@@ -21,38 +21,76 @@ env:
   TURBO_TEAM: ${{ vars.TURBO_TEAM }}
 
 jobs:
-  # Which parts changed: e2e drives apps/web against the API and database, so a PR that only touches the
-  # mobile app, docs or the migration tool skips the four e2e machines. Pushes to main/develop always run them.
+  # Which parts changed. e2e drives apps/web against the API and database, so a change that only touches
+  # the mobile app, docs, the migration tool or other scripts skips the e2e machines; a docs-only change
+  # (docs/**, *.md; not docs/09, which workflows.test.mjs reads) also skips verify.
+  # PRs diff against the base branch. Pushes diff against the previous commit, but only when ci passed on
+  # that commit (so a run cancelled by this push never lets its changes through untested).
+  # FAIL SAFE: a manual run, a new branch, an unknown previous commit, an API or git error = everything runs.
   changes:
     runs-on: ubuntu-latest
     timeout-minutes: 5
+    permissions:
+      contents: read
+      actions: read
     outputs:
       e2e: ${{ steps.diff.outputs.e2e }}
+      code: ${{ steps.diff.outputs.code }}
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - id: diff
+        env:
+          EVENT: ${{ github.event_name }}
+          BASE_REF: ${{ github.base_ref }}
+          BEFORE: ${{ github.event.before }}
+          GH_TOKEN: ${{ github.token }}
         run: |
-          if [ "${{ github.event_name }}" != "pull_request" ]; then echo "e2e=true" >> "$GITHUB_OUTPUT"; exit 0; fi
-          files=$(git diff --name-only "origin/${{ github.base_ref }}...HEAD")
+          full() { printf 'e2e=true\ncode=true\n' >> "$GITHUB_OUTPUT"; echo "::notice::$1: everything runs"; exit 0; }
+          case "$EVENT" in
+            pull_request)
+              files=$(git diff --name-only "origin/$BASE_REF...HEAD") || full "diff against $BASE_REF failed" ;;
+            push)
+              case "$BEFORE" in ''|0000000000000000000000000000000000000000) full "no previous commit" ;; esac
+              green=$(curl -fsS -H "Authorization: Bearer $GH_TOKEN" \
+                "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/actions/workflows/ci.yml/runs?head_sha=$BEFORE&status=success&per_page=1" \
+                | jq -r '.total_count') || full "GitHub API failed"
+              [ "${green:-0}" -ge 1 ] 2>/dev/null || full "ci did not pass on ${BEFORE:0:7}"
+              files=$(git diff --name-only "$BEFORE" HEAD) || full "${BEFORE:0:7} not found" ;;
+            *) full "$EVENT run" ;;
+          esac
+          [ -n "$files" ] || full "empty diff"
           echo "$files"
-          if echo "$files" | grep -qvE '^(apps/mobile/|docs/|tools/migrate/|tools/scripts/|.*\.md$)'; then
-            echo "e2e=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "e2e=false" >> "$GITHUB_OUTPUT"
-          fi
+          e2e=false; code=false
+          # Here-strings, not pipes: with pipefail an early `grep -q` exit could make the test read false.
+          if grep -qvE '^(apps/mobile/|docs/|tools/migrate/|tools/scripts/|.*\.md$)' <<< "$files" \
+            || grep -qE '^tools/scripts/(e2e-shards|write-local-env)\.mjs$' <<< "$files"; then e2e=true; fi
+          if grep -qvE '^docs/|\.md$' <<< "$files" || grep -qx 'docs/09-deployment.md' <<< "$files"; then code=true; fi
+          printf 'e2e=%s\ncode=%s\n' "$e2e" "$code" | tee -a "$GITHUB_OUTPUT"
 
-  # Lint, typecheck and unit tests run as three parallel jobs (each was waiting on the others in one
-  # 12-minute job). Turborepo's local cache is kept between runs, so packages a PR did not touch are
-  # replayed from cache instead of re-run. Branch protection can keep requiring "check": the final job.
+  # Lint, typecheck and the unit tests on parallel machines. The tests used to be one 13-minute job where
+  # web (13 min), api (9.5 min) and mobile (5 min) fought over 4 CPUs; each now has its own machine(s),
+  # web and api split in halves (vitest --shard). Turborepo's local cache is kept between runs, so
+  # packages a change did not touch are replayed from cache instead of re-run.
   verify:
+    name: verify (${{ matrix.name }})
+    needs: changes
+    if: needs.changes.outputs.code == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 20
     strategy:
       fail-fast: false
       matrix:
-        task: [lint, typecheck, test]
+        include:
+          - { name: lint, task: lint, key: lint }
+          - { name: typecheck, task: typecheck, key: typecheck }
+          - { name: test web 1/2, task: test, key: web-1, filter: --filter=web, args: '-- --shard=1/2' }
+          - { name: test web 2/2, task: test, key: web-2, filter: --filter=web, args: '-- --shard=2/2' }
+          - { name: test api 1/2, task: test, key: api-1, filter: --filter=api, args: '-- --shard=1/2' }
+          - { name: test api 2/2, task: test, key: api-2, filter: --filter=api, args: '-- --shard=2/2' }
+          - { name: test mobile, task: test, key: mobile, filter: --filter=mobile }
+          - { name: test others, task: test, key: others, filter: '--filter=!web --filter=!api --filter=!mobile' }
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
@@ -64,23 +102,37 @@ jobs:
       - uses: actions/cache@v4
         with:
           path: .turbo/cache
-          key: turbo-${{ matrix.task }}-${{ runner.os }}-${{ github.sha }}
+          key: turbo-${{ matrix.key }}-${{ runner.os }}-${{ github.sha }}
           restore-keys: |
-            turbo-${{ matrix.task }}-${{ runner.os }}-
-      - run: pnpm turbo ${{ matrix.task }} --cache-dir=.turbo/cache
+            turbo-${{ matrix.key }}-${{ runner.os }}-
+      - run: pnpm turbo ${{ matrix.task }} ${{ matrix.filter }} --cache-dir=.turbo/cache ${{ matrix.args }}
 
+  # The required aggregate for branch protection: every verify job passed, or a docs-only change skipped
+  # them all (changes said code=false). Anything else (a failed or cancelled job, a failed changes job) is red.
   check:
-    needs: verify
+    needs: [changes, verify]
     if: always()
     runs-on: ubuntu-latest
     timeout-minutes: 2
     steps:
-      - run: test "${{ needs.verify.result }}" = success
+      - env:
+          CHANGES: ${{ needs.changes.result }}
+          CODE: ${{ needs.changes.outputs.code }}
+          VERIFY: ${{ needs.verify.result }}
+        run: |
+          test "$CHANGES" = success
+          if [ "$CODE" = false ] && [ "$VERIFY" = skipped ]; then echo "docs only: verify skipped"; exit 0; fi
+          test "$VERIFY" = success
 
   # The e2e suite shares one database per run and runs with one worker, so it is split across machines
   # instead: each shard has its own local Supabase, API and web server (docs/04 §9). A failing shard does
   # not stop the others (fail-fast off), so one run shows every red spec.
+  # Shards 1-4 are Playwright's own --shard, sized on measured durations (step «Shard sizes»; refresh
+  # e2e/shard-durations.json from the «e2e-durations-*» artifacts of a push run). «single line» is the production
+  # configuration (docs/12 §13.12): ONE WhatsApp line, no WA_CHAT_* keys (playwright.config.ts reads E2E_LINES);
+  # the six §5 journeys plus the template status and settings switch specs, desktop only.
   e2e:
+    name: ${{ matrix.name }}
     needs: changes
     # On again (owner, 2026-10-05) now that the suite is fast. To pause it without a code change, set the
     # repository variable RUN_E2E to 'false' (Settings → Secrets and variables → Actions → Variables).
@@ -90,7 +142,16 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        shard: [1, 2, 3, 4]
+        include:
+          - { name: e2e (1), shard: '1' }
+          - { name: e2e (2), shard: '2' }
+          - { name: e2e (3), shard: '3' }
+          - { name: e2e (4), shard: '4' }
+          - { name: e2e (single line), shard: single }
+    env:
+      SHARDS: 4
+      # Only what the e2e suite uses: Postgres, auth, PostgREST, storage and the gateway.
+      SUPABASE_EXCLUDE: studio,imgproxy,mailpit,edge-runtime,logflare,vector,realtime,postgres-meta,supavisor
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
@@ -99,10 +160,18 @@ jobs:
           node-version-file: .nvmrc
           cache: pnpm
       - run: pnpm i --frozen-lockfile
-      - name: Start local Supabase
-        # Only what the e2e suite uses: Postgres, auth, PostgREST, storage and the gateway.
-        run: pnpm supabase start -x studio,imgproxy,mailpit,edge-runtime,logflare,vector,realtime,postgres-meta,supavisor
-      - run: pnpm env:local
+      # In the background: the browser and the build below get ready at the same time (was ~80 s in a row).
+      # Measured 2026-10-23: caching the images (docker save/load, 0.9 GB) was SLOWER than pulling them
+      # (load 70 s + start 30 s against ~80 s for pull + start), so the images are pulled.
+      - name: Start local Supabase (background)
+        run: |
+          # Supabase's host ports (54321 API, 54322 db, … 54329) sit inside Linux's ephemeral range: with
+          # downloads running alongside, an outgoing socket once took 54322 first ("address already in use").
+          sudo sysctl -qw net.ipv4.ip_local_reserved_ports=54320-54329
+          nohup bash -c 'time pnpm supabase start -x "$SUPABASE_EXCLUDE"; echo $? > "$RUNNER_TEMP/supabase.rc"' \
+            > "$RUNNER_TEMP/supabase.log" 2>&1 &
+      # apt's man-db trigger rebuilds the manual index after every install (skipped with this file gone).
+      - run: sudo rm -f /var/lib/man-db/auto-update
       - name: Playwright version
         id: pw
         run: echo "version=$(pnpm --filter e2e exec playwright --version | awk '{print $2}')" >> "$GITHUB_OUTPUT"
@@ -114,84 +183,114 @@ jobs:
           key: playwright-${{ runner.os }}-${{ steps.pw.outputs.version }}
       - name: Install the browser (only on a cache miss)
         if: steps.pw-cache.outputs.cache-hit != 'true'
-        run: pnpm --filter e2e exec playwright install --with-deps chromium
-      - name: Install the browser's system libraries (cache hit)
-        if: steps.pw-cache.outputs.cache-hit == 'true'
-        run: pnpm --filter e2e exec playwright install-deps chromium
+        run: pnpm --filter e2e exec playwright install chromium
+      # The browser's system libraries: only fonts are missing on the hosted image, but apt fetched them from
+      # the Azure mirror at times at 34 kB/s (12 min for 25 MB). The .deb files are cached per runner image
+      # and Playwright version and installed with dpkg, offline; apt only runs when they do not cover it.
+      - name: Runner image
+        id: img
+        run: echo "id=${ImageOS:-unknown}-${ImageVersion:-unknown}" >> "$GITHUB_OUTPUT"
+      - name: Restore the browser's system packages
+        id: deb-cache
+        uses: actions/cache/restore@v4
+        with:
+          path: ${{ runner.temp }}/pw-debs
+          key: pw-debs-${{ steps.img.outputs.id }}-${{ steps.pw.outputs.version }}
+      - name: Install the browser's system libraries (only if missing)
+        id: deps
+        run: |
+          pw() { pnpm --filter e2e exec playwright "$@"; }
+          debs="$RUNNER_TEMP/pw-debs"
+          if pw install-deps --dry-run chromium; then exit 0; fi
+          if ls "$debs"/*.deb >/dev/null 2>&1; then
+            if sudo dpkg -i "$debs"/*.deb >/dev/null && pw install-deps --dry-run chromium; then exit 0; fi
+            echo "::warning::the cached packages did not cover everything: installing from apt"
+          fi
+          pw install-deps chromium
+          mkdir -p "$debs" && cp /var/cache/apt/archives/*.deb "$debs"/ 2>/dev/null \
+            && echo "save=true" >> "$GITHUB_OUTPUT" || true
+      - if: steps.deps.outputs.save == 'true' && steps.deb-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: ${{ runner.temp }}/pw-debs
+          key: ${{ steps.deb-cache.outputs.cache-primary-key }}
+      - name: Restore the build cache
+        uses: actions/cache@v4
+        with:
+          path: .turbo/cache
+          key: turbo-e2e-${{ runner.os }}-${{ github.sha }}
+          restore-keys: |
+            turbo-e2e-${{ runner.os }}-
+      - name: Build what the e2e servers run
+        run: pnpm turbo build --filter=e2e^... --cache-dir=.turbo/cache
+      - name: Wait for local Supabase
+        run: |
+          for _ in $(seq 1 300); do [ -f "$RUNNER_TEMP/supabase.rc" ] && break; sleep 1; done
+          cat "$RUNNER_TEMP/supabase.log"
+          test "$(cat "$RUNNER_TEMP/supabase.rc" 2>/dev/null)" = 0
+      - run: pnpm env:local
+      # Shard sizes from the measured durations (tools/scripts/e2e-shards.mjs, e2e/shard-durations.json): the
+      # shards keep Playwright's own order and contiguous cuts, only the cut points move. FAIL SAFE: any error
+      # leaves the value empty and Playwright splits by equal test counts, as before. Every test still runs:
+      # Playwright itself assigns every group to exactly one shard whatever the sizes.
+      - name: Shard sizes
+        id: weights
+        if: matrix.shard != 'single'
+        env:
+          PROJECT: ${{ github.event_name == 'pull_request' && '--project=desktop' || '' }}
+          E2E_GROUPS_FILE: ${{ runner.temp }}/groups.json
+        run: |
+          if pnpm --filter e2e exec playwright test --list --reporter=./support/durations-reporter.ts $PROJECT >/dev/null \
+            && w=$(node tools/scripts/e2e-shards.mjs weights "$SHARDS" "$RUNNER_TEMP/groups.json") \
+            && [[ "$w" =~ ^[0-9]+(:[0-9]+)*$ ]]; then
+            echo "weights=$w" >> "$GITHUB_OUTPUT"
+          else
+            echo "::warning::shard sizes unknown: equal test counts per shard"
+          fi
       # PRs run the desktop project only (half the specs); pushes to main/develop also run the phone-size
       # project, so a mobile layout regression is still caught before a release.
-      - run: pnpm turbo e2e --filter=e2e -- --shard=${{ matrix.shard }}/4 ${{ github.event_name == 'pull_request' && '--project=desktop' || '' }}
+      - name: e2e
         env:
           CI: 'true'
+          SHARD: ${{ matrix.shard }}
+          PROJECT: ${{ github.event_name == 'pull_request' && '--project=desktop' || '' }}
+          PWTEST_SHARD_WEIGHTS: ${{ steps.weights.outputs.weights }}
+          E2E_LINES: ${{ matrix.shard == 'single' && 'single' || '' }}
+          E2E_DURATIONS_FILE: ${{ matrix.shard != 'single' && format('{0}/e2e-durations.json', runner.temp) || '' }}
+        run: |
+          if [ "$SHARD" = single ]; then
+            pnpm turbo e2e --filter=e2e --cache-dir=.turbo/cache -- --project=desktop \
+              tests/journey-1-lead-to-trial.spec.ts tests/journey-2-report.spec.ts \
+              tests/journey-3-payment-renewal.spec.ts tests/journey-4-reschedule-conflict.spec.ts \
+              tests/journey-5-availability-wizard.spec.ts tests/journey-6-duplicate-student.spec.ts \
+              tests/inbox-template-status.spec.ts tests/settings-switches.spec.ts
+          else
+            pnpm turbo e2e --filter=e2e --cache-dir=.turbo/cache -- --shard="$SHARD/$SHARDS" $PROJECT
+          fi
       - uses: actions/upload-artifact@v4
         if: failure()
         with:
-          name: playwright-report-shard-${{ matrix.shard }}
+          name: ${{ matrix.shard == 'single' && 'playwright-report-single-line' || format('playwright-report-shard-{0}', matrix.shard) }}
           path: |
             e2e/playwright-report
             e2e/test-results
           retention-days: 7
+      # Per-file durations of this shard, to refresh e2e/shard-durations.json (tools/scripts/e2e-shards.mjs merge).
+      - uses: actions/upload-artifact@v4
+        if: always() && matrix.shard != 'single'
+        with:
+          name: e2e-durations-${{ github.event_name }}-${{ matrix.shard }}
+          path: ${{ runner.temp }}/e2e-durations.json
+          if-no-files-found: ignore
+          retention-days: 14
       # Journey 7's screenshots and the assistant's video for the owner, on every run (fake data only). Only the shard that ran the
       # spec has them; the others upload nothing.
       - uses: actions/upload-artifact@v4
-        if: always()
+        if: always() && matrix.shard != 'single'
         with:
           name: assistant-journey-screens
           path: |
             e2e/test-results/**/journey-7-*/**/*.png
             e2e/test-results/**/journey-7-*/**/*.webm
           if-no-files-found: ignore
-          retention-days: 7
-
-  # The production configuration (docs/12 §13.12): ONE WhatsApp line, no WA_CHAT_* keys in the API or
-  # stub env (playwright.config.ts reads E2E_LINES). The six §5 journeys plus the template status and
-  # settings switch specs, desktop only; the two-line specs skip themselves. Same setup as e2e above.
-  e2e-single-line:
-    name: e2e (single line)
-    needs: changes
-    if: needs.changes.outputs.e2e == 'true' && vars.RUN_E2E != 'false'
-    runs-on: ubuntu-latest
-    timeout-minutes: 45
-    steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version-file: .nvmrc
-          cache: pnpm
-      - run: pnpm i --frozen-lockfile
-      - name: Start local Supabase
-        run: pnpm supabase start -x studio,imgproxy,mailpit,edge-runtime,logflare,vector,realtime,postgres-meta,supavisor
-      - run: pnpm env:local
-      - name: Playwright version
-        id: pw
-        run: echo "version=$(pnpm --filter e2e exec playwright --version | awk '{print $2}')" >> "$GITHUB_OUTPUT"
-      - name: Cache the Playwright browser
-        id: pw-cache
-        uses: actions/cache@v4
-        with:
-          path: ~/.cache/ms-playwright
-          key: playwright-${{ runner.os }}-${{ steps.pw.outputs.version }}
-      - name: Install the browser (only on a cache miss)
-        if: steps.pw-cache.outputs.cache-hit != 'true'
-        run: pnpm --filter e2e exec playwright install --with-deps chromium
-      - name: Install the browser's system libraries (cache hit)
-        if: steps.pw-cache.outputs.cache-hit == 'true'
-        run: pnpm --filter e2e exec playwright install-deps chromium
-      - run: >-
-          pnpm turbo e2e --filter=e2e -- --project=desktop
-          tests/journey-1-lead-to-trial.spec.ts tests/journey-2-report.spec.ts
-          tests/journey-3-payment-renewal.spec.ts tests/journey-4-reschedule-conflict.spec.ts
-          tests/journey-5-availability-wizard.spec.ts tests/journey-6-duplicate-student.spec.ts
-          tests/inbox-template-status.spec.ts tests/settings-switches.spec.ts
-        env:
-          CI: 'true'
-          E2E_LINES: single
-      - uses: actions/upload-artifact@v4
-        if: failure()
-        with:
-          name: playwright-report-single-line
-          path: |
-            e2e/playwright-report
-            e2e/test-results
           retention-days: 7

@@ -1,0 +1,606 @@
+{
+ "tests/account.api.spec.ts": {
+  "desktop": 1779,
+  "mobile": 1
+ },
+ "tests/account.credentials.spec.ts": {
+  "desktop": 15572,
+  "mobile": 16229
+ },
+ "tests/account.spec.ts": {
+  "desktop": 14848,
+  "mobile": 14735
+ },
+ "tests/activity-log.spec.ts": {
+  "desktop": 8710,
+  "mobile": 10611
+ },
+ "tests/apply-lesson-changes-v3.sql.spec.ts": {
+  "desktop": 50,
+  "mobile": 2
+ },
+ "tests/assistant-auto-assign-off.api.spec.ts": {
+  "desktop": 353,
+  "mobile": 4
+ },
+ "tests/assistant-commission-retro.sql.spec.ts": {
+  "desktop": 123,
+  "mobile": 3
+ },
+ "tests/assistant-commission.sql.spec.ts": {
+  "desktop": 240,
+  "mobile": 6
+ },
+ "tests/assistant-course-renew.api.spec.ts": {
+  "desktop": 536,
+  "mobile": 4
+ },
+ "tests/assistant-course-subscription.sql.spec.ts": {
+  "desktop": 68,
+  "mobile": 2
+ },
+ "tests/assistant-course.api.spec.ts": {
+  "desktop": 453,
+  "mobile": 7
+ },
+ "tests/assistant-money.api.spec.ts": {
+  "desktop": 938,
+  "mobile": 7
+ },
+ "tests/assistant-portal.spec.ts": {
+  "desktop": 8292,
+  "mobile": 12401
+ },
+ "tests/assistant-reopen.sql.spec.ts": {
+  "desktop": 101,
+  "mobile": 2
+ },
+ "tests/assistant-scope.api.spec.ts": {
+  "desktop": 278,
+  "mobile": 4
+ },
+ "tests/assistant-scope.sql.spec.ts": {
+  "desktop": 183,
+  "mobile": 5
+ },
+ "tests/assistant-statement.api.spec.ts": {
+  "desktop": 220,
+  "mobile": 5
+ },
+ "tests/assistant-statements.sql.spec.ts": {
+  "desktop": 206,
+  "mobile": 7
+ },
+ "tests/assistant-terms.sql.spec.ts": {
+  "desktop": 138,
+  "mobile": 4
+ },
+ "tests/assistants-admin.spec.ts": {
+  "desktop": 6600,
+  "mobile": 6347
+ },
+ "tests/avatars.sql.spec.ts": {
+  "desktop": 140,
+  "mobile": 6
+ },
+ "tests/booking-day-times.spec.ts": {
+  "desktop": 2425,
+  "mobile": 1
+ },
+ "tests/booking-day-times.sql.spec.ts": {
+  "desktop": 149,
+  "mobile": 4
+ },
+ "tests/booking-group.spec.ts": {
+  "desktop": 2458,
+  "mobile": 2637
+ },
+ "tests/booking-makeup-group.spec.ts": {
+  "desktop": 8424,
+  "mobile": 8024
+ },
+ "tests/booking-makeup-invoice.spec.ts": {
+  "desktop": 13749,
+  "mobile": 12892
+ },
+ "tests/booking-override.spec.ts": {
+  "desktop": 2870,
+  "mobile": 2874
+ },
+ "tests/change-course.sql.spec.ts": {
+  "desktop": 384,
+  "mobile": 8
+ },
+ "tests/chat-files.sql.spec.ts": {
+  "desktop": 54,
+  "mobile": 7
+ },
+ "tests/chat-lists.spec.ts": {
+  "desktop": 8124,
+  "mobile": 8022
+ },
+ "tests/chat-lists.sql.spec.ts": {
+  "desktop": 80,
+  "mobile": 4
+ },
+ "tests/chat-subscribe.spec.ts": {
+  "desktop": 12440,
+  "mobile": 12035
+ },
+ "tests/classroom-live-phone.spec.ts": {
+  "desktop": 0,
+  "mobile": 0
+ },
+ "tests/classroom-live.moderation.spec.ts": {
+  "desktop": 0,
+  "mobile": 0
+ },
+ "tests/classroom-live.spec.ts": {
+  "desktop": 0,
+  "mobile": 0
+ },
+ "tests/dashboard.spec.ts": {
+  "desktop": 2690,
+  "mobile": 2683
+ },
+ "tests/edit-session-time.held.spec.ts": {
+  "desktop": 8686,
+  "mobile": 8286
+ },
+ "tests/edit-session-time.spec.ts": {
+  "desktop": 6591,
+  "mobile": 6830
+ },
+ "tests/edit-time.sql.spec.ts": {
+  "desktop": 287,
+  "mobile": 10
+ },
+ "tests/expenses.spec.ts": {
+  "desktop": 3252,
+  "mobile": 3060
+ },
+ "tests/exports.spec.ts": {
+  "desktop": 2091,
+  "mobile": 2076
+ },
+ "tests/feedback.spec.ts": {
+  "desktop": 11921,
+  "mobile": 12048
+ },
+ "tests/finance-money.spec.ts": {
+  "desktop": 6305,
+  "mobile": 7083
+ },
+ "tests/forms-parity.spec.ts": {
+  "desktop": 5803,
+  "mobile": 6195
+ },
+ "tests/google-sync.spec.ts": {
+  "desktop": 12070,
+  "mobile": 2
+ },
+ "tests/google-sync.sql.spec.ts": {
+  "desktop": 195,
+  "mobile": 8
+ },
+ "tests/guardian-deliveries.spec.ts": {
+  "desktop": 6343,
+  "mobile": 70
+ },
+ "tests/inbound-new-lead.spec.ts": {
+  "desktop": 2275,
+  "mobile": 2255
+ },
+ "tests/inbound-quick-reply.spec.ts": {
+  "desktop": 1134,
+  "mobile": 1142
+ },
+ "tests/inbound-stop.spec.ts": {
+  "desktop": 532,
+  "mobile": 503
+ },
+ "tests/inbox-failures.spec.ts": {
+  "desktop": 10457,
+  "mobile": 9258
+ },
+ "tests/inbox-media.spec.ts": {
+  "desktop": 6922,
+  "mobile": 6979
+ },
+ "tests/inbox-push-owner.spec.ts": {
+  "desktop": 1121,
+  "mobile": 3
+ },
+ "tests/inbox-send-file.spec.ts": {
+  "desktop": 8802,
+  "mobile": 7885
+ },
+ "tests/inbox-template-status.spec.ts": {
+  "desktop": 5500,
+  "mobile": 4486
+ },
+ "tests/integration-config.sql.spec.ts": {
+  "desktop": 146,
+  "mobile": 8
+ },
+ "tests/internal-meeting.spec.ts": {
+  "desktop": 8005,
+  "mobile": 7215
+ },
+ "tests/journey-1-lead-to-trial.spec.ts": {
+  "desktop": 5911,
+  "mobile": 5236
+ },
+ "tests/journey-2-report.spec.ts": {
+  "desktop": 5020,
+  "mobile": 4767
+ },
+ "tests/journey-3-payment-renewal.spec.ts": {
+  "desktop": 5143,
+  "mobile": 5057
+ },
+ "tests/journey-4-reschedule-conflict.spec.ts": {
+  "desktop": 3001,
+  "mobile": 3069
+ },
+ "tests/journey-5-availability-wizard.spec.ts": {
+  "desktop": 4427,
+  "mobile": 4728
+ },
+ "tests/journey-6-duplicate-student.spec.ts": {
+  "desktop": 3827,
+  "mobile": 3935
+ },
+ "tests/journey-7-assistant-cycle.spec.ts": {
+  "desktop": 32891,
+  "mobile": 39
+ },
+ "tests/kapso-driver.spec.ts": {
+  "desktop": 9973,
+  "mobile": 579
+ },
+ "tests/lead-qualification.spec.ts": {
+  "desktop": 5181,
+  "mobile": 5850
+ },
+ "tests/lead-register.spec.ts": {
+  "desktop": 2984,
+  "mobile": 3204
+ },
+ "tests/lead-to-subscription.spec.ts": {
+  "desktop": 5422,
+  "mobile": 5159
+ },
+ "tests/leads-applicants.spec.ts": {
+  "desktop": 4686,
+  "mobile": 4504
+ },
+ "tests/lesson-rating.spec.ts": {
+  "desktop": 7763,
+  "mobile": 109
+ },
+ "tests/locale.spec.ts": {
+  "desktop": 12338,
+  "mobile": 14667
+ },
+ "tests/login.spec.ts": {
+  "desktop": 15128,
+  "mobile": 15311
+ },
+ "tests/meeting-link-auto.spec.ts": {
+  "desktop": 4666,
+  "mobile": 3456
+ },
+ "tests/meeting-recordings-rls.sql.spec.ts": {
+  "desktop": 50,
+  "mobile": 4
+ },
+ "tests/meetings.spec.ts": {
+  "desktop": 9374,
+  "mobile": 9945
+ },
+ "tests/mobile-form-sheets.spec.ts": {
+  "desktop": 4635,
+  "mobile": 5
+ },
+ "tests/notification-bell.spec.ts": {
+  "desktop": 5479,
+  "mobile": 2633
+ },
+ "tests/pay-rule.sql.spec.ts": {
+  "desktop": 307,
+  "mobile": 12
+ },
+ "tests/payment-attachments.api.spec.ts": {
+  "desktop": 439,
+  "mobile": 1
+ },
+ "tests/payments-receipt.spec.ts": {
+  "desktop": 5079,
+  "mobile": 5373
+ },
+ "tests/payouts.spec.ts": {
+  "desktop": 4540,
+  "mobile": 4659
+ },
+ "tests/phone-search.spec.ts": {
+  "desktop": 25353,
+  "mobile": 23431
+ },
+ "tests/pricing-offer.spec.ts": {
+  "desktop": 4520,
+  "mobile": 4931
+ },
+ "tests/pricing.spec.ts": {
+  "desktop": 2122,
+  "mobile": 2190
+ },
+ "tests/profiles-disabled.sql.spec.ts": {
+  "desktop": 119,
+  "mobile": 0
+ },
+ "tests/proposals-reject.spec.ts": {
+  "desktop": 5156,
+  "mobile": 5557
+ },
+ "tests/proposals.spec.ts": {
+  "desktop": 5349,
+  "mobile": 6475
+ },
+ "tests/push-notifications-rls.sql.spec.ts": {
+  "desktop": 41,
+  "mobile": 0
+ },
+ "tests/report-admin.spec.ts": {
+  "desktop": 8292,
+  "mobile": 8757
+ },
+ "tests/report-outcome.sql.spec.ts": {
+  "desktop": 113,
+  "mobile": 0
+ },
+ "tests/responsive-dashboard.spec.ts": {
+  "desktop": 17643,
+  "mobile": 30
+ },
+ "tests/responsive-frame.spec.ts": {
+  "desktop": 8554,
+  "mobile": 0
+ },
+ "tests/responsive.spec.ts": {
+  "desktop": 46039,
+  "mobile": 0
+ },
+ "tests/roles-permissions.sql.spec.ts": {
+  "desktop": 188,
+  "mobile": 1
+ },
+ "tests/roles.spec.ts": {
+  "desktop": 3938,
+  "mobile": 4577
+ },
+ "tests/sales-check-start.api.spec.ts": {
+  "desktop": 304,
+  "mobile": 0
+ },
+ "tests/sales-double-role.spec.ts": {
+  "desktop": 12658,
+  "mobile": 14981
+ },
+ "tests/sales-meetings.spec.ts": {
+  "desktop": 3914,
+  "mobile": 4234
+ },
+ "tests/sales-start-date-revoke.spec.ts": {
+  "desktop": 7965,
+  "mobile": 1
+ },
+ "tests/sales-starter.spec.ts": {
+  "desktop": 9202,
+  "mobile": 7806
+ },
+ "tests/sales-subscribe.api.spec.ts": {
+  "desktop": 657,
+  "mobile": 5
+ },
+ "tests/schedule-all-teachers.spec.ts": {
+  "desktop": 18749,
+  "mobile": 13933
+ },
+ "tests/schedule-cancel.spec.ts": {
+  "desktop": 13281,
+  "mobile": 10095
+ },
+ "tests/schedule-overview.spec.ts": {
+  "desktop": 10865,
+  "mobile": 9036
+ },
+ "tests/schedule-series.spec.ts": {
+  "desktop": 5438,
+  "mobile": 4348
+ },
+ "tests/schedule-stale.spec.ts": {
+  "desktop": 2373,
+  "mobile": 22
+ },
+ "tests/settings-academy.spec.ts": {
+  "desktop": 7321,
+  "mobile": 5777
+ },
+ "tests/settings-switches.spec.ts": {
+  "desktop": 10766,
+  "mobile": 8989
+ },
+ "tests/shell-focus.spec.ts": {
+  "desktop": 8509,
+  "mobile": 3
+ },
+ "tests/shell-menu.spec.ts": {
+  "desktop": 9317,
+  "mobile": 5460
+ },
+ "tests/student-filters.spec.ts": {
+  "desktop": 11912,
+  "mobile": 4125
+ },
+ "tests/student-lists.spec.ts": {
+  "desktop": 11433,
+  "mobile": 9161
+ },
+ "tests/student-profile.spec.ts": {
+  "desktop": 8670,
+  "mobile": 6073
+ },
+ "tests/student-recordings-api.spec.ts": {
+  "desktop": 139,
+  "mobile": 7
+ },
+ "tests/student-recordings-rls.sql.spec.ts": {
+  "desktop": 96,
+  "mobile": 3
+ },
+ "tests/student-statuses.spec.ts": {
+  "desktop": 8200,
+  "mobile": 2
+ },
+ "tests/subscriptions.spec.ts": {
+  "desktop": 15301,
+  "mobile": 12183
+ },
+ "tests/teacher-corrections.sql.spec.ts": {
+  "desktop": 317,
+  "mobile": 5
+ },
+ "tests/teacher-earnings-rls.sql.spec.ts": {
+  "desktop": 176,
+  "mobile": 3
+ },
+ "tests/teacher-earnings-ui.spec.ts": {
+  "desktop": 8884,
+  "mobile": 5990
+ },
+ "tests/teacher-earnings.sql.spec.ts": {
+  "desktop": 299,
+  "mobile": 5
+ },
+ "tests/teacher-isolation.spec.ts": {
+  "desktop": 15955,
+  "mobile": 2
+ },
+ "tests/teacher-isolation.sql.spec.ts": {
+  "desktop": 96,
+  "mobile": 2
+ },
+ "tests/teacher-meeting-mode.sql.spec.ts": {
+  "desktop": 100,
+  "mobile": 4
+ },
+ "tests/teacher-mode.spec.ts": {
+  "desktop": 19556,
+  "mobile": 15806
+ },
+ "tests/teacher-payments.sql.spec.ts": {
+  "desktop": 316,
+  "mobile": 5
+ },
+ "tests/teacher-report-attachments.spec.ts": {
+  "desktop": 12704,
+  "mobile": 8553
+ },
+ "tests/teacher-report-draft.spec.ts": {
+  "desktop": 8139,
+  "mobile": 7201
+ },
+ "tests/teacher-report-edit-window.spec.ts": {
+  "desktop": 24421,
+  "mobile": 21287
+ },
+ "tests/teacher-report-form-fields.spec.ts": {
+  "desktop": 5755,
+  "mobile": 4203
+ },
+ "tests/teacher-restricted-templates.spec.ts": {
+  "desktop": 6986,
+  "mobile": 5325
+ },
+ "tests/teacher-rls.sql.spec.ts": {
+  "desktop": 198,
+  "mobile": 180
+ },
+ "tests/teacher-week-history.spec.ts": {
+  "desktop": 6317,
+  "mobile": 5379
+ },
+ "tests/teachers-admin.spec.ts": {
+  "desktop": 9843,
+  "mobile": 8169
+ },
+ "tests/teachers-always-available.spec.ts": {
+  "desktop": 3391,
+  "mobile": 3244
+ },
+ "tests/template-numbers.spec.ts": {
+  "desktop": 10832,
+  "mobile": 8769
+ },
+ "tests/templates.spec.ts": {
+  "desktop": 11046,
+  "mobile": 8196
+ },
+ "tests/translations.spec.ts": {
+  "desktop": 5724,
+  "mobile": 5120
+ },
+ "tests/trial-no-teacher-chat.spec.ts": {
+  "desktop": 15216,
+  "mobile": 13013
+ },
+ "tests/trial-no-teacher-chat.sql.spec.ts": {
+  "desktop": 92,
+  "mobile": 3
+ },
+ "tests/users-control.delete.spec.ts": {
+  "desktop": 6389,
+  "mobile": 5248
+ },
+ "tests/users-control.invite.spec.ts": {
+  "desktop": 7973,
+  "mobile": 6043
+ },
+ "tests/users-control.login.spec.ts": {
+  "desktop": 23275,
+  "mobile": 17963
+ },
+ "tests/users-control.spec.ts": {
+  "desktop": 15624,
+  "mobile": 10865
+ },
+ "tests/users-control.sql.spec.ts": {
+  "desktop": 205,
+  "mobile": 18
+ },
+ "tests/wa-line-health.sql.spec.ts": {
+  "desktop": 55,
+  "mobile": 4
+ },
+ "tests/wa-lines-check.spec.ts": {
+  "desktop": 6220,
+  "mobile": 9
+ },
+ "tests/wa-two-lines.reply.spec.ts": {
+  "desktop": 17504,
+  "mobile": 14460
+ },
+ "tests/wa-two-lines.spec.ts": {
+  "desktop": 3792,
+  "mobile": 2721
+ },
+ "tests/whatsapp-lines.sql.spec.ts": {
+  "desktop": 171,
+  "mobile": 15
+ },
+ "tests/whatsapp-lines.windows.sql.spec.ts": {
+  "desktop": 112,
+  "mobile": 9
+ }
+}

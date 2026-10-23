@@ -2,6 +2,7 @@ import { expect, test } from '@playwright/test';
 import { earningId, pastLesson, pay, teacherWithRates } from '../support/earnings';
 import { as, rolledBack, userId, type Tx } from '../support/rls';
 import { USERS } from '../support/users';
+import { resetAbrar } from '../support/schedule';
 
 // RLS of migration 176 (rule 9): admins all; a teacher only their own rows; nobody else.
 
@@ -30,7 +31,11 @@ async function seed(tx: Tx) {
 }
 
 test.describe('teacher earnings RLS (migration 176)', () => {
-  test.beforeEach(() => test.skip(test.info().project.name !== 'desktop', 'database only: one run'));
+  test.beforeEach(async () => {
+    test.skip(test.info().project.name !== 'desktop', 'database only: one run');
+    // Start from a teacher with no lessons: the CI shard plan may run a spec that leaves one first.
+    await resetAbrar();
+  });
 
   test('a teacher reads only their own earnings, payments and items; an admin reads all', async () => {
     await rolledBack(async (tx) => {

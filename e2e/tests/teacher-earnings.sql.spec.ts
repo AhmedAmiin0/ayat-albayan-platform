@@ -1,12 +1,17 @@
 import { expect, test } from '@playwright/test';
 import { earningId, earningOf, pastLesson, pay, teacherWithRates } from '../support/earnings';
 import { rolledBack } from '../support/rls';
+import { resetAbrar } from '../support/schedule';
 
 // The per-session ledger (migrations 176-179) against the real database, each case in a
 // transaction that is rolled back. Mirrors the unit specs of planEarningSync (@ab/shared).
 
 test.describe('teacher_session_earnings follows the lessons (migration 177)', () => {
-  test.beforeEach(() => test.skip(test.info().project.name !== 'desktop', 'database only: one run'));
+  test.beforeEach(async () => {
+    test.skip(test.info().project.name !== 'desktop', 'database only: one run');
+    // Start from a teacher with no lessons: the CI shard plan may run a spec that leaves one first.
+    await resetAbrar();
+  });
 
   test('a lesson becoming completed gets an earning at the teacher rate; late / no_show only by setting', async () => {
     await rolledBack(async (tx) => {

@@ -2,6 +2,7 @@ import { expect, test } from '@playwright/test';
 import { earningId, earningOf, pastLesson, pay, teacherWithRates } from '../support/earnings';
 import { approvedPayout } from '../support/pay-rule';
 import { rolledBack } from '../support/rls';
+import { resetAbrar } from '../support/schedule';
 
 // Correcting money out to a teacher (migration 20261005000201), each case rolled back.
 
@@ -11,7 +12,11 @@ const payoutOf = async (tx: Parameters<Parameters<typeof rolledBack>[0]>[0], id:
   (await tx<PayoutState[]>`select status, paid_at, method, receipt_path from public.teacher_payouts where id = ${id}`)[0];
 
 test.describe('teacher payment corrections (20261005000201)', () => {
-  test.beforeEach(() => test.skip(test.info().project.name !== 'desktop', 'database only: one run'));
+  test.beforeEach(async () => {
+    test.skip(test.info().project.name !== 'desktop', 'database only: one run');
+    // Start from a teacher with no lessons: the CI shard plan may run a spec that leaves one first.
+    await resetAbrar();
+  });
 
   test('voiding a payment reverses its allocations, keeps it in the history and is audited once', async () => {
     await rolledBack(async (tx) => {

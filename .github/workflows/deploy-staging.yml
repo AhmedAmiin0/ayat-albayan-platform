@@ -7,6 +7,11 @@ name: deploy-staging
 # SAFETY: this workflow never sets WA_PHONE_NUMBER_ID (the WhatsApp cut-over is the owner's, by hand;
 # sending itself is switched only in /admin/settings, settings.messaging_enabled, docs/23), never touches /opt/wacrm, and only runs on develop (push → ci → here) or by hand.
 # The repo is public: no pull_request trigger, no pull_request_target, secrets only in environment jobs.
+# The title carries the deployed commit (and a marker when migrations or code were skipped by hand):
+# the «plan» job of the next run reads it back to know what staging last received.
+run-name: >-
+  deploy-staging ${{ github.event.workflow_run.head_sha || github.sha }}${{ inputs.env_only && ' env-only'
+  || (github.event_name == 'workflow_dispatch' && !inputs.migrate) && ' no-migrate' || '' }}
 on:
   # Automatic: every merge into develop, once ci has passed on it (a red develop never ships).
   workflow_run:
@@ -62,12 +67,80 @@ jobs:
           if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then echo "::error::$msg"; exit 1; fi
           echo "::warning::$msg"
 
-  # Database first (environment staging-db: the owner's required reviewer gates it), then the API.
-  migrate:
+  # What changed since staging last got it (owner 2026-10-23: no approval click when no migration changed,
+  # automatic OTA). GitHub API with actions: read only; no environment, no secret.
+  #  - migrations: false only when the last deploy that pushed migrations is known (tools/scripts/deploy-baseline.mjs)
+  #    AND nothing under packages/db/supabase/migrations/ changed since. FAIL SAFE: an unknown or unfound
+  #    baseline, an API or git error, or an empty output all leave the gated migrate job ON.
+  #  - ota: true only when apps/mobile or packages/shared (the JS the app bundles) changed since the last green
+  #    preview OTA (else since the last deploy) AND native-changes.mjs finds no native change since the last
+  #    APK (repository variable OTA_BASELINE_SHA, default c140b4cc). Anything unclear = no OTA.
+  plan:
     needs: preflight
+    if: needs.preflight.outputs.ready == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      actions: read
+    outputs:
+      migrations: ${{ steps.migrations.outputs.migrations }}
+      ota: ${{ steps.ota.outputs.ota }}
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+          package-manager-cache: false
+      - id: base
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: node tools/scripts/deploy-baseline.mjs | tee -a "$GITHUB_OUTPUT"
+      - id: migrations
+        env:
+          BASE: ${{ steps.base.outputs.migrate_base }}
+        run: |
+          migrations=true
+          if [ -z "$BASE" ]; then
+            echo "::notice::last migrated deploy unknown: the gated migrate job runs"
+          elif ! changed=$(git diff --name-only "$BASE" HEAD -- packages/db/supabase/migrations/); then
+            echo "::warning::git diff against $BASE failed: the gated migrate job runs"
+          elif [ -n "$changed" ]; then
+            printf 'migrations changed since %s:\n%s\n' "${BASE:0:7}" "$changed"
+          else
+            migrations=false
+            echo "::notice::no migration changed since ${BASE:0:7}: migrate skipped (no staging-db approval needed)"
+          fi
+          echo "migrations=$migrations" >> "$GITHUB_OUTPUT"
+      - id: ota
+        if: ${{ !inputs.env_only }}
+        env:
+          BASE: ${{ steps.base.outputs.ota_base || steps.base.outputs.code_base }}
+          NATIVE_BASE: ${{ vars.OTA_BASELINE_SHA || 'c140b4cc' }}
+        run: |
+          ota=false
+          js() { git diff --name-only "$BASE" HEAD -- apps/mobile packages/shared \
+            ':(glob,exclude)**/*.test.ts' ':(glob,exclude)**/*.test.tsx' ':(glob,exclude)**/*.md'; }
+          if [ -z "$BASE" ]; then echo "::notice::no earlier OTA or deploy known: no automatic OTA (run mobile by hand)"
+          elif ! git merge-base --is-ancestor "$BASE" HEAD; then echo "::notice::${BASE:0:7} is not behind this commit: no automatic OTA"
+          elif [ -z "$(js)" ]; then echo "no mobile JS change since ${BASE:0:7}: no OTA"
+          elif ! node tools/scripts/native-changes.mjs "$NATIVE_BASE"; then
+            echo "::warning::native change since the last APK ($NATIVE_BASE): no automatic OTA. Build an APK by hand (mobile → build-android-apk), then set OTA_BASELINE_SHA."
+          else ota=true; echo "mobile JS changed since ${BASE:0:7} and no native change: OTA to preview after the deploy"; fi
+          echo "ota=$ota" >> "$GITHUB_OUTPUT"
+
+  # Database first (environment staging-db: the owner's required reviewer gates it), then the API.
+  # Automatic runs skip it only when «plan» proved no migration changed (any other plan result, a failed
+  # plan included, runs it). By hand: the migrate / env_only inputs decide, exactly as before.
+  migrate:
+    needs: [preflight, plan]
     if: >-
-      needs.preflight.outputs.ready == 'true' &&
-      (github.event_name == 'workflow_run' || (inputs.migrate && !inputs.env_only))
+      ${{ !cancelled() && needs.preflight.outputs.ready == 'true' &&
+      ((github.event_name == 'workflow_run' && needs.plan.outputs.migrations != 'false')
+       || (github.event_name == 'workflow_dispatch' && inputs.migrate && !inputs.env_only)) }}
     permissions:
       contents: read
     uses: ./.github/workflows/db-migrate.yml
@@ -241,3 +314,30 @@ jobs:
       - name: Remove the key
         if: always()
         run: rm -rf ~/.ssh/id_deploy
+
+  # Automatic OTA (owner 2026-10-23): after a green deploy, when «plan» found mobile JS changes and no native
+  # change, start mobile.yml (ota-update → preview) through the API, exactly like the manual button: it runs on
+  # develop in the environment `mobile`, keeps its own native-change refusal, and never builds an APK, iOS or
+  # production. Only when develop still points at the deployed commit, so the OTA ships what passed ci.
+  ota:
+    needs: [plan, deploy]
+    if: ${{ !cancelled() && needs.deploy.result == 'success' && needs.plan.outputs.ota == 'true' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      actions: write
+    steps:
+      - env:
+          GH_TOKEN: ${{ github.token }}
+          SHA: ${{ github.event.workflow_run.head_sha || github.sha }}
+        run: |
+          api="$GITHUB_API_URL/repos/$GITHUB_REPOSITORY"
+          auth=(-H "Authorization: Bearer $GH_TOKEN" -H "Accept: application/vnd.github+json")
+          head=$(curl -fsS "${auth[@]}" "$api/branches/develop" | jq -r .commit.sha)
+          if [ "$head" != "$SHA" ]; then
+            echo "::notice::develop moved on (${head:0:7}): no OTA now; the next deploy decides"; exit 0
+          fi
+          curl -fsS -X POST "${auth[@]}" "$api/actions/workflows/mobile.yml/dispatches" \
+            -d '{"ref":"develop","inputs":{"action":"ota-update","branch":"preview"}}'
+          echo "### OTA to preview started (mobile.yml) for \`${SHA:0:7}\`" >> "$GITHUB_STEP_SUMMARY"
