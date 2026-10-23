@@ -5616,5 +5616,45 @@
     "unsavedClose": "You have not saved your edit. Close without saving?",
     "closeAnyway": "Close without saving",
     "keepEditing": "Keep editing"
+  },
+  "mobileNotificationRules": {
+    "intro": "Turn each notification on or off here. Timings, numbers and templates are changed on the website.",
+    "switchLabel": "Send «{name}»",
+    "locked": "Cannot be turned off",
+    "heldNow": "Not sent now: {reason}",
+    "partial": "Partly approved: lessons whose link uses a template Meta has not approved yet get nothing",
+    "blockers": {
+      "not_configured": "WhatsApp is not set up yet",
+      "messaging_off": "sending messages is off",
+      "auto_off": "automatic messages are off",
+      "row_off": "this notification is off",
+      "template_not_approved": "Meta has not approved the template yet",
+      "classroom_off": "the academy classroom is not in use"
+    },
+    "reach": {
+      "guardian": "It will reach {n} guardians.",
+      "lead": "It will reach {n} leads.",
+      "unknown": "It will reach families when it happens."
+    },
+    "familyConfirm": "Turn on «{name}»? {reach}",
+    "turnOn": "Turn on",
+    "cancel": "Cancel",
+    "essentialTitle": "Turn off «{name}»?",
+    "essentialBody": "This is an essential notification. If you turn it off, nobody receives it until you turn it back on.",
+    "typedLabel": "Type «{word}» to confirm",
+    "typedHint": "The button works once the word is typed exactly.",
+    "logLine": "This is recorded in the activity log with your name and the time.",
+    "turnOff": "Turn off the notification",
+    "close": "Close",
+    "savedOn": "«{name}» turned on",
+    "savedOff": "«{name}» turned off",
+    "errors": {
+      "forbidden": "You do not have permission to change notifications.",
+      "locked": "This notification cannot be turned off.",
+      "not_editable": "This notification is sent by hand, so it is not switched here.",
+      "invalid": "The change was not saved because the value is invalid.",
+      "confirmation_required": "Type the word exactly to confirm turning it off.",
+      "failed": "The change was not saved. Try again."
+    }
   }
 }
