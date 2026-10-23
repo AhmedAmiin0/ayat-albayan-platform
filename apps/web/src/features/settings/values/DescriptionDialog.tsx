@@ -31,6 +31,7 @@ export function DescriptionDialog({ target, entry, rights, onClose, onDone }: De
     <Dialog
       layout="center"
       title={d.readTitle}
+      glyph={{ tone: 'neutral', shape: 'hollow' }}
       description={target.label}
       onClose={onClose}
       actions={

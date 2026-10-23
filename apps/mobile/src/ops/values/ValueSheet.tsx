@@ -1,7 +1,9 @@
 import type { SettingKey, SettingMeta } from '@ab/shared';
-import { useState } from 'react';
-import { Modal, Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { useEffect, useRef, useState } from 'react';
+import { AccessibilityInfo, Modal, Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { t } from '@/lib/i18n';
 import { shape, useTheme } from '@/theme';
+import type { AppTextNode } from '@/ui/AppText';
 import { ScreenHeader } from '@/ui/ScreenHeader';
 import { useValueSheet } from './use-value-sheet';
 import { DescriptionEditor } from './DescriptionEditor';
@@ -27,11 +29,18 @@ interface DescribingProps {
   onCancel: () => void;
 }
 
-/** The sheet while «عدّل الوصف» is open: the row's name, then the description editor. */
+/**
+ * The sheet while «عدّل الوصف» is open: «تعديل الوصف» with the row's name under it, then the editor.
+ * Screen-reader focus moves to that title, so the mode change is announced.
+ */
 function Describing({ valueKey, description, onDone, onCancel }: DescribingProps) {
+  const titleRef = useRef<AppTextNode>(null);
+  useEffect(() => {
+    if (titleRef.current) AccessibilityInfo.sendAccessibilityEvent(titleRef.current, 'focus');
+  }, []);
   return (
     <View style={{ gap: 12 }}>
-      <ScreenHeader size="h2" title={labelOf(valueKey)} />
+      <ScreenHeader size="h2" title={t.mobileValues.description.title} subtitle={labelOf(valueKey)} titleRef={titleRef} />
       <DescriptionEditor
         valueKey={valueKey}
         initial={description.text ?? ''}

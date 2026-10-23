@@ -47,7 +47,7 @@ describe('«القيم» — 409 conflict row', () => {
 
   it('«احفظ قيمتي» sends the edit again with the newer version; the row and toast follow', async () => {
     const { alert } = await conflictOnDesktop();
-    fireEvent.click(within(alert).getByRole('button', { name: c.keepMine }));
+    fireEvent.click(within(alert).getByRole('button', { name: `${c.keepMine}: ${HORIZON}` }));
     await waitFor(() => expect(apiSend).toHaveBeenLastCalledWith('PATCH', URL, { value: 8, expectedVersion: 4 }));
     await screen.findByText(v.saved);
     expect(screen.queryByRole('alert')).toBeNull();
@@ -55,7 +55,7 @@ describe('«القيم» — 409 conflict row', () => {
 
   it('«اعتمد القيمة الجديدة» drops the edit and the conflict row; nothing more is sent', async () => {
     const { row, alert } = await conflictOnDesktop();
-    fireEvent.click(within(alert).getByRole('button', { name: c.takeTheirs }));
+    fireEvent.click(within(alert).getByRole('button', { name: `${c.takeTheirs}: ${HORIZON}` }));
     expect(screen.queryByRole('alert')).toBeNull();
     expect(within(row).queryByText(v.unsavedRow)).toBeNull();
     expect(apiSend).toHaveBeenCalledTimes(1);
@@ -72,7 +72,7 @@ describe('«القيم» — 409 conflict row', () => {
     fireEvent.click(within(sheet).getByRole('button', { name: v.sheet.save }));
     const alert = await within(sheet).findByRole('alert');
     expect(within(await findRow(HORIZON)).getByText(c.phoneLine.replace('{name}', 'سارة'))).toBeTruthy();
-    fireEvent.click(within(alert).getByRole('button', { name: c.keepMine }));
+    fireEvent.click(within(alert).getByRole('button', { name: `${c.keepMine}: ${HORIZON}` }));
     await waitFor(() => expect(apiSend).toHaveBeenLastCalledWith('PATCH', URL, { value: 8, expectedVersion: 4 }));
     await waitFor(() => expect(screen.queryByRole('dialog', { name: HORIZON })).toBeNull());
   });

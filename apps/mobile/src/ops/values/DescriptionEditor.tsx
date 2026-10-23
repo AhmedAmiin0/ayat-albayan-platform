@@ -1,4 +1,4 @@
-import type { SettingKey } from '@ab/shared';
+import { DESCRIPTION_MAX, type SettingKey } from '@ab/shared';
 import { View } from 'react-native';
 import { ErrorLine } from '@/inbox/ErrorLine';
 import { t } from '@/lib/i18n';
@@ -36,6 +36,8 @@ export function DescriptionEditor({ valueKey, initial, edited, onDone, onCancel 
         multiline
         textAlignVertical="top"
         editable={!ed.saving}
+        maxLength={DESCRIPTION_MAX}
+        accessibilityHint={ed.counter}
       />
       <Note>{ed.counter}</Note>
       {ed.error ? <ErrorLine message={ed.error} /> : null}

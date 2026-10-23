@@ -57,6 +57,7 @@ export function DescriptionEditor({ target, entry, start, onClose, onDone }: Des
     <Dialog
       layout="center"
       title={d.title}
+      glyph={{ tone: 'neutral', shape: 'hollow' }}
       description={d.intro.replace('{name}', target.label)}
       onClose={onClose}
       hint={d.note}

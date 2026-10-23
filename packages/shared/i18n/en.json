@@ -5565,6 +5565,7 @@
       }
     },
     "describe": {
+      "lineSr": ". Read the full description or edit it",
       "menu": "Read and edit the description",
       "title": "Edit description",
       "readTitle": "Description",
@@ -5584,7 +5585,7 @@
       "englishNote": "English descriptions are edited in «Translations»."
     },
     "conflict": {
-      "body": "{name} changed this value to {value} {when}. Your value: {mine}.",
+      "body": "This value was changed to {value} {when} by {name}. Your value: {mine}.",
       "someone": "Another user",
       "keepMine": "Save my value",
       "takeTheirs": "Use the new value",

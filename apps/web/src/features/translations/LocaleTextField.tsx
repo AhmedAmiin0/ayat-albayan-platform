@@ -41,7 +41,7 @@ export function LocaleTextField(p: LocaleTextFieldProps) {
             disabled={p.disabled}
             readOnly={locked}
             onChange={(e) => p.onChange(e.target.value)}
-            className={cn(controlClass, 'field-sizing-content min-h-24 py-2 leading-relaxed sm:min-h-24')}
+            className={cn(controlClass, 'field-sizing-content min-h-24 py-2 leading-relaxed sm:min-h-24', locked && 'cursor-default bg-sunk text-ink-2')}
           />
         )}
       </Field>

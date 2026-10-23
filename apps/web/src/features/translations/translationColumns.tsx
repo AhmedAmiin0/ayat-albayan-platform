@@ -12,19 +12,22 @@ function TextCell({ row, locale }: { row: TranslationKeyRow; locale: Locale }) {
   // The Arabic text of a registry hint is a value's description: read-only here, edited on «القيم».
   const hint = locale === 'ar' ? registryHintOf(row.key) : undefined;
   return (
-    <span dir={locale === 'ar' ? 'rtl' : 'ltr'} lang={locale} className="block whitespace-normal">
-      {effectiveText(row, locale)}
-      {overrideOf(row, locale) !== null && (
-        <span className="ms-2 inline-block rounded-sm bg-act/10 px-1.5 text-2xs font-semibold text-act">
-          {t.translations.overridden}
-        </span>
-      )}
+    <div>
+      <span dir={locale === 'ar' ? 'rtl' : 'ltr'} lang={locale} className="block whitespace-normal">
+        {effectiveText(row, locale)}
+        {overrideOf(row, locale) !== null && (
+          <span className="ms-2 inline-block rounded-sm bg-act/10 px-1.5 text-2xs font-semibold text-act">
+            {t.translations.overridden}
+          </span>
+        )}
+      </span>
+      {/* Outside the text's lang span: the link is UI chrome in the UI language. */}
       {hint && (
         <span className="block">
           <ValuesLink hint={hint} />
         </span>
       )}
-    </span>
+    </div>
   );
 }
 

@@ -42,9 +42,10 @@ function HintLine({ hint, onDescribe }: { hint: string; onDescribe?: (() => void
       title={hint}
       aria-haspopup="dialog"
       onClick={onDescribe}
-      className={`${hintClass} min-h-11 max-w-full rounded-xs text-start underline-offset-4 hover:text-ink-2 hover:underline sm:min-h-5`}
+      className={`${hintClass} min-h-11 max-w-full rounded-xs text-start underline-offset-4 decoration-dotted hover:text-lapis hover:underline focus-visible:text-lapis focus-visible:underline sm:min-h-5`}
     >
       {hint}
+      <span className="sr-only">{t.settingsValues.describe.lineSr}</span>
     </button>
   );
 }

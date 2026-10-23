@@ -15,7 +15,7 @@ export interface ConflictTextInput {
 /** Who saved first (their name, else «مستخدم آخر»). */
 export const conflictBy = (conflict: ConfigEntryConflict): string => conflict.updatedByName ?? c.someone;
 
-/** «غيّر سارة هذه القيمة إلى 6 قبل دقيقتين. قيمتك: 8.» (docs/26b §2 «Conflict (409)»). */
+/** «تغيّرت هذه القيمة إلى 6 قبل دقيقتين بواسطة سارة. قيمتك: 8.» (docs/26b §2 «Conflict (409)»). */
 export function conflictText({ key, conflict, mine, now }: ConflictTextInput): string {
   const when = conflict.updatedAt ? formatAge(conflict.updatedAt, now) : '';
   return c.body

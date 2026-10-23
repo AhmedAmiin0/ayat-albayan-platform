@@ -25,7 +25,8 @@ afterEach(() => {
   granted.perms = new Set(['settings.write']);
 });
 
-const openLine = async (label: string, text: string) => fireEvent.click(within(await findRow(label)).getByRole('button', { name: text }));
+// The line's name is its text, then the sr-only «. اقرأ الوصف كاملًا أو عدّله» (the visible text alone says no action).
+const openLine = async (label: string, text: string) => fireEvent.click(within(await findRow(label)).getByRole('button', { name: `${text}${d.lineSr}` }));
 
 describe('«القيم» — «تعديل الوصف»', () => {
   it('the muted line opens the editor: labelled textarea, live counter, «احفظ الوصف» sends PUT and announces', async () => {
