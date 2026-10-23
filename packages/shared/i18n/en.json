@@ -5316,7 +5316,160 @@
     "title": "Settings"
   },
   "settingsValues": {
-    "title": "Values"
+    "title": "Values",
+    "readOnly": "Read only",
+    "readOnlyNote": "You do not have permission to change settings. Ask the academy manager if a value needs to change.",
+    "summary": "{total} · {modified} changed · {public} public",
+    "count": {
+      "one": "1 value",
+      "two": "2 values",
+      "few": "{n} values",
+      "other": "{n} values"
+    },
+    "unsaved": {
+      "one": "1 unsaved value",
+      "two": "2 unsaved values",
+      "few": "{n} unsaved values",
+      "other": "{n} unsaved values"
+    },
+    "searchLabel": "Search all values",
+    "searchPlaceholder": "Search by name, description or key",
+    "searchHint": "Results from every group are shown under «All».",
+    "filters": "Filter values",
+    "filterModified": "Changed only",
+    "filterPublic": "Public only",
+    "groupsNav": "Value groups",
+    "groupsTitle": "Groups",
+    "ownedHeading": "Managed on another page",
+    "groups": {
+      "payouts": "Teacher payouts",
+      "messages": "Messages",
+      "retention": "Logs and retention",
+      "notifications": "Notifications",
+      "sending": "Sending and safety",
+      "google": "Google sync"
+    },
+    "all": "All",
+    "clearSearch": "Clear search",
+    "cols": {
+      "name": "Name",
+      "value": "Value",
+      "default": "Default",
+      "last": "Last change",
+      "action": "Action"
+    },
+    "tags": {
+      "public": "Public",
+      "confirm": "Asks before saving",
+      "deletes": "Deletes data",
+      "modified": "Changed"
+    },
+    "on": "On",
+    "off": "Off",
+    "bounds": "From {min} to {max}",
+    "lengthBounds": "From {min} to {max} characters",
+    "onValue": "{value} when turned on",
+    "never": "Not changed yet",
+    "unsavedRow": "Not saved",
+    "savedWas": "Saved: {value}",
+    "undo": "Undo",
+    "saving": "Saving…",
+    "saved": "Value saved",
+    "savedNamed": "«{name}» saved",
+    "saveError": "Could not save the value",
+    "saveErrorNamed": "Could not save «{name}»",
+    "retry": "Try again",
+    "moved": "Managed on another page",
+    "invalidRange": "Enter a number from {min} to {max}",
+    "invalidLength": "Enter text of {min} to {max} characters",
+    "phonePreview": "Saved as: {phone}",
+    "menu": "Options: {name}",
+    "resetDefault": "Restore the default",
+    "devKey": "For developers: the key",
+    "copyKey": "Copy the key",
+    "copied": "Key copied",
+    "editFrom": {
+      "communications": "Edited in Communications",
+      "google": "Edited in Google sync"
+    },
+    "shapeEdit": "Edit both fields",
+    "shapeSave": "Save both fields",
+    "loadError": "Could not load the values",
+    "loading": "Loading the values…",
+    "empty": "No values match your search",
+    "emptyHint": "Nothing was found in names, descriptions or keys. Try another word.",
+    "groupEmpty": "This group has no values yet.",
+    "confirm": {
+      "plainTitle": "Save «{name}»?",
+      "plainYes": "Save the value",
+      "typedTitle": "Delete data older than {n} days?",
+      "typedBody": "On saving, data older than this is deleted for good and cannot be restored.",
+      "typedLabel": "To confirm, type the number of days: {n}",
+      "typedYes": "Save and delete data",
+      "logged": "The change is recorded in the activity log."
+    },
+    "leave": {
+      "title": "Leave the page?",
+      "body": "You have unsaved values: {names}.",
+      "leave": "Leave without saving",
+      "stay": "Stay on the page"
+    },
+    "sheet": {
+      "edit": "Edit «{name}»",
+      "default": "Default: {value}",
+      "last": "Last change: {value}",
+      "dev": "For developers",
+      "save": "Save",
+      "discardTitle": "Close without saving?",
+      "discardBody": "The value you entered is not saved.",
+      "discard": "Close without saving",
+      "keep": "Keep editing"
+    },
+    "lastBy": "{name}, {at}",
+    "units": {
+      "hours": {
+        "one": "1 hour",
+        "two": "2 hours",
+        "few": "{n} hours",
+        "other": "{n} hours",
+        "unit": "hours"
+      },
+      "days": {
+        "one": "1 day",
+        "two": "2 days",
+        "few": "{n} days",
+        "other": "{n} days",
+        "unit": "days"
+      },
+      "weeks": {
+        "one": "1 week",
+        "two": "2 weeks",
+        "few": "{n} weeks",
+        "other": "{n} weeks",
+        "unit": "weeks"
+      },
+      "minutes": {
+        "one": "1 minute",
+        "two": "2 minutes",
+        "few": "{n} minutes",
+        "other": "{n} minutes",
+        "unit": "minutes"
+      },
+      "lessons": {
+        "one": "1 lesson",
+        "two": "2 lessons",
+        "few": "{n} lessons",
+        "other": "{n} lessons",
+        "unit": "lessons"
+      },
+      "mb": {
+        "one": "{n} MB",
+        "two": "{n} MB",
+        "few": "{n} MB",
+        "other": "{n} MB",
+        "unit": "MB"
+      }
+    }
   },
   "settingsPages": {
     "communications": "Communications"
