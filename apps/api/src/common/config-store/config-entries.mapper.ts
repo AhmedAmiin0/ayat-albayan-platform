@@ -29,9 +29,23 @@ export interface EntryParts {
   value: unknown;
 }
 
+/** The stored row's part of an entry; a missing row is version 0, nothing stored, no description. */
+function rowFields(row: ConfigRow | undefined) {
+  if (!row) return { stored: false, description: null, descriptionSeed: null, descriptionEdited: false, version: 0, retiredAt: null };
+  return {
+    stored: row.value !== null,
+    description: row.description,
+    descriptionSeed: row.descriptionSeed,
+    descriptionEdited: row.descriptionEdited,
+    version: row.version,
+    retiredAt: row.retiredAt,
+  };
+}
+
 /** One GET /config/entries row: the code entry merged with its stored row (missing row → version 0). */
 export function toConfigEntry(parts: EntryParts, names: ReadonlyMap<string, string>): ConfigEntry {
-  const { seed, def, row } = parts;
+  const { seed, def } = parts;
+  const { retiredAt, ...stored } = rowFields(parts.row);
   return {
     key: seed.key,
     module: seed.module,
@@ -40,18 +54,14 @@ export function toConfigEntry(parts: EntryParts, names: ReadonlyMap<string, stri
     bounds: boundsOf(def),
     value: parts.value,
     defaultValue: defaultOf(def),
-    stored: row !== undefined && row.value !== null,
-    description: row?.description ?? null,
-    descriptionSeed: row?.descriptionSeed ?? null,
-    descriptionEdited: row?.descriptionEdited ?? false,
+    ...stored,
     hintKey: seed.hintKey,
     labelKey: def.labelKey,
     public: seed.is_public,
-    version: row?.version ?? 0,
-    ...changedBy(row, names),
+    ...changedBy(parts.row, names),
     ownedBy: ownerOf(seed.key),
     confirm: seed.confirm,
-    retired: seed.retired || (row?.retiredAt ?? null) !== null,
+    retired: seed.retired || retiredAt !== null,
   };
 }
 

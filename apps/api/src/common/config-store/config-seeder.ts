@@ -21,6 +21,18 @@ type SeedLog = Pick<Logger, 'log' | 'warn' | 'error'>;
 const asOutcome = (data: unknown): SeedOutcome =>
   data !== null && typeof data === 'object' && !Array.isArray(data) ? (data as SeedOutcome) : {};
 
+/** One log line per run: skipped (and why), or applied with the failed keys (a warning when any). */
+function report(out: SeedOutcome, log: SeedLog): void {
+  if (out.skipped !== undefined) {
+    const stored = out.stored === undefined ? '' : ` (stored registry ${out.stored})`;
+    log.log(`config seed skipped: ${out.skipped}${stored}`);
+    return;
+  }
+  const failed = out.failed ?? [];
+  if (failed.length > 0) log.warn(`config seed applied ${out.applied ?? 0}, failed: ${failed.join(', ')}`);
+  else log.log(`config seed applied ${out.applied ?? 0}, failed none`);
+}
+
 /**
  * One config_seed call (docs/26 §2b): SEED_ENTRIES' metadata, with the BUNDLED Arabic hint (ar.json,
  * never the overrides) as description_seed, and REGISTRY_VERSION. It carries no value: the RPC never
@@ -32,9 +44,7 @@ export async function runConfigSeed(db: Db, log: SeedLog = new Logger('ConfigSee
     const { data, error } = await db.rpc('config_seed', { entries, registry_version: REGISTRY_VERSION });
     if (error) throw new Error(error.message);
     const out = asOutcome(data);
-    if (out.skipped !== undefined) log.log(`config seed skipped: ${out.skipped}${out.stored === undefined ? '' : ` (stored registry ${out.stored})`}`);
-    else if ((out.failed ?? []).length > 0) log.warn(`config seed applied ${out.applied ?? 0}, failed: ${(out.failed ?? []).join(', ')}`);
-    else log.log(`config seed applied ${out.applied ?? 0}, failed none`);
+    report(out, log);
     return out;
   } catch (e) {
     log.error(`config seed failed: ${e instanceof Error ? e.message : String(e)}`);
