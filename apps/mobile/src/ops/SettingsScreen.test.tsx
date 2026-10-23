@@ -3,6 +3,7 @@ import { ApiError } from '@/lib/api';
 import { t } from '@/lib/i18n';
 import { renderWithQuery } from '@/test/query';
 import { catalogue, settings } from './fixtures';
+import { numbersAnswer } from './numbers-fixtures';
 import { SettingsScreen } from './SettingsScreen';
 
 const mockApiFetch = jest.fn();
@@ -18,7 +19,7 @@ jest.mock('expo-router', () => ({
 
 beforeEach(() => {
   jest.clearAllMocks();
-  mockApiFetch.mockImplementation(async (p: string) => (p === '/admin/notifications' ? catalogue : settings));
+  mockApiFetch.mockImplementation(async (p: string) => numbersAnswer(p) ?? (p === '/admin/notifications' ? catalogue : settings));
 });
 
 const box = (label: string) => screen.findByLabelText(label);

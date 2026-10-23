@@ -32,16 +32,17 @@ const isRegistrySection = (id: string): id is (typeof SETTINGS_SECTIONS)[number]
 const rendered = (id: string): SettingKey[] => (isRegistrySection(id) ? FORM_KEYS.filter((k) => settingSection(k) === id) : []);
 
 describe('PAGE_SECTIONS (the order of /admin/settings)', () => {
-  it('ids in the legacy order: the nine registry sections, then integrations, then custom', () => {
+  it('ids in the legacy order: the nine registry sections, then numbers, integrations, then custom', () => {
     expect(PAGE_SECTIONS.map((s) => s.id)).toEqual([
-      'messaging', 'schedule', 'classroom', 'reports', 'accounts', 'uploads', 'academy', 'sales', 'appearance', 'integrations', 'custom',
+      'messaging', 'schedule', 'classroom', 'reports', 'accounts', 'uploads', 'academy', 'sales', 'appearance', 'numbers', 'integrations', 'custom',
     ]);
     expect(PAGE_SECTIONS.slice(0, 9).map((s) => s.id)).toEqual([...SETTINGS_SECTIONS]);
   });
 
-  it('labels as the legacy index had them (registry section titles, EXTRA_NAV for the last two)', () => {
+  it('labels as the legacy index had them (registry section titles, then numbers, integrations and custom)', () => {
     expect(PAGE_SECTIONS.map((s) => s.label)).toEqual([
       ...SETTINGS_SECTIONS.map((s) => t.settings.sections[s]),
+      t.numbers.title,
       t.integrations.title,
       t.config.sections.custom,
     ]);
@@ -72,5 +73,11 @@ describe('PAGE_SECTIONS (the order of /admin/settings)', () => {
     expect(at('custom')?.matches('promo', [entry])).toBe(true);
     expect(at('custom')?.matches('promo', [])).toBe(false);
     expect(PAGE_SECTIONS.filter((s) => s.id !== 'custom').every((s) => s.matches('', []))).toBe(true);
+  });
+
+  it('«الأرقام» is found by its words, and not by others', () => {
+    const numbers = PAGE_SECTIONS.find((s) => s.id === 'numbers');
+    expect(numbers?.matches(t.numbers.import.title, [])).toBe(true);
+    expect(numbers?.matches('zzzz-nothing', [])).toBe(false);
   });
 });

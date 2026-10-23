@@ -3,6 +3,7 @@ import { screen } from '@testing-library/react-native';
 import { t } from '@/lib/i18n';
 import { renderWithQuery } from '@/test/query';
 import { catalogue as mockCatalogue, settings as mockSettings } from './fixtures';
+import { numbersAnswer as mockNumbersAnswer } from './numbers-fixtures';
 import { SettingsScreen } from './SettingsScreen';
 
 jest.mock('react-native/Libraries/ReactNative/I18nManager', () => {
@@ -12,7 +13,7 @@ jest.mock('react-native/Libraries/ReactNative/I18nManager', () => {
 });
 jest.mock('@/lib/api', () => ({
   ...jest.requireActual('@/lib/api'),
-  apiFetch: async (p: string) => (p === '/admin/notifications' ? mockCatalogue : mockSettings),
+  apiFetch: async (p: string) => mockNumbersAnswer(p) ?? (p === '/admin/notifications' ? mockCatalogue : mockSettings),
 }));
 jest.mock('expo-router', () => ({ router: { back: jest.fn(), canGoBack: () => true } }));
 

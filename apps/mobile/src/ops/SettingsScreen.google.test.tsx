@@ -2,6 +2,7 @@ import { screen } from '@testing-library/react-native';
 import { t } from '@/lib/i18n';
 import { renderWithQuery } from '@/test/query';
 import { catalogue, settings } from './fixtures';
+import { numbersAnswer } from './numbers-fixtures';
 import { googleLive } from './google-status.fixtures';
 import { SettingsScreen } from './SettingsScreen';
 
@@ -16,7 +17,8 @@ jest.mock('expo-router', () => ({
 
 const answer = (permissions: string[]) => (path: string) =>
   Promise.resolve(
-    path === '/auth/me' ? { role: 'admin', permissions } : path === '/admin/google/status' ? googleLive : path === '/admin/notifications' ? catalogue : settings,
+    numbersAnswer(path) ??
+      (path === '/auth/me' ? { role: 'admin', permissions } : path === '/admin/google/status' ? googleLive : path === '/admin/notifications' ? catalogue : settings),
   );
 
 beforeEach(() => jest.clearAllMocks());

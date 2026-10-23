@@ -12,3 +12,9 @@ export const CONFIG_QUERY_KEYS = {
   settingsMeta: ['config', 'meta'],
   customConfig: ['config', 'custom'],
 } as const;
+
+/** «الأرقام» (docs/23 §3 phase 3): the numbers (GET /admin/numbers) and the parity (GET /admin/communications/parity). */
+export const NUMBERS_QUERY_KEYS = {
+  numbers: ['admin', 'numbers'],
+  parity: ['admin', 'communications', 'parity'],
+} as const;

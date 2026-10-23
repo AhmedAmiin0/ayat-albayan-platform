@@ -2271,6 +2271,7 @@ export type Database = {
           media_id: string | null;
           media_mime: string | null;
           media_name: string | null;
+          number_id: string | null;
           media_path: string | null;
           next_attempt_at: string | null;
           phone_e164: string;
@@ -2308,6 +2309,7 @@ export type Database = {
           media_id?: string | null;
           media_mime?: string | null;
           media_name?: string | null;
+          number_id?: string | null;
           media_path?: string | null;
           next_attempt_at?: string | null;
           phone_e164: string;
@@ -2345,6 +2347,7 @@ export type Database = {
           media_id?: string | null;
           media_mime?: string | null;
           media_name?: string | null;
+          number_id?: string | null;
           media_path?: string | null;
           next_attempt_at?: string | null;
           phone_e164?: string;
@@ -2417,6 +2420,13 @@ export type Database = {
             isOneToOne: false;
             referencedRelation: 'v_threads';
             referencedColumns: ['teacher_id'];
+          },
+          {
+            foreignKeyName: 'messages_number_id_fkey';
+            columns: ['number_id'];
+            isOneToOne: false;
+            referencedRelation: 'wa_numbers';
+            referencedColumns: ['id'];
           },
         ];
       };
@@ -3719,6 +3729,7 @@ export type Database = {
           checked_at: string;
           display_phone_e164: string | null;
           line: Database['public']['Enums']['wa_line'];
+          phone_number_id: string | null;
           updated_at: string;
           verified_name: string | null;
         };
@@ -3726,6 +3737,7 @@ export type Database = {
           checked_at: string;
           display_phone_e164?: string | null;
           line: Database['public']['Enums']['wa_line'];
+          phone_number_id?: string | null;
           updated_at?: string;
           verified_name?: string | null;
         };
@@ -3733,8 +3745,63 @@ export type Database = {
           checked_at?: string;
           display_phone_e164?: string | null;
           line?: Database['public']['Enums']['wa_line'];
+          phone_number_id?: string | null;
           updated_at?: string;
           verified_name?: string | null;
+        };
+        Relationships: [];
+      };
+      wa_numbers: {
+        Row: {
+          app_id: string | null;
+          checked_at: string | null;
+          created_at: string;
+          display_phone_e164: string | null;
+          enabled: boolean;
+          health: Json | null;
+          id: string;
+          is_default: boolean;
+          label: string;
+          phone_number_id: string;
+          provider: string;
+          purpose: Database['public']['Enums']['wa_line'];
+          updated_at: string;
+          updated_by: string | null;
+          waba_id: string | null;
+        };
+        Insert: {
+          app_id?: string | null;
+          checked_at?: string | null;
+          created_at?: string;
+          display_phone_e164?: string | null;
+          enabled?: boolean;
+          health?: Json | null;
+          id?: string;
+          is_default?: boolean;
+          label: string;
+          phone_number_id: string;
+          provider?: string;
+          purpose: Database['public']['Enums']['wa_line'];
+          updated_at?: string;
+          updated_by?: string | null;
+          waba_id?: string | null;
+        };
+        Update: {
+          app_id?: string | null;
+          checked_at?: string | null;
+          created_at?: string;
+          display_phone_e164?: string | null;
+          enabled?: boolean;
+          health?: Json | null;
+          id?: string;
+          is_default?: boolean;
+          label?: string;
+          phone_number_id?: string;
+          provider?: string;
+          purpose?: Database['public']['Enums']['wa_line'];
+          updated_at?: string;
+          updated_by?: string | null;
+          waba_id?: string | null;
         };
         Relationships: [];
       };
@@ -4186,6 +4253,15 @@ export type Database = {
         };
       };
       integration_secret_clear: { Args: { p_key: string }; Returns: boolean };
+      wa_number_delete: { Args: { p_id: string }; Returns: boolean };
+      wa_number_make_default: { Args: { p_id: string; p_actor: string | null }; Returns: boolean };
+      wa_number_secret_clear: { Args: { p_id: string; p_name: string }; Returns: boolean };
+      wa_number_secret_copy: { Args: { p_id: string; p_name: string; p_key: string }; Returns: boolean };
+      wa_number_secret_name_ok: { Args: { p_name: string }; Returns: boolean };
+      wa_number_secret_read: { Args: { p_id: string }; Returns: { name: string; value: string }[] };
+      wa_number_secret_set: { Args: { p_id: string; p_name: string; p_value: string }; Returns: undefined };
+      wa_number_secret_status: { Args: Record<PropertyKey, never>; Returns: { number_id: string; name: string; updated_at: string }[] };
+      wa_number_secret_vault_name: { Args: { p_id: string; p_name: string }; Returns: string };
       integration_secret_key_ok: { Args: { p_key: string }; Returns: boolean };
       integration_secret_set: { Args: { p_key: string; p_value: string }; Returns: undefined };
       google_sync_claim: {

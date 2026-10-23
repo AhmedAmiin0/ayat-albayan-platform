@@ -1,6 +1,7 @@
 import { WA_LINES } from '@ab/shared';
 import { Global, Logger, Module, type OnModuleInit } from '@nestjs/common';
 import { IntegrationConfigModule } from '../../common/integrations/integration-config.module';
+import { NumbersModule } from '../numbers/numbers.module';
 import { bootGaps, lineProvider, loadEnv } from '../../env';
 import { InboundMedia } from './inbound-media.service';
 import { InboundMediaQueries } from './inbound-media.queries';
@@ -43,8 +44,9 @@ function lines(): WhatsappLines {
  */
 @Global()
 @Module({
-  // Imported (though global) so the database's config is loaded before onModuleInit below.
-  imports: [IntegrationConfigModule],
+  // Imported (though global) so the database's config is loaded before onModuleInit below; NumbersModule
+  // so the numbers config (comms_source, docs/23 phase 3) is loaded before it too.
+  imports: [IntegrationConfigModule, NumbersModule],
   controllers: [TemplatesController, MessagesController, LinesController],
   providers: [
     { provide: WHATSAPP_LINES, useFactory: lines },

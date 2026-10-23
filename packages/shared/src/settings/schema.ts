@@ -36,7 +36,7 @@ export function settingZod(def: SettingDef): z.ZodType {
 }
 
 const shape = Object.fromEntries(
-  SETTING_KEYS.map((k) => [SETTING_FIELD_OF[k], settingZod(SETTINGS_REGISTRY[k]).optional()]),
+  SETTING_KEYS.filter((k) => (SETTINGS_REGISTRY[k] as SettingDef).patch !== false).map((k) => [SETTING_FIELD_OF[k], settingZod(SETTINGS_REGISTRY[k]).optional()]),
 );
 
 /** PATCH /settings (admin), generated from the registry: camelCase fields, each optional. */

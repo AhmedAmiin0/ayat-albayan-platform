@@ -56,7 +56,7 @@ const NEW_NAMES = [
 
 /** Every registry key with today's default (the migrations seed the same values). */
 const DEFAULTS_LITERAL = Object.freeze({
-  messaging_enabled: false, auto_messages_enabled: false, crm_cutover_done: false, feedback_mode: 'buttons',
+  messaging_enabled: false, auto_messages_enabled: false, crm_cutover_done: false, comms_source: 'legacy', feedback_mode: 'buttons',
   reminder_minutes_before: 60, reminder_24h_enabled: false, teacher_whatsapp_new_student: true,
   teacher_whatsapp_lesson_reminder: true, follow_up_hours: [24, 72], reminder_lookahead_hours: 25,
   follow_up_slots_from_hours: 12, follow_up_slots_to_days: 7, quick_reply_window_hours: 48,
@@ -77,9 +77,9 @@ describe('@ab/shared export surface (settings, custom config, integrations, goog
     expect(surface[name]).toBeDefined();
   });
 
-  it('SETTING_DEFAULTS holds the 39 keys with today\'s values', () => {
-    expect(Object.keys(DEFAULTS_LITERAL)).toHaveLength(39);
-    expect(root.SETTING_KEYS).toHaveLength(39);
+  it('SETTING_DEFAULTS holds the 40 keys with today\'s values', () => {
+    expect(Object.keys(DEFAULTS_LITERAL)).toHaveLength(40);
+    expect(root.SETTING_KEYS).toHaveLength(40);
     expect(root.SETTING_DEFAULTS).toEqual(DEFAULTS_LITERAL);
   });
 

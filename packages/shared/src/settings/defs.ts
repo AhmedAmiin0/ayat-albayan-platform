@@ -11,6 +11,8 @@ interface Base {
   public?: boolean;
   /** false: the page shows it with its own control (a switch with a confirmation), not the generic field. */
   form?: boolean;
+  /** false: PATCH /settings ignores it; only its own guarded endpoint writes it (comms_source). */
+  patch?: boolean;
 }
 
 /** A whole number in [min, max]. nullable: null = the policy is OFF (late_cancel_hours). */

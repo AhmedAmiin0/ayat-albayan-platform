@@ -82,13 +82,14 @@ export class SenderQueries {
    * is never recorded (the «sent» write failed, the process died) the next pass sees SENDING and
    * asks the admin instead of sending again. null when another worker (or the admin) got there first.
    * `line` (two lines only, docs/12 §13.2) stamps the line used; absent = the update is unchanged.
+   * `numberId` (module mode only, docs/23 phase 3) stamps messages.number_id; absent under legacy.
    */
-  async claim(input: { id: string; attempts: number; now: Date; line?: WaLine }): Promise<number | null> {
+  async claim(input: { id: string; attempts: number; now: Date; line?: WaLine; numberId?: string }): Promise<number | null> {
     const attempts = input.attempts + 1;
     const lease = new Date(input.now.getTime() + CLAIM_LEASE_MS).toISOString();
     const { data, error } = await this.db
       .from('messages')
-      .update({ attempts, next_attempt_at: lease, error_code: SENDING, ...(input.line ? { line: input.line } : {}) })
+      .update({ attempts, next_attempt_at: lease, error_code: SENDING, ...(input.line ? { line: input.line } : {}), ...(input.numberId ? { number_id: input.numberId } : {}) })
       .eq('id', input.id)
       .eq('status', 'queued')
       .eq('attempts', input.attempts)

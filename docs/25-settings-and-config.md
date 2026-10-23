@@ -114,10 +114,19 @@ Add it to the schema in `apps/api/src/env.ts` (blank = unset through `env.blank.
 
 `google_sync_enabled`, `google_sync_mode` and `google_calendar_window_days` are `public.settings` rows outside the registry (`GOOGLE_SETTING_KEYS`, `packages/shared/src/google/settings-keys.ts`, seeded by migration `20261022000610`). `GET`/`PATCH /settings` never list them; only `PUT /admin/google/settings` (admin, `settings.write`) writes them. `settings-keys.test.ts` keeps them disjoint from the registry. Folding them into the registry would change the `/settings` payloads and audit rows, so it is left out on purpose.
 
+## 6a. A registry row with its own guarded writer
+
+`comms_source` (docs/23 phase 3, `settings/domains/messaging.ts`) is a registry entry with `form: false` and
+`patch: false`: `GET /settings` lists it, but `settingsUpdateSchema` leaves it out, so `PATCH /settings`
+drops it. Its only writer is `POST /admin/communications/source` (`numbers.manage`), through
+`NumbersSettings.writeSource` (`modules/numbers/numbers.settings.ts`), which refuses `module` while
+`GET /admin/communications/parity` lists a difference. It never reads or writes `messaging_enabled`.
+
 ## 7. Refresh periods
 
 - Settings: `SettingsService` caches every row for `SETTINGS_CACHE_MS` (default 30 s; e2e 0) and clears the cache on its own writes.
 - Integrations: `IntegrationConfigService` reloads at boot, after each admin save and every `integrationRefreshMs(env)`: `INTEGRATION_REFRESH_MS` when set, else `SETTINGS_CACHE_MS` (at least 1 s); never when `INTEGRATION_CONFIG_FROM_DB=false`.
+- Numbers (docs/23 phase 3): `NumbersConfig` reloads `comms_source` and, in module mode only, the default numbers and their Vault secrets at boot, on the integration refresh period and after every numbers write; never when `INTEGRATION_CONFIG_FROM_DB=false`.
 - Public config: the clients keep `['settings','public']` for 5 minutes; the API answers with `max-age=60`.
 
 ## 8. Where the e2e settings writers live
