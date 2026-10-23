@@ -21,12 +21,17 @@ export function ValuesEmpty({ onClear }: { onClear: () => void }) {
   );
 }
 
-/** The settings could not load: an inline alert and «أعد المحاولة»; nothing is editable. */
-export function ValuesLoadError({ onRetry }: { onRetry: () => void }) {
+/** A group with no rows (an empty «قيم مخصصة»): one sentence, not a table of headers only. */
+export function GroupEmpty() {
+  return <EmptyState title={v.groupEmpty} />;
+}
+
+/** The settings (or the custom values) could not load: an inline alert and «أعد المحاولة»; nothing is editable. */
+export function ValuesLoadError({ onRetry, message = v.loadError }: { onRetry: () => void; message?: string }) {
   return (
     <div role="alert" className="flex flex-wrap items-center gap-3 rounded-md bg-danger-soft px-3 py-2.5 text-sm text-ink">
       <NuqtaGlyph shape="struck" className="text-danger" />
-      <span>{v.loadError}</span>
+      <span>{message}</span>
       <Button size="sm" variant="secondary" onClick={onRetry}>
         {v.retry}
       </Button>

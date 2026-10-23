@@ -3,7 +3,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useCallback, useState } from 'react';
 import { CONFIG_QUERY_KEYS } from '@/lib/query-keys';
 import { updateSettings } from '@/lib/settings-api';
-import { serverMessage, wasMoved } from './save-result';
+import { serverMessage, wasInvalid, wasMoved } from './save-result';
 
 export type RowStatus =
   | { state: 'idle' }
@@ -18,6 +18,8 @@ export interface RowSaves {
   status: (key: SettingKey) => RowStatus;
   /** One PATCH /settings with this one key; rows save independently of each other. */
   run: (key: SettingKey, body: SettingsUpdate) => Promise<SaveEnd>;
+  /** Forgets a failed save (the row was edited or put back), so no stale «أعد المحاولة» stays. */
+  clearFailed: (key: SettingKey) => void;
 }
 
 /**
@@ -38,6 +40,11 @@ export function useRowSaves(): RowSaves {
           set(key, { state: 'moved' });
           return 'moved';
         }
+        // Refused by the server's own checks: a failed save (the edit stays, «أعد المحاولة»).
+        if (wasInvalid(res, key)) {
+          set(key, { state: 'failed' });
+          return 'failed';
+        }
         await Promise.all([
           queryClient.invalidateQueries({ queryKey: CONFIG_QUERY_KEYS.settings }),
           queryClient.invalidateQueries({ queryKey: CONFIG_QUERY_KEYS.settingsMeta }),
@@ -52,5 +59,9 @@ export function useRowSaves(): RowSaves {
     },
     [queryClient, set],
   );
-  return { status: (key) => statuses[key] ?? IDLE, run };
+  const clearFailed = useCallback(
+    (key: SettingKey) => setStatuses((all) => (all[key]?.state === 'failed' ? { ...all, [key]: IDLE } : all)),
+    [],
+  );
+  return { status: (key) => statuses[key] ?? IDLE, run, clearFailed };
 }

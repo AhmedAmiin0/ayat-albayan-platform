@@ -54,6 +54,18 @@ export const asideLayout: DialogLayout = {
   hint: `${hint} max-sm:empty:hidden`,
 };
 
+/**
+ * `layout: 'sheet'`: a BOTTOM sheet on phones (one value to edit: the page stays visible above it,
+ * rounded top corners, as tall as its content up to 85% of the screen, the body scrolls). From `sm`
+ * the floating card in the middle, like `center`.
+ */
+export const bottomSheetLayout: DialogLayout = {
+  ...sheetLayout,
+  overlay: 'fixed inset-0 z-50 flex animate-fade-in flex-col justify-end bg-scrim sm:grid sm:place-items-center sm:overflow-y-auto sm:p-6',
+  phone: 'max-sm:max-h-[85dvh] max-sm:max-w-none max-sm:animate-fade-up max-sm:rounded-t-lg max-sm:rounded-b-none max-sm:border-x-0 max-sm:border-b-0',
+  header: 'max-sm:border-b max-sm:border-rule max-sm:bg-card max-sm:px-4 max-sm:pt-4 max-sm:pb-3',
+};
+
 export const compactLayout: DialogLayout = {
   overlay:
     'fixed inset-0 z-50 grid animate-fade-in place-items-start overflow-y-auto bg-scrim p-3 pt-[max(0.75rem,env(safe-area-inset-top))] sm:place-items-center sm:p-6',
@@ -68,7 +80,7 @@ export const compactLayout: DialogLayout = {
 
 export interface LayoutOptions {
   compact?: boolean;
-  layout?: 'aside' | 'center';
+  layout?: 'aside' | 'center' | 'sheet';
   /** Aside only: a 720px panel for big forms (two columns of fields). */
   wide?: boolean;
 }
@@ -77,5 +89,6 @@ export interface LayoutOptions {
 export function pickLayout({ compact, layout, wide }: LayoutOptions): DialogLayout {
   if (compact) return compactLayout;
   if (layout === 'center') return sheetLayout;
+  if (layout === 'sheet') return bottomSheetLayout;
   return wide ? { ...asideLayout, panel: `${asideLayout.panel} sm:max-w-[720px]` } : asideLayout;
 }

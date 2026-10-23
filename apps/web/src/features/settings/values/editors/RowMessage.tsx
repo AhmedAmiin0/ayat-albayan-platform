@@ -28,7 +28,7 @@ export function RowMessage({ settingKey, ids }: { settingKey: SettingKey; ids: R
           <NuqtaGlyph shape="struck" />
           <span>{v.saveError}</span>
           {status.message && <span className="text-ink-2">{status.message}</span>}
-          <button type="button" className="min-h-8 font-semibold text-lapis underline underline-offset-4" onClick={() => api.save(settingKey)}>
+          <button type="button" className="min-h-11 font-semibold text-lapis underline underline-offset-4 sm:min-h-8" onClick={() => api.save(settingKey)}>
             {v.retry}
           </button>
         </p>

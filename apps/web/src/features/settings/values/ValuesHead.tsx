@@ -4,8 +4,8 @@ import { Cartouche } from '@/components/ui/cartouche';
 import { Icon } from '@/components/ui/icon';
 import { NuqtaGlyph } from '@/components/ui/nuqta-glyph';
 import { PageHead } from '@/components/ui/page';
-import { StatusChip } from '@/components/ui/status-chip';
 import { t } from '@/lib/i18n';
+import { Tag } from './cells/NameCell';
 
 const v = t.settingsValues;
 
@@ -31,7 +31,7 @@ export function ValuesHead({ canWrite, counts, unsaved, onUnsaved, onAdd, phone 
     <>
       <PageHead className="mb-3">
         <Cartouche>{v.title}</Cartouche>
-        {!canWrite && <StatusChip tone="neutral" glyph="struck" label={v.readOnly} />}
+        {!canWrite && <Tag label={v.readOnly} />}
         {summary && <span className="text-sm text-ink-3">{summary}</span>}
         {!phone && unsaved > 0 && (
           <button type="button" onClick={onUnsaved} className="inline-flex items-center gap-1.5 text-sm font-semibold text-lapis underline underline-offset-4">
@@ -48,7 +48,8 @@ export function ValuesHead({ canWrite, counts, unsaved, onUnsaved, onAdd, phone 
           </div>
         )}
       </PageHead>
-      {!canWrite && <p className="mb-4 rounded-md bg-sunk px-3 py-2 text-sm text-ink-2">{v.readOnlyNote}</p>}
+      {/* Desktop: the tag says it. Phones also get the sentence, under the head. */}
+      {!canWrite && phone && <p className="mb-4 rounded-md bg-sunk px-3 py-2 text-sm text-ink-2">{v.readOnlyNote}</p>}
     </>
   );
 }

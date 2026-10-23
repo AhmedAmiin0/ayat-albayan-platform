@@ -1,8 +1,15 @@
 import { settingDef, VALUE_CONFIRM, type SettingKey } from '@ab/shared';
-import { StatusChip } from '@/components/ui/status-chip';
+import { NuqtaGlyph } from '@/components/ui/nuqta-glyph';
 import { t } from '@/lib/i18n';
 
 const tags = t.settingsValues.tags;
+
+/** A registry tag: plain and neutral (no status colour: a tag describes the value, it is not a state). */
+export const tagClass = 'inline-flex h-5 items-center whitespace-nowrap rounded-xs border border-rule-strong px-1.5 text-2xs font-semibold text-ink-2';
+
+export function Tag({ label }: { label: string }) {
+  return <span className={tagClass}>{label}</span>;
+}
 
 export interface NameCellProps {
   label: string;
@@ -26,10 +33,15 @@ export function NameCell({ label, labelId, hint, settingKey, modified, isPublic,
         <span id={labelId} className="text-sm font-semibold text-ink">
           {label}
         </span>
-        {shown && <StatusChip size="sm" tone="neutral" glyph="hollow" label={tags.public} />}
-        {confirm === 'plain' && <StatusChip size="sm" tone="act" glyph="hollow" label={tags.confirm} />}
-        {confirm === 'typed' && <StatusChip size="sm" tone="bad" glyph="struck" label={tags.deletes} />}
-        {modified && <StatusChip size="sm" tone="ok" glyph="half" label={tags.modified} />}
+        {shown && <Tag label={tags.public} />}
+        {confirm === 'plain' && <Tag label={tags.confirm} />}
+        {confirm === 'typed' && <Tag label={tags.deletes} />}
+        {modified && (
+          <span className="inline-flex items-center gap-1 text-2xs whitespace-nowrap text-ink-2">
+            <NuqtaGlyph shape="half" />
+            {tags.modified}
+          </span>
+        )}
       </div>
       {groupName && <span className="text-2xs font-semibold text-ink-2">{groupName}</span>}
       {hint && (

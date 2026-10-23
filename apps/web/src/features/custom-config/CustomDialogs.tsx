@@ -7,8 +7,12 @@ import { CustomEntryForm } from './CustomEntryForm';
 import type { CustomValues } from './use-custom-values';
 
 const c = t.config.custom;
+const p = t.settingsValues.customPublic;
 
-/** «أضف قيمة» / «عدّل» in a dialog (the same validated form), and the delete confirmation («نعم، احذفها»). */
+/**
+ * «أضف قيمة» / «عدّل» in a dialog (the same validated form), the question before a value becomes
+ * public («ستظهر هذه القيمة لأي زائر قبل تسجيل الدخول»), and the delete confirmation («نعم، احذفها»).
+ */
 export function CustomDialogs({ custom }: { custom: CustomValues }) {
   const { editing, deleting } = custom;
   return (
@@ -19,10 +23,29 @@ export function CustomDialogs({ custom }: { custom: CustomValues }) {
             initial={editing.mode === 'edit' ? draftOf(editing.entry) : emptyDraft()}
             editing={editing.mode === 'edit'}
             saving={custom.save.isPending}
-            onSave={(input) => custom.save.mutate(input)}
+            onSave={custom.submit}
             onCancel={custom.closeEdit}
           />
           {custom.save.isError && <FormAlert className="mt-3">{t.common.error}</FormAlert>}
+        </Dialog>
+      )}
+      {custom.publicAsk && (
+        <Dialog
+          compact
+          title={p.title}
+          glyph={{ tone: 'neutral', shape: 'hollow' }}
+          description={p.body}
+          onClose={custom.cancelPublic}
+          actions={
+            <>
+              <Button variant="secondary" data-autofocus onClick={custom.cancelPublic}>
+                {t.common.cancel}
+              </Button>
+              <Button onClick={custom.confirmPublic}>{p.yes}</Button>
+            </>
+          }
+        >
+          {null}
         </Dialog>
       )}
       {deleting && (

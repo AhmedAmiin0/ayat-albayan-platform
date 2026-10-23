@@ -36,7 +36,7 @@ describe('«القيم» — each row saves on its own', () => {
     expect((within(row).getByLabelText(HORIZON) as HTMLInputElement).disabled).toBe(true);
     answer(SETTINGS);
     const toast = await screen.findByText(v.saved);
-    expect(within(toast.closest('[role=status]') as HTMLElement).getByRole('button', { name: v.undo })).toBeTruthy();
+    expect(within(toast.closest('[data-undo-toast]') as HTMLElement).getByRole('button', { name: v.undo })).toBeTruthy();
   });
 
   it('saving row A never resets dirty row B, and edits survive a group switch', async () => {
@@ -67,6 +67,9 @@ describe('«القيم» — each row saves on its own', () => {
     expect(within(row).getByText(message)).toBeTruthy();
     expect(input.getAttribute('aria-invalid')).toBe('true');
     expect(input.getAttribute('aria-describedby')).toContain(within(row).getByText(message).closest('p')?.id ?? 'x');
+    // Named by aria-label, not by a visually hidden span (a browser reads that span as a block and
+    // spaces it, «حفظ : …», so the e2e's exact «حفظ: …» found nothing).
+    expect(saveOf(row).getAttribute('aria-label')).toBe(`${t.common.save}: ${HORIZON}`);
     fireEvent.click(saveOf(row));
     expect(saveOf(row).getAttribute('aria-disabled')).toBe('true');
     expect(apiSend).not.toHaveBeenCalled();
@@ -84,14 +87,16 @@ describe('«القيم» — each row saves on its own', () => {
     await waitFor(() => expect(apiSend).toHaveBeenCalledTimes(2));
   });
 
-  it('a key the API moved keeps the edit and says «تُدار من صفحة أخرى»', async () => {
+  it('a key the API moved drops the edit: the row is text with «تُدار من صفحة أخرى», nothing unsaved', async () => {
     apiSend.mockResolvedValue({ saved: [], moved: ['bookingHorizonWeeks'] });
     renderValues(apiFetch);
     const row = await findRow(HORIZON);
     fireEvent.change(within(row).getByLabelText(HORIZON), { target: { value: '8' } });
     fireEvent.click(saveOf(row));
     expect(await within(row).findByText(v.moved)).toBeTruthy();
-    expect(within(row).getByText(v.unsavedRow)).toBeTruthy();
+    expect(within(row).queryByText(v.unsavedRow)).toBeNull();
+    expect(within(row).queryByRole('spinbutton')).toBeNull();
+    expect(screen.queryByRole('button', { name: new RegExp(v.unsaved.one) })).toBeNull();
     expect(screen.queryByText(v.saved)).toBeNull();
   });
 

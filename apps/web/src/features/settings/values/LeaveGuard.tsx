@@ -22,7 +22,7 @@ export function LeaveGuard({ names }: { names: readonly string[] }) {
     <Dialog
       compact
       title={l.title}
-      glyph={{ tone: 'act', shape: 'hollow' }}
+      glyph={{ tone: 'neutral', shape: 'hollow' }}
       description={l.body.replace('{names}', names.map((n) => `«${n}»`).join(t.common.listSeparator))}
       onClose={blocker.reset}
       actions={

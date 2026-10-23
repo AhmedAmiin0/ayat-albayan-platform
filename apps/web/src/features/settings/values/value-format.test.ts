@@ -15,6 +15,14 @@ describe('value words', () => {
     expect(unitWord('reporting_currency')).toBeUndefined();
   });
 
+  it('the unit beside a number agrees with it («5 أسابيع», not «5 أسبوع»)', () => {
+    expect(unitWord('booking_horizon_weeks', 5)).toBe(v.units.weeks.few.replace('{n}', '').trim());
+    expect(unitWord('booking_horizon_weeks', 12)).toBe(v.units.weeks.other.replace('{n}', '').trim());
+    expect(unitWord('booking_horizon_weeks', 1)).toBe(v.units.weeks.unit);
+    expect(unitWord('booking_horizon_weeks', Number.NaN)).toBe(v.units.weeks.unit);
+    expect(t.settingsValues.units.weeks.few).toContain('أسابيع');
+  });
+
   it('writes each type as text', () => {
     expect(valueText('teachers_always_available', true)).toBe(v.on);
     expect(valueText('late_cancel_hours', null)).toBe(v.off);

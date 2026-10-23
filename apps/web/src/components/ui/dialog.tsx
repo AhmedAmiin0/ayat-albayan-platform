@@ -30,9 +30,10 @@ export interface DialogProps {
   compact?: boolean;
   /**
    * From 640px: `aside` (default) is a full-height panel at the inline-end for forms; `center` the
-   * floating card, for wide or visual content (side-by-side comparison, receipt, media picker).
+   * floating card, for wide or visual content (side-by-side comparison, receipt, media picker);
+   * `sheet` a bottom sheet on phones (one short editor) and the floating card from 640px.
    */
-  layout?: 'aside' | 'center';
+  layout?: 'aside' | 'center' | 'sheet';
   /** Aside only: a 720px panel instead of 520px, for big two-column forms. */
   wide?: boolean;
 }

@@ -5469,7 +5469,8 @@
       "typedBody": "On saving, data older than this is deleted for good and cannot be restored.",
       "typedLabel": "To confirm, type the number of days: {n}",
       "typedYes": "Save and delete data",
-      "logged": "The change is recorded in the activity log."
+      "logged": "The change is recorded in the activity log.",
+      "typedTitleCount": "Delete data older than {count}?"
     },
     "leave": {
       "title": "Leave the page?",
@@ -5531,6 +5532,27 @@
         "few": "{n} MB",
         "other": "{n} MB",
         "unit": "MB"
+      }
+    },
+    "restorePrevious": "Restore the previous value",
+    "customDelete": "Delete the value…",
+    "customPublic": {
+      "title": "Make the value public?",
+      "body": "This value will be shown to any visitor before signing in.",
+      "yes": "Make it public and save"
+    },
+    "confirmYes": {
+      "teachersAlwaysAvailable": {
+        "on": "Make every teacher bookable",
+        "off": "Stop making every teacher bookable"
+      },
+      "meetingLinkAuto": {
+        "on": "Turn on the automatic link",
+        "off": "Turn off the automatic link"
+      },
+      "salesAutoAssign": {
+        "on": "Turn on automatic assignment",
+        "off": "Turn off automatic assignment"
       }
     }
   },

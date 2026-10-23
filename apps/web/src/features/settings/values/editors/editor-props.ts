@@ -30,4 +30,4 @@ export const describedBy = (...ids: (string | false | undefined)[]): string | un
 
 /** Table editors are dense from 640px; the sheet keeps the stock 44px / 16px control. */
 export const denseClass = (sheet: boolean | undefined, width: string): string =>
-  cn(sheet ? 'w-full' : cn(width, 'sm:h-8 sm:min-h-8'));
+  cn(sheet ? 'w-full' : cn(width, 'max-w-full sm:h-8 sm:min-h-8'));
