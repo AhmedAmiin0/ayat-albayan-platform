@@ -3,8 +3,8 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Dialog } from '@/components/ui/dialog';
-import { settingsQuery } from '@/features/messaging/api';
 import { t } from '@/lib/i18n';
+import { settingsQuery } from '@/lib/settings-api';
 import { setFollowUpPaused, type InboxLead } from './api';
 import { fullTime } from './format';
 

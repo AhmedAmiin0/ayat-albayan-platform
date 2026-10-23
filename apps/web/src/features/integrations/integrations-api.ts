@@ -1,10 +1,11 @@
 import type { IntegrationConfigItem, IntegrationPlainKey, IntegrationSecretKey } from '@ab/shared';
 import { queryOptions } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@/lib/api';
+import { CONFIG_QUERY_KEYS } from '@/lib/query-keys';
 
 /** GET /settings/integrations (admin): every key, its source; a secret's value is always null. */
 export const integrationsQuery = queryOptions({
-  queryKey: ['settings', 'integrations'],
+  queryKey: CONFIG_QUERY_KEYS.integrations,
   queryFn: () => apiFetch<IntegrationConfigItem[]>('/settings/integrations'),
 });
 

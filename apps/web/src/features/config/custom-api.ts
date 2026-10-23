@@ -1,10 +1,11 @@
 import type { CustomConfigUpsert, CustomConfigView } from '@ab/shared';
 import { queryOptions } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@/lib/api';
+import { CONFIG_QUERY_KEYS } from '@/lib/query-keys';
 
 /** GET /config/custom (admin): the free-form entries. */
 export const customConfigQuery = queryOptions({
-  queryKey: ['config', 'custom'],
+  queryKey: CONFIG_QUERY_KEYS.customConfig,
   queryFn: () => apiFetch<CustomConfigView[]>('/config/custom'),
 });
 

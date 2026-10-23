@@ -2,7 +2,7 @@ import type { AcademySettings, SettingKey } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { isDefault, isDirty, resetPatch } from '../config/settings-dirty';
-import { updateSettings } from './api';
+import { updateSettings } from '@/lib/settings-api';
 import { settingsForm, settingsUpdate, type SettingsErrors, type SettingsForm } from './settings-form';
 
 export interface SettingsFormState {

@@ -1,12 +1,13 @@
 import type { AcademySettings } from '@ab/shared';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { FormAlert } from '@/components/ui/form-alert';
 import { NuqtaGlyph } from '@/components/ui/nuqta-glyph';
 import { StatusChip } from '@/components/ui/status-chip';
 import { t } from '@/lib/i18n';
-import { sendGateQuery, updateSettings } from './api';
+import { useSettingSwitch } from '@/lib/use-setting-switch';
+import { sendGateQuery } from './api';
 import { ConfirmSwitchDialog } from './ConfirmSwitchDialog';
 import { sendingChip } from './sending-chip';
 import { queuedText, ServerGateNote } from './ServerGateNote';
@@ -28,10 +29,8 @@ export function MessagingSwitch({ settings }: { settings: AcademySettings }) {
   const gate = useQuery(sendGateQuery);
   const [confirming, setConfirming] = useState<'on' | 'off' | null>(null);
   const enabled = settings.messaging_enabled;
-  const save = useMutation({
-    mutationFn: updateSettings,
-    onSuccess: async (next) => {
-      queryClient.setQueryData(['settings'], next);
+  const save = useSettingSwitch({
+    onSaved: async () => {
       setConfirming(null);
       await queryClient.invalidateQueries({ queryKey: sendGateQuery.queryKey });
     },

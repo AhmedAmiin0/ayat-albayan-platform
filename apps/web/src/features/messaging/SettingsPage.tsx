@@ -17,7 +17,7 @@ import { SettingsSearch } from '../config/SettingsSearch';
 import { SettingsViewContext } from '../config/settings-view';
 import { integrationsMatch } from '../integrations/integrations-form';
 import { IntegrationsPanel } from '../integrations/IntegrationsPanel';
-import { settingsQuery } from './api';
+import { settingsQuery } from '@/lib/settings-api';
 import { SettingsNav, type ExtraSection } from './SettingsNav';
 import { AppearanceSection, catalogueMatch, FieldsSection, linesMatch, MessagingSection, SalesSection, templatesMatch } from './SettingsSections';
 import { useSettingsForm } from './use-settings-form';
