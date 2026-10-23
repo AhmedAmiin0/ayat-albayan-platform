@@ -1,7 +1,9 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { readerOf } from '../../common/settings/settings.fakes';
 import type { OccurrenceGenerator } from './occurrence-generator';
 import { RuleExtendService } from './rule-extend.service';
-import { fakeSettings, ruleRow } from './scheduling.fakes';
+import { ruleRow } from './scheduling.fakes';
+import { SchedulingSettings } from './scheduling.settings';
 import type { ScheduleQueries } from './schedule.queries';
 
 const rules = { rule: vi.fn() };
@@ -9,7 +11,7 @@ const generator = { topUp: vi.fn() };
 const service = new RuleExtendService(
   rules as unknown as ScheduleQueries,
   generator as unknown as OccurrenceGenerator,
-  fakeSettings(5),
+  readerOf(SchedulingSettings, { booking_horizon_weeks: 5 }),
 );
 const NEW = { id: 'l-new', starts_at: '2026-11-08T14:00:00.000Z', ends_at: '2026-11-08T14:45:00.000Z' };
 const UNTIL = new Date('2026-11-13T10:00:00Z');
