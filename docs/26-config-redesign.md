@@ -331,6 +331,12 @@ Order: **26-P0 → 23-P3 → 26-P1 → 23-P4 → 26-P2 → 26-P3 → 23-P5 → 2
 
 ## 8. Questions for the owner (each with a recommended default)
 
+> **Answered: defaults (owner «finishh every thing», 2026-10-23).** All five questions take the recommended (a)
+> answer: one editable Arabic description per key, English through «الترجمات»; custom values folded in the last phase;
+> a typed confirmation for `recording_retention_days` and `activity_retention_days`, a plain one for
+> `teachers_always_available`, `meeting_link_auto` and `sales_auto_assign`; scalar values editable on the phone;
+> proceed as written. Colours: the app's live «Emerald Mint» tokens only (owner «keep the colors»).
+
 1. **Description language.**
    - (a) **Recommended:** one editable Arabic description per key; English stays editable through «الترجمات». The
      academy works in Arabic, and this needs no extra column.
