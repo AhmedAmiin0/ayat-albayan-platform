@@ -50,17 +50,17 @@ describe('Google section: states', () => {
 });
 
 describe('OAuth return (?google=…)', () => {
-  it('connected: an info toast, and the query leaves the URL (the anchor stays)', async () => {
-    window.history.replaceState(null, '', '/admin/settings?google=connected#integrations');
+  it('connected: an info toast, and the query leaves the URL (same page)', async () => {
+    window.history.replaceState(null, '', '/admin/settings/google?google=connected');
     renderGoogle({ apiFetch });
     expect((await screen.findByRole('status')).textContent).toContain(s.connection.connected);
     await waitFor(() => expect(window.location.search).toBe(''));
-    expect(window.location.pathname).toBe('/admin/settings');
-    expect(window.location.hash).toBe('#integrations');
+    expect(window.location.pathname).toBe('/admin/settings/google');
+    expect(window.location.hash).toBe('');
   });
 
   it('error: an error toast naming the reason', async () => {
-    window.history.replaceState(null, '', '/admin/settings?google=error&reason=denied#integrations');
+    window.history.replaceState(null, '', '/admin/settings/google?google=error&reason=denied');
     renderGoogle({ apiFetch });
     expect((await screen.findByRole('status')).textContent).toContain(s.connection.failed.replace('{reason}', s.connection.reasons.denied));
     await waitFor(() => expect(window.location.search).toBe(''));

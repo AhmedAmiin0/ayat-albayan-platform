@@ -39,12 +39,21 @@ function hits(folder: string, from: (file: string) => boolean): string[] {
 
 describe('apps/web/src settings boundaries', () => {
   it('scans the sources', () => {
-    expect(Object.keys(sources)).toEqual(expect.arrayContaining(['features/settings/SettingsPage.tsx', 'lib/settings-api.ts', 'components/settings/Section.tsx']));
+    expect(Object.keys(sources)).toEqual(
+      expect.arrayContaining(['features/settings/pages/CommunicationsPage.tsx', 'lib/settings-api.ts', 'components/settings/Section.tsx']),
+    );
   });
 
-  it('only the /admin/settings route imports features/settings from outside it', () => {
+  it('only the /admin/settings routes import features/settings from outside it', () => {
     const outside = (file: string) => !inFolder(file, 'features/settings');
-    expect(hits('features/settings', outside)).toEqual(['routes/admin/settings.tsx → features/settings/SettingsPage']);
+    const found = hits('features/settings', outside);
+    expect(found).toEqual(expect.arrayContaining(['routes/admin/settings.communications.tsx → features/settings/pages/CommunicationsPage']));
+    expect(found.filter((hit) => !/^routes\/admin\/settings(\.[a-z]+)?\.tsx → /.test(hit))).toEqual([]);
+  });
+
+  it('the old single settings page is gone (docs/26 26-P3: hub + module pages)', () => {
+    const old = ['SettingsPage', 'SettingsBody', 'SettingsNav', 'page-sections', 'use-nothing-matches', 'sections/MessagingSection'];
+    expect(Object.keys(sources).filter((f) => old.some((name) => f.startsWith(`features/settings/${name}.`)))).toEqual([]);
   });
 
   it('nothing imports features/config (renamed to features/custom-config), and the legacy page files are gone', () => {

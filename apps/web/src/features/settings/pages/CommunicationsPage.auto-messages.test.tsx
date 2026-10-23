@@ -1,25 +1,21 @@
 import { cleanup, fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { renderWithClient, routeFetch } from '@/features/inbox/test-utils';
 import { t } from '@/lib/i18n';
-import { CATALOGUE_ROUTE, SETTINGS } from '@/test/settings-fixture';
-import { SettingsPage } from './SettingsPage';
+import { SETTINGS } from '@/test/settings-fixture';
+import { renderCommunications } from './communications-test-kit';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
 vi.mock('@/lib/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
+vi.mock('@tanstack/react-router', async (orig) => ({
+  ...(await orig<object>()),
+  Link: (await import('@/features/inbox/test-utils')).MockLink,
+}));
 
 const s = t.templates.settings;
 
 function renderPage(auto: boolean, cutover = false) {
-  routeFetch(apiFetch, [
-    ['/settings/integrations', []],
-    ['/settings', { ...SETTINGS, auto_messages_enabled: auto, crm_cutover_done: cutover }],
-    CATALOGUE_ROUTE,
-    ['/messages/gate', { open: false, reason: 'switch_off', queued: 0 }],
-    ['/messaging/templates', []],
-  ]);
-  renderWithClient(<SettingsPage />);
+  renderCommunications({ apiFetch, settings: { auto_messages_enabled: auto, crm_cutover_done: cutover } });
 }
 
 afterEach(() => {
@@ -27,6 +23,7 @@ afterEach(() => {
   apiSend.mockReset();
 });
 
+// Ported from the old /admin/settings page: «التواصل» › «الإرسال».
 describe('automatic messages switch (settings.auto_messages_enabled, docs/09 cut-over)', () => {
   it('sits with the sending switch, OFF by default, with the Apps Script hint; ON sends only autoMessagesEnabled', async () => {
     renderPage(false);

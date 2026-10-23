@@ -4,11 +4,12 @@ import { freshDigits, seedLead } from '../support/messages';
 import { restoreSettings, settingText, snapshotSettings } from '../support/settings';
 import { setMessaging, stubInbound, stubReset, stubSent } from '../support/wa-stub';
 
-// /admin/settings switches (R-MSG-01, cut-over docs/09, docs/23 phase 2): the kill switch is the only
+// «التواصل» › «الإرسال» switches (/admin/settings/communications; R-MSG-01, cut-over docs/09, docs/23 phase 2): the kill switch is the only
 // switch for sending (no env fuse) and asks first both ways (ON names the queue); the automatic-messages
 // switch asks first too and holds job-made rows as auto_off.
 
 const s = ar.templates.settings;
+const tabs = ar.settingsPages.communicationsTabs;
 const KEYS = ['messaging_enabled', 'auto_messages_enabled', 'crm_cutover_done'];
 /** The sender ticks every 30 s: wait past one tick. */
 const SENDER_WAIT = { timeout: 75_000, intervals: [1_000, 2_000, 5_000] };
@@ -37,14 +38,17 @@ test.describe('settings switches — kill switch and automatic messages', () => 
     await queueText({ phone: `+${digits}`, leadId, body: 'أهلًا بحضرتك' });
     await queueText({ phone: `+${digits}`, leadId, body: 'تحب نحجز لك حلقة؟' });
     const admin = await asRole('admin');
-    await admin.goto('/admin/settings');
+    // «ماذا يُرسل ومتى» (guardian tab by default) says the report PDF is held because sending is off (read-only, no switch).
+    await admin.goto('/admin/settings/communications?tab=catalogue');
+    const report = admin.getByRole('region', { name: ar.notificationCatalogue.title }).locator('[data-key="report_ready"]');
+    await expect(report.getByText(ar.notificationCatalogue.blockers.messaging_off)).toBeVisible();
+    // The page head names the state on every tab («إرسال الرسائل: …», never the switch's own words).
+    await expect(admin.getByRole('group', { name: ar.settingsPages.sendingNow })).toContainText(s.off);
 
+    await admin.getByRole('tab', { name: tabs.sending, exact: true }).click();
     await expect(admin.getByText(s.off, { exact: true })).toBeVisible();
     await expect(admin.getByText(s.queued.two, { exact: true })).toBeVisible();
     await expect(admin.getByText(s.gateNotConfigured)).toHaveCount(0); // WhatsApp is set up (the stub)
-    // «ماذا يُرسل ومتى» says the report PDF is held because sending is off (read-only, no switch).
-    const report = admin.getByRole('region', { name: ar.notificationCatalogue.title }).locator('[data-key="report_ready"]');
-    await expect(report.getByText(ar.notificationCatalogue.blockers.messaging_off)).toBeVisible();
 
     // Cancel is the way out: nothing changes.
     await admin.getByRole('button', { name: s.enableTitle, exact: true }).click();
@@ -82,7 +86,7 @@ test.describe('settings switches — kill switch and automatic messages', () => 
     test.setTimeout(150_000);
     await restoreSettings({ keys: ['auto_messages_enabled'], rows: [{ key: 'auto_messages_enabled', value: false }] });
     const admin = await asRole('admin');
-    await admin.goto('/admin/settings');
+    await admin.goto('/admin/settings/communications'); // «الإرسال» is the default tab
     await expect(admin.getByText(s.autoOff, { exact: true })).toBeVisible();
 
     await admin.getByRole('button', { name: s.autoEnable }).click();

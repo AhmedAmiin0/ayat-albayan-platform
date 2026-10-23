@@ -7,7 +7,7 @@ import { settingsQuery } from '@/lib/settings-api';
 import { integrationsQuery } from '../integrations/integrations-api';
 import { linesCheckQuery } from '../messaging/api';
 import { catalogueQuery } from './catalogue-api';
-import { CatalogueRow } from './CatalogueRow';
+import { CatalogueTable } from './CatalogueTable';
 import { NumbersLine } from './NumbersLine';
 
 const c = t.notificationCatalogue;
@@ -27,7 +27,8 @@ function Loading() {
 /**
  * «ماذا يُرسل ومتى» (docs/23 §3 phase 1, §E H1): every notification the platform sends, to whom,
  * when, through which channel and number, and whether it goes out now under today's settings
- * (the first blocker in words). Read-only: the switches stay in their own rows of this page.
+ * (the first blocker in words), one audience at a time (docs/26b §3). Read-only: the switches stay
+ * on «الإرسال» of «التواصل».
  */
 export function CatalogueSection() {
   const settings = useQuery(settingsQuery);
@@ -60,11 +61,7 @@ export function CatalogueSection() {
       {list.data && (
         <>
           <NumbersLine lines={list.data.lines} />
-          <ul className="grid min-w-0">
-            {list.data.entries.map((entry) => (
-              <CatalogueRow key={entry.key} entry={entry} lines={list.data.lines} />
-            ))}
-          </ul>
+          <CatalogueTable entries={list.data.entries} lines={list.data.lines} />
         </>
       )}
     </div>

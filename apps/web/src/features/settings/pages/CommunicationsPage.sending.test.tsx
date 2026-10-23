@@ -1,37 +1,29 @@
 import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { renderWithClient, routeFetch } from '@/features/inbox/test-utils';
 import { t } from '@/lib/i18n';
-import { CATALOGUE_ROUTE, SETTINGS } from '@/test/settings-fixture';
-import { SettingsPage } from './SettingsPage';
+import { SETTINGS } from '@/test/settings-fixture';
+import { renderCommunications } from './communications-test-kit';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
 vi.mock('@/lib/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
+vi.mock('@tanstack/react-router', async (orig) => ({
+  ...(await orig<object>()),
+  Link: (await import('@/features/inbox/test-utils')).MockLink,
+}));
 
 const s = t.templates.settings;
-
-type Gate = { open: boolean; reason: 'not_configured' | 'switch_off' | null; queued: number };
-
-function renderPage(messagingEnabled = false, gate: Gate = { open: messagingEnabled, reason: messagingEnabled ? null : 'switch_off', queued: 0 }) {
-  routeFetch(apiFetch, [
-    ['/settings/integrations', []],
-    ['/settings', { ...SETTINGS, messaging_enabled: messagingEnabled }],
-    CATALOGUE_ROUTE,
-    ['/messages/gate', gate],
-    ['/messaging/templates', []],
-  ]);
-  renderWithClient(<SettingsPage />);
-}
+const head = () => screen.getByRole('group', { name: t.settingsPages.sendingNow });
 
 afterEach(() => {
   apiFetch.mockReset();
   apiSend.mockReset();
 });
 
-describe('messaging kill switch (docs/12 §3.1)', () => {
+// Ported from the old /admin/settings page: the kill switch lives on «التواصل» › «الإرسال» (docs/12 §3.1).
+describe('messaging kill switch on «الإرسال»', () => {
   it('warns that the CRM owns the number, and turning sending ON asks first, saying how many go out', async () => {
-    renderPage(false, { open: false, reason: 'switch_off', queued: 5 });
+    renderCommunications({ apiFetch, gate: { open: false, reason: 'switch_off', queued: 5 } });
     expect((await screen.findAllByText(s.crmWarning)).length).toBeGreaterThan(0);
     expect(screen.getByText(s.off)).toBeTruthy();
     fireEvent.click(screen.getByRole('button', { name: s.enableTitle }));
@@ -45,10 +37,12 @@ describe('messaging kill switch (docs/12 §3.1)', () => {
     await waitFor(() => expect(apiSend).toHaveBeenCalledWith('PATCH', '/settings', { messagingEnabled: true }));
     expect(await screen.findByText(s.on)).toBeTruthy();
     expect(screen.queryByRole('dialog')).toBeNull();
+    // The head follows the switch.
+    await waitFor(() => expect(head().textContent).toBe(t.settingsPages.sendingState.replace('{state}', s.on)));
   });
 
   it('turning it OFF asks first too (cancel is the default and changes nothing); cancel keeps it off', async () => {
-    renderPage(true);
+    renderCommunications({ apiFetch, settings: { messaging_enabled: true } });
     apiSend.mockResolvedValue({ ...SETTINGS, messaging_enabled: false });
     fireEvent.click(await screen.findByRole('button', { name: s.disable }));
     const off = screen.getByRole('dialog', { name: s.disableTitle });
@@ -64,47 +58,18 @@ describe('messaging kill switch (docs/12 §3.1)', () => {
     expect(screen.queryByRole('dialog')).toBeNull();
     expect(apiSend).toHaveBeenCalledTimes(1);
   });
-});
-
-describe('academy settings form', () => {
-  it('saves every setting in one PATCH; late cancel ON needs its hours', async () => {
-    renderPage();
-    fireEvent.click(await screen.findByRole('checkbox', { name: t.settings.lateCancel }));
-    fireEvent.change(screen.getByLabelText(t.settings.lateCancelHours), { target: { value: '12' } });
-    fireEvent.change(screen.getByLabelText(s.followUpHours), { target: { value: '24، 48' } });
-    fireEvent.click(screen.getByRole('checkbox', { name: t.settings.payoutCountLate }));
-    apiSend.mockResolvedValue(SETTINGS);
-    fireEvent.click(screen.getByRole('button', { name: t.common.save }));
-    await waitFor(() =>
-      expect(apiSend).toHaveBeenCalledWith(
-        'PATCH',
-        '/settings',
-        expect.objectContaining({ lateCancelHours: 12, followUpHours: [24, 48], payoutCountLate: true, bookingHorizonWeeks: 5 }),
-      ),
-    );
-    expect(await screen.findByText(t.settings.saved)).toBeTruthy();
-  });
-
-  it('a bad number stays on screen with the reason; nothing is sent', async () => {
-    renderPage();
-    fireEvent.change(await screen.findByLabelText(t.settings.bookingHorizonWeeks), { target: { value: '40' } });
-    fireEvent.change(screen.getByLabelText(s.followUpHours), { target: { value: '72، 24' } });
-    fireEvent.click(screen.getByRole('button', { name: t.common.save }));
-    const alerts = await screen.findAllByRole('alert');
-    expect(alerts.map((a) => a.textContent)).toEqual([t.settings.notAscending, t.settings.invalid]);
-    expect(apiSend).not.toHaveBeenCalled();
-  });
 
   it('WhatsApp not set up is named and the chip never says «يعمل»: the switch alone sends nothing', async () => {
-    renderPage(true, { open: false, reason: 'not_configured', queued: 2 });
+    renderCommunications({ apiFetch, settings: { messaging_enabled: true }, gate: { open: false, reason: 'not_configured', queued: 2 } });
     expect(await screen.findByText(s.gateNotConfigured)).toBeTruthy();
     expect(screen.getByText(s.onBlocked)).toBeTruthy();
     expect(screen.queryByText(s.on)).toBeNull();
     expect(screen.getByText(s.queued.two)).toBeTruthy();
+    expect(head().textContent).toBe(t.settingsPages.sendingState.replace('{state}', s.onBlocked));
   });
 
   it('after the cut-over the owner retires the CRM warning', async () => {
-    renderPage(false);
+    renderCommunications({ apiFetch });
     apiSend.mockResolvedValue({ ...SETTINGS, crm_cutover_done: true });
     fireEvent.click(await screen.findByRole('button', { name: s.crmDone }));
     await waitFor(() => expect(apiSend).toHaveBeenCalledWith('PATCH', '/settings', { crmCutoverDone: true }));
@@ -112,14 +77,7 @@ describe('academy settings form', () => {
   });
 
   it('a rollback to the CRM turns the cut-over back off and the warning returns', async () => {
-    routeFetch(apiFetch, [
-      ['/settings/integrations', []],
-      ['/settings', { ...SETTINGS, crm_cutover_done: true }],
-      CATALOGUE_ROUTE,
-      ['/messages/gate', { open: false, reason: 'switch_off', queued: 0 }],
-      ['/messaging/templates', []],
-    ]);
-    renderWithClient(<SettingsPage />);
+    renderCommunications({ apiFetch, settings: { crm_cutover_done: true } });
     expect(await screen.findByText(s.crmMoved)).toBeTruthy();
     apiSend.mockResolvedValue({ ...SETTINGS, crm_cutover_done: false });
     fireEvent.click(screen.getByRole('button', { name: s.crmUndo }));

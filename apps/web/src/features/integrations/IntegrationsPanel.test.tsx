@@ -41,6 +41,9 @@ describe('«التكاملات» panel', () => {
     expect(token.value).toBe('');
     expect(screen.getByText(s.secretFromServer)).toBeTruthy();
     expect(screen.getAllByText(s.secretUnset).length).toBeGreaterThan(0);
+    // Google has its own page now («مزامنة Google»): nothing of it here, and no Google request.
+    expect(screen.queryByRole('heading', { name: t.googleSync.title })).toBeNull();
+    expect(apiFetch.mock.calls.some(([path]) => String(path).startsWith('/admin/google'))).toBe(false);
   });
 
   it('saves only the changed plain values; an emptied field is null (back to the server value)', async () => {

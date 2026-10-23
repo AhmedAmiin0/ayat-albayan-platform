@@ -44,7 +44,7 @@ export async function dropChatRows(): Promise<void> {
  * submits trial_reschedule and the stub approves it on the chat WABA, so all three defaults are listed.
  */
 export async function importChatRows(admin: Page): Promise<void> {
-  await admin.goto('/admin/settings');
+  await admin.goto('/admin/settings/communications?tab=templates'); // «التواصل» › «القوالب»
   await syncNumber(admin, 'chat');
   await expect.poll(async () => (await chatRows()).length).toBe(CHAT_KEYS.length);
   await approveReschedule(await accessToken(admin));

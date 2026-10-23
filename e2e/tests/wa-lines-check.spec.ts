@@ -3,7 +3,7 @@ import { CHAT_PN, SINGLE_LINE, stubLineHealth } from '../support/wa-lines';
 import { stubReset } from '../support/wa-stub';
 
 // «افحص الخطوط» end to end (docs/12 §13.9–13.10, R-MSG-05, review C S2): LinesController →
-// LinesCheck → the stub's Graph diagnostics → the Lines card on /admin/settings. Both lines run in
+// LinesCheck → the stub's Graph diagnostics → the Lines card on «التواصل» › «الأرقام». Both lines run in
 // e2e (playwright.config.ts E2E_WA / E2E_WA_CHAT), each with its own Meta app id.
 
 const s = ar.templates.settings.lines;
@@ -20,7 +20,7 @@ test.describe('settings — WhatsApp lines check', () => {
 
   test('both lines configured and subscribed to our app; an unsubscribed chat WABA is flagged', async ({ asRole }) => {
     const admin = await asRole('admin');
-    await admin.goto('/admin/settings');
+    await admin.goto('/admin/settings/communications?tab=numbers');
     await expect(admin.getByText(s.title, { exact: true })).toBeVisible();
     await expect(admin.getByText(s.notChecked, { exact: true })).toBeVisible(); // nothing fetched on mount
 
@@ -38,10 +38,11 @@ test.describe('settings — WhatsApp lines check', () => {
     }
     await expect(admin.getByText(s.notChecked, { exact: true })).toHaveCount(0);
 
-    // The good number is kept (docs/23 phase 1): after a reload «ماذا يُرسل ومتى» shows it with no new check.
-    await admin.reload();
+    // The good number is kept (docs/23 phase 1): after a fresh load «ماذا يُرسل ومتى» shows it with no new check.
+    await admin.goto('/admin/settings/communications?tab=catalogue');
     const catalogue = admin.getByRole('region', { name: ar.notificationCatalogue.title });
     await expect(catalogue.getByText('+15550001111').first()).toBeVisible();
+    await admin.getByRole('tab', { name: ar.settingsPages.communicationsTabs.numbers, exact: true }).click();
     await expect(admin.getByText(s.notChecked, { exact: true })).toBeVisible();
 
     // The chat WABA loses its app subscription: only the chat row asks the admin to act.
