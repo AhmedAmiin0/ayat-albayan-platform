@@ -3,6 +3,7 @@ import { Test } from '@nestjs/testing';
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import { AppModule } from '../../app.module';
 import { AuditService } from '../audit/audit.service';
+import { SINGLETON_ENTITY_ID } from '../audit/singleton-entity';
 import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '../auth/auth.guard';
 import type { AuthUser } from '../auth/verify-token';
 import { CustomConfigService } from './custom-config.service';
@@ -52,7 +53,7 @@ describe('/config/custom (admin CRUD)', () => {
     const res = await call('PUT', '/config/custom/promo', { payload: { value: 'hi', isPublic: true } });
     expect(res.statusCode).toBe(200);
     expect(custom.upsert).toHaveBeenCalledWith('promo', { value: 'hi', isPublic: true }, USERS['admin']?.id);
-    expect(audit.record).toHaveBeenCalledWith(expect.objectContaining({ entity: 'custom_config', action: 'create:promo', before: null, after: VIEW }));
+    expect(audit.record).toHaveBeenCalledWith(expect.objectContaining({ entity: 'custom_config', entityId: SINGLETON_ENTITY_ID, action: 'create:promo', before: null, after: VIEW }));
   });
 
   it('PUT over an existing entry audits before and after as an update', async () => {

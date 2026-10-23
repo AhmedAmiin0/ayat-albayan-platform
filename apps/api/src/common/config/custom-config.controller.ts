@@ -3,12 +3,10 @@ import { Body, Controller, Delete, Get, HttpCode, NotFoundException, Param, Put 
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { parseOrThrow } from '../../modules/teachers/http';
 import { AuditService } from '../audit/audit.service';
+import { SINGLETON_ENTITY_ID } from '../audit/singleton-entity';
 import { CurrentUser, Permissions } from '../auth/decorators';
 import type { AuthUser } from '../auth/verify-token';
 import { CustomConfigService } from './custom-config.service';
-
-/** audit_log.entity_id of the custom entries (the key is not a uuid; it is in the action: 'update:promo'). */
-const CUSTOM_ENTITY_ID = '00000000-0000-0000-0000-000000000000';
 
 /** Admin CRUD of the free-form entries. Every change is audited with the old and new value. */
 @ApiTags('config')
@@ -37,7 +35,7 @@ export class CustomConfigController {
     await this.audit.record({
       actorId: user.id,
       entity: 'custom_config',
-      entityId: CUSTOM_ENTITY_ID,
+      entityId: SINGLETON_ENTITY_ID,
       action: `${before ? 'update' : 'create'}:${key}`,
       before: before ? { ...before } : null,
       after: { ...after },
@@ -55,7 +53,7 @@ export class CustomConfigController {
     await this.audit.record({
       actorId: user.id,
       entity: 'custom_config',
-      entityId: CUSTOM_ENTITY_ID,
+      entityId: SINGLETON_ENTITY_ID,
       action: `delete:${key}`,
       before: { ...before },
       after: null,

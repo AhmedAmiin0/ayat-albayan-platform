@@ -3,6 +3,7 @@ import { Test } from '@nestjs/testing';
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import { AppModule } from '../../app.module';
 import { AuditService } from '../audit/audit.service';
+import { SINGLETON_ENTITY_ID } from '../audit/singleton-entity';
 import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '../auth/auth.guard';
 import type { AuthUser } from '../auth/verify-token';
 import { CustomConfigService } from '../config/custom-config.service';
@@ -68,7 +69,7 @@ describe('GET/PATCH /settings — late-cancel hours and horizon (R-SCH-07, R-SCH
     expect((await call('PATCH', 'admin', { autoMessagesEnabled: true })).json()).toEqual(after);
     expect(settings.write).toHaveBeenCalledWith({ auto_messages_enabled: true }, USERS['admin']?.id);
     expect(audit.record).toHaveBeenCalledWith(
-      expect.objectContaining({ entity: 'settings', action: 'update', before: SETTING_DEFAULTS, after }),
+      expect.objectContaining({ entity: 'settings', entityId: SINGLETON_ENTITY_ID, action: 'update', before: SETTING_DEFAULTS, after }),
     );
     expect((await call('PATCH', 'teacher', { autoMessagesEnabled: true })).statusCode).toBe(403);
   });
