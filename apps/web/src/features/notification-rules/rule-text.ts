@@ -68,6 +68,10 @@ export function approvalWord(entry: Pick<NotificationEntryView, 'approval' | 'te
 /** The first blocker in words, including the v2 «classroom_off». */
 export const reasonText = (entry: Pick<NotificationEntryView, 'blocker'>): string | null => blockerText(entry);
 
+/** The phone row's short reason («الإرسال متوقف»); the sheet keeps the long one. */
+export const shortReasonText = (entry: Pick<NotificationEntryView, 'blocker'>): string | null =>
+  entry.blocker ? r().shortBlockers[entry.blocker] : null;
+
 /** Does switching this row ON reach families (guardians or leads)? */
 export const isFamilyFacing = (entry: Pick<NotificationEntryView, 'audience'>): boolean =>
   entry.audience === 'guardian' || entry.audience === 'lead';

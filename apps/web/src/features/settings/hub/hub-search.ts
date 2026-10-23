@@ -63,7 +63,7 @@ const googleMatch = (query: string): boolean => matchesText(`${H.googleName} ${t
 const MODULES: readonly ModuleEntry[] = [
   { id: 'lines', label: t.templates.settings.lines.title, where: COMMS, href: HUB_PATHS.communications, matches: linesMatch },
   { id: 'numbers', label: t.numbers.title, where: COMMS, href: `${HUB_PATHS.communications}?tab=numbers`, matches: numbersMatch },
-  { id: 'catalogue', label: t.notificationCatalogue.title, where: COMMS, href: HUB_PATHS.communications, matches: catalogueMatch },
+  { id: 'catalogue', label: t.notificationRules.title, where: COMMS, href: `${HUB_PATHS.communications}?tab=catalogue`, matches: catalogueMatch },
   { id: 'templates', label: t.templates.title, where: COMMS, href: `${HUB_PATHS.communications}?tab=templates`, matches: templatesMatch },
   { id: 'integrations', label: t.integrations.title, where: t.integrations.title, href: HUB_PATHS.integrations, matches: integrationsMatch },
   { id: 'google', label: t.googleSync.title, where: H.googleName, href: HUB_PATHS.google, matches: googleMatch },

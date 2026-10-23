@@ -51,13 +51,13 @@ export function overview(patch: Partial<Record<string, Partial<NotificationEntry
 }
 
 /** «الإشعارات» with every GET it makes answered. */
-export function renderRules(input: { apiFetch: Mock; data?: NotificationsOverview; onSaved?: (m: string) => void }) {
+export function renderRules(input: { apiFetch: Mock; data?: NotificationsOverview; onSaved?: (m: string) => void; queued?: number }) {
   routeFetch(input.apiFetch, [
     ['/admin/notifications', input.data ?? overview()],
     ['/admin/numbers', NUMBERS],
     ['/settings/integrations', []],
     ['/settings', SETTING_DEFAULTS],
-    ['/messages/gate', { open: false, reason: 'switch_off', queued: 0 }],
+    ['/messages/gate', { open: false, reason: 'switch_off', queued: input.queued ?? 0 }],
   ]);
   return renderWithClient(<RulesSection onSaved={input.onSaved ?? (() => undefined)} />);
 }

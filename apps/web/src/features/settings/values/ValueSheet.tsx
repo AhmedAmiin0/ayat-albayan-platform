@@ -1,5 +1,6 @@
 import { isEditableValueKey, VALUE_CONFIRM, type SettingKey } from '@ab/shared';
 import { useEffect, useState } from 'react';
+import { DiscardDialog } from '@/components/settings/DiscardDialog';
 import { settingText } from '@/components/settings/setting-text';
 import { Button } from '@/components/ui/button';
 import { Dialog } from '@/components/ui/dialog';
@@ -14,28 +15,7 @@ import { useValues } from './values-context';
 
 const v = t.settingsValues;
 
-function DiscardDialog({ onDiscard, onKeep }: { onDiscard: () => void; onKeep: () => void }) {
-  return (
-    <Dialog
-      compact
-      title={v.sheet.discardTitle}
-      description={v.sheet.discardBody}
-      onClose={onKeep}
-      actions={
-        <>
-          <Button variant="secondary" data-autofocus onClick={onKeep}>
-            {v.sheet.keep}
-          </Button>
-          <Button variant="danger-quiet" onClick={onDiscard}>
-            {v.sheet.discard}
-          </Button>
-        </>
-      }
-    >
-      {null}
-    </Dialog>
-  );
-}
+const DISCARD_WORDS = { title: v.sheet.discardTitle, body: v.sheet.discardBody, discard: v.sheet.discard, keep: v.sheet.keep };
 
 /**
  * The phone editor (docs/26b §2 «Phone»): a sheet titled by the label with the full description,
@@ -108,6 +88,7 @@ export function ValueSheet({ settingKey, onClose }: { settingKey: SettingKey; on
       </div>
       {asking && (
         <DiscardDialog
+          words={DISCARD_WORDS}
           onKeep={() => setAsking(false)}
           onDiscard={() => {
             api.drafts.discard(settingKey);

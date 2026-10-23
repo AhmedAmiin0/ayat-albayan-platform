@@ -1,5 +1,6 @@
 import type { LineHealthView, NotificationEntryView, NotificationRuleView } from '@ab/shared';
-import type { ReactNode } from 'react';
+import { useState, type ReactNode } from 'react';
+import { DiscardDialog } from '@/components/settings/DiscardDialog';
 import { Button } from '@/components/ui/button';
 import { Dialog } from '@/components/ui/dialog';
 import { t } from '@/lib/i18n';
@@ -15,6 +16,7 @@ import { useRuleRow, type RuleRowState } from '../use-rule-row';
 
 const c = t.notificationCatalogue;
 const r = t.notificationRules;
+const DISCARD_WORDS = { title: r.discard.title, body: r.discard.body, discard: r.discard.yes, keep: r.discard.keep };
 
 export interface RuleSheetProps {
   entry: NotificationEntryView;
@@ -33,9 +35,12 @@ function Section({ title, children }: { title: string; children: ReactNode }) {
 
 function SheetView({ entry, lines, onClose, row }: RuleSheetProps & { row: RuleRowState | null }) {
   const name = c.entries[entry.key].name;
+  const [asking, setAsking] = useState(false);
+  // «إلغاء», Esc and the backdrop: a dirty row asks «تجاهل التغييرات؟» first (the draft is kept otherwise).
+  const close = () => (row?.dirty ? setAsking(true) : onClose());
   const actions = row ? (
     <>
-      <Button variant="ghost" onClick={onClose}>
+      <Button variant="ghost" onClick={close}>
         {t.common.cancel}
       </Button>
       <Button disabled={row.saving || !row.result.ok} onClick={() => row.save(onClose)}>
@@ -44,7 +49,7 @@ function SheetView({ entry, lines, onClose, row }: RuleSheetProps & { row: RuleR
     </>
   ) : undefined;
   return (
-    <Dialog layout="sheet" title={name} description={c.entries[entry.key].trigger} onClose={onClose} actions={actions}>
+    <Dialog layout="sheet" title={name} description={c.entries[entry.key].trigger} onClose={close} actions={actions}>
       <div className="grid gap-4">
         <Section title={r.columns.state}>
           <StatePart entry={entry} />
@@ -61,6 +66,16 @@ function SheetView({ entry, lines, onClose, row }: RuleSheetProps & { row: RuleR
         </Section>
         {row && <RuleRowActions row={{ ...row, dirty: false }} name={name} />}
       </div>
+      {asking && row && (
+        <DiscardDialog
+          words={DISCARD_WORDS}
+          onKeep={() => setAsking(false)}
+          onDiscard={() => {
+            row.revert();
+            onClose();
+          }}
+        />
+      )}
     </Dialog>
   );
 }
@@ -73,6 +88,7 @@ function EditableSheet({ rule, ...props }: RuleSheetProps & { rule: Notification
 /**
  * The phone editor of one row (docs/26b §3 «Phone»): a bottom sheet titled by the name, with the
  * state and its reason, the switch, the timing, the channels and the number; «إلغاء» then «احفظ».
+ * Closing it with an unsaved change asks «تجاهل التغييرات؟» (the same dialog as «القيم»).
  * Without notifications.manage it opens read-only (no inputs, no actions).
  */
 export function RuleSheet(props: RuleSheetProps) {

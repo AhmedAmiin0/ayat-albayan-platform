@@ -29,6 +29,7 @@ test.describe('settings switches — kill switch and automatic messages', () => 
 
   test('kill switch: ON names the 2 queued messages and asks first, they go out; OFF is at once', async ({
     asRole,
+    isMobile,
   }) => {
     test.setTimeout(150_000);
     const digits = freshDigits();
@@ -38,10 +39,12 @@ test.describe('settings switches — kill switch and automatic messages', () => 
     await queueText({ phone: `+${digits}`, leadId, body: 'أهلًا بحضرتك' });
     await queueText({ phone: `+${digits}`, leadId, body: 'تحب نحجز لك حلقة؟' });
     const admin = await asRole('admin');
-    // «الإشعارات» (?tab=catalogue, guardian tab by default) says the report PDF is held because sending is off.
+    // «الإشعارات» (?tab=catalogue, guardian tab by default) says the report PDF is held because sending is off
+    // (the phone row says it short: «الإرسال متوقف»).
     await admin.goto('/admin/settings/communications?tab=catalogue');
     const report = admin.getByRole('region', { name: ar.notificationRules.title, exact: true }).locator('[data-key="report_ready"]');
-    await expect(report.getByText(ar.notificationCatalogue.blockers.messaging_off)).toBeVisible();
+    const held = isMobile ? ar.notificationRules.shortBlockers.messaging_off : ar.notificationCatalogue.blockers.messaging_off;
+    await expect(report.getByText(held, { exact: false })).toBeVisible();
     // The page head names the state on every tab («إرسال الرسائل: …», never the switch's own words).
     await expect(admin.getByRole('group', { name: ar.settingsPages.sendingNow })).toContainText(s.off);
 

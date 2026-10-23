@@ -53,7 +53,10 @@ describe('searchHub (docs/26b §1: labels, descriptions, keys and module pages)'
   it('module pages link to their page or tab', () => {
     expect(byId(t.numbers.title, 'page:numbers')?.href).toBe('/admin/settings/communications?tab=numbers');
     expect(byId(t.templates.title, 'page:templates')?.href).toBe('/admin/settings/communications?tab=templates');
-    expect(byId(t.notificationCatalogue.title, 'page:catalogue')?.href).toBe('/admin/settings/communications');
+    const rules = byId(t.notificationRules.title, 'page:catalogue');
+    expect(rules?.href).toBe('/admin/settings/communications?tab=catalogue');
+    expect(rules?.label).toBe(t.notificationRules.title);
+    expect(byId(t.notificationCatalogue.title, 'page:catalogue')?.href).toBe('/admin/settings/communications?tab=catalogue');
     expect(byId(t.templates.settings.lines.title, 'page:lines')?.href).toBe('/admin/settings/communications');
     expect(byId(t.integrations.keys.FX_API_URL.label, 'page:integrations')?.href).toBe('/admin/settings/integrations');
     expect(byId(t.settings.theme, 'page:appearance')?.href).toBe('/admin/settings/appearance');

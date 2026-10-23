@@ -4,7 +4,7 @@ import { t } from '@/lib/i18n';
 import { stateChip } from '../../notification-catalogue/catalogue-text';
 import { NamePart } from '../cells/NamePart';
 import { editableRule } from '../RuleRow';
-import { fillText, reasonText } from '../rule-text';
+import { fillText, shortReasonText } from '../rule-text';
 import { useRules } from '../rules-context';
 import { onOffWord } from '../switch/RuleSwitchInput';
 
@@ -25,7 +25,7 @@ function switchWord(entry: NotificationEntryView): string {
 export function RulePhoneRow({ entry, onOpen }: { entry: NotificationEntryView; onOpen: (key: string) => void }) {
   const canEdit = editableRule(entry, useRules().canManage) !== null;
   const name = t.notificationCatalogue.entries[entry.key].name;
-  const reason = reasonText(entry);
+  const reason = shortReasonText(entry);
   const word = switchWord(entry);
   return (
     <tr data-key={entry.key} className="cursor-pointer" onClick={() => onOpen(entry.key)}>
