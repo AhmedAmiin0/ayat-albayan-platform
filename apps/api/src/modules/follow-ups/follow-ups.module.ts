@@ -7,7 +7,7 @@ import { FollowUpsSettings } from './follow-ups.settings';
 
 /**
  * R-LEAD-05 lead follow-ups with two real free slots (docs/12 §7). TeachersModule exports
- * AvailabilityQuery; DB is global and FollowUpsSettings reads the global SettingsService. Register in app.module.ts.
+ * AvailabilityQuery; DB is global and FollowUpsSettings reads the global settings store. Register in app.module.ts.
  */
 @Module({
   imports: [TeachersModule],
