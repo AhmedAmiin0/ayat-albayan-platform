@@ -6,30 +6,46 @@ import { t } from '@/lib/i18n';
 import { Note } from '@/more/Note';
 import { Section } from '@/more/Section';
 import { ErrorState } from '@/ui/ErrorState';
-import { ListRow } from '@/ui/ListRow';
 import { ltr } from '@/ui/Ltr';
-import { StatusChip } from '@/ui/StatusChip';
-import { chipOf, factsOf, numberLine, whenOf } from './catalogue-words';
+import { numberLine } from './catalogue-words';
+import { CatalogueRow } from './notif-rules/CatalogueRow';
+import { ruleOf } from './notif-rules/rule-words';
+import { TypedOffSheet } from './notif-rules/TypedOffSheet';
+import { useCatalogueToggles } from './notif-rules/use-catalogue-toggles';
+import { CATALOGUE_KEY, useCanManageNotifications } from './notif-rules/use-toggle-rule';
 import { useSettings } from './use-settings';
 
 const c = t.notificationCatalogue;
 
+/** A v2 answer with at least one row to switch (the intro then says so). */
+const anyEditable = (data: NotificationsOverview | undefined): boolean =>
+  (data?.entries ?? []).some((e) => ruleOf(e)?.editable === true);
+
 /**
- * «ماذا يُرسل ومتى» on the phone (docs/23 §3 phase 1): every notification with its state under
- * today's settings and the first blocker in words. Read-only; switches stay on the web. The key
- * carries the settings' fetch time, so a saved field refetches the list.
+ * «ماذا يُرسل ومتى» on the phone (docs/23 §3 phase 1, docs/26b §4): every notification with its
+ * state and the first blocker in words. With notifications.manage and a v2 answer, editable rows get
+ * a switch (family ON and essential OFF ask first); otherwise read-only as before. The key carries
+ * the settings' fetch time, so a saved field refetches the list.
  */
 export function NotificationCatalogue() {
   const version = useSettings().dataUpdatedAt;
   const query = useQuery({
-    queryKey: ['admin', 'notifications', version],
+    queryKey: [...CATALOGUE_KEY, version],
     queryFn: () => apiFetch<NotificationsOverview>('/admin/notifications'),
     placeholderData: (previous) => previous,
   });
+  const manage = useCanManageNotifications();
+  const toggles = useCatalogueToggles();
   const data = query.data;
+  const editable = manage && anyEditable(data);
   return (
     <Section title={c.title}>
-      <Note>{`${c.readOnly} · ${c.intro}`}</Note>
+      <Note>{editable ? t.mobileNotificationRules.intro : `${c.readOnly} · ${c.intro}`}</Note>
+      {toggles.saved ? (
+        <View accessibilityLiveRegion="polite">
+          <Note>{toggles.saved}</Note>
+        </View>
+      ) : null}
       {data ? (
         <>
           {WA_LINES.map((line) => {
@@ -38,17 +54,7 @@ export function NotificationCatalogue() {
           })}
           <View style={{ marginHorizontal: -16 }}>
             {data.entries.map((e) => (
-              <ListRow
-                key={e.key}
-                title={c.entries[e.key].name}
-                tags={
-                  <>
-                    <Note>{whenOf(e)}</Note>
-                    <Note>{factsOf(e)}</Note>
-                  </>
-                }
-                trailing={<StatusChip {...chipOf(e)} size="sm" />}
-              />
+              <CatalogueRow key={e.key} entry={e} canManage={manage} reach={data.reach} toggles={toggles} />
             ))}
           </View>
         </>
@@ -57,6 +63,7 @@ export function NotificationCatalogue() {
       ) : (
         <Note>{t.common.loading}</Note>
       )}
+      {data ? <TypedOffSheet entries={data.entries} toggles={toggles} /> : null}
     </Section>
   );
 }
