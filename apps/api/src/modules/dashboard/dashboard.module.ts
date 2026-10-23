@@ -3,6 +3,7 @@ import { FxModule } from '../fx/fx.module';
 import { DashboardController } from './dashboard.controller';
 import { DashboardQueries } from './dashboard.queries';
 import { DashboardService } from './dashboard.service';
+import { DashboardSettings } from './dashboard.settings';
 import { FinanceQueries } from './finance.queries';
 import { FinanceService } from './finance.service';
 import { FxConverter } from './fx-converter';
@@ -15,7 +16,7 @@ import { WorkQueries } from './work.queries';
 @Module({
   imports: [FxModule],
   controllers: [DashboardController],
-  providers: [DashboardService, DashboardQueries, FinanceService, FinanceQueries, WorkQueries, FxConverter],
+  providers: [DashboardService, DashboardQueries, DashboardSettings, FinanceService, FinanceQueries, WorkQueries, FxConverter],
   exports: [FxConverter],
 })
 export class DashboardModule {}

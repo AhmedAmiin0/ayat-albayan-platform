@@ -7,6 +7,7 @@ import { ExpensesController } from './expenses.controller';
 import { ExpensesJob } from './expenses.job';
 import { ExpensesQueries } from './expenses.queries';
 import { ExpensesService } from './expenses.service';
+import { ExpensesSettings } from './expenses.settings';
 
 /**
  * Expenses (R-RPT-02, issue E4; owner 2026-10-05): CRUD with date, vendor, method and receipt,
@@ -16,7 +17,7 @@ import { ExpensesService } from './expenses.service';
 @Module({
   imports: [DashboardModule],
   controllers: [ExpensesController, ExpenseCategoriesController],
-  providers: [ExpensesQueries, ExpensesService, ExpenseReceipts, ExpenseYearService, ExpensesJob],
+  providers: [ExpensesQueries, ExpensesService, ExpensesSettings, ExpenseReceipts, ExpenseYearService, ExpensesJob],
   exports: [ExpensesQueries],
 })
 export class ExpensesModule {}

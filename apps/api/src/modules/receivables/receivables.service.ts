@@ -1,10 +1,10 @@
 import { receivablesOf, receivableTotals, type ReceivablesView } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import { SettingsService } from '../../common/settings/settings.service';
 import { convert, round2 } from '../dashboard/conversion';
 import { riyadhDate } from '../dashboard/range';
 import { FxConverter } from '../dashboard/fx-converter';
 import { ReceivablesQueries } from './receivables.queries';
+import { ReceivablesSettings } from './receivables.settings';
 
 /**
  * GET /receivables: every package that still owes (price − net paid), its days since the package
@@ -16,7 +16,7 @@ export class ReceivablesService {
   constructor(
     private readonly queries: ReceivablesQueries,
     private readonly fx: FxConverter,
-    private readonly settings: SettingsService,
+    private readonly settings: ReceivablesSettings,
   ) {}
 
   async list(now = new Date()): Promise<ReceivablesView> {
@@ -24,7 +24,7 @@ export class ReceivablesService {
     const paid = await this.queries.paid(subs.map((s) => s.id));
     const rows = receivablesOf({ subs, paid, today: riyadhDate(now.toISOString()) });
     const totals = receivableTotals(rows);
-    const conversion = await this.fx.conversion((await this.settings.all()).reporting_currency, totals.map((t) => t.currency));
+    const conversion = await this.fx.conversion((await this.settings.read()).reporting_currency, totals.map((t) => t.currency));
     const total = totals.reduce((n, t) => n + (convert(conversion, t.owed, t.currency) ?? 0), 0);
     return {
       rows,

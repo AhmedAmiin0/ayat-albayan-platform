@@ -3,10 +3,12 @@ import { loadEnv } from '../../env';
 import { FX_FETCHER, OpenErApiFetcher, type FxFetcher } from './fx.fetcher';
 import { FxQueries } from './fx.queries';
 import { FxService } from './fx.service';
+import { FxSettings } from './fx.settings';
 
 /** SAR→X exchange rates for USD quotes (docs/08 §4). No route: pricing (and Phase 3) inject FxService. */
 @Module({
   providers: [
+    FxSettings,
     FxService,
     FxQueries,
     // FX_API_URL read per fetch: the admin may change it in «التكاملات» (no restart).

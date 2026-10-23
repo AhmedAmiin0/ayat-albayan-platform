@@ -3,10 +3,10 @@ import { Controller, Get, Param, ParseUUIDPipe, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
 import { Permissions } from '../../common/auth/decorators';
-import { SettingsService } from '../../common/settings/settings.service';
 import { parseOrThrow } from '../teachers/http';
 import { invoiceRecentQuery, recentFilter } from './invoices.dto';
 import { InvoicesService } from './invoices.service';
+import { InvoicesSettings } from './invoices.settings';
 
 const listQuery = z
   .object({ ruleId: z.uuid().optional(), studentId: z.uuid().optional() })
@@ -20,7 +20,7 @@ const listQuery = z
 export class InvoicesController {
   constructor(
     private readonly invoices: InvoicesService,
-    private readonly settings: SettingsService,
+    private readonly settings: InvoicesSettings,
   ) {}
 
   /** `?ruleId=` (one booking) or `?studentId=` (all of a student's bookings); exactly one. */
@@ -32,7 +32,7 @@ export class InvoicesController {
   /** `?from&to` (Riyadh days, inclusive) `&kind&student&sort&dir&page&pageSize`: newest first by default. */
   @Get('recent')
   async recent(@Query() query: unknown) {
-    const { academy_timezone: tz } = await this.settings.all();
+    const { academy_timezone: tz } = await this.settings.read();
     return this.invoices.recent(recentFilter(parseOrThrow(invoiceRecentQuery, query), tz));
   }
 
