@@ -1,5 +1,5 @@
 import { SETTING_FIELD_OF, type AcademySettings, type SettingKey, type SettingsMetaResponse } from '@ab/shared';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useMutationState, useQuery, useQueryClient } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@/lib/api';
 import { pathKey } from '@/lib/query-keys';
 
@@ -25,10 +25,21 @@ export function outcomeOf(key: SettingKey, answer: unknown): SaveOutcome {
   return names.includes(key) || names.includes(SETTING_FIELD_OF[key]) ? 'moved' : 'saved';
 }
 
+const SAVE_KEY = ['settings', 'value-save'] as const;
+
+/** The keys being saved now: their rows say «جارٍ الحفظ…» on the second line. */
+export function useSavingKeys(): SettingKey[] {
+  return useMutationState({
+    filters: { mutationKey: SAVE_KEY, status: 'pending' },
+    select: (m) => (m.state.variables as ValueSave | undefined)?.key,
+  }).filter((k): k is SettingKey => k !== undefined);
+}
+
 /** One key per save (docs/26b §2: per-row saves), never the whole form. */
 export function useSaveValue() {
   const qc = useQueryClient();
   return useMutation({
+    mutationKey: SAVE_KEY,
     mutationFn: async ({ key, value }: ValueSave) => {
       const answer = await apiSend<unknown>('PATCH', SETTINGS, { [SETTING_FIELD_OF[key]]: value });
       return { outcome: outcomeOf(key, answer), answer };

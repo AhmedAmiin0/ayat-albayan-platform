@@ -28,10 +28,21 @@ test('«الإعدادات» lists «القيم» and «التواصل»; each o
   expect(router.push).toHaveBeenCalledWith('/more/ops/settings/communications');
 });
 
-test('the send state is on the list: «إرسال الرسائل عبر واتساب: مفعّل»', async () => {
+const sendLine = (state: string) => t.settingsPages.sendingState.replace('{state}', state);
+
+test('the send state is on the list: «إرسال الرسائل: مفعّل» with a filled nuqta', async () => {
   await renderWithQuery(<SettingsScreen />);
-  const m = t.mobileAdmin.settings;
-  expect(await screen.findByText(`${m.messagingEnabled}: ${m.on}`)).toBeTruthy();
+  expect(await screen.findByText(sendLine(t.numbers.chips.enabled))).toBeTruthy();
+  expect(screen.getByTestId('nuqta-fill', { includeHiddenElements: true })).toBeTruthy();
+});
+
+test('sending off: «إرسال الرسائل: متوقف» with the struck nuqta', async () => {
+  mockApiFetch.mockImplementation(async (p: string) =>
+    p === '/auth/me' ? { role: 'admin', permissions: ['settings.read'] } : { ...settings, messaging_enabled: false },
+  );
+  await renderWithQuery(<SettingsScreen />);
+  expect(await screen.findByText(sendLine(t.numbers.chips.disabled))).toBeTruthy();
+  expect(screen.getByTestId('nuqta-struck', { includeHiddenElements: true })).toBeTruthy();
 });
 
 test('«التكاملات» is a line, not a button, with «تُدار من الموقع»', async () => {
@@ -50,6 +61,6 @@ test('an admin with settings.read gets «مزامنة Google»', async () => {
 test('without settings.read: no «مزامنة Google» row', async () => {
   mockApiFetch.mockImplementation(async (p: string) => (p === '/auth/me' ? { role: 'admin', permissions: [] } : settings));
   await renderWithQuery(<SettingsScreen />);
-  await screen.findByText(new RegExp(t.mobileAdmin.settings.messagingEnabled));
+  await screen.findByText(sendLine(t.numbers.chips.enabled));
   expect(screen.queryByRole('button', { name: t.googleSync.mobile.title })).toBeNull();
 });

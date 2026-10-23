@@ -33,15 +33,15 @@ function SavedText({ valueKey, saved }: { valueKey: SettingKey; saved: unknown }
   );
 }
 
-/** «احفظ» (primary) + «إلغاء». */
+/** «إلغاء» then «احفظ» (primary), as every sheet and dialog on the web (docs/26b §7b). */
 function Actions({ sheet }: { sheet: ValueSheetState }) {
   return (
     <View style={{ flexDirection: 'row', gap: 8 }}>
       <View style={{ flex: 1 }}>
-        <Button label={t.config.custom.save} busy={sheet.saving} onPress={sheet.submit} />
+        <Button variant="ghost" label={t.config.custom.cancel} onPress={sheet.requestClose} />
       </View>
       <View style={{ flex: 1 }}>
-        <Button variant="ghost" label={t.config.custom.cancel} onPress={sheet.requestClose} />
+        <Button label={t.config.custom.save} busy={sheet.saving} onPress={sheet.submit} />
       </View>
     </View>
   );
@@ -65,9 +65,16 @@ export function ValueSheetBody({ valueKey, saved, canWrite, meta, sheet }: Value
         <SavedText valueKey={valueKey} saved={saved} />
       )}
       {sheet.error ? <ErrorLine message={sheet.error} /> : null}
-      <SheetNotes valueKey={valueKey} editable={editable} canWrite={canWrite} meta={meta} />
+      <SheetNotes
+        valueKey={valueKey}
+        saved={saved}
+        editable={editable}
+        canWrite={canWrite}
+        meta={meta}
+        onReset={sheet.resetDefault}
+      />
       <SheetNotice notice={sheet.notice} />
-      <SheetQuestion sheet={sheet} />
+      <SheetQuestion valueKey={valueKey} sheet={sheet} />
       {editable && sheet.stage === 'edit' ? <Actions sheet={sheet} /> : null}
     </View>
   );

@@ -1,3 +1,4 @@
+import { CURRENCY_ISOS } from '@ab/shared';
 import { t } from '@/lib/i18n';
 import { choicesOf, confirmOf, draftOf, editorOf, parseDraft, sameValue } from './value-draft';
 import { outcomeOf } from './use-save-value';
@@ -44,17 +45,24 @@ test('parseDraft checks with the API schema; Arabic-Indic digits are read', () =
 
 test('choicesOf keeps a stored value outside the list first', () => {
   expect(choicesOf('feedback_mode', 'buttons')).toEqual(['buttons', 'link']);
-  expect(choicesOf('reporting_currency', 'SAR')).toContain('EGP');
+  // As the web's select: CURRENCY_ISOS, plus the stored code when it is outside them.
+  expect(choicesOf('reporting_currency', 'SAR')).toEqual([...CURRENCY_ISOS]);
+  expect(choicesOf('reporting_currency', 'EGP')).toEqual(['EGP', ...CURRENCY_ISOS]);
+  expect(choicesOf('reporting_currency', '')).toEqual([...CURRENCY_ISOS]);
   expect(choicesOf('reporting_currency', 'GBP')[0]).toBe('GBP');
   expect(choicesOf('academy_timezone', 'Asia/Riyadh')[0]).toBe('Asia/Riyadh');
 });
 
-test('confirmOf: typed only for a number of days, plain for the switches', () => {
-  expect(confirmOf('recording_retention_days', 90)).toBe('typed');
-  expect(confirmOf('recording_retention_days', null)).toBeNull();
-  expect(confirmOf('activity_retention_days', 30)).toBe('typed');
-  expect(confirmOf('sales_auto_assign', true)).toBe('plain');
-  expect(confirmOf('booking_horizon_weeks', 8)).toBeNull();
+test('confirmOf: typed only when a retention is turned on or shortened, plain for the switches', () => {
+  expect(confirmOf('recording_retention_days', 90, null)).toBe('typed');
+  expect(confirmOf('recording_retention_days', 30, 90)).toBe('typed');
+  expect(confirmOf('recording_retention_days', 120, 90)).toBeNull();
+  expect(confirmOf('recording_retention_days', 90, 90)).toBeNull();
+  expect(confirmOf('recording_retention_days', null, 90)).toBeNull();
+  expect(confirmOf('activity_retention_days', 30, 180)).toBe('typed');
+  expect(confirmOf('activity_retention_days', 365, 180)).toBeNull();
+  expect(confirmOf('sales_auto_assign', true, false)).toBe('plain');
+  expect(confirmOf('booking_horizon_weeks', 8, 5)).toBeNull();
 });
 
 test('sameValue compares by content', () => {
