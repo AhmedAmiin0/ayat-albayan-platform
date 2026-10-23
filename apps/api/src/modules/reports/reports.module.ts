@@ -16,6 +16,7 @@ import { ReportSubmitService } from './report-submit.service';
 import { ReportsController } from './reports.controller';
 import { ReportsQueries } from './reports.queries';
 import { ReportsService } from './reports.service';
+import { ReportsSettings } from './reports.settings';
 import { TeacherReportsQueries } from './teacher-reports.queries';
 import { TeacherReportsService } from './teacher-reports.service';
 
@@ -39,6 +40,7 @@ import { TeacherReportsService } from './teacher-reports.service';
     ReportSubmitService,
     ReportsQueries,
     ReportsService,
+    ReportsSettings,
     TeacherReportsQueries,
     TeacherReportsService,
     { provide: ReportPdfQueue, useClass: PendingPdfQueue },

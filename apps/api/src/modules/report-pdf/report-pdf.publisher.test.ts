@@ -1,16 +1,16 @@
-import { SETTING_DEFAULTS } from '@ab/shared';
 import { Logger } from '@nestjs/common';
 import { describe, expect, it, vi } from 'vitest';
-import type { SettingsService } from '../../common/settings/settings.service';
+import { fakeSettings } from '../../common/settings/settings.fakes';
 import type { StorageService } from '../../common/storage/storage.service';
 import type { PdfRenderer } from './pdf-renderer';
 import { sampleSource } from './report-pdf.fakes';
 import { ReportPdfPublisher } from './report-pdf.publisher';
+import { ReportPdfSettings } from './report-pdf.settings';
 import type { ReportPdfSource } from './report-pdf.source';
 
 const NOW = new Date('2026-09-29T15:12:00Z');
 
-function setup(found = true, all: () => Promise<unknown> = async () => SETTING_DEFAULTS) {
+function setup(found = true, store = fakeSettings()) {
   const source = { load: vi.fn(async () => (found ? sampleSource() : null)) };
   const renderer = {
     render: vi.fn<(html: string, footer?: string) => Promise<Uint8Array>>(async () => new Uint8Array([37, 80, 68, 70])),
@@ -23,7 +23,7 @@ function setup(found = true, all: () => Promise<unknown> = async () => SETTING_D
     storage as unknown as StorageService,
   );
   // The settings arrive by property injection (the constructor stays at three parameters).
-  Object.assign(publisher, { settings: { all } as unknown as SettingsService });
+  Object.assign(publisher, { settings: new ReportPdfSettings(store) });
   return { publisher, renderer, storage };
 }
 
@@ -54,8 +54,8 @@ describe('ReportPdfPublisher — render and store one report', () => {
   });
 
   it('the footer prints the site from academy_contact and the number from academy_whatsapp_e164', async () => {
-    const settings = { ...SETTING_DEFAULTS, academy_contact: { site: 'example.org' }, academy_whatsapp_e164: '+201001234567' };
-    const { publisher, renderer } = setup(true, async () => settings);
+    const store = fakeSettings({ academy_contact: { site: 'example.org' }, academy_whatsapp_e164: '+201001234567' });
+    const { publisher, renderer } = setup(true, store);
     await publisher.publish('r1', NOW);
     const html = renderer.render.mock.calls[0]?.[0] ?? '';
     expect(html).toContain('example.org');
@@ -64,7 +64,9 @@ describe('ReportPdfPublisher — render and store one report', () => {
 
   it('a failed settings read is logged and the built-in contact is printed; the PDF is still made', async () => {
     const warn = vi.spyOn(Logger.prototype, 'warn').mockImplementation(() => undefined);
-    const { publisher, renderer, storage } = setup(true, async () => { throw new Error('db down'); });
+    const store = fakeSettings();
+    vi.mocked(store.all).mockRejectedValue(new Error('db down'));
+    const { publisher, renderer, storage } = setup(true, store);
     await publisher.publish('r1', NOW);
     expect(renderer.render.mock.calls[0]?.[0]).toContain('+966 56 610 1447');
     expect(storage.upload).toHaveBeenCalled();

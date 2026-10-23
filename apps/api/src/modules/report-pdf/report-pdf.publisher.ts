@@ -1,5 +1,4 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
-import { SettingsService } from '../../common/settings/settings.service';
 import { StorageService } from '../../common/storage/storage.service';
 import { BUCKETS, reportPdfPath } from '../../common/storage/storage.paths';
 import { pdfContact } from './pdf-contact';
@@ -10,6 +9,7 @@ import { PdfRenderer } from './pdf-renderer';
 import { toMessage, toModel } from './report-pdf.mapper';
 import { ReportPdfSource } from './report-pdf.source';
 import type { ReportReadyMessage } from './report-ready';
+import { ReportPdfSettings } from './report-pdf.settings';
 import { reportHtml } from './template';
 
 export interface Published {
@@ -29,7 +29,7 @@ export class ReportPdfPublisher {
   private readonly log = new Logger(ReportPdfPublisher.name);
 
   /** Property injection keeps the constructor at three parameters; required (a missing provider fails at boot). */
-  @Inject(SettingsService) private readonly settings!: SettingsService;
+  @Inject(ReportPdfSettings) private readonly settings!: ReportPdfSettings;
 
   /** Overwrites the object: a re-rendered (edited) report keeps its path (R-REP-04). */
   async publish(reportId: string, now: Date): Promise<Published> {
@@ -46,7 +46,7 @@ export class ReportPdfPublisher {
   /** The footer's contact from settings; a failed read is logged and the built-in contact is printed. */
   private async contact(): Promise<PdfContact | undefined> {
     try {
-      return pdfContact(await this.settings.all());
+      return pdfContact(await this.settings.read());
     } catch (e) {
       this.log.warn(`report footer: settings read failed, using the built-in contact: ${e instanceof Error ? e.message : String(e)}`);
       return undefined;
