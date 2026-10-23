@@ -1,4 +1,5 @@
-import { catalogueViews, NOTIFICATION_CATALOGUE, SETTING_DEFAULTS, TEMPLATE_KEYS, type AcademySettings, type TemplateStatus, type WaLine } from '@ab/shared';
+import { catalogueViews, NOTIFICATION_CATALOGUE, SETTING_DEFAULTS, TEMPLATE_KEYS } from '@ab/shared';
+import type { AcademySettings, TemplateStatus, WaLine } from '@ab/shared';
 import { describe, expect, it, vi } from 'vitest';
 import { readerOf } from '../../common/settings/settings.fakes';
 import { AUTOMATIC_KEYS } from '../whatsapp/send-stale';
