@@ -41,7 +41,7 @@ export function mocks() {
     teachers: { idByProfile: vi.fn() },
     access: { check: vi.fn() },
     audit: { record: vi.fn() },
-    settings: { all: vi.fn(), lateCancelHours: vi.fn(), bookingHorizonWeeks: vi.fn() },
+    settings: { all: vi.fn() },
     storage: { signedUpload: vi.fn(), signedDownload: vi.fn(), exists: vi.fn(), remove: vi.fn(), info: vi.fn(), copy: vi.fn(), head: vi.fn() },
     pricing: { quote: vi.fn(), catalog: vi.fn() },
     attachments: { forPayment: vi.fn(), save: vi.fn(), owners: vi.fn() }, // payment_attachments

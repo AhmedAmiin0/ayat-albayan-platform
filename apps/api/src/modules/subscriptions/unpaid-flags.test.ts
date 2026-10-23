@@ -1,6 +1,5 @@
-import { SETTING_DEFAULTS } from '@ab/shared';
 import { describe, expect, it, vi } from 'vitest';
-import type { SettingsService } from '../../common/settings/settings.service';
+import { readerOf } from '../../common/settings/settings.fakes';
 import type { AlertsQueries } from './alerts.queries';
 import { AlertsJob } from './alerts.job';
 import type { SubscriptionAlertsService } from './alerts.service';
@@ -8,6 +7,7 @@ import type { BalanceQueries, BalanceRow } from './balance.queries';
 import { LessonEvents } from '../../common/events/lesson-events';
 import { subRow } from './money.fakes';
 import type { SubscriptionsQueries } from './subscriptions.queries';
+import { SubscriptionsSettings } from './subscriptions.settings';
 import { UnpaidFlags } from './unpaid-flags.service';
 
 const bal = (id: string, studentId: string, remaining: number): BalanceRow => ({
@@ -23,11 +23,11 @@ function flags(on: boolean) {
   ];
   const subs = { forStudents: vi.fn(async () => rows) };
   const balances = { forStudents: vi.fn(async () => [bal('a', 's1', 0), bal('b', 's2', 2), bal('c', 's3', 0)]) };
-  const settings = { all: vi.fn(async () => ({ ...SETTING_DEFAULTS, flag_future_lessons_when_unpaid: on })) };
+  const settings = readerOf(SubscriptionsSettings, { flag_future_lessons_when_unpaid: on });
   return new UnpaidFlags(
     subs as unknown as SubscriptionsQueries,
     balances as unknown as BalanceQueries,
-    settings as unknown as SettingsService,
+    settings,
   );
 }
 

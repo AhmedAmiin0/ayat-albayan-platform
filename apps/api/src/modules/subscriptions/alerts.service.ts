@@ -2,11 +2,11 @@ import { ar } from '../../common/i18n/server-text';
 import { ALERT_TASK_KIND, alertDedupKey, packageProgress } from '@ab/shared';
 import { Injectable, Logger } from '@nestjs/common';
 import { PushService } from '../../common/push/push.service';
-import { SettingsService } from '../../common/settings/settings.service';
 import { AlertsQueries } from './alerts.queries';
 import { alertPlan, openTaskKeys, type AlertPlan } from './packages.plan';
 import { PackagesService } from './packages.service';
 import { StudentRenewal, type RenewalCause } from './student-renewal';
+import { SubscriptionsSettings } from './subscriptions.settings';
 
 export type EvaluateOptions = { actorId?: string | null; now?: Date; cause?: RenewalCause };
 
@@ -23,7 +23,7 @@ export type EvaluateOptions = { actorId?: string | null; now?: Date; cause?: Ren
 @Injectable()
 export class AlertsEnv {
   constructor(
-    readonly settings: SettingsService,
+    readonly settings: SubscriptionsSettings,
     readonly push: PushService,
     readonly renewal: StudentRenewal,
   ) {}
@@ -49,7 +49,7 @@ export class SubscriptionAlertsService {
    */
   async evaluateStudents(studentIds: readonly string[], opts: EvaluateOptions = {}): Promise<number> {
     if (studentIds.length === 0) return 0;
-    const { renewal_alert_remaining: threshold, auto_messages_enabled: auto } = await this.env.settings.all();
+    const { renewal_alert_remaining: threshold, auto_messages_enabled: auto } = await this.env.settings.read();
     const actorId = opts.actorId ?? null;
     const cause = opts.cause ?? { via: 'event' };
     let failed = 0;

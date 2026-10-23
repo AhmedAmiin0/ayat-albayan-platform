@@ -24,6 +24,7 @@ import { StudentExpiryQueries } from './student-expiry.queries';
 import { StudentTrialStatus } from './student-trial-status';
 import { StudentTrialQueries } from './student-trial.queries';
 import { SubscriptionsService } from './subscriptions.service';
+import { SubscriptionsSettings } from './subscriptions.settings';
 import { UnpaidFlags } from './unpaid-flags.service';
 
 /**
@@ -61,6 +62,7 @@ import { UnpaidFlags } from './unpaid-flags.service';
     SubscriptionsQueries,
     SubscriptionCreator,
     SubscriptionsService,
+    SubscriptionsSettings,
     UnpaidFlags,
   ],
   exports: [

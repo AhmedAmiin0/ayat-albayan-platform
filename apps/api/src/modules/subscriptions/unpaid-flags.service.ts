@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { SettingsService } from '../../common/settings/settings.service';
 import { BalanceQueries } from './balance.queries';
 import { unpaidFlagged } from './packages.plan';
 import { SubscriptionsQueries } from './subscriptions.queries';
+import { SubscriptionsSettings } from './subscriptions.settings';
 
 /**
  * R-SUB-02 «flag future lessons when unpaid»: which of these students have their newest package
@@ -15,13 +15,13 @@ export class UnpaidFlags {
   constructor(
     private readonly subs: SubscriptionsQueries,
     private readonly balances: BalanceQueries,
-    private readonly settings: SettingsService,
+    private readonly settings: SubscriptionsSettings,
   ) {}
 
   async studentIds(studentIds: readonly string[]): Promise<Set<string>> {
     const ids = [...new Set(studentIds)];
     if (ids.length === 0) return new Set();
-    if (!(await this.settings.all()).flag_future_lessons_when_unpaid) return new Set();
+    if (!(await this.settings.read()).flag_future_lessons_when_unpaid) return new Set();
     const [rows, balances] = await Promise.all([this.subs.forStudents(ids), this.balances.forStudents(ids)]);
     const byId = new Map(balances.map((b) => [b.subscription_id, b]));
     return new Set(
