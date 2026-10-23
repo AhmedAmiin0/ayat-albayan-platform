@@ -1,6 +1,7 @@
 import { isIntegrationKey, parseAllowedRecipients } from '@ab/shared';
 import { z } from 'zod';
 import { integrationOverlay } from './common/integrations/integration-overlay';
+import { blankIsUnset, optionalSecret } from './env.blank';
 import { GOOGLE_SHAPE } from './env.google';
 import { KAPSO_SHAPE } from './env.kapso';
 import { WEB_PUSH_SHAPE } from './env.web-push';
@@ -13,9 +14,6 @@ export { livekitEnv, type LivekitEnv } from './env.livekit';
 export { webPushEnv } from './env.web-push';
 export { googleEnv, googleRedirectUri, type GoogleEnv, type GoogleEndpoints } from './env.google';
 
-/** `KEY=` (empty, as in .env.example) means unset, never a boot failure. */
-const blankIsUnset = (v: unknown) => (typeof v === 'string' && v.trim() === '' ? undefined : v);
-const optionalSecret = z.preprocess(blankIsUnset, z.string().trim().min(1).optional());
 /** Comma list → normalised E.164 list; any bad item fails the boot, naming it (fail closed). */
 const recipientList = z.string().transform((raw, ctx) => {
   const { items, bad } = parseAllowedRecipients(raw);

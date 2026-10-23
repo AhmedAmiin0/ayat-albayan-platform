@@ -1,11 +1,9 @@
 import { WA_PROVIDERS } from '@ab/shared';
 import { z } from 'zod';
 import type { Env } from './env';
+import { blankIsUnset, optionalSecret } from './env.blank';
 import type { KapsoLineEnv } from './env.whatsapp';
 
-/** `KEY=` (empty, as in .env.example) means unset, never a boot failure. */
-const blankIsUnset = (v: unknown) => (typeof v === 'string' && v.trim() === '' ? undefined : v);
-const optionalSecret = z.preprocess(blankIsUnset, z.string().trim().min(1).optional());
 const provider = z.preprocess(blankIsUnset, z.enum(WA_PROVIDERS).default('meta'));
 
 /**
