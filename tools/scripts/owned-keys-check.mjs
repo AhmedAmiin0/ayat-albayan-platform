@@ -16,7 +16,11 @@ export const OWNED_KEYS = [
   'google_sync_mode',
 ];
 // insert (incl. on conflict upserts), update, delete or merge on public.settings / settings.
-const WRITE = /\b(insert\s+into|update(\s+only)?|delete\s+from|merge\s+into)\s+(public\s*\.\s*)?"?settings"?(?![\w$])/i;
+// A write into settings (also "public"."settings", the Studio / db diff form) or a call of the
+// security-definer writers from migration 630 (config_set / config_seed).
+const WRITE = /\b(insert\s+into|update(\s+only)?|delete\s+from|merge\s+into)\s+("?public"?\s*\.\s*)?"?settings"?(?![\w$])|\bconfig_(set|seed)\s*\(/i;
+// COPY puts its rows after the `;`, so the key is never in the same statement: any COPY into settings fails.
+const COPY = /\bcopy\s+("?public"?\s*\.\s*)?"?settings"?(?![\w$])[\s\S]*?\bfrom\b/i;
 
 /** true when the file's 14-digit number is above the cutoff; a name without one is checked too (fail safe). */
 export function newerThan(name, cutoff = CUTOFF) {
@@ -82,8 +86,10 @@ export function statements(sql) {
 
 /** The owned keys a statement writes: a write to settings that names the key as a quoted literal. */
 export function writtenKeys(stmt) {
+  if (COPY.test(stmt)) return ['<copy into settings>'];
   if (!WRITE.test(stmt)) return [];
-  return OWNED_KEYS.filter((k) => new RegExp(`'+${k}'+`).test(stmt));
+  // Any quoting (SQL '', JSON "" inside a literal) and any case.
+  return OWNED_KEYS.filter((k) => new RegExp(`(?<![A-Za-z0-9_])${k}(?![A-Za-z0-9_])`, 'i').test(stmt));
 }
 
 /** Every owned key the migration writes, as `<file>: …` messages (empty = fine). */

@@ -53,6 +53,13 @@ test('FAILS: dynamic SQL in a string and a delete of comms_source', () => {
   fails("delete from public.settings where key = 'comms_source';", 'comms_source');
 });
 
+test('FAILS: fully quoted names, the config_set / config_seed RPCs and COPY', () => {
+  fails(`INSERT INTO "public"."settings" ("key","value") VALUES ('messaging_enabled','true');`, 'messaging_enabled');
+  fails(`select public.config_set('[{"key":"auto_messages_enabled","value":true,"expected_version":0}]'::jsonb, null);`, 'auto_messages_enabled');
+  fails("select public.config_set(jsonb_build_array(jsonb_build_object('key','crm_cutover_done','value',true)), null);", 'crm_cutover_done');
+  fails("COPY public.settings (key, value) FROM stdin;", '<copy into settings>');
+});
+
 test('PASSES: the same insert in an older-numbered file is not checked', () => {
   const dir = mkdtempSync(join(tmpdir(), 'owned-keys-'));
   const sql = "insert into public.settings (key, value) values ('messaging_enabled', 'true');";
