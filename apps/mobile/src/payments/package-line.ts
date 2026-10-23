@@ -1,8 +1,8 @@
-import { alertFor, packageProgress, type StudentBalanceView } from '@ab/shared';
+import { alertFor, packageProgress, SETTING_DEFAULTS, type StudentBalanceView } from '@ab/shared';
 import { t } from '@/lib/i18n';
 
-/** settings.renewal_alert_remaining's default (docs/11 §2), used until GET /settings answers. */
-export const RENEWAL_DEFAULT = 2;
+/** settings.renewal_alert_remaining's default (docs/11 §2: 2), used until GET /settings answers. */
+export const RENEWAL_DEFAULT = SETTING_DEFAULTS.renewal_alert_remaining;
 
 export interface PackageLine {
   /** «فاضل حلقتين», «الباقة خلصت», «حضر حلقة زيادة عن الباقة». */

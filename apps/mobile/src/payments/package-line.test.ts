@@ -1,6 +1,6 @@
 import { t } from '@/lib/i18n';
 import { balanceOf, OLD_SUB_ID, subscription } from './fixtures';
-import { packageLine } from './package-line';
+import { packageLine, RENEWAL_DEFAULT } from './package-line';
 
 const left = (used: number, status: 'active' | 'unpaid' | 'paused' | 'trial' = 'active') =>
   balanceOf(
@@ -9,6 +9,10 @@ const left = (used: number, status: 'active' | 'unpaid' | 'paused' | 'trial' = '
       balance: { ...subscription().balance, lessons_used: used, remaining: 4 - used },
     }),
   );
+
+test('the threshold before GET /settings answers is the registry default, 2', () => {
+  expect(RENEWAL_DEFAULT).toBe(2);
+});
 
 test('no package (a trial student): no line', () => {
   expect(packageLine(balanceOf())).toBeNull();

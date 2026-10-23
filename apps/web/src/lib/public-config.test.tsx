@@ -5,7 +5,7 @@ import { EnterButton } from '@/features/classroom/JoinButton';
 import { receiptProblem } from '@/features/payments/ReceiptField';
 import { renderWithClient } from '@/features/inbox/test-utils';
 import { t } from '@/lib/i18n';
-import { usePublicConfig } from './public-config';
+import { publicConfigQuery, usePublicConfig } from './public-config';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 vi.mock('@/lib/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
@@ -18,6 +18,11 @@ function Probe() {
 }
 
 describe('usePublicConfig (GET /settings/public)', () => {
+  it('keeps the cache key and the 5-minute stale time the admin save invalidates', () => {
+    expect(publicConfigQuery.queryKey).toEqual(['settings', 'public']);
+    expect(publicConfigQuery.staleTime).toBe(300_000);
+  });
+
   it('shows the registry defaults until the API answers, then the academy values', async () => {
     let answer: (v: unknown) => void = () => undefined;
     apiFetch.mockImplementation(() => new Promise((r) => (answer = r)));

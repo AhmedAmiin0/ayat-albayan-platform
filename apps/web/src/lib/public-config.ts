@@ -1,7 +1,10 @@
 import {
   joinWindowConfig,
-  PUBLIC_SETTING_DEFAULTS,
+  PUBLIC_CONFIG_PATH,
+  PUBLIC_CONFIG_QUERY_KEY,
+  PUBLIC_CONFIG_STALE_MS,
   uploadMaxBytes,
+  withPublicDefaults,
   type JoinWindowConfig,
   type PublicConfig,
   type PublicSettings,
@@ -15,15 +18,15 @@ import { apiFetch } from './api';
  * save invalidates it. Until it answers (or if it fails) the registry defaults are used.
  */
 export const publicConfigQuery = queryOptions({
-  queryKey: ['settings', 'public'],
-  queryFn: () => apiFetch<PublicConfig>('/settings/public'),
-  staleTime: 5 * 60_000,
+  queryKey: PUBLIC_CONFIG_QUERY_KEY,
+  queryFn: () => apiFetch<PublicConfig>(PUBLIC_CONFIG_PATH),
+  staleTime: PUBLIC_CONFIG_STALE_MS,
 });
 
 /** The public settings, never undefined: the registry defaults while loading. */
 export function usePublicConfig(): PublicSettings {
   const { data } = useQuery(publicConfigQuery);
-  return { ...PUBLIC_SETTING_DEFAULTS, ...data };
+  return withPublicDefaults(data);
 }
 
 /**
