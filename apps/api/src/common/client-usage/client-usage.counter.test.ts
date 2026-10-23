@@ -15,17 +15,24 @@ describe('ClientUsageCounter', () => {
     expect(c.drain()).toEqual([]);
   });
 
-  it('caps the distinct keys (cap + the other bucket); new keys past the cap go to the other bucket, known keys still count', () => {
+  it('past the cap a new key keeps method, route and platform (build → other); known keys still count', () => {
     const c = new ClientUsageCounter(3);
     for (let i = 0; i < 5; i += 1) c.hit({ method: 'GET', route: `/r${i}`, client: 'web/1' });
     c.hit({ method: 'GET', route: '/r0', client: 'web/1' });
-    expect(c.size).toBe(4);
     expect(c.drain()).toEqual([
       ['GET /r0 web/1', 2],
-      [OTHER_BUCKET, 2],
       ['GET /r1 web/1', 1],
       ['GET /r2 web/1', 1],
+      [`GET /r3 web/${OTHER_BUCKET}`, 1],
+      [`GET /r4 web/${OTHER_BUCKET}`, 1],
     ]);
+  });
+
+  it('forged builds filling the cap never hide an untagged hit on an alias route', () => {
+    const c = new ClientUsageCounter(2);
+    for (let i = 0; i < 50; i += 1) c.hit({ method: 'PATCH', route: '/settings', client: `web/f${i}` });
+    c.hit({ method: 'PATCH', route: '/settings', client: 'untagged' });
+    expect(c.drain()).toContainEqual(['PATCH /settings untagged', 1]);
   });
 });
 

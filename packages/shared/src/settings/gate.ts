@@ -20,10 +20,13 @@ export const GATE_CONFIRM_TEXT = {
   auto: 'نعم، فعّلها',
 } as const satisfies Record<GateSwitch, string>;
 
-/** PUT /messages/gate/sending | /messages/gate/auto body. */
+/**
+ * PUT /messages/gate/sending | /messages/gate/auto body. confirmText is not validated here so that OFF
+ * is never refused over it; gateConfirmed() accepts only the exact string for ON.
+ */
 export const gateSwitchSchema = z.object({
   on: z.boolean(),
-  confirmText: z.string().max(200).optional(),
+  confirmText: z.unknown().optional(),
 });
 export type GateSwitchInput = z.infer<typeof gateSwitchSchema>;
 
@@ -32,5 +35,5 @@ export const gateCutoverSchema = z.object({ done: z.boolean() });
 export type GateCutoverInput = z.infer<typeof gateCutoverSchema>;
 
 /** true only for the exact confirmation text of that switch (trimmed). */
-export const gateConfirmed = (sw: GateSwitch, text: string | undefined): boolean =>
+export const gateConfirmed = (sw: GateSwitch, text: unknown): boolean =>
   typeof text === 'string' && text.trim() === GATE_CONFIRM_TEXT[sw];

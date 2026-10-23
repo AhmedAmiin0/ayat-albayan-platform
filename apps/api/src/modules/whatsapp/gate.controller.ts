@@ -5,8 +5,9 @@ import {
   GATE_SWITCH_KEY,
   type AcademySettings,
   type GateSwitch,
+  SETTING_DEFAULTS,
 } from '@ab/shared';
-import { Body, Controller, HttpCode, Put } from '@nestjs/common';
+import { Body, Controller, HttpCode, Logger, Put } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { AuditService } from '../../common/audit/audit.service';
 import { SINGLETON_ENTITY_ID } from '../../common/audit/singleton-entity';
@@ -29,6 +30,8 @@ type KeyWrite = { key: GateKey; value: boolean; action: string };
 @Permissions('settings.write')
 @Controller('messages/gate')
 export class GateController {
+  private readonly logger = new Logger(GateController.name);
+
   constructor(
     private readonly settings: GateSettings,
     private readonly audit: AuditService,
@@ -60,18 +63,35 @@ export class GateController {
     return this.writeOne({ key: GATE_SWITCH_KEY[sw], value: on, action: `gate_${sw}` }, user);
   }
 
+  /**
+   * The write comes first and is the only step that may fail the request: a failed read before it
+   * (cold cache, DB hiccup) must never refuse an OFF, and a failed audit or re-read after it must not
+   * report a saved switch as failed (the admin would retry). Those are logged instead.
+   */
   private async writeOne(w: KeyWrite, user: AuthUser): Promise<AcademySettings> {
-    const before = await this.settings.all();
+    const before = await this.settled('read', () => this.settings.all());
     await this.settings.writeKey(w.key, w.value, user.id);
-    const after = await this.settings.all();
-    await this.audit.record({
-      actorId: user.id,
-      entity: 'settings',
-      entityId: SINGLETON_ENTITY_ID,
-      action: w.action,
-      before: { [w.key]: before[w.key] },
-      after: { [w.key]: after[w.key] },
-    });
-    return after;
+    const after = await this.settled('re-read', () => this.settings.all());
+    await this.settled('audit', () =>
+      this.audit.record({
+        actorId: user.id,
+        entity: 'settings',
+        entityId: SINGLETON_ENTITY_ID,
+        action: w.action,
+        before: { [w.key]: before ? before[w.key] : null },
+        after: { [w.key]: w.value },
+      }),
+    );
+    return { ...(after ?? before ?? SETTING_DEFAULTS), [w.key]: w.value };
+  }
+
+  /** A step around the write: its failure is logged and yields null, never a failed request. */
+  private async settled<T>(step: string, run: () => Promise<T>): Promise<T | null> {
+    try {
+      return await run();
+    } catch (e) {
+      this.logger.error(`gate ${step} failed: ${e instanceof Error ? e.message : String(e)}`);
+      return null;
+    }
   }
 }

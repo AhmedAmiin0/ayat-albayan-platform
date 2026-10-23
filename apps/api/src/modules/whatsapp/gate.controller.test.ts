@@ -49,7 +49,7 @@ describe('PUT /messages/gate/sending | auto', () => {
 
       it('a teacher (no settings.write) → 403; a malformed body → 400; nothing written', async () => {
         expect((await t.put(`/messages/gate/${sw}`, { on: false }, 'teacher')).statusCode).toBe(403);
-        for (const body of [{}, { on: 'false' }, { on: 1 }, { on: false, confirmText: 7 }]) {
+        for (const body of [{}, { on: 'false' }, { on: 1 }, { on: null }]) {
           expect((await t.put(`/messages/gate/${sw}`, body)).statusCode).toBe(400);
         }
         expect(t.settings.write).not.toHaveBeenCalled();

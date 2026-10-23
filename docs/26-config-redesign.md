@@ -296,7 +296,7 @@ Order: **26-P0 → 23-P3 → 26-P1 → 23-P4 → 26-P2 → 26-P3 → 23-P5 → 2
 
 | # | PR | Scope | Rollback |
 |---|---|---|---|
-| **26-P0** | Guard rails | Gate routes; the alias drops owned keys (per key, with a `moved` list); `comms_source` outside the registry; migration CI check; the `X-AB-Client` header (web + OTA to 0.2.0) and per-route counting; the web form sends only changed keys | Revert. The old switches still work, because the alias change is additive |
+| **26-P0** | Guard rails | Gate routes; the alias drops owned keys (per key, with a `moved` list); `comms_source` outside the registry; migration CI check; the `X-AB-Client` header (web + OTA to 0.2.0) and per-route counting; the web form sends only changed keys | Revert. Until then an old web tab's switches (PATCH) are answered `moved` and change nothing: reload the tab |
 | 23-P3 | Numbers as records (in progress) | — | Its own |
 | **26-P1** | Expand | §2a columns, sequences, revision table, RPCs, `NOT VALID` checks, generated types; registry gains `module`/`group`/`confirm`/`ownedBy`/`reachesFamilies`; `SEED_ENTRIES`. Inert | Revert the code; the unused columns stay |
 | 23-P4 | Notification rules (**amended**) | Copies 7 of the 8 notification keys (not `renewal_alert_remaining`, §1). Moves the messaging section's writes of the 8 keys to the rules API. Ownership of the 8 keys changes **in the registry** (`ownedBy: 'notifications'`), never through SQL metadata. Legacy rows are frozen while `comms_source = module`; switching back to `legacy` first copies rules → legacy, or needs an empty reverse parity | Its own |
@@ -329,6 +329,10 @@ Order: **26-P0 → 23-P3 → 26-P1 → 23-P4 → 26-P2 → 26-P3 → 23-P5 → 2
   `apps/mobile/src/lib/client-tag.ts` (JS only), API counting `apps/api/src/common/client-usage/` (in memory, one log
   line per 15 min). Web switches: `apps/web/src/features/messaging/gate-api.ts`. Not done here (left to 26-P3 /
   `cloud/config-ui`): «the web form sends only changed keys».
+  `PATCH /settings` answers 400 (today's body) only when nothing could be saved and a field was invalid, so the
+  0.2.0 phone keeps its field errors; owned keys alone are 200 with `saved: []`. Gate routes: only the write can fail
+  the request (a failed read before it or audit after it is logged). Usage counts: past the cap only the build
+  collapses to `other`, `untagged` is always kept; any `other` count on a route means «not zero».
 - **26-P1 — built, inert.** Migration `packages/db/supabase/migrations/20261023000630_config_expand.sql` (columns,
   `settings_version_seq`, `settings_revision` bumped by a deferred row constraint trigger at commit, `config_seed`,
   `config_set`, `NOT VALID` checks); types `packages/db/src/types.ts`; registry metadata in

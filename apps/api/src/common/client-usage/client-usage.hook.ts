@@ -16,6 +16,8 @@ export const UNMATCHED_ROUTE = '(unmatched)';
  */
 export function addClientUsageHook(fastify: Fastify, sink: HitSink): void {
   fastify.addHook('onResponse', async (req) => {
+    // CORS preflights carry no client header: noise, not usage.
+    if (req.method === 'OPTIONS') return;
     sink.hit({
       method: req.method,
       route: req.routeOptions.url ?? UNMATCHED_ROUTE,
