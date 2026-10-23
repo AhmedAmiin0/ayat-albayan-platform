@@ -1,6 +1,6 @@
+import type { SettingMeta } from '@ab/shared';
 import { queryOptions } from '@tanstack/react-query';
 import { apiFetch } from '@/lib/api';
-import type { SettingMeta } from './settings-view';
 
 /** GET /config/meta (admin): who last changed each stored setting, and when. */
 export const configMetaQuery = queryOptions({

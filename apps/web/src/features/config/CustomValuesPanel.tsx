@@ -1,13 +1,14 @@
 import type { CustomConfigView } from '@ab/shared';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
+import { Section } from '@/components/settings/Section';
 import { Button } from '@/components/ui/button';
 import { Dialog } from '@/components/ui/dialog';
 import { FormAlert } from '@/components/ui/form-alert';
 import { t } from '@/lib/i18n';
-import { Section } from '../messaging/SettingsSections';
 import { customConfigQuery, deleteCustom, putCustom } from './custom-api';
 import { draftOf, emptyDraft, matchesCustom } from './custom-form';
+import { CUSTOM_CONFIG_SECTION } from './custom-section';
 import { CustomEntryForm } from './CustomEntryForm';
 import { CustomEntryRow } from './CustomEntryRow';
 
@@ -40,7 +41,7 @@ export function CustomValuesPanel({ query, onSaved }: { query: string; onSaved: 
   const rows = (list.data ?? []).filter((e) => matchesCustom(e, query));
   if (query.trim() !== '' && rows.length === 0 && !editing) return null;
   return (
-    <Section id="custom">
+    <Section id={CUSTOM_CONFIG_SECTION.id} title={CUSTOM_CONFIG_SECTION.label}>
       <p className="text-xs text-ink-3">{c.hint}</p>
       {list.isError && <p className="text-sm text-ink-2">{c.loadError}</p>}
       {list.data?.length === 0 && !editing && <p className="text-sm text-ink-3">{c.empty}</p>}

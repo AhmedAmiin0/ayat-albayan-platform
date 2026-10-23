@@ -1,10 +1,5 @@
+import type { SettingMeta } from '@ab/shared';
 import { createContext, useContext } from 'react';
-
-export interface SettingMeta {
-  updatedAt: string;
-  updatedBy: string | null;
-  updatedByName: string | null;
-}
 
 /** What every section needs besides the form: the search text and who last changed each setting. */
 export interface SettingsView {

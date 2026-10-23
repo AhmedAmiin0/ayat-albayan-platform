@@ -1,12 +1,12 @@
 import { SETTING_FIELD_OF, settingDef, type SettingKey } from '@ab/shared';
 import { useId } from 'react';
+import { settingText } from '@/components/settings/setting-text';
+import type { RowExtras } from '@/components/settings/SettingRow';
 import { controlClass, Input } from '@/components/ui/input';
 import { NuqtaGlyph } from '@/components/ui/nuqta-glyph';
 import { t } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
 import { str, shapeId } from '../messaging/settings-form';
-import { settingText } from '../messaging/setting-text';
-import type { RowExtras } from '../messaging/SettingsFields';
 import type { SettingsFormState } from '../messaging/use-settings-form';
 
 /** An object setting (contact, consent notice): one labelled box per field, one error for the whole setting. */

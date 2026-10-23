@@ -1,11 +1,11 @@
 import type { AcademySettings } from '@ab/shared';
 import { useState } from 'react';
+import { ConfirmSwitchDialog } from '@/components/settings/ConfirmSwitchDialog';
 import { Button } from '@/components/ui/button';
 import { FormAlert } from '@/components/ui/form-alert';
 import { StatusChip } from '@/components/ui/status-chip';
 import { t } from '@/lib/i18n';
 import { useSettingSwitch } from '@/lib/use-setting-switch';
-import { ConfirmSwitchDialog } from './ConfirmSwitchDialog';
 
 const s = t.templates.settings;
 

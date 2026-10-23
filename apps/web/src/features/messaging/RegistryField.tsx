@@ -1,14 +1,16 @@
 import { CURRENCY_ISOS, SETTING_FIELD_OF, settingDef, type SettingKey } from '@ab/shared';
+import { CheckField } from '@/components/settings/CheckField';
+import { NumberField } from '@/components/settings/NumberField';
+import { settingText } from '@/components/settings/setting-text';
+import { SettingRow, type RowExtras, type SettingRowProps } from '@/components/settings/SettingRow';
+import { useSettingsView } from '@/components/settings/settings-view';
 import { Input } from '@/components/ui/input';
 import { Select } from '@/components/ui/select';
 import { TimeZoneSelect } from '@/components/ui/time-zone-select';
 import { ResetButton } from '../config/ResetButton';
 import { RowNotes } from '../config/RowNotes';
-import { useSettingsView } from '../config/settings-view';
 import { ShapeRow } from '../config/ShapeRow';
 import { flag, onKey, str } from './settings-form';
-import { CheckField, NumberField, SettingRow, type RowExtras, type SettingRowProps } from './SettingsFields';
-import { settingText } from './setting-text';
 import type { SettingsFormState } from './use-settings-form';
 
 type ControlProps = Parameters<SettingRowProps['children']>[0];

@@ -1,12 +1,12 @@
 import { INTEGRATION_GROUPS, type IntegrationConfigItem } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
+import { ConfirmSwitchDialog } from '@/components/settings/ConfirmSwitchDialog';
 import { Button } from '@/components/ui/button';
 import { FormAlert } from '@/components/ui/form-alert';
 import { t } from '@/lib/i18n';
 import { sendGateQuery } from '../messaging/api';
 import { integrationsQuery, putIntegrationValues } from './integrations-api';
-import { ConfirmSwitchDialog } from '../messaging/ConfirmSwitchDialog';
 import { changesOf, draftOf, emptiesAllowList, invalidKeys, matchesIntegration, type IntegrationDraft } from './integrations-form';
 import { IntegrationGroup } from './IntegrationGroup';
 

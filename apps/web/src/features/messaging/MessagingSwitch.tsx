@@ -1,6 +1,7 @@
 import type { AcademySettings } from '@ab/shared';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
+import { ConfirmSwitchDialog } from '@/components/settings/ConfirmSwitchDialog';
 import { Button } from '@/components/ui/button';
 import { FormAlert } from '@/components/ui/form-alert';
 import { NuqtaGlyph } from '@/components/ui/nuqta-glyph';
@@ -8,7 +9,6 @@ import { StatusChip } from '@/components/ui/status-chip';
 import { t } from '@/lib/i18n';
 import { useSettingSwitch } from '@/lib/use-setting-switch';
 import { sendGateQuery } from './api';
-import { ConfirmSwitchDialog } from './ConfirmSwitchDialog';
 import { sendingChip } from './sending-chip';
 import { queuedText, ServerGateNote } from './ServerGateNote';
 

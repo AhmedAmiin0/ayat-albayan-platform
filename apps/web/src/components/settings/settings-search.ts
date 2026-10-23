@@ -1,5 +1,5 @@
 import { normalizeArabic, settingDef, type SettingKey } from '@ab/shared';
-import { settingText, textAt } from '../messaging/setting-text';
+import { settingText, textAt } from './setting-text';
 
 const fold = (s: string): string => normalizeArabic(s).toLowerCase();
 

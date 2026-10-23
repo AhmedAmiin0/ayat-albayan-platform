@@ -1,6 +1,6 @@
+import type { SettingMeta } from '@ab/shared';
 import { t } from '@/lib/i18n';
 import { formatDateTime } from '../leads/format';
-import type { SettingMeta } from './settings-view';
 
 /** Under a setting's hint: «معدَّل» while unsaved, and who changed it last when the server knows. */
 export function RowNotes({ dirty, meta }: { dirty: boolean; meta?: SettingMeta | undefined }) {

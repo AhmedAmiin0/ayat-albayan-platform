@@ -1,5 +1,6 @@
 import { SETTINGS_SECTIONS, type SettingsSectionId } from '@ab/shared';
 import { useState } from 'react';
+import { sectionId } from '@/components/settings/section-id';
 import { t } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
 
@@ -7,7 +8,7 @@ import { cn } from '@/lib/utils';
 export { SETTINGS_SECTIONS };
 export type SettingsSection = SettingsSectionId;
 
-export const sectionId = (s: string) => `settings-${s}`;
+export { sectionId };
 
 /** A section added after the registry's (the custom values panel). */
 export interface ExtraSection {

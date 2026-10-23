@@ -1,6 +1,9 @@
 import { SETTING_KEYS, type AcademySettings } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
+import { matchesSetting, matchesText } from '@/components/settings/settings-search';
+import { SettingsSearch } from '@/components/settings/SettingsSearch';
+import { SettingsViewContext } from '@/components/settings/settings-view';
 import { Button } from '@/components/ui/button';
 import { Cartouche } from '@/components/ui/cartouche';
 import { FormAlert } from '@/components/ui/form-alert';
@@ -12,14 +15,14 @@ import { configMetaQuery } from '../config/config-api';
 import { customConfigQuery } from '../config/custom-api';
 import { matchesCustom } from '../config/custom-form';
 import { CustomValuesPanel } from '../config/CustomValuesPanel';
-import { matchesSetting, matchesText } from '../config/settings-search';
-import { SettingsSearch } from '../config/SettingsSearch';
-import { SettingsViewContext } from '../config/settings-view';
 import { integrationsMatch } from '../integrations/integrations-form';
 import { IntegrationsPanel } from '../integrations/IntegrationsPanel';
 import { settingsQuery } from '@/lib/settings-api';
 import { SettingsNav, type ExtraSection } from './SettingsNav';
-import { AppearanceSection, catalogueMatch, FieldsSection, linesMatch, MessagingSection, SalesSection, templatesMatch } from './SettingsSections';
+import { catalogueMatch } from '../notification-catalogue/catalogue-match';
+import { templatesMatch } from '../templates/templates-match';
+import { linesMatch } from './lines-match';
+import { AppearanceSection, FieldsSection, MessagingSection, SalesSection } from './SettingsSections';
 import { useSettingsForm } from './use-settings-form';
 
 /** The sections made only of registry fields, in page order between messaging and sales. */

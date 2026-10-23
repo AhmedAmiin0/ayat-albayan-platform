@@ -7,8 +7,8 @@ import { RegistryField } from '../messaging/RegistryField';
 import { settingsForm, type SettingsForm } from '../messaging/settings-form';
 import type { SettingsFormState } from '../messaging/use-settings-form';
 import { isDefault, isDirty, resetPatch } from './settings-dirty';
-import { SettingsViewContext, type SettingMeta } from './settings-view';
-import type { SettingKey } from '@ab/shared';
+import { SettingsViewContext } from '@/components/settings/settings-view';
+import type { SettingKey, SettingMeta } from '@ab/shared';
 
 const saved = settingsForm({ ...SETTING_DEFAULTS, activity_retention_days: 30 });
 
