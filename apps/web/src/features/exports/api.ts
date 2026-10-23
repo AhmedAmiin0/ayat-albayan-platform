@@ -1,4 +1,5 @@
 import { ApiError } from '@/lib/api';
+import { CLIENT_HEADER, WEB_CLIENT_TAG } from '@/lib/client-tag';
 import { env } from '@/lib/env';
 import { supabase } from '@/lib/supabase';
 
@@ -32,7 +33,7 @@ export function exportErrorCode(e: unknown): string | null {
 
 export async function downloadCsv(req: ExportRequest): Promise<void> {
   const { data } = await supabase.auth.getSession();
-  const headers = new Headers();
+  const headers = new Headers({ [CLIENT_HEADER]: WEB_CLIENT_TAG });
   if (data.session) headers.set('Authorization', `Bearer ${data.session.access_token}`);
   const res = await fetch(`${env.apiUrl}${exportPath(req)}`, { headers });
   if (!res.ok) throw new ApiError(res.status, await res.json().catch(() => null));

@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { FormAlert } from '@/components/ui/form-alert';
 import { StatusChip } from '@/components/ui/status-chip';
 import { t } from '@/lib/i18n';
-import { useSettingSwitch } from '@/lib/use-setting-switch';
+import { useGateSwitch } from './gate-api';
 
 const s = t.templates.settings;
 
@@ -34,7 +34,7 @@ export function AutoMessagesSwitch({ settings }: { settings: AcademySettings }) 
   const risky = on && !settings.crm_cutover_done;
   const chip = chipOf(on, risky);
   const [confirming, setConfirming] = useState(false);
-  const save = useSettingSwitch({ onSaved: () => setConfirming(false) });
+  const save = useGateSwitch({ onSaved: () => setConfirming(false) });
 
   return (
     <div className="grid gap-3 border-t border-rule pt-4">
@@ -59,7 +59,7 @@ export function AutoMessagesSwitch({ settings }: { settings: AcademySettings }) 
       {confirming && (
         <ConfirmSwitchDialog
           {...ask(on)}
-          onYes={() => save.mutate({ autoMessagesEnabled: !on })}
+          onYes={() => save.mutate({ auto: !on })}
           onClose={() => setConfirming(false)}
           pending={save.isPending}
           failed={save.isError}

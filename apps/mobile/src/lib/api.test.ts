@@ -4,6 +4,7 @@ jest.mock('./supabase', () => ({
   supabase: { auth: { getSession: async () => ({ data: { session: { access_token: 'tok' } } }) } },
 }));
 jest.mock('./env', () => ({ env: { apiUrl: 'http://api' } }));
+jest.mock('./client-tag', () => ({ CLIENT_HEADER: 'X-AB-Client', mobileClientTag: () => 'mobile/0.2.0' }));
 
 const mockFetch = jest.fn();
 beforeEach(() => {
@@ -20,6 +21,7 @@ test('GET sends the bearer token and parses JSON', async () => {
   const [url, init] = mockFetch.mock.calls[0];
   expect(url).toBe('http://api/auth/me');
   expect(new Headers(init.headers).get('Authorization')).toBe('Bearer tok');
+  expect(new Headers(init.headers).get('X-AB-Client')).toBe('mobile/0.2.0');
 });
 
 test('non-2xx throws ApiError with status and body', async () => {

@@ -3,6 +3,8 @@ import { Global, Logger, Module, type OnModuleInit } from '@nestjs/common';
 import { IntegrationConfigModule } from '../../common/integrations/integration-config.module';
 import { NumbersModule } from '../numbers/numbers.module';
 import { bootGaps, lineProvider, loadEnv } from '../../env';
+import { GateController } from './gate.controller';
+import { GateSettings } from './gate.settings';
 import { InboundMedia } from './inbound-media.service';
 import { InboundMediaQueries } from './inbound-media.queries';
 import { LiveWhatsappClient } from './live-client';
@@ -47,7 +49,7 @@ function lines(): WhatsappLines {
   // Imported (though global) so the database's config is loaded before onModuleInit below; NumbersModule
   // so the numbers config (comms_source, docs/23 phase 3) is loaded before it too.
   imports: [IntegrationConfigModule, NumbersModule],
-  controllers: [TemplatesController, MessagesController, LinesController],
+  controllers: [TemplatesController, MessagesController, GateController, LinesController],
   providers: [
     { provide: WHATSAPP_LINES, useFactory: lines },
     { provide: WHATSAPP_CLIENT, useFactory: (l: WhatsappLines): WhatsappClient => l.notifications, inject: [WHATSAPP_LINES] },
@@ -57,6 +59,7 @@ function lines(): WhatsappLines {
     TemplateRegistry,
     TemplateStarters,
     WhatsappSettings,
+    GateSettings,
     SendGate,
     SenderQueries,
     MessageDispatch,

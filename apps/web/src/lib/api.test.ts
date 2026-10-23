@@ -32,6 +32,15 @@ describe('apiSend / apiFetch', () => {
     expect(init.body).toBe('{"name":"سهيلة"}');
     expect(headers.get('Content-Type')).toBe('application/json');
     expect(headers.get('Authorization')).toBe('Bearer tok');
+    expect(headers.get('X-AB-Client')).toBe('web/dev');
+  });
+
+  it('tags every request, GETs and caller headers included (docs/26 §2f)', async () => {
+    fetchMock.mockResolvedValue(new Response('{}', { status: 200 }));
+    await apiFetch('/settings', { headers: { Accept: 'application/json' } });
+    const headers = new Headers(lastCall()[1].headers);
+    expect(headers.get('X-AB-Client')).toBe('web/dev');
+    expect(headers.get('Accept')).toBe('application/json');
   });
 
   it('resolves undefined on 204 (DELETE)', async () => {

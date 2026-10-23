@@ -1,3 +1,4 @@
+import { CLIENT_HEADER, mobileClientTag } from './client-tag';
 import { env } from './env';
 import { supabase } from './supabase';
 
@@ -23,10 +24,11 @@ async function readJson(res: Response): Promise<unknown> {
   }
 }
 
-/** fetch against the Nest API with the current Supabase access token. */
+/** fetch against the Nest API with the current Supabase access token and the client tag (`X-AB-Client`). */
 export async function apiFetch<T>(path: string, init: RequestInit = {}): Promise<T> {
   const { data } = await supabase.auth.getSession();
   const headers = new Headers(init.headers);
+  headers.set(CLIENT_HEADER, mobileClientTag());
   if (data.session) headers.set('Authorization', `Bearer ${data.session.access_token}`);
   const res = await fetch(`${env.apiUrl}${path}`, { ...init, headers });
   const body = await readJson(res);
