@@ -1,10 +1,11 @@
 import type { AcademySettings, SettingKey } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { CONFIG_QUERY_KEYS } from '@/lib/query-keys';
 import { updateSettings } from '@/lib/settings-api';
 import { isDefault, isDirty, resetPatch } from './settings-dirty';
-import { settingsForm, settingsUpdate, type SettingsErrors, type SettingsForm } from './settings-form';
+import { FORM_KEYS, settingsForm, settingsUpdate, type SettingsErrors, type SettingsForm } from './settings-form';
+import { afterSave, changedKeys, movedKeys, refreshed, type FormPair } from './settings-scope';
 
 export interface SettingsFormState {
   form: SettingsForm;
@@ -16,49 +17,73 @@ export interface SettingsFormState {
   reset: (key: SettingKey) => void;
   errors: SettingsErrors;
   set: (patch: SettingsForm) => void;
-  /** Validates every field, then one PATCH /settings (audited); errors stay on their fields. */
+  /** Validates the changed fields, then one PATCH /settings with them only; errors stay on their fields. */
   submit: () => void;
+  /** The page's keys changed and not saved yet (for the leave guard). */
+  changed: SettingKey[];
   saving: boolean;
   failed: boolean;
 }
 
+export interface SettingsFormOptions {
+  /** The keys this page shows and saves (default: every form key). */
+  keys?: readonly SettingKey[];
+  /** After a save; `moved` lists the sent keys another page owns (the API did not write them). */
+  onSaved: (result: { moved: SettingKey[] }) => void;
+}
+
 /**
- * The academy settings form's state, shared by every section of /admin/settings: the fields live
- * in their own sections (messages, schedule, reports, accounts), one «حفظ» saves them all. The
- * switches (sending, automatic messages, auto-assign) save on their own, as before.
+ * The settings form of one page (today «مواعيد الرسائل» on «التواصل»). «حفظ» sends only the keys
+ * the admin changed among the page's own, so a value saved elsewhere (on «القيم», by another admin)
+ * is never overwritten from a stale copy; the keys not being edited follow fresh settings. After a
+ * save the settings, «آخر تعديل» and the public config are refetched (never written from the answer).
  */
-export function useSettingsForm(settings: AcademySettings, onSaved: () => void): SettingsFormState {
+export function useSettingsForm(settings: AcademySettings, options: SettingsFormOptions): SettingsFormState {
+  const keys = options.keys ?? FORM_KEYS;
   const queryClient = useQueryClient();
-  const [initial, setInitial] = useState<SettingsForm>(() => settingsForm(settings));
-  const [form, setForm] = useState<SettingsForm>(initial);
-  const [errors, setErrors] = useState<SettingsErrors>({});
-  const save = useMutation({
-    mutationFn: updateSettings,
-    onSuccess: (next) => {
-      queryClient.setQueryData(CONFIG_QUERY_KEYS.settings, next);
-      // The public subset (join window, upload limit, …) other screens read.
-      void queryClient.invalidateQueries({ queryKey: CONFIG_QUERY_KEYS.publicConfig });
-      void queryClient.invalidateQueries({ queryKey: CONFIG_QUERY_KEYS.settingsMeta });
-      onSaved();
-    },
+  const [pair, setPair] = useState<FormPair>(() => {
+    const form = settingsForm(settings);
+    return { form, initial: form };
   });
-  const set = (patch: SettingsForm) => setForm((f) => ({ ...f, ...patch }));
+  const [errors, setErrors] = useState<SettingsErrors>({});
+  const seen = useRef(settings);
+  useEffect(() => {
+    if (seen.current === settings) return;
+    seen.current = settings;
+    setPair((p) => refreshed(p, settingsForm(settings)));
+  }, [settings]);
+  const save = useMutation({ mutationFn: updateSettings });
+  const set = (patch: SettingsForm) => setPair((p) => ({ ...p, form: { ...p.form, ...patch } }));
+  const changed = changedKeys(keys, pair);
   const submit = () => {
-    const result = settingsUpdate(form);
+    const result = settingsUpdate(pair.form, changed);
     if (!result.ok) return setErrors(result.errors);
     setErrors({});
-    const sent = form;
-    save.mutate(result.value, { onSuccess: () => setInitial(sent) });
+    const sent = changed;
+    if (sent.length === 0) return options.onSaved({ moved: [] });
+    const snapshot = pair.form;
+    save.mutate(result.value, {
+      onSuccess: (res: unknown) => {
+        const moved = movedKeys(res, sent);
+        const written = sent.filter((k) => !moved.includes(k));
+        setPair((p) => afterSave(p, written, snapshot));
+        for (const queryKey of [CONFIG_QUERY_KEYS.settings, CONFIG_QUERY_KEYS.settingsMeta, CONFIG_QUERY_KEYS.publicConfig]) {
+          void queryClient.invalidateQueries({ queryKey });
+        }
+        options.onSaved({ moved });
+      },
+    });
   };
   return {
-    form,
-    initial,
-    dirty: (key) => isDirty(key, form, initial),
-    atDefault: (key) => isDefault(key, form),
+    form: pair.form,
+    initial: pair.initial,
+    dirty: (key) => isDirty(key, pair.form, pair.initial),
+    atDefault: (key) => isDefault(key, pair.form),
     reset: (key) => set(resetPatch(key)),
     errors,
     set,
     submit,
+    changed,
     saving: save.isPending,
     failed: save.isError,
   };

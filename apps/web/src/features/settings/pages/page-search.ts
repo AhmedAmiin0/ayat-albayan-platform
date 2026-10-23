@@ -2,7 +2,7 @@
 // «التواصل» (`?tab=`), and Google's OAuth return (`?google=connected` / `?google=error&reason=…`).
 
 /** «التواصل»'s tabs in order; «الإرسال» is the default (no `?tab=`). */
-export const COMMUNICATIONS_TABS = ['sending', 'numbers', 'catalogue', 'templates'] as const;
+export const COMMUNICATIONS_TABS = ['sending', 'numbers', 'catalogue', 'timing', 'templates'] as const;
 export type CommunicationsTab = (typeof COMMUNICATIONS_TABS)[number];
 
 export interface CommunicationsSearch {

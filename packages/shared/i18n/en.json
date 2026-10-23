@@ -5315,6 +5315,12 @@
   "settingsHub": {
     "title": "Settings",
     "sections": "{n} sections",
+    "sectionsCount": {
+      "one": "One section",
+      "two": "Two sections",
+      "few": "{n} sections",
+      "other": "{n} sections"
+    },
     "caption": "Settings sections and the state of each one now",
     "colSection": "Section",
     "colState": "State now",
@@ -5362,6 +5368,7 @@
     },
     "googleNotConfigured": "Google client not set up",
     "googleOff": "Sync is off",
+    "googleDryRun": "Dry run (no writing)",
     "themeNow": "Now: {theme}",
     "groups": {
       "schedule": "Schedule and lessons",
@@ -5543,13 +5550,18 @@
       "sending": "Sending",
       "numbers": "Numbers",
       "catalogue": "What is sent and when",
+      "timing": "Message timing",
       "templates": "Templates"
     },
     "sendingNow": "Sending right now",
     "sendingState": "Message sending: {state}",
     "timingTitle": "Message timing",
     "audiences": "Who receives it",
-    "audienceEmpty": "No notifications for this audience."
+    "audienceEmpty": "No notifications for this audience.",
+    "loadError": "Could not load the settings.",
+    "retry": "Try again",
+    "catalogueIntro": "Everything the platform sends, to whom, from which number, and whether it goes out now under the current settings. This list is read-only; change the sending switches in the «Sending» tab and the timings in the «Message timing» tab.",
+    "catalogueCaption": "What is sent and when: {audience}"
   },
   "mobileValues": {
     "title": "Values",

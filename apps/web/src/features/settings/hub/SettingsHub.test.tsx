@@ -27,6 +27,14 @@ describe('SettingsHub (/admin/settings, R-MSG-01, docs/26b §1)', () => {
     expect(await screen.findByText(new RegExp(counted(H.valuesCount, 28)))).toBeTruthy();
   });
 
+  it('says «5 أقسام» with the plural forms, and adds no frame of its own (the shell frames it)', () => {
+    answerHub(apiFetch, {});
+    const { container } = renderHub(<SettingsHub />);
+    expect(screen.getByText(counted(H.sectionsCount, 5))).toBeTruthy();
+    expect(counted(H.sectionsCount, 1)).toBe(H.sectionsCount.one);
+    expect(container.querySelector('.\\@container')).toBeNull();
+  });
+
   it('a search replaces the table with linked results', () => {
     answerHub(apiFetch, {});
     renderHub(<SettingsHub />);

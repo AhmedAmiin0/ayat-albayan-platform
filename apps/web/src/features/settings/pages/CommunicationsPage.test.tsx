@@ -31,7 +31,7 @@ describe('«التواصل» (/admin/settings/communications)', () => {
     expect(state.textContent).toBe(p.sendingState.replace('{state}', s.off));
   });
 
-  it('four tabs, «الإرسال» first and selected: the switches, nothing of the other tabs', async () => {
+  it('five tabs, «الإرسال» first and selected: the switches, nothing of the other tabs', async () => {
     renderCommunications({ apiFetch });
     const tabs = within(screen.getByRole('tablist', { name: p.tabs })).getAllByRole('tab');
     expect(tabs.map((x) => x.textContent)).toEqual(Object.values(p.communicationsTabs));
@@ -43,15 +43,22 @@ describe('«التواصل» (/admin/settings/communications)', () => {
     expect(screen.queryByRole('heading', { name: t.templates.title })).toBeNull();
   });
 
-  it('«ماذا يُرسل ومتى»: the catalogue (guardian first, report_ready in view) and the timing fields', async () => {
+  it('«ماذا يُرسل ومتى»: the read-only catalogue (guardian first, report_ready in view), no timing fields', async () => {
     renderCommunications({ apiFetch, catalogue: CATALOGUE });
     fireEvent.click(tab(p.communicationsTabs.catalogue));
     const region = await screen.findByRole('region', { name: t.notificationCatalogue.title });
     await within(region).findByText(t.notificationCatalogue.entries.report_ready.name);
     expect(region.querySelector('[data-key="report_ready"]')).toBeTruthy();
-    expect(screen.getByRole('heading', { name: p.timingTitle })).toBeTruthy();
-    expect(screen.getByLabelText(s.followUpHours)).toBeTruthy();
-    expect(screen.getByRole('button', { name: t.common.save })).toBeTruthy();
+    expect(screen.queryByLabelText(s.followUpHours)).toBeNull();
+    expect(screen.queryByRole('button', { name: t.common.save })).toBeNull();
+  });
+
+  it('«مواعيد الرسائل»: the timing fields and their «حفظ» in their own tab, the panel named by its tab', async () => {
+    renderCommunications({ apiFetch, tab: 'timing' });
+    const panel = await screen.findByRole('tabpanel', { name: p.communicationsTabs.timing });
+    expect(within(panel).getByLabelText(s.followUpHours)).toBeTruthy();
+    expect(within(panel).getByRole('button', { name: t.common.save })).toBeTruthy();
+    expect(tab(p.communicationsTabs.timing).getAttribute('aria-controls')).toBe(panel.id);
   });
 
   it('«الأرقام»: the numbers and the WhatsApp lines', async () => {

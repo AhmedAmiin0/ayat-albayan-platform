@@ -78,7 +78,7 @@ describe('googleChips («مزامنة Google»)', () => {
   const status = t.googleSync.connection.status;
 
   it('connected in dry run', () => {
-    expect(googleChips(googleStatus()).map((c) => c.label)).toEqual([status.connected, sw.dryRun]);
+    expect(googleChips(googleStatus()).map((c) => c.label)).toEqual([status.connected, t.settingsHub.googleDryRun]);
   });
 
   it('live, off, and an error', () => {

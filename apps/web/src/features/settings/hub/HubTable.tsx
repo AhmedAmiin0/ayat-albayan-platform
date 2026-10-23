@@ -28,7 +28,7 @@ const ICON: Record<HubDestination, IconName> = {
   appearance: 'grid',
 };
 
-const TH = 'border-b-[3px] border-double border-gold px-2.5 py-1.5 text-start text-xs font-semibold text-ink-3';
+const TH = 'border-b border-rule-strong px-2.5 py-1.5 text-start text-xs font-semibold text-ink-3';
 const CELL = 'border-b border-rule px-2.5 py-2.5 text-start align-middle max-sm:px-1.5';
 
 function HubRow({ destination }: { destination: HubDestination }) {

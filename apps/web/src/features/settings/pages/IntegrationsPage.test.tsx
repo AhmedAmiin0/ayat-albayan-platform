@@ -29,6 +29,14 @@ describe('«التكاملات» page', () => {
     expect(screen.queryByRole('heading', { name: t.googleSync.title })).toBeNull();
   });
 
+  it('the title shows once: the panel’s same-named h2 only names its region (visually hidden)', () => {
+    routeFetch(apiFetch, [['/settings/integrations', integrationItems()]]);
+    renderWithClient(<IntegrationsPage />);
+    const h2 = screen.getByRole('heading', { level: 2, name: s.title });
+    expect(h2.parentElement?.parentElement?.className).toContain('[&>section>h2]:sr-only');
+    expect(h2.closest('section')?.getAttribute('aria-labelledby')).toBe(h2.id);
+  });
+
   it('a save says so in the one toast', async () => {
     routeFetch(apiFetch, [['/settings/integrations', integrationItems()]]);
     renderWithClient(<IntegrationsPage />);
