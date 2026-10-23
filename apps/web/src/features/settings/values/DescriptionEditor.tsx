@@ -5,6 +5,7 @@ import { Dialog } from '@/components/ui/dialog';
 import { Field } from '@/components/ui/field';
 import { FormAlert } from '@/components/ui/form-alert';
 import { controlClass } from '@/components/ui/input';
+import { ApiError } from '@/lib/api';
 import { t } from '@/lib/i18n';
 import { locale } from '@/lib/locale';
 import { cn } from '@/lib/utils';
@@ -12,6 +13,10 @@ import type { DescribeTarget } from './describe-target';
 import { useDescriptionSave } from './use-description-save';
 
 const d = t.settingsValues.describe;
+
+/** 403 `owner_permission`: an owned key's description needs the owning module's right. */
+export const ownerRefused = (error: unknown): boolean =>
+  error instanceof ApiError && error.status === 403 && (error.body as { code?: unknown } | null)?.code === 'owner_permission';
 
 export interface DescriptionEditorProps {
   target: DescribeTarget;
@@ -88,7 +93,7 @@ export function DescriptionEditor({ target, entry, start, onClose, onDone }: Des
           </Button>
         )}
         {locale === 'en' && <p className="text-xs text-ink-3">{d.englishNote}</p>}
-        {save.isError && <FormAlert>{d.error}</FormAlert>}
+        {save.isError && <FormAlert>{ownerRefused(save.error) ? d.readOnlyNote : d.error}</FormAlert>}
       </form>
     </Dialog>
   );

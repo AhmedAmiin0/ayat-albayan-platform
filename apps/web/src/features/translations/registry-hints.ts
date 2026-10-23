@@ -1,7 +1,8 @@
-import { SEED_ENTRIES, type Locale } from '@ab/shared';
+import { isOwnedSettingKey, SEED_ENTRIES, type Locale } from '@ab/shared';
 
 // The registry hint keys (docs/26 §3): their Arabic text is a value's description, edited on «القيم»
 // (the API refuses an ar override there: 409 edit_on_values). English stays editable on «الترجمات».
+// Owned keys (send gate, comms_source, Google) are not refused: their ar hints stay editable here.
 
 export interface RegistryHint {
   /** The settings key whose description this hint is. */
@@ -11,9 +12,9 @@ export interface RegistryHint {
 }
 
 const HINTS: ReadonlyMap<string, RegistryHint> = new Map(
-  SEED_ENTRIES.filter((e) => e.hintKey !== null).map((e) => [
+  SEED_ENTRIES.filter((e) => e.hintKey !== null && !isOwnedSettingKey(e.key)).map((e) => [
     e.hintKey ?? '',
-    { settingKey: e.key, group: e.group ?? (e.ownedBy === 'google_sync' ? 'google' : null) },
+    { settingKey: e.key, group: e.group },
   ]),
 );
 

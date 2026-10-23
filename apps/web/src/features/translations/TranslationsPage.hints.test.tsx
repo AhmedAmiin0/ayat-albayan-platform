@@ -1,4 +1,4 @@
-import type { TranslationKeyRow } from '@ab/shared';
+import { SEED_ENTRIES, type TranslationKeyRow } from '@ab/shared';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
@@ -32,6 +32,11 @@ describe('registry hint keys (docs/26 §3)', () => {
   it('are the SEED_ENTRIES hint keys; their Arabic only is edited on «القيم»', () => {
     expect(registryHintOf(HINT_KEY)).toEqual({ settingKey: 'booking_horizon_weeks', group: 'schedule' });
     expect(registryHintOf('nav.leads')).toBeUndefined();
+    // Owned keys (send gate, comms_source, Google): their Arabic hint stays editable here.
+    for (const key of ['messaging_enabled', 'comms_source', 'google_sync_enabled']) {
+      const hintKey = SEED_ENTRIES.find((e) => e.key === key)?.hintKey;
+      if (hintKey) expect(editedOnValues(hintKey, 'ar')).toBe(false);
+    }
     expect(editedOnValues(HINT_KEY, 'ar')).toBe(true);
     expect(editedOnValues(HINT_KEY, 'en')).toBe(false);
     expect(valuesHref({ settingKey: 'booking_horizon_weeks', group: 'schedule' })).toBe(HREF);

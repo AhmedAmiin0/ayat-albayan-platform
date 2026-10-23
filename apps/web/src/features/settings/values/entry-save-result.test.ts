@@ -36,3 +36,12 @@ describe('saveFailure (PATCH /config/entries/:key refused)', () => {
     expect(isConflict(null)).toBe(false);
   });
 });
+
+describe('ownerRefused (PUT …/description)', () => {
+  it('is the 403 owner_permission only', async () => {
+    const { ownerRefused } = await import('./DescriptionEditor');
+    expect(ownerRefused(new ApiError(403, { code: 'owner_permission' }))).toBe(true);
+    expect(ownerRefused(new ApiError(403, { code: 'forbidden' }))).toBe(false);
+    expect(ownerRefused(new Error('x'))).toBe(false);
+  });
+});
