@@ -29,7 +29,7 @@ export function Section({ id, children }: { id: SettingsSection | 'custom' | 'in
   );
 }
 
-/** The registry's form fields of one section, in registry order (nothing when it has none). */
+/** The registry's form fields of one section, in page order (SETTINGS_LAYOUT; nothing when it has none). */
 export function SectionFields({ id, state }: { id: SettingsSection; state: SettingsFormState }) {
   const { query } = useSettingsView();
   const keys = FORM_KEYS.filter((k) => settingSection(k) === id && matchesSetting(k, query));
