@@ -1,7 +1,7 @@
 import type { Enums } from '@ab/db';
 import { z } from 'zod';
 import type { LessonStatus } from '../enums/index.js';
-import { SETTING_DEFAULTS } from '../settings/registry.js';
+import { SCHEDULING_SETTINGS } from '../settings/domains/scheduling.js';
 
 // Booking kind, invoice and makeup (R-SCH-10, R-PAY-03, R-MSG-06). Kept apart from scheduling.ts
 // (file size); scheduling.ts adds `bookingExtras` to the booking body and refines it.
@@ -78,7 +78,7 @@ const DAY_MS = 86_400_000;
 export function makeupEligible(
   original: MakeupOriginal,
   now: Date,
-  windowDays: number = SETTING_DEFAULTS.makeup_window_days,
+  windowDays: number = SCHEDULING_SETTINGS.makeup_window_days.default,
 ): MakeupVerdict {
   if (original.makeup) return 'is_makeup';
   if (original.trial) return 'trial';

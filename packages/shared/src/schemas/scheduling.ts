@@ -122,8 +122,6 @@ export const lessonProposalRequestSchema = z.object({
 /** POST /lesson-proposals/:id/approve — the move is a reschedule, so a clash needs a reason. */
 export const proposalApproveSchema = z.object({ override: overrideSchema.optional() });
 
-export { settingsUpdateSchema, type SettingsUpdate } from './settings.js';
-
 export type BookingRequest = z.infer<typeof bookingRequestSchema>;
 export type RescheduleRequest = z.infer<typeof rescheduleRequestSchema>;
 export type CancelRequest = z.infer<typeof cancelRequestSchema>;
