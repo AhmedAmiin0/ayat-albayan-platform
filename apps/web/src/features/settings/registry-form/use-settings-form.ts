@@ -1,8 +1,9 @@
 import type { AcademySettings, SettingKey } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
-import { isDefault, isDirty, resetPatch } from '../config/settings-dirty';
+import { CONFIG_QUERY_KEYS } from '@/lib/query-keys';
 import { updateSettings } from '@/lib/settings-api';
+import { isDefault, isDirty, resetPatch } from './settings-dirty';
 import { settingsForm, settingsUpdate, type SettingsErrors, type SettingsForm } from './settings-form';
 
 export interface SettingsFormState {
@@ -34,10 +35,10 @@ export function useSettingsForm(settings: AcademySettings, onSaved: () => void):
   const save = useMutation({
     mutationFn: updateSettings,
     onSuccess: (next) => {
-      queryClient.setQueryData(['settings'], next);
+      queryClient.setQueryData(CONFIG_QUERY_KEYS.settings, next);
       // The public subset (join window, upload limit, …) other screens read.
-      void queryClient.invalidateQueries({ queryKey: ['settings', 'public'] });
-      void queryClient.invalidateQueries({ queryKey: ['config', 'meta'] });
+      void queryClient.invalidateQueries({ queryKey: CONFIG_QUERY_KEYS.publicConfig });
+      void queryClient.invalidateQueries({ queryKey: CONFIG_QUERY_KEYS.settingsMeta });
       onSaved();
     },
   });

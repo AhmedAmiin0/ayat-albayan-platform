@@ -7,9 +7,9 @@ import { useSettingsView } from '@/components/settings/settings-view';
 import { Input } from '@/components/ui/input';
 import { Select } from '@/components/ui/select';
 import { TimeZoneSelect } from '@/components/ui/time-zone-select';
-import { ResetButton } from '../config/ResetButton';
-import { RowNotes } from '../config/RowNotes';
-import { ShapeRow } from '../config/ShapeRow';
+import { ResetButton } from './ResetButton';
+import { RowNotes } from './RowNotes';
+import { ShapeRow } from './ShapeRow';
 import { flag, onKey, str } from './settings-form';
 import type { SettingsFormState } from './use-settings-form';
 

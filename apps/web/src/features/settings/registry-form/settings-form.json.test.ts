@@ -1,7 +1,7 @@
 import { SETTING_DEFAULTS } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
 import { t } from '@/lib/i18n';
-import { settingsForm, settingsUpdate } from '../messaging/settings-form';
+import { settingsForm, settingsUpdate } from './settings-form';
 
 const form = settingsForm(SETTING_DEFAULTS);
 const sent = (f: typeof form) => {

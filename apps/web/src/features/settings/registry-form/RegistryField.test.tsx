@@ -3,11 +3,11 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import { useState } from 'react';
 import { describe, expect, it } from 'vitest';
 import { t } from '@/lib/i18n';
-import { RegistryField } from '../messaging/RegistryField';
-import { settingsForm, type SettingsForm } from '../messaging/settings-form';
-import type { SettingsFormState } from '../messaging/use-settings-form';
-import { isDefault, isDirty, resetPatch } from './settings-dirty';
 import { SettingsViewContext } from '@/components/settings/settings-view';
+import { RegistryField } from './RegistryField';
+import { isDefault, isDirty, resetPatch } from './settings-dirty';
+import { settingsForm, type SettingsForm } from './settings-form';
+import type { SettingsFormState } from './use-settings-form';
 import type { SettingKey, SettingMeta } from '@ab/shared';
 
 const saved = settingsForm({ ...SETTING_DEFAULTS, activity_retention_days: 30 });

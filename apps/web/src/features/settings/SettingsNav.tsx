@@ -1,20 +1,8 @@
-import { SETTINGS_SECTIONS, type SettingsSectionId } from '@ab/shared';
 import { useState } from 'react';
 import { sectionId } from '@/components/settings/section-id';
 import { t } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
-
-/** The sections of /admin/settings, in page order (the settings registry's). */
-export { SETTINGS_SECTIONS };
-export type SettingsSection = SettingsSectionId;
-
-export { sectionId };
-
-/** A section added after the registry's (the custom values panel). */
-export interface ExtraSection {
-  id: string;
-  label: string;
-}
+import { PAGE_SECTIONS } from './page-sections';
 
 const reduceMotion = () =>
   typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -22,15 +10,14 @@ const reduceMotion = () =>
 /**
  * The section index (owner, 2026-10-05): a column beside the settings from 900px, a row of chips
  * above them on phones. A link jumps to its section inside the page frame (smooth unless the
- * viewer asked for less motion) and is marked current.
+ * viewer asked for less motion) and is marked current. The sections are PAGE_SECTIONS, in page order.
  */
-export function SettingsNav({ className, extra = [] }: { className?: string; extra?: readonly ExtraSection[] }) {
+export function SettingsNav({ className }: { className?: string }) {
   const [current, setCurrent] = useState<string>('messaging');
-  const items: ExtraSection[] = [...SETTINGS_SECTIONS.map((id) => ({ id, label: t.settings.sections[id] })), ...extra];
   return (
     <nav aria-label={t.settings.nav} className={className}>
       <ul className="-mx-1 flex gap-1.5 overflow-x-auto px-1 pb-1 shell:mx-0 shell:flex-col shell:gap-0.5 shell:overflow-visible shell:p-0">
-        {items.map(({ id: s, label }) => (
+        {PAGE_SECTIONS.map(({ id: s, label }) => (
           <li key={s} className="shrink-0">
             <a
               href={`#${sectionId(s)}`}

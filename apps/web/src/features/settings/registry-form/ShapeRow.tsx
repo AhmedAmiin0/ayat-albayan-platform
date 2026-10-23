@@ -6,8 +6,8 @@ import { controlClass, Input } from '@/components/ui/input';
 import { NuqtaGlyph } from '@/components/ui/nuqta-glyph';
 import { t } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
-import { str, shapeId } from '../messaging/settings-form';
-import type { SettingsFormState } from '../messaging/use-settings-form';
+import { str, shapeId } from './settings-form';
+import type { SettingsFormState } from './use-settings-form';
 
 /** An object setting (contact, consent notice): one labelled box per field, one error for the whole setting. */
 export function ShapeRow({ settingKey, state, extras }: { settingKey: SettingKey; state: SettingsFormState; extras: RowExtras }) {

@@ -1,5 +1,5 @@
 import { SETTING_DEFAULTS, SETTING_FIELD_OF, settingDef, type SettingKey } from '@ab/shared';
-import { onKey, settingsForm, shapeId, type SettingsForm } from '../messaging/settings-form';
+import { onKey, settingsForm, shapeId, type SettingsForm } from './settings-form';
 
 const defaults = settingsForm(SETTING_DEFAULTS);
 

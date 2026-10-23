@@ -1,7 +1,7 @@
 import { SETTING_DEFAULTS } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
-import { settingsForm } from '../messaging/settings-form';
 import { fieldIds, isDefault, isDirty, resetPatch } from './settings-dirty';
+import { settingsForm } from './settings-form';
 
 const saved = settingsForm({ ...SETTING_DEFAULTS, activity_retention_days: 30 });
 
