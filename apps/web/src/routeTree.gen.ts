@@ -70,6 +70,11 @@ import { Route as TeacherInboxRouteImport } from './routes/teacher/inbox'
 import { Route as TeacherPayoutsRouteImport } from './routes/teacher/payouts'
 import { Route as TeacherStudentsRouteImport } from './routes/teacher/students'
 import { Route as AdminAssistantsAssistantIdRouteImport } from './routes/admin/assistants.$assistantId'
+import { Route as AdminSettingsAppearanceRouteImport } from './routes/admin/settings.appearance'
+import { Route as AdminSettingsCommunicationsRouteImport } from './routes/admin/settings.communications'
+import { Route as AdminSettingsGoogleRouteImport } from './routes/admin/settings.google'
+import { Route as AdminSettingsIntegrationsRouteImport } from './routes/admin/settings.integrations'
+import { Route as AdminSettingsValuesRouteImport } from './routes/admin/settings.values'
 import { Route as AdminStudentsStudentIdRouteImport } from './routes/admin/students.$studentId'
 import { Route as AdminTeachersTeacherIdRouteImport } from './routes/admin/teachers.$teacherId'
 import { Route as TeacherReportLessonIdRouteImport } from './routes/teacher/report.$lessonId'
@@ -385,6 +390,33 @@ const AdminAssistantsAssistantIdRoute =
     path: '/$assistantId',
     getParentRoute: () => AdminAssistantsRoute,
   } as any)
+const AdminSettingsAppearanceRoute = AdminSettingsAppearanceRouteImport.update({
+  id: '/appearance',
+  path: '/appearance',
+  getParentRoute: () => AdminSettingsRoute,
+} as any)
+const AdminSettingsCommunicationsRoute =
+  AdminSettingsCommunicationsRouteImport.update({
+    id: '/communications',
+    path: '/communications',
+    getParentRoute: () => AdminSettingsRoute,
+  } as any)
+const AdminSettingsGoogleRoute = AdminSettingsGoogleRouteImport.update({
+  id: '/google',
+  path: '/google',
+  getParentRoute: () => AdminSettingsRoute,
+} as any)
+const AdminSettingsIntegrationsRoute =
+  AdminSettingsIntegrationsRouteImport.update({
+    id: '/integrations',
+    path: '/integrations',
+    getParentRoute: () => AdminSettingsRoute,
+  } as any)
+const AdminSettingsValuesRoute = AdminSettingsValuesRouteImport.update({
+  id: '/values',
+  path: '/values',
+  getParentRoute: () => AdminSettingsRoute,
+} as any)
 const AdminStudentsStudentIdRoute = AdminStudentsStudentIdRouteImport.update({
   id: '/$studentId',
   path: '/$studentId',
@@ -456,7 +488,7 @@ export interface FileRoutesByFullPath {
   '/admin/receivables': typeof AdminReceivablesRoute
   '/admin/roles': typeof AdminRolesRoute
   '/admin/schedule': typeof AdminScheduleRoute
-  '/admin/settings': typeof AdminSettingsRoute
+  '/admin/settings': typeof AdminSettingsRouteWithChildren
   '/admin/students': typeof AdminStudentsRouteWithChildren
   '/admin/subscriptions': typeof AdminSubscriptionsRoute
   '/admin/teachers': typeof AdminTeachersRouteWithChildren
@@ -491,6 +523,11 @@ export interface FileRoutesByFullPath {
   '/sales/': typeof SalesIndexRoute
   '/teacher/': typeof TeacherIndexRoute
   '/admin/assistants/$assistantId': typeof AdminAssistantsAssistantIdRoute
+  '/admin/settings/appearance': typeof AdminSettingsAppearanceRoute
+  '/admin/settings/communications': typeof AdminSettingsCommunicationsRoute
+  '/admin/settings/google': typeof AdminSettingsGoogleRoute
+  '/admin/settings/integrations': typeof AdminSettingsIntegrationsRoute
+  '/admin/settings/values': typeof AdminSettingsValuesRoute
   '/admin/students/$studentId': typeof AdminStudentsStudentIdRoute
   '/admin/teachers/$teacherId': typeof AdminTeachersTeacherIdRoute
   '/teacher/report/$lessonId': typeof TeacherReportLessonIdRoute
@@ -522,7 +559,7 @@ export interface FileRoutesByTo {
   '/admin/receivables': typeof AdminReceivablesRoute
   '/admin/roles': typeof AdminRolesRoute
   '/admin/schedule': typeof AdminScheduleRoute
-  '/admin/settings': typeof AdminSettingsRoute
+  '/admin/settings': typeof AdminSettingsRouteWithChildren
   '/admin/students': typeof AdminStudentsRouteWithChildren
   '/admin/subscriptions': typeof AdminSubscriptionsRoute
   '/admin/teachers': typeof AdminTeachersRouteWithChildren
@@ -557,6 +594,11 @@ export interface FileRoutesByTo {
   '/sales': typeof SalesIndexRoute
   '/teacher': typeof TeacherIndexRoute
   '/admin/assistants/$assistantId': typeof AdminAssistantsAssistantIdRoute
+  '/admin/settings/appearance': typeof AdminSettingsAppearanceRoute
+  '/admin/settings/communications': typeof AdminSettingsCommunicationsRoute
+  '/admin/settings/google': typeof AdminSettingsGoogleRoute
+  '/admin/settings/integrations': typeof AdminSettingsIntegrationsRoute
+  '/admin/settings/values': typeof AdminSettingsValuesRoute
   '/admin/students/$studentId': typeof AdminStudentsStudentIdRoute
   '/admin/teachers/$teacherId': typeof AdminTeachersTeacherIdRoute
   '/teacher/report/$lessonId': typeof TeacherReportLessonIdRoute
@@ -594,7 +636,7 @@ export interface FileRoutesById {
   '/admin/receivables': typeof AdminReceivablesRoute
   '/admin/roles': typeof AdminRolesRoute
   '/admin/schedule': typeof AdminScheduleRoute
-  '/admin/settings': typeof AdminSettingsRoute
+  '/admin/settings': typeof AdminSettingsRouteWithChildren
   '/admin/students': typeof AdminStudentsRouteWithChildren
   '/admin/subscriptions': typeof AdminSubscriptionsRoute
   '/admin/teachers': typeof AdminTeachersRouteWithChildren
@@ -629,6 +671,11 @@ export interface FileRoutesById {
   '/sales/': typeof SalesIndexRoute
   '/teacher/': typeof TeacherIndexRoute
   '/admin/assistants/$assistantId': typeof AdminAssistantsAssistantIdRoute
+  '/admin/settings/appearance': typeof AdminSettingsAppearanceRoute
+  '/admin/settings/communications': typeof AdminSettingsCommunicationsRoute
+  '/admin/settings/google': typeof AdminSettingsGoogleRoute
+  '/admin/settings/integrations': typeof AdminSettingsIntegrationsRoute
+  '/admin/settings/values': typeof AdminSettingsValuesRoute
   '/admin/students/$studentId': typeof AdminStudentsStudentIdRoute
   '/admin/teachers/$teacherId': typeof AdminTeachersTeacherIdRoute
   '/teacher/report/$lessonId': typeof TeacherReportLessonIdRoute
@@ -702,6 +749,11 @@ export interface FileRouteTypes {
     | '/sales/'
     | '/teacher/'
     | '/admin/assistants/$assistantId'
+    | '/admin/settings/appearance'
+    | '/admin/settings/communications'
+    | '/admin/settings/google'
+    | '/admin/settings/integrations'
+    | '/admin/settings/values'
     | '/admin/students/$studentId'
     | '/admin/teachers/$teacherId'
     | '/teacher/report/$lessonId'
@@ -768,6 +820,11 @@ export interface FileRouteTypes {
     | '/sales'
     | '/teacher'
     | '/admin/assistants/$assistantId'
+    | '/admin/settings/appearance'
+    | '/admin/settings/communications'
+    | '/admin/settings/google'
+    | '/admin/settings/integrations'
+    | '/admin/settings/values'
     | '/admin/students/$studentId'
     | '/admin/teachers/$teacherId'
     | '/teacher/report/$lessonId'
@@ -839,6 +896,11 @@ export interface FileRouteTypes {
     | '/sales/'
     | '/teacher/'
     | '/admin/assistants/$assistantId'
+    | '/admin/settings/appearance'
+    | '/admin/settings/communications'
+    | '/admin/settings/google'
+    | '/admin/settings/integrations'
+    | '/admin/settings/values'
     | '/admin/students/$studentId'
     | '/admin/teachers/$teacherId'
     | '/teacher/report/$lessonId'
@@ -1296,6 +1358,41 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminAssistantsAssistantIdRouteImport
       parentRoute: typeof AdminAssistantsRoute
     }
+    '/admin/settings/appearance': {
+      id: '/admin/settings/appearance'
+      path: '/appearance'
+      fullPath: '/admin/settings/appearance'
+      preLoaderRoute: typeof AdminSettingsAppearanceRouteImport
+      parentRoute: typeof AdminSettingsRoute
+    }
+    '/admin/settings/communications': {
+      id: '/admin/settings/communications'
+      path: '/communications'
+      fullPath: '/admin/settings/communications'
+      preLoaderRoute: typeof AdminSettingsCommunicationsRouteImport
+      parentRoute: typeof AdminSettingsRoute
+    }
+    '/admin/settings/google': {
+      id: '/admin/settings/google'
+      path: '/google'
+      fullPath: '/admin/settings/google'
+      preLoaderRoute: typeof AdminSettingsGoogleRouteImport
+      parentRoute: typeof AdminSettingsRoute
+    }
+    '/admin/settings/integrations': {
+      id: '/admin/settings/integrations'
+      path: '/integrations'
+      fullPath: '/admin/settings/integrations'
+      preLoaderRoute: typeof AdminSettingsIntegrationsRouteImport
+      parentRoute: typeof AdminSettingsRoute
+    }
+    '/admin/settings/values': {
+      id: '/admin/settings/values'
+      path: '/values'
+      fullPath: '/admin/settings/values'
+      preLoaderRoute: typeof AdminSettingsValuesRouteImport
+      parentRoute: typeof AdminSettingsRoute
+    }
     '/admin/students/$studentId': {
       id: '/admin/students/$studentId'
       path: '/$studentId'
@@ -1378,6 +1475,26 @@ const AdminAssistantsRouteWithChildren = AdminAssistantsRoute._addFileChildren(
   AdminAssistantsRouteChildren,
 )
 
+interface AdminSettingsRouteChildren {
+  AdminSettingsAppearanceRoute: typeof AdminSettingsAppearanceRoute
+  AdminSettingsCommunicationsRoute: typeof AdminSettingsCommunicationsRoute
+  AdminSettingsGoogleRoute: typeof AdminSettingsGoogleRoute
+  AdminSettingsIntegrationsRoute: typeof AdminSettingsIntegrationsRoute
+  AdminSettingsValuesRoute: typeof AdminSettingsValuesRoute
+}
+
+const AdminSettingsRouteChildren: AdminSettingsRouteChildren = {
+  AdminSettingsAppearanceRoute: AdminSettingsAppearanceRoute,
+  AdminSettingsCommunicationsRoute: AdminSettingsCommunicationsRoute,
+  AdminSettingsGoogleRoute: AdminSettingsGoogleRoute,
+  AdminSettingsIntegrationsRoute: AdminSettingsIntegrationsRoute,
+  AdminSettingsValuesRoute: AdminSettingsValuesRoute,
+}
+
+const AdminSettingsRouteWithChildren = AdminSettingsRoute._addFileChildren(
+  AdminSettingsRouteChildren,
+)
+
 interface AdminStudentsStudentIdReportsRouteChildren {
   AdminStudentsStudentIdReportsLessonIdRoute: typeof AdminStudentsStudentIdReportsLessonIdRoute
 }
@@ -1440,7 +1557,7 @@ interface AdminRouteChildren {
   AdminReceivablesRoute: typeof AdminReceivablesRoute
   AdminRolesRoute: typeof AdminRolesRoute
   AdminScheduleRoute: typeof AdminScheduleRoute
-  AdminSettingsRoute: typeof AdminSettingsRoute
+  AdminSettingsRoute: typeof AdminSettingsRouteWithChildren
   AdminStudentsRoute: typeof AdminStudentsRouteWithChildren
   AdminSubscriptionsRoute: typeof AdminSubscriptionsRoute
   AdminTeachersRoute: typeof AdminTeachersRouteWithChildren
@@ -1467,7 +1584,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminReceivablesRoute: AdminReceivablesRoute,
   AdminRolesRoute: AdminRolesRoute,
   AdminScheduleRoute: AdminScheduleRoute,
-  AdminSettingsRoute: AdminSettingsRoute,
+  AdminSettingsRoute: AdminSettingsRouteWithChildren,
   AdminStudentsRoute: AdminStudentsRouteWithChildren,
   AdminSubscriptionsRoute: AdminSubscriptionsRoute,
   AdminTeachersRoute: AdminTeachersRouteWithChildren,

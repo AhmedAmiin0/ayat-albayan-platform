@@ -1,7 +1,13 @@
-import { createFileRoute } from '@tanstack/react-router';
-import { SettingsPage } from '@/features/settings/SettingsPage';
+import { createFileRoute, Outlet, useChildMatches } from '@tanstack/react-router';
+import { SettingsHub } from '@/features/settings/hub/SettingsHub';
 
-/** /admin/settings — messaging switch, WhatsApp template health, academy settings (R-MSG-01). */
+/** /admin/settings — the hub (docs/26b §1); also the parent of its five pages (rendered via Outlet). */
 export const Route = createFileRoute('/admin/settings')({
-  component: SettingsPage,
+  component: SettingsRoute,
 });
+
+function SettingsRoute() {
+  const children = useChildMatches();
+  if (children.length > 0) return <Outlet />;
+  return <SettingsHub />;
+}

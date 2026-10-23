@@ -5311,5 +5311,17 @@
       "parityOk": "Setup in parity",
       "parityDiff": "Differences: {{count}}"
     }
+  },
+  "settingsHub": {
+    "title": "Settings"
+  },
+  "settingsValues": {
+    "title": "Values"
+  },
+  "settingsPages": {
+    "communications": "Communications"
+  },
+  "mobileValues": {
+    "title": "Values"
   }
 }

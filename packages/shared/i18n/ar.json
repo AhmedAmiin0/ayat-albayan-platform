@@ -5311,5 +5311,17 @@
       "parityOk": "الإعداد مطابق",
       "parityDiff": "توجد فروق: {{count}}"
     }
+  },
+  "settingsHub": {
+    "title": "الإعدادات"
+  },
+  "settingsValues": {
+    "title": "القيم"
+  },
+  "settingsPages": {
+    "communications": "التواصل"
+  },
+  "mobileValues": {
+    "title": "القيم"
   }
 }

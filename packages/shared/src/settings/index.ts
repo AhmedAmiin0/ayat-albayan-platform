@@ -7,3 +7,4 @@ export * from './validate.js';
 export * from './public.js';
 export * from './meta.js';
 export * from './domains/index.js';
+export * from './value-groups.js';
