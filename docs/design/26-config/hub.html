@@ -10,7 +10,7 @@
 .hub-search { display: grid; gap: 6px; max-inline-size: 560px; margin-block-end: 24px; }
 .hub-search .search { max-inline-size: none; }
 .hub-search .input { min-block-size: 44px; }
-.dest { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 32px; border-block-start: 3px double var(--gold); }
+.dest { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 32px; border-block-start: 1px solid var(--rule); }
 .dest li { border-block-end: 1px solid var(--rule); }
 .dest a { display: grid; grid-template-columns: 44px minmax(0, 1fr) 18px; gap: 4px 14px; align-items: start; padding-block: 18px; padding-inline: 8px; border-radius: var(--r-md); color: var(--ink); text-decoration: none; transition: background-color 120ms var(--ease-ink); }
 .dest a:hover { background: var(--sunk); }
@@ -22,6 +22,7 @@
 .dest-state { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; padding-block-start: 4px; font-size: 13px; color: var(--ink-3); }
 .dest-state .sum { color: var(--ink-2); font-weight: 500; }
 .dest-path { font-size: 12px; color: var(--ink-3); }
+.dest-reason { font-size: 13px; color: var(--ink-2); text-wrap: pretty; }
 .related { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 16px; margin-block-start: 20px; font-size: 13px; color: var(--ink-3); }
 .related a { display: inline-flex; align-items: center; min-block-size: 32px; font-weight: 600; }
 @container page (max-width: 640px) {
@@ -30,14 +31,17 @@
   .rnum { inline-size: 36px; block-size: 36px; }
   .related a { min-block-size: 44px; }
 }
-/* search results example */
-.results { display: grid; gap: 4px; max-inline-size: 560px; padding: 8px; background: var(--raised); border: 1px solid var(--rule-strong); border-radius: var(--r-md); box-shadow: var(--elev-pop); }
-.results h4 { padding-inline: 10px; padding-block: 8px 2px; font-size: 12px; font-weight: 600; color: var(--ink-3); }
-.results a { display: grid; gap: 2px; padding-block: 8px; padding-inline: 10px; border-radius: var(--r-sm); color: var(--ink); text-decoration: none; }
-.results a:hover, .results a[aria-selected='true'] { background: var(--lapis-wash); }
-.results a small { font-size: 12px; color: var(--ink-3); }
+/* search results example (combobox + listbox) */
+.combo { display: grid; gap: 6px; max-inline-size: 560px; }
+.results { display: grid; gap: 4px; padding: 8px; background: var(--raised); border: 1px solid var(--rule-strong); border-radius: var(--r-md); box-shadow: var(--elev-pop); }
+.results [role='group'] { display: grid; gap: 2px; }
+.results .grp { padding-inline: 10px; padding-block: 8px 2px; font-size: 12px; font-weight: 600; color: var(--ink-3); }
+.results [role='option'] { display: grid; gap: 2px; padding-block: 8px; padding-inline: 10px; border-radius: var(--r-sm); color: var(--ink); cursor: pointer; }
+.results [role='option']:hover, .results [role='option'][aria-selected='true'] { background: var(--lapis-wash); }
+.results [role='option'][aria-selected='true'] { border-inline-start: 3px solid var(--lapis); padding-inline-start: 7px; }
+.results small { font-size: 12px; color: var(--ink-3); }
 .results .hit { color: var(--lapis); text-decoration: underline 2px; text-underline-offset: 7px; }
-.results .total { padding-inline: 10px; padding-block: 6px; font-size: 12px; color: var(--ink-3); border-block-start: 1px solid var(--rule); }
+.combo .total { padding-inline: 10px; font-size: 12px; color: var(--ink-3); }
 </style>
 </head>
 <body>
@@ -53,8 +57,6 @@
     <path fill="currentColor" d="M13.5 23.6 15.9 26 13.5 28.4 11.1 26Z"/>
   </symbol>
   <symbol id="r-ring" viewBox="0 0 16 16"><path fill="none" stroke="currentColor" stroke-width="1.1" vector-effect="non-scaling-stroke" d="M8 1.6A2.5 2.5 0 0 1 12.53 3.47A2.5 2.5 0 0 1 14.4 8A2.5 2.5 0 0 1 12.53 12.53A2.5 2.5 0 0 1 8 14.4A2.5 2.5 0 0 1 3.47 12.53A2.5 2.5 0 0 1 1.6 8A2.5 2.5 0 0 1 3.47 3.47A2.5 2.5 0 0 1 8 1.6Z"/><circle cx="8" cy="8" r="4.6" fill="none" stroke="currentColor" stroke-width=".8" vector-effect="non-scaling-stroke"/></symbol>
-  <!-- stand-in for the brand <Mark> PNG (an eight-point star frame), since this file links nothing but tokens.css -->
-  <symbol id="mark" viewBox="0 0 32 32"><g fill="none" stroke="currentColor" stroke-width="1.5"><rect x="8" y="8" width="16" height="16"/><rect x="8" y="8" width="16" height="16" transform="rotate(45 16 16)"/></g><path fill="#14503a" d="M10.5 19.5 16 17l5.5 2.5V21L16 18.6 10.5 21Z"/></symbol>
   <symbol id="i-search" viewBox="0 0 20 20"><circle cx="9" cy="9" r="5.5"/><path d="m13.2 13.2 3.6 3.6"/></symbol>
   <symbol id="i-chev-end" viewBox="0 0 20 20"><path d="M12.5 5 7.5 10l5 5"/></symbol>
   <symbol id="i-grid" viewBox="0 0 20 20"><rect x="3.5" y="3.5" width="5" height="5" rx="1"/><rect x="11.5" y="3.5" width="5" height="5" rx="1"/><rect x="3.5" y="11.5" width="5" height="5" rx="1"/><rect x="11.5" y="11.5" width="5" height="5" rx="1"/></symbol>
@@ -99,7 +101,7 @@
         <div class="screen">
           <div class="shell">
             <aside class="side">
-              <a class="brand" href="#"><span class="mark"><svg aria-hidden="true"><use href="#mark"/></svg></span><span class="wm"><small>أكاديمية</small><b>آيات البيان</b></span><span class="sr-only">الرئيسية</span></a>
+              <a class="brand" href="#"><img class="mark" src="../brand/logo-mark-transparent.png" alt="" width="40" height="40"><span class="wm"><small>أكاديمية</small><b>آيات البيان</b></span><span class="sr-only">الرئيسية</span></a>
               <nav class="nav" aria-label="القائمة الرئيسية">
                 <div class="nav-group"><ul>
                   <li><a href="#"><svg class="i" aria-hidden="true"><use href="#i-grid"/></svg>لوحة التحكم</a></li>
@@ -128,7 +130,7 @@
               </div>
               <div class="page">
                 <div class="page-head">
-                  <h1 class="cart"><svg aria-hidden="true"><use href="#cap"/></svg><span class="cart-mid"><span>الإعدادات</span></span><svg aria-hidden="true"><use href="#cap"/></svg></h1>
+                  <h3 class="cart"><svg aria-hidden="true"><use href="#cap"/></svg><span class="cart-mid"><span>الإعدادات</span></span><svg aria-hidden="true"><use href="#cap"/></svg></h3>
                   <span class="count"><span class="num">5</span> أقسام</span>
                 </div>
                 <div class="hub-search" role="search">
@@ -137,48 +139,48 @@
                   <p class="hint" id="hub-q-1-hint">يبحث في القيم والتواصل والتكاملات ومزامنة Google معًا.</p>
                 </div>
                 <ul class="dest" aria-label="أقسام الإعدادات">
-                  <li><a href="#">
-                    <span class="rnum"><svg aria-hidden="true"><use href="#r-ring"/></svg><b>1</b></span>
+                  <li><a href="#" aria-labelledby="dt-1" aria-describedby="ds-1">
+                    <span class="rnum" aria-hidden="true"><svg aria-hidden="true"><use href="#r-ring"/></svg><b>1</b></span>
                     <span class="dest-body">
-                      <span class="dest-title"><svg class="i" aria-hidden="true"><use href="#i-sliders"/></svg><span>القيم</span></span>
-                      <span class="dest-desc">مدد الحجز والإلغاء، حدود الاشتراكات، بيانات الأكاديمية، مدد الاحتفاظ، وكل قيمة يضيفها أي قسم. كل قيمة تُحفظ وحدها.</span>
-                      <span class="dest-state"><span class="sum"><span class="num">42</span> قيمة · <span class="num">5</span> معدَّلة عن الافتراضي · <span class="num">3</span> عامة</span></span>
+                      <span class="dest-title"><svg class="i" aria-hidden="true"><use href="#i-sliders"/></svg><span id="dt-1">القيم</span></span>
+                      <span class="dest-desc">مدد الحجز والإلغاء، حدود الاشتراكات، بيانات الأكاديمية، مدد الاحتفاظ، والقيم التي يضيفها فريق الأكاديمية. كل قيمة تُحفظ وحدها.</span>
+                      <span class="dest-state" id="ds-1"><span class="sum"><span class="num">28</span> قيمة · <span class="num">5</span> معدَّلة · <span class="num">8</span> عامة</span></span>
                     </span>
                     <svg class="i" aria-hidden="true"><use href="#i-chev-end"/></svg>
                   </a></li>
-                  <li><a href="#">
-                    <span class="rnum"><svg aria-hidden="true"><use href="#r-ring"/></svg><b>2</b></span>
+                  <li><a href="#" aria-labelledby="dt-2" aria-describedby="ds-2 dr-2">
+                    <span class="rnum" aria-hidden="true"><svg aria-hidden="true"><use href="#r-ring"/></svg><b>2</b></span>
                     <span class="dest-body">
-                      <span class="dest-title"><svg class="i" aria-hidden="true"><use href="#i-bell"/></svg><span>التواصل</span></span>
+                      <span class="dest-title"><svg class="i" aria-hidden="true"><use href="#i-bell"/></svg><span id="dt-2">التواصل</span></span>
                       <span class="dest-desc">أرقام واتساب، وما يُرسل ومتى، والقوالب، والحماية في بيئة الاختبار.</span>
-                      <span class="dest-state"><span class="chip chip--sm"><svg class="g" aria-hidden="true"><use href="#g-struck"/></svg>الإرسال متوقف</span><span class="sum"><span class="num">2</span> رقم · <span class="num">18</span> إشعارًا</span></span>
+                      <span class="dest-state" id="ds-2"><span class="chip chip--sm"><svg class="g" aria-hidden="true"><use href="#g-struck"/></svg>الإرسال متوقف</span><span class="sum">رقمان · <span class="num">18</span> إشعارًا</span></span><span class="dest-reason" id="dr-2">لن تُرسل أي رسالة حتى يُفعَّل من التواصل ← نظرة عامة</span>
                     </span>
                     <svg class="i" aria-hidden="true"><use href="#i-chev-end"/></svg>
                   </a></li>
-                  <li><a href="#">
-                    <span class="rnum"><svg aria-hidden="true"><use href="#r-ring"/></svg><b>3</b></span>
+                  <li><a href="#" aria-labelledby="dt-3" aria-describedby="ds-3">
+                    <span class="rnum" aria-hidden="true"><svg aria-hidden="true"><use href="#r-ring"/></svg><b>3</b></span>
                     <span class="dest-body">
-                      <span class="dest-title"><svg class="i" aria-hidden="true"><use href="#i-plug"/></svg><span>التكاملات</span></span>
-                      <span class="dest-desc">مفاتيح الخدمات الخارجية: <bdi dir="ltr">LiveKit</bdi> و<bdi dir="ltr">Expo</bdi> و<bdi dir="ltr">Web Push</bdi> وأسعار الصرف. الأسرار محفوظة في الخزنة ولا تُعرض.</span>
-                      <span class="dest-state"><span class="chip chip--sm chip--ok"><svg class="g" aria-hidden="true"><use href="#g-fill"/></svg>3 مضبوطة</span><span class="chip chip--sm"><svg class="g" aria-hidden="true"><use href="#g-hollow"/></svg>1 غير مضبوطة</span></span>
+                      <span class="dest-title"><svg class="i" aria-hidden="true"><use href="#i-plug"/></svg><span id="dt-3">التكاملات</span></span>
+                      <span class="dest-desc">بيانات ربط الخدمات الخارجية: الحلقات عبر الإنترنت، وإشعارات الجوال والمتصفح، وأسعار الصرف. البيانات السرية محفوظة ولا تُعرض.</span>
+                      <span class="dest-state" id="ds-3"><span class="chip chip--sm chip--ok"><svg class="g" aria-hidden="true"><use href="#g-fill"/></svg><span class="num">3</span> خدمات مضبوطة</span><span class="chip chip--sm"><svg class="g" aria-hidden="true"><use href="#g-hollow"/></svg>خدمة واحدة غير مضبوطة</span></span>
                     </span>
                     <svg class="i" aria-hidden="true"><use href="#i-chev-end"/></svg>
                   </a></li>
-                  <li><a href="#">
-                    <span class="rnum"><svg aria-hidden="true"><use href="#r-ring"/></svg><b>4</b></span>
+                  <li><a href="#" aria-labelledby="dt-4" aria-describedby="ds-4">
+                    <span class="rnum" aria-hidden="true"><svg aria-hidden="true"><use href="#r-ring"/></svg><b>4</b></span>
                     <span class="dest-body">
-                      <span class="dest-title"><svg class="i" aria-hidden="true"><use href="#i-sync"/></svg><span>مزامنة Google</span></span>
+                      <span class="dest-title"><svg class="i" aria-hidden="true"><use href="#i-sync"/></svg><span id="dt-4">مزامنة Google</span></span>
                       <span class="dest-desc">ربط حساب Google، والتقويمات، ومجلدات الطلاب في Drive، وسجل المزامنة.</span>
-                      <span class="dest-state"><span class="chip chip--sm chip--ok"><svg class="g" aria-hidden="true"><use href="#g-fill"/></svg>متصل</span><span class="chip chip--sm"><svg class="g" aria-hidden="true"><use href="#g-half"/></svg>تجربة بدون كتابة</span></span>
+                      <span class="dest-state" id="ds-4"><span class="chip chip--sm chip--ok"><svg class="g" aria-hidden="true"><use href="#g-fill"/></svg>متصل</span><span class="chip chip--sm"><svg class="g" aria-hidden="true"><use href="#g-half"/></svg>تجربة بدون كتابة</span></span>
                     </span>
                     <svg class="i" aria-hidden="true"><use href="#i-chev-end"/></svg>
                   </a></li>
-                  <li><a href="#">
-                    <span class="rnum"><svg aria-hidden="true"><use href="#r-ring"/></svg><b>5</b></span>
+                  <li><a href="#" aria-labelledby="dt-5" aria-describedby="ds-5">
+                    <span class="rnum" aria-hidden="true"><svg aria-hidden="true"><use href="#r-ring"/></svg><b>5</b></span>
                     <span class="dest-body">
-                      <span class="dest-title"><svg class="i" aria-hidden="true"><use href="#i-moon"/></svg><span>المظهر</span></span>
+                      <span class="dest-title"><svg class="i" aria-hidden="true"><use href="#i-moon"/></svg><span id="dt-5">المظهر</span></span>
                       <span class="dest-desc">فاتح أو ليلي أو حسب الجهاز. يُحفظ في هذا المتصفح فقط، ولا يغيّر شيئًا لغيرك.</span>
-                      <span class="dest-state"><span class="sum">الآن: حسب الجهاز</span></span>
+                      <span class="dest-state" id="ds-5"><span class="sum">الآن: حسب الجهاز</span></span>
                     </span>
                     <svg class="i" aria-hidden="true"><use href="#i-chev-end"/></svg>
                   </a></li>
@@ -195,7 +197,7 @@
         <div class="screen">
           <div class="shell">
             <aside class="side">
-              <a class="brand" href="#"><span class="mark"><svg aria-hidden="true"><use href="#mark"/></svg></span><span class="wm"><small>أكاديمية</small><b>آيات البيان</b></span><span class="sr-only">الرئيسية</span></a>
+              <a class="brand" href="#"><img class="mark" src="../brand/logo-mark-transparent.png" alt="" width="40" height="40"><span class="wm"><small>أكاديمية</small><b>آيات البيان</b></span><span class="sr-only">الرئيسية</span></a>
               <nav class="nav" aria-label="القائمة الرئيسية">
                 <div class="nav-group"><ul>
                   <li><a href="#"><svg class="i" aria-hidden="true"><use href="#i-chat"/></svg>المحادثات<span class="cnt cnt--act">11 جديدة</span></a></li>
@@ -210,7 +212,7 @@
             <div class="main">
               <div class="page">
                 <div class="page-head">
-                  <h1 class="cart"><svg aria-hidden="true"><use href="#cap"/></svg><span class="cart-mid"><span>الإعدادات</span></span><svg aria-hidden="true"><use href="#cap"/></svg></h1>
+                  <h3 class="cart"><svg aria-hidden="true"><use href="#cap"/></svg><span class="cart-mid"><span>الإعدادات</span></span><svg aria-hidden="true"><use href="#cap"/></svg></h3>
                   <span class="count"><span class="num">5</span> أقسام</span>
                 </div>
                 <div class="hub-search" role="search">
@@ -218,11 +220,11 @@
                   <div class="search"><svg class="i" aria-hidden="true"><use href="#i-search"/></svg><input class="input" id="hub-q-2" type="search" placeholder="ابحث بالاسم أو الوصف أو المفتاح"></div>
                 </div>
                 <ul class="dest" aria-label="أقسام الإعدادات">
-                  <li><a href="#"><span class="rnum"><svg aria-hidden="true"><use href="#r-ring"/></svg><b>1</b></span><span class="dest-body"><span class="dest-title"><span>القيم</span></span><span class="dest-state"><span class="sum"><span class="num">42</span> قيمة · <span class="num">5</span> معدَّلة · <span class="num">3</span> عامة</span></span></span><svg class="i" aria-hidden="true"><use href="#i-chev-end"/></svg></a></li>
-                  <li><a href="#"><span class="rnum"><svg aria-hidden="true"><use href="#r-ring"/></svg><b>2</b></span><span class="dest-body"><span class="dest-title"><span>التواصل</span></span><span class="dest-state"><span class="chip chip--sm"><svg class="g" aria-hidden="true"><use href="#g-struck"/></svg>الإرسال متوقف</span><span class="sum"><span class="num">2</span> رقم · <span class="num">18</span> إشعارًا</span></span></span><svg class="i" aria-hidden="true"><use href="#i-chev-end"/></svg></a></li>
-                  <li><a href="#"><span class="rnum"><svg aria-hidden="true"><use href="#r-ring"/></svg><b>3</b></span><span class="dest-body"><span class="dest-title"><span>التكاملات</span></span><span class="dest-state"><span class="chip chip--sm chip--ok"><svg class="g" aria-hidden="true"><use href="#g-fill"/></svg>3 مضبوطة</span><span class="chip chip--sm"><svg class="g" aria-hidden="true"><use href="#g-hollow"/></svg>1 غير مضبوطة</span></span></span><svg class="i" aria-hidden="true"><use href="#i-chev-end"/></svg></a></li>
-                  <li><a href="#"><span class="rnum"><svg aria-hidden="true"><use href="#r-ring"/></svg><b>4</b></span><span class="dest-body"><span class="dest-title"><span>مزامنة Google</span></span><span class="dest-state"><span class="chip chip--sm chip--ok"><svg class="g" aria-hidden="true"><use href="#g-fill"/></svg>متصل</span><span class="chip chip--sm"><svg class="g" aria-hidden="true"><use href="#g-half"/></svg>تجربة بدون كتابة</span></span></span><svg class="i" aria-hidden="true"><use href="#i-chev-end"/></svg></a></li>
-                  <li><a href="#"><span class="rnum"><svg aria-hidden="true"><use href="#r-ring"/></svg><b>5</b></span><span class="dest-body"><span class="dest-title"><span>المظهر</span></span><span class="dest-state"><span class="sum">الآن: حسب الجهاز</span></span></span><svg class="i" aria-hidden="true"><use href="#i-chev-end"/></svg></a></li>
+                  <li><a href="#" aria-labelledby="dt-6" aria-describedby="ds-6"><span class="rnum" aria-hidden="true"><svg aria-hidden="true"><use href="#r-ring"/></svg><b>1</b></span><span class="dest-body"><span class="dest-title"><span id="dt-6">القيم</span></span><span class="dest-state" id="ds-6"><span class="sum"><span class="num">28</span> قيمة · <span class="num">5</span> معدَّلة · <span class="num">8</span> عامة</span></span></span><svg class="i" aria-hidden="true"><use href="#i-chev-end"/></svg></a></li>
+                  <li><a href="#" aria-labelledby="dt-7" aria-describedby="ds-7 dr-7"><span class="rnum" aria-hidden="true"><svg aria-hidden="true"><use href="#r-ring"/></svg><b>2</b></span><span class="dest-body"><span class="dest-title"><span id="dt-7">التواصل</span></span><span class="dest-state" id="ds-7"><span class="chip chip--sm"><svg class="g" aria-hidden="true"><use href="#g-struck"/></svg>الإرسال متوقف</span><span class="sum">رقمان · <span class="num">18</span> إشعارًا</span></span><span class="dest-reason" id="dr-7">لن تُرسل أي رسالة حتى يُفعَّل من التواصل ← نظرة عامة</span></span><svg class="i" aria-hidden="true"><use href="#i-chev-end"/></svg></a></li>
+                  <li><a href="#" aria-labelledby="dt-8" aria-describedby="ds-8"><span class="rnum" aria-hidden="true"><svg aria-hidden="true"><use href="#r-ring"/></svg><b>3</b></span><span class="dest-body"><span class="dest-title"><span id="dt-8">التكاملات</span></span><span class="dest-state" id="ds-8"><span class="chip chip--sm chip--ok"><svg class="g" aria-hidden="true"><use href="#g-fill"/></svg><span class="num">3</span> خدمات مضبوطة</span><span class="chip chip--sm"><svg class="g" aria-hidden="true"><use href="#g-hollow"/></svg>خدمة واحدة غير مضبوطة</span></span></span><svg class="i" aria-hidden="true"><use href="#i-chev-end"/></svg></a></li>
+                  <li><a href="#" aria-labelledby="dt-9" aria-describedby="ds-9"><span class="rnum" aria-hidden="true"><svg aria-hidden="true"><use href="#r-ring"/></svg><b>4</b></span><span class="dest-body"><span class="dest-title"><span id="dt-9">مزامنة Google</span></span><span class="dest-state" id="ds-9"><span class="chip chip--sm chip--ok"><svg class="g" aria-hidden="true"><use href="#g-fill"/></svg>متصل</span><span class="chip chip--sm"><svg class="g" aria-hidden="true"><use href="#g-half"/></svg>تجربة بدون كتابة</span></span></span><svg class="i" aria-hidden="true"><use href="#i-chev-end"/></svg></a></li>
+                  <li><a href="#" aria-labelledby="dt-10" aria-describedby="ds-10"><span class="rnum" aria-hidden="true"><svg aria-hidden="true"><use href="#r-ring"/></svg><b>5</b></span><span class="dest-body"><span class="dest-title"><span id="dt-10">المظهر</span></span><span class="dest-state" id="ds-10"><span class="sum">الآن: حسب الجهاز</span></span></span><svg class="i" aria-hidden="true"><use href="#i-chev-end"/></svg></a></li>
                 </ul>
                 <p class="related"><span>روابط ذات صلة:</span><a href="#">الترجمات</a><a href="#">الأدوار والصلاحيات</a><a href="#">سجل النشاط</a></p>
               </div>
@@ -240,13 +242,19 @@
     </header>
     <figure>
       <figcaption>مثال: نتائج البحث عن «واتساب»</figcaption>
-      <div class="results" role="listbox" aria-label="نتائج البحث">
-        <h4>القيم</h4>
-        <a href="#" role="option" aria-selected="true"><span>رقم <span class="hit">واتساب</span> الأكاديمية</span><small>القيم › الأكاديمية · <bdi dir="ltr">academy_whatsapp_e164</bdi></small></a>
-        <h4>التواصل</h4>
-        <a href="#" role="option" aria-selected="false"><span>خط إشعارات <span class="hit">واتساب</span></span><small>التواصل › الأرقام</small></a>
-        <a href="#" role="option" aria-selected="false"><span>رسالة <span class="hit">واتساب</span> للمعلم عند حجز طالب جديد</span><small>التواصل › الإشعارات › المعلم</small></a>
-        <p class="total"><span class="num">3</span> نتائج</p>
+      <div class="combo">
+        <label class="sr-only" for="hub-q-ex">ابحث في الإعدادات</label>
+        <div class="search" style="max-inline-size:none"><svg class="i" aria-hidden="true"><use href="#i-search"/></svg><input class="input" id="hub-q-ex" type="search" value="واتساب" role="combobox" aria-autocomplete="list" aria-expanded="true" aria-controls="results" aria-activedescendant="opt-1"></div>
+        <div class="results" id="results" role="listbox" aria-label="نتائج البحث">
+          <div role="group" aria-labelledby="grp-values"><div role="presentation" class="grp" id="grp-values">القيم</div>
+            <div role="option" id="opt-1" aria-selected="true"><span>رقم <span class="hit">واتساب</span> الأكاديمية</span><small>القيم › الأكاديمية · <bdi dir="ltr">academy_whatsapp_e164</bdi></small></div>
+          </div>
+          <div role="group" aria-labelledby="grp-comms"><div role="presentation" class="grp" id="grp-comms">التواصل</div>
+            <div role="option" id="opt-2" aria-selected="false"><span>خط إشعارات <span class="hit">واتساب</span></span><small>التواصل › الأرقام</small></div>
+            <div role="option" id="opt-3" aria-selected="false"><span>رسالة <span class="hit">واتساب</span> للمعلم/ة عند حجز طالب جديد</span><small>التواصل › الإشعارات › المعلم/ة</small></div>
+          </div>
+        </div>
+        <p class="total" role="status"><span class="num">3</span> نتائج</p>
       </div>
     </figure>
   </section>

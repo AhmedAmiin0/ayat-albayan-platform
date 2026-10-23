@@ -18,6 +18,8 @@ body { max-inline-size: 390px; margin-inline: auto; }
 .examples { gap: 28px; }
 .dlg-stage { border-radius: 0; }
 .frag { display: grid; gap: 12px; padding: 16px; background: var(--page); border-block: 1px solid var(--rule); container: page / inline-size; }
+.trim { padding-block: 10px; padding-inline: 4px; font-size: 13px; color: var(--ink-3); }
+.vactions .flag { flex: 1 1 100%; }
 .toast-dock { display: grid; justify-items: stretch; padding: 16px; }
 .toast-dock .toast { justify-content: space-between; }
 </style>
@@ -34,7 +36,6 @@ body { max-inline-size: 390px; margin-inline: auto; }
     <path fill="none" style="stroke:var(--gold-soft)" d="M26 6.5H16C12.5 6.5 11.5 9.5 10 13.5L5.6 26L10 38.5C11.5 42.5 12.5 45.5 16 45.5H26"/>
     <path fill="currentColor" d="M13.5 23.6 15.9 26 13.5 28.4 11.1 26Z"/>
   </symbol>
-  <symbol id="mark" viewBox="0 0 32 32"><g fill="none" stroke="currentColor" stroke-width="1.5"><rect x="8" y="8" width="16" height="16"/><rect x="8" y="8" width="16" height="16" transform="rotate(45 16 16)"/></g><path fill="#14503a" d="M10.5 19.5 16 17l5.5 2.5V21L16 18.6 10.5 21Z"/></symbol>
   <symbol id="i-search" viewBox="0 0 20 20"><circle cx="9" cy="9" r="5.5"/><path d="m13.2 13.2 3.6 3.6"/></symbol>
   <symbol id="i-plus" viewBox="0 0 20 20"><path d="M10 4.5v11M4.5 10h11"/></symbol>
   <symbol id="i-check" viewBox="0 0 20 20"><path d="m4.5 10.5 3.5 3.5 7.5-8"/></symbol>
@@ -46,11 +47,12 @@ body { max-inline-size: 390px; margin-inline: auto; }
   <symbol id="i-gear" viewBox="0 0 20 20"><circle cx="10" cy="10" r="2.4"/><circle cx="10" cy="10" r="5.4"/><path d="M10 2.6v2M10 15.4v2M2.6 10h2M15.4 10h2M4.8 4.8l1.4 1.4M13.8 13.8l1.4 1.4M4.8 15.2l1.4-1.4M13.8 6.2l1.4-1.4"/></symbol>
 </svg>
 
+
 <main class="board">
   <header class="board-head">
     <div>
       <h1>القيم: <span class="num">390px</span></h1>
-      <p>المسار <bdi dir="ltr">/admin/settings/values</bdi> على عرض الهاتف. المجموعات شريط أفقي، وكل سطر يتراص: الاسم، الوصف، المحرّر بعرض كامل (نص <span class="num">16px</span> وارتفاع <span class="num">44px</span> على الأقل)، سطر المعلومات، ثم الأزرار بعرض كامل.</p>
+      <p>المسار <bdi dir="ltr">/admin/settings/values</bdi> على عرض الهاتف. المجموعات شريط أفقي، وكل سطر يتراص: الاسم، الوصف، المحرّر بعرض كامل (نص <span class="num">16px</span> وارتفاع <span class="num">44px</span> على الأقل)، سطر المعلومات، ثم الأزرار بعرض كامل. البيانات هي نفسها في نموذج سطح المكتب.</p>
     </div>
     <fieldset class="theme-pick">
       <legend>المظهر</legend>
@@ -64,7 +66,7 @@ body { max-inline-size: 390px; margin-inline: auto; }
     <div class="screen">
       <div class="shell">
         <aside class="side">
-          <a class="brand" href="#"><span class="mark"><svg aria-hidden="true"><use href="#mark"/></svg></span><span class="sr-only">الرئيسية</span></a>
+          <a class="brand" href="#"><img class="mark" src="../brand/logo-mark-transparent.png" alt="" width="40" height="40"><span class="sr-only">الرئيسية</span></a>
           <nav class="nav" aria-label="القائمة الرئيسية">
             <div class="nav-group"><ul>
               <li><a href="#" aria-current="page"><svg class="i" aria-hidden="true"><use href="#i-gear"/></svg>الإعدادات</a></li>
@@ -77,29 +79,37 @@ body { max-inline-size: 390px; margin-inline: auto; }
         <div class="main">
           <div class="page">
             <div class="page-head">
-              <h1 class="cart" id="s-page"><svg aria-hidden="true"><use href="#cap"/></svg><span class="cart-mid"><span>القيم</span></span><svg aria-hidden="true"><use href="#cap"/></svg></h1>
-              <span class="count"><span class="num">42</span> قيمة</span>
-              <div class="actions"><button class="btn btn--secondary" type="button"><svg class="i" aria-hidden="true"><use href="#i-plus"/></svg>إضافة قيمة</button></div>
+              <h2 class="cart" id="s-page"><svg aria-hidden="true"><use href="#cap"/></svg><span class="cart-mid"><span>القيم</span></span><svg aria-hidden="true"><use href="#cap"/></svg></h2>
+              <span class="count"><span class="num">28</span> قيمة · <span class="num">5</span> معدَّلة · <span class="num">8</span> عامة</span>
+              <a class="flag flag--dirty" href="#row-ra"><svg class="g" aria-hidden="true"><use href="#g-hollow"/></svg>قيمتان لم تُحفظا</a>
+              <div class="actions"><button class="btn btn--secondary" type="button"><svg class="i" aria-hidden="true"><use href="#i-plus"/></svg>أضف قيمة</button></div>
             </div>
             <div class="toolbar" role="search">
               <div class="search"><svg class="i" aria-hidden="true"><use href="#i-search"/></svg><label class="sr-only" for="q">ابحث في القيم</label><input class="input" id="q" type="search" placeholder="ابحث بالاسم أو الوصف أو المفتاح"></div>
               <div class="filters">
-                <button class="fchip" type="button" aria-pressed="true"><svg class="i" aria-hidden="true"><use href="#i-check"/></svg>المعدَّلة فقط <span class="num">5</span></button>
-                <button class="fchip" type="button" aria-pressed="false"><svg class="i" aria-hidden="true"><use href="#i-check"/></svg>العامة فقط <span class="num">3</span></button>
+                <button class="fchip" type="button" aria-pressed="false"><svg class="i" aria-hidden="true"><use href="#i-check"/></svg>المعدَّلة فقط <span class="num">5</span></button>
+                <button class="fchip" type="button" aria-pressed="false"><svg class="i" aria-hidden="true"><use href="#i-check"/></svg>العامة فقط <span class="num">8</span></button>
               </div>
             </div>
             <div class="vlayout">
               <nav class="toc" aria-label="مجموعات القيم">
-                <a href="#" aria-current="true">الكل <span class="cnt">42</span></a>
-                <a href="#g-sched">الجدول والحلقات <span class="cnt">7</span></a>
-                <a href="#g-acc">الحسابات والدفعات <span class="cnt">6</span></a>
-                <a href="#g-acad">الأكاديمية <span class="cnt">7</span></a>
-                <a href="#">السجلات والاحتفاظ <span class="cnt">3</span></a>
-                <a href="#">قيم مضافة <span class="cnt">5</span></a>
+                <a href="#" aria-current="true">الكل <span class="cnt">28</span></a>
+                <a href="#g-sched">الجدول والحلقات <span class="cnt">4</span></a>
+                <a href="#">الحلقات عبر الإنترنت <span class="cnt">4</span></a>
+                <a href="#">التقارير <span class="cnt">1</span></a>
+                <a href="#g-acc">الحسابات والدفعات <span class="cnt">5</span></a>
+                <a href="#">مستحقات المعلمين <span class="cnt">3</span></a>
+                <a href="#">الملفات المرفوعة <span class="cnt">1</span></a>
+                <a href="#g-acad">الأكاديمية <span class="cnt">5</span></a>
+                <a href="#">الرسائل <span class="cnt">2</span></a>
+                <a href="#">المبيعات <span class="cnt">1</span></a>
+                <a href="#">السجلات والاحتفاظ <span class="cnt">2</span></a>
+                <a href="#">قيم مخصصة <span class="cnt">5</span></a>
+                <a href="#g-mod">تُدار من صفحة أخرى <span class="cnt">14</span></a>
               </nav>
               <div>
                 <section class="vgroup" id="g-sched" aria-labelledby="gh-sched">
-                  <div class="vgroup-head"><h3 id="gh-sched">الجدول والحلقات</h3><span class="n"><span class="num">2</span> من <span class="num">7</span> معدَّلة</span></div>
+                  <div class="vgroup-head"><h3 id="gh-sched">الجدول والحلقات</h3><span class="n"><span class="num">4</span> قيم · <span class="num">1</span> معدَّلة</span></div>
 
                   <article class="vrow" aria-labelledby="l-lc">
                     <div class="vhead">
@@ -109,40 +119,45 @@ body { max-inline-size: 390px; margin-inline: auto; }
                     <div class="vedit null-pair">
                       <label class="sw"><input type="checkbox" role="switch" checked><span class="track" aria-hidden="true"></span><span>حساب الإلغاء المتأخر</span></label>
                       <div class="unit-field"><label class="unit" for="f-lc">قبل الحلقة بأقل من</label><input class="input" id="f-lc" type="number" inputmode="numeric" dir="ltr" min="1" max="168" value="24"><span class="unit">ساعة</span></div>
+                      <div class="vlive" aria-live="polite"></div>
                       <p class="vdefault">من <span class="num">1</span> إلى <span class="num">168</span> · الافتراضي: <span class="num">12</span> ساعة</p>
                     </div>
-                    <div class="vmeta"><span>آخر تعديل: <span class="num">21</span> أكتوبر <span class="num">14:05</span> · أحمد</span><span class="vkey">للمطوّر: <bdi dir="ltr">late_cancel_hours</bdi></span><button class="link-btn" type="button">تعديل الوصف<span class="sr-only">: الإلغاء المتأخر</span></button></div>
-                    <div class="vactions"><button class="btn btn--ghost btn--sm" type="button">إعادة للافتراضي<span class="sr-only">: الإلغاء المتأخر</span></button></div>
+                    <div class="vmeta"><span>آخر تعديل: <span class="num">21</span> أكتوبر <span class="num">14:05</span> · أحمد</span><span class="vkey">للمطوّر: <bdi dir="ltr">late_cancel_hours</bdi></span><button class="link-btn" type="button">عدّل الوصف<span class="sr-only">: الإلغاء المتأخر</span></button></div>
+                    <div class="vactions"><button class="btn btn--ghost btn--sm" type="button">أعد القيمة الافتراضية<span class="sr-only">: الإلغاء المتأخر</span></button></div>
                   </article>
 
                   <article class="vrow" aria-labelledby="l-ta">
                     <div class="vhead">
-                      <div class="vtitle"><span class="vlabel" id="l-ta">كل المعلمين متاحون للحجز على مدار الساعة طوال الأسبوع</span><span class="chip chip--sm"><svg class="g" aria-hidden="true"><use href="#g-half"/></svg>معدَّلة</span></div>
-                      <p class="vdesc">يتجاهل أوقات التوفر التي أدخلها المعلمون عند الحجز.</p>
+                      <div class="vtitle"><span class="vlabel" id="l-ta">كل المعلمين متاحون للحجز على مدار الساعة طوال الأسبوع</span></div>
+                      <p class="vdesc">يتجاهل المواعيد المسجلة للمعلمين عند الحجز.</p>
                     </div>
                     <div class="vedit">
-                      <label class="sw"><input type="checkbox" role="switch" aria-labelledby="l-ta" checked><span class="track" aria-hidden="true"></span><span class="state">مفعّل</span></label>
-                      <p class="impact"><svg class="g" aria-hidden="true"><use href="#g-fill"/></svg><b>يؤثر في الحجز:</b> يمكن حجز أي معلم في أي ساعة. يُطلب كتابة «تأكيد» قبل الحفظ.</p>
+                      <label class="sw"><input type="checkbox" role="switch" aria-labelledby="l-ta"><span class="track" aria-hidden="true"></span><span class="state">مغلق</span></label>
+                      <div class="vlive" aria-live="polite"></div>
+                      <p class="impact"><svg class="g" aria-hidden="true"><use href="#g-fill"/></svg><b>يؤثر في الحجز:</b> تشغيله يقبل الحجز مع أي معلم/ة في أي ساعة. ستُسأل للتأكيد قبل الحفظ.</p>
+                      <p class="vdefault">الافتراضي: مغلق</p>
                     </div>
-                    <div class="vmeta"><span>آخر تعديل: <span class="num">20</span> أكتوبر <span class="num">18:40</span> · سارة</span><span class="vkey">للمطوّر: <bdi dir="ltr">teachers_always_available</bdi></span></div>
-                    <div class="vactions"><button class="btn btn--ghost btn--sm" type="button">إعادة للافتراضي<span class="sr-only">: كل المعلمين متاحون</span></button></div>
+                    <div class="vmeta"><span>لم تُعدَّل بعد</span><span class="vkey">للمطوّر: <bdi dir="ltr">teachers_always_available</bdi></span></div>
+                    <div class="vactions"></div>
                   </article>
+                  <p class="trim">وقيمتان أخريان في هذه المجموعة.</p>
                 </section>
 
                 <section class="vgroup" id="g-acc" aria-labelledby="gh-acc">
-                  <div class="vgroup-head"><h3 id="gh-acc">الحسابات والدفعات</h3><span class="n"><span class="num">2</span> من <span class="num">6</span> معدَّلة</span></div>
+                  <div class="vgroup-head"><h3 id="gh-acc">الحسابات والدفعات</h3><span class="n"><span class="num">5</span> قيم · <span class="num">1</span> معدَّلة</span></div>
 
-                  <article class="vrow vrow--dirty" aria-labelledby="l-ra">
+                  <article class="vrow vrow--dirty" id="row-ra" aria-labelledby="l-ra">
                     <div class="vhead">
-                      <div class="vtitle"><label class="vlabel" id="l-ra" for="f-ra">نبّه للتجديد عندما يتبقى في الباقة كم حلقة</label><span class="chip chip--sm"><svg class="g" aria-hidden="true"><use href="#g-half"/></svg>معدَّلة</span></div>
+                      <div class="vtitle"><label class="vlabel" id="l-ra" for="f-ra">نبّه للتجديد عندما يتبقى في الباقة كم حلقة</label></div>
                       <p class="vdesc">يظهر الطالب في «بانتظار التجديد» عند هذا العدد من الحلقات المتبقية.</p>
                     </div>
                     <div class="vedit">
-                      <div class="unit-field"><input class="input" id="f-ra" type="number" inputmode="numeric" dir="ltr" min="0" max="10" value="3"><span class="unit">حلقات</span></div>
-                      <p class="vdefault">من <span class="num">0</span> إلى <span class="num">10</span> · الافتراضي: <span class="num">2</span></p>
+                      <div class="unit-field"><input class="input" id="f-ra" type="number" inputmode="numeric" dir="ltr" min="0" max="10" value="3"><span class="unit">حلقة</span></div>
+                      <div class="vlive" aria-live="polite"></div>
+                      <p class="vdefault">من <span class="num">0</span> إلى <span class="num">10</span> · الافتراضي: <span class="num">2</span> · المحفوظ الآن: <span class="num">2</span></p>
                     </div>
-                    <div class="vmeta"><span class="flag flag--dirty"><svg class="g" aria-hidden="true"><use href="#g-hollow"/></svg>لم يُحفظ</span><span class="vkey">للمطوّر: <bdi dir="ltr">renewal_alert_remaining</bdi></span></div>
-                    <div class="vactions"><button class="btn btn--secondary btn--sm" type="button">حفظ</button><button class="btn btn--ghost btn--sm" type="button"><svg class="i i--flip" aria-hidden="true"><use href="#i-undo"/></svg>تراجع</button></div>
+                    <div class="vmeta"><span>آخر تعديل: <span class="num">3</span> أكتوبر <span class="num">09:40</span> · سارة</span><span class="vkey">للمطوّر: <bdi dir="ltr">renewal_alert_remaining</bdi></span></div>
+                    <div class="vactions"><span class="flag flag--dirty"><svg class="g" aria-hidden="true"><use href="#g-hollow"/></svg>لم يُحفظ</span><button class="btn btn--secondary btn--sm" type="button">حفظ<span class="sr-only">: التنبيه للتجديد</span></button><button class="btn btn--ghost btn--sm" type="button"><svg class="i i--flip" aria-hidden="true"><use href="#i-undo"/></svg>تراجع<span class="sr-only">: التنبيه للتجديد</span></button></div>
                   </article>
 
                   <article class="vrow vrow--conflict" aria-labelledby="l-fx">
@@ -151,28 +166,53 @@ body { max-inline-size: 390px; margin-inline: auto; }
                       <p class="vdesc">بعد هذه المدة يُطلب سعر جديد من مزوّد أسعار الصرف.</p>
                     </div>
                     <div class="vedit">
-                      <div class="unit-field"><input class="input" id="f-fx" type="number" inputmode="numeric" dir="ltr" min="1" max="168" value="8"><span class="unit">ساعات</span></div>
+                      <div class="unit-field"><input class="input" id="f-fx" type="number" inputmode="numeric" dir="ltr" min="1" max="168" value="8"><span class="unit">ساعة</span></div>
+                      <p class="vdefault">من <span class="num">1</span> إلى <span class="num">168</span> · الافتراضي: <span class="num">12</span></p>
                     </div>
-                    <div class="alert alert--act" role="alert"><svg class="g" aria-hidden="true"><use href="#g-hollow"/></svg><div class="alert-body"><p>غيّر سارة هذه القيمة إلى <span class="num">6</span> قبل دقيقتين. قيمتك: <span class="num">8</span>.</p><div class="alert-actions" style="display:grid"><button class="btn btn--secondary" type="button">احفظ قيمتي</button><button class="btn btn--ghost" type="button">اعتمد القيمة الجديدة</button></div></div></div>
-                    <div class="vmeta"><span class="vkey">للمطوّر: <bdi dir="ltr">fx_fresh_hours</bdi></span></div>
+                    <div class="alert alert--act" role="alert"><svg class="g" aria-hidden="true"><use href="#g-hollow"/></svg><div class="alert-body"><p>غيّرت سارة هذه القيمة إلى <span class="num">6</span> قبل دقيقتين. قيمتك: <span class="num">8</span>.</p><div class="alert-actions" style="display:grid"><button class="btn btn--secondary" type="button">احفظ قيمتي</button><button class="btn btn--ghost" type="button">اعتمد القيمة الجديدة</button></div></div></div>
+                    <div class="vmeta"><span>آخر تعديل: قبل دقيقتين · سارة</span><span class="vkey">للمطوّر: <bdi dir="ltr">fx_fresh_hours</bdi></span></div>
                     <div class="vactions"></div>
                   </article>
+                  <p class="trim">و<span class="num">3</span> قيم أخرى في هذه المجموعة.</p>
                 </section>
 
                 <section class="vgroup" id="g-acad" aria-labelledby="gh-acad">
-                  <div class="vgroup-head"><h3 id="gh-acad">الأكاديمية</h3><span class="n"><span class="num">1</span> من <span class="num">7</span> معدَّلة</span></div>
+                  <div class="vgroup-head"><h3 id="gh-acad">الأكاديمية</h3><span class="n"><span class="num">5</span> قيم · <span class="num">1</span> معدَّلة</span></div>
                   <article class="vrow" aria-labelledby="l-wa">
                     <div class="vhead">
-                      <div class="vtitle"><label class="vlabel" id="l-wa" for="f-wa">رقم واتساب الأكاديمية</label><span class="chip chip--sm" title="تظهر قبل تسجيل الدخول"><svg class="g" aria-hidden="true"><use href="#g-hollow"/></svg>عامة</span><span class="chip chip--sm"><svg class="g" aria-hidden="true"><use href="#g-half"/></svg>معدَّلة</span></div>
+                      <div class="vtitle"><label class="vlabel" id="l-wa" for="f-wa">رقم واتساب الأكاديمية</label><span class="tag" title="تظهر قبل تسجيل الدخول">عامة</span><span class="chip chip--sm"><svg class="g" aria-hidden="true"><use href="#g-half"/></svg>معدَّلة</span></div>
                       <p class="vdesc">يظهر لأولياء الأمور في صفحة الحجز وفي تذييل تقرير الحلقة.</p>
                     </div>
                     <div class="vedit">
                       <input class="input" id="f-wa" type="tel" dir="ltr" autocomplete="off" value="+966 55 000 0000" aria-describedby="p-wa">
-                      <p class="preview-ok" id="p-wa"><svg class="i" aria-hidden="true" style="inline-size:15px;block-size:15px"><use href="#i-check"/></svg><span>يُحفظ بالصيغة: <bdi dir="ltr">+966550000000</bdi></span></p>
+                      <div class="vlive" aria-live="polite"><p class="preview-ok" id="p-wa"><svg class="i" aria-hidden="true" style="inline-size:15px;block-size:15px"><use href="#i-check"/></svg><span>يُحفظ بالصيغة: <bdi dir="ltr">+966550000000</bdi></span></p></div>
+                      <p class="vdefault">الافتراضي: فارغ (لا يظهر رقم)</p>
                     </div>
-                    <div class="vmeta"><span>آخر تعديل: <span class="num">12</span> سبتمبر · أحمد</span><span class="vkey">للمطوّر: <bdi dir="ltr">academy_whatsapp_e164</bdi></span></div>
-                    <div class="vactions"><button class="btn btn--ghost btn--sm" type="button">إعادة للافتراضي<span class="sr-only">: رقم واتساب الأكاديمية</span></button></div>
+                    <div class="vmeta"><span>آخر تعديل: <span class="num">12</span> سبتمبر <span class="num">11:30</span> · أحمد</span><span class="vkey">للمطوّر: <bdi dir="ltr">academy_whatsapp_e164</bdi></span></div>
+                    <div class="vactions"><button class="btn btn--ghost btn--sm" type="button">أعد القيمة الافتراضية<span class="sr-only">: رقم واتساب الأكاديمية</span></button></div>
                   </article>
+                  <p class="trim">و<span class="num">4</span> قيم أخرى في هذه المجموعة.</p>
+                </section>
+
+                <section class="vgroup" id="g-mod" aria-labelledby="gh-mod">
+                  <div class="vgroup-head"><h3 id="gh-mod">تُدار من صفحة أخرى</h3><span class="n"><span class="num">14</span> قيمة</span><p class="hint">تظهر هنا للاطلاع فقط وتُعدَّل من صفحتها.</p></div>
+                  <article class="vrow" aria-labelledby="l-m1">
+                    <div class="vhead">
+                      <div class="vtitle"><span class="vlabel" id="l-m1">تذكير الحلقة قبل موعدها</span></div>
+                      <p class="vdesc">متى يصل تذكير الحلقة إلى الطالب وولي الأمر.</p>
+                    </div>
+                    <div class="vedit"><span class="vvalue"><span class="num">60</span> دقيقة</span><a class="vlink" href="#">تُعدَّل من التواصل ← الإشعارات</a></div>
+                    <div class="vmeta"><span class="vkey">للمطوّر: <bdi dir="ltr">reminder_minutes_before</bdi></span></div>
+                  </article>
+                  <article class="vrow" aria-labelledby="l-m2">
+                    <div class="vhead">
+                      <div class="vtitle"><span class="vlabel" id="l-m2">إرسال الرسائل</span></div>
+                      <p class="vdesc">يشغّل كل رسائل واتساب التي ترسلها المنصة أو يوقفها.</p>
+                    </div>
+                    <div class="vedit"><span class="vvalue">مغلق</span><a class="vlink" href="#">تُعدَّل من التواصل ← نظرة عامة</a></div>
+                    <div class="vmeta"><span class="vkey">للمطوّر: <bdi dir="ltr">messaging_enabled</bdi></span></div>
+                  </article>
+                  <p class="trim">و<span class="num">12</span> قيمة أخرى في هذه المجموعة.</p>
                 </section>
               </div>
             </div>
@@ -188,7 +228,7 @@ body { max-inline-size: 390px; margin-inline: auto; }
       <figure>
         <figcaption>مثال: للاطلاع فقط</figcaption>
         <div class="frag">
-          <div class="alert alert--info" role="note"><svg class="g" aria-hidden="true"><use href="#g-hollow"/></svg><div class="alert-body"><p><b>للاطلاع فقط.</b> لا تملك صلاحية تعديل الإعدادات. إن احتجت إلى تغيير قيمة فاطلبها من مدير الأكاديمية.</p></div></div>
+          <div class="alert alert--info" role="note"><svg class="g" aria-hidden="true"><use href="#g-hollow"/></svg><div class="alert-body"><p><b>للاطلاع فقط.</b> لا تملك صلاحية تعديل الإعدادات. إن احتجت إلى تغيير قيمة فاطلبه من مدير الأكاديمية.</p></div></div>
           <article class="vrow" aria-labelledby="ro-1">
             <div class="vhead"><span class="vlabel" id="ro-1">تُجدول الحلقات لكم أسبوعًا مقدمًا</span><p class="vdesc">عدد الأسابيع التي تُنشأ فيها حلقات الطالب مسبقًا.</p></div>
             <div class="vedit"><span class="vvalue"><span class="num">4</span> أسابيع</span><span class="vdefault">الافتراضي: <span class="num">4</span></span></div>
@@ -198,26 +238,23 @@ body { max-inline-size: 390px; margin-inline: auto; }
       </figure>
 
       <figure>
-        <figcaption>مثال: تأكيد بالكتابة على الهاتف (الأزرار متراصة والأساسي في الأعلى)</figcaption>
+        <figcaption>مثال: تأكيد عادي على الهاتف (الأزرار متراصة بترتيبها في الترميز: «إلغاء» ثم الإجراء)</figcaption>
         <div class="dlg-stage">
           <div class="dlg" role="dialog" aria-modal="true" aria-labelledby="d1-t" aria-describedby="d1-d">
             <div class="dlg-head">
               <span class="dlg-glyph" aria-hidden="true"><svg class="g"><use href="#g-hollow"/></svg></span>
-              <h2 class="dlg-title" id="d1-t">إتاحة كل المعلمين طوال الوقت؟</h2>
+              <h3 class="dlg-title" id="d1-t">إتاحة كل المعلمين للحجز في أي ساعة؟</h3>
               <button class="icon-btn" type="button" aria-label="إغلاق"><svg class="i" aria-hidden="true"><use href="#i-x"/></svg></button>
-              <p class="dlg-desc" id="d1-d">سيمكن حجز أي معلم في أي ساعة، دون النظر إلى أوقات توفره.</p>
+              <p class="dlg-desc" id="d1-d">يُقبل الحجز مع أي معلم/ة في أي ساعة، دون النظر إلى المواعيد المسجلة.</p>
             </div>
-            <div class="dlg-body">
-              <div class="field"><label class="label" for="d1-in">للتأكيد اكتب: تأكيد</label><input class="input" id="d1-in" type="text" value="تأكيد" autocomplete="off"></div>
-            </div>
-            <div class="dlg-foot"><button class="btn btn--ghost" type="button">إلغاء</button><button class="btn btn--primary" type="button">احفظ القيمة</button></div>
+            <div class="dlg-foot"><button class="btn btn--ghost" type="button">إلغاء</button><button class="btn btn--primary" type="button">أتِح كل المعلمين للحجز</button></div>
           </div>
         </div>
       </figure>
 
       <figure>
-        <figcaption>مثال: الإشعار بعد الحفظ</figcaption>
-        <div class="toast-dock"><div class="toast" role="status"><span style="display:inline-flex;align-items:center;gap:10px"><svg class="g" aria-hidden="true"><use href="#g-fill"/></svg><span>حُفظت القيمة</span></span></div></div>
+        <figcaption>مثال: الإشعار بعد الحفظ (يختفي بعد <span class="num">5</span> ثوانٍ)</figcaption>
+        <div class="toast-dock"><div class="toast" role="status"><span style="display:inline-flex;align-items:center;gap:10px"><svg class="g" aria-hidden="true"><use href="#g-fill"/></svg><span>تم حفظ القيمة</span></span><button class="toast-act" type="button">تراجع</button></div></div>
       </figure>
     </div>
   </section>
