@@ -29,4 +29,12 @@ describe('retry — backoff around one PDF publish', () => {
     await expect(retry(fn, { delays: [2, 8], sleep })).rejects.toThrow('fail 3');
     expect(n).toBe(3);
   });
+
+  it('rethrows at once an error giveUp accepts (no wait, no further attempt)', async () => {
+    const sleep = vi.fn(async () => undefined);
+    const fn = vi.fn<() => Promise<string>>().mockRejectedValue(new Error('final'));
+    await expect(retry(fn, { delays: [2, 8], sleep, giveUp: (e) => e instanceof Error && e.message === 'final' })).rejects.toThrow('final');
+    expect(fn).toHaveBeenCalledTimes(1);
+    expect(sleep).not.toHaveBeenCalled();
+  });
 });

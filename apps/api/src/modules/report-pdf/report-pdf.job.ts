@@ -19,8 +19,15 @@ const STALE_MS = 10 * 60_000;
 /** Three attempts per claim, 2 s then 8 s apart; then `failed` and the admin retries (R12). */
 export const RETRY_DELAYS_MS = [2_000, 8_000] as const;
 
-export type RunSummary = { recovered: number; rendered: number; failed: number; skipped: number };
-type Outcome = 'rendered' | 'failed' | 'skipped';
+export type RunSummary = { recovered: number; rendered: number; failed: number; skipped: number; held: number };
+type Outcome = 'rendered' | 'failed' | 'skipped' | 'held';
+
+/** The notification rules could not be read: hold the report (back to pending), never fail or send it. */
+export class RulesUnreadError extends Error {
+  constructor() {
+    super('notification rules unread: report_ready held for the next run');
+  }
+}
 
 /**
  * R-REP-03 report PDF worker (docs/11 §5): claims `pending` reports one by one, renders the
@@ -76,7 +83,7 @@ export class ReportPdfJob implements OnApplicationBootstrap, OnModuleDestroy {
 
   /** One pass over the queue. Never throws. */
   async runOnce(now = new Date()): Promise<RunSummary> {
-    const summary: RunSummary = { recovered: 0, rendered: 0, failed: 0, skipped: 0 };
+    const summary: RunSummary = { recovered: 0, rendered: 0, failed: 0, skipped: 0, held: 0 };
     try {
       summary.recovered = await this.queries.recoverStale(new Date(now.getTime() - STALE_MS));
       for (const id of await this.queries.pendingIds(BATCH)) {
@@ -85,9 +92,9 @@ export class ReportPdfJob implements OnApplicationBootstrap, OnModuleDestroy {
     } catch (e) {
       this.log.error(`report PDF run aborted: ${String(e)}`);
     } finally {
-      if (summary.rendered + summary.failed > 0) await this.publisher.close();
+      if (summary.rendered + summary.failed + summary.held > 0) await this.publisher.close();
     }
-    if (summary.recovered + summary.rendered + summary.failed > 0) {
+    if (summary.recovered + summary.rendered + summary.failed + summary.held > 0) {
       this.log.log(`report PDFs: ${JSON.stringify(summary)}`);
     }
     return summary;
@@ -97,9 +104,15 @@ export class ReportPdfJob implements OnApplicationBootstrap, OnModuleDestroy {
     const version = await this.queries.claim(id);
     if (version === null) return 'skipped';
     try {
-      await retry(() => this.publish(id, version), { delays: RETRY_DELAYS_MS, sleep: this.wait });
+      const giveUp = (e: unknown) => e instanceof RulesUnreadError;
+      await retry(() => this.publish(id, version), { delays: RETRY_DELAYS_MS, sleep: this.wait, giveUp });
       return 'rendered';
     } catch (e) {
+      if (e instanceof RulesUnreadError) {
+        this.log.warn(`report ${id} v${version} held: ${e.message}`);
+        await this.queries.finish({ id, version, status: 'pending' });
+        return 'held';
+      }
       const error = (e instanceof Error ? e.message : String(e)).slice(0, 500);
       this.log.warn(`report ${id} v${version} PDF failed: ${error}`);
       await this.queries.finish({ id, version, status: 'failed', error });
@@ -111,12 +124,13 @@ export class ReportPdfJob implements OnApplicationBootstrap, OnModuleDestroy {
    * Upload, then queue the message, then `ready`: a crash in between leaves `rendering`, which the
    * stale sweep re-queues; the re-render overwrites the same object and the message insert no-ops.
    * The message only while the report_ready rule is on (off: the PDF is still ready, logged). Unreadable
-   * rules throw before `ready`, so the retry / stale sweep tries again: an essential row is never dropped.
+   * rules throw RulesUnreadError before `ready`: process() puts the row back to `pending` (not `failed`),
+   * so a later run renders and sends it once the rules read: an essential row is never dropped.
    */
   private async publish(id: string, version: number): Promise<void> {
     const { path, message } = await this.publisher.publish(id, new Date());
     const rule = await this.policy.known('report_ready');
-    if (!rule) throw new Error('notification rules unread: report_ready held for a retry');
+    if (!rule) throw new RulesUnreadError();
     if (rule.enabled) await this.queries.queueMessage(message);
     else this.log.log(`report_ready off: report ${id} v${version} not sent to the guardian`);
     if (!(await this.queries.finish({ id, version, status: 'ready', path }))) {

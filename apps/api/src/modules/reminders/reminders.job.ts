@@ -7,7 +7,7 @@ import { RemindersDeps } from './reminders.deps';
 import { joinCandidates, sentLinks, type RoomCandidate, type RoomContext } from './reminders.links';
 import { confirmationPush, needsConfirmation, planReminders, type ReminderLesson } from './reminders.plan';
 import { RemindersQueries } from './reminders.queries';
-import { reminderRules, type ReminderRules } from './reminders.rules';
+import { lookaheadHours, reminderRules, type ReminderRules } from './reminders.rules';
 import { RemindersSettings, type RemindersSettingsValues } from './reminders.settings';
 import { Ticker } from './ticker';
 
@@ -70,8 +70,8 @@ export class RemindersJob implements OnApplicationBootstrap, OnModuleDestroy {
       // Fail closed: rules unread (logged by the policy) = no reminder and no push this tick; the next retries.
       if (!snap) throw new Error('notification rules unread: nothing queued or pushed');
       const rules = reminderRules(snap);
-      // settings.reminder_lookahead_hours (≥ 25): the day-before send time is 23–25 h ahead across DST.
-      const until = new Date(now.getTime() + settings.reminder_lookahead_hours * 60 * MINUTE);
+      // reminder_lookahead_hours (≥ 25), or 48 h while a fixed day-before hour (send_at_local) is set.
+      const until = new Date(now.getTime() + lookaheadHours(settings.reminder_lookahead_hours, rules) * 60 * MINUTE);
       const lessons = await this.queries.upcoming({ now, until });
       summary.lessons = lessons.length;
       // Automatic messages OFF (docs/09 cut-over: the old Apps Script still reminds): queue nothing.

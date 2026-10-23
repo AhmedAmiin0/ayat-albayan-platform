@@ -24,7 +24,7 @@ describe('ReportPdfJob — scheduling and single flight', () => {
     });
     const run = vi.spyOn(j, 'runOnce').mockImplementationOnce(async () => {
       await gate;
-      return { recovered: 0, rendered: 0, failed: 0, skipped: 0 };
+      return { recovered: 0, rendered: 0, failed: 0, skipped: 0, held: 0 };
     });
     const first = j.kick();
     const second = j.kick();

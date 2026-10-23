@@ -23,6 +23,11 @@ export class RulesSourceSettings {
     return readSlice(this.store, KEYS);
   }
 
+  /** The next read() asks the database again (the settings store's own cache, shared app-wide). */
+  invalidate(): void {
+    this.store.invalidate();
+  }
+
   /** Only RULE_SETTING_KEYS (typed); an empty object writes nothing. */
   async writeLegacy(values: Partial<RuleSettings>, actorId: string): Promise<void> {
     const only = Object.fromEntries(Object.entries(values).filter(([k]) => (RULE_SETTING_KEYS as readonly string[]).includes(k)));

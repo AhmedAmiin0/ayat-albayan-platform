@@ -45,14 +45,20 @@ export class CommunicationsService {
       this.deps.rules.invalidate();
       await this.config.reload();
     }
-    await this.deps.audit.record({
-      actorId,
-      entity: 'settings',
-      entityId: SINGLETON_ENTITY_ID,
-      action: 'comms_source',
-      before: { comms_source: before },
-      after: { comms_source: source },
-    });
+    try {
+      // Again, now that legacy reads: a rule PATCH that landed between the first copy and the flip
+      // wrote only notification_rules (module mode then). Idempotent: an unchanged copy rewrites the same values.
+      if (source === 'legacy') await this.deps.rules.copyToLegacy(actorId);
+    } finally {
+      await this.deps.audit.record({
+        actorId,
+        entity: 'settings',
+        entityId: SINGLETON_ENTITY_ID,
+        action: 'comms_source',
+        before: { comms_source: before },
+        after: { comms_source: source },
+      });
+    }
     return { source: await this.config.source() };
   }
 }

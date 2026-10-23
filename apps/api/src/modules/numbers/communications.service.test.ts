@@ -67,8 +67,31 @@ describe('POST /admin/communications/source', () => {
   it('back to legacy is always allowed: first copies the rules into the legacy keys, then flips', async () => {
     const t = setup({ source: 'module', moduleValues: DIFFERENT, rules: [RULE_DIFF] });
     expect(await t.svc.setSource('legacy', 'actor')).toEqual({ source: 'legacy' });
-    expect(t.order).toEqual(['copy', 'source:legacy']);
+    expect(t.order).toEqual(['copy', 'source:legacy', 'copy']);
     expect(t.rules.copyToLegacy).toHaveBeenCalledWith('actor');
+    expect(t.audit.record).toHaveBeenCalledTimes(1);
+  });
+
+  it('a rule PATCH between the first copy and the flip still reaches the legacy keys (copied again after)', async () => {
+    const t = setup({ source: 'module', moduleValues: {} });
+    const legacy: Record<string, number> = {};
+    let rule = 30;
+    t.rules.copyToLegacy.mockImplementation(async () => {
+      legacy['reminder_minutes_before'] = rule;
+      rule = 45; // the PATCH lands right after the first copy, still in module mode
+      return { reminder_minutes_before: legacy['reminder_minutes_before'] };
+    });
+    await t.svc.setSource('legacy', 'actor');
+    expect(legacy).toEqual({ reminder_minutes_before: 45 });
+    expect(t.audit.record).toHaveBeenCalledTimes(1);
+  });
+
+  it('a failed second copy is still audited once (the flip happened) and surfaces the error', async () => {
+    const t = setup({ source: 'module', moduleValues: {} });
+    t.rules.copyToLegacy.mockResolvedValueOnce({ reminder_minutes_before: 30 }).mockRejectedValueOnce(new Error('settings write failed'));
+    await expect(t.svc.setSource('legacy', 'actor')).rejects.toThrow('settings write failed');
+    expect(t.settings.writeSource).toHaveBeenCalledWith('legacy', 'actor');
+    expect(t.audit.record).toHaveBeenCalledTimes(1);
   });
 
   it('a failed copy keeps module mode (no flip)', async () => {

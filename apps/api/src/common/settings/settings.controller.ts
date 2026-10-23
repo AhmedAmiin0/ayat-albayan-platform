@@ -48,8 +48,18 @@ export class SettingsController {
     const lists = { saved, moved, invalid };
     if (saved.length === 0) return { ...(await this.get()), ...lists };
     const before = await this.get();
-    if (Object.keys(changes).length > 0) await this.settings.write(changes, user.id);
+    // The rule first: a refused rule write (503 / 422) saves nothing else and leaves nothing unaudited.
     if (followUpHours && this.rules) await this.rules.writeFollowUpHours(followUpHours, user);
+    try {
+      if (Object.keys(changes).length > 0) await this.settings.write(changes, user.id);
+    } finally {
+      // Whatever was written (the rule at least, when the settings write failed) is audited.
+      await this.record(before, user);
+    }
+    return { ...(await this.get()), ...lists };
+  }
+
+  private async record(before: AcademySettings, user: AuthUser): Promise<void> {
     const after = await this.get();
     await this.audit.record({
       actorId: user.id,
@@ -59,6 +69,5 @@ export class SettingsController {
       before: { ...before },
       after: { ...after },
     });
-    return { ...after, ...lists };
   }
 }

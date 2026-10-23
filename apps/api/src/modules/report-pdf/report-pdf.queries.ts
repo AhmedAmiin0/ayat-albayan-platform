@@ -4,7 +4,9 @@ import type { ReportReadyMessage } from './report-ready';
 
 export type Finish =
   | { id: string; version: number; status: 'ready'; path: string }
-  | { id: string; version: number; status: 'failed'; error: string };
+  | { id: string; version: number; status: 'failed'; error: string }
+  /** Held (the rules were unreadable): back in the queue for the next run, never `failed`. */
+  | { id: string; version: number; status: 'pending' };
 
 /**
  * The PDF queue is lesson_reports.pdf_status itself (docs/11 §5): B1's submit and the admin retry
@@ -55,14 +57,16 @@ export class ReportPdfQueries {
   }
 
   /**
-   * rendering → ready | failed, only for the version this worker claimed: a resubmit during the
+   * rendering → ready | failed | pending (held), only for the version this worker claimed: a resubmit during the
    * render has set the row back to pending with a new version, and that one renders next tick.
    */
   async finish(input: Finish): Promise<boolean> {
     const values =
       input.status === 'ready'
         ? { pdf_status: input.status, pdf_path: input.path, pdf_error: null }
-        : { pdf_status: input.status, pdf_error: input.error };
+        : input.status === 'failed'
+          ? { pdf_status: input.status, pdf_error: input.error }
+          : { pdf_status: input.status };
     const { data, error } = await this.db
       .from('lesson_reports')
       .update(values)

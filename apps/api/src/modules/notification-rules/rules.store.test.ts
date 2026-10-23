@@ -47,6 +47,16 @@ describe('DbRulesReader (rules.store.ts)', () => {
     expect(zero.rows).toHaveBeenCalledTimes(2);
   });
 
+  it('fresh() also drops the settings cache (no 30 s stale comms_source / legacy keys); snapshot() does not', async () => {
+    const t = reader();
+    await t.r.snapshot(1000);
+    expect(t.store.invalidate).not.toHaveBeenCalled();
+    await t.r.fresh();
+    expect(t.store.invalidate).toHaveBeenCalledTimes(1);
+    const order = [vi.mocked(t.store.invalidate), vi.mocked(t.store.all)].map((f) => f.mock.invocationCallOrder.at(-1) ?? 0);
+    expect(order[0]).toBeLessThan(order[1] ?? 0);
+  });
+
   it('never caches a failure', async () => {
     const t = reader();
     t.rows.mockRejectedValueOnce(new Error('notification_rules read failed'));

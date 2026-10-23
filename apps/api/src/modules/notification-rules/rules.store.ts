@@ -36,8 +36,9 @@ export class DbRulesReader extends RulesReader {
     this.cached = null;
   }
 
-  /** A fresh snapshot (writes and parity never decide on a cached one). */
+  /** A fresh snapshot (writes and parity never decide on a cached one): the settings it reads too. */
   fresh(): Promise<RulesSnapshot> {
+    this.settings.invalidate();
     this.invalidate();
     return this.snapshot();
   }
