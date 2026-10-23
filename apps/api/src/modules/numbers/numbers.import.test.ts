@@ -88,4 +88,22 @@ describe('POST /admin/numbers/import', () => {
     expect(t.secrets.copy).not.toHaveBeenCalled();
     expect(t.secrets.set).not.toHaveBeenCalled();
   });
+
+  it('a role with an invalid WABA id is skipped (no insert, no copy, no throw); the other role imports', async () => {
+    const chat = { WA_CHAT_PHONE_NUMBER_ID: '1000000002', WA_CHAT_WABA_ID: '2000000002', WA_CHAT_ACCESS_TOKEN: 'chat-token-fake' };
+    for (const [k, v] of Object.entries({ ...ENV, ...chat, WA_WABA_ID: 'bad waba id!' })) vi.stubEnv(k, v);
+    const t = setup();
+    const dry = await t.importer.run(true, 'actor');
+    expect(dry.roles[0]).toMatchObject({ role: 'notifications', not_importable: { reason: 'invalid_id', fields: ['waba_id'] }, secrets_to_copy: [] });
+    const res = await t.importer.run(false, 'actor');
+    expect(res.changed).toBe(true);
+    expect(t.queries.insert).toHaveBeenCalledOnce();
+    expect(t.queries.insert).toHaveBeenCalledWith(expect.objectContaining({ row: expect.objectContaining({ purpose: 'chat', phone_number_id: '1000000002' }) }));
+    expect(t.secrets.set).toHaveBeenCalledWith({ id: res.roles[1]?.number_id, name: 'access_token' }, 'chat-token-fake');
+    expect(t.secrets.set).not.toHaveBeenCalledWith(expect.objectContaining({ name: 'app_secret' }), expect.anything());
+    expect(JSON.stringify([dry, res, t.effects.after.mock.calls])).not.toContain('bad waba id!');
+    vi.clearAllMocks();
+    expect((await t.importer.run(false, 'actor')).changed).toBe(false);
+    expect(t.queries.insert).not.toHaveBeenCalled();
+  });
 });

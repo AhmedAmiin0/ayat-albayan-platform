@@ -6,6 +6,7 @@ import { recipientList } from './env.recipient-list';
 import { envCandidates } from './env.sources';
 import { GOOGLE_SHAPE } from './env.google';
 import { KAPSO_SHAPE } from './env.kapso';
+import type { LineMode } from './env.whatsapp';
 import { WEB_PUSH_SHAPE } from './env.web-push';
 
 export { whatsappEnv, sendingAllowed, lineEnvs, appSecrets, lineNumbers, lineProvider } from './env.whatsapp';
@@ -49,7 +50,7 @@ const schema = z.object({
   WA_CHAT_PHONE_NUMBER_ID: optionalSecret,
   /** Chat line's WABA: needed to SEND from it. */
   WA_CHAT_WABA_ID: optionalSecret,
-  /** Chat line's token; falls back to WA_ACCESS_TOKEN. */
+  /** Chat line's token; falls back to WA_ACCESS_TOKEN under legacy only (never in numbers mode). */
   WA_CHAT_ACCESS_TOKEN: optionalSecret,
   /** Webhook secret of the chat line's Meta app; signatures may match either secret. */
   WA_CHAT_APP_SECRET: optionalSecret,
@@ -110,7 +111,7 @@ const schema = z.object({
   AUTH_PASSWORD_MIN_LENGTH: z.preprocess(blankIsUnset, z.coerce.number().int().min(6).max(72).default(8)),
 });
 
-export type Env = z.infer<typeof schema>;
+export type Env = z.infer<typeof schema> & LineMode;
 
 /**
  * The API's config. Called with no argument (every reader in app code): process.env with the
@@ -123,11 +124,11 @@ export function loadEnv(source?: NodeJS.ProcessEnv): Env {
   return envFrom(numbersOverlay()?.values ?? null);
 }
 
-/** loadEnv() with these numbers' line keys (null = legacy); the parity check compares both. */
+/** loadEnv() with these numbers' line keys (null = legacy; else marked linesFromNumbers); parity compares both. */
 export function envFrom(numbers: Readonly<Record<string, string>> | null): Env {
   for (const candidate of envCandidates(process.env, numbers)) {
     const parsed = schema.safeParse(candidate);
-    if (parsed.success) return parsed.data;
+    if (parsed.success) return numbers === null ? parsed.data : { ...parsed.data, linesFromNumbers: true };
   }
   return schema.parse(process.env);
 }
