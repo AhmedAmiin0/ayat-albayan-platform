@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import type { SettingsService } from '../../common/settings/settings.service';
 import type { StorageService } from '../../common/storage/storage.service';
 import { PHONE, threadRow } from './inbox.fakes';
+import type { InboxSettings } from './inbox.settings';
 import type { Outbox } from './outbox';
 import { ThreadFileSender } from './thread-file-send.service';
 import type { ThreadsQueries } from './threads.queries';
@@ -19,7 +19,7 @@ const outbox = { send: vi.fn() };
 const storage = { info: vi.fn(), head: vi.fn(), signedUpload: vi.fn() };
 const sender = (maxMb?: number) => {
   const s = new ThreadFileSender(queries as unknown as ThreadsQueries, outbox as unknown as Outbox, storage as unknown as StorageService);
-  if (maxMb !== undefined) Object.assign(s, { settings: { all: async () => ({ upload_max_mb: maxMb }) } as unknown as SettingsService });
+  if (maxMb !== undefined) Object.assign(s, { settings: { read: async () => ({ upload_max_mb: maxMb }) } satisfies Pick<InboxSettings, 'read'> });
   return s;
 };
 const input = (over: object = {}) => ({ clientRequestId: REQ, path: PATH, filename: 'الواجب.png', ...over });
@@ -103,7 +103,7 @@ describe('ThreadFileSender.send (owner 2026-10-19 #2)', () => {
     storage.info.mockResolvedValue({ size: 3 * MB, contentType: 'application/pdf' });
     storage.head.mockResolvedValue(PDF);
     expect(code(await send({}, sender(2)).catch((x: unknown) => x))).toBe('file_too_large');
-    await expect(send({}, sender())).resolves.toBeTruthy(); // the 10 MB registry default without SettingsService
+    await expect(send({}, sender())).resolves.toBeTruthy(); // the 10 MB registry default without InboxSettings
   });
 
   it('a replayed request id returns the first row', async () => {

@@ -3,6 +3,7 @@ import { ChatListsModule } from '../chat-lists/chat-lists.module';
 import { LessonsModule } from '../lessons/lessons.module';
 import { SalesModule } from '../sales/sales.module';
 import { SubscriptionsModule } from '../subscriptions/subscriptions.module';
+import { InboxSettings } from './inbox.settings';
 import { Outbox } from './outbox';
 import { ReadReceipts } from './read-receipts';
 import { SalesThreadsService } from './sales-threads.service';
@@ -47,6 +48,7 @@ import { ThreadsService } from './threads.service';
     ThreadReads,
     ThreadMediaService,
     ThreadFileSender,
+    InboxSettings,
   ],
   // The feedback module sends «ابعت طلب الرأي» through the same send-now path; meeting invitations
   // (ClassroomModule) read the thread and queue their chat text (R-MEET-02), a teacher only to the

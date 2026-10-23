@@ -1,9 +1,9 @@
 import { SETTING_DEFAULTS } from '@ab/shared';
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { SettingsService } from '../../common/settings/settings.service';
 import { StorageService } from '../../common/storage/storage.service';
 import { messageRow } from '../whatsapp/sender.fakes';
 import { PHONE, threadRow } from './inbox.fakes';
+import { InboxSettings } from './inbox.settings';
 import { SALES, TEACHER, inboxApp } from './test-app';
 
 type App = Awaited<ReturnType<typeof inboxApp>>;
@@ -17,16 +17,16 @@ const sendBody = (over: object = {}) => ({ clientRequestId: REQ, path: PATH, fil
 describe('POST /threads/:phone/file-upload-url and /file (owner 2026-10-19 #2)', () => {
   let t: App;
   let storage: StorageService;
-  let settings: SettingsService;
+  let settings: InboxSettings;
   beforeAll(async () => {
     t = await inboxApp();
     storage = t.app.get(StorageService);
-    settings = t.app.get(SettingsService);
+    settings = t.app.get(InboxSettings);
   });
   afterAll(() => t.app.close());
   beforeEach(() => {
     vi.resetAllMocks();
-    vi.spyOn(settings, 'all').mockResolvedValue({ ...SETTING_DEFAULTS });
+    vi.spyOn(settings, 'read').mockResolvedValue({ upload_max_mb: SETTING_DEFAULTS.upload_max_mb });
     vi.spyOn(storage, 'info').mockResolvedValue({ size: 2048, contentType: 'image/png' });
     vi.spyOn(storage, 'head').mockResolvedValue(PNG);
     vi.spyOn(storage, 'signedUpload').mockResolvedValue({ bucket: 'wa-media', path: PATH, token: 't', signed_url: 'http://up' });
