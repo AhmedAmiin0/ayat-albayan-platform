@@ -28,7 +28,7 @@ async function main(): Promise<void> {
   };
   const lines = await importEnv({ env: process.env, store, overwrite: process.argv.includes('--overwrite') });
   for (const line of lines) process.stdout.write(`${line}\n`);
-  process.stdout.write('Done. The API picks the values up within SETTINGS_CACHE_MS (or restart it).\n');
+  process.stdout.write('Done. The API picks the values up within INTEGRATION_REFRESH_MS (unset: SETTINGS_CACHE_MS), or restart it.\n');
 }
 
 main().catch((e: unknown) => {
