@@ -8,6 +8,7 @@ import { RecordingMaintenanceJob } from './recording-maintenance.job';
 import { RecordingRetention } from './recording-retention';
 import { RecordingVisibilityService } from './recording-visibility.service';
 import { RecordingRetentionQueries } from './recording-retention.queries';
+import { RecordingSettings } from './recordings.settings';
 import { StudentRecordingAccess } from './student-recordings.access';
 import { StudentRecordingsController } from './student-recordings.controller';
 import { StudentRecordingQueries } from './student-recordings.queries';
@@ -31,6 +32,7 @@ import { StudentRecordingsService } from './student-recordings.service';
     RecordingDeleteService,
     RecordingRetentionQueries,
     RecordingRetention,
+    RecordingSettings,
     RecordingMaintenanceJob,
   ],
 })

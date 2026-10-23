@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { SettingsService } from '../../common/settings/settings.service';
 import { RecordingEraser } from './recording-eraser';
 import { RecordingRetentionQueries } from './recording-retention.queries';
+import { RecordingSettings } from './recordings.settings';
 
 export const RETENTION_KEY = 'recording_retention_days';
 /** A lesson never runs this long: a row still `recording` after it lost its egress webhook. */
@@ -20,7 +20,7 @@ export class RecordingRetention {
   private readonly log = new Logger(RecordingRetention.name);
 
   constructor(
-    private readonly settings: SettingsService,
+    private readonly settings: RecordingSettings,
     private readonly queries: RecordingRetentionQueries,
     private readonly eraser: RecordingEraser,
   ) {}
@@ -28,7 +28,7 @@ export class RecordingRetention {
   /** Whole days, or null = keep forever (unset, not a positive integer, or unreadable). Never throws. */
   async days(): Promise<number | null> {
     try {
-      const v = await this.settings.get(RETENTION_KEY);
+      const v = (await this.settings.read())[RETENTION_KEY];
       return typeof v === 'number' && Number.isInteger(v) && v >= 1 ? v : null;
     } catch (e) {
       this.log.warn(`${RETENTION_KEY} unreadable, keeping recordings: ${String(e)}`);
