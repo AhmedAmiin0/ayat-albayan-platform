@@ -18,14 +18,3 @@ export function publicSettings(all: AcademySettings): PublicSettings {
 
 /** What the clients use until GET /settings/public answers (and if it fails). */
 export const PUBLIC_SETTING_DEFAULTS: PublicSettings = publicSettings(SETTING_DEFAULTS);
-
-/** The classroom window in minutes (joinWindow's third argument). */
-export interface JoinWindowConfig {
-  opensBeforeMin: number;
-  closesAfterMin: number;
-}
-
-export const joinWindowConfig = (s: Pick<AcademySettings, 'join_opens_before_min' | 'join_closes_after_min'>): JoinWindowConfig => ({
-  opensBeforeMin: s.join_opens_before_min,
-  closesAfterMin: s.join_closes_after_min,
-});
