@@ -1,5 +1,5 @@
 /* Ayat Al-Bayan, settings redesign mockups (docs/26).
-   Colour tokens = docs/07-design-system.md §3 (green brand). Shared classes = docs/07 §4–§7, §10, §14.
+   Colour tokens = the app's live «Emerald Mint» palette, copied from apps/web/src/styles/tokens.css (owner 2026-10-23: «keep the colors»). Shared classes = docs/07 §4–§7, §10, §14.
    No external URLs: fonts are family stacks only. Logical properties only.
    Theme: follows the device; the board's «المظهر» radios (#theme-light / #theme-dark) force one, no script. */
 
@@ -7,44 +7,96 @@
 :root,
 [data-theme='light'] {
   color-scheme: light;
-  --margin: #f5eddd; --page: #fdf8f0; --raised: #fffdf9; --sunk: #f7f0e1;
-  --ink: #14261e; --ink-2: #3c4b44; --ink-3: #55625b;
-  --rule: #e5d9bf; --rule-strong: #cdbb94; --rule-input: #958666;
-  --gold: #c2a24a; --gold-soft: #d6bc80; --gold-wash: #e7dab4;
-  --lapis: #14503a; --lapis-hover: #0c2a1e; --lapis-wash: #e1ede5; --on-lapis: #fdf8f0;
-  --verdigris: #1e6b4c; --verdigris-wash: #dcebdf;
-  --saffron: #8c5212; --saffron-wash: #f6e7c6;
-  --cinnabar: #9c3b2e; --cinnabar-solid: #9c3b2e; --cinnabar-wash: #f8e1db; --on-cinnabar: #fdf8f0;
-  --neutral-wash: #e9e7dd;
-  --inverse: #0c2a1e; --on-inverse: #fdf8f0; --inverse-gold: #d6bc80;
-  --cover: #0c2a1e; --leather: #14402f; --leather-deep: #0b281c; --leather-lift: #1f553f;
-  --gold-on-cover: #d6bc80; --cover-ink: #f3ead6;
-  --scrim: rgba(12, 38, 28, 0.45);
-  --elev-page: 0 1px 0 rgba(20, 38, 30, 0.04), 0 18px 40px -18px rgba(20, 38, 30, 0.28);
-  --elev-pop: 0 30px 60px -20px rgba(4, 16, 11, 0.55);
-  --elev-toast: 0 12px 28px -12px rgba(4, 16, 11, 0.5);
+  --margin: #f3f7f5;
+  --page: #ffffff;
+  --raised: #ffffff;
+  --sunk: #f1f5f3;
+  --ink: #17201c;
+  --ink-2: #2f3a35;
+  --ink-3: #4f5b55;
+  --rule: #e2e8e5;
+  --rule-strong: #c8d2cd;
+  --rule-input: #77857d;
+  --gold: #b7891f;
+  --gold-soft: #e4c97e;
+  --gold-wash: #eef7f1;
+  --lapis: #047857;
+  --lapis-fill: #047857;
+  --lapis-hover: #065f46;
+  --lapis-wash: #ecfdf5;
+  --on-lapis: #ffffff;
+  --verdigris: #15803d;
+  --verdigris-wash: #eaf7ee;
+  --saffron: #a14b06;
+  --saffron-wash: #fdf1e1;
+  --cinnabar: #b91c1c;
+  --cinnabar-solid: #b91c1c;
+  --cinnabar-wash: #fde8e8;
+  --on-cinnabar: #ffffff;
+  --neutral-wash: #ebf0ed;
+  --inverse: #17201c;
+  --on-inverse: #f5f8f6;
+  --inverse-gold: #e4c97e;
+  --cover: #ecfdf5;
+  --leather: #ecfdf5;
+  --leather-deep: #d1fae5;
+  --leather-lift: #f0fdf8;
+  --gold-on-cover: #064e3b;
+  --cover-ink: #064e3b;
+  --scrim: rgba(15, 30, 22, 0.42);
+  --read: #0284c7;
+  --tick: #55615b;
+  --elev-page: 0 1px 2px rgba(15, 30, 22, 0.05);
+  --elev-pop: 0 18px 40px -16px rgba(15, 30, 22, 0.28);
+  --elev-toast: 0 10px 24px -12px rgba(15, 30, 22, 0.3);
 }
 
 /* ---------- dark ("night Mushaf"): device setting, unless light is forced ---------- */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme='light']):not(:has(#theme-light:checked)) {
     color-scheme: dark;
-    --margin: #07110c; --page: #0c1913; --raised: #112019; --sunk: #09150f;
-    --ink: #efe8d8; --ink-2: #c7bfac; --ink-3: #a49d8b;
-    --rule: #1f3229; --rule-strong: #2f463a; --rule-input: #5f766a;
-    --gold: #cfb062; --gold-soft: #6c5a2b; --gold-wash: #29230f;
-    --lapis: #78c49c; --lapis-hover: #92d4b0; --lapis-wash: #122a1f; --on-lapis: #06120c;
-    --verdigris: #8fcf95; --verdigris-wash: #112a17;
-    --saffron: #f2aa6b; --saffron-wash: #36220f;
-    --cinnabar: #f0927f; --cinnabar-solid: #d0604d; --cinnabar-wash: #3a1914; --on-cinnabar: #06120c;
-    --neutral-wash: #1d2621;
-    --inverse: #ece4d2; --on-inverse: #0c1913; --inverse-gold: #8a6a1c;
-    --cover: #0e2419; --leather: #123826; --leather-deep: #0a2117; --leather-lift: #1b4a35;
-    --gold-on-cover: #d6bc80; --cover-ink: #f3ead6;
-    --scrim: rgba(1, 5, 3, 0.62);
-    --elev-page: 0 0 0 1px rgba(0, 0, 0, 0.25), 0 18px 40px -16px rgba(0, 0, 0, 0.65);
-    --elev-pop: 0 30px 60px -20px rgba(0, 0, 0, 0.7);
-    --elev-toast: 0 12px 28px -12px rgba(0, 0, 0, 0.6);
+    --margin: #1a211e;
+    --page: #1e2623;
+    --raised: #27312d;
+    --sunk: #222b27;
+    --ink: #e9efec;
+    --ink-2: #cfd8d3;
+    --ink-3: #adbab3;
+    --rule: #35413c;
+    --rule-strong: #45524c;
+    --rule-input: #74837c;
+    --gold: #e0b95a;
+    --gold-soft: #6b5a2c;
+    --gold-wash: #2a3a31;
+    --lapis: #5eead4;
+    --lapis-fill: #047857;
+    --lapis-hover: #065f46;
+    --lapis-wash: #213a2c;
+    --on-lapis: #ffffff;
+    --verdigris: #7ee2a6;
+    --verdigris-wash: #20372b;
+    --saffron: #fd9f68;
+    --saffron-wash: #3d2b1c;
+    --cinnabar: #fca5a5;
+    --cinnabar-solid: #dc4b4b;
+    --cinnabar-wash: #432628;
+    --on-cinnabar: #0f1512;
+    --neutral-wash: #2c3632;
+    --inverse: #e2ebe5;
+    --on-inverse: #1e2623;
+    --inverse-gold: #8a6a1c;
+    --cover: #18201d;
+    --leather: #18201d;
+    --leather-deep: #141b18;
+    --leather-lift: #26302c;
+    --gold-on-cover: #ecd18c;
+    --cover-ink: #e9efec;
+    --scrim: rgba(10, 16, 13, 0.5);
+    --read: #53bdeb;
+    --tick: #7f8e88;
+    --elev-page: 0 0 0 1px rgba(0, 0, 0, 0.12);
+    --elev-pop: 0 18px 40px -16px rgba(0, 0, 0, 0.45);
+    --elev-toast: 0 10px 24px -12px rgba(0, 0, 0, 0.4);
   }
 }
 
@@ -52,22 +104,48 @@
 [data-theme='dark'],
 :root:has(#theme-dark:checked) {
   color-scheme: dark;
-  --margin: #07110c; --page: #0c1913; --raised: #112019; --sunk: #09150f;
-  --ink: #efe8d8; --ink-2: #c7bfac; --ink-3: #a49d8b;
-  --rule: #1f3229; --rule-strong: #2f463a; --rule-input: #5f766a;
-  --gold: #cfb062; --gold-soft: #6c5a2b; --gold-wash: #29230f;
-  --lapis: #78c49c; --lapis-hover: #92d4b0; --lapis-wash: #122a1f; --on-lapis: #06120c;
-  --verdigris: #8fcf95; --verdigris-wash: #112a17;
-  --saffron: #f2aa6b; --saffron-wash: #36220f;
-  --cinnabar: #f0927f; --cinnabar-solid: #d0604d; --cinnabar-wash: #3a1914; --on-cinnabar: #06120c;
-  --neutral-wash: #1d2621;
-  --inverse: #ece4d2; --on-inverse: #0c1913; --inverse-gold: #8a6a1c;
-  --cover: #0e2419; --leather: #123826; --leather-deep: #0a2117; --leather-lift: #1b4a35;
-  --gold-on-cover: #d6bc80; --cover-ink: #f3ead6;
-  --scrim: rgba(1, 5, 3, 0.62);
-  --elev-page: 0 0 0 1px rgba(0, 0, 0, 0.25), 0 18px 40px -16px rgba(0, 0, 0, 0.65);
-  --elev-pop: 0 30px 60px -20px rgba(0, 0, 0, 0.7);
-  --elev-toast: 0 12px 28px -12px rgba(0, 0, 0, 0.6);
+  --margin: #1a211e;
+  --page: #1e2623;
+  --raised: #27312d;
+  --sunk: #222b27;
+  --ink: #e9efec;
+  --ink-2: #cfd8d3;
+  --ink-3: #adbab3;
+  --rule: #35413c;
+  --rule-strong: #45524c;
+  --rule-input: #74837c;
+  --gold: #e0b95a;
+  --gold-soft: #6b5a2c;
+  --gold-wash: #2a3a31;
+  --lapis: #5eead4;
+  --lapis-fill: #047857;
+  --lapis-hover: #065f46;
+  --lapis-wash: #213a2c;
+  --on-lapis: #ffffff;
+  --verdigris: #7ee2a6;
+  --verdigris-wash: #20372b;
+  --saffron: #fd9f68;
+  --saffron-wash: #3d2b1c;
+  --cinnabar: #fca5a5;
+  --cinnabar-solid: #dc4b4b;
+  --cinnabar-wash: #432628;
+  --on-cinnabar: #0f1512;
+  --neutral-wash: #2c3632;
+  --inverse: #e2ebe5;
+  --on-inverse: #1e2623;
+  --inverse-gold: #8a6a1c;
+  --cover: #18201d;
+  --leather: #18201d;
+  --leather-deep: #141b18;
+  --leather-lift: #26302c;
+  --gold-on-cover: #ecd18c;
+  --cover-ink: #e9efec;
+  --scrim: rgba(10, 16, 13, 0.5);
+  --read: #53bdeb;
+  --tick: #7f8e88;
+  --elev-page: 0 0 0 1px rgba(0, 0, 0, 0.12);
+  --elev-pop: 0 18px 40px -16px rgba(0, 0, 0, 0.45);
+  --elev-toast: 0 10px 24px -12px rgba(0, 0, 0, 0.4);
 }
 
 /* ---------- theme-independent ---------- */
@@ -173,7 +251,7 @@ figcaption { font-size: 13px; font-weight: 600; color: var(--ink-3); }
 /* ---------- buttons (docs/07 §6) ---------- */
 .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-block-size: var(--h-control); padding-inline: 16px; border: 1px solid transparent; border-radius: var(--r-md); background: transparent; font-size: 14px; font-weight: 600; line-height: 1.2; white-space: nowrap; text-decoration: none; cursor: pointer; transition: background-color 120ms var(--ease-ink); }
 .btn .i { inline-size: 17px; block-size: 17px; }
-.btn--primary { background: var(--lapis); color: var(--on-lapis); }
+.btn--primary { background: var(--lapis-fill); color: var(--on-lapis); }
 .btn--primary:hover { background: var(--lapis-hover); }
 .btn--secondary { background: var(--raised); color: var(--ink); border-color: var(--rule-input); }
 .btn--secondary:hover { background: var(--sunk); }
