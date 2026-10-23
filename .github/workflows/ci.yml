@@ -160,26 +160,14 @@ jobs:
           node-version-file: .nvmrc
           cache: pnpm
       - run: pnpm i --frozen-lockfile
-      - name: Supabase CLI version
-        id: sb
-        run: echo "version=$(pnpm --filter @ab/db exec supabase --version | tail -1)" >> "$GITHUB_OUTPUT"
-      # The Supabase Docker images (~0.9 GB gzipped), saved once per CLI version: loading them is faster
-      # than pulling five images from the registry on every shard.
-      - name: Restore the Supabase images
-        id: sb-cache
-        uses: actions/cache/restore@v4
-        with:
-          path: ${{ runner.temp }}/supabase-images.tar.gz
-          key: supabase-images-${{ runner.os }}-${{ steps.sb.outputs.version }}-${{ hashFiles('packages/db/supabase/config.toml') }}
       # In the background: the browser and the build below get ready at the same time (was ~80 s in a row).
+      # Measured 2026-10-23: caching the images (docker save/load, 0.9 GB) was SLOWER than pulling them
+      # (load 70 s + start 30 s against ~80 s for pull + start), so the images are pulled.
       - name: Start local Supabase (background)
         run: |
-          nohup bash -c '
-            img="$RUNNER_TEMP/supabase-images.tar.gz"
-            if [ -f "$img" ]; then time (gunzip -c "$img" | docker load -q); fi
-            time pnpm supabase start -x "$SUPABASE_EXCLUDE"; echo $? > "$RUNNER_TEMP/supabase.rc"
-          ' > "$RUNNER_TEMP/supabase.log" 2>&1 &
-      # apt's man-db trigger rebuilds the manual index after every install: minutes on hosted runners.
+          nohup bash -c 'time pnpm supabase start -x "$SUPABASE_EXCLUDE"; echo $? > "$RUNNER_TEMP/supabase.rc"' \
+            > "$RUNNER_TEMP/supabase.log" 2>&1 &
+      # apt's man-db trigger rebuilds the manual index after every install (skipped with this file gone).
       - run: sudo rm -f /var/lib/man-db/auto-update
       - name: Playwright version
         id: pw
@@ -237,14 +225,6 @@ jobs:
           for _ in $(seq 1 300); do [ -f "$RUNNER_TEMP/supabase.rc" ] && break; sleep 1; done
           cat "$RUNNER_TEMP/supabase.log"
           test "$(cat "$RUNNER_TEMP/supabase.rc" 2>/dev/null)" = 0
-      - name: Save the Supabase images (once per CLI version)
-        if: steps.sb-cache.outputs.cache-hit != 'true' && matrix.shard == '1'
-        run: docker save $(docker images --format '{{.Repository}}:{{.Tag}}' | grep -E 'supabase/|postgrest/|kong') | gzip -1 > "$RUNNER_TEMP/supabase-images.tar.gz"
-      - if: steps.sb-cache.outputs.cache-hit != 'true' && matrix.shard == '1'
-        uses: actions/cache/save@v4
-        with:
-          path: ${{ runner.temp }}/supabase-images.tar.gz
-          key: ${{ steps.sb-cache.outputs.cache-primary-key }}
       - run: pnpm env:local
       # Shard sizes from the measured durations (tools/scripts/e2e-shards.mjs, e2e/shard-durations.json): the
       # shards keep Playwright's own order and contiguous cuts, only the cut points move. FAIL SAFE: any error
