@@ -3225,7 +3225,8 @@
       "academyWhatsapp": "International format, e.g. +966500000000; shown on public pages for guardians to reach us.",
       "academyTimezone": "Days in payment and invoice ranges, the day view and recurring expenses follow this zone.",
       "feedbackRateWindowMin": "Each link may send 10 requests and each IP 60 within this window.",
-      "teachersAlwaysAvailable": "When on, any teacher can be booked at any hour of any day, whatever their saved availability. Saved availability is kept and applies again when this is off; clashes with booked lessons and time off still block. Automatic follow-up messages only offer saved availability."
+      "teachersAlwaysAvailable": "When on, any teacher can be booked at any hour of any day, whatever their saved availability. Saved availability is kept and applies again when this is off; clashes with booked lessons and time off still block. Automatic follow-up messages only offer saved availability.",
+      "commsSource": "«Current setup» or «Numbers». Changed only in the «Numbers» section, after parity is confirmed."
     },
     "theme": "Interface theme",
     "themeHint": "Light, dark or the device setting; saved for this browser.",
@@ -3246,7 +3247,8 @@
     "feedbackRateWindowMin": "Public feedback form rate-limit window (minutes)",
     "invalidPhone": "Enter the number in international format, e.g. +966500000000",
     "invalidText": "Check this field",
-    "teachersAlwaysAvailable": "All teachers can be booked around the clock, every day"
+    "teachersAlwaysAvailable": "All teachers can be booked around the clock, every day",
+    "commsSource": "Where the number setup comes from"
   },
   "language": {
     "label": "Language",
@@ -4459,12 +4461,14 @@
       "self.sales_money": "Subscribe own students and record their bank transfers (salesperson)",
       "self.assistant": "Classroom assistant's own pages",
       "students.check_registration": "Check a student's registration",
-      "subscriptions.set_start_date": "Set the subscription start date"
+      "subscriptions.set_start_date": "Set the subscription start date",
+      "numbers.manage": "Manage WhatsApp numbers"
     },
     "hints": {
       "students.check_registration": "Search by the guardian's phone or the student's name or code; shows only the name, code, status and teacher.",
       "subscriptions.set_start_date": "Pick the package's start day, including a past date for a student who started before the platform. Without it the package starts on the default day.",
-      "inbox.lists": "Create, rename and delete the shared chat lists and add chats to them. Nothing is ever sent because of a list."
+      "inbox.lists": "Create, rename and delete the shared chat lists and add chats to them. Nothing is ever sent because of a list.",
+      "numbers.manage": "Add and edit WhatsApp numbers, save their credentials, import the current setup and change the setup source. Does not open sending."
     },
     "page": {
       "title": "Roles and permissions",
@@ -5163,6 +5167,144 @@
         "name": "Google sync alert",
         "trigger": "When the Google account link expires or a teacher has no mapped calendar"
       }
+    }
+  },
+  "numbers": {
+    "title": "Numbers",
+    "intro": "Each WhatsApp number is its own record with a name, role, provider and credentials. While the source is «current setup», sending stays exactly as it is.",
+    "linkCard": "Manage WhatsApp numbers and where their setup comes from",
+    "readOnly": "Read only: editing numbers needs the «Manage WhatsApp numbers» permission.",
+    "empty": "No numbers yet. Import the current setup or add a number.",
+    "loadError": "Could not load the numbers.",
+    "defaultLabel": {
+      "notifications": "Notifications number",
+      "chat": "Chat number"
+    },
+    "purpose": {
+      "notifications": "Notifications role",
+      "chat": "Chat role"
+    },
+    "provider": {
+      "meta": "Meta directly",
+      "kapso": "Kapso"
+    },
+    "fields": {
+      "label": "Number name",
+      "purpose": "Role",
+      "provider": "Provider",
+      "phone_number_id": "Phone number ID",
+      "waba_id": "WhatsApp Business account ID",
+      "app_id": "Meta app ID",
+      "access_token": "Access token",
+      "app_secret": "App secret",
+      "configured": "Ready to send",
+      "api_base": "Server address",
+      "api_version": "API version",
+      "webhook_phone_number_id": "Number whose messages are received"
+    },
+    "chips": {
+      "enabled": "On",
+      "disabled": "Off",
+      "default": "Default for its role",
+      "phone": "Number",
+      "notChecked": "Not checked yet",
+      "checkedAt": "Last check: {{at}}"
+    },
+    "health": {
+      "ok": "Healthy",
+      "failed": "Last check failed",
+      "quality": "Quality: {{q}}"
+    },
+    "secret": {
+      "set": "Saved",
+      "notSet": "Not saved",
+      "replace": "Replace",
+      "clear": "Remove",
+      "save": "Save",
+      "placeholder": "Paste the new value",
+      "clearConfirm": "Remove «{{name}}» from this number? In «Numbers» mode it cannot send without it.",
+      "saved": "Value saved.",
+      "cleared": "Value removed."
+    },
+    "actions": {
+      "add": "Add number",
+      "edit": "Edit",
+      "save": "Save",
+      "cancel": "Cancel",
+      "enable": "Turn on",
+      "disable": "Turn off",
+      "makeDefault": "Make default",
+      "unsetDefault": "Unset default",
+      "delete": "Delete number",
+      "deleteConfirm": "Delete this number and its credentials for good?"
+    },
+    "form": {
+      "addTitle": "Add number",
+      "editTitle": "Edit number",
+      "invalid": "Check the marked fields.",
+      "invalidId": "Latin letters and digits only, up to 64 characters."
+    },
+    "errors": {
+      "parity_not_empty": "Cannot switch: the current setup and the numbers differ.",
+      "phone_taken": "This phone number ID is already used by another number.",
+      "default_taken": "This role already has another default number that is on.",
+      "number_enabled": "Turn the number off first, then delete it.",
+      "not_enabled": "Turn the number on first to make it the default.",
+      "generic": "Something went wrong. Try again."
+    },
+    "import": {
+      "title": "Import the current setup",
+      "hint": "Copies the setup in use now into number records; credentials are copied inside the server and never shown. Nothing is removed from «Integrations».",
+      "preview": "Preview the import",
+      "confirm": "Confirm the import",
+      "nothing": "Nothing new to import: the numbers match the current setup.",
+      "done": "Imported.",
+      "action": {
+        "create": "A new number will be added",
+        "exists": "The number already exists",
+        "unconfigured": "No number is set up for this role"
+      },
+      "source": {
+        "db": "From the settings",
+        "env": "From the server environment",
+        "unset": "Not set"
+      },
+      "secretHidden": "Secret value, not shown",
+      "willCopy": "Will copy: {{names}}"
+    },
+    "parity": {
+      "title": "Setup parity",
+      "hint": "Compares, role by role, what the current setup uses with what the numbers would use. Secret values are never shown.",
+      "empty": "In parity: no differences between the current setup and the numbers.",
+      "count": "Differences: {{count}}",
+      "state": {
+        "same": "Same",
+        "different": "Different",
+        "missing": "Missing on one side"
+      },
+      "legacy": "Current setup",
+      "module": "Numbers",
+      "noNumber": "No default number that is on for this role",
+      "secretSet": "Saved"
+    },
+    "source": {
+      "title": "Where the number setup comes from",
+      "legacy": "Current setup (Integrations)",
+      "module": "Numbers",
+      "current": "Source now: {{source}}",
+      "toModule": "Switch to numbers",
+      "toLegacy": "Back to the current setup",
+      "blocked": "Switching is possible only when there are no differences.",
+      "confirmTitle": "Change where the number setup comes from",
+      "confirmModule": "Each role will send from its default number instead of the «Integrations» keys. This does not change «Send messages» or the allowed numbers list.",
+      "confirmLegacy": "Sending goes back to the «Integrations» keys as before. You can switch again at any time.",
+      "confirm": "Confirm the switch",
+      "changed": "The setup source changed."
+    },
+    "mobile": {
+      "note": "Numbers are edited on the website only.",
+      "parityOk": "Setup in parity",
+      "parityDiff": "Differences: {{count}}"
     }
   }
 }

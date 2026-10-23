@@ -1,7 +1,9 @@
-import { isIntegrationKey, parseAllowedRecipients } from '@ab/shared';
+import { isIntegrationKey } from '@ab/shared';
 import { z } from 'zod';
-import { integrationOverlay } from './common/integrations/integration-overlay';
+import { numbersOverlay } from './common/integrations/numbers-overlay';
 import { blankIsUnset, optionalSecret } from './env.blank';
+import { recipientList } from './env.recipient-list';
+import { envCandidates } from './env.sources';
 import { GOOGLE_SHAPE } from './env.google';
 import { KAPSO_SHAPE } from './env.kapso';
 import { WEB_PUSH_SHAPE } from './env.web-push';
@@ -13,14 +15,6 @@ export type { WhatsappEnv, MetaLineEnv, KapsoLineEnv, LineEnvs, LineNumbers } fr
 export { livekitEnv, type LivekitEnv } from './env.livekit';
 export { webPushEnv } from './env.web-push';
 export { googleEnv, googleRedirectUri, type GoogleEnv, type GoogleEndpoints } from './env.google';
-
-/** Comma list → normalised E.164 list; any bad item fails the boot, naming it (fail closed). */
-const recipientList = z.string().transform((raw, ctx) => {
-  const { items, bad } = parseAllowedRecipients(raw);
-  if (bad === null) return items;
-  ctx.addIssue({ code: 'custom', message: `WA_ALLOWED_RECIPIENTS: not an E.164 number: ${bad}` });
-  return z.NEVER;
-});
 
 // Secrets via env or Vault (rule 9). Fails fast at boot when something required is missing.
 // WhatsApp and Expo values are all optional: without them messaging stays off (docs/12 §3).
@@ -120,17 +114,22 @@ export type Env = z.infer<typeof schema>;
 
 /**
  * The API's config. Called with no argument (every reader in app code): process.env with the
- * database's integration values on top (common/integrations/integration-overlay, a non-empty DB value wins).
- * Called with an explicit source (tests, the import command): that source alone, nothing added.
- * The overlay is pre-checked key by key, and should the merge still fail, env alone is used: a DB
- * value never makes this throw.
+ * database's integration values on top (a non-empty DB value wins) and, in numbers mode only, the
+ * numbers' line keys (envFrom). With an explicit source (tests, the import command): that source
+ * alone. A DB value never makes this throw: a merge that fails falls back to env alone.
  */
 export function loadEnv(source?: NodeJS.ProcessEnv): Env {
   if (source !== undefined) return schema.parse(source);
-  const overlay = integrationOverlay();
-  if (Object.keys(overlay).length === 0) return schema.parse(process.env);
-  const merged = schema.safeParse({ ...process.env, ...overlay });
-  return merged.success ? merged.data : schema.parse(process.env);
+  return envFrom(numbersOverlay()?.values ?? null);
+}
+
+/** loadEnv() with these numbers' line keys (null = legacy); the parity check compares both. */
+export function envFrom(numbers: Readonly<Record<string, string>> | null): Env {
+  for (const candidate of envCandidates(process.env, numbers)) {
+    const parsed = schema.safeParse(candidate);
+    if (parsed.success) return parsed.data;
+  }
+  return schema.parse(process.env);
 }
 
 /**

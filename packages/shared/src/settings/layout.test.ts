@@ -4,9 +4,10 @@ import en from '../../i18n/en.json' with { type: 'json' };
 import { SETTINGS_LAYOUT, SETTINGS_SECTIONS, settingSection, type SettingsSectionId } from './layout.js';
 import { SETTING_KEYS, type SettingKey } from './registry.js';
 
-/** /admin/settings field order before the registry was split by domain (2026-10-23): it must not move. */
+/** /admin/settings field order before the registry was split by domain (2026-10-23): it must not move.
+ * comms_source (docs/23 phase 3) joined after crm_cutover_done; it has its own control, not a field. */
 const LEGACY_PAGE_ORDER = [
-  'messaging_enabled', 'auto_messages_enabled', 'crm_cutover_done', 'feedback_mode', 'reminder_minutes_before',
+  'messaging_enabled', 'auto_messages_enabled', 'crm_cutover_done', 'comms_source', 'feedback_mode', 'reminder_minutes_before',
   'reminder_24h_enabled', 'teacher_whatsapp_new_student', 'teacher_whatsapp_lesson_reminder', 'follow_up_hours',
   'reminder_lookahead_hours', 'follow_up_slots_from_hours', 'follow_up_slots_to_days', 'quick_reply_window_hours',
   'booking_horizon_weeks', 'late_cancel_hours', 'makeup_window_days', 'teachers_always_available',

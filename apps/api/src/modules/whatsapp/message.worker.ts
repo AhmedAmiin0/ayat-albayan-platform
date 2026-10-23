@@ -1,5 +1,6 @@
 import type { WaLine } from '@ab/shared';
 import { Injectable, Logger } from '@nestjs/common';
+import { activeNumberId } from '../../common/integrations/numbers-overlay';
 import { PushService } from '../../common/push/push.service';
 import { retry, sleep } from '../report-pdf/retry';
 import { MessageDispatch } from './message.dispatch';
@@ -94,12 +95,13 @@ export class MessageWorker {
   /**
    * null = not ours to send now: the line is unconfigured or the recipient is off the allow-list
    * (the row waits untouched, docs/12 §13.3), or another worker claimed it first. The claim
-   * stamps the line only when two lines are in use (§13.2).
+   * stamps the line only when two lines are in use (§13.2), and the number in module mode (docs/23 phase 3).
    */
   private async claim(input: { row: DueMessage; now: Date; line: WaLine }): Promise<number | null> {
     const { row, now, line } = input;
     if (!this.dispatch.ready(row, line)) return null;
-    return this.queries.claim({ id: row.id, attempts: row.attempts, now, ...(this.dispatch.multi ? { line } : {}) });
+    const numberId = activeNumberId(line);
+    return this.queries.claim({ id: row.id, attempts: row.attempts, now, ...(this.dispatch.multi ? { line } : {}), ...(numberId ? { numberId } : {}) });
   }
 
   private async failed(input: { row: DueMessage; error: unknown; attempts: number; now: Date; line: WaLine }): Promise<SendOutcome> {

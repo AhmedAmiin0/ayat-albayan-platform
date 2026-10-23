@@ -23,6 +23,7 @@ export const SETTINGS_LAYOUT = {
     'messaging_enabled',
     'auto_messages_enabled',
     'crm_cutover_done',
+    'comms_source',
     'feedback_mode',
     'reminder_minutes_before',
     'reminder_24h_enabled',
