@@ -5012,7 +5012,7 @@
   },
   "notificationCatalogue": {
     "title": "What is sent and when",
-    "intro": "Everything the platform sends, to whom, from which number, and whether it goes out now under the current settings. This list is read-only; change the switches in their own sections of this page.",
+    "intro": "Everything the platform sends, to whom, from which number, and whether it goes out now under the current settings. This list is read-only; change the sending switches in the «Sending» tab and the timings in the fields below it.",
     "readOnly": "Read-only",
     "loadError": "Could not load the notifications list",
     "retry": "Reload the list",
