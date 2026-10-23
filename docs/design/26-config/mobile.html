@@ -1,0 +1,364 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>الإعدادات على الهاتف</title>
+<meta name="description" content="Design mock: Expo admin settings screens (docs/26 IA brief; docs/07 §12). Four phone frames, static, fake data, no JS.">
+<style>
+/* ===== tokens: docs/07 §3 / §12 (light) ===== */
+:root {
+  color-scheme: light;
+  --margin: #f5eddd; --page: #fdf8f0; --raised: #fffdf9; --sunk: #f7f0e1;
+  --ink: #14261e; --ink-2: #3c4b44; --ink-3: #55625b;
+  --rule: #e5d9bf; --rule-strong: #cdbb94; --rule-input: #958666;
+  --gold: #c2a24a; --gold-soft: #d6bc80; --gold-wash: #e7dab4;
+  --lapis: #14503a; --lapis-hover: #0c2a1e; --lapis-wash: #e1ede5; --on-lapis: #fdf8f0;
+  --verdigris: #1e6b4c; --verdigris-wash: #dcebdf;
+  --saffron: #8c5212; --saffron-wash: #f6e7c6;
+  --cinnabar: #9c3b2e; --cinnabar-solid: #9c3b2e; --cinnabar-wash: #f8e1db; --on-cinnabar: #fdf8f0;
+  --neutral-wash: #e9e7dd;
+  --scrim: rgba(12, 38, 28, 0.45);
+  --elev-page: 0 18px 40px -18px rgba(20, 38, 30, 0.28);
+  --elev-pop: 0 30px 60px -20px rgba(4, 16, 11, 0.55);
+  --font-sans: 'IBM Plex Sans Arabic', 'Noto Sans Arabic', 'Segoe UI', Tahoma, sans-serif;
+  --font-display: 'Amiri', 'Noto Naskh Arabic', serif;
+}
+/* ===== dark ===== */
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+    --margin: #07110c; --page: #0c1913; --raised: #112019; --sunk: #09150f;
+    --ink: #efe8d8; --ink-2: #c7bfac; --ink-3: #a49d8b;
+    --rule: #1f3229; --rule-strong: #2f463a; --rule-input: #5f766a;
+    --gold: #cfb062; --gold-soft: #6c5a2b; --gold-wash: #29230f;
+    --lapis: #78c49c; --lapis-hover: #92d4b0; --lapis-wash: #122a1f; --on-lapis: #06120c;
+    --verdigris: #8fcf95; --verdigris-wash: #112a17;
+    --saffron: #f2aa6b; --saffron-wash: #36220f;
+    --cinnabar: #f0927f; --cinnabar-solid: #d0604d; --cinnabar-wash: #3a1914; --on-cinnabar: #06120c;
+    --neutral-wash: #1d2621;
+    --scrim: rgba(1, 5, 3, 0.62);
+    --elev-page: 0 18px 40px -16px rgba(0, 0, 0, 0.65);
+    --elev-pop: 0 30px 60px -20px rgba(0, 0, 0, 0.7);
+  }
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html, body { margin: 0; }
+body { background: var(--sunk); color: var(--ink); font-family: var(--font-sans); font-size: 15px; line-height: 1.6; }
+h1, h2, h3, p, ul, figure { margin: 0; }
+ul { padding: 0; list-style: none; }
+a { color: var(--lapis); }
+:focus-visible { outline: 2px solid var(--lapis); outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; } }
+.num, bdi { font-variant-numeric: tabular-nums; }
+bdi[dir="ltr"] { white-space: nowrap; }
+.vh { position: absolute; inline-size: 1px; block-size: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.i { inline-size: 20px; block-size: 20px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+.g { inline-size: 12px; block-size: 12px; flex: none; }
+
+/* ===== board ===== */
+.board { padding-block: 32px 64px; padding-inline: 16px; max-inline-size: 1720px; margin-inline: auto; }
+.board > h1 { font-family: var(--font-display); font-weight: 700; font-size: 28px; line-height: 1.5; }
+.board > p { max-inline-size: 70ch; color: var(--ink-2); margin-block-end: 24px; }
+.phones { display: flex; flex-wrap: wrap; gap: 40px 32px; align-items: flex-start; justify-content: center; }
+figure { display: grid; gap: 12px; inline-size: 375px; max-inline-size: 100%; }
+figcaption { font-size: 13px; color: var(--ink-2); }
+figcaption b { color: var(--ink); }
+figcaption ul { display: grid; gap: 4px; margin-block-start: 6px; }
+figcaption li { display: flex; gap: 6px; align-items: baseline; }
+
+/* ===== phone: no jadwal frame, no cartouche (docs/07 §5, §12) ===== */
+.phone { position: relative; display: flex; flex-direction: column; inline-size: 375px; max-inline-size: 100%; min-block-size: 780px; overflow: hidden; background: var(--margin); border: 1px solid var(--rule-strong); border-radius: 12px; box-shadow: var(--elev-page); }
+.sysbar { display: flex; justify-content: space-between; padding-block: 8px 0; padding-inline: 20px; font-size: 12px; font-weight: 600; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+.appbar { display: flex; align-items: center; gap: 4px; padding-block: 6px 10px; padding-inline: 8px 16px; }
+.appbar h2 { font-family: var(--font-display); font-weight: 700; font-size: 28px; line-height: 1.5; }
+.appbar h2.sm { font-size: 23px; }
+.back { display: inline-grid; place-items: center; inline-size: 44px; block-size: 44px; border: 0; border-radius: 8px; background: transparent; color: var(--ink-2); cursor: pointer; }
+.body { flex: 1; display: flex; flex-direction: column; gap: 16px; padding-inline: 16px; padding-block-end: 16px; }
+.sec-h { font-size: 13px; font-weight: 600; color: var(--ink-3); margin-block-end: -8px; }
+.tabbar { display: grid; grid-template-columns: repeat(4, 1fr); padding-block: 6px 18px; padding-inline: 8px; background: var(--page); border-block-start: 1px solid var(--rule-strong); }
+.tabbar a { position: relative; display: grid; justify-items: center; gap: 2px; min-block-size: 48px; padding-block-start: 4px; color: var(--ink-3); font-size: 12px; font-weight: 500; text-decoration: none; }
+.tabbar a[aria-current="page"] { color: var(--ink); font-weight: 700; }
+.tabbar a[aria-current="page"] .i { color: var(--lapis); }
+.tabbar .badge { position: absolute; inset-block-start: 0; inset-inline-start: calc(50% + 6px); min-inline-size: 22px; block-size: 18px; padding-inline: 5px; border-radius: 999px; background: var(--saffron-wash); color: var(--saffron); font-size: 12px; font-weight: 700; line-height: 18px; text-align: center; box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--saffron) 30%, transparent); }
+
+/* ===== lists and cards ===== */
+.list { background: var(--page); border: 1px solid var(--rule-strong); border-radius: 12px; overflow: hidden; }
+.list > li + li { border-block-start: 1px solid var(--rule); }
+.nav-row { display: flex; align-items: center; gap: 12px; min-block-size: 64px; padding-block: 10px; padding-inline: 14px; color: var(--ink); text-decoration: none; }
+.nav-row .ic { display: grid; place-items: center; inline-size: 36px; block-size: 36px; border-radius: 8px; background: var(--lapis-wash); color: var(--lapis); flex: none; }
+.nav-row .t { flex: 1; min-inline-size: 0; display: grid; gap: 2px; }
+.nav-row .t b { font-weight: 600; font-size: 16px; }
+.nav-row .t span { font-size: 13px; color: var(--ink-3); }
+.nav-row .chev { color: var(--ink-3); }
+.nav-row.is-static { color: var(--ink-2); }
+.nav-row.is-static .ic { background: var(--neutral-wash); color: var(--ink-3); }
+.card { display: grid; gap: 10px; padding: 14px; background: var(--page); border: 1px solid var(--rule-strong); border-radius: 12px; }
+.card h3 { font-size: 16px; font-weight: 600; }
+.kv { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-block-size: 32px; }
+.kv .k { color: var(--ink-2); font-size: 14px; }
+.web-note { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--ink-3); }
+.web-note .i { inline-size: 16px; block-size: 16px; }
+
+/* ===== controls (16px inputs, 44px targets) ===== */
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-block-size: 44px; padding-inline: 16px; border: 1px solid transparent; border-radius: 8px; font: inherit; font-size: 15px; font-weight: 600; cursor: pointer; text-decoration: none; }
+.btn--block { inline-size: 100%; }
+.btn--primary { background: var(--lapis); color: var(--on-lapis); }
+.btn--secondary { background: var(--raised); color: var(--ink); border-color: var(--rule-input); }
+.btn--ghost { background: transparent; color: var(--lapis); }
+.btn--danger { background: var(--cinnabar-solid); color: var(--on-cinnabar); }
+.btn:disabled { opacity: .45; cursor: not-allowed; }
+.input { inline-size: 100%; min-block-size: 44px; padding-inline: 12px; border: 1px solid var(--rule-input); border-radius: 8px; background: var(--raised); color: var(--ink); font: inherit; font-size: 16px; font-variant-numeric: tabular-nums; }
+.input:focus { outline: 2px solid var(--lapis); outline-offset: 1px; border-color: var(--lapis); }
+.search { position: relative; }
+.search .i { position: absolute; inset-inline-start: 12px; inset-block-start: 12px; color: var(--ink-3); pointer-events: none; }
+.search .input { padding-inline-start: 40px; }
+.chips { display: flex; gap: 8px; overflow-x: auto; padding-block-end: 2px; margin-inline: -16px; padding-inline: 16px; }
+.fchip { display: inline-flex; align-items: center; gap: 6px; min-block-size: 44px; padding-inline: 14px; border: 1px solid var(--rule-input); border-radius: 999px; background: var(--raised); color: var(--ink-2); font: inherit; font-size: 14px; white-space: nowrap; cursor: pointer; }
+.fchip[aria-pressed="true"] { background: var(--lapis-wash); color: var(--ink); font-weight: 600; border-color: var(--lapis); }
+.fchip .n { color: var(--ink-3); font-variant-numeric: tabular-nums; }
+.sw { display: inline-flex; align-items: center; justify-content: center; min-inline-size: 52px; min-block-size: 44px; cursor: pointer; }
+.sw input { appearance: none; position: relative; inline-size: 50px; block-size: 30px; margin: 0; border: 1px solid var(--rule-input); border-radius: 999px; background: var(--sunk); cursor: pointer; }
+.sw input::after { content: ""; position: absolute; inset-block-start: 3px; inset-inline-start: 3px; inline-size: 22px; block-size: 22px; border-radius: 50%; background: var(--ink-3); transition: inset-inline-start 120ms; }
+.sw input:checked { background: var(--lapis); border-color: var(--lapis); }
+.sw input:checked::after { inset-inline-start: 23px; background: var(--on-lapis); }
+
+/* ===== chips (nuqta + word) ===== */
+.chip { --fg: var(--ink-2); --bg: var(--neutral-wash); display: inline-flex; align-items: center; gap: 6px; min-block-size: 24px; padding-inline: 8px 10px; border: 1px solid color-mix(in oklab, var(--fg) 26%, transparent); border-radius: 999px; background: var(--bg); color: var(--fg); font-size: 13px; font-weight: 600; white-space: nowrap; }
+.chip--ok { --fg: var(--verdigris); --bg: var(--verdigris-wash); }
+.chip--act { --fg: var(--saffron); --bg: var(--saffron-wash); }
+.chip--bad { --fg: var(--cinnabar); --bg: var(--cinnabar-wash); }
+.tag { display: inline-flex; align-items: center; gap: 4px; min-block-size: 22px; padding-inline: 8px; border: 1px solid var(--rule-input); border-radius: 999px; color: var(--ink-2); font-size: 12px; font-weight: 600; white-space: nowrap; }
+.meta { font-size: 12px; color: var(--ink-3); }
+.key { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 12px; color: var(--ink-3); }
+
+/* ===== value rows (stacked) ===== */
+.vrow { display: grid; gap: 8px; padding: 14px; }
+.vrow .top { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; }
+.vrow .lbl { font-weight: 600; font-size: 16px; }
+.vrow .desc { font-size: 14px; color: var(--ink-2); }
+.vrow .ed { display: flex; align-items: center; gap: 10px; }
+.vrow .ed .input { inline-size: 96px; text-align: center; }
+.vrow.is-dirty { border-inline-start: 3px solid var(--lapis); background: color-mix(in oklab, var(--lapis-wash) 55%, transparent); }
+.unsaved { display: flex; align-items: center; gap: 6px; color: var(--lapis); font-weight: 600; font-size: 14px; }
+.acts { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.ro-box { display: grid; gap: 6px; padding-block: 10px; padding-inline: 12px; background: var(--sunk); border-radius: 8px; font-size: 14px; color: var(--ink-2); }
+.banner { display: flex; align-items: flex-start; gap: 10px; padding: 12px; background: var(--neutral-wash); border-radius: 12px; font-size: 14px; color: var(--ink); }
+.banner .g { inline-size: 14px; block-size: 14px; margin-block-start: 4px; }
+
+/* ===== notification rows ===== */
+.nrow { display: flex; align-items: center; gap: 10px; padding-block: 10px; padding-inline: 14px; }
+.nrow .t { flex: 1; min-inline-size: 0; display: grid; gap: 4px; }
+.nrow .t b { font-weight: 600; font-size: 15px; }
+.nrow .t .line { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; font-size: 13px; color: var(--ink-3); }
+.lock { display: inline-flex; align-items: center; gap: 4px; font-size: 13px; color: var(--ink-2); }
+.lock .i { inline-size: 16px; block-size: 16px; }
+
+/* ===== bottom sheet ===== */
+.scrim { position: absolute; inset: 0; background: var(--scrim); }
+.sheet { position: absolute; inset-inline: 0; inset-block-end: 0; display: grid; gap: 12px; padding-block: 10px 24px; padding-inline: 16px; background: var(--page); border-start-start-radius: 12px; border-start-end-radius: 12px; box-shadow: var(--elev-pop); }
+.grabber { justify-self: center; inline-size: 40px; block-size: 4px; border-radius: 2px; background: var(--rule-strong); }
+.sheet h3 { font-family: var(--font-display); font-weight: 700; font-size: 23px; line-height: 1.5; }
+.sheet p { font-size: 15px; text-wrap: pretty; }
+.field { display: grid; gap: 6px; }
+.label { font-size: 14px; font-weight: 600; color: var(--ink-2); }
+.hint { font-size: 13px; color: var(--ink-3); }
+.logline { display: flex; align-items: center; gap: 8px; padding: 10px; background: var(--sunk); border-radius: 8px; font-size: 13px; color: var(--ink-2); }
+.logline .i { inline-size: 16px; block-size: 16px; }
+.stack { display: grid; gap: 8px; }
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <symbol id="g-fill" viewBox="0 0 16 16"><path fill="currentColor" d="M8 2.2 13.8 8 8 13.8 2.2 8Z"/></symbol>
+  <symbol id="g-half" viewBox="0 0 16 16"><path fill="currentColor" d="M2.9 8h10.2L8 13.1Z"/><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" d="M8 2.9 13.1 8 8 13.1 2.9 8Z"/></symbol>
+  <symbol id="g-hollow" viewBox="0 0 16 16"><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" d="M8 2.9 13.1 8 8 13.1 2.9 8Z"/></symbol>
+  <symbol id="g-struck" viewBox="0 0 16 16"><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" d="M8 2.9 13.1 8 8 13.1 2.9 8Z"/><path d="M2.6 13.4 13.4 2.6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></symbol>
+  <symbol id="i-home" viewBox="0 0 24 24"><path d="M4 11 12 4l8 7v9H4Z"/><path d="M10 20v-5h4v5"/></symbol>
+  <symbol id="i-chat" viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4Z"/></symbol>
+  <symbol id="i-users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M3 20c0-3.5 2.7-6 6-6s6 2.5 6 6"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7M18 14c2 .8 3 2.8 3 6"/></symbol>
+  <symbol id="i-more" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.3"/><circle cx="12" cy="12" r="1.3"/><circle cx="19" cy="12" r="1.3"/></symbol>
+  <symbol id="i-sliders" viewBox="0 0 24 24"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></symbol>
+  <symbol id="i-mega" viewBox="0 0 24 24"><path d="M4 10v4h3l7 4V6l-7 4Z"/><path d="M18 9a4 4 0 0 1 0 6"/></symbol>
+  <symbol id="i-cal" viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="15" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4"/></symbol>
+  <symbol id="i-plug" viewBox="0 0 24 24"><path d="M9 3v5M15 3v5M6 8h12v3a6 6 0 0 1-12 0Z"/><path d="M12 17v4"/></symbol>
+  <symbol id="i-monitor" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M9 20h6M12 16v4"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6"/><path d="m20 20-4.5-4.5"/></symbol>
+  <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="10.5" width="14" height="10" rx="2"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/></symbol>
+  <symbol id="i-log" viewBox="0 0 24 24"><path d="M5 4h14v16H5Z"/><path d="M8 8h8M8 12h8M8 16h5"/></symbol>
+  <!-- chevrons: "forward" points toward the inline-end (drawn pointing to x=0 for RTL); "back" points toward the inline-start -->
+  <symbol id="i-fwd" viewBox="0 0 24 24"><path d="m14 6-6 6 6 6"/></symbol>
+  <symbol id="i-back" viewBox="0 0 24 24"><path d="m10 6 6 6-6 6"/></symbol>
+</svg>
+
+<main class="board">
+  <h1>الإعدادات في تطبيق الإدارة</h1>
+  <p>أربع شاشات من تطبيق الهاتف للإدارة. لا إطار ولا خرطوشة على الهاتف؛ تبقى النقطة والأخضر للأفعال والزعفراني لما ينتظر منك عملًا. البيانات تجريبية.</p>
+
+  <div class="phones">
+
+    <!-- ========== 1. الإعدادات ========== -->
+    <figure>
+      <div class="phone">
+        <div class="sysbar" aria-hidden="true"><span class="num">15:20</span><span>آيات البيان</span></div>
+        <div class="appbar"><h2>الإعدادات</h2></div>
+        <div class="body">
+          <ul class="list">
+            <li><a class="nav-row" href="#"><span class="ic"><svg class="i" aria-hidden="true"><use href="#i-sliders"/></svg></span>
+              <span class="t"><b>القيم</b><span><span class="num">42</span> قيمة · <span class="num">5</span> معدَّلة عن الافتراضي</span></span>
+              <svg class="i chev" aria-hidden="true"><use href="#i-fwd"/></svg></a></li>
+            <li><a class="nav-row" href="#"><span class="ic"><svg class="i" aria-hidden="true"><use href="#i-mega"/></svg></span>
+              <span class="t"><b>التواصل</b><span><span class="chip chip--bad"><svg class="g" aria-hidden="true"><use href="#g-struck"/></svg>الإرسال متوقف</span> رقمان · <span class="num">18</span> إشعارًا</span></span>
+              <svg class="i chev" aria-hidden="true"><use href="#i-fwd"/></svg></a></li>
+            <li><a class="nav-row" href="#"><span class="ic"><svg class="i" aria-hidden="true"><use href="#i-cal"/></svg></span>
+              <span class="t"><b>مزامنة Google</b><span><span class="chip"><svg class="g" aria-hidden="true"><use href="#g-half"/></svg>تجربة بدون كتابة</span></span></span>
+              <svg class="i chev" aria-hidden="true"><use href="#i-fwd"/></svg></a></li>
+            <li><div class="nav-row is-static"><span class="ic"><svg class="i" aria-hidden="true"><use href="#i-plug"/></svg></span>
+              <span class="t"><b>التكاملات</b><span>تُدار من الموقع</span></span>
+              <svg class="i chev" aria-hidden="true"><use href="#i-monitor"/></svg></div></li>
+          </ul>
+          <p class="web-note"><svg class="i" aria-hidden="true"><use href="#i-monitor"/></svg><span>الأرقام وبيانات الربط والقوالب تُعدَّل من الموقع فقط.</span></p>
+        </div>
+        <nav class="tabbar" aria-label="التبويبات">
+          <a href="#"><svg class="i" aria-hidden="true"><use href="#i-home"/></svg>اليوم</a>
+          <a href="#"><svg class="i" aria-hidden="true"><use href="#i-chat"/></svg>المحادثات<span class="badge num" aria-label="11 محادثة جديدة">11</span></a>
+          <a href="#"><svg class="i" aria-hidden="true"><use href="#i-users"/></svg>الطلاب</a>
+          <a href="#" aria-current="page"><svg class="i" aria-hidden="true"><use href="#i-more"/></svg>المزيد</a>
+        </nav>
+      </div>
+      <figcaption><b>(1) قائمة الإعدادات</b> (المزيد ← الإعدادات).
+        <ul><li>يُفتح: القيم، التواصل، مزامنة Google.</li><li>لا يُفتح: «التكاملات» سطر للعلم فقط، بلا سهم، لأن بيانات الربط سرية وتُدار من الموقع.</li></ul></figcaption>
+    </figure>
+
+    <!-- ========== 2. القيم ========== -->
+    <figure>
+      <div class="phone">
+        <div class="sysbar" aria-hidden="true"><span class="num">15:20</span><span>آيات البيان</span></div>
+        <div class="appbar"><button class="back" type="button" aria-label="رجوع إلى الإعدادات"><svg class="i" aria-hidden="true"><use href="#i-back"/></svg></button><h2 class="sm">القيم</h2></div>
+        <div class="body">
+          <div class="search"><label class="vh" for="p2-q">ابحث في القيم</label><svg class="i" aria-hidden="true"><use href="#i-search"/></svg><input class="input" id="p2-q" type="search" placeholder="ابحث بالاسم أو الوصف أو المفتاح"></div>
+          <div class="chips" role="group" aria-label="تصفية حسب المجموعة">
+            <button class="fchip" type="button" aria-pressed="false">الكل <span class="n">42</span></button>
+            <button class="fchip" type="button" aria-pressed="true">الجدول والحلقات <span class="n">7</span></button>
+            <button class="fchip" type="button" aria-pressed="false">التقارير <span class="n">4</span></button>
+            <button class="fchip" type="button" aria-pressed="false">المعدَّلة فقط</button>
+            <button class="fchip" type="button" aria-pressed="false">العامة فقط</button>
+          </div>
+          <ul class="list">
+            <li class="vrow is-dirty">
+              <div class="top"><span class="lbl">أسابيع الحجز المسبق</span><span class="tag">معدَّلة</span></div>
+              <p class="desc">إلى كم أسبوعًا للأمام يمكن حجز الحلقات.</p>
+              <div class="ed"><label class="vh" for="p2-w">أسابيع الحجز المسبق</label><input class="input" id="p2-w" type="number" inputmode="numeric" min="1" max="12" value="8" aria-describedby="p2-wb"><span>أسابيع</span><span class="meta" id="p2-wb">من <span class="num">1</span> إلى <span class="num">12</span></span></div>
+              <p class="meta">الافتراضي: <span class="num">4</span> · آخر تعديل: 21 أكتوبر <span class="num">14:05</span> · أحمد</p>
+              <p class="unsaved"><svg class="g" aria-hidden="true"><use href="#g-half"/></svg>لم يُحفظ</p>
+              <div class="acts"><button class="btn btn--ghost" type="button">تراجع</button><button class="btn btn--secondary" type="button">حفظ</button></div>
+              <button class="btn btn--ghost" type="button">إعادة للافتراضي</button>
+              <bdi dir="ltr" class="key">booking_horizon_weeks</bdi>
+            </li>
+            <li class="vrow">
+              <div class="top"><span class="lbl" id="p2-tl">الحلقة التجريبية في صفحة التسجيل</span><span class="tag"><svg class="g" aria-hidden="true"><use href="#g-hollow"/></svg>عامة</span></div>
+              <div class="ed" style="justify-content:space-between"><p class="desc">تظهر للزوار قبل تسجيل الدخول.</p><label class="sw"><input type="checkbox" role="switch" checked aria-labelledby="p2-tl"></label></div>
+              <p class="meta">الافتراضي: نعم · آخر تعديل: 2 أكتوبر <span class="num">09:40</span> · سارة</p>
+              <bdi dir="ltr" class="key">trial_on_signup</bdi>
+            </li>
+            <li class="vrow">
+              <div class="top"><span class="lbl">أوقات عمل الأكاديمية</span></div>
+              <div class="ro-box"><span>السبت إلى الخميس، من <span class="num">08:00</span> إلى <span class="num">22:00</span> بتوقيت الرياض</span>
+                <span class="web-note"><svg class="i" aria-hidden="true"><use href="#i-monitor"/></svg>عدّلها من الموقع</span></div>
+              <bdi dir="ltr" class="key">academy_hours</bdi>
+            </li>
+          </ul>
+        </div>
+        <nav class="tabbar" aria-label="التبويبات">
+          <a href="#"><svg class="i" aria-hidden="true"><use href="#i-home"/></svg>اليوم</a>
+          <a href="#"><svg class="i" aria-hidden="true"><use href="#i-chat"/></svg>المحادثات<span class="badge num" aria-label="11 محادثة جديدة">11</span></a>
+          <a href="#"><svg class="i" aria-hidden="true"><use href="#i-users"/></svg>الطلاب</a>
+          <a href="#" aria-current="page"><svg class="i" aria-hidden="true"><use href="#i-more"/></svg>المزيد</a>
+        </nav>
+      </div>
+      <figcaption><b>(2) القيم.</b>
+        <ul><li>يُعدَّل من الهاتف (بصلاحية تعديل الإعدادات): الأرقام والمفاتيح والقوائم المنسدلة والنصوص، وكل صف يُحفظ وحده بـ«حفظ»، مع التأكيد المكتوب نفسه للقيم الخطرة.</li>
+        <li>للاطلاع فقط: قيم JSON والقوائم المركّبة («عدّلها من الموقع»)، وتعديل الوصف وإضافة قيمة.</li></ul></figcaption>
+      <div class="banner" role="note"><svg class="g" aria-hidden="true"><use href="#g-hollow"/></svg><span><b>للاطلاع فقط.</b> لا تملك صلاحية تعديل الإعدادات؛ تظهر القيم دون حقول أو أزرار. <span class="meta">(حالة بديلة للشاشة 2: يحل هذا الشريط فوق البحث، وتصير كل قيمة نصًّا.)</span></span></div>
+    </figure>
+
+    <!-- ========== 3. التواصل + bottom sheet ========== -->
+    <figure>
+      <div class="phone" style="min-block-size:900px">
+        <div class="sysbar" aria-hidden="true"><span class="num">15:20</span><span>آيات البيان</span></div>
+        <div class="appbar"><button class="back" type="button" aria-label="رجوع إلى الإعدادات"><svg class="i" aria-hidden="true"><use href="#i-back"/></svg></button><h2 class="sm">التواصل</h2></div>
+        <div class="body">
+          <section class="card" aria-labelledby="p3-s">
+            <h3 id="p3-s">حالة الإرسال</h3>
+            <div class="kv"><span class="k">إرسال الرسائل</span><span class="chip chip--bad"><svg class="g" aria-hidden="true"><use href="#g-struck"/></svg>متوقف</span></div>
+            <div class="kv"><span class="k">الرسائل التلقائية</span><span class="chip chip--ok"><svg class="g" aria-hidden="true"><use href="#g-fill"/></svg>تعمل</span></div>
+            <div class="kv"><span class="k">في الانتظار</span><span class="chip"><svg class="g" aria-hidden="true"><use href="#g-hollow"/></svg><span class="num">3</span> رسائل</span></div>
+            <p class="web-note"><svg class="i" aria-hidden="true"><use href="#i-monitor"/></svg>إرسال الرسائل متوقف · يُغيَّر من الموقع</p>
+          </section>
+          <p class="sec-h">ماذا يُرسل ومتى</p>
+          <ul class="list">
+            <li class="nrow"><span class="t"><b id="p3-r1">تأكيد الحجز وتغيير الموعد</b><span class="line"><span class="tag"><svg class="g" aria-hidden="true"><use href="#g-fill"/></svg>أساسي</span>ولي الأمر · فورًا</span></span><label class="sw"><input type="checkbox" role="switch" checked aria-labelledby="p3-r1"></label></li>
+            <li class="nrow"><span class="t"><b id="p3-r2">تذكير الحلقة</b><span class="line">ولي الأمر · قبل الحلقة بـ <span class="num">60</span> دقيقة</span></span><label class="sw"><input type="checkbox" role="switch" checked aria-labelledby="p3-r2"></label></li>
+            <li class="nrow"><span class="t"><b id="p3-r3">تذكير المعلم/ة بالحلقة</b><span class="line">المعلم/ة · قبل الحلقة بـ <span class="num">30</span> دقيقة</span></span><label class="sw"><input type="checkbox" role="switch" checked aria-labelledby="p3-r3"></label></li>
+            <li class="nrow"><span class="t"><b>تعذّر إرسال رسالة</b><span class="line">فريق العمل · فورًا</span></span><span class="lock"><svg class="i" aria-hidden="true"><use href="#i-lock"/></svg>لا يمكن إيقافه</span></li>
+          </ul>
+        </div>
+        <div class="scrim" aria-hidden="true"></div>
+        <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="p3-st" aria-describedby="p3-sd">
+          <span class="grabber" aria-hidden="true"></span>
+          <h3 id="p3-st">إيقاف تأكيد الحجز؟</h3>
+          <p id="p3-sd">إشعار أساسي. إذا أوقفته فلن يصل إلى <span class="num">214</span> ولي أمر أي تأكيد عند حجز حلقة أو تغيير موعدها.</p>
+          <div class="field">
+            <label class="label" for="p3-in">اكتب «إيقاف» للتأكيد</label>
+            <input class="input" id="p3-in" type="text" autocomplete="off" value="إيقا" aria-describedby="p3-h">
+            <span class="hint" id="p3-h">يُفعَّل الزر بعد كتابة الكلمة كما هي.</span>
+          </div>
+          <p class="logline"><svg class="i" aria-hidden="true"><use href="#i-log"/></svg><span>سيُسجَّل في سجل النشاط باسمك ووقته.</span></p>
+          <div class="stack">
+            <button class="btn btn--danger btn--block" type="button" disabled>إيقاف الإشعار</button>
+            <button class="btn btn--secondary btn--block" type="button">إلغاء</button>
+          </div>
+        </div>
+      </div>
+      <figcaption><b>(3) التواصل</b>، والنافذة السفلية مفتوحة بعد إغلاق مفتاح «تأكيد الحجز».
+        <ul><li>يُعدَّل من الهاتف: تشغيل كل إشعار وإيقافه، بالتأكيدات نفسها التي في الموقع (كتابة «إيقاف» للأساسي، وعدد أولياء الأمور عند التشغيل).</li>
+        <li>للاطلاع فقط: حالة الإرسال والرسائل التلقائية، والتوقيت والقنوات. الأرقام والقوالب تُفتح في الموقع.</li></ul></figcaption>
+    </figure>
+
+    <!-- ========== 4. مزامنة Google ========== -->
+    <figure>
+      <div class="phone">
+        <div class="sysbar" aria-hidden="true"><span class="num">15:20</span><span>آيات البيان</span></div>
+        <div class="appbar"><button class="back" type="button" aria-label="رجوع إلى الإعدادات"><svg class="i" aria-hidden="true"><use href="#i-back"/></svg></button><h2 class="sm">مزامنة Google</h2></div>
+        <div class="body">
+          <section class="card" aria-labelledby="p4-h">
+            <h3 id="p4-h">تقويمات المعلمين</h3>
+            <div class="kv"><span class="k">الربط</span><span class="chip chip--ok"><svg class="g" aria-hidden="true"><use href="#g-fill"/></svg>متصل</span></div>
+            <div class="kv"><span class="k">الوضع</span><span class="chip"><svg class="g" aria-hidden="true"><use href="#g-half"/></svg>تجربة بدون كتابة</span></div>
+            <p class="meta">تقرأ المنصة التقويمات وتعرض ما ستفعله، ولا تكتب فيها شيئًا بعد.</p>
+            <div class="kv"><span class="k">الحساب</span><bdi dir="ltr">calendar@example.com</bdi></div>
+            <div class="kv"><span class="k">آخر مزامنة</span><span>اليوم <span class="num">14:05</span> بتوقيت الرياض</span></div>
+            <div class="kv"><span class="k">آخر خطأ</span><span class="chip chip--ok"><svg class="g" aria-hidden="true"><use href="#g-fill"/></svg>لا يوجد</span></div>
+            <div class="kv"><span class="k">المعلمون</span><span><span class="num">16</span> مربوطًا</span></div>
+            <div class="kv"><span class="k">بلا تقويم</span><span class="chip chip--act"><svg class="g" aria-hidden="true"><use href="#g-hollow"/></svg><span class="num">2</span> يحتاجان ربطًا</span></div>
+          </section>
+          <p class="web-note"><svg class="i" aria-hidden="true"><use href="#i-monitor"/></svg><span>الربط وإيقاف التجربة وتشغيل الكتابة تتم من الموقع.</span></p>
+        </div>
+        <nav class="tabbar" aria-label="التبويبات">
+          <a href="#"><svg class="i" aria-hidden="true"><use href="#i-home"/></svg>اليوم</a>
+          <a href="#"><svg class="i" aria-hidden="true"><use href="#i-chat"/></svg>المحادثات<span class="badge num" aria-label="11 محادثة جديدة">11</span></a>
+          <a href="#"><svg class="i" aria-hidden="true"><use href="#i-users"/></svg>الطلاب</a>
+          <a href="#" aria-current="page"><svg class="i" aria-hidden="true"><use href="#i-more"/></svg>المزيد</a>
+        </nav>
+      </div>
+      <figcaption><b>(4) مزامنة Google.</b>
+        <ul><li>للاطلاع فقط بالكامل: حالة الربط، الوضع، الحساب، آخر مزامنة وآخر خطأ.</li>
+        <li>الزعفراني فقط على «يحتاجان ربطًا» لأنه عمل ينتظر الإدارة.</li></ul></figcaption>
+    </figure>
+
+  </div>
+</main>
+</body>
+</html>

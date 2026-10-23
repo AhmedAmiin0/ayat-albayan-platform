@@ -1,0 +1,673 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>التواصل · الإشعارات</title>
+<meta name="description" content="Design mock: /admin/communications, tab «الإشعارات» (docs/23 §2b, §2d; docs/26 IA brief). Static, fake data, no JS.">
+<style>
+/* ===== tokens: docs/07 §3 (light) ===== */
+:root {
+  color-scheme: light;
+  --margin: #f5eddd; --page: #fdf8f0; --raised: #fffdf9; --sunk: #f7f0e1;
+  --ink: #14261e; --ink-2: #3c4b44; --ink-3: #55625b;
+  --rule: #e5d9bf; --rule-strong: #cdbb94; --rule-input: #958666;
+  --gold: #c2a24a; --gold-soft: #d6bc80; --gold-wash: #e7dab4;
+  --lapis: #14503a; --lapis-hover: #0c2a1e; --lapis-wash: #e1ede5; --on-lapis: #fdf8f0;
+  --verdigris: #1e6b4c; --verdigris-wash: #dcebdf;
+  --saffron: #8c5212; --saffron-wash: #f6e7c6;
+  --cinnabar: #9c3b2e; --cinnabar-solid: #9c3b2e; --cinnabar-wash: #f8e1db; --on-cinnabar: #fdf8f0;
+  --neutral-wash: #e9e7dd;
+  --inverse: #0c2a1e; --on-inverse: #fdf8f0; --inverse-gold: #d6bc80;
+  --scrim: rgba(12, 38, 28, 0.45);
+  --elev-page: 0 1px 0 rgba(20, 38, 30, 0.04), 0 18px 40px -18px rgba(20, 38, 30, 0.28);
+  --elev-pop: 0 30px 60px -20px rgba(4, 16, 11, 0.55);
+  --font-sans: 'IBM Plex Sans Arabic', 'Noto Sans Arabic', 'Segoe UI', Tahoma, sans-serif;
+  --font-display: 'Amiri', 'Noto Naskh Arabic', serif;
+  --r-xs: 2px; --r-sm: 6px; --r-md: 8px; --r-lg: 12px; --r-pill: 999px;
+}
+/* ===== tokens: docs/07 §3 (dark, "night Mushaf") ===== */
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+    --margin: #07110c; --page: #0c1913; --raised: #112019; --sunk: #09150f;
+    --ink: #efe8d8; --ink-2: #c7bfac; --ink-3: #a49d8b;
+    --rule: #1f3229; --rule-strong: #2f463a; --rule-input: #5f766a;
+    --gold: #cfb062; --gold-soft: #6c5a2b; --gold-wash: #29230f;
+    --lapis: #78c49c; --lapis-hover: #92d4b0; --lapis-wash: #122a1f; --on-lapis: #06120c;
+    --verdigris: #8fcf95; --verdigris-wash: #112a17;
+    --saffron: #f2aa6b; --saffron-wash: #36220f;
+    --cinnabar: #f0927f; --cinnabar-solid: #d0604d; --cinnabar-wash: #3a1914; --on-cinnabar: #06120c;
+    --neutral-wash: #1d2621;
+    --inverse: #ece4d2; --on-inverse: #0c1913; --inverse-gold: #8a6a1c;
+    --scrim: rgba(1, 5, 3, 0.62);
+    --elev-page: 0 0 0 1px rgba(0, 0, 0, 0.25), 0 18px 40px -16px rgba(0, 0, 0, 0.65);
+    --elev-pop: 0 30px 60px -20px rgba(0, 0, 0, 0.7);
+  }
+}
+
+/* ===== base ===== */
+*, *::before, *::after { box-sizing: border-box; }
+html, body { margin: 0; }
+body { background: var(--margin); color: var(--ink); font-family: var(--font-sans); font-size: 14px; line-height: 1.6; -webkit-font-smoothing: antialiased; }
+h1, h2, h3, h4, p, ul, figure { margin: 0; }
+ul { padding: 0; list-style: none; }
+a { color: var(--lapis); }
+:focus-visible { outline: 2px solid var(--lapis); outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; } }
+.num, bdi { font-variant-numeric: tabular-nums; }
+bdi[dir="ltr"] { white-space: nowrap; }
+.vh { position: absolute; inline-size: 1px; block-size: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.i { inline-size: 18px; block-size: 18px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+.g { inline-size: 12px; block-size: 12px; flex: none; }
+.mirror { transform: scaleX(-1); }
+
+/* ===== shell (docs/07 §7) ===== */
+.shell { display: grid; grid-template-columns: 236px minmax(0, 1fr); min-block-size: 100vh; }
+.side { display: flex; flex-direction: column; gap: 24px; padding-block: 24px 0; padding-inline: 12px; border-inline-end: 1px solid var(--rule); background: var(--margin); }
+.brand { display: flex; align-items: center; gap: 10px; padding-inline: 12px; color: var(--ink); text-decoration: none; }
+.brand svg { inline-size: 40px; block-size: 40px; color: var(--gold); flex: none; }
+.brand small { display: block; font-size: 12px; color: var(--ink-3); line-height: 1.3; }
+.brand b { display: block; font-family: var(--font-display); font-size: 23px; line-height: 1.35; white-space: nowrap; }
+.nav { display: flex; flex-direction: column; gap: 16px; }
+.nav h2 { padding-inline: 12px; margin-block-end: 8px; font-size: 12px; font-weight: 600; color: var(--ink-3); }
+.nav ul { display: flex; flex-direction: column; gap: 4px; }
+.nav a { position: relative; display: flex; align-items: center; gap: 8px; min-block-size: 40px; padding-inline: 12px; border-radius: var(--r-sm); color: var(--ink-2); font-weight: 500; text-decoration: none; }
+.nav a .i { color: var(--ink-3); }
+.nav a:hover { background: var(--sunk); color: var(--ink); }
+.nav a[aria-current="page"] { background: var(--page); color: var(--ink); font-weight: 600; }
+.nav a[aria-current="page"] .i { color: var(--lapis); }
+.nav a[aria-current="page"]::before { content: ""; position: absolute; inset-inline-start: 0; inset-block: 8px; inline-size: 4px; border-radius: 2px; background: var(--lapis); }
+.nav .ld { flex: 1; min-inline-size: 8px; border-block-start: 1.5px dotted var(--rule-strong); margin-block-start: 6px; }
+.nav .cnt { font-size: 12px; color: var(--ink-3); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.nav .cnt--act { color: var(--saffron); font-weight: 700; }
+.side-foot { position: sticky; inset-block-end: 0; display: flex; align-items: center; gap: 10px; margin-block-start: auto; padding-block: 12px 24px; padding-inline: 12px; border-block-start: 1px solid var(--rule); background: var(--margin); font-size: 13px; }
+.side-foot span { display: block; font-size: 12px; color: var(--ink-3); }
+.avatar { display: grid; place-items: center; inline-size: 34px; block-size: 34px; border-radius: 50%; background: var(--neutral-wash); color: var(--ink); font-weight: 700; flex: none; }
+.main { display: flex; flex-direction: column; min-inline-size: 0; padding-inline: 16px; padding-block-end: 24px; }
+.runhead { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px 20px; min-block-size: 54px; color: var(--ink-3); font-size: 13px; }
+.crumbs { display: flex; align-items: center; gap: 6px; }
+.crumbs a { color: var(--ink-3); }
+.clocks { display: flex; align-items: center; gap: 12px; }
+.clocks b { color: var(--ink-2); font-weight: 600; font-variant-numeric: tabular-nums; }
+.clocks .sep { inline-size: 1px; block-size: 16px; background: var(--rule-strong); }
+
+/* ===== jadwal page + cartouche (docs/07 §5, §6) ===== */
+.page { position: relative; margin: 6px; padding-block: 22px 24px; padding-inline: 24px; background: var(--page); border: 1px solid var(--rule-strong); outline: 1.5px solid var(--gold); outline-offset: 4px; border-radius: var(--r-xs); box-shadow: var(--elev-page); container-type: inline-size; }
+.page-head { display: flex; align-items: center; flex-wrap: wrap; gap: 12px 16px; margin-block-end: 16px; }
+.page-head .sub { color: var(--ink-3); font-size: 14px; }
+.cart { display: inline-flex; align-items: stretch; block-size: 52px; color: var(--gold); flex: none; }
+.cart > svg { inline-size: 26px; block-size: 52px; flex: none; }
+.cart > svg:first-child { transform: scaleX(-1); }
+.cart-mid { display: flex; margin-block: 2px; border-block: 1px solid currentColor; }
+.cart-mid > span { display: flex; align-items: center; margin-block: 3px; padding-inline: 10px; padding-block-end: 5px; border-block: 1px solid var(--gold-soft); background: var(--gold-wash); color: var(--ink); font-family: var(--font-display); font-weight: 700; font-size: 25px; line-height: 1; white-space: nowrap; }
+
+/* ===== state strip ===== */
+.strip { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 24px; padding-block: 10px; padding-inline: 14px; margin-block-end: 16px; background: var(--sunk); border: 1px solid var(--rule); border-radius: var(--r-md); }
+.strip .item { display: inline-flex; align-items: center; gap: 8px; }
+.strip .k { color: var(--ink-2); }
+.strip .sentence { flex-basis: 100%; color: var(--ink); font-size: 13px; }
+
+/* ===== tabs: 3px double gold under the selected tab ===== */
+.tabs { display: flex; gap: 4px; overflow-x: auto; border-block-end: 1px solid var(--rule); margin-block-end: 20px; }
+.tabs [role="tab"] { min-block-size: 40px; padding-inline: 14px; border: 0; border-block-end: 3px double transparent; margin-block-end: -1px; background: none; color: var(--ink-2); font: inherit; font-weight: 500; white-space: nowrap; cursor: pointer; }
+.tabs [role="tab"][aria-selected="true"] { color: var(--ink); font-weight: 600; border-block-end-color: var(--gold); }
+.tabs [role="tab"]:hover { color: var(--ink); }
+.lead-line { max-inline-size: 70ch; color: var(--ink-2); margin-block-end: 16px; text-wrap: pretty; }
+
+/* ===== controls ===== */
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-block-size: 40px; padding-inline: 16px; border: 1px solid transparent; border-radius: var(--r-md); font: inherit; font-size: 14px; font-weight: 600; white-space: nowrap; cursor: pointer; text-decoration: none; transition: background-color 120ms cubic-bezier(.2,.7,.2,1); }
+.btn--sm { min-block-size: 32px; padding-inline: 12px; font-size: 13px; }
+.btn--primary { background: var(--lapis); color: var(--on-lapis); }
+.btn--primary:hover { background: var(--lapis-hover); }
+.btn--secondary { background: var(--raised); color: var(--ink); border-color: var(--rule-input); }
+.btn--secondary:hover { background: var(--sunk); }
+.btn--ghost { background: transparent; color: var(--lapis); }
+.btn--ghost:hover { background: var(--lapis-wash); }
+.btn--danger { background: var(--cinnabar-solid); color: var(--on-cinnabar); }
+.btn:disabled { opacity: .45; cursor: not-allowed; }
+.icon-btn { display: inline-grid; place-items: center; inline-size: 36px; block-size: 36px; padding: 0; border: 0; border-radius: var(--r-md); background: transparent; color: var(--ink-3); cursor: pointer; }
+.icon-btn:hover { background: var(--sunk); color: var(--ink); }
+.input, .select { min-block-size: 32px; padding-inline: 8px; border: 1px solid var(--rule-input); border-radius: var(--r-md); background: var(--raised); color: var(--ink); font: inherit; font-size: 14px; font-variant-numeric: tabular-nums; }
+.input:focus, .select:focus { outline: 2px solid var(--lapis); outline-offset: 1px; border-color: var(--lapis); }
+.input--n { inline-size: 64px; text-align: center; }
+.input--wide { inline-size: 100%; min-block-size: 40px; padding-inline: 12px; }
+.check { display: inline-flex; align-items: center; gap: 6px; min-block-size: 28px; font-size: 13px; cursor: pointer; }
+.check input { inline-size: 18px; block-size: 18px; margin: 0; accent-color: var(--lapis); }
+/* switch: input role=switch, knob moves toward the inline-end when on */
+.sw { display: inline-flex; align-items: center; gap: 8px; min-block-size: 32px; font-size: 13px; color: var(--ink-2); cursor: pointer; }
+.sw input { appearance: none; position: relative; inline-size: 44px; block-size: 26px; margin: 0; flex: none; border: 1px solid var(--rule-input); border-radius: var(--r-pill); background: var(--sunk); cursor: pointer; transition: background-color 120ms; }
+.sw input::after { content: ""; position: absolute; inset-block-start: 3px; inset-inline-start: 3px; inline-size: 18px; block-size: 18px; border-radius: 50%; background: var(--ink-3); transition: inset-inline-start 120ms; }
+.sw input:checked { background: var(--lapis); border-color: var(--lapis); }
+.sw input:checked::after { inset-inline-start: 21px; background: var(--on-lapis); }
+
+/* ===== chips and badges (nuqta + word) ===== */
+.chip { --fg: var(--ink-2); --bg: var(--neutral-wash); display: inline-flex; align-items: center; gap: 6px; min-block-size: 24px; padding-inline: 8px 10px; border: 1px solid color-mix(in oklab, var(--fg) 26%, transparent); border-radius: var(--r-pill); background: var(--bg); color: var(--fg); font-size: 13px; font-weight: 600; line-height: 1.3; }
+.chip--ok { --fg: var(--verdigris); --bg: var(--verdigris-wash); }
+.chip--act { --fg: var(--saffron); --bg: var(--saffron-wash); }
+.chip--bad { --fg: var(--cinnabar); --bg: var(--cinnabar-wash); }
+.tag { display: inline-flex; align-items: center; gap: 4px; min-block-size: 22px; padding-inline: 8px; border: 1px solid var(--rule-input); border-radius: var(--r-pill); color: var(--ink-2); font-size: 12px; font-weight: 600; white-space: nowrap; }
+.tag .i, .tag .g { inline-size: 12px; block-size: 12px; }
+.meta { font-size: 12px; color: var(--ink-3); }
+.ltr-key { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 12px; color: var(--ink-3); }
+
+/* ===== catalogue ===== */
+.group { margin-block-end: 24px; }
+.group-h { display: flex; align-items: baseline; gap: 12px; margin-block-end: 4px; }
+.group-h h3 { font-family: var(--font-display); font-weight: 700; font-size: 20px; line-height: 1.5; }
+.cat-head, .row { display: grid; grid-template-columns: minmax(220px, 1.7fr) minmax(120px, .8fr) minmax(190px, 1.1fr) minmax(170px, 1fr) 128px; gap: 8px 16px; padding-inline: 8px; }
+.cat-head { padding-block: 8px; border-block-end: 3px double var(--gold); font-size: 13px; font-weight: 600; color: var(--ink-3); }
+.row { padding-block: 12px; border-block-end: 1px solid var(--rule); align-items: start; }
+.row:hover { background: color-mix(in oklab, var(--sunk) 75%, transparent); }
+.row.is-off .name { color: var(--ink-2); }
+.cell { display: flex; flex-direction: column; gap: 6px; min-inline-size: 0; }
+.cl { display: none; font-size: 12px; font-weight: 600; color: var(--ink-3); }
+.name { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; font-weight: 600; }
+.when { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; color: var(--ink-2); font-size: 13px; }
+.ch { display: flex; flex-wrap: wrap; gap: 2px 12px; }
+.only { font-size: 13px; color: var(--ink-2); }
+.also { font-size: 12px; color: var(--ink-3); }
+.lock-note { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: var(--ink-2); }
+.row.is-dirty { border-inline-start: 3px solid var(--lapis); background: color-mix(in oklab, var(--lapis-wash) 55%, transparent); }
+.dirty-bar { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; padding-block-start: 4px; }
+.dirty-bar .unsaved { display: inline-flex; align-items: center; gap: 6px; color: var(--lapis); font-weight: 600; font-size: 13px; }
+.dirty-bar .acts { display: flex; gap: 8px; margin-inline-start: auto; }
+fieldset.fs { border: 0; margin: 0; padding: 0; min-inline-size: 0; }
+details.dev { font-size: 12px; color: var(--ink-3); }
+details.dev summary { cursor: pointer; inline-size: fit-content; }
+details.manual { margin-block-start: 8px; padding-block: 12px; border-block: 1px solid var(--rule); }
+details.manual summary { cursor: pointer; font-weight: 600; }
+details.manual ul { display: grid; gap: 6px; margin-block-start: 10px; }
+details.manual li { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+
+/* stacked rows: page under 720px, or the 390px sample */
+@container (max-width: 720px) {
+  .cat-head { display: none; }
+  .row { grid-template-columns: minmax(0, 1fr) auto; gap: 12px; padding-inline: 4px; }
+  .row > .c-name { grid-column: 1; grid-row: 1; }
+  .row > .c-sw { grid-column: 2; grid-row: 1; }
+  .row > .c-ch, .row > .c-num, .row > .c-state { grid-column: 1 / -1; }
+  .cl { display: block; }
+  .input, .select { min-block-size: 44px; font-size: 16px; }
+  .input--n { inline-size: 76px; }
+  .check { min-block-size: 44px; font-size: 15px; }
+  .sw { min-block-size: 44px; }
+  .dirty-bar .acts { inline-size: 100%; }
+  .dirty-bar .btn { flex: 1; min-block-size: 44px; }
+}
+
+/* ===== board: annotated examples on the margin ===== */
+.board { padding-block: 40px 64px; padding-inline: 24px; max-inline-size: 1240px; margin-inline: auto; }
+.board > h2 { font-family: var(--font-display); font-size: 28px; line-height: 1.5; margin-block-end: 4px; }
+.board > p { color: var(--ink-2); max-inline-size: 70ch; margin-block-end: 24px; }
+.figs { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 520px), 1fr)); gap: 40px 32px; align-items: start; }
+figure { display: grid; gap: 12px; }
+figcaption { font-size: 13px; color: var(--ink-2); max-inline-size: 70ch; }
+figcaption b { color: var(--ink); }
+.stage { padding: 32px 20px; background: var(--scrim); border-radius: var(--r-lg); }
+.dialog { max-inline-size: 560px; margin-inline: auto; padding: 22px; background: var(--page); border: 1px solid var(--rule-strong); outline: 1.5px solid var(--gold); outline-offset: 4px; border-radius: var(--r-xs); box-shadow: var(--elev-pop); color: var(--ink); }
+.dlg-head { display: grid; grid-template-columns: 40px minmax(0, 1fr) auto; gap: 12px; align-items: center; margin-block-end: 12px; }
+.dlg-glyph { display: grid; place-items: center; inline-size: 40px; block-size: 40px; border-radius: 50%; }
+.dlg-glyph .g { inline-size: 18px; block-size: 18px; }
+.dlg-glyph--bad { background: var(--cinnabar-wash); color: var(--cinnabar); }
+.dlg-glyph--ok { background: var(--verdigris-wash); color: var(--verdigris); }
+.dialog h3 { font-family: var(--font-display); font-weight: 700; font-size: 27px; line-height: 1.5; text-wrap: balance; }
+.dlg-body { display: grid; gap: 12px; font-size: 15px; }
+.dlg-body p { text-wrap: pretty; }
+.field { display: grid; gap: 6px; }
+.label { font-size: 13px; font-weight: 600; color: var(--ink-2); }
+.hint { font-size: 13px; color: var(--ink-3); }
+.logline { display: flex; align-items: center; gap: 8px; padding-block: 8px; padding-inline: 10px; background: var(--sunk); border-radius: var(--r-md); font-size: 13px; color: var(--ink-2); }
+.dlg-foot { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-block-start: 20px; }
+.dlg-foot .hint { margin-inline-end: auto; }
+.sample { padding: 16px; background: var(--page); border: 1px solid var(--rule-strong); border-radius: var(--r-xs); }
+.narrow { inline-size: 390px; max-inline-size: 100%; container-type: inline-size; margin-inline: auto; padding-inline: 16px; background: var(--page); border: 1px solid var(--rule-strong); border-radius: var(--r-lg); }
+.ro-banner { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; margin-block-end: 8px; font-size: 13px; color: var(--ink-2); }
+.ro-val { font-size: 13px; color: var(--ink-2); }
+
+@media (max-width: 900px) {
+  .shell { grid-template-columns: 1fr; }
+  .side { flex-direction: row; align-items: center; gap: 12px; padding-block: 8px; border-inline-end: 0; border-block-end: 1px solid var(--rule); overflow-x: auto; }
+  .nav, .nav ul { flex-direction: row; }
+  .nav h2, .nav .ld, .nav .cnt:not(.cnt--act), .side-foot, .brand div { display: none; }
+  .nav a { min-block-size: 44px; white-space: nowrap; }
+}
+@media (max-width: 640px) {
+  .runhead { display: none; }
+  .main { padding-inline: 8px; }
+  .page { padding-inline: 16px; }
+  .cart-mid > span { font-size: 21px; }
+}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <symbol id="g-fill" viewBox="0 0 16 16"><path fill="currentColor" d="M8 2.2 13.8 8 8 13.8 2.2 8Z"/></symbol>
+  <symbol id="g-half" viewBox="0 0 16 16"><path fill="currentColor" d="M2.9 8h10.2L8 13.1Z"/><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" d="M8 2.9 13.1 8 8 13.1 2.9 8Z"/></symbol>
+  <symbol id="g-hollow" viewBox="0 0 16 16"><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" d="M8 2.9 13.1 8 8 13.1 2.9 8Z"/></symbol>
+  <symbol id="g-struck" viewBox="0 0 16 16"><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" d="M8 2.9 13.1 8 8 13.1 2.9 8Z"/><path d="M2.6 13.4 13.4 2.6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></symbol>
+  <symbol id="cap" viewBox="0 0 26 52">
+    <path style="fill:var(--gold-wash)" d="M26 6.5H16C12.5 6.5 11.5 9.5 10 13.5L5.6 26L10 38.5C11.5 42.5 12.5 45.5 16 45.5H26Z"/>
+    <path fill="none" stroke="currentColor" d="M26 2.5H15C9.5 2.5 8.5 7 6.5 12L1.5 26L6.5 40C8.5 45 9.5 49.5 15 49.5H26"/>
+    <path fill="none" style="stroke:var(--gold-soft)" d="M26 6.5H16C12.5 6.5 11.5 9.5 10 13.5L5.6 26L10 38.5C11.5 42.5 12.5 45.5 16 45.5H26"/>
+    <path fill="currentColor" d="M13.5 23.6 15.9 26 13.5 28.4 11.1 26Z"/>
+  </symbol>
+  <symbol id="emblem" viewBox="0 0 40 40"><path fill="none" stroke="currentColor" stroke-width="1.6" d="M8 8h24v24H8Z"/><path fill="none" stroke="currentColor" stroke-width="1.6" d="M20 3 37 20 20 37 3 20Z"/><path fill="none" stroke="currentColor" stroke-width="1.4" d="M12 23c3-2 6-2 8 0 2-2 5-2 8 0v-7c-3-2-6-2-8 0-2-2-5-2-8 0Z"/></symbol>
+  <symbol id="i-home" viewBox="0 0 24 24"><path d="M4 11 12 4l8 7v9H4Z"/><path d="M10 20v-5h4v5"/></symbol>
+  <symbol id="i-chat" viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4Z"/></symbol>
+  <symbol id="i-users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M3 20c0-3.5 2.7-6 6-6s6 2.5 6 6"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7M18 14c2 .8 3 2.8 3 6"/></symbol>
+  <symbol id="i-cal" viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="15" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4"/></symbol>
+  <symbol id="i-file" viewBox="0 0 24 24"><path d="M6 3h8l4 4v14H6Z"/><path d="M14 3v4h4M9 12h6M9 16h6"/></symbol>
+  <symbol id="i-wallet" viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M16 12.5h2"/></symbol>
+  <symbol id="i-gear" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.3 5.3l2.1 2.1M16.6 16.6l2.1 2.1M5.3 18.7l2.1-2.1M16.6 7.4l2.1-2.1"/></symbol>
+  <symbol id="i-mega" viewBox="0 0 24 24"><path d="M4 10v4h3l7 4V6l-7 4Z"/><path d="M18 9a4 4 0 0 1 0 6"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3 5 6v5c0 4.5 3 8 7 10 4-2 7-5.5 7-10V6Z"/></symbol>
+  <symbol id="i-log" viewBox="0 0 24 24"><path d="M5 4h14v16H5Z"/><path d="M8 8h8M8 12h8M8 16h5"/></symbol>
+  <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="10.5" width="14" height="10" rx="2"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/></symbol>
+  <symbol id="i-chev" viewBox="0 0 24 24"><path d="m14 6-6 6 6 6"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></symbol>
+  <symbol id="i-out" viewBox="0 0 24 24"><path d="M14 4h5v16h-5"/><path d="M10 8l-4 4 4 4M6 12h9"/></symbol>
+</svg>
+
+<div class="shell">
+  <aside class="side" aria-label="القائمة الرئيسية">
+    <a class="brand" href="#"><svg aria-hidden="true"><use href="#emblem"/></svg><div><small>أكاديمية</small><b>آيات البيان</b></div></a>
+    <nav class="nav" aria-label="الأقسام">
+      <div><h2>العمل اليومي</h2><ul>
+        <li><a href="#"><svg class="i" aria-hidden="true"><use href="#i-home"/></svg>اليوم<span class="ld"></span><span class="cnt cnt--act">3 تحتاج تأكيدًا</span></a></li>
+        <li><a href="#"><svg class="i" aria-hidden="true"><use href="#i-chat"/></svg>المحادثات<span class="ld"></span><span class="cnt cnt--act">11 جديدة</span></a></li>
+        <li><a href="#"><svg class="i" aria-hidden="true"><use href="#i-users"/></svg>الطلاب<span class="ld"></span><span class="cnt">214</span></a></li>
+        <li><a href="#"><svg class="i" aria-hidden="true"><use href="#i-cal"/></svg>الجدول</a></li>
+        <li><a href="#"><svg class="i" aria-hidden="true"><use href="#i-file"/></svg>التقارير<span class="ld"></span><span class="cnt cnt--act">2 لم تُرسل</span></a></li>
+      </ul></div>
+      <div><h2>المالية</h2><ul>
+        <li><a href="#"><svg class="i" aria-hidden="true"><use href="#i-wallet"/></svg>الباقات والدفعات<span class="ld"></span><span class="cnt cnt--act">3 غير مدفوعة</span></a></li>
+      </ul></div>
+      <div><h2>الإدارة</h2><ul>
+        <li><a href="#"><svg class="i" aria-hidden="true"><use href="#i-gear"/></svg>الإعدادات</a></li>
+        <li><a href="#" aria-current="page"><svg class="i" aria-hidden="true"><use href="#i-mega"/></svg>التواصل</a></li>
+        <li><a href="#"><svg class="i" aria-hidden="true"><use href="#i-shield"/></svg>الأدوار والصلاحيات</a></li>
+        <li><a href="#"><svg class="i" aria-hidden="true"><use href="#i-log"/></svg>سجل النشاط</a></li>
+      </ul></div>
+    </nav>
+    <div class="side-foot">
+      <span class="avatar" aria-hidden="true">أ</span>
+      <div>أحمد<span>مدير الأكاديمية</span></div>
+      <button class="icon-btn" type="button" aria-label="تسجيل الخروج"><svg class="i" aria-hidden="true"><use href="#i-out"/></svg></button>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="runhead">
+      <nav class="crumbs" aria-label="مسار الصفحة"><a href="#">الإعدادات</a><svg class="i" aria-hidden="true"><use href="#i-chev"/></svg><span aria-current="page">التواصل</span></nav>
+      <div class="clocks">
+        <span>الجمعة 23 أكتوبر 2026 · 12 جمادى الأولى 1448 هـ</span><span class="sep" aria-hidden="true"></span>
+        <span>الرياض <b>15:20</b></span><span>القاهرة <b>15:20</b></span>
+      </div>
+    </div>
+
+    <section class="page" aria-labelledby="pg-title">
+      <div class="page-head">
+        <h1 class="cart" id="pg-title"><svg aria-hidden="true"><use href="#cap"/></svg><span class="cart-mid"><span>التواصل</span></span><svg aria-hidden="true"><use href="#cap"/></svg></h1>
+        <span class="sub">أرقام الأكاديمية والإشعارات</span>
+      </div>
+
+      <div class="strip" role="status" aria-label="حالة الإرسال الآن">
+        <span class="item"><span class="k">إرسال الرسائل:</span><span class="chip chip--bad"><svg class="g" aria-hidden="true"><use href="#g-struck"/></svg>متوقف</span></span>
+        <span class="item"><span class="k">الرسائل التلقائية:</span><span class="chip chip--ok"><svg class="g" aria-hidden="true"><use href="#g-fill"/></svg>تعمل</span></span>
+        <span class="item"><span class="k">في الانتظار:</span><span class="chip"><svg class="g" aria-hidden="true"><use href="#g-hollow"/></svg><span class="num">3</span> رسائل</span></span>
+        <p class="sentence">لن تُرسل أي رسالة حتى يُفعَّل الإرسال من تبويب «نظرة عامة».</p>
+      </div>
+
+      <div class="tabs" role="tablist" aria-label="أقسام التواصل">
+        <button role="tab" type="button" aria-selected="false" tabindex="-1">نظرة عامة</button>
+        <button role="tab" type="button" aria-selected="false" tabindex="-1">الأرقام</button>
+        <button role="tab" type="button" aria-selected="true" aria-controls="tab-notif" id="tab-notif-btn">الإشعارات</button>
+        <button role="tab" type="button" aria-selected="false" tabindex="-1">القوالب</button>
+        <button role="tab" type="button" aria-selected="false" tabindex="-1">الحماية</button>
+      </div>
+
+      <div role="tabpanel" id="tab-notif" aria-labelledby="tab-notif-btn">
+        <p class="lead-line">اختر لكل إشعار متى يُرسل وعبر أي قناة ومن أي رقم. يُحفظ كل صف وحده. <span class="meta">18 إشعارًا: 13 تلقائية هنا، و5 يرسلها الفريق يدويًا في آخر القائمة.</span></p>
+
+        <div class="cat-head" aria-hidden="true"><span>الإشعار ومتى يُرسل</span><span>عبر</span><span>من رقم · القالب</span><span>هل يُرسل الآن؟</span><span>التشغيل</span></div>
+
+        <!-- ========== ولي الأمر ========== -->
+        <section class="group" aria-labelledby="gh-g">
+          <div class="group-h"><h3 id="gh-g">ولي الأمر</h3><span class="meta">7 إشعارات</span></div>
+
+          <div class="row">
+            <div class="cell c-name">
+              <div class="name">تأكيد الحجز وتغيير الموعد <span class="tag"><svg class="g" aria-hidden="true"><use href="#g-fill"/></svg>أساسي</span></div>
+              <div class="when">فور حجز حلقة أو تغيير موعدها</div>
+              <details class="dev"><summary>للمطوّر</summary><bdi dir="ltr" class="ltr-key">booking_confirmation · booking_confirmation_meet · booking_confirmation_plain</bdi></details>
+            </div>
+            <div class="cell c-ch"><span class="cl">عبر</span><span class="only">واتساب فقط</span></div>
+            <div class="cell c-num"><span class="cl">من رقم · القالب</span>
+              <label class="vh" for="n1-num">الرقم المرسل لتأكيد الحجز</label>
+              <select class="select" id="n1-num"><option selected>رقم الإشعارات · &#x2066;+966 55 000 0001&#x2069;</option><option>رقم المحادثات · &#x2066;+966 55 000 0002&#x2069;</option></select>
+              <span><span class="chip chip--ok"><svg class="g" aria-hidden="true"><use href="#g-fill"/></svg>معتمد</span></span>
+            </div>
+            <div class="cell c-state"><span class="cl">هل يُرسل الآن؟</span><span><span class="chip"><svg class="g" aria-hidden="true"><use href="#g-struck"/></svg>متوقف: إرسال الرسائل متوقف</span></span></div>
+            <div class="cell c-sw"><label class="sw"><input type="checkbox" role="switch" checked aria-describedby="n1-ess">مفعَّل</label><span class="meta" id="n1-ess">إيقافه يحتاج تأكيدًا مكتوبًا</span></div>
+          </div>
+
+          <div class="row is-dirty">
+            <div class="cell c-name">
+              <div class="name">تذكير الحلقة</div>
+              <div class="when"><label for="n2-min">قبل الحلقة بـ</label><input class="input input--n" id="n2-min" type="number" inputmode="numeric" min="5" max="240" step="5" value="45"><span>دقيقة</span></div>
+              <span class="meta">الافتراضي: <span class="num">60</span></span>
+            </div>
+            <div class="cell c-ch"><span class="cl">عبر</span><span class="only">واتساب فقط</span></div>
+            <div class="cell c-num"><span class="cl">من رقم · القالب</span>
+              <label class="vh" for="n2-num">الرقم المرسل لتذكير الحلقة</label>
+              <select class="select" id="n2-num"><option selected>رقم الإشعارات · &#x2066;+966 55 000 0001&#x2069;</option><option>رقم المحادثات · &#x2066;+966 55 000 0002&#x2069;</option></select>
+              <span><span class="chip chip--ok"><svg class="g" aria-hidden="true"><use href="#g-fill"/></svg>معتمد</span></span>
+            </div>
+            <div class="cell c-state"><span class="cl">هل يُرسل الآن؟</span><span><span class="chip"><svg class="g" aria-hidden="true"><use href="#g-struck"/></svg>متوقف: إرسال الرسائل متوقف</span></span></div>
+            <div class="cell c-sw"><label class="sw"><input type="checkbox" role="switch" checked aria-label="تشغيل تذكير الحلقة">مفعَّل</label></div>
+            <div class="dirty-bar">
+              <span class="unsaved"><svg class="g" aria-hidden="true"><use href="#g-half"/></svg>لم يُحفظ: قبل الحلقة بـ <span class="num">45</span> دقيقة بدلًا من <span class="num">60</span></span>
+              <span class="acts"><button class="btn btn--ghost btn--sm" type="button">تراجع</button><button class="btn btn--secondary btn--sm" type="button">حفظ</button></span>
+            </div>
+          </div>
+
+          <div class="row is-off">
+            <div class="cell c-name">
+              <div class="name">تذكير اليوم السابق للحلقة</div>
+              <div class="when"><label for="n3-at">اليوم السابق الساعة</label>
+                <select class="select" id="n3-at"><option>18:00</option><option>19:00</option><option selected>20:00</option><option>21:00</option><option>في ساعة الحلقة نفسها</option></select>
+                <span>بتوقيت ولي الأمر</span></div>
+              <span class="meta">مع زرّي التأكيد وتغيير الموعد</span>
+            </div>
+            <div class="cell c-ch"><span class="cl">عبر</span><span class="only">واتساب فقط</span></div>
+            <div class="cell c-num"><span class="cl">من رقم · القالب</span>
+              <label class="vh" for="n3-num">الرقم المرسل لتذكير اليوم السابق</label>
+              <select class="select" id="n3-num"><option selected>رقم الإشعارات · &#x2066;+966 55 000 0001&#x2069;</option><option>رقم المحادثات · &#x2066;+966 55 000 0002&#x2069;</option></select>
+              <span><span class="chip chip--ok"><svg class="g" aria-hidden="true"><use href="#g-fill"/></svg>معتمد</span></span>
+            </div>
+            <div class="cell c-state"><span class="cl">هل يُرسل الآن؟</span><span><span class="chip"><svg class="g" aria-hidden="true"><use href="#g-struck"/></svg>مغلق</span></span></div>
+            <div class="cell c-sw"><label class="sw"><input type="checkbox" role="switch" aria-label="تشغيل تذكير اليوم السابق للحلقة">مغلق</label></div>
+          </div>
+
+          <div class="row">
+            <div class="cell c-name">
+              <div class="name">رابط دخول الحلقة</div>
+              <div class="when">مع تذكير الحلقة، للحلقات التي تُعقد في فصل الأكاديمية فقط</div>
+            </div>
+            <div class="cell c-ch"><span class="cl">عبر</span><span class="only">واتساب فقط</span></div>
+            <div class="cell c-num"><span class="cl">من رقم · القالب</span>
+              <label class="vh" for="n4-num">الرقم المرسل لرابط دخول الحلقة</label>
+              <select class="select" id="n4-num"><option selected>رقم الإشعارات · &#x2066;+966 55 000 0001&#x2069;</option><option>رقم المحادثات · &#x2066;+966 55 000 0002&#x2069;</option></select>
+              <span><span class="chip chip--bad"><svg class="g" aria-hidden="true"><use href="#g-struck"/></svg>مرفوض</span> <a href="#" class="meta">افتح القوالب</a></span>
+            </div>
+            <div class="cell c-state"><span class="cl">هل يُرسل الآن؟</span><span><span class="chip"><svg class="g" aria-hidden="true"><use href="#g-struck"/></svg>متوقف: إرسال الرسائل متوقف</span></span><span class="also">وبعده: رفضت ميتا القالب</span></div>
+            <div class="cell c-sw"><label class="sw"><input type="checkbox" role="switch" checked aria-label="تشغيل رابط دخول الحلقة">مفعَّل</label></div>
+          </div>
+
+          <div class="row">
+            <div class="cell c-name">
+              <div class="name">تقرير الحلقة بصيغة PDF <span class="tag"><svg class="g" aria-hidden="true"><use href="#g-fill"/></svg>أساسي</span></div>
+              <div class="when">بعد أن يكتب المعلم/ة التقرير وتُجهَّز نسخة PDF</div>
+            </div>
+            <div class="cell c-ch"><span class="cl">عبر</span><span class="only">واتساب فقط</span></div>
+            <div class="cell c-num"><span class="cl">من رقم · القالب</span>
+              <label class="vh" for="n5-num">الرقم المرسل لتقرير الحلقة</label>
+              <select class="select" id="n5-num"><option selected>رقم الإشعارات · &#x2066;+966 55 000 0001&#x2069;</option><option>رقم المحادثات · &#x2066;+966 55 000 0002&#x2069;</option></select>
+              <span><span class="chip chip--ok"><svg class="g" aria-hidden="true"><use href="#g-fill"/></svg>معتمد</span></span>
+            </div>
+            <div class="cell c-state"><span class="cl">هل يُرسل الآن؟</span><span><span class="chip"><svg class="g" aria-hidden="true"><use href="#g-struck"/></svg>متوقف: إرسال الرسائل متوقف</span></span></div>
+            <div class="cell c-sw"><label class="sw"><input type="checkbox" role="switch" checked aria-label="تشغيل تقرير الحلقة بصيغة PDF" aria-describedby="n5-ess">مفعَّل</label><span class="meta" id="n5-ess">إيقافه يحتاج تأكيدًا مكتوبًا</span></div>
+          </div>
+
+          <div class="row">
+            <div class="cell c-name">
+              <div class="name">تذكير تجديد الباقة</div>
+              <div class="when"><label for="n6-rem">عند بقاء</label><input class="input input--n" id="n6-rem" type="number" inputmode="numeric" min="1" max="8" value="2"><span>من حلقات الباقة أو أقل</span></div>
+            </div>
+            <div class="cell c-ch"><span class="cl">عبر</span><span class="only">واتساب فقط</span></div>
+            <div class="cell c-num"><span class="cl">من رقم · القالب</span>
+              <label class="vh" for="n6-num">الرقم المرسل لتذكير التجديد</label>
+              <select class="select" id="n6-num"><option selected>رقم الإشعارات · &#x2066;+966 55 000 0001&#x2069;</option><option>رقم المحادثات · &#x2066;+966 55 000 0002&#x2069;</option></select>
+              <span><span class="chip chip--ok"><svg class="g" aria-hidden="true"><use href="#g-fill"/></svg>معتمد</span></span>
+            </div>
+            <div class="cell c-state"><span class="cl">هل يُرسل الآن؟</span><span><span class="chip"><svg class="g" aria-hidden="true"><use href="#g-struck"/></svg>متوقف: إرسال الرسائل متوقف</span></span></div>
+            <div class="cell c-sw"><label class="sw"><input type="checkbox" role="switch" checked aria-label="تشغيل تذكير تجديد الباقة">مفعَّل</label></div>
+          </div>
+
+          <div class="row is-off">
+            <div class="cell c-name">
+              <div class="name">أزرار تقييم الحلقة</div>
+              <div class="when">بعد انتهاء الحلقة، وتنتهي صلاحيتها بعد <span class="num">72</span> ساعة</div>
+            </div>
+            <div class="cell c-ch"><span class="cl">عبر</span><span class="only">واتساب فقط</span></div>
+            <div class="cell c-num"><span class="cl">من رقم · القالب</span>
+              <label class="vh" for="n7-num">الرقم المرسل لأزرار التقييم</label>
+              <select class="select" id="n7-num"><option selected>رقم الإشعارات · &#x2066;+966 55 000 0001&#x2069;</option><option>رقم المحادثات · &#x2066;+966 55 000 0002&#x2069;</option></select>
+              <span><span class="chip"><svg class="g" aria-hidden="true"><use href="#g-hollow"/></svg>بانتظار ميتا</span></span>
+            </div>
+            <div class="cell c-state"><span class="cl">هل يُرسل الآن؟</span><span><span class="chip"><svg class="g" aria-hidden="true"><use href="#g-struck"/></svg>مغلق</span></span></div>
+            <div class="cell c-sw"><label class="sw"><input type="checkbox" role="switch" aria-label="تشغيل أزرار تقييم الحلقة">مغلق</label></div>
+          </div>
+        </section>
+
+        <!-- ========== المعلم/ة ========== -->
+        <section class="group" aria-labelledby="gh-t">
+          <div class="group-h"><h3 id="gh-t">المعلم/ة</h3><span class="meta">إشعاران</span></div>
+
+          <div class="row">
+            <div class="cell c-name">
+              <div class="name">تذكير المعلم/ة بالحلقة</div>
+              <div class="when"><label for="n8-min">قبل الحلقة بـ</label><input class="input input--n" id="n8-min" type="number" inputmode="numeric" min="5" max="240" step="5" value="30"><span>دقيقة</span></div>
+            </div>
+            <fieldset class="cell c-ch fs"><legend class="cl">عبر</legend>
+              <span class="ch"><label class="check"><input type="checkbox" checked>واتساب</label><label class="check"><input type="checkbox">الجرس</label><label class="check"><input type="checkbox" checked>إشعار الهاتف</label></span>
+            </fieldset>
+            <div class="cell c-num"><span class="cl">من رقم · القالب</span>
+              <label class="vh" for="n8-num">الرقم المرسل لتذكير المعلم/ة</label>
+              <select class="select" id="n8-num"><option selected>رقم الإشعارات · &#x2066;+966 55 000 0001&#x2069;</option><option>رقم المحادثات · &#x2066;+966 55 000 0002&#x2069;</option></select>
+              <span><span class="chip chip--ok"><svg class="g" aria-hidden="true"><use href="#g-fill"/></svg>معتمد</span></span>
+            </div>
+            <div class="cell c-state"><span class="cl">هل يُرسل الآن؟</span><span><span class="chip"><svg class="g" aria-hidden="true"><use href="#g-half"/></svg>يعمل عبر إشعار الهاتف فقط</span></span><span class="also">واتساب: إرسال الرسائل متوقف</span></div>
+            <div class="cell c-sw"><label class="sw"><input type="checkbox" role="switch" checked aria-label="تشغيل تذكير المعلم/ة بالحلقة">مفعَّل</label></div>
+          </div>
+
+          <div class="row">
+            <div class="cell c-name">
+              <div class="name">رسالة طالب جديد إلى المعلم/ة</div>
+              <div class="when">بعد حجز أول حلقة لطالب جديد</div>
+            </div>
+            <div class="cell c-ch"><span class="cl">عبر</span><span class="only">واتساب فقط</span><span class="meta">وفي الجرس دائمًا: «طالب جديد للمعلم/ة»</span></div>
+            <div class="cell c-num"><span class="cl">من رقم · القالب</span>
+              <label class="vh" for="n9-num">الرقم المرسل لرسالة الطالب الجديد</label>
+              <select class="select" id="n9-num"><option selected>رقم الإشعارات · &#x2066;+966 55 000 0001&#x2069;</option><option>رقم المحادثات · &#x2066;+966 55 000 0002&#x2069;</option></select>
+              <span><span class="chip"><svg class="g" aria-hidden="true"><use href="#g-hollow"/></svg>بانتظار ميتا</span></span>
+            </div>
+            <div class="cell c-state"><span class="cl">هل يُرسل الآن؟</span><span><span class="chip"><svg class="g" aria-hidden="true"><use href="#g-struck"/></svg>متوقف: إرسال الرسائل متوقف</span></span><span class="also">وبعده: لم تعتمد ميتا القالب بعد</span></div>
+            <div class="cell c-sw"><label class="sw"><input type="checkbox" role="switch" checked aria-label="تشغيل رسالة طالب جديد إلى المعلم/ة">مفعَّل</label></div>
+          </div>
+        </section>
+
+        <!-- ========== العميل المحتمل ========== -->
+        <section class="group" aria-labelledby="gh-l">
+          <div class="group-h"><h3 id="gh-l">العميل المحتمل</h3><span class="meta">إشعار واحد</span></div>
+          <div class="row">
+            <div class="cell c-name">
+              <div class="name">متابعة العميل بموعدين مقترحين</div>
+              <div class="when"><label for="n10-a">بعد</label><input class="input input--n" id="n10-a" type="number" inputmode="numeric" min="1" max="168" value="24"><label for="n10-b">و</label><input class="input input--n" id="n10-b" type="number" inputmode="numeric" min="1" max="168" value="72"><span>ساعة من آخر رسالة دون حجز</span></div>
+              <span class="meta">تتوقف المتابعة إذا ضغط العميل «أوقف الرسائل»</span>
+            </div>
+            <div class="cell c-ch"><span class="cl">عبر</span><span class="only">واتساب فقط</span></div>
+            <div class="cell c-num"><span class="cl">من رقم · القالب</span>
+              <label class="vh" for="n10-num">الرقم المرسل لمتابعة العميل</label>
+              <select class="select" id="n10-num"><option>رقم الإشعارات · &#x2066;+966 55 000 0001&#x2069;</option><option selected>رقم المحادثات · &#x2066;+966 55 000 0002&#x2069;</option></select>
+              <span><span class="chip chip--ok"><svg class="g" aria-hidden="true"><use href="#g-fill"/></svg>معتمد</span></span>
+            </div>
+            <div class="cell c-state"><span class="cl">هل يُرسل الآن؟</span><span><span class="chip"><svg class="g" aria-hidden="true"><use href="#g-struck"/></svg>متوقف: إرسال الرسائل متوقف</span></span></div>
+            <div class="cell c-sw"><label class="sw"><input type="checkbox" role="switch" checked aria-label="تشغيل متابعة العميل">مفعَّل</label></div>
+          </div>
+        </section>
+
+        <!-- ========== فريق العمل ========== -->
+        <section class="group" aria-labelledby="gh-s">
+          <div class="group-h"><h3 id="gh-s">فريق العمل</h3><span class="meta">3 إشعارات</span></div>
+
+          <div class="row">
+            <div class="cell c-name"><div class="name">عميل جديد</div><div class="when">عند أول رسالة من رقم غير معروف</div></div>
+            <fieldset class="cell c-ch fs"><legend class="cl">عبر</legend>
+              <span class="ch"><label class="check"><input type="checkbox" checked>الجرس</label><label class="check"><input type="checkbox" checked>إشعار الهاتف</label></span>
+            </fieldset>
+            <div class="cell c-num"><span class="cl">من رقم · القالب</span><span class="ro-val">لا ينطبق</span><a href="#" class="meta">النص من صفحة الترجمات</a></div>
+            <div class="cell c-state"><span class="cl">هل يُرسل الآن؟</span><span><span class="chip chip--ok"><svg class="g" aria-hidden="true"><use href="#g-fill"/></svg>يعمل</span></span></div>
+            <div class="cell c-sw"><label class="sw"><input type="checkbox" role="switch" checked aria-label="تشغيل إشعار عميل جديد">مفعَّل</label></div>
+          </div>
+
+          <div class="row">
+            <div class="cell c-name"><div class="name">حلقة تحتاج تأكيدًا</div>
+              <div class="when"><label for="n12-min">قبل الحلقة بـ</label><input class="input input--n" id="n12-min" type="number" inputmode="numeric" min="5" max="240" step="5" value="60"><span>دقيقة إن لم تُؤكَّد</span></div>
+              <span class="meta">يعمل حتى مع إيقاف الرسائل التلقائية</span>
+            </div>
+            <fieldset class="cell c-ch fs"><legend class="cl">عبر</legend>
+              <span class="ch"><label class="check"><input type="checkbox" checked>الجرس</label><label class="check"><input type="checkbox">إشعار الهاتف</label></span>
+            </fieldset>
+            <div class="cell c-num"><span class="cl">من رقم · القالب</span><span class="ro-val">لا ينطبق</span></div>
+            <div class="cell c-state"><span class="cl">هل يُرسل الآن؟</span><span><span class="chip chip--ok"><svg class="g" aria-hidden="true"><use href="#g-fill"/></svg>يعمل</span></span></div>
+            <div class="cell c-sw"><label class="sw"><input type="checkbox" role="switch" checked aria-label="تشغيل إشعار حلقة تحتاج تأكيدًا">مفعَّل</label></div>
+          </div>
+
+          <div class="row">
+            <div class="cell c-name"><div class="name">تعذّر إرسال رسالة <span class="tag"><svg class="i" aria-hidden="true"><use href="#i-lock"/></svg>مقفل</span></div><div class="when">عند فشل إرسال رسالة واتساب نهائيًا</div></div>
+            <fieldset class="cell c-ch fs"><legend class="cl">عبر</legend>
+              <span class="ch"><label class="check"><input type="checkbox" checked>الجرس</label><label class="check"><input type="checkbox" checked>إشعار الهاتف</label></span>
+            </fieldset>
+            <div class="cell c-num"><span class="cl">من رقم · القالب</span><span class="ro-val">لا ينطبق</span></div>
+            <div class="cell c-state"><span class="cl">هل يُرسل الآن؟</span><span><span class="chip chip--ok"><svg class="g" aria-hidden="true"><use href="#g-fill"/></svg>يعمل</span></span></div>
+            <div class="cell c-sw"><span class="lock-note"><svg class="i" aria-hidden="true"><use href="#i-lock"/></svg>لا يمكن إيقافه</span><span class="meta">لكي يعرف الفريق كل رسالة لم تصل</span></div>
+          </div>
+        </section>
+
+        <details class="manual">
+          <summary>ترسل يدويًا من الفريق (<span class="num">5</span>): لا تُشغَّل ولا تُوقَف من هنا</summary>
+          <ul>
+            <li><span class="chip"><svg class="g" aria-hidden="true"><use href="#g-hollow"/></svg>يدوي</span>رابط الدخول يدويًا <span class="meta">من صفحة الحلقة</span></li>
+            <li><span class="chip"><svg class="g" aria-hidden="true"><use href="#g-hollow"/></svg>يدوي</span>طلب التقييم يدويًا <span class="meta">من المحادثة</span></li>
+            <li><span class="chip"><svg class="g" aria-hidden="true"><use href="#g-hollow"/></svg>يدوي</span>رابط استمارة الرأي <span class="meta">من صفحة الحلقة</span></li>
+            <li><span class="chip"><svg class="g" aria-hidden="true"><use href="#g-hollow"/></svg>يدوي</span>قوالب المحادثات <span class="meta">من صندوق المحادثات</span></li>
+            <li><span class="chip"><svg class="g" aria-hidden="true"><use href="#g-hollow"/></svg>يدوي</span>دعوة إلى اجتماع وإلغاؤه <span class="meta">من صفحة الاجتماع</span></li>
+          </ul>
+        </details>
+      </div>
+    </section>
+  </main>
+</div>
+
+<!-- ================= board: states and dialogs ================= -->
+<section class="board" aria-labelledby="board-h">
+  <h2 id="board-h">حالات وأمثلة</h2>
+  <p>كل مثال أدناه حالة من الصفحة نفسها. البيانات تجريبية.</p>
+  <div class="figs">
+
+    <figure>
+      <div class="stage">
+        <div class="dialog" role="dialog" aria-modal="true" aria-labelledby="d1-t" aria-describedby="d1-d">
+          <div class="dlg-head">
+            <span class="dlg-glyph dlg-glyph--bad"><svg class="g" aria-hidden="true"><use href="#g-struck"/></svg></span>
+            <h3 id="d1-t">إيقاف تأكيد الحجز؟</h3>
+            <button class="icon-btn" type="button" aria-label="إغلاق نافذة إيقاف تأكيد الحجز"><svg class="i" aria-hidden="true"><use href="#i-x"/></svg></button>
+          </div>
+          <div class="dlg-body">
+            <p id="d1-d">تأكيد الحجز إشعار أساسي. إذا أوقفته فلن يصل إلى أولياء الأمور أي تأكيد عند حجز حلقة أو تغيير موعدها، ولن يعرفوا الموعد الجديد إلا إذا أبلغهم أحد الفريق بنفسه.</p>
+            <p>يصل هذا الإشعار اليوم إلى <span class="num">214</span> ولي أمر.</p>
+            <div class="field">
+              <label class="label" for="d1-in">اكتب «إيقاف» للتأكيد</label>
+              <input class="input input--wide" id="d1-in" type="text" autocomplete="off" aria-describedby="d1-h">
+              <span class="hint" id="d1-h">يُفعَّل الزر بعد كتابة الكلمة كما هي.</span>
+            </div>
+            <p class="logline"><svg class="i" aria-hidden="true"><use href="#i-log"/></svg><span>سيُسجَّل هذا الإيقاف في سجل النشاط باسمك ووقته.</span></p>
+          </div>
+          <div class="dlg-foot">
+            <button class="btn btn--ghost" type="button">إلغاء</button>
+            <button class="btn btn--danger" type="button" disabled>إيقاف الإشعار</button>
+          </div>
+        </div>
+      </div>
+      <figcaption><b>(أ) إيقاف إشعار أساسي.</b> يظهر عند إغلاق مفتاح «تأكيد الحجز وتغيير الموعد» أو «تقرير الحلقة بصيغة PDF». الزر معطَّل حتى تُكتب «إيقاف» حرفيًا، والإيقاف يُسجَّل في سجل النشاط. لا لون أخضر هنا لأن الفعل هادم.</figcaption>
+    </figure>
+
+    <figure>
+      <div class="stage">
+        <div class="dialog" role="dialog" aria-modal="true" aria-labelledby="d2-t" aria-describedby="d2-d">
+          <div class="dlg-head">
+            <span class="dlg-glyph dlg-glyph--ok"><svg class="g" aria-hidden="true"><use href="#g-fill"/></svg></span>
+            <h3 id="d2-t">تشغيل تذكير اليوم السابق؟</h3>
+            <button class="icon-btn" type="button" aria-label="إغلاق نافذة تشغيل التذكير"><svg class="i" aria-hidden="true"><use href="#i-x"/></svg></button>
+          </div>
+          <div class="dlg-body">
+            <p id="d2-d">سيصل إلى <span class="num">214</span> ولي أمر ابتداءً من الحلقة القادمة، في اليوم السابق الساعة <span class="num">20:00</span> بتوقيت كل ولي أمر.</p>
+            <p class="hint">لن يُرسل شيء الآن لأن إرسال الرسائل متوقف. يبدأ الإرسال عند تفعيله من تبويب «نظرة عامة».</p>
+          </div>
+          <div class="dlg-foot">
+            <span class="hint">يمكنك إيقافه في أي وقت.</span>
+            <button class="btn btn--ghost" type="button">إلغاء</button>
+            <button class="btn btn--primary" type="button">تشغيل</button>
+          </div>
+        </div>
+      </div>
+      <figcaption><b>(ب) تشغيل إشعار يصل إلى الأسر.</b> كل صف موجَّه إلى ولي الأمر أو العميل يسأل قبل التشغيل ويذكر عدد من سيصلهم ومتى. صفوف فريق العمل تُشغَّل دون سؤال.</figcaption>
+    </figure>
+
+    <figure>
+      <div class="sample">
+        <div class="ro-banner"><span class="chip"><svg class="g" aria-hidden="true"><use href="#g-hollow"/></svg>للاطلاع فقط</span><span>تحتاج صلاحية «إدارة الإشعارات» لتغيير هذه القائمة.</span></div>
+        <div class="cat-head" aria-hidden="true"><span>الإشعار ومتى يُرسل</span><span>عبر</span><span>من رقم · القالب</span><span>هل يُرسل الآن؟</span><span>التشغيل</span></div>
+        <div class="row">
+          <div class="cell c-name"><div class="name">تذكير الحلقة</div><div class="when">قبل الحلقة بـ <span class="num">60</span> دقيقة</div></div>
+          <div class="cell c-ch"><span class="cl">عبر</span><span class="ro-val">واتساب</span></div>
+          <div class="cell c-num"><span class="cl">من رقم · القالب</span><span class="ro-val">رقم الإشعارات · <bdi dir="ltr">+966 55 000 0001</bdi></span><span><span class="chip chip--ok"><svg class="g" aria-hidden="true"><use href="#g-fill"/></svg>معتمد</span></span></div>
+          <div class="cell c-state"><span class="cl">هل يُرسل الآن؟</span><span><span class="chip"><svg class="g" aria-hidden="true"><use href="#g-struck"/></svg>متوقف: إرسال الرسائل متوقف</span></span></div>
+          <div class="cell c-sw"><span class="ro-val">مفعَّل</span></div>
+        </div>
+      </div>
+      <figcaption><b>(ج) للاطلاع فقط.</b> لمن لا يملك صلاحية إدارة الإشعارات: القيم نصوص، بلا مفاتيح ولا حقول ولا أزرار حفظ. الحالة الفعلية تبقى ظاهرة.</figcaption>
+    </figure>
+
+    <figure>
+      <div class="narrow">
+        <div class="row">
+          <div class="cell c-name"><div class="name">تأكيد الحجز وتغيير الموعد <span class="tag"><svg class="g" aria-hidden="true"><use href="#g-fill"/></svg>أساسي</span></div><div class="when">فور حجز حلقة أو تغيير موعدها</div></div>
+          <div class="cell c-ch"><span class="cl">عبر</span><span class="only">واتساب فقط</span></div>
+          <div class="cell c-num"><span class="cl">من رقم · القالب</span>
+            <label class="vh" for="m1-num">الرقم المرسل لتأكيد الحجز</label>
+            <select class="select" id="m1-num"><option selected>رقم الإشعارات · &#x2066;+966 55 000 0001&#x2069;</option><option>رقم المحادثات · &#x2066;+966 55 000 0002&#x2069;</option></select>
+            <span><span class="chip chip--ok"><svg class="g" aria-hidden="true"><use href="#g-fill"/></svg>معتمد</span></span></div>
+          <div class="cell c-state"><span class="cl">هل يُرسل الآن؟</span><span><span class="chip"><svg class="g" aria-hidden="true"><use href="#g-struck"/></svg>متوقف: إرسال الرسائل متوقف</span></span></div>
+          <div class="cell c-sw"><label class="sw"><input type="checkbox" role="switch" checked aria-label="تشغيل تأكيد الحجز"><span class="vh">مفعَّل</span></label></div>
+        </div>
+        <div class="row is-dirty">
+          <div class="cell c-name"><div class="name">تذكير الحلقة</div>
+            <div class="when"><label for="m2-min">قبل الحلقة بـ</label><input class="input input--n" id="m2-min" type="number" inputmode="numeric" min="5" max="240" step="5" value="45"><span>دقيقة</span></div></div>
+          <div class="cell c-ch"><span class="cl">عبر</span><span class="only">واتساب فقط</span></div>
+          <div class="cell c-state"><span class="cl">هل يُرسل الآن؟</span><span><span class="chip"><svg class="g" aria-hidden="true"><use href="#g-struck"/></svg>متوقف: إرسال الرسائل متوقف</span></span></div>
+          <div class="cell c-sw"><label class="sw"><input type="checkbox" role="switch" checked aria-label="تشغيل تذكير الحلقة"><span class="vh">مفعَّل</span></label></div>
+          <div class="dirty-bar">
+            <span class="unsaved"><svg class="g" aria-hidden="true"><use href="#g-half"/></svg>لم يُحفظ</span>
+            <span class="acts"><button class="btn btn--ghost btn--sm" type="button">تراجع</button><button class="btn btn--secondary btn--sm" type="button">حفظ</button></span>
+          </div>
+        </div>
+        <div class="row">
+          <div class="cell c-name"><div class="name">تذكير المعلم/ة بالحلقة</div>
+            <div class="when"><label for="m3-min">قبل الحلقة بـ</label><input class="input input--n" id="m3-min" type="number" inputmode="numeric" min="5" max="240" step="5" value="30"><span>دقيقة</span></div></div>
+          <fieldset class="cell c-ch fs"><legend class="cl">عبر</legend>
+            <span class="ch"><label class="check"><input type="checkbox" checked>واتساب</label><label class="check"><input type="checkbox">الجرس</label><label class="check"><input type="checkbox" checked>إشعار الهاتف</label></span></fieldset>
+          <div class="cell c-state"><span class="cl">هل يُرسل الآن؟</span><span><span class="chip"><svg class="g" aria-hidden="true"><use href="#g-half"/></svg>يعمل عبر إشعار الهاتف فقط</span></span></div>
+          <div class="cell c-sw"><label class="sw"><input type="checkbox" role="switch" checked aria-label="تشغيل تذكير المعلم/ة"><span class="vh">مفعَّل</span></label></div>
+        </div>
+      </div>
+      <figcaption><b>(د) المكتب مقابل عرض 390px.</b> على المكتب يأخذ كل إشعار سطرًا واحدًا بخمسة أعمدة تحت رأس الجدول. تحت 720px من عرض الصفحة يتكدّس الصف: الاسم والمفتاح في الأعلى، ثم القناة والرقم والحالة كلٌّ بعنوانه الصغير، والحقول بخط 16px وارتفاع 44px، وأزرار «حفظ» و«تراجع» بعرض الصف.</figcaption>
+    </figure>
+
+  </div>
+</section>
+</body>
+</html>
