@@ -5190,7 +5190,14 @@
       "label": "Messages state",
       "autoOn": "Automatic messages: on",
       "autoOff": "Automatic messages: off",
-      "openSending": "Open «Sending» to change the sending state"
+      "openSending": "Open «Sending» to change the sending state",
+      "queued": {
+        "zero": "Waiting: no messages",
+        "one": "Waiting: 1 message",
+        "two": "Waiting: 2 messages",
+        "few": "Waiting: {n} messages",
+        "other": "Waiting: {n} messages"
+      }
     },
     "timing": {
       "minutesLabel": "Before the lesson by",
@@ -5201,7 +5208,7 @@
       "dayBeforeSame": "At the lesson’s own time",
       "dayBeforeText": "The day before at {time}",
       "dayBeforeZone": "in the guardian’s time zone",
-      "sameAsFamily": "Same as the family reminder",
+      "sameAsFamily": "Same as the guardian reminder",
       "followUpLabel": "Follow-up {n} after",
       "followUpUnit": "hours",
       "followUpAdd": "Add a follow-up",
@@ -5245,7 +5252,15 @@
     },
     "approvalSomeHint": "Meta has not approved some variants of the template, so lessons that use them get nothing.",
     "blockers": {
-      "classroom_off": "because the virtual classroom is not set up"
+      "classroom_off": "because the academy classroom is not in use now"
+    },
+    "shortBlockers": {
+      "messaging_off": "Sending paused",
+      "not_configured": "WhatsApp not set up",
+      "auto_off": "Automatic off",
+      "row_off": "Turned off here",
+      "template_not_approved": "Template not approved",
+      "classroom_off": "Classroom not in use"
     },
     "switchName": "Turn on «{name}»",
     "locked": "Cannot be turned off",
@@ -5282,12 +5297,24 @@
     "essentialOff": {
       "title": "Turn off «{name}»?",
       "body": "Families rely on this notification. Turning it off is recorded in the activity log.",
-      "label": "To confirm, type: {word}",
+      "label": "Type: {word}",
       "yes": "Turn it off"
     },
     "manualIntro": "These messages go out when a team member presses send, so they are not switched on or off here.",
     "phoneOpen": "Edit «{name}»",
     "phoneView": "View «{name}»",
+    "unsavedCount": {
+      "one": "1 notification not saved",
+      "two": "2 notifications not saved",
+      "few": "{n} notifications not saved",
+      "other": "{n} notifications not saved"
+    },
+    "discard": {
+      "title": "Discard the changes?",
+      "body": "Your changes to this notification are not saved.",
+      "yes": "Discard the changes",
+      "keep": "Keep editing"
+    },
     "timingMoved": "The reminder and follow-up timings are now on the «Notifications» tab, each in its notification’s row.",
     "timingMovedLink": "Open «Notifications»"
   },

@@ -20,15 +20,17 @@ const head = 'border-b border-rule-strong px-2 py-1.5 text-start text-xs font-se
 export interface RulesTableProps {
   entries: readonly NotificationEntryView[];
   lines: readonly LineHealthView[];
+  /** The audience tab in view (held by RulesSection, so the unsaved count can show a row's tab). */
+  tab: AudienceTab;
+  onTab: (tab: AudienceTab) => void;
 }
 
 /**
  * «الإشعارات», one audience at a time (ولي الأمر · المعلم/ة · العميل · فريق الأكاديمية · يدوي):
  * five columns from 640px; on a phone two (الإشعار | التشغيل) and a tap opens the row's sheet.
  */
-export function RulesTable({ entries, lines }: RulesTableProps) {
+export function RulesTable({ entries, lines, tab, onTab }: RulesTableProps) {
   const phone = usePhone();
-  const [tab, setTab] = useState<AudienceTab>('guardian');
   const [open, setOpen] = useState<string | null>(null);
   const tabs = audienceTabs(entries);
   const label = tabs.find((x) => x.value === tab)?.label ?? t.notificationCatalogue.audience.guardian;
@@ -38,7 +40,7 @@ export function RulesTable({ entries, lines }: RulesTableProps) {
   const opened = entries.find((e) => e.key === open);
   return (
     <div className="grid min-w-0 gap-2">
-      <Tabs label={t.settingsPages.audiences} tabs={tabs} value={tab} onChange={setTab} idPrefix={TABS_ID} />
+      <Tabs label={t.settingsPages.audiences} tabs={tabs} value={tab} onChange={onTab} idPrefix={TABS_ID} />
       <div role="tabpanel" id={ids.panel} aria-labelledby={ids.tab} className="min-w-0">
         {rows.length === 0 ? (
           <p className="py-3 text-sm text-ink-3">{t.settingsPages.audienceEmpty}</p>

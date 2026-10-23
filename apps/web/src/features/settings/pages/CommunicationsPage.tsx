@@ -15,7 +15,7 @@ export interface CommunicationsPageProps {
   /** The tab in view (`?tab=`, «الإرسال» by default). */
   tab: CommunicationsTab;
   onTab: (tab: CommunicationsTab) => void;
-  /** Asks before leaving the page with unsaved timing fields (the route passes LeaveGuard). */
+  /** Asks before leaving the page with unsaved timing fields or rule rows (the route passes LeaveGuard). */
   renderGuard?: (names: readonly string[]) => ReactNode;
 }
 

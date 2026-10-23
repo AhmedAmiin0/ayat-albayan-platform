@@ -16,6 +16,13 @@ const r = t.notificationRules;
 const c = t.notificationCatalogue;
 const name = c.entries.lesson_reminder.name;
 
+/** Taps the reminder's row button; answers its sheet. */
+async function openSheet(): Promise<HTMLElement> {
+  const row = await findRow('lesson_reminder');
+  fireEvent.click(within(row).getByRole('button', { name: new RegExp(r.phoneOpen.replace('{name}', name)) }));
+  return screen.getByRole('dialog', { name });
+}
+
 beforeEach(() => {
   vi.stubGlobal('matchMedia', vi.fn(() => ({ matches: true, addEventListener: vi.fn(), removeEventListener: vi.fn() })));
 });
@@ -32,7 +39,8 @@ describe('«الإشعارات» below 640px', () => {
     const row = await findRow('lesson_reminder');
     const heads = within(screen.getByRole('table')).getAllByRole('columnheader').map((h) => h.textContent);
     expect(heads).toEqual([r.columns.name, r.columns.switch]);
-    expect(row.textContent).toContain(`${c.states.off} · ${c.blockers.messaging_off}`);
+    expect(row.textContent).toContain(`${c.states.off} · ${r.shortBlockers.messaging_off}`);
+    expect(row.textContent).not.toContain(c.blockers.messaging_off);
     expect(within(row).queryByRole('spinbutton')).toBeNull();
     expect(within(row).queryByRole('switch')).toBeNull();
   });
@@ -47,6 +55,29 @@ describe('«الإشعارات» below 640px', () => {
     apiSend.mockResolvedValue(undefined);
     fireEvent.click(within(sheet).getByRole('button', { name: t.common.save }));
     await waitFor(() => expect(apiSend).toHaveBeenCalledWith('PATCH', '/admin/notifications/lesson_reminder', { timing: { minutes_before: 30 } }));
+    await waitFor(() => expect(screen.queryByRole('dialog')).toBeNull());
+  });
+
+  it('closing a dirty sheet asks «تجاهل التغييرات؟»: keep stays, discard closes and drops the edit', async () => {
+    renderRules({ apiFetch });
+    const sheet = await openSheet();
+    fireEvent.change(within(sheet).getByLabelText(r.timing.minutesLabel), { target: { value: '30' } });
+    fireEvent.click(within(sheet).getByRole('button', { name: t.common.cancel }));
+    fireEvent.click(screen.getByRole('button', { name: r.discard.keep }));
+    expect(screen.queryByRole('dialog', { name: r.discard.title })).toBeNull();
+    expect((within(sheet).getByLabelText(r.timing.minutesLabel) as HTMLInputElement).value).toBe('30');
+    fireEvent.click(within(sheet).getByRole('button', { name: t.common.cancel }));
+    expect(screen.getByRole('dialog', { name: r.discard.title })).toBeTruthy();
+    fireEvent.click(screen.getByRole('button', { name: r.discard.yes }));
+    await waitFor(() => expect(screen.queryByRole('dialog')).toBeNull());
+    const again = await openSheet();
+    expect((within(again).getByLabelText(r.timing.minutesLabel) as HTMLInputElement).value).toBe('60');
+    expect(apiSend).not.toHaveBeenCalled();
+  });
+
+  it('closing an untouched sheet does not ask', async () => {
+    renderRules({ apiFetch });
+    fireEvent.click(within(await openSheet()).getByRole('button', { name: t.common.cancel }));
     await waitFor(() => expect(screen.queryByRole('dialog')).toBeNull());
   });
 

@@ -8,13 +8,14 @@ const r = t.notificationRules;
 
 /**
  * Under a dirty row: «لم يُحفظ: …» (what changed, «… بدلًا من …»), then «حفظ» / «تراجع» («حفظ» is
- * aria-disabled while the draft does not parse); a refused save in words. Polite live region.
+ * aria-disabled while the draft does not parse); a refused save in words. Not a live region: the
+ * section's one always-mounted polite region (RulesSection) announces a failure, so it is never missed.
  */
 export function RuleRowActions({ row, name }: { row: RuleRowState; name: string }) {
   const invalid = !row.result.ok;
   const summary = row.result.ok ? row.result.changes.join(t.common.listSeparator) : row.result.error;
   return (
-    <div aria-live="polite" className="grid gap-1.5">
+    <div className="grid gap-1.5">
       {row.dirty && (
         <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5">
           <p className="text-xs text-ink-2">{fillText(r.unsaved, { changes: summary })}</p>

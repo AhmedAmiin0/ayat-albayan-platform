@@ -6,6 +6,7 @@ import { CONFIG_QUERY_KEYS } from '@/lib/query-keys';
 import { CATALOGUE_QUERY_KEY } from '../notification-catalogue/catalogue-api';
 import { draftOf, draftResult, isDirty, type DraftResult, type RuleDraft } from './rule-draft';
 import { numberName, useRules } from './rules-context';
+import { failureText } from './rule-text';
 import { patchRule, ruleFailure, type RuleFailure } from './rules-api';
 
 export interface SwitchInput {
@@ -44,17 +45,28 @@ function afterSave(client: QueryClient, updated: unknown) {
   void client.invalidateQueries({ queryKey: CONFIG_QUERY_KEYS.settings });
 }
 
-/** One editable row of «الإشعارات»: its draft, its per-row save and its switch (docs/26b §3). */
+/**
+ * One editable row of «الإشعارات»: its draft (kept in the shared RuleDrafts, so a tab switch keeps it),
+ * its per-row save and its switch (docs/26b §3). A refused save is also announced by the section.
+ */
 export function useRuleRow(rule: NotificationRuleView): RuleRowState {
   const api = useRules();
   const client = useQueryClient();
-  const [edits, setEdits] = useState<RuleDraft | null>(null);
+  const edits = api.drafts.get(rule.key);
+  const setEdits = (next: RuleDraft | null) => api.drafts.put(rule.key, next);
   const [failure, setFailure] = useState<RuleFailure | null>(null);
   const mutation = useMutation({ mutationFn: patchRule });
   const draft = edits ?? draftOf(rule);
-  const result = draftResult({ rule, draft, numberName: (id) => numberName(api.numbers, id) });
+  const words = { rule, numberName: (id: string | null) => numberName(api.numbers, id) };
+  const result = draftResult({ ...words, draft });
+  const fail = (error: unknown) => {
+    const why = ruleFailure(error);
+    setFailure(why);
+    if (why !== 'confirmation_required') api.announce(`${t.notificationCatalogue.entries[rule.key].name}: ${failureText(why)}`);
+  };
   const send = (body: RulePatchInput, onDone?: () => void) => {
     setFailure(null);
+    api.announce('');
     mutation.mutate(
       { key: rule.key, body },
       {
@@ -64,16 +76,19 @@ export function useRuleRow(rule: NotificationRuleView): RuleRowState {
           api.onSaved(t.notificationRules.saved);
           onDone?.();
         },
-        onError: (error) => setFailure(ruleFailure(error)),
+        onError: fail,
       },
     );
   };
   return {
     rule,
     draft,
-    set: (patch) => setEdits({ ...draft, ...patch }),
+    set: (patch) => {
+      const next = { ...draft, ...patch };
+      setEdits(isDirty(draftResult({ ...words, draft: next })) ? next : null);
+    },
     result,
-    dirty: edits !== null && isDirty(result),
+    dirty: edits !== undefined && isDirty(result),
     revert: () => {
       setEdits(null);
       setFailure(null);
