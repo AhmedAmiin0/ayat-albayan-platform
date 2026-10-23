@@ -41,10 +41,22 @@ const CHAT_KEYS = [
   'WA_CHAT_APP_ID',
 ] as const;
 
+/**
+ * Set by envFrom only on a config built from the numbers overlay (module mode, docs/23): there a line
+ * never borrows another line's credentials, so a chat number without a token is not configured.
+ */
+export interface LineMode {
+  readonly linesFromNumbers?: true;
+}
+
+/** The chat token: its own; under legacy only, WA_ACCESS_TOKEN when unset (the PR #142 item 15 rule). */
+const chatToken = (env: Env): string | undefined =>
+  env.linesFromNumbers === true ? env.WA_CHAT_ACCESS_TOKEN : (env.WA_CHAT_ACCESS_TOKEN ?? env.WA_ACCESS_TOKEN);
+
 function chatEnv(env: Env, base: string | undefined): MetaLineEnv | null {
   const phoneNumberId = env.WA_CHAT_PHONE_NUMBER_ID;
   const wabaId = env.WA_CHAT_WABA_ID;
-  const accessToken = env.WA_CHAT_ACCESS_TOKEN ?? env.WA_ACCESS_TOKEN;
+  const accessToken = chatToken(env);
   if (!base || !phoneNumberId || !wabaId || !accessToken) return null;
   if (phoneNumberId === env.WA_PHONE_NUMBER_ID) return null;
   const conn = { base, version: env.WA_API_VERSION, phoneNumberId, wabaId, accessToken };
@@ -66,7 +78,7 @@ export function lineProvider(env: Env, line: WaLine): WaProvider {
 
 /**
  * Each line under its own provider. meta: notifications = today's config (appId = WA_APP_ID); chat =
- * its own ids, token fallback, appId = WA_CHAT_APP_ID (none when unset). kapso: env.kapso.ts kapsoLine (same ids, Kapso base + key).
+ * its own ids, token fallback (legacy only, chatToken), appId = WA_CHAT_APP_ID (none when unset). kapso: env.kapso.ts kapsoLine (same ids, Kapso base + key).
  */
 export function lineEnvs(env: Env): LineEnvs {
   const base = env.WA_API_BASE?.replace(/\/+$/, '');
@@ -124,7 +136,7 @@ export function chatKeyGaps(env: Env): string[] {
   const present = {
     WA_CHAT_PHONE_NUMBER_ID: env.WA_CHAT_PHONE_NUMBER_ID,
     WA_CHAT_WABA_ID: env.WA_CHAT_WABA_ID,
-    WA_CHAT_ACCESS_TOKEN: env.WA_CHAT_ACCESS_TOKEN ?? env.WA_ACCESS_TOKEN,
+    WA_CHAT_ACCESS_TOKEN: chatToken(env),
   };
   return Object.entries(present)
     .filter(([, v]) => v === undefined)

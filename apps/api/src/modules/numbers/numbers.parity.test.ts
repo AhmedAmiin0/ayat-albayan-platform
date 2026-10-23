@@ -35,4 +35,13 @@ describe('parity: the legacy and module paths field by field', () => {
     const roles = parityRoles({ legacy: env({ WA_CHAT_APP_SECRET: 'chat-secret-fake' }), module: env(), numbers: {} });
     expect(differences(roles)).toEqual([]);
   });
+
+  it('module mode: a chat number without a token is unconfigured there, while legacy borrows (flip blocked)', () => {
+    const chat = { WA_CHAT_PHONE_NUMBER_ID: '1000000002', WA_CHAT_WABA_ID: '2000000002' };
+    const module = { ...env(chat), linesFromNumbers: true as const };
+    const diff = differences(parityRoles({ legacy: env(chat), module, numbers: {} }));
+    expect(diff).toContainEqual({ role: 'chat', field: 'configured', state: 'different' });
+    expect(diff).toContainEqual({ role: 'chat', field: 'access_token', state: 'missing' });
+    expect(diff).not.toContainEqual(expect.objectContaining({ role: 'chat', field: 'webhook_phone_number_id' }));
+  });
 });
