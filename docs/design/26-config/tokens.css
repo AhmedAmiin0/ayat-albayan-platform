@@ -333,7 +333,10 @@ figcaption { font-size: 13px; font-weight: 600; color: var(--ink-3); }
 .vrow--dirty .input { border-color: var(--lapis); }
 .vrow--conflict { margin-block: 6px; border: 1px solid color-mix(in oklab, var(--saffron) 45%, transparent); border-inline-start: 4px solid var(--saffron); border-radius: var(--r-md); }
 .vrow--saving .vedit { opacity: .7; }
-.vrow .alert { grid-column: 1 / -1; }
+.vrow--conflict { grid-template-areas: "head edit" "alert alert" "meta actions"; }
+.vrow .alert { grid-area: alert; }
+.check { display: inline-flex; align-items: center; gap: 8px; min-block-size: 32px; cursor: pointer; }
+.check input { inline-size: 18px; block-size: 18px; margin: 0; flex: none; accent-color: var(--lapis); }
 .shape { display: grid; gap: 10px; padding-block: 10px 12px; padding-inline: 12px; border: 1px solid var(--rule); border-radius: var(--r-md); }
 .shape legend { padding-inline: 4px; font-size: 12px; font-weight: 600; color: var(--ink-3); }
 .null-pair { display: grid; gap: 8px; }
@@ -346,7 +349,9 @@ figcaption { font-size: 13px; font-weight: 600; color: var(--ink-3); }
 }
 @container page (max-width: 640px) {
   .vrow { grid-template-columns: minmax(0, 1fr); grid-template-areas: "head" "edit" "meta" "actions"; padding-inline: 4px; }
+  .vrow--conflict { grid-template-areas: "head" "edit" "alert" "meta" "actions"; }
   .vrow--dirty, .vrow--conflict { padding-inline: 12px; }
+  .check { min-block-size: var(--h-touch); }
   .vactions .btn { flex: 1 1 100%; }
   .unit-field .input { inline-size: 120px; }
   .toolbar .filters { flex-wrap: nowrap; overflow-x: auto; inline-size: 100%; }
