@@ -5756,7 +5756,7 @@
       "auto_off": "automatic messages are off",
       "row_off": "this notification is off",
       "template_not_approved": "Meta has not approved the template yet",
-      "classroom_off": "because the academy classroom is not in use"
+      "classroom_off": "the academy classroom is not in use"
     },
     "reach": {
       "guardian": {
