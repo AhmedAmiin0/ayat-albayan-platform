@@ -1,7 +1,7 @@
 import {
   normalizePhone,
   SETTING_FIELD_OF,
-  SETTING_KEYS,
+  SETTINGS_LAYOUT,
   settingDef,
   settingsUpdateSchema,
   type AcademySettings,
@@ -22,8 +22,8 @@ export type SettingsForm = Record<string, string | boolean>;
 export type SettingsErrors = Partial<Record<string, string>>;
 export type SettingsResult = { ok: true; value: SettingsUpdate } | { ok: false; errors: SettingsErrors };
 
-/** The keys the generic form edits, in registry (page) order. */
-export const FORM_KEYS: SettingKey[] = SETTING_KEYS.filter((k) => settingDef(k).form !== false);
+/** The keys the generic form edits, in page order (SETTINGS_LAYOUT, section by section). */
+export const FORM_KEYS: SettingKey[] = (Object.values(SETTINGS_LAYOUT).flat() as SettingKey[]).filter((k) => settingDef(k).form !== false);
 
 export const onKey = (field: string): string => `${field}On`;
 export const str = (form: SettingsForm, key: string): string => {

@@ -29,10 +29,3 @@ export const joinWindowConfig = (s: Pick<AcademySettings, 'join_opens_before_min
   opensBeforeMin: s.join_opens_before_min,
   closesAfterMin: s.join_closes_after_min,
 });
-
-/** Upload limit in bytes (upload_max_mb, at most the buckets' 10 MB). */
-export const uploadMaxBytes = (s: Pick<AcademySettings, 'upload_max_mb'>): number => s.upload_max_mb * 1024 * 1024;
-
-/** https://wa.me/<digits> for the academy's WhatsApp number. */
-export const academyWhatsappUrl = (s: Pick<AcademySettings, 'academy_whatsapp_e164'>): string =>
-  `https://wa.me/${s.academy_whatsapp_e164.replace(/^\+/, '')}`;

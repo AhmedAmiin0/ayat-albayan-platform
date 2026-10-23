@@ -1,4 +1,4 @@
-import { settingDef, type AcademySettings } from '@ab/shared';
+import { settingSection, type AcademySettings } from '@ab/shared';
 import { useId, type ReactNode } from 'react';
 import { ThemeToggle } from '@/components/ui/theme-toggle';
 import { CatalogueSection } from '@/features/notification-catalogue/CatalogueSection';
@@ -32,7 +32,7 @@ export function Section({ id, children }: { id: SettingsSection | 'custom' | 'in
 /** The registry's form fields of one section, in registry order (nothing when it has none). */
 export function SectionFields({ id, state }: { id: SettingsSection; state: SettingsFormState }) {
   const { query } = useSettingsView();
-  const keys = FORM_KEYS.filter((k) => settingDef(k).section === id && matchesSetting(k, query));
+  const keys = FORM_KEYS.filter((k) => settingSection(k) === id && matchesSetting(k, query));
   if (keys.length === 0) return null;
   return (
     <div>
@@ -67,7 +67,7 @@ export function MessagingSection({ settings, state }: { settings: AcademySetting
   const showLines = linesMatch(query);
   const showCatalogue = catalogueMatch(query);
   const showTemplates = templatesMatch(query);
-  const hasFields = FORM_KEYS.some((k) => settingDef(k).section === 'messaging' && matchesSetting(k, query));
+  const hasFields = FORM_KEYS.some((k) => settingSection(k) === 'messaging' && matchesSetting(k, query));
   const searching = query.trim() !== '';
   if (searching && !showSending && !showAuto && !showFeedback && !showLines && !showCatalogue && !hasFields && !showTemplates) return null;
   return (
@@ -98,7 +98,7 @@ export function MessagingSection({ settings, state }: { settings: AcademySetting
 /** Any section made only of registry fields: schedule, classroom, reports, accounts, uploads, academy. */
 export function FieldsSection({ id, state }: { id: SettingsSection; state: SettingsFormState }) {
   const { query } = useSettingsView();
-  if (query.trim() !== '' && !FORM_KEYS.some((k) => settingDef(k).section === id && matchesSetting(k, query))) return null;
+  if (query.trim() !== '' && !FORM_KEYS.some((k) => settingSection(k) === id && matchesSetting(k, query))) return null;
   return (
     <Section id={id}>
       <SectionFields id={id} state={state} />
