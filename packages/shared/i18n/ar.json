@@ -5319,7 +5319,21 @@
     "title": "القيم"
   },
   "settingsPages": {
-    "communications": "التواصل"
+    "communications": "التواصل",
+    "google": "مزامنة Google",
+    "crumbs": "مسار الصفحة",
+    "tabs": "أقسام الصفحة",
+    "communicationsTabs": {
+      "sending": "الإرسال",
+      "numbers": "الأرقام",
+      "catalogue": "ماذا يُرسل ومتى",
+      "templates": "القوالب"
+    },
+    "sendingNow": "حالة الإرسال الآن",
+    "sendingState": "إرسال الرسائل: {state}",
+    "timingTitle": "مواعيد الرسائل",
+    "audiences": "لمن يُرسل",
+    "audienceEmpty": "لا توجد إشعارات لهذه الفئة."
   },
   "mobileValues": {
     "title": "القيم"

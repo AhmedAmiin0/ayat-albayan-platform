@@ -5319,7 +5319,21 @@
     "title": "Values"
   },
   "settingsPages": {
-    "communications": "Communications"
+    "communications": "Communications",
+    "google": "Google sync",
+    "crumbs": "Breadcrumb",
+    "tabs": "Page sections",
+    "communicationsTabs": {
+      "sending": "Sending",
+      "numbers": "Numbers",
+      "catalogue": "What is sent and when",
+      "templates": "Templates"
+    },
+    "sendingNow": "Sending right now",
+    "sendingState": "Message sending: {state}",
+    "timingTitle": "Message timing",
+    "audiences": "Who receives it",
+    "audienceEmpty": "No notifications for this audience."
   },
   "mobileValues": {
     "title": "Values"

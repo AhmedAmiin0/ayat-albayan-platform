@@ -3,6 +3,7 @@ import { fireEvent, screen, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { renderWithClient, routeFetch } from '@/features/inbox/test-utils';
 import { t } from '@/lib/i18n';
+import { rowsOf } from './catalogue-tabs';
 import { CatalogueSection } from './CatalogueSection';
 
 const apiFetch = vi.hoisted(() => vi.fn());
@@ -27,11 +28,13 @@ function renderSection(overview: NotificationsOverview | Error = OVERVIEW) {
 afterEach(() => apiFetch.mockReset());
 
 describe('«ماذا يُرسل ومتى» (read-only)', () => {
-  it('lists every row by name with its state, first blocker, audience and number; no switch to press', async () => {
+  it('lists the guardian rows first, by name with its state, first blocker and number; no switch to press', async () => {
     renderSection();
     const region = await screen.findByRole('region', { name: c.title });
     expect(await within(region).findByText(c.entries.report_ready.name)).toBeTruthy();
-    expect(within(region).getAllByRole('listitem').length).toBeGreaterThan(OVERVIEW.entries.length);
+    const table = within(region).getByRole('table');
+    expect(within(table).getAllByRole('row')).toHaveLength(rowsOf(OVERVIEW.entries, 'guardian').length + 1);
+    expect(within(region).getByRole('tab', { selected: true }).textContent).toContain(c.audience.guardian);
     const report = region.querySelector('[data-key="report_ready"]') as HTMLElement;
     expect(within(report).getByText(c.states.off)).toBeTruthy();
     expect(within(report).getByText(c.blockers.messaging_off)).toBeTruthy();
@@ -39,6 +42,18 @@ describe('«ماذا يُرسل ومتى» (read-only)', () => {
     expect(within(report).getByText('+966 55 123 4567')).toBeTruthy();
     expect(within(region).queryAllByRole('checkbox')).toHaveLength(0);
     expect(within(region).getByText(c.readOnly)).toBeTruthy();
+  });
+
+  it('one audience at a time: another tab shows its rows only; «يدوي» lists the manual messages', async () => {
+    renderSection();
+    const region = await screen.findByRole('region', { name: c.title });
+    await within(region).findByText(c.entries.report_ready.name);
+    fireEvent.click(within(region).getByRole('tab', { name: new RegExp(c.audience.teacher) }));
+    expect(within(region).getByText(c.entries.teacher_new_student.name)).toBeTruthy();
+    expect(within(region).queryByText(c.entries.report_ready.name)).toBeNull();
+    fireEvent.click(within(region).getByRole('tab', { name: new RegExp(c.states.manual) }));
+    expect(within(region).getByText(c.entries.inbox_templates.name)).toBeTruthy();
+    expect(within(region).queryByText(c.entries.teacher_new_student.name)).toBeNull();
   });
 
   it('the kept number shows without a check; a line never checked says so', async () => {

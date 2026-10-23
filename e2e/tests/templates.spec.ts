@@ -6,7 +6,7 @@ import {
 } from '../support/template-registry';
 import { stubReset, stubTemplateStatus } from '../support/wa-stub';
 
-// Template registry on /admin/settings (R-MSG-01, T2/T3): the health check reads «Meta» (the
+// Template registry on «التواصل» › «القوالب» (/admin/settings/communications?tab=templates; R-MSG-01, T2/T3): the health check reads «Meta» (the
 // wa-stub), a paused template needs attention, a missing one and the document-header report_ready
 // are submitted only after the confirm dialog (report_ready via the Resumable Upload API).
 
@@ -15,7 +15,7 @@ const status = ar.enums.templateStatus;
 const row = (page: Page, key: keyof typeof t.names) => page.getByRole('row').filter({ hasText: t.names[key] });
 
 async function openSettings(page: Page): Promise<void> {
-  await page.goto('/admin/settings');
+  await page.goto('/admin/settings/communications?tab=templates');
   await expect(page.getByRole('heading', { name: t.title })).toBeVisible();
 }
 

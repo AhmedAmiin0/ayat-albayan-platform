@@ -1,0 +1,80 @@
+import { catalogueViews, SETTING_DEFAULTS } from '@ab/shared';
+import { fireEvent, screen, within } from '@testing-library/react';
+import { afterEach, describe, expect, it, vi } from 'vitest';
+import { t } from '@/lib/i18n';
+import { renderCommunications } from './communications-test-kit';
+
+const apiFetch = vi.hoisted(() => vi.fn());
+vi.mock('@/lib/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+vi.mock('@tanstack/react-router', async (orig) => ({
+  ...(await orig<object>()),
+  Link: (await import('@/features/inbox/test-utils')).MockLink,
+}));
+
+const p = t.settingsPages;
+const s = t.templates.settings;
+const tab = (name: string) => screen.getByRole('tab', { name });
+const CATALOGUE = {
+  entries: catalogueViews({ settings: SETTING_DEFAULTS, gateReason: 'switch_off', templates: new Map() }),
+  lines: [],
+};
+
+afterEach(() => apiFetch.mockReset());
+
+describe('«التواصل» (/admin/settings/communications)', () => {
+  it('one title, the way back to «الإعدادات», and the sending state in the head', async () => {
+    renderCommunications({ apiFetch });
+    expect(screen.getByRole('heading', { level: 1 }).textContent).toBe(p.communications);
+    const crumbs = screen.getByRole('navigation', { name: p.crumbs });
+    expect(within(crumbs).getByRole('link', { name: t.settings.title }).getAttribute('href')).toMatch(/^\/admin\/settings\??$/);
+    const state = await screen.findByRole('group', { name: p.sendingNow });
+    expect(state.textContent).toBe(p.sendingState.replace('{state}', s.off));
+  });
+
+  it('four tabs, «الإرسال» first and selected: the switches, nothing of the other tabs', async () => {
+    renderCommunications({ apiFetch });
+    const tabs = within(screen.getByRole('tablist', { name: p.tabs })).getAllByRole('tab');
+    expect(tabs.map((x) => x.textContent)).toEqual(Object.values(p.communicationsTabs));
+    expect(tab(p.communicationsTabs.sending).getAttribute('aria-selected')).toBe('true');
+    expect(await screen.findByRole('button', { name: s.enableTitle })).toBeTruthy();
+    expect(screen.getByText(s.autoMessages)).toBeTruthy();
+    expect(screen.getByRole('tabpanel', { name: p.communicationsTabs.sending })).toBeTruthy();
+    expect(screen.queryByRole('region', { name: t.notificationCatalogue.title })).toBeNull();
+    expect(screen.queryByRole('heading', { name: t.templates.title })).toBeNull();
+  });
+
+  it('«ماذا يُرسل ومتى»: the catalogue (guardian first, report_ready in view) and the timing fields', async () => {
+    renderCommunications({ apiFetch, catalogue: CATALOGUE });
+    fireEvent.click(tab(p.communicationsTabs.catalogue));
+    const region = await screen.findByRole('region', { name: t.notificationCatalogue.title });
+    await within(region).findByText(t.notificationCatalogue.entries.report_ready.name);
+    expect(region.querySelector('[data-key="report_ready"]')).toBeTruthy();
+    expect(screen.getByRole('heading', { name: p.timingTitle })).toBeTruthy();
+    expect(screen.getByLabelText(s.followUpHours)).toBeTruthy();
+    expect(screen.getByRole('button', { name: t.common.save })).toBeTruthy();
+  });
+
+  it('«الأرقام»: the numbers and the WhatsApp lines', async () => {
+    renderCommunications({ apiFetch, tab: 'numbers' });
+    expect(await screen.findByRole('heading', { name: t.numbers.title })).toBeTruthy();
+    expect(screen.getByRole('heading', { name: s.lines.title })).toBeTruthy();
+    expect(screen.getByRole('button', { name: s.lines.check })).toBeTruthy();
+    expect(screen.queryByRole('button', { name: s.enableTitle })).toBeNull();
+  });
+
+  it('«القوالب»: the templates per number, and the sending state still in the head', async () => {
+    renderCommunications({ apiFetch, tab: 'templates' });
+    expect(await screen.findByRole('heading', { name: t.templates.title })).toBeTruthy();
+    expect(await screen.findAllByTestId('template-line')).toHaveLength(2);
+    expect(screen.getByRole('group', { name: p.sendingNow })).toBeTruthy();
+  });
+
+  it('no role=status at rest on any tab', async () => {
+    renderCommunications({ apiFetch });
+    await screen.findByRole('button', { name: s.enableTitle });
+    for (const name of Object.values(p.communicationsTabs)) {
+      fireEvent.click(tab(name));
+      expect(screen.queryAllByRole('status')).toHaveLength(0);
+    }
+  });
+});
