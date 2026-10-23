@@ -1,5 +1,5 @@
 import { HttpException } from '@nestjs/common';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { lead } from '../leads/leads.fakes';
 import { world } from './sales-assign.fakes';
 
@@ -34,7 +34,7 @@ describe('SalesAssignService.autoAssign', () => {
     const w = world({ leads: [lead({ id: 'l1' })] });
     w.q.salespeople.mockRejectedValue(new Error('db down'));
     await expect(w.service.autoAssign(lead({ id: 'l1' }))).resolves.toEqual(lead({ id: 'l1' }));
-    w.settings.salesAutoAssign.mockRejectedValue(new Error('settings down'));
+    vi.spyOn(w.settings, 'read').mockRejectedValue(new Error('settings down'));
     await expect(w.service.autoAssign(lead({ id: 'l1' }))).resolves.toEqual(lead({ id: 'l1' }));
   });
 });

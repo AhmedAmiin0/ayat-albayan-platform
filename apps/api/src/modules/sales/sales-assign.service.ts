@@ -2,10 +2,10 @@ import { pickSales, type SalesPersonView } from '@ab/shared';
 import { Injectable, Logger } from '@nestjs/common';
 import type { Tables } from '@ab/db';
 import { AuditService } from '../../common/audit/audit.service';
-import { SettingsService } from '../../common/settings/settings.service';
 import { badRequest, notFound } from '../scheduling/errors';
 import { toCandidates } from './sales-assign.mapper';
 import { SalesAssignQueries } from './sales-assign.queries';
+import { SalesSettings } from './sales.settings';
 
 /**
  * Who gets a lead. Assignment is the API's job, never a trigger: seed:demo and migrate:apply must
@@ -17,7 +17,7 @@ export class SalesAssignService {
 
   constructor(
     private readonly queries: SalesAssignQueries,
-    private readonly settings: SettingsService,
+    private readonly settings: SalesSettings,
     private readonly audit: AuditService,
   ) {}
 
@@ -27,7 +27,7 @@ export class SalesAssignService {
    */
   async autoAssign(lead: Tables<'leads'>): Promise<Tables<'leads'>> {
     try {
-      if (lead.assigned_to || !(await this.settings.salesAutoAssign())) return lead;
+      if (lead.assigned_to || !(await this.settings.read()).sales_auto_assign) return lead;
       const picked = pickSales((await this.people()).candidates);
       if (!picked) return lead;
       return (await this.queries.setAssignee({ leadId: lead.id, profileId: picked, onlyIfFree: true })) ?? lead;

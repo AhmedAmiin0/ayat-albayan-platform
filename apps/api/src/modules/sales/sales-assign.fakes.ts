@@ -2,9 +2,10 @@
 import type { Tables } from '@ab/db';
 import { vi } from 'vitest';
 import type { AuditService } from '../../common/audit/audit.service';
-import type { SettingsService } from '../../common/settings/settings.service';
+import { readerOf } from '../../common/settings/settings.fakes';
 import type { SalesAssignQueries } from './sales-assign.queries';
 import { SalesAssignService } from './sales-assign.service';
+import { SalesSettings } from './sales.settings';
 
 export const SALES = [{ id: 'a', full_name: 'أحمد' }, { id: 'b', full_name: 'بلال' }];
 
@@ -24,9 +25,9 @@ export function world(over: { sales?: typeof SALES; on?: boolean; leads?: Tables
       return next;
     }),
   };
-  const settings = { salesAutoAssign: vi.fn(async () => over.on ?? true) };
+  const settings = readerOf(SalesSettings, { sales_auto_assign: over.on ?? true });
   const audit = { record: vi.fn() };
-  const service = new SalesAssignService(q as unknown as SalesAssignQueries, settings as unknown as SettingsService, audit as unknown as AuditService);
+  const service = new SalesAssignService(q as unknown as SalesAssignQueries, settings, audit as unknown as AuditService);
   return { service, q, settings, audit, leads };
 }
 
