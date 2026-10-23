@@ -4,11 +4,12 @@ import { AvailabilityQueries } from './availability/availability.queries';
 import { AvailabilityQuery } from './availability/availability.query';
 import { TeachersController } from './teachers.controller';
 import { TeachersQueries } from './teachers.queries';
+import { TeachersSettings } from './teachers.settings';
 
 /** Teachers, weekly availability, time-off, free-slot query. R-TCH-01, R-TCH-02. */
 @Module({
   controllers: [TeachersController, AvailabilityController],
-  providers: [TeachersQueries, AvailabilityQueries, AvailabilityQuery],
+  providers: [TeachersSettings, TeachersQueries, AvailabilityQueries, AvailabilityQuery],
   exports: [AvailabilityQueries, AvailabilityQuery, TeachersQueries],
 })
 export class TeachersModule {}
