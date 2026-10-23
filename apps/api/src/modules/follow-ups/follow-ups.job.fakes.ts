@@ -1,5 +1,6 @@
+import { SETTING_DEFAULTS } from '@ab/shared';
 import { vi } from 'vitest';
-import { SETTING_DEFAULTS, type SettingsService } from '../../common/settings/settings.service';
+import type { SettingsService } from '../../common/settings/settings.service';
 import type { QueuedMessage } from '../reminders/queued-row';
 import type { FollowUpSlots } from './follow-up-slots';
 import { sampleLead } from './follow-ups.fakes';

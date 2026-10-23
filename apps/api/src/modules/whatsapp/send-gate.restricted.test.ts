@@ -1,6 +1,6 @@
+import { SETTING_DEFAULTS } from '@ab/shared';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import type { SettingsService } from '../../common/settings/settings.service';
-import { SETTING_DEFAULTS } from '../../common/settings/settings.values';
 import { fakeDb } from '../guardians/fake-db';
 import { SendGate } from './send-gate';
 

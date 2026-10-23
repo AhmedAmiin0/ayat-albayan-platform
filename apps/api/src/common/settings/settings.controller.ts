@@ -1,4 +1,4 @@
-import { settingsUpdateSchema, type AcademySettings } from '@ab/shared';
+import { settingsChanges, settingsUpdateSchema, type AcademySettings } from '@ab/shared';
 import { Body, Controller, Get, Patch } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { parseOrThrow } from '../../modules/teachers/http';
@@ -7,7 +7,6 @@ import { SINGLETON_ENTITY_ID } from '../audit/singleton-entity';
 import { CurrentUser, Permissions } from '../auth/decorators';
 import type { AuthUser } from '../auth/verify-token';
 import { SettingsService } from './settings.service';
-import { settingsChanges } from './settings.values';
 
 /**
  * Academy settings for admins (R-SCH-07, R-SCH-02): late-cancel hours (null = OFF, the default

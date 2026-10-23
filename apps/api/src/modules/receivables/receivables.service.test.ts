@@ -1,6 +1,6 @@
+import { SETTING_DEFAULTS } from '@ab/shared';
 import { describe, expect, it, vi } from 'vitest';
 import type { SettingsService } from '../../common/settings/settings.service';
-import { SETTING_DEFAULTS } from '../../common/settings/settings.values';
 import type { FxConverter } from '../dashboard/fx-converter';
 import type { ReceivablesQueries } from './receivables.queries';
 import { ReceivablesService } from './receivables.service';

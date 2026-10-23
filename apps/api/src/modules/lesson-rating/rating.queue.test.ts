@@ -1,6 +1,6 @@
+import { SETTING_DEFAULTS } from '@ab/shared';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { SettingsService } from '../../common/settings/settings.service';
-import { SETTING_DEFAULTS } from '../../common/settings/settings.values';
 import { LessonEvents } from '../../common/events/lesson-events';
 import type { MessageSender } from '../whatsapp/message.sender';
 import { heldLesson, LESSON_ID, NOW } from './rating.fakes';

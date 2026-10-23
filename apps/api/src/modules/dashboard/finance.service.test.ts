@@ -1,6 +1,6 @@
+import { SETTING_DEFAULTS } from '@ab/shared';
 import { describe, expect, it, vi } from 'vitest';
 import type { SettingsService } from '../../common/settings/settings.service';
-import { SETTING_DEFAULTS } from '../../common/settings/settings.values';
 import type { FinanceQueries } from './finance.queries';
 import { FinanceService } from './finance.service';
 import type { FxConverter } from './fx-converter';

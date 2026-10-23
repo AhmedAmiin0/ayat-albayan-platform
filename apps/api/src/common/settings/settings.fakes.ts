@@ -1,6 +1,6 @@
-import type { AcademySettings } from '@ab/shared';
+import { SETTING_DEFAULTS, type AcademySettings } from '@ab/shared';
 import { vi } from 'vitest';
-import { SETTING_DEFAULTS, type SettingsService } from './settings.service';
+import type { SettingsService } from './settings.service';
 
 /** Tests only: a SettingsService answering the registry defaults, with `over` on top. */
 export function fakeSettings(over: Partial<AcademySettings> = {}): SettingsService {
