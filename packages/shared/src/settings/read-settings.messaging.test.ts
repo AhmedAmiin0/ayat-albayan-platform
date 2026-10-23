@@ -3,7 +3,7 @@ import { SETTING_DEFAULTS } from './registry.js';
 import { settingsChanges, settingsUpdateSchema } from './schema.js';
 import { readSettings } from './validate.js';
 
-// Ported from apps/api/src/common/settings/settings.values.messaging.test.ts.
+// The messaging keys: read side (readSettings) and write side (settingsChanges, settingsUpdateSchema).
 
 describe('Phase 4 messaging settings (migration 142, docs/12 §2)', () => {
   it('defaults: follow-ups at 24 h then 72 h, reminder 60 min before, 24 h reminder and sending OFF', () => {

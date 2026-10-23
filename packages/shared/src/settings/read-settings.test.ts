@@ -3,7 +3,7 @@ import { SETTING_DEFAULTS } from './registry.js';
 import { settingsChanges } from './schema.js';
 import { readSettings } from './validate.js';
 
-// Ported from apps/api/src/common/settings/settings.values.test.ts (the API re-export goes away).
+// Read side (readSettings) against the registry defaults, plus the write-side diff (settingsChanges).
 
 describe('readSettings (migration 073 + 123 defaults)', () => {
   it('no rows → every default; Phase 3 defaults are the documented ones', () => {
