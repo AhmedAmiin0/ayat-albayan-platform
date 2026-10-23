@@ -5274,7 +5274,9 @@
         "unset": "Not set"
       },
       "secretHidden": "Secret value, not shown",
-      "willCopy": "Will copy: {{names}}"
+      "willCopy": "Will copy: {{names}}",
+      "notImportable": "Cannot be imported",
+      "invalidId": "Invalid value in: {{names}}. An ID has only Latin letters, digits, _ and -, at most 64 characters. Correct the value in «Integrations», then import again."
     },
     "parity": {
       "title": "Setup parity",
