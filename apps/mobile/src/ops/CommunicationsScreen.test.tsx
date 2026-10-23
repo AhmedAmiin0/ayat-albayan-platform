@@ -1,4 +1,4 @@
-import { screen } from '@testing-library/react-native';
+import { fireEvent, screen } from '@testing-library/react-native';
 import { t } from '@/lib/i18n';
 import { renderWithQuery } from '@/test/query';
 import { CommunicationsScreen } from './CommunicationsScreen';
@@ -30,9 +30,26 @@ test('«التواصل»: the send state is read-only, with the web note; nothin
   expect(mockApiSend).not.toHaveBeenCalled();
 });
 
-test('«التواصل» keeps «ماذا يُرسل ومتى»', async () => {
+const tab = (name: string) => screen.getByRole('tab', { name });
+
+test('«التواصل» is three tabs (الإرسال · الإشعارات · الأرقام), one shown at a time', async () => {
   await renderWithQuery(<CommunicationsScreen />);
+  const tabs = t.settingsPages.communicationsTabs;
+  expect(screen.getAllByRole('tab').map((el) => el.props.accessibilityState)).toEqual([
+    { selected: true },
+    { selected: false },
+    { selected: false },
+  ]);
+  expect(await screen.findByText(t.mobileAdmin.settings.readOnlyNote)).toBeTruthy();
+  expect(screen.queryByText(t.notificationCatalogue.entries.report_ready.name)).toBeNull();
+  await fireEvent.press(tab(t.settingsValues.groups.notifications));
+  expect(tab(t.settingsValues.groups.notifications).props.accessibilityState).toEqual({ selected: true });
   expect(await screen.findByText(t.notificationCatalogue.entries.report_ready.name)).toBeTruthy();
+  expect(screen.queryByText(t.mobileAdmin.settings.readOnlyNote)).toBeNull();
+  await fireEvent.press(tab(tabs.numbers));
+  expect(screen.queryByText(t.notificationCatalogue.entries.report_ready.name)).toBeNull();
+  expect(tab(tabs.numbers).props.accessibilityState).toEqual({ selected: true });
+  expect(await screen.findByRole('header', { name: t.numbers.title })).toBeTruthy();
 });
 
 test('the API down with nothing cached: error with retry', async () => {

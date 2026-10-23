@@ -1,7 +1,7 @@
 import { EDITABLE_VALUE_KEYS, OWNED_VALUE_GROUPS, type SettingKey } from '@ab/shared';
 import { t } from '@/lib/i18n';
 import { GROUP_IDS, groupKeys, groupLabel } from './value-groups';
-import { boundsOf, hintOf, labelOf, optionLabel, textAt, valueText } from './value-text';
+import { boundsOf, hintOf, impactOf, labelOf, optionLabel, textAt, valueText } from './value-text';
 
 test('textAt reads a dotted path, undefined when missing', () => {
   expect(textAt('settings.bookingHorizonWeeks')).toBe(t.settings.bookingHorizonWeeks);
@@ -12,6 +12,12 @@ test('textAt reads a dotted path, undefined when missing', () => {
 test('every row has a real label (never its key)', () => {
   const keys: SettingKey[] = [...EDITABLE_VALUE_KEYS, ...Object.values(OWNED_VALUE_GROUPS).flat()];
   for (const key of keys) expect(labelOf(key)).not.toBe(key);
+});
+
+test('impactOf: the switch hint first, else the hint (as the web confirmation)', () => {
+  expect(impactOf('recording_retention_days')).toBe(t.config.recordingRetentionHint);
+  expect(impactOf('activity_retention_days')).toBe(t.config.activityRetentionDaysHint);
+  expect(impactOf('teachers_always_available')).toBe(t.settings.hints.teachersAlwaysAvailable);
 });
 
 test('hintOf: the hint, or the switch hint of a number that can be off', () => {

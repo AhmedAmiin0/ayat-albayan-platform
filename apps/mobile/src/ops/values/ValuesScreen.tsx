@@ -1,32 +1,60 @@
 import type { SettingKey } from '@ab/shared';
 import { useState } from 'react';
-import { ScrollView, View } from 'react-native';
-import { usePermissions } from '@/auth/use-permissions';
+import { ActivityIndicator, ScrollView, View } from 'react-native';
+import { useHolds, useIsAdmin, usePermissions } from '@/auth/use-permissions';
 import { t } from '@/lib/i18n';
 import { Note } from '@/more/Note';
+import { useTheme } from '@/theme';
 import { ErrorState } from '@/ui/ErrorState';
 import { FilterPills } from '@/ui/FilterPills';
 import { Screen } from '@/ui/Screen';
 import { SubScreenHeader } from '../SubScreenHeader';
 import { useSettings } from '../use-settings';
+import { GOOGLE_GROUP } from './google-values';
+import { GoogleValuesTable } from './GoogleValuesTable';
 import { useConfigMeta } from './use-save-value';
 import { GROUP_IDS, groupKeys, groupLabel, type GroupId } from './value-groups';
 import { ValueSheet } from './ValueSheet';
 import { ValuesTable } from './ValuesTable';
 
+type Chip = GroupId | typeof GOOGLE_GROUP;
+
+/** The chips: every group, then «مزامنة Google» for the admins who may read its status. */
+function useChips(): { value: Chip; label: string; count: number }[] {
+  const holds = useHolds('settings.read');
+  const admin = useIsAdmin();
+  const google = holds && admin;
+  const items: { value: Chip; label: string; count: number }[] = GROUP_IDS.map((id) => ({
+    value: id,
+    label: groupLabel(id),
+    count: groupKeys(id).length,
+  }));
+  return google ? [...items, { value: GOOGLE_GROUP, label: t.mobileValues.groups.google, count: 3 }] : items;
+}
+
+/** While GET /settings has not answered: a busy region, so «القيم» is never blank. */
+function Loading() {
+  const { color } = useTheme();
+  return (
+    <View accessible accessibilityLabel={t.common.loading} accessibilityState={{ busy: true }} style={{ paddingVertical: 32 }}>
+      <ActivityIndicator color={color.lapis} />
+    </View>
+  );
+}
+
 /**
  * «القيم» on the phone (docs/26b §2 phone, §4; R-MSG-01): one group at a time in a two-column table;
  * a row opens its bottom sheet. Scalars are edited there with settings.write, one key per save;
- * shapes, lists and module-owned keys are read-only («عدّلها من الموقع»).
+ * shapes, lists, module-owned keys and «مزامنة Google» are read-only («عدّلها من الموقع»).
  */
 export function ValuesScreen() {
   const query = useSettings();
   const meta = useConfigMeta().data?.meta;
   const canWrite = usePermissions()('settings.write');
-  const [group, setGroup] = useState<GroupId>('schedule');
+  const chips = useChips();
+  const [group, setGroup] = useState<Chip>('schedule');
   const [open, setOpen] = useState<SettingKey | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
-  const items = GROUP_IDS.map((id) => ({ value: id, label: groupLabel(id), count: groupKeys(id).length }));
   const settings = query.data;
   return (
     <Screen>
@@ -34,7 +62,7 @@ export function ValuesScreen() {
       <FilterPills
         role="radiogroup"
         accessibilityLabel={t.mobileValues.groupsLabel}
-        items={items}
+        items={chips}
         value={group}
         onChange={(id) => {
           setGroup(id);
@@ -47,13 +75,17 @@ export function ValuesScreen() {
           <Note>{notice}</Note>
         </View>
       ) : null}
-      {settings ? (
+      {group === GOOGLE_GROUP ? (
+        <GoogleValuesTable />
+      ) : settings ? (
         <ScrollView style={{ flex: 1 }} contentContainerStyle={{ paddingBottom: 32 }}>
           <ValuesTable keys={groupKeys(group)} settings={settings} canWrite={canWrite} onOpen={setOpen} />
         </ScrollView>
       ) : query.isError ? (
         <ErrorState onRetry={() => void query.refetch()} />
-      ) : null}
+      ) : (
+        <Loading />
+      )}
       {settings && open ? (
         <ValueSheet
           valueKey={open}

@@ -1,4 +1,4 @@
-import type { SettingKey } from '@ab/shared';
+import { SETTING_DEFAULTS, type SettingKey } from '@ab/shared';
 import { useState } from 'react';
 import { ApiError } from '@/lib/api';
 import { t } from '@/lib/i18n';
@@ -28,7 +28,7 @@ export function useValueSheet({ valueKey, saved, onSaved, onClose }: ValueSheetO
   const save = useSaveValue();
   const parsed = parseDraft(valueKey, draft);
   const dirty = parsed.ok ? !sameValue(parsed.value, saved) : !sameValue(draft, draftOf(valueKey, saved));
-  const confirm = parsed.ok ? confirmOf(valueKey, parsed.value) : null;
+  const confirm = parsed.ok ? confirmOf(valueKey, parsed.value, saved) : null;
 
   const setDraft = (patch: Partial<Draft>) => {
     setDraftState((d) => ({ ...d, ...patch }));
@@ -81,6 +81,8 @@ export function useValueSheet({ valueKey, saved, onSaved, onClose }: ValueSheetO
     saving: save.isPending,
     setDraft,
     setTyped,
+    /** «أعد القيمة الافتراضية»: the default goes into the draft; «احفظ» saves it. */
+    resetDefault: () => setDraft(draftOf(valueKey, SETTING_DEFAULTS[valueKey])),
     submit,
     confirmSave,
     requestClose,

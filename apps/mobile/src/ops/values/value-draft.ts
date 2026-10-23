@@ -34,13 +34,15 @@ export function editorOf(key: SettingKey): EditorKind {
   return 'readonly';
 }
 
-/** The picker's options; a stored value outside the list stays first so it still shows. */
+/**
+ * The picker's options, as the web's select: a stored value outside the list stays first so it
+ * still shows (currencies: the stored code, then CURRENCY_ISOS).
+ */
 export function choicesOf(key: SettingKey, current: string): string[] {
   const def = settingDef(key);
   if (def.type === 'enum') return [...def.options];
   if (def.type === 'tz') return tzChoices(current);
-  const known: string[] = [...CURRENCY_ISOS, 'EGP'];
-  return !current || known.includes(current) ? known : [current, ...known];
+  return current ? [...new Set([current, ...CURRENCY_ISOS])] : [...CURRENCY_ISOS];
 }
 
 /** The saved value as the editor's starting draft. */
@@ -78,9 +80,14 @@ export function parseDraft(key: SettingKey, draft: Draft): Parsed {
 
 export const sameValue = (a: unknown, b: unknown): boolean => JSON.stringify(a) === JSON.stringify(b);
 
-/** Which question «احفظ» asks first: typed days (a value that deletes data), a plain dialog, or none. */
-export function confirmOf(key: SettingKey, value: unknown): 'typed' | 'plain' | null {
+/**
+ * Which question «احفظ» asks first: a plain dialog for the academy-wide switches; typed days only
+ * when a retention can delete more data than before: turned on (from off) or made shorter than the
+ * stored period. Lengthening it, or turning it off, deletes nothing and saves without typing.
+ */
+export function confirmOf(key: SettingKey, value: unknown, saved: unknown): 'typed' | 'plain' | null {
   const kind = VALUE_CONFIRM[key];
-  if (kind === 'typed') return typeof value === 'number' ? 'typed' : null;
-  return kind ?? null;
+  if (kind !== 'typed') return kind ?? null;
+  if (typeof value !== 'number') return null;
+  return typeof saved !== 'number' || value < saved ? 'typed' : null;
 }

@@ -22,7 +22,14 @@ export function hintOf(key: SettingKey): string | undefined {
   return def.type === 'int' && def.toggleHintKey ? textAt(def.toggleHintKey) : undefined;
 }
 
-const city = (id: string): string | undefined => textAt(`tz.${id}`);
+/** What a confirmed change does, as the web's confirmation says it: the switch hint, else the hint. */
+export function impactOf(key: SettingKey): string | undefined {
+  const def = settingDef(key);
+  const toggle = def.type === 'int' && def.toggleHintKey ? textAt(def.toggleHintKey) : undefined;
+  return toggle ?? (def.hintKey ? textAt(def.hintKey) : undefined);
+}
+
+const city =(id: string): string | undefined => textAt(`tz.${id}`);
 
 /** An enum option's label: the field's label key + the option ('feedbackMode' + 'Buttons'). */
 export function optionLabel(key: SettingKey, option: string): string {

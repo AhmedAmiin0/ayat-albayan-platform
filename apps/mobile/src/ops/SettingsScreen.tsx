@@ -1,4 +1,5 @@
 import { router } from 'expo-router';
+import type { ReactNode } from 'react';
 import { View } from 'react-native';
 import { useHolds, useIsAdmin } from '@/auth/use-permissions';
 import { t } from '@/lib/i18n';
@@ -7,8 +8,10 @@ import { useTheme } from '@/theme';
 import { Button } from '@/ui/Button';
 import { Chevron } from '@/ui/Chevron';
 import { ListRow } from '@/ui/ListRow';
+import { NuqtaGlyph } from '@/ui/NuqtaGlyph';
 import { Screen } from '@/ui/Screen';
 import { ScreenHeader } from '@/ui/ScreenHeader';
+import { toneColors } from '@/ui/StatusChip';
 import { useSettings } from './use-settings';
 
 const back = () => (router.canGoBack() ? router.back() : router.replace('/more'));
@@ -19,11 +22,21 @@ export const SETTINGS_HREF = {
   google: '/more/ops/settings/google',
 } as const;
 
-/** «إرسال الرسائل: متوقف»: the dangerous state is on the list, never hidden behind a row (docs/26b §5.4). */
-function useSendLine(): string | undefined {
+/**
+ * «إرسال الرسائل: متوقف»: the dangerous state is on the list, never hidden behind a row (docs/26b
+ * §5.4), with its nuqta (struck = stopped, fill = on): shape says it, colour only confirms it.
+ */
+function useSendLine(): { text: string; glyph: ReactNode } | undefined {
+  const { color } = useTheme();
   const data = useSettings().data;
-  const m = t.mobileAdmin.settings;
-  return data ? `${m.messagingEnabled}: ${data.messaging_enabled ? m.on : m.off}` : undefined;
+  if (!data) return undefined;
+  const on = data.messaging_enabled;
+  const state = on ? t.numbers.chips.enabled : t.numbers.chips.disabled;
+  const fg = toneColors(color, on ? 'ok' : 'neutral').fg;
+  return {
+    text: t.settingsPages.sendingState.replace('{state}', state),
+    glyph: <NuqtaGlyph shape={on ? 'fill' : 'struck'} color={fg} />,
+  };
 }
 
 /**
@@ -53,7 +66,8 @@ export function SettingsScreen() {
         />
         <ListRow
           title={t.settingsPages.communications}
-          subtitle={sendLine}
+          subtitle={sendLine?.text}
+          subtitleLeading={sendLine?.glyph}
           trailing={next}
           onPress={() => router.push(SETTINGS_HREF.communications)}
         />

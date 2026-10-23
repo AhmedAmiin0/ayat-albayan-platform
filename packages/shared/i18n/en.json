@@ -5562,7 +5562,8 @@
       "messages": "Messages",
       "retention": "Logs and retention",
       "notifications": "Notifications (view only)",
-      "sending": "Sending and safety (view only)"
+      "sending": "Sending and safety (view only)",
+      "google": "Google sync (view only)"
     },
     "name": "Name",
     "value": "Value",
