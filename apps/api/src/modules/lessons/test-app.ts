@@ -1,5 +1,6 @@
 // HTTP test harness for the lessons + scheduling controllers (test-only, excluded from the build).
 // Real controllers, guards, services and LessonAccess; every DB-facing class is a mock.
+import { SETTING_DEFAULTS } from '@ab/shared';
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
 import { vi } from 'vitest';
@@ -48,7 +49,7 @@ function mocks() {
     teachers: { idByProfile: vi.fn(), get: vi.fn(), loads: vi.fn() },
     overview: { teachers: vi.fn(), slots: vi.fn(), timeOff: vi.fn(), carryOver: vi.fn() },
     audit: { record: vi.fn() },
-    settings: { lateCancelHours: vi.fn(), bookingHorizonWeeks: vi.fn(), all: vi.fn() },
+    settings: { all: vi.fn() },
     time: { payoutStatus: vi.fn() },
     rules: { rule: vi.fn(), activeRuleIds: vi.fn() },
     checker: { check: vi.fn() },
@@ -96,9 +97,7 @@ export async function lessonsApp() {
     m.lessons.academyAuto.mockResolvedValue(false);
     m.lessons.seq.mockResolvedValue(new Map());
     m.teachers.idByProfile.mockImplementation(async (id: string) => (id === TEACHER.id ? TEACHER_ID : null));
-    m.settings.lateCancelHours.mockResolvedValue(null);
-    m.settings.bookingHorizonWeeks.mockResolvedValue(5);
-    m.settings.all.mockResolvedValue({ payout_count_late: false, payout_count_no_show: false });
+    m.settings.all.mockResolvedValue({ ...SETTING_DEFAULTS });
     m.time.payoutStatus.mockResolvedValue(null);
     m.rules.rule.mockResolvedValue(ruleRow());
     m.checker.check.mockResolvedValue([]);

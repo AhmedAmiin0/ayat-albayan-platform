@@ -1,9 +1,11 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { readerOf } from '../../common/settings/settings.fakes';
 import type { ConflictChecker } from '../scheduling/conflict-checker';
-import { fakeSettings, ruleRow } from '../scheduling/scheduling.fakes';
+import { ruleRow } from '../scheduling/scheduling.fakes';
 import type { ScheduleQueries } from '../scheduling/schedule.queries';
 import type { TeachersQueries } from '../teachers/teachers.queries';
 import { ADMIN, fakeStore, LESSON_ID, lessonRow, TEACHER_ID } from './lessons.fakes';
+import { LessonsSettings } from './lessons.settings';
 import { RescheduleRuleService } from './reschedule-rule.service';
 import { RulePlanner } from './rule-planner';
 
@@ -14,7 +16,7 @@ const NEW_RULE = { teacherId: TEACHER_ID, byday: [1], startTimeLocal: '18:30', t
 
 function setup(makeupOf: string | null) {
   const deps = fakeStore(lessonRow({ makeup_of_id: makeupOf }));
-  const planner = new RulePlanner(rules as unknown as ScheduleQueries, teachers as unknown as TeachersQueries, fakeSettings(2));
+  const planner = new RulePlanner(rules as unknown as ScheduleQueries, teachers as unknown as TeachersQueries, readerOf(LessonsSettings, { booking_horizon_weeks: 2 }));
   return { ...deps, service: new RescheduleRuleService(deps.store, planner, checker as unknown as ConflictChecker) };
 }
 

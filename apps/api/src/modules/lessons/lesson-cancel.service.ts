@@ -1,11 +1,11 @@
 import { isOpenLesson, type CancelRequest, type RuleCancelRequest } from '@ab/shared';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import type { AuthUser } from '../../common/auth/verify-token';
-import { SettingsService } from '../../common/settings/settings.service';
 import { badRequest, conflict } from '../scheduling/errors';
 import { addDays, localDateOf, startOfLocalDay } from '../scheduling/horizon';
 import { ScheduleQueries, type RuleWithLinks } from '../scheduling/schedule.queries';
 import { LessonStore } from './lesson-store';
+import { LessonsSettings } from './lessons.settings';
 import { CANCEL_EVENT, cancelChange, invalidTransition, type CancelContext } from './transition';
 
 export type CancelInput = { lessonId: string; body: CancelRequest; actor: AuthUser };
@@ -31,7 +31,7 @@ export class LessonCancelService {
   constructor(
     private readonly store: LessonStore,
     private readonly rules: ScheduleQueries,
-    private readonly settings: SettingsService,
+    private readonly settings: LessonsSettings,
   ) {}
 
   /** POST /lessons/:id/cancel. */
@@ -100,6 +100,6 @@ export class LessonCancelService {
   }
 
   private async context(body: Cancel): Promise<CancelContext> {
-    return { ...body, now: new Date(), lateCancelHours: await this.settings.lateCancelHours() };
+    return { ...body, now: new Date(), lateCancelHours: (await this.settings.read()).late_cancel_hours };
   }
 }

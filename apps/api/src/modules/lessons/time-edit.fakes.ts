@@ -1,11 +1,12 @@
 // Fixtures for the «عدّل الوقت» service tests (not shipped; excluded from the build by *.fakes.ts).
-import type { LessonTimeEdit } from '@ab/shared';
+import type { AcademySettings, LessonTimeEdit } from '@ab/shared';
 import { vi } from 'vitest';
 import type { TimeEditChange } from '../scheduling/change-set';
 import type { ConflictChecker } from '../scheduling/conflict-checker';
-import type { SettingsService } from '../../common/settings/settings.service';
+import { fakeSettings } from '../../common/settings/settings.fakes';
 import type { LessonRow } from './lesson-row';
 import { ADMIN, fakeStore, LESSON_ID, lessonRow } from './lessons.fakes';
+import { LessonsSettings } from './lessons.settings';
 import { LessonTimeService } from './time-edit.service';
 import { TimeEditPayout } from './time-edit.payout';
 import type { TimeEditQueries } from './time-edit.queries';
@@ -35,12 +36,13 @@ export const correction = (over: Partial<LessonTimeEdit> = {}): LessonTimeEdit =
 
 export const CLASH = { kind: 'teacher_busy', startsAt: '2026-10-05T14:00:00.000Z', endsAt: '2026-10-05T14:45:00.000Z', lessonId: 'x' };
 
-export function timeSetup(row: LessonRow | null = lessonRow()) {
+/** `over`: the academy settings on top of the registry defaults (payout_count_late / _no_show off). */
+export function timeSetup(row: LessonRow | null = lessonRow(), over: Partial<AcademySettings> = {}) {
   const deps = fakeStore(row);
   const checker = { check: vi.fn().mockResolvedValue([]) };
-  const settings = { all: vi.fn().mockResolvedValue({ payout_count_late: false, payout_count_no_show: false }) };
+  const settings = fakeSettings(over);
   const payouts = { payoutStatus: vi.fn().mockResolvedValue(null) };
-  const payout = new TimeEditPayout(settings as unknown as SettingsService, payouts as unknown as TimeEditQueries);
+  const payout = new TimeEditPayout(new LessonsSettings(settings), payouts as unknown as TimeEditQueries);
   const service = new LessonTimeService(deps.store, checker as unknown as ConflictChecker, payout);
   const run = (b: LessonTimeEdit) => service.edit({ lessonId: LESSON_ID, body: b, actor: ADMIN });
   return { ...deps, checker, settings, payouts, service, run };

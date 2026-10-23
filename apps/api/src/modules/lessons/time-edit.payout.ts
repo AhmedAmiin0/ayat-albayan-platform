@@ -1,8 +1,8 @@
 import { payoutStatuses, type TimeEditResult } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import { SettingsService } from '../../common/settings/settings.service';
 import { conflict } from '../scheduling/errors';
 import type { LessonRow } from './lesson-row';
+import { LessonsSettings } from './lessons.settings';
 import { isPayoutLocked, payoutScope, type TimeEditPlan } from './time-edit.plan';
 import { TimeEditQueries } from './time-edit.queries';
 
@@ -14,7 +14,7 @@ import { TimeEditQueries } from './time-edit.queries';
 @Injectable()
 export class TimeEditPayout {
   constructor(
-    private readonly settings: SettingsService,
+    private readonly settings: LessonsSettings,
     private readonly queries: TimeEditQueries,
   ) {}
 
@@ -35,7 +35,7 @@ export class TimeEditPayout {
   /** Only a correction depends on which statuses are paid; a move never reads the settings. */
   private async paidStatuses(plan: TimeEditPlan) {
     if (plan.mode !== 'correct') return [];
-    const s = await this.settings.all();
+    const s = await this.settings.read();
     return payoutStatuses({ countLate: s.payout_count_late, countNoShow: s.payout_count_no_show });
   }
 }
