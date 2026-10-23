@@ -1,4 +1,3 @@
-import { GOOGLE_SETTING_KEYS } from '../google/settings-keys.js';
 import { camelKey } from './camel.js';
 
 /** The module page / route that writes a key owned outside the generic settings write path (docs/26 §2f, §5). */
@@ -14,9 +13,10 @@ export const OWNED_SETTING_KEYS = {
   auto_messages_enabled: 'messages_gate',
   crm_cutover_done: 'messages_gate',
   comms_source: 'communications',
-  [GOOGLE_SETTING_KEYS.enabled]: 'google_sync',
-  [GOOGLE_SETTING_KEYS.mode]: 'google_sync',
-  [GOOGLE_SETTING_KEYS.window_days]: 'google_sync',
+  // GOOGLE_SETTING_KEYS, written out (src/settings may not import src/google; google/seed-defs.test.ts pins them).
+  google_sync_enabled: 'google_sync',
+  google_sync_mode: 'google_sync',
+  google_calendar_window_days: 'google_sync',
 } as const satisfies Record<string, SettingOwner>;
 
 export type OwnedSettingKey = keyof typeof OWNED_SETTING_KEYS;

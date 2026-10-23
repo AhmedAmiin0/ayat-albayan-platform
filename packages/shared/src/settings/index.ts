@@ -9,3 +9,7 @@ export * from './meta.js';
 export * from './domains/index.js';
 export * from './ownership.js';
 export * from './gate.js';
+export * from './patch.js';
+export * from './groups.js';
+export * from './google-defs.js';
+export * from './seed-entries.js';

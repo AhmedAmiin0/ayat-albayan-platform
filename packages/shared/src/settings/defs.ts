@@ -3,6 +3,9 @@
 // AcademySettings and the admin page's fields are all generated from these entries. Where a row
 // shows on /admin/settings is not part of its entry: layout.ts holds the page order.
 
+import type { SettingConfirm, SettingGroup } from './groups.js';
+import type { SettingOwner } from './ownership.js';
+
 interface Base {
   /** Dotted path into ar.json / en.json (e.g. 'settings.bookingHorizonWeeks'). */
   labelKey: string;
@@ -13,6 +16,24 @@ interface Base {
   form?: boolean;
   /** false: PATCH /settings ignores it; only its own guarded endpoint writes it (comms_source). */
   patch?: boolean;
+  // docs/26 §2b seed metadata (inert until the 26-P2 seeder). Typed optional so a bare def (tests)
+  // still fits; seed-entries.test.ts requires module and group on every registry entry.
+  /** The owning module: the domain file's name (follow_ups for follow-ups.ts). */
+  module?: string;
+  /** Its «القيم» group (docs/26b §2). */
+  group?: SettingGroup;
+  /** The confirmation asked before a change is saved (owner defaults, 2026-10-23). */
+  confirm?: SettingConfirm;
+  /** The module page that edits it when that is not «القيم» (the same owner as OWNED_SETTING_KEYS). */
+  ownedBy?: SettingOwner;
+  /**
+   * true: changing it changes a message families, guardians or leads receive, or a page, link, number or
+   * lesson balance they see (send switches, reminders, follow-ups, feedback, join window, contact block).
+   * Left out for staff-only values (teacher messages, payouts, money reports, internal flags).
+   */
+  reachesFamilies?: boolean;
+  /** Kept readable, no longer used: the seeder sets retired_at (only an explicit flag retires a row). */
+  retired?: true;
 }
 
 /** A whole number in [min, max]. nullable: null = the policy is OFF (late_cancel_hours). */

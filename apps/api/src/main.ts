@@ -2,6 +2,8 @@ import 'reflect-metadata';
 import { NestFactory } from '@nestjs/core';
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { AppModule } from './app.module';
+import { registerClientUsage } from './common/client-usage/client-usage.hook';
+import { ClientUsageService } from './common/client-usage/client-usage.service';
 import { loadEnv } from './env';
 import { registerLivekitWebhookParser } from './modules/classroom/livekit-webhook.controller';
 import { setupOpenApi } from './openapi';
@@ -16,6 +18,8 @@ async function bootstrap(): Promise<void> {
   });
   // LiveKit posts application/webhook+json (POST /livekit/webhook), kept as raw bytes for its signature.
   registerLivekitWebhookParser(app);
+  // X-AB-Client hits per route × build (docs/26 §2f). No allowedHeaders below: @fastify/cors reflects the request's headers.
+  registerClientUsage(app, app.get(ClientUsageService));
   app.enableCors({ origin: env.WEB_ORIGIN.split(',') });
   setupOpenApi(app);
   await app.listen(env.PORT, '0.0.0.0');
