@@ -1,13 +1,18 @@
 import { expect, test } from '@playwright/test';
 import { earningId, earningOf, pastLesson, pay, teacherWithRates } from '../support/earnings';
 import { rolledBack } from '../support/rls';
+import { resetAbrar } from '../support/schedule';
 
 // record_teacher_payment and settle_payout_in_ledger (migration 178) against the real database.
 
 const refused = (p: Promise<unknown>) => p.then(() => 'allowed', (e: { message?: string }) => e.message);
 
 test.describe('record_teacher_payment / settle_payout_in_ledger (migration 178)', () => {
-  test.beforeEach(() => test.skip(test.info().project.name !== 'desktop', 'database only: one run'));
+  test.beforeEach(async () => {
+    test.skip(test.info().project.name !== 'desktop', 'database only: one run');
+    // Start from a teacher with no lessons: the CI shard plan may run a spec that leaves one first.
+    await resetAbrar();
+  });
 
   test('one payment covers several sessions; partial payments move the status', async () => {
     await rolledBack(async (tx) => {

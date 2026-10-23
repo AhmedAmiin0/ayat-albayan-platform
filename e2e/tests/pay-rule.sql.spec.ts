@@ -2,13 +2,18 @@ import { expect, test } from '@playwright/test';
 import { earningId, earningOf, pastLesson, pay, teacherWithRates } from '../support/earnings';
 import { countableIds, payableIds, ruleLesson, setSettingTx, studentOn } from '../support/pay-rule';
 import { rolledBack } from '../support/rls';
+import { resetAbrar } from '../support/schedule';
 
 // The ONE teacher-pay rule (migration 20261005000200) against the real database: the ledger,
 // v_teacher_payable_lessons (monthly payout, dashboard) and v_teacher_countable_earnings (ledger
 // reads, settlement) agree. Each case is rolled back. Twin: lessonCountsForPay / teacherRateFor.
 
 test.describe('one rule for teacher pay (20261005000200)', () => {
-  test.beforeEach(() => test.skip(test.info().project.name !== 'desktop', 'database only: one run'));
+  test.beforeEach(async () => {
+    test.skip(test.info().project.name !== 'desktop', 'database only: one run');
+    // Start from a teacher with no lessons: the CI shard plan may run a spec that leaves one first.
+    await resetAbrar();
+  });
 
   test('a trial lesson is not paid by default; payout_count_trials + resync pays it everywhere', async () => {
     await rolledBack(async (tx) => {

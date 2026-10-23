@@ -1,102 +1,117 @@
-// e2e shard plan for ci.yml: which spec files shard N of M runs, balanced on measured durations instead of
-// Playwright's --shard (which splits by test count: one shard took 10 min while another took 6).
-// Every spec lands in exactly one shard; a spec missing from the durations file gets the median duration.
-// Usage: node tools/scripts/e2e-shards.mjs plan <shard> <total> <desktop|all>   paths relative to e2e/, one per line
-//        node tools/scripts/e2e-shards.mjs merge <durations-*.json…>            new e2e/shard-durations.json on stdout
-// The durations-*.json files are the CI artifacts «e2e-durations-*» (e2e/support/durations-reporter.ts).
-import { readdirSync, readFileSync } from 'node:fs';
+// e2e shard sizes for ci.yml. Playwright's --shard cuts its ordered (project, file) groups into equal TEST
+// COUNTS, so one shard took 10 min and another 6. This keeps Playwright's own order and contiguous cuts
+// (the specs share one database per shard, so a different neighbour can change a result) and only moves
+// the cut points so that every shard costs about the same measured time. The result is the value of
+// PWTEST_SHARD_WEIGHTS (Playwright 1.63 reads it as the shard sizes); without it, equal counts as before.
+// Usage: node tools/scripts/e2e-shards.mjs weights <total> <list.json>   list = `playwright test --list --reporter=json`
+//        node tools/scripts/e2e-shards.mjs merge <durations-*.json…>    new e2e/shard-durations.json on stdout
+// The durations-*.json files come from e2e/support/durations-reporter.ts (CI artifacts «e2e-durations-*»).
+import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 
-const root = (p) => fileURLToPath(new URL(`../../${p}`, import.meta.url));
-const DURATIONS = root('e2e/shard-durations.json');
-const isSpec = (f) => /\.spec\.ts$/.test(f);
+const DURATIONS = fileURLToPath(new URL('../../e2e/shard-durations.json', import.meta.url));
 
-/** ms a file costs in this run: desktop only on PRs, desktop + mobile on pushes. */
-function cost(row, projects) {
-  if (!row) return undefined;
-  return projects.reduce((sum, p) => sum + (row[p] ?? 0), 0);
+/** Tests per (project, file) in Playwright's order: projects in config order, files as listed. */
+export function groupsFromList(list) {
+  const projects = (list.config?.projects ?? []).map((p) => p.name).filter((n) => n !== 'setup');
+  const count = (suite, project) =>
+    (suite.specs ?? []).reduce(
+      (n, s) => n + s.tests.filter((t) => t.projectName === project).length,
+      0,
+    ) + (suite.suites ?? []).reduce((n, s) => n + count(s, project), 0);
+  const groups = [];
+  for (const project of projects) {
+    for (const suite of list.suites ?? []) {
+      const tests = count(suite, project);
+      if (tests > 0) groups.push({ project, file: `tests/${suite.file}`, tests });
+    }
+  }
+  return groups;
 }
 
-const median = (xs) => {
-  const s = [...xs].sort((a, b) => a - b);
-  return s.length ? s[Math.floor(s.length / 2)] : 1000;
-};
+/** ms per group; a group never measured costs the median ms per test of the measured ones. */
+export function costs(groups, durations) {
+  const perTest = groups
+    .filter((g) => durations[g.file]?.[g.project] !== undefined)
+    .map((g) => durations[g.file][g.project] / g.tests)
+    .sort((a, b) => a - b);
+  const fallback = perTest.length ? perTest[Math.floor(perTest.length / 2)] : 1000;
+  return groups.map((g) => durations[g.file]?.[g.project] ?? fallback * g.tests);
+}
 
 /**
- * Longest-first greedy split: each file (slowest first, ties by name) goes to the lightest shard.
- * Deterministic, so every shard machine computes the same plan.
+ * Contiguous split of the groups into `total` shards with the smallest possible slowest shard
+ * (dynamic programming over the cut points). Returns the TEST COUNT of each shard.
  */
-export function planShards({ files, durations, total, projects }) {
+export function shardSizes(groups, ms, total) {
   if (!Number.isInteger(total) || total < 1) throw new Error(`bad shard total ${total}`);
-  const known = files.map((f) => cost(durations[f], projects)).filter((x) => x !== undefined);
-  const fallback = median(known);
-  const weighted = files.map((f) => ({ f, ms: cost(durations[f], projects) ?? fallback }));
-  weighted.sort((a, b) => b.ms - a.ms || a.f.localeCompare(b.f));
-  const shards = Array.from({ length: total }, () => ({ ms: 0, files: [] }));
-  for (const { f, ms } of weighted) {
-    const lightest = shards.reduce((best, s) => (s.ms < best.ms ? s : best), shards[0]);
-    lightest.files.push(f);
-    lightest.ms += ms;
+  const n = groups.length;
+  const pre = [0];
+  for (let i = 0; i < n; i++) pre.push(pre[i] + ms[i]);
+  // best[k][i] = slowest shard when the first i groups go to k shards; cut[k][i] = start of the last one.
+  const best = Array.from({ length: total + 1 }, () => new Array(n + 1).fill(Infinity));
+  const cut = Array.from({ length: total + 1 }, () => new Array(n + 1).fill(0));
+  best[0][0] = 0;
+  for (let k = 1; k <= total; k++) {
+    for (let i = 0; i <= n; i++) {
+      for (let j = 0; j <= i; j++) {
+        const v = Math.max(best[k - 1][j], pre[i] - pre[j]);
+        if (v < best[k][i]) [best[k][i], cut[k][i]] = [v, j];
+      }
+    }
   }
-  for (const s of shards) s.files.sort();
-  return shards;
+  const sizes = [];
+  for (let k = total, i = n; k > 0; k--) {
+    const j = cut[k][i];
+    sizes.unshift(groups.slice(j, i).reduce((s, g) => s + g.tests, 0));
+    i = j;
+  }
+  return sizes;
 }
 
 /** Sums several shard outputs (each file ran on one shard) into one { file: { project: ms } } map. */
 export function mergeDurations(parts) {
   const out = {};
-  for (const part of parts)
+  for (const part of parts) {
     for (const [file, row] of Object.entries(part)) {
       const target = (out[file] ??= {});
       for (const [project, ms] of Object.entries(row))
         target[project] = Math.round((target[project] ?? 0) + ms);
     }
+  }
   return Object.fromEntries(Object.entries(out).sort(([a], [b]) => a.localeCompare(b)));
 }
 
-/** Playwright reads each CLI path as a case-insensitive RegExp: no path may also select another file. */
-export function ambiguousPaths(paths) {
-  const bad = [];
-  for (const p of paths) {
-    const re = new RegExp(p, 'i');
-    for (const q of paths) if (q !== p && re.test(q)) bad.push(`${p} also matches ${q}`);
-  }
-  return bad;
-}
-
-export const specFiles = () =>
-  readdirSync(root('e2e/tests'))
-    .filter(isSpec)
-    .sort()
-    .map((f) => `tests/${f}`);
-
 function main() {
   const [mode, ...args] = process.argv.slice(2);
+  const read = (f) => JSON.parse(readFileSync(f, 'utf8'));
   if (mode === 'merge') {
-    const parts = args.map((f) => JSON.parse(readFileSync(f, 'utf8')));
-    process.stdout.write(`${JSON.stringify(mergeDurations(parts), null, 1)}\n`);
+    process.stdout.write(`${JSON.stringify(mergeDurations(args.map(read)), null, 1)}\n`);
     return;
   }
-  if (mode !== 'plan')
-    throw new Error('usage: e2e-shards.mjs plan <shard> <total> <desktop|all> | merge <files…>');
-  const [shard, total] = [Number(args[0]), Number(args[1])];
-  const projects = args[2] === 'desktop' ? ['desktop'] : ['desktop', 'mobile'];
-  const files = specFiles();
-  const bad = ambiguousPaths(files);
-  if (bad.length) throw new Error(`ambiguous spec paths: ${bad.join('; ')}`);
-  const shards = planShards({
-    files,
-    durations: JSON.parse(readFileSync(DURATIONS, 'utf8')),
-    total,
-    projects,
-  });
-  const mine = shards[shard - 1];
-  if (!mine || mine.files.length === 0)
-    throw new Error(`shard ${args[0]}/${args[1]} has no spec files`);
+  if (mode !== 'weights')
+    throw new Error('usage: e2e-shards.mjs weights <total> <list.json> | merge <files…>');
+  const groups = groupsFromList(read(args[1]));
+  const ms = costs(groups, read(DURATIONS));
+  const sizes = shardSizes(groups, ms, Number(args[0]));
+  if (sizes.some((s) => s === 0)) throw new Error(`a shard would be empty: ${sizes.join(':')}`);
   console.error(
-    `shard ${shard}/${total}: ${mine.files.length} files, ~${Math.round(mine.ms / 1000)} s (${projects.join('+')})`,
+    `shard sizes ${sizes.join(':')} (tests), ~${Math.round(Math.max(...shardMs(groups, ms, sizes)) / 1000)} s slowest`,
   );
-  console.log(mine.files.join('\n'));
+  console.log(sizes.join(':'));
+}
+
+/** Estimated ms of each shard for given sizes (for the log line). */
+export function shardMs(groups, ms, sizes) {
+  const out = sizes.map(() => 0);
+  let shard = 0;
+  let left = sizes[0];
+  groups.forEach((g, i) => {
+    while (left <= 0 && shard < sizes.length - 1) left = sizes[++shard];
+    out[shard] += ms[i];
+    left -= g.tests;
+  });
+  return out;
 }
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) main();

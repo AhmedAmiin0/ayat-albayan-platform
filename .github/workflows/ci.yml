@@ -127,8 +127,8 @@ jobs:
   # The e2e suite shares one database per run and runs with one worker, so it is split across machines
   # instead: each shard has its own local Supabase, API and web server (docs/04 §9). A failing shard does
   # not stop the others (fail-fast off), so one run shows every red spec.
-  # Shards 1-4 split the spec files on measured durations (tools/scripts/e2e-shards.mjs, e2e/shard-durations.json;
-  # refresh it from the «e2e-durations-*» artifacts of a push run). «single line» is the production
+  # Shards 1-4 are Playwright's own --shard, sized on measured durations (step «Shard sizes»; refresh
+  # e2e/shard-durations.json from the «e2e-durations-*» artifacts of a push run). «single line» is the production
   # configuration (docs/12 §13.12): ONE WhatsApp line, no WA_CHAT_* keys (playwright.config.ts reads E2E_LINES);
   # the six §5 journeys plus the template status and settings switch specs, desktop only.
   e2e:
@@ -192,14 +192,37 @@ jobs:
           key: playwright-${{ runner.os }}-${{ steps.pw.outputs.version }}
       - name: Install the browser (only on a cache miss)
         if: steps.pw-cache.outputs.cache-hit != 'true'
-        run: pnpm --filter e2e exec playwright install --with-deps chromium
-      # install-deps ran apt-get update + install on every shard (16 s, but 8-12 min when the mirror was slow).
-      # --dry-run exits non-zero when a library is missing (or apt cannot tell): only then install.
-      - name: Install the browser's system libraries (cache hit, only if missing)
-        if: steps.pw-cache.outputs.cache-hit == 'true'
+        run: pnpm --filter e2e exec playwright install chromium
+      # The browser's system libraries: only fonts are missing on the hosted image, but apt fetched them from
+      # the Azure mirror at times at 34 kB/s (12 min for 25 MB). The .deb files are cached per runner image
+      # and Playwright version and installed with dpkg, offline; apt only runs when they do not cover it.
+      - name: Runner image
+        id: img
+        run: echo "id=${ImageOS:-unknown}-${ImageVersion:-unknown}" >> "$GITHUB_OUTPUT"
+      - name: Restore the browser's system packages
+        id: deb-cache
+        uses: actions/cache/restore@v4
+        with:
+          path: ${{ runner.temp }}/pw-debs
+          key: pw-debs-${{ steps.img.outputs.id }}-${{ steps.pw.outputs.version }}
+      - name: Install the browser's system libraries (only if missing)
+        id: deps
         run: |
-          pnpm --filter e2e exec playwright install-deps --dry-run chromium \
-            || pnpm --filter e2e exec playwright install-deps chromium
+          pw() { pnpm --filter e2e exec playwright "$@"; }
+          debs="$RUNNER_TEMP/pw-debs"
+          if pw install-deps --dry-run chromium; then exit 0; fi
+          if ls "$debs"/*.deb >/dev/null 2>&1; then
+            if sudo dpkg -i "$debs"/*.deb >/dev/null && pw install-deps --dry-run chromium; then exit 0; fi
+            echo "::warning::the cached packages did not cover everything: installing from apt"
+          fi
+          pw install-deps chromium
+          mkdir -p "$debs" && cp /var/cache/apt/archives/*.deb "$debs"/ 2>/dev/null \
+            && echo "save=true" >> "$GITHUB_OUTPUT" || true
+      - if: steps.deps.outputs.save == 'true' && steps.deb-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: ${{ runner.temp }}/pw-debs
+          key: ${{ steps.deb-cache.outputs.cache-primary-key }}
       - name: Restore the build cache
         uses: actions/cache@v4
         with:
@@ -223,27 +246,44 @@ jobs:
           path: ${{ runner.temp }}/supabase-images.tar.gz
           key: ${{ steps.sb-cache.outputs.cache-primary-key }}
       - run: pnpm env:local
+      # Shard sizes from the measured durations (tools/scripts/e2e-shards.mjs, e2e/shard-durations.json): the
+      # shards keep Playwright's own order and contiguous cuts, only the cut points move. FAIL SAFE: any error
+      # leaves the value empty and Playwright splits by equal test counts, as before. Every test still runs:
+      # Playwright itself assigns every group to exactly one shard whatever the sizes.
+      - name: Shard sizes
+        id: weights
+        if: matrix.shard != 'single'
+        env:
+          PROJECT: ${{ github.event_name == 'pull_request' && '--project=desktop' || '' }}
+          PLAYWRIGHT_JSON_OUTPUT_FILE: ${{ runner.temp }}/list.json
+        run: |
+          if pnpm --filter e2e exec playwright test --list --reporter=json $PROJECT >/dev/null \
+            && w=$(node tools/scripts/e2e-shards.mjs weights "$SHARDS" "$RUNNER_TEMP/list.json") \
+            && [[ "$w" =~ ^[0-9]+(:[0-9]+)*$ ]]; then
+            echo "weights=$w" >> "$GITHUB_OUTPUT"
+          else
+            echo "::warning::shard sizes unknown: equal test counts per shard"
+          fi
       # PRs run the desktop project only (half the specs); pushes to main/develop also run the phone-size
       # project, so a mobile layout regression is still caught before a release.
       - name: e2e
         env:
           CI: 'true'
           SHARD: ${{ matrix.shard }}
-          EVENT: ${{ github.event_name }}
+          PROJECT: ${{ github.event_name == 'pull_request' && '--project=desktop' || '' }}
+          PWTEST_SHARD_WEIGHTS: ${{ steps.weights.outputs.weights }}
           E2E_LINES: ${{ matrix.shard == 'single' && 'single' || '' }}
           E2E_DURATIONS_FILE: ${{ matrix.shard != 'single' && format('{0}/e2e-durations.json', runner.temp) || '' }}
         run: |
           if [ "$SHARD" = single ]; then
-            args="--project=desktop"
-            files="tests/journey-1-lead-to-trial.spec.ts tests/journey-2-report.spec.ts
-              tests/journey-3-payment-renewal.spec.ts tests/journey-4-reschedule-conflict.spec.ts
-              tests/journey-5-availability-wizard.spec.ts tests/journey-6-duplicate-student.spec.ts
-              tests/inbox-template-status.spec.ts tests/settings-switches.spec.ts"
+            pnpm turbo e2e --filter=e2e --cache-dir=.turbo/cache -- --project=desktop \
+              tests/journey-1-lead-to-trial.spec.ts tests/journey-2-report.spec.ts \
+              tests/journey-3-payment-renewal.spec.ts tests/journey-4-reschedule-conflict.spec.ts \
+              tests/journey-5-availability-wizard.spec.ts tests/journey-6-duplicate-student.spec.ts \
+              tests/inbox-template-status.spec.ts tests/settings-switches.spec.ts
           else
-            if [ "$EVENT" = pull_request ]; then mode=desktop; args="--project=desktop"; else mode=all; args=""; fi
-            files=$(node tools/scripts/e2e-shards.mjs plan "$SHARD" "$SHARDS" "$mode")
+            pnpm turbo e2e --filter=e2e --cache-dir=.turbo/cache -- --shard="$SHARD/$SHARDS" $PROJECT
           fi
-          pnpm turbo e2e --filter=e2e --cache-dir=.turbo/cache -- $args $files
       - uses: actions/upload-artifact@v4
         if: failure()
         with:
