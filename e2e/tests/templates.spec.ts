@@ -1,9 +1,9 @@
 import type { Page } from '@playwright/test';
 import { ar, expect, test } from '../support/fixtures';
+import { syncNumber } from '../support/template-numbers';
 import {
   restoreTemplates, setTemplateStatus, snapshotTemplates, stubTemplates, templateRow, type TemplateRow,
-} from '../support/settings';
-import { syncNumber } from '../support/template-numbers';
+} from '../support/template-registry';
 import { stubReset, stubTemplateStatus } from '../support/wa-stub';
 
 // Template registry on /admin/settings (R-MSG-01, T2/T3): the health check reads «Meta» (the

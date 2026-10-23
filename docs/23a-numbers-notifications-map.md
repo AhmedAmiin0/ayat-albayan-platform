@@ -78,7 +78,7 @@ Shared, not per line: `WA_API_BASE`/`WA_API_VERSION` (also used by a meta chat l
 
 Env only: `MESSAGING_ENABLED` (`env.ts:110`), `INTEGRATION_CONFIG_FROM_DB` (`:108`), `SETTINGS_CACHE_MS` (`:106`), `MESSAGE_SENDER_POLL_MS` (`:91`).
 
-**DB wins, env is fallback.** `common/integrations/integration-config.queries.ts:26-27` reads plain rows + `rpc('integration_secrets_read')`; `integration-config.service.ts:36-60` refreshes on boot, every `SETTINGS_CACHE_MS` and after each write, keeping the last good snapshot; `env.ts:139-147` `validOverlay` drops invalid values (logged by name); `config/integration-overlay.ts:7-16` frozen snapshot; `env.ts:127-133` `loadEnv() = parse({...process.env, ...overlay})`; `integration-config.view.ts:22` source `db|env|unset`. Controller `settings/integrations` GET, PUT, `PUT|DELETE secrets/:key` (`integration-config.controller.ts:23-57`). Every new **secret** name needs a migration replacing `integration_secret_key_ok`; plain keys do not.
+**DB wins, env is fallback.** `common/integrations/integration-config.queries.ts:26-27` reads plain rows + `rpc('integration_secrets_read')`; `integration-config.service.ts:36-60` refreshes on boot, every `integrationRefreshMs` (`integration-refresh.ts`: `INTEGRATION_REFRESH_MS`, else `SETTINGS_CACHE_MS`) and after each write, keeping the last good snapshot; `env.ts:140-148` `validOverlay` drops invalid values (logged by name); `common/integrations/integration-overlay.ts:8-17` frozen snapshot; `env.ts:128-134` `loadEnv() = parse({...process.env, ...overlay})`; `integration-config.view.ts:22` source `db|env|unset`. Controller `settings/integrations` GET, PUT, `PUT|DELETE secrets/:key` (`integration-config.controller.ts:23-57`). Every new **secret** name needs a migration replacing `integration_secret_key_ok`; plain keys do not.
 
 ### A4. Clients, health check, webhooks, window choice, kill switches
 
@@ -182,39 +182,39 @@ Lesson cancelled; teacher proposes a new time; payment received / receipt / invo
 - **Ops:** no DB-visible job schedule or history.
 
 ### B6. Settings that drive notifications today
-Messaging form (`packages/shared/src/settings/registry.messaging.ts`): `reminder_minutes_before` 60, `reminder_24h_enabled` false, `teacher_whatsapp_new_student` true, `teacher_whatsapp_lesson_reminder` true, `follow_up_hours` [24,72], `reminder_lookahead_hours` 25, `follow_up_slots_from_hours` 12, `follow_up_slots_to_days` 7, `quick_reply_window_hours` 48. Self-saving: `messaging_enabled`, `auto_messages_enabled`, `feedback_mode`, `crm_cutover_done` (UI-only). Accounts: `renewal_alert_remaining` 2, `subscription_expiry_days` 7. Classroom: `meeting_link_auto`, `join_opens_before_min` 15, `join_closes_after_min` 120. Per teacher: `teachers.meeting_mode`.
+Messaging form (`SETTINGS_LAYOUT.messaging` in `packages/shared/src/settings/layout.ts`; entries in `settings/domains/*.ts`): `reminder_minutes_before` 60, `reminder_24h_enabled` false, `teacher_whatsapp_new_student` true, `teacher_whatsapp_lesson_reminder` true, `follow_up_hours` [24,72], `reminder_lookahead_hours` 25, `follow_up_slots_from_hours` 12, `follow_up_slots_to_days` 7, `quick_reply_window_hours` 48. Self-saving: `messaging_enabled`, `auto_messages_enabled`, `feedback_mode`, `crm_cutover_done` (UI-only). Accounts: `renewal_alert_remaining` 2, `subscription_expiry_days` 7. Classroom: `meeting_link_auto`, `join_opens_before_min` 15, `join_closes_after_min` 120. Per teacher: `teachers.meeting_mode`.
 
 ---
 
 ## C. ADMIN UI TODAY
 
 ### C1. Web `/admin/settings`
-Route `apps/web/src/routes/admin/settings.tsx:5` → `features/messaging/SettingsPage.tsx:88`; guard `requireRole('admin')` (`routes/admin.tsx:9`) and `settings.read` (`features/auth/admin-access.ts:26`). **No `settings.write` / `templates.manage` checks in the web UI.** Section order (`SettingsPage.tsx:60-67`): Messaging → schedule, classroom, reports, accounts, uploads, academy → sales → appearance → **Integrations** → custom values. **Four save models on one page**: sticky «حفظ» for registry fields, instant switches, «حفظ التكاملات», per-row secret saves.
+Route `apps/web/src/routes/admin/settings.tsx` → `features/settings/SettingsPage.tsx`; guard `requireRole('admin')` (`routes/admin.tsx:9`) and `settings.read` (`features/auth/admin-access.ts:26`). **No `settings.write` / `templates.manage` checks in the web UI.** Section order (`features/settings/page-sections.tsx`, `PAGE_SECTIONS`): Messaging → schedule, classroom, reports, accounts, uploads, academy → sales → appearance → **Integrations** → custom values. **Four save models on one page**: sticky «حفظ» for registry fields, instant switches, «حفظ التكاملات», per-row secret saves.
 
-**A. «الرسائل والواتساب» (`SettingsSections.tsx:56-89`)**
+**A. «الرسائل والواتساب» (`features/settings/sections/MessagingSection.tsx`)**
 
 | # | Control | File | Edits | API permission |
 |---|---|---|---|---|
-| A1 | CRM cut-over | `MessagingSwitch.tsx:40-59` | `settings.crm_cutover_done` | `settings.write` |
-| A2 | Kill switch «إرسال الرسائل» (confirm on enable only) | `MessagingSwitch.tsx:60-102` | `settings.messaging_enabled` | `settings.write` |
+| A1 | CRM cut-over | `features/messaging/MessagingSwitch.tsx` | `settings.crm_cutover_done` | `settings.write` |
+| A2 | Kill switch «إرسال الرسائل» (confirm on enable only) | `features/messaging/MessagingSwitch.tsx` | `settings.messaging_enabled` | `settings.write` |
 | A3 | Server gate note + queued count | `ServerGateNote.tsx:15-28` | read-only (`GET /messages/gate`) | `messages.read` |
-| A4 | «الرسائل التلقائية» (no confirm) | `AutoMessagesSwitch.tsx:38-45` | `auto_messages_enabled` | `settings.write` |
-| A5 | «بعد انتهاء الحلقة» chips (save on change) | `FeedbackModeSwitch.tsx:27-34` | `feedback_mode` | `settings.write` |
+| A4 | «الرسائل التلقائية» (no confirm) | `features/messaging/AutoMessagesSwitch.tsx` | `auto_messages_enabled` | `settings.write` |
+| A5 | «بعد انتهاء الحلقة» chips (save on change) | `features/messaging/FeedbackModeSwitch.tsx` | `feedback_mode` | `settings.write` |
 | A6 | «خطوط واتساب» + «افحص الخطوط» (nothing on mount) | `LinesCard.tsx`, `LineRow.tsx`, `LineFacts.tsx`, `LineDriver.tsx` | read-only | `templates.manage` + guard |
-| A7 | Registry fields (bottom «حفظ») | `RegistryField.tsx:33` | the B6 messaging keys | `settings.write` (audited) |
+| A7 | Registry fields (bottom «حفظ») | `features/settings/registry-form/RegistryField.tsx` | the B6 messaging keys | `settings.write` (audited) |
 | A8 | Template health | `TemplateHealth.tsx:43-48` | — | `messages.read` |
 | A9 | «القوالب حسب الرقم» + «مزامنة مع Meta» | `TemplateLines.tsx`, `TemplateLineBlock.tsx:56-83` | template status/quality/body sync | `templates.manage` |
 | A10 | «متاح للمعلمين والمبيعات» | `template-columns.tsx:101-115`, `StarterToggle.tsx` | `message_templates.sales_starter` | `templates.manage` |
 | A11 | «إرسال إلى ميتا» | `SubmitTemplateDialog.tsx` | status → pending | `templates.manage` |
 | A12 | «نقل إلى الرقم الآخر» | `MoveLineDialog.tsx` | `message_templates.line` | `templates.manage` |
 
-**B. Academy section:** `academy_whatsapp_e164` «رقم واتساب الأكاديمية» (`registry.accounts.ts:48-51`) — a third "number", the public contact, unrelated to either line in the UI.
-**C. Sales:** `SalesAutoAssignSwitch.tsx` (`sales_auto_assign`, no confirm).
-**D. «التكاملات»** (`IntegrationsPanel.tsx`), groups `wa_notifications`, `wa_chat`, `kapso`, `wa_safety`, `livekit`, `expo`, `web_push`, `fx`. Plain keys (`PlainIntegrationRow.tsx`, placeholder = raw key) saved together; secrets write-only per row (`SecretIntegrationRow.tsx`, confirm only on clear). Writes need `settings.write`; audit records key names only.
-**E. Custom values** (`CustomValuesPanel.tsx`).
+**B. Academy section:** `academy_whatsapp_e164` «رقم واتساب الأكاديمية» (`packages/shared/src/settings/domains/academy.ts`) — a third "number", the public contact, unrelated to either line in the UI.
+**C. Sales:** `features/sales/SalesAutoAssignSwitch.tsx` in `features/settings/sections/SalesSection.tsx` (`sales_auto_assign`, no confirm).
+**D. «التكاملات»** (`features/integrations/IntegrationsPanel.tsx`), groups `wa_notifications`, `wa_chat`, `kapso`, `wa_safety`, `livekit`, `expo`, `web_push`, `fx`. Plain keys (`PlainIntegrationRow.tsx`, placeholder = raw key) saved together; secrets write-only per row (`SecretIntegrationRow.tsx`, confirm only on clear). Writes need `settings.write`; audit records key names only.
+**E. Custom values** (`features/custom-config/CustomValuesPanel.tsx`; the concepts: docs/25).
 
 ### C2. Other places
-`/admin/inbox` (line badges, «سيصل ردّك عبر …» in text mode only, gate note, follow-up pause, retry / sent manually / hand-off); `/admin/roles` (grants `templates.*`, `settings.write`, `messages.*`, `notifications.push`); `/admin/translations` (push and invite texts); bell panel web-push toggle per device (`WebPushToggle.tsx`, `PUT|DELETE /me/web-push`).
+`/admin/inbox` (line badges, «سيصل ردّك عبر …» in text mode only, gate note, follow-up pause, retry / sent manually / hand-off); `/admin/roles` (grants `templates.*`, `settings.write`, `messages.*`, `notifications.push`); `/admin/translations` (push and invite texts); bell panel web-push toggle per device (`features/notifications/WebPushToggle.tsx`, `PUT|DELETE /me/web-push`).
 
 ### C3. Mobile admin (Expo)
 `app/(tabs)/more/ops/settings.tsx` → `SettingsScreen.tsx` (guard `settings.read`): 7 editable fields (`SettingsFields.tsx:133-190`, incl. `follow_up_hours`, renewal alert, expiry days); read-only `messaging_enabled`, `auto_messages_enabled`, `crm_cutover_done` («تُدار من الموقع فقط», `ReadOnlySettings.tsx:71-88`) — shown as «مفعّل» even when the server gate blocks. `more/notifications.tsx` list + mark all read; push registered automatically, no toggle. Inbox shows line and gate notes. **Missing:** lines check, templates, integrations, feedback mode, teacher toggles, reminder minutes, 24 h reminder, follow-up slot windows, quick-reply window.

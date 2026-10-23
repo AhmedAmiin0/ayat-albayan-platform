@@ -3,9 +3,9 @@ import { makeAssistant } from '../support/assistant-api';
 import { ar, expect, test } from '../support/fixtures';
 import { listedKeys } from '../support/restricted-templates';
 import { CHAT_WABA, RESCHEDULE, rescheduleRow, seedReschedule } from '../support/reschedule-template';
-import { restoreTemplates, snapshotTemplates, stubTemplates, type TemplateRow } from '../support/settings';
 import { withSql } from '../support/schedule';
 import { numberBlock, syncNumber } from '../support/template-numbers';
+import { restoreTemplates, snapshotTemplates, stubTemplates, type TemplateRow } from '../support/template-registry';
 import { SINGLE_LINE } from '../support/wa-lines';
 import { stubReset, stubTemplateStatus } from '../support/wa-stub';
 

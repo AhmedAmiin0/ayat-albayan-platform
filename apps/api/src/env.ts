@@ -1,6 +1,7 @@
 import { isIntegrationKey, parseAllowedRecipients } from '@ab/shared';
 import { z } from 'zod';
-import { integrationOverlay } from './config/integration-overlay';
+import { integrationOverlay } from './common/integrations/integration-overlay';
+import { blankIsUnset, optionalSecret } from './env.blank';
 import { GOOGLE_SHAPE } from './env.google';
 import { KAPSO_SHAPE } from './env.kapso';
 import { WEB_PUSH_SHAPE } from './env.web-push';
@@ -13,9 +14,6 @@ export { livekitEnv, type LivekitEnv } from './env.livekit';
 export { webPushEnv } from './env.web-push';
 export { googleEnv, googleRedirectUri, type GoogleEnv, type GoogleEndpoints } from './env.google';
 
-/** `KEY=` (empty, as in .env.example) means unset, never a boot failure. */
-const blankIsUnset = (v: unknown) => (typeof v === 'string' && v.trim() === '' ? undefined : v);
-const optionalSecret = z.preprocess(blankIsUnset, z.string().trim().min(1).optional());
 /** Comma list → normalised E.164 list; any bad item fails the boot, naming it (fail closed). */
 const recipientList = z.string().transform((raw, ctx) => {
   const { items, bad } = parseAllowedRecipients(raw);
@@ -107,6 +105,8 @@ const schema = z.object({
    * e2e sets 0 (its specs write settings rows with SQL).
    */
   SETTINGS_CACHE_MS: z.preprocess(blankIsUnset, z.coerce.number().int().min(0).default(30_000)),
+  /** How often the integration config is re-read (ms; integration-refresh.ts). Unset = SETTINGS_CACHE_MS. */
+  INTEGRATION_REFRESH_MS: z.preprocess(blankIsUnset, z.coerce.number().int().min(0).optional()),
   /** false = ignore the database's integration config (env only); vitest sets it so no boot reads it. */
   INTEGRATION_CONFIG_FROM_DB: z.preprocess(blankIsUnset, z.stringbool().default(true)),
   /**
@@ -120,7 +120,7 @@ export type Env = z.infer<typeof schema>;
 
 /**
  * The API's config. Called with no argument (every reader in app code): process.env with the
- * database's integration values on top (config/integration-overlay, a non-empty DB value wins).
+ * database's integration values on top (common/integrations/integration-overlay, a non-empty DB value wins).
  * Called with an explicit source (tests, the import command): that source alone, nothing added.
  * The overlay is pre-checked key by key, and should the merge still fail, env alone is used: a DB
  * value never makes this throw.

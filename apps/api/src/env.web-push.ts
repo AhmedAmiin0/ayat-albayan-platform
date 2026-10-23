@@ -1,10 +1,8 @@
 import { vapidPublicKey, vapidSubject } from '@ab/shared';
 import { z } from 'zod';
 import type { Env } from './env';
+import { blankIsUnset } from './env.blank';
 import type { VapidKeys } from './common/push/web-push.vapid';
-
-/** `KEY=` (empty, as in .env.example) means unset, never a boot failure. */
-const blankIsUnset = (v: unknown) => (typeof v === 'string' && v.trim() === '' ? undefined : v);
 
 /**
  * Browser push (R-NOT-02, docs/09). All three or none: any unset = browser push is off (GET

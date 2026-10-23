@@ -99,8 +99,12 @@ chat_list_threads(list_id refs chat_lists on delete cascade, phone_e164 E.164, a
 
 -- system
 audit_log(id, actor_id, entity, entity_id, action, before jsonb, after jsonb, at)
-settings(key pk, value jsonb)   -- follow-up delays, late-cancel hours, reminder offsets
+settings(key pk, value jsonb, updated_at, updated_by)   -- the academy settings (registry: packages/shared/src/settings/domains/*.ts), plus the 3 google_* rows google-sync owns
+custom_config(key pk check '^[a-z][a-z0-9_.-]{1,63}$', value jsonb ≤ 8 KB, description, is_public, updated_at, updated_by)   -- «قيم مخصصة»; is_public rows join GET /settings/public
+integration_config(key pk check '^[A-Z][A-Z0-9_]{2,63}$', value text ≤ 4 KB, updated_at, updated_by)   -- plain integration keys; secrets in Vault `integration:<KEY>` (allow-list integration_secret_key_ok)
 ```
+
+Settings, custom values, the public config, integrations and bootstrap env are five separate concepts, each with its own store, folders and routes: docs/25-settings-and-config.md.
 
 Derived views: `v_subscription_balance` (lessons_used = count completed chargeable), `v_lesson_sequence` (row_number per student), `v_funnel`, `v_teacher_load`.
 
@@ -153,7 +157,8 @@ OpenAPI generated from Nest decorators → `packages/api-client`.
 ## 7. Integrations
 
 - **WhatsApp Cloud API**: webhook `POST /webhooks/whatsapp` (verify `X-Hub-Signature-256`), `GET` challenge; outbound `messages` endpoint; templates created in Meta Business Manager and names stored in `message_templates`; startup `TemplateRegistry.verifyAll()` flags missing (fixes the 132001 errors for good).
-- **Config** (owner, 2026-10-12, migration `20261012000310`): the integration keys (WhatsApp lines, the staging guards, LiveKit, Expo, FX URL; registry `packages/shared/src/integrations`) are edited by an admin in `/admin/settings` → «التكاملات». Plain values live in `public.integration_config`, secrets in Supabase Vault (service-role functions, write-only from the app). The API (`common/integrations`, `config/integration-overlay.ts`) loads them at boot, every `SETTINGS_CACHE_MS` and after each save, checks each against the env schema and lays them over `process.env` in `loadEnv()`: a non-empty DB value wins, env is the fallback, and every reader takes the config per call (no restart). Bootstrap and infrastructure keys (`PORT`, `SUPABASE_*`, `WEB_ORIGIN`, …) stay in env only; sending is the DB switch `settings.messaging_enabled` alone (docs/23). docs/09 «Integration config in the database».
+- **Config** (owner, 2026-10-12, migration `20261012000310`): the integration keys (WhatsApp lines, the staging guards, LiveKit, Expo, FX URL; registry `packages/shared/src/integrations`) are edited by an admin in `/admin/settings` → «التكاملات». Plain values live in `public.integration_config`, secrets in Supabase Vault (service-role functions, write-only from the app). The API (`common/integrations`: `IntegrationConfigModule`, global; the snapshot in `common/integrations/integration-overlay.ts`) loads them at boot, after each save and every `integrationRefreshMs(env)` (`common/integrations/integration-refresh.ts`: the optional env `INTEGRATION_REFRESH_MS`, else `SETTINGS_CACHE_MS`; never when `INTEGRATION_CONFIG_FROM_DB=false`), checks each against the env schema and lays them over `process.env` in `loadEnv()`: a non-empty DB value wins, env is the fallback, and every reader takes the config per call (no restart). Bootstrap and infrastructure keys (`PORT`, `SUPABASE_*`, `WEB_ORIGIN`, …) stay in env only (`env.ts`, blank = unset via `env.blank.ts`); sending is the DB switch `settings.messaging_enabled` alone (docs/23). docs/09 «Integration config in the database».
+- **Settings and config module graph** (docs/25 §3): `SettingsModule` (global: `SettingsService`, storage and cache only; GET/PATCH `/settings`, GET `/config/meta`) ← `PublicConfigModule` (GET `/settings/public`) → `CustomConfigModule` (`/config/custom`); every module reads settings through its own reader `modules/<m>/<m>.settings.ts` (`readSlice`, docs/25 §4); `IntegrationConfigModule` (global) → the overlay ← `loadEnv()`. Shared: `settings/` (registry by owner in `domains/*.ts`, page order in `layout.ts`) ← `custom-config/` ← `public-config.ts`. Boundary tests: `packages/shared/src/settings/boundaries.test.ts`, `apps/api/src/common/config-boundaries.test.ts`, `apps/web/src/features/settings/boundaries.test.ts`, and the API ESLint `no-restricted-imports` guard.
 - **Google Calendar** (optional mirror): service account with calendar share; events keyed by `extendedProperties.private.lessonId`.
 - **PDF**: HTML (React) → Playwright Chromium in a worker; stored at `reports/{student_id}/{lesson_id}.pdf`; signed URLs 7 days for WhatsApp document template.
 

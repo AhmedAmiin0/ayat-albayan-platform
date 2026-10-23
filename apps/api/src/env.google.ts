@@ -1,11 +1,7 @@
 import { GOOGLE_REDIRECT_URI_PRODUCTION } from '@ab/shared';
 import { z } from 'zod';
 import type { Env } from './env';
-
-/** `KEY=` (empty, as in .env.example) means unset, never a boot failure. */
-const blankIsUnset = (v: unknown) => (typeof v === 'string' && v.trim() === '' ? undefined : v);
-const optionalSecret = z.preprocess(blankIsUnset, z.string().trim().min(1).optional());
-const optionalUrl = z.preprocess(blankIsUnset, z.url().optional());
+import { blankIsUnset, optionalSecret, optionalUrl } from './env.blank';
 
 /**
  * Google sync (docs/24). The OAuth client (id plain, secret in Vault) comes from «التكاملات» or env.

@@ -1,9 +1,7 @@
 import { ar, expect, test } from '../support/fixtures';
+import { clearQueue, messageState, queueRenewal, queueText, queuedCount, sentToDigits } from '../support/message-queue';
 import { freshDigits, seedLead } from '../support/messages';
-import {
-  clearQueue, messageState, queueRenewal, queueText, queuedCount, restoreSettings, sentToDigits,
-  settingText, snapshotSettings,
-} from '../support/settings';
+import { restoreSettings, settingText, snapshotSettings } from '../support/settings';
 import { setMessaging, stubInbound, stubReset, stubSent } from '../support/wa-stub';
 
 // /admin/settings switches (R-MSG-01, cut-over docs/09, docs/23 phase 2): the kill switch is the only
