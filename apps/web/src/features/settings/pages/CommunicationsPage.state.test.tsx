@@ -14,7 +14,7 @@ vi.mock('@tanstack/react-router', async (orig) => ({
 }));
 
 const p = t.settingsPages;
-const hoursLabel = t.templates.settings.followUpHours;
+const hoursLabel = t.settings.reminderLookaheadHours;
 
 afterEach(() => {
   apiFetch.mockReset();
@@ -29,30 +29,30 @@ describe('«التواصل» timing form state', () => {
     act(() => {
       client.setQueryData(CONFIG_QUERY_KEYS.settings, { ...SETTINGS, booking_horizon_weeks: 9, teachers_always_available: true, activity_retention_days: 30 });
     });
-    fireEvent.change(hours, { target: { value: '24، 48' } });
+    fireEvent.change(hours, { target: { value: '30' } });
     apiSend.mockResolvedValue(SETTINGS);
     fireEvent.click(screen.getByRole('button', { name: t.common.save }));
     await waitFor(() => expect(apiSend).toHaveBeenCalledTimes(1));
-    expect(Object.keys(apiSend.mock.calls[0]?.[2] as object)).toEqual(['followUpHours']);
+    expect(Object.keys(apiSend.mock.calls[0]?.[2] as object)).toEqual(['reminderLookaheadHours']);
   });
 
   it('an untouched timing field follows fresh settings; an edited one keeps the edit', async () => {
     const client = renderCommunications({ apiFetch, tab: 'timing' });
     const hours = (await screen.findByLabelText(hoursLabel)) as HTMLInputElement;
-    act(() => client.setQueryData(CONFIG_QUERY_KEYS.settings, { ...SETTINGS, follow_up_hours: [12, 36] }));
-    await waitFor(() => expect(hours.value).toBe(`12${t.common.listSeparator}36`));
-    fireEvent.change(hours, { target: { value: '24، 48' } });
-    act(() => client.setQueryData(CONFIG_QUERY_KEYS.settings, { ...SETTINGS, follow_up_hours: [6] }));
-    expect(hours.value).toBe('24، 48');
+    act(() => client.setQueryData(CONFIG_QUERY_KEYS.settings, { ...SETTINGS, reminder_lookahead_hours: 40 }));
+    await waitFor(() => expect(hours.value).toBe('40'));
+    fireEvent.change(hours, { target: { value: '30' } });
+    act(() => client.setQueryData(CONFIG_QUERY_KEYS.settings, { ...SETTINGS, reminder_lookahead_hours: 50 }));
+    expect(hours.value).toBe('30');
   });
 
   it('switching tabs keeps an unsaved timing edit', async () => {
     renderCommunications({ apiFetch, tab: 'timing' });
-    fireEvent.change(await screen.findByLabelText(hoursLabel), { target: { value: '24، 48' } });
+    fireEvent.change(await screen.findByLabelText(hoursLabel), { target: { value: '30' } });
     fireEvent.click(screen.getByRole('tab', { name: p.communicationsTabs.templates }));
     expect(screen.queryByLabelText(hoursLabel)).toBeNull();
     fireEvent.click(screen.getByRole('tab', { name: p.communicationsTabs.timing }));
-    expect(((await screen.findByLabelText(hoursLabel)) as HTMLInputElement).value).toBe('24، 48');
+    expect(((await screen.findByLabelText(hoursLabel)) as HTMLInputElement).value).toBe('30');
   });
 
   it('a failed load says so inline with «أعد المحاولة», which refetches; no role=status while loading', async () => {

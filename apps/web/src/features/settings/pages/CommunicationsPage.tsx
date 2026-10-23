@@ -19,12 +19,15 @@ export interface CommunicationsPageProps {
   renderGuard?: (names: readonly string[]) => ReactNode;
 }
 
-const TABS = COMMUNICATIONS_TABS.map((value) => ({ value, label: t.settingsPages.communicationsTabs[value] }));
+/** «ماذا يُرسل ومتى» is «الإشعارات» now (editable, docs/26b §3); the tab value stays 'catalogue'. */
+const tabLabel = (value: CommunicationsTab): string =>
+  value === 'catalogue' ? t.notificationRules.tabLabel : t.settingsPages.communicationsTabs[value];
+const TABS = COMMUNICATIONS_TABS.map((value) => ({ value, label: tabLabel(value) }));
 
 /**
  * /admin/settings/communications «التواصل» (docs/26b §3, docs/26 26-P3): what was the messaging part
  * of the old long settings page, one tab at a time — «الإرسال» (the switches), «الأرقام» (numbers and
- * lines), «ماذا يُرسل ومتى» (the read-only catalogue), «مواعيد الرسائل» (the timing fields) and
+ * lines), «الإشعارات» (the editable catalogue), «مواعيد الرسائل» (the timing fields) and
  * «القوالب». The sending state stays in the head on every tab. Only the tab in view is mounted (its
  * queries load on demand); the timing form lives above the tabs, so an edit survives a switch.
  */

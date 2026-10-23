@@ -34,19 +34,21 @@ describe('«التواصل» (/admin/settings/communications)', () => {
   it('five tabs, «الإرسال» first and selected: the switches, nothing of the other tabs', async () => {
     renderCommunications({ apiFetch });
     const tabs = within(screen.getByRole('tablist', { name: p.tabs })).getAllByRole('tab');
-    expect(tabs.map((x) => x.textContent)).toEqual(Object.values(p.communicationsTabs));
+    expect(tabs.map((x) => x.textContent)).toEqual(Object.values({ ...p.communicationsTabs, catalogue: t.notificationRules.tabLabel }));
     expect(tab(p.communicationsTabs.sending).getAttribute('aria-selected')).toBe('true');
     expect(await screen.findByRole('button', { name: s.enableTitle })).toBeTruthy();
     expect(screen.getByText(s.autoMessages)).toBeTruthy();
     expect(screen.getByRole('tabpanel', { name: p.communicationsTabs.sending })).toBeTruthy();
-    expect(screen.queryByRole('region', { name: t.notificationCatalogue.title })).toBeNull();
+    expect(screen.queryByRole('region', { name: t.notificationRules.title })).toBeNull();
+    // The feedback mode is the «أزرار تقييم الحلقة» row of «الإشعارات» now, not a switch here.
+    expect(screen.queryByText(s.feedbackMode)).toBeNull();
     expect(screen.queryByRole('heading', { name: t.templates.title })).toBeNull();
   });
 
-  it('«ماذا يُرسل ومتى»: the read-only catalogue (guardian first, report_ready in view), no timing fields', async () => {
+  it('«الإشعارات» (tab value catalogue): the catalogue (guardian first, report_ready in view), no timing form', async () => {
     renderCommunications({ apiFetch, catalogue: CATALOGUE });
-    fireEvent.click(tab(p.communicationsTabs.catalogue));
-    const region = await screen.findByRole('region', { name: t.notificationCatalogue.title });
+    fireEvent.click(tab(t.notificationRules.tabLabel));
+    const region = await screen.findByRole('region', { name: t.notificationRules.title });
     await within(region).findByText(t.notificationCatalogue.entries.report_ready.name);
     expect(region.querySelector('[data-key="report_ready"]')).toBeTruthy();
     expect(screen.queryByLabelText(s.followUpHours)).toBeNull();
@@ -56,7 +58,7 @@ describe('«التواصل» (/admin/settings/communications)', () => {
   it('«مواعيد الرسائل»: the timing fields and their «حفظ» in their own tab, the panel named by its tab', async () => {
     renderCommunications({ apiFetch, tab: 'timing' });
     const panel = await screen.findByRole('tabpanel', { name: p.communicationsTabs.timing });
-    expect(within(panel).getByLabelText(s.followUpHours)).toBeTruthy();
+    expect(within(panel).getByLabelText(t.settings.reminderLookaheadHours)).toBeTruthy();
     expect(within(panel).getByRole('button', { name: t.common.save })).toBeTruthy();
     expect(tab(p.communicationsTabs.timing).getAttribute('aria-controls')).toBe(panel.id);
   });
@@ -79,7 +81,7 @@ describe('«التواصل» (/admin/settings/communications)', () => {
   it('no role=status at rest on any tab', async () => {
     renderCommunications({ apiFetch });
     await screen.findByRole('button', { name: s.enableTitle });
-    for (const name of Object.values(p.communicationsTabs)) {
+    for (const name of Object.values({ ...p.communicationsTabs, catalogue: t.notificationRules.tabLabel })) {
       fireEvent.click(tab(name));
       expect(screen.queryAllByRole('status')).toHaveLength(0);
     }
