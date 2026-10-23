@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { CommunicationsController } from './communications.controller';
+import { CommunicationsDeps } from './communications.deps';
 import { CommunicationsService } from './communications.service';
 import { NumbersConfig } from './numbers.config';
 import { NumbersController } from './numbers.controller';
@@ -15,11 +16,11 @@ import { NumbersSettings } from './numbers.settings';
  * Academy numbers (docs/23 §2c, phase 3): wa_numbers, the per-number Vault secrets, the import, parity
  * and the comms_source switch. Exports NumbersConfig (the line config port) and NumbersHealth (the line
  * check's per-number store) to WhatsappModule, which imports this module so the config loads first.
- * DB, settings and audit come from the global modules.
+ * DB, settings and audit come from the global modules; RulesParity from the global NotificationRulesModule.
  */
 @Module({
   controllers: [NumbersController, CommunicationsController],
-  providers: [NumbersSettings, NumbersQueries, NumbersSecrets, NumbersConfig, NumbersEffects, NumbersService, NumbersImport, CommunicationsService, NumbersHealth],
+  providers: [NumbersSettings, NumbersQueries, NumbersSecrets, NumbersConfig, NumbersEffects, NumbersService, NumbersImport, CommunicationsDeps, CommunicationsService, NumbersHealth],
   exports: [NumbersConfig, NumbersHealth],
 })
 export class NumbersModule {}

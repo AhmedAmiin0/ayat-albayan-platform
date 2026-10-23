@@ -1,4 +1,4 @@
-import { notificationEntry, resolveRule, type EffectiveRule, type NotificationChannel, type NotificationKey } from '@ab/shared';
+import { NOTIFICATION_CATALOGUE, notificationEntry, resolveRule, type EffectiveRule, type NotificationChannel, type NotificationKey } from '@ab/shared';
 import { Injectable, Logger } from '@nestjs/common';
 import { RulesReader, type RulesSnapshot } from './rules.reader';
 
@@ -29,6 +29,18 @@ export class NotificationPolicy {
       this.log.warn(`notification rules unread (producers hold): ${e instanceof Error ? e.message : String(e)}`);
       return null;
     }
+  }
+
+  /** Every catalogue row's effective rule from one snapshot (each one closed when unreadable), and that snapshot. */
+  async all(): Promise<{ snapshot: RulesSnapshot | null; rules: Map<NotificationKey, EffectiveRule> }> {
+    const snap = await this.snapshot();
+    const rules = new Map<NotificationKey, EffectiveRule>(
+      NOTIFICATION_CATALOGUE.map((e) => [
+        e.key,
+        snap ? resolveRule(e, { mode: snap.mode, row: snap.rows.get(e.key) ?? null, settings: snap.settings }) : closed(e.key),
+      ]),
+    );
+    return { snapshot: snap, rules };
   }
 
   async rule(key: NotificationKey): Promise<EffectiveRule> {

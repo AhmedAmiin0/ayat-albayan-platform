@@ -19,6 +19,6 @@ import { SETTINGS_CACHE_MS, SettingsService } from './settings.service';
     SettingsService,
     SettingsMetaQueries,
   ],
-  exports: [SettingsService],
+  exports: [SettingsService, SETTINGS_CACHE_MS],
 })
 export class SettingsModule {}

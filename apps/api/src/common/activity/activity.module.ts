@@ -18,5 +18,7 @@ import { ActivityWriter } from './activity.writer';
     ActivityRetentionJob,
     { provide: APP_INTERCEPTOR, useClass: ActivityInterceptor },
   ],
+  // Modules that log a domain event of their own (notification-rules: an essential row switched off).
+  exports: [ActivityWriter],
 })
 export class ActivityModule {}
