@@ -60,7 +60,7 @@ export interface RoomCandidate {
 
 export interface CandidateTiming {
   now: Date;
-  /** settings.reminder_minutes_before: the link goes with the same-day reminder. */
+  /** lesson_reminder minutes_before: the link goes with the same-day reminder. */
   minutesBefore: number;
   win: JoinWindowConfig;
 }

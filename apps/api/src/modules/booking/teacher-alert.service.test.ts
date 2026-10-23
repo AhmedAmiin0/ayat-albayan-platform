@@ -27,6 +27,23 @@ describe('TeacherAlert.afterBooking (R-NOT-03)', () => {
     expect(queries.queue).not.toHaveBeenCalled();
   });
 
+  it.each([
+    ['module mode, the teacher_new_student row off', { mode: 'module' as const, rows: [{ key: 'teacher_new_student', enabled: false }] }],
+    ['rules unreadable (fail closed)', { fail: true }],
+  ])('%s: the bell row only, no WhatsApp', async (_name, rules) => {
+    const { alert, push, queries } = fakeTeacherAlert({ lessons: LESSONS, rules });
+    await alert.afterBooking({ req: REQ, result: RESULT });
+    expect(push.notifyProfiles).toHaveBeenCalledTimes(1);
+    expect(queries.queue).not.toHaveBeenCalled();
+  });
+
+  it('module mode, the row on: WhatsApp queued even while the legacy key is off', async () => {
+    const rules = { mode: 'module' as const, rows: [{ key: 'teacher_new_student', enabled: true }] };
+    const { alert, queries } = fakeTeacherAlert({ lessons: LESSONS, rules, settings: { teacher_whatsapp_new_student: false } });
+    await alert.afterBooking({ req: REQ, result: RESULT });
+    expect(queries.queue).toHaveBeenCalledTimes(1);
+  });
+
   it('template not approved at Meta: the bell row only, no WhatsApp', async () => {
     const { alert, push, queries } = fakeTeacherAlert({ lessons: LESSONS, approved: false });
     await alert.afterBooking({ req: REQ, result: RESULT });

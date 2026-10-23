@@ -3,6 +3,8 @@ import { Inject, Injectable } from '@nestjs/common';
 import { z } from 'zod';
 import { DB, type Db } from '../../common/db/db.module';
 import { LessonEvents } from '../../common/events/lesson-events';
+import { gateConfirmations } from '../../common/rules/confirmations';
+import { NotificationPolicy } from '../notification-rules/policy';
 import { ConflictChecker } from '../scheduling/conflict-checker';
 import { callRpc } from '../scheduling/rpc';
 import { dbError } from '../teachers/http';
@@ -16,6 +18,7 @@ export class CourseChangeWriter {
   constructor(
     @Inject(DB) private readonly db: Db,
     private readonly events: LessonEvents,
+    private readonly policy: NotificationPolicy,
   ) {}
 
   /** The change this clientRequestId already made (a retry), or null. */
@@ -28,10 +31,13 @@ export class CourseChangeWriter {
 
   /**
    * One transaction: the old rules end, their open lessons move, the new rules and lessons, the audit
-   * row. Then the balance alerts (R-SUB-02) hear which lessons moved, as LessonStore.commit.
+   * row. Then the balance alerts (R-SUB-02) hear which lessons moved, as LessonStore.commit. Its
+   * booking_confirmation* rows only while that notification rule is on (gateConfirmations).
    */
   async apply(change: { payload: Record<string, unknown>; subscriptionId: string; moved: readonly string[] }): Promise<CourseChangeResult> {
-    const result = this.result(await callRpc(this.db, 'change_course', { p: change.payload }), change.subscriptionId);
+    const { messages } = change.payload;
+    const p = Array.isArray(messages) ? { ...change.payload, messages: await gateConfirmations(this.policy, messages) } : change.payload;
+    const result = this.result(await callRpc(this.db, 'change_course', { p }), change.subscriptionId);
     await this.events.changed(change.moved);
     return result;
   }

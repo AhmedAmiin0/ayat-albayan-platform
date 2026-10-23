@@ -10,7 +10,6 @@ const EXPECTED = [
   'teachers_always_available',
   'meeting_link_auto',
   'upload_max_mb',
-  'teacher_whatsapp_new_student',
   'sales_auto_assign',
 ] as const;
 

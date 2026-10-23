@@ -4,6 +4,7 @@ import {
   type OnApplicationBootstrap,
   type OnModuleDestroy,
 } from '@nestjs/common';
+import { NotificationPolicy } from '../notification-rules/policy';
 import { ReportPdfPublisher } from './report-pdf.publisher';
 import { ReportPdfQueries } from './report-pdf.queries';
 import { retry, sleep } from './retry';
@@ -40,6 +41,7 @@ export class ReportPdfJob implements OnApplicationBootstrap, OnModuleDestroy {
   constructor(
     private readonly queries: ReportPdfQueries,
     private readonly publisher: ReportPdfPublisher,
+    private readonly policy: NotificationPolicy,
   ) {}
 
   onApplicationBootstrap(): void {
@@ -108,10 +110,12 @@ export class ReportPdfJob implements OnApplicationBootstrap, OnModuleDestroy {
   /**
    * Upload, then queue the message, then `ready`: a crash in between leaves `rendering`, which the
    * stale sweep re-queues; the re-render overwrites the same object and the message insert no-ops.
+   * The message only while the report_ready rule is on (off or unreadable: the PDF is still ready, logged).
    */
   private async publish(id: string, version: number): Promise<void> {
     const { path, message } = await this.publisher.publish(id, new Date());
-    await this.queries.queueMessage(message);
+    if (await this.policy.isOn('report_ready')) await this.queries.queueMessage(message);
+    else this.log.log(`report_ready off: report ${id} v${version} not sent to the guardian`);
     if (!(await this.queries.finish({ id, version, status: 'ready', path }))) {
       this.log.log(`report ${id} changed while v${version} rendered; the newer version renders next`);
     }

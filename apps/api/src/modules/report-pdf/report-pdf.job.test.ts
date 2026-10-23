@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { fakePolicy } from '../notification-rules/policy.fakes';
 import { ReportPdfJob } from './report-pdf.job';
 import type { ReportPdfPublisher } from './report-pdf.publisher';
 import type { ReportPdfQueries } from './report-pdf.queries';
@@ -14,8 +15,8 @@ const publisher = { publish: vi.fn(), close: vi.fn() };
 const NOW = new Date('2026-10-02T08:00:00Z');
 const message = { dedup_key: 'report_ready:r1' };
 
-function job() {
-  const j = new ReportPdfJob(queries as unknown as ReportPdfQueries, publisher as unknown as ReportPdfPublisher);
+function job(policy = fakePolicy()) {
+  const j = new ReportPdfJob(queries as unknown as ReportPdfQueries, publisher as unknown as ReportPdfPublisher, policy);
   j.wait = vi.fn(async () => undefined);
   return j;
 }
@@ -105,6 +106,16 @@ describe('ReportPdfJob — the R-REP-03 queue worker', () => {
     queries.pendingIds.mockResolvedValue([]);
     await job().runOnce(NOW);
     expect(publisher.close).not.toHaveBeenCalled();
+  });
+
+  it.each([
+    ['module mode, the report_ready row off', fakePolicy({ mode: 'module', rows: [{ key: 'report_ready', enabled: false }] })],
+    ['rules unreadable (fail closed)', fakePolicy({ fail: true })],
+  ])('%s: the PDF is stored and ready, no message queued', async (_name, policy) => {
+    const summary = await job(policy).runOnce(NOW);
+    expect(summary).toEqual({ recovered: 0, rendered: 2, failed: 0, skipped: 0 });
+    expect(queries.queueMessage).not.toHaveBeenCalled();
+    expect(queries.finish).toHaveBeenCalledWith({ id: 'r1', version: 3, status: 'ready', path: 's/r1.pdf' });
   });
 
   it('never throws, even when the queue cannot be read', async () => {

@@ -1,16 +1,15 @@
 import { describe, expect, it } from 'vitest';
-import { readerOf } from '../../common/settings/settings.fakes';
+import { fakePolicy, type FakePolicyInput } from '../notification-rules/policy.fakes';
 import { LeadProfileService, mergeQualification } from './lead-profile.service';
 import { fakeDeps, lead, LEAD_ID } from './leads.fakes';
-import { LeadsSettings } from './leads.settings';
 
 const ACTOR = 'a0000000-0000-4000-8000-000000000001';
 
-function setup(row = lead()) {
+function setup(row = lead(), rules: FakePolicyInput = {}) {
   const deps = fakeDeps();
   deps.leads.findById.mockResolvedValue(row);
   deps.leads.update.mockImplementation(async (_id: string, patch: object) => ({ ...row, ...patch }));
-  const service = new LeadProfileService(deps.asLeads, readerOf(LeadsSettings), deps.asAudit);
+  const service = new LeadProfileService(deps.asLeads, fakePolicy(rules), deps.asAudit);
   return { ...deps, service };
 }
 
@@ -50,6 +49,16 @@ describe('LeadProfileService (L1/L2)', () => {
       follow_up_paused_by: 'admin',
       next_follow_up_at: null,
     });
+  });
+
+  it.each([
+    ['legacy: settings.follow_up_hours', { settings: { follow_up_hours: [6, 48] } }, '2026-10-01T16:00:00.000Z'],
+    ['module: the follow_up_slots row', { mode: 'module' as const, rows: [{ key: 'follow_up_slots', timing: { hours: [12], slots_from_hours: 12, slots_to_days: 7 } }] }, '2026-10-01T22:00:00.000Z'],
+    ['rules unreadable: the default 24 h (a display, not a send)', { fail: true }, '2026-10-02T10:00:00.000Z'],
+  ])('resume uses the follow-up hours — %s', async (_name, rules, next) => {
+    const { service, leads } = setup(lead({ status: 'no_reply', last_inbound_at: '2026-10-01T10:00:00Z', follow_up_paused: true }), rules);
+    await service.followUp({ id: LEAD_ID, patch: { paused: false }, actorId: ACTOR });
+    expect(leads.update).toHaveBeenLastCalledWith(LEAD_ID, expect.objectContaining({ next_follow_up_at: next }));
   });
 
   it('404 for an unknown lead', async () => {

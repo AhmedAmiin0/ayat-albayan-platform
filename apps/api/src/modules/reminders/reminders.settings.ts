@@ -3,13 +3,13 @@ import { Injectable } from '@nestjs/common';
 import { readSlice, type SettingsSlice } from '../../common/settings/settings-slice';
 import { SettingsService } from '../../common/settings/settings.service';
 
-/** The reminder timing and switches, the academy's default meeting link, and the lesson join window (joinWindowConfig). */
+/**
+ * The lookahead, the automatic-messages switch, the academy's default meeting link and the lesson join
+ * window (joinWindowConfig). The reminder timing and switches are notification rules (NotificationPolicy).
+ */
 const KEYS = [
   'reminder_lookahead_hours',
   'auto_messages_enabled',
-  'reminder_minutes_before',
-  'reminder_24h_enabled',
-  'teacher_whatsapp_lesson_reminder',
   'meeting_link_auto',
   'join_opens_before_min',
   'join_closes_after_min',

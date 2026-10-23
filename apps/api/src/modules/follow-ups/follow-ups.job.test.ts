@@ -7,7 +7,7 @@ const DUE = d('2026-10-02T10:00:00Z');
 const CYCLE = Date.parse('2026-10-01T10:00:00Z');
 
 describe('FollowUpsJob.runOnce (R-LEAD-05)', () => {
-  it('reads leads with a stage left under settings.follow_up_hours', async () => {
+  it('reads leads with a stage left under the follow_up_slots hours (legacy: settings.follow_up_hours)', async () => {
     const { job, queries } = setup({ leads: [] });
     await job.runOnce(DUE);
     expect(queries.candidates).toHaveBeenCalledWith(2);
@@ -46,7 +46,7 @@ describe('FollowUpsJob.runOnce (R-LEAD-05)', () => {
   it('due: two real slots on two days, keyed by this silence and stage; the stage waits for the send', async () => {
     const { job, queued, advanced, slots, queries } = setup();
     expect(await job.runOnce(DUE)).toMatchObject({ queued: 1 });
-    expect(slots.freeStarts).toHaveBeenCalledWith(DUE);
+    expect(slots.freeStarts).toHaveBeenCalledWith(DUE, { slots_from_hours: 12, slots_to_days: 7 });
     expect(queued[0]).toMatchObject({
       dedup_key: `follow_up_slots:lead-1:${CYCLE}:0`,
       template_params: { '1': 'الأحد 4 أكتوبر 17:00', '2': 'الاثنين 5 أكتوبر 18:00', '3': 'الرياض' },

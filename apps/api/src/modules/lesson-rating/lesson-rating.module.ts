@@ -5,6 +5,7 @@ import { RatingController } from './rating.controller';
 import { RatingJob } from './rating.job';
 import { RatingQueries } from './rating.queries';
 import { RatingQueue } from './rating.queue';
+import { RatingReads } from './rating.reads';
 import { RatingSendService } from './rating.send.service';
 import { RatingStore } from './rating.store';
 
@@ -17,7 +18,7 @@ import { RatingStore } from './rating.store';
 @Module({
   imports: [InboxModule],
   controllers: [RatingController],
-  providers: [RatingQueries, LessonRatingSettings, RatingQueue, RatingJob, RatingStore, RatingSendService],
+  providers: [RatingQueries, LessonRatingSettings, RatingReads, RatingQueue, RatingJob, RatingStore, RatingSendService],
   exports: [RatingStore],
 })
 export class LessonRatingModule {}

@@ -2,6 +2,8 @@ import type { Conflict } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { z } from 'zod';
 import { DB, type Db } from '../../common/db/db.module';
+import { gateConfirmations } from '../../common/rules/confirmations';
+import { NotificationPolicy } from '../notification-rules/policy';
 import type { ChangeSet, TimeEditChange } from './change-set';
 import { callRpc } from './rpc';
 import { dbError } from '../teachers/http';
@@ -20,7 +22,10 @@ const generated = z.array(z.object({ id: z.string(), starts_at: z.string(), ends
 /** Every multi-row lesson write, each one transaction in Postgres (docs/10 invariant 5). */
 @Injectable()
 export class LessonWriter {
-  constructor(@Inject(DB) private readonly db: Db) {}
+  constructor(
+    @Inject(DB) private readonly db: Db,
+    private readonly policy: NotificationPolicy,
+  ) {}
 
   /**
    * Idempotent upsert of a rule's occurrences on (rule_id, starts_at) with `do nothing`
@@ -55,13 +60,17 @@ export class LessonWriter {
     }
   }
 
-  /** Applies a change set atomically (migration 100); 409 invalid_transition / rule_not_active / slot_taken. */
+  /**
+   * Applies a change set atomically (migration 100); 409 invalid_transition / rule_not_active / slot_taken.
+   * Its booking_confirmation* rows only while that notification rule is on (gateConfirmations).
+   */
   async apply(change: ChangeSet): Promise<void> {
-    await callRpc(this.db, 'apply_lesson_changes', { p: change });
+    const p = change.messages ? { ...change, messages: await gateConfirmations(this.policy, change.messages) } : change;
+    await callRpc(this.db, 'apply_lesson_changes', { p });
   }
 
-  /** «عدّل الوقت» (migration 174): one lesson's time in place; 409 stale_time / slot_taken. */
+  /** «عدّل الوقت» (migration 174): one lesson's time in place; 409 stale_time / slot_taken. Confirmations as apply. */
   async retime(change: TimeEditChange): Promise<void> {
-    await callRpc(this.db, 'edit_lesson_time', { p: change });
+    await callRpc(this.db, 'edit_lesson_time', { p: { ...change, messages: await gateConfirmations(this.policy, change.messages) } });
   }
 }
