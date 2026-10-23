@@ -1,5 +1,7 @@
 # 25 — Settings and config: who owns what
 
+> **Superseded by the design in `docs/26-config-redesign.md`** (one key/value/description store «القيم» + module pages) once it is built; until then this document describes the code as it is.
+
 The platform has five kinds of configuration. They used to share one folder name («config») and one
 page, which made it hard to tell which store a value lives in, who may change it and how a change
 reaches the code. Since the settings segregation refactor (October 2026, behaviour unchanged) each
