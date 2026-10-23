@@ -36,6 +36,7 @@ describe('FeedbackRequestButton «أرسل طلب الرأي»', () => {
     open(lesson({ status: 'completed' }), 'pending');
     expect(await screen.findByText(t.feedback.templateNotApproved)).toBeTruthy();
     expect(screen.getByRole('button', { name: t.feedback.sendRequest })).toHaveProperty('disabled', true);
+    expect(screen.getByRole('link', { name: t.feedback.templateSettings }).getAttribute('href')).toBe('/admin/settings/communications?tab=templates');
   });
 
   it('posts the student to the lesson and then reads «اتبعت»', async () => {
