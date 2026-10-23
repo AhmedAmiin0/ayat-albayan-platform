@@ -1,8 +1,8 @@
 -- 26-P2 (docs/26 §3, §6): admin descriptions of settings rows. One RPC writes a description and its
 -- «الترجمات» twin in ONE transaction, and a one-time data copy moves today's Arabic overrides of the
 -- registry hint texts into settings.description. NO value is changed: inserted rows hold JSON null
--- (= unset = the default for every reader); updated rows only gain a description. No sending switch,
--- comms_source or Google row is named here (they are not in the copy list). Idempotent.
+-- (= unset = the default for every reader); updated rows only gain a description. No send-gate,
+-- source-switch or Google row is named here (they are not in the copy list). Idempotent.
 
 set local lock_timeout = '5s';
 
