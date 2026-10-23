@@ -71,12 +71,12 @@ Arrows point at what is imported. Nothing points back:
 A module that reads academy settings does it through one reader, `modules/<m>/<m>.settings.ts`:
 
 ```ts
-const KEYS = ['booking_horizon_weeks', 'late_cancel_hours'] as const satisfies readonly SettingKey[];
-export type LessonsSettingsValues = SettingsSlice<(typeof KEYS)[number]>;
+const KEYS = ['report_teacher_edit_hours', 'late_cancel_hours'] as const satisfies readonly SettingKey[];
+export type ReportsSettingsValues = SettingsSlice<(typeof KEYS)[number]>;
 @Injectable()
-export class LessonsSettings {
+export class ReportsSettings {
   constructor(private readonly store: SettingsService) {}
-  read(): Promise<LessonsSettingsValues> { return readSlice(this.store, KEYS); }
+  read(): Promise<ReportsSettingsValues> { return readSlice(this.store, KEYS); }
 }
 ```
 
