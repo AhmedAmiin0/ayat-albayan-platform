@@ -36,7 +36,7 @@ mockup annotation): see §7b «Heights».
 
 - **Hub table** (`hub.html`): columns «القسم» (name + one muted line, truncated), «الحالة الآن», «فتح» (a link «افتح»). The state
   is data, not a link label: «القيم — 28 قيمة · 5 معدَّلة · 8 عامة»; «التواصل — الإرسال متوقف» (struck glyph + word)
-  with the reason under it; «مزامنة Google — متصل · تجربة بدون كتابة»; «التكاملات — 3 خدمات مضبوطة · خدمة غير
+  with the reason under it; «مزامنة Google — متصل · تجربة دون كتابة»; «التكاملات — 3 خدمات مضبوطة · خدمة غير
   مضبوطة». The whole row is the link; on the phone the description and the «افتح» column drop. The hub search covers
   labels, descriptions, keys and module pages, and jumps to the row or tab (results: `states.html#hub`).
 - **Old links keep working** (docs/26 §4 compat): `/admin/settings#integrations` → `/admin/settings/integrations`
@@ -63,13 +63,15 @@ to the last group (`states.html#values`).
 
 | Column | Content |
 |---|---|
-| الاسم | The label (Plex 600), then tags «عامة» (visible before login), «يطلب تأكيدًا» / «يحذف بيانات» (from the registry `confirm`), and the mark «معدَّلة» (half nuqta) when the stored value differs from the default. Under it **one muted line**: the stored description, truncated with an ellipsis. The line is a button: it opens «تعديل الوصف» (read it in full, edit it, restore the seeded text) |
+| الاسم | The label (Plex 600), then tags «عامة» (visible before login), «يُسأل قبل الحفظ» / «يحذف بيانات» (from the registry `confirm`), and the mark «معدَّلة» (half nuqta) when the stored value differs from the default. Under it **one muted line**: the stored description, truncated with an ellipsis. The line is a button: it opens «تعديل الوصف» (read it in full, edit it, restore the seeded text) |
 | القيمة | The inline editor by type: number + unit (dense 32 px input, `aria-describedby` → the bounds), switch (named by the row label), select (currency, time zone), phone in E.164 (`<input type="tel" dir="ltr">` + «يُحفظ بالصيغة: …» preview), text; a nullable value is a switch + number in the same cell; a fixed shape of two fields shows a one-line summary + «عدّل الحقلين» (a dialog). Module-owned rows show the value as text + «تُعدَّل من التواصل ← الإشعارات» |
 | الافتراضي | The default, and under it the bounds («من 1 إلى 12») or «24 عند التشغيل» for a nullable value |
 | آخر تعديل | Who, and when on a second line; «لم تُعدَّل بعد»; for a dirty row «لم يُحفظ» + «المحفوظ: 2» |
 | إجراء | «حفظ» + «تراجع» only while the row is dirty. Otherwise one «⋯» button that opens the row menu: «اقرأ الوصف وعدّله», «أعد القيمة الافتراضية (5)» (only when modified), for custom rows «اجعلها عامة…» and «احذف القيمة…», and **the developer key** («للمطوّر: المفتاح» `booking_horizon_weeks` + «انسخ المفتاح»). The key is never a visible line in the row |
 
 **Row states live inside the row** (drawn together in the «الحسابات والدفعات» view of `values.html`):
+- **Header cells:** the row header carries `abbr` = the label, so screen readers repeat only the label with each cell,
+  not the description line inside the header (the app may also move the description button out of the `<th>`).
 - **Dirty:** green inline-start rule and wash on the row; «حفظ» and «تراجع» in the action cell; «لم يُحفظ · المحفوظ: …»
   in the last-change cell. The page head counts «قيمتان لم تُحفظا» (a link to the group). Saffron is never used for
   this: it means «دورك» only (docs/07 §1).
@@ -80,7 +82,7 @@ to the last group (`states.html#values`).
 - **Conflict (409):** the row keeps its value; **an inline row below it** (`<tr>` spanning all columns, saffron rule,
   `role="alert"`) says «غيّرت سارة هذه القيمة إلى 6 قبل دقيقتين. قيمتك: 8.» with «احفظ قيمتي» / «اعتمد القيمة
   الجديدة».
-- **Saved:** toast «تم حفظ القيمة» with «تراجع» (5 s), also announced by a polite live region under the table.
+- **Saved:** toast «تم حفظ القيمة» with «تراجع» (10 s, the timer pauses on hover or focus; «أعد القيمة السابقة» stays in the row menu), also announced by a polite live region under the table.
 
 **One save model:** each row saves on its own (`PATCH /config/entries/:key` with its `version`); leaving the page with
 unsaved rows asks first. **Confirmations** come from the registry (`confirm`): a plain dialog for booking-wide
@@ -119,7 +121,7 @@ page; the menu still shows the key. **«قيم مخصصة»** (docs/26 phase 5):
 | Read-only (no `settings.write`) | chip «للاطلاع فقط» under the title; values as text; no editors, no «⋯», no buttons (today every control renders and the save fails with 403). Phone: an info alert above the table; the sheet opens read-only |
 | Dirty | inside the row, as above; a count «قيمتان لم تُحفظا» in the page head |
 | Saving | inside the row: «جارٍ الحفظ…», the editor disabled; other rows stay editable |
-| Saved | toast «تم حفظ القيمة» with «تراجع» (5 s); a failed save shows «تعذّر حفظ القيمة» + «أعد المحاولة» |
+| Saved | toast «تم حفظ القيمة» with «تراجع» (10 s, paused on hover/focus; undo also in the row menu); a failed save shows «تعذّر حفظ القيمة» + «أعد المحاولة» |
 | Validation | one line under the editor in the same cell, struck glyph, linked by `aria-describedby`: «اكتب عددًا من 1 إلى 12» |
 | Conflict (409) | saffron (it is «دورك»: the save waits for the admin's choice) inline row under the row: «غيّرت سارة هذه القيمة إلى 6 قبل دقيقتين. قيمتك: 8.» + «احفظ قيمتي» / «اعتمد القيمة الجديدة» |
 | Owned by a module (409) | not reachable from the UI (read-only rows); the API answer is shown as a plain error if it happens |
@@ -209,7 +211,7 @@ Mobile column: **edit** = editable on the new Expo screen with `settings.write`;
 | 1.15 | messaging → «المتابعة بعد كم ساعة من آخر رسالة» | `follow_up_hours` → `follow_up_slots.timing.hours` (leads also reads it) | C NOT row «متابعة العميل بموعدين مقترحين» (tab العميل) | list of numbers, ascending, ≤5 | ro on the new screen; old APK edits it via m2 alias |
 | 1.16 | messaging → «مدى البحث عن الحلقات القادمة للتذكير» | `reminder_lookahead_hours` | V «الرسائل» (CONFIG: one scalar engine parameter; the «الإشعارات» tab links to it) | number 25–72 | edit |
 | 1.17–1.18 | messaging → «أقرب موعد يُقترح…», «أبعد موعد يُقترح…» | `follow_up_slots_from_hours`, `_to_days` | C NOT row «متابعة العميل بموعدين مقترحين», the line «المواعيد المقترحة: أقربها بعد … وأبعدها خلال …» | numbers 1–168 / 1–30 | ro |
-| 1.19 | messaging → «يُعتمد رد «نعم» المكتوب خلال كم ساعة» | `quick_reply_window_hours` | V «الرسائل» (CONFIG; may become a per-number value in docs/23 phase 5) | number 1–168 | edit |
+| 1.19 | messaging → «مهلة اعتماد رد «نعم» المكتوب» | `quick_reply_window_hours` | V «الرسائل» (CONFIG; may become a per-number value in docs/23 phase 5) | number 1–168 | edit |
 | 1.20–1.21 | messaging → «قوالب واتساب» header, «القوالب حسب الرقم» | `/messaging/templates(/lines)` | C TPL (moved unchanged, now under a tab heading) | — | web |
 | 1.22 | messaging → «مزامنة مع Meta» per line | `POST …/templates/health` | C TPL per-number block | button; no confirm (kept) | web |
 | 1.23–1.24 | messaging → template table, «متاح للمعلمين والمبيعات» | `message_templates` | C TPL table + starter switch | kept as is (self-save) | web (picker keeps reading templates) |
@@ -217,11 +219,11 @@ Mobile column: **edit** = editable on the new Expo screen with `settings.write`;
 | 1.27 | messaging → template toasts | — | C TPL toasts | — | — |
 | 2.1 | schedule → «تُجدول الحلقات لكم أسبوعًا مقدمًا» | `booking_horizon_weeks` | V «الجدول والحلقات» | number 1–12 | edit |
 | 2.2–2.3 | schedule → «حساب الإلغاء المتأخر» + hours | `late_cancel_hours` (nullable) | V «الجدول والحلقات», **one row** (switch + number) | switch + number 1–168 | edit |
-| 2.4 | schedule → «يمكن تعويض الحلقة الفائتة خلال كم يومًا» | `makeup_window_days` (public) | V «الجدول والحلقات», tag «عامة» | number 1–365 | edit |
-| 2.5 | schedule → «كل المعلمين متاحون للحجز…» | `teachers_always_available` | V «الجدول والحلقات», tag «يطلب تأكيدًا» (the impact sentence moves into the dialog) | switch + **ADDED** plain confirm (the button names the action) | edit (same confirm) |
+| 2.4 | schedule → «مهلة تعويض الحلقة الفائتة» | `makeup_window_days` (public) | V «الجدول والحلقات», tag «عامة» | number 1–365 | edit |
+| 2.5 | schedule → «كل المعلمين متاحون للحجز…» | `teachers_always_available` | V «الجدول والحلقات», tag «يُسأل قبل الحفظ» (the impact sentence moves into the dialog) | switch + **ADDED** plain confirm (the button names the action) | edit (same confirm) |
 | 3.1–3.3 | classroom → «تُفتح الحلقة قبل…», «تُغلق…», «عنوان الاجتماع الداخلي» | `join_opens_before_min`, `join_closes_after_min` (public), `default_meeting_title` | V «الحلقات عبر الإنترنت» | numbers / text 1–60 | edit |
-| 3.4 | classroom → «الوضع الافتراضي: الحلقات عبر منصة الأكاديمية» | `meeting_link_auto` (public; default for `teachers.meeting_mode`) | V «الحلقات عبر الإنترنت», tag «يطلب تأكيدًا» | switch + **ADDED** plain confirm stating how many lessons in the next reminder window were already reminded with the old link | edit (same) |
-| 4.1 | reports → «يمكن للمعلم/ة تعديل التقرير حتى كم ساعة» | `report_teacher_edit_hours` | V «التقارير» | number 0–168 | edit |
+| 3.4 | classroom → «الوضع الافتراضي: الحلقات عبر منصة الأكاديمية» | `meeting_link_auto` (public; default for `teachers.meeting_mode`) | V «الحلقات عبر الإنترنت», tag «يُسأل قبل الحفظ» | switch + **ADDED** plain confirm stating how many lessons in the next reminder window were already reminded with the old link | edit (same) |
+| 4.1 | reports → «مهلة تعديل التقرير للمعلم/ة» | `report_teacher_edit_hours` | V «التقارير» | number 0–168 | edit |
 | 5.1 | accounts → «عملة الأرقام في لوحة التحكم» | `reporting_currency` | V «الحسابات والدفعات» | select (ISO list; an unknown stored code is kept) | edit (select replaces free text) |
 | 5.2 | accounts → «نبّه للتجديد عندما يتبقى…» | `renewal_alert_remaining` | V «الحسابات والدفعات», **stays CONFIG** (SQL `v_student_list` reads it); C NOT row «تذكير تجديد الباقة» shows it **by reference** («من القيم» + link) | number 0–10 | edit |
 | 5.3–5.4 | accounts → «يُعدّ الاشتراك منتهيًا…», «علّم الحلقات القادمة…» | `subscription_expiry_days`, `flag_future_lessons_when_unpaid` | V «الحسابات والدفعات» | number / switch | edit |
@@ -253,7 +255,7 @@ Mobile column: **edit** = editable on the new Expo screen with `settings.write`;
 | 11.5–11.6 | Google → «اربط حساب Google»/«أعد الربط», «افصل الحساب» | OAuth; callback → `/admin/settings/google` | G connection card | kept: disconnect Dialog | web |
 | 11.7 | Google → «شغّل المزامنة» | `google_sync_enabled` | G switches card; HUB row «مزامنة Google», column «الحالة الآن» | kept: Dialog / LiveConfirmDialog | ro |
 | 11.8 | Google → «أوقف المزامنة» | `google_sync_enabled` = false | G switches card | **ADDED** confirm dialog (stops calendar/Drive writes) | ro |
-| 11.9 | Google → «تجربة بدون كتابة / كتابة فعلية» | `google_sync_mode` | G switches card; HUB row state «متصل · تجربة بدون كتابة» | kept: LiveConfirmDialog toward live | ro |
+| 11.9 | Google → «تجربة دون كتابة / كتابة فعلية» | `google_sync_mode` | G switches card; HUB row state «متصل · تجربة دون كتابة» | kept: LiveConfirmDialog toward live | ro |
 | 11.10 | Google → «نطاق التقويم بالأيام» + «حفظ النطاق» | `google_calendar_window_days` | G switches card (MODULE, not V) | number 7–180, own save | ro |
 | 11.11–11.13 | Google → «ابحث في Google», folder/sheet, «تأكيد المجلد والجدول» | `/admin/google/drive` | G «Drive والجداول» card | unchanged | web |
 | 11.14 | Google → teacher ↔ calendar map | `/admin/google/teachers` | G «المعلمون والتقاويم» | unchanged | web |
@@ -334,7 +336,56 @@ the mockups, except the four listed under «Not applied».
 
 ### 7b. Round 2 (owner feedback: tables, short views) — findings and fixes
 
-ROUND2_PLACEHOLDER
+Three independent reviews of the revised mockups, rendered in headless Chromium at 1440×900 and 390×844, light and
+dark: **(a)** design (Nielsen, WCAG 2.2, brand, MSA copy), 29 findings; **(b)** view heights; **(c)** completeness of
+the 127-control map and of the dialogs and states. All findings were applied except those under «Not applied».
+
+| Review | Finding | Fix |
+|---|---|---|
+| (a) high | `mobile.html` used an undefined `--font-sans`, so the UI fell back to a serif | `var(--font-ui)` (Plex) |
+| (a) high | Each row's live region was `display:none` while empty, so results might not be announced | kept in the accessibility tree (positioned out of flow), plus the page-level polite region |
+| (a) high | The only undo was a 5 s toast | 10 s, paused on hover/focus; «أعد القيمة السابقة» added to the row menu |
+| (a) high | The row header (with the description button) was re-read with every cell | `abbr` = label on `<th scope="row">` (§2) |
+| (a) med | Phone: dirty/conflict colour bars stayed with no text or action | bars removed below 640 px (web values and notifications) |
+| (a) med | Phone: «يحذف بيانات» tag hidden | a struck-nuqta second line «يحذف بيانات» in the value button |
+| (a) med | Description line did not look clickable; «قيمتان لم تُحفظا» link was not green | both turn green (lapis) on hover/focus / always |
+| (a) med | Sheets ordered «احفظ» before «إلغاء», unlike dialogs | every sheet: «إلغاء» then the action (DOM = visual order) |
+| (a) med | Expo shape sheet offered «عدّل الوصف» (web-only) | removed |
+| (a) med | «افتح «نظرة عامة»…» link 21 px tall on the phone | 44 px |
+| (a) med | Hub «خدمة غير مضبوطة» did not name the service | «أسعار الصرف غير مضبوطة» |
+| (a) med | Labels as embedded «كم» questions, wrapping to three lines | noun labels: «مدة الجدولة المسبقة للحلقات», «مهلة تعويض الحلقة الفائتة», «حدّ التنبيه للتجديد (الحلقات المتبقية)», «مدة صلاحية سعر الصرف المحفوظ», «مهلة تعديل التقرير للمعلم/ة», «مهلة اعتماد رد «نعم» المكتوب», «مدة انتهاء الاشتراك بعد نفاد الحلقات», «فتح الحلقة قبل موعدها», «إغلاق الحلقة بعد موعدها». The «Today» column of §6 keeps today's labels |
+| (a) med | «حلقة يحتاج تأكيد» (gender agreement) | «حلقة بحالة «يحتاج تأكيد»» |
+| (a) med | Boxed cards and a bordered table on Expo | hairline sections, unboxed table |
+| (a) low | «لا ينطبقالنص…» ran together; «2 حلقتين»; scrambled bidi around «16px»; manual tab repeated one sentence ×5; read-only rows said «أو عدّله» and «تُعدَّل في صفحتها» per row; hub «افتح» was a second tab stop | separator; «حلقتين»; «١٦ بكسل»; said once in the tab caption; «اقرأ الوصف كاملًا» and «—»; «افتح» removed from the tab order |
+| (a) low | Term drift: «بدون/دون كتابة», «في أي وقت/ساعة», «اسم القيمة البرمجي/المفتاح», «خط إشعارات/رقم الإشعارات», «يطلب تأكيدًا» close to the lesson state «يحتاج تأكيد», «يتم», «في ملفه» | «دون كتابة», «في أي ساعة», «المفتاح», «رقم الإشعارات», tag «يُسأل قبل الحفظ», «… من الموقع فقط», «في ملف المعلم/ة» |
+| (a) low | Many open `aria-modal="true"` examples on one board; custom-row menu lacked «انسخ المفتاح»; `fx_fresh_hours` differed between files | `aria-modal="false"` on the board; added; aligned (stored 6, mine 8) |
+| (b) | No view fails; borderline: notifications guardian tab, values «الإشعارات» (8 read-only rows), Expo «التواصل», hub at 390; long text cut in custom-value inputs | shorter module labels and one-line captions; text inputs fill the column; Expo frame trimmed |
+| (c) | 127 ids present once each, sum 127, 11 added confirmations hold; old wording in 2.4, 11.7, 11.9; notification row names differed from the mockup; `google_calendar_window_days` default «—»; mod-send caption; Expo strip had one 14-row chip; Expo conflict/toast only implied | cells reworded; names aligned; default 60; caption «الإرسال والحماية»; Expo strip split in three; captions say the sheet and toast are the same on Expo; «on 10 controls» → «on 16 map rows» |
+
+**Not applied (decisions):**
+- **«مفعّل / مغلق»** stays: it is the wording in `ar.json` that round 1 chose to reuse (one vocabulary across the app).
+- **Breadcrumb «الإعدادات › التواصل»** stays (round 1 decision; the IA puts «التواصل» under the hub).
+- **Phone group strip:** the selected chip may start out of view in a static mock; the app scrolls it into view on
+  load (`scrollIntoView({inline: 'center'})`).
+- **`.devkey` inside `role="menu"`** is drawn as a non-item line; in the app it is a menu item «انسخ المفتاح» with the
+  key as its description.
+- **Static `aria-selected` / `aria-current`** on CSS-switched tabs: a mockup limit (§8); the app uses roving focus.
+
+**Heights** (Chromium; frame = the app screen, doc = the whole mockup page with its slim board header; no view scrolls
+sideways; light and dark are identical):
+
+| View | 1440×900 frame / doc | 390×844 frame / doc |
+|---|---|---|
+| `hub.html` | 741 / 900 | 789 / 939 |
+| `values.html`, default («الحسابات والدفعات», every row state) | 791 / 902 | 681 / 844 |
+| `values.html`, the other 13 views | 791 / 902 (the side list sets the floor), «الإشعارات» (8 rows) 852 / 962 | 460–698 / 844–848, «الإشعارات» 821 / 971 |
+| `values-390.html`, every view | — | 460–698 / 844, «الإشعارات» 821 / 948 |
+| `notifications.html`, ولي الأمر (7 rows + an unsaved row) | 846 / 957 | 867 / 1017 |
+| `notifications.html`, المعلم/ة · العميل · فريق الأكاديمية · يدوي | 625 / 900 | 502–657 / 844 |
+| `mobile.html`, four frames | 760 · 760 · 815 · 760 (each fits 844) | same |
+| `states.html` (a board of 32 examples, not a view) | 8.7k | — |
+
+Every app frame is within one screen (largest: 867 px on an 844 px phone, the guardian tab with its open unsaved row).
 
 
 ## 8. Known limits of the mockups

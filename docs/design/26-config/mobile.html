@@ -10,7 +10,7 @@
 /* tokens and themes: tokens.css (docs/07 §3). Phone-only styles below. */
 *, *::before, *::after { box-sizing: border-box; }
 html, body { margin: 0; }
-body { background: var(--sunk); color: var(--ink); font-family: var(--font-sans); font-size: 15px; line-height: 1.6; }
+body { background: var(--sunk); color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.6; }
 h1, h2, h3, p, ul, figure { margin: 0; }
 ul { padding: 0; list-style: none; }
 a { color: var(--lapis); }
@@ -60,7 +60,7 @@ figcaption li { display: flex; gap: 6px; align-items: baseline; }
 .nav-row .t > span { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 6px; font-size: 13px; color: var(--ink-3); }
 .nav-row .chev { color: var(--ink-3); }
 .nav-row.is-static { color: var(--ink-2); }
-.card { display: grid; gap: 10px; padding: 14px; background: var(--page); border: 1px solid var(--rule-strong); border-radius: 12px; }
+.card { display: grid; gap: 8px; padding-block: 10px; border-block: 1px solid var(--rule); }
 .card h3 { font-size: 16px; font-weight: 600; }
 .kv { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-block-size: 30px; }
 .kv .k { color: var(--ink-2); font-size: 14px; }
@@ -99,10 +99,10 @@ figcaption li { display: flex; gap: 6px; align-items: baseline; }
 .chip--act { --fg: var(--saffron); --bg: var(--saffron-wash); }
 .tag { display: inline-flex; align-items: center; gap: 4px; min-block-size: 22px; padding-inline: 8px; border: 1px solid var(--rule-input); border-radius: 999px; color: var(--ink-2); font-size: 12px; font-weight: 600; white-space: nowrap; }
 .meta { font-size: 12px; color: var(--ink-3); }
-.key { font-family: var(--font-sans); font-size: 12px; color: var(--ink-3); font-variant-numeric: tabular-nums; }
+.key { font-family: var(--font-ui); font-size: 12px; color: var(--ink-3); font-variant-numeric: tabular-nums; }
 
 /* ===== «القيم»: two-column table; a row opens the bottom-sheet editor ===== */
-.mt { inline-size: 100%; border-collapse: collapse; background: var(--page); border: 1px solid var(--rule-strong); border-radius: 12px; }
+.mt { inline-size: 100%; border-collapse: collapse; }
 .mt caption { caption-side: top; padding-block-end: 6px; text-align: start; }
 .mt .cap { font-family: var(--font-display); font-weight: 700; font-size: 19px; }
 .mt thead th { padding-block: 6px; padding-inline: 12px; border-block-end: 3px double var(--gold); color: var(--ink-3); font-size: 12px; font-weight: 600; text-align: start; }
@@ -180,7 +180,7 @@ a.fchip[aria-current="page"] { background: var(--lapis-wash); color: var(--ink);
               <span class="t"><b>التواصل</b><span>إرسال الرسائل: <span class="chip"><svg class="g" aria-hidden="true"><use href="#g-struck"/></svg>متوقف</span><span>رقمان · <span class="num">18</span>&nbsp;إشعارًا</span></span></span>
               <svg class="i chev" aria-hidden="true"><use href="#i-fwd"/></svg></a></li>
             <li><a class="nav-row" href="#"><span class="ic"><svg class="i" aria-hidden="true"><use href="#i-cal"/></svg></span>
-              <span class="t"><b>مزامنة Google</b><span><span class="chip"><svg class="g" aria-hidden="true"><use href="#g-half"/></svg>تجربة بدون كتابة</span></span></span>
+              <span class="t"><b>مزامنة Google</b><span><span class="chip"><svg class="g" aria-hidden="true"><use href="#g-half"/></svg>تجربة دون كتابة</span></span></span>
               <svg class="i chev" aria-hidden="true"><use href="#i-fwd"/></svg></a></li>
             <li><div class="nav-row is-static"><span class="ic"><svg class="i" aria-hidden="true"><use href="#i-plug"/></svg></span>
               <span class="t"><b>التكاملات</b><span>تُدار من الموقع</span></span>
@@ -225,7 +225,7 @@ a.fchip[aria-current="page"] { background: var(--lapis-wash); color: var(--ink);
           <table class="mt">
             <caption><span class="cap">الحسابات والدفعات</span> <span class="meta"><span class="num">5</span> قيم</span></caption>
             <thead><tr><th scope="col">الاسم</th><th scope="col">القيمة</th></tr></thead>
-            <tbody><tr><th scope="row">عملة الأرقام في لوحة التحكم</th><td><button class="mv" type="button" aria-haspopup="dialog"><span>ريال سعودي</span><svg class="i" aria-hidden="true"><use href="#i-fwd"/></svg><span class="vh">: عدّل «عملة الأرقام في لوحة التحكم»</span></button></td></tr><tr><th scope="row">نبّه للتجديد عندما يتبقى في الباقة كم حلقة</th><td><button class="mv" type="button" aria-haspopup="dialog"><span>حلقتان</span><svg class="i" aria-hidden="true"><use href="#i-fwd"/></svg><span class="vh">: عدّل «نبّه للتجديد عندما يتبقى في الباقة كم حلقة»</span></button></td></tr><tr><th scope="row">يُعدّ الاشتراك منتهيًا بعد كم يومًا</th><td><button class="mv" type="button" aria-haspopup="dialog"><span><span class="num">7</span> أيام</span><svg class="i" aria-hidden="true"><use href="#i-fwd"/></svg><span class="vh">: عدّل «يُعدّ الاشتراك منتهيًا بعد كم يومًا»</span></button></td></tr><tr><th scope="row">علّم الحلقات القادمة إن انتهت الباقة ولم تُدفع</th><td><button class="mv" type="button" aria-haspopup="dialog"><span>مغلق<small>جارٍ الحفظ…</small></span><svg class="i" aria-hidden="true"><use href="#i-fwd"/></svg><span class="vh">: عدّل «علّم الحلقات القادمة إن انتهت الباقة ولم تُدفع»</span></button></td></tr><tr><th scope="row">يُعاد استخدام سعر الصرف المحفوظ مدة كم ساعة</th><td><button class="mv" type="button" aria-haspopup="dialog"><span><span class="num">8</span> ساعات<small class="mod"><svg class="g" aria-hidden="true"><use href="#g-half"/></svg>معدَّلة</small></span><svg class="i" aria-hidden="true"><use href="#i-fwd"/></svg><span class="vh">: عدّل «يُعاد استخدام سعر الصرف المحفوظ مدة كم ساعة»</span></button></td></tr></tbody>
+            <tbody><tr><th scope="row">عملة الأرقام في لوحة التحكم</th><td><button class="mv" type="button" aria-haspopup="dialog"><span>ريال سعودي</span><svg class="i" aria-hidden="true"><use href="#i-fwd"/></svg><span class="vh">: عدّل «عملة الأرقام في لوحة التحكم»</span></button></td></tr><tr><th scope="row">حدّ التنبيه للتجديد (الحلقات المتبقية)</th><td><button class="mv" type="button" aria-haspopup="dialog"><span>حلقتان</span><svg class="i" aria-hidden="true"><use href="#i-fwd"/></svg><span class="vh">: عدّل «حدّ التنبيه للتجديد (الحلقات المتبقية)»</span></button></td></tr><tr><th scope="row">مدة انتهاء الاشتراك بعد نفاد الحلقات</th><td><button class="mv" type="button" aria-haspopup="dialog"><span><span class="num">7</span> أيام</span><svg class="i" aria-hidden="true"><use href="#i-fwd"/></svg><span class="vh">: عدّل «مدة انتهاء الاشتراك بعد نفاد الحلقات»</span></button></td></tr><tr><th scope="row">علّم الحلقات القادمة إن انتهت الباقة ولم تُدفع</th><td><button class="mv" type="button" aria-haspopup="dialog"><span>مغلق<small>جارٍ الحفظ…</small></span><svg class="i" aria-hidden="true"><use href="#i-fwd"/></svg><span class="vh">: عدّل «علّم الحلقات القادمة إن انتهت الباقة ولم تُدفع»</span></button></td></tr><tr><th scope="row">مدة صلاحية سعر الصرف المحفوظ</th><td><button class="mv" type="button" aria-haspopup="dialog"><span><span class="num">6</span> ساعات<small class="mod"><svg class="g" aria-hidden="true"><use href="#g-half"/></svg>معدَّلة</small></span><svg class="i" aria-hidden="true"><use href="#i-fwd"/></svg><span class="vh">: عدّل «مدة صلاحية سعر الصرف المحفوظ»</span></button></td></tr></tbody>
           </table>
           <div class="vh" aria-live="polite"></div>
         </div>
@@ -238,7 +238,7 @@ a.fchip[aria-current="page"] { background: var(--lapis-wash); color: var(--ink);
       </div>
       <figcaption><b>(2) القيم: جدول من عمودين.</b>
         <ul><li>مجموعة واحدة في كل مرة؛ الشريط يبدّلها، والبحث وحده يجمع النتائج من كل المجموعات («الكل»).</li>
-        <li>لمس الصف يفتح محرّر القيمة في نافذة سفلية: الوصف، والمحرّر (خط <span class="num">16px</span>، ارتفاع <span class="num">44px</span>)، والافتراضي، وآخر تعديل، و«احفظ». التأكيدات نفسها التي في الموقع.</li>
+        <li>لمس الصف يفتح محرّر القيمة في نافذة سفلية: الوصف، والمحرّر (خط بحجم ١٦ بكسل وارتفاع ٤٤ بكسل)، والافتراضي، وآخر تعديل، و«احفظ». التأكيدات نفسها التي في الموقع.</li>
         <li>القيم المركّبة (حقلان) وإضافة قيمة وتعديل الوصف من الموقع فقط. النوافذ والحالات في <a href="./states.html#mobile">states.html</a>.</li></ul></figcaption>
     </figure>
 
@@ -285,7 +285,7 @@ a.fchip[aria-current="page"] { background: var(--lapis-wash); color: var(--ink);
           <section class="card" aria-labelledby="p4-h">
             <h3 id="p4-h">تقويمات المعلمين</h3>
             <div class="kv"><span class="k">الربط</span><span class="chip chip--ok"><svg class="g" aria-hidden="true"><use href="#g-fill"/></svg>متصل</span></div>
-            <div class="kv"><span class="k">الوضع</span><span class="chip"><svg class="g" aria-hidden="true"><use href="#g-half"/></svg>تجربة بدون كتابة</span></div>
+            <div class="kv"><span class="k">الوضع</span><span class="chip"><svg class="g" aria-hidden="true"><use href="#g-half"/></svg>تجربة دون كتابة</span></div>
             <p class="meta">تقرأ المنصة التقويمات وتعرض ما ستفعله، ولا تكتب فيها شيئًا بعد.</p>
             <div class="kv"><span class="k">الحساب</span><bdi dir="ltr">calendar@example.com</bdi></div>
             <div class="kv"><span class="k">آخر مزامنة</span><span>اليوم <span class="num">14:05</span> بتوقيت الرياض</span></div>
@@ -293,7 +293,7 @@ a.fchip[aria-current="page"] { background: var(--lapis-wash); color: var(--ink);
             <div class="kv"><span class="k">المعلمون</span><span><span class="num">16</span> مربوطًا</span></div>
             <div class="kv"><span class="k">بلا تقويم</span><span class="chip chip--act"><svg class="g" aria-hidden="true"><use href="#g-hollow"/></svg>معلمان يحتاجان إلى ربط</span></div>
           </section>
-          <p class="web-note"><svg class="i" aria-hidden="true"><use href="#i-monitor"/></svg><span>يتم الربط وإيقاف التجربة وتشغيل الكتابة من الموقع.</span></p>
+          <p class="web-note"><svg class="i" aria-hidden="true"><use href="#i-monitor"/></svg><span>الربط وإيقاف التجربة وتشغيل الكتابة من الموقع فقط.</span></p>
         </div>
         <nav class="tabbar" aria-label="التبويبات">
           <a href="#"><svg class="i" aria-hidden="true"><use href="#i-home"/></svg>اليوم</a>
