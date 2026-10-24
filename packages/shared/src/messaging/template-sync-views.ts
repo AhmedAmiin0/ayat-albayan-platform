@@ -30,7 +30,10 @@ export interface TemplateSkip {
 /** One line's sync with Meta: only its own rows against its own WABA's list. */
 export interface TemplateLineSync extends TemplateLineFacts {
   ok: boolean;
-  /** The line's failure code when ok is false: not_configured, meta_error, kapso_auth. */
+  /**
+   * The line's failure code when ok is false: not_configured, meta_error, kapso_auth; crm_managed = the line
+   * is on the crm driver, whose templates live in the CRM (no call made, no row touched, docs/19).
+   */
   error?: string;
   /** Meta's own message for meta_error. */
   message?: string;

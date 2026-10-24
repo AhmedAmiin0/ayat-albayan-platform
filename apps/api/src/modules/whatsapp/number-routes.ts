@@ -23,7 +23,8 @@ export class NumberRoutes {
   async pass(numbers: readonly OverlayNumber[]): Promise<{ pass: RoutePass; templates: TemplateRow[] }> {
     const approvals = await this.queries.approvals();
     const [templates, rules] = await Promise.all([this.queries.templates(approvals), this.ruleNumbers()]);
-    return { pass: { numbers: numbers.map(routable), ruleNumbers: rules, approvals }, templates };
+    const crm = new Set(numbers.filter((n) => n.env?.provider === 'crm').map((n) => n.id));
+    return { pass: { numbers: numbers.map(routable), ruleNumbers: rules, approvals, crm }, templates };
   }
 
   private async ruleNumbers(): Promise<Map<string, string | null>> {

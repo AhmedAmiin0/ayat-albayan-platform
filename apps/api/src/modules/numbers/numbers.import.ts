@@ -1,4 +1,4 @@
-import type { ImportResult, ImportRoleView } from '@ab/shared';
+import { WA_PROVIDERS, type ImportResult, type ImportRoleView } from '@ab/shared';
 import { Injectable, Logger } from '@nestjs/common';
 import { ar } from '../../common/i18n/server-text';
 import { integrationOverlay } from '../../common/integrations/integration-overlay';
@@ -81,7 +81,7 @@ export class NumbersImport {
     if (!row) throw new Error('import: no row to create');
     const isDefault = !(await this.queries.hasDefault(p.role));
     const created = await this.queries.insert({
-      row: { label: ar.numbers.defaultLabel[p.role], purpose: p.role, enabled: true, is_default: isDefault, ...row, provider: row.provider === 'kapso' ? 'kapso' : 'meta' },
+      row: { label: ar.numbers.defaultLabel[p.role], purpose: p.role, enabled: true, is_default: isDefault, ...row, provider: WA_PROVIDERS.find((v) => v === row.provider) ?? 'meta' },
       actorId,
     });
     return created.id;

@@ -10,6 +10,7 @@ import {
   type TemplateParams,
 } from '@ab/shared';
 import { ar } from '../../common/i18n/server-text';
+import { crmPlan } from './crm-plan';
 import { templateParams } from './wa-json';
 import { WaError, type TemplateRow } from './whatsapp.types';
 
@@ -27,6 +28,9 @@ export const HANDED_OFF = 'handed_off';
 export const AUTH_HOLD_MS = 15 * 60_000;
 /** messages.error_code when Kapso refused the line's project key (docs/19): held like an auth error. */
 export const KAPSO_AUTH = 'kapso_auth';
+/** messages.error_code when the CRM refused its API key or it lacks messages:send (docs/19): held the same way. */
+export const CRM_AUTH = 'crm_auth';
+export { CRM_RATE_LIMITED } from './crm-plan';
 const ERROR_TEXT_MAX = 500;
 
 export interface FailurePlan {
@@ -42,6 +46,8 @@ export interface FailurePlan {
 export function errorCode(error: unknown): string {
   if (!(error instanceof WaError)) return 'internal';
   if (error.info.credential === 'kapso') return KAPSO_AUTH;
+  if (error.info.credential === 'crm') return CRM_AUTH;
+  if (error.info.crmCode) return `crm_${error.info.crmCode}`;
   if (error.info.code !== null) return String(error.info.code);
   return error.info.status ? `http_${error.info.status}` : 'network';
 }
@@ -57,7 +63,8 @@ function errorText(error: unknown): string {
  * MAX_SEND_ATTEMPTS; anything else (131026 not on WhatsApp, 132001 template missing, 131047
  * window closed, bad parameters) fails at once. A timeout / dropped connection (`uncertain`: Meta
  * may have sent it) fails at once too, for the admin to check instead of a blind resend. An auth
- * error (190 / 10 / 200, or Kapso refusing its key) holds the row, uncounted: the credential is broken.
+ * error (190 / 10 / 200, or Kapso / the CRM refusing its key) holds the row, uncounted: the credential is broken.
+ * The crm driver: a 429 waits for its Retry-After (uncounted); any other CRM error code fails at once.
  * `attempts` counts this try.
  */
 export function failurePlan(input: { error: unknown; attempts: number; now: Date }): FailurePlan {
@@ -66,14 +73,14 @@ export function failurePlan(input: { error: unknown; attempts: number; now: Date
   const error_text = errorText(input.error);
   if (info?.uncertain) return { status: 'failed', next_attempt_at: null, error_code: UNCERTAIN, error_text };
   if (isWaAuthFailure(info)) return authHold({ ...input, error_text, until: at(AUTH_HOLD_MS) });
+  const crm = crmPlan({ info, attempts: input.attempts, now: input.now, error_text, error_code: errorCode(input.error) });
+  if (crm) return crm;
   const retry = isRetryableWaError(info?.code ?? null) && input.attempts < MAX_SEND_ATTEMPTS;
-  return {
-    status: retry ? 'queued' : 'failed',
-    next_attempt_at: retry ? at(backoff(input.attempts)) : null,
-    error_code: errorCode(input.error),
-    error_text,
-  };
+  return retry ? { ...plain(input.error, error_text), status: 'queued', next_attempt_at: at(backoff(input.attempts)) } : plain(input.error, error_text);
 }
+
+/** Failed for good with its code (a retry overrides status and next_attempt_at). */
+const plain = (error: unknown, error_text: string): FailurePlan => ({ status: 'failed', next_attempt_at: null, error_code: errorCode(error), error_text });
 
 /** The token is broken, not the message: back in the queue, this try not counted. */
 function authHold(h: { error: unknown; attempts: number; error_text: string; until: string }): FailurePlan {

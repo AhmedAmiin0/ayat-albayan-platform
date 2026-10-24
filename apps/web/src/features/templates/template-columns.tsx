@@ -1,13 +1,13 @@
-import { templateStatusStyle, type TemplateLineView, type TemplateView, type WaLine } from '@ab/shared';
+import { type TemplateLineView, type TemplateView, type WaLine } from '@ab/shared';
 import { createColumnHelper } from '@tanstack/react-table';
 import type { DataTableFeatures } from '@/components/DataTable';
-import { StatusChip } from '@/components/ui/status-chip';
 import { fullTime } from '@/features/inbox/format';
 import { t } from '@/lib/i18n';
+import { CrmStatusActions, type CrmStatusActionsProps } from './CrmStatusActions';
 import { SendFromCell, type SendFromCellProps } from './SendFromCell';
 import { StarterToggle } from './StarterToggle';
 import { otherLine } from './api';
-import { Label, NameCell, NumberCell, RowActions, templateName } from './template-cells';
+import { Label, NameCell, NumberCell, RowActions, StatusCell, templateName } from './template-cells';
 import type { PhoneMap } from './use-template-lines';
 import { categoryOptions, lineOptions, qualityOptions, statusOptions } from './template-filters';
 
@@ -28,13 +28,17 @@ export interface TemplateColumnsInput {
   saving: string | null;
   /** «يُرسل من» (docs/23c decision 9): the numbers, templates.manage, and a pick (confirmed by the caller). */
   sendFrom: Omit<SendFromCellProps, 'tpl'>;
+  /** A crm line's rows (docs/19): the status set by hand; `busy` = the key being saved. */
+  crmStatus: { busyKey: string | null; onSet: CrmStatusActionsProps['onSet'] };
 }
 
 /**
  * R-MSG-01 health table: name + Meta name, number, «يُرسل من» + per-number approvals, category, status (+ Meta's reason), quality, checked,
  * the sales starter switch. The whole registry is loaded, so it sorts and filters locally.
  */
-export function templateColumns({ onSubmit, onMove, onStarter, saving, phones, factsOf, sendFrom }: TemplateColumnsInput) {
+export function templateColumns({ onSubmit, onMove, onStarter, saving, phones, factsOf, sendFrom, crmStatus }: TemplateColumnsInput) {
+  const crmCell = (tpl: TemplateView) =>
+    factsOf(tpl.line)?.provider === 'crm' ? <CrmStatusActions tpl={tpl} busy={crmStatus.busyKey === tpl.key} onSet={crmStatus.onSet} /> : undefined;
   return col.columns([
     // The value is the shown name, so it sorts and filters by what the row says.
     col.accessor((r) => templateName(r.key), {
@@ -67,14 +71,7 @@ export function templateColumns({ onSubmit, onMove, onStarter, saving, phones, f
     }),
     col.accessor('status', {
       header: () => t.templates.status,
-      cell: (c) => (
-        <span className="grid justify-items-start gap-1">
-          <StatusChip size="sm" {...templateStatusStyle[c.getValue()]} label={t.enums.templateStatus[c.getValue()]} />
-          {c.row.original.last_error && (
-            <span className="max-w-[28ch] text-2xs whitespace-normal text-danger">{c.row.original.last_error}</span>
-          )}
-        </span>
-      ),
+      cell: (c) => <StatusCell tpl={c.row.original} crm={factsOf(c.row.original.line)?.provider === 'crm'} />,
       meta: { className: 'max-sm:order-2', filter: { kind: 'select', options: statusOptions() } },
     }),
     col.accessor('quality', {
@@ -125,7 +122,9 @@ export function templateColumns({ onSubmit, onMove, onStarter, saving, phones, f
     col.display({
       id: 'actions',
       header: () => t.templates.actions,
-      cell: (c) => <RowActions tpl={c.row.original} onSubmit={onSubmit} onMove={onMove} target={factsOf(otherLine(c.row.original.line))} />,
+      cell: (c) => (
+        <RowActions tpl={c.row.original} onSubmit={onSubmit} onMove={onMove} target={factsOf(otherLine(c.row.original.line))} crm={crmCell(c.row.original)} />
+      ),
       meta: { className: 'max-sm:order-7', headClassName: 'w-px' },
     }),
   ]);

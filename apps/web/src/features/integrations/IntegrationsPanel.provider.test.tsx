@@ -9,7 +9,7 @@ const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
 vi.mock('@/lib/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
 
-// docs/19: each line's driver is a select (meta | kapso), never free text; the Kapso keys have a group.
+// docs/19: each line's driver is a select (meta | kapso | crm), never free text; the Kapso and CRM keys have a group.
 
 const s = t.integrations;
 const ready = () => screen.findByRole('button', { name: s.saveValues });
@@ -26,7 +26,7 @@ afterEach(() => {
 });
 
 describe('«التكاملات»: the WhatsApp provider select', () => {
-  it('renders a select per line with the default first, then «Meta مباشرة» and «Kapso»', async () => {
+  it('renders a select per line with the default first, then «Meta مباشرة», «Kapso» and «نظام CRM»', async () => {
     renderPanel();
     await ready();
     for (const key of ['WA_PROVIDER', 'WA_CHAT_PROVIDER'] as const) {
@@ -37,6 +37,7 @@ describe('«التكاملات»: the WhatsApp provider select', () => {
         ['', s.enumDefault.replace('{value}', s.options.meta)],
         ['meta', s.options.meta],
         ['kapso', s.options.kapso],
+        ['crm', s.options.crm],
       ]);
     }
     expect(screen.getByRole('group', { name: s.groups.kapso })).toBeTruthy();
@@ -65,5 +66,18 @@ describe('«التكاملات»: the WhatsApp provider select', () => {
     await ready();
     expect(select(s.keys.WA_PROVIDER.label).className).not.toContain('font-mono');
     expect(screen.getByLabelText(s.keys.KAPSO_API_BASE.label).className).toContain('font-mono');
+  });
+
+  it('the CRM group: its base as a URL field, its key and webhook secret as secrets, each with a hint', async () => {
+    renderPanel();
+    await ready();
+    expect(screen.getByRole('group', { name: s.groups.wacrm })).toBeTruthy();
+    expect((screen.getByLabelText(s.keys.WACRM_API_BASE.label) as HTMLInputElement).type).not.toBe('password');
+    for (const key of ['WACRM_API_KEY', 'WACRM_WEBHOOK_SECRET'] as const) {
+      expect((screen.getByLabelText(s.keys[key].label) as HTMLInputElement).type).toBe('password');
+      expect(screen.getByText(s.keys[key].hint)).toBeTruthy();
+    }
+    expect(s.keys.WACRM_API_KEY.hint).toContain('messages:send');
+    expect(s.keys.WACRM_WEBHOOK_SECRET.hint).toContain('/webhooks/wacrm');
   });
 });

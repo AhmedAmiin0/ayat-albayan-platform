@@ -16,6 +16,8 @@ export interface WebhookConfig {
   numbers: LineNumbers;
   /** KAPSO_WEBHOOK_SECRET: POST /webhooks/kapso only (docs/19). Unset → every Kapso POST is 401. */
   kapsoSecret?: string;
+  /** WACRM_WEBHOOK_SECRET: POST /webhooks/wacrm only (docs/19 «crm driver»). Unset → every CRM POST is 401. */
+  wacrmSecret?: string;
   /** Module mode (docs/23c decision 7): every wa_numbers row, enabled or not; absent / null = legacy (`numbers`). */
   overlay?: readonly ReceivingNumber[] | null;
 }

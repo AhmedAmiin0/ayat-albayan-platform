@@ -1,6 +1,6 @@
 import { isWaAuthError } from '@ab/shared';
 import { z } from 'zod';
-import type { WhatsappEnv } from '../../env';
+import type { GraphEnv } from '../../env';
 import { WaError } from './whatsapp.types';
 
 // One Graph API call: auth by provider, JSON, timeout, and Meta's error body → WaError (docs/12 §3.2).
@@ -8,7 +8,7 @@ import { WaError } from './whatsapp.types';
 export type FetchLike = (url: string, init: RequestInit) => Promise<Response>;
 
 export interface GraphConn {
-  env: WhatsappEnv;
+  env: GraphEnv;
   fetch: FetchLike;
   timeoutMs: number;
 }
@@ -29,7 +29,7 @@ export interface GraphRequest {
 }
 
 /** The credential by driver (docs/19): Meta's bearer token, or Kapso's project key (never a bearer). */
-export function authHeaders(env: WhatsappEnv): Record<string, string> {
+export function authHeaders(env: GraphEnv): Record<string, string> {
   return env.provider === 'kapso' ? { 'x-api-key': env.apiKey } : { authorization: `Bearer ${env.accessToken}` };
 }
 
@@ -42,7 +42,7 @@ const metaErrorSchema = z.object({
   }),
 });
 
-function url(env: WhatsappEnv, path: string): string {
+function url(env: GraphEnv, path: string): string {
   return /^https?:\/\//.test(path) ? path : `${env.base}/${env.version}/${path}`;
 }
 
@@ -71,7 +71,7 @@ export function waErrorFrom(status: number, text: string): WaError {
  * Manager), so the sender holds the line's queue instead of failing every row and the admin is
  * told to fix KAPSO_API_KEY. Meta's own errors pass through unchanged.
  */
-export function byDriver(env: WhatsappEnv, error: WaError): WaError {
+export function byDriver(env: GraphEnv, error: WaError): WaError {
   const { status, code } = error.info;
   if (env.provider !== 'kapso' || (status !== 401 && status !== 403) || isWaAuthError(code)) return error;
   if (code !== null && code !== status) return error;

@@ -2,10 +2,10 @@ import type { TemplateStatus, TemplateView } from '@ab/shared';
 import { NotFoundException } from '@nestjs/common';
 import type { AuditService } from '../../common/audit/audit.service';
 import { lineProvider, loadEnv } from '../../env';
-import { fromMeta, requireLine, requireSync } from './template-env';
+import { fromMeta, onCrm, requireLine, requireSync } from './template-env';
 import { SAMPLE_REPORT, templateProblem } from './template-review';
 import { ourStatus } from './template-sync';
-import { REGISTRY_ENTITY_ID, toTemplateView, waHttpError } from './template.mapper';
+import { CRM_MANAGED, REGISTRY_ENTITY_ID, toTemplateView, waHttpError } from './template.mapper';
 import type { TemplatesQueries } from './templates.queries';
 import type { WhatsappLines } from './whatsapp.types';
 
@@ -25,12 +25,14 @@ export interface SubmitDeps {
  * call; the row's line must be configured (503 not_configured). A document header (report_ready) first
  * uploads the sample PDF for Meta's reviewer: that needs the line's app id (409 needs_app_id without it;
  * 409 needs_meta_driver on a kapso line), both naming the row's line. A rejected row is edited in place
- * by the driver (Kapso: hsm_id).
+ * by the driver (Kapso: hsm_id). A row whose line is on crm: 409 crm_managed before anything else.
  */
 export async function submitTemplate(deps: SubmitDeps, key: string, actorId: string): Promise<TemplateView> {
   requireSync();
   const row = await deps.queries.get(key);
   if (!row) throw new NotFoundException({ code: 'template_not_found', message: 'template_not_found' });
+  // A crm line's templates are submitted and approved in the CRM (from Meta), never from here.
+  if (onCrm(row.line)) throw waHttpError(CRM_MANAGED, 409, { line: row.line });
   if (!SUBMITTABLE.has(row.status)) throw waHttpError('not_submittable', 409, { status: row.status });
   const problem = templateProblem(row);
   if (problem) throw waHttpError('invalid_template', 409, { reason: problem });

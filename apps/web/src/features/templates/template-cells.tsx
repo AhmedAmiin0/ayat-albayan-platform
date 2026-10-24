@@ -1,7 +1,8 @@
-import type { TemplateLineView, TemplateView, WaLine } from '@ab/shared';
-import { useId } from 'react';
+import { templateStatusStyle, type TemplateLineView, type TemplateView, type WaLine } from '@ab/shared';
+import { useId, type ReactNode } from 'react';
 import { Button } from '@/components/ui/button';
 import { Ltr } from '@/components/ui/ltr';
+import { StatusChip } from '@/components/ui/status-chip';
 import { t } from '@/lib/i18n';
 import { canSubmit } from './api';
 
@@ -38,12 +39,31 @@ export function NumberCell({ line, phone }: { line: WaLine; phone: string | unde
   );
 }
 
+/**
+ * The status chip and Meta's reason. A crm line's row (docs/19) is set by hand: «يدويًا» beside the chip, and
+ * missing reads «غير متاح في نظام CRM» (Meta is not the source there).
+ */
+export function StatusCell({ tpl, crm }: { tpl: TemplateView; crm: boolean }) {
+  const label = crm && tpl.status === 'missing' ? t.templates.crmStatus.missingChip : t.enums.templateStatus[tpl.status];
+  return (
+    <span className="grid justify-items-start gap-1">
+      <span className="inline-flex flex-wrap items-center gap-1.5">
+        <StatusChip size="sm" {...templateStatusStyle[tpl.status]} label={label} />
+        {crm && <span className="text-2xs text-ink-3">{t.templates.crmStatus.note}</span>}
+      </span>
+      {tpl.last_error && <span className="max-w-[28ch] text-2xs whitespace-normal text-danger">{tpl.last_error}</span>}
+    </span>
+  );
+}
+
 export interface RowActionsProps {
   tpl: TemplateView;
   onSubmit: (tpl: TemplateView) => void;
   onMove: (tpl: TemplateView) => void;
   /** The server's facts for the number the row would move to; undefined while loading. */
   target: TemplateLineView | undefined;
+  /** The row's line is on crm (docs/19): no submit; these hand-set status buttons instead. */
+  crm?: ReactNode;
 }
 
 /**
@@ -51,12 +71,13 @@ export interface RowActionsProps {
  * the API uploads a sample PDF first) and «نقل إلى الرقم الآخر», each behind its own dialog. Moving to
  * a number the server has no credentials for is disabled, with the reason beside it.
  */
-export function RowActions({ tpl, onSubmit, onMove, target }: RowActionsProps) {
+export function RowActions({ tpl, onSubmit, onMove, target, crm }: RowActionsProps) {
   const reason = useId();
   const noTarget = target?.configured === false;
   return (
     <span className="flex flex-wrap gap-2">
-      {canSubmit(tpl) && (
+      {crm}
+      {!crm && canSubmit(tpl) && (
         <Button size="sm" variant="secondary" onClick={() => onSubmit(tpl)}>
           {t.templates.submit}
         </Button>

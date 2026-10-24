@@ -1,8 +1,10 @@
 // Fake Meta WhatsApp Cloud API for local dev + e2e (CLAUDE.md rule 5, docs/12 §5). Mirrors the
 // Graph shapes WhatsappClient uses, including the errors that matter (132001, 132000, 131047, 190),
-// and Kapso's Meta proxy under /kapso (docs/19: X-API-Key, its media lookup and template edit).
+// Kapso's Meta proxy under /kapso (docs/19: X-API-Key, its media lookup and template edit) and the
+// academy CRM's REST API under /crm/api/v1 (crm.ts).
 import type { IncomingMessage, ServerResponse } from 'node:http';
 import { controlRoutes } from './control.ts';
+import { CRM_PREFIX, crmRoute } from './crm.ts';
 import { diagnosticRoutes } from './diagnostics.ts';
 import { graphRoutes } from './graph.ts';
 import { authKind, KAPSO_PREFIX, kapsoAuthorized, kapsoMediaDownload, kapsoRoutes } from './kapso.ts';
@@ -50,6 +52,7 @@ export function createStub(opts: StubOptions = {}) {
   const kapso = [...diagnosticRoutes, ...kapsoRoutes];
 
   async function route(req: IncomingMessage, fullPath: string): Promise<Reply | null> {
+    if (fullPath.startsWith(`${CRM_PREFIX}/`)) return crmRoute(req, fullPath.slice(CRM_PREFIX.length), state);
     const { viaKapso, path } = splitPrefix(fullPath);
     const method = req.method ?? 'GET';
     const found = (viaKapso ? kapso : routes).find(([m, re]) => m === method && re.test(path));

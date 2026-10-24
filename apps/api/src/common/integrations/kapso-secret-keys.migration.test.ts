@@ -12,8 +12,8 @@ describe('migration 450: Kapso secret keys', () => {
   it('integration_secret_key_ok lists exactly the shared secret keys, Kapso included', () => {
     const fn = /integration_secret_key_ok\(p_key text\)[\s\S]*?array\[([\s\S]*?)\]/.exec(sql)?.[1] ?? '';
     const listed = [...fn.matchAll(/'([A-Z_]+)'/g)].map((m) => m[1]);
-    // The Google client secret came later (migration 20261022000610, google-sync.migration.test.ts).
-    expect(listed.sort()).toEqual(INTEGRATION_SECRET_KEYS.filter((k) => !k.startsWith('GOOGLE_')).sort());
+    // The Google client secret (20261022000610) and the CRM keys (20261025000640) came later.
+    expect(listed.sort()).toEqual(INTEGRATION_SECRET_KEYS.filter((k) => !k.startsWith('GOOGLE_') && !k.startsWith('WACRM_')).sort());
     expect(listed).toEqual(expect.arrayContaining(['KAPSO_API_KEY', 'KAPSO_WEBHOOK_SECRET']));
   });
 

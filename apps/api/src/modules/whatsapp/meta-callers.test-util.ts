@@ -28,6 +28,10 @@ export const WHITELIST = new Set([
   'modules/numbers/numbers.env.ts',
   'modules/whatsapp/number-clients.ts',
   'modules/whatsapp/whatsapp.client.ts',
+  // The crm driver (docs/19): the one client factory and the CRM's REST client, used only through the line clients.
+  'modules/whatsapp/client-factory.ts',
+  'modules/whatsapp/crm.client.ts',
+  'modules/whatsapp/crm-http.ts',
   'modules/whatsapp/whatsapp.module.ts',
   'modules/whatsapp/whatsapp.types.ts',
 ]);

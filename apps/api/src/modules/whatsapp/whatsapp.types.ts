@@ -99,8 +99,14 @@ export class WaError extends Error {
       details?: string;
       /** The request may have reached Meta (timeout, connection lost mid-call): a resend could duplicate it. */
       uncertain?: boolean;
-      /** Kapso refused the line's project key (docs/19): held like Meta's 190, but its own words. */
-      credential?: 'kapso';
+      /** Kapso refused the line's project key, or the CRM its API key (docs/19): held like Meta's 190, in its own words. */
+      credential?: 'kapso' | 'crm';
+      /** The crm driver's error code («meta_error», «template_malformed», «bad_request», …): fails at once, never retried. */
+      crmCode?: string;
+      /** The CRM's rate limit (429): try again after this long, the try not counted. */
+      retryAfterMs?: number;
+      /** The call is not supported by this line's driver (the crm driver: template list / submit / samples / media). */
+      unsupported?: 'crm';
     },
   ) {
     super(message);

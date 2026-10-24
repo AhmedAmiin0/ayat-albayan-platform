@@ -54,7 +54,7 @@ describe('lineEnvs (docs/12 §13.1)', () => {
   it('chat alone (no notifications line) still builds the chat env', () => {
     const lines = lineEnvs(env({ WA_API_BASE: 'http://x', ...CHAT }));
     expect(lines.notifications).toBeNull();
-    expect(lines.chat?.phoneNumberId).toBe('chat-phone');
+    expect(lines.chat).toMatchObject({ phoneNumberId: 'chat-phone' });
   });
 });
 

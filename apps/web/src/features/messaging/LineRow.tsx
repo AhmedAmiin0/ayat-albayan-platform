@@ -18,14 +18,17 @@ const WEBHOOK: Record<Shown, { tone: Tone; text: Label }> = {
   unverified: { tone: 'neutral', text: 'webhookUnverified' },
   kapso: { tone: 'neutral', text: 'webhookKapso' },
   kapsoNoSecret: { tone: 'act', text: 'webhookKapsoNoSecret' },
+  crm: { tone: 'neutral', text: 'webhookCrm' },
+  crmNoSecret: { tone: 'act', text: 'webhookCrmNoSecret' },
 };
 const GLYPH = { ok: 'fill', act: 'struck', bad: 'struck', neutral: 'half' } as const;
 /** Long app names / override URLs wrap at phone width (no horizontal page scroll). */
 const WRAP = 'whitespace-normal break-all';
 const ERRORS: Record<string, string | undefined> = t.messages.errors;
-/** A known Meta code in words, or Kapso refusing its key in its own words (docs/19). */
+const CREDENTIAL = { kapso: t.messages.errors.kapso_auth, crm: t.templates.error.crm_auth } as const;
+/** A known Meta code in words, or Kapso / the CRM refusing its key in its own words (docs/19). */
 const known = (e: LineCheckView['errors'][number]): string | undefined =>
-  e.credential === 'kapso' ? t.messages.errors.kapso_auth : e.code === null ? undefined : ERRORS[String(e.code)];
+  e.credential ? CREDENTIAL[e.credential] : e.code === null ? undefined : ERRORS[String(e.code)];
 
 /** Do inbound messages reach us: one chip (wrapping, it is a sentence), then each subscribed app. */
 function Webhook({ view }: { view: LineCheckView }) {

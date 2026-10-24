@@ -35,4 +35,17 @@ describe('LineDriver (docs/19)', () => {
     expect(screen.getByText(s.duplicateChatPhone)).toBeTruthy();
     expect(screen.queryByText(/same as/)).toBeNull();
   });
+
+  it('a crm line: «نظام CRM», and whether its key may send (unknown = nothing said)', () => {
+    const { rerender } = render(<LineDriver view={{ provider: 'crm', gaps: [], duplicate_chat_phone: false, crm_send_scope: false }} />);
+    expect(screen.getByText(t.integrations.options.crm)).toBeTruthy();
+    expect(screen.getByText(s.crmScopeMissing)).toBeTruthy();
+    rerender(<LineDriver view={{ provider: 'crm', gaps: [], duplicate_chat_phone: false, crm_send_scope: true }} />);
+    expect(screen.getByText(s.crmScopeOk)).toBeTruthy();
+    rerender(<LineDriver view={{ provider: 'crm', gaps: ['WACRM_API_KEY'], duplicate_chat_phone: false, crm_send_scope: null }} />);
+    expect(screen.queryByText(s.crmScopeOk)).toBeNull();
+    expect(screen.queryByText(s.crmScopeMissing)).toBeNull();
+    expect(document.body.textContent).toContain(t.integrations.keys.WACRM_API_KEY.label);
+  });
 });
+

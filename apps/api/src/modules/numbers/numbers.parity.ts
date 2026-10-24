@@ -8,13 +8,15 @@ import { lineEnvs, lineNumbers, lineProvider, type Env, type WhatsappEnv } from 
 type Facts = Record<ParityField, string | null>;
 
 function tokenOf(line: WhatsappEnv): string {
-  return line.provider === 'kapso' ? line.apiKey : line.accessToken;
+  return 'accessToken' in line ? line.accessToken : line.apiKey;
 }
 
 type LineFacts = Pick<Facts, 'phone_number_id' | 'waba_id' | 'app_id' | 'api_base' | 'api_version' | 'access_token'>;
 
 function lineFacts(line: WhatsappEnv | null): LineFacts {
   if (!line) return { phone_number_id: null, waba_id: null, app_id: null, api_base: null, api_version: null, access_token: null };
+  // A crm line has no ids or version of ours (docs/19): its base and key only.
+  if (line.provider === 'crm') return { phone_number_id: null, waba_id: null, app_id: null, api_base: line.base, api_version: null, access_token: line.apiKey };
   return {
     phone_number_id: line.phoneNumberId,
     waba_id: line.wabaId,

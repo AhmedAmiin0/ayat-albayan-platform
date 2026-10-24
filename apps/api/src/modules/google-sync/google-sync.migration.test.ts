@@ -14,7 +14,8 @@ describe('migration 20261022000610: Google sync tables', () => {
   it('integration_secret_key_ok lists exactly the shared secret keys, the Google client secret included', () => {
     const fn = /integration_secret_key_ok\(p_key text\)[\s\S]*?array\[([\s\S]*?)\]/.exec(tables)?.[1] ?? '';
     const listed = [...fn.matchAll(/'([A-Z_]+)'/g)].map((m) => m[1]);
-    expect(listed.sort()).toEqual([...INTEGRATION_SECRET_KEYS].sort());
+    // The CRM keys came later (migration 20261025000640, wacrm-driver.migration.test.ts).
+    expect(listed.sort()).toEqual(INTEGRATION_SECRET_KEYS.filter((k) => !k.startsWith('WACRM_')).sort());
   });
 
   it('RLS on every new table, admin read only, no client writes', () => {

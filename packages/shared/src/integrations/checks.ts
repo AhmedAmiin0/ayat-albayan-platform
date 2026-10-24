@@ -38,6 +38,7 @@ export const INTEGRATION_VALUE_CHECKS: Record<IntegrationPlainKey, z.ZodType> = 
   WA_CHAT_PROVIDER: provider,
   KAPSO_API_BASE: url,
   KAPSO_API_VERSION: version,
+  WACRM_API_BASE: url,
   WA_ALLOWED_RECIPIENTS: recipients,
   WA_TEMPLATE_SYNC: z.stringbool(),
   LIVEKIT_URL: url,

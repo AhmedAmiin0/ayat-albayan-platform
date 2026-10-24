@@ -32,6 +32,23 @@ function NumberFacts({ facts, phone }: Pick<TemplateLineBlockProps, 'facts' | 'p
   );
 }
 
+/** A configured number: its facts, then its last sync, or (crm, docs/19) that the CRM manages its templates. */
+function LineBody({ facts, phone, shown, crm }: Pick<TemplateLineBlockProps, 'facts' | 'phone'> & { shown: TemplateLineSync | null; crm: boolean }) {
+  return (
+    <>
+      <NumberFacts facts={facts} phone={phone} />
+      {crm ? (
+        <p className="text-xs text-ink-2">{t.templates.perNumber.crmManaged}</p>
+      ) : (
+        <>
+          <LastSync at={shown?.checked_at} />
+          {shown && <LineSyncResult sync={shown} />}
+        </>
+      )}
+    </>
+  );
+}
+
 /** «آخر مزامنة: …» or «لم تتم المزامنة بعد». */
 function LastSync({ at }: { at: string | undefined }) {
   const p = t.templates.perNumber;
@@ -59,25 +76,19 @@ export function TemplateLineBlock({ line, facts, phone, onNotice }: TemplateLine
   const shown = newerSync(result, facts?.last_sync ?? null);
   const name = t.enums.waLine[line];
   const off = facts?.configured === false;
+  // A crm line (docs/19): its templates live in the CRM, so it offers no sync with Meta.
+  const crm = facts?.provider === 'crm';
   return (
     <section data-testid="template-line" data-line={line} aria-busy={syncing} className="grid min-w-0 content-start gap-2 rounded-md border border-rule p-3">
       <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
         <h4 className="text-sm font-bold">{name}</h4>
-        {!off && (
+        {!off && !crm && (
           <Button variant="secondary" size="sm" className="ms-auto" aria-label={(syncing ? p.syncingFor : p.syncFor).replace('{line}', name)} disabled={syncing} onClick={sync}>
             {syncing ? p.syncing : p.sync}
           </Button>
         )}
       </div>
-      {off ? (
-        <p className="text-xs text-ink-3">{p.notConfigured}</p>
-      ) : (
-        <>
-          <NumberFacts facts={facts} phone={phone} />
-          <LastSync at={shown?.checked_at} />
-          {shown && <LineSyncResult sync={shown} />}
-        </>
-      )}
+      {off ? <p className="text-xs text-ink-3">{p.notConfigured}</p> : <LineBody facts={facts} phone={phone} shown={shown} crm={crm} />}
     </section>
   );
 }

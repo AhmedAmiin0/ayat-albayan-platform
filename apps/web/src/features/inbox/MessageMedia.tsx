@@ -2,6 +2,7 @@ import { isChatViewMime, isPlayableMime, type MessageView } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
+import { errorCode } from '@/features/schedule/api';
 import { ApiError } from '@/lib/api';
 import { t } from '@/lib/i18n';
 import { threadFileQuery, type ThreadFile } from './api';
@@ -58,12 +59,17 @@ function FileView({ message: m, kind }: { message: MessageView; kind: string }) 
   if (file.isPending) return <p className="text-xs text-ink-3">{t.common.loading}</p>;
   // 403 media_forbidden (a role that may not open files): the label, as in teacher mode.
   if (file.error instanceof ApiError && file.error.status === 403) return <Label kind={kind} forbidden />;
-  const expired = file.error instanceof ApiError && file.error.status === 410;
   return (
     <p role="status" className="text-xs font-semibold text-ink-2">
-      {expired ? t.inbox.mediaExpired : t.common.error}
+      {fileErrorText(file.error)}
     </p>
   );
+}
+
+/** 410: gone from WhatsApp; 409 crm_no_media: the number runs through the CRM, which holds its files (docs/19). */
+function fileErrorText(error: unknown): string {
+  if (errorCode(error) === 'crm_no_media') return t.inbox.mediaInCrm;
+  return error instanceof ApiError && error.status === 410 ? t.inbox.mediaExpired : t.common.error;
 }
 
 /**

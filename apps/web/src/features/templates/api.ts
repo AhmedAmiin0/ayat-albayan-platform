@@ -1,4 +1,4 @@
-import type { TemplateHealthView, TemplateLineSync, TemplateLineView, TemplateMoveView, TemplateNumberSetView, TemplateView, WaLine } from '@ab/shared';
+import type { CRM_TEMPLATE_STATUSES, TemplateHealthView, TemplateLineSync, TemplateLineView, TemplateMoveView, TemplateNumberSetView, TemplateView, WaLine } from '@ab/shared';
 import { queryOptions } from '@tanstack/react-query';
 import { errorCode } from '@/features/schedule/api';
 import { ApiError, apiFetch, apiSend } from '@/lib/api';
@@ -43,12 +43,18 @@ export const setTemplateNumber = ({ key, number_id }: { key: string; number_id: 
 export const setStarter = ({ key, on }: { key: string; on: boolean }) =>
   apiSend<TemplateView>('PATCH', `/messaging/templates/${encodeURIComponent(key)}/starter`, { sales_starter: on });
 
+/** A crm line's template status by hand (docs/19): «معتمد في نظام CRM» / «غير متاح في نظام CRM»; audited. */
+export const setCrmStatus = ({ key, status }: { key: string; status: CrmTemplateStatus }) =>
+  apiSend<TemplateView>('PUT', `/messaging/templates/${encodeURIComponent(key)}/crm-status`, { status });
+
 /** A submittable row: never sent, refused, or gone from Meta (docs/12 §3.4), on either number. */
 export const canSubmit = (tpl: Pick<TemplateView, 'status'>): boolean =>
   tpl.status === 'not_submitted' || tpl.status === 'rejected' || tpl.status === 'missing';
 
 /** The number a row would move to. */
 export const otherLine = (line: WaLine): WaLine => (line === 'chat' ? 'notifications' : 'chat');
+
+export type CrmTemplateStatus = (typeof CRM_TEMPLATE_STATUSES)[number];
 
 const ERRORS: Record<string, string | undefined> = t.templates.error;
 /** The app id a line's sample upload needs (409 needs_app_id). */

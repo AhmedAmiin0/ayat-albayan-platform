@@ -24,7 +24,7 @@ export interface StubSent {
   /** The phone-number id «Meta» was called on: which line the message left from. */
   phoneNumberId?: string;
   /** Meta's paths or the stub's Kapso prefix (docs/19). */
-  via?: 'graph' | 'kapso';
+  via?: 'graph' | 'kapso' | 'crm';
 }
 
 /** Everything the API sent to «Meta» since the last reset. */
