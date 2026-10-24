@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import type { FieldControlProps } from '@/components/ui/field';
+import { Icon } from '@/components/ui/icon';
 import { Input } from '@/components/ui/input';
 import { t } from '@/lib/i18n';
 
@@ -11,9 +12,10 @@ type Props = FieldControlProps & {
 };
 
 /**
- * Password with «إظهار» at the inline-end (docs/design login, .pw): a toggle button
- * (aria-pressed) that shows the typed text, which matters most on touch keyboards. RTL like the
- * reference, so the button and the input's end padding sit on the same side.
+ * Password with an eye at the inline-end (docs/design login, .pw): a toggle button named «إظهار»
+ * (aria-pressed) that shows the typed text, which matters most on touch keyboards. The name must
+ * not contain «كلمة السر»: e2e finds the input by that label. RTL like the reference, so the
+ * button and the input's end padding sit on the same side.
  */
 export function PasswordInput({ value, onValue, autoComplete = 'current-password', ...field }: Props) {
   const [shown, setShown] = useState(false);
@@ -24,18 +26,19 @@ export function PasswordInput({ value, onValue, autoComplete = 'current-password
         type={shown ? 'text' : 'password'}
         autoComplete={autoComplete}
         required
-        className="pe-[72px]"
+        className="pe-12"
         value={value}
         onChange={(e) => onValue(e.target.value)}
       />
       <button
         type="button"
+        aria-label={t.auth.showPassword}
         aria-pressed={shown}
         aria-controls={field.id}
         onClick={() => setShown((s) => !s)}
-        className="absolute inset-y-0 end-1 my-auto h-9 cursor-pointer rounded-sm px-2 text-xs font-semibold text-lapis hover:bg-accent aria-pressed:bg-accent max-sm:h-11"
+        className="absolute inset-y-0 end-1 my-auto grid size-9 cursor-pointer place-items-center rounded-sm text-ink-2 hover:bg-accent hover:text-lapis aria-pressed:text-lapis max-sm:size-11"
       >
-        {t.auth.showPassword}
+        <Icon name={shown ? 'eye-off' : 'eye'} />
       </button>
     </div>
   );

@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Cartouche } from '@/components/ui/cartouche';
 import { Field } from '@/components/ui/field';
 import { FormAlert } from '@/components/ui/form-alert';
-import { Input } from '@/components/ui/input';
+import { PasswordInput } from '@/features/auth/PasswordInput';
 import { t } from '@/lib/i18n';
 import { hasRecoverySession, savePassword, setPasswordError } from './set-password';
 
@@ -50,10 +50,10 @@ export function SetPasswordPage() {
           <>
             <p className="text-body text-pretty text-ink-2">{S.intro}</p>
             <Field label={S.password} required>
-              {(p) => <Input {...p} type="password" dir="ltr" autoComplete="new-password" value={password} onChange={(e) => setPassword(e.target.value)} />}
+              {(p) => <PasswordInput {...p} autoComplete="new-password" value={password} onValue={setPassword} />}
             </Field>
             <Field label={S.confirm} required error={error}>
-              {(p) => <Input {...p} type="password" dir="ltr" autoComplete="new-password" value={confirm} onChange={(e) => setConfirm(e.target.value)} />}
+              {(p) => <PasswordInput {...p} autoComplete="new-password" value={confirm} onValue={setConfirm} />}
             </Field>
             <Button type="submit" disabled={busy} className="min-h-11 w-full">
               {busy ? S.submitting : S.submit}
