@@ -5938,6 +5938,17 @@
     "linesLegacyHint": "These values are used while the config source is the current setup, not the number records.",
     "movedToComms": "WhatsApp, Kapso and safety settings moved to «Communications».",
     "movedToCommsLink": "Open «Communications»",
-    "timingMovedToValues": "Message timing is now in «Values» → Messages."
+    "timingMovedToValues": "Message timing is now in «Values» → Messages.",
+    "colHealth": "Status",
+    "crmOpenSafety": "Change this in «Safety»",
+    "openOverview": "Open «Overview» to change sending",
+    "mobile": {
+      "moreNumbers": {
+        "one": "and 1 more in «Numbers»",
+        "two": "and 2 more in «Numbers»",
+        "few": "and {n} more in «Numbers»",
+        "other": "and {n} more in «Numbers»"
+      }
+    }
   }
 }

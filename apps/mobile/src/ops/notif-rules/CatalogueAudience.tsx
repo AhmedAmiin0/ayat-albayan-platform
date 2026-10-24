@@ -13,14 +13,16 @@ export interface CatalogueAudienceProps {
   /** notifications.manage held: editable rows get a switch. */
   canManage: boolean;
   toggles: CatalogueToggles;
+  /** The pill shown first (the overview opens an audience); guardian when absent. */
+  initialAudience?: AudienceTab;
 }
 
 /**
  * The rows one audience at a time (docs/26b §6 1.10, same pills as the web): ولي الأمر first, so
  * each view fits a 390×844 phone. Changing the pill closes an open question (its row leaves view).
  */
-export function CatalogueAudience({ data, canManage, toggles }: CatalogueAudienceProps) {
-  const [tab, setTab] = useState<AudienceTab>('guardian');
+export function CatalogueAudience({ data, canManage, toggles, initialAudience }: CatalogueAudienceProps) {
+  const [tab, setTab] = useState<AudienceTab>(initialAudience ?? 'guardian');
   const rows = rowsOf(data.entries, tab);
   const choose = (next: AudienceTab) => {
     if (next !== tab) toggles.cancel();
