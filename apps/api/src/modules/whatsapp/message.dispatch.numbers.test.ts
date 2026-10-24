@@ -35,7 +35,7 @@ describe('MessageDispatch — a number route', () => {
   it('a number without a client is not ready, and a send through it is refused before any request', async () => {
     const { d } = setup();
     expect(d.ready(dueMessage(), { numberId: N1, line: 'notifications' })).toBe(false);
-    await expect(d.send(dueMessage(), templateRow(), { numberId: N1, line: 'notifications' })).rejects.toMatchObject({ status: 0 });
+    await expect(d.send(dueMessage(), templateRow(), { numberId: N1, line: 'notifications' })).rejects.toThrow('WhatsApp is not configured');
   });
 
   it('a line keeps today\'s client and never asks the number clients', async () => {
