@@ -12,14 +12,17 @@ const FLOWS: Record<BookingKind, readonly StepKey[]> = {
   package: ['students', 'teacher', 'package', 'slot', 'invoice', 'review'],
   makeup: ['students', 'missed', 'teacher', 'slot', 'invoice', 'review'],
 };
-/** The assistant's course of a subscription: the student, package and length come from it, no invoice. */
+/**
+ * The assistant's course of a subscription, and a new trial date for an existing student: the
+ * student, package and length are fixed, no invoice.
+ */
 const COURSE_FLOW: readonly StepKey[] = ['teacher', 'slot', 'review'];
 
 export const stepsFor = (kind: BookingKind): readonly StepKey[] => FLOWS[kind];
 
-/** The steps of this draft: the course flow when it books a subscription's course. */
-export const stepsOf = (d: Pick<BookingDraft, 'kind' | 'course'>): readonly StepKey[] =>
-  d.course ? COURSE_FLOW : FLOWS[d.kind];
+/** The steps of this draft: the reduced flow when it books a subscription's course or a new trial date. */
+export const stepsOf = (d: Pick<BookingDraft, 'kind' | 'course' | 'trialDate'>): readonly StepKey[] =>
+  d.course || d.trialDate ? COURSE_FLOW : FLOWS[d.kind];
 
 /** A course needs exactly its days a week; any other booking one picked slot at least. */
 function slotReady(d: BookingDraft): boolean {

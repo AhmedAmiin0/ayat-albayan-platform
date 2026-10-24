@@ -1,4 +1,4 @@
-import type { BookingResult } from '@ab/shared';
+import type { BookingResult, TrialDateResult } from '@ab/shared';
 import { useEffect, useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { useFocusOnChange } from '@/components/ui/use-focus-on-change';
@@ -11,6 +11,7 @@ import { stepReady, stepsOf, type BookingDraft, type PickedStudent, type StepKey
 import type { BookHint } from './hint';
 import { isNewStudent } from './new-student';
 import { useCourseClean } from './SeriesCheck';
+import { TrialDonePanel } from './trial-date/TrialDonePanel';
 import { WizardBody } from './WizardBody';
 import { WizardSteps } from './WizardSteps';
 
@@ -49,7 +50,8 @@ function BackButton({ first, exit, onBack }: BackProps) {
 
 /**
  * Booking wizard (R-SCH-06, R-LEAD-06, R-SCH-10): booking type + student(s) → [missed lesson] →
- * teacher → [length + package] → slot (+ weekly repeat) → [invoice] → review → POST /booking. One
+ * teacher → [length + package] → slot (+ weekly repeat) → [invoice] → review → POST /booking (a new
+ * trial date for an existing student: teacher → slot → review → POST /booking/trial-date). One
  * filled primary per step («التالي», then «احجز» on the review). Every step change (also «اختار
  * ميعاد تاني») moves focus to the new step.
  */
@@ -58,9 +60,10 @@ export function BookingWizard(props: BookingWizardProps) {
   const [draft, setDraft] = useState(initial);
   const [step, setStep] = useState<StepKey>(() => props.initialStep ?? stepsOf(initial)[0] ?? 'students');
   const [booked, setBooked] = useState<BookingResult | null>(null);
+  const [trialDone, setTrialDone] = useState<TrialDateResult | null>(null);
   useEffect(() => {
-    onProgress?.({ draft, step, booked: booked !== null });
-  }, [draft, step, booked, onProgress]);
+    onProgress?.({ draft, step, booked: booked !== null || trialDone !== null });
+  }, [draft, step, booked, trialDone, onProgress]);
   const section = useRef<HTMLElement>(null);
   useFocusOnChange(section, step);
   const patch = (p: Partial<BookingDraft>) => {
@@ -74,6 +77,7 @@ export function BookingWizard(props: BookingWizardProps) {
   const clean = useCourseClean(draft);
   const ready = stepReady(draft, step) && (step !== 'slot' || !draft.course || clean);
 
+  if (trialDone) return <TrialDonePanel result={trialDone} tz={draft.tz} />;
   if (booked && draft.teacher) {
     return (
       <BookedPanel
@@ -103,6 +107,7 @@ export function BookingWizard(props: BookingWizardProps) {
           missedLessonId={missedLessonId}
           onGoto={setStep}
           onBooked={setBooked}
+          onTrialDone={setTrialDone}
         />
       </section>
       {step === 'students' && isNewStudent(draft) && !primary && !stepReady(draft, step) && (

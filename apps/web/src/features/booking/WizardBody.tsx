@@ -1,4 +1,4 @@
-import type { BookingResult } from '@ab/shared';
+import type { BookingResult, TrialDateResult } from '@ab/shared';
 import type { StudentRef } from '@/features/students/types';
 import { t } from '@/lib/i18n';
 import { mediaPhone } from './booked';
@@ -16,6 +16,7 @@ import { ReviewStep } from './ReviewStep';
 import { SlotStep } from './SlotStep';
 import { StudentStep } from './StudentStep';
 import { TeacherStep } from './TeacherStep';
+import { TrialReviewStep } from './trial-date/TrialReviewStep';
 
 export interface WizardBodyProps {
   step: StepKey;
@@ -30,10 +31,13 @@ export interface WizardBodyProps {
   missedLessonId: string | undefined;
   onGoto: (step: StepKey) => void;
   onBooked: (result: BookingResult) => void;
+  /** «موعد تجريبي جديد» booked (draft.trialDate): POST {base}/trial-date answered. */
+  onTrialDone?: ((result: TrialDateResult) => void) | undefined;
 }
 
 /** The body of the current step (the wizard owns the chrome: step list, «التالي» and «رجوع»). */
-export function WizardBody({ step, draft, patch, primary, siblings, onOpenStudent, hint, missedLessonId, onGoto, onBooked }: WizardBodyProps) {
+export function WizardBody(props: WizardBodyProps) {
+  const { step, draft, patch, primary, siblings, onOpenStudent, hint, missedLessonId, onGoto, onBooked } = props;
   const mode = useBookingMode();
   switch (step) {
     case 'students': {
@@ -70,13 +74,16 @@ export function WizardBody({ step, draft, patch, primary, siblings, onOpenStuden
       return <MissedLessonStep draft={draft} preselectId={missedLessonId} onChange={patch} />;
     case 'teacher':
       return (
-        <TeacherStep
-          program={draft.program}
-          genderPref={draft.genderPref}
-          teacher={draft.teacher}
-          hintId={hint?.teacherId ?? draft.missed?.teacherId}
-          onChange={(change) => patch(teacherPatch(draft, change, hint))}
-        />
+        <>
+          {draft.trialDate && hint && <p className="mb-3 text-xs text-ink-2">{t.trialDate.lastTeacher}</p>}
+          <TeacherStep
+            program={draft.program}
+            genderPref={draft.genderPref}
+            teacher={draft.teacher}
+            hintId={hint?.teacherId ?? draft.missed?.teacherId}
+            onChange={(change) => patch(teacherPatch(draft, change, hint))}
+          />
+        </>
       );
     case 'package':
       return <PackageStep draft={draft} onChange={patch} />;
@@ -85,6 +92,9 @@ export function WizardBody({ step, draft, patch, primary, siblings, onOpenStuden
     case 'invoice':
       return <InvoiceStep draft={draft} chatPhone={mediaPhone(draft)} onChange={patch} />;
     case 'review':
+      if (draft.trialDate) {
+        return <TrialReviewStep draft={draft} onChangeSlot={() => onGoto('slot')} onPatch={patch} onDone={(r) => props.onTrialDone?.(r)} />;
+      }
       return (
         <ReviewStep
           draft={draft}
