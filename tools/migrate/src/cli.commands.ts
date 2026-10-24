@@ -8,6 +8,7 @@ import { type TargetDb, createTargetDb } from './db/target.ts';
 import { ENTITY_MODULES } from './entities/index.ts';
 import { applyPlan } from './plan/apply.ts';
 import { seedConfig } from './db/config-seed.ts';
+import { unqueueImportedLessons } from './db/unqueue-imported.ts';
 import type { PlanWithChanges } from './plan/changes.ts';
 import { deltaPlan } from './plan/stale-refs.ts';
 import { buildPlan, loadBundle } from './plan/run.ts';
@@ -91,6 +92,7 @@ export function planOrApply(args: CliArgs, apply: boolean): Promise<void> {
     });
     console.log(`applied to ${config.name}: import_runs ${runId}`);
     console.log(`settings seed: ${await seedConfig(db)}`);
+    console.log(`google sync rows of imported lessons dropped: ${await unqueueImportedLessons(db)}`);
   });
 }
 

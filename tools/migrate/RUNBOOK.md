@@ -115,7 +115,9 @@ To add what is new in the CRM / sheets without touching what the team edits in t
 `apply --target staging --creates-only`. Every planned update becomes a skip (a lead's status, a
 template's Meta id stay as the app has them). A new record's link to a row the app has since
 deleted is left empty, as `ON DELETE SET NULL` left the rows already there; a record whose missing
-link is NOT NULL is skipped. Both counts print before the plan.
+link is NOT NULL is skipped, and a new lesson whose every student link was skipped is skipped too (no
+lesson without a student). Every apply then drops the Google sync queue rows of imported lessons (the
+old script already has them in Google; the insert trigger queues them before their import item exists).
 
 ## 8. Production (owner's explicit go only)
 
