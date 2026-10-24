@@ -1,6 +1,6 @@
 import { ar, expect, test } from '../support/fixtures';
 import { accessToken } from '../support/messages';
-import { dropChatRows, importChatRows, listedKeys, RESTRICTED, sendAs } from '../support/restricted-templates';
+import { dropChatRows, importChatRows, listedKeys, pickerLabel, RESTRICTED, sendAs } from '../support/restricted-templates';
 import { resetAbrar, seedFamily, withSql } from '../support/schedule';
 import { CHAT_PN, sentVia, SINGLE_LINE } from '../support/wa-lines';
 import { setMessaging, stubInbound, stubReset } from '../support/wa-stub';
@@ -51,7 +51,7 @@ test.describe('teacher mode: the restricted templates (owner 2026-10-12)', () =>
     await teacher.getByRole('button', { name: composer.modeTemplate }).click();
     const select = teacher.getByLabel(composer.chooseTemplate);
     await expect(select.locator('option')).toHaveCount(1 + RESTRICTED.length);
-    await select.selectOption({ label: KEY });
+    await select.selectOption({ label: pickerLabel(KEY) });
     await teacher.getByLabel(composer.param.replace('{n}', '1'), { exact: true }).fill(`أم جنى ${tag}`);
     await teacher.getByRole('button', { name: composer.sendTemplate, exact: true }).click();
 

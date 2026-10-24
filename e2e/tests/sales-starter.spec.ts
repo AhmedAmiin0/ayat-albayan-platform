@@ -41,7 +41,7 @@ test.describe('restricted templates for sales (owner 2026-10-12)', () => {
       { key: 'welcome_greeting', line: 'chat', sales_starter: true },
     ]);
     const toggleOf = (key: string) =>
-      admin.getByRole('row').filter({ hasText: key }).getByRole('checkbox', { name: t.salesStarterFor.replace('{name}', key) });
+      admin.getByRole('row').filter({ hasText: key }).getByRole('checkbox', { name: t.salesStarterFor.replace('{name}', pickerLabel(key)) });
     await expect(toggleOf(KEY)).toBeChecked();
     await expect(toggleOf(UNFLAGGED)).not.toBeChecked();
 
@@ -58,7 +58,7 @@ test.describe('restricted templates for sales (owner 2026-10-12)', () => {
     const select = page.getByLabel(composer.chooseTemplate);
     await expect(select.locator('option')).toHaveCount(1 + RESTRICTED.length);
     expect(sorted(await select.locator('option').allTextContents())).toEqual(sorted(['—', ...RESTRICTED.map(pickerLabel)]));
-    await select.selectOption({ label: KEY });
+    await select.selectOption({ label: pickerLabel(KEY) });
     await page.getByLabel(composer.param.replace('{n}', '1'), { exact: true }).fill('أم سارة');
     await page.getByRole('button', { name: composer.sendTemplate, exact: true }).click();
 
