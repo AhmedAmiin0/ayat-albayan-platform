@@ -21,13 +21,15 @@ describe('config ownership (decided in code)', () => {
   });
 
   it('description permission per owner (exhaustive map)', () => {
-    expect(Object.keys(OWNER_MAY_DESCRIBE).sort()).toEqual(['communications', 'google_sync', 'messages_gate']);
+    expect(Object.keys(OWNER_MAY_DESCRIBE).sort()).toEqual(['communications', 'google_sync', 'messages_gate', 'notifications']);
     const editor = user('sales', ['settings.write']);
     const numbers = user('sales', ['settings.write', 'numbers.manage']);
     const admin = user('admin', ['settings.write', 'numbers.manage']);
     expect([mayDescribe(editor, 'messaging_enabled'), mayDescribe(editor, 'comms_source'), mayDescribe(editor, 'google_sync_mode')]).toEqual([true, false, false]);
     expect([mayDescribe(numbers, 'comms_source'), mayDescribe(numbers, 'google_sync_mode')]).toEqual([true, false]);
     expect([mayDescribe(admin, 'google_sync_mode'), mayDescribe(editor, 'upload_max_mb')]).toEqual([true, true]);
+    const rules = user('sales', ['settings.write', 'notifications.manage']);
+    expect([mayDescribe(editor, 'follow_up_hours'), mayDescribe(rules, 'follow_up_hours')]).toEqual([false, true]);
   });
 
   it('Google rows are viewable by base admins only', () => {

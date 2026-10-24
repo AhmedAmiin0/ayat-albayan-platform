@@ -28,7 +28,7 @@ describe('descriptionOf', () => {
 
 describe('canDescribe', () => {
   const plain = entryOf(KEY);
-  type Owner = 'messages_gate' | 'communications' | 'google_sync';
+  type Owner = 'messages_gate' | 'communications' | 'google_sync' | 'notifications';
   const owned = (ownedBy: Owner) => entryOf(KEY, { ownedBy });
   const writer = holds('settings.write');
 
@@ -45,6 +45,8 @@ describe('canDescribe', () => {
     expect(canDescribe({ entry: owned('google_sync'), can: writer, admin: false })).toBe(false);
     expect(canDescribe({ entry: owned('google_sync'), can: writer, admin: true })).toBe(true);
     expect(canDescribe({ entry: owned('google_sync'), can: holds(), admin: true })).toBe(false);
+    expect(canDescribe({ entry: owned('notifications'), can: writer, admin: true })).toBe(false);
+    expect(canDescribe({ entry: owned('notifications'), can: holds('settings.write', 'notifications.manage'), admin: false })).toBe(true);
   });
 });
 

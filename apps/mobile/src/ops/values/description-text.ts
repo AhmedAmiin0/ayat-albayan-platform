@@ -30,13 +30,15 @@ export interface DescribeAccess {
 
 /**
  * «عدّل الوصف»: settings.write, and on a module-owned key that module's permission
- * (messages_gate → settings.write, communications → numbers.manage, google_sync → base admin).
+ * (messages_gate → settings.write, communications → numbers.manage, google_sync → base admin,
+ * notifications → notifications.manage).
  * Without a row (older API) there is nothing to edit.
  */
 export function canDescribe({ entry, can, admin }: DescribeAccess): boolean {
   if (!entry || !can('settings.write')) return false;
   if (entry.ownedBy === 'communications') return can('numbers.manage');
   if (entry.ownedBy === 'google_sync') return admin;
+  if (entry.ownedBy === 'notifications') return can('notifications.manage');
   return true;
 }
 

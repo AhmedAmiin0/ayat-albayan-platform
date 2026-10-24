@@ -14,11 +14,7 @@ import { SettingsService } from './settings.service';
 @Global()
 @Module({
   controllers: [SettingsController, SettingsMetaController],
-  providers: [
-    { provide: SETTINGS_CACHE_MS, useFactory: (): number => loadEnv().SETTINGS_CACHE_MS },
-    SettingsService,
-    SettingsMetaQueries,
-  ],
-  exports: [SettingsService, SETTINGS_CACHE_MS],
+  providers: [SettingsService, SettingsMetaQueries],
+  exports: [SettingsService],
 })
 export class SettingsModule {}

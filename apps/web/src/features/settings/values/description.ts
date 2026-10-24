@@ -45,6 +45,7 @@ const OWNER_RIGHT: Record<SettingOwner, (r: DescribeRights) => boolean> = {
   messages_gate: (r) => r.can('settings.write'),
   communications: (r) => r.can('numbers.manage'),
   google_sync: (r) => r.baseAdmin,
+  notifications: (r) => r.can('notifications.manage'),
 };
 
 /** Can this user edit the row's description? Never without an API row (nothing to write to). */
