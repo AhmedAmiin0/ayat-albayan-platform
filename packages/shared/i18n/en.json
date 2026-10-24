@@ -2379,6 +2379,7 @@
     "mediaNotAllowed": "Viewing files isn't available to you",
     "viewMedia": "View {kind}",
     "mediaExpired": "This file has expired",
+    "mediaInCrm": "This file reached a number that runs through the CRM: open it there",
     "sendFailed": "The message wasn't sent. Try again",
     "leadPanel": "Lead",
     "leadSheet": "Lead details & registration",
@@ -2554,6 +2555,18 @@
     "move": "Move to the other number",
     "moveFor": "{name}: move to the other number",
     "moveUnavailable": "The other number is not configured on the server",
+    "crmStatus": {
+      "approved": "Mark approved in the CRM",
+      "missing": "Mark not available",
+      "approvedFor": "{name}: mark approved in the CRM",
+      "missingFor": "{name}: mark not available",
+      "confirm": "Confirm approval",
+      "confirmFor": "{name}: confirm approval",
+      "confirmHint": "Messages will be sent with this template at once",
+      "missingChip": "Not available in the CRM",
+      "saved": "Status of «{name}» saved: {status}",
+      "note": "By hand"
+    },
     "moveTitle": "Move the template to the other number",
     "moveConfirm": "«{name}» will be sent from {to} instead of {from}. After the move its status is checked on the {to} account in Meta: it stays approved if it is approved there, otherwise it becomes «Not sent to Meta yet» until you submit it to Meta from that number.",
     "moveProducerWarning": "The platform sends this template automatically: moving it changes which number sends the bookings or reminders.",
@@ -2590,6 +2603,7 @@
         "key_taken": "Another registry template already uses this key"
       },
       "notConfigured": "This number is not configured on the server, so it cannot be synced.",
+      "crmManaged": "This number's templates are managed in the CRM, so there is no sync with Meta from here. Set each template's status by hand in the table.",
       "wabaId": "Account ID",
       "phone": "Number",
       "provider": "Sending provider"
@@ -2696,6 +2710,10 @@
         "webhookUnverified": "An app is linked to the account, but it could not be verified because the app ID is not configured on the server",
         "webhookKapso": "This line runs through Kapso: inbound messages are received through the Kapso webhook at /webhooks/kapso, so the WABA's subscribed apps are not compared with a Meta app on the server.",
         "webhookKapsoNoSecret": "«Kapso webhook signing secret» is not set under «Communications» → «Safety», so every inbound message from Kapso is refused and never reaches the platform",
+        "webhookCrm": "The line runs through the CRM: inbound conversations stay in the CRM, and delivery ticks arrive via /webhooks/wacrm.",
+        "webhookCrmNoSecret": "«CRM webhook signing secret» is not set in «Communications» → «Safety», so every CRM delivery is refused and no delivery ticks show",
+        "crmScopeMissing": "The CRM API key is valid but lacks the messages:send scope, so this line will not send. Update it in «Communications» → «Safety».",
+        "crmScopeOk": "The CRM API key is valid and has the send scope",
         "callbackOverride": "Alternative callback address: {url}",
         "checkedAt": "Last checked: {time}",
         "checkFailed": "Could not check the lines",
@@ -2720,6 +2738,9 @@
       "not_configured": "The {line} details aren't set up on the server",
       "meta_error": "Meta rejected the request: {message}",
       "kapso_auth": "Kapso refused the project API key: update «Kapso project API key» in «Communications» → «Safety», then try again.",
+      "crm_auth": "The CRM refused its API key: update «CRM API key» in «Communications» → «Safety», then try again.",
+      "crm_managed": "{line} templates are managed in the CRM: they are submitted to Meta and approved there, then their status is set here by hand.",
+      "not_crm_line": "The status is set by hand only for templates of a line switched to «CRM».",
       "needs_app_id": "This template includes a PDF file. To send it to Meta from the {line}, the Meta app ID ({key}) has to be set on the server first.",
       "needs_meta_driver": "This template includes a PDF file, and Kapso cannot upload the sample file. To send it to Meta, switch the «Sending provider» of the {line} to «Meta direct» in «Communications» → «Numbers», then try again.",
       "invalid_template": "Meta would reject this template's text: a variable at the very start or end, two variables side by side, a gap in the numbering, or a variable without a sample value.",
@@ -2862,6 +2883,13 @@
       "132001": "The template doesn't exist on Meta",
       "132015": "Meta has paused this template temporarily",
       "kapso_auth": "Kapso refused the project API key — update «Kapso project API key» in «Communications» → «Safety»; messages wait in the queue",
+      "crm_auth": "The CRM refused its API key or the key lacks the send scope — update «CRM API key» in «Communications» → «Safety»; the messages wait in the queue",
+      "crm_rate_limited": "Sending hit the CRM's limit (120 requests a minute) — the messages will go out shortly",
+      "crm_meta_error": "Meta refused the message sent through the CRM — see the details",
+      "crm_template_malformed": "The CRM's template does not match the values sent — check the template in the CRM",
+      "crm_whatsapp_not_configured": "WhatsApp is not connected in the CRM",
+      "crm_not_found": "The CRM did not find the template or resource — make sure the same template is synced in the CRM",
+      "crm_bad_request": "The CRM refused the request — see the details",
       "expired": "Its time passed before it could be sent",
       "sending": "Sending now",
       "handed_off": "Waiting for you to confirm you sent it yourself",
@@ -4552,6 +4580,7 @@
       "wa_notifications": "WhatsApp notifications line",
       "wa_chat": "WhatsApp chat line",
       "kapso": "Kapso (alternative WhatsApp provider)",
+      "wacrm": "CRM (sending provider through the academy's CRM)",
       "wa_safety": "Test environment safety",
       "livekit": "Online classrooms (LiveKit)",
       "expo": "Mobile push (Expo)",
@@ -4581,6 +4610,7 @@
     "options": {
       "meta": "Meta direct",
       "kapso": "Kapso",
+      "crm": "CRM",
       "true": "On",
       "false": "Off"
     },
@@ -4591,7 +4621,7 @@
     "keys": {
       "WA_PROVIDER": {
         "label": "Sending provider",
-        "hint": "«Meta direct» sends through Meta's API with the access token and app secret in this section; «Kapso» sends through Kapso with the project key in the Kapso section. A manual switch per line, never an automatic failover."
+        "hint": "«Meta direct» sends through Meta's API with the access token and app secret in this section; «Kapso» sends through Kapso with the project key in the Kapso section; «CRM» sends through the academy CRM's API with its key in the CRM section. A manual switch per line, never an automatic failover."
       },
       "WA_API_BASE": {
         "label": "Graph API base URL",
@@ -4664,6 +4694,18 @@
       "KAPSO_WEBHOOK_SECRET": {
         "label": "Kapso webhook signing secret",
         "hint": "In Kapso, create a webhook of kind meta to the API origin followed by /webhooks/kapso, then paste its secret here."
+      },
+      "WACRM_API_BASE": {
+        "label": "CRM API base",
+        "hint": "The CRM's address followed by /api/v1. Left empty, no line switched to «CRM» sends."
+      },
+      "WACRM_API_KEY": {
+        "label": "CRM API key",
+        "hint": "From the CRM: Settings → API keys, with the messages:send scope. Sent in the Authorization header and never shown after saving."
+      },
+      "WACRM_WEBHOOK_SECRET": {
+        "label": "CRM webhook signing secret",
+        "hint": "In the CRM, add a webhook to the API origin followed by /webhooks/wacrm for the event message.status_updated, then paste its secret here so delivery ticks arrive."
       },
       "WA_ALLOWED_RECIPIENTS": {
         "label": "Allowed recipients",
@@ -5360,7 +5402,8 @@
     },
     "provider": {
       "meta": "Meta directly",
-      "kapso": "Kapso"
+      "kapso": "Kapso",
+      "crm": "CRM"
     },
     "fields": {
       "label": "Number name",
@@ -5494,7 +5537,8 @@
       "errors": {
         "not_configured": "This number’s credentials are incomplete, so its templates cannot be read.",
         "meta_error": "Meta returned an error ({{message}}).",
-        "kapso_auth": "Kapso refused this number’s credentials."
+        "kapso_auth": "Kapso refused this number’s credentials.",
+        "crm_managed": "This number's templates are managed in the CRM, so they are not read from here."
       }
     },
     "fallbackRank": {

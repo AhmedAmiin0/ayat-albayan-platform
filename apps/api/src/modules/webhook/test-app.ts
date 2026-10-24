@@ -19,6 +19,13 @@ export const SECRET = 'stub-app-secret';
 export const CHAT_SECRET = 'stub-chat-app-secret';
 export const VERIFY = 'local-verify-token';
 export const KAPSO_SECRET = 'stub-kapso-webhook-secret';
+export const WACRM_SECRET = 'stub-wacrm-webhook-secret';
+
+/** The CRM's X-Wacrm-Signature: «t=<unix seconds>,v1=<hex HMAC-SHA256 of `${t}.${body}`>». */
+export const wacrmSign = (body: string, at: { t?: number; secret?: string } = {}) => {
+  const t = at.t ?? Math.floor(Date.now() / 1000);
+  return `t=${t},v1=${createHmac('sha256', at.secret ?? WACRM_SECRET).update(`${t}.${body}`).digest('hex')}`;
+};
 
 /** Kapso's X-Webhook-Signature: lowercase hex HMAC-SHA256 of the raw body, no «sha256=» prefix. */
 export const kapsoSign = (body: string, secret = KAPSO_SECRET) => createHmac('sha256', secret).update(body).digest('hex');
@@ -34,7 +41,7 @@ export async function webhookApp(config: Partial<WebhookConfig> = {}) {
       throw new Error('no users in webhook tests');
     })
     .overrideProvider(WEBHOOK_CONFIG)
-    .useValue({ appSecrets: [SECRET], verifyToken: VERIFY, numbers: { notifications: PHONE_NUMBER_ID }, kapsoSecret: KAPSO_SECRET, ...config })
+    .useValue({ appSecrets: [SECRET], verifyToken: VERIFY, numbers: { notifications: PHONE_NUMBER_ID }, kapsoSecret: KAPSO_SECRET, wacrmSecret: WACRM_SECRET, ...config })
     .overrideProvider(WebhookQueries)
     .useValue(deps.queries)
     .overrideProvider(LeadsService)
@@ -60,5 +67,13 @@ export async function webhookApp(config: Partial<WebhookConfig> = {}) {
   /** POSTs `body` as given to /webhooks/kapso with exactly these headers (besides content-type). */
   const postKapso = (body: string, headers: Record<string, string> = { 'x-webhook-signature': kapsoSign(body) }) =>
     app.inject({ method: 'POST', url: '/webhooks/kapso', headers: { 'content-type': 'application/json', ...headers }, payload: body });
-  return { ...deps, app, post, postKapso };
+  /** POSTs `body` as given to /webhooks/wacrm, signed now unless `signature` is passed (null = none). */
+  const postWacrm = (body: string, signature: string | null = wacrmSign(body)) =>
+    app.inject({
+      method: 'POST',
+      url: '/webhooks/wacrm',
+      headers: { 'content-type': 'application/json', ...(signature === null ? {} : { 'x-wacrm-signature': signature }) },
+      payload: body,
+    });
+  return { ...deps, app, post, postKapso, postWacrm };
 }

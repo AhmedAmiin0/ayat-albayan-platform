@@ -1,7 +1,7 @@
 import type { RenderableTemplate, TemplateNumberApproval, TemplateView } from '@ab/shared';
 import { HttpException } from '@nestjs/common';
 import { paramNames, templateButtons } from './wa-json';
-import { KAPSO_AUTH } from './send-plan';
+import { CRM_AUTH, KAPSO_AUTH } from './send-plan';
 import type { ApprovalRow } from './templates.queries';
 import type { TemplateRow, WaError } from './whatsapp.types';
 
@@ -52,8 +52,16 @@ export function waHttpError(code: string, status: number, details: Record<string
   return new HttpException({ code, message: code, ...details }, status);
 }
 
-/** A Graph failure → 502: kapso_auth when Kapso refused its key (docs/19), else meta_error with Meta's code and message. */
+/** The 409 of a template action on a crm line: its templates live in the CRM (docs/19). */
+export const CRM_MANAGED = 'crm_managed';
+
+/**
+ * A driver failure → 502: kapso_auth / crm_auth when Kapso / the CRM refused its key (docs/19), else
+ * meta_error with Meta's code and message; a call the crm driver does not support → 409 crm_managed.
+ */
 export function graphHttpError(e: WaError): HttpException {
+  if (e.info.unsupported === 'crm') return waHttpError(CRM_MANAGED, 409);
   if (e.info.credential === 'kapso') return waHttpError(KAPSO_AUTH, 502);
+  if (e.info.credential === 'crm') return waHttpError(CRM_AUTH, 502);
   return waHttpError('meta_error', 502, { meta_code: e.info.code, meta_message: e.info.details ?? e.message });
 }

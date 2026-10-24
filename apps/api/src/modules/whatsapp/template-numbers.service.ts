@@ -3,10 +3,10 @@ import { Injectable, Logger } from '@nestjs/common';
 import { AuditService } from '../../common/audit/audit.service';
 import { overlayNumbers } from '../../common/integrations/numbers-overlay';
 import type { WhatsappEnv } from '../../env';
+import { whatsappClient } from './client-factory';
 import { setTemplateNumber, type NumberSetInput } from './template-number-set';
 import { syncNumber } from './template-number-sync';
 import { TemplatesQueries } from './templates.queries';
-import { HttpWhatsappClient } from './whatsapp.client';
 
 /**
  * Templates per number (docs/23 phase 5, docs/23c decision 9): a template's own number and one number's
@@ -29,7 +29,7 @@ export class TemplateNumbers {
 
   /** POST /admin/numbers/:id/templates/sync (template-number-sync.ts). */
   sync(numberId: string, now: Date = new Date()): Promise<TemplateNumberSyncView> {
-    const clientOf = (env: WhatsappEnv) => new HttpWhatsappClient(env);
+    const clientOf = (env: WhatsappEnv) => whatsappClient(env);
     return syncNumber({ queries: this.queries, numbers: overlayNumbers, clientOf, log: this.log }, numberId, now);
   }
 }

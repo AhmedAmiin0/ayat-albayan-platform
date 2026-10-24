@@ -1,4 +1,4 @@
-import { recipientAllowed, type WhatsappEnv } from '../../env';
+import { recipientAllowed, type GraphEnv } from '../../env';
 import { graphFetch, graphJson, type FetchLike, type GraphConn, type GraphRequest } from './graph';
 import { fetchMedia, nextTemplateCursor, templateEditPath } from './kapso';
 import {
@@ -43,7 +43,7 @@ export class HttpWhatsappClient implements WhatsappClient {
   /** WA_ALLOWED_RECIPIENTS (docs/12 §13.5d); null = unrestricted. */
   private readonly allowed: readonly string[] | null;
 
-  constructor(env: WhatsappEnv | null, opts: ClientOpts = {}) {
+  constructor(env: GraphEnv | null, opts: ClientOpts = {}) {
     this.conn = env ? { env, fetch: opts.fetch ?? fetch, timeoutMs: opts.timeoutMs ?? DEFAULT_TIMEOUT_MS } : null;
     this.allowed = opts.allowed ?? null;
   }

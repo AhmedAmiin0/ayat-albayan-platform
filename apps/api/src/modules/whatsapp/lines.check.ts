@@ -2,6 +2,7 @@ import { WA_LINES, type LineCheckView, type WaLine } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
 import { duplicatePhone, lineEnvs, lineGaps, lineProvider, loadEnv, type WhatsappEnv } from '../../env';
 import { graphJson, type FetchLike, type GraphConn } from './graph';
+import { crmConn, crmLineCheck } from './lines.check.crm';
 import { parsed, phoneNumberSchema, subscribedAppsSchema } from './meta-shapes';
 import { WaError } from './whatsapp.types';
 
@@ -30,7 +31,7 @@ interface LineInput {
   appId: string | null;
   checkedAt: string;
   /** The line's driver, the NAMES of what it still lacks, a duplicate chat id, whether Kapso can deliver inbound (docs/19). */
-  driver: Pick<LineCheckView, 'provider' | 'gaps' | 'duplicate_chat_phone' | 'kapso_webhook_secret'>;
+  driver: Pick<LineCheckView, 'provider' | 'gaps' | 'duplicate_chat_phone' | 'kapso_webhook_secret' | 'crm_webhook_secret'>;
 }
 
 /** A rejected call becomes an errors[] entry; it never hides the other call or line. */
@@ -69,7 +70,7 @@ async function appsOf(conn: GraphConn): Promise<Apps> {
 
 /**
  * POST /messaging/lines/check (docs/12 §13.9): two read-only Graph GETs per configured line, both
- * lines and both calls at once, through each line's driver. Ids, URLs and key NAMES only: the
+ * lines and both calls at once, through each line's driver (a crm line: GET /me only, lines.check.crm.ts). Ids, URLs and key NAMES only: the
  * result never carries a token, key or secret.
  */
 @Injectable()
@@ -87,8 +88,13 @@ export class LinesCheck {
       WA_LINES.map((line) => {
         const provider = lineProvider(env, line);
         const base = { provider, gaps: lineGaps(env, line), duplicate_chat_phone: duplicatePhone(env, line) };
-        const driver: LineInput['driver'] = provider === 'kapso' ? { ...base, kapso_webhook_secret: env.KAPSO_WEBHOOK_SECRET !== undefined } : base;
-        const appId = provider === 'kapso' ? null : (appIds[line] ?? null);
+        const driver: LineInput['driver'] =
+          provider === 'kapso'
+            ? { ...base, kapso_webhook_secret: env.KAPSO_WEBHOOK_SECRET !== undefined }
+            : provider === 'crm'
+              ? { ...base, crm_webhook_secret: env.WACRM_WEBHOOK_SECRET !== undefined }
+              : base;
+        const appId = provider === 'meta' ? (appIds[line] ?? null) : null;
         return this.one({ line, env: envs[line], appId, checkedAt, driver });
       }),
     );
@@ -97,6 +103,8 @@ export class LinesCheck {
   private async one(input: LineInput): Promise<LineCheckView> {
     const { line, env, checkedAt } = input;
     if (!env) return { ...unconfigured(line, checkedAt), ...input.driver };
+    // A crm line: GET /me only (docs/19); the number is the CRM's, so no Graph call at all.
+    if (env.provider === 'crm') return crmLineCheck({ line, conn: crmConn(env, this), checkedAt, driver: input.driver });
     const conn: GraphConn = { env, fetch: this.fetch, timeoutMs: this.timeoutMs };
     // Kapso's Meta proxy has no /{waba}/subscribed_apps (404 on staging, 2026-10-18): its inbound comes
     // through the Kapso webhook, so a kapso line is not asked (subscribed_apps stays null).

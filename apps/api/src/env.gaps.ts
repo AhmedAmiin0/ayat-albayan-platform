@@ -1,5 +1,6 @@
 import type { WaLine } from '@ab/shared';
 import type { Env } from './env';
+import { bothOnCrm, crmGaps } from './env.crm';
 import { duplicateChatPhone, kapsoGaps } from './env.kapso';
 import { chatKeyGaps, hasChatKeys, lineProvider } from './env.whatsapp';
 
@@ -18,22 +19,29 @@ function metaChatGaps(env: Env): string[] {
 }
 
 /**
- * NAMES (never values) of what a line still lacks to send under its provider: kapso → kapsoGaps;
+ * NAMES (never values) of what a line still lacks to send under its provider: crm → crmGaps; kapso → kapsoGaps;
  * meta chat → metaChatGaps; meta notifications → whichever of its four required keys is unset.
  */
 export function lineGaps(env: Env, line: WaLine): string[] {
-  if (lineProvider(env, line) === 'kapso') return kapsoGaps(env, line);
+  const provider = lineProvider(env, line);
+  if (provider === 'crm') return crmGaps(env);
+  if (provider === 'kapso') return kapsoGaps(env, line);
   if (line === 'chat') return metaChatGaps(env);
   return META_NOTIFICATION_KEYS.filter((k) => env[k] === undefined);
 }
 
-/** The chat line's phone id is the notifications one: that line stays off (either driver). */
+/**
+ * The chat line is the notifications line's number: its phone id is the notifications one (any driver), or
+ * both lines are on crm (one CRM account = one number, docs/19). That line stays off.
+ */
 export function duplicatePhone(env: Env, line: WaLine): boolean {
-  return line === 'chat' && duplicateChatPhone(env);
+  return line === 'chat' && (duplicateChatPhone(env) || bothOnCrm(env));
 }
 
 /** The boot log's words for a duplicate chat phone id («افحص الخطوط» shows duplicate_chat_phone instead). */
 export const DUPLICATE_CHAT_PHONE = 'WA_CHAT_PHONE_NUMBER_ID (same as WA_PHONE_NUMBER_ID)';
+/** The boot log's words when both lines are on crm. */
+export const BOTH_ON_CRM = 'WA_CHAT_PROVIDER (crm, same as WA_PROVIDER)';
 
 /**
  * What the boot log names for a line: lineGaps plus the duplicate-id sentence. An unset meta
@@ -41,5 +49,6 @@ export const DUPLICATE_CHAT_PHONE = 'WA_CHAT_PHONE_NUMBER_ID (same as WA_PHONE_N
  */
 export function bootGaps(env: Env, line: WaLine): string[] {
   const names = line === 'notifications' && lineProvider(env, line) === 'meta' ? [] : lineGaps(env, line);
-  return duplicatePhone(env, line) ? [...names, DUPLICATE_CHAT_PHONE] : names;
+  if (!duplicatePhone(env, line)) return names;
+  return [...names, bothOnCrm(env) ? BOTH_ON_CRM : DUPLICATE_CHAT_PHONE];
 }

@@ -3,16 +3,16 @@ import { Inject, Injectable } from '@nestjs/common';
 import { BUCKETS, SIGNED_URL_SECONDS } from '../../common/storage/storage.paths';
 import { StorageService } from '../../common/storage/storage.service';
 import { allowedRecipients, loadEnv, recipientAllowed } from '../../env';
+import { whatsappClient } from './client-factory';
 import { NumberClients } from './number-clients';
 import type { NumberRoute } from './number-route';
 import { quickReplyPayloads } from './send-plan';
 import type { DueMessage } from './sender.queries';
 import { templateButtons, templateParams } from './wa-json';
-import { HttpWhatsappClient } from './whatsapp.client';
 import { WaError, WHATSAPP_LINES, type TemplateRow, type WaSent, type WhatsappClient, type WhatsappLines } from './whatsapp.types';
 
 /** Refuses every call before any request (WaError code null, status 0). */
-const UNCONFIGURED = new HttpWhatsappClient(null);
+const UNCONFIGURED = whatsappClient(null);
 
 /** Where a row leaves from: a line (legacy: today's two line clients) or a number (module mode, docs/23c). */
 export type SendVia = WaLine | NumberRoute;

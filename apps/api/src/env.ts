@@ -5,6 +5,7 @@ import { blankIsUnset, optionalSecret } from './env.blank';
 import { recipientList } from './env.recipient-list';
 import { envCandidates } from './env.sources';
 import { GOOGLE_SHAPE } from './env.google';
+import { CRM_SHAPE } from './env.crm';
 import { KAPSO_SHAPE } from './env.kapso';
 import type { LineMode } from './env.whatsapp';
 import { WEB_PUSH_SHAPE } from './env.web-push';
@@ -12,7 +13,7 @@ import { WEB_PUSH_SHAPE } from './env.web-push';
 export { whatsappEnv, sendingAllowed, lineEnvs, appSecrets, lineNumbers, lineProvider } from './env.whatsapp';
 export { lineGaps, duplicatePhone, bootGaps, DUPLICATE_CHAT_PHONE } from './env.gaps';
 export { allowedRecipients, recipientAllowed, parseAllowedRecipients, kapsoWebhookSecret } from './env.whatsapp';
-export type { WhatsappEnv, MetaLineEnv, KapsoLineEnv, LineEnvs, LineNumbers } from './env.whatsapp';
+export type { WhatsappEnv, GraphEnv, MetaLineEnv, KapsoLineEnv, CrmLineEnv, LineEnvs, LineNumbers } from './env.whatsapp';
 export { livekitEnv, type LivekitEnv } from './env.livekit';
 export { webPushEnv } from './env.web-push';
 export { googleEnv, googleRedirectUri, type GoogleEnv, type GoogleEndpoints } from './env.google';
@@ -61,6 +62,7 @@ const schema = z.object({
   /** false = the template sync and submit stop (Meta test credentials must not rewrite the registry). */
   WA_TEMPLATE_SYNC: z.preprocess(blankIsUnset, z.stringbool().default(true)),
   ...KAPSO_SHAPE,
+  ...CRM_SHAPE,
   /** Expo push access token (only when the Expo project enforces push security). */
   EXPO_ACCESS_TOKEN: optionalSecret,
   /**

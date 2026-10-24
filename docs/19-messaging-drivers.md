@@ -1,4 +1,4 @@
-# 19 — Messaging drivers: Meta direct or Kapso, per line
+# 19 — Messaging drivers: Meta direct, Kapso or the academy CRM, per line
 
 Owner request 2026-10-17: «a notification/messaging engine: one driver using a third party like Kapso, the other using Meta native APIs».
 
@@ -68,3 +68,72 @@ Migration `20261017000450_kapso_secret_keys.sql` adds the two secrets to `integr
 ## Local and e2e
 
 `tools/wa-stub` serves the same Graph routes under `/kapso/{version}/…`: it requires `X-API-Key` and refuses any bearer, records the credential kind of every request (`GET /__stub/requests`), requires `phone_number_id` on `GET /{media_id}` and answers a `download_url` that only works without credentials, edits templates via `?hsm_id=`, and `POST /__stub/kapso/inbound` forwards a Kapso-signed raw Meta inbound to `/webhooks/kapso`. `e2e/tests/kapso-driver.spec.ts` switches the notifications line to kapso in the database, checks an inbound and a reply end to end and a bad signature, and always switches back to meta.
+
+## crm driver (owner 2026-10-25: «add one driver for the crm», «deal with the crm as api»)
+
+A third driver, `crm`: a line sends through the academy's self-hosted WA CRM (open-source wacrm, deployed at
+commit `98b5bd2`) via its **public REST API**, not a Meta proxy. Meant for the notifications line (its Meta
+token is dead; the CRM already holds a working connection to the academy's main number and the approved
+booking / reminder templates). Either line may select it; both on crm = one CRM account twice, so the chat
+line stays off (`duplicate_chat_phone`, boot log `WA_CHAT_PROVIDER (crm, same as WA_PROVIDER)`). Default stays `meta`.
+
+| Topic | crm |
+| --- | --- |
+| Base / auth | `WACRM_API_BASE` (`https://<crm-host>/api/v1`, no default) · `Authorization: Bearer <WACRM_API_KEY>` (account-scoped key, scope `messages:send`) |
+| Ids | none of ours: `CrmLineEnv {provider:'crm', base, apiKey}`. Line facts, the lines check and parity show null phone / WABA / app ids; `WA_PHONE_NUMBER_ID` (if set) and `WA_APP_SECRET` stay on the Meta webhook route, so whatever Meta still delivers for that number is stored, never dropped |
+| Template send | `POST /messages {to:"+E164", type:"template", template:{name: meta_name, language, params:{body[], headerMediaUrl?, buttonParams?}}}` built by `crm-body.ts` from the SAME values the meta driver sends (`wa-components.ts` `bodyValues` / `documentHeader` / `buttonValues`): body {{n}}, a document header as the 7-day signed Storage URL, URL-button suffixes and quick-reply payloads by button index. The CRM resolves the template from **its own synced list** by name + language |
+| Text / files | `type:"text"` (reply-to dropped: the CRM wants its own uuid) · `type:"document"\|"image"` with `media_url`, `filename`, caption as `text` |
+| wamid | `data.whatsapp_message_id` (a 2xx without it = `uncertain`) |
+| markRead | no-op (the CRM owns the conversation) |
+| Template list / submit / samples / inbound media | `WaError {unsupported:'crm'}`: the sync answers `crm_managed` (no call, **no row touched**: nothing is marked missing or not_submitted), submit is 409 `crm_managed`, a number's sync `crm_managed`, inbound media 409 `crm_no_media`; `canUploadSamples()` false |
+| 401 / 403 | `credential: 'crm'`: the queue is held 15 min, uncounted, line paused; rows read `crm_auth` («رفض نظام CRM مفتاح الواجهة…») |
+| 429 | queued until `Retry-After` (default 1 min, max 1 h), uncounted, `crm_rate_limited` (120 req/min per key) |
+| 502 `meta_error`, 500 `template_malformed`, any other 4xx | failed at once with `crm_<code>` and the CRM's message (nothing was sent) |
+| 500 `internal`, other 5xx, a timeout, a connection lost after the request left | `uncertain` (the CRM may have reached Meta before failing its own insert). **No idempotency key: never resent automatically** |
+
+The `WA_ALLOWED_RECIPIENTS` allow-list and `messaging_enabled` gate are unchanged and run before any client.
+One factory (`client-factory.ts` `whatsappClient`) builds every line's and number's client. Module mode: a
+`wa_numbers` row with `provider = 'crm'` (migration 640 widens the check) sends with `WACRM_API_BASE` /
+`WACRM_API_KEY`, like a kapso number with Kapso's project key; its `phone_number_id` only names it.
+
+**Template status on a crm line.** The queue gate (teacher-alert.plan.ts, confirmations) and the send gate
+(sender.queries.ts) read `message_templates.status` from our db, and a crm line is never synced. So on
+«القوالب» a template whose line is on crm shows «يدويًا» beside its chip (missing reads «غير متاح في نظام CRM»)
+and two buttons: «علِّمه معتمدًا في نظام CRM» (`approved`, after a second «تأكيد الاعتماد»: messages go out with
+it at once) / «علِّمه غير متاح» (`missing`) → `PUT /messaging/templates/:key/crm-status`
+(templates.manage, audited `template_crm_status_set`; 409 `not_crm_line` on any other line). No sync
+overwrites it while the line stays on crm. Moving a template to a crm line resets it to not_submitted as
+any move does; set it by hand afterwards.
+
+**Webhook `POST /webhooks/wacrm`** (public, raw body, never in the activity log). `X-Wacrm-Signature:
+t=<unix>,v1=<hex>` with v1 = HMAC-SHA256(`WACRM_WEBHOOK_SECRET`, `${t}.${rawBody}`), constant-time; `t` more
+than 5 minutes from now = 401 (replay); unset secret = every POST 401. Deduped on the payload `id` (in memory
+per instance, 10 min; a duplicate elsewhere is harmless, statuses only move forward; a failed write answers
+500 and forgets the id). `message.status_updated` → the existing delivery-status path by `wa_message_id`
+(ticks; the CRM's conversation id is not stored). `message.received` / `conversation.created` → logged, 200.
+Never sends anything.
+
+**Lines check.** A crm line makes one call, `GET /me`: ok, key refused (`errors[0].credential = 'crm'`), or
+`crm_send_scope: false` (no `messages:send`); plus `crm_webhook_secret` (set or not, never the value). Never
+a test message.
+
+**Limits.** No template sync or submit from here (submit and approve in the CRM, which syncs from Meta);
+the CRM must hold **the same template names and languages** as our registry (`meta_name`, `language`); no
+inbound media; no idempotency (an uncertain send is the admin's call); a document header goes as a link
+without our filename; best-effort webhooks (a missed tick stays «sent»). Follow-up: mirror the CRM's
+`message.received` into our inbox (the CRM owns that number's conversations today).
+
+### Switching the notifications line to the CRM (owner steps)
+
+1. In the CRM: Settings → API keys → New key with scope **`messages:send`**; copy it (shown once).
+2. «التواصل» ← «الحماية» → «نظام CRM»: `WACRM_API_BASE` = `https://<crm-host>/api/v1`, save the key as `WACRM_API_KEY`.
+3. In the CRM: add a webhook to `<API origin>/webhooks/wacrm` for event `message.status_updated`; paste its secret as `WACRM_WEBHOOK_SECRET`.
+4. Set `WA_PROVIDER` = «نظام CRM», save, press «افحص الخطوط»: the line must show «نظام CRM», nothing missing, «مفتاح واجهة نظام CRM صالح ويملك صلاحية الإرسال».
+5. On «القوالب», mark each notifications template the CRM holds approved with «علِّمه معتمدًا في نظام CRM» → «تأكيد الاعتماد».
+6. Send one test to a number in `WA_ALLOWED_RECIPIENTS` before removing the guard.
+7. **Rollback:** set `WA_PROVIDER` back to «Meta مباشرة» (or Kapso). Nothing else changes; the hand-set statuses are re-synced by the next Meta sync.
+
+`tools/wa-stub` serves a minimal CRM under `/crm/api/v1` (`GET /me`, `POST /messages`, Bearer, `{data}` /
+`{error}` envelope; `crm.apiKey` / `crm.scopes` options) for api tests and e2e. Keys: `WACRM_API_BASE` plain
+URL (group `wacrm`), `WACRM_API_KEY` / `WACRM_WEBHOOK_SECRET` Vault secrets (migration
+`20261025000640_wacrm_driver.sql`, expand-only; ship with the `migrate` input ticked).

@@ -4,7 +4,7 @@
 // server env, which stays the fallback. Every other env key (PORT, SUPABASE_*, …) stays in env.
 
 /** The form's groups, in page order. */
-export const INTEGRATION_GROUPS = ['wa_notifications', 'wa_chat', 'kapso', 'wa_safety', 'livekit', 'expo', 'web_push', 'fx', 'google'] as const;
+export const INTEGRATION_GROUPS = ['wa_notifications', 'wa_chat', 'kapso', 'wacrm', 'wa_safety', 'livekit', 'expo', 'web_push', 'fx', 'google'] as const;
 export type IntegrationGroup = (typeof INTEGRATION_GROUPS)[number];
 
 export const INTEGRATION_PLAIN_KEYS = [
@@ -20,6 +20,7 @@ export const INTEGRATION_PLAIN_KEYS = [
   'WA_CHAT_PROVIDER',
   'KAPSO_API_BASE',
   'KAPSO_API_VERSION',
+  'WACRM_API_BASE',
   'WA_ALLOWED_RECIPIENTS',
   'WA_TEMPLATE_SYNC',
   'LIVEKIT_URL',
@@ -43,6 +44,8 @@ export const INTEGRATION_SECRET_KEYS = [
   'WEB_PUSH_VAPID_PRIVATE_KEY',
   'KAPSO_API_KEY',
   'KAPSO_WEBHOOK_SECRET',
+  'WACRM_API_KEY',
+  'WACRM_WEBHOOK_SECRET',
   'GOOGLE_CLIENT_SECRET',
 ] as const;
 
@@ -79,6 +82,10 @@ const GROUP_OF: Record<IntegrationKey, IntegrationGroup> = {
   KAPSO_API_VERSION: 'kapso',
   KAPSO_API_KEY: 'kapso',
   KAPSO_WEBHOOK_SECRET: 'kapso',
+  // The academy's self-hosted WA CRM (docs/19 «crm driver»): its public REST API, not a Meta proxy.
+  WACRM_API_BASE: 'wacrm',
+  WACRM_API_KEY: 'wacrm',
+  WACRM_WEBHOOK_SECRET: 'wacrm',
   WA_ALLOWED_RECIPIENTS: 'wa_safety',
   WA_TEMPLATE_SYNC: 'wa_safety',
   LIVEKIT_URL: 'livekit',
@@ -107,8 +114,8 @@ export const INTEGRATION_KEYS: readonly IntegrationKeyDef[] = (Object.keys(GROUP
   .map((key) => ({ key, group: GROUP_OF[key], secret: SECRET_SET.has(key), i18n: `integrations.keys.${key}` as const }))
   .sort((a, b) => INTEGRATION_GROUPS.indexOf(a.group) - INTEGRATION_GROUPS.indexOf(b.group));
 
-/** WhatsApp drivers (docs/19): Meta's Cloud API directly, or through Kapso's Meta proxy. */
-export const WA_PROVIDERS = ['meta', 'kapso'] as const;
+/** WhatsApp drivers (docs/19): Meta's Cloud API directly, through Kapso's Meta proxy, or the academy CRM's API. */
+export const WA_PROVIDERS = ['meta', 'kapso', 'crm'] as const;
 export type WaProvider = (typeof WA_PROVIDERS)[number];
 
 /** Plain keys with a fixed set of values: the form renders a select, the API refuses anything else. */

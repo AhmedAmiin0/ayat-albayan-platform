@@ -1,4 +1,4 @@
-import type { WhatsappEnv } from '../../env';
+import type { GraphEnv } from '../../env';
 import { graphFetch, graphJson, type GraphConn } from './graph';
 import { kapsoMediaSchema, mediaSchema, parsed } from './meta-shapes';
 
@@ -18,7 +18,7 @@ interface TemplatePage {
  * The next page's cursor, or undefined when the list is done. Meta says so with paging.next; Kapso
  * never sends it, so there a full page with an `after` cursor means there may be more.
  */
-export function nextTemplateCursor(env: WhatsappEnv, page: TemplatePage): string | undefined {
+export function nextTemplateCursor(env: GraphEnv, page: TemplatePage): string | undefined {
   const after = page.paging?.cursors?.after;
   if (env.provider === 'kapso') return after && page.count >= page.limit ? after : undefined;
   return page.paging?.next ? after : undefined;
@@ -28,7 +28,7 @@ export function nextTemplateCursor(env: WhatsappEnv, page: TemplatePage): string
  * Where an edit of a template Meta already knows is POSTed: Meta = /{template id}; Kapso has no
  * such path, it edits through /{waba}/message_templates?hsm_id=<template id>.
  */
-export function templateEditPath(env: WhatsappEnv, templateId: string): string {
+export function templateEditPath(env: GraphEnv, templateId: string): string {
   if (env.provider !== 'kapso') return templateId;
   return `${encodeURIComponent(env.wabaId)}/message_templates?hsm_id=${encodeURIComponent(templateId)}`;
 }

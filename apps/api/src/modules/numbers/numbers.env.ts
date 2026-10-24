@@ -7,7 +7,8 @@ import type { NumberRow } from './numbers.queries';
 // One number's own client config (docs/23 phase 5, docs/23c decision 3): the row's ids and ITS Vault
 // secrets only. A number never borrows another number's token or a legacy WA_* key (PR #142 item 15).
 // The shared pieces come from the config: meta = WA_API_BASE / WA_API_VERSION; kapso = KAPSO_API_BASE,
-// KAPSO_API_VERSION and the project-wide KAPSO_API_KEY (env.kapso.ts kapsoLine). Never logs a value.
+// KAPSO_API_VERSION and the project-wide KAPSO_API_KEY (env.kapso.ts kapsoLine); crm = WACRM_API_BASE and
+// WACRM_API_KEY (env.crm.ts crmLine). Never logs a value.
 
 export interface NumberSource {
   row: NumberRow;
@@ -39,6 +40,8 @@ export function numberEnv(source: NumberSource, env: Env): WhatsappEnv | null {
   const v = source.row.enabled ? checked(source) : null;
   if (!v) return null;
   const k = ROLE_KEYS[source.row.purpose];
+  // crm: the CRM's base + key (env.crm.ts crmLine); the row's ids only name it, they are never sent.
+  if (v[k.provider] === 'crm') return crmEnv(env);
   const phoneNumberId = v[k.phone_number_id];
   const wabaId = v[k.waba_id];
   if (!phoneNumberId || !wabaId) return null;
@@ -54,6 +57,13 @@ function kapsoEnv(ids: Ids, env: Env): WhatsappEnv | null {
   const apiKey = env.KAPSO_API_KEY;
   if (!base || !apiKey) return null;
   return { provider: 'kapso', base, version: env.KAPSO_API_VERSION, ...ids, apiKey };
+}
+
+/** The CRM: WACRM_API_BASE and the account-wide WACRM_API_KEY, like Kapso's project key; never a Meta token. */
+function crmEnv(env: Env): WhatsappEnv | null {
+  const base = env.WACRM_API_BASE?.replace(/\/+$/, '');
+  const apiKey = env.WACRM_API_KEY;
+  return base && apiKey ? { provider: 'crm', base, apiKey } : null;
 }
 
 /** Meta: WA_API_BASE / WA_API_VERSION with the number's own token (app id only when set). */

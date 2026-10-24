@@ -2,6 +2,7 @@ import type { TemplateLineFacts, TemplateLineSync, WaLine } from '@ab/shared';
 import { lineFacts, readError } from './template-env';
 import { newStarters } from './template-import';
 import { findMeta, syncPatch } from './template-sync';
+import { CRM_MANAGED } from './template.mapper';
 import type { TemplatesQueries } from './templates.queries';
 import { WaError, type MetaTemplate, type WhatsappLines } from './whatsapp.types';
 
@@ -30,9 +31,14 @@ async function readList(deps: LineSyncDeps, line: WaLine): Promise<MetaTemplate[
   }
 }
 
-/** POST /messaging/templates/health for one line; an unconfigured line answers not_configured and reads nothing. */
+/**
+ * POST /messaging/templates/health for one line; an unconfigured line answers not_configured and reads
+ * nothing. A crm line answers crm_managed (docs/19): no call, and no row is touched (a status the admin set
+ * by hand stays; nothing is marked missing or not_submitted because of the CRM).
+ */
 export async function syncLine(deps: LineSyncDeps, line: WaLine, now: Date): Promise<TemplateLineSync> {
   const facts = lineFacts(line, deps.lines[line]);
+  if (facts.provider === 'crm') return { ...empty(facts, now), ok: false, error: CRM_MANAGED };
   if (!facts.configured) return { ...empty(facts, now), ok: false, error: 'not_configured' };
   const list = await readList(deps, line);
   if (!Array.isArray(list)) return { ...empty(facts, now), ok: false, ...list };

@@ -11,6 +11,7 @@ import { SubmitTemplateDialog } from './SubmitTemplateDialog';
 import { templateColumns } from './template-columns';
 import { TemplateLines } from './TemplateLines';
 import { TemplateNumberDialog } from './TemplateNumberDialog';
+import { useCrmStatus } from './use-crm-status';
 import { useTemplateActions } from './use-template-actions';
 import { useTemplateLines } from './use-template-lines';
 import { useTemplateNumber } from './use-template-number';
@@ -22,6 +23,7 @@ import { useTemplateNumber } from './use-template-number';
  * only after its explicit confirm dialog. «متاح للمعلمين والمبيعات» (the restricted allow-list)
  * picks the only templates teachers, sales and other limited roles may send (owner 2026-10-12).
  * «يُرسل من» picks each template's own number (templates.manage, after its dialog; docs/23c decision 9).
+ * A template on a crm line has its status set by hand (docs/19): the CRM holds it, nothing syncs it.
  */
 export function TemplateHealth({ headingId }: { headingId: string }) {
   const templates = useQuery(templatesQuery);
@@ -34,6 +36,7 @@ export function TemplateHealth({ headingId }: { headingId: string }) {
   const numbers = useQuery({ ...numbersQuery, enabled: can('settings.read') }).data;
   const pick = useTemplateNumber(a.setNotice);
   const { setPicking, busy: pickBusy } = pick;
+  const { busyKey: crmBusy, onSet: onCrmSet } = useCrmStatus(a.setNotice);
   const columns = useMemo(
     () =>
       templateColumns({
@@ -44,8 +47,9 @@ export function TemplateHealth({ headingId }: { headingId: string }) {
         phones,
         factsOf,
         sendFrom: { numbers, manage, busy: pickBusy, onPick: (template, numberId) => setPicking({ template, numberId }) },
+        crmStatus: { busyKey: crmBusy, onSet: onCrmSet },
       }),
-    [setSubmitting, setMoving, toggleStarter, saving, phones, factsOf, numbers, manage, setPicking, pickBusy],
+    [setSubmitting, setMoving, toggleStarter, saving, phones, factsOf, numbers, manage, setPicking, pickBusy, crmBusy, onCrmSet],
   );
   const rows = templates.data ?? [];
 

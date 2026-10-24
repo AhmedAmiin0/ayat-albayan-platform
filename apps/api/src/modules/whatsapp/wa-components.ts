@@ -11,47 +11,66 @@ export type GraphBody = Record<string, unknown>;
 export const waTo = (e164: string): string => e164.replace(/\D/g, '');
 
 /** A send we refuse before Meta does: counts as Meta's 132000 (bad parameters), never retried. */
-const badParams = (details: string) => new WaError('template parameters do not match', { code: 132000, status: 0, details });
+export const badParams = (details: string) => new WaError('template parameters do not match', { code: 132000, status: 0, details });
 
 /** Highest {{n}} in the body: Meta's own text after the health check, else the seeded shape. */
 export function bodyVarCount(body: string): number {
   return Math.max(0, ...[...body.matchAll(/\{\{(\d+)\}\}/g)].map((m) => Number(m[1])));
 }
 
-function bodyParameters(row: TemplateRow, params: TemplateParams) {
+/** The body's {{1}}…{{n}} values in order, each required (shared by the meta and crm drivers). */
+export function bodyValues(row: TemplateRow, params: TemplateParams): string[] {
   return Array.from({ length: bodyVarCount(row.body_ar) }, (_, i) => {
     const key = BODY_SLOTS[i];
     const text = key ? params[key]?.trim() : undefined;
     if (!text) throw badParams(`${row.key}: {{${i + 1}}} is empty`);
-    return { type: 'text', text };
+    return text;
   });
 }
 
-function headerComponent(input: TemplateSend): GraphBody | null {
+/** A document header's link and filename (the signed Storage URL); null for a template without one. */
+export function documentHeader(input: TemplateSend): { link: string; filename: string } | null {
   if (input.template.header_format !== 'document') return null;
   const doc = input.params.document;
   if (!doc || !input.documentUrl) throw badParams(`${input.template.key}: the document is missing`);
-  return { type: 'header', parameters: [{ type: 'document', document: { link: input.documentUrl, filename: doc.filename } }] };
+  return { link: input.documentUrl, filename: doc.filename };
+}
+
+/** One send-time button value: a URL suffix ({{1}}) or a quick-reply payload, by the button's index. */
+export interface ButtonValue {
+  index: number;
+  kind: 'url' | 'quick_reply';
+  value: string;
+}
+
+/** The buttons that need a value at send time (a fixed link and an unset payload need none). */
+export function buttonValues(input: TemplateSend): ButtonValue[] {
+  const payloads = input.payloads ?? input.params.payloads ?? [];
+  return templateButtons(input.template.buttons).flatMap((b, index): ButtonValue[] => {
+    if (b.type === 'url') {
+      if (!b.url.includes('{{1}}')) return [];
+      if (!input.params.button) throw badParams(`${input.template.key}: the link button has no value`);
+      return [{ index, kind: 'url', value: input.params.button }];
+    }
+    const payload = payloads[index];
+    return payload ? [{ index, kind: 'quick_reply', value: payload }] : [];
+  });
 }
 
 function buttonComponents(input: TemplateSend): GraphBody[] {
-  const payloads = input.payloads ?? input.params.payloads ?? [];
-  return templateButtons(input.template.buttons).flatMap((b, i): GraphBody[] => {
-    const index = String(i);
-    if (b.type === 'url') {
-      if (!b.url.includes('{{1}}')) return []; // a fixed link has nothing to fill
-      if (!input.params.button) throw badParams(`${input.template.key}: the link button has no value`);
-      return [{ type: 'button', sub_type: 'url', index, parameters: [{ type: 'text', text: input.params.button }] }];
-    }
-    const payload = payloads[i];
-    return payload ? [{ type: 'button', sub_type: 'quick_reply', index, parameters: [{ type: 'payload', payload }] }] : [];
-  });
+  return buttonValues(input).map(({ index, kind, value }) => ({
+    type: 'button',
+    sub_type: kind,
+    index: String(index),
+    parameters: [kind === 'url' ? { type: 'text', text: value } : { type: 'payload', payload: value }],
+  }));
 }
 
 /** The template's components in Meta's order: header, body, buttons by index. */
 export function templateComponents(input: TemplateSend): GraphBody[] {
-  const parameters = bodyParameters(input.template, input.params);
-  const header = headerComponent(input);
+  const parameters = bodyValues(input.template, input.params).map((text) => ({ type: 'text', text }));
+  const doc = documentHeader(input);
+  const header = doc ? { type: 'header', parameters: [{ type: 'document', document: doc }] } : null;
   return [
     ...(header ? [header] : []),
     ...(parameters.length ? [{ type: 'body', parameters }] : []),

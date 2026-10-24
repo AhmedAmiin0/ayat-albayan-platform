@@ -7,6 +7,9 @@ import { KAPSO_AUTH } from './send-plan';
 import { waHttpError } from './template.mapper';
 import { WHATSAPP_LINES, WaError, type WhatsappLines } from './whatsapp.types';
 
+/** 409 for inbound media on a crm line: the CRM holds that number's files (docs/19). */
+export const CRM_NO_MEDIA = 'crm_no_media';
+
 /** Meta keeps a media id about 30 days; a day less, so a download never races the deadline. */
 export const MEDIA_FETCH_DAYS = 29;
 const DAY_MS = 86_400_000;
@@ -85,11 +88,17 @@ export class InboundMedia {
     try {
       return await client.getMedia(mediaId);
     } catch (e) {
-      if (!(e instanceof WaError)) throw e;
-      if (e.info.credential === 'kapso') throw waHttpError(KAPSO_AUTH, HttpStatus.BAD_GATEWAY);
-      if (isWaAuthError(e.info.code)) throw waHttpError('meta_error', HttpStatus.BAD_GATEWAY, { meta_code: e.info.code });
-      if (e.info.status >= 400 && e.info.status < 500) throw waHttpError('media_expired', HttpStatus.GONE);
-      throw e;
+      throw e instanceof WaError ? mediaHttpError(e) : e;
     }
   }
+}
+
+/** A failed media fetch in words: crm_no_media, kapso_auth, a dead Meta token, or gone (410); else as is. */
+function mediaHttpError(e: WaError): Error {
+  // The crm driver cannot fetch Meta media: that number's files are in the CRM (docs/19).
+  if (e.info.unsupported === 'crm') return waHttpError(CRM_NO_MEDIA, HttpStatus.CONFLICT);
+  if (e.info.credential === 'kapso') return waHttpError(KAPSO_AUTH, HttpStatus.BAD_GATEWAY);
+  if (isWaAuthError(e.info.code)) return waHttpError('meta_error', HttpStatus.BAD_GATEWAY, { meta_code: e.info.code });
+  if (e.info.status >= 400 && e.info.status < 500) return waHttpError('media_expired', HttpStatus.GONE);
+  return e;
 }

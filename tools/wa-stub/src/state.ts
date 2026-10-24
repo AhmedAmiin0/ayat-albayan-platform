@@ -21,9 +21,17 @@ export interface KapsoOptions {
   webhookSecret?: string;
 }
 
+/** The academy CRM's REST API (docs/19 «crm driver»): its Bearer key and the key's scopes. */
+export interface CrmOptions {
+  /** When set, the Bearer must equal it; otherwise any bearer passes. */
+  apiKey?: string;
+  /** GET /me's scopes (default ['messages:send']); without messages:send POST /messages is 403. */
+  scopes?: string[];
+}
+
 /** One Graph call as it arrived: through which prefix and with which credential kind. */
 export interface RequestLog {
-  via: 'graph' | 'kapso';
+  via: 'graph' | 'kapso' | 'crm';
   method: string;
   path: string;
   auth: 'api-key' | 'bearer' | 'oauth' | 'none';
@@ -47,6 +55,8 @@ export interface StubOptions {
   enforceWindow?: boolean;
   /** The kapso prefix's key and webhook (absent = any key passes, no Kapso webhook). */
   kapso?: KapsoOptions;
+  /** The crm prefix's key and scopes (absent = any bearer, messages:send). */
+  crm?: CrmOptions;
 }
 
 export interface SentMessage {
@@ -57,8 +67,8 @@ export interface SentMessage {
   body: unknown;
   /** The phone-number id of the Graph path the message was sent through (its line). */
   phoneNumberId?: string;
-  /** Through Meta's paths or the Kapso prefix (docs/19), so e2e can scope a send to its driver. */
-  via?: 'graph' | 'kapso';
+  /** Through Meta's paths, the Kapso prefix or the CRM prefix (docs/19), so e2e can scope a send to its driver. */
+  via?: 'graph' | 'kapso' | 'crm';
 }
 
 /** A read receipt with the line (phone-number id) it was sent through. */

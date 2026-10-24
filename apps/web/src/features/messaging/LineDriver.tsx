@@ -19,12 +19,14 @@ function GapNames({ gaps }: { gaps: readonly string[] }) {
   );
 }
 
+type DriverView = Pick<LineCheckView, 'provider' | 'gaps' | 'duplicate_chat_phone'> & Partial<Pick<LineCheckView, 'crm_send_scope'>>;
+
 /**
- * The line's sending provider (docs/19: Meta directly or Kapso) and, when it cannot send yet, what it
- * still lacks by its «التكاملات» label (never a value), and in words when the chat line's phone id
- * is the notifications one.
+ * The line's sending provider (docs/19: Meta directly, Kapso or the academy CRM) and, when it cannot send
+ * yet, what it still lacks by its «التكاملات» label (never a value), in words when the chat line's phone id
+ * is the notifications one, and on a crm line whether its key may send (GET /me; unknown = not shown).
  */
-export function LineDriver({ view }: { view: Pick<LineCheckView, 'provider' | 'gaps' | 'duplicate_chat_phone'> | null }) {
+export function LineDriver({ view }: { view: DriverView | null }) {
   const s = t.templates.settings.lines;
   if (!view) return null;
   const [before, after = ''] = s.gaps.split('{keys}');
@@ -42,6 +44,8 @@ export function LineDriver({ view }: { view: Pick<LineCheckView, 'provider' | 'g
         </p>
       )}
       {view.duplicate_chat_phone && <p className="text-act">{s.duplicateChatPhone}</p>}
+      {view.provider === 'crm' && view.crm_send_scope === false && <p className="text-act">{s.crmScopeMissing}</p>}
+      {view.provider === 'crm' && view.crm_send_scope === true && <p className="text-ok">{s.crmScopeOk}</p>}
     </div>
   );
 }

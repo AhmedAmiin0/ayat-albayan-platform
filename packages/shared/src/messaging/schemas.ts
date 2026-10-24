@@ -67,6 +67,11 @@ export const templateHealthSchema = z.object({ line: z.enum(WA_LINES).optional()
 /** PATCH /messaging/templates/:key/line: the number this template goes from (audited). */
 export const templateLineSchema = z.object({ line: z.enum(WA_LINES) });
 
+/** The two statuses an admin may set by hand on a template whose line is on the crm driver (docs/19). */
+export const CRM_TEMPLATE_STATUSES = ['approved', 'missing'] as const;
+/** PUT /messaging/templates/:key/crm-status: «معتمد في نظام CRM» / «غير متاح في نظام CRM» (audited). */
+export const templateCrmStatusSchema = z.object({ status: z.enum(CRM_TEMPLATE_STATUSES) });
+
 /** PATCH /leads/:id/qualification: merged into leads.qualification; null clears a field. */
 export const leadQualificationPatchSchema = leadQualificationSchema.partial();
 

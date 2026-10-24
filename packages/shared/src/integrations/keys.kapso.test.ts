@@ -12,13 +12,16 @@ describe('WhatsApp driver keys', () => {
     expect(integrationDef('KAPSO_API_VERSION')).toMatchObject({ group: 'kapso', secret: false });
     expect(integrationDef('KAPSO_API_KEY')).toMatchObject({ group: 'kapso', secret: true });
     expect(integrationDef('KAPSO_WEBHOOK_SECRET')).toMatchObject({ group: 'kapso', secret: true });
+    expect(integrationDef('WACRM_API_BASE')).toMatchObject({ group: 'wacrm', secret: false });
+    expect(integrationDef('WACRM_API_KEY')).toMatchObject({ group: 'wacrm', secret: true });
+    expect(integrationDef('WACRM_WEBHOOK_SECRET')).toMatchObject({ group: 'wacrm', secret: true });
   });
 
-  it('the provider keys are enums valued meta | kapso; the template sync is a true | false switch', () => {
-    expect(WA_PROVIDERS).toEqual(['meta', 'kapso']);
+  it('the provider keys are enums valued meta | kapso | crm; the template sync is a true | false switch', () => {
+    expect(WA_PROVIDERS).toEqual(['meta', 'kapso', 'crm']);
     expect(Object.keys(INTEGRATION_ENUMS).sort()).toEqual(['WA_CHAT_PROVIDER', 'WA_PROVIDER', 'WA_TEMPLATE_SYNC']);
     expect(integrationEnum('WA_TEMPLATE_SYNC')).toEqual(['true', 'false']);
-    expect(integrationEnum('WA_PROVIDER')).toEqual(['meta', 'kapso']);
+    expect(integrationEnum('WA_PROVIDER')).toEqual(['meta', 'kapso', 'crm']);
     expect(integrationEnum('WA_API_BASE')).toBeNull();
     expect(integrationEnum('KAPSO_API_KEY')).toBeNull();
   });
@@ -32,6 +35,9 @@ describe('WhatsApp driver keys', () => {
     expect(integrationValueValid('KAPSO_API_BASE', 'kapso')).toBe(false);
     expect(integrationValueValid('KAPSO_API_VERSION', 'v24.0')).toBe(true);
     expect(integrationValueValid('KAPSO_API_VERSION', '24')).toBe(false);
+    expect(integrationValueValid('WA_PROVIDER', 'crm')).toBe(true);
+    expect(integrationValueValid('WACRM_API_BASE', 'https://crm.example.test/api/v1')).toBe(true);
+    expect(integrationValueValid('WACRM_API_BASE', 'crm')).toBe(false);
     const bad = integrationValuesSchema.safeParse({ values: { WA_PROVIDER: 'other' } });
     expect(bad.error?.issues.map((i) => i.path.join('.'))).toEqual(['values.WA_PROVIDER']);
   });

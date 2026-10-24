@@ -42,14 +42,18 @@ export function lineTone(field: LineField, value: string): LineTone {
  * unknown (not asked / failed: row hidden), none (no app: act), ours (ok), other (act),
  * unverified (an app is there but the server has no app id to compare: neutral), kapso (the line
  * runs through Kapso, docs/19: inbound comes via /webhooks/kapso and its subscribed apps are not asked: neutral),
- * kapsoNoSecret (KAPSO_WEBHOOK_SECRET unset: every Kapso delivery is refused: act).
+ * kapsoNoSecret (KAPSO_WEBHOOK_SECRET unset: every Kapso delivery is refused: act), crm (the line runs
+ * through the academy CRM: its conversations stay there, ticks come via /webhooks/wacrm: neutral),
+ * crmNoSecret (WACRM_WEBHOOK_SECRET unset: no delivery ticks: act).
  */
-export type WebhookState = 'unknown' | 'none' | 'ours' | 'other' | 'unverified' | 'kapso' | 'kapsoNoSecret';
+export type WebhookState = 'unknown' | 'none' | 'ours' | 'other' | 'unverified' | 'kapso' | 'kapsoNoSecret' | 'crm' | 'crmNoSecret';
 
-type WebhookView = Pick<LineCheckView, 'app_id' | 'subscribed_apps'> & Partial<Pick<LineCheckView, 'provider' | 'kapso_webhook_secret'>>;
+type WebhookView = Pick<LineCheckView, 'app_id' | 'subscribed_apps'> &
+  Partial<Pick<LineCheckView, 'provider' | 'kapso_webhook_secret' | 'crm_webhook_secret'>>;
 
 export function webhookState(view: WebhookView): WebhookState {
   if (view.provider === 'kapso') return view.kapso_webhook_secret === false ? 'kapsoNoSecret' : 'kapso';
+  if (view.provider === 'crm') return view.crm_webhook_secret === false ? 'crmNoSecret' : 'crm';
   const apps = view.subscribed_apps;
   if (apps === null) return 'unknown';
   if (apps.length === 0) return 'none';

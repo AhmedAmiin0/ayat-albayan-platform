@@ -1,11 +1,12 @@
 import { WA_LINES, type TemplateHealthView, type TemplateLineSync, type TemplateLineView, type TemplateMoveView, type TemplateView, type WaLine } from '@ab/shared';
 import { Inject, Injectable, Logger, type OnApplicationBootstrap, type OnModuleDestroy } from '@nestjs/common';
 import { AuditService } from '../../common/audit/audit.service';
+import { setCrmStatus, type CrmTemplateStatus } from './template-crm-status';
 import { lineFacts, requireLine, requireSync, syncOn } from './template-env';
 import { syncLine } from './template-line-sync';
 import { moveTemplate } from './template-move';
 import { submitTemplate } from './template-submit';
-import { toTemplateView, withNumbers } from './template.mapper';
+import { CRM_MANAGED, toTemplateView, withNumbers } from './template.mapper';
 import { TemplatesQueries } from './templates.queries';
 import { WHATSAPP_LINES, type TemplateRow, type WhatsappLines } from './whatsapp.types';
 
@@ -51,7 +52,8 @@ export class TemplateRegistry implements OnApplicationBootstrap, OnModuleDestroy
     try {
       const { lines, templates } = await this.verifyAll();
       const notReady = templates.filter((v) => v.status !== 'approved').map((v) => `${v.key}=${v.status}`);
-      const failed = lines.filter((l) => !l.ok).map((l) => `${l.line}: ${l.error ?? 'error'}`);
+      // A crm line is not a failure: its templates live in the CRM (docs/19).
+      const failed = lines.filter((l) => !l.ok && l.error !== CRM_MANAGED).map((l) => `${l.line}: ${l.error ?? 'error'}`);
       this.log.log(`templates checked: ${templates.length - notReady.length} approved; ${notReady.join(', ') || 'all ready'}`);
       if (failed.length) this.log.warn(`template sync failed for ${failed.join(', ')}`);
     } catch (e) {
@@ -112,6 +114,11 @@ export class TemplateRegistry implements OnApplicationBootstrap, OnModuleDestroy
   /** POST /messaging/templates/:key/submit (template-submit.ts). */
   submit(key: string, actorId: string): Promise<TemplateView> {
     return submitTemplate({ queries: this.queries, lines: this.lines, audit: this.audit }, key, actorId);
+  }
+
+  /** PUT /messaging/templates/:key/crm-status (template-crm-status.ts): a crm line's status by hand. */
+  setCrmStatus(input: { key: string; status: CrmTemplateStatus }, actorId: string): Promise<TemplateView> {
+    return setCrmStatus({ queries: this.queries, audit: this.audit }, input, actorId);
   }
 
   /** PATCH /messaging/templates/:key/line (template-move.ts). */
