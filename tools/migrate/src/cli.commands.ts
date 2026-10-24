@@ -7,6 +7,7 @@ import { createTargetStorage } from './db/storage.ts';
 import { type TargetDb, createTargetDb } from './db/target.ts';
 import { ENTITY_MODULES } from './entities/index.ts';
 import { applyPlan } from './plan/apply.ts';
+import { seedConfig } from './db/config-seed.ts';
 import type { PlanWithChanges } from './plan/changes.ts';
 import { buildPlan, loadBundle } from './plan/run.ts';
 import { reportMarkdown } from './report/report.ts';
@@ -84,6 +85,7 @@ export function planOrApply(args: CliArgs, apply: boolean): Promise<void> {
       readZipEntry: zip ? (path) => zip.read((n) => n === path)[path] : undefined,
     });
     console.log(`applied to ${config.name}: import_runs ${runId}`);
+    console.log(`settings seed: ${await seedConfig(db)}`);
   });
 }
 

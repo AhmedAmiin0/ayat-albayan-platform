@@ -18,7 +18,7 @@ const LATER = [
   '20261012000430_sales_check_start_permissions.sql',
   '20261020000521_chat_lists_permission.sql',
   '20261023000620_wa_numbers.sql',
-  '20261024000631_notification_rules.sql',
+  '20261024000632_notification_rules.sql',
 ]
   .map((file) => readFileSync(join(MIGRATIONS, file), 'utf8'))
   .join('\n');

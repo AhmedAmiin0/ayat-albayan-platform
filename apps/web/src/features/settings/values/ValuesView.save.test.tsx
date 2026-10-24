@@ -2,7 +2,7 @@ import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { ApiError } from '@/lib/api';
 import { t } from '@/lib/i18n';
-import { SETTINGS } from '@/test/settings-fixture';
+import { answerPatch, entryOf } from '@/test/entries-fixture';
 import { findRow, renderValues } from './values-test-utils';
 
 const apiFetch = vi.hoisted(() => vi.fn());
@@ -30,17 +30,17 @@ describe('«القيم» — each row saves on its own', () => {
     fireEvent.change(within(row).getByLabelText(HORIZON), { target: { value: '8' } });
     expect(within(row).getByText(v.unsavedRow)).toBeTruthy();
     fireEvent.click(saveOf(row));
-    expect(apiSend).toHaveBeenCalledWith('PATCH', '/settings', { bookingHorizonWeeks: 8 });
+    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('PATCH', '/config/entries/booking_horizon_weeks', { value: 8, expectedVersion: 1 }));
     expect(row.getAttribute('aria-busy')).toBe('true');
     expect(within(row).getByRole('status').textContent).toBe(v.saving);
     expect((within(row).getByLabelText(HORIZON) as HTMLInputElement).disabled).toBe(true);
-    answer(SETTINGS);
+    answer({ entry: entryOf('booking_horizon_weeks', { value: 8, version: 2 }) });
     const toast = await screen.findByText(v.saved);
     expect(within(toast.closest('[data-undo-toast]') as HTMLElement).getByRole('button', { name: v.undo })).toBeTruthy();
   });
 
   it('saving row A never resets dirty row B, and edits survive a group switch', async () => {
-    apiSend.mockResolvedValue(SETTINGS);
+    apiSend.mockImplementation(answerPatch);
     renderValues(apiFetch);
     const a = await findRow(HORIZON);
     const b = await findRow(MAKEUP);
@@ -76,7 +76,7 @@ describe('«القيم» — each row saves on its own', () => {
   });
 
   it('a refused save shows «تعذّر حفظ القيمة», the server message and «أعد المحاولة»', async () => {
-    apiSend.mockRejectedValueOnce(new ApiError(400, { message: 'out of range' })).mockResolvedValueOnce(SETTINGS);
+    apiSend.mockRejectedValueOnce(new ApiError(400, { message: 'out of range' })).mockImplementation(answerPatch);
     renderValues(apiFetch);
     const row = await findRow(HORIZON);
     fireEvent.change(within(row).getByLabelText(HORIZON), { target: { value: '8' } });
@@ -88,7 +88,7 @@ describe('«القيم» — each row saves on its own', () => {
   });
 
   it('a key the API moved drops the edit: the row is text with «تُدار من صفحة أخرى», nothing unsaved', async () => {
-    apiSend.mockResolvedValue({ saved: [], moved: ['bookingHorizonWeeks'] });
+    apiSend.mockRejectedValue(new ApiError(409, { code: 'owned_by_module' }));
     renderValues(apiFetch);
     const row = await findRow(HORIZON);
     fireEvent.change(within(row).getByLabelText(HORIZON), { target: { value: '8' } });

@@ -3,14 +3,14 @@ import { join } from 'node:path';
 import { RULE_LEGACY_MAP, RULE_SETTING_KEYS, SETTING_DEFAULTS, SETTINGS_REGISTRY } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
 
-// Migration 20261024000631 (docs/23b decision 2) read as text: no database in unit tests. Expand only:
+// Migration 20261024000632 (docs/23b decision 2) read as text: no database in unit tests. Expand only:
 // it creates notification_rules, grants notifications.manage and copies the 6 mapped rows from settings.
 const dir = join(__dirname, '../../../../../packages/db/supabase/migrations');
-const FILE = '20261024000631_notification_rules.sql';
+const FILE = '20261024000632_notification_rules.sql';
 const sql = readFileSync(join(dir, FILE), 'utf8');
 const code = sql.replace(/--.*$/gm, '');
 
-describe('migration 20261024000631: notification_rules', () => {
+describe('migration 20261024000632: notification_rules', () => {
   it('sorts after 20261023000630 (config expand)', () => {
     expect(FILE > '20261023000630_config_expand.sql').toBe(true);
   });

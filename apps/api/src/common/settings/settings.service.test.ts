@@ -1,5 +1,6 @@
 import { SETTING_DEFAULTS } from '@ab/shared';
 import { describe, expect, it, vi } from 'vitest';
+import { configRow, fakeConfigStore } from '../config-store/config-store.fakes';
 import type { Db } from '../db/db.module';
 import { SettingsService } from './settings.service';
 
@@ -9,17 +10,15 @@ type Rows = { key: string; value: unknown }[];
 function service(rows: Rows | { error: string }, ttlMs = 30_000) {
   const result = Array.isArray(rows) ? { data: rows, error: null } : { data: null, error: { message: rows.error } };
   const select = vi.fn().mockResolvedValue(result);
-  const eq = vi.fn().mockResolvedValue({ error: null });
-  const upsert = vi.fn().mockResolvedValue({ error: null });
-  const del = vi.fn().mockReturnValue({ eq });
-  const from = vi.fn().mockReturnValue({ select, upsert, delete: del });
-  return { svc: new SettingsService({ from } as unknown as Db, ttlMs), select, upsert, eq };
+  const from = vi.fn().mockReturnValue({ select });
+  const store = fakeConfigStore([configRow('booking_horizon_weeks', 5, { version: 7 })]);
+  return { svc: new SettingsService({ from } as unknown as Db, ttlMs, store), select, store, from };
 }
 
 describe('SettingsService.all (R-SCH-07, R-SCH-02)', () => {
   it('is storage only: no per-key getter (modules read through their typed readers)', () => {
     const methods = Object.getOwnPropertyNames(SettingsService.prototype).filter((m) => m !== 'constructor');
-    expect(methods.sort()).toEqual(['all', 'invalidate', 'load', 'publicView', 'write']);
+    expect(methods.sort()).toEqual(['all', 'invalidate', 'load', 'publicView', 'write', 'writeSwitch']);
   });
 
   it('reads the stored values', async () => {
@@ -83,11 +82,26 @@ describe('SettingsService cache', () => {
 });
 
 describe('SettingsService.write (PATCH /settings)', () => {
-  it('upserts values stamped with the admin; null deletes the row (reads back as OFF)', async () => {
-    const { svc, upsert, eq } = service([]);
+  it('ONE config_set at the current versions, stamped with the admin; null is stored, never deleted', async () => {
+    const { svc, store, from } = service([]);
     await svc.write({ booking_horizon_weeks: 6, late_cancel_hours: null }, 'admin-1');
-    expect(upsert).toHaveBeenCalledWith({ key: 'booking_horizon_weeks', value: 6, updated_by: 'admin-1' });
-    expect(eq).toHaveBeenCalledWith('key', 'late_cancel_hours');
+    expect(store.set).toHaveBeenCalledExactlyOnceWith(
+      [
+        { key: 'booking_horizon_weeks', value: 6, expectedVersion: 7 },
+        { key: 'late_cancel_hours', value: null, expectedVersion: 0 },
+      ],
+      'admin-1',
+    );
+    expect(from).not.toHaveBeenCalled();
+  });
+
+  it('any ConfigStore invalidation (a /config/entries save) drops the legacy cache', async () => {
+    const { svc, select, store } = service([]);
+    await svc.all();
+    await svc.all();
+    store.fire();
+    await svc.all();
+    expect(select).toHaveBeenCalledTimes(2);
   });
 
   it('all() fills defaults (docs/11 §2)', async () => {

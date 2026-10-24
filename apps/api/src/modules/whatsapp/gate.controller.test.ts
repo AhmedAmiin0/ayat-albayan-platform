@@ -16,8 +16,8 @@ describe('PUT /messages/gate/sending | auto', () => {
           expect(res.statusCode).toBe(200);
           expect(res.json()).toEqual(SETTING_DEFAULTS);
         }
-        expect(t.settings.write).toHaveBeenCalledTimes(3);
-        for (const call of t.settings.write.mock.calls) expect(call).toEqual([{ [key]: false }, ADMIN_ID]);
+        expect(t.settings.writeSwitch).toHaveBeenCalledTimes(3);
+        for (const call of t.settings.writeSwitch.mock.calls) expect(call).toEqual([key, false, ADMIN_ID]);
       });
 
       it('ON without or with the wrong text → 428 confirmation_required, nothing written or audited', async () => {
@@ -26,7 +26,7 @@ describe('PUT /messages/gate/sending | auto', () => {
           expect(res.statusCode).toBe(428);
           expect(res.json()).toMatchObject({ code: 'confirmation_required' });
         }
-        expect(t.settings.write).not.toHaveBeenCalled();
+        expect(t.settings.writeSwitch).not.toHaveBeenCalled();
         expect(t.audit.record).not.toHaveBeenCalled();
       });
 
@@ -36,7 +36,7 @@ describe('PUT /messages/gate/sending | auto', () => {
         const res = await t.put(`/messages/gate/${sw}`, { on: true, confirmText: ` ${GATE_CONFIRM_TEXT[sw]} ` });
         expect(res.statusCode).toBe(200);
         expect(res.json()).toEqual(after);
-        expect(t.settings.write).toHaveBeenCalledExactlyOnceWith({ [key]: true }, ADMIN_ID);
+        expect(t.settings.writeSwitch).toHaveBeenCalledExactlyOnceWith(key, true, ADMIN_ID);
         expect(t.audit.record).toHaveBeenCalledWith({
           actorId: ADMIN_ID,
           entity: 'settings',
@@ -52,7 +52,7 @@ describe('PUT /messages/gate/sending | auto', () => {
         for (const body of [{}, { on: 'false' }, { on: 1 }, { on: null }]) {
           expect((await t.put(`/messages/gate/${sw}`, body)).statusCode).toBe(400);
         }
-        expect(t.settings.write).not.toHaveBeenCalled();
+        expect(t.settings.writeSwitch).not.toHaveBeenCalled();
       });
     });
   }

@@ -1,67 +1,84 @@
-import type { SettingKey, SettingsUpdate } from '@ab/shared';
-import { useQueryClient } from '@tanstack/react-query';
+import type { SettingKey } from '@ab/shared';
+import { useQueryClient, type QueryClient } from '@tanstack/react-query';
 import { useCallback, useState } from 'react';
+import { cachedEntry, configEntriesQuery, patchConfigEntry, storeEntry } from '@/lib/config-entries-api';
 import { CONFIG_QUERY_KEYS } from '@/lib/query-keys';
-import { updateSettings } from '@/lib/settings-api';
-import { serverMessage, wasInvalid, wasMoved } from './save-result';
+import { IDLE, saveFailure, type RowStatus, type SaveEnd } from './entry-save-result';
 
-export type RowStatus =
-  | { state: 'idle' }
-  | { state: 'saving' }
-  | { state: 'failed'; message?: string | undefined }
-  | { state: 'moved' };
-export type SaveEnd = 'saved' | 'moved' | 'failed';
+export type { RowStatus, SaveEnd };
 
-const IDLE: RowStatus = { state: 'idle' };
+/** One row's save: the value, the typed confirmation if asked, and the version to send (else the row's). */
+export interface SaveInput {
+  value: unknown;
+  confirmText?: string | undefined;
+  /** «احفظ قيمتي» after a conflict: the newer version the 409 named. */
+  version?: number | undefined;
+}
 
 export interface RowSaves {
   status: (key: SettingKey) => RowStatus;
-  /** One PATCH /settings with this one key; rows save independently of each other. */
-  run: (key: SettingKey, body: SettingsUpdate) => Promise<SaveEnd>;
+  /** One PATCH /config/entries/:key with the row's version; rows save independently of each other. */
+  run: (key: SettingKey, input: SaveInput) => Promise<SaveEnd>;
   /** Forgets a failed save (the row was edited or put back), so no stale «أعد المحاولة» stays. */
   clearFailed: (key: SettingKey) => void;
+  /** Forgets a failed save or a conflict (the edit was dropped). */
+  clear: (key: SettingKey) => void;
 }
 
+/** The row's version: the cached entry's, else the entries read now (a failed read fails the save). */
+async function versionOf(client: QueryClient, key: SettingKey): Promise<number> {
+  const hit = cachedEntry(client, key) ?? (await client.fetchQuery(configEntriesQuery)).entries.find((e) => e.key === key);
+  if (!hit) throw new Error(`no entry ${key}`);
+  return hit.version;
+}
+
+/** The settings, «آخر تعديل», the public config and the entries are read again after a write. */
+export const refreshValues = (client: QueryClient) =>
+  Promise.all(
+    [CONFIG_QUERY_KEYS.settings, CONFIG_QUERY_KEYS.settingsMeta, CONFIG_QUERY_KEYS.publicConfig, CONFIG_QUERY_KEYS.entries].map((queryKey) =>
+      client.invalidateQueries({ queryKey }),
+    ),
+  );
+
 /**
- * Each row's own save (docs/26b §2): its status lives per key, so saving row A never touches row
- * B, and it outlives a group switch. On success the settings, «آخر تعديل» and the public config
- * are refetched (the answer is never written into the cache: its shape is changing, 26-P0).
+ * Each row's own save (docs/26b §2 «One save model»): PATCH /config/entries/:key with the row's
+ * `version`. The status lives per key, so saving row A never touches row B, and it outlives a group
+ * switch. The answered row goes into the entries cache (the next save, e.g. «تراجع», sends its new
+ * version); a 409 conflict keeps the edit and refetches, so the conflict row can show the newer value.
  */
 export function useRowSaves(): RowSaves {
   const queryClient = useQueryClient();
   const [statuses, setStatuses] = useState<Partial<Record<SettingKey, RowStatus>>>({});
   const set = useCallback((key: SettingKey, s: RowStatus) => setStatuses((all) => ({ ...all, [key]: s })), []);
   const run = useCallback(
-    async (key: SettingKey, body: SettingsUpdate): Promise<SaveEnd> => {
+    async (key: SettingKey, input: SaveInput): Promise<SaveEnd> => {
       set(key, { state: 'saving' });
       try {
-        const res: unknown = await updateSettings(body);
-        if (wasMoved(res, key)) {
-          set(key, { state: 'moved' });
-          return 'moved';
-        }
-        // Refused by the server's own checks: a failed save (the edit stays, «أعد المحاولة»).
-        if (wasInvalid(res, key)) {
-          set(key, { state: 'failed' });
-          return 'failed';
-        }
-        await Promise.all([
-          queryClient.invalidateQueries({ queryKey: CONFIG_QUERY_KEYS.settings }),
-          queryClient.invalidateQueries({ queryKey: CONFIG_QUERY_KEYS.settingsMeta }),
-          queryClient.invalidateQueries({ queryKey: CONFIG_QUERY_KEYS.publicConfig }),
-        ]);
+        const expectedVersion = input.version ?? (await versionOf(queryClient, key));
+        const body = { value: input.value, expectedVersion, ...(input.confirmText === undefined ? {} : { confirmText: input.confirmText }) };
+        const res = await patchConfigEntry(key, body);
+        storeEntry(queryClient, res.entry);
+        await refreshValues(queryClient);
         set(key, IDLE);
         return 'saved';
       } catch (error) {
-        set(key, { state: 'failed', message: serverMessage(error) });
-        return 'failed';
+        const out = saveFailure(error, { mine: input.value, typed: input.confirmText !== undefined });
+        set(key, out.status);
+        if (out.end === 'conflict') void refreshValues(queryClient);
+        return out.end;
       }
     },
     [queryClient, set],
   );
-  const clearFailed = useCallback(
-    (key: SettingKey) => setStatuses((all) => (all[key]?.state === 'failed' ? { ...all, [key]: IDLE } : all)),
+  const clearWhen = useCallback(
+    (key: SettingKey, states: readonly RowStatus['state'][]) =>
+      setStatuses((all) => {
+        const s = all[key]?.state;
+        return s && states.includes(s) ? { ...all, [key]: IDLE } : all;
+      }),
     [],
   );
-  return { status: (key) => statuses[key] ?? IDLE, run, clearFailed };
+  const clearFailed = useCallback((key: SettingKey) => clearWhen(key, ['failed']), [clearWhen]);
+  const clear = useCallback((key: SettingKey) => clearWhen(key, ['failed', 'conflict']), [clearWhen]);
+  return { status: (key) => statuses[key] ?? IDLE, run, clearFailed, clear };
 }

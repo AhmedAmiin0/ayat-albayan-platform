@@ -11,6 +11,6 @@ describe('NumbersSettings', () => {
   it('writeSource writes comms_source only (never messaging_enabled)', async () => {
     const store = fakeSettings();
     await new NumbersSettings(store).writeSource('module', 'actor');
-    expect(store.write).toHaveBeenCalledWith({ comms_source: 'module' }, 'actor');
+    expect(store.writeSwitch).toHaveBeenCalledWith('comms_source', 'module', 'actor');
   });
 });

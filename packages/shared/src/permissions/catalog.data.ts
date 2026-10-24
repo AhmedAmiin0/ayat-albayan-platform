@@ -107,7 +107,7 @@ export const PERMISSION_ROWS = [
   // comms_source switch. The admin only (migration 20261023000620); reading needs settings.read.
   { key: 'numbers.manage', area: 'system', grants: [] },
   // «الإشعارات» (docs/23 §3 phase 4): switch, time and route the notification rules. Granted by migration
-  // 20261024000631 to every role holding settings.write; reading needs settings.read.
+  // 20261024000632 to every role holding settings.write; reading needs settings.read.
   { key: 'notifications.manage', area: 'system', grants: [] },
   { key: 'activity.read', area: 'system', grants: [] },
   { key: 'roles.manage', area: 'system', grants: [] },

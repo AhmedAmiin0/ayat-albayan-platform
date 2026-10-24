@@ -21,10 +21,37 @@ export interface NameCellProps {
   isPublic?: boolean;
   /** «الكل» results: the group name under the label. */
   groupName?: string | undefined;
+  /** The muted line is a button opening «تعديل الوصف» (read it in full, edit it with the right). */
+  onDescribe?: (() => void) | undefined;
 }
 
-/** «الاسم»: the label, its tags, and one muted, truncated line (today's hint; full text in the title). */
-export function NameCell({ label, labelId, hint, settingKey, modified, isPublic, groupName }: NameCellProps) {
+const hintClass = 'truncate text-xs font-normal text-ink-3';
+
+/** The one muted line: a button that opens the description dialog, or plain text. */
+function HintLine({ hint, onDescribe }: { hint: string; onDescribe?: (() => void) | undefined }) {
+  if (!onDescribe) {
+    return (
+      <p title={hint} className={hintClass}>
+        {hint}
+      </p>
+    );
+  }
+  return (
+    <button
+      type="button"
+      title={hint}
+      aria-haspopup="dialog"
+      onClick={onDescribe}
+      className={`${hintClass} min-h-11 max-w-full rounded-xs text-start underline-offset-4 decoration-dotted hover:text-lapis hover:underline focus-visible:text-lapis focus-visible:underline sm:min-h-5`}
+    >
+      {hint}
+      <span className="sr-only">{t.settingsValues.describe.lineSr}</span>
+    </button>
+  );
+}
+
+/** «الاسم»: the label, its tags, and one muted, truncated line (the description; full text in the title and its dialog). */
+export function NameCell({ label, labelId, hint, settingKey, modified, isPublic, groupName, onDescribe }: NameCellProps) {
   const confirm = settingKey ? VALUE_CONFIRM[settingKey] : undefined;
   const shown = isPublic ?? (settingKey ? settingDef(settingKey).public === true : false);
   return (
@@ -44,11 +71,7 @@ export function NameCell({ label, labelId, hint, settingKey, modified, isPublic,
         )}
       </div>
       {groupName && <span className="text-2xs font-semibold text-ink-2">{groupName}</span>}
-      {hint && (
-        <p title={hint} className="truncate text-xs font-normal text-ink-3">
-          {hint}
-        </p>
-      )}
+      {hint && <HintLine hint={hint} onDescribe={onDescribe} />}
     </div>
   );
 }

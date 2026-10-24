@@ -2,6 +2,7 @@ import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { ApiError } from '@/lib/api';
 import { t } from '@/lib/i18n';
+import { answerPatch } from '@/test/entries-fixture';
 import { SETTINGS } from '@/test/settings-fixture';
 import { findRow, renderValues } from './values-test-utils';
 
@@ -35,7 +36,7 @@ describe('«القيم» rows — after a save', () => {
   });
 
   it('«أعد القيمة السابقة» re-saves the value the last save replaced', async () => {
-    apiSend.mockResolvedValue(SETTINGS);
+    apiSend.mockImplementation(answerPatch);
     renderValues(apiFetch, { search: { group: 'accounts' } });
     const row = await findRow(FX);
     const menuButton = () => within(row).getByRole('button', { name: v.menu.replace('{name}', FX) });
@@ -51,7 +52,7 @@ describe('«القيم» rows — after a save', () => {
     await waitFor(() => expect((within(row).getByLabelText(FX) as HTMLInputElement).value).toBe('6'));
     fireEvent.click(menuButton());
     fireEvent.click(within(row).getByRole('menuitem', { name: new RegExp(v.restorePrevious) }));
-    await waitFor(() => expect(apiSend).toHaveBeenLastCalledWith('PATCH', '/settings', { fxFreshHours: SETTINGS.fx_fresh_hours }));
+    await waitFor(() => expect(apiSend).toHaveBeenLastCalledWith('PATCH', '/config/entries/fx_fresh_hours', { value: SETTINGS.fx_fresh_hours, expectedVersion: 1 }));
   });
 
   it('tags are plain and neutral; «معدَّلة» is text with the half nuqta, not a coloured chip', async () => {

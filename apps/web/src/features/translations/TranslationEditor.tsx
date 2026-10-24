@@ -5,6 +5,7 @@ import { Dialog } from '@/components/ui/dialog';
 import { FormAlert } from '@/components/ui/form-alert';
 import { t } from '@/lib/i18n';
 import { LocaleTextField } from './LocaleTextField';
+import { editedOnValues, registryHintOf } from './registry-hints';
 import { changesFor, defaultOf, draftProblems, draftsOf, overrideOf, type Drafts } from './translation-edit';
 import { useOverrideChange } from './translations.api';
 
@@ -13,6 +14,13 @@ export interface TranslationEditorProps {
   onClose: () => void;
   /** After a save or restore: the page's confirmation line. */
   onDone: (message: string) => void;
+}
+
+/** 409 `edit_on_values`: an ar override on a registry hint key (it is a description, edited on «القيم»). */
+export function isEditOnValues(error: unknown): boolean {
+  if (typeof error !== 'object' || error === null || !('status' in error) || error.status !== 409 || !('body' in error)) return false;
+  const { body } = error;
+  return typeof body === 'object' && body !== null && 'code' in body && body.code === 'edit_on_values';
 }
 
 /** The aside panel of «الترجمات»: both languages side by side, the slots to keep, save / restore. */
@@ -67,10 +75,11 @@ export function TranslationEditor({ row, onClose, onDone }: TranslationEditorPro
               missing={problems[locale]}
               onRestore={overrideOf(row, locale) !== null ? restore(locale) : undefined}
               disabled={change.isPending}
+              onValues={editedOnValues(row.key, locale) ? registryHintOf(row.key) : undefined}
             />
           ))}
         </div>
-        {change.isError && <FormAlert>{t.common.error}</FormAlert>}
+        {change.isError && <FormAlert>{isEditOnValues(change.error) ? t.translations.arabicOnValues : t.common.error}</FormAlert>}
       </form>
     </Dialog>
   );

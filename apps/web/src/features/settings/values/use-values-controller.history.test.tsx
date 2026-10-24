@@ -3,6 +3,7 @@ import { act, renderHook, waitFor } from '@testing-library/react';
 import type { ReactNode } from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { ApiError } from '@/lib/api';
+import { answerPatch, seedEntries } from '@/test/entries-fixture';
 import { SETTINGS } from '@/test/settings-fixture';
 import { useValuesController } from './use-values-controller';
 
@@ -11,8 +12,9 @@ vi.mock('@/lib/api', async (orig) => ({ ...(await orig<object>()), apiSend }));
 
 function setup() {
   const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+  seedEntries(client);
   const wrapper = ({ children }: { children: ReactNode }) => <QueryClientProvider client={client}>{children}</QueryClientProvider>;
-  return renderHook(() => useValuesController({ settings: SETTINGS, meta: {}, canWrite: true }), { wrapper });
+  return renderHook(() => useValuesController({ settings: SETTINGS, meta: {}, canWrite: true, entries: [], describe: vi.fn() }), { wrapper });
 }
 
 afterEach(() => apiSend.mockReset());
@@ -41,14 +43,14 @@ describe('useValuesController — failed saves and the previous value', () => {
     act(() => result.current.api.apply('fx_fresh_hours', { fxFreshHours: '6' }));
     await waitFor(() => expect(result.current.api.status('fx_fresh_hours').state).toBe('failed'));
     expect(result.current.api.savedAt('fx_fresh_hours')).toBeUndefined();
-    apiSend.mockResolvedValue(SETTINGS);
+    apiSend.mockImplementation(answerPatch);
     act(() => result.current.api.save('fx_fresh_hours'));
     await waitFor(() => expect(result.current.api.savedAt('fx_fresh_hours')).toBeTypeOf('number'));
     expect(result.current.api.previous('fx_fresh_hours')).toEqual({ value: SETTINGS.fx_fresh_hours });
   });
 
-  it('a key the API answers as invalid is a failed save: the edit stays, nothing is noted', async () => {
-    apiSend.mockResolvedValue({ ...SETTINGS, saved: [], moved: [], invalid: ['fx_fresh_hours'] });
+  it('a key the API answers 422 invalid is a failed save: the edit stays, nothing is noted', async () => {
+    apiSend.mockRejectedValue(new ApiError(422, { code: 'invalid' }));
     const { result } = setup();
     act(() => result.current.api.drafts.edit('fx_fresh_hours', { fxFreshHours: '6' }));
     act(() => result.current.api.save('fx_fresh_hours'));
@@ -59,7 +61,7 @@ describe('useValuesController — failed saves and the previous value', () => {
   });
 
   it('lengthening a retention period saves without the typed confirmation', async () => {
-    apiSend.mockResolvedValue(SETTINGS);
+    apiSend.mockImplementation(answerPatch);
     const { result } = setup();
     act(() => result.current.api.apply('activity_retention_days', { activityRetentionDays: String(SETTINGS.activity_retention_days + 10) }));
     expect(result.current.pending).toBeNull();

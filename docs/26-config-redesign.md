@@ -6,7 +6,7 @@ and give it also a description field and for more complex settings like notifica
 and seeded with most of the modules and as for the modules that will require a heavey config like notifications make a
 custom desgin for it».
 
-**Design.** 26-P0, 26-P1 and 23-P4 are built (§6 «Built»); the rest is not yet. No migration number is reserved: use the next free numbers at build time
+**Design.** 26-P0, 26-P1, 26-P2 and 23-P4 are built (§6 «Built»); the rest is not yet. No migration number is reserved: use the next free numbers at build time
 (docs/23 phase 3 holds `20261023000620–629`). Once built, this supersedes docs/25 §1 (the five concepts), §5
 (recipes) and §6 (Google rows); until then docs/25 describes the code. Companion files:
 
@@ -249,6 +249,26 @@ with the en override.
 | **Switch reads** | Readers move to the facade over `ConfigStore` (no reader file changes). «القيم» ships | Parity stays empty |
 | **Contract** | After ≥ 2 clean weeks, the legacy read code goes. Phase 5 absorbs `custom_config` (copied as `custom.<key>` after a count-equality pre-check; the old table stays read-only for one release, then is dropped). Aliases go only under the §2f rule | — |
 
+**To run on staging before VALIDATE** (26-P2 does not ship the `VALIDATE` migration: it needs this check on
+staging first). The query lists every row that would fail one of the three `NOT VALID` checks of migration 630; it
+must return **zero rows** before a later migration runs `alter table public.settings validate constraint …` for
+`settings_key_format`, `settings_value_size` and `settings_kind`:
+
+```sql
+select key,
+  not (key ~ '^[a-z][a-z0-9_]{1,63}$' or key ~ '^custom\.[a-z][a-z0-9_.-]{1,63}$') as bad_key,
+  octet_length(value::text) > 8192 as too_big,
+  not (value_type is null or value = 'null'::jsonb or public.settings_kind_ok(value_type, value)) as bad_kind
+from public.settings
+where not (key ~ '^[a-z][a-z0-9_]{1,63}$' or key ~ '^custom\.[a-z][a-z0-9_.-]{1,63}$')
+   or octet_length(value::text) > 8192
+   or not (value_type is null or value = 'null'::jsonb or public.settings_kind_ok(value_type, value));
+```
+
+Run it after the 26-P2 seeder has booted once on staging (the kind check reads `value_type`, which the seeder
+fills). A row it lists is fixed by an admin through «القيم» (or the module page that owns it), never by a
+migration that writes an owned key.
+
 **Parity rules** (unit fixtures + e2e):
 1. **JSON null and a missing row differ as data but mean the same.** Both read as the default: `late_cancel_hours`
    null = OFF; `recording_retention_days` null = keep forever; `recording_consent_notice` null = no notice.
@@ -341,8 +361,22 @@ Order: **26-P0 → 23-P3 → 26-P1 → 23-P4 → 26-P2 → 26-P3 → 23-P5 → 2
   `sql-defaults.migration.test.ts`, `apps/api/src/common/settings/config-expand.migration.test.ts`,
   `e2e/tests/config-expand.sql.spec.ts`.
 
+- **26-P2 — built (branch `cloud/config-p2`).** See the PR for the full file list. Migration
+  `packages/db/supabase/migrations/20261024000631_config_describe.sql` (`config_describe` RPC + the one-time copy of
+  ar overrides into `description`; pinned by `packages/shared/src/settings/config-describe.migration.test.ts`).
+  Shared: `packages/shared/src/settings/entries.ts` (the `/config/entries` and parity contract),
+  `seed-payload.ts` (`seedPayload(bundleText(ar))`, the one payload the API boot, `pnpm migrate:apply`
+  (`tools/migrate/src/db/config-seed.ts`) and e2e (`e2e/support/config-seed.ts`) send). API:
+  `apps/api/src/common/config-store/` (ConfigStore, ConfigSeeder, parity, entries routes). e2e:
+  `e2e/tests/config-seed.sql.spec.ts` (two boots, null parity in SQL), `e2e/tests/config-parity.api.spec.ts`
+  (`GET /admin/config/parity` empty on the e2e DB; missing / JSON null / seeded null give the same `GET /settings`,
+  `GET /settings/public` and a closed gate, no `messages` row). Web «القيم» description dialog and per-row
+  `PATCH /config/entries/:key`; mobile bottom-sheet description editor.
+  **Not done on purpose:** the `VALIDATE` migration (needs the §4 pre-check on staging) and **switching readers to
+  `ConfigStore`**: `SettingsService.all()` still reads the rows through `readSettings`; only writes go through
+  `config_set`. The read switch waits until `GET /admin/config/parity` has stayed empty for ≥ 1 week on staging.
 - **23-P4 — built (2026-10-24, branch `cloud/notif-rules`).** Migration
-  `packages/db/supabase/migrations/20261024000631_notification_rules.sql` (table, RLS, `notifications.manage` to every
+  `packages/db/supabase/migrations/20261024000632_notification_rules.sql` (table, RLS, `notifications.manage` to every
   role holding `settings.write`, idempotent copy of the 6 legacy-mapped rows; never writes `settings`). The 8 keys of §1
   are `ownedBy: 'notifications'` in the registry and `OWNED_SETTING_KEYS` (`packages/shared/src/settings/ownership.ts`);
   `renewal_alert_remaining` is not copied. Contract `packages/shared/src/notifications/rules.*.ts`; API

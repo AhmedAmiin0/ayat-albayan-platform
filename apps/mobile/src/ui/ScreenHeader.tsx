@@ -13,7 +13,7 @@ export interface ScreenHeaderProps {
   trailing?: ReactNode;
   /** h1 for a screen; a sheet or dialog takes h2 so the title fits beside «إغلاق» (docs/07 §6). */
   size?: 'h1' | 'h2';
-  /** The title's node, for a sheet that moves screen-reader focus to it on open. */
+  /** The title's node, e.g. to move screen-reader focus to it when a sheet changes mode. */
   titleRef?: Ref<AppTextNode>;
 }
 

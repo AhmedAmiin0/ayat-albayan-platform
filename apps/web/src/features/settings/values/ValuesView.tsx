@@ -7,10 +7,14 @@ import { usePermissions } from '@/features/auth/use-permissions';
 import { CustomDialogs } from '@/features/custom-config/CustomDialogs';
 import { useCustomValues } from '@/features/custom-config/use-custom-values';
 import { t } from '@/lib/i18n';
+import { useConfigEntries } from '@/lib/config-entries-api';
 import { settingsQuery } from '@/lib/settings-api';
 import { settingsMetaQuery } from '../settings-meta-api';
 import { ConfirmValueDialog } from './ConfirmValueDialog';
+import type { DescribeTarget } from './describe-target';
+import { DescriptionDialog } from './DescriptionDialog';
 import { UndoToast } from './UndoToast';
+import { useDescribeRights } from './use-describe-rights';
 import { useValuesController } from './use-values-controller';
 import { ValuesBody } from './ValuesBody';
 import { ValuesContext } from './values-context';
@@ -31,10 +35,19 @@ export interface ValuesViewProps {
 export function ValuesView({ search, onSearch, renderGuard }: ValuesViewProps) {
   const settings = useQuery(settingsQuery);
   const meta = useQuery(settingsMetaQuery);
+  const entries = useConfigEntries();
   const canWrite = usePermissions().can('settings.write');
+  const rights = useDescribeRights();
+  const [describing, setDescribing] = useState<DescribeTarget | null>(null);
   const [customNote, setCustomNote] = useState<string | null>(null);
   const custom = useCustomValues(setCustomNote);
-  const ctl = useValuesController({ settings: settings.data ?? SETTING_DEFAULTS, meta: meta.data ?? {}, canWrite });
+  const ctl = useValuesController({
+    settings: settings.data ?? SETTING_DEFAULTS,
+    meta: meta.data ?? {},
+    canWrite,
+    entries,
+    describe: setDescribing,
+  });
   const dirtyNames = ctl.api.drafts.dirtyKeys().map((k) => settingText(k).label);
   return (
     <ValuesContext.Provider value={ctl.api}>
@@ -50,6 +63,15 @@ export function ValuesView({ search, onSearch, renderGuard }: ValuesViewProps) {
         {ctl.said}
       </p>
       {ctl.pending && <ConfirmValueDialog pending={ctl.pending} onYes={ctl.confirm} onClose={ctl.cancel} />}
+      {describing && (
+        <DescriptionDialog
+          target={describing}
+          entry={ctl.api.entry(describing.key)}
+          rights={rights}
+          onClose={() => setDescribing(null)}
+          onDone={ctl.api.announce}
+        />
+      )}
       <CustomDialogs custom={custom} />
       {ctl.note && (
         <UndoToast

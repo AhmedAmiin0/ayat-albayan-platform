@@ -22,7 +22,7 @@ afterEach(() => {
 });
 
 describe('«القيم» — read-only and module-owned rows', () => {
-  it('without settings.write: «للاطلاع فقط», values as text, no editors, no menus, no buttons', async () => {
+  it('without settings.write: «للاطلاع فقط», values as text, no editors, no menus; only the description lines', async () => {
     granted.write = false;
     renderValues(apiFetch);
     const row = await findRow(t.settings.bookingHorizonWeeks);
@@ -31,7 +31,11 @@ describe('«القيم» — read-only and module-owned rows', () => {
     const table = screen.getByRole('table');
     expect(within(table).queryByRole('spinbutton')).toBeNull();
     expect(within(table).queryByRole('switch')).toBeNull();
-    expect(within(table).queryByRole('button')).toBeNull();
+    // The one kind of button left: the description line, which opens the text to read (states.html).
+    const buttons = within(table).queryAllByRole('button');
+    expect(buttons.length).toBeGreaterThan(0);
+    expect(buttons.every((b) => b.getAttribute('aria-haspopup') === 'dialog')).toBe(true);
+    expect(within(table).queryByRole('button', { name: new RegExp(v.menu.replace('{name}', '')) })).toBeNull();
     expect(screen.queryByRole('button', { name: new RegExp(t.config.custom.add) })).toBeNull();
   });
 

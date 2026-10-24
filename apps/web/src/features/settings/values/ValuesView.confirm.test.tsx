@@ -1,7 +1,7 @@
 import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n';
-import { SETTINGS } from '@/test/settings-fixture';
+import { answerPatch } from '@/test/entries-fixture';
 import { findRow, renderValues } from './values-test-utils';
 
 const apiFetch = vi.hoisted(() => vi.fn());
@@ -22,7 +22,7 @@ afterEach(() => {
 
 describe('«القيم» — confirmations and the row menu', () => {
   it('a booking-wide switch asks first (cancel is the default and puts it back); yes saves it alone', async () => {
-    apiSend.mockResolvedValue(SETTINGS);
+    apiSend.mockImplementation(answerPatch);
     renderValues(apiFetch);
     const row = await findRow(ALWAYS);
     const sw = within(row).getByRole('switch', { name: ALWAYS });
@@ -34,11 +34,11 @@ describe('«القيم» — confirmations and the row menu', () => {
     expect((within(row).getByRole('switch', { name: ALWAYS }) as HTMLInputElement).checked).toBe(true);
     fireEvent.click(within(row).getByRole('switch', { name: ALWAYS }));
     fireEvent.click(within(screen.getByRole('dialog')).getByRole('button', { name: v.confirmYes.teachersAlwaysAvailable.off }));
-    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('PATCH', '/settings', { teachersAlwaysAvailable: false }));
+    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('PATCH', '/config/entries/teachers_always_available', { value: false, expectedVersion: 1 }));
   });
 
   it('retention days that delete data need the number typed before saving', async () => {
-    apiSend.mockResolvedValue(SETTINGS);
+    apiSend.mockImplementation(answerPatch);
     renderValues(apiFetch, { search: { group: 'retention' } });
     const row = await findRow(ACTIVITY);
     fireEvent.change(within(row).getByLabelText(ACTIVITY), { target: { value: '30' } });
@@ -51,11 +51,11 @@ describe('«القيم» — confirmations and the row menu', () => {
     // Typed on an Arabic keypad: «٣٠» is 30.
     fireEvent.change(within(dialog).getByLabelText(c.typedLabel.replace('{n}', '30')), { target: { value: '٣٠' } });
     fireEvent.click(within(dialog).getByRole('button', { name: c.typedYes }));
-    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('PATCH', '/settings', { activityRetentionDays: 30 }));
+    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('PATCH', '/config/entries/activity_retention_days', { value: 30, confirmText: '٣٠', expectedVersion: 1 }));
   });
 
   it('the «⋯» menu: «أعد القيمة الافتراضية» only when changed, and the developer key', async () => {
-    apiSend.mockResolvedValue(SETTINGS);
+    apiSend.mockImplementation(answerPatch);
     renderValues(apiFetch, { search: { group: 'accounts' }, settings: { fx_fresh_hours: 6 } });
     const fx = await findRow(t.settings.fxFreshHours);
     expect(within(fx).getByText(v.tags.modified)).toBeTruthy();
@@ -63,7 +63,7 @@ describe('«القيم» — confirmations and the row menu', () => {
     const menu = within(fx).getByRole('menu');
     expect(within(menu).getByText('fx_fresh_hours')).toBeTruthy();
     fireEvent.click(within(menu).getByRole('menuitem', { name: v.resetDefault }));
-    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('PATCH', '/settings', { fxFreshHours: 24 }));
+    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('PATCH', '/config/entries/fx_fresh_hours', { value: 24, expectedVersion: 1 }));
     const currency = await findRow(t.settings.reportingCurrency);
     fireEvent.click(within(currency).getByRole('button', { name: v.menu.replace('{name}', t.settings.reportingCurrency) }));
     expect(within(currency).queryByRole('menuitem', { name: v.resetDefault })).toBeNull();
