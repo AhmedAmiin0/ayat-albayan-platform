@@ -27,6 +27,9 @@ const fonts = {
  * teachers get /teacher (their own lessons, chats, reports and payouts; a real segment, so its tabs never share a URL with the
  * admin's), the salesperson /sales (the web sales portal's pages) and the classroom assistant /assistant
  * (the lessons they assist, internal meetings), everyone else only /login.
+ * A tree's chat (and what a chat opens) is its chat group beside it, a full screen above its tabs
+ * (react-native-screens#4132); groups add no URL segment, so every link stays the same. Each group
+ * sits in its tree's guard (an unlisted route is unprotected), after the tree, which stays first.
  * When the gate flips, Stack.Protected moves the screen by itself: no screen navigates after sign-in/out.
  */
 export default function RootLayout() {
@@ -53,12 +56,15 @@ export default function RootLayout() {
           >
             <Stack.Protected guard={gate === 'admin'}>
               <Stack.Screen name="(tabs)" />
+              <Stack.Screen name="(admin-chat)" />
             </Stack.Protected>
             <Stack.Protected guard={gate === 'teacher'}>
               <Stack.Screen name="teacher" />
+              <Stack.Screen name="(teacher-chat)" />
             </Stack.Protected>
             <Stack.Protected guard={gate === 'sales'}>
               <Stack.Screen name="sales" />
+              <Stack.Screen name="(sales-chat)" />
             </Stack.Protected>
             <Stack.Protected guard={gate === 'assistant'}>
               <Stack.Screen name="assistant" />

@@ -44,10 +44,12 @@ test('a tapped push opens its screen: a message → that thread, a payment due �
   await fire({ kind: 'new_message', phone: GUARDIAN_PHONE });
   expect(await screen.findByText('هل الحلقة بكرة؟')).toBeTruthy();
   expect(app.pathname()).toBe(`/inbox/thread/${GUARDIAN_PHONE}`);
+  expect(app.stack()).toEqual(['(tabs)', '(admin-chat)']); // the chat, above the tabs
 
   await fire({ kind: 'payment_due', studentId: 's9' });
   expect(await screen.findByText(t.subscriptions.empty)).toBeTruthy();
   expect(app.pathname()).toBe('/students/s9');
+  expect(app.stack()).toEqual(['(tabs)']); // the chat closed into the one tab host, no second (tabs)
   expect(backend.sent('GET /students/:id').at(-1)?.path).toBe('/students/s9');
 });
 

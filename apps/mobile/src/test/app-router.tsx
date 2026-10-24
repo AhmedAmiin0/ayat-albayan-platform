@@ -1,6 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { act, renderRouter } from 'expo-router/testing-library';
 import { queryClient } from '@/lib/query-client';
+import type { NavState } from '@/nav/chat-groups';
 import { currentBackend, type FakeBackend, setBackend } from './fake-backend';
 import { resetNative } from './native-mocks';
 import { routes } from './app-routes';
@@ -81,6 +82,13 @@ export async function renderApp({ url, backend, gate = 'admin', storage = {} }: 
   await pending;
   return {
     pathname: () => pending.getPathname(),
+    /** The route segments, groups included: [0] is '(tabs)' or '(admin-chat)'. */
+    segments: () => pending.getSegments(),
+    /** The root layout's stack, bottom → top (under expo-router's own '__root' slot). */
+    stack: () => {
+      const root: NavState | undefined = pending.getRouterState();
+      return root?.routes[0]?.state?.routes.map((r) => r.name) ?? [];
+    },
     backend: currentBackend(),
     setGate: (status: string) => act(async () => mockGate.set(status)),
   };

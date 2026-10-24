@@ -5,7 +5,10 @@ import { KID, salesPayment } from './fixtures';
 import { TransferDone } from './TransferDone';
 
 const mockPush = jest.fn();
-jest.mock('expo-router', () => ({ router: { push: (h: unknown) => mockPush(h) } }));
+const mockDismissTo = jest.fn();
+jest.mock('expo-router', () => ({
+  router: { push: (h: unknown) => mockPush(h), dismissTo: (h: unknown) => mockDismissTo(h) },
+}));
 
 beforeEach(() => jest.clearAllMocks());
 
@@ -19,6 +22,9 @@ test('«احجز أيام الحلقات الآن» opens the course wizard for 
   expect(screen.getByText(t.salesMoney.becameSubscribed)).toBeTruthy();
   await fireEvent.press(screen.getByRole('button', { name: t.booking.bookCourseDays }));
   expect(mockPush).toHaveBeenCalledWith({ pathname: '/sales/inbox/sales-course', params: { studentId: KID } });
+  // «مدفوعاتي» is a tab's screen: the chat group pops back to her tabs (no second tab host).
+  await fireEvent.press(screen.getByRole('button', { name: t.salesMoney.openMyPayments }));
+  expect(mockDismissTo).toHaveBeenCalledWith('/sales/more/earnings?view=payments');
   await fireEvent.press(screen.getByRole('button', { name: t.salesMoney.done }));
   expect(onDone).toHaveBeenCalled();
 });

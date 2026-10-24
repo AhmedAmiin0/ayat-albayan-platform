@@ -7,7 +7,6 @@ import { inTree, useTreeBase } from '@/nav/tree-base';
 import { ErrorState } from '@/ui/ErrorState';
 import { ltr } from '@/ui/Ltr';
 import { Screen } from '@/ui/Screen';
-import { useHideTabBar } from '@/ui/tab-bar';
 import { ChatHeader } from './ChatHeader';
 import { Composer } from './Composer';
 import { clockAt, kindLabel } from './format';
@@ -43,8 +42,9 @@ function subtitleOf(phone: string, query: ThreadQuery, teacher: boolean): string
  * and on her family's chat «اشتراك جديد» / «سجّل تحويلًا بنكيًا» (SalesChatMoney, R-ASST-01/04); her header
  * has «تحقق من التسجيل» for this number (students.check_registration). Admin and assistant headers
  * get «القوائم» with inbox.lists (docs/22: the chat's lists; never a teacher's).
- * Room to read (owner 2026-10-18), the same in every tree: no tab bar while the chat is open, a
- * one-line header, the sales actions in one row of pills, and a one-row composer.
+ * Room to read (owner 2026-10-18), the same in every tree: a full screen above the tabs (its tree's
+ * chat group, owner 2026-10-24: a hidden tab bar still took the bottom touches, react-native-screens#4132),
+ * a one-line header, the sales actions in one row of pills, and a one-row composer.
  */
 export function ThreadScreen() {
   const { phone = '' } = useLocalSearchParams<{ phone: string }>();
@@ -54,7 +54,7 @@ export function ThreadScreen() {
   const sales = useHolds('self.sales');
   const query = useThread(phone);
   const thread = query.data?.pages[0]?.thread ?? null;
-  useHideTabBar();
+  // Pushed from the tabs, back pops the whole chat group; a cold start on the chat opens its list.
   const back = () =>
     router.canGoBack() ? router.back() : router.replace(inTree(base, threadBase(mode)));
   return (
