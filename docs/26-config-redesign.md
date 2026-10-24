@@ -397,6 +397,19 @@ Order: **26-P0 → 23-P3 → 26-P1 → 23-P4 → 26-P2 → 26-P3 → 23-P5 → 2
 
 - **23-P6 — built (2026-10-24, branch `cloud/communications-hub`).** «التواصل» uses the docs/26b tabs (نظرة عامة · الأرقام · الإشعارات · القوالب · الحماية); the switches still write only through the 26-P0 gate routes; the CRM cut-over moved to «الحماية» and now asks both ways. `/admin/settings/communications` stays the page, `/admin/communications` redirects to it with the query string (and has an `ADMIN_PAGES` entry). No migration, no API change, no stored value touched. Next: 26-P4 (send gate last).
 
+- **26-P4 — built (2026-10-24, branch `cloud/send-gate-last`).** `WhatsappSettings.read()`
+  (`apps/api/src/modules/whatsapp/whatsapp.settings.ts`) is now one uncached primary-key read of `settings`
+  (`key in ('messaging_enabled', 'auto_messages_enabled')`) on every `SendGate` call: no SettingsService or
+  ConfigStore cache; only a stored JSON `true` is ON; a failed read rejects. Nothing else changed (no migration, no
+  route, no stored value). Tests: `send-gate.fail-closed.test.ts` (missing row, JSON null, string, number, object,
+  array, malformed rows, failed read; ON only for `true`; one read per call), `send-gate.test.ts`,
+  `whatsapp.settings.test.ts`, `settings-readers.app.test.ts` (the cached store says ON, the gate stays OFF); the
+  read is listed in `config-store.boundaries.test.ts`. e2e: `e2e/tests/send-gate-boot.api.spec.ts` boots a second
+  API (`e2e/support/api-boot.ts`) twice on staging-shaped fake data: no `messages` row created or changed, nothing
+  reaches the stub, both switches stay `false`. Rollback: revert `whatsapp.settings.ts`.
+  Still owner-gated / time-gated (not built): the `VALIDATE` migration, the read switch to `ConfigStore`, 23-P7 +
+  26-P5.
+
 ## 7. Assumptions (the owner's message ended with «but …»; any of these may be what it meant)
 
 1. «Most of the modules» means the 28 scalar keys above. The heavy modules are notifications, numbers, the send gate,

@@ -25,10 +25,11 @@ import { SendGate } from './send-gate';
 import { WhatsappSettings } from './whatsapp.settings';
 
 // The classroom, reports, messaging and money readers as AppModule wires them: each resolves and reads the one
-// SettingsService (here a fake), and SendGate (provided by WhatsappModule only) reads through WhatsappSettings.
+// SettingsService (here a fake). SendGate (provided by WhatsappModule only) reads its switches through
+// WhatsappSettings straight from the DB, never from this store (docs/26 §5 26-P4).
 
 const READERS = [
-  ClassroomSettings, ReportsSettings, ReportPdfSettings, WhatsappSettings, NotificationRulesSettings, WebhookSettings,
+  ClassroomSettings, ReportsSettings, ReportPdfSettings, NotificationRulesSettings, WebhookSettings,
   RemindersSettings, FollowUpsSettings, LessonRatingSettings, FeedbackSettings, PayoutsSettings,
   DashboardSettings, ExpensesSettings, ReceivablesSettings, FxSettings, InvoicesSettings, PaymentsSettings,
 ];
@@ -52,9 +53,12 @@ describe('settings readers inside AppModule', () => {
     expect(values).toEqual(Object.fromEntries(Object.keys(values).map((k) => [k, all[k as keyof typeof all]])));
   });
 
-  it('SendGate reads the store through WhatsappSettings; RulesService resolves with its reader', async () => {
-    await expect(mod.get(SendGate, { strict: false }).automaticOn()).resolves.toBe(true);
+  it('SendGate never answers from the cached store (it says ON here); RulesService resolves with its reader', async () => {
+    vi.mocked(store.all).mockClear();
+    const auto = await mod.get(SendGate, { strict: false }).automaticOn().catch(() => false);
+    expect(auto).toBe(false);
+    expect(store.all).not.toHaveBeenCalled();
+    expect(mod.get(WhatsappSettings, { strict: false })).toBeInstanceOf(WhatsappSettings);
     expect(mod.get(RulesService, { strict: false })).toBeInstanceOf(RulesService);
-    expect(store.all).toHaveBeenCalled();
   });
 });

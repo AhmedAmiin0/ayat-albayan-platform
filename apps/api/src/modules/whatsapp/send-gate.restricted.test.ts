@@ -1,20 +1,10 @@
-import { SETTING_DEFAULTS } from '@ab/shared';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { fakeSettings } from '../../common/settings/settings.fakes';
-import { fakeDb } from '../guardians/fake-db';
-import { SendGate } from './send-gate';
-import { WhatsappSettings } from './whatsapp.settings';
+import { STUB_WA_ENV, fakeGate, rows } from './send-gate.fakes';
 
-// A full fake store (registry defaults); each test stubs what all() answers next.
-const store = fakeSettings();
-const all = vi.mocked(store.all);
-const gate = () => new SendGate(new WhatsappSettings(store), fakeDb({ messages: [{ count: 3 }] }).db);
+const gate = (stored: Record<string, unknown> = {}) => fakeGate([rows(stored)], 3).gate;
 
 describe('SendGate.view restricted flag (WA_ALLOWED_RECIPIENTS, docs/12 §13.5)', () => {
-  afterEach(() => {
-    vi.unstubAllEnvs();
-    vi.resetAllMocks();
-  });
+  afterEach(() => vi.unstubAllEnvs());
 
   it('restricted: true when the allow-list is set (read at construction)', async () => {
     vi.stubEnv('WA_API_BASE', '');
@@ -33,12 +23,8 @@ describe('SendGate.view restricted flag (WA_ALLOWED_RECIPIENTS, docs/12 §13.5)'
   });
 
   it('an open gate keeps its state and adds the flag', async () => {
-    vi.stubEnv('WA_API_BASE', 'http://127.0.0.1:4010');
-    vi.stubEnv('WA_PHONE_NUMBER_ID', 'stub-phone');
-    vi.stubEnv('WA_WABA_ID', 'stub-waba');
-    vi.stubEnv('WA_ACCESS_TOKEN', 'stub-token');
+    Object.entries(STUB_WA_ENV).forEach(([k, v]) => vi.stubEnv(k, v));
     vi.stubEnv('WA_ALLOWED_RECIPIENTS', '+201001234567');
-    all.mockResolvedValue({ ...SETTING_DEFAULTS, messaging_enabled: true });
-    await expect(gate().view()).resolves.toEqual({ open: true, reason: null, queued: 3, restricted: true });
+    await expect(gate({ messaging_enabled: true }).view()).resolves.toEqual({ open: true, reason: null, queued: 3, restricted: true });
   });
 });
