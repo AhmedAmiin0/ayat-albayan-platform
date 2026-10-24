@@ -42,18 +42,26 @@ export function numberEnv(source: NumberSource, env: Env): WhatsappEnv | null {
   const phoneNumberId = v[k.phone_number_id];
   const wabaId = v[k.waba_id];
   if (!phoneNumberId || !wabaId) return null;
-  if (v[k.provider] === 'kapso') {
-    const base = env.KAPSO_API_BASE?.replace(/\/+$/, '');
-    const apiKey = env.KAPSO_API_KEY;
-    if (!base || !apiKey) return null;
-    return { provider: 'kapso', base, version: env.KAPSO_API_VERSION, phoneNumberId, wabaId, apiKey };
-  }
+  const ids = { phoneNumberId, wabaId };
+  return v[k.provider] === 'kapso' ? kapsoEnv(ids, env) : metaEnv({ ids, token: v[k.access_token], appId: v[k.app_id] }, env);
+}
+
+type Ids = { phoneNumberId: string; wabaId: string };
+
+/** Kapso: its base and version, the project key; never a Meta token or app id. */
+function kapsoEnv(ids: Ids, env: Env): WhatsappEnv | null {
+  const base = env.KAPSO_API_BASE?.replace(/\/+$/, '');
+  const apiKey = env.KAPSO_API_KEY;
+  if (!base || !apiKey) return null;
+  return { provider: 'kapso', base, version: env.KAPSO_API_VERSION, ...ids, apiKey };
+}
+
+/** Meta: WA_API_BASE / WA_API_VERSION with the number's own token (app id only when set). */
+function metaEnv(own: { ids: Ids; token?: string; appId?: string }, env: Env): WhatsappEnv | null {
   const base = env.WA_API_BASE?.replace(/\/+$/, '');
-  const accessToken = v[k.access_token];
-  if (!base || !accessToken) return null;
-  const conn = { base, version: env.WA_API_VERSION, phoneNumberId, wabaId, accessToken };
-  const appId = v[k.app_id];
-  return appId ? { ...conn, appId } : conn;
+  if (!base || !own.token) return null;
+  const conn = { base, version: env.WA_API_VERSION, ...own.ids, accessToken: own.token };
+  return own.appId ? { ...conn, appId: own.appId } : conn;
 }
 
 /** Its own app secret (webhook signatures), when set and valid; never another number's. */

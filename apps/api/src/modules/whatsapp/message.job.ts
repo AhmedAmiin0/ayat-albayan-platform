@@ -1,5 +1,7 @@
 import type { WaLine } from '@ab/shared';
+import type { SendVia } from './message.dispatch';
 import type { NumberRoute } from './number-route';
+import { lineOf } from './send-line';
 import type { DueMessage } from './sender.due';
 import { WaError, type TemplateRow } from './whatsapp.types';
 
@@ -53,4 +55,11 @@ export function authSubject(at: { line: WaLine; route?: NumberRoute | null; now:
   const day = at.now.toISOString().slice(0, 10);
   if (at.route) return `whatsapp_auth:number:${at.route.numberId}:${day}`;
   return `whatsapp_auth:${at.line === 'chat' ? 'chat:' : ''}${day}`;
+}
+
+/** A job's line (its number's role in module mode, else lineOf) and what it is sent through. */
+export function sendingAt(job: SendJob, multi: boolean): { line: WaLine; via: SendVia } {
+  if (job.route) return { line: job.route.line, via: job.route };
+  const line = lineOf(job.row, job.template, multi);
+  return { line, via: line };
 }

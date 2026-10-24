@@ -4,9 +4,8 @@ import { activeNumberId } from '../../common/integrations/numbers-overlay';
 import { PushService } from '../../common/push/push.service';
 import { retry, sleep } from '../report-pdf/retry';
 import { MessageDispatch } from './message.dispatch';
-import { authSubject, RECORD_DELAYS_MS, UNRECORDED, type FailedInput, type SendJob, type SendOutcome } from './message.job';
+import { authSubject, RECORD_DELAYS_MS, sendingAt, UNRECORDED, type FailedInput, type SendJob, type SendOutcome } from './message.job';
 import type { NumberRoute } from './number-route';
-import { lineOf } from './send-line';
 import { failurePlan, messageLabel, readyToSend, SENDING } from './send-plan';
 import { AUTO_OFF, dropReason, isAutomatic } from './send-stale';
 import { SenderQueries, type DueMessage } from './sender.queries';
@@ -41,8 +40,9 @@ export class MessageWorker {
     }
   }
 
-  private async run({ row, template, now, autoOn, route }: SendJob): Promise<SendOutcome> {
-    const line = route ? route.line : lineOf(row, template, this.dispatch.multi);
+  private async run(job: SendJob): Promise<SendOutcome> {
+    const { row, template, now, autoOn, route } = job;
+    const { line, via } = sendingAt(job, this.dispatch.multi);
     const drop = dropReason(row, now);
     if (drop) {
       await this.queries.expire(row.id, drop);
@@ -55,11 +55,11 @@ export class MessageWorker {
       return 'held';
     }
     if (!readyToSend(row, template)) return 'skipped';
-    const attempts = route === undefined ? await this.claim({ row, now, line }) : await this.claimNumber({ row, now, route });
+    const attempts = await this.claim({ row, now, line, route });
     if (attempts === null) return 'skipped';
     let sent: WaSent;
     try {
-      sent = await this.dispatch.send(row, template, route ?? line);
+      sent = await this.dispatch.send(row, template, via);
     } catch (error) {
       return this.failed({ row, error, attempts, now, line, route });
     }
@@ -75,8 +75,9 @@ export class MessageWorker {
    * (the row waits untouched, docs/12 §13.3), or another worker claimed it first. The claim
    * stamps the line only when two lines are in use (§13.2), and the number in module mode (docs/23 phase 3).
    */
-  private async claim(input: { row: DueMessage; now: Date; line: WaLine }): Promise<number | null> {
-    const { row, now, line } = input;
+  private async claim(input: { row: DueMessage; now: Date; line: WaLine; route?: NumberRoute | null }): Promise<number | null> {
+    const { row, now, line, route } = input;
+    if (route !== undefined) return this.claimNumber({ row, now, route });
     if (!this.dispatch.ready(row, line)) return null;
     const numberId = activeNumberId(line);
     return this.queries.claim({ id: row.id, attempts: row.attempts, now, ...(this.dispatch.multi ? { line } : {}), ...(numberId ? { numberId } : {}) });
