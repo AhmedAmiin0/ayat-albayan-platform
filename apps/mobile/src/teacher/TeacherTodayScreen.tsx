@@ -17,6 +17,7 @@ import { ErrorState } from '@/ui/ErrorState';
 import { Screen } from '@/ui/Screen';
 import { ScreenHeader } from '@/ui/ScreenHeader';
 import { StatusChip } from '@/ui/StatusChip';
+import { useTabBarInset } from '@/ui/tab-bar-inset';
 import { dayWindow, lessonsOn, reportAction } from './day';
 import { useMyLessons, usePendingReports, useTeacherMe } from './queries';
 import { TeacherLessonCard } from './TeacherLessonCard';
@@ -46,12 +47,13 @@ export function TeacherTodayScreen() {
   const day = useMyLessons(dayWindow(today));
   const pending = usePendingReports();
   const action = useLessonAction();
+  const inset = useTabBarInset();
   const lessons = lessonsOn(day.data ?? [], today, tz);
   const loaded = day.data !== undefined;
   const dateLine = `${formatRunningHead(now, locale).gregorian}. ${t.availability.tzHint.replace('{tz}', cities[tz] ?? tz)}`;
   const stale = day.isError && loaded;
   return (
-    <Screen>
+    <Screen list>
       <ScreenHeader
         title={t.teacherNav.today}
         trailing={<BellButton tree="teacher" />}
@@ -62,7 +64,7 @@ export function TeacherTodayScreen() {
       {action.notice ? <Notice message={action.notice} /> : null}
       <FlatList
         style={{ flex: 1 }}
-        contentContainerStyle={{ gap: 12, paddingBottom: 24 }}
+        contentContainerStyle={{ gap: 12, paddingBottom: 24 + inset }}
         data={lessons}
         keyExtractor={(l) => l.id}
         renderItem={({ item }) => (

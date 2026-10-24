@@ -2916,7 +2916,9 @@
   },
   "mobileNav": {
     "accountDisabled": "تم تعطيل حسابك. تواصل مع الإدارة.",
-    "badgeOverflow": "{n}+"
+    "badgeOverflow": "{n}+",
+    "tabsLabel": "التبويبات الرئيسية",
+    "tabUnread": "{title}، {n} غير مقروءة"
   },
   "notifications": {
     "new_lead": {

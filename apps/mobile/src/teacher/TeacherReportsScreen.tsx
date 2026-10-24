@@ -9,6 +9,7 @@ import { ErrorState } from '@/ui/ErrorState';
 import { FilterPills, type FilterPill } from '@/ui/FilterPills';
 import { Screen } from '@/ui/Screen';
 import { ScreenHeader } from '@/ui/ScreenHeader';
+import { useTabBarInset } from '@/ui/tab-bar-inset';
 import { usePendingReports, useTeacherMe } from './queries';
 import { PendingReportRow, StudentHistoryRow, SubmittedReportRow } from './ReportRows';
 
@@ -41,6 +42,7 @@ export function TeacherReportsScreen() {
   const tz = me.data?.tz ?? RIYADH_TZ;
   const pending = usePendingReports();
   const sent = usePagedList<TeacherReportView>({ path: '/teachers/me/reports' });
+  const inset = useTabBarInset();
   const rows: Record<View, Rows> = {
     pending: {
       data: (pending.data ?? []).map((r) => ({ key: `${r.lesson_id}:${r.student.id}`, row: <PendingReportRow row={r} tz={tz} /> })),
@@ -70,11 +72,12 @@ export function TeacherReportsScreen() {
   };
   const shown = rows[view];
   return (
-    <Screen>
+    <Screen list>
       <ScreenHeader title={t.teacherNav.reports} />
       <FilterPills items={views()} value={view} onChange={setView} accessibilityLabel={t.teacherNav.reports} />
       <FlatList
         style={{ flex: 1, marginHorizontal: -16 }}
+        contentContainerStyle={{ paddingBottom: 24 + inset }}
         data={shown.data}
         keyExtractor={(item) => item.key}
         renderItem={({ item }) => item.row}

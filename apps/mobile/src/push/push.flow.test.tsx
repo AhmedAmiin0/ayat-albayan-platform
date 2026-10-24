@@ -15,6 +15,8 @@ jest.mock('expo-constants', () => ({
 }));
 
 const TOKEN = 'ExponentPushToken[flow]';
+// The inbox has an unread thread: the tab's name carries its count («المحادثات، 1 غير مقروءة»).
+const inboxTab = new RegExp(`^${t.nav.conversations}`);
 const tap = (data: Record<string, unknown>) => ({ notification: { request: { content: { data } } } });
 
 beforeEach(async () => {
@@ -33,7 +35,7 @@ test('admin tabs mount → the token is PUT once and kept on disk; the tab bar i
   await act(async () => undefined); // registerPush stores the token right after the PUT answers
   expect(await AsyncStorage.getItem(TOKEN_KEY)).toBe(TOKEN);
   expect(tokens).toEqual([TOKEN]);
-  expect(screen.getByRole('button', { name: t.nav.conversations })).toBeTruthy();
+  expect(screen.getByRole('button', { name: inboxTab })).toBeTruthy();
 });
 
 test('a tapped push opens its screen: a message → that thread, a payment due → that student', async () => {
@@ -65,7 +67,7 @@ test('no Firebase (the token fetch rejects): no PUT, nothing stored, and the app
   const { backend } = pushBackend();
   native.token = new Error('FirebaseApp is not initialized');
   const app = await renderApp({ url: '/', backend });
-  await fireEvent.press(screen.getByRole('button', { name: t.nav.conversations }));
+  await fireEvent.press(screen.getByRole('button', { name: inboxTab }));
   expect(app.pathname()).toBe('/inbox');
   expect(await screen.findByRole('button', { name: /أم يوسف/ })).toBeTruthy();
   expect(backend.sent('PUT /me/push-tokens')).toHaveLength(0);

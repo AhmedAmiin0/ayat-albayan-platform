@@ -47,7 +47,7 @@ export function LeadFilterSheet({ visible, filters, people, total, onChange, onC
   const results = total === undefined ? t.common.close : t.mobileLeads.showResults.replace('{n}', String(total));
   return (
     <Modal visible={visible} animationType="slide" presentationStyle="pageSheet" onRequestClose={onClose}>
-      <Screen>
+      <Screen sheet>
         <ScreenHeader
           title={t.mobileLeads.filterTitle}
           trailing={count ? <Button variant="ghost" label={t.mobileLeads.clearFilters} onPress={() => onChange(NO_FILTERS)} /> : undefined}

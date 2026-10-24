@@ -19,7 +19,7 @@ export interface RescheduleSheetProps {
 export function RescheduleSheet({ lesson, onClose }: RescheduleSheetProps) {
   return (
     <Modal visible={lesson !== null} animationType="slide" presentationStyle="pageSheet" onRequestClose={onClose}>
-      <Screen>
+      <Screen sheet>
         <ScreenHeader
           size="h2"
           title={t.lessons.rescheduleTitle}

@@ -30,7 +30,7 @@ export function CreateAccountButton({ student }: CreateAccountButtonProps) {
     <>
       <Button variant="secondary" label={t.users.account.create} onPress={() => setOpen(true)} />
       <Modal visible={open} animationType="slide" presentationStyle="pageSheet" onRequestClose={close}>
-        <Screen>
+        <Screen sheet>
           <ScreenHeader size="h2" title={t.users.create.title} trailing={<Button variant="ghost" label={t.common.close} onPress={close} />} />
           <ScrollView
             style={{ flex: 1, marginHorizontal: -16 }}

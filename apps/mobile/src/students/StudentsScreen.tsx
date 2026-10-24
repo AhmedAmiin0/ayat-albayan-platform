@@ -7,6 +7,7 @@ import { ErrorState } from '@/ui/ErrorState';
 import { Screen } from '@/ui/Screen';
 import { ScreenHeader } from '@/ui/ScreenHeader';
 import { SearchField } from '@/ui/SearchField';
+import { useTabBarInset } from '@/ui/tab-bar-inset';
 import { StudentFilterBar } from './StudentFilterBar';
 import { activeCount, listParams, NO_FILTERS, type StudentFilters } from './student-filters';
 import { StudentRow } from './StudentRow';
@@ -20,11 +21,12 @@ import type { StudentListItem } from './types';
 export function StudentsScreen() {
   const [search, setSearch] = useState('');
   const [filters, setFilters] = useState<StudentFilters>(NO_FILTERS);
+  const inset = useTabBarInset();
   const list = usePagedList<StudentListItem>({ path: '/students', params: { search, ...listParams(filters) } });
   const filtered = search !== '' || activeCount(filters) > 0;
   const empty = filtered ? t.common.notFound : t.students.empty;
   return (
-    <Screen>
+    <Screen list>
       <ScreenHeader
         title={t.nav.students}
         subtitle={list.data ? t.students.count.replace('{n}', String(list.total)) : undefined}
@@ -33,6 +35,7 @@ export function StudentsScreen() {
       <StudentFilterBar value={filters} onChange={setFilters} searching={search !== ''} />
       <FlatList
         style={{ flex: 1, marginHorizontal: -16 }}
+        contentContainerStyle={{ paddingBottom: 24 + inset }}
         data={list.items}
         keyExtractor={(s) => s.id}
         renderItem={({ item }) => <StudentRow student={item} />}

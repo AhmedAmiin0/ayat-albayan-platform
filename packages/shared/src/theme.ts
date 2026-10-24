@@ -56,6 +56,39 @@ export const elevation: Record<ThemeName, Elevation> = {
   },
 };
 
+/** One stop of a top-to-bottom gradient: [offset 0–1, opacity 0–1] of a single colour. */
+export type GlassStop = readonly [offset: number, opacity: number];
+
+export interface Glass {
+  /** The tab capsule's fill: `raised` at 80 % (light) / 84 % (dark); no backdrop blur in the APK. */
+  fill: string;
+  /** The sheen over the capsule's top: white in both themes. */
+  sheen: { color: string; stops: readonly GlassStop[] };
+  /** Hairline ring, 1px inner top highlight, inner bottom line, the two floating shadows. */
+  shadow: string;
+  /** The sliding pill under the active tab. */
+  pillShadow: string;
+}
+
+// The floating mobile tab bar (owner 2026-10-24, design C «Capsule with sliding pill»): the mockup's
+// values as RN boxShadow strings, like `elevation` above. The mobile app only; the web has no tab bar.
+export const glass: Record<ThemeName, Glass> = {
+  light: {
+    fill: 'rgba(255, 255, 255, 0.8)',
+    sheen: { color: '#ffffff', stops: [[0, 0.75], [0.42, 0.2], [0.62, 0]] },
+    shadow:
+      '0 0 0 0.5px rgba(23, 32, 28, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.95), inset 0 -1px 0 rgba(23, 32, 28, 0.04), 0 8px 32px rgba(23, 32, 28, 0.14), 0 2px 8px rgba(23, 32, 28, 0.06)',
+    pillShadow: 'inset 0 0 0 0.5px rgba(4, 120, 87, 0.14), 0 1px 4px rgba(4, 120, 87, 0.1)',
+  },
+  dark: {
+    fill: 'rgba(39, 49, 45, 0.84)',
+    sheen: { color: '#ffffff', stops: [[0, 0.11], [0.42, 0.03], [0.62, 0]] },
+    shadow:
+      '0 0 0 0.5px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.16), inset 0 -1px 0 rgba(0, 0, 0, 0.2), 0 12px 32px rgba(0, 0, 0, 0.45), 0 4px 8px rgba(0, 0, 0, 0.3)',
+    pillShadow: 'inset 0 0 0 0.5px rgba(94, 234, 212, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.06)',
+  },
+};
+
 /** Font family names as registered with expo-font: Noto Sans Arabic only (owner, 2026-10-05: easier
  *  to read); titles are its 700 weight. */
 export const type = {

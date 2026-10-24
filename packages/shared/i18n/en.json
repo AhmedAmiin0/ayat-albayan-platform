@@ -2916,7 +2916,9 @@
   },
   "mobileNav": {
     "accountDisabled": "Your account has been disabled. Contact the admin team.",
-    "badgeOverflow": "{n}+"
+    "badgeOverflow": "{n}+",
+    "tabsLabel": "Main tabs",
+    "tabUnread": "{title}, {n} unread"
   },
   "notifications": {
     "new_lead": {
