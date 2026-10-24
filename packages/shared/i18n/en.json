@@ -2622,7 +2622,9 @@
       "lesson_join_link": "Online classroom link",
       "lesson_rating": "Lesson rating (buttons)",
       "teacher_new_student": "Teacher: new student alert",
-      "trial_reschedule": "Reschedule the trial lesson"
+      "trial_reschedule": "Reschedule the trial lesson",
+      "free_trial_invite": "Free trial lesson invitation",
+      "welcome_greeting": "Welcome message"
     },
     "settings": {
       "title": "Sending settings",

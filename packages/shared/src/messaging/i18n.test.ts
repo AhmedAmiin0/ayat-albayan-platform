@@ -1,12 +1,14 @@
 import { describe, expect, it } from 'vitest';
 import ar from '../../i18n/ar.json' with { type: 'json' };
 import { MESSAGE_STATUSES, PUSH_KINDS, TEMPLATE_STATUSES } from '../enums/index.js';
+import { RESTRICTED_TEMPLATE_DEFAULTS } from './restricted-templates.js';
 import { messageStatusStyle, templateStatusStyle } from './status-style.js';
 import { TEMPLATE_KEYS } from './templates.js';
 
 describe('Phase 4 strings and chips (rule 10, docs/07 §6)', () => {
-  it('every template key has an Arabic name, and so does the seeded reschedule starter (migration 460)', () => {
-    expect(Object.keys(ar.templates.names).sort()).toEqual([...TEMPLATE_KEYS, 'trial_reschedule'].sort());
+  // The restricted defaults too: the assistant's picker shows each by name, never its Meta key.
+  it('every template key has an Arabic name, and so does each restricted default (migration 460, imports)', () => {
+    expect(Object.keys(ar.templates.names).sort()).toEqual([...TEMPLATE_KEYS, ...RESTRICTED_TEMPLATE_DEFAULTS].sort());
   });
 
   it('the reschedule starter keeps its exact names and its variable label', () => {
