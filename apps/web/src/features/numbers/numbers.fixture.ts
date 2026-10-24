@@ -16,6 +16,7 @@ export function numberView(patch: Partial<NumberView> = {}): NumberView {
     display_phone_e164: '+15550001111',
     enabled: true,
     is_default: true,
+    fallback_rank: 100,
     health: { ok: true, status: 'CONNECTED', quality_rating: 'GREEN', verified_name: null, gaps: [], errors: 0 },
     checked_at: AT,
     updated_at: AT,

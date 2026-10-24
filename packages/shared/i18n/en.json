@@ -2722,7 +2722,8 @@
       "needs_meta_driver": "This template includes a PDF file, and Kapso cannot upload the sample file. To send it to Meta, switch the «Sending provider» of the {line} to «Meta direct» in «Integrations», then try again.",
       "invalid_template": "Meta would reject this template's text: a variable at the very start or end, two variables side by side, a gap in the numbering, or a variable without a sample value.",
       "template_sync_off": "Template sync with WhatsApp is turned off in this environment",
-      "allow_list_only": "Managing templates is for the admin only"
+      "allow_list_only": "Managing templates is for the admin only",
+      "unknown_number": "This number no longer exists. Refresh the page and pick another number."
     },
     "checkedNow": "Template status checked",
     "buttons": "Buttons",
@@ -2745,6 +2746,21 @@
     "teacherNewStudentKind": {
       "trial": "Trial",
       "subscription": "Subscription"
+    },
+    "sendFrom": {
+      "header": "Sent from",
+      "labelFor": "Sending number for “{name}”",
+      "roleDefault": "The role’s default number",
+      "option": "{label} ({role})",
+      "approvalsFor": "Approval of “{name}” on each number",
+      "approvalChip": "{label}: {status}",
+      "notSynced": "Not synced yet",
+      "confirmTitle": "Change the sending number",
+      "confirmText": "“{name}” will be sent from “{number}”. The template must be approved on this number’s WhatsApp Business account, otherwise the message goes out from the next number in order.",
+      "confirmDefault": "“{name}” will be sent from its role’s default number and, if that fails, from the role’s other numbers in fallback order.",
+      "confirmYes": "Yes, change the number",
+      "saved": "Sending number saved for “{name}”.",
+      "notApproved": "Number saved, but the template is not approved on it yet. Sync this number’s templates or submit the template on its account; until then the message goes out from the next number in order."
     }
   },
   "mobileAdmin": {
@@ -5463,6 +5479,25 @@
       "note": "Numbers are edited on the website only.",
       "parityOk": "Setup in parity",
       "parityDiff": "Differences: {{count}}"
+    },
+    "templateSync": {
+      "button": "Sync templates with this number",
+      "busy": "Syncing templates…",
+      "done": "Sync complete: {{meta}} templates on the number’s account, {{synced}} updated for this number.",
+      "failed": "Template sync failed: {{error}}",
+      "errors": {
+        "not_configured": "This number’s credentials are incomplete, so its templates cannot be read.",
+        "meta_error": "Meta returned an error ({{message}}).",
+        "kapso_auth": "Kapso refused this number’s credentials."
+      }
+    },
+    "fallbackRank": {
+      "label": "Fallback order",
+      "hint": "A number from 0 to 999. Lower is tried first among the same role’s numbers when the chosen number cannot send.",
+      "invalid": "Enter a whole number from 0 to 999.",
+      "save": "Save order",
+      "saved": "Fallback order saved.",
+      "value": "Fallback order: {{rank}}"
     }
   },
   "settingsHub": {

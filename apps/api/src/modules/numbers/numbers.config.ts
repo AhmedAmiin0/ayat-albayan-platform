@@ -1,8 +1,9 @@
 import type { CommsSource } from '@ab/shared';
 import { Injectable, Logger, type OnModuleDestroy, type OnModuleInit } from '@nestjs/common';
 import { integrationRefreshMs } from '../../common/integrations/integration-refresh';
-import { setNumbersOverlay, type NumbersOverlay } from '../../common/integrations/numbers-overlay';
+import { setNumbersOverlay, type NumbersOverlay, type OverlayNumber } from '../../common/integrations/numbers-overlay';
 import { loadEnv } from '../../env';
+import { overlayNumber } from './numbers.env';
 import { moduleOverlay, type DefaultNumber } from './numbers.lines';
 import { NumbersQueries } from './numbers.queries';
 import { NumbersSecrets } from './numbers.secrets';
@@ -14,7 +15,8 @@ const MIN_REFRESH_MS = 1_000;
  * NumbersConfig (docs/23 §2c): the port WhatsappModule's config comes through. comms_source = legacy
  * (the default, and whenever the setting is unknown) clears the numbers overlay, so loadEnv() and every
  * send are exactly today's. module: each role's default enabled number supplies that role's line keys
- * instead of the legacy WA_* ones. Refreshed at boot (before WhatsappModule starts), on the integration
+ * instead of the legacy WA_* ones, and every number rides along with its own credentials (phase 5
+ * routing, docs/23c). Refreshed at boot (before WhatsappModule starts), on the integration
  * refresh period and after every numbers write (never when the database config is off). Never logs a value.
  */
 @Injectable()
@@ -80,7 +82,15 @@ export class NumbersConfig implements OnModuleInit, OnModuleDestroy {
 
   /** The module side as it would be now (parity reads it in legacy mode too). */
   async build(): Promise<NumbersOverlay> {
-    return this.overlayOf(await this.defaults());
+    const [defaults, numbers] = await Promise.all([this.defaults(), this.numbers()]);
+    return { ...this.overlayOf(defaults), numbers };
+  }
+
+  /** Every wa_numbers row (enabled or not), each with ITS own Vault secrets only (docs/23c). */
+  async numbers(): Promise<OverlayNumber[]> {
+    const env = loadEnv();
+    const rows = await this.queries.all();
+    return Promise.all(rows.map(async (row) => overlayNumber({ row, secrets: await this.secrets.read(row.id) }, env)));
   }
 
   overlayOf(defaults: readonly DefaultNumber[]): NumbersOverlay {

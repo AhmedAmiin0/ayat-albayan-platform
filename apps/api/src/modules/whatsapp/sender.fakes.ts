@@ -19,6 +19,7 @@ export function dueMessage(over: Partial<DueMessage> = {}): DueMessage {
     expires_at: null,
     error_code: null,
     line: null,
+    number_id: null,
     lesson: { starts_at: '2026-10-04T14:00:00+00:00', status: 'scheduled' },
     guardian: { name: 'أم سلمى' },
     lead: null,

@@ -1,4 +1,4 @@
-import type { TemplateHealthView, TemplateLineSync, TemplateLineView, TemplateMoveView, TemplateView, WaLine } from '@ab/shared';
+import type { TemplateHealthView, TemplateLineSync, TemplateLineView, TemplateMoveView, TemplateNumberSetView, TemplateView, WaLine } from '@ab/shared';
 import { queryOptions } from '@tanstack/react-query';
 import { errorCode } from '@/features/schedule/api';
 import { ApiError, apiFetch, apiSend } from '@/lib/api';
@@ -31,6 +31,10 @@ export const submitTemplate = (key: string) =>
 /** The row now goes out from the other number; the API re-reads its status on that number's WABA. */
 export const moveTemplateLine = ({ key, line }: { key: string; line: WaLine }) =>
   apiSend<TemplateMoveView>('PATCH', `/messaging/templates/${encodeURIComponent(key)}/line`, { line });
+
+/** docs/23c decision 9: the template's own number; null = its role's default (404 unknown_number). */
+export const setTemplateNumber = ({ key, number_id }: { key: string; number_id: string | null }) =>
+  apiSend<TemplateNumberSetView>('PUT', `/messaging/templates/${encodeURIComponent(key)}/number`, { number_id });
 
 /**
  * «متاح للمعلمين والمبيعات» (the restricted allow-list, owner 2026-10-12, docs/16): the admin offers a

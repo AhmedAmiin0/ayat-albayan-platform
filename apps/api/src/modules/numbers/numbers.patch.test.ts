@@ -16,6 +16,10 @@ describe('numberPatch: a PATCH never leaves a row saying something false', () =>
     expect(numberPatch(checked, { label: 'رقم' })).toEqual({ label: 'رقم' });
   });
 
+  it('a fallback rank is a plain write (docs/23c decision 9)', () => {
+    expect(numberPatch(checked, { fallback_rank: 5 })).toEqual({ fallback_rank: 5 });
+  });
+
   it('moving a default to the other role unsets is_default (the default never moves silently)', () => {
     const def = numberRow({ purpose: 'notifications', is_default: true, enabled: true });
     expect(numberPatch(def, { purpose: 'chat' })).toEqual({ purpose: 'chat', is_default: false });

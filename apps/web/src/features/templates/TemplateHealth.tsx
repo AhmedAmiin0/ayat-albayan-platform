@@ -1,5 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { useMemo } from 'react';
+import { usePermissions } from '@/features/auth/use-permissions';
+import { numbersQuery } from '@/features/numbers/numbers-api';
 import { DataTable } from '@/components/DataTable';
 import { Toast } from '@/components/ui/toast';
 import { t } from '@/lib/i18n';
@@ -8,8 +10,10 @@ import { MoveLineDialog } from './MoveLineDialog';
 import { SubmitTemplateDialog } from './SubmitTemplateDialog';
 import { templateColumns } from './template-columns';
 import { TemplateLines } from './TemplateLines';
+import { TemplateNumberDialog } from './TemplateNumberDialog';
 import { useTemplateActions } from './use-template-actions';
 import { useTemplateLines } from './use-template-lines';
+import { useTemplateNumber } from './use-template-number';
 
 /**
  * Template health (R-MSG-01, issue C1): every registry row with Meta's status. Each number syncs
@@ -17,6 +21,7 @@ import { useTemplateLines } from './use-template-lines';
  * be sent to Meta for review from its own number (T3) and any row moved to the other number, each
  * only after its explicit confirm dialog. «متاح للمعلمين والمبيعات» (the restricted allow-list)
  * picks the only templates teachers, sales and other limited roles may send (owner 2026-10-12).
+ * «يُرسل من» picks each template's own number (templates.manage, after its dialog; docs/23c decision 9).
  */
 export function TemplateHealth({ headingId }: { headingId: string }) {
   const templates = useQuery(templatesQuery);
@@ -24,6 +29,10 @@ export function TemplateHealth({ headingId }: { headingId: string }) {
   const a = useTemplateActions();
   const { setSubmitting, setMoving, toggleStarter, savingStarter: saving } = a;
   const { phones, factsOf } = lines;
+  const manage = usePermissions().can('templates.manage');
+  const numbers = useQuery(numbersQuery).data;
+  const pick = useTemplateNumber(a.setNotice);
+  const { setPicking } = pick;
   const columns = useMemo(
     () =>
       templateColumns({
@@ -33,8 +42,9 @@ export function TemplateHealth({ headingId }: { headingId: string }) {
         saving,
         phones,
         factsOf,
+        sendFrom: { numbers, manage, onPick: (template, numberId) => setPicking({ template, numberId }) },
       }),
-    [setSubmitting, setMoving, toggleStarter, saving, phones, factsOf],
+    [setSubmitting, setMoving, toggleStarter, saving, phones, factsOf, numbers, manage, setPicking],
   );
   const rows = templates.data ?? [];
 
@@ -74,6 +84,15 @@ export function TemplateHealth({ headingId }: { headingId: string }) {
           busy={a.move.isPending}
           onConfirm={() => a.moving && a.move.mutate({ key: a.moving.key, line: otherLine(a.moving.line) })}
           onClose={() => setMoving(null)}
+        />
+      )}
+      {pick.picking && (
+        <TemplateNumberDialog
+          pick={pick.picking}
+          numbers={numbers}
+          busy={pick.busy}
+          onConfirm={pick.confirm}
+          onClose={() => setPicking(null)}
         />
       )}
       {a.notice && <Toast {...a.notice} onDismiss={() => a.setNotice(null)} />}

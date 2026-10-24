@@ -4,37 +4,15 @@ import { activeNumberId } from '../../common/integrations/numbers-overlay';
 import { PushService } from '../../common/push/push.service';
 import { retry, sleep } from '../report-pdf/retry';
 import { MessageDispatch } from './message.dispatch';
+import { authSubject, RECORD_DELAYS_MS, UNRECORDED, type FailedInput, type SendJob, type SendOutcome } from './message.job';
+import type { NumberRoute } from './number-route';
 import { lineOf } from './send-line';
 import { failurePlan, messageLabel, readyToSend, SENDING } from './send-plan';
 import { AUTO_OFF, dropReason, isAutomatic } from './send-stale';
 import { SenderQueries, type DueMessage } from './sender.queries';
-import { WaError, type TemplateRow, type WaSent } from './whatsapp.types';
+import type { WaSent } from './whatsapp.types';
 
-/** paused = the line's token is broken (auth error): the sender skips that line for this pass. */
-/** held = a job-made reminder / follow-up / renewal while automatic messages are OFF (auto_off). */
-export type SendOutcome = 'sent' | 'retry' | 'failed' | 'expired' | 'stale' | 'held' | 'paused' | 'skipped';
-
-export interface SendJob {
-  row: DueMessage;
-  /** The approved registry row of row.template_key; null for a session text. */
-  template: TemplateRow | null;
-  now: Date;
-  /** settings.auto_messages_enabled, read by the sender before this row. */
-  autoOn: boolean;
-}
-
-/**
- * Writing «sent» after Meta accepted is retried hard. If all tries fail, the claim's SENDING mark
- * stays on the row and the next pass hands it to the admin (UNCERTAIN) instead of resending.
- */
-const RECORD_DELAYS_MS = [500, 2_000] as const;
-
-/** A row still marked SENDING: a try was made and its outcome never recorded. */
-const UNRECORDED = new WaError('the last try was never recorded; check WhatsApp before resending', {
-  code: null,
-  status: 0,
-  uncertain: true,
-});
+export type { SendJob, SendOutcome } from './message.job';
 
 /**
  * One queued row, end to end (docs/12 §3.3): expiry, send-time staleness, the automatic-messages
@@ -63,27 +41,27 @@ export class MessageWorker {
     }
   }
 
-  private async run({ row, template, now, autoOn }: SendJob): Promise<SendOutcome> {
-    const line = lineOf(row, template, this.dispatch.multi);
+  private async run({ row, template, now, autoOn, route }: SendJob): Promise<SendOutcome> {
+    const line = route ? route.line : lineOf(row, template, this.dispatch.multi);
     const drop = dropReason(row, now);
     if (drop) {
       await this.queries.expire(row.id, drop);
       return drop.code;
     }
-    if (row.error_code === SENDING) return this.failed({ row, error: UNRECORDED, attempts: row.attempts, now, line });
+    if (row.error_code === SENDING) return this.failed({ row, error: UNRECORDED, attempts: row.attempts, now, line, route });
     // Not left queued: it would go out at a wrong time once the switch is back ON. No push.
     if (!autoOn && isAutomatic(row)) {
       await this.queries.expire(row.id, AUTO_OFF);
       return 'held';
     }
     if (!readyToSend(row, template)) return 'skipped';
-    const attempts = await this.claim({ row, now, line });
+    const attempts = route === undefined ? await this.claim({ row, now, line }) : await this.claimNumber({ row, now, route });
     if (attempts === null) return 'skipped';
     let sent: WaSent;
     try {
-      sent = await this.dispatch.send(row, template, line);
+      sent = await this.dispatch.send(row, template, route ?? line);
     } catch (error) {
-      return this.failed({ row, error, attempts, now, line });
+      return this.failed({ row, error, attempts, now, line, route });
     }
     const record = () => this.queries.sent({ row, waMessageId: sent.waMessageId, at: new Date() });
     if (!(await retry(record, { delays: RECORD_DELAYS_MS, sleep: this.wait }))) {
@@ -104,15 +82,22 @@ export class MessageWorker {
     return this.queries.claim({ id: row.id, attempts: row.attempts, now, ...(this.dispatch.multi ? { line } : {}), ...(numberId ? { numberId } : {}) });
   }
 
-  private async failed(input: { row: DueMessage; error: unknown; attempts: number; now: Date; line: WaLine }): Promise<SendOutcome> {
-    const { row, now, line } = input;
+  /** Module mode (decision 8): only with a number that can send now; stamps number_id and line = its role. */
+  private async claimNumber(input: { row: DueMessage; now: Date; route: NumberRoute | null }): Promise<number | null> {
+    const { row, now, route } = input;
+    if (!route || !this.dispatch.ready(row, route)) return null;
+    return this.queries.claim({ id: row.id, attempts: row.attempts, now, line: route.line, numberId: route.numberId });
+  }
+
+  private async failed(input: FailedInput): Promise<SendOutcome> {
+    const { row, now, line, route } = input;
     const plan = failurePlan(input);
     await this.queries.failure(row.id, plan);
     if (plan.attempts !== undefined) {
       // The token, not the message: rows wait; one push a day (fixed in Business Manager).
       this.log.error(`WhatsApp refused the token (${plan.error_code}); sending paused: ${plan.error_text}`);
-      // One push per line per day; the notifications subject is unchanged.
-      await this.alert(row, `whatsapp_auth:${line === 'chat' ? 'chat:' : ''}${now.toISOString().slice(0, 10)}`);
+      // One push per line per day (the notifications subject unchanged); module mode: per number.
+      await this.alert(row, authSubject({ line, route, now }));
       return 'paused';
     }
     if (plan.status === 'queued') return 'retry';
