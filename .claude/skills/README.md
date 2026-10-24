@@ -1,7 +1,7 @@
 # Project skills
 
 Copied here so cloud sessions and routines (which only see the repo) can load them. Do not edit them;
-update by copying a newer release from the source.
+update by copying a newer release from the source. License texts: `LICENSE-THIRD-PARTY.md`.
 
 | Skill | Use it for | Source | License |
 |---|---|---|---|

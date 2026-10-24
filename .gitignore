@@ -14,6 +14,7 @@ packages/db/supabase/.temp/
 packages/db/supabase/.branches/
 .claude/worktrees/
 .claude/artifacts/
+.claude/settings.local.json
 .reticle/
 .reticle-setup-crash.log
 .ouroboros_eval_artifact.md
