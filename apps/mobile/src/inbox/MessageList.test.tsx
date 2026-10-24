@@ -51,7 +51,7 @@ test('a message she sends brings her to the newest; one that comes in, or an old
   expect(toOffset).toHaveBeenCalledTimes(1);
 });
 
-test('a job's row or a colleague's reply that lands newest leaves her where she is', async () => {
+test("a job's row or a colleague's reply that lands newest leaves her where she is", async () => {
   const toOffset = jest.spyOn(FlatList.prototype, 'scrollToOffset').mockImplementation(() => undefined);
   const job = message({ id: 'm5', status: 'sent', automatic: true, created_at: '2026-10-02T08:30:00Z' });
   const colleague = message({ id: 'm6', status: 'sent', sender_name: 'سارة', created_at: '2026-10-02T08:40:00Z' });
@@ -61,7 +61,7 @@ test('a job's row or a colleague's reply that lands newest leaves her where she 
   expect(toOffset).not.toHaveBeenCalled();
 });
 
-test('an empty chat keeps its empty state upright: the wrapper takes the inverted list's flip back', async () => {
+test("an empty chat keeps its empty state upright: the wrapper takes the inverted list's flip back", async () => {
   await show(stub([[]]));
   expect(screen.getByText(t.inbox.empty)).toBeTruthy();
   expect(StyleSheet.flatten(screen.getByTestId('message-empty').props.style).transform).toContainEqual({ scaleY: -1 });
