@@ -61,5 +61,9 @@ describe('canEditDescription', () => {
     expect(google.ownedBy).toBe('google_sync');
     expect(canEditDescription(google, rights(['settings.write']))).toBe(false);
     expect(canEditDescription(google, rights([], true))).toBe(true);
+    const rule = entryOf('follow_up_hours');
+    expect(rule.ownedBy).toBe('notifications');
+    expect(canEditDescription(rule, rights(['settings.write']))).toBe(false);
+    expect(canEditDescription(rule, rights(['notifications.manage']))).toBe(true);
   });
 });

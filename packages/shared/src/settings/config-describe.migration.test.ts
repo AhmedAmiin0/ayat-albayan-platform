@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { isOwnedSettingKey } from './ownership.js';
+import { OWNED_SETTING_KEYS, isOwnedSettingKey } from './ownership.js';
 import { SEED_ENTRIES } from './seed-entries.js';
 
 declare global {
@@ -16,10 +16,14 @@ const FILES = import.meta.glob<string>('../../../db/supabase/migrations/*_config
 const sql = Object.values(FILES)[0] ?? '';
 
 // The one-time override copy (docs/26 §3) names its (key, hint key) pairs: pinned to the registry.
+// The 23-P4 notification keys became owned after this migration shipped; it copies only their
+// description (never a value), so they stay in the pinned list.
+const ownedAtCopy = (key: string): boolean => isOwnedSettingKey(key) && OWNED_SETTING_KEYS[key] !== 'notifications';
+
 describe('migration config_describe', () => {
-  it('copies exactly the registry hint keys, never a module-owned (send gate, Google) key', () => {
+  it('copies exactly the registry hint keys, never a key owned at copy time (send gate, Google)', () => {
     const pairs = [...sql.matchAll(/\('([a-z0-9_]+)', '([A-Za-z0-9_.]+)'\)/g)].map((m) => [m[1], m[2]]);
-    const want = SEED_ENTRIES.filter((e) => e.hintKey && !isOwnedSettingKey(e.key)).map((e) => [e.key, e.hintKey]);
+    const want = SEED_ENTRIES.filter((e) => e.hintKey && !ownedAtCopy(e.key)).map((e) => [e.key, e.hintKey]);
     expect(pairs).toEqual(want);
   });
 

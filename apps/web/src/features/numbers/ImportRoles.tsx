@@ -1,4 +1,4 @@
-import type { ImportFieldView, ImportRoleView } from '@ab/shared';
+import type { ImportBlock, ImportFieldView, ImportRoleView } from '@ab/shared';
 import { Ltr } from '@/components/ui/ltr';
 import { t } from '@/lib/i18n';
 
@@ -19,6 +19,17 @@ function FieldLine({ field }: { field: ImportFieldView }) {
   );
 }
 
+/** «لا يمكن استيراده» and the fields whose ids fail the checks, by label only (never the value). */
+function NotImportable({ block }: { block: ImportBlock }) {
+  const names = block.fields.map((f) => t.numbers.fields[f]).join(t.common.listSeparator);
+  return (
+    <div className="grid gap-0.5" data-testid="not-importable">
+      <p className="font-semibold text-danger">{im.notImportable}</p>
+      <p className="text-xs text-ink-2">{im.invalidId.replace('{{names}}', names)}</p>
+    </div>
+  );
+}
+
 /** The import preview, role by role: what happens, each field with its source, the secrets to copy. */
 export function ImportRoles({ roles }: { roles: readonly ImportRoleView[] }) {
   return (
@@ -26,7 +37,7 @@ export function ImportRoles({ roles }: { roles: readonly ImportRoleView[] }) {
       {roles.map((r) => (
         <section key={r.role} aria-label={t.numbers.purpose[r.role]} className="grid gap-1 text-sm">
           <h3 className="font-bold">{t.numbers.purpose[r.role]}</h3>
-          <p className="text-ink-2">{im.action[r.action]}</p>
+          {r.not_importable ? <NotImportable block={r.not_importable} /> : <p className="text-ink-2">{im.action[r.action]}</p>}
           {r.fields.length > 0 && (
             <ul className="grid gap-1 text-xs">
               {r.fields.map((f) => (

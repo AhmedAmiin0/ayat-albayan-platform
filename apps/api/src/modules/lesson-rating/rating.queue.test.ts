@@ -2,23 +2,26 @@ import { SETTING_DEFAULTS } from '@ab/shared';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { readerOf } from '../../common/settings/settings.fakes';
 import { LessonEvents } from '../../common/events/lesson-events';
+import { fakePolicy, type FakePolicyInput } from '../notification-rules/policy.fakes';
 import type { MessageSender } from '../whatsapp/message.sender';
 import { LessonRatingSettings } from './lesson-rating.settings';
 import { heldLesson, LESSON_ID, NOW } from './rating.fakes';
 import { RatingJob } from './rating.job';
 import type { RatingQueries } from './rating.queries';
 import { RatingQueue } from './rating.queue';
+import { RatingReads } from './rating.reads';
 
 // The automatic lesson_rating gates: feedback_mode, the automatic-messages switch, the template.
 
 const queries = { approved: vi.fn(), queue: vi.fn(), held: vi.fn(), byIds: vi.fn() };
 const sender = { kick: vi.fn() };
 let settings = { ...SETTING_DEFAULTS, auto_messages_enabled: true };
+let rules: FakePolicyInput = {};
 
 function setup() {
   const queue = new RatingQueue(
     queries as unknown as RatingQueries,
-    readerOf(LessonRatingSettings, settings),
+    new RatingReads(readerOf(LessonRatingSettings, settings), fakePolicy({ ...rules, settings: { feedback_mode: settings.feedback_mode } })),
     sender as unknown as MessageSender,
   );
   const events = new LessonEvents();
@@ -31,6 +34,7 @@ describe('RatingQueue / RatingJob', () => {
   beforeEach(() => {
     vi.resetAllMocks();
     settings = { ...SETTING_DEFAULTS, auto_messages_enabled: true };
+    rules = {};
     queries.approved.mockResolvedValue(true);
     queries.queue.mockImplementation(async (rows: unknown[]) => rows.length);
     queries.held.mockResolvedValue([heldLesson()]);
@@ -54,6 +58,21 @@ describe('RatingQueue / RatingJob', () => {
     await expect(setup().job.runOnce(NOW)).resolves.toEqual({ queued: 0, skipped });
     expect(queries.held).not.toHaveBeenCalled();
     expect(queries.queue).not.toHaveBeenCalled();
+  });
+
+  it.each([
+    ['module mode, the lesson_rating row off', { mode: 'module' as const, rows: [{ key: 'lesson_rating', enabled: false }] }, 'mode_link'],
+    ['rules unreadable (fail closed)', { fail: true }, 'rules_unread'],
+  ])('%s → nothing queued, no lesson read', async (_name, over, skipped) => {
+    rules = over;
+    await expect(setup().job.runOnce(NOW)).resolves.toEqual({ queued: 0, skipped });
+    expect(queries.held).not.toHaveBeenCalled();
+  });
+
+  it('module mode, the row on: queued even while feedback_mode says link', async () => {
+    settings = { ...settings, feedback_mode: 'link' };
+    rules = { mode: 'module', rows: [{ key: 'lesson_rating', enabled: true }] };
+    await expect(setup().job.runOnce(NOW)).resolves.toEqual({ queued: 1, skipped: null });
   });
 
   it('template not approved by Meta yet → nothing queued (no pile-up before approval)', async () => {

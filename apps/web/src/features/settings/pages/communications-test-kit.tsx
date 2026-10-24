@@ -1,6 +1,6 @@
 import type { AcademySettings } from '@ab/shared';
 import type { QueryClient } from '@tanstack/react-query';
-import { useState } from 'react';
+import { useState, type ReactNode } from 'react';
 import type { Mock } from 'vitest';
 import { renderWithClient, routeFetch } from '@/features/inbox/test-utils';
 import { NUMBERS, PARITY_SAME } from '@/features/numbers/numbers.fixture';
@@ -23,12 +23,14 @@ export interface RenderCommunications {
   settings?: Partial<AcademySettings>;
   gate?: Gate;
   catalogue?: unknown;
+  /** Stands in for the route's LeaveGuard (gets the unsaved names). */
+  renderGuard?: (names: readonly string[]) => ReactNode;
 }
 
 /** The page with its tab held in state (as the route holds it in `?tab=`). */
-function Harness({ initial }: { initial: CommunicationsTab }) {
+function Harness({ initial, renderGuard }: { initial: CommunicationsTab; renderGuard?: RenderCommunications['renderGuard'] }) {
   const [tab, setTab] = useState<CommunicationsTab>(initial);
-  return <CommunicationsPage tab={tab} onTab={setTab} />;
+  return <CommunicationsPage tab={tab} onTab={setTab} {...(renderGuard ? { renderGuard } : {})} />;
 }
 
 /** «التواصل» with every GET it may make answered (first prefix wins). */
@@ -46,5 +48,5 @@ export function renderCommunications(input: RenderCommunications): QueryClient {
     ['/admin/numbers', NUMBERS],
     ['/admin/communications/parity', PARITY_SAME],
   ]);
-  return renderWithClient(<Harness initial={input.tab ?? 'sending'} />);
+  return renderWithClient(<Harness initial={input.tab ?? 'sending'} renderGuard={input.renderGuard} />);
 }

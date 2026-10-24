@@ -36,12 +36,16 @@ export interface ReminderLesson {
 
 export interface ReminderPlanInput {
   lessons: readonly ReminderLesson[];
-  /** settings.reminder_minutes_before. */
+  /** The lesson_reminder rule's minutes_before (legacy: settings.reminder_minutes_before). */
   minutesBefore: number;
-  /** settings.reminder_24h_enabled AND lesson_reminder_24h approved in the registry. */
+  /** lesson_reminder on (default); false = no same-day guardian reminder. */
+  sameDay?: boolean;
+  /** lesson_reminder_24h on AND approved in the registry; dayBeforeAt = its send_at_local (null = the lesson's time). */
   dayBefore: boolean;
-  /** settings.teacher_whatsapp_lesson_reminder (R-NOT-03); false = no teacher_lesson_reminder*. Default on. */
+  dayBeforeAt?: string | null;
+  /** teacher_lesson_reminder on (R-NOT-03; default on) and its lead time (default minutesBefore). */
   teacherReminders?: boolean;
+  teacherMinutesBefore?: number;
   now: Date;
 }
 
@@ -69,11 +73,11 @@ function guardianRows(lesson: ReminderLesson, input: ReminderPlanInput): QueuedM
   for (const { guardian, names } of byGuardian(lesson)) {
     const message = { names, startsAt, tz: guardian.tz, meetingLink: lesson.meeting_link };
     const to = { phone: guardian.phone_e164, guardianId: guardian.id, lessonId: lesson.id, now, expiresAt: startsAt };
-    if (reminderDue({ kind: 'same_day', startsAt, tz: guardian.tz, minutesBefore, now })) {
+    if (input.sameDay !== false && reminderDue({ kind: 'same_day', startsAt, tz: guardian.tz, minutesBefore, now })) {
       const template = lessonReminderMessage(message);
       rows.push(queuedRow({ ...to, template, dedupKey: `lesson_reminder:${lesson.id}:${guardian.id}` }));
     }
-    if (input.dayBefore && reminderDue({ kind: 'day_before', startsAt, tz: guardian.tz, minutesBefore, now })) {
+    if (input.dayBefore && reminderDue({ kind: 'day_before', startsAt, tz: guardian.tz, minutesBefore, sendAtLocal: input.dayBeforeAt, now })) {
       const template = lessonReminder24hMessage({ ...message, lessonId: lesson.id });
       const dedupKey = `lesson_reminder_24h:${lesson.id}:${guardian.id}`;
       // «بكرة» is only true until the lesson's day starts for the guardian: never sent later.
@@ -87,7 +91,8 @@ function teacherRow(lesson: ReminderLesson, input: ReminderPlanInput): QueuedMes
   const { teacher } = lesson;
   if (!teacher?.phone_e164) return [];
   const startsAt = new Date(lesson.starts_at);
-  const due = reminderDue({ kind: 'same_day', startsAt, tz: teacher.tz, minutesBefore: input.minutesBefore, now: input.now });
+  const minutesBefore = input.teacherMinutesBefore ?? input.minutesBefore;
+  const due = reminderDue({ kind: 'same_day', startsAt, tz: teacher.tz, minutesBefore, now: input.now });
   if (!due) return [];
   const template: OutboundTemplate = teacherReminderMessage({
     names: lesson.students.map((s) => s.name),
@@ -103,7 +108,7 @@ function teacherRow(lesson: ReminderLesson, input: ReminderPlanInput): QueuedMes
 
 /**
  * Every reminder due at `now`: same-day to each guardian (wording and time in the guardian's tz)
- * and to the teacher (teacher's tz; unless settings.teacher_whatsapp_lesson_reminder is OFF), plus
+ * and to the teacher (teacher's tz, own lead time; unless teacher_lesson_reminder is OFF), plus
  * the day-before one when enabled. Same-day ones expire at
  * the lesson start, the day-before one at the guardian's midnight before it, so a row the sender
  * could not send in time is never sent late.
@@ -116,7 +121,7 @@ export function planReminders(input: ReminderPlanInput): QueuedMessage[] {
 
 /**
  * R-MOB-01 lesson_needs_confirmation (docs/12 §6): at the same-day reminder time
- * (settings.reminder_minutes_before) the lesson is still `scheduled` — nobody confirmed it.
+ * (lesson_reminder minutes_before) the lesson is still `scheduled` — nobody confirmed it.
  * PushService's dedup key (lesson id) makes it once per lesson.
  */
 export function needsConfirmation(lessons: readonly ReminderLesson[], at: { now: Date; minutesBefore: number }): ReminderLesson[] {

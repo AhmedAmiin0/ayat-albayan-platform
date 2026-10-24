@@ -6,6 +6,8 @@ import { DB } from '../../common/db/db.module';
 import { expoMessages, type ExpoMessage } from '../../common/push/expo-push';
 import { PushModule } from '../../common/push/push.module';
 import { PUSH_TRANSPORT, type PushTransport } from '../../common/push/push.service';
+import { NotificationPolicy } from '../notification-rules/policy';
+import { fakePolicy } from '../notification-rules/policy.fakes';
 
 // The Expo transport PushModule provides (common/push): batching + the access token.
 // fetch is stubbed: no test ever reaches exp.host.
@@ -15,8 +17,9 @@ import { PUSH_TRANSPORT, type PushTransport } from '../../common/push/push.servi
   providers: [
     { provide: DB, useValue: {} },
     { provide: PERMISSION_RESOLVER, useValue: systemResolver },
+    { provide: NotificationPolicy, useValue: fakePolicy() },
   ],
-  exports: [DB, PERMISSION_RESOLVER],
+  exports: [DB, PERMISSION_RESOLVER, NotificationPolicy],
 })
 class FakeDbModule {}
 

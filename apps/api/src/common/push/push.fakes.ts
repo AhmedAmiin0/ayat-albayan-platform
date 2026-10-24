@@ -1,4 +1,6 @@
 import { vi } from 'vitest';
+import { fakePolicy } from '../../modules/notification-rules/policy.fakes';
+import type { NotificationPolicy } from '../../modules/notification-rules/policy';
 import { systemResolver, type PermissionResolver } from '../auth/permissions';
 import type { Db } from '../db/db.module';
 import type { ExpoTicket } from './expo-push';
@@ -55,14 +57,14 @@ export function fakeWeb() {
 /** A PushService over the fakes; the system roles' permissions unless `resolve` says otherwise. */
 export function pushService(
   db: Db,
-  opts: { transport?: PushTransport; web?: WebPushSender; resolve?: PermissionResolver } = {},
+  opts: { transport?: PushTransport; web?: WebPushSender; resolve?: PermissionResolver; policy?: NotificationPolicy } = {},
 ): PushService {
   const channels = new PushChannels(
     db,
     opts.transport ?? vi.fn<PushTransport>(),
     opts.web ?? fakeWeb().web,
   );
-  return new PushService(db, new PushAudience(db, opts.resolve ?? systemResolver), channels);
+  return new PushService(db, new PushAudience(db, opts.resolve ?? systemResolver, opts.policy ?? fakePolicy()), channels);
 }
 
 /** The browser and app pushes run after notify*() returns (off the request path): let them finish. */

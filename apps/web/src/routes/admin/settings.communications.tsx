@@ -5,7 +5,8 @@ import { LeaveGuard } from '@/features/settings/values/LeaveGuard';
 
 /**
  * /admin/settings/communications «التواصل» — docs/26b §3: one tab at a time (`?tab=`). Leaving the
- * page with unsaved «مواعيد الرسائل» fields asks first (switching tabs keeps them, so it never asks).
+ * page with unsaved «مواعيد الرسائل» fields or «الإشعارات» rows asks first, naming them (switching
+ * tabs keeps them, so it never asks).
  */
 export const Route = createFileRoute('/admin/settings/communications')({
   validateSearch: parseCommunicationsSearch,

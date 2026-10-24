@@ -2,6 +2,8 @@ import type { Json } from '@ab/db';
 import type { BookingResult, Gender, LeadStatus, LessonStatus, PackageSize, Program, StudentStatus } from '@ab/shared';
 import { HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../common/db/db.module';
+import { gateConfirmations } from '../../common/rules/confirmations';
+import { NotificationPolicy } from '../notification-rules/policy';
 import { domainError } from './booking.errors';
 import { dbError } from '../teachers/http';
 import type { LeadFacts } from './booking.lead-merge';
@@ -38,7 +40,10 @@ const STUDENT_COLUMNS = `id, name, program, teacher_gender_pref, meeting_link_ov
 /** Every DB touch of the booking wizard (service role; the controller is admin-only). */
 @Injectable()
 export class BookingQueries {
-  constructor(@Inject(DB) private readonly db: Db) {}
+  constructor(
+    @Inject(DB) private readonly db: Db,
+    private readonly policy: NotificationPolicy,
+  ) {}
 
   async teacher(id: string): Promise<BookingTeacher | null> {
     const { data, error } = await this.db
@@ -114,8 +119,10 @@ export class BookingQueries {
   }
 
   /** Rule + students + lessons + lead + queued messages in one transaction (docs/10 §5 #14). */
+  /** create_booking; its booking_confirmation* rows only while that notification rule is on (gateConfirmations). */
   async createBooking(payload: BookingPayload, actorId: string): Promise<BookingResult> {
-    const p_booking = payload as unknown as Json; // typed payload; the RPC validates it in SQL
+    const gated = payload.messages ? { ...payload, messages: await gateConfirmations(this.policy, payload.messages) } : payload;
+    const p_booking = gated as unknown as Json; // typed payload; the RPC validates it in SQL
     const call = () => this.db.rpc('create_booking', { p_booking, p_actor: actorId });
     let { data, error } = await call();
     // Two replays at once: the loser hits client_request_id's unique key; the retry returns the

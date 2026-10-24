@@ -162,6 +162,8 @@
   "LessonsController.overview": ["admin"],
   "LinesController.check": ["admin"],
   "RulesController.overview": ["admin"],
+  "RulesController.update": ["admin"],
+  "RulesAliasController.update": ["admin"],
   "KapsoWebhookController.receive": "public",
   "LivekitWebhookController.receive": "public",
   "MeController.add": ["admin","assistant","sales","teacher"],

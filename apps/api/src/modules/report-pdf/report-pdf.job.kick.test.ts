@@ -1,4 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
+import { fakePolicy } from '../notification-rules/policy.fakes';
 import { ReportPdfJob } from './report-pdf.job';
 import type { ReportPdfPublisher } from './report-pdf.publisher';
 import type { ReportPdfQueries } from './report-pdf.queries';
@@ -8,7 +9,7 @@ function job() {
     recoverStale: vi.fn(async () => 0),
     pendingIds: vi.fn(async () => [] as string[]),
   };
-  const j = new ReportPdfJob(queries as unknown as ReportPdfQueries, {} as ReportPdfPublisher);
+  const j = new ReportPdfJob(queries as unknown as ReportPdfQueries, {} as ReportPdfPublisher, fakePolicy());
   return { j, queries };
 }
 
@@ -23,7 +24,7 @@ describe('ReportPdfJob — scheduling and single flight', () => {
     });
     const run = vi.spyOn(j, 'runOnce').mockImplementationOnce(async () => {
       await gate;
-      return { recovered: 0, rendered: 0, failed: 0, skipped: 0 };
+      return { recovered: 0, rendered: 0, failed: 0, skipped: 0, held: 0 };
     });
     const first = j.kick();
     const second = j.kick();

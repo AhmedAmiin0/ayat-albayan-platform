@@ -39,3 +39,9 @@ test('numberLine: the kept phone or nothing', () => {
   expect(numberLine('chat', kept)).toEqual({ label: c.lines.chat, phone: '+201001234567' });
   expect(numberLine('notifications', kept)).toEqual({ label: c.lines.notifications, phone: null });
 });
+
+test('a blocker this build has no words for (newer API) adds no reason, never «undefined»', () => {
+  const unknown = entry({ blocker: 'future_reason' as unknown as NotificationEntryView['blocker'] });
+  expect(factsOf(unknown)).toBe([c.audience.guardian, c.channels.whatsapp, c.lines.notifications].join(' · '));
+  expect(factsOf(unknown)).not.toMatch(/undefined/);
+});

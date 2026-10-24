@@ -4464,13 +4464,15 @@
       "self.assistant": "Classroom assistant's own pages",
       "students.check_registration": "Check a student's registration",
       "subscriptions.set_start_date": "Set the subscription start date",
-      "numbers.manage": "Manage WhatsApp numbers"
+      "numbers.manage": "Manage WhatsApp numbers",
+      "notifications.manage": "Manage notifications"
     },
     "hints": {
       "students.check_registration": "Search by the guardian's phone or the student's name or code; shows only the name, code, status and teacher.",
       "subscriptions.set_start_date": "Pick the package's start day, including a past date for a student who started before the platform. Without it the package starts on the default day.",
       "inbox.lists": "Create, rename and delete the shared chat lists and add chats to them. Nothing is ever sent because of a list.",
-      "numbers.manage": "Add and edit WhatsApp numbers, save their credentials, import the current setup and change the setup source. Does not open sending."
+      "numbers.manage": "Add and edit WhatsApp numbers, save their credentials, import the current setup and change the setup source. Does not open sending.",
+      "notifications.manage": "Turn notifications on or off and set their timing, channels and sending number. Does not open sending."
     },
     "page": {
       "title": "Roles and permissions",
@@ -5171,6 +5173,153 @@
       }
     }
   },
+  "notificationRules": {
+    "title": "Notifications",
+    "tabLabel": "Notifications",
+    "intro": "One row per notification: when it is sent, through which channel, from which number, and whether it goes out now. Each row saves on its own.",
+    "readOnly": "Read only",
+    "readOnlyHint": "You cannot edit notifications, so they are shown here read only.",
+    "caption": "{audience} notifications",
+    "columns": {
+      "name": "Notification and when it is sent",
+      "channels": "Through",
+      "number": "From number · template",
+      "state": "Sent now?",
+      "switch": "On / off",
+      "manualFrom": "Sent from"
+    },
+    "strip": {
+      "label": "Messages state",
+      "autoOn": "Automatic messages: on",
+      "autoOff": "Automatic messages: off",
+      "openSending": "Open «Sending» to change the sending state",
+      "queued": {
+        "zero": "Waiting: no messages",
+        "one": "Waiting: 1 message",
+        "two": "Waiting: 2 messages",
+        "few": "Waiting: {n} messages",
+        "other": "Waiting: {n} messages"
+      }
+    },
+    "timing": {
+      "minutesLabel": "Before the lesson by",
+      "minutesUnit": "minutes",
+      "minutesBounds": "From 5 to 720 minutes",
+      "minutesText": "{n} minutes before the lesson",
+      "dayBeforeLabel": "The day before at",
+      "dayBeforeSame": "At the lesson’s own time",
+      "dayBeforeText": "The day before at {time}",
+      "dayBeforeZone": "in the guardian’s time zone",
+      "sameAsFamily": "Same as the guardian reminder",
+      "followUpLabel": "Follow-up {n} after",
+      "followUpUnit": "hours",
+      "followUpAdd": "Add a follow-up",
+      "followUpRemove": "Remove follow-up {n}",
+      "followUpBounds": "Up to 5 follow-ups, each 1 to 720 hours after the last message without a booking, in ascending order",
+      "followUpText": "{hours} hours after the last message without a booking",
+      "slotsFromLabel": "Earliest suggested time after",
+      "slotsFromUnit": "hours",
+      "slotsToLabel": "Latest suggested time within",
+      "slotsToUnit": "days",
+      "slotsBounds": "1 to 168 hours · 1 to 30 days",
+      "slotsText": "Suggested times: the earliest after {from} hours, the latest within {to} days",
+      "withReminder": "With the lesson reminder",
+      "renewalRef": "When {n} lessons or fewer remain in the package · from «Values»",
+      "renewalLink": "Edit it in «Values»"
+    },
+    "errors": {
+      "minutes": "Enter a whole number from 5 to 720",
+      "hours": "Enter a whole number from 1 to 720 for each follow-up",
+      "ascending": "Make each follow-up later than the one before",
+      "slotsFrom": "Enter a whole number from 1 to 168 for the earliest time",
+      "slotsTo": "Enter a whole number from 1 to 30 for the latest time",
+      "invalid": "The server refused this value. Check it and save again.",
+      "locked": "This notification cannot be turned off.",
+      "not_editable": "This notification is sent by hand and is not edited here.",
+      "unknown_number": "The chosen number no longer exists. Pick another one.",
+      "confirmation_required": "Type «{word}» exactly to confirm turning it off.",
+      "forbidden": "You cannot edit notifications.",
+      "failed": "Could not save the notification. Try again."
+    },
+    "channelFixed": "{channel} always",
+    "channelToggle": "{channel}: {name}",
+    "numberLabel": "Sending number: {name}",
+    "templateNumber": "The template’s number",
+    "noNumber": "Not applicable",
+    "approval": {
+      "all": "Approved",
+      "some": "Partly approved",
+      "none": "Not approved",
+      "noTemplate": "No template"
+    },
+    "approvalSomeHint": "Meta has not approved some variants of the template, so lessons that use them get nothing.",
+    "blockers": {
+      "classroom_off": "because the academy classroom is not in use now"
+    },
+    "shortBlockers": {
+      "messaging_off": "Sending paused",
+      "not_configured": "WhatsApp not set up",
+      "auto_off": "Automatic off",
+      "row_off": "Turned off here",
+      "template_not_approved": "Template not approved",
+      "classroom_off": "Classroom not in use"
+    },
+    "switchName": "Turn on «{name}»",
+    "locked": "Cannot be turned off",
+    "unsaved": "Not saved: {changes}",
+    "insteadOf": "{new} instead of {old}",
+    "undo": "Undo",
+    "actionName": "{action}: {name}",
+    "saving": "Saving…",
+    "saved": "Notification saved",
+    "familyOn": {
+      "title": "Turn on «{name}»?",
+      "yes": "Turn it on",
+      "guardian": {
+        "one": "It will reach one guardian.",
+        "two": "It will reach two guardians.",
+        "few": "It will reach {n} guardians.",
+        "other": "It will reach {n} guardians."
+      },
+      "lead": {
+        "one": "It will reach one lead.",
+        "two": "It will reach two leads.",
+        "few": "It will reach {n} leads.",
+        "other": "It will reach {n} leads."
+      },
+      "guardianAll": "It will reach every guardian with a registered number.",
+      "leadAll": "It will reach every lead with a registered number.",
+      "nobody": "Nobody has a registered number for it now; it will reach those added later."
+    },
+    "familyOff": {
+      "title": "Turn off «{name}»?",
+      "body": "Nobody will get this notification until you turn it on again.",
+      "yes": "Turn it off"
+    },
+    "essentialOff": {
+      "title": "Turn off «{name}»?",
+      "body": "Families rely on this notification. Turning it off is recorded in the activity log.",
+      "label": "Type: {word}",
+      "yes": "Turn it off"
+    },
+    "manualIntro": "These messages go out when a team member presses send, so they are not switched on or off here.",
+    "phoneOpen": "Edit «{name}»",
+    "phoneView": "View «{name}»",
+    "unsavedCount": {
+      "one": "1 notification not saved",
+      "two": "2 notifications not saved",
+      "few": "{n} notifications not saved",
+      "other": "{n} notifications not saved"
+    },
+    "discard": {
+      "title": "Discard the changes?",
+      "body": "Your changes to this notification are not saved.",
+      "yes": "Discard the changes",
+      "keep": "Keep editing"
+    },
+    "timingMoved": "The reminder and follow-up timings are now on the «Notifications» tab, each in its notification’s row.",
+    "timingMovedLink": "Open «Notifications»"
+  },
   "numbers": {
     "title": "Numbers",
     "intro": "Each WhatsApp number is its own record with a name, role, provider and credentials. While the source is «current setup», sending stays exactly as it is.",
@@ -5276,7 +5425,9 @@
         "unset": "Not set"
       },
       "secretHidden": "Secret value, not shown",
-      "willCopy": "Will copy: {{names}}"
+      "willCopy": "Will copy: {{names}}",
+      "notImportable": "Cannot be imported",
+      "invalidId": "Invalid value in: {{names}}. An ID has only Latin letters, digits, _ and -, at most 64 characters. Correct the value in «Integrations», then import again."
     },
     "parity": {
       "title": "Setup parity",
@@ -5660,6 +5811,60 @@
       "saveFailed": "Could not save the description",
       "saved": "Description saved",
       "restored": "The original description is restored"
+    }
+  },
+  "mobileNotificationRules": {
+    "title": "Notifications",
+    "intro": "Turn each notification on or off here. Timings, numbers and templates are changed on the website.",
+    "readOnlyIntro": "Everything the platform sends, to whom, from which number, and whether it goes out now. Notifications and their timings are changed on the website.",
+    "audienceEmpty": "No notifications for this group.",
+    "switchLabel": "Send «{name}»",
+    "locked": "Cannot be turned off",
+    "heldNow": "Not sent now: {reason}",
+    "partial": "Partly approved: lessons whose link uses a template Meta has not approved yet get nothing",
+    "blockers": {
+      "not_configured": "WhatsApp is not set up yet",
+      "messaging_off": "sending messages is off",
+      "auto_off": "automatic messages are off",
+      "row_off": "this notification is off",
+      "template_not_approved": "Meta has not approved the template yet",
+      "classroom_off": "the academy classroom is not in use"
+    },
+    "reach": {
+      "guardian": {
+        "one": "It will reach one guardian.",
+        "two": "It will reach two guardians.",
+        "few": "It will reach {n} guardians.",
+        "other": "It will reach {n} guardians."
+      },
+      "lead": {
+        "one": "It will reach one lead.",
+        "two": "It will reach two leads.",
+        "few": "It will reach {n} leads.",
+        "other": "It will reach {n} leads."
+      },
+      "nobody": "Nobody has a registered number for it now; it will reach those added later.",
+      "unknown": "It will reach families when it happens."
+    },
+    "familyConfirm": "Turn on «{name}»? {reach}",
+    "turnOn": "Turn on",
+    "cancel": "Cancel",
+    "essentialTitle": "Turn off «{name}»?",
+    "essentialBody": "This is an essential notification. If you turn it off, nobody receives it until you turn it back on.",
+    "typedLabel": "Type: {word}",
+    "typedHint": "The button works once the word is typed exactly.",
+    "logLine": "This is recorded in the activity log with your name and the time.",
+    "turnOff": "Turn off the notification",
+    "close": "Close",
+    "savedOn": "«{name}» turned on",
+    "savedOff": "«{name}» turned off",
+    "errors": {
+      "forbidden": "You do not have permission to change notifications.",
+      "locked": "This notification cannot be turned off.",
+      "not_editable": "This notification is sent by hand, so it is not switched here.",
+      "invalid": "The change was not saved because the value is invalid.",
+      "confirmation_required": "Type the word exactly to confirm turning it off.",
+      "failed": "The change was not saved. Try again."
     }
   }
 }

@@ -1,7 +1,9 @@
 import { nextFollowUpAt, type FollowUpNote } from '@ab/shared';
 import { Injectable, Logger, type OnApplicationBootstrap, type OnModuleDestroy } from '@nestjs/common';
+import { ruleOf, timingOf } from '../../common/rules/rule-of';
 import { Ticker } from '../reminders/ticker';
-import { FollowUpSlots } from './follow-up-slots';
+import { FollowUpSlots, type SlotWindow } from './follow-up-slots';
+import { FollowUpsReads } from './follow-ups.deps';
 import {
   followUpDedupKey,
   followUpRow,
@@ -12,7 +14,6 @@ import {
   type FollowUpLeadRow,
 } from './follow-ups.plan';
 import { FollowUpsQueries } from './follow-ups.queries';
-import { FollowUpsSettings } from './follow-ups.settings';
 
 const EVERY_MS = 5 * 60_000;
 const FIRST_RUN_MS = 60_000;
@@ -39,7 +40,8 @@ interface Tick {
  * - follow_up_slots not approved → nothing queued, the stage stays (note waiting_template): the
  *   follow-up goes out on the first tick after approval.
  * - fewer than two free slots → nothing queued, retried next tick (note no_slots).
- * - settings.auto_messages_enabled OFF → the tick does nothing: no row queued, no stage advanced.
+ * - settings.auto_messages_enabled OFF, the follow_up_slots rule OFF or unreadable (fail closed) →
+ *   the tick does nothing: no row queued, no stage advanced. Stages and slot window: the rule's timing.
  * TODO(owner/integrator): «else an admin task» needs an admin_task_kind value (migration + types).
  */
 @Injectable()
@@ -55,7 +57,7 @@ export class FollowUpsJob implements OnApplicationBootstrap, OnModuleDestroy {
   constructor(
     private readonly queries: FollowUpsQueries,
     private readonly slots: FollowUpSlots,
-    private readonly settings: FollowUpsSettings,
+    private readonly reads: FollowUpsReads,
   ) {}
 
   onApplicationBootstrap(): void {
@@ -77,19 +79,31 @@ export class FollowUpsJob implements OnApplicationBootstrap, OnModuleDestroy {
       ...{ notDue: 0, waitingTemplate: 0, noSlots: 0, failed: 0 },
     };
     try {
-      const { follow_up_hours: hours, auto_messages_enabled: auto } = await this.settings.read();
+      const { auto_messages_enabled: auto } = await this.reads.settings.read();
       if (!auto) return summary; // automatic messages OFF (docs/09 cut-over): nothing queued or advanced
+      const timing = await this.timing();
+      if (!timing) return summary; // the follow_up_slots rule OFF or unread: nothing queued or advanced
+      const { hours, ...win } = timing;
       const leads = await this.queries.candidates(hours.length);
       summary.leads = leads.length;
       const approved = leads.length > 0 && (await this.queries.approved());
       let starts: Promise<Date[]> | null = null;
-      const lazyStarts = () => (starts ??= this.slots.freeStarts(now));
+      const lazyStarts = () => (starts ??= this.slots.freeStarts(now, win));
       for (const lead of leads) summary[await this.process({ lead, hours, approved, now, starts: lazyStarts })] += 1;
     } catch (e) {
       this.log.error(`follow-ups run aborted: ${e instanceof Error ? e.message : String(e)}`);
     }
     if (summary.queued + summary.advanced + summary.failed > 0) this.log.log(`follow-ups: ${JSON.stringify(summary)}`);
     return summary;
+  }
+
+  /** The follow_up_slots rule's timing while it is on; null when off or unreadable (logged by the policy). */
+  private async timing(): Promise<({ hours: readonly number[] } & SlotWindow) | null> {
+    const snap = await this.reads.policy.snapshot();
+    const rule = snap && ruleOf(snap, 'follow_up_slots');
+    if (!snap || !rule?.enabled) return null;
+    const s = snap.settings; // a legacy value the rule schema refuses is still used as before
+    return timingOf(rule, 'follow_up_slots') ?? { hours: s.follow_up_hours, slots_from_hours: s.follow_up_slots_from_hours, slots_to_days: s.follow_up_slots_to_days };
   }
 
   private async process(t: Tick): Promise<Outcome> {

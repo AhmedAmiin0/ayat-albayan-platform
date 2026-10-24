@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { fakePolicy } from '../notification-rules/policy.fakes';
 import { ReportPdfJob } from './report-pdf.job';
 import type { ReportPdfPublisher } from './report-pdf.publisher';
 import type { ReportPdfQueries } from './report-pdf.queries';
@@ -14,8 +15,8 @@ const publisher = { publish: vi.fn(), close: vi.fn() };
 const NOW = new Date('2026-10-02T08:00:00Z');
 const message = { dedup_key: 'report_ready:r1' };
 
-function job() {
-  const j = new ReportPdfJob(queries as unknown as ReportPdfQueries, publisher as unknown as ReportPdfPublisher);
+function job(policy = fakePolicy()) {
+  const j = new ReportPdfJob(queries as unknown as ReportPdfQueries, publisher as unknown as ReportPdfPublisher, policy);
   j.wait = vi.fn(async () => undefined);
   return j;
 }
@@ -34,7 +35,7 @@ describe('ReportPdfJob — the R-REP-03 queue worker', () => {
 
   it('claims each pending report, stores the PDF, queues the message, then marks that version ready', async () => {
     const summary = await job().runOnce(NOW);
-    expect(summary).toEqual({ recovered: 0, rendered: 2, failed: 0, skipped: 0 });
+    expect(summary).toEqual({ recovered: 0, rendered: 2, failed: 0, skipped: 0, held: 0 });
     expect(queries.pendingIds).toHaveBeenCalledWith(20);
     expect(queries.claim.mock.calls).toEqual([['r1'], ['r2']]);
     expect(queries.queueMessage).toHaveBeenCalledWith(message);
@@ -53,7 +54,7 @@ describe('ReportPdfJob — the R-REP-03 queue worker', () => {
   it('skips a report another worker claimed first (compare-and-set lost)', async () => {
     queries.claim.mockResolvedValueOnce(null);
     const summary = await job().runOnce(NOW);
-    expect(summary).toEqual({ recovered: 0, rendered: 1, failed: 0, skipped: 1 });
+    expect(summary).toEqual({ recovered: 0, rendered: 1, failed: 0, skipped: 1, held: 0 });
     expect(publisher.publish).toHaveBeenCalledTimes(1);
     expect(publisher.publish).toHaveBeenCalledWith('r2', expect.any(Date));
   });
@@ -76,7 +77,7 @@ describe('ReportPdfJob — the R-REP-03 queue worker', () => {
       return { path: 's/r2.pdf', message };
     });
     const summary = await job().runOnce(NOW);
-    expect(summary).toEqual({ recovered: 0, rendered: 1, failed: 1, skipped: 0 });
+    expect(summary).toEqual({ recovered: 0, rendered: 1, failed: 1, skipped: 0, held: 0 });
     expect(publisher.publish).toHaveBeenCalledTimes(4);
     expect(queries.finish).toHaveBeenCalledWith({ id: 'r1', version: 3, status: 'failed', error: 'x'.repeat(500) });
     expect(queries.queueMessage).toHaveBeenCalledTimes(1);
@@ -107,8 +108,22 @@ describe('ReportPdfJob — the R-REP-03 queue worker', () => {
     expect(publisher.close).not.toHaveBeenCalled();
   });
 
+  it('module mode, the report_ready row off: the PDF is stored and ready, no message queued', async () => {
+    const summary = await job(fakePolicy({ mode: 'module', rows: [{ key: 'report_ready', enabled: false }] })).runOnce(NOW);
+    expect(summary).toEqual({ recovered: 0, rendered: 2, failed: 0, skipped: 0, held: 0 });
+    expect(queries.queueMessage).not.toHaveBeenCalled();
+    expect(queries.finish).toHaveBeenCalledWith({ id: 'r1', version: 3, status: 'ready', path: 's/r1.pdf' });
+  });
+
+  it('rules unreadable: no message and not ready, so the report is retried (an essential row is never dropped)', async () => {
+    const summary = await job(fakePolicy({ fail: true })).runOnce(NOW);
+    expect(summary.rendered).toBe(0);
+    expect(queries.queueMessage).not.toHaveBeenCalled();
+    expect(queries.finish).not.toHaveBeenCalledWith(expect.objectContaining({ status: 'ready' }));
+  });
+
   it('never throws, even when the queue cannot be read', async () => {
     queries.recoverStale.mockRejectedValue(new Error('db down'));
-    await expect(job().runOnce(NOW)).resolves.toEqual({ recovered: 0, rendered: 0, failed: 0, skipped: 0 });
+    await expect(job().runOnce(NOW)).resolves.toEqual({ recovered: 0, rendered: 0, failed: 0, skipped: 0, held: 0 });
   });
 });

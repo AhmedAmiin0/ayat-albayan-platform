@@ -28,6 +28,7 @@ export const OWNER_MAY_DESCRIBE: Readonly<Record<SettingOwner, (user: AuthUser) 
   messages_gate: (user) => can(user, 'settings.write'),
   communications: (user) => can(user, 'numbers.manage'),
   google_sync: isBaseAdmin,
+  notifications: (user) => can(user, 'notifications.manage'),
 };
 
 /** settings.write is checked by the route; this adds the owner's permission for an owned key. */

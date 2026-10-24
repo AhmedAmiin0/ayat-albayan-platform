@@ -60,6 +60,12 @@ export interface ImportFieldView {
 /** create = a row will be (was) added; exists = a row with this phone id is there; unconfigured = no phone id today. */
 export type ImportAction = 'create' | 'exists' | 'unconfigured';
 
+/** Why a role's row cannot be created: an id fails the wa_numbers checks (META_ID_RE); field NAMES only. */
+export interface ImportBlock {
+  reason: 'invalid_id';
+  fields: ImportField[];
+}
+
 export interface ImportRoleView {
   role: WaLine;
   action: ImportAction;
@@ -67,6 +73,8 @@ export interface ImportRoleView {
   fields: ImportFieldView[];
   /** The number's secrets the apply copies (empty = nothing left to copy). */
   secrets_to_copy: NumberSecretName[];
+  /** Set = this role is not importable (the apply skips it; the other role still imports). Absent = importable. */
+  not_importable?: ImportBlock;
 }
 
 /** POST /admin/numbers/import. changed = false on a second apply (a no-op diff). */
@@ -107,6 +115,19 @@ export interface ParityView {
   source: CommsSource;
   roles: ParityRoleView[];
   differences: { role: WaLine; field: ParityField; state: Exclude<ParityState, 'same'> }[];
+  /**
+   * docs/23b decision 5: per legacy-mapped notification rule, each part where the module path (the rule)
+   * and the legacy path (the settings keys) disagree; values JSON-encoded. The switch to module is
+   * refused while this or `differences` is non-empty. Optional only for older API builds.
+   */
+  rules?: RuleParityDiff[];
+}
+
+export interface RuleParityDiff {
+  key: string;
+  field: 'enabled' | 'timing';
+  legacy: string;
+  module: string;
 }
 
 /** POST /admin/communications/source → the source now in use. */

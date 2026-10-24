@@ -33,6 +33,18 @@ const pushOnce = <T>(list: T[], item: T): void => {
   if (!list.includes(item)) list.push(item);
 };
 
+export type ParsedSettingField = { ok: true; value: unknown } | { ok: false; issues: SettingsPatchIssue[] };
+
+/**
+ * One PATCH field validated by its registry def (issue paths = the field, then the inner path). Also
+ * used by the API for the owned followUpHours alias (docs/26 §2f: it writes the follow-up rule).
+ */
+export function parseSettingField(input: { field: string; key: SettingKey; value: unknown }): ParsedSettingField {
+  const parsed = settingZod(SETTINGS_REGISTRY[input.key]).safeParse(input.value);
+  if (parsed.success) return { ok: true, value: parsed.data };
+  return { ok: false, issues: parsed.error.issues.map((i) => ({ path: [input.field, ...i.path.map(String)].join('.'), message: i.message })) };
+}
+
 /**
  * Splits a raw PATCH body field by field: owned keys (camelCase or snake_case) → moved; registry
  * fields with `patch: false` → moved; registry fields (camelCase) validated one by one → saved or
@@ -54,13 +66,13 @@ export function splitSettingsPatch(body: Readonly<Record<string, unknown>>): Set
       pushOnce(out.moved, key);
       continue;
     }
-    const parsed = settingZod(def).safeParse(value);
-    if (parsed.success) {
-      changes[key] = parsed.data;
+    const parsed = parseSettingField({ field, key, value });
+    if (parsed.ok) {
+      changes[key] = parsed.value;
       pushOnce(out.saved, key);
     } else {
       pushOnce(out.invalid, key);
-      for (const i of parsed.error.issues) out.issues.push({ path: [field, ...i.path.map(String)].join('.'), message: i.message });
+      out.issues.push(...parsed.issues);
     }
   }
   out.changes = changes as Partial<AcademySettings>;

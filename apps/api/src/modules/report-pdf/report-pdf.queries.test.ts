@@ -65,6 +65,13 @@ describe('ReportPdfQueries — the pdf_status queue, compare-and-set (docs/11 §
     expect(calls.find((c) => c.method === 'update')?.args).toEqual([{ pdf_status: 'failed', pdf_error: 'boom' }]);
   });
 
+  it('finish pending (held): back in the queue, same version guard, no error kept', async () => {
+    const { db, calls } = fakeDb({ [T]: [{ data: [{ id: 'r1' }] }] });
+    await expect(new ReportPdfQueries(db).finish({ id: 'r1', version: 4, status: 'pending' })).resolves.toBe(true);
+    expect(calls.find((c) => c.method === 'update')?.args).toEqual([{ pdf_status: 'pending' }]);
+    expect(eqs(calls)).toEqual([['id', 'r1'], ['pdf_status', 'rendering'], ['version', 4]]);
+  });
+
   it('queueMessage: insert-or-ignore on dedup_key, then fill the document of a still-queued row', async () => {
     const { db, calls } = fakeDb({ messages: [{}, {}] });
     await new ReportPdfQueries(db).queueMessage(message);

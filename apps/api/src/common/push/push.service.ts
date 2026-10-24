@@ -76,10 +76,14 @@ export class PushService {
     }
   }
 
-  async notifyProfiles(target: PushTarget): Promise<void> {
+  async notifyProfiles(event: PushTarget): Promise<void> {
     try {
-      const ids = [...new Set(target.profileIds)];
+      const ids = [...new Set(event.profileIds)];
       if (ids.length === 0) return;
+      // The kind's notification rule: off → no row at all; no 'push' channel → the bell row only.
+      const route = await this.audience.route(event.kind);
+      if (!route.bell) return;
+      const target = route.push ? event : { ...event, bellOnly: true };
       const profiles = await this.audience.recipients(target.kind, ids);
       const text = {
         ...pushText(target.kind, target.vars),
@@ -88,7 +92,7 @@ export class PushService {
       const data = { kind: target.kind, ...target.data };
       for (const profile of profiles) await this.deliver({ profile, target, text, data });
     } catch (e) {
-      this.warn(`${target.kind}:${target.subject}`, e);
+      this.warn(`${event.kind}:${event.subject}`, e);
     }
   }
 

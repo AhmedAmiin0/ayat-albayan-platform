@@ -11,7 +11,6 @@ import { FeedbackSettings } from '../feedback/feedback.settings';
 import { FollowUpsSettings } from '../follow-ups/follow-ups.settings';
 import { FxSettings } from '../fx/fx.settings';
 import { InvoicesSettings } from '../invoices/invoices.settings';
-import { LeadsSettings } from '../leads/leads.settings';
 import { LessonRatingSettings } from '../lesson-rating/lesson-rating.settings';
 import { NotificationRulesSettings } from '../notification-rules/notification-rules.settings';
 import { RulesService } from '../notification-rules/rules.service';
@@ -30,7 +29,7 @@ import { WhatsappSettings } from './whatsapp.settings';
 
 const READERS = [
   ClassroomSettings, ReportsSettings, ReportPdfSettings, WhatsappSettings, NotificationRulesSettings, WebhookSettings,
-  RemindersSettings, FollowUpsSettings, LeadsSettings, LessonRatingSettings, FeedbackSettings, PayoutsSettings,
+  RemindersSettings, FollowUpsSettings, LessonRatingSettings, FeedbackSettings, PayoutsSettings,
   DashboardSettings, ExpensesSettings, ReceivablesSettings, FxSettings, InvoicesSettings, PaymentsSettings,
 ];
 

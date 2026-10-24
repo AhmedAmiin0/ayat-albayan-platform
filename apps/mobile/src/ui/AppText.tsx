@@ -10,6 +10,6 @@ export type AppTextNode = Text;
  * (doLeftAndRightSwapInRTL), so 'left' means "start": right in Arabic, left in English.
  * Pass textAlign: 'center' to override.
  */
-export function AppText({ style, ...props }: TextProps & { ref?: Ref<AppTextNode> }) {
-  return <Text {...props} style={[{ textAlign: 'left' }, style]} />;
+export function AppText({ style, ref, ...props }: TextProps & { ref?: Ref<AppTextNode> }) {
+  return <Text {...props} ref={ref} style={[{ textAlign: 'left' }, style]} />;
 }

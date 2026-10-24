@@ -6,9 +6,9 @@ import { restoreSettings, settingText, snapshotSettings } from '../support/setti
 
 // «القيم» /admin/settings/values (R-SCH-07, R-SUB-02, R-REP-02, docs/26b §2): each row saves on its
 // own with its row «حفظ» (PATCH /config/entries/:key with the row's version, 26-P3); a value out of
-// bounds is refused inline and nothing is written. The follow-up hours (R-LEAD-05) moved to «التواصل»
-// (/admin/settings/communications, the «مواعيد الرسائل» tab), whose timing form keeps its page «حفظ»:
-// the API's own schema still rejects a non-ascending list there. Everything written is put back.
+// bounds is refused inline and nothing is written. The follow-up hours (R-LEAD-05) are the «متابعة العميل» row of
+// «التواصل» › «الإشعارات» (/admin/settings/communications?tab=catalogue, docs/23b): a non-ascending
+// list is refused in the row before any PATCH. Everything written is put back.
 // The spec reads only roles and labels, never request URLs, so the save route can change under it.
 
 const KEYS = ['booking_horizon_weeks', 'renewal_alert_remaining', 'report_teacher_edit_hours', 'follow_up_hours'];
@@ -80,14 +80,24 @@ test.describe('settings — «القيم» rows and the follow-up hours', () => 
     await expect(field(await open(renewal), renewal)).toHaveValue('3');
   });
 
-  test('follow-up hours on «التواصل»: a non-ascending list is refused and nothing is written', async ({ asRole }) => {
+  test('follow-up hours on «التواصل» › «الإشعارات»: a non-ascending list is refused and nothing is written', async ({ asRole }) => {
     const admin = await asRole('admin');
-    await admin.goto('/admin/settings/communications?tab=timing');
-    const hours = admin.getByLabel(ar.templates.settings.followUpHours, { exact: true });
-    await expect(hours).toBeVisible();
-    await fillStable(hours, '72، 24');
-    await admin.getByRole('button', { name: ar.common.save, exact: true }).click();
-    await expect(admin.getByText(ar.settings.notAscending)).toBeVisible();
+    const r = ar.notificationRules;
+    const name = ar.notificationCatalogue.entries.follow_up_slots.name;
+    await admin.goto('/admin/settings/communications?tab=catalogue');
+    const region = admin.getByRole('region', { name: r.title, exact: true });
+    await region.getByRole('tab', { name: new RegExp(ar.notificationCatalogue.audience.lead) }).click();
+    const row = region.locator('[data-key="follow_up_slots"]');
+    // Desktop: the editor is in the row; phones (Pixel 7): the row's button opens its bottom sheet.
+    const phone = test.info().project.name === 'mobile';
+    if (phone) await row.getByRole('button', { name: new RegExp(r.phoneOpen.replace('{name}', name)) }).click();
+    const scope = phone ? admin.getByRole('dialog', { name, exact: true }) : row;
+    const first = scope.getByLabel(r.timing.followUpLabel.replace('{n}', '1'), { exact: true });
+    await expect(first).toHaveValue('24');
+    await fillStable(first, '80');
+    await expect(scope.getByText(r.errors.ascending)).toBeVisible();
+    if (phone) await expect(scope.getByRole('button', { name: ar.common.save, exact: true })).toBeDisabled();
+    else await expect(admin.getByRole('button', { name: `${ar.common.save}: ${name}`, exact: true })).toHaveAttribute('aria-disabled', 'true');
     expect(await settingText('follow_up_hours')).toBe('[24, 72]');
   });
 });

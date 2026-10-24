@@ -26,8 +26,11 @@ const numbersOf = (lines: NotificationEntryView['lines']): string =>
 export function factsOf(entry: NotificationEntryView): string {
   const channels = entry.channels.map((ch) => c().channels[ch]).join(t.common.listSeparator);
   const numbers = entry.channels.includes('whatsapp') ? numbersOf(entry.lines) : null;
-  const parts = [c().audience[entry.audience], channels, numbers, entry.blocker ? c().blockers[entry.blocker] : null];
-  return parts.filter((p): p is string => p !== null).join(' · ');
+  // A blocker this build has no words for (a newer API) shows no reason instead of «undefined».
+  const blockers: Record<string, string | undefined> = c().blockers;
+  const reason = entry.blocker && Object.hasOwn(blockers, entry.blocker) ? blockers[entry.blocker] : undefined;
+  const parts = [c().audience[entry.audience], channels, numbers, reason];
+  return parts.filter((p): p is string => typeof p === 'string' && p !== '').join(' · ');
 }
 
 /** «رقم الإشعارات: +966…» per kept line, or «لم يُفحص الرقم بعد». */

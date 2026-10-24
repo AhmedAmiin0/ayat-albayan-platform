@@ -10,9 +10,10 @@ export function stateChip(entry: Pick<NotificationEntryView, 'state'>): { tone: 
   return { tone: 'neutral', glyph: 'struck', label: c().states.off };
 }
 
-/** The first blocker in words («لأن إرسال الرسائل متوقف»), or null. */
+/** The first blocker in words («لأن إرسال الرسائل متوقف»), or null; the v2 classroom_off has its words in notificationRules. */
 export function blockerText(entry: Pick<NotificationEntryView, 'blocker'>): string | null {
-  return entry.blocker ? c().blockers[entry.blocker] : null;
+  if (!entry.blocker) return null;
+  return entry.blocker === 'classroom_off' ? t.notificationRules.blockers.classroom_off : c().blockers[entry.blocker];
 }
 
 /** When: the trigger in words, then the timing setting's value («قبل الحلقة بـ60 دقيقة»). */

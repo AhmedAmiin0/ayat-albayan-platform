@@ -6,7 +6,7 @@ and give it also a description field and for more complex settings like notifica
 and seeded with most of the modules and as for the modules that will require a heavey config like notifications make a
 custom desgin for it».
 
-**Design.** 26-P0, 26-P1 and 26-P2 are built (§6 «Built»); the rest is not yet. No migration number is reserved: use the next free numbers at build time
+**Design.** 26-P0, 26-P1, 26-P2 and 23-P4 are built (§6 «Built»); the rest is not yet. No migration number is reserved: use the next free numbers at build time
 (docs/23 phase 3 holds `20261023000620–629`). Once built, this supersedes docs/25 §1 (the five concepts), §5
 (recipes) and §6 (Google rows); until then docs/25 describes the code. Companion files:
 
@@ -375,6 +375,18 @@ Order: **26-P0 → 23-P3 → 26-P1 → 23-P4 → 26-P2 → 26-P3 → 23-P5 → 2
   **Not done on purpose:** the `VALIDATE` migration (needs the §4 pre-check on staging) and **switching readers to
   `ConfigStore`**: `SettingsService.all()` still reads the rows through `readSettings`; only writes go through
   `config_set`. The read switch waits until `GET /admin/config/parity` has stayed empty for ≥ 1 week on staging.
+- **23-P4 — built (2026-10-24, branch `cloud/notif-rules`).** Migration
+  `packages/db/supabase/migrations/20261024000632_notification_rules.sql` (table, RLS, `notifications.manage` to every
+  role holding `settings.write`, idempotent copy of the 6 legacy-mapped rows; never writes `settings`). The 8 keys of §1
+  are `ownedBy: 'notifications'` in the registry and `OWNED_SETTING_KEYS` (`packages/shared/src/settings/ownership.ts`);
+  `renewal_alert_remaining` is not copied. Contract `packages/shared/src/notifications/rules.*.ts`; API
+  `apps/api/src/modules/notification-rules/` (`policy.ts`, `rules.store.ts`, `rules.writer.ts`, `rules.parity.ts`,
+  `rules.bridge.ts`, `rules.views.ts`): `PATCH /admin/notifications/:key` (+ alias
+  `/admin/communications/notifications/:key`), frozen v1 list without `X-AB-Client`, rules parity in
+  `GET /admin/communications/parity`, the flip to `module` refused while it is non-empty, the flip back copies rules →
+  legacy first. Producers ask `NotificationPolicy` (reminders, follow-ups, leads, rating, booking confirmations, teacher
+  alert, report PDF, renewal, staff bell/push). Web «الإشعارات» tab `apps/web/src/features/notification-rules/`; mobile
+  toggles `apps/mobile/src/ops/notif-rules/`. Build notes: docs/23b.
 
 ## 7. Assumptions (the owner's message ended with «but …»; any of these may be what it meant)
 

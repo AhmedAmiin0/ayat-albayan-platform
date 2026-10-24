@@ -1,6 +1,7 @@
 import type { AdminTaskKind } from '@ab/shared';
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 import { DB, type Db } from '../../common/db/db.module';
+import { NotificationPolicy } from '../notification-rules/policy';
 import { readAll, readChunked } from '../scheduling/read-all';
 import { dbError } from '../teachers/http';
 
@@ -20,7 +21,12 @@ export interface RenewalMessage {
 /** Reads and idempotent writes for the R-SUB-02 alerts (dedup keys, rule 8). */
 @Injectable()
 export class AlertsQueries {
-  constructor(@Inject(DB) private readonly db: Db) {}
+  private readonly log = new Logger(AlertsQueries.name);
+
+  constructor(
+    @Inject(DB) private readonly db: Db,
+    private readonly policy: NotificationPolicy,
+  ) {}
 
   async studentsOfLessons(lessonIds: readonly string[]): Promise<string[]> {
     const data = await readChunked(lessonIds, (chunk) =>
@@ -95,8 +101,15 @@ export class AlertsQueries {
     return { studentName: data.name, guardianId: data.guardian.id, phone: data.guardian.phone_e164 };
   }
 
-  /** The guardian's renewal reminder, queued for the Phase 4 sender; deduped per package. */
+  /**
+   * The guardian's renewal reminder, queued for the Phase 4 sender; deduped per package. Only while the
+   * renewal_due notification rule is on (off or unreadable: nothing queued, logged; the task still stands).
+   */
   async queueRenewal(m: RenewalMessage): Promise<void> {
+    if (!(await this.policy.isOn('renewal_due'))) {
+      this.log.log(`renewal_due off: ${m.dedupKey} not queued`);
+      return;
+    }
     const { error } = await this.db.from('messages').upsert(
       {
         direction: 'outbound',
