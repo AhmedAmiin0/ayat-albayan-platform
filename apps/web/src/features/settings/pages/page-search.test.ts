@@ -29,6 +29,18 @@ describe('«التواصل» ?tab=', () => {
     expect(communicationsSearch('templates')).toEqual({ tab: 'templates' });
   });
 
+  it('?audience= stays with «الإشعارات» only; an unknown audience is dropped', () => {
+    expect(parseCommunicationsSearch({ tab: 'catalogue', audience: 'teacher' })).toEqual({ tab: 'catalogue', audience: 'teacher' });
+    expect(parseCommunicationsSearch({ tab: 'catalogue', audience: 'nobody' })).toEqual({ tab: 'catalogue' });
+    expect(parseCommunicationsSearch({ tab: 'catalogue', audience: 2 })).toEqual({ tab: 'catalogue' });
+    expect(parseCommunicationsSearch({ tab: 'numbers', audience: 'teacher' })).toEqual({ tab: 'numbers' });
+    expect(parseCommunicationsSearch({ audience: 'teacher' })).toEqual({});
+    expect(communicationsSearch('catalogue', 'lead')).toEqual({ tab: 'catalogue', audience: 'lead' });
+    expect(communicationsSearch('catalogue')).toEqual({ tab: 'catalogue' });
+    expect(communicationsSearch('safety', 'lead')).toEqual({ tab: 'safety' });
+    expect(communicationsSearch('overview', 'lead')).toEqual({});
+  });
+
   it('the tab in view: the parsed one, else «نظرة عامة» (also for the moved `timing`)', () => {
     expect(shownTab({ tab: 'safety' })).toBe('safety');
     expect(shownTab({})).toBe('overview');

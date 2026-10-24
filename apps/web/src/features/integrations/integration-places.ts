@@ -5,10 +5,16 @@ import { matchesIntegration } from './integrations-form';
 // test guards and Kapso on «التواصل» › «الحماية», the old WhatsApp line rows folded on «الأرقام»
 // (still read while comms_source = legacy), and the rest on «التكاملات».
 
-/** «التواصل» › «الحماية»: the allow-list, the template sync, Kapso. */
-export const SAFETY_GROUPS: readonly IntegrationGroup[] = ['wa_safety', 'kapso'];
+/** «الحماية»'s first column: the test guards (allow-list, template sync). */
+export const SAFETY_GUARD_GROUPS: readonly IntegrationGroup[] = ['wa_safety'];
 
-/** «التواصل» › «الأرقام» › «إعداد الخطوط الحالي»: the two legacy WhatsApp lines. */
+/** «الحماية»'s second column: Kapso. */
+export const KAPSO_GROUPS: readonly IntegrationGroup[] = ['kapso'];
+
+/** «التواصل» › «الحماية»: the allow-list, the template sync, Kapso. */
+export const SAFETY_GROUPS: readonly IntegrationGroup[] = [...SAFETY_GUARD_GROUPS, ...KAPSO_GROUPS];
+
+/** «التواصل» › «الأرقام» › «إعداد الخطوط السابق»: the two legacy WhatsApp lines. */
 export const LEGACY_LINE_GROUPS: readonly IntegrationGroup[] = ['wa_notifications', 'wa_chat'];
 
 /** «التكاملات»: everything that is not messaging. */

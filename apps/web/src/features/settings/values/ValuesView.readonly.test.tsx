@@ -39,11 +39,11 @@ describe('«القيم» — read-only and module-owned rows', () => {
     expect(screen.queryByRole('button', { name: new RegExp(t.config.custom.add) })).toBeNull();
   });
 
-  it('«الإشعارات» rows are text with a link to «التواصل», never an editor', async () => {
+  it('«الإشعارات» rows are text with a link to «التواصل» › «الإشعارات», never an editor', async () => {
     renderValues(apiFetch, { search: { group: 'notifications' } });
     const row = await findRow(ts.reminderMinutesBefore);
     expect(within(row).queryByRole('spinbutton')).toBeNull();
-    expect(within(row).getByRole('link', { name: v.editFrom.communications }).getAttribute('href')).toContain('/admin/settings/communications');
+    expect(within(row).getByRole('link', { name: v.editFrom.communications }).getAttribute('href')).toBe('/admin/settings/communications?tab=catalogue');
     const table = screen.getByRole('table');
     expect(within(table).queryByRole('switch')).toBeNull();
     expect(within(table).queryByRole('textbox')).toBeNull();

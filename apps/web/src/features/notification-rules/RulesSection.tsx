@@ -1,3 +1,4 @@
+import type { NotificationAudience } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
@@ -32,13 +33,20 @@ function Loading() {
   );
 }
 
+interface RulesSectionProps {
+  onSaved: (message: string) => void;
+  drafts?: RuleDrafts | undefined;
+  /** The audience tab to start on (`?audience=`, from «نظرة عامة»); the tabs are local after that. */
+  audience?: NotificationAudience | undefined;
+}
+
 /**
  * «التواصل» › «الإشعارات» (docs/26b §3, docs/23b): every notification, one audience at a time, each
  * row editable on its own with notifications.manage (timing, channels, number, switch) and read-only
  * without it. GET /admin/notifications (v2: `rule`, `approval`, `reach`), GET /admin/numbers.
  * `drafts` comes from «التواصل» (so a tab switch keeps them); alone, the section holds its own.
  */
-export function RulesSection({ onSaved, drafts }: { onSaved: (message: string) => void; drafts?: RuleDrafts | undefined }) {
+export function RulesSection({ onSaved, drafts, audience }: RulesSectionProps) {
   const settings = useQuery(settingsQuery);
   const numbers = useQuery(numbersQuery);
   const canManage = canManageNotifications(usePermissions().permissions);
@@ -46,7 +54,7 @@ export function RulesSection({ onSaved, drafts }: { onSaved: (message: string) =
   const list = useCatalogue();
   const own = useRuleDrafts();
   const held = drafts ?? own;
-  const [tab, setTab] = useState<AudienceTab>('guardian');
+  const [tab, setTab] = useState<AudienceTab>(audience ?? 'guardian');
   const [live, setLive] = useState('');
   const api = { canManage, numbers: numbers.data ?? [], reach: list.data?.reach, onSaved, drafts: held, announce: setLive };
   const showFirstUnsaved = () => {

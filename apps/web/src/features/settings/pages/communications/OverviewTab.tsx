@@ -29,7 +29,7 @@ export function OverviewTab({ settings }: { settings: AcademySettings }) {
       </section>
       <div className="grid min-w-0 gap-6">
         <OverviewNumbers />
-        <OverviewWhat />
+        <OverviewWhat messagingOn={settings.messaging_enabled === true} />
         <PublicNumber e164={settings.academy_whatsapp_e164} />
       </div>
     </div>

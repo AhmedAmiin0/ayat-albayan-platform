@@ -1,5 +1,6 @@
 // The search params of the module pages under /admin/settings (docs/26b §3): the tab in view on
-// «التواصل» (`?tab=`), and Google's OAuth return (`?google=connected` / `?google=error&reason=…`).
+// «التواصل» (`?tab=`, and `?audience=` with «الإشعارات»), and Google's OAuth return (`?google=…`).
+import { NOTIFICATION_AUDIENCES, type NotificationAudience } from '@ab/shared';
 
 /** «التواصل»'s tabs in order (docs/23 §2d); «نظرة عامة» is the default (no `?tab=`). */
 export const COMMUNICATIONS_TABS = ['overview', 'numbers', 'catalogue', 'templates', 'safety'] as const;
@@ -10,6 +11,8 @@ export const MOVED_TIMING_TAB = 'timing';
 
 export interface CommunicationsSearch {
   tab?: CommunicationsTab | typeof MOVED_TIMING_TAB;
+  /** «الإشعارات» opens on this audience (a «ماذا يُرسل الآن» row); kept only with `tab=catalogue`. */
+  audience?: NotificationAudience;
 }
 
 /** The «القيم» groups that hold what «التواصل» shows read-only or no longer edits (VALUE_GROUPS ids). */
@@ -18,20 +21,29 @@ export const VALUES_GROUP = { timing: 'messages', academy: 'academy' } as const;
 const isTab = (value: unknown): value is CommunicationsTab =>
   typeof value === 'string' && (COMMUNICATIONS_TABS as readonly string[]).includes(value);
 
+const isAudience = (value: unknown): value is NotificationAudience =>
+  typeof value === 'string' && (NOTIFICATION_AUDIENCES as readonly string[]).includes(value);
+
 /**
  * Keeps a known tab only: the default, the old «الإرسال» (`sending`, its switches are on «نظرة عامة»)
- * and an unknown one leave no param; `timing` stays so the route can send it on to «القيم».
+ * and an unknown one leave no param; `timing` stays so the route can send it on to «القيم». A known
+ * `audience` stays with «الإشعارات» only; an unknown one is dropped.
  */
 export function parseCommunicationsSearch(search: Record<string, unknown>): CommunicationsSearch {
   if (search.tab === MOVED_TIMING_TAB) return { tab: MOVED_TIMING_TAB };
-  return isTab(search.tab) && search.tab !== 'overview' ? { tab: search.tab } : {};
+  if (!isTab(search.tab) || search.tab === 'overview') return {};
+  if (search.tab === 'catalogue' && isAudience(search.audience)) return { tab: search.tab, audience: search.audience };
+  return { tab: search.tab };
 }
 
 /** The tab in view for a parsed search («نظرة عامة» when none). */
 export const shownTab = (search: CommunicationsSearch): CommunicationsTab => (isTab(search.tab) ? search.tab : 'overview');
 
-/** The URL's search for a tab: the default tab leaves it empty. */
-export const communicationsSearch = (tab: CommunicationsTab): CommunicationsSearch => (tab === 'overview' ? {} : { tab });
+/** The URL's search for a tab (and «الإشعارات»' first audience): the default tab leaves it empty. */
+export function communicationsSearch(tab: CommunicationsTab, audience?: NotificationAudience): CommunicationsSearch {
+  if (tab === 'overview') return {};
+  return tab === 'catalogue' && audience ? { tab, audience } : { tab };
+}
 
 /**
  * `?tab=timing`: the two timing values live in «القيم» › «الرسائل» now (docs/26b §6a 1.16, 1.19), so

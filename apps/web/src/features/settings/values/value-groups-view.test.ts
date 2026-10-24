@@ -26,6 +26,8 @@ describe('«القيم» groups', () => {
 
   it('module views link to their page and never hold an editable key', () => {
     expect(OWNER_PAGE.notifications.to).toBe('/admin/settings/communications');
+    expect(OWNER_PAGE.notifications.search).toEqual({ tab: 'catalogue' });
+    expect(OWNER_PAGE.sending.search).toBeUndefined();
     expect(OWNER_PAGE.google.to).toBe('/admin/settings/google');
     for (const id of ['notifications', 'sending'] as const) {
       for (const key of groupKeys(id)) expect(EDITABLE_VALUE_KEYS).not.toContain(key);

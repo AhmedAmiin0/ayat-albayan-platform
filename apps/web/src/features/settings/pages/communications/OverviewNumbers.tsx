@@ -3,6 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Link } from '@tanstack/react-router';
 import { Ltr } from '@/components/ui/ltr';
 import { NuqtaGlyph } from '@/components/ui/nuqta-glyph';
+import { Skeleton } from '@/components/ui/skeleton';
 import { numbersQuery } from '@/features/numbers/numbers-api';
 import { t } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
@@ -48,12 +49,20 @@ export function OverviewNumbers() {
           {h.numbersOpen}
         </Link>
       </div>
-      {numbers.isError && <p className="text-sm text-ink-2">{n.loadError}</p>}
-      {numbers.data?.length === 0 && <p className="text-sm text-ink-2">{h.numbersEmpty}</p>}
+      {numbers.isPending && (
+        <div aria-busy="true" className="grid gap-2 py-2">
+          <span className="sr-only">{t.common.loading}</span>
+          <Skeleton className="w-2/3" />
+          <Skeleton className="w-1/2" />
+        </div>
+      )}
+      <div aria-live="polite">
+        {numbers.isError && <p className="text-sm text-ink-2">{n.loadError}</p>}
+        {numbers.data?.length === 0 && <p className="text-sm text-ink-2">{h.numbersEmpty}</p>}
+      </div>
       {numbers.data && numbers.data.length > 0 && (
         <div className="overflow-x-auto">
-          <table className="w-full border-collapse text-sm">
-            <caption className="sr-only">{h.numbersTitle}</caption>
+          <table aria-labelledby="overview-numbers" className="w-full border-collapse text-sm">
             <thead>
               <tr>
                 <th scope="col" className={TH}>

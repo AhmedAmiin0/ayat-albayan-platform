@@ -3,6 +3,7 @@ import {
   notificationEntry,
   SETTING_DEFAULTS,
   type AnyRuleTiming,
+  type NotificationAudience,
   type NotificationEntryView,
   type NotificationRuleView,
   type NotificationsOverview,
@@ -51,7 +52,13 @@ export function overview(patch: Partial<Record<string, Partial<NotificationEntry
 }
 
 /** «الإشعارات» with every GET it makes answered. */
-export function renderRules(input: { apiFetch: Mock; data?: NotificationsOverview; onSaved?: (m: string) => void; queued?: number }) {
+export function renderRules(input: {
+  apiFetch: Mock;
+  data?: NotificationsOverview;
+  onSaved?: (m: string) => void;
+  queued?: number;
+  audience?: NotificationAudience;
+}) {
   routeFetch(input.apiFetch, [
     ['/admin/notifications', input.data ?? overview()],
     ['/admin/numbers', NUMBERS],
@@ -59,7 +66,7 @@ export function renderRules(input: { apiFetch: Mock; data?: NotificationsOvervie
     ['/settings', SETTING_DEFAULTS],
     ['/messages/gate', { open: false, reason: 'switch_off', queued: input.queued ?? 0 }],
   ]);
-  return renderWithClient(<RulesSection onSaved={input.onSaved ?? (() => undefined)} />);
+  return renderWithClient(<RulesSection onSaved={input.onSaved ?? (() => undefined)} audience={input.audience} />);
 }
 
 /** The table row of one notification, once the list is in. */

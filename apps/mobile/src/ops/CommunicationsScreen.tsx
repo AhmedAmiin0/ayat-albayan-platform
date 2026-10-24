@@ -44,7 +44,7 @@ export function CommunicationsScreen() {
     <Screen>
       <SubScreenHeader title={t.settingsPages.communications} />
       <FilterPills accessibilityLabel={t.settingsPages.tabs} items={commsTabs()} value={tab} onChange={choose} />
-      <ScrollView ref={scroll} style={{ flex: 1 }} contentContainerStyle={{ gap: 20, paddingTop: 8, paddingBottom: 32 }}>
+      <ScrollView ref={scroll} style={{ flex: 1 }} contentContainerStyle={{ gap: 16, paddingTop: 8, paddingBottom: 32 }}>
         {tab === 'overview' ? <CommsOverview onOpenAudience={openAudience} onOpenNumbers={() => choose('numbers')} /> : null}
         {tab === 'notifications' ? <NotificationCatalogue key={audience ?? 'guardian'} initialAudience={audience} /> : null}
         {tab === 'numbers' ? <NumbersList /> : null}

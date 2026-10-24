@@ -1,3 +1,4 @@
+import type { NotificationAudience } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import type { ReactNode } from 'react';
 import { SettingsViewContext } from '@/components/settings/settings-view';
@@ -14,6 +15,8 @@ import { COMMUNICATIONS_TABS, type CommunicationsTab } from './page-search';
 export interface CommunicationsPageProps {
   /** The tab in view (`?tab=`, «نظرة عامة» by default). */
   tab: CommunicationsTab;
+  /** «الإشعارات» opens on this audience (`?audience=`); guardian when none. */
+  audience?: NotificationAudience | undefined;
   onTab: (tab: CommunicationsTab) => void;
   /** Asks before leaving the page with unsaved rule rows (the route passes LeaveGuard). */
   renderGuard?: (names: readonly string[]) => ReactNode;
@@ -31,7 +34,7 @@ const TABS = COMMUNICATIONS_TABS.map((value) => ({ value, label: tabLabel(value)
  * «الحماية» (CRM cut-over, test guards, Kapso). The sending state stays in the head on every tab. Only
  * the tab in view is mounted (its queries load on demand); the rule drafts live above the tabs.
  */
-export function CommunicationsPage({ tab, onTab, renderGuard }: CommunicationsPageProps) {
+export function CommunicationsPage({ tab, audience, onTab, renderGuard }: CommunicationsPageProps) {
   const settings = useQuery(settingsQuery);
   const meta = useQuery(settingsMetaQuery);
   return (
@@ -39,7 +42,7 @@ export function CommunicationsPage({ tab, onTab, renderGuard }: CommunicationsPa
       <ModuleHead title={t.settingsPages.communications}>{settings.data && <SendingState settings={settings.data} />}</ModuleHead>
       <Tabs label={t.settingsPages.tabs} tabs={TABS} value={tab} onChange={onTab} idPrefix={COMMUNICATIONS_TABS_ID} />
       {settings.data ? (
-        <CommunicationsBody tab={tab} settings={settings.data} renderGuard={renderGuard} />
+        <CommunicationsBody tab={tab} audience={audience} settings={settings.data} renderGuard={renderGuard} />
       ) : (
         <LoadState error={settings.isError} onRetry={() => void settings.refetch()} />
       )}

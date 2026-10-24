@@ -59,6 +59,15 @@ describe('«التواصل» (/admin/settings/communications)', () => {
     expect(screen.queryByRole('button', { name: t.common.save })).toBeNull();
   });
 
+  it('?audience= (a «ماذا يُرسل الآن» row) opens «الإشعارات» on that audience', async () => {
+    renderCommunications({ apiFetch, catalogue: CATALOGUE, tab: 'catalogue', audience: 'teacher' });
+    await screen.findByRole('region', { name: t.notificationRules.title });
+    const audience = t.notificationCatalogue.audience;
+    const selected = await screen.findByRole('tab', { name: new RegExp(audience.teacher), selected: true });
+    expect(selected).toBeTruthy();
+    expect(screen.getByRole('tab', { name: new RegExp(audience.guardian) }).getAttribute('aria-selected')).toBe('false');
+  });
+
   it('«الأرقام»: the numbers and the WhatsApp lines', async () => {
     renderCommunications({ apiFetch, tab: 'numbers' });
     expect(await screen.findByRole('heading', { name: t.numbers.title })).toBeTruthy();

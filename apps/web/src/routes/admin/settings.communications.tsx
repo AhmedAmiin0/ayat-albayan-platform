@@ -5,7 +5,7 @@ import { LeaveGuard } from '@/features/settings/values/LeaveGuard';
 
 /**
  * /admin/settings/communications «التواصل» — docs/23 §2d, docs/26b §3: one tab at a time (`?tab=`),
- * «نظرة عامة» by default. The old `?tab=timing` goes on to «القيم» › «الرسائل». Leaving the page with
+ * «نظرة عامة» by default; `?audience=` opens «الإشعارات» on that audience. The old `?tab=timing` goes on to «القيم» › «الرسائل». Leaving the page with
  * unsaved «الإشعارات» rows asks first, naming them (switching tabs keeps them, so it never asks).
  */
 export const Route = createFileRoute('/admin/settings/communications')({
@@ -18,11 +18,13 @@ export const Route = createFileRoute('/admin/settings/communications')({
 });
 
 function CommunicationsRoute() {
-  const tab = shownTab(Route.useSearch());
+  const search = Route.useSearch();
+  const tab = shownTab(search);
   const navigate = Route.useNavigate();
   return (
     <CommunicationsPage
       tab={tab}
+      audience={search.audience}
       onTab={(next) => void navigate({ search: communicationsSearch(next), replace: true })}
       renderGuard={(names) => <LeaveGuard names={names} />}
     />

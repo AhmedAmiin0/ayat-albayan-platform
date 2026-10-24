@@ -8,16 +8,17 @@ import { AppText } from '@/ui/AppText';
 import { Chevron } from '@/ui/Chevron';
 import { ErrorState } from '@/ui/ErrorState';
 import { useCatalogue } from '../notif-rules/use-catalogue';
+import { useSettings } from '../use-settings';
 import { sentCounts, type SentRow } from './sent-counts';
 
 const h = () => t.communicationsHub;
 
-/** One cell: the audience takes the room, the two counts are narrow and centred. */
+/** One cell: the audience takes the room (up to two lines), the two counts are narrow and centred. */
 function Cell({ text, wide, strong }: { text: string; wide?: boolean; strong?: boolean }) {
   const { color } = useTheme();
   return (
     <AppText
-      numberOfLines={1}
+      numberOfLines={wide ? 2 : 1}
       style={{
         flex: wide ? 2 : 1,
         textAlign: wide ? undefined : 'center',
@@ -55,14 +56,16 @@ function Row({ row, onOpen }: { row: SentRow; onOpen: (audience: NotificationAud
 
 /**
  * «ماذا يُرسل الآن» (docs/23 §2d mobile): per audience, how many notifications go out now and how
- * many do not, from GET /admin/notifications. A row opens «الإشعارات» on that audience.
+ * many do not, from GET /admin/notifications (the column heads say which is which, so no caption).
+ * A row opens «الإشعارات» on that audience. With WhatsApp messaging off, a line under the rows says
+ * the counted ones are in-app alerts only.
  */
 export function WhatIsSent({ onOpen }: { onOpen: (audience: NotificationAudience) => void }) {
   const query = useCatalogue();
   const data = query.data;
+  const settings = useSettings().data;
   return (
     <Section title={h().whatTitle}>
-      <Note>{h().whatCaption}</Note>
       {data ? (
         <View style={{ marginHorizontal: -16 }}>
           <View
@@ -83,6 +86,7 @@ export function WhatIsSent({ onOpen }: { onOpen: (audience: NotificationAudience
       ) : (
         <Note>{t.common.loading}</Note>
       )}
+      {data && settings && settings.messaging_enabled !== true ? <Note>{h().inAppOnlyNote}</Note> : null}
     </Section>
   );
 }

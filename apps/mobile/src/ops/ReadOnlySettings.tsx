@@ -5,8 +5,15 @@ import { Note } from '@/more/Note';
 import { Section } from '@/more/Section';
 import { ListRow } from '@/ui/ListRow';
 
-/** The switches that stay on the web: shown, never editable here (they send real WhatsApp messages). */
-export function ReadOnlySettings({ settings }: { settings: AcademySettings }) {
+/** Joins the web note with a caller's own line into one note (the overview stays one phone high). */
+export const readOnlyNoteText = (more?: string): string =>
+  more ? `${t.mobileAdmin.settings.readOnlyNote} ${more}` : t.mobileAdmin.settings.readOnlyNote;
+
+/**
+ * The switches that stay on the web: shown, never editable here (they send real WhatsApp messages).
+ * `note` adds a line to the web note instead of a block of its own.
+ */
+export function ReadOnlySettings({ settings, note }: { settings: AcademySettings; note?: string }) {
   const m = t.mobileAdmin.settings;
   const rows: [string, boolean][] = [
     [m.messagingEnabled, settings.messaging_enabled],
@@ -20,7 +27,7 @@ export function ReadOnlySettings({ settings }: { settings: AcademySettings }) {
           <ListRow key={label} title={label} trailing={<Note>{on ? m.on : m.off}</Note>} />
         ))}
       </View>
-      <Note>{m.readOnlyNote}</Note>
+      <Note>{readOnlyNoteText(note)}</Note>
     </Section>
   );
 }

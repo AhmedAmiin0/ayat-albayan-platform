@@ -48,7 +48,32 @@ describe('«التواصل» › «نظرة عامة»', () => {
     const on = guardians.filter((e) => e.state === 'on').length;
     expect(cells.slice(0, 2)).toEqual([String(on), String(guardians.length - on)]);
     const open = within(guardian).getByRole('link', { name: h.openAudience.replace('{audience}', t.notificationCatalogue.audience.guardian) });
-    expect(open.getAttribute('href')).toBe('/admin/settings/communications?tab=catalogue');
+    expect(open.getAttribute('href')).toBe('/admin/settings/communications?tab=catalogue&audience=guardian');
+    const teacher = within(rows[1] as HTMLElement).getByRole('link');
+    expect(teacher.getAttribute('href')).toBe('/admin/settings/communications?tab=catalogue&audience=teacher');
+    expect(table(h.whatCaption).parentElement?.className).toContain('overflow-x-auto');
+  });
+
+  it('with WhatsApp messaging off, a line says the counts are in-app alerts only', async () => {
+    renderCommunications({ apiFetch, catalogue: CATALOGUE, settings: { messaging_enabled: false } });
+    await screen.findByRole('table', { name: h.whatCaption });
+    expect(screen.getByText(h.inAppOnlyNote)).toBeTruthy();
+  });
+
+  it('with messaging on, no in-app-only line', async () => {
+    renderCommunications({ apiFetch, catalogue: CATALOGUE, settings: { messaging_enabled: true } });
+    await screen.findByRole('table', { name: h.whatCaption });
+    expect(screen.queryByText(h.inAppOnlyNote)).toBeNull();
+  });
+
+  it('the numbers: a busy skeleton while loading; the table is named by its heading, no repeated caption', async () => {
+    renderCommunications({ apiFetch });
+    const region = await screen.findByRole('region', { name: h.numbersTitle });
+    expect(region.querySelector('[aria-busy="true"]')).toBeTruthy();
+    const numbers = await screen.findByRole('table', { name: h.numbersTitle });
+    expect(numbers.querySelector('caption')).toBeNull();
+    expect(region.querySelector('[aria-busy="true"]')).toBeNull();
+    expect(region.querySelector('[aria-live="polite"]')).toBeTruthy();
   });
 
   it('«الرقم المعلن للأسر»: read-only, LTR, edited in «القيم» › «الأكاديمية»', async () => {

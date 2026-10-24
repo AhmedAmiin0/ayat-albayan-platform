@@ -3,6 +3,7 @@ import { t } from '@/lib/i18n';
 import { renderWithQuery } from '@/test/query';
 import { CommunicationsScreen } from './CommunicationsScreen';
 import { overviewAnswer } from './comms/comms-fixtures';
+import { readOnlyNoteText } from './ReadOnlySettings';
 
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();
@@ -15,6 +16,9 @@ jest.mock('expo-router', () => ({
   router: { back: jest.fn(), canGoBack: () => true, replace: jest.fn() },
 }));
 
+/** The web note, with what else is managed on the web folded into it. */
+const WEB_NOTE = readOnlyNoteText(t.communicationsHub.webOnly);
+
 beforeEach(() => {
   jest.clearAllMocks();
   mockApiFetch.mockImplementation(overviewAnswer);
@@ -24,9 +28,8 @@ test('«التواصل» opens on the overview: the send state is read-only, wit
   await renderWithQuery(<CommunicationsScreen />);
   expect(screen.getByRole('header', { name: t.settingsPages.communications })).toBeTruthy();
   expect(await screen.findByText(t.mobileAdmin.settings.messagingEnabled)).toBeTruthy();
-  expect(screen.getByText(t.mobileAdmin.settings.readOnlyNote)).toBeTruthy();
+  expect(screen.getByText(WEB_NOTE)).toBeTruthy();
   expect(screen.queryByLabelText(t.mobileAdmin.settings.messagingEnabled)).toBeNull();
-  expect(screen.getByText(t.communicationsHub.webOnly)).toBeTruthy();
   expect(screen.queryAllByRole('switch')).toHaveLength(0);
   expect(mockApiSend).not.toHaveBeenCalled();
 });
@@ -42,12 +45,12 @@ test('«التواصل» is three tabs (نظرة عامة · الإشعارات 
     { selected: false },
     { selected: false },
   ]);
-  expect(await screen.findByText(t.mobileAdmin.settings.readOnlyNote)).toBeTruthy();
+  expect(await screen.findByText(WEB_NOTE)).toBeTruthy();
   expect(screen.queryByText(t.notificationCatalogue.entries.report_ready.name)).toBeNull();
   await fireEvent.press(tab(t.settingsValues.groups.notifications));
   expect(tab(t.settingsValues.groups.notifications).props.accessibilityState).toEqual({ selected: true });
   expect(await screen.findByText(t.notificationCatalogue.entries.report_ready.name)).toBeTruthy();
-  expect(screen.queryByText(t.mobileAdmin.settings.readOnlyNote)).toBeNull();
+  expect(screen.queryByText(WEB_NOTE)).toBeNull();
   await fireEvent.press(tab(tabs.numbers));
   expect(screen.queryByText(t.notificationCatalogue.entries.report_ready.name)).toBeNull();
   expect(tab(tabs.numbers).props.accessibilityState).toEqual({ selected: true });

@@ -3,7 +3,9 @@ import { fireEvent, screen } from '@testing-library/react-native';
 import { t } from '@/lib/i18n';
 import { renderWithQuery } from '@/test/query';
 import { ltr } from '@/ui/Ltr';
+import { readOnlyNoteText } from '../ReadOnlySettings';
 import { closedGate, handCount, overviewAnswer, PUBLIC_PHONE } from './comms-fixtures';
+import { GATE_LINE_SEPARATOR } from './gate-words';
 import { CommsOverview } from './CommsOverview';
 
 const mockApiFetch = jest.fn();
@@ -27,22 +29,22 @@ beforeEach(() => {
 test('send state read-only with the server gate and queue; nothing to switch, nothing sent', async () => {
   await show();
   expect(await screen.findByText(t.mobileAdmin.settings.messagingEnabled)).toBeTruthy();
-  expect(screen.getByText(t.mobileAdmin.settings.readOnlyNote)).toBeTruthy();
-  expect(await screen.findByText(t.inbox.messagingOff)).toBeTruthy();
+  expect(screen.getByText(readOnlyNoteText(h.webOnly))).toBeTruthy();
+  const queued = t.templates.settings.queued.few.replace('{n}', String(closedGate.queued));
+  expect(await screen.findByText(`${t.inbox.messagingOff}${GATE_LINE_SEPARATOR}${queued}`)).toBeTruthy();
   expect(screen.getByText(t.templates.settings.off)).toBeTruthy();
-  expect(screen.getByText(t.templates.settings.queued.few.replace('{n}', String(closedGate.queued)))).toBeTruthy();
   expect(screen.queryAllByRole('switch')).toHaveLength(0);
   expect(screen.queryByLabelText(t.mobileAdmin.settings.messagingEnabled)).toBeNull();
   expect(mockApiSend).not.toHaveBeenCalled();
 });
 
-test('numbers: the first two with health, the third counted, a button to «الأرقام»', async () => {
+test('numbers: the first with its health, the other two counted, a button to «الأرقام»', async () => {
   await show();
   expect(await screen.findByText('Main line')).toBeTruthy();
-  expect(screen.getByText('Chat line')).toBeTruthy();
+  expect(screen.queryByText('Chat line')).toBeNull();
   expect(screen.queryByText('Spare line')).toBeNull();
   expect(screen.getByText(t.numbers.health.ok)).toBeTruthy();
-  expect(screen.getByText(h.mobile.moreNumbers.one)).toBeTruthy();
+  expect(screen.getByText(h.mobile.moreNumbers.two)).toBeTruthy();
   await fireEvent.press(screen.getByRole('button', { name: h.numbersOpen }));
   expect(onOpenNumbers).toHaveBeenCalledTimes(1);
 });
@@ -61,11 +63,31 @@ test('«ماذا يُرسل الآن»: one row per audience with its counts; a 
   expect(onOpenAudience).toHaveBeenCalledWith('teacher');
 });
 
-test('the number shown to families, left-to-right and read-only, then the web note', async () => {
+test('the number shown to families, left-to-right and read-only; the web line is not a block of its own', async () => {
   await show();
   expect(await screen.findByText(ltr(formatPhone(PUBLIC_PHONE)))).toBeTruthy();
   expect(screen.getByText(h.publicNumber)).toBeTruthy();
-  expect(screen.getByText(h.webOnly)).toBeTruthy();
+  expect(screen.queryByText(h.webOnly)).toBeNull();
+});
+
+test('messaging on: no in-app-only line; off: the counts are said to be in-app alerts only', async () => {
+  await show();
+  expect(await screen.findByRole('header', { name: h.whatTitle })).toBeTruthy();
+  await screen.findAllByRole('button', { name: new RegExp(h.colOn) });
+  expect(screen.queryByText(h.inAppOnlyNote)).toBeNull();
+});
+
+test('messaging off: «ماذا يُرسل الآن» says the counted rows are in-app alerts only', async () => {
+  mockApiFetch.mockImplementation(async (p: string) => (p === '/settings' ? { ...(await overviewAnswer(p) as object), messaging_enabled: false } : overviewAnswer(p)));
+  await show();
+  expect(await screen.findByText(h.inAppOnlyNote)).toBeTruthy();
+});
+
+test('open under the allow-list: the chip says so, never a plain «يعمل»', async () => {
+  mockApiFetch.mockImplementation(async (p: string) => (p === '/messages/gate' ? { open: true, reason: null, queued: 0, restricted: true } : overviewAnswer(p)));
+  await show();
+  expect(await screen.findByText(t.templates.settings.onRestricted)).toBeTruthy();
+  expect(screen.queryByText(t.templates.settings.on)).toBeNull();
 });
 
 test('no public number set: «غير محدد»', async () => {

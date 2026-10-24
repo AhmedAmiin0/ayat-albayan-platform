@@ -38,7 +38,7 @@ test('English: «Values» table and sheet', async () => {
 
 test('English: «Communications» keeps the read-only send state and the catalogue', async () => {
   await renderWithQuery(<CommunicationsScreen />);
-  expect(await screen.findByText(en.mobileAdmin.settings.readOnlyNote)).toBeTruthy();
+  expect(await screen.findByText(`${en.mobileAdmin.settings.readOnlyNote} ${en.communicationsHub.webOnly}`)).toBeTruthy();
   await fireEvent.press(screen.getByRole('tab', { name: en.settingsValues.groups.notifications }));
   expect(await screen.findByText(en.notificationCatalogue.entries.report_ready.name)).toBeTruthy();
 });

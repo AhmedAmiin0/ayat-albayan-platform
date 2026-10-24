@@ -60,4 +60,28 @@ describe('«التواصل» › «الحماية»', () => {
     expect(screen.queryByRole('group', { name: s.groups.livekit })).toBeNull();
     expect(screen.getByText(h.safetyIntro)).toBeTruthy();
   });
+
+  it('the CRM state chip sits in a polite live region (the toast keeps the only role=status)', async () => {
+    renderCommunications({ apiFetch, tab: 'safety' });
+    const chip = await screen.findByText(h.crmPendingState);
+    expect(chip.closest('[aria-live="polite"]')).toBeTruthy();
+    expect(screen.queryAllByRole('status')).toHaveLength(0);
+  });
+
+  it('emptying the allow-list asks first; only yes sends exactly {WA_ALLOWED_RECIPIENTS: null}', async () => {
+    const items = integrationItems().map((i) =>
+      i.key === 'WA_ALLOWED_RECIPIENTS' ? { ...i, value: '+201001234567', source: 'db' as const, set: true } : i,
+    );
+    renderCommunications({ apiFetch, tab: 'safety', integrations: items });
+    const guards = await screen.findByRole('region', { name: t.settingsPages.communicationsTabs.safety });
+    fireEvent.change(await within(guards).findByLabelText(s.keys.WA_ALLOWED_RECIPIENTS.label), { target: { value: '' } });
+    fireEvent.click(within(guards).getByRole('button', { name: s.saveValues }));
+    const dialog = screen.getByRole('dialog', { name: s.allowListEmptyTitle });
+    expect(within(dialog).getByText(s.allowListEmptyConfirm)).toBeTruthy();
+    expect(apiSend).not.toHaveBeenCalled();
+    apiSend.mockResolvedValue(integrationItems());
+    fireEvent.click(within(dialog).getByRole('button', { name: s.allowListEmptyYes }));
+    await waitFor(() => expect(apiSend).toHaveBeenCalledTimes(1));
+    expect(apiSend).toHaveBeenCalledWith('PUT', '/settings/integrations', { values: { WA_ALLOWED_RECIPIENTS: null } });
+  });
 });
