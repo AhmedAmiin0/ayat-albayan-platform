@@ -2760,7 +2760,9 @@
       "confirmDefault": "“{name}” will be sent from its role’s default number and, if that fails, from the role’s other numbers in fallback order.",
       "confirmYes": "Yes, change the number",
       "saved": "Sending number saved for “{name}”.",
-      "notApproved": "Number saved, but the template is not approved on it yet. Sync this number’s templates or submit the template on its account; until then the message goes out from the next number in order."
+      "notApproved": "Number saved, but the template is not approved on it yet. Sync this number’s templates or submit the template on its account; until then the message goes out from the next number in order.",
+      "unknownNumber": "Unknown number",
+      "disabledMark": "(stopped)"
     }
   },
   "mobileAdmin": {
@@ -5483,7 +5485,7 @@
     "templateSync": {
       "button": "Sync templates with this number",
       "busy": "Syncing templates…",
-      "done": "Sync complete: {{meta}} templates on the number’s account, {{synced}} updated for this number.",
+      "done": "Sync complete. Templates on the number’s account: {{meta}}; updated for this number: {{synced}}.",
       "failed": "Template sync failed: {{error}}",
       "errors": {
         "not_configured": "This number’s credentials are incomplete, so its templates cannot be read.",

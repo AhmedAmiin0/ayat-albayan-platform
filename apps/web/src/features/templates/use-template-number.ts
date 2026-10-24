@@ -23,12 +23,14 @@ export function useTemplateNumber(onNotice: (notice: Notice) => void) {
     mutationFn: setTemplateNumber,
     onSuccess: async (answer, { key }) => {
       const s = t.templates.sendFrom;
-      if (answer.not_approved_on_number) onNotice({ message: s.notApproved, tone: 'error' });
+      if (answer.not_approved_on_number) onNotice({ message: s.notApproved, tone: 'info' });
       else onNotice({ message: s.saved.replace('{name}', templateName(key)) });
       await queryClient.invalidateQueries({ queryKey: templatesQuery.queryKey, exact: true });
     },
     onError: (e) => onNotice({ message: templateErrorText(e), tone: 'error' }),
-    onSettled: () => setPicking(null),
+    // Only the pick that was saved: a newer one (if any) keeps its dialog.
+    onSettled: (_a, _e, { key, number_id }) =>
+      setPicking((cur) => (cur && cur.template.key === key && cur.numberId === number_id ? null : cur)),
   });
   const confirm = () =>
     picking && save.mutate({ key: picking.template.key, number_id: picking.numberId });

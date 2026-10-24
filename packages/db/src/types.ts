@@ -4271,6 +4271,7 @@ export type Database = {
       v_thread_numbers: {
         Row: {
           last_inbound_at: string | null;
+          line: Database['public']['Enums']['wa_line'] | null;
           number_id: string | null;
           phone_e164: string | null;
         };

@@ -59,10 +59,18 @@ export class TemplateRegistry implements OnApplicationBootstrap, OnModuleDestroy
     }
   }
 
-  /** Each row with number_id and its approvals per number (numbers[], docs/23 phase 5): one extra read. */
+  /**
+   * Each row with number_id and its approvals per number (numbers[], docs/23 phase 5): one extra read. An
+   * unreadable approvals table (e.g. the API deployed before migration 633) lists the rows without numbers[].
+   */
   async list(): Promise<TemplateView[]> {
-    const [rows, approvals] = await Promise.all([this.queries.all(), this.queries.approvals()]);
-    return withNumbers(rows, approvals);
+    const [rows, approvals] = await Promise.all([this.queries.all(), this.queries.approvals().catch((e: unknown) => this.noApprovals(e))]);
+    return approvals ? withNumbers(rows, approvals) : rows.map((row) => toTemplateView(row));
+  }
+
+  private noApprovals(e: unknown): null {
+    this.log.warn(`template numbers unread, listing without them: ${errText(e)}`);
+    return null;
   }
 
   /** The row when `key` is approved, else null (B2: H4 answers 409 template_not_approved). */

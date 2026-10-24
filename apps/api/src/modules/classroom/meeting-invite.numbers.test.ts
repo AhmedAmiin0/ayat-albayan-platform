@@ -28,7 +28,7 @@ afterEach(() => setNumbersOverlay(null));
 describe('meeting invite chat per number', () => {
   it('queues with number_id + line of the open window', async () => {
     setNumbersOverlay({ values: {}, numberIds: {}, numbers: NUMBERS });
-    const { threads, send } = setup(async () => [{ numberId: CHAT_TWO.id, lastInboundAt: FRESH }]);
+    const { threads, send } = setup(async () => [{ numberId: CHAT_TWO.id, line: 'chat', lastInboundAt: FRESH }]);
     expect(await send()).toEqual({ status: 'sent', channel: 'whatsapp', error_code: null });
     expect(threads.numberWindows).toHaveBeenCalledWith(OPEN_PHONE);
     expect(threads.enqueue).toHaveBeenCalledWith(expect.objectContaining({ number_id: 'num-chat-2', line: 'chat' }));
@@ -36,7 +36,7 @@ describe('meeting invite chat per number', () => {
 
   it('records today\'s codes: line_not_configured, session_closed, and a failed read fails closed', async () => {
     setNumbersOverlay({ values: {}, numberIds: {}, numbers: NUMBERS });
-    const off = setup(async () => [{ numberId: CHAT_OFF.id, lastInboundAt: FRESH }]);
+    const off = setup(async () => [{ numberId: CHAT_OFF.id, line: 'chat', lastInboundAt: FRESH }]);
     expect(await off.send()).toEqual({ status: 'window_closed', channel: 'link', error_code: 'line_not_configured' });
     const shut = setup(async () => []);
     expect(await shut.send(CLOSED_PHONE)).toEqual({ status: 'window_closed', channel: 'link', error_code: 'session_closed' });

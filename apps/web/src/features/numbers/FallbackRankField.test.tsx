@@ -1,7 +1,8 @@
-import { fireEvent, screen, waitFor, within } from '@testing-library/react';
+import { act, fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n';
 import { numberView } from './numbers.fixture';
+import { numbersQuery } from './numbers-api';
 import { renderPanel } from './numbers-test-kit';
 
 const apiFetch = vi.hoisted(() => vi.fn());
@@ -30,6 +31,10 @@ describe('«ترتيب البديل»', () => {
     const input = c.getByRole('spinbutton', { name: r.label });
     expect((input as HTMLInputElement).value).toBe('100');
     fireEvent.change(input, { target: { value: '1000' } });
+    // Not on every keystroke: only once the field is left (or submitted).
+    expect(input.getAttribute('aria-invalid')).toBeNull();
+    expect(c.queryByRole('alert')).toBeNull();
+    fireEvent.blur(input);
     expect(input.getAttribute('aria-invalid')).toBe('true');
     expect(c.getByRole('alert').textContent).toContain(r.invalid);
     fireEvent.click(c.getByRole('button', { name: r.save }));
@@ -46,6 +51,23 @@ describe('«ترتيب البديل»', () => {
     fireEvent.click(c.getByRole('button', { name: r.save }));
     await waitFor(() => expect(apiSend).toHaveBeenCalledWith('PATCH', '/admin/numbers/num-1', { fallback_rank: 7 }));
     await waitFor(() => expect(onSaved).toHaveBeenCalledWith(r.saved));
+  });
+
+  it('a submit with a bad value says so without a blur', async () => {
+    renderPanel(apiFetch);
+    const c = await card();
+    fireEvent.change(c.getByRole('spinbutton', { name: r.label }), { target: { value: '' } });
+    expect(c.queryByRole('alert')).toBeNull();
+    fireEvent.click(c.getByRole('button', { name: r.save }));
+    expect(c.getByRole('alert').textContent).toContain(r.invalid);
+    expect(apiSend).not.toHaveBeenCalled();
+  });
+
+  it('a refetched rank resets the input (no stale value)', async () => {
+    const { client } = renderPanel(apiFetch);
+    const c = await card();
+    act(() => client.setQueryData(numbersQuery.queryKey, [numberView({ fallback_rank: 42 })]));
+    await waitFor(() => expect((c.getByRole('spinbutton', { name: r.label }) as HTMLInputElement).value).toBe('42'));
   });
 
   it('without numbers.manage the rank is text', async () => {

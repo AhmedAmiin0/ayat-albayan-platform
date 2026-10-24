@@ -2,7 +2,8 @@
 // guards, services, registry and MessageViews; the DB-facing queries, the line clients, the gate and
 // the sender are mocks. `client` = notifications, `chatClient` = chat (docs/12 §13.16): both
 // configured by default; files that reset all mocks re-prime `configured` in beforeEach.
-import type { ChatListRef, NumberWindow, ThreadLesson, ThreadPeople } from '@ab/shared';
+import type { ThreadWindow } from './send-number';
+import type { ChatListRef, ThreadLesson, ThreadPeople } from '@ab/shared';
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
 import { vi } from 'vitest';
@@ -45,7 +46,7 @@ function mocks() {
     queries: {
       ...{ list: vi.fn(), thread: vi.fn(), messages: vi.fn(), markInboundRead: vi.fn(), enqueue: vi.fn(), get: vi.fn() },
       lessonTeacher: vi.fn(),
-      numberWindows: vi.fn(async (): Promise<NumberWindow[]> => []),
+      numberWindows: vi.fn(async (): Promise<ThreadWindow[]> => []),
       known: vi.fn(async (): Promise<KnownNumber | null> => null),
       lessons: vi.fn(async (): Promise<ThreadLesson[]> => []),
       people: vi.fn(async () => NO_PEOPLE),

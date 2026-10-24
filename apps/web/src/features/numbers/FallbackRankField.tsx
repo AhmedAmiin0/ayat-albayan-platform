@@ -14,7 +14,9 @@ const r = t.numbers.fallbackRank;
 
 /**
  * «ترتيب البديل» (docs/23c decisions 3, 9): the number's place among its role's fallbacks (0–999, lower
- * first). numbers.manage edits it through the number PATCH; without it the value is text.
+ * first). numbers.manage edits it through the number PATCH; without it the value is text. A bad value
+ * is said on blur or submit, not on every keystroke. NumberCard keys it by id + saved rank, so a
+ * refetched rank resets the input.
  */
 export function FallbackRankField({ view, manage }: { view: NumberView; manage: boolean }) {
   const [text, setText] = useState(String(view.fallback_rank));
@@ -56,10 +58,8 @@ export function FallbackRankField({ view, manage }: { view: NumberView; manage: 
             dir="ltr"
             className="max-w-36"
             value={text}
-            onChange={(e) => {
-              setText(e.target.value);
-              setTouched(true);
-            }}
+            onChange={(e) => setText(e.target.value)}
+            onBlur={() => setTouched(true)}
           />
         )}
       </Field>

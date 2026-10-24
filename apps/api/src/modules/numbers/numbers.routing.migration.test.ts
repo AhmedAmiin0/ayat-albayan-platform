@@ -26,8 +26,8 @@ describe('migration 20261024000633: routing per number', () => {
     expect(code).toContain('revoke insert, update, delete, truncate, references, trigger on public.message_template_numbers from authenticated');
   });
 
-  it('v_thread_numbers: inbound per (phone, number), service role only; v_threads untouched', () => {
-    expect(code).toMatch(/where direction = 'inbound' and number_id is not null\s+group by phone_e164, number_id/);
+  it('v_thread_numbers: inbound per (phone, number, line), service role only; v_threads untouched', () => {
+    expect(code).toMatch(/where direction = 'inbound'\s+group by phone_e164, number_id, coalesce\(line, 'notifications'::public\.wa_line\)/);
     expect(code).toContain('revoke all on public.v_thread_numbers from anon, authenticated');
     expect(code).not.toMatch(/view public\.v_threads\b/);
   });

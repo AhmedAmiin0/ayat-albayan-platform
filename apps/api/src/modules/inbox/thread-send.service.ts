@@ -1,11 +1,11 @@
-import { restrictedMay, type NumberWindow, type ThreadTemplate, type ThreadText, type WaLine } from '@ab/shared';
+import { restrictedMay, type ThreadTemplate, type ThreadText, type WaLine } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
 import { TemplateRegistry } from '../whatsapp/template.registry';
 import { waHttpError } from '../whatsapp/template.mapper';
 import type { SalesScope } from '../sales/sales-scope';
 import { Outbox, type Sent } from './outbox';
 import { assertCanSend, type TeacherScope } from './teacher-scope';
-import { pickSend } from './send-number';
+import { pickSend, type ThreadWindow } from './send-number';
 import { missingParams, type ThreadRow } from './threads.mapper';
 import { ThreadsQueries } from './threads.queries';
 
@@ -54,7 +54,7 @@ export function outboundBase<T>(s: ThreadSend<T>, thread: ThreadRow | null) {
  */
 export async function sendLine(
   thread: ThreadRow | null,
-  at: { now: Date; windows: () => Promise<readonly NumberWindow[]> },
+  at: { now: Date; windows: () => Promise<readonly ThreadWindow[]> },
 ): Promise<{ line?: WaLine; number_id?: string }> {
   const picked = await pickSend({ thread, now: at.now, windows: at.windows });
   if (!('code' in picked)) return picked;

@@ -44,19 +44,22 @@ create policy message_template_numbers_admin_read on public.message_template_num
 revoke all on public.message_template_numbers from anon;
 revoke insert, update, delete, truncate, references, trigger on public.message_template_numbers from authenticated;
 
--- Per-(phone, number) reply windows: the newest inbound row per phone and number. Only rows stamped with
--- a number (module mode) appear; older rows keep their line windows in v_threads, which is unchanged.
+-- Per-(phone, number) reply windows: the newest inbound row per phone and number. Rows stamped with a
+-- number (module mode) give that number's window; rows with no number (history, legacy) give one row per
+-- line (number_id null, a null line counting as notifications, as in v_threads), so the API credits ONLY
+-- unstamped history to a role's default number. v_threads is unchanged.
 create or replace view public.v_thread_numbers with (security_invoker = true) as
-  select phone_e164, number_id, max(created_at) as last_inbound_at
+  select phone_e164, number_id, coalesce(line, 'notifications'::public.wa_line) as line,
+    max(created_at) as last_inbound_at
   from public.messages
-  where direction = 'inbound' and number_id is not null
-  group by phone_e164, number_id;
+  where direction = 'inbound'
+  group by phone_e164, number_id, coalesce(line, 'notifications'::public.wa_line);
 revoke all on public.v_thread_numbers from anon, authenticated;
 grant select on public.v_thread_numbers to service_role;
 
 -- The window lookup reads one phone's inbound rows by number.
 create index if not exists messages_inbound_phone_number_idx on public.messages (phone_e164, number_id, created_at desc)
-  where direction = 'inbound' and number_id is not null;
+  where direction = 'inbound';
 
 -- MANUAL ROLLBACK (only after the code rollback):
 --   drop index if exists public.messages_inbound_phone_number_idx;

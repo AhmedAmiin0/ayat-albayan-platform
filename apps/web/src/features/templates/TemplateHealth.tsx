@@ -29,10 +29,11 @@ export function TemplateHealth({ headingId }: { headingId: string }) {
   const a = useTemplateActions();
   const { setSubmitting, setMoving, toggleStarter, savingStarter: saving } = a;
   const { phones, factsOf } = lines;
-  const manage = usePermissions().can('templates.manage');
-  const numbers = useQuery(numbersQuery).data;
+  const { can } = usePermissions();
+  const manage = can('templates.manage');
+  const numbers = useQuery({ ...numbersQuery, enabled: can('settings.read') }).data;
   const pick = useTemplateNumber(a.setNotice);
-  const { setPicking } = pick;
+  const { setPicking, busy: pickBusy } = pick;
   const columns = useMemo(
     () =>
       templateColumns({
@@ -42,9 +43,9 @@ export function TemplateHealth({ headingId }: { headingId: string }) {
         saving,
         phones,
         factsOf,
-        sendFrom: { numbers, manage, onPick: (template, numberId) => setPicking({ template, numberId }) },
+        sendFrom: { numbers, manage, busy: pickBusy, onPick: (template, numberId) => setPicking({ template, numberId }) },
       }),
-    [setSubmitting, setMoving, toggleStarter, saving, phones, factsOf, numbers, manage, setPicking],
+    [setSubmitting, setMoving, toggleStarter, saving, phones, factsOf, numbers, manage, setPicking, pickBusy],
   );
   const rows = templates.data ?? [];
 

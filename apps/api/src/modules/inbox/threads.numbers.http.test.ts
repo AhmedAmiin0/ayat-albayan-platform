@@ -31,14 +31,14 @@ describe('inbox replies per number (module mode)', () => {
   const enqueued = () => t.queries.enqueue.mock.calls[0]?.[0] as Record<string, unknown>;
 
   it('queued with number_id + line = purpose of the newest open sendable window', async () => {
-    t.queries.numberWindows.mockResolvedValue([{ numberId: CHAT_TWO.id, lastInboundAt: FRESH }]);
+    t.queries.numberWindows.mockResolvedValue([{ numberId: CHAT_TWO.id, line: 'chat', lastInboundAt: FRESH }]);
     expect((await t.call(TEXT)).statusCode).toBe(201);
     expect(t.queries.numberWindows).toHaveBeenCalledWith(PHONE);
     expect(enqueued()).toMatchObject({ number_id: 'num-chat-2', line: 'chat', body: 'أهلًا' });
   });
 
   it('only a disabled number open → 503 line_not_configured; none open → 409; nothing queued', async () => {
-    t.queries.numberWindows.mockResolvedValue([{ numberId: CHAT_OFF.id, lastInboundAt: FRESH }]);
+    t.queries.numberWindows.mockResolvedValue([{ numberId: CHAT_OFF.id, line: 'chat', lastInboundAt: FRESH }]);
     const off = await t.call(TEXT);
     expect([off.statusCode, off.json().code]).toEqual([503, 'line_not_configured']);
     t.queries.numberWindows.mockResolvedValue([]);

@@ -1,10 +1,10 @@
-import { templateStatusStyle, type NumberView, type TemplateLineView, type TemplateView, type WaLine } from '@ab/shared';
+import { templateStatusStyle, type TemplateLineView, type TemplateView, type WaLine } from '@ab/shared';
 import { createColumnHelper } from '@tanstack/react-table';
 import type { DataTableFeatures } from '@/components/DataTable';
 import { StatusChip } from '@/components/ui/status-chip';
 import { fullTime } from '@/features/inbox/format';
 import { t } from '@/lib/i18n';
-import { SendFromCell } from './SendFromCell';
+import { SendFromCell, type SendFromCellProps } from './SendFromCell';
 import { StarterToggle } from './StarterToggle';
 import { otherLine } from './api';
 import { Label, NameCell, NumberCell, RowActions, templateName } from './template-cells';
@@ -27,7 +27,7 @@ export interface TemplateColumnsInput {
   /** The key whose starter flag is being saved: its switch waits. */
   saving: string | null;
   /** «يُرسل من» (docs/23c decision 9): the numbers, templates.manage, and a pick (confirmed by the caller). */
-  sendFrom: { numbers: readonly NumberView[] | undefined; manage: boolean; onPick: (tpl: TemplateView, id: string | null) => void };
+  sendFrom: Omit<SendFromCellProps, 'tpl'>;
 }
 
 /**

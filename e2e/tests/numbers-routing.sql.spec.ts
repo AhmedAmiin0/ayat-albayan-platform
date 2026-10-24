@@ -15,7 +15,7 @@ async function number(tx: Tx, phoneNumberId: string): Promise<string> {
 test.describe('routing per number (migration 633)', () => {
   test.beforeEach(() => test.skip(test.info().project.name !== 'desktop', 'database only: one run'));
 
-  test('v_thread_numbers: newest inbound per (phone, number); outbound and unstamped rows never count', async () => {
+  test('v_thread_numbers: newest inbound per (phone, number); unstamped history apart, per line; outbound never counts', async () => {
     await rolledBack(async (tx) => {
       const phone = '+966500000931';
       const a = await number(tx, 'e2e-route-a');
@@ -24,10 +24,15 @@ test.describe('routing per number (migration 633)', () => {
         await tx`insert into public.messages (direction, phone_e164, body, number_id, created_at)
           values (${dir}, ${phone}, 'e2e routing', ${id}, now() - make_interval(mins => ${mins}))`;
       }
-      const rows = await tx<{ number_id: string; mins: number }[]>`
-        select number_id, round(extract(epoch from now() - last_inbound_at) / 60)::int as mins
+      const rows = await tx<{ number_id: string | null; line: string; mins: number }[]>`
+        select number_id, line, round(extract(epoch from now() - last_inbound_at) / 60)::int as mins
         from public.v_thread_numbers where phone_e164 = ${phone} order by mins`;
-      expect(rows).toEqual([{ number_id: a, mins: 20 }, { number_id: b, mins: 50 }]);
+      // The unstamped row (no line = notifications) never lends its time to a stamped number.
+      expect(rows).toEqual([
+        { number_id: null, line: 'notifications', mins: 2 },
+        { number_id: a, line: 'notifications', mins: 20 },
+        { number_id: b, line: 'notifications', mins: 50 },
+      ]);
     });
   });
 

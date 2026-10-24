@@ -5,7 +5,7 @@ import { N2, THREE } from './number-route.fakes';
 import type { RouteQueries } from './route.queries';
 import { templateRow } from './whatsapp.fakes';
 
-// One module-mode pass's routing input (docs/23c); a failed rules read never fails the pass.
+// One module-mode pass's routing input (docs/23c); a failed rules read fails the pass (nothing sends).
 
 const queries = () => ({ approvals: vi.fn(async () => new Map()), templates: vi.fn(async () => [templateRow()]) });
 const reader = (snapshot: RulesReader['snapshot']) => ({ snapshot }) as unknown as RulesReader;
@@ -21,9 +21,9 @@ describe('NumberRoutes.pass', () => {
     expect(templates).toEqual([templateRow()]);
   });
 
-  it('rules unreadable (or no reader) → no rule numbers, never a throw', async () => {
+  it('rules unreadable → the pass throws (never a number the rule did not pick); no reader → no rule numbers', async () => {
     const failing = new NumberRoutes(queries() as unknown as RouteQueries, reader(vi.fn(async () => Promise.reject(new Error('db down')))));
-    expect((await failing.pass(THREE)).pass.ruleNumbers.size).toBe(0);
+    await expect(failing.pass(THREE)).rejects.toThrow('db down');
     expect((await new NumberRoutes(queries() as unknown as RouteQueries).pass(THREE)).pass.ruleNumbers.size).toBe(0);
   });
 

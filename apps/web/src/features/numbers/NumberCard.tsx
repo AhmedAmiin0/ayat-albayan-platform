@@ -48,7 +48,7 @@ export function NumberCard({ view, manage }: { view: NumberView; manage: boolean
           <NumberSecretRow key={name} view={view} name={name} manage={manage} />
         ))}
       </div>
-      <FallbackRankField view={view} manage={manage} />
+      <FallbackRankField key={`${view.id}:${view.fallback_rank}`} view={view} manage={manage} />
       <NumberTemplateSync view={view} />
       <NumberDetails view={view} />
       {manage && <NumberActions view={view} />}
