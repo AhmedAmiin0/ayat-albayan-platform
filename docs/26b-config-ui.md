@@ -46,8 +46,8 @@ mockup annotation): see §7b «Heights».
   `google_sync_alert` bell link → `/admin/settings/google`; `#settings-messaging` → «التواصل» (until docs/23 phase 6
   the page shows today's messaging section unchanged); `#settings-<group>` → `/admin/settings/values?group=<group>`,
   which opens that group's view.
-- **Until docs/23 phase 6** «التواصل» is today's messaging section on its own page; phase 6 replaces it with the tabs
-  drawn in `notifications.html`.
+- **Built (docs/23 phase 6, 2026-10-24):** «التواصل» has the tabs drawn in `notifications.html` (نظرة عامة · الأرقام ·
+  الإشعارات · القوالب · الحماية); `/admin/communications` redirects to `/admin/settings/communications` with its query.
 
 ## 2. «القيم» — the key/value/description table
 
