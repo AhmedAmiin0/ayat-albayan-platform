@@ -6,7 +6,7 @@ import { retry, sleep } from '../report-pdf/retry';
 import { MessageDispatch } from './message.dispatch';
 import { authSubject, RECORD_DELAYS_MS, sendingAt, UNRECORDED, type FailedInput, type SendJob, type SendOutcome } from './message.job';
 import type { NumberRoute } from './number-route';
-import { failurePlan, messageLabel, readyToSend, SENDING } from './send-plan';
+import { CRM_RATE_LIMITED, failurePlan, messageLabel, readyToSend, SENDING } from './send-plan';
 import { AUTO_OFF, dropReason, isAutomatic } from './send-stale';
 import { SenderQueries, type DueMessage } from './sender.queries';
 import type { WaSent } from './whatsapp.types';
@@ -94,6 +94,8 @@ export class MessageWorker {
     const { row, now, line, route } = input;
     const plan = failurePlan(input);
     await this.queries.failure(row.id, plan);
+    // The CRM's rate limit (per key): the line waits for Retry-After this pass; not a token failure, no push.
+    if (plan.error_code === CRM_RATE_LIMITED) return 'paused';
     if (plan.attempts !== undefined) {
       // The token, not the message: rows wait; one push a day (fixed in Business Manager).
       this.log.error(`WhatsApp refused the token (${plan.error_code}); sending paused: ${plan.error_text}`);

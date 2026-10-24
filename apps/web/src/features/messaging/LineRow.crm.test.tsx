@@ -43,6 +43,6 @@ describe('LineRow on a crm line', () => {
     const errors: LineCheckView['errors'] = [{ step: 'crm_me', code: null, message: 'CRM refused the API key', credential: 'crm' }];
     render(<LineRow line="notifications" view={{ ...crmView, crm_webhook_secret: false, crm_send_scope: null, errors }} />);
     expect(screen.getByText(s.webhookCrmNoSecret).closest('[data-tone]')?.getAttribute('data-tone')).toBe('act');
-    expect(screen.getByText(t.messages.errors.crm_auth)).toBeTruthy();
+    expect(screen.getByText(t.templates.error.crm_auth)).toBeTruthy();
   });
 });

@@ -31,11 +31,13 @@ export function lineGaps(env: Env, line: WaLine): string[] {
 }
 
 /**
- * The chat line is the notifications line's number: its phone id is the notifications one (any driver), or
- * both lines are on crm (one CRM account = one number, docs/19). That line stays off.
+ * The chat line is the notifications line's number: its phone id is the notifications one (a meta / kapso
+ * chat line), or both lines are on crm (one CRM account = one number, docs/19). That line stays off. A crm
+ * chat line has no phone id of ours, so a leftover WA_CHAT_PHONE_NUMBER_ID never flags it (crmLine sends).
  */
 export function duplicatePhone(env: Env, line: WaLine): boolean {
-  return line === 'chat' && (duplicateChatPhone(env) || bothOnCrm(env));
+  if (line !== 'chat') return false;
+  return bothOnCrm(env) || (lineProvider(env, 'chat') !== 'crm' && duplicateChatPhone(env));
 }
 
 /** The boot log's words for a duplicate chat phone id («افحص الخطوط» shows duplicate_chat_phone instead). */

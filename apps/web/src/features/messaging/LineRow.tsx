@@ -25,7 +25,7 @@ const GLYPH = { ok: 'fill', act: 'struck', bad: 'struck', neutral: 'half' } as c
 /** Long app names / override URLs wrap at phone width (no horizontal page scroll). */
 const WRAP = 'whitespace-normal break-all';
 const ERRORS: Record<string, string | undefined> = t.messages.errors;
-const CREDENTIAL = { kapso: t.messages.errors.kapso_auth, crm: t.messages.errors.crm_auth } as const;
+const CREDENTIAL = { kapso: t.messages.errors.kapso_auth, crm: t.templates.error.crm_auth } as const;
 /** A known Meta code in words, or Kapso / the CRM refusing its key in its own words (docs/19). */
 const known = (e: LineCheckView['errors'][number]): string | undefined =>
   e.credential ? CREDENTIAL[e.credential] : e.code === null ? undefined : ERRORS[String(e.code)];

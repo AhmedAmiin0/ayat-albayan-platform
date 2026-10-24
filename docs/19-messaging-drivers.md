@@ -86,15 +86,18 @@ line stays off (`duplicate_chat_phone`, boot log `WA_CHAT_PROVIDER (crm, same as
 | wamid | `data.whatsapp_message_id` (a 2xx without it = `uncertain`) |
 | markRead | no-op (the CRM owns the conversation) |
 | Template list / submit / samples / inbound media | `WaError {unsupported:'crm'}`: the sync answers `crm_managed` (no call, **no row touched**: nothing is marked missing or not_submitted), submit is 409 `crm_managed`, a number's sync `crm_managed`, inbound media 409 `crm_no_media`; `canUploadSamples()` false |
-| 401 / 403 | `credential: 'crm'`: the queue is held 15 min, uncounted, line paused; rows read `crm_auth` («رفض نظام CRM مفتاح الواجهة…») |
-| 429 | queued until `Retry-After` (default 1 min, max 1 h), uncounted, `crm_rate_limited` (120 req/min per key) |
-| 502 `meta_error`, 500 `template_malformed`, any other 4xx | failed at once with `crm_<code>` and the CRM's message (nothing was sent) |
+| 401 / 403, 400 `whatsapp_not_configured` | `credential: 'crm'` (the key, or the CRM's own WhatsApp connection, is down: the line, not the message): the queue is held 15 min, uncounted, line paused, one push a day; rows read `crm_auth` («رفض نظام CRM مفتاح الواجهة…») |
+| 429 | queued until `Retry-After` (default 1 min, max 1 h), uncounted, `crm_rate_limited` (120 req/min per key); the line pauses for the rest of the pass, **no** «token refused» push |
+| 502 `meta_error`, 500 `template_malformed`, any other 4xx, a 3xx | failed at once with `crm_<code>` and the CRM's message (nothing was sent). Redirects are never followed (`redirect: 'manual'`); a body that is not the CRM's envelope is kept as `http_<status>` only |
 | 500 `internal`, other 5xx, a timeout, a connection lost after the request left | `uncertain` (the CRM may have reached Meta before failing its own insert). **No idempotency key: never resent automatically** |
 
 The `WA_ALLOWED_RECIPIENTS` allow-list and `messaging_enabled` gate are unchanged and run before any client.
 One factory (`client-factory.ts` `whatsappClient`) builds every line's and number's client. Module mode: a
 `wa_numbers` row with `provider = 'crm'` (migration 640 widens the check) sends with `WACRM_API_BASE` /
-`WACRM_API_KEY`, like a kapso number with Kapso's project key; its `phone_number_id` only names it.
+`WACRM_API_KEY`, like a kapso number with Kapso's project key; its `phone_number_id` only names it. A crm
+number's template approval is `message_templates.status` (the hand-set one): routing ignores any
+`message_template_numbers` row it kept from its meta days, and a meta number's sync never writes to a crm
+number on the same `waba_id`.
 
 **Template status on a crm line.** The queue gate (teacher-alert.plan.ts, confirmations) and the send gate
 (sender.queries.ts) read `message_templates.status` from our db, and a crm line is never synced. So on
@@ -103,7 +106,9 @@ and two buttons: «علِّمه معتمدًا في نظام CRM» (`approved`, 
 it at once) / «علِّمه غير متاح» (`missing`) → `PUT /messaging/templates/:key/crm-status`
 (templates.manage, audited `template_crm_status_set`; 409 `not_crm_line` on any other line). No sync
 overwrites it while the line stays on crm. Moving a template to a crm line resets it to not_submitted as
-any move does; set it by hand afterwards.
+any move does; set it by hand afterwards. **Switching a line to crm keeps every status from the last Meta
+sync**: an `approved` row starts going to the CRM as soon as `WA_PROVIDER` is saved (the
+`WA_ALLOWED_RECIPIENTS` guard covers steps 4–6 below), so review every row of that line (step 5).
 
 **Webhook `POST /webhooks/wacrm`** (public, raw body, never in the activity log). `X-Wacrm-Signature:
 t=<unix>,v1=<hex>` with v1 = HMAC-SHA256(`WACRM_WEBHOOK_SECRET`, `${t}.${rawBody}`), constant-time; `t` more
@@ -118,7 +123,8 @@ Never sends anything.
 a test message.
 
 **Limits.** No template sync or submit from here (submit and approve in the CRM, which syncs from Meta);
-the CRM must hold **the same template names and languages** as our registry (`meta_name`, `language`); no
+the CRM must hold **the same template names and languages** as our registry (`meta_name`, `language`), and
+**the same buttons in the same order** (`buttonParams` is keyed by the button's index); no
 inbound media; no idempotency (an uncertain send is the admin's call); a document header goes as a link
 without our filename; best-effort webhooks (a missed tick stays «sent»). Follow-up: mirror the CRM's
 `message.received` into our inbox (the CRM owns that number's conversations today).
@@ -129,9 +135,9 @@ without our filename; best-effort webhooks (a missed tick stays «sent»). Follo
 2. «التواصل» ← «الحماية» → «نظام CRM»: `WACRM_API_BASE` = `https://<crm-host>/api/v1`, save the key as `WACRM_API_KEY`.
 3. In the CRM: add a webhook to `<API origin>/webhooks/wacrm` for event `message.status_updated`; paste its secret as `WACRM_WEBHOOK_SECRET`.
 4. Set `WA_PROVIDER` = «نظام CRM», save, press «افحص الخطوط»: the line must show «نظام CRM», nothing missing, «مفتاح واجهة نظام CRM صالح ويملك صلاحية الإرسال».
-5. On «القوالب», mark each notifications template the CRM holds approved with «علِّمه معتمدًا في نظام CRM» → «تأكيد الاعتماد».
+5. On «القوالب», review **every** notifications template (statuses carry over from the last Meta sync): mark each one the CRM holds (same name, language and button order) approved with «علِّمه معتمدًا في نظام CRM» → «تأكيد الاعتماد», and each one it lacks «علِّمه غير متاح».
 6. Send one test to a number in `WA_ALLOWED_RECIPIENTS` before removing the guard.
-7. **Rollback:** set `WA_PROVIDER` back to «Meta مباشرة» (or Kapso). Nothing else changes; the hand-set statuses are re-synced by the next Meta sync.
+7. **Rollback:** set `WA_PROVIDER` back to «Meta مباشرة» (or Kapso). Nothing else changes; the hand-set statuses are re-synced by the next Meta sync **that reads the list** (a failed read touches no row: with a dead Meta token, re-check «القوالب» by hand).
 
 `tools/wa-stub` serves a minimal CRM under `/crm/api/v1` (`GET /me`, `POST /messages`, Bearer, `{data}` /
 `{error}` envelope; `crm.apiKey` / `crm.scopes` options) for api tests and e2e. Keys: `WACRM_API_BASE` plain

@@ -36,8 +36,22 @@ describe('CrmStatusActions', () => {
     fireEvent.click(screen.getByRole('button', { name: t.common.cancel }));
     expect(screen.queryByText(s.confirm)).toBeNull();
     fireEvent.click(screen.getByRole('button', { name: s.approvedFor.replace('{name}', name) }));
+    expect(document.activeElement?.textContent).toBe(t.common.cancel);
     fireEvent.click(screen.getByRole('button', { name: s.confirmFor.replace('{name}', name) }));
     expect(onSet).toHaveBeenCalledWith(tpl, 'approved');
+  });
+
+  it('after confirming, the confirm closes: the row offers «غير متاح» again, not a second confirm', () => {
+    const onSet = vi.fn();
+    const tpl = templateView({ status: 'missing' });
+    const { rerender } = render(<CrmStatusActions tpl={tpl} busy={false} onSet={onSet} />);
+    const name = templateName(tpl.key);
+    fireEvent.click(screen.getByRole('button', { name: s.approvedFor.replace('{name}', name) }));
+    fireEvent.click(screen.getByRole('button', { name: s.confirmFor.replace('{name}', name) }));
+    rerender(<CrmStatusActions tpl={{ ...tpl, status: 'approved' }} busy={false} onSet={onSet} />);
+    expect(screen.queryByText(s.confirm)).toBeNull();
+    expect(screen.queryByText(s.confirmHint)).toBeNull();
+    expect(screen.getByRole('button', { name: s.missingFor.replace('{name}', name) })).toBeTruthy();
   });
 
   it('waits while the row is being saved', () => {

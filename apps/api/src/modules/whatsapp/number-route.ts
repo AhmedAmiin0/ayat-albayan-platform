@@ -21,6 +21,8 @@ export interface RoutePass {
   /** template key → its catalogue row's notification_rules.number_id (absent / null = none chosen). */
   ruleNumbers: ReadonlyMap<string, string | null>;
   approvals: Approvals;
+  /** The crm numbers (docs/19): their approval is message_templates.status (set by hand), never a per-number row. */
+  crm?: ReadonlySet<string>;
 }
 
 /** An overlay number as routing sees it: sendable = enabled with a working config of its own. */
@@ -44,12 +46,14 @@ export function ruleNumbers(numberOf: (entryKey: string) => string | null): Map<
 
 /**
  * Decision 4: approved on a number = its message_template_numbers row says approved; with no row yet,
- * the role's default number counts as approved when message_templates.status is approved.
+ * the role's default number counts as approved when message_templates.status is approved. A crm number
+ * reads message_templates.status only: a row left from its meta days must not override the hand-set status.
  */
 export function approvedOn(pass: RoutePass, template: Pick<TemplateRow, 'key' | 'line' | 'status'>): (id: string) => boolean {
   const rows = pass.approvals.get(template.key);
   const fallback = pass.numbers.find((n) => n.purpose === template.line && n.is_default)?.id;
   return (id) => {
+    if (pass.crm?.has(id)) return template.status === 'approved';
     const status = rows?.get(id);
     if (status !== undefined) return status === 'approved';
     return id === fallback && template.status === 'approved';
