@@ -74,6 +74,8 @@ export function inboundRow({ m, phone, who, leadId, lessonId }: RowInput): Table
     created_at: m.at.toISOString(),
     // Only when stamped (docs/12 §13.2): a single-line insert carries no `line` key at all.
     ...(m.line ? { line: m.line } : {}),
+    // Module mode only (docs/23c decision 7): the receiving number; legacy rows carry no number_id key.
+    ...(m.numberId ? { number_id: m.numberId } : {}),
   };
 }
 

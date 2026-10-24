@@ -3,18 +3,21 @@ import {
   sendsAllTemplates,
   templateHealthSchema,
   templateLineSchema,
+  templateNumberSchema,
   templateStarterSchema,
   type TemplateHealthView,
   type TemplateLineView,
   type TemplateMoveView,
+  type TemplateNumberSetView,
   type TemplateView,
 } from '@ab/shared';
-import { Body, Controller, Get, HttpCode, Param, Patch, Post, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, Param, Patch, Post, Put, Query, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser, Permissions } from '../../common/auth/decorators';
 import type { AuthUser } from '../../common/auth/verify-token';
 import { parseOrThrow } from '../teachers/http';
 import { TemplateManagerGuard } from './template-manager.guard';
+import { TemplateNumbers } from './template-numbers.service';
 import { TemplateStarters } from './template-starters';
 import { TemplateRegistry } from './template.registry';
 
@@ -33,6 +36,7 @@ export class TemplatesController {
   constructor(
     private readonly registry: TemplateRegistry,
     private readonly starters: TemplateStarters,
+    private readonly numbers: TemplateNumbers,
   ) {}
 
   @Get()
@@ -78,6 +82,18 @@ export class TemplatesController {
   setLine(@Param('key') key: string, @Body() body: unknown, @CurrentUser() user: AuthUser): Promise<TemplateMoveView> {
     const input = parseOrThrow(templateLineSchema, body);
     return this.registry.moveLine({ key, line: input.line }, user.id);
+  }
+
+  /**
+   * «الرقم» (docs/23c decision 9): the template's own number, null = its role's default; audited. 404
+   * template_not_found / unknown_number. Never blocked: not_approved_on_number only warns.
+   */
+  @Put(':key/number')
+  @HttpCode(200)
+  @UseGuards(TemplateManagerGuard)
+  setNumber(@Param('key') key: string, @Body() body: unknown, @CurrentUser() user: AuthUser): Promise<TemplateNumberSetView> {
+    const input = parseOrThrow(templateNumberSchema, body);
+    return this.numbers.setNumber({ key, number_id: input.number_id }, user.id);
   }
 
   /** The allow-list: the admin offers a template to the restricted roles (teachers, sales…), or stops; audited. */

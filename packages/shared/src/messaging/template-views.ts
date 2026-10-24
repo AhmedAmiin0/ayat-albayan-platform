@@ -25,6 +25,18 @@ export interface TemplateView {
   line: WaLine;
   /** On the restricted allow-list: the only templates a role without templates.send_all may list or send (docs/16 §15). */
   sales_starter: boolean;
+  /** The template's own number (docs/23 phase 5); null = its role's default. Absent from older APIs. */
+  number_id?: string | null;
+  /** Its approval on each number synced so far (one Meta template per WABA). Absent from older APIs. */
+  numbers?: TemplateNumberApproval[];
+}
+
+/** One (template, number) approval: message_template_numbers. */
+export interface TemplateNumberApproval {
+  number_id: string;
+  status: TemplateStatus;
+  last_checked_at: string | null;
+  last_error: string | null;
 }
 
 /**

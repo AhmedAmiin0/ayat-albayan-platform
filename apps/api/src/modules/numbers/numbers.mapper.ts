@@ -37,6 +37,7 @@ export function numberView(row: NumberRow, status: SecretStatus): NumberView {
     display_phone_e164: row.display_phone_e164,
     enabled: row.enabled,
     is_default: row.is_default,
+    fallback_rank: row.fallback_rank,
     health: healthOf(row.health),
     checked_at: row.checked_at,
     updated_at: row.updated_at,

@@ -19,7 +19,11 @@ import { MessagesController } from './messages.controller';
 import { MessagesQueries } from './messages.queries';
 import { MessagesService } from './messages.service';
 import { SendGate } from './send-gate';
+import { NumberRoutes } from './number-routes';
+import { RouteQueries } from './route.queries';
 import { SenderQueries } from './sender.queries';
+import { TemplateNumbersController } from './template-numbers.controller';
+import { TemplateNumbers } from './template-numbers.service';
 import { TemplateStarters } from './template-starters';
 import { TemplateRegistry } from './template.registry';
 import { TemplatesController } from './templates.controller';
@@ -49,7 +53,7 @@ function lines(): WhatsappLines {
   // Imported (though global) so the database's config is loaded before onModuleInit below; NumbersModule
   // so the numbers config (comms_source, docs/23 phase 3) is loaded before it too.
   imports: [IntegrationConfigModule, NumbersModule],
-  controllers: [TemplatesController, MessagesController, GateController, LinesController],
+  controllers: [TemplatesController, MessagesController, GateController, LinesController, TemplateNumbersController],
   providers: [
     { provide: WHATSAPP_LINES, useFactory: lines },
     { provide: WHATSAPP_CLIENT, useFactory: (l: WhatsappLines): WhatsappClient => l.notifications, inject: [WHATSAPP_LINES] },
@@ -58,10 +62,13 @@ function lines(): WhatsappLines {
     TemplatesQueries,
     TemplateRegistry,
     TemplateStarters,
+    TemplateNumbers,
     WhatsappSettings,
     GateSettings,
     SendGate,
     SenderQueries,
+    RouteQueries,
+    NumberRoutes,
     MessageDispatch,
     MessageWorker,
     MessageSender,

@@ -4,6 +4,7 @@ import type { DataTableFeatures } from '@/components/DataTable';
 import { StatusChip } from '@/components/ui/status-chip';
 import { fullTime } from '@/features/inbox/format';
 import { t } from '@/lib/i18n';
+import { SendFromCell, type SendFromCellProps } from './SendFromCell';
 import { StarterToggle } from './StarterToggle';
 import { otherLine } from './api';
 import { Label, NameCell, NumberCell, RowActions, templateName } from './template-cells';
@@ -25,13 +26,15 @@ export interface TemplateColumnsInput {
   onStarter: (tpl: TemplateView, on: boolean) => void;
   /** The key whose starter flag is being saved: its switch waits. */
   saving: string | null;
+  /** «يُرسل من» (docs/23c decision 9): the numbers, templates.manage, and a pick (confirmed by the caller). */
+  sendFrom: Omit<SendFromCellProps, 'tpl'>;
 }
 
 /**
- * R-MSG-01 health table: name + Meta name, number, category, status (+ Meta's reason), quality, checked,
+ * R-MSG-01 health table: name + Meta name, number, «يُرسل من» + per-number approvals, category, status (+ Meta's reason), quality, checked,
  * the sales starter switch. The whole registry is loaded, so it sorts and filters locally.
  */
-export function templateColumns({ onSubmit, onMove, onStarter, saving, phones, factsOf }: TemplateColumnsInput) {
+export function templateColumns({ onSubmit, onMove, onStarter, saving, phones, factsOf, sendFrom }: TemplateColumnsInput) {
   return col.columns([
     // The value is the shown name, so it sorts and filters by what the row says.
     col.accessor((r) => templateName(r.key), {
@@ -45,6 +48,12 @@ export function templateColumns({ onSubmit, onMove, onStarter, saving, phones, f
       header: () => t.templates.number,
       cell: (c) => <NumberCell line={c.getValue()} phone={phones[c.getValue()]} />,
       meta: { className: 'max-sm:order-3', filter: { kind: 'select', options: lineOptions() } },
+    }),
+    col.display({
+      id: 'send_from',
+      header: () => t.templates.sendFrom.header,
+      cell: (c) => <SendFromCell tpl={c.row.original} {...sendFrom} />,
+      meta: { className: 'max-sm:order-3 max-sm:flex-[1_1_100%]' },
     }),
     col.accessor('category', {
       header: () => t.templates.category,

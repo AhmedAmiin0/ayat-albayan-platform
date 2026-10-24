@@ -1,4 +1,4 @@
-import type { CommsSource, CommsSourceView, ImportResult, NumberCreate, NumberSecretName, NumberUpdate, NumberView, ParityView } from '@ab/shared';
+import type { CommsSource, CommsSourceView, ImportResult, NumberCreate, NumberSecretName, NumberUpdate, NumberView, ParityView, TemplateNumberSyncView } from '@ab/shared';
 import { queryOptions } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@/lib/api';
 import { NUMBERS_QUERY_KEYS } from '@/lib/query-keys';
@@ -36,3 +36,7 @@ export const importNumbers = (dryRun: boolean) => apiSend<ImportResult>('POST', 
 
 /** POST /admin/communications/source: 409 parity_not_empty while a difference remains (to module). */
 export const setCommsSource = (source: CommsSource) => apiSend<CommsSourceView>('POST', '/admin/communications/source', { source });
+
+/** POST /admin/numbers/:id/templates/sync (templates.manage): that number's WABA list → its approvals. */
+export const syncNumberTemplates = (id: string) =>
+  apiSend<TemplateNumberSyncView>('POST', `/admin/numbers/${encodeURIComponent(id)}/templates/sync`);

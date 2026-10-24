@@ -6,6 +6,7 @@ import { BalanceQueries } from '../subscriptions/balance.queries';
 import { PackagesService } from '../subscriptions/packages.service';
 import { MESSAGE_SELECT, type MessageRow, type ThreadMessageRow } from '../whatsapp/message.mapper';
 import { knownNumber, type KnownNumber } from './known-number';
+import type { ThreadWindow } from './send-number';
 import { upcomingLessons, type LessonsOf } from './thread-lessons';
 import { familyTagsOf, threadPeople, type PeopleOf } from './thread-people';
 import type { FamilyTag } from './thread-people.mapper';
@@ -52,6 +53,16 @@ export class ThreadsQueries {
     const { data, error } = await this.db.from('v_threads').select('*').eq('phone_e164', phone).maybeSingle();
     check(error, 'thread read');
     return data;
+  }
+
+  /**
+   * Module mode only (docs/23c decision 6): the phone's newest inbound per number (v_thread_numbers);
+   * number_id null = unstamped history of that line, credited to the role's default by pickSend.
+   */
+  async numberWindows(phone: string): Promise<ThreadWindow[]> {
+    const { data, error } = await this.db.from('v_thread_numbers').select('number_id, line, last_inbound_at').eq('phone_e164', phone);
+    check(error, 'thread number windows read');
+    return (data ?? []).map((r) => ({ numberId: r.number_id, line: r.line ?? 'notifications', lastInboundAt: r.last_inbound_at }));
   }
 
   /** Newest first, `limit + 1` rows so the caller knows whether older ones exist; each with its lesson. */

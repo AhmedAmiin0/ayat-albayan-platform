@@ -2,17 +2,19 @@ import { formatPhone, NUMBER_SECRET_NAMES, type NumberView } from '@ab/shared';
 import { Ltr } from '@/components/ui/ltr';
 import { StatusChip } from '@/components/ui/status-chip';
 import { t } from '@/lib/i18n';
+import { FallbackRankField } from './FallbackRankField';
 import { NumberActions } from './NumberActions';
 import { NumberDetails } from './NumberDetails';
 import { NumberHealthLine } from './NumberHealthLine';
 import { NumberSecretRow } from './NumberSecretRow';
+import { NumberTemplateSync } from './NumberTemplateSync';
 
 const n = t.numbers;
 
 /**
  * One number as a card: its name, role and provider, the phone (LTR island), on / off and default
- * chips, the last check, the two secrets (set / not set), the raw ids folded, and — with
- * numbers.manage — its buttons.
+ * chips, the last check, the two secrets (set / not set), «ترتيب البديل» (editable with numbers.manage),
+ * «مزامنة القوالب مع هذا الرقم» (templates.manage), the raw ids folded, and — with numbers.manage — its buttons.
  */
 export function NumberCard({ view, manage }: { view: NumberView; manage: boolean }) {
   return (
@@ -46,6 +48,8 @@ export function NumberCard({ view, manage }: { view: NumberView; manage: boolean
           <NumberSecretRow key={name} view={view} name={name} manage={manage} />
         ))}
       </div>
+      <FallbackRankField key={`${view.id}:${view.fallback_rank}`} view={view} manage={manage} />
+      <NumberTemplateSync view={view} />
       <NumberDetails view={view} />
       {manage && <NumberActions view={view} />}
     </article>

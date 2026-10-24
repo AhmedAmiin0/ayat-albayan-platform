@@ -1,13 +1,15 @@
-import type { RenderableTemplate, TemplateView } from '@ab/shared';
+import type { RenderableTemplate, TemplateNumberApproval, TemplateView } from '@ab/shared';
 import { HttpException } from '@nestjs/common';
 import { paramNames, templateButtons } from './wa-json';
 import { KAPSO_AUTH } from './send-plan';
+import type { ApprovalRow } from './templates.queries';
 import type { TemplateRow, WaError } from './whatsapp.types';
 
 /** audit_log.entity_id is a uuid; the template key goes in before/after (as settings do). */
 export const REGISTRY_ENTITY_ID = '00000000-0000-0000-0000-000000000000';
 
-export function toTemplateView(row: TemplateRow): TemplateView {
+/** `numbers` (its message_template_numbers rows) only where the caller read them: absent otherwise. */
+export function toTemplateView(row: TemplateRow, numbers?: readonly ApprovalRow[]): TemplateView {
   return {
     key: row.key,
     meta_name: row.meta_name,
@@ -26,7 +28,18 @@ export function toTemplateView(row: TemplateRow): TemplateView {
     submitted_at: row.submitted_at,
     line: row.line,
     sales_starter: row.sales_starter,
+    number_id: row.number_id,
+    ...(numbers ? { numbers: numbers.map(toApproval) } : {}),
   };
+}
+
+function toApproval(a: ApprovalRow): TemplateNumberApproval {
+  return { number_id: a.number_id, status: a.status, last_checked_at: a.last_checked_at, last_error: a.last_error };
+}
+
+/** Every row with its approvals per number (one read of message_template_numbers, docs/23c decision 9). */
+export function withNumbers(rows: readonly TemplateRow[], approvals: readonly ApprovalRow[]): TemplateView[] {
+  return rows.map((row) => toTemplateView(row, approvals.filter((a) => a.template_key === row.key)));
 }
 
 /** What renderTemplateBody / fallbackText need from a registry row. */

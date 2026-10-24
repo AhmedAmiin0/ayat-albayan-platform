@@ -2200,6 +2200,7 @@ export type Database = {
           line: Database['public']['Enums']['wa_line'];
           meta_id: string | null;
           meta_name: string;
+          number_id: string | null;
           params: NonNullable<Json>;
           quality: string | null;
           sales_starter: boolean;
@@ -2220,6 +2221,7 @@ export type Database = {
           line?: Database['public']['Enums']['wa_line'];
           meta_id?: string | null;
           meta_name: string;
+          number_id?: string | null;
           params?: NonNullable<Json>;
           quality?: string | null;
           sales_starter?: boolean;
@@ -2240,6 +2242,7 @@ export type Database = {
           line?: Database['public']['Enums']['wa_line'];
           meta_id?: string | null;
           meta_name?: string;
+          number_id?: string | null;
           params?: NonNullable<Json>;
           quality?: string | null;
           sales_starter?: boolean;
@@ -2247,7 +2250,63 @@ export type Database = {
           submitted_at?: string | null;
           updated_at?: string;
         };
-        Relationships: [];
+        Relationships: [
+          {
+            foreignKeyName: 'message_templates_number_id_fkey';
+            columns: ['number_id'];
+            isOneToOne: false;
+            referencedRelation: 'wa_numbers';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      message_template_numbers: {
+        Row: {
+          last_checked_at: string | null;
+          last_error: string | null;
+          meta_id: string | null;
+          number_id: string;
+          quality: string | null;
+          status: Database['public']['Enums']['template_status'];
+          template_key: string;
+          updated_at: string;
+        };
+        Insert: {
+          last_checked_at?: string | null;
+          last_error?: string | null;
+          meta_id?: string | null;
+          number_id: string;
+          quality?: string | null;
+          status?: Database['public']['Enums']['template_status'];
+          template_key: string;
+          updated_at?: string;
+        };
+        Update: {
+          last_checked_at?: string | null;
+          last_error?: string | null;
+          meta_id?: string | null;
+          number_id?: string;
+          quality?: string | null;
+          status?: Database['public']['Enums']['template_status'];
+          template_key?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'message_template_numbers_number_id_fkey';
+            columns: ['number_id'];
+            isOneToOne: false;
+            referencedRelation: 'wa_numbers';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'message_template_numbers_template_key_fkey';
+            columns: ['template_key'];
+            isOneToOne: false;
+            referencedRelation: 'message_templates';
+            referencedColumns: ['key'];
+          },
+        ];
       };
       messages: {
         Row: {
@@ -3844,6 +3903,7 @@ export type Database = {
           created_at: string;
           display_phone_e164: string | null;
           enabled: boolean;
+          fallback_rank: number;
           health: Json | null;
           id: string;
           is_default: boolean;
@@ -3861,6 +3921,7 @@ export type Database = {
           created_at?: string;
           display_phone_e164?: string | null;
           enabled?: boolean;
+          fallback_rank?: number;
           health?: Json | null;
           id?: string;
           is_default?: boolean;
@@ -3878,6 +3939,7 @@ export type Database = {
           created_at?: string;
           display_phone_e164?: string | null;
           enabled?: boolean;
+          fallback_rank?: number;
           health?: Json | null;
           id?: string;
           is_default?: boolean;
@@ -4205,6 +4267,23 @@ export type Database = {
           unread_count: number | null;
         };
         Relationships: [];
+      };
+      v_thread_numbers: {
+        Row: {
+          last_inbound_at: string | null;
+          line: Database['public']['Enums']['wa_line'] | null;
+          number_id: string | null;
+          phone_e164: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'messages_number_id_fkey';
+            columns: ['number_id'];
+            isOneToOne: false;
+            referencedRelation: 'wa_numbers';
+            referencedColumns: ['id'];
+          },
+        ];
       };
       v_threads: {
         Row: {

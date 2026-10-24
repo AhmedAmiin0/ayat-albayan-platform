@@ -2,6 +2,7 @@
 // guards, services, registry and MessageViews; the DB-facing queries, the line clients, the gate and
 // the sender are mocks. `client` = notifications, `chatClient` = chat (docs/12 §13.16): both
 // configured by default; files that reset all mocks re-prime `configured` in beforeEach.
+import type { ThreadWindow } from './send-number';
 import type { ChatListRef, ThreadLesson, ThreadPeople } from '@ab/shared';
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
@@ -15,7 +16,7 @@ import { ChatListsQueries } from '../chat-lists/chat-lists.queries';
 import { SalesQueries } from '../sales/sales.queries';
 import { MessageSender } from '../whatsapp/message.sender';
 import { SendGate } from '../whatsapp/send-gate';
-import { TemplatesQueries } from '../whatsapp/templates.queries';
+import { TemplatesQueries, type ApprovalRow } from '../whatsapp/templates.queries';
 import { WHATSAPP_CLIENT, WHATSAPP_LINES } from '../whatsapp/whatsapp.types';
 import type { KnownNumber } from './known-number';
 import type { FamilyTag } from './thread-people.mapper';
@@ -45,6 +46,7 @@ function mocks() {
     queries: {
       ...{ list: vi.fn(), thread: vi.fn(), messages: vi.fn(), markInboundRead: vi.fn(), enqueue: vi.fn(), get: vi.fn() },
       lessonTeacher: vi.fn(),
+      numberWindows: vi.fn(async (): Promise<ThreadWindow[]> => []),
       known: vi.fn(async (): Promise<KnownNumber | null> => null),
       lessons: vi.fn(async (): Promise<ThreadLesson[]> => []),
       people: vi.fn(async () => NO_PEOPLE),
@@ -59,7 +61,7 @@ function mocks() {
       ...{ all: vi.fn(), one: vi.fn(), count: vi.fn(), create: vi.fn(), rename: vi.fn(), remove: vi.fn(), add: vi.fn(), drop: vi.fn() },
       listsOf: vi.fn(async (): Promise<ChatListRef[]> => []),
     },
-    templates: { all: vi.fn(), get: vi.fn(), update: vi.fn() },
+    templates: { all: vi.fn(), get: vi.fn(), update: vi.fn(), approvals: vi.fn(async (): Promise<ApprovalRow[]> => []) },
     client: { configured: vi.fn(() => true), markRead: vi.fn() },
     chatClient: { configured: vi.fn(() => true), markRead: vi.fn() },
     gate: { open: vi.fn() },

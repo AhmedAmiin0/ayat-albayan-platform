@@ -1,6 +1,7 @@
 import { Inject, Injectable, InternalServerErrorException, Logger } from '@nestjs/common';
 import type { LineNumbers } from '../../env';
 import { InboundService } from './webhook.inbound.service';
+import type { ReceivingNumber } from './webhook.lines';
 import { parseWebhook } from './webhook.parse';
 import { StatusService } from './webhook.status.service';
 
@@ -15,6 +16,8 @@ export interface WebhookConfig {
   numbers: LineNumbers;
   /** KAPSO_WEBHOOK_SECRET: POST /webhooks/kapso only (docs/19). Unset → every Kapso POST is 401. */
   kapsoSecret?: string;
+  /** Module mode (docs/23c decision 7): every wa_numbers row, enabled or not; absent / null = legacy (`numbers`). */
+  overlay?: readonly ReceivingNumber[] | null;
 }
 
 /**
@@ -58,7 +61,7 @@ export class WebhookService {
   async handle(body: unknown): Promise<void> {
     const now = new Date();
     const onIgnored = (id: string) => this.warnIgnored(id);
-    const batch = parseWebhook(body, { now, numbers: this.config.numbers, onIgnored });
+    const batch = parseWebhook(body, { now, numbers: this.config.numbers, onIgnored, overlay: this.config.overlay });
     // When the controller stops waiting (within), so an item knows whether Meta can still re-send it.
     const deadline = now.getTime() + RESPONSE_BUDGET_MS;
     let failed = 0;

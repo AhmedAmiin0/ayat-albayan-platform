@@ -14,6 +14,7 @@ export function numberRow(over: Partial<NumberRow> = {}): NumberRow {
     display_phone_e164: null,
     enabled: true,
     is_default: true,
+    fallback_rank: 100,
     health: null,
     checked_at: null,
     created_at: '2026-10-23T08:00:00Z',
