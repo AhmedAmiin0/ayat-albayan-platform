@@ -67,7 +67,7 @@ export function TemplatePicker(props: TemplatePickerProps) {
       presentationStyle="pageSheet"
       onRequestClose={close}
     >
-      <Screen>
+      <Screen sheet>
         <ScreenHeader
           title={chosen ? (names[chosen.key] ?? chosen.key) : t.inbox.composer.chooseTemplate}
           trailing={<Button variant="ghost" label={t.common.close} onPress={close} />}

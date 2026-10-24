@@ -12,6 +12,7 @@ import { ListRow } from '@/ui/ListRow';
 import { ltr } from '@/ui/Ltr';
 import { ScreenHeader } from '@/ui/ScreenHeader';
 import { SearchField } from '@/ui/SearchField';
+import { useTabBarInset } from '@/ui/tab-bar-inset';
 import { StatusChip } from '@/ui/StatusChip';
 import { clockAt, initialOf } from './format';
 import { activeFilterCount, leadListParams, NO_FILTERS, type LeadFilters } from './leads/lead-filters';
@@ -35,6 +36,7 @@ export function LeadsList({ switcher }: { switcher: ReactNode }) {
   const [q, setQ] = useState('');
   const [status, setStatus] = useState<Filter>('all');
   const [filters, setFilters] = useState<LeadFilters>(NO_FILTERS);
+  const inset = useTabBarInset();
   const list = usePagedList<Lead>({ path: '/leads', params: leadListParams({ q, status, filters }) });
   const filtersOn = q !== '' || status !== 'all' || activeFilterCount(filters) > 0;
   const loaded = list.data !== undefined;
@@ -59,6 +61,7 @@ export function LeadsList({ switcher }: { switcher: ReactNode }) {
       <FilterPills items={pills} value={status} onChange={setStatus} accessibilityLabel={t.leads.status} />
       <FlatList
         style={{ flex: 1, marginHorizontal: -16 }}
+        contentContainerStyle={{ paddingBottom: 24 + inset }}
         data={list.items}
         keyExtractor={(lead) => lead.id}
         renderItem={({ item }) => {

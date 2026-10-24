@@ -14,6 +14,7 @@ import { EmptyState } from '@/ui/EmptyState';
 import { ErrorState } from '@/ui/ErrorState';
 import { Screen } from '@/ui/Screen';
 import { ScreenHeader } from '@/ui/ScreenHeader';
+import { useTabBarInset } from '@/ui/tab-bar-inset';
 import { headerLine } from './agenda';
 import { AgendaItemRow } from './AgendaItemRow';
 import { AgendaLessonRow } from './AgendaLessonRow';
@@ -50,6 +51,7 @@ export function DayScheduleScreen({ back = false, initialDate }: { back?: boolea
   const [moving, setMoving] = useState<LessonView | null>(null);
   const [editing, setEditing] = useState<LessonView | null>(null);
   const action = useLessonAction();
+  const inset = useTabBarInset();
   const start = weekStart(date);
   const overview = useOverview(weekWindow(start));
   const data = overview.data;
@@ -69,7 +71,7 @@ export function DayScheduleScreen({ back = false, initialDate }: { back?: boolea
   );
 
   return (
-    <Screen>
+    <Screen list>
       <ScreenHeader
         title={t.schedule.nav}
         subtitle={subtitle}
@@ -83,7 +85,7 @@ export function DayScheduleScreen({ back = false, initialDate }: { back?: boolea
       {action.notice ? <Notice message={action.notice} /> : null}
       <SectionList
         style={{ flex: 1 }}
-        contentContainerStyle={{ paddingBottom: 24 }}
+        contentContainerStyle={{ paddingBottom: 24 + inset }}
         // The cancel reason is typed inside the list: a tap on «إلغاء الحلقة» must land with the keyboard up.
         keyboardShouldPersistTaps="handled"
         automaticallyAdjustKeyboardInsets

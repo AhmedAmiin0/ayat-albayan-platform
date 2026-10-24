@@ -21,7 +21,7 @@ export function EditTimeSheet({ lesson, onClose }: EditTimeSheetProps) {
   const correcting = lesson !== null && editMode(lesson) === 'correct';
   return (
     <Modal visible={lesson !== null} animationType="slide" presentationStyle="pageSheet" onRequestClose={onClose}>
-      <Screen>
+      <Screen sheet>
         <ScreenHeader
           size="h2"
           title={correcting ? t.editTime.correctTitle : t.editTime.title}

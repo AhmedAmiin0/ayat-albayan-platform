@@ -14,6 +14,7 @@ import { FilterPills } from '@/ui/FilterPills';
 import { Screen } from '@/ui/Screen';
 import { ScreenHeader } from '@/ui/ScreenHeader';
 import { SearchField } from '@/ui/SearchField';
+import { useTabBarInset } from '@/ui/tab-bar-inset';
 import { AllStudentRow } from './AllStudentRow';
 
 export type StudentsView = 'all' | 'mine';
@@ -33,10 +34,11 @@ export function AllStudentsScreen({ asTab = false }: { asTab?: boolean }) {
   const { color } = useTheme();
   const [view, setView] = useState<StudentsView>('all');
   const [search, setSearch] = useState('');
+  const inset = useTabBarInset();
   const list = usePagedList<SalesStudentView>({ path: '/sales/students/all', params: { search } });
   const all = view === 'all';
   return (
-    <Screen>
+    <Screen list>
       <ScreenHeader
         title={t.sales.allStudents.title}
         subtitle={all && list.data ? t.students.count.replace('{n}', String(list.total)) : undefined}
@@ -56,6 +58,7 @@ export function AllStudentsScreen({ asTab = false }: { asTab?: boolean }) {
       {all ? (
         <FlatList
           style={{ flex: 1, marginHorizontal: -16 }}
+          contentContainerStyle={{ paddingBottom: 24 + inset }}
           data={list.items}
           keyExtractor={(s) => s.id}
           renderItem={({ item }) => <AllStudentRow student={item} />}

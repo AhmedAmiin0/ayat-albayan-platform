@@ -2,9 +2,9 @@ import { createContext, type ReactNode, useContext } from 'react';
 import { ScrollView, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTheme } from '@/theme';
+import { useTabBarInset } from './tab-bar-inset';
 
 const BODY = { paddingHorizontal: 16, paddingTop: 16, gap: 16 } as const;
-const SCROLL_BODY = { ...BODY, paddingBottom: 24 } as const;
 const CHAT_BODY = { paddingHorizontal: 16, paddingTop: 8, gap: 8 } as const;
 
 const FullScreenContext = createContext(false);
@@ -17,6 +17,10 @@ export interface ScreenProps {
   scroll?: boolean;
   /** A chat: 8pt top and between blocks, and the bottom safe area too (a full screen above the tabs). */
   chat?: boolean;
+  /** The last child is a vertical list that runs under the floating tab bar and adds useTabBarInset() to its contentContainerStyle. */
+  list?: boolean;
+  /** Inside a <Modal> sheet: no bar is drawn there, but context crosses the Modal, so the inset is ignored. */
+  sheet?: boolean;
 }
 
 /**
@@ -26,7 +30,9 @@ export interface ScreenProps {
  * `scroll` for a screen of plain rows with no FlatList («المزيد»): the frame scrolls, so its last row
  * («تسجيل الخروج») is never cut off below the screen.
  */
-export function Screen({ children, scroll = false, chat = false }: ScreenProps) {
+export function Screen({ children, scroll = false, chat = false, list = false, sheet = false }: ScreenProps) {
+  const bar = useTabBarInset();
+  const inset = sheet ? 0 : bar;
   const { color } = useTheme();
   const fullScreen = useContext(FullScreenContext);
   return (
@@ -35,11 +41,13 @@ export function Screen({ children, scroll = false, chat = false }: ScreenProps) 
       edges={chat || fullScreen ? ['top', 'bottom'] : ['top']}
     >
       {scroll ? (
-        <ScrollView testID="screen-scroll" style={{ flex: 1 }} contentContainerStyle={SCROLL_BODY}>
+        <ScrollView testID="screen-scroll" style={{ flex: 1 }} contentContainerStyle={{ ...BODY, paddingBottom: 24 + inset }}>
           {children}
         </ScrollView>
       ) : (
-        <View style={{ flex: 1, ...(chat ? CHAT_BODY : BODY) }}>{children}</View>
+        <View testID="screen-body" style={{ flex: 1, ...(chat ? CHAT_BODY : BODY), paddingBottom: chat || list ? 0 : inset }}>
+          {children}
+        </View>
       )}
     </SafeAreaView>
   );

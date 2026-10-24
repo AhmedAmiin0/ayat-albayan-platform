@@ -12,6 +12,7 @@ import { ListRow } from '@/ui/ListRow';
 import { ltr } from '@/ui/Ltr';
 import { ScreenHeader } from '@/ui/ScreenHeader';
 import { SearchField } from '@/ui/SearchField';
+import { useTabBarInset } from '@/ui/tab-bar-inset';
 import { StatusChip } from '@/ui/StatusChip';
 import { clockAt, initialOf, kindLabel } from './format';
 import { DeliveryTicks } from './DeliveryTicks';
@@ -63,6 +64,7 @@ export function ThreadsList({ switcher }: { switcher?: ReactNode }) {
   const [search, setSearch] = useState('');
   const [filter, setFilter] = useState<Filter>('all');
   const [listId, setListId] = useState<string | null>(null);
+  const inset = useTabBarInset();
   const list = useThreadList({ search, unread: filter === 'unread', list: listId ?? undefined });
   const loaded = list.data !== undefined;
   const stale = list.isError && loaded;
@@ -77,6 +79,7 @@ export function ThreadsList({ switcher }: { switcher?: ReactNode }) {
       {mode.kind === 'admin' ? <ChatListChips value={listId} onChange={setListId} /> : null}
       <FlatList
         style={{ flex: 1, marginHorizontal: -16 }}
+        contentContainerStyle={{ paddingBottom: 24 + inset }}
         data={list.items}
         keyExtractor={(th) => th.phone_e164}
         renderItem={({ item: th }) => {

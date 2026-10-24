@@ -1,6 +1,7 @@
-import { NativeTabs } from 'expo-router/unstable-native-tabs';
-import { type, useTheme } from '@/theme';
-import { TAB_ICONS, type TabIconName } from './tab-icons';
+import { Tabs } from 'expo-router/js-tabs';
+import { useTheme } from '@/theme';
+import { GlassTabBar } from './GlassTabBar';
+import type { TabIconName } from './tab-icons';
 
 export interface TabItem {
   /** The route segment of the tab (folder or file under the layout). */
@@ -14,30 +15,25 @@ export interface TabItem {
 }
 
 /**
- * The bottom tab bar as the platform's own (UITabBar on iOS, Material bottom navigation on
- * Android): native gestures, haptics and accessibility. The first tab sits at the inline-start, so
- * in Arabic (RTL) it is on the right, as before. Colours and font are the app's (docs/07 §12).
- * The bar is never hidden: a chat is a full screen above the tabs (its chat group, app/_layout.tsx).
+ * The bottom tabs: expo-router's JS tabs with our own floating glass bar (GlassTabBar, owner
+ * 2026-10-24), the same on iOS and Android. The first tab sits at the inline-start, so in Arabic
+ * (RTL) it is on the right. A hidden tab is a protected route: off the bar, and a push into it goes
+ * nowhere. Back returns to the first tab, as the native tabs did. The bar is never hidden: a chat is
+ * a full screen above the tabs (its chat group, app/_layout.tsx).
  */
 export function AppNativeTabs({ tabs }: { tabs: readonly TabItem[] }) {
   const { color } = useTheme();
   return (
-    <NativeTabs
-      tintColor={color.lapis}
-      iconColor={{ default: color.ink3, selected: color.lapis }}
-      backgroundColor={color.raised}
-      labelStyle={{
-        default: { color: color.ink3, fontFamily: type.ui[600], fontSize: type.size['2xs'] },
-        selected: { color: color.lapis, fontFamily: type.ui[600], fontSize: type.size['2xs'] },
-      }}
+    <Tabs
+      backBehavior="initialRoute"
+      screenOptions={{ headerShown: false, sceneStyle: { backgroundColor: color.margin } }}
+      tabBar={(props) => <GlassTabBar {...props} tabs={tabs} />}
     >
       {tabs.map((tab) => (
-        <NativeTabs.Trigger key={tab.name} name={tab.name} hidden={tab.hidden === true}>
-          <NativeTabs.Trigger.Icon sf={TAB_ICONS[tab.icon].sf} src={TAB_ICONS[tab.icon].src} />
-          <NativeTabs.Trigger.Label>{tab.title}</NativeTabs.Trigger.Label>
-          {tab.badge ? <NativeTabs.Trigger.Badge>{tab.badge}</NativeTabs.Trigger.Badge> : null}
-        </NativeTabs.Trigger>
+        <Tabs.Protected key={tab.name} guard={tab.hidden !== true}>
+          <Tabs.Screen name={tab.name} />
+        </Tabs.Protected>
       ))}
-    </NativeTabs>
+    </Tabs>
   );
 }

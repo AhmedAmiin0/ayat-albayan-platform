@@ -39,7 +39,7 @@ export function NewChatSheet() {
     <>
       <Button variant="ghost" label={t.inbox.newChat.title} onPress={() => setOpen(true)} />
       <Modal visible={open} animationType="slide" presentationStyle="pageSheet" onRequestClose={close}>
-        <Screen>
+        <Screen sheet>
           <ScreenHeader title={t.inbox.newChat.title} trailing={<Button variant="ghost" label={t.common.close} onPress={close} />} />
           <View style={{ gap: 12 }}>
             <Field

@@ -15,6 +15,7 @@ import { ErrorState } from '@/ui/ErrorState';
 import { FilterPills } from '@/ui/FilterPills';
 import { Screen } from '@/ui/Screen';
 import { ScreenHeader } from '@/ui/ScreenHeader';
+import { useTabBarInset } from '@/ui/tab-bar-inset';
 import { useSalesSchedule, useSalesTeachers } from './sales-api';
 import { SalesLessonRow } from './SalesLessonRow';
 
@@ -34,13 +35,14 @@ export function SalesScheduleScreen({ asTab = false }: { asTab?: boolean }) {
   const [teacherId, setTeacherId] = useState(params.teacherId ?? '');
   const day = useSalesSchedule(date, teacherId);
   const teachers = useSalesTeachers();
+  const inset = useTabBarInset();
   const pills = [
     { value: '', label: t.schedule.allTeachers },
     ...(teachers.data ?? []).map((tc) => ({ value: tc.id, label: localizedName({ ar: tc.name, en: tc.name_en }, locale) })),
   ];
   const emptyTitle = teacherId ? t.sales.academySchedule.emptyTeacher : t.sales.academySchedule.empty;
   return (
-    <Screen>
+    <Screen list>
       <ScreenHeader
         title={t.sales.academySchedule.title}
         subtitle={t.schedule.riyadhTime}
@@ -53,6 +55,7 @@ export function SalesScheduleScreen({ asTab = false }: { asTab?: boolean }) {
       </View>
       <FlatList
         style={{ flex: 1 }}
+        contentContainerStyle={{ paddingBottom: 24 + inset }}
         accessibilityLabel={t.schedule.dayBoard}
         data={day.data?.lessons ?? []}
         keyExtractor={(l) => l.id}

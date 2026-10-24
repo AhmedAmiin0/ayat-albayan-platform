@@ -13,6 +13,7 @@ import { HeldBell } from '@/notifications/HeldBell';
 import { ListRow } from '@/ui/ListRow';
 import { Screen } from '@/ui/Screen';
 import { ScreenHeader } from '@/ui/ScreenHeader';
+import { useTabBarInset } from '@/ui/tab-bar-inset';
 import { assistantDay } from './assistant-day';
 
 /**
@@ -25,10 +26,11 @@ export function AssistantHomeScreen({ can }: { can: Can }) {
   const today = riyadhToday(useMinuteClock());
   const [date, setDate] = useState(today);
   const isToday = date === today;
+  const inset = useTabBarInset();
   return (
-    <Screen>
+    <Screen list>
       <ScreenHeader title={t.mobileRoles.lessonsTitle} subtitle={t.schedule.riyadhTime} trailing={<HeldBell tree="assistant" />} />
-      <ScrollView style={{ flex: 1 }} contentContainerStyle={{ gap: 16, paddingBottom: 32 }}>
+      <ScrollView style={{ flex: 1 }} contentContainerStyle={{ gap: 16, paddingBottom: 32 + inset }}>
         <DaySwitcher date={date} isToday={isToday} onStep={(n) => setDate(addDays(date, n))} onToday={() => setDate(today)} />
         <Note>{t.mobileRoles.joinNote}</Note>
         <AssistantLessonsList day={assistantDay(date)} emptyTitle={isToday ? undefined : t.mobileRoles.dayEmpty} />

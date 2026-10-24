@@ -11,6 +11,7 @@ import { useNow } from '@/today/use-day-lessons';
 import { ErrorState } from '@/ui/ErrorState';
 import { Screen } from '@/ui/Screen';
 import { ScreenHeader } from '@/ui/ScreenHeader';
+import { useTabBarInset } from '@/ui/tab-bar-inset';
 import { useMyAvailability, useMyLessons, useTeacherMe } from './queries';
 
 /** A teacher has no «غيّر الميعاد» (the API never offers her `reschedule`), so the row's action is idle. */
@@ -27,12 +28,13 @@ export function TeacherScheduleScreen() {
   const me = useTeacherMe();
   const lessons = useMyLessons(weekWindow(start));
   const grid = useMyAvailability(me.data?.id);
+  const inset = useTabBarInset();
   const loaded = lessons.data !== undefined;
   const days = agendaDays(lessons.data ?? [], start);
   const empty = days.every((d) => d.lessons.length === 0);
   const subtitle = headerLine([t.availability.tzHint.replace('{tz}', t.runningHead.riyadh)], lessons);
   return (
-    <Screen>
+    <Screen list>
       <ScreenHeader title={t.teacherNav.calendar} subtitle={subtitle} />
       <PeriodSwitcher
         label={weekLabel(start)}
@@ -45,7 +47,7 @@ export function TeacherScheduleScreen() {
       />
       <FlatList
         style={{ flex: 1 }}
-        contentContainerStyle={{ paddingBottom: 24 }}
+        contentContainerStyle={{ paddingBottom: 24 + inset }}
         data={loaded ? days : []}
         keyExtractor={(day) => day.date}
         ListHeaderComponent={loaded && empty ? <Note>{t.teacherDash.noLessonsWeek}</Note> : null}

@@ -31,5 +31,5 @@ export function InboxScreen() {
     hasThreads && hasLeads ? (
       <FilterPills items={views()} value={view} onChange={setPicked} accessibilityLabel={t.nav.conversations} />
     ) : null;
-  return <Screen>{view === 'threads' ? <ThreadsList switcher={switcher} /> : <LeadsList switcher={switcher} />}</Screen>;
+  return <Screen list>{view === 'threads' ? <ThreadsList switcher={switcher} /> : <LeadsList switcher={switcher} />}</Screen>;
 }

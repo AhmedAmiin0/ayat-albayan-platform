@@ -13,6 +13,7 @@ import { ErrorState } from '@/ui/ErrorState';
 import { FilterPills, type FilterPill } from '@/ui/FilterPills';
 import { Screen } from '@/ui/Screen';
 import { ScreenHeader } from '@/ui/ScreenHeader';
+import { useTabBarInset } from '@/ui/tab-bar-inset';
 import { LessonCard } from './LessonCard';
 import { NowLine } from './NowLine';
 import { Notice } from './Notice';
@@ -51,6 +52,7 @@ export function TodayScreen() {
   const now = useNow();
   const day = useDayLessons(now);
   const action = useLessonAction();
+  const inset = useTabBarInset();
   const [filter, setFilter] = useState<TodayFilter>('all');
   const [moving, setMoving] = useState<LessonView | null>(null);
   const [editing, setEditing] = useState<LessonView | null>(null);
@@ -67,7 +69,7 @@ export function TodayScreen() {
     : dateLine;
 
   return (
-    <Screen>
+    <Screen list>
       <ScreenHeader title={t.today.title} subtitle={subtitle} trailing={<BellButton tree="admin" />} />
       <LiveSessions lessons={lessons} showTeacher />
       <FilterPills
@@ -79,7 +81,7 @@ export function TodayScreen() {
       {action.notice ? <Notice message={action.notice} /> : null}
       <FlatList
         style={{ flex: 1 }}
-        contentContainerStyle={{ paddingBottom: 24 }}
+        contentContainerStyle={{ paddingBottom: 24 + inset }}
         // The cancel reason is typed inside the list: a tap on «إلغاء الحلقة» must land with the keyboard up.
         keyboardShouldPersistTaps="handled"
         automaticallyAdjustKeyboardInsets

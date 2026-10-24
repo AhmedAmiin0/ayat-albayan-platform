@@ -16,7 +16,7 @@ export interface ListSheetProps {
 export function ListSheet({ open, title, onClose, children }: ListSheetProps) {
   return (
     <Modal visible={open} animationType="slide" presentationStyle="pageSheet" onRequestClose={onClose}>
-      <Screen>
+      <Screen sheet>
         <ScreenHeader
           size="h2"
           title={title}

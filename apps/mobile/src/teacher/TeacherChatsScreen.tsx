@@ -7,7 +7,7 @@ import { Screen } from '@/ui/Screen';
  */
 export function TeacherChatsScreen() {
   return (
-    <Screen>
+    <Screen list>
       <ThreadsList />
     </Screen>
   );
