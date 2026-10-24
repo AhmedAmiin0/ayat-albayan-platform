@@ -23,12 +23,12 @@ afterEach(() => {
   apiSend.mockReset();
 });
 
-// Finding 1: the «الإشعارات» row drafts live with the timing form, above «التواصل»'s tabs.
+// Finding 1: the «الإشعارات» row drafts live above «التواصل»'s tabs.
 describe('«التواصل»: the «الإشعارات» row drafts', () => {
   it('survive a switch to another «التواصل» tab and back', async () => {
     renderCommunications({ apiFetch, tab: 'catalogue', catalogue: overview() });
     fireEvent.change(minutesOf(await findRow('lesson_reminder')), { target: { value: '45' } });
-    commsTab(t.settingsPages.communicationsTabs.timing);
+    commsTab(t.settingsPages.communicationsTabs.templates);
     expect(screen.queryByRole('region', { name: r.title })).toBeNull();
     commsTab(r.tabLabel);
     expect(minutesOf(await findRow('lesson_reminder')).value).toBe('45');

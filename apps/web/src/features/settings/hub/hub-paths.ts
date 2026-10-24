@@ -1,6 +1,6 @@
 /**
- * The hub's five destinations (docs/26b §1), in table order. «التواصل» moves to /admin/communications
- * in docs/23 phase 6; this path then becomes a redirect there.
+ * The hub's five destinations (docs/26b §1), in table order. «التواصل» stays at this path; docs/23
+ * §2d's /admin/communications opens it (routes/admin/communications.tsx).
  */
 export const HUB_PATHS = {
   values: '/admin/settings/values',

@@ -23,6 +23,8 @@ export interface RenderCommunications {
   settings?: Partial<AcademySettings>;
   gate?: Gate;
   catalogue?: unknown;
+  /** GET /settings/integrations (none by default). */
+  integrations?: unknown;
   /** Stands in for the route's LeaveGuard (gets the unsaved names). */
   renderGuard?: (names: readonly string[]) => ReactNode;
 }
@@ -39,7 +41,7 @@ export function renderCommunications(input: RenderCommunications): QueryClient {
   const gate = input.gate ?? { open: settings.messaging_enabled, reason: settings.messaging_enabled ? null : 'switch_off', queued: 0 };
   routeFetch(input.apiFetch, [
     ['/config/meta', { meta: {} }],
-    ['/settings/integrations', []],
+    ['/settings/integrations', input.integrations ?? []],
     ['/settings', settings],
     input.catalogue === undefined ? CATALOGUE_ROUTE : ['/admin/notifications', input.catalogue],
     ['/messages/gate', gate],
@@ -48,5 +50,5 @@ export function renderCommunications(input: RenderCommunications): QueryClient {
     ['/admin/numbers', NUMBERS],
     ['/admin/communications/parity', PARITY_SAME],
   ]);
-  return renderWithClient(<Harness initial={input.tab ?? 'sending'} renderGuard={input.renderGuard} />);
+  return renderWithClient(<Harness initial={input.tab ?? 'overview'} renderGuard={input.renderGuard} />);
 }

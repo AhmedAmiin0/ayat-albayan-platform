@@ -23,7 +23,7 @@ afterEach(() => {
   apiSend.mockReset();
 });
 
-// Ported from the old /admin/settings page: «التواصل» › «الإرسال».
+// Ported from the old /admin/settings page: «التواصل» › «نظرة عامة».
 describe('automatic messages switch (settings.auto_messages_enabled, docs/09 cut-over)', () => {
   it('sits with the sending switch, OFF by default, with the Apps Script hint; ON goes to PUT /messages/gate/auto', async () => {
     renderPage(false);

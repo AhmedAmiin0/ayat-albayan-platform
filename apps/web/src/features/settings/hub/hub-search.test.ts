@@ -57,10 +57,17 @@ describe('searchHub (docs/26b §1: labels, descriptions, keys and module pages)'
     expect(rules?.href).toBe('/admin/settings/communications?tab=catalogue');
     expect(rules?.label).toBe(t.notificationRules.title);
     expect(byId(t.notificationCatalogue.title, 'page:catalogue')?.href).toBe('/admin/settings/communications?tab=catalogue');
-    expect(byId(t.templates.settings.lines.title, 'page:lines')?.href).toBe('/admin/settings/communications');
+    expect(byId(t.templates.settings.lines.title, 'page:lines')?.href).toBe('/admin/settings/communications?tab=numbers');
     expect(byId(t.integrations.keys.FX_API_URL.label, 'page:integrations')?.href).toBe('/admin/settings/integrations');
     expect(byId(t.settings.theme, 'page:appearance')?.href).toBe('/admin/settings/appearance');
     expect(byId('Google', 'page:google')?.href).toBe('/admin/settings/google');
+  });
+
+  it('the WhatsApp groups of «التكاملات» are found on «التواصل» (docs/23 phase 6)', () => {
+    expect(byId(t.integrations.keys.WA_WABA_ID.label, 'page:lines')?.href).toBe('/admin/settings/communications?tab=numbers');
+    expect(byId(t.integrations.keys.WA_ALLOWED_RECIPIENTS.label, 'page:safety')?.href).toBe('/admin/settings/communications?tab=safety');
+    expect(byId('KAPSO_API_KEY', 'page:safety')?.label).toBe(t.settingsPages.communicationsTabs.safety);
+    expect(byId('KAPSO_API_KEY', 'page:integrations')).toBeUndefined();
   });
 
   it('settings come before module pages; nonsense finds nothing', () => {
