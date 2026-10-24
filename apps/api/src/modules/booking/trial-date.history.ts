@@ -83,5 +83,8 @@ export function trialHistory(input: HistoryInput): TrialHistory {
     count: items.length,
     items,
     upcoming_id: upcomingTrial(lessons, input.now)?.id ?? null,
+    student_tz: student.tz,
+    ...(student.program ? { program: student.program } : {}),
+    ...(student.teacher_gender_pref !== undefined ? { teacher_gender_pref: student.teacher_gender_pref } : {}),
   };
 }

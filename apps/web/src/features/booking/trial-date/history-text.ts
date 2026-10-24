@@ -25,7 +25,8 @@ export function rowTexts({ row, familyTz, viewerTz = RIYADH_TZ }: RowTextInput):
   const family = familyTz === viewerTz ? null : t.trialDate.familyTime.replace('{time}', lessonWhenText(at, familyTz, locale));
   const on = dateLabel(zonedParts(new Date(row.picked_at), viewerTz).date);
   return {
-    when: lessonWhenText(at, viewerTz, locale),
+    // Every time says its zone (docs/07 principle 7).
+    when: viewerTz === RIYADH_TZ ? `${lessonWhenText(at, viewerTz, locale)} ${t.schedule.riyadhTime}` : lessonWhenText(at, viewerTz, locale),
     family,
     picked: t.trialDate.pickedAt.replace('{name}', row.picked_by ?? t.trialDate.unknownPicker).replace('{when}', on),
   };

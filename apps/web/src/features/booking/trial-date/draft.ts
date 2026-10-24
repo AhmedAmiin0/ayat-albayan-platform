@@ -5,7 +5,7 @@ import type { BookHint } from '../hint';
 // The booking wizard's draft for «موعد تجريبي جديد» (owner 2026-10-25): one trial lesson for one
 // existing student, in the family's zone, through the reduced flow teacher → slot → review. Pure.
 
-/** What the caller knows of the student besides the history (the admin's profile; sales: nothing). */
+/** What the caller knows of the student besides the history (the admin's profile); else the history's prefill. */
 export interface TrialStudentFacts {
   program?: Program | undefined;
   genderPref?: Gender | null | undefined;
@@ -28,9 +28,9 @@ export function trialDateDraft({ student, history, facts = {} }: TrialDraftInput
   return {
     ...emptyDraft({ kind: 'trial' }),
     students: [student],
-    tz: facts.tz ?? history.family_tz,
-    program: facts.program ?? 'quran',
-    genderPref: facts.genderPref ?? null,
+    tz: facts.tz ?? history.student_tz ?? history.family_tz,
+    program: facts.program ?? history.program ?? 'quran',
+    genderPref: facts.genderPref ?? history.teacher_gender_pref ?? null,
     trialDate: { upcomingId: history.upcoming_id, upcomingAt: upcomingRow(history)?.starts_at ?? null, count: history.count },
   };
 }

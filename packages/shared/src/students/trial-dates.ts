@@ -1,4 +1,4 @@
-import type { Attendance, LessonStatus, StudentStatus } from '../enums/index.js';
+import type { Attendance, Gender, LessonStatus, Program, StudentStatus } from '../enums/index.js';
 import { isNotSubscribed } from './status-flow.js';
 
 // «موعد تجريبي جديد» (owner 2026-10-25): a new free-trial date for an existing student who has no
@@ -41,6 +41,10 @@ export interface TrialHistory {
   items: TrialDateRow[];
   /** The trial a new date would move: scheduled / confirmed and still ahead; null = a new lesson. */
   upcoming_id: string | null;
+  /** What the wizard prefills (the teacher filters and the rule's zone); optional for older answers. */
+  program?: Program;
+  teacher_gender_pref?: Gender | null;
+  student_tz?: string;
 }
 
 /** POST {base}/trial-date 201: the new trial lesson, and the one it moved (null = none was ahead). */

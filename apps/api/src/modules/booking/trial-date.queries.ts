@@ -1,4 +1,4 @@
-import type { StudentStatus, TrialDateResult } from '@ab/shared';
+import type { Gender, Program, StudentStatus, TrialDateResult } from '@ab/shared';
 import { HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { z } from 'zod';
 import type { Json } from '@ab/db';
@@ -13,7 +13,14 @@ const LESSON =
 const PLATFORM = `student_id, attendance, chargeable, lesson:lessons!inner(${LESSON}, rule:schedule_rules!lessons_rule_id_fkey!inner(package))`;
 const IMPORTED = `student_id, attendance, chargeable, lesson:lessons!inner(${LESSON}, rule:schedule_rules!lessons_rule_id_fkey(package))`;
 
-export type TrialStudent = { id: string; status: StudentStatus; tz: string; guardian: { tz: string } | null };
+export type TrialStudent = {
+  id: string;
+  status: StudentStatus;
+  tz: string;
+  program?: Program;
+  teacher_gender_pref?: Gender | null;
+  guardian: { tz: string } | null;
+};
 
 const result = z.object({
   lesson_id: z.string(),
@@ -36,7 +43,7 @@ export class TrialDateQueries {
   constructor(@Inject(DB) private readonly db: Db) {}
 
   async student(id: string): Promise<TrialStudent | null> {
-    const { data, error } = await this.db.from('students').select('id, status, tz, guardian:guardians(tz)').eq('id', id).maybeSingle();
+    const { data, error } = await this.db.from('students').select('id, status, tz, program, teacher_gender_pref, guardian:guardians(tz)').eq('id', id).maybeSingle();
     if (error) throw dbError(error);
     return data;
   }

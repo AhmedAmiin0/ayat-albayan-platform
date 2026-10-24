@@ -62,7 +62,8 @@ export function TrialDateWizard({ history, title, program, fallback }: TrialDate
             <TrialHistoryList history={history} />
             <TrialTeacherPick
               current={draft.teacher}
-              program={program}
+              program={history.program ?? program}
+              gender={history.teacher_gender_pref}
               onKeep={() => go('slot')}
               onPick={(teacher) => {
                 patch({ teacher, startsAt: null });

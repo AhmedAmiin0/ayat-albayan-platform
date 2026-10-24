@@ -11,7 +11,7 @@ test('the warning starts with the 3rd date (two exist), never before', () => {
 });
 
 test('the viewer’s clock, and the family’s only when it differs', () => {
-  const riyadh = lessonWhenText(new Date(THU_1_18), 'Asia/Riyadh', 'ar');
+  const riyadh = `${lessonWhenText(new Date(THU_1_18), 'Asia/Riyadh', 'ar')} ${t.schedule.riyadhTime}`;
   expect(whenLines(THU_1_18, 'Asia/Riyadh')).toEqual({ when: riyadh, family: null });
   const cairo = lessonWhenText(new Date(THU_1_18), 'Africa/Cairo', 'ar');
   expect(whenLines(THU_1_18, 'Africa/Cairo')).toEqual({ when: riyadh, family: t.trialDate.familyTime.replace('{time}', cairo) });
@@ -24,7 +24,7 @@ test('who picked it and when; an imported row says «غير معروف»', () =>
 });
 
 test('the effect: moves the upcoming trial (its time), or books a new lesson', () => {
-  const when = lessonWhenText(new Date(THU_1_18), 'Asia/Riyadh', 'ar');
+  const when = `${lessonWhenText(new Date(THU_1_18), 'Asia/Riyadh', 'ar')} ${t.schedule.riyadhTime}`;
   expect(effectLine(historyOf([trialRow()]))).toBe(t.trialDate.moves.replace('{when}', when));
   expect(effectLine(historyOf([trialRow({ lesson_id: OLD, outcome: 'absent' })]))).toBe(t.trialDate.newLesson);
 });

@@ -18,7 +18,7 @@ test('rows newest first: when, teacher, who picked it, the outcome chip; the cou
   const rows = screen.getAllByTestId(/^trial-row-/);
   expect(rows).toHaveLength(2);
   const first = within(screen.getByTestId(`trial-row-${history.items[0]?.lesson_id ?? ''}`));
-  expect(first.getByText(at(THU_1_18))).toBeTruthy();
+  expect(first.getByText(`${at(THU_1_18)} ${t.schedule.riyadhTime}`)).toBeTruthy();
   expect(first.getByText(maryam.display_name_ar)).toBeTruthy();
   expect(first.getByText(t.trialDate.outcome.upcoming)).toBeTruthy();
   const second = within(screen.getByTestId(`trial-row-${OLD}`));

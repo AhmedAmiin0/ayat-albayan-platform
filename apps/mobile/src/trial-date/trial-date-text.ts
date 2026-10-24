@@ -37,7 +37,8 @@ export interface WhenLines {
 /** An instant in the viewer's zone, and in the family's when it differs (rule 6). */
 export function whenLines(startsAt: string, familyTz: string): WhenLines {
   const at = new Date(startsAt);
-  const when = lessonWhenText(at, VIEWER_TZ, locale);
+  // Every time says its zone (docs/07 principle 7): the viewer reads the academy's clock.
+  const when = `${lessonWhenText(at, VIEWER_TZ, locale)} ${t.schedule.riyadhTime}`;
   if (familyTz === VIEWER_TZ) return { when, family: null };
   return { when, family: t.trialDate.familyTime.replace('{time}', lessonWhenText(at, familyTz, locale)) };
 }

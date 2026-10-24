@@ -13,6 +13,8 @@ export interface TrialTeacherPickProps {
   current: { id: string; name: string } | null;
   /** The student's program, the filter's start (quran when unknown). */
   program: Program;
+  /** The student's teacher-gender preference (history.teacher_gender_pref), the filter's start. */
+  gender?: Gender | null | undefined;
   onKeep: () => void;
   onPick: (teacher: { id: string; name: string }) => void;
 }
@@ -21,9 +23,9 @@ export interface TrialTeacherPickProps {
  * Step 1: «متابعة مع {teacher}» for the last trial's teacher (pre-selected), or another from the
  * booking's own teacher step (the same program / gender filters and «غير متاح» rows).
  */
-export function TrialTeacherPick({ current, program, onKeep, onPick }: TrialTeacherPickProps) {
+export function TrialTeacherPick({ current, program, gender = null, onKeep, onPick }: TrialTeacherPickProps) {
   const { color } = useTheme();
-  const [filter, setFilter] = useState<{ program: Program; gender: Gender | null }>({ program, gender: null });
+  const [filter, setFilter] = useState<{ program: Program; gender: Gender | null }>({ program, gender });
   const pick = (o: BookingTeacherOption) => onPick({ id: o.id, name: teacherName(o, locale) });
   return (
     <View style={{ gap: 12 }}>
