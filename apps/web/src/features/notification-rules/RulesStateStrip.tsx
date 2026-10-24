@@ -13,7 +13,7 @@ export const queuedWords = (n: number): string => (n === 0 ? r.strip.queued.zero
 
 /**
  * The state strip of «الإشعارات» (docs/26b §3): sending, automatic messages, the queued count, and
- * the way to the «الإرسال» tab that changes them. Every row's «هل يُرسل الآن؟» depends on these two.
+ * the way to «نظرة عامة», which changes them. Every row's «هل يُرسل الآن؟» depends on these two.
  */
 export function RulesStateStrip({ settings }: { settings: AcademySettings }) {
   const gate = useQuery(sendGateQuery);
@@ -29,7 +29,7 @@ export function RulesStateStrip({ settings }: { settings: AcademySettings }) {
         search={{}}
         className="inline-flex min-h-11 items-center text-xs font-semibold text-lapis underline underline-offset-4 sm:min-h-0"
       >
-        {r.strip.openSending}
+        {t.communicationsHub.openOverview}
       </Link>
     </div>
   );

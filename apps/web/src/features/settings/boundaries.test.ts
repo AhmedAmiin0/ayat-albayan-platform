@@ -44,11 +44,11 @@ describe('apps/web/src settings boundaries', () => {
     );
   });
 
-  it('only the /admin/settings routes import features/settings from outside it', () => {
+  it('only the /admin/settings routes (and the /admin/communications alias) import features/settings from outside it', () => {
     const outside = (file: string) => !inFolder(file, 'features/settings');
     const found = hits('features/settings', outside);
     expect(found).toEqual(expect.arrayContaining(['routes/admin/settings.communications.tsx → features/settings/pages/CommunicationsPage']));
-    expect(found.filter((hit) => !/^routes\/admin\/settings(\.[a-z]+)?\.tsx → /.test(hit))).toEqual([]);
+    expect(found.filter((hit) => !/^routes\/admin\/(settings(\.[a-z]+)?|communications)\.tsx → /.test(hit))).toEqual([]);
   });
 
   it('the old single settings page is gone (docs/26 26-P3: hub + module pages)', () => {

@@ -29,6 +29,17 @@ describe('«التكاملات» page', () => {
     expect(screen.queryByRole('heading', { name: t.googleSync.title })).toBeNull();
   });
 
+  it('only the services that are not messaging; WhatsApp, Kapso and the guards are on «التواصل» › «الحماية»', async () => {
+    routeFetch(apiFetch, [['/settings/integrations', integrationItems()]]);
+    renderWithClient(<IntegrationsPage />);
+    await screen.findByRole('button', { name: s.saveValues });
+    for (const g of ['livekit', 'expo', 'web_push', 'fx', 'google'] as const) expect(screen.getByRole('group', { name: s.groups[g] })).toBeTruthy();
+    for (const g of ['wa_notifications', 'wa_chat', 'kapso', 'wa_safety'] as const) expect(screen.queryByRole('group', { name: s.groups[g] })).toBeNull();
+    expect(screen.getByText(t.communicationsHub.movedToComms)).toBeTruthy();
+    const link = screen.getByRole('link', { name: t.communicationsHub.movedToCommsLink });
+    expect(link.getAttribute('href')).toBe('/admin/settings/communications?tab=safety');
+  });
+
   it('the title shows once: the panel’s same-named h2 only names its region (visually hidden)', () => {
     routeFetch(apiFetch, [['/settings/integrations', integrationItems()]]);
     renderWithClient(<IntegrationsPage />);
@@ -43,7 +54,7 @@ describe('«التكاملات» page', () => {
     await screen.findByRole('button', { name: s.saveValues });
     expect(screen.queryAllByRole('status')).toHaveLength(0);
     apiSend.mockResolvedValue(integrationItems());
-    fireEvent.change(screen.getByLabelText(s.keys.WA_ALLOWED_RECIPIENTS.label), { target: { value: '+966551234567' } });
+    fireEvent.change(screen.getByLabelText(s.keys.FX_API_URL.label), { target: { value: 'https://fx.example/latest' } });
     fireEvent.click(screen.getByRole('button', { name: s.saveValues }));
     await waitFor(() => expect(screen.getAllByRole('status')).toHaveLength(1));
   });

@@ -6,11 +6,9 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { usePermissions } from '@/features/auth/use-permissions';
 import { t } from '@/lib/i18n';
 import { settingsQuery } from '@/lib/settings-api';
-import { integrationsQuery } from '../integrations/integrations-api';
-import { linesCheckQuery } from '../messaging/api';
-import { catalogueQuery } from '../notification-catalogue/catalogue-api';
 import type { AudienceTab } from '../notification-catalogue/catalogue-tabs';
 import { NumbersLine } from '../notification-catalogue/NumbersLine';
+import { useCatalogue } from '../notification-catalogue/use-catalogue';
 import { numbersQuery } from '../numbers/numbers-api';
 import { useRuleDrafts, type RuleDrafts } from './rule-drafts';
 import { RulesContext } from './rules-context';
@@ -42,13 +40,10 @@ function Loading() {
  */
 export function RulesSection({ onSaved, drafts }: { onSaved: (message: string) => void; drafts?: RuleDrafts | undefined }) {
   const settings = useQuery(settingsQuery);
-  const check = useQuery(linesCheckQuery);
-  const integrations = useQuery(integrationsQuery);
   const numbers = useQuery(numbersQuery);
   const canManage = canManageNotifications(usePermissions().permissions);
   // Refetched whenever the settings, «التكاملات» or a line check change; first fetch once settings are in.
-  const version = settings.dataUpdatedAt + check.dataUpdatedAt + integrations.dataUpdatedAt;
-  const list = useQuery({ ...catalogueQuery(version), enabled: settings.isSuccess });
+  const list = useCatalogue();
   const own = useRuleDrafts();
   const held = drafts ?? own;
   const [tab, setTab] = useState<AudienceTab>('guardian');

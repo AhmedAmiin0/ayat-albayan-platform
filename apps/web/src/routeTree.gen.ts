@@ -24,6 +24,7 @@ import { Route as AdminActivityRouteImport } from './routes/admin/activity'
 import { Route as AdminAssistantsRouteImport } from './routes/admin/assistants'
 import { Route as AdminBookRouteImport } from './routes/admin/book'
 import { Route as AdminClassroomsRouteImport } from './routes/admin/classrooms'
+import { Route as AdminCommunicationsRouteImport } from './routes/admin/communications'
 import { Route as AdminExpensesRouteImport } from './routes/admin/expenses'
 import { Route as AdminFeedbackRouteImport } from './routes/admin/feedback'
 import { Route as AdminFinanceRouteImport } from './routes/admin/finance'
@@ -157,6 +158,11 @@ const AdminBookRoute = AdminBookRouteImport.update({
 const AdminClassroomsRoute = AdminClassroomsRouteImport.update({
   id: '/classrooms',
   path: '/classrooms',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminCommunicationsRoute = AdminCommunicationsRouteImport.update({
+  id: '/communications',
+  path: '/communications',
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminExpensesRoute = AdminExpensesRouteImport.update({
@@ -475,6 +481,7 @@ export interface FileRoutesByFullPath {
   '/admin/assistants': typeof AdminAssistantsRouteWithChildren
   '/admin/book': typeof AdminBookRoute
   '/admin/classrooms': typeof AdminClassroomsRoute
+  '/admin/communications': typeof AdminCommunicationsRoute
   '/admin/expenses': typeof AdminExpensesRoute
   '/admin/feedback': typeof AdminFeedbackRoute
   '/admin/finance': typeof AdminFinanceRoute
@@ -546,6 +553,7 @@ export interface FileRoutesByTo {
   '/admin/assistants': typeof AdminAssistantsRouteWithChildren
   '/admin/book': typeof AdminBookRoute
   '/admin/classrooms': typeof AdminClassroomsRoute
+  '/admin/communications': typeof AdminCommunicationsRoute
   '/admin/expenses': typeof AdminExpensesRoute
   '/admin/feedback': typeof AdminFeedbackRoute
   '/admin/finance': typeof AdminFinanceRoute
@@ -623,6 +631,7 @@ export interface FileRoutesById {
   '/admin/assistants': typeof AdminAssistantsRouteWithChildren
   '/admin/book': typeof AdminBookRoute
   '/admin/classrooms': typeof AdminClassroomsRoute
+  '/admin/communications': typeof AdminCommunicationsRoute
   '/admin/expenses': typeof AdminExpensesRoute
   '/admin/feedback': typeof AdminFeedbackRoute
   '/admin/finance': typeof AdminFinanceRoute
@@ -701,6 +710,7 @@ export interface FileRouteTypes {
     | '/admin/assistants'
     | '/admin/book'
     | '/admin/classrooms'
+    | '/admin/communications'
     | '/admin/expenses'
     | '/admin/feedback'
     | '/admin/finance'
@@ -772,6 +782,7 @@ export interface FileRouteTypes {
     | '/admin/assistants'
     | '/admin/book'
     | '/admin/classrooms'
+    | '/admin/communications'
     | '/admin/expenses'
     | '/admin/feedback'
     | '/admin/finance'
@@ -848,6 +859,7 @@ export interface FileRouteTypes {
     | '/admin/assistants'
     | '/admin/book'
     | '/admin/classrooms'
+    | '/admin/communications'
     | '/admin/expenses'
     | '/admin/feedback'
     | '/admin/finance'
@@ -1034,6 +1046,13 @@ declare module '@tanstack/react-router' {
       path: '/classrooms'
       fullPath: '/admin/classrooms'
       preLoaderRoute: typeof AdminClassroomsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/communications': {
+      id: '/admin/communications'
+      path: '/communications'
+      fullPath: '/admin/communications'
+      preLoaderRoute: typeof AdminCommunicationsRouteImport
       parentRoute: typeof AdminRoute
     }
     '/admin/expenses': {
@@ -1544,6 +1563,7 @@ interface AdminRouteChildren {
   AdminAssistantsRoute: typeof AdminAssistantsRouteWithChildren
   AdminBookRoute: typeof AdminBookRoute
   AdminClassroomsRoute: typeof AdminClassroomsRoute
+  AdminCommunicationsRoute: typeof AdminCommunicationsRoute
   AdminExpensesRoute: typeof AdminExpensesRoute
   AdminFeedbackRoute: typeof AdminFeedbackRoute
   AdminFinanceRoute: typeof AdminFinanceRoute
@@ -1571,6 +1591,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminAssistantsRoute: AdminAssistantsRouteWithChildren,
   AdminBookRoute: AdminBookRoute,
   AdminClassroomsRoute: AdminClassroomsRoute,
+  AdminCommunicationsRoute: AdminCommunicationsRoute,
   AdminExpensesRoute: AdminExpensesRoute,
   AdminFeedbackRoute: AdminFeedbackRoute,
   AdminFinanceRoute: AdminFinanceRoute,

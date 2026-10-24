@@ -1,5 +1,6 @@
 import type { AcademySettings } from '@ab/shared';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { Link } from '@tanstack/react-router';
 import { useState } from 'react';
 import { ConfirmSwitchDialog } from '@/components/settings/ConfirmSwitchDialog';
 import { Button } from '@/components/ui/button';
@@ -16,10 +17,23 @@ const s = t.templates.settings;
 const warning =
   'flex items-start gap-2 rounded-md bg-danger-soft px-3 py-2.5 text-sm text-ink shadow-[inset_0_0_0_1px_color-mix(in_oklab,var(--cinnabar)_35%,transparent)]';
 
+/** The cut-over is marked (and unmarked, both asking first) on «التواصل» › «الحماية» (docs/26b §6a 1.2–1.3). */
+function SafetyLink() {
+  return (
+    <Link
+      to="/admin/settings/communications"
+      search={{ tab: 'safety' }}
+      className="inline-flex min-h-11 items-center text-xs font-semibold text-lapis underline underline-offset-4 sm:min-h-0"
+    >
+      {t.communicationsHub.crmOpenSafety}
+    </Link>
+  );
+}
+
 /**
  * The admin's messaging kill switch (settings.messaging_enabled, docs/12 §3.1). Until the owner
- * marks the number moved off the CRM (crm_cutover_done, docs/09 step 3) a warning stays on
- * screen (a rollback to the CRM brings it back); WhatsApp not set up is named (the switch alone can't
+ * marks the number moved off the CRM (crm_cutover_done, docs/09 step 3, marked on «الحماية») a
+ * warning stays on screen (a rollback to the CRM brings it back); WhatsApp not set up is named (the switch alone can't
  * open it) and the chip says so. It is the only switch for sending (docs/23: no env fuse), so both ways
  * ask first with cancel as the default: ON says how many queued messages go out at once, OFF who stops
  * getting messages. OFF applies at the next message: the sender reads it before every one.
@@ -39,33 +53,18 @@ export function MessagingSwitch({ settings }: { settings: AcademySettings }) {
   return (
     <div className="grid gap-3">
       {!settings.crm_cutover_done && (
-        <div className="grid gap-1.5">
+        <div className="grid justify-items-start gap-1.5">
           <p role="note" className={warning}>
             <NuqtaGlyph shape="struck" className="mt-1 text-danger" />
             <span>{s.crmWarning}</span>
           </p>
-          <Button
-            size="sm"
-            variant="ghost"
-            className="justify-self-start"
-            onClick={() => save.mutate({ cutover: true })}
-          >
-            {s.crmDone}
-          </Button>
-          <p className="text-2xs text-ink-3">{s.crmDoneHint}</p>
+          <SafetyLink />
         </div>
       )}
       {settings.crm_cutover_done && (
         <p className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-ink-3">
           <span>{s.crmMoved}</span>
-          <Button
-            size="sm"
-            variant="ghost"
-            disabled={save.isPending}
-            onClick={() => save.mutate({ cutover: false })}
-          >
-            {s.crmUndo}
-          </Button>
+          <SafetyLink />
         </p>
       )}
       <div className="flex flex-wrap items-center gap-3">

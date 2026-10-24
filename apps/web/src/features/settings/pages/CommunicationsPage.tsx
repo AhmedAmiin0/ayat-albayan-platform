@@ -12,10 +12,10 @@ import { ModuleHead } from './ModuleHead';
 import { COMMUNICATIONS_TABS, type CommunicationsTab } from './page-search';
 
 export interface CommunicationsPageProps {
-  /** The tab in view (`?tab=`, «الإرسال» by default). */
+  /** The tab in view (`?tab=`, «نظرة عامة» by default). */
   tab: CommunicationsTab;
   onTab: (tab: CommunicationsTab) => void;
-  /** Asks before leaving the page with unsaved timing fields or rule rows (the route passes LeaveGuard). */
+  /** Asks before leaving the page with unsaved rule rows (the route passes LeaveGuard). */
   renderGuard?: (names: readonly string[]) => ReactNode;
 }
 
@@ -25,11 +25,11 @@ const tabLabel = (value: CommunicationsTab): string =>
 const TABS = COMMUNICATIONS_TABS.map((value) => ({ value, label: tabLabel(value) }));
 
 /**
- * /admin/settings/communications «التواصل» (docs/26b §3, docs/26 26-P3): what was the messaging part
- * of the old long settings page, one tab at a time — «الإرسال» (the switches), «الأرقام» (numbers and
- * lines), «الإشعارات» (the editable catalogue), «مواعيد الرسائل» (the timing fields) and
- * «القوالب». The sending state stays in the head on every tab. Only the tab in view is mounted (its
- * queries load on demand); the timing form lives above the tabs, so an edit survives a switch.
+ * /admin/settings/communications «التواصل» (docs/23 §2d, docs/26b §3; /admin/communications opens it):
+ * one tab at a time — «نظرة عامة» (the two switches, the numbers, what sends now, the families'
+ * number), «الأرقام» (numbers and lines), «الإشعارات» (the editable catalogue), «القوالب» and
+ * «الحماية» (CRM cut-over, test guards, Kapso). The sending state stays in the head on every tab. Only
+ * the tab in view is mounted (its queries load on demand); the rule drafts live above the tabs.
  */
 export function CommunicationsPage({ tab, onTab, renderGuard }: CommunicationsPageProps) {
   const settings = useQuery(settingsQuery);
