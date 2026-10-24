@@ -10,7 +10,12 @@ jest.mock('@/lib/api', () => ({
   apiFetch: async (path: string) => (path === '/auth/me' ? mockMe : {}),
 }));
 const mockPush = jest.fn();
-jest.mock('expo-router', () => ({ router: { push: (mockHref: string) => mockPush(mockHref) } }));
+// The root stack shows the tabs (no chat open): every tap is a push (useNotificationHandling.chat.test).
+const mockTabsRoot = { routes: [{ name: '__root', state: { index: 0, routes: [{ name: '(tabs)' }] } }] };
+jest.mock('expo-router', () => ({
+  router: { push: (mockHref: string) => mockPush(mockHref) },
+  useNavigationContainerRef: () => ({ isReady: () => true, getRootState: () => mockTabsRoot }),
+}));
 
 type Listener = (event: unknown) => void;
 const mockListeners: { received?: Listener; response?: Listener } = {};

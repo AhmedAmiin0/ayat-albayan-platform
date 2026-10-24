@@ -1,16 +1,17 @@
 import AppLayout from '../../app/_layout';
+import ChatLayout from '../../app/(admin-chat)/_layout';
+import BookRoute from '../../app/(admin-chat)/inbox/book';
+import SalesCourseRoute from '../../app/(admin-chat)/inbox/sales-course';
+import SalesSubscribeRoute from '../../app/(admin-chat)/inbox/sales-subscribe';
+import SalesTransferRoute from '../../app/(admin-chat)/inbox/sales-transfer';
+import SubscribeRoute from '../../app/(admin-chat)/inbox/subscribe';
+import ThreadRoute from '../../app/(admin-chat)/inbox/thread/[phone]';
 import TabsLayout from '../../app/(tabs)/_layout';
 import Today from '../../app/(tabs)/index';
 import Schedule from '../../app/(tabs)/schedule';
 import LeadRoute from '../../app/(tabs)/inbox/[id]';
 import InboxLayout from '../../app/(tabs)/inbox/_layout';
-import BookRoute from '../../app/(tabs)/inbox/book';
 import InboxIndex from '../../app/(tabs)/inbox/index';
-import SalesCourseRoute from '../../app/(tabs)/inbox/sales-course';
-import SalesSubscribeRoute from '../../app/(tabs)/inbox/sales-subscribe';
-import SalesTransferRoute from '../../app/(tabs)/inbox/sales-transfer';
-import SubscribeRoute from '../../app/(tabs)/inbox/subscribe';
-import ThreadRoute from '../../app/(tabs)/inbox/thread/[phone]';
 import Login from '../../app/login';
 import FinanceExpenses from '../../app/(tabs)/more/finance/expenses';
 import FinanceInvoices from '../../app/(tabs)/more/finance/invoices';
@@ -38,12 +39,14 @@ export const routes = {
   '(tabs)/inbox/_layout': InboxLayout,
   '(tabs)/inbox/index': InboxIndex,
   '(tabs)/inbox/[id]': LeadRoute,
-  '(tabs)/inbox/book': BookRoute,
-  '(tabs)/inbox/subscribe': SubscribeRoute,
-  '(tabs)/inbox/sales-course': SalesCourseRoute,
-  '(tabs)/inbox/sales-subscribe': SalesSubscribeRoute,
-  '(tabs)/inbox/sales-transfer': SalesTransferRoute,
-  '(tabs)/inbox/thread/[phone]': ThreadRoute,
+  // The chat and what it opens: a full screen above the tabs (same URLs, the group adds no segment).
+  '(admin-chat)/_layout': ChatLayout,
+  '(admin-chat)/inbox/thread/[phone]': ThreadRoute,
+  '(admin-chat)/inbox/book': BookRoute,
+  '(admin-chat)/inbox/subscribe': SubscribeRoute,
+  '(admin-chat)/inbox/sales-course': SalesCourseRoute,
+  '(admin-chat)/inbox/sales-subscribe': SalesSubscribeRoute,
+  '(admin-chat)/inbox/sales-transfer': SalesTransferRoute,
   '(tabs)/students/_layout': StudentsLayout,
   '(tabs)/students/index': StudentsIndex,
   '(tabs)/students/[id]': StudentRoute,

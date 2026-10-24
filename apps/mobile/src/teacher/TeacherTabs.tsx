@@ -1,10 +1,8 @@
 import { canOpen } from '@/auth/route-permissions';
 import { type Can, usePermissions } from '@/auth/use-permissions';
-import { ThreadModeProvider } from '@/inbox/thread-mode';
 import { t } from '@/lib/i18n';
 import { AppNativeTabs, type TabItem } from '@/ui/AppNativeTabs';
-import { NotLinkedScreen } from './NotLinkedScreen';
-import { isNotLinked, useTeacherMe } from './queries';
+import { TeacherScope } from './TeacherScope';
 
 // The teacher app, native tabs (R-AUTH-01, R-TCH-03, R-MOB-02): only her lessons, schedule, chats, students,
 // reports and payouts. Five tabs, the native bar's limit on Android; «الطلاب» lives in «المزيد».
@@ -18,17 +16,15 @@ const tabItems = (can: Can): TabItem[] => [
 ];
 
 /**
- * Teacher tabs. The shared chat screens run in teacher mode (her threads, no admin actions). A login
- * with no teachers row (404 `teacher_not_linked`) gets one screen that says so, and sign-out.
- * Push registration is mounted by app/teacher/_layout.tsx (teachers hold notifications.push).
+ * Teacher tabs, inside TeacherScope (teacher mode, the not-linked screen); an open chat is a full
+ * screen above them (app/(teacher-chat)). Push registration is mounted by app/teacher/_layout.tsx
+ * (teachers hold notifications.push).
  */
 export function TeacherTabs() {
-  const me = useTeacherMe();
   const can = usePermissions();
-  if (!me.data && isNotLinked(me.error)) return <NotLinkedScreen />;
   return (
-    <ThreadModeProvider value={{ kind: 'teacher', teacherId: me.data?.id ?? '' }}>
+    <TeacherScope>
       <AppNativeTabs tabs={tabItems(can)} />
-    </ThreadModeProvider>
+    </TeacherScope>
   );
 }

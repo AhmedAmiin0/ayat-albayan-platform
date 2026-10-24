@@ -24,15 +24,12 @@ function labelOf(children: ReactNode): string | undefined {
 const TriggerBase: (props: TriggerProps) => null = () => null;
 const Trigger = Object.assign(TriggerBase, { Label, Icon, Badge, VectorIcon: Icon });
 
-const noBar = () => null;
-
-// The host `hidden` (tabBarHidden on the real bar) drops the JS tab buttons, so a test sees it.
-function NativeTabsMock({ children, hidden = false }: { children?: ReactNode; hidden?: boolean }) {
+function NativeTabsMock({ children }: { children?: ReactNode }) {
   const triggers = Children.toArray(children).filter(
     isValidElement,
   ) as ReactElement<TriggerProps>[];
   return (
-    <Tabs screenOptions={{ headerShown: false }} tabBar={hidden ? noBar : undefined}>
+    <Tabs screenOptions={{ headerShown: false }}>
       {triggers.map(({ props }) => {
         const title = labelOf(props.children);
         // Like the real NativeTabs, a hidden trigger is a protected route: a push into it goes nowhere.
