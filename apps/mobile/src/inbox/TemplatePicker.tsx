@@ -6,6 +6,7 @@ import { useSendsAllTemplates } from '@/auth/use-permissions';
 import { apiFetch } from '@/lib/api';
 import { t } from '@/lib/i18n';
 import { pathKey } from '@/lib/query-keys';
+import { Note } from '@/more/Note';
 import { Button } from '@/ui/Button';
 import { EmptyState } from '@/ui/EmptyState';
 import { ErrorState } from '@/ui/ErrorState';
@@ -94,14 +95,19 @@ export function TemplatePicker(props: TemplatePickerProps) {
                 onPress={() => setChosen(item)}
               />
             )}
+            // While the list loads, say so: a slow answer is not an empty white sheet.
             ListEmptyComponent={
               templates.isError ? (
                 <ErrorState onRetry={() => void templates.refetch()} />
-              ) : templates.isSuccess ? (
+              ) : (
                 <View style={{ padding: 16 }}>
-                  <EmptyState title={restricted ? t.inbox.composer.noAllowed : t.inbox.composer.noApproved} />
+                  {templates.isPending ? (
+                    <Note>{t.common.loading}</Note>
+                  ) : (
+                    <EmptyState title={restricted ? t.inbox.composer.noAllowed : t.inbox.composer.noApproved} />
+                  )}
                 </View>
-              ) : null
+              )
             }
           />
         )}

@@ -2622,7 +2622,9 @@
       "lesson_join_link": "رابط دخول الحلقة عبر الإنترنت",
       "lesson_rating": "تقييم الحلقة بالأزرار",
       "teacher_new_student": "تنبيه المعلم/ة بطالب جديد",
-      "trial_reschedule": "إعادة جدولة الحلقة التجريبية"
+      "trial_reschedule": "إعادة جدولة الحلقة التجريبية",
+      "free_trial_invite": "دعوة إلى حلقة تجريبية مجانية",
+      "welcome_greeting": "رسالة ترحيب"
     },
     "settings": {
       "title": "إعدادات الإرسال",

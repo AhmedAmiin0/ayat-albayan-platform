@@ -35,7 +35,7 @@ afterEach(() => {
 describe('TemplateComposer — restricted roles', () => {
   it('a teacher picks free_trial_invite, fills «المتغير n» and sends it, with no lesson to pick', async () => {
     show({ mode: 'teacher', rows: [INVITE] });
-    await screen.findByRole('option', { name: 'free_trial_invite' });
+    await screen.findByRole('option', { name: t.templates.names.free_trial_invite }); // by its Arabic name, not the Meta key
     fireEvent.change(screen.getByRole('combobox', { name: t.inbox.composer.chooseTemplate }), { target: { value: 'free_trial_invite' } });
     fireEvent.change(field('1'), { target: { value: 'ياسمين' } });
     fireEvent.change(field('2'), { target: { value: 'الأحد' } });
