@@ -1,7 +1,7 @@
 import { CREDENTIAL_MODES, DEFAULT_PASSWORD_MIN, type CredentialMode } from '@ab/shared';
 import { Field } from '@/components/ui/field';
-import { Input } from '@/components/ui/input';
 import { RadioChips } from '@/components/ui/radio-chips';
+import { PasswordInput } from '@/features/auth/PasswordInput';
 import { t } from '@/lib/i18n';
 
 const C = t.users.credential;
@@ -29,7 +29,7 @@ export function CredentialPicker({ name, mode, password, onMode, onPassword, err
       />
       {mode === 'set' && (
         <Field label={C.password} required error={error} hint={C.hint.replace('{n}', String(DEFAULT_PASSWORD_MIN))}>
-          {(p) => <Input {...p} type="password" dir="ltr" autoComplete="new-password" value={password} onChange={(e) => onPassword(e.target.value)} />}
+          {(p) => <PasswordInput {...p} autoComplete="new-password" value={password} onValue={onPassword} />}
         </Field>
       )}
     </div>
