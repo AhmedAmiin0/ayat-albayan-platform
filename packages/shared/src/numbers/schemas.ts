@@ -32,6 +32,7 @@ export const numberUpdateSchema = z
     app_id: metaId.nullable(),
     enabled: z.boolean(),
     is_default: z.boolean(),
+    fallback_rank: z.number().int().min(0).max(999),
   })
   .partial()
   .refine((v) => Object.keys(v).length > 0, 'empty');

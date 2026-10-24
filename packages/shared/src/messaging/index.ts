@@ -6,6 +6,7 @@ export * from './quick-reply.js';
 export * from './rating.js';
 export * from './render.js';
 export * from './reply-line.js';
+export * from './reply-number.js';
 export * from './reply-note.js';
 export * from './restricted-templates.js';
 export * from './schemas.js';

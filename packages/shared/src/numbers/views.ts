@@ -39,6 +39,8 @@ export interface NumberView {
   display_phone_e164: string | null;
   enabled: boolean;
   is_default: boolean;
+  /** Fallback order inside its role when the chosen number is off (lower first; phase 5). */
+  fallback_rank: number;
   health: NumberHealth | null;
   checked_at: string | null;
   updated_at: string;
