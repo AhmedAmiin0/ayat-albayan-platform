@@ -28,6 +28,7 @@ Turborepo + pnpm · Supabase (Postgres, Auth, Storage, pg_cron/pg-boss) · NestJ
 ## How to execute (speed)
 - Use the **Workflow** tool for every phase with ≥ 3 independent modules (owner opted in). Builders in worktrees → verifiers → integrator (see `docs/05-build-plan.md §2`). ≤ 10 agents per run.
 - Every agent prompt repeats rules 1–4 and lists the requirement IDs it must satisfy.
+- Project skills live in `.claude/skills/` (see its README): every design review loads `heuristic-evaluation`, `design-qa-checklist` and `critique-brand-consistency`; every migration, SQL or RLS change loads `supabase-postgres-best-practices`.
 - Before finishing any phase: `pnpm turbo lint typecheck test` (+ `e2e` from Phase 2) green; write `PHASE_SUMMARY.md`.
 
 ## Commands
