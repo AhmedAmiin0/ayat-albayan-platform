@@ -34,16 +34,18 @@ const set = async (tx: Tx, changes: unknown) =>
 test.describe('settings expand (migration 630)', () => {
   test.beforeEach(() => test.skip(test.info().project.name !== 'desktop', 'database only: one run'));
 
-  test('the new columns, the revision row and the NOT VALID checks exist', async () => {
+  test('the new columns, the revision row and the three checks exist (validated by 634)', async () => {
     await rolledBack(async (tx) => {
       const cols = await tx<{ c: string }[]>`select column_name as c from information_schema.columns
         where table_schema = 'public' and table_name = 'settings' order by column_name`;
       expect(cols.map((r) => r.c)).toEqual(['default_value', 'description', 'description_edited', 'description_seed',
         'is_public', 'key', 'module', 'retired_at', 'scope', 'updated_at', 'updated_by', 'value', 'value_type', 'version']);
       expect(await tx`select count(*)::int as n from public.settings_revision`).toEqual([{ n: 1 }]);
-      const checks = await tx<{ conname: string }[]>`select conname from pg_constraint
-        where conrelid = 'public.settings'::regclass and not convalidated order by conname`;
-      expect(checks.map((r) => r.conname)).toEqual(['settings_key_format', 'settings_kind', 'settings_value_size']);
+      const checks = await tx<{ conname: string; convalidated: boolean }[]>`select conname, convalidated
+        from pg_constraint where conrelid = 'public.settings'::regclass
+          and conname in ('settings_key_format', 'settings_kind', 'settings_value_size') order by conname`;
+      expect(checks).toEqual(['settings_key_format', 'settings_kind', 'settings_value_size']
+        .map((conname) => ({ conname, convalidated: true })));
       expect((await fail(tx, () => tx`insert into public.settings (key, value) values ('Bad Key', '1')`)).code).toBe('23514');
     });
   });
