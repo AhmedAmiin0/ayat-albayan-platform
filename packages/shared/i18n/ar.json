@@ -5790,7 +5790,9 @@
       "numbers": "الأرقام",
       "catalogue": "ماذا يُرسل ومتى",
       "timing": "مواعيد الرسائل",
-      "templates": "القوالب"
+      "templates": "القوالب",
+      "overview": "نظرة عامة",
+      "safety": "الحماية"
     },
     "sendingNow": "حالة الإرسال الآن",
     "sendingState": "إرسال الرسائل: {state}",
@@ -5903,5 +5905,39 @@
       "confirmation_required": "اكتب الكلمة كما هي لتأكيد الإيقاف.",
       "failed": "تعذّر حفظ التغيير. حاول مرة أخرى."
     }
+  },
+  "communicationsHub": {
+    "switchesTitle": "مفاتيح الإرسال",
+    "numbersTitle": "الأرقام وحالتها",
+    "numbersOpen": "افتح «الأرقام»",
+    "numbersEmpty": "لا توجد أرقام مسجلة بعد.",
+    "whatTitle": "ماذا يُرسل الآن",
+    "whatCaption": "عدد الإشعارات التي تُرسل الآن لكل فئة",
+    "colAudience": "الفئة",
+    "colOn": "تُرسل الآن",
+    "colOff": "لا تُرسل",
+    "colOpen": "فتح",
+    "openAudience": "افتح إشعارات {audience}",
+    "publicNumber": "الرقم المعلن للأسر",
+    "publicNumberEdit": "يُعدَّل من «القيم» ← الأكاديمية",
+    "publicNumberNone": "غير محدد",
+    "webOnly": "الأرقام والقوالب والحماية تُدار من الموقع.",
+    "safetyIntro": "إعدادات تمنع وصول الرسائل إلى غير المقصودين أثناء التجربة.",
+    "crmTitle": "نقل الرقم من نظام CRM",
+    "crmDoneState": "تم نقل الرقم من نظام CRM.",
+    "crmPendingState": "لم يُنقل الرقم من نظام CRM بعد.",
+    "crmMark": "علّم أنه نُقل",
+    "crmUnmark": "أعد التحذير",
+    "crmMarkTitle": "تأكيد نقل الرقم من نظام CRM",
+    "crmMarkConfirm": "سيختفي التحذير من صفحة الإرسال. تأكد أن الرقم لم يعد مربوطًا بنظام CRM، وإلا قد تصل الرسائل مرتين.",
+    "crmMarkYes": "نعم، نُقل الرقم",
+    "crmUnmarkTitle": "إعادة تحذير نظام CRM",
+    "crmUnmarkConfirm": "سيعود التحذير إلى صفحة الإرسال إلى أن تؤكد نقل الرقم مرة أخرى.",
+    "crmUnmarkYes": "نعم، أعد التحذير",
+    "linesLegacyTitle": "إعداد الخطوط الحالي (من التكاملات)",
+    "linesLegacyHint": "هذه القيم مستخدمة ما دام مصدر الإعداد هو الإعداد الحالي، لا سجلات الأرقام.",
+    "movedToComms": "إعدادات واتساب وKapso والحماية انتقلت إلى «التواصل».",
+    "movedToCommsLink": "افتح «التواصل»",
+    "timingMovedToValues": "مواعيد الرسائل في «القيم» ← الرسائل الآن."
   }
 }

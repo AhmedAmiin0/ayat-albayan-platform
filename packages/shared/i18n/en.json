@@ -5790,7 +5790,9 @@
       "numbers": "Numbers",
       "catalogue": "What is sent and when",
       "timing": "Message timing",
-      "templates": "Templates"
+      "templates": "Templates",
+      "overview": "Overview",
+      "safety": "Safety"
     },
     "sendingNow": "Sending right now",
     "sendingState": "Message sending: {state}",
@@ -5903,5 +5905,39 @@
       "confirmation_required": "Type the word exactly to confirm turning it off.",
       "failed": "The change was not saved. Try again."
     }
+  },
+  "communicationsHub": {
+    "switchesTitle": "Sending switches",
+    "numbersTitle": "Numbers and their health",
+    "numbersOpen": "Open «Numbers»",
+    "numbersEmpty": "No numbers are recorded yet.",
+    "whatTitle": "What is sent now",
+    "whatCaption": "How many notifications are sent now, per audience",
+    "colAudience": "Audience",
+    "colOn": "Sent now",
+    "colOff": "Not sent",
+    "colOpen": "Open",
+    "openAudience": "Open {audience} notifications",
+    "publicNumber": "Number shown to families",
+    "publicNumberEdit": "Edited in «Values» → Academy",
+    "publicNumberNone": "Not set",
+    "webOnly": "Numbers, templates and safety are managed on the website.",
+    "safetyIntro": "Settings that keep messages from reaching the wrong people while testing.",
+    "crmTitle": "Moving the number off the CRM",
+    "crmDoneState": "The number has been moved off the CRM.",
+    "crmPendingState": "The number has not been moved off the CRM yet.",
+    "crmMark": "Mark as moved",
+    "crmUnmark": "Bring the warning back",
+    "crmMarkTitle": "Confirm the number moved off the CRM",
+    "crmMarkConfirm": "The warning disappears from the sending page. Make sure the number is no longer linked to the CRM, or messages may arrive twice.",
+    "crmMarkYes": "Yes, the number moved",
+    "crmUnmarkTitle": "Bring the CRM warning back",
+    "crmUnmarkConfirm": "The warning returns to the sending page until you confirm the move again.",
+    "crmUnmarkYes": "Yes, bring it back",
+    "linesLegacyTitle": "Current line settings (from integrations)",
+    "linesLegacyHint": "These values are used while the config source is the current setup, not the number records.",
+    "movedToComms": "WhatsApp, Kapso and safety settings moved to «Communications».",
+    "movedToCommsLink": "Open «Communications»",
+    "timingMovedToValues": "Message timing is now in «Values» → Messages."
   }
 }
