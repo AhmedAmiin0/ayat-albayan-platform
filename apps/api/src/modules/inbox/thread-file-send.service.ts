@@ -52,7 +52,7 @@ export class ThreadFileSender {
    */
   async uploadUrl(s: ThreadSend<ThreadFileUpload>, now = new Date()): Promise<SignedUpload> {
     assertSendable({ mime: s.input.mime, size: s.input.size, maxBytes: await this.maxBytes() });
-    sendLine(await this.queries.thread(s.phone), now);
+    await sendLine(await this.queries.thread(s.phone), { now, windows: () => this.queries.numberWindows(s.phone) });
     const path = chatOutPath({ actorId: s.actorId, requestId: s.input.clientRequestId, mime: s.input.mime });
     return this.storage.signedUpload({ bucket: BUCKETS.waMedia, path });
   }
@@ -66,7 +66,7 @@ export class ThreadFileSender {
   async send(s: ThreadSend<ThreadFileSendInput>, now = new Date()): Promise<Sent> {
     const key = dedupKey(s);
     const thread = await this.queries.thread(s.phone);
-    const line = sendLine(thread, now);
+    const line = await sendLine(thread, { now, windows: () => this.queries.numberWindows(s.phone) });
     const { path, clientRequestId, filename, caption } = s.input;
     if (!isChatOutPathOf(path, { actorId: s.actorId, requestId: clientRequestId })) throw filePath();
     const ref = { bucket: BUCKETS.waMedia, path };

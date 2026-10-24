@@ -1,11 +1,11 @@
-import { restrictedMay, type ThreadTemplate, type ThreadText, type WaLine } from '@ab/shared';
+import { restrictedMay, type NumberWindow, type ThreadTemplate, type ThreadText, type WaLine } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
 import { TemplateRegistry } from '../whatsapp/template.registry';
 import { waHttpError } from '../whatsapp/template.mapper';
 import type { SalesScope } from '../sales/sales-scope';
 import { Outbox, type Sent } from './outbox';
 import { assertCanSend, type TeacherScope } from './teacher-scope';
-import { pickSendLine } from './send-line';
+import { pickSend } from './send-number';
 import { missingParams, type ThreadRow } from './threads.mapper';
 import { ThreadsQueries } from './threads.queries';
 
@@ -47,9 +47,16 @@ export function outboundBase<T>(s: ThreadSend<T>, thread: ThreadRow | null) {
   };
 }
 
-/** pickSendLine as the inbox answers it: 409 session_closed (no thread too), 503 line_not_configured. */
-export function sendLine(thread: ThreadRow | null, now: Date): { line?: WaLine } {
-  const picked = pickSendLine(thread, now);
+/**
+ * pickSend as the inbox answers it: 409 session_closed (no thread too), 503 line_not_configured. Legacy:
+ * pickSendLine's { line? }; module mode (docs/23c decision 6): { number_id, line } from the reply windows,
+ * which `windows` reads (module mode only).
+ */
+export async function sendLine(
+  thread: ThreadRow | null,
+  at: { now: Date; windows: () => Promise<readonly NumberWindow[]> },
+): Promise<{ line?: WaLine; number_id?: string }> {
+  const picked = await pickSend({ thread, now: at.now, windows: at.windows });
   if (!('code' in picked)) return picked;
   throw picked.code === 'line_not_configured' ? waHttpError('line_not_configured', 503) : waHttpError('session_closed', 409);
 }
@@ -74,7 +81,8 @@ export class ThreadSendService {
     if (s.scope) assertCanSend(s.scope, s.phone);
     const key = dedupKey(s);
     const thread = await this.queries.thread(s.phone);
-    return this.outbox.send({ ...outboundBase(s, thread), dedup_key: key, body: s.input.text, ...sendLine(thread, now) });
+    const from = await sendLine(thread, { now, windows: () => this.queries.numberWindows(s.phone) });
+    return this.outbox.send({ ...outboundBase(s, thread), dedup_key: key, body: s.input.text, ...from });
   }
 
   /**

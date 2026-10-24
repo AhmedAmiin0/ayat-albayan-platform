@@ -15,3 +15,26 @@ export function lineFor(numbers: LineNumbers, id: string | undefined): WaLine | 
   if (id === numbers.chat) return 'chat';
   return id === numbers.notifications ? 'notifications' : null;
 }
+
+/** What the webhook needs of one wa_numbers row in module mode (docs/23c decision 7). */
+export interface ReceivingNumber {
+  id: string;
+  purpose: WaLine;
+  phone_number_id: string;
+}
+
+/** Where a change came in: its line (null = unstamped) and, in module mode, its wa_numbers id. */
+export interface Receiving {
+  line: WaLine | null;
+  numberId?: string;
+}
+
+/**
+ * Module mode: ANY number row, enabled or not («off = no sends, inbound still logged»), stamps its id and
+ * purpose; a change with no id is kept unstamped (as acceptsNumber does); an unknown id → null (ignored).
+ */
+export function receivingNumber(numbers: readonly ReceivingNumber[], id: string | undefined): Receiving | null {
+  if (!id) return { line: null };
+  const n = numbers.find((x) => x.phone_number_id === id);
+  return n ? { line: n.purpose, numberId: n.id } : null;
+}

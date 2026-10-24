@@ -1,7 +1,7 @@
 import type { MeetingInviteChannel, MeetingInviteStatus } from '@ab/shared';
 import { Injectable, Logger } from '@nestjs/common';
 import { PushService } from '../../common/push/push.service';
-import { pickSendLine } from '../inbox/send-line';
+import { pickSend } from '../inbox/send-number';
 import { ThreadsQueries } from '../inbox/threads.queries';
 import { MessageSender } from '../whatsapp/message.sender';
 import type { StoredInvitee } from './meeting-invitees.queries';
@@ -38,7 +38,8 @@ export interface ChatSend {
 /**
  * The two channels of a meeting invitation (R-MEET-02). Staff: one bell row (+ push) through
  * PushService.notifyProfiles, kind meeting_invite, keyed by subject (rule 8). Others: a WhatsApp
- * SESSION TEXT queued like an inbox reply (the line replyLine picks, docs/12 §13.3); never a template.
+ * SESSION TEXT queued like an inbox reply (the line replyLine picks, docs/12 §13.3; in module mode the number
+ * replyNumber picks, docs/23c decision 6); never a template.
  * No thread or every window closed → window_closed, nothing queued. The queued row goes out through the
  * usual sender and its gates (WhatsApp configured, WA_ALLOWED_RECIPIENTS, settings.messaging_enabled).
  * Never throws: one recipient's failure never fails the others.
@@ -70,7 +71,7 @@ export class MeetingInviteSender {
   async chat(s: ChatSend): Promise<DeliveryOutcome> {
     try {
       const thread = await this.threads.thread(s.phone);
-      const picked = pickSendLine(thread, s.now);
+      const picked = await pickSend({ thread, now: s.now, windows: () => this.threads.numberWindows(s.phone) });
       if ('code' in picked) return { status: 'window_closed', channel: 'link', error_code: picked.code };
       await this.threads.enqueue({
         direction: 'outbound',

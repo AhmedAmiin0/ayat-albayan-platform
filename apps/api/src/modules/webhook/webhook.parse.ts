@@ -1,5 +1,4 @@
 import type { Json } from '@ab/db';
-import type { WaLine } from '@ab/shared';
 import type { LineNumbers } from '../../env';
 import {
   DELIVERY_STATUSES,
@@ -9,7 +8,7 @@ import {
   type StatusEvent,
   type WebhookBatch,
 } from './webhook.events';
-import { acceptsNumber, lineFor } from './webhook.lines';
+import { acceptsNumber, lineFor, receivingNumber, type Receiving, type ReceivingNumber } from './webhook.lines';
 
 // Meta's webhook envelope → flat inbound messages and delivery statuses (docs/12 §3.5). Fields
 // are read by their Meta path («interactive.button_reply.id»). Lenient: an item we can't read is
@@ -50,7 +49,7 @@ function payloadOf(m: unknown, type: string): Json | null {
 interface MessageContext {
   names: Map<string, string>;
   now: Date;
-  line: WaLine | null;
+  at: Receiving;
 }
 
 function toInbound(m: unknown, ctx: MessageContext): InboundEvent | null {
@@ -71,7 +70,8 @@ function toInbound(m: unknown, ctx: MessageContext): InboundEvent | null {
     mediaId: mf('id'),
     mediaMime: mf('mime_type'),
     payload: payloadOf(m, type),
-    line: ctx.line,
+    line: ctx.at.line,
+    ...(ctx.at.numberId ? { numberId: ctx.at.numberId } : {}),
   };
 }
 
@@ -96,13 +96,16 @@ export interface ParseOptions {
   numbers?: LineNumbers;
   /** Told the phone_number_id of every change ignored as neither line (docs/12 §13.6). */
   onIgnored?: (id: string) => void;
+  /** Module mode (docs/23c decision 7): every wa_numbers row; absent / null = legacy (`numbers`). */
+  overlay?: readonly ReceivingNumber[] | null;
 }
 
-/** Whether a change for `number` is one of our lines; an ignored one is reported via onIgnored. */
-function accepted(number: string | undefined, ctx: ParseOptions): boolean {
-  if (acceptsNumber(ctx.numbers ?? {}, number)) return true;
-  if (number) ctx.onIgnored?.(number);
-  return false;
+/** Where a change for `number` came in; null = ignored (reported via onIgnored). */
+function receiving(number: string | undefined, ctx: ParseOptions): Receiving | null {
+  const numbers = ctx.numbers ?? {};
+  const at = ctx.overlay ? receivingNumber(ctx.overlay, number) : acceptsNumber(numbers, number) ? { line: lineFor(numbers, number) } : null;
+  if (!at && number) ctx.onIgnored?.(number);
+  return at;
 }
 
 /** One `messages` change → the batch; another field, or a number that is neither line, is skipped. */
@@ -110,13 +113,12 @@ function readChange(change: unknown, ctx: ParseOptions & { batch: WebhookBatch }
   if (field(change, 'field') !== 'messages') return;
   const value = get(change, 'value');
   const number = field(value, 'metadata.phone_number_id') ?? undefined;
-  const numbers = ctx.numbers ?? {};
-  if (!accepted(number, ctx)) return;
+  const at = receiving(number, ctx);
+  if (!at) return;
   const contacts = list(get(value, 'contacts'));
   const names = new Map(contacts.map((c) => [field(c, 'wa_id') ?? '', field(c, 'profile.name')?.trim() ?? '']));
-  const line = lineFor(numbers, number);
   for (const m of list(get(value, 'messages'))) {
-    const event = toInbound(m, { names, now: ctx.now, line });
+    const event = toInbound(m, { names, now: ctx.now, at });
     if (event) ctx.batch.messages.push(event);
   }
   for (const s of list(get(value, 'statuses'))) {

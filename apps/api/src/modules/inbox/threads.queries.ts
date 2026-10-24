@@ -1,5 +1,5 @@
 import type { TablesInsert } from '@ab/db';
-import type { ThreadLesson, ThreadPeople } from '@ab/shared';
+import type { NumberWindow, ThreadLesson, ThreadPeople } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../common/db/db.module';
 import { BalanceQueries } from '../subscriptions/balance.queries';
@@ -52,6 +52,13 @@ export class ThreadsQueries {
     const { data, error } = await this.db.from('v_threads').select('*').eq('phone_e164', phone).maybeSingle();
     check(error, 'thread read');
     return data;
+  }
+
+  /** Module mode only (docs/23c decision 6): the phone's newest inbound per number (v_thread_numbers). */
+  async numberWindows(phone: string): Promise<NumberWindow[]> {
+    const { data, error } = await this.db.from('v_thread_numbers').select('number_id, last_inbound_at').eq('phone_e164', phone);
+    check(error, 'thread number windows read');
+    return (data ?? []).flatMap((r) => (r.number_id ? [{ numberId: r.number_id, lastInboundAt: r.last_inbound_at }] : []));
   }
 
   /** Newest first, `limit + 1` rows so the caller knows whether older ones exist; each with its lesson. */

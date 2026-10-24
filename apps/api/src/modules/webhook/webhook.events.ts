@@ -26,6 +26,8 @@ export interface InboundEvent {
   payload: Json | null;
   /** The receiving line; null unless the chat line is configured (docs/12 §13.2). */
   line: WaLine | null;
+  /** Module mode only: the receiving wa_numbers row (messages.number_id, docs/23c decision 7). */
+  numberId?: string;
 }
 
 export const DELIVERY_STATUSES = ['sent', 'delivered', 'read', 'failed'] as const;
