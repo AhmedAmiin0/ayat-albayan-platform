@@ -4366,7 +4366,9 @@
     "saved": "Translation saved",
     "restored": "Original text restored",
     "count": "Texts: {n}",
-    "empty": "No matching texts"
+    "empty": "No matching texts",
+    "editOnValues": "Edit it in «Values»",
+    "arabicOnValues": "The Arabic text of this description is edited in «Values»."
   },
   "permissions": {
     "areas": {
@@ -5561,6 +5563,33 @@
         "on": "Turn on automatic assignment",
         "off": "Turn off automatic assignment"
       }
+    },
+    "describe": {
+      "lineSr": ". Read the full description or edit it",
+      "menu": "Read and edit the description",
+      "title": "Edit description",
+      "readTitle": "Description",
+      "intro": "«{name}». Write the description in clear Arabic: what the value does and who it affects.",
+      "label": "Description",
+      "count": "{n} of {max} characters",
+      "required": "Write the description",
+      "restore": "Restore the original description",
+      "note": "Everyone who opens «Values» sees it.",
+      "save": "Save description",
+      "saved": "Description saved",
+      "restored": "Original description restored",
+      "error": "Could not save the description. Try again.",
+      "none": "This value has no description yet.",
+      "edit": "Edit description",
+      "readOnlyNote": "You do not have permission to edit this description.",
+      "englishNote": "English descriptions are edited in «Translations»."
+    },
+    "conflict": {
+      "body": "This value was changed to {value} {when} by {name}. Your value: {mine}.",
+      "someone": "Another user",
+      "keepMine": "Save my value",
+      "takeTheirs": "Use the new value",
+      "phoneLine": "Newer value from {name}"
     }
   },
   "settingsPages": {
@@ -5615,6 +5644,22 @@
     "typedMismatch": "The typed number does not match the value",
     "unsavedClose": "You have not saved your edit. Close without saving?",
     "closeAnyway": "Close without saving",
-    "keepEditing": "Keep editing"
+    "keepEditing": "Keep editing",
+    "description": {
+      "edit": "Edit description",
+      "title": "Edit description",
+      "label": "Description",
+      "counter": "{n} / {max}",
+      "save": "Save",
+      "cancel": "Cancel",
+      "restore": "Restore the original description",
+      "required": "Write the description before saving",
+      "tooLong": "The description must be at most {max} characters",
+      "forbidden": "You do not have permission to edit this value's description",
+      "invalid": "This description was not accepted; check the text and save it again",
+      "saveFailed": "Could not save the description",
+      "saved": "Description saved",
+      "restored": "The original description is restored"
+    }
   }
 }

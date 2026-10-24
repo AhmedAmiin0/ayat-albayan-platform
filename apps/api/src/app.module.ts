@@ -3,6 +3,7 @@ import { ActivityModule } from './common/activity/activity.module';
 import { AuditModule } from './common/audit/audit.service';
 import { AuthModule } from './common/auth/auth.module';
 import { ClientUsageModule } from './common/client-usage/client-usage.module';
+import { ConfigStoreModule } from './common/config-store/config-store.module';
 import { CustomConfigModule } from './common/custom-config/custom-config.module';
 import { DbModule } from './common/db/db.module';
 import { IntegrationConfigModule } from './common/integrations/integration-config.module';
@@ -61,6 +62,7 @@ import { WhatsappModule } from './modules/whatsapp/whatsapp.module';
     AuthModule,
     ClientUsageModule,
     ActivityModule,
+    ConfigStoreModule,
     SettingsModule,
     CustomConfigModule,
     PublicConfigModule,

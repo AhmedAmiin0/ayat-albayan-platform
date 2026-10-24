@@ -5,6 +5,7 @@ import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vites
 import { AppModule } from '../../app.module';
 import { PERMISSION_RESOLVER, systemResolver } from '../auth/auth.guard';
 import { CustomConfigService } from '../custom-config/custom-config.service';
+import { fakeConfigStore } from '../config-store/config-store.fakes';
 import type { Db } from '../db/db.module';
 import { SettingsService } from '../settings/settings.service';
 
@@ -14,7 +15,7 @@ const custom = { publicRows: vi.fn() };
 /** A real SettingsService over `rows` (no cache), for the public subset it computes. */
 function realSettings(rows: { key: string; value: unknown }[]): SettingsService {
   const select = vi.fn().mockResolvedValue({ data: rows, error: null });
-  return new SettingsService({ from: () => ({ select }) } as unknown as Db, 0);
+  return new SettingsService({ from: () => ({ select }) } as unknown as Db, 0, fakeConfigStore());
 }
 
 describe('GET /settings/public (no login)', () => {

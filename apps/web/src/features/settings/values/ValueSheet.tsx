@@ -8,7 +8,9 @@ import { defaultForm, isModified } from '../registry-form/row-form';
 import { lastChangeText } from './cells/InfoCells';
 import { useRowIds } from './editors/editor-props';
 import { ValueEditor } from './editors/ValueEditor';
+import { ConflictNotice } from './ConflictNotice';
 import { ImpactNote } from './ImpactNote';
+import { useSheetDescription } from './use-sheet-description';
 import { boundsText, defaultText, valueText } from './value-format';
 import { useValues } from './values-context';
 
@@ -52,6 +54,7 @@ export function ValueSheet({ settingKey, onClose }: { settingKey: SettingKey; on
   const dirty = api.drafts.dirty(settingKey);
   const bounds = boundsText(settingKey);
   const confirm = VALUE_CONFIRM[settingKey];
+  const description = useSheetDescription(settingKey, Boolean(confirm));
   // Closes only when a save of this key lands: never after a refused, cancelled or failed «احفظ».
   const savedAt = api.savedAt(settingKey);
   const [openedAt] = useState(savedAt);
@@ -76,7 +79,7 @@ export function ValueSheet({ settingKey, onClose }: { settingKey: SettingKey; on
     </>
   ) : undefined;
   return (
-    <Dialog layout="sheet" title={words.label} description={confirm ? undefined : (words.toggleHint ?? words.hint)} onClose={close} actions={actions}>
+    <Dialog layout="sheet" title={words.label} description={description} onClose={close} actions={actions}>
       <span id={ids.label} className="sr-only">
         {words.label}
       </span>
@@ -97,6 +100,7 @@ export function ValueSheet({ settingKey, onClose }: { settingKey: SettingKey; on
         </p>
         <p className="text-sm text-ink-2">{v.sheet.last.replace('{value}', lastChangeText(api.meta[settingKey]))}</p>
         {confirm && <ImpactNote settingKey={settingKey} />}
+        <ConflictNotice settingKey={settingKey} />
         {status === 'moved' && <p className="text-sm text-ink-2">{v.moved}</p>}
         {status === 'saving' && <span role="status" className="text-sm font-semibold text-ink-2">{v.saving}</span>}
         <details className="text-xs text-ink-3">

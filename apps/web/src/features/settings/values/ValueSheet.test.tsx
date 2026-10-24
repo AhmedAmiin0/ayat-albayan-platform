@@ -1,7 +1,7 @@
 import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n';
-import { SETTINGS } from '@/test/settings-fixture';
+import { answerPatch } from '@/test/entries-fixture';
 import { findRow, renderValues } from './values-test-utils';
 
 const apiFetch = vi.hoisted(() => vi.fn());
@@ -42,12 +42,12 @@ describe('«القيم» on a phone', () => {
   });
 
   it('«احفظ» saves the row alone and closes the sheet', async () => {
-    apiSend.mockResolvedValue(SETTINGS);
+    apiSend.mockImplementation(answerPatch);
     renderValues(apiFetch);
     const sheet = await openSheet();
     fireEvent.change(within(sheet).getByLabelText(HORIZON), { target: { value: '7' } });
     fireEvent.click(within(sheet).getByRole('button', { name: v.sheet.save }));
-    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('PATCH', '/settings', { bookingHorizonWeeks: 7 }));
+    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('PATCH', '/config/entries/booking_horizon_weeks', { value: 7, expectedVersion: 1 }));
     await waitFor(() => expect(screen.queryByRole('dialog', { name: HORIZON })).toBeNull());
   });
 

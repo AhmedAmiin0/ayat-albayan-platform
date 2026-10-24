@@ -9,6 +9,7 @@ export function fakeSettings(over: Partial<AcademySettings> = {}): SettingsServi
     all,
     publicView: vi.fn(async () => publicSettings(await all())),
     write: vi.fn(async () => undefined),
+    writeSwitch: vi.fn(async () => undefined),
     invalidate: vi.fn(),
   } as unknown as SettingsService;
 }

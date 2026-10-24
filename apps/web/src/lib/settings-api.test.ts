@@ -20,6 +20,7 @@ describe('CONFIG_QUERY_KEYS (the legacy key values, unchanged)', () => {
       integrations: ['settings', 'integrations'],
       settingsMeta: ['config', 'meta'],
       customConfig: ['config', 'custom'],
+      entries: ['config', 'entries'],
     });
     expect(CONFIG_QUERY_KEYS.publicConfig).toBe(PUBLIC_CONFIG_QUERY_KEY);
   });

@@ -4,6 +4,7 @@ import { DefaultCell, LastCell } from '../cells/InfoCells';
 import { keyItem } from '../cells/key-item';
 import { NameCell } from '../cells/NameCell';
 import { useRowIds } from '../editors/editor-props';
+import { describeItem, rowDescription } from '../row-description';
 import { RowMenu } from '../RowMenu';
 import { GOOGLE_DEFAULTS, rowKey, rowWords, type GoogleField } from '../value-rows';
 import { useValues } from '../values-context';
@@ -33,8 +34,18 @@ export function GoogleValueRow({ field, google, groupName, phone }: GoogleValueR
   const ids = useRowIds();
   const row = { kind: 'google', field, group: 'google' } as const;
   const words = rowWords(row);
+  const target = { key: rowKey(row), label: words.label, hintKey: api.entry(rowKey(row))?.hintKey ?? null };
   const value = <OwnedValue text={googleText(field, google)} group="google" />;
-  const name = <NameCell label={words.label} labelId={ids.label} hint={phone ? undefined : words.hint} isPublic={false} groupName={groupName} />;
+  const name = (
+    <NameCell
+      label={words.label}
+      labelId={ids.label}
+      hint={phone ? undefined : rowDescription(api, target, words.hint)}
+      onDescribe={() => api.describe(target)}
+      isPublic={false}
+      groupName={groupName}
+    />
+  );
   if (phone) {
     return (
       <tr className={rowClass(false)}>
@@ -58,7 +69,7 @@ export function GoogleValueRow({ field, google, groupName, phone }: GoogleValueR
         <LastCell meta={api.meta[rowKey(row)]} />
       </td>
       <td className={cellClass}>
-        {api.canWrite && <RowMenu label={t.settingsValues.menu.replace('{name}', words.label)} items={[keyItem(rowKey(row), api.announce)]} />}
+        {api.canWrite && <RowMenu label={t.settingsValues.menu.replace('{name}', words.label)} items={[describeItem(api, target), keyItem(rowKey(row), api.announce)]} />}
       </td>
     </tr>
   );
