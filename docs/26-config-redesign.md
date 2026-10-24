@@ -244,7 +244,7 @@ with the en override.
 |---|---|---|
 | **Expand** | Columns, sequences, the revision table and trigger, the RPCs and checks (`NOT VALID`). Types are regenerated **only here**. Nothing reads them yet | All tests green |
 | **Copy** | The seeder fills metadata and `description_seed` (no value is written). Writes store JSON null instead of deleting. The override copy (§3) runs | e2e: a missing row, JSON null and a seeded null give the same `GET /settings`, the same SQL-function results and a closed gate. Two boots change nothing |
-| **Validate** | A separate migration runs `VALIDATE` once the pre-check query is empty on staging | — |
+| **Validate** | A separate migration runs `VALIDATE` once the pre-check query is empty on staging. **Done:** the pre-check returned zero rows on staging on 2026-10-24; migration `20261024000634_config_validate.sql` validates the three checks | — |
 | **Parity** | `GET /admin/config/parity` (admin; also run in CI on the e2e DB) compares, for every key, the **legacy** effective value (today's `readSettings` over the rows) with `ConfigStore`'s | Empty for ≥ 1 week on staging |
 | **Switch reads** | Readers move to the facade over `ConfigStore` (no reader file changes). «القيم» ships | Parity stays empty |
 | **Contract** | After ≥ 2 clean weeks, the legacy read code goes. Phase 5 absorbs `custom_config` (copied as `custom.<key>` after a count-equality pre-check; the old table stays read-only for one release, then is dropped). Aliases go only under the §2f rule | — |
@@ -372,8 +372,9 @@ Order: **26-P0 → 23-P3 → 26-P1 → 23-P4 → 26-P2 → 26-P3 → 23-P5 → 2
   (`GET /admin/config/parity` empty on the e2e DB; missing / JSON null / seeded null give the same `GET /settings`,
   `GET /settings/public` and a closed gate, no `messages` row). Web «القيم» description dialog and per-row
   `PATCH /config/entries/:key`; mobile bottom-sheet description editor.
-  **Not done on purpose:** the `VALIDATE` migration (needs the §4 pre-check on staging) and **switching readers to
-  `ConfigStore`**: `SettingsService.all()` still reads the rows through `readSettings`; only writes go through
+  **Validate (2026-10-24):** the §4 pre-check returned zero rows on staging after this seeder booted there;
+  `packages/db/supabase/migrations/20261024000634_config_validate.sql` validates the three checks.
+  **Not done on purpose:** **switching readers to `ConfigStore`**: `SettingsService.all()` still reads the rows through `readSettings`; only writes go through
   `config_set`. The read switch waits until `GET /admin/config/parity` has stayed empty for ≥ 1 week on staging.
 - **23-P4 — built (2026-10-24, branch `cloud/notif-rules`).** Migration
   `packages/db/supabase/migrations/20261024000632_notification_rules.sql` (table, RLS, `notifications.manage` to every
