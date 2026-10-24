@@ -388,6 +388,12 @@ Order: **26-P0 → 23-P3 → 26-P1 → 23-P4 → 26-P2 → 26-P3 → 23-P5 → 2
   alert, report PDF, renewal, staff bell/push). Web «الإشعارات» tab `apps/web/src/features/notification-rules/`; mobile
   toggles `apps/mobile/src/ops/notif-rules/`. Build notes: docs/23b.
 
+- **23-P5 — built (2026-10-24, branch `cloud/numbers-routing`).** Migration
+  `packages/db/supabase/migrations/20261024000633_numbers_routing.sql` (`message_templates.number_id`,
+  `wa_numbers.fallback_rank`, `message_template_numbers`, view `v_thread_numbers`; expand only, never reads or writes
+  `settings`). Build contract and decisions: docs/23c. Everything new runs only while `comms_source = module`; under
+  `legacy` the sender, webhook and inbox take today's path (pinned by tests).
+
 ## 7. Assumptions (the owner's message ended with «but …»; any of these may be what it meant)
 
 1. «Most of the modules» means the 28 scalar keys above. The heavy modules are notifications, numbers, the send gate,
