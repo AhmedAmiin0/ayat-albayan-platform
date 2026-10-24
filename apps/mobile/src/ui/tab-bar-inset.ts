@@ -10,7 +10,7 @@ export const barBottom = (insetBottom: number) => Math.max(insetBottom, 16);
 /**
  * How far the floating tab bar reaches up from the screen's bottom edge (its gap + the capsule):
  * content that runs under it pads its end by this much. 0 outside a tab navigator (login, a test,
- * a full-screen chat) and while a screen hides the bar (useHideTabBar). The bar reports it
+ * a full-screen chat). The bar reports it
  * (GlassTabBar), the tab navigator hands it to every screen; useBottomTabBarHeight() would throw
  * outside the tabs.
  */

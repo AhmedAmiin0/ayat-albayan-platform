@@ -14,8 +14,15 @@ jest.mock('@/lib/api', () => ({
 }));
 const mockBack = jest.fn();
 const mockPush = jest.fn();
+const mockDismissTo = jest.fn();
 jest.mock('expo-router', () => ({
-  router: { back: () => mockBack(), push: (h: string) => mockPush(h), canGoBack: () => true, replace: jest.fn() },
+  router: {
+    back: () => mockBack(),
+    push: (h: string) => mockPush(h),
+    dismissTo: (h: string) => mockDismissTo(h),
+    canGoBack: () => true,
+    replace: jest.fn(),
+  },
   useLocalSearchParams: () => ({ phone: '+966501112223', subscriptionId: '88888888-8888-4888-8888-888888888888' }),
 }));
 jest.mock('expo-image-picker', () => ({}));
@@ -80,7 +87,9 @@ test('a file from the chat → receipt-from-chat → POST /sales/payments with i
   expect(body).not.toHaveProperty('kind');
   expect(body).not.toHaveProperty('method');
   await fireEvent.press(screen.getByRole('button', { name: m.openMyPayments }));
-  expect(mockPush).toHaveBeenCalledWith('/more/sales/earnings?view=payments');
+  // A tab's screen from the chat group: back down to the tabs, not a second tab host pushed on top.
+  expect(mockDismissTo).toHaveBeenCalledWith('/more/sales/earnings?view=payments');
+  expect(mockPush).not.toHaveBeenCalledWith('/more/sales/earnings?view=payments');
   await fireEvent.press(screen.getByRole('button', { name: m.done }));
   expect(mockBack).toHaveBeenCalledTimes(1);
 });

@@ -108,6 +108,15 @@ Re-runs are idempotent: unchanged records are skipped, changed ones are updated,
 report's lifecycle (version, send time) edited in the app is never rewound.
 Student statuses come from the importer (`active`, else `pending_subscription` after an attended trial report, else `new`; set on create only) — do not re-run migration `20261015000442` after an import.
 
+## 7b. Delta sync while the old system keeps running (owner 2026-10-24)
+
+To add what is new in the CRM / sheets without touching what the team edits in the app:
+`extract-crm --since last`, then `dry-run --target staging --creates-only` and
+`apply --target staging --creates-only`. Every planned update becomes a skip (a lead's status, a
+template's Meta id stay as the app has them). A new record's link to a row the app has since
+deleted is left empty, as `ON DELETE SET NULL` left the rows already there; a record whose missing
+link is NOT NULL is skipped. Both counts print before the plan.
+
 ## 8. Production (owner's explicit go only)
 
 Production is refused unless `--confirm-production` is passed; pass it only after the owner has

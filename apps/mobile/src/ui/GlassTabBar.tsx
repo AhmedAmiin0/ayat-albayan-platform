@@ -15,18 +15,16 @@ const EDGE = [[0, 0], [1, 1]] as const;
 
 export interface GlassTabBarProps extends BottomTabBarProps {
   tabs: readonly TabItem[];
-  /** A screen hides the bar (useHideTabBar). */
-  hidden: boolean;
 }
 
 /**
  * The bottom tabs as a floating glass capsule (owner 2026-10-24, design C): a translucent fill with a
  * top sheen and a 1px inner highlight (no backdrop blur: no blur library in the APK), a pill that
  * springs to the active tab, and a fade of the screen colour behind it so rows scrolling under it melt
- * away. Reports its reach (gap + capsule) to the screens (useTabBarInset); `hidden` (a chat open)
- * draws nothing and reports 0, so no strip is left behind. Reduce Transparency: an opaque fill.
+ * away. Reports its reach (gap + capsule) to the screens (useTabBarInset). Reduce Transparency: an
+ * opaque fill.
  */
-export function GlassTabBar({ state, navigation, insets, tabs, hidden }: GlassTabBarProps) {
+export function GlassTabBar({ state, navigation, insets, tabs }: GlassTabBarProps) {
   const { color, glass } = useTheme();
   const width = useWindowDimensions().width;
   const opaque = useA11yPref('reduceTransparency');
@@ -36,9 +34,8 @@ export function GlassTabBar({ state, navigation, insets, tabs, hidden }: GlassTa
   const x = usePillOffset({ index: state.index, tabWidth, rtl: I18nManager.isRTL, reduceMotion });
   const report = useContext(BottomTabBarHeightCallbackContext);
   useEffect(() => {
-    report?.(hidden ? 0 : bottom + BAR_HEIGHT);
-  }, [report, hidden, bottom]);
-  if (hidden) return null;
+    report?.(bottom + BAR_HEIGHT);
+  }, [report, bottom]);
 
   return (
     <>

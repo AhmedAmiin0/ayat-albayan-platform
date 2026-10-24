@@ -1,9 +1,7 @@
-import { Tabs } from 'expo-router/js-tabs';
 import { fireEvent, renderRouter, screen } from 'expo-router/testing-library';
 import { Text } from 'react-native';
 import { t } from '@/lib/i18n';
 import { AppNativeTabs, type TabItem } from './AppNativeTabs';
-import { GlassTabBar } from './GlassTabBar';
 import { useTabBarInset } from './tab-bar-inset';
 
 // The real tabs + glass bar over stub screens; each screen prints the bar inset it is given.
@@ -19,18 +17,6 @@ function Plain() {
 }
 const screens = { a: Plain, b: Plain, c: Plain, d: Plain };
 const app = { _layout: () => <AppNativeTabs tabs={TABS} />, ...screens };
-// The bar with `hidden` set, as AppNativeTabs sets it while a chat is open (useHideTabBar; that path
-// end to end: inbox/tab-bar.flow.test.tsx). No import of ./tab-bar here: a branch deletes it.
-const hiddenBar = {
-  _layout: () => (
-    <Tabs
-      screenOptions={{ headerShown: false }}
-      tabBar={(props) => <GlassTabBar {...props} tabs={TABS} hidden />}
-    />
-  ),
-  ...screens,
-};
-
 async function open(routes: typeof app, initialUrl: string) {
   const pending = renderRouter(routes, { initialUrl });
   await pending;
@@ -58,11 +44,4 @@ test('a tap opens its tab; a tap on the open tab stays there', async () => {
   await fireEvent.press(screen.getByRole('button', { name: /^b/ }));
   expect(router.pathname()).toBe('/b');
   expect(screen.getByRole('button', { selected: true }).props.accessibilityLabel).toMatch(/^b/);
-});
-
-test('hidden (a chat open): no bar and no inset, so no dead strip is left', async () => {
-  await open(hiddenBar, '/a');
-  expect(await screen.findByText('inset 0')).toBeTruthy();
-  expect(screen.queryAllByRole('button')).toHaveLength(0);
-  expect(screen.queryByLabelText(t.mobileNav.tabsLabel)).toBeNull();
 });

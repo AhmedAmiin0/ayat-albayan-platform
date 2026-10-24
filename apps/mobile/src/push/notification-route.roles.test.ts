@@ -5,10 +5,14 @@ import { assistantRouteFor, salesRouteFor } from './notification-route.roles';
 
 const PHONE = '+966552147730';
 
-/** Does an expo-router file serve this href (`x.tsx`, `x/index.tsx`, or a `[phone].tsx` last segment)? */
-function routeExists(href: string): boolean {
-  const path = `../../app${href.replace(/\/[^/]*%2B\d+$/, '/[phone]')}`;
-  return [path, `${path}/index`].some((file) => {
+/**
+ * Does an expo-router file serve this href (`x.tsx`, `x/index.tsx`, or a `[phone].tsx` last segment),
+ * in the tree or in its full-screen chat group (`app/(sales-chat)/sales/…`, same URL)?
+ */
+function routeExists(href: string, tree = ''): boolean {
+  const path = href.replace(/\/[^/]*%2B\d+$/, '/[phone]');
+  const files = ['../../app', `../../app/(${tree}-chat)`].flatMap((root) => [`${root}${path}`, `${root}${path}/index`]);
+  return files.some((file) => {
     try {
       jest.requireActual(file);
       return true;
@@ -64,7 +68,7 @@ test.each(['sales', 'assistant'] as const)('every kind in the %s tree opens an e
     for (const kind of PUSH_KINDS) {
       const href = routeIn(tree, { kind, phone: PHONE, studentId: 's-1' }, can) ?? '';
       expect(href.startsWith(`/${tree}/`)).toBe(true);
-      expect(routeExists(href)).toBe(true);
+      expect(routeExists(href, tree)).toBe(true);
     }
   }
 });
