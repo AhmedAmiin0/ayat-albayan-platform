@@ -14,7 +14,7 @@ import { LinesCheck } from './lines.check';
 import { MessageSender } from './message.sender';
 import { MessagesQueries } from './messages.queries';
 import { SendGate } from './send-gate';
-import { TemplatesQueries } from './templates.queries';
+import { TemplatesQueries, type ApprovalRow } from './templates.queries';
 import { WHATSAPP_CLIENT, WHATSAPP_LINES } from './whatsapp.types';
 
 export const ADMIN: AuthUser = { id: 'a0000000-0000-4000-8000-000000000001', email: null, role: 'admin' };
@@ -40,7 +40,7 @@ const clientMock = () => ({
 
 function mocks() {
   return {
-    templates: { all: vi.fn(), get: vi.fn(), update: vi.fn(), insert: vi.fn() },
+    templates: { all: vi.fn(), get: vi.fn(), update: vi.fn(), insert: vi.fn(), approvals: vi.fn(async (): Promise<ApprovalRow[]> => []), upsertApprovals: vi.fn(), numberRef: vi.fn() },
     messages: { get: vi.fn(), requeue: vi.fn(), markSentManually: vi.fn(), handOff: vi.fn() },
     gate: { view: vi.fn(), open: vi.fn(), automaticOn: vi.fn(async () => true) },
     client: clientMock(),
@@ -72,7 +72,7 @@ export async function whatsappApp(resolver: PermissionResolver = systemResolver)
   const app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter(), { rawBody: true });
   await app.init();
   await app.getHttpAdapter().getInstance().ready();
-  const call = (input: { method: 'GET' | 'POST' | 'PATCH'; url: string; token?: string; body?: object }) =>
+  const call = (input: { method: 'GET' | 'POST' | 'PATCH' | 'PUT'; url: string; token?: string; body?: object }) =>
     app.inject({
       method: input.method,
       url: input.url,

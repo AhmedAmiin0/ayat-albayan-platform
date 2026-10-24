@@ -15,6 +15,7 @@ export * from './chat-lists.js';
 export * from './sender.js';
 export * from './status-style.js';
 export * from './templates.js';
+export * from './template-number.js';
 export * from './ticks.js';
 export * from './thread-people.js';
 export * from './timing.js';

@@ -9,7 +9,7 @@ import { RENEWAL_DUE_SEED, REPORT_READY_SEED } from './seed-templates.fakes';
 import { RECORDED, templateRow } from './whatsapp.fakes';
 import { WaError, type WhatsappLines } from './whatsapp.types';
 
-const queries = { all: vi.fn(), get: vi.fn(), update: vi.fn(), insert: vi.fn() };
+const queries = { all: vi.fn(), get: vi.fn(), update: vi.fn(), insert: vi.fn(), approvals: vi.fn(async () => []) };
 const client = { configured: vi.fn(), getTemplates: vi.fn(), submitTemplate: vi.fn(), canUploadSamples: vi.fn(), uploadSample: vi.fn() };
 /** Not configured (reset mocks answer undefined): one line, as before the chat line (template.registry.lines.test). */
 const chatClient = { configured: vi.fn(), getTemplates: vi.fn() };

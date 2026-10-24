@@ -8,7 +8,7 @@ import { WaError, type MetaTemplate, type WhatsappLines } from './whatsapp.types
 // The health check per number (owner 2026-10-12, 2026-10-18, docs/12 §3.4): each line syncs only its own
 // rows against its own WABA's list, imports that WABA's new templates, and reports its own failure.
 
-const queries = { all: vi.fn(), get: vi.fn(), update: vi.fn(), insert: vi.fn() };
+const queries = { all: vi.fn(), get: vi.fn(), update: vi.fn(), insert: vi.fn(), approvals: vi.fn(async () => []) };
 const client = () => ({ configured: vi.fn(), getTemplates: vi.fn(), submitTemplate: vi.fn() });
 let notifications = client();
 let chat = client();

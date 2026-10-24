@@ -111,6 +111,7 @@ const BASE_ROW: TemplateRow = {
   updated_at: '2026-10-01T00:00:00Z',
   line: 'notifications',
   sales_starter: false,
+  number_id: null,
 };
 
 export function templateRow(over: Partial<TemplateRow> = {}): TemplateRow {

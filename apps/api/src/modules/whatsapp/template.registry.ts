@@ -5,7 +5,7 @@ import { lineFacts, requireLine, requireSync, syncOn } from './template-env';
 import { syncLine } from './template-line-sync';
 import { moveTemplate } from './template-move';
 import { submitTemplate } from './template-submit';
-import { toTemplateView } from './template.mapper';
+import { toTemplateView, withNumbers } from './template.mapper';
 import { TemplatesQueries } from './templates.queries';
 import { WHATSAPP_LINES, type TemplateRow, type WhatsappLines } from './whatsapp.types';
 
@@ -59,8 +59,10 @@ export class TemplateRegistry implements OnApplicationBootstrap, OnModuleDestroy
     }
   }
 
+  /** Each row with number_id and its approvals per number (numbers[], docs/23 phase 5): one extra read. */
   async list(): Promise<TemplateView[]> {
-    return (await this.queries.all()).map(toTemplateView);
+    const [rows, approvals] = await Promise.all([this.queries.all(), this.queries.approvals()]);
+    return withNumbers(rows, approvals);
   }
 
   /** The row when `key` is approved, else null (B2: H4 answers 409 template_not_approved). */
