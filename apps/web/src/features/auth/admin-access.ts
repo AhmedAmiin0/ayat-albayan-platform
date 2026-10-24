@@ -24,6 +24,8 @@ export const ADMIN_PAGES: readonly (readonly [prefix: string, permission: Permis
   ['/admin/finance', 'dashboard.read'],
   ['/admin/pricing', 'pricing.read'],
   ['/admin/settings', 'settings.read'],
+  // «التواصل»'s own address (docs/23 §2d): it opens /admin/settings/communications, so it needs the same.
+  ['/admin/communications', 'settings.read'],
   ['/admin/translations', 'translations.manage'],
   ['/admin/activity', 'activity.read'],
   ['/admin/roles', 'roles.manage'],

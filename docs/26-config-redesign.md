@@ -6,7 +6,7 @@ and give it also a description field and for more complex settings like notifica
 and seeded with most of the modules and as for the modules that will require a heavey config like notifications make a
 custom desgin for it».
 
-**Design.** 26-P0, 26-P1, 26-P2 and 23-P4 are built (§6 «Built»); the rest is not yet. No migration number is reserved: use the next free numbers at build time
+**Design.** 26-P0, 26-P1, 26-P2, 23-P4, 23-P5 and 23-P6 are built (§6 «Built»); the rest is not yet. No migration number is reserved: use the next free numbers at build time
 (docs/23 phase 3 holds `20261023000620–629`). Once built, this supersedes docs/25 §1 (the five concepts), §5
 (recipes) and §6 (Google rows); until then docs/25 describes the code. Companion files:
 
@@ -393,6 +393,8 @@ Order: **26-P0 → 23-P3 → 26-P1 → 23-P4 → 26-P2 → 26-P3 → 23-P5 → 2
   `wa_numbers.fallback_rank`, `message_template_numbers`, view `v_thread_numbers`; expand only, never reads or writes
   `settings`). Build contract and decisions: docs/23c. Everything new runs only while `comms_source = module`; under
   `legacy` the sender, webhook and inbox take today's path (pinned by tests).
+
+- **23-P6 — built (2026-10-24, branch `cloud/communications-hub`).** «التواصل» uses the docs/26b tabs (نظرة عامة · الأرقام · الإشعارات · القوالب · الحماية); the switches still write only through the 26-P0 gate routes; the CRM cut-over moved to «الحماية» and now asks both ways. `/admin/settings/communications` stays the page, `/admin/communications` redirects to it with the query string (and has an `ADMIN_PAGES` entry). No migration, no API change, no stored value touched. Next: 26-P4 (send gate last).
 
 ## 7. Assumptions (the owner's message ended with «but …»; any of these may be what it meant)
 

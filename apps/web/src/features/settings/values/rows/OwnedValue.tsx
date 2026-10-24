@@ -8,7 +8,7 @@ export function OwnedValue({ text, group }: { text: string; group: OwnedValueGro
   return (
     <span className="grid gap-0.5">
       <span className="text-sm text-ink">{text}</span>
-      <Link to={page.to} className="text-xs font-semibold text-lapis underline underline-offset-4">
+      <Link to={page.to} search={page.search} className="text-xs font-semibold text-lapis underline underline-offset-4">
         {page.label}
       </Link>
     </span>

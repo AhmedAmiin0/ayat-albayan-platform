@@ -37,7 +37,7 @@ describe('«الإشعارات» rendering', () => {
     const strip = await screen.findByRole('group', { name: r.strip.label });
     expect(strip.textContent).toContain(t.settingsPages.sendingState.replace('{state}', t.templates.settings.off));
     expect(strip.textContent).toContain(r.strip.autoOff);
-    expect(within(strip).getByRole('link', { name: r.strip.openSending }).getAttribute('href')).toMatch(/^\/admin\/settings\/communications\??$/);
+    expect(within(strip).getByRole('link', { name: t.communicationsHub.openOverview }).getAttribute('href')).toMatch(/^\/admin\/settings\/communications\??$/);
   });
 
   it('«معتمد جزئيًا» when only some template variants are approved; classroom_off says why in MSA', async () => {

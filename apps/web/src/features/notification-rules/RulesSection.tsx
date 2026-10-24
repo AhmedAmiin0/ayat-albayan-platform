@@ -1,3 +1,4 @@
+import type { NotificationAudience } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
@@ -6,11 +7,9 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { usePermissions } from '@/features/auth/use-permissions';
 import { t } from '@/lib/i18n';
 import { settingsQuery } from '@/lib/settings-api';
-import { integrationsQuery } from '../integrations/integrations-api';
-import { linesCheckQuery } from '../messaging/api';
-import { catalogueQuery } from '../notification-catalogue/catalogue-api';
 import type { AudienceTab } from '../notification-catalogue/catalogue-tabs';
 import { NumbersLine } from '../notification-catalogue/NumbersLine';
+import { useCatalogue } from '../notification-catalogue/use-catalogue';
 import { numbersQuery } from '../numbers/numbers-api';
 import { useRuleDrafts, type RuleDrafts } from './rule-drafts';
 import { RulesContext } from './rules-context';
@@ -34,24 +33,28 @@ function Loading() {
   );
 }
 
+interface RulesSectionProps {
+  onSaved: (message: string) => void;
+  drafts?: RuleDrafts | undefined;
+  /** The audience tab to start on (`?audience=`, from «نظرة عامة»); the tabs are local after that. */
+  audience?: NotificationAudience | undefined;
+}
+
 /**
  * «التواصل» › «الإشعارات» (docs/26b §3, docs/23b): every notification, one audience at a time, each
  * row editable on its own with notifications.manage (timing, channels, number, switch) and read-only
  * without it. GET /admin/notifications (v2: `rule`, `approval`, `reach`), GET /admin/numbers.
  * `drafts` comes from «التواصل» (so a tab switch keeps them); alone, the section holds its own.
  */
-export function RulesSection({ onSaved, drafts }: { onSaved: (message: string) => void; drafts?: RuleDrafts | undefined }) {
+export function RulesSection({ onSaved, drafts, audience }: RulesSectionProps) {
   const settings = useQuery(settingsQuery);
-  const check = useQuery(linesCheckQuery);
-  const integrations = useQuery(integrationsQuery);
   const numbers = useQuery(numbersQuery);
   const canManage = canManageNotifications(usePermissions().permissions);
   // Refetched whenever the settings, «التكاملات» or a line check change; first fetch once settings are in.
-  const version = settings.dataUpdatedAt + check.dataUpdatedAt + integrations.dataUpdatedAt;
-  const list = useQuery({ ...catalogueQuery(version), enabled: settings.isSuccess });
+  const list = useCatalogue();
   const own = useRuleDrafts();
   const held = drafts ?? own;
-  const [tab, setTab] = useState<AudienceTab>('guardian');
+  const [tab, setTab] = useState<AudienceTab>(audience ?? 'guardian');
   const [live, setLive] = useState('');
   const api = { canManage, numbers: numbers.data ?? [], reach: list.data?.reach, onSaved, drafts: held, announce: setLive };
   const showFirstUnsaved = () => {

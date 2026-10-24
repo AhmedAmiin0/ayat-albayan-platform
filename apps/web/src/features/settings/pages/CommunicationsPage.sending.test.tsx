@@ -20,8 +20,8 @@ afterEach(() => {
   apiSend.mockReset();
 });
 
-// Ported from the old /admin/settings page: the kill switch lives on «التواصل» › «الإرسال» (docs/12 §3.1).
-describe('messaging kill switch on «الإرسال»', () => {
+// Ported from the old /admin/settings page: the kill switch lives on «التواصل» › «نظرة عامة» (docs/12 §3.1).
+describe('messaging kill switch on «نظرة عامة»', () => {
   it('warns that the CRM owns the number, and turning sending ON asks first, saying how many go out', async () => {
     renderCommunications({ apiFetch, gate: { open: false, reason: 'switch_off', queued: 5 } });
     expect((await screen.findAllByText(s.crmWarning)).length).toBeGreaterThan(0);
@@ -68,20 +68,20 @@ describe('messaging kill switch on «الإرسال»', () => {
     expect(head().textContent).toBe(t.settingsPages.sendingState.replace('{state}', s.onBlocked));
   });
 
-  it('after the cut-over the owner retires the CRM warning', async () => {
+  it('the CRM warning stays here; the cut-over itself is marked on «الحماية» (a link, no button)', async () => {
     renderCommunications({ apiFetch });
-    apiSend.mockResolvedValue({ ...SETTINGS, crm_cutover_done: true });
-    fireEvent.click(await screen.findByRole('button', { name: s.crmDone }));
-    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('PUT', '/messages/gate/cutover', { done: true }));
-    await waitFor(() => expect(screen.queryByText(s.crmWarning)).toBeNull());
+    expect((await screen.findAllByText(s.crmWarning)).length).toBeGreaterThan(0);
+    const link = screen.getByRole('link', { name: t.communicationsHub.crmOpenSafety });
+    expect(link.getAttribute('href')).toBe('/admin/settings/communications?tab=safety');
+    expect(screen.queryByRole('button', { name: s.crmDone })).toBeNull();
   });
 
-  it('a rollback to the CRM turns the cut-over back off and the warning returns', async () => {
+  it('after the cut-over: no warning, the line says so and links to «الحماية» to undo it', async () => {
     renderCommunications({ apiFetch, settings: { crm_cutover_done: true } });
     expect(await screen.findByText(s.crmMoved)).toBeTruthy();
-    apiSend.mockResolvedValue({ ...SETTINGS, crm_cutover_done: false });
-    fireEvent.click(screen.getByRole('button', { name: s.crmUndo }));
-    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('PUT', '/messages/gate/cutover', { done: false }));
-    expect((await screen.findAllByText(s.crmWarning)).length).toBeGreaterThan(0);
+    expect(screen.queryByText(s.crmWarning)).toBeNull();
+    expect(screen.getByRole('link', { name: t.communicationsHub.crmOpenSafety })).toBeTruthy();
+    expect(screen.queryByRole('button', { name: s.crmUndo })).toBeNull();
+    expect(apiSend).not.toHaveBeenCalled();
   });
 });

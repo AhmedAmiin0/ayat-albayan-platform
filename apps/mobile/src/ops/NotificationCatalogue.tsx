@@ -1,18 +1,17 @@
 import { formatPhone, WA_LINES, type NotificationsOverview } from '@ab/shared';
-import { useQuery } from '@tanstack/react-query';
-import { apiFetch } from '@/lib/api';
 import { t } from '@/lib/i18n';
 import { Note } from '@/more/Note';
 import { Section } from '@/more/Section';
 import { ErrorState } from '@/ui/ErrorState';
 import { ltr } from '@/ui/Ltr';
 import { numberLine } from './catalogue-words';
+import type { AudienceTab } from './notif-rules/audience-tabs';
 import { CatalogueAudience } from './notif-rules/CatalogueAudience';
 import { ruleOf } from './notif-rules/rule-words';
 import { TypedOffSheet } from './notif-rules/TypedOffSheet';
 import { useCatalogueToggles } from './notif-rules/use-catalogue-toggles';
-import { CATALOGUE_KEY, useCanManageNotifications } from './notif-rules/use-toggle-rule';
-import { useSettings } from './use-settings';
+import { useCatalogue } from './notif-rules/use-catalogue';
+import { useCanManageNotifications } from './notif-rules/use-toggle-rule';
 
 const c = t.notificationCatalogue;
 const r = t.mobileNotificationRules;
@@ -25,16 +24,11 @@ const anyEditable = (data: NotificationsOverview | undefined): boolean =>
  * «الإشعارات» on the phone (docs/23 §3 phase 1, docs/26b §4): one audience at a time, each
  * notification with its state and the first blocker in words. With notifications.manage and a v2 answer, editable rows get
  * a switch (family ON and essential OFF ask first); otherwise read-only as before. The key carries
- * the settings' fetch time, so a saved field refetches the list. The saved line is announced once,
+ * the settings' fetch time (useCatalogue). `initialAudience` opens on that pill (the overview's rows). The saved line is announced once,
  * by the toggles (announceForAccessibility), not again by a live region.
  */
-export function NotificationCatalogue() {
-  const version = useSettings().dataUpdatedAt;
-  const query = useQuery({
-    queryKey: [...CATALOGUE_KEY, version],
-    queryFn: () => apiFetch<NotificationsOverview>('/admin/notifications'),
-    placeholderData: (previous) => previous,
-  });
+export function NotificationCatalogue({ initialAudience }: { initialAudience?: AudienceTab } = {}) {
+  const query = useCatalogue();
   const manage = useCanManageNotifications();
   const toggles = useCatalogueToggles();
   const data = query.data;
@@ -49,7 +43,7 @@ export function NotificationCatalogue() {
             const n = numberLine(line, data.lines);
             return <Note key={line}>{`${n.label}: ${n.phone ? ltr(formatPhone(n.phone)) : c.notChecked}`}</Note>;
           })}
-          <CatalogueAudience data={data} canManage={manage} toggles={toggles} />
+          <CatalogueAudience data={data} canManage={manage} toggles={toggles} initialAudience={initialAudience} />
         </>
       ) : query.isError ? (
         <ErrorState message={c.loadError} onRetry={() => void query.refetch()} />

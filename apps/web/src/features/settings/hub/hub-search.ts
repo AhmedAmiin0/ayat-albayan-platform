@@ -1,7 +1,7 @@
 import { OWNED_VALUE_GROUPS, SETTING_KEYS, VALUE_GROUPS, type SettingKey } from '@ab/shared';
 import { matchesSetting, matchesText } from '@/components/settings/settings-search';
 import { settingText } from '@/components/settings/setting-text';
-import { integrationsMatch } from '@/features/integrations/integrations-form';
+import { groupsMatch, INTEGRATIONS_PAGE_GROUPS, LEGACY_LINE_GROUPS, SAFETY_GROUPS } from '@/features/integrations/integration-places';
 import { linesMatch } from '@/features/messaging/lines-match';
 import { catalogueMatch } from '@/features/notification-catalogue/catalogue-match';
 import { numbersMatch } from '@/features/numbers/numbers-section';
@@ -57,15 +57,18 @@ interface ModuleEntry {
   matches: (query: string) => boolean;
 }
 
+const linesOrLegacyMatch = (query: string): boolean => linesMatch(query) || groupsMatch(LEGACY_LINE_GROUPS)(query);
+
 const googleMatch = (query: string): boolean => matchesText(`${H.googleName} ${t.googleSync.title} ${t.googleSync.intro}`, query);
 
 /** The module pages the search reaches, in hub order. */
 const MODULES: readonly ModuleEntry[] = [
-  { id: 'lines', label: t.templates.settings.lines.title, where: COMMS, href: HUB_PATHS.communications, matches: linesMatch },
+  { id: 'lines', label: t.templates.settings.lines.title, where: COMMS, href: `${HUB_PATHS.communications}?tab=numbers`, matches: linesOrLegacyMatch },
   { id: 'numbers', label: t.numbers.title, where: COMMS, href: `${HUB_PATHS.communications}?tab=numbers`, matches: numbersMatch },
   { id: 'catalogue', label: t.notificationRules.title, where: COMMS, href: `${HUB_PATHS.communications}?tab=catalogue`, matches: catalogueMatch },
   { id: 'templates', label: t.templates.title, where: COMMS, href: `${HUB_PATHS.communications}?tab=templates`, matches: templatesMatch },
-  { id: 'integrations', label: t.integrations.title, where: t.integrations.title, href: HUB_PATHS.integrations, matches: integrationsMatch },
+  { id: 'safety', label: t.settingsPages.communicationsTabs.safety, where: COMMS, href: `${HUB_PATHS.communications}?tab=safety`, matches: groupsMatch(SAFETY_GROUPS) },
+  { id: 'integrations', label: t.integrations.title, where: t.integrations.title, href: HUB_PATHS.integrations, matches: groupsMatch(INTEGRATIONS_PAGE_GROUPS) },
   { id: 'google', label: t.googleSync.title, where: H.googleName, href: HUB_PATHS.google, matches: googleMatch },
   { id: 'appearance', label: t.settings.theme, where: t.settings.sections.appearance, href: HUB_PATHS.appearance, matches: themeMatch },
 ];

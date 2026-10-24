@@ -59,9 +59,13 @@ export function groupKeys(id: ValuesGroupId): readonly SettingKey[] {
   return VALUE_GROUPS[id];
 }
 
-/** Where a module-owned group is edited, and the link's words. */
-export const OWNER_PAGE: Record<OwnedValueGroupId, { to: string; label: string }> = {
-  notifications: { to: '/admin/settings/communications', label: t.settingsValues.editFrom.communications },
+/** Where a module-owned group is edited (the page, and its tab when it has one), and the link's words. */
+export const OWNER_PAGE: Record<OwnedValueGroupId, { to: string; search?: Record<string, string>; label: string }> = {
+  notifications: {
+    to: '/admin/settings/communications',
+    search: { tab: 'catalogue' },
+    label: t.settingsValues.editFrom.communications,
+  },
   sending: { to: '/admin/settings/communications', label: t.settingsValues.editFrom.communications },
   google: { to: '/admin/settings/google', label: t.settingsValues.editFrom.google },
 };

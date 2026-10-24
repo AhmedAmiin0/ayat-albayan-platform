@@ -4,7 +4,7 @@ import { freshDigits, seedLead } from '../support/messages';
 import { restoreSettings, settingText, snapshotSettings } from '../support/settings';
 import { setMessaging, stubInbound, stubReset, stubSent } from '../support/wa-stub';
 
-// «التواصل» › «الإرسال» switches (/admin/settings/communications; R-MSG-01, cut-over docs/09, docs/23 phase 2): the kill switch is the only
+// «التواصل» › «نظرة عامة» switches (/admin/settings/communications; R-MSG-01, cut-over docs/09, docs/23 phases 2 and 6): the kill switch is the only
 // switch for sending (no env fuse) and asks first both ways (ON names the queue); the automatic-messages
 // switch asks first too and holds job-made rows as auto_off.
 
@@ -48,7 +48,7 @@ test.describe('settings switches — kill switch and automatic messages', () => 
     // The page head names the state on every tab («إرسال الرسائل: …», never the switch's own words).
     await expect(admin.getByRole('group', { name: ar.settingsPages.sendingNow })).toContainText(s.off);
 
-    await admin.getByRole('tab', { name: tabs.sending, exact: true }).click();
+    await admin.getByRole('tab', { name: tabs.overview, exact: true }).click();
     await expect(admin.getByText(s.off, { exact: true })).toBeVisible();
     await expect(admin.getByText(s.queued.two, { exact: true })).toBeVisible();
     await expect(admin.getByText(s.gateNotConfigured)).toHaveCount(0); // WhatsApp is set up (the stub)
@@ -89,7 +89,7 @@ test.describe('settings switches — kill switch and automatic messages', () => 
     test.setTimeout(150_000);
     await restoreSettings({ keys: ['auto_messages_enabled'], rows: [{ key: 'auto_messages_enabled', value: false }] });
     const admin = await asRole('admin');
-    await admin.goto('/admin/settings/communications'); // «الإرسال» is the default tab
+    await admin.goto('/admin/communications'); // docs/23 §2d's address: «التواصل», «نظرة عامة» is the default tab
     await expect(admin.getByText(s.autoOff, { exact: true })).toBeVisible();
 
     await admin.getByRole('button', { name: s.autoEnable }).click();

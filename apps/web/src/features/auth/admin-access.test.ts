@@ -14,6 +14,13 @@ describe('pagePermission', () => {
     expect(pagePermission('/admin/roles')).toBe('roles.manage');
   });
 
+  it('«التواصل» at /admin/communications needs what /admin/settings needs', () => {
+    expect(pagePermission('/admin/communications')).toBe(pagePermission('/admin/settings/communications'));
+    expect(pagePermission('/admin/communications')).toBe('settings.read');
+    expect(adminRedirect(me('payments.read'), '/admin/communications')).toBe('/admin/payments');
+    expect(adminRedirect(me('settings.read'), '/admin/communications')).toBeNull();
+  });
+
   it('does not confuse prefixes and leaves unknown paths open', () => {
     expect(pagePermission('/admin/paymentsx')).toBeNull();
     expect(pagePermission('/teacher')).toBeNull();
