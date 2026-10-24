@@ -57,9 +57,9 @@ test('over a chat, a message push opens that chat inside the group (a push)', as
 });
 
 test.each([
-  ['sales', '(sales-chat)', { kind: 'meeting_invite' }, '/sales/more/meetings'],
-  ['teacher', '(teacher-chat)', { kind: 'report_submitted' }, '/teacher/reports'],
-])('over the %s chat, a tab screen pops back to its tabs', async (tree, group, data, href) => {
+  { tree: 'sales', group: '(sales-chat)', data: { kind: 'meeting_invite' }, href: '/sales/more/meetings' },
+  { tree: 'teacher', group: '(teacher-chat)', data: { kind: 'report_submitted' }, href: '/teacher/reports' },
+])('over the $tree chat, a tab screen pops back to its tabs', async ({ tree, group, data, href }) => {
   mockTop.name = group;
   await tapIn(tree as PushTree, data);
   expect(mockDismissTo).toHaveBeenCalledWith(href);

@@ -71,10 +71,10 @@ beforeEach(async () => {
 });
 
 test.each([
-  ['admin', '/inbox/thread', '(admin-chat)', 'chat base= mode=admin'],
-  ['sales', '/sales/inbox/thread', '(sales-chat)', 'chat base=/sales mode=admin'],
-  ['teacher', '/teacher/chats', '(teacher-chat)', 'chat base= mode=teacher'],
-])('%s: a message push opens %s/… in %s, a full screen with no tab bar', async (tree, path, group, text) => {
+  { tree: 'admin', path: '/inbox/thread', group: '(admin-chat)', text: 'chat base= mode=admin' },
+  { tree: 'sales', path: '/sales/inbox/thread', group: '(sales-chat)', text: 'chat base=/sales mode=admin' },
+  { tree: 'teacher', path: '/teacher/chats', group: '(teacher-chat)', text: 'chat base= mode=teacher' },
+])('$tree: a message push opens $path/… in $group, a full screen with no tab bar', async ({ tree, path, group, text }) => {
   // The URL the push (and the bell, and every link) still builds: unchanged, so nothing redirects.
   expect(routeIn(tree as PushTree, { kind: 'new_message', phone: PHONE })).toBe(`${path}/${ENC}`);
   const router = await open(tree, `${path}/${ENC}`);
