@@ -31,10 +31,11 @@ export interface Receiving {
 
 /**
  * Module mode: ANY number row, enabled or not («off = no sends, inbound still logged»), stamps its id and
- * purpose; a change with no id is kept unstamped (as acceptsNumber does); an unknown id → null (ignored).
+ * purpose; a change with no id, or any change while no number row exists (as acceptsNumber does with no
+ * line: Meta never retries a 200, so nothing is dropped), is kept unstamped; an unknown id → null (ignored).
  */
 export function receivingNumber(numbers: readonly ReceivingNumber[], id: string | undefined): Receiving | null {
-  if (!id) return { line: null };
+  if (!id || numbers.length === 0) return { line: null };
   const n = numbers.find((x) => x.phone_number_id === id);
   return n ? { line: n.purpose, numberId: n.id } : null;
 }

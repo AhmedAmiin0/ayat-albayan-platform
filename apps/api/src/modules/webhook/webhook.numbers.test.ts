@@ -37,7 +37,8 @@ describe('receivingNumber', () => {
     expect(receivingNumber(NUMBERS, 'pid-sales-2')).toEqual({ line: 'chat', numberId: 'num-sales-2' });
     expect(receivingNumber(NUMBERS, 'pid-off')).toEqual({ line: 'notifications', numberId: 'num-off' });
     expect(receivingNumber(NUMBERS, 'someone-else')).toBeNull();
-    expect(receivingNumber([], 'pid-off')).toBeNull();
+    // No number row at all: kept unstamped, never dropped (Meta never retries a 200).
+    expect(receivingNumber([], 'pid-off')).toEqual({ line: null });
     expect(receivingNumber(NUMBERS, undefined)).toEqual({ line: null });
   });
 });
