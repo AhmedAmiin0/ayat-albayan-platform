@@ -9,7 +9,9 @@ describe('parseCli', () => {
       zip: undefined,
       since: undefined,
       confirmProduction: false,
+      createsOnly: false,
     });
+    expect(parseCli(['apply', '--target', 'staging', '--creates-only']).createsOnly).toBe(true);
     expect(
       parseCli(['apply', '--target', 'production', '--confirm-production']).confirmProduction,
     ).toBe(true);

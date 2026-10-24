@@ -9,6 +9,7 @@ import { ENTITY_MODULES } from './entities/index.ts';
 import { applyPlan } from './plan/apply.ts';
 import { seedConfig } from './db/config-seed.ts';
 import type { PlanWithChanges } from './plan/changes.ts';
+import { deltaPlan } from './plan/stale-refs.ts';
 import { buildPlan, loadBundle } from './plan/run.ts';
 import { reportMarkdown } from './report/report.ts';
 import { writeReview } from './report/review.ts';
@@ -58,12 +59,16 @@ async function writeOutputs(plan: PlanWithChanges): Promise<void> {
 export function planOrApply(args: CliArgs, apply: boolean): Promise<void> {
   return withTarget(args, async (config, db) => {
     if (apply) await db.lockApply();
-    const { plan, existing } = await buildPlan({
+    const built = await buildPlan({
       db,
       modules: ENTITY_MODULES,
       target: config.name,
       today: today(),
     });
+    const { existing } = built;
+    const plan = args.createsOnly
+      ? await deltaPlan({ db, built, modules: ENTITY_MODULES })
+      : built.plan;
     await writeOutputs(plan);
     if (!apply) return;
     const manifest = readJson<SheetManifest | undefined>(cachePath.sheetManifest(), undefined);
