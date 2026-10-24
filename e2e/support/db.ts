@@ -14,6 +14,8 @@ function env(name: string): string {
  * seeded by their migrations (like an enum), so they survive; a journey that changes a template's
  * status puts it back, and a category an e2e adds is harmless (its key is unique per run).
  * The five system roles and their grants (20261005000220) survive too; custom roles are dropped.
+ * wa_numbers is deleted, not truncated: message_templates.number_id references it (migration 633), so a
+ * TRUNCATE … CASCADE of wa_numbers would empty the template registry too; the delete sets it null.
  */
 export async function resetDb(): Promise<void> {
   const url = env('DATABASE_URL');
@@ -23,8 +25,9 @@ export async function resetDb(): Promise<void> {
     const rows = await sql<{ t: string }[]>`
       select format('%I.%I', schemaname, tablename) as t from pg_tables
       where schemaname = 'public'
-        and tablename not in ('message_templates', 'expense_categories', 'roles', 'role_permissions')`;
+        and tablename not in ('message_templates', 'expense_categories', 'roles', 'role_permissions', 'wa_numbers')`;
     if (rows.length) await sql.unsafe(`truncate ${rows.map((r) => r.t).join(', ')} restart identity cascade`);
+    await sql`delete from public.wa_numbers`;
     await sql`delete from auth.users`;
     await sql`delete from public.roles where not is_system`;
   } finally {
