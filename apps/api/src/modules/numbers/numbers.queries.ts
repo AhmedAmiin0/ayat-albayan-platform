@@ -8,7 +8,7 @@ export type NumberRow = Database['public']['Tables']['wa_numbers']['Row'];
 type Health = Pick<NumberRow, 'health' | 'checked_at'> & { display_phone_e164?: string };
 
 const COLUMNS =
-  'id, label, purpose, provider, phone_number_id, waba_id, app_id, display_phone_e164, enabled, is_default, health, checked_at, created_at, updated_at, updated_by';
+  'id, label, purpose, provider, phone_number_id, waba_id, app_id, display_phone_e164, enabled, is_default, fallback_rank, health, checked_at, created_at, updated_at, updated_by';
 
 /** A unique violation in words: the phone id or the role's live default is taken. */
 function conflictOf(error: { code?: string; message: string }): never {
