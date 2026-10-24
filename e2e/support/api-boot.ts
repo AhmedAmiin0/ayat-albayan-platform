@@ -29,8 +29,10 @@ const BOOT_ENV = {
   SETTINGS_CACHE_MS: '',
 };
 
-async function healthy(deadline: number): Promise<void> {
-  while (Date.now() < deadline) {
+/** /health answers while THIS child runs (an orphan on the port cannot pass for it). */
+async function healthy(input: { deadline: number; alive: () => boolean }): Promise<void> {
+  while (Date.now() < input.deadline) {
+    if (!input.alive()) throw new Error('the second API exited during boot');
     const ok = await fetch(`http://localhost:${BOOT_PORT}/health`).then((r) => r.ok, () => false);
     if (ok) return;
     await new Promise((r) => setTimeout(r, 250));
@@ -45,10 +47,13 @@ export async function bootApiOnce(runMs: number): Promise<void> {
     env: { ...process.env, ...BOOT_ENV },
     stdio: 'ignore',
   });
-  const exited = new Promise<void>((resolve) => child.once('exit', () => resolve()));
+  let alive = true;
+  const exited = new Promise<void>((resolve) => child.once('exit', () => ((alive = false), resolve())));
   try {
-    await healthy(Date.now() + 60_000);
+    await healthy({ deadline: Date.now() + 60_000, alive: () => alive });
     await new Promise((r) => setTimeout(r, runMs));
+    // Still running after its sender passes: a crash right after /health fails the boot.
+    if (!alive) throw new Error('the second API exited while running');
   } finally {
     child.kill('SIGTERM');
     const killer = setTimeout(() => child.kill('SIGKILL'), 10_000);
