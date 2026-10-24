@@ -30,7 +30,9 @@ describe('failurePlan on the crm driver', () => {
   it('502 meta_error, 500 template_malformed, a 4xx: failed at once with the CRM code and its message', () => {
     expect(plan(crm(502, 'meta_error'))).toEqual({ status: 'failed', next_attempt_at: null, error_code: 'crm_meta_error', error_text: expect.stringContaining('meta_error says no') });
     expect(plan(crm(500, 'template_malformed'))).toMatchObject({ status: 'failed', error_code: 'crm_template_malformed' });
-    expect(plan(crm(400, 'whatsapp_not_configured'))).toMatchObject({ status: 'failed', error_code: 'crm_whatsapp_not_configured' });
+    expect(plan(crm(400, 'bad_request'))).toMatchObject({ status: 'failed', error_code: 'crm_bad_request' });
+    // The CRM's own WhatsApp connection is down: the line, not the message (held like a refused key).
+    expect(plan(crm(400, 'whatsapp_not_configured'))).toMatchObject({ status: 'queued', error_code: 'crm_auth' });
   });
 
   it('500 internal / another 5xx: uncertain (failed, the admin checks before resending)', () => {

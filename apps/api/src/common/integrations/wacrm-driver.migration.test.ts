@@ -10,8 +10,9 @@ const sql = readFileSync(join(dir, FILE), 'utf8');
 const code = sql.split('\n').filter((l) => !l.trim().startsWith('--')).join('\n');
 
 describe('migration 640: the crm driver', () => {
-  it('is the highest migration', () => {
-    expect(readdirSync(dir).filter((f) => f.endsWith('.sql')).sort().at(-1)).toBe(FILE);
+  it('holds the latest integration_secret_key_ok (a later migration that re-creates it must keep every key)', () => {
+    const defines = (f: string) => /function public\.integration_secret_key_ok\(/.test(readFileSync(join(dir, f), 'utf8'));
+    expect(readdirSync(dir).filter((f) => f.endsWith('.sql')).sort().filter(defines).at(-1)).toBe(FILE);
   });
 
   it('integration_secret_key_ok lists exactly the shared secret keys, the two CRM keys included', () => {

@@ -56,7 +56,7 @@ describe('CrmWhatsappClient', () => {
   it('429: retry after Retry-After; 502 meta_error / 500 template_malformed / 400: fail with the code, not uncertain', async () => {
     const limited = async () => new Response(JSON.stringify(crmFailure(429, 'rate_limited').body), { status: 429, headers: { 'retry-after': '17' } });
     expect(await failure(new CrmWhatsappClient(CRM_ENV, { fetch: limited }).sendText({ to: TO, text: 'x' }))).toMatchObject({ retryAfterMs: 17_000 });
-    for (const [status, code] of [[502, 'meta_error'], [500, 'template_malformed'], [400, 'whatsapp_not_configured'], [404, 'not_found']] as const) {
+    for (const [status, code] of [[502, 'meta_error'], [500, 'template_malformed'], [400, 'bad_request'], [404, 'not_found']] as const) {
       const info = await failure(client(scriptedFetch(crmFailure(status, code, 'Meta said no'))).sendTemplate(send));
       expect(info).toMatchObject({ status, crmCode: code, details: 'Meta said no' });
       expect(info.uncertain).toBeUndefined();

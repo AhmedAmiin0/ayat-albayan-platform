@@ -42,6 +42,13 @@ describe('the crm driver env', () => {
     expect(bootGaps(both, 'chat')).toEqual(['WA_CHAT_PROVIDER (crm, same as WA_PROVIDER)']);
   });
 
+  it('a leftover WA_CHAT_PHONE_NUMBER_ID equal to WA_PHONE_NUMBER_ID never flags a crm chat line (it sends)', () => {
+    const e = env({ ...WA, ...CRM, WA_CHAT_PROVIDER: 'crm', WA_CHAT_PHONE_NUMBER_ID: WA.WA_PHONE_NUMBER_ID });
+    expect(lineEnvs(e).chat).toMatchObject({ provider: 'crm' });
+    expect(duplicatePhone(e, 'chat')).toBe(false);
+    expect(bootGaps(e, 'chat')).toEqual([]);
+  });
+
   it('a crm line keeps its Meta webhook id and app secret (what Meta still delivers is stored, never dropped)', () => {
     const e = env({ ...WA, ...CRM, WA_PROVIDER: 'crm' });
     expect(lineNumbers(e)).toEqual({ notifications: 'n-phone' });
