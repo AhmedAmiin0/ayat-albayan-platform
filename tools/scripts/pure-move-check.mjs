@@ -58,7 +58,7 @@ export function onlyPathsChanged(before, after, ctx = {}) {
   const c = { from: ctx.from ?? 'x.ts', to: ctx.to ?? 'x.ts', table: ctx.table ?? new Map() };
   if (JSON.stringify(a.statements) !== JSON.stringify(b.statements) || a.paths.length !== b.paths.length) return false;
   if (!a.paths.every((p, i) => p === b.paths[i] || samePath(c, p, b.paths[i] ?? ''))) return false;
-  return a.body === b.body || sameButRenames(a.raw, b.raw, ctx.subs ?? new Map());
+  return a.body === b.body || sameButRenames(a.raw, b.raw, { subs: ctx.subs ?? new Map(), from: c.from, to: c.to });
 }
 
 /** A new barrel: an index file made only of `export … from` lines. */

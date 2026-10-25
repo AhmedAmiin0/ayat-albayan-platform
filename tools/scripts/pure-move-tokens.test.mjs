@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { renamedLiteral, sameButRenames, substitutions } from './pure-move-tokens.mjs';
+import { rebasedLiteral, renamedLiteral, sameButRenames, substitutions } from './pure-move-tokens.mjs';
 
 const subs = substitutions([
   ['apps/api/src/env.kapso.ts', 'apps/api/src/config/env/whatsapp/env.kapso.ts'],
@@ -35,4 +35,18 @@ test('template literals with ${…} and quotes inside stay one literal', () => {
   const b = "const s = `const base = 'https://${HOST}/x';`;\nf([`config/env/whatsapp/env.kapso.ts: ${HOST}`]);";
   assert.equal(sameButRenames(a, b, subs), true);
   assert.equal(sameButRenames(a, b.replace('/x', '/y'), subs), false);
+});
+
+test('a relative literal may be re-based so it names the same place from the moved file', () => {
+  const move = { subs, from: 'apps/mobile/src/push/a.test.ts', to: 'apps/mobile/src/core/push/a.test.ts' };
+  assert.equal(rebasedLiteral("'../../app'", "'../../../app'", move), true);
+  assert.equal(rebasedLiteral('`../../app/(${tree}-chat)`', '`../../../app/(${tree}-chat)`', move), true);
+  assert.equal(rebasedLiteral("'../../app'", "'../../../src'", move), false, 'another place');
+  assert.equal(rebasedLiteral("'../../app'", "'../../app'", move), false, 'unchanged text now names another place');
+  assert.equal(rebasedLiteral("'../x'", "'../../x'", { subs, from: 'a/b.ts', to: 'a/b.ts' }), false, 'the file did not move');
+  assert.equal(rebasedLiteral("'app'", "'../app'", move), false, 'not relative');
+  const code = "const roots = ['../../app', `../../app/(${tree}-chat)`];";
+  const moved = "const roots = ['../../../app', `../../../app/(${tree}-chat)`];";
+  assert.equal(sameButRenames(code, moved, move), true);
+  assert.equal(sameButRenames(code, moved, subs), false, 'needs the file move');
 });
