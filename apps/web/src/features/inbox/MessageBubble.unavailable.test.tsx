@@ -30,12 +30,15 @@ describe('MessageBubble: a message whose content never reached us', () => {
 
   it('any other unsupported row asks the sender to send it again, never to open WhatsApp', () => {
     const bubble = renderBubble({ interactive_payload: unsupported(131051) });
-    expect(bubble.textContent).toContain(t.inbox.media.other);
-    expect(t.inbox.media.other).not.toMatch(/افتحها/);
+    expect(bubble.textContent).toContain(t.inbox.unsupported);
+    expect(t.inbox.unsupported).not.toMatch(/افتحها/);
   });
 
   it('emptyText: the same two lines (mobile shares the keys)', () => {
     expect(emptyText({ interactive_payload: unsupported(131060) })).toBe(t.inbox.unavailable);
+    expect(emptyText({ interactive_payload: unsupported(131051) })).toBe(t.inbox.unsupported);
     expect(emptyText({ interactive_payload: null })).toBe(t.inbox.media.other);
+    // A contact card did arrive: it cannot be shown here, but nobody is asked to send it again.
+    expect(emptyText({ interactive_payload: { type: 'contacts', contacts: [] } })).toBe(t.inbox.media.other);
   });
 });

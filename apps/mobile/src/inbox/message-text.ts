@@ -1,4 +1,4 @@
-import { clockTime, isUnavailableMessage, type MessageView, SESSION_WINDOW_MS, type ThreadView } from '@ab/shared';
+import { clockTime, isUnavailableMessage, isUnsupportedMessage, type MessageView, SESSION_WINDOW_MS, type ThreadView } from '@ab/shared';
 import { ApiError } from '@/lib/api';
 import { t } from '@/lib/i18n';
 
@@ -19,13 +19,15 @@ export function mediaKind(mime: string | null): MediaKind {
 
 /**
  * The attachment line: its kind when there is a file; when there is neither file nor text (Meta's
- * `unsupported`, a location, a contact card…) what to do, as the web's: ask the sender to send it
- * again («هذه الرسالة غير متاحة» first for Meta's 131060); null for a plain text message.
+ * `unsupported`, a location, a contact card…) as the web's: Meta's `unsupported` asks the
+ * sender to send it again («هذه الرسالة غير متاحة» for 131060), anything else (a location, a contact
+ * card…) arrived but cannot be shown here; null for a plain text message.
  */
 export function mediaLine(m: Pick<MessageView, 'body' | 'media_mime' | 'interactive_payload'>): string | null {
   if (m.media_mime) return t.inbox.media[mediaKind(m.media_mime)];
   if (m.body) return null;
-  return isUnavailableMessage(m.interactive_payload) ? t.inbox.unavailable : t.inbox.media.other;
+  if (isUnavailableMessage(m.interactive_payload)) return t.inbox.unavailable;
+  return isUnsupportedMessage(m.interactive_payload) ? t.inbox.unsupported : t.inbox.media.other;
 }
 
 /** «قالب: تذكير الحلقة النهاردة — Jitsi»; an unknown key shows as itself, never blank. */
