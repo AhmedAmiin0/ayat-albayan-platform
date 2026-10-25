@@ -1,6 +1,6 @@
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import { EARLY, LESSON_ID, OPEN, STUDENT_ID } from './classroom.fakes';
-import { STUDENT_TOKEN } from './student-link.fakes';
+import { STUDENT_TOKEN } from './student-link/student-link.fakes';
 import { classroomApp } from './test-app';
 
 const open = `/lessons/${LESSON_ID}/room/open`;

@@ -5,13 +5,13 @@ import type { TeachersQueries } from '../teachers/teachers.queries';
 import type { ClassroomConfig, RecordingConfig } from './classroom.config';
 import type { ClassroomQueries } from './classroom.queries';
 import { CONFIG, LESSON_ID, OTHER_TEACHER, TEACHER, TEACHER_ID, type queries } from './classroom.fakes';
-import { LessonRoleService } from './lesson-role.service';
-import { signJwt } from './livekit-token';
-import type { HttpPost } from './livekit-api';
+import { LessonRoleService } from './join/lesson-role.service';
+import { signJwt } from './livekit/livekit-token';
+import type { HttpPost } from './livekit/livekit-api';
 import type { ModerationQueries, ParticipantRow } from './moderation.queries';
 import type { RecordingRow } from './recording.queries';
 import type { RecordingStarter } from './recording.starter';
-import { RoomAdmission } from './room-admission';
+import { RoomAdmission } from './join/room-admission';
 
 export const S3: NonNullable<RecordingConfig> = {
   endpoint: 'https://project.storage.example.test/storage/v1/s3',

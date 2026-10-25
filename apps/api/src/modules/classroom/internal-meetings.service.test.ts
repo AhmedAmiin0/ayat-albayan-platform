@@ -5,7 +5,7 @@ import { MEETING_ID, meetingQueries, meetingRow, NOW, scheduledRow } from './int
 import type { InternalMeetingsQueries } from './internal-meetings.queries';
 import { InternalMeetingsService } from './internal-meetings.service';
 import { hashMeetingToken } from './internal-meetings.token';
-import { LivekitApi } from './livekit-api';
+import { LivekitApi } from './livekit/livekit-api';
 import { http } from './moderation.fakes';
 
 const ORIGIN = 'https://app.example.test';

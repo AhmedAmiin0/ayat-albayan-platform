@@ -5,7 +5,7 @@ import { vi } from 'vitest';
 import type { AuthUser } from '../../common/auth/verify-token';
 import type { ClassroomConfig } from './classroom.config';
 import type { JoinLesson, JoinLinkRow } from './classroom.queries';
-import { hashLinkToken } from './join-link.token';
+import { hashLinkToken } from './join/join-link.token';
 
 export const CONFIG: NonNullable<ClassroomConfig> = {
   url: 'wss://livekit.example.test',

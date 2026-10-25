@@ -4,8 +4,8 @@ import type { AuthUser } from '../../common/auth/verify-token';
 import { notFound } from '../../common/http/errors';
 import { InternalMeetingsQueries } from './internal-meetings.queries';
 import { meetingRoleOf, roleOfIdentity } from './internal-meetings.token';
-import { notConfigured } from './join-gate';
-import { LivekitApi, LivekitError } from './livekit-api';
+import { notConfigured } from './join/join-gate';
+import { LivekitApi, LivekitError } from './livekit/livekit-api';
 
 /**
  * «إخراج» in an internal meeting (POST /meetings/:id/participants/:identity/remove). The remover's

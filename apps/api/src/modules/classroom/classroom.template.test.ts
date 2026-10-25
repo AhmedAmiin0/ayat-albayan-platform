@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { AUTOMATIC_KEYS, isAutomatic } from '../whatsapp/sender/send-stale';
-import { JOIN_LINK_TEMPLATE } from './join-link.service';
+import { JOIN_LINK_TEMPLATE } from './join/join-link.service';
 
 describe('lesson_join_link: the admin send and the reminders job (settings.meeting_link_auto)', () => {
   it('the job-made row is automatic (held while automatic messages are OFF); the admin send never is', () => {

@@ -3,13 +3,13 @@ import { ForbiddenException, HttpException, HttpStatus, Injectable } from '@nest
 import type { AuthUser } from '../../common/auth/verify-token';
 import { notFound } from '../../common/http/errors';
 import { parseOrThrow } from '../../common/http/http';
-import { assertWindowOpen } from './join-gate';
+import { assertWindowOpen } from './join/join-gate';
 import { InternalMeetingsQueries, type MeetingRow } from './internal-meetings.queries';
 import { hashMeetingToken, looksLikeMeetingToken, meetingRoleOf } from './internal-meetings.token';
-import { PublicJoinLimit } from './join-limit';
-import { mintToken, newIdentity } from './livekit-token';
+import { PublicJoinLimit } from './join/join-limit';
+import { mintToken, newIdentity } from './livekit/livekit-token';
 import { meetingTarget } from './recording-target';
-import { RoomAdmission } from './room-admission';
+import { RoomAdmission } from './join/room-admission';
 
 /** 410 meeting_ended: «إنهاء» was pressed, or the row was revoked. */
 export const meetingEnded = (): HttpException => new HttpException({ code: 'meeting_ended', message: 'meeting_ended' }, HttpStatus.GONE);

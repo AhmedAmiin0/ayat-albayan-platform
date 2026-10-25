@@ -2,7 +2,7 @@ import type { RoomJoinResult } from '@ab/shared';
 import { Body, Controller, HttpCode, Ip, Param, Post } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { Public } from '../../common/auth/decorators';
-import { GuestJoinService } from './guest-join.service';
+import { GuestJoinService } from './join/guest-join.service';
 
 /** The family's door (no login): the link token in the path is the whole credential. */
 @ApiTags('classroom')

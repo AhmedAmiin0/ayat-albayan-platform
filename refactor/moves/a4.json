@@ -1,0 +1,228 @@
+{
+  "id": "a4",
+  "seq": 6,
+  "moves": [
+    {
+      "from": "apps/api/src/modules/classroom/join*",
+      "to": "apps/api/src/modules/classroom/join"
+    },
+    {
+      "from": "apps/api/src/modules/classroom/guest-join*",
+      "to": "apps/api/src/modules/classroom/join"
+    },
+    {
+      "from": "apps/api/src/modules/classroom/room-*",
+      "to": "apps/api/src/modules/classroom/join"
+    },
+    {
+      "from": "apps/api/src/modules/classroom/lesson-role*",
+      "to": "apps/api/src/modules/classroom/join"
+    },
+    {
+      "from": "apps/api/src/modules/classroom/staff-by-link*",
+      "to": "apps/api/src/modules/classroom/join"
+    },
+    {
+      "from": "apps/api/src/modules/classroom/livekit*",
+      "to": "apps/api/src/modules/classroom/livekit"
+    },
+    {
+      "from": "apps/api/src/modules/classroom/egress*",
+      "to": "apps/api/src/modules/classroom/livekit"
+    },
+    {
+      "from": "apps/api/src/modules/classroom/student-link*",
+      "to": "apps/api/src/modules/classroom/student-link"
+    }
+  ],
+  "files": [
+    [
+      "apps/api/src/modules/classroom/egress-request.test.ts",
+      "apps/api/src/modules/classroom/livekit/egress-request.test.ts"
+    ],
+    [
+      "apps/api/src/modules/classroom/egress-request.ts",
+      "apps/api/src/modules/classroom/livekit/egress-request.ts"
+    ],
+    [
+      "apps/api/src/modules/classroom/guest-join.service.test.ts",
+      "apps/api/src/modules/classroom/join/guest-join.service.test.ts"
+    ],
+    [
+      "apps/api/src/modules/classroom/guest-join.service.ts",
+      "apps/api/src/modules/classroom/join/guest-join.service.ts"
+    ],
+    [
+      "apps/api/src/modules/classroom/join-gate.ts",
+      "apps/api/src/modules/classroom/join/join-gate.ts"
+    ],
+    [
+      "apps/api/src/modules/classroom/join-limit.test.ts",
+      "apps/api/src/modules/classroom/join/join-limit.test.ts"
+    ],
+    [
+      "apps/api/src/modules/classroom/join-limit.ts",
+      "apps/api/src/modules/classroom/join/join-limit.ts"
+    ],
+    [
+      "apps/api/src/modules/classroom/join-link.copy.service.ts",
+      "apps/api/src/modules/classroom/join/join-link.copy.service.ts"
+    ],
+    [
+      "apps/api/src/modules/classroom/join-link.copy.test.ts",
+      "apps/api/src/modules/classroom/join/join-link.copy.test.ts"
+    ],
+    [
+      "apps/api/src/modules/classroom/join-link.service.test.ts",
+      "apps/api/src/modules/classroom/join/join-link.service.test.ts"
+    ],
+    [
+      "apps/api/src/modules/classroom/join-link.service.ts",
+      "apps/api/src/modules/classroom/join/join-link.service.ts"
+    ],
+    [
+      "apps/api/src/modules/classroom/join-link.staff.service.ts",
+      "apps/api/src/modules/classroom/join/join-link.staff.service.ts"
+    ],
+    [
+      "apps/api/src/modules/classroom/join-link.token.test.ts",
+      "apps/api/src/modules/classroom/join/join-link.token.test.ts"
+    ],
+    [
+      "apps/api/src/modules/classroom/join-link.token.ts",
+      "apps/api/src/modules/classroom/join/join-link.token.ts"
+    ],
+    [
+      "apps/api/src/modules/classroom/join.block.test.ts",
+      "apps/api/src/modules/classroom/join/join.block.test.ts"
+    ],
+    [
+      "apps/api/src/modules/classroom/lesson-role.service.ts",
+      "apps/api/src/modules/classroom/join/lesson-role.service.ts"
+    ],
+    [
+      "apps/api/src/modules/classroom/livekit-api.mute.test.ts",
+      "apps/api/src/modules/classroom/livekit/livekit-api.mute.test.ts"
+    ],
+    [
+      "apps/api/src/modules/classroom/livekit-api.mute.ts",
+      "apps/api/src/modules/classroom/livekit/livekit-api.mute.ts"
+    ],
+    [
+      "apps/api/src/modules/classroom/livekit-api.test.ts",
+      "apps/api/src/modules/classroom/livekit/livekit-api.test.ts"
+    ],
+    [
+      "apps/api/src/modules/classroom/livekit-api.ts",
+      "apps/api/src/modules/classroom/livekit/livekit-api.ts"
+    ],
+    [
+      "apps/api/src/modules/classroom/livekit-token.server.test.ts",
+      "apps/api/src/modules/classroom/livekit/livekit-token.server.test.ts"
+    ],
+    [
+      "apps/api/src/modules/classroom/livekit-token.test.ts",
+      "apps/api/src/modules/classroom/livekit/livekit-token.test.ts"
+    ],
+    [
+      "apps/api/src/modules/classroom/livekit-token.ts",
+      "apps/api/src/modules/classroom/livekit/livekit-token.ts"
+    ],
+    [
+      "apps/api/src/modules/classroom/livekit-webhook.controller.ts",
+      "apps/api/src/modules/classroom/livekit/livekit-webhook.controller.ts"
+    ],
+    [
+      "apps/api/src/modules/classroom/livekit-webhook.room.ts",
+      "apps/api/src/modules/classroom/livekit/livekit-webhook.room.ts"
+    ],
+    [
+      "apps/api/src/modules/classroom/livekit-webhook.service.test.ts",
+      "apps/api/src/modules/classroom/livekit/livekit-webhook.service.test.ts"
+    ],
+    [
+      "apps/api/src/modules/classroom/livekit-webhook.service.ts",
+      "apps/api/src/modules/classroom/livekit/livekit-webhook.service.ts"
+    ],
+    [
+      "apps/api/src/modules/classroom/livekit-webhook.size.test.ts",
+      "apps/api/src/modules/classroom/livekit/livekit-webhook.size.test.ts"
+    ],
+    [
+      "apps/api/src/modules/classroom/livekit-webhook.test.ts",
+      "apps/api/src/modules/classroom/livekit/livekit-webhook.test.ts"
+    ],
+    [
+      "apps/api/src/modules/classroom/livekit-webhook.ts",
+      "apps/api/src/modules/classroom/livekit/livekit-webhook.ts"
+    ],
+    [
+      "apps/api/src/modules/classroom/room-admission.test.ts",
+      "apps/api/src/modules/classroom/join/room-admission.test.ts"
+    ],
+    [
+      "apps/api/src/modules/classroom/room-admission.ts",
+      "apps/api/src/modules/classroom/join/room-admission.ts"
+    ],
+    [
+      "apps/api/src/modules/classroom/room-join.sales.test.ts",
+      "apps/api/src/modules/classroom/join/room-join.sales.test.ts"
+    ],
+    [
+      "apps/api/src/modules/classroom/room-join.service.test.ts",
+      "apps/api/src/modules/classroom/join/room-join.service.test.ts"
+    ],
+    [
+      "apps/api/src/modules/classroom/room-join.service.ts",
+      "apps/api/src/modules/classroom/join/room-join.service.ts"
+    ],
+    [
+      "apps/api/src/modules/classroom/room-join.trial.test.ts",
+      "apps/api/src/modules/classroom/join/room-join.trial.test.ts"
+    ],
+    [
+      "apps/api/src/modules/classroom/room-open.controller.ts",
+      "apps/api/src/modules/classroom/join/room-open.controller.ts"
+    ],
+    [
+      "apps/api/src/modules/classroom/room-open.service.test.ts",
+      "apps/api/src/modules/classroom/join/room-open.service.test.ts"
+    ],
+    [
+      "apps/api/src/modules/classroom/room-open.service.ts",
+      "apps/api/src/modules/classroom/join/room-open.service.ts"
+    ],
+    [
+      "apps/api/src/modules/classroom/staff-by-link.http.test.ts",
+      "apps/api/src/modules/classroom/join/staff-by-link.http.test.ts"
+    ],
+    [
+      "apps/api/src/modules/classroom/student-link.admin.service.test.ts",
+      "apps/api/src/modules/classroom/student-link/student-link.admin.service.test.ts"
+    ],
+    [
+      "apps/api/src/modules/classroom/student-link.admin.service.ts",
+      "apps/api/src/modules/classroom/student-link/student-link.admin.service.ts"
+    ],
+    [
+      "apps/api/src/modules/classroom/student-link.controller.ts",
+      "apps/api/src/modules/classroom/student-link/student-link.controller.ts"
+    ],
+    [
+      "apps/api/src/modules/classroom/student-link.fakes.ts",
+      "apps/api/src/modules/classroom/student-link/student-link.fakes.ts"
+    ],
+    [
+      "apps/api/src/modules/classroom/student-link.queries.ts",
+      "apps/api/src/modules/classroom/student-link/student-link.queries.ts"
+    ],
+    [
+      "apps/api/src/modules/classroom/student-link.service.test.ts",
+      "apps/api/src/modules/classroom/student-link/student-link.service.test.ts"
+    ],
+    [
+      "apps/api/src/modules/classroom/student-link.service.ts",
+      "apps/api/src/modules/classroom/student-link/student-link.service.ts"
+    ]
+  ]
+}

@@ -7,7 +7,7 @@ import { CONFIG } from './classroom.fakes';
 import { meetingQueries } from './internal-meetings.fakes';
 import type { InternalMeetingsQueries } from './internal-meetings.queries';
 import { InternalMeetingsService } from './internal-meetings.service';
-import { LivekitApi } from './livekit-api';
+import { LivekitApi } from './livekit/livekit-api';
 import { MeetingCreateDeps, MeetingCreateService } from './meeting-create.service';
 import { MeetingInviteFlow } from './meeting-invite.flow';
 import { MeetingInvitePolicies } from './meeting-invite.policy';

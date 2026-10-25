@@ -5,10 +5,10 @@ import { notFound } from '../../common/http/errors';
 import { parseOrThrow } from '../../common/http/http';
 import { InternalMeetingsQueries } from './internal-meetings.queries';
 import { meetingRoleOf, roleOfIdentity } from './internal-meetings.token';
-import { notConfigured } from './join-gate';
-import { LessonRoleService } from './lesson-role.service';
-import { LivekitApi, LivekitError } from './livekit-api';
-import { muteTrack } from './livekit-api.mute';
+import { notConfigured } from './join/join-gate';
+import { LessonRoleService } from './join/lesson-role.service';
+import { LivekitApi, LivekitError } from './livekit/livekit-api';
+import { muteTrack } from './livekit/livekit-api.mute';
 import { ModerationQueries } from './moderation.queries';
 
 export interface MuteInput {

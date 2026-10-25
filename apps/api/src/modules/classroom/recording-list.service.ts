@@ -6,7 +6,7 @@ import { StorageService } from '../../common/storage/storage.service';
 import { notFound } from '../../common/http/errors';
 import { InternalMeetingsQueries } from './internal-meetings.queries';
 import { canManageMeeting } from './internal-meetings.token';
-import { LessonRoleService } from './lesson-role.service';
+import { LessonRoleService } from './join/lesson-role.service';
 import { RecordingQueries, type RecordingRow } from './recording.queries';
 import { lessonTarget, meetingTarget, type RoomTarget } from './recording-target';
 

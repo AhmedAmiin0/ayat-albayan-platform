@@ -1,5 +1,5 @@
 import { meetingModeOf, reminderDue, usesPlatform, type JoinWindowConfig } from '@ab/shared';
-import { linkExpiry } from '../classroom/join-link.token';
+import { linkExpiry } from '../classroom/join/join-link.token';
 import { isOpen, type ReminderLesson } from './reminders.plan';
 
 // Which link the reminders carry, per lesson: its teacher's meeting_mode (migration 490, owner

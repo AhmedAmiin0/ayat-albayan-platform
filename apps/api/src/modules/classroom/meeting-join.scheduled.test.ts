@@ -5,7 +5,7 @@ import { MEETING_ID, MEETING_TOKEN, meetingQueries, NOW, scheduledRow } from './
 import { InternalMeetingJoinService } from './internal-meetings.join.service';
 import type { InternalMeetingsQueries } from './internal-meetings.queries';
 import { hashMeetingToken } from './internal-meetings.token';
-import { PublicJoinLimit } from './join-limit';
+import { PublicJoinLimit } from './join/join-limit';
 import { admissionOf } from './moderation.fakes';
 
 let mq: ReturnType<typeof meetingQueries>;
