@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { useEffect } from 'react';
-import { Field } from '@/components/ui/field';
-import { Select } from '@/components/ui/select';
+import { Field } from '@/components/ui/form/field';
+import { Select } from '@/components/ui/form/select';
 import { studentSubscriptionsQuery, type SubscriptionView } from '@/features/subscriptions/api';
 import { moneyText, packageName } from '@/features/subscriptions/format';
 import { StudentPicker, type PickedStudent } from '@/features/subscriptions/StudentPicker';

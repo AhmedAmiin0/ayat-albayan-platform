@@ -1,11 +1,11 @@
 import { PAYMENT_METHODS, type PaymentMethod } from '@ab/shared';
 import { useId, useState, type FormEvent } from 'react';
-import { Button } from '@/components/ui/button';
-import { Dialog } from '@/components/ui/dialog';
-import { Field } from '@/components/ui/field';
-import { FormAlert } from '@/components/ui/form-alert';
-import { Input } from '@/components/ui/input';
-import { Select } from '@/components/ui/select';
+import { Button } from '@/components/ui/form/button';
+import { Dialog } from '@/components/ui/overlay/dialog';
+import { Field } from '@/components/ui/form/field';
+import { FormAlert } from '@/components/ui/form/form-alert';
+import { Input } from '@/components/ui/form/input';
+import { Select } from '@/components/ui/form/select';
 import { paidAtDay } from '@/features/payments/pay-day';
 import { ReceiptField, receiptProblem } from '@/features/payments/ReceiptField';
 import { monthLabel } from '@/features/payouts/MonthSelect';

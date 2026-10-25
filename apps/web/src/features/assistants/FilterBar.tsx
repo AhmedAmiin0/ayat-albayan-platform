@@ -1,5 +1,5 @@
-import { Field } from '@/components/ui/field';
-import { Select } from '@/components/ui/select';
+import { Field } from '@/components/ui/form/field';
+import { Select } from '@/components/ui/form/select';
 import { currentMonth } from '@/features/payouts/api';
 import { monthLabel, monthOptions } from '@/features/payouts/MonthSelect';
 import { t } from '@/lib/i18n';

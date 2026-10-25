@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Icon } from '@/components/ui/icon';
+import { Button } from '@/components/ui/form/button';
+import { Icon } from '@/components/ui/display/icon';
 import { t } from '@/lib/i18n';
 import { InternalMeetingDialog } from './InternalMeetingDialog';
 import { ScheduledMeetingDialog } from './ScheduledMeetingDialog';

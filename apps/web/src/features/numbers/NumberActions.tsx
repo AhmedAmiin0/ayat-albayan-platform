@@ -1,8 +1,8 @@
 import type { NumberView } from '@ab/shared';
 import { useState } from 'react';
 import { ConfirmSwitchDialog } from '@/components/settings/ConfirmSwitchDialog';
-import { Button } from '@/components/ui/button';
-import { FormAlert } from '@/components/ui/form-alert';
+import { Button } from '@/components/ui/form/button';
+import { FormAlert } from '@/components/ui/form/form-alert';
 import { t } from '@/lib/i18n';
 import { numberErrorText } from './number-errors';
 import { deleteNumber, updateNumber } from './numbers-api';

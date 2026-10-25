@@ -1,6 +1,6 @@
 import type { TemplateView } from '@ab/shared';
 import { useId, useState } from 'react';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/ui/form/button';
 import { t } from '@/lib/i18n';
 import type { CrmTemplateStatus } from './api';
 import { templateName } from './template-cells';

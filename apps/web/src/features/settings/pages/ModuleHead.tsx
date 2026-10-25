@@ -1,8 +1,8 @@
 import { Link } from '@tanstack/react-router';
 import type { ReactNode } from 'react';
-import { Cartouche } from '@/components/ui/cartouche';
-import { Icon } from '@/components/ui/icon';
-import { PageHead } from '@/components/ui/page';
+import { Cartouche } from '@/components/ui/display/cartouche';
+import { Icon } from '@/components/ui/display/icon';
+import { PageHead } from '@/components/ui/layout/page';
 import { t } from '@/lib/i18n';
 
 /**

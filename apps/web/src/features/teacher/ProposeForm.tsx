@@ -1,11 +1,11 @@
 import type { LessonView } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useRef, useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Field } from '@/components/ui/field';
-import { FormAlert } from '@/components/ui/form-alert';
-import { Input } from '@/components/ui/input';
-import { Select } from '@/components/ui/select';
+import { Button } from '@/components/ui/form/button';
+import { Field } from '@/components/ui/form/field';
+import { FormAlert } from '@/components/ui/form/form-alert';
+import { Input } from '@/components/ui/form/input';
+import { Select } from '@/components/ui/form/select';
 import { lessonErrorText, LESSONS_KEY } from '@/features/schedule/api';
 import { zonedParts, zonedToUtc } from '@/features/schedule/tz';
 import { timeOptions } from '@/features/teachers/grid';

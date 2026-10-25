@@ -1,6 +1,6 @@
 import type { LessonView } from '@ab/shared';
 import { isMakeup } from '@/features/booking/contract';
-import { NuqtaGlyph } from '@/components/ui/nuqta-glyph';
+import { NuqtaGlyph } from '@/components/ui/display/nuqta-glyph';
 import { t } from '@/lib/i18n';
 import { wasText } from './edit-time-text';
 import { timeEditInfo } from './edit-time.contract';

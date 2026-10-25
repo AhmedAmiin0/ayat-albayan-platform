@@ -1,7 +1,7 @@
 import type { AcademySettings } from '@ab/shared';
-import { Button } from '@/components/ui/button';
-import { FormAlert } from '@/components/ui/form-alert';
-import { StatusChip } from '@/components/ui/status-chip';
+import { Button } from '@/components/ui/form/button';
+import { FormAlert } from '@/components/ui/form/form-alert';
+import { StatusChip } from '@/components/ui/display/status-chip';
 import { t } from '@/lib/i18n';
 import { useSettingSwitch } from '@/lib/use-setting-switch';
 

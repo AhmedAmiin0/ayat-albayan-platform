@@ -1,6 +1,6 @@
-import { Button } from '@/components/ui/button';
-import { Icon } from '@/components/ui/icon';
-import { SegmentedControl } from '@/components/ui/segmented-control';
+import { Button } from '@/components/ui/form/button';
+import { Icon } from '@/components/ui/display/icon';
+import { SegmentedControl } from '@/components/ui/form/segmented-control';
 import { t } from '@/lib/i18n';
 import type { ScheduleSearch } from './search';
 import { addDays, dayMonthLabel, weekdayOf, weekStart } from './tz';

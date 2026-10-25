@@ -1,12 +1,12 @@
 import { useQuery } from '@tanstack/react-query';
 import { useMemo } from 'react';
 import { DataTable } from '@/components/DataTable';
-import { Button } from '@/components/ui/button';
-import { Cartouche } from '@/components/ui/cartouche';
-import { FormAlert } from '@/components/ui/form-alert';
-import { PageHead } from '@/components/ui/page';
-import { Tabs } from '@/components/ui/tabs';
-import { ListSkeleton } from '@/components/ui/skeleton';
+import { Button } from '@/components/ui/form/button';
+import { Cartouche } from '@/components/ui/display/cartouche';
+import { FormAlert } from '@/components/ui/form/form-alert';
+import { PageHead } from '@/components/ui/layout/page';
+import { Tabs } from '@/components/ui/layout/tabs';
+import { ListSkeleton } from '@/components/ui/display/skeleton';
 import { t } from '@/lib/i18n';
 import { salesSubscriptionsQuery, type SubscriptionKind } from './api';
 import { historyColumn } from './history-column';

@@ -1,6 +1,6 @@
 import type { SettingKey } from '@ab/shared';
 import { useState } from 'react';
-import { useBelowShell, usePhone } from '@/components/ui/use-narrow';
+import { useBelowShell, usePhone } from '@/components/ui/layout/use-narrow';
 import type { CustomValues } from '@/features/custom-config/use-custom-values';
 import { t } from '@/lib/i18n';
 import { GroupNav } from './GroupNav';

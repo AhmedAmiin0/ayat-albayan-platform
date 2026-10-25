@@ -1,6 +1,6 @@
 import { Link } from '@tanstack/react-router';
 import { useState } from 'react';
-import { Toast } from '@/components/ui/toast';
+import { Toast } from '@/components/ui/overlay/toast';
 import { INTEGRATIONS_PAGE_GROUPS } from '@/features/integrations/integration-places';
 import { IntegrationsPanel } from '@/features/integrations/IntegrationsPanel';
 import { t } from '@/lib/i18n';

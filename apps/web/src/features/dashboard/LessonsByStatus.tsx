@@ -1,5 +1,5 @@
 import { LESSON_STATUSES, lessonStatusStyle, type LessonStatus } from '@ab/shared';
-import { StatusChip } from '@/components/ui/status-chip';
+import { StatusChip } from '@/components/ui/display/status-chip';
 import { t } from '@/lib/i18n';
 import { Bar } from './Bar';
 

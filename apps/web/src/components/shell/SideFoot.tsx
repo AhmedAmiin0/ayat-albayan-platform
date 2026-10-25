@@ -1,4 +1,4 @@
-import { ThemeToggle } from '@/components/ui/theme-toggle';
+import { ThemeToggle } from '@/components/ui/layout/theme-toggle';
 import { cn } from '@/lib/utils';
 import { AccountChip } from './AccountChip';
 import { LanguageSwitch } from './LanguageSwitch';

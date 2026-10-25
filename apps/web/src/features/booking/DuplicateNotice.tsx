@@ -1,5 +1,5 @@
-import { Button } from '@/components/ui/button';
-import { Ltr } from '@/components/ui/ltr';
+import { Button } from '@/components/ui/form/button';
+import { Ltr } from '@/components/ui/display/ltr';
 import type { StudentRef } from '@/features/students/types';
 import { t } from '@/lib/i18n';
 

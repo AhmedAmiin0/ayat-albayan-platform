@@ -1,6 +1,6 @@
 import { daysBefore, SALES_START_BACK_DAYS } from '@ab/shared';
-import { Field } from '@/components/ui/field';
-import { Input } from '@/components/ui/input';
+import { Field } from '@/components/ui/form/field';
+import { Input } from '@/components/ui/form/input';
 import { dateLabel } from '@/features/schedule/tz';
 import { t } from '@/lib/i18n';
 

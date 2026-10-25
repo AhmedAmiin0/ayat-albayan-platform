@@ -1,6 +1,6 @@
 import { RECEIPT_MIMES } from '@ab/shared';
 import { useId } from 'react';
-import { buttonVariants } from '@/components/ui/button';
+import { buttonVariants } from '@/components/ui/form/button';
 import { cn } from '@/lib/utils';
 
 type Props = { label: string; onPick: (files: File[]) => void; invalid?: boolean };

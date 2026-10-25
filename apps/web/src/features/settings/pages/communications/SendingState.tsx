@@ -1,6 +1,6 @@
 import type { AcademySettings } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
-import { StatusChip } from '@/components/ui/status-chip';
+import { StatusChip } from '@/components/ui/display/status-chip';
 import { sendGateQuery } from '@/features/messaging/api';
 import { sendingChip } from '@/features/messaging/sending-chip';
 import { t } from '@/lib/i18n';

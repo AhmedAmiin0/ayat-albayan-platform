@@ -1,8 +1,8 @@
 import { ATTACHMENT_MIMES, attachmentUploadSchema, type ReportAttachmentView } from '@ab/shared';
 import { useMutation } from '@tanstack/react-query';
 import { useRef, useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { FormAlert } from '@/components/ui/form-alert';
+import { Button } from '@/components/ui/form/button';
+import { FormAlert } from '@/components/ui/form/form-alert';
 import { t } from '@/lib/i18n';
 import { attachmentUrl, removeAttachment, reportErrorText, uploadAttachment } from './api';
 

@@ -1,8 +1,8 @@
 import { isOpenLesson, joinWindow, type LessonStatus } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { FormAlert } from '@/components/ui/form-alert';
+import { Button } from '@/components/ui/form/button';
+import { FormAlert } from '@/components/ui/form/form-alert';
 import { LESSONS_KEY } from '@/features/schedule/api';
 import { t } from '@/lib/i18n';
 import { useJoinWindow } from '@/lib/public-config';

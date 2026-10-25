@@ -1,5 +1,5 @@
 import { gradeStyle, lessonWhenText, type ReportSummaryView, type UserRole } from '@ab/shared';
-import { StatusChip } from '@/components/ui/status-chip';
+import { StatusChip } from '@/components/ui/display/status-chip';
 import { t } from '@/lib/i18n';
 import { locale } from '@/lib/locale';
 import { PdfAction } from './PdfAction';

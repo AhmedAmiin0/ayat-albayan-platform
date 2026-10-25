@@ -1,8 +1,8 @@
 import { type LineCheckView, WA_LINES } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Toast } from '@/components/ui/toast';
+import { Button } from '@/components/ui/form/button';
+import { Toast } from '@/components/ui/overlay/toast';
 import { t } from '@/lib/i18n';
 import { checkLines, linesCheckQuery } from './api';
 import { LineRow } from './LineRow';

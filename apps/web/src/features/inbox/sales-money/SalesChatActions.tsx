@@ -1,6 +1,6 @@
 import type { ThreadView } from '@ab/shared';
 import type { ReactNode } from 'react';
-import { MoreMenu } from '@/components/ui/more-menu';
+import { MoreMenu } from '@/components/ui/overlay/more-menu';
 import { useSalesFamilyActions } from './use-sales-family-actions';
 
 export interface SalesChatActionsProps {

@@ -1,8 +1,8 @@
 import { type CourseSubscription, type SalesCourseView } from '@ab/shared';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
-import { Dialog } from '@/components/ui/dialog';
-import { FormAlert } from '@/components/ui/form-alert';
+import { Dialog } from '@/components/ui/overlay/dialog';
+import { FormAlert } from '@/components/ui/form/form-alert';
 import { BookingWizard } from '@/features/booking/BookingWizard';
 import type { BookingDraft } from '@/features/booking/draft';
 import { BookingModeContext, ChatReturnContext } from '@/features/booking/mode';

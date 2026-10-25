@@ -1,8 +1,8 @@
 import { useEffect, useId, useRef, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
-import { Icon } from '@/components/ui/icon';
-import { IconButton } from '@/components/ui/icon-button';
-import { useFocusTrap } from '@/components/ui/use-focus-trap';
+import { Icon } from '@/components/ui/display/icon';
+import { IconButton } from '@/components/ui/form/icon-button';
+import { useFocusTrap } from '@/components/ui/overlay/use-focus-trap';
 import { t } from '@/lib/i18n';
 
 export interface DrawerProps {

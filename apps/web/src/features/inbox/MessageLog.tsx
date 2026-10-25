@@ -1,6 +1,6 @@
 import type { MessageView } from '@ab/shared';
 import { useLayoutEffect, useRef, useState } from 'react';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/ui/form/button';
 import { t } from '@/lib/i18n';
 import { withDays, type LogItem } from './day-groups';
 import { JumpToLatest } from './JumpToLatest';

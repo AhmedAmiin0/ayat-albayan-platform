@@ -1,8 +1,8 @@
 import { GENDERS, PROGRAMS } from '@ab/shared';
-import { Field } from '@/components/ui/field';
-import { Input } from '@/components/ui/input';
-import { PhonePreview } from '@/components/ui/phone-preview';
-import { Select } from '@/components/ui/select';
+import { Field } from '@/components/ui/form/field';
+import { Input } from '@/components/ui/form/input';
+import { PhonePreview } from '@/components/ui/form/phone-preview';
+import { Select } from '@/components/ui/form/select';
 import { t } from '@/lib/i18n';
 import type { Teacher } from './api';
 import type { SetField, TeacherForm } from './teacher-form';

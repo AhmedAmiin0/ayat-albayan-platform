@@ -1,5 +1,5 @@
 import type { CommsSource, ParityView } from '@ab/shared';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/ui/form/button';
 import { t } from '@/lib/i18n';
 
 const s = t.numbers.source;

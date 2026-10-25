@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
-import { Dialog } from '@/components/ui/dialog';
-import { FormAlert } from '@/components/ui/form-alert';
+import { Dialog } from '@/components/ui/overlay/dialog';
+import { FormAlert } from '@/components/ui/form/form-alert';
 import { fullTime } from '@/features/inbox/format';
 import { t } from '@/lib/i18n';
 import { cn } from '@/lib/utils';

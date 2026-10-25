@@ -1,6 +1,6 @@
 import { lessonWhenText } from '@ab/shared';
-import { RequiredMark } from '@/components/ui/label';
-import { tzCity } from '@/components/ui/time-zone-select';
+import { RequiredMark } from '@/components/ui/form/label';
+import { tzCity } from '@/components/ui/form/time-zone-select';
 import { SlotPicker } from '@/features/schedule/SlotPicker';
 import { RIYADH_TZ } from '@/features/schedule/tz';
 import { t } from '@/lib/i18n';

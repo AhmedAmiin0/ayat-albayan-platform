@@ -1,5 +1,5 @@
 import { clockTime, type LessonView } from '@ab/shared';
-import { NuqtaGlyph } from '@/components/ui/nuqta-glyph';
+import { NuqtaGlyph } from '@/components/ui/display/nuqta-glyph';
 import { t } from '@/lib/i18n';
 import type { Change } from './edit-time';
 import { whenWithLength } from './edit-time-text';

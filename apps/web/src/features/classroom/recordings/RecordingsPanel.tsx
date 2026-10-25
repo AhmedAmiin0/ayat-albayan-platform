@@ -1,9 +1,9 @@
 import type { LessonRecordingView } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
-import { FormAlert } from '@/components/ui/form-alert';
-import { Icon } from '@/components/ui/icon';
-import { StatusChip } from '@/components/ui/status-chip';
-import { buttonVariants } from '@/components/ui/button';
+import { FormAlert } from '@/components/ui/form/form-alert';
+import { Icon } from '@/components/ui/display/icon';
+import { StatusChip } from '@/components/ui/display/status-chip';
+import { buttonVariants } from '@/components/ui/form/button';
 import { Drawer } from '@/features/schedule/Drawer';
 import { t } from '@/lib/i18n';
 import { recordingsQuery, recordingStatusQuery, type RecordingSource } from '../moderation-api';

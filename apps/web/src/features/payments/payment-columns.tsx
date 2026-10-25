@@ -1,8 +1,8 @@
 import { PAYMENT_METHODS } from '@ab/shared';
 import { createColumnHelper } from '@tanstack/react-table';
 import type { DataTableFeatures } from '@/components/DataTable';
-import { Button } from '@/components/ui/button';
-import { Ltr } from '@/components/ui/ltr';
+import { Button } from '@/components/ui/form/button';
+import { Ltr } from '@/components/ui/display/ltr';
 import { formatDate } from '@/features/leads/format';
 import { Amount } from '@/features/subscriptions/Amount';
 import { moneyText } from '@/features/subscriptions/format';

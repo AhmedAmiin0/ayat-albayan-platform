@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
-import { Dialog } from '@/components/ui/dialog';
-import { FormAlert } from '@/components/ui/form-alert';
+import { Dialog } from '@/components/ui/overlay/dialog';
+import { FormAlert } from '@/components/ui/form/form-alert';
 import { apiErrorText } from '@/features/subscriptions/format';
 import { t } from '@/lib/i18n';
 import { attachmentsQuery } from './api';

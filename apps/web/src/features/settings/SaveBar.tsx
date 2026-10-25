@@ -1,5 +1,5 @@
-import { Button } from '@/components/ui/button';
-import { FormAlert } from '@/components/ui/form-alert';
+import { Button } from '@/components/ui/form/button';
+import { FormAlert } from '@/components/ui/form/form-alert';
 import { t } from '@/lib/i18n';
 import type { SettingsFormState } from './registry-form/use-settings-form';
 

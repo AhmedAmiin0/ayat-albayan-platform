@@ -1,7 +1,7 @@
 import type { SalesStudentView } from '@ab/shared';
 import { createColumnHelper } from '@tanstack/react-table';
 import type { DataTableFeatures } from '@/components/DataTable';
-import { Ltr } from '@/components/ui/ltr';
+import { Ltr } from '@/components/ui/display/ltr';
 import { t } from '@/lib/i18n';
 
 const col = createColumnHelper<DataTableFeatures, SalesStudentView>();

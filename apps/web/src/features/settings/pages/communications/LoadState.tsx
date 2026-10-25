@@ -1,6 +1,6 @@
-import { Button } from '@/components/ui/button';
-import { FormAlert } from '@/components/ui/form-alert';
-import { Skeleton } from '@/components/ui/skeleton';
+import { Button } from '@/components/ui/form/button';
+import { FormAlert } from '@/components/ui/form/form-alert';
+import { Skeleton } from '@/components/ui/display/skeleton';
 import { t } from '@/lib/i18n';
 
 const P = t.settingsPages;

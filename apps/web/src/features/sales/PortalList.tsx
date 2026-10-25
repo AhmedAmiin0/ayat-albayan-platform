@@ -2,10 +2,10 @@ import type { UseQueryResult } from '@tanstack/react-query';
 import type { RowData } from '@tanstack/react-table';
 import type { ReactNode } from 'react';
 import { DataTable, type DataTableColumn } from '@/components/DataTable';
-import { Button } from '@/components/ui/button';
-import { EmptyState } from '@/components/ui/empty-state';
-import { FormAlert } from '@/components/ui/form-alert';
-import { ListSkeleton } from '@/components/ui/skeleton';
+import { Button } from '@/components/ui/form/button';
+import { EmptyState } from '@/components/ui/display/empty-state';
+import { FormAlert } from '@/components/ui/form/form-alert';
+import { ListSkeleton } from '@/components/ui/display/skeleton';
 import { t } from '@/lib/i18n';
 
 export interface PortalListProps<T extends RowData> {

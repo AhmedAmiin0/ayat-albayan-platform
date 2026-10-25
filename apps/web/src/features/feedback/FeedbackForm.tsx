@@ -1,12 +1,12 @@
 import { normalizePhone } from '@ab/shared';
 import { useMutation } from '@tanstack/react-query';
 import { useRef, useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Field } from '@/components/ui/field';
-import { FormAlert } from '@/components/ui/form-alert';
-import { Input, controlClass } from '@/components/ui/input';
-import { RequiredLegend } from '@/components/ui/label';
-import { RadioChips } from '@/components/ui/radio-chips';
+import { Button } from '@/components/ui/form/button';
+import { Field } from '@/components/ui/form/field';
+import { FormAlert } from '@/components/ui/form/form-alert';
+import { Input, controlClass } from '@/components/ui/form/input';
+import { RequiredLegend } from '@/components/ui/form/label';
+import { RadioChips } from '@/components/ui/form/radio-chips';
 import { t } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
 import { publicProblem, submitFeedback, type PublicProblem } from './api';

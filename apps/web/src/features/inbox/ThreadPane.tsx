@@ -1,9 +1,9 @@
 import { threadBadge } from '@ab/shared';
 import { useInfiniteQuery, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useId, useState, type ReactNode } from 'react';
-import { FormAlert } from '@/components/ui/form-alert';
-import { Toast } from '@/components/ui/toast';
-import { useBelowShell } from '@/components/ui/use-narrow';
+import { FormAlert } from '@/components/ui/form/form-alert';
+import { Toast } from '@/components/ui/overlay/toast';
+import { useBelowShell } from '@/components/ui/layout/use-narrow';
 import { teacherMeQuery } from '@/features/teacher/api';
 import { templatesQuery } from '@/features/templates/api';
 import { t } from '@/lib/i18n';

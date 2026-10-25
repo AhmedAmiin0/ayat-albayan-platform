@@ -1,6 +1,6 @@
 import { Outlet, useChildMatches, useRouterState } from '@tanstack/react-router';
 import type { ReactNode } from 'react';
-import { Cartouche } from '@/components/ui/cartouche';
+import { Cartouche } from '@/components/ui/display/cartouche';
 import { RouteFade } from './RouteFade';
 import { AdminLayout } from './shell/AdminLayout';
 import { FixedTopBarLayout } from './shell/FixedTopBarLayout';

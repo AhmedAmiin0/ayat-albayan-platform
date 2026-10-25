@@ -1,6 +1,6 @@
 import type { NumberView } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/ui/form/button';
 import { t } from '@/lib/i18n';
 import { usePermissions } from '../auth/use-permissions';
 import { templatesQuery } from '../templates/api';

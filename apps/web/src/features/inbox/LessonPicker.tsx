@@ -1,6 +1,6 @@
 import { joinNames, lessonWhenText, type ThreadLesson } from '@ab/shared';
-import { Field } from '@/components/ui/field';
-import { Select } from '@/components/ui/select';
+import { Field } from '@/components/ui/form/field';
+import { Select } from '@/components/ui/form/select';
 import { t } from '@/lib/i18n';
 import { locale } from '@/lib/locale';
 

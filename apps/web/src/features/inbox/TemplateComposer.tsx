@@ -1,10 +1,10 @@
 import { needsLesson, sendsAllTemplates } from '@ab/shared';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useRef, useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Field } from '@/components/ui/field';
-import { FormAlert } from '@/components/ui/form-alert';
-import { Select } from '@/components/ui/select';
+import { Button } from '@/components/ui/form/button';
+import { Field } from '@/components/ui/form/field';
+import { FormAlert } from '@/components/ui/form/form-alert';
+import { Select } from '@/components/ui/form/select';
 import { meQuery } from '@/features/auth/me';
 import { templatesQuery } from '@/features/templates/api';
 import { t } from '@/lib/i18n';

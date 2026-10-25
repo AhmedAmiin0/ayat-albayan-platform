@@ -1,9 +1,9 @@
 import type { Weekday } from '@ab/shared';
 import { useId, useState, type FocusEvent } from 'react';
-import { Button } from '@/components/ui/button';
-import { Icon } from '@/components/ui/icon';
-import { IconButton } from '@/components/ui/icon-button';
-import { NuqtaGlyph } from '@/components/ui/nuqta-glyph';
+import { Button } from '@/components/ui/form/button';
+import { Icon } from '@/components/ui/display/icon';
+import { IconButton } from '@/components/ui/form/icon-button';
+import { NuqtaGlyph } from '@/components/ui/display/nuqta-glyph';
 import { t } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
 import { DayTrack } from './DayTrack';

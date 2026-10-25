@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { createColumnHelper } from '@tanstack/react-table';
 import { useMemo } from 'react';
 import { DataTable, type DataTableFeatures } from '@/components/DataTable';
-import { FormAlert } from '@/components/ui/form-alert';
+import { FormAlert } from '@/components/ui/form/form-alert';
 import { monthLabel } from '@/features/payouts/MonthSelect';
 import { Amount } from '@/features/subscriptions/Amount';
 import { t } from '@/lib/i18n';

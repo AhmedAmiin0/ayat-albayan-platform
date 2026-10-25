@@ -1,6 +1,6 @@
 import type { SlotView } from '@ab/shared';
 import { clockTime } from '@ab/shared';
-import { NuqtaGlyph } from '@/components/ui/nuqta-glyph';
+import { NuqtaGlyph } from '@/components/ui/display/nuqta-glyph';
 import { t } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
 import { byLocalDay, zoneLabel } from './slots';

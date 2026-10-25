@@ -1,5 +1,5 @@
 import { useId, type ChangeEvent } from 'react';
-import { Button, buttonVariants } from '@/components/ui/button';
+import { Button, buttonVariants } from '@/components/ui/form/button';
 import { t } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
 import { AVATAR_ACCEPT } from './avatar-file';

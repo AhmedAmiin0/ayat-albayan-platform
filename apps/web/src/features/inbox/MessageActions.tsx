@@ -1,7 +1,7 @@
 import type { MessageView } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import type { MouseEvent } from 'react';
-import { Button, buttonVariants } from '@/components/ui/button';
+import { Button, buttonVariants } from '@/components/ui/form/button';
 import { errorCode } from '@/features/schedule/api';
 import { t } from '@/lib/i18n';
 import { handOffMessage, markSentManually, retryMessage } from './api';

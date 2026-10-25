@@ -1,6 +1,6 @@
 import type { Permission } from '@ab/shared';
 import { Link } from '@tanstack/react-router';
-import { Icon, type IconName } from '@/components/ui/icon';
+import { Icon, type IconName } from '@/components/ui/display/icon';
 import { cn } from '@/lib/utils';
 
 export interface SectionLink {

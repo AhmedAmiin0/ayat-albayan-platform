@@ -1,7 +1,7 @@
 import { act, fireEvent, screen, within } from '@testing-library/react';
 import type { ReactNode } from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { useBelowShell } from '@/components/ui/use-narrow';
+import { useBelowShell } from '@/components/ui/layout/use-narrow';
 import { ABRAR } from '@/features/booking/wizard-fixture';
 import { t } from '@/lib/i18n';
 import { thread } from '../inbox-fixture';

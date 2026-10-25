@@ -1,6 +1,6 @@
 import type { SubscriptionPricing } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
-import { FormAlert } from '@/components/ui/form-alert';
+import { FormAlert } from '@/components/ui/form/form-alert';
 import { durationLabel, packageCopy, sessionsOf } from '@/features/pricing/format';
 import { useDebounced } from '@/features/pricing/use-debounced';
 import { Amount } from '@/features/subscriptions/Amount';

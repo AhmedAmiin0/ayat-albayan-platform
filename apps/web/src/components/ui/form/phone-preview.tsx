@@ -1,6 +1,6 @@
 import { normalizePhone } from '@ab/shared';
-import { Icon } from '@/components/ui/icon';
-import { Ltr } from '@/components/ui/ltr';
+import { Icon } from '@/components/ui/display/icon';
+import { Ltr } from '@/components/ui/display/ltr';
 import { t } from '@/lib/i18n';
 
 /** Live E.164 preview under the phone input: «هيتحفظ كده: +966…» (docs/07 §6, R-STU-02). */

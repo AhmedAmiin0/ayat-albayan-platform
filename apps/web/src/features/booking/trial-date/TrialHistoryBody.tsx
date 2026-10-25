@@ -1,6 +1,6 @@
 import { counted, type TrialHistory } from '@ab/shared';
 import type { UseQueryResult } from '@tanstack/react-query';
-import { FormAlert } from '@/components/ui/form-alert';
+import { FormAlert } from '@/components/ui/form/form-alert';
 import { t } from '@/lib/i18n';
 import { TrialHistoryTable } from './TrialHistoryTable';
 

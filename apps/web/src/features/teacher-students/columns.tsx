@@ -2,8 +2,8 @@ import { isPackageEnded, PROGRAMS, studentStatusStyle, type TeacherStudentView }
 import { Link } from '@tanstack/react-router';
 import { createColumnHelper } from '@tanstack/react-table';
 import type { ColumnFilterDef, DataTableFeatures } from '@/components/DataTable';
-import { Ltr } from '@/components/ui/ltr';
-import { StatusChip } from '@/components/ui/status-chip';
+import { Ltr } from '@/components/ui/display/ltr';
+import { StatusChip } from '@/components/ui/display/status-chip';
 import { t } from '@/lib/i18n';
 import { nextLessonText } from './next-lesson';
 

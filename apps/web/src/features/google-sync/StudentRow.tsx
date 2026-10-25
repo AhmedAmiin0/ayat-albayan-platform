@@ -1,9 +1,9 @@
 import type { GoogleStudentMapInput, GoogleStudentMapRow } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
-import { FormAlert } from '@/components/ui/form-alert';
-import { Ltr } from '@/components/ui/ltr';
-import { StatusChip } from '@/components/ui/status-chip';
+import { FormAlert } from '@/components/ui/form/form-alert';
+import { Ltr } from '@/components/ui/display/ltr';
+import { StatusChip } from '@/components/ui/display/status-chip';
 import { t } from '@/lib/i18n';
 import { deleteStudentFolder, putStudentFolder } from './google-api';
 import { fill } from './google-format';

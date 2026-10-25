@@ -1,6 +1,6 @@
 import { t } from '@/lib/i18n';
 import { ColumnFilterText } from '../ColumnFilterText';
-import { Select } from '../ui/select';
+import { Select } from '../ui/form/select';
 import type { ColumnFilterControl } from './types';
 
 /** «تصفية حسب {col}»: every filter control's accessible name (the panel and the search box). */

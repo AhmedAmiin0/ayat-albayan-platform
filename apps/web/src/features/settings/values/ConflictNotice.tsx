@@ -1,7 +1,7 @@
 import type { SettingKey } from '@ab/shared';
 import { settingText } from '@/components/settings/setting-text';
-import { Button } from '@/components/ui/button';
-import { NuqtaGlyph } from '@/components/ui/nuqta-glyph';
+import { Button } from '@/components/ui/form/button';
+import { NuqtaGlyph } from '@/components/ui/display/nuqta-glyph';
 import { t } from '@/lib/i18n';
 import { rowActionName } from './cells/ActionCell';
 import { conflictText } from './conflict-text';

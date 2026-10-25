@@ -1,12 +1,12 @@
 import { useQuery } from '@tanstack/react-query';
 import { useCallback, useMemo, useState } from 'react';
 import { DataTable } from '@/components/DataTable';
-import { Button } from '@/components/ui/button';
-import { Cartouche } from '@/components/ui/cartouche';
-import { Icon } from '@/components/ui/icon';
-import { PageHead } from '@/components/ui/page';
-import { Pager } from '@/components/ui/pager';
-import { Toast } from '@/components/ui/toast';
+import { Button } from '@/components/ui/form/button';
+import { Cartouche } from '@/components/ui/display/cartouche';
+import { Icon } from '@/components/ui/display/icon';
+import { PageHead } from '@/components/ui/layout/page';
+import { Pager } from '@/components/ui/layout/pager';
+import { Toast } from '@/components/ui/overlay/toast';
 import { usePermissions } from '@/features/auth/use-permissions';
 import { t } from '@/lib/i18n';
 import { userListQuery, type UsersView } from './api';

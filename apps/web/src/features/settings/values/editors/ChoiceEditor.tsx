@@ -1,6 +1,6 @@
 import { CURRENCY_ISOS, SETTING_FIELD_OF, settingDef } from '@ab/shared';
-import { Select } from '@/components/ui/select';
-import { TimeZoneSelect } from '@/components/ui/time-zone-select';
+import { Select } from '@/components/ui/form/select';
+import { TimeZoneSelect } from '@/components/ui/form/time-zone-select';
 import { str } from '../../registry-form/settings-form';
 import { valueText } from '../value-format';
 import { useValues } from '../values-context';

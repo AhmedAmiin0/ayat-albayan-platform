@@ -1,6 +1,6 @@
 import type { StudentRecordingView } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { FormAlert } from '@/components/ui/form-alert';
+import { FormAlert } from '@/components/ui/form/form-alert';
 import { ApiError } from '@/lib/api';
 import { t } from '@/lib/i18n';
 import { RECORDINGS_KEY, setRecordingVisible } from './recordings-api';

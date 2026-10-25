@@ -3,7 +3,7 @@ import { useMemo } from 'react';
 import { usePermissions } from '@/features/auth/use-permissions';
 import { numbersQuery } from '@/features/numbers/numbers-api';
 import { DataTable } from '@/components/DataTable';
-import { Toast } from '@/components/ui/toast';
+import { Toast } from '@/components/ui/overlay/toast';
 import { t } from '@/lib/i18n';
 import { otherLine, templatesQuery } from './api';
 import { CrmNameDialog } from './CrmNameDialog';

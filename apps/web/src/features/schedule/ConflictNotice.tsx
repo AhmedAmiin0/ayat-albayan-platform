@@ -1,10 +1,10 @@
 import { clockTime, lessonWhenText, type Conflict } from '@ab/shared';
 import { useEffect, useId, useRef, useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Field } from '@/components/ui/field';
-import { Input } from '@/components/ui/input';
-import { NuqtaGlyph } from '@/components/ui/nuqta-glyph';
-import { tzCity } from '@/components/ui/time-zone-select';
+import { Button } from '@/components/ui/form/button';
+import { Field } from '@/components/ui/form/field';
+import { Input } from '@/components/ui/form/input';
+import { NuqtaGlyph } from '@/components/ui/display/nuqta-glyph';
+import { tzCity } from '@/components/ui/form/time-zone-select';
 import { t } from '@/lib/i18n';
 import { locale } from '@/lib/locale';
 import { RIYADH_TZ } from './tz';

@@ -1,9 +1,9 @@
 import { DURATIONS, lessonStatusStyle } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { useEffect, useRef } from 'react';
-import { FormAlert } from '@/components/ui/form-alert';
-import { RequiredMark } from '@/components/ui/label';
-import { StatusChip } from '@/components/ui/status-chip';
+import { FormAlert } from '@/components/ui/form/form-alert';
+import { RequiredMark } from '@/components/ui/form/label';
+import { StatusChip } from '@/components/ui/display/status-chip';
 import { t } from '@/lib/i18n';
 import { teacherLabel } from '@/lib/teacher-label';
 import { cn } from '@/lib/utils';

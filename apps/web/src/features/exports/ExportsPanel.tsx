@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/ui/form/button';
 import { currentMonth } from '@/features/payouts/api';
 import { MonthSelect } from '@/features/payouts/MonthSelect';
 import { dayMonthLabel } from '@/features/schedule/tz';

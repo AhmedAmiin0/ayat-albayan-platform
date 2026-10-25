@@ -1,7 +1,7 @@
 import { useEffect, useId, useRef, useState, type KeyboardEvent, type ReactNode } from 'react';
-import { Icon } from '@/components/ui/icon';
-import { iconButtonClass } from '@/components/ui/icon-button';
-import { useDismiss } from '@/components/ui/use-dismiss';
+import { Icon } from '@/components/ui/display/icon';
+import { iconButtonClass } from '@/components/ui/form/icon-button';
+import { useDismiss } from '@/components/ui/overlay/use-dismiss';
 import { cn } from '@/lib/utils';
 
 export interface RowMenuItem {

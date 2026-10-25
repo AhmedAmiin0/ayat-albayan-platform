@@ -1,6 +1,6 @@
 import type { LessonView } from '@ab/shared';
 import { useRef, useState } from 'react';
-import { useFocusOnChange } from '@/components/ui/use-focus-on-change';
+import { useFocusOnChange } from '@/components/ui/overlay/use-focus-on-change';
 import { AdminCourseChange } from '@/features/booking/course-change/AdminCourseChange';
 import { ClassroomActions } from '@/features/classroom/ClassroomActions';
 import { FeedbackRequestButton } from '@/features/feedback/FeedbackRequestButton';

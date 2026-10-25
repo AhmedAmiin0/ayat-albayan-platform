@@ -1,6 +1,6 @@
 import type { UserDetail } from '@ab/shared';
-import { StatusChip } from '@/components/ui/status-chip';
-import { Ltr } from '@/components/ui/ltr';
+import { StatusChip } from '@/components/ui/display/status-chip';
+import { Ltr } from '@/components/ui/display/ltr';
 import { formatDateTime } from '@/features/leads/format';
 import { t } from '@/lib/i18n';
 

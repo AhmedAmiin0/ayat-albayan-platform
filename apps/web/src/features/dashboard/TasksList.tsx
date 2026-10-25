@@ -1,9 +1,9 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Link } from '@tanstack/react-router';
 import { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { NuqtaGlyph } from '@/components/ui/nuqta-glyph';
-import { Toast } from '@/components/ui/toast';
+import { Button } from '@/components/ui/form/button';
+import { NuqtaGlyph } from '@/components/ui/display/nuqta-glyph';
+import { Toast } from '@/components/ui/overlay/toast';
 import { t } from '@/lib/i18n';
 import { DASHBOARD_KEY, markTaskDone } from './api';
 import { workItem, workLink } from './PendingReportsList';

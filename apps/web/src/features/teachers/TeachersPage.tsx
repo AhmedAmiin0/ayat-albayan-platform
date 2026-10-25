@@ -1,17 +1,17 @@
 import { useQuery } from '@tanstack/react-query';
 import { useMemo, useState } from 'react';
 import { DataTable } from '@/components/DataTable';
-import { Button } from '@/components/ui/button';
-import { Cartouche } from '@/components/ui/cartouche';
-import { EmptyState } from '@/components/ui/empty-state';
-import { Icon } from '@/components/ui/icon';
-import { PageHead } from '@/components/ui/page';
-import { Pager } from '@/components/ui/pager';
+import { Button } from '@/components/ui/form/button';
+import { Cartouche } from '@/components/ui/display/cartouche';
+import { EmptyState } from '@/components/ui/display/empty-state';
+import { Icon } from '@/components/ui/display/icon';
+import { PageHead } from '@/components/ui/layout/page';
+import { Pager } from '@/components/ui/layout/pager';
 import { t } from '@/lib/i18n';
 import { withFilter, withoutFilters, withSort, type ListUrlState } from '@/lib/list-url';
 import { teachersPageQuery, type Page, type Teacher, type TeacherListRow } from './api';
-import { FormAlert } from '@/components/ui/form-alert';
-import { ListSkeleton } from '@/components/ui/skeleton';
+import { FormAlert } from '@/components/ui/form/form-alert';
+import { ListSkeleton } from '@/components/ui/display/skeleton';
 import { teacherColumns } from './teacher-columns';
 import { TeacherDialog } from './TeacherDialog';
 

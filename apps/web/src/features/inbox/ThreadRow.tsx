@@ -1,9 +1,9 @@
 import { formatPhone, subscriptionStatusStyle, type ThreadView } from '@ab/shared';
 import { Link } from '@tanstack/react-router';
-import { Icon } from '@/components/ui/icon';
-import { Ltr } from '@/components/ui/ltr';
-import { NuqtaGlyph } from '@/components/ui/nuqta-glyph';
-import { StatusChip } from '@/components/ui/status-chip';
+import { Icon } from '@/components/ui/display/icon';
+import { Ltr } from '@/components/ui/display/ltr';
+import { NuqtaGlyph } from '@/components/ui/display/nuqta-glyph';
+import { StatusChip } from '@/components/ui/display/status-chip';
 import { initialOf } from '@/features/leads/format';
 import { t } from '@/lib/i18n';
 import { cn } from '@/lib/utils';

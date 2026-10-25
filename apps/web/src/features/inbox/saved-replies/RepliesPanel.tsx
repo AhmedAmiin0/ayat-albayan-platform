@@ -1,9 +1,9 @@
 import type { SavedReply, SavedReplyScope } from '@ab/shared';
-import { Button } from '@/components/ui/button';
-import { Icon } from '@/components/ui/icon';
-import { IconButton } from '@/components/ui/icon-button';
-import { SearchInput } from '@/components/ui/search-input';
-import { Tabs } from '@/components/ui/tabs';
+import { Button } from '@/components/ui/form/button';
+import { Icon } from '@/components/ui/display/icon';
+import { IconButton } from '@/components/ui/form/icon-button';
+import { SearchInput } from '@/components/ui/form/search-input';
+import { Tabs } from '@/components/ui/layout/tabs';
 import { t } from '@/lib/i18n';
 import { MineActions } from './MineActions';
 import { optionId, ReplyOptions } from './ReplyOptions';

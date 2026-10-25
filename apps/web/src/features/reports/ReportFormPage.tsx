@@ -1,9 +1,9 @@
 import type { UserRole } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
-import { Cartouche } from '@/components/ui/cartouche';
-import { FormAlert } from '@/components/ui/form-alert';
-import { PageHead } from '@/components/ui/page';
-import { ListSkeleton } from '@/components/ui/skeleton';
+import { Cartouche } from '@/components/ui/display/cartouche';
+import { FormAlert } from '@/components/ui/form/form-alert';
+import { PageHead } from '@/components/ui/layout/page';
+import { ListSkeleton } from '@/components/ui/display/skeleton';
 import { RIYADH_TZ } from '@/features/schedule/tz';
 import { ApiError } from '@/lib/api';
 import { t } from '@/lib/i18n';

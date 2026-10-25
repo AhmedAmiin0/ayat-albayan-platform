@@ -1,7 +1,7 @@
 import { useState, type FormEvent } from 'react';
-import { Button } from '@/components/ui/button';
-import { Field } from '@/components/ui/field';
-import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/form/button';
+import { Field } from '@/components/ui/form/field';
+import { Input } from '@/components/ui/form/input';
 import { t } from '@/lib/i18n';
 import { fromPhone, type PickedInvitee } from './invitee-list';
 

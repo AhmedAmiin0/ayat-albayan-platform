@@ -1,10 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
-import { Button } from '@/components/ui/button';
-import { Cartouche } from '@/components/ui/cartouche';
-import { EmptyState } from '@/components/ui/empty-state';
-import { FormAlert } from '@/components/ui/form-alert';
-import { PageHead } from '@/components/ui/page';
-import { ListSkeleton } from '@/components/ui/skeleton';
+import { Button } from '@/components/ui/form/button';
+import { Cartouche } from '@/components/ui/display/cartouche';
+import { EmptyState } from '@/components/ui/display/empty-state';
+import { FormAlert } from '@/components/ui/form/form-alert';
+import { PageHead } from '@/components/ui/layout/page';
+import { ListSkeleton } from '@/components/ui/display/skeleton';
 import { AssistantLessonRow } from '@/features/classroom/AssistantLessonRow';
 import { t } from '@/lib/i18n';
 import { salesLiveQuery } from './academy-api';

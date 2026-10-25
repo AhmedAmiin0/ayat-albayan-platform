@@ -1,6 +1,6 @@
 import { countByKind, splitByStatus, type SalesTeacherView, type StudentListKind } from '@ab/shared';
 import { useState } from 'react';
-import { SegmentedControl } from '@/components/ui/segmented-control';
+import { SegmentedControl } from '@/components/ui/form/segmented-control';
 import { t } from '@/lib/i18n';
 import { TeacherStudentItem } from './TeacherStudentItem';
 

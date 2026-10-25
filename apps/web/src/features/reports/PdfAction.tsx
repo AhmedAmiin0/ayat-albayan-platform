@@ -1,7 +1,7 @@
 import { pdfStatusStyle, type ReportSummaryView, type UserRole } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { Button } from '@/components/ui/button';
-import { StatusChip } from '@/components/ui/status-chip';
+import { Button } from '@/components/ui/form/button';
+import { StatusChip } from '@/components/ui/display/status-chip';
 import { t } from '@/lib/i18n';
 import { pdfUrl, REPORTS_KEY, reportErrorText, retryPdf } from './api';
 

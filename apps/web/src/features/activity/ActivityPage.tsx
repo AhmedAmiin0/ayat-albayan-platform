@@ -1,10 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
 import { DataTable } from '@/components/DataTable';
 import { TableBox } from '@/components/TableBox';
-import { Cartouche } from '@/components/ui/cartouche';
-import { EmptyState } from '@/components/ui/empty-state';
-import { PageHead } from '@/components/ui/page';
-import { Pager } from '@/components/ui/pager';
+import { Cartouche } from '@/components/ui/display/cartouche';
+import { EmptyState } from '@/components/ui/display/empty-state';
+import { PageHead } from '@/components/ui/layout/page';
+import { Pager } from '@/components/ui/layout/pager';
 import { t } from '@/lib/i18n';
 import { withFilter, withoutFilters, withSort, type ListUrlState } from '@/lib/list-url';
 import { activityQuery } from './activity.api';

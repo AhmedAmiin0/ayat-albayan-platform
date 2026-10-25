@@ -1,9 +1,9 @@
 import { settingDef, type SettingKey } from '@ab/shared';
 import { useId, useState } from 'react';
 import { settingText } from '@/components/settings/setting-text';
-import { Button } from '@/components/ui/button';
-import { Dialog } from '@/components/ui/dialog';
-import { NuqtaGlyph } from '@/components/ui/nuqta-glyph';
+import { Button } from '@/components/ui/form/button';
+import { Dialog } from '@/components/ui/overlay/dialog';
+import { NuqtaGlyph } from '@/components/ui/display/nuqta-glyph';
 import { t } from '@/lib/i18n';
 import { rowUpdate, rowValue } from '../../registry-form/row-form';
 import type { SettingsForm } from '../../registry-form/settings-form';

@@ -1,7 +1,7 @@
 import type { AcademySettings, NotificationAudience } from '@ab/shared';
 import { useState, type ReactNode } from 'react';
-import { tabIds } from '@/components/ui/tabs';
-import { Toast } from '@/components/ui/toast';
+import { tabIds } from '@/components/ui/layout/tabs';
+import { Toast } from '@/components/ui/overlay/toast';
 import { useRuleDrafts, type RuleDrafts } from '@/features/notification-rules/rule-drafts';
 import { RulesSection } from '@/features/notification-rules/RulesSection';
 import { t } from '@/lib/i18n';

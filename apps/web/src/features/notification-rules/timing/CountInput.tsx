@@ -1,5 +1,5 @@
 import { useId } from 'react';
-import { Input } from '@/components/ui/input';
+import { Input } from '@/components/ui/form/input';
 import { cn } from '@/lib/utils';
 
 // The browser's spin arrows sit over the digits of a narrow box: hidden (the keyboard still steps).

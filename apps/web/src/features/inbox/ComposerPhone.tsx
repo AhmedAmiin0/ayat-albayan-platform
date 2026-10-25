@@ -1,7 +1,7 @@
 import type { ChatFileProblem, ThreadView } from '@ab/shared';
 import { useState } from 'react';
-import { Icon } from '@/components/ui/icon';
-import { IconButton } from '@/components/ui/icon-button';
+import { Icon } from '@/components/ui/display/icon';
+import { IconButton } from '@/components/ui/form/icon-button';
 import { t } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
 import { noneAllowedText, useNoneAllowed, type NoneReason } from './allowed-templates';

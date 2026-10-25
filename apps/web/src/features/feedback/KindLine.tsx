@@ -1,4 +1,4 @@
-import { RequiredMark } from '@/components/ui/label';
+import { RequiredMark } from '@/components/ui/form/label';
 import { t } from '@/lib/i18n';
 import type { FeedbackKind } from './types';
 

@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState, type FormEvent } from 'react';
-import { Button } from '@/components/ui/button';
-import { FormAlert } from '@/components/ui/form-alert';
+import { Button } from '@/components/ui/form/button';
+import { FormAlert } from '@/components/ui/form/form-alert';
 import { paidAtDay } from '@/features/payments/pay-day';
 import { t } from '@/lib/i18n';
 import { ASSISTANTS_KEY, saveTerms, type AssistantRow } from './api';

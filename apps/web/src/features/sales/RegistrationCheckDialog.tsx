@@ -1,12 +1,12 @@
 import type { RegistrationCheckView } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { useId, useState, type FormEvent } from 'react';
-import { Button } from '@/components/ui/button';
-import { Dialog } from '@/components/ui/dialog';
-import { Field } from '@/components/ui/field';
-import { FormAlert } from '@/components/ui/form-alert';
-import { Input } from '@/components/ui/input';
-import { SegmentedControl } from '@/components/ui/segmented-control';
+import { Button } from '@/components/ui/form/button';
+import { Dialog } from '@/components/ui/overlay/dialog';
+import { Field } from '@/components/ui/form/field';
+import { FormAlert } from '@/components/ui/form/form-alert';
+import { Input } from '@/components/ui/form/input';
+import { SegmentedControl } from '@/components/ui/form/segmented-control';
 import { apiErrorText } from '@/features/subscriptions/format';
 import { apiFetch } from '@/lib/api';
 import { t } from '@/lib/i18n';

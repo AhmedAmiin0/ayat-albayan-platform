@@ -1,10 +1,10 @@
 import { WA_TEXT_MAX } from '@ab/shared';
 import { useIsMutating, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useId, useLayoutEffect, useRef, useSyncExternalStore, type ReactNode } from 'react';
-import { Icon } from '@/components/ui/icon';
-import { IconButton } from '@/components/ui/icon-button';
-import { controlClass } from '@/components/ui/input';
-import { usePhone } from '@/components/ui/use-narrow';
+import { Icon } from '@/components/ui/display/icon';
+import { IconButton } from '@/components/ui/form/icon-button';
+import { controlClass } from '@/components/ui/form/input';
+import { usePhone } from '@/components/ui/layout/use-narrow';
 import { errorCode } from '@/features/schedule/api';
 import { t } from '@/lib/i18n';
 import { cn } from '@/lib/utils';

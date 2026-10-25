@@ -1,5 +1,5 @@
 import { warnsTrialDate } from '@ab/shared';
-import { NuqtaGlyph } from '@/components/ui/nuqta-glyph';
+import { NuqtaGlyph } from '@/components/ui/display/nuqta-glyph';
 import { t } from '@/lib/i18n';
 import type { TrialDateDraft } from '../draft';
 import { pickedText } from '../SlotStep';

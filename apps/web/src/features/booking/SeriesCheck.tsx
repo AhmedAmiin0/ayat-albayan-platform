@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
-import { FormAlert } from '@/components/ui/form-alert';
-import { NuqtaGlyph } from '@/components/ui/nuqta-glyph';
+import { FormAlert } from '@/components/ui/form/form-alert';
+import { NuqtaGlyph } from '@/components/ui/display/nuqta-glyph';
 import { lessonErrorText } from '@/features/schedule/api';
 import { conflictText } from '@/features/schedule/ConflictNotice';
 import { t } from '@/lib/i18n';

@@ -1,12 +1,12 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { useMemo, useState } from 'react';
 import { DataTable } from '@/components/DataTable';
-import { Cartouche } from '@/components/ui/cartouche';
-import { EmptyState } from '@/components/ui/empty-state';
-import { FormAlert } from '@/components/ui/form-alert';
-import { PageHead } from '@/components/ui/page';
-import { Pager } from '@/components/ui/pager';
-import { Toast } from '@/components/ui/toast';
+import { Cartouche } from '@/components/ui/display/cartouche';
+import { EmptyState } from '@/components/ui/display/empty-state';
+import { FormAlert } from '@/components/ui/form/form-alert';
+import { PageHead } from '@/components/ui/layout/page';
+import { Pager } from '@/components/ui/layout/pager';
+import { Toast } from '@/components/ui/overlay/toast';
 import { RecordPaymentDialog } from '@/features/payments/RecordPaymentDialog';
 import { t } from '@/lib/i18n';
 import { clearFilterSearch, toFilterSearch, toSortSearch } from '@/lib/list-search';

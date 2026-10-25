@@ -4,7 +4,7 @@ import { createPortal } from 'react-dom';
 import { cn } from '@/lib/utils';
 import { pickLayout } from './dialog-classes';
 import { DialogHeader } from './dialog-header';
-import { jadwalClass } from './page';
+import { jadwalClass } from '../layout/page';
 import { useFocusTrap } from './use-focus-trap';
 
 export interface DialogProps {

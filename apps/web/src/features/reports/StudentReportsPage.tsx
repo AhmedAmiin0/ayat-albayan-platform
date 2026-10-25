@@ -1,12 +1,12 @@
 import type { UserRole } from '@ab/shared';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { type ReactNode, useState } from 'react';
-import { Cartouche } from '@/components/ui/cartouche';
-import { EmptyState } from '@/components/ui/empty-state';
-import { FormAlert } from '@/components/ui/form-alert';
-import { PageHead } from '@/components/ui/page';
-import { Pager } from '@/components/ui/pager';
-import { ListSkeleton } from '@/components/ui/skeleton';
+import { Cartouche } from '@/components/ui/display/cartouche';
+import { EmptyState } from '@/components/ui/display/empty-state';
+import { FormAlert } from '@/components/ui/form/form-alert';
+import { PageHead } from '@/components/ui/layout/page';
+import { Pager } from '@/components/ui/layout/pager';
+import { ListSkeleton } from '@/components/ui/display/skeleton';
 import { ApiError } from '@/lib/api';
 import { t } from '@/lib/i18n';
 import { studentReportsQuery } from './api';

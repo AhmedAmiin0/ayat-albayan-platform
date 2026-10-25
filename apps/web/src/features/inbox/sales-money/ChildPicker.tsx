@@ -1,6 +1,6 @@
 import type { SalesFamilyStudent } from '@ab/shared';
-import { Field } from '@/components/ui/field';
-import { Select } from '@/components/ui/select';
+import { Field } from '@/components/ui/form/field';
+import { Select } from '@/components/ui/form/select';
 import { studentLabel } from '@/features/subscriptions/format';
 import { t } from '@/lib/i18n';
 
