@@ -4,14 +4,14 @@ import { SETTINGS } from '@/test/settings-fixture';
 import { ApiError } from '@/lib/http/api';
 import { t } from '@/lib/i18n/i18n';
 import type { InboxLead } from './api';
-import { lead, PHONE } from './inbox-fixture';
+import { lead, PHONE } from './testing/inbox-fixture';
 import { LeadPanel } from './LeadPanel';
-import { renderWithClient, routeFetch } from './test-utils';
+import { renderWithClient, routeFetch } from './testing/test-utils';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
 vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
-vi.mock('@tanstack/react-router', async () => ({ Link: (await import('./test-utils')).MockLink }));
+vi.mock('@tanstack/react-router', async () => ({ Link: (await import('./testing/test-utils')).MockLink }));
 
 function renderPanel(row: InboxLead = lead()) {
   routeFetch(apiFetch, [

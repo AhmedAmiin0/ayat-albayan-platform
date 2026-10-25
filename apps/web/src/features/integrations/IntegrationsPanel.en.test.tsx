@@ -1,7 +1,7 @@
 import en from '@ab/shared/i18n/en.json';
 import { screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
-import { renderWithClient, routeFetch } from '@/features/inbox/test-utils';
+import { renderWithClient, routeFetch } from '@/features/inbox/testing/test-utils';
 import { integrationItems } from './integrations.fixture';
 import { IntegrationsPanel } from './IntegrationsPanel';
 

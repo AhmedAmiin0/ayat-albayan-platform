@@ -1,7 +1,7 @@
 import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { PRICES, REPLIES, savedReply } from '@/features/inbox/saved-replies/fixture';
-import { renderWithClient, routeFetch } from '@/features/inbox/test-utils';
+import { renderWithClient, routeFetch } from '@/features/inbox/testing/test-utils';
 import { t } from '@/lib/i18n/i18n';
 import { SavedRepliesTab } from './SavedRepliesTab';
 

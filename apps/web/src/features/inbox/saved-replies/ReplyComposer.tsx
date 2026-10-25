@@ -1,8 +1,8 @@
 import { resolveSavedReply, type SavedReply, type ThreadView } from '@ab/shared';
 import { useId, useSyncExternalStore, type ReactNode } from 'react';
-import { getDraft, setDraft, subscribeDrafts } from '../draft-store';
-import type { PrefillContext } from '../template-params';
-import { TextComposer } from '../TextComposer';
+import { getDraft, setDraft, subscribeDrafts } from '../composer/lib/draft-store';
+import type { PrefillContext } from '../composer/lib/template-params';
+import { TextComposer } from '../composer/components/TextComposer';
 import { fillComposer, slashQuery } from './filter';
 import { RepliesPanel } from './RepliesPanel';
 import { optionId } from './ReplyOptions';

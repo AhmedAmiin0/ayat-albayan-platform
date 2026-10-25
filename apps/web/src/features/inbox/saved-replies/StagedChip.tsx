@@ -4,7 +4,7 @@ import { IconButton } from '@/components/ui/form/icon-button';
 import { NuqtaGlyph } from '@/components/ui/display/nuqta-glyph';
 import { sizeText } from '@/features/students/recording-format';
 import { t } from '@/lib/i18n/i18n';
-import { sendErrorCodeText } from '../send-error';
+import { sendErrorCodeText } from '../composer/lib/send-error';
 import type { Staged } from './staged-store';
 
 const S = t.savedReplies;

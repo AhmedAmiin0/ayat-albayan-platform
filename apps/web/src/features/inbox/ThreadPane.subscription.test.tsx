@@ -3,14 +3,14 @@ import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { SETTINGS } from '@/test/settings-fixture';
 import { t } from '@/lib/i18n/i18n';
-import { detail, lead, PHONE, pupil, thread } from './inbox-fixture';
-import { renderWithClient, routeFetch } from './test-utils';
+import { detail, lead, PHONE, pupil, thread } from './testing/inbox-fixture';
+import { renderWithClient, routeFetch } from './testing/test-utils';
 import { ThreadPane } from './ThreadPane';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
 vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
-vi.mock('@tanstack/react-router', async () => ({ Link: (await import('./test-utils')).MockLink }));
+vi.mock('@tanstack/react-router', async () => ({ Link: (await import('./testing/test-utils')).MockLink }));
 
 const GUARDIAN = { guardian_id: 'g-1', lead_id: null, lead_status: null, display_name: 'أم سهيلة' } as const;
 const FAMILY: ThreadPeople = {

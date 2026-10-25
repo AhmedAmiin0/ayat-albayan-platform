@@ -11,7 +11,7 @@ const apiSend = vi.hoisted(() => vi.fn());
 const granted = vi.hoisted(() => ({ perms: new Set<string>(['settings.write']) }));
 vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
 vi.mock('@/features/auth/use-permissions', () => ({ usePermissions: () => ({ permissions: [], can: (p: string) => granted.perms.has(p) }) }));
-vi.mock('@tanstack/react-router', async () => ({ Link: (await import('@/features/inbox/test-utils')).MockLink }));
+vi.mock('@tanstack/react-router', async () => ({ Link: (await import('@/features/inbox/testing/test-utils')).MockLink }));
 
 const d = t.settingsValues.describe;
 const HORIZON = t.settings.bookingHorizonWeeks;

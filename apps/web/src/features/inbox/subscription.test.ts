@@ -1,7 +1,7 @@
 import { threadBadge } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
 import { t } from '@/lib/i18n/i18n';
-import { pupil } from './inbox-fixture';
+import { pupil } from './testing/inbox-fixture';
 import { badgeStyle, dueText, leadChip, packageChipProps, packageLine, subscribeLabel } from './subscription';
 
 const GUARDIAN = { id: 'g-1', name: 'أم سهيلة' };

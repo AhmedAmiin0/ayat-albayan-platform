@@ -1,7 +1,7 @@
 import en from '@ab/shared/i18n/en.json';
 import { fireEvent, screen, within } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
-import { renderWithClient } from '@/features/inbox/test-utils';
+import { renderWithClient } from '@/features/inbox/testing/test-utils';
 import { RegistrationCheckButton } from './RegistrationCheckButton';
 
 vi.mock('@/lib/i18n/i18n', async (orig) => ({ ...(await orig<object>()), t: en }));

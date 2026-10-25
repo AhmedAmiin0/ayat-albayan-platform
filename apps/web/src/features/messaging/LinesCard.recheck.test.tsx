@@ -1,7 +1,7 @@
 import type { LineCheckView } from '@ab/shared';
 import { fireEvent, screen, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { renderWithClient } from '@/features/inbox/test-utils';
+import { renderWithClient } from '@/features/inbox/testing/test-utils';
 import { t } from '@/lib/i18n/i18n';
 import { LinesCard } from './LinesCard';
 

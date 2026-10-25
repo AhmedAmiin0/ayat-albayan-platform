@@ -1,7 +1,7 @@
 import type { StudentStatus } from '@ab/shared';
 import { fireEvent, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { renderWithClient } from '@/features/inbox/test-utils';
+import { renderWithClient } from '@/features/inbox/testing/test-utils';
 import type { StudentProfile } from '@/features/students/types';
 import { t } from '@/lib/i18n/i18n';
 import { STUDENT_ID } from '../wizard-fixture';

@@ -1,9 +1,9 @@
 import { act, fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n/i18n';
-import { clearDraft } from '../draft-store';
-import { message, PHONE, thread } from '../inbox-fixture';
-import { renderWithClient, routeFetch } from '../test-utils';
+import { clearDraft } from '../composer/lib/draft-store';
+import { message, PHONE, thread } from '../testing/inbox-fixture';
+import { renderWithClient, routeFetch } from '../testing/test-utils';
 import { PROFILE, REPLIES } from './fixture';
 import { ReplyComposer } from './ReplyComposer';
 import { getStaged, setStaged } from './staged-store';

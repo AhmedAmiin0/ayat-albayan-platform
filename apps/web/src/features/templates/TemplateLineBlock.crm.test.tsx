@@ -1,6 +1,6 @@
 import { screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
-import { renderWithClient } from '@/features/inbox/test-utils';
+import { renderWithClient } from '@/features/inbox/testing/test-utils';
 import { t } from '@/lib/i18n/i18n';
 import { lineView } from './template-lines-fixture';
 import { TemplateLineBlock } from './TemplateLineBlock';

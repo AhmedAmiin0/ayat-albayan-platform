@@ -1,6 +1,6 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { renderWithClient } from '@/features/inbox/test-utils';
+import { renderWithClient } from '@/features/inbox/testing/test-utils';
 import { checked } from '@/features/templates/template-lines-fixture';
 import { t } from '@/lib/i18n/i18n';
 import { linesCheckQuery } from './api';

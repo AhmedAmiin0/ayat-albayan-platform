@@ -8,7 +8,7 @@ import { leadByPhoneQuery } from './api';
 import { FollowUpLine } from './FollowUpLine';
 import { LeadDataActions } from './LeadDataActions';
 import { LeadSummary } from './LeadSummary';
-import { QuickActions } from './QuickActions';
+import { QuickActions } from './composer/components/QuickActions';
 
 export type LeadNotice = Pick<ToastProps, 'message' | 'tone'>;
 

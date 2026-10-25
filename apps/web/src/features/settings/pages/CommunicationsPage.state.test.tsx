@@ -7,7 +7,7 @@ const apiFetch = vi.hoisted(() => vi.fn());
 vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 vi.mock('@tanstack/react-router', async (orig) => ({
   ...(await orig<object>()),
-  Link: (await import('@/features/inbox/test-utils')).MockLink,
+  Link: (await import('@/features/inbox/testing/test-utils')).MockLink,
 }));
 
 const p = t.settingsPages;
@@ -24,7 +24,7 @@ describe('«التواصل» load state', () => {
       if (path === '/admin/notifications') return { entries: [], lines: [] };
       return path === '/settings' ? SETTINGS : path === '/config/meta' ? { meta: {} } : [];
     });
-    const { renderWithClient } = await import('@/features/inbox/test-utils');
+    const { renderWithClient } = await import('@/features/inbox/testing/test-utils');
     const { CommunicationsPage } = await import('./CommunicationsPage');
     renderWithClient(<CommunicationsPage tab="overview" onTab={() => undefined} />);
     expect(screen.queryAllByRole('status')).toHaveLength(0);

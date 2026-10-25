@@ -1,8 +1,8 @@
 import type { TemplateHealthView } from '@ab/shared';
 import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { template } from '@/features/inbox/inbox-fixture';
-import { renderWithClient, routeFetch } from '@/features/inbox/test-utils';
+import { template } from '@/features/inbox/testing/inbox-fixture';
+import { renderWithClient, routeFetch } from '@/features/inbox/testing/test-utils';
 import { t } from '@/lib/i18n/i18n';
 import { LINES, lineSync } from './template-lines-fixture';
 import { TemplateHealth } from './TemplateHealth';

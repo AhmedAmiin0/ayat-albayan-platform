@@ -3,7 +3,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { ABRAR, next } from '@/features/booking/wizard-fixture';
 import { dayMonthLabel } from '@/features/schedule/tz';
 import { t } from '@/lib/i18n/i18n';
-import { renderWithClient } from '../test-utils';
+import { renderWithClient } from '../testing/test-utils';
 import { continueText } from './course-continue';
 import { COURSE_STUDENT_ID, NEXT_SUN, RENEWAL_VIEW, routeCourseSend, routeRenewal } from './course-fixture';
 import { SalesCourseDialog } from './SalesCourseDialog';
@@ -11,7 +11,7 @@ import { SalesCourseDialog } from './SalesCourseDialog';
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
 vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
-vi.mock('@tanstack/react-router', async () => ({ Link: (await import('../test-utils')).MockLink }));
+vi.mock('@tanstack/react-router', async () => ({ Link: (await import('../testing/test-utils')).MockLink }));
 
 const day = (n: 0 | 3) => screen.findByRole('region', { name: new RegExp(`^${t.enums.weekday[n]} `) });
 const pressed = async (n: 0 | 3, time: RegExp) => within(await day(n)).getByRole('button', { name: time }).getAttribute('aria-pressed');

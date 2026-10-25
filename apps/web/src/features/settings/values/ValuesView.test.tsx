@@ -6,7 +6,7 @@ import { findRow, hasRow, renderValues } from './values-test-utils';
 const apiFetch = vi.hoisted(() => vi.fn());
 vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend: vi.fn() }));
 vi.mock('@/features/auth/use-permissions', () => ({ usePermissions: () => ({ permissions: [], can: () => true }) }));
-vi.mock('@tanstack/react-router', async () => ({ Link: (await import('@/features/inbox/test-utils')).MockLink }));
+vi.mock('@tanstack/react-router', async () => ({ Link: (await import('@/features/inbox/testing/test-utils')).MockLink }));
 
 const v = t.settingsValues;
 const table = () => screen.getByRole('table');

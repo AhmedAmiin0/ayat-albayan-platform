@@ -3,9 +3,9 @@ import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from 'vitest
 import { t } from '@/lib/i18n/i18n';
 import { ChatActionsProvider } from './ChatActionsProvider';
 import { FLASH_MS } from './jump-to-message';
-import { message, PHONE, thread } from './inbox-fixture';
+import { message, PHONE, thread } from './testing/inbox-fixture';
 import { MessageLog } from './MessageLog';
-import { renderWithClient } from './test-utils';
+import { renderWithClient } from './testing/test-utils';
 
 const scrollIntoView = vi.fn();
 const saved = Object.getOwnPropertyDescriptor(Element.prototype, 'scrollIntoView');

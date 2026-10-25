@@ -6,7 +6,7 @@ import { findRow, overview, renderRules } from './rules-test-kit';
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
 vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
-vi.mock('@tanstack/react-router', async (orig) => ({ ...(await orig<object>()), Link: (await import('@/features/inbox/test-utils')).MockLink }));
+vi.mock('@tanstack/react-router', async (orig) => ({ ...(await orig<object>()), Link: (await import('@/features/inbox/testing/test-utils')).MockLink }));
 vi.mock('@/features/auth/use-permissions', () => ({ usePermissions: () => ({ permissions: ['settings.read', 'notifications.manage'], can: () => true }) }));
 
 const r = t.notificationRules;

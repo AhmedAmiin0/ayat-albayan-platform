@@ -1,7 +1,7 @@
 import type { AuthChangeEvent, Session } from '@supabase/supabase-js';
 import { describe, expect, it, vi } from 'vitest';
-import { getDraft, setDraft } from '@/features/inbox/draft-store';
-import { lastOwnSend, recordOwnSend } from '@/features/inbox/own-send';
+import { getDraft, setDraft } from '@/features/inbox/composer/lib/draft-store';
+import { lastOwnSend, recordOwnSend } from '@/features/inbox/composer/lib/own-send';
 import { registerDrafts, type RegisterDraft } from '@/features/inbox/register-drafts';
 import { bindWebPushToSession } from './web-push-session';
 

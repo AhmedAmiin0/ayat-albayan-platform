@@ -1,16 +1,16 @@
 import type { ThreadDetail } from '@ab/shared';
 import { screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { detail, message, PHONE, thread } from './inbox-fixture';
+import { detail, message, PHONE, thread } from './testing/inbox-fixture';
 import { threadTitle } from './format';
 import { InboxModeContext, inboxBase, type InboxMode } from './mode';
-import { renderWithClient, routeFetch } from './test-utils';
+import { renderWithClient, routeFetch } from './testing/test-utils';
 import { ThreadPane } from './ThreadPane';
 import { ThreadRow } from './ThreadRow';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
-vi.mock('@tanstack/react-router', async () => ({ Link: (await import('./test-utils')).MockLink }));
+vi.mock('@tanstack/react-router', async () => ({ Link: (await import('./testing/test-utils')).MockLink }));
 
 const GROUPED = '+966 50 123 4567';
 const page = (): ThreadDetail => ({

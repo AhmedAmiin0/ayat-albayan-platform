@@ -5,7 +5,7 @@ import { findRow, renderRules } from './rules-test-kit';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
-vi.mock('@tanstack/react-router', async (orig) => ({ ...(await orig<object>()), Link: (await import('@/features/inbox/test-utils')).MockLink }));
+vi.mock('@tanstack/react-router', async (orig) => ({ ...(await orig<object>()), Link: (await import('@/features/inbox/testing/test-utils')).MockLink }));
 vi.mock('@/features/auth/use-permissions', () => ({
   usePermissions: () => ({ permissions: ['settings.read'], can: () => true }),
 }));

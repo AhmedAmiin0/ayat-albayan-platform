@@ -2,14 +2,14 @@ import { fireEvent, screen, within } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n/i18n';
 import { timesInText } from './format';
-import { detail, PHONE } from './inbox-fixture';
+import { detail, PHONE } from './testing/inbox-fixture';
 import { InboxModeContext } from './mode';
-import { renderWithClient, routeFetch } from './test-utils';
+import { renderWithClient, routeFetch } from './testing/test-utils';
 import { ThreadPane } from './ThreadPane';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
-vi.mock('@tanstack/react-router', async () => ({ Link: (await import('./test-utils')).MockLink }));
+vi.mock('@tanstack/react-router', async () => ({ Link: (await import('./testing/test-utils')).MockLink }));
 vi.mock('@/features/auth/use-permissions', () => ({ usePermissions: () => ({ permissions: [], can: () => true }) }));
 
 describe('ThreadHeaderPhone at 375px, a sales lead (W3)', () => {

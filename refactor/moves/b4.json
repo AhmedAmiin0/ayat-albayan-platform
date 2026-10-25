@@ -1,0 +1,280 @@
+{
+  "id": "b4",
+  "seq": 39,
+  "moves": [
+    {
+      "from": "apps/web/src/features/inbox/Composer*",
+      "to": "apps/web/src/features/inbox/composer/components/"
+    },
+    {
+      "from": "apps/web/src/features/inbox/FileComposer*",
+      "to": "apps/web/src/features/inbox/composer/components/"
+    },
+    {
+      "from": "apps/web/src/features/inbox/TemplateComposer*",
+      "to": "apps/web/src/features/inbox/composer/components/"
+    },
+    {
+      "from": "apps/web/src/features/inbox/TemplateParamFields*",
+      "to": "apps/web/src/features/inbox/composer/components/"
+    },
+    {
+      "from": "apps/web/src/features/inbox/TextComposer*",
+      "to": "apps/web/src/features/inbox/composer/components/"
+    },
+    {
+      "from": "apps/web/src/features/inbox/AttachButton*",
+      "to": "apps/web/src/features/inbox/composer/components/"
+    },
+    {
+      "from": "apps/web/src/features/inbox/QuickActions*",
+      "to": "apps/web/src/features/inbox/composer/components/"
+    },
+    {
+      "from": "apps/web/src/features/inbox/ReplyStrip*",
+      "to": "apps/web/src/features/inbox/composer/components/"
+    },
+    {
+      "from": "apps/web/src/features/inbox/ReplyFromNote*",
+      "to": "apps/web/src/features/inbox/composer/components/"
+    },
+    {
+      "from": "apps/web/src/features/inbox/composer-*",
+      "to": "apps/web/src/features/inbox/composer/lib/"
+    },
+    {
+      "from": "apps/web/src/features/inbox/draft-store*",
+      "to": "apps/web/src/features/inbox/composer/lib/"
+    },
+    {
+      "from": "apps/web/src/features/inbox/send-*",
+      "to": "apps/web/src/features/inbox/composer/lib/"
+    },
+    {
+      "from": "apps/web/src/features/inbox/template-params*",
+      "to": "apps/web/src/features/inbox/composer/lib/"
+    },
+    {
+      "from": "apps/web/src/features/inbox/allowed-templates*",
+      "to": "apps/web/src/features/inbox/composer/lib/"
+    },
+    {
+      "from": "apps/web/src/features/inbox/reply-from*",
+      "to": "apps/web/src/features/inbox/composer/lib/"
+    },
+    {
+      "from": "apps/web/src/features/inbox/own-send*",
+      "to": "apps/web/src/features/inbox/composer/lib/"
+    },
+    {
+      "from": "apps/web/src/features/inbox/use-reply-target*",
+      "to": "apps/web/src/features/inbox/composer/lib/"
+    },
+    {
+      "from": "apps/web/src/features/inbox/inbox-fixture*",
+      "to": "apps/web/src/features/inbox/testing/"
+    },
+    {
+      "from": "apps/web/src/features/inbox/test-utils*",
+      "to": "apps/web/src/features/inbox/testing/"
+    }
+  ],
+  "files": [
+    [
+      "apps/web/src/features/inbox/allowed-templates.test.ts",
+      "apps/web/src/features/inbox/composer/lib/allowed-templates.test.ts"
+    ],
+    [
+      "apps/web/src/features/inbox/allowed-templates.ts",
+      "apps/web/src/features/inbox/composer/lib/allowed-templates.ts"
+    ],
+    [
+      "apps/web/src/features/inbox/AttachButton.test.tsx",
+      "apps/web/src/features/inbox/composer/components/AttachButton.test.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/AttachButton.tsx",
+      "apps/web/src/features/inbox/composer/components/AttachButton.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/composer-extras.ts",
+      "apps/web/src/features/inbox/composer/lib/composer-extras.ts"
+    ],
+    [
+      "apps/web/src/features/inbox/composer-keys.test.ts",
+      "apps/web/src/features/inbox/composer/lib/composer-keys.test.ts"
+    ],
+    [
+      "apps/web/src/features/inbox/composer-keys.ts",
+      "apps/web/src/features/inbox/composer/lib/composer-keys.ts"
+    ],
+    [
+      "apps/web/src/features/inbox/Composer.lines.test.tsx",
+      "apps/web/src/features/inbox/composer/components/Composer.lines.test.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/Composer.teacher.test.tsx",
+      "apps/web/src/features/inbox/composer/components/Composer.teacher.test.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/Composer.tsx",
+      "apps/web/src/features/inbox/composer/components/Composer.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/Composer.wide.test.tsx",
+      "apps/web/src/features/inbox/composer/components/Composer.wide.test.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/ComposerError.tsx",
+      "apps/web/src/features/inbox/composer/components/ComposerError.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/ComposerPhone.replies.test.tsx",
+      "apps/web/src/features/inbox/composer/components/ComposerPhone.replies.test.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/ComposerPhone.test.tsx",
+      "apps/web/src/features/inbox/composer/components/ComposerPhone.test.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/ComposerPhone.tsx",
+      "apps/web/src/features/inbox/composer/components/ComposerPhone.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/draft-store.test.ts",
+      "apps/web/src/features/inbox/composer/lib/draft-store.test.ts"
+    ],
+    [
+      "apps/web/src/features/inbox/draft-store.ts",
+      "apps/web/src/features/inbox/composer/lib/draft-store.ts"
+    ],
+    [
+      "apps/web/src/features/inbox/FileComposer.reply.test.tsx",
+      "apps/web/src/features/inbox/composer/components/FileComposer.reply.test.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/FileComposer.test.tsx",
+      "apps/web/src/features/inbox/composer/components/FileComposer.test.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/FileComposer.tsx",
+      "apps/web/src/features/inbox/composer/components/FileComposer.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/inbox-fixture.ts",
+      "apps/web/src/features/inbox/testing/inbox-fixture.ts"
+    ],
+    [
+      "apps/web/src/features/inbox/own-send.test.ts",
+      "apps/web/src/features/inbox/composer/lib/own-send.test.ts"
+    ],
+    [
+      "apps/web/src/features/inbox/own-send.ts",
+      "apps/web/src/features/inbox/composer/lib/own-send.ts"
+    ],
+    [
+      "apps/web/src/features/inbox/QuickActions.tsx",
+      "apps/web/src/features/inbox/composer/components/QuickActions.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/reply-from.test.ts",
+      "apps/web/src/features/inbox/composer/lib/reply-from.test.ts"
+    ],
+    [
+      "apps/web/src/features/inbox/reply-from.ts",
+      "apps/web/src/features/inbox/composer/lib/reply-from.ts"
+    ],
+    [
+      "apps/web/src/features/inbox/ReplyFromNote.test.tsx",
+      "apps/web/src/features/inbox/composer/components/ReplyFromNote.test.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/ReplyFromNote.tsx",
+      "apps/web/src/features/inbox/composer/components/ReplyFromNote.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/ReplyStrip.tsx",
+      "apps/web/src/features/inbox/composer/components/ReplyStrip.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/send-error.ts",
+      "apps/web/src/features/inbox/composer/lib/send-error.ts"
+    ],
+    [
+      "apps/web/src/features/inbox/send-start.test.ts",
+      "apps/web/src/features/inbox/composer/lib/send-start.test.ts"
+    ],
+    [
+      "apps/web/src/features/inbox/send-start.ts",
+      "apps/web/src/features/inbox/composer/lib/send-start.ts"
+    ],
+    [
+      "apps/web/src/features/inbox/template-params.test.ts",
+      "apps/web/src/features/inbox/composer/lib/template-params.test.ts"
+    ],
+    [
+      "apps/web/src/features/inbox/template-params.ts",
+      "apps/web/src/features/inbox/composer/lib/template-params.ts"
+    ],
+    [
+      "apps/web/src/features/inbox/TemplateComposer.contact.test.tsx",
+      "apps/web/src/features/inbox/composer/components/TemplateComposer.contact.test.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/TemplateComposer.empty.test.tsx",
+      "apps/web/src/features/inbox/composer/components/TemplateComposer.empty.test.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/TemplateComposer.restricted.en.test.tsx",
+      "apps/web/src/features/inbox/composer/components/TemplateComposer.restricted.en.test.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/TemplateComposer.restricted.test.tsx",
+      "apps/web/src/features/inbox/composer/components/TemplateComposer.restricted.test.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/TemplateComposer.starter.test.tsx",
+      "apps/web/src/features/inbox/composer/components/TemplateComposer.starter.test.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/TemplateComposer.tsx",
+      "apps/web/src/features/inbox/composer/components/TemplateComposer.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/TemplateParamFields.tsx",
+      "apps/web/src/features/inbox/composer/components/TemplateParamFields.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/test-utils.tsx",
+      "apps/web/src/features/inbox/testing/test-utils.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/TextComposer.draft.test.tsx",
+      "apps/web/src/features/inbox/composer/components/TextComposer.draft.test.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/TextComposer.errors.test.ts",
+      "apps/web/src/features/inbox/composer/components/TextComposer.errors.test.ts"
+    ],
+    [
+      "apps/web/src/features/inbox/TextComposer.failed.test.tsx",
+      "apps/web/src/features/inbox/composer/components/TextComposer.failed.test.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/TextComposer.focus.test.tsx",
+      "apps/web/src/features/inbox/composer/components/TextComposer.focus.test.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/TextComposer.remount.test.tsx",
+      "apps/web/src/features/inbox/composer/components/TextComposer.remount.test.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/TextComposer.tsx",
+      "apps/web/src/features/inbox/composer/components/TextComposer.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/use-reply-target.ts",
+      "apps/web/src/features/inbox/composer/lib/use-reply-target.ts"
+    ]
+  ]
+}

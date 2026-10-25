@@ -2,7 +2,7 @@ import type { AcademySettings, ConfigEntry, CustomConfigView, GoogleSyncSettings
 import { useState } from 'react';
 import { screen } from '@testing-library/react';
 import type { Mock } from 'vitest';
-import { renderWithClient, routeFetch } from '@/features/inbox/test-utils';
+import { renderWithClient, routeFetch } from '@/features/inbox/testing/test-utils';
 import { entriesFixture } from '@/test/entries-fixture';
 import { SETTINGS } from '@/test/settings-fixture';
 import type { ValuesSearch } from './values-search';

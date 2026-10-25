@@ -1,6 +1,6 @@
 import { screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
-import { renderWithClient, routeFetch } from '@/features/inbox/test-utils';
+import { renderWithClient, routeFetch } from '@/features/inbox/testing/test-utils';
 import { balanceOf, WEEKLY } from '@/features/subscriptions/money-fixture';
 import { t } from '@/lib/i18n/i18n';
 import { StudentProfilePage } from './StudentProfilePage';

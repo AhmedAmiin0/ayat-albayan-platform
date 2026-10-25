@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { thread } from './inbox-fixture';
+import { thread } from './testing/inbox-fixture';
 import { canRegisterFrom, draftFromThread } from './sales-register';
 
 describe('sales chat registration: which threads and the prefill', () => {

@@ -1,7 +1,7 @@
 import { counted } from '@ab/shared';
 import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { renderWithClient } from '@/features/inbox/test-utils';
+import { renderWithClient } from '@/features/inbox/testing/test-utils';
 import { dateLabel } from '@/features/schedule/tz';
 import { t } from '@/lib/i18n/i18n';
 import { BookingModeContext } from '../mode';

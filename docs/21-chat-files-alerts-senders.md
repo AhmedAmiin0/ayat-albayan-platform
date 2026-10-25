@@ -32,7 +32,7 @@ Requirement IDs covered: R-MSG-03, R-MSG-04, R-MSG-05, R-MSG-06, R-NOT-01, R-MOB
   - Arabic strings are MSA in `packages/shared/i18n/ar.json`, with matching keys in `en.json` (the shared `i18n.test.ts` checks key parity).
   - Jobs are idempotent and RLS stays on every table.
   - Two WhatsApp drivers, set per line (`meta|kapso`, docs/19).
-- **Precondition: `origin/fix/chat-round3` must be merged first.** The routine checks this before anything else: `git show origin/develop:apps/web/src/features/inbox/send-start.ts`. If the file is absent, the routine stops and reports. It does not copy the file in. FileComposer uses `sendStart()` and `settleOwnSend()` from it, and that branch also edits `TextComposer.tsx` and `docs/20`.
+- **Precondition: `origin/fix/chat-round3` must be merged first.** The routine checks this before anything else: `git show origin/develop:apps/web/src/features/inbox/composer/lib/send-start.ts`. If the file is absent, the routine stops and reports. It does not copy the file in. FileComposer uses `sendStart()` and `settleOwnSend()` from it, and that branch also edits `TextComposer.tsx` and `docs/20`.
 - **WhatsApp in tests:** only `tools/wa-stub`. Never call the real Meta number, the Kapso number +966536900446, or real families.
 - **Mobile:** JS-only, shipped by OTA. Do **not** add `expo-audio`, `expo-video` or `expo-document-picker`. `app.json` uses `runtimeVersion.policy: appVersion`, so a native dependency added without a new APK would crash the installed app.
 - **Running checks:** never run anything on the owner's PC. Run `pnpm turbo lint typecheck test` and `e2e` in the routine's sandbox or GitHub Actions. CI must be green.

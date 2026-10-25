@@ -12,7 +12,7 @@ vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch
 vi.mock('@/features/auth/use-permissions', () => ({
   usePermissions: () => ({ permissions: [], can: (p: string) => p !== 'settings.write' || granted.write }),
 }));
-vi.mock('@tanstack/react-router', async () => ({ Link: (await import('@/features/inbox/test-utils')).MockLink }));
+vi.mock('@tanstack/react-router', async () => ({ Link: (await import('@/features/inbox/testing/test-utils')).MockLink }));
 
 const v = t.settingsValues;
 const HORIZON = t.settings.bookingHorizonWeeks;

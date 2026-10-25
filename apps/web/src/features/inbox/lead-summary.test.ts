@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { t } from '@/lib/i18n/i18n';
-import { lead, PHONE } from './inbox-fixture';
+import { lead, PHONE } from './testing/inbox-fixture';
 import { leadSummary, registerInitial } from './lead-summary';
 
 describe('leadSummary: the aside’s key facts (R-LEAD-03)', () => {

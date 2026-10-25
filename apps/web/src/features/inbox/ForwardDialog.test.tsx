@@ -3,9 +3,9 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { ApiError } from '@/lib/http/api';
 import { t } from '@/lib/i18n/i18n';
 import { ChatActionsProvider } from './ChatActionsProvider';
-import { message, PHONE, thread } from './inbox-fixture';
+import { message, PHONE, thread } from './testing/inbox-fixture';
 import { MessageLog } from './MessageLog';
-import { renderWithClient, routeFetch } from './test-utils';
+import { renderWithClient, routeFetch } from './testing/test-utils';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
