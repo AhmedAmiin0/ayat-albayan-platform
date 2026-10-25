@@ -1,7 +1,7 @@
 import { systemPermissionsOf } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
 import type { AuthUser } from '../../../../common/auth/verify-token';
-import type { TeacherScopes } from '../../../inbox/teacher-scope';
+import type { TeacherScopes } from '../../../inbox/teacher-threads/teacher-scope';
 import { ADMIN, ASSISTANT, SALES, TEACHER } from '../../classroom.fakes';
 import { MeetingInvitePolicies, teacherMaySend, visibleCode, visibleView } from './meeting-invite.policy';
 import { CLOSED_PHONE, OPEN_PHONE, teacherScopesFake } from './meeting-invites.fakes';

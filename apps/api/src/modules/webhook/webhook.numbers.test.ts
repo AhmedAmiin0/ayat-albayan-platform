@@ -4,7 +4,7 @@ import { loadEnv } from '../../config/env/env';
 import { envelope, inboundValue, PHONE_NUMBER_ID, statusValue, textPart } from './meta.fakes';
 import { liveWebhookConfig, signatureSecrets } from './webhook.config';
 import { receivingNumber } from './webhook.lines';
-import { parseWebhook } from './webhook.parse';
+import { parseWebhook } from './parse/webhook.parse';
 
 // Module mode inbound (docs/23c decision 7): any number row stamps its id and purpose; legacy unchanged.
 

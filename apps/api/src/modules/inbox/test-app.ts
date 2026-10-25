@@ -2,7 +2,7 @@
 // guards, services, registry and MessageViews; the DB-facing queries, the line clients, the gate and
 // the sender are mocks. `client` = notifications, `chatClient` = chat (docs/12 §13.16): both
 // configured by default; files that reset all mocks re-prime `configured` in beforeEach.
-import type { ThreadWindow } from './send-number';
+import type { ThreadWindow } from './send/send-number';
 import type { ChatListRef, ThreadLesson, ThreadPeople } from '@ab/shared';
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
@@ -18,10 +18,10 @@ import { MessageSender } from '../whatsapp/sender/message.sender';
 import { SendGate } from '../whatsapp/gate/send-gate';
 import { TemplatesQueries, type ApprovalRow } from '../whatsapp/templates/catalog/templates.queries';
 import { WHATSAPP_CLIENT, WHATSAPP_LINES } from '../whatsapp/whatsapp.types';
-import type { KnownNumber } from './known-number';
-import type { FamilyTag } from './thread-people.mapper';
-import { TeacherThreadsQueries } from './teacher-threads.queries';
-import { ThreadsQueries } from './threads.queries';
+import type { KnownNumber } from './threads/known-number';
+import type { FamilyTag } from './people/thread-people.mapper';
+import { TeacherThreadsQueries } from './teacher-threads/teacher-threads.queries';
+import { ThreadsQueries } from './threads/threads.queries';
 
 export const NO_PEOPLE: ThreadPeople = { guardian: null, lead: null, students: [] };
 export const ADMIN: AuthUser = { id: 'a0000000-0000-4000-8000-000000000001', email: null, role: 'admin' };

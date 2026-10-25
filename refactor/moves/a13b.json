@@ -1,0 +1,140 @@
+{
+  "id": "a13b",
+  "seq": 17,
+  "moves": [
+    {
+      "from": "apps/api/src/modules/inbox/send-*",
+      "to": "apps/api/src/modules/inbox/send"
+    },
+    {
+      "from": "apps/api/src/modules/inbox/thread-send*",
+      "to": "apps/api/src/modules/inbox/send"
+    },
+    {
+      "from": "apps/api/src/modules/inbox/outbox*",
+      "to": "apps/api/src/modules/inbox/send"
+    },
+    {
+      "from": "apps/api/src/modules/inbox/thread-file*",
+      "to": "apps/api/src/modules/inbox/files"
+    },
+    {
+      "from": "apps/api/src/modules/inbox/thread-forward*",
+      "to": "apps/api/src/modules/inbox/files"
+    },
+    {
+      "from": "apps/api/src/modules/inbox/thread-media*",
+      "to": "apps/api/src/modules/inbox/files"
+    },
+    {
+      "from": "apps/api/src/modules/inbox/forward-files*",
+      "to": "apps/api/src/modules/inbox/files"
+    }
+  ],
+  "files": [
+    [
+      "apps/api/src/modules/inbox/forward-files.ts",
+      "apps/api/src/modules/inbox/files/forward-files.ts"
+    ],
+    [
+      "apps/api/src/modules/inbox/outbox.ts",
+      "apps/api/src/modules/inbox/send/outbox.ts"
+    ],
+    [
+      "apps/api/src/modules/inbox/send-audit.test.ts",
+      "apps/api/src/modules/inbox/send/send-audit.test.ts"
+    ],
+    [
+      "apps/api/src/modules/inbox/send-audit.ts",
+      "apps/api/src/modules/inbox/send/send-audit.ts"
+    ],
+    [
+      "apps/api/src/modules/inbox/send-line.test.ts",
+      "apps/api/src/modules/inbox/send/send-line.test.ts"
+    ],
+    [
+      "apps/api/src/modules/inbox/send-line.ts",
+      "apps/api/src/modules/inbox/send/send-line.ts"
+    ],
+    [
+      "apps/api/src/modules/inbox/send-number.fakes.ts",
+      "apps/api/src/modules/inbox/send/send-number.fakes.ts"
+    ],
+    [
+      "apps/api/src/modules/inbox/send-number.test.ts",
+      "apps/api/src/modules/inbox/send/send-number.test.ts"
+    ],
+    [
+      "apps/api/src/modules/inbox/send-number.ts",
+      "apps/api/src/modules/inbox/send/send-number.ts"
+    ],
+    [
+      "apps/api/src/modules/inbox/thread-file-send.controller.ts",
+      "apps/api/src/modules/inbox/files/thread-file-send.controller.ts"
+    ],
+    [
+      "apps/api/src/modules/inbox/thread-file-send.http.test.ts",
+      "apps/api/src/modules/inbox/files/thread-file-send.http.test.ts"
+    ],
+    [
+      "apps/api/src/modules/inbox/thread-file-send.name.test.ts",
+      "apps/api/src/modules/inbox/files/thread-file-send.name.test.ts"
+    ],
+    [
+      "apps/api/src/modules/inbox/thread-file-send.service.test.ts",
+      "apps/api/src/modules/inbox/files/thread-file-send.service.test.ts"
+    ],
+    [
+      "apps/api/src/modules/inbox/thread-file-send.service.ts",
+      "apps/api/src/modules/inbox/files/thread-file-send.service.ts"
+    ],
+    [
+      "apps/api/src/modules/inbox/thread-file.controller.ts",
+      "apps/api/src/modules/inbox/files/thread-file.controller.ts"
+    ],
+    [
+      "apps/api/src/modules/inbox/thread-file.http.test.ts",
+      "apps/api/src/modules/inbox/files/thread-file.http.test.ts"
+    ],
+    [
+      "apps/api/src/modules/inbox/thread-file.playable.http.test.ts",
+      "apps/api/src/modules/inbox/files/thread-file.playable.http.test.ts"
+    ],
+    [
+      "apps/api/src/modules/inbox/thread-forward.controller.ts",
+      "apps/api/src/modules/inbox/files/thread-forward.controller.ts"
+    ],
+    [
+      "apps/api/src/modules/inbox/thread-forward.http.test.ts",
+      "apps/api/src/modules/inbox/files/thread-forward.http.test.ts"
+    ],
+    [
+      "apps/api/src/modules/inbox/thread-forward.media.http.test.ts",
+      "apps/api/src/modules/inbox/files/thread-forward.media.http.test.ts"
+    ],
+    [
+      "apps/api/src/modules/inbox/thread-forward.service.test.ts",
+      "apps/api/src/modules/inbox/files/thread-forward.service.test.ts"
+    ],
+    [
+      "apps/api/src/modules/inbox/thread-forward.service.ts",
+      "apps/api/src/modules/inbox/files/thread-forward.service.ts"
+    ],
+    [
+      "apps/api/src/modules/inbox/thread-media.controller.ts",
+      "apps/api/src/modules/inbox/files/thread-media.controller.ts"
+    ],
+    [
+      "apps/api/src/modules/inbox/thread-media.http.test.ts",
+      "apps/api/src/modules/inbox/files/thread-media.http.test.ts"
+    ],
+    [
+      "apps/api/src/modules/inbox/thread-media.service.ts",
+      "apps/api/src/modules/inbox/files/thread-media.service.ts"
+    ],
+    [
+      "apps/api/src/modules/inbox/thread-send.service.ts",
+      "apps/api/src/modules/inbox/send/thread-send.service.ts"
+    ]
+  ]
+}

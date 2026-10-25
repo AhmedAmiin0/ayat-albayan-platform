@@ -27,10 +27,6 @@
     "files": 16,
     "dirs": 0
   },
-  "apps/api/src/modules/inbox": {
-    "files": 39,
-    "dirs": 0
-  },
   "apps/api/src/modules/me": {
     "files": 14,
     "dirs": 0
@@ -81,10 +77,6 @@
   },
   "apps/api/src/modules/users": {
     "files": 23,
-    "dirs": 0
-  },
-  "apps/api/src/modules/webhook": {
-    "files": 25,
     "dirs": 0
   }
 }

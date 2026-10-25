@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { AT, event, GUARDIAN_ID, LESSON_ID, nobody, outbound, services } from './webhook.fakes';
-import { ratingOf } from './webhook.inbound';
+import { ratingOf } from './inbound/webhook.inbound';
 
 // A guardian's lesson_rating tap (migration 195): stored on lesson_feedback, the inbound row kept
 // (it is what reopens the 24 h window), replay-safe on the wamid.

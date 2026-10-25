@@ -48,7 +48,7 @@ describe('Meta callers guard (docs/12 §13.5)', () => {
     const source = 'await this.lines.notifications.sendTemplate(x);';
     const paths = [
       'modules/whatsapp/sender/message.dispatch.ts',
-      'modules/inbox/read-receipts.ts',
+      'modules/inbox/reads/read-receipts.ts',
       'modules/whatsapp/sender/message.dispatch.test.ts',
       'modules/whatsapp/whatsapp.fakes.ts',
       'modules/whatsapp/test-app.ts',

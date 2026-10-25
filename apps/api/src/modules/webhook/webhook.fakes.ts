@@ -8,11 +8,11 @@ import type { LeadsService } from '../leads/leads.service';
 import type { RatingStore } from '../lesson-rating/rating.store';
 import type { LessonStatusService } from '../lessons/status/lesson-status.service';
 import type { InboundEvent } from './webhook.events';
-import { InboundService } from './webhook.inbound.service';
-import { InboundStore } from './webhook.inbound.store';
+import { InboundService } from './inbound/webhook.inbound.service';
+import { InboundStore } from './inbound/webhook.inbound.store';
 import type { Contact, OutboundRow, WebhookQueries } from './webhook.queries';
-import { QuickReplies } from './webhook.quick-reply';
-import { StatusService } from './webhook.status.service';
+import { QuickReplies } from './inbound/webhook.quick-reply';
+import { StatusService } from './status/webhook.status.service';
 
 export const LESSON_ID = '00000000-0000-4000-8000-0000000000a1';
 export const GUARDIAN_ID = '00000000-0000-4000-8000-0000000000b1';

@@ -1,8 +1,8 @@
 import type { MeetingInviteChannel, MeetingInviteStatus } from '@ab/shared';
 import { Injectable, Logger } from '@nestjs/common';
 import { PushService } from '../../../../common/push/push.service';
-import { pickSend } from '../../../inbox/send-number';
-import { ThreadsQueries } from '../../../inbox/threads.queries';
+import { pickSend } from '../../../inbox/send/send-number';
+import { ThreadsQueries } from '../../../inbox/threads/threads.queries';
 import { MessageSender } from '../../../whatsapp/sender/message.sender';
 import type { StoredInvitee } from './meeting-invitees.queries';
 import { whenText } from './meeting-invite.text';

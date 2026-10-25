@@ -1,7 +1,7 @@
 // Real meeting services over mocked queries (unit tests only; not shipped: *.fakes.ts).
 import type { PushService } from '../../../../common/push/push.service';
-import type { TeacherScopes } from '../../../inbox/teacher-scope';
-import type { ThreadsQueries } from '../../../inbox/threads.queries';
+import type { TeacherScopes } from '../../../inbox/teacher-threads/teacher-scope';
+import type { ThreadsQueries } from '../../../inbox/threads/threads.queries';
 import type { MessageSender } from '../../../whatsapp/sender/message.sender';
 import { CONFIG } from '../../classroom.fakes';
 import { meetingQueries } from '../../internal-meetings/internal-meetings.fakes';
