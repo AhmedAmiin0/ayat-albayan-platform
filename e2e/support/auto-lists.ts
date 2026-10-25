@@ -15,11 +15,18 @@ export async function listOf(tx: Tx, rule: 'subscribed' | 'teachers'): Promise<s
   return row.id;
 }
 
+/** The test's members (+9665000007…), each as its phone, then «*» when a person added it (added_by set). */
 export async function members(tx: Tx, list: string): Promise<string[]> {
   const rows = await tx<{ phone_e164: string; added_by: string | null }[]>`select phone_e164, added_by
     from public.chat_list_threads where list_id = ${list} and phone_e164 like '+9665000007%' order by phone_e164`;
-  if (rows.some((r) => r.added_by !== null)) throw new Error('an automatic member carries added_by');
-  return rows.map((r) => r.phone_e164);
+  return rows.map((r) => (r.added_by === null ? r.phone_e164 : `${r.phone_e164}*`));
+}
+
+/** Any profile id, to stand for a person who added a member by hand. */
+export async function someone(tx: Tx): Promise<string> {
+  const [p] = await tx<{ id: string }[]>`select id from public.profiles limit 1`;
+  if (!p) throw new Error('no profile');
+  return p.id;
 }
 
 export async function guardian(tx: Tx, phone: string): Promise<string> {

@@ -17,7 +17,7 @@ export function AutoListChip() {
         borderRadius: shape.radius.pill,
         borderWidth: 1,
         borderColor: color.ruleStrong,
-        backgroundColor: color.lapisWash,
+        backgroundColor: color.neutralSoft,
       }}
     >
       <AppText style={{ fontFamily: type.ui[600], fontSize: type.size['2xs'], lineHeight: 18, color: color.ink2 }}>{t.inbox.lists.auto}</AppText>
@@ -30,7 +30,7 @@ export function AutoListNote({ rule }: { rule: ChatListAutoRule }) {
   const { color } = useTheme();
   const line = t.inbox.lists.autoRule[rule];
   return (
-    <View accessible accessibilityLabel={`${t.inbox.lists.auto}. ${line}`} style={{ flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', gap: 8, paddingVertical: 4 }}>
+    <View accessible accessibilityRole="text" accessibilityLabel={`${t.inbox.lists.auto}. ${line}`} style={{ flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', gap: 8, paddingVertical: 4 }}>
       <AutoListChip />
       <AppText style={{ flexShrink: 1, fontFamily: type.ui[400], fontSize: type.size.xs, lineHeight: type.lineHeight(type.size.xs), color: color.ink3 }}>
         {line}

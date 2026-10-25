@@ -37,7 +37,7 @@ test('the checklist row of an automatic list shows the chip and the line, keeps 
   const onToggle = jest.fn();
   await renderWithQuery(<ListCheckRow list={TEACHERS} checked onToggle={onToggle} />);
   const box = screen.getByRole('checkbox', { name: TEACHERS.name });
-  expect(box.props.accessibilityHint).toBe(L.autoRule.teachers);
+  expect(box.props.accessibilityHint).toBe(`${L.auto}. ${L.autoRule.teachers}`);
   expect(screen.getByText(L.auto)).toBeTruthy();
   await fireEvent.press(box);
   expect(onToggle).toHaveBeenCalled();
@@ -50,4 +50,6 @@ test('a hand list row has no chip; the edit sheet of an automatic list explains 
   expect(screen.getByText(L.autoRule.subscribed)).toBeTruthy();
   expect(screen.getByRole('button', { name: L.delete })).toBeTruthy();
   expect(screen.getByRole('button', { name: L.save })).toBeTruthy();
+  await fireEvent.press(screen.getByRole('button', { name: L.delete }));
+  expect(screen.getByText(new RegExp(L.autoDeleteNote))).toBeTruthy();
 });

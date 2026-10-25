@@ -39,6 +39,7 @@ export function DeleteListDialog({ list, onClose, onDeleted }: DeleteListDialogP
       <div className="grid gap-3">
         <p className="text-body">{L.deleteConfirm.replace('{name}', list.name)}</p>
         <p className="text-sm text-ink-2">{L.deleteNote}</p>
+        {list.auto_rule && <p className="text-sm text-ink-2">{L.autoDeleteNote}</p>}
         {remove.isError && <FormAlert>{listErrorText(remove.error)}</FormAlert>}
       </div>
     </Dialog>

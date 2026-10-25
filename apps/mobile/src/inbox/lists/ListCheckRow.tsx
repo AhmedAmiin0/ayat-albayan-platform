@@ -20,7 +20,7 @@ export function ListCheckRow({ list, checked, onToggle }: ListCheckRowProps) {
       accessibilityRole="checkbox"
       accessibilityState={{ checked }}
       accessibilityLabel={list.name}
-      accessibilityHint={list.auto_rule ? t.inbox.lists.autoRule[list.auto_rule] : undefined}
+      accessibilityHint={list.auto_rule ? `${t.inbox.lists.auto}. ${t.inbox.lists.autoRule[list.auto_rule]}` : undefined}
       onPress={onToggle}
       style={({ pressed }) => ({
         minHeight: shape.control.touch,

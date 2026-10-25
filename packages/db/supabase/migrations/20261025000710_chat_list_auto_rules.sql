@@ -21,7 +21,7 @@ create unique index if not exists chat_lists_auto_rule_key on public.chat_lists 
 
 -- Attach each rule to the existing list by the key the app computes (chatListNameKey = normalizeArabic:
 -- «مشترك» → 'مشترك', «معلم» / «مُعلّم» → 'معلم'); create the list when it is missing (created_by null). At
--- the 30-list cap the list is not created (a notice): the rule then adds nothing until it exists.
+-- the 30-list cap the migration stops with an error (nothing applied): free a list, then push again.
 do $$
 declare
   r record;
@@ -33,10 +33,10 @@ begin
     update public.chat_lists set auto_rule = r.rule where name_key = r.name and auto_rule is null;
     if not found then
       if (select count(*) from public.chat_lists) >= 30 then
-        raise notice 'chat_list_auto_rules: 30 lists already, «%» not created', r.name;
-      else
-        insert into public.chat_lists (name, name_key, auto_rule) values (r.name, r.name, r.rule);
+        raise exception 'chat_list_auto_rules: 30 lists already, «%» cannot be created; delete one list first', r.name
+          using errcode = '23514';
       end if;
+      insert into public.chat_lists (name, name_key, auto_rule) values (r.name, r.name, r.rule);
     end if;
   end loop;
 end $$;
@@ -51,20 +51,6 @@ create or replace function public.chat_list_auto_add(p_rule text, p_phone text) 
   on conflict do nothing;
 $$;
 revoke all on function public.chat_list_auto_add(text, text) from public, anon, authenticated;
-
--- Backfill: guardians of students with a running subscription, and active teachers.
-insert into public.chat_list_threads (list_id, phone_e164)
-  select l.id, p.phone from public.chat_lists l
-  cross join (select distinct g.phone_e164::text as phone from public.guardians g
-    join public.students s on s.guardian_id = g.id
-    where s.status in ('active', 'pending_renewal')) p
-  where l.auto_rule = 'subscribed' and p.phone ~ '^\+[1-9][0-9]{7,14}$'
-on conflict do nothing;
-insert into public.chat_list_threads (list_id, phone_e164)
-  select l.id, t.phone_e164 from public.chat_lists l
-  cross join public.teachers t
-  where l.auto_rule = 'teachers' and t.status = 'active' and t.phone_e164 ~ '^\+[1-9][0-9]{7,14}$'
-on conflict do nothing;
 
 -- A student becomes active / pending_renewal (insert, status change, or moved to another guardian).
 create or replace function public.students_chat_list_auto() returns trigger
@@ -118,6 +104,21 @@ create trigger guardians_chat_list_auto_upd after update of phone_e164 on public
 revoke all on function public.students_chat_list_auto() from public, anon, authenticated;
 revoke all on function public.teachers_chat_list_auto() from public, anon, authenticated;
 revoke all on function public.guardians_chat_list_auto() from public, anon, authenticated;
+
+-- Backfill: guardians of students with a running subscription, and active teachers. AFTER the triggers: a
+-- student activated while this runs is caught by the trigger (once it exists) or by this later snapshot.
+insert into public.chat_list_threads (list_id, phone_e164)
+  select l.id, p.phone from public.chat_lists l
+  cross join (select distinct g.phone_e164::text as phone from public.guardians g
+    join public.students s on s.guardian_id = g.id
+    where s.status in ('active', 'pending_renewal')) p
+  where l.auto_rule = 'subscribed' and p.phone ~ '^\+[1-9][0-9]{7,14}$'
+on conflict do nothing;
+insert into public.chat_list_threads (list_id, phone_e164)
+  select l.id, t.phone_e164 from public.chat_lists l
+  cross join public.teachers t
+  where l.auto_rule = 'teachers' and t.status = 'active' and t.phone_e164 ~ '^\+[1-9][0-9]{7,14}$'
+on conflict do nothing;
 
 -- MANUAL ROLLBACK (only after the code rollback; members already added stay):
 --   drop trigger if exists students_chat_list_auto_ins on public.students;

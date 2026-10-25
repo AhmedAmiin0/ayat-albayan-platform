@@ -2478,6 +2478,7 @@
       "loadError": "Could not load the lists.",
       "saveError": "Could not save the change, please try again.",
       "auto": "Updated automatically",
+      "autoDeleteNote": "Automatic adding to this list stops.",
       "autoRule": {
         "subscribed": "Every guardian with a running subscription is added automatically",
         "teachers": "Every teacher is added automatically"

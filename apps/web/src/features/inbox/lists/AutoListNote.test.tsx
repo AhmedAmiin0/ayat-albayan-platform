@@ -3,6 +3,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n';
 import { renderWithClient, routeFetch } from '../test-utils';
 import { ChatListsBar } from './ChatListsBar';
+import { DeleteListDialog } from './DeleteListDialog';
 import { EditListDialog } from './EditListDialog';
 import { ThreadListsDialog } from './ThreadListsDialog';
 
@@ -48,7 +49,7 @@ describe('automatic lists «تُحدَّث تلقائيًا» (docs/22 «الق�
     renderWithClient(<ThreadListsDialog phone="+966501234567" lists={[{ id: SUBSCRIBED.id, name: SUBSCRIBED.name }]} onClose={vi.fn()} />);
     const box = await screen.findByRole<HTMLInputElement>('checkbox', { name: SUBSCRIBED.name });
     expect(box.checked).toBe(true);
-    expect(box.getAttribute('aria-describedby')).toBe(`auto-${SUBSCRIBED.id}`);
+    expect(box.getAttribute('aria-describedby')).toBe(`auto-chip-${SUBSCRIBED.id} auto-${SUBSCRIBED.id}`);
     expect(document.getElementById(`auto-${SUBSCRIBED.id}`)?.textContent).toBe(L.autoRule.subscribed);
     expect(screen.getAllByTestId('auto-list-chip')).toHaveLength(2);
     expect(screen.getByRole<HTMLInputElement>('checkbox', { name: HAND.name }).getAttribute('aria-describedby')).toBeNull();
@@ -62,5 +63,14 @@ describe('automatic lists «تُحدَّث تلقائيًا» (docs/22 «الق�
     expect(within(dialog).getByText(L.autoRule.teachers)).toBeTruthy();
     expect(within(dialog).getByRole('button', { name: L.delete })).toBeTruthy();
     expect(within(dialog).getByRole('button', { name: L.save })).toBeTruthy();
+  });
+
+  it.each([
+    ['an automatic list warns', TEACHERS, true],
+    ['a hand-kept list does not warn', HAND, false],
+  ])('the delete confirmation: %s that automatic adding stops', (_what, list, warns) => {
+    renderWithClient(<DeleteListDialog list={list} onClose={vi.fn()} onDeleted={vi.fn()} />);
+    expect(screen.getByText(L.deleteNote)).toBeTruthy();
+    expect(screen.queryByText(L.autoDeleteNote) !== null).toBe(warns);
   });
 });

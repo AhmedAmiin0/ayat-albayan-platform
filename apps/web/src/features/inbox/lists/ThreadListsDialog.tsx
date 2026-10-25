@@ -60,13 +60,13 @@ export function ThreadListsDialog({ phone, lists, onClose }: ThreadListsDialogPr
                     checked={member.has(l.id)}
                     onChange={(e) => toggle(l.id, e.target.checked)}
                     aria-label={l.name}
-                    aria-describedby={l.auto_rule ? `auto-${l.id}` : undefined}
+                    aria-describedby={l.auto_rule ? `auto-chip-${l.id} auto-${l.id}` : undefined}
                     className="size-4 shrink-0 accent-[var(--lapis)]"
                   />
                   <span className="grid min-w-0 flex-1 gap-0.5">
                     <span className="flex min-w-0 items-center gap-2">
                       <span className="min-w-0 truncate">{l.name}</span>
-                      {l.auto_rule && <AutoListChip />}
+                      {l.auto_rule && <AutoListChip id={`auto-chip-${l.id}`} />}
                     </span>
                     {l.auto_rule && (
                       <span id={`auto-${l.id}`} className="text-xs text-ink-3">

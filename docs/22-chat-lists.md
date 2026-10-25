@@ -141,7 +141,8 @@ to «معلم» now, then add new ones automatically; never remove anyone added 
 - **Rules** (`chat_lists.auto_rule`, migration `20261025000710_chat_list_auto_rules.sql`; at most one list
   per rule): `subscribed` on «مشترك», `teachers` on «معلم», attached by the app's name key
   (`chatListNameKey`: «مشترك» → `مشترك`, «معلم» / «مُعلّم» → `معلم`); a missing list is created
-  (`created_by` null; not at the 30-list cap).
+  (`created_by` null). At the 30-list cap the migration stops with an error (nothing applied): delete a
+  list, then push again.
 - **What is added**: once (backfill) and then by triggers — «مشترك»: the guardian's phone when a student is
   inserted as, or becomes, `active` or `pending_renewal` (also when the student moves to another guardian),
   and a guardian's new phone while one of their students is in those statuses; «معلم»: the phone of a
@@ -150,7 +151,9 @@ to «معلم» now, then add new ones automatically; never remove anyone added 
 - **Never removed**: the triggers only add. A hand-added chat stays, and an automatic member stays when the
   subscription ends or the teacher stops (a person removes it by hand if needed; it may come back on the
   next activation). Members are added and removed by hand exactly as on any list; rename and delete work as
-  before (deleting the list drops its rule).
+  before; deleting the list drops its rule (the delete confirmation says «ستتوقف الإضافة التلقائية إلى هذه
+  القائمة.»; a list made again by hand has no rule). Statuses other than `active` / `pending_renewal`
+  (new, trial, pending_subscription, expired, paused, churned) never add.
 - **UI**: an automatic list shows the chip «تُحدَّث تلقائيًا» and one line («يُضاف إليها تلقائيًا كل ولي أمر
   لديه اشتراك جارٍ» / «يُضاف إليها تلقائيًا كل معلم») under the chip row while it is shown, in the chat's
   «القوائم» checklist and in «تعديل القائمة» (web and mobile). `GET /chat-lists` items carry `auto_rule`
