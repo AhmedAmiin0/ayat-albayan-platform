@@ -27,6 +27,7 @@ const DOC_READERS = {
   'public.set_assistant_terms': ['academy_timezone'],
   'public.google_sync_on': ['google_sync_enabled'],
   'public.google_sync_window_days': ['google_calendar_window_days'],
+  'public.messages_link_number': ['comms_source'],
 };
 
 describe('every key a SQL reader names is seeded (docs/26 §2b)', () => {
