@@ -2,7 +2,7 @@ import type { HttpException } from '@nestjs/common';
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import { CLOSED, CONFIG, decode, EARLY, LESSON_ID, OPEN, queries, SALES } from '../classroom.fakes';
 import { grantsFor } from '../livekit/livekit-token';
-import { admissionOf, rolesOf } from '../moderation.fakes';
+import { admissionOf, rolesOf } from '../moderation/moderation.fakes';
 import { RoomJoinService } from './room-join.service';
 import { classroomApp } from '../test-app';
 import { readerOf } from '../../../common/settings/settings.fakes';

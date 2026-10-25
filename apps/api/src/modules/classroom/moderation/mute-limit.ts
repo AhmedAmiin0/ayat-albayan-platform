@@ -1,5 +1,5 @@
 import { HttpException, HttpStatus } from '@nestjs/common';
-import { WindowCounter } from '../feedback/feedback.rate-limit';
+import { WindowCounter } from '../../feedback/feedback.rate-limit';
 
 /** Mutes per staff login per 10 minutes: «كتم الجميع» in a full class is one call per student. */
 export const MUTES_PER_WINDOW = 120;

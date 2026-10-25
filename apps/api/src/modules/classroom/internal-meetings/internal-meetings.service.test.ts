@@ -6,7 +6,7 @@ import type { InternalMeetingsQueries } from './internal-meetings.queries';
 import { InternalMeetingsService } from './internal-meetings.service';
 import { hashMeetingToken } from './internal-meetings.token';
 import { LivekitApi } from '../livekit/livekit-api';
-import { http } from '../moderation.fakes';
+import { http } from '../moderation/moderation.fakes';
 
 const ORIGIN = 'https://app.example.test';
 let mq: ReturnType<typeof meetingQueries>;

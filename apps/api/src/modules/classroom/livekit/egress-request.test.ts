@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { egressIdOf, egressRequest, recordingPath } from './egress-request';
-import { S3 } from '../moderation.fakes';
+import { S3 } from '../moderation/moderation.fakes';
 
 const LESSON = '00000000-0000-4000-8000-0000000000d1';
 

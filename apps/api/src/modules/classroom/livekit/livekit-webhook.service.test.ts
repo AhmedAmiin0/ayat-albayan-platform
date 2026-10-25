@@ -2,9 +2,9 @@ import { UnauthorizedException } from '@nestjs/common';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { CONFIG } from '../classroom.fakes';
 import { LivekitWebhookService } from './livekit-webhook.service';
-import { recordingQueries, signedWebhook } from '../moderation.fakes';
-import type { RecordingLifecycle } from '../recording.lifecycle';
-import type { RecordingQueries } from '../recording.queries';
+import { recordingQueries, signedWebhook } from '../moderation/moderation.fakes';
+import type { RecordingLifecycle } from '../recordings/recording.lifecycle';
+import type { RecordingQueries } from '../recordings/recording.queries';
 
 const NOW = new Date('2026-10-05T17:00:00Z');
 let rq: ReturnType<typeof recordingQueries>;

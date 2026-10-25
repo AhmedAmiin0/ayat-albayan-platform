@@ -1,6 +1,6 @@
 import { ForbiddenException } from '@nestjs/common';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import type { RecordingViews } from '../classroom/recording-list.service';
+import type { RecordingViews } from '../classroom/recordings/recording-list.service';
 import { StudentRecordingAccess } from './student-recordings.access';
 import { StudentRecordingsService } from './student-recordings.service';
 import type { StudentRecordingQueries } from './student-recordings.queries';

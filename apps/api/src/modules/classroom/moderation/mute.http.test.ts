@@ -1,10 +1,10 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
-import { LESSON_ID, OTHER_TEACHER } from './classroom.fakes';
-import { MEETING_ID } from './internal-meetings/internal-meetings.fakes';
-import type { HttpPost } from './livekit/livekit-api';
+import { LESSON_ID, OTHER_TEACHER } from '../classroom.fakes';
+import { MEETING_ID } from '../internal-meetings/internal-meetings.fakes';
+import type { HttpPost } from '../livekit/livekit-api';
 import { http, participantRow } from './moderation.fakes';
 import { MuteLimit, MUTES_PER_WINDOW } from './mute-limit';
-import { classroomApp } from './test-app';
+import { classroomApp } from '../test-app';
 
 // «كتم الميكروفون» / «إيقاف الكاميرا» (owner, 2026-10-05): LiveKit GetParticipant → MutePublishedTrack.
 

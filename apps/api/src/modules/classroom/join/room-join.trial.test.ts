@@ -5,7 +5,7 @@ import type { ClassroomQueries } from '../classroom.queries';
 import { CONFIG, decode, LESSON_ID, LINK_TOKEN, OPEN, queries, TEACHER } from '../classroom.fakes';
 import { GuestJoinService } from './guest-join.service';
 import { PublicJoinLimit } from './join-limit';
-import { admissionOf, moderation, recorder, rolesOf } from '../moderation.fakes';
+import { admissionOf, moderation, recorder, rolesOf } from '../moderation/moderation.fakes';
 import { RoomJoinService } from './room-join.service';
 
 // Owner, 2026-10-11: in a trial lesson the family and the teacher do not text each other in the room.

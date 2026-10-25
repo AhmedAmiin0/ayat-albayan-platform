@@ -1,8 +1,8 @@
 import type { AssistantLessonView, AssistantView } from '@ab/shared';
 import { Body, Controller, Delete, Get, HttpCode, Param, ParseUUIDPipe, Post, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Permissions } from '../../common/auth/decorators';
-import type { AuthUser } from '../../common/auth/verify-token';
+import { CurrentUser, Permissions } from '../../../common/auth/decorators';
+import type { AuthUser } from '../../../common/auth/verify-token';
 import { AssistantsService } from './assistants.service';
 
 /** Teaching assistants: the admin assigns them per student; an assistant reads only their own sessions. */

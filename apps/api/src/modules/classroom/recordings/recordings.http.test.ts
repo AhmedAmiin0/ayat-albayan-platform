@@ -1,8 +1,8 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { ADMIN } from './classroom.fakes';
-import { MEETING_ID, meetingRow } from './internal-meetings/internal-meetings.fakes';
-import { recordingRow } from './moderation.fakes';
-import { classroomApp } from './test-app';
+import { ADMIN } from '../classroom.fakes';
+import { MEETING_ID, meetingRow } from '../internal-meetings/internal-meetings.fakes';
+import { recordingRow } from '../moderation/moderation.fakes';
+import { classroomApp } from '../test-app';
 
 // «I need all the meetings to be recorded» (owner, 2026-10-05): internal meetings are recorded on
 // join like lessons, listed for the admin and the creator; the panels can ask whether recording works.

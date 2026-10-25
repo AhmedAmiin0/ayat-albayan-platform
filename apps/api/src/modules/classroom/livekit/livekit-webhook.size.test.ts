@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { fakeDb } from '../../guardians/fake-db';
 import { egressOutcome } from './livekit-webhook';
-import { RecordingQueries } from '../recording.queries';
-import { lessonTarget } from '../recording-target';
+import { RecordingQueries } from '../recordings/recording.queries';
+import { lessonTarget } from '../recordings/recording-target';
 
 const NOW = new Date('2026-10-05T17:00:00Z');
 const ended = (info: object) => egressOutcome({ event: 'egress_ended', egressInfo: { egressId: 'EG_1', status: 'EGRESS_COMPLETE', ...info } }, NOW);

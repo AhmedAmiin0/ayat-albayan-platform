@@ -1,8 +1,8 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
-import { LESSON_ID } from './classroom.fakes';
-import { MEETING_ID } from './internal-meetings/internal-meetings.fakes';
+import { LESSON_ID } from '../classroom.fakes';
+import { MEETING_ID } from '../internal-meetings/internal-meetings.fakes';
 import { http, participantRow } from './moderation.fakes';
-import { classroomApp } from './test-app';
+import { classroomApp } from '../test-app';
 
 // «اطلب مشاركة الشاشة» → «سماح» / «إيقاف مشاركة» (owner, 2026-10-05): LiveKit UpdateParticipant.
 

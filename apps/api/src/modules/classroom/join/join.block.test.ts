@@ -4,7 +4,7 @@ import type { ClassroomQueries } from '../classroom.queries';
 import { ADMIN, LESSON_ID, LINK_TOKEN, linkRow, OPEN, queries, TEACHER } from '../classroom.fakes';
 import { GuestJoinService } from './guest-join.service';
 import { PublicJoinLimit } from './join-limit';
-import { admissionOf, moderation, recorder, rolesOf } from '../moderation.fakes';
+import { admissionOf, moderation, recorder, rolesOf } from '../moderation/moderation.fakes';
 import { RoomJoinService } from './room-join.service';
 import { readerOf } from '../../../common/settings/settings.fakes';
 import { ClassroomSettings } from '../classroom.settings';

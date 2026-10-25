@@ -5,7 +5,7 @@ import { MEETING_ID, meetingQueries } from './internal-meetings.fakes';
 import { InternalMeetingKickService } from './internal-meetings.kick.service';
 import type { InternalMeetingsQueries } from './internal-meetings.queries';
 import { LivekitApi } from '../livekit/livekit-api';
-import { http } from '../moderation.fakes';
+import { http } from '../moderation/moderation.fakes';
 
 let mq: ReturnType<typeof meetingQueries>;
 let post: ReturnType<typeof http>;

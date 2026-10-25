@@ -1,7 +1,7 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
-import { RECORDING_CONFIG, type RecordingConfig } from './classroom.config';
-import { egressIdOf, egressRequest, recordingPath } from './livekit/egress-request';
-import { LivekitApi } from './livekit/livekit-api';
+import { RECORDING_CONFIG, type RecordingConfig } from '../classroom.config';
+import { egressIdOf, egressRequest, recordingPath } from '../livekit/egress-request';
+import { LivekitApi } from '../livekit/livekit-api';
 import { RecordingQueries } from './recording.queries';
 import { roomNameOf, type RoomTarget } from './recording-target';
 

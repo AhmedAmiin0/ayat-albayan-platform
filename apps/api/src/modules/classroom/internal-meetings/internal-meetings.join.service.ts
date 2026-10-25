@@ -8,7 +8,7 @@ import { InternalMeetingsQueries, type MeetingRow } from './internal-meetings.qu
 import { hashMeetingToken, looksLikeMeetingToken, meetingRoleOf } from './internal-meetings.token';
 import { PublicJoinLimit } from '../join/join-limit';
 import { mintToken, newIdentity } from '../livekit/livekit-token';
-import { meetingTarget } from '../recording-target';
+import { meetingTarget } from '../recordings/recording-target';
 import { RoomAdmission } from '../join/room-admission';
 
 /** 410 meeting_ended: «إنهاء» was pressed, or the row was revoked. */

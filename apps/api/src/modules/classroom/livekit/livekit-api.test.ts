@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { CONFIG, decode } from '../classroom.fakes';
 import { LivekitApi, LivekitError, twirpBase } from './livekit-api';
-import { http } from '../moderation.fakes';
+import { http } from '../moderation/moderation.fakes';
 
 const api = (h = http(), config: typeof CONFIG | null = CONFIG) => new LivekitApi(config, h);
 const sent = (h: ReturnType<typeof http>, i = 0) => {

@@ -4,9 +4,9 @@ import type { LivekitEnv } from '../../../config/env/env';
 import { CLASSROOM_CONFIG, classroomConfigOf, type ClassroomConfigSource } from '../classroom.config';
 import { notConfigured } from './join-gate';
 import { mintToken, newIdentity } from '../livekit/livekit-token';
-import { ModerationQueries, principalColumns, type Principal } from '../moderation.queries';
-import { RecordingStarter } from '../recording.starter';
-import { lessonTarget, type RoomTarget } from '../recording-target';
+import { ModerationQueries, principalColumns, type Principal } from '../moderation/moderation.queries';
+import { RecordingStarter } from '../recordings/recording.starter';
+import { lessonTarget, type RoomTarget } from '../recordings/recording-target';
 
 export interface Admission {
   lessonId: string;

@@ -2,8 +2,8 @@ import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { CLASSROOM_CONFIG, classroomConfigOf, type ClassroomConfigSource } from '../classroom.config';
 import { egressOutcome, verifyWebhook } from './livekit-webhook';
 import { leftEventOf } from './livekit-webhook.room';
-import { RecordingLifecycle } from '../recording.lifecycle';
-import { RecordingQueries } from '../recording.queries';
+import { RecordingLifecycle } from '../recordings/recording.lifecycle';
+import { RecordingQueries } from '../recordings/recording.queries';
 
 export interface WebhookPost {
   /** The exact bytes LiveKit sent. */

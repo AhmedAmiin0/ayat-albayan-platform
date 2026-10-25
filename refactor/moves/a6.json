@@ -1,0 +1,152 @@
+{
+  "id": "a6",
+  "seq": 8,
+  "moves": [
+    {
+      "from": "apps/api/src/modules/classroom/assistants*",
+      "to": "apps/api/src/modules/classroom/assistants"
+    },
+    {
+      "from": "apps/api/src/modules/classroom/moderation*",
+      "to": "apps/api/src/modules/classroom/moderation"
+    },
+    {
+      "from": "apps/api/src/modules/classroom/mute*",
+      "to": "apps/api/src/modules/classroom/moderation"
+    },
+    {
+      "from": "apps/api/src/modules/classroom/kick*",
+      "to": "apps/api/src/modules/classroom/moderation"
+    },
+    {
+      "from": "apps/api/src/modules/classroom/share-grant*",
+      "to": "apps/api/src/modules/classroom/moderation"
+    },
+    {
+      "from": "apps/api/src/modules/classroom/recording*",
+      "to": "apps/api/src/modules/classroom/recordings"
+    }
+  ],
+  "files": [
+    [
+      "apps/api/src/modules/classroom/assistants.controller.ts",
+      "apps/api/src/modules/classroom/assistants/assistants.controller.ts"
+    ],
+    [
+      "apps/api/src/modules/classroom/assistants.lessons.ts",
+      "apps/api/src/modules/classroom/assistants/assistants.lessons.ts"
+    ],
+    [
+      "apps/api/src/modules/classroom/assistants.queries.ts",
+      "apps/api/src/modules/classroom/assistants/assistants.queries.ts"
+    ],
+    [
+      "apps/api/src/modules/classroom/assistants.service.test.ts",
+      "apps/api/src/modules/classroom/assistants/assistants.service.test.ts"
+    ],
+    [
+      "apps/api/src/modules/classroom/assistants.service.ts",
+      "apps/api/src/modules/classroom/assistants/assistants.service.ts"
+    ],
+    [
+      "apps/api/src/modules/classroom/kick.service.test.ts",
+      "apps/api/src/modules/classroom/moderation/kick.service.test.ts"
+    ],
+    [
+      "apps/api/src/modules/classroom/kick.service.ts",
+      "apps/api/src/modules/classroom/moderation/kick.service.ts"
+    ],
+    [
+      "apps/api/src/modules/classroom/moderation.controller.ts",
+      "apps/api/src/modules/classroom/moderation/moderation.controller.ts"
+    ],
+    [
+      "apps/api/src/modules/classroom/moderation.fakes.ts",
+      "apps/api/src/modules/classroom/moderation/moderation.fakes.ts"
+    ],
+    [
+      "apps/api/src/modules/classroom/moderation.http.test.ts",
+      "apps/api/src/modules/classroom/moderation/moderation.http.test.ts"
+    ],
+    [
+      "apps/api/src/modules/classroom/moderation.queries.test.ts",
+      "apps/api/src/modules/classroom/moderation/moderation.queries.test.ts"
+    ],
+    [
+      "apps/api/src/modules/classroom/moderation.queries.ts",
+      "apps/api/src/modules/classroom/moderation/moderation.queries.ts"
+    ],
+    [
+      "apps/api/src/modules/classroom/mute-limit.ts",
+      "apps/api/src/modules/classroom/moderation/mute-limit.ts"
+    ],
+    [
+      "apps/api/src/modules/classroom/mute.controller.ts",
+      "apps/api/src/modules/classroom/moderation/mute.controller.ts"
+    ],
+    [
+      "apps/api/src/modules/classroom/mute.http.test.ts",
+      "apps/api/src/modules/classroom/moderation/mute.http.test.ts"
+    ],
+    [
+      "apps/api/src/modules/classroom/mute.service.ts",
+      "apps/api/src/modules/classroom/moderation/mute.service.ts"
+    ],
+    [
+      "apps/api/src/modules/classroom/recording-list.service.test.ts",
+      "apps/api/src/modules/classroom/recordings/recording-list.service.test.ts"
+    ],
+    [
+      "apps/api/src/modules/classroom/recording-list.service.ts",
+      "apps/api/src/modules/classroom/recordings/recording-list.service.ts"
+    ],
+    [
+      "apps/api/src/modules/classroom/recording-target.ts",
+      "apps/api/src/modules/classroom/recordings/recording-target.ts"
+    ],
+    [
+      "apps/api/src/modules/classroom/recording.lifecycle.test.ts",
+      "apps/api/src/modules/classroom/recordings/recording.lifecycle.test.ts"
+    ],
+    [
+      "apps/api/src/modules/classroom/recording.lifecycle.ts",
+      "apps/api/src/modules/classroom/recordings/recording.lifecycle.ts"
+    ],
+    [
+      "apps/api/src/modules/classroom/recording.queries.test.ts",
+      "apps/api/src/modules/classroom/recordings/recording.queries.test.ts"
+    ],
+    [
+      "apps/api/src/modules/classroom/recording.queries.ts",
+      "apps/api/src/modules/classroom/recordings/recording.queries.ts"
+    ],
+    [
+      "apps/api/src/modules/classroom/recording.starter.test.ts",
+      "apps/api/src/modules/classroom/recordings/recording.starter.test.ts"
+    ],
+    [
+      "apps/api/src/modules/classroom/recording.starter.ts",
+      "apps/api/src/modules/classroom/recordings/recording.starter.ts"
+    ],
+    [
+      "apps/api/src/modules/classroom/recordings.controller.ts",
+      "apps/api/src/modules/classroom/recordings/recordings.controller.ts"
+    ],
+    [
+      "apps/api/src/modules/classroom/recordings.http.test.ts",
+      "apps/api/src/modules/classroom/recordings/recordings.http.test.ts"
+    ],
+    [
+      "apps/api/src/modules/classroom/share-grant.controller.ts",
+      "apps/api/src/modules/classroom/moderation/share-grant.controller.ts"
+    ],
+    [
+      "apps/api/src/modules/classroom/share-grant.http.test.ts",
+      "apps/api/src/modules/classroom/moderation/share-grant.http.test.ts"
+    ],
+    [
+      "apps/api/src/modules/classroom/share-grant.service.ts",
+      "apps/api/src/modules/classroom/moderation/share-grant.service.ts"
+    ]
+  ]
+}

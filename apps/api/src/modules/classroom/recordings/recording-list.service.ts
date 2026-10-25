@@ -1,12 +1,12 @@
 import type { LessonRecordingView } from '@ab/shared';
 import { ForbiddenException, Injectable } from '@nestjs/common';
-import type { AuthUser } from '../../common/auth/verify-token';
-import { BUCKETS, SIGNED_URL_SECONDS } from '../../common/storage/storage.paths';
-import { StorageService } from '../../common/storage/storage.service';
-import { notFound } from '../../common/http/errors';
-import { InternalMeetingsQueries } from './internal-meetings/internal-meetings.queries';
-import { canManageMeeting } from './internal-meetings/internal-meetings.token';
-import { LessonRoleService } from './join/lesson-role.service';
+import type { AuthUser } from '../../../common/auth/verify-token';
+import { BUCKETS, SIGNED_URL_SECONDS } from '../../../common/storage/storage.paths';
+import { StorageService } from '../../../common/storage/storage.service';
+import { notFound } from '../../../common/http/errors';
+import { InternalMeetingsQueries } from '../internal-meetings/internal-meetings.queries';
+import { canManageMeeting } from '../internal-meetings/internal-meetings.token';
+import { LessonRoleService } from '../join/lesson-role.service';
 import { RecordingQueries, type RecordingRow } from './recording.queries';
 import { lessonTarget, meetingTarget, type RoomTarget } from './recording-target';
 

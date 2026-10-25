@@ -1,7 +1,7 @@
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { LESSON_ID, OPEN } from './classroom.fakes';
+import { LESSON_ID, OPEN } from '../classroom.fakes';
 import { participantRow, recordingRow, signedWebhook } from './moderation.fakes';
-import { classroomApp } from './test-app';
+import { classroomApp } from '../test-app';
 
 const remove = (identity = 'guest-0123456789ab') => `/lessons/${LESSON_ID}/room/participants/${identity}/remove`;
 const recordings = `/lessons/${LESSON_ID}/recordings`;

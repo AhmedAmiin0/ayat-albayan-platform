@@ -1,7 +1,7 @@
 import { type StudentRecordingsPage, type StudentRecordingsQuery } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
 import type { AuthUser } from '../../common/auth/verify-token';
-import { RecordingViews } from '../classroom/recording-list.service';
+import { RecordingViews } from '../classroom/recordings/recording-list.service';
 import { StudentRecordingAccess } from './student-recordings.access';
 import { canManage, studentRecordingView, type ManageRule, type RecordingJoinRow } from './student-recordings.mapper';
 import { StudentRecordingQueries } from './student-recordings.queries';

@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { LivekitApi } from './livekit/livekit-api';
-import { peopleIn } from './livekit/livekit-webhook.room';
+import { LivekitApi } from '../livekit/livekit-api';
+import { peopleIn } from '../livekit/livekit-webhook.room';
 import { RecordingQueries } from './recording.queries';
 import { RecordingStarter } from './recording.starter';
 import { targetOfRoom } from './recording-target';
