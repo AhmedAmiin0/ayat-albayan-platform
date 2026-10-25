@@ -3,7 +3,7 @@ import { t } from '@/core/lib/i18n/i18n';
 import { ltr } from '@/core/ui/primitives/Ltr';
 import type { InvoiceDraft } from '../../shared/contract';
 import type { TrialDraft } from './draft';
-import type { MakeupDraft } from '../../makeup-draft';
+import type { MakeupDraft } from '../../makeup/makeup-draft';
 import { whenText } from '../../shared/slots';
 import { locale } from '@/core/lib/i18n/locale';
 

@@ -4,7 +4,7 @@ import { t } from '@/core/lib/i18n/i18n';
 import { TabStack } from '@/core/nav/TabStack';
 import TabsLayout from '../../../app/(tabs)/_layout';
 import MakeupRoute from '../../../app/(tabs)/students/makeup/[lessonId]';
-import { makeupParams } from '../makeup-draft';
+import { makeupParams } from '../makeup/makeup-draft';
 import { lesson, yusuf } from '@/today/fixtures';
 
 // The makeup wizard is a screen of the Students tab's stack, so the root stack's admin gate
@@ -13,7 +13,7 @@ import { lesson, yusuf } from '@/today/fixtures';
 jest.mock('@/auth/use-permissions', () => ({ usePermissions: () => () => true }));
 jest.mock('@/core/nav/use-inbox-badge', () => ({ useInboxBadge: () => undefined }));
 jest.mock('@/core/push/usePushRegistration', () => ({ usePushRegistration: () => undefined }));
-jest.mock('../MakeupWizard', () => ({
+jest.mock('../makeup/MakeupWizard', () => ({
   MakeupWizard: ({ source }: { source: { studentName: string; durationMin: number } }) => {
     const { Text: T } = jest.requireActual('react-native');
     return <T>{`wizard:${source.studentName}:${source.durationMin}`}</T>;

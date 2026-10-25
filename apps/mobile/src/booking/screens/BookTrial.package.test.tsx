@@ -6,7 +6,7 @@ import { BookTrialScreen } from './BookTrialScreen';
 import { booked, maryam, slot, SUN_17, THU_18 } from '../testing/fixtures';
 import { packageDaysNote } from '../trial/lib/package-choice';
 import { dayLine } from '../shared/picks';
-import { uploadInvoice } from '../invoice-upload';
+import { uploadInvoice } from '../invoice/invoice-upload';
 import { fakeBookingApi, PHOTO, PREVIEW } from '../testing/test-utils';
 
 const mockApiFetch = jest.fn();
@@ -17,7 +17,7 @@ jest.mock('@/core/lib/http/api', () => ({
   apiSend: (...mockArgs: unknown[]) => mockApiSend(...mockArgs),
 }));
 jest.mock('@/payments/receipt', () => ({ pickReceipt: jest.fn() }));
-jest.mock('../invoice-upload', () => ({ uploadInvoice: jest.fn() }));
+jest.mock('../invoice/invoice-upload', () => ({ uploadInvoice: jest.fn() }));
 const mockReplace = jest.fn();
 // The chat's «اشترك»: the lead's id, number and WhatsApp name, and the package mode.
 jest.mock('expo-router', () => ({

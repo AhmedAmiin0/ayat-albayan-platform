@@ -1,0 +1,376 @@
+{
+  "id": "c4b",
+  "seq": 78,
+  "moves": [
+    {
+      "from": "apps/mobile/src/booking/Makeup*",
+      "to": "apps/mobile/src/booking/makeup/"
+    },
+    {
+      "from": "apps/mobile/src/booking/MissedHeader*",
+      "to": "apps/mobile/src/booking/makeup/"
+    },
+    {
+      "from": "apps/mobile/src/booking/makeup-*",
+      "to": "apps/mobile/src/booking/makeup/"
+    },
+    {
+      "from": "apps/mobile/src/booking/use-book-makeup*",
+      "to": "apps/mobile/src/booking/makeup/"
+    },
+    {
+      "from": "apps/mobile/src/booking/Invoice*",
+      "to": "apps/mobile/src/booking/invoice/"
+    },
+    {
+      "from": "apps/mobile/src/booking/invoice-*",
+      "to": "apps/mobile/src/booking/invoice/"
+    },
+    {
+      "from": "apps/mobile/src/booking/use-invoice-upload*",
+      "to": "apps/mobile/src/booking/invoice/"
+    },
+    {
+      "from": "apps/mobile/src/booking/ReceiptIcon*",
+      "to": "apps/mobile/src/booking/invoice/"
+    },
+    {
+      "from": "apps/mobile/src/booking/ChatMediaSheet*",
+      "to": "apps/mobile/src/booking/invoice/"
+    },
+    {
+      "from": "apps/mobile/src/booking/MediaCard*",
+      "to": "apps/mobile/src/booking/invoice/"
+    },
+    {
+      "from": "apps/mobile/src/trial-date/TrialDateScreen*",
+      "to": "apps/mobile/src/trial-date/screens/"
+    },
+    {
+      "from": "apps/mobile/src/trial-date/TrialDateFlow*",
+      "to": "apps/mobile/src/trial-date/screens/"
+    },
+    {
+      "from": "apps/mobile/src/trial-date/TrialDateWizard*",
+      "to": "apps/mobile/src/trial-date/screens/"
+    },
+    {
+      "from": "apps/mobile/src/trial-date/TrialDate.*",
+      "to": "apps/mobile/src/trial-date/screens/"
+    },
+    {
+      "from": "apps/mobile/src/trial-date/route*",
+      "to": "apps/mobile/src/trial-date/screens/"
+    },
+    {
+      "from": "apps/mobile/src/trial-date/PickedLines*",
+      "to": "apps/mobile/src/trial-date/components/"
+    },
+    {
+      "from": "apps/mobile/src/trial-date/ReviewNotices*",
+      "to": "apps/mobile/src/trial-date/components/"
+    },
+    {
+      "from": "apps/mobile/src/trial-date/SalesTrialPills*",
+      "to": "apps/mobile/src/trial-date/components/"
+    },
+    {
+      "from": "apps/mobile/src/trial-date/ShowAll*",
+      "to": "apps/mobile/src/trial-date/components/"
+    },
+    {
+      "from": "apps/mobile/src/trial-date/TrialDateSection*",
+      "to": "apps/mobile/src/trial-date/components/"
+    },
+    {
+      "from": "apps/mobile/src/trial-date/TrialHistoryList*",
+      "to": "apps/mobile/src/trial-date/components/"
+    },
+    {
+      "from": "apps/mobile/src/trial-date/TrialHistoryRow*",
+      "to": "apps/mobile/src/trial-date/components/"
+    },
+    {
+      "from": "apps/mobile/src/trial-date/TrialTeacherPick*",
+      "to": "apps/mobile/src/trial-date/components/"
+    },
+    {
+      "from": "apps/mobile/src/trial-date/TrialDateWarn*",
+      "to": "apps/mobile/src/trial-date/components/"
+    },
+    {
+      "from": "apps/mobile/src/trial-date/TrialDateDone*",
+      "to": "apps/mobile/src/trial-date/components/"
+    },
+    {
+      "from": "apps/mobile/src/trial-date/TrialDateReview*",
+      "to": "apps/mobile/src/trial-date/components/"
+    },
+    {
+      "from": "apps/mobile/src/trial-date/history-cap*",
+      "to": "apps/mobile/src/trial-date/lib/"
+    },
+    {
+      "from": "apps/mobile/src/trial-date/queries*",
+      "to": "apps/mobile/src/trial-date/lib/"
+    },
+    {
+      "from": "apps/mobile/src/trial-date/trial-date-body*",
+      "to": "apps/mobile/src/trial-date/lib/"
+    },
+    {
+      "from": "apps/mobile/src/trial-date/trial-date-text*",
+      "to": "apps/mobile/src/trial-date/lib/"
+    },
+    {
+      "from": "apps/mobile/src/trial-date/trial-href*",
+      "to": "apps/mobile/src/trial-date/lib/"
+    },
+    {
+      "from": "apps/mobile/src/trial-date/fixtures*",
+      "to": "apps/mobile/src/trial-date/testing/"
+    },
+    {
+      "from": "apps/mobile/src/trial-date/test-utils*",
+      "to": "apps/mobile/src/trial-date/testing/"
+    }
+  ],
+  "files": [
+    [
+      "apps/mobile/src/booking/ChatMediaSheet.test.tsx",
+      "apps/mobile/src/booking/invoice/ChatMediaSheet.test.tsx"
+    ],
+    [
+      "apps/mobile/src/booking/ChatMediaSheet.tsx",
+      "apps/mobile/src/booking/invoice/ChatMediaSheet.tsx"
+    ],
+    [
+      "apps/mobile/src/booking/invoice-queries.ts",
+      "apps/mobile/src/booking/invoice/invoice-queries.ts"
+    ],
+    [
+      "apps/mobile/src/booking/invoice-upload.test.ts",
+      "apps/mobile/src/booking/invoice/invoice-upload.test.ts"
+    ],
+    [
+      "apps/mobile/src/booking/invoice-upload.ts",
+      "apps/mobile/src/booking/invoice/invoice-upload.ts"
+    ],
+    [
+      "apps/mobile/src/booking/InvoiceActions.tsx",
+      "apps/mobile/src/booking/invoice/InvoiceActions.tsx"
+    ],
+    [
+      "apps/mobile/src/booking/InvoicePreview.tsx",
+      "apps/mobile/src/booking/invoice/InvoicePreview.tsx"
+    ],
+    [
+      "apps/mobile/src/booking/InvoiceStep.en.test.tsx",
+      "apps/mobile/src/booking/invoice/InvoiceStep.en.test.tsx"
+    ],
+    [
+      "apps/mobile/src/booking/InvoiceStep.test.tsx",
+      "apps/mobile/src/booking/invoice/InvoiceStep.test.tsx"
+    ],
+    [
+      "apps/mobile/src/booking/InvoiceStep.tsx",
+      "apps/mobile/src/booking/invoice/InvoiceStep.tsx"
+    ],
+    [
+      "apps/mobile/src/booking/makeup-body.test.ts",
+      "apps/mobile/src/booking/makeup/makeup-body.test.ts"
+    ],
+    [
+      "apps/mobile/src/booking/makeup-body.ts",
+      "apps/mobile/src/booking/makeup/makeup-body.ts"
+    ],
+    [
+      "apps/mobile/src/booking/makeup-draft.test.ts",
+      "apps/mobile/src/booking/makeup/makeup-draft.test.ts"
+    ],
+    [
+      "apps/mobile/src/booking/makeup-draft.ts",
+      "apps/mobile/src/booking/makeup/makeup-draft.ts"
+    ],
+    [
+      "apps/mobile/src/booking/MakeupAction.test.tsx",
+      "apps/mobile/src/booking/makeup/MakeupAction.test.tsx"
+    ],
+    [
+      "apps/mobile/src/booking/MakeupAction.tsx",
+      "apps/mobile/src/booking/makeup/MakeupAction.tsx"
+    ],
+    [
+      "apps/mobile/src/booking/MakeupConfirm.tsx",
+      "apps/mobile/src/booking/makeup/MakeupConfirm.tsx"
+    ],
+    [
+      "apps/mobile/src/booking/MakeupScreen.tsx",
+      "apps/mobile/src/booking/makeup/MakeupScreen.tsx"
+    ],
+    [
+      "apps/mobile/src/booking/MakeupWizard.test.tsx",
+      "apps/mobile/src/booking/makeup/MakeupWizard.test.tsx"
+    ],
+    [
+      "apps/mobile/src/booking/MakeupWizard.tsx",
+      "apps/mobile/src/booking/makeup/MakeupWizard.tsx"
+    ],
+    [
+      "apps/mobile/src/booking/MediaCard.test.tsx",
+      "apps/mobile/src/booking/invoice/MediaCard.test.tsx"
+    ],
+    [
+      "apps/mobile/src/booking/MediaCard.tsx",
+      "apps/mobile/src/booking/invoice/MediaCard.tsx"
+    ],
+    [
+      "apps/mobile/src/booking/MissedHeader.tsx",
+      "apps/mobile/src/booking/makeup/MissedHeader.tsx"
+    ],
+    [
+      "apps/mobile/src/booking/ReceiptIcon.tsx",
+      "apps/mobile/src/booking/invoice/ReceiptIcon.tsx"
+    ],
+    [
+      "apps/mobile/src/booking/use-book-makeup.ts",
+      "apps/mobile/src/booking/makeup/use-book-makeup.ts"
+    ],
+    [
+      "apps/mobile/src/booking/use-invoice-upload.ts",
+      "apps/mobile/src/booking/invoice/use-invoice-upload.ts"
+    ],
+    [
+      "apps/mobile/src/trial-date/fixtures.ts",
+      "apps/mobile/src/trial-date/testing/fixtures.ts"
+    ],
+    [
+      "apps/mobile/src/trial-date/history-cap.ts",
+      "apps/mobile/src/trial-date/lib/history-cap.ts"
+    ],
+    [
+      "apps/mobile/src/trial-date/PickedLines.tsx",
+      "apps/mobile/src/trial-date/components/PickedLines.tsx"
+    ],
+    [
+      "apps/mobile/src/trial-date/queries.ts",
+      "apps/mobile/src/trial-date/lib/queries.ts"
+    ],
+    [
+      "apps/mobile/src/trial-date/ReviewNotices.tsx",
+      "apps/mobile/src/trial-date/components/ReviewNotices.tsx"
+    ],
+    [
+      "apps/mobile/src/trial-date/route.sales.test.tsx",
+      "apps/mobile/src/trial-date/screens/route.sales.test.tsx"
+    ],
+    [
+      "apps/mobile/src/trial-date/route.test.tsx",
+      "apps/mobile/src/trial-date/screens/route.test.tsx"
+    ],
+    [
+      "apps/mobile/src/trial-date/SalesTrialPills.test.tsx",
+      "apps/mobile/src/trial-date/components/SalesTrialPills.test.tsx"
+    ],
+    [
+      "apps/mobile/src/trial-date/SalesTrialPills.tsx",
+      "apps/mobile/src/trial-date/components/SalesTrialPills.tsx"
+    ],
+    [
+      "apps/mobile/src/trial-date/ShowAll.tsx",
+      "apps/mobile/src/trial-date/components/ShowAll.tsx"
+    ],
+    [
+      "apps/mobile/src/trial-date/test-utils.ts",
+      "apps/mobile/src/trial-date/testing/test-utils.ts"
+    ],
+    [
+      "apps/mobile/src/trial-date/trial-date-body.test.ts",
+      "apps/mobile/src/trial-date/lib/trial-date-body.test.ts"
+    ],
+    [
+      "apps/mobile/src/trial-date/trial-date-body.ts",
+      "apps/mobile/src/trial-date/lib/trial-date-body.ts"
+    ],
+    [
+      "apps/mobile/src/trial-date/trial-date-text.test.ts",
+      "apps/mobile/src/trial-date/lib/trial-date-text.test.ts"
+    ],
+    [
+      "apps/mobile/src/trial-date/trial-date-text.ts",
+      "apps/mobile/src/trial-date/lib/trial-date-text.ts"
+    ],
+    [
+      "apps/mobile/src/trial-date/trial-href.ts",
+      "apps/mobile/src/trial-date/lib/trial-href.ts"
+    ],
+    [
+      "apps/mobile/src/trial-date/TrialDate.blocked.test.tsx",
+      "apps/mobile/src/trial-date/screens/TrialDate.blocked.test.tsx"
+    ],
+    [
+      "apps/mobile/src/trial-date/TrialDate.errors.test.tsx",
+      "apps/mobile/src/trial-date/screens/TrialDate.errors.test.tsx"
+    ],
+    [
+      "apps/mobile/src/trial-date/TrialDate.flow.test.tsx",
+      "apps/mobile/src/trial-date/screens/TrialDate.flow.test.tsx"
+    ],
+    [
+      "apps/mobile/src/trial-date/TrialDate.sales.test.tsx",
+      "apps/mobile/src/trial-date/screens/TrialDate.sales.test.tsx"
+    ],
+    [
+      "apps/mobile/src/trial-date/TrialDate.warn.test.tsx",
+      "apps/mobile/src/trial-date/screens/TrialDate.warn.test.tsx"
+    ],
+    [
+      "apps/mobile/src/trial-date/TrialDateDone.tsx",
+      "apps/mobile/src/trial-date/components/TrialDateDone.tsx"
+    ],
+    [
+      "apps/mobile/src/trial-date/TrialDateFlow.tsx",
+      "apps/mobile/src/trial-date/screens/TrialDateFlow.tsx"
+    ],
+    [
+      "apps/mobile/src/trial-date/TrialDateReview.tsx",
+      "apps/mobile/src/trial-date/components/TrialDateReview.tsx"
+    ],
+    [
+      "apps/mobile/src/trial-date/TrialDateScreen.tsx",
+      "apps/mobile/src/trial-date/screens/TrialDateScreen.tsx"
+    ],
+    [
+      "apps/mobile/src/trial-date/TrialDateSection.test.tsx",
+      "apps/mobile/src/trial-date/components/TrialDateSection.test.tsx"
+    ],
+    [
+      "apps/mobile/src/trial-date/TrialDateSection.tsx",
+      "apps/mobile/src/trial-date/components/TrialDateSection.tsx"
+    ],
+    [
+      "apps/mobile/src/trial-date/TrialDateWarn.tsx",
+      "apps/mobile/src/trial-date/components/TrialDateWarn.tsx"
+    ],
+    [
+      "apps/mobile/src/trial-date/TrialDateWizard.tsx",
+      "apps/mobile/src/trial-date/screens/TrialDateWizard.tsx"
+    ],
+    [
+      "apps/mobile/src/trial-date/TrialHistoryList.test.tsx",
+      "apps/mobile/src/trial-date/components/TrialHistoryList.test.tsx"
+    ],
+    [
+      "apps/mobile/src/trial-date/TrialHistoryList.tsx",
+      "apps/mobile/src/trial-date/components/TrialHistoryList.tsx"
+    ],
+    [
+      "apps/mobile/src/trial-date/TrialHistoryRow.tsx",
+      "apps/mobile/src/trial-date/components/TrialHistoryRow.tsx"
+    ],
+    [
+      "apps/mobile/src/trial-date/TrialTeacherPick.tsx",
+      "apps/mobile/src/trial-date/components/TrialTeacherPick.tsx"
+    ]
+  ]
+}

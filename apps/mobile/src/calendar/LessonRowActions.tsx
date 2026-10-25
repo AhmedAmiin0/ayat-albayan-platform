@@ -1,7 +1,7 @@
 import { applyLessonEvent, type LessonEvent, type LessonView } from '@ab/shared';
 import { useState } from 'react';
 import { View } from 'react-native';
-import { MakeupAction } from '@/booking/MakeupAction';
+import { MakeupAction } from '@/booking/makeup/MakeupAction';
 import { EditTimeButton } from '@/edit-time/EditTimeButton';
 import { FeedbackRequestButton } from '@/feedback/FeedbackRequestButton';
 import { ErrorLine } from '@/inbox/ErrorLine';
