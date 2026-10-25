@@ -1,0 +1,388 @@
+{
+  "id": "c3",
+  "seq": 76,
+  "moves": [
+    {
+      "from": "apps/mobile/src/inbox/InboxScreen*",
+      "to": "apps/mobile/src/inbox/screens/"
+    },
+    {
+      "from": "apps/mobile/src/inbox/LeadDetailScreen*",
+      "to": "apps/mobile/src/inbox/screens/"
+    },
+    {
+      "from": "apps/mobile/src/inbox/inbox.flow*",
+      "to": "apps/mobile/src/inbox/screens/"
+    },
+    {
+      "from": "apps/mobile/src/inbox/ThreadsList*",
+      "to": "apps/mobile/src/inbox/threads-list/"
+    },
+    {
+      "from": "apps/mobile/src/inbox/ThreadTags*",
+      "to": "apps/mobile/src/inbox/threads-list/"
+    },
+    {
+      "from": "apps/mobile/src/inbox/OpenRow*",
+      "to": "apps/mobile/src/inbox/threads-list/"
+    },
+    {
+      "from": "apps/mobile/src/inbox/ClosedRow*",
+      "to": "apps/mobile/src/inbox/threads-list/"
+    },
+    {
+      "from": "apps/mobile/src/inbox/threads-empty*",
+      "to": "apps/mobile/src/inbox/threads-list/"
+    },
+    {
+      "from": "apps/mobile/src/inbox/use-thread-list*",
+      "to": "apps/mobile/src/inbox/threads-list/"
+    },
+    {
+      "from": "apps/mobile/src/inbox/InboxHeaderActions*",
+      "to": "apps/mobile/src/inbox/threads-list/"
+    },
+    {
+      "from": "apps/mobile/src/inbox/NewChat*",
+      "to": "apps/mobile/src/inbox/threads-list/"
+    },
+    {
+      "from": "apps/mobile/src/inbox/line-words*",
+      "to": "apps/mobile/src/inbox/shared/"
+    },
+    {
+      "from": "apps/mobile/src/inbox/LeadsList*",
+      "to": "apps/mobile/src/inbox/leads/list/"
+    },
+    {
+      "from": "apps/mobile/src/inbox/leads/LeadsList*",
+      "to": "apps/mobile/src/inbox/leads/list/"
+    },
+    {
+      "from": "apps/mobile/src/inbox/leads/LeadsFilterBar*",
+      "to": "apps/mobile/src/inbox/leads/list/"
+    },
+    {
+      "from": "apps/mobile/src/inbox/leads/LeadFilterSheet*",
+      "to": "apps/mobile/src/inbox/leads/list/"
+    },
+    {
+      "from": "apps/mobile/src/inbox/leads/lead-filters*",
+      "to": "apps/mobile/src/inbox/leads/list/"
+    },
+    {
+      "from": "apps/mobile/src/inbox/leads/lead-row*",
+      "to": "apps/mobile/src/inbox/leads/list/"
+    },
+    {
+      "from": "apps/mobile/src/inbox/leads/lead-sort*",
+      "to": "apps/mobile/src/inbox/leads/list/"
+    },
+    {
+      "from": "apps/mobile/src/inbox/leads/leads-fixtures*",
+      "to": "apps/mobile/src/inbox/leads/list/"
+    },
+    {
+      "from": "apps/mobile/src/inbox/LeadFacts*",
+      "to": "apps/mobile/src/inbox/leads/detail/"
+    },
+    {
+      "from": "apps/mobile/src/inbox/LeadReclassify*",
+      "to": "apps/mobile/src/inbox/leads/detail/"
+    },
+    {
+      "from": "apps/mobile/src/inbox/LeadStatusChanger*",
+      "to": "apps/mobile/src/inbox/leads/detail/"
+    },
+    {
+      "from": "apps/mobile/src/inbox/allowed-next-statuses*",
+      "to": "apps/mobile/src/inbox/leads/detail/"
+    },
+    {
+      "from": "apps/mobile/src/inbox/lead-words*",
+      "to": "apps/mobile/src/inbox/leads/detail/"
+    },
+    {
+      "from": "apps/mobile/src/inbox/use-cached-lead*",
+      "to": "apps/mobile/src/inbox/leads/detail/"
+    },
+    {
+      "from": "apps/mobile/src/inbox/leads/LeadAssign*",
+      "to": "apps/mobile/src/inbox/leads/detail/"
+    },
+    {
+      "from": "apps/mobile/src/inbox/leads/AssignUnassigned*",
+      "to": "apps/mobile/src/inbox/leads/detail/"
+    },
+    {
+      "from": "apps/mobile/src/inbox/leads/use-sales-people*",
+      "to": "apps/mobile/src/inbox/leads/detail/"
+    },
+    {
+      "from": "apps/mobile/src/inbox/RegisterFromChat*",
+      "to": "apps/mobile/src/inbox/leads/sales/"
+    },
+    {
+      "from": "apps/mobile/src/inbox/SalesChatActions*",
+      "to": "apps/mobile/src/inbox/leads/sales/"
+    },
+    {
+      "from": "apps/mobile/src/inbox/register-href*",
+      "to": "apps/mobile/src/inbox/leads/sales/"
+    },
+    {
+      "from": "apps/mobile/src/inbox/sales-register.flow*",
+      "to": "apps/mobile/src/inbox/leads/sales/"
+    }
+  ],
+  "files": [
+    [
+      "apps/mobile/src/inbox/allowed-next-statuses.test.ts",
+      "apps/mobile/src/inbox/leads/detail/allowed-next-statuses.test.ts"
+    ],
+    [
+      "apps/mobile/src/inbox/allowed-next-statuses.ts",
+      "apps/mobile/src/inbox/leads/detail/allowed-next-statuses.ts"
+    ],
+    [
+      "apps/mobile/src/inbox/ClosedRow.tsx",
+      "apps/mobile/src/inbox/threads-list/ClosedRow.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/inbox.flow.en.test.tsx",
+      "apps/mobile/src/inbox/screens/inbox.flow.en.test.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/inbox.flow.test.tsx",
+      "apps/mobile/src/inbox/screens/inbox.flow.test.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/InboxHeaderActions.tsx",
+      "apps/mobile/src/inbox/threads-list/InboxHeaderActions.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/InboxScreen.permissions.test.tsx",
+      "apps/mobile/src/inbox/screens/InboxScreen.permissions.test.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/InboxScreen.test.tsx",
+      "apps/mobile/src/inbox/screens/InboxScreen.test.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/InboxScreen.threads.test.tsx",
+      "apps/mobile/src/inbox/screens/InboxScreen.threads.test.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/InboxScreen.tsx",
+      "apps/mobile/src/inbox/screens/InboxScreen.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/lead-words.test.ts",
+      "apps/mobile/src/inbox/leads/detail/lead-words.test.ts"
+    ],
+    [
+      "apps/mobile/src/inbox/lead-words.ts",
+      "apps/mobile/src/inbox/leads/detail/lead-words.ts"
+    ],
+    [
+      "apps/mobile/src/inbox/LeadDetailScreen.test.tsx",
+      "apps/mobile/src/inbox/screens/LeadDetailScreen.test.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/LeadDetailScreen.tsx",
+      "apps/mobile/src/inbox/screens/LeadDetailScreen.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/LeadFacts.tsx",
+      "apps/mobile/src/inbox/leads/detail/LeadFacts.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/LeadReclassify.test.tsx",
+      "apps/mobile/src/inbox/leads/detail/LeadReclassify.test.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/LeadReclassify.tsx",
+      "apps/mobile/src/inbox/leads/detail/LeadReclassify.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/leads/AssignUnassigned.test.tsx",
+      "apps/mobile/src/inbox/leads/detail/AssignUnassigned.test.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/leads/AssignUnassigned.tsx",
+      "apps/mobile/src/inbox/leads/detail/AssignUnassigned.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/leads/lead-filters.test.ts",
+      "apps/mobile/src/inbox/leads/list/lead-filters.test.ts"
+    ],
+    [
+      "apps/mobile/src/inbox/leads/lead-filters.ts",
+      "apps/mobile/src/inbox/leads/list/lead-filters.ts"
+    ],
+    [
+      "apps/mobile/src/inbox/leads/lead-row.test.ts",
+      "apps/mobile/src/inbox/leads/list/lead-row.test.ts"
+    ],
+    [
+      "apps/mobile/src/inbox/leads/lead-row.ts",
+      "apps/mobile/src/inbox/leads/list/lead-row.ts"
+    ],
+    [
+      "apps/mobile/src/inbox/leads/lead-sort.test.ts",
+      "apps/mobile/src/inbox/leads/list/lead-sort.test.ts"
+    ],
+    [
+      "apps/mobile/src/inbox/leads/lead-sort.ts",
+      "apps/mobile/src/inbox/leads/list/lead-sort.ts"
+    ],
+    [
+      "apps/mobile/src/inbox/leads/LeadAssign.test.tsx",
+      "apps/mobile/src/inbox/leads/detail/LeadAssign.test.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/leads/LeadAssign.tsx",
+      "apps/mobile/src/inbox/leads/detail/LeadAssign.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/leads/LeadFilterSheet.tsx",
+      "apps/mobile/src/inbox/leads/list/LeadFilterSheet.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/leads/leads-fixtures.ts",
+      "apps/mobile/src/inbox/leads/list/leads-fixtures.ts"
+    ],
+    [
+      "apps/mobile/src/inbox/leads/LeadsFilterBar.tsx",
+      "apps/mobile/src/inbox/leads/list/LeadsFilterBar.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/leads/LeadsList.filters.en.test.tsx",
+      "apps/mobile/src/inbox/leads/list/LeadsList.filters.en.test.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/leads/LeadsList.filters.test.tsx",
+      "apps/mobile/src/inbox/leads/list/LeadsList.filters.test.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/leads/use-sales-people.ts",
+      "apps/mobile/src/inbox/leads/detail/use-sales-people.ts"
+    ],
+    [
+      "apps/mobile/src/inbox/LeadsList.tsx",
+      "apps/mobile/src/inbox/leads/list/LeadsList.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/LeadStatusChanger.test.tsx",
+      "apps/mobile/src/inbox/leads/detail/LeadStatusChanger.test.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/LeadStatusChanger.tsx",
+      "apps/mobile/src/inbox/leads/detail/LeadStatusChanger.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/line-words.test.ts",
+      "apps/mobile/src/inbox/shared/line-words.test.ts"
+    ],
+    [
+      "apps/mobile/src/inbox/line-words.ts",
+      "apps/mobile/src/inbox/shared/line-words.ts"
+    ],
+    [
+      "apps/mobile/src/inbox/NewChat.test.tsx",
+      "apps/mobile/src/inbox/threads-list/NewChat.test.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/NewChatSheet.tsx",
+      "apps/mobile/src/inbox/threads-list/NewChatSheet.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/OpenRow.tsx",
+      "apps/mobile/src/inbox/threads-list/OpenRow.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/register-href.test.ts",
+      "apps/mobile/src/inbox/leads/sales/register-href.test.ts"
+    ],
+    [
+      "apps/mobile/src/inbox/register-href.ts",
+      "apps/mobile/src/inbox/leads/sales/register-href.ts"
+    ],
+    [
+      "apps/mobile/src/inbox/RegisterFromChat.en.test.tsx",
+      "apps/mobile/src/inbox/leads/sales/RegisterFromChat.en.test.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/RegisterFromChat.test.tsx",
+      "apps/mobile/src/inbox/leads/sales/RegisterFromChat.test.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/RegisterFromChat.tsx",
+      "apps/mobile/src/inbox/leads/sales/RegisterFromChat.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/sales-register.flow.test.tsx",
+      "apps/mobile/src/inbox/leads/sales/sales-register.flow.test.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/SalesChatActions.test.tsx",
+      "apps/mobile/src/inbox/leads/sales/SalesChatActions.test.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/SalesChatActions.tsx",
+      "apps/mobile/src/inbox/leads/sales/SalesChatActions.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/threads-empty.test.ts",
+      "apps/mobile/src/inbox/threads-list/threads-empty.test.ts"
+    ],
+    [
+      "apps/mobile/src/inbox/threads-empty.ts",
+      "apps/mobile/src/inbox/threads-list/threads-empty.ts"
+    ],
+    [
+      "apps/mobile/src/inbox/ThreadsList.en.test.tsx",
+      "apps/mobile/src/inbox/threads-list/ThreadsList.en.test.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/ThreadsList.privacy.en.test.tsx",
+      "apps/mobile/src/inbox/threads-list/ThreadsList.privacy.en.test.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/ThreadsList.privacy.test.tsx",
+      "apps/mobile/src/inbox/threads-list/ThreadsList.privacy.test.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/ThreadsList.subscribed.test.tsx",
+      "apps/mobile/src/inbox/threads-list/ThreadsList.subscribed.test.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/ThreadsList.tags.test.tsx",
+      "apps/mobile/src/inbox/threads-list/ThreadsList.tags.test.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/ThreadsList.teacher.test.tsx",
+      "apps/mobile/src/inbox/threads-list/ThreadsList.teacher.test.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/ThreadsList.ticks.test.tsx",
+      "apps/mobile/src/inbox/threads-list/ThreadsList.ticks.test.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/ThreadsList.tsx",
+      "apps/mobile/src/inbox/threads-list/ThreadsList.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/ThreadTags.tsx",
+      "apps/mobile/src/inbox/threads-list/ThreadTags.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/use-cached-lead.ts",
+      "apps/mobile/src/inbox/leads/detail/use-cached-lead.ts"
+    ],
+    [
+      "apps/mobile/src/inbox/use-thread-list.ts",
+      "apps/mobile/src/inbox/threads-list/use-thread-list.ts"
+    ]
+  ]
+}

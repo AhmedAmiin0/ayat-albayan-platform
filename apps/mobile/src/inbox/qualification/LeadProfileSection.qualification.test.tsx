@@ -3,7 +3,7 @@ import { t } from '@/core/lib/i18n/i18n';
 import { listKey } from '@/core/lib/query/query-keys';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { cachedList, huda } from '../shared/fixtures';
-import { findCachedLead } from '../use-cached-lead';
+import { findCachedLead } from '../leads/detail/use-cached-lead';
 import { answer, hudaProfile, QUALIFICATION } from './fixtures';
 import { LeadProfileSection } from './LeadProfileSection';
 

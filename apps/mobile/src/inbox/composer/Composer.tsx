@@ -1,11 +1,11 @@
 import { sessionWindowOpen, type ThreadLesson, type ThreadView } from '@ab/shared';
 import { useState } from 'react';
 import { View } from 'react-native';
-import { ClosedRow } from '../ClosedRow';
+import { ClosedRow } from '../threads-list/ClosedRow';
 import { ComposerNotes } from './ComposerNotes';
 import { ErrorLine } from '../ErrorLine';
 import { GateNote } from '../thread/components/GateNote';
-import { OpenRow } from '../OpenRow';
+import { OpenRow } from '../threads-list/OpenRow';
 import { QuoteStrip } from '../messages/components/QuoteStrip';
 import { SavedReplyChip } from '../saved-replies/SavedReplyChip';
 import { SavedReplyPicker } from '../saved-replies/SavedReplyPicker';

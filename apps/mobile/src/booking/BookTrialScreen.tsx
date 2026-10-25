@@ -1,5 +1,5 @@
 import { router, useLocalSearchParams } from 'expo-router';
-import { useCachedLead } from '@/inbox/use-cached-lead';
+import { useCachedLead } from '@/inbox/leads/detail/use-cached-lead';
 import { t } from '@/core/lib/i18n/i18n';
 import { Button } from '@/core/ui/primitives/Button';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';

@@ -1,1 +1,1 @@
-export { InboxScreen as default } from '@/inbox/InboxScreen';
+export { InboxScreen as default } from '@/inbox/screens/InboxScreen';

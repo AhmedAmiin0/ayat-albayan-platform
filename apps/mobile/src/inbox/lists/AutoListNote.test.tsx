@@ -1,7 +1,7 @@
 import { fireEvent, screen, within } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
-import { ThreadsList } from '../ThreadsList';
+import { ThreadsList } from '../threads-list/ThreadsList';
 import { EditListSheet } from './EditListSheet';
 import { ListCheckRow } from './ListCheckRow';
 import { answer, page, PAID, SUBSCRIBED, TEACHERS, withLists } from './list-fixtures';

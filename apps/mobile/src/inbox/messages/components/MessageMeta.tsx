@@ -4,7 +4,7 @@ import { View } from 'react-native';
 import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { DeliveryTicks } from './DeliveryTicks';
-import { lineWord } from '../../line-words';
+import { lineWord } from '../../shared/line-words';
 import { deliveryTimes, queuedLine, stamp } from '../hooks/message-text';
 import { senderText } from '../../thread/hooks/thread-mode';
 

@@ -2,7 +2,7 @@ import { fireEvent, screen, waitFor, within } from '@testing-library/react-nativ
 import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
 import { thread } from '../shared/thread-fixtures';
-import { ThreadsList } from '../ThreadsList';
+import { ThreadsList } from '../threads-list/ThreadsList';
 import { answer, page, PAID, TRIAL, withLists } from './list-fixtures';
 import { listsKey } from './use-chat-lists';
 

@@ -2,7 +2,7 @@ import { fireEvent, screen, within } from '@testing-library/react-native';
 import { ApiError } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
-import { ThreadsList } from '../ThreadsList';
+import { ThreadsList } from '../threads-list/ThreadsList';
 import { answer, page, PAID, withLists } from './list-fixtures';
 
 const mockApiFetch = jest.fn();
