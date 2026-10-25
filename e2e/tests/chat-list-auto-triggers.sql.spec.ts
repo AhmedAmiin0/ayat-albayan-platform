@@ -9,24 +9,30 @@ import { rolledBack } from '../support/rls';
 test.describe('automatic chat lists: the triggers (migration 710)', () => {
   test.beforeEach(() => test.skip(test.info().project.name !== 'desktop', 'database only: one run'));
 
-  test('students: insert or status change to active / pending_renewal adds the guardian; other statuses add nothing', async () => {
+  test('students: insert or status change to active adds the guardian; pending_renewal and others add nothing', async () => {
     await rolledBack(async (tx) => {
       await rerunMigration(tx);
       const list = await listOf(tx, 'subscribed');
       const trial = await student(tx, { guardian: await guardian(tx, '+966500000721'), status: 'trial' });
-      await student(tx, { guardian: await guardian(tx, '+966500000722'), status: 'active' });
+      const act = await student(tx, { guardian: await guardian(tx, '+966500000722'), status: 'active' });
       await student(tx, { guardian: await guardian(tx, '+966500000724'), status: 'pending_renewal' });
-      expect(await members(tx, list)).toEqual(['+966500000722', '+966500000724']);
+      expect(await members(tx, list)).toEqual(['+966500000722']);
       await tx`update public.students set status = 'pending_subscription' where id = ${trial}`;
       // Moved to another guardian while not subscribed: nothing.
       await tx`update public.students set guardian_id = ${await guardian(tx, '+966500000725')} where id = ${trial}`;
-      expect(await members(tx, list)).toEqual(['+966500000722', '+966500000724']);
       await tx`update public.students set status = 'pending_renewal' where id = ${trial}`;
-      expect(await members(tx, list)).toEqual(['+966500000722', '+966500000724', '+966500000725']);
+      expect(await members(tx, list)).toEqual(['+966500000722']);
+      // A hand removal survives the package ending (active → pending_renewal); a renewal adds it again.
+      await tx`delete from public.chat_list_threads where list_id = ${list} and phone_e164 = '+966500000722'`;
+      await tx`update public.students set status = 'pending_renewal' where id = ${act}`;
+      expect(await members(tx, list)).toEqual([]);
+      await tx`update public.students set status = 'active' where id = ${trial}`;
+      await tx`update public.students set status = 'active' where id = ${act}`;
+      expect(await members(tx, list)).toEqual(['+966500000722', '+966500000725']);
       // Moved to another guardian while active: the new guardian is added, the old one stays.
       const other = await guardian(tx, '+966500000723');
       await tx`update public.students set guardian_id = ${other} where id = ${trial}`;
-      expect(await members(tx, list)).toEqual(['+966500000722', '+966500000723', '+966500000724', '+966500000725']);
+      expect(await members(tx, list)).toEqual(['+966500000722', '+966500000723', '+966500000725']);
     });
   });
 

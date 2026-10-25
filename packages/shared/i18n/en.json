@@ -2515,8 +2515,8 @@
       "auto": "Updated automatically",
       "autoDeleteNote": "Automatic adding to this list stops.",
       "autoRule": {
-        "subscribed": "Every guardian with a running subscription is added automatically",
-        "teachers": "Every teacher is added automatically"
+        "subscribed": "Every guardian with a running subscription is added automatically; nobody is removed automatically",
+        "teachers": "Every active teacher is added automatically; nobody is removed automatically"
       }
     }
   },

@@ -20,7 +20,7 @@ export function AutoListChip() {
         backgroundColor: color.neutralSoft,
       }}
     >
-      <AppText style={{ fontFamily: type.ui[600], fontSize: type.size['2xs'], lineHeight: 18, color: color.ink2 }}>{t.inbox.lists.auto}</AppText>
+      <AppText style={{ fontFamily: type.ui[600], fontSize: type.size['2xs'], lineHeight: type.lineHeight(type.size['2xs']), color: color.ink2 }}>{t.inbox.lists.auto}</AppText>
     </View>
   );
 }
