@@ -41,3 +41,19 @@ here; four Minor findings recorded, not fixed (reasons below).
 
 Verified locally: `pnpm i --frozen-lockfile`, `pnpm --filter @ab/db --filter @ab/shared build`,
 full `pnpm turbo lint typecheck test`.
+
+## Owner decision (2026-10-25)
+
+Accepted as they are: findings 2–5 above, and the limits listed in the PR body (no GoTrue session
+timebox / inactivity timeout, tokens read before migration 720, sessions whose refresh tokens were
+revoked still counted live). Each fails closed: nobody receives another person's alerts. Recorded in
+docs/04-architecture.md «Push devices».
+
+Then, at the owner's «do what you recommend»: migration `20261025000730` (`claim_push_device`) makes
+the app-token claim one statement under a per-token advisory lock. That closes the read-then-write
+races of findings 2 and 3 (a re-registration can no longer be contested between the read and the
+update, and two concurrent claims of one token are serialised). What stays accepted: repeated
+key-less claims of a known token keep its holder contested. A single phone sending two first
+registrations at once can still store the key of the losing reply; that is fail-safe (a later
+hand-over answers 409). The GoTrue session timebox / inactivity timeout is a hosted Supabase Auth
+setting: the owner sets it in the dashboard (this run changes no hosted setting).

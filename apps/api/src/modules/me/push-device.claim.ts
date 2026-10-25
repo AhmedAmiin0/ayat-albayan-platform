@@ -1,7 +1,6 @@
-import { ConflictException } from '@nestjs/common';
+import { ConflictException, UnauthorizedException } from '@nestjs/common';
 import type { Db } from '../../common/db/db.module';
-import { DEVICE_IN_USE, deviceKeyHash, mayClaimDevice, mintDeviceKey } from '../../common/push/push-claim';
-import { liveSessions } from '../../common/push/push.sessions';
+import { DEVICE_IN_USE, deviceKeyHash, mintDeviceKey } from '../../common/push/push-claim';
 import { dbError } from '../teachers/http';
 
 export interface DeviceClaim {
@@ -11,46 +10,26 @@ export interface DeviceClaim {
   deviceKey?: string | undefined;
 }
 
-interface Binding {
-  profile_id: string;
-  session_id: string;
-  device_key_hash: string | null;
-}
-
-/** Did the request carry the key of this binding (the same device)? */
-function proves(binding: Binding | null, deviceKey: string | undefined): boolean {
-  return !!binding?.device_key_hash && !!deviceKey && deviceKeyHash(deviceKey) === binding.device_key_hash;
-}
-
 /**
- * The device key the binding of `token` to the caller will carry, or 409 when the token is bound to
- * ANOTHER profile's live session and the request does not carry that binding's key (mayClaimDevice).
- * The refused binding is marked contested (no push until its holder registers it again): the phone
- * may be in the caller's hands now, and must not keep showing the holder's alerts.
- * The key is kept when the device proved it, else a new one is minted (the old holder's is void).
- * ponytail: read-then-upsert, not one statement; a race only replays this same check. Upgrade: an RPC.
+ * Binds `token` to the caller's session and returns the device key it now carries, in ONE locked
+ * statement (migration 730's claim_push_device, the mayClaimDevice rule): 409 when the token is
+ * bound to ANOTHER profile's live session and the request does not carry that binding's key (the
+ * binding stays, contested: no push until its holder registers it again, since the phone may be in
+ * the caller's hands now); 401 when the caller's session ended meanwhile. The key is kept when the
+ * device proved it, else the fresh one minted here replaces the old holder's.
  */
-export async function claimDeviceKey(db: Db, claim: DeviceClaim): Promise<string> {
-  const { data, error } = await db
-    .from('push_device_sessions')
-    .select('profile_id, session_id, device_key_hash')
-    .eq('token', claim.token)
-    .maybeSingle();
+export async function claimDevice(db: Db, claim: DeviceClaim & { sessionId: string }): Promise<string> {
+  const fresh = mintDeviceKey();
+  const { data, error } = await db.rpc('claim_push_device', {
+    p_token: claim.token,
+    p_profile: claim.userId,
+    p_session: claim.sessionId,
+    p_new_hash: deviceKeyHash(fresh),
+    ...(claim.deviceKey ? { p_presented: deviceKeyHash(claim.deviceKey) } : {}),
+  });
   if (error) throw dbError(error);
-  const proven = proves(data, claim.deviceKey);
-  if (data && data.profile_id !== claim.userId && !proven) await refuseIfLive(db, { claim, binding: data });
-  return proven && claim.deviceKey ? claim.deviceKey : mintDeviceKey();
-}
-
-async function refuseIfLive(db: Db, input: { claim: DeviceClaim; binding: Binding }): Promise<void> {
-  const { claim, binding } = input;
-  const live = (await liveSessions(db, [binding.session_id])).has(binding.session_id);
-  if (mayClaimDevice(claim.userId, { profileId: binding.profile_id, live, proven: false })) return;
-  const { error } = await db
-    .from('push_device_sessions')
-    .update({ contested_at: new Date().toISOString() })
-    .eq('token', claim.token)
-    .eq('profile_id', binding.profile_id);
-  if (error) throw dbError(error);
-  throw new ConflictException(DEVICE_IN_USE);
+  if (data === 'no_session') throw new UnauthorizedException('no_session');
+  if (data === 'in_use') throw new ConflictException(DEVICE_IN_USE);
+  if (data !== 'bound' && data !== 'proven') throw new Error(`claim_push_device: ${String(data)}`);
+  return data === 'proven' && claim.deviceKey ? claim.deviceKey : fresh;
 }
