@@ -1,13 +1,14 @@
 import { RIYADH_TZ } from '@ab/shared';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useRef } from 'react';
-import { KeyboardAvoidingView, Platform, ScrollView, View } from 'react-native';
+import { ScrollView, View } from 'react-native';
 import { clockAt } from '@/inbox/format';
 import { ApiError } from '@/lib/api';
 import { t } from '@/lib/i18n';
 import { Note } from '@/more/Note';
 import { Button } from '@/ui/Button';
 import { ErrorState } from '@/ui/ErrorState';
+import { KeyboardFrame } from '@/ui/KeyboardFrame';
 import { Screen } from '@/ui/Screen';
 import { ScreenHeader } from '@/ui/ScreenHeader';
 import { useTeacherMe } from '../queries';
@@ -39,7 +40,7 @@ export function ReportFormScreen() {
         trailing={<Button variant="ghost" label={t.common.back} onPress={back} />}
       />
       {data ? (
-        <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+        <KeyboardFrame style={{ flex: 1 }}>
           <ScrollView
             ref={scroll}
             style={{ flex: 1, marginHorizontal: -16 }}
@@ -54,7 +55,7 @@ export function ReportFormScreen() {
               </View>
             ))}
           </ScrollView>
-        </KeyboardAvoidingView>
+        </KeyboardFrame>
       ) : form.isError ? (
         <ErrorState
           onRetry={() => void form.refetch()}

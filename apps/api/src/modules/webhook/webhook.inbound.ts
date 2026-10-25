@@ -94,7 +94,8 @@ const MEDIA_LABELS: Record<string, string> = ar.inbox.media;
 /** Push text: what they wrote, else «بعت صورة» / «بعت رسالة صوتية» / … */
 export function pushPreview(m: InboundEvent): string {
   if (m.body?.trim()) return m.body.trim();
-  return fill(ar.notifications.media, { kind: MEDIA_LABELS[m.type] ?? ar.inbox.media.other });
+  const kind = MEDIA_LABELS[m.type];
+  return kind ? fill(ar.notifications.media, { kind }) : ar.notifications.unsupported;
 }
 
 export interface PushInput {

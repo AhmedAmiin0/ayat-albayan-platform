@@ -52,10 +52,17 @@ test('a number with no name or messages yet: titled by its phone, empty, the fir
 test('media: the kind as a link once the file is there; unsupported says so', async () => {
   const photo = message({ id: 'p', direction: 'inbound', media_mime: 'image/jpeg', media_url: 'https://x/p' });
   const odd = message({ id: 'o', direction: 'inbound', body: null });
-  mockApiFetch.mockResolvedValue(detail([photo, odd]));
+  const gone = message({
+    id: 'g',
+    direction: 'inbound',
+    body: null,
+    interactive_payload: { type: 'unsupported', errors: [{ code: 131060 }], unsupported: { type: 'unknown' } },
+  });
+  mockApiFetch.mockResolvedValue(detail([photo, odd, gone]));
   await renderWithQuery(<ThreadScreen />);
   expect(await screen.findByRole('link', { name: t.inbox.media.image })).toBeTruthy();
   expect(screen.getByText(t.inbox.media.other)).toBeTruthy();
+  expect(screen.getByText(t.inbox.unavailable)).toBeTruthy();
 });
 
 test('a guardian’s «تمام» says what it did: the lesson it confirmed, or that none was', async () => {

@@ -2290,8 +2290,9 @@
       "document": "File",
       "sticker": "Sticker",
       "location": "Location",
-      "other": "Unsupported message — open it in WhatsApp"
+      "other": "The content of this message did not reach us from WhatsApp — ask the sender to send it again"
     },
+    "unavailable": "This message is unavailable — ask the sender to send it again",
     "openThread": "Open conversation with {name}",
     "loadOlder": "Older messages",
     "jumpLatest": "Jump to the latest message",
@@ -3041,6 +3042,7 @@
       "body": "{title}: {when}"
     },
     "media": "Sent: {kind}",
+    "unsupported": "Sent a message whose content did not reach us",
     "rescheduleTitle": "Reschedule request from {name}",
     "google_sync_alert": {
       "title": "Google sync needs attention",
