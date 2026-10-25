@@ -3,13 +3,13 @@ import { HttpStatus, Injectable } from '@nestjs/common';
 import { can } from '../../common/auth/permissions';
 import type { AuthUser } from '../../common/auth/verify-token';
 import { domainError } from './booking.errors';
-import type { PrepareOptions } from './booking.planner';
+import type { PrepareOptions } from './plan/booking.planner';
 import type { SlotsQuery, TeacherOptionsQuery } from './booking.dto';
-import { BookingService } from './booking.service';
+import { BookingService } from './core/booking.service';
 import { SalesBookingScope } from './sales-booking.ownership';
 import { SalesCourse } from './sales-course.service';
 import { assertBookingScope, assertOwnStudents, scopeDuplicates, type BookingOwnership } from './sales-booking.scope';
-import { SlotsService } from './slots.service';
+import { SlotsService } from './plan/slots.service';
 import { TeacherOptionsService } from './teacher-options.service';
 
 /**

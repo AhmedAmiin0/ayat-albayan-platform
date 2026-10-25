@@ -6,10 +6,10 @@ import {
   type Duration,
 } from '@ab/shared';
 import { HttpStatus } from '@nestjs/common';
-import { plannedCourseEnd } from './booking.course-end';
+import { plannedCourseEnd } from './core/booking.course-end';
 import { domainError } from './booking.errors';
-import type { Plan } from './booking.plan';
-import { planSeries, type SeriesRule } from './booking.series-plan';
+import type { Plan } from './plan/booking.plan';
+import { planSeries, type SeriesRule } from './plan/booking.series-plan';
 
 // «تغيير أيام الحلقات» (owner 2026-10-18): the remaining lessons of a course on new days. Pure.
 

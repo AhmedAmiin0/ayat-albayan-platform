@@ -1,0 +1,348 @@
+{
+  "id": "a7",
+  "seq": 9,
+  "moves": [
+    {
+      "from": "apps/api/src/modules/booking/booking.course-end*",
+      "to": "apps/api/src/modules/booking/core"
+    },
+    {
+      "from": "apps/api/src/modules/booking/booking.course-label*",
+      "to": "apps/api/src/modules/booking/core"
+    },
+    {
+      "from": "apps/api/src/modules/booking/booking.follow-ups*",
+      "to": "apps/api/src/modules/booking/core"
+    },
+    {
+      "from": "apps/api/src/modules/booking/booking.lead-merge*",
+      "to": "apps/api/src/modules/booking/core"
+    },
+    {
+      "from": "apps/api/src/modules/booking/booking.mapper*",
+      "to": "apps/api/src/modules/booking/core"
+    },
+    {
+      "from": "apps/api/src/modules/booking/booking.messages*",
+      "to": "apps/api/src/modules/booking/core"
+    },
+    {
+      "from": "apps/api/src/modules/booking/booking.parties*",
+      "to": "apps/api/src/modules/booking/core"
+    },
+    {
+      "from": "apps/api/src/modules/booking/booking.payload*",
+      "to": "apps/api/src/modules/booking/core"
+    },
+    {
+      "from": "apps/api/src/modules/booking/booking.queries*",
+      "to": "apps/api/src/modules/booking/core"
+    },
+    {
+      "from": "apps/api/src/modules/booking/booking.service*",
+      "to": "apps/api/src/modules/booking/core"
+    },
+    {
+      "from": "apps/api/src/modules/booking/booking.writer*",
+      "to": "apps/api/src/modules/booking/core"
+    },
+    {
+      "from": "apps/api/src/modules/booking/course-read*",
+      "to": "apps/api/src/modules/booking/core"
+    },
+    {
+      "from": "apps/api/src/modules/booking/confirmations*",
+      "to": "apps/api/src/modules/booking/core"
+    },
+    {
+      "from": "apps/api/src/modules/booking/booking.plan*",
+      "to": "apps/api/src/modules/booking/plan"
+    },
+    {
+      "from": "apps/api/src/modules/booking/booking.series-plan*",
+      "to": "apps/api/src/modules/booking/plan"
+    },
+    {
+      "from": "apps/api/src/modules/booking/conflict*",
+      "to": "apps/api/src/modules/booking/plan"
+    },
+    {
+      "from": "apps/api/src/modules/booking/slots*",
+      "to": "apps/api/src/modules/booking/plan"
+    },
+    {
+      "from": "apps/api/src/modules/booking/package-size*",
+      "to": "apps/api/src/modules/booking/plan"
+    },
+    {
+      "from": "apps/api/src/modules/booking/booking.invoice*",
+      "to": "apps/api/src/modules/booking/invoice"
+    },
+    {
+      "from": "apps/api/src/modules/booking/invoice-sniff*",
+      "to": "apps/api/src/modules/booking/invoice"
+    },
+    {
+      "from": "apps/api/src/modules/booking/booking.makeup*",
+      "to": "apps/api/src/modules/booking/makeup"
+    },
+    {
+      "from": "apps/api/src/modules/booking/makeup-candidates*",
+      "to": "apps/api/src/modules/booking/makeup"
+    }
+  ],
+  "files": [
+    [
+      "apps/api/src/modules/booking/booking.course-end.test.ts",
+      "apps/api/src/modules/booking/core/booking.course-end.test.ts"
+    ],
+    [
+      "apps/api/src/modules/booking/booking.course-end.ts",
+      "apps/api/src/modules/booking/core/booking.course-end.ts"
+    ],
+    [
+      "apps/api/src/modules/booking/booking.course-label.ts",
+      "apps/api/src/modules/booking/core/booking.course-label.ts"
+    ],
+    [
+      "apps/api/src/modules/booking/booking.follow-ups.ts",
+      "apps/api/src/modules/booking/core/booking.follow-ups.ts"
+    ],
+    [
+      "apps/api/src/modules/booking/booking.invoice.fakes.ts",
+      "apps/api/src/modules/booking/invoice/booking.invoice.fakes.ts"
+    ],
+    [
+      "apps/api/src/modules/booking/booking.invoice.http.test.ts",
+      "apps/api/src/modules/booking/invoice/booking.invoice.http.test.ts"
+    ],
+    [
+      "apps/api/src/modules/booking/booking.invoice.test.ts",
+      "apps/api/src/modules/booking/invoice/booking.invoice.test.ts"
+    ],
+    [
+      "apps/api/src/modules/booking/booking.invoice.ts",
+      "apps/api/src/modules/booking/invoice/booking.invoice.ts"
+    ],
+    [
+      "apps/api/src/modules/booking/booking.invoice.upload.test.ts",
+      "apps/api/src/modules/booking/invoice/booking.invoice.upload.test.ts"
+    ],
+    [
+      "apps/api/src/modules/booking/booking.lead-merge.test.ts",
+      "apps/api/src/modules/booking/core/booking.lead-merge.test.ts"
+    ],
+    [
+      "apps/api/src/modules/booking/booking.lead-merge.ts",
+      "apps/api/src/modules/booking/core/booking.lead-merge.ts"
+    ],
+    [
+      "apps/api/src/modules/booking/booking.makeup.fakes.ts",
+      "apps/api/src/modules/booking/makeup/booking.makeup.fakes.ts"
+    ],
+    [
+      "apps/api/src/modules/booking/booking.makeup.ts",
+      "apps/api/src/modules/booking/makeup/booking.makeup.ts"
+    ],
+    [
+      "apps/api/src/modules/booking/booking.mapper.makeup.test.ts",
+      "apps/api/src/modules/booking/core/booking.mapper.makeup.test.ts"
+    ],
+    [
+      "apps/api/src/modules/booking/booking.mapper.test.ts",
+      "apps/api/src/modules/booking/core/booking.mapper.test.ts"
+    ],
+    [
+      "apps/api/src/modules/booking/booking.mapper.ts",
+      "apps/api/src/modules/booking/core/booking.mapper.ts"
+    ],
+    [
+      "apps/api/src/modules/booking/booking.messages.makeup.test.ts",
+      "apps/api/src/modules/booking/core/booking.messages.makeup.test.ts"
+    ],
+    [
+      "apps/api/src/modules/booking/booking.messages.test.ts",
+      "apps/api/src/modules/booking/core/booking.messages.test.ts"
+    ],
+    [
+      "apps/api/src/modules/booking/booking.messages.ts",
+      "apps/api/src/modules/booking/core/booking.messages.ts"
+    ],
+    [
+      "apps/api/src/modules/booking/booking.parties.makeup-window.test.ts",
+      "apps/api/src/modules/booking/core/booking.parties.makeup-window.test.ts"
+    ],
+    [
+      "apps/api/src/modules/booking/booking.parties.test.ts",
+      "apps/api/src/modules/booking/core/booking.parties.test.ts"
+    ],
+    [
+      "apps/api/src/modules/booking/booking.parties.ts",
+      "apps/api/src/modules/booking/core/booking.parties.ts"
+    ],
+    [
+      "apps/api/src/modules/booking/booking.payload.status.test.ts",
+      "apps/api/src/modules/booking/core/booking.payload.status.test.ts"
+    ],
+    [
+      "apps/api/src/modules/booking/booking.payload.ts",
+      "apps/api/src/modules/booking/core/booking.payload.ts"
+    ],
+    [
+      "apps/api/src/modules/booking/booking.plan.makeup.test.ts",
+      "apps/api/src/modules/booking/plan/booking.plan.makeup.test.ts"
+    ],
+    [
+      "apps/api/src/modules/booking/booking.plan.pin.test.ts",
+      "apps/api/src/modules/booking/plan/booking.plan.pin.test.ts"
+    ],
+    [
+      "apps/api/src/modules/booking/booking.plan.test.ts",
+      "apps/api/src/modules/booking/plan/booking.plan.test.ts"
+    ],
+    [
+      "apps/api/src/modules/booking/booking.plan.ts",
+      "apps/api/src/modules/booking/plan/booking.plan.ts"
+    ],
+    [
+      "apps/api/src/modules/booking/booking.planner.conflict.test.ts",
+      "apps/api/src/modules/booking/plan/booking.planner.conflict.test.ts"
+    ],
+    [
+      "apps/api/src/modules/booking/booking.planner.dst.test.ts",
+      "apps/api/src/modules/booking/plan/booking.planner.dst.test.ts"
+    ],
+    [
+      "apps/api/src/modules/booking/booking.planner.existing.test.ts",
+      "apps/api/src/modules/booking/plan/booking.planner.existing.test.ts"
+    ],
+    [
+      "apps/api/src/modules/booking/booking.planner.invoice.test.ts",
+      "apps/api/src/modules/booking/plan/booking.planner.invoice.test.ts"
+    ],
+    [
+      "apps/api/src/modules/booking/booking.planner.lead.test.ts",
+      "apps/api/src/modules/booking/plan/booking.planner.lead.test.ts"
+    ],
+    [
+      "apps/api/src/modules/booking/booking.planner.link-mode.test.ts",
+      "apps/api/src/modules/booking/plan/booking.planner.link-mode.test.ts"
+    ],
+    [
+      "apps/api/src/modules/booking/booking.planner.makeup.probe.test.ts",
+      "apps/api/src/modules/booking/plan/booking.planner.makeup.probe.test.ts"
+    ],
+    [
+      "apps/api/src/modules/booking/booking.planner.makeup.test.ts",
+      "apps/api/src/modules/booking/plan/booking.planner.makeup.test.ts"
+    ],
+    [
+      "apps/api/src/modules/booking/booking.planner.series.test.ts",
+      "apps/api/src/modules/booking/plan/booking.planner.series.test.ts"
+    ],
+    [
+      "apps/api/src/modules/booking/booking.planner.teacher-mode.test.ts",
+      "apps/api/src/modules/booking/plan/booking.planner.teacher-mode.test.ts"
+    ],
+    [
+      "apps/api/src/modules/booking/booking.planner.ts",
+      "apps/api/src/modules/booking/plan/booking.planner.ts"
+    ],
+    [
+      "apps/api/src/modules/booking/booking.queries.makeup.test.ts",
+      "apps/api/src/modules/booking/core/booking.queries.makeup.test.ts"
+    ],
+    [
+      "apps/api/src/modules/booking/booking.queries.ts",
+      "apps/api/src/modules/booking/core/booking.queries.ts"
+    ],
+    [
+      "apps/api/src/modules/booking/booking.series-plan.test.ts",
+      "apps/api/src/modules/booking/plan/booking.series-plan.test.ts"
+    ],
+    [
+      "apps/api/src/modules/booking/booking.series-plan.ts",
+      "apps/api/src/modules/booking/plan/booking.series-plan.ts"
+    ],
+    [
+      "apps/api/src/modules/booking/booking.service.replay.test.ts",
+      "apps/api/src/modules/booking/core/booking.service.replay.test.ts"
+    ],
+    [
+      "apps/api/src/modules/booking/booking.service.test.ts",
+      "apps/api/src/modules/booking/core/booking.service.test.ts"
+    ],
+    [
+      "apps/api/src/modules/booking/booking.service.ts",
+      "apps/api/src/modules/booking/core/booking.service.ts"
+    ],
+    [
+      "apps/api/src/modules/booking/booking.service.waiver.test.ts",
+      "apps/api/src/modules/booking/core/booking.service.waiver.test.ts"
+    ],
+    [
+      "apps/api/src/modules/booking/booking.writer.ts",
+      "apps/api/src/modules/booking/core/booking.writer.ts"
+    ],
+    [
+      "apps/api/src/modules/booking/confirmations.gate.test.ts",
+      "apps/api/src/modules/booking/core/confirmations.gate.test.ts"
+    ],
+    [
+      "apps/api/src/modules/booking/conflict-context.ts",
+      "apps/api/src/modules/booking/plan/conflict-context.ts"
+    ],
+    [
+      "apps/api/src/modules/booking/conflicts.dst.test.ts",
+      "apps/api/src/modules/booking/plan/conflicts.dst.test.ts"
+    ],
+    [
+      "apps/api/src/modules/booking/course-read.test.ts",
+      "apps/api/src/modules/booking/core/course-read.test.ts"
+    ],
+    [
+      "apps/api/src/modules/booking/course-read.ts",
+      "apps/api/src/modules/booking/core/course-read.ts"
+    ],
+    [
+      "apps/api/src/modules/booking/invoice-sniff.test.ts",
+      "apps/api/src/modules/booking/invoice/invoice-sniff.test.ts"
+    ],
+    [
+      "apps/api/src/modules/booking/invoice-sniff.ts",
+      "apps/api/src/modules/booking/invoice/invoice-sniff.ts"
+    ],
+    [
+      "apps/api/src/modules/booking/makeup-candidates.service.test.ts",
+      "apps/api/src/modules/booking/makeup/makeup-candidates.service.test.ts"
+    ],
+    [
+      "apps/api/src/modules/booking/makeup-candidates.service.ts",
+      "apps/api/src/modules/booking/makeup/makeup-candidates.service.ts"
+    ],
+    [
+      "apps/api/src/modules/booking/package-size.test.ts",
+      "apps/api/src/modules/booking/plan/package-size.test.ts"
+    ],
+    [
+      "apps/api/src/modules/booking/package-size.ts",
+      "apps/api/src/modules/booking/plan/package-size.ts"
+    ],
+    [
+      "apps/api/src/modules/booking/slots.service.always.test.ts",
+      "apps/api/src/modules/booking/plan/slots.service.always.test.ts"
+    ],
+    [
+      "apps/api/src/modules/booking/slots.service.course.test.ts",
+      "apps/api/src/modules/booking/plan/slots.service.course.test.ts"
+    ],
+    [
+      "apps/api/src/modules/booking/slots.service.test.ts",
+      "apps/api/src/modules/booking/plan/slots.service.test.ts"
+    ],
+    [
+      "apps/api/src/modules/booking/slots.service.ts",
+      "apps/api/src/modules/booking/plan/slots.service.ts"
+    ]
+  ]
+}

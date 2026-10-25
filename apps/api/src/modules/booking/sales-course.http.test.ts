@@ -9,7 +9,7 @@ import { fakeSettings } from '../../common/settings/settings.fakes';
 import { SettingsService } from '../../common/settings/settings.service';
 import { SalesQueries } from '../sales/sales.queries';
 import { domainError } from './booking.errors';
-import { BookingService } from './booking.service';
+import { BookingService } from './core/booking.service';
 import { SalesCourseQueries } from './sales-course.queries';
 
 // The assistant's course over HTTP (owner 2026-10-18): sales_auto_assign OFF here, so every 403

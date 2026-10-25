@@ -7,7 +7,7 @@ import type { AuthUser } from '../../common/auth/verify-token';
 import { fakeSettings } from '../../common/settings/settings.fakes';
 import { SettingsService } from '../../common/settings/settings.service';
 import { SalesQueries } from '../sales/sales.queries';
-import { SlotsService } from './slots.service';
+import { SlotsService } from './plan/slots.service';
 import { TrialDateQueries } from './trial-date.queries';
 import { TrialDates } from './trial-date.service';
 

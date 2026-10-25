@@ -1,7 +1,7 @@
 import { HttpException } from '@nestjs/common';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { ConflictChecker } from '../scheduling/conflict-checker';
-import type { BookingQueries } from './booking.queries';
+import type { BookingQueries } from './core/booking.queries';
 import type { InstantQueries } from './instant.queries';
 import { InstantLessonService } from './instant.service';
 

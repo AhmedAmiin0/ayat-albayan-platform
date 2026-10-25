@@ -7,9 +7,9 @@ import type { AuthUser } from '../../common/auth/verify-token';
 import { fakeSettings } from '../../common/settings/settings.fakes';
 import { SettingsService } from '../../common/settings/settings.service';
 import { domainError } from './booking.errors';
-import { BookingService } from './booking.service';
+import { BookingService } from './core/booking.service';
 import { SalesQueries } from '../sales/sales.queries';
-import { SlotsService } from './slots.service';
+import { SlotsService } from './plan/slots.service';
 import { TeacherOptionsService } from './teacher-options.service';
 
 const A = 'a1000000-0000-4000-8000-00000000000a';

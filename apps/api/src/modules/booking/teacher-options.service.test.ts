@@ -1,7 +1,7 @@
 import { HttpException } from '@nestjs/common';
 import { describe, expect, it, vi } from 'vitest';
 import { fakeQueries, IDS, STUDENTS } from './booking.fakes';
-import type { BookingQueries } from './booking.queries';
+import type { BookingQueries } from './core/booking.queries';
 import type { TeachersQueries } from '../teachers/teachers.queries';
 import type { TeacherOptionsQueries } from './teacher-options.queries';
 import { TeacherOptionsService } from './teacher-options.service';

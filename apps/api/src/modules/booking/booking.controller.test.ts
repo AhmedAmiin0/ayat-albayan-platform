@@ -7,8 +7,8 @@ import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier
 import type { AuthUser } from '../../common/auth/verify-token';
 import { domainError } from './booking.errors';
 import { IDS } from './booking.fakes';
-import { BookingService } from './booking.service';
-import { SlotsService } from './slots.service';
+import { BookingService } from './core/booking.service';
+import { SlotsService } from './plan/slots.service';
 import { TeacherOptionsService } from './teacher-options.service';
 
 const USERS: Record<string, AuthUser> = {

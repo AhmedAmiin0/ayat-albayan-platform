@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import type { BookingPayload } from './booking.mapper';
+import type { BookingPayload } from './core/booking.mapper';
 import { bookPick, movePick, type MovedTrial } from './trial-date.plan';
 
 const PAYLOAD = {

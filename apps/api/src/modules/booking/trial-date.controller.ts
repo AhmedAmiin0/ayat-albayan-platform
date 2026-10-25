@@ -5,8 +5,8 @@ import { z } from 'zod';
 import { CurrentUser, Permissions } from '../../common/auth/decorators';
 import type { AuthUser } from '../../common/auth/verify-token';
 import { parseOrThrow } from '../../common/http/http';
-import { clientRequest } from './booking.payload';
-import { withPackageSize } from './package-size';
+import { clientRequest } from './core/booking.payload';
+import { withPackageSize } from './plan/package-size';
 import { SalesTrialDates } from './sales-trial-date.service';
 import { TrialDates } from './trial-date.service';
 
