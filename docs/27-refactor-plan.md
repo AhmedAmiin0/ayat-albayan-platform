@@ -359,3 +359,5 @@ The stack (no Effect-TS), the DB schema and migrations, the API routes and contr
 | D5  | The PR order in §5 and the per-module freeze while a move PR is open                                                           | ✅ approve                                             |
 | D6  | E2: the single `usePermissions` behaviour while `/auth/me` loads: deny (web) or allow (mobile)                                 | deny (safer)                                           |
 | D7  | Throughput: ≈ 85 small PRs (≈ 4–5 weeks), or fewer, larger PRs (one per module, up to ~170 files)                              | small PRs                                              |
+
+**Owner decisions, 2026-10-25:** D1–D5 approved as recommended (including the domain grouping, D2). D6: hide actions until `/auth/me` has loaded (deny, as web does today). D7: small PRs (≤ ~60 files each). Phase 1 starts after the feature PRs that are open on 2026-10-25 have merged.
