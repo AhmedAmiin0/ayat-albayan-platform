@@ -1,0 +1,288 @@
+{
+  "id": "b10a",
+  "seq": 47,
+  "moves": [
+    {
+      "from": "apps/web/src/features/classroom/ClassroomRoom*",
+      "to": "apps/web/src/features/classroom/room/components/"
+    },
+    {
+      "from": "apps/web/src/features/classroom/ControlBar*",
+      "to": "apps/web/src/features/classroom/room/components/"
+    },
+    {
+      "from": "apps/web/src/features/classroom/LiveRoom*",
+      "to": "apps/web/src/features/classroom/room/components/"
+    },
+    {
+      "from": "apps/web/src/features/classroom/ParticipantGrid*",
+      "to": "apps/web/src/features/classroom/room/components/"
+    },
+    {
+      "from": "apps/web/src/features/classroom/RoomButton*",
+      "to": "apps/web/src/features/classroom/room/components/"
+    },
+    {
+      "from": "apps/web/src/features/classroom/RoomHeader*",
+      "to": "apps/web/src/features/classroom/room/components/"
+    },
+    {
+      "from": "apps/web/src/features/classroom/RoomStage*",
+      "to": "apps/web/src/features/classroom/room/components/"
+    },
+    {
+      "from": "apps/web/src/features/classroom/VideoTile*",
+      "to": "apps/web/src/features/classroom/room/components/"
+    },
+    {
+      "from": "apps/web/src/features/classroom/room-icons*",
+      "to": "apps/web/src/features/classroom/room/components/"
+    },
+    {
+      "from": "apps/web/src/features/classroom/room-types*",
+      "to": "apps/web/src/features/classroom/room/components/"
+    },
+    {
+      "from": "apps/web/src/features/classroom/livekit-*",
+      "to": "apps/web/src/features/classroom/room/livekit/"
+    },
+    {
+      "from": "apps/web/src/features/classroom/use-room*",
+      "to": "apps/web/src/features/classroom/room/livekit/"
+    },
+    {
+      "from": "apps/web/src/features/classroom/fake-client*",
+      "to": "apps/web/src/features/classroom/room/livekit/"
+    },
+    {
+      "from": "apps/web/src/features/classroom/connect-failure*",
+      "to": "apps/web/src/features/classroom/room/livekit/"
+    },
+    {
+      "from": "apps/web/src/features/classroom/media-attach*",
+      "to": "apps/web/src/features/classroom/room/livekit/"
+    },
+    {
+      "from": "apps/web/src/features/classroom/snapshot*",
+      "to": "apps/web/src/features/classroom/room/livekit/"
+    },
+    {
+      "from": "apps/web/src/features/classroom/window-hint*",
+      "to": "apps/web/src/features/classroom/room/livekit/"
+    },
+    {
+      "from": "apps/web/src/features/classroom/stage.ts",
+      "to": "apps/web/src/features/classroom/room/livekit/"
+    },
+    {
+      "from": "apps/web/src/features/classroom/errors.ts",
+      "to": "apps/web/src/features/classroom/room/livekit/"
+    }
+  ],
+  "files": [
+    [
+      "apps/web/src/features/classroom/ClassroomRoom.board.test.tsx",
+      "apps/web/src/features/classroom/room/components/ClassroomRoom.board.test.tsx"
+    ],
+    [
+      "apps/web/src/features/classroom/ClassroomRoom.boardRequest.test.tsx",
+      "apps/web/src/features/classroom/room/components/ClassroomRoom.boardRequest.test.tsx"
+    ],
+    [
+      "apps/web/src/features/classroom/ClassroomRoom.draw.test.tsx",
+      "apps/web/src/features/classroom/room/components/ClassroomRoom.draw.test.tsx"
+    ],
+    [
+      "apps/web/src/features/classroom/ClassroomRoom.en.test.tsx",
+      "apps/web/src/features/classroom/room/components/ClassroomRoom.en.test.tsx"
+    ],
+    [
+      "apps/web/src/features/classroom/ClassroomRoom.errors.test.tsx",
+      "apps/web/src/features/classroom/room/components/ClassroomRoom.errors.test.tsx"
+    ],
+    [
+      "apps/web/src/features/classroom/ClassroomRoom.kick.test.tsx",
+      "apps/web/src/features/classroom/room/components/ClassroomRoom.kick.test.tsx"
+    ],
+    [
+      "apps/web/src/features/classroom/ClassroomRoom.mute.test.tsx",
+      "apps/web/src/features/classroom/room/components/ClassroomRoom.mute.test.tsx"
+    ],
+    [
+      "apps/web/src/features/classroom/ClassroomRoom.recordingOff.test.tsx",
+      "apps/web/src/features/classroom/room/components/ClassroomRoom.recordingOff.test.tsx"
+    ],
+    [
+      "apps/web/src/features/classroom/ClassroomRoom.recordings.test.tsx",
+      "apps/web/src/features/classroom/room/components/ClassroomRoom.recordings.test.tsx"
+    ],
+    [
+      "apps/web/src/features/classroom/ClassroomRoom.share.test.tsx",
+      "apps/web/src/features/classroom/room/components/ClassroomRoom.share.test.tsx"
+    ],
+    [
+      "apps/web/src/features/classroom/ClassroomRoom.shareRequest.test.tsx",
+      "apps/web/src/features/classroom/room/components/ClassroomRoom.shareRequest.test.tsx"
+    ],
+    [
+      "apps/web/src/features/classroom/ClassroomRoom.test.tsx",
+      "apps/web/src/features/classroom/room/components/ClassroomRoom.test.tsx"
+    ],
+    [
+      "apps/web/src/features/classroom/ClassroomRoom.trial.en.test.tsx",
+      "apps/web/src/features/classroom/room/components/ClassroomRoom.trial.en.test.tsx"
+    ],
+    [
+      "apps/web/src/features/classroom/ClassroomRoom.trial.test.tsx",
+      "apps/web/src/features/classroom/room/components/ClassroomRoom.trial.test.tsx"
+    ],
+    [
+      "apps/web/src/features/classroom/ClassroomRoom.tsx",
+      "apps/web/src/features/classroom/room/components/ClassroomRoom.tsx"
+    ],
+    [
+      "apps/web/src/features/classroom/connect-failure.test.ts",
+      "apps/web/src/features/classroom/room/livekit/connect-failure.test.ts"
+    ],
+    [
+      "apps/web/src/features/classroom/connect-failure.ts",
+      "apps/web/src/features/classroom/room/livekit/connect-failure.ts"
+    ],
+    [
+      "apps/web/src/features/classroom/ControlBar.tsx",
+      "apps/web/src/features/classroom/room/components/ControlBar.tsx"
+    ],
+    [
+      "apps/web/src/features/classroom/errors.test.ts",
+      "apps/web/src/features/classroom/room/livekit/errors.test.ts"
+    ],
+    [
+      "apps/web/src/features/classroom/errors.ts",
+      "apps/web/src/features/classroom/room/livekit/errors.ts"
+    ],
+    [
+      "apps/web/src/features/classroom/fake-client.ts",
+      "apps/web/src/features/classroom/room/livekit/fake-client.ts"
+    ],
+    [
+      "apps/web/src/features/classroom/livekit-board-share.test.ts",
+      "apps/web/src/features/classroom/room/livekit/livekit-board-share.test.ts"
+    ],
+    [
+      "apps/web/src/features/classroom/livekit-board-share.ts",
+      "apps/web/src/features/classroom/room/livekit/livekit-board-share.ts"
+    ],
+    [
+      "apps/web/src/features/classroom/livekit-data.test.ts",
+      "apps/web/src/features/classroom/room/livekit/livekit-data.test.ts"
+    ],
+    [
+      "apps/web/src/features/classroom/livekit-data.ts",
+      "apps/web/src/features/classroom/room/livekit/livekit-data.ts"
+    ],
+    [
+      "apps/web/src/features/classroom/livekit-moderated.test.ts",
+      "apps/web/src/features/classroom/room/livekit/livekit-moderated.test.ts"
+    ],
+    [
+      "apps/web/src/features/classroom/livekit-moderated.ts",
+      "apps/web/src/features/classroom/room/livekit/livekit-moderated.ts"
+    ],
+    [
+      "apps/web/src/features/classroom/livekit-room.moderation.test.ts",
+      "apps/web/src/features/classroom/room/livekit/livekit-room.moderation.test.ts"
+    ],
+    [
+      "apps/web/src/features/classroom/livekit-room.test.ts",
+      "apps/web/src/features/classroom/room/livekit/livekit-room.test.ts"
+    ],
+    [
+      "apps/web/src/features/classroom/livekit-room.ts",
+      "apps/web/src/features/classroom/room/livekit/livekit-room.ts"
+    ],
+    [
+      "apps/web/src/features/classroom/LiveRoom.tsx",
+      "apps/web/src/features/classroom/room/components/LiveRoom.tsx"
+    ],
+    [
+      "apps/web/src/features/classroom/media-attach.ts",
+      "apps/web/src/features/classroom/room/livekit/media-attach.ts"
+    ],
+    [
+      "apps/web/src/features/classroom/ParticipantGrid.tsx",
+      "apps/web/src/features/classroom/room/components/ParticipantGrid.tsx"
+    ],
+    [
+      "apps/web/src/features/classroom/room-icons.tsx",
+      "apps/web/src/features/classroom/room/components/room-icons.tsx"
+    ],
+    [
+      "apps/web/src/features/classroom/room-types.ts",
+      "apps/web/src/features/classroom/room/components/room-types.ts"
+    ],
+    [
+      "apps/web/src/features/classroom/RoomButton.test.tsx",
+      "apps/web/src/features/classroom/room/components/RoomButton.test.tsx"
+    ],
+    [
+      "apps/web/src/features/classroom/RoomButton.tsx",
+      "apps/web/src/features/classroom/room/components/RoomButton.tsx"
+    ],
+    [
+      "apps/web/src/features/classroom/RoomHeader.tsx",
+      "apps/web/src/features/classroom/room/components/RoomHeader.tsx"
+    ],
+    [
+      "apps/web/src/features/classroom/RoomStage.max.test.tsx",
+      "apps/web/src/features/classroom/room/components/RoomStage.max.test.tsx"
+    ],
+    [
+      "apps/web/src/features/classroom/RoomStage.tsx",
+      "apps/web/src/features/classroom/room/components/RoomStage.tsx"
+    ],
+    [
+      "apps/web/src/features/classroom/snapshot.board.test.ts",
+      "apps/web/src/features/classroom/room/livekit/snapshot.board.test.ts"
+    ],
+    [
+      "apps/web/src/features/classroom/snapshot.share.test.ts",
+      "apps/web/src/features/classroom/room/livekit/snapshot.share.test.ts"
+    ],
+    [
+      "apps/web/src/features/classroom/snapshot.test.ts",
+      "apps/web/src/features/classroom/room/livekit/snapshot.test.ts"
+    ],
+    [
+      "apps/web/src/features/classroom/snapshot.ts",
+      "apps/web/src/features/classroom/room/livekit/snapshot.ts"
+    ],
+    [
+      "apps/web/src/features/classroom/stage.test.ts",
+      "apps/web/src/features/classroom/room/livekit/stage.test.ts"
+    ],
+    [
+      "apps/web/src/features/classroom/stage.ts",
+      "apps/web/src/features/classroom/room/livekit/stage.ts"
+    ],
+    [
+      "apps/web/src/features/classroom/use-room.chat.test.ts",
+      "apps/web/src/features/classroom/room/livekit/use-room.chat.test.ts"
+    ],
+    [
+      "apps/web/src/features/classroom/use-room.ts",
+      "apps/web/src/features/classroom/room/livekit/use-room.ts"
+    ],
+    [
+      "apps/web/src/features/classroom/VideoTile.tsx",
+      "apps/web/src/features/classroom/room/components/VideoTile.tsx"
+    ],
+    [
+      "apps/web/src/features/classroom/window-hint.test.ts",
+      "apps/web/src/features/classroom/room/livekit/window-hint.test.ts"
+    ],
+    [
+      "apps/web/src/features/classroom/window-hint.ts",
+      "apps/web/src/features/classroom/room/livekit/window-hint.ts"
+    ]
+  ]
+}

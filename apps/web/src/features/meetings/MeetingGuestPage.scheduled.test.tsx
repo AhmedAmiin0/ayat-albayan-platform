@@ -1,7 +1,7 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { fakeClient } from '@/features/classroom/fake-client';
+import { fakeClient } from '@/features/classroom/room/livekit/fake-client';
 import { ApiError } from '@/lib/http/api';
 import { t } from '@/lib/i18n/i18n';
 import { meetingJoinProblem } from './meeting-join-errors';
