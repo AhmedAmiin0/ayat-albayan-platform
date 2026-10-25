@@ -20,6 +20,7 @@ export const SETTINGS_HREF = {
   values: '/more/ops/settings/values',
   communications: '/more/ops/settings/communications',
   google: '/more/ops/settings/google',
+  savedReplies: '/more/ops/settings/saved-replies',
 } as const;
 
 /**
@@ -41,7 +42,8 @@ function useSendLine(): { text: string; glyph: ReactNode } | undefined {
 
 /**
  * «الإعدادات» (docs/26b §4, R-MSG-01): the list that /more/ops/settings opens (push deep links land
- * here). «القيم», «التواصل» and «مزامنة Google» open their screens; «التكاملات» is a line only:
+ * here). «القيم», «التواصل», «الردود السريعة» (saved_replies.manage) and «مزامنة Google» open their
+ * screens; «التكاملات» is a line only:
  * credentials stay on the website.
  */
 export function SettingsScreen() {
@@ -50,6 +52,7 @@ export function SettingsScreen() {
   const holds = useHolds('settings.read');
   const admin = useIsAdmin();
   const google = holds && admin;
+  const replies = useHolds('saved_replies.manage');
   const sendLine = useSendLine();
   const next = <Chevron to="next" color={color.ink3} />;
   return (
@@ -71,6 +74,13 @@ export function SettingsScreen() {
           trailing={next}
           onPress={() => router.push(SETTINGS_HREF.communications)}
         />
+        {replies ? (
+          <ListRow
+            title={t.savedReplies.title}
+            trailing={next}
+            onPress={() => router.push(SETTINGS_HREF.savedReplies)}
+          />
+        ) : null}
         {google ? (
           <ListRow
             title={t.googleSync.mobile.title}

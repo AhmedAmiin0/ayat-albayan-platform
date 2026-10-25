@@ -70,6 +70,19 @@ function Line({ color, size = 22, d }: IconProps & { d: string }) {
 export const AttachIcon = (p: IconProps) => (
   <Line {...p} d="m20 11.5-7.8 7.8a5 5 0 0 1-7.1-7.1l8.5-8.5a3.3 3.3 0 0 1 4.7 4.7l-8.5 8.5a1.7 1.7 0 0 1-2.4-2.4L15 6.9" />
 );
+/** «الردود السريعة»: a speech bubble with a lightning bolt (a ready answer). */
+export const SavedReplyIcon = (p: IconProps) => (
+  <Line {...p} d="M20 11.5a7.5 7.5 0 0 1-11 6.6L4 19.5l1.4-4.6A7.5 7.5 0 1 1 20 11.5ZM13 7.5l-3 4.5h4l-3 4.5" />
+);
+/** «أزل»: a cross. */
+export const CrossIcon = (p: IconProps) => <Line {...p} d="M6 6l12 12M18 6 6 18" />;
+/** «عدّل»: a pencil. */
+export const EditIcon = (p: IconProps) => <Line {...p} d="M4 20h4L19 9l-4-4L4 16v4ZM13.5 6.5l4 4" />;
+/** «احذف»: a bin. */
+export const TrashIcon = (p: IconProps) => <Line {...p} d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3" />;
+/** «إلى الأعلى» / «إلى الأسفل»: a chevron up; flipped for down. */
+export const UpIcon = (p: IconProps) => <Line {...p} d="m6 15 6-6 6 6" />;
+export const DownIcon = (p: IconProps) => <Line {...p} d="m6 9 6 6 6-6" />;
 /** «تشغيل»: a triangle pointing right in both directions (a media control, never mirrored). */
 export const PlayIcon = (p: IconProps) => <Line {...p} d="M7 4.5v15l12-7.5-12-7.5Z" />;
 /** «إيقاف مؤقت»: two bars. */

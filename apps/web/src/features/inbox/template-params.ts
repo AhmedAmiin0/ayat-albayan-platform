@@ -40,6 +40,8 @@ export const forAudience = (tpl: Pick<TemplateView, 'key'>, teacher: boolean): b
 export interface PrefillContext {
   /** qualification.student_name of the thread's lead. */
   studentName?: string | null;
+  /** The family's first student (ThreadDetail.people.students[0]): a saved reply's {student}. */
+  firstStudentName?: string | null;
   /** The thread is a teacher's. */
   teacherName?: string | null;
   /** ThreadView.display_name, the name the thread header shows (guardian ?? lead ?? teacher). */

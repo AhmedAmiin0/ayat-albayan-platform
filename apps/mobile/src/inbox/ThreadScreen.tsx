@@ -97,6 +97,7 @@ export function ThreadScreen() {
                 phone={phone}
                 thread={thread}
                 lessons={query.data.pages[0]?.lessons ?? []}
+                student={query.data.pages[0]?.people?.students[0]?.name ?? null}
               />
             )}
           </KeyboardAvoidingView>

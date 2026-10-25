@@ -9,6 +9,7 @@ import { errorCode } from '@/features/schedule/api';
 import { t } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
 import { sendText } from './api';
+import type { ComposerExtras } from './composer-extras';
 import { sendsOnKey } from './composer-keys';
 import { ComposerError } from './ComposerError';
 import { draftGeneration, getDraft, requestIdFor, setDraft, subscribeDrafts } from './draft-store';
@@ -17,8 +18,8 @@ import { ReplyStrip } from './ReplyStrip';
 import { sendErrorCode, sendErrorCodeText, sendErrorText } from './send-error';
 import { useReplyTarget } from './use-reply-target';
 
-/** A send, the message it answers («رد») and the tab-memory generations it started in (never sent). */
-type Sent = { phone: string; text: string; clientRequestId: string; replyTo?: string | undefined; gen: { draft: number; own: number } };
+/** A send, the message it answers («رد»), the tab-memory generations it started in and what follows it (never sent). */
+type Sent = { phone: string; text: string; clientRequestId: string; replyTo?: string | undefined; gen: { draft: number; own: number }; after?: () => void };
 
 /** The box's tallest height (about five lines), then it scrolls. */
 const COMPACT_MAX_PX = 128;
@@ -27,6 +28,8 @@ export interface TextComposerProps {
   phone: string;
   /** Sits before the box (the template toggle). */
   leading?: ReactNode;
+  /** «الردود السريعة» (saved-replies/ReplyComposer): its panel and chip above the row, its keys first, its file after the text. */
+  extras?: ComposerExtras;
 }
 
 /**
@@ -39,7 +42,7 @@ export interface TextComposerProps {
  * even one mounted since. A send settling after a sign-out writes nothing back (generations).
  * «رد» (owner 2026-10-25): the quoted strip above the box; a sent answer clears it, a failed one keeps it.
  */
-export function TextComposer({ phone, leading }: TextComposerProps) {
+export function TextComposer({ phone, leading, extras }: TextComposerProps) {
   const queryClient = useQueryClient();
   const errorId = useId();
   const area = useRef<HTMLTextAreaElement>(null);
@@ -61,6 +64,7 @@ export function TextComposer({ phone, leading }: TextComposerProps) {
       if (sent.replyTo) reply.done(sent.replyTo);
       const now = getDraft(sent.phone);
       if (now.failed) setDraft(sent.phone, { ...now, failed: null }, sent.gen.draft);
+      sent.after?.();
       await queryClient.invalidateQueries({ queryKey: ['threads'] });
     },
     onError: async (e, sent) => {
@@ -93,7 +97,8 @@ export function TextComposer({ phone, leading }: TextComposerProps) {
   const submit = () => {
     if (blocked) return;
     const gen = { draft: draftGeneration(), own: ownSendGeneration() };
-    const sent = { phone, text: text.trim(), clientRequestId: requestIdFor(draft, text.trim()), replyTo: reply.replyTo, gen };
+    const body = text.trim();
+    const sent = { phone, text: body, clientRequestId: requestIdFor(draft, body), replyTo: reply.replyTo, gen, after: extras?.onSubmit?.() };
     setDraft(phone, { text: '', failed: null });
     send.mutate(sent);
   };
@@ -107,6 +112,7 @@ export function TextComposer({ phone, leading }: TextComposerProps) {
       }}
     >
       <ReplyStrip returnFocus={area} />
+      {extras?.above}
       <div className="flex items-end gap-1.5">
         {leading}
         <textarea
@@ -119,8 +125,9 @@ export function TextComposer({ phone, leading }: TextComposerProps) {
           value={text}
           onChange={(e) => write(e.target.value)}
           // Desktop: Enter sends, Shift+Enter is a new line. Phones: Enter is a new line. Ctrl/⌘+Enter always sends.
+          {...extras?.boxProps}
           onKeyDown={(e) => {
-            if (!sendsOnKey(e, desktop)) return;
+            if (extras?.onKey?.(e) || !sendsOnKey(e, desktop)) return;
             e.preventDefault();
             submit();
           }}

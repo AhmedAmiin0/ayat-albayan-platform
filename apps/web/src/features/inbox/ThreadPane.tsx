@@ -73,7 +73,7 @@ export function ThreadPane({ phone, listSearch }: ThreadPaneProps) {
   if (!th) return <NewThread phone={phone} lessons={first?.lessons ?? []} />;
   const messages = [...detail.data.pages].reverse().flatMap((p) => p.messages);
   const waiting = new Set((templates.data ?? []).filter((x) => x.status !== 'approved').map((x) => x.key));
-  const context = { studentName: lead.data?.qualification.student_name ?? null, teacherName: th.teacher_name, lessons: first?.lessons ?? [] };
+  const context = { studentName: lead.data?.qualification.student_name ?? null, firstStudentName: first?.people.students[0]?.name ?? null, teacherName: th.teacher_name, lessons: first?.lessons ?? [] };
   // Sales keeps the children for its header line; their packages arrive nulled, so no badge (admin only).
   const people = teacherMode ? null : (first?.people ?? null);
   const family = admin && people?.guardian ? people : null;
