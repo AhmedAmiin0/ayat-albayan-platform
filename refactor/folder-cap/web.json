@@ -40,8 +40,8 @@
     "dirs": 0
   },
   "apps/web/src/features/inbox": {
-    "files": 71,
-    "dirs": 5
+    "files": 36,
+    "dirs": 8
   },
   "apps/web/src/features/inbox/lists": {
     "files": 17,

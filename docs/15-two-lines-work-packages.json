@@ -250,7 +250,7 @@
     "apps/web/src/features/inbox/composer/lib/reply-from.ts",
     "apps/web/src/features/inbox/composer/lib/reply-from.test.ts",
     "apps/web/src/features/inbox/ThreadRow.tsx",
-    "apps/web/src/features/inbox/MessageBubble.tsx",
+    "apps/web/src/features/inbox/messages/components/MessageBubble.tsx",
     "apps/web/src/features/inbox/composer/components/Composer.tsx",
     "apps/web/src/features/inbox/composer/components/ComposerPhone.tsx",
     "apps/web/src/features/inbox/InboxPage.lines.test.tsx",

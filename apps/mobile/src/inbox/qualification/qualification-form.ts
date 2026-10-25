@@ -12,7 +12,7 @@ import { t } from '@/core/lib/i18n/i18n';
 
 // R-LEAD-03: the lead's structured qualification, captured on the lead screen. All optional; a
 // field emptied by the admin is sent as null (clears it); untouched fields are not sent (L1 merges).
-// ponytail: mirror of apps/web/src/features/inbox/qualification-form.ts (+ grid's time options);
+// ponytail: mirror of apps/web/src/features/inbox/lead/qualification/qualification-form.ts (+ grid's time options);
 // hoist both to @ab/shared with the web's next pass.
 
 export const TEXT_FIELDS = [

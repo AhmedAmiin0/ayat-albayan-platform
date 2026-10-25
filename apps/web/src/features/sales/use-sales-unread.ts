@@ -1,7 +1,7 @@
 import type { Permission } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { useEffect } from 'react';
-import { INBOX_REFRESH_MS } from '@/features/inbox/api';
+import { INBOX_REFRESH_MS } from '@/features/inbox/api/api';
 import { ApiError, apiFetch } from '@/lib/http/api';
 import { t } from '@/lib/i18n/i18n';
 

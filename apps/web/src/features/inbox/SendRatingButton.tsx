@@ -6,7 +6,7 @@ import { FormAlert } from '@/components/ui/form/form-alert';
 import { errorCode } from '@/features/schedule/api';
 import { templatesQuery } from '@/features/templates/api';
 import { t } from '@/lib/i18n/i18n';
-import { sendRating } from './api';
+import { sendRating } from './api/api';
 import { useInboxMode } from './mode';
 import { sendStart, settleOwnSend } from './composer/lib/send-start';
 

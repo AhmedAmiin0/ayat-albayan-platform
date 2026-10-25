@@ -966,7 +966,7 @@ No other web route edits settings. `/admin/roles` grants `settings.*` and has no
 
 | Key | Endpoint | Owner / writers | Ref |
 |---|---|---|---|
-| `['settings']` (`CONFIG_QUERY_KEYS.settings`) | `GET /settings` | `settingsQuery`. Written by `setQueryData` after `PATCH` (form `use-settings-form.ts:38`, switches `W/lib/use-setting-switch.ts:20`). Read by the page, `CatalogueSection.tsx:33` and `W/features/inbox/FollowUpLine.tsx:42` | `W/lib/settings-api.ts:7`, `W/lib/query-keys.ts:9` |
+| `['settings']` (`CONFIG_QUERY_KEYS.settings`) | `GET /settings` | `settingsQuery`. Written by `setQueryData` after `PATCH` (form `use-settings-form.ts:38`, switches `W/lib/use-setting-switch.ts:20`). Read by the page, `CatalogueSection.tsx:33` and `W/features/inbox/lead/FollowUpLine.tsx:42` | `W/lib/settings-api.ts:7`, `W/lib/query-keys.ts:9` |
 | `['settings','public']` (`PUBLIC_CONFIG_QUERY_KEY`) | `GET /settings/public` (staleTime 300 s; server `max-age=60`) | invalidated **only** by the registry form save (`use-settings-form.ts:40`). Not by the switches, custom saves or Google | `S/public-config.ts:10-14`, `W/lib/public-config.ts:20` |
 | `['settings','integrations']` | `GET /settings/integrations` | integrations form and secrets | `integrations-api.ts:370` |
 | `['config','meta']` | `GET /config/meta` | invalidated by the form save only (the switches do **not** invalidate it) | `settings-meta-api.ts:232` |
