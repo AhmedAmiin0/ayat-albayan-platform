@@ -4,7 +4,7 @@ import { currentMonth } from '@/features/payouts/api';
 import { parseMonthSearch } from '@/features/subscriptions/search';
 
 /** /admin/expenses — ads / content / tools spend per month (R-RPT-02). */
-export const Route = createFileRoute('/admin/expenses')({
+export const Route = createFileRoute('/admin/(finance)/expenses')({
   validateSearch: parseMonthSearch,
   component: ExpensesRoute,
 });

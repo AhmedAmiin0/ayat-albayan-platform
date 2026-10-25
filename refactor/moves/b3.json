@@ -1,0 +1,232 @@
+{
+  "id": "b3",
+  "seq": 38,
+  "moves": [
+    {
+      "from": "apps/web/src/routes/admin/students.tsx",
+      "to": "apps/web/src/routes/admin/students/route.tsx"
+    },
+    {
+      "from": "apps/web/src/routes/admin/students.$studentId.tsx",
+      "to": "apps/web/src/routes/admin/students/$studentId.tsx"
+    },
+    {
+      "from": "apps/web/src/routes/admin/students.$studentId_.reports.tsx",
+      "to": "apps/web/src/routes/admin/students/$studentId_.reports.tsx"
+    },
+    {
+      "from": "apps/web/src/routes/admin/students.$studentId_.reports.$lessonId.tsx",
+      "to": "apps/web/src/routes/admin/students/$studentId_.reports.$lessonId.tsx"
+    },
+    {
+      "from": "apps/web/src/routes/admin/teachers.tsx",
+      "to": "apps/web/src/routes/admin/teachers/route.tsx"
+    },
+    {
+      "from": "apps/web/src/routes/admin/teachers.$teacherId.tsx",
+      "to": "apps/web/src/routes/admin/teachers/$teacherId.tsx"
+    },
+    {
+      "from": "apps/web/src/routes/admin/teachers.$teacherId_.earnings.tsx",
+      "to": "apps/web/src/routes/admin/teachers/$teacherId_.earnings.tsx"
+    },
+    {
+      "from": "apps/web/src/routes/admin/assistants.tsx",
+      "to": "apps/web/src/routes/admin/assistants/route.tsx"
+    },
+    {
+      "from": "apps/web/src/routes/admin/assistants.$assistantId.tsx",
+      "to": "apps/web/src/routes/admin/assistants/$assistantId.tsx"
+    },
+    {
+      "from": "apps/web/src/routes/admin/expenses.tsx",
+      "to": "apps/web/src/routes/admin/(finance)/"
+    },
+    {
+      "from": "apps/web/src/routes/admin/finance.tsx",
+      "to": "apps/web/src/routes/admin/(finance)/"
+    },
+    {
+      "from": "apps/web/src/routes/admin/invoices.tsx",
+      "to": "apps/web/src/routes/admin/(finance)/"
+    },
+    {
+      "from": "apps/web/src/routes/admin/payments.tsx",
+      "to": "apps/web/src/routes/admin/(finance)/"
+    },
+    {
+      "from": "apps/web/src/routes/admin/payouts.tsx",
+      "to": "apps/web/src/routes/admin/(finance)/"
+    },
+    {
+      "from": "apps/web/src/routes/admin/pricing.tsx",
+      "to": "apps/web/src/routes/admin/(finance)/"
+    },
+    {
+      "from": "apps/web/src/routes/admin/receivables.tsx",
+      "to": "apps/web/src/routes/admin/(finance)/"
+    },
+    {
+      "from": "apps/web/src/routes/admin/subscriptions.tsx",
+      "to": "apps/web/src/routes/admin/(finance)/"
+    },
+    {
+      "from": "apps/web/src/routes/admin/inbox.tsx",
+      "to": "apps/web/src/routes/admin/(people)/"
+    },
+    {
+      "from": "apps/web/src/routes/admin/job-applicants.tsx",
+      "to": "apps/web/src/routes/admin/(people)/"
+    },
+    {
+      "from": "apps/web/src/routes/admin/leads.tsx",
+      "to": "apps/web/src/routes/admin/(people)/"
+    },
+    {
+      "from": "apps/web/src/routes/admin/roles.tsx",
+      "to": "apps/web/src/routes/admin/(people)/"
+    },
+    {
+      "from": "apps/web/src/routes/admin/users.tsx",
+      "to": "apps/web/src/routes/admin/(people)/"
+    },
+    {
+      "from": "apps/web/src/routes/admin/activity.tsx",
+      "to": "apps/web/src/routes/admin/(ops)/"
+    },
+    {
+      "from": "apps/web/src/routes/admin/book.tsx",
+      "to": "apps/web/src/routes/admin/(ops)/"
+    },
+    {
+      "from": "apps/web/src/routes/admin/classrooms.tsx",
+      "to": "apps/web/src/routes/admin/(ops)/"
+    },
+    {
+      "from": "apps/web/src/routes/admin/feedback.tsx",
+      "to": "apps/web/src/routes/admin/(ops)/"
+    },
+    {
+      "from": "apps/web/src/routes/admin/schedule.tsx",
+      "to": "apps/web/src/routes/admin/(ops)/"
+    },
+    {
+      "from": "apps/web/src/routes/admin/translations.tsx",
+      "to": "apps/web/src/routes/admin/(ops)/"
+    }
+  ],
+  "files": [
+    [
+      "apps/web/src/routes/admin/activity.tsx",
+      "apps/web/src/routes/admin/(ops)/activity.tsx"
+    ],
+    [
+      "apps/web/src/routes/admin/assistants.$assistantId.tsx",
+      "apps/web/src/routes/admin/assistants/$assistantId.tsx"
+    ],
+    [
+      "apps/web/src/routes/admin/assistants.tsx",
+      "apps/web/src/routes/admin/assistants/route.tsx"
+    ],
+    [
+      "apps/web/src/routes/admin/book.tsx",
+      "apps/web/src/routes/admin/(ops)/book.tsx"
+    ],
+    [
+      "apps/web/src/routes/admin/classrooms.tsx",
+      "apps/web/src/routes/admin/(ops)/classrooms.tsx"
+    ],
+    [
+      "apps/web/src/routes/admin/expenses.tsx",
+      "apps/web/src/routes/admin/(finance)/expenses.tsx"
+    ],
+    [
+      "apps/web/src/routes/admin/feedback.tsx",
+      "apps/web/src/routes/admin/(ops)/feedback.tsx"
+    ],
+    [
+      "apps/web/src/routes/admin/finance.tsx",
+      "apps/web/src/routes/admin/(finance)/finance.tsx"
+    ],
+    [
+      "apps/web/src/routes/admin/inbox.tsx",
+      "apps/web/src/routes/admin/(people)/inbox.tsx"
+    ],
+    [
+      "apps/web/src/routes/admin/invoices.tsx",
+      "apps/web/src/routes/admin/(finance)/invoices.tsx"
+    ],
+    [
+      "apps/web/src/routes/admin/job-applicants.tsx",
+      "apps/web/src/routes/admin/(people)/job-applicants.tsx"
+    ],
+    [
+      "apps/web/src/routes/admin/leads.tsx",
+      "apps/web/src/routes/admin/(people)/leads.tsx"
+    ],
+    [
+      "apps/web/src/routes/admin/payments.tsx",
+      "apps/web/src/routes/admin/(finance)/payments.tsx"
+    ],
+    [
+      "apps/web/src/routes/admin/payouts.tsx",
+      "apps/web/src/routes/admin/(finance)/payouts.tsx"
+    ],
+    [
+      "apps/web/src/routes/admin/pricing.tsx",
+      "apps/web/src/routes/admin/(finance)/pricing.tsx"
+    ],
+    [
+      "apps/web/src/routes/admin/receivables.tsx",
+      "apps/web/src/routes/admin/(finance)/receivables.tsx"
+    ],
+    [
+      "apps/web/src/routes/admin/roles.tsx",
+      "apps/web/src/routes/admin/(people)/roles.tsx"
+    ],
+    [
+      "apps/web/src/routes/admin/schedule.tsx",
+      "apps/web/src/routes/admin/(ops)/schedule.tsx"
+    ],
+    [
+      "apps/web/src/routes/admin/students.$studentId_.reports.$lessonId.tsx",
+      "apps/web/src/routes/admin/students/$studentId_.reports.$lessonId.tsx"
+    ],
+    [
+      "apps/web/src/routes/admin/students.$studentId_.reports.tsx",
+      "apps/web/src/routes/admin/students/$studentId_.reports.tsx"
+    ],
+    [
+      "apps/web/src/routes/admin/students.$studentId.tsx",
+      "apps/web/src/routes/admin/students/$studentId.tsx"
+    ],
+    [
+      "apps/web/src/routes/admin/students.tsx",
+      "apps/web/src/routes/admin/students/route.tsx"
+    ],
+    [
+      "apps/web/src/routes/admin/subscriptions.tsx",
+      "apps/web/src/routes/admin/(finance)/subscriptions.tsx"
+    ],
+    [
+      "apps/web/src/routes/admin/teachers.$teacherId_.earnings.tsx",
+      "apps/web/src/routes/admin/teachers/$teacherId_.earnings.tsx"
+    ],
+    [
+      "apps/web/src/routes/admin/teachers.$teacherId.tsx",
+      "apps/web/src/routes/admin/teachers/$teacherId.tsx"
+    ],
+    [
+      "apps/web/src/routes/admin/teachers.tsx",
+      "apps/web/src/routes/admin/teachers/route.tsx"
+    ],
+    [
+      "apps/web/src/routes/admin/translations.tsx",
+      "apps/web/src/routes/admin/(ops)/translations.tsx"
+    ],
+    [
+      "apps/web/src/routes/admin/users.tsx",
+      "apps/web/src/routes/admin/(people)/users.tsx"
+    ]
+  ]
+}

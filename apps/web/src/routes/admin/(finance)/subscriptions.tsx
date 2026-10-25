@@ -3,7 +3,7 @@ import { parseSubscriptionsSearch } from '@/features/subscriptions/search';
 import { SubscriptionsPage } from '@/features/subscriptions/SubscriptionsPage';
 
 /** /admin/subscriptions — packages, new from the calculator, payments, alert tasks (R-SUB-01/02). */
-export const Route = createFileRoute('/admin/subscriptions')({
+export const Route = createFileRoute('/admin/(finance)/subscriptions')({
   validateSearch: parseSubscriptionsSearch,
   component: SubscriptionsRoute,
 });

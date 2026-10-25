@@ -20,30 +20,11 @@ import { Route as SetPasswordRouteImport } from './routes/set-password'
 import { Route as TeacherRouteImport } from './routes/teacher'
 import { Route as AccountIndexRouteImport } from './routes/account/index'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
-import { Route as AdminActivityRouteImport } from './routes/admin/activity'
-import { Route as AdminAssistantsRouteImport } from './routes/admin/assistants'
-import { Route as AdminBookRouteImport } from './routes/admin/book'
-import { Route as AdminClassroomsRouteImport } from './routes/admin/classrooms'
+import { Route as AdminAssistantsRouteRouteImport } from './routes/admin/assistants/route'
 import { Route as AdminCommunicationsRouteImport } from './routes/admin/communications'
-import { Route as AdminExpensesRouteImport } from './routes/admin/expenses'
-import { Route as AdminFeedbackRouteImport } from './routes/admin/feedback'
-import { Route as AdminFinanceRouteImport } from './routes/admin/finance'
-import { Route as AdminInboxRouteImport } from './routes/admin/inbox'
-import { Route as AdminInvoicesRouteImport } from './routes/admin/invoices'
-import { Route as AdminJobApplicantsRouteImport } from './routes/admin/job-applicants'
-import { Route as AdminLeadsRouteImport } from './routes/admin/leads'
-import { Route as AdminPaymentsRouteImport } from './routes/admin/payments'
-import { Route as AdminPayoutsRouteImport } from './routes/admin/payouts'
-import { Route as AdminPricingRouteImport } from './routes/admin/pricing'
-import { Route as AdminReceivablesRouteImport } from './routes/admin/receivables'
-import { Route as AdminRolesRouteImport } from './routes/admin/roles'
-import { Route as AdminScheduleRouteImport } from './routes/admin/schedule'
 import { Route as AdminSettingsRouteImport } from './routes/admin/settings'
-import { Route as AdminStudentsRouteImport } from './routes/admin/students'
-import { Route as AdminSubscriptionsRouteImport } from './routes/admin/subscriptions'
-import { Route as AdminTeachersRouteImport } from './routes/admin/teachers'
-import { Route as AdminTranslationsRouteImport } from './routes/admin/translations'
-import { Route as AdminUsersRouteImport } from './routes/admin/users'
+import { Route as AdminStudentsRouteRouteImport } from './routes/admin/students/route'
+import { Route as AdminTeachersRouteRouteImport } from './routes/admin/teachers/route'
 import { Route as AssistantIndexRouteImport } from './routes/assistant/index'
 import { Route as ClassroomLessonIdRouteImport } from './routes/classroom.$lessonId'
 import { Route as FeedbackTokenRouteImport } from './routes/feedback.$token'
@@ -70,20 +51,39 @@ import { Route as TeacherFeedbackRouteImport } from './routes/teacher/feedback'
 import { Route as TeacherInboxRouteImport } from './routes/teacher/inbox'
 import { Route as TeacherPayoutsRouteImport } from './routes/teacher/payouts'
 import { Route as TeacherStudentsRouteImport } from './routes/teacher/students'
-import { Route as AdminAssistantsAssistantIdRouteImport } from './routes/admin/assistants.$assistantId'
+import { Route as AdminfinanceExpensesRouteImport } from './routes/admin/(finance)/expenses'
+import { Route as AdminfinanceFinanceRouteImport } from './routes/admin/(finance)/finance'
+import { Route as AdminfinanceInvoicesRouteImport } from './routes/admin/(finance)/invoices'
+import { Route as AdminfinancePaymentsRouteImport } from './routes/admin/(finance)/payments'
+import { Route as AdminfinancePayoutsRouteImport } from './routes/admin/(finance)/payouts'
+import { Route as AdminfinancePricingRouteImport } from './routes/admin/(finance)/pricing'
+import { Route as AdminfinanceReceivablesRouteImport } from './routes/admin/(finance)/receivables'
+import { Route as AdminfinanceSubscriptionsRouteImport } from './routes/admin/(finance)/subscriptions'
+import { Route as AdminopsActivityRouteImport } from './routes/admin/(ops)/activity'
+import { Route as AdminopsBookRouteImport } from './routes/admin/(ops)/book'
+import { Route as AdminopsClassroomsRouteImport } from './routes/admin/(ops)/classrooms'
+import { Route as AdminopsFeedbackRouteImport } from './routes/admin/(ops)/feedback'
+import { Route as AdminopsScheduleRouteImport } from './routes/admin/(ops)/schedule'
+import { Route as AdminopsTranslationsRouteImport } from './routes/admin/(ops)/translations'
+import { Route as AdminpeopleInboxRouteImport } from './routes/admin/(people)/inbox'
+import { Route as AdminpeopleJobApplicantsRouteImport } from './routes/admin/(people)/job-applicants'
+import { Route as AdminpeopleLeadsRouteImport } from './routes/admin/(people)/leads'
+import { Route as AdminpeopleRolesRouteImport } from './routes/admin/(people)/roles'
+import { Route as AdminpeopleUsersRouteImport } from './routes/admin/(people)/users'
+import { Route as AdminAssistantsAssistantIdRouteImport } from './routes/admin/assistants/$assistantId'
 import { Route as AdminSettingsAppearanceRouteImport } from './routes/admin/settings.appearance'
 import { Route as AdminSettingsCommunicationsRouteImport } from './routes/admin/settings.communications'
 import { Route as AdminSettingsGoogleRouteImport } from './routes/admin/settings.google'
 import { Route as AdminSettingsIntegrationsRouteImport } from './routes/admin/settings.integrations'
 import { Route as AdminSettingsValuesRouteImport } from './routes/admin/settings.values'
-import { Route as AdminStudentsStudentIdRouteImport } from './routes/admin/students.$studentId'
-import { Route as AdminTeachersTeacherIdRouteImport } from './routes/admin/teachers.$teacherId'
+import { Route as AdminStudentsStudentIdRouteImport } from './routes/admin/students/$studentId'
+import { Route as AdminTeachersTeacherIdRouteImport } from './routes/admin/teachers/$teacherId'
 import { Route as TeacherReportLessonIdRouteImport } from './routes/teacher/report.$lessonId'
 import { Route as TeacherReportsIndexRouteImport } from './routes/teacher/reports.index'
 import { Route as TeacherReportsStudentIdRouteImport } from './routes/teacher/reports.$studentId'
-import { Route as AdminStudentsStudentIdReportsRouteImport } from './routes/admin/students.$studentId_.reports'
-import { Route as AdminTeachersTeacherIdEarningsRouteImport } from './routes/admin/teachers.$teacherId_.earnings'
-import { Route as AdminStudentsStudentIdReportsLessonIdRouteImport } from './routes/admin/students.$studentId_.reports.$lessonId'
+import { Route as AdminStudentsStudentIdReportsRouteImport } from './routes/admin/students/$studentId_.reports'
+import { Route as AdminTeachersTeacherIdEarningsRouteImport } from './routes/admin/teachers/$teacherId_.earnings'
+import { Route as AdminStudentsStudentIdReportsLessonIdRouteImport } from './routes/admin/students/$studentId_.reports.$lessonId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -140,24 +140,9 @@ const AdminIndexRoute = AdminIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AdminRoute,
 } as any)
-const AdminActivityRoute = AdminActivityRouteImport.update({
-  id: '/activity',
-  path: '/activity',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminAssistantsRoute = AdminAssistantsRouteImport.update({
+const AdminAssistantsRouteRoute = AdminAssistantsRouteRouteImport.update({
   id: '/assistants',
   path: '/assistants',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminBookRoute = AdminBookRouteImport.update({
-  id: '/book',
-  path: '/book',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminClassroomsRoute = AdminClassroomsRouteImport.update({
-  id: '/classrooms',
-  path: '/classrooms',
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminCommunicationsRoute = AdminCommunicationsRouteImport.update({
@@ -165,99 +150,19 @@ const AdminCommunicationsRoute = AdminCommunicationsRouteImport.update({
   path: '/communications',
   getParentRoute: () => AdminRoute,
 } as any)
-const AdminExpensesRoute = AdminExpensesRouteImport.update({
-  id: '/expenses',
-  path: '/expenses',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminFeedbackRoute = AdminFeedbackRouteImport.update({
-  id: '/feedback',
-  path: '/feedback',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminFinanceRoute = AdminFinanceRouteImport.update({
-  id: '/finance',
-  path: '/finance',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminInboxRoute = AdminInboxRouteImport.update({
-  id: '/inbox',
-  path: '/inbox',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminInvoicesRoute = AdminInvoicesRouteImport.update({
-  id: '/invoices',
-  path: '/invoices',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminJobApplicantsRoute = AdminJobApplicantsRouteImport.update({
-  id: '/job-applicants',
-  path: '/job-applicants',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminLeadsRoute = AdminLeadsRouteImport.update({
-  id: '/leads',
-  path: '/leads',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminPaymentsRoute = AdminPaymentsRouteImport.update({
-  id: '/payments',
-  path: '/payments',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminPayoutsRoute = AdminPayoutsRouteImport.update({
-  id: '/payouts',
-  path: '/payouts',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminPricingRoute = AdminPricingRouteImport.update({
-  id: '/pricing',
-  path: '/pricing',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminReceivablesRoute = AdminReceivablesRouteImport.update({
-  id: '/receivables',
-  path: '/receivables',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminRolesRoute = AdminRolesRouteImport.update({
-  id: '/roles',
-  path: '/roles',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminScheduleRoute = AdminScheduleRouteImport.update({
-  id: '/schedule',
-  path: '/schedule',
-  getParentRoute: () => AdminRoute,
-} as any)
 const AdminSettingsRoute = AdminSettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
   getParentRoute: () => AdminRoute,
 } as any)
-const AdminStudentsRoute = AdminStudentsRouteImport.update({
+const AdminStudentsRouteRoute = AdminStudentsRouteRouteImport.update({
   id: '/students',
   path: '/students',
   getParentRoute: () => AdminRoute,
 } as any)
-const AdminSubscriptionsRoute = AdminSubscriptionsRouteImport.update({
-  id: '/subscriptions',
-  path: '/subscriptions',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminTeachersRoute = AdminTeachersRouteImport.update({
+const AdminTeachersRouteRoute = AdminTeachersRouteRouteImport.update({
   id: '/teachers',
   path: '/teachers',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminTranslationsRoute = AdminTranslationsRouteImport.update({
-  id: '/translations',
-  path: '/translations',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminUsersRoute = AdminUsersRouteImport.update({
-  id: '/users',
-  path: '/users',
   getParentRoute: () => AdminRoute,
 } as any)
 const AssistantIndexRoute = AssistantIndexRouteImport.update({
@@ -390,11 +295,108 @@ const TeacherStudentsRoute = TeacherStudentsRouteImport.update({
   path: '/students',
   getParentRoute: () => TeacherRoute,
 } as any)
+const AdminfinanceExpensesRoute = AdminfinanceExpensesRouteImport.update({
+  id: '/(finance)/expenses',
+  path: '/expenses',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminfinanceFinanceRoute = AdminfinanceFinanceRouteImport.update({
+  id: '/(finance)/finance',
+  path: '/finance',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminfinanceInvoicesRoute = AdminfinanceInvoicesRouteImport.update({
+  id: '/(finance)/invoices',
+  path: '/invoices',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminfinancePaymentsRoute = AdminfinancePaymentsRouteImport.update({
+  id: '/(finance)/payments',
+  path: '/payments',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminfinancePayoutsRoute = AdminfinancePayoutsRouteImport.update({
+  id: '/(finance)/payouts',
+  path: '/payouts',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminfinancePricingRoute = AdminfinancePricingRouteImport.update({
+  id: '/(finance)/pricing',
+  path: '/pricing',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminfinanceReceivablesRoute = AdminfinanceReceivablesRouteImport.update({
+  id: '/(finance)/receivables',
+  path: '/receivables',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminfinanceSubscriptionsRoute =
+  AdminfinanceSubscriptionsRouteImport.update({
+    id: '/(finance)/subscriptions',
+    path: '/subscriptions',
+    getParentRoute: () => AdminRoute,
+  } as any)
+const AdminopsActivityRoute = AdminopsActivityRouteImport.update({
+  id: '/(ops)/activity',
+  path: '/activity',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminopsBookRoute = AdminopsBookRouteImport.update({
+  id: '/(ops)/book',
+  path: '/book',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminopsClassroomsRoute = AdminopsClassroomsRouteImport.update({
+  id: '/(ops)/classrooms',
+  path: '/classrooms',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminopsFeedbackRoute = AdminopsFeedbackRouteImport.update({
+  id: '/(ops)/feedback',
+  path: '/feedback',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminopsScheduleRoute = AdminopsScheduleRouteImport.update({
+  id: '/(ops)/schedule',
+  path: '/schedule',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminopsTranslationsRoute = AdminopsTranslationsRouteImport.update({
+  id: '/(ops)/translations',
+  path: '/translations',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminpeopleInboxRoute = AdminpeopleInboxRouteImport.update({
+  id: '/(people)/inbox',
+  path: '/inbox',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminpeopleJobApplicantsRoute =
+  AdminpeopleJobApplicantsRouteImport.update({
+    id: '/(people)/job-applicants',
+    path: '/job-applicants',
+    getParentRoute: () => AdminRoute,
+  } as any)
+const AdminpeopleLeadsRoute = AdminpeopleLeadsRouteImport.update({
+  id: '/(people)/leads',
+  path: '/leads',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminpeopleRolesRoute = AdminpeopleRolesRouteImport.update({
+  id: '/(people)/roles',
+  path: '/roles',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminpeopleUsersRoute = AdminpeopleUsersRouteImport.update({
+  id: '/(people)/users',
+  path: '/users',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminAssistantsAssistantIdRoute =
   AdminAssistantsAssistantIdRouteImport.update({
     id: '/$assistantId',
     path: '/$assistantId',
-    getParentRoute: () => AdminAssistantsRoute,
+    getParentRoute: () => AdminAssistantsRouteRoute,
   } as any)
 const AdminSettingsAppearanceRoute = AdminSettingsAppearanceRouteImport.update({
   id: '/appearance',
@@ -426,12 +428,12 @@ const AdminSettingsValuesRoute = AdminSettingsValuesRouteImport.update({
 const AdminStudentsStudentIdRoute = AdminStudentsStudentIdRouteImport.update({
   id: '/$studentId',
   path: '/$studentId',
-  getParentRoute: () => AdminStudentsRoute,
+  getParentRoute: () => AdminStudentsRouteRoute,
 } as any)
 const AdminTeachersTeacherIdRoute = AdminTeachersTeacherIdRouteImport.update({
   id: '/$teacherId',
   path: '/$teacherId',
-  getParentRoute: () => AdminTeachersRoute,
+  getParentRoute: () => AdminTeachersRouteRoute,
 } as any)
 const TeacherReportLessonIdRoute = TeacherReportLessonIdRouteImport.update({
   id: '/report/$lessonId',
@@ -452,13 +454,13 @@ const AdminStudentsStudentIdReportsRoute =
   AdminStudentsStudentIdReportsRouteImport.update({
     id: '/$studentId_/reports',
     path: '/$studentId/reports',
-    getParentRoute: () => AdminStudentsRoute,
+    getParentRoute: () => AdminStudentsRouteRoute,
   } as any)
 const AdminTeachersTeacherIdEarningsRoute =
   AdminTeachersTeacherIdEarningsRouteImport.update({
     id: '/$teacherId_/earnings',
     path: '/$teacherId/earnings',
-    getParentRoute: () => AdminTeachersRoute,
+    getParentRoute: () => AdminTeachersRouteRoute,
   } as any)
 const AdminStudentsStudentIdReportsLessonIdRoute =
   AdminStudentsStudentIdReportsLessonIdRouteImport.update({
@@ -477,30 +479,11 @@ export interface FileRoutesByFullPath {
   '/sales': typeof SalesRouteWithChildren
   '/set-password': typeof SetPasswordRoute
   '/teacher': typeof TeacherRouteWithChildren
-  '/admin/activity': typeof AdminActivityRoute
-  '/admin/assistants': typeof AdminAssistantsRouteWithChildren
-  '/admin/book': typeof AdminBookRoute
-  '/admin/classrooms': typeof AdminClassroomsRoute
+  '/admin/assistants': typeof AdminAssistantsRouteRouteWithChildren
+  '/admin/students': typeof AdminStudentsRouteRouteWithChildren
+  '/admin/teachers': typeof AdminTeachersRouteRouteWithChildren
   '/admin/communications': typeof AdminCommunicationsRoute
-  '/admin/expenses': typeof AdminExpensesRoute
-  '/admin/feedback': typeof AdminFeedbackRoute
-  '/admin/finance': typeof AdminFinanceRoute
-  '/admin/inbox': typeof AdminInboxRoute
-  '/admin/invoices': typeof AdminInvoicesRoute
-  '/admin/job-applicants': typeof AdminJobApplicantsRoute
-  '/admin/leads': typeof AdminLeadsRoute
-  '/admin/payments': typeof AdminPaymentsRoute
-  '/admin/payouts': typeof AdminPayoutsRoute
-  '/admin/pricing': typeof AdminPricingRoute
-  '/admin/receivables': typeof AdminReceivablesRoute
-  '/admin/roles': typeof AdminRolesRoute
-  '/admin/schedule': typeof AdminScheduleRoute
   '/admin/settings': typeof AdminSettingsRouteWithChildren
-  '/admin/students': typeof AdminStudentsRouteWithChildren
-  '/admin/subscriptions': typeof AdminSubscriptionsRoute
-  '/admin/teachers': typeof AdminTeachersRouteWithChildren
-  '/admin/translations': typeof AdminTranslationsRoute
-  '/admin/users': typeof AdminUsersRoute
   '/classroom/$lessonId': typeof ClassroomLessonIdRoute
   '/feedback/$token': typeof FeedbackTokenRoute
   '/join/$linkToken': typeof JoinLinkTokenRoute
@@ -529,6 +512,25 @@ export interface FileRoutesByFullPath {
   '/assistant/': typeof AssistantIndexRoute
   '/sales/': typeof SalesIndexRoute
   '/teacher/': typeof TeacherIndexRoute
+  '/admin/expenses': typeof AdminfinanceExpensesRoute
+  '/admin/finance': typeof AdminfinanceFinanceRoute
+  '/admin/invoices': typeof AdminfinanceInvoicesRoute
+  '/admin/payments': typeof AdminfinancePaymentsRoute
+  '/admin/payouts': typeof AdminfinancePayoutsRoute
+  '/admin/pricing': typeof AdminfinancePricingRoute
+  '/admin/receivables': typeof AdminfinanceReceivablesRoute
+  '/admin/subscriptions': typeof AdminfinanceSubscriptionsRoute
+  '/admin/activity': typeof AdminopsActivityRoute
+  '/admin/book': typeof AdminopsBookRoute
+  '/admin/classrooms': typeof AdminopsClassroomsRoute
+  '/admin/feedback': typeof AdminopsFeedbackRoute
+  '/admin/schedule': typeof AdminopsScheduleRoute
+  '/admin/translations': typeof AdminopsTranslationsRoute
+  '/admin/inbox': typeof AdminpeopleInboxRoute
+  '/admin/job-applicants': typeof AdminpeopleJobApplicantsRoute
+  '/admin/leads': typeof AdminpeopleLeadsRoute
+  '/admin/roles': typeof AdminpeopleRolesRoute
+  '/admin/users': typeof AdminpeopleUsersRoute
   '/admin/assistants/$assistantId': typeof AdminAssistantsAssistantIdRoute
   '/admin/settings/appearance': typeof AdminSettingsAppearanceRoute
   '/admin/settings/communications': typeof AdminSettingsCommunicationsRoute
@@ -549,30 +551,11 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/portal': typeof PortalRoute
   '/set-password': typeof SetPasswordRoute
-  '/admin/activity': typeof AdminActivityRoute
-  '/admin/assistants': typeof AdminAssistantsRouteWithChildren
-  '/admin/book': typeof AdminBookRoute
-  '/admin/classrooms': typeof AdminClassroomsRoute
+  '/admin/assistants': typeof AdminAssistantsRouteRouteWithChildren
+  '/admin/students': typeof AdminStudentsRouteRouteWithChildren
+  '/admin/teachers': typeof AdminTeachersRouteRouteWithChildren
   '/admin/communications': typeof AdminCommunicationsRoute
-  '/admin/expenses': typeof AdminExpensesRoute
-  '/admin/feedback': typeof AdminFeedbackRoute
-  '/admin/finance': typeof AdminFinanceRoute
-  '/admin/inbox': typeof AdminInboxRoute
-  '/admin/invoices': typeof AdminInvoicesRoute
-  '/admin/job-applicants': typeof AdminJobApplicantsRoute
-  '/admin/leads': typeof AdminLeadsRoute
-  '/admin/payments': typeof AdminPaymentsRoute
-  '/admin/payouts': typeof AdminPayoutsRoute
-  '/admin/pricing': typeof AdminPricingRoute
-  '/admin/receivables': typeof AdminReceivablesRoute
-  '/admin/roles': typeof AdminRolesRoute
-  '/admin/schedule': typeof AdminScheduleRoute
   '/admin/settings': typeof AdminSettingsRouteWithChildren
-  '/admin/students': typeof AdminStudentsRouteWithChildren
-  '/admin/subscriptions': typeof AdminSubscriptionsRoute
-  '/admin/teachers': typeof AdminTeachersRouteWithChildren
-  '/admin/translations': typeof AdminTranslationsRoute
-  '/admin/users': typeof AdminUsersRoute
   '/classroom/$lessonId': typeof ClassroomLessonIdRoute
   '/feedback/$token': typeof FeedbackTokenRoute
   '/join/$linkToken': typeof JoinLinkTokenRoute
@@ -601,6 +584,25 @@ export interface FileRoutesByTo {
   '/assistant': typeof AssistantIndexRoute
   '/sales': typeof SalesIndexRoute
   '/teacher': typeof TeacherIndexRoute
+  '/admin/expenses': typeof AdminfinanceExpensesRoute
+  '/admin/finance': typeof AdminfinanceFinanceRoute
+  '/admin/invoices': typeof AdminfinanceInvoicesRoute
+  '/admin/payments': typeof AdminfinancePaymentsRoute
+  '/admin/payouts': typeof AdminfinancePayoutsRoute
+  '/admin/pricing': typeof AdminfinancePricingRoute
+  '/admin/receivables': typeof AdminfinanceReceivablesRoute
+  '/admin/subscriptions': typeof AdminfinanceSubscriptionsRoute
+  '/admin/activity': typeof AdminopsActivityRoute
+  '/admin/book': typeof AdminopsBookRoute
+  '/admin/classrooms': typeof AdminopsClassroomsRoute
+  '/admin/feedback': typeof AdminopsFeedbackRoute
+  '/admin/schedule': typeof AdminopsScheduleRoute
+  '/admin/translations': typeof AdminopsTranslationsRoute
+  '/admin/inbox': typeof AdminpeopleInboxRoute
+  '/admin/job-applicants': typeof AdminpeopleJobApplicantsRoute
+  '/admin/leads': typeof AdminpeopleLeadsRoute
+  '/admin/roles': typeof AdminpeopleRolesRoute
+  '/admin/users': typeof AdminpeopleUsersRoute
   '/admin/assistants/$assistantId': typeof AdminAssistantsAssistantIdRoute
   '/admin/settings/appearance': typeof AdminSettingsAppearanceRoute
   '/admin/settings/communications': typeof AdminSettingsCommunicationsRoute
@@ -627,30 +629,11 @@ export interface FileRoutesById {
   '/sales': typeof SalesRouteWithChildren
   '/set-password': typeof SetPasswordRoute
   '/teacher': typeof TeacherRouteWithChildren
-  '/admin/activity': typeof AdminActivityRoute
-  '/admin/assistants': typeof AdminAssistantsRouteWithChildren
-  '/admin/book': typeof AdminBookRoute
-  '/admin/classrooms': typeof AdminClassroomsRoute
+  '/admin/assistants': typeof AdminAssistantsRouteRouteWithChildren
+  '/admin/students': typeof AdminStudentsRouteRouteWithChildren
+  '/admin/teachers': typeof AdminTeachersRouteRouteWithChildren
   '/admin/communications': typeof AdminCommunicationsRoute
-  '/admin/expenses': typeof AdminExpensesRoute
-  '/admin/feedback': typeof AdminFeedbackRoute
-  '/admin/finance': typeof AdminFinanceRoute
-  '/admin/inbox': typeof AdminInboxRoute
-  '/admin/invoices': typeof AdminInvoicesRoute
-  '/admin/job-applicants': typeof AdminJobApplicantsRoute
-  '/admin/leads': typeof AdminLeadsRoute
-  '/admin/payments': typeof AdminPaymentsRoute
-  '/admin/payouts': typeof AdminPayoutsRoute
-  '/admin/pricing': typeof AdminPricingRoute
-  '/admin/receivables': typeof AdminReceivablesRoute
-  '/admin/roles': typeof AdminRolesRoute
-  '/admin/schedule': typeof AdminScheduleRoute
   '/admin/settings': typeof AdminSettingsRouteWithChildren
-  '/admin/students': typeof AdminStudentsRouteWithChildren
-  '/admin/subscriptions': typeof AdminSubscriptionsRoute
-  '/admin/teachers': typeof AdminTeachersRouteWithChildren
-  '/admin/translations': typeof AdminTranslationsRoute
-  '/admin/users': typeof AdminUsersRoute
   '/classroom/$lessonId': typeof ClassroomLessonIdRoute
   '/feedback/$token': typeof FeedbackTokenRoute
   '/join/$linkToken': typeof JoinLinkTokenRoute
@@ -679,6 +662,25 @@ export interface FileRoutesById {
   '/assistant/': typeof AssistantIndexRoute
   '/sales/': typeof SalesIndexRoute
   '/teacher/': typeof TeacherIndexRoute
+  '/admin/(finance)/expenses': typeof AdminfinanceExpensesRoute
+  '/admin/(finance)/finance': typeof AdminfinanceFinanceRoute
+  '/admin/(finance)/invoices': typeof AdminfinanceInvoicesRoute
+  '/admin/(finance)/payments': typeof AdminfinancePaymentsRoute
+  '/admin/(finance)/payouts': typeof AdminfinancePayoutsRoute
+  '/admin/(finance)/pricing': typeof AdminfinancePricingRoute
+  '/admin/(finance)/receivables': typeof AdminfinanceReceivablesRoute
+  '/admin/(finance)/subscriptions': typeof AdminfinanceSubscriptionsRoute
+  '/admin/(ops)/activity': typeof AdminopsActivityRoute
+  '/admin/(ops)/book': typeof AdminopsBookRoute
+  '/admin/(ops)/classrooms': typeof AdminopsClassroomsRoute
+  '/admin/(ops)/feedback': typeof AdminopsFeedbackRoute
+  '/admin/(ops)/schedule': typeof AdminopsScheduleRoute
+  '/admin/(ops)/translations': typeof AdminopsTranslationsRoute
+  '/admin/(people)/inbox': typeof AdminpeopleInboxRoute
+  '/admin/(people)/job-applicants': typeof AdminpeopleJobApplicantsRoute
+  '/admin/(people)/leads': typeof AdminpeopleLeadsRoute
+  '/admin/(people)/roles': typeof AdminpeopleRolesRoute
+  '/admin/(people)/users': typeof AdminpeopleUsersRoute
   '/admin/assistants/$assistantId': typeof AdminAssistantsAssistantIdRoute
   '/admin/settings/appearance': typeof AdminSettingsAppearanceRoute
   '/admin/settings/communications': typeof AdminSettingsCommunicationsRoute
@@ -706,30 +708,11 @@ export interface FileRouteTypes {
     | '/sales'
     | '/set-password'
     | '/teacher'
-    | '/admin/activity'
     | '/admin/assistants'
-    | '/admin/book'
-    | '/admin/classrooms'
-    | '/admin/communications'
-    | '/admin/expenses'
-    | '/admin/feedback'
-    | '/admin/finance'
-    | '/admin/inbox'
-    | '/admin/invoices'
-    | '/admin/job-applicants'
-    | '/admin/leads'
-    | '/admin/payments'
-    | '/admin/payouts'
-    | '/admin/pricing'
-    | '/admin/receivables'
-    | '/admin/roles'
-    | '/admin/schedule'
-    | '/admin/settings'
     | '/admin/students'
-    | '/admin/subscriptions'
     | '/admin/teachers'
-    | '/admin/translations'
-    | '/admin/users'
+    | '/admin/communications'
+    | '/admin/settings'
     | '/classroom/$lessonId'
     | '/feedback/$token'
     | '/join/$linkToken'
@@ -758,6 +741,25 @@ export interface FileRouteTypes {
     | '/assistant/'
     | '/sales/'
     | '/teacher/'
+    | '/admin/expenses'
+    | '/admin/finance'
+    | '/admin/invoices'
+    | '/admin/payments'
+    | '/admin/payouts'
+    | '/admin/pricing'
+    | '/admin/receivables'
+    | '/admin/subscriptions'
+    | '/admin/activity'
+    | '/admin/book'
+    | '/admin/classrooms'
+    | '/admin/feedback'
+    | '/admin/schedule'
+    | '/admin/translations'
+    | '/admin/inbox'
+    | '/admin/job-applicants'
+    | '/admin/leads'
+    | '/admin/roles'
+    | '/admin/users'
     | '/admin/assistants/$assistantId'
     | '/admin/settings/appearance'
     | '/admin/settings/communications'
@@ -778,30 +780,11 @@ export interface FileRouteTypes {
     | '/login'
     | '/portal'
     | '/set-password'
-    | '/admin/activity'
     | '/admin/assistants'
-    | '/admin/book'
-    | '/admin/classrooms'
-    | '/admin/communications'
-    | '/admin/expenses'
-    | '/admin/feedback'
-    | '/admin/finance'
-    | '/admin/inbox'
-    | '/admin/invoices'
-    | '/admin/job-applicants'
-    | '/admin/leads'
-    | '/admin/payments'
-    | '/admin/payouts'
-    | '/admin/pricing'
-    | '/admin/receivables'
-    | '/admin/roles'
-    | '/admin/schedule'
-    | '/admin/settings'
     | '/admin/students'
-    | '/admin/subscriptions'
     | '/admin/teachers'
-    | '/admin/translations'
-    | '/admin/users'
+    | '/admin/communications'
+    | '/admin/settings'
     | '/classroom/$lessonId'
     | '/feedback/$token'
     | '/join/$linkToken'
@@ -830,6 +813,25 @@ export interface FileRouteTypes {
     | '/assistant'
     | '/sales'
     | '/teacher'
+    | '/admin/expenses'
+    | '/admin/finance'
+    | '/admin/invoices'
+    | '/admin/payments'
+    | '/admin/payouts'
+    | '/admin/pricing'
+    | '/admin/receivables'
+    | '/admin/subscriptions'
+    | '/admin/activity'
+    | '/admin/book'
+    | '/admin/classrooms'
+    | '/admin/feedback'
+    | '/admin/schedule'
+    | '/admin/translations'
+    | '/admin/inbox'
+    | '/admin/job-applicants'
+    | '/admin/leads'
+    | '/admin/roles'
+    | '/admin/users'
     | '/admin/assistants/$assistantId'
     | '/admin/settings/appearance'
     | '/admin/settings/communications'
@@ -855,30 +857,11 @@ export interface FileRouteTypes {
     | '/sales'
     | '/set-password'
     | '/teacher'
-    | '/admin/activity'
     | '/admin/assistants'
-    | '/admin/book'
-    | '/admin/classrooms'
-    | '/admin/communications'
-    | '/admin/expenses'
-    | '/admin/feedback'
-    | '/admin/finance'
-    | '/admin/inbox'
-    | '/admin/invoices'
-    | '/admin/job-applicants'
-    | '/admin/leads'
-    | '/admin/payments'
-    | '/admin/payouts'
-    | '/admin/pricing'
-    | '/admin/receivables'
-    | '/admin/roles'
-    | '/admin/schedule'
-    | '/admin/settings'
     | '/admin/students'
-    | '/admin/subscriptions'
     | '/admin/teachers'
-    | '/admin/translations'
-    | '/admin/users'
+    | '/admin/communications'
+    | '/admin/settings'
     | '/classroom/$lessonId'
     | '/feedback/$token'
     | '/join/$linkToken'
@@ -907,6 +890,25 @@ export interface FileRouteTypes {
     | '/assistant/'
     | '/sales/'
     | '/teacher/'
+    | '/admin/(finance)/expenses'
+    | '/admin/(finance)/finance'
+    | '/admin/(finance)/invoices'
+    | '/admin/(finance)/payments'
+    | '/admin/(finance)/payouts'
+    | '/admin/(finance)/pricing'
+    | '/admin/(finance)/receivables'
+    | '/admin/(finance)/subscriptions'
+    | '/admin/(ops)/activity'
+    | '/admin/(ops)/book'
+    | '/admin/(ops)/classrooms'
+    | '/admin/(ops)/feedback'
+    | '/admin/(ops)/schedule'
+    | '/admin/(ops)/translations'
+    | '/admin/(people)/inbox'
+    | '/admin/(people)/job-applicants'
+    | '/admin/(people)/leads'
+    | '/admin/(people)/roles'
+    | '/admin/(people)/users'
     | '/admin/assistants/$assistantId'
     | '/admin/settings/appearance'
     | '/admin/settings/communications'
@@ -1020,32 +1022,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminIndexRouteImport
       parentRoute: typeof AdminRoute
     }
-    '/admin/activity': {
-      id: '/admin/activity'
-      path: '/activity'
-      fullPath: '/admin/activity'
-      preLoaderRoute: typeof AdminActivityRouteImport
-      parentRoute: typeof AdminRoute
-    }
     '/admin/assistants': {
       id: '/admin/assistants'
       path: '/assistants'
       fullPath: '/admin/assistants'
-      preLoaderRoute: typeof AdminAssistantsRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/book': {
-      id: '/admin/book'
-      path: '/book'
-      fullPath: '/admin/book'
-      preLoaderRoute: typeof AdminBookRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/classrooms': {
-      id: '/admin/classrooms'
-      path: '/classrooms'
-      fullPath: '/admin/classrooms'
-      preLoaderRoute: typeof AdminClassroomsRouteImport
+      preLoaderRoute: typeof AdminAssistantsRouteRouteImport
       parentRoute: typeof AdminRoute
     }
     '/admin/communications': {
@@ -1053,97 +1034,6 @@ declare module '@tanstack/react-router' {
       path: '/communications'
       fullPath: '/admin/communications'
       preLoaderRoute: typeof AdminCommunicationsRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/expenses': {
-      id: '/admin/expenses'
-      path: '/expenses'
-      fullPath: '/admin/expenses'
-      preLoaderRoute: typeof AdminExpensesRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/feedback': {
-      id: '/admin/feedback'
-      path: '/feedback'
-      fullPath: '/admin/feedback'
-      preLoaderRoute: typeof AdminFeedbackRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/finance': {
-      id: '/admin/finance'
-      path: '/finance'
-      fullPath: '/admin/finance'
-      preLoaderRoute: typeof AdminFinanceRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/inbox': {
-      id: '/admin/inbox'
-      path: '/inbox'
-      fullPath: '/admin/inbox'
-      preLoaderRoute: typeof AdminInboxRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/invoices': {
-      id: '/admin/invoices'
-      path: '/invoices'
-      fullPath: '/admin/invoices'
-      preLoaderRoute: typeof AdminInvoicesRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/job-applicants': {
-      id: '/admin/job-applicants'
-      path: '/job-applicants'
-      fullPath: '/admin/job-applicants'
-      preLoaderRoute: typeof AdminJobApplicantsRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/leads': {
-      id: '/admin/leads'
-      path: '/leads'
-      fullPath: '/admin/leads'
-      preLoaderRoute: typeof AdminLeadsRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/payments': {
-      id: '/admin/payments'
-      path: '/payments'
-      fullPath: '/admin/payments'
-      preLoaderRoute: typeof AdminPaymentsRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/payouts': {
-      id: '/admin/payouts'
-      path: '/payouts'
-      fullPath: '/admin/payouts'
-      preLoaderRoute: typeof AdminPayoutsRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/pricing': {
-      id: '/admin/pricing'
-      path: '/pricing'
-      fullPath: '/admin/pricing'
-      preLoaderRoute: typeof AdminPricingRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/receivables': {
-      id: '/admin/receivables'
-      path: '/receivables'
-      fullPath: '/admin/receivables'
-      preLoaderRoute: typeof AdminReceivablesRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/roles': {
-      id: '/admin/roles'
-      path: '/roles'
-      fullPath: '/admin/roles'
-      preLoaderRoute: typeof AdminRolesRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/schedule': {
-      id: '/admin/schedule'
-      path: '/schedule'
-      fullPath: '/admin/schedule'
-      preLoaderRoute: typeof AdminScheduleRouteImport
       parentRoute: typeof AdminRoute
     }
     '/admin/settings': {
@@ -1157,35 +1047,14 @@ declare module '@tanstack/react-router' {
       id: '/admin/students'
       path: '/students'
       fullPath: '/admin/students'
-      preLoaderRoute: typeof AdminStudentsRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/subscriptions': {
-      id: '/admin/subscriptions'
-      path: '/subscriptions'
-      fullPath: '/admin/subscriptions'
-      preLoaderRoute: typeof AdminSubscriptionsRouteImport
+      preLoaderRoute: typeof AdminStudentsRouteRouteImport
       parentRoute: typeof AdminRoute
     }
     '/admin/teachers': {
       id: '/admin/teachers'
       path: '/teachers'
       fullPath: '/admin/teachers'
-      preLoaderRoute: typeof AdminTeachersRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/translations': {
-      id: '/admin/translations'
-      path: '/translations'
-      fullPath: '/admin/translations'
-      preLoaderRoute: typeof AdminTranslationsRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/users': {
-      id: '/admin/users'
-      path: '/users'
-      fullPath: '/admin/users'
-      preLoaderRoute: typeof AdminUsersRouteImport
+      preLoaderRoute: typeof AdminTeachersRouteRouteImport
       parentRoute: typeof AdminRoute
     }
     '/assistant/': {
@@ -1370,12 +1239,145 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TeacherStudentsRouteImport
       parentRoute: typeof TeacherRoute
     }
+    '/admin/(finance)/expenses': {
+      id: '/admin/(finance)/expenses'
+      path: '/expenses'
+      fullPath: '/admin/expenses'
+      preLoaderRoute: typeof AdminfinanceExpensesRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/(finance)/finance': {
+      id: '/admin/(finance)/finance'
+      path: '/finance'
+      fullPath: '/admin/finance'
+      preLoaderRoute: typeof AdminfinanceFinanceRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/(finance)/invoices': {
+      id: '/admin/(finance)/invoices'
+      path: '/invoices'
+      fullPath: '/admin/invoices'
+      preLoaderRoute: typeof AdminfinanceInvoicesRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/(finance)/payments': {
+      id: '/admin/(finance)/payments'
+      path: '/payments'
+      fullPath: '/admin/payments'
+      preLoaderRoute: typeof AdminfinancePaymentsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/(finance)/payouts': {
+      id: '/admin/(finance)/payouts'
+      path: '/payouts'
+      fullPath: '/admin/payouts'
+      preLoaderRoute: typeof AdminfinancePayoutsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/(finance)/pricing': {
+      id: '/admin/(finance)/pricing'
+      path: '/pricing'
+      fullPath: '/admin/pricing'
+      preLoaderRoute: typeof AdminfinancePricingRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/(finance)/receivables': {
+      id: '/admin/(finance)/receivables'
+      path: '/receivables'
+      fullPath: '/admin/receivables'
+      preLoaderRoute: typeof AdminfinanceReceivablesRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/(finance)/subscriptions': {
+      id: '/admin/(finance)/subscriptions'
+      path: '/subscriptions'
+      fullPath: '/admin/subscriptions'
+      preLoaderRoute: typeof AdminfinanceSubscriptionsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/(ops)/activity': {
+      id: '/admin/(ops)/activity'
+      path: '/activity'
+      fullPath: '/admin/activity'
+      preLoaderRoute: typeof AdminopsActivityRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/(ops)/book': {
+      id: '/admin/(ops)/book'
+      path: '/book'
+      fullPath: '/admin/book'
+      preLoaderRoute: typeof AdminopsBookRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/(ops)/classrooms': {
+      id: '/admin/(ops)/classrooms'
+      path: '/classrooms'
+      fullPath: '/admin/classrooms'
+      preLoaderRoute: typeof AdminopsClassroomsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/(ops)/feedback': {
+      id: '/admin/(ops)/feedback'
+      path: '/feedback'
+      fullPath: '/admin/feedback'
+      preLoaderRoute: typeof AdminopsFeedbackRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/(ops)/schedule': {
+      id: '/admin/(ops)/schedule'
+      path: '/schedule'
+      fullPath: '/admin/schedule'
+      preLoaderRoute: typeof AdminopsScheduleRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/(ops)/translations': {
+      id: '/admin/(ops)/translations'
+      path: '/translations'
+      fullPath: '/admin/translations'
+      preLoaderRoute: typeof AdminopsTranslationsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/(people)/inbox': {
+      id: '/admin/(people)/inbox'
+      path: '/inbox'
+      fullPath: '/admin/inbox'
+      preLoaderRoute: typeof AdminpeopleInboxRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/(people)/job-applicants': {
+      id: '/admin/(people)/job-applicants'
+      path: '/job-applicants'
+      fullPath: '/admin/job-applicants'
+      preLoaderRoute: typeof AdminpeopleJobApplicantsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/(people)/leads': {
+      id: '/admin/(people)/leads'
+      path: '/leads'
+      fullPath: '/admin/leads'
+      preLoaderRoute: typeof AdminpeopleLeadsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/(people)/roles': {
+      id: '/admin/(people)/roles'
+      path: '/roles'
+      fullPath: '/admin/roles'
+      preLoaderRoute: typeof AdminpeopleRolesRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/(people)/users': {
+      id: '/admin/(people)/users'
+      path: '/users'
+      fullPath: '/admin/users'
+      preLoaderRoute: typeof AdminpeopleUsersRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/assistants/$assistantId': {
       id: '/admin/assistants/$assistantId'
       path: '/$assistantId'
       fullPath: '/admin/assistants/$assistantId'
       preLoaderRoute: typeof AdminAssistantsAssistantIdRouteImport
-      parentRoute: typeof AdminAssistantsRoute
+      parentRoute: typeof AdminAssistantsRouteRoute
     }
     '/admin/settings/appearance': {
       id: '/admin/settings/appearance'
@@ -1417,14 +1419,14 @@ declare module '@tanstack/react-router' {
       path: '/$studentId'
       fullPath: '/admin/students/$studentId'
       preLoaderRoute: typeof AdminStudentsStudentIdRouteImport
-      parentRoute: typeof AdminStudentsRoute
+      parentRoute: typeof AdminStudentsRouteRoute
     }
     '/admin/teachers/$teacherId': {
       id: '/admin/teachers/$teacherId'
       path: '/$teacherId'
       fullPath: '/admin/teachers/$teacherId'
       preLoaderRoute: typeof AdminTeachersTeacherIdRouteImport
-      parentRoute: typeof AdminTeachersRoute
+      parentRoute: typeof AdminTeachersRouteRoute
     }
     '/teacher/report/$lessonId': {
       id: '/teacher/report/$lessonId'
@@ -1452,14 +1454,14 @@ declare module '@tanstack/react-router' {
       path: '/$studentId/reports'
       fullPath: '/admin/students/$studentId/reports'
       preLoaderRoute: typeof AdminStudentsStudentIdReportsRouteImport
-      parentRoute: typeof AdminStudentsRoute
+      parentRoute: typeof AdminStudentsRouteRoute
     }
     '/admin/teachers/$teacherId_/earnings': {
       id: '/admin/teachers/$teacherId_/earnings'
       path: '/$teacherId/earnings'
       fullPath: '/admin/teachers/$teacherId/earnings'
       preLoaderRoute: typeof AdminTeachersTeacherIdEarningsRouteImport
-      parentRoute: typeof AdminTeachersRoute
+      parentRoute: typeof AdminTeachersRouteRoute
     }
     '/admin/students/$studentId_/reports/$lessonId': {
       id: '/admin/students/$studentId_/reports/$lessonId'
@@ -1482,17 +1484,58 @@ const AccountRouteChildren: AccountRouteChildren = {
 const AccountRouteWithChildren =
   AccountRoute._addFileChildren(AccountRouteChildren)
 
-interface AdminAssistantsRouteChildren {
+interface AdminAssistantsRouteRouteChildren {
   AdminAssistantsAssistantIdRoute: typeof AdminAssistantsAssistantIdRoute
 }
 
-const AdminAssistantsRouteChildren: AdminAssistantsRouteChildren = {
+const AdminAssistantsRouteRouteChildren: AdminAssistantsRouteRouteChildren = {
   AdminAssistantsAssistantIdRoute: AdminAssistantsAssistantIdRoute,
 }
 
-const AdminAssistantsRouteWithChildren = AdminAssistantsRoute._addFileChildren(
-  AdminAssistantsRouteChildren,
-)
+const AdminAssistantsRouteRouteWithChildren =
+  AdminAssistantsRouteRoute._addFileChildren(AdminAssistantsRouteRouteChildren)
+
+interface AdminStudentsStudentIdReportsRouteChildren {
+  AdminStudentsStudentIdReportsLessonIdRoute: typeof AdminStudentsStudentIdReportsLessonIdRoute
+}
+
+const AdminStudentsStudentIdReportsRouteChildren: AdminStudentsStudentIdReportsRouteChildren =
+  {
+    AdminStudentsStudentIdReportsLessonIdRoute:
+      AdminStudentsStudentIdReportsLessonIdRoute,
+  }
+
+const AdminStudentsStudentIdReportsRouteWithChildren =
+  AdminStudentsStudentIdReportsRoute._addFileChildren(
+    AdminStudentsStudentIdReportsRouteChildren,
+  )
+
+interface AdminStudentsRouteRouteChildren {
+  AdminStudentsStudentIdRoute: typeof AdminStudentsStudentIdRoute
+  AdminStudentsStudentIdReportsRoute: typeof AdminStudentsStudentIdReportsRouteWithChildren
+}
+
+const AdminStudentsRouteRouteChildren: AdminStudentsRouteRouteChildren = {
+  AdminStudentsStudentIdRoute: AdminStudentsStudentIdRoute,
+  AdminStudentsStudentIdReportsRoute:
+    AdminStudentsStudentIdReportsRouteWithChildren,
+}
+
+const AdminStudentsRouteRouteWithChildren =
+  AdminStudentsRouteRoute._addFileChildren(AdminStudentsRouteRouteChildren)
+
+interface AdminTeachersRouteRouteChildren {
+  AdminTeachersTeacherIdRoute: typeof AdminTeachersTeacherIdRoute
+  AdminTeachersTeacherIdEarningsRoute: typeof AdminTeachersTeacherIdEarningsRoute
+}
+
+const AdminTeachersRouteRouteChildren: AdminTeachersRouteRouteChildren = {
+  AdminTeachersTeacherIdRoute: AdminTeachersTeacherIdRoute,
+  AdminTeachersTeacherIdEarningsRoute: AdminTeachersTeacherIdEarningsRoute,
+}
+
+const AdminTeachersRouteRouteWithChildren =
+  AdminTeachersRouteRoute._addFileChildren(AdminTeachersRouteRouteChildren)
 
 interface AdminSettingsRouteChildren {
   AdminSettingsAppearanceRoute: typeof AdminSettingsAppearanceRoute
@@ -1514,104 +1557,60 @@ const AdminSettingsRouteWithChildren = AdminSettingsRoute._addFileChildren(
   AdminSettingsRouteChildren,
 )
 
-interface AdminStudentsStudentIdReportsRouteChildren {
-  AdminStudentsStudentIdReportsLessonIdRoute: typeof AdminStudentsStudentIdReportsLessonIdRoute
-}
-
-const AdminStudentsStudentIdReportsRouteChildren: AdminStudentsStudentIdReportsRouteChildren =
-  {
-    AdminStudentsStudentIdReportsLessonIdRoute:
-      AdminStudentsStudentIdReportsLessonIdRoute,
-  }
-
-const AdminStudentsStudentIdReportsRouteWithChildren =
-  AdminStudentsStudentIdReportsRoute._addFileChildren(
-    AdminStudentsStudentIdReportsRouteChildren,
-  )
-
-interface AdminStudentsRouteChildren {
-  AdminStudentsStudentIdRoute: typeof AdminStudentsStudentIdRoute
-  AdminStudentsStudentIdReportsRoute: typeof AdminStudentsStudentIdReportsRouteWithChildren
-}
-
-const AdminStudentsRouteChildren: AdminStudentsRouteChildren = {
-  AdminStudentsStudentIdRoute: AdminStudentsStudentIdRoute,
-  AdminStudentsStudentIdReportsRoute:
-    AdminStudentsStudentIdReportsRouteWithChildren,
-}
-
-const AdminStudentsRouteWithChildren = AdminStudentsRoute._addFileChildren(
-  AdminStudentsRouteChildren,
-)
-
-interface AdminTeachersRouteChildren {
-  AdminTeachersTeacherIdRoute: typeof AdminTeachersTeacherIdRoute
-  AdminTeachersTeacherIdEarningsRoute: typeof AdminTeachersTeacherIdEarningsRoute
-}
-
-const AdminTeachersRouteChildren: AdminTeachersRouteChildren = {
-  AdminTeachersTeacherIdRoute: AdminTeachersTeacherIdRoute,
-  AdminTeachersTeacherIdEarningsRoute: AdminTeachersTeacherIdEarningsRoute,
-}
-
-const AdminTeachersRouteWithChildren = AdminTeachersRoute._addFileChildren(
-  AdminTeachersRouteChildren,
-)
-
 interface AdminRouteChildren {
-  AdminActivityRoute: typeof AdminActivityRoute
-  AdminAssistantsRoute: typeof AdminAssistantsRouteWithChildren
-  AdminBookRoute: typeof AdminBookRoute
-  AdminClassroomsRoute: typeof AdminClassroomsRoute
+  AdminAssistantsRouteRoute: typeof AdminAssistantsRouteRouteWithChildren
+  AdminStudentsRouteRoute: typeof AdminStudentsRouteRouteWithChildren
+  AdminTeachersRouteRoute: typeof AdminTeachersRouteRouteWithChildren
   AdminCommunicationsRoute: typeof AdminCommunicationsRoute
-  AdminExpensesRoute: typeof AdminExpensesRoute
-  AdminFeedbackRoute: typeof AdminFeedbackRoute
-  AdminFinanceRoute: typeof AdminFinanceRoute
-  AdminInboxRoute: typeof AdminInboxRoute
-  AdminInvoicesRoute: typeof AdminInvoicesRoute
-  AdminJobApplicantsRoute: typeof AdminJobApplicantsRoute
-  AdminLeadsRoute: typeof AdminLeadsRoute
-  AdminPaymentsRoute: typeof AdminPaymentsRoute
-  AdminPayoutsRoute: typeof AdminPayoutsRoute
-  AdminPricingRoute: typeof AdminPricingRoute
-  AdminReceivablesRoute: typeof AdminReceivablesRoute
-  AdminRolesRoute: typeof AdminRolesRoute
-  AdminScheduleRoute: typeof AdminScheduleRoute
   AdminSettingsRoute: typeof AdminSettingsRouteWithChildren
-  AdminStudentsRoute: typeof AdminStudentsRouteWithChildren
-  AdminSubscriptionsRoute: typeof AdminSubscriptionsRoute
-  AdminTeachersRoute: typeof AdminTeachersRouteWithChildren
-  AdminTranslationsRoute: typeof AdminTranslationsRoute
-  AdminUsersRoute: typeof AdminUsersRoute
   AdminIndexRoute: typeof AdminIndexRoute
+  AdminfinanceExpensesRoute: typeof AdminfinanceExpensesRoute
+  AdminfinanceFinanceRoute: typeof AdminfinanceFinanceRoute
+  AdminfinanceInvoicesRoute: typeof AdminfinanceInvoicesRoute
+  AdminfinancePaymentsRoute: typeof AdminfinancePaymentsRoute
+  AdminfinancePayoutsRoute: typeof AdminfinancePayoutsRoute
+  AdminfinancePricingRoute: typeof AdminfinancePricingRoute
+  AdminfinanceReceivablesRoute: typeof AdminfinanceReceivablesRoute
+  AdminfinanceSubscriptionsRoute: typeof AdminfinanceSubscriptionsRoute
+  AdminopsActivityRoute: typeof AdminopsActivityRoute
+  AdminopsBookRoute: typeof AdminopsBookRoute
+  AdminopsClassroomsRoute: typeof AdminopsClassroomsRoute
+  AdminopsFeedbackRoute: typeof AdminopsFeedbackRoute
+  AdminopsScheduleRoute: typeof AdminopsScheduleRoute
+  AdminopsTranslationsRoute: typeof AdminopsTranslationsRoute
+  AdminpeopleInboxRoute: typeof AdminpeopleInboxRoute
+  AdminpeopleJobApplicantsRoute: typeof AdminpeopleJobApplicantsRoute
+  AdminpeopleLeadsRoute: typeof AdminpeopleLeadsRoute
+  AdminpeopleRolesRoute: typeof AdminpeopleRolesRoute
+  AdminpeopleUsersRoute: typeof AdminpeopleUsersRoute
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
-  AdminActivityRoute: AdminActivityRoute,
-  AdminAssistantsRoute: AdminAssistantsRouteWithChildren,
-  AdminBookRoute: AdminBookRoute,
-  AdminClassroomsRoute: AdminClassroomsRoute,
+  AdminAssistantsRouteRoute: AdminAssistantsRouteRouteWithChildren,
+  AdminStudentsRouteRoute: AdminStudentsRouteRouteWithChildren,
+  AdminTeachersRouteRoute: AdminTeachersRouteRouteWithChildren,
   AdminCommunicationsRoute: AdminCommunicationsRoute,
-  AdminExpensesRoute: AdminExpensesRoute,
-  AdminFeedbackRoute: AdminFeedbackRoute,
-  AdminFinanceRoute: AdminFinanceRoute,
-  AdminInboxRoute: AdminInboxRoute,
-  AdminInvoicesRoute: AdminInvoicesRoute,
-  AdminJobApplicantsRoute: AdminJobApplicantsRoute,
-  AdminLeadsRoute: AdminLeadsRoute,
-  AdminPaymentsRoute: AdminPaymentsRoute,
-  AdminPayoutsRoute: AdminPayoutsRoute,
-  AdminPricingRoute: AdminPricingRoute,
-  AdminReceivablesRoute: AdminReceivablesRoute,
-  AdminRolesRoute: AdminRolesRoute,
-  AdminScheduleRoute: AdminScheduleRoute,
   AdminSettingsRoute: AdminSettingsRouteWithChildren,
-  AdminStudentsRoute: AdminStudentsRouteWithChildren,
-  AdminSubscriptionsRoute: AdminSubscriptionsRoute,
-  AdminTeachersRoute: AdminTeachersRouteWithChildren,
-  AdminTranslationsRoute: AdminTranslationsRoute,
-  AdminUsersRoute: AdminUsersRoute,
   AdminIndexRoute: AdminIndexRoute,
+  AdminfinanceExpensesRoute: AdminfinanceExpensesRoute,
+  AdminfinanceFinanceRoute: AdminfinanceFinanceRoute,
+  AdminfinanceInvoicesRoute: AdminfinanceInvoicesRoute,
+  AdminfinancePaymentsRoute: AdminfinancePaymentsRoute,
+  AdminfinancePayoutsRoute: AdminfinancePayoutsRoute,
+  AdminfinancePricingRoute: AdminfinancePricingRoute,
+  AdminfinanceReceivablesRoute: AdminfinanceReceivablesRoute,
+  AdminfinanceSubscriptionsRoute: AdminfinanceSubscriptionsRoute,
+  AdminopsActivityRoute: AdminopsActivityRoute,
+  AdminopsBookRoute: AdminopsBookRoute,
+  AdminopsClassroomsRoute: AdminopsClassroomsRoute,
+  AdminopsFeedbackRoute: AdminopsFeedbackRoute,
+  AdminopsScheduleRoute: AdminopsScheduleRoute,
+  AdminopsTranslationsRoute: AdminopsTranslationsRoute,
+  AdminpeopleInboxRoute: AdminpeopleInboxRoute,
+  AdminpeopleJobApplicantsRoute: AdminpeopleJobApplicantsRoute,
+  AdminpeopleLeadsRoute: AdminpeopleLeadsRoute,
+  AdminpeopleRolesRoute: AdminpeopleRolesRoute,
+  AdminpeopleUsersRoute: AdminpeopleUsersRoute,
 }
 
 const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)

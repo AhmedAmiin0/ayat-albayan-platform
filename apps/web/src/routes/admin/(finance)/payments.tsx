@@ -3,7 +3,7 @@ import { PaymentsPage } from '@/features/payments/PaymentsPage';
 import { parsePaymentsSearch } from '@/features/payments/search';
 
 /** /admin/payments — payments with their receipts (R-PAY-01); filters and sort live in the URL. */
-export const Route = createFileRoute('/admin/payments')({
+export const Route = createFileRoute('/admin/(finance)/payments')({
   validateSearch: parsePaymentsSearch,
   component: PaymentsRoute,
 });

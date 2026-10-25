@@ -6,7 +6,7 @@ import { listUrlValidator, parseListUrl, toListUrl } from '@/lib/list/list-url';
 const KEYS = { sortKeys: ACTIVITY_SORT_KEYS, filterKeys: ACTIVITY_FILTER_KEYS };
 
 /** /admin/activity «سجل النشاط»: `?page=&sort=&dir=desc&f_<key>=` (R-NFR-08). */
-export const Route = createFileRoute('/admin/activity')({
+export const Route = createFileRoute('/admin/(ops)/activity')({
   validateSearch: listUrlValidator(KEYS),
   component: ActivityRoute,
 });

@@ -4,7 +4,7 @@ import { PayoutsPage } from '@/features/payouts/PayoutsPage';
 import { parseMonthSearch } from '@/features/subscriptions/search';
 
 /** /admin/payouts — teacher payouts by month: generate, approve, pay, CSV (R-PAY-02, R-TCH-04). */
-export const Route = createFileRoute('/admin/payouts')({
+export const Route = createFileRoute('/admin/(finance)/payouts')({
   validateSearch: parseMonthSearch,
   component: PayoutsRoute,
 });
