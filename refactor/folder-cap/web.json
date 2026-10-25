@@ -130,9 +130,5 @@
   "apps/web/src/routes": {
     "files": 16,
     "dirs": 5
-  },
-  "apps/web/src/routes/admin": {
-    "files": 36,
-    "dirs": 0
   }
 }

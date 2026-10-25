@@ -3,7 +3,7 @@ import { InvoicesPage } from '@/features/finance/InvoicesPage';
 import { parseInvoicesSearch } from '@/features/finance/search';
 
 /** /admin/invoices — every booking invoice (R-PAY-03), «سجّل كدفعة» from one; range, sort and filters in the URL. */
-export const Route = createFileRoute('/admin/invoices')({
+export const Route = createFileRoute('/admin/(finance)/invoices')({
   validateSearch: parseInvoicesSearch,
   component: InvoicesRoute,
 });
