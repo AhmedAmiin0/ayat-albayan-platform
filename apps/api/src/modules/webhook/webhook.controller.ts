@@ -13,7 +13,7 @@ import {
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { Public } from '../../common/auth/decorators';
-import { verifyChallenge, verifySignature } from './webhook.signature';
+import { verifyChallenge, verifySignature } from './parse/webhook.signature';
 import { RESPONSE_BUDGET_MS, WEBHOOK_CONFIG, WebhookService, within, type WebhookConfig } from './webhook.service';
 
 /** The bits of the Fastify request / reply used here (no direct `fastify` dependency). */

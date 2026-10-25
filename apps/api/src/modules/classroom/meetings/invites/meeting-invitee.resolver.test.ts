@@ -1,6 +1,6 @@
 import { HttpException } from '@nestjs/common';
 import { beforeEach, describe, expect, it } from 'vitest';
-import type { TeacherScopes } from '../../../inbox/teacher-scope';
+import type { TeacherScopes } from '../../../inbox/teacher-threads/teacher-scope';
 import { ADMIN, ASSISTANT, SALES, TEACHER } from '../../classroom.fakes';
 import { MeetingInvitePolicies } from './meeting-invite.policy';
 import type { MeetingInviteeQueries } from './meeting-invitee.queries';

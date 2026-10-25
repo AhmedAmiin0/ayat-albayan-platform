@@ -1,9 +1,9 @@
 import { Logger } from '@nestjs/common';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { CHAT_PHONE_NUMBER_ID, envelope, inboundValue, PHONE_NUMBER_ID, statusValue, textPart } from './meta.fakes';
-import type { InboundService } from './webhook.inbound.service';
+import type { InboundService } from './inbound/webhook.inbound.service';
 import { RESPONSE_BUDGET_MS, WebhookService, within } from './webhook.service';
-import type { StatusService } from './webhook.status.service';
+import type { StatusService } from './status/webhook.status.service';
 
 function service(phoneNumberId: string | undefined = PHONE_NUMBER_ID, chat?: string) {
   const inbound = { handle: vi.fn().mockResolvedValue(undefined) };

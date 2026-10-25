@@ -31,7 +31,7 @@ consumer of `inbox.media.other`, push preview, webhook payload shape); MSA Arabi
    يمكن عرضها هنا»); the resend sentence moved to a new key `inbox.unsupported`, shown only for
    Meta's `type: 'unsupported'` (new `isUnsupportedMessage` in `packages/shared`), 131060 keeps
    `inbox.unavailable`. Web and mobile share the logic.
-2. **Important — fixed.** `apps/api/src/modules/webhook/webhook.inbound.ts` `pushPreview`: every
+2. **Important — fixed.** `apps/api/src/modules/webhook/inbound/webhook.inbound.ts` `pushPreview`: every
    type without a label (contacts, reaction, interactive) became «أرسل رسالة لم يصل محتواها» — false
    for those. Now only `type === 'unsupported'` says so; the others read «أرسل رسالة لا يمكن عرضها
    هنا». Tests updated (reaction, location, unsupported).

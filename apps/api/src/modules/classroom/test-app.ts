@@ -6,7 +6,7 @@ import { vi } from 'vitest';
 import { AppModule } from '../../app.module';
 import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '../../common/auth/auth.guard';
 import type { AuthUser } from '../../common/auth/verify-token';
-import { Outbox } from '../inbox/outbox';
+import { Outbox } from '../inbox/send/outbox';
 import { TeachersQueries } from '../teachers/teachers.queries';
 import { TemplateRegistry } from '../whatsapp/templates/catalog/template.registry';
 import { AssistantLessonsQueries } from './assistants/assistants.lessons';

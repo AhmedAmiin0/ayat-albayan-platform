@@ -10,7 +10,7 @@ export const WHITELIST = new Set([
   'config/env/env.gaps.ts',
   'config/env/whatsapp/env.kapso.ts',
   'config/env/whatsapp/env.whatsapp.ts',
-  'modules/inbox/read-receipts.ts',
+  'modules/inbox/reads/read-receipts.ts',
   'modules/whatsapp/drivers/meta/graph.ts',
   'modules/whatsapp/messages/inbound-media.service.ts',
   'modules/whatsapp/drivers/kapso/kapso.ts',

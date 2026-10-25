@@ -1,0 +1,156 @@
+{
+  "id": "a14",
+  "seq": 18,
+  "moves": [
+    {
+      "from": "apps/api/src/modules/webhook/webhook.inbound*",
+      "to": "apps/api/src/modules/webhook/inbound"
+    },
+    {
+      "from": "apps/api/src/modules/webhook/webhook.quick-reply*",
+      "to": "apps/api/src/modules/webhook/inbound"
+    },
+    {
+      "from": "apps/api/src/modules/webhook/webhook.status*",
+      "to": "apps/api/src/modules/webhook/status"
+    },
+    {
+      "from": "apps/api/src/modules/webhook/webhook.parse*",
+      "to": "apps/api/src/modules/webhook/parse"
+    },
+    {
+      "from": "apps/api/src/modules/webhook/webhook.signature*",
+      "to": "apps/api/src/modules/webhook/parse"
+    },
+    {
+      "from": "apps/api/src/modules/webhook/webhook.kapso-signature*",
+      "to": "apps/api/src/modules/webhook/parse"
+    },
+    {
+      "from": "apps/api/src/modules/webhook/webhook.wacrm-signature*",
+      "to": "apps/api/src/modules/webhook/parse"
+    },
+    {
+      "from": "apps/api/src/modules/webhook/webhook.kapso.*",
+      "to": "apps/api/src/modules/webhook/providers"
+    },
+    {
+      "from": "apps/api/src/modules/webhook/webhook.wacrm.*",
+      "to": "apps/api/src/modules/webhook/providers"
+    }
+  ],
+  "files": [
+    [
+      "apps/api/src/modules/webhook/webhook.inbound.order.test.ts",
+      "apps/api/src/modules/webhook/inbound/webhook.inbound.order.test.ts"
+    ],
+    [
+      "apps/api/src/modules/webhook/webhook.inbound.owners.test.ts",
+      "apps/api/src/modules/webhook/inbound/webhook.inbound.owners.test.ts"
+    ],
+    [
+      "apps/api/src/modules/webhook/webhook.inbound.service.test.ts",
+      "apps/api/src/modules/webhook/inbound/webhook.inbound.service.test.ts"
+    ],
+    [
+      "apps/api/src/modules/webhook/webhook.inbound.service.ts",
+      "apps/api/src/modules/webhook/inbound/webhook.inbound.service.ts"
+    ],
+    [
+      "apps/api/src/modules/webhook/webhook.inbound.store.ts",
+      "apps/api/src/modules/webhook/inbound/webhook.inbound.store.ts"
+    ],
+    [
+      "apps/api/src/modules/webhook/webhook.inbound.test.ts",
+      "apps/api/src/modules/webhook/inbound/webhook.inbound.test.ts"
+    ],
+    [
+      "apps/api/src/modules/webhook/webhook.inbound.ts",
+      "apps/api/src/modules/webhook/inbound/webhook.inbound.ts"
+    ],
+    [
+      "apps/api/src/modules/webhook/webhook.inbound.undo.test.ts",
+      "apps/api/src/modules/webhook/inbound/webhook.inbound.undo.test.ts"
+    ],
+    [
+      "apps/api/src/modules/webhook/webhook.kapso-signature.test.ts",
+      "apps/api/src/modules/webhook/parse/webhook.kapso-signature.test.ts"
+    ],
+    [
+      "apps/api/src/modules/webhook/webhook.kapso-signature.ts",
+      "apps/api/src/modules/webhook/parse/webhook.kapso-signature.ts"
+    ],
+    [
+      "apps/api/src/modules/webhook/webhook.kapso.controller.ts",
+      "apps/api/src/modules/webhook/providers/webhook.kapso.controller.ts"
+    ],
+    [
+      "apps/api/src/modules/webhook/webhook.kapso.http.test.ts",
+      "apps/api/src/modules/webhook/providers/webhook.kapso.http.test.ts"
+    ],
+    [
+      "apps/api/src/modules/webhook/webhook.parse.test.ts",
+      "apps/api/src/modules/webhook/parse/webhook.parse.test.ts"
+    ],
+    [
+      "apps/api/src/modules/webhook/webhook.parse.ts",
+      "apps/api/src/modules/webhook/parse/webhook.parse.ts"
+    ],
+    [
+      "apps/api/src/modules/webhook/webhook.quick-reply.test.ts",
+      "apps/api/src/modules/webhook/inbound/webhook.quick-reply.test.ts"
+    ],
+    [
+      "apps/api/src/modules/webhook/webhook.quick-reply.ts",
+      "apps/api/src/modules/webhook/inbound/webhook.quick-reply.ts"
+    ],
+    [
+      "apps/api/src/modules/webhook/webhook.signature.test.ts",
+      "apps/api/src/modules/webhook/parse/webhook.signature.test.ts"
+    ],
+    [
+      "apps/api/src/modules/webhook/webhook.signature.ts",
+      "apps/api/src/modules/webhook/parse/webhook.signature.ts"
+    ],
+    [
+      "apps/api/src/modules/webhook/webhook.status.service.test.ts",
+      "apps/api/src/modules/webhook/status/webhook.status.service.test.ts"
+    ],
+    [
+      "apps/api/src/modules/webhook/webhook.status.service.ts",
+      "apps/api/src/modules/webhook/status/webhook.status.service.ts"
+    ],
+    [
+      "apps/api/src/modules/webhook/webhook.status.test.ts",
+      "apps/api/src/modules/webhook/status/webhook.status.test.ts"
+    ],
+    [
+      "apps/api/src/modules/webhook/webhook.status.ts",
+      "apps/api/src/modules/webhook/status/webhook.status.ts"
+    ],
+    [
+      "apps/api/src/modules/webhook/webhook.wacrm-signature.test.ts",
+      "apps/api/src/modules/webhook/parse/webhook.wacrm-signature.test.ts"
+    ],
+    [
+      "apps/api/src/modules/webhook/webhook.wacrm-signature.ts",
+      "apps/api/src/modules/webhook/parse/webhook.wacrm-signature.ts"
+    ],
+    [
+      "apps/api/src/modules/webhook/webhook.wacrm.controller.ts",
+      "apps/api/src/modules/webhook/providers/webhook.wacrm.controller.ts"
+    ],
+    [
+      "apps/api/src/modules/webhook/webhook.wacrm.http.test.ts",
+      "apps/api/src/modules/webhook/providers/webhook.wacrm.http.test.ts"
+    ],
+    [
+      "apps/api/src/modules/webhook/webhook.wacrm.test.ts",
+      "apps/api/src/modules/webhook/providers/webhook.wacrm.test.ts"
+    ],
+    [
+      "apps/api/src/modules/webhook/webhook.wacrm.ts",
+      "apps/api/src/modules/webhook/providers/webhook.wacrm.ts"
+    ]
+  ]
+}

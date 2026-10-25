@@ -4,7 +4,7 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { AuditService } from '../../common/audit/audit.service';
 import { CurrentUser, Permissions } from '../../common/auth/decorators';
 import type { AuthUser } from '../../common/auth/verify-token';
-import { phoneParam } from '../inbox/phone-param';
+import { phoneParam } from '../inbox/threads/phone-param';
 import { parseOrThrow } from '../../common/http/http';
 import { RatingSendService } from './rating.send.service';
 

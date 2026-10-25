@@ -1,0 +1,240 @@
+{
+  "id": "a13a",
+  "seq": 16,
+  "moves": [
+    {
+      "from": "apps/api/src/modules/inbox/threads*",
+      "to": "apps/api/src/modules/inbox/threads"
+    },
+    {
+      "from": "apps/api/src/modules/inbox/thread-lessons*",
+      "to": "apps/api/src/modules/inbox/threads"
+    },
+    {
+      "from": "apps/api/src/modules/inbox/thread-quotes*",
+      "to": "apps/api/src/modules/inbox/threads"
+    },
+    {
+      "from": "apps/api/src/modules/inbox/chat-list-filter*",
+      "to": "apps/api/src/modules/inbox/threads"
+    },
+    {
+      "from": "apps/api/src/modules/inbox/known-number*",
+      "to": "apps/api/src/modules/inbox/threads"
+    },
+    {
+      "from": "apps/api/src/modules/inbox/phone-param*",
+      "to": "apps/api/src/modules/inbox/threads"
+    },
+    {
+      "from": "apps/api/src/modules/inbox/thread-people*",
+      "to": "apps/api/src/modules/inbox/people"
+    },
+    {
+      "from": "apps/api/src/modules/inbox/thread-reads*",
+      "to": "apps/api/src/modules/inbox/reads"
+    },
+    {
+      "from": "apps/api/src/modules/inbox/read-*",
+      "to": "apps/api/src/modules/inbox/reads"
+    },
+    {
+      "from": "apps/api/src/modules/inbox/sales-threads*",
+      "to": "apps/api/src/modules/inbox/sales-threads"
+    },
+    {
+      "from": "apps/api/src/modules/inbox/teacher-*",
+      "to": "apps/api/src/modules/inbox/teacher-threads"
+    }
+  ],
+  "files": [
+    [
+      "apps/api/src/modules/inbox/chat-list-filter.ts",
+      "apps/api/src/modules/inbox/threads/chat-list-filter.ts"
+    ],
+    [
+      "apps/api/src/modules/inbox/known-number.test.ts",
+      "apps/api/src/modules/inbox/threads/known-number.test.ts"
+    ],
+    [
+      "apps/api/src/modules/inbox/known-number.ts",
+      "apps/api/src/modules/inbox/threads/known-number.ts"
+    ],
+    [
+      "apps/api/src/modules/inbox/phone-param.ts",
+      "apps/api/src/modules/inbox/threads/phone-param.ts"
+    ],
+    [
+      "apps/api/src/modules/inbox/read-marks.test.ts",
+      "apps/api/src/modules/inbox/reads/read-marks.test.ts"
+    ],
+    [
+      "apps/api/src/modules/inbox/read-marks.ts",
+      "apps/api/src/modules/inbox/reads/read-marks.ts"
+    ],
+    [
+      "apps/api/src/modules/inbox/read-receipts.test.ts",
+      "apps/api/src/modules/inbox/reads/read-receipts.test.ts"
+    ],
+    [
+      "apps/api/src/modules/inbox/read-receipts.ts",
+      "apps/api/src/modules/inbox/reads/read-receipts.ts"
+    ],
+    [
+      "apps/api/src/modules/inbox/sales-threads.service.ts",
+      "apps/api/src/modules/inbox/sales-threads/sales-threads.service.ts"
+    ],
+    [
+      "apps/api/src/modules/inbox/sales-threads.test.ts",
+      "apps/api/src/modules/inbox/sales-threads/sales-threads.test.ts"
+    ],
+    [
+      "apps/api/src/modules/inbox/sales-threads.ts",
+      "apps/api/src/modules/inbox/sales-threads/sales-threads.ts"
+    ],
+    [
+      "apps/api/src/modules/inbox/teacher-scope.migration.test.ts",
+      "apps/api/src/modules/inbox/teacher-threads/teacher-scope.migration.test.ts"
+    ],
+    [
+      "apps/api/src/modules/inbox/teacher-scope.test.ts",
+      "apps/api/src/modules/inbox/teacher-threads/teacher-scope.test.ts"
+    ],
+    [
+      "apps/api/src/modules/inbox/teacher-scope.ts",
+      "apps/api/src/modules/inbox/teacher-threads/teacher-scope.ts"
+    ],
+    [
+      "apps/api/src/modules/inbox/teacher-threads.queries.ts",
+      "apps/api/src/modules/inbox/teacher-threads/teacher-threads.queries.ts"
+    ],
+    [
+      "apps/api/src/modules/inbox/teacher-threads.service.ts",
+      "apps/api/src/modules/inbox/teacher-threads/teacher-threads.service.ts"
+    ],
+    [
+      "apps/api/src/modules/inbox/teacher-threads.test.ts",
+      "apps/api/src/modules/inbox/teacher-threads/teacher-threads.test.ts"
+    ],
+    [
+      "apps/api/src/modules/inbox/teacher-threads.ts",
+      "apps/api/src/modules/inbox/teacher-threads/teacher-threads.ts"
+    ],
+    [
+      "apps/api/src/modules/inbox/thread-lessons.test.ts",
+      "apps/api/src/modules/inbox/threads/thread-lessons.test.ts"
+    ],
+    [
+      "apps/api/src/modules/inbox/thread-lessons.ts",
+      "apps/api/src/modules/inbox/threads/thread-lessons.ts"
+    ],
+    [
+      "apps/api/src/modules/inbox/thread-people.mapper.test.ts",
+      "apps/api/src/modules/inbox/people/thread-people.mapper.test.ts"
+    ],
+    [
+      "apps/api/src/modules/inbox/thread-people.mapper.ts",
+      "apps/api/src/modules/inbox/people/thread-people.mapper.ts"
+    ],
+    [
+      "apps/api/src/modules/inbox/thread-people.test.ts",
+      "apps/api/src/modules/inbox/people/thread-people.test.ts"
+    ],
+    [
+      "apps/api/src/modules/inbox/thread-people.ts",
+      "apps/api/src/modules/inbox/people/thread-people.ts"
+    ],
+    [
+      "apps/api/src/modules/inbox/thread-quotes.test.ts",
+      "apps/api/src/modules/inbox/threads/thread-quotes.test.ts"
+    ],
+    [
+      "apps/api/src/modules/inbox/thread-quotes.ts",
+      "apps/api/src/modules/inbox/threads/thread-quotes.ts"
+    ],
+    [
+      "apps/api/src/modules/inbox/thread-reads.ts",
+      "apps/api/src/modules/inbox/reads/thread-reads.ts"
+    ],
+    [
+      "apps/api/src/modules/inbox/threads.assistant-templates.http.test.ts",
+      "apps/api/src/modules/inbox/threads/threads.assistant-templates.http.test.ts"
+    ],
+    [
+      "apps/api/src/modules/inbox/threads.controller.ts",
+      "apps/api/src/modules/inbox/threads/threads.controller.ts"
+    ],
+    [
+      "apps/api/src/modules/inbox/threads.known.http.test.ts",
+      "apps/api/src/modules/inbox/threads/threads.known.http.test.ts"
+    ],
+    [
+      "apps/api/src/modules/inbox/threads.line.http.test.ts",
+      "apps/api/src/modules/inbox/threads/threads.line.http.test.ts"
+    ],
+    [
+      "apps/api/src/modules/inbox/threads.list.test.ts",
+      "apps/api/src/modules/inbox/threads/threads.list.test.ts"
+    ],
+    [
+      "apps/api/src/modules/inbox/threads.list.ts",
+      "apps/api/src/modules/inbox/threads/threads.list.ts"
+    ],
+    [
+      "apps/api/src/modules/inbox/threads.lists.http.test.ts",
+      "apps/api/src/modules/inbox/threads/threads.lists.http.test.ts"
+    ],
+    [
+      "apps/api/src/modules/inbox/threads.mapper.reply.test.ts",
+      "apps/api/src/modules/inbox/threads/threads.mapper.reply.test.ts"
+    ],
+    [
+      "apps/api/src/modules/inbox/threads.mapper.test.ts",
+      "apps/api/src/modules/inbox/threads/threads.mapper.test.ts"
+    ],
+    [
+      "apps/api/src/modules/inbox/threads.mapper.ts",
+      "apps/api/src/modules/inbox/threads/threads.mapper.ts"
+    ],
+    [
+      "apps/api/src/modules/inbox/threads.numbers.http.test.ts",
+      "apps/api/src/modules/inbox/threads/threads.numbers.http.test.ts"
+    ],
+    [
+      "apps/api/src/modules/inbox/threads.queries.ts",
+      "apps/api/src/modules/inbox/threads/threads.queries.ts"
+    ],
+    [
+      "apps/api/src/modules/inbox/threads.read.http.test.ts",
+      "apps/api/src/modules/inbox/threads/threads.read.http.test.ts"
+    ],
+    [
+      "apps/api/src/modules/inbox/threads.reply.http.test.ts",
+      "apps/api/src/modules/inbox/threads/threads.reply.http.test.ts"
+    ],
+    [
+      "apps/api/src/modules/inbox/threads.sales.http.test.ts",
+      "apps/api/src/modules/inbox/threads/threads.sales.http.test.ts"
+    ],
+    [
+      "apps/api/src/modules/inbox/threads.send.http.test.ts",
+      "apps/api/src/modules/inbox/threads/threads.send.http.test.ts"
+    ],
+    [
+      "apps/api/src/modules/inbox/threads.service.ts",
+      "apps/api/src/modules/inbox/threads/threads.service.ts"
+    ],
+    [
+      "apps/api/src/modules/inbox/threads.teacher-send.http.test.ts",
+      "apps/api/src/modules/inbox/threads/threads.teacher-send.http.test.ts"
+    ],
+    [
+      "apps/api/src/modules/inbox/threads.teacher.http.test.ts",
+      "apps/api/src/modules/inbox/threads/threads.teacher.http.test.ts"
+    ],
+    [
+      "apps/api/src/modules/inbox/threads.trial.http.test.ts",
+      "apps/api/src/modules/inbox/threads/threads.trial.http.test.ts"
+    ]
+  ]
+}

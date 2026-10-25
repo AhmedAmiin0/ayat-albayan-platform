@@ -245,7 +245,7 @@ Teachers still get labels only. Docs/20 :231 stays open with today's default.
    - `load(messageId, allow = isInvoiceMime)` uses it.
    - The default keeps `booking.invoice.ts` fromChat and `apps/api/src/modules/sales-money/sales-chat-files.ts` `copy()` limited to images and PDFs.
    - `cache()` caps the size with `chatFileMaxBytes(mime)` instead of `INVOICE_MAX_BYTES`. It still answers 413 `invoice_too_large`.
-2. **`ThreadMediaService`** (`apps/api/src/modules/inbox/thread-media.service.ts`, 55 lines)
+2. **`ThreadMediaService`** (`apps/api/src/modules/inbox/files/thread-media.service.ts`, 55 lines)
    - `file()` and `list()` stay **unchanged**. The admin `/media/:id` route and `SalesChatFiles.sign` keep images and PDFs only.
    - Add `bubbleFile({ phone, messageId })`, used only by W6:
      1. `queries.message(id)`. 404 `message_not_found` when it is missing or belongs to another phone. The ownership check now runs first.
@@ -328,12 +328,12 @@ Only inside the 24 h window, stored and logged under her name. Sending is by lin
 
 ### API
 
-1. **`apps/api/src/modules/inbox/thread-send.service.ts`**: export `dedupKey`, `outboundBase` and `sendLine` as module functions. Behaviour does not change and the file does not grow.
+1. **`apps/api/src/modules/inbox/send/thread-send.service.ts`**: export `dedupKey`, `outboundBase` and `sendLine` as module functions. Behaviour does not change and the file does not grow.
 2. **`storage.paths.ts`**
    - `chatOutPath({ actorId, requestId, mime })` returns `out/${actorId}/${requestId}/${uuid}.${ext}`.
    - `isChatOutPathOf(path, { actorId, requestId })` requires exactly 4 segments, with the first three matching.
    - Add tests.
-3. **`apps/api/src/modules/inbox/thread-file-send.service.ts`** (new, class `ThreadFileSender`)
+3. **`apps/api/src/modules/inbox/files/thread-file-send.service.ts`** (new, class `ThreadFileSender`)
    - Constructor: `(queries: ThreadsQueries, outbox: Outbox, storage: StorageService)`.
    - Settings are property-injected, following the `thread-reads.ts:19-21` precedent: `@Inject(SettingsService) private readonly settings?: SettingsService`. `maxBytes = uploadMaxBytes(this.settings ? await this.settings.all() : {})`.
    - `uploadUrl(s)`: `chatFileProblem` gives 400 `file_type` or 413 `file_too_large`; then `storage.signedUpload({ bucket: BUCKETS.waMedia, path: chatOutPath(…) })`.
@@ -346,14 +346,14 @@ Only inside the 24 h window, stored and logged under her name. Sending is by lin
      6. `outbox.send({ ...outboundBase(s, thread), dedup_key: key, body: caption ?? null, media_path, media_mime: mime, media_name: filename, ...line })`.
    - `outboundBase` sets `created_by = actorId`, which drives the D4 name and the audit.
    - A replayed `clientRequestId` returns the first row. Each attachment needs a fresh UUID, because the dedup namespace is shared with text sends.
-4. **`apps/api/src/modules/inbox/thread-file-send.controller.ts`** (new, `ThreadFileSendController`)
+4. **`apps/api/src/modules/inbox/files/thread-file-send.controller.ts`** (new, `ThreadFileSendController`)
    - Constructor: `(reads: ThreadReads, files: ThreadFileSender, audit: AuditService)`.
    - Class: `@Permissions('inbox.read')` and `@Controller('threads')`.
    - `POST :phone/file-upload-url` is handler `uploadUrl` (201). `POST :phone/file` is handler `send` (201). Both carry method-level `@Permissions('inbox.send')`.
    - A teacher gets 403 `files_forbidden`: `!sales && (await reads.scope(user))`, the same check as `thread-file.controller.ts:38`.
    - `send` is audited with action `thread_file` and `after = { phone, media_mime, media_name, status, sales_id }`, skipped on a replay.
    - Register it in `inbox.module.ts`.
-5. **`apps/api/src/modules/inbox/send-audit.ts`** (new)
+5. **`apps/api/src/modules/inbox/send/send-audit.ts`** (new)
    - `export async function recordSend(audit, input)` holds the body moved out of `ThreadsController.audited()` (`threads.controller.ts:78-93`). That method becomes a one-line call.
    - The `after` payload accepts the extra media fields.
 6. **`apps/api/src/common/auth/parity/access-before.json`**: add `"ThreadFileSendController.uploadUrl": ["admin","sales","teacher"]` and `"ThreadFileSendController.send": ["admin","sales","teacher"]`. The file records who passes the guard; the teacher's 403 happens in code.
@@ -470,7 +470,7 @@ async notifySales(kind: PushKind, event: PushEvent, owners: readonly string[]): 
 3. **`apps/api/src/modules/sales/sales-ownership.ts`** (44 lines): add `guardianOwnerIds(db, guardianId)`. It runs two parallel queries and returns the union with nulls dropped:
    - students' `brought_by` where `guardian_id = guardianId`;
    - leads' `assigned_to` where `converted_guardian_id = guardianId`.
-4. **`apps/api/src/modules/webhook/webhook.inbound.store.ts`**
+4. **`apps/api/src/modules/webhook/inbound/webhook.inbound.store.ts`**
    - `LeadLink` gains `owner: string | null`. In `sender()` it is `row.assigned_to` from the `upsertByPhone` row. That row comes back from the `assigned()` / `touch()` path with `select('*')` (`leads.queries.ts:59` and `:69`) and already reflects auto-assign. This costs no query, and `identify()` and `Contact` are unchanged.
    - It is null for the guardian, teacher and applicant paths.
    - Add `owners(who: Contact, lead: LeadLink): Promise<string[]>`: `lead.owner`, plus `guardianOwnerIds(guardian.id)` when a guardian wrote, de-duplicated. `webhook.queries.ts` (130 lines) is not touched; the store calls `guardianOwnerIds` with its db through a 3-line `WebhookQueries.guardianOwners`, or directly if the store already holds a Db.
@@ -492,7 +492,7 @@ async notifySales(kind: PushKind, event: PushEvent, owners: readonly string[]): 
   - no owners gives all sales;
   - the dedup key is `new_message:{subject}:{id}`, and a second identical call writes no row;
   - a throw from `salesIds` is swallowed.
-- `apps/api/src/modules/webhook/webhook.inbound.owners.test.ts`:
+- `apps/api/src/modules/webhook/inbound/webhook.inbound.owners.test.ts`:
   - lead owner A gives owners `['A']`;
   - a guardian whose children were brought by A and B, plus converted-lead owner C, gives A, B, C;
   - unowned gives `[]`;

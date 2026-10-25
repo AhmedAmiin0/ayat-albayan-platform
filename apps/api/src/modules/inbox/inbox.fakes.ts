@@ -1,6 +1,6 @@
 // Test fixtures for the inbox (test-only, excluded from the build by the *.fakes.ts pattern).
 import type { ThreadStudentView } from '@ab/shared';
-import type { ThreadRow } from './threads.mapper';
+import type { ThreadRow } from './threads/threads.mapper';
 
 export const PHONE = '+966501234567';
 

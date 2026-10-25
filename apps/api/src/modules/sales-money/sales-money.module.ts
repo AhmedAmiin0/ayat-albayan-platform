@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { ThreadMediaService } from '../inbox/thread-media.service';
+import { ThreadMediaService } from '../inbox/files/thread-media.service';
 import { PaymentsModule } from '../payments/payments.module';
 import { SalesModule } from '../sales/sales.module';
 import { SubscriptionsModule } from '../subscriptions/subscriptions.module';

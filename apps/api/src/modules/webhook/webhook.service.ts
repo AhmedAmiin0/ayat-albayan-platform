@@ -1,9 +1,9 @@
 import { Inject, Injectable, InternalServerErrorException, Logger } from '@nestjs/common';
 import type { LineNumbers } from '../../config/env/env';
-import { InboundService } from './webhook.inbound.service';
+import { InboundService } from './inbound/webhook.inbound.service';
 import type { ReceivingNumber } from './webhook.lines';
-import { parseWebhook } from './webhook.parse';
-import { StatusService } from './webhook.status.service';
+import { parseWebhook } from './parse/webhook.parse';
+import { StatusService } from './status/webhook.status.service';
 
 /** WhatsApp webhook settings from env (docs/12 §3.1, §13.6); a token so tests can swap them. */
 export const WEBHOOK_CONFIG = Symbol('WEBHOOK_CONFIG');

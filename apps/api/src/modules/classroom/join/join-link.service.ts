@@ -1,6 +1,6 @@
 import type { JoinLinkRequest, JoinLinkResult } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import { Outbox } from '../../inbox/outbox';
+import { Outbox } from '../../inbox/send/outbox';
 import { notFound } from '../../../common/http/errors';
 import { waHttpError } from '../../whatsapp/templates/catalog/template.mapper';
 import { TemplateRegistry } from '../../whatsapp/templates/catalog/template.registry';
