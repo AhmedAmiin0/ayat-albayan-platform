@@ -1,7 +1,7 @@
 import { SETTING_FIELD_OF, type AcademySettings, type SettingKey, type SettingsMetaResponse } from '@ab/shared';
 import { useMutation, useMutationState, useQuery, useQueryClient } from '@tanstack/react-query';
-import { apiFetch, apiSend } from '@/lib/api';
-import { pathKey } from '@/lib/query-keys';
+import { apiFetch, apiSend } from '@/core/lib/http/api';
+import { pathKey } from '@/core/lib/query/query-keys';
 
 const SETTINGS = '/settings';
 const META = '/config/meta';

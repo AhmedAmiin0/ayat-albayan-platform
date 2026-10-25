@@ -1,5 +1,5 @@
 import { screen } from '@testing-library/react-native';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
 import { detail, inbound } from '../thread-fixtures';
 import { ThreadModeProvider } from '../thread-mode';
@@ -7,8 +7,8 @@ import { ThreadScreen } from '../ThreadScreen';
 import { answer, withLists, withoutLists } from './list-fixtures';
 
 const mockApiFetch = jest.fn();
-jest.mock('@/lib/api', () => ({
-  ...jest.requireActual('@/lib/api'),
+jest.mock('@/core/lib/http/api', () => ({
+  ...jest.requireActual('@/core/lib/http/api'),
   apiFetch: (mockPath: string) => mockApiFetch(mockPath),
 }));
 jest.mock('expo-router', () => ({

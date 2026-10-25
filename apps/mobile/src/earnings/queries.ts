@@ -1,8 +1,8 @@
 import type { TeacherEarningsBalanceView, TeacherEarningView, TeacherPaymentView } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
-import { apiFetch } from '@/lib/api';
-import { pathKey } from '@/lib/query-keys';
-import { usePagedList } from '@/lib/use-paged-list';
+import { apiFetch } from '@/core/lib/http/api';
+import { pathKey } from '@/core/lib/query/query-keys';
+import { usePagedList } from '@/core/lib/query/use-paged-list';
 import { earningsBase, type EarningsScope } from './scope';
 
 // Per-session teacher earnings reads (docs/11 §10). Keys are the API path's segments, so

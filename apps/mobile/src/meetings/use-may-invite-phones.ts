@@ -1,7 +1,7 @@
 import { mayInvitePhones } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
-import { apiFetch } from '@/lib/api';
-import { pathKey } from '@/lib/query-keys';
+import { apiFetch } from '@/core/lib/http/api';
+import { pathKey } from '@/core/lib/query/query-keys';
 
 /** The `role` of GET /auth/me, or null (no answer yet, an older API). */
 export function roleOf(me: unknown): string | null {

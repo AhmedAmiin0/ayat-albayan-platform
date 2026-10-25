@@ -1,8 +1,8 @@
 import type { MeetingCreated, MeetingView, RoomJoinResult } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { Linking } from 'react-native';
-import { apiFetch, apiSend } from '@/lib/api';
-import { pathKey } from '@/lib/query-keys';
+import { apiFetch, apiSend } from '@/core/lib/http/api';
+import { pathKey } from '@/core/lib/query/query-keys';
 import { meetingUrl } from './meeting-text';
 
 /** GET /meetings: all for an admin, else the caller's own and the ones they are invited to. Key ['meetings'] reaches every call below. */

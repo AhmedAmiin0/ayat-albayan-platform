@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { ApiError, apiSend } from '@/lib/api';
-import { t } from '@/lib/i18n';
+import { ApiError, apiSend } from '@/core/lib/http/api';
+import { t } from '@/core/lib/i18n/i18n';
 import { recordingsKey } from './recordings-queries';
 
 const R = t.mobileStudentFile.recordings;

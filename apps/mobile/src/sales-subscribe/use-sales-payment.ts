@@ -1,8 +1,8 @@
 import type { SalesPaymentView } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
-import { apiSend } from '@/lib/api';
-import { requestId } from '@/lib/request-id';
+import { apiSend } from '@/core/lib/http/api';
+import { requestId } from '@/core/lib/http/request-id';
 import { useAttachmentPaths } from '@/payments/attachments';
 import { refreshFamily } from './family';
 import type { TransferInput } from './transfer-form';

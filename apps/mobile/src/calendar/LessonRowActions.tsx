@@ -5,7 +5,7 @@ import { MakeupAction } from '@/booking/MakeupAction';
 import { EditTimeButton } from '@/edit-time/EditTimeButton';
 import { FeedbackRequestButton } from '@/feedback/FeedbackRequestButton';
 import { ErrorLine } from '@/inbox/ErrorLine';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { CancelLesson } from '@/today/CancelLesson';
 import { studentNames } from '@/today/lesson-text';
 import type { useLessonAction } from '@/today/use-lesson-action';

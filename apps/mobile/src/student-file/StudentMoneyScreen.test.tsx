@@ -1,7 +1,7 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { Linking } from 'react-native';
-import { ApiError } from '@/lib/api';
-import { t } from '@/lib/i18n';
+import { ApiError } from '@/core/lib/http/api';
+import { t } from '@/core/lib/i18n/i18n';
 import { money } from '@/payments/format';
 import { payment } from '@/payments/fixtures';
 import { renderWithQuery } from '@/test/query';
@@ -9,8 +9,8 @@ import { StudentMoneyScreen } from './StudentMoneyScreen';
 
 const M = t.mobileStudentFile.money;
 const mockApiFetch = jest.fn();
-jest.mock('@/lib/api', () => ({
-  ...jest.requireActual('@/lib/api'),
+jest.mock('@/core/lib/http/api', () => ({
+  ...jest.requireActual('@/core/lib/http/api'),
   apiFetch: (mockPath: string) => mockApiFetch(mockPath),
 }));
 jest.mock('expo-router', () => ({

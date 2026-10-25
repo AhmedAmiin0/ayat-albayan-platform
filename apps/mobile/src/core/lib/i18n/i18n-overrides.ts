@@ -1,7 +1,7 @@
 import { applyStrings, type FlatStrings, type Locale } from '@ab/shared';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useEffect, useState } from 'react';
-import { env } from './env';
+import { env } from '../http/env';
 import { t } from './i18n';
 import { locale } from './locale';
 

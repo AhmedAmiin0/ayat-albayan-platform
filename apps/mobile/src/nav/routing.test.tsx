@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { act, renderRouter, screen } from 'expo-router/testing-library';
 import { Appearance, Text } from 'react-native';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { APPEARANCE_KEY } from '@/more/appearance';
 import { TabStack } from '@/nav/TabStack';
 import { registerPush } from '@/push/registerPush';
@@ -12,8 +12,8 @@ import RootLayout from '../../app/_layout';
 jest.mock('expo-font', () => ({ useFonts: () => [true, null] }));
 jest.mock('@/push/registerPush', () => ({ registerPush: jest.fn(async () => undefined) }));
 // Permissions and the inbox badge read the API: an admin whose /auth/me lists no permissions sees every tab.
-jest.mock('@/lib/api', () => ({
-  ...jest.requireActual('@/lib/api'),
+jest.mock('@/core/lib/http/api', () => ({
+  ...jest.requireActual('@/core/lib/http/api'),
   apiFetch: async (path: string) => (path === '/auth/me' ? { role: 'admin' } : { total: 0 }),
 }));
 jest.mock('@/auth/use-auth-gate', () => {

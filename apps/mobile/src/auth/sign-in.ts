@@ -1,6 +1,6 @@
-import { apiFetch } from '@/lib/api';
-import { t } from '@/lib/i18n';
-import { supabase } from '@/lib/supabase';
+import { apiFetch } from '@/core/lib/http/api';
+import { t } from '@/core/lib/i18n/i18n';
+import { supabase } from '@/core/lib/http/supabase';
 import { isAccountDisabled, isOtherAppRole, noticeText } from './login-notice';
 import { appRole } from './role-claim';
 import type { Me } from './verify-role';

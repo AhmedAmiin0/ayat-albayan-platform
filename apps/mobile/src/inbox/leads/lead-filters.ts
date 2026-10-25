@@ -1,5 +1,5 @@
 import type { LeadSource, LeadStatus } from '@ab/shared';
-import type { ListParams } from '@/lib/query-keys';
+import type { ListParams } from '@/core/lib/query/query-keys';
 import { leadSortValue, type LeadSort } from './lead-sort';
 
 /** The inbox's own filters beside the status pills and the search (the web LeadSearch minus paging). */

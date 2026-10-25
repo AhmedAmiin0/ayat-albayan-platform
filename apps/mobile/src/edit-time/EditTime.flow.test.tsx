@@ -1,6 +1,6 @@
 import '@/test/warm-rn';
 import { fireEvent, screen } from '@testing-library/react-native';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { EditTimeSheet } from './EditTimeSheet';
 import { GRID, NOW, SAT_17, SUN_17, result, upcoming } from './fixtures';
@@ -8,8 +8,8 @@ import { lesson } from '@/today/fixtures';
 
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();
-jest.mock('@/lib/api', () => ({
-  ...jest.requireActual('@/lib/api'),
+jest.mock('@/core/lib/http/api', () => ({
+  ...jest.requireActual('@/core/lib/http/api'),
   apiFetch: (mockPath: string) => mockApiFetch(mockPath),
   apiSend: (...args: unknown[]) => mockApiSend(...args),
 }));

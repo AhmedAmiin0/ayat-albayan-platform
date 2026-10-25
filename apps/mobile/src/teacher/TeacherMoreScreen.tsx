@@ -3,7 +3,7 @@ import { router } from 'expo-router';
 import { View } from 'react-native';
 import { AccountHeaderAvatar } from '@/account/AccountHeaderAvatar';
 import { AccountRow } from '@/account/AccountRow';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { AppearancePicker } from '@/more/AppearancePicker';
 import { LanguageRow } from '@/more/LanguageRow';
 import { ListRow } from '@/core/ui/layout/ListRow';
@@ -11,7 +11,7 @@ import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { useTeacherMe } from './queries';
 import { SignOutButton } from './SignOutButton';
-import { locale } from '@/lib/locale';
+import { locale } from '@/core/lib/i18n/locale';
 
 /**
  * The teacher's «المزيد» (R-TCH-02, R-TCH-04, R-MOB-02): my students (subscribed and trial), my earnings per lesson (monthly statements one tap in), my weekly

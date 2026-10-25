@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { apiSend } from '@/lib/api';
-import { pathKey } from '@/lib/query-keys';
+import { apiSend } from '@/core/lib/http/api';
+import { pathKey } from '@/core/lib/query/query-keys';
 import { isStale } from './edit-time-errors';
 import type { LessonTimeEditBody, TimeEditResult } from './types';
 

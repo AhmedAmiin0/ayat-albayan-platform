@@ -11,8 +11,8 @@ import {
   type TrialHistory,
   type TrialOutcome,
 } from '@ab/shared';
-import { t } from '@/lib/i18n';
-import { locale } from '@/lib/locale';
+import { t } from '@/core/lib/i18n/i18n';
+import { locale } from '@/core/lib/i18n/locale';
 
 /** The admin's and the salesperson's clock (as useViewerTz outside the teacher tree): the academy's. */
 export const VIEWER_TZ = RIYADH_TZ;

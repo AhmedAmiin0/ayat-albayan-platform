@@ -1,4 +1,4 @@
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { balanceOf, OLD_SUB_ID, subscription } from './fixtures';
 import { packageLine, RENEWAL_DEFAULT } from './package-line';
 

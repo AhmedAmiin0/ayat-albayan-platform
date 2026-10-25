@@ -1,7 +1,7 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { booked, maryam, SUN_17 } from '@/booking/fixtures';
 import { fakeBookingApi, walkToConfirm } from '@/booking/test-utils';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { renderApp, resetApp } from '@/test/app-router';
 import { inboxBackend } from './flow-backend';
 import { inbound, PHONE } from './thread-fixtures';

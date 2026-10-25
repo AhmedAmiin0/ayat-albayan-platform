@@ -1,7 +1,7 @@
 import type { SavedReply, SavedReplyScope } from '@ab/shared';
 import { useState } from 'react';
 import { FlatList, Modal, View } from 'react-native';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/more/Note';
 import { Button } from '@/core/ui/primitives/Button';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';

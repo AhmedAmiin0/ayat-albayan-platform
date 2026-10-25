@@ -1,15 +1,15 @@
 import type { StudentStatus } from '@ab/shared';
 import { fireEvent, screen, within } from '@testing-library/react-native';
 import { SalesChatActions } from '@/inbox/SalesChatActions';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { TreeBaseProvider } from '@/nav/tree-base';
 import { familyOf, familyThread, KID, KID2, kid } from '@/sales-subscribe/fixtures';
 import { renderWithQuery } from '@/test/query';
 
 // The salesperson's family chat: «موعد تجريبي جديد» per student of hers with no running subscription.
 const mockApiFetch = jest.fn();
-jest.mock('@/lib/api', () => ({
-  ...jest.requireActual('@/lib/api'),
+jest.mock('@/core/lib/http/api', () => ({
+  ...jest.requireActual('@/core/lib/http/api'),
   apiFetch: (mockPath: string) => mockApiFetch(mockPath),
 }));
 const mockPush = jest.fn();

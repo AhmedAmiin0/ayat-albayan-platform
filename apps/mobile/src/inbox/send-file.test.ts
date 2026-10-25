@@ -1,18 +1,18 @@
 import * as DocumentPicker from 'expo-document-picker';
 import * as ImagePicker from 'expo-image-picker';
-import { ApiError } from '@/lib/api';
-import { t } from '@/lib/i18n';
+import { ApiError } from '@/core/lib/http/api';
+import { t } from '@/core/lib/i18n/i18n';
 import { ChatFileError, fileError, pdfName, pickChatFile, sendChatFile, type ChatFilePick } from './send-file';
 import { PHONE } from './thread-fixtures';
 
 const mockApiSend = jest.fn();
 const mockUpload = jest.fn();
 const mockFrom = jest.fn((bucket: string) => ({ bucket, uploadToSignedUrl: mockUpload }));
-jest.mock('@/lib/api', () => ({
-  ...jest.requireActual('@/lib/api'),
+jest.mock('@/core/lib/http/api', () => ({
+  ...jest.requireActual('@/core/lib/http/api'),
   apiSend: (...mockArgs: unknown[]) => mockApiSend(...mockArgs),
 }));
-jest.mock('@/lib/supabase', () => ({ supabase: { storage: { from: (b: string) => mockFrom(b) } } }));
+jest.mock('@/core/lib/http/supabase', () => ({ supabase: { storage: { from: (b: string) => mockFrom(b) } } }));
 jest.mock('expo-image-picker', () => ({ launchCameraAsync: jest.fn(), launchImageLibraryAsync: jest.fn() }));
 jest.mock('expo-document-picker', () => ({ getDocumentAsync: jest.fn() }));
 

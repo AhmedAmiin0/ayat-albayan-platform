@@ -1,5 +1,5 @@
-import { ApiError } from '@/lib/api';
-import { t } from '@/lib/i18n';
+import { ApiError } from '@/core/lib/http/api';
+import { t } from '@/core/lib/i18n/i18n';
 import { manageOf, meetingError, meetingsBase, meetingUrl, meetingWhen } from './meeting-text';
 
 test('the room url is the web origin plus /meeting/<id>', () => {

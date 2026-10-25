@@ -1,7 +1,7 @@
 import { dehydrate, QueryClient } from '@tanstack/react-query';
 import { renderHook } from '@testing-library/react-native';
-import { persistOptions } from '@/lib/query-client';
-import { pathKey } from '@/lib/query-keys';
+import { persistOptions } from '@/core/lib/query/query-client';
+import { pathKey } from '@/core/lib/query/query-keys';
 import { queryWrapper } from '@/test/query';
 import { periodTotals, usePaymentAttachments, useReceiptUrl } from './queries';
 

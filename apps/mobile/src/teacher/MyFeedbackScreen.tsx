@@ -1,6 +1,6 @@
 import { router } from 'expo-router';
 import { FlatList } from 'react-native';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/more/Note';
 import { AverageCard } from '@/feedback/AverageCard';
 import { FeedbackRow } from '@/feedback/FeedbackRow';

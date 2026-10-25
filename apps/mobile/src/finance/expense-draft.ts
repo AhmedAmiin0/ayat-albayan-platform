@@ -1,5 +1,5 @@
 import { RIYADH_TZ, amountProblem, parseAmount, type ExpenseCreate, type PaymentMethod } from '@ab/shared';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { paidAtFor } from '@/payments/paid-day';
 import type { Receipt } from '@/payments/receipt';
 import { localDate } from '@/today/timeline';

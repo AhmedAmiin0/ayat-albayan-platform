@@ -1,4 +1,4 @@
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { work } from './fixtures';
 import { currencyLabel, packageText, pendingSubtitle, taskText, unpaidSubtitle } from './work-text';
 

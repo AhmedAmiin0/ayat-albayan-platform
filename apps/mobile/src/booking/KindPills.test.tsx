@@ -1,5 +1,5 @@
 import { fireEvent, render, screen } from '@testing-library/react-native';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { KindPills } from './KindPills';
 
 test('«نوع الحجز *» offers trial and subscription; the makeup lives on the missed lesson, and the hint says so', async () => {

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { requestId } from '@/lib/request-id';
+import { requestId } from '@/core/lib/http/request-id';
 import { useChatActions } from './chat-actions';
 import { sendError } from './message-text';
 import { quoteOf } from './quote-text';

@@ -2,8 +2,8 @@ import { formatPhone, LEAD_STATUSES, type LeadStatus, leadStatusStyle } from '@a
 import { router } from 'expo-router';
 import { type ReactNode, useState } from 'react';
 import { FlatList } from 'react-native';
-import { t } from '@/lib/i18n';
-import { usePagedList } from '@/lib/use-paged-list';
+import { t } from '@/core/lib/i18n/i18n';
+import { usePagedList } from '@/core/lib/query/use-paged-list';
 import { Avatar } from '@/core/ui/primitives/Avatar';
 import { EmptyState } from '@/core/ui/feedback/EmptyState';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';

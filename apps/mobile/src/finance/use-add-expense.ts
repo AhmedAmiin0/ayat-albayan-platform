@@ -1,7 +1,7 @@
 import type { ExpenseView } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRef } from 'react';
-import { apiSend } from '@/lib/api';
+import { apiSend } from '@/core/lib/http/api';
 import { expenseBody, type ExpenseDraft } from './expense-draft';
 import { uploadExpenseReceipt } from './upload-expense-receipt';
 

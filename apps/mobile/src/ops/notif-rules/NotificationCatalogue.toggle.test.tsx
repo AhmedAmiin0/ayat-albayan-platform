@@ -1,15 +1,15 @@
 import { counted } from '@ab/shared';
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { AccessibilityInfo } from 'react-native';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
 import { NotificationCatalogue } from '../NotificationCatalogue';
 import { answer, catalogueV2, MANAGER, openAudience } from './rules-fixtures';
 
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();
-jest.mock('@/lib/api', () => ({
-  ...jest.requireActual('@/lib/api'),
+jest.mock('@/core/lib/http/api', () => ({
+  ...jest.requireActual('@/core/lib/http/api'),
   apiFetch: (p: string) => mockApiFetch(p),
   apiSend: (m: string, p: string, b: unknown) => mockApiSend(m, p, b),
 }));
@@ -82,7 +82,7 @@ test('a locked row says «لا يمكن إيقافه»; manual rows have no swit
 });
 
 test('a refused save (422 locked) is said under its row and the switch stays where it was', async () => {
-  const { ApiError } = jest.requireActual<typeof import('@/lib/api')>('@/lib/api');
+  const { ApiError } = jest.requireActual<typeof import('@/core/lib/http/api')>('@/core/lib/http/api');
   mockApiSend.mockRejectedValue(new ApiError(422, { message: 'locked' }));
   await renderWithQuery(<NotificationCatalogue />);
   await openAudience(c.audience.teacher);
@@ -92,7 +92,7 @@ test('a refused save (422 locked) is said under its row and the switch stays whe
 });
 
 test('403 says the permission is missing', async () => {
-  const { ApiError } = jest.requireActual<typeof import('@/lib/api')>('@/lib/api');
+  const { ApiError } = jest.requireActual<typeof import('@/core/lib/http/api')>('@/core/lib/http/api');
   mockApiSend.mockRejectedValue(new ApiError(403, { message: 'forbidden' }));
   await renderWithQuery(<NotificationCatalogue />);
   await openAudience(c.audience.teacher);

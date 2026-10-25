@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Notifications from 'expo-notifications';
 import { Platform } from 'react-native';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { hasLiveSession } from './live-session';
 import { ensurePushPermission } from './permission';
 import { ANDROID_CHANNEL, easProjectId, registerPush, TOKEN_KEY, unregisterPush } from './registerPush';
@@ -31,8 +31,8 @@ jest.mock('expo-notifications', () => ({
 }));
 jest.mock('./permission', () => ({ ensurePushPermission: jest.fn() }));
 jest.mock('./live-session', () => ({ hasLiveSession: jest.fn() }));
-jest.mock('@/lib/api', () => ({
-  ...jest.requireActual('@/lib/api'),
+jest.mock('@/core/lib/http/api', () => ({
+  ...jest.requireActual('@/core/lib/http/api'),
   apiSend: (...mockArgs: unknown[]) => mockApiSend(...mockArgs),
 }));
 

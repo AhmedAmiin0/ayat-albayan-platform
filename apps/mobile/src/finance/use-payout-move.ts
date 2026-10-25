@@ -2,7 +2,7 @@ import type { PayoutView } from '@ab/shared';
 import { useMutation, useQueryClient, type QueryClient } from '@tanstack/react-query';
 import { useRef } from 'react';
 import { uploadTeacherReceipt } from '@/earnings/upload-receipt';
-import { apiSend } from '@/lib/api';
+import { apiSend } from '@/core/lib/http/api';
 import { payBody, type PayDraft } from './payout-actions';
 
 /** Money moved: the month list, the teacher's ledger, the summaries and the money lists (payments, receivables) all re-read. */

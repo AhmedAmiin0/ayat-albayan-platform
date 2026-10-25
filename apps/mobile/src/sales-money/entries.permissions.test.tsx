@@ -1,6 +1,6 @@
 import { fireEvent, render, screen } from '@testing-library/react-native';
 import { router } from 'expo-router';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { FinanceSection } from '@/more/FinanceSection';
 import { MoreScreen } from '@/more/MoreScreen';
 import { SalesSection } from '@/sales/SalesSection';

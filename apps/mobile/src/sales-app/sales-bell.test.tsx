@@ -3,13 +3,13 @@ import { router } from 'expo-router';
 import { AssistantHomeScreen } from '@/assistant-app/AssistantHomeScreen';
 import { InboxScreen } from '@/inbox/InboxScreen';
 import { thread } from '@/inbox/thread-fixtures';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { TreeBaseProvider } from '@/nav/tree-base';
 import { renderWithQuery } from '@/test/query';
 
 // The bell in the sales home («المحادثات») and the assistant home («حلقاتي»), as on the admin's Today.
 const mockApiFetch = jest.fn();
-jest.mock('@/lib/api', () => ({ ...jest.requireActual('@/lib/api'), apiFetch: (p: string) => mockApiFetch(p) }));
+jest.mock('@/core/lib/http/api', () => ({ ...jest.requireActual('@/core/lib/http/api'), apiFetch: (p: string) => mockApiFetch(p) }));
 jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
 
 const page = { items: [], total: 0, page: 1, pageSize: 20, unread: 2 };

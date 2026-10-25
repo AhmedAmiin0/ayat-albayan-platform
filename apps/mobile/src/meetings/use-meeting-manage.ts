@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { endMeeting, newMeetingLink } from './api';
 import { cancelMeeting } from './invite-api';
 import { inviteError } from './invite-text';

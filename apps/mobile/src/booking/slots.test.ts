@@ -1,4 +1,4 @@
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { MON_19, slot, SUN_17 } from './fixtures';
 import { freeSlotDays, ruleFromSlot, slotLegend, slotTimes, slotWindow, whenText } from './slots';
 

@@ -1,8 +1,8 @@
 import { clockTime, lessonWhenText, pdfStatusStyle, reportStatusStyle, type ReportFormResponse, type ReportView } from '@ab/shared';
 import { View } from 'react-native';
 import { ErrorLine } from '@/inbox/ErrorLine';
-import { t } from '@/lib/i18n';
-import { locale } from '@/lib/locale';
+import { t } from '@/core/lib/i18n/i18n';
+import { locale } from '@/core/lib/i18n/locale';
 import { Note } from '@/more/Note';
 import { Button } from '@/core/ui/primitives/Button';
 import { StatusChip } from '@/core/ui/feedback/StatusChip';

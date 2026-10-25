@@ -1,7 +1,7 @@
 import { lessonStatusStyle } from '@ab/shared';
 import { router } from 'expo-router';
 import { useTabOpen } from '@/auth/use-tab-open';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { ListRow } from '@/core/ui/layout/ListRow';
 import { StatusChip } from '@/core/ui/feedback/StatusChip';
 import type { PendingReportRow, TaskRow, UnpaidRow } from './dashboard-types';

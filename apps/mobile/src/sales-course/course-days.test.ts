@@ -1,4 +1,4 @@
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { daysText, requestDays, takenDays, takenTexts, weekdayName } from './course-days';
 
 const sep = t.common.listSeparator;

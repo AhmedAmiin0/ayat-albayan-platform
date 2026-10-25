@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { Image, View } from 'react-native';
 import { ErrorLine } from '@/inbox/ErrorLine';
-import { t } from '@/lib/i18n';
-import { useUploadMaxBytes } from '@/lib/public-config';
+import { t } from '@/core/lib/i18n/i18n';
+import { useUploadMaxBytes } from '@/core/lib/query/public-config';
 import { shape, useTheme } from '@/theme';
 import { Button } from '@/core/ui/primitives/Button';
 import { FormLabel } from './FormLabel';

@@ -1,6 +1,6 @@
 import en from '@ab/shared/i18n/en.json';
 import { render, screen } from '@testing-library/react-native';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { TrialChatNote } from './TrialChatNote';
 
 jest.mock('react-native/Libraries/ReactNative/I18nManager', () => {

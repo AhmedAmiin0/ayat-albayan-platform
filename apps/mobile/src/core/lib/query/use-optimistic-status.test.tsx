@@ -1,12 +1,12 @@
 import { useQuery } from '@tanstack/react-query';
 import { act, renderHook, waitFor } from '@testing-library/react-native';
 import { createTestQueryClient, queryWrapper } from '@/test/query';
-import { ApiError } from './api';
+import { ApiError } from '../http/api';
 import { useOptimisticStatus } from './use-optimistic-status';
 
 const mockApiSend = jest.fn();
-jest.mock('./api', () => ({
-  ...jest.requireActual('./api'),
+jest.mock('../http/api', () => ({
+  ...jest.requireActual('../http/api'),
   apiSend: (...args: unknown[]) => mockApiSend(...args),
 }));
 

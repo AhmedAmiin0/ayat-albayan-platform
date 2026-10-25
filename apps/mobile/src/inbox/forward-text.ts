@@ -1,5 +1,5 @@
 import { formatPhone, type ForwardResult, type ThreadView } from '@ab/shared';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { ltr } from '@/core/ui/primitives/Ltr';
 import type { ChatNoticeValue } from './chat-actions';
 

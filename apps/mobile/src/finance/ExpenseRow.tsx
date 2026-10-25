@@ -1,5 +1,5 @@
 import type { ExpenseCategoryView, ExpenseView } from '@ab/shared';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { localDay } from '@/payments/format';
 import { StatusChip } from '@/core/ui/feedback/StatusChip';
 import { ListRow } from '@/core/ui/layout/ListRow';

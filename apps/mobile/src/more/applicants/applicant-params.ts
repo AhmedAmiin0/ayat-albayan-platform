@@ -1,6 +1,6 @@
 import { JOB_APPLICANT_STATUSES, type JobApplicantStatus } from '@ab/shared';
-import { t } from '@/lib/i18n';
-import type { ListParams } from '@/lib/query-keys';
+import { t } from '@/core/lib/i18n/i18n';
+import type { ListParams } from '@/core/lib/query/query-keys';
 
 export type ApplicantStatusFilter = 'all' | JobApplicantStatus;
 

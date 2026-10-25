@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { View } from 'react-native';
 import { usePermissions } from '@/auth/use-permissions';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { Button } from '@/core/ui/primitives/Button';
 import { AssignUnassigned } from './AssignUnassigned';
 import { LeadFilterSheet } from './LeadFilterSheet';

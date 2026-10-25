@@ -1,4 +1,4 @@
-import type { Page } from '@/lib/paging';
+import type { Page } from '@/core/lib/query/paging';
 import type { Lead } from './types';
 
 // Test rows in the GET /leads shape.

@@ -1,13 +1,13 @@
 import { formatPhone, teacherName } from '@ab/shared';
 import { Linking, View } from 'react-native';
-import { t } from '@/lib/i18n';
-import { whatsappLink } from '@/lib/phone';
+import { t } from '@/core/lib/i18n/i18n';
+import { whatsappLink } from '@/core/lib/phone';
 import { type, useTheme } from '@/theme';
 import { Button } from '@/core/ui/primitives/Button';
 import { Ltr } from '@/core/ui/primitives/Ltr';
 import { Section } from './Section';
 import type { Teacher } from './types';
-import { locale } from '@/lib/locale';
+import { locale } from '@/core/lib/i18n/locale';
 
 /** «رقم التواصل»: the LTR phone and a WhatsApp chat. Nothing at all when no phone is on file. */
 export function TeacherContact({ teacher }: { teacher: Teacher }) {

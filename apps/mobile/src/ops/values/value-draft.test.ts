@@ -1,5 +1,5 @@
 import { CURRENCY_ISOS } from '@ab/shared';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { choicesOf, confirmOf, draftOf, editorOf, parseDraft, sameValue } from './value-draft';
 import { outcomeOf } from './use-save-value';
 

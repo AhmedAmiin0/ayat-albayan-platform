@@ -1,7 +1,7 @@
 import { renderApp, resetApp } from '@/test/app-router'; // first: its jest.mock calls must precede the app
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
-import { ApiError } from '@/lib/api';
-import { t } from '@/lib/i18n';
+import { ApiError } from '@/core/lib/http/api';
+import { t } from '@/core/lib/i18n/i18n';
 import { SAT_18, SUN_17 } from '@/reschedule/fixtures';
 import { calendarBackend, NOW } from './flow-backend';
 

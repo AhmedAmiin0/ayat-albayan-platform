@@ -1,7 +1,7 @@
 import { router } from 'expo-router';
 import { ActivityIndicator, FlatList, View } from 'react-native';
 import { ErrorLine } from '@/inbox/ErrorLine';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { useTheme } from '@/theme';
 import { Button } from '@/core/ui/primitives/Button';
 import { EmptyState } from '@/core/ui/feedback/EmptyState';

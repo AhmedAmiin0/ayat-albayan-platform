@@ -2,7 +2,7 @@ import { ESSENTIAL_OFF_TEXT } from '@ab/shared';
 import { useRef, useState } from 'react';
 import { Modal, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { ErrorLine } from '@/inbox/ErrorLine';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/more/Note';
 import { shape, useTheme } from '@/theme';
 import type { AppTextNode } from '@/core/ui/primitives/AppText';

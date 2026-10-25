@@ -1,7 +1,7 @@
 import { clockTime, RIYADH_TZ, type OverviewTeacher, type OverviewTimeOff, type Span } from '@ab/shared';
 import { teacherLoad } from '@/booking/TeacherStep';
 import { cityOf } from '@/booking/slots';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { formatTimeOff } from '@/more/schedule';
 import { ltr } from '@/core/ui/primitives/Ltr';
 

@@ -1,8 +1,8 @@
 import type { LessonRecordingView, RecordingStatus } from '@ab/shared';
 import { queryOptions, useQuery, type QueryClient } from '@tanstack/react-query';
 import { Linking } from 'react-native';
-import { apiFetch } from '@/lib/api';
-import { pathKey } from '@/lib/query-keys';
+import { apiFetch } from '@/core/lib/http/api';
+import { pathKey } from '@/core/lib/query/query-keys';
 import { recordingsPath, type RecordingSource } from './recording-format';
 
 // The list carries 1-hour signed URLs, so `noPersist` keeps it off the disk cache (lib/query-client).

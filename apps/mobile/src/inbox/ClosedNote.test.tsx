@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react-native';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { ClosedNote } from './ClosedNote';
 
 // The closed window's note beside «أرسل قالبًا»: a new number's longer note must fit a 360dp phone.

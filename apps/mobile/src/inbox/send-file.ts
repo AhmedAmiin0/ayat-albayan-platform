@@ -1,9 +1,9 @@
 import { chatFileProblem, type MessageView, type SignedUpload } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import * as DocumentPicker from 'expo-document-picker';
-import { apiSend } from '@/lib/api';
-import { t } from '@/lib/i18n';
-import { supabase } from '@/lib/supabase';
+import { apiSend } from '@/core/lib/http/api';
+import { t } from '@/core/lib/i18n/i18n';
+import { supabase } from '@/core/lib/http/supabase';
 import { pickReceipt } from '@/payments/receipt';
 import { sendError } from './message-text';
 import { appendMessage, removeMessage, type ThreadCache, threadKey, threadPath } from './thread-cache';

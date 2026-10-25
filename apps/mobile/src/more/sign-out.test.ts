@@ -1,4 +1,4 @@
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/core/lib/http/supabase';
 import { unregisterPush } from '@/push/registerPush';
 import { silencePush } from '@/push/silence-push';
 import { signOutDevice, UNREGISTER_TIMEOUT_MS } from './sign-out';

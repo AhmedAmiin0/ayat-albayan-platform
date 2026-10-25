@@ -1,5 +1,5 @@
 import { View } from 'react-native';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { EmptyState } from '@/core/ui/feedback/EmptyState';
 import type { DashboardWork, WorkList, WorkTab } from './dashboard-types';
 import { Note } from '@/more/Note';

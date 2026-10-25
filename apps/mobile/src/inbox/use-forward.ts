@@ -1,8 +1,8 @@
 import type { ForwardResponse, ThreadForward } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRef } from 'react';
-import { apiSend } from '@/lib/api';
-import { requestId } from '@/lib/request-id';
+import { apiSend } from '@/core/lib/http/api';
+import { requestId } from '@/core/lib/http/request-id';
 
 /**
  * POST /threads/forward: one message to 1–5 chats, each answered on its own (sent, or skipped and why).

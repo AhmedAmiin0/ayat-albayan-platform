@@ -1,6 +1,6 @@
 import type { LinkCandidate, UserRole, UserRoleOption, UserStatus } from '@ab/shared';
-import { t } from '@/lib/i18n';
-import { locale } from '@/lib/locale';
+import { t } from '@/core/lib/i18n/i18n';
+import { locale } from '@/core/lib/i18n/locale';
 import { formatAt } from '@/ops/activity-format';
 import { ltr } from '@/core/ui/primitives/Ltr';
 

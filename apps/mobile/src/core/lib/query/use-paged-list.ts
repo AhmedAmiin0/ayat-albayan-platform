@@ -1,6 +1,6 @@
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { useMemo } from 'react';
-import { apiFetch, toQueryString } from './api';
+import { apiFetch, toQueryString } from '../http/api';
 import { flattenPages, nextPageParam, type Page, type WithId } from './paging';
 import { listKey, type ListParams } from './query-keys';
 

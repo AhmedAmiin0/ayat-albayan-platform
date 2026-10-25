@@ -1,5 +1,5 @@
 import { fireEvent, render, screen } from '@testing-library/react-native';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { Field } from './Field';
 
 test('a password field hides its text until the eye is pressed, then hides it again', async () => {

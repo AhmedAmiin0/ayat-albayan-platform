@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
-import { apiFetch } from '@/lib/api';
-import { pathKey } from '@/lib/query-keys';
+import { apiFetch } from '@/core/lib/http/api';
+import { pathKey } from '@/core/lib/query/query-keys';
 import { threadPath } from '@/inbox/thread-cache';
 import type { MediaUrl, ThreadMediaItem } from './contract';
 

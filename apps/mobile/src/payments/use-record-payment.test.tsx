@@ -1,5 +1,5 @@
 import { act, renderHook, waitFor } from '@testing-library/react-native';
-import { ApiError } from '@/lib/api';
+import { ApiError } from '@/core/lib/http/api';
 import { createTestQueryClient, queryWrapper } from '@/test/query';
 import { balanceOf, page, payment, STUDENT, SUB_ID, subscription } from './fixtures';
 import type { PaymentInput } from './optimistic';
@@ -7,8 +7,8 @@ import type { Receipt } from './receipt';
 import { useRecordPayment } from './use-record-payment';
 
 const mockApiSend = jest.fn();
-jest.mock('@/lib/api', () => ({
-  ...jest.requireActual('@/lib/api'),
+jest.mock('@/core/lib/http/api', () => ({
+  ...jest.requireActual('@/core/lib/http/api'),
   apiSend: (...args: unknown[]) => mockApiSend(...args),
 }));
 const mockUpload = jest.fn();

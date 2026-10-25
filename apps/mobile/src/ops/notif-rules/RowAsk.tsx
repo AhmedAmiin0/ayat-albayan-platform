@@ -1,7 +1,7 @@
 import type { NotificationEntryView, NotificationsOverview } from '@ab/shared';
 import { View } from 'react-native';
 import { ErrorLine } from '@/inbox/ErrorLine';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { InlineConfirm } from '@/core/ui/feedback/InlineConfirm';
 import { reachLine } from './rule-words';
 import type { CatalogueToggles } from './use-catalogue-toggles';

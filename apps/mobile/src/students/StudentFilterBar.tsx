@@ -1,7 +1,7 @@
 import { STUDENT_STATUSES, studentStatusStyle, type StudentStatus } from '@ab/shared';
 import { useState } from 'react';
 import { ScrollView, View } from 'react-native';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { Button } from '@/core/ui/primitives/Button';
 import { FilterPills } from '@/core/ui/form/FilterPills';
 import { StudentFilterGroups } from './StudentFilterGroups';

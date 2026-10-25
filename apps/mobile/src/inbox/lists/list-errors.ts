@@ -1,6 +1,6 @@
 import { isChatListError } from '@ab/shared';
-import { ApiError } from '@/lib/api';
-import { t } from '@/lib/i18n';
+import { ApiError } from '@/core/lib/http/api';
+import { t } from '@/core/lib/i18n/i18n';
 
 /**
  * The inline line under a list's name field: the 409s (the name is taken, 30 lists already), a

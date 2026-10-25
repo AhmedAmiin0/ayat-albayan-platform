@@ -1,7 +1,7 @@
 import type { AdminTaskView } from '@ab/shared';
 import { router } from 'expo-router';
 import { useTabOpen } from '@/auth/use-tab-open';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { instantDay } from '@/payments/format';
 import { ListRow } from '@/core/ui/layout/ListRow';
 import { StatusChip } from '@/core/ui/feedback/StatusChip';

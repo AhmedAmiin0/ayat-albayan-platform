@@ -1,4 +1,4 @@
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/core/lib/http/supabase';
 
 /**
  * Is someone signed in right now, with an access token that has not expired? getSession refreshes

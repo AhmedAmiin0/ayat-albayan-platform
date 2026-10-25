@@ -1,7 +1,7 @@
 import { formatPhone, leadStatusStyle } from '@ab/shared';
 import type { ReactNode } from 'react';
 import { View } from 'react-native';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { Ltr } from '@/core/ui/primitives/Ltr';
 import { StatusChip } from '@/core/ui/feedback/StatusChip';
 import { shape, type, useTheme } from '@/theme';

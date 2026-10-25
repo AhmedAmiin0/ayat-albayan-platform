@@ -1,6 +1,6 @@
 import type { SavedReply, SavedReplyAttachment } from '@ab/shared';
 import { useState } from 'react';
-import { requestId } from '@/lib/request-id';
+import { requestId } from '@/core/lib/http/request-id';
 import { filledText, slashAt } from './reply-text';
 
 /** A picked reply's file, waiting for «أرسل». */

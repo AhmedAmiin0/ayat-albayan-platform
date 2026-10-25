@@ -2,7 +2,7 @@ import { packageProgress, paymentState, subscriptionStatusStyle, type Subscripti
 import { router } from 'expo-router';
 import { View } from 'react-native';
 import { useTabOpen } from '@/auth/use-tab-open';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { money, packageName, paidOf } from '@/payments/format';
 import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';

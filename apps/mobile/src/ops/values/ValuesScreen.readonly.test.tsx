@@ -1,5 +1,5 @@
 import { fireEvent, screen } from '@testing-library/react-native';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
 import { groupLabel } from './value-groups';
 import { labelOf } from './value-text';
@@ -8,8 +8,8 @@ import { ValuesScreen } from './ValuesScreen';
 
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();
-jest.mock('@/lib/api', () => ({
-  ...jest.requireActual('@/lib/api'),
+jest.mock('@/core/lib/http/api', () => ({
+  ...jest.requireActual('@/core/lib/http/api'),
   apiFetch: (p: string) => mockApiFetch(p),
   apiSend: (m: string, p: string, b: unknown) => mockApiSend(m, p, b),
 }));

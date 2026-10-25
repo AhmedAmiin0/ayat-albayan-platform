@@ -1,6 +1,6 @@
 import type { SalesChatReceipt, SalesChatReceiptFile, SalesReceiptCopied } from '@ab/shared';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { apiFetch, apiSend } from '@/lib/api';
+import { apiFetch, apiSend } from '@/core/lib/http/api';
 
 // The receipts the family already sent in its WhatsApp chat (R-ASST-04): their list, a short-lived
 // thumbnail per image (fetched only when its row is on screen) and the copy into receipts/.

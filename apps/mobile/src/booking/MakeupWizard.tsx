@@ -4,8 +4,8 @@ import { router } from 'expo-router';
 import { useState } from 'react';
 import { useTabOpen } from '@/auth/use-tab-open';
 import { ScrollView, View } from 'react-native';
-import { t } from '@/lib/i18n';
-import { requestId as newRequestId } from '@/lib/request-id';
+import { t } from '@/core/lib/i18n/i18n';
+import { requestId as newRequestId } from '@/core/lib/http/request-id';
 import { Button } from '@/core/ui/primitives/Button';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { BookedPanel } from './BookedPanel';
@@ -18,7 +18,7 @@ import { SlotStep } from './SlotStep';
 import { stepsFor, type Step } from './steps';
 import { TeacherStep } from './TeacherStep';
 import { useBookMakeup } from './use-book-makeup';
-import { locale } from '@/lib/locale';
+import { locale } from '@/core/lib/i18n/locale';
 
 type Filter = { program: Program; gender: Gender | null };
 

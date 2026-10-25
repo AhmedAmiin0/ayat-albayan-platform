@@ -3,8 +3,8 @@ import { threadFilePath, threadFileQuery } from './thread-file';
 import { PHONE } from './thread-fixtures';
 
 const mockApiFetch = jest.fn();
-jest.mock('@/lib/api', () => ({
-  ...jest.requireActual('@/lib/api'),
+jest.mock('@/core/lib/http/api', () => ({
+  ...jest.requireActual('@/core/lib/http/api'),
   apiFetch: (mockPath: string) => mockApiFetch(mockPath),
 }));
 

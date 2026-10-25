@@ -1,7 +1,7 @@
 import { FX_ATTRIBUTION_URL } from '@ab/shared';
 import { fireEvent, render, screen } from '@testing-library/react-native';
 import { Linking } from 'react-native';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { ltr } from '@/core/ui/primitives/Ltr';
 import { erApiRate, pegRate } from './fixtures';
 import { FxNote, fxNotice } from './FxNote';

@@ -2,7 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { dehydrate, focusManager, QueryClient, QueryObserver } from '@tanstack/react-query';
 import { waitFor } from '@testing-library/react-native';
 import { AppState } from 'react-native';
-import { ApiError } from './api';
+import { ApiError } from '../http/api';
 import {
   clearQueryCaches,
   persistOptions,
@@ -18,7 +18,7 @@ jest.mock('@/auth/login-notice', () => ({
   ...jest.requireActual('@/auth/login-notice'),
   setLoginNotice: (n: unknown) => mockSetNotice(n),
 }));
-jest.mock('./supabase', () => ({ supabase: { auth: { signOut: () => mockSignOut() } } }));
+jest.mock('../http/supabase', () => ({ supabase: { auth: { signOut: () => mockSignOut() } } }));
 
 // query-client registers its AppState listener on import: keep it before clearAllMocks wipes it.
 const onAppState = jest.mocked(AppState.addEventListener).mock.calls[0]?.[1];

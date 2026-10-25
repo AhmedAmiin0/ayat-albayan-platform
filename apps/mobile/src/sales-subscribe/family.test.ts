@@ -1,5 +1,5 @@
 import { STUDENT_STATUSES } from '@ab/shared';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { chosenOpen, familyPath, openPackages, renewTargets, withOpenPackage } from './family';
 import { familyOf, KID2, kid, openSub, SUB } from './fixtures';
 

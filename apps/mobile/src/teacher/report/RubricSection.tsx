@@ -1,6 +1,6 @@
 import { GRADES, REPORT_RUBRICS } from '@ab/shared';
 import { View } from 'react-native';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { Section } from '@/more/Section';
 import { FormLabel } from '@/payments/FormLabel';
 import { ChoiceChips } from './ChoiceChips';

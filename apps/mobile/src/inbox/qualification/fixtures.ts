@@ -1,4 +1,4 @@
-import { ApiError } from '@/lib/api';
+import { ApiError } from '@/core/lib/http/api';
 import { huda, page } from '../fixtures';
 import type { LeadProfile } from './queries';
 

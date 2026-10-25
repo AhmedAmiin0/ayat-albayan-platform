@@ -4,7 +4,7 @@ import { createTestQueryClient, queryWrapper } from '@/test/query';
 import { useInboxBadge } from './use-inbox-badge';
 
 const mockApiFetch = jest.fn();
-jest.mock('@/lib/api', () => ({ ...jest.requireActual('@/lib/api'), apiFetch: (p: string) => mockApiFetch(p) }));
+jest.mock('@/core/lib/http/api', () => ({ ...jest.requireActual('@/core/lib/http/api'), apiFetch: (p: string) => mockApiFetch(p) }));
 
 const THREADS = '/threads?unread=true&page=1&pageSize=1';
 

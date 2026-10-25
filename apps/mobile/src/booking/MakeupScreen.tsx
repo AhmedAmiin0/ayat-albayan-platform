@@ -1,5 +1,5 @@
 import { router, useLocalSearchParams } from 'expo-router';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { Button } from '@/core/ui/primitives/Button';
 import { EmptyState } from '@/core/ui/feedback/EmptyState';
 import { Screen } from '@/core/ui/layout/Screen';

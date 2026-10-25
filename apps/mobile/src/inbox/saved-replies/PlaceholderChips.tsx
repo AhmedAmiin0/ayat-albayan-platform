@@ -1,6 +1,6 @@
 import { placeholderToken, SAVED_REPLY_PLACEHOLDERS, type SavedReplyPlaceholder } from '@ab/shared';
 import { View } from 'react-native';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { PillButton } from '@/core/ui/primitives/PillButton';

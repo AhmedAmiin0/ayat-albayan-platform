@@ -1,8 +1,8 @@
 import { SUBSCRIPTION_STATUSES, subscriptionStatusStyle, type SubscriptionView } from '@ab/shared';
 import { useState } from 'react';
 import { ActivityIndicator, FlatList } from 'react-native';
-import { t } from '@/lib/i18n';
-import { usePagedList } from '@/lib/use-paged-list';
+import { t } from '@/core/lib/i18n/i18n';
+import { usePagedList } from '@/core/lib/query/use-paged-list';
 import { useRenewalThreshold } from '@/payments/queries';
 import { useTheme } from '@/theme';
 import { EmptyState } from '@/core/ui/feedback/EmptyState';

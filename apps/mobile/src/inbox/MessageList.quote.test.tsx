@@ -1,7 +1,7 @@
 import type { MessageView } from '@ab/shared';
 import { act, fireEvent, screen } from '@testing-library/react-native';
 import { FlatList, StyleSheet } from 'react-native';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { palette } from '@/theme';
 import { renderWithQuery } from '@/test/query';
 import { ChatActionsProvider } from './ChatActionsProvider';
@@ -12,8 +12,8 @@ import { LIT_MS } from './use-jump';
 import type { useThread } from './use-thread';
 
 // A bubble that answers another shows its quote on top; a tap goes to the original (owner 2026-10-25).
-jest.mock('@/lib/api', () => ({
-  ...jest.requireActual('@/lib/api'),
+jest.mock('@/core/lib/http/api', () => ({
+  ...jest.requireActual('@/core/lib/http/api'),
   apiFetch: async () => ({ id: 'u1', role: 'admin', permissions: [] }),
 }));
 

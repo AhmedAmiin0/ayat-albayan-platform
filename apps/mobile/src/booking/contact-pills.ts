@@ -1,5 +1,5 @@
 import { GENDERS, LEAD_SOURCES, TZ_OPTIONS, type Gender, type LeadSource } from '@ab/shared';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import type { FilterPill } from '@/core/ui/form/FilterPills';
 import { cityOf } from './slots';
 

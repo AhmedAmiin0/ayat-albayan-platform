@@ -1,6 +1,6 @@
 import { renderApp, resetApp } from '@/test/app-router'; // first: its jest.mock calls must precede the app
 import { fireEvent, screen } from '@testing-library/react-native';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { subscribeBackend } from '@/subscribe/flow-backend';
 import { GUARDIAN_PHONE, inboxBackend } from './flow-backend';
 import { inbound, PHONE } from './thread-fixtures';

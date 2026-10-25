@@ -3,7 +3,7 @@ import { renderWithQuery } from '@/test/query';
 import { StudentReportsScreen } from './StudentReportsScreen';
 
 const mockApiFetch = jest.fn();
-jest.mock('@/lib/api', () => ({ ...jest.requireActual('@/lib/api'), apiFetch: (p: string) => mockApiFetch(p) }));
+jest.mock('@/core/lib/http/api', () => ({ ...jest.requireActual('@/core/lib/http/api'), apiFetch: (p: string) => mockApiFetch(p) }));
 jest.mock('expo-router', () => ({
   router: { push: jest.fn(), back: jest.fn(), canGoBack: () => true, replace: jest.fn() },
   useLocalSearchParams: () => ({ id: 's1' }),

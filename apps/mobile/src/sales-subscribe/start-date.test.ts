@@ -1,4 +1,4 @@
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { checkStart, type StartDraft } from './start-date';
 
 const today = '2026-10-12';

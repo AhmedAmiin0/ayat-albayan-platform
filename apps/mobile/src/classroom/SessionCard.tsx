@@ -1,7 +1,7 @@
 import { lessonStatusStyle, teacherName, type LessonView } from '@ab/shared';
 import { View } from 'react-native';
-import { t } from '@/lib/i18n';
-import { locale } from '@/lib/locale';
+import { t } from '@/core/lib/i18n/i18n';
+import { locale } from '@/core/lib/i18n/locale';
 import { shape, type, useTheme } from '@/theme';
 import { riyadhTime, studentNames } from '@/today/lesson-text';
 import { AppText } from '@/core/ui/primitives/AppText';

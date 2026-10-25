@@ -2,10 +2,10 @@ import type { SendGateView } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { Pressable } from 'react-native';
-import { apiFetch } from '@/lib/api';
-import { t } from '@/lib/i18n';
+import { apiFetch } from '@/core/lib/http/api';
+import { t } from '@/core/lib/i18n/i18n';
 import { shape } from '@/theme';
-import { pathKey } from '@/lib/query-keys';
+import { pathKey } from '@/core/lib/query/query-keys';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { useNoteStyle } from './note-style';
 

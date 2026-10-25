@@ -1,4 +1,4 @@
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import type { FinanceSummary, MonthFinance } from './summary-types';
 
 /** Months with any money, newest first; the API sends all twelve. */

@@ -1,7 +1,7 @@
 import type { NotificationEntryView } from '@ab/shared';
 import { useState } from 'react';
 import { AccessibilityInfo } from 'react-native';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { askOf, nameOf, needsTypedWord, ruleErrorText } from './rule-words';
 import { useToggleRule } from './use-toggle-rule';
 

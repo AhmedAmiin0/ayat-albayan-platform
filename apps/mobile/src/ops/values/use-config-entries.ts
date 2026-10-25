@@ -1,10 +1,10 @@
 import type { ConfigEntriesResponse, ConfigEntry, ConfigEntryResult, SettingKey } from '@ab/shared';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { apiFetch, apiSend } from '@/lib/api';
-import { t } from '@/lib/i18n';
-import { refreshOverrides } from '@/lib/i18n-overrides';
-import { locale } from '@/lib/locale';
-import { pathKey } from '@/lib/query-keys';
+import { apiFetch, apiSend } from '@/core/lib/http/api';
+import { t } from '@/core/lib/i18n/i18n';
+import { refreshOverrides } from '@/core/lib/i18n/i18n-overrides';
+import { locale } from '@/core/lib/i18n/locale';
+import { pathKey } from '@/core/lib/query/query-keys';
 
 const ENTRIES = '/config/entries';
 

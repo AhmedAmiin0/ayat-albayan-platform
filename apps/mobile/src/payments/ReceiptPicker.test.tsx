@@ -1,6 +1,6 @@
 import { RECEIPT_MAX_BYTES } from '@ab/shared';
 import { fireEvent, render, screen } from '@testing-library/react-native';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { pickReceipt, type Receipt } from './receipt';
 import { ReceiptPicker } from './ReceiptPicker';
 

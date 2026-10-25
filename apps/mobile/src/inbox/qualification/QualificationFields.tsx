@@ -1,6 +1,6 @@
 import { GENDERS, type Gender } from '@ab/shared';
 import { View } from 'react-native';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { FormLabel } from '@/payments/FormLabel';
 import { Field } from '@/core/ui/form/Field';
 import { FilterPills, type FilterPill } from '@/core/ui/form/FilterPills';

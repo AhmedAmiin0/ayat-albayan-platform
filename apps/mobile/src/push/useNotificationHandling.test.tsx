@@ -5,8 +5,8 @@ import { FOREGROUND, useNotificationHandling } from './useNotificationHandling';
 
 // GET /auth/me answers mockMe, so a mount refetch never swaps seeded permissions for «hide nothing».
 let mockMe: unknown = {};
-jest.mock('@/lib/api', () => ({
-  ...jest.requireActual('@/lib/api'),
+jest.mock('@/core/lib/http/api', () => ({
+  ...jest.requireActual('@/core/lib/http/api'),
   apiFetch: async (path: string) => (path === '/auth/me' ? mockMe : {}),
 }));
 const mockPush = jest.fn();

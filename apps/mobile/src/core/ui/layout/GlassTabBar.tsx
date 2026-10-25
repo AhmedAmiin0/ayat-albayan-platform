@@ -2,7 +2,7 @@ import { BottomTabBarHeightCallbackContext, type BottomTabBarProps } from 'expo-
 import { CommonActions } from 'expo-router/react-navigation';
 import { useContext, useEffect } from 'react';
 import { Animated, I18nManager, Platform, useWindowDimensions, View } from 'react-native';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { useTheme } from '@/theme';
 import type { TabItem } from './AppNativeTabs';
 import { GlassGradient } from '../primitives/GlassGradient';

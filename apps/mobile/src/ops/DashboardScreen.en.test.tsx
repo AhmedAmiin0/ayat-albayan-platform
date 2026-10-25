@@ -1,6 +1,6 @@
 import en from '@ab/shared/i18n/en.json';
 import { screen } from '@testing-library/react-native';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
 import { DashboardScreen } from './DashboardScreen';
 import { summary as mockSummary, work as mockWork } from './fixtures';
@@ -11,8 +11,8 @@ jest.mock('react-native/Libraries/ReactNative/I18nManager', () => {
   const getConstants = () => ({ ...actual.getConstants(), isRTL: false });
   return { __esModule: true, default: { ...actual, isRTL: false, getConstants } };
 });
-jest.mock('@/lib/api', () => ({
-  ...jest.requireActual('@/lib/api'),
+jest.mock('@/core/lib/http/api', () => ({
+  ...jest.requireActual('@/core/lib/http/api'),
   apiFetch: async (p: string) => (p.startsWith('/dashboard/summary') ? mockSummary : mockWork),
 }));
 jest.mock('expo-router', () => ({

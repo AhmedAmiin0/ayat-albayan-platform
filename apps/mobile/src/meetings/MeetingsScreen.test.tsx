@@ -1,16 +1,16 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { router } from 'expo-router';
 import { Linking, Share } from 'react-native';
-import { ApiError } from '@/lib/api';
-import { t } from '@/lib/i18n';
+import { ApiError } from '@/core/lib/http/api';
+import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
 import { MeetingsScreen } from './MeetingsScreen';
 
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();
 jest.mock('expo-router', () => ({ router: { push: jest.fn(), back: jest.fn() }, useSegments: () => ['(tabs)'] }));
-jest.mock('@/lib/api', () => ({
-  ...jest.requireActual('@/lib/api'),
+jest.mock('@/core/lib/http/api', () => ({
+  ...jest.requireActual('@/core/lib/http/api'),
   apiFetch: (...args: unknown[]) => mockApiFetch(...args),
   apiSend: (...args: unknown[]) => mockApiSend(...args),
 }));

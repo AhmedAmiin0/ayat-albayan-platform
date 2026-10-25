@@ -1,6 +1,6 @@
 import type { SlotView } from '@ab/shared';
 import { MON_19, slot } from '@/booking/fixtures';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { fakeCourseApi, press } from '../course-test-utils';
 import { bookedCourse, courseView, SUB_ID } from '../fixtures';
 

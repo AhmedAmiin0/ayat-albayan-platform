@@ -1,8 +1,8 @@
 import type { LessonView, RescheduleRequest, SlotsResponse } from '@ab/shared';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { addDays, riyadhMidnight } from '@/calendar/week';
-import { apiFetch, apiSend, toQueryString } from '@/lib/api';
-import { pathKey } from '@/lib/query-keys';
+import { apiFetch, apiSend, toQueryString } from '@/core/lib/http/api';
+import { pathKey } from '@/core/lib/query/query-keys';
 
 export interface RescheduleSlotsParams {
   teacherId: string;

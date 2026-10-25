@@ -1,5 +1,5 @@
 import * as ImagePicker from 'expo-image-picker';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { ensureCameraPermission } from '@/payments/camera-permission';
 import { pickAvatar, toAvatar } from './avatar';
 

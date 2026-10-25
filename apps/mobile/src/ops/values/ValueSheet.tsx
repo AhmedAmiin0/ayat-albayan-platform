@@ -1,7 +1,7 @@
 import type { SettingKey, SettingMeta } from '@ab/shared';
 import { useEffect, useRef, useState } from 'react';
 import { AccessibilityInfo, Modal, Pressable, ScrollView, StyleSheet, View } from 'react-native';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { shape, useTheme } from '@/theme';
 import type { AppTextNode } from '@/core/ui/primitives/AppText';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';

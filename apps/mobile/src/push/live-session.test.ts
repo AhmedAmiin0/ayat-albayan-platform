@@ -1,4 +1,4 @@
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/core/lib/http/supabase';
 import { hasLiveSession } from './live-session';
 
 const getSession = jest.mocked(supabase.auth.getSession);

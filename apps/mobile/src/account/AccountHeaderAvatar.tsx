@@ -1,6 +1,6 @@
 import { router } from 'expo-router';
 import { Pressable } from 'react-native';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { shape, useTheme } from '@/theme';
 import { Mark } from '@/core/ui/primitives/Mark';
 import type { AccountHref } from './AccountRow';

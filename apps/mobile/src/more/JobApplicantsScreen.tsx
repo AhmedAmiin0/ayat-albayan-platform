@@ -1,8 +1,8 @@
 import { formatPhone, JOB_APPLICANT_STATUSES, jobApplicantStatusStyle } from '@ab/shared';
 import { useState } from 'react';
 import { FlatList } from 'react-native';
-import { t } from '@/lib/i18n';
-import { usePagedList } from '@/lib/use-paged-list';
+import { t } from '@/core/lib/i18n/i18n';
+import { usePagedList } from '@/core/lib/query/use-paged-list';
 import { EmptyState } from '@/core/ui/feedback/EmptyState';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { FilterPills, type FilterPill } from '@/core/ui/form/FilterPills';

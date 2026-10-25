@@ -1,8 +1,8 @@
 import type { TeacherPaymentResult } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRef } from 'react';
-import { apiSend } from '@/lib/api';
-import { requestId } from '@/lib/request-id';
+import { apiSend } from '@/core/lib/http/api';
+import { requestId } from '@/core/lib/http/request-id';
 import type { PayInput } from './pay-draft';
 import { uploadTeacherReceipt } from './upload-receipt';
 

@@ -1,6 +1,6 @@
 import type { SettingKey } from '@ab/shared';
 import { View } from 'react-native';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/more/Note';
 import { Field } from '@/core/ui/form/Field';
 import { InlineConfirm } from '@/core/ui/feedback/InlineConfirm';

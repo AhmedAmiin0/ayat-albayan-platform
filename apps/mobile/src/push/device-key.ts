@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { ApiError, apiSend } from '@/lib/api';
+import { ApiError, apiSend } from '@/core/lib/http/api';
 import { silencePush } from './silence-push';
 
 /** The token this device put on the profile, so sign-out removes exactly it (survives restarts). */

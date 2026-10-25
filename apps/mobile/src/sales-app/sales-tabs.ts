@@ -1,6 +1,6 @@
 import { canOpen } from '@/auth/route-permissions';
 import type { Can } from '@/auth/use-permissions';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import type { TabItem } from '@/core/ui/layout/AppNativeTabs';
 
 /**

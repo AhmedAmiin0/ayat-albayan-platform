@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { ScrollView } from 'react-native';
 import { useHolds } from '@/auth/use-permissions';
 import { Note } from '@/more/Note';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { AutoListNote } from './AutoListNote';
 import { CreateListSheet } from './CreateListSheet';
 import { EditListSheet } from './EditListSheet';

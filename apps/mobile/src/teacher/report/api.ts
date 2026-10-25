@@ -9,10 +9,10 @@ import type {
 } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { Linking } from 'react-native';
-import { ApiError, apiFetch, apiSend } from '@/lib/api';
-import { t } from '@/lib/i18n';
-import { pathKey } from '@/lib/query-keys';
-import { supabase } from '@/lib/supabase';
+import { ApiError, apiFetch, apiSend } from '@/core/lib/http/api';
+import { t } from '@/core/lib/i18n/i18n';
+import { pathKey } from '@/core/lib/query/query-keys';
+import { supabase } from '@/core/lib/http/supabase';
 import type { Receipt } from '@/payments/receipt';
 
 // The web form's report routes (docs/11 §4 R1–R12), same bodies: the API checks that the report

@@ -1,7 +1,7 @@
 import type { MessageView } from '@ab/shared';
 import { fireEvent, screen } from '@testing-library/react-native';
 import { FlatList, StyleSheet } from 'react-native';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
 import { AT_NEWEST, MessageList } from './MessageList';
 import { cachedThread, delivered, detail, inbound, message, PHONE } from './thread-fixtures';
@@ -9,8 +9,8 @@ import type { useThread } from './use-thread';
 
 // Owner 2026-10-24 («the chat scrolled to the last point»): every mobile chat opens on the newest
 // message. Inverted, so offset 0 is exactly the newest: no scrollToEnd aimed at a guessed height.
-jest.mock('@/lib/api', () => ({
-  ...jest.requireActual('@/lib/api'),
+jest.mock('@/core/lib/http/api', () => ({
+  ...jest.requireActual('@/core/lib/http/api'),
   apiFetch: async () => ({ id: 'u1', role: 'admin', permissions: [] }),
 }));
 

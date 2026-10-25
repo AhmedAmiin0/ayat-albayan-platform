@@ -9,7 +9,7 @@ const mockVerify = jest.fn();
 const mockClear = jest.fn();
 const mockSilence = jest.fn();
 
-jest.mock('@/lib/supabase', () => ({
+jest.mock('@/core/lib/http/supabase', () => ({
   supabase: {
     auth: {
       onAuthStateChange: (fn: Listener) => {
@@ -20,7 +20,7 @@ jest.mock('@/lib/supabase', () => ({
   },
 }));
 jest.mock('./verify-role', () => ({ verifyRole: (s: unknown) => mockVerify(s) }));
-jest.mock('@/lib/query-client', () => ({ clearQueryCaches: () => mockClear() }));
+jest.mock('@/core/lib/query/query-client', () => ({ clearQueryCaches: () => mockClear() }));
 jest.mock('@/push/silence-push', () => ({ silencePush: () => mockSilence() }));
 
 const session = { access_token: 'tok', user: { id: 'u1' } } as Session;

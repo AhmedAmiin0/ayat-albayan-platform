@@ -1,8 +1,8 @@
 import type { QuoteResponse, SubscriptionPricing, SubscriptionView } from '@ab/shared';
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useRef } from 'react';
-import { apiSend } from '@/lib/api';
-import { requestId } from '@/lib/request-id';
+import { apiSend } from '@/core/lib/http/api';
+import { requestId } from '@/core/lib/http/request-id';
 
 /**
  * POST /subscriptions/quote (R-SUB-01): the price the save would store, from the catalog in the

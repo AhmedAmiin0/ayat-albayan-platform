@@ -16,8 +16,8 @@ const SCHEDULED = {
   my_invite: null,
 };
 jest.mock('expo-router', () => ({ router: { push: jest.fn(), back: jest.fn() }, useSegments: () => ['(tabs)'] }));
-jest.mock('@/lib/api', () => ({
-  ...jest.requireActual('@/lib/api'),
+jest.mock('@/core/lib/http/api', () => ({
+  ...jest.requireActual('@/core/lib/http/api'),
   apiFetch: jest.fn(async () => [
     { id: 'm1', title: 'Staff sync', created_by: 'u', created_at: '2026-10-05T11:30:00.000Z', ends_at: null, state: 'open', can_manage: true, can_join: true, ...SCHEDULED },
   ]),

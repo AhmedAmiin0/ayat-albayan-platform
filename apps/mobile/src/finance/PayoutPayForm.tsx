@@ -2,7 +2,7 @@ import { PAYMENT_METHODS, type PayoutView, type PaymentMethod } from '@ab/shared
 import { useState } from 'react';
 import { View } from 'react-native';
 import { ErrorLine } from '@/inbox/ErrorLine';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/more/Note';
 import { FormLabel } from '@/payments/FormLabel';
 import { PaidDayPicker } from '@/payments/PaidDayPicker';

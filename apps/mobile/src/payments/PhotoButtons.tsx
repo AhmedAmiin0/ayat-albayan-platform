@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { View } from 'react-native';
 import { ErrorLine } from '@/inbox/ErrorLine';
-import { t } from '@/lib/i18n';
-import { useUploadMaxBytes } from '@/lib/public-config';
+import { t } from '@/core/lib/i18n/i18n';
+import { useUploadMaxBytes } from '@/core/lib/query/public-config';
 import { Button } from '@/core/ui/primitives/Button';
 import { pickReceipt, type Receipt, type ReceiptSource } from './receipt';
 

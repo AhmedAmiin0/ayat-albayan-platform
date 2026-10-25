@@ -1,0 +1,192 @@
+{
+  "id": "c1b",
+  "seq": 72,
+  "moves": [
+    {
+      "from": "apps/mobile/src/lib/api.ts",
+      "to": "apps/mobile/src/core/lib/http/"
+    },
+    {
+      "from": "apps/mobile/src/lib/client-tag.ts",
+      "to": "apps/mobile/src/core/lib/http/"
+    },
+    {
+      "from": "apps/mobile/src/lib/request-id.ts",
+      "to": "apps/mobile/src/core/lib/http/"
+    },
+    {
+      "from": "apps/mobile/src/lib/env.ts",
+      "to": "apps/mobile/src/core/lib/http/"
+    },
+    {
+      "from": "apps/mobile/src/lib/supabase.ts",
+      "to": "apps/mobile/src/core/lib/http/"
+    },
+    {
+      "from": "apps/mobile/src/lib/query-client.ts",
+      "to": "apps/mobile/src/core/lib/query/"
+    },
+    {
+      "from": "apps/mobile/src/lib/query-keys.ts",
+      "to": "apps/mobile/src/core/lib/query/"
+    },
+    {
+      "from": "apps/mobile/src/lib/paging.ts",
+      "to": "apps/mobile/src/core/lib/query/"
+    },
+    {
+      "from": "apps/mobile/src/lib/use-paged-list.ts",
+      "to": "apps/mobile/src/core/lib/query/"
+    },
+    {
+      "from": "apps/mobile/src/lib/use-optimistic-status.ts",
+      "to": "apps/mobile/src/core/lib/query/"
+    },
+    {
+      "from": "apps/mobile/src/lib/public-config.ts",
+      "to": "apps/mobile/src/core/lib/query/"
+    },
+    {
+      "from": "apps/mobile/src/lib/platform-classroom.test.tsx",
+      "to": "apps/mobile/src/core/lib/query/"
+    },
+    {
+      "from": "apps/mobile/src/lib/i18n.ts",
+      "to": "apps/mobile/src/core/lib/i18n/"
+    },
+    {
+      "from": "apps/mobile/src/lib/i18n-overrides.ts",
+      "to": "apps/mobile/src/core/lib/i18n/"
+    },
+    {
+      "from": "apps/mobile/src/lib/locale.ts",
+      "to": "apps/mobile/src/core/lib/i18n/"
+    },
+    {
+      "from": "apps/mobile/src/lib/locale-switch.ts",
+      "to": "apps/mobile/src/core/lib/i18n/"
+    },
+    {
+      "from": "apps/mobile/src/lib/phone.ts",
+      "to": "apps/mobile/src/core/lib/"
+    }
+  ],
+  "files": [
+    [
+      "apps/mobile/src/lib/api.test.ts",
+      "apps/mobile/src/core/lib/http/api.test.ts"
+    ],
+    [
+      "apps/mobile/src/lib/api.ts",
+      "apps/mobile/src/core/lib/http/api.ts"
+    ],
+    [
+      "apps/mobile/src/lib/client-tag.test.ts",
+      "apps/mobile/src/core/lib/http/client-tag.test.ts"
+    ],
+    [
+      "apps/mobile/src/lib/client-tag.ts",
+      "apps/mobile/src/core/lib/http/client-tag.ts"
+    ],
+    [
+      "apps/mobile/src/lib/env.ts",
+      "apps/mobile/src/core/lib/http/env.ts"
+    ],
+    [
+      "apps/mobile/src/lib/i18n-overrides.test.ts",
+      "apps/mobile/src/core/lib/i18n/i18n-overrides.test.ts"
+    ],
+    [
+      "apps/mobile/src/lib/i18n-overrides.ts",
+      "apps/mobile/src/core/lib/i18n/i18n-overrides.ts"
+    ],
+    [
+      "apps/mobile/src/lib/i18n.ts",
+      "apps/mobile/src/core/lib/i18n/i18n.ts"
+    ],
+    [
+      "apps/mobile/src/lib/locale-switch.test.ts",
+      "apps/mobile/src/core/lib/i18n/locale-switch.test.ts"
+    ],
+    [
+      "apps/mobile/src/lib/locale-switch.ts",
+      "apps/mobile/src/core/lib/i18n/locale-switch.ts"
+    ],
+    [
+      "apps/mobile/src/lib/locale.test.ts",
+      "apps/mobile/src/core/lib/i18n/locale.test.ts"
+    ],
+    [
+      "apps/mobile/src/lib/locale.ts",
+      "apps/mobile/src/core/lib/i18n/locale.ts"
+    ],
+    [
+      "apps/mobile/src/lib/paging.test.ts",
+      "apps/mobile/src/core/lib/query/paging.test.ts"
+    ],
+    [
+      "apps/mobile/src/lib/paging.ts",
+      "apps/mobile/src/core/lib/query/paging.ts"
+    ],
+    [
+      "apps/mobile/src/lib/phone.test.ts",
+      "apps/mobile/src/core/lib/phone.test.ts"
+    ],
+    [
+      "apps/mobile/src/lib/phone.ts",
+      "apps/mobile/src/core/lib/phone.ts"
+    ],
+    [
+      "apps/mobile/src/lib/platform-classroom.test.tsx",
+      "apps/mobile/src/core/lib/query/platform-classroom.test.tsx"
+    ],
+    [
+      "apps/mobile/src/lib/public-config.test.tsx",
+      "apps/mobile/src/core/lib/query/public-config.test.tsx"
+    ],
+    [
+      "apps/mobile/src/lib/public-config.ts",
+      "apps/mobile/src/core/lib/query/public-config.ts"
+    ],
+    [
+      "apps/mobile/src/lib/query-client.test.ts",
+      "apps/mobile/src/core/lib/query/query-client.test.ts"
+    ],
+    [
+      "apps/mobile/src/lib/query-client.ts",
+      "apps/mobile/src/core/lib/query/query-client.ts"
+    ],
+    [
+      "apps/mobile/src/lib/query-keys.ts",
+      "apps/mobile/src/core/lib/query/query-keys.ts"
+    ],
+    [
+      "apps/mobile/src/lib/request-id.test.ts",
+      "apps/mobile/src/core/lib/http/request-id.test.ts"
+    ],
+    [
+      "apps/mobile/src/lib/request-id.ts",
+      "apps/mobile/src/core/lib/http/request-id.ts"
+    ],
+    [
+      "apps/mobile/src/lib/supabase.ts",
+      "apps/mobile/src/core/lib/http/supabase.ts"
+    ],
+    [
+      "apps/mobile/src/lib/use-optimistic-status.test.tsx",
+      "apps/mobile/src/core/lib/query/use-optimistic-status.test.tsx"
+    ],
+    [
+      "apps/mobile/src/lib/use-optimistic-status.ts",
+      "apps/mobile/src/core/lib/query/use-optimistic-status.ts"
+    ],
+    [
+      "apps/mobile/src/lib/use-paged-list.test.tsx",
+      "apps/mobile/src/core/lib/query/use-paged-list.test.tsx"
+    ],
+    [
+      "apps/mobile/src/lib/use-paged-list.ts",
+      "apps/mobile/src/core/lib/query/use-paged-list.ts"
+    ]
+  ]
+}

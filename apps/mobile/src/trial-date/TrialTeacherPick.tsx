@@ -2,8 +2,8 @@ import { teacherName, type BookingTeacherOption, type Gender, type Program } fro
 import { useState } from 'react';
 import { View } from 'react-native';
 import { TeacherStep } from '@/booking/TeacherStep';
-import { t } from '@/lib/i18n';
-import { locale } from '@/lib/locale';
+import { t } from '@/core/lib/i18n/i18n';
+import { locale } from '@/core/lib/i18n/locale';
 import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { Button } from '@/core/ui/primitives/Button';

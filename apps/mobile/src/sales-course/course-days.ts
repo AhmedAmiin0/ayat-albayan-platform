@@ -1,6 +1,6 @@
 import { inWeekOrder, timeGroups, wallParts, WEEK_ORDER, type Conflict, type CourseChangeRequest, type DayTime } from '@ab/shared';
 import { dayAtText } from '@/booking/picks';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 
 // A booked course's weekdays as text (owner 2026-10-18): «تابِع بنفس الأيام» names the previous
 // course's days, and the clashes of a prefilled day name the weekday to pick again. Pure.

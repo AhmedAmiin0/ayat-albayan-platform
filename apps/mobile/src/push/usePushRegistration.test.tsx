@@ -6,7 +6,7 @@ import { usePushRegistration } from './usePushRegistration';
 
 jest.mock('./registerPush', () => ({ registerPush: jest.fn(async () => undefined) }));
 jest.mock('./useNotificationHandling', () => ({ useNotificationHandling: jest.fn() }));
-jest.mock('@/lib/api', () => ({ ...jest.requireActual('@/lib/api'), apiFetch: jest.fn(() => new Promise(() => undefined)) }));
+jest.mock('@/core/lib/http/api', () => ({ ...jest.requireActual('@/core/lib/http/api'), apiFetch: jest.fn(() => new Promise(() => undefined)) }));
 
 async function mount(permissions?: string[], tree?: 'admin' | 'teacher') {
   const client = createTestQueryClient();

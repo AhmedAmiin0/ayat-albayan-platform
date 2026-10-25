@@ -2,7 +2,7 @@ import { filterSalesTeachers, NO_TEACHER_FILTER, PROGRAMS, teacherPrograms } fro
 import { router } from 'expo-router';
 import { useState } from 'react';
 import { ActivityIndicator, FlatList } from 'react-native';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { useTheme } from '@/theme';
 import { Button } from '@/core/ui/primitives/Button';
 import { EmptyState } from '@/core/ui/feedback/EmptyState';

@@ -1,7 +1,7 @@
 import { teacherName } from '@ab/shared';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import type { StudentProfile } from './types';
-import { locale } from '@/lib/locale';
+import { locale } from '@/core/lib/i18n/locale';
 
 export interface Fact {
   label: string;

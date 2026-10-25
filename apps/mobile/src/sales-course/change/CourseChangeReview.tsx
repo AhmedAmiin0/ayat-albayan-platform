@@ -4,7 +4,7 @@ import type { BookFailure } from '@/booking/booking-errors';
 import { ConflictNotice } from '@/booking/ConflictNotice';
 import { whenText } from '@/booking/slots';
 import { ErrorLine } from '@/inbox/ErrorLine';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { localDay } from '@/payments/format';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { Button } from '@/core/ui/primitives/Button';

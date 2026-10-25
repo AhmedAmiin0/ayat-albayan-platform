@@ -4,7 +4,7 @@ import { View } from 'react-native';
 import { freeSlotDays, slotLegend, whenText } from '@/booking/slots';
 import { PeriodSwitcher } from '@/calendar/PeriodSwitcher';
 import { addDays, riyadhToday, weekLabel, weekStart } from '@/calendar/week';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { FormLabel } from '@/payments/FormLabel';
 import { type, useTheme } from '@/theme';
 import { localDate } from '@/today/timeline';

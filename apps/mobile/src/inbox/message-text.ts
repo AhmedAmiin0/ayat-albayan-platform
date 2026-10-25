@@ -1,6 +1,6 @@
 import { clockTime, isUnavailableMessage, isUnsupportedMessage, type MessageView, SESSION_WINDOW_MS, type ThreadView } from '@ab/shared';
-import { ApiError } from '@/lib/api';
-import { t } from '@/lib/i18n';
+import { ApiError } from '@/core/lib/http/api';
+import { t } from '@/core/lib/i18n/i18n';
 
 // The words a thread shows (R-MOB-02): media labels, template names, times, send errors.
 // All Arabic comes from ar.json; times are the device's zone, Western digits.

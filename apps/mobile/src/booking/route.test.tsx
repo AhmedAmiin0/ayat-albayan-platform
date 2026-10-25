@@ -1,6 +1,6 @@
 import { renderRouter, screen } from 'expo-router/testing-library';
 import { Text } from 'react-native';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { TabStack } from '@/nav/TabStack';
 import TabsLayout from '../../app/(tabs)/_layout';
 import MakeupRoute from '../../app/(tabs)/students/makeup/[lessonId]';

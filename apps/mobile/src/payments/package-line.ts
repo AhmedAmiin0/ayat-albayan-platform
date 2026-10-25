@@ -1,5 +1,5 @@
 import { alertFor, packageProgress, SETTING_DEFAULTS, type StudentBalanceView } from '@ab/shared';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 
 /** settings.renewal_alert_remaining's default (docs/11 §2: 2), used until GET /settings answers. */
 export const RENEWAL_DEFAULT = SETTING_DEFAULTS.renewal_alert_remaining;

@@ -1,7 +1,7 @@
 import type { AssistantLessonView, SalesScheduleDay, SalesSubscriptionHistory, SalesTeacherView } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
-import { apiFetch } from '@/lib/api';
-import { pathKey } from '@/lib/query-keys';
+import { apiFetch } from '@/core/lib/http/api';
+import { pathKey } from '@/core/lib/query/query-keys';
 
 // The salesperson's pages (docs/16, web parity with apps/web/src/features/sales): read-only, no money.
 

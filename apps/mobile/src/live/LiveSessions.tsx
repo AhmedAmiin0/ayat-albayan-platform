@@ -3,14 +3,14 @@ import type { LessonView } from '@ab/shared';
 import { View } from 'react-native';
 import { JoinClassroomButton } from '@/classroom/JoinClassroomButton';
 import { useMinuteClock } from '@/classroom/use-minute-clock';
-import { t } from '@/lib/i18n';
-import { useJoinWindow } from '@/lib/public-config';
+import { t } from '@/core/lib/i18n/i18n';
+import { useJoinWindow } from '@/core/lib/query/public-config';
 import { shape, type, useTheme } from '@/theme';
 import { riyadhTime, studentNames } from '@/today/lesson-text';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { StatusChip } from '@/core/ui/feedback/StatusChip';
 import { liveLessons, type LiveLesson } from './live-filter';
-import { locale } from '@/lib/locale';
+import { locale } from '@/core/lib/i18n/locale';
 
 function LiveRow({ item, showTeacher }: { item: LiveLesson; showTeacher: boolean }) {
   const { color } = useTheme();

@@ -8,7 +8,7 @@ import {
   type GroupKind,
   type LeadQualificationPatch,
 } from '@ab/shared';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 
 // R-LEAD-03: the lead's structured qualification, captured on the lead screen. All optional; a
 // field emptied by the admin is sent as null (clears it); untouched fields are not sent (L1 merges).

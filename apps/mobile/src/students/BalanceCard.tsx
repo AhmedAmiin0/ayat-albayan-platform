@@ -1,7 +1,7 @@
 import { subscriptionStatusStyle } from '@ab/shared';
 import { router } from 'expo-router';
 import { View } from 'react-native';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { packageName, paidOf, usedOf } from '@/payments/format';
 import { packageLine } from '@/payments/package-line';
 import { useRenewalThreshold, useStudentBalance } from '@/payments/queries';

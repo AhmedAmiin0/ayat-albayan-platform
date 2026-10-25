@@ -1,8 +1,8 @@
 import { renderApp, resetApp } from '@/test/app-router'; // first: its jest.mock calls must precede the app
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { act, fireEvent, screen, waitFor } from '@testing-library/react-native';
-import { t } from '@/lib/i18n';
-import { supabase } from '@/lib/supabase';
+import { t } from '@/core/lib/i18n/i18n';
+import { supabase } from '@/core/lib/http/supabase';
 import { native } from '@/test/native-mocks';
 import { GUARDIAN_PHONE } from '@/inbox/flow-backend';
 import { pushBackend } from './flow-backend';

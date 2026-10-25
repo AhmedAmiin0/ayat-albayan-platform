@@ -1,11 +1,11 @@
-import { apiSend } from '@/lib/api';
+import { apiSend } from '@/core/lib/http/api';
 import type { Receipt } from '@/payments/receipt';
 import { ReceiptUploadError } from '@/payments/upload-receipt';
 import { uploadTeacherReceipt } from './upload-receipt';
 
-jest.mock('@/lib/api', () => ({ ...jest.requireActual('@/lib/api'), apiSend: jest.fn() }));
+jest.mock('@/core/lib/http/api', () => ({ ...jest.requireActual('@/core/lib/http/api'), apiSend: jest.fn() }));
 const mockUpload = jest.fn();
-jest.mock('@/lib/supabase', () => ({ supabase: { storage: { from: () => ({ uploadToSignedUrl: mockUpload }) } } }));
+jest.mock('@/core/lib/http/supabase', () => ({ supabase: { storage: { from: () => ({ uploadToSignedUrl: mockUpload }) } } }));
 
 const receipt: Receipt = { uri: 'file:///r.jpg', mime: 'image/jpeg', bytes: new ArrayBuffer(3), size: 3 };
 const signed = { bucket: 'receipts', path: 't1/0b1c.jpg', token: 'tok', signed_url: 'u' };

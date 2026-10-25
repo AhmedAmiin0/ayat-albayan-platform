@@ -2,7 +2,7 @@ import { CANCEL_BY, type CancelBy, type CancelRequest, type LessonView } from '@
 import { useState } from 'react';
 import { View } from 'react-native';
 import { ErrorLine } from '@/inbox/ErrorLine';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { SectionLabel } from '@/students/SectionLabel';
 import { Field } from '@/core/ui/form/Field';
 import { FilterPills } from '@/core/ui/form/FilterPills';

@@ -1,7 +1,7 @@
 import { offerText } from '@ab/shared';
 import { fireEvent, render, screen } from '@testing-library/react-native';
 import { Linking, Share } from 'react-native';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { bulkSa, starterUsd } from './fixtures';
 import { OfferActions } from './OfferActions';
 

@@ -5,7 +5,7 @@ import type { PayInput } from './pay-draft';
 import { usePayTeacher } from './use-pay-teacher';
 
 const mockApiSend = jest.fn();
-jest.mock('@/lib/api', () => ({ ...jest.requireActual('@/lib/api'), apiSend: (...a: unknown[]) => mockApiSend(...a) }));
+jest.mock('@/core/lib/http/api', () => ({ ...jest.requireActual('@/core/lib/http/api'), apiSend: (...a: unknown[]) => mockApiSend(...a) }));
 const mockUpload = jest.fn();
 jest.mock('./upload-receipt', () => ({ uploadTeacherReceipt: (...a: unknown[]) => mockUpload(...a) }));
 

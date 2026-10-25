@@ -1,5 +1,5 @@
 import type { SavedReply } from '@ab/shared';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { useTheme } from '@/theme';
 import { IconButton } from '@/core/ui/primitives/IconButton';
 import { EditIcon, TrashIcon } from '../chat-icons';

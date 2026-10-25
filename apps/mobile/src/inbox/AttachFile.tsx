@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { Modal, Pressable, View } from 'react-native';
-import { t } from '@/lib/i18n';
-import { useUploadMaxBytes } from '@/lib/public-config';
-import { requestId } from '@/lib/request-id';
+import { t } from '@/core/lib/i18n/i18n';
+import { useUploadMaxBytes } from '@/core/lib/query/public-config';
+import { requestId } from '@/core/lib/http/request-id';
 import { shape, useTheme } from '@/theme';
 import { Button } from '@/core/ui/primitives/Button';
 import { IconButton } from '@/core/ui/primitives/IconButton';

@@ -3,7 +3,7 @@ import type { TeacherEarningView } from '@ab/shared';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import { ScrollView } from 'react-native';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { Button } from '@/core/ui/primitives/Button';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { Screen } from '@/core/ui/layout/Screen';
@@ -13,7 +13,7 @@ import { EarningsHeader, type Tab } from './EarningsHeader';
 import { PaymentsList, SessionsList } from './EarningsList';
 import { PayForm } from './PayForm';
 import { useEarningsBalance, type SessionFilter } from './queries';
-import { locale } from '@/lib/locale';
+import { locale } from '@/core/lib/i18n/locale';
 
 /**
  * «مستحقات» of a teacher (admin: More > المعلمين > teacher): the balance, the sessions with ticks,

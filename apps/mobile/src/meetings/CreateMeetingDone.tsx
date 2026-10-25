@@ -1,7 +1,7 @@
 import type { MeetingCreateResult } from '@ab/shared';
 import { View } from 'react-native';
 import { ErrorLine } from '@/inbox/ErrorLine';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { Button } from '@/core/ui/primitives/Button';
 import { InviteResults } from './InviteResults';
 import { MeetingLinkShare } from './MeetingLinkShare';

@@ -1,5 +1,5 @@
 import en from '@ab/shared/i18n/en.json';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { lineWord } from './line-words';
 
 test('a known line: its ar.json word', () => {
@@ -13,7 +13,7 @@ test('a line this build does not know yet shows raw', () => {
 
 test('an LTR run names the line with the en.json word', () => {
   jest.isolateModules(() => {
-    jest.doMock('@/lib/locale', () => ({ locale: 'en' }));
+    jest.doMock('@/core/lib/i18n/locale', () => ({ locale: 'en' }));
     const words = jest.requireActual<typeof import('./line-words')>('./line-words');
     expect(words.lineWord('chat')).toBe(en.enums.waLine.chat);
   });

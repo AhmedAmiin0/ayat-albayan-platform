@@ -2,7 +2,7 @@ import { splitByStatus, studentStatusStyle, type StudentListKind } from '@ab/sha
 import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import { ActivityIndicator, FlatList, View } from 'react-native';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/more/Note';
 import { KIND_EMPTY } from '@/students/student-kinds';
 import { useTheme } from '@/theme';

@@ -1,8 +1,8 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { renderRouter, screen, waitFor } from 'expo-router/testing-library';
 import { Text } from 'react-native';
-import { t } from '@/lib/i18n';
-import { queryClient } from '@/lib/query-client';
+import { t } from '@/core/lib/i18n/i18n';
+import { queryClient } from '@/core/lib/query/query-client';
 import { TabStack } from '@/nav/TabStack';
 import { registerPush } from '@/push/registerPush';
 import TabsLayout from '../../app/(tabs)/_layout';
@@ -15,8 +15,8 @@ import TeacherLayout from '../../app/teacher/_layout';
 jest.mock('expo-font', () => ({ useFonts: () => [true, null] }));
 jest.mock('@/push/registerPush', () => ({ registerPush: jest.fn(async () => undefined) }));
 const mockMe = { answer: { role: 'sales', permissions: [] as string[] } };
-jest.mock('@/lib/api', () => ({
-  ...jest.requireActual('@/lib/api'),
+jest.mock('@/core/lib/http/api', () => ({
+  ...jest.requireActual('@/core/lib/http/api'),
   apiFetch: async (path: string) => (path === '/auth/me' ? mockMe.answer : { total: 0 }),
 }));
 jest.mock('@/auth/use-auth-gate', () => ({ useAuthGate: () => (globalThis as { gate?: string }).gate ?? 'out' }));

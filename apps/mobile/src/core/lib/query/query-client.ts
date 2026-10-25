@@ -5,8 +5,8 @@ import type { PersistQueryClientOptions } from '@tanstack/react-query-persist-cl
 import Constants from 'expo-constants';
 import { AppState } from 'react-native';
 import { isAccountDisabled, setLoginNotice } from '@/auth/login-notice';
-import { ApiError } from './api';
-import { supabase } from './supabase';
+import { ApiError } from '../http/api';
+import { supabase } from '../http/supabase';
 
 // R-MOB-03: reads survive a restart or a dead connection (the last good answer stays on screen).
 const DAY = 24 * 60 * 60 * 1000;

@@ -5,7 +5,7 @@ import { ConflictNotice } from '@/booking/ConflictNotice';
 import { ruleFromSlot } from '@/booking/slots';
 import { ErrorLine } from '@/inbox/ErrorLine';
 import { DayChips } from '@/inbox/qualification/DayChips';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { FormLabel } from '@/payments/FormLabel';
 import { Button } from '@/core/ui/primitives/Button';
 import { FilterPills } from '@/core/ui/form/FilterPills';

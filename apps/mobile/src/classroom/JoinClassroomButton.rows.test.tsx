@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react-native';
 import { AgendaLessonRow } from '@/calendar/AgendaLessonRow';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { lesson } from '@/today/fixtures';
 import { LessonCard } from '@/today/LessonCard';
 import { renderWithQuery } from '@/test/query';
@@ -17,8 +17,8 @@ test('a cancelled row does not', async () => {
   expect(screen.queryByRole('button', { name: t.classroom.enter })).toBeNull();
 });
 
-jest.mock('@/lib/api', () => ({
-  ...jest.requireActual('@/lib/api'),
+jest.mock('@/core/lib/http/api', () => ({
+  ...jest.requireActual('@/core/lib/http/api'),
   apiFetch: () => new Promise(() => undefined),
 }));
 

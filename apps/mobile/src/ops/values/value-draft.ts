@@ -7,7 +7,7 @@ import {
   VALUE_CONFIRM,
   type SettingKey,
 } from '@ab/shared';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { ascii } from '../ascii-digits';
 
 // The bottom sheet's editor model: which editor a key gets, the typed draft, and the draft parsed

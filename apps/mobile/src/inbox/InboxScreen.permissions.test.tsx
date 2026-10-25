@@ -1,13 +1,13 @@
 import { systemPermissionsOf } from '@ab/shared';
 import { screen } from '@testing-library/react-native';
-import { t } from '@/lib/i18n';
-import { pathKey } from '@/lib/query-keys';
+import { t } from '@/core/lib/i18n/i18n';
+import { pathKey } from '@/core/lib/query/query-keys';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { InboxScreen } from './InboxScreen';
 
 let mockHeld: string[] = [];
-jest.mock('@/lib/api', () => ({
-  ...jest.requireActual('@/lib/api'),
+jest.mock('@/core/lib/http/api', () => ({
+  ...jest.requireActual('@/core/lib/http/api'),
   apiFetch: async (path: string) => (path === '/auth/me' ? { role: 'admin', permissions: mockHeld } : { items: [], total: 0, page: 1, pageSize: 25 }),
 }));
 jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));

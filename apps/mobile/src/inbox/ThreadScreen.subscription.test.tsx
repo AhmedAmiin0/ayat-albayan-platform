@@ -1,6 +1,6 @@
 import type { ThreadPeople, ThreadView } from '@ab/shared';
 import { fireEvent, screen } from '@testing-library/react-native';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { money } from '@/payments/format';
 import { renderWithQuery } from '@/test/query';
 import { child, CHILD_ID, family, leadOnly, sub, usedUp } from './subscription/people-fixtures';
@@ -8,8 +8,8 @@ import { detail, PHONE, thread } from './thread-fixtures';
 import { ThreadScreen } from './ThreadScreen';
 
 const mockApiFetch = jest.fn();
-jest.mock('@/lib/api', () => ({
-  ...jest.requireActual('@/lib/api'),
+jest.mock('@/core/lib/http/api', () => ({
+  ...jest.requireActual('@/core/lib/http/api'),
   apiFetch: (mockPath: string) => mockApiFetch(mockPath),
 }));
 const mockPush = jest.fn();

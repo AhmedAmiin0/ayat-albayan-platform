@@ -1,6 +1,6 @@
 import { leadStatusStyle } from '@ab/shared';
 import { fireEvent, render, screen } from '@testing-library/react-native';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { FilterPills, type FilterPill } from './FilterPills';
 
 type Filter = 'all' | 'new' | 'lost';

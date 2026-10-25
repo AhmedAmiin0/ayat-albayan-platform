@@ -1,5 +1,5 @@
 import { fireEvent, render, screen, within } from '@testing-library/react-native';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { ChatHeader } from './ChatHeader';
 
 const LONG = 'عبد الرحمن بن محمد بن عبد الله آل سليمان الشهري';

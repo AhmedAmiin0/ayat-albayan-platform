@@ -1,6 +1,6 @@
 import { RECEIPT_MAX_BYTES } from '@ab/shared';
 import { fireEvent, screen } from '@testing-library/react-native';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { pickReceipt } from '@/payments/receipt';
 import { renderWithQuery } from '@/test/query';
 import { UPLOADED } from './fixtures';
@@ -11,8 +11,8 @@ import { PHOTO, PREVIEW } from './test-utils';
 jest.mock('@/payments/receipt', () => ({ pickReceipt: jest.fn() }));
 jest.mock('./invoice-upload', () => ({ uploadInvoice: jest.fn() }));
 const mockApiFetch = jest.fn();
-jest.mock('@/lib/api', () => ({
-  ...jest.requireActual('@/lib/api'),
+jest.mock('@/core/lib/http/api', () => ({
+  ...jest.requireActual('@/core/lib/http/api'),
   apiFetch: (mockPath: string) => mockApiFetch(mockPath),
 }));
 

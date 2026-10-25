@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Notifications from 'expo-notifications';
-import { ApiError } from '@/lib/api';
+import { ApiError } from '@/core/lib/http/api';
 import { ensurePushPermission } from './permission';
 import { registerPush, TOKEN_KEY } from './registerPush';
 
@@ -16,8 +16,8 @@ jest.mock('expo-notifications', () => ({
   AndroidImportance: { HIGH: 4 },
 }));
 jest.mock('./permission', () => ({ ensurePushPermission: jest.fn(async () => true) }));
-jest.mock('@/lib/api', () => ({
-  ...jest.requireActual('@/lib/api'),
+jest.mock('@/core/lib/http/api', () => ({
+  ...jest.requireActual('@/core/lib/http/api'),
   apiSend: (...mockArgs: unknown[]) => mockApiSend(...mockArgs),
 }));
 

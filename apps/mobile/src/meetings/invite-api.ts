@@ -1,7 +1,7 @@
 import type { CreateMeeting, MeetingCreateResult, MeetingInviteeOption, UpdateMeeting } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
-import { apiFetch, apiSend, toQueryString } from '@/lib/api';
-import { pathKey } from '@/lib/query-keys';
+import { apiFetch, apiSend, toQueryString } from '@/core/lib/http/api';
+import { pathKey } from '@/core/lib/query/query-keys';
 
 // Scheduled meetings and invitations (R-MEET-01..03). Every key sits under ['meetings'], so a
 // create, a reschedule or a cancel refreshes the list.

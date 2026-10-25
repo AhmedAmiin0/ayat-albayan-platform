@@ -1,7 +1,7 @@
 import { gradeStyle, lessonWhenText, type PendingReportView, type TeacherReportView } from '@ab/shared';
 import { router } from 'expo-router';
-import { t } from '@/lib/i18n';
-import { locale } from '@/lib/locale';
+import { t } from '@/core/lib/i18n/i18n';
+import { locale } from '@/core/lib/i18n/locale';
 import { ListRow } from '@/core/ui/layout/ListRow';
 import { StatusChip } from '@/core/ui/feedback/StatusChip';
 

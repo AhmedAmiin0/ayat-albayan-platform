@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Notifications from 'expo-notifications';
 import { Alert, type AlertButton } from 'react-native';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { ASK_AGAIN_MS, ASKED_KEY, ensurePushPermission } from './permission';
 
 jest.mock('expo-notifications', () => ({

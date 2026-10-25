@@ -1,7 +1,7 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { Linking } from 'react-native';
-import { ApiError } from '@/lib/api';
-import { t } from '@/lib/i18n';
+import { ApiError } from '@/core/lib/http/api';
+import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
 import { delivered, detail, failed, inbound, message } from './thread-fixtures';
 import { ThreadScreen } from './ThreadScreen';
@@ -11,8 +11,8 @@ const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();
 // The actions need messages.manage (the admin's): /auth/me grants it, every other GET is the thread.
 const mockAdminMe = { role: 'admin', permissions: ['inbox.read', 'inbox.send', 'messages.read', 'messages.manage'] };
-jest.mock('@/lib/api', () => ({
-  ...jest.requireActual('@/lib/api'),
+jest.mock('@/core/lib/http/api', () => ({
+  ...jest.requireActual('@/core/lib/http/api'),
   apiFetch: (mockPath: string) => (mockPath === '/auth/me' ? Promise.resolve(mockAdminMe) : mockApiFetch(mockPath)),
   apiSend: (...mockArgs: unknown[]) => mockApiSend(...mockArgs),
 }));

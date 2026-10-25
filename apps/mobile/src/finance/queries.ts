@@ -1,8 +1,8 @@
 import type { ExpenseCategoryView, ExpenseView, InvoiceView, PayoutView, TeacherEarningsSummaryView } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
-import { apiFetch } from '@/lib/api';
-import { listKey, pathKey } from '@/lib/query-keys';
-import { usePagedList } from '@/lib/use-paged-list';
+import { apiFetch } from '@/core/lib/http/api';
+import { listKey, pathKey } from '@/core/lib/query/query-keys';
+import { usePagedList } from '@/core/lib/query/use-paged-list';
 import type { FinanceSummary } from './summary-types';
 
 // Admin finance reads. Keys are the API path's segments, so invalidating ['payouts'] reaches a month.

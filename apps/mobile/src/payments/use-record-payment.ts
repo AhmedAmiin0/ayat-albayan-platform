@@ -1,9 +1,9 @@
 import type { PaymentView, StudentBalanceView } from '@ab/shared';
 import { useMutation, useQueryClient, type Query } from '@tanstack/react-query';
 import { useRef } from 'react';
-import { apiSend } from '@/lib/api';
-import type { Page } from '@/lib/paging';
-import { requestId } from '@/lib/request-id';
+import { apiSend } from '@/core/lib/http/api';
+import type { Page } from '@/core/lib/query/paging';
+import { requestId } from '@/core/lib/http/request-id';
 import { useAttachmentPaths } from './attachments';
 import { pendingPayment, withPaid, withPayment, type PaymentInput } from './optimistic';
 import { balanceKey } from './queries';

@@ -1,8 +1,8 @@
 import { STUDENT_STATUSES, studentStatusStyle, type StudentStatus } from '@ab/shared';
 import { View } from 'react-native';
-import { ApiError } from '@/lib/api';
-import { t } from '@/lib/i18n';
-import { useOptimisticStatus, type StatusChange, type StatusRequest } from '@/lib/use-optimistic-status';
+import { ApiError } from '@/core/lib/http/api';
+import { t } from '@/core/lib/i18n/i18n';
+import { useOptimisticStatus, type StatusChange, type StatusRequest } from '@/core/lib/query/use-optimistic-status';
 import { type, useTheme } from '@/theme';
 import { FilterPills } from '@/core/ui/form/FilterPills';
 import { SectionLabel } from './SectionLabel';

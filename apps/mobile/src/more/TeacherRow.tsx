@@ -1,8 +1,8 @@
 import { teacherName, teacherStatusStyle } from '@ab/shared';
 import { router } from 'expo-router';
 import { Pressable, View } from 'react-native';
-import { t } from '@/lib/i18n';
-import { locale } from '@/lib/locale';
+import { t } from '@/core/lib/i18n/i18n';
+import { locale } from '@/core/lib/i18n/locale';
 import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { StatusChip } from '@/core/ui/feedback/StatusChip';

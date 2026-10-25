@@ -2,7 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { fireEvent, render, screen, within } from '@testing-library/react-native';
 import { router } from 'expo-router';
 import { Appearance } from 'react-native';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { APPEARANCE_KEY } from './appearance';
 import { MoreScreen } from './MoreScreen';
 import { signOutDevice } from './sign-out';

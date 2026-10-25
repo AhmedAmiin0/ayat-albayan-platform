@@ -1,6 +1,6 @@
 import type { MessageView, ThreadDetail } from '@ab/shared';
 import type { InfiniteData } from '@tanstack/react-query';
-import { pathKey } from '@/lib/query-keys';
+import { pathKey } from '@/core/lib/query/query-keys';
 
 // One WhatsApp thread (docs/12 H2): paths, query key and the cache edits an optimistic send makes.
 // The cache is an infinite query: pages[0] is the newest page, each next page is older.

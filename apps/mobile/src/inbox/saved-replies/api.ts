@@ -1,7 +1,7 @@
 import type { SavedReply, SavedReplyCreate, SavedReplyUpdate, SignedUpload } from '@ab/shared';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { apiFetch, apiSend } from '@/lib/api';
-import { supabase } from '@/lib/supabase';
+import { apiFetch, apiSend } from '@/core/lib/http/api';
+import { supabase } from '@/core/lib/http/supabase';
 import { ChatFileError, type ChatFilePick } from '../send-file';
 
 // «الردود السريعة» (owner 2026-10-25): GET /saved-replies answers the shared list then the caller's

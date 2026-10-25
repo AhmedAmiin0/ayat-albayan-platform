@@ -1,7 +1,7 @@
 import type { StudentRecordingView } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { useMemo, useState } from 'react';
-import { apiFetch } from '@/lib/api';
+import { apiFetch } from '@/core/lib/http/api';
 import { teacherLabel } from './recording-format';
 import type { TeacherChoice } from './RecordingFiltersBar';
 

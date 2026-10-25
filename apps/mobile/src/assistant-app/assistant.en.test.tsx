@@ -1,6 +1,6 @@
 import en from '@ab/shared/i18n/en.json';
 import { screen } from '@testing-library/react-native';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { fakeNow } from '@/test/fake-now';
 import { renderWithQuery } from '@/test/query';
 import { AssistantHomeScreen } from './AssistantHomeScreen';
@@ -16,7 +16,7 @@ jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
 // /me/profile answers a profile (the «More» header reads its name); every list answers empty.
 const PROFILE = { id: 'u1', full_name: 'Sara Ali', email: null, phone_e164: null, avatar_url: null, role: 'assistant' };
 const mockApiFetch = jest.fn(async (p: string) => (p === '/me/profile' ? PROFILE : []));
-jest.mock('@/lib/api', () => ({ ...jest.requireActual('@/lib/api'), apiFetch: (p: string) => mockApiFetch(p) }));
+jest.mock('@/core/lib/http/api', () => ({ ...jest.requireActual('@/core/lib/http/api'), apiFetch: (p: string) => mockApiFetch(p) }));
 
 afterEach(() => jest.useRealTimers());
 

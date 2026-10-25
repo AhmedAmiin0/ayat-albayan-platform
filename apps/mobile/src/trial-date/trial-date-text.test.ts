@@ -1,5 +1,5 @@
 import { lessonWhenText } from '@ab/shared';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { historyOf, OLD, THU_1_18, trialRow } from './fixtures';
 import { countText, effectLine, pickedLine, warnLine, whenLines } from './trial-date-text';
 

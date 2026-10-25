@@ -1,7 +1,7 @@
 import { studentStatusStyle } from '@ab/shared';
 import { router } from 'expo-router';
 import { View } from 'react-native';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { ListRow } from '@/core/ui/layout/ListRow';
 import { StatusChip } from '@/core/ui/feedback/StatusChip';
 import { studentNote } from './student-note';

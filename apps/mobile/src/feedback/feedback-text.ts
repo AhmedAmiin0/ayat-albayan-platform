@@ -1,6 +1,6 @@
 import { feedbackEligible, type LessonView } from '@ab/shared';
-import { ApiError } from '@/lib/api';
-import { t } from '@/lib/i18n';
+import { ApiError } from '@/core/lib/http/api';
+import { t } from '@/core/lib/i18n/i18n';
 import type { FeedbackAverage, FeedbackListRow } from './types';
 
 const text = t.mobile.feedback;

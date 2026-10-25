@@ -1,8 +1,8 @@
 import ar from '@ab/shared/i18n/ar.json';
 import en from '@ab/shared/i18n/en.json';
 import { act, renderHook } from '@testing-library/react-native';
-import { ApiError } from '@/lib/api';
-import { t } from '@/lib/i18n';
+import { ApiError } from '@/core/lib/http/api';
+import { t } from '@/core/lib/i18n/i18n';
 import { isAccountDisabled, isOtherAppRole, setLoginNotice, useLoginNotice } from './login-notice';
 
 test('only a 403 with code account_disabled is a disabled account', () => {

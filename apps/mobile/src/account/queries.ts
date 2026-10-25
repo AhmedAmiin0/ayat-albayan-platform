@@ -1,8 +1,8 @@
 import type { AccountProfile } from '@ab/shared';
 import { QueryClient, QueryClientContext, queryOptions, useQuery } from '@tanstack/react-query';
 import { useContext } from 'react';
-import { apiFetch } from '@/lib/api';
-import { locale } from '@/lib/locale';
+import { apiFetch } from '@/core/lib/http/api';
+import { locale } from '@/core/lib/i18n/locale';
 
 /** GET /me/profile (R-ACC-01): the caller's own login, whatever the role. */
 export const PROFILE_KEY = ['me', 'profile'] as const;

@@ -1,5 +1,5 @@
 import { intlLocale, type Glyph, type LessonRecordingView, type Tone } from '@ab/shared';
-import { locale } from '@/lib/locale';
+import { locale } from '@/core/lib/i18n/locale';
 
 /** Where a recording list comes from: a lesson (admin, its teacher) or an internal meeting (admin, creator). */
 export interface RecordingSource {

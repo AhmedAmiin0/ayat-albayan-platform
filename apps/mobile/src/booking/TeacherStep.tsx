@@ -7,7 +7,7 @@ import {
   type Program,
 } from '@ab/shared';
 import { View } from 'react-native';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { FormLabel } from '@/payments/FormLabel';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';
@@ -15,7 +15,7 @@ import { FilterPills } from '@/core/ui/form/FilterPills';
 import { ListRow } from '@/core/ui/layout/ListRow';
 import { type, useTheme } from '@/theme';
 import { useBookingTeachers } from './queries';
-import { locale } from '@/lib/locale';
+import { locale } from '@/core/lib/i18n/locale';
 
 export interface TeacherStepProps {
   program: Program;

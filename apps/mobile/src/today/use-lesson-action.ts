@@ -1,12 +1,12 @@
 import { CANCEL_STATUS, type CancelRequest, type LessonStatus } from '@ab/shared';
 import { useEffect } from 'react';
-import { ApiError } from '@/lib/api';
-import { t } from '@/lib/i18n';
+import { ApiError } from '@/core/lib/http/api';
+import { t } from '@/core/lib/i18n/i18n';
 import {
   type StatusChange,
   type StatusRequest,
   useOptimisticStatus,
-} from '@/lib/use-optimistic-status';
+} from '@/core/lib/query/use-optimistic-status';
 
 /** A confirm, or a cancel carrying its body (docs/10 routes 6 and 9). */
 export interface LessonChange extends StatusChange<LessonStatus> {

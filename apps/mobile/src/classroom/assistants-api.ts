@@ -1,7 +1,7 @@
 import type { AssistantLessonView, AssistantView } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
-import { apiFetch, apiSend, toQueryString } from '@/lib/api';
-import { pathKey } from '@/lib/query-keys';
+import { apiFetch, apiSend, toQueryString } from '@/core/lib/http/api';
+import { pathKey } from '@/core/lib/query/query-keys';
 
 /** A body that is not a list (an older API, a stub) reads as no assistants rather than crashing the student screen. */
 const asList = (data: AssistantView[]): AssistantView[] => (Array.isArray(data) ? data : []);

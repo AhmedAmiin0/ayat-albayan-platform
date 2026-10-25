@@ -2,7 +2,7 @@ import { router } from 'expo-router';
 import type { ReactNode } from 'react';
 import { View } from 'react-native';
 import { useHolds, useIsAdmin } from '@/auth/use-permissions';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/more/Note';
 import { useTheme } from '@/theme';
 import { Button } from '@/core/ui/primitives/Button';

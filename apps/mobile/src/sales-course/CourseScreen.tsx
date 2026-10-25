@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { ScrollView } from 'react-native';
 import { bookFailure, isCodedRefusal } from '@/booking/booking-errors';
 import { BookingModeProvider } from '@/booking/booking-mode';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { inTree, useTreeBase } from '@/nav/tree-base';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { Button } from '@/core/ui/primitives/Button';

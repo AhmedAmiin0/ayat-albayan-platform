@@ -2,7 +2,7 @@ import { counted } from '@ab/shared';
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { booked, maryam, SUN_17, THU_18 } from '@/booking/fixtures';
 import { dayLine } from '@/booking/picks';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { localDay } from '@/payments/format';
 import { renderWithQuery } from '@/test/query';
 import { isDisabled, fakeCourseApi, press, walkToReview } from './course-test-utils';
@@ -11,8 +11,8 @@ import { courseView, STUDENT_ID } from './fixtures';
 
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();
-jest.mock('@/lib/api', () => ({
-  ...jest.requireActual('@/lib/api'),
+jest.mock('@/core/lib/http/api', () => ({
+  ...jest.requireActual('@/core/lib/http/api'),
   apiFetch: (mockPath: string) => mockApiFetch(mockPath),
   apiSend: (...mockArgs: unknown[]) => mockApiSend(...mockArgs),
 }));

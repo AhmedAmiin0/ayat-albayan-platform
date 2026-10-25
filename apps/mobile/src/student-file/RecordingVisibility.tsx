@@ -1,6 +1,6 @@
 import type { StudentRecordingView } from '@ab/shared';
 import { Switch, View } from 'react-native';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { ErrorLine } from '@/inbox/ErrorLine';
 import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';

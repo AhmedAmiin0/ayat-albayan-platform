@@ -1,6 +1,6 @@
 import type { MyPaymentRow } from '@ab/shared';
 import { View } from 'react-native';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { AttachmentsViewer } from '@/money/AttachmentsViewer';
 import { hasAttachments } from '@/money/receipt-file';
 import { instantDay, money } from '@/payments/format';

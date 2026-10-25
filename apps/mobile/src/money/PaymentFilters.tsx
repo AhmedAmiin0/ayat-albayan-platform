@@ -1,7 +1,7 @@
 import { PAYMENT_KINDS, type PaymentKind } from '@ab/shared';
 import { useMemo } from 'react';
 import { riyadhToday } from '@/calendar/week';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { FilterPills } from '@/core/ui/form/FilterPills';
 import { monthLabel, recentMonths } from './months';
 
