@@ -1,3 +1,4 @@
+export * from './async/index.js';
 export * from './arabic.js';
 export * from './enums/index.js';
 export * from './highlight-diff.js';
