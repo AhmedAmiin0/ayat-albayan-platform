@@ -13,8 +13,8 @@ import type { ChangeRole } from './course-change.plan';
 import type { Loaded, Planned } from './course-change.planner';
 import { CourseChangeQueries, type ChangeRule, type CourseSub } from './course-change.queries';
 import { CourseChangeDeps } from './course-change.writer';
-import { SalesBookingScope } from '../sales-booking.ownership';
-import { assertOwnStudents } from '../sales-booking.scope';
+import { SalesBookingScope } from '../sales/booking/sales-booking.ownership';
+import { assertOwnStudents } from '../sales/booking/sales-booking.scope';
 
 export type ChangeActor = { user: AuthUser; role: ChangeRole };
 

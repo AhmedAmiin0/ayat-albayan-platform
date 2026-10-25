@@ -5,9 +5,9 @@ import type { BookingInvoices } from '../invoice/booking.invoice';
 import type { BookingQueries } from '../core/booking.queries';
 import { BookingService } from '../core/booking.service';
 import { BookingWriter } from '../core/booking.writer';
-import type { SalesBookingScope } from '../sales-booking.ownership';
-import type { SalesCourse } from '../sales-course.service';
-import { SalesBookingService } from '../sales-booking.service';
+import type { SalesBookingScope } from '../sales/booking/sales-booking.ownership';
+import type { SalesCourse } from '../sales/course/sales-course.service';
+import { SalesBookingService } from '../sales/booking/sales-booking.service';
 import { fakeTeacherAlert } from './teacher-alert.fakes';
 
 const TEACHER = { id: IDS.teacher, profile_id: 'P1', phone_e164: '+201001234567', tz: 'Africa/Cairo' };

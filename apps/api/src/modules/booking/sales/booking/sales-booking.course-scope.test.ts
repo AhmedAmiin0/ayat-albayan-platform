@@ -1,13 +1,13 @@
 import { bookingRequestSchema, type BookingRequest } from '@ab/shared';
 import { describe, expect, it, vi } from 'vitest';
-import type { AuthUser } from '../../common/auth/verify-token';
-import { readerOf } from '../../common/settings/settings.fakes';
-import type { SalesOwnership } from '../sales/sales-ownership';
-import type { SalesQueries } from '../sales/sales.queries';
-import { errorCode } from '../../common/http/errors';
-import { BookingSettings } from './booking.settings';
+import type { AuthUser } from '../../../../common/auth/verify-token';
+import { readerOf } from '../../../../common/settings/settings.fakes';
+import type { SalesOwnership } from '../../../sales/sales-ownership';
+import type { SalesQueries } from '../../../sales/sales.queries';
+import { errorCode } from '../../../../common/http/errors';
+import { BookingSettings } from '../../booking.settings';
 import { SalesBookingScope } from './sales-booking.ownership';
-import type { TrialDateQueries } from './trial-date.queries';
+import type { TrialDateQueries } from '../../trial-date/trial-date.queries';
 import { assertBookingScope } from './sales-booking.scope';
 
 // The assistant's course (owner 2026-10-18): kind 'package' with self.sales_money, one student of hers.

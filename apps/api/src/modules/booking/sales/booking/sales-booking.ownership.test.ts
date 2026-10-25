@@ -1,18 +1,18 @@
 import { bookingRequestSchema, type BookingRequest } from '@ab/shared';
 import { HttpException } from '@nestjs/common';
 import { describe, expect, it, vi } from 'vitest';
-import type { AuthUser } from '../../common/auth/verify-token';
-import { readerOf } from '../../common/settings/settings.fakes';
-import { NO_OWNERSHIP, type SalesOwnership } from '../sales/sales-ownership';
-import type { SalesQueries } from '../sales/sales.queries';
-import { errorCode } from '../../common/http/errors';
-import type { BookingService } from './core/booking.service';
-import { BookingSettings } from './booking.settings';
+import type { AuthUser } from '../../../../common/auth/verify-token';
+import { readerOf } from '../../../../common/settings/settings.fakes';
+import { NO_OWNERSHIP, type SalesOwnership } from '../../../sales/sales-ownership';
+import type { SalesQueries } from '../../../sales/sales.queries';
+import { errorCode } from '../../../../common/http/errors';
+import type { BookingService } from '../../core/booking.service';
+import { BookingSettings } from '../../booking.settings';
 import { SalesBookingScope } from './sales-booking.ownership';
-import type { TrialDateQueries } from './trial-date.queries';
+import type { TrialDateQueries } from '../../trial-date/trial-date.queries';
 import { assertBookingScope, assertOwnStudents, scopeDuplicates } from './sales-booking.scope';
 import { SalesBookingService } from './sales-booking.service';
-import type { SalesCourse } from './sales-course.service';
+import type { SalesCourse } from '../course/sales-course.service';
 
 // settings.sales_auto_assign OFF (owner 2026-10-12): /sales/booking checks no ownership (own = null);
 // the four trial-only rules still hold. ON keeps today's rules (sales-booking.scope.test.ts).

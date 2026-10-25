@@ -1,12 +1,12 @@
 import { upcomingTrial, type BookingRequest, type BookingResult, type Conflict, type TrialDateResult, type TrialHistory } from '@ab/shared';
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { randomUUID } from 'node:crypto';
-import { LessonEvents } from '../../common/events/lesson-events';
-import { gateConfirmations } from '../../common/rules/confirmations';
-import { NotificationPolicy } from '../notification-rules/policy';
-import { domainError } from './booking.errors';
-import { BookingFollowUps } from './core/booking.follow-ups';
-import { BookingPlanner } from './plan/booking.planner';
+import { LessonEvents } from '../../../common/events/lesson-events';
+import { gateConfirmations } from '../../../common/rules/confirmations';
+import { NotificationPolicy } from '../../notification-rules/policy';
+import { domainError } from '../booking.errors';
+import { BookingFollowUps } from '../core/booking.follow-ups';
+import { BookingPlanner } from '../plan/booking.planner';
 import { trialHistory, trialLessonsOf } from './trial-date.history';
 import { bookPick, movePick, type MovedTrial } from './trial-date.plan';
 import { TrialDateQueries } from './trial-date.queries';

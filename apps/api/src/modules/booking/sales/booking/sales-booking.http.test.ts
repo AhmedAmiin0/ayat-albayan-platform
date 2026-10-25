@@ -1,16 +1,16 @@
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { AppModule } from '../../app.module';
-import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '../../common/auth/auth.guard';
-import type { AuthUser } from '../../common/auth/verify-token';
-import { fakeSettings } from '../../common/settings/settings.fakes';
-import { SettingsService } from '../../common/settings/settings.service';
-import { domainError } from './booking.errors';
-import { BookingService } from './core/booking.service';
-import { SalesQueries } from '../sales/sales.queries';
-import { SlotsService } from './plan/slots.service';
-import { TeacherOptionsService } from './teacher/teacher-options.service';
+import { AppModule } from '../../../../app.module';
+import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '../../../../common/auth/auth.guard';
+import type { AuthUser } from '../../../../common/auth/verify-token';
+import { fakeSettings } from '../../../../common/settings/settings.fakes';
+import { SettingsService } from '../../../../common/settings/settings.service';
+import { domainError } from '../../booking.errors';
+import { BookingService } from '../../core/booking.service';
+import { SalesQueries } from '../../../sales/sales.queries';
+import { SlotsService } from '../../plan/slots.service';
+import { TeacherOptionsService } from '../../teacher/teacher-options.service';
 
 const A = 'a1000000-0000-4000-8000-00000000000a';
 const B = 'b1000000-0000-4000-8000-00000000000b';

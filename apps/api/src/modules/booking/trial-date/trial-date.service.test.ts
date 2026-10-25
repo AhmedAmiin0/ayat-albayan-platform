@@ -1,6 +1,6 @@
 import { HttpException } from '@nestjs/common';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { IDS, NOW } from './booking.fakes';
+import { IDS, NOW } from '../booking.fakes';
 import { ACTOR, fakeTrialDates, OLD, OTHER_TEACHER, REQUEST, trialRequest, trialRow } from './trial-date.fakes';
 
 const code = async (p: Promise<unknown>) => {

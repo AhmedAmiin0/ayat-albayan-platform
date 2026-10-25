@@ -25,21 +25,21 @@ import { InstantController } from './instant/instant.controller';
 import { InstantQueries } from './instant/instant.queries';
 import { InstantLessonService } from './instant/instant.service';
 import { MakeupCandidates } from './makeup/makeup-candidates.service';
-import { SalesBookingController, SalesBookingOptionsController } from './sales-booking.controller';
-import { SalesBookingScope } from './sales-booking.ownership';
-import { SalesBookingOptions, SalesBookingService } from './sales-booking.service';
-import { SalesCourseController } from './sales-course.controller';
-import { SalesCourseQueries } from './sales-course.queries';
-import { SalesCourse } from './sales-course.service';
+import { SalesBookingController, SalesBookingOptionsController } from './sales/booking/sales-booking.controller';
+import { SalesBookingScope } from './sales/booking/sales-booking.ownership';
+import { SalesBookingOptions, SalesBookingService } from './sales/booking/sales-booking.service';
+import { SalesCourseController } from './sales/course/sales-course.controller';
+import { SalesCourseQueries } from './sales/course/sales-course.queries';
+import { SalesCourse } from './sales/course/sales-course.service';
 import { SlotsService } from './plan/slots.service';
 import { TeacherAlertQueries } from './teacher/teacher-alert.queries';
 import { TeacherAlert, TeacherAlertDeps } from './teacher/teacher-alert.service';
 import { TeacherOptionsQueries } from './teacher/teacher-options.queries';
 import { TeacherOptionsService } from './teacher/teacher-options.service';
-import { SalesTrialDateController, TrialDateController } from './trial-date.controller';
-import { TrialDateQueries } from './trial-date.queries';
-import { TrialDateDeps, TrialDates } from './trial-date.service';
-import { SalesTrialDates } from './sales-trial-date.service';
+import { SalesTrialDateController, TrialDateController } from './trial-date/trial-date.controller';
+import { TrialDateQueries } from './trial-date/trial-date.queries';
+import { TrialDateDeps, TrialDates } from './trial-date/trial-date.service';
+import { SalesTrialDates } from './sales/course/sales-trial-date.service';
 
 /**
  * Booking wizard: teacher filter, slot grid with conflict reasons, POST /booking in one transaction,

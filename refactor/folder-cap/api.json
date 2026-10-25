@@ -19,10 +19,6 @@
     "files": 23,
     "dirs": 0
   },
-  "apps/api/src/modules/booking": {
-    "files": 23,
-    "dirs": 7
-  },
   "apps/api/src/modules/dashboard": {
     "files": 16,
     "dirs": 0

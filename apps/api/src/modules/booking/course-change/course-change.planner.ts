@@ -7,7 +7,7 @@ import { CourseLessonQueries, type MovedLesson } from './course-change.lessons';
 import { assertChange, assertStart, planChange, type ChangePlan, type ChangeRole } from './course-change.plan';
 import { unmaterialised } from './course-change.projection';
 import { CourseChangeQueries, type ChangeRule, type CourseSub } from './course-change.queries';
-import { courseOverlaps } from '../sales-course.rules';
+import { courseOverlaps } from '../sales/course/sales-course.rules';
 
 export type Loaded = { sub: CourseSub; active: ChangeRule[]; all: ChangeRule[] };
 export type Planned = Loaded & { plan: ChangePlan; counted: number; moved: MovedLesson[] };

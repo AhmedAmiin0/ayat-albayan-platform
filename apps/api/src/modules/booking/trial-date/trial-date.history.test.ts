@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { IDS } from './booking.fakes';
+import { IDS } from '../booking.fakes';
 import { ACTOR, OLD, trialRow } from './trial-date.fakes';
 import { trialHistory, trialLessonsOf } from './trial-date.history';
 

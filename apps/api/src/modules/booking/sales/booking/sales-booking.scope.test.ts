@@ -1,7 +1,7 @@
 import { bookingRequestSchema, type BookingRequest } from '@ab/shared';
 import { HttpException } from '@nestjs/common';
 import { describe, expect, it } from 'vitest';
-import type { SalesOwnership } from '../sales/sales-ownership';
+import type { SalesOwnership } from '../../../sales/sales-ownership';
 import { assertBookingScope, assertOwnStudents, scopeDuplicates } from './sales-booking.scope';
 
 const TEACHER = 'a0000000-0000-4000-8000-000000000001';

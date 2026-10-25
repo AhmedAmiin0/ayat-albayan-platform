@@ -1,7 +1,7 @@
 import { bookingKindOf, type BookingRequest } from '@ab/shared';
 import { HttpException } from '@nestjs/common';
-import { forbidden } from '../../common/http/errors';
-import type { SalesOwnership } from '../sales/sales-ownership';
+import { forbidden } from '../../../../common/http/errors';
+import type { SalesOwnership } from '../../../sales/sales-ownership';
 
 const all = (ids: readonly string[], allowed: readonly string[]): boolean => ids.every((id) => allowed.includes(id));
 

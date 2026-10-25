@@ -1,16 +1,16 @@
 import { bookingKindOf, type BookingRequest, type BookingResult, type BookingTeacherOption, type Conflict, type SlotsResponse } from '@ab/shared';
 import { HttpStatus, Injectable } from '@nestjs/common';
-import { can } from '../../common/auth/permissions';
-import type { AuthUser } from '../../common/auth/verify-token';
-import { domainError } from './booking.errors';
-import type { PrepareOptions } from './plan/booking.planner';
-import type { SlotsQuery, TeacherOptionsQuery } from './booking.dto';
-import { BookingService } from './core/booking.service';
+import { can } from '../../../../common/auth/permissions';
+import type { AuthUser } from '../../../../common/auth/verify-token';
+import { domainError } from '../../booking.errors';
+import type { PrepareOptions } from '../../plan/booking.planner';
+import type { SlotsQuery, TeacherOptionsQuery } from '../../booking.dto';
+import { BookingService } from '../../core/booking.service';
 import { SalesBookingScope } from './sales-booking.ownership';
-import { SalesCourse } from './sales-course.service';
+import { SalesCourse } from '../course/sales-course.service';
 import { assertBookingScope, assertOwnStudents, scopeDuplicates, type BookingOwnership } from './sales-booking.scope';
-import { SlotsService } from './plan/slots.service';
-import { TeacherOptionsService } from './teacher/teacher-options.service';
+import { SlotsService } from '../../plan/slots.service';
+import { TeacherOptionsService } from '../../teacher/teacher-options.service';
 
 /**
  * The booking wizard for an assistant (R-ASST-01): the same planner, conflict check and create_booking

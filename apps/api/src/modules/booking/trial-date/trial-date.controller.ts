@@ -2,12 +2,12 @@ import { bookingRequestSchema, type Conflict, type TrialDateResult, type TrialHi
 import { Body, Controller, Get, HttpCode, Post, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
-import { CurrentUser, Permissions } from '../../common/auth/decorators';
-import type { AuthUser } from '../../common/auth/verify-token';
-import { parseOrThrow } from '../../common/http/http';
-import { clientRequest } from './core/booking.payload';
-import { withPackageSize } from './plan/package-size';
-import { SalesTrialDates } from './sales-trial-date.service';
+import { CurrentUser, Permissions } from '../../../common/auth/decorators';
+import type { AuthUser } from '../../../common/auth/verify-token';
+import { parseOrThrow } from '../../../common/http/http';
+import { clientRequest } from '../core/booking.payload';
+import { withPackageSize } from '../plan/package-size';
+import { SalesTrialDates } from '../sales/course/sales-trial-date.service';
 import { TrialDates } from './trial-date.service';
 
 const historyQuery = z.object({ studentId: z.uuid() });
