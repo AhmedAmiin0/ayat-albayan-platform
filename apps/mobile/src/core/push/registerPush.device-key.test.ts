@@ -14,7 +14,7 @@ jest.mock('./silence-push', () => ({
   silencePush: () => mockSilence(),
   silenceSettled: () => mockSettled(),
 }));
-jest.mock('@/push/live-session', () => ({ hasLiveSession: jest.fn(async () => true) }));
+jest.mock('@/core/push/live-session', () => ({ hasLiveSession: jest.fn(async () => true) }));
 jest.mock('expo-device', () => ({ __esModule: true, isDevice: true }));
 jest.mock('expo-constants', () => ({ __esModule: true, default: { expoConfig: { extra: { eas: { projectId: 'proj-1' } } } } }));
 jest.mock('expo-notifications', () => ({

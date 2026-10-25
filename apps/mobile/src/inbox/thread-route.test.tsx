@@ -1,8 +1,8 @@
 import { useLocalSearchParams } from 'expo-router';
 import { renderRouter, screen } from 'expo-router/testing-library';
 import { Text } from 'react-native';
-import { ChatStack } from '@/nav/ChatStack';
-import { TabStack } from '@/nav/TabStack';
+import { ChatStack } from '@/core/nav/ChatStack';
+import { TabStack } from '@/core/nav/TabStack';
 import { threadHref } from './thread-cache';
 
 // The real layout's shape with a stub screen: the thread lives in (admin-chat), above the tabs, under

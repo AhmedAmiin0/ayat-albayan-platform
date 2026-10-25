@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { ScrollView } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { requestId as newRequestId } from '@/core/lib/http/request-id';
-import { useTreeBase } from '@/nav/tree-base';
+import { useTreeBase } from '@/core/nav/tree-base';
 import { Button } from '@/core/ui/primitives/Button';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { BookedPanel } from './BookedPanel';

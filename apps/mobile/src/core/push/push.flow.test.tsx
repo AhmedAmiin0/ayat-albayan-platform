@@ -10,7 +10,7 @@ import { DEVICE_KEY, TOKEN_KEY } from './registerPush';
 
 // Jest has no EAS config; registerPush needs the linked project's id.
 // Signed in with a valid token (live-session.test.ts covers the check itself).
-jest.mock('@/push/live-session', () => ({ hasLiveSession: jest.fn(async () => true) }));
+jest.mock('@/core/push/live-session', () => ({ hasLiveSession: jest.fn(async () => true) }));
 jest.mock('expo-constants', () => ({
   __esModule: true,
   default: { expoConfig: { version: 'test', extra: { eas: { projectId: 'proj-flow' } } } },

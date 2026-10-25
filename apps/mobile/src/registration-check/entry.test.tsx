@@ -3,7 +3,7 @@ import { detail, inbound } from '@/inbox/thread-fixtures';
 import { ThreadScreen } from '@/inbox/ThreadScreen';
 import { t } from '@/core/lib/i18n/i18n';
 import { pathKey } from '@/core/lib/query/query-keys';
-import { TreeBaseProvider } from '@/nav/tree-base';
+import { TreeBaseProvider } from '@/core/nav/tree-base';
 import { AllStudentsScreen } from '@/sales/AllStudentsScreen';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 

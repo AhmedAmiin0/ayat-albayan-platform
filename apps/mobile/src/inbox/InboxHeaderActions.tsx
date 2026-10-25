@@ -1,5 +1,5 @@
 import { View } from 'react-native';
-import type { TreeBase } from '@/nav/tree-base';
+import type { TreeBase } from '@/core/nav/tree-base';
 import { HeldBell } from '@/notifications/HeldBell';
 import { NewChatSheet } from './NewChatSheet';
 

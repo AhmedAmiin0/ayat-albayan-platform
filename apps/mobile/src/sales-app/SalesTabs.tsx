@@ -1,7 +1,7 @@
 import { usePermissions } from '@/auth/use-permissions';
-import { useInboxBadge } from '@/nav/use-inbox-badge';
-import { TreeBaseProvider } from '@/nav/tree-base';
-import { usePushRegistration } from '@/push/usePushRegistration';
+import { useInboxBadge } from '@/core/nav/use-inbox-badge';
+import { TreeBaseProvider } from '@/core/nav/tree-base';
+import { usePushRegistration } from '@/core/push/usePushRegistration';
 import { AppNativeTabs } from '@/core/ui/layout/AppNativeTabs';
 import { salesTabItems } from './sales-tabs';
 

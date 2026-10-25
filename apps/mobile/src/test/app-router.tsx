@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { act, renderRouter } from 'expo-router/testing-library';
 import { queryClient } from '@/core/lib/query/query-client';
-import type { NavState } from '@/nav/chat-groups';
+import type { NavState } from '@/core/nav/chat-groups';
 import { currentBackend, type FakeBackend, setBackend } from './fake-backend';
 import { resetNative } from './native-mocks';
 import { routes } from './app-routes';

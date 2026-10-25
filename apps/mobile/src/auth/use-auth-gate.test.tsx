@@ -21,7 +21,7 @@ jest.mock('@/core/lib/http/supabase', () => ({
 }));
 jest.mock('./verify-role', () => ({ verifyRole: (s: unknown) => mockVerify(s) }));
 jest.mock('@/core/lib/query/query-client', () => ({ clearQueryCaches: () => mockClear() }));
-jest.mock('@/push/silence-push', () => ({ silencePush: () => mockSilence() }));
+jest.mock('@/core/push/silence-push', () => ({ silencePush: () => mockSilence() }));
 
 const session = { access_token: 'tok', user: { id: 'u1' } } as Session;
 

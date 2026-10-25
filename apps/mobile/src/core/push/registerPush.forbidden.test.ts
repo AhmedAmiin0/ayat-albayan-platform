@@ -7,7 +7,7 @@ import { registerPush, TOKEN_KEY } from './registerPush';
 // A role without notifications.push (sales, a classroom assistant): PUT /me/push-tokens answers 403.
 const mockApiSend = jest.fn();
 // Signed in with a valid token (live-session.test.ts covers the check itself).
-jest.mock('@/push/live-session', () => ({ hasLiveSession: jest.fn(async () => true) }));
+jest.mock('@/core/push/live-session', () => ({ hasLiveSession: jest.fn(async () => true) }));
 jest.mock('expo-device', () => ({ __esModule: true, isDevice: true }));
 jest.mock('expo-constants', () => ({ __esModule: true, default: { expoConfig: { extra: { eas: { projectId: 'proj-1' } } } } }));
 jest.mock('expo-notifications', () => ({

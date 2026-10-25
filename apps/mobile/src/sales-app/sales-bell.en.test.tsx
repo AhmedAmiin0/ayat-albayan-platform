@@ -1,7 +1,7 @@
 import { screen } from '@testing-library/react-native';
 import { InboxScreen } from '@/inbox/InboxScreen';
 import { thread } from '@/inbox/thread-fixtures';
-import { TreeBaseProvider } from '@/nav/tree-base';
+import { TreeBaseProvider } from '@/core/nav/tree-base';
 import { renderWithQuery } from '@/test/query';
 
 jest.mock('react-native/Libraries/ReactNative/I18nManager', () => {

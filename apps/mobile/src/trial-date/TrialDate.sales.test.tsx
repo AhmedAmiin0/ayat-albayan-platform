@@ -1,7 +1,7 @@
 import { fireEvent, screen } from '@testing-library/react-native';
 import { maryam } from '@/booking/fixtures';
 import { t } from '@/core/lib/i18n/i18n';
-import { TreeBaseProvider } from '@/nav/tree-base';
+import { TreeBaseProvider } from '@/core/nav/tree-base';
 import { renderWithQuery } from '@/test/query';
 import { historyOf, OLD, STUDENT, trialResult, trialRow } from './fixtures';
 import { TrialDateScreen } from './TrialDateScreen';

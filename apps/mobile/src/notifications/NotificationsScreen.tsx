@@ -4,7 +4,7 @@ import { FlatList, View } from 'react-native';
 import { usePermissions } from '@/auth/use-permissions';
 import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/more/Note';
-import { routeIn, type PushTree } from '@/push/notification-route';
+import { routeIn, type PushTree } from '@/core/push/notification-route';
 import { Button } from '@/core/ui/primitives/Button';
 import { EmptyState } from '@/core/ui/feedback/EmptyState';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';

@@ -1,7 +1,7 @@
 import { router } from 'expo-router';
 import { Pressable, View } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
-import { notificationsHref, type PushTree } from '@/push/notification-route';
+import { notificationsHref, type PushTree } from '@/core/push/notification-route';
 import { shape, type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { bellBadge, bellLabel } from './notifications-cache';

@@ -1,8 +1,8 @@
 import { tabOpen } from '@/auth/route-permissions';
 import { type Can, usePermissions } from '@/auth/use-permissions';
 import { t } from '@/core/lib/i18n/i18n';
-import { useInboxBadge } from '@/nav/use-inbox-badge';
-import { usePushRegistration } from '@/push/usePushRegistration';
+import { useInboxBadge } from '@/core/nav/use-inbox-badge';
+import { usePushRegistration } from '@/core/push/usePushRegistration';
 import { AppNativeTabs, type TabItem } from '@/core/ui/layout/AppNativeTabs';
 
 // docs/07 §12 bottom tabs, native. The first tab sits at the inline-start (right in Arabic). A tab the held

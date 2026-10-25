@@ -1,7 +1,7 @@
 import { renderRouter, screen } from 'expo-router/testing-library';
 import { Text } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
-import { TabStack } from '@/nav/TabStack';
+import { TabStack } from '@/core/nav/TabStack';
 import TabsLayout from '../../app/(tabs)/_layout';
 import MakeupRoute from '../../app/(tabs)/students/makeup/[lessonId]';
 import { makeupParams } from './makeup-draft';
@@ -11,8 +11,8 @@ import { lesson, yusuf } from '@/today/fixtures';
 // (Stack.Protected on (tabs)) covers it: a teacher never reaches it.
 // The tabs' permission and badge reads need the API: allow everything, no badge, in this routing test.
 jest.mock('@/auth/use-permissions', () => ({ usePermissions: () => () => true }));
-jest.mock('@/nav/use-inbox-badge', () => ({ useInboxBadge: () => undefined }));
-jest.mock('@/push/usePushRegistration', () => ({ usePushRegistration: () => undefined }));
+jest.mock('@/core/nav/use-inbox-badge', () => ({ useInboxBadge: () => undefined }));
+jest.mock('@/core/push/usePushRegistration', () => ({ usePushRegistration: () => undefined }));
 jest.mock('./MakeupWizard', () => ({
   MakeupWizard: ({ source }: { source: { studentName: string; durationMin: number } }) => {
     const { Text: T } = jest.requireActual('react-native');

@@ -3,21 +3,21 @@ import { renderRouter, screen } from 'expo-router/testing-library';
 import { Text } from 'react-native';
 import { useThreadMode } from '@/inbox/thread-mode';
 import { queryClient } from '@/core/lib/query/query-client';
-import { TabStack } from '@/nav/TabStack';
-import { useTreeBase } from '@/nav/tree-base';
-import { type PushTree, routeIn } from '@/push/notification-route';
-import AdminChatLayout from '../../app/(admin-chat)/_layout';
-import SalesChatLayout from '../../app/(sales-chat)/_layout';
-import TeacherChatLayout from '../../app/(teacher-chat)/_layout';
-import TabsLayout from '../../app/(tabs)/_layout';
-import RootLayout from '../../app/_layout';
-import SalesLayout from '../../app/sales/_layout';
-import TeacherLayout from '../../app/teacher/_layout';
+import { TabStack } from '@/core/nav/TabStack';
+import { useTreeBase } from '@/core/nav/tree-base';
+import { type PushTree, routeIn } from '@/core/push/notification-route';
+import AdminChatLayout from '../../../app/(admin-chat)/_layout';
+import SalesChatLayout from '../../../app/(sales-chat)/_layout';
+import TeacherChatLayout from '../../../app/(teacher-chat)/_layout';
+import TabsLayout from '../../../app/(tabs)/_layout';
+import RootLayout from '../../../app/_layout';
+import SalesLayout from '../../../app/sales/_layout';
+import TeacherLayout from '../../../app/teacher/_layout';
 
 // The real root, tree and chat-group layouts with stub screens: each tree's chat is its own route group
 // above the tabs (a full screen, react-native-screens#4132), behind its tree's gate, under the same URL.
 jest.mock('expo-font', () => ({ useFonts: () => [true, null] }));
-jest.mock('@/push/registerPush', () => ({ registerPush: jest.fn(async () => undefined) }));
+jest.mock('@/core/push/registerPush', () => ({ registerPush: jest.fn(async () => undefined) }));
 // /auth/me with no `permissions` list: nothing hidden, so each tree opens on its first tab.
 const mockMe = { answer: {} as object };
 const mockTeacher = { id: 't1', display_name_ar: 'أبرار', tz: 'Africa/Cairo', students: [] };
