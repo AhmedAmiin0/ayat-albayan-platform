@@ -40,6 +40,11 @@ describe('device pushes only to a live session of the recipient (migration 700)'
     const bindings = [{ token: T, profile_id: 'other', session_id: 'live' }];
     expect((await sentTokens({ bindings })).tokens).toEqual([]);
   });
+
+  it('a contested binding (asked for without its device key, migration 720) is not pushed', async () => {
+    const bindings = [{ token: T, profile_id: 't1', session_id: 'live', contested_at: '2026-10-25T00:00:00Z' }];
+    expect((await sentTokens({ bindings })).tokens).toEqual([]);
+  });
 });
 
 describe('a failed session lookup (migration not applied yet, RPC timeout)', () => {

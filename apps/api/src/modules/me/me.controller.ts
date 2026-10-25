@@ -14,11 +14,15 @@ import { pushTokenBody, pushTokenSchema } from './push-tokens';
 export class MeController {
   constructor(private readonly me: MeService) {}
 
-  /** Idempotent; (re)binds the token to the caller's session, taking it off any other profile. */
+  /**
+   * Idempotent; (re)binds the token to the caller's session, taking it off any other profile, and
+   * answers the device key to send next time. 409 when it is another person's live device.
+   */
   @Put()
-  @HttpCode(204)
-  add(@Body() body: unknown, @CurrentUser() user: AuthUser): Promise<void> {
-    return this.me.addPushToken(user.id, parseOrThrow(pushTokenBody, body).token, user.sessionId ?? null);
+  @HttpCode(200)
+  add(@Body() body: unknown, @CurrentUser() user: AuthUser): Promise<{ deviceKey: string }> {
+    const { token, deviceKey } = parseOrThrow(pushTokenBody, body);
+    return this.me.addPushToken({ userId: user.id, token, deviceKey, sessionId: user.sessionId ?? null });
   }
 
   /** The client sends the token URL-encoded (the brackets); 204 even when it was not stored. */

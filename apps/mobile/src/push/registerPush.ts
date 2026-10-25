@@ -5,14 +5,16 @@ import * as Notifications from 'expo-notifications';
 import { Platform } from 'react-native';
 import { ApiError, apiSend } from '@/lib/api';
 import { t } from '@/lib/i18n';
+import { putPushToken, TOKEN_KEY } from './device-key';
 import { hasLiveSession } from './live-session';
 import { ensurePushPermission } from './permission';
+import { silenceSettled } from './silence-push';
 
 // R-MOB-01 registration. The API sends the pushes (common/push, one per event per admin);
 // useNotificationHandling shows them in the foreground and opens their screen on a tap.
 
-/** The token this device put on the profile, so sign-out removes exactly it (survives restarts). */
-export const TOKEN_KEY = 'push.token';
+export { DEVICE_KEY, TOKEN_KEY } from './device-key';
+
 /** Matches the expo-notifications config plugin's defaultChannel in app.json. */
 export const ANDROID_CHANNEL = 'default';
 
@@ -45,9 +47,10 @@ export async function registerPush(): Promise<void> {
       });
     }
     if (!(await ensurePushPermission())) return;
+    // A sign-out's OS unregister still running (slow network) would kill the token fetched next.
+    await silenceSettled();
     const { data: token } = await Notifications.getExpoPushTokenAsync({ projectId });
-    await apiSend('PUT', '/me/push-tokens', { token });
-    await AsyncStorage.setItem(TOKEN_KEY, token);
+    await putPushToken(token);
   } catch (error) {
     // Push is a convenience: no error UI. The next start registers again. A dev build says why
     // (an Android build without android.googleServicesFile never gets a token). A 403 is a role

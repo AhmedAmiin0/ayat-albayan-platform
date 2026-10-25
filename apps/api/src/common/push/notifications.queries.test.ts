@@ -1,6 +1,9 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import type { Db } from '../db/db.module';
 import { NotificationsQueries, WEB_PUSH_MAX_PER_PROFILE } from './notifications.queries';
+
+// The takeover check has its own tests (web-push.claim.test.ts); here every browser is free.
+vi.mock('./web-push.claim', () => ({ assertBrowserClaim: vi.fn(async () => undefined) }));
 
 type Call = [string, ...unknown[]];
 

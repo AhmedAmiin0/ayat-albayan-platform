@@ -2730,19 +2730,25 @@ export type Database = {
       };
       push_device_sessions: {
         Row: {
+          contested_at: string | null;
           created_at: string;
+          device_key_hash: string | null;
           profile_id: string;
           session_id: string;
           token: string;
         };
         Insert: {
+          contested_at?: string | null;
           created_at?: string;
+          device_key_hash?: string | null;
           profile_id: string;
           session_id: string;
           token: string;
         };
         Update: {
+          contested_at?: string | null;
           created_at?: string;
+          device_key_hash?: string | null;
           profile_id?: string;
           session_id?: string;
           token?: string;

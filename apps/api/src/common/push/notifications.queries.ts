@@ -3,6 +3,7 @@ import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { dbError } from '../../modules/teachers/http';
 import { DB, type Db } from '../db/db.module';
 import { notificationItem } from './notifications.mapper';
+import { assertBrowserClaim } from './web-push.claim';
 import type { WebPushSubscriptionInput } from './web-push.endpoint';
 
 /** A retimed lesson's superseded rows (migration 174 appends «:old:<uuid>» to their dedup_key). */
@@ -58,8 +59,10 @@ export class NotificationsQueries {
   /**
    * One row per browser, bound to the caller's session (its end deletes the row: migration 700): a
    * known endpoint moves to the caller (the browser signed in as someone else) and counts as new again. Then only the caller's newest WEB_PUSH_MAX_PER_PROFILE stay.
+   * Never another person's live browser on its endpoint alone: 409 (assertBrowserClaim).
    */
   async subscribe(profileId: string, sub: WebPushSubscriptionInput, sessionId: string): Promise<void> {
+    await assertBrowserClaim(this.db, { profileId, sub });
     const row = {
       profile_id: profileId,
       session_id: sessionId,

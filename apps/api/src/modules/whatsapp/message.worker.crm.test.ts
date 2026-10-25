@@ -11,7 +11,7 @@ import { templateRow } from './whatsapp.fakes';
 
 // docs/19 «crm driver» in the worker: a 429 waits (line paused this pass) without the token alarm.
 
-const queries = { claim: vi.fn(), sent: vi.fn(), failure: vi.fn(), expire: vi.fn() };
+const queries = { claim: vi.fn(), sent: vi.fn(), failure: vi.fn(), expire: vi.fn(), staffAtSend: vi.fn() };
 const dispatch = { send: vi.fn(), ready: vi.fn(), multi: false };
 const push = { notifyAdmins: vi.fn() };
 const NOW = new Date('2026-10-02T08:00:00Z');
