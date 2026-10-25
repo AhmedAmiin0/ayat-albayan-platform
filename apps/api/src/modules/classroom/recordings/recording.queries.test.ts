@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { fakeDb } from '../guardians/fake-db';
+import { fakeDb } from '../../guardians/fake-db';
 import { RecordingQueries } from './recording.queries';
 import { meetingTarget } from './recording-target';
 

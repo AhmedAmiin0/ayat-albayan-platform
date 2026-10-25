@@ -6,7 +6,7 @@ import { InternalMeetingJoinService } from './internal-meetings.join.service';
 import type { InternalMeetingsQueries } from './internal-meetings.queries';
 import { hashMeetingToken } from './internal-meetings.token';
 import { PublicJoinLimit } from '../join/join-limit';
-import { admissionOf } from '../moderation.fakes';
+import { admissionOf } from '../moderation/moderation.fakes';
 
 let mq: ReturnType<typeof meetingQueries>;
 const service = () => new InternalMeetingJoinService(mq as unknown as InternalMeetingsQueries, new PublicJoinLimit(), admissionOf({ q: queries(), config: CONFIG }));

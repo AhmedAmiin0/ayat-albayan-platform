@@ -1,10 +1,10 @@
 import { canRemove, JOIN_ROLES, lessonRoomName, type JoinRole } from '@ab/shared';
 import { BadGatewayException, HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import type { AuthUser } from '../../common/auth/verify-token';
-import { notFound } from '../../common/http/errors';
-import { notConfigured } from './join/join-gate';
-import { LessonRoleService } from './join/lesson-role.service';
-import { LivekitApi, LivekitError } from './livekit/livekit-api';
+import type { AuthUser } from '../../../common/auth/verify-token';
+import { notFound } from '../../../common/http/errors';
+import { notConfigured } from '../join/join-gate';
+import { LessonRoleService } from '../join/lesson-role.service';
+import { LivekitApi, LivekitError } from '../livekit/livekit-api';
 import { ModerationQueries, principalOf } from './moderation.queries';
 
 const asJoinRole = (role: string): JoinRole | null => JOIN_ROLES.find((r) => r === role) ?? null;

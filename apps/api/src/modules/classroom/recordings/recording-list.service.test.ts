@@ -1,8 +1,8 @@
 import { ForbiddenException } from '@nestjs/common';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import type { StorageService } from '../../common/storage/storage.service';
-import { ADMIN, ASSISTANT, LESSON_ID, OTHER_TEACHER, queries, TEACHER } from './classroom.fakes';
-import { recordingQueries, recordingRow, rolesOf } from './moderation.fakes';
+import type { StorageService } from '../../../common/storage/storage.service';
+import { ADMIN, ASSISTANT, LESSON_ID, OTHER_TEACHER, queries, TEACHER } from '../classroom.fakes';
+import { recordingQueries, recordingRow, rolesOf } from '../moderation/moderation.fakes';
 import { RecordingListService, recordingView, RecordingViews } from './recording-list.service';
 import type { RecordingQueries } from './recording.queries';
 

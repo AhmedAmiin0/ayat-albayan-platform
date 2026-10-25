@@ -2,7 +2,7 @@ import { roleOfMeta } from '@ab/shared';
 import { HttpException } from '@nestjs/common';
 import { beforeEach, describe, expect, it } from 'vitest';
 import { CONFIG, decode, LESSON_ID, OPEN, queries } from '../classroom.fakes';
-import { admissionOf, moderation, recorder } from '../moderation.fakes';
+import { admissionOf, moderation, recorder } from '../moderation/moderation.fakes';
 
 let mod: ReturnType<typeof moderation>;
 let rec: ReturnType<typeof recorder>;

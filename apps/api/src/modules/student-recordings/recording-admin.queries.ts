@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../common/db/db.module';
-import type { RecordingRow } from '../classroom/recording.queries';
+import type { RecordingRow } from '../classroom/recordings/recording.queries';
 import { dbError } from '../../common/http/http';
 
 /** One recording with the teacher of its lesson (null for a meeting's recording). */

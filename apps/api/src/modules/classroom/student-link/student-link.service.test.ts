@@ -3,7 +3,7 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { CLOSED, CONFIG, decode, EARLY, LESSON_ID, OPEN, queries, STUDENT_ID } from '../classroom.fakes';
 import { PublicJoinLimit } from '../join/join-limit';
 import { hashLinkToken } from '../join/join-link.token';
-import { admissionOf, moderation, recorder } from '../moderation.fakes';
+import { admissionOf, moderation, recorder } from '../moderation/moderation.fakes';
 import { LATER_LESSON, LESSON_LINK_ID, STUDENT_LESSON, STUDENT_TOKEN, studentLinkQueries } from './student-link.fakes';
 import type { StudentLinkQueries } from './student-link.queries';
 import { StudentLinkService } from './student-link.service';

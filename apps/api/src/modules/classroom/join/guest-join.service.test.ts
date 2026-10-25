@@ -1,7 +1,7 @@
 import { HttpException } from '@nestjs/common';
 import { beforeEach, describe, expect, it } from 'vitest';
 import type { ClassroomQueries } from '../classroom.queries';
-import { admissionOf, moderation, recorder } from '../moderation.fakes';
+import { admissionOf, moderation, recorder } from '../moderation/moderation.fakes';
 import { CLOSED, CONFIG, decode, EARLY, LESSON_ID, LINK_TOKEN, linkRow, OPEN, queries } from '../classroom.fakes';
 import { GuestJoinService } from './guest-join.service';
 import { PublicJoinLimit } from './join-limit';

@@ -1,8 +1,8 @@
 import { HttpException } from '@nestjs/common';
 import { beforeEach, describe, expect, it } from 'vitest';
-import { ADMIN, ASSISTANT, CONFIG, LESSON_ID, queries, TEACHER } from './classroom.fakes';
+import { ADMIN, ASSISTANT, CONFIG, LESSON_ID, queries, TEACHER } from '../classroom.fakes';
 import { KickService } from './kick.service';
-import { LivekitApi } from './livekit/livekit-api';
+import { LivekitApi } from '../livekit/livekit-api';
 import { http, moderation, participantRow, rolesOf } from './moderation.fakes';
 import type { ModerationQueries } from './moderation.queries';
 

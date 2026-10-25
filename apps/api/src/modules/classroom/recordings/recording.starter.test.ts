@@ -1,8 +1,8 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import type { RecordingConfig } from './classroom.config';
-import { CONFIG, LESSON_ID, OPEN } from './classroom.fakes';
-import { LivekitApi } from './livekit/livekit-api';
-import { http, recordingQueries, S3 } from './moderation.fakes';
+import type { RecordingConfig } from '../classroom.config';
+import { CONFIG, LESSON_ID, OPEN } from '../classroom.fakes';
+import { LivekitApi } from '../livekit/livekit-api';
+import { http, recordingQueries, S3 } from '../moderation/moderation.fakes';
 import type { RecordingQueries } from './recording.queries';
 import { RecordingStarter } from './recording.starter';
 import { lessonTarget, meetingTarget } from './recording-target';

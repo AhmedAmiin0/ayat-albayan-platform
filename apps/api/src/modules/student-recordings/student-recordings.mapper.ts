@@ -1,5 +1,5 @@
 import { durationSeconds, mediaOfPath, STUDENT_RECORDING_STATUSES, type StudentRecordingStatus, type StudentRecordingView } from '@ab/shared';
-import type { RecordingRow } from '../classroom/recording.queries';
+import type { RecordingRow } from '../classroom/recordings/recording.queries';
 
 /** A recording with the lesson it belongs to, as the student file's query selects it. */
 export type RecordingJoinRow = RecordingRow & {

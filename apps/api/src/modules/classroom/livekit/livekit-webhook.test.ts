@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { CONFIG } from '../classroom.fakes';
 import { egressOutcome, verifyWebhook } from './livekit-webhook';
-import { signedWebhook } from '../moderation.fakes';
+import { signedWebhook } from '../moderation/moderation.fakes';
 
 const NOW = new Date('2026-10-05T17:00:00Z');
 const nowS = NOW.getTime() / 1000;

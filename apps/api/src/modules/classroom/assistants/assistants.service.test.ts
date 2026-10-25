@@ -3,7 +3,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { AssistantLessonsQueries } from './assistants.lessons';
 import type { AssistantsQueries } from './assistants.queries';
 import { AssistantsService } from './assistants.service';
-import { ADMIN, ASSISTANT, LESSON_ID, STUDENT_ID } from './classroom.fakes';
+import { ADMIN, ASSISTANT, LESSON_ID, STUDENT_ID } from '../classroom.fakes';
 
 const A = { profile_id: ASSISTANT.id, full_name: 'نور' };
 let q: Record<keyof AssistantsQueries, ReturnType<typeof vi.fn>>;

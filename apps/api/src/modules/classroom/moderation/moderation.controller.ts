@@ -1,11 +1,11 @@
 import type { LessonRecordingView } from '@ab/shared';
 import { Controller, Get, HttpCode, Param, ParseUUIDPipe, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Permissions } from '../../common/auth/decorators';
-import type { AuthUser } from '../../common/auth/verify-token';
-import { notFound } from '../../common/http/errors';
+import { CurrentUser, Permissions } from '../../../common/auth/decorators';
+import type { AuthUser } from '../../../common/auth/verify-token';
+import { notFound } from '../../../common/http/errors';
 import { KickService } from './kick.service';
-import { RecordingListService } from './recording-list.service';
+import { RecordingListService } from '../recordings/recording-list.service';
 
 /** LiveKit identities the API mints: `<role>-<12 hex>` (newIdentity). */
 const IDENTITY = /^[a-z]+-[0-9a-f]{12}$/;

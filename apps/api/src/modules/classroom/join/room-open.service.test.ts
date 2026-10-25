@@ -2,7 +2,7 @@ import { ForbiddenException, HttpException } from '@nestjs/common';
 import { beforeEach, describe, expect, it } from 'vitest';
 import type { ClassroomQueries } from '../classroom.queries';
 import { ADMIN, ASSISTANT, CLOSED, EARLY, LESSON, LESSON_ID, OTHER_TEACHER, queries, SALES, TEACHER } from '../classroom.fakes';
-import { rolesOf } from '../moderation.fakes';
+import { rolesOf } from '../moderation/moderation.fakes';
 import { RoomOpenService } from './room-open.service';
 
 let q: ReturnType<typeof queries>;

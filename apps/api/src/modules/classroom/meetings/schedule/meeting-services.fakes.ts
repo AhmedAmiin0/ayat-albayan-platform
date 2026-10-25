@@ -20,7 +20,7 @@ import { MeetingInvitesDeps, MeetingInvitesService } from '../invites/meeting-in
 import type { MeetingListQueries } from './meeting-list.queries';
 import { MeetingListService } from './meeting-list.service';
 import { MeetingScheduleDeps, MeetingScheduleService } from './meeting-schedule.service';
-import { http } from '../../moderation.fakes';
+import { http } from '../../moderation/moderation.fakes';
 
 export const ORIGIN = 'https://app.example.test';
 

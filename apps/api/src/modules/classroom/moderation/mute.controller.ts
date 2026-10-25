@@ -1,7 +1,7 @@
 import { Body, Controller, HttpCode, Param, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Permissions } from '../../common/auth/decorators';
-import type { AuthUser } from '../../common/auth/verify-token';
+import { CurrentUser, Permissions } from '../../../common/auth/decorators';
+import type { AuthUser } from '../../../common/auth/verify-token';
 import { MuteLimit } from './mute-limit';
 import { MeetingMuteService, MuteService } from './mute.service';
 import { targetOf } from './share-grant.controller';

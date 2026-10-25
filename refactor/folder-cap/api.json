@@ -23,10 +23,6 @@
     "files": 69,
     "dirs": 0
   },
-  "apps/api/src/modules/classroom": {
-    "files": 27,
-    "dirs": 5
-  },
   "apps/api/src/modules/dashboard": {
     "files": 16,
     "dirs": 0

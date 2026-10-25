@@ -1,17 +1,17 @@
 // Test fixtures for classroom moderation and recordings (not shipped; excluded from the build).
 import { createHash } from 'node:crypto';
 import { vi } from 'vitest';
-import type { TeachersQueries } from '../teachers/teachers.queries';
-import type { ClassroomConfig, RecordingConfig } from './classroom.config';
-import type { ClassroomQueries } from './classroom.queries';
-import { CONFIG, LESSON_ID, OTHER_TEACHER, TEACHER, TEACHER_ID, type queries } from './classroom.fakes';
-import { LessonRoleService } from './join/lesson-role.service';
-import { signJwt } from './livekit/livekit-token';
-import type { HttpPost } from './livekit/livekit-api';
+import type { TeachersQueries } from '../../teachers/teachers.queries';
+import type { ClassroomConfig, RecordingConfig } from '../classroom.config';
+import type { ClassroomQueries } from '../classroom.queries';
+import { CONFIG, LESSON_ID, OTHER_TEACHER, TEACHER, TEACHER_ID, type queries } from '../classroom.fakes';
+import { LessonRoleService } from '../join/lesson-role.service';
+import { signJwt } from '../livekit/livekit-token';
+import type { HttpPost } from '../livekit/livekit-api';
 import type { ModerationQueries, ParticipantRow } from './moderation.queries';
-import type { RecordingRow } from './recording.queries';
-import type { RecordingStarter } from './recording.starter';
-import { RoomAdmission } from './join/room-admission';
+import type { RecordingRow } from '../recordings/recording.queries';
+import type { RecordingStarter } from '../recordings/recording.starter';
+import { RoomAdmission } from '../join/room-admission';
 
 export const S3: NonNullable<RecordingConfig> = {
   endpoint: 'https://project.storage.example.test/storage/v1/s3',

@@ -1,8 +1,8 @@
 import { describe, expect, it, vi } from 'vitest';
-import type { AuditService } from '../../common/audit/audit.service';
-import { fakeDb, type FakeResult } from '../guardians/fake-db';
+import type { AuditService } from '../../../common/audit/audit.service';
+import { fakeDb, type FakeResult } from '../../guardians/fake-db';
 import { ModerationQueries, principalColumns, principalOf } from './moderation.queries';
-import { RecordingQueries } from './recording.queries';
+import { RecordingQueries } from '../recordings/recording.queries';
 
 const setup = (results: Record<string, FakeResult[]>) => {
   const f = fakeDb(results);
