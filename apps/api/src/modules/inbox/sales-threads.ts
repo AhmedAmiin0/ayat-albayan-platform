@@ -1,5 +1,5 @@
 import type { MessageView, ThreadLesson, ThreadPeople, ThreadView } from '@ab/shared';
-import type { ThreadMessageRow } from '../whatsapp/message.mapper';
+import type { ThreadMessageRow } from '../whatsapp/messages/message.mapper';
 
 /** Templates whose template_params.button is a signed link (a feedback answer, a classroom entry): never shown to sales (migration 187). */
 const LINK_TEMPLATES: ReadonlySet<string> = new Set(['lesson_feedback_request', 'lesson_join_link']);

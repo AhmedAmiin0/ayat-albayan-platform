@@ -1,6 +1,6 @@
 import { NOTIFICATION_CATALOGUE, routeSession, routeTemplate, type RoutableNumber, type WaLine } from '@ab/shared';
 import type { OverlayNumber } from '../../../common/integrations/numbers-overlay';
-import type { DueMessage } from '../sender.due';
+import type { DueMessage } from '../sender/sender.due';
 import type { TemplateRow } from '../whatsapp.types';
 
 // Module mode's per-row number pick (docs/23 phase 5, contract docs/23c decisions 3–5). Pure: the

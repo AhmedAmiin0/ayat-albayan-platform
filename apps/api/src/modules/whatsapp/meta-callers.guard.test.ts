@@ -9,7 +9,7 @@ const SRC = join(__dirname, '../..');
 describe('Meta callers guard (docs/12 §13.5)', () => {
   it('scans the real apps/api/src tree', () => {
     const files = sources(SRC);
-    expect(files.some((p) => p.endsWith(join('modules', 'whatsapp', 'message.dispatch.ts')))).toBe(true);
+    expect(files.some((p) => p.endsWith(join('modules', 'whatsapp', 'sender/message.dispatch.ts')))).toBe(true);
     expect(files.length).toBeGreaterThan(50);
   });
 
@@ -47,9 +47,9 @@ describe('Meta callers guard (docs/12 §13.5)', () => {
   it('whitelisted files and test-only files may call Meta', () => {
     const source = 'await this.lines.notifications.sendTemplate(x);';
     const paths = [
-      'modules/whatsapp/message.dispatch.ts',
+      'modules/whatsapp/sender/message.dispatch.ts',
       'modules/inbox/read-receipts.ts',
-      'modules/whatsapp/message.dispatch.test.ts',
+      'modules/whatsapp/sender/message.dispatch.test.ts',
       'modules/whatsapp/whatsapp.fakes.ts',
       'modules/whatsapp/test-app.ts',
       'modules/guardians/fake-db.ts',

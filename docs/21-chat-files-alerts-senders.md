@@ -62,7 +62,7 @@ export const chatFileMaxBytes = (m: string | null): number => isPlayableMime(m) 
 ```
 
 - `INVOICE_*` and `RECEIPT_*` stay as they are. They are test-locked to each other.
-- `apps/api/src/modules/whatsapp/inbound-media.service.ts` re-exports `baseMime` from `@ab/shared` instead of defining it. The imports in `thread-media.service.ts` and `booking.invoice.ts` stay unchanged.
+- `apps/api/src/modules/whatsapp/messages/inbound-media.service.ts` re-exports `baseMime` from `@ab/shared` instead of defining it. The imports in `thread-media.service.ts` and `booking.invoice.ts` stay unchanged.
 - `apps/web/src/features/inbox/MessageMedia.tsx` drops its local `baseMime`.
 
 ### 1.2 `packages/shared/src/messaging/chat-files.ts` (new, plus `chat-files.test.ts`; exported from `messaging/index.ts`)
@@ -204,7 +204,7 @@ end $$;
 
 This change reads data only. `created_by` writes stay as they are, because `isAutomatic` and `sender.queries.ts:70 .is('created_by', null)` depend on jobs leaving it null.
 
-**API: `apps/api/src/modules/whatsapp/message.mapper.ts`** (84 lines, about 95 after)
+**API: `apps/api/src/modules/whatsapp/messages/message.mapper.ts`** (84 lines, about 95 after)
 
 - `MESSAGE_SELECT` becomes `'*, sent_by_teacher:teachers!messages_sent_by_teacher_id_fkey(display_name_ar), sender:profiles!messages_created_by_fkey(full_name)'`.
 - `ThreadMessageRow` gains `sender?: { full_name: string } | null`.
@@ -227,7 +227,7 @@ This change reads data only. `created_by` writes stay as they are, because `isAu
 
 **Tests**
 
-- `apps/api/src/modules/whatsapp/message.mapper.sender.test.ts` (new): the teacher's name wins; `full_name` is used for admin and sales; `automatic` is true only for outbound with created_by null and dedup_key set; imported history (dedup_key null) gives false and no name; inbound gives null and false; one assertion that `MESSAGE_SELECT` contains `sender:profiles!messages_created_by_fkey`.
+- `apps/api/src/modules/whatsapp/messages/message.mapper.sender.test.ts` (new): the teacher's name wins; `full_name` is used for admin and sales; `automatic` is true only for outbound with created_by null and dedup_key set; imported history (dedup_key null) gives false and no name; inbound gives null and false; one assertion that `MESSAGE_SELECT` contains `sender:profiles!messages_created_by_fkey`.
 - `apps/web/src/features/inbox/MessageBubble.sender.test.tsx` (new): an assistant's row shows «أرسلها: سارة», a job row shows «رسالة تلقائية», and an imported or inbound row shows neither.
 - Extend `apps/mobile/src/inbox/thread-mode.test.ts` with the same cases.
 - Grep `e2e/tests` for assertions on the whole text of outbound bubbles. Every outbound bubble now has a sender line, so those may need updating.
@@ -261,7 +261,7 @@ Teachers still get labels only. Docs/20 :231 stays open with today's default.
    - `StorageService` gains `removeMany({ bucket, paths })`: one Supabase `remove(paths)` call. Removing a path that does not exist is a no-op.
    - `InboundMediaQueries` gains `cachedBefore({ before, limit })`: id and media_path of inbound rows with `media_path` set and `created_at < before`, oldest first.
    - It also gains `clearPaths(ids)`: `update media_path = null where id in ids and direction = 'inbound'`.
-   - New `apps/api/src/modules/whatsapp/wa-media.retention.job.ts`, an in-process timer modelled on `apps/api/src/common/activity/activity.retention.job.ts`:
+   - New `apps/api/src/modules/whatsapp/messages/wa-media.retention.job.ts`, an in-process timer modelled on `apps/api/src/common/activity/activity.retention.job.ts`:
      - first run 15 min after boot, then every 24 h;
      - `runOnce()` loops batches of 100 until a batch is empty, with a cap of 50 batches per run (the staging backlog);
      - each batch calls `removeMany`, then `clearPaths`;
@@ -378,7 +378,7 @@ Only inside the 24 h window, stored and logged under her name. Sending is by lin
    - Kapso needs no code change: same path, same body, `X-API-Key`.
 9. **Views and fallback**
    - `message.mapper.ts`: add `media_name`, and set `click_to_chat = null` for an outbound row with `media_path`. A file cannot ride along in wa.me.
-   - `apps/api/src/modules/whatsapp/messages.service.ts` `handOff`: a media row gives 409 `media_handoff`. Retry stays allowed.
+   - `apps/api/src/modules/whatsapp/messages/messages.service.ts` `handOff`: a media row gives 409 `media_handoff`. Retry stays allowed.
 10. **wa-stub** (`tools/wa-stub/src/send.ts` `refusal()`): an `image` or `document` body without `link` or `id` gets 400 with Meta code 100. Add `tools/wa-stub/src/stub.media.test.ts`.
 
 ### Web

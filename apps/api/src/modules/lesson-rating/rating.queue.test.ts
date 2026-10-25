@@ -3,7 +3,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { readerOf } from '../../common/settings/settings.fakes';
 import { LessonEvents } from '../../common/events/lesson-events';
 import { fakePolicy, type FakePolicyInput } from '../notification-rules/policy.fakes';
-import type { MessageSender } from '../whatsapp/message.sender';
+import type { MessageSender } from '../whatsapp/sender/message.sender';
 import { LessonRatingSettings } from './lesson-rating.settings';
 import { heldLesson, LESSON_ID, NOW } from './rating.fakes';
 import { RatingJob } from './rating.job';

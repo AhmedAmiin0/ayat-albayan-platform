@@ -2,7 +2,7 @@ import { backoff } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
 import { MAX_ATTEMPTS, retryDelayMs } from '../../modules/google-sync/backoff';
 import { RETRY_DELAYS_MS } from '../../modules/report-pdf/report-pdf.job';
-import { RECORD_DELAYS_MS } from '../../modules/whatsapp/message.job';
+import { RECORD_DELAYS_MS } from '../../modules/whatsapp/sender/message.job';
 
 // docs/27 P1: the five backoff sites now share @ab/shared retry/backoffDelay. These pin the
 // delays and caps each one had before, so the move changed no wait.

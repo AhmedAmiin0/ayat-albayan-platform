@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from 'vitest';
 import type { OverlayNumber } from '../../../common/integrations/numbers-overlay';
 import { approvedOn, routeOf } from './number-route';
 import { N1, overlayNum, routePass } from './number-route.fakes';
-import { dueMessage } from '../sender.fakes';
+import { dueMessage } from '../sender/sender.fakes';
 import { syncNumber, type NumberSyncDeps } from '../template-number-sync';
 import type { ApprovalWrite } from '../templates.queries';
 import { templateRow } from '../whatsapp.fakes';

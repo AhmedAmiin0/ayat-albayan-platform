@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { crmErrorFrom, crmJson } from './crm-http';
 import { CRM_ENV, crmFailure } from './crm.fakes';
-import { failurePlan, CRM_AUTH } from '../../send-plan';
+import { failurePlan, CRM_AUTH } from '../../sender/send-plan';
 import { scriptedFetch } from '../../whatsapp.fakes';
 import { WaError } from '../../whatsapp.types';
 

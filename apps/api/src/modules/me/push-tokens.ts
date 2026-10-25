@@ -5,7 +5,7 @@ export const pushTokenSchema = z
   .string()
   .regex(/^Expo(nent)?PushToken\[[\w-]+\]$/, { message: 'invalid_push_token' });
 
-/** The key PUT /me/push-tokens handed this device last time (claimDeviceKey): base64url, 32 bytes. */
+/** The key PUT /me/push-tokens handed this device last time (claimDevice): base64url, 32 bytes. */
 export const deviceKeySchema = z.string().regex(/^[\w-]{43}$/, { message: 'invalid_device_key' });
 
 export const pushTokenBody = z.object({ token: pushTokenSchema, deviceKey: deviceKeySchema.optional() });

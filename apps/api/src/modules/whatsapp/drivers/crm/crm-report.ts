@@ -1,6 +1,6 @@
 import { CRM_REPORT_TEMPLATES, crmTemplateLanguage, crmTemplateName, isCrmReportName } from '@ab/shared';
 import { crmMediaBody, type CrmBody } from './crm-body';
-import { badParams } from '../../wa-components';
+import { badParams } from '../../messages/wa-components';
 import { WaError, type TemplateSend } from '../../whatsapp.types';
 
 // The lesson report like the old Apps Script (docs/19 «crm driver»): on a crm line whose report_ready the

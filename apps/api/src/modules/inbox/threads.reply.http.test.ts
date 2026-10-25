@@ -1,5 +1,5 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { messageRow } from '../whatsapp/sender.fakes';
+import { messageRow } from '../whatsapp/sender/sender.fakes';
 import { waHttpError } from '../whatsapp/template.mapper';
 import { PHONE, threadRow } from './inbox.fakes';
 import { inboxApp } from './test-app';

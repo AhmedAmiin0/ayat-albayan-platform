@@ -4504,6 +4504,10 @@ export type Database = {
       booking_result: { Args: { p_rule: string }; Returns: Json };
       build_assistant_statement: { Args: { p_statement: string }; Returns: Json };
       change_course: { Args: { p: Json }; Returns: Json };
+      claim_push_device: {
+        Args: { p_new_hash: string; p_presented?: string; p_profile: string; p_session: string; p_token: string };
+        Returns: string;
+      };
       config_describe: {
         Args: { actor: string; p_hint_key: string | null; p_key: string; p_text: string | null };
         Returns: Json;
