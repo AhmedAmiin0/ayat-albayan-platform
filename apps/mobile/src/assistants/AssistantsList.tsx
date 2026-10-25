@@ -1,6 +1,6 @@
 import { FlatList } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
-import { LoadState } from '@/sales-money/LoadState';
+import { LoadState } from '@/sales-money/components/LoadState';
 import { useAssistants } from './api';
 import { AssistantItem } from './AssistantItem';
 

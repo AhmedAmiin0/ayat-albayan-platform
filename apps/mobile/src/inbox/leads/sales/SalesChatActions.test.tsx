@@ -1,6 +1,6 @@
 import { screen, waitFor, within } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
-import { familyOf, familyThread, kid } from '@/sales-subscribe/fixtures';
+import { familyOf, familyThread, kid } from '@/sales-subscribe/testing/fixtures';
 import { renderWithQuery } from '@/test/query';
 import { SalesChatActions } from './SalesChatActions';
 import { thread } from '../../shared/thread-fixtures';

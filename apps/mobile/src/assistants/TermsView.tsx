@@ -1,10 +1,10 @@
 import type { AssistantTermsView } from '@ab/shared';
 import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/more/Note';
-import { AmountText } from '@/sales-money/AmountText';
-import { CardTitle } from '@/sales-money/CardTitle';
-import { MoneyCard } from '@/sales-money/MoneyCard';
-import { commissionText, salaryText, sinceText } from '@/sales-money/money-text';
+import { AmountText } from '@/sales-money/components/AmountText';
+import { CardTitle } from '@/sales-money/components/CardTitle';
+import { MoneyCard } from '@/sales-money/components/MoneyCard';
+import { commissionText, salaryText, sinceText } from '@/sales-money/lib/money-text';
 import { AppText } from '@/core/ui/primitives/AppText';
 
 /** The terms read-only (an admin without assistantpay.write, as the web's summary line). */

@@ -3,7 +3,7 @@ import { fireEvent, screen, within } from '@testing-library/react-native';
 import { SalesChatActions } from '@/inbox/leads/sales/SalesChatActions';
 import { t } from '@/core/lib/i18n/i18n';
 import { TreeBaseProvider } from '@/core/nav/tree-base';
-import { familyOf, familyThread, KID, KID2, kid } from '@/sales-subscribe/fixtures';
+import { familyOf, familyThread, KID, KID2, kid } from '@/sales-subscribe/testing/fixtures';
 import { renderWithQuery } from '@/test/query';
 
 // The salesperson's family chat: «موعد تجريبي جديد» per student of hers with no running subscription.

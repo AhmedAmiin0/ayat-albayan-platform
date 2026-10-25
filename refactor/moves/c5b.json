@@ -1,0 +1,192 @@
+{
+  "id": "c5b",
+  "seq": 80,
+  "moves": [
+    {
+      "from": "apps/mobile/src/sales-course/CourseScreen*",
+      "to": "apps/mobile/src/sales-course/screens/"
+    },
+    {
+      "from": "apps/mobile/src/sales-course/CourseCheckNotice*",
+      "to": "apps/mobile/src/sales-course/components/"
+    },
+    {
+      "from": "apps/mobile/src/sales-course/CourseConfirm*",
+      "to": "apps/mobile/src/sales-course/components/"
+    },
+    {
+      "from": "apps/mobile/src/sales-course/CourseContinue*",
+      "to": "apps/mobile/src/sales-course/components/"
+    },
+    {
+      "from": "apps/mobile/src/sales-course/CourseDone*",
+      "to": "apps/mobile/src/sales-course/components/"
+    },
+    {
+      "from": "apps/mobile/src/sales-course/CourseOpening*",
+      "to": "apps/mobile/src/sales-course/components/"
+    },
+    {
+      "from": "apps/mobile/src/sales-course/CourseStarts*",
+      "to": "apps/mobile/src/sales-course/components/"
+    },
+    {
+      "from": "apps/mobile/src/sales-course/CourseTeacherStep*",
+      "to": "apps/mobile/src/sales-course/components/"
+    },
+    {
+      "from": "apps/mobile/src/sales-course/CourseWizard*",
+      "to": "apps/mobile/src/sales-course/components/"
+    },
+    {
+      "from": "apps/mobile/src/sales-course/course-body*",
+      "to": "apps/mobile/src/sales-course/lib/"
+    },
+    {
+      "from": "apps/mobile/src/sales-course/course-days*",
+      "to": "apps/mobile/src/sales-course/lib/"
+    },
+    {
+      "from": "apps/mobile/src/sales-course/course-steps*",
+      "to": "apps/mobile/src/sales-course/lib/"
+    },
+    {
+      "from": "apps/mobile/src/sales-course/course-summary*",
+      "to": "apps/mobile/src/sales-course/lib/"
+    },
+    {
+      "from": "apps/mobile/src/sales-course/course-queries*",
+      "to": "apps/mobile/src/sales-course/hooks/"
+    },
+    {
+      "from": "apps/mobile/src/sales-course/use-course-view*",
+      "to": "apps/mobile/src/sales-course/hooks/"
+    },
+    {
+      "from": "apps/mobile/src/sales-course/use-known-teacher*",
+      "to": "apps/mobile/src/sales-course/hooks/"
+    },
+    {
+      "from": "apps/mobile/src/sales-course/course-test-utils*",
+      "to": "apps/mobile/src/sales-course/testing/"
+    },
+    {
+      "from": "apps/mobile/src/sales-course/fixtures*",
+      "to": "apps/mobile/src/sales-course/testing/"
+    }
+  ],
+  "files": [
+    [
+      "apps/mobile/src/sales-course/course-body.test.ts",
+      "apps/mobile/src/sales-course/lib/course-body.test.ts"
+    ],
+    [
+      "apps/mobile/src/sales-course/course-body.ts",
+      "apps/mobile/src/sales-course/lib/course-body.ts"
+    ],
+    [
+      "apps/mobile/src/sales-course/course-days.test.ts",
+      "apps/mobile/src/sales-course/lib/course-days.test.ts"
+    ],
+    [
+      "apps/mobile/src/sales-course/course-days.ts",
+      "apps/mobile/src/sales-course/lib/course-days.ts"
+    ],
+    [
+      "apps/mobile/src/sales-course/course-queries.ts",
+      "apps/mobile/src/sales-course/hooks/course-queries.ts"
+    ],
+    [
+      "apps/mobile/src/sales-course/course-steps.test.ts",
+      "apps/mobile/src/sales-course/lib/course-steps.test.ts"
+    ],
+    [
+      "apps/mobile/src/sales-course/course-steps.ts",
+      "apps/mobile/src/sales-course/lib/course-steps.ts"
+    ],
+    [
+      "apps/mobile/src/sales-course/course-summary.ts",
+      "apps/mobile/src/sales-course/lib/course-summary.ts"
+    ],
+    [
+      "apps/mobile/src/sales-course/course-test-utils.ts",
+      "apps/mobile/src/sales-course/testing/course-test-utils.ts"
+    ],
+    [
+      "apps/mobile/src/sales-course/CourseCheckNotice.test.tsx",
+      "apps/mobile/src/sales-course/components/CourseCheckNotice.test.tsx"
+    ],
+    [
+      "apps/mobile/src/sales-course/CourseCheckNotice.tsx",
+      "apps/mobile/src/sales-course/components/CourseCheckNotice.tsx"
+    ],
+    [
+      "apps/mobile/src/sales-course/CourseConfirm.tsx",
+      "apps/mobile/src/sales-course/components/CourseConfirm.tsx"
+    ],
+    [
+      "apps/mobile/src/sales-course/CourseContinue.teacher.test.tsx",
+      "apps/mobile/src/sales-course/components/CourseContinue.teacher.test.tsx"
+    ],
+    [
+      "apps/mobile/src/sales-course/CourseContinue.tsx",
+      "apps/mobile/src/sales-course/components/CourseContinue.tsx"
+    ],
+    [
+      "apps/mobile/src/sales-course/CourseDone.tsx",
+      "apps/mobile/src/sales-course/components/CourseDone.tsx"
+    ],
+    [
+      "apps/mobile/src/sales-course/CourseOpening.tsx",
+      "apps/mobile/src/sales-course/components/CourseOpening.tsx"
+    ],
+    [
+      "apps/mobile/src/sales-course/CourseScreen.change.test.tsx",
+      "apps/mobile/src/sales-course/screens/CourseScreen.change.test.tsx"
+    ],
+    [
+      "apps/mobile/src/sales-course/CourseScreen.states.test.tsx",
+      "apps/mobile/src/sales-course/screens/CourseScreen.states.test.tsx"
+    ],
+    [
+      "apps/mobile/src/sales-course/CourseScreen.tsx",
+      "apps/mobile/src/sales-course/screens/CourseScreen.tsx"
+    ],
+    [
+      "apps/mobile/src/sales-course/CourseStarts.tsx",
+      "apps/mobile/src/sales-course/components/CourseStarts.tsx"
+    ],
+    [
+      "apps/mobile/src/sales-course/CourseTeacherStep.tsx",
+      "apps/mobile/src/sales-course/components/CourseTeacherStep.tsx"
+    ],
+    [
+      "apps/mobile/src/sales-course/CourseWizard.continue.test.tsx",
+      "apps/mobile/src/sales-course/components/CourseWizard.continue.test.tsx"
+    ],
+    [
+      "apps/mobile/src/sales-course/CourseWizard.renewal.test.tsx",
+      "apps/mobile/src/sales-course/components/CourseWizard.renewal.test.tsx"
+    ],
+    [
+      "apps/mobile/src/sales-course/CourseWizard.test.tsx",
+      "apps/mobile/src/sales-course/components/CourseWizard.test.tsx"
+    ],
+    [
+      "apps/mobile/src/sales-course/CourseWizard.tsx",
+      "apps/mobile/src/sales-course/components/CourseWizard.tsx"
+    ],
+    [
+      "apps/mobile/src/sales-course/fixtures.ts",
+      "apps/mobile/src/sales-course/testing/fixtures.ts"
+    ],
+    [
+      "apps/mobile/src/sales-course/use-course-view.ts",
+      "apps/mobile/src/sales-course/hooks/use-course-view.ts"
+    ],
+    [
+      "apps/mobile/src/sales-course/use-known-teacher.ts",
+      "apps/mobile/src/sales-course/hooks/use-known-teacher.ts"
+    ]
+  ]
+}

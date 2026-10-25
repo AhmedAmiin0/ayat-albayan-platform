@@ -1,8 +1,8 @@
 import type { SlotView } from '@ab/shared';
 import { MON_19, slot } from '@/booking/testing/fixtures';
 import { t } from '@/core/lib/i18n/i18n';
-import { fakeCourseApi, press } from '../course-test-utils';
-import { bookedCourse, courseView, SUB_ID } from '../fixtures';
+import { fakeCourseApi, press } from '../testing/course-test-utils';
+import { bookedCourse, courseView, SUB_ID } from '../testing/fixtures';
 
 // Test-only: the student of the «تغيير أيام الحلقات» tests, whose course still runs (the jest.mock
 // calls stay in each test file).

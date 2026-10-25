@@ -7,9 +7,9 @@ import { ApiError } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
 import { fakeNow } from '@/test/fake-now';
 import { renderWithQuery } from '@/test/query';
-import { isDisabled, press } from '../course-test-utils';
-import { CourseScreen } from '../CourseScreen';
-import { courseView } from '../fixtures';
+import { isDisabled, press } from '../testing/course-test-utils';
+import { CourseScreen } from '../screens/CourseScreen';
+import { courseView } from '../testing/fixtures';
 import { changeApi, changeSundayToMonday, NOW, runningCourse, TZ, windowed } from './change-test-setup';
 
 const mockApiFetch = jest.fn();

@@ -3,7 +3,7 @@ import { router } from 'expo-router';
 import { useHolds } from '@/auth/use-permissions';
 import { t } from '@/core/lib/i18n/i18n';
 import { inTree, useTreeBase } from '@/core/nav/tree-base';
-import { useSalesFamily } from '@/sales-subscribe/family';
+import { useSalesFamily } from '@/sales-subscribe/lib/family';
 import { PillButton } from '@/core/ui/primitives/PillButton';
 import { chatTrialHref } from '../lib/trial-href';
 

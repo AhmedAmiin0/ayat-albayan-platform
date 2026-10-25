@@ -5,7 +5,7 @@ import { ActivityIndicator, FlatList } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { usePagedList } from '@/core/lib/query/use-paged-list';
 import { CheckRegistrationButton } from '@/registration-check/components/CheckRegistrationButton';
-import { MyStudentsView } from '@/sales-money/MyStudentsView';
+import { MyStudentsView } from '@/sales-money/screens/MyStudentsView';
 import { useTheme } from '@/theme';
 import { Button } from '@/core/ui/primitives/Button';
 import { EmptyState } from '@/core/ui/feedback/EmptyState';

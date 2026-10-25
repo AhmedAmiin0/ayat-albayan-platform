@@ -1,0 +1,440 @@
+{
+  "id": "c5c",
+  "seq": 81,
+  "moves": [
+    {
+      "from": "apps/mobile/src/sales-money/MyMoneyScreen*",
+      "to": "apps/mobile/src/sales-money/screens/"
+    },
+    {
+      "from": "apps/mobile/src/sales-money/MyEarningsView*",
+      "to": "apps/mobile/src/sales-money/screens/"
+    },
+    {
+      "from": "apps/mobile/src/sales-money/MyPaymentsView*",
+      "to": "apps/mobile/src/sales-money/screens/"
+    },
+    {
+      "from": "apps/mobile/src/sales-money/MyStudentsView*",
+      "to": "apps/mobile/src/sales-money/screens/"
+    },
+    {
+      "from": "apps/mobile/src/sales-money/AmountText*",
+      "to": "apps/mobile/src/sales-money/components/"
+    },
+    {
+      "from": "apps/mobile/src/sales-money/CardTitle*",
+      "to": "apps/mobile/src/sales-money/components/"
+    },
+    {
+      "from": "apps/mobile/src/sales-money/CommissionChip*",
+      "to": "apps/mobile/src/sales-money/components/"
+    },
+    {
+      "from": "apps/mobile/src/sales-money/CurrencyTotalsBlock*",
+      "to": "apps/mobile/src/sales-money/components/"
+    },
+    {
+      "from": "apps/mobile/src/sales-money/EarningsTermsCard*",
+      "to": "apps/mobile/src/sales-money/components/"
+    },
+    {
+      "from": "apps/mobile/src/sales-money/LinesToggle*",
+      "to": "apps/mobile/src/sales-money/components/"
+    },
+    {
+      "from": "apps/mobile/src/sales-money/LoadState*",
+      "to": "apps/mobile/src/sales-money/components/"
+    },
+    {
+      "from": "apps/mobile/src/sales-money/MoneyCard*",
+      "to": "apps/mobile/src/sales-money/components/"
+    },
+    {
+      "from": "apps/mobile/src/sales-money/MyPaymentItem*",
+      "to": "apps/mobile/src/sales-money/components/"
+    },
+    {
+      "from": "apps/mobile/src/sales-money/MyStatementCard*",
+      "to": "apps/mobile/src/sales-money/components/"
+    },
+    {
+      "from": "apps/mobile/src/sales-money/MyStudentItem*",
+      "to": "apps/mobile/src/sales-money/components/"
+    },
+    {
+      "from": "apps/mobile/src/sales-money/StatementLines*",
+      "to": "apps/mobile/src/sales-money/components/"
+    },
+    {
+      "from": "apps/mobile/src/sales-money/money-text*",
+      "to": "apps/mobile/src/sales-money/lib/"
+    },
+    {
+      "from": "apps/mobile/src/sales-money/my-api*",
+      "to": "apps/mobile/src/sales-money/lib/"
+    },
+    {
+      "from": "apps/mobile/src/sales-money/fixtures*",
+      "to": "apps/mobile/src/sales-money/testing/"
+    },
+    {
+      "from": "apps/mobile/src/sales-subscribe/SalesSubscribeScreen*",
+      "to": "apps/mobile/src/sales-subscribe/screens/"
+    },
+    {
+      "from": "apps/mobile/src/sales-subscribe/SalesTransferScreen*",
+      "to": "apps/mobile/src/sales-subscribe/screens/"
+    },
+    {
+      "from": "apps/mobile/src/sales-subscribe/ChatReceiptList*",
+      "to": "apps/mobile/src/sales-subscribe/receipts/"
+    },
+    {
+      "from": "apps/mobile/src/sales-subscribe/ChatReceiptRow*",
+      "to": "apps/mobile/src/sales-subscribe/receipts/"
+    },
+    {
+      "from": "apps/mobile/src/sales-subscribe/ChatReceiptThumb*",
+      "to": "apps/mobile/src/sales-subscribe/receipts/"
+    },
+    {
+      "from": "apps/mobile/src/sales-subscribe/chat-receipts*",
+      "to": "apps/mobile/src/sales-subscribe/receipts/"
+    },
+    {
+      "from": "apps/mobile/src/sales-subscribe/SalesChatMoney*",
+      "to": "apps/mobile/src/sales-subscribe/receipts/"
+    },
+    {
+      "from": "apps/mobile/src/sales-subscribe/ChildPills*",
+      "to": "apps/mobile/src/sales-subscribe/components/"
+    },
+    {
+      "from": "apps/mobile/src/sales-subscribe/OpenPackagePicker*",
+      "to": "apps/mobile/src/sales-subscribe/components/"
+    },
+    {
+      "from": "apps/mobile/src/sales-subscribe/SalesPriceSection*",
+      "to": "apps/mobile/src/sales-subscribe/components/"
+    },
+    {
+      "from": "apps/mobile/src/sales-subscribe/SalesQuotePreview*",
+      "to": "apps/mobile/src/sales-subscribe/components/"
+    },
+    {
+      "from": "apps/mobile/src/sales-subscribe/SalesReceiptField*",
+      "to": "apps/mobile/src/sales-subscribe/components/"
+    },
+    {
+      "from": "apps/mobile/src/sales-subscribe/SalesSubscribeForm*",
+      "to": "apps/mobile/src/sales-subscribe/components/"
+    },
+    {
+      "from": "apps/mobile/src/sales-subscribe/StartDateField*",
+      "to": "apps/mobile/src/sales-subscribe/components/"
+    },
+    {
+      "from": "apps/mobile/src/sales-subscribe/TransferDone*",
+      "to": "apps/mobile/src/sales-subscribe/components/"
+    },
+    {
+      "from": "apps/mobile/src/sales-subscribe/TransferForm*",
+      "to": "apps/mobile/src/sales-subscribe/components/"
+    },
+    {
+      "from": "apps/mobile/src/sales-subscribe/family*",
+      "to": "apps/mobile/src/sales-subscribe/lib/"
+    },
+    {
+      "from": "apps/mobile/src/sales-subscribe/package-text*",
+      "to": "apps/mobile/src/sales-subscribe/lib/"
+    },
+    {
+      "from": "apps/mobile/src/sales-subscribe/sales-errors*",
+      "to": "apps/mobile/src/sales-subscribe/lib/"
+    },
+    {
+      "from": "apps/mobile/src/sales-subscribe/start-date*",
+      "to": "apps/mobile/src/sales-subscribe/lib/"
+    },
+    {
+      "from": "apps/mobile/src/sales-subscribe/transfer-form*",
+      "to": "apps/mobile/src/sales-subscribe/lib/"
+    },
+    {
+      "from": "apps/mobile/src/sales-subscribe/upload-sales-receipt*",
+      "to": "apps/mobile/src/sales-subscribe/hooks/"
+    },
+    {
+      "from": "apps/mobile/src/sales-subscribe/use-sales-payment*",
+      "to": "apps/mobile/src/sales-subscribe/hooks/"
+    },
+    {
+      "from": "apps/mobile/src/sales-subscribe/use-sales-subscribe*",
+      "to": "apps/mobile/src/sales-subscribe/hooks/"
+    },
+    {
+      "from": "apps/mobile/src/sales-subscribe/fixtures*",
+      "to": "apps/mobile/src/sales-subscribe/testing/"
+    }
+  ],
+  "files": [
+    [
+      "apps/mobile/src/sales-money/AmountText.tsx",
+      "apps/mobile/src/sales-money/components/AmountText.tsx"
+    ],
+    [
+      "apps/mobile/src/sales-money/CardTitle.tsx",
+      "apps/mobile/src/sales-money/components/CardTitle.tsx"
+    ],
+    [
+      "apps/mobile/src/sales-money/CommissionChip.tsx",
+      "apps/mobile/src/sales-money/components/CommissionChip.tsx"
+    ],
+    [
+      "apps/mobile/src/sales-money/CurrencyTotalsBlock.tsx",
+      "apps/mobile/src/sales-money/components/CurrencyTotalsBlock.tsx"
+    ],
+    [
+      "apps/mobile/src/sales-money/EarningsTermsCard.tsx",
+      "apps/mobile/src/sales-money/components/EarningsTermsCard.tsx"
+    ],
+    [
+      "apps/mobile/src/sales-money/fixtures.ts",
+      "apps/mobile/src/sales-money/testing/fixtures.ts"
+    ],
+    [
+      "apps/mobile/src/sales-money/LinesToggle.tsx",
+      "apps/mobile/src/sales-money/components/LinesToggle.tsx"
+    ],
+    [
+      "apps/mobile/src/sales-money/LoadState.tsx",
+      "apps/mobile/src/sales-money/components/LoadState.tsx"
+    ],
+    [
+      "apps/mobile/src/sales-money/money-text.test.ts",
+      "apps/mobile/src/sales-money/lib/money-text.test.ts"
+    ],
+    [
+      "apps/mobile/src/sales-money/money-text.ts",
+      "apps/mobile/src/sales-money/lib/money-text.ts"
+    ],
+    [
+      "apps/mobile/src/sales-money/MoneyCard.tsx",
+      "apps/mobile/src/sales-money/components/MoneyCard.tsx"
+    ],
+    [
+      "apps/mobile/src/sales-money/my-api.ts",
+      "apps/mobile/src/sales-money/lib/my-api.ts"
+    ],
+    [
+      "apps/mobile/src/sales-money/MyEarningsView.tsx",
+      "apps/mobile/src/sales-money/screens/MyEarningsView.tsx"
+    ],
+    [
+      "apps/mobile/src/sales-money/MyMoneyScreen.en.test.tsx",
+      "apps/mobile/src/sales-money/screens/MyMoneyScreen.en.test.tsx"
+    ],
+    [
+      "apps/mobile/src/sales-money/MyMoneyScreen.test.tsx",
+      "apps/mobile/src/sales-money/screens/MyMoneyScreen.test.tsx"
+    ],
+    [
+      "apps/mobile/src/sales-money/MyMoneyScreen.tsx",
+      "apps/mobile/src/sales-money/screens/MyMoneyScreen.tsx"
+    ],
+    [
+      "apps/mobile/src/sales-money/MyPaymentItem.attachments.test.tsx",
+      "apps/mobile/src/sales-money/components/MyPaymentItem.attachments.test.tsx"
+    ],
+    [
+      "apps/mobile/src/sales-money/MyPaymentItem.tsx",
+      "apps/mobile/src/sales-money/components/MyPaymentItem.tsx"
+    ],
+    [
+      "apps/mobile/src/sales-money/MyPaymentsView.tsx",
+      "apps/mobile/src/sales-money/screens/MyPaymentsView.tsx"
+    ],
+    [
+      "apps/mobile/src/sales-money/MyStatementCard.tsx",
+      "apps/mobile/src/sales-money/components/MyStatementCard.tsx"
+    ],
+    [
+      "apps/mobile/src/sales-money/MyStudentItem.tsx",
+      "apps/mobile/src/sales-money/components/MyStudentItem.tsx"
+    ],
+    [
+      "apps/mobile/src/sales-money/MyStudentsView.tsx",
+      "apps/mobile/src/sales-money/screens/MyStudentsView.tsx"
+    ],
+    [
+      "apps/mobile/src/sales-money/StatementLines.tsx",
+      "apps/mobile/src/sales-money/components/StatementLines.tsx"
+    ],
+    [
+      "apps/mobile/src/sales-subscribe/chat-receipts.ts",
+      "apps/mobile/src/sales-subscribe/receipts/chat-receipts.ts"
+    ],
+    [
+      "apps/mobile/src/sales-subscribe/ChatReceiptList.tsx",
+      "apps/mobile/src/sales-subscribe/receipts/ChatReceiptList.tsx"
+    ],
+    [
+      "apps/mobile/src/sales-subscribe/ChatReceiptRow.tsx",
+      "apps/mobile/src/sales-subscribe/receipts/ChatReceiptRow.tsx"
+    ],
+    [
+      "apps/mobile/src/sales-subscribe/ChatReceiptThumb.tsx",
+      "apps/mobile/src/sales-subscribe/receipts/ChatReceiptThumb.tsx"
+    ],
+    [
+      "apps/mobile/src/sales-subscribe/ChildPills.tsx",
+      "apps/mobile/src/sales-subscribe/components/ChildPills.tsx"
+    ],
+    [
+      "apps/mobile/src/sales-subscribe/family.test.ts",
+      "apps/mobile/src/sales-subscribe/lib/family.test.ts"
+    ],
+    [
+      "apps/mobile/src/sales-subscribe/family.ts",
+      "apps/mobile/src/sales-subscribe/lib/family.ts"
+    ],
+    [
+      "apps/mobile/src/sales-subscribe/fixtures.ts",
+      "apps/mobile/src/sales-subscribe/testing/fixtures.ts"
+    ],
+    [
+      "apps/mobile/src/sales-subscribe/OpenPackagePicker.tsx",
+      "apps/mobile/src/sales-subscribe/components/OpenPackagePicker.tsx"
+    ],
+    [
+      "apps/mobile/src/sales-subscribe/package-text.ts",
+      "apps/mobile/src/sales-subscribe/lib/package-text.ts"
+    ],
+    [
+      "apps/mobile/src/sales-subscribe/sales-errors.test.ts",
+      "apps/mobile/src/sales-subscribe/lib/sales-errors.test.ts"
+    ],
+    [
+      "apps/mobile/src/sales-subscribe/sales-errors.ts",
+      "apps/mobile/src/sales-subscribe/lib/sales-errors.ts"
+    ],
+    [
+      "apps/mobile/src/sales-subscribe/SalesChatMoney.en.test.tsx",
+      "apps/mobile/src/sales-subscribe/receipts/SalesChatMoney.en.test.tsx"
+    ],
+    [
+      "apps/mobile/src/sales-subscribe/SalesChatMoney.test.tsx",
+      "apps/mobile/src/sales-subscribe/receipts/SalesChatMoney.test.tsx"
+    ],
+    [
+      "apps/mobile/src/sales-subscribe/SalesChatMoney.tsx",
+      "apps/mobile/src/sales-subscribe/receipts/SalesChatMoney.tsx"
+    ],
+    [
+      "apps/mobile/src/sales-subscribe/SalesPriceSection.tsx",
+      "apps/mobile/src/sales-subscribe/components/SalesPriceSection.tsx"
+    ],
+    [
+      "apps/mobile/src/sales-subscribe/SalesQuotePreview.tsx",
+      "apps/mobile/src/sales-subscribe/components/SalesQuotePreview.tsx"
+    ],
+    [
+      "apps/mobile/src/sales-subscribe/SalesReceiptField.tsx",
+      "apps/mobile/src/sales-subscribe/components/SalesReceiptField.tsx"
+    ],
+    [
+      "apps/mobile/src/sales-subscribe/SalesSubscribeForm.tsx",
+      "apps/mobile/src/sales-subscribe/components/SalesSubscribeForm.tsx"
+    ],
+    [
+      "apps/mobile/src/sales-subscribe/SalesSubscribeScreen.course.test.tsx",
+      "apps/mobile/src/sales-subscribe/screens/SalesSubscribeScreen.course.test.tsx"
+    ],
+    [
+      "apps/mobile/src/sales-subscribe/SalesSubscribeScreen.en.test.tsx",
+      "apps/mobile/src/sales-subscribe/screens/SalesSubscribeScreen.en.test.tsx"
+    ],
+    [
+      "apps/mobile/src/sales-subscribe/SalesSubscribeScreen.riyadh.test.tsx",
+      "apps/mobile/src/sales-subscribe/screens/SalesSubscribeScreen.riyadh.test.tsx"
+    ],
+    [
+      "apps/mobile/src/sales-subscribe/SalesSubscribeScreen.start.test.tsx",
+      "apps/mobile/src/sales-subscribe/screens/SalesSubscribeScreen.start.test.tsx"
+    ],
+    [
+      "apps/mobile/src/sales-subscribe/SalesSubscribeScreen.test.tsx",
+      "apps/mobile/src/sales-subscribe/screens/SalesSubscribeScreen.test.tsx"
+    ],
+    [
+      "apps/mobile/src/sales-subscribe/SalesSubscribeScreen.tsx",
+      "apps/mobile/src/sales-subscribe/screens/SalesSubscribeScreen.tsx"
+    ],
+    [
+      "apps/mobile/src/sales-subscribe/SalesTransferScreen.attachments.test.tsx",
+      "apps/mobile/src/sales-subscribe/screens/SalesTransferScreen.attachments.test.tsx"
+    ],
+    [
+      "apps/mobile/src/sales-subscribe/SalesTransferScreen.chat.test.tsx",
+      "apps/mobile/src/sales-subscribe/screens/SalesTransferScreen.chat.test.tsx"
+    ],
+    [
+      "apps/mobile/src/sales-subscribe/SalesTransferScreen.en.test.tsx",
+      "apps/mobile/src/sales-subscribe/screens/SalesTransferScreen.en.test.tsx"
+    ],
+    [
+      "apps/mobile/src/sales-subscribe/SalesTransferScreen.tsx",
+      "apps/mobile/src/sales-subscribe/screens/SalesTransferScreen.tsx"
+    ],
+    [
+      "apps/mobile/src/sales-subscribe/SalesTransferScreen.upload.test.tsx",
+      "apps/mobile/src/sales-subscribe/screens/SalesTransferScreen.upload.test.tsx"
+    ],
+    [
+      "apps/mobile/src/sales-subscribe/start-date.test.ts",
+      "apps/mobile/src/sales-subscribe/lib/start-date.test.ts"
+    ],
+    [
+      "apps/mobile/src/sales-subscribe/start-date.ts",
+      "apps/mobile/src/sales-subscribe/lib/start-date.ts"
+    ],
+    [
+      "apps/mobile/src/sales-subscribe/StartDateField.tsx",
+      "apps/mobile/src/sales-subscribe/components/StartDateField.tsx"
+    ],
+    [
+      "apps/mobile/src/sales-subscribe/transfer-form.test.ts",
+      "apps/mobile/src/sales-subscribe/lib/transfer-form.test.ts"
+    ],
+    [
+      "apps/mobile/src/sales-subscribe/transfer-form.ts",
+      "apps/mobile/src/sales-subscribe/lib/transfer-form.ts"
+    ],
+    [
+      "apps/mobile/src/sales-subscribe/TransferDone.test.tsx",
+      "apps/mobile/src/sales-subscribe/components/TransferDone.test.tsx"
+    ],
+    [
+      "apps/mobile/src/sales-subscribe/TransferDone.tsx",
+      "apps/mobile/src/sales-subscribe/components/TransferDone.tsx"
+    ],
+    [
+      "apps/mobile/src/sales-subscribe/TransferForm.tsx",
+      "apps/mobile/src/sales-subscribe/components/TransferForm.tsx"
+    ],
+    [
+      "apps/mobile/src/sales-subscribe/upload-sales-receipt.ts",
+      "apps/mobile/src/sales-subscribe/hooks/upload-sales-receipt.ts"
+    ],
+    [
+      "apps/mobile/src/sales-subscribe/use-sales-payment.ts",
+      "apps/mobile/src/sales-subscribe/hooks/use-sales-payment.ts"
+    ],
+    [
+      "apps/mobile/src/sales-subscribe/use-sales-subscribe.ts",
+      "apps/mobile/src/sales-subscribe/hooks/use-sales-subscribe.ts"
+    ]
+  ]
+}

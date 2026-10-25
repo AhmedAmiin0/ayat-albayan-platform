@@ -9,8 +9,8 @@ import { localDay } from '@/payments/format';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { Button } from '@/core/ui/primitives/Button';
 import { type, useTheme } from '@/theme';
-import { CourseCheckNotice } from '../CourseCheckNotice';
-import { daysText, requestDays } from '../course-days';
+import { CourseCheckNotice } from '../components/CourseCheckNotice';
+import { daysText, requestDays } from '../lib/course-days';
 import { useCourseChangeCheck } from './change-queries';
 
 export interface CourseChangeReviewProps {
