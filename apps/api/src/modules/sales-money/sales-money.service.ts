@@ -13,12 +13,12 @@ import {
 } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
 import type { AuthUser } from '../../common/auth/verify-token';
-import { riyadhToday } from '../sales/sales-schedule.mapper';
+import { riyadhToday } from '../sales/schedule/sales-schedule.mapper';
 import { badRequest, conflict, forbidden } from '../../common/http/errors';
 import { toSalesPayment, toSalesQuote, toSalesSubscription } from './sales-money.mapper';
 import { assertSalesDiscount, SalesMoneyScope } from './sales-money.scope';
 import { SalesMoneyServices } from './sales-money.services';
-import { SalesMoneyReads } from './sales-money.reads';
+import { SalesMoneyReads } from './reads/sales-money.reads';
 
 /**
  * The salesperson's money writes from the chat (owner 2026-10-12, R-ASST-01/04, docs/16 row 16): each one

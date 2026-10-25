@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import type { SalesAssignService } from '../sales/sales-assign.service';
+import type { SalesAssignService } from '../sales/assign/sales-assign.service';
 import { lead, leadsService } from './leads.fakes';
 
 describe('LeadsService.list: assigned_to + assigned_to_name', () => {

@@ -1,0 +1,48 @@
+{
+  "id": "a17b",
+  "seq": 24,
+  "moves": [
+    {
+      "from": "apps/api/src/modules/sales-money/sales-chat-*",
+      "to": "apps/api/src/modules/sales-money/chat"
+    },
+    {
+      "from": "apps/api/src/modules/sales-money/sales-money-reads*",
+      "to": "apps/api/src/modules/sales-money/reads"
+    },
+    {
+      "from": "apps/api/src/modules/sales-money/sales-money.reads*",
+      "to": "apps/api/src/modules/sales-money/reads"
+    },
+    {
+      "from": "apps/api/src/modules/sales-money/sales-family*",
+      "to": "apps/api/src/modules/sales-money/reads"
+    }
+  ],
+  "files": [
+    [
+      "apps/api/src/modules/sales-money/sales-chat-files.ts",
+      "apps/api/src/modules/sales-money/chat/sales-chat-files.ts"
+    ],
+    [
+      "apps/api/src/modules/sales-money/sales-chat-receipts.service.ts",
+      "apps/api/src/modules/sales-money/chat/sales-chat-receipts.service.ts"
+    ],
+    [
+      "apps/api/src/modules/sales-money/sales-family.queries.test.ts",
+      "apps/api/src/modules/sales-money/reads/sales-family.queries.test.ts"
+    ],
+    [
+      "apps/api/src/modules/sales-money/sales-family.queries.ts",
+      "apps/api/src/modules/sales-money/reads/sales-family.queries.ts"
+    ],
+    [
+      "apps/api/src/modules/sales-money/sales-money-reads.controller.ts",
+      "apps/api/src/modules/sales-money/reads/sales-money-reads.controller.ts"
+    ],
+    [
+      "apps/api/src/modules/sales-money/sales-money.reads.ts",
+      "apps/api/src/modules/sales-money/reads/sales-money.reads.ts"
+    ]
+  ]
+}

@@ -2,7 +2,7 @@ import type { Tables } from '@ab/db';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../common/db/db.module';
 import { dbError } from '../../common/http/http';
-import { isSalesLesson, salesLessonsBetween, type SalesLessonRow } from './sales-lessons';
+import { isSalesLesson, salesLessonsBetween, type SalesLessonRow } from './schedule/sales-lessons';
 import { ownershipOf, type SalesOwnership } from './sales-ownership';
 
 /** The columns a salesperson may see of a subscription: never money (price, fx_*, notes). */

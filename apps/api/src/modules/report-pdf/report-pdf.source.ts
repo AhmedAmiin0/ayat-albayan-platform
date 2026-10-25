@@ -1,7 +1,7 @@
 import type { Attendance, Grade, Program } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../common/db/db.module';
-import type { SlotPackage } from './pdf-model';
+import type { SlotPackage } from './render/pdf-model';
 
 const REPORT_COLUMNS =
   'id, lesson_id, student_id, teacher_id, attendance, program, recited, new_memorization, revision, theory, ' +
