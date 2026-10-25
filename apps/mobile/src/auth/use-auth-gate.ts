@@ -27,7 +27,7 @@ export async function resolveGate(
   set: (status: GateStatus) => void,
 ): Promise<void> {
   if (session) return set(await verifyRole(session));
-  // Before the login screen shows: a quick sign-in after it can never be silenced by this one.
+  // Before the login screen shows; registerPush also waits for a slower one (silenceSettled).
   await Promise.race([silencePush(), new Promise((resolve) => setTimeout(resolve, SILENCE_WAIT_MS))]);
   set('out');
   await clearQueryCaches();
