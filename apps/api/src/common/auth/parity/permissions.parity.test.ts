@@ -92,6 +92,13 @@ describe('system-role parity with the old @Roles table', () => {
     expect(WHO.filter((who) => who !== null && systemPermissionsOf(who).includes('inbox.lists'))).toEqual(['admin', 'sales']);
   });
 
+  // Owner 2026-10-25 «الردود السريعة»: writing the shared list is an inline check (SavedRepliesService),
+  // never a route gate; by default only the system admin holds it (grantable to assistants).
+  it('saved_replies.manage gates no route and is held by the system admin only', () => {
+    expect(routes.filter((r) => r.permission === 'saved_replies.manage').map((r) => r.key)).toEqual([]);
+    expect(WHO.filter((who) => who !== null && systemPermissionsOf(who).includes('saved_replies.manage'))).toEqual(['admin']);
+  });
+
   // docs/23 phase 4: notifications.manage gates the rule writes only; the list is settings.read.
   it('notifications.manage gates the two rule PATCH routes only, for the system admin only', () => {
     const gated = routes.filter((r) => r.permission === 'notifications.manage').map((r) => r.key).sort();
