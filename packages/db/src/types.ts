@@ -545,6 +545,7 @@ export type Database = {
       };
       chat_lists: {
         Row: {
+          auto_rule: string | null;
           created_at: string;
           created_by: string | null;
           id: string;
@@ -553,6 +554,7 @@ export type Database = {
           updated_at: string;
         };
         Insert: {
+          auto_rule?: string | null;
           created_at?: string;
           created_by?: string | null;
           id?: string;
@@ -561,6 +563,7 @@ export type Database = {
           updated_at?: string;
         };
         Update: {
+          auto_rule?: string | null;
           created_at?: string;
           created_by?: string | null;
           id?: string;

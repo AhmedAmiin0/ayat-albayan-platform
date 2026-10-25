@@ -63,3 +63,28 @@ migration `packages/db/supabase/migrations/20261024000633_numbers_routing.sql`.
   label on phones, busy-safe dialog, «ترتيب البديل» error on blur, MSA wording without number agreement.
 - Known limits (module mode only, documented, not changed): `due()` still filters chat-stamped texts by the
   chat role's default being configured; `SendGate.open()` still needs the notifications default configured.
+
+## ربط كل رسالة برقمها — design note (2026-10-25, NOT built)
+
+Under `comms_source = legacy` the app stamps only `messages.line`; `number_id` stays null (a chat message of
+2026-10-25 02:56Z had none). Nothing reads `number_id` under legacy (every reader is gated on
+`overlayNumbers()` / `activeNumberId()`), so linking it changes nothing until the flip to module mode, and
+there it decides reply windows (`v_thread_numbers` → `numberWindows`) and session routing (`routeSession`).
+
+**Tried and dropped (review 2026-10-25):** a BEFORE INSERT / UPDATE OF line trigger on `messages` setting
+`number_id` = the one enabled `wa_numbers` row whose `purpose` = `line`. Legacy sending stayed byte-identical,
+but the stamp guesses from the ROLE, not from the phone the message really used: legacy picks the line from
+the env / integration_config phone ids (`webhook.lines.ts` `lineFor`), and nothing keeps `wa_numbers` in step
+with them (a spare enabled, the real number disabled, a phone swap before the flip). Reproduced: an inbound on
+the env chat number got stamped with an enabled spare; after the flip its window credits the spare and the
+inbox reply leaves from a number the family never wrote to (Meta 131047), where a null stamp would have been
+credited to the default correctly. A wrong stamp is worse than none.
+
+**Safe design (a later PR, its own review):** stamp by phone id, never by role.
+- Inbound (legacy webhook): `wa_numbers.phone_number_id = metadata.phone_number_id` of the change (already
+  parsed, `webhook.parse.ts`); no row → null.
+- Outbound (legacy claim): the row of `lineNumbers(env)[line]`, the phone id the line client really sends
+  from; no row or no line → null. Only the stamp is added to the claim's update; the line, the client, the
+  gate and the window logic stay as they are, pinned by the existing legacy tests plus one per writer.
+- Never touch existing rows (staging history was stamped by hand). Tests: a spare enabled with the real
+  number disabled → null; a matching row → its id; module mode unchanged.

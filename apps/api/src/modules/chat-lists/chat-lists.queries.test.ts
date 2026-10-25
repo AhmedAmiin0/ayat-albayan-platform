@@ -27,9 +27,24 @@ const ROW = { id: 'l1', name: 'بانتظار الدفع' };
 
 describe('ChatListsQueries', () => {
   it('reads every list oldest first with its member count', async () => {
-    const { q, calls } = fake({ data: [{ ...ROW, members: [{ count: 4 }] }, { id: 'l2', name: 'ب', members: [] }] });
-    expect(await q.all()).toEqual([{ ...ROW, count: 4 }, { id: 'l2', name: 'ب', count: 0 }]);
+    const { q, calls } = fake({ data: [{ ...ROW, auto_rule: null, members: [{ count: 4 }] }, { id: 'l2', name: 'ب', auto_rule: null, members: [] }] });
+    expect(await q.all()).toEqual([
+      { ...ROW, count: 4, auto_rule: null },
+      { id: 'l2', name: 'ب', count: 0, auto_rule: null },
+    ]);
     expect(calls).toContainEqual(['order', 'created_at']);
+  });
+
+  it('reads the automatic rule of «مشترك» and «معلم»; an unknown value is a hand-kept list', async () => {
+    const rows = [
+      { id: 'a', name: 'مشترك', auto_rule: 'subscribed', members: [{ count: 2 }] },
+      { id: 'b', name: 'معلم', auto_rule: 'teachers', members: [] },
+      { id: 'c', name: 'غيرها', auto_rule: 'later', members: [] },
+    ];
+    expect((await fake({ data: rows }).q.all()).map((l) => l.auto_rule)).toEqual(['subscribed', 'teachers', null]);
+    const { q, calls } = fake({ data: rows[0] });
+    expect(await q.one('a')).toEqual({ id: 'a', name: 'مشترك', count: 2, auto_rule: 'subscribed' });
+    expect(calls).toContainEqual(['select', 'id, name, auto_rule, members:chat_list_threads(count)']);
   });
 
   it('create: a taken key is `taken`, the cap trigger is `limit`, another check violation throws', async () => {
@@ -38,7 +53,7 @@ describe('ChatListsQueries', () => {
     expect(await fake({ error: cap }).q.create({ name: 'x', name_key: 'x', created_by: 'u' })).toBe('limit');
     const other = fake({ error: { code: '23514', message: 'chat_lists_name_check' } });
     await expect(other.q.create({ name: 'x', name_key: 'x', created_by: 'u' })).rejects.toThrow(/chat list create/);
-    expect(await fake({ data: ROW }).q.create({ name: 'x', name_key: 'x', created_by: 'u' })).toEqual({ ...ROW, count: 0 });
+    expect(await fake({ data: ROW }).q.create({ name: 'x', name_key: 'x', created_by: 'u' })).toEqual({ ...ROW, count: 0, auto_rule: null });
   });
 
   it('rename: no row is null (unknown list), a taken key is `taken`', async () => {

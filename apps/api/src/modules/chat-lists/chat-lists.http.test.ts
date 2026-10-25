@@ -5,7 +5,7 @@ import { inboxApp } from '../inbox/test-app';
 
 type App = Awaited<ReturnType<typeof inboxApp>>;
 const ID = '0c000000-0000-4000-8000-000000000001';
-const LIST = { id: ID, name: 'بانتظار الدفع', count: 2 };
+const LIST = { id: ID, name: 'بانتظار الدفع', count: 2, auto_rule: null };
 const PHONE = encodeURIComponent('+966501234567');
 
 describe('/chat-lists (docs/22 §3): the academy\'s shared lists, admin and sales', () => {

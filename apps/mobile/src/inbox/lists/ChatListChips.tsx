@@ -4,6 +4,7 @@ import { ScrollView } from 'react-native';
 import { useHolds } from '@/auth/use-permissions';
 import { Note } from '@/more/Note';
 import { t } from '@/lib/i18n';
+import { AutoListNote } from './AutoListNote';
 import { CreateListSheet } from './CreateListSheet';
 import { EditListSheet } from './EditListSheet';
 import { ListChip } from './ListChip';
@@ -33,6 +34,7 @@ export function ChatListChips({ value, onChange }: ChatListChipsProps) {
     if (gone) onChange(null);
   }, [gone, onChange]);
   if (!allowed) return null;
+  const active = lists.find((l) => l.id === value);
   return (
     <>
       <ScrollView
@@ -55,6 +57,7 @@ export function ChatListChips({ value, onChange }: ChatListChipsProps) {
         ))}
         <ListChip action label={`＋ ${t.inbox.lists.new}`} onPress={() => setCreating(true)} />
       </ScrollView>
+      {active?.auto_rule ? <AutoListNote rule={active.auto_rule} /> : null}
       {query.isError && !query.data ? <Note>{t.inbox.lists.loadError}</Note> : null}
       <CreateListSheet open={creating} onClose={() => setCreating(false)} onCreated={(list) => onChange(list.id)} />
       <EditListSheet list={editing} onClose={() => setEditing(null)} />

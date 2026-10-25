@@ -3,8 +3,10 @@ import { thread } from '../thread-fixtures';
 
 // Test data for the chat lists «القوائم» (docs/22): an assistant who holds inbox.lists, two lists.
 
-export const PAID: ChatList = { id: 'l-paid', name: 'بانتظار الدفع', count: 1 };
-export const TRIAL: ChatList = { id: 'l-trial', name: 'تجريبية', count: 0 };
+export const PAID: ChatList = { id: 'l-paid', name: 'بانتظار الدفع', count: 1, auto_rule: null };
+export const TRIAL: ChatList = { id: 'l-trial', name: 'تجريبية', count: 0, auto_rule: null };
+export const SUBSCRIBED: ChatList = { id: 'l-sub', name: 'مشترك', count: 3, auto_rule: 'subscribed' };
+export const TEACHERS: ChatList = { id: 'l-tch', name: 'معلم', count: 2, auto_rule: 'teachers' };
 
 export const withLists = { role: 'sales', permissions: ['inbox.read', 'inbox.send', 'inbox.lists'] };
 export const withoutLists = { role: 'sales', permissions: ['inbox.read', 'inbox.send'] };
