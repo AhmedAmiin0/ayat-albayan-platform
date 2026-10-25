@@ -1,0 +1,200 @@
+{
+  "id": "b12b",
+  "seq": 52,
+  "moves": [
+    {
+      "from": "apps/web/src/features/students/StudentProfile*",
+      "to": "apps/web/src/features/students/profile/"
+    },
+    {
+      "from": "apps/web/src/features/students/profile-form*",
+      "to": "apps/web/src/features/students/profile/"
+    },
+    {
+      "from": "apps/web/src/features/students/save-profile*",
+      "to": "apps/web/src/features/students/profile/"
+    },
+    {
+      "from": "apps/web/src/features/students/FactFields*",
+      "to": "apps/web/src/features/students/profile/"
+    },
+    {
+      "from": "apps/web/src/features/students/ProgramField*",
+      "to": "apps/web/src/features/students/profile/"
+    },
+    {
+      "from": "apps/web/src/features/students/TeacherField*",
+      "to": "apps/web/src/features/students/profile/"
+    },
+    {
+      "from": "apps/web/src/features/students/StudentNote*",
+      "to": "apps/web/src/features/students/profile/"
+    },
+    {
+      "from": "apps/web/src/features/students/student-note*",
+      "to": "apps/web/src/features/students/profile/"
+    },
+    {
+      "from": "apps/web/src/features/students/SavedNote*",
+      "to": "apps/web/src/features/students/profile/"
+    },
+    {
+      "from": "apps/web/src/features/students/StudentInvoices*",
+      "to": "apps/web/src/features/students/profile/"
+    },
+    {
+      "from": "apps/web/src/features/students/StudentPayments*",
+      "to": "apps/web/src/features/students/profile/"
+    },
+    {
+      "from": "apps/web/src/features/students/Recording*",
+      "to": "apps/web/src/features/students/recordings/"
+    },
+    {
+      "from": "apps/web/src/features/students/StudentRecording*",
+      "to": "apps/web/src/features/students/recordings/"
+    },
+    {
+      "from": "apps/web/src/features/students/recording*",
+      "to": "apps/web/src/features/students/recordings/"
+    }
+  ],
+  "files": [
+    [
+      "apps/web/src/features/students/FactFields.tsx",
+      "apps/web/src/features/students/profile/FactFields.tsx"
+    ],
+    [
+      "apps/web/src/features/students/profile-form.test.ts",
+      "apps/web/src/features/students/profile/profile-form.test.ts"
+    ],
+    [
+      "apps/web/src/features/students/profile-form.ts",
+      "apps/web/src/features/students/profile/profile-form.ts"
+    ],
+    [
+      "apps/web/src/features/students/ProgramField.test.tsx",
+      "apps/web/src/features/students/profile/ProgramField.test.tsx"
+    ],
+    [
+      "apps/web/src/features/students/ProgramField.tsx",
+      "apps/web/src/features/students/profile/ProgramField.tsx"
+    ],
+    [
+      "apps/web/src/features/students/recording-format.test.ts",
+      "apps/web/src/features/students/recordings/recording-format.test.ts"
+    ],
+    [
+      "apps/web/src/features/students/recording-format.ts",
+      "apps/web/src/features/students/recordings/recording-format.ts"
+    ],
+    [
+      "apps/web/src/features/students/RecordingDelete.tsx",
+      "apps/web/src/features/students/recordings/RecordingDelete.tsx"
+    ],
+    [
+      "apps/web/src/features/students/RecordingFiltersBar.tsx",
+      "apps/web/src/features/students/recordings/RecordingFiltersBar.tsx"
+    ],
+    [
+      "apps/web/src/features/students/RecordingPlayer.tsx",
+      "apps/web/src/features/students/recordings/RecordingPlayer.tsx"
+    ],
+    [
+      "apps/web/src/features/students/recordings-api.ts",
+      "apps/web/src/features/students/recordings/recordings-api.ts"
+    ],
+    [
+      "apps/web/src/features/students/recordings-fixture.ts",
+      "apps/web/src/features/students/recordings/recordings-fixture.ts"
+    ],
+    [
+      "apps/web/src/features/students/RecordingVisibility.tsx",
+      "apps/web/src/features/students/recordings/RecordingVisibility.tsx"
+    ],
+    [
+      "apps/web/src/features/students/save-profile.ts",
+      "apps/web/src/features/students/profile/save-profile.ts"
+    ],
+    [
+      "apps/web/src/features/students/SavedNote.tsx",
+      "apps/web/src/features/students/profile/SavedNote.tsx"
+    ],
+    [
+      "apps/web/src/features/students/student-note.test.ts",
+      "apps/web/src/features/students/profile/student-note.test.ts"
+    ],
+    [
+      "apps/web/src/features/students/student-note.ts",
+      "apps/web/src/features/students/profile/student-note.ts"
+    ],
+    [
+      "apps/web/src/features/students/StudentInvoices.test.tsx",
+      "apps/web/src/features/students/profile/StudentInvoices.test.tsx"
+    ],
+    [
+      "apps/web/src/features/students/StudentInvoices.tsx",
+      "apps/web/src/features/students/profile/StudentInvoices.tsx"
+    ],
+    [
+      "apps/web/src/features/students/StudentNote.tsx",
+      "apps/web/src/features/students/profile/StudentNote.tsx"
+    ],
+    [
+      "apps/web/src/features/students/StudentPayments.tsx",
+      "apps/web/src/features/students/profile/StudentPayments.tsx"
+    ],
+    [
+      "apps/web/src/features/students/StudentProfileForm.status.test.tsx",
+      "apps/web/src/features/students/profile/StudentProfileForm.status.test.tsx"
+    ],
+    [
+      "apps/web/src/features/students/StudentProfileForm.test.tsx",
+      "apps/web/src/features/students/profile/StudentProfileForm.test.tsx"
+    ],
+    [
+      "apps/web/src/features/students/StudentProfileForm.tsx",
+      "apps/web/src/features/students/profile/StudentProfileForm.tsx"
+    ],
+    [
+      "apps/web/src/features/students/StudentProfilePage.renew.test.tsx",
+      "apps/web/src/features/students/profile/StudentProfilePage.renew.test.tsx"
+    ],
+    [
+      "apps/web/src/features/students/StudentProfilePage.test.tsx",
+      "apps/web/src/features/students/profile/StudentProfilePage.test.tsx"
+    ],
+    [
+      "apps/web/src/features/students/StudentProfilePage.trial.test.tsx",
+      "apps/web/src/features/students/profile/StudentProfilePage.trial.test.tsx"
+    ],
+    [
+      "apps/web/src/features/students/StudentProfilePage.tsx",
+      "apps/web/src/features/students/profile/StudentProfilePage.tsx"
+    ],
+    [
+      "apps/web/src/features/students/StudentRecordingRow.tsx",
+      "apps/web/src/features/students/recordings/StudentRecordingRow.tsx"
+    ],
+    [
+      "apps/web/src/features/students/StudentRecordings.actions.test.tsx",
+      "apps/web/src/features/students/recordings/StudentRecordings.actions.test.tsx"
+    ],
+    [
+      "apps/web/src/features/students/StudentRecordings.en.test.tsx",
+      "apps/web/src/features/students/recordings/StudentRecordings.en.test.tsx"
+    ],
+    [
+      "apps/web/src/features/students/StudentRecordings.test.tsx",
+      "apps/web/src/features/students/recordings/StudentRecordings.test.tsx"
+    ],
+    [
+      "apps/web/src/features/students/StudentRecordings.tsx",
+      "apps/web/src/features/students/recordings/StudentRecordings.tsx"
+    ],
+    [
+      "apps/web/src/features/students/TeacherField.tsx",
+      "apps/web/src/features/students/profile/TeacherField.tsx"
+    ]
+  ]
+}

@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { recordedLessonIdsQuery } from '@/features/students/recordings-api';
+import { recordedLessonIdsQuery } from '@/features/students/recordings/recordings-api';
 
 /**
  * The lessons of this student that have a finished recording, so the report history links only

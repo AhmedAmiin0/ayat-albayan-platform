@@ -1,0 +1,308 @@
+{
+  "id": "b13a",
+  "seq": 53,
+  "moves": [
+    {
+      "from": "apps/web/src/features/settings/values/ConflictNotice*",
+      "to": "apps/web/src/features/settings/values/conflicts/"
+    },
+    {
+      "from": "apps/web/src/features/settings/values/ConflictRow*",
+      "to": "apps/web/src/features/settings/values/conflicts/"
+    },
+    {
+      "from": "apps/web/src/features/settings/values/conflict-text*",
+      "to": "apps/web/src/features/settings/values/conflicts/"
+    },
+    {
+      "from": "apps/web/src/features/settings/values/DescriptionDialog*",
+      "to": "apps/web/src/features/settings/values/description/"
+    },
+    {
+      "from": "apps/web/src/features/settings/values/DescriptionEditor*",
+      "to": "apps/web/src/features/settings/values/description/"
+    },
+    {
+      "from": "apps/web/src/features/settings/values/describe-target*",
+      "to": "apps/web/src/features/settings/values/description/"
+    },
+    {
+      "from": "apps/web/src/features/settings/values/description.*",
+      "to": "apps/web/src/features/settings/values/description/"
+    },
+    {
+      "from": "apps/web/src/features/settings/values/row-description*",
+      "to": "apps/web/src/features/settings/values/description/"
+    },
+    {
+      "from": "apps/web/src/features/settings/values/use-describe-rights*",
+      "to": "apps/web/src/features/settings/values/description/"
+    },
+    {
+      "from": "apps/web/src/features/settings/values/use-description-save*",
+      "to": "apps/web/src/features/settings/values/description/"
+    },
+    {
+      "from": "apps/web/src/features/settings/values/use-sheet-description*",
+      "to": "apps/web/src/features/settings/values/description/"
+    },
+    {
+      "from": "apps/web/src/features/settings/values/ValueSheet*",
+      "to": "apps/web/src/features/settings/values/sheet/"
+    },
+    {
+      "from": "apps/web/src/features/settings/values/ConfirmValueDialog*",
+      "to": "apps/web/src/features/settings/values/sheet/"
+    },
+    {
+      "from": "apps/web/src/features/settings/values/value-confirm*",
+      "to": "apps/web/src/features/settings/values/sheet/"
+    },
+    {
+      "from": "apps/web/src/features/settings/values/ImpactNote*",
+      "to": "apps/web/src/features/settings/values/sheet/"
+    },
+    {
+      "from": "apps/web/src/features/settings/values/UndoToast*",
+      "to": "apps/web/src/features/settings/values/sheet/"
+    },
+    {
+      "from": "apps/web/src/features/settings/values/RowMenu*",
+      "to": "apps/web/src/features/settings/values/sheet/"
+    },
+    {
+      "from": "apps/web/src/features/settings/values/LeaveGuard*",
+      "to": "apps/web/src/features/settings/values/sheet/"
+    },
+    {
+      "from": "apps/web/src/features/settings/values/use-row-saves*",
+      "to": "apps/web/src/features/settings/values/hooks/"
+    },
+    {
+      "from": "apps/web/src/features/settings/values/use-tracked-drafts*",
+      "to": "apps/web/src/features/settings/values/hooks/"
+    },
+    {
+      "from": "apps/web/src/features/settings/values/use-value-drafts*",
+      "to": "apps/web/src/features/settings/values/hooks/"
+    },
+    {
+      "from": "apps/web/src/features/settings/values/use-values-controller*",
+      "to": "apps/web/src/features/settings/values/hooks/"
+    },
+    {
+      "from": "apps/web/src/features/settings/values/use-values-view*",
+      "to": "apps/web/src/features/settings/values/hooks/"
+    },
+    {
+      "from": "apps/web/src/features/settings/values/entry-save-result*",
+      "to": "apps/web/src/features/settings/values/hooks/"
+    },
+    {
+      "from": "apps/web/src/features/settings/values/save-result*",
+      "to": "apps/web/src/features/settings/values/hooks/"
+    },
+    {
+      "from": "apps/web/src/features/settings/values/value-format*",
+      "to": "apps/web/src/features/settings/values/lib/"
+    },
+    {
+      "from": "apps/web/src/features/settings/values/value-groups-view*",
+      "to": "apps/web/src/features/settings/values/lib/"
+    },
+    {
+      "from": "apps/web/src/features/settings/values/value-rows*",
+      "to": "apps/web/src/features/settings/values/lib/"
+    },
+    {
+      "from": "apps/web/src/features/settings/values/value-units*",
+      "to": "apps/web/src/features/settings/values/lib/"
+    }
+  ],
+  "files": [
+    [
+      "apps/web/src/features/settings/values/ConfirmValueDialog.test.tsx",
+      "apps/web/src/features/settings/values/sheet/ConfirmValueDialog.test.tsx"
+    ],
+    [
+      "apps/web/src/features/settings/values/ConfirmValueDialog.tsx",
+      "apps/web/src/features/settings/values/sheet/ConfirmValueDialog.tsx"
+    ],
+    [
+      "apps/web/src/features/settings/values/conflict-text.test.ts",
+      "apps/web/src/features/settings/values/conflicts/conflict-text.test.ts"
+    ],
+    [
+      "apps/web/src/features/settings/values/conflict-text.ts",
+      "apps/web/src/features/settings/values/conflicts/conflict-text.ts"
+    ],
+    [
+      "apps/web/src/features/settings/values/ConflictNotice.tsx",
+      "apps/web/src/features/settings/values/conflicts/ConflictNotice.tsx"
+    ],
+    [
+      "apps/web/src/features/settings/values/ConflictRow.tsx",
+      "apps/web/src/features/settings/values/conflicts/ConflictRow.tsx"
+    ],
+    [
+      "apps/web/src/features/settings/values/describe-target.ts",
+      "apps/web/src/features/settings/values/description/describe-target.ts"
+    ],
+    [
+      "apps/web/src/features/settings/values/description.test.ts",
+      "apps/web/src/features/settings/values/description/description.test.ts"
+    ],
+    [
+      "apps/web/src/features/settings/values/description.ts",
+      "apps/web/src/features/settings/values/description/description.ts"
+    ],
+    [
+      "apps/web/src/features/settings/values/DescriptionDialog.tsx",
+      "apps/web/src/features/settings/values/description/DescriptionDialog.tsx"
+    ],
+    [
+      "apps/web/src/features/settings/values/DescriptionEditor.tsx",
+      "apps/web/src/features/settings/values/description/DescriptionEditor.tsx"
+    ],
+    [
+      "apps/web/src/features/settings/values/entry-save-result.test.ts",
+      "apps/web/src/features/settings/values/hooks/entry-save-result.test.ts"
+    ],
+    [
+      "apps/web/src/features/settings/values/entry-save-result.ts",
+      "apps/web/src/features/settings/values/hooks/entry-save-result.ts"
+    ],
+    [
+      "apps/web/src/features/settings/values/ImpactNote.tsx",
+      "apps/web/src/features/settings/values/sheet/ImpactNote.tsx"
+    ],
+    [
+      "apps/web/src/features/settings/values/LeaveGuard.tsx",
+      "apps/web/src/features/settings/values/sheet/LeaveGuard.tsx"
+    ],
+    [
+      "apps/web/src/features/settings/values/row-description.ts",
+      "apps/web/src/features/settings/values/description/row-description.ts"
+    ],
+    [
+      "apps/web/src/features/settings/values/RowMenu.test.tsx",
+      "apps/web/src/features/settings/values/sheet/RowMenu.test.tsx"
+    ],
+    [
+      "apps/web/src/features/settings/values/RowMenu.tsx",
+      "apps/web/src/features/settings/values/sheet/RowMenu.tsx"
+    ],
+    [
+      "apps/web/src/features/settings/values/save-result.test.ts",
+      "apps/web/src/features/settings/values/hooks/save-result.test.ts"
+    ],
+    [
+      "apps/web/src/features/settings/values/save-result.ts",
+      "apps/web/src/features/settings/values/hooks/save-result.ts"
+    ],
+    [
+      "apps/web/src/features/settings/values/UndoToast.test.tsx",
+      "apps/web/src/features/settings/values/sheet/UndoToast.test.tsx"
+    ],
+    [
+      "apps/web/src/features/settings/values/UndoToast.tsx",
+      "apps/web/src/features/settings/values/sheet/UndoToast.tsx"
+    ],
+    [
+      "apps/web/src/features/settings/values/use-describe-rights.ts",
+      "apps/web/src/features/settings/values/description/use-describe-rights.ts"
+    ],
+    [
+      "apps/web/src/features/settings/values/use-description-save.ts",
+      "apps/web/src/features/settings/values/description/use-description-save.ts"
+    ],
+    [
+      "apps/web/src/features/settings/values/use-row-saves.ts",
+      "apps/web/src/features/settings/values/hooks/use-row-saves.ts"
+    ],
+    [
+      "apps/web/src/features/settings/values/use-sheet-description.tsx",
+      "apps/web/src/features/settings/values/description/use-sheet-description.tsx"
+    ],
+    [
+      "apps/web/src/features/settings/values/use-tracked-drafts.ts",
+      "apps/web/src/features/settings/values/hooks/use-tracked-drafts.ts"
+    ],
+    [
+      "apps/web/src/features/settings/values/use-value-drafts.test.tsx",
+      "apps/web/src/features/settings/values/hooks/use-value-drafts.test.tsx"
+    ],
+    [
+      "apps/web/src/features/settings/values/use-value-drafts.ts",
+      "apps/web/src/features/settings/values/hooks/use-value-drafts.ts"
+    ],
+    [
+      "apps/web/src/features/settings/values/use-values-controller.conflict.test.tsx",
+      "apps/web/src/features/settings/values/hooks/use-values-controller.conflict.test.tsx"
+    ],
+    [
+      "apps/web/src/features/settings/values/use-values-controller.history.test.tsx",
+      "apps/web/src/features/settings/values/hooks/use-values-controller.history.test.tsx"
+    ],
+    [
+      "apps/web/src/features/settings/values/use-values-controller.test.tsx",
+      "apps/web/src/features/settings/values/hooks/use-values-controller.test.tsx"
+    ],
+    [
+      "apps/web/src/features/settings/values/use-values-controller.ts",
+      "apps/web/src/features/settings/values/hooks/use-values-controller.ts"
+    ],
+    [
+      "apps/web/src/features/settings/values/use-values-view.ts",
+      "apps/web/src/features/settings/values/hooks/use-values-view.ts"
+    ],
+    [
+      "apps/web/src/features/settings/values/value-confirm.test.ts",
+      "apps/web/src/features/settings/values/sheet/value-confirm.test.ts"
+    ],
+    [
+      "apps/web/src/features/settings/values/value-confirm.ts",
+      "apps/web/src/features/settings/values/sheet/value-confirm.ts"
+    ],
+    [
+      "apps/web/src/features/settings/values/value-format.test.ts",
+      "apps/web/src/features/settings/values/lib/value-format.test.ts"
+    ],
+    [
+      "apps/web/src/features/settings/values/value-format.ts",
+      "apps/web/src/features/settings/values/lib/value-format.ts"
+    ],
+    [
+      "apps/web/src/features/settings/values/value-groups-view.test.ts",
+      "apps/web/src/features/settings/values/lib/value-groups-view.test.ts"
+    ],
+    [
+      "apps/web/src/features/settings/values/value-groups-view.ts",
+      "apps/web/src/features/settings/values/lib/value-groups-view.ts"
+    ],
+    [
+      "apps/web/src/features/settings/values/value-rows.test.ts",
+      "apps/web/src/features/settings/values/lib/value-rows.test.ts"
+    ],
+    [
+      "apps/web/src/features/settings/values/value-rows.ts",
+      "apps/web/src/features/settings/values/lib/value-rows.ts"
+    ],
+    [
+      "apps/web/src/features/settings/values/value-units.ts",
+      "apps/web/src/features/settings/values/lib/value-units.ts"
+    ],
+    [
+      "apps/web/src/features/settings/values/ValueSheet.phone.test.tsx",
+      "apps/web/src/features/settings/values/sheet/ValueSheet.phone.test.tsx"
+    ],
+    [
+      "apps/web/src/features/settings/values/ValueSheet.test.tsx",
+      "apps/web/src/features/settings/values/sheet/ValueSheet.test.tsx"
+    ],
+    [
+      "apps/web/src/features/settings/values/ValueSheet.tsx",
+      "apps/web/src/features/settings/values/sheet/ValueSheet.tsx"
+    ]
+  ]
+}

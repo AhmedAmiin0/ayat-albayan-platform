@@ -4,10 +4,10 @@ import { Button } from '@/components/ui/form/button';
 import { t } from '@/lib/i18n/i18n';
 import { defaultForm, isModified, rowForm } from '../../registry-form/row-form';
 import { isDirty } from '../../registry-form/settings-dirty';
-import { describeItem, settingTarget } from '../row-description';
-import { RowMenu, type RowMenuItem } from '../RowMenu';
-import { valueText } from '../value-format';
-import type { ValuesApi } from '../use-values-controller';
+import { describeItem, settingTarget } from '../description/row-description';
+import { RowMenu, type RowMenuItem } from '../sheet/RowMenu';
+import { valueText } from '../lib/value-format';
+import type { ValuesApi } from '../hooks/use-values-controller';
 import { useValues } from '../values-context';
 import { keyItem } from './key-item';
 

@@ -5,7 +5,7 @@ import { PhonePreview } from '@/components/ui/form/phone-preview';
 import { TimeZoneSelect } from '@/components/ui/form/time-zone-select';
 import { SourceField } from '@/features/guardians/SourceField';
 import { ageError, phoneError } from '@/features/students/create/create-student';
-import { AgeField, GenderField } from '@/features/students/FactFields';
+import { AgeField, GenderField } from '@/features/students/profile/FactFields';
 import { t } from '@/lib/i18n/i18n';
 import type { NewStudentDraft } from '../../draft/draft';
 
