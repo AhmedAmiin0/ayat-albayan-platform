@@ -12,7 +12,7 @@ import { ErrorLine } from '../../ErrorLine';
 import { ForwardRow } from './ForwardRow';
 import { chatName, forwardNotice, selectedLine } from '../hooks/forward-text';
 import { useForward, useForwardId } from '../hooks/use-forward';
-import { useThreadList } from '../../use-thread-list';
+import { useThreadList } from '../../threads-list/use-thread-list';
 
 const MAX = FORWARD_MAX_TARGETS;
 

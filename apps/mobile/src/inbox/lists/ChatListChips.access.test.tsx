@@ -4,7 +4,7 @@ import { TreeBaseProvider } from '@/core/nav/tree-base';
 import { renderWithQuery } from '@/test/query';
 import { thread } from '../shared/thread-fixtures';
 import { ThreadModeProvider } from '../thread/hooks/thread-mode';
-import { ThreadsList } from '../ThreadsList';
+import { ThreadsList } from '../threads-list/ThreadsList';
 import { answer, PAID, withLists, withoutLists } from './list-fixtures';
 
 const mockApiFetch = jest.fn();

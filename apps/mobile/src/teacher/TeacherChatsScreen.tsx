@@ -1,4 +1,4 @@
-import { ThreadsList } from '@/inbox/ThreadsList';
+import { ThreadsList } from '@/inbox/threads-list/ThreadsList';
 import { Screen } from '@/core/ui/layout/Screen';
 
 /**

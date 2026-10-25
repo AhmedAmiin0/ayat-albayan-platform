@@ -1,6 +1,6 @@
 import type { StudentStatus } from '@ab/shared';
 import { fireEvent, screen, within } from '@testing-library/react-native';
-import { SalesChatActions } from '@/inbox/SalesChatActions';
+import { SalesChatActions } from '@/inbox/leads/sales/SalesChatActions';
 import { t } from '@/core/lib/i18n/i18n';
 import { TreeBaseProvider } from '@/core/nav/tree-base';
 import { familyOf, familyThread, KID, KID2, kid } from '@/sales-subscribe/fixtures';

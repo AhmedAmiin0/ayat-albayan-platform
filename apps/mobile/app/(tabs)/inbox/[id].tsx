@@ -1,1 +1,1 @@
-export { LeadDetailScreen as default } from '@/inbox/LeadDetailScreen';
+export { LeadDetailScreen as default } from '@/inbox/screens/LeadDetailScreen';

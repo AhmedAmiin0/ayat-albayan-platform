@@ -1,6 +1,6 @@
 import { fireEvent, screen } from '@testing-library/react-native';
 import { router } from 'expo-router';
-import { InboxScreen } from '@/inbox/InboxScreen';
+import { InboxScreen } from '@/inbox/screens/InboxScreen';
 import { thread } from '@/inbox/shared/thread-fixtures';
 import { t } from '@/core/lib/i18n/i18n';
 import { TreeBaseProvider } from '@/core/nav/tree-base';

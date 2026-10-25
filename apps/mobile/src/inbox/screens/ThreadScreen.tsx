@@ -14,7 +14,7 @@ import { Composer } from '../composer/Composer';
 import { clockAt, kindLabel } from '../shared/format';
 import { MessageList } from '../messages/components/MessageList';
 import { OwnThreadNote } from '../thread/components/OwnThreadNote';
-import { SalesChatActions } from '../SalesChatActions';
+import { SalesChatActions } from '../leads/sales/SalesChatActions';
 import { SendRating } from '../rating/SendRating';
 import { SubscriptionPanel } from '../subscription/SubscriptionPanel';
 import { ThreadHeaderActions } from '../thread/components/ThreadHeaderActions';
