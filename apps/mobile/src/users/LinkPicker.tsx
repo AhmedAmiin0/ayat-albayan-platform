@@ -7,9 +7,9 @@ import { t } from '@/lib/i18n';
 import { Note } from '@/more/Note';
 import { FormLabel } from '@/payments/FormLabel';
 import { shape, type, useTheme } from '@/theme';
-import { AppText } from '@/ui/AppText';
-import { Button } from '@/ui/Button';
-import { SearchField } from '@/ui/SearchField';
+import { AppText } from '@/core/ui/primitives/AppText';
+import { Button } from '@/core/ui/primitives/Button';
+import { SearchField } from '@/core/ui/form/SearchField';
 import { candidatesQuery } from './api';
 import { recordText } from './format';
 

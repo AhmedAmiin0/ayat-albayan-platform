@@ -1,6 +1,6 @@
 import { formatPhone, type Glyph, type NumberView, type ParityView, type Tone } from '@ab/shared';
 import { t } from '@/lib/i18n';
-import { ltr } from '@/ui/Ltr';
+import { ltr } from '@/core/ui/primitives/Ltr';
 import { formatAt } from './activity-format';
 
 // «الأرقام» in words on the phone (same ar.json keys as the web's numbers page).

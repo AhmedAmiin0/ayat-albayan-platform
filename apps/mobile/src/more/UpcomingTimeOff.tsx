@@ -3,7 +3,7 @@ import { useMemo } from 'react';
 import { apiFetch } from '@/lib/api';
 import { t } from '@/lib/i18n';
 import { pathKey } from '@/lib/query-keys';
-import { ErrorState } from '@/ui/ErrorState';
+import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { Note } from './Note';
 import { upcomingTimeOff } from './schedule';
 import { Section } from './Section';

@@ -1,7 +1,7 @@
 import type { ReceiptSource } from '@/payments/receipt';
 import { View } from 'react-native';
 import { t } from '@/lib/i18n';
-import { Button } from '@/ui/Button';
+import { Button } from '@/core/ui/primitives/Button';
 
 export interface InvoiceActionsProps {
   /** An invoice is already picked: the camera says «صوّر تاني», and «شيلها» shows. */

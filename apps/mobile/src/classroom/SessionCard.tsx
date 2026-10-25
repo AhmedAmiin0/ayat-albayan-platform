@@ -4,8 +4,8 @@ import { t } from '@/lib/i18n';
 import { locale } from '@/lib/locale';
 import { shape, type, useTheme } from '@/theme';
 import { riyadhTime, studentNames } from '@/today/lesson-text';
-import { AppText } from '@/ui/AppText';
-import { StatusChip } from '@/ui/StatusChip';
+import { AppText } from '@/core/ui/primitives/AppText';
+import { StatusChip } from '@/core/ui/feedback/StatusChip';
 import { SessionActions } from './SessionActions';
 import type { SessionGroup } from './sessions';
 

@@ -1,7 +1,7 @@
 import { type Href, router } from 'expo-router';
 import { usePermissions } from '@/auth/use-permissions';
 import { t } from '@/lib/i18n';
-import { Button } from '@/ui/Button';
+import { Button } from '@/core/ui/primitives/Button';
 
 /** «تسجيلات الحلقات»: opens the recordings screen; hidden for a role without recordings.read. */
 export function RecordingsButton({ href }: { href: Href }) {

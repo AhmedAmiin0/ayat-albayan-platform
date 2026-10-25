@@ -4,7 +4,7 @@ import { cachedThread, detail, PHONE } from '@/inbox/thread-fixtures';
 import { t } from '@/lib/i18n';
 import { money } from '@/payments/format';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
-import { ltr } from '@/ui/Ltr';
+import { ltr } from '@/core/ui/primitives/Ltr';
 import { balance, CHILD, profile, quote, saved, SISTER } from './fixtures';
 import { SubscribeScreen } from './SubscribeScreen';
 

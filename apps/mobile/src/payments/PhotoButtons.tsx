@@ -3,7 +3,7 @@ import { View } from 'react-native';
 import { ErrorLine } from '@/inbox/ErrorLine';
 import { t } from '@/lib/i18n';
 import { useUploadMaxBytes } from '@/lib/public-config';
-import { Button } from '@/ui/Button';
+import { Button } from '@/core/ui/primitives/Button';
 import { pickReceipt, type Receipt, type ReceiptSource } from './receipt';
 
 export interface PhotoButtonsProps {

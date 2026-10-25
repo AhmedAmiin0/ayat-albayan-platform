@@ -6,8 +6,8 @@ import { ErrorLine } from '@/inbox/ErrorLine';
 import { t } from '@/lib/i18n';
 import { Note } from '@/more/Note';
 import { useTheme } from '@/theme';
-import { Button } from '@/ui/Button';
-import { InlineConfirm } from '@/ui/InlineConfirm';
+import { Button } from '@/core/ui/primitives/Button';
+import { InlineConfirm } from '@/core/ui/feedback/InlineConfirm';
 import { enableUser, signOutUser, USERS_KEY } from './api';
 import { userErrorText } from './errors';
 

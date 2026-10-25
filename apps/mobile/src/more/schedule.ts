@@ -1,7 +1,7 @@
 import { CAIRO_TZ, intlLocale, RIYADH_TZ } from '@ab/shared';
 import { t } from '@/lib/i18n';
 import { locale } from '@/lib/locale';
-import { ltr } from '@/ui/Ltr';
+import { ltr } from '@/core/ui/primitives/Ltr';
 import type { AvailabilityRow, TimeOff } from './types';
 
 // Read-only teacher schedule helpers (R-TCH-02). Pure, so they are unit-tested.

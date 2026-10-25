@@ -5,7 +5,7 @@ import type { AvailabilityRow, Teacher } from '@/more/types';
 import { fakeNow } from '@/test/fake-now';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { cancelled, done, lesson, muscat, pending } from '@/today/fixtures';
-import { ltr } from '@/ui/Ltr';
+import { ltr } from '@/core/ui/primitives/Ltr';
 import { TeacherCalendarScreen } from './TeacherCalendarScreen';
 
 // The first render in this file pays the cold transform of the whole calendar tree, which exceeded the

@@ -4,8 +4,8 @@ import { t } from '@/lib/i18n';
 import { locale } from '@/lib/locale';
 import { setLocale } from '@/lib/locale-switch';
 import { ErrorLine } from '@/inbox/ErrorLine';
-import { InlineConfirm } from '@/ui/InlineConfirm';
-import { ListRow } from '@/ui/ListRow';
+import { InlineConfirm } from '@/core/ui/feedback/InlineConfirm';
+import { ListRow } from '@/core/ui/layout/ListRow';
 import { Section } from './Section';
 
 /**

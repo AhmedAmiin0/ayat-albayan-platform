@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { TextInput, View, type TextInputProps } from 'react-native';
 import { t } from '@/lib/i18n';
 import { shape, type, useTheme } from '@/theme';
-import { AppText } from './AppText';
+import { AppText } from '../primitives/AppText';
 import { PasswordToggle } from './PasswordToggle';
 
 export interface FieldProps extends Omit<TextInputProps, 'style'> {

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { View } from 'react-native';
 import { t } from '@/lib/i18n';
 import { Note } from '@/more/Note';
-import { FilterPills } from '@/ui/FilterPills';
+import { FilterPills } from '@/core/ui/form/FilterPills';
 import { InviteeChips } from './InviteeChips';
 import { InviteeSearch } from './InviteeSearch';
 import { addInvitee, isFull, removeInvitee, type DraftInvitee } from './invitee-draft';

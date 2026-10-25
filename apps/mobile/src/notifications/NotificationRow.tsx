@@ -2,9 +2,9 @@ import type { NotificationItem } from '@ab/shared';
 import { leadAge } from '@/inbox/format';
 import { t } from '@/lib/i18n';
 import { type, useTheme } from '@/theme';
-import { AppText } from '@/ui/AppText';
-import { ListRow } from '@/ui/ListRow';
-import { StatusChip } from '@/ui/StatusChip';
+import { AppText } from '@/core/ui/primitives/AppText';
+import { ListRow } from '@/core/ui/layout/ListRow';
+import { StatusChip } from '@/core/ui/feedback/StatusChip';
 
 export interface NotificationRowProps {
   item: NotificationItem;

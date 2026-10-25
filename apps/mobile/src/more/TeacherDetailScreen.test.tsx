@@ -4,7 +4,7 @@ import { Linking } from 'react-native';
 import { ApiError } from '@/lib/api';
 import { t } from '@/lib/i18n';
 import { renderWithQuery } from '@/test/query';
-import { ltr } from '@/ui/Ltr';
+import { ltr } from '@/core/ui/primitives/Ltr';
 import { TeacherDetailScreen } from './TeacherDetailScreen';
 import type { AvailabilityRow, Teacher, TimeOff } from './types';
 

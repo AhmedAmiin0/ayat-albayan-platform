@@ -5,7 +5,7 @@ import { AmountText } from '@/sales-money/AmountText';
 import { CardTitle } from '@/sales-money/CardTitle';
 import { MoneyCard } from '@/sales-money/MoneyCard';
 import { commissionText, salaryText, sinceText } from '@/sales-money/money-text';
-import { AppText } from '@/ui/AppText';
+import { AppText } from '@/core/ui/primitives/AppText';
 
 /** The terms read-only (an admin without assistantpay.write, as the web's summary line). */
 export function TermsView({ terms }: { terms: AssistantTermsView }) {

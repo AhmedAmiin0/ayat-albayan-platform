@@ -1,6 +1,6 @@
 import { View } from 'react-native';
 import { shape, type, useTheme } from '@/theme';
-import { AppText } from '@/ui/AppText';
+import { AppText } from '@/core/ui/primitives/AppText';
 
 export interface KpiCardProps {
   label: string;

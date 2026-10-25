@@ -1,7 +1,7 @@
 import { payoutStatusStyle, type PayoutView } from '@ab/shared';
 import { t } from '@/lib/i18n';
-import { ListRow } from '@/ui/ListRow';
-import { StatusChip } from '@/ui/StatusChip';
+import { ListRow } from '@/core/ui/layout/ListRow';
+import { StatusChip } from '@/core/ui/feedback/StatusChip';
 import { amountText } from './format';
 
 /** A teacher's statement for the month: name, lessons and amount, its state; taps open the detail. */

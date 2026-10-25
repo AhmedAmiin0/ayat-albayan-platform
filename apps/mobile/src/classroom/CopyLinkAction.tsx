@@ -3,7 +3,7 @@ import { Share, View } from 'react-native';
 import { ErrorLine } from '@/inbox/ErrorLine';
 import { t } from '@/lib/i18n';
 import { Note } from '@/more/Note';
-import { Button } from '@/ui/Button';
+import { Button } from '@/core/ui/primitives/Button';
 import { joinLinkUrl, linkError } from './link-api';
 
 /** A fresh URL every tap (it is a short-lived secret: never kept), handed to the share sheet, which has Copy. */

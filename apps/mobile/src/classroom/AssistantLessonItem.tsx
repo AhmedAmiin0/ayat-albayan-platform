@@ -2,7 +2,7 @@ import type { AssistantLessonView } from '@ab/shared';
 import { View } from 'react-native';
 import { t } from '@/lib/i18n';
 import { riyadhTime } from '@/today/lesson-text';
-import { AppText } from '@/ui/AppText';
+import { AppText } from '@/core/ui/primitives/AppText';
 import { type, useTheme } from '@/theme';
 import type { JoinableLesson } from './JoinClassroomButton';
 import { JoinClassroomButton } from './JoinClassroomButton';

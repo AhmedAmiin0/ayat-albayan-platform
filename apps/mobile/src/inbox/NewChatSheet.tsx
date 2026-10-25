@@ -5,10 +5,10 @@ import { Modal, View } from 'react-native';
 import { t } from '@/lib/i18n';
 import { Note } from '@/more/Note';
 import { inTree, useTreeBase } from '@/nav/tree-base';
-import { Button } from '@/ui/Button';
-import { Field } from '@/ui/Field';
-import { Screen } from '@/ui/Screen';
-import { ScreenHeader } from '@/ui/ScreenHeader';
+import { Button } from '@/core/ui/primitives/Button';
+import { Field } from '@/core/ui/form/Field';
+import { Screen } from '@/core/ui/layout/Screen';
+import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { ErrorLine } from './ErrorLine';
 import { threadHref } from './thread-cache';
 

@@ -3,9 +3,9 @@ import { useState } from 'react';
 import { View } from 'react-native';
 import { t } from '@/lib/i18n';
 import { Note } from '@/more/Note';
-import { FilterPills } from '@/ui/FilterPills';
-import { InlineConfirm } from '@/ui/InlineConfirm';
-import { Ltr } from '@/ui/Ltr';
+import { FilterPills } from '@/core/ui/form/FilterPills';
+import { InlineConfirm } from '@/core/ui/feedback/InlineConfirm';
+import { Ltr } from '@/core/ui/primitives/Ltr';
 import { driverName, lineDriver } from './line-driver';
 
 export interface LineDriverRowProps {

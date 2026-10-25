@@ -3,7 +3,7 @@ import { whenText } from '@/booking/slots';
 import { t } from '@/lib/i18n';
 import { type, useTheme } from '@/theme';
 import { studentNames } from '@/today/lesson-text';
-import { AppText } from '@/ui/AppText';
+import { AppText } from '@/core/ui/primitives/AppText';
 import { lengthOf } from './edit-time-body';
 import { lengthText } from './edit-time-text';
 import type { EditableLesson, TimeEditMode } from './types';

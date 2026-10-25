@@ -2,8 +2,8 @@ import type { UserDetail } from '@ab/shared';
 import { View } from 'react-native';
 import { t } from '@/lib/i18n';
 import { type, useTheme } from '@/theme';
-import { AppText } from '@/ui/AppText';
-import { StatusChip } from '@/ui/StatusChip';
+import { AppText } from '@/core/ui/primitives/AppText';
+import { StatusChip } from '@/core/ui/feedback/StatusChip';
 import { lastSignIn, recordText, statusStyle } from './format';
 
 /** Status (and why it is disabled), the linked record and the last sign-in, above the edit fields. */

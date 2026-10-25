@@ -3,8 +3,8 @@ import { router } from 'expo-router';
 import { t } from '@/lib/i18n';
 import { Note } from '@/more/Note';
 import { countsLine } from '@/students/student-kinds';
-import { ListRow } from '@/ui/ListRow';
-import { StatusChip } from '@/ui/StatusChip';
+import { ListRow } from '@/core/ui/layout/ListRow';
+import { StatusChip } from '@/core/ui/feedback/StatusChip';
 import { useSalesHrefs } from './sales-href';
 import { teacherCounts, teacherLabel, teacherSubtitle } from './sales-text';
 

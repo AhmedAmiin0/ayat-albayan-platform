@@ -1,8 +1,8 @@
 import type { ReactNode } from 'react';
 import { Pressable, View, type ViewStyle } from 'react-native';
 import { type, useTheme } from '@/theme';
-import { Ltr } from './Ltr';
-import { AppText } from './AppText';
+import { Ltr } from '../primitives/Ltr';
+import { AppText } from '../primitives/AppText';
 
 export interface ListRowProps {
   /** At the inline-start, usually an <Avatar>. */

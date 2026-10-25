@@ -1,6 +1,6 @@
 import { fireEvent, render, screen } from '@testing-library/react-native';
 import { t } from '@/lib/i18n';
-import { ltr } from '@/ui/Ltr';
+import { ltr } from '@/core/ui/primitives/Ltr';
 import { Stepper } from './Stepper';
 
 const label = t.pricing.studentsLabel;

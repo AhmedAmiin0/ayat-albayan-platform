@@ -5,8 +5,8 @@ import { t } from '@/lib/i18n';
 import { AppearancePicker } from '@/more/AppearancePicker';
 import { LanguageRow } from '@/more/LanguageRow';
 import { SignOutButton } from '@/teacher/SignOutButton';
-import { Screen } from '@/ui/Screen';
-import { ScreenHeader } from '@/ui/ScreenHeader';
+import { Screen } from '@/core/ui/layout/Screen';
+import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 
 /** The classroom assistant's «المزيد»: «حسابي» (R-ACC-01), the appearance, the language and sign-out. */
 export function AssistantMoreScreen() {

@@ -5,8 +5,8 @@ import { Note } from '@/more/Note';
 import { money } from '@/payments/format';
 import { planText } from '@/subscribe/QuotePreview';
 import { shape, type, useTheme } from '@/theme';
-import { AppText } from '@/ui/AppText';
-import { ltr } from '@/ui/Ltr';
+import { AppText } from '@/core/ui/primitives/AppText';
+import { ltr } from '@/core/ui/primitives/Ltr';
 
 /**
  * The amount the family transfers (POST /sales/subscriptions/quote), the admin's preview without

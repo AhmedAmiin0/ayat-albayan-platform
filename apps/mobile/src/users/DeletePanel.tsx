@@ -4,7 +4,7 @@ import { ErrorLine } from '@/inbox/ErrorLine';
 import { t } from '@/lib/i18n';
 import { Section } from '@/more/Section';
 import { type, useTheme } from '@/theme';
-import { AppText } from '@/ui/AppText';
+import { AppText } from '@/core/ui/primitives/AppText';
 import { deleteUser, disableUser, USERS_KEY } from './api';
 import { historyReferences, userErrorText } from './errors';
 import { HistoryReferences } from './HistoryReferences';

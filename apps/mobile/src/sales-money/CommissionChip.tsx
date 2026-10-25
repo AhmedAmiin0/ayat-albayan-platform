@@ -1,6 +1,6 @@
 import type { AssistantCommissionStatus } from '@ab/shared';
 import { t } from '@/lib/i18n';
-import { StatusChip } from '@/ui/StatusChip';
+import { StatusChip } from '@/core/ui/feedback/StatusChip';
 
 /** «مستحقة» is settled money (ok); «ملغاة» was taken back (neutral, struck), as the web's CommissionChip. */
 export function CommissionChip({ status }: { status: AssistantCommissionStatus }) {

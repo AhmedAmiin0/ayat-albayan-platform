@@ -8,7 +8,7 @@ import { AttachmentRow } from '@/payments/AttachmentRow';
 import { attachmentsFull, withAttachment, withoutAttachment } from '@/payments/attachments';
 import { FormLabel } from '@/payments/FormLabel';
 import { PhotoButtons } from '@/payments/PhotoButtons';
-import { Button } from '@/ui/Button';
+import { Button } from '@/core/ui/primitives/Button';
 import { ChatReceiptList } from './ChatReceiptList';
 import { useCopyChatReceipt } from './chat-receipts';
 import { salesErrorText } from './sales-errors';

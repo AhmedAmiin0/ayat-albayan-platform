@@ -3,7 +3,7 @@ import { teacherLoad } from '@/booking/TeacherStep';
 import { cityOf } from '@/booking/slots';
 import { t } from '@/lib/i18n';
 import { formatTimeOff } from '@/more/schedule';
-import { ltr } from '@/ui/Ltr';
+import { ltr } from '@/core/ui/primitives/Ltr';
 
 // The words of a «الجدول» teacher section (R-SCH-01): who the teacher is, their load, the day's
 // windows and free gaps on the Riyadh clock, and time off. Pure, unit-tested in Arabic and English.

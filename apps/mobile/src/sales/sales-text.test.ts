@@ -1,6 +1,6 @@
 import { t } from '@/lib/i18n';
 import { money } from '@/payments/format';
-import { ltr } from '@/ui/Ltr';
+import { ltr } from '@/core/ui/primitives/Ltr';
 import { entry, student, subscription, teacher } from './fixtures';
 import {
   fill,

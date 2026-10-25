@@ -11,9 +11,9 @@ import { PaidDayPicker } from '@/payments/PaidDayPicker';
 import { ReceiptPicker } from '@/payments/ReceiptPicker';
 import { statementMonth } from '@/sales-money/money-text';
 import { useNow } from '@/today/use-day-lessons';
-import { Button } from '@/ui/Button';
-import { Field } from '@/ui/Field';
-import { FilterPills, type FilterPill } from '@/ui/FilterPills';
+import { Button } from '@/core/ui/primitives/Button';
+import { Field } from '@/core/ui/form/Field';
+import { FilterPills, type FilterPill } from '@/core/ui/form/FilterPills';
 import { assistantsErrorText } from './errors';
 import { usePayStatement } from './use-pay-statement';
 

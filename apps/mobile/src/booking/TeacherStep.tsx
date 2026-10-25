@@ -9,10 +9,10 @@ import {
 import { View } from 'react-native';
 import { t } from '@/lib/i18n';
 import { FormLabel } from '@/payments/FormLabel';
-import { AppText } from '@/ui/AppText';
-import { ErrorState } from '@/ui/ErrorState';
-import { FilterPills } from '@/ui/FilterPills';
-import { ListRow } from '@/ui/ListRow';
+import { AppText } from '@/core/ui/primitives/AppText';
+import { ErrorState } from '@/core/ui/feedback/ErrorState';
+import { FilterPills } from '@/core/ui/form/FilterPills';
+import { ListRow } from '@/core/ui/layout/ListRow';
 import { type, useTheme } from '@/theme';
 import { useBookingTeachers } from './queries';
 import { locale } from '@/lib/locale';

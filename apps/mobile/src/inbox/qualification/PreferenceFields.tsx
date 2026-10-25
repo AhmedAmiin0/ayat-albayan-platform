@@ -4,7 +4,7 @@ import { View } from 'react-native';
 import { cityOf } from '@/booking/slots';
 import { t } from '@/lib/i18n';
 import { FormLabel } from '@/payments/FormLabel';
-import { FilterPills, type FilterPill } from '@/ui/FilterPills';
+import { FilterPills, type FilterPill } from '@/core/ui/form/FilterPills';
 import { ErrorLine } from '../ErrorLine';
 import { DayChips } from './DayChips';
 import { timeOptions } from './qualification-form';

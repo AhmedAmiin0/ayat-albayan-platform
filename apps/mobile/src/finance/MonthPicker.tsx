@@ -2,8 +2,8 @@ import { Pressable, View } from 'react-native';
 import { t } from '@/lib/i18n';
 import { monthLabel } from '@/teacher/payout-text';
 import { shape, type, useTheme } from '@/theme';
-import { AppText } from '@/ui/AppText';
-import { Chevron } from '@/ui/Chevron';
+import { AppText } from '@/core/ui/primitives/AppText';
+import { Chevron } from '@/core/ui/primitives/Chevron';
 import { canGoNext, shiftMonth } from './month';
 
 export interface MonthPickerProps {

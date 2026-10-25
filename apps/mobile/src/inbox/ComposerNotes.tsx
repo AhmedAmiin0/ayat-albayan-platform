@@ -1,6 +1,6 @@
 import type { ThreadView } from '@ab/shared';
 import { View } from 'react-native';
-import { AppText } from '@/ui/AppText';
+import { AppText } from '@/core/ui/primitives/AppText';
 import { LineNote } from './LineNote';
 import { sessionUntil } from './message-text';
 import { useNoteStyle } from './note-style';

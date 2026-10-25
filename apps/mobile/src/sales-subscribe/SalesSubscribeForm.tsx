@@ -8,7 +8,7 @@ import { inTree, useTreeBase } from '@/nav/tree-base';
 import { PricingInputs } from '@/subscribe/PricingInputs';
 import { INITIAL_FORM, pricingOf, startDays } from '@/subscribe/subscribe-form';
 import { localDate } from '@/today/timeline';
-import { Button } from '@/ui/Button';
+import { Button } from '@/core/ui/primitives/Button';
 import { ChildPills } from './ChildPills';
 import { SalesPriceSection } from './SalesPriceSection';
 import { salesErrorText } from './sales-errors';

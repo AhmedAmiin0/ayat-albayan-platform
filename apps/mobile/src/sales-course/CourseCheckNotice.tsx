@@ -4,9 +4,9 @@ import { bookFailure, conflictLine, isCodedRefusal } from '@/booking/booking-err
 import { ConflictNotice } from '@/booking/ConflictNotice';
 import { ErrorLine } from '@/inbox/ErrorLine';
 import { t } from '@/lib/i18n';
-import { AppText } from '@/ui/AppText';
-import { ErrorState } from '@/ui/ErrorState';
-import { NuqtaGlyph } from '@/ui/NuqtaGlyph';
+import { AppText } from '@/core/ui/primitives/AppText';
+import { ErrorState } from '@/core/ui/feedback/ErrorState';
+import { NuqtaGlyph } from '@/core/ui/primitives/NuqtaGlyph';
 import { type, useTheme } from '@/theme';
 
 export interface CourseCheckNoticeProps {

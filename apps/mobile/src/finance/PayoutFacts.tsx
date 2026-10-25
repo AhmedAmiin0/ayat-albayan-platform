@@ -4,8 +4,8 @@ import { t } from '@/lib/i18n';
 import { Note } from '@/more/Note';
 import { breakdownLines, monthLabel, payoutWhen } from '@/teacher/payout-text';
 import { shape, type, useTheme } from '@/theme';
-import { AppText } from '@/ui/AppText';
-import { StatusChip } from '@/ui/StatusChip';
+import { AppText } from '@/core/ui/primitives/AppText';
+import { StatusChip } from '@/core/ui/feedback/StatusChip';
 import { amountText } from './format';
 import { dueOf } from './payout-actions';
 

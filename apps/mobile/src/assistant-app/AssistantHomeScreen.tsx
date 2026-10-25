@@ -10,10 +10,10 @@ import { useMinuteClock } from '@/classroom/use-minute-clock';
 import { t } from '@/lib/i18n';
 import { Note } from '@/more/Note';
 import { HeldBell } from '@/notifications/HeldBell';
-import { ListRow } from '@/ui/ListRow';
-import { Screen } from '@/ui/Screen';
-import { ScreenHeader } from '@/ui/ScreenHeader';
-import { useTabBarInset } from '@/ui/tab-bar-inset';
+import { ListRow } from '@/core/ui/layout/ListRow';
+import { Screen } from '@/core/ui/layout/Screen';
+import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
+import { useTabBarInset } from '@/core/ui/layout/tab-bar-inset';
 import { assistantDay } from './assistant-day';
 
 /**

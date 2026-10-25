@@ -1,5 +1,5 @@
 import { t } from '@/lib/i18n';
-import { FilterPills } from '@/ui/FilterPills';
+import { FilterPills } from '@/core/ui/form/FilterPills';
 import type { AssistantRow } from './api';
 
 /** «كل مسؤولي المبيعات» or one of them (web FilterBar's assistant select); '' is all. */

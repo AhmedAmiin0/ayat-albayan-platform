@@ -1,6 +1,6 @@
 import { View } from 'react-native';
 import { FormLabel } from '@/payments/FormLabel';
-import { FilterPills, type FilterPill } from '@/ui/FilterPills';
+import { FilterPills, type FilterPill } from '@/core/ui/form/FilterPills';
 
 export interface ChoiceProps<V extends string> {
   label: string;

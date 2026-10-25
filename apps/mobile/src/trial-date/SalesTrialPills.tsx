@@ -4,7 +4,7 @@ import { useHolds } from '@/auth/use-permissions';
 import { t } from '@/lib/i18n';
 import { inTree, useTreeBase } from '@/nav/tree-base';
 import { useSalesFamily } from '@/sales-subscribe/family';
-import { PillButton } from '@/ui/PillButton';
+import { PillButton } from '@/core/ui/primitives/PillButton';
 import { chatTrialHref } from './trial-href';
 
 /**

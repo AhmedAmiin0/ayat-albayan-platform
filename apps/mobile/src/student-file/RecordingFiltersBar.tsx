@@ -1,5 +1,5 @@
 import { t } from '@/lib/i18n';
-import { FilterPills } from '@/ui/FilterPills';
+import { FilterPills } from '@/core/ui/form/FilterPills';
 import { DATE_PRESETS, type DatePreset, type RecordingFilters } from './recording-filters';
 
 const F = t.mobileStudentFile.recordings.filters;

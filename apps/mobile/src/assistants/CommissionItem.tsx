@@ -5,7 +5,7 @@ import { ErrorLine } from '@/inbox/ErrorLine';
 import { t } from '@/lib/i18n';
 import { money } from '@/payments/format';
 import { MoneyCard } from '@/sales-money/MoneyCard';
-import { Button } from '@/ui/Button';
+import { Button } from '@/core/ui/primitives/Button';
 import { assistantsErrorText } from './errors';
 import { CommissionFacts } from './CommissionFacts';
 import { useVoidCommission } from './mutations';

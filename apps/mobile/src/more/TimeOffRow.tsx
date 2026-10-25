@@ -3,7 +3,7 @@ import { t } from '@/lib/i18n';
 import { type, useTheme } from '@/theme';
 import { formatTimeOff } from './schedule';
 import type { TimeOff } from './types';
-import { AppText } from '@/ui/AppText';
+import { AppText } from '@/core/ui/primitives/AppText';
 
 /** One time-off: the span (device zone), and the reason when there is one. */
 export function TimeOffRow({ off }: { off: TimeOff }) {

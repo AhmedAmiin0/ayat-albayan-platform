@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { useHolds } from '@/auth/use-permissions';
 import { t } from '@/lib/i18n';
 import { useTheme } from '@/theme';
-import { IconButton } from '@/ui/IconButton';
+import { IconButton } from '@/core/ui/primitives/IconButton';
 import { ListsIcon } from '../chat-icons';
 import { ThreadListsSheet } from './ThreadListsSheet';
 

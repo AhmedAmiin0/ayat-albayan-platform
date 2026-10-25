@@ -1,6 +1,6 @@
 import type { StatusStyle } from '@ab/shared';
 import { t } from '@/lib/i18n';
-import { FilterPills } from '@/ui/FilterPills';
+import { FilterPills } from '@/core/ui/form/FilterPills';
 
 export interface StatusPillsProps<S extends string> {
   statuses: readonly S[];

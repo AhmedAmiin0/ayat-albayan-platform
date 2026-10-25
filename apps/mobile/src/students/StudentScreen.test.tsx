@@ -3,7 +3,7 @@ import { Linking } from 'react-native';
 import { ApiError } from '@/lib/api';
 import { t } from '@/lib/i18n';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
-import { ltr } from '@/ui/Ltr';
+import { ltr } from '@/core/ui/primitives/Ltr';
 import { StudentScreen } from './StudentScreen';
 import { balanceOf, subscription } from '@/payments/fixtures';
 import { profile } from './test-data';

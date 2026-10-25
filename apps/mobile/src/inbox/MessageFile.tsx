@@ -4,7 +4,7 @@ import { Linking, Pressable, View } from 'react-native';
 import { ApiError } from '@/lib/api';
 import { t } from '@/lib/i18n';
 import { shape, type, useTheme } from '@/theme';
-import { AppText } from '@/ui/AppText';
+import { AppText } from '@/core/ui/primitives/AppText';
 import { AudioPlayer } from './AudioPlayer';
 import { mediaKind } from './message-text';
 import { useSmall } from './MessageMeta';

@@ -5,10 +5,10 @@ import { useTabOpen } from '@/auth/use-tab-open';
 import { t } from '@/lib/i18n';
 import { money, packageName, paidOf } from '@/payments/format';
 import { type, useTheme } from '@/theme';
-import { AppText } from '@/ui/AppText';
-import { Button } from '@/ui/Button';
-import { ListRow } from '@/ui/ListRow';
-import { StatusChip } from '@/ui/StatusChip';
+import { AppText } from '@/core/ui/primitives/AppText';
+import { Button } from '@/core/ui/primitives/Button';
+import { ListRow } from '@/core/ui/layout/ListRow';
+import { StatusChip } from '@/core/ui/feedback/StatusChip';
 
 /** The web's renewal highlight: saffron «فاضل حلقتان» once the package is at the alert threshold. */
 export function subscriptionProgress(sub: SubscriptionView, threshold?: number) {

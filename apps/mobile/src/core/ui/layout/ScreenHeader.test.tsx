@@ -1,7 +1,7 @@
 import { formatPhone } from '@ab/shared';
 import { render, screen } from '@testing-library/react-native';
 import { Text } from 'react-native';
-import { Ltr, ltr } from './Ltr';
+import { Ltr, ltr } from '../primitives/Ltr';
 import { ScreenHeader } from './ScreenHeader';
 
 test('one Amiri header, a subtitle, the small mark by default', async () => {

@@ -2,7 +2,7 @@ import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { Linking } from 'react-native';
 import { t } from '@/lib/i18n';
 import { renderWithQuery } from '@/test/query';
-import { ltr } from '@/ui/Ltr';
+import { ltr } from '@/core/ui/primitives/Ltr';
 import { JobApplicantsScreen } from './JobApplicantsScreen';
 import type { JobApplicant } from './types';
 

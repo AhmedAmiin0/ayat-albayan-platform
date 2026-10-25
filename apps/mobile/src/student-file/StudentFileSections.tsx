@@ -3,7 +3,7 @@ import { View } from 'react-native';
 import { usePermissions } from '@/auth/use-permissions';
 import { t } from '@/lib/i18n';
 import type { StudentProfile } from '@/students/types';
-import { Button } from '@/ui/Button';
+import { Button } from '@/core/ui/primitives/Button';
 import { CreateAccountButton } from '@/users/CreateAccountButton';
 import { JoinLinkCard } from './JoinLinkCard';
 import { RecordingsButton } from './RecordingsButton';

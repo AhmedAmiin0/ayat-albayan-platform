@@ -1,7 +1,7 @@
 import { router } from 'expo-router';
 import { t } from '@/lib/i18n';
-import { Button } from '@/ui/Button';
-import { ScreenHeader } from '@/ui/ScreenHeader';
+import { Button } from '@/core/ui/primitives/Button';
+import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 
 const back = () => (router.canGoBack() ? router.back() : router.replace('/more/ops/settings'));
 

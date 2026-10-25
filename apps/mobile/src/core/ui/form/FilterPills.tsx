@@ -1,9 +1,9 @@
 import type { Glyph, Tone } from '@ab/shared';
 import { Pressable, ScrollView, View } from 'react-native';
 import { shape, type, useTheme } from '@/theme';
-import { NuqtaGlyph } from './NuqtaGlyph';
-import { toneColors } from './StatusChip';
-import { AppText } from './AppText';
+import { NuqtaGlyph } from '../primitives/NuqtaGlyph';
+import { toneColors } from '../feedback/StatusChip';
+import { AppText } from '../primitives/AppText';
 
 export interface FilterPill<V extends string> {
   value: V;

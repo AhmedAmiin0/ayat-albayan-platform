@@ -3,7 +3,7 @@ import { ScrollView, View } from 'react-native';
 import { ErrorLine } from '@/inbox/ErrorLine';
 import { t } from '@/lib/i18n';
 import { Note } from '@/more/Note';
-import { Button } from '@/ui/Button';
+import { Button } from '@/core/ui/primitives/Button';
 import type { AssistantRow } from './api';
 import { CommissionFields } from './CommissionFields';
 import { assistantsErrorText } from './errors';

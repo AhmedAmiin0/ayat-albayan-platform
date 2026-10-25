@@ -5,8 +5,8 @@ import { View } from 'react-native';
 import { ErrorLine } from '@/inbox/ErrorLine';
 import { t } from '@/lib/i18n';
 import { Note } from '@/more/Note';
-import { Button } from '@/ui/Button';
-import { InlineConfirm } from '@/ui/InlineConfirm';
+import { Button } from '@/core/ui/primitives/Button';
+import { InlineConfirm } from '@/core/ui/feedback/InlineConfirm';
 import { linkError, sendJoinLink } from './link-api';
 
 type Student = LessonView['students'][number];

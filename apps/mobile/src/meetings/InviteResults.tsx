@@ -3,7 +3,7 @@ import { View } from 'react-native';
 import { t } from '@/lib/i18n';
 import { Note } from '@/more/Note';
 import { type, useTheme } from '@/theme';
-import { AppText } from '@/ui/AppText';
+import { AppText } from '@/core/ui/primitives/AppText';
 import { InviteResultRow } from './InviteResultRow';
 
 const R = t.meetingInvites.results;

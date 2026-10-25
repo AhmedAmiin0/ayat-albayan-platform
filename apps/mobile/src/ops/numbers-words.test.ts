@@ -1,6 +1,6 @@
 import { formatPhone } from '@ab/shared';
 import { t } from '@/lib/i18n';
-import { ltr } from '@/ui/Ltr';
+import { ltr } from '@/core/ui/primitives/Ltr';
 import { checkedLine, healthChip, numberSubtitle, parityLine, sourceLine, stateChips } from './numbers-words';
 import { numbers, parityDiff, parityOk } from './numbers-fixtures';
 

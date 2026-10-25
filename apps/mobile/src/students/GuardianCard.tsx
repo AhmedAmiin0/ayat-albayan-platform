@@ -3,11 +3,11 @@ import { Linking, View } from 'react-native';
 import { t } from '@/lib/i18n';
 import { whatsappLink } from '@/lib/phone';
 import { shape, type, useTheme } from '@/theme';
-import { Button } from '@/ui/Button';
-import { Ltr } from '@/ui/Ltr';
+import { Button } from '@/core/ui/primitives/Button';
+import { Ltr } from '@/core/ui/primitives/Ltr';
 import { SectionLabel } from './SectionLabel';
 import type { StudentProfile } from './types';
-import { AppText } from '@/ui/AppText';
+import { AppText } from '@/core/ui/primitives/AppText';
 
 /** ولي الأمر: name, LTR phone, «اتصال» (tel:) and «واتساب» (wa.me, the academy's channel). */
 export function GuardianCard({ guardian }: { guardian: StudentProfile['guardian'] }) {

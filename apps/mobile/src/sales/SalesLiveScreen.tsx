@@ -4,11 +4,11 @@ import { AssistantLessonItem } from '@/classroom/AssistantLessonItem';
 import { joinableRows } from '@/classroom/assistant-lessons';
 import { t } from '@/lib/i18n';
 import { useTheme } from '@/theme';
-import { Button } from '@/ui/Button';
-import { EmptyState } from '@/ui/EmptyState';
-import { ErrorState } from '@/ui/ErrorState';
-import { Screen } from '@/ui/Screen';
-import { ScreenHeader } from '@/ui/ScreenHeader';
+import { Button } from '@/core/ui/primitives/Button';
+import { EmptyState } from '@/core/ui/feedback/EmptyState';
+import { ErrorState } from '@/core/ui/feedback/ErrorState';
+import { Screen } from '@/core/ui/layout/Screen';
+import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { useSalesLive } from './sales-api';
 
 /**

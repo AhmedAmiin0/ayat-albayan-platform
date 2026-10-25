@@ -1,6 +1,6 @@
 import { t } from '@/lib/i18n';
 import { shape, type, useTheme } from '@/theme';
-import { AppText } from '@/ui/AppText';
+import { AppText } from '@/core/ui/primitives/AppText';
 
 /** In place of the composer on a teacher's own chat with the academy: she reads, the academy answers. */
 export function OwnThreadNote() {

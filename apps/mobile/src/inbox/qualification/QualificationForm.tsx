@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { View } from 'react-native';
 import { t } from '@/lib/i18n';
 import { Note } from '@/more/Note';
-import { Button } from '@/ui/Button';
+import { Button } from '@/core/ui/primitives/Button';
 import { ErrorLine } from '../ErrorLine';
 import { Heading } from './Heading';
 import { PreferenceFields } from './PreferenceFields';

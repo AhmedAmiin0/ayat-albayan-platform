@@ -2,8 +2,8 @@ import type { TrialDateRow } from '@ab/shared';
 import { View } from 'react-native';
 import { t } from '@/lib/i18n';
 import { type, useTheme } from '@/theme';
-import { AppText } from '@/ui/AppText';
-import { StatusChip } from '@/ui/StatusChip';
+import { AppText } from '@/core/ui/primitives/AppText';
+import { StatusChip } from '@/core/ui/feedback/StatusChip';
 import { pickedLine, trialOutcomeStyle, whenLines } from './trial-date-text';
 
 export interface TrialHistoryRowProps {

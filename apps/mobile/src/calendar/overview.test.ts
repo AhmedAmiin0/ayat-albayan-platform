@@ -1,6 +1,6 @@
 import { t } from '@/lib/i18n';
 import { formatTimeOff } from '@/more/schedule';
-import { ltr } from '@/ui/Ltr';
+import { ltr } from '@/core/ui/primitives/Ltr';
 import { dayCounts, teacherAgendas, type AgendaItem, type TeacherFilter } from './overview';
 import { abrar, omar, OVERVIEW, sara } from './overview-fixtures';
 import { freeLabel, spanClock, teacherMeta, timeOffLine, windowsLine } from './overview-text';

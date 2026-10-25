@@ -1,6 +1,6 @@
 import { formatPhone, normalizePhone, teacherName } from '@ab/shared';
 import { t } from '@/lib/i18n';
-import { ltr } from '@/ui/Ltr';
+import { ltr } from '@/core/ui/primitives/Ltr';
 import type { InvoiceDraft } from './contract';
 import type { TrialDraft } from './draft';
 import type { MakeupDraft } from './makeup-draft';

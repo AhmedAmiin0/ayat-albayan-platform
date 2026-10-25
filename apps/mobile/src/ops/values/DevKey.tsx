@@ -2,8 +2,8 @@ import { useState } from 'react';
 import { Pressable, View } from 'react-native';
 import { t } from '@/lib/i18n';
 import { type, useTheme } from '@/theme';
-import { AppText } from '@/ui/AppText';
-import { Ltr } from '@/ui/Ltr';
+import { AppText } from '@/core/ui/primitives/AppText';
+import { Ltr } from '@/core/ui/primitives/Ltr';
 
 /** «للمطوّر», closed by default: opens to the setting's key (LTR), as the web sheet's <details>. */
 export function DevKey({ settingKey }: { settingKey: string }) {

@@ -1,5 +1,5 @@
 import { t } from '@/lib/i18n';
-import { ltr } from '@/ui/Ltr';
+import { ltr } from '@/core/ui/primitives/Ltr';
 import { subscription } from './fixtures';
 import { instantDay, localDay, money, packageFrom, packageName, paidOf, usedOf } from './format';
 

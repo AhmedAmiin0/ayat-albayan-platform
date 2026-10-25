@@ -3,9 +3,9 @@ import { View } from 'react-native';
 import { t } from '@/lib/i18n';
 import { Note } from '@/more/Note';
 import { Section } from '@/more/Section';
-import { EmptyState } from '@/ui/EmptyState';
-import { ListRow } from '@/ui/ListRow';
-import { StatusChip } from '@/ui/StatusChip';
+import { EmptyState } from '@/core/ui/feedback/EmptyState';
+import { ListRow } from '@/core/ui/layout/ListRow';
+import { StatusChip } from '@/core/ui/feedback/StatusChip';
 import type { CheckBy } from './registration-check';
 
 /**

@@ -3,7 +3,7 @@ import { ApiError } from '@/lib/api';
 import { t } from '@/lib/i18n';
 import { listKey } from '@/lib/query-keys';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
-import { ltr } from '@/ui/Ltr';
+import { ltr } from '@/core/ui/primitives/Ltr';
 import { cachedList, huda, page, unnamed } from './fixtures';
 import { InboxScreen } from './InboxScreen';
 

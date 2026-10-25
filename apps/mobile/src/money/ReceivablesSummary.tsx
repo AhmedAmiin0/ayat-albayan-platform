@@ -3,7 +3,7 @@ import { View } from 'react-native';
 import { t } from '@/lib/i18n';
 import { money } from '@/payments/format';
 import { shape, type, useTheme } from '@/theme';
-import { AppText } from '@/ui/AppText';
+import { AppText } from '@/core/ui/primitives/AppText';
 import { fxMissingText } from './receivables';
 
 /** Total owed in the reporting currency, then each currency's own total; the FX gap if any. */

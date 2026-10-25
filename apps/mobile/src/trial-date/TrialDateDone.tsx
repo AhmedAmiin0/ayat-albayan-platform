@@ -2,9 +2,9 @@ import type { TrialDateResult } from '@ab/shared';
 import { View } from 'react-native';
 import { t } from '@/lib/i18n';
 import { type, useTheme } from '@/theme';
-import { AppText } from '@/ui/AppText';
-import { Button } from '@/ui/Button';
-import { NuqtaGlyph } from '@/ui/NuqtaGlyph';
+import { AppText } from '@/core/ui/primitives/AppText';
+import { Button } from '@/core/ui/primitives/Button';
+import { NuqtaGlyph } from '@/core/ui/primitives/NuqtaGlyph';
 import { whenLines } from './trial-date-text';
 
 export interface TrialDateDoneProps {

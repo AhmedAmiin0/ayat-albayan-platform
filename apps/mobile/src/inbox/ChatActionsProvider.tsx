@@ -1,6 +1,6 @@
 import { formatPhone, sessionWindowOpen, type MessageView, type ThreadView } from '@ab/shared';
 import { type ReactNode, useMemo, useState } from 'react';
-import { ltr } from '@/ui/Ltr';
+import { ltr } from '@/core/ui/primitives/Ltr';
 import { type ChatActions, ChatActionsContext, type ChatNoticeValue } from './chat-actions';
 import { ForwardSheet } from './ForwardSheet';
 import { MessageMenu } from './MessageMenu';

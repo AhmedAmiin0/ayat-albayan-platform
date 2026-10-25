@@ -1,9 +1,9 @@
 import { View } from 'react-native';
 import { t } from '@/lib/i18n';
 import { Note } from '@/more/Note';
-import { AppText } from '@/ui/AppText';
-import { EmptyState } from '@/ui/EmptyState';
-import { ErrorState } from '@/ui/ErrorState';
+import { AppText } from '@/core/ui/primitives/AppText';
+import { EmptyState } from '@/core/ui/feedback/EmptyState';
+import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import type { RecordingSource } from './recording-format';
 import { RecordingRow } from './RecordingRow';
 import { useRecordings, useRecordingStatus } from './recordings-api';

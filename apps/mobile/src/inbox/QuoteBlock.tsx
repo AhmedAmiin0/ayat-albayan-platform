@@ -2,7 +2,7 @@ import type { MessageQuote } from '@ab/shared';
 import { Pressable } from 'react-native';
 import { t } from '@/lib/i18n';
 import { shape, type, useTheme } from '@/theme';
-import { AppText } from '@/ui/AppText';
+import { AppText } from '@/core/ui/primitives/AppText';
 import { useChatActions } from './chat-actions';
 import { quoteSender, quoteText } from './quote-text';
 

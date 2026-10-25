@@ -5,10 +5,10 @@ import { t } from '@/lib/i18n';
 import { usePagedList } from '@/lib/use-paged-list';
 import { useRenewalThreshold } from '@/payments/queries';
 import { useTheme } from '@/theme';
-import { EmptyState } from '@/ui/EmptyState';
-import { ErrorState } from '@/ui/ErrorState';
-import { FilterPills, type FilterPill } from '@/ui/FilterPills';
-import { SearchField } from '@/ui/SearchField';
+import { EmptyState } from '@/core/ui/feedback/EmptyState';
+import { ErrorState } from '@/core/ui/feedback/ErrorState';
+import { FilterPills, type FilterPill } from '@/core/ui/form/FilterPills';
+import { SearchField } from '@/core/ui/form/SearchField';
 import { subscriptionParams, type SubscriptionFilter } from './filters';
 import { SubscriptionItem } from './SubscriptionItem';
 

@@ -1,7 +1,7 @@
 import type { SalesCourseView } from '@ab/shared';
 import { t } from '@/lib/i18n';
 import { localDay } from '@/payments/format';
-import { AppText } from '@/ui/AppText';
+import { AppText } from '@/core/ui/primitives/AppText';
 import { type, useTheme } from '@/theme';
 
 /** «يبدأ الاشتراك في 25 أكتوبر 2026» under the course's title: its days are picked from then on. */

@@ -3,7 +3,7 @@ import { Switch, View } from 'react-native';
 import { t } from '@/lib/i18n';
 import { ErrorLine } from '@/inbox/ErrorLine';
 import { type, useTheme } from '@/theme';
-import { AppText } from '@/ui/AppText';
+import { AppText } from '@/core/ui/primitives/AppText';
 import { useSetVisibility, visibilityError } from './recording-actions';
 
 const V = t.mobileStudentFile.recordings.visible;

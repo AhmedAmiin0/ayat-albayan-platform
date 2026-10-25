@@ -8,9 +8,9 @@ import { t } from '@/lib/i18n';
 import { AppearancePicker } from '@/more/AppearancePicker';
 import { LanguageRow } from '@/more/LanguageRow';
 import { SignOutButton } from '@/teacher/SignOutButton';
-import { ListRow } from '@/ui/ListRow';
-import { Screen } from '@/ui/Screen';
-import { ScreenHeader } from '@/ui/ScreenHeader';
+import { ListRow } from '@/core/ui/layout/ListRow';
+import { Screen } from '@/core/ui/layout/Screen';
+import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 
 const rows = () =>
   [

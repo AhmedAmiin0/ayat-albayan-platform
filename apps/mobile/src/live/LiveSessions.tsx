@@ -7,8 +7,8 @@ import { t } from '@/lib/i18n';
 import { useJoinWindow } from '@/lib/public-config';
 import { shape, type, useTheme } from '@/theme';
 import { riyadhTime, studentNames } from '@/today/lesson-text';
-import { AppText } from '@/ui/AppText';
-import { StatusChip } from '@/ui/StatusChip';
+import { AppText } from '@/core/ui/primitives/AppText';
+import { StatusChip } from '@/core/ui/feedback/StatusChip';
 import { liveLessons, type LiveLesson } from './live-filter';
 import { locale } from '@/lib/locale';
 

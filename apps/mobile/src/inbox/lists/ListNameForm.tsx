@@ -2,8 +2,8 @@ import { CHAT_LIST_NAME_MAX, chatListNameSchema } from '@ab/shared';
 import { useState } from 'react';
 import { View } from 'react-native';
 import { t } from '@/lib/i18n';
-import { Button } from '@/ui/Button';
-import { Field } from '@/ui/Field';
+import { Button } from '@/core/ui/primitives/Button';
+import { Field } from '@/core/ui/form/Field';
 import { ErrorLine } from '../ErrorLine';
 
 export interface ListNameFormProps {

@@ -10,7 +10,7 @@ import {
 import { t } from '@/lib/i18n';
 import { Note } from '@/more/Note';
 import { Section } from '@/more/Section';
-import { FilterPills, type FilterPill } from '@/ui/FilterPills';
+import { FilterPills, type FilterPill } from '@/core/ui/form/FilterPills';
 import { DiscountField } from './DiscountField';
 import type { CountryChoice, PlanChoice, Selection } from './selection';
 import { Stepper } from './Stepper';

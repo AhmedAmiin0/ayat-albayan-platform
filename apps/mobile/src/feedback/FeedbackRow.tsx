@@ -4,10 +4,10 @@ import { t } from '@/lib/i18n';
 import { Note } from '@/more/Note';
 import { localDate } from '@/today/timeline';
 import { shape, type, useTheme } from '@/theme';
-import { AppText } from '@/ui/AppText';
-import { ltr } from '@/ui/Ltr';
-import { NuqtaGlyph } from '@/ui/NuqtaGlyph';
-import { StatusChip } from '@/ui/StatusChip';
+import { AppText } from '@/core/ui/primitives/AppText';
+import { ltr } from '@/core/ui/primitives/Ltr';
+import { NuqtaGlyph } from '@/core/ui/primitives/NuqtaGlyph';
+import { StatusChip } from '@/core/ui/feedback/StatusChip';
 import { answerLine } from './feedback-text';
 import type { FeedbackListRow } from './types';
 

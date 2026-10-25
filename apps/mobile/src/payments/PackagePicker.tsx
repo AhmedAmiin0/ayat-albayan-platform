@@ -2,8 +2,8 @@ import type { SubscriptionView } from '@ab/shared';
 import { View } from 'react-native';
 import { t } from '@/lib/i18n';
 import { type, useTheme } from '@/theme';
-import { AppText } from '@/ui/AppText';
-import { FilterPills } from '@/ui/FilterPills';
+import { AppText } from '@/core/ui/primitives/AppText';
+import { FilterPills } from '@/core/ui/form/FilterPills';
 import { FormLabel } from './FormLabel';
 import { packageFrom, paidOf } from './format';
 

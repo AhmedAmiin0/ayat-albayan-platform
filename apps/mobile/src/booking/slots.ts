@@ -1,7 +1,7 @@
 import { clockTime, lessonWhenText, RIYADH_TZ, utcOffsetMinutes, type SlotView } from '@ab/shared';
 import { t } from '@/lib/i18n';
 import { locale } from '@/lib/locale';
-import { ltr } from '@/ui/Ltr';
+import { ltr } from '@/core/ui/primitives/Ltr';
 import { localDate } from '@/today/timeline';
 
 // Free trial slots (R-SCH-06, R-SCH-01): the next 7 days of GET /booking/slots, laid out by the

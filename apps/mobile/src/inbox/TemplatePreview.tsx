@@ -2,7 +2,7 @@ import { renderTemplateBody, type TemplateParamsInput, type TemplateView } from 
 import { View } from 'react-native';
 import { t } from '@/lib/i18n';
 import { shape, type, useTheme } from '@/theme';
-import { AppText } from '@/ui/AppText';
+import { AppText } from '@/core/ui/primitives/AppText';
 
 /** The text the guardian will read: body with the params filled in, then the footer. */
 export function templatePreview(template: TemplateView, params: TemplateParamsInput): string {

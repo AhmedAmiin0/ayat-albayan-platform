@@ -3,7 +3,7 @@ import { t } from '@/lib/i18n';
 import { Note } from '@/more/Note';
 import { localDay } from '@/payments/format';
 import { type, useTheme } from '@/theme';
-import { AppText } from '@/ui/AppText';
+import { AppText } from '@/core/ui/primitives/AppText';
 import { CardTitle } from './CardTitle';
 import { MoneyCard } from './MoneyCard';
 import { myCommissionText, salaryFrom } from './money-text';

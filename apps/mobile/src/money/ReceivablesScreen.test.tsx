@@ -2,7 +2,7 @@ import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { t } from '@/lib/i18n';
 import { money } from '@/payments/format';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
-import { ltr } from '@/ui/Ltr';
+import { ltr } from '@/core/ui/primitives/Ltr';
 import { receivable, receivablesView } from './fixtures';
 import { ReceivablesScreen } from './ReceivablesScreen';
 

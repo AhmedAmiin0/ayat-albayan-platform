@@ -1,8 +1,8 @@
 import { View } from 'react-native';
 import { t } from '@/lib/i18n';
-import { AppText } from '@/ui/AppText';
-import { EmptyState } from '@/ui/EmptyState';
-import { ErrorState } from '@/ui/ErrorState';
+import { AppText } from '@/core/ui/primitives/AppText';
+import { EmptyState } from '@/core/ui/feedback/EmptyState';
+import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { useAssistantLessons } from './assistants-api';
 import { joinableRows } from './assistant-lessons';
 import { AssistantLessonItem } from './AssistantLessonItem';

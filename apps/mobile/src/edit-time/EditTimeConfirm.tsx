@@ -1,7 +1,7 @@
 import { Switch, View } from 'react-native';
 import { t } from '@/lib/i18n';
 import { shape, type, useTheme } from '@/theme';
-import { AppText } from '@/ui/AppText';
+import { AppText } from '@/core/ui/primitives/AppText';
 import { chosenStart, isBookable, isChanged, lengthOf, willNotify, type EditState } from './edit-time-body';
 import { changeLine, teacherLine } from './edit-time-text';
 import type { EditableLesson, TimeEditMode } from './types';

@@ -2,7 +2,7 @@ import { formatAmount, intlLocale, RIYADH_TZ, type TeacherEarningView } from '@a
 import { t } from '@/lib/i18n';
 import { locale } from '@/lib/locale';
 import { instantDay } from '@/payments/format';
-import { ltr } from '@/ui/Ltr';
+import { ltr } from '@/core/ui/primitives/Ltr';
 
 /** «145 ج.م»: teacher money is EGP. */
 export const egp = (amount: number): string => `${ltr(formatAmount(amount))} ${t.earnings.currency}`;

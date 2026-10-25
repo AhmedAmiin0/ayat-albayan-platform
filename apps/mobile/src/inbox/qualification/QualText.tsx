@@ -1,5 +1,5 @@
 import { View } from 'react-native';
-import { Field, type FieldProps } from '@/ui/Field';
+import { Field, type FieldProps } from '@/core/ui/form/Field';
 import { ErrorLine } from '../ErrorLine';
 import type { TextField } from './qualification-form';
 import type { QualFieldsProps } from './QualificationFields';

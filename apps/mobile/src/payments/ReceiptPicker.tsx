@@ -4,7 +4,7 @@ import { ErrorLine } from '@/inbox/ErrorLine';
 import { t } from '@/lib/i18n';
 import { useUploadMaxBytes } from '@/lib/public-config';
 import { shape, useTheme } from '@/theme';
-import { Button } from '@/ui/Button';
+import { Button } from '@/core/ui/primitives/Button';
 import { FormLabel } from './FormLabel';
 import { pickReceipt, type Receipt, type ReceiptSource } from './receipt';
 
