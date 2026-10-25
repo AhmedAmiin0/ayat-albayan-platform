@@ -1,0 +1,368 @@
+{
+  "id": "c5a",
+  "seq": 79,
+  "moves": [
+    {
+      "from": "apps/mobile/src/sales/AllStudentsScreen*",
+      "to": "apps/mobile/src/sales/screens/"
+    },
+    {
+      "from": "apps/mobile/src/sales/SalesLiveScreen*",
+      "to": "apps/mobile/src/sales/screens/"
+    },
+    {
+      "from": "apps/mobile/src/sales/SalesScheduleScreen*",
+      "to": "apps/mobile/src/sales/screens/"
+    },
+    {
+      "from": "apps/mobile/src/sales/SalesSubscriptionsScreen*",
+      "to": "apps/mobile/src/sales/screens/"
+    },
+    {
+      "from": "apps/mobile/src/sales/SalesTeacherScreen*",
+      "to": "apps/mobile/src/sales/screens/"
+    },
+    {
+      "from": "apps/mobile/src/sales/SalesTeachersScreen*",
+      "to": "apps/mobile/src/sales/screens/"
+    },
+    {
+      "from": "apps/mobile/src/sales/SubscriptionHistoryScreen*",
+      "to": "apps/mobile/src/sales/screens/"
+    },
+    {
+      "from": "apps/mobile/src/sales/sales.en*",
+      "to": "apps/mobile/src/sales/screens/"
+    },
+    {
+      "from": "apps/mobile/src/sales/AllStudentRow*",
+      "to": "apps/mobile/src/sales/components/"
+    },
+    {
+      "from": "apps/mobile/src/sales/HistoryEntryCard*",
+      "to": "apps/mobile/src/sales/components/"
+    },
+    {
+      "from": "apps/mobile/src/sales/SalesLessonRow*",
+      "to": "apps/mobile/src/sales/components/"
+    },
+    {
+      "from": "apps/mobile/src/sales/SalesSection*",
+      "to": "apps/mobile/src/sales/components/"
+    },
+    {
+      "from": "apps/mobile/src/sales/SalesSubscriptionRow*",
+      "to": "apps/mobile/src/sales/components/"
+    },
+    {
+      "from": "apps/mobile/src/sales/SalesTeacherHeader*",
+      "to": "apps/mobile/src/sales/components/"
+    },
+    {
+      "from": "apps/mobile/src/sales/SalesTeacherRow*",
+      "to": "apps/mobile/src/sales/components/"
+    },
+    {
+      "from": "apps/mobile/src/sales/SmallHeading*",
+      "to": "apps/mobile/src/sales/components/"
+    },
+    {
+      "from": "apps/mobile/src/sales/TeacherFiltersBar*",
+      "to": "apps/mobile/src/sales/components/"
+    },
+    {
+      "from": "apps/mobile/src/sales/TeacherMeetingLink*",
+      "to": "apps/mobile/src/sales/components/"
+    },
+    {
+      "from": "apps/mobile/src/sales/sales-api*",
+      "to": "apps/mobile/src/sales/lib/"
+    },
+    {
+      "from": "apps/mobile/src/sales/sales-href*",
+      "to": "apps/mobile/src/sales/lib/"
+    },
+    {
+      "from": "apps/mobile/src/sales/sales-text*",
+      "to": "apps/mobile/src/sales/lib/"
+    },
+    {
+      "from": "apps/mobile/src/sales/fixtures*",
+      "to": "apps/mobile/src/sales/testing/"
+    },
+    {
+      "from": "apps/mobile/src/sales-app/SalesMoreScreen*",
+      "to": "apps/mobile/src/sales-app/screens/"
+    },
+    {
+      "from": "apps/mobile/src/sales-app/SalesTabs*",
+      "to": "apps/mobile/src/sales-app/screens/"
+    },
+    {
+      "from": "apps/mobile/src/sales-app/sales-bell*",
+      "to": "apps/mobile/src/sales-app/screens/"
+    },
+    {
+      "from": "apps/mobile/src/sales-app/sales-inbox*",
+      "to": "apps/mobile/src/sales-app/screens/"
+    },
+    {
+      "from": "apps/mobile/src/sales-app/sales-thread*",
+      "to": "apps/mobile/src/sales-app/screens/"
+    },
+    {
+      "from": "apps/mobile/src/sales-app/sales-tabs*",
+      "to": "apps/mobile/src/sales-app/lib/"
+    },
+    {
+      "from": "apps/mobile/src/registration-check/RegistrationCheckScreen*",
+      "to": "apps/mobile/src/registration-check/screens/"
+    },
+    {
+      "from": "apps/mobile/src/registration-check/entry*",
+      "to": "apps/mobile/src/registration-check/screens/"
+    },
+    {
+      "from": "apps/mobile/src/registration-check/CheckRegistrationButton*",
+      "to": "apps/mobile/src/registration-check/components/"
+    },
+    {
+      "from": "apps/mobile/src/registration-check/RegistrationForm*",
+      "to": "apps/mobile/src/registration-check/components/"
+    },
+    {
+      "from": "apps/mobile/src/registration-check/RegistrationResults*",
+      "to": "apps/mobile/src/registration-check/components/"
+    },
+    {
+      "from": "apps/mobile/src/registration-check/registration-check*",
+      "to": "apps/mobile/src/registration-check/lib/"
+    }
+  ],
+  "files": [
+    [
+      "apps/mobile/src/registration-check/CheckRegistrationButton.tsx",
+      "apps/mobile/src/registration-check/components/CheckRegistrationButton.tsx"
+    ],
+    [
+      "apps/mobile/src/registration-check/entry.test.tsx",
+      "apps/mobile/src/registration-check/screens/entry.test.tsx"
+    ],
+    [
+      "apps/mobile/src/registration-check/registration-check.test.ts",
+      "apps/mobile/src/registration-check/lib/registration-check.test.ts"
+    ],
+    [
+      "apps/mobile/src/registration-check/registration-check.ts",
+      "apps/mobile/src/registration-check/lib/registration-check.ts"
+    ],
+    [
+      "apps/mobile/src/registration-check/RegistrationCheckScreen.en.test.tsx",
+      "apps/mobile/src/registration-check/screens/RegistrationCheckScreen.en.test.tsx"
+    ],
+    [
+      "apps/mobile/src/registration-check/RegistrationCheckScreen.test.tsx",
+      "apps/mobile/src/registration-check/screens/RegistrationCheckScreen.test.tsx"
+    ],
+    [
+      "apps/mobile/src/registration-check/RegistrationCheckScreen.tsx",
+      "apps/mobile/src/registration-check/screens/RegistrationCheckScreen.tsx"
+    ],
+    [
+      "apps/mobile/src/registration-check/RegistrationForm.tsx",
+      "apps/mobile/src/registration-check/components/RegistrationForm.tsx"
+    ],
+    [
+      "apps/mobile/src/registration-check/RegistrationResults.tsx",
+      "apps/mobile/src/registration-check/components/RegistrationResults.tsx"
+    ],
+    [
+      "apps/mobile/src/sales-app/sales-bell.en.test.tsx",
+      "apps/mobile/src/sales-app/screens/sales-bell.en.test.tsx"
+    ],
+    [
+      "apps/mobile/src/sales-app/sales-bell.test.tsx",
+      "apps/mobile/src/sales-app/screens/sales-bell.test.tsx"
+    ],
+    [
+      "apps/mobile/src/sales-app/sales-inbox.test.tsx",
+      "apps/mobile/src/sales-app/screens/sales-inbox.test.tsx"
+    ],
+    [
+      "apps/mobile/src/sales-app/sales-tabs.test.ts",
+      "apps/mobile/src/sales-app/lib/sales-tabs.test.ts"
+    ],
+    [
+      "apps/mobile/src/sales-app/sales-tabs.ts",
+      "apps/mobile/src/sales-app/lib/sales-tabs.ts"
+    ],
+    [
+      "apps/mobile/src/sales-app/sales-thread.actions.test.tsx",
+      "apps/mobile/src/sales-app/screens/sales-thread.actions.test.tsx"
+    ],
+    [
+      "apps/mobile/src/sales-app/sales-thread.test.tsx",
+      "apps/mobile/src/sales-app/screens/sales-thread.test.tsx"
+    ],
+    [
+      "apps/mobile/src/sales-app/SalesMoreScreen.en.test.tsx",
+      "apps/mobile/src/sales-app/screens/SalesMoreScreen.en.test.tsx"
+    ],
+    [
+      "apps/mobile/src/sales-app/SalesMoreScreen.test.tsx",
+      "apps/mobile/src/sales-app/screens/SalesMoreScreen.test.tsx"
+    ],
+    [
+      "apps/mobile/src/sales-app/SalesMoreScreen.tsx",
+      "apps/mobile/src/sales-app/screens/SalesMoreScreen.tsx"
+    ],
+    [
+      "apps/mobile/src/sales-app/SalesTabs.tsx",
+      "apps/mobile/src/sales-app/screens/SalesTabs.tsx"
+    ],
+    [
+      "apps/mobile/src/sales/AllStudentRow.tsx",
+      "apps/mobile/src/sales/components/AllStudentRow.tsx"
+    ],
+    [
+      "apps/mobile/src/sales/AllStudentsScreen.mine.test.tsx",
+      "apps/mobile/src/sales/screens/AllStudentsScreen.mine.test.tsx"
+    ],
+    [
+      "apps/mobile/src/sales/AllStudentsScreen.test.tsx",
+      "apps/mobile/src/sales/screens/AllStudentsScreen.test.tsx"
+    ],
+    [
+      "apps/mobile/src/sales/AllStudentsScreen.tsx",
+      "apps/mobile/src/sales/screens/AllStudentsScreen.tsx"
+    ],
+    [
+      "apps/mobile/src/sales/fixtures.ts",
+      "apps/mobile/src/sales/testing/fixtures.ts"
+    ],
+    [
+      "apps/mobile/src/sales/HistoryEntryCard.tsx",
+      "apps/mobile/src/sales/components/HistoryEntryCard.tsx"
+    ],
+    [
+      "apps/mobile/src/sales/sales-api.ts",
+      "apps/mobile/src/sales/lib/sales-api.ts"
+    ],
+    [
+      "apps/mobile/src/sales/sales-href.test.ts",
+      "apps/mobile/src/sales/lib/sales-href.test.ts"
+    ],
+    [
+      "apps/mobile/src/sales/sales-href.ts",
+      "apps/mobile/src/sales/lib/sales-href.ts"
+    ],
+    [
+      "apps/mobile/src/sales/sales-text.test.ts",
+      "apps/mobile/src/sales/lib/sales-text.test.ts"
+    ],
+    [
+      "apps/mobile/src/sales/sales-text.ts",
+      "apps/mobile/src/sales/lib/sales-text.ts"
+    ],
+    [
+      "apps/mobile/src/sales/sales.en.test.tsx",
+      "apps/mobile/src/sales/screens/sales.en.test.tsx"
+    ],
+    [
+      "apps/mobile/src/sales/SalesLessonRow.tsx",
+      "apps/mobile/src/sales/components/SalesLessonRow.tsx"
+    ],
+    [
+      "apps/mobile/src/sales/SalesLiveScreen.test.tsx",
+      "apps/mobile/src/sales/screens/SalesLiveScreen.test.tsx"
+    ],
+    [
+      "apps/mobile/src/sales/SalesLiveScreen.tsx",
+      "apps/mobile/src/sales/screens/SalesLiveScreen.tsx"
+    ],
+    [
+      "apps/mobile/src/sales/SalesScheduleScreen.test.tsx",
+      "apps/mobile/src/sales/screens/SalesScheduleScreen.test.tsx"
+    ],
+    [
+      "apps/mobile/src/sales/SalesScheduleScreen.tsx",
+      "apps/mobile/src/sales/screens/SalesScheduleScreen.tsx"
+    ],
+    [
+      "apps/mobile/src/sales/SalesSection.test.tsx",
+      "apps/mobile/src/sales/components/SalesSection.test.tsx"
+    ],
+    [
+      "apps/mobile/src/sales/SalesSection.tsx",
+      "apps/mobile/src/sales/components/SalesSection.tsx"
+    ],
+    [
+      "apps/mobile/src/sales/SalesSubscriptionRow.tsx",
+      "apps/mobile/src/sales/components/SalesSubscriptionRow.tsx"
+    ],
+    [
+      "apps/mobile/src/sales/SalesSubscriptionsScreen.test.tsx",
+      "apps/mobile/src/sales/screens/SalesSubscriptionsScreen.test.tsx"
+    ],
+    [
+      "apps/mobile/src/sales/SalesSubscriptionsScreen.tsx",
+      "apps/mobile/src/sales/screens/SalesSubscriptionsScreen.tsx"
+    ],
+    [
+      "apps/mobile/src/sales/SalesTeacherHeader.test.tsx",
+      "apps/mobile/src/sales/components/SalesTeacherHeader.test.tsx"
+    ],
+    [
+      "apps/mobile/src/sales/SalesTeacherHeader.tsx",
+      "apps/mobile/src/sales/components/SalesTeacherHeader.tsx"
+    ],
+    [
+      "apps/mobile/src/sales/SalesTeacherRow.tsx",
+      "apps/mobile/src/sales/components/SalesTeacherRow.tsx"
+    ],
+    [
+      "apps/mobile/src/sales/SalesTeacherScreen.kinds.test.tsx",
+      "apps/mobile/src/sales/screens/SalesTeacherScreen.kinds.test.tsx"
+    ],
+    [
+      "apps/mobile/src/sales/SalesTeacherScreen.test.tsx",
+      "apps/mobile/src/sales/screens/SalesTeacherScreen.test.tsx"
+    ],
+    [
+      "apps/mobile/src/sales/SalesTeacherScreen.tsx",
+      "apps/mobile/src/sales/screens/SalesTeacherScreen.tsx"
+    ],
+    [
+      "apps/mobile/src/sales/SalesTeachersScreen.test.tsx",
+      "apps/mobile/src/sales/screens/SalesTeachersScreen.test.tsx"
+    ],
+    [
+      "apps/mobile/src/sales/SalesTeachersScreen.tsx",
+      "apps/mobile/src/sales/screens/SalesTeachersScreen.tsx"
+    ],
+    [
+      "apps/mobile/src/sales/SmallHeading.tsx",
+      "apps/mobile/src/sales/components/SmallHeading.tsx"
+    ],
+    [
+      "apps/mobile/src/sales/SubscriptionHistoryScreen.test.tsx",
+      "apps/mobile/src/sales/screens/SubscriptionHistoryScreen.test.tsx"
+    ],
+    [
+      "apps/mobile/src/sales/SubscriptionHistoryScreen.tsx",
+      "apps/mobile/src/sales/screens/SubscriptionHistoryScreen.tsx"
+    ],
+    [
+      "apps/mobile/src/sales/TeacherFiltersBar.tsx",
+      "apps/mobile/src/sales/components/TeacherFiltersBar.tsx"
+    ],
+    [
+      "apps/mobile/src/sales/TeacherMeetingLink.test.tsx",
+      "apps/mobile/src/sales/components/TeacherMeetingLink.test.tsx"
+    ],
+    [
+      "apps/mobile/src/sales/TeacherMeetingLink.tsx",
+      "apps/mobile/src/sales/components/TeacherMeetingLink.tsx"
+    ]
+  ]
+}

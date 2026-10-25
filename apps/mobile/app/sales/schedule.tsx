@@ -1,5 +1,5 @@
 import { useLocalSearchParams } from 'expo-router';
-import { SalesScheduleScreen } from '@/sales/SalesScheduleScreen';
+import { SalesScheduleScreen } from '@/sales/screens/SalesScheduleScreen';
 
 /**
  * «جدول الحلقات» tab (read-only, «ادخل الحلقة» on a running lesson). A teacher's «جدولها» from
