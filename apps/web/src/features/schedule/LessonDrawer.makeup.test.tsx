@@ -3,7 +3,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { cleanup, fireEvent, render, screen, within } from '@testing-library/react';
 import type { ReactNode } from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import type { InvoiceView } from '@/features/booking/contract';
+import type { InvoiceView } from '@/features/booking/draft/contract';
 import { t } from '@/lib/i18n/i18n';
 import { JOUD, lesson, SUHAILA } from './lesson-fixture';
 import { LessonChip } from './LessonChip';

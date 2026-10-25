@@ -1,5 +1,5 @@
 import type { Gender, Program, TrialHistory } from '@ab/shared';
-import { emptyDraft, type BookingDraft, type PickedStudent } from '../draft';
+import { emptyDraft, type BookingDraft, type PickedStudent } from '../draft/draft';
 import type { BookHint } from '../hint';
 
 // The booking wizard's draft for «موعد تجريبي جديد» (owner 2026-10-25): one trial lesson for one

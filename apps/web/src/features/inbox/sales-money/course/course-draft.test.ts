@@ -1,7 +1,7 @@
 import { bookingRequestSchema, counted, courseBodyPackage } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
 import { ABRAR } from '@/features/booking/wizard-fixture';
-import { stepReady, toBookingRequest, withPicks } from '@/features/booking/draft';
+import { stepReady, toBookingRequest, withPicks } from '@/features/booking/draft/draft';
 import { dateLabel } from '@/features/schedule/tz';
 import { studentLabel } from '@/features/subscriptions/format';
 import { t } from '@/lib/i18n/i18n';

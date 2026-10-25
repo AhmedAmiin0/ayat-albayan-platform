@@ -1,8 +1,8 @@
 import type { BookingTeacherOption } from '@ab/shared';
 import type { BookSearch } from './api';
-import type { BookingKind } from './contract';
-import { withPicks } from './draft.days';
-import type { BookingDraft } from './draft';
+import type { BookingKind } from './draft/contract';
+import { withPicks } from './draft/draft.days';
+import type { BookingDraft } from './draft/draft';
 
 /** A free gap clicked on the calendar: preselect this teacher, then this first lesson. */
 export interface BookHint {

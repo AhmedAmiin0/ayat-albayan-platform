@@ -1,7 +1,7 @@
 import { NuqtaGlyph } from '@/components/ui/display/nuqta-glyph';
 import { t } from '@/lib/i18n/i18n';
 import { cn } from '@/lib/utils';
-import type { StepKey } from './draft';
+import type { StepKey } from './draft/draft';
 
 /**
  * «خطوة 2 من 5» and the step names of this booking type; done steps get a filled nuqta, the current one half.

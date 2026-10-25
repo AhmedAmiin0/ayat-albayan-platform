@@ -5,9 +5,9 @@ import { FormAlert } from '@/components/ui/form/form-alert';
 import { conflictsOf, errorCode, lessonErrorText } from '@/features/schedule/api';
 import { ConflictNotice } from '@/features/schedule/ConflictNotice';
 import { t } from '@/lib/i18n/i18n';
-import { toBookingRequest, type BookingDraft } from '../draft';
+import { toBookingRequest, type BookingDraft } from '../draft/draft';
 import { useBookingMode } from '../mode';
-import { ReviewSummary } from '../ReviewSummary';
+import { ReviewSummary } from '../steps/review/ReviewSummary';
 import { createTrialDate, refreshAfterTrialDate, TRIAL_DATES_KEY } from './api';
 import { TrialDateNotes } from './TrialDateNotes';
 

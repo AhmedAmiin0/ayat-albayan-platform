@@ -2,7 +2,7 @@ import type { SignedDownload, SignedUpload } from '@ab/shared';
 import { queryOptions } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@/lib/http/api';
 import { supabase } from '@/lib/http/supabase';
-import type { InvoiceView, MakeupCandidate, ThreadMediaItem } from './contract';
+import type { InvoiceView, MakeupCandidate, ThreadMediaItem } from './draft/contract';
 import { invoiceMime } from './invoice-file';
 
 // R-SCH-10 / R-PAY-03 / R-MSG-06 routes (spec section 4): the invoice upload, the chat's media,

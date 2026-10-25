@@ -3,10 +3,10 @@ import { fireEvent, render, screen, waitFor, within } from '@testing-library/rea
 import type { ReactNode } from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n/i18n';
-import { mediaCardLabel } from './ChatMediaPicker';
+import { mediaCardLabel } from './invoice/ChatMediaPicker';
 import type { BookSearch } from './api';
 import { BookingPage } from './BookingPage';
-import type { MakeupCandidate } from './contract';
+import type { MakeupCandidate } from './draft/contract';
 import {
   ABRAR,
   bookingBodies,

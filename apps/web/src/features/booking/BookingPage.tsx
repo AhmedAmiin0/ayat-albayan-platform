@@ -5,7 +5,7 @@ import { t } from '@/lib/i18n/i18n';
 import type { BookSearch } from './api';
 import { LeadBooking, StudentBooking } from './booking-entries';
 import { BookingWizard } from './BookingWizard';
-import { emptyDraft, type BookingDraft } from './draft';
+import { emptyDraft, type BookingDraft } from './draft/draft';
 import { bookHint } from './hint';
 
 export { draftFromLead, draftFromStudent } from './booking-entries';

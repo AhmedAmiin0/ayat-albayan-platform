@@ -2,8 +2,8 @@ import { counted, pickProgress, togglePick, type CourseChangeView } from '@ab/sh
 import { Button } from '@/components/ui/form/button';
 import { SlotPicker } from '@/features/schedule/SlotPicker';
 import { t } from '@/lib/i18n/i18n';
-import { DayTimesList } from '../DayTimesList';
-import { dayPicks, withPicks } from '../draft.days';
+import { DayTimesList } from '../steps/slots/DayTimesList';
+import { dayPicks, withPicks } from '../draft/draft.days';
 import { picksReady } from './change-body';
 import { currentDaysText } from './change-text';
 
