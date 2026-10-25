@@ -1,7 +1,7 @@
 import type { AssistantStatementView } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRef } from 'react';
-import { payBody, type PayDraft } from '@/finance/payout-actions';
+import { payBody, type PayDraft } from '@/finance/payouts/payout-actions';
 import { apiSend } from '@/core/lib/http/api';
 import { ASSISTANTS_KEY } from './api';
 import { uploadStatementReceipt } from './upload-receipt';

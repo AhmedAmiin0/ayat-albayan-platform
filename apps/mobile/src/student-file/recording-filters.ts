@@ -1,5 +1,5 @@
 import { addDays } from '@/calendar/week';
-import { monthRange } from '@/money/months';
+import { monthRange } from '@/money/shared/months';
 
 export const DATE_PRESETS = ['all', 'last7', 'last30', 'month'] as const;
 export type DatePreset = (typeof DATE_PRESETS)[number];

@@ -3,10 +3,10 @@ import { pathKey } from '@/core/lib/query/query-keys';
 import { t } from '@/core/lib/i18n/i18n';
 import { STUDENT, subscription } from '@/payments/fixtures';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
-import { adminTask, receivable } from './fixtures';
-import { ReceivableItem } from './ReceivableItem';
-import { SubscriptionItem } from './SubscriptionItem';
-import { TaskItem } from './TaskItem';
+import { adminTask, receivable } from './shared/fixtures';
+import { ReceivableItem } from './receivables/ReceivableItem';
+import { SubscriptionItem } from './subscriptions/SubscriptionItem';
+import { TaskItem } from './tasks/TaskItem';
 
 // A hidden Students tab is a protected route: rows that push into it must not offer the tap.
 let mockHeld: string[] = [];

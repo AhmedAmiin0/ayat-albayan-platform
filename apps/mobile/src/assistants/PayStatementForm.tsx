@@ -1,7 +1,7 @@
 import { PAYMENT_METHODS, type AssistantStatementView, type PaymentMethod } from '@ab/shared';
 import { useState } from 'react';
 import { View } from 'react-native';
-import type { PayDraft } from '@/finance/payout-actions';
+import type { PayDraft } from '@/finance/payouts/payout-actions';
 import { ErrorLine } from '@/inbox/ErrorLine';
 import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/more/Note';

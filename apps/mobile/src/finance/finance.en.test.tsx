@@ -5,9 +5,9 @@ import { locale } from '@/core/lib/i18n/locale';
 import { FinanceSection } from '@/more/FinanceSection';
 import { renderWithQuery } from '@/test/query';
 import { monthLabel } from '@/teacher/payout-text';
-import { amountText } from './format';
-import { APPROVED } from './fixtures';
-import { PayoutsScreen } from './PayoutsScreen';
+import { amountText } from './shared/format';
+import { APPROVED } from './shared/fixtures';
+import { PayoutsScreen } from './payouts/PayoutsScreen';
 
 // An English run: the native flag is LTR (jest.setup reports RTL, the Arabic default).
 jest.mock('react-native/Libraries/ReactNative/I18nManager', () => {

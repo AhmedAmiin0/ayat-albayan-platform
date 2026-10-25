@@ -1,1 +1,1 @@
-export { PayoutsScreen as default } from '@/finance/PayoutsScreen';
+export { PayoutsScreen as default } from '@/finance/payouts/PayoutsScreen';
