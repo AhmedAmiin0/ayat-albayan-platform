@@ -7,7 +7,7 @@ import type { AuthUser } from '../../common/auth/verify-token';
 import { forbidden } from '../../common/http/errors';
 import { parseOrThrow } from '../../common/http/http';
 import { courseQuerySchema } from './booking.dto';
-import { CourseChange } from './course-change.service';
+import { CourseChange } from './course-change/course-change.service';
 import { SalesCourse } from './sales-course.service';
 
 /**

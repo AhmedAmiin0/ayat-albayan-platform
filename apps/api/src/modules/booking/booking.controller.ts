@@ -15,7 +15,7 @@ import { slotsQuerySchema, teacherOptionsQuerySchema } from './booking.dto';
 import { BookingService } from './core/booking.service';
 import { withPackageSize } from './plan/package-size';
 import { SlotsService } from './plan/slots.service';
-import { TeacherOptionsService } from './teacher-options.service';
+import { TeacherOptionsService } from './teacher/teacher-options.service';
 
 /** Booking wizard API (R-SCH-06, R-SCH-04, R-LEAD-06; docs/10 §5 #12–14). Admin only. */
 @ApiTags('booking')

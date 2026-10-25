@@ -5,7 +5,7 @@ import type { LessonEvents } from '../../common/events/lesson-events';
 import { ruleSettingsOf } from '../../common/rules/rule-settings.fakes';
 import { fakePolicy } from '../notification-rules/policy.fakes';
 import { bookingRequest, fakePlanner, IDS } from './booking.fakes';
-import { fakeTeacherAlert } from './teacher-alert.fakes';
+import { fakeTeacherAlert } from './teacher/teacher-alert.fakes';
 import type { TrialLessonRead } from './trial-date.history';
 import type { TrialPick } from './trial-date.plan';
 import type { TrialDateQueries } from './trial-date.queries';

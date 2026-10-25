@@ -4,7 +4,7 @@ import type { BookingInvoices } from '../invoice/booking.invoice';
 import type { BookingQueries } from './booking.queries';
 import { BookingService } from './booking.service';
 import { BookingWriter } from './booking.writer';
-import { fakeTeacherAlert } from '../teacher-alert.fakes';
+import { fakeTeacherAlert } from '../teacher/teacher-alert.fakes';
 
 const FIRST = { rule_id: 'R1', student_ids: [IDS.s1], guardian_ids: [IDS.g1], lessons: [], message_ids: [], invoice_id: 'I1' };
 const REQUEST = 'c0000000-0000-4000-8000-0000000000c1';

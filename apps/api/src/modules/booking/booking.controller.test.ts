@@ -9,7 +9,7 @@ import { domainError } from './booking.errors';
 import { IDS } from './booking.fakes';
 import { BookingService } from './core/booking.service';
 import { SlotsService } from './plan/slots.service';
-import { TeacherOptionsService } from './teacher-options.service';
+import { TeacherOptionsService } from './teacher/teacher-options.service';
 
 const USERS: Record<string, AuthUser> = {
   admin: { id: 'a0000000-0000-4000-8000-000000000001', email: null, role: 'admin' },
