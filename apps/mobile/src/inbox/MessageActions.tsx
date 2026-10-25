@@ -5,7 +5,7 @@ import { t } from '@/core/lib/i18n/i18n';
 import { Button } from '@/core/ui/primitives/Button';
 import { InlineConfirm } from '@/core/ui/feedback/InlineConfirm';
 import { ErrorLine } from './ErrorLine';
-import { useMessageAction } from './use-thread';
+import { useMessageAction } from './thread/hooks/use-thread';
 
 /**
  * Under an outbound row that did not go out (R-MSG-03/05; why is MessageBubble's): «جرّب تاني» (failed

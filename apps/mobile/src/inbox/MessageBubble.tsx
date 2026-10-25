@@ -12,7 +12,7 @@ import { MessageMeta, useSmall } from './MessageMeta';
 import { errorLine, mediaLine, templateLine } from './message-text';
 import { QuoteBlock } from './QuoteBlock';
 import { SwipeReply } from './SwipeReply';
-import { useThreadMode } from './thread-mode';
+import { useThreadMode } from './thread/hooks/thread-mode';
 
 /** A file line: a link to the signed URL once the API has the file, else its kind and why not. */
 function MediaLine({ label, url, file }: { label: string; url: string | null; file: boolean }) {

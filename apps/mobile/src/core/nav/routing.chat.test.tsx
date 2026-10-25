@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { renderRouter, screen } from 'expo-router/testing-library';
 import { Text } from 'react-native';
-import { useThreadMode } from '@/inbox/thread-mode';
+import { useThreadMode } from '@/inbox/thread/hooks/thread-mode';
 import { queryClient } from '@/core/lib/query/query-client';
 import { TabStack } from '@/core/nav/TabStack';
 import { useTreeBase } from '@/core/nav/tree-base';

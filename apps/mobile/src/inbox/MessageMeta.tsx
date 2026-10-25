@@ -6,7 +6,7 @@ import { AppText } from '@/core/ui/primitives/AppText';
 import { DeliveryTicks } from './DeliveryTicks';
 import { lineWord } from './line-words';
 import { deliveryTimes, queuedLine, stamp } from './message-text';
-import { senderText } from './thread-mode';
+import { senderText } from './thread/hooks/thread-mode';
 
 export function useSmall() {
   const { color } = useTheme();

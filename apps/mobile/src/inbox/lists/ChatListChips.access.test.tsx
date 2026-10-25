@@ -3,7 +3,7 @@ import { t } from '@/core/lib/i18n/i18n';
 import { TreeBaseProvider } from '@/core/nav/tree-base';
 import { renderWithQuery } from '@/test/query';
 import { thread } from '../thread-fixtures';
-import { ThreadModeProvider } from '../thread-mode';
+import { ThreadModeProvider } from '../thread/hooks/thread-mode';
 import { ThreadsList } from '../ThreadsList';
 import { answer, PAID, withLists, withoutLists } from './list-fixtures';
 

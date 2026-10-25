@@ -3,7 +3,7 @@ import { fireEvent, screen } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
 import { thread } from './thread-fixtures';
-import { ThreadModeProvider } from './thread-mode';
+import { ThreadModeProvider } from './thread/hooks/thread-mode';
 import { ThreadsList } from './ThreadsList';
 
 const mockApiFetch = jest.fn();

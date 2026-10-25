@@ -12,7 +12,7 @@ import { AppText } from '@/core/ui/primitives/AppText';
 import { Button } from '@/core/ui/primitives/Button';
 import { InlineConfirm } from '@/core/ui/feedback/InlineConfirm';
 import { ErrorLine } from '../ErrorLine';
-import { threadPath } from '../thread-cache';
+import { threadPath } from '../thread/hooks/thread-cache';
 import { ratingApproved, ratingDone, ratingError } from './rating-words';
 
 const TEMPLATES = '/messaging/templates';

@@ -1,7 +1,7 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
-import { pickChatFile } from '../send-file';
+import { pickChatFile } from '../composer/send-file';
 import { MINE, REPLIES } from './fixtures';
 import { SavedRepliesSheet } from './SavedRepliesSheet';
 
@@ -14,7 +14,7 @@ jest.mock('@/core/lib/http/api', () => ({
   apiSend: (...mockArgs: unknown[]) => mockApiSend(...mockArgs),
 }));
 jest.mock('@/core/lib/http/supabase', () => ({ supabase: { storage: { from: () => ({ uploadToSignedUrl: mockUpload }) } } }));
-jest.mock('../send-file', () => ({ ...jest.requireActual('../send-file'), pickChatFile: jest.fn() }));
+jest.mock('../composer/send-file', () => ({ ...jest.requireActual('../composer/send-file'), pickChatFile: jest.fn() }));
 
 const onPick = jest.fn();
 async function openMine() {
