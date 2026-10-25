@@ -2,7 +2,7 @@ import type { AuthChangeEvent, Session } from '@supabase/supabase-js';
 import { useEffect, useState } from 'react';
 import { clearQueryCaches } from '@/core/lib/query/query-client';
 import { supabase } from '@/core/lib/http/supabase';
-import { silencePush } from '@/push/silence-push';
+import { silencePush } from '@/core/push/silence-push';
 import type { AppRole } from './role-claim';
 import { verifyRole } from './verify-role';
 

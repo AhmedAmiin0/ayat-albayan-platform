@@ -4,7 +4,7 @@ import { AssistantHomeScreen } from '@/assistant-app/AssistantHomeScreen';
 import { InboxScreen } from '@/inbox/InboxScreen';
 import { thread } from '@/inbox/thread-fixtures';
 import { t } from '@/core/lib/i18n/i18n';
-import { TreeBaseProvider } from '@/nav/tree-base';
+import { TreeBaseProvider } from '@/core/nav/tree-base';
 import { renderWithQuery } from '@/test/query';
 
 // The bell in the sales home («المحادثات») and the assistant home («حلقاتي»), as on the admin's Today.

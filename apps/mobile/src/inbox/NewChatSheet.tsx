@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { Modal, View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/more/Note';
-import { inTree, useTreeBase } from '@/nav/tree-base';
+import { inTree, useTreeBase } from '@/core/nav/tree-base';
 import { Button } from '@/core/ui/primitives/Button';
 import { Field } from '@/core/ui/form/Field';
 import { Screen } from '@/core/ui/layout/Screen';

@@ -5,7 +5,7 @@ import { ScrollView } from 'react-native';
 import { bookFailure, isCodedRefusal } from '@/booking/booking-errors';
 import { BookingModeProvider } from '@/booking/booking-mode';
 import { t } from '@/core/lib/i18n/i18n';
-import { inTree, useTreeBase } from '@/nav/tree-base';
+import { inTree, useTreeBase } from '@/core/nav/tree-base';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { Button } from '@/core/ui/primitives/Button';
 import { EmptyState } from '@/core/ui/feedback/EmptyState';

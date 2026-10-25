@@ -2,7 +2,7 @@ import type { StudentStatus } from '@ab/shared';
 import { fireEvent, screen, within } from '@testing-library/react-native';
 import { SalesChatActions } from '@/inbox/SalesChatActions';
 import { t } from '@/core/lib/i18n/i18n';
-import { TreeBaseProvider } from '@/nav/tree-base';
+import { TreeBaseProvider } from '@/core/nav/tree-base';
 import { familyOf, familyThread, KID, KID2, kid } from '@/sales-subscribe/fixtures';
 import { renderWithQuery } from '@/test/query';
 

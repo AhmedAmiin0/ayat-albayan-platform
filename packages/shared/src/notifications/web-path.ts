@@ -4,7 +4,7 @@ import { HOME_BY_ROLE, type UserRole } from '../roles.js';
 
 // Where a bell row opens on the web (R-NOT-01). `data` is PushService's { kind, ...event.data }:
 // untrusted JSON, so every field is checked (E.164 phone, uuid ids) and anything else falls back
-// to a safe list or the role's home. Mirrors apps/mobile/src/push/notification-route.ts.
+// to a safe list or the role's home. Mirrors apps/mobile/src/core/push/notification-route.ts.
 
 type Area = 'admin' | 'teacher' | 'sales' | 'assistant';
 type Data = Readonly<Record<string, unknown>> | null | undefined;

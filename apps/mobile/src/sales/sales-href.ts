@@ -1,5 +1,5 @@
 import type { Href } from 'expo-router';
-import { type TreeBase, useTreeBase } from '@/nav/tree-base';
+import { type TreeBase, useTreeBase } from '@/core/nav/tree-base';
 
 /**
  * Where the salesperson's pages live in each tree. Admins and teachers holding the sales double role

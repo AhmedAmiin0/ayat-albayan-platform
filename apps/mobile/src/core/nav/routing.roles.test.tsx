@@ -3,17 +3,17 @@ import { renderRouter, screen, waitFor } from 'expo-router/testing-library';
 import { Text } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { queryClient } from '@/core/lib/query/query-client';
-import { TabStack } from '@/nav/TabStack';
-import { registerPush } from '@/push/registerPush';
-import TabsLayout from '../../app/(tabs)/_layout';
-import RootLayout from '../../app/_layout';
-import AssistantLayout from '../../app/assistant/_layout';
-import SalesLayout from '../../app/sales/_layout';
-import TeacherLayout from '../../app/teacher/_layout';
+import { TabStack } from '@/core/nav/TabStack';
+import { registerPush } from '@/core/push/registerPush';
+import TabsLayout from '../../../app/(tabs)/_layout';
+import RootLayout from '../../../app/_layout';
+import AssistantLayout from '../../../app/assistant/_layout';
+import SalesLayout from '../../../app/sales/_layout';
+import TeacherLayout from '../../../app/teacher/_layout';
 
 // The real root and the four tree layouts with stub screens: the gate decides who reaches what.
 jest.mock('expo-font', () => ({ useFonts: () => [true, null] }));
-jest.mock('@/push/registerPush', () => ({ registerPush: jest.fn(async () => undefined) }));
+jest.mock('@/core/push/registerPush', () => ({ registerPush: jest.fn(async () => undefined) }));
 const mockMe = { answer: { role: 'sales', permissions: [] as string[] } };
 jest.mock('@/core/lib/http/api', () => ({
   ...jest.requireActual('@/core/lib/http/api'),

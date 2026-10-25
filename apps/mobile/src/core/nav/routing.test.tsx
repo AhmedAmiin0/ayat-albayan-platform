@@ -3,14 +3,14 @@ import { act, renderRouter, screen } from 'expo-router/testing-library';
 import { Appearance, Text } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { APPEARANCE_KEY } from '@/more/appearance';
-import { TabStack } from '@/nav/TabStack';
-import { registerPush } from '@/push/registerPush';
-import TabsLayout from '../../app/(tabs)/_layout';
-import RootLayout from '../../app/_layout';
+import { TabStack } from '@/core/nav/TabStack';
+import { registerPush } from '@/core/push/registerPush';
+import TabsLayout from '../../../app/(tabs)/_layout';
+import RootLayout from '../../../app/_layout';
 
 // The real root + tabs layouts with stub screens: proves the gate decides what can be reached.
 jest.mock('expo-font', () => ({ useFonts: () => [true, null] }));
-jest.mock('@/push/registerPush', () => ({ registerPush: jest.fn(async () => undefined) }));
+jest.mock('@/core/push/registerPush', () => ({ registerPush: jest.fn(async () => undefined) }));
 // Permissions and the inbox badge read the API: an admin whose /auth/me lists no permissions sees every tab.
 jest.mock('@/core/lib/http/api', () => ({
   ...jest.requireActual('@/core/lib/http/api'),

@@ -1,15 +1,15 @@
 import { act, renderRouter, screen } from 'expo-router/testing-library';
 import { Text } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
-import { TabStack } from '@/nav/TabStack';
-import { registerPush } from '@/push/registerPush';
-import TabsLayout from '../../app/(tabs)/_layout';
-import RootLayout from '../../app/_layout';
-import TeacherLayout from '../../app/teacher/_layout';
+import { TabStack } from '@/core/nav/TabStack';
+import { registerPush } from '@/core/push/registerPush';
+import TabsLayout from '../../../app/(tabs)/_layout';
+import RootLayout from '../../../app/_layout';
+import TeacherLayout from '../../../app/teacher/_layout';
 
 // The real root, admin and teacher layouts with stub screens: the gate decides who reaches what.
 jest.mock('expo-font', () => ({ useFonts: () => [true, null] }));
-jest.mock('@/push/registerPush', () => ({ registerPush: jest.fn(async () => undefined) }));
+jest.mock('@/core/push/registerPush', () => ({ registerPush: jest.fn(async () => undefined) }));
 const mockApiFetch = jest.fn();
 jest.mock('@/core/lib/http/api', () => ({ ...jest.requireActual('@/core/lib/http/api'), apiFetch: (p: string) => mockApiFetch(p) }));
 jest.mock('@/auth/use-auth-gate', () => {

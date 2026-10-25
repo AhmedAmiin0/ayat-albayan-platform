@@ -2,7 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { renderRouter, screen } from 'expo-router/testing-library';
 import { Text } from 'react-native';
 import { queryClient } from '@/core/lib/query/query-client';
-import { TabStack } from '@/nav/TabStack';
+import { TabStack } from '@/core/nav/TabStack';
 import SalesChatLayout from '../../app/(sales-chat)/_layout';
 import TrialDateRoute from '../../app/(sales-chat)/sales/inbox/trial-date';
 import TabsLayout from '../../app/(tabs)/_layout';
@@ -12,7 +12,7 @@ import SalesLayout from '../../app/sales/_layout';
 // From a salesperson's family chat: a route of the (sales-chat) group beside its book route, so the
 // chat's screens stay full screens with no tab bar under them (react-native-screens#4132).
 jest.mock('expo-font', () => ({ useFonts: () => [true, null] }));
-jest.mock('@/push/registerPush', () => ({ registerPush: jest.fn(async () => undefined) }));
+jest.mock('@/core/push/registerPush', () => ({ registerPush: jest.fn(async () => undefined) }));
 jest.mock('@/core/lib/http/api', () => ({
   ...jest.requireActual('@/core/lib/http/api'),
   apiFetch: async (path: string) => (path === '/auth/me' ? { role: 'sales' } : { total: 0 }),

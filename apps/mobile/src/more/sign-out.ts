@@ -1,6 +1,6 @@
 import { supabase } from '@/core/lib/http/supabase';
-import { unregisterPush } from '@/push/registerPush';
-import { silencePush } from '@/push/silence-push';
+import { unregisterPush } from '@/core/push/registerPush';
+import { silencePush } from '@/core/push/silence-push';
 
 /** A slow network must not trap the admin in the app: give the DELETE this long, then sign out. */
 export const UNREGISTER_TIMEOUT_MS = 3000;

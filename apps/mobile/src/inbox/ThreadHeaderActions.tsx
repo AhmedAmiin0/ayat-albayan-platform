@@ -1,4 +1,4 @@
-import { inTree, useTreeBase } from '@/nav/tree-base';
+import { inTree, useTreeBase } from '@/core/nav/tree-base';
 import { CheckRegistrationButton } from '@/registration-check/CheckRegistrationButton';
 import { ThreadListsButton } from './lists/ThreadListsButton';
 import type { ThreadCache } from './thread-cache';

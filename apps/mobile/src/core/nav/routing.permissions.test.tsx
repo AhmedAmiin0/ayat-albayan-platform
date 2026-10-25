@@ -3,14 +3,14 @@ import { Text } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { pathKey } from '@/core/lib/query/query-keys';
 import { queryClient } from '@/core/lib/query/query-client';
-import { TabStack } from '@/nav/TabStack';
-import TabsLayout from '../../app/(tabs)/_layout';
-import RootLayout from '../../app/_layout';
-import TeacherLayout from '../../app/teacher/_layout';
+import { TabStack } from '@/core/nav/TabStack';
+import TabsLayout from '../../../app/(tabs)/_layout';
+import RootLayout from '../../../app/_layout';
+import TeacherLayout from '../../../app/teacher/_layout';
 
 // Permission-aware tabs: the real layouts, /auth/me answered by the test.
 jest.mock('expo-font', () => ({ useFonts: () => [true, null] }));
-jest.mock('@/push/registerPush', () => ({ registerPush: jest.fn(async () => undefined) }));
+jest.mock('@/core/push/registerPush', () => ({ registerPush: jest.fn(async () => undefined) }));
 const mockMe = { answer: null as null | { role: string; permissions: string[] } };
 const mockApiFetch = jest.fn(async (path: string) => {
   if (path === '/auth/me') {

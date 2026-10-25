@@ -4,7 +4,7 @@ import { router, useNavigationContainerRef } from 'expo-router';
 import { useEffect, useRef } from 'react';
 import { usePermissions } from '@/auth/use-permissions';
 import { threadKey } from '@/inbox/thread-cache';
-import { isThreadHref, overChat } from '@/nav/chat-groups';
+import { isThreadHref, overChat } from '@/core/nav/chat-groups';
 import { pushKind, pushPhone, routeIn, type PushTree } from './notification-route';
 
 /** An admin push in the foreground still shows: banner, notification list and sound. */

@@ -11,7 +11,7 @@ const PHONE = '+966552147730';
  */
 function routeExists(href: string, tree = ''): boolean {
   const path = href.replace(/\/[^/]*%2B\d+$/, '/[phone]');
-  const files = ['../../app', `../../app/(${tree}-chat)`].flatMap((root) => [`${root}${path}`, `${root}${path}/index`]);
+  const files = ['../../../app', `../../../app/(${tree}-chat)`].flatMap((root) => [`${root}${path}`, `${root}${path}/index`]);
   return files.some((file) => {
     try {
       jest.requireActual(file);

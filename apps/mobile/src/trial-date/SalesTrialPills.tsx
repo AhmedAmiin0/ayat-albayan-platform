@@ -2,7 +2,7 @@ import { canPickTrialDate, type ThreadView } from '@ab/shared';
 import { router } from 'expo-router';
 import { useHolds } from '@/auth/use-permissions';
 import { t } from '@/core/lib/i18n/i18n';
-import { inTree, useTreeBase } from '@/nav/tree-base';
+import { inTree, useTreeBase } from '@/core/nav/tree-base';
 import { useSalesFamily } from '@/sales-subscribe/family';
 import { PillButton } from '@/core/ui/primitives/PillButton';
 import { chatTrialHref } from './trial-href';

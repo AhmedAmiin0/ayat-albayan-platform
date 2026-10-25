@@ -1,13 +1,13 @@
 import { renderRouter, screen } from 'expo-router/testing-library';
 import { Text } from 'react-native';
-import { TabStack } from '@/nav/TabStack';
+import { TabStack } from '@/core/nav/TabStack';
 import TabsLayout from '../../app/(tabs)/_layout';
 import TrialDateRoute from '../../app/(tabs)/students/trial-date/[studentId]';
 
 // From the admin student file: its own screen in the Students tab's stack (behind the root's admin gate).
 jest.mock('@/auth/use-permissions', () => ({ usePermissions: () => () => true }));
-jest.mock('@/nav/use-inbox-badge', () => ({ useInboxBadge: () => undefined }));
-jest.mock('@/push/usePushRegistration', () => ({ usePushRegistration: () => undefined }));
+jest.mock('@/core/nav/use-inbox-badge', () => ({ useInboxBadge: () => undefined }));
+jest.mock('@/core/push/usePushRegistration', () => ({ usePushRegistration: () => undefined }));
 jest.mock('./TrialDateFlow', () => ({
   TrialDateFlow: (p: { studentId: string; name: string; program: string }) => {
     const { Text: T } = jest.requireActual('react-native');

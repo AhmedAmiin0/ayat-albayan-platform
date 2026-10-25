@@ -2,7 +2,7 @@ import { fireEvent, screen, within } from '@testing-library/react-native';
 import { router } from 'expo-router';
 import { t } from '@/core/lib/i18n/i18n';
 import { pathKey } from '@/core/lib/query/query-keys';
-import { TreeBaseProvider } from '@/nav/tree-base';
+import { TreeBaseProvider } from '@/core/nav/tree-base';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { detail, inbound, thread } from './thread-fixtures';
 import { ThreadScreen } from './ThreadScreen';

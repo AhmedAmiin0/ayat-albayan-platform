@@ -3,7 +3,7 @@ import { router } from 'expo-router';
 import { type ReactNode, useState } from 'react';
 import { FlatList } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
-import { inTree, useTreeBase } from '@/nav/tree-base';
+import { inTree, useTreeBase } from '@/core/nav/tree-base';
 import { Avatar } from '@/core/ui/primitives/Avatar';
 import { EmptyState } from '@/core/ui/feedback/EmptyState';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';

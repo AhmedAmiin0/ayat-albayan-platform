@@ -1,10 +1,10 @@
 import { supabase } from '@/core/lib/http/supabase';
-import { unregisterPush } from '@/push/registerPush';
-import { silencePush } from '@/push/silence-push';
+import { unregisterPush } from '@/core/push/registerPush';
+import { silencePush } from '@/core/push/silence-push';
 import { signOutDevice, UNREGISTER_TIMEOUT_MS } from './sign-out';
 
-jest.mock('@/push/registerPush', () => ({ unregisterPush: jest.fn() }));
-jest.mock('@/push/silence-push', () => ({ silencePush: jest.fn() }));
+jest.mock('@/core/push/registerPush', () => ({ unregisterPush: jest.fn() }));
+jest.mock('@/core/push/silence-push', () => ({ silencePush: jest.fn() }));
 
 const unregister = jest.mocked(unregisterPush);
 const silence = jest.mocked(silencePush);

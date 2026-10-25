@@ -1,6 +1,6 @@
 import { screen } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
-import { TreeBaseProvider } from '@/nav/tree-base';
+import { TreeBaseProvider } from '@/core/nav/tree-base';
 import { renderWithQuery } from '@/test/query';
 import { thread } from '../thread-fixtures';
 import { ThreadModeProvider } from '../thread-mode';
