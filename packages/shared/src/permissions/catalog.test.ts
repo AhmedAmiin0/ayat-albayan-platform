@@ -17,7 +17,7 @@ import {
 describe('permission catalog', () => {
   it('has unique resource.action keys', () => {
     expect(new Set(PERMISSIONS).size).toBe(PERMISSIONS.length);
-    for (const p of PERMISSIONS) expect(p).toMatch(/^[a-z]+\.[a-z_]+$/);
+    for (const p of PERMISSIONS) expect(p).toMatch(/^[a-z][a-z_]*\.[a-z_]+$/);
   });
 
   it('labels every key and every area in Arabic and English', () => {

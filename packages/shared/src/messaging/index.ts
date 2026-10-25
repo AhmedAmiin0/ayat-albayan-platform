@@ -25,3 +25,5 @@ export type * from './views.js';
 export type * from './template-views.js';
 export type * from './line-views.js';
 export type * from './template-sync-views.js';
+export * from './saved-replies.js';
+export * from './saved-reply-text.js';

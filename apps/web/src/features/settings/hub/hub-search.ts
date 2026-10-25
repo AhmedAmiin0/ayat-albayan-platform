@@ -59,6 +59,8 @@ interface ModuleEntry {
 
 const linesOrLegacyMatch = (query: string): boolean => linesMatch(query) || groupsMatch(LEGACY_LINE_GROUPS)(query);
 
+const savedRepliesMatch = (query: string): boolean => matchesText(`${t.savedReplies.title} ${t.savedReplies.manageIntro}`, query);
+
 const googleMatch = (query: string): boolean => matchesText(`${H.googleName} ${t.googleSync.title} ${t.googleSync.intro}`, query);
 
 /** The module pages the search reaches, in hub order. */
@@ -67,6 +69,7 @@ const MODULES: readonly ModuleEntry[] = [
   { id: 'numbers', label: t.numbers.title, where: COMMS, href: `${HUB_PATHS.communications}?tab=numbers`, matches: numbersMatch },
   { id: 'catalogue', label: t.notificationRules.title, where: COMMS, href: `${HUB_PATHS.communications}?tab=catalogue`, matches: catalogueMatch },
   { id: 'templates', label: t.templates.title, where: COMMS, href: `${HUB_PATHS.communications}?tab=templates`, matches: templatesMatch },
+  { id: 'savedReplies', label: t.savedReplies.title, where: COMMS, href: `${HUB_PATHS.communications}?tab=savedReplies`, matches: savedRepliesMatch },
   { id: 'safety', label: t.settingsPages.communicationsTabs.safety, where: COMMS, href: `${HUB_PATHS.communications}?tab=safety`, matches: groupsMatch(SAFETY_GROUPS) },
   { id: 'integrations', label: t.integrations.title, where: t.integrations.title, href: HUB_PATHS.integrations, matches: groupsMatch(INTEGRATIONS_PAGE_GROUPS) },
   { id: 'google', label: t.googleSync.title, where: H.googleName, href: HUB_PATHS.google, matches: googleMatch },
