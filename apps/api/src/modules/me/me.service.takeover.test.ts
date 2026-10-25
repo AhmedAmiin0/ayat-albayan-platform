@@ -1,7 +1,7 @@
 import { ConflictException } from '@nestjs/common';
 import { describe, expect, it } from 'vitest';
 import { deviceKeyHash, mintDeviceKey } from '../../common/push/push-claim';
-import { fakeDb, type FakeResult } from '../guardians/fake-db';
+import { fakeDb, type FakeCall, type FakeResult } from '../guardians/fake-db';
 import { MeService } from './me.service';
 
 // Review of #172 (PR #175 «Not fixed»): an admin who can read a teacher's token must not pull the
@@ -17,7 +17,7 @@ function setup(binding: FakeResult, live: string[]) {
     profiles: [{ data: { push_tokens: [] } }, {}, { data: [] }],
   });
 }
-const upserts = (calls: { table: string; method: string }[]) =>
+const upserts = (calls: FakeCall[]) =>
   calls.filter((c) => c.table === 'push_device_sessions' && c.method === 'upsert');
 
 describe('PUT /me/push-tokens: no takeover of another person’s live device', () => {
