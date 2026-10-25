@@ -1,7 +1,7 @@
 import { APPLICANT_FILTER_KEYS, APPLICANT_SORT_KEYS } from '@ab/shared';
 import { createFileRoute } from '@tanstack/react-router';
 import { JobApplicantsList } from '@/features/leads/JobApplicantsList';
-import { listUrlValidator, parseListUrl, toListUrl } from '@/lib/list-url';
+import { listUrlValidator, parseListUrl, toListUrl } from '@/lib/list/list-url';
 
 const KEYS = { sortKeys: APPLICANT_SORT_KEYS, filterKeys: APPLICANT_FILTER_KEYS };
 

@@ -1,9 +1,9 @@
 import type { Permission, UserRole } from '@ab/shared';
 import { queryOptions, type QueryClient } from '@tanstack/react-query';
 import { redirect } from '@tanstack/react-router';
-import { apiFetch } from '@/lib/api';
+import { apiFetch } from '@/lib/http/api';
 import { forgetWebPush } from '@/features/notifications/web-push';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/lib/http/supabase';
 
 export interface Me {
   id: string;

@@ -4,14 +4,14 @@ import { useMemo } from 'react';
 import { DataTable } from '@/components/DataTable';
 import { FormAlert } from '@/components/ui/form/form-alert';
 import { Pager } from '@/components/ui/layout/pager';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import {
   serverListProps,
   serverListState,
   type ServerListKeys,
   type ServerListPatch,
   type ServerListSearch,
-} from '@/lib/server-list-search';
+} from '@/lib/list/server-list-search';
 import { myReportsQuery } from './api';
 import { submittedReportColumns } from './submitted-report-columns';
 

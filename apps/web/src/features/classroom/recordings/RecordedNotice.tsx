@@ -1,4 +1,4 @@
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 
 /** «تُسجَّل هذه الجلسة»: said before a guest joins, since every room is recorded (consent). */
 export function RecordedNotice() {

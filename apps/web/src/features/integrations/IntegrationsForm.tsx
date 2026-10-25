@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { ConfirmSwitchDialog } from '@/components/settings/dialogs/ConfirmSwitchDialog';
 import { Button } from '@/components/ui/form/button';
 import { FormAlert } from '@/components/ui/form/form-alert';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { sendGateQuery } from '../messaging/api';
 import { integrationsQuery, putIntegrationValues } from './integrations-api';
 import { changesOf, draftOf, emptiesAllowList, invalidKeys, matchesIntegration, type IntegrationDraft } from './integrations-form';

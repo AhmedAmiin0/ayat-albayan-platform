@@ -1,6 +1,6 @@
 import type { NotificationsPage, WebPushKey } from '@ab/shared';
 import { queryOptions, useMutation, useQueryClient } from '@tanstack/react-query';
-import { apiFetch, apiSend } from '@/lib/api';
+import { apiFetch, apiSend } from '@/lib/http/api';
 
 // apps/api /me/notifications and /me/web-push (R-NOT-01): the bell's rows and this browser's
 // push subscription. Every signed-in staff member holding notifications.push reads their own.

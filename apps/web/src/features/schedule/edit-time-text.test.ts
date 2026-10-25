@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { ApiError } from '@/lib/api';
-import { t } from '@/lib/i18n';
+import { ApiError } from '@/lib/http/api';
+import { t } from '@/lib/i18n/i18n';
 import { lengthText, lockedText, payoutLock, whenWithLength } from './edit-time-text';
 
 describe('edit-time wording (R-SCH-11)', () => {

@@ -2,7 +2,7 @@ import type { LessonView } from '@ab/shared';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, beforeEach, vi } from 'vitest';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import type { TimeEditResult } from './edit-time.contract';
 import { lesson } from './lesson-fixture';
 import { LessonDrawer } from './LessonDrawer';

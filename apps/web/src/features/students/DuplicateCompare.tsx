@@ -1,8 +1,8 @@
 import { formatPhone, normalizePhone } from '@ab/shared';
 import { HighlightDiff } from '@/components/ui/display/highlight-diff';
 import { Ltr } from '@/components/ui/display/ltr';
-import { t } from '@/lib/i18n';
-import { teacherLabel } from '@/lib/teacher-label';
+import { t } from '@/lib/i18n/i18n';
+import { teacherLabel } from '@/lib/i18n/teacher-label';
 import { nameMatch, textMatch } from './compare';
 import type { CreateStudentValues } from './create-student';
 import { CompareRow, cell } from './CompareRow';

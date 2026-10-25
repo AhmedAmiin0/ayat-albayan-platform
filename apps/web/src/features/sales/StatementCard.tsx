@@ -3,7 +3,7 @@ import { StatusChip } from '@/components/ui/display/status-chip';
 import { formatDate } from '@/features/leads/format';
 import { monthLabel } from '@/features/payouts/MonthSelect';
 import { Amount } from '@/features/subscriptions/Amount';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { CurrencyTotalsList } from './CurrencyTotalsList';
 
 const p = t.assistantPortal.earnings;

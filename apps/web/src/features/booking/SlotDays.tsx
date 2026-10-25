@@ -1,7 +1,7 @@
 import { counted, pickProgress } from '@ab/shared';
 import { useId } from 'react';
 import { RequiredMark } from '@/components/ui/form/label';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { dayPicks, draftPicks, withPicks } from './draft.days';
 import type { BookingDraft } from './draft';
 import { DayTimesList } from './DayTimesList';

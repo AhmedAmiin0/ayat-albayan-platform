@@ -2,8 +2,8 @@ import { CHAT_SEND_MIMES, chatFileProblem, type ChatFileProblem } from '@ab/shar
 import { useRef } from 'react';
 import { Icon } from '@/components/ui/display/icon';
 import { IconButton } from '@/components/ui/form/icon-button';
-import { t } from '@/lib/i18n';
-import { useUploadMaxBytes } from '@/lib/public-config';
+import { t } from '@/lib/i18n/i18n';
+import { useUploadMaxBytes } from '@/lib/settings/public-config';
 
 export interface AttachButtonProps {
   /** A JPEG, PNG or PDF within the limits: FileComposer takes over the box. */

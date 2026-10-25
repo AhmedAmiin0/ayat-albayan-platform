@@ -3,7 +3,7 @@ import { FormAlert } from '@/components/ui/form/form-alert';
 import { NuqtaGlyph } from '@/components/ui/display/nuqta-glyph';
 import { lessonErrorText } from '@/features/schedule/api';
 import { conflictText } from '@/features/schedule/ConflictNotice';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { bookingCheckQuery } from './api';
 import { takenTexts } from './course-taken';
 import type { BookingBody } from './contract';

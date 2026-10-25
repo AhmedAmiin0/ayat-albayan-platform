@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { ScrollX } from '@/components/ui/layout/scroll-x';
 import { Tabs, tabIds } from '@/components/ui/layout/tabs';
 import { usePhone } from '@/components/ui/layout/use-narrow';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { audienceTabs, rowsOf, type AudienceTab } from '../notification-catalogue/catalogue-tabs';
 import { ManualTable } from './ManualTable';
 import { RulePhoneRow } from './phone/RulePhoneRow';

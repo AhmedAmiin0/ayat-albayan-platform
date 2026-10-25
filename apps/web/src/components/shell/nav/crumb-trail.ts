@@ -1,4 +1,4 @@
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 
 type CrumbTarget = '/admin' | '/admin/students' | '/admin/teachers';
 export interface Crumb {

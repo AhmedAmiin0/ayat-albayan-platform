@@ -2,13 +2,13 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen } from '@testing-library/react';
 import type { ReactNode } from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { clearAllFilters, closeFilters, openFilters } from '@/test/open-filters';
 import { LeadsInbox } from './LeadsInbox';
 import type { LeadSearch } from './types';
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@/lib/api', () => ({ apiFetch, apiSend: vi.fn() }));
+vi.mock('@/lib/http/api', () => ({ apiFetch, apiSend: vi.fn() }));
 vi.mock('@tanstack/react-router', () => ({
   Link: ({ to, children }: { to: string; children: ReactNode }) => <a href={to}>{children}</a>,
 }));

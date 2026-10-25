@@ -4,10 +4,10 @@ import { describe, expect, it, vi } from 'vitest';
 import { PROFILE, renderWithClient } from './account-test-kit';
 import { AccountPage } from './AccountPage';
 
-vi.mock('@/lib/i18n', async (orig) => ({ ...(await orig<object>()), t: en }));
-vi.mock('@/lib/locale', async (orig) => ({ ...(await orig<object>()), locale: 'en' }));
+vi.mock('@/lib/i18n/i18n', async (orig) => ({ ...(await orig<object>()), t: en }));
+vi.mock('@/lib/i18n/locale', async (orig) => ({ ...(await orig<object>()), locale: 'en' }));
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@/lib/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 
 describe('AccountPage, English (R-ACC-01)', () => {
   it('title, role (English name), sections, fields and buttons read in English', async () => {

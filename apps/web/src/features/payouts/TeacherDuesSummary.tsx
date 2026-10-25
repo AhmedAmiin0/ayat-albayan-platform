@@ -3,9 +3,9 @@ import { Link } from '@tanstack/react-router';
 import { FormAlert } from '@/components/ui/form/form-alert';
 import { formatDate } from '@/features/leads/format';
 import { Amount } from '@/features/subscriptions/Amount';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { earningsSummaryQuery } from './api';
-import { teacherLabel } from '@/lib/teacher-label';
+import { teacherLabel } from '@/lib/i18n/teacher-label';
 
 /**
  * «مستحقات المعلمين» overview (ledger, all months): the total still owed, then per teacher what

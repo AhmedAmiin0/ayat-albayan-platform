@@ -1,6 +1,6 @@
 import { buttonVariants } from '@/components/ui/form/button';
 import { Icon, type IconName } from '@/components/ui/display/icon';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { cn } from '@/lib/utils';
 import { HUB_DESTINATIONS, HUB_PATHS, type HubDestination } from './hub-paths';
 import { HubLink } from './HubLink';

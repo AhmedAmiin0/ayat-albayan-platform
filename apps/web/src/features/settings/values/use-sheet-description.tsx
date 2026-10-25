@@ -1,7 +1,7 @@
 import type { SettingKey } from '@ab/shared';
 import type { ReactNode } from 'react';
 import { settingText } from '@/components/settings/search/setting-text';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { canEditDescription } from './description';
 import { rowDescription, settingTarget } from './row-description';
 import { useDescribeRights } from './use-describe-rights';

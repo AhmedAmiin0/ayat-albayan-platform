@@ -2,7 +2,7 @@ import { OPEN_LESSON_STATUSES, type AssistantLessonView } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { EmptyState } from '@/components/ui/display/empty-state';
 import { FormAlert } from '@/components/ui/form/form-alert';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { assistantLessonsQuery, localDay } from './api';
 import { AssistantLessonRow } from './AssistantLessonRow';
 import { useNow } from './use-now';

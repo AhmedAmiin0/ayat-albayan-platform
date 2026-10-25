@@ -1,5 +1,5 @@
 import { WA_LINES } from '@ab/shared';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { TemplateLineBlock } from './TemplateLineBlock';
 import type { Notice } from './use-template-actions';
 import type { TemplateLines as Lines } from './use-template-lines';

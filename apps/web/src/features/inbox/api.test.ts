@@ -2,7 +2,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { INBOX_REFRESH_MS, threadFileQuery, threadQuery, threadsQuery } from './api';
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@/lib/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 
 /** The interval as TanStack calls it (a function of the query, unused here). */
 function interval(value: unknown): unknown {

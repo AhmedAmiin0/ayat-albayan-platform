@@ -1,6 +1,6 @@
 import { normalizePhone, SETTING_FIELD_OF, settingDef } from '@ab/shared';
 import { Input } from '@/components/ui/form/input';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { str } from '../../registry-form/settings-form';
 import { boundsText } from '../value-format';
 import { useValues } from '../values-context';

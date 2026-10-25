@@ -1,11 +1,11 @@
 import en from '@ab/shared/i18n/en.json';
 import { render, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { ServerGateNote } from './ServerGateNote';
 
 const lang = vi.hoisted(() => ({ en: false }));
-vi.mock('@/lib/i18n', async (orig) => {
+vi.mock('@/lib/i18n/i18n', async (orig) => {
   const real = await orig<{ t: object }>();
   return {
     ...real,

@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/form/button';
 import { AttachmentItems } from '@/features/payments/AttachmentItems';
 import { AttachmentPicker } from '@/features/payments/AttachmentPicker';
 import { addAttachments, type AttachmentProblem } from '@/features/payments/attachments';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { ChatReceiptGrid } from './ChatReceiptGrid';
 import { addChatChoice, attachmentItem, pickedMessages, type ReceiptChoice } from './receipt';
 

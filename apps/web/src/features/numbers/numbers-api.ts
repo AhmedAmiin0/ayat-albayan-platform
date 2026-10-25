@@ -1,7 +1,7 @@
 import type { CommsSource, CommsSourceView, ImportResult, NumberCreate, NumberSecretName, NumberUpdate, NumberView, ParityView, TemplateNumberSyncView } from '@ab/shared';
 import { queryOptions } from '@tanstack/react-query';
-import { apiFetch, apiSend } from '@/lib/api';
-import { NUMBERS_QUERY_KEYS } from '@/lib/query-keys';
+import { apiFetch, apiSend } from '@/lib/http/api';
+import { NUMBERS_QUERY_KEYS } from '@/lib/settings/query-keys';
 
 /** GET /admin/numbers (settings.read): every number; secrets as «set / not set» only. */
 export const numbersQuery = queryOptions({

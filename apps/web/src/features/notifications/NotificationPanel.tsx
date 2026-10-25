@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { useId } from 'react';
 import { Button } from '@/components/ui/form/button';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { notificationsQuery, useMarkRead } from './api';
 import { NotificationList } from './NotificationList';
 import { WebPushToggle } from './WebPushToggle';

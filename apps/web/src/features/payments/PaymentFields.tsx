@@ -4,7 +4,7 @@ import { Input } from '@/components/ui/form/input';
 import { Select } from '@/components/ui/form/select';
 import { dateLabel } from '@/features/schedule/tz';
 import { currencySymbol } from '@/features/subscriptions/format';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 
 export interface PaymentForm {
   /** Text while typing (Arabic digits too); parseAmount reads it on submit. */

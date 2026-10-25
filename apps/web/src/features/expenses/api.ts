@@ -8,11 +8,11 @@ import {
   type SignedUpload,
 } from '@ab/shared';
 import { queryOptions } from '@tanstack/react-query';
-import { apiFetch, apiSend } from '@/lib/api';
-import { supabase } from '@/lib/supabase';
+import { apiFetch, apiSend } from '@/lib/http/api';
+import { supabase } from '@/lib/http/supabase';
 import { MONEY_KEY } from '@/features/subscriptions/api';
-import { t } from '@/lib/i18n';
-import { locale } from '@/lib/locale';
+import { t } from '@/lib/i18n/i18n';
+import { locale } from '@/lib/i18n/locale';
 
 // apps/api/src/modules/expenses (docs/11 §9 + §13, R-RPT-02, issue E4).
 export type { ExpenseCategoryView, ExpenseView, ExpenseYearView } from '@ab/shared';

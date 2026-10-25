@@ -1,6 +1,6 @@
 import { act, fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { ClassroomRoom } from './ClassroomRoom';
 import { from, joinAs, openRoom, sent } from './board/board-fixture';
 import { fakeClient, tile } from './fake-client';

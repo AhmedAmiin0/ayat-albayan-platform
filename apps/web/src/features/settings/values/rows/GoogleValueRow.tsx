@@ -1,5 +1,5 @@
 import type { GoogleSyncSettings } from '@ab/shared';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { DefaultCell, LastCell } from '../cells/InfoCells';
 import { keyItem } from '../cells/key-item';
 import { NameCell } from '../cells/NameCell';

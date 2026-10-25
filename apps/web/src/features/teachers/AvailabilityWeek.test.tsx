@@ -1,7 +1,7 @@
 import type { Weekday } from '@ab/shared';
 import { fireEvent, render, screen, within } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { AvailabilityWeek } from './AvailabilityWeek';
 import { emptyGrid, WEEK_ORDER, type Grid } from './grid';
 

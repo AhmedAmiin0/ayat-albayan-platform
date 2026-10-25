@@ -11,8 +11,8 @@ import type {
   SubscriptionPricing,
 } from '@ab/shared';
 import { queryOptions, type QueryClient } from '@tanstack/react-query';
-import { apiFetch, apiSend } from '@/lib/api';
-import { supabase } from '@/lib/supabase';
+import { apiFetch, apiSend } from '@/lib/http/api';
+import { supabase } from '@/lib/http/supabase';
 
 // The salesperson's money writes from the chat (R-ASST-01/04, docs/16): /sales/money/*,
 // /sales/subscriptions and /sales/payments. Only her students; the price always from the API.

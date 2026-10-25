@@ -1,5 +1,5 @@
 import { familyChatViaSales, type StudentStatus } from '@ab/shared';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 
 /**
  * A trial student's family is reached through sales, not the teacher (owner, 2026-10-11): the

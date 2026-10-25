@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { invoicesQuery } from '@/features/booking/api.invoice';
 import { InvoiceButton } from '@/features/booking/InvoiceDialog';
 import { fullTime } from '@/features/inbox/format';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 
 /**
  * «الفواتير» on the student's profile (R-PAY-03): the payment proofs of this student's bookings,

@@ -2,9 +2,9 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { Button } from '@/components/ui/form/button';
 import { Icon } from '@/components/ui/display/icon';
-import { ApiError } from '@/lib/api';
+import { ApiError } from '@/lib/http/api';
 import { ConfirmDialog } from '@/features/payments/ConfirmDialog';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { deleteRecording, RECORDINGS_KEY } from './recordings-api';
 
 const R = t.studentRecordings.delete;

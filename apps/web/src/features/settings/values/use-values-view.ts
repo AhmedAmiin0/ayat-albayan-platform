@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { customConfigQuery } from '@/features/custom-config/custom-api';
 import { googleStatusQuery } from '@/features/google-sync/google-api';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { allRows, groupRows, type RowQuery } from './value-rows';
 import { GROUP_IDS, groupLabel, groupOfKey, isOwnedGroup, OWNER_PAGE, resolveGroup } from './value-groups-view';
 import { useValues } from './values-context';

@@ -9,8 +9,8 @@ import { T_ABRAR, T_FATMA, T_NOUR } from './overview-fixture';
 import { ScheduleNav } from './ScheduleNav';
 
 // The calendar in English (LTR): every word from en.json, Western digits, the same layout.
-vi.mock('@/lib/i18n', async (orig) => ({ ...(await orig<object>()), t: en }));
-vi.mock('@/lib/locale', async (orig) => ({ ...(await orig<object>()), locale: 'en' }));
+vi.mock('@/lib/i18n/i18n', async (orig) => ({ ...(await orig<object>()), t: en }));
+vi.mock('@/lib/i18n/locale', async (orig) => ({ ...(await orig<object>()), locale: 'en' }));
 vi.mock('@tanstack/react-router', () => ({
   Link: ({ to, children }: { to: string; children: ReactNode }) => <a href={to}>{children}</a>,
 }));

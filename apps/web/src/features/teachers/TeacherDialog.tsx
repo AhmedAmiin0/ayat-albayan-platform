@@ -3,8 +3,8 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useId, useState, type FormEvent } from 'react';
 import { Button } from '@/components/ui/form/button';
 import { Dialog } from '@/components/ui/overlay/dialog';
-import { apiSend } from '@/lib/api';
-import { t } from '@/lib/i18n';
+import { apiSend } from '@/lib/http/api';
+import { t } from '@/lib/i18n/i18n';
 import type { Teacher } from './api';
 import { FormAlert } from '@/components/ui/form/form-alert';
 import {

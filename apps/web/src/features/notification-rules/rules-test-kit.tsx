@@ -12,7 +12,7 @@ import { fireEvent, screen, within } from '@testing-library/react';
 import type { Mock } from 'vitest';
 import { renderWithClient, routeFetch } from '@/features/inbox/test-utils';
 import { NUMBERS } from '@/features/numbers/numbers.fixture';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { RulesSection } from './RulesSection';
 
 // Shared by the «الإشعارات» tests (not app code). Each test file mocks @/lib/api, the router's Link

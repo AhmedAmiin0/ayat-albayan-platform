@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { emptyGrid } from './grid';
 import { barBox, overlaps, trackPct, wallClock, weeklyHours, weeklyHoursLabel } from './track';
 

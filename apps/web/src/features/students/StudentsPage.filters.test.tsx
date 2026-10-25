@@ -1,13 +1,13 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen, within } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { openFilters } from '@/test/open-filters';
 import type { StudentsFilters } from './filters';
 import { StudentsPage } from './StudentsPage';
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@/lib/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch }));
+vi.mock('@/lib/http/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch }));
 
 const COUNTS = { new: 1, trial: 2, pending_subscription: 1, active: 9, pending_renewal: 0, expired: 1, paused: 1, churned: 0 };
 

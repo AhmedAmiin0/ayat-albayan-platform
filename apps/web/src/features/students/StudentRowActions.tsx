@@ -1,7 +1,7 @@
 import type { MouseEvent } from 'react';
 import { Icon } from '@/components/ui/display/icon';
 import { IconButton, iconButtonClass } from '@/components/ui/form/icon-button';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import type { StudentListItem } from './types';
 
 type StudentRowActionsProps = { row: StudentListItem; onOpen: (studentId: string) => void };

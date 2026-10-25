@@ -4,13 +4,13 @@ import { cleanup, fireEvent, render, screen, within } from '@testing-library/rea
 import type { ReactNode } from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import type { InvoiceView } from '@/features/booking/contract';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { JOUD, lesson, SUHAILA } from './lesson-fixture';
 import { LessonChip } from './LessonChip';
 import { LessonDrawer } from './LessonDrawer';
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@/lib/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch, apiSend: vi.fn() }));
+vi.mock('@/lib/http/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch, apiSend: vi.fn() }));
 vi.mock('@tanstack/react-router', () => ({
   Link: ({ to, search, children }: { to: string; search: Record<string, string>; children: ReactNode }) => (
     <a href={`${to}?${new URLSearchParams(search)}`}>{children}</a>

@@ -1,5 +1,5 @@
 import type { TeacherMeetingMode } from '@ab/shared';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 
 /** A radio value per teachers.meeting_mode: null is «حسب إعداد الأكاديمية» (radios need a string). */
 export type MeetingModeChoice = TeacherMeetingMode | 'academy';

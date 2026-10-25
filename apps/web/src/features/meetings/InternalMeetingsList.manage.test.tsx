@@ -2,12 +2,12 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { cleanup, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { meQuery, type Me } from '@/features/auth/me';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { InternalMeetingsList } from './InternalMeetingsList';
 import { meetingRow } from './meeting-fixture';
 
 const api = vi.hoisted(() => ({ fetch: vi.fn(), send: vi.fn() }));
-vi.mock('@/lib/api', async (orig) => ({ ...(await orig<object>()), apiFetch: api.fetch, apiSend: api.send }));
+vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch: api.fetch, apiSend: api.send }));
 
 const M = t.meetingInvites.list;
 const R = t.meetingInvites.results;

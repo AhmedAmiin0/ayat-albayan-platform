@@ -7,7 +7,7 @@ import { Ltr } from '@/components/ui/display/ltr';
 import { StatusChip } from '@/components/ui/display/status-chip';
 import { formatDate } from '@/features/leads/format';
 import { Amount } from '@/features/subscriptions/Amount';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import type { AssistantCommissionView } from './api';
 import { commissionStatusStyle } from './status';
 

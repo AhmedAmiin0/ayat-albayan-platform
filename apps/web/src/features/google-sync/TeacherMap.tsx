@@ -1,6 +1,6 @@
 import type { GoogleFound } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { BlockSkeleton, GoogleBlock, LoadError } from './GoogleBlock';
 import { googleTeachersQuery } from './google-api';
 import { TeacherRow } from './TeacherRow';

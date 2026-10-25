@@ -1,6 +1,6 @@
 import type { UserReference } from '@ab/shared';
-import { ApiError } from '@/lib/api';
-import { t } from '@/lib/i18n';
+import { ApiError } from '@/lib/http/api';
+import { t } from '@/lib/i18n/i18n';
 
 const MESSAGES: Record<string, string | undefined> = t.users.errors;
 const TABLES: Record<string, string | undefined> = t.users.tables;

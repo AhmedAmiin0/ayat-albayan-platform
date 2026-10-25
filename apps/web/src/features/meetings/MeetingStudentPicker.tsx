@@ -5,7 +5,7 @@ import { Icon } from '@/components/ui/display/icon';
 import { Ltr } from '@/components/ui/display/ltr';
 import { studentListQuery } from '@/features/students/api';
 import { StudentSearch } from '@/features/students/StudentSearch';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { toggleStudent, type MeetingStudent } from './instant-form';
 
 interface Props {

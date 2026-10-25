@@ -1,8 +1,8 @@
 import type { CRM_TEMPLATE_STATUSES, TemplateHealthView, TemplateLineSync, TemplateLineView, TemplateMoveView, TemplateNumberSetView, TemplateView, WaLine } from '@ab/shared';
 import { queryOptions } from '@tanstack/react-query';
 import { errorCode } from '@/features/schedule/api';
-import { ApiError, apiFetch, apiSend } from '@/lib/api';
-import { t } from '@/lib/i18n';
+import { ApiError, apiFetch, apiSend } from '@/lib/http/api';
+import { t } from '@/lib/i18n/i18n';
 
 // Template registry routes (docs/12 §4: T1–T3). Submitting to Meta is only ever this explicit
 // admin action (owner's messaging-safety rule), never automatic.

@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { Link } from '@tanstack/react-router';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { salesLiveQuery } from './academy-api';
 
 /**

@@ -1,6 +1,6 @@
 import { googleErrorKey, intlLocale, type GoogleAccountStatus, type GoogleSkipReason, type GoogleSyncState, type Glyph, type Tone } from '@ab/shared';
-import { t } from '@/lib/i18n';
-import { locale } from '@/lib/locale';
+import { t } from '@/lib/i18n/i18n';
+import { locale } from '@/lib/i18n/locale';
 
 // Display helpers of the Google section. DB times are UTC; the academy reads them in Asia/Riyadh,
 // 24h, Western digits like every other time in the product.

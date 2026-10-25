@@ -1,6 +1,6 @@
 import type { MyEarnings, MyPaymentRow, MyStudentRow } from '@ab/shared';
 import { queryOptions } from '@tanstack/react-query';
-import { apiFetch, apiSend } from '@/lib/api';
+import { apiFetch, apiSend } from '@/lib/http/api';
 
 export type SubscriptionKind = 'pending' | 'confirmed';
 

@@ -5,7 +5,7 @@ import type { Me } from '@/features/auth/me';
 import { isStaffRole } from './staff-link';
 import { StaffLinkGate } from './StaffLinkGate';
 
-vi.mock('@/lib/supabase', () => ({ supabase: { auth: { getSession: vi.fn() } } }));
+vi.mock('@/lib/http/supabase', () => ({ supabase: { auth: { getSession: vi.fn() } } }));
 
 const me = (role: Me['role']): Me => ({ id: 'u1', email: null, role, permissions: [] });
 

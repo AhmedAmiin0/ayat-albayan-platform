@@ -9,8 +9,8 @@ const auth = vi.hoisted(() => ({
   getSession: vi.fn(async () => ({ data: { session: { access_token: 'tok' } } })),
 }));
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@/lib/supabase', () => ({ supabase: { auth } }));
-vi.mock('@/lib/api', () => ({ apiFetch }));
+vi.mock('@/lib/http/supabase', () => ({ supabase: { auth } }));
+vi.mock('@/lib/http/api', () => ({ apiFetch }));
 vi.mock('./session-activity', () => ({ reportSession: vi.fn(async () => undefined) }));
 vi.mock('@/features/notifications/web-push', () => ({
   forgetWebPush: vi.fn(async () => void order.push('forget')),

@@ -40,7 +40,7 @@ function hits(folder: string, from: (file: string) => boolean): string[] {
 describe('apps/web/src settings boundaries', () => {
   it('scans the sources', () => {
     expect(Object.keys(sources)).toEqual(
-      expect.arrayContaining(['features/settings/pages/CommunicationsPage.tsx', 'lib/settings-api.ts', 'components/settings/Section.tsx']),
+      expect.arrayContaining(['features/settings/pages/CommunicationsPage.tsx', 'lib/settings/settings-api.ts', 'components/settings/Section.tsx']),
     );
   });
 

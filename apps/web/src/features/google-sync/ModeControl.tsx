@@ -1,7 +1,7 @@
 import type { GoogleStatusView, GoogleSyncMode } from '@ab/shared';
 import { useState } from 'react';
 import { SegmentedControl } from '@/components/ui/form/segmented-control';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { LiveConfirmDialog } from './LiveConfirmDialog';
 import type { useSaveSettings } from './use-save-settings';
 

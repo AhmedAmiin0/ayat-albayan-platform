@@ -1,7 +1,7 @@
 import type { MessageQuote, MessageView, ThreadView } from '@ab/shared';
 import { useCallback, useMemo, useState, type ReactNode } from 'react';
 import { Toast } from '@/components/ui/overlay/toast';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { ChatActionsContext, type ChatActions } from './chat-actions';
 import { ForwardDialog } from './ForwardDialog';
 import { forwardSummary, type ForwardSummary } from './forward-summary';

@@ -1,7 +1,7 @@
 import { createColumnHelper } from '@tanstack/react-table';
 import { act, fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { closeFilters, openFilters } from '@/test/open-filters';
 import { FILTER_DEBOUNCE_MS } from './ColumnFilterText';
 import { DataTable, type DataTableFeatures } from './DataTable';

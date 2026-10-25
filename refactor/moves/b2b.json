@@ -1,0 +1,188 @@
+{
+  "id": "b2b",
+  "seq": 37,
+  "moves": [
+    {
+      "from": "apps/web/src/lib/api.ts",
+      "to": "apps/web/src/lib/http/"
+    },
+    {
+      "from": "apps/web/src/lib/client-tag.ts",
+      "to": "apps/web/src/lib/http/"
+    },
+    {
+      "from": "apps/web/src/lib/env.ts",
+      "to": "apps/web/src/lib/http/"
+    },
+    {
+      "from": "apps/web/src/lib/supabase.ts",
+      "to": "apps/web/src/lib/http/"
+    },
+    {
+      "from": "apps/web/src/lib/settings-api.ts",
+      "to": "apps/web/src/lib/settings/"
+    },
+    {
+      "from": "apps/web/src/lib/config-entries-api.ts",
+      "to": "apps/web/src/lib/settings/"
+    },
+    {
+      "from": "apps/web/src/lib/public-config.ts",
+      "to": "apps/web/src/lib/settings/"
+    },
+    {
+      "from": "apps/web/src/lib/platform-classroom.test.tsx",
+      "to": "apps/web/src/lib/settings/"
+    },
+    {
+      "from": "apps/web/src/lib/query-keys.ts",
+      "to": "apps/web/src/lib/settings/"
+    },
+    {
+      "from": "apps/web/src/lib/use-setting-switch.ts",
+      "to": "apps/web/src/lib/settings/"
+    },
+    {
+      "from": "apps/web/src/lib/i18n.ts",
+      "to": "apps/web/src/lib/i18n/"
+    },
+    {
+      "from": "apps/web/src/lib/i18n-overrides.ts",
+      "to": "apps/web/src/lib/i18n/"
+    },
+    {
+      "from": "apps/web/src/lib/locale.ts",
+      "to": "apps/web/src/lib/i18n/"
+    },
+    {
+      "from": "apps/web/src/lib/teacher-label.ts",
+      "to": "apps/web/src/lib/i18n/"
+    },
+    {
+      "from": "apps/web/src/lib/list-search.ts",
+      "to": "apps/web/src/lib/list/"
+    },
+    {
+      "from": "apps/web/src/lib/list-url.ts",
+      "to": "apps/web/src/lib/list/"
+    },
+    {
+      "from": "apps/web/src/lib/server-list-search.ts",
+      "to": "apps/web/src/lib/list/"
+    }
+  ],
+  "files": [
+    [
+      "apps/web/src/lib/api.test.ts",
+      "apps/web/src/lib/http/api.test.ts"
+    ],
+    [
+      "apps/web/src/lib/api.ts",
+      "apps/web/src/lib/http/api.ts"
+    ],
+    [
+      "apps/web/src/lib/client-tag.test.ts",
+      "apps/web/src/lib/http/client-tag.test.ts"
+    ],
+    [
+      "apps/web/src/lib/client-tag.ts",
+      "apps/web/src/lib/http/client-tag.ts"
+    ],
+    [
+      "apps/web/src/lib/config-entries-api.ts",
+      "apps/web/src/lib/settings/config-entries-api.ts"
+    ],
+    [
+      "apps/web/src/lib/env.test.ts",
+      "apps/web/src/lib/http/env.test.ts"
+    ],
+    [
+      "apps/web/src/lib/env.ts",
+      "apps/web/src/lib/http/env.ts"
+    ],
+    [
+      "apps/web/src/lib/i18n-overrides.test.ts",
+      "apps/web/src/lib/i18n/i18n-overrides.test.ts"
+    ],
+    [
+      "apps/web/src/lib/i18n-overrides.ts",
+      "apps/web/src/lib/i18n/i18n-overrides.ts"
+    ],
+    [
+      "apps/web/src/lib/i18n.ts",
+      "apps/web/src/lib/i18n/i18n.ts"
+    ],
+    [
+      "apps/web/src/lib/list-search.test.ts",
+      "apps/web/src/lib/list/list-search.test.ts"
+    ],
+    [
+      "apps/web/src/lib/list-search.ts",
+      "apps/web/src/lib/list/list-search.ts"
+    ],
+    [
+      "apps/web/src/lib/list-url.test.ts",
+      "apps/web/src/lib/list/list-url.test.ts"
+    ],
+    [
+      "apps/web/src/lib/list-url.ts",
+      "apps/web/src/lib/list/list-url.ts"
+    ],
+    [
+      "apps/web/src/lib/locale.test.ts",
+      "apps/web/src/lib/i18n/locale.test.ts"
+    ],
+    [
+      "apps/web/src/lib/locale.ts",
+      "apps/web/src/lib/i18n/locale.ts"
+    ],
+    [
+      "apps/web/src/lib/platform-classroom.test.tsx",
+      "apps/web/src/lib/settings/platform-classroom.test.tsx"
+    ],
+    [
+      "apps/web/src/lib/public-config.test.tsx",
+      "apps/web/src/lib/settings/public-config.test.tsx"
+    ],
+    [
+      "apps/web/src/lib/public-config.ts",
+      "apps/web/src/lib/settings/public-config.ts"
+    ],
+    [
+      "apps/web/src/lib/query-keys.ts",
+      "apps/web/src/lib/settings/query-keys.ts"
+    ],
+    [
+      "apps/web/src/lib/server-list-search.test.ts",
+      "apps/web/src/lib/list/server-list-search.test.ts"
+    ],
+    [
+      "apps/web/src/lib/server-list-search.ts",
+      "apps/web/src/lib/list/server-list-search.ts"
+    ],
+    [
+      "apps/web/src/lib/settings-api.test.ts",
+      "apps/web/src/lib/settings/settings-api.test.ts"
+    ],
+    [
+      "apps/web/src/lib/settings-api.ts",
+      "apps/web/src/lib/settings/settings-api.ts"
+    ],
+    [
+      "apps/web/src/lib/supabase.ts",
+      "apps/web/src/lib/http/supabase.ts"
+    ],
+    [
+      "apps/web/src/lib/teacher-label.ts",
+      "apps/web/src/lib/i18n/teacher-label.ts"
+    ],
+    [
+      "apps/web/src/lib/use-setting-switch.test.tsx",
+      "apps/web/src/lib/settings/use-setting-switch.test.tsx"
+    ],
+    [
+      "apps/web/src/lib/use-setting-switch.ts",
+      "apps/web/src/lib/settings/use-setting-switch.ts"
+    ]
+  ]
+}

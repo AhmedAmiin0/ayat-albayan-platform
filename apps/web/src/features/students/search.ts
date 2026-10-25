@@ -6,7 +6,7 @@ import {
   toSortSearch,
   type FilterSearch,
   type SortSearch,
-} from '@/lib/list-search';
+} from '@/lib/list/list-search';
 import type { DataTableFilters, DataTableSort } from '@/components/DataTable';
 import { activeFilterCount, parseStudentFilters, type StudentsFilters } from './filters';
 

@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useId, useState } from 'react';
 import { StatusChip } from '@/components/ui/display/status-chip';
 import { Pager } from '@/components/ui/layout/pager';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { activityQuery, type ActivityScope } from './activity.api';
 import { actionLabel, formatAt, resultLabel, resultStyle, roleLabel } from './activity-format';
 

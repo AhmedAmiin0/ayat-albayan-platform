@@ -1,5 +1,5 @@
 import { formatPhone, type ForwardResponse } from '@ab/shared';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 
 export interface ForwardSummary {
   /** «تم الإرسال: 2 · تم التخطي: 1», then one line per skipped chat: «أم سهيلة: السبب». */

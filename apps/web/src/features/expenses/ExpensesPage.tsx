@@ -15,7 +15,7 @@ import { currentMonth } from '@/features/payouts/api';
 import { MonthSelect } from '@/features/payouts/MonthSelect';
 import { MONEY_KEY } from '@/features/subscriptions/api';
 import { Amount } from '@/features/subscriptions/Amount';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { categoriesQuery, categoryLabel, confirmDraft, deleteExpense, expenseReceiptUrl, expensesQuery, totalsByCurrency, type ExpenseView } from './api';
 import { ExpenseDialog } from './ExpenseDialog';
 import type { ExpenseAction } from './ExpenseActions';

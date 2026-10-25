@@ -1,7 +1,7 @@
 import type { TemplateLineSync, WaLine } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { CATALOGUE_QUERY_KEY } from '../notification-catalogue/catalogue-api';
 import { checkTemplateHealth, lineSyncErrorText, templateErrorText, templatesQuery } from './api';
 import type { Notice } from './use-template-actions';

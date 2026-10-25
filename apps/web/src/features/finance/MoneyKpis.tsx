@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Link } from '@tanstack/react-router';
 import { earningsSummaryQuery } from '@/features/payouts/api';
 import { Amount } from '@/features/subscriptions/Amount';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { receivablesQuery } from './api';
 
 const tile = 'grid gap-1 rounded-xs px-3 py-3 no-underline hover:bg-sunk/75';

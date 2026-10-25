@@ -1,12 +1,12 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { ApiError } from '@/lib/api';
-import { t } from '@/lib/i18n';
+import { ApiError } from '@/lib/http/api';
+import { t } from '@/lib/i18n/i18n';
 import { fakeNow, HELD, openEditTime, pick, SAVED } from './edit-time-fixture';
 import { lesson } from './lesson-fixture';
 
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@/lib/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch: vi.fn(async () => []), apiSend }));
+vi.mock('@/lib/http/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch: vi.fn(async () => []), apiSend }));
 
 const LOCKED = new ApiError(409, { code: 'payout_locked', message: 'payout_locked', month: '2026-09', status: 'approved' });
 const SAVE = () => screen.getByRole('button', { name: t.lessons.timeEdit.submit }) as HTMLButtonElement;

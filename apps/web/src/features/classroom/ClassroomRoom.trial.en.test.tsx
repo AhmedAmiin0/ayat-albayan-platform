@@ -4,8 +4,8 @@ import { expect, it, vi } from 'vitest';
 import { ClassroomRoom } from './ClassroomRoom';
 import { fakeClient, tile } from './fake-client';
 
-vi.mock('@/lib/i18n', async (orig) => ({ ...(await orig<object>()), t: en }));
-vi.mock('@/lib/locale', async (orig) => ({ ...(await orig<object>()), locale: 'en' }));
+vi.mock('@/lib/i18n/i18n', async (orig) => ({ ...(await orig<object>()), t: en }));
+vi.mock('@/lib/i18n/locale', async (orig) => ({ ...(await orig<object>()), locale: 'en' }));
 
 it('a trial lesson room says, in English, that text chat is closed', () => {
   const c = fakeClient({ tiles: [tile({ key: 'me', name: 'Joud', isLocal: true, role: 'guest' })] });

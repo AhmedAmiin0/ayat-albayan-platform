@@ -1,7 +1,7 @@
 import type { LessonView, OverviewTeacher } from '@ab/shared';
 import { useNarrow } from '@/components/ui/layout/use-narrow';
-import { t } from '@/lib/i18n';
-import { teacherLabel } from '@/lib/teacher-label';
+import { t } from '@/lib/i18n/i18n';
+import { teacherLabel } from '@/lib/i18n/teacher-label';
 import { cn } from '@/lib/utils';
 import { LessonChip } from './LessonChip';
 import { teacherRows } from './lessons';

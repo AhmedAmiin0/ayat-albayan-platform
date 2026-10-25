@@ -1,5 +1,5 @@
 import type { TemplateSkipReason } from '@ab/shared';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 
 // Why a sync did not import a Meta template, in the admin's language (the API sends codes, never prose).
 

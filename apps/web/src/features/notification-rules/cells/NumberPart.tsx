@@ -1,7 +1,7 @@
 import type { LineHealthView, NotificationEntryView } from '@ab/shared';
 import { useId } from 'react';
 import { Select } from '@/components/ui/form/select';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { NumberParts } from '../../notification-catalogue/NumberParts';
 import { approvalWord, fillText } from '../rule-text';
 import { numberName, useRules } from '../rules-context';

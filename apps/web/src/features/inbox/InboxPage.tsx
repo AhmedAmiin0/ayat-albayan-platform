@@ -4,7 +4,7 @@ import { EmptyState } from '@/components/ui/display/empty-state';
 import { Pager } from '@/components/ui/layout/pager';
 import { ListSkeleton } from '@/components/ui/display/skeleton';
 import { paneScroll } from '@/components/ui/layout/rail';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { cn } from '@/lib/utils';
 import { threadsQuery } from './api';
 import { InboxListHead } from './InboxListHead';

@@ -1,6 +1,6 @@
 import { PAYMENT_ATTACHMENTS_MAX, type PaymentAttachmentView } from '@ab/shared';
 import { useRef } from 'react';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { receiptProblem } from './ReceiptField';
 
 // A payment's «المرفقات» (owner 2026-10-12): optional, at most PAYMENT_ATTACHMENTS_MAX files, each checked like

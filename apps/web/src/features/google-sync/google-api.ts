@@ -8,7 +8,7 @@ import type {
   GoogleTeacherMapRow,
 } from '@ab/shared';
 import { queryOptions } from '@tanstack/react-query';
-import { apiFetch, apiSend } from '@/lib/api';
+import { apiFetch, apiSend } from '@/lib/http/api';
 
 // The Google sync admin API (docs/24 §3): every route needs a signed-in admin.
 

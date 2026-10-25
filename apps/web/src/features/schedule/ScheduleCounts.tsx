@@ -1,5 +1,5 @@
 import { counted, type LessonView } from '@ab/shared';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { needsConfirmCount } from './lessons';
 
 /** «5 حلقات» and, in saffron (دورك), «2 يحتاج تأكيد». No lessons shows nothing, never «0 حلقة». */

@@ -1,9 +1,9 @@
 import { SETTING_FIELD_OF, type AcademySettings, type SettingKey } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useRef, useState } from 'react';
-import { t } from '@/lib/i18n';
-import { CONFIG_QUERY_KEYS } from '@/lib/query-keys';
-import { updateSettings } from '@/lib/settings-api';
+import { t } from '@/lib/i18n/i18n';
+import { CONFIG_QUERY_KEYS } from '@/lib/settings/query-keys';
+import { updateSettings } from '@/lib/settings/settings-api';
 import { isDefault, isDirty, resetPatch } from './settings-dirty';
 import { FORM_KEYS, settingsForm, settingsUpdate, type SettingsErrors, type SettingsForm } from './settings-form';
 import { afterSave, changedKeys, invalidKeys, movedKeys, refreshed, type FormPair } from './settings-scope';

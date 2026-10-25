@@ -1,7 +1,7 @@
 import type { CustomConfigUpsert, CustomConfigView } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { customConfigQuery, deleteCustom, putCustom } from './custom-api';
 
 const c = t.config.custom;

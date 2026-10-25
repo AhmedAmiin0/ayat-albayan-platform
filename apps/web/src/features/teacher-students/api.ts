@@ -1,6 +1,6 @@
 import type { TeacherStudentKind, TeacherStudentView } from '@ab/shared';
 import { queryOptions } from '@tanstack/react-query';
-import { apiFetch } from '@/lib/api';
+import { apiFetch } from '@/lib/http/api';
 
 /** GET /teachers/me/students?kind= — my subscribed or my trial students, one list per kind. */
 export const teacherStudentsQuery = (kind: TeacherStudentKind) =>

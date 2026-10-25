@@ -1,6 +1,6 @@
 import { ScrollX } from '@/components/ui/layout/scroll-x';
 import { dayMonthLabel } from '@/features/schedule/tz';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { sectionTitle } from './Bar';
 import { LessonsByStatus } from './LessonsByStatus';
 import { TeacherLoad } from './TeacherLoad';

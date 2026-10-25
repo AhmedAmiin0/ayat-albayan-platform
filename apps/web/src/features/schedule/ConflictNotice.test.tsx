@@ -1,7 +1,7 @@
 import type { Conflict } from '@ab/shared';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { ConflictNotice, conflictText } from './ConflictNotice';
 
 const busy = (startsAt: string): Conflict => ({ kind: 'teacher_busy', startsAt, endsAt: startsAt });

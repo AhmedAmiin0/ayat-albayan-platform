@@ -3,7 +3,7 @@ import { useRef } from 'react';
 import { Icon } from '@/components/ui/display/icon';
 import { IconButton } from '@/components/ui/form/icon-button';
 import { useDismiss } from '@/components/ui/overlay/use-dismiss';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { cn } from '@/lib/utils';
 import { BubbleMenu } from './BubbleMenu';
 import { useChatActions } from './chat-actions';

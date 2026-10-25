@@ -10,7 +10,7 @@ import type {
   UserWithCredential,
 } from '@ab/shared';
 import { keepPreviousData, queryOptions } from '@tanstack/react-query';
-import { apiFetch, apiSend } from '@/lib/api';
+import { apiFetch, apiSend } from '@/lib/http/api';
 
 // apps/api/src/modules/users: «المستخدمون». users.read lists and opens, users.write does the rest.
 export const USERS_KEY = ['users'] as const;

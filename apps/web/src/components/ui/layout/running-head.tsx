@@ -1,7 +1,7 @@
 import { formatRunningHead } from '@ab/shared';
 import { useEffect, useState, type ReactNode } from 'react';
-import { t } from '@/lib/i18n';
-import { locale } from '@/lib/locale';
+import { t } from '@/lib/i18n/i18n';
+import { locale } from '@/lib/i18n/locale';
 import { cn } from '@/lib/utils';
 
 /** Current time, re-rendered on every minute boundary. */

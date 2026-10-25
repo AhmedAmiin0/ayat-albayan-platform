@@ -1,7 +1,7 @@
 import { counted, type PackageSize } from '@ab/shared';
 import { RequiredMark } from '@/components/ui/form/label';
 import { WEEK_ORDER } from '@/features/teachers/grid';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { PACKAGE_NOTE_CLASS, packageDaysNote } from './package-days';
 
 export interface ByDayPickerProps {

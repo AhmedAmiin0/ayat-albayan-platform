@@ -1,5 +1,5 @@
 import type { ThreadView } from '@ab/shared';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 
 /**
  * «سيصل ردّك عبر خط المحادثات» (docs/12 §13.10): the line a session reply leaves from, i.e. the

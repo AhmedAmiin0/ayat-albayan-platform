@@ -1,6 +1,6 @@
 import type { ConfigEntriesResponse, ConfigEntry, ConfigEntryPatchInput, ConfigEntryResult } from '@ab/shared';
 import { queryOptions, useQuery, type QueryClient } from '@tanstack/react-query';
-import { apiFetch, apiSend } from './api';
+import { apiFetch, apiSend } from '../http/api';
 import { CONFIG_QUERY_KEYS } from './query-keys';
 
 /** GET /config/entries (settings.read): every key with value, version, description and owner. */

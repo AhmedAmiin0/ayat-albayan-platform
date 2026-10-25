@@ -2,7 +2,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { fakeClient } from '@/features/classroom/fake-client';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { MeetingGuestPage } from './MeetingGuestPage';
 
 const fetchMock = vi.fn();

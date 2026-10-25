@@ -1,6 +1,6 @@
 import type { LineHealthView, NotificationEntryView, NotificationRuleView } from '@ab/shared';
 import { cn } from '@/lib/utils';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { ChannelsPart } from './cells/ChannelsPart';
 import { NamePart } from './cells/NamePart';
 import { NumberPart } from './cells/NumberPart';

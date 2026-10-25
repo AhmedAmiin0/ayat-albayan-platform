@@ -1,5 +1,5 @@
 import { intlLocale } from '@ab/shared';
-import { locale } from '@/lib/locale';
+import { locale } from '@/lib/i18n/locale';
 
 // Display helpers for the inbox. DB times are UTC; these render in the viewer's zone (rule 6).
 // `nu-latn` (in intlLocale): Western digits everywhere (docs/07 §2 Numerals), either language.

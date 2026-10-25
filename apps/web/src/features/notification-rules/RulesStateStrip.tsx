@@ -4,7 +4,7 @@ import { Link } from '@tanstack/react-router';
 import { StatusChip } from '@/components/ui/display/status-chip';
 import { sendGateQuery } from '@/features/messaging/api';
 import { sendingChip } from '@/features/messaging/sending-chip';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 
 const r = t.notificationRules;
 

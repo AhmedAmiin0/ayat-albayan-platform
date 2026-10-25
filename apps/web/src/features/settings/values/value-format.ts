@@ -1,6 +1,6 @@
 import { SETTING_DEFAULTS, settingDef, type SettingKey } from '@ab/shared';
 import { tzCity } from '@/components/ui/form/time-zone-select';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { countText, unitWord } from './value-units';
 
 // A value as words: the read-only cells, the default column, «المحفوظ: …», the phone button.

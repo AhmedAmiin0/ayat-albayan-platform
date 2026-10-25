@@ -1,11 +1,11 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { ApiError } from '@/lib/api';
+import { ApiError } from '@/lib/http/api';
 import { downloadCsv, exportErrorCode, exportPath, filenameFrom } from './api';
 
-vi.mock('@/lib/supabase', () => ({
+vi.mock('@/lib/http/supabase', () => ({
   supabase: { auth: { getSession: async () => ({ data: { session: { access_token: 'tok' } } }) } },
 }));
-vi.mock('@/lib/env', () => ({ env: { apiUrl: 'http://api.test' } }));
+vi.mock('@/lib/http/env', () => ({ env: { apiUrl: 'http://api.test' } }));
 
 describe('exports api (R-RPT-03)', () => {
   afterEach(() => vi.unstubAllGlobals());

@@ -2,7 +2,7 @@ import { type TemplateLineView, type TemplateView, type WaLine } from '@ab/share
 import { createColumnHelper } from '@tanstack/react-table';
 import type { DataTableFeatures } from '@/components/DataTable';
 import { fullTime } from '@/features/inbox/format';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { CrmNameButton } from './CrmNameButton';
 import { CrmStatusActions, type CrmStatusActionsProps } from './CrmStatusActions';
 import { SendFromCell, type SendFromCellProps } from './SendFromCell';

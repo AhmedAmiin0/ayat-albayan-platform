@@ -8,7 +8,7 @@ import { Input } from '@/components/ui/form/input';
 import { PageHead } from '@/components/ui/layout/page';
 import { Pager } from '@/components/ui/layout/pager';
 import { Select } from '@/components/ui/form/select';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { TranslationEditor } from './TranslationEditor';
 import { translationColumns } from './translationColumns';
 import { translationKeysQuery, type TranslationsSearch } from './translations.api';

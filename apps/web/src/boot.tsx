@@ -3,8 +3,8 @@ import { createRouter, RouterProvider } from '@tanstack/react-router';
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { bindWebPushToSession } from './features/notifications/web-push-session';
-import { t } from './lib/i18n';
-import { supabase } from './lib/supabase';
+import { t } from './lib/i18n/i18n';
+import { supabase } from './lib/http/supabase';
 import { watchSystemTheme } from './lib/theme';
 import { routeTree } from './routeTree.gen';
 

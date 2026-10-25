@@ -3,11 +3,11 @@ import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { renderWithClient } from '@/features/inbox/test-utils';
 import { lesson } from '@/features/schedule/lesson-fixture';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { MyWeek } from './MyWeek';
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@/lib/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 vi.mock('@tanstack/react-router', async (orig) => ({
   ...(await orig<object>()),
   Link: (await import('@/features/dashboard/link-mock')).Link,

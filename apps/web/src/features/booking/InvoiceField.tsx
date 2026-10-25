@@ -3,14 +3,14 @@ import { useId, useState } from 'react';
 import { Button, buttonVariants } from '@/components/ui/form/button';
 import { RequiredMark } from '@/components/ui/form/label';
 import { lessonErrorText } from '@/features/schedule/api';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { cn } from '@/lib/utils';
 import { uploadInvoiceFile } from './api.invoice';
 import { ChatMediaPicker } from './ChatMediaPicker';
 import type { InvoiceDraft } from './draft';
 import { InvoiceChosen } from './InvoiceChosen';
 import { canShow, invoiceMime, invoiceProblem } from './invoice-file';
-import { useUploadMaxBytes } from '@/lib/public-config';
+import { useUploadMaxBytes } from '@/lib/settings/public-config';
 
 export interface InvoiceFieldProps {
   value: InvoiceDraft | null;

@@ -122,7 +122,7 @@ None of today's confirmations is a **typed** confirmation; all are a dialog with
 | `google_sync_enabled` on (off is instant) | `SyncSwitches` | `LiveConfirmDialog` (names targets) when live, else plain `Dialog` | `apps/web/src/features/google-sync/SyncSwitches.tsx:23-60` |
 | `google_sync_mode` → `live` (back to dry_run instant) | `ModeControl` | `LiveConfirmDialog` | `apps/web/src/features/google-sync/ModeControl.tsx:16-46` |
 
-Shared kit: `apps/web/src/components/settings/dialogs/ConfirmSwitchDialog.tsx:23`, `apps/web/src/components/settings/fields/DangerFrame.tsx:5`, `apps/web/src/lib/use-setting-switch.ts:15` (instant PATCH /settings for a form:false key). docs/23a §C1 still says auto messages has «no confirm» — stale since docs/23 phase 2.
+Shared kit: `apps/web/src/components/settings/dialogs/ConfirmSwitchDialog.tsx:23`, `apps/web/src/components/settings/fields/DangerFrame.tsx:5`, `apps/web/src/lib/settings/use-setting-switch.ts:15` (instant PATCH /settings for a form:false key). docs/23a §C1 still says auto messages has «no confirm» — stale since docs/23 phase 2.
 
 ### 3. Google-sync rows (`GOOGLE_SETTING_KEYS`) — in `public.settings`, outside the registry
 

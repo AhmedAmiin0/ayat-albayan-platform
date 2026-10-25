@@ -1,7 +1,7 @@
 import { isChatListError, type ChatList } from '@ab/shared';
 import { queryOptions, type QueryClient } from '@tanstack/react-query';
-import { ApiError, apiFetch, apiSend } from '@/lib/api';
-import { t } from '@/lib/i18n';
+import { ApiError, apiFetch, apiSend } from '@/lib/http/api';
+import { t } from '@/lib/i18n/i18n';
 
 // «القوائم» (docs/22 §3): the academy's ONE shared set of chat lists. Lists only organise chats.
 

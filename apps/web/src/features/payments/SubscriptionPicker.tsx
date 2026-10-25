@@ -5,7 +5,7 @@ import { Select } from '@/components/ui/form/select';
 import { studentSubscriptionsQuery, type SubscriptionView } from '@/features/subscriptions/api';
 import { moneyText, packageName } from '@/features/subscriptions/format';
 import { StudentPicker, type PickedStudent } from '@/features/subscriptions/StudentPicker';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 
 type Props = {
   student: PickedStudent | null;

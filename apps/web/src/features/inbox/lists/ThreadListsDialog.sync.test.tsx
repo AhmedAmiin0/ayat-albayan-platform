@@ -7,7 +7,7 @@ import { ThreadListsDialog } from './ThreadListsDialog';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@/lib/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
+vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
 
 const PHONE = '+966501234567';
 const PAY = { id: '0c000000-0000-4000-8000-000000000001', name: 'بانتظار الدفع' };

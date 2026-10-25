@@ -3,7 +3,7 @@ import { emptyDraft, type BookingDraft } from '@/features/booking/draft';
 import type { BookHint } from '@/features/booking/hint';
 import { dateLabel } from '@/features/schedule/tz';
 import { studentLabel } from '@/features/subscriptions/format';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 
 // «أيام الحلقات» (owner 2026-10-18, R-ASST-01): the booking wizard's draft for the course of a
 // subscription she sold. Student, package, length, zone, program and teacher preference come from

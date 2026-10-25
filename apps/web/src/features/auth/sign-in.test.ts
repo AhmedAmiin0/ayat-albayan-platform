@@ -1,6 +1,6 @@
 import { QueryClient } from '@tanstack/react-query';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { signIn, signOut } from './sign-in';
 
 const auth = vi.hoisted(() => ({
@@ -11,8 +11,8 @@ const auth = vi.hoisted(() => ({
 const apiFetch = vi.hoisted(() => vi.fn());
 const reportSession = vi.hoisted(() => vi.fn());
 
-vi.mock('@/lib/supabase', () => ({ supabase: { auth } }));
-vi.mock('@/lib/api', () => ({ apiFetch }));
+vi.mock('@/lib/http/supabase', () => ({ supabase: { auth } }));
+vi.mock('@/lib/http/api', () => ({ apiFetch }));
 vi.mock('./session-activity', () => ({ reportSession }));
 
 const creds = { email: 'admin@ab.local', password: 'secret-123' };

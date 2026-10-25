@@ -1,8 +1,8 @@
 import type { ConfigEntry } from '@ab/shared';
 import { Button } from '@/components/ui/form/button';
 import { Dialog } from '@/components/ui/overlay/dialog';
-import { t } from '@/lib/i18n';
-import { locale } from '@/lib/locale';
+import { t } from '@/lib/i18n/i18n';
+import { locale } from '@/lib/i18n/locale';
 import type { DescribeTarget } from './describe-target';
 import { canEditDescription, editorStart, shownDescription, type DescribeRights } from './description';
 import { DescriptionEditor } from './DescriptionEditor';

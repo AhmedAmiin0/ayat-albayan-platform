@@ -1,6 +1,6 @@
 import { templateStatusStyle } from '@ab/shared';
 import { StatusChip } from '@/components/ui/display/status-chip';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { isPartial, type NumberApprovalRow, type NumberApprovalState } from './number-approvals';
 
 const s = t.templates.sendFrom;

@@ -3,12 +3,12 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render, screen } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { lesson, SUHAILA } from '@/features/schedule/lesson-fixture';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { LessonReportLinks } from './LessonReportLinks';
 import { PendingReports } from './PendingReports';
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@/lib/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch }));
+vi.mock('@/lib/http/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch }));
 
 const STARTED = '2026-10-03T13:00:00.000Z';
 const AYA = { ...SUHAILA, id: 's-2', name: 'آية', code: 'AB-0184' };

@@ -3,7 +3,7 @@ import { Link } from '@tanstack/react-router';
 import { useEffect, useRef } from 'react';
 import { Button, buttonVariants } from '@/components/ui/form/button';
 import { NuqtaGlyph } from '@/components/ui/display/nuqta-glyph';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { LESSONS_KEY } from './api';
 import { whenWithLength } from './edit-time-text';
 import type { TimeEditResult } from './edit-time.contract';

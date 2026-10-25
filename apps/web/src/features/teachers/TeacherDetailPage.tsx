@@ -8,7 +8,7 @@ import { PageHead } from '@/components/ui/layout/page';
 import { StatusChip } from '@/components/ui/display/status-chip';
 import { Tabs } from '@/components/ui/layout/tabs';
 import { EntityActivity } from '@/features/activity/EntityActivity';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { availabilityQuery, teacherQuery, type Teacher } from './api';
 import { AvailabilityGrid } from './AvailabilityGrid';
 import { FormAlert } from '@/components/ui/form/form-alert';
@@ -21,7 +21,7 @@ import { TeacherMeta } from './TeacherMeta';
 import { TeacherStudentsPanel } from './TeacherStudentsPanel';
 import { TimeOffList } from './TimeOffList';
 import { HeadActions } from '@/components/ui/layout/head-actions';
-import { teacherLabel } from '@/lib/teacher-label';
+import { teacherLabel } from '@/lib/i18n/teacher-label';
 
 type Tab = 'data' | 'availability' | 'students' | 'activity';
 // «المستحقات» is its own page (the earnings button in the head).

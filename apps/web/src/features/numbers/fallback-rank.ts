@@ -1,5 +1,5 @@
 import type { TemplateNumberSyncView } from '@ab/shared';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 
 // «ترتيب البديل» and the per-number template sync (docs/23c decision 9). Pure.
 

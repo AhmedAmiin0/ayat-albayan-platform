@@ -11,7 +11,7 @@ import {
   type SettingKey,
   type SettingsUpdate,
 } from '@ab/shared';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 
 // /admin/settings form ↔ PATCH /settings, generated from the settings registry. Numbers are typed
 // counts (hours, weeks, minutes), never times of day (rule 6). The switches with a confirmation

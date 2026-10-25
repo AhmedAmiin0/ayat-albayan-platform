@@ -1,8 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
 import { useId } from 'react';
 import { RadioChips } from '@/components/ui/form/radio-chips';
-import { t } from '@/lib/i18n';
-import { publicConfigQuery } from '@/lib/public-config';
+import { t } from '@/lib/i18n/i18n';
+import { publicConfigQuery } from '@/lib/settings/public-config';
 import type { Teacher } from './api';
 import { academyOptionText, effectivePlatform, fromChoice, knownAcademyAuto, toChoice, type MeetingModeChoice } from './meeting-mode-text';
 import { MeetingModeWarnings } from './MeetingModeWarnings';

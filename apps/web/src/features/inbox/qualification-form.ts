@@ -6,7 +6,7 @@ import {
   type Gender,
   type LeadQualificationPatch,
 } from '@ab/shared';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 
 // R-LEAD-03: the lead's structured qualification, captured in the thread, with the questions the
 // first registration form asked (research-forms 8–9). All optional; a field emptied by the admin

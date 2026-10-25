@@ -6,7 +6,7 @@ import { Toast } from '@/components/ui/overlay/toast';
 import { useBelowShell } from '@/components/ui/layout/use-narrow';
 import { teacherMeQuery } from '@/features/teacher/api';
 import { templatesQuery } from '@/features/templates/api';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { leadByPhoneQuery, threadQuery } from './api';
 import { ChatActionsProvider } from './ChatActionsProvider';
 import { Composer } from './Composer';

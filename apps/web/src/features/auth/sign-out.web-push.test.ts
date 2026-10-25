@@ -10,7 +10,7 @@ const auth = vi.hoisted(() => ({
     return { error: new Error('Invalid login') };
   }),
 }));
-vi.mock('@/lib/supabase', () => ({ supabase: { auth } }));
+vi.mock('@/lib/http/supabase', () => ({ supabase: { auth } }));
 vi.mock('./session-activity', () => ({ reportSession: vi.fn(async () => void order.push('report')) }));
 vi.mock('@/features/notifications/web-push', () => ({ forgetWebPush: vi.fn(async () => void order.push('forget')) }));
 

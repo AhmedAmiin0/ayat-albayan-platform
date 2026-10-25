@@ -1,6 +1,6 @@
 import type { LessonView } from '@ab/shared';
-import { t } from '@/lib/i18n';
-import { teacherLabel } from '@/lib/teacher-label';
+import { t } from '@/lib/i18n/i18n';
+import { teacherLabel } from '@/lib/i18n/teacher-label';
 import { cn } from '@/lib/utils';
 import { LessonChip } from './LessonChip';
 import { dayMonthLabel, weekdayOf } from './tz';

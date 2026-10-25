@@ -1,6 +1,6 @@
 import type { Locale, TranslationKeysPage } from '@ab/shared';
 import { keepPreviousData, queryOptions, useMutation, useQueryClient } from '@tanstack/react-query';
-import { apiFetch, apiSend } from '@/lib/api';
+import { apiFetch, apiSend } from '@/lib/http/api';
 
 export const TRANSLATIONS_PAGE_SIZE = 50;
 

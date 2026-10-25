@@ -2,14 +2,14 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render, screen, within } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { SourceField } from '@/features/guardians/SourceField';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { ByDayPicker } from './ByDayPicker';
 import { emptyDraft } from './draft';
 import { LeadStudentStep } from './LeadStudentStep';
 import { PackageStep } from './PackageStep';
 
 // استمارة تسجيل طالب جديد: the wizard's titles, options and stars are the Google Form's.
-vi.mock('@/lib/api', async (orig) => ({ ...(await orig<object>()), apiFetch: vi.fn(async () => ({ total: 0, currency: 'SAR', fx: null })) }));
+vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch: vi.fn(async () => ({ total: 0, currency: 'SAR', fx: null })) }));
 
 const wrap = (ui: React.ReactNode) => <QueryClientProvider client={new QueryClient()}>{ui}</QueryClientProvider>;
 

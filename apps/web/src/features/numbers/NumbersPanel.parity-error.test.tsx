@@ -1,12 +1,12 @@
 import { screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { renderWithClient } from '@/features/inbox/test-utils';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { NUMBERS } from './numbers.fixture';
 import { NumbersPanel } from './NumbersPanel';
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@/lib/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 vi.mock('@/features/auth/use-permissions', () => ({ usePermissions: () => ({ permissions: [], can: () => true }) }));
 
 afterEach(() => apiFetch.mockReset());

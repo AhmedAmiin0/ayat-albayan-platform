@@ -4,7 +4,7 @@ import { message } from './inbox-fixture';
 import { MessageBubble } from './MessageBubble';
 import { renderWithClient } from './test-utils';
 
-vi.mock('@/lib/api', async (orig) => ({ ...(await orig<object>()), apiFetch: vi.fn(), apiSend: vi.fn() }));
+vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch: vi.fn(), apiSend: vi.fn() }));
 
 function renderBody(body: string) {
   renderWithClient(

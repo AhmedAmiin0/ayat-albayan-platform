@@ -6,7 +6,7 @@ import { EmptyState } from '@/components/ui/display/empty-state';
 import { FormAlert } from '@/components/ui/form/form-alert';
 import { ListSkeleton } from '@/components/ui/display/skeleton';
 import { ASSISTANT_COMMISSION_STATUSES } from '@ab/shared';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { commissionsQuery, type AssistantCommissionView, type AssistantRow } from './api';
 import { commissionColumns } from './commission-columns';
 import { CurrencyList } from './CurrencyList';

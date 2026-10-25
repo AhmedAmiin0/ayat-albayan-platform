@@ -3,7 +3,7 @@ import { useState, type ReactNode } from 'react';
 import { DiscardDialog } from '@/components/settings/dialogs/DiscardDialog';
 import { Button } from '@/components/ui/form/button';
 import { Dialog } from '@/components/ui/overlay/dialog';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { ChannelsPart } from '../cells/ChannelsPart';
 import { NumberPart } from '../cells/NumberPart';
 import { StatePart } from '../cells/StatePart';

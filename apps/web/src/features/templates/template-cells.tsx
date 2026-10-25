@@ -3,7 +3,7 @@ import { useId, type ReactNode } from 'react';
 import { Button } from '@/components/ui/form/button';
 import { Ltr } from '@/components/ui/display/ltr';
 import { StatusChip } from '@/components/ui/display/status-chip';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { canSubmit } from './api';
 
 // Cells of the template health table that carry more than one value (template-columns.tsx).
