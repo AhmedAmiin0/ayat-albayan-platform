@@ -27,10 +27,6 @@
     "files": 16,
     "dirs": 0
   },
-  "apps/api/src/modules/google-sync": {
-    "files": 51,
-    "dirs": 0
-  },
   "apps/api/src/modules/inbox": {
     "files": 39,
     "dirs": 0

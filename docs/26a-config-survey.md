@@ -380,7 +380,7 @@ Tests pin these: `apps/api/src/common/integrations/secret-keys.migration.test.ts
 | `integration-config.queries.ts:52-53` | `integration_config` delete / `upsert({key, value, updated_by})` | write | null deletes (env applies again); `updated_by` may be null (import command `apps/api/src/scripts/config-import-env.ts`) |
 | `integration-config.queries.ts:59,65` | `rpc('integration_secret_set' / 'integration_secret_clear')` | write | |
 | `apps/api/src/common/activity/activity.retention.job.ts:32` | `rpc('prune_activity_log')` | job | the only "cron" touching settings |
-| `apps/api/src/modules/google-sync/google-items.queries.ts:111` | `rpc('google_sync_reconcile')` | job | reads `google_sync_on`/`window_days` |
+| `apps/api/src/modules/google-sync/sync/google-items.queries.ts:111` | `rpc('google_sync_reconcile')` | job | reads `google_sync_on`/`window_days` |
 
 Generated types: `packages/db/src/types.ts:692` (`custom_config`), `:1182` (`integration_config`), `:2878` (`settings`) under `Tables`. If one of these becomes a view, `supabase gen types` moves it under `Views` with **nullable Row columns** and `Insert`/`Update` only if auto-updatable — the typed `Db` client calls above would then fail `typecheck`.
 
@@ -391,7 +391,7 @@ Generated types: `packages/db/src/types.ts:692` (`custom_config`), `:1182` (`int
 | settings (`PATCH /settings`) | `'settings'` | `SINGLETON_ENTITY_ID` = `00000000-0000-0000-0000-000000000000` (`apps/api/src/common/audit/singleton-entity.ts:6`) | `'update'`, before/after = full value maps | `apps/api/src/common/settings/settings.controller.ts:38-44` |
 | custom-config | `'custom_config'` | singleton id | `create:<key>` / `update:<key>` / `delete:<key>` | `apps/api/src/common/custom-config/custom-config.controller.ts:35-59` |
 | integrations | `'integration_config'` | `INTEGRATIONS_ENTITY_ID` (same zero uuid, `integration-config.controller.ts:12`) | `update` / `secret_set:<KEY>` / `secret_clear:<KEY>`, after = `{keys}` (no values) | `integration-config.controller.ts:41-70` |
-| google settings | `'google_account'` | `GOOGLE_ENTITY_ID` (zero uuid) | `'settings'` | `apps/api/src/modules/google-sync/google-admin.service.ts:19,27` |
+| google settings | `'google_account'` | `GOOGLE_ENTITY_ID` (zero uuid) | `'settings'` | `apps/api/src/modules/google-sync/admin/google-admin.service.ts:19,27` |
 
 `activity_log.entity` is derived from the route pattern (`apps/api/src/common/activity/activity.route.ts:52-68`): `/settings*` → `settings`, `/config/custom/:key` and `/config/meta` → `config` (`:key` is not id-like), `/admin/google/settings` → `admin`. No DB trigger writes either log for these tables.
 
