@@ -19,16 +19,8 @@
     "files": 19,
     "dirs": 1
   },
-  "apps/mobile/src/earnings": {
-    "files": 16,
-    "dirs": 0
-  },
   "apps/mobile/src/edit-time": {
     "files": 17,
-    "dirs": 0
-  },
-  "apps/mobile/src/finance": {
-    "files": 36,
     "dirs": 0
   },
   "apps/mobile/src/inbox/lists": {
@@ -45,10 +37,6 @@
   },
   "apps/mobile/src/meetings": {
     "files": 27,
-    "dirs": 0
-  },
-  "apps/mobile/src/money": {
-    "files": 24,
     "dirs": 0
   },
   "apps/mobile/src/more": {

@@ -1,0 +1,360 @@
+{
+  "id": "c6a",
+  "seq": 82,
+  "moves": [
+    {
+      "from": "apps/mobile/src/finance/ExpenseForm*",
+      "to": "apps/mobile/src/finance/expenses/"
+    },
+    {
+      "from": "apps/mobile/src/finance/ExpenseRow*",
+      "to": "apps/mobile/src/finance/expenses/"
+    },
+    {
+      "from": "apps/mobile/src/finance/ExpenseTotals*",
+      "to": "apps/mobile/src/finance/expenses/"
+    },
+    {
+      "from": "apps/mobile/src/finance/ExpensesScreen*",
+      "to": "apps/mobile/src/finance/expenses/"
+    },
+    {
+      "from": "apps/mobile/src/finance/categories*",
+      "to": "apps/mobile/src/finance/expenses/"
+    },
+    {
+      "from": "apps/mobile/src/finance/expense-draft*",
+      "to": "apps/mobile/src/finance/expenses/"
+    },
+    {
+      "from": "apps/mobile/src/finance/expense-math*",
+      "to": "apps/mobile/src/finance/expenses/"
+    },
+    {
+      "from": "apps/mobile/src/finance/upload-expense-receipt*",
+      "to": "apps/mobile/src/finance/expenses/"
+    },
+    {
+      "from": "apps/mobile/src/finance/use-add-expense*",
+      "to": "apps/mobile/src/finance/expenses/"
+    },
+    {
+      "from": "apps/mobile/src/finance/PayoutActionBar*",
+      "to": "apps/mobile/src/finance/payouts/"
+    },
+    {
+      "from": "apps/mobile/src/finance/PayoutDetail*",
+      "to": "apps/mobile/src/finance/payouts/"
+    },
+    {
+      "from": "apps/mobile/src/finance/PayoutFacts*",
+      "to": "apps/mobile/src/finance/payouts/"
+    },
+    {
+      "from": "apps/mobile/src/finance/PayoutPayForm*",
+      "to": "apps/mobile/src/finance/payouts/"
+    },
+    {
+      "from": "apps/mobile/src/finance/PayoutRow*",
+      "to": "apps/mobile/src/finance/payouts/"
+    },
+    {
+      "from": "apps/mobile/src/finance/PayoutsScreen*",
+      "to": "apps/mobile/src/finance/payouts/"
+    },
+    {
+      "from": "apps/mobile/src/finance/UnpayConfirm*",
+      "to": "apps/mobile/src/finance/payouts/"
+    },
+    {
+      "from": "apps/mobile/src/finance/payout-actions*",
+      "to": "apps/mobile/src/finance/payouts/"
+    },
+    {
+      "from": "apps/mobile/src/finance/use-payout-move*",
+      "to": "apps/mobile/src/finance/payouts/"
+    },
+    {
+      "from": "apps/mobile/src/finance/KpiCard*",
+      "to": "apps/mobile/src/finance/summary/"
+    },
+    {
+      "from": "apps/mobile/src/finance/MonthRow*",
+      "to": "apps/mobile/src/finance/summary/"
+    },
+    {
+      "from": "apps/mobile/src/finance/SummaryCards*",
+      "to": "apps/mobile/src/finance/summary/"
+    },
+    {
+      "from": "apps/mobile/src/finance/SummaryMonths*",
+      "to": "apps/mobile/src/finance/summary/"
+    },
+    {
+      "from": "apps/mobile/src/finance/SummaryScreen*",
+      "to": "apps/mobile/src/finance/summary/"
+    },
+    {
+      "from": "apps/mobile/src/finance/summary-cards*",
+      "to": "apps/mobile/src/finance/summary/"
+    },
+    {
+      "from": "apps/mobile/src/finance/summary-lines*",
+      "to": "apps/mobile/src/finance/summary/"
+    },
+    {
+      "from": "apps/mobile/src/finance/summary-types*",
+      "to": "apps/mobile/src/finance/summary/"
+    },
+    {
+      "from": "apps/mobile/src/finance/InvoicesScreen*",
+      "to": "apps/mobile/src/finance/invoices/"
+    },
+    {
+      "from": "apps/mobile/src/finance/invoice-text*",
+      "to": "apps/mobile/src/finance/invoices/"
+    },
+    {
+      "from": "apps/mobile/src/finance/MonthPicker*",
+      "to": "apps/mobile/src/finance/shared/"
+    },
+    {
+      "from": "apps/mobile/src/finance/StateNote*",
+      "to": "apps/mobile/src/finance/shared/"
+    },
+    {
+      "from": "apps/mobile/src/finance/errors*",
+      "to": "apps/mobile/src/finance/shared/"
+    },
+    {
+      "from": "apps/mobile/src/finance/fixtures*",
+      "to": "apps/mobile/src/finance/shared/"
+    },
+    {
+      "from": "apps/mobile/src/finance/format*",
+      "to": "apps/mobile/src/finance/shared/"
+    },
+    {
+      "from": "apps/mobile/src/finance/month*",
+      "to": "apps/mobile/src/finance/shared/"
+    },
+    {
+      "from": "apps/mobile/src/finance/queries*",
+      "to": "apps/mobile/src/finance/shared/"
+    },
+    {
+      "from": "apps/mobile/src/finance/receipt-link*",
+      "to": "apps/mobile/src/finance/shared/"
+    }
+  ],
+  "files": [
+    [
+      "apps/mobile/src/finance/categories.test.ts",
+      "apps/mobile/src/finance/expenses/categories.test.ts"
+    ],
+    [
+      "apps/mobile/src/finance/categories.ts",
+      "apps/mobile/src/finance/expenses/categories.ts"
+    ],
+    [
+      "apps/mobile/src/finance/errors.test.ts",
+      "apps/mobile/src/finance/shared/errors.test.ts"
+    ],
+    [
+      "apps/mobile/src/finance/errors.ts",
+      "apps/mobile/src/finance/shared/errors.ts"
+    ],
+    [
+      "apps/mobile/src/finance/expense-draft.test.ts",
+      "apps/mobile/src/finance/expenses/expense-draft.test.ts"
+    ],
+    [
+      "apps/mobile/src/finance/expense-draft.ts",
+      "apps/mobile/src/finance/expenses/expense-draft.ts"
+    ],
+    [
+      "apps/mobile/src/finance/expense-math.test.ts",
+      "apps/mobile/src/finance/expenses/expense-math.test.ts"
+    ],
+    [
+      "apps/mobile/src/finance/expense-math.ts",
+      "apps/mobile/src/finance/expenses/expense-math.ts"
+    ],
+    [
+      "apps/mobile/src/finance/ExpenseForm.tsx",
+      "apps/mobile/src/finance/expenses/ExpenseForm.tsx"
+    ],
+    [
+      "apps/mobile/src/finance/ExpenseRow.tsx",
+      "apps/mobile/src/finance/expenses/ExpenseRow.tsx"
+    ],
+    [
+      "apps/mobile/src/finance/ExpensesScreen.test.tsx",
+      "apps/mobile/src/finance/expenses/ExpensesScreen.test.tsx"
+    ],
+    [
+      "apps/mobile/src/finance/ExpensesScreen.tsx",
+      "apps/mobile/src/finance/expenses/ExpensesScreen.tsx"
+    ],
+    [
+      "apps/mobile/src/finance/ExpenseTotals.tsx",
+      "apps/mobile/src/finance/expenses/ExpenseTotals.tsx"
+    ],
+    [
+      "apps/mobile/src/finance/fixtures.ts",
+      "apps/mobile/src/finance/shared/fixtures.ts"
+    ],
+    [
+      "apps/mobile/src/finance/format.test.ts",
+      "apps/mobile/src/finance/shared/format.test.ts"
+    ],
+    [
+      "apps/mobile/src/finance/format.ts",
+      "apps/mobile/src/finance/shared/format.ts"
+    ],
+    [
+      "apps/mobile/src/finance/invoice-text.test.ts",
+      "apps/mobile/src/finance/invoices/invoice-text.test.ts"
+    ],
+    [
+      "apps/mobile/src/finance/invoice-text.ts",
+      "apps/mobile/src/finance/invoices/invoice-text.ts"
+    ],
+    [
+      "apps/mobile/src/finance/InvoicesScreen.test.tsx",
+      "apps/mobile/src/finance/invoices/InvoicesScreen.test.tsx"
+    ],
+    [
+      "apps/mobile/src/finance/InvoicesScreen.tsx",
+      "apps/mobile/src/finance/invoices/InvoicesScreen.tsx"
+    ],
+    [
+      "apps/mobile/src/finance/KpiCard.tsx",
+      "apps/mobile/src/finance/summary/KpiCard.tsx"
+    ],
+    [
+      "apps/mobile/src/finance/month.test.ts",
+      "apps/mobile/src/finance/shared/month.test.ts"
+    ],
+    [
+      "apps/mobile/src/finance/month.ts",
+      "apps/mobile/src/finance/shared/month.ts"
+    ],
+    [
+      "apps/mobile/src/finance/MonthPicker.tsx",
+      "apps/mobile/src/finance/shared/MonthPicker.tsx"
+    ],
+    [
+      "apps/mobile/src/finance/MonthRow.tsx",
+      "apps/mobile/src/finance/summary/MonthRow.tsx"
+    ],
+    [
+      "apps/mobile/src/finance/payout-actions.test.ts",
+      "apps/mobile/src/finance/payouts/payout-actions.test.ts"
+    ],
+    [
+      "apps/mobile/src/finance/payout-actions.ts",
+      "apps/mobile/src/finance/payouts/payout-actions.ts"
+    ],
+    [
+      "apps/mobile/src/finance/PayoutActionBar.tsx",
+      "apps/mobile/src/finance/payouts/PayoutActionBar.tsx"
+    ],
+    [
+      "apps/mobile/src/finance/PayoutDetail.tsx",
+      "apps/mobile/src/finance/payouts/PayoutDetail.tsx"
+    ],
+    [
+      "apps/mobile/src/finance/PayoutFacts.tsx",
+      "apps/mobile/src/finance/payouts/PayoutFacts.tsx"
+    ],
+    [
+      "apps/mobile/src/finance/PayoutPayForm.tsx",
+      "apps/mobile/src/finance/payouts/PayoutPayForm.tsx"
+    ],
+    [
+      "apps/mobile/src/finance/PayoutRow.tsx",
+      "apps/mobile/src/finance/payouts/PayoutRow.tsx"
+    ],
+    [
+      "apps/mobile/src/finance/PayoutsScreen.pay.test.tsx",
+      "apps/mobile/src/finance/payouts/PayoutsScreen.pay.test.tsx"
+    ],
+    [
+      "apps/mobile/src/finance/PayoutsScreen.test.tsx",
+      "apps/mobile/src/finance/payouts/PayoutsScreen.test.tsx"
+    ],
+    [
+      "apps/mobile/src/finance/PayoutsScreen.tsx",
+      "apps/mobile/src/finance/payouts/PayoutsScreen.tsx"
+    ],
+    [
+      "apps/mobile/src/finance/queries.ts",
+      "apps/mobile/src/finance/shared/queries.ts"
+    ],
+    [
+      "apps/mobile/src/finance/receipt-link.ts",
+      "apps/mobile/src/finance/shared/receipt-link.ts"
+    ],
+    [
+      "apps/mobile/src/finance/StateNote.tsx",
+      "apps/mobile/src/finance/shared/StateNote.tsx"
+    ],
+    [
+      "apps/mobile/src/finance/summary-cards.test.ts",
+      "apps/mobile/src/finance/summary/summary-cards.test.ts"
+    ],
+    [
+      "apps/mobile/src/finance/summary-cards.ts",
+      "apps/mobile/src/finance/summary/summary-cards.ts"
+    ],
+    [
+      "apps/mobile/src/finance/summary-lines.test.ts",
+      "apps/mobile/src/finance/summary/summary-lines.test.ts"
+    ],
+    [
+      "apps/mobile/src/finance/summary-lines.ts",
+      "apps/mobile/src/finance/summary/summary-lines.ts"
+    ],
+    [
+      "apps/mobile/src/finance/summary-types.ts",
+      "apps/mobile/src/finance/summary/summary-types.ts"
+    ],
+    [
+      "apps/mobile/src/finance/SummaryCards.tsx",
+      "apps/mobile/src/finance/summary/SummaryCards.tsx"
+    ],
+    [
+      "apps/mobile/src/finance/SummaryMonths.tsx",
+      "apps/mobile/src/finance/summary/SummaryMonths.tsx"
+    ],
+    [
+      "apps/mobile/src/finance/SummaryScreen.test.tsx",
+      "apps/mobile/src/finance/summary/SummaryScreen.test.tsx"
+    ],
+    [
+      "apps/mobile/src/finance/SummaryScreen.tsx",
+      "apps/mobile/src/finance/summary/SummaryScreen.tsx"
+    ],
+    [
+      "apps/mobile/src/finance/UnpayConfirm.tsx",
+      "apps/mobile/src/finance/payouts/UnpayConfirm.tsx"
+    ],
+    [
+      "apps/mobile/src/finance/upload-expense-receipt.ts",
+      "apps/mobile/src/finance/expenses/upload-expense-receipt.ts"
+    ],
+    [
+      "apps/mobile/src/finance/use-add-expense.ts",
+      "apps/mobile/src/finance/expenses/use-add-expense.ts"
+    ],
+    [
+      "apps/mobile/src/finance/use-payout-move.test.ts",
+      "apps/mobile/src/finance/payouts/use-payout-move.test.ts"
+    ],
+    [
+      "apps/mobile/src/finance/use-payout-move.ts",
+      "apps/mobile/src/finance/payouts/use-payout-move.ts"
+    ]
+  ]
+}
