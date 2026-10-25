@@ -4,6 +4,7 @@ import { t } from '@/lib/i18n';
 import { Button } from '@/ui/Button';
 import { InlineConfirm } from '@/ui/InlineConfirm';
 import { ErrorLine } from '../ErrorLine';
+import { AutoListNote } from './AutoListNote';
 import { listErrorText } from './list-errors';
 import { ListNameForm } from './ListNameForm';
 import { ListSheet } from './ListSheet';
@@ -34,6 +35,7 @@ export function EditListSheet({ list, onClose }: EditListSheetProps) {
   const confirm = t.inbox.lists.deleteConfirm.replace('{name}', list.name);
   return (
     <ListSheet open title={t.inbox.lists.editNamed.replace('{name}', list.name)} onClose={close}>
+      {list.auto_rule ? <AutoListNote rule={list.auto_rule} /> : null}
       <ListNameForm
         key={list.id}
         initial={list.name}
@@ -44,7 +46,7 @@ export function EditListSheet({ list, onClose }: EditListSheetProps) {
       />
       {confirming ? (
         <InlineConfirm
-          message={`${confirm} ${t.inbox.lists.deleteNote}`}
+          message={[confirm, t.inbox.lists.deleteNote, list.auto_rule ? t.inbox.lists.autoDeleteNote : ''].filter(Boolean).join(' ')}
           confirmLabel={t.inbox.lists.deleteYes}
           onConfirm={() => remove.mutate(list.id, { onSuccess: close })}
           onCancel={() => setConfirming(false)}

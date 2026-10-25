@@ -14,7 +14,7 @@ jest.mock('@/lib/api', () => ({
 }));
 jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
 
-const NEW = { id: 'l-new', name: 'متابعة', count: 0 };
+const NEW = { id: 'l-new', name: 'متابعة', count: 0, auto_rule: null };
 let mockLists = [PAID];
 const createButton = () => screen.getByRole('button', { name: t.inbox.lists.create });
 

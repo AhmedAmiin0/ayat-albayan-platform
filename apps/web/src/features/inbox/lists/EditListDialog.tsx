@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Dialog } from '@/components/ui/dialog';
 import { t } from '@/lib/i18n';
 import { listErrorText, refreshLists, renameList } from './api';
+import { AutoListNote } from './AutoListNote';
 import { DeleteListDialog } from './DeleteListDialog';
 import { ListNameForm } from './ListNameForm';
 
@@ -48,6 +49,7 @@ export function EditListDialog({ list, onClose, onDeleted }: EditListDialogProps
   );
   return (
     <Dialog layout="center" title={L.edit} description={list.name} onClose={onClose} actions={actions}>
+      {list.auto_rule && <AutoListNote rule={list.auto_rule} className="mb-3" />}
       <ListNameForm
         id={formId}
         initial={list.name}

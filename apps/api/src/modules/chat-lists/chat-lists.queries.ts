@@ -1,4 +1,4 @@
-import type { ChatList, ChatListRef } from '@ab/shared';
+import { type ChatList, type ChatListRef, isChatListAutoRule } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import type { PostgrestError } from '@supabase/supabase-js';
 import { DB, type Db } from '../../common/db/db.module';
@@ -11,9 +11,9 @@ export interface ListName {
   name_key: string;
 }
 
-type CountedRow = { id: string; name: string; members: { count: number }[] };
+type CountedRow = { id: string; name: string; auto_rule: string | null; members: { count: number }[] };
 
-const COUNTED = 'id, name, members:chat_list_threads(count)' as const;
+const COUNTED = 'id, name, auto_rule, members:chat_list_threads(count)' as const;
 
 function check(error: PostgrestError | null, what: string): void {
   if (error) throw new Error(`${what} failed: ${error.message}`);
@@ -25,7 +25,13 @@ function clashOf(error: PostgrestError | null): ListClash | null {
   return null;
 }
 
-const counted = (r: CountedRow): ChatList => ({ id: r.id, name: r.name, count: r.members[0]?.count ?? 0 });
+/** `auto_rule` (migration 20261025000710): an unknown value reads as a hand-kept list. */
+const counted = (r: CountedRow): ChatList => ({
+  id: r.id,
+  name: r.name,
+  count: r.members[0]?.count ?? 0,
+  auto_rule: isChatListAutoRule(r.auto_rule) ? r.auto_rule : null,
+});
 
 /** chat_lists / chat_list_threads (migration 20261020000520), service role only (docs/22 §1). */
 @Injectable()
@@ -57,7 +63,7 @@ export class ChatListsQueries {
     if (clash) return clash;
     check(error, 'chat list create');
     if (!data) throw new Error('chat list create returned no row');
-    return { ...data, count: 0 };
+    return { ...data, count: 0, auto_rule: null };
   }
 
   /** null = no such list. */
