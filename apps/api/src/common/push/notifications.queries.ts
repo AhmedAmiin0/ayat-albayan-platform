@@ -1,5 +1,5 @@
 import type { NotificationItem, NotificationsPage, NotificationsQuery } from '@ab/shared';
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { dbError } from '../../modules/teachers/http';
 import { DB, type Db } from '../db/db.module';
 import { notificationItem } from './notifications.mapper';
@@ -71,6 +71,8 @@ export class NotificationsQueries {
     const { error } = await this.db
       .from('web_push_subscriptions')
       .upsert(row, { onConflict: 'endpoint' });
+    // foreign_key_violation: the session just ended. 401 like PUT /me/push-tokens, nothing bound.
+    if (error?.code === '23503') throw new UnauthorizedException('no_session');
     if (error) throw dbError(error);
     const extra = await this.db
       .from('web_push_subscriptions')
