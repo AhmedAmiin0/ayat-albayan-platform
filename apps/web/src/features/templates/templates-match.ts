@@ -1,4 +1,4 @@
-import { matchesText } from '@/components/settings/settings-search';
+import { matchesText } from '@/components/settings/search/settings-search';
 import { t } from '@/lib/i18n';
 
 /** Does the search match the template section's own text (its title, intro, «القوالب حسب الرقم»)? */

@@ -1,7 +1,7 @@
 import { isIntegrationSecretKey, type IntegrationConfigItem } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
-import { SettingRow } from '@/components/settings/SettingRow';
+import { SettingRow } from '@/components/settings/fields/SettingRow';
 import { Button } from '@/components/ui/form/button';
 import { Dialog } from '@/components/ui/overlay/dialog';
 import { FormAlert } from '@/components/ui/form/form-alert';

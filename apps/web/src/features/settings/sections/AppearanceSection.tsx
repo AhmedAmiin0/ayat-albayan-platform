@@ -1,5 +1,5 @@
 import { Section } from '@/components/settings/Section';
-import { matchesText } from '@/components/settings/settings-search';
+import { matchesText } from '@/components/settings/search/settings-search';
 import { useSettingsView } from '@/components/settings/settings-view';
 import { ThemeToggle } from '@/components/ui/layout/theme-toggle';
 import { t } from '@/lib/i18n';

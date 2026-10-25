@@ -1,7 +1,7 @@
 import { isEditableValueKey, VALUE_CONFIRM, type SettingKey } from '@ab/shared';
 import { useEffect, useState } from 'react';
-import { DiscardDialog } from '@/components/settings/DiscardDialog';
-import { settingText } from '@/components/settings/setting-text';
+import { DiscardDialog } from '@/components/settings/dialogs/DiscardDialog';
+import { settingText } from '@/components/settings/search/setting-text';
 import { Button } from '@/components/ui/form/button';
 import { Dialog } from '@/components/ui/overlay/dialog';
 import { t } from '@/lib/i18n';

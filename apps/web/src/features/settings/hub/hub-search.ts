@@ -1,6 +1,6 @@
 import { OWNED_VALUE_GROUPS, SETTING_KEYS, VALUE_GROUPS, type SettingKey } from '@ab/shared';
-import { matchesSetting, matchesText } from '@/components/settings/settings-search';
-import { settingText } from '@/components/settings/setting-text';
+import { matchesSetting, matchesText } from '@/components/settings/search/settings-search';
+import { settingText } from '@/components/settings/search/setting-text';
 import { groupsMatch, INTEGRATIONS_PAGE_GROUPS, LEGACY_LINE_GROUPS, SAFETY_GROUPS } from '@/features/integrations/integration-places';
 import { linesMatch } from '@/features/messaging/lines-match';
 import { catalogueMatch } from '@/features/notification-catalogue/catalogue-match';

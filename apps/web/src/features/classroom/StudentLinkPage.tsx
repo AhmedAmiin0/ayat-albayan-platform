@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { LanguageSwitch } from '@/components/shell/LanguageSwitch';
+import { LanguageSwitch } from '@/components/shell/account/LanguageSwitch';
 import { Cartouche } from '@/components/ui/display/cartouche';
 import { FormAlert } from '@/components/ui/form/form-alert';
 import { Logo } from '@/components/ui/display/mark';

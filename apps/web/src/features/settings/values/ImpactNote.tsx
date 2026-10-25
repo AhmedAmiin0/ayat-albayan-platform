@@ -1,5 +1,5 @@
 import { VALUE_CONFIRM, type SettingKey } from '@ab/shared';
-import { settingText } from '@/components/settings/setting-text';
+import { settingText } from '@/components/settings/search/setting-text';
 import { t } from '@/lib/i18n';
 import { Tag } from './cells/NameCell';
 

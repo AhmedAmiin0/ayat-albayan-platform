@@ -1,5 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router';
-import { AssistantShell } from '@/components/shell/SectionShells';
+import { AssistantShell } from '@/components/shell/nav/SectionShells';
 import { requireRole } from '@/features/auth/me';
 
 /** /assistant: a teaching assistant's own page (no nav: one list). */

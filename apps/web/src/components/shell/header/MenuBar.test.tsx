@@ -2,7 +2,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen, within } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n';
-import { AdminNav } from '../AdminNav';
+import { AdminNav } from '../../AdminNav';
 import { MenuBar } from './MenuBar';
 
 const path = vi.hoisted(() => ({ current: '/admin/students' }));

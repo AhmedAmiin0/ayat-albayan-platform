@@ -1,7 +1,7 @@
 import { counted, westernDigits, type SettingKey } from '@ab/shared';
 import { useId, useState } from 'react';
-import { ConfirmSwitchDialog } from '@/components/settings/ConfirmSwitchDialog';
-import { settingText } from '@/components/settings/setting-text';
+import { ConfirmSwitchDialog } from '@/components/settings/dialogs/ConfirmSwitchDialog';
+import { settingText } from '@/components/settings/search/setting-text';
 import { Button } from '@/components/ui/form/button';
 import { Dialog } from '@/components/ui/overlay/dialog';
 import { Input } from '@/components/ui/form/input';

@@ -8,7 +8,7 @@ Owner 2026-10-19: «for the assistant the chat is not good … in the web». Aud
 
 ### W1 (major) The inbox fits the window: about 150px less chrome, no 1180px width cap, and the page itself stops scrolling — ✅ done
 
-Files: `apps/web/src/components/shell/FixedTopBarLayout.tsx`, `apps/web/src/components/shell/TopBarLayout.tsx`, `apps/web/src/components/ui/layout/running-head.tsx`, `apps/web/src/components/shell/inbox-route.ts`, `apps/web/src/features/inbox/InboxPage.tsx`, `apps/web/src/features/inbox/NewChatForm.tsx`, `apps/web/src/features/inbox/ThreadList.tsx`, `apps/web/src/features/sales/SalesLiveStrip.tsx`, `apps/web/src/routes/sales/inbox.tsx`, `apps/web/src/components/shell/inbox-route.test.ts`
+Files: `apps/web/src/components/shell/layout/FixedTopBarLayout.tsx`, `apps/web/src/components/shell/layout/TopBarLayout.tsx`, `apps/web/src/components/ui/layout/running-head.tsx`, `apps/web/src/components/shell/layout/inbox-route.ts`, `apps/web/src/features/inbox/InboxPage.tsx`, `apps/web/src/features/inbox/NewChatForm.tsx`, `apps/web/src/features/inbox/ThreadList.tsx`, `apps/web/src/features/sales/SalesLiveStrip.tsx`, `apps/web/src/routes/sales/inbox.tsx`, `apps/web/src/components/shell/layout/inbox-route.test.ts`
 
 Scope: FixedTopBarLayout serves both sales and teacher, so the /sales/inbox and /teacher/inbox shells change. The admin shell (AdminLayout.tsx:72) stays as it is: do not edit the shared INBOX_PAGE. Add a new constant for the top-bar layout instead.
 
@@ -129,7 +129,7 @@ All strings MSA, with en parity. The real fix (an enabled template) is the templ
 
 ### W8 (major) Unread count on «المحادثات» and in the tab title, still updating while the tab is in the background — ✅ done
 
-Files: `apps/web/src/features/sales/use-sales-unread.ts`, `apps/web/src/components/shell/SectionShells.tsx`, `apps/web/src/features/sales/SalesNav.tsx`, `apps/web/src/components/shell/SectionLinks.tsx`
+Files: `apps/web/src/features/sales/use-sales-unread.ts`, `apps/web/src/components/shell/nav/SectionShells.tsx`, `apps/web/src/features/sales/SalesNav.tsx`, `apps/web/src/components/shell/nav/SectionLinks.tsx`
 
 (1) New use-sales-unread.ts.
 - useQuery with queryKey ['threads','nav-count','unread'], under ['threads'] so ThreadPane's existing invalidation refreshes it.

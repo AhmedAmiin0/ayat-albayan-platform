@@ -1,5 +1,5 @@
 import { createFileRoute, redirect } from '@tanstack/react-router';
-import { AdminShell } from '@/components/shell/SectionShells';
+import { AdminShell } from '@/components/shell/nav/SectionShells';
 import { adminRedirect } from '@/features/auth/admin-access';
 import { requireRole } from '@/features/auth/me';
 

@@ -1,5 +1,5 @@
 import type { AcademySettings } from '@ab/shared';
-import { DangerFrame } from '@/components/settings/DangerFrame';
+import { DangerFrame } from '@/components/settings/fields/DangerFrame';
 import { AutoMessagesSwitch } from '@/features/messaging/AutoMessagesSwitch';
 import { MessagingSwitch } from '@/features/messaging/MessagingSwitch';
 import { t } from '@/lib/i18n';

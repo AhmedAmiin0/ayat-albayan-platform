@@ -1,4 +1,4 @@
-import { SwitchTrack, switchInputClass } from '@/components/settings/SwitchTrack';
+import { SwitchTrack, switchInputClass } from '@/components/settings/fields/SwitchTrack';
 import { t } from '@/lib/i18n';
 
 /** «مفعّل» / «مغلق» (the settings pages' state words). */

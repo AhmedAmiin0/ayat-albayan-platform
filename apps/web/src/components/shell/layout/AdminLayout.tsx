@@ -7,11 +7,11 @@ import { meQuery } from '@/features/auth/me';
 import { NotificationBell } from '@/features/notifications/NotificationBell';
 import { t } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
-import { Crumbs } from './Crumbs';
+import { Crumbs } from '../nav/Crumbs';
 import { INBOX_PAGE, isInboxPath } from './inbox-route';
-import { MenuBar } from './MenuBar';
+import { MenuBar } from '../header/MenuBar';
 import { PageFrame } from './PageFrame';
-import { SideFoot } from './SideFoot';
+import { SideFoot } from '../account/SideFoot';
 
 export interface AdminLayoutProps {
   nav: ReactNode;

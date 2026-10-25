@@ -1,5 +1,5 @@
 import type { SettingKey } from '@ab/shared';
-import { settingText } from '@/components/settings/setting-text';
+import { settingText } from '@/components/settings/search/setting-text';
 import { Button } from '@/components/ui/form/button';
 import { t } from '@/lib/i18n';
 import { defaultForm, isModified, rowForm } from '../../registry-form/row-form';

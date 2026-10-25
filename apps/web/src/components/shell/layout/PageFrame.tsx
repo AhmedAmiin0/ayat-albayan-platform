@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import { Page } from '@/components/ui/layout/page';
 import { cn } from '@/lib/utils';
-import { useRailBox } from '../use-rail-box';
+import { useRailBox } from '../../use-rail-box';
 
 // The page's own scroll area: the cartouche row stays pinned and a table keeps its header in view.
 // A flex column, so a screen can hand the rest of the height to one box (`flex-1 min-h-0`: the

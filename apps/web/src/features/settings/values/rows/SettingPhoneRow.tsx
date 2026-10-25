@@ -1,5 +1,5 @@
 import { VALUE_CONFIRM, type SettingKey } from '@ab/shared';
-import { settingText } from '@/components/settings/setting-text';
+import { settingText } from '@/components/settings/search/setting-text';
 import { Icon } from '@/components/ui/display/icon';
 import { t } from '@/lib/i18n';
 import { rowValue } from '../../registry-form/row-form';

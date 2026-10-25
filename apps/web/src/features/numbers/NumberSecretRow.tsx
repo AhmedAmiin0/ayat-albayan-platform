@@ -1,7 +1,7 @@
 import type { NumberSecretName, NumberView } from '@ab/shared';
 import { useState } from 'react';
-import { ConfirmSwitchDialog } from '@/components/settings/ConfirmSwitchDialog';
-import { SettingRow } from '@/components/settings/SettingRow';
+import { ConfirmSwitchDialog } from '@/components/settings/dialogs/ConfirmSwitchDialog';
+import { SettingRow } from '@/components/settings/fields/SettingRow';
 import { Button } from '@/components/ui/form/button';
 import { FormAlert } from '@/components/ui/form/form-alert';
 import { Input } from '@/components/ui/form/input';

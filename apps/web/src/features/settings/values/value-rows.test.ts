@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { settingText } from '@/components/settings/setting-text';
+import { settingText } from '@/components/settings/search/setting-text';
 import { t } from '@/lib/i18n';
 import { SETTINGS } from '@/test/settings-fixture';
 import { allRows, groupRows, rowKey, rowMatches, rowWords, valueCounts, type ValueRow } from './value-rows';

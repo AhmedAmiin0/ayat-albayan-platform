@@ -1,6 +1,6 @@
 import type { NotificationEntryView } from '@ab/shared';
 import { useState } from 'react';
-import { ConfirmSwitchDialog } from '@/components/settings/ConfirmSwitchDialog';
+import { ConfirmSwitchDialog } from '@/components/settings/dialogs/ConfirmSwitchDialog';
 import { t } from '@/lib/i18n';
 import { failureText, fillText, isFamilyFacing, reachText } from '../rule-text';
 import { useRules } from '../rules-context';
