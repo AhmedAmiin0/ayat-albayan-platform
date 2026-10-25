@@ -1,8 +1,8 @@
 import { type AcademySettings, GATE_CONFIRM_TEXT, type GateSwitch } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { apiSend } from '@/lib/api';
-import { CONFIG_QUERY_KEYS } from '@/lib/query-keys';
-import type { SettingSwitchOptions } from '@/lib/use-setting-switch';
+import { apiSend } from '@/lib/http/api';
+import { CONFIG_QUERY_KEYS } from '@/lib/settings/query-keys';
+import type { SettingSwitchOptions } from '@/lib/settings/use-setting-switch';
 
 /** One change to the messaging gate: the sending switch, automatic messages, or the CRM cut-over tick. */
 export type GateChange = { sending: boolean } | { auto: boolean } | { cutover: boolean };

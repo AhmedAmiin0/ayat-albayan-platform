@@ -1,4 +1,4 @@
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { AllStudents } from './AllStudents';
 import { MyStudents } from './MyStudents';
 import { RegistrationCheckButton } from './RegistrationCheckButton';

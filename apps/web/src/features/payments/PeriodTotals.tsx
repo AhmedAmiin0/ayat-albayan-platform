@@ -1,5 +1,5 @@
 import { Amount } from '@/features/subscriptions/Amount';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import type { PeriodTotal } from './api';
 
 /** The filter's totals per currency: net (payments − refunds), and the refunds when there are any. */

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { ApiError } from '@/lib/api';
+import { ApiError } from '@/lib/http/api';
 import { publicProblem, toFormView } from './api';
 
 describe('public feedback contract', () => {

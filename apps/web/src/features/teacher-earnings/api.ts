@@ -9,9 +9,9 @@ import type {
 } from '@ab/shared';
 import { keepPreviousData, queryOptions } from '@tanstack/react-query';
 import { MONEY_KEY, type Page } from '@/features/subscriptions/api';
-import { apiFetch, apiSend } from '@/lib/api';
-import { sortFilterParams, type FilterSearch, type SortSearch } from '@/lib/list-search';
-import { supabase } from '@/lib/supabase';
+import { apiFetch, apiSend } from '@/lib/http/api';
+import { sortFilterParams, type FilterSearch, type SortSearch } from '@/lib/list/list-search';
+import { supabase } from '@/lib/http/supabase';
 
 // apps/api/src/modules/teacher-earnings (docs/11 §10). Teacher money is EGP.
 export type { TeacherEarningsBalanceView, TeacherEarningView, TeacherPaymentView } from '@ab/shared';

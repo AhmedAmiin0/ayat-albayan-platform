@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { kickScope, lessonIdOfRoom, meetingIdOfRoom, recordingSourceOf, recordingsQuery, removeParticipant } from './moderation-api';
 
 const api = vi.hoisted(() => ({ fetch: vi.fn(), send: vi.fn() }));
-vi.mock('@/lib/api', () => ({ apiFetch: api.fetch, apiSend: api.send }));
+vi.mock('@/lib/http/api', () => ({ apiFetch: api.fetch, apiSend: api.send }));
 
 describe('moderation api', () => {
   beforeEach(() => {

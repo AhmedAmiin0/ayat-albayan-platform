@@ -1,6 +1,6 @@
 import { IconButton } from '@/components/ui/form/icon-button';
 import { Icon } from '@/components/ui/display/icon';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import type { PickedInvitee } from './invitee-list';
 
 interface Props {

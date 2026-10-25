@@ -2,8 +2,8 @@ import type { Permission } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { useEffect } from 'react';
 import { INBOX_REFRESH_MS } from '@/features/inbox/api';
-import { ApiError, apiFetch } from '@/lib/api';
-import { t } from '@/lib/i18n';
+import { ApiError, apiFetch } from '@/lib/http/api';
+import { t } from '@/lib/i18n/i18n';
 
 type Total = { total: number };
 

@@ -2,7 +2,7 @@ import type { AcademySettings } from '@ab/shared';
 import { DangerFrame } from '@/components/settings/fields/DangerFrame';
 import { KAPSO_GROUPS, SAFETY_GUARD_GROUPS, WACRM_GROUPS } from '@/features/integrations/integration-places';
 import { IntegrationsPanel } from '@/features/integrations/IntegrationsPanel';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { CrmCutoverCard } from './CrmCutoverCard';
 
 /**

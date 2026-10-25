@@ -9,7 +9,7 @@ import { Select } from '@/components/ui/form/select';
 import { lessonErrorText, LESSONS_KEY } from '@/features/schedule/api';
 import { zonedParts, zonedToUtc } from '@/features/schedule/tz';
 import { timeOptions } from '@/features/teachers/grid';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { proposeLesson } from './api';
 
 export interface ProposeFormProps {

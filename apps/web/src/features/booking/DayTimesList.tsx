@@ -2,7 +2,7 @@ import { Icon } from '@/components/ui/display/icon';
 import { IconButton } from '@/components/ui/form/icon-button';
 import { tzCity } from '@/components/ui/form/time-zone-select';
 import { RIYADH_TZ } from '@/features/schedule/tz';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import type { DayPick } from './draft.days';
 
 export interface DayTimesListProps {

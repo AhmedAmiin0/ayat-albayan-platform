@@ -4,7 +4,7 @@ import { SETTINGS } from '@/test/settings-fixture';
 import { settingsForm, settingsUpdate } from './settings-form';
 
 // The UI in English: follow-up hours show as «24, 72» and still save as [24, 72].
-vi.mock('@/lib/i18n', async (orig) => ({ ...(await orig<object>()), t: en }));
+vi.mock('@/lib/i18n/i18n', async (orig) => ({ ...(await orig<object>()), t: en }));
 
 describe('settings form in English', () => {
   it('shows follow-up hours with the English list joiner and reads them back', () => {

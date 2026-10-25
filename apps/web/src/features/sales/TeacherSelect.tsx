@@ -1,7 +1,7 @@
 import type { SalesTeacherView } from '@ab/shared';
 import { Select } from '@/components/ui/form/select';
-import { t } from '@/lib/i18n';
-import { teacherLabel } from '@/lib/teacher-label';
+import { t } from '@/lib/i18n/i18n';
+import { teacherLabel } from '@/lib/i18n/teacher-label';
 
 export interface TeacherSelectProps {
   teachers: readonly SalesTeacherView[];

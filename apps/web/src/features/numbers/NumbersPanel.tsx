@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { Section } from '@/components/settings/Section';
 import { Button } from '@/components/ui/form/button';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { usePermissions } from '../auth/use-permissions';
 import { ImportButton } from './ImportButton';
 import { NumberFormDialog } from './NumberFormDialog';

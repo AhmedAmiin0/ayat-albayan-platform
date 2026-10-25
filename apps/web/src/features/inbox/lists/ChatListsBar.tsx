@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { chatListsQuery } from './api';
 import { AutoListNote } from './AutoListNote';
 import { ChatListChips } from './ChatListChips';

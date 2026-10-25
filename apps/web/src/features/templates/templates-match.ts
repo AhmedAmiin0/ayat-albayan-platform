@@ -1,5 +1,5 @@
 import { matchesText } from '@/components/settings/search/settings-search';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 
 /** Does the search match the template section's own text (its title, intro, «القوالب حسب الرقم»)? */
 export const templatesMatch = (query: string): boolean => {

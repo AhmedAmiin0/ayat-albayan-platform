@@ -4,7 +4,7 @@ import { Icon } from '@/components/ui/display/icon';
 import { iconButtonClass } from '@/components/ui/form/icon-button';
 import { useDismiss } from '@/components/ui/overlay/use-dismiss';
 import { usePermissions } from '@/features/auth/use-permissions';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { cn } from '@/lib/utils';
 import { notificationsQuery } from './api';
 import { NotificationPanel } from './NotificationPanel';

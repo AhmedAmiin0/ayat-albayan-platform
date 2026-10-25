@@ -1,6 +1,6 @@
 import type { AssistantLessonView, SalesScheduleDay, SalesStudentView, SalesSubscriptionHistory, SalesTeacherView } from '@ab/shared';
 import { keepPreviousData, queryOptions } from '@tanstack/react-query';
-import { apiFetch } from '@/lib/api';
+import { apiFetch } from '@/lib/http/api';
 
 // The salesperson's assistant side (docs/16) and a subscription's history. Read-only, no money.
 

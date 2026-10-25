@@ -1,8 +1,8 @@
 import type { StudentRecordingView, UserRole } from '@ab/shared';
 import { StatusChip } from '@/components/ui/display/status-chip';
 import { recordingTime, RECORDING_TONE } from '@/features/classroom/recordings/recording-format';
-import { t } from '@/lib/i18n';
-import { teacherLabel } from '@/lib/teacher-label';
+import { t } from '@/lib/i18n/i18n';
+import { teacherLabel } from '@/lib/i18n/teacher-label';
 import { durationText, sizeText } from './recording-format';
 import { RecordingDelete } from './RecordingDelete';
 import { RecordingPlayer } from './RecordingPlayer';

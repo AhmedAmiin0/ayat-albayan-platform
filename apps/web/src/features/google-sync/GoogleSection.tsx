@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { Toast } from '@/components/ui/overlay/toast';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { ConnectionCard } from './ConnectionCard';
 import { DriveCard } from './DriveCard';
 import { BlockSkeleton, LoadError } from './GoogleBlock';

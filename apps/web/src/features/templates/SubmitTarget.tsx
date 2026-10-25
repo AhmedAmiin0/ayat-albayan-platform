@@ -1,6 +1,6 @@
 import type { TemplateLineView, WaLine } from '@ab/shared';
 import { Ltr } from '@/components/ui/display/ltr';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { optionText } from '../integrations/integrations-form';
 
 export interface SubmitTargetProps {

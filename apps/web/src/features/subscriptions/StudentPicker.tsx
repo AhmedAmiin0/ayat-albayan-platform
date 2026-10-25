@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/form/input';
 import { Ltr } from '@/components/ui/display/ltr';
 import { useDebounced } from '@/features/pricing/use-debounced';
 import { studentListQuery } from '@/features/students/api';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 
 export type PickedStudent = { id: string; name: string; code: string | null };
 

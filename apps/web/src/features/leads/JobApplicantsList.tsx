@@ -5,8 +5,8 @@ import { Cartouche } from '@/components/ui/display/cartouche';
 import { EmptyState } from '@/components/ui/display/empty-state';
 import { PageHead } from '@/components/ui/layout/page';
 import { Pager } from '@/components/ui/layout/pager';
-import { t } from '@/lib/i18n';
-import { withFilter, withoutFilters, withSort, type ListUrlState } from '@/lib/list-url';
+import { t } from '@/lib/i18n/i18n';
+import { withFilter, withoutFilters, withSort, type ListUrlState } from '@/lib/list/list-url';
 import { applicantColumns } from './applicantColumns';
 import { jobApplicantsQuery } from './leads.api';
 

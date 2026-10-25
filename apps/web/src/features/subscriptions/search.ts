@@ -1,5 +1,5 @@
 import { PACKAGE_SIZES, SUBSCRIPTION_SORT_KEYS, SUBSCRIPTION_STATUSES, type PackageSize, type SubscriptionStatus } from '@ab/shared';
-import { parseFilterSearch, parseSortSearch, type FilterSearch, type SortDir, type SortSearch } from '@/lib/list-search';
+import { parseFilterSearch, parseSortSearch, type FilterSearch, type SortDir, type SortSearch } from '@/lib/list/list-search';
 
 // URL search of the money pages; defaults (no filter, page 1, this month) stay out of the URL.
 

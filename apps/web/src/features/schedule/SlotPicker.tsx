@@ -6,7 +6,7 @@ import { FormAlert } from '@/components/ui/form/form-alert';
 import { Icon } from '@/components/ui/display/icon';
 import { tzCity } from '@/components/ui/form/time-zone-select';
 import { useBookingMode } from '@/features/booking/mode';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { slotsQuery } from './api';
 import { SlotGrid, type SlotGridProps } from './SlotGrid';
 import { bookableWindow, currentWeekStart } from './slots';

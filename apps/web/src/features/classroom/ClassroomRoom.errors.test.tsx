@@ -1,7 +1,7 @@
 import type { RoomJoinResult } from '@ab/shared';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { ClassroomRoom } from './ClassroomRoom';
 import { fakeClient, tile } from './fake-client';
 

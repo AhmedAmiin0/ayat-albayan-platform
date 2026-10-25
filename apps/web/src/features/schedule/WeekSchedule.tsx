@@ -9,7 +9,7 @@ import { FormAlert } from '@/components/ui/form/form-alert';
 import { PageHead } from '@/components/ui/layout/page';
 import { Toast } from '@/components/ui/overlay/toast';
 import { ListSkeleton } from '@/components/ui/display/skeleton';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { cn } from '@/lib/utils';
 import { NewMeetingMenu } from '@/features/meetings/NewMeetingMenu';
 import { overviewQuery, proposalsQuery } from './api';

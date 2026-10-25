@@ -3,7 +3,7 @@ import { LanguageSwitch } from '@/components/shell/account/LanguageSwitch';
 import { Cartouche } from '@/components/ui/display/cartouche';
 import { FormAlert } from '@/components/ui/form/form-alert';
 import { Logo } from '@/components/ui/display/mark';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { ClassroomRoom } from './ClassroomRoom';
 import { classroomErrorText } from './errors';
 import { joinByStudentLink, studentLinkView } from './meetings-api';

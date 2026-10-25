@@ -12,7 +12,7 @@ import { ListSkeleton } from '@/components/ui/display/skeleton';
 import { MONEY_KEY } from '@/features/subscriptions/api';
 import { Amount } from '@/features/subscriptions/Amount';
 import { apiErrorText } from '@/features/subscriptions/format';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import {
   approvePayout,
   currentMonth,

@@ -1,6 +1,6 @@
 import { STUDENT_PACKAGE_FILTERS, STUDENT_WEEKLY_FILTERS, type StudentStatus } from '@ab/shared';
 import type { StudentListView } from '@/features/students/api';
-import type { FilterSearch, SortSearch } from '@/lib/list-search';
+import type { FilterSearch, SortSearch } from '@/lib/list/list-search';
 
 export interface PanelState {
   teacherId: string;

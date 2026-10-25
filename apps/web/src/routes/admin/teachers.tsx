@@ -2,7 +2,7 @@ import { TEACHER_FILTER_KEYS, TEACHER_SORT_KEYS } from '@ab/shared';
 import { createFileRoute, Outlet, useChildMatches, useNavigate } from '@tanstack/react-router';
 import { useCallback } from 'react';
 import { TeachersPage } from '@/features/teachers/TeachersPage';
-import { listUrlValidator, parseListUrl, toListUrl } from '@/lib/list-url';
+import { listUrlValidator, parseListUrl, toListUrl } from '@/lib/list/list-url';
 
 const KEYS = { sortKeys: TEACHER_SORT_KEYS, filterKeys: TEACHER_FILTER_KEYS };
 

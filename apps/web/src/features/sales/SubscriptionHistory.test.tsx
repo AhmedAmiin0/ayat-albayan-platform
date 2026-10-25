@@ -1,13 +1,13 @@
 import { fireEvent, screen, within } from '@testing-library/react';
 import { useState } from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { history, HISTORY_ID } from './academy.fixtures';
 import { renderWithQuery } from './academy.test-utils';
 import { SalesSubscriptions } from './SalesSubscriptions';
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@/lib/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 
 const CONFIRMED = [{ id: HISTORY_ID, student: { id: 's1', code: 'AB-0183', name: 'سهيلة' }, package: '8', status: 'active', starts_on: '2026-09-01', lessons_total: 8 }];
 

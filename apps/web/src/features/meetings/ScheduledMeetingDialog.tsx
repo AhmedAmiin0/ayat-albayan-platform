@@ -6,7 +6,7 @@ import { Field } from '@/components/ui/form/field';
 import { FormAlert } from '@/components/ui/form/form-alert';
 import { Input } from '@/components/ui/form/input';
 import { viewerTz } from '@/features/classroom/student-link';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { CreatedMeeting } from './CreatedMeeting';
 import { MEETINGS_KEY } from './internal-api';
 import type { PickedInvitee } from './invitee-list';

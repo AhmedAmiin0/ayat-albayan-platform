@@ -1,9 +1,9 @@
 import { lessonWhenText, type LessonView } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { NuqtaGlyph } from '@/components/ui/display/nuqta-glyph';
-import { t } from '@/lib/i18n';
-import { teacherLabel } from '@/lib/teacher-label';
-import { locale } from '@/lib/locale';
+import { t } from '@/lib/i18n/i18n';
+import { teacherLabel } from '@/lib/i18n/teacher-label';
+import { locale } from '@/lib/i18n/locale';
 import { proposalsQuery } from './api';
 import { studentNames } from './lessons';
 import { RIYADH_TZ } from './tz';

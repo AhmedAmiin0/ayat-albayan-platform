@@ -2,8 +2,8 @@ import type { MessageView } from '@ab/shared';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { ApiError } from '@/lib/api';
-import { t } from '@/lib/i18n';
+import { ApiError } from '@/lib/http/api';
+import { t } from '@/lib/i18n/i18n';
 import { threadFileQuery } from './api';
 import { message, PHONE } from './inbox-fixture';
 import { MessageMedia } from './MessageMedia';
@@ -11,7 +11,7 @@ import { InboxModeContext } from './mode';
 import { renderWithClient } from './test-utils';
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@/lib/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 
 const SIGNED = 'https://storage.test/wa-media/m-1.png?token=x';
 const IMAGE = message({ id: 'm-1', body: 'صورة الاستمارة', media_mime: 'image/png' }) satisfies MessageView;

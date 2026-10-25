@@ -2,7 +2,7 @@ import type { GoogleStatusView } from '@ab/shared';
 import { Button } from '@/components/ui/form/button';
 import { Dialog } from '@/components/ui/overlay/dialog';
 import { FormAlert } from '@/components/ui/form/form-alert';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { fill, listOf } from './google-format';
 
 const c = t.googleSync.confirm;

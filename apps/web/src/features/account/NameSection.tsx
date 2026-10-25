@@ -3,7 +3,7 @@ import { useState, type FormEvent } from 'react';
 import { Field } from '@/components/ui/form/field';
 import { FormAlert } from '@/components/ui/form/form-alert';
 import { Input } from '@/components/ui/form/input';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { nameErrors } from './account-validation';
 import { AccountSection } from './AccountSection';
 import { updateProfile } from './api';

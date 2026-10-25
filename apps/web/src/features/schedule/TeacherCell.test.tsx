@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import type { ReactNode } from 'react';
 import { describe, expect, it, vi } from 'vitest';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { T_ABRAR, T_FATMA, T_NOUR } from './overview-fixture';
 import { TeacherCell } from './TeacherCell';
 

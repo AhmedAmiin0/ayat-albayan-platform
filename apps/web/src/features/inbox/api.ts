@@ -12,8 +12,8 @@ import type {
 } from '@ab/shared';
 import { infiniteQueryOptions, keepPreviousData, queryOptions } from '@tanstack/react-query';
 import type { LeadRow, Page } from '@/features/leads/types';
-import { apiFetch, apiSend } from '@/lib/api';
-import { env } from '@/lib/env';
+import { apiFetch, apiSend } from '@/lib/http/api';
+import { env } from '@/lib/http/env';
 import type { InboxSearch } from './search';
 
 // Inbox routes (docs/12 §4: H1–H4, M1–M2, L1–L2) plus the existing lead routes.

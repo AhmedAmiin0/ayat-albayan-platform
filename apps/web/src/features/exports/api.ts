@@ -1,7 +1,7 @@
-import { ApiError } from '@/lib/api';
-import { CLIENT_HEADER, WEB_CLIENT_TAG } from '@/lib/client-tag';
-import { env } from '@/lib/env';
-import { supabase } from '@/lib/supabase';
+import { ApiError } from '@/lib/http/api';
+import { CLIENT_HEADER, WEB_CLIENT_TAG } from '@/lib/http/client-tag';
+import { env } from '@/lib/http/env';
+import { supabase } from '@/lib/http/supabase';
 
 // CSV downloads (docs/11 §9 C1–C4, R-RPT-03). apiFetch parses JSON, so a file is fetched here with
 // the same bearer token and handed to the browser as a download.

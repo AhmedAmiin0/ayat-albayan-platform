@@ -1,5 +1,5 @@
 import type { LessonView } from '@ab/shared';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { CopyLinkButton } from './CopyLinkButton';
 import { StaffJoinButton } from './StaffJoinButton';
 import { SendLinkButton } from './SendLinkButton';

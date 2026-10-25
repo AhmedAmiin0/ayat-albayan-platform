@@ -1,12 +1,12 @@
 import { counted } from '@ab/shared';
 import { fireEvent, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { answerHub, renderHub, settingsWith } from './hub-test-utils';
 import { SettingsHub } from './SettingsHub';
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@/lib/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 
 const H = t.settingsHub;
 const search = () => screen.getByRole('searchbox', { name: t.config.search.label });

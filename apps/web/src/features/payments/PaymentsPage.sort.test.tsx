@@ -3,14 +3,14 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import { useState } from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { PAYMENT } from '@/features/subscriptions/money-fixture';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { closeFilters, openFilters } from '@/test/open-filters';
 import { PaymentsPage } from './PaymentsPage';
 import { parsePaymentsSearch, paymentsView, type PaymentsUrlSearch } from './search';
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@/lib/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch }));
-vi.mock('@/lib/supabase', () => ({ supabase: {} }));
+vi.mock('@/lib/http/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch }));
+vi.mock('@/lib/http/supabase', () => ({ supabase: {} }));
 
 const by = (col: string) => t.table.filterBy.replace('{col}', col);
 const onSearch = vi.fn();

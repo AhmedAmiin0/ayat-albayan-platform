@@ -1,5 +1,5 @@
 import { matchesText } from '@/components/settings/search/settings-search';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 
 /**
  * Does the search match «الإشعارات» (its title or intro, editable now: docs/26b §3)? Its old name

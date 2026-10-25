@@ -6,7 +6,7 @@ import { Icon } from '@/components/ui/display/icon';
 import { Toast } from '@/components/ui/overlay/toast';
 import { NewMeetingMenu } from '@/features/meetings/NewMeetingMenu';
 import { CreateStudentDialog } from '@/features/students/CreateStudentDialog';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 
 /**
  * The dashboard's quick actions (owner, 2026-10-05): «اجتماع جديد» (the one primary), «إضافة طالب»

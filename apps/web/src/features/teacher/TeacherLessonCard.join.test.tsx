@@ -3,8 +3,8 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render, screen } from '@testing-library/react';
 import { expect, it, vi } from 'vitest';
 import { lesson } from '@/features/schedule/lesson-fixture';
-import { t } from '@/lib/i18n';
-import { publicConfigQuery } from '@/lib/public-config';
+import { t } from '@/lib/i18n/i18n';
+import { publicConfigQuery } from '@/lib/settings/public-config';
 import { TeacherLessonCard } from './TeacherLessonCard';
 
 const LINK = 'https://meet.jit.si/ayat-abrar'; // the fixture lesson's own link

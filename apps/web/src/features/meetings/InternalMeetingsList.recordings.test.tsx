@@ -2,12 +2,12 @@ import type { LessonRecordingView, MeetingView } from '@ab/shared';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen, within } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { InternalMeetingsList } from './InternalMeetingsList';
 import { meetingRow } from './meeting-fixture';
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@/lib/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 
 const R = t.classroom.recordings;
 const row = (over: Partial<MeetingView> = {}): MeetingView =>

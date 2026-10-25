@@ -1,8 +1,8 @@
 import type { SettingKey } from '@ab/shared';
 import { useQueryClient, type QueryClient } from '@tanstack/react-query';
 import { useCallback, useState } from 'react';
-import { cachedEntry, configEntriesQuery, patchConfigEntry, storeEntry } from '@/lib/config-entries-api';
-import { CONFIG_QUERY_KEYS } from '@/lib/query-keys';
+import { cachedEntry, configEntriesQuery, patchConfigEntry, storeEntry } from '@/lib/settings/config-entries-api';
+import { CONFIG_QUERY_KEYS } from '@/lib/settings/query-keys';
 import { IDLE, saveFailure, type RowStatus, type SaveEnd } from './entry-save-result';
 
 export type { RowStatus, SaveEnd };

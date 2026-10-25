@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/form/button';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { fillText } from '../rule-text';
 import { MAX_FOLLOW_UPS, type TimingDraft } from '../rule-timing';
 import { CountInput } from './CountInput';

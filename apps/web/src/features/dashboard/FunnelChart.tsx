@@ -1,5 +1,5 @@
 import type { LeadStatus } from '@ab/shared';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { Bar } from './Bar';
 import { percent } from './format';
 import { funnelSteps, type FunnelStage } from './funnel';

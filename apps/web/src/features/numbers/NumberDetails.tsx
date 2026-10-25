@@ -1,6 +1,6 @@
 import type { NumberView } from '@ab/shared';
 import { Ltr } from '@/components/ui/display/ltr';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 
 const IDS = ['phone_number_id', 'waba_id', 'app_id'] as const;
 

@@ -3,7 +3,7 @@ import type { DataTableFeatures, FilterOption } from '@/components/DataTable';
 import { Ltr } from '@/components/ui/display/ltr';
 import { NuqtaGlyph } from '@/components/ui/display/nuqta-glyph';
 import { StatusChip } from '@/components/ui/display/status-chip';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { feedbackDate } from './format';
 import { kindOptions, quickRatingOptions, ratingOptions, recommendOptions } from './filter-options';
 import type { FeedbackListRow } from './types';

@@ -1,5 +1,5 @@
-import { ApiError } from '@/lib/api';
-import { t } from '@/lib/i18n';
+import { ApiError } from '@/lib/http/api';
+import { t } from '@/lib/i18n/i18n';
 
 /** The inputs of the «حسابي» forms an API error can point at; `form` is the form-level alert. */
 export type AccountField = 'full_name' | 'phone_e164' | 'email' | 'current_password' | 'new_password' | 'confirm' | 'avatar' | 'form';

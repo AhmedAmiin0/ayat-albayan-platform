@@ -3,7 +3,7 @@ import { cleanup, render, screen } from '@testing-library/react';
 import type { ReactNode } from 'react';
 import { describe, expect, it, vi } from 'vitest';
 import { TeacherNav } from '@/features/teacher/TeacherNav';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { SalesNav } from './SalesNav';
 
 vi.mock('@tanstack/react-router', () => ({

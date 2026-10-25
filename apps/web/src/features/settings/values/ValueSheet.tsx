@@ -4,7 +4,7 @@ import { DiscardDialog } from '@/components/settings/dialogs/DiscardDialog';
 import { settingText } from '@/components/settings/search/setting-text';
 import { Button } from '@/components/ui/form/button';
 import { Dialog } from '@/components/ui/overlay/dialog';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { defaultForm, isModified } from '../registry-form/row-form';
 import { lastChangeText } from './cells/InfoCells';
 import { useRowIds } from './editors/editor-props';

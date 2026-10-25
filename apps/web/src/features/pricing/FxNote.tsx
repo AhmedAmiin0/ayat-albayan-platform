@@ -1,6 +1,6 @@
 import { FX_ATTRIBUTION_URL } from '@ab/shared';
 import { NuqtaGlyph } from '@/components/ui/display/nuqta-glyph';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { cn } from '@/lib/utils';
 import type { FxRate } from './api';
 import { fxLine } from './format';

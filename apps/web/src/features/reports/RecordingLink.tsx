@@ -1,7 +1,7 @@
 import type { UserRole } from '@ab/shared';
 import { Link } from '@tanstack/react-router';
 import { buttonVariants } from '@/components/ui/form/button';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 
 /** «تسجيل الحلقة»: from a report row to the lesson's recording in the student's file. */
 export function RecordingLink({ studentId, lessonId, role, when }: { studentId: string; lessonId: string; role: UserRole; when: string }) {

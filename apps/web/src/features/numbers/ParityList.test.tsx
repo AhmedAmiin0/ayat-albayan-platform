@@ -1,6 +1,6 @@
 import { render, screen, within } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { PARITY_DIFF, PARITY_SAME } from './numbers.fixture';
 import { ParityList } from './ParityList';
 

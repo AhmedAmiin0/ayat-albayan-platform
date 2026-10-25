@@ -1,6 +1,6 @@
 import { formatAmount, type CurrencyIso } from '@ab/shared';
 import { Ltr } from '@/components/ui/display/ltr';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 
 export interface MoneyProps {
   amount: number;

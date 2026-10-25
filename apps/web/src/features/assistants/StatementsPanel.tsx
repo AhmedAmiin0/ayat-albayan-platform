@@ -8,7 +8,7 @@ import { EmptyState } from '@/components/ui/display/empty-state';
 import { FormAlert } from '@/components/ui/form/form-alert';
 import { ListSkeleton } from '@/components/ui/display/skeleton';
 import { currentMonth } from '@/features/payouts/api';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { ASSISTANTS_KEY, approveStatement, generateStatement, statementReceiptUrl, statementsQuery, type AssistantRow, type StatementFilter } from './api';
 import { FilterBar } from './FilterBar';
 import { generateTargets } from './generate-targets';

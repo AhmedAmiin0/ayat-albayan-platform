@@ -1,6 +1,6 @@
 import { useId, type ReactNode } from 'react';
 import { StatusChip } from '@/components/ui/display/status-chip';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import type { QuoteResponse } from './api';
 import { durationLabel, packageCopy, sessionsOf } from './format';
 import { FxNote } from './FxNote';

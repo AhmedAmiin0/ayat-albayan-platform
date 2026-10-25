@@ -127,10 +127,6 @@
     "files": 29,
     "dirs": 0
   },
-  "apps/web/src/lib": {
-    "files": 18,
-    "dirs": 0
-  },
   "apps/web/src/routes": {
     "files": 16,
     "dirs": 5

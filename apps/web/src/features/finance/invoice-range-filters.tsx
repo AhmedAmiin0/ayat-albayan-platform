@@ -1,7 +1,7 @@
 import { chipIfSet, DateFilterField } from '@/components/table-toolbar/fields';
 import type { ExtraFilters } from '@/components/table-toolbar/types';
-import { t } from '@/lib/i18n';
-import { clearFilterSearch } from '@/lib/list-search';
+import { t } from '@/lib/i18n/i18n';
+import { clearFilterSearch } from '@/lib/list/list-search';
 import type { InvoicesUrlSearch } from './search';
 
 export interface InvoiceRangeOptions {

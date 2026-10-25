@@ -1,7 +1,7 @@
 import { isOpenLesson, type LessonStatus } from '@ab/shared';
 import { Button, buttonVariants } from '@/components/ui/form/button';
-import { t } from '@/lib/i18n';
-import { useJoinWindow } from '@/lib/public-config';
+import { t } from '@/lib/i18n/i18n';
+import { useJoinWindow } from '@/lib/settings/public-config';
 import { cn } from '@/lib/utils';
 import { useNow } from './use-now';
 import { joinHint } from './window-hint';

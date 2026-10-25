@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Button } from '@/components/ui/form/button';
 import { useFocusOnChange } from '@/components/ui/overlay/use-focus-on-change';
 import type { StudentRef } from '@/features/students/types';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { chatPhone, subscribeTarget } from './booked';
 import { BookedPanel } from './BookedPanel';
 import { GapChip } from './GapChip';

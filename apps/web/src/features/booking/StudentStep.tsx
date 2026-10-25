@@ -4,7 +4,7 @@ import { Ltr } from '@/components/ui/display/ltr';
 import { studentListQuery } from '@/features/students/api';
 import { StudentSearch } from '@/features/students/StudentSearch';
 import type { StudentRef } from '@/features/students/types';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import type { PickedStudent } from './draft';
 
 export interface StudentStepProps {

@@ -2,11 +2,11 @@ import { screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { history } from '@/features/booking/trial-date/trial-fixture';
 import { renderWithClient, routeFetch } from '@/features/inbox/test-utils';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { StudentProfilePage } from './StudentProfilePage';
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@/lib/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 vi.mock('@/features/auth/use-permissions', () => ({ usePermissions: () => ({ permissions: ['booking.write'], can: () => true }) }));
 vi.mock('@tanstack/react-router', async () => ({ Link: (await import('@/features/dashboard/link-mock')).Link }));
 vi.mock('@/features/subscriptions/BalanceCard', () => ({ BalanceCard: () => null }));

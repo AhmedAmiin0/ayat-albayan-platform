@@ -4,7 +4,7 @@ import { tabIds } from '@/components/ui/layout/tabs';
 import { Toast } from '@/components/ui/overlay/toast';
 import { useRuleDrafts, type RuleDrafts } from '@/features/notification-rules/rule-drafts';
 import { RulesSection } from '@/features/notification-rules/RulesSection';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import type { CommunicationsTab } from '../page-search';
 import { NumbersTab } from './NumbersTab';
 import { OverviewTab } from './OverviewTab';

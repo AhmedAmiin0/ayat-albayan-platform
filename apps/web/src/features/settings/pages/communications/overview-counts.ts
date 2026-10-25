@@ -1,6 +1,6 @@
 import { NOTIFICATION_AUDIENCES, type NotificationAudience, type NotificationEntryView } from '@ab/shared';
 import { rowsOf } from '@/features/notification-catalogue/catalogue-tabs';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 
 /** One row of «ماذا يُرسل الآن»: an audience and how many of its notifications send now / do not. */
 export interface AudienceCount {

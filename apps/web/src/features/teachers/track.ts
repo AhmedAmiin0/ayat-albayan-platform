@@ -1,6 +1,6 @@
 import { intlLocale, WEEKDAYS, type Weekday } from '@ab/shared';
-import { t } from '@/lib/i18n';
-import { locale } from '@/lib/locale';
+import { t } from '@/lib/i18n/i18n';
+import { locale } from '@/lib/i18n/locale';
 import { toMin, type Grid, type Range } from './grid';
 
 // The availability track (docs/07 §8): 08:00–24:00, drawn from the inline-start like the text.

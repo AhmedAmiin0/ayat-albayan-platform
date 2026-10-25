@@ -1,6 +1,6 @@
 import type { SalesScheduleLesson } from '@ab/shared';
-import { t } from '@/lib/i18n';
-import { teacherLabel } from '@/lib/teacher-label';
+import { t } from '@/lib/i18n/i18n';
+import { teacherLabel } from '@/lib/i18n/teacher-label';
 import { ScheduleLessonItem } from './ScheduleLessonItem';
 
 interface TeacherDay {

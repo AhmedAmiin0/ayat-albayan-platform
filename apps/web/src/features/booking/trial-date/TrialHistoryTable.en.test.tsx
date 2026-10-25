@@ -5,8 +5,8 @@ import { TrialHistoryTable } from './TrialHistoryTable';
 import { history, row } from './trial-fixture';
 
 // The UI in English: column names, outcome words and the family line read in English.
-vi.mock('@/lib/i18n', async (orig) => ({ ...(await orig<object>()), t: en }));
-vi.mock('@/lib/locale', async (orig) => ({ ...(await orig<object>()), locale: 'en' }));
+vi.mock('@/lib/i18n/i18n', async (orig) => ({ ...(await orig<object>()), t: en }));
+vi.mock('@/lib/i18n/locale', async (orig) => ({ ...(await orig<object>()), locale: 'en' }));
 
 it('reads in English', () => {
   render(<TrialHistoryTable history={history({ family_tz: 'Europe/London', items: [row({ outcome: 'attended', picked_by: null })] })} />);

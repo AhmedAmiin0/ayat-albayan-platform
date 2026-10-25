@@ -1,6 +1,6 @@
 import { CLASSROOM_ERRORS } from '@ab/shared';
 import { errorCode } from '@/features/schedule/api';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import type { MediaDevice } from './room-types';
 
 const KNOWN: ReadonlySet<string> = new Set<string>([...CLASSROOM_ERRORS, 'forbidden', 'duplicate']);

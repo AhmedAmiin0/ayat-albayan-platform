@@ -6,7 +6,7 @@ import { IconButton } from '@/components/ui/form/icon-button';
 import { controlClass } from '@/components/ui/form/input';
 import { errorCode } from '@/features/schedule/api';
 import { sizeText } from '@/features/students/recording-format';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { cn } from '@/lib/utils';
 import { ChatUploadError, sendFile, uploadChatFile } from './api.files';
 import { ComposerError } from './ComposerError';

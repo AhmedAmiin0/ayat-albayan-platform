@@ -1,5 +1,5 @@
 import { formatPhone, mediaKindOf, QUOTE_BODY_MAX, quoteLine, type MessageQuote, type MessageView } from '@ab/shared';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 
 // «رد» (owner 2026-10-25): what a quote shows, in the reply strip and on the answering bubble.
 

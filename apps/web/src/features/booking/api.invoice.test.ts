@@ -4,8 +4,8 @@ import { invoicesQuery, makeupCandidatesQuery, threadMediaQuery, threadMediaUrl,
 const apiSend = vi.hoisted(() => vi.fn());
 const uploadToSignedUrl = vi.hoisted(() => vi.fn());
 const from = vi.hoisted(() => vi.fn());
-vi.mock('@/lib/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch: vi.fn(), apiSend }));
-vi.mock('@/lib/supabase', () => ({ supabase: { storage: { from } } }));
+vi.mock('@/lib/http/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch: vi.fn(), apiSend }));
+vi.mock('@/lib/http/supabase', () => ({ supabase: { storage: { from } } }));
 
 const SIGNED = { bucket: 'invoices', path: 'req-1/abc.pdf', token: 'tok', signed_url: 'https://x' };
 

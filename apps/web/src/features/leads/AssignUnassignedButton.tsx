@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui/form/button';
 import { assignUnassigned } from '@/features/sales/api';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 
 /** «عيّن العملاء من غير مسؤول»: spreads every ownerless lead, then says «اتعيّن {n} عميل». */
 export function AssignUnassignedButton() {

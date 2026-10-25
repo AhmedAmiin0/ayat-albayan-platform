@@ -1,14 +1,14 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { clearAllFilters, openFilters } from '@/test/open-filters';
 import { TeacherStudentsPanel } from './TeacherStudentsPanel';
 import { panelView } from './teacher-students-view';
 
 vi.mock('@tanstack/react-router', async () => ({ Link: (await import('@/features/dashboard/link-mock')).Link }));
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@/lib/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch }));
+vi.mock('@/lib/http/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch }));
 
 const ROW = { id: 's1', code: 'AB-0183', name: 'سهيلة', status: 'active', program: 'quran', package_remaining: 3, has_weekly: true };
 const COUNTS = { new: 0, trial: 0, pending_subscription: 0, active: 1, pending_renewal: 0, expired: 0, paused: 0, churned: 0 };

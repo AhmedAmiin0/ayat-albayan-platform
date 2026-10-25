@@ -1,7 +1,7 @@
 import type { Locale } from '@ab/shared';
 import { Icon } from '@/components/ui/display/icon';
-import { t } from '@/lib/i18n';
-import { locale, setLocale } from '@/lib/locale';
+import { t } from '@/lib/i18n/i18n';
+import { locale, setLocale } from '@/lib/i18n/locale';
 import { cn } from '@/lib/utils';
 
 const other: Locale = locale === 'ar' ? 'en' : 'ar';

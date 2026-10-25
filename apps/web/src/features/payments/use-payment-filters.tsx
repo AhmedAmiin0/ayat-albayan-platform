@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { chipIfSet } from '@/components/table-toolbar/fields';
 import type { ExtraFilters } from '@/components/table-toolbar/types';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import type { PaymentFilters } from './api';
 import { PaymentFilterFields } from './PaymentFilterFields';
 import type { PaymentsUrlSearch } from './search';

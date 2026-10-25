@@ -1,7 +1,7 @@
 import type { LineCheckView } from '@ab/shared';
 import { render, screen, within } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { LineRow } from './LineRow';
 
 const s = t.templates.settings.lines;

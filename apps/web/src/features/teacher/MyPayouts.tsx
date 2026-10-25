@@ -13,7 +13,7 @@ import { monthLabel } from '@/features/payouts/MonthSelect';
 import { breakdownLines, payoutStatusOptions } from '@/features/payouts/payout-columns';
 import { LedgerPaid } from '@/features/payouts/LedgerPaid';
 import { Amount } from '@/features/subscriptions/Amount';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { myPayoutsQuery } from './api';
 
 const col = createColumnHelper<DataTableFeatures, PayoutView>();

@@ -1,7 +1,7 @@
 import { counted, type TrialHistory } from '@ab/shared';
 import type { UseQueryResult } from '@tanstack/react-query';
 import { FormAlert } from '@/components/ui/form/form-alert';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { TrialHistoryTable } from './TrialHistoryTable';
 
 /** «مواعيد الحلقة التجريبية · 3 مواعيد»: the history's title and its count (counted). */

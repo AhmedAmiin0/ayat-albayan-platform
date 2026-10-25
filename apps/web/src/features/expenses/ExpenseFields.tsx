@@ -4,7 +4,7 @@ import { Field } from '@/components/ui/form/field';
 import { Input } from '@/components/ui/form/input';
 import { Select } from '@/components/ui/form/select';
 import { currencySymbol } from '@/features/subscriptions/format';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { categoryLabel, type ExpenseCategoryView } from './api';
 import type { ExpenseForm } from './expense-form';
 

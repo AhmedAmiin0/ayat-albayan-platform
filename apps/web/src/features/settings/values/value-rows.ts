@@ -1,7 +1,7 @@
 import { GOOGLE_SETTING_KEYS, settingDef, type AcademySettings, type CustomConfigView, type GoogleSyncSettings, type SettingKey } from '@ab/shared';
 import { settingText } from '@/components/settings/search/setting-text';
 import { matchesSetting, matchesText } from '@/components/settings/search/settings-search';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { isModified } from '../registry-form/row-form';
 import { GROUP_IDS, groupKeys, isOwnedGroup, type ValuesGroupId } from './value-groups-view';
 import type { ValuesFilter } from './values-search';

@@ -2,7 +2,7 @@ import type { StudentStatus } from '@ab/shared';
 import { fireEvent, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { history } from '@/features/booking/trial-date/trial-fixture';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { thread } from '../inbox-fixture';
 import { InboxModeContext } from '../mode';
 import { renderWithClient, routeFetch } from '../test-utils';
@@ -10,7 +10,7 @@ import { SalesChatActions } from './SalesChatActions';
 import { student } from './sales-money-fixture';
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@/lib/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 vi.mock('@/features/auth/use-permissions', () => ({ usePermissions: () => ({ permissions: [], can: () => false }) }));
 
 const FAMILY = thread({ guardian_id: 'g-1', lead_id: null, lead_status: null, guardian_name: 'أم سهيلة' });

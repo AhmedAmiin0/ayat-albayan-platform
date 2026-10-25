@@ -1,14 +1,14 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { ApiError } from '@/lib/api';
-import { t } from '@/lib/i18n';
+import { ApiError } from '@/lib/http/api';
+import { t } from '@/lib/i18n/i18n';
 import { CreateStudentDialog } from './CreateStudentDialog';
 import { EMPTY_STUDENT, toCreateBody, type CreateStudentValues } from './create-student';
 
 const api = vi.hoisted(() => ({ createStudent: vi.fn(), mergeStudents: vi.fn() }));
 vi.mock('./api', async (importOriginal) => ({ ...(await importOriginal<object>()), ...api }));
-vi.mock('@/lib/api', async (importOriginal) => ({
+vi.mock('@/lib/http/api', async (importOriginal) => ({
   ...(await importOriginal<object>()),
   apiFetch: vi.fn(async (path: string) => {
     if (path.startsWith('/students/teacher-options')) return [];

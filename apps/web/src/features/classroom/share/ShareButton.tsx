@@ -1,5 +1,5 @@
 import type { JoinRole } from '@ab/shared';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { RoomButton } from '../RoomButton';
 import { RequestButton } from './RequestButton';
 import type { RoomController } from '../use-room';

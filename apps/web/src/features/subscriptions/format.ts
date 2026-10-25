@@ -7,8 +7,8 @@ import {
   type PackageProgress,
   type StudentBalanceView,
 } from '@ab/shared';
-import { ApiError } from '@/lib/api';
-import { t } from '@/lib/i18n';
+import { ApiError } from '@/lib/http/api';
+import { t } from '@/lib/i18n/i18n';
 import type { SubscriptionView } from './api';
 
 // Display text for the money screens. Wording from ar.json, Western digits (docs/07 §2).

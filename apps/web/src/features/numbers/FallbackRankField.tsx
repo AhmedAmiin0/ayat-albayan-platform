@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/form/button';
 import { Field } from '@/components/ui/form/field';
 import { FormAlert } from '@/components/ui/form/form-alert';
 import { Input } from '@/components/ui/form/input';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { parseRank, RANK_MAX, RANK_MIN } from './fallback-rank';
 import { numberErrorText } from './number-errors';
 import { updateNumber } from './numbers-api';

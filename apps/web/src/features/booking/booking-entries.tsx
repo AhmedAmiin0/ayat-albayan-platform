@@ -4,7 +4,7 @@ import { FormAlert } from '@/components/ui/form/form-alert';
 import { leadByPhoneQuery, type InboxLead } from '@/features/inbox/api';
 import { studentQuery } from '@/features/students/api';
 import type { StudentProfile } from '@/features/students/types';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { guardianQuery, type BookSearch, type GuardianRow } from './api';
 import { BookingWizard, type BookingWizardProps } from './BookingWizard';
 import { emptyDraft, type BookingDraft } from './draft';

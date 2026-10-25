@@ -1,6 +1,6 @@
 import type { LessonRecordingView, RecordingStatus } from '@ab/shared';
 import { queryOptions } from '@tanstack/react-query';
-import { apiFetch, apiSend } from '@/lib/api';
+import { apiFetch, apiSend } from '@/lib/http/api';
 import { removeMeetingParticipant } from '@/features/meetings/internal-api';
 import { CLASSROOM_KEY } from './api';
 

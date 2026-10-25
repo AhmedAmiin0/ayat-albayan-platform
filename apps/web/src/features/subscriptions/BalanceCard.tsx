@@ -6,7 +6,7 @@ import { FormAlert } from '@/components/ui/form/form-alert';
 import { StatusChip } from '@/components/ui/display/status-chip';
 import { Toast } from '@/components/ui/overlay/toast';
 import { RecordPaymentDialog } from '@/features/payments/RecordPaymentDialog';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { studentBalanceQuery } from './api';
 import { BalanceDetails } from './BalanceDetails';
 import { CreateSubscriptionDialog } from './CreateSubscriptionDialog';

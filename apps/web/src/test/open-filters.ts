@@ -1,5 +1,5 @@
 import { fireEvent, screen, within } from '@testing-library/react';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 
 const filterButton = () => ({ name: new RegExp(`^${t.table.filter}`) });
 

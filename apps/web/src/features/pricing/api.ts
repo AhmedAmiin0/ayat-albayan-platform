@@ -9,7 +9,7 @@ import {
   type SiteCountry,
 } from '@ab/shared';
 import { keepPreviousData, queryOptions } from '@tanstack/react-query';
-import { apiFetch } from '@/lib/api';
+import { apiFetch } from '@/lib/http/api';
 
 // Shapes returned by apps/api/src/modules/pricing (docs/08). The client never prices anything:
 // every number on the calculator comes from these responses.

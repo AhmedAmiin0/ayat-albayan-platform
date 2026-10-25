@@ -1,8 +1,8 @@
 import type { RoleCreate, RoleUpdate, RoleView, StaffUserView } from '@ab/shared';
 import { queryOptions } from '@tanstack/react-query';
-import { apiFetch, apiSend } from '@/lib/api';
-import { t } from '@/lib/i18n';
-import { locale } from '@/lib/locale';
+import { apiFetch, apiSend } from '@/lib/http/api';
+import { t } from '@/lib/i18n/i18n';
+import { locale } from '@/lib/i18n/locale';
 
 // apps/api/src/modules/roles: «الأدوار والصلاحيات», all behind roles.manage.
 export type { RoleView, StaffUserView } from '@ab/shared';

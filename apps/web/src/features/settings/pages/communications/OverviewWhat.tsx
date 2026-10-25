@@ -1,7 +1,7 @@
 import { Link } from '@tanstack/react-router';
 import { Skeleton } from '@/components/ui/display/skeleton';
 import { useCatalogue } from '@/features/notification-catalogue/use-catalogue';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { cn } from '@/lib/utils';
 import { communicationsSearch } from '../page-search';
 import { audienceCounts } from './overview-counts';

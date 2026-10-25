@@ -1,6 +1,6 @@
 import type { NotificationEntryView } from '@ab/shared';
 import { Icon } from '@/components/ui/display/icon';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { stateChip } from '../../notification-catalogue/catalogue-text';
 import { NamePart } from '../cells/NamePart';
 import { editableRule } from '../RuleRow';

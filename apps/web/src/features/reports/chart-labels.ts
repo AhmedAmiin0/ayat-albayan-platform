@@ -1,5 +1,5 @@
 import { dayMonthLabel, zonedParts } from '@/features/schedule/tz';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { gradeOfScore, type SeriesKey } from './chart';
 
 /** «التقدير العام» or the rubric's form wording. */

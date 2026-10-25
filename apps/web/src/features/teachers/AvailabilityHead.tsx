@@ -4,8 +4,8 @@ import { Icon } from '@/components/ui/display/icon';
 import { Label } from '@/components/ui/form/label';
 import { Ltr } from '@/components/ui/display/ltr';
 import { TimeZoneSelect, tzCity } from '@/components/ui/form/time-zone-select';
-import { t } from '@/lib/i18n';
-import { locale } from '@/lib/locale';
+import { t } from '@/lib/i18n/i18n';
+import { locale } from '@/lib/i18n/locale';
 
 type Props = { tz: string; onTz: (tz: string) => void };
 

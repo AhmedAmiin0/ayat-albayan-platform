@@ -1,7 +1,7 @@
 import type { SalesChatReceipt } from '@ab/shared';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { FormAlert } from '@/components/ui/form/form-alert';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { cn } from '@/lib/utils';
 import { chatReceiptsQuery, receiptFromChat } from './api';
 import { ChatReceiptThumb } from './ChatReceiptThumb';

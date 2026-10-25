@@ -1,6 +1,6 @@
 import type { Permission } from '@ab/shared';
 import { SectionLinks, type SectionLink } from '@/components/shell/nav/SectionLinks';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 
 // The teacher's own pages (R-TCH-03), the same order as the mobile tabs.
 export const TEACHER_NAV_ITEMS = [

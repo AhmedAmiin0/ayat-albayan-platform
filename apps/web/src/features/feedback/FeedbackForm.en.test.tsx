@@ -5,8 +5,8 @@ import { expect, it, vi } from 'vitest';
 import { FeedbackForm } from './FeedbackForm';
 
 // The same form in English (LTR): every title and option reads English, no Arabic left.
-vi.mock('@/lib/i18n', async (orig) => ({ ...(await orig<object>()), t: en }));
-vi.mock('@/lib/locale', async (orig) => ({ ...(await orig<object>()), locale: 'en' }));
+vi.mock('@/lib/i18n/i18n', async (orig) => ({ ...(await orig<object>()), t: en }));
+vi.mock('@/lib/i18n/locale', async (orig) => ({ ...(await orig<object>()), locale: 'en' }));
 
 it('shows the form in English with the scale ends and the options', () => {
   render(
