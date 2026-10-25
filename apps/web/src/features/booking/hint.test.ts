@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { emptyDraft } from './draft';
+import { emptyDraft } from './draft/draft';
 import { bookHint, searchForStudent, teacherPatch } from './hint';
 import { ABRAR, NOOR, SLOT } from './wizard-fixture';
 

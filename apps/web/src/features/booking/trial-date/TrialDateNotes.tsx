@@ -1,8 +1,8 @@
 import { warnsTrialDate } from '@ab/shared';
 import { NuqtaGlyph } from '@/components/ui/display/nuqta-glyph';
 import { t } from '@/lib/i18n/i18n';
-import type { TrialDateDraft } from '../draft';
-import { pickedText } from '../SlotStep';
+import type { TrialDateDraft } from '../draft/draft';
+import { pickedText } from '../steps/slots/SlotStep';
 
 export interface TrialDateNotesProps {
   trial: TrialDateDraft;

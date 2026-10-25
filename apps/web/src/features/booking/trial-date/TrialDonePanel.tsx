@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/form/button';
 import { NuqtaGlyph } from '@/components/ui/display/nuqta-glyph';
 import { t } from '@/lib/i18n/i18n';
 import { useChatReturn } from '../mode';
-import { pickedText } from '../SlotStep';
+import { pickedText } from '../steps/slots/SlotStep';
 
 export interface TrialDonePanelProps {
   result: TrialDateResult;

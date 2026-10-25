@@ -1,6 +1,6 @@
 import { counted, courseOpensOn, inWeekOrder, prefillDays, type SalesCourseView } from '@ab/shared';
-import type { BookingDraft } from '@/features/booking/draft';
-import { dayAtText } from '@/features/booking/DayTimesList';
+import type { BookingDraft } from '@/features/booking/draft/draft';
+import { dayAtText } from '@/features/booking/steps/slots/DayTimesList';
 import type { BookHint } from '@/features/booking/hint';
 import { dateLabel } from '@/features/schedule/tz';
 import { t } from '@/lib/i18n/i18n';

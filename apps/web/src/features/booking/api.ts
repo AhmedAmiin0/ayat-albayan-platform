@@ -9,7 +9,7 @@ import {
 } from '@ab/shared';
 import { queryOptions } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@/lib/http/api';
-import { BOOKING_KINDS, type BookingBody, type BookingKind } from './contract';
+import { BOOKING_KINDS, type BookingBody, type BookingKind } from './draft/contract';
 import { bookingBase, type BookingMode } from './mode';
 
 // Booking routes (docs/10 §5, rows 12–14) + the guardian row for the quote currency.

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { stepsOf } from '../draft';
+import { stepsOf } from '../draft/draft';
 import { trialDateDraft, trialHint, upcomingRow } from './draft';
 import { history, row, UPCOMING_ID } from './trial-fixture';
 

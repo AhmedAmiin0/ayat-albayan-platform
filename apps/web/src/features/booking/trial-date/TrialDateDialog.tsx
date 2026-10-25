@@ -6,7 +6,7 @@ import { Dialog } from '@/components/ui/overlay/dialog';
 import { FormAlert } from '@/components/ui/form/form-alert';
 import { t } from '@/lib/i18n/i18n';
 import { BookingWizard } from '../BookingWizard';
-import type { BookingDraft, PickedStudent } from '../draft';
+import type { BookingDraft, PickedStudent } from '../draft/draft';
 import type { BookHint } from '../hint';
 import { BookingModeContext, ChatReturnContext, type BookingMode } from '../mode';
 import { trialHistoryQuery } from './api';
