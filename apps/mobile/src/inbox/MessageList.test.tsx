@@ -5,7 +5,7 @@ import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
 import { AT_NEWEST, MessageList } from './MessageList';
 import { cachedThread, delivered, detail, inbound, message, PHONE } from './thread-fixtures';
-import type { useThread } from './use-thread';
+import type { useThread } from './thread/hooks/use-thread';
 
 // Owner 2026-10-24 («the chat scrolled to the last point»): every mobile chat opens on the newest
 // message. Inverted, so offset 0 is exactly the newest: no scrollToEnd aimed at a guessed height.

@@ -221,7 +221,7 @@ This change reads data only. `created_by` writes stay as they are, because `isAu
 
 **Mobile**
 
-- `apps/mobile/src/inbox/thread-mode.tsx:42`: `sentByName` becomes `senderText(m)`, built on `senderLine`.
+- `apps/mobile/src/inbox/thread/hooks/thread-mode.tsx:42`: `sentByName` becomes `senderText(m)`, built on `senderLine`.
 - `MessageMeta.tsx:32-36` renders it.
 - The optimistic row (`thread-cache.ts`) has neither field, so the line appears when the API row arrives.
 
@@ -229,7 +229,7 @@ This change reads data only. `created_by` writes stay as they are, because `isAu
 
 - `apps/api/src/modules/whatsapp/messages/message.mapper.sender.test.ts` (new): the teacher's name wins; `full_name` is used for admin and sales; `automatic` is true only for outbound with created_by null and dedup_key set; imported history (dedup_key null) gives false and no name; inbound gives null and false; one assertion that `MESSAGE_SELECT` contains `sender:profiles!messages_created_by_fkey`.
 - `apps/web/src/features/inbox/MessageBubble.sender.test.tsx` (new): an assistant's row shows «أرسلها: سارة», a job row shows «رسالة تلقائية», and an imported or inbound row shows neither.
-- Extend `apps/mobile/src/inbox/thread-mode.test.ts` with the same cases.
+- Extend `apps/mobile/src/inbox/thread/hooks/thread-mode.test.ts` with the same cases.
 - Grep `e2e/tests` for assertions on the whole text of outbound bubbles. Every outbound bubble now has a sender line, so those may need updating.
 
 **Known behaviour (in the PR body):** a staff-triggered template shows the staff member's name, not «رسالة تلقائية». This covers booking confirmations, lesson-change notices, the join link, meeting invites, and the admin's rating or feedback sends. `report_ready`, reminders, follow-ups, renewal alerts and changes a guardian triggered show «رسالة تلقائية».
@@ -405,7 +405,7 @@ Only inside the 24 h window, stored and logged under her name. Sending is by lin
 
 ### Mobile (JS-only, OTA): images only
 
-15. **`apps/mobile/src/inbox/send-file.ts`** (new)
+15. **`apps/mobile/src/inbox/composer/send-file.ts`** (new)
     - It reuses `pickReceipt` from `apps/mobile/src/payments/receipt.ts` (JPEG, quality 0.6, no EXIF; `expo-image-picker` is already in the APK).
     - Then `POST file-upload-url` and `uploadToSignedUrl`, following the `apps/mobile/src/assistants/upload-receipt.ts` pattern.
     - Then `POST /file` with no caption. The `clientRequestId` comes from the same helper the mobile text send uses.

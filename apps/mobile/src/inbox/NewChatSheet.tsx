@@ -10,7 +10,7 @@ import { Field } from '@/core/ui/form/Field';
 import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { ErrorLine } from './ErrorLine';
-import { threadHref } from './thread-cache';
+import { threadHref } from './thread/hooks/thread-cache';
 
 /**
  * «محادثة جديدة» (admin and sales, the web inbox's form): type a family's WhatsApp number and open its

@@ -1,5 +1,5 @@
 import type { MessageView, TemplateView, ThreadDetail, ThreadPeople, ThreadView } from '@ab/shared';
-import { provisionalMessage, type ThreadCache } from './thread-cache';
+import { provisionalMessage, type ThreadCache } from './thread/hooks/thread-cache';
 
 // Test rows in the GET /threads/:phone and GET /messaging/templates shapes (huda's test phone).
 

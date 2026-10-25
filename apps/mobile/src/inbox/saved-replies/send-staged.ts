@@ -1,7 +1,7 @@
 import type { MessageView, SavedReplyStaged } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiSend } from '@/core/lib/http/api';
-import { appendMessage, removeMessage, type ThreadCache, threadKey, threadPath } from '../thread-cache';
+import { appendMessage, removeMessage, type ThreadCache, threadKey, threadPath } from '../thread/hooks/thread-cache';
 import type { StagedFile } from './use-saved-reply';
 
 /**
