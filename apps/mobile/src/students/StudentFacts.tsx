@@ -1,11 +1,11 @@
 import { Linking, Pressable, View } from 'react-native';
 import { t } from '@/lib/i18n';
 import { shape, type, useTheme } from '@/theme';
-import { Ltr } from '@/ui/Ltr';
+import { Ltr } from '@/core/ui/primitives/Ltr';
 import { profileFacts } from './profile-facts';
 import { SectionLabel } from './SectionLabel';
 import type { StudentProfile } from './types';
-import { AppText } from '@/ui/AppText';
+import { AppText } from '@/core/ui/primitives/AppText';
 
 /** Program, level…, tz, teacher, then the effective meeting link, which opens in the browser/app. */
 export function StudentFacts({ student }: { student: StudentProfile }) {

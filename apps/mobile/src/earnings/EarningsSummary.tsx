@@ -2,7 +2,7 @@ import type { TeacherEarningsBalanceView } from '@ab/shared';
 import { View } from 'react-native';
 import { t } from '@/lib/i18n';
 import { shape, type, useTheme } from '@/theme';
-import { AppText } from '@/ui/AppText';
+import { AppText } from '@/core/ui/primitives/AppText';
 import { egp } from './format';
 
 function Card({ label, amount, strong }: { label: string; amount: number; strong?: boolean }) {

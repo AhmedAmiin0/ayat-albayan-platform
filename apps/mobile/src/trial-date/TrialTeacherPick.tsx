@@ -5,8 +5,8 @@ import { TeacherStep } from '@/booking/TeacherStep';
 import { t } from '@/lib/i18n';
 import { locale } from '@/lib/locale';
 import { type, useTheme } from '@/theme';
-import { AppText } from '@/ui/AppText';
-import { Button } from '@/ui/Button';
+import { AppText } from '@/core/ui/primitives/AppText';
+import { Button } from '@/core/ui/primitives/Button';
 
 export interface TrialTeacherPickProps {
   /** The last trial's teacher, kept with one tap; null when the student never had one. */

@@ -3,8 +3,8 @@ import { useState } from 'react';
 import { View } from 'react-native';
 import { t } from '@/lib/i18n';
 import { Note } from '@/more/Note';
-import { Button } from '@/ui/Button';
-import { SearchField } from '@/ui/SearchField';
+import { Button } from '@/core/ui/primitives/Button';
+import { SearchField } from '@/core/ui/form/SearchField';
 import { useInviteeOptions } from './invite-api';
 import { fromOption, type DraftInvitee } from './invitee-draft';
 

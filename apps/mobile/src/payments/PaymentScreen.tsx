@@ -1,12 +1,12 @@
 import { router, useLocalSearchParams } from 'expo-router';
 import { ScrollView } from 'react-native';
 import { t } from '@/lib/i18n';
-import { Button } from '@/ui/Button';
-import { EmptyState } from '@/ui/EmptyState';
-import { ErrorState } from '@/ui/ErrorState';
-import { ltr } from '@/ui/Ltr';
-import { Screen } from '@/ui/Screen';
-import { ScreenHeader } from '@/ui/ScreenHeader';
+import { Button } from '@/core/ui/primitives/Button';
+import { EmptyState } from '@/core/ui/feedback/EmptyState';
+import { ErrorState } from '@/core/ui/feedback/ErrorState';
+import { ltr } from '@/core/ui/primitives/Ltr';
+import { Screen } from '@/core/ui/layout/Screen';
+import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { isOffline } from './payment-errors';
 import { PaymentForm } from './PaymentForm';
 import { useStudentBalance } from './queries';

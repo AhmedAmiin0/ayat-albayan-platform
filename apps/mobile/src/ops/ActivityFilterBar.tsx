@@ -2,9 +2,9 @@ import { View } from 'react-native';
 import { t } from '@/lib/i18n';
 import { Section } from '@/more/Section';
 import { ErrorLine } from '@/inbox/ErrorLine';
-import { Button } from '@/ui/Button';
-import { Field } from '@/ui/Field';
-import { FilterPills } from '@/ui/FilterPills';
+import { Button } from '@/core/ui/primitives/Button';
+import { Field } from '@/core/ui/form/Field';
+import { FilterPills } from '@/core/ui/form/FilterPills';
 import {
   ALL,
   ENTITIES,

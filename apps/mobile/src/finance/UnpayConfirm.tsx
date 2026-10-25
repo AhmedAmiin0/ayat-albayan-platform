@@ -3,9 +3,9 @@ import { View } from 'react-native';
 import { ErrorLine } from '@/inbox/ErrorLine';
 import { t } from '@/lib/i18n';
 import { shape, useTheme } from '@/theme';
-import { Button } from '@/ui/Button';
-import { Field } from '@/ui/Field';
-import { AppText } from '@/ui/AppText';
+import { Button } from '@/core/ui/primitives/Button';
+import { Field } from '@/core/ui/form/Field';
+import { AppText } from '@/core/ui/primitives/AppText';
 
 export interface UnpayConfirmProps {
   message: string;

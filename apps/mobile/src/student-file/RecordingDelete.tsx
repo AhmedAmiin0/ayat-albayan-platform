@@ -2,8 +2,8 @@ import { useState } from 'react';
 import { View } from 'react-native';
 import { ErrorLine } from '@/inbox/ErrorLine';
 import { t } from '@/lib/i18n';
-import { Button } from '@/ui/Button';
-import { InlineConfirm } from '@/ui/InlineConfirm';
+import { Button } from '@/core/ui/primitives/Button';
+import { InlineConfirm } from '@/core/ui/feedback/InlineConfirm';
 import { deleteError, useDeleteRecording } from './recording-actions';
 
 const D = t.mobileStudentFile.recordings.delete;

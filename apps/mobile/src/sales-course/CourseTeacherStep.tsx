@@ -4,7 +4,7 @@ import { View } from 'react-native';
 import { TeacherStep } from '@/booking/TeacherStep';
 import { t } from '@/lib/i18n';
 import { locale } from '@/lib/locale';
-import { Button } from '@/ui/Button';
+import { Button } from '@/core/ui/primitives/Button';
 
 export interface CourseTeacherStepProps {
   student: SalesCourseView['student'];

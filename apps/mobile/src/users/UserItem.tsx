@@ -2,10 +2,10 @@ import { formatPhone, type UserView } from '@ab/shared';
 import { View } from 'react-native';
 import { t } from '@/lib/i18n';
 import { type, useTheme } from '@/theme';
-import { AppText } from '@/ui/AppText';
-import { ListRow } from '@/ui/ListRow';
-import { Ltr } from '@/ui/Ltr';
-import { StatusChip } from '@/ui/StatusChip';
+import { AppText } from '@/core/ui/primitives/AppText';
+import { ListRow } from '@/core/ui/layout/ListRow';
+import { Ltr } from '@/core/ui/primitives/Ltr';
+import { StatusChip } from '@/core/ui/feedback/StatusChip';
 import { lastSignIn, recordText, roleText, statusStyle } from './format';
 
 export interface UserItemProps {

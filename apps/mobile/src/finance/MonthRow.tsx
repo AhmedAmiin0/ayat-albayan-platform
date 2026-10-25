@@ -2,7 +2,7 @@ import { View } from 'react-native';
 import { t } from '@/lib/i18n';
 import { monthLabel } from '@/teacher/payout-text';
 import { type, useTheme } from '@/theme';
-import { AppText } from '@/ui/AppText';
+import { AppText } from '@/core/ui/primitives/AppText';
 import { wholeText } from './format';
 import type { MonthFinance } from './summary-types';
 

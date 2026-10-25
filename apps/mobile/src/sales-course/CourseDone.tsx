@@ -3,9 +3,9 @@ import { View } from 'react-native';
 import { whenText } from '@/booking/slots';
 import { t } from '@/lib/i18n';
 import { localDay } from '@/payments/format';
-import { AppText } from '@/ui/AppText';
-import { Button } from '@/ui/Button';
-import { NuqtaGlyph } from '@/ui/NuqtaGlyph';
+import { AppText } from '@/core/ui/primitives/AppText';
+import { Button } from '@/core/ui/primitives/Button';
+import { NuqtaGlyph } from '@/core/ui/primitives/NuqtaGlyph';
 import { type, useTheme } from '@/theme';
 import { courseEnd } from './course-body';
 

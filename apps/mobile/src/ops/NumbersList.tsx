@@ -3,7 +3,7 @@ import { View } from 'react-native';
 import { t } from '@/lib/i18n';
 import { Note } from '@/more/Note';
 import { Section } from '@/more/Section';
-import { ErrorState } from '@/ui/ErrorState';
+import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { NumberRow } from './NumberRow';
 import { parityLine, sourceLine } from './numbers-words';
 import { useNumbers, useParity } from './use-numbers';

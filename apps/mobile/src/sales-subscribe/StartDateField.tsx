@@ -8,7 +8,7 @@ import { Note } from '@/more/Note';
 import { Section } from '@/more/Section';
 import { StartDayPills } from '@/subscribe/SubscribeParts';
 import { type, useTheme } from '@/theme';
-import { AppText } from '@/ui/AppText';
+import { AppText } from '@/core/ui/primitives/AppText';
 import type { StartDraft } from './start-date';
 
 export interface StartDateFieldProps {

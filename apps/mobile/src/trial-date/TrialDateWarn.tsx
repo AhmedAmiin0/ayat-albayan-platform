@@ -1,6 +1,6 @@
 import { View } from 'react-native';
 import { type, useTheme } from '@/theme';
-import { AppText } from '@/ui/AppText';
+import { AppText } from '@/core/ui/primitives/AppText';
 import { warnLine } from './trial-date-text';
 
 /**

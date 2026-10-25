@@ -7,7 +7,7 @@ import { TeacherTabs } from './TeacherTabs';
 const mockApiFetch = jest.fn();
 jest.mock('@/lib/api', () => ({ ...jest.requireActual('@/lib/api'), apiFetch: (p: string) => mockApiFetch(p) }));
 // The tabs themselves are the router's (routing.teacher.test, ui/GlassTabBar.test); here only what wraps them.
-jest.mock('@/ui/AppNativeTabs', () => {
+jest.mock('@/core/ui/layout/AppNativeTabs', () => {
   const { Text } = jest.requireActual('react-native');
   return { AppNativeTabs: () => <Text>teacher-tabs</Text> };
 });

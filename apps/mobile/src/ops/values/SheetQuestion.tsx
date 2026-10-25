@@ -2,8 +2,8 @@ import type { SettingKey } from '@ab/shared';
 import { View } from 'react-native';
 import { t } from '@/lib/i18n';
 import { Note } from '@/more/Note';
-import { Field } from '@/ui/Field';
-import { InlineConfirm } from '@/ui/InlineConfirm';
+import { Field } from '@/core/ui/form/Field';
+import { InlineConfirm } from '@/core/ui/feedback/InlineConfirm';
 import type { ValueSheetState } from './use-value-sheet';
 import { impactOf } from './value-text';
 

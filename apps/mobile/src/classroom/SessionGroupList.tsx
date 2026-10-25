@@ -3,7 +3,7 @@ import { View } from 'react-native';
 import { t } from '@/lib/i18n';
 import { Note } from '@/more/Note';
 import { type, useTheme } from '@/theme';
-import { AppText } from '@/ui/AppText';
+import { AppText } from '@/core/ui/primitives/AppText';
 import { SessionCard } from './SessionCard';
 import { SESSION_GROUPS, type SessionGroup } from './sessions';
 

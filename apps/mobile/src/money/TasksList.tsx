@@ -3,8 +3,8 @@ import { ActivityIndicator, FlatList } from 'react-native';
 import { t } from '@/lib/i18n';
 import { usePagedList } from '@/lib/use-paged-list';
 import { useTheme } from '@/theme';
-import { EmptyState } from '@/ui/EmptyState';
-import { ErrorState } from '@/ui/ErrorState';
+import { EmptyState } from '@/core/ui/feedback/EmptyState';
+import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { TaskItem } from './TaskItem';
 
 /** «المهام»: GET /admin-tasks (open ones: renewal due, package unpaid). Read-only; the web marks them done. */

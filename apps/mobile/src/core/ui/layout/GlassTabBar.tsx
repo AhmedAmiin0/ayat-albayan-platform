@@ -5,10 +5,10 @@ import { Animated, I18nManager, Platform, useWindowDimensions, View } from 'reac
 import { t } from '@/lib/i18n';
 import { useTheme } from '@/theme';
 import type { TabItem } from './AppNativeTabs';
-import { GlassGradient } from './GlassGradient';
+import { GlassGradient } from '../primitives/GlassGradient';
 import { GlassTab } from './GlassTab';
 import { BAR_HEIGHT, barBottom } from './tab-bar-inset';
-import { useA11yPref } from './use-a11y-pref';
+import { useA11yPref } from '../primitives/use-a11y-pref';
 import { usePillOffset } from './use-pill-offset';
 
 const EDGE = [[0, 0], [1, 1]] as const;

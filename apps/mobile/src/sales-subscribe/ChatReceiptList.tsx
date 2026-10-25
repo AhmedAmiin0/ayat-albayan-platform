@@ -2,7 +2,7 @@ import type { SalesChatReceipt } from '@ab/shared';
 import { View } from 'react-native';
 import { t } from '@/lib/i18n';
 import { Note } from '@/more/Note';
-import { ErrorState } from '@/ui/ErrorState';
+import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { ChatReceiptRow } from './ChatReceiptRow';
 import { useChatReceipts } from './chat-receipts';
 

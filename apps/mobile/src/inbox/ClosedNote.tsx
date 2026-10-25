@@ -1,7 +1,7 @@
 import { View } from 'react-native';
 import { t } from '@/lib/i18n';
 import { shape, type, useTheme } from '@/theme';
-import { AppText } from '@/ui/AppText';
+import { AppText } from '@/core/ui/primitives/AppText';
 
 /**
  * In the reply box's place once the 24 h window closed: why only a template can go now

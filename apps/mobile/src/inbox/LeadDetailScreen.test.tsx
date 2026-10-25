@@ -3,7 +3,7 @@ import { Linking } from 'react-native';
 import { t } from '@/lib/i18n';
 import { listKey } from '@/lib/query-keys';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
-import { ltr } from '@/ui/Ltr';
+import { ltr } from '@/core/ui/primitives/Ltr';
 import { cachedList, huda, unnamed } from './fixtures';
 import { LeadDetailScreen } from './LeadDetailScreen';
 import { answer, hudaProfile } from './qualification/fixtures';

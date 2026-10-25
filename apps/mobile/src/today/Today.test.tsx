@@ -2,7 +2,7 @@ import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { ApiError } from '@/lib/api';
 import { t } from '@/lib/i18n';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
-import { ltr } from '@/ui/Ltr';
+import { ltr } from '@/core/ui/primitives/Ltr';
 import TodayRoute from '../../app/(tabs)/index';
 import { cancelled, done, muscat, pending } from './fixtures';
 

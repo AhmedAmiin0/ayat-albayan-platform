@@ -1,8 +1,8 @@
 import type { NumberView } from '@ab/shared';
 import { View } from 'react-native';
 import { Note } from '@/more/Note';
-import { ListRow } from '@/ui/ListRow';
-import { StatusChip } from '@/ui/StatusChip';
+import { ListRow } from '@/core/ui/layout/ListRow';
+import { StatusChip } from '@/core/ui/feedback/StatusChip';
 import { checkedLine, healthChip, numberSubtitle, stateChips } from './numbers-words';
 
 /** One number, read-only: label, role and phone, state chips, last check; the health at the end. */

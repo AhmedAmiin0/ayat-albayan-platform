@@ -7,7 +7,7 @@ import { t } from '@/lib/i18n';
 import { Note } from '@/more/Note';
 import { FormLabel } from '@/payments/FormLabel';
 import { pickReceipt, type Receipt } from '@/payments/receipt';
-import { Button } from '@/ui/Button';
+import { Button } from '@/core/ui/primitives/Button';
 import { openSigned, reportErrorText, uploadAttachment } from './api';
 
 export interface AttachmentsFieldProps {

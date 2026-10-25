@@ -2,8 +2,8 @@ import { subscriptionStatusStyle, type ThreadView } from '@ab/shared';
 import type { TextStyle } from 'react-native';
 import { t } from '@/lib/i18n';
 import { type, useTheme } from '@/theme';
-import { AppText } from '@/ui/AppText';
-import { StatusChip } from '@/ui/StatusChip';
+import { AppText } from '@/core/ui/primitives/AppText';
+import { StatusChip } from '@/core/ui/feedback/StatusChip';
 import { leadSourceWord, leadStatusChip } from './lead-words';
 import { badgeChip } from './subscription/subscription-words';
 

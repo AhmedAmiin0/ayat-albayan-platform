@@ -6,11 +6,11 @@ import { Note } from '@/more/Note';
 import { Section } from '@/more/Section';
 import type { StudentRef } from '@/students/types';
 import { type, useTheme } from '@/theme';
-import { AppText } from '@/ui/AppText';
-import { Button } from '@/ui/Button';
-import { ErrorState } from '@/ui/ErrorState';
-import { FilterPills } from '@/ui/FilterPills';
-import { NuqtaGlyph } from '@/ui/NuqtaGlyph';
+import { AppText } from '@/core/ui/primitives/AppText';
+import { Button } from '@/core/ui/primitives/Button';
+import { ErrorState } from '@/core/ui/feedback/ErrorState';
+import { FilterPills } from '@/core/ui/form/FilterPills';
+import { NuqtaGlyph } from '@/core/ui/primitives/NuqtaGlyph';
 import { QuotePreview } from './QuotePreview';
 import { startDayLabel, subscribeErrorText } from './subscribe-form';
 

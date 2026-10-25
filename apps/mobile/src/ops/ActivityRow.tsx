@@ -1,6 +1,6 @@
 import type { ActivityView } from '@ab/shared';
-import { ListRow } from '@/ui/ListRow';
-import { StatusChip } from '@/ui/StatusChip';
+import { ListRow } from '@/core/ui/layout/ListRow';
+import { StatusChip } from '@/core/ui/feedback/StatusChip';
 import { actionLabel, actorLine, metaLine, resultLabel, resultStyle } from './activity-format';
 
 /** One logged action: what, by whom, on which item, when, and whether it worked. */

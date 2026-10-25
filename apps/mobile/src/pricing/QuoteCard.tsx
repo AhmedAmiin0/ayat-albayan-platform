@@ -3,8 +3,8 @@ import { View } from 'react-native';
 import { t } from '@/lib/i18n';
 import { Note } from '@/more/Note';
 import { shape, type, useTheme } from '@/theme';
-import { AppText } from '@/ui/AppText';
-import { ltr } from '@/ui/Ltr';
+import { AppText } from '@/core/ui/primitives/AppText';
+import { ltr } from '@/core/ui/primitives/Ltr';
 import { FxNote } from './FxNote';
 import type { QuoteResponse } from './use-quote';
 

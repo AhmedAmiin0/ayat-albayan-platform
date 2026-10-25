@@ -5,8 +5,8 @@ import { ErrorLine } from '@/inbox/ErrorLine';
 import { invoiceSubtitle } from '@/finance/invoice-text';
 import { t } from '@/lib/i18n';
 import { type, useTheme } from '@/theme';
-import { AppText } from '@/ui/AppText';
-import { Button } from '@/ui/Button';
+import { AppText } from '@/core/ui/primitives/AppText';
+import { Button } from '@/core/ui/primitives/Button';
 import { invoiceDownloadUrl } from './money-queries';
 
 const M = t.mobileStudentFile.money;

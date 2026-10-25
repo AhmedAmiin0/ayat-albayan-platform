@@ -1,8 +1,8 @@
 import { Pressable, View } from 'react-native';
 import { t } from '@/lib/i18n';
 import { shape, type, useTheme } from '@/theme';
-import { AppText } from '@/ui/AppText';
-import { Chevron } from '@/ui/Chevron';
+import { AppText } from '@/core/ui/primitives/AppText';
+import { Chevron } from '@/core/ui/primitives/Chevron';
 
 export interface PeriodSwitcherProps {
   /** «3 أكتوبر – 9 أكتوبر» or «الخميس 1 أكتوبر». */

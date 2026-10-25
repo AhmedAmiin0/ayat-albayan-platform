@@ -3,9 +3,9 @@ import { Share, View } from 'react-native';
 import { t } from '@/lib/i18n';
 import { Note } from '@/more/Note';
 import { type, useTheme } from '@/theme';
-import { AppText } from '@/ui/AppText';
-import { Button } from '@/ui/Button';
-import { StatusChip } from '@/ui/StatusChip';
+import { AppText } from '@/core/ui/primitives/AppText';
+import { Button } from '@/core/ui/primitives/Button';
+import { StatusChip } from '@/core/ui/feedback/StatusChip';
 import { notSentHint, resultLabel } from './invite-text';
 
 const R = t.meetingInvites.results;

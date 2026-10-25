@@ -4,7 +4,7 @@ import { View } from 'react-native';
 import { EditTimeIconButton } from '@/edit-time/EditTimeIconButton';
 import { t } from '@/lib/i18n';
 import { type, useTheme } from '@/theme';
-import { AppText } from '@/ui/AppText';
+import { AppText } from '@/core/ui/primitives/AppText';
 import { riyadhTime, studentNames } from './lesson-text';
 import { TimelineRow } from './TimelineRow';
 import { locale } from '@/lib/locale';

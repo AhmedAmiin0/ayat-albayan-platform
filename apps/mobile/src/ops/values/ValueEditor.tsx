@@ -1,8 +1,8 @@
 import { settingDef, type SettingKey } from '@ab/shared';
 import { View } from 'react-native';
 import { t } from '@/lib/i18n';
-import { Field } from '@/ui/Field';
-import { FilterPills } from '@/ui/FilterPills';
+import { Field } from '@/core/ui/form/Field';
+import { FilterPills } from '@/core/ui/form/FilterPills';
 import { choicesOf, editorOf, type Draft } from './value-draft';
 import { labelOf, optionLabel, textAt } from './value-text';
 

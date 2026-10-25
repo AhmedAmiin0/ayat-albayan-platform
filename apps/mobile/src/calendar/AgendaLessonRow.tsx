@@ -8,9 +8,9 @@ import { t } from '@/lib/i18n';
 import { LiveBadge } from '@/live/LiveBadge';
 import { type, useTheme } from '@/theme';
 import { durationLabel, riyadhTime, studentNames } from '@/today/lesson-text';
-import { AppText } from '@/ui/AppText';
-import { Button } from '@/ui/Button';
-import { StatusChip } from '@/ui/StatusChip';
+import { AppText } from '@/core/ui/primitives/AppText';
+import { Button } from '@/core/ui/primitives/Button';
+import { StatusChip } from '@/core/ui/feedback/StatusChip';
 import { teacherClock } from './agenda';
 import { Tag } from './Tag';
 

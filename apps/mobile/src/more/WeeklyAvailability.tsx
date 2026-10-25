@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { apiFetch } from '@/lib/api';
 import { t } from '@/lib/i18n';
 import { pathKey } from '@/lib/query-keys';
-import { ErrorState } from '@/ui/ErrorState';
+import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { Note } from './Note';
 import { groupByWeekday, gridTz, tzLabel } from './schedule';
 import { Section } from './Section';

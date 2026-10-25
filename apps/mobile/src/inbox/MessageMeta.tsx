@@ -2,7 +2,7 @@ import type { MessageView } from '@ab/shared';
 import { useState } from 'react';
 import { View } from 'react-native';
 import { type, useTheme } from '@/theme';
-import { AppText } from '@/ui/AppText';
+import { AppText } from '@/core/ui/primitives/AppText';
 import { DeliveryTicks } from './DeliveryTicks';
 import { lineWord } from './line-words';
 import { deliveryTimes, queuedLine, stamp } from './message-text';

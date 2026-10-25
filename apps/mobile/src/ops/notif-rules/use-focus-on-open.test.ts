@@ -1,5 +1,5 @@
 import { AccessibilityInfo } from 'react-native';
-import type { AppTextNode } from '@/ui/AppText';
+import type { AppTextNode } from '@/core/ui/primitives/AppText';
 import { focusNode } from './use-focus-on-open';
 
 const mockFindNodeHandle = jest.fn();

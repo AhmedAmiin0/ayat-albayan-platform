@@ -5,8 +5,8 @@ import { View } from 'react-native';
 import { apiSend } from '@/lib/api';
 import { t } from '@/lib/i18n';
 import { pathKey } from '@/lib/query-keys';
-import { Button } from '@/ui/Button';
-import { InlineConfirm } from '@/ui/InlineConfirm';
+import { Button } from '@/core/ui/primitives/Button';
+import { InlineConfirm } from '@/core/ui/feedback/InlineConfirm';
 import { ErrorLine } from './ErrorLine';
 
 /**

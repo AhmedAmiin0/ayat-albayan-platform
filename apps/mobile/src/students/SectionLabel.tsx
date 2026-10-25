@@ -1,5 +1,5 @@
 import { type, useTheme } from '@/theme';
-import { AppText } from '@/ui/AppText';
+import { AppText } from '@/core/ui/primitives/AppText';
 
 /** Small ink-3 label over a quick-view block (البرنامج، ولي الأمر…). */
 export function SectionLabel({ children }: { children: string }) {

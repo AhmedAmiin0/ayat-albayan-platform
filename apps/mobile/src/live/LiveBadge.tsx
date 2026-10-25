@@ -2,7 +2,7 @@ import type { LessonView } from '@ab/shared';
 import { useMinuteClock } from '@/classroom/use-minute-clock';
 import { t } from '@/lib/i18n';
 import { useJoinWindow } from '@/lib/public-config';
-import { StatusChip } from '@/ui/StatusChip';
+import { StatusChip } from '@/core/ui/feedback/StatusChip';
 import { livePhase } from './live-filter';
 
 /** «مباشر الآن» (filled dot + word) beside a row's time while the lesson is under way; else nothing. */

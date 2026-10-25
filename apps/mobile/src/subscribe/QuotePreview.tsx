@@ -5,8 +5,8 @@ import { Note } from '@/more/Note';
 import { money } from '@/payments/format';
 import { FxNote } from '@/pricing/FxNote';
 import { shape, type, useTheme } from '@/theme';
-import { AppText } from '@/ui/AppText';
-import { ltr } from '@/ui/Ltr';
+import { AppText } from '@/core/ui/primitives/AppText';
+import { ltr } from '@/core/ui/primitives/Ltr';
 
 const p = t.pricing;
 const minutes: Readonly<Record<string, string | undefined>> = p.durations;

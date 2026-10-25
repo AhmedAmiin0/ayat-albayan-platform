@@ -3,8 +3,8 @@ import { View } from 'react-native';
 import { t } from '@/lib/i18n';
 import { FormLabel } from '@/payments/FormLabel';
 import { type, useTheme } from '@/theme';
-import { AppText } from '@/ui/AppText';
-import { FilterPills } from '@/ui/FilterPills';
+import { AppText } from '@/core/ui/primitives/AppText';
+import { FilterPills } from '@/core/ui/form/FilterPills';
 import { dueText, packageLabel } from './package-text';
 
 export interface OpenPackagePickerProps {

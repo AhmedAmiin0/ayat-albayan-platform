@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { View } from 'react-native';
 import { t } from '@/lib/i18n';
 import { Note } from '@/more/Note';
-import { FilterPills } from '@/ui/FilterPills';
+import { FilterPills } from '@/core/ui/form/FilterPills';
 import { audienceTabs, rowsOf, type AudienceTab } from './audience-tabs';
 import { CatalogueRow } from './CatalogueRow';
 import type { CatalogueToggles } from './use-catalogue-toggles';

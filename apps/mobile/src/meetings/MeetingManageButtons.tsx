@@ -1,5 +1,5 @@
 import { t } from '@/lib/i18n';
-import { Button } from '@/ui/Button';
+import { Button } from '@/core/ui/primitives/Button';
 import type { Asking } from './use-meeting-manage';
 
 const L = t.meetings.internal;

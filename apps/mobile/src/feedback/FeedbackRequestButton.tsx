@@ -4,7 +4,7 @@ import { ErrorLine } from '@/inbox/ErrorLine';
 import { useApprovedTemplates } from '@/inbox/TemplatePicker';
 import { t } from '@/lib/i18n';
 import { Note } from '@/more/Note';
-import { Button } from '@/ui/Button';
+import { Button } from '@/core/ui/primitives/Button';
 import { askable, requestError } from './feedback-text';
 import { useSendFeedbackRequest } from './queries';
 

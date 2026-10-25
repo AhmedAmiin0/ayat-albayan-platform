@@ -3,12 +3,12 @@ import { Pressable, View } from 'react-native';
 import { ApiError } from '@/lib/api';
 import { t } from '@/lib/i18n';
 import { useOptimisticStatus } from '@/lib/use-optimistic-status';
-import { StatusChip } from '@/ui/StatusChip';
+import { StatusChip } from '@/core/ui/feedback/StatusChip';
 import { type, useTheme } from '@/theme';
 import { allowedNextStatuses } from './allowed-next-statuses';
 import { ErrorLine } from './ErrorLine';
 import type { Lead } from './types';
-import { AppText } from '@/ui/AppText';
+import { AppText } from '@/core/ui/primitives/AppText';
 
 /**
  * «تغيير الحالة»: one chip button per move the API allows from the current status (R-LEAD-01).

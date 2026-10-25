@@ -8,9 +8,9 @@ import { KIND_EMPTY, kindCounts, kindPills, presetKind } from '@/students/studen
 import { StudentRow } from '@/students/StudentRow';
 import type { StudentListItem } from '@/students/types';
 import { useStatusCounts } from '@/students/use-student-list-data';
-import { Button } from '@/ui/Button';
-import { ErrorState } from '@/ui/ErrorState';
-import { FilterPills } from '@/ui/FilterPills';
+import { Button } from '@/core/ui/primitives/Button';
+import { ErrorState } from '@/core/ui/feedback/ErrorState';
+import { FilterPills } from '@/core/ui/form/FilterPills';
 import { Note } from './Note';
 import { Section } from './Section';
 

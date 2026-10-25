@@ -1,7 +1,7 @@
 import { View } from 'react-native';
 import { t } from '@/lib/i18n';
-import { AppText } from '@/ui/AppText';
-import { Button } from '@/ui/Button';
+import { AppText } from '@/core/ui/primitives/AppText';
+import { Button } from '@/core/ui/primitives/Button';
 import { shape, type, useTheme } from '@/theme';
 
 export interface ConflictNoticeProps {

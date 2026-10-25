@@ -2,7 +2,7 @@ import type { ReportFormResponse } from '@ab/shared';
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { t } from '@/lib/i18n';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
-import { ltr } from '@/ui/Ltr';
+import { ltr } from '@/core/ui/primitives/Ltr';
 import { reportFormKey } from './api';
 import { formResponse } from './fixtures';
 import { ReportFormScreen } from './ReportFormScreen';

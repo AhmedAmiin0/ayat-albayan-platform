@@ -7,8 +7,8 @@ import { t } from '@/lib/i18n';
 import { locale } from '@/lib/locale';
 import { type, useTheme } from '@/theme';
 import { riyadhTime } from '@/today/lesson-text';
-import { AppText } from '@/ui/AppText';
-import { StatusChip } from '@/ui/StatusChip';
+import { AppText } from '@/core/ui/primitives/AppText';
+import { StatusChip } from '@/core/ui/feedback/StatusChip';
 
 /**
  * One lesson in sales' read-only day (the admin agenda row without its actions): the Riyadh start,

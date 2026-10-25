@@ -1,7 +1,7 @@
 import { counted, formatAmount, intlLocale, RIYADH_TZ, type SubscriptionView } from '@ab/shared';
 import { t } from '@/lib/i18n';
 import { locale } from '@/lib/locale';
-import { ltr } from '@/ui/Ltr';
+import { ltr } from '@/core/ui/primitives/Ltr';
 
 // Money lines (docs/07 §2: Western digits, LTR values isolated). Strings come from ar.json only.
 

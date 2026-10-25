@@ -6,7 +6,7 @@ import {
   type TeacherStudentCounts,
 } from '@ab/shared';
 import { t } from '@/lib/i18n';
-import type { FilterPill } from '@/ui/FilterPills';
+import type { FilterPill } from '@/core/ui/form/FilterPills';
 import { countOf, totalOf } from './student-filters';
 
 // «مشترك · تجريبي · الكل» (owner 2026-10-12): the switch over a teacher's students, the same words

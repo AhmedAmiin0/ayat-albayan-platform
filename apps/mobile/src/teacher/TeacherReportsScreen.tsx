@@ -4,12 +4,12 @@ import { FlatList } from 'react-native';
 import { t } from '@/lib/i18n';
 import { Note } from '@/more/Note';
 import { usePagedList } from '@/lib/use-paged-list';
-import { EmptyState } from '@/ui/EmptyState';
-import { ErrorState } from '@/ui/ErrorState';
-import { FilterPills, type FilterPill } from '@/ui/FilterPills';
-import { Screen } from '@/ui/Screen';
-import { ScreenHeader } from '@/ui/ScreenHeader';
-import { useTabBarInset } from '@/ui/tab-bar-inset';
+import { EmptyState } from '@/core/ui/feedback/EmptyState';
+import { ErrorState } from '@/core/ui/feedback/ErrorState';
+import { FilterPills, type FilterPill } from '@/core/ui/form/FilterPills';
+import { Screen } from '@/core/ui/layout/Screen';
+import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
+import { useTabBarInset } from '@/core/ui/layout/tab-bar-inset';
 import { usePendingReports, useTeacherMe } from './queries';
 import { PendingReportRow, StudentHistoryRow, SubmittedReportRow } from './ReportRows';
 

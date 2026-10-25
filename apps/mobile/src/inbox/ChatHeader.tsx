@@ -2,9 +2,9 @@ import type { ReactNode } from 'react';
 import { View } from 'react-native';
 import { t } from '@/lib/i18n';
 import { type, useTheme } from '@/theme';
-import { AppText } from '@/ui/AppText';
-import { Chevron } from '@/ui/Chevron';
-import { IconButton } from '@/ui/IconButton';
+import { AppText } from '@/core/ui/primitives/AppText';
+import { Chevron } from '@/core/ui/primitives/Chevron';
+import { IconButton } from '@/core/ui/primitives/IconButton';
 
 export interface ChatHeaderProps {
   /** The name (or the number); one line, cut with an ellipsis. */

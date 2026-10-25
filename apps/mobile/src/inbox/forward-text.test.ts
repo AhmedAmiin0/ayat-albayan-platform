@@ -1,5 +1,5 @@
 import { t } from '@/lib/i18n';
-import { ltr } from '@/ui/Ltr';
+import { ltr } from '@/core/ui/primitives/Ltr';
 import { chatName, forwardNotice, selectedLine } from './forward-text';
 
 const names: Record<string, string> = { '+966500000001': 'أم يوسف', '+966500000002': 'أبو سالم' };

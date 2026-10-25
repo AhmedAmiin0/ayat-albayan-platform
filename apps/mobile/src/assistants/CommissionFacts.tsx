@@ -5,8 +5,8 @@ import { Note } from '@/more/Note';
 import { instantDay, money } from '@/payments/format';
 import { AmountText } from '@/sales-money/AmountText';
 import { CardTitle } from '@/sales-money/CardTitle';
-import { Ltr } from '@/ui/Ltr';
-import { StatusChip } from '@/ui/StatusChip';
+import { Ltr } from '@/core/ui/primitives/Ltr';
+import { StatusChip } from '@/core/ui/feedback/StatusChip';
 import { commissionStatusStyle } from './commission-style';
 
 const L = t.assistants.ledger;

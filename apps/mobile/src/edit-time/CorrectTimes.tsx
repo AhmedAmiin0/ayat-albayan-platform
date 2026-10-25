@@ -7,7 +7,7 @@ import { FormLabel } from '@/payments/FormLabel';
 import { SlotButton } from '@/reschedule/SlotButton';
 import { type, useTheme } from '@/theme';
 import { localDate } from '@/today/timeline';
-import { AppText } from '@/ui/AppText';
+import { AppText } from '@/core/ui/primitives/AppText';
 import { correctStarts } from './edit-time-body';
 
 export interface CorrectTimesProps {

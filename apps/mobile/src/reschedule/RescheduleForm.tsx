@@ -6,7 +6,7 @@ import { ErrorLine } from '@/inbox/ErrorLine';
 import { t } from '@/lib/i18n';
 import { type, useTheme } from '@/theme';
 import { studentNames } from '@/today/lesson-text';
-import { AppText } from '@/ui/AppText';
+import { AppText } from '@/core/ui/primitives/AppText';
 import { MoveFields } from './MoveFields';
 import { useReschedule } from './queries';
 import { familyTz, lessonDuration, type Scope } from './reschedule-body';

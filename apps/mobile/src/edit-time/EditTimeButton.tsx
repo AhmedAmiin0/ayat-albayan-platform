@@ -1,6 +1,6 @@
 import { t } from '@/lib/i18n';
 import { studentNames } from '@/today/lesson-text';
-import { Button } from '@/ui/Button';
+import { Button } from '@/core/ui/primitives/Button';
 import { editMode, type EditableLesson } from './types';
 
 export interface EditTimeButtonProps {

@@ -2,7 +2,7 @@ import { View } from 'react-native';
 import { t } from '@/lib/i18n';
 import { money } from '@/payments/format';
 import { shape, type, useTheme } from '@/theme';
-import { AppText } from '@/ui/AppText';
+import { AppText } from '@/core/ui/primitives/AppText';
 import type { PeriodTotal } from './types';
 
 /** The filter's net per currency (payments minus refunds), and the refunds when there are any. */

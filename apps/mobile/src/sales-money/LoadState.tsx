@@ -2,8 +2,8 @@ import { ActivityIndicator, View } from 'react-native';
 import { t } from '@/lib/i18n';
 import { Note } from '@/more/Note';
 import { useTheme } from '@/theme';
-import { EmptyState } from '@/ui/EmptyState';
-import { ErrorState } from '@/ui/ErrorState';
+import { EmptyState } from '@/core/ui/feedback/EmptyState';
+import { ErrorState } from '@/core/ui/feedback/ErrorState';
 
 export interface LoadStateProps {
   /** The query: no data yet, failed, or loaded (then `empty` decides). */

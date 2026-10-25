@@ -1,4 +1,4 @@
-import { FullScreenProvider } from '@/ui/Screen';
+import { FullScreenProvider } from '@/core/ui/layout/Screen';
 import { TabStack } from './TabStack';
 
 /**

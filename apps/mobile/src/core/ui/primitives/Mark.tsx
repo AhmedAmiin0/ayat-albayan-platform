@@ -1,7 +1,7 @@
 import { Image } from 'react-native';
 import { t } from '@/lib/i18n';
-import markLarge from '../../assets/brand/mark.png';
-import markSmall from '../../assets/brand/mark-small.png';
+import markLarge from '../../../../assets/brand/mark.png';
+import markSmall from '../../../../assets/brand/mark-small.png';
 
 // Logo mark (docs/07 §11): the academy's own emblem, the open Mushaf on its green rahle inside the
 // gold eight-point star, exported transparent by docs/design/brand/tools/build.mjs. It keeps its own

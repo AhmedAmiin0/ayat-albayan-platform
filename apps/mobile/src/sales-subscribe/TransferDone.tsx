@@ -5,9 +5,9 @@ import { t } from '@/lib/i18n';
 import { inTree, useTreeBase } from '@/nav/tree-base';
 import { money } from '@/payments/format';
 import { type, useTheme } from '@/theme';
-import { AppText } from '@/ui/AppText';
-import { Button } from '@/ui/Button';
-import { NuqtaGlyph } from '@/ui/NuqtaGlyph';
+import { AppText } from '@/core/ui/primitives/AppText';
+import { Button } from '@/core/ui/primitives/Button';
+import { NuqtaGlyph } from '@/core/ui/primitives/NuqtaGlyph';
 
 /**
  * The transfer is recorded: «أصبح الطالب مشتركًا» when the student is now active (a paid trial),

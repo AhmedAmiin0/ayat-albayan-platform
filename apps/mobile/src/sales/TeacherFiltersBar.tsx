@@ -1,8 +1,8 @@
 import { GENDERS, type Program, type SalesTeacherFilter } from '@ab/shared';
 import { View } from 'react-native';
 import { t } from '@/lib/i18n';
-import { FilterPills } from '@/ui/FilterPills';
-import { SearchField } from '@/ui/SearchField';
+import { FilterPills } from '@/core/ui/form/FilterPills';
+import { SearchField } from '@/core/ui/form/SearchField';
 
 export interface TeacherFiltersBarProps {
   value: SalesTeacherFilter;

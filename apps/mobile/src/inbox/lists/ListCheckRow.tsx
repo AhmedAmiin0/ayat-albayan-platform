@@ -2,7 +2,7 @@ import type { ChatList } from '@ab/shared';
 import { Pressable, View } from 'react-native';
 import { t } from '@/lib/i18n';
 import { shape, type, useTheme } from '@/theme';
-import { AppText } from '@/ui/AppText';
+import { AppText } from '@/core/ui/primitives/AppText';
 import { AutoListChip } from './AutoListNote';
 
 export interface ListCheckRowProps {

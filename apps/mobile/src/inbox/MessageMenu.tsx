@@ -3,8 +3,8 @@ import { Modal, Platform, Pressable, View } from 'react-native';
 import { t } from '@/lib/i18n';
 import { Note } from '@/more/Note';
 import { shape, type, useTheme } from '@/theme';
-import { AppText } from '@/ui/AppText';
-import { Button } from '@/ui/Button';
+import { AppText } from '@/core/ui/primitives/AppText';
+import { Button } from '@/core/ui/primitives/Button';
 import { useChatActions } from './chat-actions';
 import { quoteOf, quoteText } from './quote-text';
 

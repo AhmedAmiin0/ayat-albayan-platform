@@ -7,8 +7,8 @@ import { pathKey } from '@/lib/query-keys';
 import { t } from '@/lib/i18n';
 import { Note } from '@/more/Note';
 import { Section } from '@/more/Section';
-import { Button } from '@/ui/Button';
-import { ListRow } from '@/ui/ListRow';
+import { Button } from '@/core/ui/primitives/Button';
+import { ListRow } from '@/core/ui/layout/ListRow';
 import { assignAssistant, removeAssistant, useAllAssistants, useStudentAssistants } from './assistants-api';
 import { AssistantPicker } from './AssistantPicker';
 

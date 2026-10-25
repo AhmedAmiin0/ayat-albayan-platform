@@ -1,8 +1,8 @@
 import { View } from 'react-native';
 import { type, useTheme } from '@/theme';
-import { Ltr } from '@/ui/Ltr';
+import { Ltr } from '@/core/ui/primitives/Ltr';
 import { slotRange, weekdayName, type WeekdaySlots } from './schedule';
-import { AppText } from '@/ui/AppText';
+import { AppText } from '@/core/ui/primitives/AppText';
 
 /** «الاتنين   16:00 – 18:00   20:00 – 22:00»: the day, then its ranges (wrapping). */
 export function WeekdayRow({ day }: { day: WeekdaySlots }) {

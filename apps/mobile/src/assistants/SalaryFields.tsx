@@ -2,7 +2,7 @@ import { View } from 'react-native';
 import { ErrorLine } from '@/inbox/ErrorLine';
 import { t } from '@/lib/i18n';
 import { Section } from '@/more/Section';
-import { Field } from '@/ui/Field';
+import { Field } from '@/core/ui/form/Field';
 import { CurrencyPills } from './CurrencyPills';
 import { fieldError } from './errors';
 import { StartDayPicker } from './StartDayPicker';

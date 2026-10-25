@@ -2,8 +2,8 @@ import { placeholderToken, SAVED_REPLY_PLACEHOLDERS, type SavedReplyPlaceholder 
 import { View } from 'react-native';
 import { t } from '@/lib/i18n';
 import { type, useTheme } from '@/theme';
-import { AppText } from '@/ui/AppText';
-import { PillButton } from '@/ui/PillButton';
+import { AppText } from '@/core/ui/primitives/AppText';
+import { PillButton } from '@/core/ui/primitives/PillButton';
 
 /** `text` with the placeholder put where the cursor is (or replacing the selection). Pure. */
 export function insertToken(input: { text: string; key: SavedReplyPlaceholder; selection: { start: number; end: number } }): string {

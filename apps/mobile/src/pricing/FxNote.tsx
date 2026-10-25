@@ -3,8 +3,8 @@ import { Linking, Pressable, View } from 'react-native';
 import { t } from '@/lib/i18n';
 import { Note } from '@/more/Note';
 import { type, useTheme } from '@/theme';
-import { AppText } from '@/ui/AppText';
-import { ltr } from '@/ui/Ltr';
+import { AppText } from '@/core/ui/primitives/AppText';
+import { ltr } from '@/core/ui/primitives/Ltr';
 import type { QuoteFx } from './use-quote';
 
 const fx = t.pricing.fx;

@@ -1,5 +1,5 @@
 import { type, useTheme } from '@/theme';
-import { AppText } from '@/ui/AppText';
+import { AppText } from '@/core/ui/primitives/AppText';
 
 /** A small ink-2 heading inside a card («تغييرات الحالة», «الدفعات المرتبطة»). */
 export function SmallHeading({ children }: { children: string }) {

@@ -3,7 +3,7 @@ import { SummaryList } from '@/booking/ConfirmStep';
 import { t } from '@/lib/i18n';
 import { SectionLabel } from '@/students/SectionLabel';
 import { type, useTheme } from '@/theme';
-import { AppText } from '@/ui/AppText';
+import { AppText } from '@/core/ui/primitives/AppText';
 import type { TrialDateDraft } from './trial-date-body';
 import { whenLines } from './trial-date-text';
 

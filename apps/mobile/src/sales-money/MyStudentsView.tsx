@@ -1,6 +1,6 @@
 import { FlatList } from 'react-native';
 import { t } from '@/lib/i18n';
-import { useTabBarInset } from '@/ui/tab-bar-inset';
+import { useTabBarInset } from '@/core/ui/layout/tab-bar-inset';
 import { LoadState } from './LoadState';
 import { useMyStudents } from './my-api';
 import { MyStudentItem } from './MyStudentItem';

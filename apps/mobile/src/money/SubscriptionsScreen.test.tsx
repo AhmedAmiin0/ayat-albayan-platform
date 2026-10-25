@@ -2,7 +2,7 @@ import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { t } from '@/lib/i18n';
 import { page, STUDENT, subscription } from '@/payments/fixtures';
 import { renderWithQuery } from '@/test/query';
-import { ltr } from '@/ui/Ltr';
+import { ltr } from '@/core/ui/primitives/Ltr';
 import { adminTask } from './fixtures';
 import { SubscriptionsScreen } from './SubscriptionsScreen';
 

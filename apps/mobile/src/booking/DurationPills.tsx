@@ -3,7 +3,7 @@ import { View } from 'react-native';
 import { t } from '@/lib/i18n';
 import { Note } from '@/more/Note';
 import { FormLabel } from '@/payments/FormLabel';
-import { FilterPills } from '@/ui/FilterPills';
+import { FilterPills } from '@/core/ui/form/FilterPills';
 
 const lengths: Record<string, string | undefined> = t.enums.duration;
 const pills = () =>

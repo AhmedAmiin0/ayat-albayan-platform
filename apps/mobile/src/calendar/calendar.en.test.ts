@@ -1,6 +1,6 @@
 import type { AvailabilityRow } from '@/more/types';
 import { lesson } from '@/today/fixtures';
-import { ltr } from '@/ui/Ltr';
+import { ltr } from '@/core/ui/primitives/Ltr';
 import { availabilityLine, teacherClock } from './agenda';
 import { abrar, omar } from './overview-fixtures';
 import { freeLabel, teacherMeta, windowsLine } from './overview-text';

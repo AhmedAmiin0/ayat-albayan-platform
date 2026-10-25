@@ -10,7 +10,7 @@ import { Pressable, View, type ViewStyle } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
 import { t } from '@/lib/i18n';
 import { type Palette, type, useTheme } from '@/theme';
-import { AppText } from '@/ui/AppText';
+import { AppText } from '@/core/ui/primitives/AppText';
 
 // Read is the WhatsApp-like blue (`read`), the rest the tick grey (`tick`); failed is saffron, the
 // «دورك» tone of its chip (status-style.ts).

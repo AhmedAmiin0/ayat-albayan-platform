@@ -1,5 +1,5 @@
 import { type, useTheme } from '@/theme';
-import { AppText } from '@/ui/AppText';
+import { AppText } from '@/core/ui/primitives/AppText';
 
 /** Small ink-3 line: a hint («المواعيد بتوقيت الرياض») or an empty note («مفيش إجازات»). */
 export function Note({ children }: { children: string }) {

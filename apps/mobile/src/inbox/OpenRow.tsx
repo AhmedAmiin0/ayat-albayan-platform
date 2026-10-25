@@ -1,7 +1,7 @@
 import { View } from 'react-native';
 import { t } from '@/lib/i18n';
 import { useTheme } from '@/theme';
-import { IconButton } from '@/ui/IconButton';
+import { IconButton } from '@/core/ui/primitives/IconButton';
 import { AttachFile } from './AttachFile';
 import { SendIcon, TemplateIcon } from './chat-icons';
 import { ComposerInput } from './ComposerInput';

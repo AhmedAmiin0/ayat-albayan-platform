@@ -1,6 +1,6 @@
 import { View } from 'react-native';
 import { t } from '@/lib/i18n';
-import { Button } from '@/ui/Button';
+import { Button } from '@/core/ui/primitives/Button';
 import { ClosedNote } from './ClosedNote';
 import { SavedRepliesButton } from './saved-replies/SavedRepliesButton';
 

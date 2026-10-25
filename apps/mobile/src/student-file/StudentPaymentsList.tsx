@@ -6,8 +6,8 @@ import { PaymentItem } from '@/money/PaymentItem';
 import { PaymentTotals } from '@/money/PaymentTotals';
 import { periodTotals } from '@/money/queries';
 import { useTheme } from '@/theme';
-import { EmptyState } from '@/ui/EmptyState';
-import { ErrorState } from '@/ui/ErrorState';
+import { EmptyState } from '@/core/ui/feedback/EmptyState';
+import { ErrorState } from '@/core/ui/feedback/ErrorState';
 
 /** GET /payments?studentId=: the student's payments and refunds, newest first, with the net; each with its receipt. */
 export function StudentPaymentsList({ studentId }: { studentId: string }) {

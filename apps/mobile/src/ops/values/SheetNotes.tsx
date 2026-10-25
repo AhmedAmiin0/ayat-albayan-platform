@@ -3,7 +3,7 @@ import { View } from 'react-native';
 import { ErrorLine } from '@/inbox/ErrorLine';
 import { t } from '@/lib/i18n';
 import { Note } from '@/more/Note';
-import { Button } from '@/ui/Button';
+import { Button } from '@/core/ui/primitives/Button';
 import { formatAt } from '../activity-format';
 import { DevKey } from './DevKey';
 import { sameValue } from './value-draft';

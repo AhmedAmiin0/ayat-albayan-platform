@@ -5,8 +5,8 @@ import { useTabOpen } from '@/auth/use-tab-open';
 import { t } from '@/lib/i18n';
 import { money, paidOf } from '@/payments/format';
 import { type, useTheme } from '@/theme';
-import { AppText } from '@/ui/AppText';
-import { ListRow } from '@/ui/ListRow';
+import { AppText } from '@/core/ui/primitives/AppText';
+import { ListRow } from '@/core/ui/layout/ListRow';
 import { daysLateText, isSevere } from './receivables';
 
 /** Student + code, guardian under it; the amount owed and how late at the inline-end. Opens the payment form (only when the Students tab is open to the role). */

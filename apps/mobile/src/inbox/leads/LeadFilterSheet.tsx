@@ -3,11 +3,11 @@ import type { ReactNode } from 'react';
 import { Modal, ScrollView, View } from 'react-native';
 import { t } from '@/lib/i18n';
 import { type, useTheme } from '@/theme';
-import { AppText } from '@/ui/AppText';
-import { Button } from '@/ui/Button';
-import { FilterPills, type FilterPill } from '@/ui/FilterPills';
-import { Screen } from '@/ui/Screen';
-import { ScreenHeader } from '@/ui/ScreenHeader';
+import { AppText } from '@/core/ui/primitives/AppText';
+import { Button } from '@/core/ui/primitives/Button';
+import { FilterPills, type FilterPill } from '@/core/ui/form/FilterPills';
+import { Screen } from '@/core/ui/layout/Screen';
+import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { activeFilterCount, NO_FILTERS, type LeadFilters } from './lead-filters';
 import { leadSortChoices, leadSortFromValue, leadSortValue } from './lead-sort';
 

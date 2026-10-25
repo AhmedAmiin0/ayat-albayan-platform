@@ -3,9 +3,9 @@ import { t } from '@/lib/i18n';
 import { Note } from '@/more/Note';
 import { Section } from '@/more/Section';
 import { shape, type, useTheme } from '@/theme';
-import { AppText } from '@/ui/AppText';
-import { ErrorState } from '@/ui/ErrorState';
-import { StatusChip } from '@/ui/StatusChip';
+import { AppText } from '@/core/ui/primitives/AppText';
+import { ErrorState } from '@/core/ui/feedback/ErrorState';
+import { StatusChip } from '@/core/ui/feedback/StatusChip';
 import { googleStatusText, useGoogleStatus, type GoogleStatusText } from './google-status';
 
 function Line({ children, tone }: { children: string; tone?: 'bad' }) {
