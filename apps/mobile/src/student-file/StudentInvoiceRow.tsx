@@ -2,7 +2,7 @@ import type { InvoiceView } from '@ab/shared';
 import { useState } from 'react';
 import { Linking, View } from 'react-native';
 import { ErrorLine } from '@/inbox/ErrorLine';
-import { invoiceSubtitle } from '@/finance/invoice-text';
+import { invoiceSubtitle } from '@/finance/invoices/invoice-text';
 import { t } from '@/core/lib/i18n/i18n';
 import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';

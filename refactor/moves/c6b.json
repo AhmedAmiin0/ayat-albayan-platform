@@ -1,0 +1,416 @@
+{
+  "id": "c6b",
+  "seq": 83,
+  "moves": [
+    {
+      "from": "apps/mobile/src/money/PaymentFilters*",
+      "to": "apps/mobile/src/money/payments/"
+    },
+    {
+      "from": "apps/mobile/src/money/PaymentItem*",
+      "to": "apps/mobile/src/money/payments/"
+    },
+    {
+      "from": "apps/mobile/src/money/PaymentTotals*",
+      "to": "apps/mobile/src/money/payments/"
+    },
+    {
+      "from": "apps/mobile/src/money/PaymentsScreen*",
+      "to": "apps/mobile/src/money/payments/"
+    },
+    {
+      "from": "apps/mobile/src/money/filters*",
+      "to": "apps/mobile/src/money/payments/"
+    },
+    {
+      "from": "apps/mobile/src/money/ReceivableItem*",
+      "to": "apps/mobile/src/money/receivables/"
+    },
+    {
+      "from": "apps/mobile/src/money/ReceivablesScreen*",
+      "to": "apps/mobile/src/money/receivables/"
+    },
+    {
+      "from": "apps/mobile/src/money/ReceivablesSummary*",
+      "to": "apps/mobile/src/money/receivables/"
+    },
+    {
+      "from": "apps/mobile/src/money/receivables*",
+      "to": "apps/mobile/src/money/receivables/"
+    },
+    {
+      "from": "apps/mobile/src/money/SubscriptionItem*",
+      "to": "apps/mobile/src/money/subscriptions/"
+    },
+    {
+      "from": "apps/mobile/src/money/SubscriptionsList*",
+      "to": "apps/mobile/src/money/subscriptions/"
+    },
+    {
+      "from": "apps/mobile/src/money/SubscriptionsScreen*",
+      "to": "apps/mobile/src/money/subscriptions/"
+    },
+    {
+      "from": "apps/mobile/src/money/TaskItem*",
+      "to": "apps/mobile/src/money/tasks/"
+    },
+    {
+      "from": "apps/mobile/src/money/TasksList*",
+      "to": "apps/mobile/src/money/tasks/"
+    },
+    {
+      "from": "apps/mobile/src/money/tasks*",
+      "to": "apps/mobile/src/money/tasks/"
+    },
+    {
+      "from": "apps/mobile/src/money/AttachmentItem*",
+      "to": "apps/mobile/src/money/attachments/"
+    },
+    {
+      "from": "apps/mobile/src/money/AttachmentsViewer*",
+      "to": "apps/mobile/src/money/attachments/"
+    },
+    {
+      "from": "apps/mobile/src/money/ReceiptViewer*",
+      "to": "apps/mobile/src/money/attachments/"
+    },
+    {
+      "from": "apps/mobile/src/money/attachments*",
+      "to": "apps/mobile/src/money/attachments/"
+    },
+    {
+      "from": "apps/mobile/src/money/receipt-file*",
+      "to": "apps/mobile/src/money/attachments/"
+    },
+    {
+      "from": "apps/mobile/src/money/fixtures*",
+      "to": "apps/mobile/src/money/shared/"
+    },
+    {
+      "from": "apps/mobile/src/money/months*",
+      "to": "apps/mobile/src/money/shared/"
+    },
+    {
+      "from": "apps/mobile/src/money/queries*",
+      "to": "apps/mobile/src/money/shared/"
+    },
+    {
+      "from": "apps/mobile/src/money/types*",
+      "to": "apps/mobile/src/money/shared/"
+    },
+    {
+      "from": "apps/mobile/src/earnings/MyEarningsScreen*",
+      "to": "apps/mobile/src/earnings/screens/"
+    },
+    {
+      "from": "apps/mobile/src/earnings/TeacherEarningsScreen*",
+      "to": "apps/mobile/src/earnings/screens/"
+    },
+    {
+      "from": "apps/mobile/src/earnings/EarningsHeader*",
+      "to": "apps/mobile/src/earnings/components/"
+    },
+    {
+      "from": "apps/mobile/src/earnings/EarningsList*",
+      "to": "apps/mobile/src/earnings/components/"
+    },
+    {
+      "from": "apps/mobile/src/earnings/EarningsSummary*",
+      "to": "apps/mobile/src/earnings/components/"
+    },
+    {
+      "from": "apps/mobile/src/earnings/PayForm*",
+      "to": "apps/mobile/src/earnings/components/"
+    },
+    {
+      "from": "apps/mobile/src/earnings/PaymentItem*",
+      "to": "apps/mobile/src/earnings/components/"
+    },
+    {
+      "from": "apps/mobile/src/earnings/SessionItem*",
+      "to": "apps/mobile/src/earnings/components/"
+    },
+    {
+      "from": "apps/mobile/src/earnings/earnings-errors*",
+      "to": "apps/mobile/src/earnings/lib/"
+    },
+    {
+      "from": "apps/mobile/src/earnings/format*",
+      "to": "apps/mobile/src/earnings/lib/"
+    },
+    {
+      "from": "apps/mobile/src/earnings/pay-draft*",
+      "to": "apps/mobile/src/earnings/lib/"
+    },
+    {
+      "from": "apps/mobile/src/earnings/scope*",
+      "to": "apps/mobile/src/earnings/lib/"
+    },
+    {
+      "from": "apps/mobile/src/earnings/queries*",
+      "to": "apps/mobile/src/earnings/hooks/"
+    },
+    {
+      "from": "apps/mobile/src/earnings/upload-receipt*",
+      "to": "apps/mobile/src/earnings/hooks/"
+    },
+    {
+      "from": "apps/mobile/src/earnings/use-pay-teacher*",
+      "to": "apps/mobile/src/earnings/hooks/"
+    },
+    {
+      "from": "apps/mobile/src/earnings/fixtures*",
+      "to": "apps/mobile/src/earnings/testing/"
+    }
+  ],
+  "files": [
+    [
+      "apps/mobile/src/earnings/earnings-errors.test.ts",
+      "apps/mobile/src/earnings/lib/earnings-errors.test.ts"
+    ],
+    [
+      "apps/mobile/src/earnings/earnings-errors.ts",
+      "apps/mobile/src/earnings/lib/earnings-errors.ts"
+    ],
+    [
+      "apps/mobile/src/earnings/EarningsHeader.tsx",
+      "apps/mobile/src/earnings/components/EarningsHeader.tsx"
+    ],
+    [
+      "apps/mobile/src/earnings/EarningsList.tsx",
+      "apps/mobile/src/earnings/components/EarningsList.tsx"
+    ],
+    [
+      "apps/mobile/src/earnings/EarningsSummary.tsx",
+      "apps/mobile/src/earnings/components/EarningsSummary.tsx"
+    ],
+    [
+      "apps/mobile/src/earnings/fixtures.ts",
+      "apps/mobile/src/earnings/testing/fixtures.ts"
+    ],
+    [
+      "apps/mobile/src/earnings/format.test.ts",
+      "apps/mobile/src/earnings/lib/format.test.ts"
+    ],
+    [
+      "apps/mobile/src/earnings/format.ts",
+      "apps/mobile/src/earnings/lib/format.ts"
+    ],
+    [
+      "apps/mobile/src/earnings/MyEarningsScreen.test.tsx",
+      "apps/mobile/src/earnings/screens/MyEarningsScreen.test.tsx"
+    ],
+    [
+      "apps/mobile/src/earnings/MyEarningsScreen.tsx",
+      "apps/mobile/src/earnings/screens/MyEarningsScreen.tsx"
+    ],
+    [
+      "apps/mobile/src/earnings/pay-draft.test.ts",
+      "apps/mobile/src/earnings/lib/pay-draft.test.ts"
+    ],
+    [
+      "apps/mobile/src/earnings/pay-draft.ts",
+      "apps/mobile/src/earnings/lib/pay-draft.ts"
+    ],
+    [
+      "apps/mobile/src/earnings/PayForm.tsx",
+      "apps/mobile/src/earnings/components/PayForm.tsx"
+    ],
+    [
+      "apps/mobile/src/earnings/PaymentItem.tsx",
+      "apps/mobile/src/earnings/components/PaymentItem.tsx"
+    ],
+    [
+      "apps/mobile/src/earnings/queries.ts",
+      "apps/mobile/src/earnings/hooks/queries.ts"
+    ],
+    [
+      "apps/mobile/src/earnings/scope.ts",
+      "apps/mobile/src/earnings/lib/scope.ts"
+    ],
+    [
+      "apps/mobile/src/earnings/SessionItem.tsx",
+      "apps/mobile/src/earnings/components/SessionItem.tsx"
+    ],
+    [
+      "apps/mobile/src/earnings/TeacherEarningsScreen.test.tsx",
+      "apps/mobile/src/earnings/screens/TeacherEarningsScreen.test.tsx"
+    ],
+    [
+      "apps/mobile/src/earnings/TeacherEarningsScreen.tsx",
+      "apps/mobile/src/earnings/screens/TeacherEarningsScreen.tsx"
+    ],
+    [
+      "apps/mobile/src/earnings/upload-receipt.test.ts",
+      "apps/mobile/src/earnings/hooks/upload-receipt.test.ts"
+    ],
+    [
+      "apps/mobile/src/earnings/upload-receipt.ts",
+      "apps/mobile/src/earnings/hooks/upload-receipt.ts"
+    ],
+    [
+      "apps/mobile/src/earnings/use-pay-teacher.test.tsx",
+      "apps/mobile/src/earnings/hooks/use-pay-teacher.test.tsx"
+    ],
+    [
+      "apps/mobile/src/earnings/use-pay-teacher.ts",
+      "apps/mobile/src/earnings/hooks/use-pay-teacher.ts"
+    ],
+    [
+      "apps/mobile/src/money/AttachmentItem.tsx",
+      "apps/mobile/src/money/attachments/AttachmentItem.tsx"
+    ],
+    [
+      "apps/mobile/src/money/attachments.test.ts",
+      "apps/mobile/src/money/attachments/attachments.test.ts"
+    ],
+    [
+      "apps/mobile/src/money/attachments.ts",
+      "apps/mobile/src/money/attachments/attachments.ts"
+    ],
+    [
+      "apps/mobile/src/money/AttachmentsViewer.tsx",
+      "apps/mobile/src/money/attachments/AttachmentsViewer.tsx"
+    ],
+    [
+      "apps/mobile/src/money/filters.test.ts",
+      "apps/mobile/src/money/payments/filters.test.ts"
+    ],
+    [
+      "apps/mobile/src/money/filters.ts",
+      "apps/mobile/src/money/payments/filters.ts"
+    ],
+    [
+      "apps/mobile/src/money/fixtures.ts",
+      "apps/mobile/src/money/shared/fixtures.ts"
+    ],
+    [
+      "apps/mobile/src/money/months.test.ts",
+      "apps/mobile/src/money/shared/months.test.ts"
+    ],
+    [
+      "apps/mobile/src/money/months.ts",
+      "apps/mobile/src/money/shared/months.ts"
+    ],
+    [
+      "apps/mobile/src/money/PaymentFilters.tsx",
+      "apps/mobile/src/money/payments/PaymentFilters.tsx"
+    ],
+    [
+      "apps/mobile/src/money/PaymentItem.attachments.test.tsx",
+      "apps/mobile/src/money/payments/PaymentItem.attachments.test.tsx"
+    ],
+    [
+      "apps/mobile/src/money/PaymentItem.tsx",
+      "apps/mobile/src/money/payments/PaymentItem.tsx"
+    ],
+    [
+      "apps/mobile/src/money/PaymentsScreen.en.test.tsx",
+      "apps/mobile/src/money/payments/PaymentsScreen.en.test.tsx"
+    ],
+    [
+      "apps/mobile/src/money/PaymentsScreen.test.tsx",
+      "apps/mobile/src/money/payments/PaymentsScreen.test.tsx"
+    ],
+    [
+      "apps/mobile/src/money/PaymentsScreen.tsx",
+      "apps/mobile/src/money/payments/PaymentsScreen.tsx"
+    ],
+    [
+      "apps/mobile/src/money/PaymentTotals.tsx",
+      "apps/mobile/src/money/payments/PaymentTotals.tsx"
+    ],
+    [
+      "apps/mobile/src/money/queries.test.ts",
+      "apps/mobile/src/money/shared/queries.test.ts"
+    ],
+    [
+      "apps/mobile/src/money/queries.ts",
+      "apps/mobile/src/money/shared/queries.ts"
+    ],
+    [
+      "apps/mobile/src/money/receipt-file.test.ts",
+      "apps/mobile/src/money/attachments/receipt-file.test.ts"
+    ],
+    [
+      "apps/mobile/src/money/receipt-file.ts",
+      "apps/mobile/src/money/attachments/receipt-file.ts"
+    ],
+    [
+      "apps/mobile/src/money/ReceiptViewer.tsx",
+      "apps/mobile/src/money/attachments/ReceiptViewer.tsx"
+    ],
+    [
+      "apps/mobile/src/money/ReceivableItem.tsx",
+      "apps/mobile/src/money/receivables/ReceivableItem.tsx"
+    ],
+    [
+      "apps/mobile/src/money/receivables.en.test.ts",
+      "apps/mobile/src/money/receivables/receivables.en.test.ts"
+    ],
+    [
+      "apps/mobile/src/money/receivables.test.ts",
+      "apps/mobile/src/money/receivables/receivables.test.ts"
+    ],
+    [
+      "apps/mobile/src/money/receivables.ts",
+      "apps/mobile/src/money/receivables/receivables.ts"
+    ],
+    [
+      "apps/mobile/src/money/ReceivablesScreen.en.test.tsx",
+      "apps/mobile/src/money/receivables/ReceivablesScreen.en.test.tsx"
+    ],
+    [
+      "apps/mobile/src/money/ReceivablesScreen.test.tsx",
+      "apps/mobile/src/money/receivables/ReceivablesScreen.test.tsx"
+    ],
+    [
+      "apps/mobile/src/money/ReceivablesScreen.tsx",
+      "apps/mobile/src/money/receivables/ReceivablesScreen.tsx"
+    ],
+    [
+      "apps/mobile/src/money/ReceivablesSummary.tsx",
+      "apps/mobile/src/money/receivables/ReceivablesSummary.tsx"
+    ],
+    [
+      "apps/mobile/src/money/SubscriptionItem.tsx",
+      "apps/mobile/src/money/subscriptions/SubscriptionItem.tsx"
+    ],
+    [
+      "apps/mobile/src/money/SubscriptionsList.tsx",
+      "apps/mobile/src/money/subscriptions/SubscriptionsList.tsx"
+    ],
+    [
+      "apps/mobile/src/money/SubscriptionsScreen.en.test.tsx",
+      "apps/mobile/src/money/subscriptions/SubscriptionsScreen.en.test.tsx"
+    ],
+    [
+      "apps/mobile/src/money/SubscriptionsScreen.test.tsx",
+      "apps/mobile/src/money/subscriptions/SubscriptionsScreen.test.tsx"
+    ],
+    [
+      "apps/mobile/src/money/SubscriptionsScreen.tsx",
+      "apps/mobile/src/money/subscriptions/SubscriptionsScreen.tsx"
+    ],
+    [
+      "apps/mobile/src/money/TaskItem.tsx",
+      "apps/mobile/src/money/tasks/TaskItem.tsx"
+    ],
+    [
+      "apps/mobile/src/money/tasks.test.ts",
+      "apps/mobile/src/money/tasks/tasks.test.ts"
+    ],
+    [
+      "apps/mobile/src/money/tasks.ts",
+      "apps/mobile/src/money/tasks/tasks.ts"
+    ],
+    [
+      "apps/mobile/src/money/TasksList.tsx",
+      "apps/mobile/src/money/tasks/TasksList.tsx"
+    ],
+    [
+      "apps/mobile/src/money/types.ts",
+      "apps/mobile/src/money/shared/types.ts"
+    ]
+  ]
+}
