@@ -10,6 +10,7 @@ describe('redact (lock screen, owner 2026-10-25)', () => {
   it('masks phone numbers to their last 4 digits, in any spacing', () => {
     expect(redact(`اتصل على ${PHONE}`)).toBe('اتصل على •••0123');
     expect(redact('رقمي 010 0000 0123')).toBe('رقمي •••0123');
+    expect(redact('رقمي +20 (100) 000 0123')).toBe('رقمي •••0123');
   });
 
   it('masks a phone typed in Arabic-Indic or Persian digits', () => {

@@ -59,8 +59,8 @@ export async function registerPush(): Promise<void> {
 
 /**
  * Takes this device's token off the profile. Call it BEFORE supabase.auth.signOut(): the DELETE
- * needs the session's bearer. Never throws. When it fails (offline, timeout, a 401-forced sign-out)
- * the server still drops the token once the session ends: it is bound to it (migration 700).
+ * needs the session's bearer. Never throws. When it fails (offline, timeout) sign-out also silences
+ * the OS (silence-push); a session ended on the server drops the token too (migration 700).
  */
 export async function unregisterPush(): Promise<void> {
   try {

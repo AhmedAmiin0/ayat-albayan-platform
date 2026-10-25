@@ -42,6 +42,18 @@ describe('device pushes only to a live session of the recipient (migration 700)'
   });
 });
 
+describe('a failed session lookup (migration not applied yet, RPC timeout)', () => {
+  it('fails closed for devices, but the bell row is still written', async () => {
+    const { db, writes, rpc } = fakePushDb([teacher]);
+    rpc.mockResolvedValueOnce({ data: null, error: { message: 'timeout' } } as never);
+    const transport = vi.fn<PushTransport>(async (m) => okTickets(m.length));
+    await pushService(db, { transport, web: fakeWeb().web }).notifyProfiles(target);
+    await flushPushes();
+    expect(writes.filter((w) => w.op === 'upsert')).toHaveLength(1);
+    expect(transport).not.toHaveBeenCalled();
+  });
+});
+
 describe('liveSessions', () => {
   it('asks push_live_sessions once for the distinct non-null ids; none asks nothing', async () => {
     const { db, rpc } = fakePushDb([], { live: ['a'] });

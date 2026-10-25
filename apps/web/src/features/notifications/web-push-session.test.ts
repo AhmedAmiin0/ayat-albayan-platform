@@ -6,7 +6,8 @@ import { registerDrafts, type RegisterDraft } from '@/features/inbox/register-dr
 import { bindWebPushToSession } from './web-push-session';
 
 const dropLocalWebPush = vi.hoisted(() => vi.fn(async () => undefined));
-vi.mock('./web-push', () => ({ dropLocalWebPush }));
+const rebindWebPush = vi.hoisted(() => vi.fn(async () => null));
+vi.mock('./web-push', () => ({ dropLocalWebPush, rebindWebPush }));
 
 const PHONE = '+966501234567';
 
@@ -63,5 +64,21 @@ describe('bindWebPushToSession (R-NOT-02 privacy)', () => {
     expect(getDraft(PHONE).text).toBe('');
     expect(lastOwnSend(PHONE)).toBeUndefined();
     expect(registerDrafts.get(PHONE)).toBeUndefined();
+  });
+
+  it('on load, a signed-in browser re-binds its subscription to this session (bell never opened)', async () => {
+    await new Promise((resolve) => setTimeout(resolve, 0)); // earlier tests' deferred re-binds
+    vi.useFakeTimers();
+    rebindWebPush.mockClear();
+    const { auth, emit } = fakeAuth();
+    bindWebPushToSession(auth as never);
+    emit('INITIAL_SESSION', null);
+    emit('TOKEN_REFRESHED');
+    await vi.runAllTimersAsync();
+    expect(rebindWebPush).not.toHaveBeenCalled();
+    emit('INITIAL_SESSION', 'u1');
+    await vi.runAllTimersAsync();
+    expect(rebindWebPush).toHaveBeenCalledTimes(1);
+    vi.useRealTimers();
   });
 });

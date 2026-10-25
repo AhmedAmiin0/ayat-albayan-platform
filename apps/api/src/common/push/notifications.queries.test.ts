@@ -110,4 +110,11 @@ describe('NotificationsQueries (R-NOT-01)', () => {
       ]),
     );
   });
+
+  it('a session that has just ended (FK violation): 401 no_session, nothing else runs', async () => {
+    const { db, queries } = recordingDb(() => ({ error: { code: '23503', message: 'fk' }, data: null }));
+    const sub = { endpoint: 'https://fcm.googleapis.com/z', keys: { p256dh: 'k', auth: 'a' } };
+    await expect(new NotificationsQueries(db).subscribe('p1', sub, 'sess-gone')).rejects.toMatchObject({ status: 401 });
+    expect(queries).toHaveLength(1);
+  });
 });

@@ -4,8 +4,8 @@ import { pushText, type PushText } from './expo-push';
 // What a device shows on its lock screen (owner 2026-10-25): no more personal data than the alert
 // needs. The bell row keeps the full text: it is read only inside the app, after sign-in.
 
-/** A run of 7+ digits (Latin, Arabic-Indic or Persian; spaces, dashes, dots between): a phone. */
-const PHONE = /\+?[\d٠-٩۰-۹](?:[\d٠-٩۰-۹\s.-]{5,}[\d٠-٩۰-۹])/g;
+/** A run of 7+ digits (Latin, Arabic-Indic or Persian; spaces, dashes, dots, brackets between): a phone. */
+const PHONE = /\+?[\d٠-٩۰-۹](?:[\d٠-٩۰-۹\s.()-]{5,}[\d٠-٩۰-۹])/g;
 /** A sum with its currency on either side (Latin and Arabic-Indic digits). */
 const AMOUNT =
   /(?:[$€£]|\b(?:USD|EGP|SAR|AED|KWD)\b)\s?[\d٠-٩][\d٠-٩.,]*|[\d٠-٩][\d٠-٩.,]*\s?(?:[$€£]|\b(?:USD|EGP|SAR|AED|KWD)\b|ج\.م|جنيه|ريال|ر\.س|دولار|درهم)/giu;
