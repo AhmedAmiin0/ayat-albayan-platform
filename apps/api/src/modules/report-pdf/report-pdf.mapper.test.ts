@@ -76,3 +76,11 @@ describe('report PDF mapper (R-REP-01: everything derived from the DB)', () => {
     });
   });
 });
+
+describe('toMessage: the crm report kind (docs/19)', () => {
+  it('a trial lesson → crm.report trial; a regular one (or unknown) → regular', () => {
+    const trial = { ...sampleSource(), lesson: { ...sampleSource().lesson, trial: true } };
+    expect(toMessage(trial, 's1/l1.pdf', NOW).template_params.crm).toEqual({ report: 'trial' });
+    expect(toMessage(sampleSource(), 's1/l1.pdf', NOW).template_params.crm).toEqual({ report: 'regular' });
+  });
+});

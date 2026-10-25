@@ -2298,6 +2298,40 @@
     "jumpLatestCount": "Jump to the latest message ({count} new)",
     "readForbidden": "You are not allowed to view this chat",
     "replyTo": "Replying to:",
+    "reply": {
+      "action": "Reply",
+      "menu": "Message options",
+      "cancel": "Cancel reply",
+      "strip": "Replying to a message",
+      "you": "You",
+      "template": "Template message",
+      "jump": "Go to the original message",
+      "notLoaded": "The original message is older than the loaded ones. Load older messages and try again",
+      "swipeHint": "Swipe to reply, or long-press for message options"
+    },
+    "forward": {
+      "action": "Forward",
+      "title": "Forward message",
+      "search": "Search by name or number",
+      "selected": "Selected: {count} of {max}",
+      "max": "You can pick at most {max} chats",
+      "send": "Send",
+      "sending": "Sending…",
+      "empty": "No matching chats",
+      "loading": "Loading chats…",
+      "forwarded": "Forwarded",
+      "result": "Sent: {sent} · Skipped: {skipped}",
+      "error": "Could not forward, try again",
+      "close": "Close",
+      "skip": {
+        "session_closed": "Outside the 24-hour window — send a template first",
+        "not_your_thread": "This chat is not one of yours",
+        "own_thread_read_only": "This is your chat with the academy, read only",
+        "line_not_configured": "The line is not set up on the server",
+        "files_forbidden": "Sending files is not available to you",
+        "send_failed": "Could not send"
+      }
+    },
     "quickReply": {
       "confirmed": "Confirmed the {when} lesson (Riyadh time)",
       "notConfirmed": "No lesson was confirmed by this reply",
@@ -2369,7 +2403,8 @@
       "file_path": "The file could not be uploaded. Try again",
       "file_upload": "The file could not be uploaded. Try again",
       "files_forbidden": "You cannot send files",
-      "media_handoff": "Files cannot be handed off to WhatsApp; retry here"
+      "media_handoff": "Files cannot be handed off to WhatsApp; retry here",
+      "reply_not_in_thread": "The quoted message is not in this chat. Cancel the reply and try again"
     },
     "line": {
       "replyFrom": "Your reply will be sent via: {line}"
@@ -2564,6 +2599,20 @@
     "move": "Move to the other number",
     "moveFor": "{name}: move to the other number",
     "moveUnavailable": "The other number is not configured on the server",
+    "crmName": {
+      "edit": "Edit its name in the CRM",
+      "editFor": "{name}: edit its name in the CRM",
+      "current": "In the CRM: {crm}",
+      "title": "Template name in the CRM",
+      "description": "«{name}» is sent to the CRM with this name and language only while its line is on the CRM; nothing changes on Meta or Kapso. Leave a field blank to use the default.",
+      "name": "Name in the CRM",
+      "nameHint": "Lowercase English letters, digits and underscores, as the CRM shows it. Default: {crm}",
+      "language": "Template language in the CRM",
+      "languageHint": "The language code as the CRM shows it, e.g. ar or en_US. Default: {language}",
+      "invalid": "Use only lowercase English letters, digits and underscores for the name, and a code like ar or en_US for the language.",
+      "reportNote": "Type report_session to send the report file first, then report_session for a regular lesson or report_trial_session for a trial lesson, as the old system did. Only do this if both templates have no variables in the CRM.",
+      "saved": "Saved the name «{name}» is sent under to the CRM"
+    },
     "crmStatus": {
       "approved": "Mark approved in the CRM",
       "missing": "Mark not available",
@@ -2775,6 +2824,7 @@
       "lesson_kind": "Trial",
       "contact_name": "Ahmed"
     },
+    "teacherLessonMinutes": "{n} minutes",
     "teacherNewStudentKind": {
       "trial": "Trial",
       "subscription": "Subscription"
@@ -5967,6 +6017,18 @@
     }
   },
   "communicationsHub": {
+    "driverTitle": "Sending provider per line",
+    "driverIntro": "Sets the route a line's messages leave by: Meta directly, Kapso or the CRM. Every switch is recorded in the activity log.",
+    "driverPicker": "Sending provider for {line}",
+    "driverCurrent": "Sending through {driver} now",
+    "driverConfirm": "This line will send through {driver}. The next messages move to it as soon as you save.",
+    "driverConfirmYes": "Yes, switch the provider",
+    "driverReady": "Everything {driver} needs is set.",
+    "driverMissing": "These keys are missing, so the line will not send through {driver} until they are set on the web in «Communications»: the CRM and Kapso keys in «Safety», the line ids and tokens in «Numbers» › «Previous line settings (from integrations)»:",
+    "driverSaved": "{line}: sending through {driver} now",
+    "driverFailed": "Could not save the provider. Try again.",
+    "driverReadOnly": "Switching the provider needs permission to edit settings.",
+    "driverModule": "The academy runs in numbers mode: each number sends through the provider set for it in «Communications» › «Numbers» on the web; it is not switched here.",
     "switchesTitle": "Sending switches",
     "numbersTitle": "Numbers and their health",
     "numbersOpen": "Open «Numbers»",

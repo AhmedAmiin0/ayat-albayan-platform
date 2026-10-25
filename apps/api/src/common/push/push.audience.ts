@@ -8,8 +8,9 @@ import {
 import { NotificationPolicy } from '../../modules/notification-rules/policy';
 import { DB, type Db } from '../db/db.module';
 import { pushRoute, type PushRoute } from './push.rules';
+import { liveTokens } from './push.sessions';
 
-/** A profile a notification may go to (enabled, permitted for its kind). */
+/** A profile a notification may go to (enabled, permitted for its kind); push_tokens: live ones only. */
 export interface Recipient {
   id: string;
   role: UserRole | null;
@@ -58,7 +59,11 @@ export class PushAudience {
       .is('disabled_at', null);
     if (error) throw new Error(error.message);
     const allowed = await Promise.all(data.map((p) => this.permitted(kind, p)));
-    return data.filter((_, i) => allowed[i]);
+    // Their devices: only tokens bound to a live session of theirs (signed out / revoked = none).
+    return liveTokens(
+      this.db,
+      data.filter((_, i) => allowed[i]),
+    );
   }
 
   private async roleIds(role: 'admin' | 'sales'): Promise<string[]> {

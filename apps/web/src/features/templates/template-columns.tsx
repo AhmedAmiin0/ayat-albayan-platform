@@ -3,6 +3,7 @@ import { createColumnHelper } from '@tanstack/react-table';
 import type { DataTableFeatures } from '@/components/DataTable';
 import { fullTime } from '@/features/inbox/format';
 import { t } from '@/lib/i18n';
+import { CrmNameButton } from './CrmNameButton';
 import { CrmStatusActions, type CrmStatusActionsProps } from './CrmStatusActions';
 import { SendFromCell, type SendFromCellProps } from './SendFromCell';
 import { StarterToggle } from './StarterToggle';
@@ -28,8 +29,8 @@ export interface TemplateColumnsInput {
   saving: string | null;
   /** «يُرسل من» (docs/23c decision 9): the numbers, templates.manage, and a pick (confirmed by the caller). */
   sendFrom: Omit<SendFromCellProps, 'tpl'>;
-  /** A crm line's rows (docs/19): the status set by hand; `busy` = the key being saved. */
-  crmStatus: { busyKey: string | null; onSet: CrmStatusActionsProps['onSet'] };
+  /** A crm line's rows (docs/19): the status set by hand (`busy` = the key being saved) and its CRM name. */
+  crmStatus: { busyKey: string | null; onSet: CrmStatusActionsProps['onSet']; onEditName: (tpl: TemplateView) => void };
 }
 
 /**
@@ -38,7 +39,12 @@ export interface TemplateColumnsInput {
  */
 export function templateColumns({ onSubmit, onMove, onStarter, saving, phones, factsOf, sendFrom, crmStatus }: TemplateColumnsInput) {
   const crmCell = (tpl: TemplateView) =>
-    factsOf(tpl.line)?.provider === 'crm' ? <CrmStatusActions tpl={tpl} busy={crmStatus.busyKey === tpl.key} onSet={crmStatus.onSet} /> : undefined;
+    factsOf(tpl.line)?.provider === 'crm' ? (
+      <>
+        <CrmStatusActions tpl={tpl} busy={crmStatus.busyKey === tpl.key} onSet={crmStatus.onSet} />
+        <CrmNameButton tpl={tpl} onEdit={crmStatus.onEditName} />
+      </>
+    ) : undefined;
   return col.columns([
     // The value is the shown name, so it sorts and filters by what the row says.
     col.accessor((r) => templateName(r.key), {

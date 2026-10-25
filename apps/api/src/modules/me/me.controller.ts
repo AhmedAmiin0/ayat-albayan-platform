@@ -14,11 +14,11 @@ import { pushTokenBody, pushTokenSchema } from './push-tokens';
 export class MeController {
   constructor(private readonly me: MeService) {}
 
-  /** Idempotent: registering a known token again changes nothing. */
+  /** Idempotent; (re)binds the token to the caller's session, taking it off any other profile. */
   @Put()
   @HttpCode(204)
   add(@Body() body: unknown, @CurrentUser() user: AuthUser): Promise<void> {
-    return this.me.addPushToken(user.id, parseOrThrow(pushTokenBody, body).token);
+    return this.me.addPushToken(user.id, parseOrThrow(pushTokenBody, body).token, user.sessionId ?? null);
   }
 
   /** The client sends the token URL-encoded (the brackets); 204 even when it was not stored. */

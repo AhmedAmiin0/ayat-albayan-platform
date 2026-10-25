@@ -2194,6 +2194,8 @@ export type Database = {
           body_ar: string;
           buttons: NonNullable<Json>;
           category: Database['public']['Enums']['template_category'];
+          crm_language: string | null;
+          crm_name: string | null;
           footer_ar: string | null;
           header_format: string | null;
           key: string;
@@ -2215,6 +2217,8 @@ export type Database = {
           body_ar: string;
           buttons?: NonNullable<Json>;
           category?: Database['public']['Enums']['template_category'];
+          crm_language?: string | null;
+          crm_name?: string | null;
           footer_ar?: string | null;
           header_format?: string | null;
           key: string;
@@ -2236,6 +2240,8 @@ export type Database = {
           body_ar?: string;
           buttons?: NonNullable<Json>;
           category?: Database['public']['Enums']['template_category'];
+          crm_language?: string | null;
+          crm_name?: string | null;
           footer_ar?: string | null;
           header_format?: string | null;
           key?: string;
@@ -2324,6 +2330,7 @@ export type Database = {
           error_code: string | null;
           error_text: string | null;
           expires_at: string | null;
+          forwarded_from_id: string | null;
           guardian_id: string | null;
           id: string;
           interactive_payload: Json | null;
@@ -2338,6 +2345,7 @@ export type Database = {
           next_attempt_at: string | null;
           phone_e164: string;
           read_at: string | null;
+          reply_to_message_id: string | null;
           reply_to_wa_id: string | null;
           scheduled_for: string | null;
           sent_at: string | null;
@@ -2362,6 +2370,7 @@ export type Database = {
           error_code?: string | null;
           error_text?: string | null;
           expires_at?: string | null;
+          forwarded_from_id?: string | null;
           guardian_id?: string | null;
           id?: string;
           interactive_payload?: Json | null;
@@ -2376,6 +2385,7 @@ export type Database = {
           next_attempt_at?: string | null;
           phone_e164: string;
           read_at?: string | null;
+          reply_to_message_id?: string | null;
           reply_to_wa_id?: string | null;
           scheduled_for?: string | null;
           sent_at?: string | null;
@@ -2400,6 +2410,7 @@ export type Database = {
           error_code?: string | null;
           error_text?: string | null;
           expires_at?: string | null;
+          forwarded_from_id?: string | null;
           guardian_id?: string | null;
           id?: string;
           interactive_payload?: Json | null;
@@ -2414,6 +2425,7 @@ export type Database = {
           next_attempt_at?: string | null;
           phone_e164?: string;
           read_at?: string | null;
+          reply_to_message_id?: string | null;
           reply_to_wa_id?: string | null;
           scheduled_for?: string | null;
           sent_at?: string | null;
@@ -2432,6 +2444,13 @@ export type Database = {
             columns: ['created_by'];
             isOneToOne: false;
             referencedRelation: 'profiles';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'messages_forwarded_from_id_fkey';
+            columns: ['forwarded_from_id'];
+            isOneToOne: false;
+            referencedRelation: 'messages';
             referencedColumns: ['id'];
           },
           {
@@ -2467,6 +2486,13 @@ export type Database = {
             columns: ['lesson_id'];
             isOneToOne: false;
             referencedRelation: 'lessons';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'messages_reply_to_message_id_fkey';
+            columns: ['reply_to_message_id'];
+            isOneToOne: false;
+            referencedRelation: 'messages';
             referencedColumns: ['id'];
           },
           {
@@ -2699,6 +2725,35 @@ export type Database = {
             isOneToOne: false;
             referencedRelation: 'roles';
             referencedColumns: ['id', 'base_role'];
+          },
+        ];
+      };
+      push_device_sessions: {
+        Row: {
+          created_at: string;
+          profile_id: string;
+          session_id: string;
+          token: string;
+        };
+        Insert: {
+          created_at?: string;
+          profile_id: string;
+          session_id: string;
+          token: string;
+        };
+        Update: {
+          created_at?: string;
+          profile_id?: string;
+          session_id?: string;
+          token?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'push_device_sessions_profile_id_fkey';
+            columns: ['profile_id'];
+            isOneToOne: false;
+            referencedRelation: 'profiles';
+            referencedColumns: ['id'];
           },
         ];
       };
@@ -4034,6 +4089,7 @@ export type Database = {
           id: string;
           p256dh: string;
           profile_id: string;
+          session_id: string | null;
         };
         Insert: {
           auth: string;
@@ -4042,6 +4098,7 @@ export type Database = {
           id?: string;
           p256dh: string;
           profile_id: string;
+          session_id?: string | null;
         };
         Update: {
           auth?: string;
@@ -4050,6 +4107,7 @@ export type Database = {
           id?: string;
           p256dh?: string;
           profile_id?: string;
+          session_id?: string | null;
         };
         Relationships: [
           {
@@ -4593,6 +4651,7 @@ export type Database = {
         Returns: Json;
       };
       prune_activity_log: { Args: Record<PropertyKey, never>; Returns: number };
+      push_live_sessions: { Args: { p_ids: string[] }; Returns: string[] };
       record_teacher_payment: { Args: { p: Json }; Returns: Json };
       reopen_assistant_statement: { Args: { p_actor: string; p_statement: string }; Returns: Json };
       report_of_path: { Args: { p_name: string }; Returns: string };
@@ -4602,6 +4661,7 @@ export type Database = {
         Args: { p: Json; p_actor: string; p_assistant: string };
         Returns: undefined;
       };
+      revoke_other_user_sessions: { Args: { p_keep: string | null; p_user: string }; Returns: number };
       revoke_user_sessions: { Args: { p_user: string }; Returns: number };
       saved_replies_manager: { Args: never; Returns: boolean };
       saved_replies_reader: { Args: never; Returns: boolean };

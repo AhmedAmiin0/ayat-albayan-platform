@@ -7,6 +7,7 @@ import type {
 } from '../enums/index.js';
 import type { WaLine } from '../enums/messaging.js';
 import type { ChatListRef } from './chat-lists.js';
+import type { MessageQuote } from './reply-forward.js';
 import type { TemplateParams } from './templates.js';
 import type { SubscriptionBadge, ThreadPeople } from './thread-people.js';
 
@@ -71,6 +72,16 @@ export interface MessageView {
   /** Signed Storage URL (1 h) of a downloaded inbound or outbound file; null until downloaded. */
   media_url: string | null;
   reply_to_wa_id: string | null;
+  /** Our row of the message this one answers (same chat); null when none or not ours. Absent in an old cache. */
+  reply_to_message_id?: string | null;
+  /** The message this one answers (same chat), when we hold it (owner 2026-10-25). Absent in an old cache. */
+  reply_to?: MessageQuote | null;
+  /** WhatsApp knows it (it has a wamid): «رد» may quote it. Absent in an old cache. */
+  replyable?: boolean;
+  /** A text or a file we can copy: «إعادة توجيه». Absent in an old cache. */
+  forwardable?: boolean;
+  /** Staff forwarded it from another message (our inbox only: WhatsApp shows no flag). */
+  forwarded?: boolean;
   interactive_payload: unknown;
   error_code: string | null;
   error_text: string | null;

@@ -1,15 +1,14 @@
-import { replyNote, senderLine, type MessageView } from '@ab/shared';
-import { t } from '@/lib/i18n';
-import { locale } from '@/lib/locale';
+import type { MessageView } from '@ab/shared';
+import { useState } from 'react';
 import { cn } from '@/lib/utils';
+import { BubbleActions, useHasBubbleActions } from './BubbleActions';
 import { DeliveryTicks } from './DeliveryTicks';
-import { clockText, fullTime, templateLine } from './format';
+import { clockText, fullTime } from './format';
+import { bubbleId } from './jump-to-message';
 import { LineBadge } from './LineBadge';
-import { splitLinks } from './linkify';
 import { MessageActions } from './MessageActions';
-import { MessageMedia } from './MessageMedia';
+import { Content, SenderLine } from './MessageContent';
 import { useInboxMode } from './mode';
-import { RatingChip } from './RatingChip';
 import { canRetry, canSendByHand, deliveryTitle, isHandedOff, outboundNotes } from './message-notes';
 
 export interface MessageBubbleProps {
@@ -19,66 +18,41 @@ export interface MessageBubbleProps {
   now: Date;
 }
 
-/** The text with its http(s) links clickable (W11). */
-function Body({ text }: { text: string }) {
-  return (
-    <p dir="auto" className="whitespace-pre-wrap [overflow-wrap:anywhere]">
-      {splitLinks(text).map((part, i) =>
-        part.href ? (
-          <a key={i} href={part.href} target="_blank" rel="noopener noreferrer" dir="ltr" className="break-all text-lapis underline underline-offset-4">
-            {part.text}
-          </a>
-        ) : (
-          part.text
-        ),
-      )}
-    </p>
-  );
-}
-
-/** What a quick reply did (R-SCH-03): «اتأكدت حلقة …» only when its lesson is confirmed now. */
-function ReplyLine({ message: m }: { message: MessageView }) {
-  const note = replyNote(m, locale);
-  if (!note) return null;
-  return <p className="mt-1 text-xs font-semibold text-ink-2">{t.inbox.quickReply[note.key].replace('{when}', note.when ?? '')}</p>;
-}
-
-/** Who sent ours (D4): «أرسلها: سارة» for staff, «رسالة تلقائية» for a job; nothing for theirs or history. */
-function SenderLine({ message: m }: { message: MessageView }) {
-  const line = senderLine(m);
-  if (!line) return null;
-  const text = line.kind === 'name' ? t.inbox.sentBy.replace('{name}', line.name) : t.inbox.automaticMessage;
-  return <p className="mt-1 text-2xs font-semibold text-ink-2">{text}</p>;
-}
-
-/** What was said: the template's name, the media, the text, and what a quick reply did. */
-function Content({ message: m }: { message: MessageView }) {
-  const empty = !m.body && !m.media_mime && !m.template_key;
-  return (
-    <>
-      {m.template_key && <p className="mb-1 text-2xs font-semibold text-ink-3">{templateLine(m.template_key)}</p>}
-      {(m.media_mime || m.media_url) && <MessageMedia message={m} />}
-      {m.body && <Body text={m.body} />}
-      {empty && <p className="text-xs text-ink-3">{t.inbox.media.other}</p>}
-      <ReplyLine message={m} />
-      <RatingChip message={m} />
-    </>
-  );
-}
-
 /**
  * One message (R-MSG-05). Theirs at the inline-start, ours at the end; the clock time (the log's day
  * separators carry the day, the tooltip the full date), and on ours WhatsApp-style delivery ticks
- * right after the time (DeliveryTicks), the reason when it failed and what to do next.
+ * right after the time (DeliveryTicks), the reason when it failed and what to do next. In a chat she
+ * can write in, «رد» / «إعادة توجيه» beside it (BubbleActions; also a right-click), and an id a
+ * quote's click scrolls to (jump-to-message), highlighted for a moment.
  */
 export function MessageBubble({ message: m, waitingTemplate, now }: MessageBubbleProps) {
   const outbound = m.direction === 'outbound';
   const notes = outboundNotes(m, { waitingTemplate, now });
   const admin = useInboxMode() === 'admin';
+  const [menu, setMenu] = useState(false);
+  const acts = useHasBubbleActions(m);
+  const actions = <BubbleActions message={m} menu={menu} onMenu={setMenu} />;
 
   return (
-    <li className={cn('flex', outbound ? 'justify-end' : 'justify-start')}>
+    <li
+      id={bubbleId(m.id)}
+      data-message-id={m.id}
+      tabIndex={-1}
+      className={cn(
+        'group flex items-start gap-1 rounded-lg transition-colors duration-500 data-[flash]:bg-lapis-wash motion-reduce:transition-none',
+        outbound ? 'justify-end' : 'justify-start',
+      )}
+    >
+      {outbound && actions}
       <article
+        onContextMenu={
+          acts
+            ? (e) => {
+                e.preventDefault();
+                setMenu(true);
+              }
+            : undefined
+        }
         className={cn(
           'min-w-0 max-w-[min(85%,560px)] rounded-lg px-3.5 py-2.5 text-sm',
           // Below 900px (the full-screen chat on a sunk ground): ours mint with its tail at the end, theirs white.
@@ -106,6 +80,7 @@ export function MessageBubble({ message: m, waitingTemplate, now }: MessageBubbl
         ))}
         {admin && (canRetry(m) || canSendByHand(m) || isHandedOff(m)) && <MessageActions message={m} />}
       </article>
+      {!outbound && actions}
     </li>
   );
 }

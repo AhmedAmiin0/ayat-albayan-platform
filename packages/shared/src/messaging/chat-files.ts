@@ -16,6 +16,23 @@ export type WaMediaKind = 'image' | 'document';
 export const waMediaKind = (mime: string | null): WaMediaKind =>
   baseMime(mime).startsWith('image/') ? 'image' : 'document';
 
+/** Meta's session media types by mime (images JPEG/PNG only; WhatsApp's own audio and video formats). */
+const SEND_KINDS: Record<string, 'image' | 'audio' | 'video'> = {
+  'image/jpeg': 'image',
+  'image/png': 'image',
+  'audio/aac': 'audio',
+  'audio/amr': 'audio',
+  'audio/mpeg': 'audio',
+  'audio/mp4': 'audio',
+  'audio/ogg': 'audio',
+  'video/mp4': 'video',
+  'video/3gpp': 'video',
+};
+export type WaSendKind = 'image' | 'audio' | 'video' | 'document';
+
+/** The type a stored file travels as (a forwarded voice note or video too); anything else goes as a document. */
+export const waSendKind = (mime: string | null): WaSendKind => SEND_KINDS[baseMime(mime)] ?? 'document';
+
 export type ChatFileProblem = 'file_type' | 'file_too_large';
 
 /**

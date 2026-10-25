@@ -16,6 +16,10 @@ import { ThreadFileSender } from './thread-file-send.service';
 import { ThreadMediaController } from './thread-media.controller';
 import { ThreadMediaService } from './thread-media.service';
 import { ThreadReads } from './thread-reads';
+import { ForwardFiles } from './forward-files';
+import { ThreadForwardController } from './thread-forward.controller';
+import { ThreadForwardService } from './thread-forward.service';
+import { ThreadQuotes } from './thread-quotes';
 import { ThreadSendService } from './thread-send.service';
 import { ThreadsController } from './threads.controller';
 import { ThreadsQueries } from './threads.queries';
@@ -31,10 +35,11 @@ import { ThreadsService } from './threads.service';
  * ThreadFileController serves bubble photos / PDFs to the admin and sales (docs/20 W6);
  * ThreadFileSendController lets them send images / PDFs from the chat (owner 2026-10-19 #2).
  * ChatListsModule: GET /threads?list= and the open chat's «القوائم» (docs/22).
+ * «رد» / «إعادة توجيه» (owner 2026-10-25): ThreadQuotes, ThreadForwardController.
  */
 @Module({
   imports: [SubscriptionsModule, LessonsModule, SalesModule, ChatListsModule],
-  controllers: [ThreadsController, ThreadMediaController, ThreadFileController, ThreadFileSendController],
+  controllers: [ThreadsController, ThreadMediaController, ThreadFileController, ThreadFileSendController, ThreadForwardController],
   providers: [
     ThreadsQueries,
     ThreadsService,
@@ -49,6 +54,9 @@ import { ThreadsService } from './threads.service';
     ThreadMediaService,
     ThreadFileSender,
     InboxSettings,
+    ThreadQuotes,
+    ForwardFiles,
+    ThreadForwardService,
   ],
   // The feedback module sends «ابعت طلب الرأي» through the same send-now path; meeting invitations
   // (ClassroomModule) read the thread and queue their chat text (R-MEET-02), a teacher only to the

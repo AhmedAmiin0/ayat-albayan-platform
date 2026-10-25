@@ -20,7 +20,12 @@ describe('createTokenVerifier (R-AUTH-01)', () => {
 
   it('accepts a valid HS256 token and maps the role claim', async () => {
     const token = await hs256({ sub: 'u1', email: 'a@x.com', user_role: 'admin' });
-    await expect(verify(token)).resolves.toEqual({ id: 'u1', email: 'a@x.com', role: 'admin' });
+    await expect(verify(token)).resolves.toEqual({ id: 'u1', email: 'a@x.com', role: 'admin', sessionId: null });
+  });
+
+  it('carries the session_id claim (push registrations are bound to it)', async () => {
+    const token = await hs256({ sub: 'u1', session_id: 's-1' });
+    await expect(verify(token)).resolves.toMatchObject({ sessionId: 's-1' });
   });
 
   it('returns role null for unknown or missing role claims', async () => {

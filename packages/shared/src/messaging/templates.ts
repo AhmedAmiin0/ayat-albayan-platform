@@ -1,3 +1,4 @@
+import type { CrmValues } from './crm-names.js';
 import { meetingLinkParts } from './meeting-link.js';
 import type { QuickReplyIntent } from './quick-reply.js';
 
@@ -42,6 +43,8 @@ export interface TemplateParams extends Partial<Record<BodySlot, string>> {
   /** Quick-reply payloads by button index, each quickReplyPayload(intent, ref). */
   payloads?: string[];
   document?: TemplateDocument;
+  /** The crm driver's own values (docs/19): read only when the template's line is on crm. */
+  crm?: CrmValues;
 }
 
 /** message_templates.buttons entries. `text` of an approved URL button comes from Meta's sync. */

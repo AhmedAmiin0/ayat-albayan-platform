@@ -52,4 +52,9 @@ export class SupabaseAccountAuth implements AccountAuth {
     });
     if (error) throw authError(error);
   }
+
+  async revokeOtherSessions(input: { userId: string; keep: string | null }): Promise<void> {
+    const { error } = await this.db.rpc('revoke_other_user_sessions', { p_user: input.userId, p_keep: input.keep });
+    if (error) throw new Error(`revoke sessions: ${error.message}`);
+  }
 }

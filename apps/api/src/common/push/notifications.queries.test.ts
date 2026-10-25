@@ -61,10 +61,11 @@ describe('NotificationsQueries (R-NOT-01)', () => {
   it('upserts a browser on its endpoint for the caller (newest again); deletes only the caller’s row', async () => {
     const { db, queries } = recordingDb(() => ({ error: null, data: [] }));
     const q = new NotificationsQueries(db);
-    await q.subscribe('p1', { endpoint: 'https://fcm.googleapis.com/x', keys: { p256dh: 'k', auth: 'a' } });
+    await q.subscribe('p1', { endpoint: 'https://fcm.googleapis.com/x', keys: { p256dh: 'k', auth: 'a' } }, 'sess-1');
     await q.unsubscribe('p1', 'https://fcm.googleapis.com/x');
     const row = {
       profile_id: 'p1',
+      session_id: 'sess-1',
       endpoint: 'https://fcm.googleapis.com/x',
       p256dh: 'k',
       auth: 'a',
@@ -94,7 +95,7 @@ describe('NotificationsQueries (R-NOT-01)', () => {
     await new NotificationsQueries(db).subscribe('p1', {
       endpoint: 'https://fcm.googleapis.com/y',
       keys: { p256dh: 'k', auth: 'a' },
-    });
+    }, 'sess-1');
     expect(queries[1]).toEqual(
       expect.arrayContaining([
         ['eq', 'profile_id', 'p1'],
@@ -108,5 +109,12 @@ describe('NotificationsQueries (R-NOT-01)', () => {
         ['in', 'id', ['s11', 's12']],
       ]),
     );
+  });
+
+  it('a session that has just ended (FK violation): 401 no_session, nothing else runs', async () => {
+    const { db, queries } = recordingDb(() => ({ error: { code: '23503', message: 'fk' }, data: null }));
+    const sub = { endpoint: 'https://fcm.googleapis.com/z', keys: { p256dh: 'k', auth: 'a' } };
+    await expect(new NotificationsQueries(db).subscribe('p1', sub, 'sess-gone')).rejects.toMatchObject({ status: 401 });
+    expect(queries).toHaveLength(1);
   });
 });

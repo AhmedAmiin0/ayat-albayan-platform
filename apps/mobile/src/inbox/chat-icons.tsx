@@ -1,4 +1,4 @@
-import { I18nManager } from 'react-native';
+import { I18nManager, View } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
 
 interface IconProps {
@@ -89,6 +89,16 @@ export const PlayIcon = (p: IconProps) => <Line {...p} d="M7 4.5v15l12-7.5-12-7.
 export const PauseIcon = (p: IconProps) => <Line {...p} d="M8 5v14M16 5v14" />;
 /** «القوائم»: three bulleted lines (the chat's lists). */
 export const ListsIcon = (p: IconProps) => <Line {...p} d="M9 6h11M9 12h11M9 18h11M4.5 6h.01M4.5 12h.01M4.5 18h.01" />;
+/** «إلغاء الرد»: a cross. */
+export const CloseIcon = (p: IconProps) => <Line {...p} d="M6 6l12 12M18 6 6 18" />;
+/** A chat picked for «إعادة توجيه». */
+export const CheckIcon = (p: IconProps) => <Line {...p} d="m5 12.5 4.5 4.5L19 7" />;
+/** «رد», revealed behind a bubble as it is swiped: a curved arrow back, mirrored in RTL (as on the web). */
+export const ReplyIcon = (p: IconProps) => (
+  <View style={{ transform: [{ scaleX: I18nManager.isRTL ? -1 : 1 }] }}>
+    <Line {...p} d="M10 7 4 12l6 5M4 12h10a6 6 0 0 1 6 6" />
+  </View>
+);
 
 /** «تحقق من التسجيل»: a person with a check mark (is this number already a student?). */
 export function CheckPersonIcon({ color, size = 22 }: IconProps) {

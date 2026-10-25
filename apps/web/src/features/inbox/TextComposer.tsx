@@ -4,7 +4,6 @@ import { useId, useLayoutEffect, useRef, useSyncExternalStore, type ReactNode } 
 import { Icon } from '@/components/ui/icon';
 import { IconButton } from '@/components/ui/icon-button';
 import { controlClass } from '@/components/ui/input';
-import { NuqtaGlyph } from '@/components/ui/nuqta-glyph';
 import { usePhone } from '@/components/ui/use-narrow';
 import { errorCode } from '@/features/schedule/api';
 import { t } from '@/lib/i18n';
@@ -12,12 +11,15 @@ import { cn } from '@/lib/utils';
 import { sendText } from './api';
 import type { ComposerExtras } from './composer-extras';
 import { sendsOnKey } from './composer-keys';
+import { ComposerError } from './ComposerError';
 import { draftGeneration, getDraft, requestIdFor, setDraft, subscribeDrafts } from './draft-store';
 import { ownSendGeneration, recordOwnSend } from './own-send';
+import { ReplyStrip } from './ReplyStrip';
 import { sendErrorCode, sendErrorCodeText, sendErrorText } from './send-error';
+import { useReplyTarget } from './use-reply-target';
 
-/** A send, the tab-memory generations it started in and what follows it (never sent to the API). */
-type Sent = { phone: string; text: string; clientRequestId: string; gen: { draft: number; own: number }; after?: () => void };
+/** A send, the message it answers («رد»), the tab-memory generations it started in and what follows it (never sent). */
+type Sent = { phone: string; text: string; clientRequestId: string; replyTo?: string | undefined; gen: { draft: number; own: number }; after?: () => void };
 
 /** The box's tallest height (about five lines), then it scrolls. */
 const COMPACT_MAX_PX = 128;
@@ -38,6 +40,7 @@ export interface TextComposerProps {
  * or a remount keeps it, with the failure's line); the box empties at once on send and text typed
  * meanwhile is never wiped. While this chat's send is in flight no box for it can send (mutationKey),
  * even one mounted since. A send settling after a sign-out writes nothing back (generations).
+ * «رد» (owner 2026-10-25): the quoted strip above the box; a sent answer clears it, a failed one keeps it.
  */
 export function TextComposer({ phone, leading, extras }: TextComposerProps) {
   const queryClient = useQueryClient();
@@ -45,6 +48,7 @@ export function TextComposer({ phone, leading, extras }: TextComposerProps) {
   const area = useRef<HTMLTextAreaElement>(null);
   const desktop = !usePhone();
   const draft = useSyncExternalStore(subscribeDrafts, () => getDraft(phone));
+  const reply = useReplyTarget(area);
   const text = draft.text;
   const write = (next: string) => {
     const { failed } = getDraft(phone);
@@ -53,9 +57,11 @@ export function TextComposer({ phone, leading, extras }: TextComposerProps) {
   const mutationKey = ['inbox-send', phone];
   const send = useMutation({
     mutationKey,
-    mutationFn: ({ phone: to, text: body, clientRequestId }: Sent) => sendText({ phone: to, text: body, clientRequestId }),
+    mutationFn: ({ phone: to, text: body, clientRequestId, replyTo }: Sent) =>
+      sendText({ phone: to, text: body, clientRequestId, ...(replyTo ? { replyToMessageId: replyTo } : {}) }),
     onSuccess: async (view, sent) => {
       recordOwnSend(sent.phone, view.id, sent.gen.own);
+      if (sent.replyTo) reply.done(sent.replyTo);
       const now = getDraft(sent.phone);
       if (now.failed) setDraft(sent.phone, { ...now, failed: null }, sent.gen.draft);
       sent.after?.();
@@ -91,7 +97,8 @@ export function TextComposer({ phone, leading, extras }: TextComposerProps) {
   const submit = () => {
     if (blocked) return;
     const gen = { draft: draftGeneration(), own: ownSendGeneration() };
-    const sent = { phone, text: text.trim(), clientRequestId: requestIdFor(draft, text.trim()), gen, after: extras?.onSubmit?.() };
+    const body = text.trim();
+    const sent = { phone, text: body, clientRequestId: requestIdFor(draft, body), replyTo: reply.replyTo, gen, after: extras?.onSubmit?.() };
     setDraft(phone, { text: '', failed: null });
     send.mutate(sent);
   };
@@ -104,6 +111,7 @@ export function TextComposer({ phone, leading, extras }: TextComposerProps) {
         submit();
       }}
     >
+      <ReplyStrip returnFocus={area} />
       {extras?.above}
       <div className="flex items-end gap-1.5">
         {leading}
@@ -135,12 +143,7 @@ export function TextComposer({ phone, leading, extras }: TextComposerProps) {
           <Icon name="send" className="size-5" />
         </IconButton>
       </div>
-      {error && (
-        <p id={errorId} role="alert" className="flex items-center gap-1.5 text-xs text-danger">
-          <NuqtaGlyph shape="struck" />
-          <span>{error}</span>
-        </p>
-      )}
+      {error && <ComposerError id={errorId} text={error} />}
     </form>
   );
 }
