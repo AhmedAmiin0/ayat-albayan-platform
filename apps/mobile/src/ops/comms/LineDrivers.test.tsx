@@ -79,6 +79,8 @@ test('one save at a time: while a line saves, the other line\'s choices wait', a
   await pick('notifications', t.integrations.options.crm);
   await fireEvent.press(screen.getByRole('button', { name: h.driverConfirmYes }));
   await waitFor(() => expect(mockApiSend).toHaveBeenCalledTimes(1));
+  // The pending save has rendered (the confirm reads «saving»), then the other line is tried.
+  expect(await screen.findByText(t.common.saving)).toBeTruthy();
   await pick('chat', t.integrations.options.kapso);
   expect(within(screen.getByTestId('driver-chat')).queryByText(h.driverConfirm.replace('{driver}', t.integrations.options.kapso))).toBeNull();
 });
