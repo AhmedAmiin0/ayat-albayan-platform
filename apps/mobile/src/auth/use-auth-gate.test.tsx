@@ -7,6 +7,7 @@ let mockEmit: Listener = () => undefined;
 const mockUnsubscribe = jest.fn();
 const mockVerify = jest.fn();
 const mockClear = jest.fn();
+const mockSilence = jest.fn();
 
 jest.mock('@/lib/supabase', () => ({
   supabase: {
@@ -20,6 +21,7 @@ jest.mock('@/lib/supabase', () => ({
 }));
 jest.mock('./verify-role', () => ({ verifyRole: (s: unknown) => mockVerify(s) }));
 jest.mock('@/lib/query-client', () => ({ clearQueryCaches: () => mockClear() }));
+jest.mock('@/push/silence-push', () => ({ silencePush: () => mockSilence() }));
 
 const session = { access_token: 'tok', user: { id: 'u1' } } as Session;
 
@@ -32,6 +34,7 @@ test('boots, then admits a restored admin session', async () => {
   await act(async () => mockEmit('INITIAL_SESSION', session));
   await waitFor(() => expect(result.current).toBe('admin'));
   expect(mockClear).not.toHaveBeenCalled();
+  expect(mockSilence).not.toHaveBeenCalled();
 });
 
 test('a restored teacher session opens the teacher app, checked with that session', async () => {
@@ -48,6 +51,7 @@ test('no stored session: out, with the caches cleared', async () => {
   await waitFor(() => expect(result.current).toBe('out'));
   expect(mockVerify).not.toHaveBeenCalled();
   expect(mockClear).toHaveBeenCalled();
+  expect(mockSilence).toHaveBeenCalled();
 });
 
 test('sign-out from anywhere closes the app and clears query + persisted cache', async () => {
@@ -58,6 +62,16 @@ test('sign-out from anywhere closes the app and clears query + persisted cache',
   await act(async () => mockEmit('SIGNED_OUT', null));
   await waitFor(() => expect(result.current).toBe('out'));
   expect(mockClear).toHaveBeenCalledTimes(1);
+});
+
+test('GoTrue signs the app out on its own (refresh-token reuse): pushes silenced like the button', async () => {
+  mockVerify.mockResolvedValue('teacher');
+  const { result } = await renderHook(() => useAuthGate());
+  await act(async () => mockEmit('INITIAL_SESSION', session));
+  await waitFor(() => expect(result.current).toBe('teacher'));
+  expect(mockSilence).not.toHaveBeenCalled();
+  await act(async () => mockEmit('SIGNED_OUT', null));
+  await waitFor(() => expect(mockSilence).toHaveBeenCalledTimes(1));
 });
 
 test('a slow check that finishes after sign-out cannot reopen the app', async () => {

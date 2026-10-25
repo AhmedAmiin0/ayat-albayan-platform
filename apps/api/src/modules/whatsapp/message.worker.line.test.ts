@@ -11,7 +11,7 @@ import { WaError } from './whatsapp.types';
 
 // Two lines in the worker (docs/12 §13.3): ready before the claim, stamp only when multi, per-line alert.
 
-const queries = { claim: vi.fn(), sent: vi.fn(), failure: vi.fn(), expire: vi.fn() };
+const queries = { claim: vi.fn(), sent: vi.fn(), failure: vi.fn(), expire: vi.fn(), staffAtSend: vi.fn() };
 const dispatch = { send: vi.fn(), ready: vi.fn(), multi: false };
 const push = { notifyAdmins: vi.fn() };
 const NOW = new Date('2026-10-02T08:00:00Z');

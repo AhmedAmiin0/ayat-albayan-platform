@@ -2728,18 +2728,21 @@ export type Database = {
       push_device_sessions: {
         Row: {
           created_at: string;
+          device_key_hash: string | null;
           profile_id: string;
           session_id: string;
           token: string;
         };
         Insert: {
           created_at?: string;
+          device_key_hash?: string | null;
           profile_id: string;
           session_id: string;
           token: string;
         };
         Update: {
           created_at?: string;
+          device_key_hash?: string | null;
           profile_id?: string;
           session_id?: string;
           token?: string;

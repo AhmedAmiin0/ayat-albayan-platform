@@ -5,7 +5,10 @@ export const pushTokenSchema = z
   .string()
   .regex(/^Expo(nent)?PushToken\[[\w-]+\]$/, { message: 'invalid_push_token' });
 
-export const pushTokenBody = z.object({ token: pushTokenSchema });
+/** The key PUT /me/push-tokens handed this device last time (claimDeviceKey): base64url, 32 bytes. */
+export const deviceKeySchema = z.string().regex(/^[\w-]{43}$/, { message: 'invalid_device_key' });
+
+export const pushTokenBody = z.object({ token: pushTokenSchema, deviceKey: deviceKeySchema.optional() });
 
 /**
  * A reinstall mints a new token; the dead one stays until Expo reports it DeviceNotRegistered,

@@ -1,11 +1,13 @@
 import type { WaLine } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../common/db/db.module';
+import type { StaffAtSend } from '../reminders/staff-reachable';
 import { allowedRecipients, lineEnvs, loadEnv } from '../../env';
 import { stampDelivered } from './delivered';
 import { CLAIM_LEASE_MS, SENDING, type FailurePlan } from './send-plan';
 import { AUTO_OFF, AUTOMATIC_KEYS } from './send-stale';
 import { DUE_COLUMNS, type DueMessage } from './sender.due';
+import { staffAtSend } from './staff-at-send';
 import type { TemplateRow } from './whatsapp.types';
 
 export type { DueMessage } from './sender.due';
@@ -23,6 +25,11 @@ export class SenderQueries {
   }
 
   constructor(@Inject(DB) private readonly db: Db) {}
+
+  /** A staff alert's teacher as on record now (send-time staffStale); undefined for any other row. */
+  staffAtSend(row: DueMessage): Promise<StaffAtSend[] | undefined> {
+    return staffAtSend(this.db, row);
+  }
 
   async approvedTemplates(): Promise<TemplateRow[]> {
     const { data, error } = await this.db.from('message_templates').select('*').eq('status', 'approved');

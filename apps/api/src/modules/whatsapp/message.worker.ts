@@ -14,7 +14,8 @@ import type { WaSent } from './whatsapp.types';
 export type { SendJob, SendOutcome } from './message.job';
 
 /**
- * One queued row, end to end (docs/12 §3.3): expiry, send-time staleness, the automatic-messages
+ * One queued row, end to end (docs/12 §3.3): expiry, send-time staleness (a staff alert's teacher
+ * checked again: staffAtSend), the automatic-messages
  * hold (auto_off), claim, send, outcome.
  * Never throws. Idempotency: a row is claimed by compare-and-set before Meta is called, so two
  * workers never send it twice; producers dedupe the row itself by dedup_key.
@@ -43,7 +44,8 @@ export class MessageWorker {
   private async run(job: SendJob): Promise<SendOutcome> {
     const { row, template, now, autoOn, route } = job;
     const { line, via } = sendingAt(job, this.dispatch.multi);
-    const drop = dropReason(row, now);
+    const staff = await this.queries.staffAtSend(row);
+    const drop = dropReason(staff ? { ...row, staff } : row, now);
     if (drop) {
       await this.queries.expire(row.id, drop);
       return drop.code;

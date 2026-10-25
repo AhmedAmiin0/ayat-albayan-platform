@@ -11,7 +11,7 @@ import { WaError } from './whatsapp.types';
 
 // docs/23c decision 8: the claim stamps the chosen number and line = its role; a broken token pauses that number.
 
-const queries = { claim: vi.fn(), sent: vi.fn(), failure: vi.fn(), expire: vi.fn() };
+const queries = { claim: vi.fn(), sent: vi.fn(), failure: vi.fn(), expire: vi.fn(), staffAtSend: vi.fn() };
 const dispatch = { send: vi.fn(), ready: vi.fn(), multi: false };
 const push = { notifyAdmins: vi.fn() };
 const NOW = new Date('2026-10-02T08:00:00Z');

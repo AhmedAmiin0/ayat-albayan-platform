@@ -9,6 +9,7 @@ import {
   type TemplateKey,
 } from '@ab/shared';
 import { REMINDER_KEYS } from '../reminders/reminders.queries';
+import { isStaffAlert, staffStale, type StaffAtSend } from '../reminders/staff-reachable';
 
 // Send-time check of a queued row (docs/12 §3.3): rows wait in the queue while the send gate is
 // closed (until cut-over, after a kill-switch OFF), so what was right to queue may be wrong to send.
@@ -66,15 +67,25 @@ function newStudentRetimed(row: {
   return !!row.expires_at && Date.parse(row.expires_at) !== Date.parse(row.lesson.starts_at);
 }
 
-/** A queued row the worker drops before claiming it: past its send window, or stale (above). */
-export function dropReason(
-  row: StaleInput & { expires_at: string | null; lesson: { starts_at: string; status: LessonStatus } | null },
-  now: Date,
-): { code: 'expired' | 'stale'; text: string } | null {
+/** What dropReason reads: a staff alert also carries its teacher as found at send time (staffAtSend). */
+export type DropInput = StaleInput & {
+  expires_at: string | null;
+  lesson: { starts_at: string; status: LessonStatus } | null;
+  phone_e164?: string;
+  staff?: readonly StaffAtSend[];
+};
+
+/**
+ * A queued row the worker drops before claiming it: past its send window, a staff alert whose
+ * teacher may no longer hear from the academy (staffStale), or stale (above).
+ */
+export function dropReason(row: DropInput, now: Date): { code: 'expired' | 'stale'; text: string } | null {
   const lessonStartsAt = row.lesson?.starts_at ?? null;
   if (messageExpired({ templateKey: row.template_key, expiresAt: row.expires_at, lessonStartsAt, now })) {
     return { code: 'expired', text: 'expired before it was sent' };
   }
+  const staff = row.staff && isStaffAlert(row.template_key) ? staffStale(row.staff, row.phone_e164 ?? '') : null;
+  if (staff) return { code: 'stale', text: staff };
   if (newStudentRetimed(row)) return { code: 'stale', text: 'lesson retimed' };
   const stale = staleReason(row);
   return stale ? { code: 'stale', text: stale } : null;
