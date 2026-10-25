@@ -2,9 +2,9 @@ import { HttpException } from '@nestjs/common';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { StorageService } from '../../common/storage/storage.service';
 import type { InboundMediaQueries, MediaMessage } from './inbound-media.queries';
-import { byDriver, graphFetch } from './graph';
+import { byDriver, graphFetch } from './drivers/meta/graph';
 import { InboundMedia } from './inbound-media.service';
-import { KAPSO_ENV, kapsoFetch } from './kapso.fakes';
+import { KAPSO_ENV, kapsoFetch } from './drivers/kapso/kapso.fakes';
 import { STUB_ENV } from './whatsapp.fakes';
 import { WaError, type WhatsappLines } from './whatsapp.types';
 

@@ -28,10 +28,21 @@ test.each([
   expect(mediaKind(mime)).toBe(kind);
 });
 
-test('media line: the file kind, «مش مدعومة» with neither file nor text, nothing for plain text', () => {
-  expect(mediaLine({ body: 'شوفي', media_mime: 'image/png' })).toBe(t.inbox.media.image);
-  expect(mediaLine({ body: null, media_mime: null })).toBe(t.inbox.media.other);
-  expect(mediaLine({ body: 'السلام عليكم', media_mime: null })).toBeNull();
+test('media line: the file kind, «لا يمكن عرضها هنا» with neither file nor text, nothing for plain text', () => {
+  const none = { interactive_payload: null };
+  expect(mediaLine({ body: 'شوفي', media_mime: 'image/png', ...none })).toBe(t.inbox.media.image);
+  expect(mediaLine({ body: null, media_mime: null, ...none })).toBe(t.inbox.media.other);
+  expect(mediaLine({ body: 'السلام عليكم', media_mime: null, ...none })).toBeNull();
+});
+
+test('media line: Meta’s unsupported says «غير متاحة» for 131060, else that its content never arrived', () => {
+  const unsupported = (code: number) => ({ type: 'unsupported', errors: [{ code }], unsupported: { type: 'unknown' } });
+  expect(mediaLine({ body: null, media_mime: null, interactive_payload: unsupported(131060) })).toBe(t.inbox.unavailable);
+  expect(mediaLine({ body: null, media_mime: null, interactive_payload: unsupported(131051) })).toBe(t.inbox.unsupported);
+  expect(t.inbox.unsupported).not.toMatch(/افتحها/); // no WhatsApp app on a Cloud API number
+  // A location / contact card did arrive: never «ask for it again».
+  const location = { type: 'location', location: { latitude: 1, longitude: 2 } };
+  expect(mediaLine({ body: null, media_mime: null, interactive_payload: location })).toBe(t.inbox.media.other);
 });
 
 test('template line uses the registry name; an unknown key shows as itself', () => {

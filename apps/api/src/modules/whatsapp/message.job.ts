@@ -1,6 +1,6 @@
 import type { WaLine } from '@ab/shared';
 import type { SendVia } from './message.dispatch';
-import type { NumberRoute } from './number-route';
+import type { NumberRoute } from './numbers/number-route';
 import { lineOf } from './send-line';
 import type { DueMessage } from './sender.due';
 import { WaError, type TemplateRow } from './whatsapp.types';

@@ -5,7 +5,7 @@ import { activeNumberId } from '../../common/integrations/numbers-overlay';
 import { PushService } from '../../common/push/push.service';
 import { MessageDispatch } from './message.dispatch';
 import { authSubject, RECORD_DELAYS_MS, sendingAt, UNRECORDED, type FailedInput, type SendJob, type SendOutcome } from './message.job';
-import type { NumberRoute } from './number-route';
+import type { NumberRoute } from './numbers/number-route';
 import { CRM_RATE_LIMITED, failurePlan, messageLabel, readyToSend, SENDING } from './send-plan';
 import { AUTO_OFF, dropReason, isAutomatic } from './send-stale';
 import { SenderQueries, type DueMessage } from './sender.queries';

@@ -11,10 +11,10 @@ export const WHITELIST = new Set([
   'config/env/whatsapp/env.kapso.ts',
   'config/env/whatsapp/env.whatsapp.ts',
   'modules/inbox/read-receipts.ts',
-  'modules/whatsapp/graph.ts',
+  'modules/whatsapp/drivers/meta/graph.ts',
   'modules/whatsapp/inbound-media.service.ts',
-  'modules/whatsapp/kapso.ts',
-  'modules/whatsapp/lines.check.ts',
+  'modules/whatsapp/drivers/kapso/kapso.ts',
+  'modules/whatsapp/lines/lines.check.ts',
   'modules/whatsapp/message.dispatch.ts',
   'modules/whatsapp/template.registry.ts',
   // The registry's own parts (150-line cap): one line's sync (read-only list), the explicit submit.
@@ -26,12 +26,12 @@ export const WHITELIST = new Set([
   'modules/whatsapp/live-client.ts',
   // Routing per number (docs/23c): one number's own config and client, used only by MessageDispatch.
   'modules/numbers/numbers.env.ts',
-  'modules/whatsapp/number-clients.ts',
+  'modules/whatsapp/numbers/number-clients.ts',
   'modules/whatsapp/whatsapp.client.ts',
   // The crm driver (docs/19): the one client factory and the CRM's REST client, used only through the line clients.
   'modules/whatsapp/client-factory.ts',
-  'modules/whatsapp/crm.client.ts',
-  'modules/whatsapp/crm-http.ts',
+  'modules/whatsapp/drivers/crm/crm.client.ts',
+  'modules/whatsapp/drivers/crm/crm-http.ts',
   'modules/whatsapp/whatsapp.module.ts',
   'modules/whatsapp/whatsapp.types.ts',
 ]);

@@ -1,11 +1,12 @@
 import { useState } from 'react';
-import { KeyboardAvoidingView, Platform, ScrollView, View } from 'react-native';
+import { ScrollView, View } from 'react-native';
 import { setLoginNotice, useLoginNotice } from '@/auth/login-notice';
 import { signIn } from '@/auth/sign-in';
 import { t } from '@/lib/i18n';
 import { shape, type, useTheme } from '@/theme';
 import { Button } from '@/ui/Button';
 import { Field } from '@/ui/Field';
+import { KeyboardFrame } from '@/ui/KeyboardFrame';
 import { Mark } from '@/ui/Mark';
 import { NuqtaGlyph } from '@/ui/NuqtaGlyph';
 import { AppText } from '@/ui/AppText';
@@ -33,10 +34,8 @@ export default function Login() {
   };
 
   return (
-    <KeyboardAvoidingView
-      style={{ flex: 1, backgroundColor: color.margin }}
-      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-    >
+    // The route's root, at the window's top; Android too (edge to edge, the window is not resized).
+    <KeyboardFrame inScreen={false} style={{ flex: 1, backgroundColor: color.margin }}>
       <ScrollView
         contentContainerStyle={{ flexGrow: 1, justifyContent: 'center', padding: 24, gap: 16 }}
         keyboardShouldPersistTaps="handled"
@@ -104,6 +103,6 @@ export default function Login() {
         ) : null}
         <Button label={busy ? t.auth.submitting : t.auth.submit} onPress={submit} busy={busy} />
       </ScrollView>
-    </KeyboardAvoidingView>
+    </KeyboardFrame>
   );
 }

@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { AuditService } from '../../common/audit/audit.service';
-import { CrmWhatsappClient } from './crm.client';
-import { CRM_ENV } from './crm.fakes';
+import { CrmWhatsappClient } from './drivers/crm/crm.client';
+import { CRM_ENV } from './drivers/crm/crm.fakes';
 import { TemplateRegistry } from './template.registry';
 import type { TemplatesQueries } from './templates.queries';
 import { templateRow } from './whatsapp.fakes';

@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { whatsappClient } from './client-factory';
-import { CrmWhatsappClient } from './crm.client';
-import { CRM_ENV } from './crm.fakes';
-import { KAPSO_ENV } from './kapso.fakes';
+import { CrmWhatsappClient } from './drivers/crm/crm.client';
+import { CRM_ENV } from './drivers/crm/crm.fakes';
+import { KAPSO_ENV } from './drivers/kapso/kapso.fakes';
 import { HttpWhatsappClient } from './whatsapp.client';
 import { STUB_ENV } from './whatsapp.fakes';
 

@@ -1,7 +1,7 @@
 import { NOTIFICATION_CATALOGUE, type LineHealthView, type NotificationsOverview, type TemplateStatus, type WaLine } from '@ab/shared';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { DB, type Db } from '../../common/db/db.module';
-import { LineHealthStore } from '../whatsapp/line-health.store';
+import { LineHealthStore } from '../whatsapp/lines/line-health.store';
 
 export type TemplateFacts = ReadonlyMap<string, { status: TemplateStatus; line: WaLine }>;
 export type Reach = NonNullable<NotificationsOverview['reach']>;

@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import type { SendGate } from '../whatsapp/send-gate';
+import type { SendGate } from '../whatsapp/gate/send-gate';
 import type { WhatsappLines } from '../whatsapp/whatsapp.types';
 import type { ReadMark } from './read-marks';
 import { ReadReceipts } from './read-receipts';

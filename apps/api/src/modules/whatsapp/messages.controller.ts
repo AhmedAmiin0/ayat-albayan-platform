@@ -5,7 +5,7 @@ import { AuditService } from '../../common/audit/audit.service';
 import { CurrentUser, Permissions } from '../../common/auth/decorators';
 import type { AuthUser } from '../../common/auth/verify-token';
 import { MessagesService, type MessageChange } from './messages.service';
-import { SendGate } from './send-gate';
+import { SendGate } from './gate/send-gate';
 
 /** M1–M3 (docs/12 §4): what the admin does with an outbound message that did not go out. */
 @ApiTags('messaging')

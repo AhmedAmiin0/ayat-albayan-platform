@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 import type { Db } from '../../common/db/db.module';
 import { fakeDb } from '../guardians/fake-db';
-import type { LineHealthStore } from '../whatsapp/line-health.store';
+import type { LineHealthStore } from '../whatsapp/lines/line-health.store';
 import { RulesQueries } from './rules.queries';
 
 const queries = (all: () => Promise<unknown>) =>
