@@ -1,6 +1,6 @@
 import type { ConflictKind, LessonStatus, PayoutStatus, TimeEditMode } from '@ab/shared';
 import { badRequest } from '../../../common/http/errors';
-import { localDateOf } from '../../scheduling/horizon';
+import { localDateOf } from '../../scheduling/occurrences/horizon';
 import { MINUTE } from '../../teachers/availability/zoned-time';
 
 // Pure decisions of «عدّل الوقت» (R-SCH-11, docs/10 §10): what a time edit may do to a lesson,

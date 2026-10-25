@@ -8,7 +8,7 @@ import type { AuthUser } from '../../../common/auth/verify-token';
 import { fakeSettings } from '../../../common/settings/settings.fakes';
 import { SettingsService } from '../../../common/settings/settings.service';
 import { SalesQueries } from '../../sales/sales.queries';
-import { ConflictChecker } from '../../scheduling/conflict-checker';
+import { ConflictChecker } from '../../scheduling/conflicts/conflict-checker';
 import { BODY, CLASH, RULE_A, RULE_B, S1, SUB, SUB_ID } from './course-change.fakes';
 import { CourseLessonQueries } from './course-change.lessons';
 import { CourseChangeQueries } from './course-change.queries';

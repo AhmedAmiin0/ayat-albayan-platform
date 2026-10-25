@@ -1,14 +1,14 @@
 import { Module } from '@nestjs/common';
-import { CommunicationsController } from './communications.controller';
-import { CommunicationsDeps } from './communications.deps';
-import { CommunicationsService } from './communications.service';
-import { NumbersConfig } from './numbers.config';
+import { CommunicationsController } from './communications/communications.controller';
+import { CommunicationsDeps } from './communications/communications.deps';
+import { CommunicationsService } from './communications/communications.service';
+import { NumbersConfig } from './config/numbers.config';
 import { NumbersController } from './numbers.controller';
 import { NumbersEffects } from './numbers.effects';
-import { NumbersHealth } from './numbers.health';
-import { NumbersImport } from './numbers.import';
+import { NumbersHealth } from './lines/numbers.health';
+import { NumbersImport } from './import/numbers.import';
 import { NumbersQueries } from './numbers.queries';
-import { NumbersSecrets } from './numbers.secrets';
+import { NumbersSecrets } from './config/numbers.secrets';
 import { NumbersService } from './numbers.service';
 import { NumbersSettings } from './numbers.settings';
 

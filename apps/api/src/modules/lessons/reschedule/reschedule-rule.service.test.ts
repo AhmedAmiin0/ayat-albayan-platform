@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { readerOf } from '../../../common/settings/settings.fakes';
-import type { ConflictChecker } from '../../scheduling/conflict-checker';
+import type { ConflictChecker } from '../../scheduling/conflicts/conflict-checker';
 import { ruleRow } from '../../scheduling/scheduling.fakes';
 import type { ScheduleQueries } from '../../scheduling/schedule.queries';
 import type { TeachersQueries } from '../../teachers/teachers.queries';

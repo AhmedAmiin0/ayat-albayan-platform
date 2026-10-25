@@ -1,5 +1,5 @@
 import { timeGroups } from '@ab/shared';
-import { localDateOf, startOfLocalDay } from '../../scheduling/horizon';
+import { localDateOf, startOfLocalDay } from '../../scheduling/occurrences/horizon';
 import { DAY } from '../../teachers/availability/zoned-time';
 import { planBooking } from '../plan/booking.plan';
 import type { SeriesRule } from '../plan/booking.series-plan';

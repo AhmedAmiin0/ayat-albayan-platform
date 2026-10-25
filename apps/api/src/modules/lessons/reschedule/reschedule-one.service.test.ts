@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import type { ConflictChecker } from '../../scheduling/conflict-checker';
+import type { ConflictChecker } from '../../scheduling/conflicts/conflict-checker';
 import { conflict } from '../../../common/http/errors';
 import type { TeachersQueries } from '../../teachers/teachers.queries';
 import { ADMIN, appliedChange, fakeStore, LESSON_ID, lessonRow, OTHER_TEACHER_ID, RULE_ID, STUDENT_ID, TEACHER_ID } from '../lessons.fakes';

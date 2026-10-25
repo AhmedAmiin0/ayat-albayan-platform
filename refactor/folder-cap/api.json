@@ -35,10 +35,6 @@
     "files": 22,
     "dirs": 0
   },
-  "apps/api/src/modules/numbers": {
-    "files": 22,
-    "dirs": 0
-  },
   "apps/api/src/modules/payments": {
     "files": 14,
     "dirs": 0
@@ -61,10 +57,6 @@
   },
   "apps/api/src/modules/sales-money": {
     "files": 14,
-    "dirs": 0
-  },
-  "apps/api/src/modules/scheduling": {
-    "files": 21,
     "dirs": 0
   },
   "apps/api/src/modules/student-recordings": {

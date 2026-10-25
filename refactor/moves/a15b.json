@@ -1,0 +1,136 @@
+{
+  "id": "a15b",
+  "seq": 20,
+  "moves": [
+    {
+      "from": "apps/api/src/modules/numbers/numbers.config*",
+      "to": "apps/api/src/modules/numbers/config"
+    },
+    {
+      "from": "apps/api/src/modules/numbers/numbers.env*",
+      "to": "apps/api/src/modules/numbers/config"
+    },
+    {
+      "from": "apps/api/src/modules/numbers/numbers.secrets*",
+      "to": "apps/api/src/modules/numbers/config"
+    },
+    {
+      "from": "apps/api/src/modules/numbers/numbers.import*",
+      "to": "apps/api/src/modules/numbers/import"
+    },
+    {
+      "from": "apps/api/src/modules/numbers/numbers.lines*",
+      "to": "apps/api/src/modules/numbers/lines"
+    },
+    {
+      "from": "apps/api/src/modules/numbers/numbers.health*",
+      "to": "apps/api/src/modules/numbers/lines"
+    },
+    {
+      "from": "apps/api/src/modules/numbers/numbers.parity*",
+      "to": "apps/api/src/modules/numbers/lines"
+    },
+    {
+      "from": "apps/api/src/modules/numbers/communications*",
+      "to": "apps/api/src/modules/numbers/communications"
+    }
+  ],
+  "files": [
+    [
+      "apps/api/src/modules/numbers/communications.controller.ts",
+      "apps/api/src/modules/numbers/communications/communications.controller.ts"
+    ],
+    [
+      "apps/api/src/modules/numbers/communications.deps.ts",
+      "apps/api/src/modules/numbers/communications/communications.deps.ts"
+    ],
+    [
+      "apps/api/src/modules/numbers/communications.service.test.ts",
+      "apps/api/src/modules/numbers/communications/communications.service.test.ts"
+    ],
+    [
+      "apps/api/src/modules/numbers/communications.service.ts",
+      "apps/api/src/modules/numbers/communications/communications.service.ts"
+    ],
+    [
+      "apps/api/src/modules/numbers/numbers.config.fakes.ts",
+      "apps/api/src/modules/numbers/config/numbers.config.fakes.ts"
+    ],
+    [
+      "apps/api/src/modules/numbers/numbers.config.refresh.test.ts",
+      "apps/api/src/modules/numbers/config/numbers.config.refresh.test.ts"
+    ],
+    [
+      "apps/api/src/modules/numbers/numbers.config.test.ts",
+      "apps/api/src/modules/numbers/config/numbers.config.test.ts"
+    ],
+    [
+      "apps/api/src/modules/numbers/numbers.config.ts",
+      "apps/api/src/modules/numbers/config/numbers.config.ts"
+    ],
+    [
+      "apps/api/src/modules/numbers/numbers.env.crm.test.ts",
+      "apps/api/src/modules/numbers/config/numbers.env.crm.test.ts"
+    ],
+    [
+      "apps/api/src/modules/numbers/numbers.env.test.ts",
+      "apps/api/src/modules/numbers/config/numbers.env.test.ts"
+    ],
+    [
+      "apps/api/src/modules/numbers/numbers.env.ts",
+      "apps/api/src/modules/numbers/config/numbers.env.ts"
+    ],
+    [
+      "apps/api/src/modules/numbers/numbers.health.test.ts",
+      "apps/api/src/modules/numbers/lines/numbers.health.test.ts"
+    ],
+    [
+      "apps/api/src/modules/numbers/numbers.health.ts",
+      "apps/api/src/modules/numbers/lines/numbers.health.ts"
+    ],
+    [
+      "apps/api/src/modules/numbers/numbers.import-plan.invalid.test.ts",
+      "apps/api/src/modules/numbers/import/numbers.import-plan.invalid.test.ts"
+    ],
+    [
+      "apps/api/src/modules/numbers/numbers.import-plan.test.ts",
+      "apps/api/src/modules/numbers/import/numbers.import-plan.test.ts"
+    ],
+    [
+      "apps/api/src/modules/numbers/numbers.import-plan.ts",
+      "apps/api/src/modules/numbers/import/numbers.import-plan.ts"
+    ],
+    [
+      "apps/api/src/modules/numbers/numbers.import.test.ts",
+      "apps/api/src/modules/numbers/import/numbers.import.test.ts"
+    ],
+    [
+      "apps/api/src/modules/numbers/numbers.import.ts",
+      "apps/api/src/modules/numbers/import/numbers.import.ts"
+    ],
+    [
+      "apps/api/src/modules/numbers/numbers.lines.test.ts",
+      "apps/api/src/modules/numbers/lines/numbers.lines.test.ts"
+    ],
+    [
+      "apps/api/src/modules/numbers/numbers.lines.ts",
+      "apps/api/src/modules/numbers/lines/numbers.lines.ts"
+    ],
+    [
+      "apps/api/src/modules/numbers/numbers.parity.test.ts",
+      "apps/api/src/modules/numbers/lines/numbers.parity.test.ts"
+    ],
+    [
+      "apps/api/src/modules/numbers/numbers.parity.ts",
+      "apps/api/src/modules/numbers/lines/numbers.parity.ts"
+    ],
+    [
+      "apps/api/src/modules/numbers/numbers.secrets.test.ts",
+      "apps/api/src/modules/numbers/config/numbers.secrets.test.ts"
+    ],
+    [
+      "apps/api/src/modules/numbers/numbers.secrets.ts",
+      "apps/api/src/modules/numbers/config/numbers.secrets.ts"
+    ]
+  ]
+}

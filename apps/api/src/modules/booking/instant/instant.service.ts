@@ -1,6 +1,6 @@
 import type { BookingResult, InstantLessonRequest, InstantLessonResult } from '@ab/shared';
 import { HttpStatus, Injectable } from '@nestjs/common';
-import { ConflictChecker } from '../../scheduling/conflict-checker';
+import { ConflictChecker } from '../../scheduling/conflicts/conflict-checker';
 import { domainError } from '../booking.errors';
 import { meetingLinkFor } from '../core/booking.mapper';
 import { BookingQueries } from '../core/booking.queries';

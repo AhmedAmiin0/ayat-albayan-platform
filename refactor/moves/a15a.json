@@ -1,0 +1,176 @@
+{
+  "id": "a15a",
+  "seq": 19,
+  "moves": [
+    {
+      "from": "apps/api/src/modules/scheduling/occurrence-generator*",
+      "to": "apps/api/src/modules/scheduling/occurrences"
+    },
+    {
+      "from": "apps/api/src/modules/scheduling/occurrences*",
+      "to": "apps/api/src/modules/scheduling/occurrences"
+    },
+    {
+      "from": "apps/api/src/modules/scheduling/dst-probe*",
+      "to": "apps/api/src/modules/scheduling/occurrences"
+    },
+    {
+      "from": "apps/api/src/modules/scheduling/horizon*",
+      "to": "apps/api/src/modules/scheduling/occurrences"
+    },
+    {
+      "from": "apps/api/src/modules/scheduling/lesson-writer*",
+      "to": "apps/api/src/modules/scheduling/occurrences"
+    },
+    {
+      "from": "apps/api/src/modules/scheduling/conflict-checker*",
+      "to": "apps/api/src/modules/scheduling/conflicts"
+    },
+    {
+      "from": "apps/api/src/modules/scheduling/conflicts*",
+      "to": "apps/api/src/modules/scheduling/conflicts"
+    },
+    {
+      "from": "apps/api/src/modules/scheduling/busy.queries*",
+      "to": "apps/api/src/modules/scheduling/conflicts"
+    },
+    {
+      "from": "apps/api/src/modules/scheduling/rule-extend*",
+      "to": "apps/api/src/modules/scheduling/rules"
+    },
+    {
+      "from": "apps/api/src/modules/scheduling/rule-projection*",
+      "to": "apps/api/src/modules/scheduling/rules"
+    },
+    {
+      "from": "apps/api/src/modules/scheduling/schedule-rules*",
+      "to": "apps/api/src/modules/scheduling/rules"
+    }
+  ],
+  "files": [
+    [
+      "apps/api/src/modules/scheduling/busy.queries.ts",
+      "apps/api/src/modules/scheduling/conflicts/busy.queries.ts"
+    ],
+    [
+      "apps/api/src/modules/scheduling/conflict-checker.test.ts",
+      "apps/api/src/modules/scheduling/conflicts/conflict-checker.test.ts"
+    ],
+    [
+      "apps/api/src/modules/scheduling/conflict-checker.ts",
+      "apps/api/src/modules/scheduling/conflicts/conflict-checker.ts"
+    ],
+    [
+      "apps/api/src/modules/scheduling/conflicts.always.test.ts",
+      "apps/api/src/modules/scheduling/conflicts/conflicts.always.test.ts"
+    ],
+    [
+      "apps/api/src/modules/scheduling/conflicts.edges.test.ts",
+      "apps/api/src/modules/scheduling/conflicts/conflicts.edges.test.ts"
+    ],
+    [
+      "apps/api/src/modules/scheduling/conflicts.kinds.test.ts",
+      "apps/api/src/modules/scheduling/conflicts/conflicts.kinds.test.ts"
+    ],
+    [
+      "apps/api/src/modules/scheduling/conflicts.ts",
+      "apps/api/src/modules/scheduling/conflicts/conflicts.ts"
+    ],
+    [
+      "apps/api/src/modules/scheduling/dst-probe.test.ts",
+      "apps/api/src/modules/scheduling/occurrences/dst-probe.test.ts"
+    ],
+    [
+      "apps/api/src/modules/scheduling/dst-probe.ts",
+      "apps/api/src/modules/scheduling/occurrences/dst-probe.ts"
+    ],
+    [
+      "apps/api/src/modules/scheduling/horizon.job.test.ts",
+      "apps/api/src/modules/scheduling/occurrences/horizon.job.test.ts"
+    ],
+    [
+      "apps/api/src/modules/scheduling/horizon.job.ts",
+      "apps/api/src/modules/scheduling/occurrences/horizon.job.ts"
+    ],
+    [
+      "apps/api/src/modules/scheduling/horizon.test.ts",
+      "apps/api/src/modules/scheduling/occurrences/horizon.test.ts"
+    ],
+    [
+      "apps/api/src/modules/scheduling/horizon.ts",
+      "apps/api/src/modules/scheduling/occurrences/horizon.ts"
+    ],
+    [
+      "apps/api/src/modules/scheduling/lesson-writer.ts",
+      "apps/api/src/modules/scheduling/occurrences/lesson-writer.ts"
+    ],
+    [
+      "apps/api/src/modules/scheduling/occurrence-generator.test.ts",
+      "apps/api/src/modules/scheduling/occurrences/occurrence-generator.test.ts"
+    ],
+    [
+      "apps/api/src/modules/scheduling/occurrence-generator.ts",
+      "apps/api/src/modules/scheduling/occurrences/occurrence-generator.ts"
+    ],
+    [
+      "apps/api/src/modules/scheduling/occurrences.bounds.test.ts",
+      "apps/api/src/modules/scheduling/occurrences/occurrences.bounds.test.ts"
+    ],
+    [
+      "apps/api/src/modules/scheduling/occurrences.byday.test.ts",
+      "apps/api/src/modules/scheduling/occurrences/occurrences.byday.test.ts"
+    ],
+    [
+      "apps/api/src/modules/scheduling/occurrences.cairo-dst.test.ts",
+      "apps/api/src/modules/scheduling/occurrences/occurrences.cairo-dst.test.ts"
+    ],
+    [
+      "apps/api/src/modules/scheduling/occurrences.riyadh.test.ts",
+      "apps/api/src/modules/scheduling/occurrences/occurrences.riyadh.test.ts"
+    ],
+    [
+      "apps/api/src/modules/scheduling/occurrences.transition-weeks.test.ts",
+      "apps/api/src/modules/scheduling/occurrences/occurrences.transition-weeks.test.ts"
+    ],
+    [
+      "apps/api/src/modules/scheduling/occurrences.ts",
+      "apps/api/src/modules/scheduling/occurrences/occurrences.ts"
+    ],
+    [
+      "apps/api/src/modules/scheduling/rule-extend.service.test.ts",
+      "apps/api/src/modules/scheduling/rules/rule-extend.service.test.ts"
+    ],
+    [
+      "apps/api/src/modules/scheduling/rule-extend.service.ts",
+      "apps/api/src/modules/scheduling/rules/rule-extend.service.ts"
+    ],
+    [
+      "apps/api/src/modules/scheduling/rule-projection.queries.test.ts",
+      "apps/api/src/modules/scheduling/rules/rule-projection.queries.test.ts"
+    ],
+    [
+      "apps/api/src/modules/scheduling/rule-projection.queries.ts",
+      "apps/api/src/modules/scheduling/rules/rule-projection.queries.ts"
+    ],
+    [
+      "apps/api/src/modules/scheduling/rule-projection.test.ts",
+      "apps/api/src/modules/scheduling/rules/rule-projection.test.ts"
+    ],
+    [
+      "apps/api/src/modules/scheduling/rule-projection.ts",
+      "apps/api/src/modules/scheduling/rules/rule-projection.ts"
+    ],
+    [
+      "apps/api/src/modules/scheduling/schedule-rules.controller.test.ts",
+      "apps/api/src/modules/scheduling/rules/schedule-rules.controller.test.ts"
+    ],
+    [
+      "apps/api/src/modules/scheduling/schedule-rules.controller.ts",
+      "apps/api/src/modules/scheduling/rules/schedule-rules.controller.ts"
+    ],
+    [
+      "apps/api/src/modules/scheduling/schedule-rules.refresh.test.ts",
+      "apps/api/src/modules/scheduling/rules/schedule-rules.refresh.test.ts"
+    ]
+  ]
+}

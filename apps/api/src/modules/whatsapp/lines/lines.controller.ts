@@ -2,7 +2,7 @@ import type { LineCheckView } from '@ab/shared';
 import { Controller, HttpCode, Post, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Permissions } from '../../../common/auth/decorators';
-import { NumbersHealth } from '../../numbers/numbers.health';
+import { NumbersHealth } from '../../numbers/lines/numbers.health';
 import { LineHealthStore } from './line-health.store';
 import { LinesCheck } from './lines.check';
 import { TemplateManagerGuard } from '../templates/catalog/template-manager.guard';

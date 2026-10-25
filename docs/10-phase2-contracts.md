@@ -8,7 +8,7 @@ The single source for the Phase 2 builders (API B1–B3, web, mobile) so they ca
 
 | Area | Owner | Edits only | Migrations |
 |---|---|---|---|
-| Foundation (done, **read-only** for everyone) | — | migrations `070–073`; `packages/shared/src/lessons/*`, `messaging/booking-confirmation.ts`, `schemas/scheduling.ts`; `apps/api/src/modules/scheduling/occurrences.ts` + `conflicts.ts`; `common/settings/`; `app.module.ts`; `e2e/support/*` | `2026100100007x` |
+| Foundation (done, **read-only** for everyone) | — | migrations `070–073`; `packages/shared/src/lessons/*`, `messaging/booking-confirmation.ts`, `schemas/scheduling.ts`; `apps/api/src/modules/scheduling/occurrences/occurrences.ts` + `conflicts.ts`; `common/settings/`; `app.module.ts`; `e2e/support/*` | `2026100100007x` |
 | Rules + horizon | **B1** | `apps/api/src/modules/scheduling/**` (not the two pure files) | `2026100100008x` |
 | Booking wizard API | **B2** | `apps/api/src/modules/booking/**`, `teachers/availability/availability.query.ts` (its `TODO(Phase 2)` busy intervals) | `2026100100009x` |
 | Lessons + teacher self-service API | **B3** | `apps/api/src/modules/lessons/**` (incl. the controllers mounted at `teachers/me`, `students/:id/lessons`, `schedule-rules/:id/cancel`) | `202610010001xx` (100–109) |

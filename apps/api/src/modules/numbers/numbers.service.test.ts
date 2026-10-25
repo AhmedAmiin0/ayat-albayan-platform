@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from 'vitest';
 import type { NumbersEffects } from './numbers.effects';
 import { numberRow } from './numbers.fakes';
 import type { NumbersQueries } from './numbers.queries';
-import type { NumbersSecrets } from './numbers.secrets';
+import type { NumbersSecrets } from './config/numbers.secrets';
 import { NumbersService } from './numbers.service';
 
 function setup(row = numberRow()) {

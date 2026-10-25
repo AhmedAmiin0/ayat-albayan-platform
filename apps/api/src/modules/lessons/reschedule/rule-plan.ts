@@ -1,9 +1,9 @@
 import type { WeeklyRule } from '@ab/shared';
 import { randomUUID } from 'node:crypto';
 import type { NewLesson, NewRule } from '../../scheduling/change-set';
-import { horizonWindow, localDateOf } from '../../scheduling/horizon';
+import { horizonWindow, localDateOf } from '../../scheduling/occurrences/horizon';
 import { resolveMeetingLink } from '../../scheduling/meeting-link';
-import { ruleOccurrences, type Occurrence } from '../../scheduling/occurrences';
+import { ruleOccurrences, type Occurrence } from '../../scheduling/occurrences/occurrences';
 import { ruleStudents, type RuleWithLinks } from '../../scheduling/schedule.queries';
 
 export type RulePlanInput = {

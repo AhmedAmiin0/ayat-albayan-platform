@@ -2,7 +2,7 @@ import { timeEditMode, type Conflict, type LessonTimeEdit, type TimeEditResult }
 import { Injectable } from '@nestjs/common';
 import type { AuthUser } from '../../../common/auth/verify-token';
 import type { TimeEditChange } from '../../scheduling/change-set';
-import { ConflictChecker } from '../../scheduling/conflict-checker';
+import { ConflictChecker } from '../../scheduling/conflicts/conflict-checker';
 import { conflict, errorCode } from '../../../common/http/errors';
 import { studentIdsOf, type LessonRow } from '../store/lesson-row';
 import { LessonStore } from '../store/lesson-store';

@@ -10,7 +10,7 @@ import type {
 import type { Json } from '@ab/db';
 import { z } from 'zod';
 import { canTransitionLead } from '../../leads/lead-state-machine';
-import type { Occurrence, RuleTiming } from '../../scheduling/occurrences';
+import type { Occurrence, RuleTiming } from '../../scheduling/occurrences/occurrences';
 import type { MessageDraft } from './booking.messages';
 
 export type LessonRow = {

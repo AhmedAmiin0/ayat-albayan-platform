@@ -2,7 +2,7 @@ import { WA_PROVIDERS, type LineCheckView, type NumberHealth, type NumberView, t
 import type { Json } from '@ab/db';
 import { displayE164 } from '../whatsapp/lines/line-health.store';
 import type { NumberRow } from './numbers.queries';
-import type { SecretStatus } from './numbers.secrets';
+import type { SecretStatus } from './config/numbers.secrets';
 
 const providerOf = (p: string): WaProvider => WA_PROVIDERS.find((k) => k === p) ?? 'meta';
 

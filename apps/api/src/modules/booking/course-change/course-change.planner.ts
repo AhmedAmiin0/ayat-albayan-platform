@@ -1,6 +1,6 @@
 import { DURATIONS, courseDaysPerWeek, wallParts, type CourseChangeRequest, type CourseLessonFact } from '@ab/shared';
 import { HttpStatus, Injectable } from '@nestjs/common';
-import { startOfLocalDay } from '../../scheduling/horizon';
+import { startOfLocalDay } from '../../scheduling/occurrences/horizon';
 import { domainError } from '../booking.errors';
 import { BookingSettings } from '../booking.settings';
 import { CourseLessonQueries, type MovedLesson } from './course-change.lessons';

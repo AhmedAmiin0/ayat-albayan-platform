@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { ruleOccurrences } from '../../scheduling/occurrences';
+import { ruleOccurrences } from '../../scheduling/occurrences/occurrences';
 import { instantPayload, instantPlan } from './instant.plan';
 
 const now = new Date('2026-10-05T13:07:42.512Z'); // a Monday; 16:07 in Riyadh, 15:07 in Cairo

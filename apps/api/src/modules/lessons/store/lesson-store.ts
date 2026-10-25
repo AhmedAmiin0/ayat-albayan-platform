@@ -4,7 +4,7 @@ import type { AuditEntry } from '../../../common/audit/audit.service';
 import { LessonEvents } from '../../../common/events/lesson-events';
 import type { ChangeSet, TimeEditChange } from '../../scheduling/change-set';
 import { errorCode } from '../../../common/http/errors';
-import { LessonWriter } from '../../scheduling/lesson-writer';
+import { LessonWriter } from '../../scheduling/occurrences/lesson-writer';
 import type { LessonRow } from './lesson-row';
 import { LessonsQueries } from '../lessons.queries';
 import { invalidTransition } from '../status/transition';

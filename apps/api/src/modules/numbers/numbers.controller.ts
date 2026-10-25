@@ -8,7 +8,7 @@ import { z } from 'zod';
 import { CurrentUser, Permissions } from '../../common/auth/decorators';
 import type { AuthUser } from '../../common/auth/verify-token';
 import { parseOrThrow } from '../../common/http/http';
-import { NumbersImport } from './numbers.import';
+import { NumbersImport } from './import/numbers.import';
 import { NumbersService } from './numbers.service';
 
 /** :id is a uuid, :name one of the two secret names (anything else is 400). */

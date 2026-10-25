@@ -25,7 +25,7 @@ export const WHITELIST = new Set([
   'modules/whatsapp/templates/sync/template-numbers.service.ts',
   'modules/whatsapp/live-client.ts',
   // Routing per number (docs/23c): one number's own config and client, used only by MessageDispatch.
-  'modules/numbers/numbers.env.ts',
+  'modules/numbers/config/numbers.env.ts',
   'modules/whatsapp/numbers/number-clients.ts',
   'modules/whatsapp/whatsapp.client.ts',
   // The crm driver (docs/19): the one client factory and the CRM's REST client, used only through the line clients.

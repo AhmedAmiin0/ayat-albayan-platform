@@ -1,7 +1,7 @@
 import { instant, localDate, SETTING_DEFAULTS, timeZone } from '@ab/shared';
 import { z } from 'zod';
 import { badRequest } from '../../../common/http/errors';
-import { addDays, startOfLocalDay } from '../../scheduling/horizon';
+import { addDays, startOfLocalDay } from '../../scheduling/occurrences/horizon';
 import { parseOrThrow } from '../../../common/http/http';
 import type { LessonWindow } from '../lessons.queries';
 

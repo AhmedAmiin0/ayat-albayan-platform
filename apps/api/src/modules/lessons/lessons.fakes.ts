@@ -2,7 +2,7 @@
 import { vi } from 'vitest';
 import type { ChangeSet, TimeEditChange } from '../scheduling/change-set';
 import type { AuthUser } from '../../common/auth/verify-token';
-import type { LessonWriter } from '../scheduling/lesson-writer';
+import type { LessonWriter } from '../scheduling/occurrences/lesson-writer';
 import { STUDENT_ID, TEACHER_ID } from '../scheduling/scheduling.fakes';
 import type { LessonRow } from './store/lesson-row';
 import { LessonEvents } from '../../common/events/lesson-events';

@@ -1,9 +1,9 @@
 import { isOpenLesson, type RescheduleRequest } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
 import type { AuthUser } from '../../../common/auth/verify-token';
-import { ConflictChecker } from '../../scheduling/conflict-checker';
+import { ConflictChecker } from '../../scheduling/conflicts/conflict-checker';
 import { badRequest, conflict } from '../../../common/http/errors';
-import { addDays, localDateOf, startOfLocalDay } from '../../scheduling/horizon';
+import { addDays, localDateOf, startOfLocalDay } from '../../scheduling/occurrences/horizon';
 import { ruleStudents } from '../../scheduling/schedule.queries';
 import { confirmationMessages, forMessages } from '../status/confirmation-messages';
 import type { LessonRow } from '../store/lesson-row';

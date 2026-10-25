@@ -3,7 +3,7 @@ import { LessonEvents } from '../../../common/events/lesson-events';
 import { fakeDb } from '../../guardians/fake-db';
 import { fakePolicy, type FakePolicyInput } from '../../notification-rules/policy.fakes';
 import type { ChangeSet, QueuedMessage, TimeEditChange } from '../../scheduling/change-set';
-import { LessonWriter } from '../../scheduling/lesson-writer';
+import { LessonWriter } from '../../scheduling/occurrences/lesson-writer';
 import type { BookingPayload } from './booking.mapper';
 import { BookingQueries } from './booking.queries';
 import { CourseChangeWriter } from '../course-change/course-change.writer';

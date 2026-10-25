@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 import { LessonEvents } from '../../../common/events/lesson-events';
-import type { LessonWriter } from '../../scheduling/lesson-writer';
+import type { LessonWriter } from '../../scheduling/occurrences/lesson-writer';
 import { LessonStore } from './lesson-store';
 import type { LessonsQueries } from '../lessons.queries';
 
