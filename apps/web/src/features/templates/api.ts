@@ -47,6 +47,10 @@ export const setStarter = ({ key, on }: { key: string; on: boolean }) =>
 export const setCrmStatus = ({ key, status }: { key: string; status: CrmTemplateStatus }) =>
   apiSend<TemplateView>('PUT', `/messaging/templates/${encodeURIComponent(key)}/crm-status`, { status });
 
+/** A crm line's template name / language in the CRM (docs/19); null = the default; audited. */
+export const setCrmName = ({ key, ...body }: { key: string; crm_name: string | null; crm_language: string | null }) =>
+  apiSend<TemplateView>('PUT', `/messaging/templates/${encodeURIComponent(key)}/crm-name`, body);
+
 /** A submittable row: never sent, refused, or gone from Meta (docs/12 §3.4), on either number. */
 export const canSubmit = (tpl: Pick<TemplateView, 'status'>): boolean =>
   tpl.status === 'not_submitted' || tpl.status === 'rejected' || tpl.status === 'missing';

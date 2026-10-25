@@ -19,6 +19,7 @@ const LATER = [
   '20261020000521_chat_lists_permission.sql',
   '20261023000620_wa_numbers.sql',
   '20261024000632_notification_rules.sql',
+  '20261025000671_saved_replies_permission.sql',
 ]
   .map((file) => readFileSync(join(MIGRATIONS, file), 'utf8'))
   .join('\n');
@@ -33,7 +34,7 @@ function addedLater(key: string): string[] {
   return [...inserts].filter((m) => [...(m[2] ?? '').matchAll(/'([a-z_]+)'/g)].some((k) => k[1] === key)).map((m) => m[1] ?? '');
 }
 
-describe('migration 20261005000220 seed (+ 240, 274, 281, 300, 360, 380, 430, 521, 620, 631)', () => {
+describe('migration 20261005000220 seed (+ 240, 274, 281, 300, 360, 380, 430, 521, 620, 631, 671)', () => {
   it.each(['admin', 'teacher', 'assistant', 'sales'] as const)('%s gets exactly its catalog grants', (key) => {
     expect([...seeded(key), ...addedLater(key)].sort()).toEqual([...defaultGrantsOf(key)].sort());
   });
@@ -54,6 +55,10 @@ describe('migration 20261005000220 seed (+ 240, 274, 281, 300, 360, 380, 430, 52
   it('seeds notifications.push (the bell, 2026-10-12) for teacher, assistant and sales; the admin had it', () => {
     expect(['teacher', 'assistant', 'sales'].filter((k) => addedLater(k).includes('notifications.push'))).toEqual(['teacher', 'assistant', 'sales']);
     expect(seeded('admin')).toContain('notifications.push');
+  });
+
+  it('seeds saved_replies.manage «الردود السريعة» (2026-10-25) for the admin only', () => {
+    expect(['admin', 'teacher', 'assistant', 'sales'].filter((k) => addedLater(k).includes('saved_replies.manage'))).toEqual(['admin']);
   });
 
   it('seeds inbox.lists «القوائم» (2026-10-20) for admin and sales only, never a teacher', () => {

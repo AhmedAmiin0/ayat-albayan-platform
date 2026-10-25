@@ -31,11 +31,11 @@ describe('«التواصل» (/admin/settings/communications)', () => {
     expect(state.textContent).toBe(p.sendingState.replace('{state}', s.off));
   });
 
-  it('five tabs, «نظرة عامة» first and selected: the switches, nothing of the other tabs', async () => {
+  it('six tabs, «نظرة عامة» first and selected: the switches, nothing of the other tabs', async () => {
     renderCommunications({ apiFetch });
     const tabs = within(screen.getByRole('tablist', { name: p.tabs })).getAllByRole('tab');
     const ct = p.communicationsTabs;
-    expect(tabs.map((x) => x.textContent)).toEqual([ct.overview, ct.numbers, t.notificationRules.tabLabel, ct.templates, ct.safety]);
+    expect(tabs.map((x) => x.textContent)).toEqual([ct.overview, ct.numbers, t.notificationRules.tabLabel, ct.templates, ct.savedReplies, ct.safety]);
     expect(tab(ct.overview).getAttribute('aria-selected')).toBe('true');
     expect(await screen.findByRole('button', { name: s.enableTitle })).toBeTruthy();
     expect(screen.getByText(s.autoMessages)).toBeTruthy();

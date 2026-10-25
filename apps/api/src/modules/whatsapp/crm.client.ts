@@ -2,6 +2,7 @@ import { z } from 'zod';
 import { recipientAllowed, type CrmLineEnv } from '../../env';
 import { crmMediaBody, crmTemplateBody, crmTextBody, type CrmBody } from './crm-body';
 import { crmJson, type CrmConn } from './crm-http';
+import { afterDocument, crmReportBodies } from './crm-report';
 import type { FetchLike } from './graph';
 import { WaError, type MediaSend, type MetaTemplate, type TemplateSend, type WaSent, type WhatsappClient } from './whatsapp.types';
 
@@ -40,8 +41,16 @@ export class CrmWhatsappClient implements WhatsappClient {
     return this.conn !== null;
   }
 
-  sendTemplate(input: TemplateSend): Promise<WaSent> {
-    return this.send(input.to, () => crmTemplateBody(input));
+  /** A report on the old script's flow (crm-report.ts) is two calls: the PDF, then its template. */
+  async sendTemplate(input: TemplateSend): Promise<WaSent> {
+    const report = crmReportBodies(input);
+    if (!report) return this.send(input.to, () => crmTemplateBody(input));
+    await this.send(input.to, () => report.document);
+    try {
+      return await this.send(input.to, () => report.template);
+    } catch (e) {
+      throw afterDocument(e);
+    }
   }
 
   /** replyTo is ignored: the CRM's reply_to_message_id is its own uuid, never a wamid. */

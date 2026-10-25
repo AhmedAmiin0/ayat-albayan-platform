@@ -3,7 +3,7 @@
 import { NOTIFICATION_AUDIENCES, type NotificationAudience } from '@ab/shared';
 
 /** «التواصل»'s tabs in order (docs/23 §2d); «نظرة عامة» is the default (no `?tab=`). */
-export const COMMUNICATIONS_TABS = ['overview', 'numbers', 'catalogue', 'templates', 'safety'] as const;
+export const COMMUNICATIONS_TABS = ['overview', 'numbers', 'catalogue', 'templates', 'savedReplies', 'safety'] as const;
 export type CommunicationsTab = (typeof COMMUNICATIONS_TABS)[number];
 
 /** `?tab=timing` («مواعيد الرسائل», gone in docs/23 phase 6): kept only to send old links on to «القيم». */

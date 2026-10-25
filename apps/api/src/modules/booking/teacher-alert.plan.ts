@@ -3,6 +3,7 @@ import { ar } from '../../common/i18n/server-text';
 import type { PushTarget } from '../../common/push/push.service';
 import { queuedRow, type QueuedMessage } from '../reminders/queued-row';
 import { staffReachable, type StaffOnRecord } from '../reminders/staff-reachable';
+import { teacherAlertCrm } from './teacher-alert.crm';
 
 // R-NOT-03 (owner 2026-10-12): after a booking, the teacher hears about the new student in the bell
 // (always) and on WhatsApp (teacher_new_student, only while settings.teacher_whatsapp_new_student
@@ -15,17 +16,21 @@ export interface AlertTeacher extends StaffOnRecord {
   profile_id: string | null;
   phone_e164: string | null;
   tz: string;
+  /** The CRM alert's {{1}} (teacher-alert.crm.ts). */
+  display_name_ar?: string | null;
 }
 
 export interface AlertLesson {
   id: string;
   starts_at: string;
+  /** The CRM alert's duration. */
+  ends_at?: string | null;
   teacher: AlertTeacher | null;
 }
 
 export interface AlertInput {
   lessons: readonly AlertLesson[];
-  students: readonly { id: string; name: string }[];
+  students: readonly { id: string; name: string; code?: string | null }[];
   kind: BookingKind;
   now: Date;
 }
@@ -72,12 +77,14 @@ export function teacherAlerts(input: AlertInput): TeacherAlertPlan[] {
           profileIds: [teacher.profile_id],
         }
       : null;
+    const meta = teacherNewStudentMessage({ names, startsAt, tz: teacher.tz, kind: input.kind });
+    const crm = teacherAlertCrm({ teacher, lesson, students: input.students });
     // Only the lesson's teacher's number on record, and only while they are still on staff.
     const message = teacher.phone_e164 && staffReachable(teacher)
       ? queuedRow({
           phone: teacher.phone_e164,
           lessonId: lesson.id,
-          template: teacherNewStudentMessage({ names, startsAt, tz: teacher.tz, kind: input.kind }),
+          template: crm ? { ...meta, params: { ...meta.params, crm } } : meta,
           dedupKey: `teacher_new_student:${lesson.id}:${teacher.id}`,
           now: input.now,
           // About an upcoming lesson: never sent once it started (a send gate closed until then).

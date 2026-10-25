@@ -15,7 +15,7 @@ There is **one** messaging engine: the outbox and its queue, the send gate and k
 - **The same ids.** A kapso line uses the same `WA_PHONE_NUMBER_ID` / `WA_WABA_ID` (chat: `WA_CHAT_*`) as under meta. It needs no Meta token and no `WA_API_BASE`.
 - **No automatic failover.** Switching is manual. A send whose answer was lost (timeout) may already have gone out; retrying it through the other driver could deliver it twice, so the engine never does that.
 - **Half-configured = off, loudly.** A line switched to kapso without `KAPSO_API_BASE`, `KAPSO_API_KEY` or its ids refuses every call (its rows stay `queued`, nothing fails). «افحص الخطوط» shows each line's driver and NAMES the missing keys (never values; a meta chat line names `WA_API_BASE` too when it is unset), a chat phone id equal to the notifications one as its own flag (`duplicate_chat_phone`), and for a kapso line a note that inbound arrives via `/webhooks/kapso` instead of Meta's subscribed-app verdict; the API logs the same names once at boot. The send gate requires the notifications line to be configured under its own driver.
-- **Mobile:** there is no integrations screen in the Expo app; nothing changes there.
+- **Mobile:** no integrations screen in the Expo app; the per-line driver switch is on «نظرة عامة» (see «Mobile» in the crm section).
 
 ## Where Kapso differs from Meta (all handled in `apps/api/src/modules/whatsapp/kapso.ts`)
 
@@ -81,7 +81,7 @@ line stays off (`duplicate_chat_phone`, boot log `WA_CHAT_PROVIDER (crm, same as
 | --- | --- |
 | Base / auth | `WACRM_API_BASE` (`https://<crm-host>/api/v1`, no default) · `Authorization: Bearer <WACRM_API_KEY>` (account-scoped key, scope `messages:send`) |
 | Ids | none of ours: `CrmLineEnv {provider:'crm', base, apiKey}`. Line facts, the lines check and parity show null phone / WABA / app ids; `WA_PHONE_NUMBER_ID` (if set) and `WA_APP_SECRET` stay on the Meta webhook route, so whatever Meta still delivers for that number is stored, never dropped |
-| Template send | `POST /messages {to:"+E164", type:"template", template:{name: meta_name, language, params:{body[], headerMediaUrl?, buttonParams?}}}` built by `crm-body.ts` from the SAME values the meta driver sends (`wa-components.ts` `bodyValues` / `documentHeader` / `buttonValues`): body {{n}}, a document header as the 7-day signed Storage URL, URL-button suffixes and quick-reply payloads by button index. The CRM resolves the template from **its own synced list** by name + language |
+| Template send | `POST /messages {to:"+E164", type:"template", template:{name: crmTemplateName, language: crmTemplateLanguage, params:{body[], headerMediaUrl?, buttonParams?}}}` built by `crm-body.ts` from the SAME values the meta driver sends (`wa-components.ts` `bodyValues` / `documentHeader` / `buttonValues`): body {{n}}, a document header as the 7-day signed Storage URL, URL-button suffixes and quick-reply payloads by button index. The CRM resolves the template from **its own synced list** by name + language. The name is the template's `crm_name` (admin, «القوالب»), else the old script's name (`CRM_DEFAULT_NAMES`), else `meta_name`; the language `crm_language`, else `language` («Mapping to the old script» below) |
 | Text / files | `type:"text"` (reply-to dropped: the CRM wants its own uuid) · `type:"document"\|"image"` with `media_url`, `filename`, caption as `text` |
 | wamid | `data.whatsapp_message_id` (a 2xx without it = `uncertain`) |
 | markRead | no-op (the CRM owns the conversation) |
@@ -122,11 +122,50 @@ Never sends anything.
 `crm_send_scope: false` (no `messages:send`); plus `crm_webhook_secret` (set or not, never the value). Never
 a test message.
 
+**Mapping to the old script** (owner 2026-10-25: «add a similar integration»). The CRM holds the templates
+of the academy's old Google Apps Script («نظام تسجيل الطلاب», CRM.gs), which sent through the same
+`/api/v1/messages`. Per template, `message_templates.crm_name` / `crm_language` (migration
+`20261025000680_template_crm_name.sql`, expand-only) are what the crm driver sends **instead of** `meta_name` /
+`language`, read only while the template's line is on crm (the meta and kapso drivers never read them). Set on
+«القوالب» for a crm line's row: «عدّل اسمه في نظام CRM» → name / language (blank = the default) →
+`PUT /messaging/templates/:key/crm-name` (templates.manage, audited `template_crm_name_set`, 409 `not_crm_line`
+when setting a name on any other line; clearing both back to the default works on any line; Meta's name rules
+checked in the form and by the API). A crm_name equal to `meta_name` (the CRM's copy of the Meta template) sends the
+Meta values, never the producer's CRM values.
+
+| Ours (`key`) | The CRM's template | Values |
+|---|---|---|
+| `booking_confirmation` / `_meet` / `_plain`, `lesson_reminder` (`lesson_reminder_v2` on Meta) / `_meet` / `_plain`, `teacher_lesson_reminder` | same names (no change) | the meta driver's values |
+| `teacher_new_student` | `teacher_lesson_v2` (default, no crm_name needed) | body [teacher, students, their codes `AB-nnnn`, the first lesson's time in the teacher's tz, its duration «45 دقيقة»]; URL buttons by index: 0 «ادخل الحلقة» = `classroom/<lesson id>`, 1 «تقرير الحلقة» = `teacher/report/<lesson id>` |
+| `report_ready` | `report_ready` (default) **or**, once `crm_name` = `report_session`, the old script's flow | the PDF as a `type:"document"` message (7-day signed URL), then `report_trial_session` (the lesson's rule is a trial package) or `report_session` (any other), **no variables** |
+
+The teacher alert's CRM values are written by `teacher-alert.crm.ts` into `template_params.crm` beside the Meta
+values {{1}}–{{3}} (the Meta path is unchanged); a row without its `crm` part (queued before this change, or a value
+missing: no teacher name, a student without a name or code, no end time) goes as before, `meta_name` with the
+Meta values (`crmRowName`); an admin's crm_name is always sent as set. The CRM template's two URL buttons must be
+`<WEB_ORIGIN>/{{1}}` (we send the path after the origin; both pages need a login). The report kind is
+`template_params.crm.report` (`report-ready.ts`, from `schedule_rules.package`). The report flow is two calls
+from one row: the document first (a failure there fails the row as today, nothing sent); if the template call
+fails after the PDF went, the row fails as **`uncertain`**, never resent automatically, so the PDF never goes
+twice on its own. Its text says which: «the CRM refused its template» (a CRM code; the code and a refused key's
+credential flag are kept) or «its CRM template may have gone too: check the CRM before a retry» (timeout, 5xx,
+a 2xx without wamid). **A manual retry (M1) sends both again**, the PDF included: the row does not record that
+the document went (follow-up: keep the document's wamid on the row and skip it on a retry); the row's wamid (ticks) is the template's.
+Dedup stays `report_ready:{report id}`: one row per report, whatever its version.
+
+**Not known: the variables of `report_session` / `report_trial_session`.** The old script's exact values are not
+in this repo, so the platform does not guess: report_ready keeps its own path by default, and the flow above
+sends the two templates **without variables**. Owner: switch it on (`crm_name` = `report_session` on
+report_ready) only after checking in the CRM that both templates have no variables (and no buttons); if they
+do, keep report_ready (the CRM must then hold an approved `report_ready` with a document header) and tell us
+their variables to map them.
+
 **Limits.** No template sync or submit from here (submit and approve in the CRM, which syncs from Meta);
-the CRM must hold **the same template names and languages** as our registry (`meta_name`, `language`), and
+the CRM must hold **the same template names and languages** as our registry (`meta_name`, `language`, or the row's
+`crm_name` / `crm_language` / the old script's default), and
 **the same buttons in the same order** (`buttonParams` is keyed by the button's index); no
-inbound media; no idempotency (an uncertain send is the admin's call); a document header goes as a link
-without our filename; best-effort webhooks (a missed tick stays «sent»). Follow-up: mirror the CRM's
+inbound media; no idempotency (an uncertain send is the admin's call); a document header or the report PDF goes
+as a link and the CRM shows its own file name, not ours (`AB-nnnn_<date>_تقرير-الحلقة.pdf` is lost); best-effort webhooks (a missed tick stays «sent»). Follow-up: mirror the CRM's
 `message.received` into our inbox (the CRM owns that number's conversations today).
 
 ### Switching the notifications line to the CRM (owner steps)
@@ -134,12 +173,23 @@ without our filename; best-effort webhooks (a missed tick stays «sent»). Follo
 1. In the CRM: Settings → API keys → New key with scope **`messages:send`**; copy it (shown once).
 2. «التواصل» ← «الحماية» → «نظام CRM»: `WACRM_API_BASE` = `https://<crm-host>/api/v1`, save the key as `WACRM_API_KEY`.
 3. In the CRM: add a webhook to `<API origin>/webhooks/wacrm` for event `message.status_updated`; paste its secret as `WACRM_WEBHOOK_SECRET`.
-4. Set `WA_PROVIDER` = «نظام CRM», save, press «افحص الخطوط»: the line must show «نظام CRM», nothing missing, «مفتاح واجهة نظام CRM صالح ويملك صلاحية الإرسال».
+4. Set `WA_PROVIDER` = «نظام CRM» (web «التكاملات», or on the phone «التواصل» → «نظرة عامة» → «مزوّد الإرسال لكل خط»: pick «نظام CRM», check the missing keys it names, confirm «سيُرسل هذا الخط عبر نظام CRM»; same audited save), save, press «افحص الخطوط»: the line must show «نظام CRM», nothing missing, «مفتاح واجهة نظام CRM صالح ويملك صلاحية الإرسال».
 5. On «القوالب», review **every** notifications template (statuses carry over from the last Meta sync): mark each one the CRM holds (same name, language and button order) approved with «علِّمه معتمدًا في نظام CRM» → «تأكيد الاعتماد», and each one it lacks «علِّمه غير متاح».
-6. Send one test to a number in `WA_ALLOWED_RECIPIENTS` before removing the guard.
-7. **Rollback:** set `WA_PROVIDER` back to «Meta مباشرة» (or Kapso). Nothing else changes; the hand-set statuses are re-synced by the next Meta sync **that reads the list** (a failed read touches no row: with a dead Meta token, re-check «القوالب» by hand).
+6. On «القوالب», review the **CRM names** (the line under each crm row's buttons, «في نظام CRM: …»): teacher_new_student must read `teacher_lesson_v2`; correct any name or language the CRM spells differently with «عدّل اسمه في نظام CRM». For the old script's report flow set report_ready to `report_session` only after the check in «Not known» above.
+7. Send one test to a number in `WA_ALLOWED_RECIPIENTS` before removing the guard.
+8. **Rollback:** set `WA_PROVIDER` back to «Meta مباشرة» (or Kapso). Nothing else changes; the hand-set statuses are re-synced by the next Meta sync **that reads the list** (a failed read touches no row: with a dead Meta token, re-check «القوالب» by hand).
 
 `tools/wa-stub` serves a minimal CRM under `/crm/api/v1` (`GET /me`, `POST /messages`, Bearer, `{data}` /
 `{error}` envelope; `crm.apiKey` / `crm.scopes` options) for api tests and e2e. Keys: `WACRM_API_BASE` plain
 URL (group `wacrm`), `WACRM_API_KEY` / `WACRM_WEBHOOK_SECRET` Vault secrets (migration
-`20261025000640_wacrm_driver.sql`, expand-only; ship with the `migrate` input ticked).
+`20261025000640_wacrm_driver.sql`, expand-only; ship with the `migrate` input ticked). The CRM names: migration
+`20261025000680_template_crm_name.sql` (two nullable columns, expand-only, idempotent; ship with `migrate` ticked).
+
+**Mobile.** «التواصل» → «نظرة عامة» shows «مزوّد الإرسال لكل خط»: each line's driver (Meta مباشرة / Kapso /
+نظام CRM) as radio pills. A pick never saves alone: it lists the key NAMES that driver still lacks
+(`driverKeys` in packages/shared, an approximation of the API's `lineGaps`; «افحص الخطوط» on the web stays the
+final word) and asks «سيُرسل هذا الخط عبر …» first; the confirm sends `PUT /settings/integrations` with that
+line's key only (settings.write, audited like the web); one save at a time. Without settings.write it is shown,
+not offered; the keys themselves are still entered on the web (CRM and Kapso keys on «الحماية», the line ids
+and tokens on «الأرقام» → «إعداد الخطوط السابق»). In module mode (`comms_source` = module) each number's own
+provider sends and `WA_PROVIDER` is not read, so the section shows only a note pointing to «الأرقام». JS-only.

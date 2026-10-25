@@ -29,6 +29,8 @@ export function toTemplateView(row: TemplateRow, numbers?: readonly ApprovalRow[
     line: row.line,
     sales_starter: row.sales_starter,
     number_id: row.number_id,
+    crm_name: row.crm_name,
+    crm_language: row.crm_language,
     ...(numbers ? { numbers: numbers.map(toApproval) } : {}),
   };
 }

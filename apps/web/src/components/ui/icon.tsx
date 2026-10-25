@@ -45,6 +45,8 @@ const PATHS = {
   person: 'M13 6.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0ZM4 16.5c1.1-2.9 3.3-4.3 6-4.3s4.9 1.4 6 4.3',
   template: 'M5.5 3.5h9v13h-9v-13ZM8 7.5h4M8 10.5h4M8 13.5h2',
   paperclip: 'm15.5 9.5-5.6 5.6a3.5 3.5 0 0 1-5-5l6.3-6.3a2.3 2.3 0 0 1 3.3 3.3l-6.3 6.3a1.2 1.2 0 0 1-1.7-1.7L12 6.2',
+  /** «الردود السريعة»: a bolt (a saved reply in one tap). */
+  bolt: 'M11 3 4.5 11.5H10l-1 5.5 6.5-8.5H10l1-5.5Z',
   // The password toggle: an open eye while the text is hidden, struck through once it shows.
   eye: 'M2.5 10S5.3 4.5 10 4.5s7.5 5.5 7.5 5.5-2.8 5.5-7.5 5.5S2.5 10 2.5 10ZM12.5 10a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0Z',
   'eye-off': 'M2.5 10S5.3 4.5 10 4.5s7.5 5.5 7.5 5.5-2.8 5.5-7.5 5.5S2.5 10 2.5 10ZM12.5 10a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0ZM4 4l12 12',

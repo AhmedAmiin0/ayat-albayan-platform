@@ -6,11 +6,13 @@ import { DataTable } from '@/components/DataTable';
 import { Toast } from '@/components/ui/toast';
 import { t } from '@/lib/i18n';
 import { otherLine, templatesQuery } from './api';
+import { CrmNameDialog } from './CrmNameDialog';
 import { MoveLineDialog } from './MoveLineDialog';
 import { SubmitTemplateDialog } from './SubmitTemplateDialog';
 import { templateColumns } from './template-columns';
 import { TemplateLines } from './TemplateLines';
 import { TemplateNumberDialog } from './TemplateNumberDialog';
+import { useCrmName } from './use-crm-name';
 import { useCrmStatus } from './use-crm-status';
 import { useTemplateActions } from './use-template-actions';
 import { useTemplateLines } from './use-template-lines';
@@ -23,7 +25,7 @@ import { useTemplateNumber } from './use-template-number';
  * only after its explicit confirm dialog. «متاح للمعلمين والمبيعات» (the restricted allow-list)
  * picks the only templates teachers, sales and other limited roles may send (owner 2026-10-12).
  * «يُرسل من» picks each template's own number (templates.manage, after its dialog; docs/23c decision 9).
- * A template on a crm line has its status set by hand (docs/19): the CRM holds it, nothing syncs it.
+ * A template on a crm line has its status and its CRM name set by hand (docs/19): the CRM holds it, nothing syncs it.
  */
 export function TemplateHealth({ headingId }: { headingId: string }) {
   const templates = useQuery(templatesQuery);
@@ -37,6 +39,8 @@ export function TemplateHealth({ headingId }: { headingId: string }) {
   const pick = useTemplateNumber(a.setNotice);
   const { setPicking, busy: pickBusy } = pick;
   const { busyKey: crmBusy, onSet: onCrmSet } = useCrmStatus(a.setNotice);
+  const crmName = useCrmName(a.setNotice);
+  const { setEditing: onEditName } = crmName;
   const columns = useMemo(
     () =>
       templateColumns({
@@ -47,9 +51,9 @@ export function TemplateHealth({ headingId }: { headingId: string }) {
         phones,
         factsOf,
         sendFrom: { numbers, manage, busy: pickBusy, onPick: (template, numberId) => setPicking({ template, numberId }) },
-        crmStatus: { busyKey: crmBusy, onSet: onCrmSet },
+        crmStatus: { busyKey: crmBusy, onSet: onCrmSet, onEditName },
       }),
-    [setSubmitting, setMoving, toggleStarter, saving, phones, factsOf, numbers, manage, setPicking, pickBusy, crmBusy, onCrmSet],
+    [setSubmitting, setMoving, toggleStarter, saving, phones, factsOf, numbers, manage, setPicking, pickBusy, crmBusy, onCrmSet, onEditName],
   );
   const rows = templates.data ?? [];
 
@@ -99,6 +103,9 @@ export function TemplateHealth({ headingId }: { headingId: string }) {
           onConfirm={pick.confirm}
           onClose={() => setPicking(null)}
         />
+      )}
+      {crmName.editing && (
+        <CrmNameDialog template={crmName.editing} busy={crmName.save.isPending} onSave={(input) => crmName.save.mutate(input)} onClose={() => onEditName(null)} />
       )}
       {a.notice && <Toast {...a.notice} onDismiss={() => a.setNotice(null)} />}
     </>
