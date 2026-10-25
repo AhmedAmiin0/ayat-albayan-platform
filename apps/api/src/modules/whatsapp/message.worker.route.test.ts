@@ -3,7 +3,7 @@ import type { PushService } from '../../common/push/push.service';
 import type { MessageDispatch } from './message.dispatch';
 import { authSubject } from './message.job';
 import { MessageWorker, type SendJob } from './message.worker';
-import { N2 } from './number-route.fakes';
+import { N2 } from './numbers/number-route.fakes';
 import { dueMessage } from './sender.fakes';
 import type { SenderQueries } from './sender.queries';
 import { templateRow } from './whatsapp.fakes';

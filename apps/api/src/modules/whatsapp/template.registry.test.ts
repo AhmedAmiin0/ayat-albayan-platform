@@ -1,8 +1,8 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { AuditService } from '../../common/audit/audit.service';
-import { byDriver } from './graph';
-import { KAPSO_ENV } from './kapso.fakes';
-import { toMetaTemplate } from './meta-shapes';
+import { byDriver } from './drivers/meta/graph';
+import { KAPSO_ENV } from './drivers/kapso/kapso.fakes';
+import { toMetaTemplate } from './drivers/meta/meta-shapes';
 import { TemplateRegistry } from './template.registry';
 import type { TemplatesQueries } from './templates.queries';
 import { RENEWAL_DUE_SEED, REPORT_READY_SEED } from './seed-templates.fakes';

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { fakeDb } from '../guardians/fake-db';
-import { rows } from './send-gate.fakes';
+import { rows } from './gate/send-gate.fakes';
 import { WhatsappSettings } from './whatsapp.settings';
 
 /** What SendGate read before the reader existed: the reader lists exactly these. */

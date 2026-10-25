@@ -3,7 +3,7 @@ import type { AcademySettings, TemplateStatus, WaLine } from '@ab/shared';
 import { describe, expect, it, vi } from 'vitest';
 import { readerOf } from '../../common/settings/settings.fakes';
 import { AUTOMATIC_KEYS } from '../whatsapp/send-stale';
-import type { SendGate } from '../whatsapp/send-gate';
+import type { SendGate } from '../whatsapp/gate/send-gate';
 import { NotificationRulesSettings } from './notification-rules.settings';
 import { fakePolicy, type FakePolicyInput } from './policy.fakes';
 import { RulesFacts } from './rules.facts';

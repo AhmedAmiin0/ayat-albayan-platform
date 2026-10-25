@@ -15,7 +15,7 @@ import type { AuthUser } from '../../common/auth/verify-token';
 import { ChatListsQueries } from '../chat-lists/chat-lists.queries';
 import { SalesQueries } from '../sales/sales.queries';
 import { MessageSender } from '../whatsapp/message.sender';
-import { SendGate } from '../whatsapp/send-gate';
+import { SendGate } from '../whatsapp/gate/send-gate';
 import { TemplatesQueries, type ApprovalRow } from '../whatsapp/templates.queries';
 import { WHATSAPP_CLIENT, WHATSAPP_LINES } from '../whatsapp/whatsapp.types';
 import type { KnownNumber } from './known-number';

@@ -1,6 +1,6 @@
 import type { CatalogueInputs, LineHealthView } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import { SendGate } from '../whatsapp/send-gate';
+import { SendGate } from '../whatsapp/gate/send-gate';
 import { NotificationRulesSettings } from './notification-rules.settings';
 import { RulesQueries, type Reach } from './rules.queries';
 

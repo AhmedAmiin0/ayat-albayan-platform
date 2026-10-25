@@ -9,11 +9,11 @@ import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier
 import type { PermissionResolver } from '../../common/auth/permissions';
 import type { AuthUser } from '../../common/auth/verify-token';
 import { StorageService } from '../../common/storage/storage.service';
-import { LineHealthStore } from './line-health.store';
-import { LinesCheck } from './lines.check';
+import { LineHealthStore } from './lines/line-health.store';
+import { LinesCheck } from './lines/lines.check';
 import { MessageSender } from './message.sender';
 import { MessagesQueries } from './messages.queries';
-import { SendGate } from './send-gate';
+import { SendGate } from './gate/send-gate';
 import { TemplatesQueries, type ApprovalRow } from './templates.queries';
 import { WHATSAPP_CLIENT, WHATSAPP_LINES } from './whatsapp.types';
 

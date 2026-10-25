@@ -12,7 +12,7 @@ import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier
 import type { PermissionResolver } from '../../common/auth/permissions';
 import type { AuthUser } from '../../common/auth/verify-token';
 import { SETTINGS_CACHE_MS, SettingsService } from '../../common/settings/settings.service';
-import { SendGate } from '../whatsapp/send-gate';
+import { SendGate } from '../whatsapp/gate/send-gate';
 import { RulesQueries } from './rules.queries';
 import { RulesTable, type RuleRowWrite } from './rules.table';
 

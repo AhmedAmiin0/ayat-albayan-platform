@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { byDriver } from './graph';
-import { KAPSO_ENV } from './kapso.fakes';
+import { byDriver } from './drivers/meta/graph';
+import { KAPSO_ENV } from './drivers/kapso/kapso.fakes';
 import { errorCode, failurePlan, messageLabel, quickReplyPayloads, readyToSend, reportIdOf } from './send-plan';
 import { REMINDER_24H, REPORT_READY, STUB_ENV, templateRow } from './whatsapp.fakes';
 import { WaError } from './whatsapp.types';

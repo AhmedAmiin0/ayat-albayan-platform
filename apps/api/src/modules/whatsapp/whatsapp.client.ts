@@ -1,6 +1,6 @@
 import { recipientAllowed, type GraphEnv } from '../../config/env/env';
-import { graphFetch, graphJson, type FetchLike, type GraphConn, type GraphRequest } from './graph';
-import { fetchMedia, nextTemplateCursor, templateEditPath } from './kapso';
+import { graphFetch, graphJson, type FetchLike, type GraphConn, type GraphRequest } from './drivers/meta/graph';
+import { fetchMedia, nextTemplateCursor, templateEditPath } from './drivers/kapso/kapso';
 import {
   parsed,
   sentSchema,
@@ -9,7 +9,7 @@ import {
   toMetaTemplate,
   uploadHandleSchema,
   uploadSessionSchema,
-} from './meta-shapes';
+} from './drivers/meta/meta-shapes';
 import { mediaMessage, readReceipt, submitPayload, templateMessage, textMessage, type GraphBody } from './wa-components';
 import {
   WaError,
