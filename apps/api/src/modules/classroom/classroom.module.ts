@@ -20,7 +20,7 @@ import { ClassroomPublicController } from './classroom.public.controller';
 import { ClassroomQueries } from './classroom.queries';
 import { ClassroomSettings } from './classroom.settings';
 import { GuestJoinService } from './join/guest-join.service';
-import { INTERNAL_MEETING_CONTROLLERS, INTERNAL_MEETING_PROVIDERS } from './internal-meetings.providers';
+import { INTERNAL_MEETING_CONTROLLERS, INTERNAL_MEETING_PROVIDERS } from './internal-meetings/internal-meetings.providers';
 import { PublicJoinLimit } from './join/join-limit';
 import { JoinLinkCopyService } from './join/join-link.copy.service';
 import { JoinLinkService } from './join/join-link.service';

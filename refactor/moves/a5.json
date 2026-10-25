@@ -1,0 +1,244 @@
+{
+  "id": "a5",
+  "seq": 7,
+  "moves": [
+    {
+      "from": "apps/api/src/modules/classroom/meeting-invite.*",
+      "to": "apps/api/src/modules/classroom/meetings/invites"
+    },
+    {
+      "from": "apps/api/src/modules/classroom/meeting-invitee.*",
+      "to": "apps/api/src/modules/classroom/meetings/invites"
+    },
+    {
+      "from": "apps/api/src/modules/classroom/meeting-invitees.*",
+      "to": "apps/api/src/modules/classroom/meetings/invites"
+    },
+    {
+      "from": "apps/api/src/modules/classroom/meeting-invites.*",
+      "to": "apps/api/src/modules/classroom/meetings/invites"
+    },
+    {
+      "from": "apps/api/src/modules/classroom/meeting-create*",
+      "to": "apps/api/src/modules/classroom/meetings/schedule"
+    },
+    {
+      "from": "apps/api/src/modules/classroom/meeting-list*",
+      "to": "apps/api/src/modules/classroom/meetings/schedule"
+    },
+    {
+      "from": "apps/api/src/modules/classroom/meeting-schedule*",
+      "to": "apps/api/src/modules/classroom/meetings/schedule"
+    },
+    {
+      "from": "apps/api/src/modules/classroom/meeting-services*",
+      "to": "apps/api/src/modules/classroom/meetings/schedule"
+    },
+    {
+      "from": "apps/api/src/modules/classroom/internal-meetings*",
+      "to": "apps/api/src/modules/classroom/internal-meetings"
+    },
+    {
+      "from": "apps/api/src/modules/classroom/meeting-join*",
+      "to": "apps/api/src/modules/classroom/internal-meetings"
+    }
+  ],
+  "files": [
+    [
+      "apps/api/src/modules/classroom/internal-meetings.controller.ts",
+      "apps/api/src/modules/classroom/internal-meetings/internal-meetings.controller.ts"
+    ],
+    [
+      "apps/api/src/modules/classroom/internal-meetings.fakes.ts",
+      "apps/api/src/modules/classroom/internal-meetings/internal-meetings.fakes.ts"
+    ],
+    [
+      "apps/api/src/modules/classroom/internal-meetings.http.test.ts",
+      "apps/api/src/modules/classroom/internal-meetings/internal-meetings.http.test.ts"
+    ],
+    [
+      "apps/api/src/modules/classroom/internal-meetings.join.service.ts",
+      "apps/api/src/modules/classroom/internal-meetings/internal-meetings.join.service.ts"
+    ],
+    [
+      "apps/api/src/modules/classroom/internal-meetings.join.test.ts",
+      "apps/api/src/modules/classroom/internal-meetings/internal-meetings.join.test.ts"
+    ],
+    [
+      "apps/api/src/modules/classroom/internal-meetings.kick.service.ts",
+      "apps/api/src/modules/classroom/internal-meetings/internal-meetings.kick.service.ts"
+    ],
+    [
+      "apps/api/src/modules/classroom/internal-meetings.kick.test.ts",
+      "apps/api/src/modules/classroom/internal-meetings/internal-meetings.kick.test.ts"
+    ],
+    [
+      "apps/api/src/modules/classroom/internal-meetings.providers.ts",
+      "apps/api/src/modules/classroom/internal-meetings/internal-meetings.providers.ts"
+    ],
+    [
+      "apps/api/src/modules/classroom/internal-meetings.queries.ts",
+      "apps/api/src/modules/classroom/internal-meetings/internal-meetings.queries.ts"
+    ],
+    [
+      "apps/api/src/modules/classroom/internal-meetings.service.test.ts",
+      "apps/api/src/modules/classroom/internal-meetings/internal-meetings.service.test.ts"
+    ],
+    [
+      "apps/api/src/modules/classroom/internal-meetings.service.ts",
+      "apps/api/src/modules/classroom/internal-meetings/internal-meetings.service.ts"
+    ],
+    [
+      "apps/api/src/modules/classroom/internal-meetings.token.test.ts",
+      "apps/api/src/modules/classroom/internal-meetings/internal-meetings.token.test.ts"
+    ],
+    [
+      "apps/api/src/modules/classroom/internal-meetings.token.ts",
+      "apps/api/src/modules/classroom/internal-meetings/internal-meetings.token.ts"
+    ],
+    [
+      "apps/api/src/modules/classroom/meeting-create.service.test.ts",
+      "apps/api/src/modules/classroom/meetings/schedule/meeting-create.service.test.ts"
+    ],
+    [
+      "apps/api/src/modules/classroom/meeting-create.service.ts",
+      "apps/api/src/modules/classroom/meetings/schedule/meeting-create.service.ts"
+    ],
+    [
+      "apps/api/src/modules/classroom/meeting-invite.flow.ts",
+      "apps/api/src/modules/classroom/meetings/invites/meeting-invite.flow.ts"
+    ],
+    [
+      "apps/api/src/modules/classroom/meeting-invite.numbers.test.ts",
+      "apps/api/src/modules/classroom/meetings/invites/meeting-invite.numbers.test.ts"
+    ],
+    [
+      "apps/api/src/modules/classroom/meeting-invite.policy.test.ts",
+      "apps/api/src/modules/classroom/meetings/invites/meeting-invite.policy.test.ts"
+    ],
+    [
+      "apps/api/src/modules/classroom/meeting-invite.policy.ts",
+      "apps/api/src/modules/classroom/meetings/invites/meeting-invite.policy.ts"
+    ],
+    [
+      "apps/api/src/modules/classroom/meeting-invite.sender.ts",
+      "apps/api/src/modules/classroom/meetings/invites/meeting-invite.sender.ts"
+    ],
+    [
+      "apps/api/src/modules/classroom/meeting-invite.text.test.ts",
+      "apps/api/src/modules/classroom/meetings/invites/meeting-invite.text.test.ts"
+    ],
+    [
+      "apps/api/src/modules/classroom/meeting-invite.text.ts",
+      "apps/api/src/modules/classroom/meetings/invites/meeting-invite.text.ts"
+    ],
+    [
+      "apps/api/src/modules/classroom/meeting-invitee.queries.test.ts",
+      "apps/api/src/modules/classroom/meetings/invites/meeting-invitee.queries.test.ts"
+    ],
+    [
+      "apps/api/src/modules/classroom/meeting-invitee.queries.ts",
+      "apps/api/src/modules/classroom/meetings/invites/meeting-invitee.queries.ts"
+    ],
+    [
+      "apps/api/src/modules/classroom/meeting-invitee.resolver.test.ts",
+      "apps/api/src/modules/classroom/meetings/invites/meeting-invitee.resolver.test.ts"
+    ],
+    [
+      "apps/api/src/modules/classroom/meeting-invitee.resolver.ts",
+      "apps/api/src/modules/classroom/meetings/invites/meeting-invitee.resolver.ts"
+    ],
+    [
+      "apps/api/src/modules/classroom/meeting-invitees.queries.test.ts",
+      "apps/api/src/modules/classroom/meetings/invites/meeting-invitees.queries.test.ts"
+    ],
+    [
+      "apps/api/src/modules/classroom/meeting-invitees.queries.ts",
+      "apps/api/src/modules/classroom/meetings/invites/meeting-invitees.queries.ts"
+    ],
+    [
+      "apps/api/src/modules/classroom/meeting-invites.controller.ts",
+      "apps/api/src/modules/classroom/meetings/invites/meeting-invites.controller.ts"
+    ],
+    [
+      "apps/api/src/modules/classroom/meeting-invites.fakes.ts",
+      "apps/api/src/modules/classroom/meetings/invites/meeting-invites.fakes.ts"
+    ],
+    [
+      "apps/api/src/modules/classroom/meeting-invites.http.test.ts",
+      "apps/api/src/modules/classroom/meetings/invites/meeting-invites.http.test.ts"
+    ],
+    [
+      "apps/api/src/modules/classroom/meeting-invites.mapper.ts",
+      "apps/api/src/modules/classroom/meetings/invites/meeting-invites.mapper.ts"
+    ],
+    [
+      "apps/api/src/modules/classroom/meeting-invites.migration.test.ts",
+      "apps/api/src/modules/classroom/meetings/invites/meeting-invites.migration.test.ts"
+    ],
+    [
+      "apps/api/src/modules/classroom/meeting-invites.policy-flow.test.ts",
+      "apps/api/src/modules/classroom/meetings/invites/meeting-invites.policy-flow.test.ts"
+    ],
+    [
+      "apps/api/src/modules/classroom/meeting-invites.resend-guard.test.ts",
+      "apps/api/src/modules/classroom/meetings/invites/meeting-invites.resend-guard.test.ts"
+    ],
+    [
+      "apps/api/src/modules/classroom/meeting-invites.service.test.ts",
+      "apps/api/src/modules/classroom/meetings/invites/meeting-invites.service.test.ts"
+    ],
+    [
+      "apps/api/src/modules/classroom/meeting-invites.service.ts",
+      "apps/api/src/modules/classroom/meetings/invites/meeting-invites.service.ts"
+    ],
+    [
+      "apps/api/src/modules/classroom/meeting-invites.trigger-cap.test.ts",
+      "apps/api/src/modules/classroom/meetings/invites/meeting-invites.trigger-cap.test.ts"
+    ],
+    [
+      "apps/api/src/modules/classroom/meeting-join.scheduled.test.ts",
+      "apps/api/src/modules/classroom/internal-meetings/meeting-join.scheduled.test.ts"
+    ],
+    [
+      "apps/api/src/modules/classroom/meeting-list.queries.ts",
+      "apps/api/src/modules/classroom/meetings/schedule/meeting-list.queries.ts"
+    ],
+    [
+      "apps/api/src/modules/classroom/meeting-list.service.test.ts",
+      "apps/api/src/modules/classroom/meetings/schedule/meeting-list.service.test.ts"
+    ],
+    [
+      "apps/api/src/modules/classroom/meeting-list.service.ts",
+      "apps/api/src/modules/classroom/meetings/schedule/meeting-list.service.ts"
+    ],
+    [
+      "apps/api/src/modules/classroom/meeting-schedule.cancel.test.ts",
+      "apps/api/src/modules/classroom/meetings/schedule/meeting-schedule.cancel.test.ts"
+    ],
+    [
+      "apps/api/src/modules/classroom/meeting-schedule.rules.test.ts",
+      "apps/api/src/modules/classroom/meetings/schedule/meeting-schedule.rules.test.ts"
+    ],
+    [
+      "apps/api/src/modules/classroom/meeting-schedule.rules.ts",
+      "apps/api/src/modules/classroom/meetings/schedule/meeting-schedule.rules.ts"
+    ],
+    [
+      "apps/api/src/modules/classroom/meeting-schedule.service.test.ts",
+      "apps/api/src/modules/classroom/meetings/schedule/meeting-schedule.service.test.ts"
+    ],
+    [
+      "apps/api/src/modules/classroom/meeting-schedule.service.ts",
+      "apps/api/src/modules/classroom/meetings/schedule/meeting-schedule.service.ts"
+    ],
+    [
+      "apps/api/src/modules/classroom/meeting-schedule.stale.test.ts",
+      "apps/api/src/modules/classroom/meetings/schedule/meeting-schedule.stale.test.ts"
+    ],
+    [
+      "apps/api/src/modules/classroom/meeting-services.fakes.ts",
+      "apps/api/src/modules/classroom/meetings/schedule/meeting-services.fakes.ts"
+    ]
+  ]
+}
