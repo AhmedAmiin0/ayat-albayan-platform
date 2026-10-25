@@ -11,9 +11,9 @@ import { TimeZoneSelect } from '@/components/ui/form/time-zone-select';
 import { SourceField } from '@/features/guardians/SourceField';
 import { t } from '@/lib/i18n/i18n';
 import { ageError, EMPTY_STUDENT, phoneError, requiredError, type CreateStudentValues } from './create-student';
-import { AgeField, GenderField } from '../FactFields';
-import { ProgramField } from '../ProgramField';
-import { TeacherField } from '../TeacherField';
+import { AgeField, GenderField } from '../profile/FactFields';
+import { ProgramField } from '../profile/ProgramField';
+import { TeacherField } from '../profile/TeacherField';
 
 type CreateStudentFormProps = {
   onSubmit: (values: CreateStudentValues) => Promise<void>;

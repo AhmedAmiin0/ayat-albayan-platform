@@ -6,11 +6,11 @@ import { useRuleDrafts, type RuleDrafts } from '@/features/notification-rules/ru
 import { RulesSection } from '@/features/notification-rules/RulesSection';
 import { t } from '@/lib/i18n/i18n';
 import type { CommunicationsTab } from '../page-search';
-import { NumbersTab } from './NumbersTab';
-import { OverviewTab } from './OverviewTab';
-import { SafetyTab } from './SafetyTab';
-import { SavedRepliesTab } from './SavedRepliesTab';
-import { TemplatesTab } from './TemplatesTab';
+import { NumbersTab } from './tabs/NumbersTab';
+import { OverviewTab } from './overview/OverviewTab';
+import { SafetyTab } from './tabs/SafetyTab';
+import { SavedRepliesTab } from './tabs/SavedRepliesTab';
+import { TemplatesTab } from './tabs/TemplatesTab';
 
 /** The id prefix of «التواصل»'s tabs and panel (tabIds). */
 export const COMMUNICATIONS_TABS_ID = 'communications';

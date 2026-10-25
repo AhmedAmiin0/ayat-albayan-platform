@@ -1,5 +1,5 @@
 import { Link } from '@tanstack/react-router';
-import { OWNER_PAGE } from '../value-groups-view';
+import { OWNER_PAGE } from '../lib/value-groups-view';
 import type { OwnedValueGroupId } from '@ab/shared';
 
 /** A module-owned value: text, and the link to the page that edits it (never an editor). */

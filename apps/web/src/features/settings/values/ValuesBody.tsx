@@ -5,15 +5,15 @@ import type { CustomValues } from '@/features/custom-config/use-custom-values';
 import { t } from '@/lib/i18n/i18n';
 import { GroupNav } from './GroupNav';
 import type { RowEnv } from './rows/ValueRowView';
-import { valueCounts } from './value-rows';
-import { ValueSheet } from './ValueSheet';
+import { valueCounts } from './lib/value-rows';
+import { ValueSheet } from './sheet/ValueSheet';
 import { GroupEmpty, ValuesEmpty, ValuesLoadError } from './ValuesStates';
 import { ValuesHead } from './ValuesHead';
 import { ValuesTable } from './ValuesTable';
 import { ValuesToolbar } from './ValuesToolbar';
 import { useValues } from './values-context';
 import type { ValuesSearch } from './values-search';
-import { useValuesView } from './use-values-view';
+import { useValuesView } from './hooks/use-values-view';
 
 export interface ValuesBodyProps {
   search: ValuesSearch;

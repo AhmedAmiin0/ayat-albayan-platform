@@ -1,0 +1,88 @@
+{
+  "id": "b13b",
+  "seq": 54,
+  "moves": [
+    {
+      "from": "apps/web/src/features/settings/pages/communications/Overview*",
+      "to": "apps/web/src/features/settings/pages/communications/overview/"
+    },
+    {
+      "from": "apps/web/src/features/settings/pages/communications/overview-*",
+      "to": "apps/web/src/features/settings/pages/communications/overview/"
+    },
+    {
+      "from": "apps/web/src/features/settings/pages/communications/PublicNumber*",
+      "to": "apps/web/src/features/settings/pages/communications/overview/"
+    },
+    {
+      "from": "apps/web/src/features/settings/pages/communications/NumbersTab*",
+      "to": "apps/web/src/features/settings/pages/communications/tabs/"
+    },
+    {
+      "from": "apps/web/src/features/settings/pages/communications/SafetyTab*",
+      "to": "apps/web/src/features/settings/pages/communications/tabs/"
+    },
+    {
+      "from": "apps/web/src/features/settings/pages/communications/SavedReplies*",
+      "to": "apps/web/src/features/settings/pages/communications/tabs/"
+    },
+    {
+      "from": "apps/web/src/features/settings/pages/communications/TemplatesTab*",
+      "to": "apps/web/src/features/settings/pages/communications/tabs/"
+    }
+  ],
+  "files": [
+    [
+      "apps/web/src/features/settings/pages/communications/NumbersTab.tsx",
+      "apps/web/src/features/settings/pages/communications/tabs/NumbersTab.tsx"
+    ],
+    [
+      "apps/web/src/features/settings/pages/communications/overview-counts.test.ts",
+      "apps/web/src/features/settings/pages/communications/overview/overview-counts.test.ts"
+    ],
+    [
+      "apps/web/src/features/settings/pages/communications/overview-counts.ts",
+      "apps/web/src/features/settings/pages/communications/overview/overview-counts.ts"
+    ],
+    [
+      "apps/web/src/features/settings/pages/communications/overview-table.ts",
+      "apps/web/src/features/settings/pages/communications/overview/overview-table.ts"
+    ],
+    [
+      "apps/web/src/features/settings/pages/communications/OverviewNumbers.tsx",
+      "apps/web/src/features/settings/pages/communications/overview/OverviewNumbers.tsx"
+    ],
+    [
+      "apps/web/src/features/settings/pages/communications/OverviewTab.tsx",
+      "apps/web/src/features/settings/pages/communications/overview/OverviewTab.tsx"
+    ],
+    [
+      "apps/web/src/features/settings/pages/communications/OverviewWhat.tsx",
+      "apps/web/src/features/settings/pages/communications/overview/OverviewWhat.tsx"
+    ],
+    [
+      "apps/web/src/features/settings/pages/communications/PublicNumber.tsx",
+      "apps/web/src/features/settings/pages/communications/overview/PublicNumber.tsx"
+    ],
+    [
+      "apps/web/src/features/settings/pages/communications/SafetyTab.tsx",
+      "apps/web/src/features/settings/pages/communications/tabs/SafetyTab.tsx"
+    ],
+    [
+      "apps/web/src/features/settings/pages/communications/SavedRepliesTab.test.tsx",
+      "apps/web/src/features/settings/pages/communications/tabs/SavedRepliesTab.test.tsx"
+    ],
+    [
+      "apps/web/src/features/settings/pages/communications/SavedRepliesTab.tsx",
+      "apps/web/src/features/settings/pages/communications/tabs/SavedRepliesTab.tsx"
+    ],
+    [
+      "apps/web/src/features/settings/pages/communications/SavedRepliesTable.tsx",
+      "apps/web/src/features/settings/pages/communications/tabs/SavedRepliesTable.tsx"
+    ],
+    [
+      "apps/web/src/features/settings/pages/communications/TemplatesTab.tsx",
+      "apps/web/src/features/settings/pages/communications/tabs/TemplatesTab.tsx"
+    ]
+  ]
+}

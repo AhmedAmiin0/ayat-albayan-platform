@@ -1,8 +1,8 @@
 import type { GoogleSyncSettings, SettingKey } from '@ab/shared';
 import { CustomValueRow } from './CustomValueRow';
 import type { CustomValues } from '@/features/custom-config/use-custom-values';
-import { groupLabel } from '../value-groups-view';
-import type { ValueRow } from '../value-rows';
+import { groupLabel } from '../lib/value-groups-view';
+import type { ValueRow } from '../lib/value-rows';
 import { useValues } from '../values-context';
 import { GoogleValueRow } from './GoogleValueRow';
 import { SettingPhoneRow } from './SettingPhoneRow';

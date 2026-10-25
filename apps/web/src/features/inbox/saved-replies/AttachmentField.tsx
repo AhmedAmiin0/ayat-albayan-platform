@@ -4,7 +4,7 @@ import { useRef } from 'react';
 import { Button } from '@/components/ui/form/button';
 import { FormAlert } from '@/components/ui/form/form-alert';
 import { Icon } from '@/components/ui/display/icon';
-import { sizeText } from '@/features/students/recording-format';
+import { sizeText } from '@/features/students/recordings/recording-format';
 import { t } from '@/lib/i18n/i18n';
 import { useUploadMaxBytes } from '@/lib/settings/public-config';
 import { chatSendMime } from '../api/api.files';
