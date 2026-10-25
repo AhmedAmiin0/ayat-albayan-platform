@@ -2,7 +2,7 @@ import { SETTING_DEFAULTS } from '@ab/shared';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { readerOf } from '../../common/settings/settings.fakes';
 import { LessonEvents } from '../../common/events/lesson-events';
-import { fakePolicy, type FakePolicyInput } from '../notification-rules/policy.fakes';
+import { fakePolicy, type FakePolicyInput } from '../notification-rules/policy/policy.fakes';
 import type { MessageSender } from '../whatsapp/sender/message.sender';
 import { LessonRatingSettings } from './lesson-rating.settings';
 import { heldLesson, LESSON_ID, NOW } from './rating.fakes';

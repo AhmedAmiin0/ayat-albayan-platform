@@ -3,7 +3,7 @@ import { HttpStatus, Injectable } from '@nestjs/common';
 import { randomUUID } from 'node:crypto';
 import { LessonEvents } from '../../../common/events/lesson-events';
 import { gateConfirmations } from '../../../common/rules/confirmations';
-import { NotificationPolicy } from '../../notification-rules/policy';
+import { NotificationPolicy } from '../../notification-rules/policy/policy';
 import { domainError } from '../booking.errors';
 import { BookingFollowUps } from '../core/booking.follow-ups';
 import { BookingPlanner } from '../plan/booking.planner';

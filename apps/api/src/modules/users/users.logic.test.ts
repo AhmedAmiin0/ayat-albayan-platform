@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest';
 import { systemRoles } from '../roles/roles.fakes';
 import type { RoleRecord } from '../roles/roles.store';
 import { adminProblem, assertOutranks, assertRoleAssignable, chooseRole, isAssignable, lockedOutOfUsers, profilePatch, roleChangeBlocked, type UserState } from './users.logic';
-import type { StaffProfile } from './users.store';
+import type { StaffProfile } from './store/users.store';
 
 const prof = (id: string, role: StaffProfile['role'], extra: Partial<StaffProfile> = {}): StaffProfile => ({ id, full_name: id, role, role_id: null, disabled_at: null, ...extra });
 const custom: RoleRecord = { id: 'c1', key: 'custom-1', name_ar: 'محاسب', name_en: null, base_role: 'admin', is_system: false, permissions: ['payments.read'] };

@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { LessonEvents } from '../../../common/events/lesson-events';
 import { fakeDb } from '../../guardians/fake-db';
-import { fakePolicy, type FakePolicyInput } from '../../notification-rules/policy.fakes';
+import { fakePolicy, type FakePolicyInput } from '../../notification-rules/policy/policy.fakes';
 import type { ChangeSet, QueuedMessage, TimeEditChange } from '../../scheduling/change-set';
 import { LessonWriter } from '../../scheduling/occurrences/lesson-writer';
 import type { BookingPayload } from './booking.mapper';

@@ -13,8 +13,8 @@ import {
   type RuleSettings,
 } from '@ab/shared';
 import { ruleConfirmationRequired, ruleError } from './rules.errors';
-import type { RulesSnapshot } from './rules.reader';
-import type { RuleRowWrite } from './rules.table';
+import type { RulesSnapshot } from './store/rules.reader';
+import type { RuleRowWrite } from './store/rules.table';
 
 export interface PlanInput {
   entry: NotificationEntry<NotificationKey>;

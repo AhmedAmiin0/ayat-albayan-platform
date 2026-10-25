@@ -1,0 +1,120 @@
+{
+  "id": "a18a",
+  "seq": 25,
+  "moves": [
+    {
+      "from": "apps/api/src/modules/users/users.auth*",
+      "to": "apps/api/src/modules/users/auth"
+    },
+    {
+      "from": "apps/api/src/modules/users/users.credential*",
+      "to": "apps/api/src/modules/users/auth"
+    },
+    {
+      "from": "apps/api/src/modules/users/users.password*",
+      "to": "apps/api/src/modules/users/auth"
+    },
+    {
+      "from": "apps/api/src/modules/users/users.fakes.auth*",
+      "to": "apps/api/src/modules/users/auth"
+    },
+    {
+      "from": "apps/api/src/modules/users/users.store*",
+      "to": "apps/api/src/modules/users/store"
+    },
+    {
+      "from": "apps/api/src/modules/users/users.fakes.store*",
+      "to": "apps/api/src/modules/users/store"
+    },
+    {
+      "from": "apps/api/src/modules/users/users.queries*",
+      "to": "apps/api/src/modules/users/store"
+    },
+    {
+      "from": "apps/api/src/modules/users/users.links*",
+      "to": "apps/api/src/modules/users/store"
+    },
+    {
+      "from": "apps/api/src/modules/users/users.rows*",
+      "to": "apps/api/src/modules/users/store"
+    },
+    {
+      "from": "apps/api/src/modules/users/users.create*",
+      "to": "apps/api/src/modules/users/lifecycle"
+    },
+    {
+      "from": "apps/api/src/modules/users/users.lifecycle*",
+      "to": "apps/api/src/modules/users/lifecycle"
+    }
+  ],
+  "files": [
+    [
+      "apps/api/src/modules/users/users.auth.supabase.test.ts",
+      "apps/api/src/modules/users/auth/users.auth.supabase.test.ts"
+    ],
+    [
+      "apps/api/src/modules/users/users.auth.supabase.ts",
+      "apps/api/src/modules/users/auth/users.auth.supabase.ts"
+    ],
+    [
+      "apps/api/src/modules/users/users.create.service.ts",
+      "apps/api/src/modules/users/lifecycle/users.create.service.ts"
+    ],
+    [
+      "apps/api/src/modules/users/users.create.test.ts",
+      "apps/api/src/modules/users/lifecycle/users.create.test.ts"
+    ],
+    [
+      "apps/api/src/modules/users/users.credential.ts",
+      "apps/api/src/modules/users/auth/users.credential.ts"
+    ],
+    [
+      "apps/api/src/modules/users/users.fakes.auth.ts",
+      "apps/api/src/modules/users/auth/users.fakes.auth.ts"
+    ],
+    [
+      "apps/api/src/modules/users/users.fakes.store.ts",
+      "apps/api/src/modules/users/store/users.fakes.store.ts"
+    ],
+    [
+      "apps/api/src/modules/users/users.lifecycle.service.ts",
+      "apps/api/src/modules/users/lifecycle/users.lifecycle.service.ts"
+    ],
+    [
+      "apps/api/src/modules/users/users.lifecycle.test.ts",
+      "apps/api/src/modules/users/lifecycle/users.lifecycle.test.ts"
+    ],
+    [
+      "apps/api/src/modules/users/users.links.queries.test.ts",
+      "apps/api/src/modules/users/store/users.links.queries.test.ts"
+    ],
+    [
+      "apps/api/src/modules/users/users.links.queries.ts",
+      "apps/api/src/modules/users/store/users.links.queries.ts"
+    ],
+    [
+      "apps/api/src/modules/users/users.password.test.ts",
+      "apps/api/src/modules/users/auth/users.password.test.ts"
+    ],
+    [
+      "apps/api/src/modules/users/users.password.ts",
+      "apps/api/src/modules/users/auth/users.password.ts"
+    ],
+    [
+      "apps/api/src/modules/users/users.queries.test.ts",
+      "apps/api/src/modules/users/store/users.queries.test.ts"
+    ],
+    [
+      "apps/api/src/modules/users/users.queries.ts",
+      "apps/api/src/modules/users/store/users.queries.ts"
+    ],
+    [
+      "apps/api/src/modules/users/users.rows.ts",
+      "apps/api/src/modules/users/store/users.rows.ts"
+    ],
+    [
+      "apps/api/src/modules/users/users.store.ts",
+      "apps/api/src/modules/users/store/users.store.ts"
+    ]
+  ]
+}

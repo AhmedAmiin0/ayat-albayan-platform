@@ -1,6 +1,6 @@
 import { Injectable, Optional } from '@nestjs/common';
 import type { OverlayNumber } from '../../../common/integrations/numbers-overlay';
-import { RulesReader } from '../../notification-rules/rules.reader';
+import { RulesReader } from '../../notification-rules/store/rules.reader';
 import { routable, ruleNumbers, type RoutePass } from './number-route';
 import { RouteQueries } from './route.queries';
 import type { TemplateRow } from '../whatsapp.types';

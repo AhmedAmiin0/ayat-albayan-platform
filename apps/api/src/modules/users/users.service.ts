@@ -6,7 +6,7 @@ import { adminProblem, chooseRole, lockedOutOfUsers, profilePatch, replaced, rol
 import { toUserDetail, toUserView } from './users.mapper';
 import { UserEffects, UserPorts } from './users.ports';
 import { assertMayAssign, assertMayList, assertMayTouch, canAssign, type Actor } from './users.rules';
-import type { UserRow } from './users.store';
+import type { UserRow } from './store/users.store';
 
 export type { Actor } from './users.rules';
 

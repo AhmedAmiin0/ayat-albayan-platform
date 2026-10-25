@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { fakePolicy } from '../../notification-rules/policy.fakes';
+import { fakePolicy } from '../../notification-rules/policy/policy.fakes';
 import type { ConflictChecker } from '../conflicts/conflict-checker';
 import { LessonWriter } from './lesson-writer';
 import { OccurrenceGenerator } from './occurrence-generator';

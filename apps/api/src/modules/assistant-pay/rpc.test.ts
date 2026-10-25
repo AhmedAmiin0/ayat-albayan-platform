@@ -4,7 +4,7 @@ import { describe, expect, it } from 'vitest';
 import { fakeDb } from '../guardians/fake-db';
 import { assistantError } from './assistant-pay.errors';
 import { AssistantRpc } from './assistant-pay.rpc';
-import { TermsQueries } from './terms.queries';
+import { TermsQueries } from './terms/terms.queries';
 
 const pg = (code: string, message: string) => new PostgrestError({ message, details: '', hint: '', code });
 const thrown = (p: Promise<unknown>): Promise<Error> => p.then(() => new Error('did not throw'), (e: Error) => e);

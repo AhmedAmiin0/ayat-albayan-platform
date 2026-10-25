@@ -3,7 +3,7 @@ import type { StudentStatus } from '@ab/shared';
 import { vi } from 'vitest';
 import type { LessonEvents } from '../../../common/events/lesson-events';
 import { ruleSettingsOf } from '../../../common/rules/rule-settings.fakes';
-import { fakePolicy } from '../../notification-rules/policy.fakes';
+import { fakePolicy } from '../../notification-rules/policy/policy.fakes';
 import { bookingRequest, fakePlanner, IDS } from '../booking.fakes';
 import { fakeTeacherAlert } from '../teacher/teacher-alert.fakes';
 import type { TrialLessonRead } from './trial-date.history';

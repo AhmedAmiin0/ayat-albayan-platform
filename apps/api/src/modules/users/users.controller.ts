@@ -16,8 +16,8 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser, Permissions } from '../../common/auth/decorators';
 import type { AuthUser } from '../../common/auth/verify-token';
 import { parseOrThrow } from '../../common/http/http';
-import { UsersCreateService } from './users.create.service';
-import { UsersLifecycleService } from './users.lifecycle.service';
+import { UsersCreateService } from './lifecycle/users.create.service';
+import { UsersLifecycleService } from './lifecycle/users.lifecycle.service';
 import { UsersService, type Actor } from './users.service';
 
 const actorOf = (user: AuthUser): Actor => ({ id: user.id, permissions: user.permissions ?? [] });

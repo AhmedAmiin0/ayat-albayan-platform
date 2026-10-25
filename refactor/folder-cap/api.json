@@ -15,10 +15,6 @@
     "files": 0,
     "dirs": 47
   },
-  "apps/api/src/modules/assistant-pay": {
-    "files": 23,
-    "dirs": 0
-  },
   "apps/api/src/modules/dashboard": {
     "files": 16,
     "dirs": 0
@@ -29,10 +25,6 @@
   },
   "apps/api/src/modules/me": {
     "files": 14,
-    "dirs": 0
-  },
-  "apps/api/src/modules/notification-rules": {
-    "files": 22,
     "dirs": 0
   },
   "apps/api/src/modules/payments": {
@@ -49,10 +41,6 @@
   },
   "apps/api/src/modules/teacher-earnings": {
     "files": 13,
-    "dirs": 0
-  },
-  "apps/api/src/modules/users": {
-    "files": 23,
     "dirs": 0
   }
 }

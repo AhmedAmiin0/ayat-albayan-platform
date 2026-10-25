@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { fakeDb } from '../../guardians/fake-db';
-import { fakePolicy } from '../../notification-rules/policy.fakes';
+import { fakePolicy } from '../../notification-rules/policy/policy.fakes';
 import { AlertsQueries } from './alerts.queries';
 import { toBalance } from '../money/balance.queries';
 import { cents, SubscriptionsQueries } from '../subscriptions.queries';

@@ -4,20 +4,20 @@ import { SettingsRulesPort } from '../../common/settings/settings-rules.port';
 import { livekitEnv } from '../../config/env/env.livekit';
 import { loadEnv } from '../../config/env/env';
 import { NotificationRulesSettings } from './notification-rules.settings';
-import { NotificationPolicy } from './policy';
+import { NotificationPolicy } from './policy/policy';
 import { RulesSourceSettings } from './rules-source.settings';
-import { RulesSettingsBridge } from './rules.bridge';
+import { RulesSettingsBridge } from './sync/rules.bridge';
 import { RulesAliasController, RulesController } from './rules.controller';
-import { RulesFacts } from './rules.facts';
-import { RulesJournal } from './rules.journal';
-import { RulesParity } from './rules.parity';
-import { RulesPersist } from './rules.persist';
+import { RulesFacts } from './policy/rules.facts';
+import { RulesJournal } from './store/rules.journal';
+import { RulesParity } from './sync/rules.parity';
+import { RulesPersist } from './store/rules.persist';
 import { RULES_CLASSROOM, RulesQueries, type ClassroomOn } from './rules.queries';
-import { RulesReader } from './rules.reader';
+import { RulesReader } from './store/rules.reader';
 import { RulesService } from './rules.service';
-import { DbRulesReader } from './rules.store';
-import { RulesTable } from './rules.table';
-import { RulesWriter } from './rules.writer';
+import { DbRulesReader } from './store/rules.store';
+import { RulesTable } from './store/rules.table';
+import { RulesWriter } from './store/rules.writer';
 
 /**
  * The notification rules (docs/23 §2c, phase 4; contract docs/23b). Global: every producer injects
