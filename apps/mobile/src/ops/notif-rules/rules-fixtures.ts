@@ -1,6 +1,6 @@
 import type { NotificationEntryView, NotificationsOverview } from '@ab/shared';
 import { fireEvent, screen } from '@testing-library/react-native';
-import { catalogue, settings } from '../fixtures';
+import { catalogue, settings } from '../shared/fixtures';
 
 // GET /admin/notifications as a tagged phone sees it (v2: rule, approval, mode, reach), for the switch tests.
 

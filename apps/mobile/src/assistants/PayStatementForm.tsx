@@ -7,7 +7,7 @@ import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/more/Note';
 import { money } from '@/payments/format';
 import { FormLabel } from '@/payments/FormLabel';
-import { PaidDayPicker } from '@/payments/PaidDayPicker';
+import { PaidDayPicker } from '@/payments/components/PaidDayPicker';
 import { ReceiptPicker } from '@/payments/ReceiptPicker';
 import { statementMonth } from '@/sales-money/lib/money-text';
 import { useNow } from '@/today/use-day-lessons';

@@ -1,5 +1,5 @@
 import { t } from '@/core/lib/i18n/i18n';
-import { catalogue } from '../fixtures';
+import { catalogue } from '../shared/fixtures';
 import { audienceTabs, rowsOf } from './audience-tabs';
 
 const c = t.notificationCatalogue;

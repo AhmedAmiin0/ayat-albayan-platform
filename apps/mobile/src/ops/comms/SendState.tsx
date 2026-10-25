@@ -7,8 +7,8 @@ import { pathKey } from '@/core/lib/query/query-keys';
 import { Note } from '@/more/Note';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { StatusChip } from '@/core/ui/feedback/StatusChip';
-import { ReadOnlySettings } from '../ReadOnlySettings';
-import { useSettings } from '../use-settings';
+import { ReadOnlySettings } from '../settings/ReadOnlySettings';
+import { useSettings } from '../settings/use-settings';
 import { gateChip, gateLine } from './gate-words';
 
 const GATE_PATH = '/messages/gate';

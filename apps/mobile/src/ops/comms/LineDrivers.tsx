@@ -5,7 +5,7 @@ import { usePermissions } from '@/auth/use-permissions';
 import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/more/Note';
 import { Section } from '@/more/Section';
-import { useSettings } from '../use-settings';
+import { useSettings } from '../settings/use-settings';
 import { driverName } from './line-driver';
 import { LineDriverRow } from './LineDriverRow';
 import { useIntegrations, useSaveDriver } from './use-line-drivers';

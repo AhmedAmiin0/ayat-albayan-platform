@@ -5,8 +5,8 @@ import { Note } from '@/more/Note';
 import { Section } from '@/more/Section';
 import { Button } from '@/core/ui/primitives/Button';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';
-import { NumberRow } from '../NumberRow';
-import { useNumbers } from '../use-numbers';
+import { NumberRow } from '../numbers/NumberRow';
+import { useNumbers } from '../numbers/use-numbers';
 
 /** How many numbers the overview shows in full; the rest are counted (the screen stays one phone high). */
 export const SHOWN_NUMBERS = 1;

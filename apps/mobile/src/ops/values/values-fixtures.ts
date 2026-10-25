@@ -1,5 +1,5 @@
 import type { SettingsMetaResponse } from '@ab/shared';
-import { settings } from '../fixtures';
+import { settings } from '../shared/fixtures';
 
 export const meta: SettingsMetaResponse = {
   meta: {

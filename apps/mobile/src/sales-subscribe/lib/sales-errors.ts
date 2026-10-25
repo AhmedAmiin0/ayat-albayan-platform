@@ -1,6 +1,6 @@
 import { ApiError } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
-import { isOffline } from '@/payments/payment-errors';
+import { isOffline } from '@/payments/lib/payment-errors';
 import { ReceiptUploadError } from '@/payments/upload-receipt';
 
 const messages: Record<string, string | undefined> = t.salesMoney.error;

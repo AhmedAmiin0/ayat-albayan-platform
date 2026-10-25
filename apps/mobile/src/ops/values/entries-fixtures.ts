@@ -1,5 +1,5 @@
 import { settingDef, type ConfigEntry, type SettingKey } from '@ab/shared';
-import { settings } from '../fixtures';
+import { settings } from '../shared/fixtures';
 import { meta } from './values-fixtures';
 
 /** One GET /config/entries row for `key` (the seed = the registry hint path's Arabic text). */

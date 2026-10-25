@@ -1,7 +1,7 @@
 import { bookFailure } from '@/booking/shared/booking-errors';
 import { ApiError } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
-import { isOffline } from '@/payments/payment-errors';
+import { isOffline } from '@/payments/lib/payment-errors';
 
 // What a failed POST /lessons/:id/reschedule means (docs/10 §3: clients switch on `code`).
 

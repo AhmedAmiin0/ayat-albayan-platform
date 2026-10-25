@@ -12,7 +12,7 @@ import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { ListRow } from '@/core/ui/layout/ListRow';
 import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
-import { useStudentName } from '@/ops/use-student-name';
+import { useStudentName } from '@/ops/reports/use-student-name';
 import { RecordingsButton } from '@/student-file/RecordingsButton';
 import { useTeacherMe } from './queries';
 import { openSigned } from './report/api';

@@ -1,7 +1,7 @@
 import { parseAmount, type SalesMoneySubscriptionView } from '@ab/shared';
 import { t } from '@/core/lib/i18n/i18n';
-import type { Attachment } from '@/payments/attachments';
-import { paidAtFor } from '@/payments/paid-day';
+import type { Attachment } from '@/payments/receipts/attachments';
+import { paidAtFor } from '@/payments/lib/paid-day';
 
 // «سجّل تحويلًا بنكيًا» (R-ASST-04): what she entered, checked. Pure. The method is always the
 // bank's (the API sets it), the currency always the package's (owner 2026-10-12); «المرفقات» are

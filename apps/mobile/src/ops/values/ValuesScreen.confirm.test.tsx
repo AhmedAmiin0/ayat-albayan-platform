@@ -1,7 +1,7 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
-import { settings } from '../fixtures';
+import { settings } from '../shared/fixtures';
 import { groupLabel } from './value-groups';
 import { labelOf } from './value-text';
 import { valuesAnswer, WRITER } from './values-fixtures';

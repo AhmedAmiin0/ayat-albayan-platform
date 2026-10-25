@@ -1,8 +1,8 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
-import { settings } from '../fixtures';
-import { googleLive } from '../google-status.fixtures';
+import { settings } from '../shared/fixtures';
+import { googleLive } from '../google-sync/google-status.fixtures';
 import { googleValues } from './google-values';
 import { labelOf } from './value-text';
 import { meta, READER, WRITER } from './values-fixtures';

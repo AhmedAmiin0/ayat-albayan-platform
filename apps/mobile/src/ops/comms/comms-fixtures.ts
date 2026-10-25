@@ -1,6 +1,6 @@
 import type { NotificationAudience, SendGateView } from '@ab/shared';
-import { catalogue, settings } from '../fixtures';
-import { numbers } from '../numbers-fixtures';
+import { catalogue, settings } from '../shared/fixtures';
+import { numbers } from '../numbers/numbers-fixtures';
 
 // GET answers for the «نظرة عامة» tests: settings with the public number, the catalogue, three numbers, a closed gate.
 

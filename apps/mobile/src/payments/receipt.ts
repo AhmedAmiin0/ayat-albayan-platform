@@ -1,6 +1,6 @@
 import { RECEIPT_MIMES } from '@ab/shared';
 import * as ImagePicker from 'expo-image-picker';
-import { ensureCameraPermission } from './camera-permission';
+import { ensureCameraPermission } from './receipts/camera-permission';
 
 export type ReceiptSource = 'camera' | 'library';
 export type ReceiptMime = (typeof RECEIPT_MIMES)[number];
