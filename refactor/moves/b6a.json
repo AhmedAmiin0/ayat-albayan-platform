@@ -1,6 +1,6 @@
 {
   "id": "b6a",
-  "seq": 77,
+  "seq": 41,
   "moves": [
     {
       "from": "apps/web/src/features/inbox/InboxPage*",
