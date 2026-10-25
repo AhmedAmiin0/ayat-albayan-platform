@@ -72,6 +72,15 @@ describe('ReplyComposer: «/» opens the picker', () => {
     expect(apiSend).not.toHaveBeenCalled();
   });
 
+  it('Enter on an empty list (no match) is still taken: the «/…» text is never sent', async () => {
+    show();
+    type('/لا يوجد');
+    expect(await screen.findByText(S.noMatch)).toBeTruthy();
+    fireEvent.keyDown(box(), { key: 'Enter' });
+    expect(box().value).toBe('/لا يوجد');
+    expect(apiSend).not.toHaveBeenCalled();
+  });
+
   it('Esc closes it, and more typing after the same «/» does not reopen it', async () => {
     show();
     type('/');

@@ -3,7 +3,7 @@ import { useId, useSyncExternalStore, type ReactNode } from 'react';
 import { getDraft, setDraft, subscribeDrafts } from '../draft-store';
 import type { PrefillContext } from '../template-params';
 import { TextComposer } from '../TextComposer';
-import { fillComposer } from './filter';
+import { fillComposer, slashQuery } from './filter';
 import { RepliesPanel } from './RepliesPanel';
 import { optionId } from './ReplyOptions';
 import { SavedRepliesButton } from './SavedRepliesButton';
@@ -31,6 +31,9 @@ function focusBox(id: string): void {
   });
 }
 
+/** True when a pick replaces the whole box content (its «/» token, or nothing typed). */
+const replacesBox = (text: string): boolean => slashQuery(text) !== null || !text.trim();
+
 /**
  * The message box with «الردود السريعة» (owner 2026-10-25), inside the 24 h window only: the button or
  * «/» opens the picker; a pick FILLS the box (placeholders resolved, still editable) and stages its
@@ -46,8 +49,11 @@ export function ReplyComposer({ thread, context, leading }: ReplyComposerProps) 
   const fileSend = useStagedSend(phone);
   const dialogs = useReplyDialogs('mine');
   const onPick = (reply: SavedReply) => {
-    setDraft(phone, { text: fillComposer(getDraft(phone).text, resolveSavedReply(reply.body, values)), failed: null });
-    if (reply.attachment) setStaged(phone, { replyId: reply.id, attachment: reply.attachment, requestId: crypto.randomUUID(), failed: null });
+    const before = getDraft(phone).text;
+    setDraft(phone, { text: fillComposer(before, resolveSavedReply(reply.body, values)), failed: null });
+    const next = reply.attachment ? { replyId: reply.id, attachment: reply.attachment, requestId: crypto.randomUUID(), failed: null } : null;
+    // A pick that replaces the box (a «/» token or an empty box) replaces its file too; one added after text keeps it.
+    if (next || replacesBox(before)) setStaged(phone, next);
     focusBox(boxId);
   };
   const picker = useRepliesPicker({ text: draft.text, enabled: thread.session_open, onPick, onClose: () => focusBox(boxId) });
@@ -69,9 +75,14 @@ export function ReplyComposer({ thread, context, leading }: ReplyComposerProps) 
     above,
     onKey: (e: Parameters<typeof picker.keys.onKey>[0]) => picker.bySlash && picker.keys.onKey(e),
     boxProps: { id: boxId, 'aria-controls': picker.bySlash ? listId : undefined, 'aria-activedescendant': active },
-    onSent: () => {
-      const next = getStaged(phone);
-      if (next) fileSend.mutate({ ...next, failed: null });
+    // The file staged at «أرسل» follows that text only if it is still the one staged (not a later pick's).
+    onSubmit: () => {
+      const at = getStaged(phone)?.requestId;
+      if (!at) return undefined;
+      return () => {
+        const next = getStaged(phone);
+        if (next?.requestId === at) fileSend.mutate({ ...next, failed: null });
+      };
     },
   };
   return (

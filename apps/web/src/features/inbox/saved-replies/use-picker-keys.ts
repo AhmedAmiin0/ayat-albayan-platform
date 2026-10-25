@@ -4,7 +4,7 @@ export interface PickerKeys {
   /** The highlighted row (aria-activedescendant), clamped to the list. */
   active: number;
   setActive: (index: number) => void;
-  /** ↑ ↓ move, Enter picks, Esc closes; true when the key was the picker's (the caller stops it). */
+  /** ↑ ↓ move, Enter picks (and is taken even on an empty list), Esc closes; true when the key was the picker's (the caller stops it). */
   onKey: (e: KeyboardEvent<HTMLElement>) => boolean;
 }
 
@@ -16,7 +16,10 @@ export function usePickerKeys(input: { count: number; onPick: (index: number) =>
     if (e.key === 'Escape') input.onClose();
     else if (e.key === 'ArrowDown') setActive(input.count ? (active + 1) % input.count : 0);
     else if (e.key === 'ArrowUp') setActive(input.count ? (active - 1 + input.count) % input.count : 0);
-    else if (e.key === 'Enter' && !e.shiftKey && input.count) input.onPick(active);
+    // Always taken, even with nothing to pick (no match, still loading): the «/…» text never sends.
+    else if (e.key === 'Enter' && !e.shiftKey) {
+      if (input.count) input.onPick(active);
+    }
     else return false;
     e.preventDefault();
     return true;
