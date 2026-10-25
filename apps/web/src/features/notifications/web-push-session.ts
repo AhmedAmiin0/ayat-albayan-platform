@@ -1,5 +1,5 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
-import { clearTabMemories } from '@/features/inbox/tab-memory';
+import { clearTabMemories } from '@/features/inbox/shared/tab-memory';
 import { dropLocalWebPush, rebindWebPush } from './web-push';
 
 /**

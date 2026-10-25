@@ -4,7 +4,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { history } from '@/features/booking/trial-date/trial-fixture';
 import { t } from '@/lib/i18n/i18n';
 import { thread } from '../testing/inbox-fixture';
-import { InboxModeContext } from '../mode';
+import { InboxModeContext } from '../shared/mode';
 import { renderWithClient, routeFetch } from '../testing/test-utils';
 import { SalesChatActions } from './SalesChatActions';
 import { student } from './sales-money-fixture';

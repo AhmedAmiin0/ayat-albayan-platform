@@ -8,7 +8,7 @@ import { noneAllowedText, useNoneAllowed, type NoneReason } from '../lib/allowed
 import { AttachButton } from './AttachButton';
 import { FileComposer } from './FileComposer';
 import { sessionUntil } from '../../format';
-import { useInboxMode } from '../../mode';
+import { useInboxMode } from '../../shared/mode';
 import { replyFromText } from '../lib/reply-from';
 import { ReplyComposer } from '../../saved-replies/ReplyComposer';
 import { SavedRepliesButton } from '../../saved-replies/SavedRepliesButton';
@@ -16,7 +16,7 @@ import { SendRatingButton } from '../../SendRatingButton';
 import { TemplateComposer } from './TemplateComposer';
 import { TextComposer } from './TextComposer';
 import type { PrefillContext } from '../lib/template-params';
-import { useChatAccess } from '../../use-chat-access';
+import { useChatAccess } from '../../shared/use-chat-access';
 
 export type ComposerMode = 'text' | 'template';
 

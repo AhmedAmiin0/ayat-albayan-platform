@@ -2,10 +2,10 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n/i18n';
-import { ChatActionsContext, type ChatActions } from '../../chat-actions';
+import { ChatActionsContext, type ChatActions } from '../../shared/chat-actions';
 import { FileComposer } from './FileComposer';
 import { message, PHONE } from '../../testing/inbox-fixture';
-import { clearTabMemories } from '../../tab-memory';
+import { clearTabMemories } from '../../shared/tab-memory';
 
 const apiSend = vi.hoisted(() => vi.fn());
 const uploadToSignedUrl = vi.hoisted(() => vi.fn(async () => ({ error: null })));

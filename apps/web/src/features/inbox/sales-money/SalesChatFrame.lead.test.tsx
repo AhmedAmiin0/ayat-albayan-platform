@@ -5,7 +5,7 @@ import { useBelowShell } from '@/components/ui/layout/use-narrow';
 import { ABRAR } from '@/features/booking/wizard-fixture';
 import { t } from '@/lib/i18n/i18n';
 import { thread } from '../testing/inbox-fixture';
-import { InboxModeContext } from '../mode';
+import { InboxModeContext } from '../shared/mode';
 import { renderWithClient, routeFetch } from '../testing/test-utils';
 import { SalesChatFrame } from './SalesChatFrame';
 

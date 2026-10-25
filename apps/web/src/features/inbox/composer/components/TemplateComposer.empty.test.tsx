@@ -2,7 +2,7 @@ import { screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n/i18n';
 import { PHONE } from '../../testing/inbox-fixture';
-import { InboxModeContext } from '../../mode';
+import { InboxModeContext } from '../../shared/mode';
 import { TemplateComposer } from './TemplateComposer';
 import { renderWithClient, routeFetch } from '../../testing/test-utils';
 

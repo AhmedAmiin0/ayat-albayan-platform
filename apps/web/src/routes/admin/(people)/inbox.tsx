@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router';
-import { InboxPage } from '@/features/inbox/InboxPage';
-import { parseInboxSearch } from '@/features/inbox/search';
+import { InboxPage } from '@/features/inbox/threads/list/InboxPage';
+import { parseInboxSearch } from '@/features/inbox/shared/search';
 
 /** /admin/inbox?phone=&q=&unread=&page= — WhatsApp threads and the open one (R-LEAD-02). */
 export const Route = createFileRoute('/admin/(people)/inbox')({
