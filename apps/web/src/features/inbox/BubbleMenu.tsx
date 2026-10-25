@@ -9,8 +9,6 @@ export interface BubbleMenuProps {
   message: MessageView;
   /** Opens toward the middle of the chat: from the inline-end edge for ours. */
   outbound: boolean;
-  /** The closed window's hint element, for a disabled «رد». */
-  hintId: string;
   /** Closes the menu and puts focus back on its trigger (before the pick runs). */
   onClose: () => void;
 }
@@ -22,7 +20,7 @@ const item =
  * The bubble's small menu (right-click, or the «خيارات الرسالة» button): «رد» and «إعادة توجيه».
  * Plain buttons like MoreMenu (no ARIA menu roles); the first takes focus, Esc closes (BubbleActions).
  */
-export function BubbleMenu({ message: m, outbound, hintId, onClose }: BubbleMenuProps) {
+export function BubbleMenu({ message: m, outbound, onClose }: BubbleMenuProps) {
   const actions = useChatActions();
   const first = useRef<HTMLDivElement>(null);
   useEffect(() => {
@@ -45,7 +43,7 @@ export function BubbleMenu({ message: m, outbound, hintId, onClose }: BubbleMenu
         <button
           type="button"
           aria-disabled={blocked ? true : undefined}
-          aria-describedby={blocked ? hintId : undefined}
+          aria-description={blocked ?? undefined}
           title={blocked ?? undefined}
           onClick={blocked ? undefined : pick(() => actions.reply(m))}
           className={item}

@@ -1,5 +1,5 @@
 import { canForward, canReply, type MessageView } from '@ab/shared';
-import { useId, useRef } from 'react';
+import { useRef } from 'react';
 import { Icon } from '@/components/ui/icon';
 import { IconButton } from '@/components/ui/icon-button';
 import { useDismiss } from '@/components/ui/use-dismiss';
@@ -27,7 +27,6 @@ export function useHasBubbleActions(m: MessageView): boolean {
  */
 export function BubbleActions({ message: m, menu, onMenu }: BubbleActionsProps) {
   const actions = useChatActions();
-  const hintId = useId();
   const box = useRef<HTMLDivElement>(null);
   const trigger = useRef<HTMLButtonElement>(null);
   const close = (focus: boolean) => {
@@ -51,7 +50,8 @@ export function BubbleActions({ message: m, menu, onMenu }: BubbleActionsProps) 
         <IconButton
           label={t.inbox.reply.action}
           aria-disabled={blocked ? true : undefined}
-          aria-describedby={blocked ? hintId : undefined}
+          // Not a hidden copy of the notice: the composer already shows it once (e2e reads it by text).
+          aria-description={blocked ?? undefined}
           title={blocked ?? t.inbox.reply.action}
           onClick={blocked ? undefined : () => actions.reply(m)}
           className="rounded-full aria-disabled:cursor-not-allowed aria-disabled:opacity-45 pointer-coarse:hidden"
@@ -62,12 +62,7 @@ export function BubbleActions({ message: m, menu, onMenu }: BubbleActionsProps) 
       <IconButton ref={trigger} label={t.inbox.reply.menu} aria-expanded={menu} className="rounded-full" onClick={() => onMenu(!menu)}>
         <Icon name="more" />
       </IconButton>
-      {blocked && (
-        <span id={hintId} hidden>
-          {blocked}
-        </span>
-      )}
-      {menu && <BubbleMenu message={m} outbound={outbound} hintId={hintId} onClose={() => close(true)} />}
+      {menu && <BubbleMenu message={m} outbound={outbound} onClose={() => close(true)} />}
     </div>
   );
 }
