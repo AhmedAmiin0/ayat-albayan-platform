@@ -1,6 +1,6 @@
 import { WA_PROVIDERS, type LineCheckView, type NumberHealth, type NumberView, type WaProvider } from '@ab/shared';
 import type { Json } from '@ab/db';
-import { displayE164 } from '../whatsapp/line-health.store';
+import { displayE164 } from '../whatsapp/lines/line-health.store';
 import type { NumberRow } from './numbers.queries';
 import type { SecretStatus } from './numbers.secrets';
 

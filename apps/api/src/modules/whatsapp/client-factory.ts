@@ -1,5 +1,5 @@
 import type { WhatsappEnv } from '../../config/env/env';
-import { CrmWhatsappClient } from './crm.client';
+import { CrmWhatsappClient } from './drivers/crm/crm.client';
 import { HttpWhatsappClient, type ClientOpts } from './whatsapp.client';
 import type { WhatsappClient } from './whatsapp.types';
 

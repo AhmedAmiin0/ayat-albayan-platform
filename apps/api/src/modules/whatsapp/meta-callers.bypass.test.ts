@@ -52,6 +52,6 @@ describe('Meta callers guard: bypasses are caught', () => {
   });
 
   it('Windows separators are normalised before the whitelist lookup', () => {
-    expect(at('modules\\whatsapp\\graph.ts', 'export async function graphFetch() {}')).toEqual([]);
+    expect(at('modules\\whatsapp\\drivers/meta/graph.ts', 'export async function graphFetch() {}')).toEqual([]);
   });
 });

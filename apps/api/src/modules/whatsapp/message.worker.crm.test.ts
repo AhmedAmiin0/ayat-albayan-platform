@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { PushService } from '../../common/push/push.service';
-import { crmErrorFrom } from './crm-http';
-import { crmFailure } from './crm.fakes';
+import { crmErrorFrom } from './drivers/crm/crm-http';
+import { crmFailure } from './drivers/crm/crm.fakes';
 import type { MessageDispatch } from './message.dispatch';
 import { MessageWorker } from './message.worker';
 import { CRM_AUTH, CRM_RATE_LIMITED } from './send-plan';

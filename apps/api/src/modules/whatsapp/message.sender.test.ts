@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { MessageSender } from './message.sender';
 import type { MessageWorker } from './message.worker';
-import type { SendGate } from './send-gate';
+import type { SendGate } from './gate/send-gate';
 import { dueMessage } from './sender.fakes';
 import type { SenderQueries } from './sender.queries';
 import { templateRow } from './whatsapp.fakes';

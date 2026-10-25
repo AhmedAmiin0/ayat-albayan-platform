@@ -1,8 +1,8 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { AuditService } from '../../common/audit/audit.service';
 import type { OverlayNumber } from '../../common/integrations/numbers-overlay';
-import { CrmWhatsappClient } from './crm.client';
-import { CRM_ENV, CRM_SENT } from './crm.fakes';
+import { CrmWhatsappClient } from './drivers/crm/crm.client';
+import { CRM_ENV, CRM_SENT } from './drivers/crm/crm.fakes';
 import { syncNumber } from './template-number-sync';
 import { TemplateRegistry } from './template.registry';
 import type { TemplatesQueries } from './templates.queries';

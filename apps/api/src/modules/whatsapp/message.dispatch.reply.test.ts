@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { StorageService } from '../../common/storage/storage.service';
-import { crmMediaBody } from './crm-body';
+import { crmMediaBody } from './drivers/crm/crm-body';
 import { MessageDispatch } from './message.dispatch';
 import { dueMessage } from './sender.fakes';
 import { mediaMessage } from './wa-components';

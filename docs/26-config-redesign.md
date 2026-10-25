@@ -339,7 +339,7 @@ Order: **26-P0 → 23-P3 → 26-P1 → 23-P4 → 26-P2 → 26-P3 → 23-P5 → 2
 **Built (2026-10-23, branch `cloud/config-p0-p1`):**
 - **26-P0 — built.** Gate routes `PUT /messages/gate/sending|auto` (ON needs `GATE_CONFIRM_TEXT`, checked by the
   server, 428 `confirmation_required`; OFF always accepted) and `PUT /messages/gate/cutover`:
-  `apps/api/src/modules/whatsapp/gate.controller.ts`, `gate.settings.ts`, `gate.errors.ts`; contract
+  `apps/api/src/modules/whatsapp/gate/gate.controller.ts`, `gate.settings.ts`, `gate.errors.ts`; contract
   `packages/shared/src/settings/gate.ts`. Per-key `PATCH /settings` answering `{...settings, saved, moved, invalid}`:
   `packages/shared/src/settings/patch.ts`, `apps/api/src/common/settings/settings.controller.ts`, `settings-patch.ts`;
   ownership in code: `packages/shared/src/settings/ownership.ts` (`OWNED_SETTING_KEYS`). `comms_source` is written only
