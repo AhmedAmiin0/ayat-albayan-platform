@@ -11,7 +11,7 @@ import { errorCode } from '@/features/schedule/api';
 import { InternalMeetingButton } from '@/features/meetings/InternalMeetingButton';
 import { InternalMeetingsList } from '@/features/meetings/InternalMeetingsList';
 import { PendingReports } from '@/features/reports/PendingReports';
-import { lessonsOnDay } from '@/features/schedule/lessons';
+import { lessonsOnDay } from '@/features/schedule/lesson/lessons';
 import { addDays, dayMonthLabel, weekWindow, zonedParts } from '@/features/schedule/tz';
 import { t } from '@/lib/i18n/i18n';
 import { usePlatformClassroom } from '@/lib/settings/public-config';

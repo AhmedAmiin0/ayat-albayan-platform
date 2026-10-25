@@ -5,8 +5,8 @@ import { usePermissions } from '@/features/auth/use-permissions';
 import type { StudentProfile } from '@/features/students/types';
 import { trialHistoryQuery } from './api';
 import { TrialDateButton } from './TrialDateButton';
-import { TrialDateDialog } from './TrialDateDialog';
-import { TrialHistoryBody, TrialHistoryTitle } from './TrialHistoryBody';
+import { TrialDateDialog } from './dialog/TrialDateDialog';
+import { TrialHistoryBody, TrialHistoryTitle } from './history/TrialHistoryBody';
 
 /** GET /students/:id returns every column; the teacher preference is one of them (migration 070). */
 type Profile = StudentProfile & { teacher_gender_pref?: Gender | null };

@@ -1,7 +1,7 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { lesson } from '@/features/schedule/lesson-fixture';
+import { lesson } from '@/features/schedule/lesson/lesson-fixture';
 import { t } from '@/lib/i18n/i18n';
 import { TeacherLessonCard } from './TeacherLessonCard';
 

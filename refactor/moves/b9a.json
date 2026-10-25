@@ -1,0 +1,172 @@
+{
+  "id": "b9a",
+  "seq": 45,
+  "moves": [
+    {
+      "from": "apps/web/src/features/schedule/Week*",
+      "to": "apps/web/src/features/schedule/grid/"
+    },
+    {
+      "from": "apps/web/src/features/schedule/DayBoard*",
+      "to": "apps/web/src/features/schedule/grid/"
+    },
+    {
+      "from": "apps/web/src/features/schedule/SlotGrid*",
+      "to": "apps/web/src/features/schedule/grid/"
+    },
+    {
+      "from": "apps/web/src/features/schedule/ScheduleTrack*",
+      "to": "apps/web/src/features/schedule/grid/"
+    },
+    {
+      "from": "apps/web/src/features/schedule/TeacherCell*",
+      "to": "apps/web/src/features/schedule/grid/"
+    },
+    {
+      "from": "apps/web/src/features/schedule/Lesson*",
+      "to": "apps/web/src/features/schedule/lesson/"
+    },
+    {
+      "from": "apps/web/src/features/schedule/lesson*",
+      "to": "apps/web/src/features/schedule/lesson/"
+    },
+    {
+      "from": "apps/web/src/features/schedule/unpaid-flag*",
+      "to": "apps/web/src/features/schedule/lesson/"
+    }
+  ],
+  "files": [
+    [
+      "apps/web/src/features/schedule/DayBoard.en.test.tsx",
+      "apps/web/src/features/schedule/grid/DayBoard.en.test.tsx"
+    ],
+    [
+      "apps/web/src/features/schedule/DayBoard.test.tsx",
+      "apps/web/src/features/schedule/grid/DayBoard.test.tsx"
+    ],
+    [
+      "apps/web/src/features/schedule/DayBoard.tsx",
+      "apps/web/src/features/schedule/grid/DayBoard.tsx"
+    ],
+    [
+      "apps/web/src/features/schedule/lesson-fixture.ts",
+      "apps/web/src/features/schedule/lesson/lesson-fixture.ts"
+    ],
+    [
+      "apps/web/src/features/schedule/LessonActions.tsx",
+      "apps/web/src/features/schedule/lesson/LessonActions.tsx"
+    ],
+    [
+      "apps/web/src/features/schedule/LessonChip.tsx",
+      "apps/web/src/features/schedule/lesson/LessonChip.tsx"
+    ],
+    [
+      "apps/web/src/features/schedule/LessonDetails.link.test.tsx",
+      "apps/web/src/features/schedule/lesson/LessonDetails.link.test.tsx"
+    ],
+    [
+      "apps/web/src/features/schedule/LessonDetails.tsx",
+      "apps/web/src/features/schedule/lesson/LessonDetails.tsx"
+    ],
+    [
+      "apps/web/src/features/schedule/LessonDrawer.actions.test.tsx",
+      "apps/web/src/features/schedule/lesson/LessonDrawer.actions.test.tsx"
+    ],
+    [
+      "apps/web/src/features/schedule/LessonDrawer.cancel.test.tsx",
+      "apps/web/src/features/schedule/lesson/LessonDrawer.cancel.test.tsx"
+    ],
+    [
+      "apps/web/src/features/schedule/LessonDrawer.course.test.tsx",
+      "apps/web/src/features/schedule/lesson/LessonDrawer.course.test.tsx"
+    ],
+    [
+      "apps/web/src/features/schedule/LessonDrawer.makeup.offer.test.tsx",
+      "apps/web/src/features/schedule/lesson/LessonDrawer.makeup.offer.test.tsx"
+    ],
+    [
+      "apps/web/src/features/schedule/LessonDrawer.makeup.test.tsx",
+      "apps/web/src/features/schedule/lesson/LessonDrawer.makeup.test.tsx"
+    ],
+    [
+      "apps/web/src/features/schedule/LessonDrawer.proposal.test.tsx",
+      "apps/web/src/features/schedule/lesson/LessonDrawer.proposal.test.tsx"
+    ],
+    [
+      "apps/web/src/features/schedule/LessonDrawer.reschedule.test.tsx",
+      "apps/web/src/features/schedule/lesson/LessonDrawer.reschedule.test.tsx"
+    ],
+    [
+      "apps/web/src/features/schedule/LessonDrawer.tsx",
+      "apps/web/src/features/schedule/lesson/LessonDrawer.tsx"
+    ],
+    [
+      "apps/web/src/features/schedule/LessonInvoice.tsx",
+      "apps/web/src/features/schedule/lesson/LessonInvoice.tsx"
+    ],
+    [
+      "apps/web/src/features/schedule/lessons.test.ts",
+      "apps/web/src/features/schedule/lesson/lessons.test.ts"
+    ],
+    [
+      "apps/web/src/features/schedule/lessons.ts",
+      "apps/web/src/features/schedule/lesson/lessons.ts"
+    ],
+    [
+      "apps/web/src/features/schedule/LessonTags.tsx",
+      "apps/web/src/features/schedule/lesson/LessonTags.tsx"
+    ],
+    [
+      "apps/web/src/features/schedule/ScheduleTrack.test.tsx",
+      "apps/web/src/features/schedule/grid/ScheduleTrack.test.tsx"
+    ],
+    [
+      "apps/web/src/features/schedule/ScheduleTrack.tsx",
+      "apps/web/src/features/schedule/grid/ScheduleTrack.tsx"
+    ],
+    [
+      "apps/web/src/features/schedule/SlotGrid.test.tsx",
+      "apps/web/src/features/schedule/grid/SlotGrid.test.tsx"
+    ],
+    [
+      "apps/web/src/features/schedule/SlotGrid.tsx",
+      "apps/web/src/features/schedule/grid/SlotGrid.tsx"
+    ],
+    [
+      "apps/web/src/features/schedule/TeacherCell.test.tsx",
+      "apps/web/src/features/schedule/grid/TeacherCell.test.tsx"
+    ],
+    [
+      "apps/web/src/features/schedule/TeacherCell.tsx",
+      "apps/web/src/features/schedule/grid/TeacherCell.tsx"
+    ],
+    [
+      "apps/web/src/features/schedule/unpaid-flag.test.tsx",
+      "apps/web/src/features/schedule/lesson/unpaid-flag.test.tsx"
+    ],
+    [
+      "apps/web/src/features/schedule/WeekAgenda.test.tsx",
+      "apps/web/src/features/schedule/grid/WeekAgenda.test.tsx"
+    ],
+    [
+      "apps/web/src/features/schedule/WeekAgenda.tsx",
+      "apps/web/src/features/schedule/grid/WeekAgenda.tsx"
+    ],
+    [
+      "apps/web/src/features/schedule/WeekGrid.tsx",
+      "apps/web/src/features/schedule/grid/WeekGrid.tsx"
+    ],
+    [
+      "apps/web/src/features/schedule/WeekSchedule.flags.test.tsx",
+      "apps/web/src/features/schedule/grid/WeekSchedule.flags.test.tsx"
+    ],
+    [
+      "apps/web/src/features/schedule/WeekSchedule.test.tsx",
+      "apps/web/src/features/schedule/grid/WeekSchedule.test.tsx"
+    ],
+    [
+      "apps/web/src/features/schedule/WeekSchedule.tsx",
+      "apps/web/src/features/schedule/grid/WeekSchedule.tsx"
+    ]
+  ]
+}

@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { parseScheduleSearch } from '@/features/schedule/search';
-import { WeekSchedule } from '@/features/schedule/WeekSchedule';
+import { WeekSchedule } from '@/features/schedule/grid/WeekSchedule';
 
 /**
  * /admin/schedule — every teacher's week (or ?view=day&day= one day) with hours, time off, load

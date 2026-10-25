@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { FATMA, lesson } from './lesson-fixture';
+import { FATMA, lesson } from './lesson/lesson-fixture';
 import {
   boardRows,
   clipSpans,

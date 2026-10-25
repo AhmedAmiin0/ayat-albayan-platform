@@ -1,7 +1,7 @@
 import { clockTime, type Gender, type Program, type LessonView, type OverviewTeacher, type OverviewTimeOff, type Span } from '@ab/shared';
 import type { Range } from '@/features/teachers/grid';
 import { t } from '@/lib/i18n/i18n';
-import { teacherRows } from './lessons';
+import { teacherRows } from './lesson/lessons';
 import { addDays, RIYADH_TZ, zonedToUtc } from './tz';
 
 // All-teachers calendar view logic (R-SCH-01): filters on the one cached overview, and a teacher's

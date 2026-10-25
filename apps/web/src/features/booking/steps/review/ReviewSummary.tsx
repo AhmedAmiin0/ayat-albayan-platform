@@ -4,7 +4,7 @@ import { t } from '@/lib/i18n/i18n';
 import { locale } from '@/lib/i18n/locale';
 import { teacherLabel } from '@/lib/i18n/teacher-label';
 import type { BookingDraft } from '../../draft/draft';
-import { InvoiceThumb } from '../../InvoiceThumb';
+import { InvoiceThumb } from '../../invoice/InvoiceThumb';
 import { PackagePrice } from '../package/PackageStep';
 import { ReviewDays } from './ReviewDays';
 import { pickedText } from '../slots/SlotStep';

@@ -8,10 +8,10 @@ import { RIYADH_TZ, weekStart, zonedParts } from '@/features/schedule/tz';
 import { RecordPaymentDialog } from '@/features/payments/RecordPaymentDialog';
 import { CreateSubscriptionDialog } from '@/features/subscriptions/CreateSubscriptionDialog';
 import { t } from '@/lib/i18n/i18n';
-import { invoicesQuery } from '../../api.invoice';
+import { invoicesQuery } from '../../invoice/api.invoice';
 import type { BookingKind } from '../../draft/contract';
 import type { PickedStudent } from '../../draft/draft';
-import { InvoiceButton } from '../../InvoiceDialog';
+import { InvoiceButton } from '../../invoice/InvoiceDialog';
 import { useBookingMode, useChatReturn } from '../../mode';
 import { pickedText } from '../slots/SlotStep';
 

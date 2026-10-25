@@ -3,7 +3,7 @@ import { keepPreviousData, queryOptions } from '@tanstack/react-query';
 import { ApiError, apiFetch, apiSend } from '@/lib/http/api';
 import { bookingBase, type BookingMode } from '@/features/booking/mode';
 import { t } from '@/lib/i18n/i18n';
-import type { LessonTimeEdit, TimeEditResult } from './edit-time.contract';
+import type { LessonTimeEdit, TimeEditResult } from './edit-time/edit-time.contract';
 
 // Phase 2 lesson routes (docs/10 §5). Commands camelCase, responses LessonView rows.
 

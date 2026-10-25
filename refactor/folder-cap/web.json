@@ -11,14 +11,6 @@
     "files": 33,
     "dirs": 0
   },
-  "apps/web/src/features/booking": {
-    "files": 48,
-    "dirs": 2
-  },
-  "apps/web/src/features/booking/trial-date": {
-    "files": 13,
-    "dirs": 0
-  },
   "apps/web/src/features/classroom": {
     "files": 45,
     "dirs": 6
@@ -81,10 +73,6 @@
   },
   "apps/web/src/features/sales": {
     "files": 50,
-    "dirs": 0
-  },
-  "apps/web/src/features/schedule": {
-    "files": 46,
     "dirs": 0
   },
   "apps/web/src/features/settings/pages/communications": {

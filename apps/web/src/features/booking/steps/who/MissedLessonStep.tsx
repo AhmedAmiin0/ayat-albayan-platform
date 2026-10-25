@@ -7,7 +7,7 @@ import { StatusChip } from '@/components/ui/display/status-chip';
 import { t } from '@/lib/i18n/i18n';
 import { teacherLabel } from '@/lib/i18n/teacher-label';
 import { cn } from '@/lib/utils';
-import { makeupCandidatesQuery } from '../../api.invoice';
+import { makeupCandidatesQuery } from '../../invoice/api.invoice';
 import type { MakeupCandidate } from '../../draft/contract';
 import type { BookingDraft } from '../../draft/draft';
 import { pickedText } from '../slots/SlotStep';

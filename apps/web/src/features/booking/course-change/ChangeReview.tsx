@@ -3,7 +3,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui/form/button';
 import { FormAlert } from '@/components/ui/form/form-alert';
 import { conflictsOf, lessonErrorText } from '@/features/schedule/api';
-import { ConflictNotice } from '@/features/schedule/ConflictNotice';
+import { ConflictNotice } from '@/features/schedule/reschedule/ConflictNotice';
 import { dateLabel } from '@/features/schedule/tz';
 import { t } from '@/lib/i18n/i18n';
 import { useBookingMode } from '../mode';

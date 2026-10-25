@@ -2,7 +2,7 @@ import { PUBLIC_SETTING_DEFAULTS, type LessonView, type TeacherMe } from '@ab/sh
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { lesson, SUHAILA } from '@/features/schedule/lesson-fixture';
+import { lesson, SUHAILA } from '@/features/schedule/lesson/lesson-fixture';
 import { ApiError } from '@/lib/http/api';
 import { t } from '@/lib/i18n/i18n';
 import { TeacherDashboard } from './TeacherDashboard';

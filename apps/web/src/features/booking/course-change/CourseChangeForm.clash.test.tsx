@@ -1,7 +1,7 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { renderWithClient } from '@/features/inbox/testing/test-utils';
-import { conflictText } from '@/features/schedule/ConflictNotice';
+import { conflictText } from '@/features/schedule/reschedule/ConflictNotice';
 import { ApiError } from '@/lib/http/api';
 import { t } from '@/lib/i18n/i18n';
 import { BookingModeContext, type BookingMode } from '../mode';

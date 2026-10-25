@@ -2,7 +2,7 @@ import type { PendingReportView } from '@ab/shared';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render, screen } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { lesson, SUHAILA } from '@/features/schedule/lesson-fixture';
+import { lesson, SUHAILA } from '@/features/schedule/lesson/lesson-fixture';
 import { t } from '@/lib/i18n/i18n';
 import { LessonReportLinks } from './LessonReportLinks';
 import { PendingReports } from './PendingReports';

@@ -2,7 +2,7 @@ import { PUBLIC_SETTING_DEFAULTS } from '@ab/shared';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render, screen } from '@testing-library/react';
 import { expect, it, vi } from 'vitest';
-import { lesson } from '@/features/schedule/lesson-fixture';
+import { lesson } from '@/features/schedule/lesson/lesson-fixture';
 import { t } from '@/lib/i18n/i18n';
 import { publicConfigQuery } from '@/lib/settings/public-config';
 import { TeacherLessonCard } from './TeacherLessonCard';

@@ -1,6 +1,6 @@
 import { counted, type LessonView } from '@ab/shared';
 import { t } from '@/lib/i18n/i18n';
-import { needsConfirmCount } from './lessons';
+import { needsConfirmCount } from './lesson/lessons';
 
 /** «5 حلقات» and, in saffron (دورك), «2 يحتاج تأكيد». No lessons shows nothing, never «0 حلقة». */
 export function ScheduleCounts({ shown }: { shown: readonly LessonView[] }) {

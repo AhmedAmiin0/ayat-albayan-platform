@@ -11,7 +11,7 @@ import { stepReady, stepsOf, type BookingDraft, type PickedStudent, type StepKey
 import type { BookHint } from './hint';
 import { isNewStudent } from './steps/who/new-student';
 import { useCourseClean } from './steps/review/SeriesCheck';
-import { TrialDonePanel } from './trial-date/TrialDonePanel';
+import { TrialDonePanel } from './trial-date/dialog/TrialDonePanel';
 import { WizardBody } from './WizardBody';
 import { WizardSteps } from './WizardSteps';
 

@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
-import { invoicesQuery } from '@/features/booking/api.invoice';
-import { InvoiceButton } from '@/features/booking/InvoiceDialog';
+import { invoicesQuery } from '@/features/booking/invoice/api.invoice';
+import { InvoiceButton } from '@/features/booking/invoice/InvoiceDialog';
 import { fullTime } from '@/features/inbox/format';
 import { t } from '@/lib/i18n/i18n';
 

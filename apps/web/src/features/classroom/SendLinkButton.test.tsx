@@ -1,7 +1,7 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { JOUD, lesson, SUHAILA } from '@/features/schedule/lesson-fixture';
+import { JOUD, lesson, SUHAILA } from '@/features/schedule/lesson/lesson-fixture';
 import { ApiError } from '@/lib/http/api';
 import { t } from '@/lib/i18n/i18n';
 import { SendLinkButton } from './SendLinkButton';
