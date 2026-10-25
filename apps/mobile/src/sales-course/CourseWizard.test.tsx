@@ -1,7 +1,7 @@
 import { counted } from '@ab/shared';
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
-import { booked, maryam, SUN_17, THU_18 } from '@/booking/fixtures';
-import { dayLine } from '@/booking/picks';
+import { booked, maryam, SUN_17, THU_18 } from '@/booking/testing/fixtures';
+import { dayLine } from '@/booking/shared/picks';
 import { t } from '@/core/lib/i18n/i18n';
 import { localDay } from '@/payments/format';
 import { renderWithQuery } from '@/test/query';

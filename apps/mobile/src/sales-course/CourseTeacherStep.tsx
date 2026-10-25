@@ -1,7 +1,7 @@
 import { teacherName, type SalesCourseView } from '@ab/shared';
 import { useState } from 'react';
 import { View } from 'react-native';
-import { TeacherStep } from '@/booking/TeacherStep';
+import { TeacherStep } from '@/booking/trial/components/TeacherStep';
 import { t } from '@/core/lib/i18n/i18n';
 import { locale } from '@/core/lib/i18n/locale';
 import { Button } from '@/core/ui/primitives/Button';

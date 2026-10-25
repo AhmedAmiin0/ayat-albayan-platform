@@ -1,7 +1,7 @@
 import type { LessonView } from '@ab/shared';
 import { useState } from 'react';
 import { View } from 'react-native';
-import { whenText } from '@/booking/slots';
+import { whenText } from '@/booking/shared/slots';
 import { ErrorLine } from '@/inbox/ErrorLine';
 import { t } from '@/core/lib/i18n/i18n';
 import { type, useTheme } from '@/theme';

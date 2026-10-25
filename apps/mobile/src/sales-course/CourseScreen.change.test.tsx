@@ -1,6 +1,6 @@
 import { screen, waitFor } from '@testing-library/react-native';
 import { StyleSheet } from 'react-native';
-import { maryam } from '@/booking/fixtures';
+import { maryam } from '@/booking/testing/fixtures';
 import { t } from '@/core/lib/i18n/i18n';
 import { fakeNow } from '@/test/fake-now';
 import { renderWithQuery } from '@/test/query';

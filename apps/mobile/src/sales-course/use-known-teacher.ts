@@ -1,5 +1,5 @@
 import { teacherName, type Program } from '@ab/shared';
-import { useBookingTeachers } from '@/booking/queries';
+import { useBookingTeachers } from '@/booking/shared/queries';
 import { locale } from '@/core/lib/i18n/locale';
 
 export interface KnownTeacher {

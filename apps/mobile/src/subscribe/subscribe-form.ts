@@ -11,7 +11,7 @@ import { ApiError } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
 import { isOffline } from '@/payments/payment-errors';
 import type { PlanChoice } from '@/pricing/selection';
-import { dayLabel } from '@/booking/slots';
+import { dayLabel } from '@/booking/shared/slots';
 import { localDate } from '@/today/timeline';
 
 // «اشتراك جديد» from a chat (R-SUB-01): the calculator inputs for ONE student and the package's

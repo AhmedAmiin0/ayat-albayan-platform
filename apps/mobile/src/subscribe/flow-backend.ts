@@ -2,8 +2,8 @@ import type { ThreadPeople, ThreadStudentView } from '@ab/shared';
 import { inboxBackend, GUARDIAN_PHONE } from '@/inbox/shared/flow-backend';
 import { child, family, leadOnly, sub, usedUp } from '@/inbox/subscription/people-fixtures';
 import { detail, PHONE } from '@/inbox/shared/thread-fixtures';
-import { booked, SUN_17 } from '@/booking/fixtures';
-import { fakeBookingApi } from '@/booking/test-utils';
+import { booked, SUN_17 } from '@/booking/testing/fixtures';
+import { fakeBookingApi } from '@/booking/testing/test-utils';
 import { profile, quote, saved } from './fixtures';
 
 // The chats API plus subscriptions: the guardian's child starts with a finished package, and

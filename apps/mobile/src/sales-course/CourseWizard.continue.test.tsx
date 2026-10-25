@@ -1,6 +1,6 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
-import { booked, maryam } from '@/booking/fixtures';
-import { dayLine } from '@/booking/picks';
+import { booked, maryam } from '@/booking/testing/fixtures';
+import { dayLine } from '@/booking/shared/picks';
 import { t } from '@/core/lib/i18n/i18n';
 import { localDay } from '@/payments/format';
 import { fakeNow } from '@/test/fake-now';

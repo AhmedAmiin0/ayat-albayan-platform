@@ -1,7 +1,7 @@
-import { toInvoiceInput } from './booking-body';
-import type { MakeupRequest } from './contract';
+import { toInvoiceInput } from './trial/lib/booking-body';
+import type { MakeupRequest } from './shared/contract';
 import type { MakeupDraft } from './makeup-draft';
-import { ruleFromSlot } from './slots';
+import { ruleFromSlot } from './shared/slots';
 
 /**
  * POST /booking for «حجز تعويضي»: one lesson of the missed lesson's student, linked to it. No

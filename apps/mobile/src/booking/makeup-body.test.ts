@@ -1,4 +1,4 @@
-import { UPLOADED, SUN_17 } from './fixtures';
+import { UPLOADED, SUN_17 } from './testing/fixtures';
 import { makeupRequest } from './makeup-body';
 import { makeupDraft, type MakeupSource } from './makeup-draft';
 

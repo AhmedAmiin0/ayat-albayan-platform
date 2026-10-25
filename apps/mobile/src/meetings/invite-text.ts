@@ -1,5 +1,5 @@
 import { intlLocale, lessonWhenText, type MeetingInviteResult, type MeetingView } from '@ab/shared';
-import { cityOf } from '@/booking/slots';
+import { cityOf } from '@/booking/shared/slots';
 import { ApiError } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
 import { locale } from '@/core/lib/i18n/locale';

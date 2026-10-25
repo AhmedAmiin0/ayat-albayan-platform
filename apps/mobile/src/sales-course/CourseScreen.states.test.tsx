@@ -1,5 +1,5 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
-import { booked, maryam, SUN_17 } from '@/booking/fixtures';
+import { booked, maryam, SUN_17 } from '@/booking/testing/fixtures';
 import { ApiError } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
 import { pathKey } from '@/core/lib/query/query-keys';

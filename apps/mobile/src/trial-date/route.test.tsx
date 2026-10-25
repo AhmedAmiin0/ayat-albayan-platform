@@ -11,7 +11,7 @@ jest.mock('@/core/push/usePushRegistration', () => ({ usePushRegistration: () =>
 jest.mock('./TrialDateFlow', () => ({
   TrialDateFlow: (p: { studentId: string; name: string; program: string }) => {
     const { Text: T } = jest.requireActual('react-native');
-    const { useBookingMode } = jest.requireActual('@/booking/booking-mode');
+    const { useBookingMode } = jest.requireActual('@/booking/shared/booking-mode');
     return <T>{`flow:${p.studentId}:${p.name}:${p.program}:${useBookingMode()}`}</T>;
   },
 }));

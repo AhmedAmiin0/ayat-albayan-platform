@@ -4,7 +4,7 @@ import { Note } from '@/more/Note';
 import { FormLabel } from '@/payments/FormLabel';
 import { Button } from '@/core/ui/primitives/Button';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';
-import type { ThreadMediaItem } from './contract';
+import type { ThreadMediaItem } from './shared/contract';
 import { useThreadMedia } from './invoice-queries';
 import { MediaCard } from './MediaCard';
 

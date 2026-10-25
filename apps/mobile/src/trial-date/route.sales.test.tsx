@@ -21,7 +21,7 @@ jest.mock('@/auth/use-auth-gate', () => ({ useAuthGate: () => 'sales' }));
 jest.mock('./TrialDateFlow', () => ({
   TrialDateFlow: (p: { studentId: string; name: string }) => {
     const { Text: T } = jest.requireActual('react-native');
-    const { useBookingMode } = jest.requireActual('@/booking/booking-mode');
+    const { useBookingMode } = jest.requireActual('@/booking/shared/booking-mode');
     return <T>{`flow:${p.studentId}:${p.name}:${useBookingMode()}`}</T>;
   },
 }));

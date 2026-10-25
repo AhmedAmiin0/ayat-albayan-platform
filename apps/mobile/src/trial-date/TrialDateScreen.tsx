@@ -1,5 +1,5 @@
 import { router, useLocalSearchParams } from 'expo-router';
-import { BookingModeProvider } from '@/booking/booking-mode';
+import { BookingModeProvider } from '@/booking/shared/booking-mode';
 import { useTreeBase } from '@/core/nav/tree-base';
 import { t } from '@/core/lib/i18n/i18n';
 import { Button } from '@/core/ui/primitives/Button';

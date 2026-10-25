@@ -1,5 +1,5 @@
 import { clockTime, RIYADH_TZ, type LessonView } from '@ab/shared';
-import { cityOf } from '@/booking/slots';
+import { cityOf } from '@/booking/shared/slots';
 import { clockAt } from '@/inbox/shared/format';
 import { t } from '@/core/lib/i18n/i18n';
 import { gridTz, slotRange } from '@/more/schedule';

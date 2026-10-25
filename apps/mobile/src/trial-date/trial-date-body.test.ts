@@ -1,4 +1,4 @@
-import { maryam, SUN_17 } from '@/booking/fixtures';
+import { maryam, SUN_17 } from '@/booking/testing/fixtures';
 import { historyOf, STUDENT, trialRow } from './fixtures';
 import { trialDateBody, trialDateDraft, trialLength } from './trial-date-body';
 

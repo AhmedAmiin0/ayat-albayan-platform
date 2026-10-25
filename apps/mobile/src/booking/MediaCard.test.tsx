@@ -1,7 +1,7 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
-import type { ThreadMediaItem } from './contract';
+import type { ThreadMediaItem } from './shared/contract';
 import { MediaCard } from './MediaCard';
 
 const mockApiFetch = jest.fn();

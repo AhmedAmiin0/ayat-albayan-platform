@@ -1,6 +1,6 @@
 import { lessonWhenText } from '@ab/shared';
 import { fireEvent, render, screen, within } from '@testing-library/react-native';
-import { maryam } from '@/booking/fixtures';
+import { maryam } from '@/booking/testing/fixtures';
 import { t } from '@/core/lib/i18n/i18n';
 import { historyOf, OLD, THU_1_18, trialRow } from './fixtures';
 import { TrialHistoryList } from './TrialHistoryList';

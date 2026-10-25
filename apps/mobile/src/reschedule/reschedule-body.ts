@@ -5,7 +5,7 @@ import {
   type LessonView,
   type RescheduleRequest,
 } from '@ab/shared';
-import { ruleFromSlot } from '@/booking/slots';
+import { ruleFromSlot } from '@/booking/shared/slots';
 
 // POST /lessons/:id/reschedule bodies (R-SCH-07, docs/10 route 8), as the web builds them
 // (apps/web/src/features/schedule/reschedule.ts). Mobile has no «احجز رغم التعارض»: no override.

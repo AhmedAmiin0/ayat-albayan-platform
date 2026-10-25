@@ -1,0 +1,376 @@
+{
+  "id": "c4a",
+  "seq": 77,
+  "moves": [
+    {
+      "from": "apps/mobile/src/booking/BookTrial*",
+      "to": "apps/mobile/src/booking/screens/"
+    },
+    {
+      "from": "apps/mobile/src/booking/lead-book*",
+      "to": "apps/mobile/src/booking/screens/"
+    },
+    {
+      "from": "apps/mobile/src/booking/route*",
+      "to": "apps/mobile/src/booking/screens/"
+    },
+    {
+      "from": "apps/mobile/src/booking/contract*",
+      "to": "apps/mobile/src/booking/shared/"
+    },
+    {
+      "from": "apps/mobile/src/booking/booking-errors*",
+      "to": "apps/mobile/src/booking/shared/"
+    },
+    {
+      "from": "apps/mobile/src/booking/booking-mode*",
+      "to": "apps/mobile/src/booking/shared/"
+    },
+    {
+      "from": "apps/mobile/src/booking/queries*",
+      "to": "apps/mobile/src/booking/shared/"
+    },
+    {
+      "from": "apps/mobile/src/booking/slots*",
+      "to": "apps/mobile/src/booking/shared/"
+    },
+    {
+      "from": "apps/mobile/src/booking/picks*",
+      "to": "apps/mobile/src/booking/shared/"
+    },
+    {
+      "from": "apps/mobile/src/booking/ConflictNotice*",
+      "to": "apps/mobile/src/booking/shared/"
+    },
+    {
+      "from": "apps/mobile/src/booking/PicksList*",
+      "to": "apps/mobile/src/booking/shared/"
+    },
+    {
+      "from": "apps/mobile/src/booking/BookedPanel*",
+      "to": "apps/mobile/src/booking/shared/"
+    },
+    {
+      "from": "apps/mobile/src/booking/fixtures*",
+      "to": "apps/mobile/src/booking/testing/"
+    },
+    {
+      "from": "apps/mobile/src/booking/test-utils*",
+      "to": "apps/mobile/src/booking/testing/"
+    },
+    {
+      "from": "apps/mobile/src/booking/flow-backend*",
+      "to": "apps/mobile/src/booking/testing/"
+    },
+    {
+      "from": "apps/mobile/src/booking/TrialWizard*",
+      "to": "apps/mobile/src/booking/trial/components/"
+    },
+    {
+      "from": "apps/mobile/src/booking/WizardStep*",
+      "to": "apps/mobile/src/booking/trial/components/"
+    },
+    {
+      "from": "apps/mobile/src/booking/ContactStep*",
+      "to": "apps/mobile/src/booking/trial/components/"
+    },
+    {
+      "from": "apps/mobile/src/booking/PackageStep*",
+      "to": "apps/mobile/src/booking/trial/components/"
+    },
+    {
+      "from": "apps/mobile/src/booking/SlotStep*",
+      "to": "apps/mobile/src/booking/trial/components/"
+    },
+    {
+      "from": "apps/mobile/src/booking/TeacherStep*",
+      "to": "apps/mobile/src/booking/trial/components/"
+    },
+    {
+      "from": "apps/mobile/src/booking/ConfirmStep*",
+      "to": "apps/mobile/src/booking/trial/components/"
+    },
+    {
+      "from": "apps/mobile/src/booking/ConfirmNotices*",
+      "to": "apps/mobile/src/booking/trial/components/"
+    },
+    {
+      "from": "apps/mobile/src/booking/DuplicateNotice*",
+      "to": "apps/mobile/src/booking/trial/components/"
+    },
+    {
+      "from": "apps/mobile/src/booking/DurationPills*",
+      "to": "apps/mobile/src/booking/trial/components/"
+    },
+    {
+      "from": "apps/mobile/src/booking/MultiFooter*",
+      "to": "apps/mobile/src/booking/trial/components/"
+    },
+    {
+      "from": "apps/mobile/src/booking/KindPills*",
+      "to": "apps/mobile/src/booking/trial/components/"
+    },
+    {
+      "from": "apps/mobile/src/booking/booking-body*",
+      "to": "apps/mobile/src/booking/trial/lib/"
+    },
+    {
+      "from": "apps/mobile/src/booking/confirm-summary*",
+      "to": "apps/mobile/src/booking/trial/lib/"
+    },
+    {
+      "from": "apps/mobile/src/booking/contact-pills*",
+      "to": "apps/mobile/src/booking/trial/lib/"
+    },
+    {
+      "from": "apps/mobile/src/booking/package-choice*",
+      "to": "apps/mobile/src/booking/trial/lib/"
+    },
+    {
+      "from": "apps/mobile/src/booking/steps*",
+      "to": "apps/mobile/src/booking/trial/lib/"
+    },
+    {
+      "from": "apps/mobile/src/booking/use-book-trial*",
+      "to": "apps/mobile/src/booking/trial/lib/"
+    },
+    {
+      "from": "apps/mobile/src/booking/draft*",
+      "to": "apps/mobile/src/booking/trial/lib/"
+    }
+  ],
+  "files": [
+    [
+      "apps/mobile/src/booking/BookedPanel.test.tsx",
+      "apps/mobile/src/booking/shared/BookedPanel.test.tsx"
+    ],
+    [
+      "apps/mobile/src/booking/BookedPanel.tsx",
+      "apps/mobile/src/booking/shared/BookedPanel.tsx"
+    ],
+    [
+      "apps/mobile/src/booking/booking-body.days.test.ts",
+      "apps/mobile/src/booking/trial/lib/booking-body.days.test.ts"
+    ],
+    [
+      "apps/mobile/src/booking/booking-body.invoice.test.ts",
+      "apps/mobile/src/booking/trial/lib/booking-body.invoice.test.ts"
+    ],
+    [
+      "apps/mobile/src/booking/booking-body.test.ts",
+      "apps/mobile/src/booking/trial/lib/booking-body.test.ts"
+    ],
+    [
+      "apps/mobile/src/booking/booking-body.ts",
+      "apps/mobile/src/booking/trial/lib/booking-body.ts"
+    ],
+    [
+      "apps/mobile/src/booking/booking-errors.test.ts",
+      "apps/mobile/src/booking/shared/booking-errors.test.ts"
+    ],
+    [
+      "apps/mobile/src/booking/booking-errors.ts",
+      "apps/mobile/src/booking/shared/booking-errors.ts"
+    ],
+    [
+      "apps/mobile/src/booking/booking-mode.tsx",
+      "apps/mobile/src/booking/shared/booking-mode.tsx"
+    ],
+    [
+      "apps/mobile/src/booking/BookTrial.conflict.test.tsx",
+      "apps/mobile/src/booking/screens/BookTrial.conflict.test.tsx"
+    ],
+    [
+      "apps/mobile/src/booking/BookTrial.contact.test.tsx",
+      "apps/mobile/src/booking/screens/BookTrial.contact.test.tsx"
+    ],
+    [
+      "apps/mobile/src/booking/BookTrial.duplicate.test.tsx",
+      "apps/mobile/src/booking/screens/BookTrial.duplicate.test.tsx"
+    ],
+    [
+      "apps/mobile/src/booking/BookTrial.flow.test.tsx",
+      "apps/mobile/src/booking/screens/BookTrial.flow.test.tsx"
+    ],
+    [
+      "apps/mobile/src/booking/BookTrial.form.test.tsx",
+      "apps/mobile/src/booking/screens/BookTrial.form.test.tsx"
+    ],
+    [
+      "apps/mobile/src/booking/BookTrial.invoice.test.tsx",
+      "apps/mobile/src/booking/screens/BookTrial.invoice.test.tsx"
+    ],
+    [
+      "apps/mobile/src/booking/BookTrial.package.test.tsx",
+      "apps/mobile/src/booking/screens/BookTrial.package.test.tsx"
+    ],
+    [
+      "apps/mobile/src/booking/BookTrialScreen.tsx",
+      "apps/mobile/src/booking/screens/BookTrialScreen.tsx"
+    ],
+    [
+      "apps/mobile/src/booking/confirm-summary.ts",
+      "apps/mobile/src/booking/trial/lib/confirm-summary.ts"
+    ],
+    [
+      "apps/mobile/src/booking/ConfirmNotices.tsx",
+      "apps/mobile/src/booking/trial/components/ConfirmNotices.tsx"
+    ],
+    [
+      "apps/mobile/src/booking/ConfirmStep.tsx",
+      "apps/mobile/src/booking/trial/components/ConfirmStep.tsx"
+    ],
+    [
+      "apps/mobile/src/booking/ConflictNotice.tsx",
+      "apps/mobile/src/booking/shared/ConflictNotice.tsx"
+    ],
+    [
+      "apps/mobile/src/booking/contact-pills.ts",
+      "apps/mobile/src/booking/trial/lib/contact-pills.ts"
+    ],
+    [
+      "apps/mobile/src/booking/ContactStep.en.test.tsx",
+      "apps/mobile/src/booking/trial/components/ContactStep.en.test.tsx"
+    ],
+    [
+      "apps/mobile/src/booking/ContactStep.form.test.tsx",
+      "apps/mobile/src/booking/trial/components/ContactStep.form.test.tsx"
+    ],
+    [
+      "apps/mobile/src/booking/ContactStep.tsx",
+      "apps/mobile/src/booking/trial/components/ContactStep.tsx"
+    ],
+    [
+      "apps/mobile/src/booking/contract.ts",
+      "apps/mobile/src/booking/shared/contract.ts"
+    ],
+    [
+      "apps/mobile/src/booking/draft.test.ts",
+      "apps/mobile/src/booking/trial/lib/draft.test.ts"
+    ],
+    [
+      "apps/mobile/src/booking/draft.ts",
+      "apps/mobile/src/booking/trial/lib/draft.ts"
+    ],
+    [
+      "apps/mobile/src/booking/DuplicateNotice.tsx",
+      "apps/mobile/src/booking/trial/components/DuplicateNotice.tsx"
+    ],
+    [
+      "apps/mobile/src/booking/DurationPills.tsx",
+      "apps/mobile/src/booking/trial/components/DurationPills.tsx"
+    ],
+    [
+      "apps/mobile/src/booking/fixtures.ts",
+      "apps/mobile/src/booking/testing/fixtures.ts"
+    ],
+    [
+      "apps/mobile/src/booking/flow-backend.ts",
+      "apps/mobile/src/booking/testing/flow-backend.ts"
+    ],
+    [
+      "apps/mobile/src/booking/KindPills.test.tsx",
+      "apps/mobile/src/booking/trial/components/KindPills.test.tsx"
+    ],
+    [
+      "apps/mobile/src/booking/KindPills.tsx",
+      "apps/mobile/src/booking/trial/components/KindPills.tsx"
+    ],
+    [
+      "apps/mobile/src/booking/lead-book.flow.test.tsx",
+      "apps/mobile/src/booking/screens/lead-book.flow.test.tsx"
+    ],
+    [
+      "apps/mobile/src/booking/MultiFooter.tsx",
+      "apps/mobile/src/booking/trial/components/MultiFooter.tsx"
+    ],
+    [
+      "apps/mobile/src/booking/package-choice.test.ts",
+      "apps/mobile/src/booking/trial/lib/package-choice.test.ts"
+    ],
+    [
+      "apps/mobile/src/booking/package-choice.ts",
+      "apps/mobile/src/booking/trial/lib/package-choice.ts"
+    ],
+    [
+      "apps/mobile/src/booking/PackageStep.test.tsx",
+      "apps/mobile/src/booking/trial/components/PackageStep.test.tsx"
+    ],
+    [
+      "apps/mobile/src/booking/PackageStep.tsx",
+      "apps/mobile/src/booking/trial/components/PackageStep.tsx"
+    ],
+    [
+      "apps/mobile/src/booking/picks.test.ts",
+      "apps/mobile/src/booking/shared/picks.test.ts"
+    ],
+    [
+      "apps/mobile/src/booking/picks.ts",
+      "apps/mobile/src/booking/shared/picks.ts"
+    ],
+    [
+      "apps/mobile/src/booking/PicksList.tsx",
+      "apps/mobile/src/booking/shared/PicksList.tsx"
+    ],
+    [
+      "apps/mobile/src/booking/queries.ts",
+      "apps/mobile/src/booking/shared/queries.ts"
+    ],
+    [
+      "apps/mobile/src/booking/route.test.tsx",
+      "apps/mobile/src/booking/screens/route.test.tsx"
+    ],
+    [
+      "apps/mobile/src/booking/slots.en.test.ts",
+      "apps/mobile/src/booking/shared/slots.en.test.ts"
+    ],
+    [
+      "apps/mobile/src/booking/slots.test.ts",
+      "apps/mobile/src/booking/shared/slots.test.ts"
+    ],
+    [
+      "apps/mobile/src/booking/slots.ts",
+      "apps/mobile/src/booking/shared/slots.ts"
+    ],
+    [
+      "apps/mobile/src/booking/slots.window.test.ts",
+      "apps/mobile/src/booking/shared/slots.window.test.ts"
+    ],
+    [
+      "apps/mobile/src/booking/SlotStep.multi.test.tsx",
+      "apps/mobile/src/booking/trial/components/SlotStep.multi.test.tsx"
+    ],
+    [
+      "apps/mobile/src/booking/SlotStep.tsx",
+      "apps/mobile/src/booking/trial/components/SlotStep.tsx"
+    ],
+    [
+      "apps/mobile/src/booking/steps.test.ts",
+      "apps/mobile/src/booking/trial/lib/steps.test.ts"
+    ],
+    [
+      "apps/mobile/src/booking/steps.ts",
+      "apps/mobile/src/booking/trial/lib/steps.ts"
+    ],
+    [
+      "apps/mobile/src/booking/TeacherStep.tsx",
+      "apps/mobile/src/booking/trial/components/TeacherStep.tsx"
+    ],
+    [
+      "apps/mobile/src/booking/test-utils.ts",
+      "apps/mobile/src/booking/testing/test-utils.ts"
+    ],
+    [
+      "apps/mobile/src/booking/TrialWizard.tsx",
+      "apps/mobile/src/booking/trial/components/TrialWizard.tsx"
+    ],
+    [
+      "apps/mobile/src/booking/use-book-trial.ts",
+      "apps/mobile/src/booking/trial/lib/use-book-trial.ts"
+    ],
+    [
+      "apps/mobile/src/booking/WizardStep.tsx",
+      "apps/mobile/src/booking/trial/components/WizardStep.tsx"
+    ]
+  ]
+}

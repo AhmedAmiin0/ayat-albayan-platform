@@ -1,6 +1,6 @@
 import type { LessonView } from '@ab/shared';
 import { View } from 'react-native';
-import { slotLegend } from '@/booking/slots';
+import { slotLegend } from '@/booking/shared/slots';
 import { dayLabel } from '@/calendar/week';
 import { t } from '@/core/lib/i18n/i18n';
 import { FormLabel } from '@/payments/FormLabel';

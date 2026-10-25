@@ -1,5 +1,5 @@
 import { Pressable } from 'react-native';
-import { slotTimes } from '@/booking/slots';
+import { slotTimes } from '@/booking/shared/slots';
 import { t } from '@/core/lib/i18n/i18n';
 import { shape, type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';

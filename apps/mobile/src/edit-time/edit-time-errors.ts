@@ -1,4 +1,4 @@
-import { bookFailure, type BookFailure } from '@/booking/booking-errors';
+import { bookFailure, type BookFailure } from '@/booking/shared/booking-errors';
 import { ApiError } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
 import { isOffline } from '@/payments/payment-errors';

@@ -4,7 +4,7 @@ import { GUARDIAN_PHONE } from '@/inbox/shared/flow-backend';
 import { PHONE } from '@/inbox/shared/thread-fixtures';
 import { t } from '@/core/lib/i18n/i18n';
 import { armCamera } from '@/test/native-mocks';
-import { booked } from '@/booking/fixtures';
+import { booked } from '@/booking/testing/fixtures';
 import { subscribeBackend } from './flow-backend';
 import { CHILD } from './fixtures';
 

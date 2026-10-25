@@ -1,8 +1,8 @@
 import '@/test/warm-rn';
 import { screen, waitFor } from '@testing-library/react-native';
-import { slot } from '@/booking/fixtures';
-import { dayStartUtc } from '@/booking/slots';
-import { dayLine } from '@/booking/picks';
+import { slot } from '@/booking/testing/fixtures';
+import { dayStartUtc } from '@/booking/shared/slots';
+import { dayLine } from '@/booking/shared/picks';
 import { ApiError } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
 import { fakeNow } from '@/test/fake-now';

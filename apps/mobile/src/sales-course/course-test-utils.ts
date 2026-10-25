@@ -1,6 +1,6 @@
 import type { SalesCourseView, SlotView } from '@ab/shared';
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
-import { maryam, noAvailability, slot, SUN_17, THU_18 } from '@/booking/fixtures';
+import { maryam, noAvailability, slot, SUN_17, THU_18 } from '@/booking/testing/fixtures';
 import { t } from '@/core/lib/i18n/i18n';
 import { courseView } from './fixtures';
 

@@ -1,5 +1,5 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
-import { dayLabel } from '@/booking/slots';
+import { dayLabel } from '@/booking/shared/slots';
 import { t } from '@/core/lib/i18n/i18n';
 import { localDay, money } from '@/payments/format';
 import { renderWithQuery } from '@/test/query';

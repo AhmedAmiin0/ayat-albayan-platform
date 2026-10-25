@@ -1,5 +1,5 @@
 import type { TrialDateResult, TrialDateRow, TrialHistory } from '@ab/shared';
-import { maryam, SUN_17 } from '@/booking/fixtures';
+import { maryam, SUN_17 } from '@/booking/testing/fixtures';
 
 // Invented answers of GET …/trial-dates and POST …/trial-date (no real people).
 
