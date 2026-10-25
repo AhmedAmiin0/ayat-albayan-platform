@@ -1,0 +1,348 @@
+{
+  "id": "c2a",
+  "seq": 74,
+  "moves": [
+    {
+      "from": "apps/mobile/src/inbox/ThreadScreen*",
+      "to": "apps/mobile/src/inbox/screens/"
+    },
+    {
+      "from": "apps/mobile/src/inbox/privacy*",
+      "to": "apps/mobile/src/inbox/screens/"
+    },
+    {
+      "from": "apps/mobile/src/inbox/chat-fullscreen*",
+      "to": "apps/mobile/src/inbox/screens/"
+    },
+    {
+      "from": "apps/mobile/src/inbox/reply-forward*",
+      "to": "apps/mobile/src/inbox/screens/"
+    },
+    {
+      "from": "apps/mobile/src/inbox/ThreadHeaderActions*",
+      "to": "apps/mobile/src/inbox/thread/components/"
+    },
+    {
+      "from": "apps/mobile/src/inbox/ChatHeader*",
+      "to": "apps/mobile/src/inbox/thread/components/"
+    },
+    {
+      "from": "apps/mobile/src/inbox/ChatNotice*",
+      "to": "apps/mobile/src/inbox/thread/components/"
+    },
+    {
+      "from": "apps/mobile/src/inbox/ClosedNote*",
+      "to": "apps/mobile/src/inbox/thread/components/"
+    },
+    {
+      "from": "apps/mobile/src/inbox/GateNote*",
+      "to": "apps/mobile/src/inbox/thread/components/"
+    },
+    {
+      "from": "apps/mobile/src/inbox/LineNote*",
+      "to": "apps/mobile/src/inbox/thread/components/"
+    },
+    {
+      "from": "apps/mobile/src/inbox/OwnThreadNote*",
+      "to": "apps/mobile/src/inbox/thread/components/"
+    },
+    {
+      "from": "apps/mobile/src/inbox/ChatActionsProvider*",
+      "to": "apps/mobile/src/inbox/thread/components/"
+    },
+    {
+      "from": "apps/mobile/src/inbox/Forward*",
+      "to": "apps/mobile/src/inbox/thread/components/"
+    },
+    {
+      "from": "apps/mobile/src/inbox/chat-actions*",
+      "to": "apps/mobile/src/inbox/thread/hooks/"
+    },
+    {
+      "from": "apps/mobile/src/inbox/thread-cache*",
+      "to": "apps/mobile/src/inbox/thread/hooks/"
+    },
+    {
+      "from": "apps/mobile/src/inbox/thread-mode*",
+      "to": "apps/mobile/src/inbox/thread/hooks/"
+    },
+    {
+      "from": "apps/mobile/src/inbox/thread-route*",
+      "to": "apps/mobile/src/inbox/thread/hooks/"
+    },
+    {
+      "from": "apps/mobile/src/inbox/use-thread.*",
+      "to": "apps/mobile/src/inbox/thread/hooks/"
+    },
+    {
+      "from": "apps/mobile/src/inbox/use-jump*",
+      "to": "apps/mobile/src/inbox/thread/hooks/"
+    },
+    {
+      "from": "apps/mobile/src/inbox/forward-text*",
+      "to": "apps/mobile/src/inbox/thread/hooks/"
+    },
+    {
+      "from": "apps/mobile/src/inbox/use-forward*",
+      "to": "apps/mobile/src/inbox/thread/hooks/"
+    },
+    {
+      "from": "apps/mobile/src/inbox/Composer*",
+      "to": "apps/mobile/src/inbox/composer/"
+    },
+    {
+      "from": "apps/mobile/src/inbox/AttachFile*",
+      "to": "apps/mobile/src/inbox/composer/"
+    },
+    {
+      "from": "apps/mobile/src/inbox/Template*",
+      "to": "apps/mobile/src/inbox/composer/"
+    },
+    {
+      "from": "apps/mobile/src/inbox/send-file*",
+      "to": "apps/mobile/src/inbox/composer/"
+    },
+    {
+      "from": "apps/mobile/src/inbox/use-composer-send*",
+      "to": "apps/mobile/src/inbox/composer/"
+    }
+  ],
+  "files": [
+    [
+      "apps/mobile/src/inbox/AttachFile.reply.test.tsx",
+      "apps/mobile/src/inbox/composer/AttachFile.reply.test.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/AttachFile.test.tsx",
+      "apps/mobile/src/inbox/composer/AttachFile.test.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/AttachFile.tsx",
+      "apps/mobile/src/inbox/composer/AttachFile.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/chat-actions.ts",
+      "apps/mobile/src/inbox/thread/hooks/chat-actions.ts"
+    ],
+    [
+      "apps/mobile/src/inbox/chat-fullscreen.flow.test.tsx",
+      "apps/mobile/src/inbox/screens/chat-fullscreen.flow.test.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/ChatActionsProvider.tsx",
+      "apps/mobile/src/inbox/thread/components/ChatActionsProvider.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/ChatHeader.test.tsx",
+      "apps/mobile/src/inbox/thread/components/ChatHeader.test.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/ChatHeader.tsx",
+      "apps/mobile/src/inbox/thread/components/ChatHeader.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/ChatNotice.tsx",
+      "apps/mobile/src/inbox/thread/components/ChatNotice.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/ClosedNote.test.tsx",
+      "apps/mobile/src/inbox/thread/components/ClosedNote.test.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/ClosedNote.tsx",
+      "apps/mobile/src/inbox/thread/components/ClosedNote.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/Composer.layout.test.tsx",
+      "apps/mobile/src/inbox/composer/Composer.layout.test.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/Composer.tsx",
+      "apps/mobile/src/inbox/composer/Composer.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/ComposerInput.tsx",
+      "apps/mobile/src/inbox/composer/ComposerInput.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/ComposerNotes.tsx",
+      "apps/mobile/src/inbox/composer/ComposerNotes.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/forward-text.test.ts",
+      "apps/mobile/src/inbox/thread/hooks/forward-text.test.ts"
+    ],
+    [
+      "apps/mobile/src/inbox/forward-text.ts",
+      "apps/mobile/src/inbox/thread/hooks/forward-text.ts"
+    ],
+    [
+      "apps/mobile/src/inbox/ForwardPicker.tsx",
+      "apps/mobile/src/inbox/thread/components/ForwardPicker.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/ForwardRow.tsx",
+      "apps/mobile/src/inbox/thread/components/ForwardRow.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/ForwardSheet.tsx",
+      "apps/mobile/src/inbox/thread/components/ForwardSheet.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/GateNote.tsx",
+      "apps/mobile/src/inbox/thread/components/GateNote.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/LineNote.tsx",
+      "apps/mobile/src/inbox/thread/components/LineNote.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/OwnThreadNote.tsx",
+      "apps/mobile/src/inbox/thread/components/OwnThreadNote.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/privacy.helpers.ts",
+      "apps/mobile/src/inbox/screens/privacy.helpers.ts"
+    ],
+    [
+      "apps/mobile/src/inbox/reply-forward.flow.test.tsx",
+      "apps/mobile/src/inbox/screens/reply-forward.flow.test.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/send-file.test.ts",
+      "apps/mobile/src/inbox/composer/send-file.test.ts"
+    ],
+    [
+      "apps/mobile/src/inbox/send-file.ts",
+      "apps/mobile/src/inbox/composer/send-file.ts"
+    ],
+    [
+      "apps/mobile/src/inbox/TemplateForm.contact.test.tsx",
+      "apps/mobile/src/inbox/composer/TemplateForm.contact.test.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/TemplateForm.starter.test.tsx",
+      "apps/mobile/src/inbox/composer/TemplateForm.starter.test.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/TemplateForm.tsx",
+      "apps/mobile/src/inbox/composer/TemplateForm.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/TemplatePicker.restricted.en.test.tsx",
+      "apps/mobile/src/inbox/composer/TemplatePicker.restricted.en.test.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/TemplatePicker.restricted.test.tsx",
+      "apps/mobile/src/inbox/composer/TemplatePicker.restricted.test.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/TemplatePicker.tsx",
+      "apps/mobile/src/inbox/composer/TemplatePicker.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/TemplatePreview.tsx",
+      "apps/mobile/src/inbox/composer/TemplatePreview.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/thread-cache.test.ts",
+      "apps/mobile/src/inbox/thread/hooks/thread-cache.test.ts"
+    ],
+    [
+      "apps/mobile/src/inbox/thread-cache.ts",
+      "apps/mobile/src/inbox/thread/hooks/thread-cache.ts"
+    ],
+    [
+      "apps/mobile/src/inbox/thread-mode.test.ts",
+      "apps/mobile/src/inbox/thread/hooks/thread-mode.test.ts"
+    ],
+    [
+      "apps/mobile/src/inbox/thread-mode.tsx",
+      "apps/mobile/src/inbox/thread/hooks/thread-mode.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/thread-route.test.tsx",
+      "apps/mobile/src/inbox/thread/hooks/thread-route.test.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/ThreadHeaderActions.tsx",
+      "apps/mobile/src/inbox/thread/components/ThreadHeaderActions.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/ThreadScreen.actions.test.tsx",
+      "apps/mobile/src/inbox/screens/ThreadScreen.actions.test.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/ThreadScreen.forward.test.tsx",
+      "apps/mobile/src/inbox/screens/ThreadScreen.forward.test.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/ThreadScreen.keyboard.test.tsx",
+      "apps/mobile/src/inbox/screens/ThreadScreen.keyboard.test.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/ThreadScreen.layout.test.tsx",
+      "apps/mobile/src/inbox/screens/ThreadScreen.layout.test.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/ThreadScreen.lines.test.tsx",
+      "apps/mobile/src/inbox/screens/ThreadScreen.lines.test.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/ThreadScreen.privacy.test.tsx",
+      "apps/mobile/src/inbox/screens/ThreadScreen.privacy.test.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/ThreadScreen.rating.test.tsx",
+      "apps/mobile/src/inbox/screens/ThreadScreen.rating.test.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/ThreadScreen.read.test.tsx",
+      "apps/mobile/src/inbox/screens/ThreadScreen.read.test.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/ThreadScreen.reply.test.tsx",
+      "apps/mobile/src/inbox/screens/ThreadScreen.reply.test.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/ThreadScreen.send.test.tsx",
+      "apps/mobile/src/inbox/screens/ThreadScreen.send.test.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/ThreadScreen.subscription.test.tsx",
+      "apps/mobile/src/inbox/screens/ThreadScreen.subscription.test.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/ThreadScreen.teacher.test.tsx",
+      "apps/mobile/src/inbox/screens/ThreadScreen.teacher.test.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/ThreadScreen.template.test.tsx",
+      "apps/mobile/src/inbox/screens/ThreadScreen.template.test.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/ThreadScreen.tsx",
+      "apps/mobile/src/inbox/screens/ThreadScreen.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/use-composer-send.test.tsx",
+      "apps/mobile/src/inbox/composer/use-composer-send.test.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/use-composer-send.ts",
+      "apps/mobile/src/inbox/composer/use-composer-send.ts"
+    ],
+    [
+      "apps/mobile/src/inbox/use-forward.ts",
+      "apps/mobile/src/inbox/thread/hooks/use-forward.ts"
+    ],
+    [
+      "apps/mobile/src/inbox/use-jump.ts",
+      "apps/mobile/src/inbox/thread/hooks/use-jump.ts"
+    ],
+    [
+      "apps/mobile/src/inbox/use-thread.ts",
+      "apps/mobile/src/inbox/thread/hooks/use-thread.ts"
+    ]
+  ]
+}

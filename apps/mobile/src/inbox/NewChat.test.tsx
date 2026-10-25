@@ -4,7 +4,7 @@ import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
 import { NewChatSheet } from './NewChatSheet';
 import { plainReminder } from './thread-fixtures';
-import { ThreadScreen } from './ThreadScreen';
+import { ThreadScreen } from './screens/ThreadScreen';
 
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();

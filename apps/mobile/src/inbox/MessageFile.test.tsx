@@ -8,7 +8,7 @@ import { renderWithQuery } from '@/test/query';
 import { shape } from '@/theme';
 import { MessageBubble } from './MessageBubble';
 import { message, PHONE } from './thread-fixtures';
-import { ThreadModeProvider } from './thread-mode';
+import { ThreadModeProvider } from './thread/hooks/thread-mode';
 
 const mockApiFetch = jest.fn();
 jest.mock('@/core/lib/http/api', () => ({

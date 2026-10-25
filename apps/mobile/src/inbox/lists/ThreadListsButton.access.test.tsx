@@ -2,8 +2,8 @@ import { screen } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
 import { detail, inbound } from '../thread-fixtures';
-import { ThreadModeProvider } from '../thread-mode';
-import { ThreadScreen } from '../ThreadScreen';
+import { ThreadModeProvider } from '../thread/hooks/thread-mode';
+import { ThreadScreen } from '../screens/ThreadScreen';
 import { answer, withLists, withoutLists } from './list-fixtures';
 
 const mockApiFetch = jest.fn();

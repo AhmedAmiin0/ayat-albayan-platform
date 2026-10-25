@@ -9,7 +9,7 @@ import { AudioPlayer } from './AudioPlayer';
 import { mediaKind } from './message-text';
 import { useSmall } from './MessageMeta';
 import { type ThreadFile, useThreadFile } from './thread-file';
-import { useThreadMode } from './thread-mode';
+import { useThreadMode } from './thread/hooks/thread-mode';
 import { VideoPlayer } from './VideoPlayer';
 
 type State =

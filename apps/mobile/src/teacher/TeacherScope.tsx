@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { ThreadModeProvider } from '@/inbox/thread-mode';
+import { ThreadModeProvider } from '@/inbox/thread/hooks/thread-mode';
 import { NotLinkedScreen } from './NotLinkedScreen';
 import { isNotLinked, useTeacherMe } from './queries';
 

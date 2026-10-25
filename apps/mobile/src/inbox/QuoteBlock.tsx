@@ -3,7 +3,7 @@ import { Pressable } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { shape, type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
-import { useChatActions } from './chat-actions';
+import { useChatActions } from './thread/hooks/chat-actions';
 import { quoteSender, quoteText } from './quote-text';
 
 export interface QuoteBlockProps {

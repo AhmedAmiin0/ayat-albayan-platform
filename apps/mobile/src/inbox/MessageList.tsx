@@ -6,9 +6,9 @@ import { Button } from '@/core/ui/primitives/Button';
 import { EmptyState } from '@/core/ui/feedback/EmptyState';
 import { messageGap } from './list-gap';
 import { MessageBubble } from './MessageBubble';
-import { threadMessages } from './thread-cache';
-import { useJump } from './use-jump';
-import type { useThread } from './use-thread';
+import { threadMessages } from './thread/hooks/thread-cache';
+import { useJump } from './thread/hooks/use-jump';
+import type { useThread } from './thread/hooks/use-thread';
 
 type ThreadQuery = ReturnType<typeof useThread>;
 

@@ -1,5 +1,5 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
-import { threadKey } from '@/inbox/thread-cache';
+import { threadKey } from '@/inbox/thread/hooks/thread-cache';
 import { cachedThread, detail, PHONE } from '@/inbox/thread-fixtures';
 import { t } from '@/core/lib/i18n/i18n';
 import { money } from '@/payments/format';

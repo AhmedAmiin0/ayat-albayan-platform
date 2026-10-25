@@ -3,7 +3,7 @@ import * as Notifications from 'expo-notifications';
 import { router, useNavigationContainerRef } from 'expo-router';
 import { useEffect, useRef } from 'react';
 import { usePermissions } from '@/auth/use-permissions';
-import { threadKey } from '@/inbox/thread-cache';
+import { threadKey } from '@/inbox/thread/hooks/thread-cache';
 import { isThreadHref, overChat } from '@/core/nav/chat-groups';
 import { pushKind, pushPhone, routeIn, type PushTree } from './notification-route';
 

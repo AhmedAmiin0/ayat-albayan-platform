@@ -19,7 +19,7 @@ import { DeliveryTicks } from './DeliveryTicks';
 import { InboxHeaderActions } from './InboxHeaderActions';
 import { ChatListChips } from './lists/ChatListChips';
 import { threadPreview } from './message-text';
-import { threadLink, useThreadMode } from './thread-mode';
+import { threadLink, useThreadMode } from './thread/hooks/thread-mode';
 import { threadsEmptyTitle } from './threads-empty';
 import { ThreadTags } from './ThreadTags';
 import { useThreadList } from './use-thread-list';
