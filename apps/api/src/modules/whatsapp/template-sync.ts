@@ -1,7 +1,7 @@
 import type { TablesUpdate } from '@ab/db';
 import { quickReplyIntent, type TemplateButton, type TemplateStatus } from '@ab/shared';
 import { z } from 'zod';
-import { templateButtons } from './wa-json';
+import { templateButtons } from './messages/wa-json';
 import type { MetaTemplate, TemplateRow } from './whatsapp.types';
 
 // The health check's pure part (docs/12 §3.4): Meta's view of one template → our registry row.

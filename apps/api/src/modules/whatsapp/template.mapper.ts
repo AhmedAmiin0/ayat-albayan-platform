@@ -1,7 +1,7 @@
 import type { RenderableTemplate, TemplateNumberApproval, TemplateView } from '@ab/shared';
 import { HttpException } from '@nestjs/common';
-import { paramNames, templateButtons } from './wa-json';
-import { CRM_AUTH, KAPSO_AUTH } from './send-plan';
+import { paramNames, templateButtons } from './messages/wa-json';
+import { CRM_AUTH, KAPSO_AUTH } from './sender/send-plan';
 import type { ApprovalRow } from './templates.queries';
 import type { TemplateRow, WaError } from './whatsapp.types';
 

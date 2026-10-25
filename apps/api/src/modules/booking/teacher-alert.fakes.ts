@@ -4,7 +4,7 @@ import type { PushService } from '../../common/push/push.service';
 import { ruleSettingsOf } from '../../common/rules/rule-settings.fakes';
 import { fakePolicy, type FakePolicyInput } from '../notification-rules/policy.fakes';
 import type { StudentTrialStatus } from '../subscriptions/student-trial-status';
-import type { MessageSender } from '../whatsapp/message.sender';
+import type { MessageSender } from '../whatsapp/sender/message.sender';
 import { BookingFollowUps } from './booking.follow-ups';
 import type { AlertLesson } from './teacher-alert.plan';
 import type { TeacherAlertQueries } from './teacher-alert.queries';

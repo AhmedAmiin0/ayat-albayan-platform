@@ -10,7 +10,7 @@ import {
   uploadHandleSchema,
   uploadSessionSchema,
 } from './drivers/meta/meta-shapes';
-import { mediaMessage, readReceipt, submitPayload, templateMessage, textMessage, type GraphBody } from './wa-components';
+import { mediaMessage, readReceipt, submitPayload, templateMessage, textMessage, type GraphBody } from './messages/wa-components';
 import {
   WaError,
   type MetaTemplate,

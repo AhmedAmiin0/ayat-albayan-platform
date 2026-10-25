@@ -3,7 +3,7 @@ import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { SEEDS } from './seed-templates.fakes';
 import { bodyExamples, SAMPLE_REPORT, templateProblem } from './template-review';
-import { bodyVarCount, submitPayload } from './wa-components';
+import { bodyVarCount, submitPayload } from './messages/wa-components';
 import { templateRow } from './whatsapp.fakes';
 
 const MIGRATION = join(__dirname, '../../../../../packages/db/supabase/migrations/20261001000141_message_templates.sql');

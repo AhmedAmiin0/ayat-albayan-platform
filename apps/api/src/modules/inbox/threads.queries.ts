@@ -4,7 +4,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../common/db/db.module';
 import { BalanceQueries } from '../subscriptions/balance.queries';
 import { PackagesService } from '../subscriptions/packages.service';
-import { MESSAGE_SELECT, type MessageRow, type ThreadMessageRow } from '../whatsapp/message.mapper';
+import { MESSAGE_SELECT, type MessageRow, type ThreadMessageRow } from '../whatsapp/messages/message.mapper';
 import { knownNumber, type KnownNumber } from './known-number';
 import type { ThreadWindow } from './send-number';
 import { upcomingLessons, type LessonsOf } from './thread-lessons';

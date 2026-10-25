@@ -1,4 +1,4 @@
-import type { FailurePlan } from '../../send-plan';
+import type { FailurePlan } from '../../sender/send-plan';
 import type { WaError } from '../../whatsapp.types';
 
 /** messages.error_code while the CRM's rate limit (429) holds the row until its Retry-After. */

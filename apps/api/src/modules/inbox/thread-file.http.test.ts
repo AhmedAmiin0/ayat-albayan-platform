@@ -4,7 +4,7 @@ import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vites
 import { AppModule } from '../../app.module';
 import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '../../common/auth/auth.guard';
 import { StorageService } from '../../common/storage/storage.service';
-import { InboundMediaQueries, type MediaMessage } from '../whatsapp/inbound-media.queries';
+import { InboundMediaQueries, type MediaMessage } from '../whatsapp/messages/inbound-media.queries';
 import { WHATSAPP_CLIENT, WHATSAPP_LINES } from '../whatsapp/whatsapp.types';
 import { TeacherThreadsQueries } from './teacher-threads.queries';
 import { ADMIN, SALES, TEACHER } from './test-app';
