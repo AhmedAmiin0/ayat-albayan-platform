@@ -4,7 +4,7 @@ import { t } from '@/core/lib/i18n/i18n';
 import { pathKey } from '@/core/lib/query/query-keys';
 import { TreeBaseProvider } from '@/core/nav/tree-base';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
-import { detail, inbound, thread } from '../thread-fixtures';
+import { detail, inbound, thread } from '../shared/thread-fixtures';
 import { ThreadScreen } from './ThreadScreen';
 
 // The sales chat's top (owner 2026-10-18: more room to read): one header line, one strip of pills.

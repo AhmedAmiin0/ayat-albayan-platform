@@ -4,7 +4,7 @@ import { t } from '@/core/lib/i18n/i18n';
 import { money } from '@/payments/format';
 import { renderWithQuery } from '@/test/query';
 import { child, CHILD_ID, family, leadOnly, sub, usedUp } from '../subscription/people-fixtures';
-import { detail, PHONE, thread } from '../thread-fixtures';
+import { detail, PHONE, thread } from '../shared/thread-fixtures';
 import { ThreadScreen } from './ThreadScreen';
 
 const mockApiFetch = jest.fn();

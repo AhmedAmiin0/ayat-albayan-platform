@@ -1,7 +1,7 @@
 import type { MessageQuote } from '@ab/shared';
 import { t } from '@/core/lib/i18n/i18n';
 import { quoteOf, quoteSender, quoteText } from './quote-text';
-import { inbound, message } from './thread-fixtures';
+import { inbound, message } from '../../shared/thread-fixtures';
 
 const q = (fields: Partial<MessageQuote>): MessageQuote => ({
   id: 'm1',

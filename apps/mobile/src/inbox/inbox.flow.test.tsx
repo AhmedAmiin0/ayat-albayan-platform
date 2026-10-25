@@ -2,9 +2,9 @@ import { fireEvent, screen, waitFor, within } from '@testing-library/react-nativ
 import { t } from '@/core/lib/i18n/i18n';
 import { renderApp, resetApp } from '@/test/app-router';
 import { pullToRefresh } from '@/test/pull-refresh';
-import { GUARDIAN_PHONE, inboxBackend } from './flow-backend';
-import { inbound, PHONE } from './thread-fixtures';
-import { ticksLabel } from './ticks.helpers';
+import { GUARDIAN_PHONE, inboxBackend } from './shared/flow-backend';
+import { inbound, PHONE } from './shared/thread-fixtures';
+import { ticksLabel } from './shared/ticks.helpers';
 
 beforeEach(resetApp);
 

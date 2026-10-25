@@ -4,7 +4,7 @@ import { router } from 'expo-router';
 import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
 import { InboxScreen } from './InboxScreen';
-import { thread } from './thread-fixtures';
+import { thread } from './shared/thread-fixtures';
 
 const mockApiFetch = jest.fn();
 jest.mock('@/core/lib/http/api', () => ({

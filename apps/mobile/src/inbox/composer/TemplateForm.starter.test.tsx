@@ -2,7 +2,7 @@ import type { TemplateView } from '@ab/shared';
 import { fireEvent, render, screen } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { TemplateForm } from './TemplateForm';
-import { plainReminder } from '../thread-fixtures';
+import { plainReminder } from '../shared/thread-fixtures';
 
 // A chat starter imported from Meta (owner 2026-10-12): its key is its Meta name (not a producer key)
 // and it may take more than three variables (var_1…var_n, labelled «المتغير n»).

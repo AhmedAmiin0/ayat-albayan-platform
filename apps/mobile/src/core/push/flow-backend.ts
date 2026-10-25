@@ -1,4 +1,4 @@
-import { inboxBackend } from '@/inbox/flow-backend';
+import { inboxBackend } from '@/inbox/shared/flow-backend';
 import { listItem, profile } from '@/students/test-data';
 
 // The inbox API plus what a tapped push can open: Today (empty), a student's profile (no package).

@@ -1,6 +1,6 @@
 import { createTestQueryClient } from '@/test/query';
 import { threadFilePath, threadFileQuery } from './thread-file';
-import { PHONE } from './thread-fixtures';
+import { PHONE } from '../../shared/thread-fixtures';
 
 const mockApiFetch = jest.fn();
 jest.mock('@/core/lib/http/api', () => ({

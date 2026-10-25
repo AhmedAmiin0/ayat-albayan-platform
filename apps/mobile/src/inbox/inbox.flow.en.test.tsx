@@ -2,8 +2,8 @@ import { LOCALE_STORAGE_KEY } from '@ab/shared';
 import en from '@ab/shared/i18n/en.json';
 import { fireEvent, screen, waitFor, within } from '@testing-library/react-native';
 import { renderApp, resetApp } from '@/test/app-router';
-import { inboxBackend } from './flow-backend';
-import { PHONE } from './thread-fixtures';
+import { inboxBackend } from './shared/flow-backend';
+import { PHONE } from './shared/thread-fixtures';
 
 // An English run: the native flag is LTR (jest.setup reports RTL, the Arabic default) and English
 // is the saved language, so the boot gate does not reload.

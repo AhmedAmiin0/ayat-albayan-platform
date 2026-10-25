@@ -4,11 +4,11 @@ import { FlatList, View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { Button } from '@/core/ui/primitives/Button';
 import { EmptyState } from '@/core/ui/feedback/EmptyState';
-import { messageGap } from './list-gap';
+import { messageGap } from '../hooks/list-gap';
 import { MessageBubble } from './MessageBubble';
-import { threadMessages } from './thread/hooks/thread-cache';
-import { useJump } from './thread/hooks/use-jump';
-import type { useThread } from './thread/hooks/use-thread';
+import { threadMessages } from '../../thread/hooks/thread-cache';
+import { useJump } from '../../thread/hooks/use-jump';
+import type { useThread } from '../../thread/hooks/use-thread';
 
 type ThreadQuery = ReturnType<typeof useThread>;
 

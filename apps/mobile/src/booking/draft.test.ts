@@ -1,4 +1,4 @@
-import { huda, unnamed } from '@/inbox/fixtures';
+import { huda, unnamed } from '@/inbox/shared/fixtures';
 import { ageValid, contactReady, draftFromLead, phoneProblem, tzForPhone } from './draft';
 
 test('the phone country suggests the family zone; anything else is Riyadh', () => {

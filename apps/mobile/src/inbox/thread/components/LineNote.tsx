@@ -2,7 +2,7 @@ import type { ThreadView } from '@ab/shared';
 import { t } from '@/core/lib/i18n/i18n';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { lineWord } from '../../line-words';
-import { useNoteStyle } from '../../note-style';
+import { useNoteStyle } from '../../shared/note-style';
 
 /**
  * Inside the 24 h window, which line the reply leaves from: the server's reply_line, the chat line

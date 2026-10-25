@@ -1,7 +1,7 @@
 import { fireEvent, screen, within } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
-import { huda } from '../fixtures';
+import { huda } from '../shared/fixtures';
 import { answer, hudaProfile, QUALIFICATION } from './fixtures';
 import { LeadProfileSection } from './LeadProfileSection';
 

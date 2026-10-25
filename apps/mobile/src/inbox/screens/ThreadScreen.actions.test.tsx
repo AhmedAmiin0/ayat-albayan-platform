@@ -3,9 +3,9 @@ import { Linking } from 'react-native';
 import { ApiError } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
-import { delivered, detail, failed, inbound, message } from '../thread-fixtures';
+import { delivered, detail, failed, inbound, message } from '../shared/thread-fixtures';
 import { ThreadScreen } from './ThreadScreen';
-import { ticksLabel } from '../ticks.helpers';
+import { ticksLabel } from '../shared/ticks.helpers';
 
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();

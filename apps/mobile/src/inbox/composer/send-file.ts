@@ -5,7 +5,7 @@ import { apiSend } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
 import { supabase } from '@/core/lib/http/supabase';
 import { pickReceipt } from '@/payments/receipt';
-import { sendError } from '../message-text';
+import { sendError } from '../messages/hooks/message-text';
 import { appendMessage, removeMessage, type ThreadCache, threadKey, threadPath } from '../thread/hooks/thread-cache';
 
 // The assistant sends a photo or a PDF from the chat (owner 2026-10-19 #1/#2), inside the 24 h

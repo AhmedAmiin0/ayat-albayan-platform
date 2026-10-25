@@ -4,7 +4,7 @@ import { ApiError } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
 import { listKey } from '@/core/lib/query/query-keys';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
-import { cachedList, huda } from './fixtures';
+import { cachedList, huda } from './shared/fixtures';
 import { LeadDetailScreen } from './LeadDetailScreen';
 
 const mockApiSend = jest.fn();

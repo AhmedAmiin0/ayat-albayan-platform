@@ -6,10 +6,10 @@ import { t } from '@/core/lib/i18n/i18n';
 import { shape, type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { AudioPlayer } from './AudioPlayer';
-import { mediaKind } from './message-text';
+import { mediaKind } from '../hooks/message-text';
 import { useSmall } from './MessageMeta';
-import { type ThreadFile, useThreadFile } from './thread-file';
-import { useThreadMode } from './thread/hooks/thread-mode';
+import { type ThreadFile, useThreadFile } from '../hooks/thread-file';
+import { useThreadMode } from '../../thread/hooks/thread-mode';
 import { VideoPlayer } from './VideoPlayer';
 
 type State =

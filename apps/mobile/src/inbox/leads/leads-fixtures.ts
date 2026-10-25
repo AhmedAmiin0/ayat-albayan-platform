@@ -1,7 +1,7 @@
 import type { SalesPersonView } from '@ab/shared';
 import type { Page } from '@/core/lib/query/paging';
-import { huda, unnamed } from '../fixtures';
-import type { Lead } from '../types';
+import { huda, unnamed } from '../shared/fixtures';
+import type { Lead } from '../shared/types';
 
 // Test rows for the leads / sales endpoints the parity screens read.
 

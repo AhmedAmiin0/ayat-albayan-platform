@@ -2,7 +2,7 @@ import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { ApiError } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
-import { detail, inbound } from '../thread-fixtures';
+import { detail, inbound } from '../shared/thread-fixtures';
 import { ThreadScreen } from '../screens/ThreadScreen';
 import { answer, PAID, TRIAL, withLists } from './list-fixtures';
 

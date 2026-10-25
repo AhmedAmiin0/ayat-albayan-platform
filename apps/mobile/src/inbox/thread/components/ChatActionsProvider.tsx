@@ -3,7 +3,7 @@ import { type ReactNode, useMemo, useState } from 'react';
 import { ltr } from '@/core/ui/primitives/Ltr';
 import { type ChatActions, ChatActionsContext, type ChatNoticeValue } from '../hooks/chat-actions';
 import { ForwardSheet } from './ForwardSheet';
-import { MessageMenu } from '../../MessageMenu';
+import { MessageMenu } from '../../messages/components/MessageMenu';
 import { isOwnThread, useThreadMode } from '../hooks/thread-mode';
 
 export interface ChatActionsProviderProps {

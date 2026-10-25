@@ -3,7 +3,7 @@ import * as ImagePicker from 'expo-image-picker';
 import { ApiError } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
 import { ChatFileError, fileError, pdfName, pickChatFile, sendChatFile, type ChatFilePick } from './send-file';
-import { PHONE } from '../thread-fixtures';
+import { PHONE } from '../shared/thread-fixtures';
 
 const mockApiSend = jest.fn();
 const mockUpload = jest.fn();

@@ -1,6 +1,6 @@
 import { t } from '@/core/lib/i18n/i18n';
 import { isOwnThread, senderText, threadBase, threadLink, type ThreadMode } from './thread-mode';
-import { message, PHONE, thread } from '../../thread-fixtures';
+import { message, PHONE, thread } from '../../shared/thread-fixtures';
 
 const admin: ThreadMode = { kind: 'admin' };
 const abrar: ThreadMode = { kind: 'teacher', teacherId: 't-abrar' };

@@ -2,7 +2,7 @@ import { counted, formatRunningHead, RIYADH_TZ } from '@ab/shared';
 import { router } from 'expo-router';
 import { FlatList, View } from 'react-native';
 import { LiveSessions } from '@/live/LiveSessions';
-import { clockAt } from '@/inbox/format';
+import { clockAt } from '@/inbox/shared/format';
 import { t } from '@/core/lib/i18n/i18n';
 import { locale } from '@/core/lib/i18n/locale';
 import { Note } from '@/more/Note';
