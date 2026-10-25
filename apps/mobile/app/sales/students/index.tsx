@@ -1,4 +1,4 @@
-import { AllStudentsScreen } from '@/sales/AllStudentsScreen';
+import { AllStudentsScreen } from '@/sales/screens/AllStudentsScreen';
 
 /** «الطلاب» tab: every student, «طلابي» a filter inside (docs/16 row 4). */
 export default function SalesStudentsRoute() {
