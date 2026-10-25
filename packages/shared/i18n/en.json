@@ -2298,6 +2298,40 @@
     "jumpLatestCount": "Jump to the latest message ({count} new)",
     "readForbidden": "You are not allowed to view this chat",
     "replyTo": "Replying to:",
+    "reply": {
+      "action": "Reply",
+      "menu": "Message options",
+      "cancel": "Cancel reply",
+      "strip": "Replying to a message",
+      "you": "You",
+      "template": "Template message",
+      "jump": "Go to the original message",
+      "notLoaded": "The original message is older than the loaded ones. Load older messages and try again",
+      "swipeHint": "Swipe to reply, or long-press for message options"
+    },
+    "forward": {
+      "action": "Forward",
+      "title": "Forward message",
+      "search": "Search by name or number",
+      "selected": "Selected: {count} of {max}",
+      "max": "You can pick at most {max} chats",
+      "send": "Send",
+      "sending": "Sending…",
+      "empty": "No matching chats",
+      "loading": "Loading chats…",
+      "forwarded": "Forwarded",
+      "result": "Sent: {sent} · Skipped: {skipped}",
+      "error": "Could not forward, try again",
+      "close": "Close",
+      "skip": {
+        "session_closed": "Outside the 24-hour window — send a template first",
+        "not_your_thread": "This chat is not one of yours",
+        "own_thread_read_only": "This is your chat with the academy, read only",
+        "line_not_configured": "The line is not set up on the server",
+        "files_forbidden": "Sending files is not available to you",
+        "send_failed": "Could not send"
+      }
+    },
     "quickReply": {
       "confirmed": "Confirmed the {when} lesson (Riyadh time)",
       "notConfirmed": "No lesson was confirmed by this reply",
@@ -2369,7 +2403,8 @@
       "file_path": "The file could not be uploaded. Try again",
       "file_upload": "The file could not be uploaded. Try again",
       "files_forbidden": "You cannot send files",
-      "media_handoff": "Files cannot be handed off to WhatsApp; retry here"
+      "media_handoff": "Files cannot be handed off to WhatsApp; retry here",
+      "reply_not_in_thread": "The quoted message is not in this chat. Cancel the reply and try again"
     },
     "line": {
       "replyFrom": "Your reply will be sent via: {line}"

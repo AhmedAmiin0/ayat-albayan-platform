@@ -14,6 +14,8 @@ export const threadTextSchema = z.object({
   text: z.string().trim().min(1).max(WA_TEXT_MAX),
   /** Idempotency (rule 8): a retried send returns the first row. */
   clientRequestId: z.uuid().optional(),
+  /** «رد»: the quoted message, of this same chat (the API resolves its wamid; 400 reply_not_in_thread). */
+  replyToMessageId: z.uuid().optional(),
 });
 
 /** POST /threads/:phone/file-upload-url: a signed upload for one image or PDF (owner 2026-10-19 #2). */
@@ -30,6 +32,7 @@ export const threadFileSendSchema = z.object({
   // No path separators and no control characters (a newline would reach the family's WhatsApp).
   filename: z.string().trim().min(1).max(200).regex(/^[^/\\\p{Cc}]+$/u),
   caption: z.string().trim().max(WA_CAPTION_MAX).optional(),
+  replyToMessageId: z.uuid().optional(),
 });
 
 const paramText = z.string().trim().min(1).max(1024).optional();

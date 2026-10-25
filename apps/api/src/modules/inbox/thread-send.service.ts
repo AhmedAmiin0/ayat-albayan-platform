@@ -1,11 +1,12 @@
 import { restrictedMay, type ThreadTemplate, type ThreadText, type WaLine } from '@ab/shared';
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { TemplateRegistry } from '../whatsapp/template.registry';
 import { waHttpError } from '../whatsapp/template.mapper';
 import type { SalesScope } from '../sales/sales-scope';
 import { Outbox, type Sent } from './outbox';
 import { assertCanSend, type TeacherScope } from './teacher-scope';
 import { pickSend, type ThreadWindow } from './send-number';
+import { ThreadQuotes, type ReplyFields, type SendFrom } from './thread-quotes';
 import { missingParams, type ThreadRow } from './threads.mapper';
 import { ThreadsQueries } from './threads.queries';
 
@@ -22,6 +23,8 @@ export interface ThreadSend<T> {
    * (restrictedMay, like GET /messaging/templates). Absent = every template (the admin).
    */
   restricted?: boolean;
+  /** «إعادة توجيه»: the message this copy was forwarded from (messages.forwarded_from_id). */
+  forwardedFrom?: string;
 }
 
 /**
@@ -44,7 +47,19 @@ export function outboundBase<T>(s: ThreadSend<T>, thread: ThreadRow | null) {
     guardian_id: thread?.guardian_id ?? null,
     created_by: s.actorId,
     sent_by_teacher_id: s.scope?.teacherId ?? null,
+    ...(s.forwardedFrom ? { forwarded_from_id: s.forwardedFrom } : {}),
   };
+}
+
+/** «رد»: the quoted message's id and wamid, resolved in this chat only (ThreadQuotes.target); none = {}. */
+export async function replyOf(
+  quotes: ThreadQuotes | undefined,
+  s: ThreadSend<{ replyToMessageId?: string | undefined }>,
+  from: SendFrom,
+): Promise<ReplyFields | Record<string, never>> {
+  if (!s.input.replyToMessageId) return {};
+  if (!quotes) throw new Error('ThreadQuotes is not provided');
+  return quotes.target(s.phone, s.input.replyToMessageId, from);
 }
 
 /**
@@ -67,6 +82,9 @@ export async function sendLine(
  */
 @Injectable()
 export class ThreadSendService {
+  /** «رد» (property-injected: the constructor is at the 3-parameter limit). */
+  @Inject(ThreadQuotes) private readonly quotes?: ThreadQuotes;
+
   constructor(
     private readonly queries: ThreadsQueries,
     private readonly templates: TemplateRegistry,
@@ -82,7 +100,8 @@ export class ThreadSendService {
     const key = dedupKey(s);
     const thread = await this.queries.thread(s.phone);
     const from = await sendLine(thread, { now, windows: () => this.queries.numberWindows(s.phone) });
-    return this.outbox.send({ ...outboundBase(s, thread), dedup_key: key, body: s.input.text, ...from });
+    const reply = await replyOf(this.quotes, s, from);
+    return this.outbox.send({ ...outboundBase(s, thread), dedup_key: key, body: s.input.text, ...from, ...reply });
   }
 
   /**

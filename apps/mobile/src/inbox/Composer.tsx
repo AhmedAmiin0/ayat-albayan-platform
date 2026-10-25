@@ -6,6 +6,7 @@ import { ComposerNotes } from './ComposerNotes';
 import { ErrorLine } from './ErrorLine';
 import { GateNote } from './GateNote';
 import { OpenRow } from './OpenRow';
+import { QuoteStrip } from './QuoteStrip';
 import { SavedReplyChip } from './saved-replies/SavedReplyChip';
 import { SavedReplyPicker } from './saved-replies/SavedReplyPicker';
 import { useSavedReplyDraft } from './saved-replies/use-saved-reply';
@@ -20,6 +21,7 @@ import { errorLines, useComposerSend } from './use-composer-send';
  * against the device clock on every render (a refetch, a keystroke), not only when the thread loaded.
  * «الردود السريعة» (owner 2026-10-25, staff only): the button or «/» at a line's start opens the
  * picker; a pick fills the box and stages its file (the chip). «أرسل» sends the text, then the file.
+ * «رد» (owner 2026-10-25): the quoted strip over the row; the text answers it (useComposerSend).
  */
 export function Composer({
   phone,
@@ -56,6 +58,7 @@ export function Composer({
       ))}
       <GateNote />
       <ComposerNotes thread={thread} open={open} />
+      {open ? <QuoteStrip /> : null}
       {open && replies.staged ? <SavedReplyChip file={replies.staged.file} onRemove={replies.clearStaged} /> : null}
       {open ? (
         <OpenRow

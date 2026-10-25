@@ -1,4 +1,4 @@
-import { searchDigits, type MessageView, type ThreadLesson, type ThreadView } from '@ab/shared';
+import { searchDigits, type ForwardResult, type MessageView, type ThreadForward, type ThreadLesson, type ThreadView } from '@ab/shared';
 import { FakeBackend } from '@/test/fake-backend';
 import { family, child } from './subscription/people-fixtures';
 import {
@@ -12,7 +12,8 @@ import {
 } from './thread-fixtures';
 
 // An in-memory chats API for the inbox flows: GET /threads (search, unread), GET /threads/:phone,
-// POST …/text and …/template (the thread's last_* move with each send, like the real list).
+// POST …/text and …/template (the thread's last_* move with each send, like the real list), and
+// POST /threads/forward (a copy into each open chat; a closed one is skipped, as the API does).
 
 export const GUARDIAN_PHONE = '+966501112223';
 export const LESSON: ThreadLesson = {
@@ -106,8 +107,19 @@ export function inboxBackend() {
       return detail(log[phone] ?? [], { thread: row, lessons, ...(people ? { people } : {}) });
     })
     .on('POST /threads/:phone/text', ({ params, body }) => {
-      const text = (body as { text: string }).text;
-      return record(params['phone'] ?? '', message({ id: `srv-${log[params['phone'] ?? '']?.length ?? 0}`, body: text }));
+      const { text, replyToMessageId } = body as { text: string; replyToMessageId?: string };
+      const id = `srv-${log[params['phone'] ?? '']?.length ?? 0}`;
+      return record(params['phone'] ?? '', message({ id, body: text, reply_to_message_id: replyToMessageId ?? null }));
+    })
+    .on('POST /threads/forward', ({ body }) => {
+      const { messageId, targets } = body as ThreadForward;
+      const source = Object.values(log).flat().find((m) => m.id === messageId);
+      const results = targets.map((phone): ForwardResult => {
+        if (!byPhone(phone)?.session_open) return { phone, sent: false, reason: 'session_closed' };
+        const copy = record(phone, message({ id: `fwd-${phone}`, body: source?.body ?? null, forwarded: true }));
+        return { phone, sent: true, message_id: copy.id };
+      });
+      return { results };
     })
     .on('POST /threads/:phone/template', ({ params }) =>
       record(params['phone'] ?? '', message({ id: 'srv-tpl', body: 'حلقة سهيلة النهاردة — 17:00', template_key: 'lesson_reminder_plain' })),

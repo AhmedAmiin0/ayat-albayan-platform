@@ -4,16 +4,18 @@ import { useEffect, useId, useMemo, useRef, useState } from 'react';
 import { Icon } from '@/components/ui/icon';
 import { IconButton } from '@/components/ui/icon-button';
 import { controlClass } from '@/components/ui/input';
-import { NuqtaGlyph } from '@/components/ui/nuqta-glyph';
 import { errorCode } from '@/features/schedule/api';
 import { sizeText } from '@/features/students/recording-format';
 import { t } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
 import { ChatUploadError, sendFile, uploadChatFile } from './api.files';
+import { ComposerError } from './ComposerError';
+import { ReplyStrip } from './ReplyStrip';
 import { sendErrorCode, sendErrorCodeText } from './send-error';
 import { sendStart, settleOwnSend } from './send-start';
+import { useReplyTarget } from './use-reply-target';
 
-type FileSend = { phone: string; clientRequestId: string; file: File; caption: string };
+type FileSend = { phone: string; clientRequestId: string; file: File; caption: string; replyTo?: string | undefined };
 
 export interface FileComposerProps {
   phone: string;
@@ -48,24 +50,28 @@ function Chip({ file }: { file: File }) {
  * an optional caption and «أرسل». Upload then send; a failed send keeps its clientRequestId, so the
  * same file sent again is the same request (rule 8). It shares the chat's send lock with the message
  * box (mutationKey), and its result after a sign-out writes nothing back (sendStart generations).
+ * «رد»: the quoted strip stays above it; the file answers that message, and a sent one clears it.
  */
 export function FileComposer({ phone, file, onDone }: FileComposerProps) {
   const queryClient = useQueryClient();
   const errorId = useId();
   const [caption, setCaption] = useState('');
   const requestId = useRef(crypto.randomUUID());
+  const captionBox = useRef<HTMLInputElement>(null);
+  const reply = useReplyTarget(captionBox);
   const mutationKey = ['inbox-send', phone];
   const send = useMutation({
     mutationKey,
     mutationFn: async (s: FileSend) => {
       const path = await uploadChatFile({ phone: s.phone, requestId: s.clientRequestId, file: s.file });
       const text = s.caption.trim();
-      const body = { phone: s.phone, clientRequestId: s.clientRequestId, path, filename: sentName(s.file) };
+      const body = { phone: s.phone, clientRequestId: s.clientRequestId, path, filename: sentName(s.file), ...(s.replyTo ? { replyToMessageId: s.replyTo } : {}) };
       return sendFile(text ? { ...body, caption: text } : body);
     },
     onMutate: sendStart,
     onSuccess: async (view, s, start) => {
       settleOwnSend(s.phone, view.id, start);
+      if (s.replyTo) reply.done(s.replyTo);
       onDone();
       await queryClient.invalidateQueries({ queryKey: ['threads'] });
     },
@@ -83,9 +89,10 @@ export function FileComposer({ phone, file, onDone }: FileComposerProps) {
       onSubmit={(e) => {
         e.preventDefault();
         if (pending) return;
-        send.mutate({ phone, clientRequestId: requestId.current, file, caption });
+        send.mutate({ phone, clientRequestId: requestId.current, file, caption, replyTo: reply.replyTo });
       }}
     >
+      <ReplyStrip returnFocus={captionBox} />
       <div className="flex items-center gap-1.5">
         <Chip file={file} />
         <IconButton label={t.inbox.composer.removeFile} disabled={pending} className="rounded-full" onClick={onDone}>
@@ -94,6 +101,7 @@ export function FileComposer({ phone, file, onDone }: FileComposerProps) {
       </div>
       <div className="flex items-end gap-1.5">
         <input
+          ref={captionBox}
           aria-label={t.inbox.composer.captionPlaceholder}
           aria-invalid={error ? true : undefined}
           aria-describedby={error ? errorId : undefined}
@@ -114,12 +122,7 @@ export function FileComposer({ phone, file, onDone }: FileComposerProps) {
           <Icon name="send" className="size-5" />
         </IconButton>
       </div>
-      {error && (
-        <p id={errorId} role="alert" className="flex items-center gap-1.5 text-xs text-danger">
-          <NuqtaGlyph shape="struck" />
-          <span>{error}</span>
-        </p>
-      )}
+      {error && <ComposerError id={errorId} text={error} />}
     </form>
   );
 }

@@ -1,4 +1,4 @@
-import { waMediaKind, type TemplateDocument, type WaLine } from '@ab/shared';
+import { waSendKind, type TemplateDocument, type WaLine } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { BUCKETS, SIGNED_URL_SECONDS } from '../../common/storage/storage.paths';
 import { StorageService } from '../../common/storage/storage.service';
@@ -92,11 +92,12 @@ export class MessageDispatch {
     throw new WaError('nothing to send: no approved template and no text', { code: 100, status: 0 });
   }
 
-  /** A file staff sent from the chat: an image or a document by link, its body as the caption. */
+  /** A file staff sent or forwarded from the chat: by link as its kind (waSendKind), its body as the caption. */
   private async sendFile(row: DueMessage, at: { via: SendVia; path: string }): Promise<WaSent> {
     const url = await mediaLink(this.storage, at.path);
-    const kind = waMediaKind(row.media_mime ?? null);
-    return this.client(at.via).sendDocument({ to: row.phone_e164, kind, url, filename: row.media_name ?? undefined, caption: row.body });
+    const kind = waSendKind(row.media_mime ?? null);
+    const filename = row.media_name ?? undefined;
+    return this.client(at.via).sendDocument({ to: row.phone_e164, kind, url, filename, caption: row.body, replyTo: row.reply_to_wa_id });
   }
 
   /** A line's client, or the number's own; a number that cannot send now gets a client that refuses every call. */

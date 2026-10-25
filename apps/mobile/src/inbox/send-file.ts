@@ -64,13 +64,15 @@ export interface SendFileInput {
   id: string;
   /** The academy's upload limit (useUploadMaxBytes); an image also stays within Meta's 5 MB. */
   maxBytes: number;
+  /** The message it answers (owner 2026-10-25 «رد»): our row of the same chat. */
+  replyToMessageId?: string;
 }
 
 /**
  * Checked here first (chatFileProblem, as the API does), then POST …/file-upload-url, the signed
  * upload (as assistants/upload-receipt.ts) and POST …/file with no caption. Resolves the API's row.
  */
-export async function sendChatFile({ phone, file, id, maxBytes }: SendFileInput): Promise<MessageView> {
+export async function sendChatFile({ phone, file, id, maxBytes, replyToMessageId }: SendFileInput): Promise<MessageView> {
   const problem = chatFileProblem({ mime: file.mime, size: file.size, maxBytes });
   if (problem) throw new ChatFileError(problem);
   const signed = await apiSend<SignedUpload>('POST', `${threadPath(phone)}/file-upload-url`, {
@@ -86,6 +88,7 @@ export async function sendChatFile({ phone, file, id, maxBytes }: SendFileInput)
     clientRequestId: id,
     path: signed.path,
     filename: file.filename,
+    ...(replyToMessageId ? { replyToMessageId } : {}),
   });
 }
 

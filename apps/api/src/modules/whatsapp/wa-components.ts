@@ -98,12 +98,16 @@ export function textMessage(input: { to: string; text: string; replyTo?: string 
   };
 }
 
-/** A session image or document by link (`{type: kind, [kind]: {link, caption?, filename?}}`); a filename is a document's only. */
+/**
+ * A session file by link (`{type: kind, [kind]: {link, caption?, filename?}}`); a filename is a
+ * document's only, Meta takes no caption on an audio. A reply carries the quoted wamid as context.
+ */
 export function mediaMessage(input: MediaSend): GraphBody {
   const kind = input.kind ?? 'document';
   const filename = kind === 'document' && input.filename ? { filename: input.filename } : {};
-  const media = { link: input.url, ...(input.caption ? { caption: input.caption } : {}), ...filename };
-  return { ...envelope(input.to), type: kind, [kind]: media };
+  const caption = kind !== 'audio' && input.caption ? { caption: input.caption } : {};
+  const context = input.replyTo ? { context: { message_id: input.replyTo } } : {};
+  return { ...envelope(input.to), type: kind, [kind]: { link: input.url, ...caption, ...filename }, ...context };
 }
 
 export const readReceipt = (waMessageId: string): GraphBody => ({

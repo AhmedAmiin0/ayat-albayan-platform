@@ -588,3 +588,14 @@ None blocks the build. The routine builds these defaults and lists them in the P
 - the sender line.
 
 The only things that need a new APK are inline audio and video playback (`expo-audio` and `expo-video`) and picking PDFs on mobile (`expo-document-picker`). Both are deferred, as listed in §10.
+## 14. Reply «رد» and forward «إعادة توجيه» (owner 2026-10-25, migration 20261025000690)
+
+**Reply.** Any bubble WhatsApp knows (it has a wamid, `MessageView.replyable`) can be quoted. The composer shows one quoted strip; a session text or file sends `replyToMessageId`, which the API resolves to the wamid of a message of the **same chat** (`ThreadQuotes.target`, else 400 `reply_not_in_thread`). Our row keeps `reply_to_message_id` and `reply_to_wa_id`; the sender passes the wamid as Meta's / Kapso's `context.message_id` on texts and files. An inbound reply is linked by the trigger `messages_link_reply` (same phone only). A thread page carries each bubble's quote (`MessageView.reply_to`, one read per page; a template's text is never quoted). Outside the 24 h window the composer is in template mode and reply is off, with the usual hint.
+
+**Forward.** `POST /threads/forward {messageId, targets[1–5], clientRequestId}` copies a text or a file (never a template) to each target through the normal session send path: the actor's scope (a teacher only to their families, never a file), the 24 h window and the line, and then the sender's gates as for any send (messaging switch, `WA_ALLOWED_RECIPIENTS`, the line's driver). A file is copied once per forward to `wa-media/out/{actor}/{request}/fwd-{message}.{ext}` (theirs is fetched into our cache first) and re-sent by signed URL. Per target the answer is «sent» (the new message id) or «skipped» with the send path's reason (`session_closed`, `not_your_thread`, …). The request id is reused per target (the dedup key carries the phone), so a retry returns the same rows. One audit row `thread_forward` per forward, on the source message. The copy stores `forwarded_from_id`; our inbox labels it «مُعاد توجيهها».
+
+**Limits.**
+- WhatsApp Cloud API cannot set the «forwarded» flag: the family sees an ordinary message; only our inbox shows the label.
+- On a crm line the quote shows in our inbox but WhatsApp gets no context (the CRM wants its own message uuid, docs/19). A forwarded voice note or video goes there as a document (the CRM takes images and documents only).
+- A forwarded inbound file must still be fetchable (WhatsApp keeps media ~30 days; after that 410 `media_expired`).
+- Mobile: no swipe library in the APK (react-native-gesture-handler is not a dependency); see the mobile notes in the PR for what is used.
