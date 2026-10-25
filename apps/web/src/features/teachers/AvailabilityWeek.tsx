@@ -1,6 +1,6 @@
 import type { Weekday } from '@ab/shared';
 import { forwardRef } from 'react';
-import { useMinuteClock } from '@/components/ui/running-head';
+import { useMinuteClock } from '@/components/ui/layout/running-head';
 import { t } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
 import { AvailabilityDay, cellClass, trackCellClass, weekRowClass } from './AvailabilityDay';

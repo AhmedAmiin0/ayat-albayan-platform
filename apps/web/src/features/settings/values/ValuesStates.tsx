@@ -1,6 +1,6 @@
-import { Button } from '@/components/ui/button';
-import { EmptyState } from '@/components/ui/empty-state';
-import { NuqtaGlyph } from '@/components/ui/nuqta-glyph';
+import { Button } from '@/components/ui/form/button';
+import { EmptyState } from '@/components/ui/display/empty-state';
+import { NuqtaGlyph } from '@/components/ui/display/nuqta-glyph';
 import { t } from '@/lib/i18n';
 
 const v = t.settingsValues;

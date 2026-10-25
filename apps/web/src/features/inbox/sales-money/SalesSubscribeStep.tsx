@@ -1,9 +1,9 @@
 import { DISCOUNTS, type SalesFamilyStudent, type SalesMoneySubscriptionView } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useId, useRef, useState, type FormEvent } from 'react';
-import { Button } from '@/components/ui/button';
-import { Dialog } from '@/components/ui/dialog';
-import { FormAlert } from '@/components/ui/form-alert';
+import { Button } from '@/components/ui/form/button';
+import { Dialog } from '@/components/ui/overlay/dialog';
+import { FormAlert } from '@/components/ui/form/form-alert';
 import { usePermissions } from '@/features/auth/use-permissions';
 import { INITIAL_PRICING, pricingBody, todayIn, type PricingForm } from '@/features/subscriptions/pricing-form';
 import { PricingFields } from '@/features/subscriptions/PricingFields';

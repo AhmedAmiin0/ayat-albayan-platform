@@ -1,7 +1,7 @@
 import { PAYOUT_STATUSES, payoutStatusStyle } from '@ab/shared';
 import { createColumnHelper } from '@tanstack/react-table';
 import type { DataTableFeatures, FilterOption } from '@/components/DataTable';
-import { StatusChip } from '@/components/ui/status-chip';
+import { StatusChip } from '@/components/ui/display/status-chip';
 import { formatDate } from '@/features/leads/format';
 import { LedgerPaid } from './LedgerPaid';
 import { PayoutActions } from './PayoutActions';

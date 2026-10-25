@@ -1,5 +1,5 @@
-import { Button } from '@/components/ui/button';
-import { NuqtaGlyph } from '@/components/ui/nuqta-glyph';
+import { Button } from '@/components/ui/form/button';
+import { NuqtaGlyph } from '@/components/ui/display/nuqta-glyph';
 import { t } from '@/lib/i18n';
 import { weeklyHoursLabel } from './track';
 

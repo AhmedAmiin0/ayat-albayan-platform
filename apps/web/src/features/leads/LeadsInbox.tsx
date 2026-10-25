@@ -1,9 +1,9 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
-import { Cartouche } from '@/components/ui/cartouche';
-import { PageHead } from '@/components/ui/page';
-import { Pager } from '@/components/ui/pager';
-import { Toast, type ToastProps } from '@/components/ui/toast';
+import { Cartouche } from '@/components/ui/display/cartouche';
+import { PageHead } from '@/components/ui/layout/page';
+import { Pager } from '@/components/ui/layout/pager';
+import { Toast, type ToastProps } from '@/components/ui/overlay/toast';
 import { t } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
 import { AssignUnassignedButton } from './AssignUnassignedButton';
@@ -13,7 +13,7 @@ import { LeadStatusTabs } from './LeadStatusTabs';
 import { LeadsToolbar } from './LeadsToolbar';
 import { parseLeadSearch, type LeadSearch } from './types';
 import { TableBox } from '@/components/TableBox';
-import { ListSkeleton } from '@/components/ui/skeleton';
+import { ListSkeleton } from '@/components/ui/display/skeleton';
 
 export interface LeadsInboxProps {
   search: LeadSearch;

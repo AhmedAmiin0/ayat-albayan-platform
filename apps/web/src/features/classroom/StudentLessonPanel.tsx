@@ -1,9 +1,9 @@
 import { lessonWhenText, type StudentLinkLesson } from '@ab/shared';
 import { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Field } from '@/components/ui/field';
-import { FormAlert } from '@/components/ui/form-alert';
-import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/form/button';
+import { Field } from '@/components/ui/form/field';
+import { FormAlert } from '@/components/ui/form/form-alert';
+import { Input } from '@/components/ui/form/input';
 import { t } from '@/lib/i18n';
 import { locale } from '@/lib/locale';
 import { classroomErrorText, opensAtOf } from './errors';

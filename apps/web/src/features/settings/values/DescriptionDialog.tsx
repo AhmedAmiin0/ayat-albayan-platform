@@ -1,6 +1,6 @@
 import type { ConfigEntry } from '@ab/shared';
-import { Button } from '@/components/ui/button';
-import { Dialog } from '@/components/ui/dialog';
+import { Button } from '@/components/ui/form/button';
+import { Dialog } from '@/components/ui/overlay/dialog';
 import { t } from '@/lib/i18n';
 import { locale } from '@/lib/locale';
 import type { DescribeTarget } from './describe-target';

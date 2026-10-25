@@ -1,6 +1,6 @@
 import { useRouter } from '@tanstack/react-router';
 import type { MouseEvent, ReactNode } from 'react';
-import { buttonVariants } from '@/components/ui/button';
+import { buttonVariants } from '@/components/ui/form/button';
 import { cn } from '@/lib/utils';
 
 export interface ReportLinkProps {

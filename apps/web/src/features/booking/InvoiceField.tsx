@@ -1,7 +1,7 @@
 import { useMutation } from '@tanstack/react-query';
 import { useId, useState } from 'react';
-import { Button, buttonVariants } from '@/components/ui/button';
-import { RequiredMark } from '@/components/ui/label';
+import { Button, buttonVariants } from '@/components/ui/form/button';
+import { RequiredMark } from '@/components/ui/form/label';
 import { lessonErrorText } from '@/features/schedule/api';
 import { t } from '@/lib/i18n';
 import { cn } from '@/lib/utils';

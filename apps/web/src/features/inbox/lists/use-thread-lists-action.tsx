@@ -1,6 +1,6 @@
 import type { ChatListRef } from '@ab/shared';
 import { useState, type ReactNode } from 'react';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/ui/form/button';
 import { t } from '@/lib/i18n';
 import { ThreadListsDialog } from './ThreadListsDialog';
 import { useListsAccess } from './use-lists-access';

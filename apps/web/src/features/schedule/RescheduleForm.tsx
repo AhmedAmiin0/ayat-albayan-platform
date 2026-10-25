@@ -1,8 +1,8 @@
 import type { LessonView } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { FormAlert } from '@/components/ui/form-alert';
+import { Button } from '@/components/ui/form/button';
+import { FormAlert } from '@/components/ui/form/form-alert';
 import { ByDayPicker } from '@/features/booking/ByDayPicker';
 import { isMakeup } from '@/features/booking/contract';
 import { ruleFromSlot } from '@/features/booking/draft';

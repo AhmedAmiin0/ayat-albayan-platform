@@ -1,10 +1,10 @@
 import { subscriptionStatusStyle } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { FormAlert } from '@/components/ui/form-alert';
-import { StatusChip } from '@/components/ui/status-chip';
-import { Toast } from '@/components/ui/toast';
+import { Button } from '@/components/ui/form/button';
+import { FormAlert } from '@/components/ui/form/form-alert';
+import { StatusChip } from '@/components/ui/display/status-chip';
+import { Toast } from '@/components/ui/overlay/toast';
 import { RecordPaymentDialog } from '@/features/payments/RecordPaymentDialog';
 import { t } from '@/lib/i18n';
 import { studentBalanceQuery } from './api';

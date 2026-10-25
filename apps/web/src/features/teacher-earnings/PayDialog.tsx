@@ -1,8 +1,8 @@
 import { amountProblem, earningIdsOf, parseAmount, payCeiling, type TeacherEarningView } from '@ab/shared';
 import { useId, useState, type FormEvent } from 'react';
-import { Button } from '@/components/ui/button';
-import { Dialog } from '@/components/ui/dialog';
-import { FormAlert } from '@/components/ui/form-alert';
+import { Button } from '@/components/ui/form/button';
+import { Dialog } from '@/components/ui/overlay/dialog';
+import { FormAlert } from '@/components/ui/form/form-alert';
 import { paidAtDay } from '@/features/payments/pay-day';
 import { PaymentFields, type PaymentForm } from '@/features/payments/PaymentFields';
 import { ReceiptField, receiptProblem } from '@/features/payments/ReceiptField';

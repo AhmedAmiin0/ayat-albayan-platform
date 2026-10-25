@@ -1,6 +1,6 @@
 import { CREDENTIAL_MODES, DEFAULT_PASSWORD_MIN, type CredentialMode } from '@ab/shared';
-import { Field } from '@/components/ui/field';
-import { RadioChips } from '@/components/ui/radio-chips';
+import { Field } from '@/components/ui/form/field';
+import { RadioChips } from '@/components/ui/form/radio-chips';
 import { PasswordInput } from '@/features/auth/PasswordInput';
 import { t } from '@/lib/i18n';
 

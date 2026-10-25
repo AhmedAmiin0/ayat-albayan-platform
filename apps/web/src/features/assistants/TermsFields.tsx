@@ -1,7 +1,7 @@
 import { ASSISTANT_COMMISSION_TYPES } from '@ab/shared';
-import { Field } from '@/components/ui/field';
-import { Input } from '@/components/ui/input';
-import { Select } from '@/components/ui/select';
+import { Field } from '@/components/ui/form/field';
+import { Input } from '@/components/ui/form/input';
+import { Select } from '@/components/ui/form/select';
 import { t } from '@/lib/i18n';
 import { CurrencySelect } from './CurrencySelect';
 import { fieldError } from './status';

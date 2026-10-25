@@ -1,7 +1,7 @@
 import type { TrialDateResult } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { Button } from '@/components/ui/button';
-import { FormAlert } from '@/components/ui/form-alert';
+import { Button } from '@/components/ui/form/button';
+import { FormAlert } from '@/components/ui/form/form-alert';
 import { conflictsOf, errorCode, lessonErrorText } from '@/features/schedule/api';
 import { ConflictNotice } from '@/features/schedule/ConflictNotice';
 import { t } from '@/lib/i18n';

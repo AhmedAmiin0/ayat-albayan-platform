@@ -1,8 +1,8 @@
 import { GOOGLE_WINDOW_DAYS } from '@ab/shared';
 import { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Field } from '@/components/ui/field';
-import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/form/button';
+import { Field } from '@/components/ui/form/field';
+import { Input } from '@/components/ui/form/input';
 import { t } from '@/lib/i18n';
 import { fill } from './google-format';
 import { parseWindowDays } from './google-input';

@@ -1,4 +1,4 @@
-import { EmptyState } from '@/components/ui/empty-state';
+import { EmptyState } from '@/components/ui/display/empty-state';
 import { t } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
 import { leadGridClass, LeadListItem } from './LeadListItem';

@@ -1,6 +1,6 @@
 import { studentStatusStyle, type SalesTeacherStudent } from '@ab/shared';
-import { Ltr } from '@/components/ui/ltr';
-import { StatusChip } from '@/components/ui/status-chip';
+import { Ltr } from '@/components/ui/display/ltr';
+import { StatusChip } from '@/components/ui/display/status-chip';
 import { t } from '@/lib/i18n';
 import { riyadhWhen } from './teacher-view';
 

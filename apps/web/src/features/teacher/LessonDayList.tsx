@@ -1,5 +1,5 @@
 import type { LessonView } from '@ab/shared';
-import { EmptyState } from '@/components/ui/empty-state';
+import { EmptyState } from '@/components/ui/display/empty-state';
 import { byLocalDay } from '@/features/schedule/slots';
 import { dayMonthLabel, weekdayOf } from '@/features/schedule/tz';
 import { t } from '@/lib/i18n';

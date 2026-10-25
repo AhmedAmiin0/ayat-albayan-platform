@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import type { ReactElement } from 'react';
-import { StatusChip } from '@/components/ui/status-chip';
+import { StatusChip } from '@/components/ui/display/status-chip';
 import { googleStatusQuery } from '@/features/google-sync/google-api';
 import { fill } from '@/features/google-sync/google-format';
 import { integrationsQuery } from '@/features/integrations/integrations-api';

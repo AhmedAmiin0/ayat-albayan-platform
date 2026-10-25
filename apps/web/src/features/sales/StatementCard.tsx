@@ -1,5 +1,5 @@
 import { payoutStatusStyle, type AssistantStatementLineView, type AssistantStatementView } from '@ab/shared';
-import { StatusChip } from '@/components/ui/status-chip';
+import { StatusChip } from '@/components/ui/display/status-chip';
 import { formatDate } from '@/features/leads/format';
 import { monthLabel } from '@/features/payouts/MonthSelect';
 import { Amount } from '@/features/subscriptions/Amount';

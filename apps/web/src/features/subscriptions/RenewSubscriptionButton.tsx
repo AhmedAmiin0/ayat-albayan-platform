@@ -1,8 +1,8 @@
 import { isPackageEnded, renewalPricing, type StudentStatus } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Toast } from '@/components/ui/toast';
+import { Button } from '@/components/ui/form/button';
+import { Toast } from '@/components/ui/overlay/toast';
 import { t } from '@/lib/i18n';
 import { studentBalanceQuery } from './api';
 import { CreateSubscriptionDialog } from './CreateSubscriptionDialog';

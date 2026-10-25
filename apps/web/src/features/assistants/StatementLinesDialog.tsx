@@ -1,6 +1,6 @@
-import { Button } from '@/components/ui/button';
-import { Dialog } from '@/components/ui/dialog';
-import { Ltr } from '@/components/ui/ltr';
+import { Button } from '@/components/ui/form/button';
+import { Dialog } from '@/components/ui/overlay/dialog';
+import { Ltr } from '@/components/ui/display/ltr';
 import { monthLabel } from '@/features/payouts/MonthSelect';
 import { Amount } from '@/features/subscriptions/Amount';
 import { t } from '@/lib/i18n';

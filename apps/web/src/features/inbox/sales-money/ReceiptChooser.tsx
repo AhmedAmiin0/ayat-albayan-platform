@@ -1,6 +1,6 @@
 import { PAYMENT_ATTACHMENTS_MAX } from '@ab/shared';
 import { useState } from 'react';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/ui/form/button';
 import { AttachmentItems } from '@/features/payments/AttachmentItems';
 import { AttachmentPicker } from '@/features/payments/AttachmentPicker';
 import { addAttachments, type AttachmentProblem } from '@/features/payments/attachments';

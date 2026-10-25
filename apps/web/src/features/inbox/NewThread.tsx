@@ -1,6 +1,6 @@
 import { formatPhone, type ThreadLesson } from '@ab/shared';
-import { EmptyState } from '@/components/ui/empty-state';
-import { Ltr } from '@/components/ui/ltr';
+import { EmptyState } from '@/components/ui/display/empty-state';
+import { Ltr } from '@/components/ui/display/ltr';
 import { t } from '@/lib/i18n';
 import { noneAllowedText, useNoneAllowed } from './allowed-templates';
 import { useInboxMode } from './mode';

@@ -1,6 +1,6 @@
 import { chatOpen, type RoomJoinResult } from '@ab/shared';
 import { useState } from 'react';
-import { FormAlert } from '@/components/ui/form-alert';
+import { FormAlert } from '@/components/ui/form/form-alert';
 import { t } from '@/lib/i18n';
 import { BoardStage } from './board/BoardStage';
 import { useBoard } from './board/use-board';

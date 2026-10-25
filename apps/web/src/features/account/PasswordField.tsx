@@ -1,4 +1,4 @@
-import { Field } from '@/components/ui/field';
+import { Field } from '@/components/ui/form/field';
 import { PasswordInput } from '@/features/auth/PasswordInput';
 import { t } from '@/lib/i18n';
 

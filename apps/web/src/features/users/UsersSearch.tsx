@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import { Icon } from '@/components/ui/icon';
-import { Input } from '@/components/ui/input';
+import { Icon } from '@/components/ui/display/icon';
+import { Input } from '@/components/ui/form/input';
 import { t } from '@/lib/i18n';
 
 export interface UsersSearchProps {

@@ -1,8 +1,8 @@
 import { LEAD_STATUSES, type LeadStatus } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useId, useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Select } from '@/components/ui/select';
+import { Button } from '@/components/ui/form/button';
+import { Select } from '@/components/ui/form/select';
 import { errorCode } from '@/features/schedule/api';
 import { t } from '@/lib/i18n';
 import { changeLeadStatus, type InboxLead } from './api';

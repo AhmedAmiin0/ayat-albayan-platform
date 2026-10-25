@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { useRouterState } from '@tanstack/react-router';
 import type { ReactNode } from 'react';
-import { RunningHead } from '@/components/ui/running-head';
+import { RunningHead } from '@/components/ui/layout/running-head';
 import { meQuery } from '@/features/auth/me';
 import { cn } from '@/lib/utils';
 import { INBOX_PAGE_TOPBAR, isInboxPath, WIDE_PAGE_TOPBAR } from './inbox-route';

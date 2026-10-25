@@ -1,9 +1,9 @@
 import type { NotificationAudience } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { NuqtaGlyph } from '@/components/ui/nuqta-glyph';
-import { Skeleton } from '@/components/ui/skeleton';
+import { Button } from '@/components/ui/form/button';
+import { NuqtaGlyph } from '@/components/ui/display/nuqta-glyph';
+import { Skeleton } from '@/components/ui/display/skeleton';
 import { usePermissions } from '@/features/auth/use-permissions';
 import { t } from '@/lib/i18n';
 import { settingsQuery } from '@/lib/settings-api';

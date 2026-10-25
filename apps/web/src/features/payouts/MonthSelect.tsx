@@ -1,6 +1,6 @@
 import { intlLocale } from '@ab/shared';
-import { Field } from '@/components/ui/field';
-import { Select } from '@/components/ui/select';
+import { Field } from '@/components/ui/form/field';
+import { Select } from '@/components/ui/form/select';
 import { locale } from '@/lib/locale';
 
 const LABEL = new Intl.DateTimeFormat(intlLocale(locale), { month: 'long', year: 'numeric', timeZone: 'UTC' });

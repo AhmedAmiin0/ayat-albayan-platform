@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { Link } from '@tanstack/react-router';
-import { FormAlert } from '@/components/ui/form-alert';
+import { FormAlert } from '@/components/ui/form/form-alert';
 import { formatDate } from '@/features/leads/format';
 import { Amount } from '@/features/subscriptions/Amount';
 import { t } from '@/lib/i18n';

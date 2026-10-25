@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { Cartouche } from '@/components/ui/cartouche';
-import { PageHead } from '@/components/ui/page';
+import { Cartouche } from '@/components/ui/display/cartouche';
+import { PageHead } from '@/components/ui/layout/page';
 import { t } from '@/lib/i18n';
 import type { BookSearch } from './api';
 import { LeadBooking, StudentBooking } from './booking-entries';

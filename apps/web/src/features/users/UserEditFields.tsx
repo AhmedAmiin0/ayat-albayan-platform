@@ -1,8 +1,8 @@
 import type { UserRoleOption } from '@ab/shared';
-import { Field } from '@/components/ui/field';
-import { Input } from '@/components/ui/input';
-import { Select } from '@/components/ui/select';
-import { TimeZoneSelect } from '@/components/ui/time-zone-select';
+import { Field } from '@/components/ui/form/field';
+import { Input } from '@/components/ui/form/input';
+import { Select } from '@/components/ui/form/select';
+import { TimeZoneSelect } from '@/components/ui/form/time-zone-select';
 import { t } from '@/lib/i18n';
 import type { EditForm } from './edit-form';
 import { RolePicker } from './RolePicker';

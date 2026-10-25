@@ -1,12 +1,12 @@
 import type { ThreadPeople } from '@ab/shared';
-import { railXl } from '@/components/ui/rail';
+import { railXl } from '@/components/ui/layout/rail';
 import { cn } from '@/lib/utils';
 import { useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Ltr } from '@/components/ui/ltr';
-import { StatusChip } from '@/components/ui/status-chip';
-import { Toast } from '@/components/ui/toast';
+import { Button } from '@/components/ui/form/button';
+import { Ltr } from '@/components/ui/display/ltr';
+import { StatusChip } from '@/components/ui/display/status-chip';
+import { Toast } from '@/components/ui/overlay/toast';
 import { CreateSubscriptionDialog } from '@/features/subscriptions/CreateSubscriptionDialog';
 import type { PickedStudent } from '@/features/subscriptions/StudentPicker';
 import { t } from '@/lib/i18n';

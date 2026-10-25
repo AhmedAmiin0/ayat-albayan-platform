@@ -1,9 +1,9 @@
 import { useQuery } from '@tanstack/react-query';
 import { useId } from 'react';
-import { Button } from '@/components/ui/button';
-import { FormAlert } from '@/components/ui/form-alert';
-import { Icon } from '@/components/ui/icon';
-import { Skeleton } from '@/components/ui/skeleton';
+import { Button } from '@/components/ui/form/button';
+import { FormAlert } from '@/components/ui/form/form-alert';
+import { Icon } from '@/components/ui/display/icon';
+import { Skeleton } from '@/components/ui/display/skeleton';
 import { usePermissions } from '@/features/auth/use-permissions';
 import { savedRepliesQuery } from '@/features/inbox/saved-replies/api';
 import { useReplyDialogs } from '@/features/inbox/saved-replies/use-reply-dialogs';

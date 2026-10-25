@@ -1,6 +1,6 @@
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
-import { SearchInput } from '@/components/ui/search-input';
+import { SearchInput } from '@/components/ui/form/search-input';
 import { t } from '@/lib/i18n';
 import { useDebounced } from '../pricing/use-debounced';
 import { BlockSkeleton, GoogleBlock, LoadError } from './GoogleBlock';

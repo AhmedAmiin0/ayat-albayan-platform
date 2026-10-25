@@ -1,6 +1,6 @@
 import { useId, useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { controlClass, Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/form/button';
+import { controlClass, Input } from '@/components/ui/form/input';
 import { t } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
 import { parseDraft, type CustomDraft, type CustomDraftErrors } from './custom-form';

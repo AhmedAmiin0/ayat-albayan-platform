@@ -1,6 +1,6 @@
 import { formatPhone, normalizePhone } from '@ab/shared';
-import { HighlightDiff } from '@/components/ui/highlight-diff';
-import { Ltr } from '@/components/ui/ltr';
+import { HighlightDiff } from '@/components/ui/display/highlight-diff';
+import { Ltr } from '@/components/ui/display/ltr';
 import { t } from '@/lib/i18n';
 import { teacherLabel } from '@/lib/teacher-label';
 import { nameMatch, textMatch } from './compare';

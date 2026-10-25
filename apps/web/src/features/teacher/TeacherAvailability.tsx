@@ -1,7 +1,7 @@
 import type { TeacherMe } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
-import { FormAlert } from '@/components/ui/form-alert';
-import { ListSkeleton } from '@/components/ui/skeleton';
+import { FormAlert } from '@/components/ui/form/form-alert';
+import { ListSkeleton } from '@/components/ui/display/skeleton';
 import { availabilityQuery } from '@/features/teachers/api';
 import { AvailabilityGrid } from '@/features/teachers/AvailabilityGrid';
 import { gridTz } from '@/features/teachers/grid';

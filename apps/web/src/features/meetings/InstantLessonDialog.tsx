@@ -1,12 +1,12 @@
 import { DURATIONS, type Duration } from '@ab/shared';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Dialog } from '@/components/ui/dialog';
-import { Field } from '@/components/ui/field';
-import { FormAlert } from '@/components/ui/form-alert';
-import { Input } from '@/components/ui/input';
-import { Select } from '@/components/ui/select';
+import { Button } from '@/components/ui/form/button';
+import { Dialog } from '@/components/ui/overlay/dialog';
+import { Field } from '@/components/ui/form/field';
+import { FormAlert } from '@/components/ui/form/form-alert';
+import { Input } from '@/components/ui/form/input';
+import { Select } from '@/components/ui/form/select';
 import { bookingTeachersQuery } from '@/features/booking/api';
 import { startInstant } from '@/features/classroom/meetings-api';
 import { conflictText } from '@/features/schedule/ConflictNotice';

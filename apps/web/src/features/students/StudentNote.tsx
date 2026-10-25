@@ -1,4 +1,4 @@
-import { NuqtaGlyph } from '@/components/ui/nuqta-glyph';
+import { NuqtaGlyph } from '@/components/ui/display/nuqta-glyph';
 import { cn } from '@/lib/utils';
 
 type StudentNoteProps = { text: string | null; className?: string };

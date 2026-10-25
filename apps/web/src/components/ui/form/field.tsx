@@ -1,7 +1,7 @@
 import { useId, type ReactNode } from 'react';
 import { Label, RequiredMark } from './label';
-import { isolateLtr } from './ltr';
-import { NuqtaGlyph } from './nuqta-glyph';
+import { isolateLtr } from '../display/ltr';
+import { NuqtaGlyph } from '../display/nuqta-glyph';
 
 /** Spread onto the control: links it to the label, hint and error. */
 export interface FieldControlProps {

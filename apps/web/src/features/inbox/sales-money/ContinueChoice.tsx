@@ -1,7 +1,7 @@
 import { continueFits, type SalesCourseView } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
-import { Button } from '@/components/ui/button';
-import { FormAlert } from '@/components/ui/form-alert';
+import { Button } from '@/components/ui/form/button';
+import { FormAlert } from '@/components/ui/form/form-alert';
 import { bookingTeachersQuery } from '@/features/booking/api';
 import type { BookingDraft } from '@/features/booking/draft';
 import { t } from '@/lib/i18n';

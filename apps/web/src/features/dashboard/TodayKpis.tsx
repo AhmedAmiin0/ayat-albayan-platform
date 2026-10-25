@@ -1,6 +1,6 @@
 import { Link } from '@tanstack/react-router';
 import type { ReactNode } from 'react';
-import { Skeleton } from '@/components/ui/skeleton';
+import { Skeleton } from '@/components/ui/display/skeleton';
 import { t } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
 

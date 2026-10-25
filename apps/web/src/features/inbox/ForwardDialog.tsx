@@ -1,10 +1,10 @@
 import { FORWARD_MAX_TARGETS, type ForwardResponse, type MessageView, type ThreadView } from '@ab/shared';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useRef, useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Dialog } from '@/components/ui/dialog';
-import { FormAlert } from '@/components/ui/form-alert';
-import { SearchInput } from '@/components/ui/search-input';
+import { Button } from '@/components/ui/form/button';
+import { Dialog } from '@/components/ui/overlay/dialog';
+import { FormAlert } from '@/components/ui/form/form-alert';
+import { SearchInput } from '@/components/ui/form/search-input';
 import { useDebounced } from '@/features/pricing/use-debounced';
 import { t } from '@/lib/i18n';
 import { threadsQuery } from './api';

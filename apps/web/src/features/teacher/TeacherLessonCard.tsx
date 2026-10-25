@@ -1,7 +1,7 @@
 import { clockTime, isOpenLesson, lessonStatusStyle, subscriptionStatusStyle, type LessonView } from '@ab/shared';
-import { buttonVariants } from '@/components/ui/button';
-import { StatusChip } from '@/components/ui/status-chip';
-import { tzCity } from '@/components/ui/time-zone-select';
+import { buttonVariants } from '@/components/ui/form/button';
+import { StatusChip } from '@/components/ui/display/status-chip';
+import { tzCity } from '@/components/ui/form/time-zone-select';
 import { CopyLinkButton } from '@/features/classroom/CopyLinkButton';
 import { StaffJoinButton } from '@/features/classroom/StaffJoinButton';
 import { LessonReportLinks } from '@/features/reports/LessonReportLinks';

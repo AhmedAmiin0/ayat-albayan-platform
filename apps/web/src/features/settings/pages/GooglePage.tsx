@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Toast } from '@/components/ui/toast';
+import { Toast } from '@/components/ui/overlay/toast';
 import { GoogleSection } from '@/features/google-sync/GoogleSection';
 import { t } from '@/lib/i18n';
 import { ModuleHead } from './ModuleHead';

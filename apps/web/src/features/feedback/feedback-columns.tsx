@@ -1,8 +1,8 @@
 import { createColumnHelper } from '@tanstack/react-table';
 import type { DataTableFeatures, FilterOption } from '@/components/DataTable';
-import { Ltr } from '@/components/ui/ltr';
-import { NuqtaGlyph } from '@/components/ui/nuqta-glyph';
-import { StatusChip } from '@/components/ui/status-chip';
+import { Ltr } from '@/components/ui/display/ltr';
+import { NuqtaGlyph } from '@/components/ui/display/nuqta-glyph';
+import { StatusChip } from '@/components/ui/display/status-chip';
 import { t } from '@/lib/i18n';
 import { feedbackDate } from './format';
 import { kindOptions, quickRatingOptions, ratingOptions, recommendOptions } from './filter-options';

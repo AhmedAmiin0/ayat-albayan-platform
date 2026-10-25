@@ -1,5 +1,5 @@
 import type { LessonView } from '@ab/shared';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/ui/form/button';
 import { t } from '@/lib/i18n';
 import { wasText } from './edit-time-text';
 import { timeEditInfo, timeEditMode } from './edit-time.contract';

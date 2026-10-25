@@ -1,8 +1,8 @@
 import type { LineHealthView, NotificationEntryView } from '@ab/shared';
 import { useState } from 'react';
-import { ScrollX } from '@/components/ui/scroll-x';
-import { Tabs, tabIds } from '@/components/ui/tabs';
-import { usePhone } from '@/components/ui/use-narrow';
+import { ScrollX } from '@/components/ui/layout/scroll-x';
+import { Tabs, tabIds } from '@/components/ui/layout/tabs';
+import { usePhone } from '@/components/ui/layout/use-narrow';
 import { t } from '@/lib/i18n';
 import { audienceTabs, rowsOf, type AudienceTab } from '../notification-catalogue/catalogue-tabs';
 import { ManualTable } from './ManualTable';

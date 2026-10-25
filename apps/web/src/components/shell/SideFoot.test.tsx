@@ -10,7 +10,7 @@ vi.mock('@/lib/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 
 vi.mock('./LogoutButton', () => ({ LogoutButton: () => <button type="button">out</button> }));
 vi.mock('./LanguageSwitch', () => ({ LanguageSwitch: () => <button type="button">lang</button> }));
-vi.mock('@/components/ui/theme-toggle', () => ({ ThemeToggle: () => <button type="button">theme</button> }));
+vi.mock('@/components/ui/layout/theme-toggle', () => ({ ThemeToggle: () => <button type="button">theme</button> }));
 
 // The «حسابي» chip reads ['me','profile']; here it fails, and the foot still shows the email.
 const render = (ui: ReactElement) =>

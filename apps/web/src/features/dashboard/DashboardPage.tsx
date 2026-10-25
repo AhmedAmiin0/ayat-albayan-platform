@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
-import { Cartouche } from '@/components/ui/cartouche';
-import { FormAlert } from '@/components/ui/form-alert';
-import { PageHead } from '@/components/ui/page';
+import { Cartouche } from '@/components/ui/display/cartouche';
+import { FormAlert } from '@/components/ui/form/form-alert';
+import { PageHead } from '@/components/ui/layout/page';
 import { adminDayQuery, dayAround } from '@/features/classroom/api';
 import { useNow } from '@/features/classroom/use-now';
 import { ExportsPanel } from '@/features/exports/ExportsPanel';

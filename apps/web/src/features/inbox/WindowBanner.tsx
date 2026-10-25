@@ -1,6 +1,6 @@
 import type { ThreadView } from '@ab/shared';
 import { useEffect, useState } from 'react';
-import { StatusChip } from '@/components/ui/status-chip';
+import { StatusChip } from '@/components/ui/display/status-chip';
 import { useInboxMode } from './mode';
 import { windowText } from './window-state';
 

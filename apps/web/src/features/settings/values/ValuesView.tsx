@@ -2,7 +2,7 @@ import { SETTING_DEFAULTS } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { useState, type ReactNode } from 'react';
 import { settingText } from '@/components/settings/setting-text';
-import { Toast } from '@/components/ui/toast';
+import { Toast } from '@/components/ui/overlay/toast';
 import { usePermissions } from '@/features/auth/use-permissions';
 import { CustomDialogs } from '@/features/custom-config/CustomDialogs';
 import { useCustomValues } from '@/features/custom-config/use-custom-values';

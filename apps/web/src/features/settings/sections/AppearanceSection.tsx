@@ -1,7 +1,7 @@
 import { Section } from '@/components/settings/Section';
 import { matchesText } from '@/components/settings/settings-search';
 import { useSettingsView } from '@/components/settings/settings-view';
-import { ThemeToggle } from '@/components/ui/theme-toggle';
+import { ThemeToggle } from '@/components/ui/layout/theme-toggle';
 import { t } from '@/lib/i18n';
 
 /** Does the search match the theme row's words? */

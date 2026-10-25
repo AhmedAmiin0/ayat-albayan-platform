@@ -1,7 +1,7 @@
 import { chatListNameSchema, CHAT_LIST_NAME_MAX } from '@ab/shared';
 import { useState, type FormEvent } from 'react';
-import { Field } from '@/components/ui/field';
-import { Input } from '@/components/ui/input';
+import { Field } from '@/components/ui/form/field';
+import { Input } from '@/components/ui/form/input';
 import { t } from '@/lib/i18n';
 
 export interface ListNameFormProps {

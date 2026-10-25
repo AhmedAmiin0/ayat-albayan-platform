@@ -1,10 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { FormAlert } from '@/components/ui/form-alert';
-import { NuqtaGlyph } from '@/components/ui/nuqta-glyph';
-import { Skeleton } from '@/components/ui/skeleton';
-import { Toast } from '@/components/ui/toast';
+import { Button } from '@/components/ui/form/button';
+import { FormAlert } from '@/components/ui/form/form-alert';
+import { NuqtaGlyph } from '@/components/ui/display/nuqta-glyph';
+import { Skeleton } from '@/components/ui/display/skeleton';
+import { Toast } from '@/components/ui/overlay/toast';
 import { t } from '@/lib/i18n';
 import { AccountHead } from './AccountHead';
 import { profileQuery } from './api';

@@ -1,4 +1,4 @@
-import { Button, type ButtonProps } from '@/components/ui/button';
+import { Button, type ButtonProps } from '@/components/ui/form/button';
 import { cn } from '@/lib/utils';
 import { RoomIcon, type RoomIconName } from './room-icons';
 

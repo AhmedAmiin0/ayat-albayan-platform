@@ -1,8 +1,8 @@
 import { ACCOUNT_NAME_MAX, ACCOUNT_NAME_MIN } from '@ab/shared';
 import { useState, type FormEvent } from 'react';
-import { Field } from '@/components/ui/field';
-import { FormAlert } from '@/components/ui/form-alert';
-import { Input } from '@/components/ui/input';
+import { Field } from '@/components/ui/form/field';
+import { FormAlert } from '@/components/ui/form/form-alert';
+import { Input } from '@/components/ui/form/input';
 import { t } from '@/lib/i18n';
 import { nameErrors } from './account-validation';
 import { AccountSection } from './AccountSection';

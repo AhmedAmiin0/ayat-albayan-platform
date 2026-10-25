@@ -1,8 +1,8 @@
 import { CURRENCY_ISOS, PAYMENT_METHODS, type PaymentMethod } from '@ab/shared';
 import { CheckField } from '@/components/settings/CheckField';
-import { Field } from '@/components/ui/field';
-import { Input } from '@/components/ui/input';
-import { Select } from '@/components/ui/select';
+import { Field } from '@/components/ui/form/field';
+import { Input } from '@/components/ui/form/input';
+import { Select } from '@/components/ui/form/select';
 import { currencySymbol } from '@/features/subscriptions/format';
 import { t } from '@/lib/i18n';
 import { categoryLabel, type ExpenseCategoryView } from './api';

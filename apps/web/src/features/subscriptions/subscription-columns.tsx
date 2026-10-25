@@ -1,9 +1,9 @@
 import { PACKAGE_SIZES, paymentState, subscriptionStatusStyle } from '@ab/shared';
 import { createColumnHelper } from '@tanstack/react-table';
 import type { DataTableFeatures } from '@/components/DataTable';
-import { Button } from '@/components/ui/button';
-import { Ltr } from '@/components/ui/ltr';
-import { StatusChip } from '@/components/ui/status-chip';
+import { Button } from '@/components/ui/form/button';
+import { Ltr } from '@/components/ui/display/ltr';
+import { StatusChip } from '@/components/ui/display/status-chip';
 import { t } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
 import { Amount } from './Amount';

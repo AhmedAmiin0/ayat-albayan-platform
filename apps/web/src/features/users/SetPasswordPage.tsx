@@ -1,10 +1,10 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from '@tanstack/react-router';
 import { useEffect, useState, type FormEvent } from 'react';
-import { Button } from '@/components/ui/button';
-import { Cartouche } from '@/components/ui/cartouche';
-import { Field } from '@/components/ui/field';
-import { FormAlert } from '@/components/ui/form-alert';
+import { Button } from '@/components/ui/form/button';
+import { Cartouche } from '@/components/ui/display/cartouche';
+import { Field } from '@/components/ui/form/field';
+import { FormAlert } from '@/components/ui/form/form-alert';
 import { PasswordInput } from '@/features/auth/PasswordInput';
 import { t } from '@/lib/i18n';
 import { hasRecoverySession, savePassword, setPasswordError } from './set-password';

@@ -1,11 +1,11 @@
 import type { StudentRecordingView, UserRole } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { EmptyState } from '@/components/ui/empty-state';
-import { FormAlert } from '@/components/ui/form-alert';
-import { Pager } from '@/components/ui/pager';
-import { ListSkeleton } from '@/components/ui/skeleton';
+import { Button } from '@/components/ui/form/button';
+import { EmptyState } from '@/components/ui/display/empty-state';
+import { FormAlert } from '@/components/ui/form/form-alert';
+import { Pager } from '@/components/ui/layout/pager';
+import { ListSkeleton } from '@/components/ui/display/skeleton';
 import { ApiError } from '@/lib/api';
 import { t } from '@/lib/i18n';
 import { teacherLabel } from '@/lib/teacher-label';

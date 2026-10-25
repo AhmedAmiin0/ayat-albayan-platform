@@ -1,8 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
 import { LanguageSwitch } from '@/components/shell/LanguageSwitch';
-import { Cartouche } from '@/components/ui/cartouche';
-import { FormAlert } from '@/components/ui/form-alert';
-import { Logo } from '@/components/ui/mark';
+import { Cartouche } from '@/components/ui/display/cartouche';
+import { FormAlert } from '@/components/ui/form/form-alert';
+import { Logo } from '@/components/ui/display/mark';
 import { GuestJoinPage } from '@/features/classroom/GuestJoinPage';
 import { viewerTz } from '@/features/classroom/student-link';
 import type { RoomClient } from '@/features/classroom/room-types';

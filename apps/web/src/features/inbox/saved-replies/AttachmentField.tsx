@@ -1,9 +1,9 @@
 import { chatFileProblem, CHAT_SEND_MIMES } from '@ab/shared';
 import { useMutation } from '@tanstack/react-query';
 import { useRef } from 'react';
-import { Button } from '@/components/ui/button';
-import { FormAlert } from '@/components/ui/form-alert';
-import { Icon } from '@/components/ui/icon';
+import { Button } from '@/components/ui/form/button';
+import { FormAlert } from '@/components/ui/form/form-alert';
+import { Icon } from '@/components/ui/display/icon';
 import { sizeText } from '@/features/students/recording-format';
 import { t } from '@/lib/i18n';
 import { useUploadMaxBytes } from '@/lib/public-config';

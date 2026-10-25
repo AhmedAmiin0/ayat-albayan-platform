@@ -1,10 +1,10 @@
 import type { SlotsResponse, SlotView } from '@ab/shared';
 import { useQuery, type UseQueryResult } from '@tanstack/react-query';
 import { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { FormAlert } from '@/components/ui/form-alert';
-import { Icon } from '@/components/ui/icon';
-import { tzCity } from '@/components/ui/time-zone-select';
+import { Button } from '@/components/ui/form/button';
+import { FormAlert } from '@/components/ui/form/form-alert';
+import { Icon } from '@/components/ui/display/icon';
+import { tzCity } from '@/components/ui/form/time-zone-select';
 import { useBookingMode } from '@/features/booking/mode';
 import { t } from '@/lib/i18n';
 import { slotsQuery } from './api';

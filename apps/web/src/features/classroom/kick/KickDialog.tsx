@@ -1,6 +1,6 @@
-import { Button } from '@/components/ui/button';
-import { Dialog } from '@/components/ui/dialog';
-import { Toast } from '@/components/ui/toast';
+import { Button } from '@/components/ui/form/button';
+import { Dialog } from '@/components/ui/overlay/dialog';
+import { Toast } from '@/components/ui/overlay/toast';
 import { t } from '@/lib/i18n';
 import type { KickController } from './use-kick';
 

@@ -1,7 +1,7 @@
 import type { GoogleFound, GoogleTeacherMapRow } from '@ab/shared';
 import { useId } from 'react';
-import { Select } from '@/components/ui/select';
-import { StatusChip } from '@/components/ui/status-chip';
+import { Select } from '@/components/ui/form/select';
+import { StatusChip } from '@/components/ui/display/status-chip';
 import { t } from '@/lib/i18n';
 import { fill } from './google-format';
 import { NO_CALENDAR } from './google-input';

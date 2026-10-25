@@ -1,5 +1,5 @@
 import { isRunningLesson, type SalesScheduleLesson } from '@ab/shared';
-import { StatusChip } from '@/components/ui/status-chip';
+import { StatusChip } from '@/components/ui/display/status-chip';
 import { EnterButton } from '@/features/classroom/JoinButton';
 import { LessonChip } from '@/features/schedule/LessonChip';
 import { t } from '@/lib/i18n';

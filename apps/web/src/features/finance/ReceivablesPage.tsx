@@ -1,11 +1,11 @@
 import { AGING_BUCKETS } from '@ab/shared';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { DataTable } from '@/components/DataTable';
-import { Button } from '@/components/ui/button';
-import { Cartouche } from '@/components/ui/cartouche';
-import { EmptyState } from '@/components/ui/empty-state';
-import { FormAlert } from '@/components/ui/form-alert';
-import { PageHead } from '@/components/ui/page';
+import { Button } from '@/components/ui/form/button';
+import { Cartouche } from '@/components/ui/display/cartouche';
+import { EmptyState } from '@/components/ui/display/empty-state';
+import { FormAlert } from '@/components/ui/form/form-alert';
+import { PageHead } from '@/components/ui/layout/page';
 import { downloadCsv } from '@/features/exports/api';
 import { Amount } from '@/features/subscriptions/Amount';
 import { t } from '@/lib/i18n';

@@ -1,6 +1,6 @@
 import { GRADES, gradeStyle, type Grade } from '@ab/shared';
-import { RequiredMark } from '@/components/ui/label';
-import { GradePips } from '@/components/ui/nuqta-glyph';
+import { RequiredMark } from '@/components/ui/form/label';
+import { GradePips } from '@/components/ui/display/nuqta-glyph';
 import { t } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
 

@@ -1,8 +1,8 @@
 import { counted } from '@ab/shared';
 import { useMemo, useState } from 'react';
-import { Cartouche } from '@/components/ui/cartouche';
-import { PageHead } from '@/components/ui/page';
-import { SearchInput } from '@/components/ui/search-input';
+import { Cartouche } from '@/components/ui/display/cartouche';
+import { PageHead } from '@/components/ui/layout/page';
+import { SearchInput } from '@/components/ui/form/search-input';
 import { t } from '@/lib/i18n';
 import { HUB_DESTINATIONS } from './hub-paths';
 import { searchHub } from './hub-search';

@@ -1,9 +1,9 @@
 import type { SavedReply } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { Button } from '@/components/ui/button';
-import { FormAlert } from '@/components/ui/form-alert';
-import { Icon } from '@/components/ui/icon';
-import { IconButton } from '@/components/ui/icon-button';
+import { Button } from '@/components/ui/form/button';
+import { FormAlert } from '@/components/ui/form/form-alert';
+import { Icon } from '@/components/ui/display/icon';
+import { IconButton } from '@/components/ui/form/icon-button';
 import { moveReply, refreshReplies, replyErrorText, SAVED_REPLIES_KEY } from '@/features/inbox/saved-replies/api';
 import { t } from '@/lib/i18n';
 import { cn } from '@/lib/utils';

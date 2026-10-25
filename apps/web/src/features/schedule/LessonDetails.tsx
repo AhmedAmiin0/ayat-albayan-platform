@@ -1,8 +1,8 @@
 import { lessonStatusStyle, lessonWhenText, subscriptionStatusStyle, type LessonView } from '@ab/shared';
 import type { ReactNode } from 'react';
-import { buttonVariants } from '@/components/ui/button';
-import { Ltr } from '@/components/ui/ltr';
-import { StatusChip } from '@/components/ui/status-chip';
+import { buttonVariants } from '@/components/ui/form/button';
+import { Ltr } from '@/components/ui/display/ltr';
+import { StatusChip } from '@/components/ui/display/status-chip';
 import { conflictText } from './ConflictNotice';
 import { t } from '@/lib/i18n';
 import { usePlatformClassroom } from '@/lib/public-config';

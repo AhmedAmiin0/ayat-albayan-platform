@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { SegmentedControl, type SegmentOption } from '@/components/ui/segmented-control';
+import { SegmentedControl, type SegmentOption } from '@/components/ui/form/segmented-control';
 
 export interface SegmentStepProps<V extends string> {
   /** Shown above the group and names it for assistive tech. */

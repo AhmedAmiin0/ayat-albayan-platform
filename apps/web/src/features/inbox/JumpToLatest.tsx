@@ -1,4 +1,4 @@
-import { Icon } from '@/components/ui/icon';
+import { Icon } from '@/components/ui/display/icon';
 import { t } from '@/lib/i18n';
 
 export interface JumpToLatestProps {

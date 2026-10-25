@@ -1,7 +1,7 @@
 import { feedbackEligible, type LessonView } from '@ab/shared';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { Button } from '@/components/ui/button';
-import { FormAlert } from '@/components/ui/form-alert';
+import { Button } from '@/components/ui/form/button';
+import { FormAlert } from '@/components/ui/form/form-alert';
 import { templatesQuery } from '@/features/templates/api';
 import { t } from '@/lib/i18n';
 import { requestErrorText, requestFeedback } from './api';

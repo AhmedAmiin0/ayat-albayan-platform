@@ -1,9 +1,9 @@
 import { useQuery } from '@tanstack/react-query';
 import { Link } from '@tanstack/react-router';
-import { Cartouche } from '@/components/ui/cartouche';
-import { FormAlert } from '@/components/ui/form-alert';
-import { PageHead } from '@/components/ui/page';
-import { ListSkeleton } from '@/components/ui/skeleton';
+import { Cartouche } from '@/components/ui/display/cartouche';
+import { FormAlert } from '@/components/ui/form/form-alert';
+import { PageHead } from '@/components/ui/layout/page';
+import { ListSkeleton } from '@/components/ui/display/skeleton';
 import { apiErrorText } from '@/features/subscriptions/format';
 import { t } from '@/lib/i18n';
 import { balanceQuery, type Scope } from './api';

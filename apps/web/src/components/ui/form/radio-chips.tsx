@@ -1,4 +1,4 @@
-import { RequiredMark } from '@/components/ui/label';
+import { RequiredMark } from '@/components/ui/form/label';
 import { cn } from '@/lib/utils';
 
 export interface RadioChipsProps<V extends string> {

@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { useId } from 'react';
-import { RadioChips } from '@/components/ui/radio-chips';
+import { RadioChips } from '@/components/ui/form/radio-chips';
 import { t } from '@/lib/i18n';
 import { publicConfigQuery } from '@/lib/public-config';
 import type { Teacher } from './api';

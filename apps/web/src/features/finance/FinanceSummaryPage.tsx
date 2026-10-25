@@ -1,10 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
-import { Cartouche } from '@/components/ui/cartouche';
-import { Field } from '@/components/ui/field';
-import { FormAlert } from '@/components/ui/form-alert';
-import { PageHead } from '@/components/ui/page';
-import { Select } from '@/components/ui/select';
+import { Cartouche } from '@/components/ui/display/cartouche';
+import { Field } from '@/components/ui/form/field';
+import { FormAlert } from '@/components/ui/form/form-alert';
+import { PageHead } from '@/components/ui/layout/page';
+import { Select } from '@/components/ui/form/select';
 import { summaryQuery } from '@/features/dashboard/api';
 import { FinanceByMonth } from '@/features/dashboard/FinanceByMonth';
 import { FinanceTotals } from '@/features/dashboard/FinanceTotals';

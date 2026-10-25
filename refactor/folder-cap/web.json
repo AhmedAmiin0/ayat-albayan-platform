@@ -7,10 +7,6 @@
     "files": 19,
     "dirs": 0
   },
-  "apps/web/src/components/ui": {
-    "files": 41,
-    "dirs": 0
-  },
   "apps/web/src/features": {
     "files": 0,
     "dirs": 40

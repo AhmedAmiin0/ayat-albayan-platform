@@ -2,8 +2,8 @@ import { TEACHER_REPORT_FILTER_KEYS, TEACHER_REPORT_SORT_KEYS } from '@ab/shared
 import { useQuery } from '@tanstack/react-query';
 import { useMemo } from 'react';
 import { DataTable } from '@/components/DataTable';
-import { FormAlert } from '@/components/ui/form-alert';
-import { Pager } from '@/components/ui/pager';
+import { FormAlert } from '@/components/ui/form/form-alert';
+import { Pager } from '@/components/ui/layout/pager';
 import { t } from '@/lib/i18n';
 import {
   serverListProps,

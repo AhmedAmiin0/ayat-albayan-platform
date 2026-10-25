@@ -1,6 +1,6 @@
 import { LEAD_STATUSES, type LeadStatus } from '@ab/shared';
-import { Tabs, type TabOption } from '@/components/ui/tabs';
-import { paneScroll } from '@/components/ui/rail';
+import { Tabs, type TabOption } from '@/components/ui/layout/tabs';
+import { paneScroll } from '@/components/ui/layout/rail';
 import { t } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
 

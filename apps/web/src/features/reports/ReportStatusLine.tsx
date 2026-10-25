@@ -1,6 +1,6 @@
 import { clockTime, lessonWhenText, pdfStatusStyle, reportStatusStyle, type ReportView } from '@ab/shared';
-import { NuqtaGlyph } from '@/components/ui/nuqta-glyph';
-import { StatusChip } from '@/components/ui/status-chip';
+import { NuqtaGlyph } from '@/components/ui/display/nuqta-glyph';
+import { StatusChip } from '@/components/ui/display/status-chip';
 import { t } from '@/lib/i18n';
 import { locale } from '@/lib/locale';
 import type { SaveState } from './use-autosave';

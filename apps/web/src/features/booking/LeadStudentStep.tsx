@@ -1,8 +1,8 @@
-import { Field } from '@/components/ui/field';
-import { Input } from '@/components/ui/input';
-import { RequiredLegend } from '@/components/ui/label';
-import { PhonePreview } from '@/components/ui/phone-preview';
-import { TimeZoneSelect } from '@/components/ui/time-zone-select';
+import { Field } from '@/components/ui/form/field';
+import { Input } from '@/components/ui/form/input';
+import { RequiredLegend } from '@/components/ui/form/label';
+import { PhonePreview } from '@/components/ui/form/phone-preview';
+import { TimeZoneSelect } from '@/components/ui/form/time-zone-select';
 import { SourceField } from '@/features/guardians/SourceField';
 import { ageError, phoneError } from '@/features/students/create-student';
 import { AgeField, GenderField } from '@/features/students/FactFields';

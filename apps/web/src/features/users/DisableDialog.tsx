@@ -1,11 +1,11 @@
 import type { UserDetail } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useId, useState, type FormEvent } from 'react';
-import { Button } from '@/components/ui/button';
-import { Dialog } from '@/components/ui/dialog';
-import { Field } from '@/components/ui/field';
-import { FormAlert } from '@/components/ui/form-alert';
-import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/form/button';
+import { Dialog } from '@/components/ui/overlay/dialog';
+import { Field } from '@/components/ui/form/field';
+import { FormAlert } from '@/components/ui/form/form-alert';
+import { Input } from '@/components/ui/form/input';
 import { t } from '@/lib/i18n';
 import { disableUser, USERS_KEY } from './api';
 import { userErrorText } from './errors';

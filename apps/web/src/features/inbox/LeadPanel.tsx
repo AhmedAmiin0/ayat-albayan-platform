@@ -1,8 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
-import { railXl } from '@/components/ui/rail';
+import { railXl } from '@/components/ui/layout/rail';
 import { cn } from '@/lib/utils';
-import { Toast, type ToastProps } from '@/components/ui/toast';
+import { Toast, type ToastProps } from '@/components/ui/overlay/toast';
 import { t } from '@/lib/i18n';
 import { leadByPhoneQuery } from './api';
 import { FollowUpLine } from './FollowUpLine';
