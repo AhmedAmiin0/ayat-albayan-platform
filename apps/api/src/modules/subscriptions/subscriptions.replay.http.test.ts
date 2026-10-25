@@ -1,6 +1,6 @@
 import type { NestFastifyApplication } from '@nestjs/platform-fastify';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
-import { STUDENT_ID, subRow, SUB_ID, WEEKLY_SA } from './money.fakes';
+import { STUDENT_ID, subRow, SUB_ID, WEEKLY_SA } from './money/money.fakes';
 import { ADMIN, moneyApp, resetMocks, type Mocks } from './test-app';
 
 // Rule 8 on POST /subscriptions: one clientRequestId per subscribe form, re-sent on every retry.

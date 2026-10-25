@@ -1,7 +1,7 @@
 import { RATING_TEMPLATE, type QuickReplyIntent } from '@ab/shared';
 import { HttpException, Injectable, Logger } from '@nestjs/common';
 import { AuditService } from '../../common/audit/audit.service';
-import { LessonStatusService } from '../lessons/lesson-status.service';
+import { LessonStatusService } from '../lessons/status/lesson-status.service';
 import type { InboundEvent } from './webhook.events';
 import { payloadLesson } from './webhook.inbound';
 import { WebhookQueries, type Contact } from './webhook.queries';

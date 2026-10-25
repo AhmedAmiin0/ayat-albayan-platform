@@ -1,7 +1,7 @@
 import type { ThreadPeople } from '@ab/shared';
 import type { Db } from '../../common/db/db.module';
-import type { BalanceQueries } from '../subscriptions/balance.queries';
-import type { PackagesService } from '../subscriptions/packages.service';
+import type { BalanceQueries } from '../subscriptions/money/balance.queries';
+import type { PackagesService } from '../subscriptions/money/packages.service';
 import { dbError } from '../../common/http/http';
 import { familyTags, toThreadStudent, type FamilyTag } from './thread-people.mapper';
 import type { ThreadRow } from './threads.mapper';

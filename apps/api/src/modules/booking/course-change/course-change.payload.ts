@@ -1,7 +1,7 @@
 import type { Conflict, CourseChangeRequest } from '@ab/shared';
 import { randomUUID } from 'node:crypto';
-import { confirmationMessages, forMessages, type Contact } from '../../lessons/confirmation-messages';
-import { planLessons } from '../../lessons/rule-plan';
+import { confirmationMessages, forMessages, type Contact } from '../../lessons/status/confirmation-messages';
+import { planLessons } from '../../lessons/reschedule/rule-plan';
 import type { NewLesson, NewRule } from '../../scheduling/change-set';
 import { addDays } from '../../scheduling/horizon';
 import type { Plan } from '../plan/booking.plan';

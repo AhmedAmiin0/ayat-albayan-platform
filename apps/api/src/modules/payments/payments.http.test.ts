@@ -1,6 +1,6 @@
 import type { NestFastifyApplication } from '@nestjs/platform-fastify';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
-import { PAYMENT_ID, paymentRow, STUDENT_ID, SUB_ID, subRow } from '../subscriptions/money.fakes';
+import { PAYMENT_ID, paymentRow, STUDENT_ID, SUB_ID, subRow } from '../subscriptions/money/money.fakes';
 import { moneyApp, resetMocks, type Mocks } from '../subscriptions/test-app';
 
 const SUB = { id: SUB_ID, student_id: STUDENT_ID, currency: 'SAR' };

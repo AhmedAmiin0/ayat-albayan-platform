@@ -1,7 +1,7 @@
 import { meetingModeOf, type LessonStatus, type PackageSize, type TeacherMeetingMode } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../../common/db/db.module';
-import type { Contact } from '../../lessons/confirmation-messages';
+import type { Contact } from '../../lessons/status/confirmation-messages';
 import { notFound } from '../../../common/http/errors';
 import { dbError } from '../../../common/http/http';
 

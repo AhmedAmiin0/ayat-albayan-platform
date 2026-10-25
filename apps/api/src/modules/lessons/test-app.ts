@@ -15,16 +15,16 @@ import { ConflictChecker } from '../scheduling/conflict-checker';
 import { LessonWriter } from '../scheduling/lesson-writer';
 import { ruleRow } from '../scheduling/scheduling.fakes';
 import { ScheduleQueries } from '../scheduling/schedule.queries';
-import { AlertsQueries } from '../subscriptions/alerts.queries';
-import { StudentTrialQueries } from '../subscriptions/student-trial.queries';
-import { UnpaidFlags } from '../subscriptions/unpaid-flags.service';
+import { AlertsQueries } from '../subscriptions/alerts/alerts.queries';
+import { StudentTrialQueries } from '../subscriptions/trial/student-trial.queries';
+import { UnpaidFlags } from '../subscriptions/alerts/unpaid-flags.service';
 import { TeachersQueries } from '../teachers/teachers.queries';
-import { LessonProposalQueries } from './lesson-proposals.queries';
+import { LessonProposalQueries } from './proposals/lesson-proposals.queries';
 import { LessonsQueries } from './lessons.queries';
 import { OverviewQueries } from './overview/overview.queries';
 import { ADMIN, CONTACT, lessonRow, TEACHER, TEACHER_ID } from './lessons.fakes';
-import { TeacherMeQueries } from './teacher-me.queries';
-import { TimeEditQueries } from './time-edit.queries';
+import { TeacherMeQueries } from './teacher-me/teacher-me.queries';
+import { TimeEditQueries } from './time-edit/time-edit.queries';
 
 const USERS: Record<string, AuthUser> = {
   admin: ADMIN,

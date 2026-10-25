@@ -1,6 +1,6 @@
 import type { NestFastifyApplication } from '@nestjs/platform-fastify';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
-import { PAYOUT_ID, payoutRow } from '../subscriptions/money.fakes';
+import { PAYOUT_ID, payoutRow } from '../subscriptions/money/money.fakes';
 import { ADMIN, moneyApp, resetMocks, type Mocks } from '../subscriptions/test-app';
 
 // Payout corrections (migration 20261005000201): reopen approved → draft, un-pay paid → approved.

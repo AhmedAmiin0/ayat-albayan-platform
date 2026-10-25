@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 import { fakeDb } from '../guardians/fake-db';
-import type { BalanceQueries } from '../subscriptions/balance.queries';
-import type { PackagesService } from '../subscriptions/packages.service';
+import type { BalanceQueries } from '../subscriptions/money/balance.queries';
+import type { PackagesService } from '../subscriptions/money/packages.service';
 import { threadRow } from './inbox.fakes';
 import { familyTagsOf, threadPeople } from './thread-people';
 

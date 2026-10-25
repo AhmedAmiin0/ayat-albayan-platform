@@ -4,9 +4,9 @@ import type { ChangeSet, TimeEditChange } from '../scheduling/change-set';
 import type { AuthUser } from '../../common/auth/verify-token';
 import type { LessonWriter } from '../scheduling/lesson-writer';
 import { STUDENT_ID, TEACHER_ID } from '../scheduling/scheduling.fakes';
-import type { LessonRow } from './lesson-row';
+import type { LessonRow } from './store/lesson-row';
 import { LessonEvents } from '../../common/events/lesson-events';
-import { LessonStore } from './lesson-store';
+import { LessonStore } from './store/lesson-store';
 import type { LessonsQueries } from './lessons.queries';
 
 export { RULE_ID, STUDENT_ID, TEACHER_ID } from '../scheduling/scheduling.fakes';

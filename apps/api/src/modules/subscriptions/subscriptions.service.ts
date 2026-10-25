@@ -3,8 +3,8 @@ import type { SubscriptionUpdate, SubscriptionView } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
 import { conflict, notFound } from '../../common/http/errors';
 import type { Page } from '../../common/http/http';
-import { MoneyWrites } from './money-writes';
-import { PackagesService } from './packages.service';
+import { MoneyWrites } from './money/money-writes';
+import { PackagesService } from './money/packages.service';
 import { SubscriptionsQueries, type SubListQuery, type SubRow } from './subscriptions.queries';
 
 /**

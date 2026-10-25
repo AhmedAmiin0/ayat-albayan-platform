@@ -1,0 +1,144 @@
+{
+  "id": "a11a",
+  "seq": 13,
+  "moves": [
+    {
+      "from": "apps/api/src/modules/lessons/lesson-store*",
+      "to": "apps/api/src/modules/lessons/store"
+    },
+    {
+      "from": "apps/api/src/modules/lessons/lesson-row*",
+      "to": "apps/api/src/modules/lessons/store"
+    },
+    {
+      "from": "apps/api/src/modules/lessons/lesson-views*",
+      "to": "apps/api/src/modules/lessons/store"
+    },
+    {
+      "from": "apps/api/src/modules/lessons/lesson-queries*",
+      "to": "apps/api/src/modules/lessons/store"
+    },
+    {
+      "from": "apps/api/src/modules/lessons/lesson-access*",
+      "to": "apps/api/src/modules/lessons/store"
+    },
+    {
+      "from": "apps/api/src/modules/lessons/lesson-status*",
+      "to": "apps/api/src/modules/lessons/status"
+    },
+    {
+      "from": "apps/api/src/modules/lessons/lesson-cancel*",
+      "to": "apps/api/src/modules/lessons/status"
+    },
+    {
+      "from": "apps/api/src/modules/lessons/lesson-actions*",
+      "to": "apps/api/src/modules/lessons/status"
+    },
+    {
+      "from": "apps/api/src/modules/lessons/transition*",
+      "to": "apps/api/src/modules/lessons/status"
+    },
+    {
+      "from": "apps/api/src/modules/lessons/outcomes*",
+      "to": "apps/api/src/modules/lessons/status"
+    },
+    {
+      "from": "apps/api/src/modules/lessons/unpaid-mark*",
+      "to": "apps/api/src/modules/lessons/status"
+    },
+    {
+      "from": "apps/api/src/modules/lessons/confirmation-messages*",
+      "to": "apps/api/src/modules/lessons/status"
+    }
+  ],
+  "files": [
+    [
+      "apps/api/src/modules/lessons/confirmation-messages.test.ts",
+      "apps/api/src/modules/lessons/status/confirmation-messages.test.ts"
+    ],
+    [
+      "apps/api/src/modules/lessons/confirmation-messages.ts",
+      "apps/api/src/modules/lessons/status/confirmation-messages.ts"
+    ],
+    [
+      "apps/api/src/modules/lessons/lesson-access.ts",
+      "apps/api/src/modules/lessons/store/lesson-access.ts"
+    ],
+    [
+      "apps/api/src/modules/lessons/lesson-actions.controller.test.ts",
+      "apps/api/src/modules/lessons/status/lesson-actions.controller.test.ts"
+    ],
+    [
+      "apps/api/src/modules/lessons/lesson-actions.controller.ts",
+      "apps/api/src/modules/lessons/status/lesson-actions.controller.ts"
+    ],
+    [
+      "apps/api/src/modules/lessons/lesson-cancel.service.test.ts",
+      "apps/api/src/modules/lessons/status/lesson-cancel.service.test.ts"
+    ],
+    [
+      "apps/api/src/modules/lessons/lesson-cancel.service.ts",
+      "apps/api/src/modules/lessons/status/lesson-cancel.service.ts"
+    ],
+    [
+      "apps/api/src/modules/lessons/lesson-queries.schema.test.ts",
+      "apps/api/src/modules/lessons/store/lesson-queries.schema.test.ts"
+    ],
+    [
+      "apps/api/src/modules/lessons/lesson-queries.schema.ts",
+      "apps/api/src/modules/lessons/store/lesson-queries.schema.ts"
+    ],
+    [
+      "apps/api/src/modules/lessons/lesson-row.ts",
+      "apps/api/src/modules/lessons/store/lesson-row.ts"
+    ],
+    [
+      "apps/api/src/modules/lessons/lesson-status.group.test.ts",
+      "apps/api/src/modules/lessons/status/lesson-status.group.test.ts"
+    ],
+    [
+      "apps/api/src/modules/lessons/lesson-status.service.test.ts",
+      "apps/api/src/modules/lessons/status/lesson-status.service.test.ts"
+    ],
+    [
+      "apps/api/src/modules/lessons/lesson-status.service.ts",
+      "apps/api/src/modules/lessons/status/lesson-status.service.ts"
+    ],
+    [
+      "apps/api/src/modules/lessons/lesson-store.test.ts",
+      "apps/api/src/modules/lessons/store/lesson-store.test.ts"
+    ],
+    [
+      "apps/api/src/modules/lessons/lesson-store.ts",
+      "apps/api/src/modules/lessons/store/lesson-store.ts"
+    ],
+    [
+      "apps/api/src/modules/lessons/lesson-views.ts",
+      "apps/api/src/modules/lessons/store/lesson-views.ts"
+    ],
+    [
+      "apps/api/src/modules/lessons/outcomes.test.ts",
+      "apps/api/src/modules/lessons/status/outcomes.test.ts"
+    ],
+    [
+      "apps/api/src/modules/lessons/outcomes.ts",
+      "apps/api/src/modules/lessons/status/outcomes.ts"
+    ],
+    [
+      "apps/api/src/modules/lessons/transition.test.ts",
+      "apps/api/src/modules/lessons/status/transition.test.ts"
+    ],
+    [
+      "apps/api/src/modules/lessons/transition.ts",
+      "apps/api/src/modules/lessons/status/transition.ts"
+    ],
+    [
+      "apps/api/src/modules/lessons/unpaid-mark.test.ts",
+      "apps/api/src/modules/lessons/status/unpaid-mark.test.ts"
+    ],
+    [
+      "apps/api/src/modules/lessons/unpaid-mark.ts",
+      "apps/api/src/modules/lessons/status/unpaid-mark.ts"
+    ]
+  ]
+}

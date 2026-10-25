@@ -1,7 +1,7 @@
 import { ServiceUnavailableException } from '@nestjs/common';
 import type { NestFastifyApplication } from '@nestjs/platform-fastify';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
-import { EXPENSE_ID, expenseRow } from '../subscriptions/money.fakes';
+import { EXPENSE_ID, expenseRow } from '../subscriptions/money/money.fakes';
 import { moneyApp, resetMocks, type Mocks } from '../subscriptions/test-app';
 
 // Expenses re-managed (owner, 2026-10-05): categories table, receipts, drafts, the year table.

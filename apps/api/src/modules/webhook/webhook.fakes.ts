@@ -6,7 +6,7 @@ import type { PushService } from '../../common/push/push.service';
 import { lead } from '../leads/leads.fakes';
 import type { LeadsService } from '../leads/leads.service';
 import type { RatingStore } from '../lesson-rating/rating.store';
-import type { LessonStatusService } from '../lessons/lesson-status.service';
+import type { LessonStatusService } from '../lessons/status/lesson-status.service';
 import type { InboundEvent } from './webhook.events';
 import { InboundService } from './webhook.inbound.service';
 import { InboundStore } from './webhook.inbound.store';

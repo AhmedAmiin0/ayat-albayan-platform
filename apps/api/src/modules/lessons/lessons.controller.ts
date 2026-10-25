@@ -2,8 +2,8 @@ import type { LessonView, ScheduleOverview } from '@ab/shared';
 import { Controller, Get, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Permissions } from '../../common/auth/decorators';
-import { parseDay, parseWindow } from './lesson-queries.schema';
-import { LessonViews } from './lesson-views';
+import { parseDay, parseWindow } from './store/lesson-queries.schema';
+import { LessonViews } from './store/lesson-views';
 import { LessonsSettings } from './lessons.settings';
 import { OverviewService } from './overview/overview.service';
 
