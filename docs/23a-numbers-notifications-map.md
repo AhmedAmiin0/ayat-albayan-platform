@@ -43,7 +43,7 @@ Also: `.github/workflows/ci.yml:146-189` (`E2E_LINES: single` job), `tools/migra
 **apps/api production branches**
 - `modules/whatsapp/whatsapp.module.ts:31` literal `{ notifications: new LiveWhatsappClient('notifications'), chat: new LiveWhatsappClient('chat') }`; `:49` `WHATSAPP_CLIENT = l.notifications`; `:73-79` boot gaps per line.
 - `whatsapp.types.ts:90` `type WhatsappLines = Record<WaLine, WhatsappClient>`.
-- `whatsapp/send-line.ts` `lineOf()` (file is 18 lines): a session text uses its stamped line or notifications; a template uses `message_templates.line`, chat only if the chat line is configured.
+- `whatsapp/sender/send-line.ts` `lineOf()` (file is 18 lines): a session text uses its stamped line or notifications; a template uses `message_templates.line`, chat only if the chat line is configured.
 - `message.dispatch.ts:58-60` `multi = lines.chat.configured()` decides whether `messages.line` is stamped.
 - `message.worker.ts:113` auth alert key `whatsapp_auth:${line==='chat'?'chat:':''}…`.
 - `sender.queries.ts:21-22,51` chat-off filter `line.neq.chat`.
@@ -107,12 +107,12 @@ The two lines are two **roles**, not a list: notifications is mandatory and the 
 
 ### B0. Headline facts
 1. **No pg_cron / pg-boss.** Every scheduled producer is an in-process timer in the one API instance (`modules/reminders/ticker.ts`: "Move to pg_cron / pg-boss when the API scales out"). DB-side producers are only the booking/reschedule RPCs that insert `messages` rows in the same transaction.
-2. **Two pipelines.** WhatsApp: the `public.messages` table is the queue (`status='queued'`, unique `dedup_key`), drained by `MessageSender` (`whatsapp/message.sender.ts`, 50 rows per pass `:16`, every 30 s `whatsapp/sender-timing.ts:2`). Bell + web push + Expo: `PushService` (`common/push/push.service.ts`) writes one `push_notifications` row (dedup `{kind}:{subject}:{profile_id}`, `:37`) then fans out without awaiting (`push.channels.ts`). **Email: none** (`me/account.auth.ts:20` "no SMTP").
+2. **Two pipelines.** WhatsApp: the `public.messages` table is the queue (`status='queued'`, unique `dedup_key`), drained by `MessageSender` (`whatsapp/sender/message.sender.ts`, 50 rows per pass `:16`, every 30 s `whatsapp/sender-timing.ts:2`). Bell + web push + Expo: `PushService` (`common/push/push.service.ts`) writes one `push_notifications` row (dedup `{kind}:{subject}:{profile_id}`, `:37`) then fans out without awaiting (`push.channels.ts`). **Email: none** (`me/account.auth.ts:20` "no SMTP").
 3. **Gates.** Every WhatsApp send: notifications line configured + `settings.messaging_enabled` (`send-gate.ts:24-26`), plus `WA_ALLOWED_RECIPIENTS`. While closed, rows stay queued.
-4. **`auto_messages_enabled`** governs only `AUTOMATIC_KEYS` = reminder keys + `follow_up_slots` + `renewal_due` + `lesson_rating` with `created_by` null (`whatsapp/send-stale.ts:96`). OFF: jobs don't queue them and the sender fails queued ones `auto_off`. Booking confirmations, `report_ready`, `teacher_new_student`, meeting invites and admin sends are not affected.
+4. **`auto_messages_enabled`** governs only `AUTOMATIC_KEYS` = reminder keys + `follow_up_slots` + `renewal_due` + `lesson_rating` with `created_by` null (`whatsapp/sender/send-stale.ts:96`). OFF: jobs don't queue them and the sender fails queued ones `auto_off`. Booking confirmations, `report_ready`, `teacher_new_student`, meeting invites and admin sends are not affected.
 5. **Language fixed to Arabic**: one `message_templates` row per key, `language default 'ar'`; parameter text Arabic (`server-text.ts:10` "owner decision pending on English").
 6. **Line per template**: `message_templates.line` (default notifications; all 15 producer keys seeded notifications, `…340_template_lines.sql:27-33`); admin can move it (`PATCH /messaging/templates/:key/line`). Session texts prefer the chat line while its window is open.
-7. **Retries** (all WhatsApp): `MAX_SEND_ATTEMPTS = 3`, backoff 1/5/25 min (cap 1 h), only throttling/outage retried, `uncertain` fails at once, auth failure holds the line 15 min uncounted (`whatsapp/send-plan.ts:27,57-69`). Final failure / Meta `failed` webhook → `reminder_failed` push to admins (`message.worker.ts:113-124`). Admin recovery: `POST /messages/:id/retry|sent-manually|hand-off`.
+7. **Retries** (all WhatsApp): `MAX_SEND_ATTEMPTS = 3`, backoff 1/5/25 min (cap 1 h), only throttling/outage retried, `uncertain` fails at once, auth failure holds the line 15 min uncounted (`whatsapp/sender/send-plan.ts:27,57-69`). Final failure / Meta `failed` webhook → `reminder_failed` push to admins (`message.worker.ts:113-124`). Admin recovery: `POST /messages/:id/retry|sent-manually|hand-off`.
 8. **Bell/push recipients** filtered at send time by permission (`packages/shared/src/notifications/kind-permissions.ts`); no per-person preferences, quiet hours or opt-out table.
 9. **Texts.** Template bodies (`body_ar`) are seeded by migration and approved by Meta; no in-app editor. Push texts and meeting-invite texts are editable at `/admin/translations` (`notifications.*`, `meetingInvites.*`).
 
@@ -125,7 +125,7 @@ The two lines are two **roles**, not a list: notifications is mandatory and the 
 | RatingJob | `modules/lesson-rating/rating.job.ts` | 45 s / 5 min + LessonEvents | W14 |
 | AlertsJob | `modules/subscriptions/alerts.job.ts` | 5 min / 15 min + LessonEvents | W11, P5, admin tasks |
 | ReportPdfJob | `modules/report-pdf/report-pdf.job.ts` | 30 s / 60 s + kick | W10 |
-| MessageSender | `whatsapp/message.sender.ts` | 30 s / 30 s + kicks | all WhatsApp |
+| MessageSender | `whatsapp/sender/message.sender.ts` | 30 s / 30 s + kicks | all WhatsApp |
 | PushReceiptsJob | `modules/push/push-receipts.job.ts` | 2 min / 15 min | Expo receipts, dead tokens |
 | TemplateRegistry boot check | `whatsapp/template.registry.ts` | 5 s after boot | template status sync |
 
@@ -155,7 +155,7 @@ Event bus: `LessonEvents` (`common/events/lesson-events.ts`), in-process, after 
 | W18 | Meeting invite text | non-staff invitees | `classroom/meeting-invite.flow.ts` | **session text** `meetingInvites.message.invite`; line via `pickSendLine` | `inbox.send`; window must be open else `window_closed` | immediate | `meeting_invite:{meeting}:{phone}:{startsAt\|instant}` | text in translations; caps 30/meeting, 100/day (migration 414) |
 | W19 | Meeting cancelled text | families reached | `classroom/meeting-schedule.service.ts` | session text `meetingInvites.message.cancelled` | same | immediate | `meeting_cancel:{meeting}:{phone}` | text in translations |
 
-Expiry: lesson-timed keys drop if the lesson started, was cancelled or moved (`shared/messaging/templates.ts:101-124`, `whatsapp/send-stale.ts`).
+Expiry: lesson-timed keys drop if the lesson started, was cancelled or moved (`shared/messaging/templates.ts:101-124`, `whatsapp/sender/send-stale.ts`).
 
 ### B3. Bell / web push / Expo (`push_notifications`; text `ar.notifications.<kind>`, editable in translations; failures logged, not retried)
 

@@ -1,9 +1,9 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import { StorageService } from '../../common/storage/storage.service';
-import { InboundMedia } from '../whatsapp/inbound-media.service';
-import type { MediaMessage } from '../whatsapp/inbound-media.queries';
-import type { MessageRow } from '../whatsapp/message.mapper';
-import { messageRow } from '../whatsapp/sender.fakes';
+import { InboundMedia } from '../whatsapp/messages/inbound-media.service';
+import type { MediaMessage } from '../whatsapp/messages/inbound-media.queries';
+import type { MessageRow } from '../whatsapp/messages/message.mapper';
+import { messageRow } from '../whatsapp/sender/sender.fakes';
 import { PHONE, threadRow } from './inbox.fakes';
 import { ADMIN, inboxApp } from './test-app';
 

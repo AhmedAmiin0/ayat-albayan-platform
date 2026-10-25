@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ruleOf } from '../../common/rules/rule-of';
-import { MessageSender } from '../whatsapp/message.sender';
+import { MessageSender } from '../whatsapp/sender/message.sender';
 import { planRatings, type RatingLesson } from './rating.plan';
 import { RatingQueries } from './rating.queries';
 import { RatingReads } from './rating.reads';

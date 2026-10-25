@@ -1,7 +1,7 @@
 import type { ThreadDetail, ThreadPeople, ThreadView } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
 import type { Page } from '../../common/http/http';
-import { MessageViews } from '../whatsapp/message.views';
+import { MessageViews } from '../whatsapp/messages/message.views';
 import { ReadReceipts } from './read-receipts';
 import { forSales, salesLessons, salesPeople, visibleToSales, withoutLinks } from './sales-threads';
 import { toThreadView, type ThreadRow } from './threads.mapper';

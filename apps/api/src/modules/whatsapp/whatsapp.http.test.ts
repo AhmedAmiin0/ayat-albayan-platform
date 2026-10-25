@@ -1,6 +1,6 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import { toMetaTemplate } from './drivers/meta/meta-shapes';
-import { messageRow } from './sender.fakes';
+import { messageRow } from './sender/sender.fakes';
 import { ADMIN, whatsappApp } from './test-app';
 import { RENEWAL_DUE_SEED, REPORT_READY_SEED } from './seed-templates.fakes';
 import { RECORDED, templateRow } from './whatsapp.fakes';

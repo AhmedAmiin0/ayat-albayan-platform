@@ -9,7 +9,7 @@ describe('Meta callers guard: bypasses are caught', () => {
   it('a whitelisted basename in another folder is not whitelisted', () => {
     const source = 'await this.client.sendText({ to, text });';
     expect(at('modules/leads/message.dispatch.ts', source)).toEqual(['modules/leads/message.dispatch.ts: client method']);
-    expect(at('modules/whatsapp/message.dispatch.ts', source)).toEqual([]);
+    expect(at('modules/whatsapp/sender/message.dispatch.ts', source)).toEqual([]);
   });
 
   it('bracket access', () => {

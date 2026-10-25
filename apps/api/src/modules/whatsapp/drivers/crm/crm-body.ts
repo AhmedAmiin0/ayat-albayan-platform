@@ -1,5 +1,5 @@
 import { CRM_DEFAULT_NAMES, crmTemplateLanguage, crmTemplateName } from '@ab/shared';
-import { bodyValues, buttonValues, documentHeader } from '../../wa-components';
+import { bodyValues, buttonValues, documentHeader } from '../../messages/wa-components';
 import type { MediaSend, TemplateSend } from '../../whatsapp.types';
 
 // POST {crm}/messages bodies (docs/19 «crm driver»). The CRM resolves the template from its own synced list

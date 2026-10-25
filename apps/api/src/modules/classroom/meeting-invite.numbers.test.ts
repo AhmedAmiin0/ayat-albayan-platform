@@ -3,7 +3,7 @@ import type { PushService } from '../../common/push/push.service';
 import { setNumbersOverlay } from '../../common/integrations/numbers-overlay';
 import { CHAT_OFF, CHAT_TWO, NUMBERS } from '../inbox/send-number.fakes';
 import type { ThreadsQueries } from '../inbox/threads.queries';
-import type { MessageSender } from '../whatsapp/message.sender';
+import type { MessageSender } from '../whatsapp/sender/message.sender';
 import { MeetingInviteSender } from './meeting-invite.sender';
 import { CLOSED_PHONE, OPEN_PHONE } from './meeting-invites.fakes';
 

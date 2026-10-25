@@ -1,7 +1,7 @@
 import type { TablesInsert, TablesUpdate } from '@ab/db';
 import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../common/db/db.module';
-import { SENDING } from '../whatsapp/send-plan';
+import { SENDING } from '../whatsapp/sender/send-plan';
 import { dbError } from '../../common/http/http';
 import type { InviteeRow } from './meeting-invites.mapper';
 

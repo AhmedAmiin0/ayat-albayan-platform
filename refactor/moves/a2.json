@@ -1,0 +1,312 @@
+{
+  "id": "a2",
+  "seq": 4,
+  "moves": [
+    {
+      "from": "apps/api/src/modules/whatsapp/messages.*",
+      "to": "apps/api/src/modules/whatsapp/messages"
+    },
+    {
+      "from": "apps/api/src/modules/whatsapp/message.mapper*",
+      "to": "apps/api/src/modules/whatsapp/messages"
+    },
+    {
+      "from": "apps/api/src/modules/whatsapp/message.views*",
+      "to": "apps/api/src/modules/whatsapp/messages"
+    },
+    {
+      "from": "apps/api/src/modules/whatsapp/inbound-media*",
+      "to": "apps/api/src/modules/whatsapp/messages"
+    },
+    {
+      "from": "apps/api/src/modules/whatsapp/wa-components*",
+      "to": "apps/api/src/modules/whatsapp/messages"
+    },
+    {
+      "from": "apps/api/src/modules/whatsapp/wa-json*",
+      "to": "apps/api/src/modules/whatsapp/messages"
+    },
+    {
+      "from": "apps/api/src/modules/whatsapp/wa-media.retention*",
+      "to": "apps/api/src/modules/whatsapp/messages"
+    },
+    {
+      "from": "apps/api/src/modules/whatsapp/delivered*",
+      "to": "apps/api/src/modules/whatsapp/messages"
+    },
+    {
+      "from": "apps/api/src/modules/whatsapp/message.dispatch*",
+      "to": "apps/api/src/modules/whatsapp/sender"
+    },
+    {
+      "from": "apps/api/src/modules/whatsapp/message.job*",
+      "to": "apps/api/src/modules/whatsapp/sender"
+    },
+    {
+      "from": "apps/api/src/modules/whatsapp/message.sender*",
+      "to": "apps/api/src/modules/whatsapp/sender"
+    },
+    {
+      "from": "apps/api/src/modules/whatsapp/message.worker*",
+      "to": "apps/api/src/modules/whatsapp/sender"
+    },
+    {
+      "from": "apps/api/src/modules/whatsapp/send-line*",
+      "to": "apps/api/src/modules/whatsapp/sender"
+    },
+    {
+      "from": "apps/api/src/modules/whatsapp/send-plan*",
+      "to": "apps/api/src/modules/whatsapp/sender"
+    },
+    {
+      "from": "apps/api/src/modules/whatsapp/send-stale*",
+      "to": "apps/api/src/modules/whatsapp/sender"
+    },
+    {
+      "from": "apps/api/src/modules/whatsapp/sender*",
+      "to": "apps/api/src/modules/whatsapp/sender"
+    },
+    {
+      "from": "apps/api/src/modules/whatsapp/staff-at-send*",
+      "to": "apps/api/src/modules/whatsapp/sender"
+    }
+  ],
+  "files": [
+    [
+      "apps/api/src/modules/whatsapp/delivered.ts",
+      "apps/api/src/modules/whatsapp/messages/delivered.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/inbound-media.chat.test.ts",
+      "apps/api/src/modules/whatsapp/messages/inbound-media.chat.test.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/inbound-media.lines.test.ts",
+      "apps/api/src/modules/whatsapp/messages/inbound-media.lines.test.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/inbound-media.queries.test.ts",
+      "apps/api/src/modules/whatsapp/messages/inbound-media.queries.test.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/inbound-media.queries.ts",
+      "apps/api/src/modules/whatsapp/messages/inbound-media.queries.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/inbound-media.service.test.ts",
+      "apps/api/src/modules/whatsapp/messages/inbound-media.service.test.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/inbound-media.service.ts",
+      "apps/api/src/modules/whatsapp/messages/inbound-media.service.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/message.dispatch.lines.test.ts",
+      "apps/api/src/modules/whatsapp/sender/message.dispatch.lines.test.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/message.dispatch.media.test.ts",
+      "apps/api/src/modules/whatsapp/sender/message.dispatch.media.test.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/message.dispatch.numbers.test.ts",
+      "apps/api/src/modules/whatsapp/sender/message.dispatch.numbers.test.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/message.dispatch.reply.test.ts",
+      "apps/api/src/modules/whatsapp/sender/message.dispatch.reply.test.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/message.dispatch.test.ts",
+      "apps/api/src/modules/whatsapp/sender/message.dispatch.test.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/message.dispatch.ts",
+      "apps/api/src/modules/whatsapp/sender/message.dispatch.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/message.job.ts",
+      "apps/api/src/modules/whatsapp/sender/message.job.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/message.mapper.reply.test.ts",
+      "apps/api/src/modules/whatsapp/messages/message.mapper.reply.test.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/message.mapper.sender.test.ts",
+      "apps/api/src/modules/whatsapp/messages/message.mapper.sender.test.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/message.mapper.test.ts",
+      "apps/api/src/modules/whatsapp/messages/message.mapper.test.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/message.mapper.ts",
+      "apps/api/src/modules/whatsapp/messages/message.mapper.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/message.sender.lines.test.ts",
+      "apps/api/src/modules/whatsapp/sender/message.sender.lines.test.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/message.sender.numbers.test.ts",
+      "apps/api/src/modules/whatsapp/sender/message.sender.numbers.test.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/message.sender.test.ts",
+      "apps/api/src/modules/whatsapp/sender/message.sender.test.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/message.sender.ts",
+      "apps/api/src/modules/whatsapp/sender/message.sender.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/message.views.ts",
+      "apps/api/src/modules/whatsapp/messages/message.views.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/message.worker.auto.test.ts",
+      "apps/api/src/modules/whatsapp/sender/message.worker.auto.test.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/message.worker.crm.test.ts",
+      "apps/api/src/modules/whatsapp/sender/message.worker.crm.test.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/message.worker.line.test.ts",
+      "apps/api/src/modules/whatsapp/sender/message.worker.line.test.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/message.worker.number.test.ts",
+      "apps/api/src/modules/whatsapp/sender/message.worker.number.test.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/message.worker.route.test.ts",
+      "apps/api/src/modules/whatsapp/sender/message.worker.route.test.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/message.worker.staff.test.ts",
+      "apps/api/src/modules/whatsapp/sender/message.worker.staff.test.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/message.worker.test.ts",
+      "apps/api/src/modules/whatsapp/sender/message.worker.test.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/message.worker.ts",
+      "apps/api/src/modules/whatsapp/sender/message.worker.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/messages.controller.ts",
+      "apps/api/src/modules/whatsapp/messages/messages.controller.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/messages.queries.ts",
+      "apps/api/src/modules/whatsapp/messages/messages.queries.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/messages.service.handoff.test.ts",
+      "apps/api/src/modules/whatsapp/messages/messages.service.handoff.test.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/messages.service.ts",
+      "apps/api/src/modules/whatsapp/messages/messages.service.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/send-line.test.ts",
+      "apps/api/src/modules/whatsapp/sender/send-line.test.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/send-line.ts",
+      "apps/api/src/modules/whatsapp/sender/send-line.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/send-plan.crm.test.ts",
+      "apps/api/src/modules/whatsapp/sender/send-plan.crm.test.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/send-plan.test.ts",
+      "apps/api/src/modules/whatsapp/sender/send-plan.test.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/send-plan.ts",
+      "apps/api/src/modules/whatsapp/sender/send-plan.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/send-stale.test.ts",
+      "apps/api/src/modules/whatsapp/sender/send-stale.test.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/send-stale.trial-date.test.ts",
+      "apps/api/src/modules/whatsapp/sender/send-stale.trial-date.test.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/send-stale.ts",
+      "apps/api/src/modules/whatsapp/sender/send-stale.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/sender-timing.test.ts",
+      "apps/api/src/modules/whatsapp/sender/sender-timing.test.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/sender-timing.ts",
+      "apps/api/src/modules/whatsapp/sender/sender-timing.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/sender.due.ts",
+      "apps/api/src/modules/whatsapp/sender/sender.due.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/sender.fakes.ts",
+      "apps/api/src/modules/whatsapp/sender/sender.fakes.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/sender.queries.allowed.test.ts",
+      "apps/api/src/modules/whatsapp/sender/sender.queries.allowed.test.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/sender.queries.chat.test.ts",
+      "apps/api/src/modules/whatsapp/sender/sender.queries.chat.test.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/sender.queries.test.ts",
+      "apps/api/src/modules/whatsapp/sender/sender.queries.test.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/sender.queries.ts",
+      "apps/api/src/modules/whatsapp/sender/sender.queries.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/staff-at-send.ts",
+      "apps/api/src/modules/whatsapp/sender/staff-at-send.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/wa-components.media.test.ts",
+      "apps/api/src/modules/whatsapp/messages/wa-components.media.test.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/wa-components.test.ts",
+      "apps/api/src/modules/whatsapp/messages/wa-components.test.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/wa-components.ts",
+      "apps/api/src/modules/whatsapp/messages/wa-components.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/wa-json.test.ts",
+      "apps/api/src/modules/whatsapp/messages/wa-json.test.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/wa-json.ts",
+      "apps/api/src/modules/whatsapp/messages/wa-json.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/wa-media.retention.job.test.ts",
+      "apps/api/src/modules/whatsapp/messages/wa-media.retention.job.test.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/wa-media.retention.job.ts",
+      "apps/api/src/modules/whatsapp/messages/wa-media.retention.job.ts"
+    ]
+  ]
+}

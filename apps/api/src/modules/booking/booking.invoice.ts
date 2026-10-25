@@ -16,7 +16,7 @@ import {
   uploadName,
 } from '../../common/storage/storage.paths';
 import { StorageService } from '../../common/storage/storage.service';
-import { baseMime, InboundMedia } from '../whatsapp/inbound-media.service';
+import { baseMime, InboundMedia } from '../whatsapp/messages/inbound-media.service';
 import { domainError } from './booking.errors';
 import { SNIFF_BYTES, sniffMime } from './invoice-sniff';
 import type { InvoiceRow } from './booking.mapper';

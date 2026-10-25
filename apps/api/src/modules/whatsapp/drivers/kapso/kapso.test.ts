@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { WaError } from '../../whatsapp.types';
 import { authHeaders, byDriver, graphFetch } from '../meta/graph';
-import { failurePlan } from '../../send-plan';
+import { failurePlan } from '../../sender/send-plan';
 import { nextTemplateCursor, templateEditPath } from './kapso';
 import { KAPSO_ENV, kapsoFetch } from './kapso.fakes';
 import { STUB_ENV } from '../../whatsapp.fakes';

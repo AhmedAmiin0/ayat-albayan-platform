@@ -2,8 +2,8 @@ import { isChatViewMime, type SignedDownload, type ThreadMediaItem } from '@ab/s
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { BUCKETS } from '../../common/storage/storage.paths';
 import { StorageService } from '../../common/storage/storage.service';
-import { InboundMediaQueries } from '../whatsapp/inbound-media.queries';
-import { baseMime, InboundMedia, isInvoiceMime, mediaExpired, servable } from '../whatsapp/inbound-media.service';
+import { InboundMediaQueries } from '../whatsapp/messages/inbound-media.queries';
+import { baseMime, InboundMedia, isInvoiceMime, mediaExpired, servable } from '../whatsapp/messages/inbound-media.service';
 import { waHttpError } from '../whatsapp/template.mapper';
 
 const DAY_MS = 86_400_000;
