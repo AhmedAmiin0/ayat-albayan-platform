@@ -1,0 +1,240 @@
+{
+  "id": "b11a",
+  "seq": 49,
+  "moves": [
+    {
+      "from": "apps/web/src/features/sales/Teacher*",
+      "to": "apps/web/src/features/sales/teachers/"
+    },
+    {
+      "from": "apps/web/src/features/sales/teacher-view*",
+      "to": "apps/web/src/features/sales/teachers/"
+    },
+    {
+      "from": "apps/web/src/features/sales/EarningsTerms*",
+      "to": "apps/web/src/features/sales/teachers/"
+    },
+    {
+      "from": "apps/web/src/features/sales/MyEarnings*",
+      "to": "apps/web/src/features/sales/teachers/"
+    },
+    {
+      "from": "apps/web/src/features/sales/SalesTeachers*",
+      "to": "apps/web/src/features/sales/teachers/"
+    },
+    {
+      "from": "apps/web/src/features/sales/MyStudents*",
+      "to": "apps/web/src/features/sales/students/"
+    },
+    {
+      "from": "apps/web/src/features/sales/my-student-*",
+      "to": "apps/web/src/features/sales/students/"
+    },
+    {
+      "from": "apps/web/src/features/sales/AllStudents*",
+      "to": "apps/web/src/features/sales/students/"
+    },
+    {
+      "from": "apps/web/src/features/sales/all-student-*",
+      "to": "apps/web/src/features/sales/students/"
+    },
+    {
+      "from": "apps/web/src/features/sales/SalesStudents*",
+      "to": "apps/web/src/features/sales/students/"
+    },
+    {
+      "from": "apps/web/src/features/sales/PortalList*",
+      "to": "apps/web/src/features/sales/students/"
+    },
+    {
+      "from": "apps/web/src/features/sales/MyPayments*",
+      "to": "apps/web/src/features/sales/money/"
+    },
+    {
+      "from": "apps/web/src/features/sales/my-payment-*",
+      "to": "apps/web/src/features/sales/money/"
+    },
+    {
+      "from": "apps/web/src/features/sales/SalesMoney*",
+      "to": "apps/web/src/features/sales/money/"
+    },
+    {
+      "from": "apps/web/src/features/sales/CurrencyTotals*",
+      "to": "apps/web/src/features/sales/money/"
+    },
+    {
+      "from": "apps/web/src/features/sales/StatementCard*",
+      "to": "apps/web/src/features/sales/money/"
+    },
+    {
+      "from": "apps/web/src/features/sales/SalesSubscriptions*",
+      "to": "apps/web/src/features/sales/subscriptions/"
+    },
+    {
+      "from": "apps/web/src/features/sales/sales-subscription-*",
+      "to": "apps/web/src/features/sales/subscriptions/"
+    },
+    {
+      "from": "apps/web/src/features/sales/SubscriptionHistory*",
+      "to": "apps/web/src/features/sales/subscriptions/"
+    },
+    {
+      "from": "apps/web/src/features/sales/HistoryEntryCard*",
+      "to": "apps/web/src/features/sales/subscriptions/"
+    },
+    {
+      "from": "apps/web/src/features/sales/history-column*",
+      "to": "apps/web/src/features/sales/subscriptions/"
+    }
+  ],
+  "files": [
+    [
+      "apps/web/src/features/sales/all-student-columns.tsx",
+      "apps/web/src/features/sales/students/all-student-columns.tsx"
+    ],
+    [
+      "apps/web/src/features/sales/AllStudents.test.tsx",
+      "apps/web/src/features/sales/students/AllStudents.test.tsx"
+    ],
+    [
+      "apps/web/src/features/sales/AllStudents.tsx",
+      "apps/web/src/features/sales/students/AllStudents.tsx"
+    ],
+    [
+      "apps/web/src/features/sales/CurrencyTotalsList.tsx",
+      "apps/web/src/features/sales/money/CurrencyTotalsList.tsx"
+    ],
+    [
+      "apps/web/src/features/sales/EarningsTerms.tsx",
+      "apps/web/src/features/sales/teachers/EarningsTerms.tsx"
+    ],
+    [
+      "apps/web/src/features/sales/history-column.tsx",
+      "apps/web/src/features/sales/subscriptions/history-column.tsx"
+    ],
+    [
+      "apps/web/src/features/sales/HistoryEntryCard.tsx",
+      "apps/web/src/features/sales/subscriptions/HistoryEntryCard.tsx"
+    ],
+    [
+      "apps/web/src/features/sales/my-payment-columns.tsx",
+      "apps/web/src/features/sales/money/my-payment-columns.tsx"
+    ],
+    [
+      "apps/web/src/features/sales/my-student-columns.tsx",
+      "apps/web/src/features/sales/students/my-student-columns.tsx"
+    ],
+    [
+      "apps/web/src/features/sales/MyEarnings.test.tsx",
+      "apps/web/src/features/sales/teachers/MyEarnings.test.tsx"
+    ],
+    [
+      "apps/web/src/features/sales/MyEarnings.tsx",
+      "apps/web/src/features/sales/teachers/MyEarnings.tsx"
+    ],
+    [
+      "apps/web/src/features/sales/MyPayments.test.tsx",
+      "apps/web/src/features/sales/money/MyPayments.test.tsx"
+    ],
+    [
+      "apps/web/src/features/sales/MyPayments.tsx",
+      "apps/web/src/features/sales/money/MyPayments.tsx"
+    ],
+    [
+      "apps/web/src/features/sales/MyStudents.test.tsx",
+      "apps/web/src/features/sales/students/MyStudents.test.tsx"
+    ],
+    [
+      "apps/web/src/features/sales/MyStudents.tsx",
+      "apps/web/src/features/sales/students/MyStudents.tsx"
+    ],
+    [
+      "apps/web/src/features/sales/PortalList.tsx",
+      "apps/web/src/features/sales/students/PortalList.tsx"
+    ],
+    [
+      "apps/web/src/features/sales/sales-subscription-columns.tsx",
+      "apps/web/src/features/sales/subscriptions/sales-subscription-columns.tsx"
+    ],
+    [
+      "apps/web/src/features/sales/SalesMoney.tsx",
+      "apps/web/src/features/sales/money/SalesMoney.tsx"
+    ],
+    [
+      "apps/web/src/features/sales/SalesStudents.tsx",
+      "apps/web/src/features/sales/students/SalesStudents.tsx"
+    ],
+    [
+      "apps/web/src/features/sales/SalesSubscriptions.en.test.tsx",
+      "apps/web/src/features/sales/subscriptions/SalesSubscriptions.en.test.tsx"
+    ],
+    [
+      "apps/web/src/features/sales/SalesSubscriptions.test.tsx",
+      "apps/web/src/features/sales/subscriptions/SalesSubscriptions.test.tsx"
+    ],
+    [
+      "apps/web/src/features/sales/SalesSubscriptions.tsx",
+      "apps/web/src/features/sales/subscriptions/SalesSubscriptions.tsx"
+    ],
+    [
+      "apps/web/src/features/sales/SalesTeachers.test.tsx",
+      "apps/web/src/features/sales/teachers/SalesTeachers.test.tsx"
+    ],
+    [
+      "apps/web/src/features/sales/SalesTeachers.tsx",
+      "apps/web/src/features/sales/teachers/SalesTeachers.tsx"
+    ],
+    [
+      "apps/web/src/features/sales/StatementCard.tsx",
+      "apps/web/src/features/sales/money/StatementCard.tsx"
+    ],
+    [
+      "apps/web/src/features/sales/SubscriptionHistory.test.tsx",
+      "apps/web/src/features/sales/subscriptions/SubscriptionHistory.test.tsx"
+    ],
+    [
+      "apps/web/src/features/sales/SubscriptionHistory.tsx",
+      "apps/web/src/features/sales/subscriptions/SubscriptionHistory.tsx"
+    ],
+    [
+      "apps/web/src/features/sales/teacher-view.test.ts",
+      "apps/web/src/features/sales/teachers/teacher-view.test.ts"
+    ],
+    [
+      "apps/web/src/features/sales/teacher-view.ts",
+      "apps/web/src/features/sales/teachers/teacher-view.ts"
+    ],
+    [
+      "apps/web/src/features/sales/TeacherDetail.tsx",
+      "apps/web/src/features/sales/teachers/TeacherDetail.tsx"
+    ],
+    [
+      "apps/web/src/features/sales/TeacherFilters.tsx",
+      "apps/web/src/features/sales/teachers/TeacherFilters.tsx"
+    ],
+    [
+      "apps/web/src/features/sales/TeacherListItem.tsx",
+      "apps/web/src/features/sales/teachers/TeacherListItem.tsx"
+    ],
+    [
+      "apps/web/src/features/sales/TeacherMeetingLink.test.tsx",
+      "apps/web/src/features/sales/teachers/TeacherMeetingLink.test.tsx"
+    ],
+    [
+      "apps/web/src/features/sales/TeacherMeetingLink.tsx",
+      "apps/web/src/features/sales/teachers/TeacherMeetingLink.tsx"
+    ],
+    [
+      "apps/web/src/features/sales/TeacherSelect.tsx",
+      "apps/web/src/features/sales/teachers/TeacherSelect.tsx"
+    ],
+    [
+      "apps/web/src/features/sales/TeacherStudentItem.tsx",
+      "apps/web/src/features/sales/teachers/TeacherStudentItem.tsx"
+    ],
+    [
+      "apps/web/src/features/sales/TeacherStudentsByKind.tsx",
+      "apps/web/src/features/sales/teachers/TeacherStudentsByKind.tsx"
+    ]
+  ]
+}

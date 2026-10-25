@@ -4,7 +4,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n/i18n';
 import { openFilters } from '@/test/open-filters';
 import type { SalesSubscription } from './api';
-import { SalesSubscriptions } from './SalesSubscriptions';
+import { SalesSubscriptions } from './subscriptions/SalesSubscriptions';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));

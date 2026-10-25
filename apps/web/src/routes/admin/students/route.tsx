@@ -1,6 +1,6 @@
 import { createFileRoute, Outlet, useChildMatches } from '@tanstack/react-router';
-import { fromStudentsUrl, parseStudentsSearch, toStudentsUrl } from '@/features/students/search';
-import { StudentsPage } from '@/features/students/StudentsPage';
+import { fromStudentsUrl, parseStudentsSearch, toStudentsUrl } from '@/features/students/list/search';
+import { StudentsPage } from '@/features/students/list/StudentsPage';
 
 /** /admin/students — list; also the parent of /admin/students/$studentId (renders it via Outlet). */
 export const Route = createFileRoute('/admin/students')({

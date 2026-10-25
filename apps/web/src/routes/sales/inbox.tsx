@@ -3,7 +3,7 @@ import { usePermissions } from '@/features/auth/use-permissions';
 import { InboxPage } from '@/features/inbox/threads/list/InboxPage';
 import { InboxModeContext } from '@/features/inbox/shared/mode';
 import { parseInboxSearch } from '@/features/inbox/shared/search';
-import { SalesLiveStrip } from '@/features/sales/SalesLiveStrip';
+import { SalesLiveStrip } from '@/features/sales/live/SalesLiveStrip';
 
 /** /sales/inbox «المحادثات» (the sales landing): every chat (API-scoped, redacted), phones shown; the running lessons as a chip in the list's head. */
 export const Route = createFileRoute('/sales/inbox')({

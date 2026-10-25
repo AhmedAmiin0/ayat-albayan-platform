@@ -1,0 +1,244 @@
+{
+  "id": "b12a",
+  "seq": 51,
+  "moves": [
+    {
+      "from": "apps/web/src/features/students/StudentsPage*",
+      "to": "apps/web/src/features/students/list/"
+    },
+    {
+      "from": "apps/web/src/features/students/StudentFilters*",
+      "to": "apps/web/src/features/students/list/"
+    },
+    {
+      "from": "apps/web/src/features/students/StudentSearch*",
+      "to": "apps/web/src/features/students/list/"
+    },
+    {
+      "from": "apps/web/src/features/students/StudentRowActions*",
+      "to": "apps/web/src/features/students/list/"
+    },
+    {
+      "from": "apps/web/src/features/students/StatusChips*",
+      "to": "apps/web/src/features/students/list/"
+    },
+    {
+      "from": "apps/web/src/features/students/stacked-rows*",
+      "to": "apps/web/src/features/students/list/"
+    },
+    {
+      "from": "apps/web/src/features/students/studentColumns*",
+      "to": "apps/web/src/features/students/list/"
+    },
+    {
+      "from": "apps/web/src/features/students/filters*",
+      "to": "apps/web/src/features/students/list/"
+    },
+    {
+      "from": "apps/web/src/features/students/use-student-filters*",
+      "to": "apps/web/src/features/students/list/"
+    },
+    {
+      "from": "apps/web/src/features/students/search*",
+      "to": "apps/web/src/features/students/list/"
+    },
+    {
+      "from": "apps/web/src/features/students/TeacherCell*",
+      "to": "apps/web/src/features/students/list/"
+    },
+    {
+      "from": "apps/web/src/features/students/StudentKindSwitch*",
+      "to": "apps/web/src/features/students/list/"
+    },
+    {
+      "from": "apps/web/src/features/students/CreateStudent*",
+      "to": "apps/web/src/features/students/create/"
+    },
+    {
+      "from": "apps/web/src/features/students/create-student*",
+      "to": "apps/web/src/features/students/create/"
+    },
+    {
+      "from": "apps/web/src/features/students/Duplicate*",
+      "to": "apps/web/src/features/students/duplicates/"
+    },
+    {
+      "from": "apps/web/src/features/students/Compare*",
+      "to": "apps/web/src/features/students/duplicates/"
+    },
+    {
+      "from": "apps/web/src/features/students/compare*",
+      "to": "apps/web/src/features/students/duplicates/"
+    },
+    {
+      "from": "apps/web/src/features/students/MergeDialog*",
+      "to": "apps/web/src/features/students/duplicates/"
+    },
+    {
+      "from": "apps/web/src/features/students/Sibling*",
+      "to": "apps/web/src/features/students/duplicates/"
+    }
+  ],
+  "files": [
+    [
+      "apps/web/src/features/students/compare.test.ts",
+      "apps/web/src/features/students/duplicates/compare.test.ts"
+    ],
+    [
+      "apps/web/src/features/students/compare.ts",
+      "apps/web/src/features/students/duplicates/compare.ts"
+    ],
+    [
+      "apps/web/src/features/students/CompareRow.tsx",
+      "apps/web/src/features/students/duplicates/CompareRow.tsx"
+    ],
+    [
+      "apps/web/src/features/students/create-student.test.ts",
+      "apps/web/src/features/students/create/create-student.test.ts"
+    ],
+    [
+      "apps/web/src/features/students/create-student.ts",
+      "apps/web/src/features/students/create/create-student.ts"
+    ],
+    [
+      "apps/web/src/features/students/CreateStudentDialog.initial.test.tsx",
+      "apps/web/src/features/students/create/CreateStudentDialog.initial.test.tsx"
+    ],
+    [
+      "apps/web/src/features/students/CreateStudentDialog.teacher.test.tsx",
+      "apps/web/src/features/students/create/CreateStudentDialog.teacher.test.tsx"
+    ],
+    [
+      "apps/web/src/features/students/CreateStudentDialog.test.tsx",
+      "apps/web/src/features/students/create/CreateStudentDialog.test.tsx"
+    ],
+    [
+      "apps/web/src/features/students/CreateStudentDialog.tsx",
+      "apps/web/src/features/students/create/CreateStudentDialog.tsx"
+    ],
+    [
+      "apps/web/src/features/students/CreateStudentForm.tsx",
+      "apps/web/src/features/students/create/CreateStudentForm.tsx"
+    ],
+    [
+      "apps/web/src/features/students/DuplicateCompare.tsx",
+      "apps/web/src/features/students/duplicates/DuplicateCompare.tsx"
+    ],
+    [
+      "apps/web/src/features/students/DuplicateDialog.test.tsx",
+      "apps/web/src/features/students/duplicates/DuplicateDialog.test.tsx"
+    ],
+    [
+      "apps/web/src/features/students/DuplicateDialog.tsx",
+      "apps/web/src/features/students/duplicates/DuplicateDialog.tsx"
+    ],
+    [
+      "apps/web/src/features/students/filters.test.ts",
+      "apps/web/src/features/students/list/filters.test.ts"
+    ],
+    [
+      "apps/web/src/features/students/filters.ts",
+      "apps/web/src/features/students/list/filters.ts"
+    ],
+    [
+      "apps/web/src/features/students/MergeDialog.test.tsx",
+      "apps/web/src/features/students/duplicates/MergeDialog.test.tsx"
+    ],
+    [
+      "apps/web/src/features/students/MergeDialog.tsx",
+      "apps/web/src/features/students/duplicates/MergeDialog.tsx"
+    ],
+    [
+      "apps/web/src/features/students/search.test.ts",
+      "apps/web/src/features/students/list/search.test.ts"
+    ],
+    [
+      "apps/web/src/features/students/search.ts",
+      "apps/web/src/features/students/list/search.ts"
+    ],
+    [
+      "apps/web/src/features/students/SiblingMerge.test.tsx",
+      "apps/web/src/features/students/duplicates/SiblingMerge.test.tsx"
+    ],
+    [
+      "apps/web/src/features/students/SiblingMerge.tsx",
+      "apps/web/src/features/students/duplicates/SiblingMerge.tsx"
+    ],
+    [
+      "apps/web/src/features/students/SiblingsStrip.tsx",
+      "apps/web/src/features/students/duplicates/SiblingsStrip.tsx"
+    ],
+    [
+      "apps/web/src/features/students/stacked-rows.ts",
+      "apps/web/src/features/students/list/stacked-rows.ts"
+    ],
+    [
+      "apps/web/src/features/students/StatusChips.tsx",
+      "apps/web/src/features/students/list/StatusChips.tsx"
+    ],
+    [
+      "apps/web/src/features/students/studentColumns.tsx",
+      "apps/web/src/features/students/list/studentColumns.tsx"
+    ],
+    [
+      "apps/web/src/features/students/StudentFilters.test.tsx",
+      "apps/web/src/features/students/list/StudentFilters.test.tsx"
+    ],
+    [
+      "apps/web/src/features/students/StudentFilters.tsx",
+      "apps/web/src/features/students/list/StudentFilters.tsx"
+    ],
+    [
+      "apps/web/src/features/students/StudentKindSwitch.test.tsx",
+      "apps/web/src/features/students/list/StudentKindSwitch.test.tsx"
+    ],
+    [
+      "apps/web/src/features/students/StudentKindSwitch.tsx",
+      "apps/web/src/features/students/list/StudentKindSwitch.tsx"
+    ],
+    [
+      "apps/web/src/features/students/StudentRowActions.tsx",
+      "apps/web/src/features/students/list/StudentRowActions.tsx"
+    ],
+    [
+      "apps/web/src/features/students/StudentSearch.test.tsx",
+      "apps/web/src/features/students/list/StudentSearch.test.tsx"
+    ],
+    [
+      "apps/web/src/features/students/StudentSearch.tsx",
+      "apps/web/src/features/students/list/StudentSearch.tsx"
+    ],
+    [
+      "apps/web/src/features/students/StudentsPage.bulk.test.tsx",
+      "apps/web/src/features/students/list/StudentsPage.bulk.test.tsx"
+    ],
+    [
+      "apps/web/src/features/students/StudentsPage.filters.test.tsx",
+      "apps/web/src/features/students/list/StudentsPage.filters.test.tsx"
+    ],
+    [
+      "apps/web/src/features/students/StudentsPage.rows.test.tsx",
+      "apps/web/src/features/students/list/StudentsPage.rows.test.tsx"
+    ],
+    [
+      "apps/web/src/features/students/StudentsPage.sort.test.tsx",
+      "apps/web/src/features/students/list/StudentsPage.sort.test.tsx"
+    ],
+    [
+      "apps/web/src/features/students/StudentsPage.test.tsx",
+      "apps/web/src/features/students/list/StudentsPage.test.tsx"
+    ],
+    [
+      "apps/web/src/features/students/StudentsPage.tsx",
+      "apps/web/src/features/students/list/StudentsPage.tsx"
+    ],
+    [
+      "apps/web/src/features/students/TeacherCell.tsx",
+      "apps/web/src/features/students/list/TeacherCell.tsx"
+    ],
+    [
+      "apps/web/src/features/students/use-student-filters.tsx",
+      "apps/web/src/features/students/list/use-student-filters.tsx"
+    ]
+  ]
+}

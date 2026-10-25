@@ -1,5 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router';
-import { SalesStudents } from '@/features/sales/SalesStudents';
+import { SalesStudents } from '@/features/sales/students/SalesStudents';
 import { parseStudentsSearch } from '@/features/sales/search';
 
 /** /sales/students?view=mine «الطلاب» — every student of the academy; «طلابي» is a filter. */

@@ -1,0 +1,136 @@
+{
+  "id": "b11b",
+  "seq": 50,
+  "moves": [
+    {
+      "from": "apps/web/src/features/sales/SalesSchedule*",
+      "to": "apps/web/src/features/sales/schedule/"
+    },
+    {
+      "from": "apps/web/src/features/sales/SalesDay*",
+      "to": "apps/web/src/features/sales/schedule/"
+    },
+    {
+      "from": "apps/web/src/features/sales/ScheduleLessonItem*",
+      "to": "apps/web/src/features/sales/schedule/"
+    },
+    {
+      "from": "apps/web/src/features/sales/schedule-search*",
+      "to": "apps/web/src/features/sales/schedule/"
+    },
+    {
+      "from": "apps/web/src/features/sales/SalesLive*",
+      "to": "apps/web/src/features/sales/live/"
+    },
+    {
+      "from": "apps/web/src/features/sales/SalesMeetings*",
+      "to": "apps/web/src/features/sales/live/"
+    },
+    {
+      "from": "apps/web/src/features/sales/Registration*",
+      "to": "apps/web/src/features/sales/registration/"
+    },
+    {
+      "from": "apps/web/src/features/sales/registration-check*",
+      "to": "apps/web/src/features/sales/registration/"
+    },
+    {
+      "from": "apps/web/src/features/sales/register-redirect*",
+      "to": "apps/web/src/features/sales/registration/"
+    }
+  ],
+  "files": [
+    [
+      "apps/web/src/features/sales/register-redirect.test.ts",
+      "apps/web/src/features/sales/registration/register-redirect.test.ts"
+    ],
+    [
+      "apps/web/src/features/sales/register-redirect.ts",
+      "apps/web/src/features/sales/registration/register-redirect.ts"
+    ],
+    [
+      "apps/web/src/features/sales/registration-check.test.ts",
+      "apps/web/src/features/sales/registration/registration-check.test.ts"
+    ],
+    [
+      "apps/web/src/features/sales/registration-check.ts",
+      "apps/web/src/features/sales/registration/registration-check.ts"
+    ],
+    [
+      "apps/web/src/features/sales/RegistrationCheckButton.en.test.tsx",
+      "apps/web/src/features/sales/registration/RegistrationCheckButton.en.test.tsx"
+    ],
+    [
+      "apps/web/src/features/sales/RegistrationCheckButton.test.tsx",
+      "apps/web/src/features/sales/registration/RegistrationCheckButton.test.tsx"
+    ],
+    [
+      "apps/web/src/features/sales/RegistrationCheckButton.tsx",
+      "apps/web/src/features/sales/registration/RegistrationCheckButton.tsx"
+    ],
+    [
+      "apps/web/src/features/sales/RegistrationCheckDialog.tsx",
+      "apps/web/src/features/sales/registration/RegistrationCheckDialog.tsx"
+    ],
+    [
+      "apps/web/src/features/sales/RegistrationMatches.tsx",
+      "apps/web/src/features/sales/registration/RegistrationMatches.tsx"
+    ],
+    [
+      "apps/web/src/features/sales/SalesDayBoard.tsx",
+      "apps/web/src/features/sales/schedule/SalesDayBoard.tsx"
+    ],
+    [
+      "apps/web/src/features/sales/SalesDayNav.tsx",
+      "apps/web/src/features/sales/schedule/SalesDayNav.tsx"
+    ],
+    [
+      "apps/web/src/features/sales/SalesLive.test.tsx",
+      "apps/web/src/features/sales/live/SalesLive.test.tsx"
+    ],
+    [
+      "apps/web/src/features/sales/SalesLive.tsx",
+      "apps/web/src/features/sales/live/SalesLive.tsx"
+    ],
+    [
+      "apps/web/src/features/sales/SalesLiveStrip.test.tsx",
+      "apps/web/src/features/sales/live/SalesLiveStrip.test.tsx"
+    ],
+    [
+      "apps/web/src/features/sales/SalesLiveStrip.tsx",
+      "apps/web/src/features/sales/live/SalesLiveStrip.tsx"
+    ],
+    [
+      "apps/web/src/features/sales/SalesMeetings.test.tsx",
+      "apps/web/src/features/sales/live/SalesMeetings.test.tsx"
+    ],
+    [
+      "apps/web/src/features/sales/SalesMeetings.tsx",
+      "apps/web/src/features/sales/live/SalesMeetings.tsx"
+    ],
+    [
+      "apps/web/src/features/sales/SalesSchedule.en.test.tsx",
+      "apps/web/src/features/sales/schedule/SalesSchedule.en.test.tsx"
+    ],
+    [
+      "apps/web/src/features/sales/SalesSchedule.test.tsx",
+      "apps/web/src/features/sales/schedule/SalesSchedule.test.tsx"
+    ],
+    [
+      "apps/web/src/features/sales/SalesSchedule.tsx",
+      "apps/web/src/features/sales/schedule/SalesSchedule.tsx"
+    ],
+    [
+      "apps/web/src/features/sales/schedule-search.test.ts",
+      "apps/web/src/features/sales/schedule/schedule-search.test.ts"
+    ],
+    [
+      "apps/web/src/features/sales/schedule-search.ts",
+      "apps/web/src/features/sales/schedule/schedule-search.ts"
+    ],
+    [
+      "apps/web/src/features/sales/ScheduleLessonItem.tsx",
+      "apps/web/src/features/sales/schedule/ScheduleLessonItem.tsx"
+    ]
+  ]
+}
