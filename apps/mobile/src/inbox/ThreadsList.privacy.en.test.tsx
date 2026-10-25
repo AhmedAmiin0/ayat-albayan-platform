@@ -5,7 +5,7 @@ import { renderWithQuery } from '@/test/query';
 import { readable, SHOWN } from './screens/privacy.helpers';
 import { ThreadModeProvider } from './thread/hooks/thread-mode';
 import { ThreadsList } from './ThreadsList';
-import { thread } from './thread-fixtures';
+import { thread } from './shared/thread-fixtures';
 
 // An English run: the native flag is LTR (jest.setup reports RTL, the Arabic default).
 jest.mock('react-native/Libraries/ReactNative/I18nManager', () => {

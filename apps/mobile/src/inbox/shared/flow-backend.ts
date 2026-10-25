@@ -1,6 +1,6 @@
 import { searchDigits, type ForwardResult, type MessageView, type ThreadForward, type ThreadLesson, type ThreadView } from '@ab/shared';
 import { FakeBackend } from '@/test/fake-backend';
-import { family, child } from './subscription/people-fixtures';
+import { family, child } from '../subscription/people-fixtures';
 import {
   detail,
   inbound,

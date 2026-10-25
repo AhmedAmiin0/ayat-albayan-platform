@@ -3,8 +3,8 @@ import { StyleSheet } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { shape, type } from '@/theme';
-import { sessionUntil } from '../message-text';
-import { detail, inbound, thread } from '../thread-fixtures';
+import { sessionUntil } from '../messages/hooks/message-text';
+import { detail, inbound, thread } from '../shared/thread-fixtures';
 import { ThreadScreen } from '../screens/ThreadScreen';
 
 // The one-row composer (owner 2026-10-18): [template] [text] [send], one-line notes, a compact closed state.

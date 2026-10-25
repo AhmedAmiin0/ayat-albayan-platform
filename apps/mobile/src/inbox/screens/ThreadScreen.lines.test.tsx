@@ -4,7 +4,7 @@ import { t } from '@/core/lib/i18n/i18n';
 import { fakeNow } from '@/test/fake-now';
 import { renderWithQuery } from '@/test/query';
 import { readable, SHOWN } from './privacy.helpers';
-import { detail, inbound, message, NOW, thread } from '../thread-fixtures';
+import { detail, inbound, message, NOW, thread } from '../shared/thread-fixtures';
 import { ThreadModeProvider } from '../thread/hooks/thread-mode';
 import { ThreadScreen } from './ThreadScreen';
 

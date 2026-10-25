@@ -7,7 +7,7 @@ import { shape, useTheme } from '@/theme';
 import { Button } from '@/core/ui/primitives/Button';
 import { IconButton } from '@/core/ui/primitives/IconButton';
 import { useChatActions } from '../thread/hooks/chat-actions';
-import { AttachIcon } from '../chat-icons';
+import { AttachIcon } from '../shared/chat-icons';
 import { type ChatFileSource, fileError, pickChatFile, useSendFile } from './send-file';
 import { useThreadMode } from '../thread/hooks/thread-mode';
 

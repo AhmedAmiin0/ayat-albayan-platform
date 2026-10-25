@@ -8,7 +8,7 @@ import { Button } from '@/core/ui/primitives/Button';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { IconButton } from '@/core/ui/primitives/IconButton';
 import { Screen } from '@/core/ui/layout/Screen';
-import { DownIcon, TrashIcon, UpIcon } from '@/inbox/chat-icons';
+import { DownIcon, TrashIcon, UpIcon } from '@/inbox/shared/chat-icons';
 import { ErrorLine } from '@/inbox/ErrorLine';
 import { useMoveReply, useSavedReplies } from '@/inbox/saved-replies/api';
 import { DeleteConfirm } from '@/inbox/saved-replies/DeleteConfirm';

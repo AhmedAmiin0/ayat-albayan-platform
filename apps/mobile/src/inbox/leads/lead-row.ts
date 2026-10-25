@@ -1,7 +1,7 @@
 import { t } from '@/core/lib/i18n/i18n';
-import { leadAge } from '../format';
+import { leadAge } from '../shared/format';
 import { leadSourceWord } from '../lead-words';
-import type { Lead } from '../types';
+import type { Lead } from '../shared/types';
 
 /** «إعلان فيسبوك · منذ يومين · المسؤول: سارة»; the owner part only when the API sent a name. */
 export function leadRowSubtitle(lead: Lead): string {

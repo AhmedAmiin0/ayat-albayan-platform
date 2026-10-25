@@ -1,7 +1,7 @@
 import { fireEvent, render, screen } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { RegisterFromChat } from './RegisterFromChat';
-import { thread } from './thread-fixtures';
+import { thread } from './shared/thread-fixtures';
 
 const mockPush = jest.fn();
 jest.mock('expo-router', () => ({ router: { push: (h: unknown) => mockPush(h) } }));

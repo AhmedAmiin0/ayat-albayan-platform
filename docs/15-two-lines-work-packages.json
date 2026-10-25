@@ -291,7 +291,7 @@
     "R-MSG-05"
    ],
    "owns": [
-    "apps/mobile/src/inbox/MessageBubble.tsx",
+    "apps/mobile/src/inbox/messages/components/MessageBubble.tsx",
     "apps/mobile/src/inbox/composer/Composer.tsx",
     "apps/mobile/src/inbox/thread/components/LineNote.tsx",
     "apps/mobile/src/inbox/line-words.ts",

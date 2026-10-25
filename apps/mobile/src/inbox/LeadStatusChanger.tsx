@@ -7,7 +7,7 @@ import { StatusChip } from '@/core/ui/feedback/StatusChip';
 import { type, useTheme } from '@/theme';
 import { allowedNextStatuses } from './allowed-next-statuses';
 import { ErrorLine } from './ErrorLine';
-import type { Lead } from './types';
+import type { Lead } from './shared/types';
 import { AppText } from '@/core/ui/primitives/AppText';
 
 /**

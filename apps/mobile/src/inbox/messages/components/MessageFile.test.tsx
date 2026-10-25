@@ -7,8 +7,8 @@ import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
 import { shape } from '@/theme';
 import { MessageBubble } from './MessageBubble';
-import { message, PHONE } from './thread-fixtures';
-import { ThreadModeProvider } from './thread/hooks/thread-mode';
+import { message, PHONE } from '../../shared/thread-fixtures';
+import { ThreadModeProvider } from '../../thread/hooks/thread-mode';
 
 const mockApiFetch = jest.fn();
 jest.mock('@/core/lib/http/api', () => ({

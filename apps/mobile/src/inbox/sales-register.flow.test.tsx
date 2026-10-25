@@ -3,8 +3,8 @@ import { booked, maryam, SUN_17 } from '@/booking/fixtures';
 import { fakeBookingApi, walkToConfirm } from '@/booking/test-utils';
 import { t } from '@/core/lib/i18n/i18n';
 import { renderApp, resetApp } from '@/test/app-router';
-import { inboxBackend } from './flow-backend';
-import { inbound, PHONE } from './thread-fixtures';
+import { inboxBackend } from './shared/flow-backend';
+import { inbound, PHONE } from './shared/thread-fixtures';
 
 beforeEach(resetApp);
 

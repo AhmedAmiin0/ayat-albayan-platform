@@ -1,5 +1,5 @@
-import type { Lead } from '@/inbox/types';
-import { huda, unnamed } from '@/inbox/fixtures';
+import type { Lead } from '@/inbox/shared/types';
+import { huda, unnamed } from '@/inbox/shared/fixtures';
 import { FakeBackend } from '@/test/fake-backend';
 import { booked, SUN_17 } from './fixtures';
 import { fakeBookingApi } from './test-utils';

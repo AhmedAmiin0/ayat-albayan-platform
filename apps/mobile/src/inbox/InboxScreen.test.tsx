@@ -4,7 +4,7 @@ import { t } from '@/core/lib/i18n/i18n';
 import { listKey } from '@/core/lib/query/query-keys';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { ltr } from '@/core/ui/primitives/Ltr';
-import { cachedList, huda, page, unnamed } from './fixtures';
+import { cachedList, huda, page, unnamed } from './shared/fixtures';
 import { InboxScreen } from './InboxScreen';
 
 const mockApiFetch = jest.fn();

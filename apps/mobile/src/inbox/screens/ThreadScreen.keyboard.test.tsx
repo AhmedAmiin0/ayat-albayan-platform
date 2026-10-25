@@ -3,7 +3,7 @@ import { DeviceEventEmitter, Platform } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { t } from '@/core/lib/i18n/i18n';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
-import { detail, inbound, thread } from '../thread-fixtures';
+import { detail, inbound, thread } from '../shared/thread-fixtures';
 import { ThreadScreen } from './ThreadScreen';
 
 // The owner's Android sales chat (2026-10-25): the composer was under the keyboard. A 400 × 800

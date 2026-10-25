@@ -2,7 +2,7 @@ import type { ActivityView } from '@ab/shared';
 import { router } from 'expo-router';
 import { useState } from 'react';
 import { FlatList, View } from 'react-native';
-import { clockAt } from '@/inbox/format';
+import { clockAt } from '@/inbox/shared/format';
 import { t } from '@/core/lib/i18n/i18n';
 import { usePagedList } from '@/core/lib/query/use-paged-list';
 import { Button } from '@/core/ui/primitives/Button';

@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { createTestQueryClient, queryWrapper } from '@/test/query';
 import { PRICES } from '../saved-replies/fixtures';
 import type { StagedFile } from '../saved-replies/use-saved-reply';
-import { message } from '../thread-fixtures';
+import { message } from '../shared/thread-fixtures';
 import { useComposerSend } from './use-composer-send';
 
 const mockApiSend = jest.fn();

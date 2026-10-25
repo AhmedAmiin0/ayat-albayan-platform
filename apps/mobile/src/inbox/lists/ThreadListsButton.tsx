@@ -4,7 +4,7 @@ import { useHolds } from '@/auth/use-permissions';
 import { t } from '@/core/lib/i18n/i18n';
 import { useTheme } from '@/theme';
 import { IconButton } from '@/core/ui/primitives/IconButton';
-import { ListsIcon } from '../chat-icons';
+import { ListsIcon } from '../shared/chat-icons';
 import { ThreadListsSheet } from './ThreadListsSheet';
 
 export interface ThreadListsButtonProps {
