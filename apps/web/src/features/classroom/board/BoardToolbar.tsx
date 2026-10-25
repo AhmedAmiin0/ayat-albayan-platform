@@ -1,9 +1,9 @@
 import { t } from '@/lib/i18n/i18n';
 import { cn } from '@/lib/utils';
-import { RoomButton } from '../RoomButton';
+import { RoomButton } from '../room/components/RoomButton';
 import { RequestButton } from '../share/RequestButton';
 import type { ShareRequests } from '../share/use-share-requests';
-import { PEN_COLORS, type PenColor } from './model';
+import { PEN_COLORS, type PenColor } from './model/model';
 import type { BoardController } from './use-board';
 import type { BoardShare } from './use-board-share';
 

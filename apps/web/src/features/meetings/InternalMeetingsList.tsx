@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { FormAlert } from '@/components/ui/form/form-alert';
-import { viewerTz } from '@/features/classroom/student-link';
+import { viewerTz } from '@/features/classroom/student-link/student-link';
 import { t } from '@/lib/i18n/i18n';
 import { meetingsQuery } from './internal-api';
 import { MeetingRow } from './MeetingRow';

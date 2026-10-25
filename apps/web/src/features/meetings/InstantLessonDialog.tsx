@@ -8,7 +8,7 @@ import { FormAlert } from '@/components/ui/form/form-alert';
 import { Input } from '@/components/ui/form/input';
 import { Select } from '@/components/ui/form/select';
 import { bookingTeachersQuery } from '@/features/booking/api';
-import { startInstant } from '@/features/classroom/meetings-api';
+import { startInstant } from '@/features/classroom/api/meetings-api';
 import { conflictText } from '@/features/schedule/reschedule/ConflictNotice';
 import { conflictsOf } from '@/features/schedule/api';
 import { t } from '@/lib/i18n/i18n';

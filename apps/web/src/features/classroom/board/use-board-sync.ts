@@ -1,10 +1,10 @@
 import type { JoinRole } from '@ab/shared';
 import { useCallback, useEffect, useRef, type RefObject } from 'react';
-import type { DataPacketIn, RoomStatus } from '../room-types';
-import type { RoomController } from '../use-room';
-import { BOARD_TOPIC, decodeMessage, encodeMessage, syncMessages, type BoardMessage } from './messages';
-import type { BoardState } from './model';
-import { shouldAnswerSync, type BoardInput } from './reducer';
+import type { DataPacketIn, RoomStatus } from '../room/components/room-types';
+import type { RoomController } from '../room/livekit/use-room';
+import { BOARD_TOPIC, decodeMessage, encodeMessage, syncMessages, type BoardMessage } from './model/messages';
+import type { BoardState } from './model/model';
+import { shouldAnswerSync, type BoardInput } from './model/reducer';
 
 export interface BoardSyncOptions {
   room: Pick<RoomController, 'sendData' | 'onData'>;

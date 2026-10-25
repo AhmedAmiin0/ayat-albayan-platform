@@ -1,8 +1,8 @@
 import { renderHook } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
-import type { BoardMessage } from './messages';
-import { ERASER_WIDTH, PEN_WIDTH } from './model';
-import type { BoardInput } from './reducer';
+import type { BoardMessage } from './model/messages';
+import { ERASER_WIDTH, PEN_WIDTH } from './model/model';
+import type { BoardInput } from './model/reducer';
 import { usePen, type BoardTool } from './use-pen';
 
 const me = { identity: 'me', role: 'teacher' } as const;

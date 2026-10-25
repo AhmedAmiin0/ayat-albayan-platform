@@ -1,7 +1,7 @@
 import { IconButton } from '@/components/ui/form/icon-button';
 import { t } from '@/lib/i18n/i18n';
-import { RoomIcon } from '../room-icons';
-import type { TileView } from '../room-types';
+import { RoomIcon } from '../room/components/room-icons';
+import type { TileView } from '../room/components/room-types';
 
 /** The tile's corner «إخراج من الحلقة» (named for the person); the confirm dialog follows. */
 export function KickButton({ tile, onAsk }: { tile: TileView; onAsk: (tile: TileView) => void }) {

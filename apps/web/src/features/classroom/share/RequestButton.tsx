@@ -1,4 +1,4 @@
-import { RoomButton } from '../RoomButton';
+import { RoomButton } from '../room/components/RoomButton';
 import { REQUEST_TEXT } from './request-text';
 import type { RequestKind } from './share-messages';
 import type { ShareRequests } from './use-share-requests';

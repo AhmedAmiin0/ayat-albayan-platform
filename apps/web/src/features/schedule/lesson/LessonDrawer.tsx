@@ -2,7 +2,7 @@ import type { LessonView } from '@ab/shared';
 import { useRef, useState } from 'react';
 import { useFocusOnChange } from '@/components/ui/overlay/use-focus-on-change';
 import { AdminCourseChange } from '@/features/booking/course-change/AdminCourseChange';
-import { ClassroomActions } from '@/features/classroom/ClassroomActions';
+import { ClassroomActions } from '@/features/classroom/join/ClassroomActions';
 import { FeedbackRequestButton } from '@/features/feedback/FeedbackRequestButton';
 import { LessonReportLinks } from '@/features/reports/LessonReportLinks';
 import { t } from '@/lib/i18n/i18n';
