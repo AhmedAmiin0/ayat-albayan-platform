@@ -12,8 +12,8 @@ import {
   type TeacherPaymentView,
 } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import { badRequest, conflict, notFound } from '../scheduling/errors';
-import type { Page } from '../teachers/http';
+import { badRequest, conflict, notFound } from '../../common/http/errors';
+import type { Page } from '../../common/http/http';
 import { toEarningView, toPaymentView } from './earnings.mapper';
 import { EarningsQueries, type PaymentRow } from './earnings.queries';
 import { EarningsReceipts } from './earnings.receipts';

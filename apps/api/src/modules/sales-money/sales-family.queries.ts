@@ -1,8 +1,8 @@
 import type { StudentStatus } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../common/db/db.module';
-import { notFound } from '../scheduling/errors';
-import { dbError } from '../teachers/http';
+import { notFound } from '../../common/http/errors';
+import { dbError } from '../../common/http/http';
 
 export type FamilyStudentRow = { id: string; code: string | null; name: string; status: StudentStatus };
 

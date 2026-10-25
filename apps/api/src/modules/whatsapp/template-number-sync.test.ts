@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { OverlayNumber } from '../../common/integrations/numbers-overlay';
-import type { MetaLineEnv } from '../../env';
+import type { MetaLineEnv } from '../../config/env/env';
 import { syncNumber, type NumberSyncDeps } from './template-number-sync';
 import type { ApprovalRow, ApprovalWrite } from './templates.queries';
 import { REMINDER_24H, REPORT_READY, STUB_ENV, templateRow } from './whatsapp.fakes';

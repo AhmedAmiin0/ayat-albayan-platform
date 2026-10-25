@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { appSecrets, bootGaps, duplicatePhone, lineEnvs, lineGaps, lineNumbers, lineProvider, loadEnv, sendingAllowed } from './env';
+import { appSecrets, bootGaps, duplicatePhone, lineEnvs, lineGaps, lineNumbers, lineProvider, loadEnv, sendingAllowed } from '../env';
 import { crmGaps, crmWebhookSecret } from './env.crm';
 
 // docs/19 «crm driver»: a line on the academy CRM's REST API — its base and key only, no ids of ours.

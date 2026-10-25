@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 import type { AuthUser } from '../../common/auth/verify-token';
 import { avatarPath, isPathOf } from '../../common/storage/storage.paths';
 import { SNIFF_BYTES, sniffMime } from '../booking/invoice-sniff';
-import { badRequest, notFound } from '../scheduling/errors';
+import { badRequest, notFound } from '../../common/http/errors';
 import { baseMime } from '../whatsapp/inbound-media.service';
 import { AccountPorts } from './account.ports.provider';
 import { AccountService } from './account.service';

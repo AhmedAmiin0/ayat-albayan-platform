@@ -2,7 +2,7 @@ import { ConflictException, NotFoundException } from '@nestjs/common';
 import type { PostgrestError } from '@supabase/supabase-js';
 import { describe, expect, it, vi } from 'vitest';
 import type { Db } from '../../common/db/db.module';
-import { errorCode } from '../scheduling/errors';
+import { errorCode } from '../../common/http/errors';
 import { callSubmitReport, submitError } from './report-rpc';
 import type { SubmitPayload } from './submit-plan';
 

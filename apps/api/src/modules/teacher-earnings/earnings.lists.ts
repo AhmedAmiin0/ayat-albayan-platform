@@ -1,7 +1,7 @@
 import type { EARNING_SORT_KEYS, EarningsListQuery, TEACHER_PAYMENT_SORT_KEYS, TeacherPaymentListQuery } from '@ab/shared';
 import type { Db } from '../../common/db/db.module';
 import { applySort, ilikeContains, type SortSpec } from '../../common/list-sort';
-import { dbError, type Page } from '../teachers/http';
+import { dbError, type Page } from '../../common/http/http';
 import { lessonNames } from './earnings.names';
 import type { EarningRow, PaymentRow, SessionRow } from './earnings.queries';
 

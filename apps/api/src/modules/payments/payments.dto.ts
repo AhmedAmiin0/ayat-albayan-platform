@@ -1,6 +1,6 @@
 import { listSortShape, localDate, PAYMENT_KINDS, PAYMENT_METHODS, PAYMENT_SORT_KEYS, SETTING_DEFAULTS } from '@ab/shared';
 import { z } from 'zod';
-import { pageQuerySchema } from '../teachers/http';
+import { pageQuerySchema } from '../../common/http/http';
 import { DAY, zonedToUtc } from '../teachers/availability/zoned-time';
 import type { PaymentFilter } from './payments.queries';
 

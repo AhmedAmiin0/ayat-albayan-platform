@@ -1,7 +1,7 @@
 import type { SavedReply, SavedReplyCreate, SavedReplyStaged, SavedReplyUpdate, SignedUpload, SavedReplyUpload } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
 import type { AuthUser } from '../../common/auth/verify-token';
-import { forbidden, notFound } from '../scheduling/errors';
+import { forbidden, notFound } from '../../common/http/errors';
 import { managesShared } from './saved-replies.guard';
 import { inListOrder, toSavedReply, type SavedReplyRow } from './saved-replies.mapper';
 import { SavedReplyFiles, type StoredFile } from './saved-replies.files';

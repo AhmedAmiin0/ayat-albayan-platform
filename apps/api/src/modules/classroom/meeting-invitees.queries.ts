@@ -2,7 +2,7 @@ import type { TablesInsert, TablesUpdate } from '@ab/db';
 import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../common/db/db.module';
 import { SENDING } from '../whatsapp/send-plan';
-import { dbError } from '../teachers/http';
+import { dbError } from '../../common/http/http';
 import type { InviteeRow } from './meeting-invites.mapper';
 
 /** The server's view of an invitee: the phone and profile too (never sent to a client), never the hash. */

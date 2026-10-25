@@ -1,5 +1,5 @@
 import type { LinkCandidate, LinkKind } from '@ab/shared';
-import { conflict } from '../scheduling/errors';
+import { conflict } from '../../common/http/errors';
 import type { LinkTarget, NewProfile, NewTeacher, ProfilePatch, RefRow, StaffProfile, UserRow, UserStore } from './users.store';
 
 export const row = (id: string, role: UserRow['role'], extra: Partial<UserRow> = {}): UserRow => ({

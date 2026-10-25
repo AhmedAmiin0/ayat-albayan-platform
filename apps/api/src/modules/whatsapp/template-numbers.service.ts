@@ -2,7 +2,7 @@ import type { TemplateNumberSetView, TemplateNumberSyncView } from '@ab/shared';
 import { Injectable, Logger } from '@nestjs/common';
 import { AuditService } from '../../common/audit/audit.service';
 import { overlayNumbers } from '../../common/integrations/numbers-overlay';
-import type { WhatsappEnv } from '../../env';
+import type { WhatsappEnv } from '../../config/env/env';
 import { whatsappClient } from './client-factory';
 import { setTemplateNumber, type NumberSetInput } from './template-number-set';
 import { syncNumber } from './template-number-sync';

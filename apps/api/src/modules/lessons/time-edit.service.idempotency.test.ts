@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { conflict } from '../scheduling/errors';
+import { conflict } from '../../common/http/errors';
 import { body, correction, heldRow, lessonRow, NOW, timeSetup } from './time-edit.fakes';
 
 describe('LessonTimeService — replays and races (idempotency, rule 8)', () => {

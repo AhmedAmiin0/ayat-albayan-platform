@@ -3,7 +3,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../common/db/db.module';
 import { orSafe } from '../guardians/http';
 import { studentNameOrCodeFilter } from '../students/students.mapper';
-import { dbError } from '../teachers/http';
+import { dbError } from '../../common/http/http';
 
 /** Who may be invited as staff (base roles; never a guardian or a student login). */
 export const STAFF_ROLES = ['admin', 'teacher', 'assistant', 'sales'] as const;

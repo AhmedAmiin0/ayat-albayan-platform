@@ -2,7 +2,7 @@ import { REGISTRATION_CHECK_MAX, type RegistrationMatch } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../common/db/db.module';
 import { studentNameOrCodeFilter } from '../students/students.mapper';
-import { dbError } from '../teachers/http';
+import { dbError } from '../../common/http/http';
 
 /** One more row than the answer lists, so `more` can be told without a count. */
 const READ = REGISTRATION_CHECK_MAX + 1;

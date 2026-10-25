@@ -1,7 +1,7 @@
 import { isOpenLesson, type LessonProposalRequest, type ProposalApprove } from '@ab/shared';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import type { AuthUser } from '../../common/auth/verify-token';
-import { badRequest, conflict } from '../scheduling/errors';
+import { badRequest, conflict } from '../../common/http/errors';
 import { LessonAccess } from './lesson-access';
 import { LessonProposalQueries } from './lesson-proposals.queries';
 import { LessonStore } from './lesson-store';

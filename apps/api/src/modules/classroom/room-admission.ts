@@ -1,6 +1,6 @@
 import { lessonRoomName, type JoinRole, type RoomJoinResult } from '@ab/shared';
 import { HttpException, HttpStatus, Inject, Injectable, Logger } from '@nestjs/common';
-import type { LivekitEnv } from '../../env';
+import type { LivekitEnv } from '../../config/env/env';
 import { CLASSROOM_CONFIG, classroomConfigOf, type ClassroomConfigSource } from './classroom.config';
 import { notConfigured } from './join-gate';
 import { mintToken, newIdentity } from './livekit-token';

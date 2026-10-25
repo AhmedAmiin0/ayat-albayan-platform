@@ -3,7 +3,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { BUCKETS, isPathOf } from '../../common/storage/storage.paths';
 import { StorageService } from '../../common/storage/storage.service';
 import { SNIFF_BYTES, sniffMime } from '../booking/invoice-sniff';
-import { badRequest, conflict, notFound } from '../scheduling/errors';
+import { badRequest, conflict, notFound } from '../../common/http/errors';
 import { PaymentAttachmentsQueries } from './payment-attachments.queries';
 import { PaymentsQueries } from './payments.queries';
 

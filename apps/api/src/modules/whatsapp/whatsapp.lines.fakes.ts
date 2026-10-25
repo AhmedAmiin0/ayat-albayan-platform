@@ -1,5 +1,5 @@
 import { vi } from 'vitest';
-import type { MetaLineEnv } from '../../env';
+import type { MetaLineEnv } from '../../config/env/env';
 import { STUB_ENV, type Recorded } from './whatsapp.fakes';
 
 // Test-only (excluded from the build). The chat line (docs/12 §13.16 item 6) and the diagnostics

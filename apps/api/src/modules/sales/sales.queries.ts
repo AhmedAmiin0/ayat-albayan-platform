@@ -1,7 +1,7 @@
 import type { Tables } from '@ab/db';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../common/db/db.module';
-import { dbError } from '../teachers/http';
+import { dbError } from '../../common/http/http';
 import { isSalesLesson, salesLessonsBetween, type SalesLessonRow } from './sales-lessons';
 import { ownershipOf, type SalesOwnership } from './sales-ownership';
 

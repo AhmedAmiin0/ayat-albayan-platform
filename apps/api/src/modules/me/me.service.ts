@@ -1,7 +1,7 @@
 import { Inject, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { DB, type Db } from '../../common/db/db.module';
 import { deviceKeyHash } from '../../common/push/push-claim';
-import { dbError } from '../teachers/http';
+import { dbError } from '../../common/http/http';
 import { claimDeviceKey, type DeviceClaim } from './push-device.claim';
 import { withoutPushToken, withPushToken } from './push-tokens';
 

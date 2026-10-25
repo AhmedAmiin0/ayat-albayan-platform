@@ -9,7 +9,7 @@ import { Body, Controller, Delete, Get, Headers, HttpCode, Param, Put, Query, Re
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser, Permissions, Public } from '../../common/auth/decorators';
 import type { AuthUser } from '../../common/auth/verify-token';
-import { parseOrThrow } from '../teachers/http';
+import { parseOrThrow } from '../../common/http/http';
 import { TranslationsService } from './translations.service';
 
 /** The bit of the Fastify reply used here (no direct `fastify` dependency). */

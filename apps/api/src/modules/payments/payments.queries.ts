@@ -5,8 +5,8 @@ import { DB, type Db } from '../../common/db/db.module';
 import { applySort } from '../../common/list-sort';
 import type { StudentRef } from '../subscriptions/subscriptions.queries';
 import { readAll } from '../scheduling/read-all';
-import { badRequest } from '../scheduling/errors';
-import { dbError, type Page } from '../teachers/http';
+import { badRequest } from '../../common/http/errors';
+import { dbError, type Page } from '../../common/http/http';
 import { filtered, PAYMENT_SORT, type PaymentFilter } from './payments.list-query';
 
 export type { PaymentFilter } from './payments.list-query';

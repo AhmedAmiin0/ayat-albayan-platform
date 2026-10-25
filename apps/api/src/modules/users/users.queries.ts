@@ -1,7 +1,7 @@
 import type { LinkKind, UsersListQuery } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../common/db/db.module';
-import { dbError } from '../teachers/http';
+import { dbError } from '../../common/http/http';
 import { guardedError, phoneAware } from './users.errors';
 import * as links from './users.links.queries';
 import { mapListRow } from './users.rows';

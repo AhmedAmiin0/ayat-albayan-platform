@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 import type { AuthUser } from '../../common/auth/verify-token';
 import type { TimeEditChange } from '../scheduling/change-set';
 import { ConflictChecker } from '../scheduling/conflict-checker';
-import { conflict, errorCode } from '../scheduling/errors';
+import { conflict, errorCode } from '../../common/http/errors';
 import { studentIdsOf, type LessonRow } from './lesson-row';
 import { LessonStore } from './lesson-store';
 import { TimeEditPayout } from './time-edit.payout';

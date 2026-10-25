@@ -1,4 +1,4 @@
-import type { MetaLineEnv } from '../../env';
+import type { MetaLineEnv } from '../../config/env/env';
 import type { TemplateRow } from './whatsapp.types';
 
 // Test-only (excluded from the build). Graph bodies recorded from tools/wa-stub on 2026-10-02

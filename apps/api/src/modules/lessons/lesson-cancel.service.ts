@@ -1,7 +1,7 @@
 import { isOpenLesson, type CancelRequest, type RuleCancelRequest } from '@ab/shared';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import type { AuthUser } from '../../common/auth/verify-token';
-import { badRequest, conflict } from '../scheduling/errors';
+import { badRequest, conflict } from '../../common/http/errors';
 import { addDays, localDateOf, startOfLocalDay } from '../scheduling/horizon';
 import { ScheduleQueries, type RuleWithLinks } from '../scheduling/schedule.queries';
 import { LessonStore } from './lesson-store';

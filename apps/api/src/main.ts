@@ -4,7 +4,7 @@ import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fa
 import { AppModule } from './app.module';
 import { registerClientUsage } from './common/client-usage/client-usage.hook';
 import { ClientUsageService } from './common/client-usage/client-usage.service';
-import { loadEnv } from './env';
+import { loadEnv } from './config/env/env';
 import { registerLivekitWebhookParser } from './modules/classroom/livekit-webhook.controller';
 import { setupOpenApi } from './openapi';
 

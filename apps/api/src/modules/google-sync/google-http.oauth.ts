@@ -1,5 +1,5 @@
 import { OAuth2Client } from 'google-auth-library';
-import type { GoogleEnv } from '../../env';
+import type { GoogleEnv } from '../../config/env/env';
 import type { GoogleOAuth } from './google-client.port';
 import { toGoogleError } from './google-http';
 

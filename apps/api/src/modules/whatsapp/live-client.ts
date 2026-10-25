@@ -1,5 +1,5 @@
 import type { WaLine } from '@ab/shared';
-import { allowedRecipients, lineEnvs, loadEnv } from '../../env';
+import { allowedRecipients, lineEnvs, loadEnv } from '../../config/env/env';
 import { whatsappClient } from './client-factory';
 import type { WhatsappClient } from './whatsapp.types';
 

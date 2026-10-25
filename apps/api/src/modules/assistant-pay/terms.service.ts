@@ -1,7 +1,7 @@
 import type { AssistantTermsInput, BroughtByView, AssistantTermsRow, AssistantTermsView } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
 import { AuditService } from '../../common/audit/audit.service';
-import { notFound } from '../scheduling/errors';
+import { notFound } from '../../common/http/errors';
 import { AssistantRpc } from './assistant-pay.rpc';
 import { termsColumns, toTermsView } from './terms.mapper';
 import { TermsQueries } from './terms.queries';

@@ -3,7 +3,7 @@ import { joinWindowConfig, type JoinWindowConfig } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../common/db/db.module';
 import { ClassroomSettings } from './classroom.settings';
-import { dbError } from '../teachers/http';
+import { dbError } from '../../common/http/http';
 
 export type MeetingRow = Pick<
   Tables<'meetings'>,

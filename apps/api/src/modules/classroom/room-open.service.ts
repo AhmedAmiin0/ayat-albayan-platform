@@ -1,7 +1,7 @@
 import { isOpenLesson, joinWindow, type RoomOpenResult } from '@ab/shared';
 import { ForbiddenException, HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import type { AuthUser } from '../../common/auth/verify-token';
-import { conflict, notFound } from '../scheduling/errors';
+import { conflict, notFound } from '../../common/http/errors';
 import { ClassroomQueries } from './classroom.queries';
 import { LessonRoleService } from './lesson-role.service';
 

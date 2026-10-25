@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ROLE_STORE, type RoleStore } from '../roles/roles.store';
-import { notFound } from '../scheduling/errors';
+import { notFound } from '../../common/http/errors';
 import type { UserState } from './users.logic';
 import { USER_STORE, type StaffProfile, type UserStore } from './users.store';
 

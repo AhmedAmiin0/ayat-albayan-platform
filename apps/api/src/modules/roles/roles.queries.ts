@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../common/db/db.module';
-import { dbError } from '../teachers/http';
+import { dbError } from '../../common/http/http';
 import type { NewRole, ProfileRecord, RoleNames, RoleRecord, RoleStore } from './roles.store';
 
 /**

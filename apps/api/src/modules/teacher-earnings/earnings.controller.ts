@@ -17,7 +17,7 @@ import { Body, Controller, Get, HttpCode, Param, ParseUUIDPipe, Post, Query } fr
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser, Permissions } from '../../common/auth/decorators';
 import type { AuthUser } from '../../common/auth/verify-token';
-import { parseOrThrow, type Page } from '../teachers/http';
+import { parseOrThrow, type Page } from '../../common/http/http';
 import { CorrectionsQueries } from './corrections.queries';
 import { EarningsReceipts } from './earnings.receipts';
 import { EarningsService } from './earnings.service';

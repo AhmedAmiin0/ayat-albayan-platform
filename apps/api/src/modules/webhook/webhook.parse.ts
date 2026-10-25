@@ -1,5 +1,5 @@
 import type { Json } from '@ab/db';
-import type { LineNumbers } from '../../env';
+import type { LineNumbers } from '../../config/env/env';
 import {
   DELIVERY_STATUSES,
   MEDIA_TYPES,

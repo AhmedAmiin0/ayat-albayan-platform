@@ -1,6 +1,6 @@
 import { ForbiddenException } from '@nestjs/common';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { conflict } from '../scheduling/errors';
+import { conflict } from '../../common/http/errors';
 import type { LessonAccess } from './lesson-access';
 import type { LessonProposalQueries } from './lesson-proposals.queries';
 import { LessonProposeService, ProposalDecisionService } from './lesson-proposals.service';

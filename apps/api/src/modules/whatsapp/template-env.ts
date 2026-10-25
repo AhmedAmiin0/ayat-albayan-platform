@@ -1,5 +1,5 @@
 import type { TemplateLineFacts, WaLine } from '@ab/shared';
-import { lineEnvs, lineProvider, loadEnv } from '../../env';
+import { lineEnvs, lineProvider, loadEnv } from '../../config/env/env';
 import { graphHttpError, waHttpError } from './template.mapper';
 import { WaError, type WhatsappClient } from './whatsapp.types';
 

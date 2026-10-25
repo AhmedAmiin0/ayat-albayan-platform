@@ -1,6 +1,6 @@
 import { payoutStatuses, type TimeEditResult } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import { conflict } from '../scheduling/errors';
+import { conflict } from '../../common/http/errors';
 import type { LessonRow } from './lesson-row';
 import { LessonsSettings } from './lessons.settings';
 import { isPayoutLocked, payoutScope, type TimeEditPlan } from './time-edit.plan';

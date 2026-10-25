@@ -102,13 +102,13 @@ No code. An admin adds it in «قيم مخصصة» (`PUT /config/custom/:key`): 
 
 ### Add an integration key
 1. `packages/shared/src/integrations/keys.ts`: add it to `INTEGRATION_PLAIN_KEYS` or `INTEGRATION_SECRET_KEYS` and to `GROUP_OF`; add its form check in `checks.ts`.
-2. The env schema (`apps/api/src/env.ts` or its `env.<topic>.ts` shape) must define it, using `env.blank.ts`'s helpers: `validOverlay` checks each database value against that key's schema and drops a bad one.
+2. The env schema (`apps/api/src/config/env/env.ts` or its `env.<topic>.ts` shape) must define it, using `env.blank.ts`'s helpers: `validOverlay` checks each database value against that key's schema and drops a bad one.
 3. A **secret** key needs a new migration that re-creates `public.integration_secret_key_ok` with the full list (never edit an old migration). `apps/api/src/common/integrations/secret-keys.migration.test.ts` reads the latest definition and fails until it matches `INTEGRATION_SECRET_KEYS`. A plain key needs no migration.
 4. Add `integrations.keys.<KEY>.label` / `.hint` to `ar.json` and `en.json`; update the key table in docs/09 «Integration config in the database».
 5. Read it from `loadEnv()` per call, never once at boot, so a saved value applies without a restart. `pnpm --filter api config:import-env` copies it from env automatically.
 
 ### Add a bootstrap env key
-Add it to the schema in `apps/api/src/env.ts` (blank = unset through `env.blank.ts`), then a line in `apps/api/.env.example` and the «Stays in env» row in docs/09. It must not be an integration key. `env.ts` is close to the 150-line cap, so a group of related keys gets its own `env.<topic>.ts` shape spread into the schema (as `env.kapso.ts`, `env.google.ts` and `env.web-push.ts` are). The meta-callers whitelist names env files by path.
+Add it to the schema in `apps/api/src/config/env/env.ts` (blank = unset through `env.blank.ts`), then a line in `apps/api/.env.example` and the «Stays in env» row in docs/09. It must not be an integration key. `env.ts` is close to the 150-line cap, so a group of related keys gets its own `env.<topic>.ts` shape spread into the schema (as `env.kapso.ts`, `env.google.ts` and `env.web-push.ts` are). The meta-callers whitelist names env files by path.
 
 ## 6. Rows google-sync owns
 

@@ -1,7 +1,7 @@
 import { WA_PROVIDERS } from '@ab/shared';
 import { z } from 'zod';
-import type { Env } from './env';
-import { blankIsUnset, optionalSecret } from './env.blank';
+import type { Env } from '../env';
+import { blankIsUnset, optionalSecret } from '../env.blank';
 import type { KapsoLineEnv } from './env.whatsapp';
 
 const provider = z.preprocess(blankIsUnset, z.enum(WA_PROVIDERS).default('meta'));

@@ -1,6 +1,6 @@
 import type { WeeklyRule } from '@ab/shared';
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { badRequest, conflict } from '../scheduling/errors';
+import { badRequest, conflict } from '../../common/http/errors';
 import { localDateOf } from '../scheduling/horizon';
 import { ScheduleQueries, type RuleWithLinks } from '../scheduling/schedule.queries';
 import { TeachersQueries } from '../teachers/teachers.queries';

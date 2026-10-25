@@ -1,6 +1,6 @@
 // Test fixtures (not shipped behaviour): module-mode numbers for the reply-per-number tests (docs/23c).
 import type { OverlayNumber } from '../../common/integrations/numbers-overlay';
-import type { WhatsappEnv } from '../../env';
+import type { WhatsappEnv } from '../../config/env/env';
 
 /** A fake line env: only "is it null" matters to routing. Never a real token. */
 export const FAKE_ENV: WhatsappEnv = { base: 'http://wa-stub.test', version: 'v21.0', phoneNumberId: 'p', wabaId: 'w', accessToken: 'token-fake' };

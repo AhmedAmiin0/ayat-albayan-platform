@@ -8,7 +8,7 @@ Contents: A. Lines · B. Notification engine · C. Admin UI · D. Data model · 
 
 ## A. LINES (the two WhatsApp numbers)
 
-**Correction to the brief.** Both lines can run on either driver. `WA_PROVIDER` picks the notifications line's driver and `WA_CHAT_PROVIDER` the chat line's (`apps/api/src/env.kapso.ts:16-20`, `apps/api/src/env.whatsapp.ts:63-65`). Only the defaults are `meta`. The e2e helper `e2e/support/kapso.ts:24-37` switches the **notifications** line to kapso.
+**Correction to the brief.** Both lines can run on either driver. `WA_PROVIDER` picks the notifications line's driver and `WA_CHAT_PROVIDER` the chat line's (`apps/api/src/config/env/whatsapp/env.kapso.ts:16-20`, `apps/api/src/config/env/whatsapp/env.whatsapp.ts:63-65`). Only the defaults are `meta`. The e2e helper `e2e/support/kapso.ts:24-37` switches the **notifications** line to kapso.
 
 ### A1. Where the line type is defined
 

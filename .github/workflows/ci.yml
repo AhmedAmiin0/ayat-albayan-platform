@@ -107,6 +107,31 @@ jobs:
             turbo-${{ matrix.key }}-${{ runner.os }}-
       - run: pnpm turbo ${{ matrix.task }} ${{ matrix.filter }} --cache-dir=.turbo/cache ${{ matrix.args }}
 
+  # Refactor guards (docs/27 §4). Folder cap: report only until Wave F. Pure-move check: only for the
+  # move PRs of the refactor chain (cloud/refactor-a*, b*, c*, d* heads); it fails on any hunk that is not a
+  # rename, a module path, a new index.ts barrel or path-dependent config. No install, no secrets.
+  refactor:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+      - run: node tools/scripts/folder-cap.mjs
+      - name: Pure-move check
+        env:
+          HEAD_REF: ${{ github.head_ref }}
+          BASE_REF: ${{ github.base_ref }}
+        run: |
+          case "$HEAD_REF" in
+            cloud/refactor-[abcd][0-9]*) node tools/scripts/pure-move-check.mjs "origin/$BASE_REF" HEAD ;;
+            *) echo "not a move PR ($HEAD_REF): skipped" ;;
+          esac
+
   # The required aggregate for branch protection: every verify job passed, or a docs-only change skipped
   # them all (changes said code=false). Anything else (a failed or cancelled job, a failed changes job) is red.
   check:

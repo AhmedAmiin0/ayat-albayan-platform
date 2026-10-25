@@ -2,7 +2,7 @@ import { convertPayment, type PaymentCreate, type SignedDownload } from '@ab/sha
 import { Injectable } from '@nestjs/common';
 import { FxService } from '../fx/fx.service';
 import { InvoicesService } from '../invoices/invoices.service';
-import { badRequest, errorCode } from '../scheduling/errors';
+import { badRequest, errorCode } from '../../common/http/errors';
 import type { PaymentRow, PaymentSubscription } from './payments.queries';
 import { PaymentFiles } from './payment-files';
 import type { ReceiptsService } from './receipts.service';

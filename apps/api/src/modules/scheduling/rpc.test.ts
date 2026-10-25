@@ -2,7 +2,7 @@ import { ConflictException } from '@nestjs/common';
 import type { PostgrestError } from '@supabase/supabase-js';
 import { describe, expect, it } from 'vitest';
 import type { Db } from '../../common/db/db.module';
-import { errorCode } from './errors';
+import { errorCode } from '../../common/http/errors';
 import { callRpc, rpcError } from './rpc';
 
 const pgError = (code: string, message: string): PostgrestError =>

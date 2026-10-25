@@ -1,6 +1,6 @@
 import { createHmac, randomBytes } from 'node:crypto';
 import { participantMeta, type JoinRole } from '@ab/shared';
-import type { LivekitEnv } from '../../env';
+import type { LivekitEnv } from '../../config/env/env';
 
 // LiveKit join tokens are plain HS256 JWTs (tools/livekit/token-server.mjs is the reference), so
 // no server SDK: claims iss = API key, sub = identity, name, nbf, exp, video grant.

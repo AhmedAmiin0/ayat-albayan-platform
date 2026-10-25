@@ -1,7 +1,7 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { AuditService } from '../../common/audit/audit.service';
 import type { AuthUser } from '../../common/auth/verify-token';
-import { conflict, notFound } from '../scheduling/errors';
+import { conflict, notFound } from '../../common/http/errors';
 import { TeachersQueries } from '../teachers/teachers.queries';
 import { RecordingAdminQueries, type RecordingWithTeacher } from './recording-admin.queries';
 

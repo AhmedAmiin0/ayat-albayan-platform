@@ -1,4 +1,4 @@
-import type { CrmLineEnv } from '../../env';
+import type { CrmLineEnv } from '../../config/env/env';
 
 // Test-only (excluded from the build). A line on the academy CRM's REST API (docs/19 «crm driver») pointed
 // at tools/wa-stub's crm prefix, and the CRM's answers. Ids and keys invented.

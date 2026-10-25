@@ -1,7 +1,7 @@
 import { reportBlock, type ReportSubmit, type ReportView } from '@ab/shared';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import type { AuthUser } from '../../common/auth/verify-token';
-import { badRequest, conflict } from '../scheduling/errors';
+import { badRequest, conflict } from '../../common/http/errors';
 import { ReportFollowUp } from './report-follow-up';
 import { ReportGate } from './report-gate';
 import { reportView, submitColumns } from './report.mapper';

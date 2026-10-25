@@ -1,8 +1,8 @@
 import type { WaLine } from '@ab/shared';
 import type { Env } from './env';
-import { bothOnCrm, crmGaps } from './env.crm';
-import { duplicateChatPhone, kapsoGaps } from './env.kapso';
-import { chatKeyGaps, hasChatKeys, lineProvider } from './env.whatsapp';
+import { bothOnCrm, crmGaps } from './whatsapp/env.crm';
+import { duplicateChatPhone, kapsoGaps } from './whatsapp/env.kapso';
+import { chatKeyGaps, hasChatKeys, lineProvider } from './whatsapp/env.whatsapp';
 
 // What each line still lacks to send, for «افحص الخطوط» and the boot log (docs/19): key NAMES only.
 

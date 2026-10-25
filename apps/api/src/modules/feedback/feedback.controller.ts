@@ -10,7 +10,7 @@ import { Body, Controller, Get, HttpCode, Param, ParseUUIDPipe, Post, Query } fr
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser, Permissions } from '../../common/auth/decorators';
 import type { AuthUser } from '../../common/auth/verify-token';
-import { pageQuerySchema, parseOrThrow, type Page } from '../teachers/http';
+import { pageQuerySchema, parseOrThrow, type Page } from '../../common/http/http';
 import { FeedbackReadService } from './feedback.read.service';
 import { FeedbackRequestService } from './feedback.request.service';
 

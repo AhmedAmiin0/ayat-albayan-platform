@@ -8,7 +8,7 @@ import {
   type Rubric,
   type StudentReportsResponse,
 } from '@ab/shared';
-import type { PageQuery } from '../teachers/http';
+import type { PageQuery } from '../../common/http/http';
 import type { HistoryLesson, HistoryRow, PendingRow } from './report-history.queries';
 import { iso } from './report-form.mapper';
 

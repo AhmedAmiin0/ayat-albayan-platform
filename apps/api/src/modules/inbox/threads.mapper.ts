@@ -9,7 +9,7 @@ import {
   type ThreadView,
   type WaLine,
 } from '@ab/shared';
-import { lineEnvs, loadEnv } from '../../env';
+import { lineEnvs, loadEnv } from '../../config/env/env';
 import { orSafe } from '../guardians/http';
 import type { FamilyTag } from './thread-people.mapper';
 

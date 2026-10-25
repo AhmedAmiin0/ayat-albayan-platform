@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { loadEnv } from '../../env';
+import { loadEnv } from '../../config/env/env';
 import { integrationRefreshMs } from './integration-refresh';
 
 const base = { INTEGRATION_CONFIG_FROM_DB: true, INTEGRATION_REFRESH_MS: undefined, SETTINGS_CACHE_MS: 30_000 };

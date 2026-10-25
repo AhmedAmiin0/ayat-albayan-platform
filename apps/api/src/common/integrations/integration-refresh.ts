@@ -1,4 +1,4 @@
-import type { Env } from '../../env';
+import type { Env } from '../../config/env/env';
 
 export type IntegrationRefreshEnv = Pick<Env, 'INTEGRATION_CONFIG_FROM_DB' | 'INTEGRATION_REFRESH_MS' | 'SETTINGS_CACHE_MS'>;
 

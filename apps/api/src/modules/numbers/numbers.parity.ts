@@ -1,5 +1,5 @@
 import { SECRET_PARITY_FIELDS, WA_LINES, type ParityCell, type ParityField, type ParityRoleView, type ParityView, type WaLine } from '@ab/shared';
-import { lineEnvs, lineNumbers, lineProvider, type Env, type WhatsappEnv } from '../../env';
+import { lineEnvs, lineNumbers, lineProvider, type Env, type WhatsappEnv } from '../../config/env/env';
 
 // GET /admin/communications/parity (docs/23 §2e step 4): per role, the effective config the legacy path
 // and the module path would use, field by field. Secrets are compared in memory and shown only as

@@ -1,6 +1,6 @@
 import type { ThreadDetail, ThreadPeople, ThreadView } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import type { Page } from '../teachers/http';
+import type { Page } from '../../common/http/http';
 import { MessageViews } from '../whatsapp/message.views';
 import { ReadReceipts } from './read-receipts';
 import { familyTag, type FamilyTag } from './thread-people.mapper';

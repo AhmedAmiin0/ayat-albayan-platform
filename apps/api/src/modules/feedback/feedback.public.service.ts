@@ -1,7 +1,7 @@
 import { feedbackSubmitSchema, type FeedbackFormView } from '@ab/shared';
 import { GoneException, Inject, Injectable } from '@nestjs/common';
-import { conflict, notFound } from '../scheduling/errors';
-import { parseOrThrow } from '../teachers/http';
+import { conflict, notFound } from '../../common/http/errors';
+import { parseOrThrow } from '../../common/http/http';
 import { FEEDBACK_CONFIG, type FeedbackConfig } from './feedback.config';
 import { answerOf, toFormView } from './feedback.mapper';
 import { FeedbackQueries, type PublicContext } from './feedback.queries';

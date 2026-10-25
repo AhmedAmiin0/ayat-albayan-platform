@@ -1,4 +1,4 @@
-import type { KapsoLineEnv } from '../../env';
+import type { KapsoLineEnv } from '../../config/env/env';
 import { STUB_ENV } from './whatsapp.fakes';
 
 // Test-only (excluded from the build). A line on Kapso's Meta proxy (docs/19) pointed at

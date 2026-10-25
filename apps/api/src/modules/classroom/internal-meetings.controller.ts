@@ -3,7 +3,7 @@ import { Body, Controller, Get, HttpCode, Injectable, Ip, Param, ParseUUIDPipe, 
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser, Permissions, Public } from '../../common/auth/decorators';
 import type { AuthUser } from '../../common/auth/verify-token';
-import { notFound } from '../scheduling/errors';
+import { notFound } from '../../common/http/errors';
 import { InternalMeetingJoinService } from './internal-meetings.join.service';
 import { InternalMeetingKickService } from './internal-meetings.kick.service';
 import { InternalMeetingsService } from './internal-meetings.service';

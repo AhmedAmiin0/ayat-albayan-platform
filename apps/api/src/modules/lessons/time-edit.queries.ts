@@ -1,7 +1,7 @@
 import type { PayoutStatus } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../common/db/db.module';
-import { dbError } from '../teachers/http';
+import { dbError } from '../../common/http/http';
 
 /** The one read «عدّل الوقت» needs beyond the lesson itself (service role; the controller guards). */
 @Injectable()

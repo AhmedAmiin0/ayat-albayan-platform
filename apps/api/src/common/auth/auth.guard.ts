@@ -10,7 +10,7 @@ import {
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { IS_PUBLIC, PERMISSION, SIGNED_IN } from './decorators';
-import { forbidden } from '../../modules/scheduling/errors';
+import { forbidden } from '../http/errors';
 import { AccountDisabledError, PERMISSION_RESOLVER, type PermissionResolver } from './permissions';
 import type { AuthUser } from './verify-token';
 

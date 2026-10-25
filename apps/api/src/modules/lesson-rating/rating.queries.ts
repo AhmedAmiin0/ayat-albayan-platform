@@ -4,7 +4,7 @@ import { DB, type Db } from '../../common/db/db.module';
 import type { QueuedMessage } from '../reminders/queued-row';
 import { approvedTemplates, queueMessages } from '../reminders/reminders.queries';
 import { readAll } from '../scheduling/read-all';
-import { dbError } from '../teachers/http';
+import { dbError } from '../../common/http/http';
 import type { RatingGuardian, RatingLesson } from './rating.plan';
 
 const LESSON_SELECT =

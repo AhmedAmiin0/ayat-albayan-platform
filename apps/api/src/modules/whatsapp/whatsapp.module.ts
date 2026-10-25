@@ -2,7 +2,7 @@ import { WA_LINES } from '@ab/shared';
 import { Global, Logger, Module, type OnModuleInit } from '@nestjs/common';
 import { IntegrationConfigModule } from '../../common/integrations/integration-config.module';
 import { NumbersModule } from '../numbers/numbers.module';
-import { bootGaps, lineProvider, loadEnv } from '../../env';
+import { bootGaps, lineProvider, loadEnv } from '../../config/env/env';
 import { GateController } from './gate.controller';
 import { GateSettings } from './gate.settings';
 import { InboundMedia } from './inbound-media.service';

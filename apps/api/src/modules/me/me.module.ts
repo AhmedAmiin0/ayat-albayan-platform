@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { loadEnv } from '../../env';
+import { loadEnv } from '../../config/env/env';
 import { SupabaseAccountAuth } from './account.auth';
 import { AccountAvatarService } from './account.avatar.service';
 import { AccountController } from './account.controller';

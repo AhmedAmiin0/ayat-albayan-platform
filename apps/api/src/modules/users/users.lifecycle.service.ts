@@ -1,6 +1,6 @@
 import type { PasswordReset, UserDetail, UserDisable, UserWithCredential } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import { conflict, notFound } from '../scheduling/errors';
+import { conflict, notFound } from '../../common/http/errors';
 import { recordUser } from './users.audit';
 import { prepareCredential, withLink } from './users.credential';
 import { adminProblem, disabledCopy, replaced, without } from './users.logic';

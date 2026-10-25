@@ -2,7 +2,7 @@ import type { Json, Tables } from '@ab/db';
 import type { EarningsListQuery, TeacherPaymentListQuery } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../common/db/db.module';
-import { dbError, type Page } from '../teachers/http';
+import { dbError, type Page } from '../../common/http/http';
 import { ledgerError } from './earnings.errors';
 import { paymentsPage, sessionsPage } from './earnings.lists';
 

@@ -1,5 +1,5 @@
-import { conflict } from '../scheduling/errors';
-import { dbError } from '../teachers/http';
+import { conflict } from '../../common/http/errors';
+import { dbError } from '../../common/http/http';
 
 type DbFailure = Parameters<typeof dbError>[0];
 

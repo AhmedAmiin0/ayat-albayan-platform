@@ -1,6 +1,6 @@
 import { changePicks, dayTimesKeeping, prefillDays, type BookedCourse, type CourseChangeRequest } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
-import { errorCode } from '../scheduling/errors';
+import { errorCode } from '../../common/http/errors';
 import { assertStart } from './course-change.plan';
 import { bookedCourse, type CourseRuleRow } from './course-read';
 

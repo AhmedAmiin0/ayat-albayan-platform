@@ -2,7 +2,7 @@ import type { CommsSource } from '@ab/shared';
 import { Injectable, Logger, type OnModuleDestroy, type OnModuleInit } from '@nestjs/common';
 import { integrationRefreshMs } from '../../common/integrations/integration-refresh';
 import { setNumbersOverlay, type NumbersOverlay, type OverlayNumber } from '../../common/integrations/numbers-overlay';
-import { loadEnv } from '../../env';
+import { loadEnv } from '../../config/env/env';
 import { overlayNumber } from './numbers.env';
 import { moduleOverlay, type DefaultNumber } from './numbers.lines';
 import { NumbersQueries } from './numbers.queries';

@@ -1,4 +1,4 @@
-import { recipientAllowed, type GraphEnv } from '../../env';
+import { recipientAllowed, type GraphEnv } from '../../config/env/env';
 import { graphFetch, graphJson, type FetchLike, type GraphConn, type GraphRequest } from './graph';
 import { fetchMedia, nextTemplateCursor, templateEditPath } from './kapso';
 import {

@@ -1,6 +1,6 @@
 import type { LinkKind, UserCreate, UserWithCredential } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import { badRequest, conflict, notFound } from '../scheduling/errors';
+import { badRequest, conflict, notFound } from '../../common/http/errors';
 import { recordUser } from './users.audit';
 import { prepareCredential, withLink } from './users.credential';
 import { chooseRole } from './users.logic';

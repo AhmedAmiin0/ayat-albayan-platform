@@ -1,7 +1,7 @@
 import { passwordProblem, type AccountProfile, type EmailChange, type PasswordChange, type ProfileUpdate } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import type { AuthUser } from '../../common/auth/verify-token';
-import { badRequest, conflict, notFound } from '../scheduling/errors';
+import { badRequest, conflict, notFound } from '../../common/http/errors';
 import { AccountPorts } from './account.ports.provider';
 import { ACCOUNT_CONFIG, selfWritable, type AccountConfig } from './account.ports';
 

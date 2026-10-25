@@ -1,8 +1,8 @@
 import { createServer, type IncomingMessage, type Server } from 'node:http';
 import type { AddressInfo } from 'node:net';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
-import type { GoogleEnv } from '../../env';
-import { googleEndpoints } from '../../env.google';
+import type { GoogleEnv } from '../../config/env/env';
+import { googleEndpoints } from '../../config/env/env.google';
 import { classify } from './backoff';
 import { GoogleApiError } from './google-client.port';
 import { GoogleHttpClient } from './google-http.client';

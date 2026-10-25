@@ -1,6 +1,6 @@
 import type { NumberSecretName } from '@ab/shared';
 import type { OverlayNumber } from '../../common/integrations/numbers-overlay';
-import { validOverlay, type Env, type WhatsappEnv } from '../../env';
+import { validOverlay, type Env, type WhatsappEnv } from '../../config/env/env';
 import { ROLE_KEYS } from './numbers.lines';
 import type { NumberRow } from './numbers.queries';
 

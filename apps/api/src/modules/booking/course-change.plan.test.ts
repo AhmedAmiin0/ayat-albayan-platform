@@ -1,6 +1,6 @@
 import { courseChangeCheckSchema, type CourseLessonFact } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
-import { errorCode } from '../scheduling/errors';
+import { errorCode } from '../../common/http/errors';
 import { assertChange, planChange, type ChangeFacts } from './course-change.plan';
 
 const NOW = new Date('2026-10-18T08:00:00Z');

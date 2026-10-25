@@ -7,7 +7,7 @@ import { gateConfirmations } from '../../common/rules/confirmations';
 import { NotificationPolicy } from '../notification-rules/policy';
 import { ConflictChecker } from '../scheduling/conflict-checker';
 import { callRpc } from '../scheduling/rpc';
-import { dbError } from '../teachers/http';
+import { dbError } from '../../common/http/http';
 import { CourseChangePlanner } from './course-change.planner';
 
 const changeResult = z.object({ rule_ids: z.array(z.string()), ends_on: z.string().nullable() });

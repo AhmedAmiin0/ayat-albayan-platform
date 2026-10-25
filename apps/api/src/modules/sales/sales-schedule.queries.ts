@@ -2,7 +2,7 @@ import type { Tables } from '@ab/db';
 import { OPEN_LESSON_STATUSES } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../common/db/db.module';
-import { dbError } from '../teachers/http';
+import { dbError } from '../../common/http/http';
 
 /** Whitelisted lesson columns for sales: never meeting_link, reasons, attendance, notes or money. */
 export const SALES_SCHEDULE_SELECT =

@@ -1,7 +1,7 @@
 import type { OutboundTemplate } from '@ab/shared';
 import type { Db } from '../../common/db/db.module';
 import { hashLinkToken, newLinkToken } from '../classroom/join-link.token';
-import { dbError } from '../teachers/http';
+import { dbError } from '../../common/http/http';
 import { queuedRow, type QueuedMessage } from './queued-row';
 import type { RoomCandidate } from './reminders.links';
 

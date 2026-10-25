@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { can } from '../../common/auth/permissions';
 import type { AuthUser } from '../../common/auth/verify-token';
-import { forbidden, notFound } from '../scheduling/errors';
+import { forbidden, notFound } from '../../common/http/errors';
 
 /**
  * «الردود السريعة» (owner 2026-10-25) belong to the inbox of the admin and the assistants (base role

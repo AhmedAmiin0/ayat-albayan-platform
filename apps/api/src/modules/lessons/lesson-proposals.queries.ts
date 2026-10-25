@@ -1,8 +1,8 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../common/db/db.module';
-import { conflict } from '../scheduling/errors';
+import { conflict } from '../../common/http/errors';
 import { readAll } from '../scheduling/read-all';
-import { dbError } from '../teachers/http';
+import { dbError } from '../../common/http/http';
 
 export type ProposalRow = { id: string; lesson_id: string; proposed_starts_at: string; status: string };
 export type NewProposal = {

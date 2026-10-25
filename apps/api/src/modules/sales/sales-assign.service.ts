@@ -2,7 +2,7 @@ import { pickSales, type SalesPersonView } from '@ab/shared';
 import { Injectable, Logger } from '@nestjs/common';
 import type { Tables } from '@ab/db';
 import { AuditService } from '../../common/audit/audit.service';
-import { badRequest, notFound } from '../scheduling/errors';
+import { badRequest, notFound } from '../../common/http/errors';
 import { toCandidates } from './sales-assign.mapper';
 import { SalesAssignQueries } from './sales-assign.queries';
 import { SalesSettings } from './sales.settings';

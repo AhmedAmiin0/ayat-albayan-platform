@@ -1,8 +1,8 @@
 import { guestJoinSchema, meetingRoomName, meetingState, meetingWindow, type JoinRole, type PublicMeetingView, type RoomJoinResult } from '@ab/shared';
 import { ForbiddenException, HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import type { AuthUser } from '../../common/auth/verify-token';
-import { notFound } from '../scheduling/errors';
-import { parseOrThrow } from '../teachers/http';
+import { notFound } from '../../common/http/errors';
+import { parseOrThrow } from '../../common/http/http';
 import { assertWindowOpen } from './join-gate';
 import { InternalMeetingsQueries, type MeetingRow } from './internal-meetings.queries';
 import { hashMeetingToken, looksLikeMeetingToken, meetingRoleOf } from './internal-meetings.token';

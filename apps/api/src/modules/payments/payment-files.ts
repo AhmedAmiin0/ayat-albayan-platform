@@ -1,6 +1,6 @@
 import { PAYMENT_ATTACHMENTS_MAX, type PaymentMethod } from '@ab/shared';
 import { Injectable, Logger } from '@nestjs/common';
-import { badRequest } from '../scheduling/errors';
+import { badRequest } from '../../common/http/errors';
 import { PaymentAttachments, type CheckedAttachment } from './payment-attachments.service';
 import { ReceiptsService } from './receipts.service';
 

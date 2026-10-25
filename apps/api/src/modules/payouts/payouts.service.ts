@@ -1,7 +1,7 @@
 import { canTransitionPayout, monthStart, type PayoutView } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
 import { AuditService } from '../../common/audit/audit.service';
-import { conflict, notFound } from '../scheduling/errors';
+import { conflict, notFound } from '../../common/http/errors';
 import { TeachersQueries } from '../teachers/teachers.queries';
 import { toPayoutView } from './payouts.mapper';
 import { approveBlock, monthWindow } from './payouts.plan';

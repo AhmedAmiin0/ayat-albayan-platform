@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { readerOf } from '../../common/settings/settings.fakes';
-import { conflict } from '../scheduling/errors';
+import { conflict } from '../../common/http/errors';
 import { ruleRow } from '../scheduling/scheduling.fakes';
 import type { ScheduleQueries } from '../scheduling/schedule.queries';
 import { LessonCancelService } from './lesson-cancel.service';

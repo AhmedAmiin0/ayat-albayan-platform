@@ -3,7 +3,7 @@ import { Inject, Injectable, Logger } from '@nestjs/common';
 import { DB, type Db } from '../../common/db/db.module';
 import { NotificationPolicy } from '../notification-rules/policy';
 import { readAll, readChunked } from '../scheduling/read-all';
-import { dbError } from '../teachers/http';
+import { dbError } from '../../common/http/http';
 
 export interface Recipient {
   studentName: string;

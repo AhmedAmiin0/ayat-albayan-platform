@@ -1,7 +1,7 @@
 import { HttpException } from '@nestjs/common';
 import { beforeEach, describe, expect, it } from 'vitest';
 import { PermissionCache } from '../../common/auth/permission.cache';
-import { errorCode } from '../scheduling/errors';
+import { errorCode } from '../../common/http/errors';
 import { managerProblem } from './roles.logic';
 import { fakeAudit, FakeRoleStore, profile, systemRoles } from './roles.fakes';
 import { RolesService } from './roles.service';

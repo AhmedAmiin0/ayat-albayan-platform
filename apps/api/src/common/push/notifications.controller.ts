@@ -1,8 +1,8 @@
 import { notificationsQuerySchema, notificationsReadSchema, type NotificationsPage, type WebPushKey } from '@ab/shared';
 import { Body, Controller, Delete, Get, HttpCode, Post, Put, Query, UnauthorizedException } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { parseOrThrow } from '../../modules/teachers/http';
-import { loadEnv, webPushEnv } from '../../env';
+import { parseOrThrow } from '../http/http';
+import { loadEnv, webPushEnv } from '../../config/env/env';
 import { CurrentUser, Permissions } from '../auth/decorators';
 import type { AuthUser } from '../auth/verify-token';
 import { NotificationsQueries } from './notifications.queries';

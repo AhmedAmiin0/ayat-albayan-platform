@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { loadEnv } from '../../env';
+import { loadEnv } from '../../config/env/env';
 import { LeadsModule } from '../leads/leads.module';
 import { LessonRatingModule } from '../lesson-rating/lesson-rating.module';
 import { LessonsModule } from '../lessons/lessons.module';

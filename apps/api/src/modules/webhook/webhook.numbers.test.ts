@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { setNumbersOverlay, type OverlayNumber } from '../../common/integrations/numbers-overlay';
-import { loadEnv } from '../../env';
+import { loadEnv } from '../../config/env/env';
 import { envelope, inboundValue, PHONE_NUMBER_ID, statusValue, textPart } from './meta.fakes';
 import { liveWebhookConfig, signatureSecrets } from './webhook.config';
 import { receivingNumber } from './webhook.lines';

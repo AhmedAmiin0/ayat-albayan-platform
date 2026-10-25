@@ -1,6 +1,6 @@
 import { waIdToE164 } from '@ab/shared';
 import { describe, expect, it, vi } from 'vitest';
-import type { LineNumbers } from '../../env';
+import type { LineNumbers } from '../../config/env/env';
 import {
   buttonPart,
   CHAT_PHONE_NUMBER_ID,

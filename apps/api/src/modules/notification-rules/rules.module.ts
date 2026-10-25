@@ -1,8 +1,8 @@
 import { Global, Module } from '@nestjs/common';
 import { ActivityModule } from '../../common/activity/activity.module';
 import { SettingsRulesPort } from '../../common/settings/settings-rules.port';
-import { livekitEnv } from '../../env.livekit';
-import { loadEnv } from '../../env';
+import { livekitEnv } from '../../config/env/env.livekit';
+import { loadEnv } from '../../config/env/env';
 import { NotificationRulesSettings } from './notification-rules.settings';
 import { NotificationPolicy } from './policy';
 import { RulesSourceSettings } from './rules-source.settings';

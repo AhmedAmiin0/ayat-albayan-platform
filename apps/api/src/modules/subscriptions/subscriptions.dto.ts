@@ -7,7 +7,7 @@ import {
   type SubscriptionPricing,
 } from '@ab/shared';
 import { z } from 'zod';
-import { pageQuerySchema } from '../teachers/http';
+import { pageQuerySchema } from '../../common/http/http';
 import type { QuoteQuery } from '../pricing/pricing.dto';
 
 /**

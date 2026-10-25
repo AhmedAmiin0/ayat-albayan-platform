@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { appSecrets, bootGaps, duplicatePhone, lineEnvs, lineGaps, lineNumbers, loadEnv, sendingAllowed, whatsappEnv } from './env';
+import { appSecrets, bootGaps, duplicatePhone, lineEnvs, lineGaps, lineNumbers, loadEnv, sendingAllowed, whatsappEnv } from '../env';
 
 const BASE = { SUPABASE_URL: 'http://127.0.0.1:54321', SUPABASE_SERVICE_ROLE_KEY: 'k' };
 const WA = {

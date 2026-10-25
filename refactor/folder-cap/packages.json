@@ -1,0 +1,38 @@
+{
+  "packages/shared/src": {
+    "files": 13,
+    "dirs": 22
+  },
+  "packages/shared/src/lessons": {
+    "files": 14,
+    "dirs": 0
+  },
+  "packages/shared/src/messaging": {
+    "files": 33,
+    "dirs": 0
+  },
+  "packages/shared/src/money": {
+    "files": 22,
+    "dirs": 0
+  },
+  "packages/shared/src/notifications": {
+    "files": 15,
+    "dirs": 0
+  },
+  "packages/shared/src/sales": {
+    "files": 13,
+    "dirs": 0
+  },
+  "packages/shared/src/schemas": {
+    "files": 17,
+    "dirs": 0
+  },
+  "packages/shared/src/settings": {
+    "files": 20,
+    "dirs": 1
+  },
+  "packages/shared/src/settings/domains": {
+    "files": 16,
+    "dirs": 0
+  }
+}

@@ -3,7 +3,7 @@ import { ForbiddenException, Injectable } from '@nestjs/common';
 import type { AuthUser } from '../../common/auth/verify-token';
 import { BUCKETS, SIGNED_URL_SECONDS } from '../../common/storage/storage.paths';
 import { StorageService } from '../../common/storage/storage.service';
-import { notFound } from '../scheduling/errors';
+import { notFound } from '../../common/http/errors';
 import { InternalMeetingsQueries } from './internal-meetings.queries';
 import { canManageMeeting } from './internal-meetings.token';
 import { LessonRoleService } from './lesson-role.service';

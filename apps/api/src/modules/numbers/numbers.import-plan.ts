@@ -2,7 +2,7 @@ import {
   IMPORT_FIELDS, META_ID_RE, NUMBER_SECRET_NAMES, WA_LINES, type ImportField, type ImportFieldView, type ImportRoleView,
   type IntegrationKey, type IntegrationSource, type NumberSecretName, type WaLine,
 } from '@ab/shared';
-import { lineNumbers, lineProvider, type Env } from '../../env';
+import { lineNumbers, lineProvider, type Env } from '../../config/env/env';
 import { ROLE_KEYS } from './numbers.lines';
 import type { NumberRow } from './numbers.queries';
 import type { SecretStatus } from './numbers.secrets';

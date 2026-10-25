@@ -213,7 +213,7 @@ jobs:
           ssh target "test -d $DEST" || { echo "::error::$DEST missing on the server"; exit 1; }
 
       - name: Merge the server .env (key names only are logged)
-        # API .env keys (apps/api/src/env.ts), scoped to this step only. The WhatsApp phone number id and
+        # API .env keys (apps/api/src/config/env/env.ts), scoped to this step only. The WhatsApp phone number id and
         # the messaging switch are deliberately NOT here: they stay whatever the server has.
         env:
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY || secrets.STAGING_SUPABASE_SERVICE_ROLE_KEY }}

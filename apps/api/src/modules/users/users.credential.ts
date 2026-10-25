@@ -1,5 +1,5 @@
 import { passwordProblem, type CredentialMode, type IssuedCredential } from '@ab/shared';
-import { badRequest } from '../scheduling/errors';
+import { badRequest } from '../../common/http/errors';
 import { generatePassword } from './users.password';
 import type { AuthAdmin } from './users.store';
 

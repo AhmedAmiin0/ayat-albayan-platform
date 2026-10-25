@@ -9,8 +9,8 @@ import {
 } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
 import type { AuthUser } from '../../common/auth/verify-token';
-import { notFound } from '../scheduling/errors';
-import { parseOrThrow } from '../teachers/http';
+import { notFound } from '../../common/http/errors';
+import { parseOrThrow } from '../../common/http/http';
 import { InternalMeetingsService } from './internal-meetings.service';
 import { MeetingInviteFlow } from './meeting-invite.flow';
 import { visibleView } from './meeting-invite.policy';

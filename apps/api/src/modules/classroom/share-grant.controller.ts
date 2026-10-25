@@ -2,7 +2,7 @@ import { Body, Controller, HttpCode, Param, ParseUUIDPipe, Post } from '@nestjs/
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser, Permissions } from '../../common/auth/decorators';
 import type { AuthUser } from '../../common/auth/verify-token';
-import { notFound } from '../scheduling/errors';
+import { notFound } from '../../common/http/errors';
 import { MeetingShareGrantService, ShareGrantService } from './share-grant.service';
 
 /** LiveKit identities the API mints: `<role>-<12 hex>` (newIdentity). */

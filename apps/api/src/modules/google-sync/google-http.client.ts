@@ -1,4 +1,4 @@
-import type { GoogleEnv } from '../../env';
+import type { GoogleEnv } from '../../config/env/env';
 import type { EventRef, GoogleClient, GoogleClientFactory, GoogleEventBody, GoogleOAuth, Rows, ValueRender, CellValue } from './google-client.port';
 import { GoogleHttp } from './google-http';
 import { CalendarApi } from './google-http.calendar';

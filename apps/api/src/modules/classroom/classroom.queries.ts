@@ -4,7 +4,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../common/db/db.module';
 import { ClassroomSettings } from './classroom.settings';
 import { isSalesLesson } from '../sales/sales-lessons';
-import { dbError } from '../teachers/http';
+import { dbError } from '../../common/http/http';
 
 export type JoinLesson = Pick<Tables<'lessons'>, 'id' | 'teacher_id' | 'starts_at' | 'ends_at' | 'status' | 'room_opened_at'>;
 const JOIN_COLUMNS = 'id, teacher_id, starts_at, ends_at, status, room_opened_at';

@@ -1,6 +1,6 @@
 import type { PostgrestError } from '@supabase/supabase-js';
-import { badRequest, conflict, notFound } from '../scheduling/errors';
-import { dbError } from '../teachers/http';
+import { badRequest, conflict, notFound } from '../../common/http/errors';
+import { dbError } from '../../common/http/http';
 
 const BAD = new Set(['allocation_mismatch', 'allocation_invalid']);
 const CONFLICT = new Set(['overpayment', 'already_voided', 'invalid_transition']);

@@ -2,7 +2,7 @@ import { isOpenLesson, type RescheduleRequest } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
 import type { AuthUser } from '../../common/auth/verify-token';
 import { ConflictChecker } from '../scheduling/conflict-checker';
-import { badRequest, conflict } from '../scheduling/errors';
+import { badRequest, conflict } from '../../common/http/errors';
 import { addDays, localDateOf, startOfLocalDay } from '../scheduling/horizon';
 import { ruleStudents } from '../scheduling/schedule.queries';
 import { confirmationMessages, forMessages } from './confirmation-messages';

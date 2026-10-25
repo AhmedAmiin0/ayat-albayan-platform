@@ -4,8 +4,8 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { AuditService } from '../../common/audit/audit.service';
 import { CurrentUser, Permissions } from '../../common/auth/decorators';
 import type { AuthUser } from '../../common/auth/verify-token';
-import { notFound } from '../scheduling/errors';
-import { parseOrThrow, type Page } from '../teachers/http';
+import { notFound } from '../../common/http/errors';
+import { parseOrThrow, type Page } from '../../common/http/http';
 import { AdminTasksQueries } from './admin-tasks.queries';
 import { adminTaskListQuery } from './subscriptions.dto';
 

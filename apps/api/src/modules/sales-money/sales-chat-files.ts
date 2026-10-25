@@ -4,7 +4,7 @@ import { HttpStatus, Injectable } from '@nestjs/common';
 import { BUCKETS, extFor } from '../../common/storage/storage.paths';
 import { StorageService } from '../../common/storage/storage.service';
 import { ThreadMediaService } from '../inbox/thread-media.service';
-import { badRequest } from '../scheduling/errors';
+import { badRequest } from '../../common/http/errors';
 import { InboundMedia } from '../whatsapp/inbound-media.service';
 import { waHttpError } from '../whatsapp/template.mapper';
 

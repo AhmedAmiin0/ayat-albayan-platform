@@ -1,5 +1,5 @@
 import type { Db } from '../../common/db/db.module';
-import { dbError } from '../teachers/http';
+import { dbError } from '../../common/http/http';
 
 /**
  * What a salesperson owns (migrations 187 and 274, in TypeScript because the API runs as the service role):

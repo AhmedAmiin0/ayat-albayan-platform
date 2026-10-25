@@ -2,7 +2,7 @@ import type { PushKind, TemplateKey } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../common/db/db.module';
 import { readAll } from '../scheduling/read-all';
-import { dbError } from '../teachers/http';
+import { dbError } from '../../common/http/http';
 import type { QueuedMessage } from './queued-row';
 import type { RoomCandidate } from './reminders.links';
 import { REMINDER_LESSON_STATUSES, type ReminderLesson } from './reminders.plan';

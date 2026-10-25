@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { livekitEnv, loadEnv } from '../../env';
-import { recordingEnv } from '../../env.recording';
+import { livekitEnv, loadEnv } from '../../config/env/env';
+import { recordingEnv } from '../../config/env/env.recording';
 import { InboxModule } from '../inbox/inbox.module';
 import { TeachersModule } from '../teachers/teachers.module';
 import { AssistantsController } from './assistants.controller';

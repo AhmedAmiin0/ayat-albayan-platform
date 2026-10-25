@@ -1,7 +1,7 @@
 import type { LinkKind, Permission, UserRole } from '@ab/shared';
 import { isSystemAdmin, roleView } from '../roles/roles.logic';
 import type { RoleRecord } from '../roles/roles.store';
-import { forbidden } from '../scheduling/errors';
+import { forbidden } from '../../common/http/errors';
 import { assertOutranks, isSystemAdminProfile, missingFor, type UserState } from './users.logic';
 import type { StaffProfile } from './users.store';
 

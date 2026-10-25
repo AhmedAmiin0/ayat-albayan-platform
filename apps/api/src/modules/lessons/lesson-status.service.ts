@@ -1,7 +1,7 @@
 import { applyLessonEvent, type LessonStatusRequest, type StatusRouteEvent } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
 import type { AuthUser } from '../../common/auth/verify-token';
-import { badRequest, conflict, errorCode } from '../scheduling/errors';
+import { badRequest, conflict, errorCode } from '../../common/http/errors';
 import { LessonAccess } from './lesson-access';
 import { studentIdsOf, type LessonRow } from './lesson-row';
 import { LessonStore } from './lesson-store';

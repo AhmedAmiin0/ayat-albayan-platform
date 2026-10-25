@@ -164,11 +164,11 @@ Seeded rows: **none** (no migration or `seed.sql` inserts into `custom_config`).
 
 Table `M/20261012000310_integration_config.sql:10-15`: `key text pk check (key ~ '^[A-Z][A-Z0-9_]{2,63}$'), value text not null check (octet_length(value) <= 4096), updated_at, updated_by`; RLS admin read `:22-26`. Secrets: Vault name **`integration:<KEY>`** via `integration_secret_set/clear/secrets_read/secrets_status` (`:38-89`), whitelisted by `public.integration_secret_key_ok()` — redefined 4 times: `M/…000310:29` (8 keys) → `M/20261012000380_notification_bell.sql:50` (+`WEB_PUSH_VAPID_PRIVATE_KEY`) → `M/20261017000450_kapso_secret_keys.sql:13` (+`KAPSO_API_KEY`, `KAPSO_WEBHOOK_SECRET`) → `M/20261022000610_google_sync.sql:132` (+`GOOGLE_CLIENT_SECRET`) = 12. Pinned by `apps/api/src/common/integrations/secret-keys.migration.test.ts`.
 
-Groups in page order `packages/shared/src/integrations/keys.ts:7`: `wa_notifications, wa_chat, kapso, wa_safety, livekit, expo, web_push, fx, google`. Plain list `keys.ts:10-31` (20), secret list `keys.ts:34-47` (12), `GROUP_OF` `keys.ts:62-96`, enums `keys.ts:115-120`, value checks `checks.ts:28-49` (max 4096 `checks.ts:9`). i18n `integrations.keys.<KEY>.label/.hint`. Env fallback: a non-empty DB value wins over `process.env` (`apps/api/src/env.ts` `loadEnv` / `validOverlay`); env schema location given.
+Groups in page order `packages/shared/src/integrations/keys.ts:7`: `wa_notifications, wa_chat, kapso, wa_safety, livekit, expo, web_push, fx, google`. Plain list `keys.ts:10-31` (20), secret list `keys.ts:34-47` (12), `GROUP_OF` `keys.ts:62-96`, enums `keys.ts:115-120`, value checks `checks.ts:28-49` (max 4096 `checks.ts:9`). i18n `integrations.keys.<KEY>.label/.hint`. Env fallback: a non-empty DB value wins over `process.env` (`apps/api/src/config/env/env.ts` `loadEnv` / `validOverlay`); env schema location given.
 
 | key | group | plain/secret | storage | check (`checks.ts`) | env schema (fallback) | code default when unset | proposed module |
 |---|---|---|---|---|---|---|---|
-| `WA_PROVIDER` | wa_notifications | plain | integration_config | enum `meta`/`kapso` | `apps/api/src/env.kapso.ts:16` | `meta` | numbers (per-number `provider`, docs/23 §2a) |
+| `WA_PROVIDER` | wa_notifications | plain | integration_config | enum `meta`/`kapso` | `apps/api/src/config/env/whatsapp/env.kapso.ts:16` | `meta` | numbers (per-number `provider`, docs/23 §2a) |
 | `WA_API_BASE` | wa_notifications | plain | integration_config | url | `env.ts:40` | none | numbers (global, «الحماية») |
 | `WA_API_VERSION` | wa_notifications | plain | integration_config | `^v\d+\.\d+$` | `env.ts:41` | yes | numbers (global) |
 | `WA_PHONE_NUMBER_ID` | wa_notifications | plain | integration_config | id 1..200 | `env.ts:42` | none | numbers (per number) |
@@ -194,16 +194,16 @@ Groups in page order `packages/shared/src/integrations/keys.ts:7`: `wa_notificat
 | `LIVEKIT_API_SECRET` | livekit | **secret** | Vault | — | `env.ts:90` | none | integrations |
 | `EXPO_API_BASE` | expo | plain | integration_config | url | `env.ts:75` | none | integrations |
 | `EXPO_ACCESS_TOKEN` | expo | **secret** | Vault | — | `env.ts:70` | none | integrations |
-| `WEB_PUSH_VAPID_PUBLIC_KEY` | web_push | plain | integration_config | base64url 87 | `apps/api/src/env.web-push.ts:13` | none | integrations |
+| `WEB_PUSH_VAPID_PUBLIC_KEY` | web_push | plain | integration_config | base64url 87 | `apps/api/src/config/env/env.web-push.ts:13` | none | integrations |
 | `WEB_PUSH_VAPID_PRIVATE_KEY` | web_push | **secret** | Vault | env: base64url 43 | `env.web-push.ts:15` | none | integrations |
 | `WEB_PUSH_SUBJECT` | web_push | plain | integration_config | mailto:/https: | `env.web-push.ts:16` | none | integrations |
 | `FX_API_URL` | fx | plain | integration_config | url | `env.ts:38` | yes (a public URL) | integrations |
-| `GOOGLE_CLIENT_ID` | google | plain | integration_config | `…apps.googleusercontent.com` | `apps/api/src/env.google.ts:12` | none | integrations / google-sync |
+| `GOOGLE_CLIENT_ID` | google | plain | integration_config | `…apps.googleusercontent.com` | `apps/api/src/config/env/env.google.ts:12` | none | integrations / google-sync |
 | `GOOGLE_CLIENT_SECRET` | google | **secret** | Vault | — | `env.google.ts:13` | none | integrations / google-sync |
 
 Other Vault entries (not integration keys): **`google:refresh_token`** — `M/20261022000610_google_sync.sql:144-178` (`google_token_set/_read/_clear`, never in the overlay). Planned (docs/23 phase 3): `wa_number:<id>:access_token`, `:app_secret`.
 
-### 6. Env bootstrap (`apps/api/src/env.ts` + `env.<topic>.ts`) — names only
+### 6. Env bootstrap (`apps/api/src/config/env/env.ts` + `env.<topic>.ts`) — names only
 
 Integration keys (all 32 above) are also env keys (fallback). Env-only keys:
 

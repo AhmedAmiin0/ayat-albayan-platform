@@ -1,6 +1,6 @@
 import type { ListSort, PAYMENT_SORT_KEYS, PaymentKind, PaymentMethod } from '@ab/shared';
 import type { SortSpec } from '../../common/list-sort';
-import type { PageQuery } from '../teachers/http';
+import type { PageQuery } from '../../common/http/http';
 
 export type PaymentSortKey = (typeof PAYMENT_SORT_KEYS)[number];
 

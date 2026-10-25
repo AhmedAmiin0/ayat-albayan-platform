@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../common/db/db.module';
-import { badRequest, conflict } from '../scheduling/errors';
-import { dbError } from '../teachers/http';
+import { badRequest, conflict } from '../../common/http/errors';
+import { dbError } from '../../common/http/http';
 import { USERS_CONFIG, type AuthAdmin, type AuthPatch, type UsersConfig } from './users.store';
 
 /** ~100 years: GoTrue has no "ban forever", and `none` lifts it. */

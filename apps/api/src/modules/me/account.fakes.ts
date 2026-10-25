@@ -1,5 +1,5 @@
 import type { AuthUser } from '../../common/auth/verify-token';
-import { conflict } from '../scheduling/errors';
+import { conflict } from '../../common/http/errors';
 import { AccountAvatarService } from './account.avatar.service';
 import type { AccountAuth, AccountFiles, AccountRow, AccountStore, SelfPatch } from './account.ports';
 import { AccountPorts } from './account.ports.provider';
