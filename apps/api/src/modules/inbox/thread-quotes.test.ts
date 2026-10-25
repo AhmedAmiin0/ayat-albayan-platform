@@ -1,7 +1,7 @@
 import { QUOTE_BODY_MAX, type MessageView } from '@ab/shared';
 import { describe, expect, it, vi } from 'vitest';
 import type { Db } from '../../common/db/db.module';
-import { quoteOf, ThreadQuotes, withQuotes, type QuotedRow } from './thread-quotes';
+import { quoteOf, sameNumber, ThreadQuotes, withQuotes, type QuotedRow } from './thread-quotes';
 
 const row = (over: Partial<QuotedRow> = {}): QuotedRow => ({
   id: 'q1', direction: 'inbound', body: 'السلام عليكم', media_mime: null, template_key: null, sender: null, ...over,
@@ -49,6 +49,13 @@ describe('ThreadQuotes', () => {
     expect(f.calls).toContainEqual(['eq', 'phone_e164', '+966501234567']);
   });
 
+  it('target: no wamid for Meta when the reply leaves from another line or number (the quote stays ours)', async () => {
+    const data = { id: 'q1', wa_message_id: 'wamid.Q', line: 'notifications', number_id: null };
+    const q = new ThreadQuotes(fakeDb({ data, error: null }).db);
+    await expect(q.target('+966501234567', 'q1', { line: 'chat' })).resolves.toEqual({ reply_to_message_id: 'q1', reply_to_wa_id: null });
+    await expect(q.target('+966501234567', 'q1', { line: 'notifications' })).resolves.toMatchObject({ reply_to_wa_id: 'wamid.Q' });
+  });
+
   it('target: 400 reply_not_in_thread for no row (another chat) or no wamid', async () => {
     for (const data of [null, { id: 'q1', wa_message_id: null }]) {
       await expect(new ThreadQuotes(fakeDb({ data, error: null }).db).target('+966501234567', 'q1')).rejects.toMatchObject({
@@ -69,5 +76,15 @@ describe('ThreadQuotes', () => {
     const out = await new ThreadQuotes(f.db).attach([{ id: 'a', reply_to_message_id: 'q1' } as MessageView], '+966501234567');
     expect(f.calls).toContainEqual(['in', 'id', ['q1']]);
     expect(out[0]?.reply_to).toMatchObject({ id: 'q1', body: 'السلام عليكم' });
+  });
+});
+
+describe('sameNumber', () => {
+  it('compares numbers first, then lines; an unknown side never drops the context', () => {
+    expect(sameNumber({ number_id: 'n1', line: 'chat' }, { number_id: 'n2', line: 'chat' })).toBe(false);
+    expect(sameNumber({ number_id: 'n1', line: 'chat' }, { number_id: 'n1', line: 'notifications' })).toBe(true);
+    expect(sameNumber({ line: 'notifications' }, { line: 'chat' })).toBe(false);
+    expect(sameNumber({ line: null }, { line: 'chat' })).toBe(true);
+    expect(sameNumber({ line: 'chat' }, {})).toBe(true);
   });
 });

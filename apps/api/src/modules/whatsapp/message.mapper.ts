@@ -8,6 +8,7 @@ import {
   type MessageView,
   type RenderableTemplate,
 } from '@ab/shared';
+import { mediaExpired } from './inbound-media.service';
 import { SENDING } from './send-plan';
 import { templateParams } from './wa-json';
 
@@ -59,13 +60,13 @@ const isAutomatic = (row: ThreadMessageRow): boolean =>
 const fallbackLink = (row: ThreadMessageRow, text: string | undefined): string | null =>
   needsManualSend(row) && !row.media_path ? clickToChatLink(row.phone_e164, text) : null;
 
-/** «إعادة توجيه»: a text, or a file we hold (ours) or can fetch (theirs); never a template. */
+/** «إعادة توجيه»: a text, or a file we hold (ours) or can still fetch (theirs, not expired); never a template. */
 const isForwardable = (row: ThreadMessageRow): boolean =>
   !row.template_key &&
   (row.direction === 'outbound'
     ? !!row.media_path?.startsWith('out/') || (!row.media_mime && !!row.body?.trim())
     : row.media_id || row.media_path
-      ? isChatViewMime(row.media_mime)
+      ? isChatViewMime(row.media_mime) && !mediaExpired(row, new Date())
       : !!row.body?.trim());
 
 /**

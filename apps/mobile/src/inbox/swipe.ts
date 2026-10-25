@@ -14,17 +14,21 @@ export interface Move {
   dy: number;
 }
 
-/** Which way is «toward the inline-start» on screen: right in Arabic (RTL), left in English. */
-const sign = (rtl: boolean) => (rtl ? 1 : -1);
+/**
+ * Which way is «toward the inline-end» on screen: left in Arabic (RTL), right in English. As WhatsApp,
+ * the bubble moves away from the inline-start, uncovering the reply icon drawn there (SwipeReply).
+ */
+const sign = (rtl: boolean) => (rtl ? -1 : 1);
 
-/** Whether a move is a reply swipe (toward the inline-start, mostly sideways) and not a scroll. */
+/** Whether a move is a reply swipe (toward the inline-end, mostly sideways) and not a scroll. */
 export function swipeClaims({ dx, dy }: Move, rtl: boolean): boolean {
   return dx * sign(rtl) > START && Math.abs(dx) > Math.abs(dy) * SIDEWAYS;
 }
 
-/** Where the bubble sits while dragged: only toward the inline-start, at most SWIPE_MAX. */
+/** Where the bubble sits while dragged: only toward the inline-end, at most SWIPE_MAX. */
 export function swipeOffset(dx: number, rtl: boolean): number {
-  return Math.min(Math.max(dx * sign(rtl), 0), SWIPE_MAX) * sign(rtl);
+  // `|| 0`: at rest it is 0, never -0 (RTL multiplies by -1).
+  return Math.min(Math.max(dx * sign(rtl), 0), SWIPE_MAX) * sign(rtl) || 0;
 }
 
 /** Letting go far enough answers the message. */

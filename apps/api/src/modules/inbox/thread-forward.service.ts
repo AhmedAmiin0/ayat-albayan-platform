@@ -1,5 +1,5 @@
 import type { ForwardResult, ForwardSkip, ThreadForward } from '@ab/shared';
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
 import type { SalesScope } from '../sales/sales-scope';
 import type { ThreadMessageRow } from '../whatsapp/message.mapper';
 import { waHttpError } from '../whatsapp/template.mapper';
@@ -28,9 +28,12 @@ const SKIPS: ReadonlySet<string> = new Set<ForwardSkip>([
   'files_forbidden',
 ]);
 
-/** A send path refusal → the target's reason; anything that is not an HTTP refusal is a real error. */
+/**
+ * A send path refusal → the target's reason. Any other error (a DB or outbox failure) is that target's
+ * `send_failed` too: the targets before it are already queued, so the forward still answers and is audited.
+ */
 export function skipOf(e: unknown): ForwardSkip {
-  if (!(e instanceof HttpException)) throw e;
+  if (!(e instanceof HttpException)) return 'send_failed';
   const body = e.getResponse();
   const code = typeof body === 'object' && body !== null && 'code' in body ? String(body.code) : '';
   return SKIPS.has(code) ? (code as ForwardSkip) : 'send_failed';
@@ -52,6 +55,8 @@ export function assertForwardable(row: ThreadMessageRow | null, who: Omit<Forwar
  */
 @Injectable()
 export class ThreadForwardService {
+  private readonly log = new Logger(ThreadForwardService.name);
+
   constructor(
     private readonly queries: ThreadsQueries,
     private readonly sends: ThreadSendService,
@@ -72,8 +77,11 @@ export class ThreadForwardService {
     const { f, source, phone } = t;
     try {
       const sent = await this.sendTo({ ...t, base: { phone, actorId: f.actorId, scope: f.scope, sales: f.sales, forwardedFrom: source.id } });
+      // The outbox answers a driver refusal as a `failed` row: that family never got the copy.
+      if (sent.view.status === 'failed') return { phone, sent: false, reason: 'send_failed' };
       return { phone, sent: true, message_id: sent.view.id, replayed: sent.replayed };
     } catch (e) {
+      if (!(e instanceof HttpException)) this.log.error(`forward to one target failed: ${e instanceof Error ? e.message : String(e)}`);
       return { phone, sent: false, reason: skipOf(e) };
     }
   }

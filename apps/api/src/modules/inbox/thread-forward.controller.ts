@@ -20,8 +20,11 @@ export function forwardAudit(results: readonly ForwardOutcome[]) {
 const publicResult = (r: ForwardOutcome): ForwardResult =>
   r.sent ? { phone: r.phone, sent: true, message_id: r.message_id } : { phone: r.phone, sent: false, reason: r.reason };
 
+/** What this request newly did: a copy that already existed (a retry) was audited the first time. */
+export const freshResults = (results: readonly ForwardOutcome[]): ForwardOutcome[] => results.filter((r) => !(r.sent && r.replayed === true));
+
 /** A retried forward whose every copy already existed was audited the first time. */
-export const allReplayed = (results: readonly ForwardOutcome[]): boolean => results.every((r) => r.sent && r.replayed === true);
+export const allReplayed = (results: readonly ForwardOutcome[]): boolean => freshResults(results).length === 0;
 
 /**
  * «إعادة توجيه» (owner 2026-10-25): POST /threads/forward copies one message to 1–5 chats through the
@@ -55,7 +58,7 @@ export class ThreadForwardController {
         entityId: source.id,
         action: 'thread_forward',
         before: null,
-        after: { from_phone: source.phone_e164, media_mime: source.media_mime, ...forwardAudit(results), ...by },
+        after: { from_phone: source.phone_e164, media_mime: source.media_mime, ...forwardAudit(freshResults(results)), ...by },
       });
     }
     return { results: results.map(publicResult) };

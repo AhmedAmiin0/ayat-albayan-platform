@@ -5,7 +5,8 @@ import { ReplyIcon } from './chat-icons';
 import { SWIPE_MAX as MAX, swipeAnswers, swipeClaims, swipeOffset } from './swipe';
 
 /**
- * Swipe a bubble toward the inline-start to answer it, as WhatsApp (owner 2026-10-25). RN core only
+ * Swipe a bubble toward the inline-end to answer it, as WhatsApp (owner 2026-10-25): it uncovers the
+ * icon at the inline-start. RN core only
  * (PanResponder + Animated, no gesture-handler): it claims a touch only once it moves sideways, and
  * hands it back whenever the list asks, so a vertical scroll of the inverted list always wins.
  * The long-press menu is the main way; this is the shortcut. Without `onReply` it is a plain row.
