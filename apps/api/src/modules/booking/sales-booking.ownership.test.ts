@@ -9,6 +9,7 @@ import { errorCode } from '../scheduling/errors';
 import type { BookingService } from './booking.service';
 import { BookingSettings } from './booking.settings';
 import { SalesBookingScope } from './sales-booking.ownership';
+import type { TrialDateQueries } from './trial-date.queries';
 import { assertBookingScope, assertOwnStudents, scopeDuplicates } from './sales-booking.scope';
 import { SalesBookingService } from './sales-booking.service';
 import type { SalesCourse } from './sales-course.service';
@@ -73,7 +74,7 @@ describe('assertBookingScope with own = null (sales_auto_assign OFF)', () => {
 
 const scopeWith = (on: boolean) => {
   const sales = { ownership: vi.fn(async (): Promise<SalesOwnership> => OWN) };
-  return { sales, scope: new SalesBookingScope(sales as unknown as SalesQueries, readerOf(BookingSettings, { sales_auto_assign: on })) };
+  return { sales, scope: new SalesBookingScope(sales as unknown as SalesQueries, readerOf(BookingSettings, { sales_auto_assign: on }), {} as unknown as TrialDateQueries) };
 };
 
 describe('SalesBookingScope.of: the switch decides', () => {
@@ -92,7 +93,7 @@ describe('SalesBookingScope.of: the switch decides', () => {
   it('a failed settings read fails the call (no silent OFF)', async () => {
     const settings = readerOf(BookingSettings);
     vi.spyOn(settings, 'read').mockRejectedValue(new Error('settings down'));
-    const scope = new SalesBookingScope({ ownership: vi.fn() } as unknown as SalesQueries, settings);
+    const scope = new SalesBookingScope({ ownership: vi.fn() } as unknown as SalesQueries, settings, {} as unknown as TrialDateQueries);
     await expect(scope.of(USER)).rejects.toThrow('settings down');
   });
 });

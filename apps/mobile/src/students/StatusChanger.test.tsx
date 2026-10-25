@@ -4,6 +4,7 @@ import { ApiError } from '@/lib/api';
 import { t } from '@/lib/i18n';
 import { renderWithQuery } from '@/test/query';
 import { StudentScreen } from './StudentScreen';
+import { historyOf } from '@/trial-date/fixtures';
 import { profile } from './test-data';
 
 const mockApiFetch = jest.fn();
@@ -22,7 +23,8 @@ const selected = () => screen.getByRole('radio', { checked: true });
 const pill = (name: string) => screen.getByRole('radio', { name });
 
 beforeEach(() => {
-  mockApiFetch.mockReset().mockResolvedValue(profile);
+  // The file's «مواعيد الحلقة التجريبية» reads its own endpoint (an empty history here).
+  mockApiFetch.mockReset().mockImplementation(async (p: string) => (p.includes('/trial-dates') ? historyOf([]) : profile));
   mockApiSend.mockReset();
 });
 

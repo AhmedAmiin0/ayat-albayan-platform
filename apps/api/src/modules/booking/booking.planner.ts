@@ -35,6 +35,8 @@ export type PrepareOptions = {
   endsOn?: string | null;
   /** The subscription it books: every rule's package and subscription_id (CourseLabel). */
   course?: CourseLabel;
+  /** Lessons the check ignores: the upcoming trial a «موعد تجريبي جديد» moves (TrialDates). */
+  excludeLessonIds?: readonly string[];
 };
 type Series = { plan: Plan; siblings: Plan[]; first: Occurrence; conflicts: Conflict[] };
 
@@ -66,7 +68,7 @@ export class BookingPlanner {
   async conflicts(req: BookingRequest, opts: PrepareOptions = {}): Promise<Conflict[]> {
     const { teacher, lead } = await this.parties.lookup(req);
     const who = await this.parties.resolve(req, lead);
-    return (await this.series(req, { teacher, who, endsOn: opts.endsOn })).conflicts;
+    return (await this.series(req, { teacher, who, endsOn: opts.endsOn, exclude: opts.excludeLessonIds })).conflicts;
   }
 
   async prepare(req: BookingRequest, opts: PrepareOptions = {}): Promise<Prepared> {
@@ -76,7 +78,7 @@ export class BookingPlanner {
     const { teacher, lead } = await this.parties.lookup(req);
     const who = await this.parties.resolve(req, lead);
     const makeupOf = kind === 'makeup' ? await this.parties.missed(req) : null;
-    const { plan, siblings, first, conflicts } = await this.series(req, { teacher, who, endsOn: opts.endsOn });
+    const { plan, siblings, first, conflicts } = await this.series(req, { teacher, who, endsOn: opts.endsOn, exclude: opts.excludeLessonIds });
     if (conflicts.length > 0 && !req.override) {
       throw domainError(HttpStatus.CONFLICT, 'conflict', { conflicts });
     }
@@ -113,13 +115,13 @@ export class BookingPlanner {
       teacherId: ctx.teacher.id,
       studentIds: ctx.who.student_ids,
       proposed: [...plans.flatMap((p) => p.occurrences), ...probe],
-      excludeIds: [],
+      excludeIds: [...(ctx.exclude ?? [])],
     });
     return { plan, siblings, first, conflicts };
   }
 }
 
-type SeriesContext = { teacher: BookingTeacher; who: Resolved; endsOn?: string | null | undefined };
+type SeriesContext = { teacher: BookingTeacher; who: Resolved; endsOn?: string | null | undefined; exclude?: readonly string[] | undefined };
 
 /** The plan's rule a week around each DST change after its last generated lesson. */
 function probeAfter(plan: Plan, tzs: readonly string[]): Occurrence[] {

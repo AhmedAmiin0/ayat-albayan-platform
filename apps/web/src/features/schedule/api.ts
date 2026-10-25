@@ -35,6 +35,8 @@ export interface SlotsParams extends Window {
   studentIds: readonly string[];
   /** «تغيير أيام الحلقات»: this course's lessons (subscription id) are moving, so they are not busy. */
   excludeCourse?: string | undefined;
+  /** «موعد تجريبي جديد»: the upcoming trial the new date moves, so it is not busy. */
+  excludeLessonId?: string | undefined;
 }
 
 /** GET /booking/slots (≤ 14 days; the assistant's mirror under /sales/booking): the teacher's candidate starts, each with its conflicts. */
@@ -47,6 +49,7 @@ export const slotsQuery = (p: SlotsParams, mode: BookingMode = 'admin') => {
   });
   if (p.studentIds.length > 0) params.set('studentIds', p.studentIds.join(','));
   if (p.excludeCourse) params.set('excludeCourse', p.excludeCourse);
+  if (p.excludeLessonId) params.set('excludeLessonId', p.excludeLessonId);
   return queryOptions({
     queryKey: [...LESSONS_KEY, 'slots', mode, params.toString()],
     queryFn: () => apiFetch<SlotsResponse>(`${bookingBase(mode)}/slots?${params}`),

@@ -9,6 +9,7 @@ import { takenTexts } from './course-taken';
 import type { BookingBody } from './contract';
 import { days, toBookingRequest, type BookingDraft } from './draft';
 import { useBookingMode } from './mode';
+import { trialDateCheckQuery } from './trial-date/api';
 
 /** How many clashes are listed under the count. */
 const SHOWN = 4;
@@ -17,13 +18,15 @@ const SHOWN = 4;
 export const seriesReady = (d: BookingDraft): boolean => !d.course || days(d).length === d.course.perWeek;
 
 /**
- * POST {base}/check for this draft (one cached query, shared by the slot and review steps).
+ * POST {base}/check (a new trial date: {base}/trial-date/check) for this draft (one cached query, shared by the slot and review steps).
  * `enabled` false only reads the cache (the admin's review and the wizard's chrome never ask).
  */
 export function useSeriesCheck(draft: BookingDraft, enabled = true) {
   const mode = useBookingMode();
   const body = seriesReady(draft) ? toBookingRequest(draft) : null;
-  return { body, check: useQuery({ ...bookingCheckQuery(body ?? emptyBody, mode), enabled: enabled && body !== null }) };
+  // A new trial date is checked by its own route: the trial it moves never clashes with it.
+  const query = draft.trialDate ? trialDateCheckQuery : bookingCheckQuery;
+  return { body, check: useQuery({ ...query(body ?? emptyBody, mode), enabled: enabled && body !== null }) };
 }
 
 export type SeriesCheckResult = ReturnType<typeof useSeriesCheck>;

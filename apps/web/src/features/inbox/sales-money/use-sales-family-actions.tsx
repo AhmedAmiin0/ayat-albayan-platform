@@ -1,4 +1,4 @@
-import { isPackageEnded, type ThreadView } from '@ab/shared';
+import { canPickTrialDate, isPackageEnded, type SalesStudentRef, type ThreadView } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { useState, type ReactNode } from 'react';
 import { Button } from '@/components/ui/button';
@@ -7,6 +7,7 @@ import { IconButton } from '@/components/ui/icon-button';
 import { usePermissions } from '@/features/auth/use-permissions';
 import { RegistrationCheckTrigger } from '@/features/sales/RegistrationCheckButton';
 import { RegistrationCheckDialog } from '@/features/sales/RegistrationCheckDialog';
+import { TrialDateDialog } from '@/features/booking/trial-date/TrialDateDialog';
 import { t } from '@/lib/i18n';
 import { useInboxMode } from '../mode';
 import { SalesRegisterButton, SalesRegisterDialog } from '../SalesRegisterAction';
@@ -32,7 +33,8 @@ export interface SalesFamilyActions {
  * The sales chat's header actions (R-ASST-01/04, W3), split into one visible action and the rest.
  * Family (GET /sales/money/family, her students only): «جدّد الاشتراك» per student whose package
  * ended, «سجّل تحويلًا بنكيًا» while a package is owed, «أيام الحلقات» per student with a course
- * (hasCourse); several children are named on each (the visible text is the accessible name).
+ * (hasCourse), «موعد تجريبي جديد» per student with no running subscription (canPickTrialDate, with
+ * the trial dates' history in its dialog); several children are named on each (the visible text is the accessible name).
  * «تحقق من التسجيل» (students.check_registration) always goes in the menu. `compact` (phones):
  * the visible action is an icon button. Outside sales mode everything is empty. Every dialog's open
  * state lives here, so SalesChatFrame keeps them open across 900px (m13; round 2 B: the lead's
@@ -47,6 +49,7 @@ export function useSalesFamilyActions({ thread, compact = false }: { thread: Thr
   const [course, setCourse] = useState<string | null>(null);
   const [registering, setRegistering] = useState<LeadThread | null>(null);
   const [checking, setChecking] = useState(false);
+  const [trialFor, setTrialFor] = useState<SalesStudentRef | null>(null);
   if (mode !== 'sales') return { primary: null, items: [], dialogs: null };
   const students = sales ? (family.data?.students ?? []) : [];
   const checkItem = check ? [<RegistrationCheckTrigger key="check" onClick={() => setChecking(true)} />] : [];
@@ -57,6 +60,7 @@ export function useSalesFamilyActions({ thread, compact = false }: { thread: Thr
       {registering && <SalesRegisterDialog thread={registering} onClose={() => setRegistering(null)} />}
       {checking && <RegistrationCheckDialog phone={thread.phone_e164} onClose={() => setChecking(false)} />}
       {course && <SalesCourseDialog studentId={course} onClose={() => setCourse(null)} />}
+      {trialFor && <TrialDateDialog mode="sales" student={trialFor} onClose={() => setTrialFor(null)} />}
       {opened && <SalesMoneyFlow {...opened} students={students} onClose={() => setOpened(null)} />}
     </>
   );
@@ -80,6 +84,10 @@ export function useSalesFamilyActions({ thread, compact = false }: { thread: Thr
       .map((s) => item(`renew-${s.id}`, named(t.students.renew, s.name), () => setOpened({ start: 'subscribe', studentId: s.id }))),
     ...(students.some((s) => s.open.length > 0) ? [item('transfer', t.salesMoney.recordTransfer, () => setOpened({ start: 'transfer' }))] : []),
     ...students.filter(hasCourse).map((s) => item(`course-${s.id}`, named(t.booking.courseDays, s.name), () => setCourse(s.id))),
+    // «موعد تجريبي جديد» (owner 2026-10-25): her students without a running subscription only.
+    ...students
+      .filter((s) => canPickTrialDate(s.status))
+      .map((s) => item(`trial-${s.id}`, named(t.trialDate.action, s.name), () => setTrialFor({ id: s.id, name: s.name, code: s.code }))),
   ];
   const primary = compact ? (
     <IconButton label={t.salesMoney.newSubscription} onClick={subscribe} className="text-lapis">
