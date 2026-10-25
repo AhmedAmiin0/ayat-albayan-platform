@@ -1,6 +1,7 @@
 import { canPickTrialDate, type Gender } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { useId, useState } from 'react';
+import { usePermissions } from '@/features/auth/use-permissions';
 import type { StudentProfile } from '@/features/students/types';
 import { trialHistoryQuery } from './api';
 import { TrialDateButton } from './TrialDateButton';
@@ -12,9 +13,15 @@ type Profile = StudentProfile & { teacher_gender_pref?: Gender | null };
 
 /**
  * The student file's «مواعيد الحلقة التجريبية» (R-STU-05): the count, «موعد تجريبي جديد» (disabled
- * with the reason for a subscriber), and the compact history. Admin routes (/booking).
+ * with the reason for a subscriber), and the compact history. Admin routes (/booking, booking.write):
+ * a role without it sees no section rather than a 403.
  */
 export function TrialDatesSection({ student }: { student: Profile }) {
+  const { can } = usePermissions();
+  return can('booking.write') ? <TrialDates student={student} /> : null;
+}
+
+function TrialDates({ student }: { student: Profile }) {
   const titleId = useId();
   const history = useQuery(trialHistoryQuery(student.id));
   const [open, setOpen] = useState(false);

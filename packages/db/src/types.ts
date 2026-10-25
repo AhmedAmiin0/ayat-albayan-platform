@@ -4425,6 +4425,8 @@ export type Database = {
       };
       integration_secret_clear: { Args: { p_key: string }; Returns: boolean };
       pick_trial_date: { Args: { p: Json }; Returns: Json };
+      trial_ahead: { Args: { p_students: string[] }; Returns: boolean };
+      trial_date_replay: { Args: { p_request: string; p_student: string }; Returns: Json };
       trial_date_result: { Args: { p_lesson: string }; Returns: Json };
       wa_number_delete: { Args: { p_id: string }; Returns: boolean };
       wa_number_make_default: { Args: { p_id: string; p_actor: string | null }; Returns: boolean };

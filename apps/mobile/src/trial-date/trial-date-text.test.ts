@@ -13,8 +13,11 @@ test('the warning starts with the 3rd date (two exist), never before', () => {
 test('the viewer’s clock, and the family’s only when it differs', () => {
   const riyadh = `${lessonWhenText(new Date(THU_1_18), 'Asia/Riyadh', 'ar')} ${t.schedule.riyadhTime}`;
   expect(whenLines(THU_1_18, 'Asia/Riyadh')).toEqual({ when: riyadh, family: null });
-  const cairo = lessonWhenText(new Date(THU_1_18), 'Africa/Cairo', 'ar');
-  expect(whenLines(THU_1_18, 'Africa/Cairo')).toEqual({ when: riyadh, family: t.trialDate.familyTime.replace('{time}', cairo) });
+  const london = lessonWhenText(new Date(THU_1_18), 'Europe/London', 'ar');
+  expect(whenLines(THU_1_18, 'Europe/London')).toEqual({ when: riyadh, family: t.trialDate.familyTime.replace('{time}', london) });
+  // Another zone name on the same clock (Kuwait; Cairo in its summer time) adds no line.
+  expect(whenLines(THU_1_18, 'Asia/Kuwait').family).toBeNull();
+  expect(whenLines(THU_1_18, 'Africa/Cairo').family).toBeNull();
 });
 
 test('who picked it and when; an imported row says «غير معروف»', () => {

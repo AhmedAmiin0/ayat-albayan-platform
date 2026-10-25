@@ -123,4 +123,12 @@ describe('«موعد تجريبي جديد» routes: the admin’s from the stud
     };
     expect([await kept([S1, S2]), await kept([S1]), await kept([S1], '')]).toEqual([undefined, L1, undefined]);
   });
+
+  it('assistant slots: another family’s students are 403, with or without excludeLessonId', async () => {
+    const q = `teacherId=${TEACHER}&from=2026-10-11T00:00:00Z&to=2026-10-12T00:00:00Z&durationMin=45&studentIds=${S2}`;
+    expect((await call({ url: `/sales/booking/slots?${q}`, token: 'sales' })).statusCode).toBe(403);
+    expect((await call({ url: `/sales/booking/slots?${q}&excludeLessonId=${L1}`, token: 'sales' })).statusCode).toBe(403);
+    expect(lessons.lessonStudents).not.toHaveBeenCalled();
+    expect(slots.slots).not.toHaveBeenCalled();
+  });
 });

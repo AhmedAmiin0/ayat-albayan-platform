@@ -39,7 +39,7 @@ export function trialLength(history: TrialHistory): Duration {
 export function trialDateDraft(history: TrialHistory): TrialDateDraft {
   return {
     studentId: history.student_id,
-    tz: history.family_tz,
+    tz: history.student_tz ?? history.family_tz, // as the web draft: the student's own zone first
     durationMin: trialLength(history),
     teacher: history.items[0]?.teacher ?? null,
     startsAt: null,

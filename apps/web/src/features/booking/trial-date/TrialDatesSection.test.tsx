@@ -10,13 +10,25 @@ import { history, routeTrialFetch } from './trial-fixture';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 vi.mock('@/lib/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+const held = vi.hoisted(() => ({ list: ['booking.write'] }));
+vi.mock('@/features/auth/use-permissions', () => ({ usePermissions: () => ({ permissions: held.list, can: (p: string) => held.list.includes(p) }) }));
 
 const profile = (status: StudentStatus) =>
   ({ id: STUDENT_ID, name: 'سهيلة', code: 'AB-0183', status, program: 'quran', tz: 'Asia/Riyadh' }) as StudentProfile;
 const action = () => screen.getByTestId('trial-date-action');
 
 describe('TrialDatesSection: the student file (R-STU-05)', () => {
-  afterEach(() => apiFetch.mockReset());
+  afterEach(() => {
+    apiFetch.mockReset();
+    held.list = ['booking.write'];
+  });
+
+  it('a role without booking.write sees no section (its routes are 403 for it)', () => {
+    held.list = ['students.read'];
+    renderWithClient(<TrialDatesSection student={profile('trial')} />);
+    expect(screen.queryByTestId('trial-dates-section')).toBeNull();
+    expect(apiFetch).not.toHaveBeenCalled();
+  });
 
   it.each<StudentStatus>(['new', 'trial', 'pending_subscription'])('offers «موعد تجريبي جديد» to a %s student', async (status) => {
     routeTrialFetch(apiFetch, { base: '/booking', history: history({ status }) });

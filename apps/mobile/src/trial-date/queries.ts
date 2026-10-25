@@ -60,5 +60,7 @@ export function useTrialDate(studentId: string) {
     mutationKey: ['booking', 'trial-date', studentId],
     mutationFn: (body: TrialDateBody) => apiSend<TrialDateResult>('POST', bookingPath(mode, '/trial-date'), body),
     onSuccess: () => refreshAfterTrialDate(client, { mode, studentId }),
+    // trial_changed and the like: the history (and what the next pick moves) is read again.
+    onError: () => client.invalidateQueries({ queryKey: historyKey(mode, studentId) }),
   });
 }

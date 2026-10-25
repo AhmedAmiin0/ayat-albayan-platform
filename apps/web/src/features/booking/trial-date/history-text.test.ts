@@ -12,8 +12,13 @@ describe('rowTexts («مواعيد الحلقة التجريبية» row)', () =
   });
 
   it('adds the family’s clock when their zone differs', () => {
-    const text = rowTexts({ row: row(), familyTz: 'Africa/Cairo' });
-    expect(text.family).toBe(t.trialDate.familyTime.replace('{time}', 'الاثنين 5 أكتوبر 17:00'));
+    const text = rowTexts({ row: row(), familyTz: 'Europe/London' });
+    expect(text.family).toBe(t.trialDate.familyTime.replace('{time}', 'الاثنين 5 أكتوبر 15:00'));
+  });
+
+  it('no family line for another zone on the same clock (Kuwait, or Cairo in summer time)', () => {
+    expect(rowTexts({ row: row(), familyTz: 'Asia/Kuwait' }).family).toBeNull();
+    expect(rowTexts({ row: row(), familyTz: 'Africa/Cairo' }).family).toBeNull();
   });
 
   it('names an unknown picker for an imported row', () => {

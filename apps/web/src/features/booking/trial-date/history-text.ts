@@ -22,7 +22,9 @@ export interface RowTextInput {
 
 export function rowTexts({ row, familyTz, viewerTz = RIYADH_TZ }: RowTextInput): RowTexts {
   const at = new Date(row.starts_at);
-  const family = familyTz === viewerTz ? null : t.trialDate.familyTime.replace('{time}', lessonWhenText(at, familyTz, locale));
+  const familyAt = lessonWhenText(at, familyTz, locale);
+  // Another zone name on the same clock (Asia/Kuwait vs Riyadh) adds nothing.
+  const family = familyAt === lessonWhenText(at, viewerTz, locale) ? null : t.trialDate.familyTime.replace('{time}', familyAt);
   const on = dateLabel(zonedParts(new Date(row.picked_at), viewerTz).date);
   return {
     // Every time says its zone (docs/07 principle 7).

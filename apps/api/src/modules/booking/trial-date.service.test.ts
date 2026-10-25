@@ -81,6 +81,7 @@ describe('TrialDates: a new trial date for an existing student (owner 2026-10-25
     const first = { lesson_id: REQUEST, starts_at: 'x', ends_at: 'y', teacher_id: IDS.teacher, moved_from_id: OLD };
     s.trialQueries.replay.mockResolvedValue(first);
     expect(await s.service.replay(trialRequest(), ACTOR)).toEqual(first);
+    expect(s.trialQueries.replay).toHaveBeenCalledWith(REQUEST, IDS.s1);
     expect(s.trialQueries.pick).not.toHaveBeenCalled();
     expect(s.alert.push.notifyProfiles).not.toHaveBeenCalled();
   });
@@ -93,10 +94,10 @@ describe('TrialDates: a new trial date for an existing student (owner 2026-10-25
     expect(await s.service.pick(await s.service.target(trialRequest()), ACTOR)).toEqual(won);
   });
 
-  it('teacher alert: another teacher hears of the new student; the same teacher gets no new alert; the sender is kicked', async () => {
+  it('teacher alert: the new lesson is announced to another teacher and to the same teacher (new time); the sender is kicked', async () => {
     const same = fakeTrialDates({ rows: [trialRow()] });
     await same.service.pick(await same.service.target(trialRequest()), ACTOR);
-    expect(same.alert.queries.lessons).not.toHaveBeenCalled();
+    expect(same.alert.queries.lessons).toHaveBeenCalledWith([REQUEST]);
     expect(same.alert.sender.kick).toHaveBeenCalled();
     expect(same.events.changed).toHaveBeenCalledWith([OLD, REQUEST]);
     const other = fakeTrialDates({ rows: [trialRow({ teacher_id: OTHER_TEACHER })] });
