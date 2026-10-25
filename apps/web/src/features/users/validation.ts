@@ -5,7 +5,7 @@ import {
   passwordProblem,
   type UserCreate,
 } from '@ab/shared';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import type { CreateForm } from './create-form';
 
 const V = t.users.validation;

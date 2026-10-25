@@ -1,8 +1,8 @@
 import type { PaymentAttachmentView, PaymentKind, PaymentMethod, PaymentView, SignedDownload, SignedUpload } from '@ab/shared';
 import { keepPreviousData, queryOptions } from '@tanstack/react-query';
-import { apiFetch, apiSend } from '@/lib/api';
-import { sortFilterParams, type SortSearch } from '@/lib/list-search';
-import { supabase } from '@/lib/supabase';
+import { apiFetch, apiSend } from '@/lib/http/api';
+import { sortFilterParams, type SortSearch } from '@/lib/list/list-search';
+import { supabase } from '@/lib/http/supabase';
 import { MONEY_KEY, PAGE_SIZE, type Page } from '@/features/subscriptions/api';
 
 // apps/api/src/modules/payments (docs/11 §7, R-PAY-01).

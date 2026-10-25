@@ -1,4 +1,4 @@
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 
 /** livekit-client's ConnectionError reasons that mean «the server could not be reached at all». */
 const UNREACHABLE: ReadonlySet<string> = new Set(['ServerUnreachable', 'WebSocket', 'Timeout', 'ServiceNotFound']);

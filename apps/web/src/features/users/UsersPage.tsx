@@ -8,7 +8,7 @@ import { PageHead } from '@/components/ui/layout/page';
 import { Pager } from '@/components/ui/layout/pager';
 import { Toast } from '@/components/ui/overlay/toast';
 import { usePermissions } from '@/features/auth/use-permissions';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { userListQuery, type UsersView } from './api';
 import { CreateUserDialog } from './CreateUserDialog';
 import { UserDetailDialog } from './UserDetailDialog';

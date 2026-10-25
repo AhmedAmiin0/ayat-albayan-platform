@@ -6,7 +6,7 @@ import {
   type NotificationEntryView,
   type NotificationsOverview,
 } from '@ab/shared';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { blockerText } from '../notification-catalogue/catalogue-text';
 import type { RuleFailure } from './rules-api';
 

@@ -6,7 +6,7 @@ import { availabilityQuery } from '@/features/teachers/api';
 import { AvailabilityGrid } from '@/features/teachers/AvailabilityGrid';
 import { gridTz } from '@/features/teachers/grid';
 import { TimeOffList } from '@/features/teachers/TimeOffList';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 
 /**
  * The teacher's own weekly availability and time-off (R-TCH-02, R-SCH-08): the same editor the

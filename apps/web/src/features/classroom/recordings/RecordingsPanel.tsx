@@ -5,7 +5,7 @@ import { Icon } from '@/components/ui/display/icon';
 import { StatusChip } from '@/components/ui/display/status-chip';
 import { buttonVariants } from '@/components/ui/form/button';
 import { Drawer } from '@/features/schedule/Drawer';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { recordingsQuery, recordingStatusQuery, type RecordingSource } from '../moderation-api';
 import { RECORDING_TONE, recordingTime } from './recording-format';
 

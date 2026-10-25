@@ -1,6 +1,6 @@
 import type { IntegrationKey } from '@ab/shared';
 import { Ltr } from '@/components/ui/display/ltr';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 
 /**
  * The server's key name, for developers only (docs/23a §E H3): folded under «للمطوّر», so the row

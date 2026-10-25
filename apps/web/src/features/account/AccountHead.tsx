@@ -2,7 +2,7 @@ import type { AccountProfile } from '@ab/shared';
 import { Cartouche } from '@/components/ui/display/cartouche';
 import { Ltr } from '@/components/ui/display/ltr';
 import { PageHead } from '@/components/ui/layout/page';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { roleLabel } from './role-label';
 
 /** The one cartouche «حسابي», the subtitle, and who is signed in: name, role, email (R-ACC-01). */

@@ -1,7 +1,7 @@
 import { formatPhone, type ThreadView } from '@ab/shared';
 import { useId } from 'react';
 import { Ltr } from '@/components/ui/display/ltr';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { showsPhone, useInboxMode } from './mode';
 
 export interface ForwardListProps {

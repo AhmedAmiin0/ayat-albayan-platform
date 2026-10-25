@@ -1,6 +1,6 @@
 import type { LineCheckView, SendGateView } from '@ab/shared';
 import { queryOptions, skipToken } from '@tanstack/react-query';
-import { apiFetch, apiSend } from '@/lib/api';
+import { apiFetch, apiSend } from '@/lib/http/api';
 
 /** GET /messages/gate: the effective send gate (env, WhatsApp config, kill switch) and the queue. */
 export const sendGateQuery = queryOptions({

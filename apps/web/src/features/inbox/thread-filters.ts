@@ -1,6 +1,6 @@
 import { chipIfSet } from '@/components/table-toolbar/fields';
 import type { FilterChip } from '@/components/table-toolbar/types';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import type { InboxMode } from './mode';
 import type { InboxSearch } from './search';
 

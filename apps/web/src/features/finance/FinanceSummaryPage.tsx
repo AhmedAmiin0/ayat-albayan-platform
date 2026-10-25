@@ -9,7 +9,7 @@ import { summaryQuery } from '@/features/dashboard/api';
 import { FinanceByMonth } from '@/features/dashboard/FinanceByMonth';
 import { FinanceTotals } from '@/features/dashboard/FinanceTotals';
 import { riyadhToday } from '@/features/dashboard/search';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { yearRange } from './api';
 import { MoneyKpis } from './MoneyKpis';
 

@@ -6,7 +6,7 @@ import { Ltr } from '@/components/ui/display/ltr';
 import { formatDate } from '@/features/leads/format';
 import { Amount } from '@/features/subscriptions/Amount';
 import { moneyText } from '@/features/subscriptions/format';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import type { PaymentView } from './api';
 
 const col = createColumnHelper<DataTableFeatures, PaymentView>();

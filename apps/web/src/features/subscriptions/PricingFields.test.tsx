@@ -1,7 +1,7 @@
 import { DISCOUNTS } from '@ab/shared';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { INITIAL_PRICING } from './pricing-form';
 import { PricingFields } from './PricingFields';
 

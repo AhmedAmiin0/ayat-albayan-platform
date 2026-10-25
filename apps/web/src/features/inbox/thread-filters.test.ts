@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { CLEAR_THREAD_FILTERS, threadFilterChips } from './thread-filters';
 
 const search = { page: 1, sort: 'unread', f_status: 'new' } as const;

@@ -2,7 +2,7 @@ import { Link } from '@tanstack/react-router';
 import { Ltr } from '@/components/ui/display/ltr';
 import { NuqtaGlyph } from '@/components/ui/display/nuqta-glyph';
 import { dayMonthLabel } from '@/features/schedule/tz';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { amount, currencyLabel } from './format';
 import { workItem, workLink } from './PendingReportsList';
 import type { UnpaidRow } from './types';

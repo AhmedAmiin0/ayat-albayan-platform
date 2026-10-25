@@ -2,7 +2,7 @@ import { safeHttpUrl } from '@ab/shared';
 import { useState } from 'react';
 import { Button, buttonVariants } from '@/components/ui/form/button';
 import { Ltr } from '@/components/ui/display/ltr';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 
 const L = t.studentLists;
 

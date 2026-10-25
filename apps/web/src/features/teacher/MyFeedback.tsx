@@ -8,8 +8,8 @@ import { FEEDBACK_PAGE_SIZE, myFeedbackQuery } from '@/features/feedback/api';
 import { FeedbackTable } from '@/features/feedback/FeedbackTable';
 import { MY_FEEDBACK_LIST_KEYS } from '@/features/feedback/search';
 import { TeacherAverages } from '@/features/feedback/TeacherAverages';
-import { t } from '@/lib/i18n';
-import { serverListProps, serverListState, type ServerListPatch, type ServerListSearch } from '@/lib/server-list-search';
+import { t } from '@/lib/i18n/i18n';
+import { serverListProps, serverListState, type ServerListPatch, type ServerListSearch } from '@/lib/list/server-list-search';
 
 export interface MyFeedbackProps {
   /** The route's search: page, sort and column filters (R-NFR-08). */

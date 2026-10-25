@@ -7,7 +7,7 @@ import { NuqtaGlyph } from '@/components/ui/display/nuqta-glyph';
 import { RIYADH_TZ, weekStart, zonedParts } from '@/features/schedule/tz';
 import { RecordPaymentDialog } from '@/features/payments/RecordPaymentDialog';
 import { CreateSubscriptionDialog } from '@/features/subscriptions/CreateSubscriptionDialog';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { invoicesQuery } from './api.invoice';
 import type { BookingKind } from './contract';
 import type { PickedStudent } from './draft';

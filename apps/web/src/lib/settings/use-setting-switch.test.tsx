@@ -6,7 +6,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { useSettingSwitch, type SettingSwitchOptions } from './use-setting-switch';
 
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('./api', async (orig) => ({ ...(await orig<object>()), apiSend }));
+vi.mock('../http/api', async (orig) => ({ ...(await orig<object>()), apiSend }));
 
 const NEXT: AcademySettings = { ...SETTING_DEFAULTS, sales_auto_assign: true };
 

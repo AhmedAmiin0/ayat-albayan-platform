@@ -9,9 +9,9 @@ import {
 } from '@ab/shared';
 import { queryOptions, type QueryClient } from '@tanstack/react-query';
 import { errorCode } from '@/features/schedule/api';
-import { apiFetch, apiSend } from '@/lib/api';
-import { t } from '@/lib/i18n';
-import { supabase } from '@/lib/supabase';
+import { apiFetch, apiSend } from '@/lib/http/api';
+import { t } from '@/lib/i18n/i18n';
+import { supabase } from '@/lib/http/supabase';
 import { ChatUploadError } from '../api.files';
 
 // «الردود السريعة» (owner 2026-10-25): the shared list and the caller's own, filled into the composer.

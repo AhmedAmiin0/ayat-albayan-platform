@@ -1,6 +1,6 @@
 import { VALUE_GROUP_IDS, VALUE_GROUPS, type NotificationEntryView } from '@ab/shared';
 import { Link } from '@tanstack/react-router';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { fillText, timingText } from '../rule-text';
 import type { RuleRowState } from '../use-rule-row';
 import { TimingEditor } from './TimingEditor';

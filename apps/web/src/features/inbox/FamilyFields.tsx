@@ -2,7 +2,7 @@ import { FILLED_BY, GROUP_KINDS } from '@ab/shared';
 import { Field } from '@/components/ui/form/field';
 import { controlClass, Input } from '@/components/ui/form/input';
 import { Select } from '@/components/ui/form/select';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { cn } from '@/lib/utils';
 import type { QualFieldsProps } from './QualificationFields';
 import type { QualTextField } from './qualification-form';

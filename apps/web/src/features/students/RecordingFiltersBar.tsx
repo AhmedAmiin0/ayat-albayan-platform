@@ -1,6 +1,6 @@
 import { DateFilterField, SelectFilterField, chipIfSet } from '@/components/table-toolbar/fields';
 import { TableToolbar } from '@/components/table-toolbar/TableToolbar';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import type { RecordingFilters } from './recordings-api';
 
 const F = t.studentRecordings.filters;

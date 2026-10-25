@@ -3,7 +3,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render } from '@testing-library/react';
 import type { ReactNode } from 'react';
 import type { Mock } from 'vitest';
-import { ApiError } from '@/lib/api';
+import { ApiError } from '@/lib/http/api';
 import { SETTINGS } from '@/test/settings-fixture';
 
 /** What each read answers; a missing entry answers 403 (a role without that permission). */

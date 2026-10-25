@@ -1,5 +1,5 @@
 import type { WaLine } from '@ab/shared';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 
 /**
  * Which WhatsApp line a thread or message came through (docs/12 §13.10, R-MSG-05): a plain label,

@@ -1,11 +1,11 @@
 import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { findRow, overview, renderRules } from './rules-test-kit';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@/lib/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
+vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
 vi.mock('@tanstack/react-router', async (orig) => ({ ...(await orig<object>()), Link: (await import('@/features/inbox/test-utils')).MockLink }));
 vi.mock('@/features/auth/use-permissions', () => ({ usePermissions: () => ({ permissions: ['settings.read', 'notifications.manage'], can: () => true }) }));
 
@@ -72,7 +72,7 @@ describe('«الإشعارات»: a row saves on its own', () => {
     renderRules({ apiFetch });
     const row = await findRow('lesson_reminder');
     fireEvent.change(within(row).getByLabelText(r.timing.minutesLabel), { target: { value: '90' } });
-    const { ApiError } = await import('@/lib/api');
+    const { ApiError } = await import('@/lib/http/api');
     apiSend.mockRejectedValue(new ApiError(422, { message: 'invalid' }));
     fireEvent.click(screen.getByRole('button', { name: saveName }));
     expect(await screen.findByText(r.errors.invalid)).toBeTruthy();

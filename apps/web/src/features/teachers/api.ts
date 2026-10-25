@@ -1,8 +1,8 @@
 import type { AvailabilitySlot, TeacherCreate, TeacherMeetingMode, TeacherStudentCounts } from '@ab/shared';
 import { keepPreviousData, queryOptions } from '@tanstack/react-query';
-import { apiFetch } from '@/lib/api';
-import { sortFilterParams } from '@/lib/list-search';
-import type { ListUrlState } from '@/lib/list-url';
+import { apiFetch } from '@/lib/http/api';
+import { sortFilterParams } from '@/lib/list/list-search';
+import type { ListUrlState } from '@/lib/list/list-url';
 
 // Shapes returned by apps/api/src/modules/teachers (R-TCH-01, R-TCH-02).
 /**

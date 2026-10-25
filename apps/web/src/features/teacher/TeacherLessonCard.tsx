@@ -7,8 +7,8 @@ import { StaffJoinButton } from '@/features/classroom/StaffJoinButton';
 import { LessonReportLinks } from '@/features/reports/LessonReportLinks';
 import { LessonActions } from '@/features/schedule/LessonActions';
 import { studentNames, studentTimes } from '@/features/schedule/lessons';
-import { t } from '@/lib/i18n';
-import { usePlatformClassroom } from '@/lib/public-config';
+import { t } from '@/lib/i18n/i18n';
+import { usePlatformClassroom } from '@/lib/settings/public-config';
 import { cn } from '@/lib/utils';
 import { TeacherProposal } from './TeacherProposal';
 

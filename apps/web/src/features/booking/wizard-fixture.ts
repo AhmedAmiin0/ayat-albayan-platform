@@ -1,7 +1,7 @@
 import type { BookingTeacherOption } from '@ab/shared';
 import { fireEvent, screen, within } from '@testing-library/react';
 import { vi, type Mock } from 'vitest';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 
 // Test data only (imported by the wizard *.test.tsx): API responses keyed by path prefix.
 

@@ -1,6 +1,6 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { MediaPlayer } from './MediaPlayer';
 
 const file = (patch: { url?: string; mime: string }) => ({ url: 'https://storage.test/a?token=1', expires_at: '2026-10-19T12:00:00Z', ...patch });

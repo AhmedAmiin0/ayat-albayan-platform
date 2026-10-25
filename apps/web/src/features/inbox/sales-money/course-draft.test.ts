@@ -4,7 +4,7 @@ import { ABRAR } from '@/features/booking/wizard-fixture';
 import { stepReady, toBookingRequest, withPicks } from '@/features/booking/draft';
 import { dateLabel } from '@/features/schedule/tz';
 import { studentLabel } from '@/features/subscriptions/format';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { COURSE_SUB, COURSE_VIEW } from './course-fixture';
 import { courseDraft, courseFixedText, courseHint, courseTitle, subscriptionStartsText } from './course-draft';
 

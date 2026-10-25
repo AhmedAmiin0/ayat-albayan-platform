@@ -2,7 +2,7 @@ import { isRunningLesson, type SalesScheduleLesson } from '@ab/shared';
 import { StatusChip } from '@/components/ui/display/status-chip';
 import { EnterButton } from '@/features/classroom/JoinButton';
 import { LessonChip } from '@/features/schedule/LessonChip';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 
 /**
  * One lesson in sales' read-only day: the admin's chip without its drawer (time in Riyadh, students,

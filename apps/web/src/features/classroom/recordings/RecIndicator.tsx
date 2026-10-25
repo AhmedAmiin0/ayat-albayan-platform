@@ -1,4 +1,4 @@
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 
 /** «جارٍ التسجيل» while LiveKit egress records the room: a pulsing dot plus the words (never colour alone). */
 export function RecIndicator() {

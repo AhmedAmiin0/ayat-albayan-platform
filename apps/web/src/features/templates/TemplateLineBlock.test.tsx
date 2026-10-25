@@ -2,12 +2,12 @@ import { screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { renderWithClient } from '@/features/inbox/test-utils';
 import { fullTime } from '@/features/inbox/format';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { lineSync, lineView } from './template-lines-fixture';
 import { newerSync, TemplateLineBlock } from './TemplateLineBlock';
 
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@/lib/api', async (orig) => ({ ...(await orig<object>()), apiSend }));
+vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiSend }));
 
 const p = t.templates.perNumber;
 

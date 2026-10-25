@@ -2,7 +2,7 @@ import type { AcademySettings } from '@ab/shared';
 import { DangerFrame } from '@/components/settings/fields/DangerFrame';
 import { AutoMessagesSwitch } from '@/features/messaging/AutoMessagesSwitch';
 import { MessagingSwitch } from '@/features/messaging/MessagingSwitch';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { OverviewNumbers } from './OverviewNumbers';
 import { OverviewWhat } from './OverviewWhat';
 import { PublicNumber } from './PublicNumber';

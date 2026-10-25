@@ -2,7 +2,7 @@ import { Field } from '@/components/ui/form/field';
 import { Select } from '@/components/ui/form/select';
 import { currentMonth } from '@/features/payouts/api';
 import { monthLabel, monthOptions } from '@/features/payouts/MonthSelect';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import type { AssistantRow } from './api';
 
 export type Filter<S extends string> = { assistantId: string; month: string; status: '' | S };

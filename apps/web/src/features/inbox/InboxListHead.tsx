@@ -1,7 +1,7 @@
 import { useState, type ReactNode } from 'react';
 import { Cartouche } from '@/components/ui/display/cartouche';
 import { PageHead } from '@/components/ui/layout/page';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { useInboxMode } from './mode';
 import { NewChatForm, NewChatToggle } from './NewChatForm';
 

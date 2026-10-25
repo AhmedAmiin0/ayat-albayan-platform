@@ -7,7 +7,7 @@ import { FormAlert } from '@/components/ui/form/form-alert';
 import { usePermissions } from '@/features/auth/use-permissions';
 import { INITIAL_PRICING, pricingBody, todayIn, type PricingForm } from '@/features/subscriptions/pricing-form';
 import { PricingFields } from '@/features/subscriptions/PricingFields';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { createSalesSubscription, refreshAfterSalesWrite } from './api';
 import { ChildPicker } from './ChildPicker';
 import { salesErrorText } from './errors';

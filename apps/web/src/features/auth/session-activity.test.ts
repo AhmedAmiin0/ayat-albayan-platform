@@ -2,7 +2,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { REPORT_TIMEOUT_MS, reportSession } from './session-activity';
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@/lib/api', () => ({ apiFetch }));
+vi.mock('@/lib/http/api', () => ({ apiFetch }));
 
 describe('reportSession («سجل النشاط»)', () => {
   beforeEach(() => {

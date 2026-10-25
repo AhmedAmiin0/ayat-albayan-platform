@@ -1,4 +1,4 @@
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { cn } from '@/lib/utils';
 
 /** One shimmering placeholder bar (motion.css `.ab-skeleton`; still under reduced motion). */

@@ -1,7 +1,7 @@
 import type { NumberView } from '@ab/shared';
 import { Button } from '@/components/ui/form/button';
 import { Dialog } from '@/components/ui/overlay/dialog';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { templateName } from './template-cells';
 import type { NumberPick } from './use-template-number';
 

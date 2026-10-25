@@ -2,7 +2,7 @@ import { formatPhone } from '@ab/shared';
 import type { ReactNode } from 'react';
 import { Icon, type IconName } from '@/components/ui/display/icon';
 import { Ltr } from '@/components/ui/display/ltr';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import type { Teacher } from './api';
 
 function Item({ icon, children }: { icon: IconName; children: ReactNode }) {

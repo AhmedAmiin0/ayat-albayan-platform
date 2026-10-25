@@ -7,7 +7,7 @@ import { Input } from '@/components/ui/form/input';
 import { conflictsOf, errorCode, lessonErrorText, LESSONS_KEY } from '@/features/schedule/api';
 import { ConflictNotice } from '@/features/schedule/ConflictNotice';
 import { duplicateCandidates } from '@/features/students/api';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { createBooking } from './api';
 import { CourseCheckNotice } from './CourseCheckNotice';
 import { toBookingRequest, type BookingDraft } from './draft';

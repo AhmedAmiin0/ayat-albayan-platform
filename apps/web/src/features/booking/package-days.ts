@@ -1,5 +1,5 @@
 import { counted, packagePerWeek, type PackageSize } from '@ab/shared';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 
 /**
  * «الباقة 8 حلقات في الشهر = مرتين في الأسبوع» when the picked weekdays don't add up to the

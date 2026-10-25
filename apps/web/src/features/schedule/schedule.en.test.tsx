@@ -9,10 +9,10 @@ import { studentNames } from './lessons';
 import { ProposalsPanel } from './ProposalsPanel';
 
 // The UI in English (LTR): dates, joiners and the proposal arrow follow it, not the Arabic default.
-vi.mock('@/lib/i18n', async (orig) => ({ ...(await orig<object>()), t: en }));
-vi.mock('@/lib/locale', async (orig) => ({ ...(await orig<object>()), locale: 'en' }));
+vi.mock('@/lib/i18n/i18n', async (orig) => ({ ...(await orig<object>()), t: en }));
+vi.mock('@/lib/i18n/locale', async (orig) => ({ ...(await orig<object>()), locale: 'en' }));
 const PENDING = { id: 'p1', proposed_starts_at: '2026-10-05T15:00:00.000Z', note: null, created_at: '2026-10-03T08:00:00.000Z' };
-vi.mock('@/lib/api', async (orig) => ({
+vi.mock('@/lib/http/api', async (orig) => ({
   ...(await orig<object>()),
   apiFetch: vi.fn(async () => [lesson({ pending_proposal: PENDING })]),
 }));

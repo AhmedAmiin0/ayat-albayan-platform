@@ -1,5 +1,5 @@
 import { Icon } from '@/components/ui/display/icon';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 
 export interface JumpToLatestProps {
   /** Messages that arrived after the reader scrolled up; 0 shows the arrow alone. */

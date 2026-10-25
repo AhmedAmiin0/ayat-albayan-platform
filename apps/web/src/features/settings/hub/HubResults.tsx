@@ -1,6 +1,6 @@
 import { counted } from '@ab/shared';
 import { Ltr } from '@/components/ui/display/ltr';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import type { HubHit } from './hub-search';
 import { HubLink } from './HubLink';
 

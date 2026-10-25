@@ -9,7 +9,7 @@ import { Icon } from '@/components/ui/display/icon';
 import { PageHead } from '@/components/ui/layout/page';
 import { Pager } from '@/components/ui/layout/pager';
 import { Toast } from '@/components/ui/overlay/toast';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { studentListQuery, studentStatusCountsQuery } from './api';
 import { BulkAssign } from '@/features/assistants/BulkAssign';
 import { useStudentPick } from '@/features/assistants/use-student-pick';

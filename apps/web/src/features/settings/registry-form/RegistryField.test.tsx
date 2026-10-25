@@ -2,7 +2,7 @@ import { SETTING_DEFAULTS } from '@ab/shared';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { useState } from 'react';
 import { describe, expect, it } from 'vitest';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { SettingsViewContext } from '@/components/settings/settings-view';
 import { RegistryField } from './RegistryField';
 import { isDefault, isDirty, resetPatch } from './settings-dirty';

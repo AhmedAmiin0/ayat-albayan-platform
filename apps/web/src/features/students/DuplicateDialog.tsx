@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/form/button';
 import { Dialog } from '@/components/ui/overlay/dialog';
 import { SegmentedControl } from '@/components/ui/form/segmented-control';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { studentQuery } from './api';
 import type { CreateStudentValues } from './create-student';
 import { DuplicateCompare } from './DuplicateCompare';

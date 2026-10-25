@@ -1,5 +1,5 @@
 import { settingDef, type SettingKey } from '@ab/shared';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 
 /** A dotted ar.json / en.json path of the registry ('settings.hints.uploadMaxMb') → its string. */
 export function textAt(path: string): string {

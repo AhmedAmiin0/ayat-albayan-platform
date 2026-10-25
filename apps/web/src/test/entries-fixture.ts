@@ -1,6 +1,6 @@
 import { SEED_ENTRIES, type ConfigEntry, type ConfigEntriesResponse } from '@ab/shared';
 import type { QueryClient } from '@tanstack/react-query';
-import { CONFIG_QUERY_KEYS } from '@/lib/query-keys';
+import { CONFIG_QUERY_KEYS } from '@/lib/settings/query-keys';
 
 /** One GET /config/entries row for `key` (a seeded key): version 1, no description of its own. Tests only. */
 export function entryOf(key: string, over: Partial<ConfigEntry> = {}): ConfigEntry {

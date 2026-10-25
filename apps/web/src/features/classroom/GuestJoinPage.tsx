@@ -8,7 +8,7 @@ import { Field } from '@/components/ui/form/field';
 import { FormAlert } from '@/components/ui/form/form-alert';
 import { Input } from '@/components/ui/form/input';
 import { Logo } from '@/components/ui/display/mark';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { joinAsGuest } from './api';
 import { ClassroomRoom } from './ClassroomRoom';
 import { classroomErrorText, opensAtOf } from './errors';

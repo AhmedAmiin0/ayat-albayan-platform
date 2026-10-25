@@ -1,5 +1,5 @@
 import { parseAmount, type PaymentMethod } from '@ab/shared';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import type { ExpenseBody, ExpenseView } from './api';
 
 // The expense dialog's form ↔ the API body (pure, unit-tested).

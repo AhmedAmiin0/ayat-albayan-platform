@@ -2,7 +2,7 @@ import { Cartouche } from '@/components/ui/display/cartouche';
 import { PageHead } from '@/components/ui/layout/page';
 import { InternalMeetingButton } from '@/features/meetings/InternalMeetingButton';
 import { InternalMeetingsList } from '@/features/meetings/InternalMeetingsList';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 
 /**
  * /sales/meetings «الاجتماعات» (owner 2026-10-12: back for sales): «اجتماع داخلي» now or «اجتماع

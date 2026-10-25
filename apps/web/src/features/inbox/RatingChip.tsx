@@ -1,6 +1,6 @@
 import { ratingOfInteractive, type LessonRating, type MessageView, type Tone } from '@ab/shared';
 import { StatusChip } from '@/components/ui/display/status-chip';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 
 const TONE: Record<LessonRating, Tone> = { excellent: 'ok', good: 'neutral', needs_work: 'act' };
 

@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/form/button';
 import { NuqtaGlyph } from '@/components/ui/display/nuqta-glyph';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { actionName, failureText, fillText } from './rule-text';
 import type { RuleRowState } from './use-rule-row';
 

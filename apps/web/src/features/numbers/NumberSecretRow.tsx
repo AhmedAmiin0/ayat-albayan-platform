@@ -5,7 +5,7 @@ import { SettingRow } from '@/components/settings/fields/SettingRow';
 import { Button } from '@/components/ui/form/button';
 import { FormAlert } from '@/components/ui/form/form-alert';
 import { Input } from '@/components/ui/form/input';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { numberErrorText } from './number-errors';
 import { clearNumberSecret, putNumberSecret } from './numbers-api';
 import { SecretChip } from './SecretChip';

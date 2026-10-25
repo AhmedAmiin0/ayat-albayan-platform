@@ -1,6 +1,6 @@
 import { INVOICE_SORT_KEYS } from '@ab/shared';
 import { parsePage } from '@/features/subscriptions/search';
-import { parseFilterSearch, parseSortSearch, type FilterSearch, type SortDir, type SortSearch } from '@/lib/list-search';
+import { parseFilterSearch, parseSortSearch, type FilterSearch, type SortDir, type SortSearch } from '@/lib/list/list-search';
 
 // URL state of /admin/invoices: the page, the created-day range, the table's sort and filters.
 // Defaults (page 1, no range, newest first) stay out of the URL.

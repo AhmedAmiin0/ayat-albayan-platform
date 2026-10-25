@@ -4,7 +4,7 @@ import { EmptyState } from '@/components/ui/display/empty-state';
 import { FormAlert } from '@/components/ui/form/form-alert';
 import { ListSkeleton } from '@/components/ui/display/skeleton';
 import { Amount } from '@/features/subscriptions/Amount';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { myEarningsQuery } from './api';
 import { CurrencyTotalsList } from './CurrencyTotalsList';
 import { EarningsTerms } from './EarningsTerms';

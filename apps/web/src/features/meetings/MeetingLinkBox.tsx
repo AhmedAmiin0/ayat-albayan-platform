@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/form/button';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { copyText } from './internal-api';
 
 const L = t.meetings.internal;

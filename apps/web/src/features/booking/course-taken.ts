@@ -1,6 +1,6 @@
 import { wallParts, type Conflict } from '@ab/shared';
 import { WEEK_ORDER } from '@/features/teachers/grid';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { draftPicks } from './draft.days';
 import type { BookingDraft } from './draft';
 

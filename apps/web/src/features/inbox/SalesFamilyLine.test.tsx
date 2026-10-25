@@ -1,7 +1,7 @@
 import type { ThreadLesson, ThreadPeople } from '@ab/shared';
 import { screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { fullTime } from './format';
 import { PHONE, pupil } from './inbox-fixture';
 import { student } from './sales-money/sales-money-fixture';
@@ -9,7 +9,7 @@ import { SalesFamilyLine } from './SalesFamilyLine';
 import { renderWithClient, routeFetch } from './test-utils';
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@/lib/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 
 // What sales gets in pages[0].people: the children, their packages nulled.
 const PEOPLE: ThreadPeople = {

@@ -9,7 +9,7 @@ import { ThreadPane } from './ThreadPane';
 import { ThreadRow } from './ThreadRow';
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@/lib/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 vi.mock('@tanstack/react-router', async () => ({ Link: (await import('./test-utils')).MockLink }));
 
 const GROUPED = '+966 50 123 4567';

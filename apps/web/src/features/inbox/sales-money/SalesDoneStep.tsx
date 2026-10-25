@@ -4,7 +4,7 @@ import { Button, buttonVariants } from '@/components/ui/form/button';
 import { Dialog } from '@/components/ui/overlay/dialog';
 import { Amount } from '@/features/subscriptions/Amount';
 import { studentLabel } from '@/features/subscriptions/format';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 
 /** `onBookCourse`: «احجز أيام الحلقات الآن» for the paid package's student (owner 2026-10-18). */
 type Props = { payment: SalesPaymentView; onClose: () => void; onBookCourse?: (() => void) | undefined };

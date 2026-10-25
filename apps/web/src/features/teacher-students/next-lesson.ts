@@ -1,5 +1,5 @@
 import { dayMonthLabel, RIYADH_TZ, zonedParts } from '@/features/schedule/tz';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 
 /** «الحلقة الجاية: 12 أكتوبر 17:00» on the academy's Riyadh clock, or «مفيش حلقة جاية». */
 export function nextLessonText(startsAt: string | null): string {

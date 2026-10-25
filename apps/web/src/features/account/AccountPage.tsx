@@ -5,7 +5,7 @@ import { FormAlert } from '@/components/ui/form/form-alert';
 import { NuqtaGlyph } from '@/components/ui/display/nuqta-glyph';
 import { Skeleton } from '@/components/ui/display/skeleton';
 import { Toast } from '@/components/ui/overlay/toast';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { AccountHead } from './AccountHead';
 import { profileQuery } from './api';
 import { AvatarSection } from './AvatarSection';

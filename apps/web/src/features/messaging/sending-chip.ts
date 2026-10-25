@@ -1,5 +1,5 @@
 import type { Glyph, SendGateView, Tone } from '@ab/shared';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 
 /**
  * The «إرسال الرسائل» chip, honest about the server (docs/23a §E M1): ON with WhatsApp not set up

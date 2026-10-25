@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { emptyTitle } from './empty-title';
 
 const LIST = '0c000000-0000-4000-8000-000000000001';

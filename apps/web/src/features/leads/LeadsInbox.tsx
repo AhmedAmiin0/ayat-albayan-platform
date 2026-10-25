@@ -4,7 +4,7 @@ import { Cartouche } from '@/components/ui/display/cartouche';
 import { PageHead } from '@/components/ui/layout/page';
 import { Pager } from '@/components/ui/layout/pager';
 import { Toast, type ToastProps } from '@/components/ui/overlay/toast';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { cn } from '@/lib/utils';
 import { AssignUnassignedButton } from './AssignUnassignedButton';
 import { LeadList } from './LeadList';

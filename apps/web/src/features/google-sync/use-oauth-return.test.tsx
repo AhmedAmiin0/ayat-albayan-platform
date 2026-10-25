@@ -3,7 +3,7 @@ import {
 } from '@tanstack/react-router';
 import { render, renderHook, screen, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it } from 'vitest';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { useOauthReturn } from './use-oauth-return';
 
 const c = t.googleSync.connection;

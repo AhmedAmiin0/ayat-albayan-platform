@@ -12,7 +12,7 @@ import {
   type PackageId,
 } from '@ab/shared';
 import { Input } from '@/components/ui/form/input';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { OTHER, type Selection } from './api';
 import { SegmentStep } from './SegmentStep';
 import { Stepper } from './Stepper';

@@ -3,10 +3,10 @@ import { Link } from '@tanstack/react-router';
 import { Ltr } from '@/components/ui/display/ltr';
 import { NuqtaGlyph } from '@/components/ui/display/nuqta-glyph';
 import { StatusChip } from '@/components/ui/display/status-chip';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { whenRiyadh } from './format';
 import type { PendingReportRow } from './types';
-import { teacherLabel } from '@/lib/teacher-label';
+import { teacherLabel } from '@/lib/i18n/teacher-label';
 
 export const workItem = 'flex flex-wrap items-center gap-x-3 gap-y-1 border-b border-rule py-2.5 last:border-b-0';
 export const workLink = 'ms-auto text-xs font-semibold text-lapis underline-offset-4 hover:underline';

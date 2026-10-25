@@ -1,7 +1,7 @@
 import type { TemplateView } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { setTemplateNumber, templateErrorText, templatesQuery } from './api';
 import { templateName } from './template-cells';
 import type { Notice } from './use-template-actions';

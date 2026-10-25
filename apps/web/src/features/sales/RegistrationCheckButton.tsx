@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/form/button';
 import { Icon } from '@/components/ui/display/icon';
 import { usePermissions } from '@/features/auth/use-permissions';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { RegistrationCheckDialog } from './RegistrationCheckDialog';
 
 /** The «تحقق من التسجيل» button alone: the sales chat holds its dialog above the width switch (m13). */

@@ -3,13 +3,13 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/form/button';
 import { Icon } from '@/components/ui/display/icon';
 import { StatusChip } from '@/components/ui/display/status-chip';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { cn } from '@/lib/utils';
 import { CopyLinkButton } from './CopyLinkButton';
 import { SendLinkButton } from './SendLinkButton';
 import { sessionChip, type SessionGroup } from './sessions';
 import { StaffJoinButton } from './StaffJoinButton';
-import { teacherLabel } from '@/lib/teacher-label';
+import { teacherLabel } from '@/lib/i18n/teacher-label';
 
 /** Times in the viewer's own zone (the browser's), 24-hour, Western digits. */
 const CLOCK = new Intl.DateTimeFormat('en-GB', { hour: '2-digit', minute: '2-digit', hour12: false });

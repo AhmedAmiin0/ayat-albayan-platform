@@ -2,7 +2,7 @@ import type { TemplateSkipReason } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
 import ar from '@ab/shared/i18n/ar.json';
 import en from '@ab/shared/i18n/en.json';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { skipReasonText } from './skip-reasons';
 
 // Every reason code the API sends reads in the admin's language (rule 10), never the API's English.

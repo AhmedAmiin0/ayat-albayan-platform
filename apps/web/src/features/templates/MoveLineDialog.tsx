@@ -1,7 +1,7 @@
 import { TEMPLATE_KEYS, type TemplateLineView, type TemplateView } from '@ab/shared';
 import { Button } from '@/components/ui/form/button';
 import { Dialog } from '@/components/ui/overlay/dialog';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { otherLine } from './api';
 import { templateName } from './template-cells';
 

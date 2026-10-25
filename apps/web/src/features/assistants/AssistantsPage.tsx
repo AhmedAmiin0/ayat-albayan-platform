@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { Cartouche } from '@/components/ui/display/cartouche';
 import { PageHead } from '@/components/ui/layout/page';
 import { Tabs } from '@/components/ui/layout/tabs';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { assistantsQuery } from './api';
 import { AssistantsList } from './AssistantsList';
 import { CommissionLedger } from './CommissionLedger';

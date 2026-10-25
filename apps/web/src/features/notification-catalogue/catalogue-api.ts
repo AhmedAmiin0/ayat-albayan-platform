@@ -1,6 +1,6 @@
 import type { NotificationsOverview } from '@ab/shared';
 import { queryOptions } from '@tanstack/react-query';
-import { apiFetch } from '@/lib/api';
+import { apiFetch } from '@/lib/http/api';
 
 /** Every version of the catalogue query (invalidate this to refetch it, e.g. after a template sync). */
 export const CATALOGUE_QUERY_KEY = ['admin-notifications'] as const;

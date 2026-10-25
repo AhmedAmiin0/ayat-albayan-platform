@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { meQuery } from '@/features/auth/me';
 import { sendGateQuery } from '@/features/messaging/api';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { useReadsMessaging } from './allowed-templates';
 import { ComposerPhone, type ComposerMode as Mode } from './ComposerPhone';
 import type { PrefillContext } from './template-params';

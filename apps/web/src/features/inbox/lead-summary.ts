@@ -1,5 +1,5 @@
 import { EMPTY_STUDENT, type CreateStudentValues } from '@/features/students/create-student';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import type { InboxLead } from './api';
 import { qualForm } from './qualification-form';
 

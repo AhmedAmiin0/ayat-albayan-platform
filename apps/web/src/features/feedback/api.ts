@@ -1,10 +1,10 @@
 import { keepPreviousData, queryOptions } from '@tanstack/react-query';
 import { errorCode } from '@/features/schedule/api';
-import { ApiError, apiFetch, apiSend } from '@/lib/api';
-import { env } from '@/lib/env';
-import { t } from '@/lib/i18n';
-import { sortFilterParams } from '@/lib/list-search';
-import type { ServerListState } from '@/lib/server-list-search';
+import { ApiError, apiFetch, apiSend } from '@/lib/http/api';
+import { env } from '@/lib/http/env';
+import { t } from '@/lib/i18n/i18n';
+import { sortFilterParams } from '@/lib/list/list-search';
+import type { ServerListState } from '@/lib/list/server-list-search';
 import {
   FEEDBACK_KINDS,
   type FeedbackFormView,

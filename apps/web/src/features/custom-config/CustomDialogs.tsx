@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/form/button';
 import { Dialog } from '@/components/ui/overlay/dialog';
 import { FormAlert } from '@/components/ui/form/form-alert';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { draftOf, emptyDraft } from './custom-form';
 import { CustomEntryForm } from './CustomEntryForm';
 import type { CustomValues } from './use-custom-values';

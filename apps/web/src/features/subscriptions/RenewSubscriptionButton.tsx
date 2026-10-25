@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { Button } from '@/components/ui/form/button';
 import { Toast } from '@/components/ui/overlay/toast';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { studentBalanceQuery } from './api';
 import { CreateSubscriptionDialog } from './CreateSubscriptionDialog';
 import type { PickedStudent } from './StudentPicker';

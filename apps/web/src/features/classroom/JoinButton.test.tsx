@@ -4,11 +4,11 @@ import type { ReactElement } from 'react';
 import { act } from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { lesson } from '@/features/schedule/lesson-fixture';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { JoinButton } from './JoinButton';
 
 // GET /settings/public never answers here: the window stays on the registry defaults (15 / 120 min).
-vi.mock('@/lib/api', async (orig) => ({ ...(await orig<object>()), apiFetch: () => new Promise(() => undefined) }));
+vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch: () => new Promise(() => undefined) }));
 
 const L = lesson({ id: 'l-5', status: 'confirmed', starts_at: '2026-10-03T16:00:00.000Z', minutes: 60 });
 const at = (iso: string) => vi.setSystemTime(new Date(iso));

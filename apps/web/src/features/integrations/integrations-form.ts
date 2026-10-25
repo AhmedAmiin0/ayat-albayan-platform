@@ -1,6 +1,6 @@
 import { INTEGRATION_KEYS, integrationValueValid, isIntegrationPlainKey, type IntegrationConfigItem, type IntegrationKey, type IntegrationPlainKey } from '@ab/shared';
 import { matchesText } from '@/components/settings/search/settings-search';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 
 export type IntegrationDraft = Partial<Record<IntegrationPlainKey, string>>;
 export type IntegrationChanges = Partial<Record<IntegrationPlainKey, string | null>>;

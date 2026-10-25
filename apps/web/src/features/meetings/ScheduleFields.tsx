@@ -3,7 +3,7 @@ import { Input } from '@/components/ui/form/input';
 import { Select } from '@/components/ui/form/select';
 import { tzCity } from '@/components/ui/form/time-zone-select';
 import { dateLabel, zonedParts } from '@/features/schedule/tz';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { DURATION_OPTIONS, quarterTimes, type ScheduleValue } from './schedule-form';
 
 const L = t.meetingInvites;

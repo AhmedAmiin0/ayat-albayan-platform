@@ -1,6 +1,6 @@
 import type { NumberView, TemplateView } from '@ab/shared';
 import { Select } from '@/components/ui/form/select';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { approvalRows } from './number-approvals';
 import { NumberApprovals } from './NumberApprovals';
 import { Label, templateName } from './template-cells';

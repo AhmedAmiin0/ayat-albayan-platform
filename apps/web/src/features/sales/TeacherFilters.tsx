@@ -1,7 +1,7 @@
 import { GENDERS, type Gender, type Program } from '@ab/shared';
 import { SearchInput } from '@/components/ui/form/search-input';
 import { Select } from '@/components/ui/form/select';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import type { TeacherFilter } from './teacher-view';
 
 export interface TeacherFiltersProps {

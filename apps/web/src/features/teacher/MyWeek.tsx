@@ -14,7 +14,7 @@ import { studentNames } from '@/features/schedule/lessons';
 import { currentWeekStart } from '@/features/schedule/slots';
 import { addDays, dayMonthLabel, RIYADH_TZ, weekWindow, zonedParts } from '@/features/schedule/tz';
 import { WeekGrid } from '@/features/schedule/WeekGrid';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { cn } from '@/lib/utils';
 import { myLessonsQuery, teacherMeQuery } from './api';
 import { TeacherLessonCard } from './TeacherLessonCard';

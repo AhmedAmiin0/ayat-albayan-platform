@@ -1,6 +1,6 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { closeFilters, liveSummary, openFilters } from '@/test/open-filters';
 import { TableToolbar } from './TableToolbar';
 import type { FilterChip } from './types';

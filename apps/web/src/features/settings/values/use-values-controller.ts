@@ -1,7 +1,7 @@
 import { isEditableValueKey, settingDef, type AcademySettings, type ConfigEntry, type SettingKey, type SettingMeta } from '@ab/shared';
 import { useCallback, useState } from 'react';
 import { settingText } from '@/components/settings/search/setting-text';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { rowForm, rowUpdate } from '../registry-form/row-form';
 import type { SettingsForm } from '../registry-form/settings-form';
 import type { DescribeTarget } from './describe-target';

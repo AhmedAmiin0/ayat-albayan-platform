@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/form/button';
 import { Field } from '@/components/ui/form/field';
 import { FormAlert } from '@/components/ui/form/form-alert';
 import { Input } from '@/components/ui/form/input';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { cancelLesson, lessonErrorText, LESSONS_KEY } from './api';
 import { ScopeRadios, type Scope } from './ScopeRadios';
 

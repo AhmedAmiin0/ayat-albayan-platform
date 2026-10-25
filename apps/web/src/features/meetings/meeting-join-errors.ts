@@ -1,8 +1,8 @@
 import { classroomErrorText, opensAtOf } from '@/features/classroom/errors';
 import { viewerTz } from '@/features/classroom/student-link';
 import { errorCode } from '@/features/schedule/api';
-import { ApiError } from '@/lib/api';
-import { t } from '@/lib/i18n';
+import { ApiError } from '@/lib/http/api';
+import { t } from '@/lib/i18n/i18n';
 import { whenText } from './meeting-when';
 
 const R = t.meetings.internal.refusal;

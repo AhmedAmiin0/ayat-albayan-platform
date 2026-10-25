@@ -1,7 +1,7 @@
 import { formatAmount } from '@ab/shared';
 import { formatDate } from '@/features/leads/format';
 import { moneyText } from '@/features/subscriptions/format';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import type { AssistantTermsView } from './api';
 
 /** A plain day (YYYY-MM-DD) shown as a date: noon UTC, so no zone moves it to another day. */

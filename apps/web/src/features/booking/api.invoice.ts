@@ -1,7 +1,7 @@
 import type { SignedDownload, SignedUpload } from '@ab/shared';
 import { queryOptions } from '@tanstack/react-query';
-import { apiFetch, apiSend } from '@/lib/api';
-import { supabase } from '@/lib/supabase';
+import { apiFetch, apiSend } from '@/lib/http/api';
+import { supabase } from '@/lib/http/supabase';
 import type { InvoiceView, MakeupCandidate, ThreadMediaItem } from './contract';
 import { invoiceMime } from './invoice-file';
 

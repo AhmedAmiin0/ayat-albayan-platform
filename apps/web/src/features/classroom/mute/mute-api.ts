@@ -1,5 +1,5 @@
 import type { MuteSource } from '@ab/shared';
-import { apiSend } from '@/lib/api';
+import { apiSend } from '@/lib/http/api';
 import { participantsBase } from '../share/share-api';
 
 /** «كتم الميكروفون» / «إيقاف الكاميرا» for one participant: 204, or an ApiError. */

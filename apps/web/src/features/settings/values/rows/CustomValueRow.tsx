@@ -1,7 +1,7 @@
 import type { CustomConfigView } from '@ab/shared';
 import { useId } from 'react';
 import { formatDateTime } from '@/features/leads/format';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { DefaultCell } from '../cells/InfoCells';
 import { keyItem } from '../cells/key-item';
 import { NameCell } from '../cells/NameCell';

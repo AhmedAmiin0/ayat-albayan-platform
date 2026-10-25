@@ -1,13 +1,13 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react';
 import { act } from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { openRoom } from './board/board-fixture';
 import { fakeClient, tile, type FakeClient } from './fake-client';
 import { decodeShare, encodeShare, SHARE_TOPIC, type ShareMessage } from './share/share-messages';
 
 const apiSend = vi.hoisted(() => vi.fn().mockResolvedValue(undefined));
-vi.mock('@/lib/api', async (orig) => ({ ...(await orig<typeof import('@/lib/api')>()), apiSend }));
+vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<typeof import('@/lib/http/api')>()), apiSend }));
 
 const S = t.classroom.shareRequest;
 const guestRoom = () => fakeClient({ shareAllowed: false, tiles: [tile({ key: 'me', isLocal: true, role: 'guest' }), tile({ key: 't', role: 'teacher' })] });

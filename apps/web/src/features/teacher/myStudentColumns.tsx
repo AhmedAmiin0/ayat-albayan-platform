@@ -5,7 +5,7 @@ import type { ColumnFilterDef, DataTableFeatures } from '@/components/DataTable'
 import { Ltr } from '@/components/ui/display/ltr';
 import { StatusChip } from '@/components/ui/display/status-chip';
 import { tzCity } from '@/components/ui/form/time-zone-select';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 
 type MyStudent = TeacherMe['students'][number];
 

@@ -3,7 +3,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import type { MouseEvent } from 'react';
 import { Button, buttonVariants } from '@/components/ui/form/button';
 import { errorCode } from '@/features/schedule/api';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { handOffMessage, markSentManually, retryMessage } from './api';
 import { canRetry, canSendByHand, isHandedOff } from './message-notes';
 

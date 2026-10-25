@@ -9,8 +9,8 @@ import { Pager } from '@/components/ui/layout/pager';
 import { studentListQuery, studentStatusCountsQuery, type StatusCounts } from '@/features/students/api';
 import { StatusChips } from '@/features/students/StatusChips';
 import { setColumnFilter } from '@/features/students/search';
-import { t } from '@/lib/i18n';
-import type { FilterSearch, SortSearch } from '@/lib/list-search';
+import { t } from '@/lib/i18n/i18n';
+import type { FilterSearch, SortSearch } from '@/lib/list/list-search';
 import { teacherStudentColumns } from './teacher-student-columns';
 import { panelView } from './teacher-students-view';
 

@@ -7,7 +7,7 @@ import { usePermissions } from '@/features/auth/use-permissions';
 import { SALES_NAV_ITEMS, SalesNav } from '@/features/sales/SalesNav';
 import { useSalesUnread } from '@/features/sales/use-sales-unread';
 import { TEACHER_NAV_ITEMS, TeacherNav } from '@/features/teacher/TeacherNav';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { useNavCounts } from './use-nav-counts';
 
 // Each role's own shell (docs/07 §7), shared by its section route (/admin, /teacher, …) and by

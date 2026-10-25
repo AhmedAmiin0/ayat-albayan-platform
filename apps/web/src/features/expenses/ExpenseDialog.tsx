@@ -7,12 +7,12 @@ import { paidAtDay } from '@/features/payments/pay-day';
 import { ReceiptField, receiptProblem } from '@/features/payments/ReceiptField';
 import { MONEY_KEY } from '@/features/subscriptions/api';
 import { apiErrorText } from '@/features/subscriptions/format';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { categoriesQuery, saveExpense, uploadExpenseReceipt, type ExpenseView } from './api';
 import { AddCategory } from './AddCategory';
 import { expenseBody, expenseForm, type ExpenseForm } from './expense-form';
 import { ExpenseFields } from './ExpenseFields';
-import { useUploadMaxBytes } from '@/lib/public-config';
+import { useUploadMaxBytes } from '@/lib/settings/public-config';
 
 type Props = { month: string; expense: ExpenseView | null; onClose: () => void; onSaved: () => void };
 

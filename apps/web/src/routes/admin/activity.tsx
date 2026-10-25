@@ -1,7 +1,7 @@
 import { ACTIVITY_FILTER_KEYS, ACTIVITY_SORT_KEYS } from '@ab/shared';
 import { createFileRoute } from '@tanstack/react-router';
 import { ActivityPage } from '@/features/activity/ActivityPage';
-import { listUrlValidator, parseListUrl, toListUrl } from '@/lib/list-url';
+import { listUrlValidator, parseListUrl, toListUrl } from '@/lib/list/list-url';
 
 const KEYS = { sortKeys: ACTIVITY_SORT_KEYS, filterKeys: ACTIVITY_FILTER_KEYS };
 

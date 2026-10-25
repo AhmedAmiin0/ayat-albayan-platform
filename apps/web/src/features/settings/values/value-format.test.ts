@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { boundsText, defaultNote, defaultText, valueText } from './value-format';
 import { countText, unitWord } from './value-units';
 

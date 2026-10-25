@@ -3,7 +3,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render, screen, within } from '@testing-library/react';
 import { createElement, type ReactElement } from 'react';
 import { vi } from 'vitest';
-import { ApiError } from '@/lib/api';
+import { ApiError } from '@/lib/http/api';
 
 // Shared by the «حسابي» tests (not a test itself): a profile, API errors and a render wrapper.
 // Each test file mocks '@/lib/api' (apiFetch for GET /me/profile, apiSend for the changes).

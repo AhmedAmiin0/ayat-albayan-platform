@@ -1,5 +1,5 @@
 import type { Glyph, LineHealthView, NotificationEntryView, Tone, WaLine } from '@ab/shared';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 
 const c = () => t.notificationCatalogue;
 

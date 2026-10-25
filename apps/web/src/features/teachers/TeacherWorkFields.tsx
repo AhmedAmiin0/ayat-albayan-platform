@@ -3,7 +3,7 @@ import { Field } from '@/components/ui/form/field';
 import { Input } from '@/components/ui/form/input';
 import { Select } from '@/components/ui/form/select';
 import { TimeZoneSelect } from '@/components/ui/form/time-zone-select';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { RATE_FIELDS, type SetField, type TeacherForm } from './teacher-form';
 
 type Props = { form: TeacherForm; set: SetField };

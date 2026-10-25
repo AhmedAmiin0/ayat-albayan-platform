@@ -2,12 +2,12 @@ import { GRANTABLE_PERMISSIONS, type RoleView } from '@ab/shared';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { RolesPage } from './RolesPage';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@/lib/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch, apiSend }));
+vi.mock('@/lib/http/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch, apiSend }));
 
 const P = t.permissions.page;
 const ADMIN: RoleView = {
@@ -72,7 +72,7 @@ describe('RolesPage «استعادة الافتراضي»', () => {
 
   it('shows the API refusal', async () => {
     const dialog = await openRole('المبيعات');
-    const { ApiError } = await import('@/lib/api');
+    const { ApiError } = await import('@/lib/http/api');
     apiSend.mockRejectedValue(new ApiError(400, { code: 'not_system_role' }));
     fireEvent.click(dialog.getByRole('button', { name: P.reset }));
     fireEvent.click(dialog.getByRole('button', { name: P.resetConfirm }));

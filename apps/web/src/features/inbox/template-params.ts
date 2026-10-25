@@ -8,7 +8,7 @@ import {
   type TemplateView,
   type ThreadLesson,
 } from '@ab/shared';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 
 // The inbox template composer's form (R-LEAD-02, docs/12 H4): {{1}}…{{9}} by position, plus the
 // URL button's suffix (the Meet code / Jitsi room) when the template has one. Lesson times come

@@ -1,5 +1,5 @@
 import { apiErrorText } from '@/features/subscriptions/format';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 
 /**
  * An API failure of the sales money writes as text: the domain code (not_your_student, start_date_past,

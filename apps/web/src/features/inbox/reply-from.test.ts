@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { thread } from './inbox-fixture';
 import { replyFromText } from './reply-from';
 

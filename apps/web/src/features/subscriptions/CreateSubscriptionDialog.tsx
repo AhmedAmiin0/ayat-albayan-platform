@@ -6,7 +6,7 @@ import { Field } from '@/components/ui/form/field';
 import { FormAlert } from '@/components/ui/form/form-alert';
 import { Input } from '@/components/ui/form/input';
 import { Ltr } from '@/components/ui/display/ltr';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { createSubscription, MONEY_KEY } from './api';
 import { apiErrorText } from './format';
 import { INITIAL_PRICING, pricingBody, todayIn, type PricingForm } from './pricing-form';

@@ -1,12 +1,12 @@
 import { fireEvent, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { PHONE, template } from './inbox-fixture';
 import { TemplateComposer } from './TemplateComposer';
 import { renderWithClient, routeFetch } from './test-utils';
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@/lib/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 
 // trial_reschedule's one variable is the recipient's name: it starts as the thread's display name.
 const RESCHEDULE = template({

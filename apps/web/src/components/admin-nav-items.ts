@@ -1,6 +1,6 @@
 import type { Permission } from '@ab/shared';
 import type { IconName } from '@/components/ui/display/icon';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 
 // The fihris (surah index) nav, docs/07 §7: the ONE list of admin pages, rendered by the sidebar
 // (≥ 900px) and by the «القائمة» sheet below it; `visibleGroups` (dynamic roles) filters it once.

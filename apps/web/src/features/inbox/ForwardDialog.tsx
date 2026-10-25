@@ -6,7 +6,7 @@ import { Dialog } from '@/components/ui/overlay/dialog';
 import { FormAlert } from '@/components/ui/form/form-alert';
 import { SearchInput } from '@/components/ui/form/search-input';
 import { useDebounced } from '@/features/pricing/use-debounced';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { threadsQuery } from './api';
 import { forwardMessage } from './api.forward';
 import { ForwardList } from './ForwardList';
