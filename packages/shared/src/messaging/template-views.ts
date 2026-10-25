@@ -29,6 +29,9 @@ export interface TemplateView {
   number_id?: string | null;
   /** Its approval on each number synced so far (one Meta template per WABA). Absent from older APIs. */
   numbers?: TemplateNumberApproval[];
+  /** The CRM's name / language when its line is on crm (docs/19); null = the default. Absent from older APIs. */
+  crm_name?: string | null;
+  crm_language?: string | null;
 }
 
 /** One (template, number) approval: message_template_numbers. */

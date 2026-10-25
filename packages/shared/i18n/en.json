@@ -2555,6 +2555,20 @@
     "move": "Move to the other number",
     "moveFor": "{name}: move to the other number",
     "moveUnavailable": "The other number is not configured on the server",
+    "crmName": {
+      "edit": "Its name in the CRM",
+      "editFor": "{name}: its name in the CRM",
+      "current": "In the CRM: {crm}",
+      "title": "Template name in the CRM",
+      "description": "«{name}» is sent to the CRM with this name and language only while its line is on the CRM; nothing changes on Meta or Kapso. Leave a field blank to use the default.",
+      "name": "Name in the CRM",
+      "nameHint": "Lowercase English letters, digits and underscores, as the CRM shows it. Default: {crm}",
+      "language": "Template language in the CRM",
+      "languageHint": "The language code as the CRM shows it, e.g. ar or en_US. Default: {language}",
+      "invalid": "Use only lowercase English letters, digits and underscores for the name, and a code like ar or en_US for the language.",
+      "reportNote": "Type report_session to send the report file first, then report_session for a regular lesson or report_trial_session for a trial lesson, as the old system did. Only do this if both templates have no variables in the CRM.",
+      "saved": "Name of «{name}» in the CRM saved"
+    },
     "crmStatus": {
       "approved": "Mark approved in the CRM",
       "missing": "Mark not available",
@@ -2766,6 +2780,7 @@
       "lesson_kind": "Trial",
       "contact_name": "Ahmed"
     },
+    "teacherLessonMinutes": "{n} minutes",
     "teacherNewStudentKind": {
       "trial": "Trial",
       "subscription": "Subscription"
@@ -5955,6 +5970,17 @@
     }
   },
   "communicationsHub": {
+    "driverTitle": "Sending provider per line",
+    "driverIntro": "Sets the route a line's messages leave by: Meta directly, Kapso or the CRM. Every switch is recorded in the activity log.",
+    "driverPicker": "Sending provider for {line}",
+    "driverCurrent": "Sending through {driver} now",
+    "driverConfirm": "This line will send through {driver}. The next messages move to it as soon as you save.",
+    "driverConfirmYes": "Yes, switch the provider",
+    "driverReady": "Everything {driver} needs is set.",
+    "driverMissing": "These keys are missing, so the line will not send through {driver} until they are set on the web in «Communications» ← «Safety»:",
+    "driverSaved": "{line}: sending through {driver} now",
+    "driverFailed": "Could not save the provider. Try again.",
+    "driverReadOnly": "Switching the provider needs permission to edit settings.",
     "switchesTitle": "Sending switches",
     "numbersTitle": "Numbers and their health",
     "numbersOpen": "Open «Numbers»",

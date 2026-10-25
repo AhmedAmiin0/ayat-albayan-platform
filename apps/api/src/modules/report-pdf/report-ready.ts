@@ -1,4 +1,4 @@
-import { lessonWhenText } from '@ab/shared';
+import { lessonWhenText, type CrmReportKind } from '@ab/shared';
 import { BUCKETS } from '../../common/storage/storage.paths';
 import { AR, localDate } from './pdf-text';
 
@@ -15,6 +15,8 @@ export interface ReportReadyInput {
   startsAt: Date;
   guardian: { id: string; phone_e164: string; tz: string };
   pdfPath: string;
+  /** The lesson's rule is a trial (schedule_rules.package = 'trial'): the CRM's report_trial_session. */
+  trial?: boolean;
 }
 
 /** One `messages` insert. Shape of the columns the PDF job writes. */
@@ -29,6 +31,8 @@ export interface ReportReadyMessage {
     '1': string;
     '2': string;
     document: { bucket: string; path: string; filename: string };
+    /** The crm driver's report template by the lesson's kind (docs/19); the meta driver never reads it. */
+    crm: { report: CrmReportKind };
   };
   dedup_key: string;
   scheduled_for: string;
@@ -62,6 +66,7 @@ export function reportReadyMessage(input: ReportReadyInput, now: Date): ReportRe
         path: input.pdfPath,
         filename: reportFileName({ code: input.studentCode, startsAt: input.startsAt, tz: guardian.tz }),
       },
+      crm: { report: input.trial ? 'trial' : 'regular' },
     },
     dedup_key: reportReadyDedupKey(input.reportId),
     scheduled_for: now.toISOString(),

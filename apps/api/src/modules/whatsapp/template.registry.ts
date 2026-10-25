@@ -1,6 +1,7 @@
-import { WA_LINES, type TemplateHealthView, type TemplateLineSync, type TemplateLineView, type TemplateMoveView, type TemplateView, type WaLine } from '@ab/shared';
+import { WA_LINES, type TemplateCrmNameInput, type TemplateHealthView, type TemplateLineSync, type TemplateLineView, type TemplateMoveView, type TemplateView, type WaLine } from '@ab/shared';
 import { Inject, Injectable, Logger, type OnApplicationBootstrap, type OnModuleDestroy } from '@nestjs/common';
 import { AuditService } from '../../common/audit/audit.service';
+import { setCrmName } from './template-crm-name';
 import { setCrmStatus, type CrmTemplateStatus } from './template-crm-status';
 import { lineFacts, requireLine, requireSync, syncOn } from './template-env';
 import { syncLine } from './template-line-sync';
@@ -119,6 +120,11 @@ export class TemplateRegistry implements OnApplicationBootstrap, OnModuleDestroy
   /** PUT /messaging/templates/:key/crm-status (template-crm-status.ts): a crm line's status by hand. */
   setCrmStatus(input: { key: string; status: CrmTemplateStatus }, actorId: string): Promise<TemplateView> {
     return setCrmStatus({ queries: this.queries, audit: this.audit }, input, actorId);
+  }
+
+  /** PUT /messaging/templates/:key/crm-name (template-crm-name.ts): a crm line's CRM name / language. */
+  setCrmName(input: TemplateCrmNameInput & { key: string }, actorId: string): Promise<TemplateView> {
+    return setCrmName({ queries: this.queries, audit: this.audit }, input, actorId);
   }
 
   /** PATCH /messaging/templates/:key/line (template-move.ts). */

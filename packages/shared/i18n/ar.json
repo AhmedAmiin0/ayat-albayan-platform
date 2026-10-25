@@ -2555,6 +2555,20 @@
     "move": "نقل إلى الرقم الآخر",
     "moveFor": "{name}: نقل إلى الرقم الآخر",
     "moveUnavailable": "الرقم الآخر غير مضبوط على الخادم",
+    "crmName": {
+      "edit": "اسمه في نظام CRM",
+      "editFor": "{name}: اسمه في نظام CRM",
+      "current": "في نظام CRM: {crm}",
+      "title": "اسم القالب في نظام CRM",
+      "description": "يُرسَل «{name}» إلى نظام CRM بهذا الاسم وهذه اللغة ما دام خطه على نظام CRM فقط، ولا يتغيّر شيء على ميتا أو Kapso. اترك الحقل فارغًا لاستخدام القيمة الافتراضية.",
+      "name": "الاسم في نظام CRM",
+      "nameHint": "حروف إنجليزية صغيرة وأرقام وشرطة سفلية، كما يظهر في نظام CRM. الافتراضي: {crm}",
+      "language": "لغة القالب في نظام CRM",
+      "languageHint": "رمز اللغة كما يظهر في نظام CRM، مثل ar أو en_US. الافتراضي: {language}",
+      "invalid": "اكتب الاسم بحروف إنجليزية صغيرة وأرقام وشرطة سفلية فقط، واللغة برمز مثل ar أو en_US.",
+      "reportNote": "اكتب report_session ليُرسَل ملف التقرير أولًا ثم قالب report_session للحلقة العادية أو report_trial_session للحلقة التجريبية، كما في النظام القديم. افعل ذلك فقط إن كان القالبان في نظام CRM بلا متغيرات.",
+      "saved": "حُفظ اسم «{name}» في نظام CRM"
+    },
     "crmStatus": {
       "approved": "علِّمه معتمدًا في نظام CRM",
       "missing": "علِّمه غير متاح",
@@ -2766,6 +2780,7 @@
       "lesson_kind": "تجريبية",
       "contact_name": "أحمد"
     },
+    "teacherLessonMinutes": "{n} دقيقة",
     "teacherNewStudentKind": {
       "trial": "تجريبية",
       "subscription": "اشتراك"
@@ -5955,6 +5970,17 @@
     }
   },
   "communicationsHub": {
+    "driverTitle": "مزوّد الإرسال لكل خط",
+    "driverIntro": "يحدد الطريق الذي تخرج منه رسائل الخط: ميتا مباشرة أو Kapso أو نظام CRM. يُسجَّل كل تبديل في سجل النشاط.",
+    "driverPicker": "مزوّد الإرسال لـ{line}",
+    "driverCurrent": "يُرسل الآن عبر {driver}",
+    "driverConfirm": "سيُرسل هذا الخط عبر {driver}. تنتقل الرسائل التالية إليه فور الحفظ.",
+    "driverConfirmYes": "نعم، بدّل المزوّد",
+    "driverReady": "كل ما يحتاجه {driver} مضبوط.",
+    "driverMissing": "تنقص هذه المفاتيح، فلن يُرسل الخط عبر {driver} حتى تُضبط من الموقع في «التواصل» ← «الحماية»:",
+    "driverSaved": "{line}: يُرسل الآن عبر {driver}",
+    "driverFailed": "تعذّر حفظ المزوّد. حاول مرة أخرى.",
+    "driverReadOnly": "تبديل المزوّد يحتاج صلاحية تعديل الإعدادات.",
     "switchesTitle": "مفاتيح الإرسال",
     "numbersTitle": "الأرقام وحالتها",
     "numbersOpen": "افتح «الأرقام»",

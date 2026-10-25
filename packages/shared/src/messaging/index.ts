@@ -12,6 +12,7 @@ export * from './restricted-templates.js';
 export * from './schemas.js';
 export * from './chat-files.js';
 export * from './chat-lists.js';
+export * from './crm-names.js';
 export * from './sender.js';
 export * from './status-style.js';
 export * from './templates.js';

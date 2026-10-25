@@ -1,5 +1,5 @@
 import type { Json } from '@ab/db';
-import { BODY_SLOTS, QUICK_REPLY_INTENTS, type BodySlot, type TemplateButton, type TemplateParams } from '@ab/shared';
+import { BODY_SLOTS, crmValuesSchema, QUICK_REPLY_INTENTS, type BodySlot, type TemplateButton, type TemplateParams } from '@ab/shared';
 import { z } from 'zod';
 
 // The jsonb columns the sender and the registry read (message_templates.params / buttons,
@@ -18,6 +18,7 @@ const paramsSchema = z.object({
   button: z.string().optional(),
   payloads: z.array(z.string()).optional(),
   document: z.object({ bucket: z.string(), path: z.string(), filename: z.string() }).optional(),
+  crm: crmValuesSchema.optional(),
 });
 
 export function templateButtons(json: Json | null): TemplateButton[] {
