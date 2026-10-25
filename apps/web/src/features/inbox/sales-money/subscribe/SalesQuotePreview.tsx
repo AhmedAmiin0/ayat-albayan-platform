@@ -5,8 +5,8 @@ import { durationLabel, packageCopy, sessionsOf } from '@/features/pricing/forma
 import { useDebounced } from '@/features/pricing/use-debounced';
 import { Amount } from '@/features/subscriptions/Amount';
 import { t } from '@/lib/i18n/i18n';
-import { quoteSalesSubscription, SALES_MONEY_KEY } from './api';
-import { salesErrorText } from './errors';
+import { quoteSalesSubscription, SALES_MONEY_KEY } from '../api';
+import { salesErrorText } from '../errors';
 
 type Props = { studentId: string; pricing: SubscriptionPricing };
 

@@ -1,10 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import { ApiError } from '@/lib/http/api';
 import { t } from '@/lib/i18n/i18n';
-import { openPackages } from './SalesMoneyFlow';
-import { salesErrorText } from './errors';
+import { openPackages } from '../SalesMoneyFlow';
+import { salesErrorText } from '../errors';
 import { addChatChoice, attachmentItem, attachmentsFor, chatReceiptLabel, pickedMessages } from './receipt';
-import { CHAT_RECEIPTS, OPEN_SUB, student } from './sales-money-fixture';
+import { CHAT_RECEIPTS, OPEN_SUB, student } from '../sales-money-fixture';
 
 const chat = { kind: 'chat', messageId: 'm', subscriptionId: 'sub-a', path: 'receipts/sub-a/x.jpg', label: 'تحويل' } as const;
 

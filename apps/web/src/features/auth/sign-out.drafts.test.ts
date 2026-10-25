@@ -3,7 +3,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { draftFromLead } from '@/features/booking/booking-entries';
 import { getDraft, setDraft } from '@/features/inbox/composer/lib/draft-store';
 import { lastOwnSend, recordOwnSend } from '@/features/inbox/composer/lib/own-send';
-import { registerDrafts } from '@/features/inbox/register-drafts';
+import { registerDrafts } from '@/features/inbox/sales/register-drafts';
 import { signOut } from './sign-in';
 
 const auth = vi.hoisted(() => ({ signOut: vi.fn(async () => undefined) }));

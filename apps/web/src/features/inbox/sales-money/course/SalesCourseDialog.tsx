@@ -8,7 +8,7 @@ import type { BookingDraft } from '@/features/booking/draft';
 import { BookingModeContext, ChatReturnContext } from '@/features/booking/mode';
 import { lessonErrorText } from '@/features/schedule/api';
 import { t } from '@/lib/i18n/i18n';
-import { refreshAfterSalesWrite, salesCourseQuery } from './api';
+import { refreshAfterSalesWrite, salesCourseQuery } from '../api';
 import { continuePlan, type ContinuePlan } from './course-continue';
 import { courseDraft, courseFixedText, courseHint, courseTitle, subscriptionStartsText } from './course-draft';
 import { ContinueChoice } from './ContinueChoice';

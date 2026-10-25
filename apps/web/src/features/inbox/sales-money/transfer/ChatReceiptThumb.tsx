@@ -1,6 +1,6 @@
 import type { SalesChatReceipt } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
-import { chatReceiptFileQuery } from './api';
+import { chatReceiptFileQuery } from '../api';
 
 type Props = { studentId: string; receipt: SalesChatReceipt };
 

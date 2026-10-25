@@ -1,6 +1,6 @@
 import { clearAllDrafts } from '../composer/lib/draft-store';
 import { clearOwnSends } from '../composer/lib/own-send';
-import { registerDrafts } from '../register-drafts';
+import { registerDrafts } from '../sales/register-drafts';
 import { clearAllStaged } from '../saved-replies/staged-store';
 
 /**
