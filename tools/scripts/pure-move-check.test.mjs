@@ -114,3 +114,10 @@ test('docs and JSON may change only by whole moved paths', () => {
   files['head:docs/a.json'] = '["apps/api/src/config/env/env.ts", "y"]';
   assert.equal(classify({ status: 'M', from: 'docs/a.json', to: 'docs/a.json' }, read, ctx).kind, 'bad');
 });
+
+test('a shrunk folder-cap allow-list and a new move map are config', () => {
+  const files = { 'base:refactor/folder-cap/web.json': '{ "a": 1, "b": 2 }', 'head:refactor/folder-cap/web.json': '{ "a": 1 }' };
+  const read = (side, f) => files[`${side}:${f}`] ?? '';
+  assert.equal(classify({ status: 'M', from: 'refactor/folder-cap/web.json', to: 'refactor/folder-cap/web.json' }, read).kind, 'config');
+  assert.equal(classify({ status: 'A', from: 'refactor/moves/b1.json', to: 'refactor/moves/b1.json' }, read).kind, 'config');
+});
