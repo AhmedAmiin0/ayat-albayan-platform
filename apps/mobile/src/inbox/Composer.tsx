@@ -7,6 +7,7 @@ import { useTheme } from '@/theme';
 import { Button } from '@/ui/Button';
 import { IconButton } from '@/ui/IconButton';
 import { AttachFile } from './AttachFile';
+import { useChatActions } from './chat-actions';
 import { TemplateIcon, SendIcon } from './chat-icons';
 import { ClosedNote } from './ClosedNote';
 import { ComposerInput } from './ComposerInput';
@@ -14,6 +15,8 @@ import { ComposerNotes } from './ComposerNotes';
 import { ErrorLine } from './ErrorLine';
 import { GateNote } from './GateNote';
 import { sendError } from './message-text';
+import { quoteOf } from './quote-text';
+import { QuoteStrip } from './QuoteStrip';
 import { TemplatePicker } from './TemplatePicker';
 import { type Outgoing, useSendMessage } from './use-thread';
 
@@ -48,15 +51,25 @@ export function Composer({
   const [fileError, setFileError] = useState<string | null>(null);
   const open = sessionWindowOpen(thread?.last_inbound_at ?? null, new Date());
   const pick = () => setPicking(true);
+  // «رد» (owner 2026-10-25): the message the next text answers; another target is another send.
+  const { reply, setReply } = useChatActions();
+  const draftReply = useRef<string | undefined>(undefined);
 
   const sendText = () => {
     const body = text.trim();
     if (!body) return;
     setText('');
+    const replyTo = reply && open ? quoteOf(reply) : undefined;
+    const id = draftReply.current === replyTo?.id ? draftId : requestId();
+    draftReply.current = replyTo?.id;
+    setDraftId(id);
     send.mutate(
-      { out: { kind: 'text', text: body }, id: draftId },
+      { out: { kind: 'text', text: body, ...(replyTo ? { replyTo } : {}) }, id },
       {
-        onSuccess: () => setDraftId(requestId()),
+        onSuccess: () => {
+          setDraftId(requestId());
+          if (replyTo) setReply((now) => (now?.id === replyTo.id ? null : now));
+        },
         onError: () => setText((now) => now || body),
       },
     );
@@ -68,6 +81,7 @@ export function Composer({
       {fileError && open ? <ErrorLine message={fileError} /> : null}
       <GateNote />
       <ComposerNotes thread={thread} open={open} />
+      {open ? <QuoteStrip /> : null}
       {open ? (
         <View style={{ flexDirection: 'row', alignItems: 'flex-end', gap: 6 }}>
           <IconButton label={t.inbox.composer.sendTemplate} onPress={pick}>

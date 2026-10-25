@@ -1,14 +1,17 @@
 import { isChatViewMime, type MessageView, replyNote } from '@ab/shared';
-import { Linking, Pressable, View } from 'react-native';
+import { Linking, Pressable, View, type ViewStyle } from 'react-native';
 import { useHolds } from '@/auth/use-permissions';
 import { t } from '@/lib/i18n';
 import { locale } from '@/lib/locale';
 import { shape, type, useTheme } from '@/theme';
 import { AppText } from '@/ui/AppText';
+import { useBubbleActions } from './bubble-actions';
 import { MessageActions } from './MessageActions';
 import { MessageFile } from './MessageFile';
 import { MessageMeta, useSmall } from './MessageMeta';
 import { errorLine, mediaLine, templateLine } from './message-text';
+import { QuoteBlock } from './QuoteBlock';
+import { SwipeReply } from './SwipeReply';
 import { useThreadMode } from './thread-mode';
 
 /** A file line: a link to the signed URL once the API has the file, else its kind and why not. */
@@ -29,6 +32,15 @@ function MediaLine({ label, url, file }: { label: string; url: string | null; fi
   );
 }
 
+export interface MessageBubbleProps {
+  message: MessageView;
+  phone: string;
+  /** A tap on its quote: MessageList scrolls to the original. */
+  onJump?: (id: string) => void;
+  /** Just jumped to: a mint edge for a moment. */
+  highlight?: boolean;
+}
+
 /**
  * One message (R-MSG-05). Theirs at the inline-start, ours at the end, as WhatsApp lays out Arabic.
  * Ours carry WhatsApp-style delivery ticks (DeliveryTicks, named by the status word); a template
@@ -36,8 +48,10 @@ function MediaLine({ label, url, file }: { label: string; url: string | null; fi
  * («أرسلها: سارة», «رسالة تلقائية»); a photo, PDF, voice note or video opens from MessageFile. Why a send failed is for everyone (as the web's
  * outboundNotes); retry / sent-by-hand stay the admin's (R-MSG-05).
  */
-export function MessageBubble({ message: m, phone }: { message: MessageView; phone: string }) {
+export function MessageBubble({ message: m, phone, onJump, highlight = false }: MessageBubbleProps) {
   const { color } = useTheme();
+  // «رد» / «إعادة توجيه» (owner 2026-10-25): a long press opens the menu, a swipe answers.
+  const touch = useBubbleActions(m);
   const admin = useThreadMode().kind === 'admin';
   // The sales tree has no thread mode either: the actions' endpoints need messages.manage (admin-only).
   const manages = useHolds('messages.manage');
@@ -51,26 +65,35 @@ export function MessageBubble({ message: m, phone }: { message: MessageView; pho
   const stuck = admin && manages && ours && (m.status === 'failed' || m.click_to_chat !== null);
   // A hand-off asks «بعتّها؟» in MessageActions instead of a reason.
   const why = ours && m.status === 'failed' && m.error_code !== 'handed_off';
-  return (
-    <View
-      style={{
-        alignSelf: ours ? 'flex-end' : 'flex-start',
-        maxWidth: '88%',
-        gap: 4,
-        paddingHorizontal: 10,
-        paddingVertical: 6,
-        borderRadius: shape.radius.lg,
-        borderWidth: 1,
-        borderColor: ours ? color.lapisWash : color.rule,
-        backgroundColor: ours ? color.lapisWash : color.raised,
-      }}
-    >
-      {m.template_key ? <AppText style={small}>{templateLine(m.template_key)}</AppText> : null}
+  // The screen reader's way to the menu sits on the text; a file-only bubble keeps its own buttons.
+  const a11yOn = m.body ? 'body' : m.template_key ? 'template' : null;
+  const box: ViewStyle = {
+    alignSelf: ours ? 'flex-end' : 'flex-start',
+    maxWidth: '88%',
+    gap: 4,
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    borderRadius: shape.radius.lg,
+    borderWidth: 1,
+    borderColor: highlight ? color.lapis : ours ? color.lapisWash : color.rule,
+    backgroundColor: ours ? color.lapisWash : color.raised,
+  };
+  const content = (
+    <>
+      {m.forwarded ? <AppText style={small}>{t.inbox.forward.forwarded}</AppText> : null}
+      {m.reply_to ? <QuoteBlock quote={m.reply_to} onJump={onJump} /> : null}
+      {m.template_key ? (
+        <AppText style={small} {...(a11yOn === 'template' ? touch.a11y : {})}>
+          {templateLine(m.template_key)}
+        </AppText>
+      ) : null}
       {file ? <MessageFile message={m} phone={phone} /> : null}
       {media && !file ? <MediaLine label={media} url={m.media_url} file={m.media_mime !== null} /> : null}
       {m.body ? (
         <AppText
-          selectable
+          // Selecting text would swallow the long press that opens «رد» / «إعادة توجيه».
+          selectable={!touch.has}
+          {...(a11yOn === 'body' ? touch.a11y : {})}
           style={{
             fontFamily: type.ui[400],
             fontSize: type.size.body,
@@ -90,6 +113,14 @@ export function MessageBubble({ message: m, phone }: { message: MessageView; pho
       <MessageMeta message={m} />
       {why ? <AppText style={{ ...small, fontSize: type.size.xs, lineHeight: type.lineHeight(type.size.xs) }}>{errorLine(m)}</AppText> : null}
       {stuck ? <MessageActions message={m} phone={phone} /> : null}
-    </View>
+    </>
+  );
+  if (!touch.has) return <View testID={`bubble-${m.id}`} style={box}>{content}</View>;
+  return (
+    <SwipeReply onReply={touch.swipe}>
+      <Pressable testID={`bubble-${m.id}`} accessible={false} onLongPress={touch.openMenu} delayLongPress={350} style={box}>
+        {content}
+      </Pressable>
+    </SwipeReply>
   );
 }

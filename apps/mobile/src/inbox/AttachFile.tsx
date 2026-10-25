@@ -6,6 +6,7 @@ import { requestId } from '@/lib/request-id';
 import { shape, useTheme } from '@/theme';
 import { Button } from '@/ui/Button';
 import { IconButton } from '@/ui/IconButton';
+import { useChatActions } from './chat-actions';
 import { AttachIcon } from './chat-icons';
 import { type ChatFileSource, fileError, pickChatFile, useSendFile } from './send-file';
 import { useThreadMode } from './thread-mode';
@@ -65,6 +66,7 @@ export function AttachFile({ phone, onError }: AttachFileProps) {
   const teacher = useThreadMode().kind === 'teacher';
   const maxBytes = useUploadMaxBytes();
   const send = useSendFile(phone);
+  const { reply, setReply } = useChatActions();
   const [choosing, setChoosing] = useState(false);
   if (teacher) return null;
 
@@ -73,7 +75,11 @@ export function AttachFile({ phone, onError }: AttachFileProps) {
     onError(null);
     try {
       const file = await pickChatFile(source, maxBytes);
-      if (file) await send.mutateAsync({ phone, file, id: requestId(), maxBytes });
+      if (!file) return;
+      // An answer (the composer's quote strip): sent, it clears; refused, it stays for another try.
+      const to = reply?.id;
+      await send.mutateAsync({ phone, file, id: requestId(), maxBytes, ...(to ? { replyToMessageId: to } : {}) });
+      if (to) setReply((now) => (now?.id === to ? null : now));
     } catch (e) {
       onError(fileError(e));
     }

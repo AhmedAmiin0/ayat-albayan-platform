@@ -7,7 +7,9 @@ import { inTree, useTreeBase } from '@/nav/tree-base';
 import { ErrorState } from '@/ui/ErrorState';
 import { ltr } from '@/ui/Ltr';
 import { Screen } from '@/ui/Screen';
+import { ChatActionsProvider } from './ChatActionsProvider';
 import { ChatHeader } from './ChatHeader';
+import { ChatNotice } from './ChatNotice';
 import { Composer } from './Composer';
 import { clockAt, kindLabel } from './format';
 import { MessageList } from './MessageList';
@@ -58,40 +60,50 @@ export function ThreadScreen() {
   const back = () =>
     router.canGoBack() ? router.back() : router.replace(inTree(base, threadBase(mode)));
   return (
-    <Screen chat>
-      <ChatHeader
-        title={thread?.display_name ?? (teacher ? kindLabel(thread) : ltr(formatPhone(phone)))}
-        subtitle={subtitleOf(phone, query, teacher)}
-        onBack={back}
-        trailing={
-          mode.kind === 'admin' ? <ThreadHeaderActions phone={phone} data={query.data} sales={sales} /> : null
-        }
-      />
-      {mode.kind !== 'admin' ? null : sales ? (
-        <SalesChatActions thread={thread} />
-      ) : (
-        <SubscriptionPanel data={query.data} phone={phone} />
-      )}
-      {query.data ? (
-        <KeyboardAvoidingView
-          style={{ flex: 1, gap: 4 }}
-          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        >
-          <MessageList phone={phone} query={query} />
-          {mode.kind === 'admin' &&
-          thread?.guardian_id &&
-          !sessionWindowOpen(thread.last_inbound_at, new Date()) ? (
-            <SendRating thread={thread} />
-          ) : null}
-          {isOwnThread(mode, thread) ? (
-            <OwnThreadNote />
-          ) : (
-            <Composer phone={phone} thread={thread} lessons={query.data.pages[0]?.lessons ?? []} />
-          )}
-        </KeyboardAvoidingView>
-      ) : query.isError ? (
-        <ErrorState onRetry={() => void query.refetch()} />
-      ) : null}
-    </Screen>
+    // «رد» / «إعادة توجيه» (owner 2026-10-25): its state is this chat's; another chat starts clean.
+    <ChatActionsProvider key={phone} phone={phone} thread={thread}>
+      <Screen chat>
+        <ChatHeader
+          title={thread?.display_name ?? (teacher ? kindLabel(thread) : ltr(formatPhone(phone)))}
+          subtitle={subtitleOf(phone, query, teacher)}
+          onBack={back}
+          trailing={
+            mode.kind === 'admin' ? (
+              <ThreadHeaderActions phone={phone} data={query.data} sales={sales} />
+            ) : null
+          }
+        />
+        {mode.kind !== 'admin' ? null : sales ? (
+          <SalesChatActions thread={thread} />
+        ) : (
+          <SubscriptionPanel data={query.data} phone={phone} />
+        )}
+        {query.data ? (
+          <KeyboardAvoidingView
+            style={{ flex: 1, gap: 4 }}
+            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          >
+            <MessageList phone={phone} query={query} />
+            <ChatNotice />
+            {mode.kind === 'admin' &&
+            thread?.guardian_id &&
+            !sessionWindowOpen(thread.last_inbound_at, new Date()) ? (
+              <SendRating thread={thread} />
+            ) : null}
+            {isOwnThread(mode, thread) ? (
+              <OwnThreadNote />
+            ) : (
+              <Composer
+                phone={phone}
+                thread={thread}
+                lessons={query.data.pages[0]?.lessons ?? []}
+              />
+            )}
+          </KeyboardAvoidingView>
+        ) : query.isError ? (
+          <ErrorState onRetry={() => void query.refetch()} />
+        ) : null}
+      </Screen>
+    </ChatActionsProvider>
   );
 }
