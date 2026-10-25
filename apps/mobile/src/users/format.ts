@@ -1,7 +1,7 @@
 import type { LinkCandidate, UserRole, UserRoleOption, UserStatus } from '@ab/shared';
 import { t } from '@/core/lib/i18n/i18n';
 import { locale } from '@/core/lib/i18n/locale';
-import { formatAt } from '@/ops/activity-format';
+import { formatAt } from '@/ops/activity/activity-format';
 import { ltr } from '@/core/ui/primitives/Ltr';
 
 // The words the users screens print, as the web's usersColumns / UserSummary / RolePicker do.

@@ -43,20 +43,12 @@
     "files": 25,
     "dirs": 1
   },
-  "apps/mobile/src/ops": {
-    "files": 37,
-    "dirs": 3
-  },
   "apps/mobile/src/ops/notif-rules": {
     "files": 13,
     "dirs": 0
   },
   "apps/mobile/src/ops/values": {
     "files": 22,
-    "dirs": 0
-  },
-  "apps/mobile/src/payments": {
-    "files": 25,
     "dirs": 0
   },
   "apps/mobile/src/student-file": {

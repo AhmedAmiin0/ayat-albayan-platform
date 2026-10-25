@@ -1,5 +1,5 @@
 import type { PaymentMethod, PayoutView } from '@ab/shared';
-import { paidAtFor } from '@/payments/paid-day';
+import { paidAtFor } from '@/payments/lib/paid-day';
 import type { Receipt } from '@/payments/receipt';
 
 export type PayoutAction = 'approve' | 'pay' | 'reopen' | 'unpay' | 'receipt';

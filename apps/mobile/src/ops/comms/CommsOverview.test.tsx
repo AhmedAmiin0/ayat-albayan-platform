@@ -3,7 +3,7 @@ import { fireEvent, screen } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
 import { ltr } from '@/core/ui/primitives/Ltr';
-import { readOnlyNoteText } from '../ReadOnlySettings';
+import { readOnlyNoteText } from '../settings/ReadOnlySettings';
 import { closedGate, handCount, overviewAnswer, PUBLIC_PHONE } from './comms-fixtures';
 import { GATE_LINE_SEPARATOR } from './gate-words';
 import { CommsOverview } from './CommsOverview';

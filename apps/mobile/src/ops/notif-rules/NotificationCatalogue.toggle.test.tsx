@@ -3,7 +3,7 @@ import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { AccessibilityInfo } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
-import { NotificationCatalogue } from '../NotificationCatalogue';
+import { NotificationCatalogue } from '../settings/NotificationCatalogue';
 import { answer, catalogueV2, MANAGER, openAudience } from './rules-fixtures';
 
 const mockApiFetch = jest.fn();

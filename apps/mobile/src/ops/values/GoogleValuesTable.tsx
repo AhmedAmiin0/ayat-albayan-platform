@@ -1,6 +1,6 @@
 import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/more/Note';
-import { useGoogleStatus } from '../google-status';
+import { useGoogleStatus } from '../google-sync/google-status';
 import { googleValues } from './google-values';
 import { TableFrame } from './ValuesTable';
 import { ValueRow } from './ValueRow';

@@ -8,7 +8,7 @@ import {
   type SettingKey,
 } from '@ab/shared';
 import { t } from '@/core/lib/i18n/i18n';
-import { ascii } from '../ascii-digits';
+import { ascii } from '../shared/ascii-digits';
 
 // The bottom sheet's editor model: which editor a key gets, the typed draft, and the draft parsed
 // and checked with the API's own schema (settingZod) before anything is sent.

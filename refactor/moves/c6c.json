@@ -1,0 +1,204 @@
+{
+  "id": "c6c",
+  "seq": 84,
+  "moves": [
+    {
+      "from": "apps/mobile/src/payments/PaymentScreen*",
+      "to": "apps/mobile/src/payments/screens/"
+    },
+    {
+      "from": "apps/mobile/src/payments/AmountField*",
+      "to": "apps/mobile/src/payments/components/"
+    },
+    {
+      "from": "apps/mobile/src/payments/PackagePicker*",
+      "to": "apps/mobile/src/payments/components/"
+    },
+    {
+      "from": "apps/mobile/src/payments/PaidDayPicker*",
+      "to": "apps/mobile/src/payments/components/"
+    },
+    {
+      "from": "apps/mobile/src/payments/PaymentForm*",
+      "to": "apps/mobile/src/payments/components/"
+    },
+    {
+      "from": "apps/mobile/src/payments/RecentPayments*",
+      "to": "apps/mobile/src/payments/components/"
+    },
+    {
+      "from": "apps/mobile/src/payments/AttachmentRow*",
+      "to": "apps/mobile/src/payments/receipts/"
+    },
+    {
+      "from": "apps/mobile/src/payments/AttachmentsField*",
+      "to": "apps/mobile/src/payments/receipts/"
+    },
+    {
+      "from": "apps/mobile/src/payments/PhotoButtons*",
+      "to": "apps/mobile/src/payments/receipts/"
+    },
+    {
+      "from": "apps/mobile/src/payments/attachments*",
+      "to": "apps/mobile/src/payments/receipts/"
+    },
+    {
+      "from": "apps/mobile/src/payments/camera-permission*",
+      "to": "apps/mobile/src/payments/receipts/"
+    },
+    {
+      "from": "apps/mobile/src/payments/optimistic*",
+      "to": "apps/mobile/src/payments/lib/"
+    },
+    {
+      "from": "apps/mobile/src/payments/package-line*",
+      "to": "apps/mobile/src/payments/lib/"
+    },
+    {
+      "from": "apps/mobile/src/payments/paid-day*",
+      "to": "apps/mobile/src/payments/lib/"
+    },
+    {
+      "from": "apps/mobile/src/payments/payment-errors*",
+      "to": "apps/mobile/src/payments/lib/"
+    },
+    {
+      "from": "apps/mobile/src/payments/payment-form*",
+      "to": "apps/mobile/src/payments/lib/"
+    },
+    {
+      "from": "apps/mobile/src/payments/queries*",
+      "to": "apps/mobile/src/payments/hooks/"
+    },
+    {
+      "from": "apps/mobile/src/payments/use-record-payment*",
+      "to": "apps/mobile/src/payments/hooks/"
+    },
+    {
+      "from": "apps/mobile/src/payments/flow-backend*",
+      "to": "apps/mobile/src/payments/testing/"
+    }
+  ],
+  "files": [
+    [
+      "apps/mobile/src/payments/AmountField.tsx",
+      "apps/mobile/src/payments/components/AmountField.tsx"
+    ],
+    [
+      "apps/mobile/src/payments/AttachmentRow.tsx",
+      "apps/mobile/src/payments/receipts/AttachmentRow.tsx"
+    ],
+    [
+      "apps/mobile/src/payments/attachments.test.ts",
+      "apps/mobile/src/payments/receipts/attachments.test.ts"
+    ],
+    [
+      "apps/mobile/src/payments/attachments.ts",
+      "apps/mobile/src/payments/receipts/attachments.ts"
+    ],
+    [
+      "apps/mobile/src/payments/AttachmentsField.tsx",
+      "apps/mobile/src/payments/receipts/AttachmentsField.tsx"
+    ],
+    [
+      "apps/mobile/src/payments/camera-permission.test.ts",
+      "apps/mobile/src/payments/receipts/camera-permission.test.ts"
+    ],
+    [
+      "apps/mobile/src/payments/camera-permission.ts",
+      "apps/mobile/src/payments/receipts/camera-permission.ts"
+    ],
+    [
+      "apps/mobile/src/payments/flow-backend.ts",
+      "apps/mobile/src/payments/testing/flow-backend.ts"
+    ],
+    [
+      "apps/mobile/src/payments/optimistic.test.ts",
+      "apps/mobile/src/payments/lib/optimistic.test.ts"
+    ],
+    [
+      "apps/mobile/src/payments/optimistic.ts",
+      "apps/mobile/src/payments/lib/optimistic.ts"
+    ],
+    [
+      "apps/mobile/src/payments/package-line.test.ts",
+      "apps/mobile/src/payments/lib/package-line.test.ts"
+    ],
+    [
+      "apps/mobile/src/payments/package-line.ts",
+      "apps/mobile/src/payments/lib/package-line.ts"
+    ],
+    [
+      "apps/mobile/src/payments/PackagePicker.tsx",
+      "apps/mobile/src/payments/components/PackagePicker.tsx"
+    ],
+    [
+      "apps/mobile/src/payments/paid-day.test.ts",
+      "apps/mobile/src/payments/lib/paid-day.test.ts"
+    ],
+    [
+      "apps/mobile/src/payments/paid-day.ts",
+      "apps/mobile/src/payments/lib/paid-day.ts"
+    ],
+    [
+      "apps/mobile/src/payments/PaidDayPicker.tsx",
+      "apps/mobile/src/payments/components/PaidDayPicker.tsx"
+    ],
+    [
+      "apps/mobile/src/payments/payment-errors.test.ts",
+      "apps/mobile/src/payments/lib/payment-errors.test.ts"
+    ],
+    [
+      "apps/mobile/src/payments/payment-errors.ts",
+      "apps/mobile/src/payments/lib/payment-errors.ts"
+    ],
+    [
+      "apps/mobile/src/payments/payment-form.test.ts",
+      "apps/mobile/src/payments/lib/payment-form.test.ts"
+    ],
+    [
+      "apps/mobile/src/payments/payment-form.ts",
+      "apps/mobile/src/payments/lib/payment-form.ts"
+    ],
+    [
+      "apps/mobile/src/payments/PaymentForm.tsx",
+      "apps/mobile/src/payments/components/PaymentForm.tsx"
+    ],
+    [
+      "apps/mobile/src/payments/PaymentScreen.attachments.test.tsx",
+      "apps/mobile/src/payments/screens/PaymentScreen.attachments.test.tsx"
+    ],
+    [
+      "apps/mobile/src/payments/PaymentScreen.states.test.tsx",
+      "apps/mobile/src/payments/screens/PaymentScreen.states.test.tsx"
+    ],
+    [
+      "apps/mobile/src/payments/PaymentScreen.submit.test.tsx",
+      "apps/mobile/src/payments/screens/PaymentScreen.submit.test.tsx"
+    ],
+    [
+      "apps/mobile/src/payments/PaymentScreen.tsx",
+      "apps/mobile/src/payments/screens/PaymentScreen.tsx"
+    ],
+    [
+      "apps/mobile/src/payments/PhotoButtons.tsx",
+      "apps/mobile/src/payments/receipts/PhotoButtons.tsx"
+    ],
+    [
+      "apps/mobile/src/payments/queries.ts",
+      "apps/mobile/src/payments/hooks/queries.ts"
+    ],
+    [
+      "apps/mobile/src/payments/RecentPayments.tsx",
+      "apps/mobile/src/payments/components/RecentPayments.tsx"
+    ],
+    [
+      "apps/mobile/src/payments/use-record-payment.test.tsx",
+      "apps/mobile/src/payments/hooks/use-record-payment.test.tsx"
+    ],
+    [
+      "apps/mobile/src/payments/use-record-payment.ts",
+      "apps/mobile/src/payments/hooks/use-record-payment.ts"
+    ]
+  ]
+}

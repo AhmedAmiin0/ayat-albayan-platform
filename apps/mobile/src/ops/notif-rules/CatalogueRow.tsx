@@ -3,7 +3,7 @@ import { View } from 'react-native';
 import { Note } from '@/more/Note';
 import { ListRow } from '@/core/ui/layout/ListRow';
 import { StatusChip } from '@/core/ui/feedback/StatusChip';
-import { chipOf, factsOf, whenOf } from '../catalogue-words';
+import { chipOf, factsOf, whenOf } from '../settings/catalogue-words';
 import { controlOf, heldLine, nameOf, partialLine, ruleOf } from './rule-words';
 import { RowAsk } from './RowAsk';
 import { RuleControl } from './RuleControl';

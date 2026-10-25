@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { ActivityIndicator, FlatList } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { usePagedList } from '@/core/lib/query/use-paged-list';
-import { useRenewalThreshold } from '@/payments/queries';
+import { useRenewalThreshold } from '@/payments/hooks/queries';
 import { useTheme } from '@/theme';
 import { EmptyState } from '@/core/ui/feedback/EmptyState';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';

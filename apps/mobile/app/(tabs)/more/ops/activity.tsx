@@ -1,1 +1,1 @@
-export { ActivityScreen as default } from '@/ops/ActivityScreen';
+export { ActivityScreen as default } from '@/ops/activity/ActivityScreen';

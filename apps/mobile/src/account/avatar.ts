@@ -1,7 +1,7 @@
 import { AVATAR_MIMES, type AvatarMime } from '@ab/shared';
 import * as ImagePicker from 'expo-image-picker';
 import { t } from '@/core/lib/i18n/i18n';
-import { ensureCameraPermission } from '@/payments/camera-permission';
+import { ensureCameraPermission } from '@/payments/receipts/camera-permission';
 import { decodeBase64 } from '@/payments/receipt';
 
 export type AvatarSource = 'camera' | 'library';

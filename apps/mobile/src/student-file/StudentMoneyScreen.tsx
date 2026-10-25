@@ -2,7 +2,7 @@ import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import { usePermissions } from '@/auth/use-permissions';
 import { t } from '@/core/lib/i18n/i18n';
-import { useStudentName } from '@/ops/use-student-name';
+import { useStudentName } from '@/ops/reports/use-student-name';
 import { Button } from '@/core/ui/primitives/Button';
 import { FilterPills } from '@/core/ui/form/FilterPills';
 import { Screen } from '@/core/ui/layout/Screen';

@@ -1,0 +1,396 @@
+{
+  "id": "c7a",
+  "seq": 85,
+  "moves": [
+    {
+      "from": "apps/mobile/src/ops/ActivityFilterBar*",
+      "to": "apps/mobile/src/ops/activity/"
+    },
+    {
+      "from": "apps/mobile/src/ops/ActivityRow*",
+      "to": "apps/mobile/src/ops/activity/"
+    },
+    {
+      "from": "apps/mobile/src/ops/ActivityScreen*",
+      "to": "apps/mobile/src/ops/activity/"
+    },
+    {
+      "from": "apps/mobile/src/ops/activity-filters*",
+      "to": "apps/mobile/src/ops/activity/"
+    },
+    {
+      "from": "apps/mobile/src/ops/activity-format*",
+      "to": "apps/mobile/src/ops/activity/"
+    },
+    {
+      "from": "apps/mobile/src/ops/DashboardScreen*",
+      "to": "apps/mobile/src/ops/dashboard/"
+    },
+    {
+      "from": "apps/mobile/src/ops/KpiTile*",
+      "to": "apps/mobile/src/ops/dashboard/"
+    },
+    {
+      "from": "apps/mobile/src/ops/WorkPanel*",
+      "to": "apps/mobile/src/ops/dashboard/"
+    },
+    {
+      "from": "apps/mobile/src/ops/WorkRows*",
+      "to": "apps/mobile/src/ops/dashboard/"
+    },
+    {
+      "from": "apps/mobile/src/ops/dashboard-queries*",
+      "to": "apps/mobile/src/ops/dashboard/"
+    },
+    {
+      "from": "apps/mobile/src/ops/dashboard-types*",
+      "to": "apps/mobile/src/ops/dashboard/"
+    },
+    {
+      "from": "apps/mobile/src/ops/kpis*",
+      "to": "apps/mobile/src/ops/dashboard/"
+    },
+    {
+      "from": "apps/mobile/src/ops/work-text*",
+      "to": "apps/mobile/src/ops/dashboard/"
+    },
+    {
+      "from": "apps/mobile/src/ops/AdminReportScreen*",
+      "to": "apps/mobile/src/ops/reports/"
+    },
+    {
+      "from": "apps/mobile/src/ops/AdminStudentReportsScreen*",
+      "to": "apps/mobile/src/ops/reports/"
+    },
+    {
+      "from": "apps/mobile/src/ops/ReportFieldRow*",
+      "to": "apps/mobile/src/ops/reports/"
+    },
+    {
+      "from": "apps/mobile/src/ops/report-fields*",
+      "to": "apps/mobile/src/ops/reports/"
+    },
+    {
+      "from": "apps/mobile/src/ops/use-student-name*",
+      "to": "apps/mobile/src/ops/reports/"
+    },
+    {
+      "from": "apps/mobile/src/ops/GoogleSyncCard*",
+      "to": "apps/mobile/src/ops/google-sync/"
+    },
+    {
+      "from": "apps/mobile/src/ops/GoogleSyncScreen*",
+      "to": "apps/mobile/src/ops/google-sync/"
+    },
+    {
+      "from": "apps/mobile/src/ops/google-status*",
+      "to": "apps/mobile/src/ops/google-sync/"
+    },
+    {
+      "from": "apps/mobile/src/ops/NumberRow*",
+      "to": "apps/mobile/src/ops/numbers/"
+    },
+    {
+      "from": "apps/mobile/src/ops/NumbersList*",
+      "to": "apps/mobile/src/ops/numbers/"
+    },
+    {
+      "from": "apps/mobile/src/ops/numbers-fixtures*",
+      "to": "apps/mobile/src/ops/numbers/"
+    },
+    {
+      "from": "apps/mobile/src/ops/numbers-words*",
+      "to": "apps/mobile/src/ops/numbers/"
+    },
+    {
+      "from": "apps/mobile/src/ops/use-numbers*",
+      "to": "apps/mobile/src/ops/numbers/"
+    },
+    {
+      "from": "apps/mobile/src/ops/ReadOnlySettings*",
+      "to": "apps/mobile/src/ops/settings/"
+    },
+    {
+      "from": "apps/mobile/src/ops/SettingsScreen*",
+      "to": "apps/mobile/src/ops/settings/"
+    },
+    {
+      "from": "apps/mobile/src/ops/NotificationCatalogue*",
+      "to": "apps/mobile/src/ops/settings/"
+    },
+    {
+      "from": "apps/mobile/src/ops/catalogue-words*",
+      "to": "apps/mobile/src/ops/settings/"
+    },
+    {
+      "from": "apps/mobile/src/ops/use-settings*",
+      "to": "apps/mobile/src/ops/settings/"
+    },
+    {
+      "from": "apps/mobile/src/ops/CommunicationsScreen*",
+      "to": "apps/mobile/src/ops/settings/"
+    },
+    {
+      "from": "apps/mobile/src/ops/SharedRepliesScreen*",
+      "to": "apps/mobile/src/ops/settings/"
+    },
+    {
+      "from": "apps/mobile/src/ops/SubScreenHeader*",
+      "to": "apps/mobile/src/ops/shared/"
+    },
+    {
+      "from": "apps/mobile/src/ops/ascii-digits*",
+      "to": "apps/mobile/src/ops/shared/"
+    },
+    {
+      "from": "apps/mobile/src/ops/fixtures*",
+      "to": "apps/mobile/src/ops/shared/"
+    }
+  ],
+  "files": [
+    [
+      "apps/mobile/src/ops/activity-filters.test.ts",
+      "apps/mobile/src/ops/activity/activity-filters.test.ts"
+    ],
+    [
+      "apps/mobile/src/ops/activity-filters.ts",
+      "apps/mobile/src/ops/activity/activity-filters.ts"
+    ],
+    [
+      "apps/mobile/src/ops/activity-format.test.ts",
+      "apps/mobile/src/ops/activity/activity-format.test.ts"
+    ],
+    [
+      "apps/mobile/src/ops/activity-format.ts",
+      "apps/mobile/src/ops/activity/activity-format.ts"
+    ],
+    [
+      "apps/mobile/src/ops/ActivityFilterBar.tsx",
+      "apps/mobile/src/ops/activity/ActivityFilterBar.tsx"
+    ],
+    [
+      "apps/mobile/src/ops/ActivityRow.tsx",
+      "apps/mobile/src/ops/activity/ActivityRow.tsx"
+    ],
+    [
+      "apps/mobile/src/ops/ActivityScreen.test.tsx",
+      "apps/mobile/src/ops/activity/ActivityScreen.test.tsx"
+    ],
+    [
+      "apps/mobile/src/ops/ActivityScreen.tsx",
+      "apps/mobile/src/ops/activity/ActivityScreen.tsx"
+    ],
+    [
+      "apps/mobile/src/ops/AdminReportScreen.test.tsx",
+      "apps/mobile/src/ops/reports/AdminReportScreen.test.tsx"
+    ],
+    [
+      "apps/mobile/src/ops/AdminReportScreen.tsx",
+      "apps/mobile/src/ops/reports/AdminReportScreen.tsx"
+    ],
+    [
+      "apps/mobile/src/ops/AdminStudentReportsScreen.test.tsx",
+      "apps/mobile/src/ops/reports/AdminStudentReportsScreen.test.tsx"
+    ],
+    [
+      "apps/mobile/src/ops/AdminStudentReportsScreen.tsx",
+      "apps/mobile/src/ops/reports/AdminStudentReportsScreen.tsx"
+    ],
+    [
+      "apps/mobile/src/ops/ascii-digits.test.ts",
+      "apps/mobile/src/ops/shared/ascii-digits.test.ts"
+    ],
+    [
+      "apps/mobile/src/ops/ascii-digits.ts",
+      "apps/mobile/src/ops/shared/ascii-digits.ts"
+    ],
+    [
+      "apps/mobile/src/ops/catalogue-words.test.ts",
+      "apps/mobile/src/ops/settings/catalogue-words.test.ts"
+    ],
+    [
+      "apps/mobile/src/ops/catalogue-words.ts",
+      "apps/mobile/src/ops/settings/catalogue-words.ts"
+    ],
+    [
+      "apps/mobile/src/ops/CommunicationsScreen.test.tsx",
+      "apps/mobile/src/ops/settings/CommunicationsScreen.test.tsx"
+    ],
+    [
+      "apps/mobile/src/ops/CommunicationsScreen.tsx",
+      "apps/mobile/src/ops/settings/CommunicationsScreen.tsx"
+    ],
+    [
+      "apps/mobile/src/ops/dashboard-queries.test.ts",
+      "apps/mobile/src/ops/dashboard/dashboard-queries.test.ts"
+    ],
+    [
+      "apps/mobile/src/ops/dashboard-queries.ts",
+      "apps/mobile/src/ops/dashboard/dashboard-queries.ts"
+    ],
+    [
+      "apps/mobile/src/ops/dashboard-types.ts",
+      "apps/mobile/src/ops/dashboard/dashboard-types.ts"
+    ],
+    [
+      "apps/mobile/src/ops/DashboardScreen.en.test.tsx",
+      "apps/mobile/src/ops/dashboard/DashboardScreen.en.test.tsx"
+    ],
+    [
+      "apps/mobile/src/ops/DashboardScreen.test.tsx",
+      "apps/mobile/src/ops/dashboard/DashboardScreen.test.tsx"
+    ],
+    [
+      "apps/mobile/src/ops/DashboardScreen.tsx",
+      "apps/mobile/src/ops/dashboard/DashboardScreen.tsx"
+    ],
+    [
+      "apps/mobile/src/ops/fixtures.ts",
+      "apps/mobile/src/ops/shared/fixtures.ts"
+    ],
+    [
+      "apps/mobile/src/ops/google-status.fixtures.ts",
+      "apps/mobile/src/ops/google-sync/google-status.fixtures.ts"
+    ],
+    [
+      "apps/mobile/src/ops/google-status.ts",
+      "apps/mobile/src/ops/google-sync/google-status.ts"
+    ],
+    [
+      "apps/mobile/src/ops/GoogleSyncCard.test.tsx",
+      "apps/mobile/src/ops/google-sync/GoogleSyncCard.test.tsx"
+    ],
+    [
+      "apps/mobile/src/ops/GoogleSyncCard.tsx",
+      "apps/mobile/src/ops/google-sync/GoogleSyncCard.tsx"
+    ],
+    [
+      "apps/mobile/src/ops/GoogleSyncScreen.tsx",
+      "apps/mobile/src/ops/google-sync/GoogleSyncScreen.tsx"
+    ],
+    [
+      "apps/mobile/src/ops/kpis.test.ts",
+      "apps/mobile/src/ops/dashboard/kpis.test.ts"
+    ],
+    [
+      "apps/mobile/src/ops/kpis.ts",
+      "apps/mobile/src/ops/dashboard/kpis.ts"
+    ],
+    [
+      "apps/mobile/src/ops/KpiTile.tsx",
+      "apps/mobile/src/ops/dashboard/KpiTile.tsx"
+    ],
+    [
+      "apps/mobile/src/ops/NotificationCatalogue.test.tsx",
+      "apps/mobile/src/ops/settings/NotificationCatalogue.test.tsx"
+    ],
+    [
+      "apps/mobile/src/ops/NotificationCatalogue.tsx",
+      "apps/mobile/src/ops/settings/NotificationCatalogue.tsx"
+    ],
+    [
+      "apps/mobile/src/ops/NumberRow.tsx",
+      "apps/mobile/src/ops/numbers/NumberRow.tsx"
+    ],
+    [
+      "apps/mobile/src/ops/numbers-fixtures.ts",
+      "apps/mobile/src/ops/numbers/numbers-fixtures.ts"
+    ],
+    [
+      "apps/mobile/src/ops/numbers-words.test.ts",
+      "apps/mobile/src/ops/numbers/numbers-words.test.ts"
+    ],
+    [
+      "apps/mobile/src/ops/numbers-words.ts",
+      "apps/mobile/src/ops/numbers/numbers-words.ts"
+    ],
+    [
+      "apps/mobile/src/ops/NumbersList.test.tsx",
+      "apps/mobile/src/ops/numbers/NumbersList.test.tsx"
+    ],
+    [
+      "apps/mobile/src/ops/NumbersList.tsx",
+      "apps/mobile/src/ops/numbers/NumbersList.tsx"
+    ],
+    [
+      "apps/mobile/src/ops/ReadOnlySettings.test.ts",
+      "apps/mobile/src/ops/settings/ReadOnlySettings.test.ts"
+    ],
+    [
+      "apps/mobile/src/ops/ReadOnlySettings.tsx",
+      "apps/mobile/src/ops/settings/ReadOnlySettings.tsx"
+    ],
+    [
+      "apps/mobile/src/ops/report-fields.test.ts",
+      "apps/mobile/src/ops/reports/report-fields.test.ts"
+    ],
+    [
+      "apps/mobile/src/ops/report-fields.ts",
+      "apps/mobile/src/ops/reports/report-fields.ts"
+    ],
+    [
+      "apps/mobile/src/ops/ReportFieldRow.tsx",
+      "apps/mobile/src/ops/reports/ReportFieldRow.tsx"
+    ],
+    [
+      "apps/mobile/src/ops/SettingsScreen.en.test.tsx",
+      "apps/mobile/src/ops/settings/SettingsScreen.en.test.tsx"
+    ],
+    [
+      "apps/mobile/src/ops/SettingsScreen.google.test.tsx",
+      "apps/mobile/src/ops/settings/SettingsScreen.google.test.tsx"
+    ],
+    [
+      "apps/mobile/src/ops/SettingsScreen.test.tsx",
+      "apps/mobile/src/ops/settings/SettingsScreen.test.tsx"
+    ],
+    [
+      "apps/mobile/src/ops/SettingsScreen.tsx",
+      "apps/mobile/src/ops/settings/SettingsScreen.tsx"
+    ],
+    [
+      "apps/mobile/src/ops/SharedRepliesScreen.test.tsx",
+      "apps/mobile/src/ops/settings/SharedRepliesScreen.test.tsx"
+    ],
+    [
+      "apps/mobile/src/ops/SharedRepliesScreen.tsx",
+      "apps/mobile/src/ops/settings/SharedRepliesScreen.tsx"
+    ],
+    [
+      "apps/mobile/src/ops/SubScreenHeader.tsx",
+      "apps/mobile/src/ops/shared/SubScreenHeader.tsx"
+    ],
+    [
+      "apps/mobile/src/ops/use-numbers.ts",
+      "apps/mobile/src/ops/numbers/use-numbers.ts"
+    ],
+    [
+      "apps/mobile/src/ops/use-settings.ts",
+      "apps/mobile/src/ops/settings/use-settings.ts"
+    ],
+    [
+      "apps/mobile/src/ops/use-student-name.ts",
+      "apps/mobile/src/ops/reports/use-student-name.ts"
+    ],
+    [
+      "apps/mobile/src/ops/work-text.test.ts",
+      "apps/mobile/src/ops/dashboard/work-text.test.ts"
+    ],
+    [
+      "apps/mobile/src/ops/work-text.ts",
+      "apps/mobile/src/ops/dashboard/work-text.ts"
+    ],
+    [
+      "apps/mobile/src/ops/WorkPanel.tsx",
+      "apps/mobile/src/ops/dashboard/WorkPanel.tsx"
+    ],
+    [
+      "apps/mobile/src/ops/WorkRows.permissions.test.tsx",
+      "apps/mobile/src/ops/dashboard/WorkRows.permissions.test.tsx"
+    ],
+    [
+      "apps/mobile/src/ops/WorkRows.tsx",
+      "apps/mobile/src/ops/dashboard/WorkRows.tsx"
+    ]
+  ]
+}

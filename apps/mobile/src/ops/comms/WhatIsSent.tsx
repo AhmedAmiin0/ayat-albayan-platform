@@ -8,7 +8,7 @@ import { AppText } from '@/core/ui/primitives/AppText';
 import { Chevron } from '@/core/ui/primitives/Chevron';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { useCatalogue } from '../notif-rules/use-catalogue';
-import { useSettings } from '../use-settings';
+import { useSettings } from '../settings/use-settings';
 import { sentCounts, type SentRow } from './sent-counts';
 
 const h = () => t.communicationsHub;

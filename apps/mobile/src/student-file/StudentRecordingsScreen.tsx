@@ -5,7 +5,7 @@ import { ActivityIndicator, FlatList, View } from 'react-native';
 import { usePermissions } from '@/auth/use-permissions';
 import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/more/Note';
-import { useStudentName } from '@/ops/use-student-name';
+import { useStudentName } from '@/ops/reports/use-student-name';
 import { useTeacherMe } from '@/teacher/queries';
 import { useTheme } from '@/theme';
 import { Button } from '@/core/ui/primitives/Button';

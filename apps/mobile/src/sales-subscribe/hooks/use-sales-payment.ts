@@ -3,7 +3,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { apiSend } from '@/core/lib/http/api';
 import { requestId } from '@/core/lib/http/request-id';
-import { useAttachmentPaths } from '@/payments/attachments';
+import { useAttachmentPaths } from '@/payments/receipts/attachments';
 import { refreshFamily } from '../lib/family';
 import type { TransferInput } from '../lib/transfer-form';
 import { uploadSalesReceipt } from './upload-sales-receipt';

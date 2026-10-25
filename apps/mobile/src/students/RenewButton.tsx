@@ -1,6 +1,6 @@
 import { router } from 'expo-router';
 import { t } from '@/core/lib/i18n/i18n';
-import { useStudentBalance } from '@/payments/queries';
+import { useStudentBalance } from '@/payments/hooks/queries';
 import { Button } from '@/core/ui/primitives/Button';
 import { renewHref } from './renew';
 import type { StudentRef } from './types';

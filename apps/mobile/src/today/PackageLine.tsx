@@ -1,5 +1,5 @@
-import { packageLine } from '@/payments/package-line';
-import { useRenewalThreshold, useStudentBalance } from '@/payments/queries';
+import { packageLine } from '@/payments/lib/package-line';
+import { useRenewalThreshold, useStudentBalance } from '@/payments/hooks/queries';
 import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 

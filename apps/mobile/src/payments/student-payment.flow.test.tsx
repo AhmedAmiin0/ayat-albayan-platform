@@ -3,7 +3,7 @@ import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { armCamera } from '@/test/native-mocks';
 import { SUB_ID, subscription } from './fixtures';
-import { paymentBackend, SIGNED } from './flow-backend';
+import { paymentBackend, SIGNED } from './testing/flow-backend';
 
 const m = t.payments.mobile;
 const FIRST = t.payments.attachmentN.replace('{n}', '1');

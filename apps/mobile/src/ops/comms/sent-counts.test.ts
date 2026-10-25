@@ -1,6 +1,6 @@
 import type { NotificationEntryView } from '@ab/shared';
 import { t } from '@/core/lib/i18n/i18n';
-import { catalogue } from '../fixtures';
+import { catalogue } from '../shared/fixtures';
 import { sentCounts } from './sent-counts';
 
 const base = catalogue.entries.find((e) => !e.manual && e.audience === 'guardian');

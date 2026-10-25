@@ -1,7 +1,7 @@
 import { fireEvent, screen } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
-import { NotificationCatalogue } from '../NotificationCatalogue';
+import { NotificationCatalogue } from '../settings/NotificationCatalogue';
 import { rowsOf } from './audience-tabs';
 import { answer, catalogueV2, MANAGER, openAudience } from './rules-fixtures';
 

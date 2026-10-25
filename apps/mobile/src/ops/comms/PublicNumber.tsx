@@ -4,7 +4,7 @@ import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/more/Note';
 import { ListRow } from '@/core/ui/layout/ListRow';
 import { ltr } from '@/core/ui/primitives/Ltr';
-import { useSettings } from '../use-settings';
+import { useSettings } from '../settings/use-settings';
 
 /**
  * «الرقم المعلن للأسر» (docs/23 §2d): academy_whatsapp_e164 from GET /settings, LTR, read-only here

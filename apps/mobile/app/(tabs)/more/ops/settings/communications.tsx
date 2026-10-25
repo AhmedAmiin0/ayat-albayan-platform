@@ -1,1 +1,1 @@
-export { CommunicationsScreen as default } from '@/ops/CommunicationsScreen';
+export { CommunicationsScreen as default } from '@/ops/settings/CommunicationsScreen';

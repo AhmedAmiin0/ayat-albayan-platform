@@ -2,7 +2,7 @@ import { fireEvent, screen, waitFor, within } from '@testing-library/react-nativ
 import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
 import { ltr } from '@/core/ui/primitives/Ltr';
-import { settings } from '../fixtures';
+import { settings } from '../shared/fixtures';
 import { groupLabel } from './value-groups';
 import { labelOf } from './value-text';
 import { meta, WRITER } from './values-fixtures';

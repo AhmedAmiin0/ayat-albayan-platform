@@ -4,7 +4,7 @@ import { ErrorLine } from '@/inbox/ErrorLine';
 import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/more/Note';
 import { Button } from '@/core/ui/primitives/Button';
-import { formatAt } from '../activity-format';
+import { formatAt } from '../activity/activity-format';
 import { DevKey } from './DevKey';
 import { sameValue } from './value-draft';
 import { boundsOf, valueText } from './value-text';
