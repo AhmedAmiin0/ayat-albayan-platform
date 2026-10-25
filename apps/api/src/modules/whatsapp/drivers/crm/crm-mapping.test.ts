@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { crmTemplateBody } from './crm-body';
-import { templateMessage } from '../../wa-components';
+import { templateMessage } from '../../messages/wa-components';
 import { templateRow } from '../../whatsapp.fakes';
 
 // docs/19 «crm driver»: the CRM's own name (crm_name, the old script's default) and the producer's CRM values,

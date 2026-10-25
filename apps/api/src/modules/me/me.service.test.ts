@@ -8,7 +8,7 @@ const B = 'ExponentPushToken[bbbbbbbbbbbbbbbbbbbbbb]';
 
 describe('MeService push tokens (R-MOB-01)', () => {
   it('add: appends to the caller’s own profile row', async () => {
-    const { db, argsOf } = fakeDb({ profiles: [{ data: { push_tokens: [A] } }, {}] });
+    const { db, argsOf } = fakeDb({ 'rpc:claim_push_device': [{ data: 'bound' }], profiles: [{ data: { push_tokens: [A] } }, {}] });
     await new MeService(db).addPushToken({ userId: 'admin-1', token: B, sessionId: 'sess-1' });
     expect(argsOf('profiles', 'eq')).toEqual(['id', 'admin-1']);
     expect(argsOf('profiles', 'update')).toEqual([{ push_tokens: [A, B] }]);
@@ -16,7 +16,7 @@ describe('MeService push tokens (R-MOB-01)', () => {
 
   it('add: takes the token off any other profile (a handed-over phone)', async () => {
     const other = { id: 'admin-2', push_tokens: [A, B] };
-    const { db, calls } = fakeDb({ profiles: [{ data: { push_tokens: [] } }, {}, { data: [other] }, {}] });
+    const { db, calls } = fakeDb({ 'rpc:claim_push_device': [{ data: 'bound' }], profiles: [{ data: { push_tokens: [] } }, {}, { data: [other] }, {}] });
     await new MeService(db).addPushToken({ userId: 'admin-1', token: A, sessionId: 'sess-1' });
     expect(calls).toContainEqual({ table: 'profiles', method: 'contains', args: ['push_tokens', [A]] });
     expect(calls).toContainEqual({ table: 'profiles', method: 'neq', args: ['id', 'admin-1'] });
@@ -25,39 +25,39 @@ describe('MeService push tokens (R-MOB-01)', () => {
   });
 
   it('add: a token already stored writes nothing (idempotent)', async () => {
-    const { db, argsOf } = fakeDb({ profiles: [{ data: { push_tokens: [A] } }] });
+    const { db, argsOf } = fakeDb({ 'rpc:claim_push_device': [{ data: 'bound' }], profiles: [{ data: { push_tokens: [A] } }] });
     await new MeService(db).addPushToken({ userId: 'admin-1', token: A, sessionId: 'sess-1' });
     expect(argsOf('profiles', 'update')).toBeUndefined();
   });
 
   it('remove: drops the token; an unknown one writes nothing', async () => {
-    const { db, argsOf } = fakeDb({ profiles: [{ data: { push_tokens: [A, B] } }, {}] });
+    const { db, argsOf } = fakeDb({ 'rpc:claim_push_device': [{ data: 'bound' }], profiles: [{ data: { push_tokens: [A, B] } }, {}] });
     await new MeService(db).removePushToken('admin-1', A);
     expect(argsOf('profiles', 'update')).toEqual([{ push_tokens: [B] }]);
 
-    const other = fakeDb({ profiles: [{ data: { push_tokens: [B] } }] });
+    const other = fakeDb({ 'rpc:claim_push_device': [{ data: 'bound' }], profiles: [{ data: { push_tokens: [B] } }] });
     await new MeService(other.db).removePushToken('admin-1', A);
     expect(other.argsOf('profiles', 'update')).toBeUndefined();
   });
 
   it('404 when the caller has no profile row', async () => {
-    const { db } = fakeDb({ profiles: [{ data: null }] });
+    const { db } = fakeDb({ 'rpc:claim_push_device': [{ data: 'bound' }], profiles: [{ data: null }] });
     await expect(new MeService(db).addPushToken({ userId: 'ghost', token: A, sessionId: 'sess-1' })).rejects.toBeInstanceOf(NotFoundException);
   });
 
   it('a failed write surfaces as an error', async () => {
     const { db } = fakeDb({
+      'rpc:claim_push_device': [{ data: 'bound' }],
       profiles: [{ data: { push_tokens: [] } }, { error: { code: 'XX000', message: 'boom' } }],
     });
     await expect(new MeService(db).addPushToken({ userId: 'admin-1', token: A, sessionId: 'sess-1' })).rejects.toThrow(/boom/);
   });
 
   it('add: binds the token to the caller’s session (its end removes the token server-side)', async () => {
-    const { db, argsOf } = fakeDb({ profiles: [{ data: { push_tokens: [] } }, {}] });
+    const { db, argsOf } = fakeDb({ 'rpc:claim_push_device': [{ data: 'bound' }], profiles: [{ data: { push_tokens: [] } }, {}] });
     await new MeService(db).addPushToken({ userId: 'admin-1', token: A, sessionId: 'sess-1' });
-    expect(argsOf('push_device_sessions', 'upsert')).toEqual([
-      { token: A, profile_id: 'admin-1', session_id: 'sess-1', device_key_hash: expect.stringMatching(/^[0-9a-f]{64}$/), contested_at: null },
-      { onConflict: 'token' },
+    expect(argsOf('rpc:claim_push_device', 'rpc')).toEqual([
+      { p_token: A, p_profile: 'admin-1', p_session: 'sess-1', p_new_hash: expect.stringMatching(/^[0-9a-f]{64}$/) },
     ]);
   });
 
@@ -65,13 +65,13 @@ describe('MeService push tokens (R-MOB-01)', () => {
     const none = fakeDb({});
     await expect(new MeService(none.db).addPushToken({ userId: 'admin-1', token: A, sessionId: null })).rejects.toBeInstanceOf(UnauthorizedException);
     expect(none.calls).toEqual([]);
-    const gone = fakeDb({ push_device_sessions: [{}, { error: { code: '23503', message: 'fk' } }] });
+    const gone = fakeDb({ 'rpc:claim_push_device': [{ data: 'no_session' }] });
     await expect(new MeService(gone.db).addPushToken({ userId: 'admin-1', token: A, sessionId: 'dead' })).rejects.toBeInstanceOf(UnauthorizedException);
     expect(gone.argsOf('profiles', 'update')).toBeUndefined();
   });
 
   it('remove: also drops the caller’s own binding of that token', async () => {
-    const { db, calls } = fakeDb({ profiles: [{ data: { push_tokens: [A] } }, {}] });
+    const { db, calls } = fakeDb({ 'rpc:claim_push_device': [{ data: 'bound' }], profiles: [{ data: { push_tokens: [A] } }, {}] });
     await new MeService(db).removePushToken('admin-1', A);
     const binding = calls.filter((c) => c.table === 'push_device_sessions').map((c) => [c.method, ...c.args]);
     expect(binding).toEqual([['delete'], ['eq', 'token', A], ['eq', 'profile_id', 'admin-1']]);

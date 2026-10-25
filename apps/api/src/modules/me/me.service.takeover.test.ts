@@ -1,87 +1,54 @@
-import { ConflictException } from '@nestjs/common';
+import { ConflictException, UnauthorizedException } from '@nestjs/common';
 import { describe, expect, it } from 'vitest';
 import { deviceKeyHash, mintDeviceKey } from '../../common/push/push-claim';
-import { fakeDb, type FakeCall, type FakeResult } from '../guardians/fake-db';
+import { fakeDb, type FakeResult } from '../guardians/fake-db';
 import { MeService } from './me.service';
 
-// Review of #172 (PR #175 «Not fixed»): an admin who can read a teacher's token must not pull the
-// teacher's phone onto the admin's alerts. Owner 2026-10-25: notifications only to authorized people.
+// Review of #172 (PR #175) and #177: an admin who knows a teacher's token must not pull the
+// teacher's phone onto the admin's alerts. The rule itself runs in claim_push_device (migration 730,
+// e2e/tests/push-device-claim.sql.spec.ts); here: what the API sends it and makes of its answer.
 const T = 'ExponentPushToken[tttttttttttttttttttttt]';
 const KEY = mintDeviceKey();
-const held = (hash: string | null): FakeResult => ({ data: { profile_id: 'teacher-1', session_id: 'sess-t', device_key_hash: hash } });
 
-function setup(binding: FakeResult, live: string[]) {
-  return fakeDb({
-    push_device_sessions: [binding, {}, {}],
-    'rpc:push_live_sessions': [{ data: live }],
-    profiles: [{ data: { push_tokens: [] } }, {}, { data: [] }],
-  });
+function setup(answer: FakeResult) {
+  return fakeDb({ 'rpc:claim_push_device': [answer], profiles: [{ data: { push_tokens: [] } }, {}, { data: [] }] });
 }
-const upserts = (calls: FakeCall[]) =>
-  calls.filter((c) => c.table === 'push_device_sessions' && c.method === 'upsert');
+const add = (db: ReturnType<typeof setup>['db'], deviceKey?: string) =>
+  new MeService(db).addPushToken({ userId: 'admin-1', token: T, sessionId: 'sess-a', deviceKey });
 
 describe('PUT /me/push-tokens: no takeover of another person’s live device', () => {
-  it('attack: the token alone (no key, or a wrong one) → 409, never moved, profiles untouched', async () => {
-    for (const deviceKey of [undefined, mintDeviceKey()]) {
-      const { db, calls } = setup(held(deviceKeyHash(KEY)), ['sess-t']);
-      const add = new MeService(db).addPushToken({ userId: 'admin-1', token: T, sessionId: 'sess-a', deviceKey });
-      await expect(add).rejects.toBeInstanceOf(ConflictException);
-      expect(upserts(calls)).toEqual([]);
+  it('sends the token, the caller, its session, a fresh key’s hash and the presented key’s hash only', async () => {
+    const { db, argsOf } = setup({ data: 'bound' });
+    await add(db, KEY);
+    expect(argsOf('rpc:claim_push_device', 'rpc')).toEqual([
+      { p_token: T, p_profile: 'admin-1', p_session: 'sess-a', p_new_hash: expect.stringMatching(/^[0-9a-f]{64}$/), p_presented: deviceKeyHash(KEY) },
+    ]);
+    expect(JSON.stringify(argsOf('rpc:claim_push_device', 'rpc'))).not.toContain(KEY);
+  });
+
+  it('in_use (another person’s live device, no key proved it) → 409, profiles untouched', async () => {
+    const { db, calls } = setup({ data: 'in_use' });
+    await expect(add(db)).rejects.toBeInstanceOf(ConflictException);
+    expect(calls.some((c) => c.table === 'profiles')).toBe(false);
+  });
+
+  it('proven (the same phone, signed in as someone else) → the presented key kept', async () => {
+    await expect(add(setup({ data: 'proven' }).db, KEY)).resolves.toEqual({ deviceKey: KEY });
+  });
+
+  it('bound → a fresh key, the one whose hash was sent', async () => {
+    const { db, argsOf } = setup({ data: 'bound' });
+    const { deviceKey } = await add(db, KEY);
+    expect(deviceKey).not.toBe(KEY);
+    expect(argsOf('rpc:claim_push_device', 'rpc')?.[0]).toMatchObject({ p_new_hash: deviceKeyHash(deviceKey) });
+  });
+
+  it('no_session → 401; a failed call or an unknown answer fails, nothing on profiles', async () => {
+    await expect(add(setup({ data: 'no_session' }).db)).rejects.toBeInstanceOf(UnauthorizedException);
+    for (const answer of [{ error: { message: 'down' } }, { data: 'what' }]) {
+      const { db, calls } = setup(answer);
+      await expect(add(db)).rejects.toThrow();
       expect(calls.some((c) => c.table === 'profiles')).toBe(false);
     }
-  });
-
-  it('a refused claim marks only the holder’s binding contested (the phone may have changed hands)', async () => {
-    const { db, calls } = setup(held(null), ['sess-t']);
-    await expect(new MeService(db).addPushToken({ userId: 'admin-1', token: T, sessionId: 'sess-a' })).rejects.toBeInstanceOf(ConflictException);
-    const writes = calls.filter((c) => c.table === 'push_device_sessions' && c.method !== 'select' && c.method !== 'maybeSingle');
-    expect(writes.map((c) => [c.method, ...c.args])).toEqual([
-      ['eq', 'token', T],
-      ['update', { contested_at: expect.any(String) }],
-      ['eq', 'token', T],
-      ['eq', 'profile_id', 'teacher-1'],
-    ]);
-  });
-
-  it('the holder registering again clears the contest', async () => {
-    const { db, calls } = setup({ data: { profile_id: 'teacher-1', session_id: 'sess-t', device_key_hash: null } }, []);
-    await new MeService(db).addPushToken({ userId: 'teacher-1', token: T, sessionId: 'sess-t' });
-    expect(upserts(calls)[0]?.args[0]).toMatchObject({ profile_id: 'teacher-1', contested_at: null });
-  });
-
-  it('attack: a binding made before migration 720 (no key) is just as safe while its session lives', async () => {
-    const { db } = setup(held(null), ['sess-t']);
-    const add = new MeService(db).addPushToken({ userId: 'admin-1', token: T, sessionId: 'sess-a', deviceKey: KEY });
-    await expect(add).rejects.toBeInstanceOf(ConflictException);
-  });
-
-  it('legit: the teacher signs in on the admin’s old phone (its key) → moved, the same key kept', async () => {
-    const { db, calls } = setup(held(deviceKeyHash(KEY)), ['sess-t']);
-    const res = await new MeService(db).addPushToken({ userId: 'admin-1', token: T, sessionId: 'sess-a', deviceKey: KEY });
-    expect(res).toEqual({ deviceKey: KEY });
-    expect(upserts(calls)[0]?.args[0]).toMatchObject({ profile_id: 'admin-1', session_id: 'sess-a', device_key_hash: deviceKeyHash(KEY) });
-    expect(calls.some((c) => c.table === 'rpc:push_live_sessions')).toBe(false);
-  });
-
-  it('legit: the old holder’s session has ended → moved with a fresh key', async () => {
-    const { db, calls } = setup(held(deviceKeyHash(KEY)), []);
-    const res = await new MeService(db).addPushToken({ userId: 'admin-1', token: T, sessionId: 'sess-a' });
-    expect(res.deviceKey).not.toBe(KEY);
-    expect(upserts(calls)[0]?.args[0]).toMatchObject({ profile_id: 'admin-1', device_key_hash: deviceKeyHash(res.deviceKey) });
-  });
-
-  it('the holder re-registering its own device always passes (a new key when it lost the old one)', async () => {
-    const { db } = setup({ data: { profile_id: 'admin-1', session_id: 'old', device_key_hash: null } }, []);
-    const res = await new MeService(db).addPushToken({ userId: 'admin-1', token: T, sessionId: 'sess-a' });
-    expect(res.deviceKey).toMatch(/^[\w-]{43}$/);
-  });
-
-  it('a failed session lookup refuses nothing silently: the PUT fails, nothing is bound', async () => {
-    const { db, calls } = fakeDb({
-      push_device_sessions: [held(null)],
-      'rpc:push_live_sessions': [{ error: { message: 'down' } }],
-    });
-    await expect(new MeService(db).addPushToken({ userId: 'admin-1', token: T, sessionId: 'sess-a' })).rejects.toThrow(/down/);
-    expect(upserts(calls)).toEqual([]);
   });
 });

@@ -1,5 +1,5 @@
 import { ar } from '../../common/i18n/server-text';
-import { paramNames } from './wa-json';
+import { paramNames } from './messages/wa-json';
 import type { SampleFile, TemplateRow } from './whatsapp.types';
 
 // What Meta's template review gets besides the text (docs/12 §3.4): a realistic value for every

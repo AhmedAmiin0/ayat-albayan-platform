@@ -54,24 +54,21 @@ describe('/me/push-tokens HTTP (R-MOB-01)', () => {
   });
 
   it('PUT stores the token on the caller’s profile: 200 with the device key to keep', async () => {
+    results['rpc:claim_push_device'] = [{ data: 'bound' }];
     results['profiles'] = [{ data: { push_tokens: [] } }, {}];
     const res = await call({ method: 'PUT', url: '/me/push-tokens', body: { token: TOKEN } });
     expect(res.statusCode).toBe(200);
     expect(res.json()).toEqual({ deviceKey: expect.stringMatching(/^[\w-]{43}$/) });
     expect(fake.calls).toContainEqual({ table: 'profiles', method: 'update', args: [{ push_tokens: [TOKEN] }] });
     expect(fake.calls).toContainEqual({
-      table: 'push_device_sessions',
-      method: 'upsert',
-      args: [
-        { token: TOKEN, profile_id: 'admin-1', session_id: 'sess-1', device_key_hash: expect.stringMatching(/^[0-9a-f]{64}$/), contested_at: null },
-        { onConflict: 'token' },
-      ],
+      table: 'rpc:claim_push_device',
+      method: 'rpc',
+      args: [{ p_token: TOKEN, p_profile: 'admin-1', p_session: 'sess-1', p_new_hash: expect.stringMatching(/^[0-9a-f]{64}$/) }],
     });
   });
 
   it('PUT of another person’s live device is 409 push_device_in_use; a malformed device key 400', async () => {
-    results['push_device_sessions'] = [{ data: { profile_id: 'teacher-9', session_id: 'sess-9', device_key_hash: null } }];
-    results['rpc:push_live_sessions'] = [{ data: ['sess-9'] }];
+    results['rpc:claim_push_device'] = [{ data: 'in_use' }];
     const res = await call({ method: 'PUT', url: '/me/push-tokens', body: { token: TOKEN } });
     expect(res.statusCode).toBe(409);
     expect(res.json()).toMatchObject({ message: 'push_device_in_use' });

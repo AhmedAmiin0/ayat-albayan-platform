@@ -1,6 +1,6 @@
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import { setNumbersOverlay } from '../../common/integrations/numbers-overlay';
-import { messageRow } from '../whatsapp/sender.fakes';
+import { messageRow } from '../whatsapp/sender/sender.fakes';
 import { PHONE, threadRow } from './inbox.fakes';
 import { CHAT_OFF, CHAT_TWO, NUMBERS } from './send-number.fakes';
 import { inboxApp } from './test-app';

@@ -12,10 +12,10 @@ export const WHITELIST = new Set([
   'config/env/whatsapp/env.whatsapp.ts',
   'modules/inbox/read-receipts.ts',
   'modules/whatsapp/drivers/meta/graph.ts',
-  'modules/whatsapp/inbound-media.service.ts',
+  'modules/whatsapp/messages/inbound-media.service.ts',
   'modules/whatsapp/drivers/kapso/kapso.ts',
   'modules/whatsapp/lines/lines.check.ts',
-  'modules/whatsapp/message.dispatch.ts',
+  'modules/whatsapp/sender/message.dispatch.ts',
   'modules/whatsapp/template.registry.ts',
   // The registry's own parts (150-line cap): one line's sync (read-only list), the explicit submit.
   'modules/whatsapp/template-line-sync.ts',

@@ -5,7 +5,7 @@ import { vi } from 'vitest';
 import { PushService } from '../../common/push/push.service';
 import { TeacherScopes } from '../inbox/teacher-scope';
 import { ThreadsQueries } from '../inbox/threads.queries';
-import { MessageSender } from '../whatsapp/message.sender';
+import { MessageSender } from '../whatsapp/sender/message.sender';
 import { meetingRow } from './internal-meetings.fakes';
 import { MeetingInviteeQueries } from './meeting-invitee.queries';
 import { MeetingInviteesQueries, type StoredInvitee } from './meeting-invitees.queries';

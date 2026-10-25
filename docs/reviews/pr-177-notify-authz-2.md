@@ -37,7 +37,23 @@ here; four Minor findings recorded, not fixed (reasons below).
 | 2 | Minor | `apps/api/src/modules/me/push-device.claim.ts:49-53` | A user with `notifications.push` who knows another admin's Expo token (readable by admins before 720) PUTs it without the key every minute → 409 each time, but the victim's binding stays contested, so their phone gets no push until it re-registers. Related race: a re-registration between the read and the contest update gets contested. | Not fixed: fail-closed (nobody receives someone else's alerts), needs a known token and an admin-level caller, and a real fix (contest only from the same device / a single SQL RPC with `contested_at is null`) is the RPC upgrade the code already notes. Owner decision: harden in a follow-up or accept. |
 | 3 | Minor | `apps/api/src/modules/me/push-device.claim.ts:42` + `me.service.ts` | Two simultaneous first PUTs from one phone mint K1 and K2; DB may keep K2's hash while the phone stores K1 → a later hand-over of that phone answers 409. | Not fixed: fail-safe, rare (one phone, two concurrent first registrations), fixed by the same RPC as #2. |
 | 4 | Minor | `apps/api/src/modules/reminders/staff-reachable.ts` (`staffStale`) | A teacher alert waits behind a closed send gate while the lesson's teacher changes → old teacher could get the family's names. | Not fixed: a substitute/reschedule creates a new lesson, so the existing `staleReason` already drops the old alert; no current path changes `teacher_id` in place. |
-| 5 | Minor | `apps/api/src/modules/whatsapp/staff-at-send.ts:16` | Fallback by phone (dedup key without teacher id) + duplicate `teachers.phone_e164` + `every(staffReachable)` → one inactive duplicate drops an active teacher's alert. | Not fixed: latent, no producer emits a dedup key without the teacher id; fail-closed. |
+| 5 | Minor | `apps/api/src/modules/whatsapp/sender/staff-at-send.ts:16` | Fallback by phone (dedup key without teacher id) + duplicate `teachers.phone_e164` + `every(staffReachable)` → one inactive duplicate drops an active teacher's alert. | Not fixed: latent, no producer emits a dedup key without the teacher id; fail-closed. |
 
 Verified locally: `pnpm i --frozen-lockfile`, `pnpm --filter @ab/db --filter @ab/shared build`,
 full `pnpm turbo lint typecheck test`.
+
+## Owner decision (2026-10-25)
+
+Accepted as they are: findings 2–5 above, and the limits listed in the PR body (no GoTrue session
+timebox / inactivity timeout, tokens read before migration 720, sessions whose refresh tokens were
+revoked still counted live). Each fails closed: nobody receives another person's alerts. Recorded in
+docs/04-architecture.md «Push devices».
+
+Then, at the owner's «do what you recommend»: migration `20261025000730` (`claim_push_device`) makes
+the app-token claim one statement under a per-token advisory lock. That closes the read-then-write
+races of findings 2 and 3 (a re-registration can no longer be contested between the read and the
+update, and two concurrent claims of one token are serialised). What stays accepted: repeated
+key-less claims of a known token keep its holder contested. A single phone sending two first
+registrations at once can still store the key of the losing reply; that is fail-safe (a later
+hand-over answers 409). The GoTrue session timebox / inactivity timeout is a hosted Supabase Auth
+setting: the owner sets it in the dashboard (this run changes no hosted setting).

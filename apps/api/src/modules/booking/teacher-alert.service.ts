@@ -2,7 +2,7 @@ import { bookingKindOf, type BookingRequest, type BookingResult } from '@ab/shar
 import { Injectable, Logger } from '@nestjs/common';
 import { PushService } from '../../common/push/push.service';
 import { NotificationPolicy } from '../notification-rules/policy';
-import { MessageSender } from '../whatsapp/message.sender';
+import { MessageSender } from '../whatsapp/sender/message.sender';
 import { teacherAlerts } from './teacher-alert.plan';
 import { TeacherAlertQueries } from './teacher-alert.queries';
 

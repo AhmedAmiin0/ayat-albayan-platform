@@ -1,19 +1,15 @@
 import { Inject, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { DB, type Db } from '../../common/db/db.module';
-import { deviceKeyHash } from '../../common/push/push-claim';
 import { dbError } from '../../common/http/http';
-import { claimDeviceKey, type DeviceClaim } from './push-device.claim';
+import { claimDevice, type DeviceClaim } from './push-device.claim';
 import { withoutPushToken, withPushToken } from './push-tokens';
-
-/** Postgres foreign_key_violation: the session the token would be bound to has just ended. */
-const FK_VIOLATION = '23503';
 
 /**
  * The signed-in user's own profile settings. Push tokens (R-MOB-01) live on profiles.push_tokens,
  * each bound to the auth session that registered it (push_device_sessions, migration 700): that
  * session's end removes the token server-side, and only bound tokens of a live session get a push.
  * A token bound to another person's live session is never taken over on the token alone: the
- * request must carry that binding's device key (claimDeviceKey, migration 720).
+ * request must carry that binding's device key (claimDevice: migration 730's one locked statement).
  * ponytail: read-then-write (supabase-js has no atomic array_append); two devices registering in
  * the same instant can drop one, and that device re-registers on its next start. Upgrade: an RPC.
  */
@@ -28,11 +24,7 @@ export class MeService {
   async addPushToken(input: DeviceClaim & { sessionId: string | null }): Promise<{ deviceKey: string }> {
     const { userId, token, sessionId } = input;
     if (!sessionId) throw new UnauthorizedException('no_session');
-    const deviceKey = await claimDeviceKey(this.db, input);
-    const row = { token, profile_id: userId, session_id: sessionId, device_key_hash: deviceKeyHash(deviceKey), contested_at: null };
-    const bound = await this.db.from('push_device_sessions').upsert(row, { onConflict: 'token' });
-    if (bound.error?.code === FK_VIOLATION) throw new UnauthorizedException('no_session');
-    if (bound.error) throw dbError(bound.error);
+    const deviceKey = await claimDevice(this.db, { ...input, sessionId });
     const tokens = await this.pushTokens(userId);
     const next = withPushToken(tokens, token);
     if (next !== tokens) await this.savePushTokens(userId, next);
@@ -60,7 +52,7 @@ export class MeService {
   }
 
   /**
-   * A device belongs to whoever signed in on it last (once claimDeviceKey let it move): a handed-over phone, or one whose sign-out
+   * A device belongs to whoever signed in on it last (once claimDevice let it move): a handed-over phone, or one whose sign-out
    * DELETE never ran (401, offline, timeout), stops receiving the previous admin's pushes.
    */
   private async releaseFromOthers(userId: string, token: string): Promise<void> {
