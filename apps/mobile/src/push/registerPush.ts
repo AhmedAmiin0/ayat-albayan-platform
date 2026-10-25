@@ -5,6 +5,7 @@ import * as Notifications from 'expo-notifications';
 import { Platform } from 'react-native';
 import { ApiError, apiSend } from '@/lib/api';
 import { t } from '@/lib/i18n';
+import { hasLiveSession } from './live-session';
 import { ensurePushPermission } from './permission';
 
 // R-MOB-01 registration. The API sends the pushes (common/push, one per event per admin);
@@ -33,6 +34,8 @@ export async function registerPush(): Promise<void> {
   if (!Device.isDevice) return;
   const projectId = easProjectId(Constants.expoConfig?.extra);
   if (!projectId) return;
+  // Never before the user is authenticated (a cold start on an expired session): no prompt, no PUT.
+  if (!(await hasLiveSession())) return;
   try {
     if (Platform.OS === 'android') {
       // Android 13+ shows the permission prompt only once a channel exists.
@@ -56,8 +59,8 @@ export async function registerPush(): Promise<void> {
 
 /**
  * Takes this device's token off the profile. Call it BEFORE supabase.auth.signOut(): the DELETE
- * needs the session's bearer. Never throws; offline, the token stays until a later sign-out.
- * TODO(R-MOB-01): a 401-forced sign-out skips this; sending will prune DeviceNotRegistered tokens.
+ * needs the session's bearer. Never throws. When it fails (offline, timeout) sign-out also silences
+ * the OS (silence-push); a session ended on the server drops the token too (migration 700).
  */
 export async function unregisterPush(): Promise<void> {
   try {

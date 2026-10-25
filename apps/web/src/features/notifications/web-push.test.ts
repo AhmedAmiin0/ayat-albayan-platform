@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { base64UrlToBytes, FORGET_TIMEOUT_MS, forgetWebPush, subscribeWebPush, unsubscribeWebPush } from './web-push';
+import { base64UrlToBytes, FORGET_TIMEOUT_MS, forgetWebPush, rebindWebPush, subscribeWebPush, unsubscribeWebPush } from './web-push';
 
 const api = vi.hoisted(() => ({ saveWebPush: vi.fn(), deleteWebPush: vi.fn() }));
 vi.mock('./api', () => api);
@@ -46,6 +46,22 @@ describe('subscribeWebPush', () => {
     vi.mocked(Notification.requestPermission).mockResolvedValue('denied');
     await expect(subscribeWebPush('AQID')).resolves.toBe('denied');
     expect(sw.register).not.toHaveBeenCalled();
+    expect(api.saveWebPush).not.toHaveBeenCalled();
+  });
+});
+
+describe('rebindWebPush', () => {
+  it('PUTs an existing subscription again (bound to this session), never prompts; a failed PUT is quiet', async () => {
+    pushManager.getSubscription.mockResolvedValue(sub);
+    api.saveWebPush.mockRejectedValue(new Error('offline'));
+    await expect(rebindWebPush()).resolves.toBe(sub);
+    expect(api.saveWebPush).toHaveBeenCalledWith(JSON_SUB);
+    expect(Notification.requestPermission).not.toHaveBeenCalled();
+  });
+
+  it('none: nothing sent', async () => {
+    pushManager.getSubscription.mockResolvedValue(null);
+    await expect(rebindWebPush()).resolves.toBeNull();
     expect(api.saveWebPush).not.toHaveBeenCalled();
   });
 });

@@ -4,6 +4,7 @@ import { DB, type Db } from '../db/db.module';
 import { pushText, type PushText } from './expo-push';
 import { PushAudience, type Recipient } from './push.audience';
 import { PushChannels } from './push.channels';
+import { lockScreenText } from './push.lock-screen';
 
 export type { PushTransport } from './expo-deliver';
 export { PUSH_TRANSPORT } from './push.channels';
@@ -31,6 +32,8 @@ type Delivery = {
   profile: Recipient;
   target: PushTarget;
   text: PushText;
+  /** What the browser / app shows (lock screen): lockScreenText; the bell row keeps `text`. */
+  device: PushText;
   data: Record<string, string>;
 };
 
@@ -89,15 +92,16 @@ export class PushService {
         ...pushText(target.kind, target.vars),
         ...(target.title ? { title: target.title } : {}),
       };
+      const device = lockScreenText(target);
       const data = { kind: target.kind, ...target.data };
-      for (const profile of profiles) await this.deliver({ profile, target, text, data });
+      for (const profile of profiles) await this.deliver({ profile, target, text, device, data });
     } catch (e) {
       this.warn(`${event.kind}:${event.subject}`, e);
     }
   }
 
   /** One profile: the row (awaited), then (new rows only) the browsers and the app, not awaited. */
-  private async deliver({ profile, target, text, data }: Delivery): Promise<void> {
+  private async deliver({ profile, target, text, device, data }: Delivery): Promise<void> {
     try {
       const { data: inserted, error } = await this.db
         .from('push_notifications')
@@ -110,11 +114,11 @@ export class PushService {
       const row = inserted[0];
       if (!row) return; // already notified
       const web = {
-        ...text,
+        ...device,
         url: webNotificationPath(data, profile.role),
         tag: `${target.kind}:${target.subject}`,
       };
-      if (!target.bellOnly) void this.channels.send({ profile, rowId: row.id, text, data, web });
+      if (!target.bellOnly) void this.channels.send({ profile, rowId: row.id, text: device, data, web });
     } catch (e) {
       this.warn(`${target.kind}:${target.subject} → ${profile.id}`, e);
     }

@@ -8,6 +8,8 @@ export interface AuthUser {
   email: string | null;
   /** From the `user_role` claim added by public.custom_access_token_hook; null until a profile exists. */
   role: Role | null;
+  /** The token's `session_id` (auth.sessions): a device's push registration is bound to it. */
+  sessionId?: string | null;
   /** Effective permissions, set by the AuthGuard from the user's role (never from the token). */
   permissions?: readonly Permission[];
 }
@@ -39,7 +41,8 @@ export function createTokenVerifier(opts: VerifierOptions) {
         : await jwtVerify(token, jwks, verifyOpts);
     if (!payload.sub) throw new Error('token has no subject');
     const email = typeof payload['email'] === 'string' ? payload['email'] : null;
-    return { id: payload.sub, email, role: toRole(payload['user_role']) };
+    const sessionId = typeof payload['session_id'] === 'string' ? payload['session_id'] : null;
+    return { id: payload.sub, email, role: toRole(payload['user_role']), sessionId };
   };
 }
 

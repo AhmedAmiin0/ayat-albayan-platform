@@ -7,7 +7,7 @@ import { WebPushToggle } from './WebPushToggle';
 
 const READY: PushEnv = { hasServiceWorker: true, hasPushManager: true, hasNotification: true, permission: 'default', isIos: false, isStandalone: false };
 const env = vi.hoisted(() => ({ current: {} as PushEnv }));
-const push = vi.hoisted(() => ({ currentSubscription: vi.fn(), subscribeWebPush: vi.fn(), unsubscribeWebPush: vi.fn() }));
+const push = vi.hoisted(() => ({ rebindWebPush: vi.fn(), subscribeWebPush: vi.fn(), unsubscribeWebPush: vi.fn() }));
 const apiFetch = vi.hoisted(() => vi.fn());
 vi.mock('./web-push-support', async (orig) => ({ ...(await orig<object>()), readPushEnv: () => env.current }));
 vi.mock('./web-push', () => push);
@@ -17,7 +17,7 @@ beforeEach(() => {
   vi.resetAllMocks();
   env.current = READY;
   apiFetch.mockResolvedValue({ publicKey: 'AQID' });
-  push.currentSubscription.mockResolvedValue(null);
+  push.rebindWebPush.mockResolvedValue(null);
 });
 
 describe('WebPushToggle: only explains when push cannot be used', () => {
@@ -56,7 +56,7 @@ describe('WebPushToggle: on / off', () => {
   });
 
   it('on: the click unsubscribes', async () => {
-    push.currentSubscription.mockResolvedValue({ endpoint: 'https://push.example/1' });
+    push.rebindWebPush.mockResolvedValue({ endpoint: 'https://push.example/1' });
     push.unsubscribeWebPush.mockResolvedValue(undefined);
     renderWithClient(<WebPushToggle />);
     fireEvent.click(await screen.findByRole('button', { name: t.bell.push.disable }));

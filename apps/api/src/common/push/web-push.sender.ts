@@ -1,6 +1,7 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { DB, type Db } from '../db/db.module';
 import { encryptPayload } from './web-push.crypto';
+import { liveSessions } from './push.sessions';
 import { pushEndpointAllowed } from './web-push.endpoint';
 import { vapidAuthorization, type VapidKeys } from './web-push.vapid';
 
@@ -39,7 +40,7 @@ const clip = (text: string) =>
   text.length > WEB_PUSH_BODY_MAX ? `${text.slice(0, WEB_PUSH_BODY_MAX - 1)}…` : text;
 
 /**
- * Browser push (R-NOT-02): one encrypted POST per subscription of the profile. Off (no call at all)
+ * Browser push (R-NOT-02): one encrypted POST per subscription of the profile bound to a live session. Off (no call at all)
  * until the three WEB_PUSH_* values are set. A GONE status: the row is deleted;
  * an endpoint off the allow-list is deleted unsent. Never throws.
  */
@@ -58,10 +59,13 @@ export class WebPushSender {
     try {
       const keys = this.keys();
       if (!keys) return 0;
-      const { data, error } = await this.db.from('web_push_subscriptions').select('id, endpoint, p256dh, auth').eq('profile_id', profileId);
+      const { data, error } = await this.db.from('web_push_subscriptions').select('id, endpoint, p256dh, auth, session_id').eq('profile_id', profileId);
       if (error) throw new Error(error.message);
+      // Only browsers bound to a live session of this profile (migration 700; null = not yet re-bound).
+      const live = await liveSessions(this.db, data.map((s) => s.session_id));
+      const subs = data.filter((s) => s.session_id !== null && live.has(s.session_id));
       const body = Buffer.from(JSON.stringify({ ...payload, body: clip(payload.body) }));
-      const sent = await Promise.allSettled(data.map((sub) => this.one({ sub, keys, body })));
+      const sent = await Promise.allSettled(subs.map((sub) => this.one({ sub, keys, body })));
       return sent.filter((r) => r.status === 'fulfilled' && r.value).length;
     } catch (e) {
       this.log.warn(`web push to ${profileId} failed: ${e instanceof Error ? e.message : String(e)}`);

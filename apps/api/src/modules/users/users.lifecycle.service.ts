@@ -28,8 +28,8 @@ export class UsersLifecycleService {
     await this.ports.store.setDisabled(id, { by: actor.id, reason: input.reason ?? null });
     await this.ports.auth.update(id, { banned: true });
     await this.ports.auth.revokeSessions(id);
-    // No browser push for a disabled account: its subscriptions go (app tokens stay: the bell's
-    // PushAudience already skips a disabled profile, and enabling it again keeps its devices).
+    // No push for a disabled account: revoking its sessions ends their device bindings, and the
+    // disabled_at trigger (migration 700) drops every app token and browser; PushAudience skips it.
     await this.ports.store.forgetBrowsers(id);
     this.effects.cache.clear();
     return this.done({ id, actor, action: 'disable', before });

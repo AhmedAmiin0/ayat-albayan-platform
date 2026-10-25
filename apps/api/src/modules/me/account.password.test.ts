@@ -1,13 +1,19 @@
 import { describe, expect, it } from 'vitest';
 import { accountKit, ME, PASSWORD } from './account.fakes';
 
-// R-ACC-04: the rules of users.password / AUTH_PASSWORD_MIN_LENGTH; the session is not revoked.
+// R-ACC-04: the rules of users.password / AUTH_PASSWORD_MIN_LENGTH; the caller's session is kept.
 
 describe('PUT /me/password (R-ACC-04)', () => {
   it('sets the new password after checking the current one', async () => {
     const kit = accountKit();
     await kit.account.changePassword(ME, { current_password: PASSWORD, new_password: 'Brand-new-9' });
     expect(kit.auth.updates).toEqual([{ id: 'user-1', patch: { password: 'Brand-new-9' } }]);
+  });
+
+  it('ends every other session of the user (their devices stop getting pushes), keeping the caller’s', async () => {
+    const kit = accountKit();
+    await kit.account.changePassword({ ...ME, sessionId: 'sess-1' }, { current_password: PASSWORD, new_password: 'Brand-new-9' });
+    expect(kit.auth.revoked).toEqual([{ userId: 'user-1', keep: 'sess-1' }]);
   });
 
   it('applies the configured minimum length', async () => {
@@ -36,5 +42,6 @@ describe('PUT /me/password (R-ACC-04)', () => {
       response: { code: 'wrong_password' },
     });
     expect(kit.auth.updates).toEqual([]);
+    expect(kit.auth.revoked).toEqual([]);
   });
 });

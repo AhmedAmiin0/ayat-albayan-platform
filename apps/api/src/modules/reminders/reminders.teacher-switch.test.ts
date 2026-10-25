@@ -26,4 +26,18 @@ describe('settings.teacher_whatsapp_lesson_reminder', () => {
     expect(keys(true)).toEqual(keys());
     expect(keys(false)).toEqual(['lesson_reminder', 'lesson_reminder']);
   });
+
+  it('planReminders: never to an inactive teacher or one whose login was disabled (owner 2026-10-25)', () => {
+    const base = sampleLesson();
+    const keys = (teacher: Partial<NonNullable<typeof base.teacher>>) =>
+      planReminders({
+        lessons: [{ ...base, teacher: base.teacher && { ...base.teacher, ...teacher } }],
+        minutesBefore: 60,
+        dayBefore: false,
+        now: at('2026-10-04T13:10:00Z'),
+      }).map((r) => r.template_key);
+    expect(keys({ status: 'active', profile: { disabled_at: null } })).toContain('teacher_lesson_reminder');
+    expect(keys({ status: 'inactive' })).toEqual(['lesson_reminder', 'lesson_reminder']);
+    expect(keys({ profile: { disabled_at: '2026-10-25T00:00:00Z' } })).toEqual(['lesson_reminder', 'lesson_reminder']);
+  });
 });

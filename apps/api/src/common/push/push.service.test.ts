@@ -38,7 +38,7 @@ describe('PushService.notifyAdmins (R-MOB-01, rule 8)', () => {
     expect(send).not.toHaveBeenCalled();
   });
 
-  it('prunes a token Expo reports DeviceNotRegistered', async () => {
+  it('prunes a token Expo reports DeviceNotRegistered (its binding; the trigger updates the profile)', async () => {
     const { db, writes } = fakePushDb([{ id: 'a1', role: 'admin', push_tokens: ['ExponentPushToken[old]', 'ExponentPushToken[new]'] }]);
     const transport: PushTransport = async () => [
       { status: 'error', message: 'gone', details: { error: 'DeviceNotRegistered' } },
@@ -49,11 +49,9 @@ describe('PushService.notifyAdmins (R-MOB-01, rule 8)', () => {
       vars: {},
     });
     await flushPushes();
-    expect(writes).toContainEqual({
-      table: 'profiles',
-      op: 'update',
-      value: { push_tokens: ['ExponentPushToken[new]'] },
-    });
+    // Never a rewrite of the profile's list: a token registered meanwhile must survive.
+    expect(writes.filter((w) => w.table === 'profiles' && w.op === 'update')).toEqual([]);
+    expect(writes).toContainEqual({ table: 'push_device_sessions', op: 'delete', value: ['ExponentPushToken[old]'] });
   });
 
   it('never throws: a transport failure is only logged', async () => {

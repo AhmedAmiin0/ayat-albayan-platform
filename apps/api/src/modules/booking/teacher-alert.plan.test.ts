@@ -45,4 +45,12 @@ describe('teacherAlerts (R-NOT-03)', () => {
     expect(plans[0]).toMatchObject({ push: null, message: expect.objectContaining({ phone_e164: '+966552147730' }) });
     expect(plans[1]).toMatchObject({ push: expect.objectContaining({ profileIds: ['P1'] }), message: null });
   });
+
+  it('no WhatsApp row for an inactive teacher or a disabled login; the bell still decides by profile (owner 2026-10-25)', () => {
+    for (const off of [{ status: 'inactive' as const }, { profile: { disabled_at: '2026-10-25T00:00:00Z' } }]) {
+      const [plan] = teacherAlerts({ lessons: [lesson('L1', '2026-10-04T14:00:00Z', { ...T1, ...off })], students: STUDENTS, kind: 'trial', now: NOW });
+      expect(plan?.message).toBeNull();
+      expect(plan?.push).not.toBeNull();
+    }
+  });
 });

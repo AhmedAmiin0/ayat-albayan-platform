@@ -8,7 +8,7 @@ import { DB } from '../../common/db/db.module';
 import { fakeDb, type FakeResult } from '../guardians/fake-db';
 
 const USERS: Record<string, AuthUser> = {
-  admin: { id: 'admin-1', email: 'a@x.com', role: 'admin' },
+  admin: { id: 'admin-1', email: 'a@x.com', role: 'admin', sessionId: 'sess-1' },
   teacher: { id: 'teacher-1', email: 't@x.com', role: 'teacher' },
   guardian: { id: 'guardian-1', email: 'g@x.com', role: 'guardian' },
 };
@@ -58,6 +58,16 @@ describe('/me/push-tokens HTTP (R-MOB-01)', () => {
     const res = await call({ method: 'PUT', url: '/me/push-tokens', body: { token: TOKEN } });
     expect(res.statusCode).toBe(204);
     expect(fake.calls).toContainEqual({ table: 'profiles', method: 'update', args: [{ push_tokens: [TOKEN] }] });
+    expect(fake.calls).toContainEqual({
+      table: 'push_device_sessions',
+      method: 'upsert',
+      args: [{ token: TOKEN, profile_id: 'admin-1', session_id: 'sess-1' }, { onConflict: 'token' }],
+    });
+  });
+
+  it('PUT from a token without a session_id claim is 401 (never bound to nobody)', async () => {
+    const res = await call({ method: 'PUT', url: '/me/push-tokens', token: 'teacher', body: { token: TOKEN } });
+    expect(res.statusCode).toBe(401);
   });
 
   it('DELETE takes the URL-encoded bracketed token: 204', async () => {
