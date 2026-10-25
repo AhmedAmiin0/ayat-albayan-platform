@@ -96,4 +96,23 @@ describe('ReplyComposer: the button', () => {
     await waitFor(() => expect(box().value).toBe('السلام عليكم أم أحمد، معك سارة.'));
     expect(screen.queryByRole('listbox')).toBeNull();
   });
+
+  it('Esc in its search closes it and puts the focus back in the message box', async () => {
+    show();
+    fireEvent.click(screen.getByRole('button', { name: S.open }));
+    const search = await screen.findByRole('combobox', { name: S.search });
+    fireEvent.keyDown(search, { key: 'Escape' });
+    expect(screen.queryByRole('combobox')).toBeNull();
+    await waitFor(() => expect(document.activeElement).toBe(box()));
+  });
+
+  it('a failed load says so, with «أعد المحاولة»', async () => {
+    routeFetch(apiFetch, [['/me/profile', PROFILE]]);
+    renderWithClient(<ReplyComposer thread={thread(OPEN)} context={{}} leading={null} />);
+    fireEvent.click(screen.getByRole('button', { name: S.open }));
+    expect(await screen.findByText(S.loadError)).toBeTruthy();
+    routeFetch(apiFetch, [['/saved-replies', REPLIES], ['/me/profile', PROFILE]]);
+    fireEvent.click(screen.getByRole('button', { name: S.retry }));
+    expect(await options()).toHaveLength(2);
+  });
 });

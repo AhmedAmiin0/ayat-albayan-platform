@@ -26,6 +26,9 @@ function saveInput(input: { reply: SavedReply | null; scope: SavedReplyScope; ti
   return { id: reply.id, patch: changed ? { title, body, attachment } : { title, body } };
 }
 
+/** A title and a text, and no upload still running. */
+const canSave = (d: { title: string; body: string; uploading: boolean }): boolean => d.title.trim() !== '' && d.body.trim() !== '' && !d.uploading;
+
 /** Add or edit one reply: title (≤ 60), text (≤ 4096) with its placeholder pills, and an optional file. */
 export function ReplyEditor({ reply, scope, onDone }: ReplyEditorProps) {
   const save = useSaveReply();
@@ -33,7 +36,8 @@ export function ReplyEditor({ reply, scope, onDone }: ReplyEditorProps) {
   const [body, setBody] = useState(reply?.body ?? '');
   const [sel, setSel] = useState({ start: body.length, end: body.length });
   const [file, setFile] = useState<EditorFile>(reply?.attachment ? { name: reply.attachment.name } : null);
-  const ready = title.trim() !== '' && body.trim() !== '';
+  const [uploading, setUploading] = useState(false);
+  const ready = canSave({ title, body, uploading });
   const submit = () => {
     if (!ready) return;
     save.mutate(saveInput({ reply, scope, title: title.trim(), body: body.trim(), file }), { onSuccess: onDone });
@@ -63,7 +67,7 @@ export function ReplyEditor({ reply, scope, onDone }: ReplyEditorProps) {
           setSel({ start: at, end: at });
         }}
       />
-      <ReplyFileField file={file} onChange={setFile} />
+      <ReplyFileField file={file} onChange={setFile} onBusy={setUploading} />
       {save.isError ? <ErrorLine message={replyError(save.error)} /> : null}
       <View style={{ flexDirection: 'row', gap: 8 }}>
         <Button label={save.isPending ? t.common.saving : t.common.save} busy={save.isPending} disabled={!ready} onPress={submit} />

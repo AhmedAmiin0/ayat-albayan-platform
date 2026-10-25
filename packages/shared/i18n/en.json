@@ -6043,10 +6043,7 @@
     "colTitle": "Title",
     "colPreview": "Text",
     "colAttachment": "Attachment",
-    "colScope": "Scope",
     "colOrder": "Order",
-    "scopeShared": "Shared",
-    "scopeMine": "Personal",
     "hasAttachment": "Has an attachment",
     "staged": "Sent after the text",
     "stagedRemove": "Remove the attachment «{name}»",
@@ -6063,6 +6060,7 @@
     "web": {
       "retryFile": "Resend the attachment",
       "fileFailed": "The attachment was not sent: {reason}"
-    }
+    },
+    "retry": "Try again"
   }
 }

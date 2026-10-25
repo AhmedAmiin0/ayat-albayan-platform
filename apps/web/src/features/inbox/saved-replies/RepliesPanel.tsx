@@ -1,4 +1,5 @@
 import type { SavedReply, SavedReplyScope } from '@ab/shared';
+import { Button } from '@/components/ui/button';
 import { Icon } from '@/components/ui/icon';
 import { IconButton } from '@/components/ui/icon-button';
 import { SearchInput } from '@/components/ui/search-input';
@@ -38,7 +39,12 @@ export function RepliesPanel({ picker, listId, onAdd, onEdit, onDelete }: Replie
   const { list, keys } = picker;
   const active = list[keys.active];
   return (
-    <section aria-label={S.title} className="grid gap-1.5 rounded-lg border border-rule bg-raised p-2 shadow-pop">
+    <section
+      aria-label={S.title}
+      className="grid gap-1.5 rounded-lg border border-rule bg-raised p-2 shadow-pop"
+      // After «/» the message box drives the list: a click on a tab or button keeps its focus (and ↑ ↓ Enter Esc).
+      onMouseDown={picker.bySlash ? (e) => e.preventDefault() : undefined}
+    >
       <div className="flex items-center gap-1">
         <Tabs label={S.title} tabs={TABS} value={picker.tab} onChange={picker.setTab} className="min-w-0 flex-1 text-sm" />
         <IconButton label={t.common.close} className="rounded-full" onClick={picker.close}>
@@ -65,9 +71,16 @@ export function RepliesPanel({ picker, listId, onAdd, onEdit, onDelete }: Replie
       {list.length ? (
         <ReplyOptions id={listId} replies={list} active={keys.active} onActive={keys.setActive} onPick={picker.pick} />
       ) : (
-        <p role="status" className="px-2 py-3 text-sm text-ink-2">
-          {emptyText(picker)}
-        </p>
+        <div className="flex flex-wrap items-center gap-2 px-2 py-2">
+          <p role="status" className="text-sm text-ink-2">
+            {emptyText(picker)}
+          </p>
+          {picker.failed && (
+            <Button type="button" size="sm" variant="secondary" onClick={picker.retry}>
+              {S.retry}
+            </Button>
+          )}
+        </div>
       )}
       <div className="flex flex-wrap items-center gap-2 px-1">
         {picker.tab === 'mine' && <MineActions active={active} onAdd={onAdd} onEdit={onEdit} onDelete={onDelete} />}

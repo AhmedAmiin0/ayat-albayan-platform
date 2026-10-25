@@ -1,5 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
+import { useId } from 'react';
 import { Button } from '@/components/ui/button';
+import { FormAlert } from '@/components/ui/form-alert';
 import { Icon } from '@/components/ui/icon';
 import { Skeleton } from '@/components/ui/skeleton';
 import { usePermissions } from '@/features/auth/use-permissions';
@@ -12,19 +14,20 @@ const S = t.savedReplies;
 
 /**
  * «الردود السريعة» (owner 2026-10-25): the SHARED replies everyone with the chats inserts, in one
- * compact table with reorder, edit and delete; «رد جديد» opens the editor. Without
+ * compact table (no scope column: every row is shared) with reorder, edit and delete; «رد جديد» opens the editor. Without
  * saved_replies.manage the table is read-only. Personal replies are managed from the chat's «ردودي».
  */
 export function SavedRepliesTab() {
   const replies = useQuery(savedRepliesQuery);
   const manage = usePermissions().can('saved_replies.manage');
   const dialogs = useReplyDialogs('shared');
+  const headingId = useId();
   const shared = (replies.data ?? []).filter((r) => r.scope === 'shared');
   return (
-    <section aria-labelledby="saved-replies-title" className="grid min-w-0 gap-3">
+    <section aria-labelledby={headingId} className="grid min-w-0 gap-3">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="grid gap-1">
-          <h2 id="saved-replies-title" className="text-h4 font-bold">
+          <h2 id={headingId} className="text-h4 font-bold">
             {S.title}
           </h2>
           <p className="text-sm text-ink-2">{S.manageIntro}</p>
@@ -45,10 +48,17 @@ export function SavedRepliesTab() {
         </div>
       )}
       <div aria-live="polite">
-        {replies.isError && <p className="text-sm text-ink-2">{S.loadError}</p>}
+        {replies.isError && (
+          <div className="grid justify-items-start gap-2">
+            <FormAlert>{S.loadError}</FormAlert>
+            <Button size="sm" variant="secondary" onClick={() => void replies.refetch()}>
+              {S.retry}
+            </Button>
+          </div>
+        )}
         {replies.data && shared.length === 0 && <p className="text-sm text-ink-2">{S.emptyShared}</p>}
       </div>
-      {shared.length > 0 && <SavedRepliesTable replies={shared} manage={manage} onEdit={dialogs.edit} onDelete={dialogs.remove} />}
+      {shared.length > 0 && <SavedRepliesTable labelledBy={headingId} replies={shared} manage={manage} onEdit={dialogs.edit} onDelete={dialogs.remove} />}
       {dialogs.dialogs}
     </section>
   );

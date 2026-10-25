@@ -17,16 +17,16 @@ import { replyError } from '@/inbox/saved-replies/reply-error';
 import { ReplyRow } from '@/inbox/saved-replies/ReplyRow';
 import { SubScreenHeader } from './SubScreenHeader';
 
-/** «إلى الأعلى» / «إلى الأسفل» (none at the ends) and «احذف», 44pt each. */
-function RowActions(p: { reply: SavedReply; first: boolean; last: boolean; onMove: (d: 'up' | 'down') => void; onDelete: () => void }) {
+/** «إلى الأعلى» / «إلى الأسفل» (none at the ends, none while a move is saving) and «احذف», 44pt each. */
+function RowActions(p: { reply: SavedReply; first: boolean; last: boolean; busy: boolean; onMove: (d: 'up' | 'down') => void; onDelete: () => void }) {
   const { color } = useTheme();
   const name = (s: string) => s.replace('{title}', p.reply.title);
   return (
     <>
-      <IconButton label={name(t.savedReplies.moveUp)} disabled={p.first} onPress={() => p.onMove('up')}>
+      <IconButton label={name(t.savedReplies.moveUp)} disabled={p.first || p.busy} onPress={() => p.onMove('up')}>
         <UpIcon color={color.lapis} size={20} />
       </IconButton>
-      <IconButton label={name(t.savedReplies.moveDown)} disabled={p.last} onPress={() => p.onMove('down')}>
+      <IconButton label={name(t.savedReplies.moveDown)} disabled={p.last || p.busy} onPress={() => p.onMove('down')}>
         <DownIcon color={color.lapis} size={20} />
       </IconButton>
       <IconButton label={name(t.savedReplies.deleteReply)} onPress={p.onDelete}>
@@ -77,6 +77,7 @@ export function SharedRepliesScreen() {
                   reply={item}
                   first={index === 0}
                   last={index === shared.length - 1}
+                  busy={move.isPending}
                   onMove={(direction) => move.mutate({ id: item.id, direction })}
                   onDelete={() => setDeleting(item.id)}
                 />

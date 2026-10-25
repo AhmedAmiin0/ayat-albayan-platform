@@ -1,4 +1,4 @@
-import { screen, waitFor } from '@testing-library/react';
+import { fireEvent, screen, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n';
 import { ComposerPhone } from './ComposerPhone';
@@ -48,6 +48,20 @@ describe('ComposerPhone: «الردود السريعة»', () => {
     expect(button()?.getAttribute('title')).toBe(S.closedHint);
     const hint = document.getElementById(button()?.getAttribute('aria-describedby') ?? '');
     expect(hint?.textContent).toBe(S.closedHint);
+    expect(hint?.hidden).toBe(true);
+  });
+
+  it('after the window: a tap on the locked button shows why in the row', async () => {
+    show({ mode: 'sales', open: false });
+    await waitFor(() => expect(button()).toBeTruthy());
+    const hint = document.getElementById(button()?.getAttribute('aria-describedby') ?? '');
+    // A tap shows the reason in the row (no tooltip on touch screens); a second tap hides it.
+    const locked = button();
+    if (locked) fireEvent.click(locked);
+    expect(hint?.hidden).toBe(false);
+    expect(locked?.getAttribute('aria-expanded')).toBe('true');
+    if (locked) fireEvent.click(locked);
+    expect(hint?.hidden).toBe(true);
   });
 
   it('never for a teacher', async () => {

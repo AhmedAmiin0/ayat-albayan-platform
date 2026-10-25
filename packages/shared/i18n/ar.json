@@ -6043,10 +6043,7 @@
     "colTitle": "العنوان",
     "colPreview": "النص",
     "colAttachment": "المرفق",
-    "colScope": "النطاق",
     "colOrder": "الترتيب",
-    "scopeShared": "مشترك",
-    "scopeMine": "شخصي",
     "hasAttachment": "يتضمن مرفقًا",
     "staged": "يُرسل بعد النص",
     "stagedRemove": "أزل المرفق «{name}»",
@@ -6063,6 +6060,7 @@
     "web": {
       "retryFile": "أعد إرسال المرفق",
       "fileFailed": "لم يُرسل المرفق: {reason}"
-    }
+    },
+    "retry": "أعد المحاولة"
   }
 }

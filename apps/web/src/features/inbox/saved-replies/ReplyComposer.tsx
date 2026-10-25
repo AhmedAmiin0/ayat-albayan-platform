@@ -21,7 +21,7 @@ export interface ReplyComposerProps {
   leading: ReactNode;
 }
 
-/** Puts the caret after the filled text, back in the box (the picker's search had the focus). */
+/** Puts the caret at the end, back in the box (after a pick or a close the picker's search had the focus). */
 function focusBox(id: string): void {
   requestAnimationFrame(() => {
     const box = document.getElementById(id);
@@ -50,7 +50,7 @@ export function ReplyComposer({ thread, context, leading }: ReplyComposerProps) 
     if (reply.attachment) setStaged(phone, { replyId: reply.id, attachment: reply.attachment, requestId: crypto.randomUUID(), failed: null });
     focusBox(boxId);
   };
-  const picker = useRepliesPicker({ text: draft.text, enabled: thread.session_open, onPick });
+  const picker = useRepliesPicker({ text: draft.text, enabled: thread.session_open, onPick, onClose: () => focusBox(boxId) });
   const active = picker.bySlash && picker.list.length ? optionId(listId, picker.keys.active) : undefined;
   const above = (
     <>

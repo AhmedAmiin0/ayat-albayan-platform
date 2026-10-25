@@ -31,12 +31,12 @@ afterEach(() => {
 });
 
 describe('«التواصل» → «الردود السريعة»', () => {
-  it('lists the shared replies only, in order, with file and scope', async () => {
+  it('lists the shared replies only, in order, with the file (no scope column)', async () => {
     show(['saved_replies.manage']);
     const list = await rows();
     expect(list.map((r) => within(r).getByRole('rowheader').textContent)).toEqual(['الترحيب', 'الأسعار']);
     expect(within(list[1] as HTMLElement).getByText(S.hasAttachment)).toBeTruthy();
-    expect(within(list[0] as HTMLElement).getByText(S.scopeShared)).toBeTruthy();
+    expect(screen.getAllByRole('columnheader').map((h) => h.textContent)).not.toContain('مشترك');
     expect(screen.queryByText('متابعة')).toBeNull();
   });
 
@@ -83,5 +83,18 @@ describe('«التواصل» → «الردود السريعة»', () => {
     expect(screen.queryByRole('button', { name: S.add })).toBeNull();
     expect(screen.queryByRole('button', { name: S.moveUp.replace('{title}', 'الأسعار') })).toBeNull();
     expect(screen.queryByRole('button', { name: S.deleteReply.replace('{title}', 'الأسعار') })).toBeNull();
+  });
+
+  it('a failed load says so and «أعد المحاولة» loads it again', async () => {
+    routeFetch(apiFetch, [['/auth/me', { id: 'u1', email: null, role: 'admin', permissions: [] }]]);
+    renderWithClient(<SavedRepliesTab />);
+    const retry = await screen.findByRole('button', { name: S.retry });
+    expect(screen.getByText(S.loadError)).toBeTruthy();
+    routeFetch(apiFetch, [
+      ['/auth/me', { id: 'u1', email: null, role: 'admin', permissions: [] }],
+      ['/saved-replies', REPLIES],
+    ]);
+    fireEvent.click(retry);
+    expect((await rows()).length).toBeGreaterThan(0);
   });
 });

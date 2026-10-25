@@ -12,6 +12,8 @@ import { CELL, TH } from './overview-table';
 const S = t.savedReplies;
 
 export interface SavedRepliesTableProps {
+  /** The tab's heading id: the table's name. */
+  labelledBy: string;
   /** The shared list, by position then title. */
   replies: readonly SavedReply[];
   /** saved_replies.manage: reorder, edit and delete; otherwise read-only. */
@@ -20,19 +22,19 @@ export interface SavedRepliesTableProps {
   onDelete: (reply: SavedReply) => void;
 }
 
-/** One row per shared reply: order (up / down, no drag), title, the text on one line, file, scope, actions. */
-export function SavedRepliesTable({ replies, manage, onEdit, onDelete }: SavedRepliesTableProps) {
+/** One row per shared reply: order (up / down, no drag), title, the text on one line, file, actions. */
+export function SavedRepliesTable({ labelledBy, replies, manage, onEdit, onDelete }: SavedRepliesTableProps) {
   const queryClient = useQueryClient();
   const move = useMutation({
     mutationFn: moveReply,
     onSuccess: (lists) => queryClient.setQueryData(SAVED_REPLIES_KEY, lists),
   });
-  const cols = [S.colTitle, S.colPreview, S.colAttachment, S.colScope];
+  const cols = [S.colTitle, S.colPreview, S.colAttachment];
   return (
     <div className="grid gap-2">
       {move.isError && <FormAlert>{replyErrorText(move.error)}</FormAlert>}
       <div className="overflow-x-auto">
-        <table aria-labelledby="saved-replies-title" className="w-full border-collapse text-sm">
+        <table aria-labelledby={labelledBy} className="w-full border-collapse text-sm">
           <thead>
             <tr>
               {manage && <th scope="col" className={TH}>{S.colOrder}</th>}
@@ -60,8 +62,11 @@ export function SavedRepliesTable({ replies, manage, onEdit, onDelete }: SavedRe
                 <th scope="row" className={cn(CELL, 'font-semibold')}>
                   <bdi>{reply.title}</bdi>
                 </th>
-                <td className={cn(CELL, 'max-w-80 truncate text-ink-2')} dir="auto" title={reply.body}>
-                  {reply.body}
+                <td className={cn(CELL, 'text-ink-2')} title={reply.body}>
+                  {/* A cell ignores max-width: the span keeps the text to one short line. */}
+                  <span className="block max-w-80 truncate" dir="auto">
+                    {reply.body}
+                  </span>
                 </td>
                 <td className={CELL}>
                   {reply.attachment ? (
@@ -72,9 +77,6 @@ export function SavedRepliesTable({ replies, manage, onEdit, onDelete }: SavedRe
                   ) : (
                     <span className="text-ink-3">—</span>
                   )}
-                </td>
-                <td className={cn(CELL, 'text-xs')}>
-                  <span className="rounded-full bg-accent px-2 py-0.5 font-semibold text-ink">{S.scopeShared}</span>
                 </td>
                 {manage && (
                   <td className={cn(CELL, 'whitespace-nowrap')}>

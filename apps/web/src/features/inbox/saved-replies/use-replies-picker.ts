@@ -17,6 +17,8 @@ export interface RepliesPicker {
   list: SavedReply[];
   loading: boolean;
   failed: boolean;
+  /** Loads the list again after a failure. */
+  retry: () => void;
   keys: PickerKeys;
   /** Fill the composer with this tab's row `index` (a click, or Enter on the highlighted one). */
   pick: (index: number) => void;
@@ -30,13 +32,15 @@ export interface PickerInput {
   /** Inside the 24 h window only; outside it nothing opens. */
   enabled: boolean;
   onPick: (reply: SavedReply) => void;
+  /** Esc, «إغلاق» or the button again: the caller puts the focus back in the message box. */
+  onClose?: () => void;
 }
 
 /**
  * The picker's state: open by the button or by «/», the tab, the search and the keyboard. Esc on a
  * «/» trigger keeps it closed until a new «/» starts. The list loads the first time it opens.
  */
-export function useRepliesPicker({ text, enabled, onPick }: PickerInput): RepliesPicker {
+export function useRepliesPicker({ text, enabled, onPick, onClose }: PickerInput): RepliesPicker {
   const [manual, setManual] = useState(false);
   const [dismissedAt, setDismissedAt] = useState<number | null>(null);
   const [tab, setTab] = useState<SavedReplyScope>('shared');
@@ -51,6 +55,7 @@ export function useRepliesPicker({ text, enabled, onPick }: PickerInput): Replie
     setManual(false);
     setSearch('');
     setDismissedAt(slash === null ? null : slashStart(text));
+    onClose?.();
   };
   const pick = (index: number) => {
     const reply = list[index];
@@ -68,6 +73,7 @@ export function useRepliesPicker({ text, enabled, onPick }: PickerInput): Replie
     },
     loading: replies.isPending && open,
     failed: replies.isError,
+    retry: () => void replies.refetch(),
     toggle: () => (open ? close() : setManual(true)),
   };
 }

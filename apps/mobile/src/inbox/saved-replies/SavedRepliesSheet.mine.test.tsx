@@ -75,3 +75,19 @@ test('the shared tab has no edit or delete', async () => {
   expect(screen.queryByRole('button', { name: t.savedReplies.add })).toBeNull();
   expect(screen.queryByRole('button', { name: t.savedReplies.deleteReply.replace('{title}', 'ترحيب') })).toBeNull();
 });
+
+test('«حفظ» waits while the file is uploading (the reply is never saved without it)', async () => {
+  let finish: (v: unknown) => void = () => undefined;
+  jest.mocked(pickChatFile).mockResolvedValue({ mime: 'application/pdf', bytes: new ArrayBuffer(3), size: 3, filename: 'جدول.pdf' });
+  mockApiSend.mockImplementation((_m: string, path: string) =>
+    path === '/saved-replies/attachment-upload-url' ? new Promise((resolve) => (finish = resolve)) : Promise.resolve(MINE),
+  );
+  await openMine();
+  await fireEvent.press(screen.getByRole('button', { name: t.savedReplies.editReply.replace('{title}', MINE.title) }));
+  await fireEvent.press(screen.getByRole('button', { name: t.inbox.composer.attachPdf }));
+  await screen.findByText(t.savedReplies.attachUploading);
+  expect(screen.getByRole('button', { name: t.common.save }).props.accessibilityState).toMatchObject({ disabled: true });
+  finish({ bucket: 'wa-media', path: 'saved/s1/x.pdf', token: 'tok', signed_url: 'u' });
+  await screen.findByTestId('saved-reply-chip');
+  expect(screen.getByRole('button', { name: t.common.save }).props.accessibilityState).toMatchObject({ disabled: false });
+});
