@@ -22,6 +22,7 @@ export * from './ticks.js';
 export * from './thread-people.js';
 export * from './timing.js';
 export * from './trial-chat.js';
+export * from './unavailable.js';
 export * from './wa.js';
 export type * from './views.js';
 export type * from './template-views.js';

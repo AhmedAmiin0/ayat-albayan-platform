@@ -1,10 +1,10 @@
 import { formatPhone, sessionWindowOpen } from '@ab/shared';
 import { router, useLocalSearchParams } from 'expo-router';
-import { KeyboardAvoidingView, Platform } from 'react-native';
 import { useHolds } from '@/auth/use-permissions';
 import { t } from '@/lib/i18n';
 import { inTree, useTreeBase } from '@/nav/tree-base';
 import { ErrorState } from '@/ui/ErrorState';
+import { KeyboardFrame } from '@/ui/KeyboardFrame';
 import { ltr } from '@/ui/Ltr';
 import { Screen } from '@/ui/Screen';
 import { ChatActionsProvider } from './ChatActionsProvider';
@@ -79,10 +79,8 @@ export function ThreadScreen() {
           <SubscriptionPanel data={query.data} phone={phone} />
         )}
         {query.data ? (
-          <KeyboardAvoidingView
-            style={{ flex: 1, gap: 4 }}
-            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-          >
+          // Composer, quote strip and staged file stay on the keyboard (owner 2026-10-25, Android).
+          <KeyboardFrame style={{ flex: 1, gap: 4 }}>
             <MessageList phone={phone} query={query} />
             <ChatNotice />
             {mode.kind === 'admin' &&
@@ -100,7 +98,7 @@ export function ThreadScreen() {
                 student={query.data.pages[0]?.people?.students[0]?.name ?? null}
               />
             )}
-          </KeyboardAvoidingView>
+          </KeyboardFrame>
         ) : query.isError ? (
           <ErrorState onRetry={() => void query.refetch()} />
         ) : null}
