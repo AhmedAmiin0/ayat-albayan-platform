@@ -10,7 +10,7 @@ vi.mock('@tanstack/react-router', async () => ({ Link: (await import('@/features
 // The page's own head is under test; the cards below it have their own tests.
 vi.mock('@/features/subscriptions/BalanceCard', () => ({ BalanceCard: () => null }));
 vi.mock('./StudentProfileForm', () => ({ StudentProfileForm: () => null }));
-vi.mock('./SiblingMerge', () => ({ SiblingMerge: () => null }));
+vi.mock('./duplicates/SiblingMerge', () => ({ SiblingMerge: () => null }));
 
 const STUDENT = {
   id: 's1',

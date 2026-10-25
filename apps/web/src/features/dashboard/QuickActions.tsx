@@ -5,7 +5,7 @@ import { HeadActions } from '@/components/ui/layout/head-actions';
 import { Icon } from '@/components/ui/display/icon';
 import { Toast } from '@/components/ui/overlay/toast';
 import { NewMeetingMenu } from '@/features/meetings/NewMeetingMenu';
-import { CreateStudentDialog } from '@/features/students/CreateStudentDialog';
+import { CreateStudentDialog } from '@/features/students/create/CreateStudentDialog';
 import { t } from '@/lib/i18n/i18n';
 
 /**

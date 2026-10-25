@@ -19,7 +19,7 @@ import { studentQuery } from './api';
 import { FormAlert } from '@/components/ui/form/form-alert';
 import { BalanceCard } from '@/features/subscriptions/BalanceCard';
 import { RenewSubscriptionButton } from '@/features/subscriptions/RenewSubscriptionButton';
-import { SiblingMerge } from './SiblingMerge';
+import { SiblingMerge } from './duplicates/SiblingMerge';
 import { StudentInvoices } from './StudentInvoices';
 import { StudentPayments } from './StudentPayments';
 import { StudentProfileForm } from './StudentProfileForm';

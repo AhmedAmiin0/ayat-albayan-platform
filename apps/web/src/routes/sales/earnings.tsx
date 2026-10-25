@@ -1,5 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router';
-import { SalesMoney } from '@/features/sales/SalesMoney';
+import { SalesMoney } from '@/features/sales/money/SalesMoney';
 import { parseMoneySearch } from '@/features/sales/search';
 
 /** /sales/earnings?view=payments «أرباحي» — my salary, commissions and statements; «مدفوعاتي» is a filter. */

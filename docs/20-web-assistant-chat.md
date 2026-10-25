@@ -8,7 +8,7 @@ Owner 2026-10-19: «for the assistant the chat is not good … in the web». Aud
 
 ### W1 (major) The inbox fits the window: about 150px less chrome, no 1180px width cap, and the page itself stops scrolling — ✅ done
 
-Files: `apps/web/src/components/shell/layout/FixedTopBarLayout.tsx`, `apps/web/src/components/shell/layout/TopBarLayout.tsx`, `apps/web/src/components/ui/layout/running-head.tsx`, `apps/web/src/components/shell/layout/inbox-route.ts`, `apps/web/src/features/inbox/threads/list/InboxPage.tsx`, `apps/web/src/features/inbox/threads/list/NewChatForm.tsx`, `apps/web/src/features/inbox/threads/list/ThreadList.tsx`, `apps/web/src/features/sales/SalesLiveStrip.tsx`, `apps/web/src/routes/sales/inbox.tsx`, `apps/web/src/components/shell/layout/inbox-route.test.ts`
+Files: `apps/web/src/components/shell/layout/FixedTopBarLayout.tsx`, `apps/web/src/components/shell/layout/TopBarLayout.tsx`, `apps/web/src/components/ui/layout/running-head.tsx`, `apps/web/src/components/shell/layout/inbox-route.ts`, `apps/web/src/features/inbox/threads/list/InboxPage.tsx`, `apps/web/src/features/inbox/threads/list/NewChatForm.tsx`, `apps/web/src/features/inbox/threads/list/ThreadList.tsx`, `apps/web/src/features/sales/live/SalesLiveStrip.tsx`, `apps/web/src/routes/sales/inbox.tsx`, `apps/web/src/components/shell/layout/inbox-route.test.ts`
 
 Scope: FixedTopBarLayout serves both sales and teacher, so the /sales/inbox and /teacher/inbox shells change. The admin shell (AdminLayout.tsx:72) stays as it is: do not edit the shared INBOX_PAGE. Add a new constant for the top-bar layout instead.
 

@@ -3,9 +3,9 @@ import { fireEvent, screen, within } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { history, liveLesson, pupil, teacher } from './academy.fixtures';
 import { renderWithQuery } from './academy.test-utils';
-import { SalesLive } from './SalesLive';
-import { SalesTeachers } from './SalesTeachers';
-import { SubscriptionHistory } from './SubscriptionHistory';
+import { SalesLive } from './live/SalesLive';
+import { SalesTeachers } from './teachers/SalesTeachers';
+import { SubscriptionHistory } from './subscriptions/SubscriptionHistory';
 
 vi.mock('@/lib/i18n/i18n', async (orig) => ({ ...(await orig<object>()), t: en }));
 vi.mock('@/lib/i18n/locale', async (orig) => ({ ...(await orig<object>()), locale: 'en' }));

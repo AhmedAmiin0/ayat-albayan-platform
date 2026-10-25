@@ -11,7 +11,7 @@ vi.mock('@/features/auth/use-permissions', () => ({ usePermissions: () => ({ per
 vi.mock('@tanstack/react-router', async () => ({ Link: (await import('@/features/dashboard/link-mock')).Link }));
 vi.mock('@/features/subscriptions/BalanceCard', () => ({ BalanceCard: () => null }));
 vi.mock('./StudentProfileForm', () => ({ StudentProfileForm: () => null }));
-vi.mock('./SiblingMerge', () => ({ SiblingMerge: () => null }));
+vi.mock('./duplicates/SiblingMerge', () => ({ SiblingMerge: () => null }));
 
 const STUDENT = {
   id: 's1',

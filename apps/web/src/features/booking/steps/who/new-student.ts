@@ -10,7 +10,7 @@ import {
   type Program,
 } from '@ab/shared';
 import type { InboxLead } from '@/features/inbox/api/api';
-import { parseAge } from '@/features/students/create-student';
+import { parseAge } from '@/features/students/create/create-student';
 
 // The lead path's new student + guardian (R-LEAD-06): what step 1 edits, what the lead's
 // «بيانات الطالب» prefills (research-forms item 2) and how it maps onto POST /booking.

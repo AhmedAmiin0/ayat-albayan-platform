@@ -1,4 +1,4 @@
-import { EMPTY_STUDENT, type CreateStudentValues } from '@/features/students/create-student';
+import { EMPTY_STUDENT, type CreateStudentValues } from '@/features/students/create/create-student';
 import { t } from '@/lib/i18n/i18n';
 import type { InboxLead } from '../api/api';
 import { qualForm } from './qualification/qualification-form';

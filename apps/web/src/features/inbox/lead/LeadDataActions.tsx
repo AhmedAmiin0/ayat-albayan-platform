@@ -2,7 +2,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { Button } from '@/components/ui/form/button';
 import { Dialog } from '@/components/ui/overlay/dialog';
-import { CreateStudentDialog } from '@/features/students/CreateStudentDialog';
+import { CreateStudentDialog } from '@/features/students/create/CreateStudentDialog';
 import { t } from '@/lib/i18n/i18n';
 import type { InboxLead } from '../api/api';
 import { registerInitial } from './lead-summary';

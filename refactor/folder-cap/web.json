@@ -63,10 +63,6 @@
     "files": 28,
     "dirs": 0
   },
-  "apps/web/src/features/sales": {
-    "files": 50,
-    "dirs": 0
-  },
   "apps/web/src/features/settings/pages/communications": {
     "files": 15,
     "dirs": 0
@@ -76,8 +72,8 @@
     "dirs": 3
   },
   "apps/web/src/features/students": {
-    "files": 45,
-    "dirs": 0
+    "files": 23,
+    "dirs": 3
   },
   "apps/web/src/features/subscriptions": {
     "files": 17,
