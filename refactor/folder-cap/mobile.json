@@ -11,10 +11,6 @@
     "files": 38,
     "dirs": 0
   },
-  "apps/mobile/src/booking": {
-    "files": 17,
-    "dirs": 4
-  },
   "apps/mobile/src/calendar": {
     "files": 19,
     "dirs": 0
@@ -109,10 +105,6 @@
   },
   "apps/mobile/src/today": {
     "files": 14,
-    "dirs": 0
-  },
-  "apps/mobile/src/trial-date": {
-    "files": 21,
     "dirs": 0
   },
   "apps/mobile/src/users": {

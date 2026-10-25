@@ -5,7 +5,7 @@ import { useBookingMode } from '../../shared/booking-mode';
 import { ConfirmStep } from './ConfirmStep';
 import { ContactStep } from './ContactStep';
 import type { StudentChoice, TrialDraft } from '../lib/draft';
-import { InvoiceStep } from '../../InvoiceStep';
+import { InvoiceStep } from '../../invoice/InvoiceStep';
 import { KindPills } from './KindPills';
 import { kindPatch } from '../lib/package-choice';
 import { PackageStep } from './PackageStep';

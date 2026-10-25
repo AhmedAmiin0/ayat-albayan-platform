@@ -4,7 +4,7 @@ import { ApiError } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
 import { StudentScreen } from './StudentScreen';
-import { historyOf } from '@/trial-date/fixtures';
+import { historyOf } from '@/trial-date/testing/fixtures';
 import { profile } from './test-data';
 
 const mockApiFetch = jest.fn();

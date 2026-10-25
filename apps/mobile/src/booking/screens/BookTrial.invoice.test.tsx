@@ -5,7 +5,7 @@ import { t } from '@/core/lib/i18n/i18n';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { BookTrialScreen } from './BookTrialScreen';
 import { booked, SUN_17 } from '../testing/fixtures';
-import { uploadInvoice } from '../invoice-upload';
+import { uploadInvoice } from '../invoice/invoice-upload';
 import { fakeBookingApi, LEADS_KEY, walkPackageToInvoice } from '../testing/test-utils';
 
 const mockApiFetch = jest.fn();
@@ -16,7 +16,7 @@ jest.mock('@/core/lib/http/api', () => ({
   apiSend: (...mockArgs: unknown[]) => mockApiSend(...mockArgs),
 }));
 jest.mock('@/payments/receipt', () => ({ pickReceipt: jest.fn() }));
-jest.mock('../invoice-upload', () => ({ uploadInvoice: jest.fn() }));
+jest.mock('../invoice/invoice-upload', () => ({ uploadInvoice: jest.fn() }));
 jest.mock('expo-router', () => ({
   router: { back: jest.fn(), canGoBack: () => true, replace: jest.fn(), push: jest.fn() },
   useLocalSearchParams: () => ({ leadId: 'a1', phone: '+966552147730', name: 'هدى سالم', mode: 'subscribe' }),

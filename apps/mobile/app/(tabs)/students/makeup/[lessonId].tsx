@@ -1,1 +1,1 @@
-export { MakeupScreen as default } from '@/booking/MakeupScreen';
+export { MakeupScreen as default } from '@/booking/makeup/MakeupScreen';

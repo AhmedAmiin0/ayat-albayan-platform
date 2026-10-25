@@ -3,7 +3,7 @@ import { ScrollView } from 'react-native';
 import { useHolds } from '@/auth/use-permissions';
 import { useSalesFamily } from '@/sales-subscribe/family';
 import { SalesChatMoney } from '@/sales-subscribe/SalesChatMoney';
-import { SalesTrialPills } from '@/trial-date/SalesTrialPills';
+import { SalesTrialPills } from '@/trial-date/components/SalesTrialPills';
 import { RegisterFromChat } from './RegisterFromChat';
 import { registerHref } from './register-href';
 
