@@ -1,7 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { AssistantHome } from '@/features/classroom/sessions/AssistantHome';
-import { InternalMeetingButton } from '@/features/meetings/InternalMeetingButton';
-import { InternalMeetingsList } from '@/features/meetings/InternalMeetingsList';
+import { InternalMeetingButton } from '@/features/meetings/internal/InternalMeetingButton';
+import { InternalMeetingsList } from '@/features/meetings/internal/InternalMeetingsList';
 
 export const Route = createFileRoute('/assistant/')({ component: AssistantPage });
 

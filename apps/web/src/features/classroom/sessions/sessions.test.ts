@@ -1,6 +1,6 @@
 import type { LessonStatus } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
-import { lessonAt } from '@/features/dashboard/today-fixture';
+import { lessonAt } from '@/features/dashboard/today/today-fixture';
 import { t } from '@/lib/i18n/i18n';
 import { groupOf, groupSessions, sessionChip } from './sessions';
 

@@ -1,0 +1,256 @@
+{
+  "id": "b14b",
+  "seq": 56,
+  "moves": [
+    {
+      "from": "apps/web/src/features/dashboard/Bar.*",
+      "to": "apps/web/src/features/dashboard/shared/"
+    },
+    {
+      "from": "apps/web/src/features/dashboard/SortableTh*",
+      "to": "apps/web/src/features/dashboard/shared/"
+    },
+    {
+      "from": "apps/web/src/features/dashboard/hand-sort*",
+      "to": "apps/web/src/features/dashboard/shared/"
+    },
+    {
+      "from": "apps/web/src/features/dashboard/format.*",
+      "to": "apps/web/src/features/dashboard/shared/"
+    },
+    {
+      "from": "apps/web/src/features/dashboard/Today*",
+      "to": "apps/web/src/features/dashboard/today/"
+    },
+    {
+      "from": "apps/web/src/features/dashboard/today*",
+      "to": "apps/web/src/features/dashboard/today/"
+    },
+    {
+      "from": "apps/web/src/features/dashboard/PendingReportsList*",
+      "to": "apps/web/src/features/dashboard/today/"
+    },
+    {
+      "from": "apps/web/src/features/dashboard/UnpaidList*",
+      "to": "apps/web/src/features/dashboard/today/"
+    },
+    {
+      "from": "apps/web/src/features/dashboard/LessonsByStatus*",
+      "to": "apps/web/src/features/dashboard/today/"
+    },
+    {
+      "from": "apps/web/src/features/dashboard/TeacherLoad*",
+      "to": "apps/web/src/features/dashboard/today/"
+    },
+    {
+      "from": "apps/web/src/features/dashboard/WeekSection*",
+      "to": "apps/web/src/features/dashboard/today/"
+    },
+    {
+      "from": "apps/web/src/features/dashboard/WorkPanel*",
+      "to": "apps/web/src/features/dashboard/work/"
+    },
+    {
+      "from": "apps/web/src/features/dashboard/work-text*",
+      "to": "apps/web/src/features/dashboard/work/"
+    },
+    {
+      "from": "apps/web/src/features/dashboard/TasksList*",
+      "to": "apps/web/src/features/dashboard/work/"
+    },
+    {
+      "from": "apps/web/src/features/dashboard/RecentInbox*",
+      "to": "apps/web/src/features/dashboard/work/"
+    },
+    {
+      "from": "apps/web/src/features/dashboard/QuickActions*",
+      "to": "apps/web/src/features/dashboard/work/"
+    },
+    {
+      "from": "apps/web/src/features/dashboard/FinanceByMonth*",
+      "to": "apps/web/src/features/dashboard/finance/"
+    },
+    {
+      "from": "apps/web/src/features/dashboard/FinanceTotals*",
+      "to": "apps/web/src/features/dashboard/finance/"
+    },
+    {
+      "from": "apps/web/src/features/dashboard/ExpensesByCategory*",
+      "to": "apps/web/src/features/dashboard/finance/"
+    },
+    {
+      "from": "apps/web/src/features/dashboard/finance-notes*",
+      "to": "apps/web/src/features/dashboard/finance/"
+    },
+    {
+      "from": "apps/web/src/features/dashboard/FunnelChart*",
+      "to": "apps/web/src/features/dashboard/funnel/"
+    },
+    {
+      "from": "apps/web/src/features/dashboard/funnel*",
+      "to": "apps/web/src/features/dashboard/funnel/"
+    },
+    {
+      "from": "apps/web/src/features/dashboard/SourceTable*",
+      "to": "apps/web/src/features/dashboard/funnel/"
+    },
+    {
+      "from": "apps/web/src/features/dashboard/KpiStrip*",
+      "to": "apps/web/src/features/dashboard/funnel/"
+    },
+    {
+      "from": "apps/web/src/features/dashboard/kpis*",
+      "to": "apps/web/src/features/dashboard/funnel/"
+    }
+  ],
+  "files": [
+    [
+      "apps/web/src/features/dashboard/Bar.tsx",
+      "apps/web/src/features/dashboard/shared/Bar.tsx"
+    ],
+    [
+      "apps/web/src/features/dashboard/ExpensesByCategory.tsx",
+      "apps/web/src/features/dashboard/finance/ExpensesByCategory.tsx"
+    ],
+    [
+      "apps/web/src/features/dashboard/finance-notes.en.test.ts",
+      "apps/web/src/features/dashboard/finance/finance-notes.en.test.ts"
+    ],
+    [
+      "apps/web/src/features/dashboard/finance-notes.test.ts",
+      "apps/web/src/features/dashboard/finance/finance-notes.test.ts"
+    ],
+    [
+      "apps/web/src/features/dashboard/finance-notes.ts",
+      "apps/web/src/features/dashboard/finance/finance-notes.ts"
+    ],
+    [
+      "apps/web/src/features/dashboard/FinanceByMonth.tsx",
+      "apps/web/src/features/dashboard/finance/FinanceByMonth.tsx"
+    ],
+    [
+      "apps/web/src/features/dashboard/FinanceTotals.tsx",
+      "apps/web/src/features/dashboard/finance/FinanceTotals.tsx"
+    ],
+    [
+      "apps/web/src/features/dashboard/format.test.ts",
+      "apps/web/src/features/dashboard/shared/format.test.ts"
+    ],
+    [
+      "apps/web/src/features/dashboard/format.ts",
+      "apps/web/src/features/dashboard/shared/format.ts"
+    ],
+    [
+      "apps/web/src/features/dashboard/funnel.test.ts",
+      "apps/web/src/features/dashboard/funnel/funnel.test.ts"
+    ],
+    [
+      "apps/web/src/features/dashboard/funnel.ts",
+      "apps/web/src/features/dashboard/funnel/funnel.ts"
+    ],
+    [
+      "apps/web/src/features/dashboard/FunnelChart.tsx",
+      "apps/web/src/features/dashboard/funnel/FunnelChart.tsx"
+    ],
+    [
+      "apps/web/src/features/dashboard/hand-sort.test.tsx",
+      "apps/web/src/features/dashboard/shared/hand-sort.test.tsx"
+    ],
+    [
+      "apps/web/src/features/dashboard/hand-sort.ts",
+      "apps/web/src/features/dashboard/shared/hand-sort.ts"
+    ],
+    [
+      "apps/web/src/features/dashboard/kpis.test.ts",
+      "apps/web/src/features/dashboard/funnel/kpis.test.ts"
+    ],
+    [
+      "apps/web/src/features/dashboard/kpis.ts",
+      "apps/web/src/features/dashboard/funnel/kpis.ts"
+    ],
+    [
+      "apps/web/src/features/dashboard/KpiStrip.tsx",
+      "apps/web/src/features/dashboard/funnel/KpiStrip.tsx"
+    ],
+    [
+      "apps/web/src/features/dashboard/LessonsByStatus.tsx",
+      "apps/web/src/features/dashboard/today/LessonsByStatus.tsx"
+    ],
+    [
+      "apps/web/src/features/dashboard/PendingReportsList.tsx",
+      "apps/web/src/features/dashboard/today/PendingReportsList.tsx"
+    ],
+    [
+      "apps/web/src/features/dashboard/QuickActions.tsx",
+      "apps/web/src/features/dashboard/work/QuickActions.tsx"
+    ],
+    [
+      "apps/web/src/features/dashboard/RecentInbox.tsx",
+      "apps/web/src/features/dashboard/work/RecentInbox.tsx"
+    ],
+    [
+      "apps/web/src/features/dashboard/SortableTh.tsx",
+      "apps/web/src/features/dashboard/shared/SortableTh.tsx"
+    ],
+    [
+      "apps/web/src/features/dashboard/SourceTable.tsx",
+      "apps/web/src/features/dashboard/funnel/SourceTable.tsx"
+    ],
+    [
+      "apps/web/src/features/dashboard/TasksList.test.tsx",
+      "apps/web/src/features/dashboard/work/TasksList.test.tsx"
+    ],
+    [
+      "apps/web/src/features/dashboard/TasksList.tsx",
+      "apps/web/src/features/dashboard/work/TasksList.tsx"
+    ],
+    [
+      "apps/web/src/features/dashboard/TeacherLoad.tsx",
+      "apps/web/src/features/dashboard/today/TeacherLoad.tsx"
+    ],
+    [
+      "apps/web/src/features/dashboard/today-fixture.ts",
+      "apps/web/src/features/dashboard/today/today-fixture.ts"
+    ],
+    [
+      "apps/web/src/features/dashboard/today.test.ts",
+      "apps/web/src/features/dashboard/today/today.test.ts"
+    ],
+    [
+      "apps/web/src/features/dashboard/today.ts",
+      "apps/web/src/features/dashboard/today/today.ts"
+    ],
+    [
+      "apps/web/src/features/dashboard/TodayKpis.tsx",
+      "apps/web/src/features/dashboard/today/TodayKpis.tsx"
+    ],
+    [
+      "apps/web/src/features/dashboard/TodayLessons.tsx",
+      "apps/web/src/features/dashboard/today/TodayLessons.tsx"
+    ],
+    [
+      "apps/web/src/features/dashboard/UnpaidList.test.tsx",
+      "apps/web/src/features/dashboard/today/UnpaidList.test.tsx"
+    ],
+    [
+      "apps/web/src/features/dashboard/UnpaidList.tsx",
+      "apps/web/src/features/dashboard/today/UnpaidList.tsx"
+    ],
+    [
+      "apps/web/src/features/dashboard/WeekSection.tsx",
+      "apps/web/src/features/dashboard/today/WeekSection.tsx"
+    ],
+    [
+      "apps/web/src/features/dashboard/work-text.test.ts",
+      "apps/web/src/features/dashboard/work/work-text.test.ts"
+    ],
+    [
+      "apps/web/src/features/dashboard/work-text.ts",
+      "apps/web/src/features/dashboard/work/work-text.ts"
+    ],
+    [
+      "apps/web/src/features/dashboard/WorkPanel.tsx",
+      "apps/web/src/features/dashboard/work/WorkPanel.tsx"
+    ]
+  ]
+}

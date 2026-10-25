@@ -9,17 +9,17 @@ import { MoneyKpis } from '@/features/finance/MoneyKpis';
 import { t } from '@/lib/i18n/i18n';
 import { useJoinWindow } from '@/lib/settings/public-config';
 import { summaryQuery, workQuery } from './api';
-import { KpiStrip } from './KpiStrip';
+import { KpiStrip } from './funnel/KpiStrip';
 import { PeriodSection } from './PeriodSection';
-import { QuickActions } from './QuickActions';
-import { RecentInbox } from './RecentInbox';
+import { QuickActions } from './work/QuickActions';
+import { RecentInbox } from './work/RecentInbox';
 import { periodOf, riyadhToday, thisWeek, type DashboardSearch } from './search';
-import { todayCounts } from './today';
-import { TodayKpis } from './TodayKpis';
-import { TodayLessons } from './TodayLessons';
+import { todayCounts } from './today/today';
+import { TodayKpis } from './today/TodayKpis';
+import { TodayLessons } from './today/TodayLessons';
 import type { DayRange } from './types';
-import { WeekSection } from './WeekSection';
-import { WorkPanel } from './WorkPanel';
+import { WeekSection } from './today/WeekSection';
+import { WorkPanel } from './work/WorkPanel';
 
 export interface DashboardPageProps {
   search: DashboardSearch;

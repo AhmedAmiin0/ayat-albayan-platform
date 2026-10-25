@@ -11,10 +11,6 @@
     "files": 33,
     "dirs": 0
   },
-  "apps/web/src/features/dashboard": {
-    "files": 35,
-    "dirs": 0
-  },
   "apps/web/src/features/feedback": {
     "files": 16,
     "dirs": 0
@@ -37,10 +33,6 @@
   },
   "apps/web/src/features/leads": {
     "files": 16,
-    "dirs": 0
-  },
-  "apps/web/src/features/meetings": {
-    "files": 35,
     "dirs": 0
   },
   "apps/web/src/features/notification-rules": {
