@@ -64,3 +64,15 @@ test('without settings.read: no «مزامنة Google» row', async () => {
   await screen.findByText(sendLine(t.numbers.chips.enabled));
   expect(screen.queryByRole('button', { name: t.googleSync.mobile.title })).toBeNull();
 });
+
+test('«الردود السريعة» shows only with saved_replies.manage and opens the shared list', async () => {
+  await renderWithQuery(<SettingsScreen />);
+  await screen.findByRole('button', { name: t.mobileValues.title });
+  expect(screen.queryByRole('button', { name: t.savedReplies.title })).toBeNull();
+  mockApiFetch.mockImplementation(async (p: string) =>
+    p === '/auth/me' ? { role: 'admin', permissions: ['settings.read', 'saved_replies.manage'] } : settings,
+  );
+  await renderWithQuery(<SettingsScreen />);
+  await fireEvent.press(await screen.findByRole('button', { name: t.savedReplies.title }));
+  expect(router.push).toHaveBeenCalledWith('/more/ops/settings/saved-replies');
+});

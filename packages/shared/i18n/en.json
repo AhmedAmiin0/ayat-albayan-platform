@@ -4524,14 +4524,16 @@
       "students.check_registration": "Check a student's registration",
       "subscriptions.set_start_date": "Set the subscription start date",
       "numbers.manage": "Manage WhatsApp numbers",
-      "notifications.manage": "Manage notifications"
+      "notifications.manage": "Manage notifications",
+      "saved_replies.manage": "Manage shared quick replies"
     },
     "hints": {
       "students.check_registration": "Search by the guardian's phone or the student's name or code; shows only the name, code, status and teacher.",
       "subscriptions.set_start_date": "Pick the package's start day, including a past date for a student who started before the platform. Without it the package starts on the default day.",
       "inbox.lists": "Create, rename and delete the shared chat lists and add chats to them. Nothing is ever sent because of a list.",
       "numbers.manage": "Add and edit WhatsApp numbers, save their credentials, import the current setup and change the setup source. Does not open sending.",
-      "notifications.manage": "Turn notifications on or off and set their timing, channels and sending number. Does not open sending."
+      "notifications.manage": "Turn notifications on or off and set their timing, channels and sending number. Does not open sending.",
+      "saved_replies.manage": "Add, edit, delete and reorder the shared quick replies. Everyone manages their own replies without this permission."
     },
     "page": {
       "title": "Roles and permissions",
@@ -5849,7 +5851,8 @@
       "timing": "Message timing",
       "templates": "Templates",
       "overview": "Overview",
-      "safety": "Safety"
+      "safety": "Safety",
+      "savedReplies": "Quick replies"
     },
     "sendingNow": "Sending right now",
     "sendingState": "Message sending: {state}",
@@ -6008,6 +6011,66 @@
         "other": "and {n} other numbers"
       }
     }
+  },
+  "savedReplies": {
+    "title": "Quick replies",
+    "open": "Quick replies",
+    "closedHint": "Quick replies are available within 24 hours of the customer's last message",
+    "listLabel": "Saved replies",
+    "tabShared": "Shared",
+    "tabMine": "My replies",
+    "search": "Search the title or text",
+    "emptyShared": "No shared replies yet.",
+    "emptyMine": "You have not saved any reply yet. Add one you use often.",
+    "noMatch": "No replies match your search.",
+    "keyboardHint": "↑ ↓ to move, Enter to insert, Esc to close",
+    "add": "New reply",
+    "addTitle": "New reply",
+    "editTitle": "Edit reply",
+    "editReply": "Edit «{title}»",
+    "deleteReply": "Delete «{title}»",
+    "deleteTitle": "Delete the reply «{title}»",
+    "deleteConfirm": "The reply and its attachment are deleted for good. Messages already sent are not affected.",
+    "deleteYes": "Yes, delete",
+    "fieldTitle": "Title",
+    "fieldBody": "Reply text",
+    "placeholdersLabel": "Insert a placeholder",
+    "placeholdersHint": "A placeholder becomes the name when the reply is inserted, and is removed when the name is unknown.",
+    "placeholders": {
+      "name": "Contact name",
+      "student": "Student name",
+      "assistant": "Your name"
+    },
+    "attachment": "Attachment (optional)",
+    "attach": "Attach an image or PDF",
+    "attachReplace": "Replace the attachment",
+    "attachRemove": "Remove the attachment",
+    "attachUploading": "Uploading the file…",
+    "attachHint": "A JPEG or PNG image or a PDF, sent after the reply text.",
+    "moveUp": "Move «{title}» up",
+    "moveDown": "Move «{title}» down",
+    "colTitle": "Title",
+    "colPreview": "Text",
+    "colAttachment": "Attachment",
+    "colOrder": "Order",
+    "hasAttachment": "Has an attachment",
+    "staged": "Sent after the text",
+    "stagedRemove": "Remove the attachment «{name}»",
+    "manageIntro": "Replies everyone using the chats can see. Each user manages their own replies from «My replies» in the chat.",
+    "readOnly": "You do not have permission to edit shared replies.",
+    "saved": "Reply saved.",
+    "deleted": "Reply deleted.",
+    "loadError": "Could not load the replies.",
+    "errors": {
+      "saved_reply_not_found": "This reply no longer exists.",
+      "saved_replies_forbidden": "You do not have permission for this.",
+      "generic": "Could not save. Please try again."
+    },
+    "web": {
+      "retryFile": "Resend the attachment",
+      "fileFailed": "The attachment was not sent: {reason}"
+    },
+    "retry": "Try again"
   },
   "trialDate": {
     "action": "New trial date",

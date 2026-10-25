@@ -86,7 +86,12 @@ export function ThreadScreen() {
           {isOwnThread(mode, thread) ? (
             <OwnThreadNote />
           ) : (
-            <Composer phone={phone} thread={thread} lessons={query.data.pages[0]?.lessons ?? []} />
+            <Composer
+              phone={phone}
+              thread={thread}
+              lessons={query.data.pages[0]?.lessons ?? []}
+              student={query.data.pages[0]?.people?.students[0]?.name ?? null}
+            />
           )}
         </KeyboardAvoidingView>
       ) : query.isError ? (

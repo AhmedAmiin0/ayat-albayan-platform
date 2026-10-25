@@ -9,6 +9,7 @@ import type { CommunicationsTab } from '../page-search';
 import { NumbersTab } from './NumbersTab';
 import { OverviewTab } from './OverviewTab';
 import { SafetyTab } from './SafetyTab';
+import { SavedRepliesTab } from './SavedRepliesTab';
 import { TemplatesTab } from './TemplatesTab';
 
 /** The id prefix of «التواصل»'s tabs and panel (tabIds). */
@@ -34,6 +35,7 @@ function TabBody({ tab, audience, settings, drafts, onNote }: TabBodyProps) {
   if (tab === 'numbers') return <NumbersTab onNote={onNote} />;
   if (tab === 'catalogue') return <RulesSection onSaved={onNote} drafts={drafts} audience={audience} />;
   if (tab === 'templates') return <TemplatesTab />;
+  if (tab === 'savedReplies') return <SavedRepliesTab />;
   if (tab === 'safety') return <SafetyTab settings={settings} onNote={onNote} />;
   return <OverviewTab settings={settings} />;
 }

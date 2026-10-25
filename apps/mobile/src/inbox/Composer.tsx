@@ -1,96 +1,85 @@
 import { sessionWindowOpen, type ThreadLesson, type ThreadView } from '@ab/shared';
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import { View } from 'react-native';
-import { t } from '@/lib/i18n';
-import { requestId } from '@/lib/request-id';
-import { useTheme } from '@/theme';
-import { Button } from '@/ui/Button';
-import { IconButton } from '@/ui/IconButton';
-import { AttachFile } from './AttachFile';
-import { TemplateIcon, SendIcon } from './chat-icons';
-import { ClosedNote } from './ClosedNote';
-import { ComposerInput } from './ComposerInput';
+import { ClosedRow } from './ClosedRow';
 import { ComposerNotes } from './ComposerNotes';
 import { ErrorLine } from './ErrorLine';
 import { GateNote } from './GateNote';
-import { sendError } from './message-text';
+import { OpenRow } from './OpenRow';
+import { SavedReplyChip } from './saved-replies/SavedReplyChip';
+import { SavedReplyPicker } from './saved-replies/SavedReplyPicker';
+import { useSavedReplyDraft } from './saved-replies/use-saved-reply';
 import { TemplatePicker } from './TemplatePicker';
-import { type Outgoing, useSendMessage } from './use-thread';
-
-/** One template draft = one key + params: re-sending it after an error keeps its clientRequestId. */
-const draftOf = (out: Outgoing): string =>
-  out.kind === 'template' ? JSON.stringify([out.key, out.params, out.lessonId]) : '';
+import { useThreadMode } from './thread-mode';
+import { errorLines, useComposerSend } from './use-composer-send';
 
 /**
- * Reply box (R-MOB-02, R-MSG-03), one WhatsApp-like row: [template] [file] [text] [send]. Within
+ * Reply box (R-MOB-02, R-MSG-03), one WhatsApp-like row: [template] [replies] [file] [text] [send]. Within
  * 24 h of their last message: free text, a photo or PDF, plus a template if wanted. After that WhatsApp allows only an
  * approved template, so the row says why (ClosedNote) beside «أرسل قالبًا». The window is checked
  * against the device clock on every render (a refetch, a keystroke), not only when the thread loaded.
+ * «الردود السريعة» (owner 2026-10-25, staff only): the button or «/» at a line's start opens the
+ * picker; a pick fills the box and stages its file (the chip). «أرسل» sends the text, then the file.
  */
 export function Composer({
   phone,
   thread,
   lessons,
+  student,
 }: {
   phone: string;
   thread: ThreadView | null;
   lessons: ThreadLesson[];
+  /** The family's first student: a saved reply's {student}. */
+  student?: string | null;
 }) {
-  const { color } = useTheme();
-  const send = useSendMessage(phone);
+  const staff = useThreadMode().kind !== 'teacher';
   const [text, setText] = useState('');
-  // clientRequestId: kept while the same text is retried, so a lost answer never sends twice.
-  const [draftId, setDraftId] = useState(requestId);
-  // The same for a template: the same template + params sent again (after «جرّب تاني») reuses its id.
-  const templateDraft = useRef<{ draft: string; id: string } | null>(null);
+  const replies = useSavedReplyDraft({ text, setText, enabled: staff });
+  const { sendTemplate, sendText, renew, errors, pending } = useComposerSend({ phone, text, setText, ...replies });
   const [picking, setPicking] = useState(false);
   // Why a photo / PDF did not go (AttachFile), until the next pick.
   const [fileError, setFileError] = useState<string | null>(null);
   const open = sessionWindowOpen(thread?.last_inbound_at ?? null, new Date());
   const pick = () => setPicking(true);
-
-  const sendText = () => {
-    const body = text.trim();
-    if (!body) return;
-    setText('');
-    send.mutate(
-      { out: { kind: 'text', text: body }, id: draftId },
-      {
-        onSuccess: () => setDraftId(requestId()),
-        onError: () => setText((now) => now || body),
-      },
-    );
+  const type = (v: string) => {
+    replies.typed(v);
+    setText(v);
+    renew();
   };
+  const lines = errorLines({ errors, fileError, open });
 
   return (
     <View style={{ gap: 4, paddingBottom: 8 }}>
-      {send.isError ? <ErrorLine message={sendError(send.error)} /> : null}
-      {fileError && open ? <ErrorLine message={fileError} /> : null}
+      {lines.map((line) => (
+        <ErrorLine key={line} message={line} />
+      ))}
       <GateNote />
       <ComposerNotes thread={thread} open={open} />
+      {open && replies.staged ? <SavedReplyChip file={replies.staged.file} onRemove={replies.clearStaged} /> : null}
       {open ? (
-        <View style={{ flexDirection: 'row', alignItems: 'flex-end', gap: 6 }}>
-          <IconButton label={t.inbox.composer.sendTemplate} onPress={pick}>
-            <TemplateIcon color={color.lapis} />
-          </IconButton>
-          <AttachFile phone={phone} onError={setFileError} />
-          <ComposerInput
-            value={text}
-            onChange={(v) => {
-              setText(v);
-              setDraftId(requestId());
-            }}
-          />
-          <IconButton variant="filled" label={t.inbox.composer.send} onPress={sendText}>
-            <SendIcon color={color.onLapis} />
-          </IconButton>
-        </View>
+        <OpenRow
+          phone={phone}
+          text={text}
+          onText={type}
+          staff={staff}
+          onTemplate={pick}
+          onReplies={replies.open}
+          onFileError={setFileError}
+          onSend={sendText}
+          sending={pending}
+        />
       ) : (
-        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
-          <ClosedNote known={thread !== null} />
-          <Button label={t.inbox.composer.sendTemplate} onPress={pick} />
-        </View>
+        <ClosedRow known={thread !== null} staff={staff} onTemplate={pick} />
       )}
+      {replies.picker ? (
+        <SavedReplyPicker
+          initialQuery=""
+          contact={{ thread, student }}
+          onClose={replies.close}
+          onFill={replies.fill}
+        />
+      ) : null}
       <TemplatePicker
         visible={picking}
         lessons={lessons}
@@ -99,11 +88,7 @@ export function Composer({
         onClose={() => setPicking(false)}
         onSend={(out) => {
           setPicking(false);
-          const draft = draftOf(out);
-          const last = templateDraft.current;
-          const id = last?.draft === draft ? last.id : requestId();
-          templateDraft.current = { draft, id };
-          send.mutate({ out, id }, { onSuccess: () => (templateDraft.current = null) });
+          sendTemplate(out);
         }}
       />
     </View>
