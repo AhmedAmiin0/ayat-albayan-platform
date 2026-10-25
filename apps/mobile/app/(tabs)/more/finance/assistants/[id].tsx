@@ -1,1 +1,1 @@
-export { AssistantDetailScreen as default } from '@/assistants/AssistantDetailScreen';
+export { AssistantDetailScreen as default } from '@/assistants/screens/AssistantDetailScreen';

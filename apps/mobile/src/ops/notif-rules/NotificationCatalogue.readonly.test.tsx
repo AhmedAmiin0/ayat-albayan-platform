@@ -3,7 +3,7 @@ import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
 import { catalogue } from '../shared/fixtures';
 import { NotificationCatalogue } from '../settings/NotificationCatalogue';
-import { answer, catalogueV2, MANAGER, READER, withUnknownBlocker } from './rules-fixtures';
+import { answer, catalogueV2, MANAGER, READER, withUnknownBlocker } from './testing/rules-fixtures';
 
 const mockApiFetch = jest.fn();
 jest.mock('@/core/lib/http/api', () => ({

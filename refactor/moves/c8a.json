@@ -1,0 +1,328 @@
+{
+  "id": "c8a",
+  "seq": 87,
+  "moves": [
+    {
+      "from": "apps/mobile/src/assistants/AssistantDetailScreen*",
+      "to": "apps/mobile/src/assistants/screens/"
+    },
+    {
+      "from": "apps/mobile/src/assistants/AssistantsScreen*",
+      "to": "apps/mobile/src/assistants/screens/"
+    },
+    {
+      "from": "apps/mobile/src/assistants/AssistantItem*",
+      "to": "apps/mobile/src/assistants/list/"
+    },
+    {
+      "from": "apps/mobile/src/assistants/AssistantPills*",
+      "to": "apps/mobile/src/assistants/list/"
+    },
+    {
+      "from": "apps/mobile/src/assistants/AssistantTabBody*",
+      "to": "apps/mobile/src/assistants/list/"
+    },
+    {
+      "from": "apps/mobile/src/assistants/AssistantsList*",
+      "to": "apps/mobile/src/assistants/list/"
+    },
+    {
+      "from": "apps/mobile/src/assistants/StatusPills*",
+      "to": "apps/mobile/src/assistants/list/"
+    },
+    {
+      "from": "apps/mobile/src/assistants/CurrencyPills*",
+      "to": "apps/mobile/src/assistants/list/"
+    },
+    {
+      "from": "apps/mobile/src/assistants/CommissionFacts*",
+      "to": "apps/mobile/src/assistants/commission/"
+    },
+    {
+      "from": "apps/mobile/src/assistants/CommissionFields*",
+      "to": "apps/mobile/src/assistants/commission/"
+    },
+    {
+      "from": "apps/mobile/src/assistants/CommissionItem*",
+      "to": "apps/mobile/src/assistants/commission/"
+    },
+    {
+      "from": "apps/mobile/src/assistants/CommissionLedger*",
+      "to": "apps/mobile/src/assistants/commission/"
+    },
+    {
+      "from": "apps/mobile/src/assistants/commission-style*",
+      "to": "apps/mobile/src/assistants/commission/"
+    },
+    {
+      "from": "apps/mobile/src/assistants/CurrencyTotalsLine*",
+      "to": "apps/mobile/src/assistants/commission/"
+    },
+    {
+      "from": "apps/mobile/src/assistants/MonthFilter*",
+      "to": "apps/mobile/src/assistants/commission/"
+    },
+    {
+      "from": "apps/mobile/src/assistants/SalaryFields*",
+      "to": "apps/mobile/src/assistants/terms/"
+    },
+    {
+      "from": "apps/mobile/src/assistants/StartDayPicker*",
+      "to": "apps/mobile/src/assistants/terms/"
+    },
+    {
+      "from": "apps/mobile/src/assistants/TermsEditor*",
+      "to": "apps/mobile/src/assistants/terms/"
+    },
+    {
+      "from": "apps/mobile/src/assistants/TermsView*",
+      "to": "apps/mobile/src/assistants/terms/"
+    },
+    {
+      "from": "apps/mobile/src/assistants/terms-form*",
+      "to": "apps/mobile/src/assistants/terms/"
+    },
+    {
+      "from": "apps/mobile/src/assistants/GenerateBar*",
+      "to": "apps/mobile/src/assistants/statements/components/"
+    },
+    {
+      "from": "apps/mobile/src/assistants/PayStatementForm*",
+      "to": "apps/mobile/src/assistants/statements/components/"
+    },
+    {
+      "from": "apps/mobile/src/assistants/ReasonConfirm*",
+      "to": "apps/mobile/src/assistants/statements/components/"
+    },
+    {
+      "from": "apps/mobile/src/assistants/StatementActionBar*",
+      "to": "apps/mobile/src/assistants/statements/components/"
+    },
+    {
+      "from": "apps/mobile/src/assistants/StatementButtons*",
+      "to": "apps/mobile/src/assistants/statements/components/"
+    },
+    {
+      "from": "apps/mobile/src/assistants/StatementItem*",
+      "to": "apps/mobile/src/assistants/statements/components/"
+    },
+    {
+      "from": "apps/mobile/src/assistants/StatementTotals*",
+      "to": "apps/mobile/src/assistants/statements/components/"
+    },
+    {
+      "from": "apps/mobile/src/assistants/StatementsPanel*",
+      "to": "apps/mobile/src/assistants/statements/components/"
+    },
+    {
+      "from": "apps/mobile/src/assistants/generate-targets*",
+      "to": "apps/mobile/src/assistants/statements/hooks/"
+    },
+    {
+      "from": "apps/mobile/src/assistants/statement-can*",
+      "to": "apps/mobile/src/assistants/statements/hooks/"
+    },
+    {
+      "from": "apps/mobile/src/assistants/totals*",
+      "to": "apps/mobile/src/assistants/statements/hooks/"
+    },
+    {
+      "from": "apps/mobile/src/assistants/upload-receipt*",
+      "to": "apps/mobile/src/assistants/statements/hooks/"
+    },
+    {
+      "from": "apps/mobile/src/assistants/use-pay-statement*",
+      "to": "apps/mobile/src/assistants/statements/hooks/"
+    },
+    {
+      "from": "apps/mobile/src/assistants/receipt-link*",
+      "to": "apps/mobile/src/assistants/statements/hooks/"
+    },
+    {
+      "from": "apps/mobile/src/assistants/api*",
+      "to": "apps/mobile/src/assistants/api/"
+    },
+    {
+      "from": "apps/mobile/src/assistants/errors*",
+      "to": "apps/mobile/src/assistants/api/"
+    },
+    {
+      "from": "apps/mobile/src/assistants/fixtures*",
+      "to": "apps/mobile/src/assistants/api/"
+    },
+    {
+      "from": "apps/mobile/src/assistants/mutations*",
+      "to": "apps/mobile/src/assistants/api/"
+    }
+  ],
+  "files": [
+    [
+      "apps/mobile/src/assistants/api.ts",
+      "apps/mobile/src/assistants/api/api.ts"
+    ],
+    [
+      "apps/mobile/src/assistants/AssistantDetailScreen.test.tsx",
+      "apps/mobile/src/assistants/screens/AssistantDetailScreen.test.tsx"
+    ],
+    [
+      "apps/mobile/src/assistants/AssistantDetailScreen.tsx",
+      "apps/mobile/src/assistants/screens/AssistantDetailScreen.tsx"
+    ],
+    [
+      "apps/mobile/src/assistants/AssistantItem.tsx",
+      "apps/mobile/src/assistants/list/AssistantItem.tsx"
+    ],
+    [
+      "apps/mobile/src/assistants/AssistantPills.tsx",
+      "apps/mobile/src/assistants/list/AssistantPills.tsx"
+    ],
+    [
+      "apps/mobile/src/assistants/AssistantsList.tsx",
+      "apps/mobile/src/assistants/list/AssistantsList.tsx"
+    ],
+    [
+      "apps/mobile/src/assistants/AssistantsScreen.test.tsx",
+      "apps/mobile/src/assistants/screens/AssistantsScreen.test.tsx"
+    ],
+    [
+      "apps/mobile/src/assistants/AssistantsScreen.tsx",
+      "apps/mobile/src/assistants/screens/AssistantsScreen.tsx"
+    ],
+    [
+      "apps/mobile/src/assistants/AssistantTabBody.tsx",
+      "apps/mobile/src/assistants/list/AssistantTabBody.tsx"
+    ],
+    [
+      "apps/mobile/src/assistants/commission-style.ts",
+      "apps/mobile/src/assistants/commission/commission-style.ts"
+    ],
+    [
+      "apps/mobile/src/assistants/CommissionFacts.tsx",
+      "apps/mobile/src/assistants/commission/CommissionFacts.tsx"
+    ],
+    [
+      "apps/mobile/src/assistants/CommissionFields.tsx",
+      "apps/mobile/src/assistants/commission/CommissionFields.tsx"
+    ],
+    [
+      "apps/mobile/src/assistants/CommissionItem.tsx",
+      "apps/mobile/src/assistants/commission/CommissionItem.tsx"
+    ],
+    [
+      "apps/mobile/src/assistants/CommissionLedger.tsx",
+      "apps/mobile/src/assistants/commission/CommissionLedger.tsx"
+    ],
+    [
+      "apps/mobile/src/assistants/CurrencyPills.tsx",
+      "apps/mobile/src/assistants/list/CurrencyPills.tsx"
+    ],
+    [
+      "apps/mobile/src/assistants/CurrencyTotalsLine.tsx",
+      "apps/mobile/src/assistants/commission/CurrencyTotalsLine.tsx"
+    ],
+    [
+      "apps/mobile/src/assistants/errors.ts",
+      "apps/mobile/src/assistants/api/errors.ts"
+    ],
+    [
+      "apps/mobile/src/assistants/fixtures.ts",
+      "apps/mobile/src/assistants/api/fixtures.ts"
+    ],
+    [
+      "apps/mobile/src/assistants/generate-targets.ts",
+      "apps/mobile/src/assistants/statements/hooks/generate-targets.ts"
+    ],
+    [
+      "apps/mobile/src/assistants/GenerateBar.tsx",
+      "apps/mobile/src/assistants/statements/components/GenerateBar.tsx"
+    ],
+    [
+      "apps/mobile/src/assistants/MonthFilter.tsx",
+      "apps/mobile/src/assistants/commission/MonthFilter.tsx"
+    ],
+    [
+      "apps/mobile/src/assistants/mutations.ts",
+      "apps/mobile/src/assistants/api/mutations.ts"
+    ],
+    [
+      "apps/mobile/src/assistants/PayStatementForm.tsx",
+      "apps/mobile/src/assistants/statements/components/PayStatementForm.tsx"
+    ],
+    [
+      "apps/mobile/src/assistants/ReasonConfirm.tsx",
+      "apps/mobile/src/assistants/statements/components/ReasonConfirm.tsx"
+    ],
+    [
+      "apps/mobile/src/assistants/receipt-link.ts",
+      "apps/mobile/src/assistants/statements/hooks/receipt-link.ts"
+    ],
+    [
+      "apps/mobile/src/assistants/SalaryFields.tsx",
+      "apps/mobile/src/assistants/terms/SalaryFields.tsx"
+    ],
+    [
+      "apps/mobile/src/assistants/StartDayPicker.tsx",
+      "apps/mobile/src/assistants/terms/StartDayPicker.tsx"
+    ],
+    [
+      "apps/mobile/src/assistants/statement-can.ts",
+      "apps/mobile/src/assistants/statements/hooks/statement-can.ts"
+    ],
+    [
+      "apps/mobile/src/assistants/StatementActionBar.tsx",
+      "apps/mobile/src/assistants/statements/components/StatementActionBar.tsx"
+    ],
+    [
+      "apps/mobile/src/assistants/StatementButtons.tsx",
+      "apps/mobile/src/assistants/statements/components/StatementButtons.tsx"
+    ],
+    [
+      "apps/mobile/src/assistants/StatementItem.tsx",
+      "apps/mobile/src/assistants/statements/components/StatementItem.tsx"
+    ],
+    [
+      "apps/mobile/src/assistants/StatementsPanel.actions.test.tsx",
+      "apps/mobile/src/assistants/statements/components/StatementsPanel.actions.test.tsx"
+    ],
+    [
+      "apps/mobile/src/assistants/StatementsPanel.tsx",
+      "apps/mobile/src/assistants/statements/components/StatementsPanel.tsx"
+    ],
+    [
+      "apps/mobile/src/assistants/StatementTotals.tsx",
+      "apps/mobile/src/assistants/statements/components/StatementTotals.tsx"
+    ],
+    [
+      "apps/mobile/src/assistants/StatusPills.tsx",
+      "apps/mobile/src/assistants/list/StatusPills.tsx"
+    ],
+    [
+      "apps/mobile/src/assistants/terms-form.test.ts",
+      "apps/mobile/src/assistants/terms/terms-form.test.ts"
+    ],
+    [
+      "apps/mobile/src/assistants/terms-form.ts",
+      "apps/mobile/src/assistants/terms/terms-form.ts"
+    ],
+    [
+      "apps/mobile/src/assistants/TermsEditor.tsx",
+      "apps/mobile/src/assistants/terms/TermsEditor.tsx"
+    ],
+    [
+      "apps/mobile/src/assistants/TermsView.tsx",
+      "apps/mobile/src/assistants/terms/TermsView.tsx"
+    ],
+    [
+      "apps/mobile/src/assistants/totals.ts",
+      "apps/mobile/src/assistants/statements/hooks/totals.ts"
+    ],
+    [
+      "apps/mobile/src/assistants/upload-receipt.ts",
+      "apps/mobile/src/assistants/statements/hooks/upload-receipt.ts"
+    ],
+    [
+      "apps/mobile/src/assistants/use-pay-statement.ts",
+      "apps/mobile/src/assistants/statements/hooks/use-pay-statement.ts"
+    ]
+  ]
+}

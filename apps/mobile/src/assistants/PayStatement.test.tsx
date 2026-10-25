@@ -2,8 +2,8 @@ import { Linking } from 'react-native';
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
-import { ALL, ASSISTANT, routes, statement } from './fixtures';
-import { StatementsPanel } from './StatementsPanel';
+import { ALL, ASSISTANT, routes, statement } from './api/fixtures';
+import { StatementsPanel } from './statements/components/StatementsPanel';
 
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();
