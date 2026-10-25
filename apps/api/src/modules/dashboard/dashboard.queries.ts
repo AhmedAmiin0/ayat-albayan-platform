@@ -3,7 +3,7 @@ import type { PostgrestError } from '@supabase/supabase-js';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../common/db/db.module';
 import { readAll } from '../scheduling/read-all';
-import { dbError } from '../teachers/http';
+import { dbError } from '../../common/http/http';
 import type { Window } from './finance.queries';
 
 const HOURS_48 = 48 * 3_600_000;

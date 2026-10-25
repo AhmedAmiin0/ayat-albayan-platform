@@ -1,19 +1,19 @@
 import { isIntegrationKey } from '@ab/shared';
 import { z } from 'zod';
-import { numbersOverlay } from './common/integrations/numbers-overlay';
+import { numbersOverlay } from '../../common/integrations/numbers-overlay';
 import { blankIsUnset, optionalSecret } from './env.blank';
-import { recipientList } from './env.recipient-list';
+import { recipientList } from './whatsapp/env.recipient-list';
 import { envCandidates } from './env.sources';
 import { GOOGLE_SHAPE } from './env.google';
-import { CRM_SHAPE } from './env.crm';
-import { KAPSO_SHAPE } from './env.kapso';
-import type { LineMode } from './env.whatsapp';
+import { CRM_SHAPE } from './whatsapp/env.crm';
+import { KAPSO_SHAPE } from './whatsapp/env.kapso';
+import type { LineMode } from './whatsapp/env.whatsapp';
 import { WEB_PUSH_SHAPE } from './env.web-push';
 
-export { whatsappEnv, sendingAllowed, lineEnvs, appSecrets, lineNumbers, lineProvider } from './env.whatsapp';
+export { whatsappEnv, sendingAllowed, lineEnvs, appSecrets, lineNumbers, lineProvider } from './whatsapp/env.whatsapp';
 export { lineGaps, duplicatePhone, bootGaps, DUPLICATE_CHAT_PHONE } from './env.gaps';
-export { allowedRecipients, recipientAllowed, parseAllowedRecipients, kapsoWebhookSecret } from './env.whatsapp';
-export type { WhatsappEnv, GraphEnv, MetaLineEnv, KapsoLineEnv, CrmLineEnv, LineEnvs, LineNumbers } from './env.whatsapp';
+export { allowedRecipients, recipientAllowed, parseAllowedRecipients, kapsoWebhookSecret } from './whatsapp/env.whatsapp';
+export type { WhatsappEnv, GraphEnv, MetaLineEnv, KapsoLineEnv, CrmLineEnv, LineEnvs, LineNumbers } from './whatsapp/env.whatsapp';
 export { livekitEnv, type LivekitEnv } from './env.livekit';
 export { webPushEnv } from './env.web-push';
 export { googleEnv, googleRedirectUri, type GoogleEnv, type GoogleEndpoints } from './env.google';

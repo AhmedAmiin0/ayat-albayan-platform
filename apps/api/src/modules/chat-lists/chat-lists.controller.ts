@@ -3,7 +3,7 @@ import { Body, Controller, Delete, Get, HttpCode, Param, Patch, Post, Put } from
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser, Permissions } from '../../common/auth/decorators';
 import type { AuthUser } from '../../common/auth/verify-token';
-import { parseOrThrow } from '../teachers/http';
+import { parseOrThrow } from '../../common/http/http';
 import { assertListsUser, listIdParam, listPhoneParam } from './chat-lists.guard';
 import { ChatListsService } from './chat-lists.service';
 

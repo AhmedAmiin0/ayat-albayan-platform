@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it } from 'vitest';
-import { loadEnv } from '../../env';
+import { loadEnv } from '../../config/env/env';
 import { CHAT_PHONE_NUMBER_ID, envelope, inboundValue, PHONE_NUMBER_ID, textPart } from './meta.fakes';
 import { CHAT_SECRET, SECRET, sign, webhookApp } from './test-app';
 import { webhookConfig } from './webhook.config';

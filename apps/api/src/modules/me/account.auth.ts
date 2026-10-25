@@ -1,7 +1,7 @@
 import { createClient } from '@supabase/supabase-js';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../common/db/db.module';
-import { badRequest, conflict } from '../scheduling/errors';
+import { badRequest, conflict } from '../../common/http/errors';
 import { ACCOUNT_CONFIG, type AccountAuth, type AccountConfig } from './account.ports';
 
 interface AuthFailure {

@@ -1,5 +1,5 @@
 import type { WaLine } from '@ab/shared';
-import type { WhatsappEnv } from '../../env.whatsapp';
+import type { WhatsappEnv } from '../../config/env/whatsapp/env.whatsapp';
 
 // Numbers as records (docs/23 §3 phase 3). null = settings.comms_source is legacy (or not loaded): loadEnv()
 // is exactly today's (process.env + the integration overlay). In module mode NumbersConfig puts here the

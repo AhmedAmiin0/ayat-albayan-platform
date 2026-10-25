@@ -1,0 +1,18 @@
+{
+  "tools/migrate/src/plan": {
+    "files": 13,
+    "dirs": 0
+  },
+  "tools/migrate/src/sources": {
+    "files": 15,
+    "dirs": 2
+  },
+  "tools/scripts": {
+    "files": 25,
+    "dirs": 1
+  },
+  "tools/wa-stub/src": {
+    "files": 15,
+    "dirs": 0
+  }
+}

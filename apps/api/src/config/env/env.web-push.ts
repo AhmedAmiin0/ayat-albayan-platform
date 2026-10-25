@@ -2,7 +2,7 @@ import { vapidPublicKey, vapidSubject } from '@ab/shared';
 import { z } from 'zod';
 import type { Env } from './env';
 import { blankIsUnset } from './env.blank';
-import type { VapidKeys } from './common/push/web-push.vapid';
+import type { VapidKeys } from '../../common/push/web-push.vapid';
 
 /**
  * Browser push (R-NOT-02, docs/09). All three or none: any unset = browser push is off (GET

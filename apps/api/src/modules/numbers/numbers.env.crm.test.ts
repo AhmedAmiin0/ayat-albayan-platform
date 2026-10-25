@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { loadEnv } from '../../env';
+import { loadEnv } from '../../config/env/env';
 import { numberEnv } from './numbers.env';
 import { LEGACY_ENV, numberRow } from './numbers.fakes';
 import { differences, parityRoles } from './numbers.parity';

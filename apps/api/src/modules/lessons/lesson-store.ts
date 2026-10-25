@@ -3,7 +3,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import type { AuditEntry } from '../../common/audit/audit.service';
 import { LessonEvents } from '../../common/events/lesson-events';
 import type { ChangeSet, TimeEditChange } from '../scheduling/change-set';
-import { errorCode } from '../scheduling/errors';
+import { errorCode } from '../../common/http/errors';
 import { LessonWriter } from '../scheduling/lesson-writer';
 import type { LessonRow } from './lesson-row';
 import { LessonsQueries } from './lessons.queries';

@@ -2,7 +2,7 @@ import type { Tables } from '@ab/db';
 import type { AdminTaskView } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../common/db/db.module';
-import { dbError, type Page, type PageQuery } from '../teachers/http';
+import { dbError, type Page, type PageQuery } from '../../common/http/http';
 import { studentRef } from './subscriptions.mapper';
 import type { StudentRef } from './subscriptions.queries';
 

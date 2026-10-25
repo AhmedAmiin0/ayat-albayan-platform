@@ -15,7 +15,7 @@ import {
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser, Permissions } from '../../../common/auth/decorators';
 import type { AuthUser } from '../../../common/auth/verify-token';
-import { orNotFound, parseOrThrow } from '../http';
+import { orNotFound, parseOrThrow } from '../../../common/http/http';
 import { OwnTeacherGuard } from '../own-teacher.guard';
 import { AvailabilityQueries, type AvailabilityRow, type TimeOff } from './availability.queries';
 

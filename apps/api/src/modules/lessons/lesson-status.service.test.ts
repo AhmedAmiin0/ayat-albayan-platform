@@ -1,7 +1,7 @@
 import { ForbiddenException } from '@nestjs/common';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { readerOf } from '../../common/settings/settings.fakes';
-import { conflict } from '../scheduling/errors';
+import { conflict } from '../../common/http/errors';
 import type { LessonAccess } from './lesson-access';
 import type { LessonRow } from './lesson-row';
 import { LessonStatusService } from './lesson-status.service';

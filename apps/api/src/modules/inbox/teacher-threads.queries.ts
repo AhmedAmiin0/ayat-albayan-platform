@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../common/db/db.module';
 import { TeacherMeQueries } from '../lessons/teacher-me.queries';
-import { dbError } from '../teachers/http';
+import { dbError } from '../../common/http/http';
 import type { PeopleStudentRow } from './thread-people.mapper';
 
 export interface ScopeTeacher {

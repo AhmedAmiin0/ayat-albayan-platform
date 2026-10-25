@@ -1,7 +1,7 @@
 import type { MeetingInviteChannel, MeetingInviteStatus } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../common/db/db.module';
-import { dbError } from '../teachers/http';
+import { dbError } from '../../common/http/http';
 import { MEETING_COLUMNS, type MeetingRow } from './internal-meetings.queries';
 
 const LIST_LIMIT = 20;

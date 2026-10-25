@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { duplicatePhone, lineEnvs, lineGaps, lineProvider, loadEnv, sendingAllowed } from './env';
+import { duplicatePhone, lineEnvs, lineGaps, lineProvider, loadEnv, sendingAllowed } from '../env';
 
 // docs/19: each line resolves its own driver; default meta, so nothing changes until an admin switches.
 

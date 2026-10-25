@@ -10,7 +10,7 @@ describe('Meta callers guard: the Kapso host', () => {
     const source = `const base = 'https://${HOST}/meta/whatsapp';`;
     expect(offenders([{ path: 'modules/x/x.service.ts', source }])).toEqual([`modules/x/x.service.ts: ${HOST}`]);
     expect(offenders([{ path: 'modules/whatsapp/kapso.ts', source }])).toEqual([`modules/whatsapp/kapso.ts: ${HOST}`]);
-    expect(offenders([{ path: 'env.kapso.ts', source }])).toEqual([`env.kapso.ts: ${HOST}`]);
+    expect(offenders([{ path: 'config/env/whatsapp/env.kapso.ts', source }])).toEqual([`config/env/whatsapp/env.kapso.ts: ${HOST}`]);
   });
 
   it('a comment mention and a test file pass', () => {
@@ -23,6 +23,6 @@ describe('Meta callers guard: the Kapso host', () => {
   it('KAPSO_API_BASE is read only where WA_API_BASE is (the env files)', () => {
     const source = 'const b = env.KAPSO_API_BASE;';
     expect(offenders([{ path: 'modules/x/x.service.ts', source }])).toEqual(['modules/x/x.service.ts: KAPSO_API_BASE']);
-    expect(offenders([{ path: 'env.kapso.ts', source }])).toEqual([]);
+    expect(offenders([{ path: 'config/env/whatsapp/env.kapso.ts', source }])).toEqual([]);
   });
 });

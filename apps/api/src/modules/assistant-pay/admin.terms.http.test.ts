@@ -1,5 +1,5 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { badRequest } from '../scheduling/errors';
+import { badRequest } from '../../common/http/errors';
 import { A, ADMIN, assistantApp, STUDENT } from './assistant-pay.fakes';
 
 type App = Awaited<ReturnType<typeof assistantApp>>;

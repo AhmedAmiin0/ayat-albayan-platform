@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import type { LineNumbers } from '../../env';
+import type { LineNumbers } from '../../config/env/env';
 import { acceptsNumber, lineFor } from './webhook.lines';
 
 const NOTIF = 'notif-phone';

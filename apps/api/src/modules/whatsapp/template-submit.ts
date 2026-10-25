@@ -1,7 +1,7 @@
 import type { TemplateStatus, TemplateView } from '@ab/shared';
 import { NotFoundException } from '@nestjs/common';
 import type { AuditService } from '../../common/audit/audit.service';
-import { lineProvider, loadEnv } from '../../env';
+import { lineProvider, loadEnv } from '../../config/env/env';
 import { fromMeta, onCrm, requireLine, requireSync } from './template-env';
 import { SAMPLE_REPORT, templateProblem } from './template-review';
 import { ourStatus } from './template-sync';

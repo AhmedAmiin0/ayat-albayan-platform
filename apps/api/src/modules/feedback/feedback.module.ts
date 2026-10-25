@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { loadEnv } from '../../env';
+import { loadEnv } from '../../config/env/env';
 import { InboxModule } from '../inbox/inbox.module';
 import { TeachersModule } from '../teachers/teachers.module';
 import { FEEDBACK_CONFIG, type FeedbackConfig } from './feedback.config';

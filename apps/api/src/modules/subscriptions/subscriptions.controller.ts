@@ -11,7 +11,7 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser, Permissions } from '../../common/auth/decorators';
 import { can } from '../../common/auth/permissions';
 import type { AuthUser } from '../../common/auth/verify-token';
-import { parseOrThrow, sentOnly, type Page } from '../teachers/http';
+import { parseOrThrow, sentOnly, type Page } from '../../common/http/http';
 import { toTeacherBalance } from './balance.teacher';
 import { PackagesService } from './packages.service';
 import { StudentAccess } from './student-access';

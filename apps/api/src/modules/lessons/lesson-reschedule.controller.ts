@@ -3,7 +3,7 @@ import { Body, Controller, HttpCode, Param, ParseUUIDPipe, Post } from '@nestjs/
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser, Permissions } from '../../common/auth/decorators';
 import type { AuthUser } from '../../common/auth/verify-token';
-import { parseOrThrow } from '../teachers/http';
+import { parseOrThrow } from '../../common/http/http';
 import { LessonViews } from './lesson-views';
 import { RescheduleOneService } from './reschedule-one.service';
 import { RescheduleRuleService } from './reschedule-rule.service';

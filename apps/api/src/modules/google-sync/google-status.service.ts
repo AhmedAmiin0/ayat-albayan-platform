@@ -1,6 +1,6 @@
 import { GOOGLE_SCOPES, type GoogleStatusView } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
-import { googleRedirectUri, loadEnv } from '../../env';
+import { googleRedirectUri, loadEnv } from '../../config/env/env';
 import { readDiscovery } from './discovery';
 import { GoogleData } from './google-data';
 import { GOOGLE_CLIENT_FACTORY, type GoogleClientFactory } from './google-client.port';

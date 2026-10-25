@@ -1,4 +1,4 @@
-import type { GraphEnv } from '../../env';
+import type { GraphEnv } from '../../config/env/env';
 import { graphFetch, graphJson, type GraphConn } from './graph';
 import { kapsoMediaSchema, mediaSchema, parsed } from './meta-shapes';
 

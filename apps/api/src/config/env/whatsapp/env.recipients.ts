@@ -1,4 +1,4 @@
-import type { Env } from './env';
+import type { Env } from '../env';
 
 // WA_ALLOWED_RECIPIENTS (docs/12 §13.5): the staging guard. Fail closed: nothing non-blank ever
 // degrades to "unrestricted", and an empty list never means "everyone". The parser is shared with

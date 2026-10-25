@@ -1,7 +1,7 @@
 import type { Tables, TablesInsert } from '@ab/db';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../common/db/db.module';
-import { dbError } from '../teachers/http';
+import { dbError } from '../../common/http/http';
 
 /** A path already held by a payment: one of its «المرفقات», or its single receipt. */
 export type PathOwner = { path: string; paymentId: string };

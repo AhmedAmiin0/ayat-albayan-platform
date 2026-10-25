@@ -2,7 +2,7 @@ import { NotFoundException } from '@nestjs/common';
 import type { Json } from '@ab/db';
 import type { PostgrestError } from '@supabase/supabase-js';
 import type { Db } from '../../common/db/db.module';
-import { conflict } from '../scheduling/errors';
+import { conflict } from '../../common/http/errors';
 import { rpcError } from '../scheduling/rpc';
 import type { SubmitPayload } from './submit-plan';
 

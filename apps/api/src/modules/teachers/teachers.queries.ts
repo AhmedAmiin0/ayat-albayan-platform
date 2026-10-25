@@ -3,7 +3,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../common/db/db.module';
 import { applySort } from '../../common/list-sort';
 import { readAll } from '../scheduling/read-all';
-import { dbError, type Page } from './http';
+import { dbError, type Page } from '../../common/http/http';
 import { CURRENT_STUDENT_STATUSES, NOT_SUBSCRIBED_STATUSES, type TeacherStudentCounts } from '@ab/shared';
 import { applyTeacherFilters, TEACHER_SORT, tallyKinds, type TeacherListQuery } from './teachers.list';
 import { teacherSearchFilter } from './teachers.mapper';

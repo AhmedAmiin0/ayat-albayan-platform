@@ -1,7 +1,7 @@
 import type { UserRole } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../common/db/db.module';
-import { dbError } from '../teachers/http';
+import { dbError } from '../../common/http/http';
 import { phoneAware } from '../users/users.errors';
 import { phoneTaken } from '../users/users.links.queries';
 import { selfWritable, type AccountRow, type AccountStore, type SelfPatch } from './account.ports';

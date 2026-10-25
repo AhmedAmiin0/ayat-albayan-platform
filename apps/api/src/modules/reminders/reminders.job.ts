@@ -1,6 +1,6 @@
 import { joinWindowConfig, type TemplateKey } from '@ab/shared';
 import { Injectable, Logger, type OnApplicationBootstrap, type OnModuleDestroy } from '@nestjs/common';
-import { livekitEnv, loadEnv } from '../../env';
+import { livekitEnv, loadEnv } from '../../config/env/env';
 import { firstWebOrigin } from '../classroom/classroom.config';
 import type { QueuedMessage } from './queued-row';
 import { RemindersDeps } from './reminders.deps';

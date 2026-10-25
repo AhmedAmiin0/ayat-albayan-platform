@@ -1,11 +1,11 @@
 import { monthQuery, PAYMENT_KINDS, PAYMENT_METHODS } from '@ab/shared';
 import { z } from 'zod';
-import { parseOrThrow } from '../teachers/http';
+import { parseOrThrow } from '../../common/http/http';
 import { Controller, Get, Query, Res } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Permissions } from '../../common/auth/decorators';
 import { parseRange } from '../dashboard/range';
-import { badRequest } from '../scheduling/errors';
+import { badRequest } from '../../common/http/errors';
 import { attachment } from './csv';
 import { ExportsService, type CsvFile } from './exports.service';
 

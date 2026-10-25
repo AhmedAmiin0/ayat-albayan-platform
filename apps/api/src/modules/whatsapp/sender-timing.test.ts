@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { loadEnv } from '../../env';
+import { loadEnv } from '../../config/env/env';
 import { SENDER_FIRST_RUN_MS, SENDER_POLL_MS, senderTiming } from './sender-timing';
 
 const BASE = { SUPABASE_URL: 'http://localhost:54321', SUPABASE_SERVICE_ROLE_KEY: 'k' };

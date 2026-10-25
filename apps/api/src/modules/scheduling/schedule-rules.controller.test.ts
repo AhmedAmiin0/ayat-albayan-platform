@@ -5,7 +5,7 @@ import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vites
 import { AppModule } from '../../app.module';
 import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '../../common/auth/auth.guard';
 import type { AuthUser } from '../../common/auth/verify-token';
-import { conflict } from './errors';
+import { conflict } from '../../common/http/errors';
 import { RuleExtendService } from './rule-extend.service';
 
 const USERS: Record<string, AuthUser> = {

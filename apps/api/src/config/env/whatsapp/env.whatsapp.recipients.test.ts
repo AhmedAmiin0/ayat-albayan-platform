@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { allowedRecipients, loadEnv, parseAllowedRecipients, recipientAllowed } from './env';
+import { allowedRecipients, loadEnv, parseAllowedRecipients, recipientAllowed } from '../env';
 import { EMPTY_RECIPIENTS } from './env.recipients';
 
 const BASE = { SUPABASE_URL: 'http://127.0.0.1:54321', SUPABASE_SERVICE_ROLE_KEY: 'k' };

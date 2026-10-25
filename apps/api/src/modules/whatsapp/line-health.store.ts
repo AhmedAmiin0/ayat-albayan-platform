@@ -1,7 +1,7 @@
 import { normalizePhone, type LineCheckView, type LineHealthView } from '@ab/shared';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { DB, type Db } from '../../common/db/db.module';
-import { lineNumbers, loadEnv } from '../../env';
+import { lineNumbers, loadEnv } from '../../config/env/env';
 
 /** Meta's display number («+966 55 123 4567», sometimes without the +) as E.164, or null. */
 export function displayE164(display: string | null): string | null {

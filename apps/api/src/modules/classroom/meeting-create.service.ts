@@ -1,7 +1,7 @@
 import { createMeetingSchema, mayInvitePhones, type MeetingCreateResult } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
 import type { AuthUser } from '../../common/auth/verify-token';
-import { parseOrThrow } from '../teachers/http';
+import { parseOrThrow } from '../../common/http/http';
 import { InternalMeetingsQueries, type MeetingRow } from './internal-meetings.queries';
 import { hashMeetingToken, newMeetingToken } from './internal-meetings.token';
 import { chatCount, MeetingInviteFlow } from './meeting-invite.flow';

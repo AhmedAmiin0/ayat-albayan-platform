@@ -6,10 +6,10 @@ import { join } from 'node:path';
 // (getMedia), so the per-line routing and the WA_ALLOWED_RECIPIENTS guard cannot be bypassed.
 
 export const WHITELIST = new Set([
-  'env.ts',
-  'env.gaps.ts',
-  'env.kapso.ts',
-  'env.whatsapp.ts',
+  'config/env/env.ts',
+  'config/env/env.gaps.ts',
+  'config/env/whatsapp/env.kapso.ts',
+  'config/env/whatsapp/env.whatsapp.ts',
   'modules/inbox/read-receipts.ts',
   'modules/whatsapp/graph.ts',
   'modules/whatsapp/inbound-media.service.ts',

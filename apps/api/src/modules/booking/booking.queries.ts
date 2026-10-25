@@ -5,7 +5,7 @@ import { DB, type Db } from '../../common/db/db.module';
 import { gateConfirmations } from '../../common/rules/confirmations';
 import { NotificationPolicy } from '../notification-rules/policy';
 import { domainError } from './booking.errors';
-import { dbError } from '../teachers/http';
+import { dbError } from '../../common/http/http';
 import type { LeadFacts } from './booking.lead-merge';
 import { toBookingResult, type BookingPayload, type InvoiceRow } from './booking.mapper';
 

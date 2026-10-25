@@ -1,4 +1,4 @@
-import type { Env } from './env';
+import type { Env } from '../env';
 import type { MetaLineEnv } from './env.whatsapp';
 
 // The meta driver's two lines (docs/12 §13.1), out of env.whatsapp.ts (150-line cap). Type-only imports.

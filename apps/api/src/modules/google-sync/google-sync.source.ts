@@ -1,7 +1,7 @@
 import { meetingModeOf, usesPlatform, type Attendance, type Grade, type LessonStatus, type Program } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../common/db/db.module';
-import { loadEnv } from '../../env';
+import { loadEnv } from '../../config/env/env';
 import { firstWebOrigin } from '../classroom/classroom.config';
 import { classroomUrl } from '../reminders/reminders.links';
 import type { EventLesson, LessonKind } from './event-format';

@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { conflict } from '../scheduling/errors';
+import { conflict } from '../../common/http/errors';
 import { ACTOR, earning, eid, OTHER_TEACHER, PAYMENT, paymentRow, REQUEST, TEACHER } from './earnings.fakes';
 import { EarningsService } from './earnings.service';
 

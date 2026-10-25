@@ -3,7 +3,7 @@ import { Controller, Get, Param, ParseUUIDPipe, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser, Permissions } from '../../common/auth/decorators';
 import type { AuthUser } from '../../common/auth/verify-token';
-import { pageQuerySchema, parseOrThrow, type Page } from '../teachers/http';
+import { pageQuerySchema, parseOrThrow, type Page } from '../../common/http/http';
 import { ReportHistoryService } from './report-history.service';
 import { ReportsService } from './reports.service';
 import { TeacherReportsService } from './teacher-reports.service';

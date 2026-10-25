@@ -1,7 +1,7 @@
 import { reportBlock, type ReportDraft, type ReportFormResponse, type ReportView } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
 import type { AuthUser } from '../../common/auth/verify-token';
-import { conflict, notFound } from '../scheduling/errors';
+import { conflict, notFound } from '../../common/http/errors';
 import { formResponse } from './report-form.mapper';
 import { ReportGate } from './report-gate';
 import { ReportLessonQueries } from './report-lesson.queries';

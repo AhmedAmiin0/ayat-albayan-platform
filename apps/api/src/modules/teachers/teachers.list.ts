@@ -9,7 +9,7 @@ import {
   type TeacherStudentCounts,
 } from '@ab/shared';
 import { ilikeContains, type SortSpec } from '../../common/list-sort';
-import type { PageQuery } from './http';
+import type { PageQuery } from '../../common/http/http';
 
 type TeacherSortKey = (typeof TEACHER_SORT_KEYS)[number];
 

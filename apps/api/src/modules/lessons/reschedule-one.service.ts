@@ -3,7 +3,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { randomUUID } from 'node:crypto';
 import type { AuthUser } from '../../common/auth/verify-token';
 import { ConflictChecker } from '../scheduling/conflict-checker';
-import { conflict } from '../scheduling/errors';
+import { conflict } from '../../common/http/errors';
 import { TeachersQueries } from '../teachers/teachers.queries';
 import { confirmationMessages, forMessages } from './confirmation-messages';
 import { studentIdsOf, type LessonRow } from './lesson-row';

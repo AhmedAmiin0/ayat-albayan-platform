@@ -1,5 +1,5 @@
 import { Injectable, Logger, type OnApplicationBootstrap, type OnModuleDestroy } from '@nestjs/common';
-import { loadEnv } from '../../env';
+import { loadEnv } from '../../config/env/env';
 import { GoogleItemsQueries } from './google-items.queries';
 import { GoogleSyncProcessor } from './google-sync.processor';
 

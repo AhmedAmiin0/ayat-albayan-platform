@@ -1,7 +1,7 @@
 import type { JoinLinkUrl } from '@ab/shared';
 import { ForbiddenException, Inject, Injectable } from '@nestjs/common';
 import type { AuthUser } from '../../common/auth/verify-token';
-import { notFound } from '../scheduling/errors';
+import { notFound } from '../../common/http/errors';
 import { TeachersQueries } from '../teachers/teachers.queries';
 import { CLASSROOM_WEB_ORIGIN } from './classroom.config';
 import { ClassroomQueries } from './classroom.queries';

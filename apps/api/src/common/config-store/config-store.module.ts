@@ -1,5 +1,5 @@
 import { Global, Module } from '@nestjs/common';
-import { loadEnv } from '../../env';
+import { loadEnv } from '../../config/env/env';
 import { ConfigEntriesAudit } from './config-entries.audit';
 import { ConfigEntriesController } from './config-entries.controller';
 import { ConfigEntriesService } from './config-entries.service';

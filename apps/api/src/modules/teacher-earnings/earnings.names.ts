@@ -1,5 +1,5 @@
 import type { Db } from '../../common/db/db.module';
-import { dbError } from '../teachers/http';
+import { dbError } from '../../common/http/http';
 
 type Student = { student: { name: string } | null };
 type NameRow = { lesson_id: string } & Student;

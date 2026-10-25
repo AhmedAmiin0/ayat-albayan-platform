@@ -1,7 +1,7 @@
 import type { PendingReportView, StudentReportsResponse } from '@ab/shared';
 import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import type { AuthUser } from '../../common/auth/verify-token';
-import type { PageQuery } from '../teachers/http';
+import type { PageQuery } from '../../common/http/http';
 import { ReportAccess } from './report-access';
 import { historyResponse, pendingViews } from './report-history.mapper';
 import { ReportHistoryQueries } from './report-history.queries';

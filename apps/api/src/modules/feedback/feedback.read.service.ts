@@ -6,8 +6,8 @@ import type {
 } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
 import type { AuthUser } from '../../common/auth/verify-token';
-import { notFound } from '../scheduling/errors';
-import type { Page, PageQuery } from '../teachers/http';
+import { notFound } from '../../common/http/errors';
+import type { Page, PageQuery } from '../../common/http/http';
 import { TeachersQueries } from '../teachers/teachers.queries';
 import { peopleOf, toRowView, toSummary, toTeacherRowView, type People } from './feedback.mapper';
 import { FeedbackReadQueries, type FeedbackListRow } from './feedback.read.queries';

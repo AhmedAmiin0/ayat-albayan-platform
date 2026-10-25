@@ -1,6 +1,6 @@
 import { CHAT_LIST_LIMIT, chatListNameKey, type ChatList } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import { conflict, notFound } from '../scheduling/errors';
+import { conflict, notFound } from '../../common/http/errors';
 import { ChatListsQueries, type ListName } from './chat-lists.queries';
 
 const named = (name: string): ListName => ({ name, name_key: chatListNameKey(name) });

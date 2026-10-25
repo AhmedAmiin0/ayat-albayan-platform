@@ -3,7 +3,7 @@ import { OCCUPYING_LESSON_STATUSES, RIYADH_TZ, type AvailabilitySlot, type TimeO
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../../common/db/db.module';
 import type { BusyLesson } from '../../scheduling/conflicts';
-import { dbError } from '../http';
+import { dbError } from '../../../common/http/http';
 import { TeachersSettings } from '../teachers.settings';
 import { allDayRows, type WeeklyRow } from './free-slots';
 

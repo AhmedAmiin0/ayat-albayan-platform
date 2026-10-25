@@ -1,5 +1,5 @@
 import type { ConflictKind, LessonStatus, PayoutStatus, TimeEditMode } from '@ab/shared';
-import { badRequest } from '../scheduling/errors';
+import { badRequest } from '../../common/http/errors';
 import { localDateOf } from '../scheduling/horizon';
 import { MINUTE } from '../teachers/availability/zoned-time';
 

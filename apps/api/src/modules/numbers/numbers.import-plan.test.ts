@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { loadEnv } from '../../env';
+import { loadEnv } from '../../config/env/env';
 import { LEGACY_ENV, numberRow } from './numbers.fakes';
 import { planAll, type PlanInput } from './numbers.import-plan';
 

@@ -2,7 +2,7 @@ import type { Tables, TablesInsert, TablesUpdate } from '@ab/db';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../common/db/db.module';
 import { applySort, ilikeContains } from '../../common/list-sort';
-import { dbError, type Page } from '../teachers/http';
+import { dbError, type Page } from '../../common/http/http';
 import { readChunked } from '../scheduling/read-all';
 import { listSelect, SELECT, SUB_SORT, type SubListQuery } from './subscriptions.list-query';
 

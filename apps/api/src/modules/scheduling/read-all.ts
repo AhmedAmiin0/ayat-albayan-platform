@@ -1,5 +1,5 @@
 import type { PostgrestError } from '@supabase/supabase-js';
-import { dbError } from '../teachers/http';
+import { dbError } from '../../common/http/http';
 
 /** PostgREST `max_rows` (packages/db/supabase/config.toml): longer results are cut silently. */
 export const MAX_ROWS = 1000;

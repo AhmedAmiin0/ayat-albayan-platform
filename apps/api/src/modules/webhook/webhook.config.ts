@@ -1,6 +1,6 @@
 import { overlayNumbers, type OverlayNumber } from '../../common/integrations/numbers-overlay';
-import { crmWebhookSecret } from '../../env.crm';
-import { appSecrets, kapsoWebhookSecret, lineNumbers, type Env } from '../../env';
+import { crmWebhookSecret } from '../../config/env/whatsapp/env.crm';
+import { appSecrets, kapsoWebhookSecret, lineNumbers, type Env } from '../../config/env/env';
 import type { WebhookConfig } from './webhook.service';
 
 /**

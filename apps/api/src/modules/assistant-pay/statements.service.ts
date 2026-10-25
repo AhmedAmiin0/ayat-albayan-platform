@@ -1,6 +1,6 @@
 import { monthStart, type AssistantStatementView, type SignedDownload, type SignedUpload, type TeacherReceiptUpload } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import { notFound } from '../scheduling/errors';
+import { notFound } from '../../common/http/errors';
 import { EarningsReceipts } from '../teacher-earnings/earnings.receipts';
 import type { StatementPay as Pay, StatementsQuery as Query } from './assistant-pay.dto';
 import { AssistantRpc } from './assistant-pay.rpc';

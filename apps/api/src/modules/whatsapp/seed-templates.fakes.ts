@@ -1,4 +1,4 @@
-import type { MetaLineEnv } from '../../env';
+import type { MetaLineEnv } from '../../config/env/env';
 import { STUB_ENV, templateRow } from './whatsapp.fakes';
 
 // Test-only (excluded from the build). The four templates migration 141 seeds as not_submitted,

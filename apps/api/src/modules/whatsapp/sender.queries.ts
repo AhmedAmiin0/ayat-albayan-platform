@@ -2,7 +2,7 @@ import type { WaLine } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../common/db/db.module';
 import type { StaffAtSend } from '../reminders/staff-reachable';
-import { allowedRecipients, lineEnvs, loadEnv } from '../../env';
+import { allowedRecipients, lineEnvs, loadEnv } from '../../config/env/env';
 import { stampDelivered } from './delivered';
 import { CLAIM_LEASE_MS, SENDING, type FailurePlan } from './send-plan';
 import { AUTO_OFF, AUTOMATIC_KEYS } from './send-stale';

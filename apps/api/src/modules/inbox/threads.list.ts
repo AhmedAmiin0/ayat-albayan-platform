@@ -1,7 +1,7 @@
 import { LEAD_STATUSES, listSortShape, type LeadStatus, type ListSort } from '@ab/shared';
 import { z } from 'zod';
 import type { SortSpec } from '../../common/list-sort';
-import { pageQuerySchema } from '../teachers/http';
+import { pageQuerySchema } from '../../common/http/http';
 
 // H1 list order and filters (R-LEAD-02, R-NFR-08). No `sort` = newest message first (the old order).
 

@@ -1,5 +1,5 @@
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { conflict } from '../scheduling/errors';
+import { conflict } from '../../common/http/errors';
 import { LESSON_ID, lessonRow } from './lessons.fakes';
 import { lessonsApp } from './test-app';
 

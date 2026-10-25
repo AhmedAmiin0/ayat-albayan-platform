@@ -1,5 +1,5 @@
 import { createHash, createHmac, timingSafeEqual } from 'node:crypto';
-import type { LivekitEnv } from '../../env';
+import type { LivekitEnv } from '../../config/env/env';
 
 // LiveKit signs every webhook POST with a JWT in the Authorization header (no "Bearer"): HS256
 // with the API secret, iss = API key, and a `sha256` claim = base64 (standard) of sha256(body).

@@ -3,7 +3,7 @@ import { Controller, Get, Param, ParseUUIDPipe, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
 import { Permissions } from '../../common/auth/decorators';
-import { parseOrThrow } from '../teachers/http';
+import { parseOrThrow } from '../../common/http/http';
 import { invoiceRecentQuery, recentFilter } from './invoices.dto';
 import { InvoicesService } from './invoices.service';
 import { InvoicesSettings } from './invoices.settings';

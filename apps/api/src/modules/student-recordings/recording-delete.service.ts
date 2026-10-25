@@ -1,6 +1,6 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import type { AuthUser } from '../../common/auth/verify-token';
-import { conflict, notFound } from '../scheduling/errors';
+import { conflict, notFound } from '../../common/http/errors';
 import { RecordingAdminQueries } from './recording-admin.queries';
 import { RecordingEraser } from './recording-eraser';
 

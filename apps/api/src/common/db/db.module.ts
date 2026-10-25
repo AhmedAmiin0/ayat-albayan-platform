@@ -1,7 +1,7 @@
 import type { Database } from '@ab/db';
 import { Global, Module } from '@nestjs/common';
 import { createClient, type SupabaseClient } from '@supabase/supabase-js';
-import { loadEnv } from '../../env';
+import { loadEnv } from '../../config/env/env';
 
 /** Inject with `@Inject(DB) private readonly db: Db`. */
 export const DB = Symbol('DB');

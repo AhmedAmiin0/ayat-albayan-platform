@@ -1,7 +1,7 @@
 import type { BalanceView } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../common/db/db.module';
-import { dbError } from '../teachers/http';
+import { dbError } from '../../common/http/http';
 
 /** Lesson numbers and package balances shown on the report form (R-REP-01, R-LES-03, R-SUB-03). */
 @Injectable()

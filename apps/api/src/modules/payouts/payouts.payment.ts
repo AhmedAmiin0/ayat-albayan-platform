@@ -1,6 +1,6 @@
 import { canTransitionPayout, type PayoutPay, type PayoutView, type SignedDownload } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import { conflict, notFound } from '../scheduling/errors';
+import { conflict, notFound } from '../../common/http/errors';
 import { CorrectionsQueries } from '../teacher-earnings/corrections.queries';
 import { EarningsReceipts } from '../teacher-earnings/earnings.receipts';
 import { toPayoutView } from './payouts.mapper';

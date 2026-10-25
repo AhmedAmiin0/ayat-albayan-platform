@@ -1,4 +1,4 @@
-import type { RecordingEnv } from '../../env.recording';
+import type { RecordingEnv } from '../../config/env/env.recording';
 import type { RoomTarget } from './recording-target';
 
 /**

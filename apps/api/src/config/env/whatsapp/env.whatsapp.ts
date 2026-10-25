@@ -1,5 +1,5 @@
 import type { WaLine, WaProvider } from '@ab/shared';
-import type { Env } from './env';
+import type { Env } from '../env';
 import { crmLine } from './env.crm';
 import { kapsoLine } from './env.kapso';
 import { chatEnv, metaNotifications } from './env.meta';

@@ -1,5 +1,5 @@
 import { Global, Module } from '@nestjs/common';
-import { loadEnv, webPushEnv } from '../../env';
+import { loadEnv, webPushEnv } from '../../config/env/env';
 import { EXPO_PUSH_PATH, type ExpoMessage, type ExpoTicket } from './expo-push';
 import { NotificationsController, WebPushController } from './notifications.controller';
 import { NotificationsQueries } from './notifications.queries';

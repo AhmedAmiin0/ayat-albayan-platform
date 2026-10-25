@@ -1,8 +1,8 @@
 import { canMute, JOIN_ROLES, lessonRoomName, meetingRoomName, muteSchema, type JoinRole, type MuteSource } from '@ab/shared';
 import { BadGatewayException, ForbiddenException, HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import type { AuthUser } from '../../common/auth/verify-token';
-import { notFound } from '../scheduling/errors';
-import { parseOrThrow } from '../teachers/http';
+import { notFound } from '../../common/http/errors';
+import { parseOrThrow } from '../../common/http/http';
 import { InternalMeetingsQueries } from './internal-meetings.queries';
 import { meetingRoleOf, roleOfIdentity } from './internal-meetings.token';
 import { notConfigured } from './join-gate';

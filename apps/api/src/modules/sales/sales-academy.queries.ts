@@ -3,7 +3,7 @@ import { OPEN_LESSON_STATUSES, type SalesStudentsQuery } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../common/db/db.module';
 import { studentNameOrCodeFilter } from '../students/students.mapper';
-import { dbError } from '../teachers/http';
+import { dbError } from '../../common/http/http';
 
 type Student = Pick<Tables<'students'>, 'id' | 'code' | 'name' | 'status' | 'program'>;
 

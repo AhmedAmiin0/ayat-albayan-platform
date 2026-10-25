@@ -1,8 +1,8 @@
 import type { TablesInsert, TablesUpdate } from '@ab/db';
 import type { SubscriptionUpdate, SubscriptionView } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import { conflict, notFound } from '../scheduling/errors';
-import type { Page } from '../teachers/http';
+import { conflict, notFound } from '../../common/http/errors';
+import type { Page } from '../../common/http/http';
 import { MoneyWrites } from './money-writes';
 import { PackagesService } from './packages.service';
 import { SubscriptionsQueries, type SubListQuery, type SubRow } from './subscriptions.queries';

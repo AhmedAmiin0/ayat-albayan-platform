@@ -2,7 +2,7 @@ import { GRANTABLE_PERMISSIONS } from '@ab/shared';
 import { HttpException } from '@nestjs/common';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { PermissionCache } from '../../common/auth/permission.cache';
-import { errorCode } from '../scheduling/errors';
+import { errorCode } from '../../common/http/errors';
 import { fakeAudit, FakeRoleStore, profile } from './roles.fakes';
 import { RolesService } from './roles.service';
 

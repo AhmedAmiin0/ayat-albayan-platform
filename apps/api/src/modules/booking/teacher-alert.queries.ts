@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../common/db/db.module';
 import type { QueuedMessage } from '../reminders/queued-row';
 import { approvedTemplates, queueMessages } from '../reminders/reminders.queries';
-import { dbError } from '../teachers/http';
+import { dbError } from '../../common/http/http';
 import type { AlertLesson } from './teacher-alert.plan';
 
 /** Reads and the idempotent queue write of the teacher's new-student alert (R-NOT-03). */

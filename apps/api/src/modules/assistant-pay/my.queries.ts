@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../common/db/db.module';
-import { dbError } from '../teachers/http';
+import { dbError } from '../../common/http/http';
 import { MY_PAYMENT_SELECT, MY_STUDENT_COLUMNS, type MyPaymentSource, type MyStudentSource } from './my.mapper';
 
 export type StatementState = { statement: { status: 'draft' | 'approved' | 'paid' } | null };

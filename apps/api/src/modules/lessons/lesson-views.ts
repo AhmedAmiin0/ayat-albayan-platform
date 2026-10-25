@@ -2,7 +2,7 @@ import type { LessonView } from '@ab/shared';
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import type { Role } from '../../common/auth/verify-token';
 import { UnpaidFlags } from '../subscriptions/unpaid-flags.service';
-import type { Page, PageQuery } from '../teachers/http';
+import type { Page, PageQuery } from '../../common/http/http';
 import type { LessonRow } from './lesson-row';
 import { toLessonView } from './lessons.mapper';
 import { LessonsQueries, type LessonWindow } from './lessons.queries';

@@ -1,7 +1,7 @@
 import { canRemove, meetingRoomName } from '@ab/shared';
 import { BadGatewayException, ForbiddenException, HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import type { AuthUser } from '../../common/auth/verify-token';
-import { notFound } from '../scheduling/errors';
+import { notFound } from '../../common/http/errors';
 import { InternalMeetingsQueries } from './internal-meetings.queries';
 import { meetingRoleOf, roleOfIdentity } from './internal-meetings.token';
 import { notConfigured } from './join-gate';

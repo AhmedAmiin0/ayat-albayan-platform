@@ -2,7 +2,7 @@ import type { TeacherMe } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../common/db/db.module';
 import { withMeeting } from '../teachers/meeting-view';
-import { dbError } from '../teachers/http';
+import { dbError } from '../../common/http/http';
 import { LessonsSettings } from './lessons.settings';
 
 type MyStudent = TeacherMe['students'][number];

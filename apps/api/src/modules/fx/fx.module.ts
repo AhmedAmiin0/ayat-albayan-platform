@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { loadEnv } from '../../env';
+import { loadEnv } from '../../config/env/env';
 import { FX_FETCHER, OpenErApiFetcher, type FxFetcher } from './fx.fetcher';
 import { FxQueries } from './fx.queries';
 import { FxService } from './fx.service';

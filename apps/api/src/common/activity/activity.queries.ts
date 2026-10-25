@@ -1,6 +1,6 @@
 import type { ActivityListQuery, ActivityPage, ActivitySortKey, ActivityView } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
-import { dbError } from '../../modules/teachers/http';
+import { dbError } from '../http/http';
 import { DB, type Db } from '../db/db.module';
 import { applySort, type SortSpec } from '../list-sort';
 

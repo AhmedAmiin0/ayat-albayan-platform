@@ -1,6 +1,6 @@
 import { courseChangeCheckSchema, courseChangeSchema } from '@ab/shared';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { errorCode } from '../scheduling/errors';
+import { errorCode } from '../../common/http/errors';
 import { ADMIN, BODY, CLASH, REQUEST_ID, RULE_A, SALES, setup, SUB, SUB_ID } from './course-change.fakes';
 
 const body = (o: object = {}) => courseChangeSchema.parse({ ...BODY, ...o });

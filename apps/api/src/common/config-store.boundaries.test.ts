@@ -18,7 +18,7 @@ const relImports = (file: string): string[] =>
   );
 
 /** What config-store may import outside itself: infrastructure and the one parse helper. */
-const STORE_MAY_IMPORT = [/^common\/(db|auth|audit)\//, /^env$/, /^modules\/teachers\/http$/];
+const STORE_MAY_IMPORT = [/^common\/(db|auth|audit)\//, /^config\/env\/env$/, /^common\/http\/http$/];
 
 /**
  * Raw `settings` / `custom_config` table access allowed TODAY. common/config-store is the target;

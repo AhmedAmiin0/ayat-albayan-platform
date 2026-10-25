@@ -16,7 +16,7 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
 import { CurrentUser, Permissions } from '../../common/auth/decorators';
 import type { AuthUser } from '../../common/auth/verify-token';
-import { orNotFound, pageQuerySchema, parseOrThrow, sentOnly, type Page } from './http';
+import { orNotFound, pageQuerySchema, parseOrThrow, sentOnly, type Page } from '../../common/http/http';
 import { withMeeting, type MeetingFields } from './meeting-view';
 import { TeachersQueries, type Teacher, type TeacherListRow } from './teachers.queries';
 import { TeachersSettings } from './teachers.settings';
