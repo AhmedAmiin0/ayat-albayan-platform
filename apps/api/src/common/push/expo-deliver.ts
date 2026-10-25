@@ -17,7 +17,7 @@ export interface ExpoDelivery {
 
 /**
  * The app half of one notification (R-MOB-01): push to the profile's devices, record the tickets on
- * the row, and drop the tokens Expo reports DeviceNotRegistered. No device = nothing to do.
+ * the row, and drop the tokens Expo reports DeviceNotRegistered (and their session bindings). No device = nothing to do.
  */
 export async function expoDeliver(d: ExpoDelivery): Promise<void> {
   const tokens = d.profile.push_tokens;
@@ -30,4 +30,5 @@ export async function expoDeliver(d: ExpoDelivery): Promise<void> {
   if (outcome.deadTokens.length === 0) return;
   const kept = outcome.deadTokens.reduce((list, t) => withoutPushToken(list, t), tokens);
   await d.db.from('profiles').update({ push_tokens: kept }).eq('id', d.profile.id);
+  await d.db.from('push_device_sessions').delete().in('token', outcome.deadTokens);
 }

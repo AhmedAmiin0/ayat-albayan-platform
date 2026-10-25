@@ -24,27 +24,48 @@ const enabled = (profiles: FakeProfile[]) => ({
   }),
 });
 
+/** A push_device_sessions row (migration 700). */
+export type FakeBinding = { token: string; profile_id: string; session_id: string };
+
+export interface FakePushOptions {
+  /** Every upsert hits an existing dedup key. */
+  duplicate?: boolean;
+  /** Default: every profile token bound to its profile, session 'live'. */
+  bindings?: FakeBinding[];
+  /** Sessions push_live_sessions answers as live; default ['live']. */
+  live?: string[];
+}
+
 /**
  * A minimal supabase-js double: profiles select (eq role / in ids, then .is('disabled_at', null)),
- * push_notifications upsert/update, profiles update. `duplicate` = every upsert hits an existing dedup key.
+ * push_device_sessions select, rpc push_live_sessions, push_notifications upsert/update, profiles update.
  */
-export function fakePushDb(profiles: FakeProfile[], opts: { duplicate?: boolean } = {}) {
+export function fakePushDb(profiles: FakeProfile[], opts: FakePushOptions = {}) {
   const writes: { table: string; op: string; value: unknown }[] = [];
+  const bindings = opts.bindings ?? profiles.flatMap((p) => p.push_tokens.map((token) => ({ token, profile_id: p.id, session_id: 'live' })));
+  const live = opts.live ?? ['live'];
+  const rpc = vi.fn(async (_fn: string, args: { p_ids: string[] }) => ({ data: args.p_ids.filter((id) => live.includes(id)), error: null }));
   const from = vi.fn((table: string) => ({
     select: () => ({
       eq: (_c: string, role: string) => enabled(profiles.filter((p) => p.role === role)),
-      in: (_c: string, ids: string[]) => enabled(profiles.filter((p) => ids.includes(p.id))),
+      in: (_c: string, ids: string[]) =>
+        table === 'push_device_sessions'
+          ? Promise.resolve({ data: bindings.filter((b) => ids.includes(b.token)), error: null })
+          : enabled(profiles.filter((p) => ids.includes(p.id))),
     }),
     upsert: (value: unknown) => {
       writes.push({ table, op: 'upsert', value });
       return { select: async () => ({ data: opts.duplicate ? [] : [{ id: `row-${writes.length}` }], error: null }) };
     },
+    delete: () => ({
+      in: async (_c: string, value: unknown) => (writes.push({ table, op: 'delete', value }), { error: null }),
+    }),
     update: (value: unknown) => {
       writes.push({ table, op: 'update', value });
       return { eq: async () => ({ error: null }) };
     },
   }));
-  return { db: { from } as unknown as Db, writes };
+  return { db: { from, rpc } as unknown as Db, writes, rpc };
 }
 
 export const okTickets = (n: number): ExpoTicket[] => Array.from({ length: n }, (_, i) => ({ status: 'ok', id: `t${i}` }));

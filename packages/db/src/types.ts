@@ -2699,6 +2699,35 @@ export type Database = {
           },
         ];
       };
+      push_device_sessions: {
+        Row: {
+          created_at: string;
+          profile_id: string;
+          session_id: string;
+          token: string;
+        };
+        Insert: {
+          created_at?: string;
+          profile_id: string;
+          session_id: string;
+          token: string;
+        };
+        Update: {
+          created_at?: string;
+          profile_id?: string;
+          session_id?: string;
+          token?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'push_device_sessions_profile_id_fkey';
+            columns: ['profile_id'];
+            isOneToOne: false;
+            referencedRelation: 'profiles';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       push_notifications: {
         Row: {
           body: string;
@@ -3961,6 +3990,7 @@ export type Database = {
           id: string;
           p256dh: string;
           profile_id: string;
+          session_id: string | null;
         };
         Insert: {
           auth: string;
@@ -3969,6 +3999,7 @@ export type Database = {
           id?: string;
           p256dh: string;
           profile_id: string;
+          session_id?: string | null;
         };
         Update: {
           auth?: string;
@@ -3977,6 +4008,7 @@ export type Database = {
           id?: string;
           p256dh?: string;
           profile_id?: string;
+          session_id?: string | null;
         };
         Relationships: [
           {
@@ -4520,6 +4552,7 @@ export type Database = {
         Returns: Json;
       };
       prune_activity_log: { Args: Record<PropertyKey, never>; Returns: number };
+      push_live_sessions: { Args: { p_ids: string[] }; Returns: string[] };
       record_teacher_payment: { Args: { p: Json }; Returns: Json };
       reopen_assistant_statement: { Args: { p_actor: string; p_statement: string }; Returns: Json };
       report_of_path: { Args: { p_name: string }; Returns: string };
@@ -4529,6 +4562,7 @@ export type Database = {
         Args: { p: Json; p_actor: string; p_assistant: string };
         Returns: undefined;
       };
+      revoke_other_user_sessions: { Args: { p_keep: string | null; p_user: string }; Returns: number };
       revoke_user_sessions: { Args: { p_user: string }; Returns: number };
       set_role_permissions: { Args: { perms: string[]; role_id: string }; Returns: undefined };
       set_student_brought_by: {

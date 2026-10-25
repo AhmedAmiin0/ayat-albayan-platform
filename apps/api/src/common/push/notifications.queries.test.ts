@@ -61,10 +61,11 @@ describe('NotificationsQueries (R-NOT-01)', () => {
   it('upserts a browser on its endpoint for the caller (newest again); deletes only the caller’s row', async () => {
     const { db, queries } = recordingDb(() => ({ error: null, data: [] }));
     const q = new NotificationsQueries(db);
-    await q.subscribe('p1', { endpoint: 'https://fcm.googleapis.com/x', keys: { p256dh: 'k', auth: 'a' } });
+    await q.subscribe('p1', { endpoint: 'https://fcm.googleapis.com/x', keys: { p256dh: 'k', auth: 'a' } }, 'sess-1');
     await q.unsubscribe('p1', 'https://fcm.googleapis.com/x');
     const row = {
       profile_id: 'p1',
+      session_id: 'sess-1',
       endpoint: 'https://fcm.googleapis.com/x',
       p256dh: 'k',
       auth: 'a',
@@ -94,7 +95,7 @@ describe('NotificationsQueries (R-NOT-01)', () => {
     await new NotificationsQueries(db).subscribe('p1', {
       endpoint: 'https://fcm.googleapis.com/y',
       keys: { p256dh: 'k', auth: 'a' },
-    });
+    }, 'sess-1');
     expect(queries[1]).toEqual(
       expect.arrayContaining([
         ['eq', 'profile_id', 'p1'],

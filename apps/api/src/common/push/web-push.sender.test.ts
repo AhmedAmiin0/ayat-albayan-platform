@@ -5,7 +5,7 @@ import { decryptPayload } from './web-push.crypto';
 import { WebPushSender, type WebPushTransport } from './web-push.sender';
 import type { VapidKeys } from './web-push.vapid';
 
-type Sub = { id: string; endpoint: string; p256dh: string; auth: string };
+type Sub = { id: string; endpoint: string; p256dh: string; auth: string; session_id?: string | null };
 
 function browser() {
   const ua = createECDH('prime256v1');
@@ -14,13 +14,16 @@ function browser() {
   return { ua, auth, keys: { p256dh: ua.getPublicKey('base64url'), auth: auth.toString('base64url') } };
 }
 
-function fakeDb(subs: Sub[]) {
+/** Subscriptions bound to session 'live' unless they say otherwise; push_live_sessions knows `live`. */
+function fakeDb(subs: Sub[], live = ['live']) {
   const deleted: string[] = [];
+  const rows = subs.map((s) => ({ session_id: 'live', ...s }));
   const from = vi.fn(() => ({
-    select: () => ({ eq: async () => ({ data: subs, error: null }) }),
+    select: () => ({ eq: async () => ({ data: rows, error: null }) }),
     delete: () => ({ eq: async (_c: string, id: string) => (deleted.push(id), { error: null }) }),
   }));
-  return { db: { from } as unknown as Db, deleted };
+  const rpc = vi.fn(async (_fn: string, a: { p_ids: string[] }) => ({ data: a.p_ids.filter((id) => live.includes(id)), error: null }));
+  return { db: { from, rpc } as unknown as Db, deleted };
 }
 
 const vapid = (): VapidKeys => {
@@ -82,5 +85,17 @@ describe('WebPushSender (R-NOT-02)', () => {
     await expect(new WebPushSender(db, down, vapid).send('p1', PAYLOAD)).resolves.toBe(0);
     await expect(new WebPushSender(db, down, () => ({ ...vapid(), publicKey: 'x' })).send('p1', PAYLOAD)).resolves.toBe(0);
     expect(deleted).toEqual([]);
+  });
+
+  it('a browser not bound to a live session of the profile (signed out, revoked, never re-bound) gets nothing', async () => {
+    const subs = [
+      { id: 'ended', endpoint: `${FCM}/1`, session_id: 'ended', ...browser().keys },
+      { id: 'unbound', endpoint: `${FCM}/2`, session_id: null, ...browser().keys },
+      { id: 'ok', endpoint: `${FCM}/3`, ...browser().keys },
+    ];
+    const { db } = fakeDb(subs);
+    const transport = vi.fn<WebPushTransport>(async () => ({ status: 201 }));
+    expect(await new WebPushSender(db, transport, vapid).send('p1', PAYLOAD)).toBe(1);
+    expect(transport.mock.calls.map(([r]) => r.url)).toEqual([`${FCM}/3`]);
   });
 });

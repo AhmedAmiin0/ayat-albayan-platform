@@ -1,5 +1,5 @@
 import { notificationsQuerySchema, notificationsReadSchema, type NotificationsPage, type WebPushKey } from '@ab/shared';
-import { Body, Controller, Delete, Get, HttpCode, Post, Put, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, Post, Put, Query, UnauthorizedException } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { parseOrThrow } from '../../modules/teachers/http';
 import { loadEnv, webPushEnv } from '../../env';
@@ -44,11 +44,16 @@ export class WebPushController {
     return { publicKey: webPushEnv(loadEnv())?.publicKey ?? null };
   }
 
-  /** PushSubscription.toJSON(); the endpoint must be a known push service (SSRF guard). Idempotent. */
+  /**
+   * PushSubscription.toJSON(); the endpoint must be a known push service (SSRF guard). Idempotent.
+   * Bound to the caller's session: 401 for a token without one (never a row nobody's session owns).
+   */
   @Put()
   @HttpCode(204)
-  subscribe(@Body() body: unknown, @CurrentUser() user: AuthUser): Promise<void> {
-    return this.queries.subscribe(user.id, parseOrThrow(webPushSubscriptionSchema, body));
+  async subscribe(@Body() body: unknown, @CurrentUser() user: AuthUser): Promise<void> {
+    const sub = parseOrThrow(webPushSubscriptionSchema, body);
+    if (!user.sessionId) throw new UnauthorizedException('no_session');
+    await this.queries.subscribe(user.id, sub, user.sessionId);
   }
 
   @Delete()

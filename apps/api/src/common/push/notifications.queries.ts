@@ -56,12 +56,13 @@ export class NotificationsQueries {
   }
 
   /**
-   * One row per browser: a known endpoint moves to the caller (the browser signed in as someone
-   * else) and counts as new again. Then only the caller's newest WEB_PUSH_MAX_PER_PROFILE stay.
+   * One row per browser, bound to the caller's session (its end deletes the row: migration 700): a
+   * known endpoint moves to the caller (the browser signed in as someone else) and counts as new again. Then only the caller's newest WEB_PUSH_MAX_PER_PROFILE stay.
    */
-  async subscribe(profileId: string, sub: WebPushSubscriptionInput): Promise<void> {
+  async subscribe(profileId: string, sub: WebPushSubscriptionInput, sessionId: string): Promise<void> {
     const row = {
       profile_id: profileId,
+      session_id: sessionId,
       endpoint: sub.endpoint,
       p256dh: sub.keys.p256dh,
       auth: sub.keys.auth,

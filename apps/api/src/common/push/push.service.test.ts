@@ -54,6 +54,7 @@ describe('PushService.notifyAdmins (R-MOB-01, rule 8)', () => {
       op: 'update',
       value: { push_tokens: ['ExponentPushToken[new]'] },
     });
+    expect(writes).toContainEqual({ table: 'push_device_sessions', op: 'delete', value: ['ExponentPushToken[old]'] });
   });
 
   it('never throws: a transport failure is only logged', async () => {

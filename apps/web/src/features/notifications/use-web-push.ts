@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import { webPushKeyQuery } from './api';
-import { currentSubscription, subscribeWebPush, unsubscribeWebPush } from './web-push';
+import { rebindWebPush, subscribeWebPush, unsubscribeWebPush } from './web-push';
 import { readPushEnv, webPushSupport, type WebPushSupport } from './web-push-support';
 
 /** What the toggle shows: the browser's support, then the server's key, then this browser's state. */
@@ -31,7 +31,8 @@ export function webPushView({ support, publicKey, subscribed }: ViewInput): WebP
 
 /**
  * Browser push for the toggle at the foot of the bell panel. Reads only on mount (support, the
- * server key, an existing subscription); the permission prompt comes from enable(), i.e. a click.
+ * server key, an existing subscription, re-bound to this session); the permission prompt comes
+ * from enable(), i.e. a click.
  */
 export function useWebPush(): WebPushState {
   const [support, setSupport] = useState(() => webPushSupport(readPushEnv()));
@@ -42,7 +43,7 @@ export function useWebPush(): WebPushState {
   useEffect(() => {
     if (support !== 'ready') return;
     let live = true;
-    currentSubscription().then(
+    rebindWebPush().then(
       (s) => live && setSubscribed(s !== null),
       () => live && setSubscribed(false),
     );

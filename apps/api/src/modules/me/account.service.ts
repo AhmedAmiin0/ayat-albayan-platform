@@ -48,13 +48,17 @@ export class AccountService {
     return this.profile(user);
   }
 
-  /** R-ACC-04: the existing password rules (AUTH_PASSWORD_MIN_LENGTH); the current session stays. */
+  /**
+   * R-ACC-04: the existing password rules (AUTH_PASSWORD_MIN_LENGTH). The current session stays;
+   * every other one ends, and with it their devices' pushes (migration 700's session bindings).
+   */
   async changePassword(user: AuthUser, input: PasswordChange): Promise<void> {
     const problem = passwordProblem(input.new_password, this.config.passwordMinLength);
     if (problem) throw badRequest(problem === 'too_long' ? 'password_too_long' : 'password_too_short');
     if (input.new_password === input.current_password) throw badRequest('password_same');
     await this.checkPassword(user, { password: input.current_password });
     await this.ports.auth.update(user.id, { password: input.new_password });
+    await this.ports.auth.revokeOtherSessions({ userId: user.id, keep: user.sessionId ?? null });
   }
 
   /** 400 wrong_password unless the password signs the caller in. */

@@ -13,7 +13,7 @@ export class TeacherAlertQueries {
   async lessons(ids: readonly string[]): Promise<AlertLesson[]> {
     const { data, error } = await this.db
       .from('lessons')
-      .select('id, starts_at, teacher:teachers(id, profile_id, phone_e164, tz)')
+      .select('id, starts_at, teacher:teachers(id, profile_id, phone_e164, tz, status, profile:profiles!teachers_profile_id_fkey(disabled_at))')
       .in('id', [...ids]);
     if (error) throw dbError(error);
     return data;

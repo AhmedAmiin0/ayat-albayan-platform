@@ -7,7 +7,8 @@ import type { AuthUser } from '../auth/verify-token';
 import { NotificationsQueries } from './notifications.queries';
 
 const USERS: Record<string, AuthUser> = {
-  assistant: { id: '1b9d6bcd-bbfd-4b2d-9b5d-ab8dfbbd4bed', email: null, role: 'assistant' },
+  assistant: { id: '1b9d6bcd-bbfd-4b2d-9b5d-ab8dfbbd4bed', email: null, role: 'assistant', sessionId: 'sess-1' },
+  noSession: { id: '2b9d6bcd-bbfd-4b2d-9b5d-ab8dfbbd4bed', email: null, role: 'assistant' },
   student: { id: '3b9d6bcd-bbfd-4b2d-9b5d-ab8dfbbd4bed', email: null, role: 'student' },
 };
 const verify: TokenVerifier = async (token) => {
@@ -49,11 +50,17 @@ describe('/me/web-push (R-NOT-02)', () => {
 
   it('PUT stores the subscription for the caller; a disallowed endpoint is 400 and never stored', async () => {
     expect((await call({ method: 'PUT', url: '/me/web-push', payload: SUB })).statusCode).toBe(204);
-    expect(q.subscribe).toHaveBeenCalledWith(USERS['assistant']?.id, SUB);
+    expect(q.subscribe).toHaveBeenCalledWith(USERS['assistant']?.id, SUB, 'sess-1');
     for (const endpoint of ['http://fcm.googleapis.com/x', 'https://localhost/x', 'https://127.0.0.1/x', 'https://evil.example/x']) {
       expect((await call({ method: 'PUT', url: '/me/web-push', payload: { ...SUB, endpoint } })).statusCode).toBe(400);
     }
     expect(q.subscribe).toHaveBeenCalledTimes(1);
+  });
+
+  it('PUT from a token without a session_id claim is 401 and stores nothing', async () => {
+    q.subscribe.mockClear();
+    expect((await call({ method: 'PUT', url: '/me/web-push', token: 'noSession', payload: SUB })).statusCode).toBe(401);
+    expect(q.subscribe).not.toHaveBeenCalled();
   });
 
   it('DELETE removes the caller’s row by endpoint', async () => {

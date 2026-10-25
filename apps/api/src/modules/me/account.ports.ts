@@ -43,6 +43,8 @@ export interface AccountAuth {
   passwordMatches(input: { email: string; password: string }): Promise<boolean>;
   /** Admin update (no SMTP): a new email is confirmed at once; 409 email_taken. */
   update(id: string, patch: { email?: string; password?: string }): Promise<void>;
+  /** Ends every session of the user but `keep` (null = all); their devices' push bindings go with them. */
+  revokeOtherSessions(input: { userId: string; keep: string | null }): Promise<void>;
 }
 
 export interface AccountFiles {

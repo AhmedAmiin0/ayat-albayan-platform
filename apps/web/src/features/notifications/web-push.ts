@@ -20,6 +20,17 @@ export async function currentSubscription(): Promise<PushSubscription | null> {
   return (await registration?.pushManager.getSubscription()) ?? null;
 }
 
+/**
+ * On load: this browser's existing subscription is PUT again (best effort), so the server binds it
+ * to the session now signed in (migration 700: a push goes only to a browser bound to a live
+ * session). Null when there is none. Never prompts.
+ */
+export async function rebindWebPush(): Promise<PushSubscription | null> {
+  const subscription = await currentSubscription();
+  if (subscription) await saveWebPush(subscription.toJSON()).catch(() => undefined);
+  return subscription;
+}
+
 export type SubscribeResult = 'subscribed' | NotificationPermission;
 
 /** Permission prompt → worker → subscription → PUT /me/web-push. Throws when a step fails. */

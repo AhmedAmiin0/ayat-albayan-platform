@@ -12,6 +12,7 @@ import {
 } from '@ab/shared';
 import type { PushEvent } from '../../common/push/push.service';
 import { queuedRow, type QueuedMessage } from './queued-row';
+import { staffReachable, type StaffOnRecord } from './staff-reachable';
 
 // R-MSG-02 reminder planning (docs/12 §7). Pure: the job calls it every tick; the dedup keys
 // (docs/12 §2.2, one per lesson + recipient + type) make a repeated tick a no-op (rule 8).
@@ -30,7 +31,9 @@ export interface ReminderLesson {
   status: LessonStatus;
   meeting_link: string | null;
   /** meeting_mode: teachers.meeting_mode (migration 490), null = the academy default; optional in fakes. */
-  teacher: { id: string; display_name_ar: string; phone_e164: string | null; tz: string; meeting_mode?: string | null } | null;
+  teacher:
+    | ({ id: string; display_name_ar: string; phone_e164: string | null; tz: string; meeting_mode?: string | null } & StaffOnRecord)
+    | null;
   students: { id: string; name: string; guardian: ReminderGuardian | null }[];
 }
 
@@ -89,7 +92,7 @@ function guardianRows(lesson: ReminderLesson, input: ReminderPlanInput): QueuedM
 
 function teacherRow(lesson: ReminderLesson, input: ReminderPlanInput): QueuedMessage[] {
   const { teacher } = lesson;
-  if (!teacher?.phone_e164) return [];
+  if (!teacher?.phone_e164 || !staffReachable(teacher)) return [];
   const startsAt = new Date(lesson.starts_at);
   const minutesBefore = input.teacherMinutesBefore ?? input.minutesBefore;
   const due = reminderDue({ kind: 'same_day', startsAt, tz: teacher.tz, minutesBefore, now: input.now });

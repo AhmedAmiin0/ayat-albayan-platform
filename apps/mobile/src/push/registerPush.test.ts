@@ -2,6 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Notifications from 'expo-notifications';
 import { Platform } from 'react-native';
 import { t } from '@/lib/i18n';
+import { hasLiveSession } from './live-session';
 import { ensurePushPermission } from './permission';
 import { ANDROID_CHANNEL, easProjectId, registerPush, TOKEN_KEY, unregisterPush } from './registerPush';
 
@@ -29,6 +30,7 @@ jest.mock('expo-notifications', () => ({
   AndroidImportance: { HIGH: 4 },
 }));
 jest.mock('./permission', () => ({ ensurePushPermission: jest.fn() }));
+jest.mock('./live-session', () => ({ hasLiveSession: jest.fn() }));
 jest.mock('@/lib/api', () => ({
   ...jest.requireActual('@/lib/api'),
   apiSend: (...mockArgs: unknown[]) => mockApiSend(...mockArgs),
@@ -37,11 +39,13 @@ jest.mock('@/lib/api', () => ({
 const TOKEN = 'ExponentPushToken[abc-123]';
 const getToken = jest.mocked(Notifications.getExpoPushTokenAsync);
 const allowed = jest.mocked(ensurePushPermission);
+const live = jest.mocked(hasLiveSession);
 
 beforeEach(async () => {
   jest.clearAllMocks();
   await AsyncStorage.clear();
   allowed.mockResolvedValue(true);
+  live.mockResolvedValue(true);
   getToken.mockResolvedValue({ type: 'expo', data: TOKEN });
 });
 afterEach(() => jest.restoreAllMocks());
@@ -68,6 +72,14 @@ test.each([
 ])('%s: skips silently, nothing sent', async (_case, arrange) => {
   arrange();
   await expect(registerPush()).resolves.toBeUndefined();
+  expect(mockApiSend).not.toHaveBeenCalled();
+});
+
+test('no live session (a cold start on an expired one): no prompt, no token, no PUT', async () => {
+  live.mockResolvedValueOnce(false);
+  await registerPush();
+  expect(allowed).not.toHaveBeenCalled();
+  expect(getToken).not.toHaveBeenCalled();
   expect(mockApiSend).not.toHaveBeenCalled();
 });
 
