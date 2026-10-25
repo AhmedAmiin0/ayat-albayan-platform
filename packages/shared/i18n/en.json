@@ -701,7 +701,7 @@
       "no_change": "You have not changed any time yet; pick another day or time",
       "trial_date_subscribed": "This student is subscribed and needs no trial lesson. Change their lesson days instead.",
       "trial_date_invalid": "A new trial date is booked for one registered student only.",
-      "trial_changed": "The upcoming trial date just changed; open the window again and pick the date once more."
+      "trial_changed": "The upcoming trial date just changed; go back and pick the date once more."
     },
     "pickDayTimes": "Pick a time for each day",
     "dayAt": "{day} at {time}",
@@ -6016,6 +6016,7 @@
     },
     "empty": "No trial date has been picked for this student yet.",
     "loadError": "Could not load the trial lesson dates.",
+    "retry": "Try again",
     "columns": {
       "when": "Date",
       "teacher": "Teacher",
@@ -6034,7 +6035,7 @@
     "pickedAt": "{name}, {when}",
     "unknownPicker": "Unknown",
     "warn": "This will be trial date number {n} for this student. Check with the guardian before booking.",
-    "moves": "The upcoming date ({when}) moves to the new one; the old one stays in the history as «Moved».",
+    "moves": "The upcoming date ({when}) moves to the new one; the old one stays in the history as \"Moved\".",
     "newLesson": "There is no upcoming trial date, so a new trial lesson will be booked.",
     "lastTeacher": "The teacher of the last trial lesson is picked; you can change it.",
     "submit": "Book the new date",

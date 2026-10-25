@@ -39,8 +39,10 @@ export function whenLines(startsAt: string, familyTz: string): WhenLines {
   const at = new Date(startsAt);
   // Every time says its zone (docs/07 principle 7): the viewer reads the academy's clock.
   const when = `${lessonWhenText(at, VIEWER_TZ, locale)} ${t.schedule.riyadhTime}`;
-  if (familyTz === VIEWER_TZ) return { when, family: null };
-  return { when, family: t.trialDate.familyTime.replace('{time}', lessonWhenText(at, familyTz, locale)) };
+  const familyAt = lessonWhenText(at, familyTz, locale);
+  // Another zone name on the same clock (Asia/Kuwait vs Riyadh) adds nothing.
+  if (familyAt === lessonWhenText(at, VIEWER_TZ, locale)) return { when, family: null };
+  return { when, family: t.trialDate.familyTime.replace('{time}', familyAt) };
 }
 
 /** «فاطمة، الأحد 4 أكتوبر 17:00»: who picked it and when; «غير معروف» for an imported row. */

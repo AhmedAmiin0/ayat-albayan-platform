@@ -3,13 +3,14 @@ import { rolledBack, type Tx } from '../support/edit-time';
 import { bookPayload, movePayload, seedTrial, type TrialSeed } from '../support/trial-date';
 
 // pick_trial_date (migration 20261025000660, owner 2026-10-25 «موعد تجريبي جديد»): the move or the
-// booking, the student → trial and the audit rows in one transaction. Rolled back.
+// booking, the student → trial and the audit rows in one transaction (via = trial_new_date since
+// 20261025000661). Rolled back.
 
 type Pick = ReturnType<typeof movePayload> | ReturnType<typeof bookPayload>;
 const pick = (tx: Tx, p: Pick) => tx<{ r: { lesson_id: string; moved_from_id: string | null } }[]>`select public.pick_trial_date(${tx.json(p)}) as r`;
 const statusOf = async (tx: Tx, s: TrialSeed) => (await tx<{ status: string }[]>`select status::text from public.students where id = ${s.student}`)[0]?.status;
 const trialAudits = (tx: Tx, s: TrialSeed) =>
-  tx`select 1 from public.audit_log where entity = 'students' and entity_id = ${s.student} and action = 'status_change' and after ->> 'via' = 'trial_date'`;
+  tx`select 1 from public.audit_log where entity = 'students' and entity_id = ${s.student} and action = 'status_change' and after ->> 'via' = 'trial_new_date'`;
 
 test.describe('pick_trial_date: a new trial date in one transaction (R-SCH-07, R-STU-05)', () => {
   test.beforeEach(() => test.skip(test.info().project.name !== 'desktop', 'database only: one run'));
@@ -54,6 +55,8 @@ test.describe('pick_trial_date: a new trial date in one transaction (R-SCH-07, R
   test('a booking (no upcoming trial): a new trial rule and lesson, the student → trial', async () => {
     await rolledBack(async (tx) => {
       const s = await seedTrial(tx);
+      // No upcoming trial (the seeded one was cancelled), else the booking is refused (migration 661).
+      await tx`update public.lessons set status = 'cancelled_by_admin' where id = ${s.lesson}`;
       const [row] = await pick(tx, bookPayload(s));
       expect(row?.r.moved_from_id).toBeNull();
       const [rule] = await tx<{ package: string }[]>`select r.package::text from public.lessons l

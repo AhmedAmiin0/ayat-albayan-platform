@@ -8,7 +8,7 @@ import { t } from '@/lib/i18n';
 import { toBookingRequest, type BookingDraft } from '../draft';
 import { useBookingMode } from '../mode';
 import { ReviewSummary } from '../ReviewSummary';
-import { createTrialDate, refreshAfterTrialDate } from './api';
+import { createTrialDate, refreshAfterTrialDate, TRIAL_DATES_KEY } from './api';
 import { TrialDateNotes } from './TrialDateNotes';
 
 export interface TrialReviewStepProps {
@@ -38,6 +38,8 @@ export function TrialReviewStep({ draft, onChangeSlot, onPatch, onDone }: TrialR
       await refreshAfterTrialDate(queryClient);
       onDone(result);
     },
+    // trial_changed and the like: the next open builds its draft from a fresh history, not the cache.
+    onError: () => queryClient.invalidateQueries({ queryKey: TRIAL_DATES_KEY }),
   });
   const conflicts = conflictsOf(send.error);
   const past = errorCode(send.error) === 'date_in_past';

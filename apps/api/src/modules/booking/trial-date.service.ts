@@ -28,8 +28,8 @@ export class TrialDateDeps {
  * link, conflict check and confirmation as a trial booking), skipping the upcoming trial it moves;
  * pick_trial_date writes it in one transaction (the move or the booking, status → trial, the audit
  * rows). A replay of the request id returns the first pick. Then the booking's follow-ups: the trial
- * status re-check, the teacher's new-student alert (for a new lesson or another teacher; the same
- * teacher has no moved-lesson notice to reuse, the calendar sync shows the move) and the sender kick.
+ * status re-check, the teacher's new-student alert for the new lesson (also for the same teacher:
+ * there is no moved-lesson notice to reuse, and the old lesson's alert goes stale) and the sender kick.
  * The old trial's queued confirmation and reminders go stale at send time (send-stale.ts).
  */
 @Injectable()
@@ -60,9 +60,9 @@ export class TrialDates {
     return targetOf({ req, studentId, old, requestId: randomUUID() });
   }
 
-  /** The first pick of this request id, if any (its idempotent trial status re-check runs again). */
+  /** The first pick of this request id for this student, if any (its idempotent trial status re-check runs again). */
   async replay(req: BookingRequest, actorId: string): Promise<TrialDateResult | null> {
-    const first = req.clientRequestId ? await this.queries.replay(req.clientRequestId) : null;
+    const first = req.clientRequestId ? await this.queries.replay(req.clientRequestId, trialStudentId(req)) : null;
     if (first) await this.deps.after.afterReplay({ req, result: asBooking(first, { req, alerted: [] }), actorId });
     return first;
   }
@@ -85,7 +85,7 @@ export class TrialDates {
       result = await this.queries.pick(pick);
     } catch (e) {
       // The same request twice at once: the loser (trial_changed, or the request id's unique key) finds the winner's pick.
-      const first = await this.queries.replay(lessonId);
+      const first = await this.queries.replay(lessonId, trialStudentId(req));
       if (!first) throw e;
       return first;
     }
@@ -96,9 +96,9 @@ export class TrialDates {
   private async followUps(done: { req: BookingRequest; result: TrialDateResult; old: MovedTrial | null; actorId: string }): Promise<void> {
     const { req, result, old, actorId } = done;
     if (old) await this.deps.events.changed([old.id, result.lesson_id]);
-    // Same teacher moved: no alert (nothing to reuse), the kick still sends the guardian's confirmation now.
-    const alerted = !old || old.teacher_id !== result.teacher_id ? [result] : [];
-    await this.deps.after.afterBooking({ req, result: asBooking(result, { req, alerted }), actorId });
+    // Always the new lesson's alert (dedup by its id): the old lesson's queued one goes stale, and a
+    // same-teacher move has no moved-lesson notice, so this is how that teacher learns the new time.
+    await this.deps.after.afterBooking({ req, result: asBooking(result, { req, alerted: [result] }), actorId });
   }
 }
 

@@ -29,6 +29,8 @@ const result = z.object({
   teacher_id: z.string(),
   moved_from_id: z.string().nullable(),
 });
+/** A move lost its trial (invalid_transition) or a booking found one booked meanwhile (trial_changed). */
+const STALE = ['invalid_transition', 'trial_changed'];
 const iso = (t: string) => new Date(t).toISOString();
 
 /** pick_trial_date / trial_date_result's jsonb → TrialDateResult with UTC ISO instants. */
@@ -79,22 +81,11 @@ export class TrialDateQueries {
     return data.map((r) => r.student_id);
   }
 
-  /** The date this request already picked: a moved lesson's id is the request id; a new one's rule carries it. */
-  async replay(requestId: string): Promise<TrialDateResult | null> {
-    const moved = await this.result(requestId);
-    if (moved) return moved;
-    const { data: rule, error } = await this.db.from('schedule_rules').select('id').eq('client_request_id', requestId).maybeSingle();
+  /** The date this request already picked for this student (trial_date_replay): a moved row's id is the request id; a new one's rule carries it. */
+  async replay(requestId: string, studentId: string): Promise<TrialDateResult | null> {
+    const { data, error } = await this.db.rpc('trial_date_replay', { p_request: requestId, p_student: studentId });
     if (error) throw dbError(error);
-    if (!rule) return null;
-    const { data: first, error: failed } = await this.db
-      .from('lessons')
-      .select('id')
-      .eq('rule_id', rule.id)
-      .order('starts_at')
-      .limit(1)
-      .maybeSingle();
-    if (failed) throw dbError(failed);
-    return first ? this.result(first.id) : null;
+    return data ? toTrialDateResult(data) : null;
   }
 
   /** One transaction: 409 trial_date_subscribed (a payment came in), conflict / stale on a lost race. */
@@ -102,14 +93,9 @@ export class TrialDateQueries {
     const { data, error } = await this.db.rpc('pick_trial_date', { p: p as unknown as Json });
     if (error?.code === 'P0001' && error.message === 'trial_date_subscribed') throw domainError(HttpStatus.CONFLICT, 'trial_date_subscribed');
     // The upcoming trial changed meanwhile (moved or cancelled by someone else): pick again.
-    if (error?.code === 'P0001' && error.message === 'invalid_transition') throw domainError(HttpStatus.CONFLICT, 'trial_changed');
+    if (error?.code === 'P0001' && STALE.includes(error.message)) throw domainError(HttpStatus.CONFLICT, 'trial_changed');
+    if (error?.code === 'P0001' && error.message === 'trial_date_invalid') throw domainError(HttpStatus.BAD_REQUEST, 'trial_date_invalid');
     if (error) throw dbError(error);
     return toTrialDateResult(data);
-  }
-
-  private async result(lessonId: string): Promise<TrialDateResult | null> {
-    const { data, error } = await this.db.rpc('trial_date_result', { p_lesson: lessonId });
-    if (error) throw dbError(error);
-    return data ? toTrialDateResult(data) : null;
   }
 }

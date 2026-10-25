@@ -7,6 +7,7 @@ import { StudentProfilePage } from './StudentProfilePage';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 vi.mock('@/lib/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+vi.mock('@/features/auth/use-permissions', () => ({ usePermissions: () => ({ permissions: ['booking.write'], can: () => true }) }));
 vi.mock('@tanstack/react-router', async () => ({ Link: (await import('@/features/dashboard/link-mock')).Link }));
 vi.mock('@/features/subscriptions/BalanceCard', () => ({ BalanceCard: () => null }));
 vi.mock('./StudentProfileForm', () => ({ StudentProfileForm: () => null }));

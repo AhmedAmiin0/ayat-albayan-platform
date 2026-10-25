@@ -47,3 +47,8 @@ test('nothing to send until a teacher and a time are picked', () => {
   expect(trialDateBody({ ...draft, startsAt: SUN_17 }, 'r')).toBeNull();
   expect(trialDateBody({ ...trialDateDraft(historyOf([trialRow()])) }, 'r')).toBeNull();
 });
+
+test('the draft takes the student’s own zone before the family’s (as the web draft)', () => {
+  const history = historyOf([trialRow()], { family_tz: 'Africa/Cairo', student_tz: 'Europe/London' });
+  expect(trialDateDraft(history).tz).toBe('Europe/London');
+});

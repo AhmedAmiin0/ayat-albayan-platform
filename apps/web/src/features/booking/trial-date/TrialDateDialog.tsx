@@ -3,6 +3,7 @@ import { useQuery, type UseQueryResult } from '@tanstack/react-query';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Dialog } from '@/components/ui/dialog';
+import { FormAlert } from '@/components/ui/form-alert';
 import { t } from '@/lib/i18n';
 import { BookingWizard } from '../BookingWizard';
 import type { BookingDraft, PickedStudent } from '../draft';
@@ -60,6 +61,12 @@ export function TrialDateDialog({ student, mode, facts, onClose }: TrialDateDial
         <HistoryToggle query={history} />
         {blocked && <p role="status" className="rounded-md bg-sunk px-3.5 py-2.5 text-sm">{t.trialDate.notAllowed}</p>}
         {!start && history.isPending && <p className="text-sm text-ink-3">{t.common.loading}</p>}
+        {!start && history.isError && (
+          <FormAlert>
+            {t.trialDate.loadError}{' '}
+            <Button type="button" size="sm" variant="ghost" onClick={() => void history.refetch()}>{t.trialDate.retry}</Button>
+          </FormAlert>
+        )}
         {start && (
           <BookingModeContext.Provider value={mode}>
             <ChatReturnContext.Provider value={onClose}>

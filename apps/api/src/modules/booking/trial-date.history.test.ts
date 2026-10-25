@@ -10,7 +10,7 @@ const NEW = 'cccccccc-0000-4000-8000-000000000001';
 /** The first date (moved), the date that replaced it (upcoming), an older attended and an absent one. */
 const ROWS = [
   trialRow({ status: 'rescheduled', created_at: '2026-09-20T09:00:00+00:00' }),
-  trialRow({ id: NEW, rescheduled_from_id: OLD, starts_at: '2026-10-06T15:00:00+00:00', created_at: '2026-09-29T09:00:00+00:00', created_by: null }),
+  trialRow({ id: NEW, rescheduled_from_id: OLD, starts_at: '2026-10-06T15:00:00+00:00', ends_at: '2026-10-06T15:30:00+00:00', created_at: '2026-09-29T09:00:00+00:00', created_by: null }),
   trialRow({ id: 'att', status: 'completed', starts_at: '2026-09-10T15:00:00+00:00', created_at: '2026-09-01T09:00:00+00:00' }),
   trialRow({ id: 'abs', status: 'completed', attendance: 'absent', created_at: '2026-08-01T09:00:00+00:00' }),
 ];
@@ -28,7 +28,7 @@ describe('«مواعيد الحلقة التجريبية»: every trial time pic
     expect(h.items[0]).toEqual({
       lesson_id: NEW,
       starts_at: '2026-10-06T15:00:00.000Z',
-      ends_at: '2026-10-05T14:30:00.000Z',
+      ends_at: '2026-10-06T15:30:00.000Z',
       teacher: { id: IDS.teacher, name: 'أبرار' },
       outcome: 'upcoming',
       picked_by: null,

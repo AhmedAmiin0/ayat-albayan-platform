@@ -38,8 +38,8 @@ test.each([
 });
 
 test('a family in another zone: its own clock under each row', async () => {
-  await render(<TrialHistoryList history={historyOf([trialRow()], { family_tz: 'Africa/Cairo' })} />);
-  expect(screen.getByText(t.trialDate.familyTime.replace('{time}', at(THU_1_18, 'Africa/Cairo')))).toBeTruthy();
+  await render(<TrialHistoryList history={historyOf([trialRow()], { family_tz: 'Europe/London' })} />);
+  expect(screen.getByText(t.trialDate.familyTime.replace('{time}', at(THU_1_18, 'Europe/London')))).toBeTruthy();
 });
 
 test('no trial yet: the empty line and «0»', async () => {

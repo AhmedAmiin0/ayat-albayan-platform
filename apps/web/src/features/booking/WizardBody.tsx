@@ -75,7 +75,7 @@ export function WizardBody(props: WizardBodyProps) {
     case 'teacher':
       return (
         <>
-          {draft.trialDate && hint && <p className="mb-3 text-xs text-ink-2">{t.trialDate.lastTeacher}</p>}
+          {draft.trialDate && hint && draft.teacher?.id === hint.teacherId && <p className="mb-3 text-xs text-ink-2">{t.trialDate.lastTeacher}</p>}
           <TeacherStep
             program={draft.program}
             genderPref={draft.genderPref}
