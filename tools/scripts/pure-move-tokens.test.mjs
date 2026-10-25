@@ -13,6 +13,7 @@ test('a path literal may follow its file, relative to any base', () => {
   assert.equal(renamedLiteral('`env.kapso.ts: ${HOST}`', '`config/env/whatsapp/env.kapso.ts: ${HOST}`', subs), true);
   assert.equal(renamedLiteral('/^modules\\/teachers\\/http$/', '/^common\\/http\\/http$/', subs), true);
   assert.equal(renamedLiteral("'modules/whatsapp'", "'modules/messaging/whatsapp'", subs), true, 'a folder fragment');
+  assert.equal(renamedLiteral("'modules\\\\whatsapp\\\\kapso.ts'", "'modules\\\\messaging\\\\whatsapp\\\\kapso.ts'", subs), true, 'Windows separators');
 });
 
 test('other literal changes do not pass', () => {
