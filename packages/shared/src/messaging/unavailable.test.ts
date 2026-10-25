@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { isUnavailableMessage } from './unavailable.js';
+import { isUnavailableMessage, isUnsupportedMessage } from './unavailable.js';
 
 const unsupported = (errors: unknown) => ({ type: 'unsupported', errors, unsupported: { type: 'unknown' } });
 
@@ -16,5 +16,14 @@ describe('isUnavailableMessage', () => {
     expect(isUnavailableMessage({ type: 'reaction', errors: [{ code: 131060 }] })).toBe(false);
     expect(isUnavailableMessage(null)).toBe(false);
     expect(isUnavailableMessage('unsupported')).toBe(false);
+  });
+});
+
+describe('isUnsupportedMessage', () => {
+  it('is Meta’s unsupported only, never a location, contact card or reaction that did arrive', () => {
+    expect(isUnsupportedMessage(unsupported([{ code: 131051 }]))).toBe(true);
+    expect(isUnsupportedMessage({ type: 'location', location: { latitude: 1, longitude: 2 } })).toBe(false);
+    expect(isUnsupportedMessage({ type: 'contacts' })).toBe(false);
+    expect(isUnsupportedMessage(null)).toBe(false);
   });
 });

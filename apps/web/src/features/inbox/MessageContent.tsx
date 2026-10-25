@@ -1,4 +1,4 @@
-import { isUnavailableMessage, replyNote, senderLine, type MessageView } from '@ab/shared';
+import { isUnavailableMessage, isUnsupportedMessage, replyNote, senderLine, type MessageView } from '@ab/shared';
 import { Icon } from '@/components/ui/icon';
 import { t } from '@/lib/i18n';
 import { locale } from '@/lib/locale';
@@ -52,9 +52,14 @@ export function SenderLine({ message: m }: { message: MessageView }) {
   return <p className="mt-1 text-2xs font-semibold text-ink-2">{text}</p>;
 }
 
-/** No text, file or template (Meta's `unsupported`…): ask the sender again, «غير متاحة» first for 131060. */
-export const emptyText = (m: Pick<MessageView, 'interactive_payload'>): string =>
-  isUnavailableMessage(m.interactive_payload) ? t.inbox.unavailable : t.inbox.media.other;
+/**
+ * No text, file or template: Meta's `unsupported` asks the sender again («غير متاحة» for 131060);
+ * anything else (a location, a contact card…) did arrive and only cannot be shown here.
+ */
+export function emptyText(m: Pick<MessageView, 'interactive_payload'>): string {
+  if (isUnavailableMessage(m.interactive_payload)) return t.inbox.unavailable;
+  return isUnsupportedMessage(m.interactive_payload) ? t.inbox.unsupported : t.inbox.media.other;
+}
 
 /** What was said: «مُعاد توجيهها», the quote it answers, the template's name, the media, the text, what a quick reply did. */
 export function Content({ message: m }: { message: MessageView }) {
