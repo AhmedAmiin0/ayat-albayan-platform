@@ -1,5 +1,5 @@
 import { isLinkedRole, type UserRoleOption } from '@ab/shared';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { Choice } from './Choice';
 import type { CreateForm } from './create-form';
 import { CredentialPicker } from './CredentialPicker';

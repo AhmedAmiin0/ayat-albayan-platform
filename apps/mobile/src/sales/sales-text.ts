@@ -8,8 +8,8 @@ import {
   type SalesTeacherStudent,
   type SalesTeacherView,
 } from '@ab/shared';
-import { t } from '@/lib/i18n';
-import { locale } from '@/lib/locale';
+import { t } from '@/core/lib/i18n/i18n';
+import { locale } from '@/core/lib/i18n/locale';
 import { money } from '@/payments/format';
 import { ltr } from '@/core/ui/primitives/Ltr';
 import type { SalesSubscription } from './sales-api';

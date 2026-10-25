@@ -1,13 +1,13 @@
 import { PUBLIC_SETTING_DEFAULTS } from '@ab/shared';
 import { fireEvent, screen } from '@testing-library/react-native';
 import { Linking, Share } from 'react-native';
-import { t } from '@/lib/i18n';
-import { publicConfigQuery } from '@/lib/public-config';
+import { t } from '@/core/lib/i18n/i18n';
+import { publicConfigQuery } from '@/core/lib/query/public-config';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { TeacherMeetingLink } from './TeacherMeetingLink';
 
-jest.mock('@/lib/api', () => ({
-  ...jest.requireActual('@/lib/api'),
+jest.mock('@/core/lib/http/api', () => ({
+  ...jest.requireActual('@/core/lib/http/api'),
   apiFetch: () => new Promise(() => undefined),
 }));
 

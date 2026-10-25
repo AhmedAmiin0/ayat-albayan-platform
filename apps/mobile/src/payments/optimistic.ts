@@ -5,7 +5,7 @@ import {
   type StudentBalanceView,
   type SubscriptionView,
 } from '@ab/shared';
-import type { Page } from '@/lib/paging';
+import type { Page } from '@/core/lib/query/paging';
 import type { Attachment } from './attachments';
 import type { Receipt } from './receipt';
 

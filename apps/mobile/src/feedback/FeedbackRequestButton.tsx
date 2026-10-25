@@ -2,7 +2,7 @@ import type { LessonView } from '@ab/shared';
 import { View } from 'react-native';
 import { ErrorLine } from '@/inbox/ErrorLine';
 import { useApprovedTemplates } from '@/inbox/TemplatePicker';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/more/Note';
 import { Button } from '@/core/ui/primitives/Button';
 import { askable, requestError } from './feedback-text';

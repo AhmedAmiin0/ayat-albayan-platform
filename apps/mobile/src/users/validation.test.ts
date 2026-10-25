@@ -1,5 +1,5 @@
 import type { LinkCandidate } from '@ab/shared';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { initialCreateForm, type CreateForm } from './create-form';
 import { createBody, createErrors, emailError, nameError, passwordError, phoneError } from './validation';
 

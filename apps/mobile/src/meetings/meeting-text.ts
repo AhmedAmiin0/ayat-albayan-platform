@@ -1,8 +1,8 @@
 import { intlLocale, type MeetingView } from '@ab/shared';
-import { ApiError } from '@/lib/api';
+import { ApiError } from '@/core/lib/http/api';
 import { webOrigin } from '@/classroom/web-origin';
-import { t } from '@/lib/i18n';
-import { locale } from '@/lib/locale';
+import { t } from '@/core/lib/i18n/i18n';
+import { locale } from '@/core/lib/i18n/locale';
 
 const errors: Record<string, string | undefined> = t.classroom.error;
 

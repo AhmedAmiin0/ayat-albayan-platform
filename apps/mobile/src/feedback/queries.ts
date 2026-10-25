@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { apiFetch, apiSend } from '@/lib/api';
-import { pathKey } from '@/lib/query-keys';
-import { usePagedList } from '@/lib/use-paged-list';
+import { apiFetch, apiSend } from '@/core/lib/http/api';
+import { pathKey } from '@/core/lib/query/query-keys';
+import { usePagedList } from '@/core/lib/query/use-paged-list';
 import type { FeedbackRowView, TeacherFeedbackSummary, TeacherFeedbackView } from './types';
 
 /** GET /feedback (admin): every request and answer, newest first, paged. */

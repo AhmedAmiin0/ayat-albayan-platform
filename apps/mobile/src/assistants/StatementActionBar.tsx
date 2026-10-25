@@ -2,7 +2,7 @@ import type { AssistantStatementView } from '@ab/shared';
 import { useState } from 'react';
 import { View } from 'react-native';
 import { ErrorLine } from '@/inbox/ErrorLine';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { statementMonth } from '@/sales-money/money-text';
 import { InlineConfirm } from '@/core/ui/feedback/InlineConfirm';
 import { assistantsErrorText } from './errors';

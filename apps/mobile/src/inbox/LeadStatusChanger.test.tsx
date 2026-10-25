@@ -1,15 +1,15 @@
 import { LEAD_STATUSES } from '@ab/shared';
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
-import { ApiError } from '@/lib/api';
-import { t } from '@/lib/i18n';
-import { listKey } from '@/lib/query-keys';
+import { ApiError } from '@/core/lib/http/api';
+import { t } from '@/core/lib/i18n/i18n';
+import { listKey } from '@/core/lib/query/query-keys';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { cachedList, huda } from './fixtures';
 import { LeadDetailScreen } from './LeadDetailScreen';
 
 const mockApiSend = jest.fn();
-jest.mock('@/lib/api', () => ({
-  ...jest.requireActual('@/lib/api'),
+jest.mock('@/core/lib/http/api', () => ({
+  ...jest.requireActual('@/core/lib/http/api'),
   apiSend: (...mockArgs: unknown[]) => mockApiSend(...mockArgs),
 }));
 jest.mock('expo-router', () => ({

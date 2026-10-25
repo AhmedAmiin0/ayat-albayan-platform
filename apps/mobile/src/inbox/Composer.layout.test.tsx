@@ -1,6 +1,6 @@
 import { fireEvent, screen, within } from '@testing-library/react-native';
 import { StyleSheet } from 'react-native';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { shape, type } from '@/theme';
 import { sessionUntil } from './message-text';
@@ -9,8 +9,8 @@ import { ThreadScreen } from './ThreadScreen';
 
 // The one-row composer (owner 2026-10-18): [template] [text] [send], one-line notes, a compact closed state.
 const mockApiFetch = jest.fn();
-jest.mock('@/lib/api', () => ({
-  ...jest.requireActual('@/lib/api'),
+jest.mock('@/core/lib/http/api', () => ({
+  ...jest.requireActual('@/core/lib/http/api'),
   apiFetch: (mockPath: string) => mockApiFetch(mockPath),
   apiSend: jest.fn(),
 }));

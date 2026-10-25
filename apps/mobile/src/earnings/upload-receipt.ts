@@ -1,8 +1,8 @@
 import type { SignedUpload } from '@ab/shared';
-import { apiSend } from '@/lib/api';
+import { apiSend } from '@/core/lib/http/api';
 import type { Receipt } from '@/payments/receipt';
 import { ReceiptUploadError } from '@/payments/upload-receipt';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/core/lib/http/supabase';
 
 /**
  * POST /teacher-earnings/:teacherId/receipt-upload-url, then the signed upload into the private

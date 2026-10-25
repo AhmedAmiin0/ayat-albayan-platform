@@ -13,7 +13,7 @@ jest.mock('@react-native-async-storage/async-storage', () =>
 
 // No real Supabase client in tests (it needs a key and starts timers): a signed-out stub.
 // A test that needs a session overrides it with its own jest.mock('@/lib/supabase', …).
-jest.mock('./src/lib/supabase', () => ({
+jest.mock('./src/core/lib/http/supabase', () => ({
   supabase: {
     auth: {
       getSession: jest.fn(async () => ({ data: { session: null }, error: null })),
@@ -26,8 +26,8 @@ jest.mock('./src/lib/supabase', () => ({
 
 // The translation-overrides refresh would call the real API from every flow test: off here.
 // lib/i18n-overrides.test.ts tests the real module (jest.requireActual).
-jest.mock('./src/lib/i18n-overrides', () => ({
-  ...jest.requireActual('./src/lib/i18n-overrides'),
+jest.mock('./src/core/lib/i18n/i18n-overrides', () => ({
+  ...jest.requireActual('./src/core/lib/i18n/i18n-overrides'),
   refreshOverrides: jest.fn(async () => false),
 }));
 

@@ -11,7 +11,7 @@ jest.mock('react-native/Libraries/ReactNative/I18nManager', () => {
 });
 jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
 const mockApiFetch = jest.fn();
-jest.mock('@/lib/api', () => ({ ...jest.requireActual('@/lib/api'), apiFetch: (p: string) => mockApiFetch(p) }));
+jest.mock('@/core/lib/http/api', () => ({ ...jest.requireActual('@/core/lib/http/api'), apiFetch: (p: string) => mockApiFetch(p) }));
 
 test('the sales inbox bell reads in English', async () => {
   mockApiFetch.mockImplementation(async (p: string) => {

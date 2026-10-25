@@ -1,4 +1,4 @@
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { readOnlyNoteText } from './ReadOnlySettings';
 
 test('the web note alone, or with a caller line folded into it', () => {

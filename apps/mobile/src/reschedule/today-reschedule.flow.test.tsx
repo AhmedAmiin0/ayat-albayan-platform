@@ -1,7 +1,7 @@
 import { renderApp, resetApp } from '@/test/app-router'; // first: its jest.mock calls must precede the app
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { calendarBackend, NOW } from '@/calendar/flow-backend';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 
 // The «جلسات مباشرة» section repeats the live card; it has its own tests (src/live).
 jest.mock('@/live/LiveSessions', () => ({ LiveSessions: () => null }));

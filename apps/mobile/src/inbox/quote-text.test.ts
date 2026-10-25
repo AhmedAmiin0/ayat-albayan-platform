@@ -1,5 +1,5 @@
 import type { MessageQuote } from '@ab/shared';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { quoteOf, quoteSender, quoteText } from './quote-text';
 import { inbound, message } from './thread-fixtures';
 

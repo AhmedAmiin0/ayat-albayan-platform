@@ -1,7 +1,7 @@
 import { formatPhone, sessionWindowOpen } from '@ab/shared';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useHolds } from '@/auth/use-permissions';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { inTree, useTreeBase } from '@/nav/tree-base';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { KeyboardFrame } from '@/core/ui/layout/KeyboardFrame';

@@ -1,6 +1,6 @@
 import { studentStatusStyle } from '@ab/shared';
 import { fireEvent, render, screen } from '@testing-library/react-native';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { ListRow } from './ListRow';
 import { ltr } from '../primitives/Ltr';
 import { StatusChip } from '../feedback/StatusChip';

@@ -1,7 +1,7 @@
 import type { Conflict, TrialDateResult, TrialHistory } from '@ab/shared';
 import { useMutation, useQuery, useQueryClient, type QueryClient } from '@tanstack/react-query';
-import { apiFetch, apiSend, toQueryString } from '@/lib/api';
-import { pathKey } from '@/lib/query-keys';
+import { apiFetch, apiSend, toQueryString } from '@/core/lib/http/api';
+import { pathKey } from '@/core/lib/query/query-keys';
 import { bookingPath, useBookingMode, type BookingMode } from '@/booking/booking-mode';
 import type { TrialDateBody } from './trial-date-body';
 

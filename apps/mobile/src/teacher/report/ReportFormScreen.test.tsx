@@ -1,6 +1,6 @@
 import type { ReportFormResponse } from '@ab/shared';
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { ltr } from '@/core/ui/primitives/Ltr';
 import { reportFormKey } from './api';
@@ -9,8 +9,8 @@ import { ReportFormScreen } from './ReportFormScreen';
 
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();
-jest.mock('@/lib/api', () => ({
-  ...jest.requireActual('@/lib/api'),
+jest.mock('@/core/lib/http/api', () => ({
+  ...jest.requireActual('@/core/lib/http/api'),
   apiFetch: (p: string) => mockApiFetch(p),
   apiSend: (m: string, p: string, b?: unknown) => mockApiSend(m, p, b),
 }));
@@ -21,7 +21,7 @@ jest.mock('expo-router', () => ({
 const mockPick = jest.fn();
 jest.mock('@/payments/receipt', () => ({ pickReceipt: (s: string) => mockPick(s) }));
 const mockUpload = jest.fn();
-jest.mock('@/lib/supabase', () => ({
+jest.mock('@/core/lib/http/supabase', () => ({
   supabase: { storage: { from: () => ({ uploadToSignedUrl: (...a: unknown[]) => mockUpload(...a) }) } },
 }));
 

@@ -1,5 +1,5 @@
 import type { ReceivablesView, TeacherEarningsSummaryView } from '@ab/shared';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { wholeText } from './format';
 import type { FinanceSummary } from './summary-types';
 

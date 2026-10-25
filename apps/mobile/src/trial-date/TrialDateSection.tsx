@@ -2,7 +2,7 @@ import { canPickTrialDate } from '@ab/shared';
 import { router } from 'expo-router';
 import { View } from 'react-native';
 import { usePermissions } from '@/auth/use-permissions';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import type { StudentProfile } from '@/students/types';
 import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';

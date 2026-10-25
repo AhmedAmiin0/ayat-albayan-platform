@@ -1,5 +1,5 @@
 import { intlLocale } from '@ab/shared';
-import { locale } from '@/lib/locale';
+import { locale } from '@/core/lib/i18n/locale';
 
 /** The newest `count` months ending with the one `today` is in, as YYYY-MM, newest first. */
 export function recentMonths(today: string, count = 6): string[] {

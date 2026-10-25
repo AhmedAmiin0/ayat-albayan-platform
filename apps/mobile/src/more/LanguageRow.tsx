@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { View } from 'react-native';
-import { t } from '@/lib/i18n';
-import { locale } from '@/lib/locale';
-import { setLocale } from '@/lib/locale-switch';
+import { t } from '@/core/lib/i18n/i18n';
+import { locale } from '@/core/lib/i18n/locale';
+import { setLocale } from '@/core/lib/i18n/locale-switch';
 import { ErrorLine } from '@/inbox/ErrorLine';
 import { InlineConfirm } from '@/core/ui/feedback/InlineConfirm';
 import { ListRow } from '@/core/ui/layout/ListRow';

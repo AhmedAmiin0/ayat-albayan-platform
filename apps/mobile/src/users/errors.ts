@@ -1,6 +1,6 @@
 import type { UserReference } from '@ab/shared';
-import { ApiError } from '@/lib/api';
-import { t } from '@/lib/i18n';
+import { ApiError } from '@/core/lib/http/api';
+import { t } from '@/core/lib/i18n/i18n';
 
 // Same mapping as the web (apps/web/src/features/users/errors.ts): the API's `code` → t.users.errors.
 

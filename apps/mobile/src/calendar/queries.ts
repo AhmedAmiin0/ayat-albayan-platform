@@ -1,7 +1,7 @@
 import type { LessonView } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
-import { apiFetch, toQueryString } from '@/lib/api';
-import { pathKey } from '@/lib/query-keys';
+import { apiFetch, toQueryString } from '@/core/lib/http/api';
+import { pathKey } from '@/core/lib/query/query-keys';
 import type { AvailabilityRow, Teacher } from '@/more/types';
 
 // Calendar reads. Keys are the API path's segments (lib/query-keys), so a lesson change that

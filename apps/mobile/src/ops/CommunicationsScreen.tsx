@@ -1,7 +1,7 @@
 import type { NotificationAudience } from '@ab/shared';
 import { useRef, useState } from 'react';
 import { ScrollView } from 'react-native';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { FilterPills } from '@/core/ui/form/FilterPills';
 import { Screen } from '@/core/ui/layout/Screen';
 import { CommsOverview } from './comms/CommsOverview';

@@ -3,7 +3,7 @@ import { Switch, View } from 'react-native';
 import { StartDayPicker } from '@/assistants/StartDayPicker';
 import { dayLabel } from '@/booking/slots';
 import { ErrorLine } from '@/inbox/ErrorLine';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/more/Note';
 import { Section } from '@/more/Section';
 import { StartDayPills } from '@/subscribe/SubscribeParts';

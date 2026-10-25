@@ -1,13 +1,13 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
-import { t } from '@/lib/i18n';
-import { pathKey } from '@/lib/query-keys';
+import { t } from '@/core/lib/i18n/i18n';
+import { pathKey } from '@/core/lib/query/query-keys';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { AssistantsSection, freeAssistants } from './AssistantsSection';
 
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();
-jest.mock('@/lib/api', () => ({
-  ...jest.requireActual('@/lib/api'),
+jest.mock('@/core/lib/http/api', () => ({
+  ...jest.requireActual('@/core/lib/http/api'),
   apiFetch: (...args: unknown[]) => mockApiFetch(...args),
   apiSend: (...args: unknown[]) => mockApiSend(...args),
 }));

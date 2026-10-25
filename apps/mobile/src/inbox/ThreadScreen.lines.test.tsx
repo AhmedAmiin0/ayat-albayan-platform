@@ -1,6 +1,6 @@
 import type { MessageView, ThreadView } from '@ab/shared';
 import { screen } from '@testing-library/react-native';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { fakeNow } from '@/test/fake-now';
 import { renderWithQuery } from '@/test/query';
 import { readable, SHOWN } from './privacy.helpers';
@@ -9,8 +9,8 @@ import { ThreadModeProvider } from './thread-mode';
 import { ThreadScreen } from './ThreadScreen';
 
 const mockApiFetch = jest.fn();
-jest.mock('@/lib/api', () => ({
-  ...jest.requireActual('@/lib/api'),
+jest.mock('@/core/lib/http/api', () => ({
+  ...jest.requireActual('@/core/lib/http/api'),
   apiFetch: (mockPath: string) => mockApiFetch(mockPath),
 }));
 jest.mock('expo-router', () => ({

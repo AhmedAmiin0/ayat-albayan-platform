@@ -1,5 +1,5 @@
 import { subscriptionStatusStyle } from '@ab/shared';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { money } from '@/payments/format';
 import { child, CHILD_ID, family, leadOnly, sub, usedUp } from './people-fixtures';
 import { badgeChip, childChip, dueLine, packageText, subscribeAction } from './subscription-words';

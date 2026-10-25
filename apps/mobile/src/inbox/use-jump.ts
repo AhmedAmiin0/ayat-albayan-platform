@@ -1,7 +1,7 @@
 import type { MessageView } from '@ab/shared';
 import { type RefObject, useEffect, useRef, useState } from 'react';
 import type { FlatList } from 'react-native';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { useChatActions } from './chat-actions';
 
 /** How long the original stays lit after a jump to it (ms). */

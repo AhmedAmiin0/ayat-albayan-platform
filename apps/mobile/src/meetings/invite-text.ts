@@ -1,8 +1,8 @@
 import { intlLocale, lessonWhenText, type MeetingInviteResult, type MeetingView } from '@ab/shared';
 import { cityOf } from '@/booking/slots';
-import { ApiError } from '@/lib/api';
-import { t } from '@/lib/i18n';
-import { locale } from '@/lib/locale';
+import { ApiError } from '@/core/lib/http/api';
+import { t } from '@/core/lib/i18n/i18n';
+import { locale } from '@/core/lib/i18n/locale';
 
 const L = t.meetingInvites;
 const errors: Record<string, string | undefined> = L.errors;

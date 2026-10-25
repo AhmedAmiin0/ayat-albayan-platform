@@ -1,6 +1,6 @@
 import { formatPhone } from '@ab/shared';
 import { View } from 'react-native';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/more/Note';
 import { ListRow } from '@/core/ui/layout/ListRow';
 import { ltr } from '@/core/ui/primitives/Ltr';

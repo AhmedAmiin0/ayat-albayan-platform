@@ -1,12 +1,12 @@
 import { fireEvent, screen } from '@testing-library/react-native';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
 import { familyOf, KID, kid, PHONE } from './fixtures';
 import { SalesSubscribeScreen } from './SalesSubscribeScreen';
 
 const mockApiFetch = jest.fn();
-jest.mock('@/lib/api', () => ({
-  ...jest.requireActual('@/lib/api'),
+jest.mock('@/core/lib/http/api', () => ({
+  ...jest.requireActual('@/core/lib/http/api'),
   apiFetch: (mockPath: string) => mockApiFetch(mockPath),
   apiSend: () => Promise.resolve(jest.requireActual('./fixtures').salesQuote),
 }));

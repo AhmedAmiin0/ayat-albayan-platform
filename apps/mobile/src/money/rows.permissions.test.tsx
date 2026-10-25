@@ -1,6 +1,6 @@
 import { fireEvent, screen } from '@testing-library/react-native';
-import { pathKey } from '@/lib/query-keys';
-import { t } from '@/lib/i18n';
+import { pathKey } from '@/core/lib/query/query-keys';
+import { t } from '@/core/lib/i18n/i18n';
 import { STUDENT, subscription } from '@/payments/fixtures';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { adminTask, receivable } from './fixtures';
@@ -11,7 +11,7 @@ import { TaskItem } from './TaskItem';
 // A hidden Students tab is a protected route: rows that push into it must not offer the tap.
 let mockHeld: string[] = [];
 const mockApiFetch = jest.fn(async () => ({ permissions: mockHeld }));
-jest.mock('@/lib/api', () => ({ ...jest.requireActual('@/lib/api'), apiFetch: () => mockApiFetch() }));
+jest.mock('@/core/lib/http/api', () => ({ ...jest.requireActual('@/core/lib/http/api'), apiFetch: () => mockApiFetch() }));
 const mockPush = jest.fn();
 jest.mock('expo-router', () => ({ router: { push: (mockHref: string) => mockPush(mockHref), back: jest.fn() } }));
 

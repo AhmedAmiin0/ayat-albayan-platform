@@ -1,8 +1,8 @@
 import { statusParamOfKind, type StudentListKind } from '@ab/shared';
 import { useState } from 'react';
 import { View } from 'react-native';
-import { t } from '@/lib/i18n';
-import { usePagedList } from '@/lib/use-paged-list';
+import { t } from '@/core/lib/i18n/i18n';
+import { usePagedList } from '@/core/lib/query/use-paged-list';
 import { NO_FILTERS } from '@/students/student-filters';
 import { KIND_EMPTY, kindCounts, kindPills, presetKind } from '@/students/student-kinds';
 import { StudentRow } from '@/students/StudentRow';

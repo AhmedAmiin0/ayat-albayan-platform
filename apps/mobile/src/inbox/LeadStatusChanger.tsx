@@ -1,8 +1,8 @@
 import { leadStatusStyle, type LeadStatus } from '@ab/shared';
 import { Pressable, View } from 'react-native';
-import { ApiError } from '@/lib/api';
-import { t } from '@/lib/i18n';
-import { useOptimisticStatus } from '@/lib/use-optimistic-status';
+import { ApiError } from '@/core/lib/http/api';
+import { t } from '@/core/lib/i18n/i18n';
+import { useOptimisticStatus } from '@/core/lib/query/use-optimistic-status';
 import { StatusChip } from '@/core/ui/feedback/StatusChip';
 import { type, useTheme } from '@/theme';
 import { allowedNextStatuses } from './allowed-next-statuses';

@@ -1,6 +1,6 @@
 import { intlLocale, type PayoutView } from '@ab/shared';
-import { t } from '@/lib/i18n';
-import { locale } from '@/lib/locale';
+import { t } from '@/core/lib/i18n/i18n';
+import { locale } from '@/core/lib/i18n/locale';
 
 // «مستحقاتي» lines (R-TCH-04): month names and amounts in the UI language, Western digits. Pure.
 

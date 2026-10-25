@@ -1,5 +1,5 @@
 import { FlatList } from 'react-native';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { LoadState } from './LoadState';
 import { useMyPayments } from './my-api';
 import { MyPaymentItem } from './MyPaymentItem';

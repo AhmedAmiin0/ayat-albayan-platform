@@ -1,9 +1,9 @@
 import type { SendGateView } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { View } from 'react-native';
-import { apiFetch } from '@/lib/api';
-import { t } from '@/lib/i18n';
-import { pathKey } from '@/lib/query-keys';
+import { apiFetch } from '@/core/lib/http/api';
+import { t } from '@/core/lib/i18n/i18n';
+import { pathKey } from '@/core/lib/query/query-keys';
 import { Note } from '@/more/Note';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { StatusChip } from '@/core/ui/feedback/StatusChip';

@@ -1,8 +1,8 @@
 import { RIYADH_TZ, type LessonView } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
-import { apiFetch, toQueryString } from '@/lib/api';
-import { pathKey } from '@/lib/query-keys';
+import { apiFetch, toQueryString } from '@/core/lib/http/api';
+import { pathKey } from '@/core/lib/query/query-keys';
 import { localDate } from './timeline';
 
 const MINUTE = 60_000;

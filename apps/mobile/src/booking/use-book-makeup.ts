@@ -1,6 +1,6 @@
 import type { BookingResult } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { apiSend } from '@/lib/api';
+import { apiSend } from '@/core/lib/http/api';
 import { makeupRequest } from './makeup-body';
 import type { MakeupDraft } from './makeup-draft';
 

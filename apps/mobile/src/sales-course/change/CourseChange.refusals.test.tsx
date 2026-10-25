@@ -3,8 +3,8 @@ import { screen, waitFor } from '@testing-library/react-native';
 import { slot } from '@/booking/fixtures';
 import { dayStartUtc } from '@/booking/slots';
 import { dayLine } from '@/booking/picks';
-import { ApiError } from '@/lib/api';
-import { t } from '@/lib/i18n';
+import { ApiError } from '@/core/lib/http/api';
+import { t } from '@/core/lib/i18n/i18n';
 import { fakeNow } from '@/test/fake-now';
 import { renderWithQuery } from '@/test/query';
 import { isDisabled, press } from '../course-test-utils';
@@ -14,8 +14,8 @@ import { changeApi, changeSundayToMonday, NOW, runningCourse, TZ, windowed } fro
 
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();
-jest.mock('@/lib/api', () => ({
-  ...jest.requireActual('@/lib/api'),
+jest.mock('@/core/lib/http/api', () => ({
+  ...jest.requireActual('@/core/lib/http/api'),
   apiFetch: (mockPath: string) => mockApiFetch(mockPath),
   apiSend: (...mockArgs: unknown[]) => mockApiSend(...mockArgs),
 }));

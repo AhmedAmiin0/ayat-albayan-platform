@@ -1,7 +1,7 @@
 import { MESSAGE_STATUSES, type MessageStatus } from '@ab/shared';
 import { fireEvent, render, screen } from '@testing-library/react-native';
 import { StyleSheet } from 'react-native';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { palette } from '@/theme';
 import { DeliveryTicks } from './DeliveryTicks';
 

@@ -4,7 +4,7 @@ import { View } from 'react-native';
 import { JoinClassroomButton } from '@/classroom/JoinClassroomButton';
 import { EditTimeButton } from '@/edit-time/EditTimeButton';
 import { editMode } from '@/edit-time/types';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { LiveBadge } from '@/live/LiveBadge';
 import { type, useTheme } from '@/theme';
 import { durationLabel, riyadhTime, studentNames } from '@/today/lesson-text';

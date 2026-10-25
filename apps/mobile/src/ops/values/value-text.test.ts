@@ -1,5 +1,5 @@
 import { EDITABLE_VALUE_KEYS, OWNED_VALUE_GROUPS, type SettingKey } from '@ab/shared';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { GROUP_IDS, groupKeys, groupLabel } from './value-groups';
 import { boundsOf, hintOf, impactOf, labelOf, optionLabel, textAt, valueText } from './value-text';
 

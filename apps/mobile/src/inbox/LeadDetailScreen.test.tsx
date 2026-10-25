@@ -1,7 +1,7 @@
 import { fireEvent, screen } from '@testing-library/react-native';
 import { Linking } from 'react-native';
-import { t } from '@/lib/i18n';
-import { listKey } from '@/lib/query-keys';
+import { t } from '@/core/lib/i18n/i18n';
+import { listKey } from '@/core/lib/query/query-keys';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { ltr } from '@/core/ui/primitives/Ltr';
 import { cachedList, huda, unnamed } from './fixtures';
@@ -10,8 +10,8 @@ import { answer, hudaProfile } from './qualification/fixtures';
 
 // GET /leads?q=phone (the fresh row under the facts) and /settings; huda answers for any phone.
 const mockApiFetch = jest.fn();
-jest.mock('@/lib/api', () => ({
-  ...jest.requireActual('@/lib/api'),
+jest.mock('@/core/lib/http/api', () => ({
+  ...jest.requireActual('@/core/lib/http/api'),
   apiFetch: (mockPath: string) => mockApiFetch(mockPath),
 }));
 const mockBack = jest.fn();

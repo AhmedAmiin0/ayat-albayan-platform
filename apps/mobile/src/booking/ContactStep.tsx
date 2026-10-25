@@ -2,7 +2,7 @@ import type { Gender, LeadSource } from '@ab/shared';
 import { useState, type ReactNode } from 'react';
 import { View } from 'react-native';
 import { ErrorLine } from '@/inbox/ErrorLine';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/more/Note';
 import { FormLabel } from '@/payments/FormLabel';
 import { Button } from '@/core/ui/primitives/Button';

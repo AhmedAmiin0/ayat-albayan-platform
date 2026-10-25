@@ -1,7 +1,7 @@
 import { act, fireEvent, screen, within } from '@testing-library/react-native';
 import { DeviceEventEmitter, Platform } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { detail, inbound, thread } from './thread-fixtures';
 import { ThreadScreen } from './ThreadScreen';
@@ -9,8 +9,8 @@ import { ThreadScreen } from './ThreadScreen';
 // The owner's Android sales chat (2026-10-25): the composer was under the keyboard. A 400 × 800
 // window, 32pt status bar, 48pt navigation bar; the chat body starts under the status bar.
 const mockApiFetch = jest.fn();
-jest.mock('@/lib/api', () => ({
-  ...jest.requireActual('@/lib/api'),
+jest.mock('@/core/lib/http/api', () => ({
+  ...jest.requireActual('@/core/lib/http/api'),
   apiFetch: (mockPath: string) => mockApiFetch(mockPath),
 }));
 jest.mock('expo-router', () => ({

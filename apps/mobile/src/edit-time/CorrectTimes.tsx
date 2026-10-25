@@ -2,7 +2,7 @@ import type { LessonView } from '@ab/shared';
 import { View } from 'react-native';
 import { slotLegend } from '@/booking/slots';
 import { dayLabel } from '@/calendar/week';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { FormLabel } from '@/payments/FormLabel';
 import { SlotButton } from '@/reschedule/SlotButton';
 import { type, useTheme } from '@/theme';

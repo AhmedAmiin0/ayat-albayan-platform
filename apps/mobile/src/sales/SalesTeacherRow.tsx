@@ -1,6 +1,6 @@
 import type { SalesTeacherView } from '@ab/shared';
 import { router } from 'expo-router';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/more/Note';
 import { countsLine } from '@/students/student-kinds';
 import { ListRow } from '@/core/ui/layout/ListRow';

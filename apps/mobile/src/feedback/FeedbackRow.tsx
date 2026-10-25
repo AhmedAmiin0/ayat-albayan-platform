@@ -1,6 +1,6 @@
 import { formatPhone } from '@ab/shared';
 import { View } from 'react-native';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/more/Note';
 import { localDate } from '@/today/timeline';
 import { shape, type, useTheme } from '@/theme';

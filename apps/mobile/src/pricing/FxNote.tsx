@@ -1,6 +1,6 @@
 import { FX_ATTRIBUTION_URL } from '@ab/shared';
 import { Linking, Pressable, View } from 'react-native';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/more/Note';
 import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';

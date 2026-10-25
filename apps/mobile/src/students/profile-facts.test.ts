@@ -1,4 +1,4 @@
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { profileFacts } from './profile-facts';
 import { profile as base } from './test-data';
 

@@ -1,11 +1,11 @@
 import { fireEvent, screen } from '@testing-library/react-native';
-import { ApiError, apiFetch, apiSend } from '@/lib/api';
-import { t } from '@/lib/i18n';
+import { ApiError, apiFetch, apiSend } from '@/core/lib/http/api';
+import { t } from '@/core/lib/i18n/i18n';
 import { profileFixture, savedProfile } from '@/test/account';
 import { renderWithQuery } from '@/test/query';
 import { AccountScreen } from './AccountScreen';
 
-jest.mock('@/lib/api', () => ({ ...jest.requireActual('@/lib/api'), apiFetch: jest.fn(), apiSend: jest.fn() }));
+jest.mock('@/core/lib/http/api', () => ({ ...jest.requireActual('@/core/lib/http/api'), apiFetch: jest.fn(), apiSend: jest.fn() }));
 jest.mock('expo-router', () => ({ router: { back: jest.fn(), canGoBack: jest.fn(() => true) } }));
 
 const send = jest.mocked(apiSend);

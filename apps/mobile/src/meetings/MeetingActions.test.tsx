@@ -1,7 +1,7 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { router } from 'expo-router';
-import { ApiError } from '@/lib/api';
-import { t } from '@/lib/i18n';
+import { ApiError } from '@/core/lib/http/api';
+import { t } from '@/core/lib/i18n/i18n';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { CreateMeeting } from './CreateMeeting';
 import { MeetingActions } from './MeetingActions';
@@ -10,8 +10,8 @@ let mockSegments: string[] = ['(tabs)'];
 jest.mock('expo-router', () => ({ router: { push: jest.fn() }, useSegments: () => mockSegments }));
 const mockApiSend = jest.fn();
 const mockApiFetch = jest.fn();
-jest.mock('@/lib/api', () => ({
-  ...jest.requireActual('@/lib/api'),
+jest.mock('@/core/lib/http/api', () => ({
+  ...jest.requireActual('@/core/lib/http/api'),
   apiSend: (...args: unknown[]) => mockApiSend(...args),
   apiFetch: (...args: unknown[]) => mockApiFetch(...args),
 }));

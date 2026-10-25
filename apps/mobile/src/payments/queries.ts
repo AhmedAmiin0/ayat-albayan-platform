@@ -1,8 +1,8 @@
 import type { AcademySettings, PaymentView, StudentBalanceView } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
-import { apiFetch, toQueryString } from '@/lib/api';
-import type { Page } from '@/lib/paging';
-import { listKey, pathKey } from '@/lib/query-keys';
+import { apiFetch, toQueryString } from '@/core/lib/http/api';
+import type { Page } from '@/core/lib/query/paging';
+import { listKey, pathKey } from '@/core/lib/query/query-keys';
 
 // Money reads (docs/11 §6–7). Keys follow lib/query-keys, so invalidating ['students', id] reaches
 // the balance and ['payments'] reaches every payments list.

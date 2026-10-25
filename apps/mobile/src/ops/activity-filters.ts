@@ -1,6 +1,6 @@
 import { ACTIVITY_ROLES } from '@ab/shared';
-import { t } from '@/lib/i18n';
-import type { ListParams } from '@/lib/query-keys';
+import { t } from '@/core/lib/i18n/i18n';
+import type { ListParams } from '@/core/lib/query/query-keys';
 import { ascii } from './ascii-digits';
 
 /** The server's filters of GET /activity that fit a phone: who (role), what (entity), when (days). */

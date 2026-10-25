@@ -1,6 +1,6 @@
 import type { AssistantCommissionView, AssistantStatementView, AssistantTermsRow, AssistantTermsView, PayoutStatus } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
-import { apiFetch } from '@/lib/api';
+import { apiFetch } from '@/core/lib/http/api';
 
 // apps/api assistant-pay (owner, 2026-10-06; web apps/web/src/features/assistants/api.ts). Reads need
 // assistantpay.read, writes assistantpay.write, approve/reopen/unpay assistantpay.approve. Per currency.

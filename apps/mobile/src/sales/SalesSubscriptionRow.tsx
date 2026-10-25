@@ -1,5 +1,5 @@
 import { router } from 'expo-router';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { Button } from '@/core/ui/primitives/Button';
 import { ListRow } from '@/core/ui/layout/ListRow';
 import type { SalesSubscription } from './sales-api';

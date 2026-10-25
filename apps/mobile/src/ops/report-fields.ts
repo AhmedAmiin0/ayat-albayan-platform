@@ -1,5 +1,5 @@
 import { REPORT_RUBRICS, type ReportView } from '@ab/shared';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 
 export interface ReportField {
   /** Unique: the rubric repeats the words «الحفظ الجديد» and «المراجعة». */

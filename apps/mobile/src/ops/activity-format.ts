@@ -1,7 +1,7 @@
 import { intlLocale } from '@ab/shared';
 import type { ActivityView, StatusStyle } from '@ab/shared';
-import { t } from '@/lib/i18n';
-import { locale } from '@/lib/locale';
+import { t } from '@/core/lib/i18n/i18n';
+import { locale } from '@/core/lib/i18n/locale';
 
 // The log is the academy's: times read in Asia/Riyadh, 24 h, Western digits (same as the web).
 

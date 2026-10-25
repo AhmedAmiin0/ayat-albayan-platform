@@ -2,7 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { renderRouter, screen } from 'expo-router/testing-library';
 import { Text } from 'react-native';
 import { useThreadMode } from '@/inbox/thread-mode';
-import { queryClient } from '@/lib/query-client';
+import { queryClient } from '@/core/lib/query/query-client';
 import { TabStack } from '@/nav/TabStack';
 import { useTreeBase } from '@/nav/tree-base';
 import { type PushTree, routeIn } from '@/push/notification-route';
@@ -21,8 +21,8 @@ jest.mock('@/push/registerPush', () => ({ registerPush: jest.fn(async () => unde
 // /auth/me with no `permissions` list: nothing hidden, so each tree opens on its first tab.
 const mockMe = { answer: {} as object };
 const mockTeacher = { id: 't1', display_name_ar: 'أبرار', tz: 'Africa/Cairo', students: [] };
-jest.mock('@/lib/api', () => ({
-  ...jest.requireActual('@/lib/api'),
+jest.mock('@/core/lib/http/api', () => ({
+  ...jest.requireActual('@/core/lib/http/api'),
   apiFetch: async (path: string) =>
     path === '/auth/me' ? mockMe.answer : path === '/teachers/me' ? mockTeacher : { total: 0 },
 }));

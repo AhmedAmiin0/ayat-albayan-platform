@@ -1,5 +1,5 @@
 import type { NotificationsPage } from '@ab/shared';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 
 // Pure helpers for the bell (R-NOT-01): the badge text and the optimistic «read» edit.
 

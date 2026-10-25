@@ -1,14 +1,14 @@
 import type { ThreadView } from '@ab/shared';
 import { fireEvent, screen } from '@testing-library/react-native';
 import { router } from 'expo-router';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
 import { InboxScreen } from './InboxScreen';
 import { thread } from './thread-fixtures';
 
 const mockApiFetch = jest.fn();
-jest.mock('@/lib/api', () => ({
-  ...jest.requireActual('@/lib/api'),
+jest.mock('@/core/lib/http/api', () => ({
+  ...jest.requireActual('@/core/lib/http/api'),
   apiFetch: (mockPath: string) => mockApiFetch(mockPath),
 }));
 jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));

@@ -1,6 +1,6 @@
 import { Pressable } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { shape, useTheme } from '@/theme';
 import { studentNames } from '@/today/lesson-text';
 import { editMode, type EditableLesson } from './types';

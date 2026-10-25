@@ -1,7 +1,7 @@
 import type { QuoteResponse } from '@ab/shared';
 import type { UseQueryResult } from '@tanstack/react-query';
 import { View } from 'react-native';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/more/Note';
 import { Section } from '@/more/Section';
 import type { StudentRef } from '@/students/types';

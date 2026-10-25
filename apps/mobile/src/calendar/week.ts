@@ -1,6 +1,6 @@
 import { intlLocale, RIYADH_TZ } from '@ab/shared';
-import { t } from '@/lib/i18n';
-import { locale } from '@/lib/locale';
+import { t } from '@/core/lib/i18n/i18n';
+import { locale } from '@/core/lib/i18n/locale';
 import { localDate } from '@/today/timeline';
 
 // Calendar days for the mobile schedule (R-SCH-01, R-TCH-02): the academy week runs السبت →

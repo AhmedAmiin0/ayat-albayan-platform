@@ -2,16 +2,16 @@ import { fireEvent, screen } from '@testing-library/react-native';
 import { router } from 'expo-router';
 import { detail, inbound, NOW, thread } from '@/inbox/thread-fixtures';
 import { ThreadScreen } from '@/inbox/ThreadScreen';
-import { t } from '@/lib/i18n';
-import { pathKey } from '@/lib/query-keys';
+import { t } from '@/core/lib/i18n/i18n';
+import { pathKey } from '@/core/lib/query/query-keys';
 import { TreeBaseProvider } from '@/nav/tree-base';
 import { fakeNow } from '@/test/fake-now';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 
 // The salesperson's own tree (base role sales): the shared thread screen in sales mode under /sales.
 const mockApiFetch = jest.fn();
-jest.mock('@/lib/api', () => ({
-  ...jest.requireActual('@/lib/api'),
+jest.mock('@/core/lib/http/api', () => ({
+  ...jest.requireActual('@/core/lib/http/api'),
   apiFetch: (mockPath: string) => mockApiFetch(mockPath),
 }));
 jest.mock('expo-router', () => ({

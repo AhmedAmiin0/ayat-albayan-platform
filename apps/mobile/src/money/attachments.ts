@@ -1,5 +1,5 @@
 import type { PaymentAttachmentView } from '@ab/shared';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { isPdfName } from './receipt-file';
 
 export interface AttachmentRow {

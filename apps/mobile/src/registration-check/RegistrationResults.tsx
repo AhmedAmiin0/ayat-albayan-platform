@@ -1,6 +1,6 @@
 import { studentStatusStyle, type RegistrationCheckView } from '@ab/shared';
 import { View } from 'react-native';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/more/Note';
 import { Section } from '@/more/Section';
 import { EmptyState } from '@/core/ui/feedback/EmptyState';

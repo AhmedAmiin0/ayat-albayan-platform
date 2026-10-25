@@ -2,7 +2,7 @@ import { PAYMENT_METHODS, earningIdsOf, payCeiling, type PaymentMethod, type Tea
 import { useState } from 'react';
 import { View } from 'react-native';
 import { ErrorLine } from '@/inbox/ErrorLine';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { AmountField } from '@/payments/AmountField';
 import { FormLabel } from '@/payments/FormLabel';
 import { PaidDayPicker } from '@/payments/PaidDayPicker';

@@ -1,6 +1,6 @@
 import { View } from 'react-native';
 import { SummaryList } from '@/booking/ConfirmStep';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { SectionLabel } from '@/students/SectionLabel';
 import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';

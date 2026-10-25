@@ -2,8 +2,8 @@ import { applyLessonEvent, clockTime, isOpenLesson, lessonStatusStyle, type Less
 import { Linking, View } from 'react-native';
 import { JoinClassroomButton } from '@/classroom/JoinClassroomButton';
 import { ErrorLine } from '@/inbox/ErrorLine';
-import { t } from '@/lib/i18n';
-import { usePlatformClassroom } from '@/lib/public-config';
+import { t } from '@/core/lib/i18n/i18n';
+import { usePlatformClassroom } from '@/core/lib/query/public-config';
 import { LiveBadge } from '@/live/LiveBadge';
 import { shape, type, useTheme } from '@/theme';
 import { durationLabel, studentNames } from '@/today/lesson-text';

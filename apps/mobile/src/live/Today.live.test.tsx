@@ -1,5 +1,5 @@
 import { screen } from '@testing-library/react-native';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { TeacherTodayScreen } from '@/teacher/TeacherTodayScreen';
 import { fakeNow } from '@/test/fake-now';
 import { renderWithQuery } from '@/test/query';
@@ -7,8 +7,8 @@ import { lesson } from '@/today/fixtures';
 import TodayRoute from '../../app/(tabs)/index';
 
 const mockApiFetch = jest.fn();
-jest.mock('@/lib/api', () => ({
-  ...jest.requireActual('@/lib/api'),
+jest.mock('@/core/lib/http/api', () => ({
+  ...jest.requireActual('@/core/lib/http/api'),
   apiFetch: (p: string) => mockApiFetch(p),
 }));
 jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));

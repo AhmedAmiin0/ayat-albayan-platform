@@ -1,6 +1,6 @@
 import type { StudentStatus } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
-import { apiFetch, toQueryString } from '@/lib/api';
+import { apiFetch, toQueryString } from '@/core/lib/http/api';
 import { countParams, type StudentFilters } from './student-filters';
 
 export type StatusCounts = Record<StudentStatus, number>;

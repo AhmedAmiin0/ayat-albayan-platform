@@ -1,5 +1,5 @@
 import { settingDef, tzOptionLabel, type SettingKey } from '@ab/shared';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 
 // «القيم» on the phone: a setting's words (label, description, value as text) from the registry's
 // dotted i18n paths, so the phone reads the same strings as the web.

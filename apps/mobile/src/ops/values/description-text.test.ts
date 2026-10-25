@@ -1,6 +1,6 @@
 import type { Permission } from '@ab/shared';
-import { ApiError } from '@/lib/api';
-import { t } from '@/lib/i18n';
+import { ApiError } from '@/core/lib/http/api';
+import { t } from '@/core/lib/i18n/i18n';
 import { canDescribe, checkDescription, counterText, describeError, descriptionOf } from './description-text';
 import { entryOf } from './entries-fixtures';
 

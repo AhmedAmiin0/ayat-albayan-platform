@@ -1,12 +1,12 @@
 import { screen } from '@testing-library/react-native';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
 import { historyOf, OLD, trialRow } from './fixtures';
 import { TrialDateScreen } from './TrialDateScreen';
 
 const mockApiFetch = jest.fn();
-jest.mock('@/lib/api', () => ({
-  ...jest.requireActual('@/lib/api'),
+jest.mock('@/core/lib/http/api', () => ({
+  ...jest.requireActual('@/core/lib/http/api'),
   apiFetch: (mockPath: string) => mockApiFetch(mockPath),
 }));
 const mockParams = { value: { studentId: '44444444-4444-4444-8444-444444444444', name: 'ريم' } as Record<string, string> };

@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { View } from 'react-native';
 import { AccountHeaderAvatar } from '@/account/AccountHeaderAvatar';
 import { AccountRow } from '@/account/AccountRow';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { SalesSection } from '@/sales/SalesSection';
 import { Button } from '@/core/ui/primitives/Button';
 import { ListRow } from '@/core/ui/layout/ListRow';

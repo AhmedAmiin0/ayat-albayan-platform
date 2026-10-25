@@ -1,7 +1,7 @@
 {
   "apps/mobile/src": {
     "files": 1,
-    "dirs": 39
+    "dirs": 38
   },
   "apps/mobile/src/account": {
     "files": 19,
@@ -48,10 +48,6 @@
     "dirs": 0
   },
   "apps/mobile/src/inbox/saved-replies": {
-    "files": 16,
-    "dirs": 0
-  },
-  "apps/mobile/src/lib": {
     "files": 16,
     "dirs": 0
   },

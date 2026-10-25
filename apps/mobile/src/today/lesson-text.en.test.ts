@@ -2,8 +2,8 @@ import { jana, lesson, yusuf } from './fixtures';
 import { studentNames } from './lesson-text';
 
 // The UI in English: the compact row joins names with en.json's «, ».
-jest.mock('@/lib/i18n', () => ({
-  ...jest.requireActual<object>('@/lib/i18n'),
+jest.mock('@/core/lib/i18n/i18n', () => ({
+  ...jest.requireActual<object>('@/core/lib/i18n/i18n'),
   t: jest.requireActual<object>('@ab/shared/i18n/en.json'),
 }));
 

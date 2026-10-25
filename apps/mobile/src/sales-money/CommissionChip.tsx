@@ -1,5 +1,5 @@
 import type { AssistantCommissionStatus } from '@ab/shared';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { StatusChip } from '@/core/ui/feedback/StatusChip';
 
 /** «مستحقة» is settled money (ok); «ملغاة» was taken back (neutral, struck), as the web's CommissionChip. */

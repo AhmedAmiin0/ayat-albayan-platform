@@ -1,12 +1,12 @@
 import type { PayoutView } from '@ab/shared';
 import { screen } from '@testing-library/react-native';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
 import { MyPayoutsScreen } from './MyPayoutsScreen';
 import { breakdownLines, monthLabel, payoutSummary, payoutWhen } from './payout-text';
 
 const mockApiFetch = jest.fn();
-jest.mock('@/lib/api', () => ({ ...jest.requireActual('@/lib/api'), apiFetch: (p: string) => mockApiFetch(p) }));
+jest.mock('@/core/lib/http/api', () => ({ ...jest.requireActual('@/core/lib/http/api'), apiFetch: (p: string) => mockApiFetch(p) }));
 jest.mock('expo-router', () => ({ router: { back: jest.fn() } }));
 
 const paid: PayoutView = {

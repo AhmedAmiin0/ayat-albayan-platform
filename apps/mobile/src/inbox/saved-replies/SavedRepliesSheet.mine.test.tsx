@@ -1,5 +1,5 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
 import { pickChatFile } from '../send-file';
 import { MINE, REPLIES } from './fixtures';
@@ -8,12 +8,12 @@ import { SavedRepliesSheet } from './SavedRepliesSheet';
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();
 const mockUpload = jest.fn();
-jest.mock('@/lib/api', () => ({
-  ...jest.requireActual('@/lib/api'),
+jest.mock('@/core/lib/http/api', () => ({
+  ...jest.requireActual('@/core/lib/http/api'),
   apiFetch: (mockPath: string) => mockApiFetch(mockPath),
   apiSend: (...mockArgs: unknown[]) => mockApiSend(...mockArgs),
 }));
-jest.mock('@/lib/supabase', () => ({ supabase: { storage: { from: () => ({ uploadToSignedUrl: mockUpload }) } } }));
+jest.mock('@/core/lib/http/supabase', () => ({ supabase: { storage: { from: () => ({ uploadToSignedUrl: mockUpload }) } } }));
 jest.mock('../send-file', () => ({ ...jest.requireActual('../send-file'), pickChatFile: jest.fn() }));
 
 const onPick = jest.fn();

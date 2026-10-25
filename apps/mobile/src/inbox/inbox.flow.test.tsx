@@ -1,5 +1,5 @@
 import { fireEvent, screen, waitFor, within } from '@testing-library/react-native';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { renderApp, resetApp } from '@/test/app-router';
 import { pullToRefresh } from '@/test/pull-refresh';
 import { GUARDIAN_PHONE, inboxBackend } from './flow-backend';

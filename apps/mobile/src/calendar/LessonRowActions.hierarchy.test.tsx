@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react-native';
 import { StyleSheet } from 'react-native';
 import { OVERVIEW } from './overview-fixtures';
 import { LessonRowActions } from './LessonRowActions';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 
 const action = { busyId: null, errorFor: () => null, confirm: jest.fn(), cancel: jest.fn() } as never;
 const pending = OVERVIEW.lessons.find((l) => l.id === 'l-pending');

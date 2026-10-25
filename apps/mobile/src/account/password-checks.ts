@@ -1,5 +1,5 @@
 import { DEFAULT_PASSWORD_MIN, passwordProblem } from '@ab/shared';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import type { AccountFieldErrors } from './account-errors';
 
 export interface PasswordDraft {

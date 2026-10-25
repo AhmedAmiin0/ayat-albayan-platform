@@ -1,6 +1,6 @@
 import { counted, packagePerWeek, type BookingResult, type Duration, type PackageSize } from '@ab/shared';
 import type { Href } from 'expo-router';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { localDate } from '@/today/timeline';
 import type { TrialDraft } from './draft';
 import { NO_PICKS, picksOf } from './picks';

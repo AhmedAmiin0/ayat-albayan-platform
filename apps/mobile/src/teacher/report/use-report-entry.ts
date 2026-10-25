@@ -11,7 +11,7 @@ import {
 } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
-import { pathKey } from '@/lib/query-keys';
+import { pathKey } from '@/core/lib/query/query-keys';
 import { submitReport } from './api';
 import { useAutosave } from './use-autosave';
 

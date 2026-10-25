@@ -1,8 +1,8 @@
 import type { SalesTeacherView, StudentListKind } from '@ab/shared';
 import { router } from 'expo-router';
 import { View } from 'react-native';
-import { t } from '@/lib/i18n';
-import { usePlatformClassroom } from '@/lib/public-config';
+import { t } from '@/core/lib/i18n/i18n';
+import { usePlatformClassroom } from '@/core/lib/query/public-config';
 import { Note } from '@/more/Note';
 import { kindPills } from '@/students/student-kinds';
 import { Button } from '@/core/ui/primitives/Button';

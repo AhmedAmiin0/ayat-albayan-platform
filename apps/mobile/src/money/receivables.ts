@@ -1,5 +1,5 @@
 import { normalizeArabic, type ReceivableRow } from '@ab/shared';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 
 /** Past this many days the web shows the late count in saffron; so does the phone. */
 export const SEVERE_DAYS = 60;

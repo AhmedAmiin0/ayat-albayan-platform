@@ -1,10 +1,10 @@
 import type { AcademySettings, FollowUpNote } from '@ab/shared';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { apiFetch, apiSend, toQueryString } from '@/lib/api';
-import { patchCached, type Page } from '@/lib/paging';
-import { pathKey } from '@/lib/query-keys';
+import { apiFetch, apiSend, toQueryString } from '@/core/lib/http/api';
+import { patchCached, type Page } from '@/core/lib/query/paging';
+import { pathKey } from '@/core/lib/query/query-keys';
 import { isOffline } from '@/payments/payment-errors';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import type { Lead } from '../types';
 
 /**

@@ -1,6 +1,6 @@
 import { bookFailure, type BookFailure } from '@/booking/booking-errors';
-import { ApiError } from '@/lib/api';
-import { t } from '@/lib/i18n';
+import { ApiError } from '@/core/lib/http/api';
+import { t } from '@/core/lib/i18n/i18n';
 import { isOffline } from '@/payments/payment-errors';
 
 // What a failed PATCH /lessons/:id/time means (docs/10 §3: clients switch on `code`).

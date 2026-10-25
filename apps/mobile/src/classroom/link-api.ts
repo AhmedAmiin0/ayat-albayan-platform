@@ -1,6 +1,6 @@
 import type { JoinLinkResult, JoinLinkUrl } from '@ab/shared';
-import { ApiError, apiSend } from '@/lib/api';
-import { t } from '@/lib/i18n';
+import { ApiError, apiSend } from '@/core/lib/http/api';
+import { t } from '@/core/lib/i18n/i18n';
 import { joinError } from './join-text';
 
 /** POST /lessons/:id/join-link (admin): the family's one-lesson link, sent to the guardian on WhatsApp. */

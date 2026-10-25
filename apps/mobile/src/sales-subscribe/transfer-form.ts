@@ -1,5 +1,5 @@
 import { parseAmount, type SalesMoneySubscriptionView } from '@ab/shared';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import type { Attachment } from '@/payments/attachments';
 import { paidAtFor } from '@/payments/paid-day';
 

@@ -1,7 +1,7 @@
 import { isPackageEnded, type SalesFamilyView, type SalesMoneySubscriptionView } from '@ab/shared';
 import { useQuery, type QueryClient } from '@tanstack/react-query';
-import { apiFetch } from '@/lib/api';
-import { t } from '@/lib/i18n';
+import { apiFetch } from '@/core/lib/http/api';
+import { t } from '@/core/lib/i18n/i18n';
 
 // GET /sales/money/family?phone (R-ASST-01): HER students in this chat's family, each with the
 // packages still owed. Only hers: an empty list means nothing of the family is hers to sell.

@@ -1,7 +1,7 @@
 import { SAVED_REPLY_BODY_MAX, SAVED_REPLY_TITLE_MAX, type SavedReply, type SavedReplyScope } from '@ab/shared';
 import { useState } from 'react';
 import { ScrollView, View } from 'react-native';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { Button } from '@/core/ui/primitives/Button';
 import { Field } from '@/core/ui/form/Field';
 import { ErrorLine } from '../ErrorLine';

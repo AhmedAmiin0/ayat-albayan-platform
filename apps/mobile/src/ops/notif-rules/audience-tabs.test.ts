@@ -1,4 +1,4 @@
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { catalogue } from '../fixtures';
 import { audienceTabs, rowsOf } from './audience-tabs';
 

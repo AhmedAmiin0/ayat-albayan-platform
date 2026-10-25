@@ -1,8 +1,8 @@
 import { act, renderRouter, screen, waitFor } from 'expo-router/testing-library';
 import { Text } from 'react-native';
-import { t } from '@/lib/i18n';
-import { pathKey } from '@/lib/query-keys';
-import { queryClient } from '@/lib/query-client';
+import { t } from '@/core/lib/i18n/i18n';
+import { pathKey } from '@/core/lib/query/query-keys';
+import { queryClient } from '@/core/lib/query/query-client';
 import { TabStack } from '@/nav/TabStack';
 import TabsLayout from '../../app/(tabs)/_layout';
 import RootLayout from '../../app/_layout';
@@ -20,7 +20,7 @@ const mockApiFetch = jest.fn(async (path: string) => {
   if (path.startsWith('/teachers/me')) return { id: 't1', display_name_ar: 'أبرار', tz: 'Africa/Cairo', students: [] };
   return { total: 0 };
 });
-jest.mock('@/lib/api', () => ({ ...jest.requireActual('@/lib/api'), apiFetch: (p: string) => mockApiFetch(p) }));
+jest.mock('@/core/lib/http/api', () => ({ ...jest.requireActual('@/core/lib/http/api'), apiFetch: (p: string) => mockApiFetch(p) }));
 jest.mock('@/auth/use-auth-gate', () => ({ useAuthGate: () => (globalThis as { gate?: string }).gate ?? 'admin' }));
 
 const stub = (label: string) => () => <Text>{label}</Text>;

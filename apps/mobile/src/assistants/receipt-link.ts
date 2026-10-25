@@ -1,6 +1,6 @@
 import type { SignedDownload } from '@ab/shared';
 import { Linking } from 'react-native';
-import { apiFetch } from '@/lib/api';
+import { apiFetch } from '@/core/lib/http/api';
 
 /** A paid statement's receipt: GET /assistant-pay/statements/:id/receipt (a short-lived signed URL), opened in the browser. */
 export async function openStatementReceipt(statementId: string): Promise<void> {

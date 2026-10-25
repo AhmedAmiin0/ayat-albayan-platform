@@ -1,7 +1,7 @@
 import type { PaymentView } from '@ab/shared';
 import { ActivityIndicator, FlatList } from 'react-native';
-import { usePagedList } from '@/lib/use-paged-list';
-import { t } from '@/lib/i18n';
+import { usePagedList } from '@/core/lib/query/use-paged-list';
+import { t } from '@/core/lib/i18n/i18n';
 import { PaymentItem } from '@/money/PaymentItem';
 import { PaymentTotals } from '@/money/PaymentTotals';
 import { periodTotals } from '@/money/queries';

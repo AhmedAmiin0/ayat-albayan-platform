@@ -1,4 +1,4 @@
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { Choice } from './Choice';
 import type { NewTeacherForm } from './create-form';
 import { TextField } from './TextField';

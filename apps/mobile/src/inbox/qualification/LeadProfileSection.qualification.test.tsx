@@ -1,6 +1,6 @@
 import { fireEvent, screen, within } from '@testing-library/react-native';
-import { t } from '@/lib/i18n';
-import { listKey } from '@/lib/query-keys';
+import { t } from '@/core/lib/i18n/i18n';
+import { listKey } from '@/core/lib/query/query-keys';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { cachedList, huda } from '../fixtures';
 import { findCachedLead } from '../use-cached-lead';
@@ -9,8 +9,8 @@ import { LeadProfileSection } from './LeadProfileSection';
 
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();
-jest.mock('@/lib/api', () => ({
-  ...jest.requireActual('@/lib/api'),
+jest.mock('@/core/lib/http/api', () => ({
+  ...jest.requireActual('@/core/lib/http/api'),
   apiFetch: (mockPath: string) => mockApiFetch(mockPath),
   apiSend: (...mockArgs: unknown[]) => mockApiSend(...mockArgs),
 }));

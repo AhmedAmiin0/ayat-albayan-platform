@@ -1,7 +1,7 @@
 import { clockTime, durationText, lessonWhenText, RIYADH_TZ, type LessonView } from '@ab/shared';
 import { cityOf } from '@/booking/slots';
-import { t } from '@/lib/i18n';
-import { locale } from '@/lib/locale';
+import { t } from '@/core/lib/i18n/i18n';
+import { locale } from '@/core/lib/i18n/locale';
 import { chosenStart, lengthOf, type EditState } from './edit-time-body';
 
 const lengths: Record<string, string | undefined> = t.enums.duration;

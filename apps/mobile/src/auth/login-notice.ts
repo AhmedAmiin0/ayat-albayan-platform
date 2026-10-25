@@ -1,6 +1,6 @@
 import { useSyncExternalStore } from 'react';
-import { ApiError } from '@/lib/api';
-import { t } from '@/lib/i18n';
+import { ApiError } from '@/core/lib/http/api';
+import { t } from '@/core/lib/i18n/i18n';
 
 export type LoginNotice = 'accountDisabled' | 'wrongApp';
 

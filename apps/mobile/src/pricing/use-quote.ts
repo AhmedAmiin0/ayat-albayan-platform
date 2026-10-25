@@ -1,7 +1,7 @@
 import type { QuoteResponse } from '@ab/shared';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
-import { apiFetch, toQueryString } from '@/lib/api';
-import { pathKey } from '@/lib/query-keys';
+import { apiFetch, toQueryString } from '@/core/lib/http/api';
+import { pathKey } from '@/core/lib/query/query-keys';
 import { quoteParams, type Selection } from './selection';
 
 /** The rate a USD quote used; null for the site's own currencies. */

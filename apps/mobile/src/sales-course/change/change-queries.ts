@@ -1,7 +1,7 @@
 import type { CourseChangeCheck, CourseChangeRequest, CourseChangeResult } from '@ab/shared';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { apiSend } from '@/lib/api';
-import { pathKey } from '@/lib/query-keys';
+import { apiSend } from '@/core/lib/http/api';
+import { pathKey } from '@/core/lib/query/query-keys';
 
 const CHANGE = '/sales/booking/course/change';
 

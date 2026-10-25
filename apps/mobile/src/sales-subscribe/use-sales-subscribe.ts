@@ -1,8 +1,8 @@
 import type { SalesMoneySubscriptionView, SalesQuoteView, SubscriptionPricing } from '@ab/shared';
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
-import { apiSend } from '@/lib/api';
-import { requestId } from '@/lib/request-id';
+import { apiSend } from '@/core/lib/http/api';
+import { requestId } from '@/core/lib/http/request-id';
 import { familyKey, refreshFamily, withOpenPackage } from './family';
 
 /** POST /sales/subscriptions/quote: the price she tells the family (no fx details). Keyed by its body. */

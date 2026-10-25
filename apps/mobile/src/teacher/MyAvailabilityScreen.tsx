@@ -1,6 +1,6 @@
 import { router } from 'expo-router';
 import { ScrollView } from 'react-native';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { UpcomingTimeOff } from '@/more/UpcomingTimeOff';
 import { WeeklyAvailability } from '@/more/WeeklyAvailability';
 import { Button } from '@/core/ui/primitives/Button';

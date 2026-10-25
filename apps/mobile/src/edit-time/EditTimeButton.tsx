@@ -1,4 +1,4 @@
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { studentNames } from '@/today/lesson-text';
 import { Button } from '@/core/ui/primitives/Button';
 import { editMode, type EditableLesson } from './types';

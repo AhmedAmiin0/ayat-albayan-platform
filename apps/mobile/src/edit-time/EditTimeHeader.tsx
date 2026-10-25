@@ -1,6 +1,6 @@
 import { View } from 'react-native';
 import { whenText } from '@/booking/slots';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { type, useTheme } from '@/theme';
 import { studentNames } from '@/today/lesson-text';
 import { AppText } from '@/core/ui/primitives/AppText';

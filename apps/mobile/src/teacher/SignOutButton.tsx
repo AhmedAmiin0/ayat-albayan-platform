@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { View } from 'react-native';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { signOutDevice } from '@/more/sign-out';
 import { Button } from '@/core/ui/primitives/Button';
 

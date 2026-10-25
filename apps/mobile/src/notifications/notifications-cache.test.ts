@@ -1,5 +1,5 @@
 import type { NotificationItem, NotificationsPage } from '@ab/shared';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { bellBadge, bellLabel, markedRead } from './notifications-cache';
 
 const row = (id: string, read_at: string | null = null): NotificationItem => ({

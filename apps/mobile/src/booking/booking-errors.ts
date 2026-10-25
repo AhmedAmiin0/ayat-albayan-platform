@@ -1,7 +1,7 @@
 import { CONFLICT_KINDS, lessonWhenText, RIYADH_TZ, type Conflict } from '@ab/shared';
-import { ApiError } from '@/lib/api';
-import { t } from '@/lib/i18n';
-import { locale } from '@/lib/locale';
+import { ApiError } from '@/core/lib/http/api';
+import { t } from '@/core/lib/i18n/i18n';
+import { locale } from '@/core/lib/i18n/locale';
 import { isOffline } from '@/payments/payment-errors';
 
 // What a failed POST /booking means for the trial wizard (docs/10 §3: clients switch on `code`).

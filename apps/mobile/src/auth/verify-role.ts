@@ -1,8 +1,8 @@
 import type { Session } from '@supabase/supabase-js';
-import { ApiError, apiFetch } from '@/lib/api';
-import { pathKey } from '@/lib/query-keys';
-import { queryClient } from '@/lib/query-client';
-import { supabase } from '@/lib/supabase';
+import { ApiError, apiFetch } from '@/core/lib/http/api';
+import { pathKey } from '@/core/lib/query/query-keys';
+import { queryClient } from '@/core/lib/query/query-client';
+import { supabase } from '@/core/lib/http/supabase';
 import { isAccountDisabled, isOtherAppRole, setLoginNotice } from './login-notice';
 import { appRole, roleClaim, type AppRole } from './role-claim';
 

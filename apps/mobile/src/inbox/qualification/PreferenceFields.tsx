@@ -2,7 +2,7 @@ import { GROUP_KINDS, tzChoices, type GroupKind } from '@ab/shared';
 import type { ReactNode } from 'react';
 import { View } from 'react-native';
 import { cityOf } from '@/booking/slots';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { FormLabel } from '@/payments/FormLabel';
 import { FilterPills, type FilterPill } from '@/core/ui/form/FilterPills';
 import { ErrorLine } from '../ErrorLine';

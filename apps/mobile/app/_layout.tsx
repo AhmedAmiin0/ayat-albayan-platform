@@ -8,9 +8,9 @@ import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
 import { useAuthGate } from '@/auth/use-auth-gate';
-import { useOverridesReady } from '@/lib/i18n-overrides';
-import { useLocaleReady } from '@/lib/locale-switch';
-import { persistOptions, queryClient } from '@/lib/query-client';
+import { useOverridesReady } from '@/core/lib/i18n/i18n-overrides';
+import { useLocaleReady } from '@/core/lib/i18n/locale-switch';
+import { persistOptions, queryClient } from '@/core/lib/query/query-client';
 import { restoreAppearance } from '@/more/appearance';
 import { useTheme } from '@/theme';
 

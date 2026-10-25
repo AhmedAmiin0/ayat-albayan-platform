@@ -2,7 +2,7 @@ import { PAYMENT_METHODS, type PaymentMethod, type StudentBalanceView } from '@a
 import { useState } from 'react';
 import { View } from 'react-native';
 import { ErrorLine } from '@/inbox/ErrorLine';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { useNow } from '@/today/use-day-lessons';
 import { Button } from '@/core/ui/primitives/Button';
 import { FilterPills, type FilterPill } from '@/core/ui/form/FilterPills';

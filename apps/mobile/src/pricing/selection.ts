@@ -7,7 +7,7 @@ import {
   type PricingDuration,
   type SiteCountry,
 } from '@ab/shared';
-import type { ListParams } from '@/lib/query-keys';
+import type { ListParams } from '@/core/lib/query/query-keys';
 
 // What the staff member picked on «حاسبة الأسعار». The API prices it (GET /pricing/quote); the
 // app only turns the choice into query params. Pill values are strings (FilterPills), hence `${}`.

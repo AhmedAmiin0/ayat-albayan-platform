@@ -1,6 +1,6 @@
 import type { NotificationAudience } from '@ab/shared';
 import { Pressable, View } from 'react-native';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/more/Note';
 import { Section } from '@/more/Section';
 import { shape, type, useTheme } from '@/theme';

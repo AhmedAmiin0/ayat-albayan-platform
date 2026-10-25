@@ -1,5 +1,5 @@
 import { RIYADH_TZ, wallParts } from '@ab/shared';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { cityOf } from './slots';
 
 // A weekly package's picks (owner 2026-10-18: «اختر موعدًا لكل يوم»): one free slot per weekday of

@@ -1,6 +1,6 @@
 import en from '@ab/shared/i18n/en.json';
 import { screen } from '@testing-library/react-native';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
 import { SalesTransferScreen } from './SalesTransferScreen';
 
@@ -9,9 +9,9 @@ jest.mock('react-native/Libraries/ReactNative/I18nManager', () => {
   const getConstants = () => ({ ...actual.getConstants(), isRTL: false });
   return { __esModule: true, default: { ...actual, isRTL: false, getConstants } };
 });
-jest.mock('@/lib/api', () => {
+jest.mock('@/core/lib/http/api', () => {
   const f = jest.requireActual('./fixtures');
-  return { ...jest.requireActual('@/lib/api'), apiFetch: async () => f.familyOf(f.kid({ open: [f.openSub()] })) };
+  return { ...jest.requireActual('@/core/lib/http/api'), apiFetch: async () => f.familyOf(f.kid({ open: [f.openSub()] })) };
 });
 jest.mock('expo-router', () => ({
   router: { back: jest.fn(), canGoBack: () => true, replace: jest.fn() },

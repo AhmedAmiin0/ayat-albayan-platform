@@ -1,8 +1,8 @@
 import type { ThreadView } from '@ab/shared';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { useMemo } from 'react';
-import { apiFetch, toQueryString } from '@/lib/api';
-import { nextPageParam, type Page } from '@/lib/paging';
+import { apiFetch, toQueryString } from '@/core/lib/http/api';
+import { nextPageParam, type Page } from '@/core/lib/query/paging';
 
 const PAGE_SIZE = 25;
 

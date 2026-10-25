@@ -1,5 +1,5 @@
 import { Image } from 'react-native';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import markLarge from '../../../../assets/brand/mark.png';
 import markSmall from '../../../../assets/brand/mark-small.png';
 

@@ -1,6 +1,6 @@
 import { DEFAULT_PASSWORD_MIN } from '@ab/shared';
 import { useState } from 'react';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { changePassword } from './account-api';
 import { AccountCard } from './AccountCard';
 import { AccountField, passwordInput } from './AccountField';

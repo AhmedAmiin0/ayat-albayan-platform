@@ -1,5 +1,5 @@
 import { USER_ROLES, type UserRole, type UserRoleOption } from '@ab/shared';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/more/Note';
 import { Choice } from './Choice';
 import { roleOptionName, roleText } from './format';

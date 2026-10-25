@@ -1,7 +1,7 @@
 import { fireEvent, screen } from '@testing-library/react-native';
 import { router } from 'expo-router';
 import { PROFILE_KEY } from '@/account/queries';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { profileFixture, savedProfile } from '@/test/account';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { MoreScreen } from './MoreScreen';

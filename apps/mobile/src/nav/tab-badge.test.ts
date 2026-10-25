@@ -1,4 +1,4 @@
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { badgeText } from './tab-badge';
 
 test('no badge at zero or while nothing has loaded', () => {

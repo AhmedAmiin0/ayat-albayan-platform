@@ -8,7 +8,7 @@ import { usePushRegistration } from './usePushRegistration';
 jest.mock('./registerPush', () => ({ registerPush: jest.fn(async () => undefined) }));
 jest.mock('./useNotificationHandling', () => ({ useNotificationHandling: jest.fn() }));
 const mockApiFetch = jest.fn();
-jest.mock('@/lib/api', () => ({ ...jest.requireActual('@/lib/api'), apiFetch: (p: string) => mockApiFetch(p) }));
+jest.mock('@/core/lib/http/api', () => ({ ...jest.requireActual('@/core/lib/http/api'), apiFetch: (p: string) => mockApiFetch(p) }));
 
 const mount = (tree: 'sales' | 'assistant') =>
   renderHook(() => usePushRegistration(tree), { wrapper: queryWrapper(createTestQueryClient()) });

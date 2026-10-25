@@ -1,7 +1,7 @@
 import { fireEvent, screen, within } from '@testing-library/react-native';
 import { router } from 'expo-router';
-import { t } from '@/lib/i18n';
-import { pathKey } from '@/lib/query-keys';
+import { t } from '@/core/lib/i18n/i18n';
+import { pathKey } from '@/core/lib/query/query-keys';
 import { TreeBaseProvider } from '@/nav/tree-base';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { detail, inbound, thread } from './thread-fixtures';
@@ -9,8 +9,8 @@ import { ThreadScreen } from './ThreadScreen';
 
 // The sales chat's top (owner 2026-10-18: more room to read): one header line, one strip of pills.
 const mockApiFetch = jest.fn();
-jest.mock('@/lib/api', () => ({
-  ...jest.requireActual('@/lib/api'),
+jest.mock('@/core/lib/http/api', () => ({
+  ...jest.requireActual('@/core/lib/http/api'),
   apiFetch: (mockPath: string) => mockApiFetch(mockPath),
 }));
 jest.mock('expo-router', () => ({

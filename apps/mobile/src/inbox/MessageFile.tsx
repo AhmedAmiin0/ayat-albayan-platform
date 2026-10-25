@@ -1,8 +1,8 @@
 import { baseMime, isPlayableMime, type MessageView } from '@ab/shared';
 import { useState } from 'react';
 import { Linking, Pressable, View } from 'react-native';
-import { ApiError } from '@/lib/api';
-import { t } from '@/lib/i18n';
+import { ApiError } from '@/core/lib/http/api';
+import { t } from '@/core/lib/i18n/i18n';
 import { shape, type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { AudioPlayer } from './AudioPlayer';

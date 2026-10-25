@@ -2,8 +2,8 @@ import { teacherName } from '@ab/shared';
 import { router } from 'expo-router';
 import { useState } from 'react';
 import { ScrollView } from 'react-native';
-import { t } from '@/lib/i18n';
-import { requestId as newRequestId } from '@/lib/request-id';
+import { t } from '@/core/lib/i18n/i18n';
+import { requestId as newRequestId } from '@/core/lib/http/request-id';
 import { useTreeBase } from '@/nav/tree-base';
 import { Button } from '@/core/ui/primitives/Button';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
@@ -15,7 +15,7 @@ import { stepsFor, type Step } from './steps';
 import { useBookingMode } from './booking-mode';
 import { useBookTrial } from './use-book-trial';
 import { WizardStep } from './WizardStep';
-import { locale } from '@/lib/locale';
+import { locale } from '@/core/lib/i18n/locale';
 
 const stepNames = (): Record<Step, string> => ({
   contact: t.booking.steps.students,

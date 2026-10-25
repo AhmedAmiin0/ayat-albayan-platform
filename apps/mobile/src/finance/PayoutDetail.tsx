@@ -1,6 +1,6 @@
 import type { PayoutView } from '@ab/shared';
 import { ScrollView } from 'react-native';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { PayoutActionBar } from './PayoutActionBar';
 import { PayoutFacts } from './PayoutFacts';
 import { PayoutPayForm } from './PayoutPayForm';

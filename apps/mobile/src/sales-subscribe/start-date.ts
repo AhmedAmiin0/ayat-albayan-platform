@@ -1,5 +1,5 @@
 import { salesStartDate } from '@ab/shared';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 
 // The sales subscribe's first day (owner 2026-10-12, docs/16 row 24). Pure. Without
 // subscriptions.set_start_date nothing is asked or sent (the API starts the package on today). With it:

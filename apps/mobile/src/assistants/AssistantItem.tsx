@@ -1,5 +1,5 @@
 import { router } from 'expo-router';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { commissionText, salaryText } from '@/sales-money/money-text';
 import { ListRow } from '@/core/ui/layout/ListRow';
 import type { AssistantRow } from './api';

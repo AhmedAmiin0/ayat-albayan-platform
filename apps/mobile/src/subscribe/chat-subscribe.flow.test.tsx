@@ -2,7 +2,7 @@ import { renderApp, resetApp } from '@/test/app-router'; // first: its jest.mock
 import { act, fireEvent, screen, waitFor, within } from '@testing-library/react-native';
 import { GUARDIAN_PHONE } from '@/inbox/flow-backend';
 import { PHONE } from '@/inbox/thread-fixtures';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { armCamera } from '@/test/native-mocks';
 import { booked } from '@/booking/fixtures';
 import { subscribeBackend } from './flow-backend';

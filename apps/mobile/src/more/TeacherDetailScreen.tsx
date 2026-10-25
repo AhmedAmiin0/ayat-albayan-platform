@@ -2,9 +2,9 @@ import { teacherName, teacherStatusStyle } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { router, useLocalSearchParams } from 'expo-router';
 import { ScrollView } from 'react-native';
-import { ApiError, apiFetch } from '@/lib/api';
-import { t } from '@/lib/i18n';
-import { pathKey } from '@/lib/query-keys';
+import { ApiError, apiFetch } from '@/core/lib/http/api';
+import { t } from '@/core/lib/i18n/i18n';
+import { pathKey } from '@/core/lib/query/query-keys';
 import { Button } from '@/core/ui/primitives/Button';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { Screen } from '@/core/ui/layout/Screen';
@@ -15,7 +15,7 @@ import { TeacherStudentsSection } from './TeacherStudentsSection';
 import type { Teacher } from './types';
 import { UpcomingTimeOff } from './UpcomingTimeOff';
 import { WeeklyAvailability } from './WeeklyAvailability';
-import { locale } from '@/lib/locale';
+import { locale } from '@/core/lib/i18n/locale';
 
 /**
  * A teacher, read-only (R-TCH-01, R-TCH-02): status, «جدول المعلم/ة» (the week's lessons), their

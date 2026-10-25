@@ -1,5 +1,5 @@
 import { fireEvent, render, screen } from '@testing-library/react-native';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { DiscountField } from './DiscountField';
 
 test('shows the typed discount and hands every edit back as text', async () => {

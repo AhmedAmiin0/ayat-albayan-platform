@@ -1,19 +1,19 @@
 import type { Session } from '@supabase/supabase-js';
 import { renderHook } from '@testing-library/react-native';
-import { ApiError } from '@/lib/api';
-import { t } from '@/lib/i18n';
-import { pathKey } from '@/lib/query-keys';
-import { queryClient } from '@/lib/query-client';
+import { ApiError } from '@/core/lib/http/api';
+import { t } from '@/core/lib/i18n/i18n';
+import { pathKey } from '@/core/lib/query/query-keys';
+import { queryClient } from '@/core/lib/query/query-client';
 import { setLoginNotice, useLoginNotice } from './login-notice';
 import { verifyRole } from './verify-role';
 
 const mockApiFetch = jest.fn();
 const mockSignOut = jest.fn();
-jest.mock('@/lib/api', () => ({
-  ...jest.requireActual('@/lib/api'),
+jest.mock('@/core/lib/http/api', () => ({
+  ...jest.requireActual('@/core/lib/http/api'),
   apiFetch: (p: string) => mockApiFetch(p),
 }));
-jest.mock('@/lib/supabase', () => ({ supabase: { auth: { signOut: () => mockSignOut() } } }));
+jest.mock('@/core/lib/http/supabase', () => ({ supabase: { auth: { signOut: () => mockSignOut() } } }));
 
 const claim = (role: string | null) => `h.${btoa(JSON.stringify({ sub: 'u1', user_role: role }))}.s`;
 const session = (role: string | null) => ({ access_token: claim(role) }) as Session;

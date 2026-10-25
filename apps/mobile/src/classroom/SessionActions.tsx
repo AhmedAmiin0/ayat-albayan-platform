@@ -2,7 +2,7 @@ import { isOpenLesson, type LessonView } from '@ab/shared';
 import { usePermissions } from '@/auth/use-permissions';
 import { router } from 'expo-router';
 import { View } from 'react-native';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { Button } from '@/core/ui/primitives/Button';
 import { CopyLinkAction } from './CopyLinkAction';
 import { JoinClassroomButton } from './JoinClassroomButton';

@@ -1,6 +1,6 @@
 import { formatRunningHead, RIYADH_TZ } from '@ab/shared';
-import { t } from '@/lib/i18n';
-import { locale } from '@/lib/locale';
+import { t } from '@/core/lib/i18n/i18n';
+import { locale } from '@/core/lib/i18n/locale';
 import { localDate } from '@/today/timeline';
 
 const DAY = 86_400_000;

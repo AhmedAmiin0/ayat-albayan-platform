@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { canOpen } from '@/auth/route-permissions';
 import { usePermissions } from '@/auth/use-permissions';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { useTreeBase } from '@/nav/tree-base';
 import { FilterPills, type FilterPill } from '@/core/ui/form/FilterPills';
 import { Screen } from '@/core/ui/layout/Screen';

@@ -1,5 +1,5 @@
 import { LEAD_SORT_KEYS, type LeadSortKey } from '@ab/shared';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 
 /** A lead list order (R-NFR-08), as the web inbox: no key = latest inbound message first. */
 export type LeadSort = { sort?: LeadSortKey; dir?: 'desc' };

@@ -1,6 +1,6 @@
 import type { SavedReply } from '@ab/shared';
 import { View } from 'react-native';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { InlineConfirm } from '@/core/ui/feedback/InlineConfirm';
 import { ErrorLine } from '../ErrorLine';
 import { useDeleteReply } from './api';

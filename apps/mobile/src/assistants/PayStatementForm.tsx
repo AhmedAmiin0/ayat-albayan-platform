@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { View } from 'react-native';
 import type { PayDraft } from '@/finance/payout-actions';
 import { ErrorLine } from '@/inbox/ErrorLine';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/more/Note';
 import { money } from '@/payments/format';
 import { FormLabel } from '@/payments/FormLabel';

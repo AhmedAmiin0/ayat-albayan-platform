@@ -5,7 +5,7 @@ import {
   QUOTE_BODY_MAX,
   quoteLine,
 } from '@ab/shared';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 
 // The words of a quote (owner 2026-10-25 «رد»): over a bubble that answers one, and in the composer's strip.
 

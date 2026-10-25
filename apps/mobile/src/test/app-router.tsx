@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { act, renderRouter } from 'expo-router/testing-library';
-import { queryClient } from '@/lib/query-client';
+import { queryClient } from '@/core/lib/query/query-client';
 import type { NavState } from '@/nav/chat-groups';
 import { currentBackend, type FakeBackend, setBackend } from './fake-backend';
 import { resetNative } from './native-mocks';
@@ -16,13 +16,13 @@ jest.mock('expo-font', () => ({ useFonts: () => [true, null] }));
 jest.mock('expo-device', () => jest.requireActual('./native-mocks').deviceMock());
 jest.mock('expo-notifications', () => jest.requireActual('./native-mocks').notificationsMock());
 jest.mock('expo-image-picker', () => jest.requireActual('./native-mocks').imagePickerMock());
-jest.mock('@/lib/api', () => ({
-  ...jest.requireActual('@/lib/api'),
+jest.mock('@/core/lib/http/api', () => ({
+  ...jest.requireActual('@/core/lib/http/api'),
   apiFetch: (url: string) => jest.requireActual('./fake-backend').currentBackend().fetch(url),
   apiSend: (method: string, url: string, body?: unknown) =>
     jest.requireActual('./fake-backend').currentBackend().send(method, url, body),
 }));
-jest.mock('@/lib/supabase', () => ({
+jest.mock('@/core/lib/http/supabase', () => ({
   supabase: {
     auth: {
       getSession: jest.fn(async () => ({ data: { session: null }, error: null })),

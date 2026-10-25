@@ -1,7 +1,7 @@
 import { clockTime, type LessonView, RIYADH_TZ, teacherName } from '@ab/shared';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { ltr } from '@/core/ui/primitives/Ltr';
-import { locale } from '@/lib/locale';
+import { locale } from '@/core/lib/i18n/locale';
 
 // Card lines for a lesson (R-SCH-01: Riyadh time on the spine, the student's own clock beside it
 // when it differs). Western digits, 24h, wall-clock from the UTC instants the API returns.

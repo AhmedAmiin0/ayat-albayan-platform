@@ -1,4 +1,4 @@
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { ltr } from '@/core/ui/primitives/Ltr';
 import { jana, lesson, muscat, pending, yusuf } from './fixtures';
 import { durationLabel, lessonSubtitle, riyadhTime, studentNames, studentTimes } from './lesson-text';

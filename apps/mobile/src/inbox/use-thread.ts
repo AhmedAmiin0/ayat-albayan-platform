@@ -1,6 +1,6 @@
 import type { MessageQuote, TemplateParamsInput, ThreadDetail, ThreadTemplate, MessageView } from '@ab/shared';
 import { useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { apiFetch, apiSend, toQueryString } from '@/lib/api';
+import { apiFetch, apiSend, toQueryString } from '@/core/lib/http/api';
 import {
   appendMessage,
   provisionalMessage,

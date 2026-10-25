@@ -1,5 +1,5 @@
 import { screen, waitFor } from '@testing-library/react-native';
-import { ApiError } from '@/lib/api';
+import { ApiError } from '@/core/lib/http/api';
 import { balanceOf, subscription } from '@/payments/fixtures';
 import { renderWithQuery } from '@/test/query';
 import { palette } from '@/theme';
@@ -7,8 +7,8 @@ import TodayRoute from '../../app/(tabs)/index';
 import { done, lesson, muscat, pending } from './fixtures';
 
 const mockApiFetch = jest.fn();
-jest.mock('@/lib/api', () => ({
-  ...jest.requireActual('@/lib/api'),
+jest.mock('@/core/lib/http/api', () => ({
+  ...jest.requireActual('@/core/lib/http/api'),
   apiFetch: (mockPath: string) => mockApiFetch(mockPath),
 }));
 

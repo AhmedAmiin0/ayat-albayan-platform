@@ -1,11 +1,11 @@
 import { screen } from '@testing-library/react-native';
-import { ApiError } from '@/lib/api';
-import { t } from '@/lib/i18n';
+import { ApiError } from '@/core/lib/http/api';
+import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
 import { TeacherTabs } from './TeacherTabs';
 
 const mockApiFetch = jest.fn();
-jest.mock('@/lib/api', () => ({ ...jest.requireActual('@/lib/api'), apiFetch: (p: string) => mockApiFetch(p) }));
+jest.mock('@/core/lib/http/api', () => ({ ...jest.requireActual('@/core/lib/http/api'), apiFetch: (p: string) => mockApiFetch(p) }));
 // The tabs themselves are the router's (routing.teacher.test, ui/GlassTabBar.test); here only what wraps them.
 jest.mock('@/core/ui/layout/AppNativeTabs', () => {
   const { Text } = jest.requireActual('react-native');

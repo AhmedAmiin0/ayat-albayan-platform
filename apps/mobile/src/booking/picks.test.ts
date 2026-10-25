@@ -1,4 +1,4 @@
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { SUN_17, THU_18 } from './fixtures';
 import { dayAtText, dayLine } from './picks';
 

@@ -1,5 +1,5 @@
 import type { InvoiceView } from '@ab/shared';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { instantDay } from '@/payments/format';
 
 const kinds: Record<InvoiceView['kind'], string> = { package: t.finance.invoicePackage, makeup: t.finance.invoiceMakeup };

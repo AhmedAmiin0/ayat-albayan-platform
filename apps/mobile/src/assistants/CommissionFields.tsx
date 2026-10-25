@@ -1,7 +1,7 @@
 import { ASSISTANT_COMMISSION_TYPES, type AssistantCommissionType } from '@ab/shared';
 import { View } from 'react-native';
 import { ErrorLine } from '@/inbox/ErrorLine';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { Section } from '@/more/Section';
 import { FormLabel } from '@/payments/FormLabel';
 import { Field } from '@/core/ui/form/Field';

@@ -1,7 +1,7 @@
 import type { IntegrationConfigItem, WaLine, WaProvider } from '@ab/shared';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { apiFetch, apiSend } from '@/lib/api';
-import { pathKey } from '@/lib/query-keys';
+import { apiFetch, apiSend } from '@/core/lib/http/api';
+import { pathKey } from '@/core/lib/query/query-keys';
 import { driverValues } from './line-driver';
 
 const PATH = '/settings/integrations';

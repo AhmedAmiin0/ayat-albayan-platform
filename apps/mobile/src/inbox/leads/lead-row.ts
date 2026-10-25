@@ -1,4 +1,4 @@
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { leadAge } from '../format';
 import { leadSourceWord } from '../lead-words';
 import type { Lead } from '../types';

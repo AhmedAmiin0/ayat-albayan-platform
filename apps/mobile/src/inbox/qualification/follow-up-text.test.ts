@@ -1,4 +1,4 @@
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { huda } from '../fixtures';
 import { followUpLines } from './follow-up-text';
 import type { LeadProfile } from './queries';

@@ -1,5 +1,5 @@
 import { formatAmount, type AssistantStatementLineView, type AssistantStatementView, type AssistantTermsView } from '@ab/shared';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { localDay, instantDay, money } from '@/payments/format';
 import { monthLabel } from '@/teacher/payout-text';
 

@@ -1,6 +1,6 @@
 import type { IntegrationConfigItem } from '@ab/shared';
 import { fireEvent, screen, waitFor, within } from '@testing-library/react-native';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
 import { ltr } from '@/core/ui/primitives/Ltr';
 import { LineDrivers } from './LineDrivers';
@@ -10,8 +10,8 @@ import { LineDrivers } from './LineDrivers';
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();
 let mockPermissions = ['settings.read', 'settings.write'];
-jest.mock('@/lib/api', () => ({
-  ...jest.requireActual('@/lib/api'),
+jest.mock('@/core/lib/http/api', () => ({
+  ...jest.requireActual('@/core/lib/http/api'),
   apiFetch: (p: string) => mockApiFetch(p),
   apiSend: (m: string, p: string, b: unknown) => mockApiSend(m, p, b),
 }));

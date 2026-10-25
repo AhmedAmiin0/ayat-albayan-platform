@@ -1,6 +1,6 @@
 import { fireEvent, render, screen } from '@testing-library/react-native';
 import { useAudioPlayer, useAudioPlayerStatus } from 'expo-audio';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { AudioPlayer } from './AudioPlayer';
 
 const mockPlayer = { play: jest.fn(), pause: jest.fn(), seekTo: jest.fn(async () => undefined) };

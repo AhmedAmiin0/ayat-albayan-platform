@@ -1,7 +1,7 @@
 import type { SavedReply } from '@ab/shared';
 import type { ReactNode } from 'react';
 import { Pressable, View } from 'react-native';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { AttachIcon } from '../chat-icons';

@@ -3,7 +3,7 @@ import { router } from 'expo-router';
 import { useState } from 'react';
 import { SectionList } from 'react-native';
 import { EditTimeSheet } from '@/edit-time/EditTimeSheet';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/more/Note';
 import { RescheduleSheet } from '@/reschedule/RescheduleSheet';
 import { Notice } from '@/today/Notice';

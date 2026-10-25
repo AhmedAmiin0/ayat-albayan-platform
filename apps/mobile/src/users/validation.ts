@@ -5,7 +5,7 @@ import {
   passwordProblem,
   type UserCreate,
 } from '@ab/shared';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import type { CreateForm } from './create-form';
 
 // The web's validation.ts, unchanged: the create / edit checks and the POST /users body.

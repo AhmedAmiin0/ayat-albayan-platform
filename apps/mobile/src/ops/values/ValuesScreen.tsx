@@ -2,7 +2,7 @@ import type { SettingKey } from '@ab/shared';
 import { useState } from 'react';
 import { ActivityIndicator, ScrollView, View } from 'react-native';
 import { useHolds, useIsAdmin, usePermissions } from '@/auth/use-permissions';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/more/Note';
 import { useTheme } from '@/theme';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';

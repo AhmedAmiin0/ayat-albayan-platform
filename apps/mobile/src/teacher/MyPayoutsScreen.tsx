@@ -1,7 +1,7 @@
 import { payoutStatusStyle, type PayoutView } from '@ab/shared';
 import { router } from 'expo-router';
 import { FlatList, View } from 'react-native';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/more/Note';
 import { egp } from '@/earnings/format';
 import { shape, type, useTheme } from '@/theme';

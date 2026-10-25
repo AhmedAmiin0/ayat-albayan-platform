@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { renderRouter, screen } from 'expo-router/testing-library';
 import { Text } from 'react-native';
-import { queryClient } from '@/lib/query-client';
+import { queryClient } from '@/core/lib/query/query-client';
 import { TabStack } from '@/nav/TabStack';
 import SalesChatLayout from '../../app/(sales-chat)/_layout';
 import TrialDateRoute from '../../app/(sales-chat)/sales/inbox/trial-date';
@@ -13,8 +13,8 @@ import SalesLayout from '../../app/sales/_layout';
 // chat's screens stay full screens with no tab bar under them (react-native-screens#4132).
 jest.mock('expo-font', () => ({ useFonts: () => [true, null] }));
 jest.mock('@/push/registerPush', () => ({ registerPush: jest.fn(async () => undefined) }));
-jest.mock('@/lib/api', () => ({
-  ...jest.requireActual('@/lib/api'),
+jest.mock('@/core/lib/http/api', () => ({
+  ...jest.requireActual('@/core/lib/http/api'),
   apiFetch: async (path: string) => (path === '/auth/me' ? { role: 'sales' } : { total: 0 }),
 }));
 jest.mock('@/auth/use-auth-gate', () => ({ useAuthGate: () => 'sales' }));

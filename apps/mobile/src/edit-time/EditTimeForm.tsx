@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { View } from 'react-native';
 import { ConflictNotice } from '@/booking/ConflictNotice';
 import { ErrorLine } from '@/inbox/ErrorLine';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { familyTz } from '@/reschedule/reschedule-body';
 import { Button } from '@/core/ui/primitives/Button';
 import { canSubmit, editBody, lengthOf, type EditState } from './edit-time-body';

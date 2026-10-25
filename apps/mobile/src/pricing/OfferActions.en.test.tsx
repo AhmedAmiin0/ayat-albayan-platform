@@ -7,8 +7,8 @@ import { bulkSa } from './fixtures';
 import { OfferActions } from './OfferActions';
 
 // The UI in English: the buttons are English, the offer the guardian receives stays Arabic.
-jest.mock('@/lib/i18n', () => ({
-  ...jest.requireActual<object>('@/lib/i18n'),
+jest.mock('@/core/lib/i18n/i18n', () => ({
+  ...jest.requireActual<object>('@/core/lib/i18n/i18n'),
   t: jest.requireActual<object>('@ab/shared/i18n/en.json'),
 }));
 

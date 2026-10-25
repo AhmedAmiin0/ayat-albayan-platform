@@ -1,7 +1,7 @@
 import type { LessonView } from '@ab/shared';
 import { useMinuteClock } from '@/classroom/use-minute-clock';
-import { t } from '@/lib/i18n';
-import { useJoinWindow } from '@/lib/public-config';
+import { t } from '@/core/lib/i18n/i18n';
+import { useJoinWindow } from '@/core/lib/query/public-config';
 import { StatusChip } from '@/core/ui/feedback/StatusChip';
 import { livePhase } from './live-filter';
 

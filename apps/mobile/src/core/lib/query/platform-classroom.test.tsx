@@ -3,8 +3,8 @@ import { renderHook } from '@testing-library/react-native';
 import { createTestQueryClient, queryWrapper } from '@/test/query';
 import { publicConfigQuery, usePlatformClassroom } from './public-config';
 
-jest.mock('@/lib/api', () => ({
-  ...jest.requireActual('@/lib/api'),
+jest.mock('@/core/lib/http/api', () => ({
+  ...jest.requireActual('@/core/lib/http/api'),
   apiFetch: () => new Promise(() => undefined),
 }));
 

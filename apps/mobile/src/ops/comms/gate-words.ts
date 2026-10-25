@@ -1,5 +1,5 @@
 import { counted, type Glyph, type SendGateView, type Tone } from '@ab/shared';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 
 // The server's send gate (GET /messages/gate) in words for the overview: the same words the inbox
 // GateNote and the web sending chip use, so the phone never says «يعمل» while the server holds messages

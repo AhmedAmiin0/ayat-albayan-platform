@@ -5,7 +5,7 @@ import { agendaDays, availabilityLine, headerLine } from '@/calendar/agenda';
 import { AgendaDayView } from '@/calendar/AgendaDayView';
 import { PeriodSwitcher } from '@/calendar/PeriodSwitcher';
 import { addDays, riyadhToday, weekLabel, weekStart, weekWindow } from '@/calendar/week';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/more/Note';
 import { useNow } from '@/today/use-day-lessons';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';

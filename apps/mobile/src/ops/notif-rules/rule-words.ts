@@ -1,6 +1,6 @@
 import { counted, type NotificationEntryView, type NotificationRuleView, type NotificationsOverview } from '@ab/shared';
-import { ApiError } from '@/lib/api';
-import { t } from '@/lib/i18n';
+import { ApiError } from '@/core/lib/http/api';
+import { t } from '@/core/lib/i18n/i18n';
 
 // The catalogue's switches on the phone (docs/23b §4, docs/26b §6b m7), in words. Every v2 field is
 // guarded: an APK on an older API (v1, no `rule`) or a newer API (an unknown blocker) never crashes.

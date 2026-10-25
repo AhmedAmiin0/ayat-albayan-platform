@@ -9,7 +9,7 @@ import type {
   UserWithCredential,
 } from '@ab/shared';
 import { queryOptions } from '@tanstack/react-query';
-import { apiFetch, apiSend } from '@/lib/api';
+import { apiFetch, apiSend } from '@/core/lib/http/api';
 
 // The web's users/api.ts on the phone (apps/api/src/modules/users): users.read lists and opens,
 // users.write does the rest. Every key sits under ['users'], so one invalidation reaches them all.

@@ -1,6 +1,6 @@
 import { FOLLOW_UP_STATUSES, lessonWhenText } from '@ab/shared';
-import { t } from '@/lib/i18n';
-import { locale } from '@/lib/locale';
+import { t } from '@/core/lib/i18n/i18n';
+import { locale } from '@/core/lib/i18n/locale';
 import type { LeadProfile } from './queries';
 
 const statuses: readonly string[] = FOLLOW_UP_STATUSES;

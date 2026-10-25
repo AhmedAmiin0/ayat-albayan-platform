@@ -1,5 +1,5 @@
 import type { PaymentView } from '@ab/shared';
-import type { Page } from '@/lib/paging';
+import type { Page } from '@/core/lib/query/paging';
 
 /** One currency's net on GET /payments (payments minus refunds), as apps/api returns it. */
 export interface PeriodTotal {

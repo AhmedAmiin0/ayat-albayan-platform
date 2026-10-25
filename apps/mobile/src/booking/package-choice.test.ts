@@ -1,7 +1,7 @@
 import { bookingRequestSchema } from '@ab/shared';
 import { toBookingRequest } from './booking-body';
 import { booked, draft, maryam, SUN_17, THU_18, TUE_17 } from './fixtures';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { effectiveByday, packageDaysNote, subscriptionHref } from './package-choice';
 
 const REQ = '99999999-9999-4999-8999-999999999999';

@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react-native';
 import { useVideoPlayer } from 'expo-video';
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { VideoPlayer } from './VideoPlayer';
 
 const mockPlayer = { play: jest.fn() };

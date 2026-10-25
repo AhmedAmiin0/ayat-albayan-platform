@@ -1,4 +1,4 @@
-import { t } from '@/lib/i18n';
+import { t } from '@/core/lib/i18n/i18n';
 import { threadsEmptyTitle } from './threads-empty';
 
 test('an empty chat list says how to fill it', () => {

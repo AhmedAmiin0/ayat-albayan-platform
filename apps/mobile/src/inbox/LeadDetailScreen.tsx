@@ -1,8 +1,8 @@
 import { formatPhone } from '@ab/shared';
 import { router, useLocalSearchParams } from 'expo-router';
 import { Linking, ScrollView, View } from 'react-native';
-import { t } from '@/lib/i18n';
-import { whatsappLink } from '@/lib/phone';
+import { t } from '@/core/lib/i18n/i18n';
+import { whatsappLink } from '@/core/lib/phone';
 import { Button } from '@/core/ui/primitives/Button';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { ltr } from '@/core/ui/primitives/Ltr';
