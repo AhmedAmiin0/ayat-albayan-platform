@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router';
-import { MyReports } from '@/features/teacher/MyReports';
-import { MY_REPORTS_LIST_KEYS } from '@/features/teacher/SubmittedReports';
+import { MyReports } from '@/features/teacher/reports/MyReports';
+import { MY_REPORTS_LIST_KEYS } from '@/features/teacher/reports/SubmittedReports';
 import { parseServerListSearch } from '@/lib/list/server-list-search';
 
 /** /teacher/reports?page&sort&dir&f_<key> — pending, sent (edit window) and my students' history (R-REP-01/02/05). */

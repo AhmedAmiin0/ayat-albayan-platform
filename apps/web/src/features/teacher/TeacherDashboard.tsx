@@ -16,10 +16,10 @@ import { addDays, dayMonthLabel, weekWindow, zonedParts } from '@/features/sched
 import { t } from '@/lib/i18n/i18n';
 import { usePlatformClassroom } from '@/lib/settings/public-config';
 import { myLessonsQuery, teacherMeQuery } from './api';
-import { JoinLink } from './JoinLink';
-import { LessonDayList } from './LessonDayList';
+import { JoinLink } from './lessons/JoinLink';
+import { LessonDayList } from './lessons/LessonDayList';
 import { MyStudents } from './MyStudents';
-import { TeacherAvailability } from './TeacherAvailability';
+import { TeacherAvailability } from './proposals/TeacherAvailability';
 
 type Tab = 'today' | 'week' | 'students' | 'availability';
 const TABS: { value: Tab; label: string }[] = [

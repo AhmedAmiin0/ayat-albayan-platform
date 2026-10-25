@@ -7,7 +7,7 @@ import { Ltr } from '@/components/ui/display/ltr';
 import { StatusChip } from '@/components/ui/display/status-chip';
 import { t } from '@/lib/i18n/i18n';
 import type { Teacher, TeacherListRow } from './api';
-import { StudentCountLink } from './StudentCountLink';
+import { StudentCountLink } from './detail/StudentCountLink';
 import { teacherLabel } from '@/lib/i18n/teacher-label';
 
 const col = createColumnHelper<DataTableFeatures, TeacherListRow>();

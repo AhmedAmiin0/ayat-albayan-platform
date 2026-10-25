@@ -7,10 +7,6 @@
     "files": 20,
     "dirs": 0
   },
-  "apps/web/src/features/assistants": {
-    "files": 33,
-    "dirs": 0
-  },
   "apps/web/src/features/feedback": {
     "files": 16,
     "dirs": 0
@@ -57,14 +53,6 @@
   },
   "apps/web/src/features/subscriptions": {
     "files": 17,
-    "dirs": 0
-  },
-  "apps/web/src/features/teacher": {
-    "files": 18,
-    "dirs": 0
-  },
-  "apps/web/src/features/teachers": {
-    "files": 32,
     "dirs": 0
   },
   "apps/web/src/features/templates": {

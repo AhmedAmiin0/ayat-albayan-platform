@@ -4,7 +4,7 @@ import { render, screen } from '@testing-library/react';
 import type { ReactNode } from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n/i18n';
-import { TrialChatNote } from '@/features/teacher/TrialChatNote';
+import { TrialChatNote } from '@/features/teacher/lessons/TrialChatNote';
 import { StudentReportsPage } from './StudentReportsPage';
 
 const apiFetch = vi.hoisted(() => vi.fn());

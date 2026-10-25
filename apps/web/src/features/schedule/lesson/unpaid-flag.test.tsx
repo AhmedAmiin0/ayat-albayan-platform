@@ -1,7 +1,7 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
-import { TeacherLessonCard } from '@/features/teacher/TeacherLessonCard';
+import { TeacherLessonCard } from '@/features/teacher/lessons/TeacherLessonCard';
 import { t } from '@/lib/i18n/i18n';
 import { JOUD, lesson, SUHAILA } from './lesson-fixture';
 import { LessonChip } from './LessonChip';

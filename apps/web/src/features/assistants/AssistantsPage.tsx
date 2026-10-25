@@ -6,9 +6,9 @@ import { Tabs } from '@/components/ui/layout/tabs';
 import { t } from '@/lib/i18n/i18n';
 import { assistantsQuery } from './api';
 import { AssistantsList } from './AssistantsList';
-import { CommissionLedger } from './CommissionLedger';
-import { StatementsPanel } from './StatementsPanel';
-import { useStatementCan } from './use-statement-can';
+import { CommissionLedger } from './commissions/CommissionLedger';
+import { StatementsPanel } from './statements/StatementsPanel';
+import { useStatementCan } from './statements/use-statement-can';
 
 type Tab = 'list' | 'commissions' | 'statements';
 const TABS: { value: Tab; label: string }[] = [

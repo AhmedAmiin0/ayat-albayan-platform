@@ -4,7 +4,7 @@ import { StudentReportsPage } from '@/features/reports/StudentReportsPage';
 import { StudentRecordings } from '@/features/students/recordings/StudentRecordings';
 import { RIYADH_TZ } from '@/features/schedule/tz';
 import { teacherMeQuery } from '@/features/teacher/api';
-import { TrialChatNote } from '@/features/teacher/TrialChatNote';
+import { TrialChatNote } from '@/features/teacher/lessons/TrialChatNote';
 
 /** /teacher/reports/$studentId — one of my students' report history + grade chart (R-REP-05). */
 export const Route = createFileRoute('/teacher/reports/$studentId')({ component: TeacherStudentReportsRoute });
