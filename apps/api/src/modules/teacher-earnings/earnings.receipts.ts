@@ -2,7 +2,7 @@ import type { SignedDownload, SignedUpload, TeacherReceiptUpload } from '@ab/sha
 import { Injectable } from '@nestjs/common';
 import { BUCKETS, isPathOf, teacherReceiptPath } from '../../common/storage/storage.paths';
 import { StorageService } from '../../common/storage/storage.service';
-import { badRequest, notFound } from '../scheduling/errors';
+import { badRequest, notFound } from '../../common/http/errors';
 
 /** Teacher payment receipts in the private `receipts` bucket, under receipts/{teacher_id}/{uuid}.{ext}. */
 @Injectable()

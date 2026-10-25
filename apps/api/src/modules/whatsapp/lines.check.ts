@@ -1,6 +1,6 @@
 import { WA_LINES, type LineCheckView, type WaLine } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import { duplicatePhone, lineEnvs, lineGaps, lineProvider, loadEnv, type WhatsappEnv } from '../../env';
+import { duplicatePhone, lineEnvs, lineGaps, lineProvider, loadEnv, type WhatsappEnv } from '../../config/env/env';
 import { graphJson, type FetchLike, type GraphConn } from './graph';
 import { crmConn, crmLineCheck } from './lines.check.crm';
 import { parsed, phoneNumberSchema, subscribedAppsSchema } from './meta-shapes';

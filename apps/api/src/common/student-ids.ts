@@ -1,6 +1,6 @@
 import type { PostgrestError } from '@supabase/supabase-js';
 import { orSafe } from '../modules/guardians/http';
-import { dbError } from '../modules/teachers/http';
+import { dbError } from './http/http';
 import type { Db } from './db/db.module';
 
 /** A name/code search matches at most this many students (their ids then go in the list's URL). */

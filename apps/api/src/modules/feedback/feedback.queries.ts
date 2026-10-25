@@ -2,7 +2,7 @@ import type { Tables, TablesInsert, TablesUpdate } from '@ab/db';
 import type { Attendance, FeedbackKind, LessonStatus } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../common/db/db.module';
-import { dbError } from '../teachers/http';
+import { dbError } from '../../common/http/http';
 
 export type FeedbackRow = Tables<'lesson_feedback'>;
 

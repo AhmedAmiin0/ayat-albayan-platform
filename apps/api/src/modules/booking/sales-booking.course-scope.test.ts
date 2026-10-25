@@ -4,7 +4,7 @@ import type { AuthUser } from '../../common/auth/verify-token';
 import { readerOf } from '../../common/settings/settings.fakes';
 import type { SalesOwnership } from '../sales/sales-ownership';
 import type { SalesQueries } from '../sales/sales.queries';
-import { errorCode } from '../scheduling/errors';
+import { errorCode } from '../../common/http/errors';
 import { BookingSettings } from './booking.settings';
 import { SalesBookingScope } from './sales-booking.ownership';
 import type { TrialDateQueries } from './trial-date.queries';

@@ -1,7 +1,7 @@
 import type { StudentJoinLinkUrl } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { AuditService } from '../../common/audit/audit.service';
-import { notFound } from '../scheduling/errors';
+import { notFound } from '../../common/http/errors';
 import { CLASSROOM_WEB_ORIGIN } from './classroom.config';
 import { hashLinkToken, newLinkToken } from './join-link.token';
 import { StudentLinkQueries } from './student-link.queries';

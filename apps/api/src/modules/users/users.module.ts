@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { loadEnv } from '../../env';
+import { loadEnv } from '../../config/env/env';
 import { RolesModule } from '../roles/roles.module';
 import { UserAccess } from './users.access';
 import { SupabaseAuthAdmin } from './users.auth.supabase';

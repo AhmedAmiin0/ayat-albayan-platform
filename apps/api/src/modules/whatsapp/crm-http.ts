@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import type { CrmLineEnv } from '../../env';
+import type { CrmLineEnv } from '../../config/env/env';
 import { mayHaveReachedMeta, type FetchLike } from './graph';
 import { WaError } from './whatsapp.types';
 

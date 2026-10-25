@@ -3,7 +3,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../common/db/db.module';
 import { applySort, type SortSpec } from '../../common/list-sort';
 import { studentIdsMatching } from '../../common/student-ids';
-import { dbError, type PageQuery } from '../teachers/http';
+import { dbError, type PageQuery } from '../../common/http/http';
 
 export type TeacherReportRow = {
   id: string;

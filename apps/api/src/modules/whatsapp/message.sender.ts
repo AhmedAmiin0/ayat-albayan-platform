@@ -8,7 +8,7 @@ import {
   type OnModuleDestroy,
 } from '@nestjs/common';
 import { overlayNumbers, type OverlayNumber } from '../../common/integrations/numbers-overlay';
-import { loadEnv } from '../../env';
+import { loadEnv } from '../../config/env/env';
 import { MessageWorker, type SendOutcome } from './message.worker';
 import { routeOf } from './number-route';
 import { NumberRoutes } from './number-routes';

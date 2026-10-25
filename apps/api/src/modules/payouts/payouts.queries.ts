@@ -2,7 +2,7 @@ import type { Tables, TablesInsert, TablesUpdate } from '@ab/db';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../common/db/db.module';
 import { REPORTABLE_STATUSES } from '../reports/report-history.queries';
-import { dbError } from '../teachers/http';
+import { dbError } from '../../common/http/http';
 import type { PayoutLesson, PayoutTeacher } from './payouts.plan';
 
 export type PayoutRow = Tables<'teacher_payouts'> & {

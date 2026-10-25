@@ -1,8 +1,8 @@
 import { DURATIONS, type CourseSubscription, type SalesCourseView } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../common/db/db.module';
-import { notFound } from '../scheduling/errors';
-import { dbError } from '../teachers/http';
+import { notFound } from '../../common/http/errors';
+import { dbError } from '../../common/http/http';
 import type { CourseRuleRow } from './course-read';
 import type { CourseRule } from './sales-course.rules';
 

@@ -1,7 +1,7 @@
 import { Logger } from '@nestjs/common';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { integrationOverlay, setIntegrationOverlay } from './integration-overlay';
-import { loadEnv } from '../../env';
+import { loadEnv } from '../../config/env/env';
 import { asQueries, fakeQueries, type FakeQueries } from './integration-config.fakes';
 import { IntegrationConfigService } from './integration-config.service';
 

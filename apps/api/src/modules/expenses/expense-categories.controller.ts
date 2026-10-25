@@ -4,8 +4,8 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { AuditService } from '../../common/audit/audit.service';
 import { CurrentUser, Permissions } from '../../common/auth/decorators';
 import type { AuthUser } from '../../common/auth/verify-token';
-import { conflict } from '../scheduling/errors';
-import { parseOrThrow } from '../teachers/http';
+import { conflict } from '../../common/http/errors';
+import { parseOrThrow } from '../../common/http/http';
 import { ExpensesQueries } from './expenses.queries';
 
 /** Expense categories (migration 20261005000204): the seeded nine plus any the admin adds. */

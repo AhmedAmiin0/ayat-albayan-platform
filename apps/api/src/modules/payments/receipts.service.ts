@@ -2,7 +2,7 @@ import { RECEIPT_MAX_BYTES, type ReceiptUpload, type SignedDownload, type Signed
 import { Injectable } from '@nestjs/common';
 import { BUCKETS, isPathOf, receiptPath } from '../../common/storage/storage.paths';
 import { StorageService } from '../../common/storage/storage.service';
-import { badRequest, conflict, notFound } from '../scheduling/errors';
+import { badRequest, conflict, notFound } from '../../common/http/errors';
 import { PaymentAttachmentsQueries } from './payment-attachments.queries';
 import { PaymentsQueries, type PaymentSubscription } from './payments.queries';
 

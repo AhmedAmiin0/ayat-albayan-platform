@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { loadEnv } from '../../env';
+import { loadEnv } from '../../config/env/env';
 import { PushReceiptsJob } from './push-receipts.job';
 import { PushReceiptsQueries } from './push-receipts.queries';
 import { expoReceiptsTransport, RECEIPTS_TRANSPORT, type ReceiptsTransport } from './receipts.transport';

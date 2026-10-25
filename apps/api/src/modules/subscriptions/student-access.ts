@@ -1,8 +1,8 @@
 import { ForbiddenException, Inject, Injectable } from '@nestjs/common';
 import type { AuthUser } from '../../common/auth/verify-token';
 import { DB, type Db } from '../../common/db/db.module';
-import { notFound } from '../scheduling/errors';
-import { dbError } from '../teachers/http';
+import { notFound } from '../../common/http/errors';
+import { dbError } from '../../common/http/http';
 import { TeachersQueries } from '../teachers/teachers.queries';
 
 /**

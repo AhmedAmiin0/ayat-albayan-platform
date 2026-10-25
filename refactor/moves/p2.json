@@ -1,0 +1,204 @@
+{
+  "id": "p2",
+  "seq": 2,
+  "moves": [
+    {
+      "from": "apps/api/src/modules/teachers/http.ts",
+      "to": "apps/api/src/common/http/http.ts"
+    },
+    {
+      "from": "apps/api/src/modules/scheduling/errors.ts",
+      "to": "apps/api/src/common/http/errors.ts"
+    },
+    {
+      "from": "apps/api/src/env.ts",
+      "to": "apps/api/src/config/env/"
+    },
+    {
+      "from": "apps/api/src/env.blank.ts",
+      "to": "apps/api/src/config/env/"
+    },
+    {
+      "from": "apps/api/src/env.gaps.ts",
+      "to": "apps/api/src/config/env/"
+    },
+    {
+      "from": "apps/api/src/env.sources.ts",
+      "to": "apps/api/src/config/env/"
+    },
+    {
+      "from": "apps/api/src/env.google.ts",
+      "to": "apps/api/src/config/env/"
+    },
+    {
+      "from": "apps/api/src/env.livekit.ts",
+      "to": "apps/api/src/config/env/"
+    },
+    {
+      "from": "apps/api/src/env.recording.ts",
+      "to": "apps/api/src/config/env/"
+    },
+    {
+      "from": "apps/api/src/env.web-push.ts",
+      "to": "apps/api/src/config/env/"
+    },
+    {
+      "from": "apps/api/src/env.overlay.test.ts",
+      "to": "apps/api/src/config/env/"
+    },
+    {
+      "from": "apps/api/src/env.numbers.test.ts",
+      "to": "apps/api/src/config/env/"
+    },
+    {
+      "from": "apps/api/src/env.whatsapp.ts",
+      "to": "apps/api/src/config/env/whatsapp/"
+    },
+    {
+      "from": "apps/api/src/env.whatsapp.*.test.ts",
+      "to": "apps/api/src/config/env/whatsapp"
+    },
+    {
+      "from": "apps/api/src/env.meta.ts",
+      "to": "apps/api/src/config/env/whatsapp/"
+    },
+    {
+      "from": "apps/api/src/env.kapso.ts",
+      "to": "apps/api/src/config/env/whatsapp/"
+    },
+    {
+      "from": "apps/api/src/env.crm.ts",
+      "to": "apps/api/src/config/env/whatsapp/"
+    },
+    {
+      "from": "apps/api/src/env.recipients.ts",
+      "to": "apps/api/src/config/env/whatsapp/"
+    },
+    {
+      "from": "apps/api/src/env.recipient-list.ts",
+      "to": "apps/api/src/config/env/whatsapp/"
+    }
+  ],
+  "files": [
+    [
+      "apps/api/src/env.blank.test.ts",
+      "apps/api/src/config/env/env.blank.test.ts"
+    ],
+    [
+      "apps/api/src/env.blank.ts",
+      "apps/api/src/config/env/env.blank.ts"
+    ],
+    [
+      "apps/api/src/env.crm.test.ts",
+      "apps/api/src/config/env/whatsapp/env.crm.test.ts"
+    ],
+    [
+      "apps/api/src/env.crm.ts",
+      "apps/api/src/config/env/whatsapp/env.crm.ts"
+    ],
+    [
+      "apps/api/src/env.gaps.ts",
+      "apps/api/src/config/env/env.gaps.ts"
+    ],
+    [
+      "apps/api/src/env.google.test.ts",
+      "apps/api/src/config/env/env.google.test.ts"
+    ],
+    [
+      "apps/api/src/env.google.ts",
+      "apps/api/src/config/env/env.google.ts"
+    ],
+    [
+      "apps/api/src/env.kapso.test.ts",
+      "apps/api/src/config/env/whatsapp/env.kapso.test.ts"
+    ],
+    [
+      "apps/api/src/env.kapso.ts",
+      "apps/api/src/config/env/whatsapp/env.kapso.ts"
+    ],
+    [
+      "apps/api/src/env.livekit.test.ts",
+      "apps/api/src/config/env/env.livekit.test.ts"
+    ],
+    [
+      "apps/api/src/env.livekit.ts",
+      "apps/api/src/config/env/env.livekit.ts"
+    ],
+    [
+      "apps/api/src/env.meta.ts",
+      "apps/api/src/config/env/whatsapp/env.meta.ts"
+    ],
+    [
+      "apps/api/src/env.numbers.test.ts",
+      "apps/api/src/config/env/env.numbers.test.ts"
+    ],
+    [
+      "apps/api/src/env.overlay.test.ts",
+      "apps/api/src/config/env/env.overlay.test.ts"
+    ],
+    [
+      "apps/api/src/env.recipient-list.ts",
+      "apps/api/src/config/env/whatsapp/env.recipient-list.ts"
+    ],
+    [
+      "apps/api/src/env.recipients.ts",
+      "apps/api/src/config/env/whatsapp/env.recipients.ts"
+    ],
+    [
+      "apps/api/src/env.recording.test.ts",
+      "apps/api/src/config/env/env.recording.test.ts"
+    ],
+    [
+      "apps/api/src/env.recording.ts",
+      "apps/api/src/config/env/env.recording.ts"
+    ],
+    [
+      "apps/api/src/env.sources.ts",
+      "apps/api/src/config/env/env.sources.ts"
+    ],
+    [
+      "apps/api/src/env.test.ts",
+      "apps/api/src/config/env/env.test.ts"
+    ],
+    [
+      "apps/api/src/env.ts",
+      "apps/api/src/config/env/env.ts"
+    ],
+    [
+      "apps/api/src/env.web-push.test.ts",
+      "apps/api/src/config/env/env.web-push.test.ts"
+    ],
+    [
+      "apps/api/src/env.web-push.ts",
+      "apps/api/src/config/env/env.web-push.ts"
+    ],
+    [
+      "apps/api/src/env.whatsapp.numbers-mode.test.ts",
+      "apps/api/src/config/env/whatsapp/env.whatsapp.numbers-mode.test.ts"
+    ],
+    [
+      "apps/api/src/env.whatsapp.recipients.test.ts",
+      "apps/api/src/config/env/whatsapp/env.whatsapp.recipients.test.ts"
+    ],
+    [
+      "apps/api/src/env.whatsapp.test.ts",
+      "apps/api/src/config/env/whatsapp/env.whatsapp.test.ts"
+    ],
+    [
+      "apps/api/src/env.whatsapp.ts",
+      "apps/api/src/config/env/whatsapp/env.whatsapp.ts"
+    ],
+    [
+      "apps/api/src/modules/scheduling/errors.ts",
+      "apps/api/src/common/http/errors.ts"
+    ],
+    [
+      "apps/api/src/modules/teachers/http.test.ts",
+      "apps/api/src/common/http/http.test.ts"
+    ],
+    [
+      "apps/api/src/modules/teachers/http.ts",
+      "apps/api/src/common/http/http.ts"
+    ]
+  ]
+}

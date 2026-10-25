@@ -2,7 +2,7 @@ import { invoiceUploadSchema, uploadMaxBytes, type MakeupCandidate, type SignedU
 import { Body, Controller, Get, HttpCode, Post, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Permissions } from '../../common/auth/decorators';
-import { parseOrThrow } from '../teachers/http';
+import { parseOrThrow } from '../../common/http/http';
 import { makeupCandidatesQuery } from './booking.dto';
 import { BookingInvoices } from './booking.invoice';
 import { BookingSettings } from './booking.settings';

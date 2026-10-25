@@ -1,8 +1,8 @@
 import type { Database } from '@ab/db';
 import type { PostgrestError } from '@supabase/supabase-js';
 import type { Db } from '../../common/db/db.module';
-import { dbError } from '../teachers/http';
-import { conflict } from './errors';
+import { dbError } from '../../common/http/http';
+import { conflict } from '../../common/http/errors';
 
 type RpcResult = { data: unknown; error: PostgrestError | null };
 type RpcName = keyof Database['public']['Functions'];

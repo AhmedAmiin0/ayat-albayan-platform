@@ -1,5 +1,5 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
-import { allowedRecipients, loadEnv, recipientAllowed } from '../../env';
+import { allowedRecipients, loadEnv, recipientAllowed } from '../../config/env/env';
 import { SendGate } from '../whatsapp/send-gate';
 import { WHATSAPP_LINES, type WhatsappLines } from '../whatsapp/whatsapp.types';
 import type { ReadMark } from './read-marks';

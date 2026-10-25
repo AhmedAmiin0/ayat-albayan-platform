@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { loadEnv } from '../../env';
+import { loadEnv } from '../../config/env/env';
 import { webhookConfig } from './webhook.config';
 
 const BASE = { SUPABASE_URL: 'http://127.0.0.1:54321', SUPABASE_SERVICE_ROLE_KEY: 'k' };

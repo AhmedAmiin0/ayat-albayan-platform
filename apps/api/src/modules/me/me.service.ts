@@ -1,6 +1,6 @@
 import { Inject, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { DB, type Db } from '../../common/db/db.module';
-import { dbError } from '../teachers/http';
+import { dbError } from '../../common/http/http';
 import { claimDevice, type DeviceClaim } from './push-device.claim';
 import { withoutPushToken, withPushToken } from './push-tokens';
 

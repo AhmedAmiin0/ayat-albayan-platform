@@ -3,7 +3,7 @@ import type { StudentStatus } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { AuditService } from '../../common/audit/audit.service';
 import { DB, type Db } from '../../common/db/db.module';
-import { dbError } from '../teachers/http';
+import { dbError } from '../../common/http/http';
 import type { StatusChangeRow } from './student-renewal.plan';
 
 export type StatusMove = { studentId: string; from: StudentStatus; to: StudentStatus };

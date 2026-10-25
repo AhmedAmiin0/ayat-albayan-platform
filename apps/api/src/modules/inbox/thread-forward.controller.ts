@@ -4,7 +4,7 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { AuditService } from '../../common/audit/audit.service';
 import { CurrentUser, Permissions } from '../../common/auth/decorators';
 import type { AuthUser } from '../../common/auth/verify-token';
-import { parseOrThrow } from '../teachers/http';
+import { parseOrThrow } from '../../common/http/http';
 import { ThreadForwardService, type ForwardOutcome } from './thread-forward.service';
 import { ThreadReads } from './thread-reads';
 

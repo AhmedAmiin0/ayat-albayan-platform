@@ -1,5 +1,5 @@
 import { Global, Module } from '@nestjs/common';
-import { loadEnv } from '../../env';
+import { loadEnv } from '../../config/env/env';
 import { IntegrationConfigController } from './integration-config.controller';
 import { IntegrationConfigQueries } from './integration-config.queries';
 import { INTEGRATION_REFRESH_MS, IntegrationConfigService } from './integration-config.service';

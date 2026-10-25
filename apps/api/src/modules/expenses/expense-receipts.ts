@@ -2,7 +2,7 @@ import type { SignedDownload, SignedUpload } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
 import { BUCKETS, isPathOf, uploadName } from '../../common/storage/storage.paths';
 import { StorageService } from '../../common/storage/storage.service';
-import { badRequest, notFound } from '../scheduling/errors';
+import { badRequest, notFound } from '../../common/http/errors';
 
 /** Expense receipts live in the private receipts bucket under receipts/expenses/{uuid}.{ext}. */
 export const EXPENSE_FOLDER = 'expenses';

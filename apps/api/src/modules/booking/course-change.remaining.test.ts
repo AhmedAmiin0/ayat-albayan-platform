@@ -1,6 +1,6 @@
 import { courseChangeCheckSchema } from '@ab/shared';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { errorCode } from '../scheduling/errors';
+import { errorCode } from '../../common/http/errors';
 import { BODY, RULE_A, RULE_B, SALES, setup, SUB } from './course-change.fakes';
 
 // REMAINING (review fix 2) and the change point's guards (review fix 4, 7) of CourseChange.

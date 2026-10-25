@@ -3,7 +3,7 @@ import { Controller, Get, HttpCode, Param, ParseUUIDPipe, Post } from '@nestjs/c
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser, Permissions } from '../../common/auth/decorators';
 import type { AuthUser } from '../../common/auth/verify-token';
-import { notFound } from '../scheduling/errors';
+import { notFound } from '../../common/http/errors';
 import { KickService } from './kick.service';
 import { RecordingListService } from './recording-list.service';
 

@@ -1,7 +1,7 @@
 import { DISCOUNTS } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
 import type { AuthUser } from '../../common/auth/verify-token';
-import { forbidden } from '../scheduling/errors';
+import { forbidden } from '../../common/http/errors';
 import { SalesQueries } from '../sales/sales.queries';
 import { SalesFamilyQueries } from './sales-family.queries';
 import type { SalesOwnership } from '../sales/sales-ownership';

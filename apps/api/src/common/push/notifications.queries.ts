@@ -1,6 +1,6 @@
 import type { NotificationItem, NotificationsPage, NotificationsQuery } from '@ab/shared';
 import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
-import { dbError } from '../../modules/teachers/http';
+import { dbError } from '../http/http';
 import { DB, type Db } from '../db/db.module';
 import { notificationItem } from './notifications.mapper';
 import { assertBrowserClaim } from './web-push.claim';

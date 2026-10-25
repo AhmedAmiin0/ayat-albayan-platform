@@ -1,7 +1,7 @@
 import type { AssistantView } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../common/db/db.module';
-import { dbError } from '../teachers/http';
+import { dbError } from '../../common/http/http';
 
 export interface LessonRef {
   lesson_id: string;

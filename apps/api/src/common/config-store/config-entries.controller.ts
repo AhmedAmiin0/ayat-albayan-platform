@@ -6,7 +6,7 @@ import {
 } from '@ab/shared';
 import { Body, Controller, Get, Param, Patch, Put } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { parseOrThrow } from '../../modules/teachers/http';
+import { parseOrThrow } from '../http/http';
 import { CurrentUser, Permissions } from '../auth/decorators';
 import type { AuthUser } from '../auth/verify-token';
 import { ConfigEntriesService } from './config-entries.service';

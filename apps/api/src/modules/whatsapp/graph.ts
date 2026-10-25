@@ -1,6 +1,6 @@
 import { isWaAuthError } from '@ab/shared';
 import { z } from 'zod';
-import type { GraphEnv } from '../../env';
+import type { GraphEnv } from '../../config/env/env';
 import { WaError } from './whatsapp.types';
 
 // One Graph API call: auth by provider, JSON, timeout, and Meta's error body → WaError (docs/12 §3.2).

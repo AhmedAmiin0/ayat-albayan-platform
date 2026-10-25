@@ -1,7 +1,7 @@
 import type { CommsSource, CommsSourceView, ParityView, WaLine } from '@ab/shared';
 import { ConflictException, Injectable } from '@nestjs/common';
 import { SINGLETON_ENTITY_ID } from '../../common/audit/singleton-entity';
-import { envFrom } from '../../env';
+import { envFrom } from '../../config/env/env';
 import { CommunicationsDeps } from './communications.deps';
 import { NumbersConfig } from './numbers.config';
 import { differences, parityRoles } from './numbers.parity';

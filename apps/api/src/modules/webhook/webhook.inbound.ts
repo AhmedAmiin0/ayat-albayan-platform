@@ -91,9 +91,10 @@ export function orderedAt(at: Date, latestInSecond: Date | null): Date {
 
 const MEDIA_LABELS: Record<string, string> = ar.inbox.media;
 
-/** Push text: what they wrote, else «بعت صورة» / «بعت رسالة صوتية» / … */
+/** Push text: what they wrote, else «أرسل صورة» / «أرسل رسالة صوتية» / … ; Meta's `unsupported` never arrived. */
 export function pushPreview(m: InboundEvent): string {
   if (m.body?.trim()) return m.body.trim();
+  if (m.type === 'unsupported') return ar.notifications.unsupported;
   return fill(ar.notifications.media, { kind: MEDIA_LABELS[m.type] ?? ar.inbox.media.other });
 }
 

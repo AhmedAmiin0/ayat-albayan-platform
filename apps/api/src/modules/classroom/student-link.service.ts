@@ -8,8 +8,8 @@ import {
   type StudentLinkView,
 } from '@ab/shared';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { notFound } from '../scheduling/errors';
-import { parseOrThrow } from '../teachers/http';
+import { notFound } from '../../common/http/errors';
+import { parseOrThrow } from '../../common/http/http';
 import { assertWindowOpen } from './join-gate';
 import { PublicJoinLimit } from './join-limit';
 import { hashLinkToken, looksLikeLinkToken } from './join-link.token';

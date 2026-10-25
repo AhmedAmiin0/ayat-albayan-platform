@@ -1,0 +1,27 @@
+{
+  "name": "@ab/client-core",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "dev": "tsc -p tsconfig.build.json -w --preserveWatchOutput",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "@ab/config": "workspace:*",
+    "eslint": "^10.0.0",
+    "typescript": "~6.0.3",
+    "vitest": "^5.0.3"
+  },
+  "dependencies": {
+    "@ab/shared": "workspace:*"
+  }
+}

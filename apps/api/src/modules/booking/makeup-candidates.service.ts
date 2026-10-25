@@ -1,7 +1,7 @@
 import type { MakeupCandidate } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../common/db/db.module';
-import { dbError } from '../teachers/http';
+import { dbError } from '../../common/http/http';
 import { BookingSettings } from './booking.settings';
 
 const DAY_MS = 86_400_000;

@@ -1,6 +1,6 @@
 import { GOOGLE_SCOPES } from '@ab/shared';
 import { ConflictException, Inject, Injectable, Logger } from '@nestjs/common';
-import { loadEnv } from '../../env';
+import { loadEnv } from '../../config/env/env';
 import { GoogleAccountQueries } from './google-account.queries';
 import { GOOGLE_CLIENT_FACTORY, type GoogleClientFactory } from './google-client.port';
 import { GoogleData } from './google-data';

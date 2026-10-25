@@ -3,7 +3,7 @@ import { Controller, Get, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser, Permissions } from '../../common/auth/decorators';
 import type { AuthUser } from '../../common/auth/verify-token';
-import { notFound } from '../scheduling/errors';
+import { notFound } from '../../common/http/errors';
 import { LessonAccess } from './lesson-access';
 import { parseWindow } from './lesson-queries.schema';
 import { LessonViews } from './lesson-views';

@@ -8,7 +8,7 @@ import { Body, Controller, Get, HttpCode, Param, ParseUUIDPipe, Post, Put } from
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser, Permissions } from '../../common/auth/decorators';
 import type { AuthUser } from '../../common/auth/verify-token';
-import { parseOrThrow, sentOnly } from '../teachers/http';
+import { parseOrThrow, sentOnly } from '../../common/http/http';
 import { ReportFilesService } from './report-files.service';
 import { ReportSubmitService } from './report-submit.service';
 import { ReportsService } from './reports.service';

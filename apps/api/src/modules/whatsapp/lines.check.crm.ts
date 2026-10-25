@@ -1,6 +1,6 @@
 import type { LineCheckView, WaLine } from '@ab/shared';
 import { z } from 'zod';
-import type { CrmLineEnv } from '../../env';
+import type { CrmLineEnv } from '../../config/env/env';
 import { crmJson, type CrmConn } from './crm-http';
 import { WaError } from './whatsapp.types';
 

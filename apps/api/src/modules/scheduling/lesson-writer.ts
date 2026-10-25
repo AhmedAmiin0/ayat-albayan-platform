@@ -6,7 +6,7 @@ import { gateConfirmations } from '../../common/rules/confirmations';
 import { NotificationPolicy } from '../notification-rules/policy';
 import type { ChangeSet, TimeEditChange } from './change-set';
 import { callRpc } from './rpc';
-import { dbError } from '../teachers/http';
+import { dbError } from '../../common/http/http';
 
 /** One occurrence to persist for a rule (UTC ISO instants + the link copied onto the lesson). */
 export type OccurrenceRow = { starts_at: string; ends_at: string; meeting_link: string | null };

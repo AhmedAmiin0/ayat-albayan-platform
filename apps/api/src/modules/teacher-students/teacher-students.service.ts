@@ -1,7 +1,7 @@
 import { TEACHER_STUDENT_STATUSES, type TeacherStudentKind, type TeacherStudentView } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
 import type { AuthUser } from '../../common/auth/verify-token';
-import { notFound } from '../scheduling/errors';
+import { notFound } from '../../common/http/errors';
 import { TeachersQueries } from '../teachers/teachers.queries';
 import { nextLessonByStudent, studentIdsOf, toStudentViews } from './teacher-students.mapper';
 import { TeacherStudentsQueries } from './teacher-students.queries';

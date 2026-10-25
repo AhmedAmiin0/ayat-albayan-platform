@@ -10,7 +10,7 @@ The single source for the Phase 4 builders (API B1–B3, web, mobile), so they c
 
 | Area | Owner | Edits only | Migrations |
 |---|---|---|---|
-| Foundation (done, **read-only**) | — | migrations `140–143`; `packages/shared/src/messaging/*`, `enums/messaging.ts`, the Phase 4 settings keys; `apps/api/src/env.ts`, `main.ts` (rawBody), `common/push/*`, `modules/whatsapp/whatsapp.types.ts`, the three empty modules in `app.module.ts`; `tools/wa-stub`; `e2e/support/wa-stub.ts`, `playwright.config.ts` | — |
+| Foundation (done, **read-only**) | — | migrations `140–143`; `packages/shared/src/messaging/*`, `enums/messaging.ts`, the Phase 4 settings keys; `apps/api/src/config/env/env.ts`, `main.ts` (rawBody), `common/push/*`, `modules/whatsapp/whatsapp.types.ts`, the three empty modules in `app.module.ts`; `tools/wa-stub`; `e2e/support/wa-stub.ts`, `playwright.config.ts` | — |
 | WhatsApp core | **B1** | `apps/api/src/modules/whatsapp/**` (not `whatsapp.types.ts`) | `2026100100015[0-2]` |
 | Webhook + inbox API + lead routes | **B2** | `apps/api/src/modules/inbox/**`, `apps/api/src/modules/leads/**` | `2026100100015[3-5]` |
 | Jobs + push triggers | **B3** | `apps/api/src/modules/messaging-jobs/**`; the one-line `PushService` calls in `reports` (submit) and `subscriptions` (alerts) | `2026100100015[6-8]` |
@@ -20,7 +20,7 @@ The single source for the Phase 4 builders (API B1–B3, web, mobile), so they c
 - `16x` belongs to Phase 6 (`20261001000160_import_log.sql` on `phase6/foundation`).
 - `app.module.ts` already registers `PushModule` (global), `WhatsappModule`, `InboxModule`, `MessagingJobsModule`. Fill your own module; never edit `app.module.ts`.
 - `ar.json`: the namespaces `inbox`, `templates`, `messages`, `followUps`, `notifications` and `enums.{messageStatus,templateStatus,templateCategory,pushKind}` exist. Add keys only inside them, never rename. `nav.inbox` / `nav.templates` exist.
-- HTTP helpers: `parseOrThrow`, `orNotFound`, `dbError`, `pageQuerySchema`, `Page<T>` from `apps/api/src/modules/teachers/http.ts` (import, don't copy). Errors: `{ code, message: code, …details }`.
+- HTTP helpers: `parseOrThrow`, `orNotFound`, `dbError`, `pageQuerySchema`, `Page<T>` from `apps/api/src/common/http/http.ts` (import, don't copy). Errors: `{ code, message: code, …details }`.
 
 ## 2. Data model (migrations 140–143)
 
@@ -76,7 +76,7 @@ Dedup keys (rule 8; `insert … on conflict (dedup_key) do nothing`):
 
 ## 3. WhatsApp: env, gate, client, sender, webhook
 
-### 3.1 Env (`apps/api/src/env.ts`, all optional; `KEY=` means unset)
+### 3.1 Env (`apps/api/src/config/env/env.ts`, all optional; `KEY=` means unset)
 `WA_API_BASE` (no default), `WA_API_VERSION` (`v21.0`), `WA_PHONE_NUMBER_ID`, `WA_WABA_ID`, `WA_ACCESS_TOKEN`, `WA_APP_ID`, `WA_APP_SECRET`, `WA_VERIFY_TOKEN`, `EXPO_ACCESS_TOKEN`, `MESSAGING_ENABLED` (`true|false`, default false). `whatsappEnv(env)` → `{ base, version, phoneNumberId, wabaId, accessToken, appId? } | null` (`appId` only when `WA_APP_ID` is set).
 
 **The one send gate:** `sendingAllowed(env, settings.messaging_enabled)` = WhatsApp configured **and** the admin's kill switch (the env `MESSAGING_ENABLED` fuse was removed on 2026-10-22, docs/23; only a stored `true` opens the switch). Any of them off → rows stay `queued` (nothing fails, nothing is lost). Call it at the top of every sender tick and before any immediate send. Inbound (webhook) processing does **not** depend on the gate. Local: `pnpm env:local` writes stub values; sending stays OFF until the admin switches it on.
@@ -219,7 +219,7 @@ Journey #1 (docs/03 §5) runs against the e2e stub (`:4110`, started by `playwri
 
 **Fixed names (everywhere).** DB enum `public.wa_line` (`'notifications'`, `'chat'`); TS `WA_LINES` / `type WaLine` in `@ab/shared` (`as const satisfies readonly Enums<'wa_line'>[]`); column `messages.line` (nullable, NO default, NO backfill); view columns `v_threads.last_inbound_line`, `last_chat_inbound_at`, `last_notifications_inbound_at` (appended in that order, LAST); computed `ThreadView.reply_line` (13.3 rule 2, owner 2026-10-11; not a DB column); i18n `enums.waLine`. NOT added, do not invent: `last_line`, a `GET /threads?line=` filter (later, if asked). No request body carries a line: it is server policy. Chat unset = today's behaviour: the same SQL writes (no `line` key in any insert) and the same Graph calls; **no new stamps and no badge on a fresh single-line deployment** (rows stamped while the chat line was configured keep their `line` and their badge: 13.15). The observable deltas are (1) thread and message reads gain the keys `last_inbound_line: null`, `last_chat_inbound_at: null`, `last_notifications_inbound_at` (= `last_inbound_at` on a single line), `reply_line: null` / `line: null` (clients ignore them), (2) the sender's and the media lookup's selects read the new column, so **the migration MUST be applied before the new API** (13.15), (3) **a media download whose Meta error is an auth error (190 / 10 / 200) now answers 502 `meta_error`, not 410 `media_expired`**, even on the notifications line with chat unset (every other 4xx stays 410; 13.4), and (4) the webhook logs ONE new warning per distinct unknown `phone_number_id` per process (13.6). Do not describe this as "byte for byte" or as "no behaviour change".
 
-### 13.1 Env (`apps/api/src/env.ts` schema; logic in `apps/api/src/env.whatsapp.ts`)
+### 13.1 Env (`apps/api/src/config/env/env.ts` schema; logic in `apps/api/src/config/env/whatsapp/env.whatsapp.ts`)
 
 All optional; `KEY=` (blank) means unset, as everywhere in `env.ts`.
 

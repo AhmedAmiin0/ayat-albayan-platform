@@ -3,7 +3,7 @@ import { HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { z } from 'zod';
 import type { Json } from '@ab/db';
 import { DB, type Db } from '../../common/db/db.module';
-import { dbError } from '../teachers/http';
+import { dbError } from '../../common/http/http';
 import { domainError } from './booking.errors';
 import type { TrialPick } from './trial-date.plan';
 import type { TrialLessonRead } from './trial-date.history';

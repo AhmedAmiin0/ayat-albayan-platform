@@ -10,7 +10,7 @@ import type { AuthUser } from '../../common/auth/verify-token';
 import { attachmentPath, BUCKETS, isPathOf } from '../../common/storage/storage.paths';
 import { StorageService } from '../../common/storage/storage.service';
 import { reportFileName } from '../report-pdf/report-ready';
-import { badRequest, conflict } from '../scheduling/errors';
+import { badRequest, conflict } from '../../common/http/errors';
 import { ReportAttachmentsQueries } from './report-attachments.queries';
 import { ReportGate } from './report-gate';
 

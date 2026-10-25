@@ -2,7 +2,7 @@ import { INTEGRATION_SECRET_KEYS, integrationSecretSchema, integrationValuesSche
 import { Body, Controller, Delete, Get, Param, Put } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
-import { parseOrThrow } from '../../modules/teachers/http';
+import { parseOrThrow } from '../http/http';
 import { AuditService } from '../audit/audit.service';
 import { CurrentUser, Permissions } from '../auth/decorators';
 import type { AuthUser } from '../auth/verify-token';

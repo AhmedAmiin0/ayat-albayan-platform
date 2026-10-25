@@ -2,8 +2,8 @@ import { meetingModeOf, type LessonStatus, type PackageSize, type TeacherMeeting
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../common/db/db.module';
 import type { Contact } from '../lessons/confirmation-messages';
-import { notFound } from '../scheduling/errors';
-import { dbError } from '../teachers/http';
+import { notFound } from '../../common/http/errors';
+import { dbError } from '../../common/http/http';
 
 /** The subscription a course belongs to (subscriptions row). */
 export type CourseSub = {

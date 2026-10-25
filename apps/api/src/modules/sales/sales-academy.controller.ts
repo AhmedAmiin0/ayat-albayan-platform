@@ -11,7 +11,7 @@ import { Controller, Get, Param, ParseUUIDPipe, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser, Permissions } from '../../common/auth/decorators';
 import type { AuthUser } from '../../common/auth/verify-token';
-import { parseOrThrow, type Page } from '../teachers/http';
+import { parseOrThrow, type Page } from '../../common/http/http';
 import { SalesAcademyService } from './sales-academy.service';
 import { SalesScheduleService } from './sales-schedule.service';
 

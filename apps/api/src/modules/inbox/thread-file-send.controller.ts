@@ -5,7 +5,7 @@ import { AuditService } from '../../common/audit/audit.service';
 import { CurrentUser, Permissions } from '../../common/auth/decorators';
 import type { AuthUser } from '../../common/auth/verify-token';
 import type { SalesScope } from '../sales/sales-scope';
-import { parseOrThrow } from '../teachers/http';
+import { parseOrThrow } from '../../common/http/http';
 import { waHttpError } from '../whatsapp/template.mapper';
 import { phoneParam } from './phone-param';
 import { recordSend } from './send-audit';

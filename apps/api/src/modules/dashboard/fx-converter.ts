@@ -1,7 +1,7 @@
 import type { FxRate } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
 import { FxService } from '../fx/fx.service';
-import { errorCode } from '../scheduling/errors';
+import { errorCode } from '../../common/http/errors';
 import { conversionFrom, type Conversion } from './conversion';
 
 const SAR_SELF: FxRate = { quote: 'SAR', rate: 1, date: null, provider: 'self', fallback: false, ageHours: null };

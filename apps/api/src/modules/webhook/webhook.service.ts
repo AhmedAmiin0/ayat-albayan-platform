@@ -1,5 +1,5 @@
 import { Inject, Injectable, InternalServerErrorException, Logger } from '@nestjs/common';
-import type { LineNumbers } from '../../env';
+import type { LineNumbers } from '../../config/env/env';
 import { InboundService } from './webhook.inbound.service';
 import type { ReceivingNumber } from './webhook.lines';
 import { parseWebhook } from './webhook.parse';

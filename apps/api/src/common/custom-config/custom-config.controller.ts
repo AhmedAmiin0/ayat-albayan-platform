@@ -1,7 +1,7 @@
 import { customConfigUpsertSchema, customKeySchema, type CustomConfigView } from '@ab/shared';
 import { Body, Controller, Delete, Get, HttpCode, NotFoundException, Param, Put } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { parseOrThrow } from '../../modules/teachers/http';
+import { parseOrThrow } from '../http/http';
 import { AuditService } from '../audit/audit.service';
 import { SINGLETON_ENTITY_ID } from '../audit/singleton-entity';
 import { CurrentUser, Permissions } from '../auth/decorators';

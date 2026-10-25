@@ -10,8 +10,8 @@ import { Controller, Get, Param, ParseUUIDPipe, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser, Permissions } from '../../common/auth/decorators';
 import type { AuthUser } from '../../common/auth/verify-token';
-import { notFound } from '../scheduling/errors';
-import { parseOrThrow, type Page } from '../teachers/http';
+import { notFound } from '../../common/http/errors';
+import { parseOrThrow, type Page } from '../../common/http/http';
 import { TeachersQueries } from '../teachers/teachers.queries';
 import { EarningsService } from './earnings.service';
 

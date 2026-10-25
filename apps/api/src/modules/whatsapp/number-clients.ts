@@ -1,5 +1,5 @@
 import { overlayNumbers } from '../../common/integrations/numbers-overlay';
-import { allowedRecipients, loadEnv } from '../../env';
+import { allowedRecipients, loadEnv } from '../../config/env/env';
 import { whatsappClient } from './client-factory';
 import type { WhatsappClient } from './whatsapp.types';
 

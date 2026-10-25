@@ -1,7 +1,7 @@
 import { meetingRoomName, meetingState, meetingWindow, type JoinWindowConfig, type MeetingCreated } from '@ab/shared';
 import { ConflictException, ForbiddenException, Inject, Injectable, Logger } from '@nestjs/common';
 import type { AuthUser } from '../../common/auth/verify-token';
-import { notFound } from '../scheduling/errors';
+import { notFound } from '../../common/http/errors';
 import { CLASSROOM_WEB_ORIGIN } from './classroom.config';
 import { meetingEnded } from './internal-meetings.join.service';
 import { InternalMeetingsQueries, type MeetingRow } from './internal-meetings.queries';

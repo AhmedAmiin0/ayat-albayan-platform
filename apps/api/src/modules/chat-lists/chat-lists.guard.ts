@@ -2,7 +2,7 @@ import { chatListPhone } from '@ab/shared';
 import { z } from 'zod';
 import { can } from '../../common/auth/permissions';
 import type { AuthUser } from '../../common/auth/verify-token';
-import { badRequest, forbidden, notFound } from '../scheduling/errors';
+import { badRequest, forbidden, notFound } from '../../common/http/errors';
 
 /**
  * Every lists route needs inbox.lists (the route's @Permissions) AND inbox.read, and the inbox of the

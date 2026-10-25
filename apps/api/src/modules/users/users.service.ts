@@ -1,6 +1,6 @@
 import { type LinkCandidate, type LinkKind, type UserDetail, type UserPage, type UserRoleOption, type UserUpdate, type UsersListQuery } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import { badRequest, conflict, notFound } from '../scheduling/errors';
+import { badRequest, conflict, notFound } from '../../common/http/errors';
 import { recordUser } from './users.audit';
 import { adminProblem, chooseRole, lockedOutOfUsers, profilePatch, replaced, roleChangeBlocked, type UserState } from './users.logic';
 import { toUserDetail, toUserView } from './users.mapper';

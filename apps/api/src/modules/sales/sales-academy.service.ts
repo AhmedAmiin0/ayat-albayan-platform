@@ -1,8 +1,8 @@
 import type { AssistantLessonView, SalesStudentsQuery, SalesStudentView, SalesSubscriptionHistory } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
 import type { AuthUser } from '../../common/auth/verify-token';
-import { notFound } from '../scheduling/errors';
-import type { Page } from '../teachers/http';
+import { notFound } from '../../common/http/errors';
+import type { Page } from '../../common/http/http';
 import { toSalesLive, toSalesStudent } from './sales-academy.mapper';
 import { SalesAcademyQueries } from './sales-academy.queries';
 import { toSalesHistory } from './sales-history.mapper';

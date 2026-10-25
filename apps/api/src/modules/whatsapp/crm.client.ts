@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { recipientAllowed, type CrmLineEnv } from '../../env';
+import { recipientAllowed, type CrmLineEnv } from '../../config/env/env';
 import { crmMediaBody, crmTemplateBody, crmTextBody, type CrmBody } from './crm-body';
 import { crmJson, type CrmConn } from './crm-http';
 import { afterDocument, crmReportBodies } from './crm-report';

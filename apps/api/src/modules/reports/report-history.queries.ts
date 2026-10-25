@@ -2,7 +2,7 @@ import type { Attendance, Grade, LessonStatus, PdfStatus, ReportStatus } from '@
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../common/db/db.module';
 import { readAll } from '../scheduling/read-all';
-import { dbError } from '../teachers/http';
+import { dbError } from '../../common/http/http';
 
 const HISTORY_COLUMNS =
   'id, lesson_id, teacher_id, attendance, grade_recitation, grade_memorization, grade_revision, grade_tajweed, grade_engagement, grade_commitment, grade_overall, status, version, pdf_status, sent_at' as const;

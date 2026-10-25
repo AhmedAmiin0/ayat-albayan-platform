@@ -1,7 +1,7 @@
 import { dateRangeQuery, RIYADH_TZ, type DateRangeQuery } from '@ab/shared';
-import { badRequest } from '../scheduling/errors';
+import { badRequest } from '../../common/http/errors';
 import { DAY, localDay, zonedToUtc } from '../teachers/availability/zoned-time';
-import { parseOrThrow } from '../teachers/http';
+import { parseOrThrow } from '../../common/http/http';
 
 // `?from&to` (docs/11 §3): local days in Asia/Riyadh, inclusive, at most a year.
 

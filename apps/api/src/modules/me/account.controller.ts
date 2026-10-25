@@ -11,7 +11,7 @@ import { Body, Controller, Delete, Get, HttpCode, Patch, Post, Put } from '@nest
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser, SignedIn } from '../../common/auth/decorators';
 import type { AuthUser } from '../../common/auth/verify-token';
-import { parseOrThrow } from '../teachers/http';
+import { parseOrThrow } from '../../common/http/http';
 import { AccountAvatarService } from './account.avatar.service';
 import { AccountService } from './account.service';
 

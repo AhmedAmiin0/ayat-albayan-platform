@@ -2,7 +2,7 @@ import { RIYADH_TZ, type Gender, type LessonStatus, type Program, type TeacherSt
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../../common/db/db.module';
 import { allDayRows } from '../../teachers/availability/free-slots';
-import { dbError } from '../../teachers/http';
+import { dbError } from '../../../common/http/http';
 import type { LessonWindow } from '../lessons.queries';
 import { LessonsSettings } from '../lessons.settings';
 

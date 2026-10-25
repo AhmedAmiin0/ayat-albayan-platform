@@ -9,7 +9,7 @@ import { Body, Controller, Delete, Get, HttpCode, Param, ParseUUIDPipe, Post } f
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser, Permissions } from '../../common/auth/decorators';
 import type { AuthUser } from '../../common/auth/verify-token';
-import { parseOrThrow } from '../teachers/http';
+import { parseOrThrow } from '../../common/http/http';
 import { ReportFilesService } from './report-files.service';
 
 /**

@@ -1,7 +1,7 @@
 import { GRANTABLE_PERMISSIONS, type Permission } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
 import type { RoleRecord } from '../roles/roles.store';
-import { errorCode } from '../scheduling/errors';
+import { errorCode } from '../../common/http/errors';
 import { ADMIN_ACTOR, row, setupUsers, type Link } from './users.fakes';
 import type { Actor } from './users.rules';
 

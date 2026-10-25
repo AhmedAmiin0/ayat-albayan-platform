@@ -1,7 +1,7 @@
 import type { Program, StudentStatus } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../common/db/db.module';
-import { dbError } from '../teachers/http';
+import { dbError } from '../../common/http/http';
 
 /** The only student columns a teacher gets: no phone, guardian or money (R-TCH-03). */
 export type TeacherStudentRow = {

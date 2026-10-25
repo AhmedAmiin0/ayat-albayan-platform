@@ -3,7 +3,7 @@ import { joinWindowConfig, OPEN_LESSON_STATUSES, type JoinWindowConfig } from '@
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../common/db/db.module';
 import { ClassroomSettings } from './classroom.settings';
-import { dbError } from '../teachers/http';
+import { dbError } from '../../common/http/http';
 import { hashLinkToken, linkExpiry, newLinkToken } from './join-link.token';
 
 export type StudentLinkRow = Pick<Tables<'student_join_links'>, 'id' | 'student_id' | 'revoked_at'>;

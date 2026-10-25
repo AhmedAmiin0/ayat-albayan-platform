@@ -64,7 +64,9 @@ describe('pushPreview', () => {
   it('is the text, else «أرسل …» with the media kind', () => {
     expect(pushPreview(event({ body: '  أهلا  ' }))).toBe('أهلا');
     expect(pushPreview(event({ type: 'audio', body: null }))).toBe('أرسل رسالة صوتية');
-    expect(pushPreview(event({ type: 'reaction', body: null }))).toBe('أرسل رسالة غير مدعومة — افتحها من واتساب');
+    expect(pushPreview(event({ type: 'reaction', body: null }))).toBe('أرسل رسالة لا يمكن عرضها هنا');
+    expect(pushPreview(event({ type: 'location', body: null }))).toBe('أرسل موقع');
+    expect(pushPreview(event({ type: 'unsupported', body: null }))).toBe('أرسل رسالة لم يصل محتواها');
   });
 });
 

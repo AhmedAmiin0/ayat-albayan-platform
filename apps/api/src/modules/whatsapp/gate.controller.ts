@@ -13,7 +13,7 @@ import { AuditService } from '../../common/audit/audit.service';
 import { SINGLETON_ENTITY_ID } from '../../common/audit/singleton-entity';
 import { CurrentUser, Permissions } from '../../common/auth/decorators';
 import type { AuthUser } from '../../common/auth/verify-token';
-import { parseOrThrow } from '../teachers/http';
+import { parseOrThrow } from '../../common/http/http';
 import { confirmationRequired } from './gate.errors';
 import { GateSettings, type GateKey } from './gate.settings';
 

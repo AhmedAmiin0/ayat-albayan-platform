@@ -1,7 +1,7 @@
 import type { ExpenseCreate, ExpenseUpdate, ExpenseView } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
 import { AuditService } from '../../common/audit/audit.service';
-import { notFound } from '../scheduling/errors';
+import { notFound } from '../../common/http/errors';
 import { expenseInsert, expensePatch } from './expense.write';
 import { ExpenseReceipts } from './expense-receipts';
 import { ExpensesQueries, toExpenseView, type ExpenseRow } from './expenses.queries';

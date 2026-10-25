@@ -1,6 +1,6 @@
 import type { TemplateNumberSyncView } from '@ab/shared';
 import type { OverlayNumber } from '../../common/integrations/numbers-overlay';
-import type { WhatsappEnv } from '../../env';
+import type { WhatsappEnv } from '../../config/env/env';
 import { readError, requireSync } from './template-env';
 import { findMeta, syncPatch } from './template-sync';
 import { CRM_MANAGED, waHttpError } from './template.mapper';

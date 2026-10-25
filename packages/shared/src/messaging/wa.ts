@@ -1,3 +1,4 @@
+import { backoffDelay } from '../async/retry.js';
 import { normalizePhone } from '../phone.js';
 
 // WhatsApp Cloud API rules the sender, the webhook and the inbox share (docs/12 §3).
@@ -38,13 +39,11 @@ export function clickToChatLink(phoneE164: string, text?: string): string {
 /** Tries per outbound message before it is `failed` (and the admin gets reminder_failed). */
 export const MAX_SEND_ATTEMPTS = 3;
 
-const BACKOFF_BASE_MS = 60_000;
-const BACKOFF_CAP_MS = 60 * 60_000;
+const BACKOFF = { baseMs: 60_000, factor: 5, capMs: 60 * 60_000 };
 
 /** Wait before try `attempt + 1`, after `attempt` failed tries: 1 min, 5 min, 25 min, … ≤ 1 h. */
 export function backoff(attempt: number): number {
-  const n = Math.max(1, Math.floor(attempt));
-  return Math.min(BACKOFF_BASE_MS * 5 ** (n - 1), BACKOFF_CAP_MS);
+  return backoffDelay(Math.max(1, Math.floor(attempt)) - 1, BACKOFF);
 }
 
 /**

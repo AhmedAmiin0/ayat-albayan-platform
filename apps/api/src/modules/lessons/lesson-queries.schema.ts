@@ -1,8 +1,8 @@
 import { instant, localDate, SETTING_DEFAULTS, timeZone } from '@ab/shared';
 import { z } from 'zod';
-import { badRequest } from '../scheduling/errors';
+import { badRequest } from '../../common/http/errors';
 import { addDays, startOfLocalDay } from '../scheduling/horizon';
-import { parseOrThrow } from '../teachers/http';
+import { parseOrThrow } from '../../common/http/http';
 import type { LessonWindow } from './lessons.queries';
 
 /** The window is the page (R-NFR-08): at most 31 days per request (docs/10 §3 Lists). */

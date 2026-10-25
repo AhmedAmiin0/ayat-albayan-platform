@@ -4,7 +4,7 @@ import type { PostgrestError } from '@supabase/supabase-js';
 import { DB, type Db } from '../../common/db/db.module';
 import { applySort, ilikeContains, type SortSpec } from '../../common/list-sort';
 import { studentIdsMatching } from '../../common/student-ids';
-import { dbError, type PageQuery } from '../teachers/http';
+import { dbError, type PageQuery } from '../../common/http/http';
 import type { FeedbackRow } from './feedback.queries';
 
 /**

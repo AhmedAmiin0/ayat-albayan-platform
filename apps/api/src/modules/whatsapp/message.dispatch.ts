@@ -2,7 +2,7 @@ import { waSendKind, type TemplateDocument, type WaLine } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { BUCKETS, SIGNED_URL_SECONDS } from '../../common/storage/storage.paths';
 import { StorageService } from '../../common/storage/storage.service';
-import { allowedRecipients, loadEnv, recipientAllowed } from '../../env';
+import { allowedRecipients, loadEnv, recipientAllowed } from '../../config/env/env';
 import { whatsappClient } from './client-factory';
 import { NumberClients } from './number-clients';
 import type { NumberRoute } from './number-route';

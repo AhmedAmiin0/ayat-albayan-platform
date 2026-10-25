@@ -1,7 +1,7 @@
 import { canEditReport } from '@ab/shared';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import type { AuthUser } from '../../common/auth/verify-token';
-import { conflict } from '../scheduling/errors';
+import { conflict } from '../../common/http/errors';
 import { ReportAccess } from './report-access';
 import type { ViewContext } from './report.mapper';
 import type { ReportRow } from './report-row';

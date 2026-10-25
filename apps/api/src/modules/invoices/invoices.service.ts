@@ -3,7 +3,7 @@ import { ar } from '../../common/i18n/server-text';
 import { Injectable } from '@nestjs/common';
 import { BUCKETS, extFor } from '../../common/storage/storage.paths';
 import { StorageService } from '../../common/storage/storage.service';
-import { notFound } from '../scheduling/errors';
+import { notFound } from '../../common/http/errors';
 import type { RecentFilter } from './invoices.dto';
 import { InvoicesQueries, type InvoiceRowOut } from './invoices.queries';
 

@@ -2,7 +2,7 @@ import type { Permission, RoleCreate, RoleUpdate, RoleView, StaffUserView } from
 import { Inject, Injectable } from '@nestjs/common';
 import { AuditService } from '../../common/audit/audit.service';
 import { PermissionCache } from '../../common/auth/permission.cache';
-import { badRequest, conflict, forbidden, notFound } from '../scheduling/errors';
+import { badRequest, conflict, forbidden, notFound } from '../../common/http/errors';
 import { cleanGrants, customKey, grantsOf, isPortalRole, isSystemAdmin, managerProblem, missingGrant, roleView, staffUserView, type RoleState } from './roles.logic';
 import { regrantAudit, resetGrants, type Regrant } from './roles.reset';
 import { ROLE_STORE, type ProfileRecord, type RoleRecord, type RoleStore } from './roles.store';

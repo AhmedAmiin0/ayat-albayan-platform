@@ -1,7 +1,7 @@
 import { ConflictException, UnauthorizedException } from '@nestjs/common';
 import type { Db } from '../../common/db/db.module';
 import { DEVICE_IN_USE, deviceKeyHash, mintDeviceKey } from '../../common/push/push-claim';
-import { dbError } from '../teachers/http';
+import { dbError } from '../../common/http/http';
 
 export interface DeviceClaim {
   userId: string;

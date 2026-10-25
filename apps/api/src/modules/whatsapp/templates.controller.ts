@@ -17,7 +17,7 @@ import { Body, Controller, Get, HttpCode, Param, Patch, Post, Put, Query, UseGua
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser, Permissions } from '../../common/auth/decorators';
 import type { AuthUser } from '../../common/auth/verify-token';
-import { parseOrThrow } from '../teachers/http';
+import { parseOrThrow } from '../../common/http/http';
 import { TemplateManagerGuard } from './template-manager.guard';
 import { TemplateNumbers } from './template-numbers.service';
 import { TemplateStarters } from './template-starters';

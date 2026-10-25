@@ -2,7 +2,7 @@ import type { ThreadDetail, ThreadView } from '@ab/shared';
 import { ForbiddenException, Inject, Injectable } from '@nestjs/common';
 import type { AuthUser } from '../../common/auth/verify-token';
 import { ChatListsQueries } from '../chat-lists/chat-lists.queries';
-import type { Page } from '../teachers/http';
+import type { Page } from '../../common/http/http';
 import { SalesScopes, type SalesScope } from '../sales/sales-scope';
 import { listFilter, withLists } from './chat-list-filter';
 import { SalesThreadsService } from './sales-threads.service';

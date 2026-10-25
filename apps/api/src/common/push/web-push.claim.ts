@@ -1,5 +1,5 @@
 import { ConflictException } from '@nestjs/common';
-import { dbError } from '../../modules/teachers/http';
+import { dbError } from '../http/http';
 import type { Db } from '../db/db.module';
 import { DEVICE_IN_USE, mayClaimDevice } from './push-claim';
 import { liveSessions } from './push.sessions';

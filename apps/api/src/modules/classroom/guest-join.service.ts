@@ -1,7 +1,7 @@
 import { guestJoinSchema, joinWindow, type RoomJoinResult } from '@ab/shared';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { notFound } from '../scheduling/errors';
-import { parseOrThrow } from '../teachers/http';
+import { notFound } from '../../common/http/errors';
+import { parseOrThrow } from '../../common/http/http';
 import { ClassroomQueries } from './classroom.queries';
 import { assertWindowOpen } from './join-gate';
 import { PublicJoinLimit } from './join-limit';

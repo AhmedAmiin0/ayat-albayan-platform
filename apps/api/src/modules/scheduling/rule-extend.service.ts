@@ -1,6 +1,6 @@
 import type { Conflict } from '@ab/shared';
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { conflict } from './errors';
+import { conflict } from '../../common/http/errors';
 import { OccurrenceGenerator } from './occurrence-generator';
 import { ScheduleQueries } from './schedule.queries';
 import { SchedulingSettings } from './scheduling.settings';

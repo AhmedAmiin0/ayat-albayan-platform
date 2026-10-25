@@ -1,7 +1,7 @@
 import type { SendGateView } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../common/db/db.module';
-import { allowedRecipients, loadEnv, sendingAllowed, whatsappEnv, type Env } from '../../env';
+import { allowedRecipients, loadEnv, sendingAllowed, whatsappEnv, type Env } from '../../config/env/env';
 import { WhatsappSettings } from './whatsapp.settings';
 
 /**

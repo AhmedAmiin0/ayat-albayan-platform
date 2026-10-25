@@ -5,7 +5,7 @@ import { z } from 'zod';
 import { Permissions } from '../../common/auth/decorators';
 import { rangeWindow, riyadhDate } from '../dashboard/range';
 import { ReceivablesService } from '../receivables/receivables.service';
-import { parseOrThrow } from '../teachers/http';
+import { parseOrThrow } from '../../common/http/http';
 import { attachment, toCsv } from './csv';
 import { FinanceExportsQueries } from './finance-exports.queries';
 import { expenseCsv, ledgerCsv, receivablesCsv } from './finance.rows';

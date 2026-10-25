@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import type { AuthUser } from '../../common/auth/verify-token';
-import { notFound } from '../scheduling/errors';
+import { notFound } from '../../common/http/errors';
 import { ClassroomQueries } from './classroom.queries';
 import { hashLinkToken, looksLikeLinkToken } from './join-link.token';
 import { LessonRoleService } from './lesson-role.service';

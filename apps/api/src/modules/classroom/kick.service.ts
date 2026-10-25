@@ -1,7 +1,7 @@
 import { canRemove, JOIN_ROLES, lessonRoomName, type JoinRole } from '@ab/shared';
 import { BadGatewayException, HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import type { AuthUser } from '../../common/auth/verify-token';
-import { notFound } from '../scheduling/errors';
+import { notFound } from '../../common/http/errors';
 import { notConfigured } from './join-gate';
 import { LessonRoleService } from './lesson-role.service';
 import { LivekitApi, LivekitError } from './livekit-api';

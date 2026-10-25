@@ -1,7 +1,7 @@
 import type { Tables } from '@ab/db';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../common/db/db.module';
-import { dbError } from '../teachers/http';
+import { dbError } from '../../common/http/http';
 import type { AssignedLead } from './sales-assign.mapper';
 
 /** Reads and writes behind the lead assignment (service role; SalesAssignService decides). */
