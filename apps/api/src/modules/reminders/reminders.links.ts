@@ -32,6 +32,9 @@ export const roomFor = (lesson: Pick<ReminderLesson, 'meeting_link' | 'teacher'>
 /** The lesson's room for staff (login required): what the teacher's reminder links to. */
 export const classroomUrl = (origin: string, lessonId: string): string => `${origin}/classroom/${lessonId}`;
 
+/** The teacher's report form of the lesson (web /teacher/report/<id>, login required). */
+export const teacherReportUrl = (origin: string, lessonId: string): string => `${origin}/teacher/report/${lessonId}`;
+
 /**
  * The lessons as the reminders should name their link. A room lesson gets the classroom page, a
  * host no template button knows, so the guardian's reminder is lesson_reminder_plain (the family's

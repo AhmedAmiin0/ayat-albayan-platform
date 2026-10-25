@@ -35,7 +35,8 @@ export interface ReportRow {
 /** Everything one report PDF and its message need, read with the service role. */
 export interface ReportSource {
   report: ReportRow;
-  lesson: { starts_at: string; ends_at: string };
+  /** trial: its rule's package is 'trial' (the CRM's report_trial_session, docs/19). */
+  lesson: { starts_at: string; ends_at: string; trial?: boolean };
   student: { name: string; code: string; program: Program };
   guardian: { id: string; phone_e164: string; tz: string };
   teacher: { display_name_ar: string };
@@ -69,7 +70,7 @@ export class ReportPdfSource {
     const report = res.data as unknown as ReportRow;
     const pair = { lesson_id: report.lesson_id, student_id: report.student_id };
     const [lesson, student, teacher, seq, slot, subs] = await Promise.all([
-      this.db.from('lessons').select('starts_at, ends_at').eq('id', report.lesson_id).maybeSingle(),
+      this.db.from('lessons').select('starts_at, ends_at, rule:schedule_rules(package)').eq('id', report.lesson_id).maybeSingle(),
       this.db
         .from('students')
         .select('name, code, program, guardians(id, phone_e164, tz)')
@@ -85,7 +86,7 @@ export class ReportPdfSource {
     const n = must({ data: seq.data ?? { seq: null }, error: seq.error }, 'sequence').seq;
     return {
       report,
-      lesson: l,
+      lesson: { starts_at: l.starts_at, ends_at: l.ends_at, trial: l.rule?.package === 'trial' },
       // code is a generated column (never null); the type says nullable.
       student: { name: s.name, code: s.code ?? '', program: s.program },
       guardian: must({ data: s.guardians, error: null }, 'guardian'),

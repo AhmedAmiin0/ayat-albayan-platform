@@ -1,4 +1,5 @@
 import type { NotificationAudience } from '@ab/shared';
+import { LineDrivers } from './LineDrivers';
 import { NumbersSummary } from './NumbersSummary';
 import { PublicNumber } from './PublicNumber';
 import { SendState } from './SendState';
@@ -13,13 +14,14 @@ export interface CommsOverviewProps {
 
 /**
  * «نظرة عامة» on the phone (docs/23 §2d mobile, docs/26b §6b): the send state and the server's gate
- * (read-only), the numbers with their health, «ماذا يُرسل الآن» per audience, the number shown to
- * families; where the rest is managed is in the send state's web note. Nothing here writes.
+ * (read-only), each line's sending provider (switched after a confirm, docs/19), the numbers with their
+ * health, «ماذا يُرسل الآن» per audience, the number shown to families; where the rest is managed is in the send state's web note. Only the provider switch writes.
  */
 export function CommsOverview({ onOpenAudience, onOpenNumbers }: CommsOverviewProps) {
   return (
     <>
       <SendState />
+      <LineDrivers />
       <NumbersSummary onOpen={onOpenNumbers} />
       <WhatIsSent onOpen={onOpenAudience} />
       <PublicNumber />

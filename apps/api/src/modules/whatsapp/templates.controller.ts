@@ -2,6 +2,7 @@ import {
   restrictedMay,
   sendsAllTemplates,
   templateHealthSchema,
+  templateCrmNameSchema,
   templateCrmStatusSchema,
   templateLineSchema,
   templateNumberSchema,
@@ -104,6 +105,15 @@ export class TemplatesController {
   setCrmStatus(@Param('key') key: string, @Body() body: unknown, @CurrentUser() user: AuthUser): Promise<TemplateView> {
     const input = parseOrThrow(templateCrmStatusSchema, body);
     return this.registry.setCrmStatus({ key, status: input.status }, user.id);
+  }
+
+  /** A crm line's template (docs/19): its name / language in the CRM; blank = the default; 409 not_crm_line; audited. */
+  @Put(':key/crm-name')
+  @HttpCode(200)
+  @UseGuards(TemplateManagerGuard)
+  setCrmName(@Param('key') key: string, @Body() body: unknown, @CurrentUser() user: AuthUser): Promise<TemplateView> {
+    const input = parseOrThrow(templateCrmNameSchema, body);
+    return this.registry.setCrmName({ key, ...input }, user.id);
   }
 
   /** The allow-list: the admin offers a template to the restricted roles (teachers, sales…), or stops; audited. */
