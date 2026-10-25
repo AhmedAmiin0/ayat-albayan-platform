@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
-import { retry } from './retry';
+import { retry } from './retry.js';
 
-describe('retry — backoff around one PDF publish', () => {
+describe('retry — fixed delays between attempts', () => {
   it('returns the first success without waiting', async () => {
     const sleep = vi.fn(async () => undefined);
     await expect(retry(async () => 'ok', { delays: [2, 8], sleep })).resolves.toBe('ok');

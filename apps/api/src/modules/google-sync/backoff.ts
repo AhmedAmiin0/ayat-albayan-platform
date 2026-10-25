@@ -1,14 +1,13 @@
+import { backoffDelay, withJitter } from '@ab/shared';
 import { GoogleApiError } from './google-client.port';
 
 /** Five attempts in all (docs/24 §3), then `failed` until an admin retries (or, for lessons, the daily reconcile). */
 export const MAX_ATTEMPTS = 5;
-const BASE_MS = 30_000;
-const CAP_MS = 30 * 60_000;
+const BACKOFF = { baseMs: 30_000, factor: 2, capMs: 30 * 60_000 };
 
 /** 30 s, 60 s, 2 min, 4 min… capped at 30 min, ±50 % jitter so a burst of 429s spreads out. */
 export function retryDelayMs(attempt: number, random: () => number = Math.random): number {
-  const exp = Math.min(CAP_MS, BASE_MS * 2 ** Math.max(0, attempt - 1));
-  return Math.round(exp * (0.5 + random()));
+  return withJitter(backoffDelay(attempt - 1, BACKOFF), random);
 }
 
 /**

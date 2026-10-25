@@ -1,8 +1,8 @@
-import type { WaLine } from '@ab/shared';
+import { retry, type WaLine } from '@ab/shared';
 import { Injectable, Logger } from '@nestjs/common';
+import { sleep } from '../../common/async/sleep';
 import { activeNumberId } from '../../common/integrations/numbers-overlay';
 import { PushService } from '../../common/push/push.service';
-import { retry, sleep } from '../report-pdf/retry';
 import { MessageDispatch } from './message.dispatch';
 import { authSubject, RECORD_DELAYS_MS, sendingAt, UNRECORDED, type FailedInput, type SendJob, type SendOutcome } from './message.job';
 import type { NumberRoute } from './number-route';
