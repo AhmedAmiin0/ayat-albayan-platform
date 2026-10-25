@@ -44,6 +44,7 @@ export function toMessage(source: ReportSource, pdfPath: string, now: Date): Rep
       startsAt: new Date(source.lesson.starts_at),
       guardian: source.guardian,
       pdfPath,
+      trial: source.lesson.trial === true,
     },
     now,
   );

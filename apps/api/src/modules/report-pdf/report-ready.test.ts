@@ -39,6 +39,7 @@ describe('report_ready message (R-REP-03, R-MSG-01, docs/11 §5)', () => {
         '1': 'سلمى',
         '2': 'الثلاثاء 29 سبتمبر 17:00',
         document: { bucket: 'reports', path: 's1/l1.pdf', filename: 'AB-0183_2026-09-29_تقرير-الحلقة.pdf' },
+        crm: { report: 'regular' },
       },
       dedup_key: 'report_ready:r1',
       scheduled_for: '2026-09-29T15:12:00.000Z',

@@ -327,6 +327,7 @@
   "TemplatesController.list": ["admin","sales","teacher"],
   "TemplatesController.setLine": ["admin"],
   "TemplatesController.setCrmStatus": ["admin"],
+  "TemplatesController.setCrmName": ["admin"],
   "TemplatesController.setNumber": ["admin"],
   "TemplatesController.setStarter": ["admin"],
   "TemplatesController.submit": ["admin"],

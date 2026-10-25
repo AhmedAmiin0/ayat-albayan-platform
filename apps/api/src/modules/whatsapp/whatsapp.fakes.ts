@@ -112,6 +112,8 @@ const BASE_ROW: TemplateRow = {
   line: 'notifications',
   sales_starter: false,
   number_id: null,
+  crm_name: null,
+  crm_language: null,
 };
 
 export function templateRow(over: Partial<TemplateRow> = {}): TemplateRow {

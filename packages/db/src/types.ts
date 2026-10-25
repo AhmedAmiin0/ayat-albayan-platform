@@ -2191,6 +2191,8 @@ export type Database = {
           body_ar: string;
           buttons: NonNullable<Json>;
           category: Database['public']['Enums']['template_category'];
+          crm_language: string | null;
+          crm_name: string | null;
           footer_ar: string | null;
           header_format: string | null;
           key: string;
@@ -2212,6 +2214,8 @@ export type Database = {
           body_ar: string;
           buttons?: NonNullable<Json>;
           category?: Database['public']['Enums']['template_category'];
+          crm_language?: string | null;
+          crm_name?: string | null;
           footer_ar?: string | null;
           header_format?: string | null;
           key: string;
@@ -2233,6 +2237,8 @@ export type Database = {
           body_ar?: string;
           buttons?: NonNullable<Json>;
           category?: Database['public']['Enums']['template_category'];
+          crm_language?: string | null;
+          crm_name?: string | null;
           footer_ar?: string | null;
           header_format?: string | null;
           key?: string;
