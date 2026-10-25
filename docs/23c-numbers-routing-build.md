@@ -63,3 +63,18 @@ migration `packages/db/supabase/migrations/20261024000633_numbers_routing.sql`.
   label on phones, busy-safe dialog, «ترتيب البديل» error on blur, MSA wording without number agreement.
 - Known limits (module mode only, documented, not changed): `due()` still filters chat-stamped texts by the
   chat role's default being configured; `SendGate.open()` still needs the notifications default configured.
+
+## ربط كل رسالة برقمها (2026-10-25, legacy mode)
+
+Under `comms_source = legacy` the app stamps only `messages.line`; `number_id` stayed null (a chat message of
+2026-10-25 02:56Z had none). Migration `20261025000711_messages_number_link.sql` adds BEFORE triggers on
+`messages` instead of changing the writers (webhooks meta / kapso / wacrm, the sender's claim, the CRM
+driver, inbox send, reminders, follow-ups, invites, imports): on insert with no `number_id`, and on an
+update that changes `line` (the legacy claim stamps `line` when two lines are in use), `number_id` = the ONE
+enabled `wa_numbers` row whose `purpose` = `line`, else null (no line, none, or several). A number the writer
+set is kept, and on a line change a number the trigger did not choose (hand-stamped history) is kept.
+Module mode: the trigger does nothing (decisions 5–8 stamp in the app). Why a trigger: no app code changes,
+so every legacy send, routing, reply-window, gate and template decision stays byte for byte (under legacy
+nothing reads `number_id`; `v_threads` ignores it; `v_thread_numbers` is read only in module mode, where a
+stamped row counts for the number the family actually wrote to). Existing rows are never touched (staging
+was stamped by hand). Tests: `e2e/tests/messages-number-link.sql.spec.ts`.

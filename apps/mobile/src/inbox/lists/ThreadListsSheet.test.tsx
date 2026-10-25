@@ -75,7 +75,7 @@ test('«قائمة جديدة» creates the list and adds this chat in one go; a
   await fireEvent.changeText(screen.getByLabelText(t.inbox.lists.name), PAID.name);
   await fireEvent.press(screen.getByRole('button', { name: t.inbox.lists.create }));
   expect(await screen.findByText(t.inbox.lists.nameTaken)).toBeTruthy();
-  const made = { id: 'l-new', name: 'متابعة', count: 0 };
+  const made = { id: 'l-new', name: 'متابعة', count: 0, auto_rule: null };
   mockApiSend.mockResolvedValueOnce(made).mockReturnValueOnce(new Promise(() => undefined));
   mockLists = [PAID, TRIAL, made];
   await fireEvent.changeText(screen.getByLabelText(t.inbox.lists.name), made.name);

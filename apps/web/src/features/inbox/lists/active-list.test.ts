@@ -2,8 +2,8 @@ import { describe, expect, it } from 'vitest';
 import { activeList } from './active-list';
 
 const LISTS = [
-  { id: 'a', name: 'بانتظار الدفع', count: 2 },
-  { id: 'b', name: 'تجريبي', count: 0 },
+  { id: 'a', name: 'بانتظار الدفع', count: 2, auto_rule: null },
+  { id: 'b', name: 'تجريبي', count: 0, auto_rule: null },
 ];
 
 describe('activeList', () => {

@@ -2476,7 +2476,12 @@
       "count": "Chats: {n}",
       "empty": "No chats in this list yet. Open a chat and choose “Lists” to add it.",
       "loadError": "Could not load the lists.",
-      "saveError": "Could not save the change, please try again."
+      "saveError": "Could not save the change, please try again.",
+      "auto": "Updated automatically",
+      "autoRule": {
+        "subscribed": "Every guardian with a running subscription is added automatically",
+        "teachers": "Every teacher is added automatically"
+      }
     }
   },
   "mobileFinance": {

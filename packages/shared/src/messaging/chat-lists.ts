@@ -47,11 +47,23 @@ export function chatListPhone(raw: string): string | null {
   return phone.ok ? phone.e164 : null;
 }
 
-/** GET /chat-lists: oldest first; `count` = the chats in it. */
+/**
+ * An automatic list (migration 20261025000710, docs/22 «القوائم التلقائية»): «مشترك» gains every guardian
+ * with a running subscription, «معلم» every active teacher. The rule only adds, never removes; adding and
+ * removing by hand work as on any list.
+ */
+export const CHAT_LIST_AUTO_RULES = ['subscribed', 'teachers'] as const;
+export type ChatListAutoRule = (typeof CHAT_LIST_AUTO_RULES)[number];
+
+export const isChatListAutoRule = (rule: unknown): rule is ChatListAutoRule =>
+  CHAT_LIST_AUTO_RULES.some((r) => r === rule);
+
+/** GET /chat-lists: oldest first; `count` = the chats in it; `auto_rule` null = a hand-kept list. */
 export interface ChatList {
   id: string;
   name: string;
   count: number;
+  auto_rule: ChatListAutoRule | null;
 }
 
 /** A list a chat is in (GET /threads/:phone → `lists`). */

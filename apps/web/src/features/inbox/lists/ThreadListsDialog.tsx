@@ -7,6 +7,7 @@ import { FormAlert } from '@/components/ui/form-alert';
 import { Icon } from '@/components/ui/icon';
 import { t } from '@/lib/i18n';
 import { chatListsQuery } from './api';
+import { AutoListChip } from './AutoListNote';
 import { CreateListDialog } from './CreateListDialog';
 import { useMembership } from './use-membership';
 
@@ -53,14 +54,26 @@ export function ThreadListsDialog({ phone, lists, onClose }: ThreadListsDialogPr
           <ul aria-label={L.title} className="grid gap-1">
             {all.data.map((l) => (
               <li key={l.id}>
-                <label className="flex min-h-11 cursor-pointer items-center gap-3 rounded-md border border-rule px-3 text-sm hover:bg-sunk sm:min-h-10">
+                <label className="flex min-h-11 cursor-pointer items-center gap-3 rounded-md border border-rule px-3 py-1.5 text-sm hover:bg-sunk sm:min-h-10">
                   <input
                     type="checkbox"
                     checked={member.has(l.id)}
                     onChange={(e) => toggle(l.id, e.target.checked)}
+                    aria-label={l.name}
+                    aria-describedby={l.auto_rule ? `auto-${l.id}` : undefined}
                     className="size-4 shrink-0 accent-[var(--lapis)]"
                   />
-                  <span className="min-w-0 flex-1 truncate">{l.name}</span>
+                  <span className="grid min-w-0 flex-1 gap-0.5">
+                    <span className="flex min-w-0 items-center gap-2">
+                      <span className="min-w-0 truncate">{l.name}</span>
+                      {l.auto_rule && <AutoListChip />}
+                    </span>
+                    {l.auto_rule && (
+                      <span id={`auto-${l.id}`} className="text-xs text-ink-3">
+                        {L.autoRule[l.auto_rule]}
+                      </span>
+                    )}
+                  </span>
                 </label>
               </li>
             ))}

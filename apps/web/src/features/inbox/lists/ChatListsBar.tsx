@@ -2,6 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { t } from '@/lib/i18n';
 import { chatListsQuery } from './api';
+import { AutoListNote } from './AutoListNote';
 import { ChatListChips } from './ChatListChips';
 import { CreateListDialog } from './CreateListDialog';
 import { EditListDialog } from './EditListDialog';
@@ -35,6 +36,7 @@ export function ChatListsBar({ active, onPick }: ChatListsBarProps) {
   return (
     <>
       <ChatListChips lists={lists.data} active={active} onPick={onPick} onNew={() => setDialog('new')} onEdit={() => setDialog('edit')} />
+      {current?.auto_rule && <AutoListNote rule={current.auto_rule} className="-mt-1.5 mb-3 px-1" />}
       {dialog === 'new' && (
         <CreateListDialog
           onClose={close}

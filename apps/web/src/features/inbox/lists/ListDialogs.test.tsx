@@ -10,7 +10,7 @@ const apiSend = vi.hoisted(() => vi.fn());
 vi.mock('@/lib/api', async (orig) => ({ ...(await orig<object>()), apiSend, apiFetch: vi.fn(async () => []) }));
 
 const L = t.inbox.lists;
-const LIST = { id: '0c000000-0000-4000-8000-000000000001', name: 'بانتظار الدفع', count: 3 };
+const LIST = { id: '0c000000-0000-4000-8000-000000000001', name: 'بانتظار الدفع', count: 3, auto_rule: null };
 const name = () => screen.getByRole('textbox', { name: new RegExp(L.name) });
 const type = (value: string) => fireEvent.change(name(), { target: { value } });
 

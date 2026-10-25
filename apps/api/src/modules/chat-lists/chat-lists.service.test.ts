@@ -3,7 +3,7 @@ import type { ChatListsQueries } from './chat-lists.queries';
 import { ChatListsService } from './chat-lists.service';
 
 const ID = '0c000000-0000-4000-8000-000000000001';
-const LIST = { id: ID, name: 'بانتظار الدفع', count: 0 };
+const LIST = { id: ID, name: 'بانتظار الدفع', count: 0, auto_rule: null };
 
 function setup() {
   const q = {
