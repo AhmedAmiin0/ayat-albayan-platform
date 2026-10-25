@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router';
-import { meetingPathOfLink } from '@/features/classroom/staff-link';
-import { StaffLinkGate } from '@/features/classroom/StaffLinkGate';
+import { meetingPathOfLink } from '@/features/classroom/join/staff-link';
+import { StaffLinkGate } from '@/features/classroom/join/StaffLinkGate';
 import { MeetingGuestPage } from '@/features/meetings/MeetingGuestPage';
 
 /**

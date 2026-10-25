@@ -1,5 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router';
-import { AssistantHome } from '@/features/classroom/AssistantHome';
+import { AssistantHome } from '@/features/classroom/sessions/AssistantHome';
 import { InternalMeetingButton } from '@/features/meetings/InternalMeetingButton';
 import { InternalMeetingsList } from '@/features/meetings/InternalMeetingsList';
 

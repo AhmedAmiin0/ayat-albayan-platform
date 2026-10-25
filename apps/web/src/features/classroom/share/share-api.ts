@@ -1,5 +1,5 @@
 import { apiSend } from '@/lib/http/api';
-import { lessonIdOfRoom, meetingIdOfRoom } from '../moderation-api';
+import { lessonIdOfRoom, meetingIdOfRoom } from '../api/moderation-api';
 
 /** «سماح» (allow) / «إيقاف مشاركة» (stop) one guest's screen share: 204, or an ApiError. */
 export type GrantShare = (input: { identity: string; allow: boolean }) => Promise<void>;

@@ -1,5 +1,5 @@
 import { Toast } from '@/components/ui/overlay/toast';
-import type { RoomController } from '../use-room';
+import type { RoomController } from '../room/livekit/use-room';
 import type { MuteController } from './use-mute';
 import { useMutedNotice } from './use-muted-notice';
 

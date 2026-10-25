@@ -1,8 +1,8 @@
 import { lessonStatusStyle, type LessonView } from '@ab/shared';
 import { ListSkeleton } from '@/components/ui/display/skeleton';
 import { StatusChip } from '@/components/ui/display/status-chip';
-import { StaffJoinButton } from '@/features/classroom/StaffJoinButton';
-import { useNow } from '@/features/classroom/use-now';
+import { StaffJoinButton } from '@/features/classroom/join/StaffJoinButton';
+import { useNow } from '@/features/classroom/sessions/use-now';
 import { t } from '@/lib/i18n/i18n';
 import { useJoinWindow } from '@/lib/settings/public-config';
 import { cn } from '@/lib/utils';

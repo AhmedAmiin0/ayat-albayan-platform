@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { t } from '@/lib/i18n/i18n';
-import type { RoomController } from '../use-room';
+import type { RoomController } from '../room/livekit/use-room';
 
 /**
  * «كتمك المعلم» / «أوقف المعلم كاميرتك»: what the muted person sees. They may turn the microphone

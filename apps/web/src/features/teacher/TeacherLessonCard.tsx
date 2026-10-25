@@ -2,8 +2,8 @@ import { clockTime, isOpenLesson, lessonStatusStyle, subscriptionStatusStyle, ty
 import { buttonVariants } from '@/components/ui/form/button';
 import { StatusChip } from '@/components/ui/display/status-chip';
 import { tzCity } from '@/components/ui/form/time-zone-select';
-import { CopyLinkButton } from '@/features/classroom/CopyLinkButton';
-import { StaffJoinButton } from '@/features/classroom/StaffJoinButton';
+import { CopyLinkButton } from '@/features/classroom/join/CopyLinkButton';
+import { StaffJoinButton } from '@/features/classroom/join/StaffJoinButton';
 import { LessonReportLinks } from '@/features/reports/LessonReportLinks';
 import { LessonActions } from '@/features/schedule/lesson/LessonActions';
 import { studentNames, studentTimes } from '@/features/schedule/lesson/lessons';

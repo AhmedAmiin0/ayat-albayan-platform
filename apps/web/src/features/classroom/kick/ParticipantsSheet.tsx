@@ -2,7 +2,7 @@ import { Button } from '@/components/ui/form/button';
 import { Drawer } from '@/features/schedule/Drawer';
 import { t } from '@/lib/i18n/i18n';
 import type { MuteController } from '../mute/use-mute';
-import type { TileView } from '../room-types';
+import type { TileView } from '../room/components/room-types';
 import type { KickController } from './use-kick';
 
 const M = t.classroom.mute;

@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { requireRole } from '@/features/auth/me';
-import { StaffClassroomPage } from '@/features/classroom/StaffClassroomPage';
+import { StaffClassroomPage } from '@/features/classroom/join/StaffClassroomPage';
 import { joinMeeting } from '@/features/meetings/internal-api';
 import { meetingJoinProblem } from '@/features/meetings/meeting-join-errors';
 

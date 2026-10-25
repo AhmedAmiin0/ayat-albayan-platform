@@ -1,8 +1,8 @@
 import type { JoinRole } from '@ab/shared';
 import { t } from '@/lib/i18n/i18n';
-import { RoomButton } from '../RoomButton';
+import { RoomButton } from '../room/components/RoomButton';
 import { RequestButton } from './RequestButton';
-import type { RoomController } from '../use-room';
+import type { RoomController } from '../room/livekit/use-room';
 import { canShareScreen } from './media-support';
 import type { ShareRequests } from './use-share-requests';
 

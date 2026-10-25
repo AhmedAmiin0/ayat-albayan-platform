@@ -1,0 +1,308 @@
+{
+  "id": "b10b",
+  "seq": 48,
+  "moves": [
+    {
+      "from": "apps/web/src/features/classroom/GuestJoinPage*",
+      "to": "apps/web/src/features/classroom/join/"
+    },
+    {
+      "from": "apps/web/src/features/classroom/JoinButton*",
+      "to": "apps/web/src/features/classroom/join/"
+    },
+    {
+      "from": "apps/web/src/features/classroom/StaffClassroomPage*",
+      "to": "apps/web/src/features/classroom/join/"
+    },
+    {
+      "from": "apps/web/src/features/classroom/StaffJoinButton*",
+      "to": "apps/web/src/features/classroom/join/"
+    },
+    {
+      "from": "apps/web/src/features/classroom/StaffLinkGate*",
+      "to": "apps/web/src/features/classroom/join/"
+    },
+    {
+      "from": "apps/web/src/features/classroom/staff-link*",
+      "to": "apps/web/src/features/classroom/join/"
+    },
+    {
+      "from": "apps/web/src/features/classroom/CopyLinkButton*",
+      "to": "apps/web/src/features/classroom/join/"
+    },
+    {
+      "from": "apps/web/src/features/classroom/SendLinkButton*",
+      "to": "apps/web/src/features/classroom/join/"
+    },
+    {
+      "from": "apps/web/src/features/classroom/ClassroomActions*",
+      "to": "apps/web/src/features/classroom/join/"
+    },
+    {
+      "from": "apps/web/src/features/classroom/StudentJoinLink*",
+      "to": "apps/web/src/features/classroom/student-link/"
+    },
+    {
+      "from": "apps/web/src/features/classroom/StudentLessonPanel*",
+      "to": "apps/web/src/features/classroom/student-link/"
+    },
+    {
+      "from": "apps/web/src/features/classroom/StudentLinkPage*",
+      "to": "apps/web/src/features/classroom/student-link/"
+    },
+    {
+      "from": "apps/web/src/features/classroom/student-link*",
+      "to": "apps/web/src/features/classroom/student-link/"
+    },
+    {
+      "from": "apps/web/src/features/classroom/AdminSessions*",
+      "to": "apps/web/src/features/classroom/sessions/"
+    },
+    {
+      "from": "apps/web/src/features/classroom/SessionCard*",
+      "to": "apps/web/src/features/classroom/sessions/"
+    },
+    {
+      "from": "apps/web/src/features/classroom/sessions*",
+      "to": "apps/web/src/features/classroom/sessions/"
+    },
+    {
+      "from": "apps/web/src/features/classroom/Assistant*",
+      "to": "apps/web/src/features/classroom/sessions/"
+    },
+    {
+      "from": "apps/web/src/features/classroom/use-now*",
+      "to": "apps/web/src/features/classroom/sessions/"
+    },
+    {
+      "from": "apps/web/src/features/classroom/api.*",
+      "to": "apps/web/src/features/classroom/api/"
+    },
+    {
+      "from": "apps/web/src/features/classroom/meetings-api*",
+      "to": "apps/web/src/features/classroom/api/"
+    },
+    {
+      "from": "apps/web/src/features/classroom/moderation-api*",
+      "to": "apps/web/src/features/classroom/api/"
+    },
+    {
+      "from": "apps/web/src/features/classroom/board/board-frames*",
+      "to": "apps/web/src/features/classroom/board/model/"
+    },
+    {
+      "from": "apps/web/src/features/classroom/board/draw*",
+      "to": "apps/web/src/features/classroom/board/model/"
+    },
+    {
+      "from": "apps/web/src/features/classroom/board/messages*",
+      "to": "apps/web/src/features/classroom/board/model/"
+    },
+    {
+      "from": "apps/web/src/features/classroom/board/model*",
+      "to": "apps/web/src/features/classroom/board/model/"
+    },
+    {
+      "from": "apps/web/src/features/classroom/board/reducer*",
+      "to": "apps/web/src/features/classroom/board/model/"
+    }
+  ],
+  "files": [
+    [
+      "apps/web/src/features/classroom/AdminSessions.test.tsx",
+      "apps/web/src/features/classroom/sessions/AdminSessions.test.tsx"
+    ],
+    [
+      "apps/web/src/features/classroom/AdminSessions.tsx",
+      "apps/web/src/features/classroom/sessions/AdminSessions.tsx"
+    ],
+    [
+      "apps/web/src/features/classroom/api.ts",
+      "apps/web/src/features/classroom/api/api.ts"
+    ],
+    [
+      "apps/web/src/features/classroom/AssistantHome.test.tsx",
+      "apps/web/src/features/classroom/sessions/AssistantHome.test.tsx"
+    ],
+    [
+      "apps/web/src/features/classroom/AssistantHome.tsx",
+      "apps/web/src/features/classroom/sessions/AssistantHome.tsx"
+    ],
+    [
+      "apps/web/src/features/classroom/AssistantLessonRow.tsx",
+      "apps/web/src/features/classroom/sessions/AssistantLessonRow.tsx"
+    ],
+    [
+      "apps/web/src/features/classroom/AssistantsManager.test.tsx",
+      "apps/web/src/features/classroom/sessions/AssistantsManager.test.tsx"
+    ],
+    [
+      "apps/web/src/features/classroom/AssistantsManager.tsx",
+      "apps/web/src/features/classroom/sessions/AssistantsManager.tsx"
+    ],
+    [
+      "apps/web/src/features/classroom/board/board-frames.test.ts",
+      "apps/web/src/features/classroom/board/model/board-frames.test.ts"
+    ],
+    [
+      "apps/web/src/features/classroom/board/board-frames.ts",
+      "apps/web/src/features/classroom/board/model/board-frames.ts"
+    ],
+    [
+      "apps/web/src/features/classroom/board/draw.test.ts",
+      "apps/web/src/features/classroom/board/model/draw.test.ts"
+    ],
+    [
+      "apps/web/src/features/classroom/board/draw.ts",
+      "apps/web/src/features/classroom/board/model/draw.ts"
+    ],
+    [
+      "apps/web/src/features/classroom/board/messages.test.ts",
+      "apps/web/src/features/classroom/board/model/messages.test.ts"
+    ],
+    [
+      "apps/web/src/features/classroom/board/messages.ts",
+      "apps/web/src/features/classroom/board/model/messages.ts"
+    ],
+    [
+      "apps/web/src/features/classroom/board/model.test.ts",
+      "apps/web/src/features/classroom/board/model/model.test.ts"
+    ],
+    [
+      "apps/web/src/features/classroom/board/model.ts",
+      "apps/web/src/features/classroom/board/model/model.ts"
+    ],
+    [
+      "apps/web/src/features/classroom/board/reducer.test.ts",
+      "apps/web/src/features/classroom/board/model/reducer.test.ts"
+    ],
+    [
+      "apps/web/src/features/classroom/board/reducer.ts",
+      "apps/web/src/features/classroom/board/model/reducer.ts"
+    ],
+    [
+      "apps/web/src/features/classroom/ClassroomActions.tsx",
+      "apps/web/src/features/classroom/join/ClassroomActions.tsx"
+    ],
+    [
+      "apps/web/src/features/classroom/CopyLinkButton.test.tsx",
+      "apps/web/src/features/classroom/join/CopyLinkButton.test.tsx"
+    ],
+    [
+      "apps/web/src/features/classroom/CopyLinkButton.tsx",
+      "apps/web/src/features/classroom/join/CopyLinkButton.tsx"
+    ],
+    [
+      "apps/web/src/features/classroom/GuestJoinPage.test.tsx",
+      "apps/web/src/features/classroom/join/GuestJoinPage.test.tsx"
+    ],
+    [
+      "apps/web/src/features/classroom/GuestJoinPage.tsx",
+      "apps/web/src/features/classroom/join/GuestJoinPage.tsx"
+    ],
+    [
+      "apps/web/src/features/classroom/JoinButton.test.tsx",
+      "apps/web/src/features/classroom/join/JoinButton.test.tsx"
+    ],
+    [
+      "apps/web/src/features/classroom/JoinButton.tsx",
+      "apps/web/src/features/classroom/join/JoinButton.tsx"
+    ],
+    [
+      "apps/web/src/features/classroom/meetings-api.ts",
+      "apps/web/src/features/classroom/api/meetings-api.ts"
+    ],
+    [
+      "apps/web/src/features/classroom/moderation-api.test.ts",
+      "apps/web/src/features/classroom/api/moderation-api.test.ts"
+    ],
+    [
+      "apps/web/src/features/classroom/moderation-api.ts",
+      "apps/web/src/features/classroom/api/moderation-api.ts"
+    ],
+    [
+      "apps/web/src/features/classroom/SendLinkButton.test.tsx",
+      "apps/web/src/features/classroom/join/SendLinkButton.test.tsx"
+    ],
+    [
+      "apps/web/src/features/classroom/SendLinkButton.tsx",
+      "apps/web/src/features/classroom/join/SendLinkButton.tsx"
+    ],
+    [
+      "apps/web/src/features/classroom/SessionCard.tsx",
+      "apps/web/src/features/classroom/sessions/SessionCard.tsx"
+    ],
+    [
+      "apps/web/src/features/classroom/sessions.test.ts",
+      "apps/web/src/features/classroom/sessions/sessions.test.ts"
+    ],
+    [
+      "apps/web/src/features/classroom/sessions.ts",
+      "apps/web/src/features/classroom/sessions/sessions.ts"
+    ],
+    [
+      "apps/web/src/features/classroom/staff-link.ts",
+      "apps/web/src/features/classroom/join/staff-link.ts"
+    ],
+    [
+      "apps/web/src/features/classroom/StaffClassroomPage.meeting.test.tsx",
+      "apps/web/src/features/classroom/join/StaffClassroomPage.meeting.test.tsx"
+    ],
+    [
+      "apps/web/src/features/classroom/StaffClassroomPage.test.tsx",
+      "apps/web/src/features/classroom/join/StaffClassroomPage.test.tsx"
+    ],
+    [
+      "apps/web/src/features/classroom/StaffClassroomPage.tsx",
+      "apps/web/src/features/classroom/join/StaffClassroomPage.tsx"
+    ],
+    [
+      "apps/web/src/features/classroom/StaffJoinButton.test.tsx",
+      "apps/web/src/features/classroom/join/StaffJoinButton.test.tsx"
+    ],
+    [
+      "apps/web/src/features/classroom/StaffJoinButton.tsx",
+      "apps/web/src/features/classroom/join/StaffJoinButton.tsx"
+    ],
+    [
+      "apps/web/src/features/classroom/StaffLinkGate.test.tsx",
+      "apps/web/src/features/classroom/join/StaffLinkGate.test.tsx"
+    ],
+    [
+      "apps/web/src/features/classroom/StaffLinkGate.tsx",
+      "apps/web/src/features/classroom/join/StaffLinkGate.tsx"
+    ],
+    [
+      "apps/web/src/features/classroom/student-link.test.ts",
+      "apps/web/src/features/classroom/student-link/student-link.test.ts"
+    ],
+    [
+      "apps/web/src/features/classroom/student-link.ts",
+      "apps/web/src/features/classroom/student-link/student-link.ts"
+    ],
+    [
+      "apps/web/src/features/classroom/StudentJoinLink.test.tsx",
+      "apps/web/src/features/classroom/student-link/StudentJoinLink.test.tsx"
+    ],
+    [
+      "apps/web/src/features/classroom/StudentJoinLink.tsx",
+      "apps/web/src/features/classroom/student-link/StudentJoinLink.tsx"
+    ],
+    [
+      "apps/web/src/features/classroom/StudentLessonPanel.tsx",
+      "apps/web/src/features/classroom/student-link/StudentLessonPanel.tsx"
+    ],
+    [
+      "apps/web/src/features/classroom/StudentLinkPage.test.tsx",
+      "apps/web/src/features/classroom/student-link/StudentLinkPage.test.tsx"
+    ],
+    [
+      "apps/web/src/features/classroom/StudentLinkPage.tsx",
+      "apps/web/src/features/classroom/student-link/StudentLinkPage.tsx"
+    ],
+    [
+      "apps/web/src/features/classroom/use-now.ts",
+      "apps/web/src/features/classroom/sessions/use-now.ts"
+    ]
+  ]
+}

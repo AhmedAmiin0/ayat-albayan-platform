@@ -1,6 +1,6 @@
 import { useCallback, useRef } from 'react';
-import { ERASER_WIDTH, PEN_WIDTH, strokeId, type PenColor, type Stroke } from './model';
-import type { BoardInput } from './reducer';
+import { ERASER_WIDTH, PEN_WIDTH, strokeId, type PenColor, type Stroke } from './model/model';
+import type { BoardInput } from './model/reducer';
 import type { BoardSend } from './use-board-sync';
 
 export type BoardTool = 'pen' | 'eraser';

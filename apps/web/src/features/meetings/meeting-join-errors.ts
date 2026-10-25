@@ -1,5 +1,5 @@
-import { classroomErrorText, opensAtOf } from '@/features/classroom/errors';
-import { viewerTz } from '@/features/classroom/student-link';
+import { classroomErrorText, opensAtOf } from '@/features/classroom/room/livekit/errors';
+import { viewerTz } from '@/features/classroom/student-link/student-link';
 import { errorCode } from '@/features/schedule/api';
 import { ApiError } from '@/lib/http/api';
 import { t } from '@/lib/i18n/i18n';
