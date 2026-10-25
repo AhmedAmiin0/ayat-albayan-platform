@@ -7,6 +7,7 @@ import type {
   ThreadDetail,
   ThreadRating,
   ThreadTemplate,
+  ThreadText,
   ThreadView,
 } from '@ab/shared';
 import { infiniteQueryOptions, keepPreviousData, queryOptions } from '@tanstack/react-query';
@@ -74,11 +75,9 @@ export const threadFileQuery = (phone: string, messageId: string) =>
     retry: false,
   });
 
-export const sendText = (input: { phone: string; text: string; clientRequestId: string }) =>
-  apiSend<MessageView>('POST', `${threadPath(input.phone)}/text`, {
-    text: input.text,
-    clientRequestId: input.clientRequestId,
-  });
+/** H3; `replyToMessageId` (owner 2026-10-25): the message of this chat it answers (400 reply_not_in_thread otherwise). */
+export const sendText = ({ phone, ...body }: ThreadText & { phone: string }) =>
+  apiSend<MessageView>('POST', `${threadPath(phone)}/text`, body);
 
 export const sendTemplate = ({ phone, ...body }: ThreadTemplate & { phone: string }) =>
   apiSend<MessageView>('POST', `${threadPath(phone)}/template`, body);

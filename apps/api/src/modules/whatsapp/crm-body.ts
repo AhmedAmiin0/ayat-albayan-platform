@@ -74,9 +74,12 @@ export function crmTextBody(input: { to: string; text: string }): CrmBody {
   return { to: input.to, type: 'text', text: input.text };
 }
 
-/** type image / document by link; `text` is the caption, a filename is a document's only. */
+/**
+ * type image / document by link; `text` is the caption, a filename is a document's only. The CRM
+ * takes these two only: a forwarded voice note or video goes as a document. No reply context (its uuid).
+ */
 export function crmMediaBody(input: MediaSend): CrmBody {
-  const type = input.kind ?? 'document';
+  const type = input.kind === 'image' ? 'image' : 'document';
   return {
     to: input.to,
     type,

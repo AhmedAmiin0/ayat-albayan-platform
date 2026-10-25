@@ -31,6 +31,7 @@ const PATHS = {
   trash: 'M4.5 6h11M8 6V4.5h4V6M6 6l.7 9.5h6.6L14 6',
   download: 'M10 4v9M6 9.5l4 4 4-4M4.5 16h11',
   reply: 'M8 5.5 3.5 10 8 14.5M3.5 10H11a5.5 5.5 0 0 1 5.5 5.5',
+  forward: 'M12 5.5 16.5 10 12 14.5M16.5 10H9a5.5 5.5 0 0 0-5.5 5.5',
   approx: 'M4 8c2-2 4-2 6 0s4 2 6 0M4 13c2-2 4-2 6 0s4 2 6 0',
   box: 'M10 3 16.5 6.5v7L10 17l-6.5-3.5v-7L10 3ZM3.5 6.5 10 10l6.5-3.5M10 10v7',
   card: 'M4 5.5h12A1.5 1.5 0 0 1 17.5 7v6a1.5 1.5 0 0 1-1.5 1.5H4A1.5 1.5 0 0 1 2.5 13V7A1.5 1.5 0 0 1 4 5.5ZM2.5 8.5h15M5.5 11.5h3',
@@ -62,6 +63,7 @@ const MIRROR: Partial<Record<IconName, string>> = {
   'chevron-right': 'ltr:-scale-x-100',
   logout: 'ltr:-scale-x-100',
   reply: 'rtl:-scale-x-100',
+  forward: 'rtl:-scale-x-100',
   send: 'rtl:-scale-x-100',
 };
 

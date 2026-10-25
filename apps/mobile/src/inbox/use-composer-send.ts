@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { requestId } from '@/lib/request-id';
+import { useChatActions } from './chat-actions';
 import { sendError } from './message-text';
+import { quoteOf } from './quote-text';
 import { useSendStagedFile } from './saved-replies/send-staged';
 import type { StagedFile } from './saved-replies/use-saved-reply';
 import { fileError } from './send-file';
@@ -28,6 +30,9 @@ export function useComposerSend({ phone, text, setText, staged, clearStaged }: C
   const send = useSendMessage(phone);
   const sendStaged = useSendStagedFile(phone);
   const [draftId, setDraftId] = useState(requestId);
+  // «رد» (owner 2026-10-25): the message the next text answers; another target is another send.
+  const { reply, setReply } = useChatActions();
+  const draftReply = useRef<string | undefined>(undefined);
   // The same for a template: the same template + params sent again (after «جرّب تاني») reuses its id.
   const templateDraft = useRef<{ draft: string; id: string } | null>(null);
   const sendTemplate = (out: Outgoing) => {
@@ -53,11 +58,16 @@ export function useComposerSend({ phone, text, setText, staged, clearStaged }: C
     const tapped = staged?.requestId;
     if (!body) return sendFile(staged);
     setText('');
+    const replyTo = reply ? quoteOf(reply) : undefined;
+    const id = draftReply.current === replyTo?.id ? draftId : requestId();
+    draftReply.current = replyTo?.id;
+    setDraftId(id);
     send.mutate(
-      { out: { kind: 'text', text: body }, id: draftId },
+      { out: { kind: 'text', text: body, ...(replyTo ? { replyTo } : {}) }, id },
       {
         onSuccess: () => {
           setDraftId(requestId());
+          if (replyTo) setReply((now) => (now?.id === replyTo.id ? null : now));
           const now = stagedNow.current;
           if (now && now.requestId === tapped) sendFile(now);
         },

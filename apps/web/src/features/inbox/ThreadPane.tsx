@@ -8,6 +8,7 @@ import { teacherMeQuery } from '@/features/teacher/api';
 import { templatesQuery } from '@/features/templates/api';
 import { t } from '@/lib/i18n';
 import { leadByPhoneQuery, threadQuery } from './api';
+import { ChatActionsProvider } from './ChatActionsProvider';
 import { Composer } from './Composer';
 import { LeadPanel, type LeadNotice } from './LeadPanel';
 import { MessageLog } from './MessageLog';
@@ -143,5 +144,6 @@ export function ThreadPane({ phone, listSearch }: ThreadPaneProps) {
     ) : (
       <ThreadPaneWide labelledBy={headingId} header={<ThreadHeader {...headerProps} action={actions} />} log={log(aside ? 'xl' : 'shell')} reply={reply} aside={aside} side={side} toast={toast} />
     );
-  return <SalesChatFrame key={phone} thread={th} lists={first?.lists} compact={phoneView}>{body}</SalesChatFrame>;
+  const frame = <SalesChatFrame key={phone} thread={th} lists={first?.lists} compact={phoneView}>{body}</SalesChatFrame>;
+  return <ChatActionsProvider thread={th} enabled={!readOnly && !teacherMode}>{frame}</ChatActionsProvider>;
 }

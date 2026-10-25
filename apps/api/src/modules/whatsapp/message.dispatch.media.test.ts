@@ -31,6 +31,7 @@ describe('MessageDispatch — a sent file', () => {
       url: 'https://storage.local/signed-out',
       filename: 'واجب.jpg',
       caption: 'الواجب',
+      replyTo: null,
     });
   });
 

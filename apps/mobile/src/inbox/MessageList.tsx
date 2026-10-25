@@ -7,6 +7,7 @@ import { EmptyState } from '@/ui/EmptyState';
 import { messageGap } from './list-gap';
 import { MessageBubble } from './MessageBubble';
 import { threadMessages } from './thread-cache';
+import { useJump } from './use-jump';
 import type { useThread } from './use-thread';
 
 type ThreadQuery = ReturnType<typeof useThread>;
@@ -32,6 +33,8 @@ export function MessageList({ phone, query }: { phone: string; query: ThreadQuer
   useEffect(() => {
     if (ours) list.current?.scrollToOffset({ offset: 0, animated: true });
   }, [ours]);
+  // A tap on a quote scrolls to the original (owner 2026-10-25 «رد»).
+  const { lit, jump, onScrollToIndexFailed } = useJump(list, rows);
   const older = query.hasNextPage ? (
     <Button
       variant="ghost"
@@ -49,13 +52,15 @@ export function MessageList({ phone, query }: { phone: string; query: ThreadQuer
       contentContainerStyle={{ paddingVertical: 4 }}
       data={rows}
       keyExtractor={(m) => m.id}
+      extraData={lit}
+      onScrollToIndexFailed={onScrollToIndexFailed}
       renderItem={({ item, index }) => (
         // Each cell is flipped back upright, so its top is still the visual top: the older neighbour.
         <View
           testID={`message-row-${item.id}`}
           style={{ paddingTop: messageGap(rows[index + 1], item) }}
         >
-          <MessageBubble message={item} phone={phone} />
+          <MessageBubble message={item} phone={phone} onJump={jump} highlight={lit === item.id} />
         </View>
       )}
       maintainVisibleContentPosition={{ minIndexForVisible: 0, autoscrollToTopThreshold: AT_NEWEST }}

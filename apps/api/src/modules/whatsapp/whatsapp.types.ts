@@ -1,5 +1,5 @@
 import type { Tables } from '@ab/db';
-import type { TemplateParams, WaLine } from '@ab/shared';
+import type { TemplateParams, WaLine, WaSendKind } from '@ab/shared';
 
 // WhatsappClient contract (docs/12 §3). B1 implements it over WA_API_BASE (tools/wa-stub locally
 // and in e2e); B2/B3 inject it with `@Inject(WHATSAPP_CLIENT)` and fake it in unit tests.
@@ -49,13 +49,17 @@ export interface SampleFile {
   bytes: Uint8Array<ArrayBuffer>;
 }
 
-/** A session image or document by link; `kind` defaults to document, `filename` is a document's only. */
+/**
+ * A session file by link; `kind` defaults to document, `filename` is a document's only, an audio
+ * takes no caption. `replyTo` = the quoted wamid (Meta's context; the crm driver drops it).
+ */
 export interface MediaSend {
   to: string;
-  kind?: 'image' | 'document';
+  kind?: WaSendKind;
   url: string;
   filename?: string;
   caption?: string | null;
+  replyTo?: string | null;
 }
 
 /**

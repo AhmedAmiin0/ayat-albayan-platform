@@ -8,6 +8,7 @@ export * from './render.js';
 export * from './reply-line.js';
 export * from './reply-number.js';
 export * from './reply-note.js';
+export * from './reply-forward.js';
 export * from './restricted-templates.js';
 export * from './schemas.js';
 export * from './chat-files.js';

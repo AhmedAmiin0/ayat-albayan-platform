@@ -1,4 +1,4 @@
-import type { TemplateParamsInput, ThreadDetail, ThreadTemplate, MessageView } from '@ab/shared';
+import type { MessageQuote, TemplateParamsInput, ThreadDetail, ThreadTemplate, MessageView } from '@ab/shared';
 import { useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiFetch, apiSend, toQueryString } from '@/lib/api';
 import {
@@ -31,7 +31,7 @@ export function useThread(phone: string) {
  * registry key: a producer's, or a chat starter imported from Meta (owner 2026-10-12).
  */
 export type Outgoing =
-  | { kind: 'text'; text: string }
+  | { kind: 'text'; text: string; replyTo?: MessageQuote }
   | { kind: 'template'; key: ThreadTemplate['key']; params: TemplateParamsInput; preview: string; lessonId?: string };
 
 export interface SendInput {
@@ -41,7 +41,10 @@ export interface SendInput {
 }
 
 function body({ out, id }: SendInput) {
-  if (out.kind === 'text') return { text: out.text, clientRequestId: id };
+  if (out.kind === 'text') {
+    const reply = out.replyTo ? { replyToMessageId: out.replyTo.id } : {};
+    return { text: out.text, clientRequestId: id, ...reply };
+  }
   const lesson = out.lessonId ? { lessonId: out.lessonId } : {};
   return { key: out.key, params: out.params, clientRequestId: id, ...lesson };
 }
@@ -62,7 +65,10 @@ export function useSendMessage(phone: string) {
       await client.cancelQueries({ queryKey });
       const text = out.kind === 'text' ? out.text : out.preview;
       const key = out.kind === 'template' ? out.key : undefined;
-      edit((old) => appendMessage(old, provisionalMessage({ id, phone, body: text, templateKey: key })));
+      // An answer shows its quote at once (owner 2026-10-25 «رد»), as the API's row will.
+      const quote = out.kind === 'text' && out.replyTo ? { reply_to_message_id: out.replyTo.id, reply_to: out.replyTo } : {};
+      const row = { ...provisionalMessage({ id, phone, body: text, templateKey: key }), ...quote };
+      edit((old) => appendMessage(old, row));
     },
     onSuccess: (row, { id }) => edit((old) => replaceMessage(old, id, row)),
     onError: (_error, { id }) => edit((old) => removeMessage(old, id)),
