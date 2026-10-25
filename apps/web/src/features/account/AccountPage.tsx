@@ -8,11 +8,11 @@ import { Toast } from '@/components/ui/overlay/toast';
 import { t } from '@/lib/i18n/i18n';
 import { AccountHead } from './AccountHead';
 import { profileQuery } from './api';
-import { AvatarSection } from './AvatarSection';
-import { EmailSection } from './EmailSection';
-import { NameSection } from './NameSection';
-import { PasswordSection } from './PasswordSection';
-import { PhoneSection } from './PhoneSection';
+import { AvatarSection } from './sections/AvatarSection';
+import { EmailSection } from './sections/EmailSection';
+import { NameSection } from './sections/NameSection';
+import { PasswordSection } from './sections/PasswordSection';
+import { PhoneSection } from './sections/PhoneSection';
 
 /** Loading (R-ACC-01): the head's line and a few section-shaped bars, spoken as «جاري تحميل…». */
 function AccountSkeleton() {

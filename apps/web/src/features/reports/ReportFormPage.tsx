@@ -9,8 +9,8 @@ import { ApiError } from '@/lib/http/api';
 import { t } from '@/lib/i18n/i18n';
 import { reportErrorText, reportFormQuery } from './api';
 import { reportHistoryHref } from './paths';
-import { ReportEntry } from './ReportEntry';
-import { ReportLink } from './ReportLink';
+import { ReportEntry } from './entry/ReportEntry';
+import { ReportLink } from './history/ReportLink';
 
 export interface ReportFormPageProps {
   lessonId: string;

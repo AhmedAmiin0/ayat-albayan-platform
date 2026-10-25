@@ -6,7 +6,7 @@ import {
   type UserCreate,
 } from '@ab/shared';
 import { t } from '@/lib/i18n/i18n';
-import type { CreateForm } from './create-form';
+import type { CreateForm } from './create/create-form';
 
 const V = t.users.validation;
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;

@@ -4,7 +4,7 @@ import { StatusChip } from '@/components/ui/display/status-chip';
 import { tzCity } from '@/components/ui/form/time-zone-select';
 import { CopyLinkButton } from '@/features/classroom/join/CopyLinkButton';
 import { StaffJoinButton } from '@/features/classroom/join/StaffJoinButton';
-import { LessonReportLinks } from '@/features/reports/LessonReportLinks';
+import { LessonReportLinks } from '@/features/reports/history/LessonReportLinks';
 import { LessonActions } from '@/features/schedule/lesson/LessonActions';
 import { studentNames, studentTimes } from '@/features/schedule/lesson/lessons';
 import { t } from '@/lib/i18n/i18n';

@@ -4,8 +4,8 @@ import type { DataTableFeatures } from '@/components/DataTable';
 import { Ltr } from '@/components/ui/display/ltr';
 import { StatusChip } from '@/components/ui/display/status-chip';
 import { reportFormHref } from '@/features/reports/paths';
-import { PdfAction } from '@/features/reports/PdfAction';
-import { ReportLink } from '@/features/reports/ReportLink';
+import { PdfAction } from '@/features/reports/history/PdfAction';
+import { ReportLink } from '@/features/reports/history/ReportLink';
 import { t } from '@/lib/i18n/i18n';
 import { locale } from '@/lib/i18n/locale';
 

@@ -10,7 +10,7 @@ import { ListSkeleton } from '@/components/ui/display/skeleton';
 import { errorCode } from '@/features/schedule/api';
 import { InternalMeetingButton } from '@/features/meetings/internal/InternalMeetingButton';
 import { InternalMeetingsList } from '@/features/meetings/internal/InternalMeetingsList';
-import { PendingReports } from '@/features/reports/PendingReports';
+import { PendingReports } from '@/features/reports/history/PendingReports';
 import { lessonsOnDay } from '@/features/schedule/lesson/lessons';
 import { addDays, dayMonthLabel, weekWindow, zonedParts } from '@/features/schedule/tz';
 import { t } from '@/lib/i18n/i18n';

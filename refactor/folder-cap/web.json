@@ -3,16 +3,8 @@
     "files": 0,
     "dirs": 40
   },
-  "apps/web/src/features/account": {
-    "files": 20,
-    "dirs": 0
-  },
   "apps/web/src/features/feedback": {
     "files": 16,
-    "dirs": 0
-  },
-  "apps/web/src/features/google-sync": {
-    "files": 27,
     "dirs": 0
   },
   "apps/web/src/features/inbox/lists": {
@@ -47,20 +39,12 @@
     "files": 13,
     "dirs": 0
   },
-  "apps/web/src/features/reports": {
-    "files": 28,
-    "dirs": 0
-  },
   "apps/web/src/features/subscriptions": {
     "files": 17,
     "dirs": 0
   },
   "apps/web/src/features/templates": {
     "files": 28,
-    "dirs": 0
-  },
-  "apps/web/src/features/users": {
-    "files": 29,
     "dirs": 0
   },
   "apps/web/src/routes": {

@@ -1,0 +1,276 @@
+{
+  "id": "b16b",
+  "seq": 60,
+  "moves": [
+    {
+      "from": "apps/web/src/features/users/CreateAccountButton*",
+      "to": "apps/web/src/features/users/create/"
+    },
+    {
+      "from": "apps/web/src/features/users/CreateUser*",
+      "to": "apps/web/src/features/users/create/"
+    },
+    {
+      "from": "apps/web/src/features/users/NewTeacherFields*",
+      "to": "apps/web/src/features/users/create/"
+    },
+    {
+      "from": "apps/web/src/features/users/create-form*",
+      "to": "apps/web/src/features/users/create/"
+    },
+    {
+      "from": "apps/web/src/features/users/Credential*",
+      "to": "apps/web/src/features/users/create/"
+    },
+    {
+      "from": "apps/web/src/features/users/RolePicker*",
+      "to": "apps/web/src/features/users/create/"
+    },
+    {
+      "from": "apps/web/src/features/users/LinkPicker*",
+      "to": "apps/web/src/features/users/create/"
+    },
+    {
+      "from": "apps/web/src/features/users/UserDetailDialog*",
+      "to": "apps/web/src/features/users/edit/"
+    },
+    {
+      "from": "apps/web/src/features/users/UserEditFields*",
+      "to": "apps/web/src/features/users/edit/"
+    },
+    {
+      "from": "apps/web/src/features/users/UserEditor*",
+      "to": "apps/web/src/features/users/edit/"
+    },
+    {
+      "from": "apps/web/src/features/users/UserSummary*",
+      "to": "apps/web/src/features/users/edit/"
+    },
+    {
+      "from": "apps/web/src/features/users/edit-form*",
+      "to": "apps/web/src/features/users/edit/"
+    },
+    {
+      "from": "apps/web/src/features/users/HistoryReferences*",
+      "to": "apps/web/src/features/users/edit/"
+    },
+    {
+      "from": "apps/web/src/features/users/UserActions*",
+      "to": "apps/web/src/features/users/actions/"
+    },
+    {
+      "from": "apps/web/src/features/users/DeleteUserDialog*",
+      "to": "apps/web/src/features/users/actions/"
+    },
+    {
+      "from": "apps/web/src/features/users/DisableDialog*",
+      "to": "apps/web/src/features/users/actions/"
+    },
+    {
+      "from": "apps/web/src/features/users/ResetPasswordDialog*",
+      "to": "apps/web/src/features/users/actions/"
+    },
+    {
+      "from": "apps/web/src/features/users/SetPasswordPage*",
+      "to": "apps/web/src/features/users/actions/"
+    },
+    {
+      "from": "apps/web/src/features/users/set-password*",
+      "to": "apps/web/src/features/users/actions/"
+    },
+    {
+      "from": "apps/web/src/features/account/AccountSection*",
+      "to": "apps/web/src/features/account/sections/"
+    },
+    {
+      "from": "apps/web/src/features/account/AvatarSection*",
+      "to": "apps/web/src/features/account/sections/"
+    },
+    {
+      "from": "apps/web/src/features/account/EmailSection*",
+      "to": "apps/web/src/features/account/sections/"
+    },
+    {
+      "from": "apps/web/src/features/account/NameSection*",
+      "to": "apps/web/src/features/account/sections/"
+    },
+    {
+      "from": "apps/web/src/features/account/Password*",
+      "to": "apps/web/src/features/account/sections/"
+    },
+    {
+      "from": "apps/web/src/features/account/PhoneSection*",
+      "to": "apps/web/src/features/account/sections/"
+    },
+    {
+      "from": "apps/web/src/features/account/AvatarActions*",
+      "to": "apps/web/src/features/account/sections/"
+    },
+    {
+      "from": "apps/web/src/features/account/section-props*",
+      "to": "apps/web/src/features/account/sections/"
+    }
+  ],
+  "files": [
+    [
+      "apps/web/src/features/account/AccountSection.tsx",
+      "apps/web/src/features/account/sections/AccountSection.tsx"
+    ],
+    [
+      "apps/web/src/features/account/AvatarActions.tsx",
+      "apps/web/src/features/account/sections/AvatarActions.tsx"
+    ],
+    [
+      "apps/web/src/features/account/AvatarSection.test.tsx",
+      "apps/web/src/features/account/sections/AvatarSection.test.tsx"
+    ],
+    [
+      "apps/web/src/features/account/AvatarSection.tsx",
+      "apps/web/src/features/account/sections/AvatarSection.tsx"
+    ],
+    [
+      "apps/web/src/features/account/EmailSection.test.tsx",
+      "apps/web/src/features/account/sections/EmailSection.test.tsx"
+    ],
+    [
+      "apps/web/src/features/account/EmailSection.tsx",
+      "apps/web/src/features/account/sections/EmailSection.tsx"
+    ],
+    [
+      "apps/web/src/features/account/NameSection.test.tsx",
+      "apps/web/src/features/account/sections/NameSection.test.tsx"
+    ],
+    [
+      "apps/web/src/features/account/NameSection.tsx",
+      "apps/web/src/features/account/sections/NameSection.tsx"
+    ],
+    [
+      "apps/web/src/features/account/PasswordField.tsx",
+      "apps/web/src/features/account/sections/PasswordField.tsx"
+    ],
+    [
+      "apps/web/src/features/account/PasswordSection.test.tsx",
+      "apps/web/src/features/account/sections/PasswordSection.test.tsx"
+    ],
+    [
+      "apps/web/src/features/account/PasswordSection.tsx",
+      "apps/web/src/features/account/sections/PasswordSection.tsx"
+    ],
+    [
+      "apps/web/src/features/account/PhoneSection.test.tsx",
+      "apps/web/src/features/account/sections/PhoneSection.test.tsx"
+    ],
+    [
+      "apps/web/src/features/account/PhoneSection.tsx",
+      "apps/web/src/features/account/sections/PhoneSection.tsx"
+    ],
+    [
+      "apps/web/src/features/account/section-props.ts",
+      "apps/web/src/features/account/sections/section-props.ts"
+    ],
+    [
+      "apps/web/src/features/users/create-form.ts",
+      "apps/web/src/features/users/create/create-form.ts"
+    ],
+    [
+      "apps/web/src/features/users/CreateAccountButton.test.tsx",
+      "apps/web/src/features/users/create/CreateAccountButton.test.tsx"
+    ],
+    [
+      "apps/web/src/features/users/CreateAccountButton.tsx",
+      "apps/web/src/features/users/create/CreateAccountButton.tsx"
+    ],
+    [
+      "apps/web/src/features/users/CreateUserDialog.test.tsx",
+      "apps/web/src/features/users/create/CreateUserDialog.test.tsx"
+    ],
+    [
+      "apps/web/src/features/users/CreateUserDialog.tsx",
+      "apps/web/src/features/users/create/CreateUserDialog.tsx"
+    ],
+    [
+      "apps/web/src/features/users/CreateUserFields.tsx",
+      "apps/web/src/features/users/create/CreateUserFields.tsx"
+    ],
+    [
+      "apps/web/src/features/users/CredentialPicker.tsx",
+      "apps/web/src/features/users/create/CredentialPicker.tsx"
+    ],
+    [
+      "apps/web/src/features/users/CredentialResult.tsx",
+      "apps/web/src/features/users/create/CredentialResult.tsx"
+    ],
+    [
+      "apps/web/src/features/users/DeleteUserDialog.tsx",
+      "apps/web/src/features/users/actions/DeleteUserDialog.tsx"
+    ],
+    [
+      "apps/web/src/features/users/DisableDialog.tsx",
+      "apps/web/src/features/users/actions/DisableDialog.tsx"
+    ],
+    [
+      "apps/web/src/features/users/edit-form.test.ts",
+      "apps/web/src/features/users/edit/edit-form.test.ts"
+    ],
+    [
+      "apps/web/src/features/users/edit-form.ts",
+      "apps/web/src/features/users/edit/edit-form.ts"
+    ],
+    [
+      "apps/web/src/features/users/HistoryReferences.tsx",
+      "apps/web/src/features/users/edit/HistoryReferences.tsx"
+    ],
+    [
+      "apps/web/src/features/users/LinkPicker.tsx",
+      "apps/web/src/features/users/create/LinkPicker.tsx"
+    ],
+    [
+      "apps/web/src/features/users/NewTeacherFields.tsx",
+      "apps/web/src/features/users/create/NewTeacherFields.tsx"
+    ],
+    [
+      "apps/web/src/features/users/ResetPasswordDialog.tsx",
+      "apps/web/src/features/users/actions/ResetPasswordDialog.tsx"
+    ],
+    [
+      "apps/web/src/features/users/RolePicker.tsx",
+      "apps/web/src/features/users/create/RolePicker.tsx"
+    ],
+    [
+      "apps/web/src/features/users/set-password.test.ts",
+      "apps/web/src/features/users/actions/set-password.test.ts"
+    ],
+    [
+      "apps/web/src/features/users/set-password.ts",
+      "apps/web/src/features/users/actions/set-password.ts"
+    ],
+    [
+      "apps/web/src/features/users/SetPasswordPage.tsx",
+      "apps/web/src/features/users/actions/SetPasswordPage.tsx"
+    ],
+    [
+      "apps/web/src/features/users/UserActions.tsx",
+      "apps/web/src/features/users/actions/UserActions.tsx"
+    ],
+    [
+      "apps/web/src/features/users/UserDetailDialog.test.tsx",
+      "apps/web/src/features/users/edit/UserDetailDialog.test.tsx"
+    ],
+    [
+      "apps/web/src/features/users/UserDetailDialog.tsx",
+      "apps/web/src/features/users/edit/UserDetailDialog.tsx"
+    ],
+    [
+      "apps/web/src/features/users/UserEditFields.tsx",
+      "apps/web/src/features/users/edit/UserEditFields.tsx"
+    ],
+    [
+      "apps/web/src/features/users/UserEditor.tsx",
+      "apps/web/src/features/users/edit/UserEditor.tsx"
+    ],
+    [
+      "apps/web/src/features/users/UserSummary.tsx",
+      "apps/web/src/features/users/edit/UserSummary.tsx"
+    ]
+  ]
+}
