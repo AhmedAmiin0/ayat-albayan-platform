@@ -37,7 +37,8 @@ export function substitutions(renames, gone = () => false) {
   return subs;
 }
 
-const unescape = (t) => t.replace(/\\([/.])/g, '$1');
+/** Regex escapes and Windows separators (`\\\\` in source) read as plain `/` paths. */
+const unescape = (t) => t.replace(/\\\\/g, '/').replace(/\\([/.])/g, '$1');
 
 /** True when `b` is `a` with one renamed path fragment (or all of them) replaced. */
 export function renamedLiteral(a, b, subs) {
