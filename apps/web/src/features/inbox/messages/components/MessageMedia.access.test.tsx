@@ -7,7 +7,7 @@ import { t } from '@/lib/i18n/i18n';
 import { threadFileQuery } from '../../api/api';
 import { message, PHONE } from '../../testing/inbox-fixture';
 import { MessageMedia } from './MessageMedia';
-import { InboxModeContext } from '../../mode';
+import { InboxModeContext } from '../../shared/mode';
 import { renderWithClient } from '../../testing/test-utils';
 
 const apiFetch = vi.hoisted(() => vi.fn());

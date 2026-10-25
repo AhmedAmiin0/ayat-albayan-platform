@@ -5,7 +5,7 @@ import { usePermissions } from '@/features/auth/use-permissions';
 import { FEEDBACK_TEMPLATE } from '@/features/feedback/types';
 import { templatesQuery } from '@/features/templates/api';
 import { t } from '@/lib/i18n/i18n';
-import { useInboxMode } from '../../mode';
+import { useInboxMode } from '../../shared/mode';
 import { forAudience } from './template-params';
 
 /**

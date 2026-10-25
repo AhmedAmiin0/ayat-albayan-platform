@@ -7,7 +7,7 @@ import { getDraft } from '../lib/draft-store';
 import { FileComposer } from './FileComposer';
 import { message, PHONE } from '../../testing/inbox-fixture';
 import { lastOwnSend } from '../lib/own-send';
-import { clearTabMemories } from '../../tab-memory';
+import { clearTabMemories } from '../../shared/tab-memory';
 import { TextComposer } from './TextComposer';
 
 const apiSend = vi.hoisted(() => vi.fn());

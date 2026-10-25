@@ -2,9 +2,9 @@ import { fireEvent, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n/i18n';
 import { detail, PHONE } from '../testing/inbox-fixture';
-import { InboxModeContext, type InboxMode } from '../mode';
+import { InboxModeContext, type InboxMode } from '../shared/mode';
 import { renderWithClient, routeFetch } from '../testing/test-utils';
-import { ThreadPane } from '../ThreadPane';
+import { ThreadPane } from '../threads/pane/ThreadPane';
 import { OPEN_SUB, student } from './sales-money-fixture';
 
 const apiFetch = vi.hoisted(() => vi.fn());

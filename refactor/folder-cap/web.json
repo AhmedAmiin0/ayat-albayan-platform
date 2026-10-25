@@ -39,10 +39,6 @@
     "files": 27,
     "dirs": 0
   },
-  "apps/web/src/features/inbox": {
-    "files": 36,
-    "dirs": 8
-  },
   "apps/web/src/features/inbox/lists": {
     "files": 17,
     "dirs": 0

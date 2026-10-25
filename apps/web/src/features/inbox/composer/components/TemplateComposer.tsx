@@ -11,7 +11,7 @@ import { t } from '@/lib/i18n/i18n';
 import { allowedTemplates, noneAllowedText, useNoneAllowed, useReadsMessaging } from '../lib/allowed-templates';
 import { sendTemplate } from '../../api/api';
 import { LessonPicker } from '../../lead/LessonPicker';
-import { useInboxMode } from '../../mode';
+import { useInboxMode } from '../../shared/mode';
 import { TemplateParamFields } from './TemplateParamFields';
 import { lessonValues, missingParams, prefillParams, toParamsInput, type ParamValues, type PrefillContext } from '../lib/template-params';
 import { sendErrorText } from '../lib/send-error';

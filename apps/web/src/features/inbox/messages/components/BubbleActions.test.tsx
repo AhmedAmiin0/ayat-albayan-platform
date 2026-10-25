@@ -1,7 +1,7 @@
 import { fireEvent, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n/i18n';
-import { ChatActionsProvider } from '../../ChatActionsProvider';
+import { ChatActionsProvider } from '../../shared/ChatActionsProvider';
 import { message, PHONE, thread } from '../../testing/inbox-fixture';
 import { MessageLog } from './MessageLog';
 import { renderWithClient } from '../../testing/test-utils';

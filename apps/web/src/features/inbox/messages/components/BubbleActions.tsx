@@ -6,7 +6,7 @@ import { useDismiss } from '@/components/ui/overlay/use-dismiss';
 import { t } from '@/lib/i18n/i18n';
 import { cn } from '@/lib/utils';
 import { BubbleMenu } from './BubbleMenu';
-import { useChatActions } from '../../chat-actions';
+import { useChatActions } from '../../shared/chat-actions';
 
 export interface BubbleActionsProps {
   message: MessageView;
