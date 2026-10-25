@@ -36,6 +36,10 @@ import { TeacherAlertQueries } from './teacher-alert.queries';
 import { TeacherAlert, TeacherAlertDeps } from './teacher-alert.service';
 import { TeacherOptionsQueries } from './teacher-options.queries';
 import { TeacherOptionsService } from './teacher-options.service';
+import { SalesTrialDateController, TrialDateController } from './trial-date.controller';
+import { TrialDateQueries } from './trial-date.queries';
+import { TrialDateDeps, TrialDates } from './trial-date.service';
+import { SalesTrialDates } from './sales-trial-date.service';
 
 /**
  * Booking wizard: teacher filter, slot grid with conflict reasons, POST /booking in one transaction,
@@ -46,7 +50,7 @@ import { TeacherOptionsService } from './teacher-options.service';
  */
 @Module({
   imports: [TeachersModule, SchedulingModule, SalesModule, SubscriptionsModule],
-  controllers: [BookingController, BookingExtrasController, InstantController, SalesBookingController, SalesBookingOptionsController, SalesCourseController, CourseChangeController],
+  controllers: [BookingController, BookingExtrasController, InstantController, SalesBookingController, SalesBookingOptionsController, SalesCourseController, CourseChangeController, TrialDateController, SalesTrialDateController],
   providers: [
     BookingSettings,
     BookingQueries,
@@ -78,6 +82,10 @@ import { TeacherOptionsService } from './teacher-options.service';
     MakeupCandidates,
     InstantQueries,
     InstantLessonService,
+    TrialDateQueries,
+    TrialDates,
+    TrialDateDeps,
+    SalesTrialDates,
   ],
 })
 export class BookingModule {}

@@ -2849,6 +2849,76 @@ export type Database = {
         };
         Relationships: [];
       };
+      saved_replies: {
+        Row: {
+          attachment_mime: string | null;
+          attachment_name: string | null;
+          attachment_path: string | null;
+          attachment_size: number | null;
+          body: string;
+          created_at: string;
+          created_by: string | null;
+          id: string;
+          owner_profile_id: string | null;
+          position: number;
+          title: string;
+          updated_at: string;
+          updated_by: string | null;
+        };
+        Insert: {
+          attachment_mime?: string | null;
+          attachment_name?: string | null;
+          attachment_path?: string | null;
+          attachment_size?: number | null;
+          body: string;
+          created_at?: string;
+          created_by?: string | null;
+          id?: string;
+          owner_profile_id?: string | null;
+          position?: number;
+          title: string;
+          updated_at?: string;
+          updated_by?: string | null;
+        };
+        Update: {
+          attachment_mime?: string | null;
+          attachment_name?: string | null;
+          attachment_path?: string | null;
+          attachment_size?: number | null;
+          body?: string;
+          created_at?: string;
+          created_by?: string | null;
+          id?: string;
+          owner_profile_id?: string | null;
+          position?: number;
+          title?: string;
+          updated_at?: string;
+          updated_by?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'saved_replies_created_by_fkey';
+            columns: ['created_by'];
+            isOneToOne: false;
+            referencedRelation: 'profiles';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'saved_replies_owner_profile_id_fkey';
+            columns: ['owner_profile_id'];
+            isOneToOne: false;
+            referencedRelation: 'profiles';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'saved_replies_updated_by_fkey';
+            columns: ['updated_by'];
+            isOneToOne: false;
+            referencedRelation: 'profiles';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       schedule_rule_students: {
         Row: {
           created_at: string;
@@ -4430,6 +4500,10 @@ export type Database = {
         };
       };
       integration_secret_clear: { Args: { p_key: string }; Returns: boolean };
+      pick_trial_date: { Args: { p: Json }; Returns: Json };
+      trial_ahead: { Args: { p_students: string[] }; Returns: boolean };
+      trial_date_replay: { Args: { p_request: string; p_student: string }; Returns: Json };
+      trial_date_result: { Args: { p_lesson: string }; Returns: Json };
       wa_number_delete: { Args: { p_id: string }; Returns: boolean };
       wa_number_make_default: { Args: { p_id: string; p_actor: string | null }; Returns: boolean };
       wa_number_secret_clear: { Args: { p_id: string; p_name: string }; Returns: boolean };
@@ -4532,6 +4606,8 @@ export type Database = {
         Returns: undefined;
       };
       revoke_user_sessions: { Args: { p_user: string }; Returns: number };
+      saved_replies_manager: { Args: never; Returns: boolean };
+      saved_replies_reader: { Args: never; Returns: boolean };
       set_role_permissions: { Args: { perms: string[]; role_id: string }; Returns: undefined };
       set_student_brought_by: {
         Args: { p_actor: string; p_assistant: string; p_brought_at?: string; p_student: string };

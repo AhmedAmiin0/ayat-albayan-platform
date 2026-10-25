@@ -52,10 +52,10 @@ describe('renewalTarget / revertTarget', () => {
     expect(revertTarget({ otherPayment: true, ended: true, facts })).toBe('pending_renewal');
   });
 
-  it('none left → by the trial facts: attended → pending_subscription, open trial → trial, none → new', () => {
+  it('none left → by the trial facts: attended → pending_subscription, open trial → trial (a new trial date wins over an attended one), none → new', () => {
     const at = (open: boolean, attended: boolean) => revertTarget({ otherPayment: false, ended: true, facts: { open, attended, paid: false } });
     expect(at(false, true)).toBe('pending_subscription');
-    expect(at(true, true)).toBe('pending_subscription');
+    expect(at(true, true)).toBe('trial');
     expect(at(true, false)).toBe('trial');
     expect(at(false, false)).toBe('new');
   });

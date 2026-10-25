@@ -6,6 +6,7 @@ import { ApiError, apiFetch } from '@/lib/api';
 import { t } from '@/lib/i18n';
 import { pathKey } from '@/lib/query-keys';
 import { StudentFileSections } from '@/student-file/StudentFileSections';
+import { TrialDateSection } from '@/trial-date/TrialDateSection';
 import { Button } from '@/ui/Button';
 import { ErrorState } from '@/ui/ErrorState';
 import { ltr } from '@/ui/Ltr';
@@ -24,7 +25,7 @@ const back = () => (router.canGoBack() ? router.back() : router.replace('/studen
 /**
  * Student quick view (R-MOB-02) on GET /students/:id. The status changes here, and a payment is
  * recorded from the balance card, «جدّد الاشتراك» once the package ended; editing, adding and merging stay on the web.
- * TODO(R-MOB-02): «حجز حلقة تجريبية» (quick book trial) with Phase 2.
+ * «موعد تجريبي جديد» and the trial dates' history in TrialDateSection (R-STU-05).
  */
 export function StudentScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -68,6 +69,7 @@ export function StudentScreen() {
         />
         <BalanceCard studentId={student.id} />
         <StudentFileSections student={student} />
+        <TrialDateSection student={student} />
         <StudentFacts student={student} />
         <GuardianCard guardian={student.guardian} />
         <SiblingsList siblings={student.siblings} />

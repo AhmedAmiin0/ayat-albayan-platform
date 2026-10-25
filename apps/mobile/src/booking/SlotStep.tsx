@@ -35,6 +35,8 @@ export interface SlotStepProps {
   from?: string;
   /** «تغيير أيام الحلقات»: this course's own lessons (of these students) are not busy: they move. */
   exclude?: { course: string; studentIds: readonly string[] };
+  /** «موعد تجريبي جديد»: the upcoming trial it moves (its own time is not busy). */
+  excludeLessonId?: string;
 }
 
 /**
@@ -43,10 +45,11 @@ export interface SlotStepProps {
  * one start per weekday (togglePick: the same one again removes it, another on that day replaces
  * it). Mounting again (after a clash) asks the API afresh from now (or `from`, when later).
  */
-export function SlotStep({ teacherId, tz, durationMin, onPick, multi, from, exclude }: SlotStepProps) {
+export function SlotStep(props: SlotStepProps) {
+  const { teacherId, tz, durationMin, onPick, multi, from, exclude, excludeLessonId } = props;
   const { color } = useTheme();
   const [now] = useState(() => new Date());
-  const slots = useSlots({ teacherId, ...slotWindow(windowStart(now, from)), durationMin, ...excludeParams(exclude) });
+  const slots = useSlots({ teacherId, ...slotWindow(windowStart(now, from)), durationMin, ...excludeParams(exclude, excludeLessonId) });
   const days = slots.data ? freeSlotDays(slots.data.slots) : [];
   const note = { fontFamily: type.ui[500], fontSize: type.size.sm, color: color.ink2 };
   const picks = multi?.picks ?? [];
@@ -87,9 +90,12 @@ export function SlotStep({ teacherId, tz, durationMin, onPick, multi, from, excl
   );
 }
 
-/** GET /booking/slots `studentIds` + `excludeCourse`, when a course's own lessons move. */
-function excludeParams(exclude: SlotStepProps['exclude']): { studentIds?: string; excludeCourse?: string } {
-  return exclude ? { studentIds: exclude.studentIds.join(','), excludeCourse: exclude.course } : {};
+type ExcludeParams = { studentIds?: string; excludeCourse?: string; excludeLessonId?: string };
+
+/** GET /booking/slots `studentIds` + `excludeCourse` when a course's own lessons move; `excludeLessonId` a trial. */
+function excludeParams(exclude: SlotStepProps['exclude'], excludeLessonId?: string): ExcludeParams {
+  const lesson = excludeLessonId ? { excludeLessonId } : {};
+  return exclude ? { studentIds: exclude.studentIds.join(','), excludeCourse: exclude.course, ...lesson } : lesson;
 }
 
 /** Loading, a failed read (retry) or no free start at all. */

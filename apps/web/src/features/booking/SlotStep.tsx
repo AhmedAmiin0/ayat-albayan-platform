@@ -55,6 +55,7 @@ export function SlotStep({ draft, onChange }: SlotStepProps) {
           value={draft.startsAt}
           also={pkg ? draft.extra : undefined}
           onPick={(slot) => onChange(pickPatch(draft, slot.starts_at))}
+          excludeLessonId={draft.trialDate?.upcomingId ?? undefined}
           {...(draft.course ? { near: courseNear(draft.course.startsOn) } : {})}
         />
       </section>

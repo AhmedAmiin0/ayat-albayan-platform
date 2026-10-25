@@ -10,6 +10,8 @@ import { FileComposer } from './FileComposer';
 import { sessionUntil } from './format';
 import { useInboxMode } from './mode';
 import { replyFromText } from './reply-from';
+import { ReplyComposer } from './saved-replies/ReplyComposer';
+import { SavedRepliesButton } from './saved-replies/SavedRepliesButton';
 import { SendRatingButton } from './SendRatingButton';
 import { TemplateComposer } from './TemplateComposer';
 import { TextComposer } from './TextComposer';
@@ -72,12 +74,13 @@ function noticeLines(input: Pick<ComposerPhoneProps, 'thread' | 'gateNote' | 'mo
  * with no template allowed get no toggle, and after the window one line on what they can do.
  * Staff (not teachers) also get a paperclip inside the window (D2): a picked file swaps the box for
  * FileComposer. The File lives here only (never in the draft store), for this chat only.
+ * Staff also get «الردود السريعة» (ReplyComposer); after the window its button shows locked.
  */
 export function ComposerPhone({ thread, context, gateNote, mode, onMode, teacher }: ComposerPhoneProps) {
   const open = thread.session_open;
   const noneAllowed = useNoneAllowed(teacher);
   const notes = noticeLines({ thread, gateNote, mode, noneAllowed });
-  const files = useChatAccess(useInboxMode()).files;
+  const { files, replies } = useChatAccess(useInboxMode());
   const [picked, setPicked] = useState<{ phone: string; file: File } | null>(null);
   const [problem, setProblem] = useState<ChatFileProblem | null>(null);
   const file = picked?.phone === thread.phone_e164 ? picked.file : null;
@@ -92,6 +95,8 @@ export function ComposerPhone({ thread, context, gateNote, mode, onMode, teacher
       <Icon name="template" className="size-5" />
     </IconButton>
   );
+  // «الردود السريعة» after the window: shown locked with why (session messages only).
+  const locked = !open && replies && <SavedRepliesButton locked />;
   const attach = open && files && (
     <AttachButton
       onPick={(next) => {
@@ -106,13 +111,15 @@ export function ComposerPhone({ thread, context, gateNote, mode, onMode, teacher
     <div className="grid max-h-[70dvh] shrink-0 gap-1.5 overflow-y-auto border-t border-rule bg-page px-2 pt-1.5 pb-[max(0.5rem,env(safe-area-inset-bottom))]">
       <Notices notes={notes} />
       {!open && <SendRatingButton thread={thread} />}
-      {template && toggle && <div className="flex">{toggle}</div>}
+      {template && (toggle || locked) && <div className="flex gap-1.5">{toggle}{locked}</div>}
       {!open && noneAllowed ? (
         <p className="px-1 text-xs text-ink-2">{noneAllowedText(noneAllowed, t.inbox.composer.noAllowedHelp)}</p>
       ) : template ? (
         <TemplateComposer phone={thread.phone_e164} context={context} teacher={teacher} />
       ) : file ? (
         <FileComposer phone={thread.phone_e164} file={file} onDone={() => setPicked(null)} />
+      ) : replies ? (
+        <ReplyComposer thread={thread} context={context} leading={<>{toggle}{attach}</>} />
       ) : (
         <TextComposer phone={thread.phone_e164} leading={<>{toggle}{attach}</>} />
       )}

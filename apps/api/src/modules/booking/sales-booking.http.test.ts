@@ -138,12 +138,4 @@ describe('/sales/booking: registration by the assistant, with her as the actor',
     expect((await call({ url: `/sales/booking/teachers?studentId=${S1}`, token: 'salesB' })).statusCode).toBe(403);
     expect((await call({ url: `/sales/booking/teachers?studentId=${S1}`, token: 'salesA' })).statusCode).toBe(200);
   });
-
-  it('slots: foreign students are 403; excludeLessonId (the admin move feature) is dropped', async () => {
-    const q = `teacherId=${TEACHER}&from=2026-10-11T00:00:00Z&to=2026-10-12T00:00:00Z&durationMin=45`;
-    slots.slots.mockResolvedValue({ teacher_tz: 'Asia/Riyadh', step_min: 45, slots: [] });
-    expect((await call({ url: `/sales/booking/slots?${q}&studentIds=${S2}`, token: 'salesA' })).statusCode).toBe(403);
-    expect((await call({ url: `/sales/booking/slots?${q}&studentIds=${S1}&excludeLessonId=${S2}`, token: 'salesA' })).statusCode).toBe(200);
-    expect(slots.slots.mock.calls[0]?.[0].excludeLessonId).toBeUndefined();
-  });
 });

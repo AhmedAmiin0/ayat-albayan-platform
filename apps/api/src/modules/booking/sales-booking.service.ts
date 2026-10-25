@@ -90,12 +90,15 @@ export class SalesBookingOptions {
   }
 
   /**
-   * `excludeLessonId` (moving a lesson) is the admin's; it is dropped. `excludeCourse` («تغيير أيام
-   * الحلقات») frees only her own students' course lessons: those students must be hers whatever the switch.
+   * `excludeLessonId` is kept only for a lesson of the grid's own students (her student's trial that
+   * «موعد تجريبي جديد» moves); any other is dropped (moving a lesson is the admin's). `excludeCourse`
+   * («تغيير أيام الحلقات») frees only her own students' course lessons: those students must be hers whatever the switch.
    */
   async slots(q: SlotsQuery, user: AuthUser): Promise<SlotsResponse> {
-    if (q.studentIds?.length) assertOwnStudents(q.studentIds, await this.scope.of(user));
-    if (q.excludeCourse) assertOwnStudents(q.studentIds ?? [], await this.scope.owned(user));
-    return this.slotsService.slots({ ...q, excludeLessonId: undefined });
+    const ids = q.studentIds ?? [];
+    if (ids.length) assertOwnStudents(ids, await this.scope.of(user));
+    if (q.excludeCourse) assertOwnStudents(ids, await this.scope.owned(user));
+    const keep = !!q.excludeLessonId && ids.length > 0 && (await this.scope.ownLesson(q.excludeLessonId, ids));
+    return this.slotsService.slots({ ...q, excludeLessonId: keep ? q.excludeLessonId : undefined });
   }
 }
