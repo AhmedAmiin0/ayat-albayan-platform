@@ -6,7 +6,7 @@ import type { ChangeSet, QueuedMessage, TimeEditChange } from '../../scheduling/
 import { LessonWriter } from '../../scheduling/lesson-writer';
 import type { BookingPayload } from './booking.mapper';
 import { BookingQueries } from './booking.queries';
-import { CourseChangeWriter } from '../course-change.writer';
+import { CourseChangeWriter } from '../course-change/course-change.writer';
 
 // The booking_confirmation rule at each write that carries confirmations (create_booking,
 // apply_lesson_changes, edit_lesson_time, change_course): on = the payload unchanged; off = no confirmation.

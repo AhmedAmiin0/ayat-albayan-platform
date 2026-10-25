@@ -10,7 +10,7 @@ import { domainError } from './booking.errors';
 import { BookingService } from './core/booking.service';
 import { SalesQueries } from '../sales/sales.queries';
 import { SlotsService } from './plan/slots.service';
-import { TeacherOptionsService } from './teacher-options.service';
+import { TeacherOptionsService } from './teacher/teacher-options.service';
 
 const A = 'a1000000-0000-4000-8000-00000000000a';
 const B = 'b1000000-0000-4000-8000-00000000000b';

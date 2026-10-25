@@ -10,7 +10,7 @@ import { SalesBookingScope } from './sales-booking.ownership';
 import { SalesCourse } from './sales-course.service';
 import { assertBookingScope, assertOwnStudents, scopeDuplicates, type BookingOwnership } from './sales-booking.scope';
 import { SlotsService } from './plan/slots.service';
-import { TeacherOptionsService } from './teacher-options.service';
+import { TeacherOptionsService } from './teacher/teacher-options.service';
 
 /**
  * The booking wizard for an assistant (R-ASST-01): the same planner, conflict check and create_booking

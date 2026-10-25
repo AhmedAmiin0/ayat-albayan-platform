@@ -5,7 +5,7 @@ import type { InvoiceRow } from './booking.mapper';
 import type { BookingQueries } from './booking.queries';
 import { BookingService } from './booking.service';
 import { BookingWriter } from './booking.writer';
-import { fakeTeacherAlert } from '../teacher-alert.fakes';
+import { fakeTeacherAlert } from '../teacher/teacher-alert.fakes';
 
 const ACTOR = 'a0000000-0000-4000-8000-000000000001';
 const RESULT = {

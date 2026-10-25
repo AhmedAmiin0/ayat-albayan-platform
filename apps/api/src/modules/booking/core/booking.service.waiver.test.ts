@@ -5,7 +5,7 @@ import { code, SCOPE, setup as invoiceSetup } from '../invoice/booking.invoice.f
 import type { BookingQueries } from './booking.queries';
 import { BookingService } from './booking.service';
 import { BookingWriter } from './booking.writer';
-import { fakeTeacherAlert } from '../teacher-alert.fakes';
+import { fakeTeacherAlert } from '../teacher/teacher-alert.fakes';
 
 // The invoice waiver is a server-side option only (the assistant's course, owner 2026-10-18 decision 2):
 // the request body has no way to ask for it, so the admin's POST /booking still needs an invoice.
