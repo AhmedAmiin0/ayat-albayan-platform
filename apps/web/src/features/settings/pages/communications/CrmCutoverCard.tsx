@@ -1,9 +1,9 @@
 import type { AcademySettings } from '@ab/shared';
 import { useState } from 'react';
 import { ConfirmSwitchDialog } from '@/components/settings/ConfirmSwitchDialog';
-import { Button } from '@/components/ui/button';
-import { FormAlert } from '@/components/ui/form-alert';
-import { StatusChip } from '@/components/ui/status-chip';
+import { Button } from '@/components/ui/form/button';
+import { FormAlert } from '@/components/ui/form/form-alert';
+import { StatusChip } from '@/components/ui/display/status-chip';
 import { useGateSwitch } from '@/features/messaging/gate-api';
 import { t } from '@/lib/i18n';
 

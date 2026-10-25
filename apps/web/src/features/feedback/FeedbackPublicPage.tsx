@@ -1,10 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { LanguageSwitch } from '@/components/shell/LanguageSwitch';
-import { Button } from '@/components/ui/button';
-import { Cartouche } from '@/components/ui/cartouche';
-import { FormAlert } from '@/components/ui/form-alert';
-import { Logo } from '@/components/ui/mark';
+import { Button } from '@/components/ui/form/button';
+import { Cartouche } from '@/components/ui/display/cartouche';
+import { FormAlert } from '@/components/ui/form/form-alert';
+import { Logo } from '@/components/ui/display/mark';
 import { t } from '@/lib/i18n';
 import { publicFeedbackQuery, publicProblem, type PublicProblem } from './api';
 import { FeedbackForm } from './FeedbackForm';

@@ -1,5 +1,5 @@
 import type { NotificationEntryView } from '@ab/shared';
-import { StatusChip } from '@/components/ui/status-chip';
+import { StatusChip } from '@/components/ui/display/status-chip';
 import { stateChip } from '../../notification-catalogue/catalogue-text';
 import { reasonText } from '../rule-text';
 

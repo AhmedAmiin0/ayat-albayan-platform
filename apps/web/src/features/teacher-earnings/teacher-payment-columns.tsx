@@ -1,7 +1,7 @@
 import { PAYMENT_METHODS, type TeacherPaymentView } from '@ab/shared';
 import { createColumnHelper } from '@tanstack/react-table';
 import type { DataTableFeatures } from '@/components/DataTable';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/ui/form/button';
 import { formatDate } from '@/features/leads/format';
 import { Amount } from '@/features/subscriptions/Amount';
 import { t } from '@/lib/i18n';

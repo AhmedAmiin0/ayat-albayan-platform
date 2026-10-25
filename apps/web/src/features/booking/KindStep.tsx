@@ -1,4 +1,4 @@
-import { RadioChips } from '@/components/ui/radio-chips';
+import { RadioChips } from '@/components/ui/form/radio-chips';
 import { t } from '@/lib/i18n';
 import { BOOKING_KINDS } from './contract';
 import type { BookingDraft } from './draft';

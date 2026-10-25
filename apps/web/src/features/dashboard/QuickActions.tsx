@@ -1,9 +1,9 @@
 import { Link } from '@tanstack/react-router';
 import { useState } from 'react';
-import { Button, buttonVariants } from '@/components/ui/button';
-import { HeadActions } from '@/components/ui/head-actions';
-import { Icon } from '@/components/ui/icon';
-import { Toast } from '@/components/ui/toast';
+import { Button, buttonVariants } from '@/components/ui/form/button';
+import { HeadActions } from '@/components/ui/layout/head-actions';
+import { Icon } from '@/components/ui/display/icon';
+import { Toast } from '@/components/ui/overlay/toast';
 import { NewMeetingMenu } from '@/features/meetings/NewMeetingMenu';
 import { CreateStudentDialog } from '@/features/students/CreateStudentDialog';
 import { t } from '@/lib/i18n';

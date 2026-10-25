@@ -1,7 +1,7 @@
 import type { SalesPaymentView } from '@ab/shared';
 import { Link } from '@tanstack/react-router';
-import { Button, buttonVariants } from '@/components/ui/button';
-import { Dialog } from '@/components/ui/dialog';
+import { Button, buttonVariants } from '@/components/ui/form/button';
+import { Dialog } from '@/components/ui/overlay/dialog';
 import { Amount } from '@/features/subscriptions/Amount';
 import { studentLabel } from '@/features/subscriptions/format';
 import { t } from '@/lib/i18n';

@@ -1,7 +1,7 @@
 import { useRef, useState, type ReactNode } from 'react';
 import { t } from '@/lib/i18n';
-import { Icon } from './icon';
-import { iconButtonClass } from './icon-button';
+import { Icon } from '../display/icon';
+import { iconButtonClass } from '../form/icon-button';
 import { useDismiss } from './use-dismiss';
 
 /**

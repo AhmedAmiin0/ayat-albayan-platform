@@ -1,6 +1,6 @@
-import { Field } from '../ui/field';
-import { Input } from '../ui/input';
-import { Select } from '../ui/select';
+import { Field } from '../ui/form/field';
+import { Input } from '../ui/form/input';
+import { Select } from '../ui/form/select';
 import type { FilterOption } from '../data-table-features';
 import type { FilterChip } from './types';
 

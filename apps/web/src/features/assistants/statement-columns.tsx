@@ -1,7 +1,7 @@
 import { payoutStatusStyle } from '@ab/shared';
 import { createColumnHelper } from '@tanstack/react-table';
 import type { DataTableFeatures } from '@/components/DataTable';
-import { StatusChip } from '@/components/ui/status-chip';
+import { StatusChip } from '@/components/ui/display/status-chip';
 import { formatDate } from '@/features/leads/format';
 import { monthLabel } from '@/features/payouts/MonthSelect';
 import { t } from '@/lib/i18n';

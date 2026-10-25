@@ -1,10 +1,10 @@
 import { formatPhone, leadStatusStyle } from '@ab/shared';
 import { Link } from '@tanstack/react-router';
 import { useRef } from 'react';
-import { Icon } from '@/components/ui/icon';
-import { IconButton, iconButtonClass } from '@/components/ui/icon-button';
-import { Ltr } from '@/components/ui/ltr';
-import { StatusChip } from '@/components/ui/status-chip';
+import { Icon } from '@/components/ui/display/icon';
+import { IconButton, iconButtonClass } from '@/components/ui/form/icon-button';
+import { Ltr } from '@/components/ui/display/ltr';
+import { StatusChip } from '@/components/ui/display/status-chip';
 import { t } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
 import { formatAge, formatDateTime, initialOf } from './format';

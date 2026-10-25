@@ -1,8 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
-import { IconButton } from '@/components/ui/icon-button';
-import { Icon } from '@/components/ui/icon';
-import { Ltr } from '@/components/ui/ltr';
+import { IconButton } from '@/components/ui/form/icon-button';
+import { Icon } from '@/components/ui/display/icon';
+import { Ltr } from '@/components/ui/display/ltr';
 import { studentListQuery } from '@/features/students/api';
 import { StudentSearch } from '@/features/students/StudentSearch';
 import { t } from '@/lib/i18n';

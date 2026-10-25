@@ -1,6 +1,6 @@
 import type { LineCheckView } from '@ab/shared';
-import { Ltr } from '@/components/ui/ltr';
-import { NuqtaGlyph } from '@/components/ui/nuqta-glyph';
+import { Ltr } from '@/components/ui/display/ltr';
+import { NuqtaGlyph } from '@/components/ui/display/nuqta-glyph';
 import { t } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
 import { lineTone, type LineField } from './line-status';

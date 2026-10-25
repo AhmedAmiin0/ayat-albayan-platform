@@ -1,8 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Cartouche } from '@/components/ui/cartouche';
-import { PageHead } from '@/components/ui/page';
+import { Button } from '@/components/ui/form/button';
+import { Cartouche } from '@/components/ui/display/cartouche';
+import { PageHead } from '@/components/ui/layout/page';
 import { t } from '@/lib/i18n';
 import { rolesQuery, staffUsersQuery, type RoleView } from './api';
 import { RoleDialog } from './RoleDialog';

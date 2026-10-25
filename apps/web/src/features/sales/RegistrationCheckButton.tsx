@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Icon } from '@/components/ui/icon';
+import { Button } from '@/components/ui/form/button';
+import { Icon } from '@/components/ui/display/icon';
 import { usePermissions } from '@/features/auth/use-permissions';
 import { t } from '@/lib/i18n';
 import { RegistrationCheckDialog } from './RegistrationCheckDialog';

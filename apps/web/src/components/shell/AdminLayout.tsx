@@ -1,8 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
 import { Link, useRouterState } from '@tanstack/react-router';
 import { useEffect, useRef, type ReactNode } from 'react';
-import { Logo } from '@/components/ui/mark';
-import { RunningHead } from '@/components/ui/running-head';
+import { Logo } from '@/components/ui/display/mark';
+import { RunningHead } from '@/components/ui/layout/running-head';
 import { meQuery } from '@/features/auth/me';
 import { NotificationBell } from '@/features/notifications/NotificationBell';
 import { t } from '@/lib/i18n';

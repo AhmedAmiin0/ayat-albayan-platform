@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
-import { Ltr } from '@/components/ui/ltr';
+import { Ltr } from '@/components/ui/display/ltr';
 import { studentListQuery } from '@/features/students/api';
 import { StudentSearch } from '@/features/students/StudentSearch';
 import type { StudentRef } from '@/features/students/types';

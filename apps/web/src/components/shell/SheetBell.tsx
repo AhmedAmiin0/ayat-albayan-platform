@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { useId, useState } from 'react';
-import { Icon } from '@/components/ui/icon';
+import { Icon } from '@/components/ui/display/icon';
 import { usePermissions } from '@/features/auth/use-permissions';
 import { notificationsQuery } from '@/features/notifications/api';
 import { badgeText } from '@/features/notifications/NotificationBell';

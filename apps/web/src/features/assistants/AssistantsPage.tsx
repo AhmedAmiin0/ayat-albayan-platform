@@ -1,8 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
-import { Cartouche } from '@/components/ui/cartouche';
-import { PageHead } from '@/components/ui/page';
-import { Tabs } from '@/components/ui/tabs';
+import { Cartouche } from '@/components/ui/display/cartouche';
+import { PageHead } from '@/components/ui/layout/page';
+import { Tabs } from '@/components/ui/layout/tabs';
 import { t } from '@/lib/i18n';
 import { assistantsQuery } from './api';
 import { AssistantsList } from './AssistantsList';

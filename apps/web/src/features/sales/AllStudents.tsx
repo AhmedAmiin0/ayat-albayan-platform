@@ -1,11 +1,11 @@
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { DataTable } from '@/components/DataTable';
-import { Button } from '@/components/ui/button';
-import { FormAlert } from '@/components/ui/form-alert';
-import { Pager } from '@/components/ui/pager';
-import { SearchInput } from '@/components/ui/search-input';
-import { ListSkeleton } from '@/components/ui/skeleton';
+import { Button } from '@/components/ui/form/button';
+import { FormAlert } from '@/components/ui/form/form-alert';
+import { Pager } from '@/components/ui/layout/pager';
+import { SearchInput } from '@/components/ui/form/search-input';
+import { ListSkeleton } from '@/components/ui/display/skeleton';
 import { t } from '@/lib/i18n';
 import { ALL_STUDENTS_PAGE_SIZE, salesAllStudentsQuery } from './academy-api';
 import { allStudentColumns } from './all-student-columns';

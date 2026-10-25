@@ -1,10 +1,10 @@
 import { normalizePhone } from '@ab/shared';
 import { useEffect, useRef, useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Field } from '@/components/ui/field';
-import { Icon } from '@/components/ui/icon';
-import { IconButton } from '@/components/ui/icon-button';
-import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/form/button';
+import { Field } from '@/components/ui/form/field';
+import { Icon } from '@/components/ui/display/icon';
+import { IconButton } from '@/components/ui/form/icon-button';
+import { Input } from '@/components/ui/form/input';
 import { t } from '@/lib/i18n';
 
 /**

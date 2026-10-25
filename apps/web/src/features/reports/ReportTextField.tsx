@@ -1,5 +1,5 @@
-import { Field } from '@/components/ui/field';
-import { controlClass } from '@/components/ui/input';
+import { Field } from '@/components/ui/form/field';
+import { controlClass } from '@/components/ui/form/input';
 import { cn } from '@/lib/utils';
 
 export interface ReportTextFieldProps {

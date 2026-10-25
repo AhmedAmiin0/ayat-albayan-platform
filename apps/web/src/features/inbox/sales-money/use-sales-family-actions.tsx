@@ -1,9 +1,9 @@
 import { canPickTrialDate, isPackageEnded, type SalesStudentRef, type ThreadView } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { useState, type ReactNode } from 'react';
-import { Button } from '@/components/ui/button';
-import { Icon } from '@/components/ui/icon';
-import { IconButton } from '@/components/ui/icon-button';
+import { Button } from '@/components/ui/form/button';
+import { Icon } from '@/components/ui/display/icon';
+import { IconButton } from '@/components/ui/form/icon-button';
 import { usePermissions } from '@/features/auth/use-permissions';
 import { RegistrationCheckTrigger } from '@/features/sales/RegistrationCheckButton';
 import { RegistrationCheckDialog } from '@/features/sales/RegistrationCheckDialog';

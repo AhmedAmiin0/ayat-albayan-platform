@@ -1,9 +1,9 @@
 import { useQuery } from '@tanstack/react-query';
-import { Cartouche } from '@/components/ui/cartouche';
-import { FormAlert } from '@/components/ui/form-alert';
-import { PageHead } from '@/components/ui/page';
-import { Pager } from '@/components/ui/pager';
-import { ListSkeleton } from '@/components/ui/skeleton';
+import { Cartouche } from '@/components/ui/display/cartouche';
+import { FormAlert } from '@/components/ui/form/form-alert';
+import { PageHead } from '@/components/ui/layout/page';
+import { Pager } from '@/components/ui/layout/pager';
+import { ListSkeleton } from '@/components/ui/display/skeleton';
 import { FEEDBACK_PAGE_SIZE, myFeedbackQuery } from '@/features/feedback/api';
 import { FeedbackTable } from '@/features/feedback/FeedbackTable';
 import { MY_FEEDBACK_LIST_KEYS } from '@/features/feedback/search';

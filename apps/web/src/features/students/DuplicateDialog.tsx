@@ -1,13 +1,13 @@
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Dialog } from '@/components/ui/dialog';
-import { SegmentedControl } from '@/components/ui/segmented-control';
+import { Button } from '@/components/ui/form/button';
+import { Dialog } from '@/components/ui/overlay/dialog';
+import { SegmentedControl } from '@/components/ui/form/segmented-control';
 import { t } from '@/lib/i18n';
 import { studentQuery } from './api';
 import type { CreateStudentValues } from './create-student';
 import { DuplicateCompare } from './DuplicateCompare';
-import { FormAlert } from '@/components/ui/form-alert';
+import { FormAlert } from '@/components/ui/form/form-alert';
 import { SiblingsStrip } from './SiblingsStrip';
 import type { StudentRef } from './types';
 

@@ -1,8 +1,8 @@
 import type { ChatList } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useId, useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Dialog } from '@/components/ui/dialog';
+import { Button } from '@/components/ui/form/button';
+import { Dialog } from '@/components/ui/overlay/dialog';
 import { t } from '@/lib/i18n';
 import { listErrorText, refreshLists, renameList } from './api';
 import { AutoListNote } from './AutoListNote';

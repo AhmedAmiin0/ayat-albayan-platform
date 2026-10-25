@@ -1,5 +1,5 @@
 import { lessonWhenText } from '@ab/shared';
-import { Icon } from '@/components/ui/icon';
+import { Icon } from '@/components/ui/display/icon';
 import { RIYADH_TZ } from '@/features/schedule/tz';
 import { t } from '@/lib/i18n';
 import { locale } from '@/lib/locale';

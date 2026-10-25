@@ -1,8 +1,8 @@
 import type { LessonView } from '@ab/shared';
 import { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Icon } from '@/components/ui/icon';
-import { StatusChip } from '@/components/ui/status-chip';
+import { Button } from '@/components/ui/form/button';
+import { Icon } from '@/components/ui/display/icon';
+import { StatusChip } from '@/components/ui/display/status-chip';
 import { t } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
 import { CopyLinkButton } from './CopyLinkButton';

@@ -1,7 +1,7 @@
 import { GOOGLE_SYNC_STATES, type GoogleStatusView } from '@ab/shared';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { Button } from '@/components/ui/button';
-import { FormAlert } from '@/components/ui/form-alert';
+import { Button } from '@/components/ui/form/button';
+import { FormAlert } from '@/components/ui/form/form-alert';
 import { t } from '@/lib/i18n';
 import { BlockSkeleton, GoogleBlock, LoadError } from './GoogleBlock';
 import { googleItemsQuery, googleStatusQuery, reconcileGoogle } from './google-api';

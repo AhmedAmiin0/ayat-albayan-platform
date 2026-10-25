@@ -1,9 +1,9 @@
 import { useQuery } from '@tanstack/react-query';
 import type { ReactNode } from 'react';
-import { EmptyState } from '@/components/ui/empty-state';
-import { Pager } from '@/components/ui/pager';
-import { ListSkeleton } from '@/components/ui/skeleton';
-import { paneScroll } from '@/components/ui/rail';
+import { EmptyState } from '@/components/ui/display/empty-state';
+import { Pager } from '@/components/ui/layout/pager';
+import { ListSkeleton } from '@/components/ui/display/skeleton';
+import { paneScroll } from '@/components/ui/layout/rail';
 import { t } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
 import { threadsQuery } from './api';

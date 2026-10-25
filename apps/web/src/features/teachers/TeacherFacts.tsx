@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { Ltr } from '@/components/ui/ltr';
+import { Ltr } from '@/components/ui/display/ltr';
 import { t } from '@/lib/i18n';
 import type { Teacher } from './api';
 import { meetingModeText } from './meeting-mode-text';

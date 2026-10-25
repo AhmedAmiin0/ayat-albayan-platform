@@ -1,10 +1,10 @@
 import { DESCRIPTION_MAX, type ConfigEntry } from '@ab/shared';
 import { useId, useState, type FormEvent } from 'react';
-import { Button } from '@/components/ui/button';
-import { Dialog } from '@/components/ui/dialog';
-import { Field } from '@/components/ui/field';
-import { FormAlert } from '@/components/ui/form-alert';
-import { controlClass } from '@/components/ui/input';
+import { Button } from '@/components/ui/form/button';
+import { Dialog } from '@/components/ui/overlay/dialog';
+import { Field } from '@/components/ui/form/field';
+import { FormAlert } from '@/components/ui/form/form-alert';
+import { controlClass } from '@/components/ui/form/input';
 import { ApiError } from '@/lib/api';
 import { t } from '@/lib/i18n';
 import { locale } from '@/lib/locale';

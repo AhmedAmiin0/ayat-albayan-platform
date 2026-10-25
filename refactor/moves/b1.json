@@ -1,0 +1,468 @@
+{
+  "id": "b1",
+  "seq": 35,
+  "moves": [
+    {
+      "from": "apps/web/src/components/ui/button.tsx",
+      "to": "apps/web/src/components/ui/form/"
+    },
+    {
+      "from": "apps/web/src/components/ui/field.tsx",
+      "to": "apps/web/src/components/ui/form/"
+    },
+    {
+      "from": "apps/web/src/components/ui/form-alert.tsx",
+      "to": "apps/web/src/components/ui/form/"
+    },
+    {
+      "from": "apps/web/src/components/ui/icon-button.tsx",
+      "to": "apps/web/src/components/ui/form/"
+    },
+    {
+      "from": "apps/web/src/components/ui/input.tsx",
+      "to": "apps/web/src/components/ui/form/"
+    },
+    {
+      "from": "apps/web/src/components/ui/label.tsx",
+      "to": "apps/web/src/components/ui/form/"
+    },
+    {
+      "from": "apps/web/src/components/ui/phone-preview.tsx",
+      "to": "apps/web/src/components/ui/form/"
+    },
+    {
+      "from": "apps/web/src/components/ui/radio-chips.tsx",
+      "to": "apps/web/src/components/ui/form/"
+    },
+    {
+      "from": "apps/web/src/components/ui/search-input.tsx",
+      "to": "apps/web/src/components/ui/form/"
+    },
+    {
+      "from": "apps/web/src/components/ui/segmented-control.tsx",
+      "to": "apps/web/src/components/ui/form/"
+    },
+    {
+      "from": "apps/web/src/components/ui/select.tsx",
+      "to": "apps/web/src/components/ui/form/"
+    },
+    {
+      "from": "apps/web/src/components/ui/time-zone-select.tsx",
+      "to": "apps/web/src/components/ui/form/"
+    },
+    {
+      "from": "apps/web/src/components/ui/dialog.tsx",
+      "to": "apps/web/src/components/ui/overlay/"
+    },
+    {
+      "from": "apps/web/src/components/ui/dialog-classes.ts",
+      "to": "apps/web/src/components/ui/overlay/"
+    },
+    {
+      "from": "apps/web/src/components/ui/dialog-header.tsx",
+      "to": "apps/web/src/components/ui/overlay/"
+    },
+    {
+      "from": "apps/web/src/components/ui/more-menu.tsx",
+      "to": "apps/web/src/components/ui/overlay/"
+    },
+    {
+      "from": "apps/web/src/components/ui/toast.tsx",
+      "to": "apps/web/src/components/ui/overlay/"
+    },
+    {
+      "from": "apps/web/src/components/ui/use-dismiss.ts",
+      "to": "apps/web/src/components/ui/overlay/"
+    },
+    {
+      "from": "apps/web/src/components/ui/use-focus-trap.ts",
+      "to": "apps/web/src/components/ui/overlay/"
+    },
+    {
+      "from": "apps/web/src/components/ui/use-focus-on-change.ts",
+      "to": "apps/web/src/components/ui/overlay/"
+    },
+    {
+      "from": "apps/web/src/components/ui/dialog-layout.test.tsx",
+      "to": "apps/web/src/components/ui/overlay/"
+    },
+    {
+      "from": "apps/web/src/components/ui/dialog-sheet.test.tsx",
+      "to": "apps/web/src/components/ui/overlay/"
+    },
+    {
+      "from": "apps/web/src/components/ui/more-menu.portal.test.tsx",
+      "to": "apps/web/src/components/ui/overlay/"
+    },
+    {
+      "from": "apps/web/src/components/ui/page.tsx",
+      "to": "apps/web/src/components/ui/layout/"
+    },
+    {
+      "from": "apps/web/src/components/ui/page-list.ts",
+      "to": "apps/web/src/components/ui/layout/"
+    },
+    {
+      "from": "apps/web/src/components/ui/pager.tsx",
+      "to": "apps/web/src/components/ui/layout/"
+    },
+    {
+      "from": "apps/web/src/components/ui/rail.ts",
+      "to": "apps/web/src/components/ui/layout/"
+    },
+    {
+      "from": "apps/web/src/components/ui/running-head.tsx",
+      "to": "apps/web/src/components/ui/layout/"
+    },
+    {
+      "from": "apps/web/src/components/ui/scroll-x.tsx",
+      "to": "apps/web/src/components/ui/layout/"
+    },
+    {
+      "from": "apps/web/src/components/ui/tabs.tsx",
+      "to": "apps/web/src/components/ui/layout/"
+    },
+    {
+      "from": "apps/web/src/components/ui/head-actions.tsx",
+      "to": "apps/web/src/components/ui/layout/"
+    },
+    {
+      "from": "apps/web/src/components/ui/use-narrow.ts",
+      "to": "apps/web/src/components/ui/layout/"
+    },
+    {
+      "from": "apps/web/src/components/ui/theme-toggle.tsx",
+      "to": "apps/web/src/components/ui/layout/"
+    },
+    {
+      "from": "apps/web/src/components/ui/tabs.ids.test.tsx",
+      "to": "apps/web/src/components/ui/layout/"
+    },
+    {
+      "from": "apps/web/src/components/ui/avatar.tsx",
+      "to": "apps/web/src/components/ui/display/"
+    },
+    {
+      "from": "apps/web/src/components/ui/cartouche.tsx",
+      "to": "apps/web/src/components/ui/display/"
+    },
+    {
+      "from": "apps/web/src/components/ui/empty-state.tsx",
+      "to": "apps/web/src/components/ui/display/"
+    },
+    {
+      "from": "apps/web/src/components/ui/highlight-diff.tsx",
+      "to": "apps/web/src/components/ui/display/"
+    },
+    {
+      "from": "apps/web/src/components/ui/icon.tsx",
+      "to": "apps/web/src/components/ui/display/"
+    },
+    {
+      "from": "apps/web/src/components/ui/ltr.tsx",
+      "to": "apps/web/src/components/ui/display/"
+    },
+    {
+      "from": "apps/web/src/components/ui/mark.tsx",
+      "to": "apps/web/src/components/ui/display/"
+    },
+    {
+      "from": "apps/web/src/components/ui/nuqta-glyph.tsx",
+      "to": "apps/web/src/components/ui/display/"
+    },
+    {
+      "from": "apps/web/src/components/ui/rosette.tsx",
+      "to": "apps/web/src/components/ui/display/"
+    },
+    {
+      "from": "apps/web/src/components/ui/skeleton.tsx",
+      "to": "apps/web/src/components/ui/display/"
+    },
+    {
+      "from": "apps/web/src/components/ui/status-chip.tsx",
+      "to": "apps/web/src/components/ui/display/"
+    },
+    {
+      "from": "apps/web/src/components/ui/mirroring.test.tsx",
+      "to": "apps/web/src/components/ui/display/"
+    }
+  ],
+  "files": [
+    [
+      "apps/web/src/components/ui/avatar.test.tsx",
+      "apps/web/src/components/ui/display/avatar.test.tsx"
+    ],
+    [
+      "apps/web/src/components/ui/avatar.tsx",
+      "apps/web/src/components/ui/display/avatar.tsx"
+    ],
+    [
+      "apps/web/src/components/ui/button.test.tsx",
+      "apps/web/src/components/ui/form/button.test.tsx"
+    ],
+    [
+      "apps/web/src/components/ui/button.tsx",
+      "apps/web/src/components/ui/form/button.tsx"
+    ],
+    [
+      "apps/web/src/components/ui/cartouche.tsx",
+      "apps/web/src/components/ui/display/cartouche.tsx"
+    ],
+    [
+      "apps/web/src/components/ui/dialog-classes.ts",
+      "apps/web/src/components/ui/overlay/dialog-classes.ts"
+    ],
+    [
+      "apps/web/src/components/ui/dialog-header.tsx",
+      "apps/web/src/components/ui/overlay/dialog-header.tsx"
+    ],
+    [
+      "apps/web/src/components/ui/dialog-layout.test.tsx",
+      "apps/web/src/components/ui/overlay/dialog-layout.test.tsx"
+    ],
+    [
+      "apps/web/src/components/ui/dialog-sheet.test.tsx",
+      "apps/web/src/components/ui/overlay/dialog-sheet.test.tsx"
+    ],
+    [
+      "apps/web/src/components/ui/dialog.test.tsx",
+      "apps/web/src/components/ui/overlay/dialog.test.tsx"
+    ],
+    [
+      "apps/web/src/components/ui/dialog.tsx",
+      "apps/web/src/components/ui/overlay/dialog.tsx"
+    ],
+    [
+      "apps/web/src/components/ui/empty-state.tsx",
+      "apps/web/src/components/ui/display/empty-state.tsx"
+    ],
+    [
+      "apps/web/src/components/ui/field.test.tsx",
+      "apps/web/src/components/ui/form/field.test.tsx"
+    ],
+    [
+      "apps/web/src/components/ui/field.tsx",
+      "apps/web/src/components/ui/form/field.tsx"
+    ],
+    [
+      "apps/web/src/components/ui/form-alert.test.tsx",
+      "apps/web/src/components/ui/form/form-alert.test.tsx"
+    ],
+    [
+      "apps/web/src/components/ui/form-alert.tsx",
+      "apps/web/src/components/ui/form/form-alert.tsx"
+    ],
+    [
+      "apps/web/src/components/ui/head-actions.test.tsx",
+      "apps/web/src/components/ui/layout/head-actions.test.tsx"
+    ],
+    [
+      "apps/web/src/components/ui/head-actions.tsx",
+      "apps/web/src/components/ui/layout/head-actions.tsx"
+    ],
+    [
+      "apps/web/src/components/ui/highlight-diff.test.tsx",
+      "apps/web/src/components/ui/display/highlight-diff.test.tsx"
+    ],
+    [
+      "apps/web/src/components/ui/highlight-diff.tsx",
+      "apps/web/src/components/ui/display/highlight-diff.tsx"
+    ],
+    [
+      "apps/web/src/components/ui/icon-button.tsx",
+      "apps/web/src/components/ui/form/icon-button.tsx"
+    ],
+    [
+      "apps/web/src/components/ui/icon.tsx",
+      "apps/web/src/components/ui/display/icon.tsx"
+    ],
+    [
+      "apps/web/src/components/ui/input.tsx",
+      "apps/web/src/components/ui/form/input.tsx"
+    ],
+    [
+      "apps/web/src/components/ui/label.tsx",
+      "apps/web/src/components/ui/form/label.tsx"
+    ],
+    [
+      "apps/web/src/components/ui/ltr.test.tsx",
+      "apps/web/src/components/ui/display/ltr.test.tsx"
+    ],
+    [
+      "apps/web/src/components/ui/ltr.tsx",
+      "apps/web/src/components/ui/display/ltr.tsx"
+    ],
+    [
+      "apps/web/src/components/ui/mark.test.tsx",
+      "apps/web/src/components/ui/display/mark.test.tsx"
+    ],
+    [
+      "apps/web/src/components/ui/mark.tsx",
+      "apps/web/src/components/ui/display/mark.tsx"
+    ],
+    [
+      "apps/web/src/components/ui/mirroring.test.tsx",
+      "apps/web/src/components/ui/display/mirroring.test.tsx"
+    ],
+    [
+      "apps/web/src/components/ui/more-menu.portal.test.tsx",
+      "apps/web/src/components/ui/overlay/more-menu.portal.test.tsx"
+    ],
+    [
+      "apps/web/src/components/ui/more-menu.test.tsx",
+      "apps/web/src/components/ui/overlay/more-menu.test.tsx"
+    ],
+    [
+      "apps/web/src/components/ui/more-menu.tsx",
+      "apps/web/src/components/ui/overlay/more-menu.tsx"
+    ],
+    [
+      "apps/web/src/components/ui/nuqta-glyph.tsx",
+      "apps/web/src/components/ui/display/nuqta-glyph.tsx"
+    ],
+    [
+      "apps/web/src/components/ui/page-list.ts",
+      "apps/web/src/components/ui/layout/page-list.ts"
+    ],
+    [
+      "apps/web/src/components/ui/page.tsx",
+      "apps/web/src/components/ui/layout/page.tsx"
+    ],
+    [
+      "apps/web/src/components/ui/pager.test.tsx",
+      "apps/web/src/components/ui/layout/pager.test.tsx"
+    ],
+    [
+      "apps/web/src/components/ui/pager.tsx",
+      "apps/web/src/components/ui/layout/pager.tsx"
+    ],
+    [
+      "apps/web/src/components/ui/phone-preview.tsx",
+      "apps/web/src/components/ui/form/phone-preview.tsx"
+    ],
+    [
+      "apps/web/src/components/ui/radio-chips.tsx",
+      "apps/web/src/components/ui/form/radio-chips.tsx"
+    ],
+    [
+      "apps/web/src/components/ui/rail.ts",
+      "apps/web/src/components/ui/layout/rail.ts"
+    ],
+    [
+      "apps/web/src/components/ui/rosette.tsx",
+      "apps/web/src/components/ui/display/rosette.tsx"
+    ],
+    [
+      "apps/web/src/components/ui/running-head.test.tsx",
+      "apps/web/src/components/ui/layout/running-head.test.tsx"
+    ],
+    [
+      "apps/web/src/components/ui/running-head.tsx",
+      "apps/web/src/components/ui/layout/running-head.tsx"
+    ],
+    [
+      "apps/web/src/components/ui/scroll-x.test.tsx",
+      "apps/web/src/components/ui/layout/scroll-x.test.tsx"
+    ],
+    [
+      "apps/web/src/components/ui/scroll-x.tsx",
+      "apps/web/src/components/ui/layout/scroll-x.tsx"
+    ],
+    [
+      "apps/web/src/components/ui/search-input.test.tsx",
+      "apps/web/src/components/ui/form/search-input.test.tsx"
+    ],
+    [
+      "apps/web/src/components/ui/search-input.tsx",
+      "apps/web/src/components/ui/form/search-input.tsx"
+    ],
+    [
+      "apps/web/src/components/ui/segmented-control.tsx",
+      "apps/web/src/components/ui/form/segmented-control.tsx"
+    ],
+    [
+      "apps/web/src/components/ui/select.tsx",
+      "apps/web/src/components/ui/form/select.tsx"
+    ],
+    [
+      "apps/web/src/components/ui/skeleton.test.tsx",
+      "apps/web/src/components/ui/display/skeleton.test.tsx"
+    ],
+    [
+      "apps/web/src/components/ui/skeleton.tsx",
+      "apps/web/src/components/ui/display/skeleton.tsx"
+    ],
+    [
+      "apps/web/src/components/ui/status-chip.test.tsx",
+      "apps/web/src/components/ui/display/status-chip.test.tsx"
+    ],
+    [
+      "apps/web/src/components/ui/status-chip.tsx",
+      "apps/web/src/components/ui/display/status-chip.tsx"
+    ],
+    [
+      "apps/web/src/components/ui/tabs.ids.test.tsx",
+      "apps/web/src/components/ui/layout/tabs.ids.test.tsx"
+    ],
+    [
+      "apps/web/src/components/ui/tabs.test.tsx",
+      "apps/web/src/components/ui/layout/tabs.test.tsx"
+    ],
+    [
+      "apps/web/src/components/ui/tabs.tsx",
+      "apps/web/src/components/ui/layout/tabs.tsx"
+    ],
+    [
+      "apps/web/src/components/ui/theme-toggle.test.tsx",
+      "apps/web/src/components/ui/layout/theme-toggle.test.tsx"
+    ],
+    [
+      "apps/web/src/components/ui/theme-toggle.tsx",
+      "apps/web/src/components/ui/layout/theme-toggle.tsx"
+    ],
+    [
+      "apps/web/src/components/ui/time-zone-select.test.tsx",
+      "apps/web/src/components/ui/form/time-zone-select.test.tsx"
+    ],
+    [
+      "apps/web/src/components/ui/time-zone-select.tsx",
+      "apps/web/src/components/ui/form/time-zone-select.tsx"
+    ],
+    [
+      "apps/web/src/components/ui/toast.test.tsx",
+      "apps/web/src/components/ui/overlay/toast.test.tsx"
+    ],
+    [
+      "apps/web/src/components/ui/toast.tsx",
+      "apps/web/src/components/ui/overlay/toast.tsx"
+    ],
+    [
+      "apps/web/src/components/ui/use-dismiss.test.tsx",
+      "apps/web/src/components/ui/overlay/use-dismiss.test.tsx"
+    ],
+    [
+      "apps/web/src/components/ui/use-dismiss.ts",
+      "apps/web/src/components/ui/overlay/use-dismiss.ts"
+    ],
+    [
+      "apps/web/src/components/ui/use-focus-on-change.test.tsx",
+      "apps/web/src/components/ui/overlay/use-focus-on-change.test.tsx"
+    ],
+    [
+      "apps/web/src/components/ui/use-focus-on-change.ts",
+      "apps/web/src/components/ui/overlay/use-focus-on-change.ts"
+    ],
+    [
+      "apps/web/src/components/ui/use-focus-trap.ts",
+      "apps/web/src/components/ui/overlay/use-focus-trap.ts"
+    ],
+    [
+      "apps/web/src/components/ui/use-narrow.test.tsx",
+      "apps/web/src/components/ui/layout/use-narrow.test.tsx"
+    ],
+    [
+      "apps/web/src/components/ui/use-narrow.ts",
+      "apps/web/src/components/ui/layout/use-narrow.ts"
+    ]
+  ]
+}

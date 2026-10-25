@@ -1,8 +1,8 @@
 import type { RoomJoinResult } from '@ab/shared';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { FormAlert } from '@/components/ui/form-alert';
+import { Button } from '@/components/ui/form/button';
+import { FormAlert } from '@/components/ui/form/form-alert';
 import { ApiError } from '@/lib/api';
 import { t } from '@/lib/i18n';
 import { CLASSROOM_KEY, joinRoom } from './api';

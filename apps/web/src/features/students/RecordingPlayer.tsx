@@ -1,6 +1,6 @@
 import type { StudentRecordingView } from '@ab/shared';
-import { buttonVariants } from '@/components/ui/button';
-import { Icon } from '@/components/ui/icon';
+import { buttonVariants } from '@/components/ui/form/button';
+import { Icon } from '@/components/ui/display/icon';
 import { t } from '@/lib/i18n';
 
 const R = t.studentRecordings;

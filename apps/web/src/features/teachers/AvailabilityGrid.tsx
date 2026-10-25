@@ -1,7 +1,7 @@
 import type { AvailabilitySlot } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRef, useState } from 'react';
-import { Toast } from '@/components/ui/toast';
+import { Toast } from '@/components/ui/overlay/toast';
 import { apiSend } from '@/lib/api';
 import { t } from '@/lib/i18n';
 import { availabilityQuery, type AvailabilityRow } from './api';

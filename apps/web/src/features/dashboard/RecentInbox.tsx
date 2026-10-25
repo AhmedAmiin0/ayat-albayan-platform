@@ -1,7 +1,7 @@
 import type { ThreadView } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { Link } from '@tanstack/react-router';
-import { ListSkeleton } from '@/components/ui/skeleton';
+import { ListSkeleton } from '@/components/ui/display/skeleton';
 import { threadsQuery } from '@/features/inbox/api';
 import { DeliveryTicks } from '@/features/inbox/DeliveryTicks';
 import { listTime, previewText, threadName } from '@/features/inbox/format';

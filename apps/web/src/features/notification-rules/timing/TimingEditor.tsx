@@ -1,7 +1,7 @@
 import { DAY_BEFORE_HOURS } from '@ab/shared';
 import { useId } from 'react';
-import { NuqtaGlyph } from '@/components/ui/nuqta-glyph';
-import { Select } from '@/components/ui/select';
+import { NuqtaGlyph } from '@/components/ui/display/nuqta-glyph';
+import { Select } from '@/components/ui/form/select';
 import { t } from '@/lib/i18n';
 import { RuleCheck } from '../RuleCheck';
 import type { TimingDraft } from '../rule-timing';

@@ -1,5 +1,5 @@
 import { counted } from '@ab/shared';
-import { Skeleton } from '@/components/ui/skeleton';
+import { Skeleton } from '@/components/ui/display/skeleton';
 import { t } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
 import { rowKey, type ValueRow } from './value-rows';

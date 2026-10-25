@@ -1,14 +1,14 @@
 import type { TimeOffCreate } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useId, useState, type FormEvent } from 'react';
-import { Button } from '@/components/ui/button';
-import { Dialog } from '@/components/ui/dialog';
-import { Field } from '@/components/ui/field';
-import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/form/button';
+import { Dialog } from '@/components/ui/overlay/dialog';
+import { Field } from '@/components/ui/form/field';
+import { Input } from '@/components/ui/form/input';
 import { apiSend } from '@/lib/api';
 import { t } from '@/lib/i18n';
 import { timeOffQuery } from './api';
-import { FormAlert } from '@/components/ui/form-alert';
+import { FormAlert } from '@/components/ui/form/form-alert';
 import { emptyTimeOffDraft, toTimeOffBody, type TimeOffDraft } from './time-off';
 
 type Props = { teacherId: string; onClose: () => void };

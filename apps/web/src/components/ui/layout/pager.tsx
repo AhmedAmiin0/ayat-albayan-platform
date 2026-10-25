@@ -1,9 +1,9 @@
 import { t } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
-import { Button } from './button';
-import { Icon } from './icon';
+import { Button } from '../form/button';
+import { Icon } from '../display/icon';
 import { pageCount, pageList } from './page-list';
-import { Rosette } from './rosette';
+import { Rosette } from '../display/rosette';
 
 export interface PagerProps {
   /** 1-based current page. */

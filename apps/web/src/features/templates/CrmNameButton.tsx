@@ -1,6 +1,6 @@
 import { crmTemplateName, type TemplateView } from '@ab/shared';
-import { Button } from '@/components/ui/button';
-import { Ltr } from '@/components/ui/ltr';
+import { Button } from '@/components/ui/form/button';
+import { Ltr } from '@/components/ui/display/ltr';
 import { t } from '@/lib/i18n';
 import { templateName } from './template-cells';
 

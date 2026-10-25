@@ -1,8 +1,8 @@
 import { isOpenLesson, lessonWhenText, type LessonView } from '@ab/shared';
 import { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Dialog } from '@/components/ui/dialog';
-import { usePhone } from '@/components/ui/use-narrow';
+import { Button } from '@/components/ui/form/button';
+import { Dialog } from '@/components/ui/overlay/dialog';
+import { usePhone } from '@/components/ui/layout/use-narrow';
 import { t } from '@/lib/i18n';
 import { locale } from '@/lib/locale';
 import { ProposeForm } from './ProposeForm';

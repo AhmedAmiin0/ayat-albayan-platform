@@ -2,7 +2,7 @@ import type { NotificationAudience } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import type { ReactNode } from 'react';
 import { SettingsViewContext } from '@/components/settings/settings-view';
-import { Tabs } from '@/components/ui/tabs';
+import { Tabs } from '@/components/ui/layout/tabs';
 import { t } from '@/lib/i18n';
 import { settingsQuery } from '@/lib/settings-api';
 import { settingsMetaQuery } from '../settings-meta-api';

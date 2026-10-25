@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { Select } from '@/components/ui/select';
+import { Select } from '@/components/ui/form/select';
 import { assignLead, salesPeopleQuery } from '@/features/sales/api';
 import { t } from '@/lib/i18n';
 import type { LeadRow } from './types';

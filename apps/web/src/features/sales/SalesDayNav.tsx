@@ -1,5 +1,5 @@
-import { Button } from '@/components/ui/button';
-import { Icon } from '@/components/ui/icon';
+import { Button } from '@/components/ui/form/button';
+import { Icon } from '@/components/ui/display/icon';
 import { addDays, dayMonthLabel, weekdayOf } from '@/features/schedule/tz';
 import { t } from '@/lib/i18n';
 

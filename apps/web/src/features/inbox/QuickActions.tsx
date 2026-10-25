@@ -1,8 +1,8 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Link } from '@tanstack/react-router';
 import { useState } from 'react';
-import { Button, buttonVariants } from '@/components/ui/button';
-import { Icon } from '@/components/ui/icon';
+import { Button, buttonVariants } from '@/components/ui/form/button';
+import { Icon } from '@/components/ui/display/icon';
 import { reclassifyLead } from '@/features/leads/leads.api';
 import { ReclassifyConfirm } from '@/features/leads/ReclassifyConfirm';
 import { t } from '@/lib/i18n';

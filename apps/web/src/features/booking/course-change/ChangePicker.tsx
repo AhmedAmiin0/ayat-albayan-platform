@@ -1,5 +1,5 @@
 import { counted, pickProgress, togglePick, type CourseChangeView } from '@ab/shared';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/ui/form/button';
 import { SlotPicker } from '@/features/schedule/SlotPicker';
 import { t } from '@/lib/i18n';
 import { DayTimesList } from '../DayTimesList';

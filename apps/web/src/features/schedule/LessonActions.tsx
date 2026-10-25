@@ -1,8 +1,8 @@
 import { STATUS_ROUTE_EVENTS, type LessonEvent, type LessonView, type StatusRouteEvent } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { FormAlert } from '@/components/ui/form-alert';
+import { Button } from '@/components/ui/form/button';
+import { FormAlert } from '@/components/ui/form/form-alert';
 import { t } from '@/lib/i18n';
 import { confirmLesson, lessonErrorText, LESSONS_KEY, setLessonStatus } from './api';
 

@@ -1,9 +1,9 @@
 import { offerText, type Quote } from '@ab/shared';
 import ar from '@ab/shared/i18n/ar.json';
 import { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Icon } from '@/components/ui/icon';
-import { Toast } from '@/components/ui/toast';
+import { Button } from '@/components/ui/form/button';
+import { Icon } from '@/components/ui/display/icon';
+import { Toast } from '@/components/ui/overlay/toast';
 import { t } from '@/lib/i18n';
 import { waLink } from './format';
 

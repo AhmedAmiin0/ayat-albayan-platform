@@ -2,7 +2,7 @@ import { PROGRAMS, STUDENT_PACKAGE_FILTERS, NO_TEACHER, tzChoices, tzOptionLabel
 import { useQuery } from '@tanstack/react-query';
 import type { FilterOption } from '@/components/data-table-features';
 import { SelectFilterField } from '@/components/table-toolbar/fields';
-import { tzCity } from '@/components/ui/time-zone-select';
+import { tzCity } from '@/components/ui/form/time-zone-select';
 import { t } from '@/lib/i18n';
 import { teacherOptionsQuery } from './api';
 import { selectedStatuses, setFilter, toggleStatus, type StudentsFilters } from './filters';

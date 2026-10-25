@@ -1,6 +1,6 @@
 import { useBlocker } from '@tanstack/react-router';
-import { Button } from '@/components/ui/button';
-import { Dialog } from '@/components/ui/dialog';
+import { Button } from '@/components/ui/form/button';
+import { Dialog } from '@/components/ui/overlay/dialog';
 import { t } from '@/lib/i18n';
 
 const l = t.settingsValues.leave;

@@ -1,9 +1,9 @@
 import { ESSENTIAL_OFF_TEXT } from '@ab/shared';
 import { useId, useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Dialog } from '@/components/ui/dialog';
-import { FormAlert } from '@/components/ui/form-alert';
-import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/form/button';
+import { Dialog } from '@/components/ui/overlay/dialog';
+import { FormAlert } from '@/components/ui/form/form-alert';
+import { Input } from '@/components/ui/form/input';
 import { t } from '@/lib/i18n';
 import { fillText } from '../rule-text';
 

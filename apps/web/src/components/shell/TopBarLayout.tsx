@@ -1,9 +1,9 @@
 import { useQuery } from '@tanstack/react-query';
 import type { ReactNode } from 'react';
-import { Logo } from '@/components/ui/mark';
-import { Page } from '@/components/ui/page';
-import { RunningHead } from '@/components/ui/running-head';
-import { ThemeToggle } from '@/components/ui/theme-toggle';
+import { Logo } from '@/components/ui/display/mark';
+import { Page } from '@/components/ui/layout/page';
+import { RunningHead } from '@/components/ui/layout/running-head';
+import { ThemeToggle } from '@/components/ui/layout/theme-toggle';
 import { meQuery } from '@/features/auth/me';
 import { NotificationBell } from '@/features/notifications/NotificationBell';
 import { cn } from '@/lib/utils';

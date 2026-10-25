@@ -1,12 +1,12 @@
 import type { TeacherMe } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
-import { Cartouche } from '@/components/ui/cartouche';
-import { FormAlert } from '@/components/ui/form-alert';
-import { PageHead } from '@/components/ui/page';
-import { Tabs } from '@/components/ui/tabs';
-import { Toast } from '@/components/ui/toast';
-import { ListSkeleton } from '@/components/ui/skeleton';
+import { Cartouche } from '@/components/ui/display/cartouche';
+import { FormAlert } from '@/components/ui/form/form-alert';
+import { PageHead } from '@/components/ui/layout/page';
+import { Tabs } from '@/components/ui/layout/tabs';
+import { Toast } from '@/components/ui/overlay/toast';
+import { ListSkeleton } from '@/components/ui/display/skeleton';
 import { errorCode } from '@/features/schedule/api';
 import { InternalMeetingButton } from '@/features/meetings/InternalMeetingButton';
 import { InternalMeetingsList } from '@/features/meetings/InternalMeetingsList';

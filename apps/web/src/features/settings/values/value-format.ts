@@ -1,5 +1,5 @@
 import { SETTING_DEFAULTS, settingDef, type SettingKey } from '@ab/shared';
-import { tzCity } from '@/components/ui/time-zone-select';
+import { tzCity } from '@/components/ui/form/time-zone-select';
 import { t } from '@/lib/i18n';
 import { countText, unitWord } from './value-units';
 

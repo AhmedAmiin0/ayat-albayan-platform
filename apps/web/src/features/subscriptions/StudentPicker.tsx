@@ -1,8 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
-import { Field } from '@/components/ui/field';
-import { Input } from '@/components/ui/input';
-import { Ltr } from '@/components/ui/ltr';
+import { Field } from '@/components/ui/form/field';
+import { Input } from '@/components/ui/form/input';
+import { Ltr } from '@/components/ui/display/ltr';
 import { useDebounced } from '@/features/pricing/use-debounced';
 import { studentListQuery } from '@/features/students/api';
 import { t } from '@/lib/i18n';

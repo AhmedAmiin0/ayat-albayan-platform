@@ -1,5 +1,5 @@
 import { PROGRAMS } from '@ab/shared';
-import { Mark } from '@/components/ui/mark';
+import { Mark } from '@/components/ui/display/mark';
 import { t } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
 

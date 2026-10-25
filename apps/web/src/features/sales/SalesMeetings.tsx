@@ -1,5 +1,5 @@
-import { Cartouche } from '@/components/ui/cartouche';
-import { PageHead } from '@/components/ui/page';
+import { Cartouche } from '@/components/ui/display/cartouche';
+import { PageHead } from '@/components/ui/layout/page';
 import { InternalMeetingButton } from '@/features/meetings/InternalMeetingButton';
 import { InternalMeetingsList } from '@/features/meetings/InternalMeetingsList';
 import { t } from '@/lib/i18n';

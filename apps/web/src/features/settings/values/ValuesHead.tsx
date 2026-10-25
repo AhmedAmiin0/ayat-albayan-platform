@@ -1,9 +1,9 @@
 import { counted } from '@ab/shared';
-import { Button } from '@/components/ui/button';
-import { Cartouche } from '@/components/ui/cartouche';
-import { Icon } from '@/components/ui/icon';
-import { NuqtaGlyph } from '@/components/ui/nuqta-glyph';
-import { PageHead } from '@/components/ui/page';
+import { Button } from '@/components/ui/form/button';
+import { Cartouche } from '@/components/ui/display/cartouche';
+import { Icon } from '@/components/ui/display/icon';
+import { NuqtaGlyph } from '@/components/ui/display/nuqta-glyph';
+import { PageHead } from '@/components/ui/layout/page';
 import { t } from '@/lib/i18n';
 import { Tag } from './cells/NameCell';
 

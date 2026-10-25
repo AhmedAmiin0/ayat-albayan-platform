@@ -1,5 +1,5 @@
 import { formatAmount } from '@ab/shared';
-import { Ltr } from '@/components/ui/ltr';
+import { Ltr } from '@/components/ui/display/ltr';
 import { cn } from '@/lib/utils';
 import { currencySymbol } from './format';
 

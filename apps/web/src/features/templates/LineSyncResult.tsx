@@ -1,5 +1,5 @@
 import type { TemplateLineSync } from '@ab/shared';
-import { Ltr } from '@/components/ui/ltr';
+import { Ltr } from '@/components/ui/display/ltr';
 import { t } from '@/lib/i18n';
 import { syncFailedText } from './api';
 import { skipReasonText } from './skip-reasons';

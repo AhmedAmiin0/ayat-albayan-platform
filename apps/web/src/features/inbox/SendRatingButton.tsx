@@ -1,8 +1,8 @@
 import { RATING_TEMPLATE, type MessageView, type TemplateView, type ThreadView } from '@ab/shared';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useRef } from 'react';
-import { Button } from '@/components/ui/button';
-import { FormAlert } from '@/components/ui/form-alert';
+import { Button } from '@/components/ui/form/button';
+import { FormAlert } from '@/components/ui/form/form-alert';
 import { errorCode } from '@/features/schedule/api';
 import { templatesQuery } from '@/features/templates/api';
 import { t } from '@/lib/i18n';

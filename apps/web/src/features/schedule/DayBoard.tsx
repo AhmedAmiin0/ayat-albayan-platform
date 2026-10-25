@@ -1,6 +1,6 @@
 import type { LessonView, Span } from '@ab/shared';
 import { Link } from '@tanstack/react-router';
-import { buttonVariants } from '@/components/ui/button';
+import { buttonVariants } from '@/components/ui/form/button';
 import { AXIS_HOURS } from '@/features/teachers/track';
 import { t } from '@/lib/i18n';
 import { teacherLabel } from '@/lib/teacher-label';

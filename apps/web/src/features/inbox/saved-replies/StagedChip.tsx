@@ -1,7 +1,7 @@
-import { Button } from '@/components/ui/button';
-import { Icon } from '@/components/ui/icon';
-import { IconButton } from '@/components/ui/icon-button';
-import { NuqtaGlyph } from '@/components/ui/nuqta-glyph';
+import { Button } from '@/components/ui/form/button';
+import { Icon } from '@/components/ui/display/icon';
+import { IconButton } from '@/components/ui/form/icon-button';
+import { NuqtaGlyph } from '@/components/ui/display/nuqta-glyph';
 import { sizeText } from '@/features/students/recording-format';
 import { t } from '@/lib/i18n';
 import { sendErrorCodeText } from '../send-error';

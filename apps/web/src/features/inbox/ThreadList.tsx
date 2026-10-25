@@ -1,8 +1,8 @@
 import type { ThreadView } from '@ab/shared';
 import { ColumnFilterText } from '@/components/ColumnFilterText';
 import { TableToolbar } from '@/components/table-toolbar/TableToolbar';
-import { EmptyState } from '@/components/ui/empty-state';
-import { SegmentedControl } from '@/components/ui/segmented-control';
+import { EmptyState } from '@/components/ui/display/empty-state';
+import { SegmentedControl } from '@/components/ui/form/segmented-control';
 import { t } from '@/lib/i18n';
 import { useInboxMode } from './mode';
 import type { InboxSearch } from './search';

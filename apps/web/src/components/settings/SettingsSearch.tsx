@@ -1,5 +1,5 @@
 import { useId } from 'react';
-import { Input } from '@/components/ui/input';
+import { Input } from '@/components/ui/form/input';
 import { t } from '@/lib/i18n';
 
 /** A search box over every setting (label, hint or key); an empty box shows everything. */

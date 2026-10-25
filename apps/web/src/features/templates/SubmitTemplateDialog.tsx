@@ -1,7 +1,7 @@
 import type { TemplateLineView, TemplateView } from '@ab/shared';
-import { Button } from '@/components/ui/button';
-import { Dialog } from '@/components/ui/dialog';
-import { Ltr } from '@/components/ui/ltr';
+import { Button } from '@/components/ui/form/button';
+import { Dialog } from '@/components/ui/overlay/dialog';
+import { Ltr } from '@/components/ui/display/ltr';
 import { t } from '@/lib/i18n';
 import { SubmitTarget } from './SubmitTarget';
 import { templateName } from './template-cells';

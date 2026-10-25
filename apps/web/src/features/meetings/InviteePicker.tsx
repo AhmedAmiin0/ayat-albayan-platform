@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Tabs } from '@/components/ui/tabs';
+import { Tabs } from '@/components/ui/layout/tabs';
 import { t } from '@/lib/i18n';
 import { InviteeChips } from './InviteeChips';
 import { addInvitee, isFull, removeInvitee, type PickedInvitee } from './invitee-list';

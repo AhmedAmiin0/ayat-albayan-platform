@@ -1,9 +1,9 @@
 import { intlLocale, nextDstTransition } from '@ab/shared';
 import { useId, useMemo } from 'react';
-import { Icon } from '@/components/ui/icon';
-import { Label } from '@/components/ui/label';
-import { Ltr } from '@/components/ui/ltr';
-import { TimeZoneSelect, tzCity } from '@/components/ui/time-zone-select';
+import { Icon } from '@/components/ui/display/icon';
+import { Label } from '@/components/ui/form/label';
+import { Ltr } from '@/components/ui/display/ltr';
+import { TimeZoneSelect, tzCity } from '@/components/ui/form/time-zone-select';
 import { t } from '@/lib/i18n';
 import { locale } from '@/lib/locale';
 

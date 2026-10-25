@@ -1,5 +1,5 @@
 import { isIntegrationKey, type LineCheckView } from '@ab/shared';
-import { Ltr } from '@/components/ui/ltr';
+import { Ltr } from '@/components/ui/display/ltr';
 import { t } from '@/lib/i18n';
 import { integrationText, optionText } from '../integrations/integrations-form';
 

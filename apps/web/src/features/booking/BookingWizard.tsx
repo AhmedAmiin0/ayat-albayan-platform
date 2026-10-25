@@ -1,7 +1,7 @@
 import type { BookingResult, TrialDateResult } from '@ab/shared';
 import { useEffect, useRef, useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { useFocusOnChange } from '@/components/ui/use-focus-on-change';
+import { Button } from '@/components/ui/form/button';
+import { useFocusOnChange } from '@/components/ui/overlay/use-focus-on-change';
 import type { StudentRef } from '@/features/students/types';
 import { t } from '@/lib/i18n';
 import { chatPhone, subscribeTarget } from './booked';

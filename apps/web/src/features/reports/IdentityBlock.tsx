@@ -1,7 +1,7 @@
 import { lessonWhenText, packageProgress, type ReportFormEntry, type ReportFormLesson } from '@ab/shared';
 import type { ReactNode } from 'react';
-import { Ltr } from '@/components/ui/ltr';
-import { tzCity } from '@/components/ui/time-zone-select';
+import { Ltr } from '@/components/ui/display/ltr';
+import { tzCity } from '@/components/ui/form/time-zone-select';
 import { t } from '@/lib/i18n';
 import { locale } from '@/lib/locale';
 import { teacherLabel } from '@/lib/teacher-label';

@@ -1,6 +1,6 @@
 import { SETTING_FIELD_OF, settingDef } from '@ab/shared';
 import { settingText } from '@/components/settings/setting-text';
-import { Input } from '@/components/ui/input';
+import { Input } from '@/components/ui/form/input';
 import { cn } from '@/lib/utils';
 import { flag, onKey, str } from '../../registry-form/settings-form';
 import { boundsText } from '../value-format';

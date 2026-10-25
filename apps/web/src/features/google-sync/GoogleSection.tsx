@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { Toast } from '@/components/ui/toast';
+import { Toast } from '@/components/ui/overlay/toast';
 import { t } from '@/lib/i18n';
 import { ConnectionCard } from './ConnectionCard';
 import { DriveCard } from './DriveCard';

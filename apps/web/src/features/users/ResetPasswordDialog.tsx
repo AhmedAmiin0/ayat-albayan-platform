@@ -1,9 +1,9 @@
 import type { CredentialMode, IssuedCredential, UserDetail } from '@ab/shared';
 import { useMutation } from '@tanstack/react-query';
 import { useId, useState, type FormEvent } from 'react';
-import { Button } from '@/components/ui/button';
-import { Dialog } from '@/components/ui/dialog';
-import { FormAlert } from '@/components/ui/form-alert';
+import { Button } from '@/components/ui/form/button';
+import { Dialog } from '@/components/ui/overlay/dialog';
+import { FormAlert } from '@/components/ui/form/form-alert';
 import { t } from '@/lib/i18n';
 import { resetPassword } from './api';
 import { CredentialPicker } from './CredentialPicker';

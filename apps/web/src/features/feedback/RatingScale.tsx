@@ -1,4 +1,4 @@
-import { RequiredMark } from '@/components/ui/label';
+import { RequiredMark } from '@/components/ui/form/label';
 import { t } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
 import { RATINGS, type Rating } from './types';

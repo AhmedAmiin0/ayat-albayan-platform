@@ -1,8 +1,8 @@
 import { lessonWhenText, type LessonView } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { Button } from '@/components/ui/button';
-import { FormAlert } from '@/components/ui/form-alert';
-import { NuqtaGlyph } from '@/components/ui/nuqta-glyph';
+import { Button } from '@/components/ui/form/button';
+import { FormAlert } from '@/components/ui/form/form-alert';
+import { NuqtaGlyph } from '@/components/ui/display/nuqta-glyph';
 import { t } from '@/lib/i18n';
 import { locale } from '@/lib/locale';
 import { approveProposal, conflictsOf, lessonErrorText, LESSONS_KEY, rejectProposal } from './api';

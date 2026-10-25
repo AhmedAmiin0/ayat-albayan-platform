@@ -1,5 +1,5 @@
 import { ATTENDANCES, type Attendance } from '@ab/shared';
-import { RadioChips } from '@/components/ui/radio-chips';
+import { RadioChips } from '@/components/ui/form/radio-chips';
 import { t } from '@/lib/i18n';
 
 export interface AttendanceFieldProps {

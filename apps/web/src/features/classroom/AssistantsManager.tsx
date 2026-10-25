@@ -1,8 +1,8 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { FormAlert } from '@/components/ui/form-alert';
-import { Select } from '@/components/ui/select';
+import { Button } from '@/components/ui/form/button';
+import { FormAlert } from '@/components/ui/form/form-alert';
+import { Select } from '@/components/ui/form/select';
 import { t } from '@/lib/i18n';
 import { assignAssistant, assistantsQuery, removeAssistant, studentAssistantsQuery } from './api';
 

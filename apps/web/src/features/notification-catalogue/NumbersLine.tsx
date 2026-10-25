@@ -1,5 +1,5 @@
 import { formatPhone, WA_LINES, type LineHealthView } from '@ab/shared';
-import { Ltr } from '@/components/ui/ltr';
+import { Ltr } from '@/components/ui/display/ltr';
 import { t } from '@/lib/i18n';
 import { formatDateTime } from '../leads/format';
 

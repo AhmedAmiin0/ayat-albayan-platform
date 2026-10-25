@@ -1,8 +1,8 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { Link } from '@tanstack/react-router';
 import { useEffect, useRef } from 'react';
-import { Button, buttonVariants } from '@/components/ui/button';
-import { NuqtaGlyph } from '@/components/ui/nuqta-glyph';
+import { Button, buttonVariants } from '@/components/ui/form/button';
+import { NuqtaGlyph } from '@/components/ui/display/nuqta-glyph';
 import { t } from '@/lib/i18n';
 import { LESSONS_KEY } from './api';
 import { whenWithLength } from './edit-time-text';

@@ -1,8 +1,8 @@
 import { DURATIONS, type PackageSize } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
-import { Field } from '@/components/ui/field';
-import { RequiredMark } from '@/components/ui/label';
-import { Select } from '@/components/ui/select';
+import { Field } from '@/components/ui/form/field';
+import { RequiredMark } from '@/components/ui/form/label';
+import { Select } from '@/components/ui/form/select';
 import { quoteQuery } from '@/features/pricing/api';
 import { Money } from '@/features/pricing/Money';
 import { t } from '@/lib/i18n';

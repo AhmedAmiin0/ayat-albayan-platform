@@ -5,10 +5,10 @@ import {
   PRICING_DURATIONS,
   SITE_COUNTRIES,
 } from '@ab/shared';
-import { Field } from '@/components/ui/field';
-import { Input } from '@/components/ui/input';
-import { Select } from '@/components/ui/select';
-import { SegmentedControl } from '@/components/ui/segmented-control';
+import { Field } from '@/components/ui/form/field';
+import { Input } from '@/components/ui/form/input';
+import { Select } from '@/components/ui/form/select';
+import { SegmentedControl } from '@/components/ui/form/segmented-control';
 import { durationLabel, packageCopy } from '@/features/pricing/format';
 import { t } from '@/lib/i18n';
 import type { PricingForm } from './pricing-form';

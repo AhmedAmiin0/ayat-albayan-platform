@@ -8,7 +8,7 @@ Owner 2026-10-19: «for the assistant the chat is not good … in the web». Aud
 
 ### W1 (major) The inbox fits the window: about 150px less chrome, no 1180px width cap, and the page itself stops scrolling — ✅ done
 
-Files: `apps/web/src/components/shell/FixedTopBarLayout.tsx`, `apps/web/src/components/shell/TopBarLayout.tsx`, `apps/web/src/components/ui/running-head.tsx`, `apps/web/src/components/shell/inbox-route.ts`, `apps/web/src/features/inbox/InboxPage.tsx`, `apps/web/src/features/inbox/NewChatForm.tsx`, `apps/web/src/features/inbox/ThreadList.tsx`, `apps/web/src/features/sales/SalesLiveStrip.tsx`, `apps/web/src/routes/sales/inbox.tsx`, `apps/web/src/components/shell/inbox-route.test.ts`
+Files: `apps/web/src/components/shell/FixedTopBarLayout.tsx`, `apps/web/src/components/shell/TopBarLayout.tsx`, `apps/web/src/components/ui/layout/running-head.tsx`, `apps/web/src/components/shell/inbox-route.ts`, `apps/web/src/features/inbox/InboxPage.tsx`, `apps/web/src/features/inbox/NewChatForm.tsx`, `apps/web/src/features/inbox/ThreadList.tsx`, `apps/web/src/features/sales/SalesLiveStrip.tsx`, `apps/web/src/routes/sales/inbox.tsx`, `apps/web/src/components/shell/inbox-route.test.ts`
 
 Scope: FixedTopBarLayout serves both sales and teacher, so the /sales/inbox and /teacher/inbox shells change. The admin shell (AdminLayout.tsx:72) stays as it is: do not edit the shared INBOX_PAGE. Add a new constant for the top-bar layout instead.
 
@@ -65,7 +65,7 @@ Files: `apps/web/src/features/inbox/ThreadHeader.tsx`, `apps/web/src/features/in
 
 ### W4 (major) The chat follows the conversation: full-screen chat below 900px, a jump-to-latest button with a count, and a snap to the bottom after she sends — ✅ done
 
-Files: `apps/web/src/components/ui/use-narrow.ts`, `apps/web/src/features/inbox/ThreadPane.tsx`, `apps/web/src/features/inbox/MessageBubble.tsx`, `apps/web/src/features/inbox/MessageLog.tsx`, `apps/web/src/features/inbox/JumpToLatest.tsx`, `packages/shared/i18n/ar.json`, `packages/shared/i18n/en.json`
+Files: `apps/web/src/components/ui/layout/use-narrow.ts`, `apps/web/src/features/inbox/ThreadPane.tsx`, `apps/web/src/features/inbox/MessageBubble.tsx`, `apps/web/src/features/inbox/MessageLog.tsx`, `apps/web/src/features/inbox/JumpToLatest.tsx`, `packages/shared/i18n/ar.json`, `packages/shared/i18n/en.json`
 
 (1) use-narrow.ts: add `useBelowShell()` for '(max-width: 56.24rem)'. Leave usePhone alone; the dialogs depend on it.
 - ThreadPane.tsx:42 uses `phoneView = useBelowShell()`. From 640 to 899px the thread is then the existing PhoneChat, ThreadHeaderPhone and compact composer (after W2 the composer no longer branches on width).

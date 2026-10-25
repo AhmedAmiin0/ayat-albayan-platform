@@ -1,6 +1,6 @@
 import { lessonWhenText, makeupOffer, type LessonView } from '@ab/shared';
 import { Link } from '@tanstack/react-router';
-import { buttonVariants } from '@/components/ui/button';
+import { buttonVariants } from '@/components/ui/form/button';
 import { t } from '@/lib/i18n';
 import { locale } from '@/lib/locale';
 import { usePublicConfig } from '@/lib/public-config';

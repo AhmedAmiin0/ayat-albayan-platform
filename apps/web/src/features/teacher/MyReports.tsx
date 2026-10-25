@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
-import { Cartouche } from '@/components/ui/cartouche';
-import { FormAlert } from '@/components/ui/form-alert';
-import { PageHead } from '@/components/ui/page';
+import { Cartouche } from '@/components/ui/display/cartouche';
+import { FormAlert } from '@/components/ui/form/form-alert';
+import { PageHead } from '@/components/ui/layout/page';
 import { PendingReports } from '@/features/reports/PendingReports';
 import { errorCode } from '@/features/schedule/api';
 import { RIYADH_TZ } from '@/features/schedule/tz';

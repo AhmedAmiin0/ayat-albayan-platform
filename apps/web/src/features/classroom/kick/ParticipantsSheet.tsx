@@ -1,4 +1,4 @@
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/ui/form/button';
 import { Drawer } from '@/features/schedule/Drawer';
 import { t } from '@/lib/i18n';
 import type { MuteController } from '../mute/use-mute';

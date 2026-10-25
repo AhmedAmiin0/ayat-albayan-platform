@@ -1,8 +1,8 @@
 import type { ReactNode } from 'react';
-import { Button } from '@/components/ui/button';
-import { Dialog } from '@/components/ui/dialog';
-import { Icon } from '@/components/ui/icon';
-import { IconButton } from '@/components/ui/icon-button';
+import { Button } from '@/components/ui/form/button';
+import { Dialog } from '@/components/ui/overlay/dialog';
+import { Icon } from '@/components/ui/display/icon';
+import { IconButton } from '@/components/ui/form/icon-button';
 
 export interface ThreadSideSheetProps {
   /** The button's text and the sheet's title: «بيانات العميل والتسجيل» / «الأبناء والاشتراكات». */

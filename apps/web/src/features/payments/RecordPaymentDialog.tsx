@@ -1,10 +1,10 @@
 import { CURRENCY_ISOS, parseAmount, type PaymentKind } from '@ab/shared';
 import { useId, useState, type FormEvent } from 'react';
-import { Button } from '@/components/ui/button';
-import { Dialog } from '@/components/ui/dialog';
-import { Field } from '@/components/ui/field';
-import { FormAlert } from '@/components/ui/form-alert';
-import { Select } from '@/components/ui/select';
+import { Button } from '@/components/ui/form/button';
+import { Dialog } from '@/components/ui/overlay/dialog';
+import { Field } from '@/components/ui/form/field';
+import { FormAlert } from '@/components/ui/form/form-alert';
+import { Select } from '@/components/ui/form/select';
 import type { SubscriptionView } from '@/features/subscriptions/api';
 import { apiErrorText, moneyText, packageName, studentLabel } from '@/features/subscriptions/format';
 import type { PickedStudent } from '@/features/subscriptions/StudentPicker';

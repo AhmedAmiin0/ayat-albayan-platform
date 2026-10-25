@@ -1,6 +1,6 @@
 import { lessonWhenText, type LessonView } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
-import { NuqtaGlyph } from '@/components/ui/nuqta-glyph';
+import { NuqtaGlyph } from '@/components/ui/display/nuqta-glyph';
 import { t } from '@/lib/i18n';
 import { teacherLabel } from '@/lib/teacher-label';
 import { locale } from '@/lib/locale';

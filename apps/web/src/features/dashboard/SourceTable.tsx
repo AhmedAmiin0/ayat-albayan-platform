@@ -1,5 +1,5 @@
 import type { SourceRow } from '@ab/shared';
-import { ScrollX } from '@/components/ui/scroll-x';
+import { ScrollX } from '@/components/ui/layout/scroll-x';
 import { t } from '@/lib/i18n';
 import { Bar } from './Bar';
 import { amount, percent } from './format';

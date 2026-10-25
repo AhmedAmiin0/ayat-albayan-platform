@@ -1,4 +1,4 @@
-import { IconButton } from '@/components/ui/icon-button';
+import { IconButton } from '@/components/ui/form/icon-button';
 import { t } from '@/lib/i18n';
 import { RoomIcon } from '../room-icons';
 import type { TileView } from '../room-types';

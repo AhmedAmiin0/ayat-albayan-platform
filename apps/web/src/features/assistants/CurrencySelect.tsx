@@ -1,6 +1,6 @@
 import { CURRENCY_ISOS } from '@ab/shared';
-import { Field } from '@/components/ui/field';
-import { Select } from '@/components/ui/select';
+import { Field } from '@/components/ui/form/field';
+import { Select } from '@/components/ui/form/select';
 import { currencySymbol } from '@/features/subscriptions/format';
 
 /** The academy pays in EGP; the site currencies follow (a commission keeps the package's own). */

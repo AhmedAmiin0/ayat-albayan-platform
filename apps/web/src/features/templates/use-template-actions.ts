@@ -1,7 +1,7 @@
 import type { TemplateView } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
-import type { ToastProps } from '@/components/ui/toast';
+import type { ToastProps } from '@/components/ui/overlay/toast';
 import { t } from '@/lib/i18n';
 import { moveTemplateLine, setStarter, submitTemplate, syncFailedText, templateErrorText, templateLinesQuery, templatesQuery } from './api';
 

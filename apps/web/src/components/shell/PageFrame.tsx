@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { Page } from '@/components/ui/page';
+import { Page } from '@/components/ui/layout/page';
 import { cn } from '@/lib/utils';
 import { useRailBox } from '../use-rail-box';
 
