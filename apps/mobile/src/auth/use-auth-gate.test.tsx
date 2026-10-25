@@ -74,6 +74,16 @@ test('GoTrue signs the app out on its own (refresh-token reuse): pushes silenced
   await waitFor(() => expect(mockSilence).toHaveBeenCalledTimes(1));
 });
 
+test('the OS push is silenced before the login screen shows (a quick sign-in is never silenced)', async () => {
+  let done: () => void = () => undefined;
+  mockSilence.mockReturnValueOnce(new Promise<void>((r) => (done = r)));
+  const { result } = await renderHook(() => useAuthGate());
+  await act(async () => mockEmit('INITIAL_SESSION', null));
+  expect(result.current).toBe('booting');
+  await act(async () => done());
+  await waitFor(() => expect(result.current).toBe('out'));
+});
+
 test('a slow check that finishes after sign-out cannot reopen the app', async () => {
   let finish: (v: string) => void = () => undefined;
   mockVerify.mockReturnValue(new Promise((r) => (finish = r)));

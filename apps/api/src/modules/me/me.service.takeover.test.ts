@@ -12,7 +12,7 @@ const held = (hash: string | null): FakeResult => ({ data: { profile_id: 'teache
 
 function setup(binding: FakeResult, live: string[]) {
   return fakeDb({
-    push_device_sessions: [binding, {}],
+    push_device_sessions: [binding, {}, {}],
     'rpc:push_live_sessions': [{ data: live }],
     profiles: [{ data: { push_tokens: [] } }, {}, { data: [] }],
   });
@@ -21,7 +21,7 @@ const upserts = (calls: FakeCall[]) =>
   calls.filter((c) => c.table === 'push_device_sessions' && c.method === 'upsert');
 
 describe('PUT /me/push-tokens: no takeover of another person’s live device', () => {
-  it('attack: the token alone (no key, or a wrong one) → 409, the binding and profiles untouched', async () => {
+  it('attack: the token alone (no key, or a wrong one) → 409, never moved, profiles untouched', async () => {
     for (const deviceKey of [undefined, mintDeviceKey()]) {
       const { db, calls } = setup(held(deviceKeyHash(KEY)), ['sess-t']);
       const add = new MeService(db).addPushToken({ userId: 'admin-1', token: T, sessionId: 'sess-a', deviceKey });
@@ -29,6 +29,24 @@ describe('PUT /me/push-tokens: no takeover of another person’s live device', (
       expect(upserts(calls)).toEqual([]);
       expect(calls.some((c) => c.table === 'profiles')).toBe(false);
     }
+  });
+
+  it('a refused claim marks only the holder’s binding contested (the phone may have changed hands)', async () => {
+    const { db, calls } = setup(held(null), ['sess-t']);
+    await expect(new MeService(db).addPushToken({ userId: 'admin-1', token: T, sessionId: 'sess-a' })).rejects.toBeInstanceOf(ConflictException);
+    const writes = calls.filter((c) => c.table === 'push_device_sessions' && c.method !== 'select' && c.method !== 'maybeSingle');
+    expect(writes.map((c) => [c.method, ...c.args])).toEqual([
+      ['eq', 'token', T],
+      ['update', { contested_at: expect.any(String) }],
+      ['eq', 'token', T],
+      ['eq', 'profile_id', 'teacher-1'],
+    ]);
+  });
+
+  it('the holder registering again clears the contest', async () => {
+    const { db, calls } = setup({ data: { profile_id: 'teacher-1', session_id: 'sess-t', device_key_hash: null } }, []);
+    await new MeService(db).addPushToken({ userId: 'teacher-1', token: T, sessionId: 'sess-t' });
+    expect(upserts(calls)[0]?.args[0]).toMatchObject({ profile_id: 'teacher-1', contested_at: null });
   });
 
   it('attack: a binding made before migration 720 (no key) is just as safe while its session lives', async () => {

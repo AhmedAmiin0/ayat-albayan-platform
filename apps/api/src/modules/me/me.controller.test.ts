@@ -63,7 +63,7 @@ describe('/me/push-tokens HTTP (R-MOB-01)', () => {
       table: 'push_device_sessions',
       method: 'upsert',
       args: [
-        { token: TOKEN, profile_id: 'admin-1', session_id: 'sess-1', device_key_hash: expect.stringMatching(/^[0-9a-f]{64}$/) },
+        { token: TOKEN, profile_id: 'admin-1', session_id: 'sess-1', device_key_hash: expect.stringMatching(/^[0-9a-f]{64}$/), contested_at: null },
         { onConflict: 'token' },
       ],
     });

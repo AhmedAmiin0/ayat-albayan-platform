@@ -29,7 +29,7 @@ export class MeService {
     const { userId, token, sessionId } = input;
     if (!sessionId) throw new UnauthorizedException('no_session');
     const deviceKey = await claimDeviceKey(this.db, input);
-    const row = { token, profile_id: userId, session_id: sessionId, device_key_hash: deviceKeyHash(deviceKey) };
+    const row = { token, profile_id: userId, session_id: sessionId, device_key_hash: deviceKeyHash(deviceKey), contested_at: null };
     const bound = await this.db.from('push_device_sessions').upsert(row, { onConflict: 'token' });
     if (bound.error?.code === FK_VIOLATION) throw new UnauthorizedException('no_session');
     if (bound.error) throw dbError(bound.error);

@@ -8,6 +8,9 @@ import { verifyRole } from './verify-role';
 
 export type GateStatus = 'booting' | AppRole | 'out';
 
+/** The longest the login screen waits on the OS push unregister (it never throws, may be slow). */
+export const SILENCE_WAIT_MS = 1500;
+
 /** Only these move the gate; TOKEN_REFRESHED / USER_UPDATED keep the current answer. */
 export function movesGate(event: AuthChangeEvent, session: Session | null): boolean {
   return !session || event === 'INITIAL_SESSION' || event === 'SIGNED_IN';
@@ -24,9 +27,10 @@ export async function resolveGate(
   set: (status: GateStatus) => void,
 ): Promise<void> {
   if (session) return set(await verifyRole(session));
+  // Before the login screen shows: a quick sign-in after it can never be silenced by this one.
+  await Promise.race([silencePush(), new Promise((resolve) => setTimeout(resolve, SILENCE_WAIT_MS))]);
   set('out');
   await clearQueryCaches();
-  await silencePush();
 }
 
 /**

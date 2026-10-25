@@ -15,8 +15,10 @@ export function pushBackend() {
       current: null,
       packages: [],
     }))
+    // The API answers the device key to send next time (migration 720).
     .on('PUT /me/push-tokens', ({ body }) => {
       tokens.push((body as { token: string }).token);
+      return { deviceKey: 'k'.repeat(43) };
     })
     .on('DELETE /me/push-tokens/:token', ({ params }) => {
       tokens.splice(tokens.indexOf(params['token'] ?? ''), 1);

@@ -7,6 +7,8 @@ import { DEVICE_KEY, registerPush, TOKEN_KEY, unregisterPush } from './registerP
 const TOKEN = 'ExponentPushToken[x]';
 const KEY = 'k'.repeat(43);
 const mockApiSend = jest.fn();
+const mockSilence = jest.fn();
+jest.mock('./silence-push', () => ({ silencePush: () => mockSilence() }));
 jest.mock('@/push/live-session', () => ({ hasLiveSession: jest.fn(async () => true) }));
 jest.mock('expo-device', () => ({ __esModule: true, isDevice: true }));
 jest.mock('expo-constants', () => ({ __esModule: true, default: { expoConfig: { extra: { eas: { projectId: 'proj-1' } } } } }));
@@ -43,11 +45,21 @@ test('later registrations send the kept key; sign-out keeps it (a handed-over ph
   expect(await AsyncStorage.getItem(DEVICE_KEY)).toBe(KEY);
 });
 
-test('409 (another person’s live device): resolves, nothing kept', async () => {
+test('409 (another person’s live device): the OS stops delivering here, nothing kept, no warning', async () => {
   const warn = jest.spyOn(console, 'warn').mockImplementation(() => undefined);
   mockApiSend.mockRejectedValueOnce(new ApiError(409, { message: 'push_device_in_use' }));
   await expect(registerPush()).resolves.toBeUndefined();
+  expect(mockSilence).toHaveBeenCalledTimes(1);
   expect(await AsyncStorage.getItem(TOKEN_KEY)).toBeNull();
   expect(await AsyncStorage.getItem(DEVICE_KEY)).toBeNull();
+  expect(warn).not.toHaveBeenCalled();
+  warn.mockRestore();
+});
+
+test('any other failure does not silence the device', async () => {
+  const warn = jest.spyOn(console, 'warn').mockImplementation(() => undefined);
+  mockApiSend.mockRejectedValueOnce(new ApiError(500));
+  await expect(registerPush()).resolves.toBeUndefined();
+  expect(mockSilence).not.toHaveBeenCalled();
   warn.mockRestore();
 });

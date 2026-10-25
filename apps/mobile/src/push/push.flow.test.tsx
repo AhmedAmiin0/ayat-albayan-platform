@@ -6,7 +6,7 @@ import { supabase } from '@/lib/supabase';
 import { native } from '@/test/native-mocks';
 import { GUARDIAN_PHONE } from '@/inbox/flow-backend';
 import { pushBackend } from './flow-backend';
-import { TOKEN_KEY } from './registerPush';
+import { DEVICE_KEY, TOKEN_KEY } from './registerPush';
 
 // Jest has no EAS config; registerPush needs the linked project's id.
 // Signed in with a valid token (live-session.test.ts covers the check itself).
@@ -36,6 +36,7 @@ test('admin tabs mount → the token is PUT once and kept on disk; the tab bar i
   expect(backend.sent('PUT /me/push-tokens')[0]?.body).toEqual({ token: TOKEN });
   await act(async () => undefined); // registerPush stores the token right after the PUT answers
   expect(await AsyncStorage.getItem(TOKEN_KEY)).toBe(TOKEN);
+  await waitFor(async () => expect(await AsyncStorage.getItem(DEVICE_KEY)).toBe('k'.repeat(43)));
   expect(tokens).toEqual([TOKEN]);
   expect(screen.getByRole('button', { name: inboxTab })).toBeTruthy();
 });

@@ -5,20 +5,15 @@ import * as Notifications from 'expo-notifications';
 import { Platform } from 'react-native';
 import { ApiError, apiSend } from '@/lib/api';
 import { t } from '@/lib/i18n';
+import { putPushToken, TOKEN_KEY } from './device-key';
 import { hasLiveSession } from './live-session';
 import { ensurePushPermission } from './permission';
 
 // R-MOB-01 registration. The API sends the pushes (common/push, one per event per admin);
 // useNotificationHandling shows them in the foreground and opens their screen on a tap.
 
-/** The token this device put on the profile, so sign-out removes exactly it (survives restarts). */
-export const TOKEN_KEY = 'push.token';
-/**
- * The key the API handed this device with its last registration (migration 720). It proves to the
- * API that a PUT comes from this very phone, so a token bound to someone else's live session moves
- * only for it (a handed-over phone); sign-out keeps it. Never the token alone.
- */
-export const DEVICE_KEY = 'push.deviceKey';
+export { DEVICE_KEY, TOKEN_KEY } from './device-key';
+
 /** Matches the expo-notifications config plugin's defaultChannel in app.json. */
 export const ANDROID_CHANNEL = 'default';
 
@@ -52,16 +47,11 @@ export async function registerPush(): Promise<void> {
     }
     if (!(await ensurePushPermission())) return;
     const { data: token } = await Notifications.getExpoPushTokenAsync({ projectId });
-    const deviceKey = await AsyncStorage.getItem(DEVICE_KEY);
-    const res = await apiSend<{ deviceKey?: string } | undefined>('PUT', '/me/push-tokens', deviceKey ? { token, deviceKey } : { token });
-    await AsyncStorage.setItem(TOKEN_KEY, token);
-    if (res?.deviceKey) await AsyncStorage.setItem(DEVICE_KEY, res.deviceKey);
+    await putPushToken(token);
   } catch (error) {
     // Push is a convenience: no error UI. The next start registers again. A dev build says why
     // (an Android build without android.googleServicesFile never gets a token). A 403 is a role
     // without notifications.push (sales, a classroom assistant): expected, so not even a warning.
-    // A 409 is a token still bound to another person's live session (an old phone whose sign-out
-    // never reached the API, without its key): the next start retries once that session ends.
     if (error instanceof ApiError && error.status === 403) return;
     if (__DEV__) console.warn('registerPush', error);
   }

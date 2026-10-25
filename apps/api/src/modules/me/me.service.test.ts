@@ -56,7 +56,7 @@ describe('MeService push tokens (R-MOB-01)', () => {
     const { db, argsOf } = fakeDb({ profiles: [{ data: { push_tokens: [] } }, {}] });
     await new MeService(db).addPushToken({ userId: 'admin-1', token: A, sessionId: 'sess-1' });
     expect(argsOf('push_device_sessions', 'upsert')).toEqual([
-      { token: A, profile_id: 'admin-1', session_id: 'sess-1', device_key_hash: expect.stringMatching(/^[0-9a-f]{64}$/) },
+      { token: A, profile_id: 'admin-1', session_id: 'sess-1', device_key_hash: expect.stringMatching(/^[0-9a-f]{64}$/), contested_at: null },
       { onConflict: 'token' },
     ]);
   });

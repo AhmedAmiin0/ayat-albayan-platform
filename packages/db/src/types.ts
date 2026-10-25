@@ -2727,6 +2727,7 @@ export type Database = {
       };
       push_device_sessions: {
         Row: {
+          contested_at: string | null;
           created_at: string;
           device_key_hash: string | null;
           profile_id: string;
@@ -2734,6 +2735,7 @@ export type Database = {
           token: string;
         };
         Insert: {
+          contested_at?: string | null;
           created_at?: string;
           device_key_hash?: string | null;
           profile_id: string;
@@ -2741,6 +2743,7 @@ export type Database = {
           token: string;
         };
         Update: {
+          contested_at?: string | null;
           created_at?: string;
           device_key_hash?: string | null;
           profile_id?: string;

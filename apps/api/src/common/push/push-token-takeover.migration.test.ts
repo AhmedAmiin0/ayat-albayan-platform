@@ -16,6 +16,10 @@ describe('migration 720: no push-token takeover', () => {
     expect(code).toContain("add column if not exists device_key_hash text check (device_key_hash ~ '^[0-9a-f]{64}$')");
   });
 
+  it('push_device_sessions.contested_at: a refused claim silences the binding (nullable, re-runnable)', () => {
+    expect(code).toContain('add column if not exists contested_at timestamptz;');
+  });
+
   it('profiles: table SELECT revoked from clients, every column but push_tokens granted back', () => {
     expect(code).toContain('revoke select on public.profiles from anon, authenticated;');
     expect(code).toContain("column_name <> 'push_tokens'");

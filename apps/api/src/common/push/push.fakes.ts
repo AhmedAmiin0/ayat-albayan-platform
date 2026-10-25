@@ -25,7 +25,7 @@ const enabled = (profiles: FakeProfile[]) => ({
 });
 
 /** A push_device_sessions row (migration 700). */
-export type FakeBinding = { token: string; profile_id: string; session_id: string };
+export type FakeBinding = { token: string; profile_id: string; session_id: string; contested_at?: string | null };
 
 export interface FakePushOptions {
   /** Every upsert hits an existing dedup key. */
