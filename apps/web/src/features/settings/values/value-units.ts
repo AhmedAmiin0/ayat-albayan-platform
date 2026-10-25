@@ -1,5 +1,5 @@
 import { counted, pluralForm, type SettingKey } from '@ab/shared';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 
 // The unit of each counted setting (rule 6: counts of hours, days…, never times of day). The
 // registry has no units yet (docs/26 26-P1 adds them); until then they are listed here.

@@ -9,8 +9,8 @@ import type {
 } from '@ab/shared';
 import { queryOptions } from '@tanstack/react-query';
 import { errorCode } from '@/features/schedule/api';
-import { apiFetch, apiSend } from '@/lib/api';
-import { t } from '@/lib/i18n';
+import { apiFetch, apiSend } from '@/lib/http/api';
+import { t } from '@/lib/i18n/i18n';
 import { MEETINGS_KEY } from './internal-api';
 
 // Scheduled meetings and invitations (R-MEET-01..03, owner 2026-10-12): POST /meetings with a time

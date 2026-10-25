@@ -1,7 +1,7 @@
 import type { AssistantLessonView, AssistantView, JoinLinkResult, JoinLinkUrl, LessonView, RoomJoinResult } from '@ab/shared';
 import { queryOptions } from '@tanstack/react-query';
-import { ApiError, apiFetch, apiSend } from '@/lib/api';
-import { env } from '@/lib/env';
+import { ApiError, apiFetch, apiSend } from '@/lib/http/api';
+import { env } from '@/lib/http/env';
 
 export const CLASSROOM_KEY = ['classroom'] as const;
 

@@ -7,7 +7,7 @@ import { Skeleton } from '@/components/ui/display/skeleton';
 import { usePermissions } from '@/features/auth/use-permissions';
 import { savedRepliesQuery } from '@/features/inbox/saved-replies/api';
 import { useReplyDialogs } from '@/features/inbox/saved-replies/use-reply-dialogs';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { SavedRepliesTable } from './SavedRepliesTable';
 
 const S = t.savedReplies;

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { sendingChip } from './sending-chip';
 
 const s = t.templates.settings;

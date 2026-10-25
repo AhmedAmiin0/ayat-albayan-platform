@@ -7,7 +7,7 @@ import { Input } from '@/components/ui/form/input';
 import { Select } from '@/components/ui/form/select';
 import { usePermissions } from '@/features/auth/use-permissions';
 import { paidAtDay } from '@/features/payments/pay-day';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { ASSISTANTS_KEY, assistantsQuery, broughtByQuery, setBroughtBy } from './api';
 import { broughtAtOf } from './brought-at';
 import { errorText } from './status';

@@ -1,11 +1,11 @@
 import { screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { renderWithClient, routeFetch } from '@/features/inbox/test-utils';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { StudentProfilePage } from './StudentProfilePage';
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@/lib/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 vi.mock('@tanstack/react-router', async () => ({ Link: (await import('@/features/dashboard/link-mock')).Link }));
 // The page's own head is under test; the cards below it have their own tests.
 vi.mock('@/features/subscriptions/BalanceCard', () => ({ BalanceCard: () => null }));

@@ -4,10 +4,10 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { confirmLine, fakeNow, openEditTime, pick, SAVED, SCHEDULED } from './edit-time-fixture';
 
 // The form in English (LTR): labels, the day chips, the before → after line and the toast.
-vi.mock('@/lib/i18n', async (orig) => ({ ...(await orig<object>()), t: en }));
-vi.mock('@/lib/locale', async (orig) => ({ ...(await orig<object>()), locale: 'en' }));
+vi.mock('@/lib/i18n/i18n', async (orig) => ({ ...(await orig<object>()), t: en }));
+vi.mock('@/lib/i18n/locale', async (orig) => ({ ...(await orig<object>()), locale: 'en' }));
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@/lib/api', async (orig) => ({ ...(await orig<object>()), apiFetch: vi.fn(async () => []), apiSend }));
+vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch: vi.fn(async () => []), apiSend }));
 
 const ARABIC = /[؀-ۿ]/;
 

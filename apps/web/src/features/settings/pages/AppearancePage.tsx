@@ -1,4 +1,4 @@
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { AppearanceSection } from '../sections/AppearanceSection';
 import { ModuleHead } from './ModuleHead';
 

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { ApiError } from '@/lib/api';
-import { t } from '@/lib/i18n';
+import { ApiError } from '@/lib/http/api';
+import { t } from '@/lib/i18n/i18n';
 import { conflictsOf, errorCode, lessonErrorText, overviewQuery, slotsQuery } from './api';
 
 const FROM = new Date('2026-10-02T21:00:00.000Z');

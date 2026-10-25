@@ -9,11 +9,11 @@ import { Select } from '@/components/ui/form/select';
 import { paidAtDay } from '@/features/payments/pay-day';
 import { ReceiptField, receiptProblem } from '@/features/payments/ReceiptField';
 import { apiErrorText, moneyText } from '@/features/subscriptions/format';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import type { PayoutView } from './api';
 import { usePayPayout } from './use-pay-payout';
-import { teacherLabel } from '@/lib/teacher-label';
-import { useUploadMaxBytes } from '@/lib/public-config';
+import { teacherLabel } from '@/lib/i18n/teacher-label';
+import { useUploadMaxBytes } from '@/lib/settings/public-config';
 
 type Props = { payout: PayoutView; onClose: () => void; onSaved: () => void };
 

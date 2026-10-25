@@ -1,13 +1,13 @@
 import type { MessageView } from '@ab/shared';
 import { screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { message } from './inbox-fixture';
 import { MessageBubble } from './MessageBubble';
 import { emptyText } from './MessageContent';
 import { renderWithClient } from './test-utils';
 
-vi.mock('@/lib/api', async (orig) => ({ ...(await orig<object>()), apiFetch: vi.fn(), apiSend: vi.fn() }));
+vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch: vi.fn(), apiSend: vi.fn() }));
 
 // A lead's first message arrived as Meta's `unsupported` (owner 2026-10-25): no body, no file.
 const NOW = new Date('2026-10-01T12:00:00Z');

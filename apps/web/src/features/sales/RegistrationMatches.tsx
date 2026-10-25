@@ -1,6 +1,6 @@
 import type { RegistrationCheckView } from '@ab/shared';
 import { Ltr } from '@/components/ui/display/ltr';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import type { CheckBy } from './registration-check';
 
 const R = t.registrationCheck;

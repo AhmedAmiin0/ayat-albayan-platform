@@ -11,13 +11,13 @@ import { Toast } from '@/components/ui/overlay/toast';
 import { downloadCsv } from '@/features/exports/api';
 import { currentMonth } from '@/features/payouts/api';
 import { ListSkeleton } from '@/components/ui/display/skeleton';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { balanceQuery, type Scope } from './api';
 import { EarningsCards } from './EarningsCards';
 import { PayDialog } from './PayDialog';
 import { PaymentsHistory } from './PaymentsHistory';
 import { SessionsPanel } from './SessionsPanel';
-import { teacherLabel } from '@/lib/teacher-label';
+import { teacherLabel } from '@/lib/i18n/teacher-label';
 
 /**
  * /admin/teachers/:teacherId/earnings «مستحقات المعلم»: balance cards, the sessions with ticks, a

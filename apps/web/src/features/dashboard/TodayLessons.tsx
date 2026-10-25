@@ -3,12 +3,12 @@ import { ListSkeleton } from '@/components/ui/display/skeleton';
 import { StatusChip } from '@/components/ui/display/status-chip';
 import { StaffJoinButton } from '@/features/classroom/StaffJoinButton';
 import { useNow } from '@/features/classroom/use-now';
-import { t } from '@/lib/i18n';
-import { useJoinWindow } from '@/lib/public-config';
+import { t } from '@/lib/i18n/i18n';
+import { useJoinWindow } from '@/lib/settings/public-config';
 import { cn } from '@/lib/utils';
 import { sectionTitle } from './Bar';
 import { isLiveNow, todaysLessons } from './today';
-import { teacherLabel } from '@/lib/teacher-label';
+import { teacherLabel } from '@/lib/i18n/teacher-label';
 
 const CLOCK = new Intl.DateTimeFormat('en-GB', { hour: '2-digit', minute: '2-digit', hour12: false });
 

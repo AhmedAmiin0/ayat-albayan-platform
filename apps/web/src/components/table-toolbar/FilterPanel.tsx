@@ -1,5 +1,5 @@
 import { useRef, type ReactNode } from 'react';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { Button } from '../ui/form/button';
 import { Dialog } from '../ui/overlay/dialog';
 import { FilterSummary } from './FilterSummary';

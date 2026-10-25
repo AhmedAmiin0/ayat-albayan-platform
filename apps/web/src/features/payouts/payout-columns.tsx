@@ -8,9 +8,9 @@ import { PayoutActions } from './PayoutActions';
 import { Amount } from '@/features/subscriptions/Amount';
 import { durationLabel } from '@/features/pricing/format';
 import { moneyText } from '@/features/subscriptions/format';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import type { PayoutView } from './api';
-import { teacherLabel } from '@/lib/teacher-label';
+import { teacherLabel } from '@/lib/i18n/teacher-label';
 
 const col = createColumnHelper<DataTableFeatures, PayoutView>();
 

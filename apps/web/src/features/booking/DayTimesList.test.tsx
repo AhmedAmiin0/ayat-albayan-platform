@@ -1,6 +1,6 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { dayAtText, DayTimesList } from './DayTimesList';
 
 const SUN = { at: '2026-10-04T14:00:00.000Z', weekday: 0, time: '17:00' };

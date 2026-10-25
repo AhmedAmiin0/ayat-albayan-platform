@@ -1,7 +1,7 @@
 import { formatPhone } from '@ab/shared';
 import { Link } from '@tanstack/react-router';
 import { Ltr } from '@/components/ui/display/ltr';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { VALUES_GROUP } from '../page-search';
 import { LINK } from './overview-table';
 

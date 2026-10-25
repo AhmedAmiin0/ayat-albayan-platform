@@ -1,12 +1,12 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { badgeText, NotificationBell } from './NotificationBell';
 import { ITEM, page, READ_ITEM, renderWithClient } from './notifications-test-kit';
 
 const granted = vi.hoisted(() => new Set<string>());
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@/lib/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 vi.mock('@/features/auth/use-permissions', () => ({ usePermissions: () => ({ permissions: [], can: (p: string) => granted.has(p) }) }));
 vi.mock('@tanstack/react-router', () => ({ useNavigate: () => vi.fn() }));
 

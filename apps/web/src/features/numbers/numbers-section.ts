@@ -1,6 +1,6 @@
 import type { SettingsPageSection } from '@/components/settings/section-id';
 import { matchesText } from '@/components/settings/search/settings-search';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 
 /** «الأرقام» on /admin/settings: its section id (`#settings-numbers`) and its title. */
 export const NUMBERS_SECTION: SettingsPageSection = { id: 'numbers', label: t.numbers.title };

@@ -4,7 +4,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { LineBadge } from './LineBadge';
 
 const lang = vi.hoisted(() => ({ locale: 'ar' as 'ar' | 'en' }));
-vi.mock('@/lib/i18n', async (orig) => {
+vi.mock('@/lib/i18n/i18n', async (orig) => {
   const real = await orig<{ t: object }>();
   return {
     ...real,
@@ -30,7 +30,7 @@ describe('LineBadge (docs/12 §13.10)', () => {
   });
 
   it('a chat line is a plain word with data-line, no tone, no glyph, without any provider', async () => {
-    const { t } = await import('@/lib/i18n');
+    const { t } = await import('@/lib/i18n/i18n');
     render(<LineBadge line="chat" />);
     const badge = screen.getByTestId('line-badge');
     expect(badge.textContent).toBe(t.enums.waLine.chat);

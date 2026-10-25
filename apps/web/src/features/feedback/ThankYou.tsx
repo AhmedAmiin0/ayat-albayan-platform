@@ -1,6 +1,6 @@
 import { academyWhatsappUrl } from '@ab/shared';
-import { t } from '@/lib/i18n';
-import { usePublicConfig } from '@/lib/public-config';
+import { t } from '@/lib/i18n/i18n';
+import { usePublicConfig } from '@/lib/settings/public-config';
 
 type Kind = 'sent' | 'already' | 'expired' | 'invalid';
 

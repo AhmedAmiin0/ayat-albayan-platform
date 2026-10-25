@@ -1,5 +1,5 @@
 import type { MeetingInviteChannel, MeetingInviteeKind, MeetingInviteStatus } from '@ab/shared';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 
 const R = t.meetingInvites.results;
 const BY_STATUS: Record<MeetingInviteStatus, string> = {

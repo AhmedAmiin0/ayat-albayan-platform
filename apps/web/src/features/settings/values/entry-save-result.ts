@@ -1,5 +1,5 @@
 import type { ConfigEntryConflict } from '@ab/shared';
-import { ApiError } from '@/lib/api';
+import { ApiError } from '@/lib/http/api';
 import { serverMessage } from './save-result';
 
 // How «القيم» reads a refused PATCH /config/entries/:key (docs/26 §2f): 409 conflict (someone saved

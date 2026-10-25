@@ -1,13 +1,13 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen, within } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { remainingLabel } from './teacher-student-columns';
 import { statusSummary, TeacherStudentsPanel } from './TeacherStudentsPanel';
 
 vi.mock('@tanstack/react-router', async () => ({ Link: (await import('@/features/dashboard/link-mock')).Link }));
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@/lib/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch }));
+vi.mock('@/lib/http/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch }));
 
 const ROW = {
   id: 's1',

@@ -7,11 +7,11 @@ import { NewChatForm } from './NewChatForm';
 import { NewThread } from './NewThread';
 import { renderWithClient, routeFetch } from './test-utils';
 
-vi.mock('@/lib/i18n', async (orig) => ({ ...(await orig<object>()), t: en }));
-vi.mock('@/lib/locale', async (orig) => ({ ...(await orig<object>()), locale: 'en' }));
+vi.mock('@/lib/i18n/i18n', async (orig) => ({ ...(await orig<object>()), t: en }));
+vi.mock('@/lib/i18n/locale', async (orig) => ({ ...(await orig<object>()), locale: 'en' }));
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@/lib/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
-vi.mock('@/lib/supabase', () => ({ supabase: { auth: { getSession: async () => ({ data: { session: { access_token: 'x' } } }) } } }));
+vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+vi.mock('@/lib/http/supabase', () => ({ supabase: { auth: { getSession: async () => ({ data: { session: { access_token: 'x' } } }) } } }));
 
 describe('starting a conversation, English', () => {
   it('the new chat form and the no-template note read in English', async () => {

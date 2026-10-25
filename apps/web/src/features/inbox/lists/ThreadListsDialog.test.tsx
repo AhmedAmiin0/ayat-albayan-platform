@@ -1,13 +1,13 @@
 import { act, fireEvent, screen, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { ApiError } from '@/lib/api';
-import { t } from '@/lib/i18n';
+import { ApiError } from '@/lib/http/api';
+import { t } from '@/lib/i18n/i18n';
 import { renderWithClient, routeFetch } from '../test-utils';
 import { ThreadListsDialog } from './ThreadListsDialog';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@/lib/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
+vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
 
 const L = t.inbox.lists;
 const PHONE = '+966501234567';

@@ -1,5 +1,5 @@
 import { canJoinNow, DEFAULT_JOIN_WINDOW, joinWindow, type JoinWindowConfig, type WindowLesson } from '@ab/shared';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 
 const CLOCK = new Intl.DateTimeFormat('en-GB', { hour: '2-digit', minute: '2-digit', hour12: false });
 

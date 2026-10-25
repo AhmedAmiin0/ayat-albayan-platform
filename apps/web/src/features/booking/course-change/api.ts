@@ -1,6 +1,6 @@
 import type { CourseChangeCheck, CourseChangeRequest, CourseChangeResult, CourseChangeView } from '@ab/shared';
 import { queryOptions } from '@tanstack/react-query';
-import { apiFetch, apiSend } from '@/lib/api';
+import { apiFetch, apiSend } from '@/lib/http/api';
 import type { BookingMode } from '../mode';
 
 // «تغيير أيام الحلقات» (owner 2026-10-18): the admin's /booking/course/change* and the assistant's

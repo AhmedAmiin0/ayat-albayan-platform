@@ -1,5 +1,5 @@
 import { intlLocale } from '@ab/shared';
-import { locale } from '@/lib/locale';
+import { locale } from '@/lib/i18n/locale';
 
 // Bell row times (docs/07: viewer's zone, 24h, Western digits). Recent rows read relative
 // («منذ 5 دقائق»), today's the clock, older ones day + month + clock; the full stamp is the tooltip.

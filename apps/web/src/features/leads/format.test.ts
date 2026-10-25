@@ -1,6 +1,6 @@
 import { intlLocale } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
-import { locale } from '@/lib/locale';
+import { locale } from '@/lib/i18n/locale';
 import { formatAge, formatDate, formatDateTime, initialOf } from './format';
 import { parseLeadSearch, parsePageSearch } from './types';
 

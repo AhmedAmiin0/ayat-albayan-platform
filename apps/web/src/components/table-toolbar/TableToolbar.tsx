@@ -1,5 +1,5 @@
 import { useRef, useState, type ReactNode } from 'react';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { cn } from '@/lib/utils';
 import { Button } from '../ui/form/button';
 import { Icon } from '../ui/display/icon';

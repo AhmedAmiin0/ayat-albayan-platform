@@ -1,5 +1,5 @@
 import { keepPreviousData, queryOptions } from '@tanstack/react-query';
-import { apiFetch, apiSend } from '@/lib/api';
+import { apiFetch, apiSend } from '@/lib/http/api';
 import type { DashboardData, DashboardWork, DayRange } from './types';
 
 // The /admin dashboard (docs/11 §9 D1; R-RPT-01, R-RPT-02).

@@ -1,7 +1,7 @@
 import type { MeetingCreated, MeetingView, PublicMeetingView, RoomJoinResult } from '@ab/shared';
 import { queryOptions } from '@tanstack/react-query';
-import { ApiError, apiFetch, apiSend } from '@/lib/api';
-import { env } from '@/lib/env';
+import { ApiError, apiFetch, apiSend } from '@/lib/http/api';
+import { env } from '@/lib/http/env';
 
 // «اجتماع داخلي»: a standalone room with no lesson (POST /meetings and friends, /public/meetings/:token).
 

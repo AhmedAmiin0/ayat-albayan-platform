@@ -1,6 +1,6 @@
 import { SETTING_DEFAULTS } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { settingsForm, settingsUpdate } from './settings-form';
 
 const form = settingsForm(SETTING_DEFAULTS);

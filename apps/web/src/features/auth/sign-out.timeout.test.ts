@@ -6,8 +6,8 @@ import { REPORT_TIMEOUT_MS } from './session-activity';
 const auth = vi.hoisted(() => ({ signInWithPassword: vi.fn(), signOut: vi.fn(), getSession: vi.fn() }));
 const apiFetch = vi.hoisted(() => vi.fn());
 
-vi.mock('@/lib/supabase', () => ({ supabase: { auth } }));
-vi.mock('@/lib/api', () => ({ apiFetch }));
+vi.mock('@/lib/http/supabase', () => ({ supabase: { auth } }));
+vi.mock('@/lib/http/api', () => ({ apiFetch }));
 
 afterEach(() => {
   vi.useRealTimers();

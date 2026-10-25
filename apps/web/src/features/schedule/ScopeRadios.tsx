@@ -1,4 +1,4 @@
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 
 export type Scope = 'one' | 'rule';
 const SCOPES: readonly Scope[] = ['one', 'rule'];

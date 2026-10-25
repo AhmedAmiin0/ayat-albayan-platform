@@ -1,6 +1,6 @@
 import { useId } from 'react';
 import { Button } from '@/components/ui/form/button';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { useWebPush, type WebPushView } from './use-web-push';
 
 const MESSAGE: Record<WebPushView, string> = {

@@ -4,11 +4,11 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { TeacherStudents } from './TeacherStudents';
 
-vi.mock('@/lib/i18n', async (orig) => ({ ...(await orig<object>()), t: en }));
-vi.mock('@/lib/locale', async (orig) => ({ ...(await orig<object>()), locale: 'en' }));
+vi.mock('@/lib/i18n/i18n', async (orig) => ({ ...(await orig<object>()), t: en }));
+vi.mock('@/lib/i18n/locale', async (orig) => ({ ...(await orig<object>()), locale: 'en' }));
 vi.mock('@tanstack/react-router', async () => ({ Link: (await import('@/features/dashboard/link-mock')).Link }));
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@/lib/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 
 describe('TeacherStudents, English', () => {
   it('two separate tabs, row facts and an empty trial list read in English', async () => {

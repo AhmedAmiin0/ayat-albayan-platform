@@ -1,7 +1,7 @@
 import { TZ_OPTIONS } from '@ab/shared';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { TimeZoneSelect, tzCity } from './time-zone-select';
 
 describe('TimeZoneSelect (rule 6)', () => {

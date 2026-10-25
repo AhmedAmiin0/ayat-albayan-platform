@@ -1,6 +1,6 @@
 import type { StudentStatus } from '@ab/shared';
 import type { QueryClient } from '@tanstack/react-query';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { isStatusChanged, STUDENTS_KEY, studentQuery, updateStudent } from './api';
 import { toProfileValues, toStudentPatch, type ProfileValues } from './profile-form';
 import type { StudentProfile } from './types';

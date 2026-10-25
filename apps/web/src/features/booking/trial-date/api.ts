@@ -2,7 +2,7 @@ import type { Conflict, TrialDateResult, TrialHistory } from '@ab/shared';
 import { queryOptions, type QueryClient } from '@tanstack/react-query';
 import { LESSONS_KEY } from '@/features/schedule/api';
 import { STUDENTS_KEY } from '@/features/students/api';
-import { apiFetch, apiSend } from '@/lib/api';
+import { apiFetch, apiSend } from '@/lib/http/api';
 import type { BookingBody } from '../contract';
 import { bookingBase, type BookingMode } from '../mode';
 

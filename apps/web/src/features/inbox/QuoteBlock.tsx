@@ -1,5 +1,5 @@
 import type { MessageQuote } from '@ab/shared';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { cn } from '@/lib/utils';
 import { useChatActions } from './chat-actions';
 import { jumpToMessage } from './jump-to-message';

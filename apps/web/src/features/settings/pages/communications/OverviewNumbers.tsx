@@ -5,7 +5,7 @@ import { Ltr } from '@/components/ui/display/ltr';
 import { NuqtaGlyph } from '@/components/ui/display/nuqta-glyph';
 import { Skeleton } from '@/components/ui/display/skeleton';
 import { numbersQuery } from '@/features/numbers/numbers-api';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { cn } from '@/lib/utils';
 import { CELL, LINK, TH } from './overview-table';
 

@@ -7,9 +7,9 @@ import { paidAtDay } from '@/features/payments/pay-day';
 import { PaymentFields, type PaymentForm } from '@/features/payments/PaymentFields';
 import { ReceiptField, receiptProblem } from '@/features/payments/ReceiptField';
 import { apiErrorText, moneyText } from '@/features/subscriptions/format';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { usePayTeacher } from './use-pay-teacher';
-import { useUploadMaxBytes } from '@/lib/public-config';
+import { useUploadMaxBytes } from '@/lib/settings/public-config';
 
 type Props = {
   teacher: { id: string; name: string };

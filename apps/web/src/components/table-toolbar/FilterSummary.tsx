@@ -1,5 +1,5 @@
 import { counted } from '@ab/shared';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { cn } from '@/lib/utils';
 
 /** «2 مفعّلة، 14 نتيجة»; «لا توجد تصفية مفعّلة» when none is set; the count alone when the total is unknown. */

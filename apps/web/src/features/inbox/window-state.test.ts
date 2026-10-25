@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { leftText, windowLeftMs, windowText } from './window-state';
 
 const NOW = new Date('2026-10-05T12:00:00Z');

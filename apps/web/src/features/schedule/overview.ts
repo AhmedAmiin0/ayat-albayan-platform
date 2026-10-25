@@ -1,6 +1,6 @@
 import { clockTime, type Gender, type Program, type LessonView, type OverviewTeacher, type OverviewTimeOff, type Span } from '@ab/shared';
 import type { Range } from '@/features/teachers/grid';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { teacherRows } from './lessons';
 import { addDays, RIYADH_TZ, zonedToUtc } from './tz';
 

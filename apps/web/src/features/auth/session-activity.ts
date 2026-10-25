@@ -1,4 +1,4 @@
-import { apiFetch } from '@/lib/api';
+import { apiFetch } from '@/lib/http/api';
 
 /** What the activity log is told about a Supabase sign-in (the API never sees the sign-in itself). */
 export type SessionEvent = 'login' | 'logout' | 'login-failed';

@@ -2,13 +2,13 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { ROW_DONE } from '@/features/feedback/feedback-fixture';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { openFilters } from '@/test/open-filters';
-import type { ServerListSearch } from '@/lib/server-list-search';
+import type { ServerListSearch } from '@/lib/list/server-list-search';
 import { MyFeedback } from './MyFeedback';
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@/lib/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 
 function open(data: unknown, search: ServerListSearch = {}) {
   apiFetch.mockResolvedValue(data);

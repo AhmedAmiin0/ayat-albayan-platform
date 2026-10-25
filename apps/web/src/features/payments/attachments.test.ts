@@ -1,8 +1,8 @@
 import type { PaymentAttachmentView } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
 import { apiErrorText } from '@/features/subscriptions/format';
-import { ApiError } from '@/lib/api';
-import { t } from '@/lib/i18n';
+import { ApiError } from '@/lib/http/api';
+import { t } from '@/lib/i18n/i18n';
 import { addAttachments, attachmentLabels } from './attachments';
 
 const file = (type: string, size = 10) => new File([new Uint8Array(size)], `f.${type.split('/')[1] ?? 'x'}`, { type });

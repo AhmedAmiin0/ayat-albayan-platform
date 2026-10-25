@@ -7,7 +7,7 @@ import { ByDayPicker } from '@/features/booking/ByDayPicker';
 import { isMakeup } from '@/features/booking/contract';
 import { ruleFromSlot } from '@/features/booking/draft';
 import { pickedText } from '@/features/booking/SlotStep';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { conflictsOf, lessonErrorText, LESSONS_KEY, rescheduleLesson } from './api';
 import { ConflictNotice } from './ConflictNotice';
 import { durationMin } from './lessons';

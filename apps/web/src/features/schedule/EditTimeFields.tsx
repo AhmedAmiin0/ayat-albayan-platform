@@ -4,7 +4,7 @@ import { Input } from '@/components/ui/form/input';
 import { RadioChips } from '@/components/ui/form/radio-chips';
 import { Select } from '@/components/ui/form/select';
 import { tzCity } from '@/components/ui/form/time-zone-select';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { validLength } from './edit-time';
 import { lengthText } from './edit-time-text';
 import type { TimeEditMode } from './edit-time.contract';

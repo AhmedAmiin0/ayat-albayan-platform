@@ -5,7 +5,7 @@ import { FormAlert } from '@/components/ui/form/form-alert';
 import { Icon } from '@/components/ui/display/icon';
 import { IconButton } from '@/components/ui/form/icon-button';
 import { moveReply, refreshReplies, replyErrorText, SAVED_REPLIES_KEY } from '@/features/inbox/saved-replies/api';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { cn } from '@/lib/utils';
 import { CELL, TH } from './overview-table';
 

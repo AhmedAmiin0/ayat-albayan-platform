@@ -4,7 +4,7 @@ import { Cartouche } from '@/components/ui/display/cartouche';
 import { Icon } from '@/components/ui/display/icon';
 import { NuqtaGlyph } from '@/components/ui/display/nuqta-glyph';
 import { PageHead } from '@/components/ui/layout/page';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { Tag } from './cells/NameCell';
 
 const v = t.settingsValues;

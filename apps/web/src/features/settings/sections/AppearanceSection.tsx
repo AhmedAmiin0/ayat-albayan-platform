@@ -2,7 +2,7 @@ import { Section } from '@/components/settings/Section';
 import { matchesText } from '@/components/settings/search/settings-search';
 import { useSettingsView } from '@/components/settings/settings-view';
 import { ThemeToggle } from '@/components/ui/layout/theme-toggle';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 
 /** Does the search match the theme row's words? */
 export const themeMatch = (query: string): boolean => matchesText(`${t.settings.theme} ${t.settings.themeHint}`, query);

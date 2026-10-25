@@ -9,7 +9,7 @@ import { RequiredLegend } from '@/components/ui/form/label';
 import { PhonePreview } from '@/components/ui/form/phone-preview';
 import { TimeZoneSelect } from '@/components/ui/form/time-zone-select';
 import { SourceField } from '@/features/guardians/SourceField';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { ageError, EMPTY_STUDENT, phoneError, requiredError, type CreateStudentValues } from './create-student';
 import { AgeField, GenderField } from './FactFields';
 import { ProgramField } from './ProgramField';

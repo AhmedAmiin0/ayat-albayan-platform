@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { Toast } from '@/components/ui/overlay/toast';
 import { INTEGRATIONS_PAGE_GROUPS } from '@/features/integrations/integration-places';
 import { IntegrationsPanel } from '@/features/integrations/IntegrationsPanel';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { ModuleHead } from './ModuleHead';
 
 const h = t.communicationsHub;

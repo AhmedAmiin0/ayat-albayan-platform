@@ -1,6 +1,6 @@
 import { counted, formatAmount, type Quote } from '@ab/shared';
 import { formatDate } from '@/features/leads/format';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import type { FxRate } from './api';
 
 // Display text for a quote. Wording from ar.json (the site's copy, Western digits).

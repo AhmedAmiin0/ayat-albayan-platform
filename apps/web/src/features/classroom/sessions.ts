@@ -1,5 +1,5 @@
 import { DEFAULT_JOIN_WINDOW, isOpenLesson, joinWindow, lessonStatusStyle, type JoinWindowConfig, type LessonView, type Tone, type Glyph } from '@ab/shared';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 
 /** The three groups of /admin/classrooms, in reading order. */
 export const SESSION_GROUPS = ['now', 'upcoming', 'ended'] as const;

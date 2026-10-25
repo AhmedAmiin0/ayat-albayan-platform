@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { FormAlert } from '@/components/ui/form/form-alert';
 import { Select } from '@/components/ui/form/select';
 import { apiErrorText } from '@/features/subscriptions/format';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { assignRole, roleName, ROLES_KEY, type RoleView, type StaffUserView } from './api';
 
 const P = t.permissions.page;

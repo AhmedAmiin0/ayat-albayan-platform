@@ -8,8 +8,8 @@ import { FormAlert } from '@/components/ui/form/form-alert';
 import { Input } from '@/components/ui/form/input';
 import { SegmentedControl } from '@/components/ui/form/segmented-control';
 import { apiErrorText } from '@/features/subscriptions/format';
-import { apiFetch } from '@/lib/api';
-import { t } from '@/lib/i18n';
+import { apiFetch } from '@/lib/http/api';
+import { t } from '@/lib/i18n/i18n';
 import { checkRequest, type CheckBy, type CheckErrorCode } from './registration-check';
 import { RegistrationMatches } from './RegistrationMatches';
 

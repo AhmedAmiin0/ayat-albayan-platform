@@ -1,6 +1,6 @@
 import { PROGRAMS } from '@ab/shared';
 import { Mark } from '@/components/ui/display/mark';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { cn } from '@/lib/utils';
 
 // The binding (docs/07 §1, §5): Mamluk tooled leather, gold fillets, four corner pieces and a

@@ -1,5 +1,5 @@
 import { intlLocale, type LessonRecordingView, type Tone } from '@ab/shared';
-import { locale } from '@/lib/locale';
+import { locale } from '@/lib/i18n/locale';
 
 /** Status chip of a recording: under way = act, ready = ok, failed = bad. */
 export const RECORDING_TONE: Record<LessonRecordingView['status'], Tone> = {

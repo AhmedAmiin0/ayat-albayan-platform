@@ -4,7 +4,7 @@ import type { ReactNode } from 'react';
 import { Icon } from '@/components/ui/display/icon';
 import { Ltr } from '@/components/ui/display/ltr';
 import { StatusChip } from '@/components/ui/display/status-chip';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { threadKind, threadTitle, timesInText } from './format';
 import { inboxBase, showsPhone, useInboxMode } from './mode';
 import type { InboxSearch } from './search';

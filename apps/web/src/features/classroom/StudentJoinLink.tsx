@@ -1,7 +1,7 @@
 import { useMutation } from '@tanstack/react-query';
 import { Button } from '@/components/ui/form/button';
 import { FormAlert } from '@/components/ui/form/form-alert';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { issueStudentLink } from './meetings-api';
 
 async function issue(studentId: string): Promise<string> {

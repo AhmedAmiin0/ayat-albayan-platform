@@ -4,9 +4,9 @@ import type { Page } from '@/features/leads/types';
 import { REPORTS_KEY } from '@/features/reports/api';
 import { LESSONS_KEY, type Window } from '@/features/schedule/api';
 import { MONEY_KEY } from '@/features/subscriptions/api';
-import { apiFetch, apiSend } from '@/lib/api';
-import { sortFilterParams } from '@/lib/list-search';
-import type { ServerListState } from '@/lib/server-list-search';
+import { apiFetch, apiSend } from '@/lib/http/api';
+import { sortFilterParams } from '@/lib/list/list-search';
+import type { ServerListState } from '@/lib/list/server-list-search';
 
 // Teacher self-service routes (docs/10 §5 rows 3–4; R-TCH-03, R-SCH-08).
 

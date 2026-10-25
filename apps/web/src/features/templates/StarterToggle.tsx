@@ -1,4 +1,4 @@
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 
 export interface StarterToggleProps {
   /** The template's shown name: each row's switch has its own accessible name. */

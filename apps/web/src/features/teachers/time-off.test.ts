@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { formatTimeOff, toTimeOffBody } from './time-off';
 
 const draft = { from: '2026-10-05', to: '2026-10-07', reason: '' };

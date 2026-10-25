@@ -2,13 +2,13 @@ import { counted } from '@ab/shared';
 import { screen, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { fill } from '@/features/google-sync/google-format';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { THEME_KEY } from '@/lib/theme';
 import { answerHub, googleStatus, item, renderHub, settingsWith } from './hub-test-utils';
 import { HubStatus } from './HubStatus';
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@/lib/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 
 const H = t.settingsHub;
 const GATE_OPEN = { open: true, reason: null, queued: 0 } as const;

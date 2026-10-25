@@ -3,12 +3,12 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render, screen } from '@testing-library/react';
 import type { ReactNode } from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { JOUD, lesson, SUHAILA } from './lesson-fixture';
 import { LessonDrawer } from './LessonDrawer';
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@/lib/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch, apiSend: vi.fn() }));
+vi.mock('@/lib/http/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch, apiSend: vi.fn() }));
 vi.mock('@tanstack/react-router', () => ({
   useRouter: () => undefined,
   Link: ({ to, search, children }: { to: string; search: Record<string, string>; children: ReactNode }) => (

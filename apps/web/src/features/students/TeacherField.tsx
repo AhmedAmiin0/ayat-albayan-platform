@@ -1,8 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
 import { Field } from '@/components/ui/form/field';
 import { Select } from '@/components/ui/form/select';
-import { t } from '@/lib/i18n';
-import { teacherLabel } from '@/lib/teacher-label';
+import { t } from '@/lib/i18n/i18n';
+import { teacherLabel } from '@/lib/i18n/teacher-label';
 import { teacherOptionsQuery } from './api';
 
 /** «المعلم/المعلمه» as the registration form asks it: the academy's teachers and an empty first option. */

@@ -6,7 +6,7 @@ import { FormAlert } from '@/components/ui/form/form-alert';
 import { Input } from '@/components/ui/form/input';
 import { MONEY_KEY } from '@/features/subscriptions/api';
 import { apiErrorText } from '@/features/subscriptions/format';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { addCategory } from './api';
 
 /** «إضافة بند»: the admin adds an expense category (Arabic name + a latin key), chosen right away. */

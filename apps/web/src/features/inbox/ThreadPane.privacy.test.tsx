@@ -1,7 +1,7 @@
 import type { ThreadDetail, TeacherMe } from '@ab/shared';
 import { screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { detail, message, PHONE, thread } from './inbox-fixture';
 import { InboxModeContext, type InboxMode } from './mode';
 import { renderWithClient, routeFetch } from './test-utils';
@@ -9,7 +9,7 @@ import { ThreadPane } from './ThreadPane';
 import { ThreadRow } from './ThreadRow';
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@/lib/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 vi.mock('@tanstack/react-router', async () => ({ Link: (await import('./test-utils')).MockLink }));
 
 const ME = { id: 't-abrar', display_name_ar: 'أبرار', tz: 'Africa/Cairo', students: [] } as unknown as TeacherMe;

@@ -6,7 +6,7 @@ import { SideFoot } from './SideFoot';
 
 vi.mock('@tanstack/react-router', async () => ({ Link: (await import('@/features/dashboard/link-mock')).Link }));
 const apiFetch = vi.hoisted(() => vi.fn(() => Promise.reject(new Error('offline'))));
-vi.mock('@/lib/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 
 vi.mock('./LogoutButton', () => ({ LogoutButton: () => <button type="button">out</button> }));
 vi.mock('./LanguageSwitch', () => ({ LanguageSwitch: () => <button type="button">lang</button> }));

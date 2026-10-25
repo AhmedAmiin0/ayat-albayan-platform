@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/form/button';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import type { AssistantStatementView } from './api';
 
 export type StatementAction = 'details' | 'approve' | 'pay' | 'reopen' | 'unpay' | 'receipt';

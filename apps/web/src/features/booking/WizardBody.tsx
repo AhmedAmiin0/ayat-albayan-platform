@@ -1,6 +1,6 @@
 import type { BookingResult, TrialDateResult } from '@ab/shared';
 import type { StudentRef } from '@/features/students/types';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { mediaPhone } from './booked';
 import type { BookingDraft, PickedStudent, StepKey } from './draft';
 import { teacherPatch, type BookHint } from './hint';

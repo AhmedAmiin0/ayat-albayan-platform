@@ -5,7 +5,7 @@ import { RequiredMark } from '@/components/ui/form/label';
 import { Select } from '@/components/ui/form/select';
 import { quoteQuery } from '@/features/pricing/api';
 import { Money } from '@/features/pricing/Money';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { cn } from '@/lib/utils';
 import type { BookingDraft } from './draft';
 import { quoteSelection, type PriceInput } from './price';

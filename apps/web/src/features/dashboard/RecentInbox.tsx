@@ -5,7 +5,7 @@ import { ListSkeleton } from '@/components/ui/display/skeleton';
 import { threadsQuery } from '@/features/inbox/api';
 import { DeliveryTicks } from '@/features/inbox/DeliveryTicks';
 import { listTime, previewText, threadName } from '@/features/inbox/format';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { cn } from '@/lib/utils';
 import { sectionTitle } from './Bar';
 

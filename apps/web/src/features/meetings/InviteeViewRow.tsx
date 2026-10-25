@@ -3,7 +3,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRef } from 'react';
 import { Button } from '@/components/ui/form/button';
 import { FormAlert } from '@/components/ui/form/form-alert';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { MEETINGS_KEY } from './internal-api';
 import { InviteResultRow } from './InviteResultRow';
 import { inviteeName, inviteStatusText, mayResend, nameDir } from './invite-status';

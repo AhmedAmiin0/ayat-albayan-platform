@@ -1,6 +1,6 @@
 import type { SettingMeta } from '@ab/shared';
 import { formatDateTime } from '@/features/leads/format';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 
 const v = t.settingsValues;
 

@@ -6,8 +6,8 @@ import {
   type TeacherMeetingMode,
   type TeacherStatus,
 } from '@ab/shared';
-import { ApiError } from '@/lib/api';
-import { t } from '@/lib/i18n';
+import { ApiError } from '@/lib/http/api';
+import { t } from '@/lib/i18n/i18n';
 import type { Teacher } from './api';
 
 /** Rate column per lesson duration (EGP). R-TCH-01. */

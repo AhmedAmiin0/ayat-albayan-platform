@@ -7,7 +7,7 @@ import { catalogueMatch } from '@/features/notification-catalogue/catalogue-matc
 import { numbersMatch } from '@/features/numbers/numbers-section';
 import { themeMatch } from '@/features/settings/sections/AppearanceSection';
 import { templatesMatch } from '@/features/templates/templates-match';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { HUB_PATHS } from './hub-paths';
 
 // The hub search (docs/26b §1, states.html#hub): every setting by label, description or key, and

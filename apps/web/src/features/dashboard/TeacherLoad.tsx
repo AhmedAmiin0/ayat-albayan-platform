@@ -1,10 +1,10 @@
 import type { DashboardSummary } from '@ab/shared';
 import { Link } from '@tanstack/react-router';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { Bar } from './Bar';
 import { useHandSort } from './hand-sort';
 import { SortableTh } from './SortableTh';
-import { teacherLabel } from '@/lib/teacher-label';
+import { teacherLabel } from '@/lib/i18n/teacher-label';
 
 type Load = DashboardSummary['teacher_load'][number];
 

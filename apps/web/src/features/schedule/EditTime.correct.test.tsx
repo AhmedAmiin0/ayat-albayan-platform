@@ -1,10 +1,10 @@
 import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { fakeNow, HELD, openEditTime, pick, SAVED } from './edit-time-fixture';
 
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@/lib/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch: vi.fn(async () => []), apiSend }));
+vi.mock('@/lib/http/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch: vi.fn(async () => []), apiSend }));
 
 vi.mock('@tanstack/react-router', async (importOriginal) => ({
   ...(await importOriginal<object>()),

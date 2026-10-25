@@ -1,7 +1,7 @@
 import { Field } from '@/components/ui/form/field';
 import { Input } from '@/components/ui/form/input';
 import { dateLabel } from '@/features/schedule/tz';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import type { TransferForm } from './use-sales-payment';
 
 type Props = {

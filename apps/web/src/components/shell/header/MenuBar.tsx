@@ -2,7 +2,7 @@ import { Link, useRouterState } from '@tanstack/react-router';
 import { useState, type MouseEvent, type ReactNode } from 'react';
 import { Dialog } from '@/components/ui/overlay/dialog';
 import { Mark } from '@/components/ui/display/mark';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { cn } from '@/lib/utils';
 import { MenuBell } from './MenuBell';
 import { MenuFoot } from '../account/MenuFoot';

@@ -1,5 +1,5 @@
 import type { AssistantCommissionStatus, StatusStyle } from '@ab/shared';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { apiErrorText } from '@/features/subscriptions/format';
 
 /** Earned is settled money (fill); voided is struck, in the danger tone (shape carries the state). */

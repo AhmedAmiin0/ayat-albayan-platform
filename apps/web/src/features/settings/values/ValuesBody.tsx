@@ -2,7 +2,7 @@ import type { SettingKey } from '@ab/shared';
 import { useState } from 'react';
 import { useBelowShell, usePhone } from '@/components/ui/layout/use-narrow';
 import type { CustomValues } from '@/features/custom-config/use-custom-values';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { GroupNav } from './GroupNav';
 import type { RowEnv } from './rows/ValueRowView';
 import { valueCounts } from './value-rows';

@@ -1,13 +1,13 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { draftFromLead } from './booking-entries';
 import { BookingWizard, type BookingWizardProps } from './BookingWizard';
 import { ABRAR, respond } from './wizard-fixture';
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@/lib/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch }));
+vi.mock('@/lib/http/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch }));
 
 const initial = draftFromLead({ leadId: 'lead-1', phone: '+966501234567', name: 'أم جود' }, null);
 const filled = initial.newStudent ? { ...initial, newStudent: { ...initial.newStudent, name: 'جود' } } : initial;

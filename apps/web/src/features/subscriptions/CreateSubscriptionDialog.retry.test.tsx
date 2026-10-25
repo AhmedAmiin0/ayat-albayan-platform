@@ -1,12 +1,12 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen, within } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { CreateSubscriptionDialog } from './CreateSubscriptionDialog';
 import { WEEKLY } from './money-fixture';
 
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@/lib/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiSend }));
+vi.mock('@/lib/http/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiSend }));
 
 const posts = () => apiSend.mock.calls.filter((c) => c[1] === '/subscriptions').map((c) => c[2] as { clientRequestId: string });
 

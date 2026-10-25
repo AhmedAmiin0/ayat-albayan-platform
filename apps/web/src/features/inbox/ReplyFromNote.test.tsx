@@ -5,7 +5,7 @@ import { thread } from './inbox-fixture';
 import { ReplyFromNote } from './ReplyFromNote';
 
 const lang = vi.hoisted(() => ({ en: false }));
-vi.mock('@/lib/i18n', async (orig) => {
+vi.mock('@/lib/i18n/i18n', async (orig) => {
   const real = await orig<{ t: object }>();
   return {
     ...real,
@@ -21,7 +21,7 @@ afterEach(() => {
 
 describe('ReplyFromNote', () => {
   it('an open chat window says the reply leaves from the chat line', async () => {
-    const { t } = await import('@/lib/i18n');
+    const { t } = await import('@/lib/i18n/i18n');
     render(<ReplyFromNote thread={thread({ session_open: true, reply_line: 'chat' })} />);
     expect(screen.getByText(t.inbox.line.replyFrom.replace('{line}', t.enums.waLine.chat)).tagName).toBe('P');
   });

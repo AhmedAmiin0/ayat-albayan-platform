@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useEffect, useRef } from 'react';
 import { FormAlert } from '@/components/ui/form/form-alert';
 import { SegmentedControl } from '@/components/ui/form/segmented-control';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { bookingTeachersQuery } from './api';
 import { useBookingMode } from './mode';
 import { TeacherOption } from './TeacherOption';

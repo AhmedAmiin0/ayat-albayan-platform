@@ -4,7 +4,7 @@ import { ConfirmSwitchDialog } from '@/components/settings/dialogs/ConfirmSwitch
 import { Button } from '@/components/ui/form/button';
 import { FormAlert } from '@/components/ui/form/form-alert';
 import { StatusChip } from '@/components/ui/display/status-chip';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { useGateSwitch } from './gate-api';
 
 const s = t.templates.settings;

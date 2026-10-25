@@ -1,5 +1,5 @@
 import type { UserReference } from '@ab/shared';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { tableLabel } from './errors';
 
 /** The tables that keep a user from being deleted, with how many rows each holds. */

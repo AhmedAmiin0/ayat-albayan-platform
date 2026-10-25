@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/form/button';
 import { Dialog } from '@/components/ui/overlay/dialog';
 import { FormAlert } from '@/components/ui/form/form-alert';
 import { Input } from '@/components/ui/form/input';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { DeveloperKey } from './DeveloperKey';
 import { sendGateQuery } from '../messaging/api';
 import { clearIntegrationSecret, integrationsQuery, putIntegrationSecret } from './integrations-api';

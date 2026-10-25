@@ -4,7 +4,7 @@ import { FormAlert } from '@/components/ui/form/form-alert';
 import { useDebounced } from '@/features/pricing/use-debounced';
 import { FxNote } from '@/features/pricing/FxNote';
 import { durationLabel, packageCopy, sessionsOf } from '@/features/pricing/format';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { Amount } from './Amount';
 import { MONEY_KEY, quoteSubscription } from './api';
 import { apiErrorText } from './format';

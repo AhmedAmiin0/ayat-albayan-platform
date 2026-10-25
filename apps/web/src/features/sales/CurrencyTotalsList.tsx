@@ -1,6 +1,6 @@
 import type { CurrencyTotals } from '@ab/shared';
 import { Amount } from '@/features/subscriptions/Amount';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 
 const PARTS = ['salary', 'commissions', 'adjustments', 'total'] as const;
 

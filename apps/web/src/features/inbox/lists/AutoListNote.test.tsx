@@ -1,6 +1,6 @@
 import { fireEvent, screen, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { renderWithClient, routeFetch } from '../test-utils';
 import { ChatListsBar } from './ChatListsBar';
 import { DeleteListDialog } from './DeleteListDialog';
@@ -9,7 +9,7 @@ import { ThreadListsDialog } from './ThreadListsDialog';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@/lib/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
+vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
 
 const L = t.inbox.lists;
 const SUBSCRIBED = { id: '0c000000-0000-4000-8000-000000000011', name: 'مشترك', count: 4, auto_rule: 'subscribed' as const };

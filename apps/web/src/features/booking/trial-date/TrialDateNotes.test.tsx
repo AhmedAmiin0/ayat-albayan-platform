@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { TrialDateNotes } from './TrialDateNotes';
 
 const UPCOMING = { upcomingId: 'l1', upcomingAt: '2026-10-05T14:00:00.000Z' };

@@ -1,7 +1,7 @@
 import { formatPhone, NUMBER_SECRET_NAMES, type NumberView } from '@ab/shared';
 import { Ltr } from '@/components/ui/display/ltr';
 import { StatusChip } from '@/components/ui/display/status-chip';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { FallbackRankField } from './FallbackRankField';
 import { NumberActions } from './NumberActions';
 import { NumberDetails } from './NumberDetails';

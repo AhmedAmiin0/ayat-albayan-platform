@@ -5,8 +5,8 @@ import { Field } from '@/components/ui/form/field';
 import { Input } from '@/components/ui/form/input';
 import { NuqtaGlyph } from '@/components/ui/display/nuqta-glyph';
 import { tzCity } from '@/components/ui/form/time-zone-select';
-import { t } from '@/lib/i18n';
-import { locale } from '@/lib/locale';
+import { t } from '@/lib/i18n/i18n';
+import { locale } from '@/lib/i18n/locale';
 import { RIYADH_TZ } from './tz';
 
 /** How many clashes are listed before «وفيه {n} تعارض كمان». */

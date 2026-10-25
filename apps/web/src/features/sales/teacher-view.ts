@@ -1,6 +1,6 @@
 import { clockTime, type SalesTeacherFilter, type SalesTeacherView } from '@ab/shared';
 import { dayMonthLabel, RIYADH_TZ, weekdayOf, zonedParts } from '@/features/schedule/tz';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 
 // «المعلمون» (sales, owner report 2026-10-12). The filter rules live in @ab/shared (the mobile screen
 // uses the same ones); here: the web's names for them and the Riyadh time of a next lesson.

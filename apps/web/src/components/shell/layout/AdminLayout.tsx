@@ -5,7 +5,7 @@ import { Logo } from '@/components/ui/display/mark';
 import { RunningHead } from '@/components/ui/layout/running-head';
 import { meQuery } from '@/features/auth/me';
 import { NotificationBell } from '@/features/notifications/NotificationBell';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { cn } from '@/lib/utils';
 import { Crumbs } from '../nav/Crumbs';
 import { INBOX_PAGE, isInboxPath } from './inbox-route';

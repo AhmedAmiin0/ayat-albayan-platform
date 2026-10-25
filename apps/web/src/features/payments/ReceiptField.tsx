@@ -1,7 +1,7 @@
 import { RECEIPT_MAX_BYTES, RECEIPT_MIMES } from '@ab/shared';
 import { useEffect, useId, useMemo } from 'react';
 import { Button, buttonVariants } from '@/components/ui/form/button';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { cn } from '@/lib/utils';
 
 type Props = { file: File | null; onChange: (file: File | null) => void; error?: string | null };

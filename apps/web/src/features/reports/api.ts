@@ -11,9 +11,9 @@ import type {
 } from '@ab/shared';
 import { queryOptions } from '@tanstack/react-query';
 import { errorCode } from '@/features/schedule/api';
-import { ApiError, apiFetch, apiSend } from '@/lib/api';
-import { t } from '@/lib/i18n';
-import { supabase } from '@/lib/supabase';
+import { ApiError, apiFetch, apiSend } from '@/lib/http/api';
+import { t } from '@/lib/i18n/i18n';
+import { supabase } from '@/lib/http/supabase';
 
 // Report routes (docs/11 §4 R1–R12). Commands camelCase, responses snake_case.
 

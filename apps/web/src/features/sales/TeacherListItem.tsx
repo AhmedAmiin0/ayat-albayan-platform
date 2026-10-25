@@ -1,7 +1,7 @@
 import type { SalesTeacherView } from '@ab/shared';
 import { StatusChip } from '@/components/ui/display/status-chip';
-import { t } from '@/lib/i18n';
-import { teacherLabel } from '@/lib/teacher-label';
+import { t } from '@/lib/i18n/i18n';
+import { teacherLabel } from '@/lib/i18n/teacher-label';
 import { cn } from '@/lib/utils';
 import { programList } from './teacher-view';
 

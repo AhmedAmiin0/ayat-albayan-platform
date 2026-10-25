@@ -2,14 +2,14 @@ import type { LessonRecordingView } from '@ab/shared';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { act, fireEvent, render, screen, within } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { ApiError } from '@/lib/api';
-import { t } from '@/lib/i18n';
+import { ApiError } from '@/lib/http/api';
+import { t } from '@/lib/i18n/i18n';
 import { joinAs } from './board/board-fixture';
 import { ClassroomRoom } from './ClassroomRoom';
 import { fakeClient, tile } from './fake-client';
 
 const api = vi.hoisted(() => ({ fetch: vi.fn() }));
-vi.mock('@/lib/api', async (orig) => ({ ...(await orig<object>()), apiFetch: api.fetch }));
+vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch: api.fetch }));
 
 const REC: LessonRecordingView[] = [
   { id: 'r1', status: 'done', started_at: '2026-10-03T15:00:00Z', ended_at: '2026-10-03T15:40:00Z', url: 'https://files.test/r1.mp4' },

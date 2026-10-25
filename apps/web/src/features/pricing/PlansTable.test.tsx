@@ -2,7 +2,7 @@ import { PACKAGE_IDS, quote, type Quote } from '@ab/shared';
 import { act, fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { FILTER_DEBOUNCE_MS } from '@/components/ColumnFilterText';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { openFilters } from '@/test/open-filters';
 import { PlansTable } from './PlansTable';
 

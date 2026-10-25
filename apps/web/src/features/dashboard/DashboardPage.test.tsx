@@ -1,13 +1,13 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render, screen, within } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { SUMMARY, WORK } from './dashboard-fixture';
 import { DashboardPage, previousMonth } from './DashboardPage';
 import type { DashboardSearch } from './search';
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@/lib/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch }));
+vi.mock('@/lib/http/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch }));
 vi.mock('@tanstack/react-router', async () => ({ Link: (await import('./link-mock')).Link }));
 
 const DUES = { currency: 'EGP', rows: [], totals: { earned: 900, paid: 300, owed: 600, teachers_owed: 2 } };

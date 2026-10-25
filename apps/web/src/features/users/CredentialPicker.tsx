@@ -2,7 +2,7 @@ import { CREDENTIAL_MODES, DEFAULT_PASSWORD_MIN, type CredentialMode } from '@ab
 import { Field } from '@/components/ui/form/field';
 import { RadioChips } from '@/components/ui/form/radio-chips';
 import { PasswordInput } from '@/features/auth/PasswordInput';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 
 const C = t.users.credential;
 

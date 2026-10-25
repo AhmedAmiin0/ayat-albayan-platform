@@ -6,7 +6,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { useGateSwitch } from './gate-api';
 
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@/lib/api', async (orig) => ({ ...(await orig<object>()), apiSend }));
+vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiSend }));
 
 const NEXT: AcademySettings = { ...SETTING_DEFAULTS, crm_cutover_done: true };
 

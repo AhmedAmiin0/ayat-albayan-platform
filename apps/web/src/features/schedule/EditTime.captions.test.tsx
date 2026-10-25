@@ -1,13 +1,13 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { SCHEDULED } from './edit-time-fixture';
 import { lesson } from './lesson-fixture';
 import { LessonDrawer } from './LessonDrawer';
 import { LessonTags } from './LessonTags';
 
-vi.mock('@/lib/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch: vi.fn(async () => []), apiSend: vi.fn() }));
+vi.mock('@/lib/http/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch: vi.fn(async () => []), apiSend: vi.fn() }));
 
 describe('«عدّل الوقت» next to «غيّر الموعد» (R-SCH-11)', () => {
   it('each button says what it does, in the drawer, before anything is opened', () => {

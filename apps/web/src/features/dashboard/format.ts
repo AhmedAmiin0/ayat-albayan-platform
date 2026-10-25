@@ -1,6 +1,6 @@
 import { clockTime, formatAmount, intlLocale, RIYADH_TZ } from '@ab/shared';
-import { t } from '@/lib/i18n';
-import { locale } from '@/lib/locale';
+import { t } from '@/lib/i18n/i18n';
+import { locale } from '@/lib/i18n/locale';
 
 // Display text for the dashboard: Western digits everywhere (docs/07 §2), money rounded to whole
 // units (the table and the CSV keep the exact amounts), Riyadh times with the zone said once.

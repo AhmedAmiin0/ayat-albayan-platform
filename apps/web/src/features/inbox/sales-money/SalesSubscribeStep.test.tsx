@@ -1,14 +1,14 @@
 import { formatAmount } from '@ab/shared';
 import { fireEvent, screen, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { renderWithClient, routeFetch } from '../test-utils';
 import { SALES_QUOTE, OPEN_SUB, student } from './sales-money-fixture';
 import { SalesMoneyFlow } from './SalesMoneyFlow';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@/lib/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
+vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
 vi.mock('@/features/auth/use-permissions', () => ({ usePermissions: () => ({ permissions: [], can: () => false }) }));
 vi.mock('@tanstack/react-router', async () => ({ Link: (await import('../test-utils')).MockLink }));
 

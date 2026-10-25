@@ -2,7 +2,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen, within } from '@testing-library/react';
 import type { ReactNode } from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { openFilters } from '@/test/open-filters';
 import { FATMA, lesson } from './lesson-fixture';
 import { overview } from './overview-fixture';
@@ -10,7 +10,7 @@ import type { ScheduleSearch } from './search';
 import { WeekSchedule } from './WeekSchedule';
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@/lib/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch }));
+vi.mock('@/lib/http/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch }));
 vi.mock('@tanstack/react-router', () => ({
   Link: ({ to, children, className }: { to: string; children: ReactNode; className?: string }) => (
     <a href={to} className={className}>{children}</a>

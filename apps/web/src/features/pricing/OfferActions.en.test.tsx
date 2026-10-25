@@ -6,7 +6,7 @@ import { expect, it, vi } from 'vitest';
 import { OfferActions } from './OfferActions';
 
 // The UI in English: the buttons are English, the offer the guardian receives stays Arabic.
-vi.mock('@/lib/i18n', async (orig) => ({ ...(await orig<object>()), t: en }));
+vi.mock('@/lib/i18n/i18n', async (orig) => ({ ...(await orig<object>()), t: en }));
 
 it('sends the Arabic offer text from an English UI', () => {
   const KW = quote({ tier: 'standard', duration: 45, country: 'KW', students: 2, discount: 10 });

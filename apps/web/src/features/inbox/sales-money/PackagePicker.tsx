@@ -2,7 +2,7 @@ import type { SalesMoneySubscriptionView } from '@ab/shared';
 import { Field } from '@/components/ui/form/field';
 import { Select } from '@/components/ui/form/select';
 import { moneyText, packageName, studentLabel } from '@/features/subscriptions/format';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 
 type Props = {
   packages: SalesMoneySubscriptionView[];

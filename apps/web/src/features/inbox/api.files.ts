@@ -7,8 +7,8 @@ import {
   type ThreadFileSendInput,
   type ThreadFileUpload,
 } from '@ab/shared';
-import { apiSend } from '@/lib/api';
-import { supabase } from '@/lib/supabase';
+import { apiSend } from '@/lib/http/api';
+import { supabase } from '@/lib/http/supabase';
 
 // D2 (owner 2026-10-19 #2): staff send an image or PDF inside the 24 h window. The file goes to
 // wa-media through a one-off signed URL, then POST /file sends that path (the API re-checks it).

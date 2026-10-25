@@ -2,7 +2,7 @@ import { USER_ROLES, type UserRole, type UserRoleOption } from '@ab/shared';
 import { Field } from '@/components/ui/form/field';
 import { Select } from '@/components/ui/form/select';
 import { roleName } from '@/features/roles/api';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 
 const F = t.users.form;
 

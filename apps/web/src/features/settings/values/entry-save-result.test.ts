@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { ApiError } from '@/lib/api';
+import { ApiError } from '@/lib/http/api';
 import { isConflict, saveFailure } from './entry-save-result';
 
 const CONFLICT = { code: 'conflict', key: 'fx_fresh_hours', current: 12, version: 5, updatedAt: null, updatedByName: null };

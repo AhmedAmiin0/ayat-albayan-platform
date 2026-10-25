@@ -2,7 +2,7 @@ import { MAX_TRANSLATION_LENGTH, type Locale } from '@ab/shared';
 import { Button } from '@/components/ui/form/button';
 import { Field } from '@/components/ui/form/field';
 import { controlClass } from '@/components/ui/form/input';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { cn } from '@/lib/utils';
 import type { RegistryHint } from './registry-hints';
 import { ValuesLink } from './ValuesLink';

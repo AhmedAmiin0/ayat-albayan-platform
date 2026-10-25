@@ -1,5 +1,5 @@
 import { FEEDBACK_SORT_KEYS } from '@ab/shared';
-import type { ServerListKeys } from '@/lib/server-list-search';
+import type { ServerListKeys } from '@/lib/list/server-list-search';
 
 // URL state of the feedback lists (R-NFR-08): `page`, `sort`, `dir`, `f_<key>`; the keys are the
 // GET /feedback params, so `sortFilterParams` sends them as they are.

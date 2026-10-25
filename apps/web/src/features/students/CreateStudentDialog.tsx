@@ -1,6 +1,6 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { useRef, useState } from 'react';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { createStudent, duplicateCandidates, mergeStudents, STUDENTS_KEY } from './api';
 import { toCreateBody, type CreateStudentValues } from './create-student';
 import { CreateStudentForm } from './CreateStudentForm';

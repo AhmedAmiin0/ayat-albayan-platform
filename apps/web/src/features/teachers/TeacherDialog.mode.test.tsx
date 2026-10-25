@@ -2,14 +2,14 @@ import { PUBLIC_SETTING_DEFAULTS } from '@ab/shared';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { t } from '@/lib/i18n';
-import { publicConfigQuery } from '@/lib/public-config';
+import { t } from '@/lib/i18n/i18n';
+import { publicConfigQuery } from '@/lib/settings/public-config';
 import type { Teacher } from './api';
 import { TeacherDialog } from './TeacherDialog';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@/lib/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
+vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
 
 const T = t.teachers;
 const SARA: Teacher = {

@@ -1,5 +1,5 @@
 import type { Header, ReactTable, RowData } from '@tanstack/react-table';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { cn } from '@/lib/utils';
 import { nextSortDir } from './client-sort';
 import type { DataTableFeatures, DataTableSort, SortDir } from './data-table-features';

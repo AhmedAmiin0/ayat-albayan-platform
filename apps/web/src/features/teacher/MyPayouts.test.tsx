@@ -3,12 +3,12 @@ import { fireEvent, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { renderWithClient, routeFetch } from '@/features/inbox/test-utils';
 import { monthLabel } from '@/features/payouts/MonthSelect';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { openFilters } from '@/test/open-filters';
 import { MyPayouts } from './MyPayouts';
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@/lib/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 
 const payout = (over: Partial<PayoutView>): PayoutView => ({
   id: 'p-1',

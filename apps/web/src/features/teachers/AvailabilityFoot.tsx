@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/form/button';
 import { NuqtaGlyph } from '@/components/ui/display/nuqta-glyph';
-import { t } from '@/lib/i18n';
+import { t } from '@/lib/i18n/i18n';
 import { weeklyHoursLabel } from './track';
 
 type Props = { hours: number; pending: boolean; failed: boolean; onCancel: () => void; onSave: () => void };

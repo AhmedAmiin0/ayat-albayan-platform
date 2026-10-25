@@ -1,4 +1,4 @@
-import { apiSend } from '@/lib/api';
+import { apiSend } from '@/lib/http/api';
 import { lessonIdOfRoom, meetingIdOfRoom } from '../moderation-api';
 
 /** «سماح» (allow) / «إيقاف مشاركة» (stop) one guest's screen share: 204, or an ApiError. */
