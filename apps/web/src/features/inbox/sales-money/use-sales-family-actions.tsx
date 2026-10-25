@@ -9,7 +9,7 @@ import { RegistrationCheckTrigger } from '@/features/sales/RegistrationCheckButt
 import { RegistrationCheckDialog } from '@/features/sales/RegistrationCheckDialog';
 import { TrialDateDialog } from '@/features/booking/trial-date/TrialDateDialog';
 import { t } from '@/lib/i18n/i18n';
-import { useInboxMode } from '../mode';
+import { useInboxMode } from '../shared/mode';
 import { SalesRegisterButton, SalesRegisterDialog } from '../SalesRegisterAction';
 import { canRegisterFrom } from '../sales-register';
 import { salesFamilyQuery } from './api';

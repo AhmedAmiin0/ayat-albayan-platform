@@ -1,7 +1,7 @@
 import { HOME_BY_ROLE } from '@ab/shared';
 import type { QueryClient } from '@tanstack/react-query';
 import { t } from '@/lib/i18n/i18n';
-import { clearTabMemories } from '@/features/inbox/tab-memory';
+import { clearTabMemories } from '@/features/inbox/shared/tab-memory';
 import { forgetWebPush } from '@/features/notifications/web-push';
 import { supabase } from '@/lib/http/supabase';
 import { isAccountDisabled, meQuery } from './me';

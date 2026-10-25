@@ -3,7 +3,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n/i18n';
 import { ComposerPhone } from './ComposerPhone';
 import { thread } from '../../testing/inbox-fixture';
-import { InboxModeContext, type InboxMode } from '../../mode';
+import { InboxModeContext, type InboxMode } from '../../shared/mode';
 import { renderWithClient, routeFetch } from '../../testing/test-utils';
 
 const apiFetch = vi.hoisted(() => vi.fn());

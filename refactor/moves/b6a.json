@@ -1,0 +1,368 @@
+{
+  "id": "b6a",
+  "seq": 41,
+  "moves": [
+    {
+      "from": "apps/web/src/features/inbox/InboxPage*",
+      "to": "apps/web/src/features/inbox/threads/list/"
+    },
+    {
+      "from": "apps/web/src/features/inbox/InboxListHead*",
+      "to": "apps/web/src/features/inbox/threads/list/"
+    },
+    {
+      "from": "apps/web/src/features/inbox/ThreadList*",
+      "to": "apps/web/src/features/inbox/threads/list/"
+    },
+    {
+      "from": "apps/web/src/features/inbox/ThreadRow*",
+      "to": "apps/web/src/features/inbox/threads/list/"
+    },
+    {
+      "from": "apps/web/src/features/inbox/ThreadFilterFields*",
+      "to": "apps/web/src/features/inbox/threads/list/"
+    },
+    {
+      "from": "apps/web/src/features/inbox/NewChatForm*",
+      "to": "apps/web/src/features/inbox/threads/list/"
+    },
+    {
+      "from": "apps/web/src/features/inbox/thread-filters*",
+      "to": "apps/web/src/features/inbox/threads/list/"
+    },
+    {
+      "from": "apps/web/src/features/inbox/empty-title*",
+      "to": "apps/web/src/features/inbox/threads/list/"
+    },
+    {
+      "from": "apps/web/src/features/inbox/ThreadPane*",
+      "to": "apps/web/src/features/inbox/threads/pane/"
+    },
+    {
+      "from": "apps/web/src/features/inbox/ThreadHeader*",
+      "to": "apps/web/src/features/inbox/threads/pane/"
+    },
+    {
+      "from": "apps/web/src/features/inbox/ThreadSideSheet*",
+      "to": "apps/web/src/features/inbox/threads/pane/"
+    },
+    {
+      "from": "apps/web/src/features/inbox/PhoneChat*",
+      "to": "apps/web/src/features/inbox/threads/pane/"
+    },
+    {
+      "from": "apps/web/src/features/inbox/NewThread*",
+      "to": "apps/web/src/features/inbox/threads/pane/"
+    },
+    {
+      "from": "apps/web/src/features/inbox/WindowBanner*",
+      "to": "apps/web/src/features/inbox/threads/pane/"
+    },
+    {
+      "from": "apps/web/src/features/inbox/window-state*",
+      "to": "apps/web/src/features/inbox/threads/pane/"
+    },
+    {
+      "from": "apps/web/src/features/inbox/use-window-focus*",
+      "to": "apps/web/src/features/inbox/threads/pane/"
+    },
+    {
+      "from": "apps/web/src/features/inbox/read-error*",
+      "to": "apps/web/src/features/inbox/threads/pane/"
+    },
+    {
+      "from": "apps/web/src/features/inbox/mode*",
+      "to": "apps/web/src/features/inbox/shared/"
+    },
+    {
+      "from": "apps/web/src/features/inbox/search*",
+      "to": "apps/web/src/features/inbox/shared/"
+    },
+    {
+      "from": "apps/web/src/features/inbox/tab-memory*",
+      "to": "apps/web/src/features/inbox/shared/"
+    },
+    {
+      "from": "apps/web/src/features/inbox/chat-actions*",
+      "to": "apps/web/src/features/inbox/shared/"
+    },
+    {
+      "from": "apps/web/src/features/inbox/ChatActionsProvider*",
+      "to": "apps/web/src/features/inbox/shared/"
+    },
+    {
+      "from": "apps/web/src/features/inbox/use-chat-access*",
+      "to": "apps/web/src/features/inbox/shared/"
+    },
+    {
+      "from": "apps/web/src/features/inbox/LineBadge*",
+      "to": "apps/web/src/features/inbox/shared/"
+    }
+  ],
+  "files": [
+    [
+      "apps/web/src/features/inbox/chat-actions.ts",
+      "apps/web/src/features/inbox/shared/chat-actions.ts"
+    ],
+    [
+      "apps/web/src/features/inbox/ChatActionsProvider.tsx",
+      "apps/web/src/features/inbox/shared/ChatActionsProvider.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/empty-title.test.ts",
+      "apps/web/src/features/inbox/threads/list/empty-title.test.ts"
+    ],
+    [
+      "apps/web/src/features/inbox/empty-title.ts",
+      "apps/web/src/features/inbox/threads/list/empty-title.ts"
+    ],
+    [
+      "apps/web/src/features/inbox/InboxListHead.tsx",
+      "apps/web/src/features/inbox/threads/list/InboxListHead.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/InboxPage.layout.test.tsx",
+      "apps/web/src/features/inbox/threads/list/InboxPage.layout.test.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/InboxPage.lines.test.tsx",
+      "apps/web/src/features/inbox/threads/list/InboxPage.lines.test.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/InboxPage.list.test.tsx",
+      "apps/web/src/features/inbox/threads/list/InboxPage.list.test.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/InboxPage.lists.test.tsx",
+      "apps/web/src/features/inbox/threads/list/InboxPage.lists.test.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/InboxPage.sort.test.tsx",
+      "apps/web/src/features/inbox/threads/list/InboxPage.sort.test.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/InboxPage.tags.test.tsx",
+      "apps/web/src/features/inbox/threads/list/InboxPage.tags.test.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/InboxPage.tsx",
+      "apps/web/src/features/inbox/threads/list/InboxPage.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/LineBadge.test.tsx",
+      "apps/web/src/features/inbox/shared/LineBadge.test.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/LineBadge.tsx",
+      "apps/web/src/features/inbox/shared/LineBadge.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/mode.ts",
+      "apps/web/src/features/inbox/shared/mode.ts"
+    ],
+    [
+      "apps/web/src/features/inbox/NewChatForm.tsx",
+      "apps/web/src/features/inbox/threads/list/NewChatForm.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/NewThread.en.test.tsx",
+      "apps/web/src/features/inbox/threads/pane/NewThread.en.test.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/NewThread.test.tsx",
+      "apps/web/src/features/inbox/threads/pane/NewThread.test.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/NewThread.tsx",
+      "apps/web/src/features/inbox/threads/pane/NewThread.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/PhoneChat.tsx",
+      "apps/web/src/features/inbox/threads/pane/PhoneChat.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/read-error.test.ts",
+      "apps/web/src/features/inbox/threads/pane/read-error.test.ts"
+    ],
+    [
+      "apps/web/src/features/inbox/read-error.ts",
+      "apps/web/src/features/inbox/threads/pane/read-error.ts"
+    ],
+    [
+      "apps/web/src/features/inbox/search.test.ts",
+      "apps/web/src/features/inbox/shared/search.test.ts"
+    ],
+    [
+      "apps/web/src/features/inbox/search.ts",
+      "apps/web/src/features/inbox/shared/search.ts"
+    ],
+    [
+      "apps/web/src/features/inbox/tab-memory.ts",
+      "apps/web/src/features/inbox/shared/tab-memory.ts"
+    ],
+    [
+      "apps/web/src/features/inbox/thread-filters.test.ts",
+      "apps/web/src/features/inbox/threads/list/thread-filters.test.ts"
+    ],
+    [
+      "apps/web/src/features/inbox/thread-filters.ts",
+      "apps/web/src/features/inbox/threads/list/thread-filters.ts"
+    ],
+    [
+      "apps/web/src/features/inbox/ThreadFilterFields.tsx",
+      "apps/web/src/features/inbox/threads/list/ThreadFilterFields.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/ThreadHeader.test.tsx",
+      "apps/web/src/features/inbox/threads/pane/ThreadHeader.test.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/ThreadHeader.tsx",
+      "apps/web/src/features/inbox/threads/pane/ThreadHeader.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/ThreadHeaderPhone.test.tsx",
+      "apps/web/src/features/inbox/threads/pane/ThreadHeaderPhone.test.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/ThreadHeaderPhone.tsx",
+      "apps/web/src/features/inbox/threads/pane/ThreadHeaderPhone.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/ThreadList.tsx",
+      "apps/web/src/features/inbox/threads/list/ThreadList.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/ThreadPane.chat.test.tsx",
+      "apps/web/src/features/inbox/threads/pane/ThreadPane.chat.test.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/ThreadPane.composer.test.tsx",
+      "apps/web/src/features/inbox/threads/pane/ThreadPane.composer.test.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/ThreadPane.converted.test.tsx",
+      "apps/web/src/features/inbox/threads/pane/ThreadPane.converted.test.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/ThreadPane.focus.test.tsx",
+      "apps/web/src/features/inbox/threads/pane/ThreadPane.focus.test.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/ThreadPane.handoff.test.tsx",
+      "apps/web/src/features/inbox/threads/pane/ThreadPane.handoff.test.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/ThreadPane.lists.test.tsx",
+      "apps/web/src/features/inbox/threads/pane/ThreadPane.lists.test.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/ThreadPane.messages.test.tsx",
+      "apps/web/src/features/inbox/threads/pane/ThreadPane.messages.test.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/ThreadPane.narrow.test.tsx",
+      "apps/web/src/features/inbox/threads/pane/ThreadPane.narrow.test.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/ThreadPane.permissions.test.tsx",
+      "apps/web/src/features/inbox/threads/pane/ThreadPane.permissions.test.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/ThreadPane.phone.test.tsx",
+      "apps/web/src/features/inbox/threads/pane/ThreadPane.phone.test.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/ThreadPane.privacy.en.test.tsx",
+      "apps/web/src/features/inbox/threads/pane/ThreadPane.privacy.en.test.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/ThreadPane.privacy.test.tsx",
+      "apps/web/src/features/inbox/threads/pane/ThreadPane.privacy.test.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/ThreadPane.rating.test.tsx",
+      "apps/web/src/features/inbox/threads/pane/ThreadPane.rating.test.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/ThreadPane.refetch-error.test.tsx",
+      "apps/web/src/features/inbox/threads/pane/ThreadPane.refetch-error.test.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/ThreadPane.register.test.tsx",
+      "apps/web/src/features/inbox/threads/pane/ThreadPane.register.test.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/ThreadPane.registrationCheck.test.tsx",
+      "apps/web/src/features/inbox/threads/pane/ThreadPane.registrationCheck.test.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/ThreadPane.reply.test.tsx",
+      "apps/web/src/features/inbox/threads/pane/ThreadPane.reply.test.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/ThreadPane.sales.test.tsx",
+      "apps/web/src/features/inbox/threads/pane/ThreadPane.sales.test.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/ThreadPane.salesRegister.en.test.tsx",
+      "apps/web/src/features/inbox/threads/pane/ThreadPane.salesRegister.en.test.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/ThreadPane.salesRegister.test.tsx",
+      "apps/web/src/features/inbox/threads/pane/ThreadPane.salesRegister.test.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/ThreadPane.subscription.test.tsx",
+      "apps/web/src/features/inbox/threads/pane/ThreadPane.subscription.test.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/ThreadPane.teacher.test.tsx",
+      "apps/web/src/features/inbox/threads/pane/ThreadPane.teacher.test.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/ThreadPane.tsx",
+      "apps/web/src/features/inbox/threads/pane/ThreadPane.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/ThreadPaneWide.tsx",
+      "apps/web/src/features/inbox/threads/pane/ThreadPaneWide.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/ThreadRow.ticks.test.tsx",
+      "apps/web/src/features/inbox/threads/list/ThreadRow.ticks.test.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/ThreadRow.tsx",
+      "apps/web/src/features/inbox/threads/list/ThreadRow.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/ThreadSideSheet.tsx",
+      "apps/web/src/features/inbox/threads/pane/ThreadSideSheet.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/use-chat-access.ts",
+      "apps/web/src/features/inbox/shared/use-chat-access.ts"
+    ],
+    [
+      "apps/web/src/features/inbox/use-window-focus.test.ts",
+      "apps/web/src/features/inbox/threads/pane/use-window-focus.test.ts"
+    ],
+    [
+      "apps/web/src/features/inbox/use-window-focus.ts",
+      "apps/web/src/features/inbox/threads/pane/use-window-focus.ts"
+    ],
+    [
+      "apps/web/src/features/inbox/window-state.test.ts",
+      "apps/web/src/features/inbox/threads/pane/window-state.test.ts"
+    ],
+    [
+      "apps/web/src/features/inbox/window-state.ts",
+      "apps/web/src/features/inbox/threads/pane/window-state.ts"
+    ],
+    [
+      "apps/web/src/features/inbox/WindowBanner.tsx",
+      "apps/web/src/features/inbox/threads/pane/WindowBanner.tsx"
+    ]
+  ]
+}

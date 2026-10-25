@@ -5,7 +5,7 @@ import { t } from '@/lib/i18n/i18n';
 import { ComposerPhone } from './ComposerPhone';
 import { detail, message, PHONE, thread } from '../../testing/inbox-fixture';
 import { renderWithClient, routeFetch } from '../../testing/test-utils';
-import { ThreadPane } from '../../ThreadPane';
+import { ThreadPane } from '../../threads/pane/ThreadPane';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend: vi.fn() }));

@@ -1,8 +1,8 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { usePermissions } from '@/features/auth/use-permissions';
-import { InboxPage } from '@/features/inbox/InboxPage';
-import { InboxModeContext } from '@/features/inbox/mode';
-import { parseInboxSearch } from '@/features/inbox/search';
+import { InboxPage } from '@/features/inbox/threads/list/InboxPage';
+import { InboxModeContext } from '@/features/inbox/shared/mode';
+import { parseInboxSearch } from '@/features/inbox/shared/search';
 import { SalesLiveStrip } from '@/features/sales/SalesLiveStrip';
 
 /** /sales/inbox «المحادثات» (the sales landing): every chat (API-scoped, redacted), phones shown; the running lessons as a chip in the list's head. */
