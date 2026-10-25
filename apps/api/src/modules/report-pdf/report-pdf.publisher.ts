@@ -1,16 +1,16 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { StorageService } from '../../common/storage/storage.service';
 import { BUCKETS, reportPdfPath } from '../../common/storage/storage.paths';
-import { pdfContact } from './pdf-contact';
-import type { PdfContact } from './pdf-model';
+import { pdfContact } from './render/pdf-contact';
+import type { PdfContact } from './render/pdf-model';
 import { pdfAssets } from './pdf-assets';
-import { footerLabel } from './pdf-pages';
-import { PdfRenderer } from './pdf-renderer';
+import { footerLabel } from './render/pdf-pages';
+import { PdfRenderer } from './render/pdf-renderer';
 import { toMessage, toModel } from './report-pdf.mapper';
 import { ReportPdfSource } from './report-pdf.source';
 import type { ReportReadyMessage } from './report-ready';
 import { ReportPdfSettings } from './report-pdf.settings';
-import { reportHtml } from './template';
+import { reportHtml } from './template/template';
 
 export interface Published {
   path: string;

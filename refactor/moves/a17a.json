@@ -1,0 +1,140 @@
+{
+  "id": "a17a",
+  "seq": 23,
+  "moves": [
+    {
+      "from": "apps/api/src/modules/sales/sales-academy*",
+      "to": "apps/api/src/modules/sales/academy"
+    },
+    {
+      "from": "apps/api/src/modules/sales/sales-assign*",
+      "to": "apps/api/src/modules/sales/assign"
+    },
+    {
+      "from": "apps/api/src/modules/sales/sales-schedule*",
+      "to": "apps/api/src/modules/sales/schedule"
+    },
+    {
+      "from": "apps/api/src/modules/sales/sales-lessons*",
+      "to": "apps/api/src/modules/sales/schedule"
+    },
+    {
+      "from": "apps/api/src/modules/sales/sales-history*",
+      "to": "apps/api/src/modules/sales/history"
+    }
+  ],
+  "files": [
+    [
+      "apps/api/src/modules/sales/sales-academy.controller.ts",
+      "apps/api/src/modules/sales/academy/sales-academy.controller.ts"
+    ],
+    [
+      "apps/api/src/modules/sales/sales-academy.fakes.ts",
+      "apps/api/src/modules/sales/academy/sales-academy.fakes.ts"
+    ],
+    [
+      "apps/api/src/modules/sales/sales-academy.http.test.ts",
+      "apps/api/src/modules/sales/academy/sales-academy.http.test.ts"
+    ],
+    [
+      "apps/api/src/modules/sales/sales-academy.mapper.test.ts",
+      "apps/api/src/modules/sales/academy/sales-academy.mapper.test.ts"
+    ],
+    [
+      "apps/api/src/modules/sales/sales-academy.mapper.ts",
+      "apps/api/src/modules/sales/academy/sales-academy.mapper.ts"
+    ],
+    [
+      "apps/api/src/modules/sales/sales-academy.queries.test.ts",
+      "apps/api/src/modules/sales/academy/sales-academy.queries.test.ts"
+    ],
+    [
+      "apps/api/src/modules/sales/sales-academy.queries.ts",
+      "apps/api/src/modules/sales/academy/sales-academy.queries.ts"
+    ],
+    [
+      "apps/api/src/modules/sales/sales-academy.service.ts",
+      "apps/api/src/modules/sales/academy/sales-academy.service.ts"
+    ],
+    [
+      "apps/api/src/modules/sales/sales-assign.fakes.ts",
+      "apps/api/src/modules/sales/assign/sales-assign.fakes.ts"
+    ],
+    [
+      "apps/api/src/modules/sales/sales-assign.mapper.test.ts",
+      "apps/api/src/modules/sales/assign/sales-assign.mapper.test.ts"
+    ],
+    [
+      "apps/api/src/modules/sales/sales-assign.mapper.ts",
+      "apps/api/src/modules/sales/assign/sales-assign.mapper.ts"
+    ],
+    [
+      "apps/api/src/modules/sales/sales-assign.queries.test.ts",
+      "apps/api/src/modules/sales/assign/sales-assign.queries.test.ts"
+    ],
+    [
+      "apps/api/src/modules/sales/sales-assign.queries.ts",
+      "apps/api/src/modules/sales/assign/sales-assign.queries.ts"
+    ],
+    [
+      "apps/api/src/modules/sales/sales-assign.service.test.ts",
+      "apps/api/src/modules/sales/assign/sales-assign.service.test.ts"
+    ],
+    [
+      "apps/api/src/modules/sales/sales-assign.service.ts",
+      "apps/api/src/modules/sales/assign/sales-assign.service.ts"
+    ],
+    [
+      "apps/api/src/modules/sales/sales-assign.upsert.test.ts",
+      "apps/api/src/modules/sales/assign/sales-assign.upsert.test.ts"
+    ],
+    [
+      "apps/api/src/modules/sales/sales-history.mapper.test.ts",
+      "apps/api/src/modules/sales/history/sales-history.mapper.test.ts"
+    ],
+    [
+      "apps/api/src/modules/sales/sales-history.mapper.ts",
+      "apps/api/src/modules/sales/history/sales-history.mapper.ts"
+    ],
+    [
+      "apps/api/src/modules/sales/sales-history.queries.test.ts",
+      "apps/api/src/modules/sales/history/sales-history.queries.test.ts"
+    ],
+    [
+      "apps/api/src/modules/sales/sales-history.queries.ts",
+      "apps/api/src/modules/sales/history/sales-history.queries.ts"
+    ],
+    [
+      "apps/api/src/modules/sales/sales-lessons.test.ts",
+      "apps/api/src/modules/sales/schedule/sales-lessons.test.ts"
+    ],
+    [
+      "apps/api/src/modules/sales/sales-lessons.ts",
+      "apps/api/src/modules/sales/schedule/sales-lessons.ts"
+    ],
+    [
+      "apps/api/src/modules/sales/sales-schedule.http.test.ts",
+      "apps/api/src/modules/sales/schedule/sales-schedule.http.test.ts"
+    ],
+    [
+      "apps/api/src/modules/sales/sales-schedule.mapper.test.ts",
+      "apps/api/src/modules/sales/schedule/sales-schedule.mapper.test.ts"
+    ],
+    [
+      "apps/api/src/modules/sales/sales-schedule.mapper.ts",
+      "apps/api/src/modules/sales/schedule/sales-schedule.mapper.ts"
+    ],
+    [
+      "apps/api/src/modules/sales/sales-schedule.queries.test.ts",
+      "apps/api/src/modules/sales/schedule/sales-schedule.queries.test.ts"
+    ],
+    [
+      "apps/api/src/modules/sales/sales-schedule.queries.ts",
+      "apps/api/src/modules/sales/schedule/sales-schedule.queries.ts"
+    ],
+    [
+      "apps/api/src/modules/sales/sales-schedule.service.ts",
+      "apps/api/src/modules/sales/schedule/sales-schedule.service.ts"
+    ]
+  ]
+}

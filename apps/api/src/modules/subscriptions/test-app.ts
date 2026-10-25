@@ -19,7 +19,7 @@ import { CorrectionsQueries } from '../teacher-earnings/corrections.queries';
 import { EarningsQueries } from '../teacher-earnings/earnings.queries';
 import { PricingService } from '../pricing/pricing.service';
 import { SalesQueries } from '../sales/sales.queries';
-import { SalesFamilyQueries } from '../sales-money/sales-family.queries';
+import { SalesFamilyQueries } from '../sales-money/reads/sales-family.queries';
 import { InboundMedia } from '../whatsapp/messages/inbound-media.service';
 import { InboundMediaQueries } from '../whatsapp/messages/inbound-media.queries';
 import { TeachersQueries } from '../teachers/teachers.queries';

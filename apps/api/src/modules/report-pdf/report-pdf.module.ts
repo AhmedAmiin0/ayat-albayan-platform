@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { PdfRenderer } from './pdf-renderer';
+import { PdfRenderer } from './render/pdf-renderer';
 import { ReportPdfJob } from './report-pdf.job';
 import { ReportPdfPublisher } from './report-pdf.publisher';
 import { ReportPdfQueries } from './report-pdf.queries';

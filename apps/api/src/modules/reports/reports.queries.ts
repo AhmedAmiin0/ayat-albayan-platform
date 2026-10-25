@@ -8,8 +8,8 @@ import {
   type ReportLessonRow,
   type ReportRow,
 } from './report-row';
-import { callSubmitReport } from './report-rpc';
-import type { SubmitPayload } from './submit-plan';
+import { callSubmitReport } from './submit/report-rpc';
+import type { SubmitPayload } from './submit/submit-plan';
 
 /** lesson_reports reads and writes (service role — the services guard every call). R-REP-01..04. */
 @Injectable()

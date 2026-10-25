@@ -43,22 +43,6 @@
     "files": 14,
     "dirs": 0
   },
-  "apps/api/src/modules/report-pdf": {
-    "files": 20,
-    "dirs": 0
-  },
-  "apps/api/src/modules/reports": {
-    "files": 28,
-    "dirs": 0
-  },
-  "apps/api/src/modules/sales": {
-    "files": 25,
-    "dirs": 0
-  },
-  "apps/api/src/modules/sales-money": {
-    "files": 14,
-    "dirs": 0
-  },
   "apps/api/src/modules/student-recordings": {
     "files": 15,
     "dirs": 0

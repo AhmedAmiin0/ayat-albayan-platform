@@ -1,7 +1,7 @@
 import { SETTING_DEFAULTS } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
 import { readerOf } from '../../common/settings/settings.fakes';
-import { pdfContact } from './pdf-contact';
+import { pdfContact } from './render/pdf-contact';
 import { ReportPdfSettings } from './report-pdf.settings';
 
 /** What ReportPdfPublisher read before the reader existed: the reader lists exactly these. */

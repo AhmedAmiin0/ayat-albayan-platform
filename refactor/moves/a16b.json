@@ -1,0 +1,108 @@
+{
+  "id": "a16b",
+  "seq": 22,
+  "moves": [
+    {
+      "from": "apps/api/src/modules/report-pdf/pdf-contact*",
+      "to": "apps/api/src/modules/report-pdf/render"
+    },
+    {
+      "from": "apps/api/src/modules/report-pdf/pdf-model*",
+      "to": "apps/api/src/modules/report-pdf/render"
+    },
+    {
+      "from": "apps/api/src/modules/report-pdf/pdf-pages*",
+      "to": "apps/api/src/modules/report-pdf/render"
+    },
+    {
+      "from": "apps/api/src/modules/report-pdf/pdf-renderer*",
+      "to": "apps/api/src/modules/report-pdf/render"
+    },
+    {
+      "from": "apps/api/src/modules/report-pdf/pdf-text*",
+      "to": "apps/api/src/modules/report-pdf/render"
+    },
+    {
+      "from": "apps/api/src/modules/report-pdf/template*",
+      "to": "apps/api/src/modules/report-pdf/template"
+    },
+    {
+      "from": "apps/api/src/modules/report-pdf/__snapshots__/",
+      "to": "apps/api/src/modules/report-pdf/template/__snapshots__/"
+    }
+  ],
+  "files": [
+    [
+      "apps/api/src/modules/report-pdf/__snapshots__/report-absent.html",
+      "apps/api/src/modules/report-pdf/template/__snapshots__/report-absent.html"
+    ],
+    [
+      "apps/api/src/modules/report-pdf/__snapshots__/report-attended.html",
+      "apps/api/src/modules/report-pdf/template/__snapshots__/report-attended.html"
+    ],
+    [
+      "apps/api/src/modules/report-pdf/pdf-contact.test.ts",
+      "apps/api/src/modules/report-pdf/render/pdf-contact.test.ts"
+    ],
+    [
+      "apps/api/src/modules/report-pdf/pdf-contact.ts",
+      "apps/api/src/modules/report-pdf/render/pdf-contact.ts"
+    ],
+    [
+      "apps/api/src/modules/report-pdf/pdf-model.test.ts",
+      "apps/api/src/modules/report-pdf/render/pdf-model.test.ts"
+    ],
+    [
+      "apps/api/src/modules/report-pdf/pdf-model.ts",
+      "apps/api/src/modules/report-pdf/render/pdf-model.ts"
+    ],
+    [
+      "apps/api/src/modules/report-pdf/pdf-pages.test.ts",
+      "apps/api/src/modules/report-pdf/render/pdf-pages.test.ts"
+    ],
+    [
+      "apps/api/src/modules/report-pdf/pdf-pages.ts",
+      "apps/api/src/modules/report-pdf/render/pdf-pages.ts"
+    ],
+    [
+      "apps/api/src/modules/report-pdf/pdf-renderer.smoke.test.ts",
+      "apps/api/src/modules/report-pdf/render/pdf-renderer.smoke.test.ts"
+    ],
+    [
+      "apps/api/src/modules/report-pdf/pdf-renderer.ts",
+      "apps/api/src/modules/report-pdf/render/pdf-renderer.ts"
+    ],
+    [
+      "apps/api/src/modules/report-pdf/pdf-text.test.ts",
+      "apps/api/src/modules/report-pdf/render/pdf-text.test.ts"
+    ],
+    [
+      "apps/api/src/modules/report-pdf/pdf-text.ts",
+      "apps/api/src/modules/report-pdf/render/pdf-text.ts"
+    ],
+    [
+      "apps/api/src/modules/report-pdf/template.body.ts",
+      "apps/api/src/modules/report-pdf/template/template.body.ts"
+    ],
+    [
+      "apps/api/src/modules/report-pdf/template.css.ts",
+      "apps/api/src/modules/report-pdf/template/template.css.ts"
+    ],
+    [
+      "apps/api/src/modules/report-pdf/template.grades.ts",
+      "apps/api/src/modules/report-pdf/template/template.grades.ts"
+    ],
+    [
+      "apps/api/src/modules/report-pdf/template.header.ts",
+      "apps/api/src/modules/report-pdf/template/template.header.ts"
+    ],
+    [
+      "apps/api/src/modules/report-pdf/template.test.ts",
+      "apps/api/src/modules/report-pdf/template/template.test.ts"
+    ],
+    [
+      "apps/api/src/modules/report-pdf/template.ts",
+      "apps/api/src/modules/report-pdf/template/template.ts"
+    ]
+  ]
+}

@@ -13,12 +13,12 @@ import { fakeSettings } from '../../common/settings/settings.fakes';
 import { SettingsService } from '../../common/settings/settings.service';
 import { StorageService } from '../../common/storage/storage.service';
 import { TeachersQueries } from '../teachers/teachers.queries';
-import { ReportAttachmentsQueries } from './report-attachments.queries';
-import { ReportHistoryQueries } from './report-history.queries';
+import { ReportAttachmentsQueries } from './files/report-attachments.queries';
+import { ReportHistoryQueries } from './history/report-history.queries';
 import { ReportLessonQueries } from './report-lesson.queries';
-import { ReportPdfQueue } from './report-pdf.queue';
+import { ReportPdfQueue } from './submit/report-pdf.queue';
 import { ReportsQueries } from './reports.queries';
-import { TeacherReportsQueries } from './teacher-reports.queries';
+import { TeacherReportsQueries } from './teacher/teacher-reports.queries';
 import { ADMIN, GUARDIAN, lessonRow, OTHER_TEACHER, reportRow, TEACHER, TEACHER_ID } from './reports.fakes';
 
 const USERS: Record<string, AuthUser> = { admin: ADMIN, teacher: TEACHER, other: OTHER_TEACHER, guardian: GUARDIAN };

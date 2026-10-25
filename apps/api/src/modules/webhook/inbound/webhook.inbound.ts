@@ -11,7 +11,7 @@ import {
 import { ar } from '../../../common/i18n/server-text';
 import { z } from 'zod';
 import type { PushEvent } from '../../../common/push/push.service';
-import { fill } from '../../report-pdf/pdf-text';
+import { fill } from '../../report-pdf/render/pdf-text';
 import type { InboundEvent } from '../webhook.events';
 import type { Contact } from '../webhook.queries';
 
