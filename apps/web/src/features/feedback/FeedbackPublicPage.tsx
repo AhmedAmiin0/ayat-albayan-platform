@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
-import { LanguageSwitch } from '@/components/shell/LanguageSwitch';
+import { LanguageSwitch } from '@/components/shell/account/LanguageSwitch';
 import { Button } from '@/components/ui/form/button';
 import { Cartouche } from '@/components/ui/display/cartouche';
 import { FormAlert } from '@/components/ui/form/form-alert';

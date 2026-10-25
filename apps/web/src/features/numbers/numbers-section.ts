@@ -1,5 +1,5 @@
 import type { SettingsPageSection } from '@/components/settings/section-id';
-import { matchesText } from '@/components/settings/settings-search';
+import { matchesText } from '@/components/settings/search/settings-search';
 import { t } from '@/lib/i18n';
 
 /** «الأرقام» on /admin/settings: its section id (`#settings-numbers`) and its title. */

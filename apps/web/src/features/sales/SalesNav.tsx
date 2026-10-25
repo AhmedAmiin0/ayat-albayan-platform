@@ -1,5 +1,5 @@
 import type { Permission } from '@ab/shared';
-import { SectionLinks, type SectionLink } from '@/components/shell/SectionLinks';
+import { SectionLinks, type SectionLink } from '@/components/shell/nav/SectionLinks';
 import { t } from '@/lib/i18n';
 
 // The salesperson's pages (base role sales, shown «المبيعات»): chats (where a new student is registered),

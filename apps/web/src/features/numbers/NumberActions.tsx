@@ -1,6 +1,6 @@
 import type { NumberView } from '@ab/shared';
 import { useState } from 'react';
-import { ConfirmSwitchDialog } from '@/components/settings/ConfirmSwitchDialog';
+import { ConfirmSwitchDialog } from '@/components/settings/dialogs/ConfirmSwitchDialog';
 import { Button } from '@/components/ui/form/button';
 import { FormAlert } from '@/components/ui/form/form-alert';
 import { t } from '@/lib/i18n';

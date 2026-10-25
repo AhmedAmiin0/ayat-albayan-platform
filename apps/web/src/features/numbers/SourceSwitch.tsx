@@ -1,7 +1,7 @@
 import type { CommsSource, ParityView } from '@ab/shared';
 import { useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
-import { ConfirmSwitchDialog } from '@/components/settings/ConfirmSwitchDialog';
+import { ConfirmSwitchDialog } from '@/components/settings/dialogs/ConfirmSwitchDialog';
 import { FormAlert } from '@/components/ui/form/form-alert';
 import { StatusChip } from '@/components/ui/display/status-chip';
 import { t } from '@/lib/i18n';

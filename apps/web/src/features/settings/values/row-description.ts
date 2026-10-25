@@ -1,5 +1,5 @@
 import { settingDef, type SettingKey } from '@ab/shared';
-import { settingText } from '@/components/settings/setting-text';
+import { settingText } from '@/components/settings/search/setting-text';
 import { t } from '@/lib/i18n';
 import { locale } from '@/lib/locale';
 import type { DescribeTarget } from './describe-target';

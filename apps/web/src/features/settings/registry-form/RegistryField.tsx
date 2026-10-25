@@ -1,8 +1,8 @@
 import { CURRENCY_ISOS, SETTING_FIELD_OF, settingDef, type SettingKey } from '@ab/shared';
-import { CheckField } from '@/components/settings/CheckField';
-import { NumberField } from '@/components/settings/NumberField';
-import { settingText } from '@/components/settings/setting-text';
-import { SettingRow, type RowExtras, type SettingRowProps } from '@/components/settings/SettingRow';
+import { CheckField } from '@/components/settings/fields/CheckField';
+import { NumberField } from '@/components/settings/fields/NumberField';
+import { settingText } from '@/components/settings/search/setting-text';
+import { SettingRow, type RowExtras, type SettingRowProps } from '@/components/settings/fields/SettingRow';
 import { useSettingsView } from '@/components/settings/settings-view';
 import { Input } from '@/components/ui/form/input';
 import { Select } from '@/components/ui/form/select';

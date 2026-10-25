@@ -12,7 +12,7 @@ vi.mock('@tanstack/react-router', async () => ({
   useNavigate: () => vi.fn(),
 }));
 vi.mock('@/features/auth/me', () => ({ meQuery: { queryKey: ['auth', 'me'], queryFn: async () => null } }));
-vi.mock('./MenuBar', () => ({ MenuBar: () => null }));
+vi.mock('../header/MenuBar', () => ({ MenuBar: () => null }));
 vi.mock('@/features/notifications/NotificationBell', () => ({
   NotificationBell: () => <button type="button">{t.bell.open}</button>,
 }));

@@ -1,5 +1,5 @@
 import { CURRENCY_ISOS, PAYMENT_METHODS, type PaymentMethod } from '@ab/shared';
-import { CheckField } from '@/components/settings/CheckField';
+import { CheckField } from '@/components/settings/fields/CheckField';
 import { Field } from '@/components/ui/form/field';
 import { Input } from '@/components/ui/form/input';
 import { Select } from '@/components/ui/form/select';

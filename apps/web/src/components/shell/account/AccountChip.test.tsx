@@ -6,7 +6,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n';
 import { MenuFoot } from './MenuFoot';
 import { SideFoot } from './SideFoot';
-import { WideHeader } from './TopBarLayout';
+import { WideHeader } from '../layout/TopBarLayout';
 
 vi.mock('@tanstack/react-router', async () => ({
   Link: (await import('@/features/dashboard/link-mock')).Link,

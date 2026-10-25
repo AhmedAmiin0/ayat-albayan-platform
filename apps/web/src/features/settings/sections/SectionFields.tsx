@@ -1,5 +1,5 @@
 import { settingSection, type SettingsSectionId } from '@ab/shared';
-import { matchesSetting } from '@/components/settings/settings-search';
+import { matchesSetting } from '@/components/settings/search/settings-search';
 import { useSettingsView } from '@/components/settings/settings-view';
 import { RegistryField } from '../registry-form/RegistryField';
 import { FORM_KEYS } from '../registry-form/settings-form';

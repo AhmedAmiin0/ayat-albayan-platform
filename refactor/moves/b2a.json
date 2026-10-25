@@ -1,0 +1,312 @@
+{
+  "id": "b2a",
+  "seq": 36,
+  "moves": [
+    {
+      "from": "apps/web/src/components/shell/AdminLayout.tsx",
+      "to": "apps/web/src/components/shell/layout/"
+    },
+    {
+      "from": "apps/web/src/components/shell/FixedTopBarLayout.tsx",
+      "to": "apps/web/src/components/shell/layout/"
+    },
+    {
+      "from": "apps/web/src/components/shell/TopBarLayout.tsx",
+      "to": "apps/web/src/components/shell/layout/"
+    },
+    {
+      "from": "apps/web/src/components/shell/PageFrame.tsx",
+      "to": "apps/web/src/components/shell/layout/"
+    },
+    {
+      "from": "apps/web/src/components/shell/inbox-route.ts",
+      "to": "apps/web/src/components/shell/layout/"
+    },
+    {
+      "from": "apps/web/src/components/shell/Crumbs.tsx",
+      "to": "apps/web/src/components/shell/nav/"
+    },
+    {
+      "from": "apps/web/src/components/shell/crumb-trail.ts",
+      "to": "apps/web/src/components/shell/nav/"
+    },
+    {
+      "from": "apps/web/src/components/shell/SectionLinks.tsx",
+      "to": "apps/web/src/components/shell/nav/"
+    },
+    {
+      "from": "apps/web/src/components/shell/SectionShells.tsx",
+      "to": "apps/web/src/components/shell/nav/"
+    },
+    {
+      "from": "apps/web/src/components/shell/nav-title.ts",
+      "to": "apps/web/src/components/shell/nav/"
+    },
+    {
+      "from": "apps/web/src/components/shell/use-nav-counts.ts",
+      "to": "apps/web/src/components/shell/nav/"
+    },
+    {
+      "from": "apps/web/src/components/shell/MenuBar.tsx",
+      "to": "apps/web/src/components/shell/header/"
+    },
+    {
+      "from": "apps/web/src/components/shell/MenuBell.tsx",
+      "to": "apps/web/src/components/shell/header/"
+    },
+    {
+      "from": "apps/web/src/components/shell/SheetBell.tsx",
+      "to": "apps/web/src/components/shell/header/"
+    },
+    {
+      "from": "apps/web/src/components/shell/bell-placement.test.tsx",
+      "to": "apps/web/src/components/shell/header/"
+    },
+    {
+      "from": "apps/web/src/components/shell/AccountChip.tsx",
+      "to": "apps/web/src/components/shell/account/"
+    },
+    {
+      "from": "apps/web/src/components/shell/LanguageSwitch.tsx",
+      "to": "apps/web/src/components/shell/account/"
+    },
+    {
+      "from": "apps/web/src/components/shell/LogoutButton.tsx",
+      "to": "apps/web/src/components/shell/account/"
+    },
+    {
+      "from": "apps/web/src/components/shell/MenuFoot.tsx",
+      "to": "apps/web/src/components/shell/account/"
+    },
+    {
+      "from": "apps/web/src/components/shell/SideFoot.tsx",
+      "to": "apps/web/src/components/shell/account/"
+    },
+    {
+      "from": "apps/web/src/components/settings/CheckField.tsx",
+      "to": "apps/web/src/components/settings/fields/"
+    },
+    {
+      "from": "apps/web/src/components/settings/NumberField.tsx",
+      "to": "apps/web/src/components/settings/fields/"
+    },
+    {
+      "from": "apps/web/src/components/settings/SettingRow.tsx",
+      "to": "apps/web/src/components/settings/fields/"
+    },
+    {
+      "from": "apps/web/src/components/settings/SwitchTrack.tsx",
+      "to": "apps/web/src/components/settings/fields/"
+    },
+    {
+      "from": "apps/web/src/components/settings/DangerFrame.tsx",
+      "to": "apps/web/src/components/settings/fields/"
+    },
+    {
+      "from": "apps/web/src/components/settings/ConfirmSwitchDialog.tsx",
+      "to": "apps/web/src/components/settings/dialogs/"
+    },
+    {
+      "from": "apps/web/src/components/settings/DiscardDialog.tsx",
+      "to": "apps/web/src/components/settings/dialogs/"
+    },
+    {
+      "from": "apps/web/src/components/settings/SettingsSearch.tsx",
+      "to": "apps/web/src/components/settings/search/"
+    },
+    {
+      "from": "apps/web/src/components/settings/settings-search.ts",
+      "to": "apps/web/src/components/settings/search/"
+    },
+    {
+      "from": "apps/web/src/components/settings/setting-text.ts",
+      "to": "apps/web/src/components/settings/search/"
+    }
+  ],
+  "files": [
+    [
+      "apps/web/src/components/settings/CheckField.tsx",
+      "apps/web/src/components/settings/fields/CheckField.tsx"
+    ],
+    [
+      "apps/web/src/components/settings/ConfirmSwitchDialog.test.tsx",
+      "apps/web/src/components/settings/dialogs/ConfirmSwitchDialog.test.tsx"
+    ],
+    [
+      "apps/web/src/components/settings/ConfirmSwitchDialog.tsx",
+      "apps/web/src/components/settings/dialogs/ConfirmSwitchDialog.tsx"
+    ],
+    [
+      "apps/web/src/components/settings/DangerFrame.tsx",
+      "apps/web/src/components/settings/fields/DangerFrame.tsx"
+    ],
+    [
+      "apps/web/src/components/settings/DiscardDialog.tsx",
+      "apps/web/src/components/settings/dialogs/DiscardDialog.tsx"
+    ],
+    [
+      "apps/web/src/components/settings/NumberField.tsx",
+      "apps/web/src/components/settings/fields/NumberField.tsx"
+    ],
+    [
+      "apps/web/src/components/settings/setting-text.test.ts",
+      "apps/web/src/components/settings/search/setting-text.test.ts"
+    ],
+    [
+      "apps/web/src/components/settings/setting-text.ts",
+      "apps/web/src/components/settings/search/setting-text.ts"
+    ],
+    [
+      "apps/web/src/components/settings/SettingRow.test.tsx",
+      "apps/web/src/components/settings/fields/SettingRow.test.tsx"
+    ],
+    [
+      "apps/web/src/components/settings/SettingRow.tsx",
+      "apps/web/src/components/settings/fields/SettingRow.tsx"
+    ],
+    [
+      "apps/web/src/components/settings/settings-search.test.ts",
+      "apps/web/src/components/settings/search/settings-search.test.ts"
+    ],
+    [
+      "apps/web/src/components/settings/settings-search.ts",
+      "apps/web/src/components/settings/search/settings-search.ts"
+    ],
+    [
+      "apps/web/src/components/settings/SettingsSearch.tsx",
+      "apps/web/src/components/settings/search/SettingsSearch.tsx"
+    ],
+    [
+      "apps/web/src/components/settings/SwitchTrack.tsx",
+      "apps/web/src/components/settings/fields/SwitchTrack.tsx"
+    ],
+    [
+      "apps/web/src/components/shell/AccountChip.test.tsx",
+      "apps/web/src/components/shell/account/AccountChip.test.tsx"
+    ],
+    [
+      "apps/web/src/components/shell/AccountChip.tsx",
+      "apps/web/src/components/shell/account/AccountChip.tsx"
+    ],
+    [
+      "apps/web/src/components/shell/AdminLayout.test.tsx",
+      "apps/web/src/components/shell/layout/AdminLayout.test.tsx"
+    ],
+    [
+      "apps/web/src/components/shell/AdminLayout.tsx",
+      "apps/web/src/components/shell/layout/AdminLayout.tsx"
+    ],
+    [
+      "apps/web/src/components/shell/bell-placement.test.tsx",
+      "apps/web/src/components/shell/header/bell-placement.test.tsx"
+    ],
+    [
+      "apps/web/src/components/shell/crumb-trail.test.ts",
+      "apps/web/src/components/shell/nav/crumb-trail.test.ts"
+    ],
+    [
+      "apps/web/src/components/shell/crumb-trail.ts",
+      "apps/web/src/components/shell/nav/crumb-trail.ts"
+    ],
+    [
+      "apps/web/src/components/shell/Crumbs.tsx",
+      "apps/web/src/components/shell/nav/Crumbs.tsx"
+    ],
+    [
+      "apps/web/src/components/shell/FixedTopBarLayout.test.tsx",
+      "apps/web/src/components/shell/layout/FixedTopBarLayout.test.tsx"
+    ],
+    [
+      "apps/web/src/components/shell/FixedTopBarLayout.tsx",
+      "apps/web/src/components/shell/layout/FixedTopBarLayout.tsx"
+    ],
+    [
+      "apps/web/src/components/shell/inbox-route.test.ts",
+      "apps/web/src/components/shell/layout/inbox-route.test.ts"
+    ],
+    [
+      "apps/web/src/components/shell/inbox-route.ts",
+      "apps/web/src/components/shell/layout/inbox-route.ts"
+    ],
+    [
+      "apps/web/src/components/shell/LanguageSwitch.test.tsx",
+      "apps/web/src/components/shell/account/LanguageSwitch.test.tsx"
+    ],
+    [
+      "apps/web/src/components/shell/LanguageSwitch.tsx",
+      "apps/web/src/components/shell/account/LanguageSwitch.tsx"
+    ],
+    [
+      "apps/web/src/components/shell/LogoutButton.tsx",
+      "apps/web/src/components/shell/account/LogoutButton.tsx"
+    ],
+    [
+      "apps/web/src/components/shell/MenuBar.test.tsx",
+      "apps/web/src/components/shell/header/MenuBar.test.tsx"
+    ],
+    [
+      "apps/web/src/components/shell/MenuBar.tsx",
+      "apps/web/src/components/shell/header/MenuBar.tsx"
+    ],
+    [
+      "apps/web/src/components/shell/MenuBell.tsx",
+      "apps/web/src/components/shell/header/MenuBell.tsx"
+    ],
+    [
+      "apps/web/src/components/shell/MenuFoot.tsx",
+      "apps/web/src/components/shell/account/MenuFoot.tsx"
+    ],
+    [
+      "apps/web/src/components/shell/nav-title.test.ts",
+      "apps/web/src/components/shell/nav/nav-title.test.ts"
+    ],
+    [
+      "apps/web/src/components/shell/nav-title.ts",
+      "apps/web/src/components/shell/nav/nav-title.ts"
+    ],
+    [
+      "apps/web/src/components/shell/PageFrame.test.tsx",
+      "apps/web/src/components/shell/layout/PageFrame.test.tsx"
+    ],
+    [
+      "apps/web/src/components/shell/PageFrame.tsx",
+      "apps/web/src/components/shell/layout/PageFrame.tsx"
+    ],
+    [
+      "apps/web/src/components/shell/SectionLinks.test.tsx",
+      "apps/web/src/components/shell/nav/SectionLinks.test.tsx"
+    ],
+    [
+      "apps/web/src/components/shell/SectionLinks.tsx",
+      "apps/web/src/components/shell/nav/SectionLinks.tsx"
+    ],
+    [
+      "apps/web/src/components/shell/SectionShells.test.tsx",
+      "apps/web/src/components/shell/nav/SectionShells.test.tsx"
+    ],
+    [
+      "apps/web/src/components/shell/SectionShells.tsx",
+      "apps/web/src/components/shell/nav/SectionShells.tsx"
+    ],
+    [
+      "apps/web/src/components/shell/SheetBell.tsx",
+      "apps/web/src/components/shell/header/SheetBell.tsx"
+    ],
+    [
+      "apps/web/src/components/shell/SideFoot.test.tsx",
+      "apps/web/src/components/shell/account/SideFoot.test.tsx"
+    ],
+    [
+      "apps/web/src/components/shell/SideFoot.tsx",
+      "apps/web/src/components/shell/account/SideFoot.tsx"
+    ],
+    [
+      "apps/web/src/components/shell/TopBarLayout.tsx",
+      "apps/web/src/components/shell/layout/TopBarLayout.tsx"
+    ],
+    [
+      "apps/web/src/components/shell/use-nav-counts.ts",
+      "apps/web/src/components/shell/nav/use-nav-counts.ts"
+    ]
+  ]
+}

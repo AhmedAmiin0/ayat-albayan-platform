@@ -1,6 +1,6 @@
 import type { LineHealthView, NotificationEntryView, NotificationRuleView } from '@ab/shared';
 import { useState, type ReactNode } from 'react';
-import { DiscardDialog } from '@/components/settings/DiscardDialog';
+import { DiscardDialog } from '@/components/settings/dialogs/DiscardDialog';
 import { Button } from '@/components/ui/form/button';
 import { Dialog } from '@/components/ui/overlay/dialog';
 import { t } from '@/lib/i18n';

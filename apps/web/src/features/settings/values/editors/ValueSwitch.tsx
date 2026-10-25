@@ -1,4 +1,4 @@
-import { SwitchTrack, switchInputClass } from '@/components/settings/SwitchTrack';
+import { SwitchTrack, switchInputClass } from '@/components/settings/fields/SwitchTrack';
 import { onOff } from '../value-format';
 
 export interface ValueSwitchProps {

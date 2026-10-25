@@ -1,6 +1,6 @@
 import { settingDef, type SettingKey } from '@ab/shared';
 import { useId, useState } from 'react';
-import { settingText } from '@/components/settings/setting-text';
+import { settingText } from '@/components/settings/search/setting-text';
 import { Button } from '@/components/ui/form/button';
 import { Dialog } from '@/components/ui/overlay/dialog';
 import { NuqtaGlyph } from '@/components/ui/display/nuqta-glyph';

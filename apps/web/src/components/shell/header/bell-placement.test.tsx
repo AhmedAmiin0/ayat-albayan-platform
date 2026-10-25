@@ -8,7 +8,7 @@ import {
 } from '@/features/notifications/notifications-test-kit';
 import { t } from '@/lib/i18n';
 import { MenuBar } from './MenuBar';
-import { WideHeader } from './TopBarLayout';
+import { WideHeader } from '../layout/TopBarLayout';
 
 const granted = vi.hoisted(() => new Set<string>());
 const apiFetch = vi.hoisted(() => vi.fn());

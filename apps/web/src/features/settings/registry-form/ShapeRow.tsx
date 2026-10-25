@@ -1,7 +1,7 @@
 import { SETTING_FIELD_OF, settingDef, type SettingKey } from '@ab/shared';
 import { useId } from 'react';
-import { settingText } from '@/components/settings/setting-text';
-import type { RowExtras } from '@/components/settings/SettingRow';
+import { settingText } from '@/components/settings/search/setting-text';
+import type { RowExtras } from '@/components/settings/fields/SettingRow';
 import { controlClass, Input } from '@/components/ui/form/input';
 import { NuqtaGlyph } from '@/components/ui/display/nuqta-glyph';
 import { t } from '@/lib/i18n';

@@ -1,5 +1,5 @@
 import { integrationEnum, type IntegrationConfigItem } from '@ab/shared';
-import { SettingRow } from '@/components/settings/SettingRow';
+import { SettingRow } from '@/components/settings/fields/SettingRow';
 import { Input } from '@/components/ui/form/input';
 import { Select } from '@/components/ui/form/select';
 import { t } from '@/lib/i18n';

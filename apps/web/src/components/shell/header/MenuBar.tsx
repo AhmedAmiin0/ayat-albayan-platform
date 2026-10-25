@@ -5,7 +5,7 @@ import { Mark } from '@/components/ui/display/mark';
 import { t } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
 import { MenuBell } from './MenuBell';
-import { MenuFoot } from './MenuFoot';
+import { MenuFoot } from '../account/MenuFoot';
 import { SheetBell } from './SheetBell';
 
 export interface MenuBarProps {

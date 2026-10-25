@@ -1,12 +1,4 @@
 {
-  "apps/web/src/components/settings": {
-    "files": 13,
-    "dirs": 0
-  },
-  "apps/web/src/components/shell": {
-    "files": 19,
-    "dirs": 0
-  },
   "apps/web/src/features": {
     "files": 0,
     "dirs": 40
