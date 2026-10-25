@@ -2,7 +2,7 @@ import { isOpenLesson, type CancelRequest, type RuleCancelRequest } from '@ab/sh
 import { Injectable, NotFoundException } from '@nestjs/common';
 import type { AuthUser } from '../../../common/auth/verify-token';
 import { badRequest, conflict } from '../../../common/http/errors';
-import { addDays, localDateOf, startOfLocalDay } from '../../scheduling/horizon';
+import { addDays, localDateOf, startOfLocalDay } from '../../scheduling/occurrences/horizon';
 import { ScheduleQueries, type RuleWithLinks } from '../../scheduling/schedule.queries';
 import { LessonStore } from '../store/lesson-store';
 import { LessonsSettings } from '../lessons.settings';

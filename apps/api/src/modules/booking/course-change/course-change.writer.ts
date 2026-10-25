@@ -5,7 +5,7 @@ import { DB, type Db } from '../../../common/db/db.module';
 import { LessonEvents } from '../../../common/events/lesson-events';
 import { gateConfirmations } from '../../../common/rules/confirmations';
 import { NotificationPolicy } from '../../notification-rules/policy';
-import { ConflictChecker } from '../../scheduling/conflict-checker';
+import { ConflictChecker } from '../../scheduling/conflicts/conflict-checker';
 import { callRpc } from '../../scheduling/rpc';
 import { dbError } from '../../../common/http/http';
 import { CourseChangePlanner } from './course-change.planner';

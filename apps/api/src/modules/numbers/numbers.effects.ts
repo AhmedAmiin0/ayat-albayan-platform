@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { AuditService, type AuditEntry } from '../../common/audit/audit.service';
-import { NumbersConfig } from './numbers.config';
+import { NumbersConfig } from './config/numbers.config';
 
 /**
  * What follows every numbers write: an audit row (ids, labels, flags and secret NAMES only, never a

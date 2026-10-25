@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import type { ConflictInput } from '../../scheduling/conflicts';
-import { BusyQueries } from '../../scheduling/busy.queries';
+import type { ConflictInput } from '../../scheduling/conflicts/conflicts';
+import { BusyQueries } from '../../scheduling/conflicts/busy.queries';
 import { AvailabilityQueries } from '../../teachers/availability/availability.queries';
 import type { Range } from '../core/booking.queries';
 

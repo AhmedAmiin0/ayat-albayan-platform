@@ -4,7 +4,7 @@ import {
   type Occurrence,
   type RuleTiming,
   type UtcWindow,
-} from '../../scheduling/occurrences';
+} from '../../scheduling/occurrences/occurrences';
 import { DAY, localDay, offsetMs, zonedToUtc } from '../../teachers/availability/zoned-time';
 
 export type PlanRule = Pick<

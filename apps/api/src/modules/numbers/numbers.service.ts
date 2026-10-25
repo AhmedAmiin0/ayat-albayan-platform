@@ -5,7 +5,7 @@ import { numberView } from './numbers.mapper';
 import { NumbersEffects } from './numbers.effects';
 import { numberPatch } from './numbers.patch';
 import { NumbersQueries, type NumberRow } from './numbers.queries';
-import { NumbersSecrets } from './numbers.secrets';
+import { NumbersSecrets } from './config/numbers.secrets';
 
 /** What the audit keeps of a number: no health, no secret (secrets are not on the row anyway). */
 function audited(row: NumberRow | null): Json {

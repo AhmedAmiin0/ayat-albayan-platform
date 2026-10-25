@@ -3,7 +3,7 @@ import { randomUUID } from 'node:crypto';
 import { confirmationMessages, forMessages, type Contact } from '../../lessons/status/confirmation-messages';
 import { planLessons } from '../../lessons/reschedule/rule-plan';
 import type { NewLesson, NewRule } from '../../scheduling/change-set';
-import { addDays } from '../../scheduling/horizon';
+import { addDays } from '../../scheduling/occurrences/horizon';
 import type { Plan } from '../plan/booking.plan';
 import type { ChangePlan, ChangeRole } from './course-change.plan';
 import type { ChangeRule, OpenCourseLesson } from './course-change.queries';

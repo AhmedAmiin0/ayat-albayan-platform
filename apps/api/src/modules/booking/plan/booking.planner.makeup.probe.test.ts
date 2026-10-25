@@ -1,9 +1,9 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { probeOccurrences } from '../../scheduling/dst-probe';
+import { probeOccurrences } from '../../scheduling/occurrences/dst-probe';
 import { bookingRequest, fakePlanner, IDS, NOW } from '../booking.fakes';
 import { makeupRequest, missedLessonRow } from '../makeup/booking.makeup.fakes';
 
-vi.mock('../../scheduling/dst-probe', () => ({ probeOccurrences: vi.fn(() => []) }));
+vi.mock('../../scheduling/occurrences/dst-probe', () => ({ probeOccurrences: vi.fn(() => []) }));
 
 // A trial and a makeup are one lesson: there is no series whose later weeks a DST change could move.
 describe('BookingPlanner — the DST probe is for a package only (R-SCH-10)', () => {
