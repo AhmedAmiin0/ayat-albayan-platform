@@ -19,7 +19,10 @@ describe('toMessageView — reply and forward', () => {
     expect(view({}).forwardable).toBe(true);
     expect(view({ body: null, media_path: 'out/a/b/c.pdf', media_mime: 'application/pdf' }).forwardable).toBe(true);
     expect(view({ body: null, media_path: null, media_mime: 'image/png' }).forwardable).toBe(false);
-    expect(view({ direction: 'inbound', body: null, media_id: 'mid', media_mime: 'audio/ogg' }).forwardable).toBe(true);
+    const fresh = new Date().toISOString();
+    expect(view({ direction: 'inbound', body: null, media_id: 'mid', media_mime: 'audio/ogg', created_at: fresh }).forwardable).toBe(true);
+    // Older than WhatsApp keeps it and never cached: it can't be fetched, so it is not offered.
+    expect(view({ direction: 'inbound', body: null, media_id: 'mid', media_path: null, media_mime: 'audio/ogg', created_at: '2020-01-01T00:00:00Z' }).forwardable).toBe(false);
     expect(view({ direction: 'inbound', body: null, media_id: 'mid', media_mime: 'application/zip' }).forwardable).toBe(false);
     expect(view({ template_key: 'trial_reminder' }).forwardable).toBe(false);
   });

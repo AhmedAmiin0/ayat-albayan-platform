@@ -6,7 +6,7 @@ import type { SalesScope } from '../sales/sales-scope';
 import { Outbox, type Sent } from './outbox';
 import { assertCanSend, type TeacherScope } from './teacher-scope';
 import { pickSend, type ThreadWindow } from './send-number';
-import { ThreadQuotes, type ReplyFields } from './thread-quotes';
+import { ThreadQuotes, type ReplyFields, type SendFrom } from './thread-quotes';
 import { missingParams, type ThreadRow } from './threads.mapper';
 import { ThreadsQueries } from './threads.queries';
 
@@ -55,10 +55,11 @@ export function outboundBase<T>(s: ThreadSend<T>, thread: ThreadRow | null) {
 export async function replyOf(
   quotes: ThreadQuotes | undefined,
   s: ThreadSend<{ replyToMessageId?: string | undefined }>,
+  from: SendFrom,
 ): Promise<ReplyFields | Record<string, never>> {
   if (!s.input.replyToMessageId) return {};
   if (!quotes) throw new Error('ThreadQuotes is not provided');
-  return quotes.target(s.phone, s.input.replyToMessageId);
+  return quotes.target(s.phone, s.input.replyToMessageId, from);
 }
 
 /**
@@ -99,7 +100,7 @@ export class ThreadSendService {
     const key = dedupKey(s);
     const thread = await this.queries.thread(s.phone);
     const from = await sendLine(thread, { now, windows: () => this.queries.numberWindows(s.phone) });
-    const reply = await replyOf(this.quotes, s);
+    const reply = await replyOf(this.quotes, s, from);
     return this.outbox.send({ ...outboundBase(s, thread), dedup_key: key, body: s.input.text, ...from, ...reply });
   }
 

@@ -32,7 +32,7 @@ describe('«رد»: POST /threads/:phone/text with replyToMessageId (owner 2026-
     const target = vi.spyOn(quotes, 'target').mockResolvedValue({ reply_to_message_id: QUOTED, reply_to_wa_id: 'wamid.Q' });
     const res = await t.call(reply());
     expect(res.statusCode).toBe(201);
-    expect(target).toHaveBeenCalledWith(PHONE, QUOTED);
+    expect(target).toHaveBeenCalledWith(PHONE, QUOTED, expect.any(Object));
     expect(t.queries.enqueue).toHaveBeenCalledWith(expect.objectContaining({ body: 'نعم', reply_to_message_id: QUOTED, reply_to_wa_id: 'wamid.Q' }));
   });
 

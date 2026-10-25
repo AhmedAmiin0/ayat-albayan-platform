@@ -51,7 +51,8 @@ export function ForwardDialog({ message, from, onClose, onDone }: ForwardDialogP
   const submit = () => {
     const targets = [...picked.keys()];
     if (targets.length === 0 || send.isPending) return;
-    const key = targets.join(',');
+    // The message is part of the key: one id is never reused for another message (dedup would replay it).
+    const key = `${message.id}:${targets.join(',')}`;
     if (request.current.key !== key) request.current = { key, id: crypto.randomUUID() };
     send.mutate({ messageId: message.id, targets, clientRequestId: request.current.id });
   };
