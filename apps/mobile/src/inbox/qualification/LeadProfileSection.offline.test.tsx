@@ -3,8 +3,8 @@ import { fireEvent, screen } from '@testing-library/react-native';
 import { ApiError } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
-import { huda } from '../fixtures';
-import { deviceTimeZone } from '../message-text';
+import { huda } from '../shared/fixtures';
+import { deviceTimeZone } from '../messages/hooks/message-text';
 import { answer, hudaProfile, noNetwork } from './fixtures';
 import { LeadProfileSection } from './LeadProfileSection';
 

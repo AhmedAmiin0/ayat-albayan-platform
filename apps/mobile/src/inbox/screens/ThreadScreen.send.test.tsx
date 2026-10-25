@@ -3,9 +3,9 @@ import { ApiError } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { threadKey, threadMessages, type ThreadCache } from '../thread/hooks/thread-cache';
-import { detail, inbound, message, PHONE, thread } from '../thread-fixtures';
+import { detail, inbound, message, PHONE, thread } from '../shared/thread-fixtures';
 import { ThreadScreen } from './ThreadScreen';
-import { ticksLabel } from '../ticks.helpers';
+import { ticksLabel } from '../shared/ticks.helpers';
 
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();

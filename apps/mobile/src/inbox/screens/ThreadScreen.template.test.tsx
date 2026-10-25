@@ -2,7 +2,7 @@ import type { ThreadLesson } from '@ab/shared';
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
-import { detail, inbound, meetReminder, notApproved, plainReminder, thread } from '../thread-fixtures';
+import { detail, inbound, meetReminder, notApproved, plainReminder, thread } from '../shared/thread-fixtures';
 import { ThreadScreen } from './ThreadScreen';
 
 const mockApiFetch = jest.fn();

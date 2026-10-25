@@ -1,5 +1,5 @@
 import { ApiError } from '@/core/lib/http/api';
-import { huda, page } from '../fixtures';
+import { huda, page } from '../shared/fixtures';
 import type { LeadProfile } from './queries';
 
 // Test rows in the GET /leads shape (every column the profile reads).

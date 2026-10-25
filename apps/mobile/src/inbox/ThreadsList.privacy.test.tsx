@@ -3,7 +3,7 @@ import { screen } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
 import { readable, SHOWN } from './screens/privacy.helpers';
-import { thread } from './thread-fixtures';
+import { thread } from './shared/thread-fixtures';
 import { ThreadModeProvider } from './thread/hooks/thread-mode';
 import { ThreadsList } from './ThreadsList';
 

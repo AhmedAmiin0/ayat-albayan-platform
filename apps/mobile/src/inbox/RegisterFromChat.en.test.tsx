@@ -2,7 +2,7 @@ import en from '@ab/shared/i18n/en.json';
 import { render, screen } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { RegisterFromChat } from './RegisterFromChat';
-import { thread } from './thread-fixtures';
+import { thread } from './shared/thread-fixtures';
 
 jest.mock('react-native/Libraries/ReactNative/I18nManager', () => {
   const actual = jest.requireActual('react-native/Libraries/ReactNative/I18nManager').default;

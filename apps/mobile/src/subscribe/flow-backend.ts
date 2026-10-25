@@ -1,7 +1,7 @@
 import type { ThreadPeople, ThreadStudentView } from '@ab/shared';
-import { inboxBackend, GUARDIAN_PHONE } from '@/inbox/flow-backend';
+import { inboxBackend, GUARDIAN_PHONE } from '@/inbox/shared/flow-backend';
 import { child, family, leadOnly, sub, usedUp } from '@/inbox/subscription/people-fixtures';
-import { detail, PHONE } from '@/inbox/thread-fixtures';
+import { detail, PHONE } from '@/inbox/shared/thread-fixtures';
 import { booked, SUN_17 } from '@/booking/fixtures';
 import { fakeBookingApi } from '@/booking/test-utils';
 import { profile, quote, saved } from './fixtures';

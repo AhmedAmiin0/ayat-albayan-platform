@@ -1,5 +1,5 @@
 import type { NotificationItem } from '@ab/shared';
-import { leadAge } from '@/inbox/format';
+import { leadAge } from '@/inbox/shared/format';
 import { t } from '@/core/lib/i18n/i18n';
 import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';

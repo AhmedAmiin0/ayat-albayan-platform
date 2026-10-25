@@ -4,9 +4,9 @@ import { View } from 'react-native';
 import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { DeliveryTicks } from './DeliveryTicks';
-import { lineWord } from './line-words';
-import { deliveryTimes, queuedLine, stamp } from './message-text';
-import { senderText } from './thread/hooks/thread-mode';
+import { lineWord } from '../../line-words';
+import { deliveryTimes, queuedLine, stamp } from '../hooks/message-text';
+import { senderText } from '../../thread/hooks/thread-mode';
 
 export function useSmall() {
   const { color } = useTheme();

@@ -1,4 +1,4 @@
-import { detail } from '../thread-fixtures';
+import { detail } from '../shared/thread-fixtures';
 import type { ThreadCache } from '../thread/hooks/thread-cache';
 import { undoChange, withMembership } from './use-list-membership';
 

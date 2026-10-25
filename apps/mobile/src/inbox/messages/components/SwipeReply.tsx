@@ -1,8 +1,8 @@
 import { type ReactNode, useMemo, useState } from 'react';
 import { Animated, I18nManager, PanResponder, View } from 'react-native';
 import { useTheme } from '@/theme';
-import { ReplyIcon } from './chat-icons';
-import { SWIPE_MAX as MAX, swipeAnswers, swipeClaims, swipeOffset } from './swipe';
+import { ReplyIcon } from '../../shared/chat-icons';
+import { SWIPE_MAX as MAX, swipeAnswers, swipeClaims, swipeOffset } from '../hooks/swipe';
 
 /**
  * Swipe a bubble toward the inline-end to answer it, as WhatsApp (owner 2026-10-25): it uncovers the

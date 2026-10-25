@@ -8,7 +8,7 @@ import {
   threadMessages,
   threadPath,
 } from './thread-cache';
-import { cachedThread, delivered, detail, failed, inbound, message, NOW, PHONE } from '../../thread-fixtures';
+import { cachedThread, delivered, detail, failed, inbound, message, NOW, PHONE } from '../../shared/thread-fixtures';
 
 const older = message({ id: 'm0', body: 'قديمة', created_at: '2026-09-30T08:00:00Z' });
 

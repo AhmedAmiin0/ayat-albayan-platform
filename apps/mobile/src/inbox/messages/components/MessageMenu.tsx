@@ -5,8 +5,8 @@ import { Note } from '@/more/Note';
 import { shape, type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { Button } from '@/core/ui/primitives/Button';
-import { useChatActions } from './thread/hooks/chat-actions';
-import { quoteOf, quoteText } from './quote-text';
+import { useChatActions } from '../../thread/hooks/chat-actions';
+import { quoteOf, quoteText } from '../hooks/quote-text';
 
 /** iOS presents one modal at a time: the forward sheet waits for this menu to finish closing. */
 export const AFTER_MENU_MS = Platform.OS === 'ios' ? 350 : 0;

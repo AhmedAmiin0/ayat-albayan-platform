@@ -3,7 +3,7 @@ import { t } from '@/core/lib/i18n/i18n';
 import { useTheme } from '@/theme';
 import { IconButton } from '@/core/ui/primitives/IconButton';
 import { AttachFile } from './composer/AttachFile';
-import { SendIcon, TemplateIcon } from './chat-icons';
+import { SendIcon, TemplateIcon } from './shared/chat-icons';
 import { ComposerInput } from './composer/ComposerInput';
 import { SavedRepliesButton } from './saved-replies/SavedRepliesButton';
 

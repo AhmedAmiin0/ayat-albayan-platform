@@ -1,0 +1,256 @@
+{
+  "id": "c2b",
+  "seq": 75,
+  "moves": [
+    {
+      "from": "apps/mobile/src/inbox/Message*",
+      "to": "apps/mobile/src/inbox/messages/components/"
+    },
+    {
+      "from": "apps/mobile/src/inbox/AudioPlayer*",
+      "to": "apps/mobile/src/inbox/messages/components/"
+    },
+    {
+      "from": "apps/mobile/src/inbox/VideoPlayer*",
+      "to": "apps/mobile/src/inbox/messages/components/"
+    },
+    {
+      "from": "apps/mobile/src/inbox/DeliveryTicks*",
+      "to": "apps/mobile/src/inbox/messages/components/"
+    },
+    {
+      "from": "apps/mobile/src/inbox/Quote*",
+      "to": "apps/mobile/src/inbox/messages/components/"
+    },
+    {
+      "from": "apps/mobile/src/inbox/Swipe*",
+      "to": "apps/mobile/src/inbox/messages/components/"
+    },
+    {
+      "from": "apps/mobile/src/inbox/quote-text*",
+      "to": "apps/mobile/src/inbox/messages/hooks/"
+    },
+    {
+      "from": "apps/mobile/src/inbox/swipe*",
+      "to": "apps/mobile/src/inbox/messages/hooks/"
+    },
+    {
+      "from": "apps/mobile/src/inbox/bubble-actions*",
+      "to": "apps/mobile/src/inbox/messages/hooks/"
+    },
+    {
+      "from": "apps/mobile/src/inbox/media-time*",
+      "to": "apps/mobile/src/inbox/messages/hooks/"
+    },
+    {
+      "from": "apps/mobile/src/inbox/message-text*",
+      "to": "apps/mobile/src/inbox/messages/hooks/"
+    },
+    {
+      "from": "apps/mobile/src/inbox/list-gap*",
+      "to": "apps/mobile/src/inbox/messages/hooks/"
+    },
+    {
+      "from": "apps/mobile/src/inbox/thread-file*",
+      "to": "apps/mobile/src/inbox/messages/hooks/"
+    },
+    {
+      "from": "apps/mobile/src/inbox/ticks*",
+      "to": "apps/mobile/src/inbox/shared/"
+    },
+    {
+      "from": "apps/mobile/src/inbox/note-style*",
+      "to": "apps/mobile/src/inbox/shared/"
+    },
+    {
+      "from": "apps/mobile/src/inbox/chat-icons*",
+      "to": "apps/mobile/src/inbox/shared/"
+    },
+    {
+      "from": "apps/mobile/src/inbox/format*",
+      "to": "apps/mobile/src/inbox/shared/"
+    },
+    {
+      "from": "apps/mobile/src/inbox/types*",
+      "to": "apps/mobile/src/inbox/shared/"
+    },
+    {
+      "from": "apps/mobile/src/inbox/fixtures*",
+      "to": "apps/mobile/src/inbox/shared/"
+    },
+    {
+      "from": "apps/mobile/src/inbox/thread-fixtures*",
+      "to": "apps/mobile/src/inbox/shared/"
+    },
+    {
+      "from": "apps/mobile/src/inbox/flow-backend*",
+      "to": "apps/mobile/src/inbox/shared/"
+    }
+  ],
+  "files": [
+    [
+      "apps/mobile/src/inbox/AudioPlayer.test.tsx",
+      "apps/mobile/src/inbox/messages/components/AudioPlayer.test.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/AudioPlayer.tsx",
+      "apps/mobile/src/inbox/messages/components/AudioPlayer.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/bubble-actions.ts",
+      "apps/mobile/src/inbox/messages/hooks/bubble-actions.ts"
+    ],
+    [
+      "apps/mobile/src/inbox/chat-icons.tsx",
+      "apps/mobile/src/inbox/shared/chat-icons.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/DeliveryTicks.test.tsx",
+      "apps/mobile/src/inbox/messages/components/DeliveryTicks.test.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/DeliveryTicks.tsx",
+      "apps/mobile/src/inbox/messages/components/DeliveryTicks.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/fixtures.ts",
+      "apps/mobile/src/inbox/shared/fixtures.ts"
+    ],
+    [
+      "apps/mobile/src/inbox/flow-backend.ts",
+      "apps/mobile/src/inbox/shared/flow-backend.ts"
+    ],
+    [
+      "apps/mobile/src/inbox/format.test.ts",
+      "apps/mobile/src/inbox/shared/format.test.ts"
+    ],
+    [
+      "apps/mobile/src/inbox/format.ts",
+      "apps/mobile/src/inbox/shared/format.ts"
+    ],
+    [
+      "apps/mobile/src/inbox/list-gap.test.ts",
+      "apps/mobile/src/inbox/messages/hooks/list-gap.test.ts"
+    ],
+    [
+      "apps/mobile/src/inbox/list-gap.ts",
+      "apps/mobile/src/inbox/messages/hooks/list-gap.ts"
+    ],
+    [
+      "apps/mobile/src/inbox/media-time.test.ts",
+      "apps/mobile/src/inbox/messages/hooks/media-time.test.ts"
+    ],
+    [
+      "apps/mobile/src/inbox/media-time.ts",
+      "apps/mobile/src/inbox/messages/hooks/media-time.ts"
+    ],
+    [
+      "apps/mobile/src/inbox/message-text.test.ts",
+      "apps/mobile/src/inbox/messages/hooks/message-text.test.ts"
+    ],
+    [
+      "apps/mobile/src/inbox/message-text.ts",
+      "apps/mobile/src/inbox/messages/hooks/message-text.ts"
+    ],
+    [
+      "apps/mobile/src/inbox/MessageActions.tsx",
+      "apps/mobile/src/inbox/messages/components/MessageActions.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/MessageBubble.ticks.test.tsx",
+      "apps/mobile/src/inbox/messages/components/MessageBubble.ticks.test.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/MessageBubble.tsx",
+      "apps/mobile/src/inbox/messages/components/MessageBubble.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/MessageFile.test.tsx",
+      "apps/mobile/src/inbox/messages/components/MessageFile.test.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/MessageFile.tsx",
+      "apps/mobile/src/inbox/messages/components/MessageFile.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/MessageList.quote.test.tsx",
+      "apps/mobile/src/inbox/messages/components/MessageList.quote.test.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/MessageList.test.tsx",
+      "apps/mobile/src/inbox/messages/components/MessageList.test.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/MessageList.tsx",
+      "apps/mobile/src/inbox/messages/components/MessageList.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/MessageMenu.tsx",
+      "apps/mobile/src/inbox/messages/components/MessageMenu.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/MessageMeta.tsx",
+      "apps/mobile/src/inbox/messages/components/MessageMeta.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/note-style.ts",
+      "apps/mobile/src/inbox/shared/note-style.ts"
+    ],
+    [
+      "apps/mobile/src/inbox/quote-text.test.ts",
+      "apps/mobile/src/inbox/messages/hooks/quote-text.test.ts"
+    ],
+    [
+      "apps/mobile/src/inbox/quote-text.ts",
+      "apps/mobile/src/inbox/messages/hooks/quote-text.ts"
+    ],
+    [
+      "apps/mobile/src/inbox/QuoteBlock.tsx",
+      "apps/mobile/src/inbox/messages/components/QuoteBlock.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/QuoteStrip.tsx",
+      "apps/mobile/src/inbox/messages/components/QuoteStrip.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/swipe.test.ts",
+      "apps/mobile/src/inbox/messages/hooks/swipe.test.ts"
+    ],
+    [
+      "apps/mobile/src/inbox/swipe.ts",
+      "apps/mobile/src/inbox/messages/hooks/swipe.ts"
+    ],
+    [
+      "apps/mobile/src/inbox/SwipeReply.tsx",
+      "apps/mobile/src/inbox/messages/components/SwipeReply.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/thread-file.test.ts",
+      "apps/mobile/src/inbox/messages/hooks/thread-file.test.ts"
+    ],
+    [
+      "apps/mobile/src/inbox/thread-file.ts",
+      "apps/mobile/src/inbox/messages/hooks/thread-file.ts"
+    ],
+    [
+      "apps/mobile/src/inbox/thread-fixtures.ts",
+      "apps/mobile/src/inbox/shared/thread-fixtures.ts"
+    ],
+    [
+      "apps/mobile/src/inbox/ticks.helpers.ts",
+      "apps/mobile/src/inbox/shared/ticks.helpers.ts"
+    ],
+    [
+      "apps/mobile/src/inbox/types.ts",
+      "apps/mobile/src/inbox/shared/types.ts"
+    ],
+    [
+      "apps/mobile/src/inbox/VideoPlayer.test.tsx",
+      "apps/mobile/src/inbox/messages/components/VideoPlayer.test.tsx"
+    ],
+    [
+      "apps/mobile/src/inbox/VideoPlayer.tsx",
+      "apps/mobile/src/inbox/messages/components/VideoPlayer.tsx"
+    ]
+  ]
+}

@@ -6,7 +6,7 @@ import type {
   SalesPaymentView,
   SalesQuoteView,
 } from '@ab/shared';
-import { thread } from '@/inbox/thread-fixtures';
+import { thread } from '@/inbox/shared/thread-fixtures';
 
 // Invented answers of the salesperson's money endpoints (no real people).
 

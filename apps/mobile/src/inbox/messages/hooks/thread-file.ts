@@ -1,7 +1,7 @@
 import { queryOptions, useQueryClient } from '@tanstack/react-query';
 import { useCallback } from 'react';
 import { apiFetch } from '@/core/lib/http/api';
-import { threadPath } from './thread/hooks/thread-cache';
+import { threadPath } from '../../thread/hooks/thread-cache';
 
 /** W6's answer: a signed URL of our own copy of the file, and its type. */
 export interface ThreadFile {

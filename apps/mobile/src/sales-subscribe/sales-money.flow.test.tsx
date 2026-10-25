@@ -1,7 +1,7 @@
 import { renderApp, resetApp } from '@/test/app-router'; // first: its jest.mock calls must precede the app
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import type { SalesFamilyStudent } from '@ab/shared';
-import { GUARDIAN_PHONE, inboxBackend } from '@/inbox/flow-backend';
+import { GUARDIAN_PHONE, inboxBackend } from '@/inbox/shared/flow-backend';
 import { t } from '@/core/lib/i18n/i18n';
 import { instantDay } from '@/payments/format';
 import { chatImage, familyOf, kid, MSG, openSub, salesPayment, SUB } from './fixtures';

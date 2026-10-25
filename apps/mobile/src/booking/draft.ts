@@ -12,7 +12,7 @@ import {
   type Program,
 } from '@ab/shared';
 import { qualForm } from '@/inbox/qualification/qualification-form';
-import type { Lead } from '@/inbox/types';
+import type { Lead } from '@/inbox/shared/types';
 import type { BookingKind, InvoiceDraft } from './contract';
 import { DEFAULT_MINUTES } from './package-choice';
 

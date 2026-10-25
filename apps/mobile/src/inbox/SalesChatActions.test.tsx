@@ -3,7 +3,7 @@ import { t } from '@/core/lib/i18n/i18n';
 import { familyOf, familyThread, kid } from '@/sales-subscribe/fixtures';
 import { renderWithQuery } from '@/test/query';
 import { SalesChatActions } from './SalesChatActions';
-import { thread } from './thread-fixtures';
+import { thread } from './shared/thread-fixtures';
 
 // The action strip shows only once a pill will: no empty band over a family chat (review of #112).
 const mockApiFetch = jest.fn();

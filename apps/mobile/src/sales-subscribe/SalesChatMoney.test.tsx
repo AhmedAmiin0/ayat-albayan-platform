@@ -1,5 +1,5 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
-import { thread } from '@/inbox/thread-fixtures';
+import { thread } from '@/inbox/shared/thread-fixtures';
 import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
 import { familyOf, familyThread, KID, kid, openSub, PHONE } from './fixtures';

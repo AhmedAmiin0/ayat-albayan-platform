@@ -288,8 +288,8 @@ Teachers still get labels only. Docs/20 :231 stays open with today's default.
 ### Mobile (JS-only, OTA)
 
 9. **Opening files**
-   - New `apps/mobile/src/inbox/thread-file.ts`: a query hook for `GET /threads/:phone/messages/:id/file` with `meta: { noPersist: true }`, following the `booking/invoice-queries.ts` pattern.
-   - New `apps/mobile/src/inbox/MessageFile.tsx`, for rows where `isChatViewMime(media_mime)` holds, in both directions, outside teacher mode:
+   - New `apps/mobile/src/inbox/messages/hooks/thread-file.ts`: a query hook for `GET /threads/:phone/messages/:id/file` with `meta: { noPersist: true }`, following the `booking/invoice-queries.ts` pattern.
+   - New `apps/mobile/src/inbox/messages/components/MessageFile.tsx`, for rows where `isChatViewMime(media_mime)` holds, in both directions, outside teacher mode:
      - a Pressable «تشغيل {kind}» or «عرض {kind}»;
      - on tap: `queryClient.fetchQuery`, then `Linking.openURL(url)`;
      - 410 shows `mediaExpired`; 403 or teacher mode shows `mediaNotAllowed`.

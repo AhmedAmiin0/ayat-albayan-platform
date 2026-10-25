@@ -2,7 +2,7 @@ import { fireEvent, screen } from '@testing-library/react-native';
 import { router } from 'expo-router';
 import { AssistantHomeScreen } from '@/assistant-app/AssistantHomeScreen';
 import { InboxScreen } from '@/inbox/InboxScreen';
-import { thread } from '@/inbox/thread-fixtures';
+import { thread } from '@/inbox/shared/thread-fixtures';
 import { t } from '@/core/lib/i18n/i18n';
 import { TreeBaseProvider } from '@/core/nav/tree-base';
 import { renderWithQuery } from '@/test/query';

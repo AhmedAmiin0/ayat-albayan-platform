@@ -4,8 +4,8 @@ import { t } from '@/core/lib/i18n/i18n';
 import { shape, type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { Avatar } from '@/core/ui/primitives/Avatar';
-import { CheckIcon } from '../../chat-icons';
-import { initialOf } from '../../format';
+import { CheckIcon } from '../../shared/chat-icons';
+import { initialOf } from '../../shared/format';
 import { chatName } from '../hooks/forward-text';
 
 export interface ForwardRowProps {

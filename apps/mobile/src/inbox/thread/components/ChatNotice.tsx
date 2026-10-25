@@ -5,7 +5,7 @@ import { shape, type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { IconButton } from '@/core/ui/primitives/IconButton';
 import { useChatActions } from '../hooks/chat-actions';
-import { CloseIcon } from '../../chat-icons';
+import { CloseIcon } from '../../shared/chat-icons';
 
 /** A notice with nothing to read twice goes by itself after this long (ms). */
 export const NOTICE_MS = 5000;
