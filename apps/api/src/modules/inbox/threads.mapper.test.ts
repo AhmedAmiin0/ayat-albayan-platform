@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { toTemplateView } from '../whatsapp/template.mapper';
+import { toTemplateView } from '../whatsapp/templates/catalog/template.mapper';
 import { REMINDER_24H, templateRow } from '../whatsapp/whatsapp.fakes';
 import { threadRow } from './inbox.fakes';
 import { missingParams, threadSearchFilter, toThreadView } from './threads.mapper';

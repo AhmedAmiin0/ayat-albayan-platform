@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { APP_ENV, RECORDED_UPLOAD, REPORT_READY_SEED } from './seed-templates.fakes';
+import { APP_ENV, RECORDED_UPLOAD, REPORT_READY_SEED } from './templates/catalog/seed-templates.fakes';
 import { SAMPLE_REPORT } from './template-review';
 import { HttpWhatsappClient } from './whatsapp.client';
 import { scriptedFetch, STUB_ENV } from './whatsapp.fakes';

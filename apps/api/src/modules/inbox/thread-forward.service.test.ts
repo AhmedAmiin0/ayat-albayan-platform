@@ -1,7 +1,7 @@
 import { HttpStatus } from '@nestjs/common';
 import { describe, expect, it, vi } from 'vitest';
 import { messageRow } from '../whatsapp/sender/sender.fakes';
-import { waHttpError } from '../whatsapp/template.mapper';
+import { waHttpError } from '../whatsapp/templates/catalog/template.mapper';
 import type { ForwardFiles } from './forward-files';
 import type { Sent } from './outbox';
 import { allReplayed, forwardAudit, freshResults } from './thread-forward.controller';

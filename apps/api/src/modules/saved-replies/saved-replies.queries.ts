@@ -2,7 +2,7 @@ import type { Database } from '@ab/db';
 import { HttpStatus, Inject, Injectable } from '@nestjs/common';
 import type { PostgrestError } from '@supabase/supabase-js';
 import { DB, type Db } from '../../common/db/db.module';
-import { waHttpError } from '../whatsapp/template.mapper';
+import { waHttpError } from '../whatsapp/templates/catalog/template.mapper';
 import { REPLY_COLUMNS, type SavedReplyRow } from './saved-replies.mapper';
 
 export type ReplyInsert = Database['public']['Tables']['saved_replies']['Insert'];

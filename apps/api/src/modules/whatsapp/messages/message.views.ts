@@ -3,8 +3,8 @@ import { Injectable } from '@nestjs/common';
 import { StorageService } from '../../../common/storage/storage.service';
 import { documentLink } from '../sender/message.dispatch';
 import { needsManualSend, toMessageView, type ThreadMessageRow } from './message.mapper';
-import { renderable } from '../template.mapper';
-import { TemplatesQueries } from '../templates.queries';
+import { renderable } from '../templates/catalog/template.mapper';
+import { TemplatesQueries } from '../templates/catalog/templates.queries';
 import { templateParams } from './wa-json';
 
 /**

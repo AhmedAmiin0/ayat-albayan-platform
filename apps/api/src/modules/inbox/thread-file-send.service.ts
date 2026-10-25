@@ -11,7 +11,7 @@ import { HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { BUCKETS, chatOutPath, isChatOutPathOf } from '../../common/storage/storage.paths';
 import { StorageService } from '../../common/storage/storage.service';
 import { sniffMime, SNIFF_BYTES } from '../booking/invoice-sniff';
-import { waHttpError } from '../whatsapp/template.mapper';
+import { waHttpError } from '../whatsapp/templates/catalog/template.mapper';
 import { InboxSettings } from './inbox.settings';
 import { Outbox, type Sent } from './outbox';
 import { ThreadQuotes } from './thread-quotes';

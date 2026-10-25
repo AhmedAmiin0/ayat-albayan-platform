@@ -6,7 +6,7 @@ import { AuditService } from '../../common/audit/audit.service';
 import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '../../common/auth/auth.guard';
 import type { AuthUser } from '../../common/auth/verify-token';
 import { Outbox } from '../inbox/outbox';
-import { TemplateRegistry } from '../whatsapp/template.registry';
+import { TemplateRegistry } from '../whatsapp/templates/catalog/template.registry';
 import { guardian, heldLesson, LESSON_ID, PHONE } from './rating.fakes';
 import { RatingQueries } from './rating.queries';
 
