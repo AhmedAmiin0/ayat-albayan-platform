@@ -2,11 +2,11 @@ import en from '@ab/shared/i18n/en.json';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
-import { conflictText } from './ConflictNotice';
-import { JOUD, lesson, SUHAILA } from './lesson-fixture';
-import { LessonDetails } from './LessonDetails';
-import { studentNames } from './lessons';
-import { ProposalsPanel } from './ProposalsPanel';
+import { conflictText } from './reschedule/ConflictNotice';
+import { JOUD, lesson, SUHAILA } from './lesson/lesson-fixture';
+import { LessonDetails } from './lesson/LessonDetails';
+import { studentNames } from './lesson/lessons';
+import { ProposalsPanel } from './reschedule/ProposalsPanel';
 
 // The UI in English (LTR): dates, joiners and the proposal arrow follow it, not the Arabic default.
 vi.mock('@/lib/i18n/i18n', async (orig) => ({ ...(await orig<object>()), t: en }));

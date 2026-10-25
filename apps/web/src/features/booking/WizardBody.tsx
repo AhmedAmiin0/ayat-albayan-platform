@@ -4,7 +4,7 @@ import { t } from '@/lib/i18n/i18n';
 import { mediaPhone } from './steps/review/booked';
 import type { BookingDraft, PickedStudent, StepKey } from './draft/draft';
 import { teacherPatch, type BookHint } from './hint';
-import { InvoiceStep } from './InvoiceStep';
+import { InvoiceStep } from './invoice/InvoiceStep';
 import { KindStep } from './steps/who/KindStep';
 import { LeadStudentStep } from './steps/who/LeadStudentStep';
 import { MissedLessonStep } from './steps/who/MissedLessonStep';
@@ -16,7 +16,7 @@ import { ReviewStep } from './steps/review/ReviewStep';
 import { SlotStep } from './steps/slots/SlotStep';
 import { StudentStep } from './steps/who/StudentStep';
 import { TeacherStep } from './steps/slots/TeacherStep';
-import { TrialReviewStep } from './trial-date/TrialReviewStep';
+import { TrialReviewStep } from './trial-date/dialog/TrialReviewStep';
 
 export interface WizardBodyProps {
   step: StepKey;

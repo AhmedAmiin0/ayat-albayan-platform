@@ -2,7 +2,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { cleanup, fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { ApiError } from '@/lib/http/api';
-import { lesson } from '@/features/schedule/lesson-fixture';
+import { lesson } from '@/features/schedule/lesson/lesson-fixture';
 import { t } from '@/lib/i18n/i18n';
 import { StaffJoinButton } from './StaffJoinButton';
 

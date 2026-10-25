@@ -4,11 +4,11 @@ import { FormAlert } from '@/components/ui/form/form-alert';
 import { fullTime } from '@/features/inbox/format';
 import { t } from '@/lib/i18n/i18n';
 import { cn } from '@/lib/utils';
-import { threadMediaQuery, threadMediaUrl } from '../api.invoice';
+import { threadMediaQuery, threadMediaUrl } from './api.invoice';
 import type { ThreadMediaItem } from '../draft/contract';
 import type { InvoiceDraft } from '../draft/draft';
-import { InvoiceThumb } from '../InvoiceThumb';
-import { canShow, isImage } from '../invoice-file';
+import { InvoiceThumb } from './InvoiceThumb';
+import { canShow, isImage } from './invoice-file';
 
 export interface ChatMediaPickerProps {
   /** The family's WhatsApp number (E.164). */

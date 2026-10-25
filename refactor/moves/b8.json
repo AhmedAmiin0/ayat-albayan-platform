@@ -1,0 +1,164 @@
+{
+  "id": "b8",
+  "seq": 44,
+  "moves": [
+    {
+      "from": "apps/web/src/features/booking/Invoice*",
+      "to": "apps/web/src/features/booking/invoice/"
+    },
+    {
+      "from": "apps/web/src/features/booking/api.invoice*",
+      "to": "apps/web/src/features/booking/invoice/"
+    },
+    {
+      "from": "apps/web/src/features/booking/invoice-file*",
+      "to": "apps/web/src/features/booking/invoice/"
+    },
+    {
+      "from": "apps/web/src/features/booking/trial-date/TrialDateDialog*",
+      "to": "apps/web/src/features/booking/trial-date/dialog/"
+    },
+    {
+      "from": "apps/web/src/features/booking/trial-date/TrialDateNotes*",
+      "to": "apps/web/src/features/booking/trial-date/dialog/"
+    },
+    {
+      "from": "apps/web/src/features/booking/trial-date/TrialReviewStep*",
+      "to": "apps/web/src/features/booking/trial-date/dialog/"
+    },
+    {
+      "from": "apps/web/src/features/booking/trial-date/TrialDonePanel*",
+      "to": "apps/web/src/features/booking/trial-date/dialog/"
+    },
+    {
+      "from": "apps/web/src/features/booking/trial-date/draft*",
+      "to": "apps/web/src/features/booking/trial-date/dialog/"
+    },
+    {
+      "from": "apps/web/src/features/booking/trial-date/TrialHistory*",
+      "to": "apps/web/src/features/booking/trial-date/history/"
+    },
+    {
+      "from": "apps/web/src/features/booking/trial-date/history-text*",
+      "to": "apps/web/src/features/booking/trial-date/history/"
+    },
+    {
+      "from": "apps/web/src/features/booking/trial-date/outcome-style*",
+      "to": "apps/web/src/features/booking/trial-date/history/"
+    }
+  ],
+  "files": [
+    [
+      "apps/web/src/features/booking/api.invoice.test.ts",
+      "apps/web/src/features/booking/invoice/api.invoice.test.ts"
+    ],
+    [
+      "apps/web/src/features/booking/api.invoice.ts",
+      "apps/web/src/features/booking/invoice/api.invoice.ts"
+    ],
+    [
+      "apps/web/src/features/booking/invoice-file.ts",
+      "apps/web/src/features/booking/invoice/invoice-file.ts"
+    ],
+    [
+      "apps/web/src/features/booking/InvoiceChosen.tsx",
+      "apps/web/src/features/booking/invoice/InvoiceChosen.tsx"
+    ],
+    [
+      "apps/web/src/features/booking/InvoiceDialog.tsx",
+      "apps/web/src/features/booking/invoice/InvoiceDialog.tsx"
+    ],
+    [
+      "apps/web/src/features/booking/InvoiceField.en.test.tsx",
+      "apps/web/src/features/booking/invoice/InvoiceField.en.test.tsx"
+    ],
+    [
+      "apps/web/src/features/booking/InvoiceField.replace.test.tsx",
+      "apps/web/src/features/booking/invoice/InvoiceField.replace.test.tsx"
+    ],
+    [
+      "apps/web/src/features/booking/InvoiceField.test.tsx",
+      "apps/web/src/features/booking/invoice/InvoiceField.test.tsx"
+    ],
+    [
+      "apps/web/src/features/booking/InvoiceField.tsx",
+      "apps/web/src/features/booking/invoice/InvoiceField.tsx"
+    ],
+    [
+      "apps/web/src/features/booking/InvoiceStep.tsx",
+      "apps/web/src/features/booking/invoice/InvoiceStep.tsx"
+    ],
+    [
+      "apps/web/src/features/booking/InvoiceThumb.tsx",
+      "apps/web/src/features/booking/invoice/InvoiceThumb.tsx"
+    ],
+    [
+      "apps/web/src/features/booking/trial-date/draft.test.ts",
+      "apps/web/src/features/booking/trial-date/dialog/draft.test.ts"
+    ],
+    [
+      "apps/web/src/features/booking/trial-date/draft.ts",
+      "apps/web/src/features/booking/trial-date/dialog/draft.ts"
+    ],
+    [
+      "apps/web/src/features/booking/trial-date/history-text.test.ts",
+      "apps/web/src/features/booking/trial-date/history/history-text.test.ts"
+    ],
+    [
+      "apps/web/src/features/booking/trial-date/history-text.ts",
+      "apps/web/src/features/booking/trial-date/history/history-text.ts"
+    ],
+    [
+      "apps/web/src/features/booking/trial-date/outcome-style.ts",
+      "apps/web/src/features/booking/trial-date/history/outcome-style.ts"
+    ],
+    [
+      "apps/web/src/features/booking/trial-date/TrialDateDialog.admin.test.tsx",
+      "apps/web/src/features/booking/trial-date/dialog/TrialDateDialog.admin.test.tsx"
+    ],
+    [
+      "apps/web/src/features/booking/trial-date/TrialDateDialog.sales.test.tsx",
+      "apps/web/src/features/booking/trial-date/dialog/TrialDateDialog.sales.test.tsx"
+    ],
+    [
+      "apps/web/src/features/booking/trial-date/TrialDateDialog.states.test.tsx",
+      "apps/web/src/features/booking/trial-date/dialog/TrialDateDialog.states.test.tsx"
+    ],
+    [
+      "apps/web/src/features/booking/trial-date/TrialDateDialog.tsx",
+      "apps/web/src/features/booking/trial-date/dialog/TrialDateDialog.tsx"
+    ],
+    [
+      "apps/web/src/features/booking/trial-date/TrialDateNotes.test.tsx",
+      "apps/web/src/features/booking/trial-date/dialog/TrialDateNotes.test.tsx"
+    ],
+    [
+      "apps/web/src/features/booking/trial-date/TrialDateNotes.tsx",
+      "apps/web/src/features/booking/trial-date/dialog/TrialDateNotes.tsx"
+    ],
+    [
+      "apps/web/src/features/booking/trial-date/TrialDonePanel.tsx",
+      "apps/web/src/features/booking/trial-date/dialog/TrialDonePanel.tsx"
+    ],
+    [
+      "apps/web/src/features/booking/trial-date/TrialHistoryBody.tsx",
+      "apps/web/src/features/booking/trial-date/history/TrialHistoryBody.tsx"
+    ],
+    [
+      "apps/web/src/features/booking/trial-date/TrialHistoryTable.en.test.tsx",
+      "apps/web/src/features/booking/trial-date/history/TrialHistoryTable.en.test.tsx"
+    ],
+    [
+      "apps/web/src/features/booking/trial-date/TrialHistoryTable.test.tsx",
+      "apps/web/src/features/booking/trial-date/history/TrialHistoryTable.test.tsx"
+    ],
+    [
+      "apps/web/src/features/booking/trial-date/TrialHistoryTable.tsx",
+      "apps/web/src/features/booking/trial-date/history/TrialHistoryTable.tsx"
+    ],
+    [
+      "apps/web/src/features/booking/trial-date/TrialReviewStep.tsx",
+      "apps/web/src/features/booking/trial-date/dialog/TrialReviewStep.tsx"
+    ]
+  ]
+}

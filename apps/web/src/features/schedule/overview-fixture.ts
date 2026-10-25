@@ -1,5 +1,5 @@
 import type { LessonView, OverviewTeacher, ScheduleOverview } from '@ab/shared';
-import { ABRAR, FATMA } from './lesson-fixture';
+import { ABRAR, FATMA } from './lesson/lesson-fixture';
 
 // Test data only (imported by *.test.ts[x]): GET /lessons/overview rows for the week of Sat 3 Oct
 // 2026 (Riyadh = UTC+3). Abrar works Sunday 16:00–20:00 Riyadh; Fatma is off all Monday.

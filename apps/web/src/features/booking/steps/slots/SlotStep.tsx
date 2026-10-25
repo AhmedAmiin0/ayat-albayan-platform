@@ -1,7 +1,7 @@
 import { lessonWhenText } from '@ab/shared';
 import { RequiredMark } from '@/components/ui/form/label';
 import { tzCity } from '@/components/ui/form/time-zone-select';
-import { SlotPicker } from '@/features/schedule/SlotPicker';
+import { SlotPicker } from '@/features/schedule/reschedule/SlotPicker';
 import { RIYADH_TZ } from '@/features/schedule/tz';
 import { t } from '@/lib/i18n/i18n';
 import { locale } from '@/lib/i18n/locale';

@@ -7,7 +7,7 @@ import { IconButton } from '@/components/ui/form/icon-button';
 import { usePermissions } from '@/features/auth/use-permissions';
 import { RegistrationCheckTrigger } from '@/features/sales/RegistrationCheckButton';
 import { RegistrationCheckDialog } from '@/features/sales/RegistrationCheckDialog';
-import { TrialDateDialog } from '@/features/booking/trial-date/TrialDateDialog';
+import { TrialDateDialog } from '@/features/booking/trial-date/dialog/TrialDateDialog';
 import { t } from '@/lib/i18n/i18n';
 import { useInboxMode } from '../shared/mode';
 import { SalesRegisterButton, SalesRegisterDialog } from '../sales/SalesRegisterAction';

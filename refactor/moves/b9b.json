@@ -1,0 +1,180 @@
+{
+  "id": "b9b",
+  "seq": 46,
+  "moves": [
+    {
+      "from": "apps/web/src/features/schedule/EditTime*",
+      "to": "apps/web/src/features/schedule/edit-time/"
+    },
+    {
+      "from": "apps/web/src/features/schedule/edit-time*",
+      "to": "apps/web/src/features/schedule/edit-time/"
+    },
+    {
+      "from": "apps/web/src/features/schedule/Reschedule*",
+      "to": "apps/web/src/features/schedule/reschedule/"
+    },
+    {
+      "from": "apps/web/src/features/schedule/reschedule*",
+      "to": "apps/web/src/features/schedule/reschedule/"
+    },
+    {
+      "from": "apps/web/src/features/schedule/Proposal*",
+      "to": "apps/web/src/features/schedule/reschedule/"
+    },
+    {
+      "from": "apps/web/src/features/schedule/CancelForm*",
+      "to": "apps/web/src/features/schedule/reschedule/"
+    },
+    {
+      "from": "apps/web/src/features/schedule/ConflictNotice*",
+      "to": "apps/web/src/features/schedule/reschedule/"
+    },
+    {
+      "from": "apps/web/src/features/schedule/ScopeRadios*",
+      "to": "apps/web/src/features/schedule/reschedule/"
+    },
+    {
+      "from": "apps/web/src/features/schedule/MakeupAction*",
+      "to": "apps/web/src/features/schedule/reschedule/"
+    },
+    {
+      "from": "apps/web/src/features/schedule/SlotPicker*",
+      "to": "apps/web/src/features/schedule/reschedule/"
+    },
+    {
+      "from": "apps/web/src/features/schedule/slots*",
+      "to": "apps/web/src/features/schedule/reschedule/"
+    }
+  ],
+  "files": [
+    [
+      "apps/web/src/features/schedule/CancelForm.tsx",
+      "apps/web/src/features/schedule/reschedule/CancelForm.tsx"
+    ],
+    [
+      "apps/web/src/features/schedule/ConflictNotice.edit.test.tsx",
+      "apps/web/src/features/schedule/reschedule/ConflictNotice.edit.test.tsx"
+    ],
+    [
+      "apps/web/src/features/schedule/ConflictNotice.test.tsx",
+      "apps/web/src/features/schedule/reschedule/ConflictNotice.test.tsx"
+    ],
+    [
+      "apps/web/src/features/schedule/ConflictNotice.tsx",
+      "apps/web/src/features/schedule/reschedule/ConflictNotice.tsx"
+    ],
+    [
+      "apps/web/src/features/schedule/edit-time-fixture.tsx",
+      "apps/web/src/features/schedule/edit-time/edit-time-fixture.tsx"
+    ],
+    [
+      "apps/web/src/features/schedule/edit-time-text.test.ts",
+      "apps/web/src/features/schedule/edit-time/edit-time-text.test.ts"
+    ],
+    [
+      "apps/web/src/features/schedule/edit-time-text.ts",
+      "apps/web/src/features/schedule/edit-time/edit-time-text.ts"
+    ],
+    [
+      "apps/web/src/features/schedule/edit-time.contract.ts",
+      "apps/web/src/features/schedule/edit-time/edit-time.contract.ts"
+    ],
+    [
+      "apps/web/src/features/schedule/edit-time.test.ts",
+      "apps/web/src/features/schedule/edit-time/edit-time.test.ts"
+    ],
+    [
+      "apps/web/src/features/schedule/edit-time.ts",
+      "apps/web/src/features/schedule/edit-time/edit-time.ts"
+    ],
+    [
+      "apps/web/src/features/schedule/EditTime.captions.test.tsx",
+      "apps/web/src/features/schedule/edit-time/EditTime.captions.test.tsx"
+    ],
+    [
+      "apps/web/src/features/schedule/EditTime.correct.test.tsx",
+      "apps/web/src/features/schedule/edit-time/EditTime.correct.test.tsx"
+    ],
+    [
+      "apps/web/src/features/schedule/EditTime.en.test.tsx",
+      "apps/web/src/features/schedule/edit-time/EditTime.en.test.tsx"
+    ],
+    [
+      "apps/web/src/features/schedule/EditTime.errors.test.tsx",
+      "apps/web/src/features/schedule/edit-time/EditTime.errors.test.tsx"
+    ],
+    [
+      "apps/web/src/features/schedule/EditTime.locked.test.tsx",
+      "apps/web/src/features/schedule/edit-time/EditTime.locked.test.tsx"
+    ],
+    [
+      "apps/web/src/features/schedule/EditTime.test.tsx",
+      "apps/web/src/features/schedule/edit-time/EditTime.test.tsx"
+    ],
+    [
+      "apps/web/src/features/schedule/EditTimeConfirm.tsx",
+      "apps/web/src/features/schedule/edit-time/EditTimeConfirm.tsx"
+    ],
+    [
+      "apps/web/src/features/schedule/EditTimeDone.tsx",
+      "apps/web/src/features/schedule/edit-time/EditTimeDone.tsx"
+    ],
+    [
+      "apps/web/src/features/schedule/EditTimeFields.tsx",
+      "apps/web/src/features/schedule/edit-time/EditTimeFields.tsx"
+    ],
+    [
+      "apps/web/src/features/schedule/EditTimeForm.tsx",
+      "apps/web/src/features/schedule/edit-time/EditTimeForm.tsx"
+    ],
+    [
+      "apps/web/src/features/schedule/EditTimeLink.tsx",
+      "apps/web/src/features/schedule/edit-time/EditTimeLink.tsx"
+    ],
+    [
+      "apps/web/src/features/schedule/MakeupAction.tsx",
+      "apps/web/src/features/schedule/reschedule/MakeupAction.tsx"
+    ],
+    [
+      "apps/web/src/features/schedule/ProposalBox.tsx",
+      "apps/web/src/features/schedule/reschedule/ProposalBox.tsx"
+    ],
+    [
+      "apps/web/src/features/schedule/ProposalsPanel.tsx",
+      "apps/web/src/features/schedule/reschedule/ProposalsPanel.tsx"
+    ],
+    [
+      "apps/web/src/features/schedule/reschedule.test.ts",
+      "apps/web/src/features/schedule/reschedule/reschedule.test.ts"
+    ],
+    [
+      "apps/web/src/features/schedule/reschedule.ts",
+      "apps/web/src/features/schedule/reschedule/reschedule.ts"
+    ],
+    [
+      "apps/web/src/features/schedule/RescheduleForm.tsx",
+      "apps/web/src/features/schedule/reschedule/RescheduleForm.tsx"
+    ],
+    [
+      "apps/web/src/features/schedule/ScopeRadios.tsx",
+      "apps/web/src/features/schedule/reschedule/ScopeRadios.tsx"
+    ],
+    [
+      "apps/web/src/features/schedule/SlotPicker.test.tsx",
+      "apps/web/src/features/schedule/reschedule/SlotPicker.test.tsx"
+    ],
+    [
+      "apps/web/src/features/schedule/SlotPicker.tsx",
+      "apps/web/src/features/schedule/reschedule/SlotPicker.tsx"
+    ],
+    [
+      "apps/web/src/features/schedule/slots.test.ts",
+      "apps/web/src/features/schedule/reschedule/slots.test.ts"
+    ],
+    [
+      "apps/web/src/features/schedule/slots.ts",
+      "apps/web/src/features/schedule/reschedule/slots.ts"
+    ]
+  ]
+}
