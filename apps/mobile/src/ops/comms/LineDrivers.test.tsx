@@ -62,6 +62,27 @@ test('without settings.write the choice is shown, not offered', async () => {
   expect(screen.queryByText(h.driverConfirmYes)).toBeNull();
 });
 
+test('module mode (comms_source = module): each number\'s provider sends, so a note and no switch', async () => {
+  mockApiFetch.mockImplementation(async (path: string) => {
+    if (path === '/auth/me') return { permissions: mockPermissions };
+    return path === '/settings' ? { comms_source: 'module' } : ITEMS;
+  });
+  await renderWithQuery(<LineDrivers />);
+  expect(await screen.findByText(h.driverModule)).toBeTruthy();
+  expect(screen.queryByTestId('driver-notifications')).toBeNull();
+});
+
+test('one save at a time: while a line saves, the other line\'s choices wait', async () => {
+  mockApiSend.mockReturnValue(new Promise(() => undefined));
+  await renderWithQuery(<LineDrivers />);
+  await screen.findByText(h.driverTitle);
+  await pick('notifications', t.integrations.options.crm);
+  await fireEvent.press(screen.getByRole('button', { name: h.driverConfirmYes }));
+  await waitFor(() => expect(mockApiSend).toHaveBeenCalledTimes(1));
+  await pick('chat', t.integrations.options.kapso);
+  expect(within(screen.getByTestId('driver-chat')).queryByText(h.driverConfirm.replace('{driver}', t.integrations.options.kapso))).toBeNull();
+});
+
 test('an unreadable list (no settings.read): nothing shown', async () => {
   mockApiFetch.mockImplementation(async (path: string) => {
     if (path === '/auth/me') return { permissions: [] };

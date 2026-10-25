@@ -15,7 +15,7 @@ There is **one** messaging engine: the outbox and its queue, the send gate and k
 - **The same ids.** A kapso line uses the same `WA_PHONE_NUMBER_ID` / `WA_WABA_ID` (chat: `WA_CHAT_*`) as under meta. It needs no Meta token and no `WA_API_BASE`.
 - **No automatic failover.** Switching is manual. A send whose answer was lost (timeout) may already have gone out; retrying it through the other driver could deliver it twice, so the engine never does that.
 - **Half-configured = off, loudly.** A line switched to kapso without `KAPSO_API_BASE`, `KAPSO_API_KEY` or its ids refuses every call (its rows stay `queued`, nothing fails). «افحص الخطوط» shows each line's driver and NAMES the missing keys (never values; a meta chat line names `WA_API_BASE` too when it is unset), a chat phone id equal to the notifications one as its own flag (`duplicate_chat_phone`), and for a kapso line a note that inbound arrives via `/webhooks/kapso` instead of Meta's subscribed-app verdict; the API logs the same names once at boot. The send gate requires the notifications line to be configured under its own driver.
-- **Mobile:** there is no integrations screen in the Expo app; nothing changes there.
+- **Mobile:** no integrations screen in the Expo app; the per-line driver switch is on «نظرة عامة» (see «Mobile» in the crm section).
 
 ## Where Kapso differs from Meta (all handled in `apps/api/src/modules/whatsapp/kapso.ts`)
 
@@ -127,9 +127,11 @@ of the academy's old Google Apps Script («نظام تسجيل الطلاب», C
 `/api/v1/messages`. Per template, `message_templates.crm_name` / `crm_language` (migration
 `20261025000680_template_crm_name.sql`, expand-only) are what the crm driver sends **instead of** `meta_name` /
 `language`, read only while the template's line is on crm (the meta and kapso drivers never read them). Set on
-«القوالب» for a crm line's row: «اسمه في نظام CRM» → name / language (blank = the default) →
+«القوالب» for a crm line's row: «عدّل اسمه في نظام CRM» → name / language (blank = the default) →
 `PUT /messaging/templates/:key/crm-name` (templates.manage, audited `template_crm_name_set`, 409 `not_crm_line`
-on any other line, Meta's name rules checked in the form and by the API).
+when setting a name on any other line; clearing both back to the default works on any line; Meta's name rules
+checked in the form and by the API). A crm_name equal to `meta_name` (the CRM's copy of the Meta template) sends the
+Meta values, never the producer's CRM values.
 
 | Ours (`key`) | The CRM's template | Values |
 |---|---|---|
@@ -138,13 +140,17 @@ on any other line, Meta's name rules checked in the form and by the API).
 | `report_ready` | `report_ready` (default) **or**, once `crm_name` = `report_session`, the old script's flow | the PDF as a `type:"document"` message (7-day signed URL), then `report_trial_session` (the lesson's rule is a trial package) or `report_session` (any other), **no variables** |
 
 The teacher alert's CRM values are written by `teacher-alert.crm.ts` into `template_params.crm` beside the Meta
-values {{1}}–{{3}} (the Meta path is unchanged); a row queued before this change (no `crm` part) sends the Meta
-values under the CRM name and is refused by the CRM. The CRM template's two URL buttons must be
+values {{1}}–{{3}} (the Meta path is unchanged); a row without its `crm` part (queued before this change, or a value
+missing: no teacher name, a student without a name or code, no end time) goes as before, `meta_name` with the
+Meta values (`crmRowName`); an admin's crm_name is always sent as set. The CRM template's two URL buttons must be
 `<WEB_ORIGIN>/{{1}}` (we send the path after the origin; both pages need a login). The report kind is
 `template_params.crm.report` (`report-ready.ts`, from `schedule_rules.package`). The report flow is two calls
 from one row: the document first (a failure there fails the row as today, nothing sent); if the template call
-fails after the PDF went, the row fails as **`uncertain`** («the report PDF was sent, its CRM template was
-not»), never resent automatically, so the PDF never goes twice; the row's wamid (ticks) is the template's.
+fails after the PDF went, the row fails as **`uncertain`**, never resent automatically, so the PDF never goes
+twice on its own. Its text says which: «the CRM refused its template» (a CRM code; the code and a refused key's
+credential flag are kept) or «its CRM template may have gone too: check the CRM before a retry» (timeout, 5xx,
+a 2xx without wamid). **A manual retry (M1) sends both again**, the PDF included: the row does not record that
+the document went (follow-up: keep the document's wamid on the row and skip it on a retry); the row's wamid (ticks) is the template's.
 Dedup stays `report_ready:{report id}`: one row per report, whatever its version.
 
 **Not known: the variables of `report_session` / `report_trial_session`.** The old script's exact values are not
@@ -169,7 +175,7 @@ as a link and the CRM shows its own file name, not ours (`AB-nnnn_<date>_تقر�
 3. In the CRM: add a webhook to `<API origin>/webhooks/wacrm` for event `message.status_updated`; paste its secret as `WACRM_WEBHOOK_SECRET`.
 4. Set `WA_PROVIDER` = «نظام CRM» (web «التكاملات», or on the phone «التواصل» → «نظرة عامة» → «مزوّد الإرسال لكل خط»: pick «نظام CRM», check the missing keys it names, confirm «سيُرسل هذا الخط عبر نظام CRM»; same audited save), save, press «افحص الخطوط»: the line must show «نظام CRM», nothing missing, «مفتاح واجهة نظام CRM صالح ويملك صلاحية الإرسال».
 5. On «القوالب», review **every** notifications template (statuses carry over from the last Meta sync): mark each one the CRM holds (same name, language and button order) approved with «علِّمه معتمدًا في نظام CRM» → «تأكيد الاعتماد», and each one it lacks «علِّمه غير متاح».
-6. On «القوالب», review the **CRM names** (the line under each crm row's buttons, «في نظام CRM: …»): teacher_new_student must read `teacher_lesson_v2`; correct any name or language the CRM spells differently with «اسمه في نظام CRM». For the old script's report flow set report_ready to `report_session` only after the check in «Not known» above.
+6. On «القوالب», review the **CRM names** (the line under each crm row's buttons, «في نظام CRM: …»): teacher_new_student must read `teacher_lesson_v2`; correct any name or language the CRM spells differently with «عدّل اسمه في نظام CRM». For the old script's report flow set report_ready to `report_session` only after the check in «Not known» above.
 7. Send one test to a number in `WA_ALLOWED_RECIPIENTS` before removing the guard.
 8. **Rollback:** set `WA_PROVIDER` back to «Meta مباشرة» (or Kapso). Nothing else changes; the hand-set statuses are re-synced by the next Meta sync **that reads the list** (a failed read touches no row: with a dead Meta token, re-check «القوالب» by hand).
 
@@ -183,5 +189,7 @@ URL (group `wacrm`), `WACRM_API_KEY` / `WACRM_WEBHOOK_SECRET` Vault secrets (mig
 نظام CRM) as radio pills. A pick never saves alone: it lists the key NAMES that driver still lacks
 (`driverKeys` in packages/shared, an approximation of the API's `lineGaps`; «افحص الخطوط» on the web stays the
 final word) and asks «سيُرسل هذا الخط عبر …» first; the confirm sends `PUT /settings/integrations` with that
-line's key only (settings.write, audited like the web). Without settings.write it is shown, not offered; the
-keys themselves are still entered on the web. JS-only.
+line's key only (settings.write, audited like the web); one save at a time. Without settings.write it is shown,
+not offered; the keys themselves are still entered on the web (CRM and Kapso keys on «الحماية», the line ids
+and tokens on «الأرقام» → «إعداد الخطوط السابق»). In module mode (`comms_source` = module) each number's own
+provider sends and `WA_PROVIDER` is not read, so the section shows only a note pointing to «الأرقام». JS-only.

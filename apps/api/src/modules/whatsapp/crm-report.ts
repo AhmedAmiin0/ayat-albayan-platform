@@ -27,11 +27,18 @@ export function crmReportBodies(input: TemplateSend): CrmReportBodies | null {
 }
 
 /**
- * The PDF went out but its template did not: never resent automatically (the PDF would go twice), so the row
- * fails as `uncertain` for the admin, with what the CRM said.
+ * The PDF went out, its template did not surely go: never resent automatically (the PDF would go twice), so the
+ * row fails as `uncertain` for the admin. The text says whether the template surely failed (the CRM refused it:
+ * its code, a held key) or may have gone (timeout, 5xx, a 2xx without wamid: check the CRM first), and that a
+ * retry sends the PDF again. The CRM's code and the credential flag are kept.
  */
 export function afterDocument(error: unknown): WaError {
+  const inner = error instanceof WaError ? error.info : null;
   const said = error instanceof Error ? error.message : String(error);
-  const details = error instanceof WaError ? [said, error.info.details].filter(Boolean).join(' — ') : said;
-  return new WaError('the report PDF was sent, its CRM template was not', { code: null, status: 0, uncertain: true, details });
+  const details = [said, inner?.details].filter(Boolean).join(' — ');
+  const message = inner && !inner.uncertain ? REFUSED : UNKNOWN;
+  return new WaError(message, { code: inner?.code ?? null, status: inner?.status ?? 0, crmCode: inner?.crmCode, credential: inner?.credential, uncertain: true, details });
 }
+
+const REFUSED = 'the report PDF was sent, the CRM refused its template (a retry sends the PDF again)';
+const UNKNOWN = 'the report PDF was sent, its CRM template may have gone too: check the CRM before a retry (it sends both again)';

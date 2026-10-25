@@ -13,6 +13,7 @@ export interface LineDriverRowProps {
   items: readonly IntegrationConfigItem[];
   /** settings.write: without it the choice is shown, not offered. */
   canWrite: boolean;
+  /** A save is running (this line's or another's): every confirm waits. */
   busy: boolean;
   onSave: (line: WaLine, provider: WaProvider) => void;
 }
@@ -25,11 +26,12 @@ export interface LineDriverRowProps {
 export function LineDriverRow({ line, items, canWrite, busy, onSave }: LineDriverRowProps) {
   const h = t.communicationsHub;
   const current = lineDriver(items, line);
-  const [chosen, setPicked] = useState<WaProvider | null>(null);
-  // Cleared once the save lands (the cache then reads the new driver); a failed save keeps the confirm to retry.
-  const picked = chosen && chosen !== current ? chosen : null;
+  const [picked, setPicked] = useState<WaProvider | null>(null);
+  // Cleared once the save lands (the cache then reads the new driver), so a later change elsewhere never
+  // reopens it; a failed save keeps the confirm to retry.
+  if (picked !== null && picked === current) setPicked(null);
   const lineName = t.enums.waLine[line];
-  const options = WA_PROVIDERS.map((p) => ({ value: p, label: driverName(p), disabled: !canWrite }));
+  const options = WA_PROVIDERS.map((p) => ({ value: p, label: driverName(p), disabled: !canWrite || busy }));
   const missing = picked ? driverMissing({ provider: picked, line, items }) : [];
   const choose = (p: WaProvider) => setPicked(p === current ? null : p);
   const confirm = () => {
