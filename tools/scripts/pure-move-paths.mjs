@@ -18,8 +18,9 @@ export function renameTable(renames) {
 /** The repo path a specifier points at from `file` (null for a package). */
 export function target(file, spec) {
   if (spec.startsWith('.')) return posix.normalize(posix.join(posix.dirname(file), spec)).replace(/\/$/, '');
-  const app = /^(apps\/[^/]+\/src)\//.exec(file);
-  if (spec.startsWith('@/') && app) return posix.join(app[1], spec.slice(2));
+  // `@/*` → `./src/*` in each app's tsconfig, for every file of the app (mobile's app/ routes too).
+  const app = /^(apps\/[^/]+)\//.exec(file);
+  if (spec.startsWith('@/') && app) return posix.join(app[1], 'src', spec.slice(2));
   return null;
 }
 

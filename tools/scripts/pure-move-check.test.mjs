@@ -121,3 +121,11 @@ test('a shrunk folder-cap allow-list and a new move map are config', () => {
   assert.equal(classify({ status: 'M', from: 'refactor/folder-cap/web.json', to: 'refactor/folder-cap/web.json' }, read).kind, 'config');
   assert.equal(classify({ status: 'A', from: 'refactor/moves/b1.json', to: 'refactor/moves/b1.json' }, read).kind, 'config');
 });
+
+test('an @/ path in a mobile route file (apps/mobile/app) resolves to the app src', () => {
+  const file = 'apps/mobile/app/login.tsx';
+  const ctx = { from: file, to: file, table: renameTable([['apps/mobile/src/ui/AppText.tsx', 'apps/mobile/src/core/ui/primitives/AppText.tsx']]) };
+  const src = "import { AppText } from '@/ui/AppText';\n";
+  assert.equal(onlyPathsChanged(src, src.replace('@/ui/AppText', '@/core/ui/primitives/AppText'), ctx), true);
+  assert.equal(onlyPathsChanged(src, src.replace('@/ui/AppText', '@/core/ui/AppText'), ctx), false);
+});
