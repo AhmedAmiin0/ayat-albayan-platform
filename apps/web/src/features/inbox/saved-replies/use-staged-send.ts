@@ -1,8 +1,8 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { errorCode } from '@/features/schedule/api';
 import { sendFile } from '../api.files';
-import { sendErrorCode } from '../send-error';
-import { sendStart, settleOwnSend } from '../send-start';
+import { sendErrorCode } from '../composer/lib/send-error';
+import { sendStart, settleOwnSend } from '../composer/lib/send-start';
 import { stageReply } from './api';
 import { getStaged, setStaged, type Staged } from './staged-store';
 

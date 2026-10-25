@@ -3,7 +3,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n/i18n';
 import { CrmStatusActions } from './CrmStatusActions';
 import { templateName } from './template-cells';
-import { template as templateView } from '@/features/inbox/inbox-fixture';
+import { template as templateView } from '@/features/inbox/testing/inbox-fixture';
 
 // docs/19 «crm driver»: the admin says by hand whether the CRM holds the template approved.
 

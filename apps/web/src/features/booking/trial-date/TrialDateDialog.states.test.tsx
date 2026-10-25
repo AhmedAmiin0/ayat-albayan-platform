@@ -1,6 +1,6 @@
 import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { renderWithClient } from '@/features/inbox/test-utils';
+import { renderWithClient } from '@/features/inbox/testing/test-utils';
 import { ApiError } from '@/lib/http/api';
 import { t } from '@/lib/i18n/i18n';
 import { ABRAR, next, NOOR, STUDENT_ID } from '../wizard-fixture';

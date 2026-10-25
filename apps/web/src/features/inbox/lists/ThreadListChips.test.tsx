@@ -4,7 +4,7 @@ import { t } from '@/lib/i18n/i18n';
 import { InboxModeContext, type InboxMode } from '../mode';
 import { ThreadListChips } from './ThreadListChips';
 
-vi.mock('@tanstack/react-router', async () => ({ Link: (await import('../test-utils')).MockLink }));
+vi.mock('@tanstack/react-router', async () => ({ Link: (await import('../testing/test-utils')).MockLink }));
 
 const PHONE = '+966501234567';
 const PAY = { id: '0c000000-0000-4000-8000-000000000001', name: 'بانتظار الدفع' };

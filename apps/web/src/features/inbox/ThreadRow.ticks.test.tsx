@@ -1,11 +1,11 @@
 import { screen, within } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n/i18n';
-import { thread } from './inbox-fixture';
-import { renderWithClient } from './test-utils';
+import { thread } from './testing/inbox-fixture';
+import { renderWithClient } from './testing/test-utils';
 import { ThreadRow } from './ThreadRow';
 
-vi.mock('@tanstack/react-router', async () => ({ Link: (await import('./test-utils')).MockLink }));
+vi.mock('@tanstack/react-router', async () => ({ Link: (await import('./testing/test-utils')).MockLink }));
 
 function renderRow(patch: Parameters<typeof thread>[0]) {
   renderWithClient(

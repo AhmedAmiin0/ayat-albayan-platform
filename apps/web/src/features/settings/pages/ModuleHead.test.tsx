@@ -5,7 +5,7 @@ import { ModuleHead } from './ModuleHead';
 
 vi.mock('@tanstack/react-router', async (orig) => ({
   ...(await orig<object>()),
-  Link: (await import('@/features/inbox/test-utils')).MockLink,
+  Link: (await import('@/features/inbox/testing/test-utils')).MockLink,
 }));
 
 describe('ModuleHead (a module page under /admin/settings)', () => {

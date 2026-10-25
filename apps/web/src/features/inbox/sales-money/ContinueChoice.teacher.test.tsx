@@ -2,7 +2,7 @@ import { fireEvent, screen, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { ABRAR } from '@/features/booking/wizard-fixture';
 import { t } from '@/lib/i18n/i18n';
-import { renderWithClient } from '../test-utils';
+import { renderWithClient } from '../testing/test-utils';
 import { ContinueChoice } from './ContinueChoice';
 import { RENEWAL_VIEW } from './course-fixture';
 

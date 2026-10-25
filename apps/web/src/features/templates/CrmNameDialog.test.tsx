@@ -1,6 +1,6 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
-import { template as templateView } from '@/features/inbox/inbox-fixture';
+import { template as templateView } from '@/features/inbox/testing/inbox-fixture';
 import { t } from '@/lib/i18n/i18n';
 import { CrmNameButton } from './CrmNameButton';
 import { CrmNameDialog } from './CrmNameDialog';

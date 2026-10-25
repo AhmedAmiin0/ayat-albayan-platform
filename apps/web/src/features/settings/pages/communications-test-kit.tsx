@@ -2,7 +2,7 @@ import type { AcademySettings, NotificationAudience } from '@ab/shared';
 import type { QueryClient } from '@tanstack/react-query';
 import { useState, type ReactNode } from 'react';
 import type { Mock } from 'vitest';
-import { renderWithClient, routeFetch } from '@/features/inbox/test-utils';
+import { renderWithClient, routeFetch } from '@/features/inbox/testing/test-utils';
 import { NUMBERS, PARITY_SAME } from '@/features/numbers/numbers.fixture';
 import { LINES } from '@/features/templates/template-lines-fixture';
 import { CATALOGUE_ROUTE, SETTINGS } from '@/test/settings-fixture';

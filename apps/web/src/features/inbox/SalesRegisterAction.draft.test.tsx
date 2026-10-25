@@ -3,16 +3,16 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { draftFromLead } from '@/features/booking/booking-entries';
 import { ABRAR, next, pickSlot, pickTeacher, SLOT } from '@/features/booking/wizard-fixture';
 import { t } from '@/lib/i18n/i18n';
-import { PHONE, thread } from './inbox-fixture';
+import { PHONE, thread } from './testing/inbox-fixture';
 import { InboxModeContext } from './mode';
 import { registerDrafts } from './register-drafts';
 import { SalesChatActions } from './sales-money/SalesChatActions';
-import { renderWithClient, routeFetch } from './test-utils';
+import { renderWithClient, routeFetch } from './testing/test-utils';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
 vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
-vi.mock('@tanstack/react-router', async () => ({ Link: (await import('./test-utils')).MockLink }));
+vi.mock('@tanstack/react-router', async () => ({ Link: (await import('./testing/test-utils')).MockLink }));
 vi.mock('@/features/auth/use-permissions', () => ({ usePermissions: () => ({ permissions: [], can: () => false }) }));
 
 const OTHER = '+966559999999';

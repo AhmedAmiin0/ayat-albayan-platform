@@ -1,7 +1,7 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n/i18n';
-import { renderWithClient } from '../test-utils';
+import { renderWithClient } from '../testing/test-utils';
 import { PRICES } from './fixture';
 import { ReplyEditorDialog } from './ReplyEditorDialog';
 

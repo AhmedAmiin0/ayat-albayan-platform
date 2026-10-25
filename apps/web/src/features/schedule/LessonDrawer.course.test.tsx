@@ -2,7 +2,7 @@ import { counted, type LessonView } from '@ab/shared';
 import { fireEvent, screen, waitFor } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { CHECK, COURSE, NOW, routeChange, routeChangeSend, swapSundayForMonday } from '@/features/booking/course-change/change-fixture';
-import { renderWithClient } from '@/features/inbox/test-utils';
+import { renderWithClient } from '@/features/inbox/testing/test-utils';
 import { t } from '@/lib/i18n/i18n';
 import { lesson } from './lesson-fixture';
 import { LessonDrawer } from './LessonDrawer';
@@ -10,7 +10,7 @@ import { LessonDrawer } from './LessonDrawer';
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
 vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
-vi.mock('@tanstack/react-router', async () => ({ Link: (await import('@/features/inbox/test-utils')).MockLink }));
+vi.mock('@tanstack/react-router', async () => ({ Link: (await import('@/features/inbox/testing/test-utils')).MockLink }));
 
 const COURSE_LESSON = { ...lesson(), course_subscription_id: COURSE.subscriptionId };
 const action = () => screen.queryByRole('button', { name: t.booking.courseChange.changeDays });

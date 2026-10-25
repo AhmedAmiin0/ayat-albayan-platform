@@ -29,7 +29,7 @@ describe('«الأرقام» without numbers.manage', () => {
 
   it('a failed load says so', async () => {
     apiFetch.mockRejectedValue(new Error('down'));
-    const { renderWithClient } = await import('@/features/inbox/test-utils');
+    const { renderWithClient } = await import('@/features/inbox/testing/test-utils');
     const { NumbersPanel } = await import('./NumbersPanel');
     renderWithClient(<NumbersPanel query="" onSaved={vi.fn()} />);
     expect(await screen.findByText(n.loadError)).toBeTruthy();

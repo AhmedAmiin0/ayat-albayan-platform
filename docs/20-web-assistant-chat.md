@@ -27,7 +27,7 @@ Result: about 150px of chrome. At 1366 the chat column is about 850px.
 
 ### W2 (major) The desktop composer becomes the compact one: one line capped at 128px, a round send button, Enter sends, focus stays in the box — ✅ done
 
-Files: `apps/web/src/features/inbox/Composer.tsx`, `apps/web/src/features/inbox/ComposerPhone.tsx`, `apps/web/src/features/inbox/TextComposer.tsx`, `apps/web/src/features/inbox/composer-keys.ts`, `packages/shared/i18n/ar.json`, `packages/shared/i18n/en.json`
+Files: `apps/web/src/features/inbox/composer/components/Composer.tsx`, `apps/web/src/features/inbox/composer/components/ComposerPhone.tsx`, `apps/web/src/features/inbox/composer/components/TextComposer.tsx`, `apps/web/src/features/inbox/composer/lib/composer-keys.ts`, `packages/shared/i18n/ar.json`, `packages/shared/i18n/en.json`
 
 Scope: all three inbox modes get the compact composer. This is the #112 pass that mobile already got.
 
@@ -80,7 +80,7 @@ Applies to all modes. MessageLog stays well under 150 lines with the button in i
 
 ### W5 (major) Unsent work survives: a reply draft per chat, text typed during a send is kept, and a failed background poll no longer blanks the chat — ✅ done
 
-Files: `apps/web/src/features/inbox/draft-store.ts`, `apps/web/src/features/inbox/TextComposer.tsx`, `apps/web/src/features/inbox/ThreadPane.tsx`, `apps/web/src/features/inbox/ThreadPaneWide.tsx`
+Files: `apps/web/src/features/inbox/composer/lib/draft-store.ts`, `apps/web/src/features/inbox/composer/components/TextComposer.tsx`, `apps/web/src/features/inbox/ThreadPane.tsx`, `apps/web/src/features/inbox/ThreadPaneWide.tsx`
 
 (1) New draft-store.ts: a module-level, subscribable `Map<phone, { text, failed: { text, id, code } | null }>` with get, set and clear (as built, review M2; the plan's single `requestId` per draft was replaced). TextComposer reads it through useSyncExternalStore (subscribeDrafts) and writes to it on change; the id is picked at submit with requestIdFor. The draft therefore survives a thread switch (InboxPage.tsx:76 and ThreadPane.tsx:102 key by phone), the قالب toggle, and the window flipping. A retried draft keeps its clientRequestId (rule 8).
 (2) Submit (as built): the clientRequestId is chosen AT SUBMIT: the failed send's id when the box holds exactly that failed text (trimmed), else a fresh `crypto.randomUUID()` (rule 8). The box empties at once. onError: the text comes back only if the box is still empty (new typing is never overwritten), and `failed = { text, id, code }` is stored. The failed id is dropped on ANY successful send for that phone and as soon as the box text differs from `failed.text` (round 2 C), so it is never replayed later for an unrelated identical text. While a chat's send is in flight no box for it can send (`mutationKey ['inbox-send', phone]`), even one mounted since. Never call setText('') after the POST returns; that is what wipes text typed during the send.
@@ -112,7 +112,7 @@ This is the only API change in the routine, allowed because docs/16 row 1b says 
 
 ### W7 (major) Closed window or no allowed template: tell sales what she can do, instead of offering a template and a rating she does not have — ✅ done
 
-Files: `apps/web/src/features/inbox/window-state.ts`, `apps/web/src/features/inbox/WindowBanner.tsx`, `apps/web/src/features/inbox/ComposerPhone.tsx`, `apps/web/src/features/inbox/TemplateComposer.tsx`, `apps/web/src/features/inbox/allowed-templates.ts`, `apps/web/src/features/inbox/NewThread.tsx`, `packages/shared/i18n/ar.json`, `packages/shared/i18n/en.json`
+Files: `apps/web/src/features/inbox/window-state.ts`, `apps/web/src/features/inbox/WindowBanner.tsx`, `apps/web/src/features/inbox/composer/components/ComposerPhone.tsx`, `apps/web/src/features/inbox/composer/components/TemplateComposer.tsx`, `apps/web/src/features/inbox/composer/lib/allowed-templates.ts`, `apps/web/src/features/inbox/NewThread.tsx`, `packages/shared/i18n/ar.json`, `packages/shared/i18n/en.json`
 
 Sales and teacher modes only. The admin's wording and controls stay as they are.
 
@@ -174,7 +174,7 @@ New linkify.ts: `splitLinks(text): Array<{ text: string; href?: string }>`, matc
 
 ### W12 (minor) The chat's controls follow the editable sales role's permissions instead of breaking with a generic error — ✅ done
 
-Files: `apps/web/src/features/inbox/ThreadPane.tsx`, `apps/web/src/features/inbox/Composer.tsx`, `apps/web/src/features/inbox/TemplateComposer.tsx`, `apps/web/src/features/inbox/TextComposer.tsx`, `apps/web/src/routes/sales/index.tsx`, `packages/shared/i18n/ar.json`, `packages/shared/i18n/en.json`
+Files: `apps/web/src/features/inbox/ThreadPane.tsx`, `apps/web/src/features/inbox/composer/components/Composer.tsx`, `apps/web/src/features/inbox/composer/components/TemplateComposer.tsx`, `apps/web/src/features/inbox/composer/components/TextComposer.tsx`, `apps/web/src/routes/sales/index.tsx`, `packages/shared/i18n/ar.json`, `packages/shared/i18n/en.json`
 
 Non-admin modes. Admin mode is unchanged.
 

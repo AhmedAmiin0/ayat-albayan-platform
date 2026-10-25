@@ -1,16 +1,16 @@
 import en from '@ab/shared/i18n/en.json';
 import { fireEvent, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
-import { detail, PHONE } from './inbox-fixture';
+import { detail, PHONE } from './testing/inbox-fixture';
 import { InboxModeContext } from './mode';
-import { renderWithClient, routeFetch } from './test-utils';
+import { renderWithClient, routeFetch } from './testing/test-utils';
 import { ThreadPane } from './ThreadPane';
 
 vi.mock('@/lib/i18n/i18n', async (orig) => ({ ...(await orig<object>()), t: en }));
 vi.mock('@/lib/i18n/locale', async (orig) => ({ ...(await orig<object>()), locale: 'en' }));
 const apiFetch = vi.hoisted(() => vi.fn());
 vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
-vi.mock('@tanstack/react-router', async () => ({ Link: (await import('./test-utils')).MockLink }));
+vi.mock('@tanstack/react-router', async () => ({ Link: (await import('./testing/test-utils')).MockLink }));
 
 describe('registering a new student from a sales chat, English', () => {
   it('the action and its dialog read in English', async () => {

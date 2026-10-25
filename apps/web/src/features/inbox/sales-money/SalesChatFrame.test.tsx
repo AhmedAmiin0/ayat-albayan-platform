@@ -3,9 +3,9 @@ import { fireEvent, render, screen, within } from '@testing-library/react';
 import type { ReactNode } from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n/i18n';
-import { thread } from '../inbox-fixture';
+import { thread } from '../testing/inbox-fixture';
 import { InboxModeContext } from '../mode';
-import { routeFetch } from '../test-utils';
+import { routeFetch } from '../testing/test-utils';
 import { SalesChatFrame } from './SalesChatFrame';
 import { OPEN_SUB, SALES_QUOTE, student } from './sales-money-fixture';
 

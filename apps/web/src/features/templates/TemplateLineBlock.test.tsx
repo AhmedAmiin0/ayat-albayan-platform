@@ -1,6 +1,6 @@
 import { screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { renderWithClient } from '@/features/inbox/test-utils';
+import { renderWithClient } from '@/features/inbox/testing/test-utils';
 import { fullTime } from '@/features/inbox/format';
 import { t } from '@/lib/i18n/i18n';
 import { lineSync, lineView } from './template-lines-fixture';

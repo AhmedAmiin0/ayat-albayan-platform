@@ -5,7 +5,7 @@ import { t } from '@/lib/i18n/i18n';
 import { withDays, type LogItem } from './day-groups';
 import { JumpToLatest } from './JumpToLatest';
 import { MessageBubble } from './MessageBubble';
-import { lastOwnSend } from './own-send';
+import { lastOwnSend } from './composer/lib/own-send';
 import { isNearBottom } from './stick-to-bottom';
 
 export interface MessageLogProps {

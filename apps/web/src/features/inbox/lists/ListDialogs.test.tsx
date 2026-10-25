@@ -2,7 +2,7 @@ import { fireEvent, screen, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { ApiError } from '@/lib/http/api';
 import { t } from '@/lib/i18n/i18n';
-import { renderWithClient } from '../test-utils';
+import { renderWithClient } from '../testing/test-utils';
 import { CreateListDialog } from './CreateListDialog';
 import { EditListDialog } from './EditListDialog';
 

@@ -1,7 +1,7 @@
 import type { NumberView, ParityView } from '@ab/shared';
 import type { QueryClient } from '@tanstack/react-query';
 import { vi, type Mock } from 'vitest';
-import { renderWithClient, routeFetch } from '@/features/inbox/test-utils';
+import { renderWithClient, routeFetch } from '@/features/inbox/testing/test-utils';
 import { NUMBERS, PARITY_SAME } from './numbers.fixture';
 import { NumbersPanel } from './NumbersPanel';
 

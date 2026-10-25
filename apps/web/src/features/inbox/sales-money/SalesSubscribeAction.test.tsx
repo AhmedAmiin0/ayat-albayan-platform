@@ -1,15 +1,15 @@
 import { fireEvent, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n/i18n';
-import { detail, PHONE } from '../inbox-fixture';
+import { detail, PHONE } from '../testing/inbox-fixture';
 import { InboxModeContext, type InboxMode } from '../mode';
-import { renderWithClient, routeFetch } from '../test-utils';
+import { renderWithClient, routeFetch } from '../testing/test-utils';
 import { ThreadPane } from '../ThreadPane';
 import { OPEN_SUB, student } from './sales-money-fixture';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
-vi.mock('@tanstack/react-router', async () => ({ Link: (await import('../test-utils')).MockLink }));
+vi.mock('@tanstack/react-router', async () => ({ Link: (await import('../testing/test-utils')).MockLink }));
 
 const FAMILY = { guardian_id: 'g-1', lead_id: null, lead_status: null, guardian_name: 'أم سهيلة' } as const;
 

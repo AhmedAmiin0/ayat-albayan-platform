@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { t } from '@/lib/i18n/i18n';
 import { errorText, listTime, mediaKind, previewText, sessionUntil, threadKind, threadName, unreadLabel } from './format';
-import { PHONE, thread } from './inbox-fixture';
+import { PHONE, thread } from './testing/inbox-fixture';
 
 describe('inbox display text (docs/07 §9)', () => {
   it.each([

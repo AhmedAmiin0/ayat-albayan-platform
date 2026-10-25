@@ -9,7 +9,7 @@ const apiSend = vi.hoisted(() => vi.fn());
 vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
 vi.mock('@tanstack/react-router', async (orig) => ({
   ...(await orig<object>()),
-  Link: (await import('@/features/inbox/test-utils')).MockLink,
+  Link: (await import('@/features/inbox/testing/test-utils')).MockLink,
 }));
 
 const s = t.templates.settings;

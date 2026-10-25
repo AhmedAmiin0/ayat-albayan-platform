@@ -2,7 +2,7 @@ import { render, screen, within } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n/i18n';
 import { fullTime } from './format';
-import { message, PHONE } from './inbox-fixture';
+import { message, PHONE } from './testing/inbox-fixture';
 import { MessageLog } from './MessageLog';
 
 // Day separators at every width; each bubble shows the clock only, the full date in its tooltip (W10).

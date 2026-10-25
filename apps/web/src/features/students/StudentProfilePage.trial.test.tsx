@@ -1,7 +1,7 @@
 import { screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { history } from '@/features/booking/trial-date/trial-fixture';
-import { renderWithClient, routeFetch } from '@/features/inbox/test-utils';
+import { renderWithClient, routeFetch } from '@/features/inbox/testing/test-utils';
 import { t } from '@/lib/i18n/i18n';
 import { StudentProfilePage } from './StudentProfilePage';
 

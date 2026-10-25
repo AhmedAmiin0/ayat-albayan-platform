@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { t } from '@/lib/i18n/i18n';
-import { message } from './inbox-fixture';
+import { message } from './testing/inbox-fixture';
 import { canRetry, canSendByHand, deliveryTitle, isHandedOff, outboundNotes } from './message-notes';
 
 const NOW = new Date('2026-10-01T12:00:00Z');

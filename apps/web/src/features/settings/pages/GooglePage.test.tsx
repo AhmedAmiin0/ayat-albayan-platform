@@ -1,7 +1,7 @@
 import { screen, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { googleItems, googleStatus, googleStudents, googleTeachers } from '@/features/google-sync/google.fixture';
-import { renderWithClient, routeFetch } from '@/features/inbox/test-utils';
+import { renderWithClient, routeFetch } from '@/features/inbox/testing/test-utils';
 import { t } from '@/lib/i18n/i18n';
 import { GooglePage } from './GooglePage';
 
@@ -9,7 +9,7 @@ const apiFetch = vi.hoisted(() => vi.fn());
 vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 vi.mock('@tanstack/react-router', async (orig) => ({
   ...(await orig<object>()),
-  Link: (await import('@/features/inbox/test-utils')).MockLink,
+  Link: (await import('@/features/inbox/testing/test-utils')).MockLink,
 }));
 
 const g = t.googleSync;

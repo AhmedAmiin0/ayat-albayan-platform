@@ -1,7 +1,7 @@
 import { SETTING_DEFAULTS } from '@ab/shared';
 import { fireEvent, screen, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { renderWithClient, routeFetch } from '@/features/inbox/test-utils';
+import { renderWithClient, routeFetch } from '@/features/inbox/testing/test-utils';
 import { RulesSection } from '@/features/notification-rules/RulesSection';
 import { t } from '@/lib/i18n/i18n';
 import { lineSync, lineView } from './template-lines-fixture';
@@ -10,7 +10,7 @@ import { TemplateLineBlock } from './TemplateLineBlock';
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
 vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
-vi.mock('@tanstack/react-router', async (orig) => ({ ...(await orig<object>()), Link: (await import('@/features/inbox/test-utils')).MockLink }));
+vi.mock('@tanstack/react-router', async (orig) => ({ ...(await orig<object>()), Link: (await import('@/features/inbox/testing/test-utils')).MockLink }));
 
 const p = t.templates.perNumber;
 const catalogueCalls = () => apiFetch.mock.calls.filter(([path]) => path === '/admin/notifications').length;

@@ -9,7 +9,7 @@ import { templatesQuery } from '@/features/templates/api';
 import { t } from '@/lib/i18n/i18n';
 import { leadByPhoneQuery, threadQuery } from './api';
 import { ChatActionsProvider } from './ChatActionsProvider';
-import { Composer } from './Composer';
+import { Composer } from './composer/components/Composer';
 import { LeadPanel, type LeadNotice } from './LeadPanel';
 import { MessageLog } from './MessageLog';
 import { NewThread } from './NewThread';
