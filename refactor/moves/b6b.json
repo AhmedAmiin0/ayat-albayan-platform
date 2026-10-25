@@ -1,0 +1,316 @@
+{
+  "id": "b6b",
+  "seq": 42,
+  "moves": [
+    {
+      "from": "apps/web/src/features/inbox/Sales*",
+      "to": "apps/web/src/features/inbox/sales/"
+    },
+    {
+      "from": "apps/web/src/features/inbox/SubscribePanel*",
+      "to": "apps/web/src/features/inbox/sales/"
+    },
+    {
+      "from": "apps/web/src/features/inbox/Subscription*",
+      "to": "apps/web/src/features/inbox/sales/"
+    },
+    {
+      "from": "apps/web/src/features/inbox/subscription*",
+      "to": "apps/web/src/features/inbox/sales/"
+    },
+    {
+      "from": "apps/web/src/features/inbox/register-drafts*",
+      "to": "apps/web/src/features/inbox/sales/"
+    },
+    {
+      "from": "apps/web/src/features/inbox/sales-register*",
+      "to": "apps/web/src/features/inbox/sales/"
+    },
+    {
+      "from": "apps/web/src/features/inbox/RatingChip*",
+      "to": "apps/web/src/features/inbox/sales/"
+    },
+    {
+      "from": "apps/web/src/features/inbox/SendRatingButton*",
+      "to": "apps/web/src/features/inbox/sales/"
+    },
+    {
+      "from": "apps/web/src/features/inbox/sales-money/SalesCourseDialog*",
+      "to": "apps/web/src/features/inbox/sales-money/course/"
+    },
+    {
+      "from": "apps/web/src/features/inbox/sales-money/ContinueChoice*",
+      "to": "apps/web/src/features/inbox/sales-money/course/"
+    },
+    {
+      "from": "apps/web/src/features/inbox/sales-money/SalesRunningCourse*",
+      "to": "apps/web/src/features/inbox/sales-money/course/"
+    },
+    {
+      "from": "apps/web/src/features/inbox/sales-money/course-continue*",
+      "to": "apps/web/src/features/inbox/sales-money/course/"
+    },
+    {
+      "from": "apps/web/src/features/inbox/sales-money/course-draft*",
+      "to": "apps/web/src/features/inbox/sales-money/course/"
+    },
+    {
+      "from": "apps/web/src/features/inbox/sales-money/course-fixture*",
+      "to": "apps/web/src/features/inbox/sales-money/course/"
+    },
+    {
+      "from": "apps/web/src/features/inbox/sales-money/SalesSubscribeStep*",
+      "to": "apps/web/src/features/inbox/sales-money/subscribe/"
+    },
+    {
+      "from": "apps/web/src/features/inbox/sales-money/SalesQuotePreview*",
+      "to": "apps/web/src/features/inbox/sales-money/subscribe/"
+    },
+    {
+      "from": "apps/web/src/features/inbox/sales-money/SalesStartField*",
+      "to": "apps/web/src/features/inbox/sales-money/subscribe/"
+    },
+    {
+      "from": "apps/web/src/features/inbox/sales-money/start-body*",
+      "to": "apps/web/src/features/inbox/sales-money/subscribe/"
+    },
+    {
+      "from": "apps/web/src/features/inbox/sales-money/ChildPicker*",
+      "to": "apps/web/src/features/inbox/sales-money/subscribe/"
+    },
+    {
+      "from": "apps/web/src/features/inbox/sales-money/SalesTransferStep*",
+      "to": "apps/web/src/features/inbox/sales-money/transfer/"
+    },
+    {
+      "from": "apps/web/src/features/inbox/sales-money/TransferFields*",
+      "to": "apps/web/src/features/inbox/sales-money/transfer/"
+    },
+    {
+      "from": "apps/web/src/features/inbox/sales-money/PackagePicker*",
+      "to": "apps/web/src/features/inbox/sales-money/transfer/"
+    },
+    {
+      "from": "apps/web/src/features/inbox/sales-money/ReceiptChooser*",
+      "to": "apps/web/src/features/inbox/sales-money/transfer/"
+    },
+    {
+      "from": "apps/web/src/features/inbox/sales-money/ChatReceipt*",
+      "to": "apps/web/src/features/inbox/sales-money/transfer/"
+    },
+    {
+      "from": "apps/web/src/features/inbox/sales-money/receipt*",
+      "to": "apps/web/src/features/inbox/sales-money/transfer/"
+    },
+    {
+      "from": "apps/web/src/features/inbox/sales-money/use-sales-payment*",
+      "to": "apps/web/src/features/inbox/sales-money/transfer/"
+    }
+  ],
+  "files": [
+    [
+      "apps/web/src/features/inbox/RatingChip.tsx",
+      "apps/web/src/features/inbox/sales/RatingChip.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/register-drafts.test.ts",
+      "apps/web/src/features/inbox/sales/register-drafts.test.ts"
+    ],
+    [
+      "apps/web/src/features/inbox/register-drafts.ts",
+      "apps/web/src/features/inbox/sales/register-drafts.ts"
+    ],
+    [
+      "apps/web/src/features/inbox/sales-money/ChatReceiptGrid.tsx",
+      "apps/web/src/features/inbox/sales-money/transfer/ChatReceiptGrid.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/sales-money/ChatReceiptThumb.tsx",
+      "apps/web/src/features/inbox/sales-money/transfer/ChatReceiptThumb.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/sales-money/ChildPicker.tsx",
+      "apps/web/src/features/inbox/sales-money/subscribe/ChildPicker.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/sales-money/ContinueChoice.teacher.test.tsx",
+      "apps/web/src/features/inbox/sales-money/course/ContinueChoice.teacher.test.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/sales-money/ContinueChoice.tsx",
+      "apps/web/src/features/inbox/sales-money/course/ContinueChoice.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/sales-money/course-continue.test.ts",
+      "apps/web/src/features/inbox/sales-money/course/course-continue.test.ts"
+    ],
+    [
+      "apps/web/src/features/inbox/sales-money/course-continue.ts",
+      "apps/web/src/features/inbox/sales-money/course/course-continue.ts"
+    ],
+    [
+      "apps/web/src/features/inbox/sales-money/course-draft.test.ts",
+      "apps/web/src/features/inbox/sales-money/course/course-draft.test.ts"
+    ],
+    [
+      "apps/web/src/features/inbox/sales-money/course-draft.ts",
+      "apps/web/src/features/inbox/sales-money/course/course-draft.ts"
+    ],
+    [
+      "apps/web/src/features/inbox/sales-money/course-fixture.ts",
+      "apps/web/src/features/inbox/sales-money/course/course-fixture.ts"
+    ],
+    [
+      "apps/web/src/features/inbox/sales-money/PackagePicker.tsx",
+      "apps/web/src/features/inbox/sales-money/transfer/PackagePicker.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/sales-money/receipt.test.ts",
+      "apps/web/src/features/inbox/sales-money/transfer/receipt.test.ts"
+    ],
+    [
+      "apps/web/src/features/inbox/sales-money/receipt.ts",
+      "apps/web/src/features/inbox/sales-money/transfer/receipt.ts"
+    ],
+    [
+      "apps/web/src/features/inbox/sales-money/ReceiptChooser.tsx",
+      "apps/web/src/features/inbox/sales-money/transfer/ReceiptChooser.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/sales-money/SalesCourseDialog.change.test.tsx",
+      "apps/web/src/features/inbox/sales-money/course/SalesCourseDialog.change.test.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/sales-money/SalesCourseDialog.choice.test.tsx",
+      "apps/web/src/features/inbox/sales-money/course/SalesCourseDialog.choice.test.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/sales-money/SalesCourseDialog.clash.test.tsx",
+      "apps/web/src/features/inbox/sales-money/course/SalesCourseDialog.clash.test.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/sales-money/SalesCourseDialog.continue.test.tsx",
+      "apps/web/src/features/inbox/sales-money/course/SalesCourseDialog.continue.test.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/sales-money/SalesCourseDialog.count.test.tsx",
+      "apps/web/src/features/inbox/sales-money/course/SalesCourseDialog.count.test.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/sales-money/SalesCourseDialog.other.test.tsx",
+      "apps/web/src/features/inbox/sales-money/course/SalesCourseDialog.other.test.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/sales-money/SalesCourseDialog.test.tsx",
+      "apps/web/src/features/inbox/sales-money/course/SalesCourseDialog.test.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/sales-money/SalesCourseDialog.tsx",
+      "apps/web/src/features/inbox/sales-money/course/SalesCourseDialog.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/sales-money/SalesQuotePreview.tsx",
+      "apps/web/src/features/inbox/sales-money/subscribe/SalesQuotePreview.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/sales-money/SalesRunningCourse.tsx",
+      "apps/web/src/features/inbox/sales-money/course/SalesRunningCourse.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/sales-money/SalesStartField.tsx",
+      "apps/web/src/features/inbox/sales-money/subscribe/SalesStartField.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/sales-money/SalesSubscribeStep.start.test.tsx",
+      "apps/web/src/features/inbox/sales-money/subscribe/SalesSubscribeStep.start.test.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/sales-money/SalesSubscribeStep.test.tsx",
+      "apps/web/src/features/inbox/sales-money/subscribe/SalesSubscribeStep.test.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/sales-money/SalesSubscribeStep.tsx",
+      "apps/web/src/features/inbox/sales-money/subscribe/SalesSubscribeStep.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/sales-money/SalesTransferStep.chat.test.tsx",
+      "apps/web/src/features/inbox/sales-money/transfer/SalesTransferStep.chat.test.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/sales-money/SalesTransferStep.tsx",
+      "apps/web/src/features/inbox/sales-money/transfer/SalesTransferStep.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/sales-money/SalesTransferStep.upload.test.tsx",
+      "apps/web/src/features/inbox/sales-money/transfer/SalesTransferStep.upload.test.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/sales-money/start-body.test.ts",
+      "apps/web/src/features/inbox/sales-money/subscribe/start-body.test.ts"
+    ],
+    [
+      "apps/web/src/features/inbox/sales-money/start-body.ts",
+      "apps/web/src/features/inbox/sales-money/subscribe/start-body.ts"
+    ],
+    [
+      "apps/web/src/features/inbox/sales-money/TransferFields.tsx",
+      "apps/web/src/features/inbox/sales-money/transfer/TransferFields.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/sales-money/use-sales-payment.ts",
+      "apps/web/src/features/inbox/sales-money/transfer/use-sales-payment.ts"
+    ],
+    [
+      "apps/web/src/features/inbox/sales-register.test.ts",
+      "apps/web/src/features/inbox/sales/sales-register.test.ts"
+    ],
+    [
+      "apps/web/src/features/inbox/sales-register.ts",
+      "apps/web/src/features/inbox/sales/sales-register.ts"
+    ],
+    [
+      "apps/web/src/features/inbox/SalesFamilyLine.test.tsx",
+      "apps/web/src/features/inbox/sales/SalesFamilyLine.test.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/SalesFamilyLine.tsx",
+      "apps/web/src/features/inbox/sales/SalesFamilyLine.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/SalesRegisterAction.draft.test.tsx",
+      "apps/web/src/features/inbox/sales/SalesRegisterAction.draft.test.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/SalesRegisterAction.tsx",
+      "apps/web/src/features/inbox/sales/SalesRegisterAction.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/SendRatingButton.test.tsx",
+      "apps/web/src/features/inbox/sales/SendRatingButton.test.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/SendRatingButton.tsx",
+      "apps/web/src/features/inbox/sales/SendRatingButton.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/SubscribePanel.tsx",
+      "apps/web/src/features/inbox/sales/SubscribePanel.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/subscription.test.ts",
+      "apps/web/src/features/inbox/sales/subscription.test.ts"
+    ],
+    [
+      "apps/web/src/features/inbox/subscription.ts",
+      "apps/web/src/features/inbox/sales/subscription.ts"
+    ],
+    [
+      "apps/web/src/features/inbox/SubscriptionChip.en.test.tsx",
+      "apps/web/src/features/inbox/sales/SubscriptionChip.en.test.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/SubscriptionChip.tsx",
+      "apps/web/src/features/inbox/sales/SubscriptionChip.tsx"
+    ]
+  ]
+}

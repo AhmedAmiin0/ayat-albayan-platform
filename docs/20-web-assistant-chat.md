@@ -43,7 +43,7 @@ TextComposer must stay ≤ 150 lines; deleting the branch frees about 15.
 
 ### W3 (major) One-row thread header: secondary sales actions go in «المزيد», and sales sees which children the chat is about — ✅ done
 
-Files: `apps/web/src/features/inbox/threads/pane/ThreadHeader.tsx`, `apps/web/src/features/inbox/threads/pane/ThreadHeaderPhone.tsx`, `apps/web/src/features/inbox/sales-money/SalesChatActions.tsx`, `apps/web/src/features/inbox/sales-money/SalesSubscribeAction.tsx`, `apps/web/src/features/inbox/sales-money/use-sales-family-actions.tsx`, `apps/web/src/features/inbox/SalesFamilyLine.tsx`, `apps/web/src/features/inbox/threads/pane/ThreadPane.tsx`, `apps/web/src/features/inbox/threads/pane/ThreadPaneWide.tsx`, `packages/shared/i18n/ar.json`, `packages/shared/i18n/en.json`
+Files: `apps/web/src/features/inbox/threads/pane/ThreadHeader.tsx`, `apps/web/src/features/inbox/threads/pane/ThreadHeaderPhone.tsx`, `apps/web/src/features/inbox/sales-money/SalesChatActions.tsx`, `apps/web/src/features/inbox/sales-money/SalesSubscribeAction.tsx`, `apps/web/src/features/inbox/sales-money/use-sales-family-actions.tsx`, `apps/web/src/features/inbox/sales/SalesFamilyLine.tsx`, `apps/web/src/features/inbox/threads/pane/ThreadPane.tsx`, `apps/web/src/features/inbox/threads/pane/ThreadPaneWide.tsx`, `packages/shared/i18n/ar.json`, `packages/shared/i18n/en.json`
 
 (0) Line budget first. ThreadPane.tsx is exactly 150 lines, so move its wide return block (:128-149) into ThreadPaneWide.tsx, which takes one props object: header, log, reply, aside, side, toast. W4, W5 and W12 build on this split.
 
@@ -144,7 +144,7 @@ Sales shell only. The count is the shared academy unread, the same number the ad
 
 ### W9 (major) «تسجيل طالب جديد» keeps its draft and step when she closes it to re-read the chat — ✅ done
 
-Files: `apps/web/src/features/inbox/SalesRegisterAction.tsx`, `apps/web/src/features/inbox/register-drafts.ts`, `apps/web/src/features/booking/BookingWizard.tsx`
+Files: `apps/web/src/features/inbox/sales/SalesRegisterAction.tsx`, `apps/web/src/features/inbox/sales/register-drafts.ts`, `apps/web/src/features/booking/BookingWizard.tsx`
 
 Do NOT keep the Dialog mounted with `hidden`: dialog.tsx:56-60 locks body scroll on mount, and the focus trap would stay active.
 

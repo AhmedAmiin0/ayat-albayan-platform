@@ -10,10 +10,10 @@ import { RegistrationCheckDialog } from '@/features/sales/RegistrationCheckDialo
 import { TrialDateDialog } from '@/features/booking/trial-date/TrialDateDialog';
 import { t } from '@/lib/i18n/i18n';
 import { useInboxMode } from '../shared/mode';
-import { SalesRegisterButton, SalesRegisterDialog } from '../SalesRegisterAction';
-import { canRegisterFrom } from '../sales-register';
+import { SalesRegisterButton, SalesRegisterDialog } from '../sales/SalesRegisterAction';
+import { canRegisterFrom } from '../sales/sales-register';
 import { salesFamilyQuery } from './api';
-import { SalesCourseDialog } from './SalesCourseDialog';
+import { SalesCourseDialog } from './course/SalesCourseDialog';
 import { SalesMoneyFlow, type FlowStart } from './SalesMoneyFlow';
 import { hasCourse } from './SalesSubscribeAction';
 

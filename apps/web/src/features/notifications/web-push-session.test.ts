@@ -2,7 +2,7 @@ import type { AuthChangeEvent, Session } from '@supabase/supabase-js';
 import { describe, expect, it, vi } from 'vitest';
 import { getDraft, setDraft } from '@/features/inbox/composer/lib/draft-store';
 import { lastOwnSend, recordOwnSend } from '@/features/inbox/composer/lib/own-send';
-import { registerDrafts, type RegisterDraft } from '@/features/inbox/register-drafts';
+import { registerDrafts, type RegisterDraft } from '@/features/inbox/sales/register-drafts';
 import { bindWebPushToSession } from './web-push-session';
 
 const dropLocalWebPush = vi.hoisted(() => vi.fn(async () => undefined));

@@ -12,7 +12,7 @@ import { useInboxMode } from '../../shared/mode';
 import { replyFromText } from '../lib/reply-from';
 import { ReplyComposer } from '../../saved-replies/ReplyComposer';
 import { SavedRepliesButton } from '../../saved-replies/SavedRepliesButton';
-import { SendRatingButton } from '../../SendRatingButton';
+import { SendRatingButton } from '../../sales/SendRatingButton';
 import { TemplateComposer } from './TemplateComposer';
 import { TextComposer } from './TextComposer';
 import type { PrefillContext } from '../lib/template-params';
