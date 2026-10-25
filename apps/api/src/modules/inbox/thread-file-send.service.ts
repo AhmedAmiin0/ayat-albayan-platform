@@ -14,7 +14,8 @@ import { sniffMime, SNIFF_BYTES } from '../booking/invoice-sniff';
 import { waHttpError } from '../whatsapp/template.mapper';
 import { InboxSettings } from './inbox.settings';
 import { Outbox, type Sent } from './outbox';
-import { dedupKey, outboundBase, sendLine, type ThreadSend } from './thread-send.service';
+import { ThreadQuotes } from './thread-quotes';
+import { dedupKey, outboundBase, replyOf, sendLine, type ThreadSend } from './thread-send.service';
 import { ThreadsQueries } from './threads.queries';
 
 /** 400 file_type / 413 file_too_large, or nothing. */
@@ -39,6 +40,8 @@ const filePath = () => waHttpError('file_path', HttpStatus.BAD_REQUEST);
 export class ThreadFileSender {
   /** Property-injected (the constructor is at the 3-parameter limit); absent → the registry default. */
   @Inject(InboxSettings) private readonly settings?: InboxSettings;
+  /** «رد» on a file (owner 2026-10-25), property-injected like settings. */
+  @Inject(ThreadQuotes) private readonly quotes?: ThreadQuotes;
 
   constructor(
     private readonly queries: ThreadsQueries,
@@ -77,6 +80,7 @@ export class ThreadFileSender {
     const head = await this.storage.head(ref, SNIFF_BYTES);
     if (!head) throw filePath();
     if (sniffMime(head) !== mime) throw waHttpError('file_type', HttpStatus.BAD_REQUEST);
+    const reply = await replyOf(this.quotes, s);
     return this.outbox.send({
       ...outboundBase(s, thread),
       dedup_key: key,
@@ -85,6 +89,7 @@ export class ThreadFileSender {
       media_mime: mime,
       media_name: sentFileName(filename, mime),
       ...line,
+      ...reply,
     });
   }
 

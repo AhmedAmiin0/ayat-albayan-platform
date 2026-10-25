@@ -8,6 +8,7 @@ import { listFilter, withLists } from './chat-list-filter';
 import { SalesThreadsService } from './sales-threads.service';
 import { TeacherScopes, type TeacherScope } from './teacher-scope';
 import { TeacherThreadsService } from './teacher-threads.service';
+import { ThreadQuotes } from './thread-quotes';
 import type { ThreadListFilter } from './threads.queries';
 import { ThreadsService, type ThreadPageQuery } from './threads.service';
 
@@ -23,6 +24,8 @@ export class ThreadReads {
   @Inject(SalesScopes) private readonly salesScopes?: SalesScopes;
   /** «القوائم» (docs/22): the list filter and the open chat's lists (admin and sales only). */
   @Inject(ChatListsQueries) private readonly chatLists?: ChatListsQueries;
+  /** «رد»: the messages a page's bubbles answer (owner 2026-10-25). */
+  @Inject(ThreadQuotes) private readonly quotes?: ThreadQuotes;
 
   constructor(
     private readonly admin: ThreadsService,
@@ -53,9 +56,13 @@ export class ThreadReads {
   async detail(q: ThreadPageQuery, user: AuthUser): Promise<ThreadDetail> {
     const mine = await this.salesScope(user);
     const scope = mine ? null : await this.scopes.of(user);
-    if (scope) return this.teacher.detail(q, scope);
+    if (scope) return this.quoted(await this.teacher.detail(q, scope), q.phone);
     const detail = mine ? await this.salesService().detail(q) : await this.admin.detail(q);
-    return withLists(detail, { user, lists: this.chatLists, phone: q.phone, first: !q.before });
+    return withLists(await this.quoted(detail, q.phone), { user, lists: this.chatLists, phone: q.phone, first: !q.before });
+  }
+
+  private async quoted(detail: ThreadDetail, phone: string): Promise<ThreadDetail> {
+    return this.quotes ? { ...detail, messages: await this.quotes.attach(detail.messages, phone) } : detail;
   }
 
   private salesService(): SalesThreadsService {

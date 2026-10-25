@@ -93,6 +93,11 @@ export function chatOutPath(input: { actorId: string; requestId: string; mime: s
   return `out/${input.actorId}/${input.requestId}/${uploadName(input.mime)}`;
 }
 
+/** wa-media/out/{actor}/{client_request_id}/fwd-{message_id}.{ext}: our copy of a forwarded file, one per forward. */
+export function forwardOutPath(input: { actorId: string; requestId: string; messageId: string; mime: string }): string {
+  return `out/${input.actorId}/${input.requestId}/fwd-${input.messageId}.${extFor(input.mime)}`;
+}
+
 /** Was `path` signed for this actor and request? Exactly out/{actor}/{request}/{file}. */
 export function isChatOutPathOf(path: string, owner: { actorId: string; requestId: string }): boolean {
   const parts = path.split('/');

@@ -2,6 +2,7 @@ import type { Tables } from '@ab/db';
 import {
   clickToChatLink,
   fallbackText,
+  isChatViewMime,
   renderTemplateBody,
   type MessageLesson,
   type MessageView,
@@ -58,6 +59,15 @@ const isAutomatic = (row: ThreadMessageRow): boolean =>
 const fallbackLink = (row: ThreadMessageRow, text: string | undefined): string | null =>
   needsManualSend(row) && !row.media_path ? clickToChatLink(row.phone_e164, text) : null;
 
+/** «إعادة توجيه»: a text, or a file we hold (ours) or can fetch (theirs); never a template. */
+const isForwardable = (row: ThreadMessageRow): boolean =>
+  !row.template_key &&
+  (row.direction === 'outbound'
+    ? !!row.media_path?.startsWith('out/') || (!row.media_mime && !!row.body?.trim())
+    : row.media_id || row.media_path
+      ? isChatViewMime(row.media_mime)
+      : !!row.body?.trim());
+
 /**
  * messages row → MessageView (R-MSG-05): a template row shows its rendered text; a queued or
  * failed outbound row carries the wa.me link with the same text pre-filled (R-MSG-03).
@@ -83,6 +93,11 @@ export function toMessageView(input: MessageViewInput): MessageView {
     media_url: input.mediaUrl ?? null,
     media_name: row.media_name,
     reply_to_wa_id: row.reply_to_wa_id,
+    reply_to_message_id: row.reply_to_message_id,
+    reply_to: null,
+    replyable: row.wa_message_id !== null,
+    forwardable: isForwardable(row),
+    forwarded: row.forwarded_from_id !== null,
     interactive_payload: row.interactive_payload,
     error_code: row.error_code,
     error_text: row.error_text,

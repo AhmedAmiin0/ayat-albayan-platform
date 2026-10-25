@@ -2321,6 +2321,7 @@ export type Database = {
           error_code: string | null;
           error_text: string | null;
           expires_at: string | null;
+          forwarded_from_id: string | null;
           guardian_id: string | null;
           id: string;
           interactive_payload: Json | null;
@@ -2335,6 +2336,7 @@ export type Database = {
           next_attempt_at: string | null;
           phone_e164: string;
           read_at: string | null;
+          reply_to_message_id: string | null;
           reply_to_wa_id: string | null;
           scheduled_for: string | null;
           sent_at: string | null;
@@ -2359,6 +2361,7 @@ export type Database = {
           error_code?: string | null;
           error_text?: string | null;
           expires_at?: string | null;
+          forwarded_from_id?: string | null;
           guardian_id?: string | null;
           id?: string;
           interactive_payload?: Json | null;
@@ -2373,6 +2376,7 @@ export type Database = {
           next_attempt_at?: string | null;
           phone_e164: string;
           read_at?: string | null;
+          reply_to_message_id?: string | null;
           reply_to_wa_id?: string | null;
           scheduled_for?: string | null;
           sent_at?: string | null;
@@ -2397,6 +2401,7 @@ export type Database = {
           error_code?: string | null;
           error_text?: string | null;
           expires_at?: string | null;
+          forwarded_from_id?: string | null;
           guardian_id?: string | null;
           id?: string;
           interactive_payload?: Json | null;
@@ -2411,6 +2416,7 @@ export type Database = {
           next_attempt_at?: string | null;
           phone_e164?: string;
           read_at?: string | null;
+          reply_to_message_id?: string | null;
           reply_to_wa_id?: string | null;
           scheduled_for?: string | null;
           sent_at?: string | null;
@@ -2429,6 +2435,13 @@ export type Database = {
             columns: ['created_by'];
             isOneToOne: false;
             referencedRelation: 'profiles';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'messages_forwarded_from_id_fkey';
+            columns: ['forwarded_from_id'];
+            isOneToOne: false;
+            referencedRelation: 'messages';
             referencedColumns: ['id'];
           },
           {
@@ -2464,6 +2477,13 @@ export type Database = {
             columns: ['lesson_id'];
             isOneToOne: false;
             referencedRelation: 'lessons';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'messages_reply_to_message_id_fkey';
+            columns: ['reply_to_message_id'];
+            isOneToOne: false;
+            referencedRelation: 'messages';
             referencedColumns: ['id'];
           },
           {
