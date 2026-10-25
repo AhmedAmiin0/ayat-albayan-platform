@@ -4,7 +4,7 @@ import { BUCKETS, waMediaPath } from '../../../common/storage/storage.paths';
 import { StorageService } from '../../../common/storage/storage.service';
 import { InboundMediaQueries, type MediaMessage } from './inbound-media.queries';
 import { KAPSO_AUTH } from '../sender/send-plan';
-import { waHttpError } from '../template.mapper';
+import { waHttpError } from '../templates/catalog/template.mapper';
 import { WHATSAPP_LINES, WaError, type WhatsappLines } from '../whatsapp.types';
 
 /** 409 for inbound media on a crm line: the CRM holds that number's files (docs/19). */

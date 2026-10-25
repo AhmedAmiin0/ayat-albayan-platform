@@ -1,0 +1,260 @@
+{
+  "id": "a3",
+  "seq": 5,
+  "moves": [
+    {
+      "from": "apps/api/src/modules/whatsapp/template.registry*",
+      "to": "apps/api/src/modules/whatsapp/templates/catalog"
+    },
+    {
+      "from": "apps/api/src/modules/whatsapp/template.mapper*",
+      "to": "apps/api/src/modules/whatsapp/templates/catalog"
+    },
+    {
+      "from": "apps/api/src/modules/whatsapp/template.crm*",
+      "to": "apps/api/src/modules/whatsapp/templates/catalog"
+    },
+    {
+      "from": "apps/api/src/modules/whatsapp/templates.controller*",
+      "to": "apps/api/src/modules/whatsapp/templates/catalog"
+    },
+    {
+      "from": "apps/api/src/modules/whatsapp/templates.queries*",
+      "to": "apps/api/src/modules/whatsapp/templates/catalog"
+    },
+    {
+      "from": "apps/api/src/modules/whatsapp/templates.restricted*",
+      "to": "apps/api/src/modules/whatsapp/templates/catalog"
+    },
+    {
+      "from": "apps/api/src/modules/whatsapp/templates.starter*",
+      "to": "apps/api/src/modules/whatsapp/templates/catalog"
+    },
+    {
+      "from": "apps/api/src/modules/whatsapp/template-manager.guard*",
+      "to": "apps/api/src/modules/whatsapp/templates/catalog"
+    },
+    {
+      "from": "apps/api/src/modules/whatsapp/template-starters*",
+      "to": "apps/api/src/modules/whatsapp/templates/catalog"
+    },
+    {
+      "from": "apps/api/src/modules/whatsapp/template-crm-name*",
+      "to": "apps/api/src/modules/whatsapp/templates/catalog"
+    },
+    {
+      "from": "apps/api/src/modules/whatsapp/template-crm-status*",
+      "to": "apps/api/src/modules/whatsapp/templates/catalog"
+    },
+    {
+      "from": "apps/api/src/modules/whatsapp/template-env*",
+      "to": "apps/api/src/modules/whatsapp/templates/catalog"
+    },
+    {
+      "from": "apps/api/src/modules/whatsapp/seed-templates*",
+      "to": "apps/api/src/modules/whatsapp/templates/catalog"
+    },
+    {
+      "from": "apps/api/src/modules/whatsapp/template-sync*",
+      "to": "apps/api/src/modules/whatsapp/templates/sync"
+    },
+    {
+      "from": "apps/api/src/modules/whatsapp/template-line-sync*",
+      "to": "apps/api/src/modules/whatsapp/templates/sync"
+    },
+    {
+      "from": "apps/api/src/modules/whatsapp/template-number-sync*",
+      "to": "apps/api/src/modules/whatsapp/templates/sync"
+    },
+    {
+      "from": "apps/api/src/modules/whatsapp/template-number-set*",
+      "to": "apps/api/src/modules/whatsapp/templates/sync"
+    },
+    {
+      "from": "apps/api/src/modules/whatsapp/template-numbers.*",
+      "to": "apps/api/src/modules/whatsapp/templates/sync"
+    },
+    {
+      "from": "apps/api/src/modules/whatsapp/templates.numbers*",
+      "to": "apps/api/src/modules/whatsapp/templates/sync"
+    },
+    {
+      "from": "apps/api/src/modules/whatsapp/templates.lines*",
+      "to": "apps/api/src/modules/whatsapp/templates/sync"
+    },
+    {
+      "from": "apps/api/src/modules/whatsapp/template-import*",
+      "to": "apps/api/src/modules/whatsapp/templates/sync"
+    },
+    {
+      "from": "apps/api/src/modules/whatsapp/template-move*",
+      "to": "apps/api/src/modules/whatsapp/templates/sync"
+    },
+    {
+      "from": "apps/api/src/modules/whatsapp/template.move*",
+      "to": "apps/api/src/modules/whatsapp/templates/sync"
+    },
+    {
+      "from": "apps/api/src/modules/whatsapp/template-submit*",
+      "to": "apps/api/src/modules/whatsapp/templates/sync"
+    },
+    {
+      "from": "apps/api/src/modules/whatsapp/template.submit-*",
+      "to": "apps/api/src/modules/whatsapp/templates/sync"
+    }
+  ],
+  "files": [
+    [
+      "apps/api/src/modules/whatsapp/seed-templates.fakes.ts",
+      "apps/api/src/modules/whatsapp/templates/catalog/seed-templates.fakes.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/template-crm-name.test.ts",
+      "apps/api/src/modules/whatsapp/templates/catalog/template-crm-name.test.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/template-crm-name.ts",
+      "apps/api/src/modules/whatsapp/templates/catalog/template-crm-name.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/template-crm-status.ts",
+      "apps/api/src/modules/whatsapp/templates/catalog/template-crm-status.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/template-env.ts",
+      "apps/api/src/modules/whatsapp/templates/catalog/template-env.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/template-import.test.ts",
+      "apps/api/src/modules/whatsapp/templates/sync/template-import.test.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/template-import.ts",
+      "apps/api/src/modules/whatsapp/templates/sync/template-import.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/template-line-sync.ts",
+      "apps/api/src/modules/whatsapp/templates/sync/template-line-sync.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/template-manager.guard.ts",
+      "apps/api/src/modules/whatsapp/templates/catalog/template-manager.guard.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/template-move.ts",
+      "apps/api/src/modules/whatsapp/templates/sync/template-move.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/template-number-set.test.ts",
+      "apps/api/src/modules/whatsapp/templates/sync/template-number-set.test.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/template-number-set.ts",
+      "apps/api/src/modules/whatsapp/templates/sync/template-number-set.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/template-number-sync.test.ts",
+      "apps/api/src/modules/whatsapp/templates/sync/template-number-sync.test.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/template-number-sync.ts",
+      "apps/api/src/modules/whatsapp/templates/sync/template-number-sync.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/template-numbers.controller.ts",
+      "apps/api/src/modules/whatsapp/templates/sync/template-numbers.controller.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/template-numbers.service.ts",
+      "apps/api/src/modules/whatsapp/templates/sync/template-numbers.service.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/template-starters.test.ts",
+      "apps/api/src/modules/whatsapp/templates/catalog/template-starters.test.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/template-starters.ts",
+      "apps/api/src/modules/whatsapp/templates/catalog/template-starters.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/template-submit.ts",
+      "apps/api/src/modules/whatsapp/templates/sync/template-submit.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/template-sync.test.ts",
+      "apps/api/src/modules/whatsapp/templates/sync/template-sync.test.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/template-sync.ts",
+      "apps/api/src/modules/whatsapp/templates/sync/template-sync.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/template.crm.test.ts",
+      "apps/api/src/modules/whatsapp/templates/catalog/template.crm.test.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/template.mapper.ts",
+      "apps/api/src/modules/whatsapp/templates/catalog/template.mapper.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/template.move.test.ts",
+      "apps/api/src/modules/whatsapp/templates/sync/template.move.test.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/template.registry.lines.test.ts",
+      "apps/api/src/modules/whatsapp/templates/catalog/template.registry.lines.test.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/template.registry.sync.test.ts",
+      "apps/api/src/modules/whatsapp/templates/catalog/template.registry.sync.test.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/template.registry.test.ts",
+      "apps/api/src/modules/whatsapp/templates/catalog/template.registry.test.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/template.registry.ts",
+      "apps/api/src/modules/whatsapp/templates/catalog/template.registry.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/template.submit-chat.test.ts",
+      "apps/api/src/modules/whatsapp/templates/sync/template.submit-chat.test.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/template.submit-doc.test.ts",
+      "apps/api/src/modules/whatsapp/templates/sync/template.submit-doc.test.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/template.submit-kapso.test.ts",
+      "apps/api/src/modules/whatsapp/templates/sync/template.submit-kapso.test.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/templates.controller.ts",
+      "apps/api/src/modules/whatsapp/templates/catalog/templates.controller.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/templates.lines.http.test.ts",
+      "apps/api/src/modules/whatsapp/templates/sync/templates.lines.http.test.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/templates.numbers.http.test.ts",
+      "apps/api/src/modules/whatsapp/templates/sync/templates.numbers.http.test.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/templates.queries.test.ts",
+      "apps/api/src/modules/whatsapp/templates/catalog/templates.queries.test.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/templates.queries.ts",
+      "apps/api/src/modules/whatsapp/templates/catalog/templates.queries.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/templates.restricted.http.test.ts",
+      "apps/api/src/modules/whatsapp/templates/catalog/templates.restricted.http.test.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/templates.starter.http.test.ts",
+      "apps/api/src/modules/whatsapp/templates/catalog/templates.starter.http.test.ts"
+    ]
+  ]
+}

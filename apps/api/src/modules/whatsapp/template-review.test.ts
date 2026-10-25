@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { SEEDS } from './seed-templates.fakes';
+import { SEEDS } from './templates/catalog/seed-templates.fakes';
 import { bodyExamples, SAMPLE_REPORT, templateProblem } from './template-review';
 import { bodyVarCount, submitPayload } from './messages/wa-components';
 import { templateRow } from './whatsapp.fakes';

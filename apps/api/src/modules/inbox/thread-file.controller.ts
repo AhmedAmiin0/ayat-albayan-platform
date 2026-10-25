@@ -2,7 +2,7 @@ import { Controller, Get, HttpStatus, Param, ParseUUIDPipe } from '@nestjs/commo
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser, Permissions } from '../../common/auth/decorators';
 import type { AuthUser } from '../../common/auth/verify-token';
-import { waHttpError } from '../whatsapp/template.mapper';
+import { waHttpError } from '../whatsapp/templates/catalog/template.mapper';
 import { phoneParam } from './phone-param';
 import { ThreadMediaService, type ThreadFile } from './thread-media.service';
 import { ThreadReads } from './thread-reads';

@@ -5,7 +5,7 @@ import { Permissions } from '../../../common/auth/decorators';
 import { NumbersHealth } from '../../numbers/numbers.health';
 import { LineHealthStore } from './line-health.store';
 import { LinesCheck } from './lines.check';
-import { TemplateManagerGuard } from '../template-manager.guard';
+import { TemplateManagerGuard } from '../templates/catalog/template-manager.guard';
 
 /**
  * Line diagnostics (docs/12 §13.9, R-MSG-05): each WhatsApp line as Meta reports it. Admin only

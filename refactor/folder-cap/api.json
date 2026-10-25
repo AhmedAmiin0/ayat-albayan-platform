@@ -106,9 +106,5 @@
   "apps/api/src/modules/webhook": {
     "files": 25,
     "dirs": 0
-  },
-  "apps/api/src/modules/whatsapp": {
-    "files": 30,
-    "dirs": 6
   }
 }

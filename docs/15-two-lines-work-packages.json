@@ -65,8 +65,8 @@
     "apps/api/src/modules/whatsapp/whatsapp.client.test.ts",
     "apps/api/src/modules/whatsapp/gate/send-gate.ts",
     "apps/api/src/modules/whatsapp/gate/send-gate.restricted.test.ts",
-    "apps/api/src/modules/whatsapp/template.registry.ts",
-    "apps/api/src/modules/whatsapp/template.registry.sync.test.ts",
+    "apps/api/src/modules/whatsapp/templates/catalog/template.registry.ts",
+    "apps/api/src/modules/whatsapp/templates/catalog/template.registry.sync.test.ts",
     "apps/api/src/modules/whatsapp/test-app.ts",
     "apps/api/src/common/auth/parity/access-before.json"
    ],

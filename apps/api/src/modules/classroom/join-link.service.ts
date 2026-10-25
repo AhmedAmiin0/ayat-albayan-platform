@@ -2,8 +2,8 @@ import type { JoinLinkRequest, JoinLinkResult } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
 import { Outbox } from '../inbox/outbox';
 import { notFound } from '../../common/http/errors';
-import { waHttpError } from '../whatsapp/template.mapper';
-import { TemplateRegistry } from '../whatsapp/template.registry';
+import { waHttpError } from '../whatsapp/templates/catalog/template.mapper';
+import { TemplateRegistry } from '../whatsapp/templates/catalog/template.registry';
 import { ClassroomQueries } from './classroom.queries';
 import { hashLinkToken, linkExpiry, newLinkToken } from './join-link.token';
 

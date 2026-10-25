@@ -5,7 +5,7 @@ import { MessageViews } from './message.views';
 import { needsManualSend, type MessageRow } from './message.mapper';
 import { MessagesQueries } from './messages.queries';
 import { AUTO_OFF } from '../sender/send-stale';
-import { waHttpError } from '../template.mapper';
+import { waHttpError } from '../templates/catalog/template.mapper';
 
 export interface MessageChange {
   before: MessageRow;

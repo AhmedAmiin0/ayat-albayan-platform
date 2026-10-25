@@ -8,7 +8,7 @@ import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier
 import type { AuthUser } from '../../common/auth/verify-token';
 import { Outbox } from '../inbox/outbox';
 import { TeachersQueries } from '../teachers/teachers.queries';
-import { TemplateRegistry } from '../whatsapp/template.registry';
+import { TemplateRegistry } from '../whatsapp/templates/catalog/template.registry';
 import { AssistantLessonsQueries } from './assistants.lessons';
 import { AssistantsQueries } from './assistants.queries';
 import { CLASSROOM_CONFIG, CLASSROOM_WEB_ORIGIN, RECORDING_CONFIG } from './classroom.config';

@@ -9,7 +9,7 @@ import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier
 import type { AuthUser } from '../../common/auth/verify-token';
 import { Outbox } from '../inbox/outbox';
 import { TeachersQueries } from '../teachers/teachers.queries';
-import { TemplateRegistry } from '../whatsapp/template.registry';
+import { TemplateRegistry } from '../whatsapp/templates/catalog/template.registry';
 import { FEEDBACK_CONFIG } from './feedback.config';
 import { ADMIN, GUARDIAN, listRow, OTHER_TEACHER, SECRET, TEACHER, TEACHER_ID } from './feedback.fakes';
 import { FeedbackQueries } from './feedback.queries';

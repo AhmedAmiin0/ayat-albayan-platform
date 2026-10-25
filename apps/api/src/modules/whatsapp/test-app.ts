@@ -14,7 +14,7 @@ import { LinesCheck } from './lines/lines.check';
 import { MessageSender } from './sender/message.sender';
 import { MessagesQueries } from './messages/messages.queries';
 import { SendGate } from './gate/send-gate';
-import { TemplatesQueries, type ApprovalRow } from './templates.queries';
+import { TemplatesQueries, type ApprovalRow } from './templates/catalog/templates.queries';
 import { WHATSAPP_CLIENT, WHATSAPP_LINES } from './whatsapp.types';
 
 export const ADMIN: AuthUser = { id: 'a0000000-0000-4000-8000-000000000001', email: null, role: 'admin' };

@@ -4,7 +4,7 @@ import { BUCKETS, forwardOutPath } from '../../common/storage/storage.paths';
 import { StorageService } from '../../common/storage/storage.service';
 import { InboundMedia } from '../whatsapp/messages/inbound-media.service';
 import type { ThreadMessageRow } from '../whatsapp/messages/message.mapper';
-import { waHttpError } from '../whatsapp/template.mapper';
+import { waHttpError } from '../whatsapp/templates/catalog/template.mapper';
 import { Outbox, type Sent } from './outbox';
 import { dedupKey, outboundBase, sendLine, type ThreadSend } from './thread-send.service';
 import { ThreadsQueries } from './threads.queries';

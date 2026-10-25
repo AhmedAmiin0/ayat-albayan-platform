@@ -1,7 +1,7 @@
 import { HttpException } from '@nestjs/common';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { Outbox } from '../inbox/outbox';
-import type { TemplateRegistry } from '../whatsapp/template.registry';
+import type { TemplateRegistry } from '../whatsapp/templates/catalog/template.registry';
 import type { ClassroomQueries } from './classroom.queries';
 import { ADMIN, LESSON_ID, OPEN, queries, STUDENT_ID } from './classroom.fakes';
 import { hashLinkToken } from './join-link.token';

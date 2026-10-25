@@ -4,7 +4,7 @@ import { BUCKETS } from '../../common/storage/storage.paths';
 import { StorageService } from '../../common/storage/storage.service';
 import { InboundMediaQueries } from '../whatsapp/messages/inbound-media.queries';
 import { baseMime, InboundMedia, isInvoiceMime, mediaExpired, servable } from '../whatsapp/messages/inbound-media.service';
-import { waHttpError } from '../whatsapp/template.mapper';
+import { waHttpError } from '../whatsapp/templates/catalog/template.mapper';
 
 const DAY_MS = 86_400_000;
 /** The picker looks back this far and shows this many files. */

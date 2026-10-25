@@ -2,7 +2,7 @@ import type { ForwardResult, ForwardSkip, ThreadForward } from '@ab/shared';
 import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
 import type { SalesScope } from '../sales/sales-scope';
 import type { ThreadMessageRow } from '../whatsapp/messages/message.mapper';
-import { waHttpError } from '../whatsapp/template.mapper';
+import { waHttpError } from '../whatsapp/templates/catalog/template.mapper';
 import { ForwardFiles, type ForwardFile } from './forward-files';
 import type { Sent } from './outbox';
 import { visibleToSales } from './sales-threads';

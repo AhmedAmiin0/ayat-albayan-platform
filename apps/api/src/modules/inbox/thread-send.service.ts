@@ -1,7 +1,7 @@
 import { restrictedMay, type ThreadTemplate, type ThreadText, type WaLine } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
-import { TemplateRegistry } from '../whatsapp/template.registry';
-import { waHttpError } from '../whatsapp/template.mapper';
+import { TemplateRegistry } from '../whatsapp/templates/catalog/template.registry';
+import { waHttpError } from '../whatsapp/templates/catalog/template.mapper';
 import type { SalesScope } from '../sales/sales-scope';
 import { Outbox, type Sent } from './outbox';
 import { assertCanSend, type TeacherScope } from './teacher-scope';

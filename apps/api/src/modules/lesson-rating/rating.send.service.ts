@@ -1,8 +1,8 @@
 import { lessonRatingMessage, RATING_TEMPLATE } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
 import { Outbox, type Sent } from '../inbox/outbox';
-import { waHttpError } from '../whatsapp/template.mapper';
-import { TemplateRegistry } from '../whatsapp/template.registry';
+import { waHttpError } from '../whatsapp/templates/catalog/template.mapper';
+import { TemplateRegistry } from '../whatsapp/templates/catalog/template.registry';
 import { ratingFamilies } from './rating.plan';
 import { RatingQueries } from './rating.queries';
 

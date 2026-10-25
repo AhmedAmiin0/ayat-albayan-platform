@@ -1,7 +1,7 @@
 import { feedbackEligible, type FeedbackRequest, type FeedbackRequestResult } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { conflict, notFound } from '../../common/http/errors';
-import { waHttpError } from '../whatsapp/template.mapper';
+import { waHttpError } from '../whatsapp/templates/catalog/template.mapper';
 import { FEEDBACK_CONFIG, type FeedbackConfig } from './feedback.config';
 import { FeedbackQueries, type FeedbackRow, type RequestContext } from './feedback.queries';
 import { FEEDBACK_TEMPLATE, FeedbackSender } from './feedback.sender';
