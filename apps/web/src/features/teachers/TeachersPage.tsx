@@ -13,7 +13,7 @@ import { teachersPageQuery, type Page, type Teacher, type TeacherListRow } from 
 import { FormAlert } from '@/components/ui/form/form-alert';
 import { ListSkeleton } from '@/components/ui/display/skeleton';
 import { teacherColumns } from './teacher-columns';
-import { TeacherDialog } from './TeacherDialog';
+import { TeacherDialog } from './form/TeacherDialog';
 
 type Props = {
   /** Page, column sort and filters, kept in the route search (R-NFR-08). */

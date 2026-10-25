@@ -1,0 +1,208 @@
+{
+  "id": "b16a",
+  "seq": 59,
+  "moves": [
+    {
+      "from": "apps/web/src/features/assistants/PayStatementDialog*",
+      "to": "apps/web/src/features/assistants/statements/"
+    },
+    {
+      "from": "apps/web/src/features/assistants/Statement*",
+      "to": "apps/web/src/features/assistants/statements/"
+    },
+    {
+      "from": "apps/web/src/features/assistants/statement-columns*",
+      "to": "apps/web/src/features/assistants/statements/"
+    },
+    {
+      "from": "apps/web/src/features/assistants/use-pay-statement*",
+      "to": "apps/web/src/features/assistants/statements/"
+    },
+    {
+      "from": "apps/web/src/features/assistants/use-statement-can*",
+      "to": "apps/web/src/features/assistants/statements/"
+    },
+    {
+      "from": "apps/web/src/features/assistants/totals.*",
+      "to": "apps/web/src/features/assistants/statements/"
+    },
+    {
+      "from": "apps/web/src/features/assistants/generate-targets*",
+      "to": "apps/web/src/features/assistants/statements/"
+    },
+    {
+      "from": "apps/web/src/features/assistants/CommissionLedger*",
+      "to": "apps/web/src/features/assistants/commissions/"
+    },
+    {
+      "from": "apps/web/src/features/assistants/commission-columns*",
+      "to": "apps/web/src/features/assistants/commissions/"
+    },
+    {
+      "from": "apps/web/src/features/assistants/VoidCommissionDialog*",
+      "to": "apps/web/src/features/assistants/commissions/"
+    },
+    {
+      "from": "apps/web/src/features/assistants/Currency*",
+      "to": "apps/web/src/features/assistants/commissions/"
+    },
+    {
+      "from": "apps/web/src/features/assistants/Terms*",
+      "to": "apps/web/src/features/assistants/terms/"
+    },
+    {
+      "from": "apps/web/src/features/assistants/terms-*",
+      "to": "apps/web/src/features/assistants/terms/"
+    },
+    {
+      "from": "apps/web/src/features/assistants/BroughtByField*",
+      "to": "apps/web/src/features/assistants/students/"
+    },
+    {
+      "from": "apps/web/src/features/assistants/brought-at*",
+      "to": "apps/web/src/features/assistants/students/"
+    },
+    {
+      "from": "apps/web/src/features/assistants/BulkAssign*",
+      "to": "apps/web/src/features/assistants/students/"
+    },
+    {
+      "from": "apps/web/src/features/assistants/pick-column*",
+      "to": "apps/web/src/features/assistants/students/"
+    },
+    {
+      "from": "apps/web/src/features/assistants/use-student-pick*",
+      "to": "apps/web/src/features/assistants/students/"
+    },
+    {
+      "from": "apps/web/src/features/assistants/FilterBar*",
+      "to": "apps/web/src/features/assistants/students/"
+    }
+  ],
+  "files": [
+    [
+      "apps/web/src/features/assistants/brought-at.ts",
+      "apps/web/src/features/assistants/students/brought-at.ts"
+    ],
+    [
+      "apps/web/src/features/assistants/BroughtByField.tsx",
+      "apps/web/src/features/assistants/students/BroughtByField.tsx"
+    ],
+    [
+      "apps/web/src/features/assistants/BulkAssign.tsx",
+      "apps/web/src/features/assistants/students/BulkAssign.tsx"
+    ],
+    [
+      "apps/web/src/features/assistants/commission-columns.tsx",
+      "apps/web/src/features/assistants/commissions/commission-columns.tsx"
+    ],
+    [
+      "apps/web/src/features/assistants/CommissionLedger.test.tsx",
+      "apps/web/src/features/assistants/commissions/CommissionLedger.test.tsx"
+    ],
+    [
+      "apps/web/src/features/assistants/CommissionLedger.tsx",
+      "apps/web/src/features/assistants/commissions/CommissionLedger.tsx"
+    ],
+    [
+      "apps/web/src/features/assistants/CurrencyList.tsx",
+      "apps/web/src/features/assistants/commissions/CurrencyList.tsx"
+    ],
+    [
+      "apps/web/src/features/assistants/CurrencySelect.tsx",
+      "apps/web/src/features/assistants/commissions/CurrencySelect.tsx"
+    ],
+    [
+      "apps/web/src/features/assistants/FilterBar.tsx",
+      "apps/web/src/features/assistants/students/FilterBar.tsx"
+    ],
+    [
+      "apps/web/src/features/assistants/generate-targets.ts",
+      "apps/web/src/features/assistants/statements/generate-targets.ts"
+    ],
+    [
+      "apps/web/src/features/assistants/PayStatementDialog.tsx",
+      "apps/web/src/features/assistants/statements/PayStatementDialog.tsx"
+    ],
+    [
+      "apps/web/src/features/assistants/pick-column.tsx",
+      "apps/web/src/features/assistants/students/pick-column.tsx"
+    ],
+    [
+      "apps/web/src/features/assistants/statement-columns.tsx",
+      "apps/web/src/features/assistants/statements/statement-columns.tsx"
+    ],
+    [
+      "apps/web/src/features/assistants/StatementActions.tsx",
+      "apps/web/src/features/assistants/statements/StatementActions.tsx"
+    ],
+    [
+      "apps/web/src/features/assistants/StatementDialogs.tsx",
+      "apps/web/src/features/assistants/statements/StatementDialogs.tsx"
+    ],
+    [
+      "apps/web/src/features/assistants/StatementLinesDialog.tsx",
+      "apps/web/src/features/assistants/statements/StatementLinesDialog.tsx"
+    ],
+    [
+      "apps/web/src/features/assistants/StatementsPanel.test.tsx",
+      "apps/web/src/features/assistants/statements/StatementsPanel.test.tsx"
+    ],
+    [
+      "apps/web/src/features/assistants/StatementsPanel.tsx",
+      "apps/web/src/features/assistants/statements/StatementsPanel.tsx"
+    ],
+    [
+      "apps/web/src/features/assistants/StatementTotals.tsx",
+      "apps/web/src/features/assistants/statements/StatementTotals.tsx"
+    ],
+    [
+      "apps/web/src/features/assistants/terms-form.test.ts",
+      "apps/web/src/features/assistants/terms/terms-form.test.ts"
+    ],
+    [
+      "apps/web/src/features/assistants/terms-form.ts",
+      "apps/web/src/features/assistants/terms/terms-form.ts"
+    ],
+    [
+      "apps/web/src/features/assistants/terms-summary.ts",
+      "apps/web/src/features/assistants/terms/terms-summary.ts"
+    ],
+    [
+      "apps/web/src/features/assistants/TermsEditor.test.tsx",
+      "apps/web/src/features/assistants/terms/TermsEditor.test.tsx"
+    ],
+    [
+      "apps/web/src/features/assistants/TermsEditor.tsx",
+      "apps/web/src/features/assistants/terms/TermsEditor.tsx"
+    ],
+    [
+      "apps/web/src/features/assistants/TermsFields.tsx",
+      "apps/web/src/features/assistants/terms/TermsFields.tsx"
+    ],
+    [
+      "apps/web/src/features/assistants/totals.test.ts",
+      "apps/web/src/features/assistants/statements/totals.test.ts"
+    ],
+    [
+      "apps/web/src/features/assistants/totals.ts",
+      "apps/web/src/features/assistants/statements/totals.ts"
+    ],
+    [
+      "apps/web/src/features/assistants/use-pay-statement.ts",
+      "apps/web/src/features/assistants/statements/use-pay-statement.ts"
+    ],
+    [
+      "apps/web/src/features/assistants/use-statement-can.ts",
+      "apps/web/src/features/assistants/statements/use-statement-can.ts"
+    ],
+    [
+      "apps/web/src/features/assistants/use-student-pick.ts",
+      "apps/web/src/features/assistants/students/use-student-pick.ts"
+    ],
+    [
+      "apps/web/src/features/assistants/VoidCommissionDialog.tsx",
+      "apps/web/src/features/assistants/commissions/VoidCommissionDialog.tsx"
+    ]
+  ]
+}

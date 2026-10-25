@@ -1,7 +1,7 @@
 import type { CSSProperties } from 'react';
-import { hatchStyle } from '@/features/teachers/DayTrack';
-import type { Range } from '@/features/teachers/grid';
-import { barBox } from '@/features/teachers/track';
+import { hatchStyle } from '@/features/teachers/availability/DayTrack';
+import type { Range } from '@/features/teachers/availability/grid';
+import { barBox } from '@/features/teachers/availability/track';
 import { cn } from '@/lib/utils';
 
 // Hairline every 2h on the sunk track, from the inline-start (right in RTL), as DayTrack. docs/07 §8.

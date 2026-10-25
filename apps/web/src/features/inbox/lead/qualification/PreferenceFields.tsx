@@ -2,7 +2,7 @@ import { tzChoices, tzOptionLabel } from '@ab/shared';
 import { Field } from '@/components/ui/form/field';
 import { Select } from '@/components/ui/form/select';
 import { tzCity } from '@/components/ui/form/time-zone-select';
-import { timeOptions, WEEK_ORDER } from '@/features/teachers/grid';
+import { timeOptions, WEEK_ORDER } from '@/features/teachers/availability/grid';
 import { t } from '@/lib/i18n/i18n';
 import type { QualFieldsProps } from './QualificationFields';
 

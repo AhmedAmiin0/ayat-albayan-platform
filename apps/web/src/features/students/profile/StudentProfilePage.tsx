@@ -9,7 +9,7 @@ import { PageHead } from '@/components/ui/layout/page';
 import { StatusChip } from '@/components/ui/display/status-chip';
 import { Toast } from '@/components/ui/overlay/toast';
 import { EntityActivity } from '@/features/activity/EntityActivity';
-import { BroughtByField } from '@/features/assistants/BroughtByField';
+import { BroughtByField } from '@/features/assistants/students/BroughtByField';
 import { AssistantsManager } from '@/features/classroom/sessions/AssistantsManager';
 import { StudentJoinLink } from '@/features/classroom/student-link/StudentJoinLink';
 import { GuardianEditDialog } from '@/features/guardians/GuardianEditForm';

@@ -1,0 +1,272 @@
+{
+  "id": "b15a",
+  "seq": 57,
+  "moves": [
+    {
+      "from": "apps/web/src/features/teachers/Availability*",
+      "to": "apps/web/src/features/teachers/availability/"
+    },
+    {
+      "from": "apps/web/src/features/teachers/DayTrack*",
+      "to": "apps/web/src/features/teachers/availability/"
+    },
+    {
+      "from": "apps/web/src/features/teachers/RangeRow*",
+      "to": "apps/web/src/features/teachers/availability/"
+    },
+    {
+      "from": "apps/web/src/features/teachers/grid.*",
+      "to": "apps/web/src/features/teachers/availability/"
+    },
+    {
+      "from": "apps/web/src/features/teachers/track.*",
+      "to": "apps/web/src/features/teachers/availability/"
+    },
+    {
+      "from": "apps/web/src/features/teachers/TeacherDialog*",
+      "to": "apps/web/src/features/teachers/form/"
+    },
+    {
+      "from": "apps/web/src/features/teachers/TeacherFormFields*",
+      "to": "apps/web/src/features/teachers/form/"
+    },
+    {
+      "from": "apps/web/src/features/teachers/TeacherWorkFields*",
+      "to": "apps/web/src/features/teachers/form/"
+    },
+    {
+      "from": "apps/web/src/features/teachers/TeacherMeetingModeField*",
+      "to": "apps/web/src/features/teachers/form/"
+    },
+    {
+      "from": "apps/web/src/features/teachers/MeetingModeWarnings*",
+      "to": "apps/web/src/features/teachers/form/"
+    },
+    {
+      "from": "apps/web/src/features/teachers/meeting-mode-*",
+      "to": "apps/web/src/features/teachers/form/"
+    },
+    {
+      "from": "apps/web/src/features/teachers/teacher-form*",
+      "to": "apps/web/src/features/teachers/form/"
+    },
+    {
+      "from": "apps/web/src/features/teachers/TeacherDetailPage*",
+      "to": "apps/web/src/features/teachers/detail/"
+    },
+    {
+      "from": "apps/web/src/features/teachers/TeacherFacts*",
+      "to": "apps/web/src/features/teachers/detail/"
+    },
+    {
+      "from": "apps/web/src/features/teachers/TeacherMeta*",
+      "to": "apps/web/src/features/teachers/detail/"
+    },
+    {
+      "from": "apps/web/src/features/teachers/TeacherStudentsPanel*",
+      "to": "apps/web/src/features/teachers/detail/"
+    },
+    {
+      "from": "apps/web/src/features/teachers/teacher-student-columns*",
+      "to": "apps/web/src/features/teachers/detail/"
+    },
+    {
+      "from": "apps/web/src/features/teachers/teacher-students-view*",
+      "to": "apps/web/src/features/teachers/detail/"
+    },
+    {
+      "from": "apps/web/src/features/teachers/StudentCountLink*",
+      "to": "apps/web/src/features/teachers/detail/"
+    },
+    {
+      "from": "apps/web/src/features/teachers/RatesTable*",
+      "to": "apps/web/src/features/teachers/detail/"
+    },
+    {
+      "from": "apps/web/src/features/teachers/TimeOff*",
+      "to": "apps/web/src/features/teachers/time-off/"
+    },
+    {
+      "from": "apps/web/src/features/teachers/time-off*",
+      "to": "apps/web/src/features/teachers/time-off/"
+    }
+  ],
+  "files": [
+    [
+      "apps/web/src/features/teachers/AvailabilityDay.tsx",
+      "apps/web/src/features/teachers/availability/AvailabilityDay.tsx"
+    ],
+    [
+      "apps/web/src/features/teachers/AvailabilityFoot.tsx",
+      "apps/web/src/features/teachers/availability/AvailabilityFoot.tsx"
+    ],
+    [
+      "apps/web/src/features/teachers/AvailabilityGrid.test.tsx",
+      "apps/web/src/features/teachers/availability/AvailabilityGrid.test.tsx"
+    ],
+    [
+      "apps/web/src/features/teachers/AvailabilityGrid.tsx",
+      "apps/web/src/features/teachers/availability/AvailabilityGrid.tsx"
+    ],
+    [
+      "apps/web/src/features/teachers/AvailabilityHead.tsx",
+      "apps/web/src/features/teachers/availability/AvailabilityHead.tsx"
+    ],
+    [
+      "apps/web/src/features/teachers/AvailabilityWeek.test.tsx",
+      "apps/web/src/features/teachers/availability/AvailabilityWeek.test.tsx"
+    ],
+    [
+      "apps/web/src/features/teachers/AvailabilityWeek.tsx",
+      "apps/web/src/features/teachers/availability/AvailabilityWeek.tsx"
+    ],
+    [
+      "apps/web/src/features/teachers/DayTrack.tsx",
+      "apps/web/src/features/teachers/availability/DayTrack.tsx"
+    ],
+    [
+      "apps/web/src/features/teachers/grid.test.ts",
+      "apps/web/src/features/teachers/availability/grid.test.ts"
+    ],
+    [
+      "apps/web/src/features/teachers/grid.ts",
+      "apps/web/src/features/teachers/availability/grid.ts"
+    ],
+    [
+      "apps/web/src/features/teachers/meeting-mode-notes.test.ts",
+      "apps/web/src/features/teachers/form/meeting-mode-notes.test.ts"
+    ],
+    [
+      "apps/web/src/features/teachers/meeting-mode-notes.ts",
+      "apps/web/src/features/teachers/form/meeting-mode-notes.ts"
+    ],
+    [
+      "apps/web/src/features/teachers/meeting-mode-test-utils.tsx",
+      "apps/web/src/features/teachers/form/meeting-mode-test-utils.tsx"
+    ],
+    [
+      "apps/web/src/features/teachers/meeting-mode-text.test.ts",
+      "apps/web/src/features/teachers/form/meeting-mode-text.test.ts"
+    ],
+    [
+      "apps/web/src/features/teachers/meeting-mode-text.ts",
+      "apps/web/src/features/teachers/form/meeting-mode-text.ts"
+    ],
+    [
+      "apps/web/src/features/teachers/MeetingModeWarnings.test.tsx",
+      "apps/web/src/features/teachers/form/MeetingModeWarnings.test.tsx"
+    ],
+    [
+      "apps/web/src/features/teachers/MeetingModeWarnings.tsx",
+      "apps/web/src/features/teachers/form/MeetingModeWarnings.tsx"
+    ],
+    [
+      "apps/web/src/features/teachers/RangeRow.tsx",
+      "apps/web/src/features/teachers/availability/RangeRow.tsx"
+    ],
+    [
+      "apps/web/src/features/teachers/RatesTable.tsx",
+      "apps/web/src/features/teachers/detail/RatesTable.tsx"
+    ],
+    [
+      "apps/web/src/features/teachers/StudentCountLink.tsx",
+      "apps/web/src/features/teachers/detail/StudentCountLink.tsx"
+    ],
+    [
+      "apps/web/src/features/teachers/teacher-form.test.ts",
+      "apps/web/src/features/teachers/form/teacher-form.test.ts"
+    ],
+    [
+      "apps/web/src/features/teachers/teacher-form.ts",
+      "apps/web/src/features/teachers/form/teacher-form.ts"
+    ],
+    [
+      "apps/web/src/features/teachers/teacher-student-columns.tsx",
+      "apps/web/src/features/teachers/detail/teacher-student-columns.tsx"
+    ],
+    [
+      "apps/web/src/features/teachers/teacher-students-view.ts",
+      "apps/web/src/features/teachers/detail/teacher-students-view.ts"
+    ],
+    [
+      "apps/web/src/features/teachers/TeacherDetailPage.test.tsx",
+      "apps/web/src/features/teachers/detail/TeacherDetailPage.test.tsx"
+    ],
+    [
+      "apps/web/src/features/teachers/TeacherDetailPage.tsx",
+      "apps/web/src/features/teachers/detail/TeacherDetailPage.tsx"
+    ],
+    [
+      "apps/web/src/features/teachers/TeacherDialog.mode.test.tsx",
+      "apps/web/src/features/teachers/form/TeacherDialog.mode.test.tsx"
+    ],
+    [
+      "apps/web/src/features/teachers/TeacherDialog.tsx",
+      "apps/web/src/features/teachers/form/TeacherDialog.tsx"
+    ],
+    [
+      "apps/web/src/features/teachers/TeacherFacts.tsx",
+      "apps/web/src/features/teachers/detail/TeacherFacts.tsx"
+    ],
+    [
+      "apps/web/src/features/teachers/TeacherFormFields.tsx",
+      "apps/web/src/features/teachers/form/TeacherFormFields.tsx"
+    ],
+    [
+      "apps/web/src/features/teachers/TeacherMeetingModeField.test.tsx",
+      "apps/web/src/features/teachers/form/TeacherMeetingModeField.test.tsx"
+    ],
+    [
+      "apps/web/src/features/teachers/TeacherMeetingModeField.tsx",
+      "apps/web/src/features/teachers/form/TeacherMeetingModeField.tsx"
+    ],
+    [
+      "apps/web/src/features/teachers/TeacherMeta.tsx",
+      "apps/web/src/features/teachers/detail/TeacherMeta.tsx"
+    ],
+    [
+      "apps/web/src/features/teachers/TeacherStudentsPanel.sort.test.tsx",
+      "apps/web/src/features/teachers/detail/TeacherStudentsPanel.sort.test.tsx"
+    ],
+    [
+      "apps/web/src/features/teachers/TeacherStudentsPanel.test.tsx",
+      "apps/web/src/features/teachers/detail/TeacherStudentsPanel.test.tsx"
+    ],
+    [
+      "apps/web/src/features/teachers/TeacherStudentsPanel.tsx",
+      "apps/web/src/features/teachers/detail/TeacherStudentsPanel.tsx"
+    ],
+    [
+      "apps/web/src/features/teachers/TeacherWorkFields.tsx",
+      "apps/web/src/features/teachers/form/TeacherWorkFields.tsx"
+    ],
+    [
+      "apps/web/src/features/teachers/time-off.test.ts",
+      "apps/web/src/features/teachers/time-off/time-off.test.ts"
+    ],
+    [
+      "apps/web/src/features/teachers/time-off.ts",
+      "apps/web/src/features/teachers/time-off/time-off.ts"
+    ],
+    [
+      "apps/web/src/features/teachers/TimeOffDialog.tsx",
+      "apps/web/src/features/teachers/time-off/TimeOffDialog.tsx"
+    ],
+    [
+      "apps/web/src/features/teachers/TimeOffList.test.tsx",
+      "apps/web/src/features/teachers/time-off/TimeOffList.test.tsx"
+    ],
+    [
+      "apps/web/src/features/teachers/TimeOffList.tsx",
+      "apps/web/src/features/teachers/time-off/TimeOffList.tsx"
+    ],
+    [
+      "apps/web/src/features/teachers/track.test.ts",
+      "apps/web/src/features/teachers/availability/track.test.ts"
+    ],
+    [
+      "apps/web/src/features/teachers/track.ts",
+      "apps/web/src/features/teachers/availability/track.ts"
+    ]
+  ]
+}
