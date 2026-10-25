@@ -3,7 +3,7 @@ import { Icon } from '@/components/ui/display/icon';
 import { IconButton } from '@/components/ui/form/icon-button';
 import { t } from '@/lib/i18n/i18n';
 import { useChatActions } from '../../chat-actions';
-import { quoteSender, quoteText } from '../../quote';
+import { quoteSender, quoteText } from '../../messages/lib/quote';
 
 /**
  * «الرد على رسالة» above the message box (owner 2026-10-25): one compact line (44px, the phone's

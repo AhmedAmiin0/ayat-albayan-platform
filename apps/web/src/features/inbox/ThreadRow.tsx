@@ -7,7 +7,7 @@ import { StatusChip } from '@/components/ui/display/status-chip';
 import { initialOf } from '@/features/leads/format';
 import { t } from '@/lib/i18n/i18n';
 import { cn } from '@/lib/utils';
-import { DeliveryTicks } from './DeliveryTicks';
+import { DeliveryTicks } from './messages/components/DeliveryTicks';
 import { fullTime, listTime, previewText, threadKind, threadTitle, unreadLabel } from './format';
 import { LineBadge } from './LineBadge';
 import { inboxBase, showsPhone, useInboxMode } from './mode';

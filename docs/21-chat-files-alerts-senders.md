@@ -63,7 +63,7 @@ export const chatFileMaxBytes = (m: string | null): number => isPlayableMime(m) 
 
 - `INVOICE_*` and `RECEIPT_*` stay as they are. They are test-locked to each other.
 - `apps/api/src/modules/whatsapp/messages/inbound-media.service.ts` re-exports `baseMime` from `@ab/shared` instead of defining it. The imports in `thread-media.service.ts` and `booking.invoice.ts` stay unchanged.
-- `apps/web/src/features/inbox/MessageMedia.tsx` drops its local `baseMime`.
+- `apps/web/src/features/inbox/messages/components/MessageMedia.tsx` drops its local `baseMime`.
 
 ### 1.2 `packages/shared/src/messaging/chat-files.ts` (new, plus `chat-files.test.ts`; exported from `messaging/index.ts`)
 
@@ -215,7 +215,7 @@ This change reads data only. `created_by` writes stay as they are, because `isAu
 - Every caller inherits this with no service change: admin `threads.service.ts:51`, `sales-threads.service.ts:47`, `teacher-threads.service.ts:53`, Outbox and messages.service.
 - The sales redaction (`sales-threads.ts`) is unchanged.
 
-**Web: `apps/web/src/features/inbox/MessageBubble.tsx:85-87`** (106 lines)
+**Web: `apps/web/src/features/inbox/messages/components/MessageBubble.tsx:85-87`** (106 lines)
 
 - Replace the teacher-only line with `senderLine(m)`. It renders `t.inbox.sentBy` with the name, or `t.inbox.automaticMessage`, in the same `text-2xs` style.
 
@@ -228,7 +228,7 @@ This change reads data only. `created_by` writes stay as they are, because `isAu
 **Tests**
 
 - `apps/api/src/modules/whatsapp/messages/message.mapper.sender.test.ts` (new): the teacher's name wins; `full_name` is used for admin and sales; `automatic` is true only for outbound with created_by null and dedup_key set; imported history (dedup_key null) gives false and no name; inbound gives null and false; one assertion that `MESSAGE_SELECT` contains `sender:profiles!messages_created_by_fkey`.
-- `apps/web/src/features/inbox/MessageBubble.sender.test.tsx` (new): an assistant's row shows «أرسلها: سارة», a job row shows «رسالة تلقائية», and an imported or inbound row shows neither.
+- `apps/web/src/features/inbox/messages/components/MessageBubble.sender.test.tsx` (new): an assistant's row shows «أرسلها: سارة», a job row shows «رسالة تلقائية», and an imported or inbound row shows neither.
 - Extend `apps/mobile/src/inbox/thread/hooks/thread-mode.test.ts` with the same cases.
 - Grep `e2e/tests` for assertions on the whole text of outbound bubbles. Every outbound bubble now has a sender line, so those may need updating.
 
@@ -383,7 +383,7 @@ Only inside the 24 h window, stored and logged under her name. Sending is by lin
 
 ### Web
 
-11. **`apps/web/src/features/inbox/api.files.ts`** (new; `api.ts` is at 133 lines)
+11. **`apps/web/src/features/inbox/api/api.files.ts`** (new; `api.ts` is at 133 lines)
     - `fileUploadUrl`;
     - `uploadChatFile({ phone, requestId, file })`, a signed PUT via `supabase.storage.uploadToSignedUrl`, copied from `booking/api.invoice.ts:18-27`;
     - `sendFile`.

@@ -1,6 +1,6 @@
 import { QueryClient } from '@tanstack/react-query';
 import { describe, expect, it } from 'vitest';
-import { threadQuery } from '../api';
+import { threadQuery } from '../api/api';
 import { CHAT_LISTS_KEY } from './api';
 import { patchThreadLists } from './member-cache';
 

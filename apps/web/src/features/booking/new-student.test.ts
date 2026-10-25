@@ -1,6 +1,6 @@
 import { bookingRequestSchema } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
-import type { InboxLead } from '@/features/inbox/api';
+import type { InboxLead } from '@/features/inbox/api/api';
 import { draftFromLead } from './BookingPage';
 import { leadParts, newStudentFromLead, newStudentReady } from './new-student';
 

@@ -6,8 +6,8 @@ import { Icon } from '@/components/ui/display/icon';
 import { reclassifyLead } from '@/features/leads/leads.api';
 import { ReclassifyConfirm } from '@/features/leads/ReclassifyConfirm';
 import { t } from '@/lib/i18n/i18n';
-import type { InboxLead } from '../../api';
-import { LeadStatusChange } from '../../LeadStatusChange';
+import type { InboxLead } from '../../api/api';
+import { LeadStatusChange } from '../../lead/LeadStatusChange';
 
 export interface QuickActionsProps {
   lead: InboxLead;

@@ -2,7 +2,7 @@ import { screen, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { ApiError } from '@/lib/http/api';
 import { t } from '@/lib/i18n/i18n';
-import { threadQuery } from './api';
+import { threadQuery } from './api/api';
 import { detail, message, PHONE } from './testing/inbox-fixture';
 import { InboxModeContext } from './mode';
 import { renderWithClient, routeFetch } from './testing/test-utils';

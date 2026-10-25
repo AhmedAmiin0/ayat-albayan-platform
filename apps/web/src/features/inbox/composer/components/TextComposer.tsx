@@ -8,7 +8,7 @@ import { usePhone } from '@/components/ui/layout/use-narrow';
 import { errorCode } from '@/features/schedule/api';
 import { t } from '@/lib/i18n/i18n';
 import { cn } from '@/lib/utils';
-import { sendText } from '../../api';
+import { sendText } from '../../api/api';
 import type { ComposerExtras } from '../lib/composer-extras';
 import { sendsOnKey } from '../lib/composer-keys';
 import { ComposerError } from './ComposerError';

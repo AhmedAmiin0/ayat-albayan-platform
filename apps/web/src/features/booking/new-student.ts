@@ -9,7 +9,7 @@ import {
   type PackageSize,
   type Program,
 } from '@ab/shared';
-import type { InboxLead } from '@/features/inbox/api';
+import type { InboxLead } from '@/features/inbox/api/api';
 import { parseAge } from '@/features/students/create-student';
 
 // The lead path's new student + guardian (R-LEAD-06): what step 1 edits, what the lead's

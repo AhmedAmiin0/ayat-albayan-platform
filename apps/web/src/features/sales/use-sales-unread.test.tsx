@@ -2,7 +2,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { act, renderHook, waitFor } from '@testing-library/react';
 import type { ReactNode } from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { INBOX_REFRESH_MS } from '@/features/inbox/api';
+import { INBOX_REFRESH_MS } from '@/features/inbox/api/api';
 import { t } from '@/lib/i18n/i18n';
 import { ApiError } from '@/lib/http/api';
 import { salesUnreadQuery, unreadRetry, unreadTitle, useSalesUnread } from './use-sales-unread';

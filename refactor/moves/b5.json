@@ -1,0 +1,352 @@
+{
+  "id": "b5",
+  "seq": 40,
+  "moves": [
+    {
+      "from": "apps/web/src/features/inbox/api.*",
+      "to": "apps/web/src/features/inbox/api/"
+    },
+    {
+      "from": "apps/web/src/features/inbox/Message*",
+      "to": "apps/web/src/features/inbox/messages/components/"
+    },
+    {
+      "from": "apps/web/src/features/inbox/Bubble*",
+      "to": "apps/web/src/features/inbox/messages/components/"
+    },
+    {
+      "from": "apps/web/src/features/inbox/DeliveryTicks*",
+      "to": "apps/web/src/features/inbox/messages/components/"
+    },
+    {
+      "from": "apps/web/src/features/inbox/MediaPlayer*",
+      "to": "apps/web/src/features/inbox/messages/components/"
+    },
+    {
+      "from": "apps/web/src/features/inbox/Quote*",
+      "to": "apps/web/src/features/inbox/messages/components/"
+    },
+    {
+      "from": "apps/web/src/features/inbox/JumpToLatest*",
+      "to": "apps/web/src/features/inbox/messages/components/"
+    },
+    {
+      "from": "apps/web/src/features/inbox/quote*",
+      "to": "apps/web/src/features/inbox/messages/lib/"
+    },
+    {
+      "from": "apps/web/src/features/inbox/linkify*",
+      "to": "apps/web/src/features/inbox/messages/lib/"
+    },
+    {
+      "from": "apps/web/src/features/inbox/day-groups*",
+      "to": "apps/web/src/features/inbox/messages/lib/"
+    },
+    {
+      "from": "apps/web/src/features/inbox/jump-to-message*",
+      "to": "apps/web/src/features/inbox/messages/lib/"
+    },
+    {
+      "from": "apps/web/src/features/inbox/stick-to-bottom*",
+      "to": "apps/web/src/features/inbox/messages/lib/"
+    },
+    {
+      "from": "apps/web/src/features/inbox/message-notes*",
+      "to": "apps/web/src/features/inbox/messages/lib/"
+    },
+    {
+      "from": "apps/web/src/features/inbox/Forward*",
+      "to": "apps/web/src/features/inbox/messages/forward/"
+    },
+    {
+      "from": "apps/web/src/features/inbox/forward-summary*",
+      "to": "apps/web/src/features/inbox/messages/forward/"
+    },
+    {
+      "from": "apps/web/src/features/inbox/Lead*",
+      "to": "apps/web/src/features/inbox/lead/"
+    },
+    {
+      "from": "apps/web/src/features/inbox/lead-summary*",
+      "to": "apps/web/src/features/inbox/lead/"
+    },
+    {
+      "from": "apps/web/src/features/inbox/FollowUpLine*",
+      "to": "apps/web/src/features/inbox/lead/"
+    },
+    {
+      "from": "apps/web/src/features/inbox/LessonPicker*",
+      "to": "apps/web/src/features/inbox/lead/"
+    },
+    {
+      "from": "apps/web/src/features/inbox/Qualification*",
+      "to": "apps/web/src/features/inbox/lead/qualification/"
+    },
+    {
+      "from": "apps/web/src/features/inbox/qualification-form*",
+      "to": "apps/web/src/features/inbox/lead/qualification/"
+    },
+    {
+      "from": "apps/web/src/features/inbox/FamilyFields*",
+      "to": "apps/web/src/features/inbox/lead/qualification/"
+    },
+    {
+      "from": "apps/web/src/features/inbox/PreferenceFields*",
+      "to": "apps/web/src/features/inbox/lead/qualification/"
+    }
+  ],
+  "files": [
+    [
+      "apps/web/src/features/inbox/api.files.test.ts",
+      "apps/web/src/features/inbox/api/api.files.test.ts"
+    ],
+    [
+      "apps/web/src/features/inbox/api.files.ts",
+      "apps/web/src/features/inbox/api/api.files.ts"
+    ],
+    [
+      "apps/web/src/features/inbox/api.forward.ts",
+      "apps/web/src/features/inbox/api/api.forward.ts"
+    ],
+    [
+      "apps/web/src/features/inbox/api.test.ts",
+      "apps/web/src/features/inbox/api/api.test.ts"
+    ],
+    [
+      "apps/web/src/features/inbox/api.ts",
+      "apps/web/src/features/inbox/api/api.ts"
+    ],
+    [
+      "apps/web/src/features/inbox/BubbleActions.test.tsx",
+      "apps/web/src/features/inbox/messages/components/BubbleActions.test.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/BubbleActions.tsx",
+      "apps/web/src/features/inbox/messages/components/BubbleActions.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/BubbleMenu.tsx",
+      "apps/web/src/features/inbox/messages/components/BubbleMenu.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/day-groups.test.ts",
+      "apps/web/src/features/inbox/messages/lib/day-groups.test.ts"
+    ],
+    [
+      "apps/web/src/features/inbox/day-groups.ts",
+      "apps/web/src/features/inbox/messages/lib/day-groups.ts"
+    ],
+    [
+      "apps/web/src/features/inbox/DeliveryTicks.tsx",
+      "apps/web/src/features/inbox/messages/components/DeliveryTicks.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/FamilyFields.tsx",
+      "apps/web/src/features/inbox/lead/qualification/FamilyFields.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/FollowUpLine.tsx",
+      "apps/web/src/features/inbox/lead/FollowUpLine.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/forward-summary.test.ts",
+      "apps/web/src/features/inbox/messages/forward/forward-summary.test.ts"
+    ],
+    [
+      "apps/web/src/features/inbox/forward-summary.ts",
+      "apps/web/src/features/inbox/messages/forward/forward-summary.ts"
+    ],
+    [
+      "apps/web/src/features/inbox/ForwardDialog.test.tsx",
+      "apps/web/src/features/inbox/messages/forward/ForwardDialog.test.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/ForwardDialog.tsx",
+      "apps/web/src/features/inbox/messages/forward/ForwardDialog.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/ForwardList.tsx",
+      "apps/web/src/features/inbox/messages/forward/ForwardList.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/jump-to-message.ts",
+      "apps/web/src/features/inbox/messages/lib/jump-to-message.ts"
+    ],
+    [
+      "apps/web/src/features/inbox/JumpToLatest.tsx",
+      "apps/web/src/features/inbox/messages/components/JumpToLatest.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/lead-summary.test.ts",
+      "apps/web/src/features/inbox/lead/lead-summary.test.ts"
+    ],
+    [
+      "apps/web/src/features/inbox/lead-summary.ts",
+      "apps/web/src/features/inbox/lead/lead-summary.ts"
+    ],
+    [
+      "apps/web/src/features/inbox/LeadDataActions.tsx",
+      "apps/web/src/features/inbox/lead/LeadDataActions.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/LeadPanel.register.test.tsx",
+      "apps/web/src/features/inbox/lead/LeadPanel.register.test.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/LeadPanel.test.tsx",
+      "apps/web/src/features/inbox/lead/LeadPanel.test.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/LeadPanel.tsx",
+      "apps/web/src/features/inbox/lead/LeadPanel.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/LeadStatusChange.tsx",
+      "apps/web/src/features/inbox/lead/LeadStatusChange.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/LeadSummary.test.tsx",
+      "apps/web/src/features/inbox/lead/LeadSummary.test.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/LeadSummary.tsx",
+      "apps/web/src/features/inbox/lead/LeadSummary.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/LessonPicker.tsx",
+      "apps/web/src/features/inbox/lead/LessonPicker.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/linkify.test.ts",
+      "apps/web/src/features/inbox/messages/lib/linkify.test.ts"
+    ],
+    [
+      "apps/web/src/features/inbox/linkify.ts",
+      "apps/web/src/features/inbox/messages/lib/linkify.ts"
+    ],
+    [
+      "apps/web/src/features/inbox/MediaPlayer.test.tsx",
+      "apps/web/src/features/inbox/messages/components/MediaPlayer.test.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/MediaPlayer.tsx",
+      "apps/web/src/features/inbox/messages/components/MediaPlayer.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/message-notes.test.ts",
+      "apps/web/src/features/inbox/messages/lib/message-notes.test.ts"
+    ],
+    [
+      "apps/web/src/features/inbox/message-notes.ts",
+      "apps/web/src/features/inbox/messages/lib/message-notes.ts"
+    ],
+    [
+      "apps/web/src/features/inbox/MessageActions.tsx",
+      "apps/web/src/features/inbox/messages/components/MessageActions.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/MessageBubble.links.test.tsx",
+      "apps/web/src/features/inbox/messages/components/MessageBubble.links.test.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/MessageBubble.sender.test.tsx",
+      "apps/web/src/features/inbox/messages/components/MessageBubble.sender.test.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/MessageBubble.ticks.test.tsx",
+      "apps/web/src/features/inbox/messages/components/MessageBubble.ticks.test.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/MessageBubble.tsx",
+      "apps/web/src/features/inbox/messages/components/MessageBubble.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/MessageBubble.unavailable.test.tsx",
+      "apps/web/src/features/inbox/messages/components/MessageBubble.unavailable.test.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/MessageContent.tsx",
+      "apps/web/src/features/inbox/messages/components/MessageContent.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/MessageLog.days.test.tsx",
+      "apps/web/src/features/inbox/messages/components/MessageLog.days.test.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/MessageLog.jump.test.tsx",
+      "apps/web/src/features/inbox/messages/components/MessageLog.jump.test.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/MessageLog.pin.test.tsx",
+      "apps/web/src/features/inbox/messages/components/MessageLog.pin.test.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/MessageLog.quote.test.tsx",
+      "apps/web/src/features/inbox/messages/components/MessageLog.quote.test.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/MessageLog.tsx",
+      "apps/web/src/features/inbox/messages/components/MessageLog.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/MessageLog.wrap.test.tsx",
+      "apps/web/src/features/inbox/messages/components/MessageLog.wrap.test.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/MessageMedia.access.test.tsx",
+      "apps/web/src/features/inbox/messages/components/MessageMedia.access.test.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/MessageMedia.test.tsx",
+      "apps/web/src/features/inbox/messages/components/MessageMedia.test.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/MessageMedia.tsx",
+      "apps/web/src/features/inbox/messages/components/MessageMedia.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/PreferenceFields.tsx",
+      "apps/web/src/features/inbox/lead/qualification/PreferenceFields.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/qualification-form.test.ts",
+      "apps/web/src/features/inbox/lead/qualification/qualification-form.test.ts"
+    ],
+    [
+      "apps/web/src/features/inbox/qualification-form.ts",
+      "apps/web/src/features/inbox/lead/qualification/qualification-form.ts"
+    ],
+    [
+      "apps/web/src/features/inbox/QualificationFields.tsx",
+      "apps/web/src/features/inbox/lead/qualification/QualificationFields.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/QualificationForm.tsx",
+      "apps/web/src/features/inbox/lead/qualification/QualificationForm.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/QualificationForm.v1.test.tsx",
+      "apps/web/src/features/inbox/lead/qualification/QualificationForm.v1.test.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/quote.test.ts",
+      "apps/web/src/features/inbox/messages/lib/quote.test.ts"
+    ],
+    [
+      "apps/web/src/features/inbox/quote.ts",
+      "apps/web/src/features/inbox/messages/lib/quote.ts"
+    ],
+    [
+      "apps/web/src/features/inbox/QuoteBlock.tsx",
+      "apps/web/src/features/inbox/messages/components/QuoteBlock.tsx"
+    ],
+    [
+      "apps/web/src/features/inbox/stick-to-bottom.test.ts",
+      "apps/web/src/features/inbox/messages/lib/stick-to-bottom.test.ts"
+    ],
+    [
+      "apps/web/src/features/inbox/stick-to-bottom.ts",
+      "apps/web/src/features/inbox/messages/lib/stick-to-bottom.ts"
+    ]
+  ]
+}

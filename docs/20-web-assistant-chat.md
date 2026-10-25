@@ -65,7 +65,7 @@ Files: `apps/web/src/features/inbox/ThreadHeader.tsx`, `apps/web/src/features/in
 
 ### W4 (major) The chat follows the conversation: full-screen chat below 900px, a jump-to-latest button with a count, and a snap to the bottom after she sends — ✅ done
 
-Files: `apps/web/src/components/ui/layout/use-narrow.ts`, `apps/web/src/features/inbox/ThreadPane.tsx`, `apps/web/src/features/inbox/MessageBubble.tsx`, `apps/web/src/features/inbox/MessageLog.tsx`, `apps/web/src/features/inbox/JumpToLatest.tsx`, `packages/shared/i18n/ar.json`, `packages/shared/i18n/en.json`
+Files: `apps/web/src/components/ui/layout/use-narrow.ts`, `apps/web/src/features/inbox/ThreadPane.tsx`, `apps/web/src/features/inbox/messages/components/MessageBubble.tsx`, `apps/web/src/features/inbox/messages/components/MessageLog.tsx`, `apps/web/src/features/inbox/messages/components/JumpToLatest.tsx`, `packages/shared/i18n/ar.json`, `packages/shared/i18n/en.json`
 
 (1) use-narrow.ts: add `useBelowShell()` for '(max-width: 56.24rem)'. Leave usePhone alone; the dialogs depend on it.
 - ThreadPane.tsx:42 uses `phoneView = useBelowShell()`. From 640 to 899px the thread is then the existing PhoneChat, ThreadHeaderPhone and compact composer (after W2 the composer no longer branches on width).
@@ -92,7 +92,7 @@ All modes. Keep TextComposer ≤ 150 lines: the store and W2's key helper are se
 
 ### W6 (major) Photos and PDFs from families open in the chat (access bug: docs/16 row 1b promises bubble media for sales) — ✅ done
 
-Files: `apps/api/src/modules/inbox/thread-file.controller.ts`, `apps/api/src/modules/inbox/thread-file.http.test.ts`, `apps/api/src/modules/inbox/inbox.module.ts`, `apps/web/src/features/inbox/api.ts`, `apps/web/src/features/inbox/MessageMedia.tsx`, `apps/web/src/features/inbox/MessageBubble.tsx`, `e2e/tests/inbox-media.spec.ts`, `packages/shared/i18n/ar.json`, `packages/shared/i18n/en.json`
+Files: `apps/api/src/modules/inbox/thread-file.controller.ts`, `apps/api/src/modules/inbox/thread-file.http.test.ts`, `apps/api/src/modules/inbox/inbox.module.ts`, `apps/web/src/features/inbox/api/api.ts`, `apps/web/src/features/inbox/messages/components/MessageMedia.tsx`, `apps/web/src/features/inbox/messages/components/MessageBubble.tsx`, `e2e/tests/inbox-media.spec.ts`, `packages/shared/i18n/ar.json`, `packages/shared/i18n/en.json`
 
 This is the only API change in the routine, allowed because docs/16 row 1b says media inside messages «shows in every thread» for sales, while MessageViews.view is always called without a URL (sales-threads.service.ts:47).
 
@@ -158,7 +158,7 @@ Ceiling: the drawer still covers the thread while it is open. A non-modal pane i
 
 ### W10 (minor) Day separators at every width, and only the clock time on each bubble — ✅ done
 
-Files: `apps/web/src/features/inbox/MessageLog.tsx`, `apps/web/src/features/inbox/MessageBubble.tsx`
+Files: `apps/web/src/features/inbox/messages/components/MessageLog.tsx`, `apps/web/src/features/inbox/messages/components/MessageBubble.tsx`
 
 MessageLog.tsx:54: use `withDays(messages, now)` for every fill, not only 'phone'. Update the doc comment at :43. With separators drawn, the bubble stamp uses clockText(created_at) instead of stampText (format.ts:75), and keeps fullTime in the `title` tooltip. All modes.
 
@@ -166,7 +166,7 @@ MessageLog.tsx:54: use `withDays(messages, now)` for every fill, not only 'phone
 
 ### W11 (minor) Links in messages are clickable — ✅ done
 
-Files: `apps/web/src/features/inbox/linkify.ts`, `apps/web/src/features/inbox/MessageBubble.tsx`
+Files: `apps/web/src/features/inbox/messages/lib/linkify.ts`, `apps/web/src/features/inbox/messages/components/MessageBubble.tsx`
 
 New linkify.ts: `splitLinks(text): Array<{ text: string; href?: string }>`, matching only /https?:\/\/[^\s]+/ and trimming trailing . , ، ؛ ) from the match. MessageBubble Content (:51-55) renders a link part as `<a href target="_blank" rel="noopener noreferrer" dir="ltr" className="break-all underline underline-offset-4 text-lapis">`. Signed links are already stripped server-side for sales (withoutLinks). Quoted replies need an API change and are left out.
 
@@ -187,7 +187,7 @@ Non-admin modes. Admin mode is unchanged.
 
 ### W13 (minor) An open chat in an unfocused window no longer marks new messages read for everyone — ✅ done
 
-Files: `apps/web/src/features/inbox/api.ts`
+Files: `apps/web/src/features/inbox/api/api.ts`
 
 Web-only, replacing the API `peek` idea. api.ts threadQuery uses `refetchInterval: () => (document.hasFocus() ? INBOX_REFRESH_MS : false)`. The list query keeps polling, so the unread rows and W8's count still rise. TanStack's refetchOnWindowFocus follows `visibilitychange` only, which never fires when she switches back from another window, so (as built, review M4) ThreadPane calls `useWindowFocus(detail.refetch, phone)`: the window's `focus` event refetches the open chat (marking it read) and re-arms the focus-gated poll.
 
