@@ -1,0 +1,328 @@
+{
+  "id": "b7",
+  "seq": 43,
+  "moves": [
+    {
+      "from": "apps/web/src/features/booking/draft*",
+      "to": "apps/web/src/features/booking/draft/"
+    },
+    {
+      "from": "apps/web/src/features/booking/contract*",
+      "to": "apps/web/src/features/booking/draft/"
+    },
+    {
+      "from": "apps/web/src/features/booking/KindStep*",
+      "to": "apps/web/src/features/booking/steps/who/"
+    },
+    {
+      "from": "apps/web/src/features/booking/StudentStep*",
+      "to": "apps/web/src/features/booking/steps/who/"
+    },
+    {
+      "from": "apps/web/src/features/booking/LeadStudentStep*",
+      "to": "apps/web/src/features/booking/steps/who/"
+    },
+    {
+      "from": "apps/web/src/features/booking/MissedLessonStep*",
+      "to": "apps/web/src/features/booking/steps/who/"
+    },
+    {
+      "from": "apps/web/src/features/booking/new-student*",
+      "to": "apps/web/src/features/booking/steps/who/"
+    },
+    {
+      "from": "apps/web/src/features/booking/PackageStep*",
+      "to": "apps/web/src/features/booking/steps/package/"
+    },
+    {
+      "from": "apps/web/src/features/booking/package-days*",
+      "to": "apps/web/src/features/booking/steps/package/"
+    },
+    {
+      "from": "apps/web/src/features/booking/price*",
+      "to": "apps/web/src/features/booking/steps/package/"
+    },
+    {
+      "from": "apps/web/src/features/booking/SlotStep*",
+      "to": "apps/web/src/features/booking/steps/slots/"
+    },
+    {
+      "from": "apps/web/src/features/booking/SlotDays*",
+      "to": "apps/web/src/features/booking/steps/slots/"
+    },
+    {
+      "from": "apps/web/src/features/booking/ByDayPicker*",
+      "to": "apps/web/src/features/booking/steps/slots/"
+    },
+    {
+      "from": "apps/web/src/features/booking/DayTimesList*",
+      "to": "apps/web/src/features/booking/steps/slots/"
+    },
+    {
+      "from": "apps/web/src/features/booking/TeacherStep*",
+      "to": "apps/web/src/features/booking/steps/slots/"
+    },
+    {
+      "from": "apps/web/src/features/booking/TeacherOption*",
+      "to": "apps/web/src/features/booking/steps/slots/"
+    },
+    {
+      "from": "apps/web/src/features/booking/GapChip*",
+      "to": "apps/web/src/features/booking/steps/slots/"
+    },
+    {
+      "from": "apps/web/src/features/booking/ReviewStep*",
+      "to": "apps/web/src/features/booking/steps/review/"
+    },
+    {
+      "from": "apps/web/src/features/booking/ReviewDays*",
+      "to": "apps/web/src/features/booking/steps/review/"
+    },
+    {
+      "from": "apps/web/src/features/booking/ReviewSummary*",
+      "to": "apps/web/src/features/booking/steps/review/"
+    },
+    {
+      "from": "apps/web/src/features/booking/SeriesCheck*",
+      "to": "apps/web/src/features/booking/steps/review/"
+    },
+    {
+      "from": "apps/web/src/features/booking/course-taken*",
+      "to": "apps/web/src/features/booking/steps/review/"
+    },
+    {
+      "from": "apps/web/src/features/booking/DuplicateNotice*",
+      "to": "apps/web/src/features/booking/steps/review/"
+    },
+    {
+      "from": "apps/web/src/features/booking/CourseCheckNotice*",
+      "to": "apps/web/src/features/booking/steps/review/"
+    },
+    {
+      "from": "apps/web/src/features/booking/BookedPanel*",
+      "to": "apps/web/src/features/booking/steps/review/"
+    },
+    {
+      "from": "apps/web/src/features/booking/booked*",
+      "to": "apps/web/src/features/booking/steps/review/"
+    },
+    {
+      "from": "apps/web/src/features/booking/ChatMediaPicker*",
+      "to": "apps/web/src/features/booking/invoice/"
+    }
+  ],
+  "files": [
+    [
+      "apps/web/src/features/booking/booked.test.ts",
+      "apps/web/src/features/booking/steps/review/booked.test.ts"
+    ],
+    [
+      "apps/web/src/features/booking/booked.ts",
+      "apps/web/src/features/booking/steps/review/booked.ts"
+    ],
+    [
+      "apps/web/src/features/booking/BookedPanel.test.tsx",
+      "apps/web/src/features/booking/steps/review/BookedPanel.test.tsx"
+    ],
+    [
+      "apps/web/src/features/booking/BookedPanel.tsx",
+      "apps/web/src/features/booking/steps/review/BookedPanel.tsx"
+    ],
+    [
+      "apps/web/src/features/booking/ByDayPicker.tsx",
+      "apps/web/src/features/booking/steps/slots/ByDayPicker.tsx"
+    ],
+    [
+      "apps/web/src/features/booking/ChatMediaPicker.test.tsx",
+      "apps/web/src/features/booking/invoice/ChatMediaPicker.test.tsx"
+    ],
+    [
+      "apps/web/src/features/booking/ChatMediaPicker.tsx",
+      "apps/web/src/features/booking/invoice/ChatMediaPicker.tsx"
+    ],
+    [
+      "apps/web/src/features/booking/contract.ts",
+      "apps/web/src/features/booking/draft/contract.ts"
+    ],
+    [
+      "apps/web/src/features/booking/course-taken.test.ts",
+      "apps/web/src/features/booking/steps/review/course-taken.test.ts"
+    ],
+    [
+      "apps/web/src/features/booking/course-taken.ts",
+      "apps/web/src/features/booking/steps/review/course-taken.ts"
+    ],
+    [
+      "apps/web/src/features/booking/CourseCheckNotice.tsx",
+      "apps/web/src/features/booking/steps/review/CourseCheckNotice.tsx"
+    ],
+    [
+      "apps/web/src/features/booking/DayTimesList.test.tsx",
+      "apps/web/src/features/booking/steps/slots/DayTimesList.test.tsx"
+    ],
+    [
+      "apps/web/src/features/booking/DayTimesList.tsx",
+      "apps/web/src/features/booking/steps/slots/DayTimesList.tsx"
+    ],
+    [
+      "apps/web/src/features/booking/draft.days.test.ts",
+      "apps/web/src/features/booking/draft/draft.days.test.ts"
+    ],
+    [
+      "apps/web/src/features/booking/draft.days.ts",
+      "apps/web/src/features/booking/draft/draft.days.ts"
+    ],
+    [
+      "apps/web/src/features/booking/draft.flows.ts",
+      "apps/web/src/features/booking/draft/draft.flows.ts"
+    ],
+    [
+      "apps/web/src/features/booking/draft.invoice.ts",
+      "apps/web/src/features/booking/draft/draft.invoice.ts"
+    ],
+    [
+      "apps/web/src/features/booking/draft.kind.test.ts",
+      "apps/web/src/features/booking/draft/draft.kind.test.ts"
+    ],
+    [
+      "apps/web/src/features/booking/draft.kind.ts",
+      "apps/web/src/features/booking/draft/draft.kind.ts"
+    ],
+    [
+      "apps/web/src/features/booking/draft.prefilled.test.ts",
+      "apps/web/src/features/booking/draft/draft.prefilled.test.ts"
+    ],
+    [
+      "apps/web/src/features/booking/draft.steps.ts",
+      "apps/web/src/features/booking/draft/draft.steps.ts"
+    ],
+    [
+      "apps/web/src/features/booking/draft.test.ts",
+      "apps/web/src/features/booking/draft/draft.test.ts"
+    ],
+    [
+      "apps/web/src/features/booking/draft.ts",
+      "apps/web/src/features/booking/draft/draft.ts"
+    ],
+    [
+      "apps/web/src/features/booking/DuplicateNotice.tsx",
+      "apps/web/src/features/booking/steps/review/DuplicateNotice.tsx"
+    ],
+    [
+      "apps/web/src/features/booking/GapChip.tsx",
+      "apps/web/src/features/booking/steps/slots/GapChip.tsx"
+    ],
+    [
+      "apps/web/src/features/booking/KindStep.test.tsx",
+      "apps/web/src/features/booking/steps/who/KindStep.test.tsx"
+    ],
+    [
+      "apps/web/src/features/booking/KindStep.tsx",
+      "apps/web/src/features/booking/steps/who/KindStep.tsx"
+    ],
+    [
+      "apps/web/src/features/booking/LeadStudentStep.tsx",
+      "apps/web/src/features/booking/steps/who/LeadStudentStep.tsx"
+    ],
+    [
+      "apps/web/src/features/booking/MissedLessonStep.test.tsx",
+      "apps/web/src/features/booking/steps/who/MissedLessonStep.test.tsx"
+    ],
+    [
+      "apps/web/src/features/booking/MissedLessonStep.tsx",
+      "apps/web/src/features/booking/steps/who/MissedLessonStep.tsx"
+    ],
+    [
+      "apps/web/src/features/booking/new-student.test.ts",
+      "apps/web/src/features/booking/steps/who/new-student.test.ts"
+    ],
+    [
+      "apps/web/src/features/booking/new-student.ts",
+      "apps/web/src/features/booking/steps/who/new-student.ts"
+    ],
+    [
+      "apps/web/src/features/booking/package-days.test.ts",
+      "apps/web/src/features/booking/steps/package/package-days.test.ts"
+    ],
+    [
+      "apps/web/src/features/booking/package-days.ts",
+      "apps/web/src/features/booking/steps/package/package-days.ts"
+    ],
+    [
+      "apps/web/src/features/booking/PackageStep.tsx",
+      "apps/web/src/features/booking/steps/package/PackageStep.tsx"
+    ],
+    [
+      "apps/web/src/features/booking/price.test.ts",
+      "apps/web/src/features/booking/steps/package/price.test.ts"
+    ],
+    [
+      "apps/web/src/features/booking/price.ts",
+      "apps/web/src/features/booking/steps/package/price.ts"
+    ],
+    [
+      "apps/web/src/features/booking/ReviewDays.tsx",
+      "apps/web/src/features/booking/steps/review/ReviewDays.tsx"
+    ],
+    [
+      "apps/web/src/features/booking/ReviewStep.course.test.tsx",
+      "apps/web/src/features/booking/steps/review/ReviewStep.course.test.tsx"
+    ],
+    [
+      "apps/web/src/features/booking/ReviewStep.invoice.test.tsx",
+      "apps/web/src/features/booking/steps/review/ReviewStep.invoice.test.tsx"
+    ],
+    [
+      "apps/web/src/features/booking/ReviewStep.past.test.tsx",
+      "apps/web/src/features/booking/steps/review/ReviewStep.past.test.tsx"
+    ],
+    [
+      "apps/web/src/features/booking/ReviewStep.tsx",
+      "apps/web/src/features/booking/steps/review/ReviewStep.tsx"
+    ],
+    [
+      "apps/web/src/features/booking/ReviewSummary.test.tsx",
+      "apps/web/src/features/booking/steps/review/ReviewSummary.test.tsx"
+    ],
+    [
+      "apps/web/src/features/booking/ReviewSummary.tsx",
+      "apps/web/src/features/booking/steps/review/ReviewSummary.tsx"
+    ],
+    [
+      "apps/web/src/features/booking/SeriesCheck.test.tsx",
+      "apps/web/src/features/booking/steps/review/SeriesCheck.test.tsx"
+    ],
+    [
+      "apps/web/src/features/booking/SeriesCheck.tsx",
+      "apps/web/src/features/booking/steps/review/SeriesCheck.tsx"
+    ],
+    [
+      "apps/web/src/features/booking/SlotDays.tsx",
+      "apps/web/src/features/booking/steps/slots/SlotDays.tsx"
+    ],
+    [
+      "apps/web/src/features/booking/SlotStep.course.test.ts",
+      "apps/web/src/features/booking/steps/slots/SlotStep.course.test.ts"
+    ],
+    [
+      "apps/web/src/features/booking/SlotStep.en.test.ts",
+      "apps/web/src/features/booking/steps/slots/SlotStep.en.test.ts"
+    ],
+    [
+      "apps/web/src/features/booking/SlotStep.tsx",
+      "apps/web/src/features/booking/steps/slots/SlotStep.tsx"
+    ],
+    [
+      "apps/web/src/features/booking/StudentStep.tsx",
+      "apps/web/src/features/booking/steps/who/StudentStep.tsx"
+    ],
+    [
+      "apps/web/src/features/booking/TeacherOption.tsx",
+      "apps/web/src/features/booking/steps/slots/TeacherOption.tsx"
+    ],
+    [
+      "apps/web/src/features/booking/TeacherStep.tsx",
+      "apps/web/src/features/booking/steps/slots/TeacherStep.tsx"
+    ]
+  ]
+}

@@ -1,5 +1,5 @@
 import { DURATIONS, shiftByday, type LessonView, type RescheduleRequest } from '@ab/shared';
-import { ruleFromSlot } from '@/features/booking/draft';
+import { ruleFromSlot } from '@/features/booking/draft/draft';
 import { durationMin } from './lessons';
 import { RIYADH_TZ } from './tz';
 import type { Scope } from './ScopeRadios';

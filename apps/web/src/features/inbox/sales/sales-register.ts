@@ -1,6 +1,6 @@
 import type { ThreadView } from '@ab/shared';
 import { draftFromLead } from '@/features/booking/booking-entries';
-import type { BookingDraft } from '@/features/booking/draft';
+import type { BookingDraft } from '@/features/booking/draft/draft';
 
 // «تسجيل طالب جديد» in a sales chat (SalesRegisterAction): which threads offer it and its prefill.
 

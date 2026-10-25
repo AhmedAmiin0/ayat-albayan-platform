@@ -1,5 +1,5 @@
 import { counted, courseOpensOn, type CourseSubscription, type SalesCourseView } from '@ab/shared';
-import { emptyDraft, type BookingDraft } from '@/features/booking/draft';
+import { emptyDraft, type BookingDraft } from '@/features/booking/draft/draft';
 import type { BookHint } from '@/features/booking/hint';
 import { dateLabel } from '@/features/schedule/tz';
 import { studentLabel } from '@/features/subscriptions/format';

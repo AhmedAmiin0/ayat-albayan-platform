@@ -7,10 +7,10 @@ import type { StudentProfile } from '@/features/students/types';
 import { t } from '@/lib/i18n/i18n';
 import { guardianQuery, type BookSearch, type GuardianRow } from './api';
 import { BookingWizard, type BookingWizardProps } from './BookingWizard';
-import { emptyDraft, type BookingDraft } from './draft';
+import { emptyDraft, type BookingDraft } from './draft/draft';
 import type { BookHint } from './hint';
-import { newStudentFromLead } from './new-student';
-import { guardianCountry } from './price';
+import { newStudentFromLead } from './steps/who/new-student';
+import { guardianCountry } from './steps/package/price';
 
 /** GET /students/:id returns every column; the gender preference is one of them (migration 070). */
 type ProfileWithPref = StudentProfile & { teacher_gender_pref?: Gender | null };

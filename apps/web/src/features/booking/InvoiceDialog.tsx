@@ -6,7 +6,7 @@ import { FormAlert } from '@/components/ui/form/form-alert';
 import { fullTime } from '@/features/inbox/format';
 import { t } from '@/lib/i18n/i18n';
 import { invoiceDownload } from './api.invoice';
-import type { InvoiceView } from './contract';
+import type { InvoiceView } from './draft/contract';
 import { canShow } from './invoice-file';
 
 /** «الفاتورة · <student> · <date>»: the title names whose invoice and when it was saved. */

@@ -1,21 +1,21 @@
 import type { BookingResult, TrialDateResult } from '@ab/shared';
 import type { StudentRef } from '@/features/students/types';
 import { t } from '@/lib/i18n/i18n';
-import { mediaPhone } from './booked';
-import type { BookingDraft, PickedStudent, StepKey } from './draft';
+import { mediaPhone } from './steps/review/booked';
+import type { BookingDraft, PickedStudent, StepKey } from './draft/draft';
 import { teacherPatch, type BookHint } from './hint';
 import { InvoiceStep } from './InvoiceStep';
-import { KindStep } from './KindStep';
-import { LeadStudentStep } from './LeadStudentStep';
-import { MissedLessonStep } from './MissedLessonStep';
+import { KindStep } from './steps/who/KindStep';
+import { LeadStudentStep } from './steps/who/LeadStudentStep';
+import { MissedLessonStep } from './steps/who/MissedLessonStep';
 import { useBookingMode } from './mode';
-import { isNewStudent } from './new-student';
-import { PackageStep } from './PackageStep';
-import { guardianCountry } from './price';
-import { ReviewStep } from './ReviewStep';
-import { SlotStep } from './SlotStep';
-import { StudentStep } from './StudentStep';
-import { TeacherStep } from './TeacherStep';
+import { isNewStudent } from './steps/who/new-student';
+import { PackageStep } from './steps/package/PackageStep';
+import { guardianCountry } from './steps/package/price';
+import { ReviewStep } from './steps/review/ReviewStep';
+import { SlotStep } from './steps/slots/SlotStep';
+import { StudentStep } from './steps/who/StudentStep';
+import { TeacherStep } from './steps/slots/TeacherStep';
 import { TrialReviewStep } from './trial-date/TrialReviewStep';
 
 export interface WizardBodyProps {

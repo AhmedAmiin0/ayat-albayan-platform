@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { Dialog } from '@/components/ui/overlay/dialog';
 import { FormAlert } from '@/components/ui/form/form-alert';
 import { BookingWizard } from '@/features/booking/BookingWizard';
-import type { BookingDraft } from '@/features/booking/draft';
+import type { BookingDraft } from '@/features/booking/draft/draft';
 import { BookingModeContext, ChatReturnContext } from '@/features/booking/mode';
 import { lessonErrorText } from '@/features/schedule/api';
 import { t } from '@/lib/i18n/i18n';
