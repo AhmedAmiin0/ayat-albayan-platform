@@ -15,7 +15,7 @@ export function AutoListChip({ id, className }: { id?: string; className?: strin
     <span
       id={id}
       data-testid="auto-list-chip"
-      className={cn('inline-flex h-[22px] shrink-0 items-center rounded-full border border-ink-2/25 bg-neutral-soft px-2 text-xs font-semibold leading-none text-ink-2', className)}
+      className={cn('inline-flex h-[22px] shrink-0 items-center whitespace-nowrap rounded-full border border-ink-2/25 bg-neutral-soft px-2 text-xs font-semibold leading-none text-ink-2', className)}
     >
       {L.auto}
     </span>

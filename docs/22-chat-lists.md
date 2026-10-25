@@ -144,18 +144,20 @@ to «معلم» now, then add new ones automatically; never remove anyone added 
   (`created_by` null). At the 30-list cap the migration stops with an error (nothing applied): delete a
   list, then push again.
 - **What is added**: once (backfill) and then by triggers — «مشترك»: the guardian's phone when a student is
-  inserted as, or becomes, `active` or `pending_renewal` (also when the student moves to another guardian),
-  and a guardian's new phone while one of their students is in those statuses; «معلم»: the phone of a
+  inserted as, or becomes, `active` (also when the student moves to another guardian), and a guardian's
+  new phone while one of their students is `active` (R-STU-05: `pending_renewal` is not «مشترك»); «معلم»: the phone of a
   teacher inserted or updated as `active`, and an active teacher's new phone. Only numbers that pass the
   members' E.164 check; `added_by` stays null for automatic rows; adding twice is a no-op.
 - **Never removed**: the triggers only add. A hand-added chat stays, and an automatic member stays when the
   subscription ends or the teacher stops (a person removes it by hand if needed; it may come back on the
   next activation). Members are added and removed by hand exactly as on any list; rename and delete work as
   before; deleting the list drops its rule (the delete confirmation says «ستتوقف الإضافة التلقائية إلى هذه
-  القائمة.»; a list made again by hand has no rule). Statuses other than `active` / `pending_renewal`
-  (new, trial, pending_subscription, expired, paused, churned) never add.
+  القائمة.»; a list made again by hand has no rule). Statuses other than `active`
+  (new, trial, pending_subscription, pending_renewal, expired, paused, churned) never add, so a chat removed
+  by hand stays out when the package ends and comes back only on a renewal (`→ active`).
 - **UI**: an automatic list shows the chip «تُحدَّث تلقائيًا» and one line («يُضاف إليها تلقائيًا كل ولي أمر
-  لديه اشتراك جارٍ» / «يُضاف إليها تلقائيًا كل معلم») under the chip row while it is shown, in the chat's
+  لديه اشتراك جارٍ، ولا يُحذف منها أحد تلقائيًا» / «يُضاف إليها تلقائيًا كل معلم نشِط، ولا يُحذف منها أحد
+  تلقائيًا») under the chip row while it is shown, in the chat's
   «القوائم» checklist and in «تعديل القائمة» (web and mobile). `GET /chat-lists` items carry `auto_rule`
   (`'subscribed' | 'teachers' | null`).
 - **Tests**: `e2e/tests/chat-list-auto-rules.sql.spec.ts` (backfill, each trigger path, idempotency,

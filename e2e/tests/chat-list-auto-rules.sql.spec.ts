@@ -3,7 +3,7 @@ import { guardian, listOf, members, rerunMigration, someone, student, teacher } 
 import { rolledBack } from '../support/rls';
 
 // Automatic chat lists (migration 20261025000710, docs/22 «القوائم التلقائية»): «مشترك» gains the guardian of
-// every active / pending_renewal student, «معلم» every active teacher; backfill + triggers, add only, never
+// every active student (not pending_renewal, R-STU-05), «معلم» every active teacher; backfill + triggers, add only, never
 // remove; automatic rows have no added_by; a list without a rule is untouched. This file: the attach, the
 // backfill, the cap and the grants; the trigger paths: chat-list-auto-triggers.sql.spec.ts. Rolled back.
 
@@ -30,7 +30,7 @@ test.describe('automatic chat lists (migration 710)', () => {
       await teacher(tx, { phone: '+966500000712', status: 'inactive' });
       await rerunMigration(tx);
       await rerunMigration(tx);
-      expect(await members(tx, await listOf(tx, 'subscribed'))).toEqual(['+966500000701', '+966500000702']);
+      expect(await members(tx, await listOf(tx, 'subscribed'))).toEqual(['+966500000701']);
       expect(await members(tx, await listOf(tx, 'teachers'))).toEqual(['+966500000711']);
       const [n] = await tx<{ n: number }[]>`select count(*)::int as n from public.chat_lists where auto_rule is not null`;
       expect(n?.n).toBe(2);
@@ -40,6 +40,9 @@ test.describe('automatic chat lists (migration 710)', () => {
   test('a renamed «معلم» keeps its rule; a missing list is created with created_by null', async () => {
     await rolledBack(async (tx) => {
       await rerunMigration(tx);
+      await tx`update public.chat_lists set name = 'المعلمون', name_key = 'المعلمون' where auto_rule = 'teachers'`;
+      await teacher(tx, { phone: '+966500000713', status: 'active' });
+      expect(await members(tx, await listOf(tx, 'teachers'))).toEqual(['+966500000713']);
       await tx`delete from public.chat_lists where auto_rule = 'subscribed'`;
       await tx`update public.chat_lists set auto_rule = null where auto_rule = 'teachers'`;
       await rerunMigration(tx);

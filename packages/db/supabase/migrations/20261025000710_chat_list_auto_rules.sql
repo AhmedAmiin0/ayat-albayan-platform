@@ -1,9 +1,10 @@
 -- Automatic chat lists (owner 2026-10-25, docs/22 «القوائم التلقائية»): «مشترك» holds every family with a
--- running subscription (a student active or pending_renewal) and «معلم» every active teacher. Added once
--- now (backfill), then kept up to date by triggers. EXPAND ONLY and ADD ONLY: nothing here ever deletes a
--- member (a hand-added chat stays, and an automatic member stays when the subscription ends). Members can
--- still be added and removed by hand through the API, as before. added_by stays null for automatic rows.
--- RLS and grants are unchanged. Never reads or writes public.settings. Idempotent: safe to run twice.
+-- running subscription (a student `active`; R-STU-05: pending_renewal is not «مشترك») and «معلم» every
+-- active teacher. Added once now (backfill), then kept up to date by triggers. EXPAND ONLY and ADD ONLY:
+-- nothing here ever deletes a member (a hand-added chat stays, and an automatic member stays when the
+-- subscription ends). Members can still be added and removed by hand through the API, as before. added_by
+-- stays null for automatic rows. RLS and grants are unchanged. Never reads or writes public.settings.
+-- Idempotent: safe to run twice.
 
 set local lock_timeout = '5s';
 
@@ -52,7 +53,7 @@ create or replace function public.chat_list_auto_add(p_rule text, p_phone text) 
 $$;
 revoke all on function public.chat_list_auto_add(text, text) from public, anon, authenticated;
 
--- A student becomes active / pending_renewal (insert, status change, or moved to another guardian).
+-- A student becomes active (insert, status change, or moved to another guardian).
 create or replace function public.students_chat_list_auto() returns trigger
   language plpgsql security definer set search_path = public, pg_temp as $$
 begin
@@ -61,11 +62,11 @@ begin
 end $$;
 drop trigger if exists students_chat_list_auto_ins on public.students;
 create trigger students_chat_list_auto_ins after insert on public.students
-  for each row when (new.status in ('active', 'pending_renewal'))
+  for each row when (new.status = 'active')
   execute function public.students_chat_list_auto();
 drop trigger if exists students_chat_list_auto_upd on public.students;
 create trigger students_chat_list_auto_upd after update of status, guardian_id on public.students
-  for each row when (new.status in ('active', 'pending_renewal')
+  for each row when (new.status = 'active'
     and (old.status is distinct from new.status or old.guardian_id is distinct from new.guardian_id))
   execute function public.students_chat_list_auto();
 
@@ -91,7 +92,7 @@ create trigger teachers_chat_list_auto_upd after update of status, phone_e164 on
 create or replace function public.guardians_chat_list_auto() returns trigger
   language plpgsql security definer set search_path = public, pg_temp as $$
 begin
-  if exists (select 1 from public.students s where s.guardian_id = new.id and s.status in ('active', 'pending_renewal')) then
+  if exists (select 1 from public.students s where s.guardian_id = new.id and s.status = 'active') then
     perform public.chat_list_auto_add('subscribed', new.phone_e164::text);
   end if;
   return null;
@@ -111,7 +112,7 @@ insert into public.chat_list_threads (list_id, phone_e164)
   select l.id, p.phone from public.chat_lists l
   cross join (select distinct g.phone_e164::text as phone from public.guardians g
     join public.students s on s.guardian_id = g.id
-    where s.status in ('active', 'pending_renewal')) p
+    where s.status = 'active') p
   where l.auto_rule = 'subscribed' and p.phone ~ '^\+[1-9][0-9]{7,14}$'
 on conflict do nothing;
 insert into public.chat_list_threads (list_id, phone_e164)
