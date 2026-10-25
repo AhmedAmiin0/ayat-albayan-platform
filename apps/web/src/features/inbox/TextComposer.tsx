@@ -16,8 +16,8 @@ import { draftGeneration, getDraft, requestIdFor, setDraft, subscribeDrafts } fr
 import { ownSendGeneration, recordOwnSend } from './own-send';
 import { sendErrorCode, sendErrorCodeText, sendErrorText } from './send-error';
 
-/** A send and the tab-memory generations it started in (never sent to the API). */
-type Sent = { phone: string; text: string; clientRequestId: string; gen: { draft: number; own: number } };
+/** A send, the tab-memory generations it started in and what follows it (never sent to the API). */
+type Sent = { phone: string; text: string; clientRequestId: string; gen: { draft: number; own: number }; after?: () => void };
 
 /** The box's tallest height (about five lines), then it scrolls. */
 const COMPACT_MAX_PX = 128;
@@ -29,7 +29,6 @@ export interface TextComposerProps {
   /** «الردود السريعة» (saved-replies/ReplyComposer): its panel and chip above the row, its keys first, its file after the text. */
   extras?: ComposerExtras;
 }
-
 
 /**
  * A session message (H3), only inside the 24 h window: one auto-growing line with a round send icon
@@ -59,7 +58,7 @@ export function TextComposer({ phone, leading, extras }: TextComposerProps) {
       recordOwnSend(sent.phone, view.id, sent.gen.own);
       const now = getDraft(sent.phone);
       if (now.failed) setDraft(sent.phone, { ...now, failed: null }, sent.gen.draft);
-      extras?.onSent?.();
+      sent.after?.();
       await queryClient.invalidateQueries({ queryKey: ['threads'] });
     },
     onError: async (e, sent) => {
@@ -92,7 +91,7 @@ export function TextComposer({ phone, leading, extras }: TextComposerProps) {
   const submit = () => {
     if (blocked) return;
     const gen = { draft: draftGeneration(), own: ownSendGeneration() };
-    const sent = { phone, text: text.trim(), clientRequestId: requestIdFor(draft, text.trim()), gen };
+    const sent = { phone, text: text.trim(), clientRequestId: requestIdFor(draft, text.trim()), gen, after: extras?.onSubmit?.() };
     setDraft(phone, { text: '', failed: null });
     send.mutate(sent);
   };

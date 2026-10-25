@@ -33,7 +33,7 @@ function emptyText(picker: RepliesPicker): string {
 
 /**
  * «الردود السريعة» above the message box: «المشتركة» / «ردودي», a search (the button's; after «/» the
- * box's own text searches), the list, and in «ردودي» add / edit / delete. Picking only fills the box.
+ * box's own text searches), the list, and in «ردودي» «رد جديد» plus each row's own edit / delete. Picking only fills the box.
  */
 export function RepliesPanel({ picker, listId, onAdd, onEdit, onDelete }: RepliesPanelProps) {
   const { list, keys } = picker;
@@ -69,7 +69,10 @@ export function RepliesPanel({ picker, listId, onAdd, onEdit, onDelete }: Replie
         />
       )}
       {list.length ? (
-        <ReplyOptions id={listId} replies={list} active={keys.active} onActive={keys.setActive} onPick={picker.pick} />
+        <ReplyOptions
+          {...{ id: listId, replies: list, active: keys.active, onActive: keys.setActive, onPick: picker.pick }}
+          manage={picker.tab === 'mine' ? { onEdit, onDelete } : undefined}
+        />
       ) : (
         <div className="flex flex-wrap items-center gap-2 px-2 py-2">
           <p role="status" className="text-sm text-ink-2">
@@ -83,7 +86,7 @@ export function RepliesPanel({ picker, listId, onAdd, onEdit, onDelete }: Replie
         </div>
       )}
       <div className="flex flex-wrap items-center gap-2 px-1">
-        {picker.tab === 'mine' && <MineActions active={active} onAdd={onAdd} onEdit={onEdit} onDelete={onDelete} />}
+        {picker.tab === 'mine' && <MineActions onAdd={onAdd} />}
         <span className="ms-auto hidden text-2xs text-ink-3 pointer-fine:inline">{S.keyboardHint}</span>
       </div>
     </section>

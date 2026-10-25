@@ -17,7 +17,7 @@ export interface OpenRowProps {
   onReplies: () => void;
   onFileError: (message: string | null) => void;
   onSend: () => void;
-  /** A staged file is on its way: one «أرسل» at a time. */
+  /** The text or a staged file is on its way: one «أرسل» at a time. */
   sending: boolean;
 }
 

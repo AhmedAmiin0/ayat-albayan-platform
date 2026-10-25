@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { FormAlert } from '@/components/ui/form-alert';
 import { Icon } from '@/components/ui/icon';
 import { IconButton } from '@/components/ui/icon-button';
-import { moveReply, replyErrorText, SAVED_REPLIES_KEY } from '@/features/inbox/saved-replies/api';
+import { moveReply, refreshReplies, replyErrorText, SAVED_REPLIES_KEY } from '@/features/inbox/saved-replies/api';
 import { t } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
 import { CELL, TH } from './overview-table';
@@ -28,6 +28,8 @@ export function SavedRepliesTable({ labelledBy, replies, manage, onEdit, onDelet
   const move = useMutation({
     mutationFn: moveReply,
     onSuccess: (lists) => queryClient.setQueryData(SAVED_REPLIES_KEY, lists),
+    // Another admin may have moved or deleted it meanwhile: show the list as it is now.
+    onError: () => refreshReplies(queryClient),
   });
   const cols = [S.colTitle, S.colPreview, S.colAttachment];
   return (

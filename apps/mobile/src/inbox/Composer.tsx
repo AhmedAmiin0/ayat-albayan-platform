@@ -36,7 +36,7 @@ export function Composer({
   const staff = useThreadMode().kind !== 'teacher';
   const [text, setText] = useState('');
   const replies = useSavedReplyDraft({ text, setText, enabled: staff });
-  const { sendTemplate, sendText, renew, errors, filePending } = useComposerSend({ phone, text, setText, ...replies });
+  const { sendTemplate, sendText, renew, errors, pending } = useComposerSend({ phone, text, setText, ...replies });
   const [picking, setPicking] = useState(false);
   // Why a photo / PDF did not go (AttachFile), until the next pick.
   const [fileError, setFileError] = useState<string | null>(null);
@@ -67,7 +67,7 @@ export function Composer({
           onReplies={replies.open}
           onFileError={setFileError}
           onSend={sendText}
-          sending={filePending}
+          sending={pending}
         />
       ) : (
         <ClosedRow known={thread !== null} staff={staff} onTemplate={pick} />

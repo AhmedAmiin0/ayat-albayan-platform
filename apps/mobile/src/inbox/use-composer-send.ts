@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { requestId } from '@/lib/request-id';
 import { sendError } from './message-text';
 import { useSendStagedFile } from './saved-replies/send-staged';
@@ -37,26 +37,36 @@ export function useComposerSend({ phone, text, setText, staged, clearStaged }: C
     templateDraft.current = { draft, id };
     send.mutate({ out, id }, { onSuccess: () => (templateDraft.current = null) });
   };
-  const sendFile = () => {
-    if (staged) sendStaged.mutate(staged.replyId, { onSuccess: clearStaged });
+  // The chip as it is now, not as it was at the tap: removed or replaced meanwhile → not this file.
+  const stagedNow = useRef(staged);
+  useEffect(() => {
+    stagedNow.current = staged;
+  }, [staged]);
+  const sendFile = (file: StagedFile | null) => {
+    if (!file) return;
+    const still = () => stagedNow.current?.requestId === file.requestId;
+    sendStaged.mutate(file, { onSuccess: () => still() && clearStaged() });
   };
   const sendText = () => {
+    if (send.isPending || sendStaged.isPending) return;
     const body = text.trim();
-    if (!body) return sendFile();
+    const tapped = staged?.requestId;
+    if (!body) return sendFile(staged);
     setText('');
     send.mutate(
       { out: { kind: 'text', text: body }, id: draftId },
       {
         onSuccess: () => {
           setDraftId(requestId());
-          sendFile();
+          const now = stagedNow.current;
+          if (now && now.requestId === tapped) sendFile(now);
         },
         onError: () => setText((now) => now || body),
       },
     );
   };
   const errors = [send.isError ? sendError(send.error) : null, sendStaged.isError ? fileError(sendStaged.error) : null];
-  return { sendTemplate, sendText, renew: () => setDraftId(requestId()), errors, filePending: sendStaged.isPending };
+  return { sendTemplate, sendText, renew: () => setDraftId(requestId()), errors, pending: send.isPending || sendStaged.isPending };
 }
 
 /** The failures under the box: the text's always; the file's only while the window is open. */

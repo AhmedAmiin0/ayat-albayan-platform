@@ -1,11 +1,14 @@
 import type { SavedReply, SavedReplyAttachment } from '@ab/shared';
 import { useState } from 'react';
+import { requestId } from '@/lib/request-id';
 import { filledText, slashAt } from './reply-text';
 
 /** A picked reply's file, waiting for «أرسل». */
 export interface StagedFile {
   replyId: string;
   file: SavedReplyAttachment;
+  /** Minted once at staging: every retry of this file's send reuses it (rule 8). */
+  requestId: string;
 }
 
 /**
@@ -29,7 +32,9 @@ export function useSavedReplyDraft(input: { text: string; setText: (text: string
     },
     fill: (reply: string, picked: SavedReply) => {
       input.setText(filledText({ text: input.text, reply, slash: picker?.slash ?? null }));
-      if (picked.attachment) setStaged({ replyId: picked.id, file: picked.attachment });
+      const file = picked.attachment;
+      // The same reply again keeps its id; a different reply is a new request.
+      if (file) setStaged((now) => (now?.replyId === picked.id ? { ...now, file } : { replyId: picked.id, file, requestId: requestId() }));
       setPicker(null);
     },
   };

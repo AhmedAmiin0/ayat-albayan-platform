@@ -42,14 +42,28 @@ describe('«ردودي» in the picker', () => {
     await waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', '/saved-replies', { scope: 'mine', title: 'شكر', body: 'شكرًا لكم' }));
   });
 
-  it('edits and deletes the highlighted reply', async () => {
-    await openMine();
-    await screen.findByRole('option', { name: /متابعة/ });
+  it('each row edits and deletes its own reply, whatever row is highlighted', async () => {
+    const other = { ...MINE, id: 'r-4', title: 'تذكير', body: 'موعد الحلقة غدًا', position: 1 };
+    await openMine([...REPLIES, other]);
+    const second = await screen.findByRole('option', { name: /تذكير/ });
+    // The pointer crosses row 2 on its way to row 1's buttons: the highlight moves, the target does not.
+    fireEvent.mouseEnter(second);
+    expect(second.getAttribute('aria-selected')).toBe('true');
     fireEvent.click(screen.getByRole('button', { name: S.editReply.replace('{title}', 'متابعة') }));
-    expect(await screen.findByRole('dialog', { name: S.editTitle })).toBeTruthy();
+    const dialog = await screen.findByRole('dialog', { name: S.editTitle });
+    expect(within(dialog).getByRole<HTMLInputElement>('textbox', { name: new RegExp(S.fieldTitle) }).value).toBe('متابعة');
     fireEvent.click(screen.getByRole('button', { name: t.common.cancel }));
     fireEvent.click(screen.getByRole('button', { name: S.deleteReply.replace('{title}', 'متابعة') }));
     expect(await screen.findByRole('dialog', { name: S.deleteTitle.replace('{title}', 'متابعة') })).toBeTruthy();
+  });
+
+  it('the row buttons sit outside the options, and only under «ردودي»', async () => {
+    await openMine();
+    const option = await screen.findByRole('option', { name: /متابعة/ });
+    expect(within(option).queryByRole('button')).toBeNull();
+    fireEvent.click(screen.getByRole('tab', { name: S.tabShared }));
+    await screen.findByRole('option', { name: /الترحيب/ });
+    expect(screen.queryByRole('button', { name: S.editReply.replace('{title}', 'الترحيب') })).toBeNull();
   });
 
   it('says so when there is none yet', async () => {

@@ -8,6 +8,9 @@ export interface ComposerExtras {
   onKey?: (e: KeyboardEvent<HTMLTextAreaElement>) => boolean;
   /** The box's id and the listbox wiring while «/» drives the picker. */
   boxProps?: TextareaHTMLAttributes<HTMLTextAreaElement> & { id?: string };
-  /** The text went: the staged attachment follows through the chat's file send. */
-  onSent?: () => void;
+  /**
+   * At «أرسل», before the box empties: what to run once THAT text went (the staged attachment captured
+   * now follows through the chat's file send; one staged after the submit waits for its own send).
+   */
+  onSubmit?: () => (() => void) | undefined;
 }

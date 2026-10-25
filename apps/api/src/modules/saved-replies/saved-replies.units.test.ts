@@ -57,8 +57,16 @@ describe('movedOrder', () => {
 });
 
 describe('toSavedReply', () => {
-  it('drops a half-written attachment and an unknown type', () => {
+  it('drops an unknown type', () => {
     expect(toSavedReply(row({ n: 1, attachment_path: 'saved/a/x', attachment_mime: 'image/webp', attachment_name: 'x', attachment_size: 1 })).attachment).toBeNull();
+  });
+
+  it('drops a half-written attachment', () => {
+    const half = row({ n: 1, attachment_path: 'saved/a/x.pdf', attachment_mime: 'application/pdf', attachment_name: null, attachment_size: 1 });
+    expect(toSavedReply(half).attachment).toBeNull();
+  });
+
+  it('a row with an owner is «mine»', () => {
     expect(toSavedReply(row({ n: 1, owner_profile_id: 'u' })).scope).toBe('mine');
   });
 });
