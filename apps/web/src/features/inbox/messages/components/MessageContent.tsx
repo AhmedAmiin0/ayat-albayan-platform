@@ -6,7 +6,7 @@ import { templateLine } from '../../format';
 import { splitLinks } from '../lib/linkify';
 import { MessageMedia } from './MessageMedia';
 import { QuoteBlock } from './QuoteBlock';
-import { RatingChip } from '../../RatingChip';
+import { RatingChip } from '../../sales/RatingChip';
 
 // The inside of a MessageBubble: what was said, and who sent ours.
 
