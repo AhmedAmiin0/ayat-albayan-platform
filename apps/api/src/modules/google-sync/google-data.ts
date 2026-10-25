@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { GoogleAccountQueries } from './google-account.queries';
-import { GoogleItemsQueries } from './google-items.queries';
+import { GoogleAccountQueries } from './oauth/google-account.queries';
+import { GoogleItemsQueries } from './sync/google-items.queries';
 import { GoogleSettings } from './google-settings';
 
 /** The sync's own tables: the account row, its settings and the outbox (max 3 constructor params, rule 2). */

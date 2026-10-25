@@ -1,0 +1,388 @@
+{
+  "id": "a10",
+  "seq": 12,
+  "moves": [
+    {
+      "from": "apps/api/src/modules/google-sync/google-http*",
+      "to": "apps/api/src/modules/google-sync/http"
+    },
+    {
+      "from": "apps/api/src/modules/google-sync/backoff.ts",
+      "to": "apps/api/src/modules/google-sync/http/"
+    },
+    {
+      "from": "apps/api/src/modules/google-sync/google-client.fake.ts",
+      "to": "apps/api/src/modules/google-sync/http/"
+    },
+    {
+      "from": "apps/api/src/modules/google-sync/google-oauth.service.ts",
+      "to": "apps/api/src/modules/google-sync/oauth/"
+    },
+    {
+      "from": "apps/api/src/modules/google-sync/google-callback.controller.ts",
+      "to": "apps/api/src/modules/google-sync/oauth/"
+    },
+    {
+      "from": "apps/api/src/modules/google-sync/oauth-state.ts",
+      "to": "apps/api/src/modules/google-sync/oauth/"
+    },
+    {
+      "from": "apps/api/src/modules/google-sync/google-account.queries.ts",
+      "to": "apps/api/src/modules/google-sync/oauth/"
+    },
+    {
+      "from": "apps/api/src/modules/google-sync/google-connection.ts",
+      "to": "apps/api/src/modules/google-sync/oauth/"
+    },
+    {
+      "from": "apps/api/src/modules/google-sync/admin-only.ts",
+      "to": "apps/api/src/modules/google-sync/admin/"
+    },
+    {
+      "from": "apps/api/src/modules/google-sync/google-admin.controller.ts",
+      "to": "apps/api/src/modules/google-sync/admin/"
+    },
+    {
+      "from": "apps/api/src/modules/google-sync/google-admin.service.ts",
+      "to": "apps/api/src/modules/google-sync/admin/"
+    },
+    {
+      "from": "apps/api/src/modules/google-sync/google-status.service.ts",
+      "to": "apps/api/src/modules/google-sync/admin/"
+    },
+    {
+      "from": "apps/api/src/modules/google-sync/google-items.controller.ts",
+      "to": "apps/api/src/modules/google-sync/admin/"
+    },
+    {
+      "from": "apps/api/src/modules/google-sync/google-log.queries.ts",
+      "to": "apps/api/src/modules/google-sync/admin/"
+    },
+    {
+      "from": "apps/api/src/modules/google-sync/google-map*",
+      "to": "apps/api/src/modules/google-sync/map"
+    },
+    {
+      "from": "apps/api/src/modules/google-sync/suggest.ts",
+      "to": "apps/api/src/modules/google-sync/map/"
+    },
+    {
+      "from": "apps/api/src/modules/google-sync/discovery.ts",
+      "to": "apps/api/src/modules/google-sync/map/"
+    },
+    {
+      "from": "apps/api/src/modules/google-sync/google-sync.job.ts",
+      "to": "apps/api/src/modules/google-sync/sync/"
+    },
+    {
+      "from": "apps/api/src/modules/google-sync/google-sync.processor.ts",
+      "to": "apps/api/src/modules/google-sync/sync/"
+    },
+    {
+      "from": "apps/api/src/modules/google-sync/google-sync.source.ts",
+      "to": "apps/api/src/modules/google-sync/sync/"
+    },
+    {
+      "from": "apps/api/src/modules/google-sync/google-sync.settings.ts",
+      "to": "apps/api/src/modules/google-sync/sync/"
+    },
+    {
+      "from": "apps/api/src/modules/google-sync/google-writers.ts",
+      "to": "apps/api/src/modules/google-sync/sync/"
+    },
+    {
+      "from": "apps/api/src/modules/google-sync/write-context.ts",
+      "to": "apps/api/src/modules/google-sync/sync/"
+    },
+    {
+      "from": "apps/api/src/modules/google-sync/google-items.queries.ts",
+      "to": "apps/api/src/modules/google-sync/sync/"
+    },
+    {
+      "from": "apps/api/src/modules/google-sync/calendar.writer.ts",
+      "to": "apps/api/src/modules/google-sync/writers/calendar/"
+    },
+    {
+      "from": "apps/api/src/modules/google-sync/event-format.ts",
+      "to": "apps/api/src/modules/google-sync/writers/calendar/"
+    },
+    {
+      "from": "apps/api/src/modules/google-sync/content-hash.ts",
+      "to": "apps/api/src/modules/google-sync/writers/calendar/"
+    },
+    {
+      "from": "apps/api/src/modules/google-sync/drive-files.ts",
+      "to": "apps/api/src/modules/google-sync/writers/drive/"
+    },
+    {
+      "from": "apps/api/src/modules/google-sync/report-pdf.writer.ts",
+      "to": "apps/api/src/modules/google-sync/writers/drive/"
+    },
+    {
+      "from": "apps/api/src/modules/google-sync/pdf-name.ts",
+      "to": "apps/api/src/modules/google-sync/writers/drive/"
+    },
+    {
+      "from": "apps/api/src/modules/google-sync/drive.waits.test.ts",
+      "to": "apps/api/src/modules/google-sync/writers/drive/"
+    },
+    {
+      "from": "apps/api/src/modules/google-sync/drive.writers.test.ts",
+      "to": "apps/api/src/modules/google-sync/writers/drive/"
+    },
+    {
+      "from": "apps/api/src/modules/google-sync/sheet-*",
+      "to": "apps/api/src/modules/google-sync/writers/sheets"
+    },
+    {
+      "from": "apps/api/src/modules/google-sync/attendance-row.ts",
+      "to": "apps/api/src/modules/google-sync/writers/sheets/"
+    },
+    {
+      "from": "apps/api/src/modules/google-sync/summary-row.ts",
+      "to": "apps/api/src/modules/google-sync/writers/sheets/"
+    },
+    {
+      "from": "apps/api/src/modules/google-sync/a1-range.ts",
+      "to": "apps/api/src/modules/google-sync/writers/sheets/"
+    }
+  ],
+  "files": [
+    [
+      "apps/api/src/modules/google-sync/a1-range.ts",
+      "apps/api/src/modules/google-sync/writers/sheets/a1-range.ts"
+    ],
+    [
+      "apps/api/src/modules/google-sync/admin-only.ts",
+      "apps/api/src/modules/google-sync/admin/admin-only.ts"
+    ],
+    [
+      "apps/api/src/modules/google-sync/attendance-row.ts",
+      "apps/api/src/modules/google-sync/writers/sheets/attendance-row.ts"
+    ],
+    [
+      "apps/api/src/modules/google-sync/backoff.test.ts",
+      "apps/api/src/modules/google-sync/http/backoff.test.ts"
+    ],
+    [
+      "apps/api/src/modules/google-sync/backoff.ts",
+      "apps/api/src/modules/google-sync/http/backoff.ts"
+    ],
+    [
+      "apps/api/src/modules/google-sync/calendar.writer.test.ts",
+      "apps/api/src/modules/google-sync/writers/calendar/calendar.writer.test.ts"
+    ],
+    [
+      "apps/api/src/modules/google-sync/calendar.writer.ts",
+      "apps/api/src/modules/google-sync/writers/calendar/calendar.writer.ts"
+    ],
+    [
+      "apps/api/src/modules/google-sync/content-hash.ts",
+      "apps/api/src/modules/google-sync/writers/calendar/content-hash.ts"
+    ],
+    [
+      "apps/api/src/modules/google-sync/discovery.ts",
+      "apps/api/src/modules/google-sync/map/discovery.ts"
+    ],
+    [
+      "apps/api/src/modules/google-sync/drive-files.ts",
+      "apps/api/src/modules/google-sync/writers/drive/drive-files.ts"
+    ],
+    [
+      "apps/api/src/modules/google-sync/drive.waits.test.ts",
+      "apps/api/src/modules/google-sync/writers/drive/drive.waits.test.ts"
+    ],
+    [
+      "apps/api/src/modules/google-sync/drive.writers.test.ts",
+      "apps/api/src/modules/google-sync/writers/drive/drive.writers.test.ts"
+    ],
+    [
+      "apps/api/src/modules/google-sync/event-format.test.ts",
+      "apps/api/src/modules/google-sync/writers/calendar/event-format.test.ts"
+    ],
+    [
+      "apps/api/src/modules/google-sync/event-format.ts",
+      "apps/api/src/modules/google-sync/writers/calendar/event-format.ts"
+    ],
+    [
+      "apps/api/src/modules/google-sync/google-account.queries.ts",
+      "apps/api/src/modules/google-sync/oauth/google-account.queries.ts"
+    ],
+    [
+      "apps/api/src/modules/google-sync/google-admin.controller.ts",
+      "apps/api/src/modules/google-sync/admin/google-admin.controller.ts"
+    ],
+    [
+      "apps/api/src/modules/google-sync/google-admin.service.ts",
+      "apps/api/src/modules/google-sync/admin/google-admin.service.ts"
+    ],
+    [
+      "apps/api/src/modules/google-sync/google-callback.controller.ts",
+      "apps/api/src/modules/google-sync/oauth/google-callback.controller.ts"
+    ],
+    [
+      "apps/api/src/modules/google-sync/google-client.fake.ts",
+      "apps/api/src/modules/google-sync/http/google-client.fake.ts"
+    ],
+    [
+      "apps/api/src/modules/google-sync/google-connection.ts",
+      "apps/api/src/modules/google-sync/oauth/google-connection.ts"
+    ],
+    [
+      "apps/api/src/modules/google-sync/google-http.calendar.ts",
+      "apps/api/src/modules/google-sync/http/google-http.calendar.ts"
+    ],
+    [
+      "apps/api/src/modules/google-sync/google-http.client.test.ts",
+      "apps/api/src/modules/google-sync/http/google-http.client.test.ts"
+    ],
+    [
+      "apps/api/src/modules/google-sync/google-http.client.ts",
+      "apps/api/src/modules/google-sync/http/google-http.client.ts"
+    ],
+    [
+      "apps/api/src/modules/google-sync/google-http.drive.ts",
+      "apps/api/src/modules/google-sync/http/google-http.drive.ts"
+    ],
+    [
+      "apps/api/src/modules/google-sync/google-http.oauth.ts",
+      "apps/api/src/modules/google-sync/http/google-http.oauth.ts"
+    ],
+    [
+      "apps/api/src/modules/google-sync/google-http.sheets.ts",
+      "apps/api/src/modules/google-sync/http/google-http.sheets.ts"
+    ],
+    [
+      "apps/api/src/modules/google-sync/google-http.ts",
+      "apps/api/src/modules/google-sync/http/google-http.ts"
+    ],
+    [
+      "apps/api/src/modules/google-sync/google-items.controller.ts",
+      "apps/api/src/modules/google-sync/admin/google-items.controller.ts"
+    ],
+    [
+      "apps/api/src/modules/google-sync/google-items.queries.test.ts",
+      "apps/api/src/modules/google-sync/sync/google-items.queries.test.ts"
+    ],
+    [
+      "apps/api/src/modules/google-sync/google-items.queries.ts",
+      "apps/api/src/modules/google-sync/sync/google-items.queries.ts"
+    ],
+    [
+      "apps/api/src/modules/google-sync/google-log.queries.ts",
+      "apps/api/src/modules/google-sync/admin/google-log.queries.ts"
+    ],
+    [
+      "apps/api/src/modules/google-sync/google-map.controller.ts",
+      "apps/api/src/modules/google-sync/map/google-map.controller.ts"
+    ],
+    [
+      "apps/api/src/modules/google-sync/google-map.queries.ts",
+      "apps/api/src/modules/google-sync/map/google-map.queries.ts"
+    ],
+    [
+      "apps/api/src/modules/google-sync/google-map.service.ts",
+      "apps/api/src/modules/google-sync/map/google-map.service.ts"
+    ],
+    [
+      "apps/api/src/modules/google-sync/google-oauth.service.test.ts",
+      "apps/api/src/modules/google-sync/oauth/google-oauth.service.test.ts"
+    ],
+    [
+      "apps/api/src/modules/google-sync/google-oauth.service.ts",
+      "apps/api/src/modules/google-sync/oauth/google-oauth.service.ts"
+    ],
+    [
+      "apps/api/src/modules/google-sync/google-status.service.ts",
+      "apps/api/src/modules/google-sync/admin/google-status.service.ts"
+    ],
+    [
+      "apps/api/src/modules/google-sync/google-sync.job.ts",
+      "apps/api/src/modules/google-sync/sync/google-sync.job.ts"
+    ],
+    [
+      "apps/api/src/modules/google-sync/google-sync.processor.test.ts",
+      "apps/api/src/modules/google-sync/sync/google-sync.processor.test.ts"
+    ],
+    [
+      "apps/api/src/modules/google-sync/google-sync.processor.ts",
+      "apps/api/src/modules/google-sync/sync/google-sync.processor.ts"
+    ],
+    [
+      "apps/api/src/modules/google-sync/google-sync.settings.test.ts",
+      "apps/api/src/modules/google-sync/sync/google-sync.settings.test.ts"
+    ],
+    [
+      "apps/api/src/modules/google-sync/google-sync.settings.ts",
+      "apps/api/src/modules/google-sync/sync/google-sync.settings.ts"
+    ],
+    [
+      "apps/api/src/modules/google-sync/google-sync.source.ts",
+      "apps/api/src/modules/google-sync/sync/google-sync.source.ts"
+    ],
+    [
+      "apps/api/src/modules/google-sync/google-writers.ts",
+      "apps/api/src/modules/google-sync/sync/google-writers.ts"
+    ],
+    [
+      "apps/api/src/modules/google-sync/oauth-state.test.ts",
+      "apps/api/src/modules/google-sync/oauth/oauth-state.test.ts"
+    ],
+    [
+      "apps/api/src/modules/google-sync/oauth-state.ts",
+      "apps/api/src/modules/google-sync/oauth/oauth-state.ts"
+    ],
+    [
+      "apps/api/src/modules/google-sync/pdf-name.test.ts",
+      "apps/api/src/modules/google-sync/writers/drive/pdf-name.test.ts"
+    ],
+    [
+      "apps/api/src/modules/google-sync/pdf-name.ts",
+      "apps/api/src/modules/google-sync/writers/drive/pdf-name.ts"
+    ],
+    [
+      "apps/api/src/modules/google-sync/report-pdf.writer.ts",
+      "apps/api/src/modules/google-sync/writers/drive/report-pdf.writer.ts"
+    ],
+    [
+      "apps/api/src/modules/google-sync/sheet-dates.test.ts",
+      "apps/api/src/modules/google-sync/writers/sheets/sheet-dates.test.ts"
+    ],
+    [
+      "apps/api/src/modules/google-sync/sheet-dates.ts",
+      "apps/api/src/modules/google-sync/writers/sheets/sheet-dates.ts"
+    ],
+    [
+      "apps/api/src/modules/google-sync/sheet-rows.writer.ts",
+      "apps/api/src/modules/google-sync/writers/sheets/sheet-rows.writer.ts"
+    ],
+    [
+      "apps/api/src/modules/google-sync/sheet-style.test.ts",
+      "apps/api/src/modules/google-sync/writers/sheets/sheet-style.test.ts"
+    ],
+    [
+      "apps/api/src/modules/google-sync/sheet-style.ts",
+      "apps/api/src/modules/google-sync/writers/sheets/sheet-style.ts"
+    ],
+    [
+      "apps/api/src/modules/google-sync/suggest.test.ts",
+      "apps/api/src/modules/google-sync/map/suggest.test.ts"
+    ],
+    [
+      "apps/api/src/modules/google-sync/suggest.ts",
+      "apps/api/src/modules/google-sync/map/suggest.ts"
+    ],
+    [
+      "apps/api/src/modules/google-sync/summary-row.test.ts",
+      "apps/api/src/modules/google-sync/writers/sheets/summary-row.test.ts"
+    ],
+    [
+      "apps/api/src/modules/google-sync/summary-row.ts",
+      "apps/api/src/modules/google-sync/writers/sheets/summary-row.ts"
+    ],
+    [
+      "apps/api/src/modules/google-sync/write-context.ts",
+      "apps/api/src/modules/google-sync/sync/write-context.ts"
+    ]
+  ]
+}

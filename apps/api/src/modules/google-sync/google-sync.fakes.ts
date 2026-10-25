@@ -1,7 +1,7 @@
 import { vi } from 'vitest';
-import type { EventLesson } from './event-format';
-import type { SyncItem } from './google-items.queries';
-import type { ReportSource } from './google-sync.source';
+import type { EventLesson } from './writers/calendar/event-format';
+import type { SyncItem } from './sync/google-items.queries';
+import type { ReportSource } from './sync/google-sync.source';
 
 // Test-only builders for the writers' inputs. Obviously fake ids and names, never real data.
 
