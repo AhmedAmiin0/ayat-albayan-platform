@@ -13,7 +13,7 @@ import { LeadReclassify } from './LeadReclassify';
 import { LeadAssign } from './leads/LeadAssign';
 import { LeadStatusChanger } from './LeadStatusChanger';
 import { LeadProfileSection } from './qualification/LeadProfileSection';
-import { threadHref } from './thread-cache';
+import { threadHref } from './thread/hooks/thread-cache';
 import { useCachedLead } from './use-cached-lead';
 
 /**

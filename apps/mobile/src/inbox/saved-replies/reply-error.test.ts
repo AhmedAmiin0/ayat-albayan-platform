@@ -1,6 +1,6 @@
 import { ApiError } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
-import { ChatFileError } from '../send-file';
+import { ChatFileError } from '../composer/send-file';
 import { replyError } from './reply-error';
 
 test('says the reply\'s own reason, the chat\'s file reason, else the generic line', () => {

@@ -3,7 +3,7 @@ import { t } from '@/core/lib/i18n/i18n';
 import { shape, type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { IconButton } from '@/core/ui/primitives/IconButton';
-import { useChatActions } from './chat-actions';
+import { useChatActions } from './thread/hooks/chat-actions';
 import { CloseIcon } from './chat-icons';
 import { quoteOf, quoteSender, quoteText } from './quote-text';
 

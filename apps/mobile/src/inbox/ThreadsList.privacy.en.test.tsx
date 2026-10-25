@@ -2,8 +2,8 @@ import en from '@ab/shared/i18n/en.json';
 import type { ThreadView } from '@ab/shared';
 import { screen } from '@testing-library/react-native';
 import { renderWithQuery } from '@/test/query';
-import { readable, SHOWN } from './privacy.helpers';
-import { ThreadModeProvider } from './thread-mode';
+import { readable, SHOWN } from './screens/privacy.helpers';
+import { ThreadModeProvider } from './thread/hooks/thread-mode';
 import { ThreadsList } from './ThreadsList';
 import { thread } from './thread-fixtures';
 

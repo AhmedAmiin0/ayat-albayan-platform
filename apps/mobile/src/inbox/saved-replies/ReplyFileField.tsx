@@ -6,7 +6,7 @@ import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { Button } from '@/core/ui/primitives/Button';
 import { ErrorLine } from '../ErrorLine';
-import { type ChatFileSource, pickChatFile } from '../send-file';
+import { type ChatFileSource, pickChatFile } from '../composer/send-file';
 import { uploadReplyFile } from './api';
 import { replyError } from './reply-error';
 import { SavedReplyChip } from './SavedReplyChip';
