@@ -46,7 +46,11 @@ describe('registration and the trial lesson', () => {
   it('attending (completed / late) moves new or trial → pending_subscription', () => {
     for (const s of ['new', 'trial'] as const)
       expect(trialMove(s, { open: false, attended: true, paid: false })).toEqual({ from: s, to: 'pending_subscription', reason: 'trial_attended' });
-    expect(trialMove('trial', { open: true, attended: true, paid: false })?.to).toBe('pending_subscription');
+    expect(trialMove('new', { open: true, attended: true, paid: false })?.to).toBe('trial');
+  });
+
+  it('a new trial date still ahead keeps the student in trial after an older attended one (owner 2026-10-25)', () => {
+    expect(trialMove('trial', { open: true, attended: true, paid: false })).toBeNull();
   });
 
   it('attended but already paid (owner 2026-10-15) → no move, open or not', () => {

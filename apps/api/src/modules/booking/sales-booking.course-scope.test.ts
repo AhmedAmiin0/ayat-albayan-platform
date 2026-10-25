@@ -7,6 +7,7 @@ import type { SalesQueries } from '../sales/sales.queries';
 import { errorCode } from '../scheduling/errors';
 import { BookingSettings } from './booking.settings';
 import { SalesBookingScope } from './sales-booking.ownership';
+import type { TrialDateQueries } from './trial-date.queries';
 import { assertBookingScope } from './sales-booking.scope';
 
 // The assistant's course (owner 2026-10-18): kind 'package' with self.sales_money, one student of hers.
@@ -70,7 +71,7 @@ describe('assertBookingScope — a course (R-ASST-01)', () => {
 describe('SalesBookingScope.forRequest — a course always reads her ownership', () => {
   const scopeWith = (on: boolean) => {
     const sales = { ownership: vi.fn(async (): Promise<SalesOwnership> => OWN) };
-    return { sales, scope: new SalesBookingScope(sales as unknown as SalesQueries, readerOf(BookingSettings, { sales_auto_assign: on })) };
+    return { sales, scope: new SalesBookingScope(sales as unknown as SalesQueries, readerOf(BookingSettings, { sales_auto_assign: on }), {} as unknown as TrialDateQueries) };
   };
 
   it('auto-assign OFF: a course gets her ownership, a trial gets null', async () => {

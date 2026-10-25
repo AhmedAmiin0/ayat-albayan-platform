@@ -54,18 +54,19 @@ export interface TrialFacts {
 }
 
 /**
- * Transitions 2–3: booking, attending or losing the trial lesson. Only from new / trial: attended →
- * pending_subscription; new with an open trial → trial; trial with neither an open nor an attended
+ * Transitions 2–3: booking, attending or losing the trial lesson. Only from new / trial: new with an
+ * open trial → trial (an open one keeps a trial student in trial, even after an older attended one);
+ * attended and nothing open → pending_subscription; trial with neither an open nor an attended
  * trial lesson (no_show, excused, cancelled and nothing else booked) → new. Anything else: null.
  * Attended but already paid (owner 2026-10-15): no move; the payment rules own that student.
  */
 export function trialMove(current: StudentStatus, facts: TrialFacts): StatusMovePlan | null {
   if (current !== 'new' && current !== 'trial') return null;
   if (facts.attended && facts.paid) return null;
+  // A trial date still ahead wins over an older attended one: «موعد تجريبي جديد» (owner 2026-10-25).
+  if (facts.open) return current === 'new' ? { from: current, to: 'trial', reason: 'trial_booked' } : null;
   if (facts.attended) return { from: current, to: 'pending_subscription', reason: 'trial_attended' };
-  if (current === 'new' && facts.open) return { from: current, to: 'trial', reason: 'trial_booked' };
-  if (current === 'trial' && !facts.open) return { from: current, to: 'new', reason: 'trial_missed' };
-  return null;
+  return current === 'trial' ? { from: current, to: 'new', reason: 'trial_missed' } : null;
 }
 
 /** Transition 4: a positive payment. */

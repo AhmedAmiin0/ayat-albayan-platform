@@ -26,6 +26,7 @@ import { StudentProfileForm } from './StudentProfileForm';
 import { HeadActions } from '@/components/ui/head-actions';
 import { StudentRecordings } from './StudentRecordings';
 import { CreateAccountButton } from '@/features/users/CreateAccountButton';
+import { TrialDatesSection } from '@/features/booking/trial-date/TrialDatesSection';
 
 /** Once the package ended «جدّد الاشتراك» is the head's primary action and booking moves beside it. */
 const headOf = (ended: boolean, nodes: { renew: ReactNode; book: ReactNode }) =>
@@ -98,6 +99,7 @@ export function StudentProfilePage({ studentId }: { studentId: string }) {
           </div>
         ))}
       </dl>
+      <TrialDatesSection student={student} />
       <BalanceCard student={student} />
       <StudentPayments studentId={student.id} />
       <StudentInvoices studentId={student.id} />

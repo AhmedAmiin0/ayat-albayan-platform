@@ -23,6 +23,8 @@ export interface SlotsParams {
   /** «تغيير أيام الحلقات»: `?studentIds=a,b`, whose lessons of `excludeCourse` are not busy (they move). */
   studentIds?: string;
   excludeCourse?: string;
+  /** «موعد تجريبي جديد»: the upcoming trial the new date moves is not busy. */
+  excludeLessonId?: string;
 }
 
 /** GET /booking/slots (docs/10 route 13; sales: /sales/booking/slots): candidate starts, each with its clashes ([] = free). */

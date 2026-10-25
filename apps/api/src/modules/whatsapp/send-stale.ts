@@ -53,19 +53,22 @@ export function staleReason(row: StaleInput): string | null {
  * teacher_new_student is queued with expires_at = the first lesson's start (TeacherAlert): a lesson
  * moved since (edit_lesson_time) would announce the old time, so the row is dropped, like the
  * reminders edit_lesson_time expires; the teacher still gets the bell row and the lesson reminder.
+ * A lesson no longer open (a trial moved to a new date by «موعد تجريبي جديد», or cancelled) drops it
+ * too: the new lesson carries its own alert.
  */
 function newStudentRetimed(row: {
   template_key: string | null;
   expires_at: string | null;
-  lesson: { starts_at: string } | null;
+  lesson: { starts_at: string; status: LessonStatus } | null;
 }): boolean {
-  if (row.template_key !== 'teacher_new_student' || !row.expires_at || !row.lesson) return false;
-  return Date.parse(row.expires_at) !== Date.parse(row.lesson.starts_at);
+  if (row.template_key !== 'teacher_new_student' || !row.lesson) return false;
+  if (!OPEN_LESSON.includes(row.lesson.status)) return true;
+  return !!row.expires_at && Date.parse(row.expires_at) !== Date.parse(row.lesson.starts_at);
 }
 
 /** A queued row the worker drops before claiming it: past its send window, or stale (above). */
 export function dropReason(
-  row: StaleInput & { expires_at: string | null; lesson: { starts_at: string } | null },
+  row: StaleInput & { expires_at: string | null; lesson: { starts_at: string; status: LessonStatus } | null },
   now: Date,
 ): { code: 'expired' | 'stale'; text: string } | null {
   const lessonStartsAt = row.lesson?.starts_at ?? null;

@@ -698,7 +698,10 @@
       "starts_at_mismatch": "The first lesson is not on the start day; pick the time again",
       "starts_before_course": "The first new time is before this package's lessons start; pick a time after it",
       "course_changed": "This package's lessons just changed; open the window again",
-      "no_change": "You have not changed any time yet; pick another day or time"
+      "no_change": "You have not changed any time yet; pick another day or time",
+      "trial_date_subscribed": "This student is subscribed and needs no trial lesson. Change their lesson days instead.",
+      "trial_date_invalid": "A new trial date is booked for one registered student only.",
+      "trial_changed": "The upcoming trial date just changed; go back and pick the date once more."
     },
     "pickDayTimes": "Pick a time for each day",
     "dayAt": "{day} at {time}",
@@ -6062,5 +6065,59 @@
       "fileFailed": "The attachment was not sent: {reason}"
     },
     "retry": "Try again"
+  },
+  "trialDate": {
+    "action": "New trial date",
+    "actionHint": "Pick a new trial lesson date for this student",
+    "title": "New trial date for {name}",
+    "historyTitle": "Trial lesson dates",
+    "count": {
+      "one": "1 date",
+      "two": "2 dates",
+      "few": "{n} dates",
+      "other": "{n} dates"
+    },
+    "empty": "No trial date has been picked for this student yet.",
+    "loadError": "Could not load the trial lesson dates.",
+    "retry": "Try again",
+    "columns": {
+      "when": "Date",
+      "teacher": "Teacher",
+      "outcome": "Outcome",
+      "pickedBy": "Picked by"
+    },
+    "outcome": {
+      "upcoming": "Upcoming",
+      "awaiting": "Awaiting report",
+      "attended": "Attended",
+      "absent": "Absent",
+      "cancelled": "Cancelled",
+      "moved": "Moved"
+    },
+    "familyTime": "Family time: {time}",
+    "pickedAt": "{name}, {when}",
+    "unknownPicker": "Unknown",
+    "warn": "This will be trial date number {n} for this student. Check with the guardian before booking.",
+    "moves": "The upcoming date ({when}) moves to the new one; the old one stays in the history as \"Moved\".",
+    "newLesson": "There is no upcoming trial date, so a new trial lesson will be booked.",
+    "lastTeacher": "The teacher of the last trial lesson is picked; you can change it.",
+    "submit": "Book the new date",
+    "submitting": "Booking…",
+    "done": "The new trial date is booked.",
+    "doneMoved": "The trial lesson moved to the new date.",
+    "doneNote": "The guardian is sent the new date, and the teacher's calendar is updated.",
+    "notAllowed": "This student is subscribed and needs no trial lesson. Change their lesson days instead.",
+    "close": "Close",
+    "showHistory": "Show dates",
+    "mobile": {
+      "showAll": "Show all ({n})",
+      "showLess": "Show less",
+      "newTime": "New date"
+    },
+    "web": {
+      "showAll": "Show all dates ({n})",
+      "showFewer": "Show fewer",
+      "hideHistory": "Hide dates"
+    }
   }
 }
