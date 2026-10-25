@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import type { BalanceRow } from '../subscriptions/balance.queries';
-import { STUDENT_ID, subRow } from '../subscriptions/money.fakes';
+import type { BalanceRow } from '../subscriptions/money/balance.queries';
+import { STUDENT_ID, subRow } from '../subscriptions/money/money.fakes';
 import { toStudentBalance, toSubscriptionView } from '../subscriptions/subscriptions.mapper';
 import type { SubRow } from '../subscriptions/subscriptions.queries';
 import { familyTags, toThreadStudent, type PeopleStudentRow } from './thread-people.mapper';

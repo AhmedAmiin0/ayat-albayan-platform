@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { fakeDb } from '../guardians/fake-db';
-import { LESSON_SELECT } from './lesson-row';
+import { LESSON_SELECT } from './store/lesson-row';
 import { lessonRow, STUDENT_ID } from './lessons.fakes';
 import { LessonsQueries } from './lessons.queries';
 import { LessonsSettings } from './lessons.settings';

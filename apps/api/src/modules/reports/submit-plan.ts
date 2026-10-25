@@ -8,7 +8,7 @@ import {
   type Attendance,
   type LessonStatus,
 } from '@ab/shared';
-import { outcomeChange } from '../lessons/outcomes';
+import { outcomeChange } from '../lessons/status/outcomes';
 import type { ChangeSet } from '../scheduling/change-set';
 import type { FormColumns } from './report.mapper';
 

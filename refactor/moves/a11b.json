@@ -1,0 +1,184 @@
+{
+  "id": "a11b",
+  "seq": 14,
+  "moves": [
+    {
+      "from": "apps/api/src/modules/lessons/lesson-proposals*",
+      "to": "apps/api/src/modules/lessons/proposals"
+    },
+    {
+      "from": "apps/api/src/modules/lessons/lesson-reschedule*",
+      "to": "apps/api/src/modules/lessons/reschedule"
+    },
+    {
+      "from": "apps/api/src/modules/lessons/reschedule*",
+      "to": "apps/api/src/modules/lessons/reschedule"
+    },
+    {
+      "from": "apps/api/src/modules/lessons/rule-*",
+      "to": "apps/api/src/modules/lessons/reschedule"
+    },
+    {
+      "from": "apps/api/src/modules/lessons/time-edit*",
+      "to": "apps/api/src/modules/lessons/time-edit"
+    },
+    {
+      "from": "apps/api/src/modules/lessons/lesson-time*",
+      "to": "apps/api/src/modules/lessons/time-edit"
+    },
+    {
+      "from": "apps/api/src/modules/lessons/teacher-me*",
+      "to": "apps/api/src/modules/lessons/teacher-me"
+    }
+  ],
+  "files": [
+    [
+      "apps/api/src/modules/lessons/lesson-proposals.controller.test.ts",
+      "apps/api/src/modules/lessons/proposals/lesson-proposals.controller.test.ts"
+    ],
+    [
+      "apps/api/src/modules/lessons/lesson-proposals.controller.ts",
+      "apps/api/src/modules/lessons/proposals/lesson-proposals.controller.ts"
+    ],
+    [
+      "apps/api/src/modules/lessons/lesson-proposals.queries.ts",
+      "apps/api/src/modules/lessons/proposals/lesson-proposals.queries.ts"
+    ],
+    [
+      "apps/api/src/modules/lessons/lesson-proposals.service.test.ts",
+      "apps/api/src/modules/lessons/proposals/lesson-proposals.service.test.ts"
+    ],
+    [
+      "apps/api/src/modules/lessons/lesson-proposals.service.ts",
+      "apps/api/src/modules/lessons/proposals/lesson-proposals.service.ts"
+    ],
+    [
+      "apps/api/src/modules/lessons/lesson-reschedule.controller.test.ts",
+      "apps/api/src/modules/lessons/reschedule/lesson-reschedule.controller.test.ts"
+    ],
+    [
+      "apps/api/src/modules/lessons/lesson-reschedule.controller.ts",
+      "apps/api/src/modules/lessons/reschedule/lesson-reschedule.controller.ts"
+    ],
+    [
+      "apps/api/src/modules/lessons/lesson-time.controller.test.ts",
+      "apps/api/src/modules/lessons/time-edit/lesson-time.controller.test.ts"
+    ],
+    [
+      "apps/api/src/modules/lessons/lesson-time.controller.ts",
+      "apps/api/src/modules/lessons/time-edit/lesson-time.controller.ts"
+    ],
+    [
+      "apps/api/src/modules/lessons/reschedule-one.service.test.ts",
+      "apps/api/src/modules/lessons/reschedule/reschedule-one.service.test.ts"
+    ],
+    [
+      "apps/api/src/modules/lessons/reschedule-one.service.ts",
+      "apps/api/src/modules/lessons/reschedule/reschedule-one.service.ts"
+    ],
+    [
+      "apps/api/src/modules/lessons/reschedule-rule.makeup.test.ts",
+      "apps/api/src/modules/lessons/reschedule/reschedule-rule.makeup.test.ts"
+    ],
+    [
+      "apps/api/src/modules/lessons/reschedule-rule.service.test.ts",
+      "apps/api/src/modules/lessons/reschedule/reschedule-rule.service.test.ts"
+    ],
+    [
+      "apps/api/src/modules/lessons/reschedule-rule.service.ts",
+      "apps/api/src/modules/lessons/reschedule/reschedule-rule.service.ts"
+    ],
+    [
+      "apps/api/src/modules/lessons/reschedule.meeting-mode.test.ts",
+      "apps/api/src/modules/lessons/reschedule/reschedule.meeting-mode.test.ts"
+    ],
+    [
+      "apps/api/src/modules/lessons/rule-cancel.controller.ts",
+      "apps/api/src/modules/lessons/reschedule/rule-cancel.controller.ts"
+    ],
+    [
+      "apps/api/src/modules/lessons/rule-plan.test.ts",
+      "apps/api/src/modules/lessons/reschedule/rule-plan.test.ts"
+    ],
+    [
+      "apps/api/src/modules/lessons/rule-plan.ts",
+      "apps/api/src/modules/lessons/reschedule/rule-plan.ts"
+    ],
+    [
+      "apps/api/src/modules/lessons/rule-planner.ts",
+      "apps/api/src/modules/lessons/reschedule/rule-planner.ts"
+    ],
+    [
+      "apps/api/src/modules/lessons/teacher-me.controller.test.ts",
+      "apps/api/src/modules/lessons/teacher-me/teacher-me.controller.test.ts"
+    ],
+    [
+      "apps/api/src/modules/lessons/teacher-me.controller.ts",
+      "apps/api/src/modules/lessons/teacher-me/teacher-me.controller.ts"
+    ],
+    [
+      "apps/api/src/modules/lessons/teacher-me.queries.test.ts",
+      "apps/api/src/modules/lessons/teacher-me/teacher-me.queries.test.ts"
+    ],
+    [
+      "apps/api/src/modules/lessons/teacher-me.queries.ts",
+      "apps/api/src/modules/lessons/teacher-me/teacher-me.queries.ts"
+    ],
+    [
+      "apps/api/src/modules/lessons/time-edit.fakes.ts",
+      "apps/api/src/modules/lessons/time-edit/time-edit.fakes.ts"
+    ],
+    [
+      "apps/api/src/modules/lessons/time-edit.messages.ts",
+      "apps/api/src/modules/lessons/time-edit/time-edit.messages.ts"
+    ],
+    [
+      "apps/api/src/modules/lessons/time-edit.payout.ts",
+      "apps/api/src/modules/lessons/time-edit/time-edit.payout.ts"
+    ],
+    [
+      "apps/api/src/modules/lessons/time-edit.plan.correct.test.ts",
+      "apps/api/src/modules/lessons/time-edit/time-edit.plan.correct.test.ts"
+    ],
+    [
+      "apps/api/src/modules/lessons/time-edit.plan.test.ts",
+      "apps/api/src/modules/lessons/time-edit/time-edit.plan.test.ts"
+    ],
+    [
+      "apps/api/src/modules/lessons/time-edit.plan.ts",
+      "apps/api/src/modules/lessons/time-edit/time-edit.plan.ts"
+    ],
+    [
+      "apps/api/src/modules/lessons/time-edit.queries.test.ts",
+      "apps/api/src/modules/lessons/time-edit/time-edit.queries.test.ts"
+    ],
+    [
+      "apps/api/src/modules/lessons/time-edit.queries.ts",
+      "apps/api/src/modules/lessons/time-edit/time-edit.queries.ts"
+    ],
+    [
+      "apps/api/src/modules/lessons/time-edit.service.held.test.ts",
+      "apps/api/src/modules/lessons/time-edit/time-edit.service.held.test.ts"
+    ],
+    [
+      "apps/api/src/modules/lessons/time-edit.service.idempotency.test.ts",
+      "apps/api/src/modules/lessons/time-edit/time-edit.service.idempotency.test.ts"
+    ],
+    [
+      "apps/api/src/modules/lessons/time-edit.service.messages.test.ts",
+      "apps/api/src/modules/lessons/time-edit/time-edit.service.messages.test.ts"
+    ],
+    [
+      "apps/api/src/modules/lessons/time-edit.service.move.test.ts",
+      "apps/api/src/modules/lessons/time-edit/time-edit.service.move.test.ts"
+    ],
+    [
+      "apps/api/src/modules/lessons/time-edit.service.payout.test.ts",
+      "apps/api/src/modules/lessons/time-edit/time-edit.service.payout.test.ts"
+    ],
+    [
+      "apps/api/src/modules/lessons/time-edit.service.ts",
+      "apps/api/src/modules/lessons/time-edit/time-edit.service.ts"
+    ]
+  ]
+}

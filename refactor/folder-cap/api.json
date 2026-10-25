@@ -31,10 +31,6 @@
     "files": 39,
     "dirs": 0
   },
-  "apps/api/src/modules/lessons": {
-    "files": 38,
-    "dirs": 1
-  },
   "apps/api/src/modules/me": {
     "files": 14,
     "dirs": 0
@@ -77,10 +73,6 @@
   },
   "apps/api/src/modules/student-recordings": {
     "files": 15,
-    "dirs": 0
-  },
-  "apps/api/src/modules/subscriptions": {
-    "files": 37,
     "dirs": 0
   },
   "apps/api/src/modules/teacher-earnings": {

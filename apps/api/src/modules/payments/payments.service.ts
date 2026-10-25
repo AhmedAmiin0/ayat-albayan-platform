@@ -2,7 +2,7 @@ import type { TablesUpdate } from '@ab/db';
 import type { PaymentAttachmentView, PaymentCreate, PaymentUpdate, PaymentView } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
 import { notFound } from '../../common/http/errors';
-import { MoneyWrites } from '../subscriptions/money-writes';
+import { MoneyWrites } from '../subscriptions/money/money-writes';
 import type { Page } from '../../common/http/http';
 import { toPaymentView } from './payments.mapper';
 import { PaymentsQueries, type PaymentFilter, type PaymentRow, type PeriodTotal } from './payments.queries';

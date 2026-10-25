@@ -1,6 +1,6 @@
 import type { NestFastifyApplication } from '@nestjs/platform-fastify';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
-import { PAYOUT_ID, payoutRow, TEACHER_ID } from '../subscriptions/money.fakes';
+import { PAYOUT_ID, payoutRow, TEACHER_ID } from '../subscriptions/money/money.fakes';
 import { ADMIN, moneyApp, resetMocks, type Mocks } from '../subscriptions/test-app';
 
 // The rule against double counting (docs/11 §12): the ledger is the record of what was paid, and

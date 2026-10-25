@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import type { BalanceQueries } from '../subscriptions/balance.queries';
-import type { PackagesService } from '../subscriptions/packages.service';
+import type { BalanceQueries } from '../subscriptions/money/balance.queries';
+import type { PackagesService } from '../subscriptions/money/packages.service';
 import { fakeDb } from '../guardians/fake-db';
 import { teacherListFilter, threadListQuery } from './threads.list';
 import { ThreadsQueries } from './threads.queries';

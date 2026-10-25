@@ -1,0 +1,260 @@
+{
+  "id": "a12",
+  "seq": 15,
+  "moves": [
+    {
+      "from": "apps/api/src/modules/subscriptions/alerts*",
+      "to": "apps/api/src/modules/subscriptions/alerts"
+    },
+    {
+      "from": "apps/api/src/modules/subscriptions/admin-tasks*",
+      "to": "apps/api/src/modules/subscriptions/alerts"
+    },
+    {
+      "from": "apps/api/src/modules/subscriptions/unpaid-flags*",
+      "to": "apps/api/src/modules/subscriptions/alerts"
+    },
+    {
+      "from": "apps/api/src/modules/subscriptions/balance*",
+      "to": "apps/api/src/modules/subscriptions/money"
+    },
+    {
+      "from": "apps/api/src/modules/subscriptions/money-follow-ups*",
+      "to": "apps/api/src/modules/subscriptions/money"
+    },
+    {
+      "from": "apps/api/src/modules/subscriptions/money-writes*",
+      "to": "apps/api/src/modules/subscriptions/money"
+    },
+    {
+      "from": "apps/api/src/modules/subscriptions/money.fakes*",
+      "to": "apps/api/src/modules/subscriptions/money"
+    },
+    {
+      "from": "apps/api/src/modules/subscriptions/packages*",
+      "to": "apps/api/src/modules/subscriptions/money"
+    },
+    {
+      "from": "apps/api/src/modules/subscriptions/student-trial*",
+      "to": "apps/api/src/modules/subscriptions/trial"
+    },
+    {
+      "from": "apps/api/src/modules/subscriptions/student-access*",
+      "to": "apps/api/src/modules/subscriptions/student-lifecycle"
+    },
+    {
+      "from": "apps/api/src/modules/subscriptions/student-activation*",
+      "to": "apps/api/src/modules/subscriptions/student-lifecycle"
+    },
+    {
+      "from": "apps/api/src/modules/subscriptions/student-deactivation*",
+      "to": "apps/api/src/modules/subscriptions/student-lifecycle"
+    },
+    {
+      "from": "apps/api/src/modules/subscriptions/student-expiry*",
+      "to": "apps/api/src/modules/subscriptions/student-lifecycle"
+    },
+    {
+      "from": "apps/api/src/modules/subscriptions/student-renewal*",
+      "to": "apps/api/src/modules/subscriptions/student-lifecycle"
+    },
+    {
+      "from": "apps/api/src/modules/subscriptions/student-status*",
+      "to": "apps/api/src/modules/subscriptions/student-lifecycle"
+    },
+    {
+      "from": "apps/api/src/modules/subscriptions/lead-conversion*",
+      "to": "apps/api/src/modules/subscriptions/student-lifecycle"
+    }
+  ],
+  "files": [
+    [
+      "apps/api/src/modules/subscriptions/admin-tasks.controller.ts",
+      "apps/api/src/modules/subscriptions/alerts/admin-tasks.controller.ts"
+    ],
+    [
+      "apps/api/src/modules/subscriptions/admin-tasks.http.test.ts",
+      "apps/api/src/modules/subscriptions/alerts/admin-tasks.http.test.ts"
+    ],
+    [
+      "apps/api/src/modules/subscriptions/admin-tasks.queries.ts",
+      "apps/api/src/modules/subscriptions/alerts/admin-tasks.queries.ts"
+    ],
+    [
+      "apps/api/src/modules/subscriptions/alerts.job.ts",
+      "apps/api/src/modules/subscriptions/alerts/alerts.job.ts"
+    ],
+    [
+      "apps/api/src/modules/subscriptions/alerts.queries.test.ts",
+      "apps/api/src/modules/subscriptions/alerts/alerts.queries.test.ts"
+    ],
+    [
+      "apps/api/src/modules/subscriptions/alerts.queries.ts",
+      "apps/api/src/modules/subscriptions/alerts/alerts.queries.ts"
+    ],
+    [
+      "apps/api/src/modules/subscriptions/alerts.service.renewal.test.ts",
+      "apps/api/src/modules/subscriptions/alerts/alerts.service.renewal.test.ts"
+    ],
+    [
+      "apps/api/src/modules/subscriptions/alerts.service.test.ts",
+      "apps/api/src/modules/subscriptions/alerts/alerts.service.test.ts"
+    ],
+    [
+      "apps/api/src/modules/subscriptions/alerts.service.ts",
+      "apps/api/src/modules/subscriptions/alerts/alerts.service.ts"
+    ],
+    [
+      "apps/api/src/modules/subscriptions/balance.queries.ts",
+      "apps/api/src/modules/subscriptions/money/balance.queries.ts"
+    ],
+    [
+      "apps/api/src/modules/subscriptions/balance.teacher.test.ts",
+      "apps/api/src/modules/subscriptions/money/balance.teacher.test.ts"
+    ],
+    [
+      "apps/api/src/modules/subscriptions/balance.teacher.ts",
+      "apps/api/src/modules/subscriptions/money/balance.teacher.ts"
+    ],
+    [
+      "apps/api/src/modules/subscriptions/lead-conversion.test.ts",
+      "apps/api/src/modules/subscriptions/student-lifecycle/lead-conversion.test.ts"
+    ],
+    [
+      "apps/api/src/modules/subscriptions/lead-conversion.ts",
+      "apps/api/src/modules/subscriptions/student-lifecycle/lead-conversion.ts"
+    ],
+    [
+      "apps/api/src/modules/subscriptions/money-follow-ups.test.ts",
+      "apps/api/src/modules/subscriptions/money/money-follow-ups.test.ts"
+    ],
+    [
+      "apps/api/src/modules/subscriptions/money-follow-ups.ts",
+      "apps/api/src/modules/subscriptions/money/money-follow-ups.ts"
+    ],
+    [
+      "apps/api/src/modules/subscriptions/money-writes.test.ts",
+      "apps/api/src/modules/subscriptions/money/money-writes.test.ts"
+    ],
+    [
+      "apps/api/src/modules/subscriptions/money-writes.ts",
+      "apps/api/src/modules/subscriptions/money/money-writes.ts"
+    ],
+    [
+      "apps/api/src/modules/subscriptions/money.fakes.ts",
+      "apps/api/src/modules/subscriptions/money/money.fakes.ts"
+    ],
+    [
+      "apps/api/src/modules/subscriptions/packages.plan.test.ts",
+      "apps/api/src/modules/subscriptions/money/packages.plan.test.ts"
+    ],
+    [
+      "apps/api/src/modules/subscriptions/packages.plan.ts",
+      "apps/api/src/modules/subscriptions/money/packages.plan.ts"
+    ],
+    [
+      "apps/api/src/modules/subscriptions/packages.service.test.ts",
+      "apps/api/src/modules/subscriptions/money/packages.service.test.ts"
+    ],
+    [
+      "apps/api/src/modules/subscriptions/packages.service.ts",
+      "apps/api/src/modules/subscriptions/money/packages.service.ts"
+    ],
+    [
+      "apps/api/src/modules/subscriptions/student-access.test.ts",
+      "apps/api/src/modules/subscriptions/student-lifecycle/student-access.test.ts"
+    ],
+    [
+      "apps/api/src/modules/subscriptions/student-access.ts",
+      "apps/api/src/modules/subscriptions/student-lifecycle/student-access.ts"
+    ],
+    [
+      "apps/api/src/modules/subscriptions/student-activation.test.ts",
+      "apps/api/src/modules/subscriptions/student-lifecycle/student-activation.test.ts"
+    ],
+    [
+      "apps/api/src/modules/subscriptions/student-activation.ts",
+      "apps/api/src/modules/subscriptions/student-lifecycle/student-activation.ts"
+    ],
+    [
+      "apps/api/src/modules/subscriptions/student-deactivation.test.ts",
+      "apps/api/src/modules/subscriptions/student-lifecycle/student-deactivation.test.ts"
+    ],
+    [
+      "apps/api/src/modules/subscriptions/student-deactivation.ts",
+      "apps/api/src/modules/subscriptions/student-lifecycle/student-deactivation.ts"
+    ],
+    [
+      "apps/api/src/modules/subscriptions/student-expiry.job.test.ts",
+      "apps/api/src/modules/subscriptions/student-lifecycle/student-expiry.job.test.ts"
+    ],
+    [
+      "apps/api/src/modules/subscriptions/student-expiry.job.ts",
+      "apps/api/src/modules/subscriptions/student-lifecycle/student-expiry.job.ts"
+    ],
+    [
+      "apps/api/src/modules/subscriptions/student-expiry.queries.test.ts",
+      "apps/api/src/modules/subscriptions/student-lifecycle/student-expiry.queries.test.ts"
+    ],
+    [
+      "apps/api/src/modules/subscriptions/student-expiry.queries.ts",
+      "apps/api/src/modules/subscriptions/student-lifecycle/student-expiry.queries.ts"
+    ],
+    [
+      "apps/api/src/modules/subscriptions/student-renewal.plan.test.ts",
+      "apps/api/src/modules/subscriptions/student-lifecycle/student-renewal.plan.test.ts"
+    ],
+    [
+      "apps/api/src/modules/subscriptions/student-renewal.plan.ts",
+      "apps/api/src/modules/subscriptions/student-lifecycle/student-renewal.plan.ts"
+    ],
+    [
+      "apps/api/src/modules/subscriptions/student-renewal.test.ts",
+      "apps/api/src/modules/subscriptions/student-lifecycle/student-renewal.test.ts"
+    ],
+    [
+      "apps/api/src/modules/subscriptions/student-renewal.ts",
+      "apps/api/src/modules/subscriptions/student-lifecycle/student-renewal.ts"
+    ],
+    [
+      "apps/api/src/modules/subscriptions/student-status.queries.test.ts",
+      "apps/api/src/modules/subscriptions/student-lifecycle/student-status.queries.test.ts"
+    ],
+    [
+      "apps/api/src/modules/subscriptions/student-status.queries.ts",
+      "apps/api/src/modules/subscriptions/student-lifecycle/student-status.queries.ts"
+    ],
+    [
+      "apps/api/src/modules/subscriptions/student-trial-status.test.ts",
+      "apps/api/src/modules/subscriptions/trial/student-trial-status.test.ts"
+    ],
+    [
+      "apps/api/src/modules/subscriptions/student-trial-status.ts",
+      "apps/api/src/modules/subscriptions/trial/student-trial-status.ts"
+    ],
+    [
+      "apps/api/src/modules/subscriptions/student-trial.plan.test.ts",
+      "apps/api/src/modules/subscriptions/trial/student-trial.plan.test.ts"
+    ],
+    [
+      "apps/api/src/modules/subscriptions/student-trial.plan.ts",
+      "apps/api/src/modules/subscriptions/trial/student-trial.plan.ts"
+    ],
+    [
+      "apps/api/src/modules/subscriptions/student-trial.queries.test.ts",
+      "apps/api/src/modules/subscriptions/trial/student-trial.queries.test.ts"
+    ],
+    [
+      "apps/api/src/modules/subscriptions/student-trial.queries.ts",
+      "apps/api/src/modules/subscriptions/trial/student-trial.queries.ts"
+    ],
+    [
+      "apps/api/src/modules/subscriptions/unpaid-flags.service.ts",
+      "apps/api/src/modules/subscriptions/alerts/unpaid-flags.service.ts"
+    ],
+    [
+      "apps/api/src/modules/subscriptions/unpaid-flags.test.ts",
+      "apps/api/src/modules/subscriptions/alerts/unpaid-flags.test.ts"
+    ]
+  ]
+}

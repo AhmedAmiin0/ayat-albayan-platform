@@ -1,7 +1,7 @@
 import type { ScheduleOverview } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
 import { TeachersQueries } from '../../teachers/teachers.queries';
-import { LessonViews } from '../lesson-views';
+import { LessonViews } from '../store/lesson-views';
 import type { LessonWindow } from '../lessons.queries';
 import { toOverview } from './overview.mapper';
 import { OverviewQueries } from './overview.queries';

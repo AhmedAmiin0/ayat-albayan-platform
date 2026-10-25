@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { toPaymentView } from '../payments/payments.mapper';
-import { paymentRow, subRow, WEEKLY_SA } from '../subscriptions/money.fakes';
+import { paymentRow, subRow, WEEKLY_SA } from '../subscriptions/money/money.fakes';
 import { toSalesPayment, toSalesQuote, toSalesSubscription } from './sales-money.mapper';
 import type { SubscriptionView } from '@ab/shared';
 

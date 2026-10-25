@@ -8,7 +8,7 @@ import { AuditService } from '../../common/audit/audit.service';
 import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER } from '../../common/auth/auth.guard';
 import { PushService } from '../../common/push/push.service';
 import { LeadsService } from '../leads/leads.service';
-import { LessonStatusService } from '../lessons/lesson-status.service';
+import { LessonStatusService } from '../lessons/status/lesson-status.service';
 import { fakeDeps } from './webhook.fakes';
 import { PHONE_NUMBER_ID } from './meta.fakes';
 import { WebhookModule } from './webhook.module';

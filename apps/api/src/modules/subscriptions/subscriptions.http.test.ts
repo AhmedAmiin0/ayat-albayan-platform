@@ -1,6 +1,6 @@
 import type { NestFastifyApplication } from '@nestjs/platform-fastify';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
-import { STUDENT_ID, SUB_ID, subRow, WEEKLY_SA } from './money.fakes';
+import { STUDENT_ID, SUB_ID, subRow, WEEKLY_SA } from './money/money.fakes';
 import { moneyApp, resetMocks, type Mocks } from './test-app';
 
 describe('subscriptions routes (S1–S6, R-SUB-01)', () => {
