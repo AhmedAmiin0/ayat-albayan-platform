@@ -69,6 +69,15 @@ describe('ReportPdfSource — one report and everything around it', () => {
     expect(src?.packages).toEqual([]);
   });
 
+  it('the lesson\'s rule package picks the CRM report kind: trial only for a trial rule (docs/19)', async () => {
+    const lesson = (rule: { package: string } | null) => ({ lessons: [{ data: { starts_at: '2026-09-29T14:00:00+00:00', ends_at: '2026-09-29T15:00:00+00:00', rule } }] });
+    const { db, calls } = fakeDb(tables(lesson({ package: 'trial' })));
+    expect((await new ReportPdfSource(db).load('r1'))?.lesson.trial).toBe(true);
+    expect(calls.find((c) => c.table === 'lessons' && c.method === 'select')?.args[0]).toContain('rule:schedule_rules(package)');
+    expect((await new ReportPdfSource(fakeDb(tables(lesson({ package: 'monthly' }))).db).load('r1'))?.lesson.trial).toBe(false);
+    expect((await new ReportPdfSource(fakeDb(tables(lesson(null))).db).load('r1'))?.lesson.trial).toBe(false);
+  });
+
   it('a deleted report → null; a missing student or a read error → throws', async () => {
     await expect(new ReportPdfSource(fakeDb(tables({ lesson_reports: [{ data: null }] })).db).load('r1')).resolves.toBeNull();
     await expect(new ReportPdfSource(fakeDb(tables({ students: [{ data: null }] })).db).load('r1')).rejects.toThrow(

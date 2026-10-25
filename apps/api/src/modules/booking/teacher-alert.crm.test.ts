@@ -20,6 +20,8 @@ describe('teacherAlertCrm', () => {
     expect(teacherAlertCrm({ teacher: { ...TEACHER, display_name_ar: null }, lesson: LESSON, students: STUDENTS })).toBeNull();
     expect(teacherAlertCrm({ teacher: TEACHER, lesson: LESSON, students: [{ name: 'سهيلة', code: null }] })).toBeNull();
     expect(teacherAlertCrm({ teacher: TEACHER, lesson: { ...LESSON, ends_at: null }, students: STUDENTS })).toBeNull();
+    // A nameless student would shift the codes against the names.
+    expect(teacherAlertCrm({ teacher: TEACHER, lesson: LESSON, students: [{ name: ' ', code: 'AB-0100' }, ...STUDENTS] })).toBeNull();
   });
 
   it('the queued row keeps the Meta values {{1}}–{{3}} and adds crm beside them', () => {

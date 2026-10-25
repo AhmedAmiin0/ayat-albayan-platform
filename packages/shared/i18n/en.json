@@ -2556,8 +2556,8 @@
     "moveFor": "{name}: move to the other number",
     "moveUnavailable": "The other number is not configured on the server",
     "crmName": {
-      "edit": "Its name in the CRM",
-      "editFor": "{name}: its name in the CRM",
+      "edit": "Edit its name in the CRM",
+      "editFor": "{name}: edit its name in the CRM",
       "current": "In the CRM: {crm}",
       "title": "Template name in the CRM",
       "description": "«{name}» is sent to the CRM with this name and language only while its line is on the CRM; nothing changes on Meta or Kapso. Leave a field blank to use the default.",
@@ -2567,7 +2567,7 @@
       "languageHint": "The language code as the CRM shows it, e.g. ar or en_US. Default: {language}",
       "invalid": "Use only lowercase English letters, digits and underscores for the name, and a code like ar or en_US for the language.",
       "reportNote": "Type report_session to send the report file first, then report_session for a regular lesson or report_trial_session for a trial lesson, as the old system did. Only do this if both templates have no variables in the CRM.",
-      "saved": "Name of «{name}» in the CRM saved"
+      "saved": "Saved the name «{name}» is sent under to the CRM"
     },
     "crmStatus": {
       "approved": "Mark approved in the CRM",
@@ -5977,10 +5977,11 @@
     "driverConfirm": "This line will send through {driver}. The next messages move to it as soon as you save.",
     "driverConfirmYes": "Yes, switch the provider",
     "driverReady": "Everything {driver} needs is set.",
-    "driverMissing": "These keys are missing, so the line will not send through {driver} until they are set on the web in «Communications» ← «Safety»:",
+    "driverMissing": "These keys are missing, so the line will not send through {driver} until they are set on the web in «Communications»: the CRM and Kapso keys in «Safety», the line ids and tokens in «Numbers» › «Previous line settings (from integrations)»:",
     "driverSaved": "{line}: sending through {driver} now",
     "driverFailed": "Could not save the provider. Try again.",
     "driverReadOnly": "Switching the provider needs permission to edit settings.",
+    "driverModule": "The academy runs in numbers mode: each number sends through the provider set for it in «Communications» › «Numbers» on the web; it is not switched here.",
     "switchesTitle": "Sending switches",
     "numbersTitle": "Numbers and their health",
     "numbersOpen": "Open «Numbers»",

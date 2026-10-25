@@ -18,7 +18,8 @@ const paramsSchema = z.object({
   button: z.string().optional(),
   payloads: z.array(z.string()).optional(),
   document: z.object({ bucket: z.string(), path: z.string(), filename: z.string() }).optional(),
-  crm: crmValuesSchema.optional(),
+  // A malformed crm part is dropped, never the whole row's values (the meta and kapso drivers never read it).
+  crm: crmValuesSchema.optional().catch(undefined),
 });
 
 export function templateButtons(json: Json | null): TemplateButton[] {

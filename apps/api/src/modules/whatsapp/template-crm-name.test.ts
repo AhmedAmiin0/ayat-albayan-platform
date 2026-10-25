@@ -47,4 +47,12 @@ describe('setCrmName', () => {
     expect(queries.update).not.toHaveBeenCalled();
     expect(audit.record).not.toHaveBeenCalled();
   });
+
+  it('back to the default works on a meta line too (a name left from its crm days), audited', async () => {
+    vi.stubEnv('WA_PROVIDER', 'meta');
+    queries.get.mockResolvedValue(templateRow({ key: 'teacher_new_student', crm_name: 'teacher_alert_x' }));
+    await registry().setCrmName({ key: 'teacher_new_student', crm_name: null, crm_language: null }, 'admin-1');
+    expect(queries.update).toHaveBeenCalledWith('teacher_new_student', { crm_name: null, crm_language: null });
+    expect(audit.record).toHaveBeenCalledWith(expect.objectContaining({ before: expect.objectContaining({ crm_name: 'teacher_alert_x' }) }));
+  });
 });

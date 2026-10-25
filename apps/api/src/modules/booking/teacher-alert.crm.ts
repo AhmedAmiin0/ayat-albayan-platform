@@ -21,8 +21,11 @@ export interface CrmAlertInput {
  * (an older read): the row then carries only the Meta values.
  */
 export function teacherAlertCrm({ teacher, lesson, students }: CrmAlertInput): CrmValues | null {
-  const names = joinNames(students.map((s) => s.name).filter((n) => n.trim() !== ''));
-  const codes = students.flatMap((s) => (s.code ? [s.code] : [])).join('، ');
+  // One student list for both values, so the codes line up with the names (a student without either: null).
+  const named = students.filter((s) => s.name.trim() !== '');
+  if (named.length !== students.length || named.some((s) => !s.code)) return null;
+  const names = joinNames(named.map((s) => s.name));
+  const codes = named.map((s) => s.code).join(ar.common.listSeparator);
   const minutes = lesson.ends_at ? Math.round((Date.parse(lesson.ends_at) - Date.parse(lesson.starts_at)) / 60_000) : 0;
   const name = teacher.display_name_ar?.trim();
   if (!name || !names || !codes || minutes <= 0) return null;

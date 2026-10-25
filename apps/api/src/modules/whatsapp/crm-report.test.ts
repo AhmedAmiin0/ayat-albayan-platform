@@ -28,6 +28,10 @@ describe('crmReportBodies', () => {
     expect(crmReportBodies(send('trial'))?.document).toEqual({ to: TO, type: 'document', media_url: 'https://s.local/signed.pdf', filename: DOC.filename });
   });
 
+  it('the old flow without its PDF link: refused before any call (never a template alone)', () => {
+    expect(() => crmReportBodies({ ...send('regular'), documentUrl: null })).toThrow(WaError);
+  });
+
   it('report_ready without that crm_name keeps today\'s path (null)', () => {
     expect(crmReportBodies(send('trial', REPORT_READY))).toBeNull();
     expect(crmReportBodies({ ...send('trial'), template: templateRow({ crm_name: 'report_session' }) })).toBeNull();
@@ -48,7 +52,21 @@ describe('CrmWhatsappClient: the report flow', () => {
     const f = scriptedFetch(CRM_SENT, crmFailure(429, 'rate_limited'));
     const e = await client(f).sendTemplate(send('regular')).then(() => null, (x: unknown) => x);
     expect(e).toBeInstanceOf(WaError);
+    expect((e as WaError).info).toMatchObject({ uncertain: true, crmCode: 'rate_limited' });
+    expect((e as WaError).message).toMatch(/refused its template/);
+  });
+
+  it('the template call may have gone (a 5xx, a timeout): says so, never «not sent»', async () => {
+    const f = scriptedFetch(CRM_SENT, crmFailure(500, 'internal'));
+    const e = await client(f).sendTemplate(send('regular')).then(() => null, (x: unknown) => x);
     expect((e as WaError).info).toMatchObject({ uncertain: true });
+    expect((e as WaError).message).toMatch(/may have gone too/);
+  });
+
+  it('the key refused between the two calls keeps its credential flag', async () => {
+    const f = scriptedFetch(CRM_SENT, crmFailure(401, 'unauthorized'));
+    const e = await client(f).sendTemplate(send('regular')).then(() => null, (x: unknown) => x);
+    expect((e as WaError).info).toMatchObject({ uncertain: true, credential: 'crm' });
   });
 
   it('the PDF itself fails: that error, nothing else is called', async () => {

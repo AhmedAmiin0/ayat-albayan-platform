@@ -5,14 +5,16 @@ import { usePermissions } from '@/auth/use-permissions';
 import { t } from '@/lib/i18n';
 import { Note } from '@/more/Note';
 import { Section } from '@/more/Section';
+import { useSettings } from '../use-settings';
 import { driverName } from './line-driver';
 import { LineDriverRow } from './LineDriverRow';
 import { useIntegrations, useSaveDriver } from './use-line-drivers';
 
 /**
  * «مزوّد الإرسال لكل خط» on the overview (docs/19, owner 2026-10-25: «switch between crm and other
- * drivers»): each line's driver, switched after its confirm. Hidden when the integrations list cannot be
- * read (no settings.read, an older API); the keys themselves are still set on the web.
+ * drivers»): each line's driver, switched after its confirm; one save at a time. Hidden when the integrations
+ * list cannot be read (no settings.read, an older API); the keys themselves are still set on the web. In module
+ * mode (comms_source = module) each number's own provider sends and WA_PROVIDER is not read: a note, no switch.
  */
 export function LineDrivers() {
   const h = t.communicationsHub;
@@ -20,7 +22,15 @@ export function LineDrivers() {
   const save = useSaveDriver();
   const canWrite = usePermissions()('settings.write');
   const [said, setSaid] = useState<string | null>(null);
+  const moduleMode = useSettings().data?.comms_source === 'module';
   if (!Array.isArray(query.data)) return null;
+  if (moduleMode) {
+    return (
+      <Section title={h.driverTitle}>
+        <Note>{h.driverModule}</Note>
+      </Section>
+    );
+  }
   const items = query.data;
   const onSave = (line: WaLine, provider: WaProvider) => {
     setSaid(null);
@@ -38,7 +48,7 @@ export function LineDrivers() {
       {!canWrite && <Note>{h.driverReadOnly}</Note>}
       <View style={{ gap: 12 }}>
         {WA_LINES.map((line) => (
-          <LineDriverRow key={line} line={line} items={items} canWrite={canWrite} busy={save.isPending && save.variables.line === line} onSave={onSave} />
+          <LineDriverRow key={line} line={line} items={items} canWrite={canWrite} busy={save.isPending} onSave={onSave} />
         ))}
       </View>
       {said && (

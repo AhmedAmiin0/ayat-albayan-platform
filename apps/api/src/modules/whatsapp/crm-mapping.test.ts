@@ -39,6 +39,24 @@ describe('teacher_new_student on a crm line = the CRM\'s teacher_lesson_v2', () 
     expect(() => crmTemplateBody({ to: TO, template: ALERT, params: { crm } })).toThrow();
   });
 
+  it('crm_name = the Meta name (the CRM\'s copy of the Meta template): the Meta values, never the five', () => {
+    const copy = templateRow({ ...ALERT, crm_name: 'teacher_new_student' });
+    expect(crmTemplateBody({ to: TO, template: copy, params })).toEqual({
+      to: TO,
+      type: 'template',
+      template: { name: 'teacher_new_student', language: 'ar', params: { body: ['سارة', 'الأحد 5:00 م', 'تجريبية'] } },
+    });
+  });
+
+  it('a row without the CRM values (queued before them, a value missing): meta_name and the Meta values, as before', () => {
+    const metaOnly = { '1': params['1'], '2': params['2'], '3': params['3'] };
+    expect(crmTemplateBody({ to: TO, template: ALERT, params: metaOnly })).toMatchObject({
+      template: { name: 'teacher_new_student', params: { body: ['سارة', 'الأحد 5:00 م', 'تجريبية'] } },
+    });
+    const named = templateRow({ ...ALERT, crm_name: 'teacher_lesson_v2' });
+    expect(crmTemplateBody({ to: TO, template: named, params: metaOnly })).toMatchObject({ template: { name: 'teacher_lesson_v2' } });
+  });
+
   it('the meta driver ignores crm_name and the CRM values: meta_name, its own three values', () => {
     const named = templateRow({ ...ALERT, crm_name: 'teacher_alert_x' });
     const body = templateMessage({ to: TO, template: named, params });
