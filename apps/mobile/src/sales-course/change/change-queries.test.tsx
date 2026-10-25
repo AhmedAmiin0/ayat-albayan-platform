@@ -2,7 +2,7 @@ import type { CourseChangeRequest } from '@ab/shared';
 import { renderHook, waitFor } from '@testing-library/react-native';
 import { createTestQueryClient, queryWrapper } from '@/test/query';
 import { useCourseChangeCheck } from './change-queries';
-import { SUB_ID } from '../fixtures';
+import { SUB_ID } from '../testing/fixtures';
 
 const mockApiSend = jest.fn();
 jest.mock('@/core/lib/http/api', () => ({

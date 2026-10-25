@@ -2,7 +2,7 @@ import { ASSISTANT_COMMISSION_STATUSES } from '@ab/shared';
 import { useState } from 'react';
 import { FlatList, View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
-import { LoadState } from '@/sales-money/LoadState';
+import { LoadState } from '@/sales-money/components/LoadState';
 import { useCommissions, type AssistantRow, type LedgerFilter } from './api';
 import { AssistantPills } from './AssistantPills';
 import { commissionStatusStyle } from './commission-style';

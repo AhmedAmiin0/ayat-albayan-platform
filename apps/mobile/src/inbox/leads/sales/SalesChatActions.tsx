@@ -1,8 +1,8 @@
 import type { ThreadView } from '@ab/shared';
 import { ScrollView } from 'react-native';
 import { useHolds } from '@/auth/use-permissions';
-import { useSalesFamily } from '@/sales-subscribe/family';
-import { SalesChatMoney } from '@/sales-subscribe/SalesChatMoney';
+import { useSalesFamily } from '@/sales-subscribe/lib/family';
+import { SalesChatMoney } from '@/sales-subscribe/receipts/SalesChatMoney';
 import { SalesTrialPills } from '@/trial-date/components/SalesTrialPills';
 import { RegisterFromChat } from './RegisterFromChat';
 import { registerHref } from './register-href';

@@ -4,7 +4,7 @@ import { View } from 'react-native';
 import { ErrorLine } from '@/inbox/ErrorLine';
 import { t } from '@/core/lib/i18n/i18n';
 import { money } from '@/payments/format';
-import { MoneyCard } from '@/sales-money/MoneyCard';
+import { MoneyCard } from '@/sales-money/components/MoneyCard';
 import { Button } from '@/core/ui/primitives/Button';
 import { assistantsErrorText } from './errors';
 import { CommissionFacts } from './CommissionFacts';

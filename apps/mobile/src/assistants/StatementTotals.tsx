@@ -3,8 +3,8 @@ import { View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/more/Note';
 import { money } from '@/payments/format';
-import { AmountText } from '@/sales-money/AmountText';
-import { byCurrency } from '@/sales-money/money-text';
+import { AmountText } from '@/sales-money/components/AmountText';
+import { byCurrency } from '@/sales-money/lib/money-text';
 
 /** The totals a statement froze (web StatementTotals): per currency, the total then «الراتب + العمولات + التسويات = الإجمالي». */
 export function StatementTotals({ totals }: { totals: Readonly<Record<string, CurrencyTotals>> }) {

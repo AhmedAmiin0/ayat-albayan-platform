@@ -4,7 +4,7 @@ import type { SalesFamilyStudent } from '@ab/shared';
 import { GUARDIAN_PHONE, inboxBackend } from '@/inbox/shared/flow-backend';
 import { t } from '@/core/lib/i18n/i18n';
 import { instantDay } from '@/payments/format';
-import { chatImage, familyOf, kid, MSG, openSub, salesPayment, SUB } from './fixtures';
+import { chatImage, familyOf, kid, MSG, openSub, salesPayment, SUB } from './testing/fixtures';
 
 const m = t.salesMoney;
 const press = async (role: 'button' | 'radio', name: string) => fireEvent.press(await screen.findByRole(role, { name }));
@@ -18,12 +18,12 @@ function salesMoneyBackend() {
   backend
     .on('GET /auth/me', () => ({ role: 'admin', permissions: ['inbox.read', 'self.sales', 'self.sales_money'] }))
     .on('GET /sales/money/family', () => familyOf(student))
-    .on('POST /sales/subscriptions/quote', () => jest.requireActual('./fixtures').salesQuote)
+    .on('POST /sales/subscriptions/quote', () => jest.requireActual('./testing/fixtures').salesQuote)
     .on('POST /sales/subscriptions', () => {
       student = kid({ open: [openSub()] });
       return openSub();
     })
-    .on('GET /sales/booking/course', () => jest.requireActual('@/sales-course/fixtures').courseView())
+    .on('GET /sales/booking/course', () => jest.requireActual('@/sales-course/testing/fixtures').courseView())
     .on('GET /sales/booking/teachers', () => [])
     .on('GET /sales/money/chat-receipts', () => [chatImage])
     .on('GET /sales/money/chat-receipts/:id', () => ({ url: 'https://x/t.jpg', expires_at: '', mime: 'image/jpeg' }))

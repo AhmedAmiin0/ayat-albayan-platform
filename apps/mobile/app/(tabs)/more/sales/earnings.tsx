@@ -1,1 +1,1 @@
-export { MyMoneyScreen as default } from '@/sales-money/MyMoneyScreen';
+export { MyMoneyScreen as default } from '@/sales-money/screens/MyMoneyScreen';

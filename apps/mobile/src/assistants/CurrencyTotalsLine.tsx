@@ -1,7 +1,7 @@
 import { View } from 'react-native';
 import { Note } from '@/more/Note';
-import { AmountText } from '@/sales-money/AmountText';
-import { byCurrency } from '@/sales-money/money-text';
+import { AmountText } from '@/sales-money/components/AmountText';
+import { byCurrency } from '@/sales-money/lib/money-text';
 
 /** «إجمالي العمولات المستحقة»: one amount per currency, one line each (web CurrencyList). Never summed across them. */
 export function CurrencyTotalsLine({ label, totals }: { label: string; totals: Readonly<Record<string, number>> }) {

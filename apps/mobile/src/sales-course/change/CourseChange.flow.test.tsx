@@ -6,10 +6,10 @@ import { t } from '@/core/lib/i18n/i18n';
 import { localDay } from '@/payments/format';
 import { fakeNow } from '@/test/fake-now';
 import { renderWithQuery } from '@/test/query';
-import { daysText } from '../course-days';
-import { isDisabled, press } from '../course-test-utils';
-import { CourseScreen } from '../CourseScreen';
-import { STUDENT_ID, SUB_ID } from '../fixtures';
+import { daysText } from '../lib/course-days';
+import { isDisabled, press } from '../testing/course-test-utils';
+import { CourseScreen } from '../screens/CourseScreen';
+import { STUDENT_ID, SUB_ID } from '../testing/fixtures';
 import { changeApi, changeBody, changeSundayToMonday, NOW, runningCourse, SUN_4, THU_1, TZ } from './change-test-setup';
 
 const mockApiFetch = jest.fn();
