@@ -76,7 +76,7 @@ function lookup(r: Resolver, base: string): Omit<Target, 'alias'> | undefined {
 /** The repo file a specifier in `from` points at; undefined for packages and unknown paths. */
 export function resolveSpec(r: Resolver, from: string, spec: string): Target | undefined {
   if (spec.startsWith('./') || spec.startsWith('../') || spec === '.' || spec === '..') {
-    return lookup(r, posix.normalize(posix.join(posix.dirname(from), spec)));
+    return lookup(r, posix.normalize(posix.join(posix.dirname(from), spec)).replace(/\/$/, ''));
   }
   const alias = r.aliases.find((a) => spec.startsWith(a.prefix) && under(from, a.scope));
   if (alias === undefined) return undefined;

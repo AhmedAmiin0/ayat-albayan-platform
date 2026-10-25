@@ -2,7 +2,7 @@ import { z } from 'zod';
 import { isIntegrationPlainKey, WA_PROVIDERS, type IntegrationPlainKey } from './keys.js';
 import { parseAllowedRecipients } from './recipients.js';
 
-// The value checks of the plain keys, consistent with apps/api/src/env.ts (the API also re-checks
+// The value checks of the plain keys, consistent with apps/api/src/config/env/env.ts (the API also re-checks
 // every DB value with its own env schema before using it).
 
 /** integration_config.value: octet_length(value) <= 4096 (ASCII keys and values in practice). */

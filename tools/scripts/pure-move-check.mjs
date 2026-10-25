@@ -4,6 +4,7 @@
 // vitest/jest/tsconfig/eslint configs, refactor/ maps and allow-lists, the generated route tree). Anything else fails.
 import { execFileSync } from 'node:child_process';
 import { pathToFileURL } from 'node:url';
+import { renameTable, samePath } from './pure-move-paths.mjs';
 import { sameButRenames, substitutions } from './pure-move-tokens.mjs';
 
 const CODE = /\.[cm]?[jt]sx?$/;
@@ -27,24 +28,37 @@ const STATEMENTS = new RegExp(
   ].join('|'),
   'gm',
 );
-const SPEC = /(['"`])[^'"`\n]*\1/;
-const CALLS = /\b((?:vi|jest)\.\w+|require(?:\.resolve)?|import)(\s*(?:<[^>]*>)?\(\s*)(['"`])[^'"`\n]*\3/g;
+const SPEC = /(['"`])([^'"`\n]*)\1/;
+const CALLS =
+  /\b((?:vi|jest)\.(?:mock|doMock|unmock|doUnmock|importActual|importMock|requireActual|requireMock|createMockFromModule)|require(?:\.resolve)?|import)(\s*(?:<[^>]*>)?\(\s*)(['"`])([^'"`\n]*)\3/g;
 
 const squash = (s) => s.replace(/\s+/g, ' ').replace(/,\s*}/g, ' }').replace(/{\s*/g, '{ ').replace(/\s*}/g, ' }').trim();
 
-/** A source split into its module statements (paths blanked) and the rest (call paths blanked). */
+/** A source split into its module statements and the rest, with every module path pulled out. */
 export function normalize(text) {
-  const statements = (text.match(STATEMENTS) ?? []).map((s) => squash(s.replace(SPEC, '"<path>"'))).sort();
-  const body = squash(text.replace(STATEMENTS, '').replace(CALLS, '$1$2"<path>"'));
-  return { statements, body };
+  const paths = [];
+  const statements = (text.match(STATEMENTS) ?? []).map((st) => {
+    paths.push(SPEC.exec(st)?.[2] ?? '');
+    return squash(st.replace(SPEC, '"<path>"'));
+  });
+  const raw = text.replace(STATEMENTS, '').replace(CALLS, (_m, name, open, _q, path) => {
+    paths.push(path);
+    return `${name}${open}"<path>"`;
+  });
+  return { statements, body: squash(raw), raw, paths };
 }
 
-/** True when the only differences are module paths and literals changed by a rename (`subs`). */
-export function onlyPathsChanged(before, after, subs = new Map()) {
+/**
+ * True when the only differences are module paths that still name the same (moved) file, and literals
+ * changed by a rename (`ctx.subs`). `ctx`: { from, to, table, subs } (file paths and rename tables).
+ */
+export function onlyPathsChanged(before, after, ctx = {}) {
   const a = normalize(before);
   const b = normalize(after);
-  if (JSON.stringify(a.statements) !== JSON.stringify(b.statements)) return false;
-  return a.body === b.body || sameButRenames(a.body, b.body, subs);
+  const c = { from: ctx.from ?? 'x.ts', to: ctx.to ?? 'x.ts', table: ctx.table ?? new Map() };
+  if (JSON.stringify(a.statements) !== JSON.stringify(b.statements) || a.paths.length !== b.paths.length) return false;
+  if (!a.paths.every((p, i) => p === b.paths[i] || samePath(c, p, b.paths[i] ?? ''))) return false;
+  return a.body === b.body || sameButRenames(a.raw, b.raw, ctx.subs ?? new Map());
 }
 
 /** A new barrel: an index file made only of `export … from` lines. */
@@ -55,19 +69,29 @@ export function isBarrel(file, text) {
   return rest === '' && lines.length > 0 && lines.every((l) => /^\s*export\b/.test(l));
 }
 
+/** Docs and JSON/YAML data: only whole repo paths of moved files may change (as the codemod writes them). */
+const TEXT = /(^docs\/.*|\.md|(?<!tsconfig[^/]*)\.json|\.ya?ml)$/;
+const escape = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+export const rewriteText = (text, renames) =>
+  renames.reduce((acc, [f, t]) => acc.replace(new RegExp(`(?<![\\w./-])${escape(f)}(?![\\w-]|\\.\\w)`, 'g'), t), text);
+
 const isConfig = (file) => CONFIG.some((re) => re.test(file));
 
 /** Why one `git diff --name-status` entry is not a pure move (null = fine), and its kind. */
-export function classify(entry, read, subs = new Map()) {
+export function classify(entry, read, ctx = {}) {
   const { status, from, to } = entry;
   if (status === 'R100') return { kind: 'rename' };
+  if (TEXT.test(to) && !to.startsWith('.github/') && status !== 'A' && status !== 'D') {
+    const renamed = rewriteText(read('base', from), ctx.renames ?? []);
+    return renamed === read('head', to) ? { kind: 'paths' } : { kind: 'bad', why: 'changes more than moved file paths' };
+  }
   if (isConfig(to)) return { kind: 'config' };
   if (status === 'A') {
     return isBarrel(to, read('head', to)) ? { kind: 'barrel' } : { kind: 'bad', why: 'new file (only index.ts barrels may be added)' };
   }
   if (status === 'D') return { kind: 'bad', why: 'deleted file (a move is a rename)' };
   if ((status.startsWith('R') || status === 'M') && CODE.test(to)) {
-    return onlyPathsChanged(read('base', from), read('head', to), subs)
+    return onlyPathsChanged(read('base', from), read('head', to), { ...ctx, from, to })
       ? { kind: 'paths' }
       : { kind: 'bad', why: 'changes more than import/export/mock paths' };
   }
@@ -95,10 +119,12 @@ function main([base, head = 'HEAD']) {
   const refs = { base: mergeBase, head };
   const read = (side, file) => git('show', `${refs[side]}:${file}`);
   const entries = parseNameStatus(git('diff', '--name-status', '-M50%', '--no-color', mergeBase, head));
-  const subs = substitutions(entries.filter((e) => e.status.startsWith('R')).map((e) => [e.from, e.to]));
+  const renames = entries.filter((e) => e.status.startsWith('R')).map((e) => [e.from, e.to]);
+  const gone = (dir) => git('ls-tree', '-d', '--name-only', head, '--', dir).trim() === '';
+  const ctx = { renames, table: renameTable(renames), subs: substitutions(renames, gone) };
   const counts = { rename: 0, paths: 0, barrel: 0, config: 0, bad: 0 };
   for (const e of entries) {
-    const result = classify(e, read, subs);
+    const result = classify(e, read, ctx);
     counts[result.kind] += 1;
     if (result.kind === 'bad') console.log(`✗ ${e.from === e.to ? e.to : `${e.from} → ${e.to}`}: ${result.why}`);
     if (result.kind === 'config') console.log(`• config: ${e.to}`);

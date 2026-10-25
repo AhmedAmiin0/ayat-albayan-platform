@@ -4,7 +4,7 @@ import { applyEdits, specifierNodes } from './specifiers.ts';
 
 /** Strings a file must contain to possibly import one of the renamed files (skips parsing the rest). */
 export function needles(renamed: Map<string, string>): string[] {
-  const out = new Set(["'.'", "'..'", '".."', '"."']);
+  const out = new Set(["'.'", "'..'", '".."', '"."', "'./'", '"./"', "'../'", '"../"']);
   for (const from of renamed.keys()) {
     const base = from.split('/').pop() ?? from;
     const stem = base.replace(/\.(d\.ts|[cm]?[jt]sx?|json)$/, '');

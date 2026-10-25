@@ -5,6 +5,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { test } from 'node:test';
 import { fileURLToPath } from 'node:url';
+import { renameTable } from './pure-move-paths.mjs';
 import { classify, isBarrel, onlyPathsChanged, parseNameStatus } from './pure-move-check.mjs';
 
 const BEFORE = `import { a, b } from '../teachers/http';
@@ -22,7 +23,8 @@ test('a path-only change passes, also when an import wraps differently', () => {
   const after = BEFORE.replaceAll('../teachers/http', '../../common/http/http')
     .replace("import { a, b } from '../../common/http/http';", "import {\n  a,\n  b,\n} from '../../common/http/http';")
     .replace("'./lazy'", "'../x/lazy'");
-  assert.equal(onlyPathsChanged(BEFORE, after), true);
+  const ctx = { from: 'apps/api/src/modules/x/a.ts', to: 'apps/api/src/modules/x/a.ts', table: renameTable([['apps/api/src/modules/teachers/http.ts', 'apps/api/src/common/http/http.ts']]) };
+  assert.equal(onlyPathsChanged(BEFORE, after, ctx), true);
 });
 
 test('any logic, symbol or string edit fails', () => {
@@ -49,7 +51,8 @@ test('classifies renames, path rewrites, barrels, config and the rest', () => {
   assert.equal(classify({ status: 'A', from: 'x/index.ts', to: 'x/index.ts' }, read).kind, 'barrel');
   assert.equal(classify({ status: 'A', from: 'new.ts', to: 'new.ts' }, read).kind, 'bad');
   assert.equal(classify({ status: 'D', from: 'a.ts', to: 'a.ts' }, read).kind, 'bad');
-  assert.equal(classify({ status: 'M', from: 'docs/x.md', to: 'docs/x.md' }, read).kind, 'config');
+  assert.equal(classify({ status: 'M', from: 'docs/x.md', to: 'docs/x.md' }, read).kind, 'paths');
+  assert.equal(classify({ status: 'M', from: '.github/workflows/ci.yml', to: '.github/workflows/ci.yml' }, read).kind, 'config');
   assert.equal(classify({ status: 'M', from: 'apps/web/vitest.config.ts', to: 'apps/web/vitest.config.ts' }, read).kind, 'config');
   assert.equal(classify({ status: 'M', from: 'packages/db/x.sql', to: 'packages/db/x.sql' }, read).kind, 'bad');
 });
@@ -90,4 +93,24 @@ test('end to end on a git repo: a move passes, a logic edit fails', () => {
   const bad = run();
   assert.equal(bad.code, 1);
   assert.match(bad.out, /m\/use\.ts: changes more than/);
+});
+
+test('a changed path must name the same file at its new place', () => {
+  const ctx = { from: 'apps/api/src/m/use.ts', to: 'apps/api/src/m/use.ts', table: renameTable([['apps/api/src/m/http.ts', 'apps/api/src/common/http.ts']]) };
+  const src = "import { a } from './http';\nimport { b } from './y';\nconst l = import('./http');\nvi.stubEnv('A', '1');\n";
+  const ok = src.replaceAll("'./http'", "'../common/http'");
+  assert.equal(onlyPathsChanged(src, ok, ctx), true);
+  assert.equal(onlyPathsChanged(src, src.replace("'./y'", "'./z'"), ctx), false, 'a path to an unmoved file');
+  assert.equal(onlyPathsChanged(src, ok.replace("import('../common/http')", "import('./y')"), ctx), false);
+  assert.equal(onlyPathsChanged(src, src.replace("{ a } from './http';\nimport { b } from './y'", "{ b } from './http';\nimport { a } from './y'"), ctx), false, 'names swapped');
+  assert.equal(onlyPathsChanged(src, src.replace("'A'", "'B'"), ctx), false, 'vi.stubEnv is not a path');
+});
+
+test('docs and JSON may change only by whole moved paths', () => {
+  const files = { 'base:docs/a.json': '["apps/api/src/env.ts", "x"]', 'head:docs/a.json': '["apps/api/src/config/env/env.ts", "x"]' };
+  const read = (side, f) => files[`${side}:${f}`] ?? '';
+  const ctx = { renames: [['apps/api/src/env.ts', 'apps/api/src/config/env/env.ts']] };
+  assert.equal(classify({ status: 'M', from: 'docs/a.json', to: 'docs/a.json' }, read, ctx).kind, 'paths');
+  files['head:docs/a.json'] = '["apps/api/src/config/env/env.ts", "y"]';
+  assert.equal(classify({ status: 'M', from: 'docs/a.json', to: 'docs/a.json' }, read, ctx).kind, 'bad');
 });
