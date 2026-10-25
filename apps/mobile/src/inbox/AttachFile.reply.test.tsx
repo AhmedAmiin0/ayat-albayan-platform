@@ -58,6 +58,6 @@ test('the file goes with replyToMessageId, and the strip clears once it is sent'
 test('a refused file keeps the strip', async () => {
   mockApiSend.mockResolvedValueOnce(signed).mockRejectedValueOnce(new ApiError(400, { code: 'reply_not_in_thread' }));
   await answerWithPhoto();
-  expect(await screen.findByText(t.inbox.error.send_failed)).toBeTruthy();
+  expect(await screen.findByText(t.inbox.error.reply_not_in_thread)).toBeTruthy();
   expect(screen.getByTestId('reply-strip')).toBeTruthy();
 });

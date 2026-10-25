@@ -117,7 +117,7 @@ test('a refused answer keeps the strip (and the text) for another try', async ()
   await replyTo('m1');
   await fireEvent.changeText(box(), 'أهلًا بك');
   await fireEvent.press(screen.getByRole('button', { name: t.inbox.composer.send }));
-  expect(await screen.findByText(t.inbox.error.send_failed)).toBeTruthy();
+  expect(await screen.findByText(t.inbox.error.reply_not_in_thread)).toBeTruthy();
   expect(strip()).toBeTruthy();
   expect(box().props.value).toBe('أهلًا بك');
 });

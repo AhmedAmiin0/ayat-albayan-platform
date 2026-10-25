@@ -2403,7 +2403,8 @@
       "file_path": "The file could not be uploaded. Try again",
       "file_upload": "The file could not be uploaded. Try again",
       "files_forbidden": "You cannot send files",
-      "media_handoff": "Files cannot be handed off to WhatsApp; retry here"
+      "media_handoff": "Files cannot be handed off to WhatsApp; retry here",
+      "reply_not_in_thread": "The quoted message is not in this chat. Cancel the reply and try again"
     },
     "line": {
       "replyFrom": "Your reply will be sent via: {line}"
