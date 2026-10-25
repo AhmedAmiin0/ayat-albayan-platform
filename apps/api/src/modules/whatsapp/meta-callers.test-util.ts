@@ -16,13 +16,13 @@ export const WHITELIST = new Set([
   'modules/whatsapp/drivers/kapso/kapso.ts',
   'modules/whatsapp/lines/lines.check.ts',
   'modules/whatsapp/sender/message.dispatch.ts',
-  'modules/whatsapp/template.registry.ts',
+  'modules/whatsapp/templates/catalog/template.registry.ts',
   // The registry's own parts (150-line cap): one line's sync (read-only list), the explicit submit.
-  'modules/whatsapp/template-line-sync.ts',
-  'modules/whatsapp/template-submit.ts',
+  'modules/whatsapp/templates/sync/template-line-sync.ts',
+  'modules/whatsapp/templates/sync/template-submit.ts',
   // One number's template sync (docs/23c decision 4): a read-only list from that number's own client.
-  'modules/whatsapp/template-number-sync.ts',
-  'modules/whatsapp/template-numbers.service.ts',
+  'modules/whatsapp/templates/sync/template-number-sync.ts',
+  'modules/whatsapp/templates/sync/template-numbers.service.ts',
   'modules/whatsapp/live-client.ts',
   // Routing per number (docs/23c): one number's own config and client, used only by MessageDispatch.
   'modules/numbers/numbers.env.ts',
