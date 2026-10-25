@@ -2,7 +2,7 @@ import { baseMime, chatFileProblem, uploadMaxBytes, type SignedUpload, type Save
 import { HttpStatus, Injectable, Logger } from '@nestjs/common';
 import { BUCKETS, chatOutPath } from '../../common/storage/storage.paths';
 import { StorageService } from '../../common/storage/storage.service';
-import { sniffMime, SNIFF_BYTES } from '../booking/invoice-sniff';
+import { sniffMime, SNIFF_BYTES } from '../booking/invoice/invoice-sniff';
 import { waHttpError } from '../whatsapp/templates/catalog/template.mapper';
 import { isSavedReplyPathOf, savedReplyPath } from './saved-replies.paths';
 import { SavedReplySettings } from './saved-replies.settings';

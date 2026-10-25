@@ -4,7 +4,7 @@ import { confirmationMessages, forMessages, type Contact } from '../lessons/conf
 import { planLessons } from '../lessons/rule-plan';
 import type { NewLesson, NewRule } from '../scheduling/change-set';
 import { addDays } from '../scheduling/horizon';
-import type { Plan } from './booking.plan';
+import type { Plan } from './plan/booking.plan';
 import type { ChangePlan, ChangeRole } from './course-change.plan';
 import type { ChangeRule, OpenCourseLesson } from './course-change.queries';
 

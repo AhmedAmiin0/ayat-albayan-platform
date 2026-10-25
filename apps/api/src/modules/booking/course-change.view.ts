@@ -2,7 +2,7 @@ import { wallParts, type CourseChangeView } from '@ab/shared';
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { domainError } from './booking.errors';
 import { CourseChangeQueries } from './course-change.queries';
-import { studentCourses } from './course-read';
+import { studentCourses } from './core/course-read';
 import { SalesCourseQueries } from './sales-course.queries';
 
 /** GET /booking/course/change?subscriptionId= (the admin): the course's current days, for the change dialog. */

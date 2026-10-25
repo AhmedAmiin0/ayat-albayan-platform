@@ -1,10 +1,10 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { AuthUser } from '../../common/auth/verify-token';
 import { bookingRequest, fakePlanner, IDS, leadRequest, NOW } from './booking.fakes';
-import type { BookingInvoices } from './booking.invoice';
-import type { BookingQueries } from './booking.queries';
-import { BookingService } from './booking.service';
-import { BookingWriter } from './booking.writer';
+import type { BookingInvoices } from './invoice/booking.invoice';
+import type { BookingQueries } from './core/booking.queries';
+import { BookingService } from './core/booking.service';
+import { BookingWriter } from './core/booking.writer';
 import type { SalesBookingScope } from './sales-booking.ownership';
 import type { SalesCourse } from './sales-course.service';
 import { SalesBookingService } from './sales-booking.service';

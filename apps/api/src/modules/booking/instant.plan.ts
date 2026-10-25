@@ -1,7 +1,7 @@
 import type { Conflict } from '@ab/shared';
 import type { Occurrence, RuleTiming } from '../scheduling/occurrences';
 import { localDay, MINUTE, offsetMs, weekdayOf } from '../teachers/availability/zoned-time';
-import { lessonRows, type BookingPayload } from './booking.mapper';
+import { lessonRows, type BookingPayload } from './core/booking.mapper';
 
 export type InstantPlan = { timing: RuleTiming; occurrence: Occurrence };
 

@@ -6,7 +6,7 @@ import { readerOf } from '../../common/settings/settings.fakes';
 import { NO_OWNERSHIP, type SalesOwnership } from '../sales/sales-ownership';
 import type { SalesQueries } from '../sales/sales.queries';
 import { errorCode } from '../../common/http/errors';
-import type { BookingService } from './booking.service';
+import type { BookingService } from './core/booking.service';
 import { BookingSettings } from './booking.settings';
 import { SalesBookingScope } from './sales-booking.ownership';
 import type { TrialDateQueries } from './trial-date.queries';

@@ -4,9 +4,9 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Permissions } from '../../common/auth/decorators';
 import { parseOrThrow } from '../../common/http/http';
 import { makeupCandidatesQuery } from './booking.dto';
-import { BookingInvoices } from './booking.invoice';
+import { BookingInvoices } from './invoice/booking.invoice';
 import { BookingSettings } from './booking.settings';
-import { MakeupCandidates } from './makeup-candidates.service';
+import { MakeupCandidates } from './makeup/makeup-candidates.service';
 
 /** The invoice and the makeup half of the booking wizard API (R-PAY-03, R-SCH-10). Admin only. */
 @ApiTags('booking')

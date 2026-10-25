@@ -4,10 +4,10 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser, Permissions } from '../../common/auth/decorators';
 import type { AuthUser } from '../../common/auth/verify-token';
 import { parseOrThrow } from '../../common/http/http';
-import { clientRequest } from './booking.payload';
+import { clientRequest } from './core/booking.payload';
 import { slotsQuerySchema, teacherOptionsQuerySchema } from './booking.dto';
 import { SalesBookingOptions, SalesBookingService } from './sales-booking.service';
-import { withPackageSize } from './package-size';
+import { withPackageSize } from './plan/package-size';
 
 /**
  * Registration by the assistant (R-ASST-01): the booking wizard's check and book, scoped to their own leads

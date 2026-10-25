@@ -10,11 +10,11 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser, Permissions } from '../../common/auth/decorators';
 import type { AuthUser } from '../../common/auth/verify-token';
 import { parseOrThrow } from '../../common/http/http';
-import { clientRequest } from './booking.payload';
+import { clientRequest } from './core/booking.payload';
 import { slotsQuerySchema, teacherOptionsQuerySchema } from './booking.dto';
-import { BookingService } from './booking.service';
-import { withPackageSize } from './package-size';
-import { SlotsService } from './slots.service';
+import { BookingService } from './core/booking.service';
+import { withPackageSize } from './plan/package-size';
+import { SlotsService } from './plan/slots.service';
 import { TeacherOptionsService } from './teacher-options.service';
 
 /** Booking wizard API (R-SCH-06, R-SCH-04, R-LEAD-06; docs/10 §5 #12–14). Admin only. */

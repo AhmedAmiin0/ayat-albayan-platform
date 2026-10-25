@@ -5,11 +5,11 @@ import type { BusyQueries } from '../scheduling/busy.queries';
 import { ConflictChecker } from '../scheduling/conflict-checker';
 import type { RuleProjectionQueries } from '../scheduling/rule-projection.queries';
 import type { AvailabilityQueries } from '../teachers/availability/availability.queries';
-import { BookingParties } from './booking.parties';
-import { BookingPlanner } from './booking.planner';
-import type { BookingQueries, BookingStudent } from './booking.queries';
+import { BookingParties } from './core/booking.parties';
+import { BookingPlanner } from './plan/booking.planner';
+import type { BookingQueries, BookingStudent } from './core/booking.queries';
 import { BookingSettings } from './booking.settings';
-import { ConflictContext } from './conflict-context';
+import { ConflictContext } from './plan/conflict-context';
 import { fakeSettings, readerOf } from '../../common/settings/settings.fakes';
 
 export const IDS = {

@@ -1,7 +1,7 @@
 import type { LessonStatus } from '@ab/shared';
 import type { ChangeSet, QueuedMessage } from '../scheduling/change-set';
-import type { BookingPayload } from './booking.mapper';
-import type { MessageDraft } from './booking.messages';
+import type { BookingPayload } from './core/booking.mapper';
+import type { MessageDraft } from './core/booking.messages';
 
 // The write of «موعد تجريبي جديد» (owner 2026-10-25), planned from the booking planner's payload:
 // with no upcoming trial it IS that booking (create_booking); with one, the same lesson, link,

@@ -2,7 +2,7 @@ import { AVATAR_MAX_BYTES, AVATAR_MIMES, type AccountProfile, type AvatarUpload,
 import { Injectable } from '@nestjs/common';
 import type { AuthUser } from '../../common/auth/verify-token';
 import { avatarPath, isPathOf } from '../../common/storage/storage.paths';
-import { SNIFF_BYTES, sniffMime } from '../booking/invoice-sniff';
+import { SNIFF_BYTES, sniffMime } from '../booking/invoice/invoice-sniff';
 import { badRequest, notFound } from '../../common/http/errors';
 import { baseMime } from '../whatsapp/messages/inbound-media.service';
 import { AccountPorts } from './account.ports.provider';
