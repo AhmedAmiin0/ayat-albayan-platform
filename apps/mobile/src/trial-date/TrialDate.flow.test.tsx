@@ -45,7 +45,8 @@ test('admin: history → the last teacher kept → a free slot → review «سي
   const { client } = await renderWithQuery(<TrialDateScreen />);
   expect(await screen.findByRole('header', { name: t.trialDate.title.replace('{name}', 'ريم') })).toBeTruthy();
   expect(mockApiFetch).toHaveBeenCalledWith(`/booking/trial-dates?studentId=${STUDENT}`);
-  expect(screen.getByText(t.trialDate.count.one)).toBeTruthy();
+  // The history query may resolve after the header (a loaded runner): wait for it.
+  expect(await screen.findByText(t.trialDate.count.one)).toBeTruthy();
   expect(screen.getByText(t.trialDate.lastTeacher)).toBeTruthy();
 
   await walkToReview();
