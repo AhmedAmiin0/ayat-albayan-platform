@@ -5,10 +5,10 @@ import { BubbleActions, useHasBubbleActions } from './BubbleActions';
 import { DeliveryTicks } from './DeliveryTicks';
 import { clockText, fullTime } from '../../format';
 import { bubbleId } from '../lib/jump-to-message';
-import { LineBadge } from '../../LineBadge';
+import { LineBadge } from '../../shared/LineBadge';
 import { MessageActions } from './MessageActions';
 import { Content, SenderLine } from './MessageContent';
-import { useInboxMode } from '../../mode';
+import { useInboxMode } from '../../shared/mode';
 import { canRetry, canSendByHand, deliveryTitle, isHandedOff, outboundNotes } from '../lib/message-notes';
 
 export interface MessageBubbleProps {

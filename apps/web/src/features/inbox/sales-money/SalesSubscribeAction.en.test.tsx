@@ -2,9 +2,9 @@ import en from '@ab/shared/i18n/en.json';
 import { fireEvent, screen, within } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { detail, PHONE } from '../testing/inbox-fixture';
-import { InboxModeContext } from '../mode';
+import { InboxModeContext } from '../shared/mode';
 import { renderWithClient, routeFetch } from '../testing/test-utils';
-import { ThreadPane } from '../ThreadPane';
+import { ThreadPane } from '../threads/pane/ThreadPane';
 import { OPEN_SUB, student } from './sales-money-fixture';
 
 vi.mock('@/lib/i18n/i18n', async (orig) => ({ ...(await orig<object>()), t: en }));

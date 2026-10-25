@@ -1,6 +1,6 @@
 import { counted, formatPhone, intlLocale, SESSION_WINDOW_MS, type MessageView, type ThreadView } from '@ab/shared';
 import { t } from '@/lib/i18n/i18n';
-import { showsPhone, type InboxMode } from './mode';
+import { showsPhone, type InboxMode } from './shared/mode';
 import { locale } from '@/lib/i18n/locale';
 
 // Display text for the inbox (docs/07 §9, docs/12 §8). DB instants are UTC; times render in the

@@ -1,7 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router';
-import { InboxPage } from '@/features/inbox/InboxPage';
-import { InboxModeContext } from '@/features/inbox/mode';
-import { parseInboxSearch } from '@/features/inbox/search';
+import { InboxPage } from '@/features/inbox/threads/list/InboxPage';
+import { InboxModeContext } from '@/features/inbox/shared/mode';
+import { parseInboxSearch } from '@/features/inbox/shared/search';
 
 /** /teacher/inbox «المحادثات»: the families I teach and my own chat with the academy (R-TCH-03, R-MSG-05). */
 export const Route = createFileRoute('/teacher/inbox')({

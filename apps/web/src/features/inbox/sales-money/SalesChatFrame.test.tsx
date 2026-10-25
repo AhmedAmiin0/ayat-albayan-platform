@@ -4,7 +4,7 @@ import type { ReactNode } from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n/i18n';
 import { thread } from '../testing/inbox-fixture';
-import { InboxModeContext } from '../mode';
+import { InboxModeContext } from '../shared/mode';
 import { routeFetch } from '../testing/test-utils';
 import { SalesChatFrame } from './SalesChatFrame';
 import { OPEN_SUB, SALES_QUOTE, student } from './sales-money-fixture';
