@@ -1,5 +1,5 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { toMetaTemplate } from './meta-shapes';
+import { toMetaTemplate } from './drivers/meta/meta-shapes';
 import { messageRow } from './sender.fakes';
 import { ADMIN, whatsappApp } from './test-app';
 import { RENEWAL_DUE_SEED, REPORT_READY_SEED } from './seed-templates.fakes';

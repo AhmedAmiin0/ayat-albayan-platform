@@ -4,8 +4,8 @@ import type { MessageDispatch } from './message.dispatch';
 import { MessageWorker } from './message.worker';
 import { dueMessage } from './sender.fakes';
 import type { SenderQueries } from './sender.queries';
-import { byDriver } from './graph';
-import { KAPSO_ENV } from './kapso.fakes';
+import { byDriver } from './drivers/meta/graph';
+import { KAPSO_ENV } from './drivers/kapso/kapso.fakes';
 import { STUB_ENV, templateRow } from './whatsapp.fakes';
 import { WaError } from './whatsapp.types';
 

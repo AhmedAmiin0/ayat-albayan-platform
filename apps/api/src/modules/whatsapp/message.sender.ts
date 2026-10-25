@@ -10,10 +10,10 @@ import {
 import { overlayNumbers, type OverlayNumber } from '../../common/integrations/numbers-overlay';
 import { loadEnv } from '../../config/env/env';
 import { MessageWorker, type SendOutcome } from './message.worker';
-import { routeOf } from './number-route';
-import { NumberRoutes } from './number-routes';
+import { routeOf } from './numbers/number-route';
+import { NumberRoutes } from './numbers/number-routes';
 import { lineOf } from './send-line';
-import { SendGate } from './send-gate';
+import { SendGate } from './gate/send-gate';
 import { SenderQueries } from './sender.queries';
 import { senderTiming } from './sender-timing';
 

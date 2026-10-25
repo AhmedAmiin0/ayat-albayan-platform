@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { HttpWhatsappClient } from './whatsapp.client';
-import { KAPSO_ENV, KAPSO_MEDIA, kapsoFetch, kapsoPage } from './kapso.fakes';
+import { KAPSO_ENV, KAPSO_MEDIA, kapsoFetch, kapsoPage } from './drivers/kapso/kapso.fakes';
 import { RECORDED, scriptedFetch, STUB_ENV, templateRow } from './whatsapp.fakes';
 
 // The kapso driver (docs/19): same Cloud API paths and bodies, X-API-Key instead of a bearer, and

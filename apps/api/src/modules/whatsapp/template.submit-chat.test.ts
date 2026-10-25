@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { AuditService } from '../../common/audit/audit.service';
 import { lineEnvs, loadEnv } from '../../config/env/env';
-import { KAPSO_ENV, kapsoFetch } from './kapso.fakes';
+import { KAPSO_ENV, kapsoFetch } from './drivers/kapso/kapso.fakes';
 import { RECORDED_UPLOAD, RENEWAL_DUE_SEED, REPORT_READY_SEED } from './seed-templates.fakes';
 import { TemplateRegistry } from './template.registry';
 import type { TemplatesQueries } from './templates.queries';

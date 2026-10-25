@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { toMetaTemplate } from './meta-shapes';
+import { toMetaTemplate } from './drivers/meta/meta-shapes';
 import { findMeta, ourStatus, syncPatch } from './template-sync';
 import { RECORDED, REMINDER_24H, templateRow } from './whatsapp.fakes';
 import type { MetaTemplate } from './whatsapp.types';

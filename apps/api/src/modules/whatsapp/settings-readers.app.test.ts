@@ -21,7 +21,7 @@ import { RemindersSettings } from '../reminders/reminders.settings';
 import { ReportPdfSettings } from '../report-pdf/report-pdf.settings';
 import { ReportsSettings } from '../reports/reports.settings';
 import { WebhookSettings } from '../webhook/webhook.settings';
-import { SendGate } from './send-gate';
+import { SendGate } from './gate/send-gate';
 import { WhatsappSettings } from './whatsapp.settings';
 
 // The classroom, reports, messaging and money readers as AppModule wires them: each resolves and reads the one

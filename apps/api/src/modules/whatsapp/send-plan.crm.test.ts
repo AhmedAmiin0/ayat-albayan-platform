@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
-import { crmErrorFrom } from './crm-http';
+import { crmErrorFrom } from './drivers/crm/crm-http';
 import { CRM_AUTH, CRM_RATE_LIMITED, errorCode, failurePlan, UNCERTAIN } from './send-plan';
 import { graphHttpError } from './template.mapper';
-import { crmUnsupported } from './crm.client';
+import { crmUnsupported } from './drivers/crm/crm.client';
 
 // docs/19 «crm driver»: what a CRM failure leads to in the sender, and in the template routes.
 

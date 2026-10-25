@@ -1,0 +1,244 @@
+{
+  "id": "a1",
+  "seq": 3,
+  "moves": [
+    {
+      "from": "apps/api/src/modules/whatsapp/meta-shapes.ts",
+      "to": "apps/api/src/modules/whatsapp/drivers/meta/"
+    },
+    {
+      "from": "apps/api/src/modules/whatsapp/graph.ts",
+      "to": "apps/api/src/modules/whatsapp/drivers/meta/"
+    },
+    {
+      "from": "apps/api/src/modules/whatsapp/kapso*",
+      "to": "apps/api/src/modules/whatsapp/drivers/kapso"
+    },
+    {
+      "from": "apps/api/src/modules/whatsapp/crm*",
+      "to": "apps/api/src/modules/whatsapp/drivers/crm"
+    },
+    {
+      "from": "apps/api/src/modules/whatsapp/gate*",
+      "to": "apps/api/src/modules/whatsapp/gate"
+    },
+    {
+      "from": "apps/api/src/modules/whatsapp/send-gate*",
+      "to": "apps/api/src/modules/whatsapp/gate"
+    },
+    {
+      "from": "apps/api/src/modules/whatsapp/line-health*",
+      "to": "apps/api/src/modules/whatsapp/lines"
+    },
+    {
+      "from": "apps/api/src/modules/whatsapp/lines.*",
+      "to": "apps/api/src/modules/whatsapp/lines"
+    },
+    {
+      "from": "apps/api/src/modules/whatsapp/number-*",
+      "to": "apps/api/src/modules/whatsapp/numbers"
+    },
+    {
+      "from": "apps/api/src/modules/whatsapp/route.queries*",
+      "to": "apps/api/src/modules/whatsapp/numbers"
+    }
+  ],
+  "files": [
+    [
+      "apps/api/src/modules/whatsapp/crm-body.test.ts",
+      "apps/api/src/modules/whatsapp/drivers/crm/crm-body.test.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/crm-body.ts",
+      "apps/api/src/modules/whatsapp/drivers/crm/crm-body.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/crm-http.test.ts",
+      "apps/api/src/modules/whatsapp/drivers/crm/crm-http.test.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/crm-http.ts",
+      "apps/api/src/modules/whatsapp/drivers/crm/crm-http.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/crm-mapping.test.ts",
+      "apps/api/src/modules/whatsapp/drivers/crm/crm-mapping.test.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/crm-plan.ts",
+      "apps/api/src/modules/whatsapp/drivers/crm/crm-plan.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/crm-report.test.ts",
+      "apps/api/src/modules/whatsapp/drivers/crm/crm-report.test.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/crm-report.ts",
+      "apps/api/src/modules/whatsapp/drivers/crm/crm-report.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/crm.client.test.ts",
+      "apps/api/src/modules/whatsapp/drivers/crm/crm.client.test.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/crm.client.ts",
+      "apps/api/src/modules/whatsapp/drivers/crm/crm.client.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/crm.fakes.ts",
+      "apps/api/src/modules/whatsapp/drivers/crm/crm.fakes.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/gate.controller.test.ts",
+      "apps/api/src/modules/whatsapp/gate/gate.controller.test.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/gate.controller.ts",
+      "apps/api/src/modules/whatsapp/gate/gate.controller.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/gate.cutover.test.ts",
+      "apps/api/src/modules/whatsapp/gate/gate.cutover.test.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/gate.errors.ts",
+      "apps/api/src/modules/whatsapp/gate/gate.errors.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/gate.failures.test.ts",
+      "apps/api/src/modules/whatsapp/gate/gate.failures.test.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/gate.settings.ts",
+      "apps/api/src/modules/whatsapp/gate/gate.settings.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/gate.test-app.ts",
+      "apps/api/src/modules/whatsapp/gate/gate.test-app.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/graph.ts",
+      "apps/api/src/modules/whatsapp/drivers/meta/graph.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/kapso.fakes.ts",
+      "apps/api/src/modules/whatsapp/drivers/kapso/kapso.fakes.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/kapso.media.test.ts",
+      "apps/api/src/modules/whatsapp/drivers/kapso/kapso.media.test.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/kapso.test.ts",
+      "apps/api/src/modules/whatsapp/drivers/kapso/kapso.test.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/kapso.ts",
+      "apps/api/src/modules/whatsapp/drivers/kapso/kapso.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/line-health.store.test.ts",
+      "apps/api/src/modules/whatsapp/lines/line-health.store.test.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/line-health.store.ts",
+      "apps/api/src/modules/whatsapp/lines/line-health.store.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/lines.check.crm.test.ts",
+      "apps/api/src/modules/whatsapp/lines/lines.check.crm.test.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/lines.check.crm.ts",
+      "apps/api/src/modules/whatsapp/lines/lines.check.crm.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/lines.check.driver.test.ts",
+      "apps/api/src/modules/whatsapp/lines/lines.check.driver.test.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/lines.check.kapso.test.ts",
+      "apps/api/src/modules/whatsapp/lines/lines.check.kapso.test.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/lines.check.test.ts",
+      "apps/api/src/modules/whatsapp/lines/lines.check.test.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/lines.check.ts",
+      "apps/api/src/modules/whatsapp/lines/lines.check.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/lines.controller.ts",
+      "apps/api/src/modules/whatsapp/lines/lines.controller.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/lines.http.test.ts",
+      "apps/api/src/modules/whatsapp/lines/lines.http.test.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/meta-shapes.ts",
+      "apps/api/src/modules/whatsapp/drivers/meta/meta-shapes.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/number-clients.test.ts",
+      "apps/api/src/modules/whatsapp/numbers/number-clients.test.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/number-clients.ts",
+      "apps/api/src/modules/whatsapp/numbers/number-clients.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/number-route.crm.test.ts",
+      "apps/api/src/modules/whatsapp/numbers/number-route.crm.test.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/number-route.fakes.ts",
+      "apps/api/src/modules/whatsapp/numbers/number-route.fakes.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/number-route.test.ts",
+      "apps/api/src/modules/whatsapp/numbers/number-route.test.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/number-route.ts",
+      "apps/api/src/modules/whatsapp/numbers/number-route.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/number-routes.test.ts",
+      "apps/api/src/modules/whatsapp/numbers/number-routes.test.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/number-routes.ts",
+      "apps/api/src/modules/whatsapp/numbers/number-routes.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/route.queries.test.ts",
+      "apps/api/src/modules/whatsapp/numbers/route.queries.test.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/route.queries.ts",
+      "apps/api/src/modules/whatsapp/numbers/route.queries.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/send-gate.fail-closed.test.ts",
+      "apps/api/src/modules/whatsapp/gate/send-gate.fail-closed.test.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/send-gate.fakes.ts",
+      "apps/api/src/modules/whatsapp/gate/send-gate.fakes.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/send-gate.restricted.test.ts",
+      "apps/api/src/modules/whatsapp/gate/send-gate.restricted.test.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/send-gate.test.ts",
+      "apps/api/src/modules/whatsapp/gate/send-gate.test.ts"
+    ],
+    [
+      "apps/api/src/modules/whatsapp/send-gate.ts",
+      "apps/api/src/modules/whatsapp/gate/send-gate.ts"
+    ]
+  ]
+}
