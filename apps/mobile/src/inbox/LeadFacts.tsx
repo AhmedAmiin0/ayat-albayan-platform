@@ -5,8 +5,8 @@ import { t } from '@/core/lib/i18n/i18n';
 import { Ltr } from '@/core/ui/primitives/Ltr';
 import { StatusChip } from '@/core/ui/feedback/StatusChip';
 import { shape, type, useTheme } from '@/theme';
-import { leadAge } from './format';
-import type { Lead } from './types';
+import { leadAge } from './shared/format';
+import type { Lead } from './shared/types';
 import { AppText } from '@/core/ui/primitives/AppText';
 
 /** Label/value card of the lead row; its qualification and follow-up sit below (qualification/). */

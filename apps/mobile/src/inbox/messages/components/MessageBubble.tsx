@@ -5,14 +5,14 @@ import { t } from '@/core/lib/i18n/i18n';
 import { locale } from '@/core/lib/i18n/locale';
 import { shape, type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
-import { useBubbleActions } from './bubble-actions';
+import { useBubbleActions } from '../hooks/bubble-actions';
 import { MessageActions } from './MessageActions';
 import { MessageFile } from './MessageFile';
 import { MessageMeta, useSmall } from './MessageMeta';
-import { errorLine, mediaLine, templateLine } from './message-text';
+import { errorLine, mediaLine, templateLine } from '../hooks/message-text';
 import { QuoteBlock } from './QuoteBlock';
 import { SwipeReply } from './SwipeReply';
-import { useThreadMode } from './thread/hooks/thread-mode';
+import { useThreadMode } from '../../thread/hooks/thread-mode';
 
 /** A file line: a link to the signed URL once the API has the file, else its kind and why not. */
 function MediaLine({ label, url, file }: { label: string; url: string | null; file: boolean }) {

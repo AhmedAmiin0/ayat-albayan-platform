@@ -4,7 +4,7 @@ import { act, fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { supabase } from '@/core/lib/http/supabase';
 import { native } from '@/test/native-mocks';
-import { GUARDIAN_PHONE } from '@/inbox/flow-backend';
+import { GUARDIAN_PHONE } from '@/inbox/shared/flow-backend';
 import { pushBackend } from './flow-backend';
 import { DEVICE_KEY, TOKEN_KEY } from './registerPush';
 

@@ -5,7 +5,7 @@ import { patchCached, type Page } from '@/core/lib/query/paging';
 import { pathKey } from '@/core/lib/query/query-keys';
 import { isOffline } from '@/payments/payment-errors';
 import { t } from '@/core/lib/i18n/i18n';
-import type { Lead } from '../types';
+import type { Lead } from '../shared/types';
 
 /**
  * GET /leads returns every column (apps/api LeadRow); the profile reads these beyond the list row.

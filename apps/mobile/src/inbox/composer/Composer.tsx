@@ -6,7 +6,7 @@ import { ComposerNotes } from './ComposerNotes';
 import { ErrorLine } from '../ErrorLine';
 import { GateNote } from '../thread/components/GateNote';
 import { OpenRow } from '../OpenRow';
-import { QuoteStrip } from '../QuoteStrip';
+import { QuoteStrip } from '../messages/components/QuoteStrip';
 import { SavedReplyChip } from '../saved-replies/SavedReplyChip';
 import { SavedReplyPicker } from '../saved-replies/SavedReplyPicker';
 import { useSavedReplyDraft } from '../saved-replies/use-saved-reply';

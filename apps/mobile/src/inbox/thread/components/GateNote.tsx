@@ -7,7 +7,7 @@ import { t } from '@/core/lib/i18n/i18n';
 import { shape } from '@/theme';
 import { pathKey } from '@/core/lib/query/query-keys';
 import { AppText } from '@/core/ui/primitives/AppText';
-import { useNoteStyle } from '../../note-style';
+import { useNoteStyle } from '../../shared/note-style';
 
 const PATH = '/messages/gate';
 

@@ -1,7 +1,7 @@
 import type { BookingResult } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { allowedNextStatuses } from '@/inbox/allowed-next-statuses';
-import type { Lead } from '@/inbox/types';
+import type { Lead } from '@/inbox/shared/types';
 import { apiSend } from '@/core/lib/http/api';
 import { patchCached } from '@/core/lib/query/paging';
 import { pathKey } from '@/core/lib/query/query-keys';

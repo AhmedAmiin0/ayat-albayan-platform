@@ -1,6 +1,6 @@
 import { fireEvent, screen } from '@testing-library/react-native';
 import { router } from 'expo-router';
-import { detail, inbound, NOW, thread } from '@/inbox/thread-fixtures';
+import { detail, inbound, NOW, thread } from '@/inbox/shared/thread-fixtures';
 import { ThreadScreen } from '@/inbox/screens/ThreadScreen';
 import { t } from '@/core/lib/i18n/i18n';
 import { pathKey } from '@/core/lib/query/query-keys';

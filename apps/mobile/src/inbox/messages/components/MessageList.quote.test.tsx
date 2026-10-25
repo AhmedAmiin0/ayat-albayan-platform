@@ -4,12 +4,12 @@ import { FlatList, StyleSheet } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { palette } from '@/theme';
 import { renderWithQuery } from '@/test/query';
-import { ChatActionsProvider } from './thread/components/ChatActionsProvider';
-import { ChatNotice } from './thread/components/ChatNotice';
+import { ChatActionsProvider } from '../../thread/components/ChatActionsProvider';
+import { ChatNotice } from '../../thread/components/ChatNotice';
 import { MessageList } from './MessageList';
-import { cachedThread, detail, inbound, message, PHONE, thread } from './thread-fixtures';
-import { LIT_MS } from './thread/hooks/use-jump';
-import type { useThread } from './thread/hooks/use-thread';
+import { cachedThread, detail, inbound, message, PHONE, thread } from '../../shared/thread-fixtures';
+import { LIT_MS } from '../../thread/hooks/use-jump';
+import type { useThread } from '../../thread/hooks/use-thread';
 
 // A bubble that answers another shows its quote on top; a tap goes to the original (owner 2026-10-25).
 jest.mock('@/core/lib/http/api', () => ({

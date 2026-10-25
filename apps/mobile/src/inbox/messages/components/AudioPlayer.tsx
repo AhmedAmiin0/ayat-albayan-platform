@@ -5,8 +5,8 @@ import { t } from '@/core/lib/i18n/i18n';
 import { shape, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { IconButton } from '@/core/ui/primitives/IconButton';
-import { PauseIcon, PlayIcon } from './chat-icons';
-import { mediaProgress, mediaTime } from './media-time';
+import { PauseIcon, PlayIcon } from '../../shared/chat-icons';
+import { mediaProgress, mediaTime } from '../hooks/media-time';
 import { useSmall } from './MessageMeta';
 
 /**

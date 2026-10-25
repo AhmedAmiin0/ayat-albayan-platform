@@ -14,12 +14,12 @@ import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { SearchField } from '@/core/ui/form/SearchField';
 import { useTabBarInset } from '@/core/ui/layout/tab-bar-inset';
 import { StatusChip } from '@/core/ui/feedback/StatusChip';
-import { clockAt, initialOf } from './format';
+import { clockAt, initialOf } from './shared/format';
 import { activeFilterCount, leadListParams, NO_FILTERS, type LeadFilters } from './leads/lead-filters';
 import { LeadsFilterBar } from './leads/LeadsFilterBar';
 import { leadRowSubtitle } from './leads/lead-row';
 import { leadStatusChip } from './lead-words';
-import type { Lead } from './types';
+import type { Lead } from './shared/types';
 
 type Filter = 'all' | LeadStatus;
 

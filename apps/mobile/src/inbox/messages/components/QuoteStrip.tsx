@@ -3,9 +3,9 @@ import { t } from '@/core/lib/i18n/i18n';
 import { shape, type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { IconButton } from '@/core/ui/primitives/IconButton';
-import { useChatActions } from './thread/hooks/chat-actions';
-import { CloseIcon } from './chat-icons';
-import { quoteOf, quoteSender, quoteText } from './quote-text';
+import { useChatActions } from '../../thread/hooks/chat-actions';
+import { CloseIcon } from '../../shared/chat-icons';
+import { quoteOf, quoteSender, quoteText } from '../hooks/quote-text';
 
 /**
  * Over the composer while she answers a message: ONE line (sender · first line) and ✕, 44pt in all,

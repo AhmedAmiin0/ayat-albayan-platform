@@ -1,6 +1,6 @@
 import { type Href, router } from 'expo-router';
 import { useHolds } from '@/auth/use-permissions';
-import { CheckPersonIcon } from '@/inbox/chat-icons';
+import { CheckPersonIcon } from '@/inbox/shared/chat-icons';
 import { t } from '@/core/lib/i18n/i18n';
 import { useTheme } from '@/theme';
 import { Button } from '@/core/ui/primitives/Button';

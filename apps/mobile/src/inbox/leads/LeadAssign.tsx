@@ -9,7 +9,7 @@ import { AppText } from '@/core/ui/primitives/AppText';
 import { Button } from '@/core/ui/primitives/Button';
 import { FilterPills, type FilterPill } from '@/core/ui/form/FilterPills';
 import { ErrorLine } from '../ErrorLine';
-import type { Lead } from '../types';
+import type { Lead } from '../shared/types';
 import { useSalesPeople } from './use-sales-people';
 
 const NONE = '';

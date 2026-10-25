@@ -8,7 +8,7 @@ import { AppText } from '@/core/ui/primitives/AppText';
 import { Button } from '@/core/ui/primitives/Button';
 import { InlineConfirm } from '@/core/ui/feedback/InlineConfirm';
 import { ErrorLine } from '../ErrorLine';
-import { deviceTimeZone } from '../message-text';
+import { deviceTimeZone } from '../messages/hooks/message-text';
 import { followUpLines } from './follow-up-text';
 import { Heading } from './Heading';
 import { saveErrorText, useFollowUpTotal, useLeadPatch, type LeadProfile } from './queries';

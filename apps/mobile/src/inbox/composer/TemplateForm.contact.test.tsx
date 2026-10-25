@@ -2,7 +2,7 @@ import type { TemplateView } from '@ab/shared';
 import { fireEvent, render, screen } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { TemplateForm } from './TemplateForm';
-import { plainReminder } from '../thread-fixtures';
+import { plainReminder } from '../shared/thread-fixtures';
 
 // trial_reschedule's one variable is the recipient's name: it starts as the thread's display name.
 

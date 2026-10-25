@@ -2,7 +2,7 @@ import { RIYADH_TZ } from '@ab/shared';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useRef } from 'react';
 import { ScrollView, View } from 'react-native';
-import { clockAt } from '@/inbox/format';
+import { clockAt } from '@/inbox/shared/format';
 import { ApiError } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/more/Note';

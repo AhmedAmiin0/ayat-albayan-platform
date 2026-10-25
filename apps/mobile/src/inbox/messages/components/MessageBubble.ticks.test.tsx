@@ -3,9 +3,9 @@ import { fireEvent, screen, within } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
 import { MessageBubble } from './MessageBubble';
-import { stamp } from './message-text';
-import { delivered, failed, inbound, PHONE } from './thread-fixtures';
-import { ticksLabel } from './ticks.helpers';
+import { stamp } from '../hooks/message-text';
+import { delivered, failed, inbound, PHONE } from '../../shared/thread-fixtures';
+import { ticksLabel } from '../../shared/ticks.helpers';
 
 const word = t.enums.messageStatus;
 const show = (m: MessageView) => renderWithQuery(<MessageBubble message={m} phone={PHONE} />);

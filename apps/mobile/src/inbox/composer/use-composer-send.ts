@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { requestId } from '@/core/lib/http/request-id';
 import { useChatActions } from '../thread/hooks/chat-actions';
-import { sendError } from '../message-text';
-import { quoteOf } from '../quote-text';
+import { sendError } from '../messages/hooks/message-text';
+import { quoteOf } from '../messages/hooks/quote-text';
 import { useSendStagedFile } from '../saved-replies/send-staged';
 import type { StagedFile } from '../saved-replies/use-saved-reply';
 import { fileError } from './send-file';

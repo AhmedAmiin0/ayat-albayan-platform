@@ -2,8 +2,8 @@ import type { ThreadView } from '@ab/shared';
 import { View } from 'react-native';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { LineNote } from '../thread/components/LineNote';
-import { sessionUntil } from '../message-text';
-import { useNoteStyle } from '../note-style';
+import { sessionUntil } from '../messages/hooks/message-text';
+import { useNoteStyle } from '../shared/note-style';
 
 /**
  * Over an open reply box, in one 2xs row: which line the reply leaves from (LineNote) and until when
