@@ -3,7 +3,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { paidAtFor } from '@/features/payments/api';
 import { useUploadOnce } from '@/features/payments/attachments';
-import { recordSalesPayment, refreshAfterSalesWrite, uploadSalesReceipt } from './api';
+import { recordSalesPayment, refreshAfterSalesWrite, uploadSalesReceipt } from '../api';
 import type { ReceiptChoice } from './receipt';
 
 export interface TransferForm {

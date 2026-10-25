@@ -6,7 +6,7 @@ import { FormAlert } from '@/components/ui/form/form-alert';
 import { moneyText, packageName, studentLabel } from '@/features/subscriptions/format';
 import { t } from '@/lib/i18n/i18n';
 import { useUploadMaxBytes } from '@/lib/settings/public-config';
-import { salesErrorText } from './errors';
+import { salesErrorText } from '../errors';
 import { PackagePicker } from './PackagePicker';
 import { ReceiptChooser } from './ReceiptChooser';
 import { attachmentsFor, type ReceiptChoice } from './receipt';

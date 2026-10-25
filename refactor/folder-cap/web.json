@@ -43,10 +43,6 @@
     "files": 17,
     "dirs": 0
   },
-  "apps/web/src/features/inbox/sales-money": {
-    "files": 28,
-    "dirs": 0
-  },
   "apps/web/src/features/inbox/saved-replies": {
     "files": 20,
     "dirs": 0

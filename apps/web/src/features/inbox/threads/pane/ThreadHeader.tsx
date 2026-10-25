@@ -9,8 +9,8 @@ import { threadKind, threadTitle, timesInText } from '../../format';
 import { inboxBase, showsPhone, useInboxMode } from '../../shared/mode';
 import type { InboxSearch } from '../../shared/search';
 import { ThreadListChips } from '../../lists/ThreadListChips';
-import { leadChip } from '../../subscription';
-import { SubscriptionChip } from '../../SubscriptionChip';
+import { leadChip } from '../../sales/subscription';
+import { SubscriptionChip } from '../../sales/SubscriptionChip';
 import { WindowBanner } from './WindowBanner';
 
 export interface ThreadHeaderProps {

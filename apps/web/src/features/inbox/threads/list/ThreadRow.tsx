@@ -12,8 +12,8 @@ import { fullTime, listTime, previewText, threadKind, threadTitle, unreadLabel }
 import { LineBadge } from '../../shared/LineBadge';
 import { inboxBase, showsPhone, useInboxMode } from '../../shared/mode';
 import type { InboxSearch } from '../../shared/search';
-import { leadChip } from '../../subscription';
-import { SubscriptionChip } from '../../SubscriptionChip';
+import { leadChip } from '../../sales/subscription';
+import { SubscriptionChip } from '../../sales/SubscriptionChip';
 
 export interface ThreadRowProps {
   thread: ThreadView;

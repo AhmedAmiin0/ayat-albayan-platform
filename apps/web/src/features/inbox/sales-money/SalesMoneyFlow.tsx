@@ -1,9 +1,9 @@
 import type { SalesFamilyStudent, SalesMoneySubscriptionView, SalesPaymentView } from '@ab/shared';
 import { useState } from 'react';
-import { SalesCourseDialog } from './SalesCourseDialog';
+import { SalesCourseDialog } from './course/SalesCourseDialog';
 import { SalesDoneStep } from './SalesDoneStep';
-import { SalesSubscribeStep } from './SalesSubscribeStep';
-import { SalesTransferStep } from './SalesTransferStep';
+import { SalesSubscribeStep } from './subscribe/SalesSubscribeStep';
+import { SalesTransferStep } from './transfer/SalesTransferStep';
 
 export type FlowStart = 'subscribe' | 'transfer';
 
