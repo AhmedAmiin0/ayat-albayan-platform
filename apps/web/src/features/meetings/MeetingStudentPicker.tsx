@@ -6,7 +6,7 @@ import { Ltr } from '@/components/ui/display/ltr';
 import { studentListQuery } from '@/features/students/api';
 import { StudentSearch } from '@/features/students/list/StudentSearch';
 import { t } from '@/lib/i18n/i18n';
-import { toggleStudent, type MeetingStudent } from './instant-form';
+import { toggleStudent, type MeetingStudent } from './instant/instant-form';
 
 interface Props {
   picked: readonly MeetingStudent[];

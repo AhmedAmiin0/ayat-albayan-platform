@@ -1,7 +1,7 @@
 import type { OverviewTeacher } from '@ab/shared';
 import { Link } from '@tanstack/react-router';
-import { Bar } from '@/features/dashboard/Bar';
-import { loadLabel } from '@/features/dashboard/TeacherLoad';
+import { Bar } from '@/features/dashboard/shared/Bar';
+import { loadLabel } from '@/features/dashboard/today/TeacherLoad';
 import { formatTimeOff } from '@/features/teachers/time-off';
 import { t } from '@/lib/i18n/i18n';
 import { teacherLabel } from '@/lib/i18n/teacher-label';

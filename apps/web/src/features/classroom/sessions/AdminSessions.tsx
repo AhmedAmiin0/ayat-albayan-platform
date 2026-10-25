@@ -9,7 +9,7 @@ import { FormAlert } from '@/components/ui/form/form-alert';
 import { Icon } from '@/components/ui/display/icon';
 import { PageHead } from '@/components/ui/layout/page';
 import { ListSkeleton } from '@/components/ui/display/skeleton';
-import { InternalMeetingsList } from '@/features/meetings/InternalMeetingsList';
+import { InternalMeetingsList } from '@/features/meetings/internal/InternalMeetingsList';
 import { NewMeetingMenu } from '@/features/meetings/NewMeetingMenu';
 import { t } from '@/lib/i18n/i18n';
 import { locale } from '@/lib/i18n/locale';

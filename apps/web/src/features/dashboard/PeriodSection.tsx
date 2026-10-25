@@ -1,12 +1,12 @@
 import { t } from '@/lib/i18n/i18n';
 import { cn } from '@/lib/utils';
-import { sectionTitle } from './Bar';
-import { ExpensesByCategory } from './ExpensesByCategory';
-import { FinanceByMonth } from './FinanceByMonth';
-import { FinanceTotals } from './FinanceTotals';
-import { FunnelChart } from './FunnelChart';
+import { sectionTitle } from './shared/Bar';
+import { ExpensesByCategory } from './finance/ExpensesByCategory';
+import { FinanceByMonth } from './finance/FinanceByMonth';
+import { FinanceTotals } from './finance/FinanceTotals';
+import { FunnelChart } from './funnel/FunnelChart';
 import { PeriodFilter } from './PeriodFilter';
-import { SourceTable } from './SourceTable';
+import { SourceTable } from './funnel/SourceTable';
 import type { DashboardData, DayRange } from './types';
 
 export interface PeriodSectionProps {

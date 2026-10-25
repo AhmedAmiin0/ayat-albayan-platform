@@ -8,9 +8,9 @@ import { viewerTz } from '@/features/classroom/student-link/student-link';
 import type { RoomClient } from '@/features/classroom/room/components/room-types';
 import { ApiError } from '@/lib/http/api';
 import { t } from '@/lib/i18n/i18n';
-import { joinMeetingAsGuest, publicMeetingQuery } from './internal-api';
-import { meetingJoinProblem } from './meeting-join-errors';
-import { guestScheduleText } from './meeting-when';
+import { joinMeetingAsGuest, publicMeetingQuery } from './internal/internal-api';
+import { meetingJoinProblem } from './rows/meeting-join-errors';
+import { guestScheduleText } from './scheduled/meeting-when';
 
 const L = t.meetings.internal.guest;
 

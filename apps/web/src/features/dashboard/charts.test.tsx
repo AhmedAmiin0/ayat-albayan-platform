@@ -2,12 +2,12 @@ import { render, screen, within } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n/i18n';
 import { SUMMARY } from './dashboard-fixture';
-import { ExpensesByCategory } from './ExpensesByCategory';
-import { FinanceByMonth } from './FinanceByMonth';
-import { FunnelChart } from './FunnelChart';
-import { LessonsByStatus } from './LessonsByStatus';
-import { SourceTable } from './SourceTable';
-import { loadLabel, TeacherLoad } from './TeacherLoad';
+import { ExpensesByCategory } from './finance/ExpensesByCategory';
+import { FinanceByMonth } from './finance/FinanceByMonth';
+import { FunnelChart } from './funnel/FunnelChart';
+import { LessonsByStatus } from './today/LessonsByStatus';
+import { SourceTable } from './funnel/SourceTable';
+import { loadLabel, TeacherLoad } from './today/TeacherLoad';
 
 vi.mock('@tanstack/react-router', async () => ({ Link: (await import('./link-mock')).Link }));
 
