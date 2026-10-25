@@ -512,7 +512,7 @@ Related routes reading config (outside these four modules):
 | GET | `/admin/notifications` | `modules/notification-rules/rules.controller.ts:17-21` | `settings.read` | `NotificationRulesSettings` + `SendGate.state()` + templates + line health → `NotificationsOverview {entries, lines}` (`rules.service.ts:20-28`) |
 | PUT | `/admin/google/settings` | `modules/google-sync/google-admin.controller.ts:45-50` | class `settings.write` (:15) + `requireAdmin(user)` inline | body `googleSettingsSchema`; `GoogleAdminService.saveSettings` (`google-admin.service.ts:23-31`) → audit entity `google_account`, action `settings`, after = new `GoogleSyncSettings`; returns `GoogleStatusView` |
 | GET | `/admin/google/status` | `google-admin.controller.ts:24-29` | `settings.read` + `requireAdmin` | `GoogleSettings.read()` among others |
-| GET | `/messages/gate` | `modules/whatsapp/messages/messages.controller.ts:26-30` | `messages.read` (class `messages.manage`) | `SendGate.view()` |
+| GET | `/messages/gate` | `modules/whatsapp/messages.controller.ts:26-30` | `messages.read` (class `messages.manage`) | `SendGate.view()` |
 
 Other `settings.read/write`-gated controllers: `modules/google-sync/google-map.controller.ts:13,19,34`, `google-items.controller.ts:14,24`.
 
