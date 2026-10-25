@@ -6059,6 +6059,10 @@
       "saved_reply_not_found": "لم يعد هذا الرد موجودًا.",
       "saved_replies_forbidden": "لا تملك صلاحية هذا الإجراء.",
       "generic": "تعذّر الحفظ، حاول مرة أخرى."
+    },
+    "web": {
+      "retryFile": "أعد إرسال المرفق",
+      "fileFailed": "لم يُرسل المرفق: {reason}"
     }
   }
 }

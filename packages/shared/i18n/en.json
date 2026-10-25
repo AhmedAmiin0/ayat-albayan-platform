@@ -6059,6 +6059,10 @@
       "saved_reply_not_found": "This reply no longer exists.",
       "saved_replies_forbidden": "You do not have permission for this.",
       "generic": "Could not save. Please try again."
+    },
+    "web": {
+      "retryFile": "Resend the attachment",
+      "fileFailed": "The attachment was not sent: {reason}"
     }
   }
 }
