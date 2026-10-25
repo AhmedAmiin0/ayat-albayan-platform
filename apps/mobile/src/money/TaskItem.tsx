@@ -3,8 +3,8 @@ import { router } from 'expo-router';
 import { useTabOpen } from '@/auth/use-tab-open';
 import { t } from '@/lib/i18n';
 import { instantDay } from '@/payments/format';
-import { ListRow } from '@/ui/ListRow';
-import { StatusChip } from '@/ui/StatusChip';
+import { ListRow } from '@/core/ui/layout/ListRow';
+import { StatusChip } from '@/core/ui/feedback/StatusChip';
 import { taskText } from './tasks';
 
 /** One open admin task: the student, what is due and since when; saffron «بانتظار إجراء»; opens the student. */

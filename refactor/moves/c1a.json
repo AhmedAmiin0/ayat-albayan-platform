@@ -1,0 +1,336 @@
+{
+  "id": "c1a",
+  "seq": 71,
+  "moves": [
+    {
+      "from": "apps/mobile/src/ui/AppText.tsx",
+      "to": "apps/mobile/src/core/ui/primitives/"
+    },
+    {
+      "from": "apps/mobile/src/ui/Avatar.tsx",
+      "to": "apps/mobile/src/core/ui/primitives/"
+    },
+    {
+      "from": "apps/mobile/src/ui/Button.tsx",
+      "to": "apps/mobile/src/core/ui/primitives/"
+    },
+    {
+      "from": "apps/mobile/src/ui/Chevron.tsx",
+      "to": "apps/mobile/src/core/ui/primitives/"
+    },
+    {
+      "from": "apps/mobile/src/ui/GlassGradient.tsx",
+      "to": "apps/mobile/src/core/ui/primitives/"
+    },
+    {
+      "from": "apps/mobile/src/ui/IconButton.tsx",
+      "to": "apps/mobile/src/core/ui/primitives/"
+    },
+    {
+      "from": "apps/mobile/src/ui/Ltr.tsx",
+      "to": "apps/mobile/src/core/ui/primitives/"
+    },
+    {
+      "from": "apps/mobile/src/ui/Mark.tsx",
+      "to": "apps/mobile/src/core/ui/primitives/"
+    },
+    {
+      "from": "apps/mobile/src/ui/NuqtaGlyph.tsx",
+      "to": "apps/mobile/src/core/ui/primitives/"
+    },
+    {
+      "from": "apps/mobile/src/ui/PillButton.tsx",
+      "to": "apps/mobile/src/core/ui/primitives/"
+    },
+    {
+      "from": "apps/mobile/src/ui/use-a11y-pref.ts",
+      "to": "apps/mobile/src/core/ui/primitives/"
+    },
+    {
+      "from": "apps/mobile/src/ui/Field.tsx",
+      "to": "apps/mobile/src/core/ui/form/"
+    },
+    {
+      "from": "apps/mobile/src/ui/FilterPills.tsx",
+      "to": "apps/mobile/src/core/ui/form/"
+    },
+    {
+      "from": "apps/mobile/src/ui/FilterPills.wrap.test.tsx",
+      "to": "apps/mobile/src/core/ui/form/"
+    },
+    {
+      "from": "apps/mobile/src/ui/PasswordToggle.tsx",
+      "to": "apps/mobile/src/core/ui/form/"
+    },
+    {
+      "from": "apps/mobile/src/ui/SearchField.tsx",
+      "to": "apps/mobile/src/core/ui/form/"
+    },
+    {
+      "from": "apps/mobile/src/ui/EmptyState.tsx",
+      "to": "apps/mobile/src/core/ui/feedback/"
+    },
+    {
+      "from": "apps/mobile/src/ui/ErrorState.tsx",
+      "to": "apps/mobile/src/core/ui/feedback/"
+    },
+    {
+      "from": "apps/mobile/src/ui/InlineConfirm.tsx",
+      "to": "apps/mobile/src/core/ui/feedback/"
+    },
+    {
+      "from": "apps/mobile/src/ui/StatusChip.tsx",
+      "to": "apps/mobile/src/core/ui/feedback/"
+    },
+    {
+      "from": "apps/mobile/src/ui/AppNativeTabs.tsx",
+      "to": "apps/mobile/src/core/ui/layout/"
+    },
+    {
+      "from": "apps/mobile/src/ui/GlassTab.tsx",
+      "to": "apps/mobile/src/core/ui/layout/"
+    },
+    {
+      "from": "apps/mobile/src/ui/GlassTabBar.tsx",
+      "to": "apps/mobile/src/core/ui/layout/"
+    },
+    {
+      "from": "apps/mobile/src/ui/GlassTabBar.motion.test.tsx",
+      "to": "apps/mobile/src/core/ui/layout/"
+    },
+    {
+      "from": "apps/mobile/src/ui/KeyboardFrame.tsx",
+      "to": "apps/mobile/src/core/ui/layout/"
+    },
+    {
+      "from": "apps/mobile/src/ui/ListRow.tsx",
+      "to": "apps/mobile/src/core/ui/layout/"
+    },
+    {
+      "from": "apps/mobile/src/ui/Screen.tsx",
+      "to": "apps/mobile/src/core/ui/layout/"
+    },
+    {
+      "from": "apps/mobile/src/ui/Screen.inset.test.tsx",
+      "to": "apps/mobile/src/core/ui/layout/"
+    },
+    {
+      "from": "apps/mobile/src/ui/ScreenHeader.tsx",
+      "to": "apps/mobile/src/core/ui/layout/"
+    },
+    {
+      "from": "apps/mobile/src/ui/TabBadge.tsx",
+      "to": "apps/mobile/src/core/ui/layout/"
+    },
+    {
+      "from": "apps/mobile/src/ui/tab-bar-inset.ts",
+      "to": "apps/mobile/src/core/ui/layout/"
+    },
+    {
+      "from": "apps/mobile/src/ui/tab-icons.ts",
+      "to": "apps/mobile/src/core/ui/layout/"
+    },
+    {
+      "from": "apps/mobile/src/ui/use-pill-offset.ts",
+      "to": "apps/mobile/src/core/ui/layout/"
+    }
+  ],
+  "files": [
+    [
+      "apps/mobile/src/ui/AppNativeTabs.tsx",
+      "apps/mobile/src/core/ui/layout/AppNativeTabs.tsx"
+    ],
+    [
+      "apps/mobile/src/ui/AppText.test.tsx",
+      "apps/mobile/src/core/ui/primitives/AppText.test.tsx"
+    ],
+    [
+      "apps/mobile/src/ui/AppText.tsx",
+      "apps/mobile/src/core/ui/primitives/AppText.tsx"
+    ],
+    [
+      "apps/mobile/src/ui/Avatar.tsx",
+      "apps/mobile/src/core/ui/primitives/Avatar.tsx"
+    ],
+    [
+      "apps/mobile/src/ui/Button.test.tsx",
+      "apps/mobile/src/core/ui/primitives/Button.test.tsx"
+    ],
+    [
+      "apps/mobile/src/ui/Button.tsx",
+      "apps/mobile/src/core/ui/primitives/Button.tsx"
+    ],
+    [
+      "apps/mobile/src/ui/Chevron.test.tsx",
+      "apps/mobile/src/core/ui/primitives/Chevron.test.tsx"
+    ],
+    [
+      "apps/mobile/src/ui/Chevron.tsx",
+      "apps/mobile/src/core/ui/primitives/Chevron.tsx"
+    ],
+    [
+      "apps/mobile/src/ui/EmptyState.tsx",
+      "apps/mobile/src/core/ui/feedback/EmptyState.tsx"
+    ],
+    [
+      "apps/mobile/src/ui/ErrorState.test.tsx",
+      "apps/mobile/src/core/ui/feedback/ErrorState.test.tsx"
+    ],
+    [
+      "apps/mobile/src/ui/ErrorState.tsx",
+      "apps/mobile/src/core/ui/feedback/ErrorState.tsx"
+    ],
+    [
+      "apps/mobile/src/ui/Field.test.tsx",
+      "apps/mobile/src/core/ui/form/Field.test.tsx"
+    ],
+    [
+      "apps/mobile/src/ui/Field.tsx",
+      "apps/mobile/src/core/ui/form/Field.tsx"
+    ],
+    [
+      "apps/mobile/src/ui/FilterPills.test.tsx",
+      "apps/mobile/src/core/ui/form/FilterPills.test.tsx"
+    ],
+    [
+      "apps/mobile/src/ui/FilterPills.tsx",
+      "apps/mobile/src/core/ui/form/FilterPills.tsx"
+    ],
+    [
+      "apps/mobile/src/ui/FilterPills.wrap.test.tsx",
+      "apps/mobile/src/core/ui/form/FilterPills.wrap.test.tsx"
+    ],
+    [
+      "apps/mobile/src/ui/GlassGradient.tsx",
+      "apps/mobile/src/core/ui/primitives/GlassGradient.tsx"
+    ],
+    [
+      "apps/mobile/src/ui/GlassTab.tsx",
+      "apps/mobile/src/core/ui/layout/GlassTab.tsx"
+    ],
+    [
+      "apps/mobile/src/ui/GlassTabBar.motion.test.tsx",
+      "apps/mobile/src/core/ui/layout/GlassTabBar.motion.test.tsx"
+    ],
+    [
+      "apps/mobile/src/ui/GlassTabBar.test.tsx",
+      "apps/mobile/src/core/ui/layout/GlassTabBar.test.tsx"
+    ],
+    [
+      "apps/mobile/src/ui/GlassTabBar.tsx",
+      "apps/mobile/src/core/ui/layout/GlassTabBar.tsx"
+    ],
+    [
+      "apps/mobile/src/ui/IconButton.tsx",
+      "apps/mobile/src/core/ui/primitives/IconButton.tsx"
+    ],
+    [
+      "apps/mobile/src/ui/InlineConfirm.test.tsx",
+      "apps/mobile/src/core/ui/feedback/InlineConfirm.test.tsx"
+    ],
+    [
+      "apps/mobile/src/ui/InlineConfirm.tsx",
+      "apps/mobile/src/core/ui/feedback/InlineConfirm.tsx"
+    ],
+    [
+      "apps/mobile/src/ui/KeyboardFrame.test.tsx",
+      "apps/mobile/src/core/ui/layout/KeyboardFrame.test.tsx"
+    ],
+    [
+      "apps/mobile/src/ui/KeyboardFrame.tsx",
+      "apps/mobile/src/core/ui/layout/KeyboardFrame.tsx"
+    ],
+    [
+      "apps/mobile/src/ui/ListRow.test.tsx",
+      "apps/mobile/src/core/ui/layout/ListRow.test.tsx"
+    ],
+    [
+      "apps/mobile/src/ui/ListRow.tsx",
+      "apps/mobile/src/core/ui/layout/ListRow.tsx"
+    ],
+    [
+      "apps/mobile/src/ui/Ltr.tsx",
+      "apps/mobile/src/core/ui/primitives/Ltr.tsx"
+    ],
+    [
+      "apps/mobile/src/ui/Mark.test.tsx",
+      "apps/mobile/src/core/ui/primitives/Mark.test.tsx"
+    ],
+    [
+      "apps/mobile/src/ui/Mark.tsx",
+      "apps/mobile/src/core/ui/primitives/Mark.tsx"
+    ],
+    [
+      "apps/mobile/src/ui/NuqtaGlyph.tsx",
+      "apps/mobile/src/core/ui/primitives/NuqtaGlyph.tsx"
+    ],
+    [
+      "apps/mobile/src/ui/PasswordToggle.tsx",
+      "apps/mobile/src/core/ui/form/PasswordToggle.tsx"
+    ],
+    [
+      "apps/mobile/src/ui/PillButton.tsx",
+      "apps/mobile/src/core/ui/primitives/PillButton.tsx"
+    ],
+    [
+      "apps/mobile/src/ui/Screen.inset.test.tsx",
+      "apps/mobile/src/core/ui/layout/Screen.inset.test.tsx"
+    ],
+    [
+      "apps/mobile/src/ui/Screen.test.tsx",
+      "apps/mobile/src/core/ui/layout/Screen.test.tsx"
+    ],
+    [
+      "apps/mobile/src/ui/Screen.tsx",
+      "apps/mobile/src/core/ui/layout/Screen.tsx"
+    ],
+    [
+      "apps/mobile/src/ui/ScreenHeader.test.tsx",
+      "apps/mobile/src/core/ui/layout/ScreenHeader.test.tsx"
+    ],
+    [
+      "apps/mobile/src/ui/ScreenHeader.tsx",
+      "apps/mobile/src/core/ui/layout/ScreenHeader.tsx"
+    ],
+    [
+      "apps/mobile/src/ui/SearchField.test.tsx",
+      "apps/mobile/src/core/ui/form/SearchField.test.tsx"
+    ],
+    [
+      "apps/mobile/src/ui/SearchField.tsx",
+      "apps/mobile/src/core/ui/form/SearchField.tsx"
+    ],
+    [
+      "apps/mobile/src/ui/StatusChip.test.tsx",
+      "apps/mobile/src/core/ui/feedback/StatusChip.test.tsx"
+    ],
+    [
+      "apps/mobile/src/ui/StatusChip.tsx",
+      "apps/mobile/src/core/ui/feedback/StatusChip.tsx"
+    ],
+    [
+      "apps/mobile/src/ui/tab-bar-inset.ts",
+      "apps/mobile/src/core/ui/layout/tab-bar-inset.ts"
+    ],
+    [
+      "apps/mobile/src/ui/tab-icons.ts",
+      "apps/mobile/src/core/ui/layout/tab-icons.ts"
+    ],
+    [
+      "apps/mobile/src/ui/TabBadge.tsx",
+      "apps/mobile/src/core/ui/layout/TabBadge.tsx"
+    ],
+    [
+      "apps/mobile/src/ui/use-a11y-pref.ts",
+      "apps/mobile/src/core/ui/primitives/use-a11y-pref.ts"
+    ],
+    [
+      "apps/mobile/src/ui/use-pill-offset.test.ts",
+      "apps/mobile/src/core/ui/layout/use-pill-offset.test.ts"
+    ],
+    [
+      "apps/mobile/src/ui/use-pill-offset.ts",
+      "apps/mobile/src/core/ui/layout/use-pill-offset.ts"
+    ]
+  ]
+}

@@ -2,7 +2,7 @@ import { formatPhone } from '@ab/shared';
 import { fireEvent, screen } from '@testing-library/react-native';
 import { t } from '@/lib/i18n';
 import { renderWithQuery } from '@/test/query';
-import { ltr } from '@/ui/Ltr';
+import { ltr } from '@/core/ui/primitives/Ltr';
 import { readOnlyNoteText } from '../ReadOnlySettings';
 import { closedGate, handCount, overviewAnswer, PUBLIC_PHONE } from './comms-fixtures';
 import { GATE_LINE_SEPARATOR } from './gate-words';

@@ -1,8 +1,8 @@
 import { studentStatusStyle, type SalesStudentView } from '@ab/shared';
 import { t } from '@/lib/i18n';
 import { Note } from '@/more/Note';
-import { ListRow } from '@/ui/ListRow';
-import { StatusChip } from '@/ui/StatusChip';
+import { ListRow } from '@/core/ui/layout/ListRow';
+import { StatusChip } from '@/core/ui/feedback/StatusChip';
 import { guardianLine, studentSubtitle } from './sales-text';
 
 /**

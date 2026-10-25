@@ -4,7 +4,7 @@ import { Share } from 'react-native';
 import { ApiError } from '@/lib/api';
 import { t } from '@/lib/i18n';
 import { renderWithQuery } from '@/test/query';
-import { ltr } from '@/ui/Ltr';
+import { ltr } from '@/core/ui/primitives/Ltr';
 import { CreateUserScreen } from './CreateUserScreen';
 import { CANDIDATES, DETAIL, usersGet } from './fixtures';
 

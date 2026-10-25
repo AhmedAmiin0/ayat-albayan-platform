@@ -1,8 +1,8 @@
 import type { ReactNode, Ref } from 'react';
 import { View } from 'react-native';
 import { type, useTheme } from '@/theme';
-import { Mark } from './Mark';
-import { AppText, type AppTextNode } from './AppText';
+import { Mark } from '../primitives/Mark';
+import { AppText, type AppTextNode } from '../primitives/AppText';
 
 export interface ScreenHeaderProps {
   /** Amiri title, e.g. t.mobile.today. Mobile has no cartouche: this is the screen's one title. */

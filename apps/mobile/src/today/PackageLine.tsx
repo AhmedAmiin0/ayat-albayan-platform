@@ -1,7 +1,7 @@
 import { packageLine } from '@/payments/package-line';
 import { useRenewalThreshold, useStudentBalance } from '@/payments/queries';
 import { type, useTheme } from '@/theme';
-import { AppText } from '@/ui/AppText';
+import { AppText } from '@/core/ui/primitives/AppText';
 
 /**
  * The package line under a student on a Today card (docs/07 §12): «فاضل حلقتين», saffron only

@@ -2,10 +2,10 @@ import { router, useLocalSearchParams } from 'expo-router';
 import { BookingModeProvider } from '@/booking/booking-mode';
 import { useTreeBase } from '@/nav/tree-base';
 import { t } from '@/lib/i18n';
-import { Button } from '@/ui/Button';
-import { EmptyState } from '@/ui/EmptyState';
-import { Screen } from '@/ui/Screen';
-import { ScreenHeader } from '@/ui/ScreenHeader';
+import { Button } from '@/core/ui/primitives/Button';
+import { EmptyState } from '@/core/ui/feedback/EmptyState';
+import { Screen } from '@/core/ui/layout/Screen';
+import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { programOf } from './trial-href';
 import { TrialDateFlow } from './TrialDateFlow';
 

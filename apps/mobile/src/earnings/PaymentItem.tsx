@@ -3,7 +3,7 @@ import { View } from 'react-native';
 import { t } from '@/lib/i18n';
 import { instantDay } from '@/payments/format';
 import { type, useTheme } from '@/theme';
-import { AppText } from '@/ui/AppText';
+import { AppText } from '@/core/ui/primitives/AppText';
 import { egp } from './format';
 
 /** One payment made to the teacher: amount, method, day, and how many lessons it covered. */

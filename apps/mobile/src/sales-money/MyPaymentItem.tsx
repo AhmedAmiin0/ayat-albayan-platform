@@ -5,8 +5,8 @@ import { AttachmentsViewer } from '@/money/AttachmentsViewer';
 import { hasAttachments } from '@/money/receipt-file';
 import { instantDay, money } from '@/payments/format';
 import { type, useTheme } from '@/theme';
-import { AppText } from '@/ui/AppText';
-import { Ltr } from '@/ui/Ltr';
+import { AppText } from '@/core/ui/primitives/AppText';
+import { Ltr } from '@/core/ui/primitives/Ltr';
 
 /** One payment I recorded (web my-payment-columns): student and code, amount in its currency, kind · method · day, note, then «المرفقات» of a bank transfer. */
 export function MyPaymentItem({ payment }: { payment: MyPaymentRow }) {

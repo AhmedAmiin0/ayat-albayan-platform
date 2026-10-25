@@ -1,6 +1,6 @@
 import type { ThreadView } from '@ab/shared';
 import { t } from '@/lib/i18n';
-import { AppText } from '@/ui/AppText';
+import { AppText } from '@/core/ui/primitives/AppText';
 import { lineWord } from './line-words';
 import { useNoteStyle } from './note-style';
 

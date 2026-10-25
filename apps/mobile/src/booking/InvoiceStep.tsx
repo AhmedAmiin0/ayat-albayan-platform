@@ -4,7 +4,7 @@ import { ErrorLine } from '@/inbox/ErrorLine';
 import { t } from '@/lib/i18n';
 import { Note } from '@/more/Note';
 import { FormLabel } from '@/payments/FormLabel';
-import { Button } from '@/ui/Button';
+import { Button } from '@/core/ui/primitives/Button';
 import { ChatMediaSheet } from './ChatMediaSheet';
 import type { InvoiceDraft } from './contract';
 import { InvoiceActions } from './InvoiceActions';

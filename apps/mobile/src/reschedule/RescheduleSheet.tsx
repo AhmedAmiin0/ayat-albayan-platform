@@ -1,9 +1,9 @@
 import type { LessonView } from '@ab/shared';
 import { Modal, ScrollView } from 'react-native';
 import { t } from '@/lib/i18n';
-import { Button } from '@/ui/Button';
-import { Screen } from '@/ui/Screen';
-import { ScreenHeader } from '@/ui/ScreenHeader';
+import { Button } from '@/core/ui/primitives/Button';
+import { Screen } from '@/core/ui/layout/Screen';
+import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { RescheduleForm } from './RescheduleForm';
 
 export interface RescheduleSheetProps {

@@ -3,10 +3,10 @@ import { useState } from 'react';
 import { usePermissions } from '@/auth/use-permissions';
 import { t } from '@/lib/i18n';
 import { useStudentName } from '@/ops/use-student-name';
-import { Button } from '@/ui/Button';
-import { FilterPills } from '@/ui/FilterPills';
-import { Screen } from '@/ui/Screen';
-import { ScreenHeader } from '@/ui/ScreenHeader';
+import { Button } from '@/core/ui/primitives/Button';
+import { FilterPills } from '@/core/ui/form/FilterPills';
+import { Screen } from '@/core/ui/layout/Screen';
+import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { StudentInvoicesList } from './StudentInvoicesList';
 import { StudentPaymentsList } from './StudentPaymentsList';
 

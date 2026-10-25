@@ -4,8 +4,8 @@ import { Pressable, View } from 'react-native';
 import { t } from '@/lib/i18n';
 import { locale } from '@/lib/locale';
 import { shape, type, useTheme } from '@/theme';
-import { AppText } from '@/ui/AppText';
-import { Chevron } from '@/ui/Chevron';
+import { AppText } from '@/core/ui/primitives/AppText';
+import { Chevron } from '@/core/ui/primitives/Chevron';
 import type { TeacherAgenda } from './overview';
 import { teacherMeta, timeOffLine, windowsLine } from './overview-text';
 

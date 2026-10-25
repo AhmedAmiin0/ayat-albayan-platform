@@ -1,7 +1,7 @@
 import { screen } from '@testing-library/react-native';
 import { t } from '@/lib/i18n';
 import { renderWithQuery } from '@/test/query';
-import { ltr } from '@/ui/Ltr';
+import { ltr } from '@/core/ui/primitives/Ltr';
 import { answered, page, pending, summary } from './fixtures';
 import { FeedbackScreen } from './FeedbackScreen';
 

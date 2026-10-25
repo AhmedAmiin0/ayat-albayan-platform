@@ -3,7 +3,7 @@ import { type Can, usePermissions } from '@/auth/use-permissions';
 import { t } from '@/lib/i18n';
 import { useInboxBadge } from '@/nav/use-inbox-badge';
 import { usePushRegistration } from '@/push/usePushRegistration';
-import { AppNativeTabs, type TabItem } from '@/ui/AppNativeTabs';
+import { AppNativeTabs, type TabItem } from '@/core/ui/layout/AppNativeTabs';
 
 // docs/07 §12 bottom tabs, native. The first tab sits at the inline-start (right in Arabic). A tab the held
 // role cannot read is hidden (`can` allows all while /auth/me loads: no flicker); المحادثات carries the

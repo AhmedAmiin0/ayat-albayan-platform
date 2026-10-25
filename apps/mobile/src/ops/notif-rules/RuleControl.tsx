@@ -1,7 +1,7 @@
 import { Switch, View } from 'react-native';
 import { t } from '@/lib/i18n';
 import { type, useTheme } from '@/theme';
-import { AppText } from '@/ui/AppText';
+import { AppText } from '@/core/ui/primitives/AppText';
 import type { RowControl } from './rule-words';
 
 export interface RuleControlProps {

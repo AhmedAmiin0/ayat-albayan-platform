@@ -2,7 +2,7 @@ import { payoutStatusStyle, type AssistantStatementView } from '@ab/shared';
 import { View } from 'react-native';
 import { t } from '@/lib/i18n';
 import { Note } from '@/more/Note';
-import { StatusChip } from '@/ui/StatusChip';
+import { StatusChip } from '@/core/ui/feedback/StatusChip';
 import { CardTitle } from './CardTitle';
 import { CurrencyTotalsBlock } from './CurrencyTotalsBlock';
 import { LinesToggle } from './LinesToggle';

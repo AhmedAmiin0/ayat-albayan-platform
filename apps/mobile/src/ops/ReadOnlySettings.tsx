@@ -3,7 +3,7 @@ import { View } from 'react-native';
 import { t } from '@/lib/i18n';
 import { Note } from '@/more/Note';
 import { Section } from '@/more/Section';
-import { ListRow } from '@/ui/ListRow';
+import { ListRow } from '@/core/ui/layout/ListRow';
 
 /** Joins the web note with a caller's own line into one note (the overview stays one phone high). */
 export const readOnlyNoteText = (more?: string): string =>

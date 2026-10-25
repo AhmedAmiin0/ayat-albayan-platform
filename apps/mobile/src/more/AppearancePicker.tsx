@@ -1,5 +1,5 @@
 import { t } from '@/lib/i18n';
-import { FilterPills, type FilterPill } from '@/ui/FilterPills';
+import { FilterPills, type FilterPill } from '@/core/ui/form/FilterPills';
 import type { AppearancePref } from './appearance';
 import { Section } from './Section';
 import { useAppearancePref } from './useAppearancePref';

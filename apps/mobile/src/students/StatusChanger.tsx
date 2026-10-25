@@ -4,10 +4,10 @@ import { ApiError } from '@/lib/api';
 import { t } from '@/lib/i18n';
 import { useOptimisticStatus, type StatusChange, type StatusRequest } from '@/lib/use-optimistic-status';
 import { type, useTheme } from '@/theme';
-import { FilterPills } from '@/ui/FilterPills';
+import { FilterPills } from '@/core/ui/form/FilterPills';
 import { SectionLabel } from './SectionLabel';
 import type { StudentRef } from './types';
-import { AppText } from '@/ui/AppText';
+import { AppText } from '@/core/ui/primitives/AppText';
 
 /** Students have no /status route: PATCH /students/:id, a compare-and-set on the status shown (R-STU-05). */
 type StudentStatusChange = StatusChange<StudentStatus> & { expected: StudentStatus };

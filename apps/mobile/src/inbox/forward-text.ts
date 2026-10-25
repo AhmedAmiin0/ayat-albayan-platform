@@ -1,6 +1,6 @@
 import { formatPhone, type ForwardResult, type ThreadView } from '@ab/shared';
 import { t } from '@/lib/i18n';
-import { ltr } from '@/ui/Ltr';
+import { ltr } from '@/core/ui/primitives/Ltr';
 import type { ChatNoticeValue } from './chat-actions';
 
 // The words of «إعادة توجيه» (owner 2026-10-25): a picked chat's name, and what the forward did.

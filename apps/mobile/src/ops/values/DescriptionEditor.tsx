@@ -3,8 +3,8 @@ import { View } from 'react-native';
 import { ErrorLine } from '@/inbox/ErrorLine';
 import { t } from '@/lib/i18n';
 import { Note } from '@/more/Note';
-import { Button } from '@/ui/Button';
-import { Field } from '@/ui/Field';
+import { Button } from '@/core/ui/primitives/Button';
+import { Field } from '@/core/ui/form/Field';
 import { useDescriptionEditor } from './use-description-editor';
 
 export interface DescriptionEditorProps {

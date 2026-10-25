@@ -1,5 +1,5 @@
 import { type, useTheme } from '@/theme';
-import { AppText } from '@/ui/AppText';
+import { AppText } from '@/core/ui/primitives/AppText';
 
 export interface FormLabelProps {
   children: string;

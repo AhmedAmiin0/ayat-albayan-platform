@@ -3,7 +3,7 @@ import { Pressable, View } from 'react-native';
 import { t } from '@/lib/i18n';
 import { instantDay } from '@/payments/format';
 import { type, useTheme } from '@/theme';
-import { AppText } from '@/ui/AppText';
+import { AppText } from '@/core/ui/primitives/AppText';
 import { ChatReceiptThumb } from './ChatReceiptThumb';
 
 export interface ChatReceiptRowProps {

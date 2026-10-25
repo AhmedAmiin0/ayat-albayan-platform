@@ -2,7 +2,7 @@ import { View } from 'react-native';
 import { t } from '@/lib/i18n';
 import { Note } from '@/more/Note';
 import { shape, type, useTheme } from '@/theme';
-import { AppText } from '@/ui/AppText';
+import { AppText } from '@/core/ui/primitives/AppText';
 import { averageLine, recommendLine } from './feedback-text';
 import type { FeedbackAverage } from './types';
 

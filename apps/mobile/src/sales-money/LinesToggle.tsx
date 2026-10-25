@@ -1,7 +1,7 @@
 import type { AssistantStatementLineView } from '@ab/shared';
 import { useState } from 'react';
 import { t } from '@/lib/i18n';
-import { Button } from '@/ui/Button';
+import { Button } from '@/core/ui/primitives/Button';
 import { StatementLines } from './StatementLines';
 
 /** «بنود الكشف» folded under its statement (the web's <details>), opened on demand. */

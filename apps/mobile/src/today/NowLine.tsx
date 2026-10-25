@@ -2,7 +2,7 @@ import { clockTime, RIYADH_TZ } from '@ab/shared';
 import { View } from 'react-native';
 import { t } from '@/lib/i18n';
 import { shape, type, useTheme } from '@/theme';
-import { AppText } from '@/ui/AppText';
+import { AppText } from '@/core/ui/primitives/AppText';
 
 /**
  * «دلوقتي 15:20» (docs/07 §12): a 2pt ink line with an ink pill over the time column. Ink, not

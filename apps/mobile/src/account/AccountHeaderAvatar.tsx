@@ -2,7 +2,7 @@ import { router } from 'expo-router';
 import { Pressable } from 'react-native';
 import { t } from '@/lib/i18n';
 import { shape, useTheme } from '@/theme';
-import { Mark } from '@/ui/Mark';
+import { Mark } from '@/core/ui/primitives/Mark';
 import type { AccountHref } from './AccountRow';
 import { ProfileAvatar } from './ProfileAvatar';
 import { useMyProfile } from './queries';

@@ -3,8 +3,8 @@ import { View } from 'react-native';
 import { t } from '@/lib/i18n';
 import { Note } from '@/more/Note';
 import { Section } from '@/more/Section';
-import { Button } from '@/ui/Button';
-import { ErrorState } from '@/ui/ErrorState';
+import { Button } from '@/core/ui/primitives/Button';
+import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { NumberRow } from '../NumberRow';
 import { useNumbers } from '../use-numbers';
 

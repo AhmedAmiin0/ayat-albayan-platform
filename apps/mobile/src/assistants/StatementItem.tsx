@@ -7,7 +7,7 @@ import { CardTitle } from '@/sales-money/CardTitle';
 import { MoneyCard } from '@/sales-money/MoneyCard';
 import { statementMonth, statementWhen } from '@/sales-money/money-text';
 import { StatementLines } from '@/sales-money/StatementLines';
-import { StatusChip } from '@/ui/StatusChip';
+import { StatusChip } from '@/core/ui/feedback/StatusChip';
 import { StatementActionBar } from './StatementActionBar';
 import type { StatementCan } from './statement-can';
 import { StatementTotals } from './StatementTotals';

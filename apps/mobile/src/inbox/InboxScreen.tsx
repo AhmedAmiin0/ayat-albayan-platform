@@ -3,8 +3,8 @@ import { canOpen } from '@/auth/route-permissions';
 import { usePermissions } from '@/auth/use-permissions';
 import { t } from '@/lib/i18n';
 import { useTreeBase } from '@/nav/tree-base';
-import { FilterPills, type FilterPill } from '@/ui/FilterPills';
-import { Screen } from '@/ui/Screen';
+import { FilterPills, type FilterPill } from '@/core/ui/form/FilterPills';
+import { Screen } from '@/core/ui/layout/Screen';
 import { LeadsList } from './LeadsList';
 import { ThreadsList } from './ThreadsList';
 

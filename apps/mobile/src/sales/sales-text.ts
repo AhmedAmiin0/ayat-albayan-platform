@@ -11,7 +11,7 @@ import {
 import { t } from '@/lib/i18n';
 import { locale } from '@/lib/locale';
 import { money } from '@/payments/format';
-import { ltr } from '@/ui/Ltr';
+import { ltr } from '@/core/ui/primitives/Ltr';
 import type { SalesSubscription } from './sales-api';
 
 // Row lines of the salesperson's pages (docs/16), same words as the web. Western digits; dates and

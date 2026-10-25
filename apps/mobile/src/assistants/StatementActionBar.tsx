@@ -4,7 +4,7 @@ import { View } from 'react-native';
 import { ErrorLine } from '@/inbox/ErrorLine';
 import { t } from '@/lib/i18n';
 import { statementMonth } from '@/sales-money/money-text';
-import { InlineConfirm } from '@/ui/InlineConfirm';
+import { InlineConfirm } from '@/core/ui/feedback/InlineConfirm';
 import { assistantsErrorText } from './errors';
 import { useStatementMove } from './mutations';
 import { ReasonConfirm } from './ReasonConfirm';

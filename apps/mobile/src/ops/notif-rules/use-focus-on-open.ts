@@ -1,6 +1,6 @@
 import { useEffect, type RefObject } from 'react';
 import { AccessibilityInfo, findNodeHandle } from 'react-native';
-import type { AppTextNode } from '@/ui/AppText';
+import type { AppTextNode } from '@/core/ui/primitives/AppText';
 
 /** After the sheet's slide-in, so the node exists on both platforms. */
 export const FOCUS_DELAY_MS = 250;

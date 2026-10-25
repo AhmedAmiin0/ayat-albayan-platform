@@ -8,10 +8,10 @@ import { addDays, riyadhToday, weekLabel, weekStart, weekWindow } from '@/calend
 import { t } from '@/lib/i18n';
 import { Note } from '@/more/Note';
 import { useNow } from '@/today/use-day-lessons';
-import { ErrorState } from '@/ui/ErrorState';
-import { Screen } from '@/ui/Screen';
-import { ScreenHeader } from '@/ui/ScreenHeader';
-import { useTabBarInset } from '@/ui/tab-bar-inset';
+import { ErrorState } from '@/core/ui/feedback/ErrorState';
+import { Screen } from '@/core/ui/layout/Screen';
+import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
+import { useTabBarInset } from '@/core/ui/layout/tab-bar-inset';
 import { useMyAvailability, useMyLessons, useTeacherMe } from './queries';
 
 /** A teacher has no «غيّر الميعاد» (the API never offers her `reschedule`), so the row's action is idle. */

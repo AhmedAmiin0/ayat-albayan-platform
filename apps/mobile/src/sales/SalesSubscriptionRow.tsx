@@ -1,7 +1,7 @@
 import { router } from 'expo-router';
 import { t } from '@/lib/i18n';
-import { Button } from '@/ui/Button';
-import { ListRow } from '@/ui/ListRow';
+import { Button } from '@/core/ui/primitives/Button';
+import { ListRow } from '@/core/ui/layout/ListRow';
 import type { SalesSubscription } from './sales-api';
 import { useSalesHrefs } from './sales-href';
 import { startsLine, subscriptionSubtitle } from './sales-text';

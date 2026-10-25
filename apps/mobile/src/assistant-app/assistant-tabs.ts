@@ -1,7 +1,7 @@
 import { canOpen } from '@/auth/route-permissions';
 import type { Can } from '@/auth/use-permissions';
 import { t } from '@/lib/i18n';
-import type { TabItem } from '@/ui/AppNativeTabs';
+import type { TabItem } from '@/core/ui/layout/AppNativeTabs';
 
 /**
  * The classroom assistant's bottom tabs (web /assistant/): «حلقاتي» (self.assistant: the lessons

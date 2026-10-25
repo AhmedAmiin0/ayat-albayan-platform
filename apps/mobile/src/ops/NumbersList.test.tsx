@@ -2,7 +2,7 @@ import { formatPhone } from '@ab/shared';
 import { fireEvent, screen } from '@testing-library/react-native';
 import { t } from '@/lib/i18n';
 import { renderWithQuery } from '@/test/query';
-import { ltr } from '@/ui/Ltr';
+import { ltr } from '@/core/ui/primitives/Ltr';
 import { numbers, parityDiff, parityOk } from './numbers-fixtures';
 import { NumbersList } from './NumbersList';
 import { NUMBERS_PATH, PARITY_PATH } from './use-numbers';

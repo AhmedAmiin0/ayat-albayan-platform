@@ -11,7 +11,7 @@ import { Section } from '@/more/Section';
 import { DiscountField } from '@/pricing/DiscountField';
 import type { PlanChoice } from '@/pricing/selection';
 import { Stepper } from '@/pricing/Stepper';
-import { FilterPills, type FilterPill } from '@/ui/FilterPills';
+import { FilterPills, type FilterPill } from '@/core/ui/form/FilterPills';
 import type { SubscribeForm } from './subscribe-form';
 
 const p = t.pricing;

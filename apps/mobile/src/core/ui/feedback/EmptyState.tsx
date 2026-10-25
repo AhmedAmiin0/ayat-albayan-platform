@@ -1,7 +1,7 @@
 import { View } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
 import { shape, type, useTheme } from '@/theme';
-import { AppText } from './AppText';
+import { AppText } from '../primitives/AppText';
 
 /** docs/07 §10: dashed box, 56px gold double-outline rhombus (never the rosette), Amiri title. */
 export function EmptyState({ title }: { title: string }) {

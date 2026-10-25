@@ -4,8 +4,8 @@ import { Pressable, View } from 'react-native';
 import { t } from '@/lib/i18n';
 import { locale } from '@/lib/locale';
 import { type, useTheme } from '@/theme';
-import { AppText } from '@/ui/AppText';
-import { StatusChip } from '@/ui/StatusChip';
+import { AppText } from '@/core/ui/primitives/AppText';
+import { StatusChip } from '@/core/ui/feedback/StatusChip';
 import { TeacherCountLinks } from './TeacherCountLinks';
 import type { TeacherListItem } from './types';
 

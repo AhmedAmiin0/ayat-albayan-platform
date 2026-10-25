@@ -1,7 +1,7 @@
 import { View } from 'react-native';
 import { t } from '@/lib/i18n';
 import { type, useTheme } from '@/theme';
-import { AppText } from '@/ui/AppText';
+import { AppText } from '@/core/ui/primitives/AppText';
 import type { ReportField } from './report-fields';
 
 /** A label over its value; a blank field says so in ink-3 instead of disappearing. */

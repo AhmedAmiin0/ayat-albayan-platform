@@ -1,5 +1,5 @@
 import { type, useTheme } from '@/theme';
-import { AppText } from '@/ui/AppText';
+import { AppText } from '@/core/ui/primitives/AppText';
 
 /** A failed action under its control, announced as an alert. The data on screen already rolled back. */
 export function ErrorLine({ message }: { message: string }) {

@@ -3,9 +3,9 @@ import { useState } from 'react';
 import { Modal, ScrollView } from 'react-native';
 import { usePermissions } from '@/auth/use-permissions';
 import { t } from '@/lib/i18n';
-import { Button } from '@/ui/Button';
-import { Screen } from '@/ui/Screen';
-import { ScreenHeader } from '@/ui/ScreenHeader';
+import { Button } from '@/core/ui/primitives/Button';
+import { Screen } from '@/core/ui/layout/Screen';
+import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { candidatesQuery } from './api';
 import { CreateUserForm } from './CreateUserForm';
 

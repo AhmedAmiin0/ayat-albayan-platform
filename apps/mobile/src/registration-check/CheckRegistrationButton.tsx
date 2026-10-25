@@ -3,8 +3,8 @@ import { useHolds } from '@/auth/use-permissions';
 import { CheckPersonIcon } from '@/inbox/chat-icons';
 import { t } from '@/lib/i18n';
 import { useTheme } from '@/theme';
-import { Button } from '@/ui/Button';
-import { IconButton } from '@/ui/IconButton';
+import { Button } from '@/core/ui/primitives/Button';
+import { IconButton } from '@/core/ui/primitives/IconButton';
 
 /**
  * «تحقق من التسجيل» in a sales header (the chat thread, the «الطلاب» tab): opens the registration

@@ -2,7 +2,7 @@ import type { ChatListAutoRule } from '@ab/shared';
 import { View } from 'react-native';
 import { t } from '@/lib/i18n';
 import { shape, type, useTheme } from '@/theme';
-import { AppText } from '@/ui/AppText';
+import { AppText } from '@/core/ui/primitives/AppText';
 
 /** The quiet «تُحدَّث تلقائيًا» chip of an automatic list (docs/22 «القوائم التلقائية»); not a control. */
 export function AutoListChip() {

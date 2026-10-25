@@ -5,7 +5,7 @@ import { t } from '@/lib/i18n';
 import { money } from '@/payments/format';
 import { payment } from '@/payments/fixtures';
 import { renderWithQuery } from '@/test/query';
-import { ltr } from '@/ui/Ltr';
+import { ltr } from '@/core/ui/primitives/Ltr';
 import { PaymentsScreen } from './PaymentsScreen';
 import { monthLabel, monthRange, recentMonths } from './months';
 

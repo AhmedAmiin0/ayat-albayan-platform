@@ -4,7 +4,7 @@ import { Pressable, View } from 'react-native';
 import { t } from '@/lib/i18n';
 import { KIND_LABEL } from '@/students/student-kinds';
 import { shape, type, useTheme } from '@/theme';
-import { AppText } from '@/ui/AppText';
+import { AppText } from '@/core/ui/primitives/AppText';
 import type { TeacherListItem } from './types';
 
 const L = t.studentLists;

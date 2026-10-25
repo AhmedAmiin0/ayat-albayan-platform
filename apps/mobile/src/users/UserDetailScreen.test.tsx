@@ -3,7 +3,7 @@ import { router } from 'expo-router';
 import { ApiError } from '@/lib/api';
 import { t } from '@/lib/i18n';
 import { renderWithQuery } from '@/test/query';
-import { ltr } from '@/ui/Ltr';
+import { ltr } from '@/core/ui/primitives/Ltr';
 import { DETAIL, usersGet, YOUSEF } from './fixtures';
 import { UserDetailScreen } from './UserDetailScreen';
 

@@ -1,6 +1,6 @@
 import { View } from 'react-native';
 import { t } from '@/lib/i18n';
-import { EmptyState } from '@/ui/EmptyState';
+import { EmptyState } from '@/core/ui/feedback/EmptyState';
 import type { DashboardWork, WorkList, WorkTab } from './dashboard-types';
 import { Note } from '@/more/Note';
 import { PendingRow, TaskListRow, UnpaidListRow } from './WorkRows';

@@ -1,6 +1,6 @@
 import { View } from 'react-native';
 import { t } from '@/lib/i18n';
-import { AppText } from '@/ui/AppText';
+import { AppText } from '@/core/ui/primitives/AppText';
 import { type, useTheme } from '@/theme';
 import type { MakeupSource } from './makeup-draft';
 import { whenText } from './slots';

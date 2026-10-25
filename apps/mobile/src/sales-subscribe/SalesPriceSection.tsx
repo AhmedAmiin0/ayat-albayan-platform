@@ -3,7 +3,7 @@ import type { UseQueryResult } from '@tanstack/react-query';
 import { t } from '@/lib/i18n';
 import { Note } from '@/more/Note';
 import { Section } from '@/more/Section';
-import { ErrorState } from '@/ui/ErrorState';
+import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { SalesQuotePreview } from './SalesQuotePreview';
 import { salesErrorText } from './sales-errors';
 

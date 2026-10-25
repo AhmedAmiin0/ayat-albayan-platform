@@ -3,8 +3,8 @@ import { useState } from 'react';
 import { View } from 'react-native';
 import { t } from '@/lib/i18n';
 import { Note } from '@/more/Note';
-import { Button } from '@/ui/Button';
-import { ListRow } from '@/ui/ListRow';
+import { Button } from '@/core/ui/primitives/Button';
+import { ListRow } from '@/core/ui/layout/ListRow';
 
 const A = t.classroom.assistants;
 

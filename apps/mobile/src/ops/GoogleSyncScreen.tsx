@@ -1,6 +1,6 @@
 import { useHolds, useIsAdmin } from '@/auth/use-permissions';
 import { t } from '@/lib/i18n';
-import { Screen } from '@/ui/Screen';
+import { Screen } from '@/core/ui/layout/Screen';
 import { GoogleSyncCard } from './GoogleSyncCard';
 import { SubScreenHeader } from './SubScreenHeader';
 

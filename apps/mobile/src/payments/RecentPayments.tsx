@@ -3,7 +3,7 @@ import { View } from 'react-native';
 import { t } from '@/lib/i18n';
 import { SectionLabel } from '@/students/SectionLabel';
 import { type, useTheme } from '@/theme';
-import { AppText } from '@/ui/AppText';
+import { AppText } from '@/core/ui/primitives/AppText';
 import { instantDay, money } from './format';
 import { isPending } from './optimistic';
 import { useRecentPayments } from './queries';

@@ -6,7 +6,7 @@ import { apiSend } from '@/lib/api';
 import { t } from '@/lib/i18n';
 import { useJoinWindow } from '@/lib/public-config';
 import { Note } from '@/more/Note';
-import { Button } from '@/ui/Button';
+import { Button } from '@/core/ui/primitives/Button';
 import { joinError, opensAtLine } from './join-text';
 import { useMinuteClock } from './use-minute-clock';
 import { classroomUrl } from './web-origin';

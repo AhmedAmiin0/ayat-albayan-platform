@@ -1,7 +1,7 @@
 import { Pressable, View } from 'react-native';
 import { t } from '@/lib/i18n';
 import { shape, type, useTheme } from '@/theme';
-import { AppText } from '@/ui/AppText';
+import { AppText } from '@/core/ui/primitives/AppText';
 
 export interface ChoiceChipsProps<V extends string> {
   /** The question, verbatim from the Google Form («الحضور», «التلاوة والنطق» …). */

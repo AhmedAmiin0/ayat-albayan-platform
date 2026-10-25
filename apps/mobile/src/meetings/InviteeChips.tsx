@@ -1,7 +1,7 @@
 import { Pressable, View } from 'react-native';
 import { t } from '@/lib/i18n';
 import { shape, type, useTheme } from '@/theme';
-import { AppText } from '@/ui/AppText';
+import { AppText } from '@/core/ui/primitives/AppText';
 import type { DraftInvitee } from './invitee-draft';
 
 /** The picked invitees as chips; tapping one («إزالة …») takes it off the list. */

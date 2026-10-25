@@ -1,8 +1,8 @@
 import { Pressable, View } from 'react-native';
 import { t } from '@/lib/i18n';
 import { shape, type, useTheme } from '@/theme';
-import { AppText } from '@/ui/AppText';
-import { Ltr } from '@/ui/Ltr';
+import { AppText } from '@/core/ui/primitives/AppText';
+import { Ltr } from '@/core/ui/primitives/Ltr';
 import { stepValue } from './step-value';
 
 export interface StepperProps {

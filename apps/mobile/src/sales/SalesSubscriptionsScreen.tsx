@@ -3,12 +3,12 @@ import { useState } from 'react';
 import { ActivityIndicator, FlatList } from 'react-native';
 import { t } from '@/lib/i18n';
 import { useTheme } from '@/theme';
-import { Button } from '@/ui/Button';
-import { EmptyState } from '@/ui/EmptyState';
-import { ErrorState } from '@/ui/ErrorState';
-import { FilterPills } from '@/ui/FilterPills';
-import { Screen } from '@/ui/Screen';
-import { ScreenHeader } from '@/ui/ScreenHeader';
+import { Button } from '@/core/ui/primitives/Button';
+import { EmptyState } from '@/core/ui/feedback/EmptyState';
+import { ErrorState } from '@/core/ui/feedback/ErrorState';
+import { FilterPills } from '@/core/ui/form/FilterPills';
+import { Screen } from '@/core/ui/layout/Screen';
+import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { type SubscriptionKind, useSalesSubscriptions } from './sales-api';
 import { SalesSubscriptionRow } from './SalesSubscriptionRow';
 

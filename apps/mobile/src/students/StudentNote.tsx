@@ -1,8 +1,8 @@
 import { View } from 'react-native';
 import { type, useTheme } from '@/theme';
-import { NuqtaGlyph } from '@/ui/NuqtaGlyph';
-import { toneColors } from '@/ui/StatusChip';
-import { AppText } from '@/ui/AppText';
+import { NuqtaGlyph } from '@/core/ui/primitives/NuqtaGlyph';
+import { toneColors } from '@/core/ui/feedback/StatusChip';
+import { AppText } from '@/core/ui/primitives/AppText';
 
 /** «دورك» note (docs/07 §6 hamish): small saffron nuqta + ink 600 words, like the web row. */
 export function StudentNote({ text }: { text: string }) {

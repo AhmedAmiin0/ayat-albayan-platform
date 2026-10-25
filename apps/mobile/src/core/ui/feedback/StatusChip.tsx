@@ -1,8 +1,8 @@
 import type { Glyph, Tone } from '@ab/shared';
 import { View } from 'react-native';
 import { type Palette, shape, type, useTheme } from '@/theme';
-import { NuqtaGlyph } from './NuqtaGlyph';
-import { AppText } from './AppText';
+import { NuqtaGlyph } from '../primitives/NuqtaGlyph';
+import { AppText } from '../primitives/AppText';
 
 /** Foreground + soft background per tone (docs/07 §6). There is no neutral ink: it is ink-2. */
 export function toneColors(color: Palette, tone: Tone): { fg: string; bg: string } {

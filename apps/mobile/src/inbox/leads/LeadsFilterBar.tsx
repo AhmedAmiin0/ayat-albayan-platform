@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { View } from 'react-native';
 import { usePermissions } from '@/auth/use-permissions';
 import { t } from '@/lib/i18n';
-import { Button } from '@/ui/Button';
+import { Button } from '@/core/ui/primitives/Button';
 import { AssignUnassigned } from './AssignUnassigned';
 import { LeadFilterSheet } from './LeadFilterSheet';
 import { activeFilterCount, type LeadFilters } from './lead-filters';

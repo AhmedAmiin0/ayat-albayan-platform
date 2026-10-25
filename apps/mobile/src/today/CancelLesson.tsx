@@ -4,9 +4,9 @@ import { View } from 'react-native';
 import { ErrorLine } from '@/inbox/ErrorLine';
 import { t } from '@/lib/i18n';
 import { SectionLabel } from '@/students/SectionLabel';
-import { Field } from '@/ui/Field';
-import { FilterPills } from '@/ui/FilterPills';
-import { InlineConfirm } from '@/ui/InlineConfirm';
+import { Field } from '@/core/ui/form/Field';
+import { FilterPills } from '@/core/ui/form/FilterPills';
+import { InlineConfirm } from '@/core/ui/feedback/InlineConfirm';
 
 type Scope = CancelRequest['scope'];
 

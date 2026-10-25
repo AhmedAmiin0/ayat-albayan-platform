@@ -2,7 +2,7 @@ import type { LessonView } from '@ab/shared';
 import { View } from 'react-native';
 import { t } from '@/lib/i18n';
 import { type, useTheme } from '@/theme';
-import { AppText } from '@/ui/AppText';
+import { AppText } from '@/core/ui/primitives/AppText';
 import type { AgendaDay } from './agenda';
 import { AgendaLessonRow } from './AgendaLessonRow';
 import { dayLabel } from './week';

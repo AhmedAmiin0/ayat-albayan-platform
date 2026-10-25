@@ -1,10 +1,10 @@
 import { router, useLocalSearchParams } from 'expo-router';
 import { useCachedLead } from '@/inbox/use-cached-lead';
 import { t } from '@/lib/i18n';
-import { Button } from '@/ui/Button';
-import { ErrorState } from '@/ui/ErrorState';
-import { Screen } from '@/ui/Screen';
-import { ScreenHeader } from '@/ui/ScreenHeader';
+import { Button } from '@/core/ui/primitives/Button';
+import { ErrorState } from '@/core/ui/feedback/ErrorState';
+import { Screen } from '@/core/ui/layout/Screen';
+import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { BookingModeProvider } from './booking-mode';
 import { isLeadSource, type BookingLead } from './draft';
 import { TrialWizard } from './TrialWizard';

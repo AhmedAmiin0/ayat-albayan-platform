@@ -1,6 +1,6 @@
 import { View } from 'react-native';
 import { type, useTheme } from '@/theme';
-import { AppText } from './AppText';
+import { AppText } from '../primitives/AppText';
 
 /**
  * The count at the icon's top end (the left in Arabic), ringed in what lies behind it: the pill on the

@@ -4,7 +4,7 @@ import { allowedRows } from '@/auth/route-permissions';
 import type { Can } from '@/auth/use-permissions';
 import { t } from '@/lib/i18n';
 import { Section } from '@/more/Section';
-import { ListRow } from '@/ui/ListRow';
+import { ListRow } from '@/core/ui/layout/ListRow';
 
 const rows = () =>
   [

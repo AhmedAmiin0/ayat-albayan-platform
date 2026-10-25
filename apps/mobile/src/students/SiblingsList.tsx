@@ -2,8 +2,8 @@ import { studentStatusStyle } from '@ab/shared';
 import { router } from 'expo-router';
 import { View } from 'react-native';
 import { t } from '@/lib/i18n';
-import { ListRow } from '@/ui/ListRow';
-import { StatusChip } from '@/ui/StatusChip';
+import { ListRow } from '@/core/ui/layout/ListRow';
+import { StatusChip } from '@/core/ui/feedback/StatusChip';
 import { SectionLabel } from './SectionLabel';
 import type { StudentRef } from './types';
 

@@ -9,7 +9,7 @@ import { t } from '@/lib/i18n';
 import { CancelLesson } from '@/today/CancelLesson';
 import { studentNames } from '@/today/lesson-text';
 import type { useLessonAction } from '@/today/use-lesson-action';
-import { Button, type ButtonVariant } from '@/ui/Button';
+import { Button, type ButtonVariant } from '@/core/ui/primitives/Button';
 
 export interface LessonRowActionsProps {
   lesson: LessonView;

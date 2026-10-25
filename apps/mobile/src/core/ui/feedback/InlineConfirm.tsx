@@ -1,8 +1,8 @@
 import { View } from 'react-native';
 import { t } from '@/lib/i18n';
 import { shape, type, useTheme } from '@/theme';
-import { Button } from './Button';
-import { AppText } from './AppText';
+import { Button } from '../primitives/Button';
+import { AppText } from '../primitives/AppText';
 
 export interface InlineConfirmProps {
   /** The question, e.g. «شكلها طلب توظيف مش طالب.» */

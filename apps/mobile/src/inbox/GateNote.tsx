@@ -6,7 +6,7 @@ import { apiFetch } from '@/lib/api';
 import { t } from '@/lib/i18n';
 import { shape } from '@/theme';
 import { pathKey } from '@/lib/query-keys';
-import { AppText } from '@/ui/AppText';
+import { AppText } from '@/core/ui/primitives/AppText';
 import { useNoteStyle } from './note-style';
 
 const PATH = '/messages/gate';

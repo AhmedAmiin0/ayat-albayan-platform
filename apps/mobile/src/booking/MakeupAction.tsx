@@ -5,8 +5,8 @@ import { t } from '@/lib/i18n';
 import { locale } from '@/lib/locale';
 import { usePublicConfig } from '@/lib/public-config';
 import { type, useTheme } from '@/theme';
-import { AppText } from '@/ui/AppText';
-import { Button } from '@/ui/Button';
+import { AppText } from '@/core/ui/primitives/AppText';
+import { Button } from '@/core/ui/primitives/Button';
 import { makeupParams } from './makeup-draft';
 
 /**

@@ -2,8 +2,8 @@ import { canRetryCode, type MessageView } from '@ab/shared';
 import { Linking, View } from 'react-native';
 import { ApiError } from '@/lib/api';
 import { t } from '@/lib/i18n';
-import { Button } from '@/ui/Button';
-import { InlineConfirm } from '@/ui/InlineConfirm';
+import { Button } from '@/core/ui/primitives/Button';
+import { InlineConfirm } from '@/core/ui/feedback/InlineConfirm';
 import { ErrorLine } from './ErrorLine';
 import { useMessageAction } from './use-thread';
 

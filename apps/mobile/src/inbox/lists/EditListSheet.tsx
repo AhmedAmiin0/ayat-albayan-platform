@@ -1,8 +1,8 @@
 import type { ChatList } from '@ab/shared';
 import { useState } from 'react';
 import { t } from '@/lib/i18n';
-import { Button } from '@/ui/Button';
-import { InlineConfirm } from '@/ui/InlineConfirm';
+import { Button } from '@/core/ui/primitives/Button';
+import { InlineConfirm } from '@/core/ui/feedback/InlineConfirm';
 import { ErrorLine } from '../ErrorLine';
 import { AutoListNote } from './AutoListNote';
 import { listErrorText } from './list-errors';

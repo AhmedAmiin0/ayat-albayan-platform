@@ -2,7 +2,7 @@ import { PAYMENT_KINDS, type PaymentKind } from '@ab/shared';
 import { useMemo } from 'react';
 import { riyadhToday } from '@/calendar/week';
 import { t } from '@/lib/i18n';
-import { FilterPills } from '@/ui/FilterPills';
+import { FilterPills } from '@/core/ui/form/FilterPills';
 import { monthLabel, recentMonths } from './months';
 
 export interface PaymentFiltersProps {

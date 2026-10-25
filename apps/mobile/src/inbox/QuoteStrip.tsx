@@ -1,8 +1,8 @@
 import { View } from 'react-native';
 import { t } from '@/lib/i18n';
 import { shape, type, useTheme } from '@/theme';
-import { AppText } from '@/ui/AppText';
-import { IconButton } from '@/ui/IconButton';
+import { AppText } from '@/core/ui/primitives/AppText';
+import { IconButton } from '@/core/ui/primitives/IconButton';
 import { useChatActions } from './chat-actions';
 import { CloseIcon } from './chat-icons';
 import { quoteOf, quoteSender, quoteText } from './quote-text';

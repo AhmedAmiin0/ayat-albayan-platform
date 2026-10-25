@@ -2,7 +2,7 @@ import type { UserReference } from '@ab/shared';
 import { View } from 'react-native';
 import { t } from '@/lib/i18n';
 import { type, useTheme } from '@/theme';
-import { AppText } from '@/ui/AppText';
+import { AppText } from '@/core/ui/primitives/AppText';
 import { tableLabel } from './errors';
 
 /** The tables that keep a user from being deleted, with how many rows each holds. */

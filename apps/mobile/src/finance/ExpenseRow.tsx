@@ -1,8 +1,8 @@
 import type { ExpenseCategoryView, ExpenseView } from '@ab/shared';
 import { t } from '@/lib/i18n';
 import { localDay } from '@/payments/format';
-import { StatusChip } from '@/ui/StatusChip';
-import { ListRow } from '@/ui/ListRow';
+import { StatusChip } from '@/core/ui/feedback/StatusChip';
+import { ListRow } from '@/core/ui/layout/ListRow';
 import { categoryLabel } from './categories';
 import { amountText } from './format';
 

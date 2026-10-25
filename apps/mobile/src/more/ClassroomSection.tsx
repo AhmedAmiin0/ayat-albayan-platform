@@ -2,7 +2,7 @@ import type { Permission } from '@ab/shared';
 import { router } from 'expo-router';
 import { View } from 'react-native';
 import { t } from '@/lib/i18n';
-import { ListRow } from '@/ui/ListRow';
+import { ListRow } from '@/core/ui/layout/ListRow';
 import { Section } from './Section';
 
 /**

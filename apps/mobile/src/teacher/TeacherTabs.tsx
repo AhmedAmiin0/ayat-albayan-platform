@@ -1,7 +1,7 @@
 import { canOpen } from '@/auth/route-permissions';
 import { type Can, usePermissions } from '@/auth/use-permissions';
 import { t } from '@/lib/i18n';
-import { AppNativeTabs, type TabItem } from '@/ui/AppNativeTabs';
+import { AppNativeTabs, type TabItem } from '@/core/ui/layout/AppNativeTabs';
 import { TeacherScope } from './TeacherScope';
 
 // The teacher app, native tabs (R-AUTH-01, R-TCH-03, R-MOB-02): only her lessons, schedule, chats, students,

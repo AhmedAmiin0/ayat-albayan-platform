@@ -2,9 +2,9 @@ import { lessonStatusStyle, type LessonStatus } from '@ab/shared';
 import type { ReactNode } from 'react';
 import { View } from 'react-native';
 import { type, useTheme } from '@/theme';
-import { AppText } from '@/ui/AppText';
-import { NuqtaGlyph } from '@/ui/NuqtaGlyph';
-import { toneColors } from '@/ui/StatusChip';
+import { AppText } from '@/core/ui/primitives/AppText';
+import { NuqtaGlyph } from '@/core/ui/primitives/NuqtaGlyph';
+import { toneColors } from '@/core/ui/feedback/StatusChip';
 
 export interface TimelineRowProps {
   /** Riyadh start, «16:00». */

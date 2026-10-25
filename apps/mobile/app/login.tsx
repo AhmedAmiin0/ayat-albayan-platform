@@ -4,12 +4,12 @@ import { setLoginNotice, useLoginNotice } from '@/auth/login-notice';
 import { signIn } from '@/auth/sign-in';
 import { t } from '@/lib/i18n';
 import { shape, type, useTheme } from '@/theme';
-import { Button } from '@/ui/Button';
-import { Field } from '@/ui/Field';
-import { KeyboardFrame } from '@/ui/KeyboardFrame';
-import { Mark } from '@/ui/Mark';
-import { NuqtaGlyph } from '@/ui/NuqtaGlyph';
-import { AppText } from '@/ui/AppText';
+import { Button } from '@/core/ui/primitives/Button';
+import { Field } from '@/core/ui/form/Field';
+import { KeyboardFrame } from '@/core/ui/layout/KeyboardFrame';
+import { Mark } from '@/core/ui/primitives/Mark';
+import { NuqtaGlyph } from '@/core/ui/primitives/NuqtaGlyph';
+import { AppText } from '@/core/ui/primitives/AppText';
 
 // docs/07 §12: mobile drops the binding cover, frame and cartouche; it keeps the mark, Amiri title,
 // 16pt inputs and one lapis button. The error is the §10 inline alert: danger-soft, struck glyph, word.
