@@ -3,8 +3,8 @@ import { BadGatewayException, ForbiddenException, HttpException, HttpStatus, Inj
 import type { AuthUser } from '../../common/auth/verify-token';
 import { notFound } from '../../common/http/errors';
 import { parseOrThrow } from '../../common/http/http';
-import { InternalMeetingsQueries } from './internal-meetings.queries';
-import { meetingRoleOf, roleOfIdentity } from './internal-meetings.token';
+import { InternalMeetingsQueries } from './internal-meetings/internal-meetings.queries';
+import { meetingRoleOf, roleOfIdentity } from './internal-meetings/internal-meetings.token';
 import { notConfigured } from './join/join-gate';
 import { LessonRoleService } from './join/lesson-role.service';
 import { LivekitApi, LivekitError } from './livekit/livekit-api';

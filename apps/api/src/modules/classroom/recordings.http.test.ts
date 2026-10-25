@@ -1,6 +1,6 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import { ADMIN } from './classroom.fakes';
-import { MEETING_ID, meetingRow } from './internal-meetings.fakes';
+import { MEETING_ID, meetingRow } from './internal-meetings/internal-meetings.fakes';
 import { recordingRow } from './moderation.fakes';
 import { classroomApp } from './test-app';
 

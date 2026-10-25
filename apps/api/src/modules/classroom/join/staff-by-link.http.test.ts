@@ -1,6 +1,6 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { LESSON_ID, LINK_TOKEN } from '../classroom.fakes';
-import { MEETING_ID, MEETING_TOKEN } from '../internal-meetings.fakes';
+import { MEETING_ID, MEETING_TOKEN } from '../internal-meetings/internal-meetings.fakes';
 import { classroomApp } from '../test-app';
 
 // Root cause of «السبورة للعرض فقط» (owner, 2026-10-05): staff who opened a shared link entered as
