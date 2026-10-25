@@ -1,13 +1,13 @@
 import { bookingRequestSchema, type BookingResult, type BookingTeacherOption, type Conflict, type SlotsResponse } from '@ab/shared';
 import { Body, Controller, Get, HttpCode, Post, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Permissions } from '../../common/auth/decorators';
-import type { AuthUser } from '../../common/auth/verify-token';
-import { parseOrThrow } from '../../common/http/http';
-import { clientRequest } from './core/booking.payload';
-import { slotsQuerySchema, teacherOptionsQuerySchema } from './booking.dto';
+import { CurrentUser, Permissions } from '../../../../common/auth/decorators';
+import type { AuthUser } from '../../../../common/auth/verify-token';
+import { parseOrThrow } from '../../../../common/http/http';
+import { clientRequest } from '../../core/booking.payload';
+import { slotsQuerySchema, teacherOptionsQuerySchema } from '../../booking.dto';
 import { SalesBookingOptions, SalesBookingService } from './sales-booking.service';
-import { withPackageSize } from './plan/package-size';
+import { withPackageSize } from '../../plan/package-size';
 
 /**
  * Registration by the assistant (R-ASST-01): the booking wizard's check and book, scoped to their own leads

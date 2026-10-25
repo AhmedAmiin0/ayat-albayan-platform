@@ -8,7 +8,7 @@ import {
   type TrialDateRow,
   type TrialHistory,
 } from '@ab/shared';
-import { isTrialLesson } from '../subscriptions/student-trial.plan';
+import { isTrialLesson } from '../../subscriptions/student-trial.plan';
 import type { TrialStudent } from './trial-date.queries';
 
 // «مواعيد الحلقة التجريبية» (owner 2026-10-25): every trial time picked for a student, newest pick

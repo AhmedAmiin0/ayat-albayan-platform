@@ -7,7 +7,7 @@ import { CourseChangePlanner } from './course-change.planner';
 import type { ChangeRule, CourseChangeQueries, CourseSub } from './course-change.queries';
 import { CourseChange, type ChangeActor } from './course-change.service';
 import type { CourseChangeDeps } from './course-change.writer';
-import type { SalesBookingScope } from '../sales-booking.ownership';
+import type { SalesBookingScope } from '../sales/booking/sales-booking.ownership';
 
 // Fakes of «تغيير أيام الحلقات» (course-change.service.ts) for its unit tests.
 

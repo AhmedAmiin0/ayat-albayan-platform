@@ -1,12 +1,12 @@
 import { addLocalDays, courseDaysPerWeek, wallParts, type BookingRequest, type CourseSubscription, type SalesCourseView } from '@ab/shared';
 import { HttpStatus, Injectable } from '@nestjs/common';
-import type { AuthUser } from '../../common/auth/verify-token';
-import { plannedCourseEnd } from './core/booking.course-end';
-import { courseFacts } from './core/course-read';
-import { domainError } from './booking.errors';
-import type { PrepareOptions } from './plan/booking.planner';
-import { SalesBookingScope } from './sales-booking.ownership';
-import { assertOwnStudents } from './sales-booking.scope';
+import type { AuthUser } from '../../../../common/auth/verify-token';
+import { plannedCourseEnd } from '../../core/booking.course-end';
+import { courseFacts } from '../../core/course-read';
+import { domainError } from '../../booking.errors';
+import type { PrepareOptions } from '../../plan/booking.planner';
+import { SalesBookingScope } from '../booking/sales-booking.ownership';
+import { assertOwnStudents } from '../booking/sales-booking.scope';
 import { SalesCourseQueries } from './sales-course.queries';
 import { courseBlock, courseProblem } from './sales-course.rules';
 

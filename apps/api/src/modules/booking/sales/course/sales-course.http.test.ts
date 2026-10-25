@@ -1,15 +1,15 @@
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { AppModule } from '../../app.module';
-import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '../../common/auth/auth.guard';
-import type { PermissionResolver } from '../../common/auth/permissions';
-import type { AuthUser } from '../../common/auth/verify-token';
-import { fakeSettings } from '../../common/settings/settings.fakes';
-import { SettingsService } from '../../common/settings/settings.service';
-import { SalesQueries } from '../sales/sales.queries';
-import { domainError } from './booking.errors';
-import { BookingService } from './core/booking.service';
+import { AppModule } from '../../../../app.module';
+import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '../../../../common/auth/auth.guard';
+import type { PermissionResolver } from '../../../../common/auth/permissions';
+import type { AuthUser } from '../../../../common/auth/verify-token';
+import { fakeSettings } from '../../../../common/settings/settings.fakes';
+import { SettingsService } from '../../../../common/settings/settings.service';
+import { SalesQueries } from '../../../sales/sales.queries';
+import { domainError } from '../../booking.errors';
+import { BookingService } from '../../core/booking.service';
 import { SalesCourseQueries } from './sales-course.queries';
 
 // The assistant's course over HTTP (owner 2026-10-18): sales_auto_assign OFF here, so every 403

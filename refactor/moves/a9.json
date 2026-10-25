@@ -1,0 +1,140 @@
+{
+  "id": "a9",
+  "seq": 11,
+  "moves": [
+    {
+      "from": "apps/api/src/modules/booking/sales-booking*",
+      "to": "apps/api/src/modules/booking/sales/booking"
+    },
+    {
+      "from": "apps/api/src/modules/booking/sales-course*",
+      "to": "apps/api/src/modules/booking/sales/course"
+    },
+    {
+      "from": "apps/api/src/modules/booking/sales-trial-date*",
+      "to": "apps/api/src/modules/booking/sales/course"
+    },
+    {
+      "from": "apps/api/src/modules/booking/trial-date*",
+      "to": "apps/api/src/modules/booking/trial-date"
+    }
+  ],
+  "files": [
+    [
+      "apps/api/src/modules/booking/sales-booking.controller.ts",
+      "apps/api/src/modules/booking/sales/booking/sales-booking.controller.ts"
+    ],
+    [
+      "apps/api/src/modules/booking/sales-booking.course-scope.test.ts",
+      "apps/api/src/modules/booking/sales/booking/sales-booking.course-scope.test.ts"
+    ],
+    [
+      "apps/api/src/modules/booking/sales-booking.http.test.ts",
+      "apps/api/src/modules/booking/sales/booking/sales-booking.http.test.ts"
+    ],
+    [
+      "apps/api/src/modules/booking/sales-booking.ownership.test.ts",
+      "apps/api/src/modules/booking/sales/booking/sales-booking.ownership.test.ts"
+    ],
+    [
+      "apps/api/src/modules/booking/sales-booking.ownership.ts",
+      "apps/api/src/modules/booking/sales/booking/sales-booking.ownership.ts"
+    ],
+    [
+      "apps/api/src/modules/booking/sales-booking.scope.test.ts",
+      "apps/api/src/modules/booking/sales/booking/sales-booking.scope.test.ts"
+    ],
+    [
+      "apps/api/src/modules/booking/sales-booking.scope.ts",
+      "apps/api/src/modules/booking/sales/booking/sales-booking.scope.ts"
+    ],
+    [
+      "apps/api/src/modules/booking/sales-booking.service.ts",
+      "apps/api/src/modules/booking/sales/booking/sales-booking.service.ts"
+    ],
+    [
+      "apps/api/src/modules/booking/sales-course.controller.ts",
+      "apps/api/src/modules/booking/sales/course/sales-course.controller.ts"
+    ],
+    [
+      "apps/api/src/modules/booking/sales-course.http.test.ts",
+      "apps/api/src/modules/booking/sales/course/sales-course.http.test.ts"
+    ],
+    [
+      "apps/api/src/modules/booking/sales-course.previous.test.ts",
+      "apps/api/src/modules/booking/sales/course/sales-course.previous.test.ts"
+    ],
+    [
+      "apps/api/src/modules/booking/sales-course.queries.test.ts",
+      "apps/api/src/modules/booking/sales/course/sales-course.queries.test.ts"
+    ],
+    [
+      "apps/api/src/modules/booking/sales-course.queries.ts",
+      "apps/api/src/modules/booking/sales/course/sales-course.queries.ts"
+    ],
+    [
+      "apps/api/src/modules/booking/sales-course.rules.test.ts",
+      "apps/api/src/modules/booking/sales/course/sales-course.rules.test.ts"
+    ],
+    [
+      "apps/api/src/modules/booking/sales-course.rules.ts",
+      "apps/api/src/modules/booking/sales/course/sales-course.rules.ts"
+    ],
+    [
+      "apps/api/src/modules/booking/sales-course.service.test.ts",
+      "apps/api/src/modules/booking/sales/course/sales-course.service.test.ts"
+    ],
+    [
+      "apps/api/src/modules/booking/sales-course.service.ts",
+      "apps/api/src/modules/booking/sales/course/sales-course.service.ts"
+    ],
+    [
+      "apps/api/src/modules/booking/sales-trial-date.service.ts",
+      "apps/api/src/modules/booking/sales/course/sales-trial-date.service.ts"
+    ],
+    [
+      "apps/api/src/modules/booking/trial-date.controller.ts",
+      "apps/api/src/modules/booking/trial-date/trial-date.controller.ts"
+    ],
+    [
+      "apps/api/src/modules/booking/trial-date.fakes.ts",
+      "apps/api/src/modules/booking/trial-date/trial-date.fakes.ts"
+    ],
+    [
+      "apps/api/src/modules/booking/trial-date.history.test.ts",
+      "apps/api/src/modules/booking/trial-date/trial-date.history.test.ts"
+    ],
+    [
+      "apps/api/src/modules/booking/trial-date.history.ts",
+      "apps/api/src/modules/booking/trial-date/trial-date.history.ts"
+    ],
+    [
+      "apps/api/src/modules/booking/trial-date.http.test.ts",
+      "apps/api/src/modules/booking/trial-date/trial-date.http.test.ts"
+    ],
+    [
+      "apps/api/src/modules/booking/trial-date.plan.test.ts",
+      "apps/api/src/modules/booking/trial-date/trial-date.plan.test.ts"
+    ],
+    [
+      "apps/api/src/modules/booking/trial-date.plan.ts",
+      "apps/api/src/modules/booking/trial-date/trial-date.plan.ts"
+    ],
+    [
+      "apps/api/src/modules/booking/trial-date.queries.ts",
+      "apps/api/src/modules/booking/trial-date/trial-date.queries.ts"
+    ],
+    [
+      "apps/api/src/modules/booking/trial-date.service.test.ts",
+      "apps/api/src/modules/booking/trial-date/trial-date.service.test.ts"
+    ],
+    [
+      "apps/api/src/modules/booking/trial-date.service.ts",
+      "apps/api/src/modules/booking/trial-date/trial-date.service.ts"
+    ],
+    [
+      "apps/api/src/modules/booking/trial-date.target.ts",
+      "apps/api/src/modules/booking/trial-date/trial-date.target.ts"
+    ]
+  ]
+}

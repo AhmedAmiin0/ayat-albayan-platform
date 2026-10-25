@@ -1,11 +1,11 @@
 import { bookingKindOf, type BookingRequest } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import type { AuthUser } from '../../common/auth/verify-token';
-import type { SalesOwnership } from '../sales/sales-ownership';
-import { SalesQueries } from '../sales/sales.queries';
-import { BookingSettings } from './booking.settings';
+import type { AuthUser } from '../../../../common/auth/verify-token';
+import type { SalesOwnership } from '../../../sales/sales-ownership';
+import { SalesQueries } from '../../../sales/sales.queries';
+import { BookingSettings } from '../../booking.settings';
 import type { BookingOwnership } from './sales-booking.scope';
-import { TrialDateQueries } from './trial-date.queries';
+import { TrialDateQueries } from '../../trial-date/trial-date.queries';
 
 /**
  * The ownership /sales/booking checks (owner 2026-10-12: «if auto assign is turned off dont validate over it

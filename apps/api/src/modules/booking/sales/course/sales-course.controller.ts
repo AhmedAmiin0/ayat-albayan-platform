@@ -1,13 +1,13 @@
 import { courseChangeCheckSchema, courseChangeSchema, type CourseChangeCheck, type CourseChangeResult, type SalesCourseView } from '@ab/shared';
 import { Body, Controller, Get, HttpCode, Post, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Permissions } from '../../common/auth/decorators';
-import { can } from '../../common/auth/permissions';
-import type { AuthUser } from '../../common/auth/verify-token';
-import { forbidden } from '../../common/http/errors';
-import { parseOrThrow } from '../../common/http/http';
-import { courseQuerySchema } from './booking.dto';
-import { CourseChange } from './course-change/course-change.service';
+import { CurrentUser, Permissions } from '../../../../common/auth/decorators';
+import { can } from '../../../../common/auth/permissions';
+import type { AuthUser } from '../../../../common/auth/verify-token';
+import { forbidden } from '../../../../common/http/errors';
+import { parseOrThrow } from '../../../../common/http/http';
+import { courseQuerySchema } from '../../booking.dto';
+import { CourseChange } from '../../course-change/course-change.service';
 import { SalesCourse } from './sales-course.service';
 
 /**

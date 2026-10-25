@@ -1,11 +1,11 @@
 import type { BookingRequest, Conflict, TrialDateResult, TrialHistory } from '@ab/shared';
 import { HttpStatus, Injectable } from '@nestjs/common';
-import type { AuthUser } from '../../common/auth/verify-token';
-import { domainError } from './booking.errors';
-import { SalesBookingScope } from './sales-booking.ownership';
-import { assertBookingScope, assertOwnStudents, type BookingOwnership } from './sales-booking.scope';
-import { TrialDates } from './trial-date.service';
-import type { TrialTarget } from './trial-date.target';
+import type { AuthUser } from '../../../../common/auth/verify-token';
+import { domainError } from '../../booking.errors';
+import { SalesBookingScope } from '../booking/sales-booking.ownership';
+import { assertBookingScope, assertOwnStudents, type BookingOwnership } from '../booking/sales-booking.scope';
+import { TrialDates } from '../../trial-date/trial-date.service';
+import type { TrialTarget } from '../../trial-date/trial-date.target';
 
 /**
  * «موعد تجريبي جديد» for an assistant (R-ASST-01, owner 2026-10-25): the same scope as her trial

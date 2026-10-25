@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { fakeDb } from '../guardians/fake-db';
+import { fakeDb } from '../../../guardians/fake-db';
 import { SalesCourseQueries } from './sales-course.queries';
 
 const SUB = { id: 'sub1', package: '8', duration: 45, lessons_total: 8, starts_on: '2026-10-10' };
