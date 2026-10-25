@@ -3,10 +3,10 @@ import { t } from '@/core/lib/i18n/i18n';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { Button } from '@/core/ui/primitives/Button';
 import { type, useTheme } from '@/theme';
-import type { BookFailure } from './booking-errors';
-import { makeupSummary } from './confirm-summary';
-import { FailureNotice } from './ConfirmNotices';
-import { SummaryList } from './ConfirmStep';
+import type { BookFailure } from './shared/booking-errors';
+import { makeupSummary } from './trial/lib/confirm-summary';
+import { FailureNotice } from './trial/components/ConfirmNotices';
+import { SummaryList } from './trial/components/ConfirmStep';
 import type { MakeupDraft } from './makeup-draft';
 
 export interface MakeupConfirmProps {

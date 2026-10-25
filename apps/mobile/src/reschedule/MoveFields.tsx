@@ -1,8 +1,8 @@
 import type { LessonView } from '@ab/shared';
 import { useState } from 'react';
 import { View } from 'react-native';
-import { ConflictNotice } from '@/booking/ConflictNotice';
-import { ruleFromSlot } from '@/booking/slots';
+import { ConflictNotice } from '@/booking/shared/ConflictNotice';
+import { ruleFromSlot } from '@/booking/shared/slots';
 import { ErrorLine } from '@/inbox/ErrorLine';
 import { DayChips } from '@/inbox/qualification/DayChips';
 import { t } from '@/core/lib/i18n/i18n';

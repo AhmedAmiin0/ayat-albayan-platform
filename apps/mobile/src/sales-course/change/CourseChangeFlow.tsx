@@ -1,9 +1,9 @@
 import { changePicks, changePrefillFrom, type BookedCourse, type SalesCourseView } from '@ab/shared';
 import { useState } from 'react';
 import { ScrollView } from 'react-native';
-import { bookFailure } from '@/booking/booking-errors';
-import { SlotStep } from '@/booking/SlotStep';
-import { dayStartUtc } from '@/booking/slots';
+import { bookFailure } from '@/booking/shared/booking-errors';
+import { SlotStep } from '@/booking/trial/components/SlotStep';
+import { dayStartUtc } from '@/booking/shared/slots';
 import { t } from '@/core/lib/i18n/i18n';
 import { requestId as newRequestId } from '@/core/lib/http/request-id';
 import { AppText } from '@/core/ui/primitives/AppText';

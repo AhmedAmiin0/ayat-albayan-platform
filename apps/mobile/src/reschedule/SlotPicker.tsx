@@ -1,7 +1,7 @@
 import type { LessonView, SlotView } from '@ab/shared';
 import { useState } from 'react';
 import { View } from 'react-native';
-import { freeSlotDays, slotLegend, whenText } from '@/booking/slots';
+import { freeSlotDays, slotLegend, whenText } from '@/booking/shared/slots';
 import { PeriodSwitcher } from '@/calendar/PeriodSwitcher';
 import { addDays, riyadhToday, weekLabel, weekStart } from '@/calendar/week';
 import { t } from '@/core/lib/i18n/i18n';

@@ -1,6 +1,6 @@
 import { DURATIONS, type Duration, type TrialHistory } from '@ab/shared';
-import { DEFAULT_MINUTES } from '@/booking/package-choice';
-import { ruleFromSlot } from '@/booking/slots';
+import { DEFAULT_MINUTES } from '@/booking/trial/lib/package-choice';
+import { ruleFromSlot } from '@/booking/shared/slots';
 
 /** What the trial-date wizard holds: the student, the family's zone, the length, the picks. */
 export interface TrialDateDraft {

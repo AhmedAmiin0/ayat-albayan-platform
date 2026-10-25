@@ -3,10 +3,10 @@ import { fireEvent, screen } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { pickReceipt } from '@/payments/receipt';
 import { renderWithQuery } from '@/test/query';
-import { UPLOADED } from './fixtures';
+import { UPLOADED } from './testing/fixtures';
 import { uploadInvoice } from './invoice-upload';
 import { InvoiceStep, type InvoiceStepProps } from './InvoiceStep';
-import { PHOTO, PREVIEW } from './test-utils';
+import { PHOTO, PREVIEW } from './testing/test-utils';
 
 jest.mock('@/payments/receipt', () => ({ pickReceipt: jest.fn() }));
 jest.mock('./invoice-upload', () => ({ uploadInvoice: jest.fn() }));

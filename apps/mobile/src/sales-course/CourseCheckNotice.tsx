@@ -1,7 +1,7 @@
 import type { Conflict } from '@ab/shared';
 import { View } from 'react-native';
-import { bookFailure, conflictLine, isCodedRefusal } from '@/booking/booking-errors';
-import { ConflictNotice } from '@/booking/ConflictNotice';
+import { bookFailure, conflictLine, isCodedRefusal } from '@/booking/shared/booking-errors';
+import { ConflictNotice } from '@/booking/shared/ConflictNotice';
 import { ErrorLine } from '@/inbox/ErrorLine';
 import { t } from '@/core/lib/i18n/i18n';
 import { AppText } from '@/core/ui/primitives/AppText';

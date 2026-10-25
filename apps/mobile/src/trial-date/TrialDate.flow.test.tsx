@@ -1,5 +1,5 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
-import { maryam, SUN_17 } from '@/booking/fixtures';
+import { maryam, SUN_17 } from '@/booking/testing/fixtures';
 import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
 import { historyOf, STUDENT, trialResult, trialRow, UPCOMING } from './fixtures';

@@ -1,5 +1,5 @@
 import { bookingRequestSchema, counted } from '@ab/shared';
-import { maryam, SUN_17, THU_18, TUE_17 } from '@/booking/fixtures';
+import { maryam, SUN_17, THU_18, TUE_17 } from '@/booking/testing/fixtures';
 import { t } from '@/core/lib/i18n/i18n';
 import { courseBlock, courseEnd, courseRequest } from './course-body';
 import { courseFixedText, courseRows } from './course-summary';

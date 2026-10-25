@@ -6,7 +6,7 @@ import { Note } from '@/more/Note';
 import { FormLabel } from '@/payments/FormLabel';
 import { Button } from '@/core/ui/primitives/Button';
 import { ChatMediaSheet } from './ChatMediaSheet';
-import type { InvoiceDraft } from './contract';
+import type { InvoiceDraft } from './shared/contract';
 import { InvoiceActions } from './InvoiceActions';
 import { InvoicePreview } from './InvoicePreview';
 import { useInvoiceUpload } from './use-invoice-upload';

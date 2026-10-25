@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { apiFetch } from '@/core/lib/http/api';
 import { pathKey } from '@/core/lib/query/query-keys';
 import { threadPath } from '@/inbox/thread/hooks/thread-cache';
-import type { MediaUrl, ThreadMediaItem } from './contract';
+import type { MediaUrl, ThreadMediaItem } from './shared/contract';
 
 // Admin-only (a teacher gets 403). Signed URLs expire, so `noPersist` keeps these off the disk
 // cache (lib/query-client): a restart would show a dead thumbnail.

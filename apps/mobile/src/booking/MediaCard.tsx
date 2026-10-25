@@ -4,7 +4,7 @@ import { t } from '@/core/lib/i18n/i18n';
 import { locale } from '@/core/lib/i18n/locale';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { shape, type, useTheme } from '@/theme';
-import type { ThreadMediaItem } from './contract';
+import type { ThreadMediaItem } from './shared/contract';
 import { useMediaUrl } from './invoice-queries';
 import { ReceiptIcon } from './ReceiptIcon';
 

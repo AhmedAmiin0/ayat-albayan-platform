@@ -1,9 +1,9 @@
 import { counted, type BookingRequest, type Conflict, type SalesCourseView } from '@ab/shared';
 import { View } from 'react-native';
-import type { BookFailure } from '@/booking/booking-errors';
-import { ConflictNotice } from '@/booking/ConflictNotice';
-import { SummaryList } from '@/booking/ConfirmStep';
-import { PicksList } from '@/booking/PicksList';
+import type { BookFailure } from '@/booking/shared/booking-errors';
+import { ConflictNotice } from '@/booking/shared/ConflictNotice';
+import { SummaryList } from '@/booking/trial/components/ConfirmStep';
+import { PicksList } from '@/booking/shared/PicksList';
 import { ErrorLine } from '@/inbox/ErrorLine';
 import { t } from '@/core/lib/i18n/i18n';
 import { localDay } from '@/payments/format';

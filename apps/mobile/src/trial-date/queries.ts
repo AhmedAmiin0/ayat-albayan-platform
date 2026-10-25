@@ -2,7 +2,7 @@ import type { Conflict, TrialDateResult, TrialHistory } from '@ab/shared';
 import { useMutation, useQuery, useQueryClient, type QueryClient } from '@tanstack/react-query';
 import { apiFetch, apiSend, toQueryString } from '@/core/lib/http/api';
 import { pathKey } from '@/core/lib/query/query-keys';
-import { bookingPath, useBookingMode, type BookingMode } from '@/booking/booking-mode';
+import { bookingPath, useBookingMode, type BookingMode } from '@/booking/shared/booking-mode';
 import type { TrialDateBody } from './trial-date-body';
 
 // «موعد تجريبي جديد» (R-SCH-06/07, R-STU-05, R-ASST-01): the history, the clash check and the

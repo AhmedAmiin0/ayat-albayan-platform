@@ -1,7 +1,7 @@
 import { counted, pickProgress } from '@ab/shared';
 import { screen, waitFor } from '@testing-library/react-native';
-import { noAvailability } from '@/booking/fixtures';
-import { dayLine } from '@/booking/picks';
+import { noAvailability } from '@/booking/testing/fixtures';
+import { dayLine } from '@/booking/shared/picks';
 import { t } from '@/core/lib/i18n/i18n';
 import { localDay } from '@/payments/format';
 import { fakeNow } from '@/test/fake-now';

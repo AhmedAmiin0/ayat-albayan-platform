@@ -3,12 +3,12 @@ import { ApiError } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
 import { pickReceipt } from '@/payments/receipt';
 import { renderWithQuery } from '@/test/query';
-import { booked, maryam, SUN_17 } from './fixtures';
+import { booked, maryam, SUN_17 } from './testing/fixtures';
 import { uploadInvoice } from './invoice-upload';
 import type { MakeupSource } from './makeup-draft';
 import { MakeupWizard } from './MakeupWizard';
-import { fakeBookingApi, PHOTO, PREVIEW } from './test-utils';
-import { whenText } from './slots';
+import { fakeBookingApi, PHOTO, PREVIEW } from './testing/test-utils';
+import { whenText } from './shared/slots';
 
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();

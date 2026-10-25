@@ -1,5 +1,5 @@
 import type { BookedCourse, SalesCourseView } from '@ab/shared';
-import { maryam } from '@/booking/fixtures';
+import { maryam } from '@/booking/testing/fixtures';
 
 // Invented rows in the GET /sales/booking/course shape (no real people).
 

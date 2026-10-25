@@ -1,7 +1,7 @@
 import { counted } from '@ab/shared';
 import { screen, waitFor } from '@testing-library/react-native';
-import { maryam } from '@/booking/fixtures';
-import { dayLine } from '@/booking/picks';
+import { maryam } from '@/booking/testing/fixtures';
+import { dayLine } from '@/booking/shared/picks';
 import { t } from '@/core/lib/i18n/i18n';
 import { localDay } from '@/payments/format';
 import { fakeNow } from '@/test/fake-now';
