@@ -4,10 +4,10 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser, Permissions } from '../../common/auth/decorators';
 import type { AuthUser } from '../../common/auth/verify-token';
 import { parseOrThrow } from '../../common/http/http';
-import { JoinLinkCopyService } from './join-link.copy.service';
-import { JoinLinkService } from './join-link.service';
-import { JoinLinkStaffService } from './join-link.staff.service';
-import { RoomJoinService } from './room-join.service';
+import { JoinLinkCopyService } from './join/join-link.copy.service';
+import { JoinLinkService } from './join/join-link.service';
+import { JoinLinkStaffService } from './join/join-link.staff.service';
+import { RoomJoinService } from './join/room-join.service';
 
 /** Online classroom, staff side. The service decides who may enter (admin, the lesson's teacher, an assigned assistant). */
 @ApiTags('classroom')

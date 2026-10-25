@@ -6,7 +6,7 @@ import { CLASSROOM_WEB_ORIGIN } from './classroom.config';
 import { meetingEnded } from './internal-meetings.join.service';
 import { InternalMeetingsQueries, type MeetingRow } from './internal-meetings.queries';
 import { canManageMeeting, hashMeetingToken, newMeetingToken } from './internal-meetings.token';
-import { LivekitApi } from './livekit-api';
+import { LivekitApi } from './livekit/livekit-api';
 
 /**
  * «اجتماع داخلي» (POST /meetings/:id/end, POST /meetings/:id/link): «إنهاء» and «رابط جديد». Creating

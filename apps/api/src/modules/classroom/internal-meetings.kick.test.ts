@@ -4,7 +4,7 @@ import { ADMIN, ASSISTANT, CONFIG, GUARDIAN, TEACHER } from './classroom.fakes';
 import { MEETING_ID, meetingQueries } from './internal-meetings.fakes';
 import { InternalMeetingKickService } from './internal-meetings.kick.service';
 import type { InternalMeetingsQueries } from './internal-meetings.queries';
-import { LivekitApi } from './livekit-api';
+import { LivekitApi } from './livekit/livekit-api';
 import { http } from './moderation.fakes';
 
 let mq: ReturnType<typeof meetingQueries>;

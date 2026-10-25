@@ -19,17 +19,17 @@ import { ClassroomController, JoinLinkStaffController } from './classroom.contro
 import { ClassroomPublicController } from './classroom.public.controller';
 import { ClassroomQueries } from './classroom.queries';
 import { ClassroomSettings } from './classroom.settings';
-import { GuestJoinService } from './guest-join.service';
+import { GuestJoinService } from './join/guest-join.service';
 import { INTERNAL_MEETING_CONTROLLERS, INTERNAL_MEETING_PROVIDERS } from './internal-meetings.providers';
-import { PublicJoinLimit } from './join-limit';
-import { JoinLinkCopyService } from './join-link.copy.service';
-import { JoinLinkService } from './join-link.service';
-import { JoinLinkStaffService } from './join-link.staff.service';
+import { PublicJoinLimit } from './join/join-limit';
+import { JoinLinkCopyService } from './join/join-link.copy.service';
+import { JoinLinkService } from './join/join-link.service';
+import { JoinLinkStaffService } from './join/join-link.staff.service';
 import { KickService } from './kick.service';
-import { LessonRoleService } from './lesson-role.service';
-import { LIVEKIT_HTTP, LivekitApi, type HttpPost } from './livekit-api';
-import { LivekitWebhookController } from './livekit-webhook.controller';
-import { LivekitWebhookService } from './livekit-webhook.service';
+import { LessonRoleService } from './join/lesson-role.service';
+import { LIVEKIT_HTTP, LivekitApi, type HttpPost } from './livekit/livekit-api';
+import { LivekitWebhookController } from './livekit/livekit-webhook.controller';
+import { LivekitWebhookService } from './livekit/livekit-webhook.service';
 import { ModerationController } from './moderation.controller';
 import { ModerationQueries } from './moderation.queries';
 import { MuteLimit } from './mute-limit';
@@ -40,16 +40,16 @@ import { MeetingRecordingsController, RecordingStatusController } from './record
 import { RecordingLifecycle } from './recording.lifecycle';
 import { RecordingQueries } from './recording.queries';
 import { RecordingStarter } from './recording.starter';
-import { RoomAdmission } from './room-admission';
-import { RoomJoinService } from './room-join.service';
-import { RoomOpenController } from './room-open.controller';
-import { RoomOpenService } from './room-open.service';
+import { RoomAdmission } from './join/room-admission';
+import { RoomJoinService } from './join/room-join.service';
+import { RoomOpenController } from './join/room-open.controller';
+import { RoomOpenService } from './join/room-open.service';
 import { LessonShareController, MeetingShareController } from './share-grant.controller';
 import { MeetingShareGrantService, ShareGrantService } from './share-grant.service';
-import { StudentLinkAdminService } from './student-link.admin.service';
-import { StudentLinkAdminController, StudentLinkPublicController } from './student-link.controller';
-import { StudentLinkQueries } from './student-link.queries';
-import { StudentLinkService } from './student-link.service';
+import { StudentLinkAdminService } from './student-link/student-link.admin.service';
+import { StudentLinkAdminController, StudentLinkPublicController } from './student-link/student-link.controller';
+import { StudentLinkQueries } from './student-link/student-link.queries';
+import { StudentLinkService } from './student-link/student-link.service';
 
 /**
  * Online classrooms on the self-hosted LiveKit (docs/09, tools/livekit): staff join with their

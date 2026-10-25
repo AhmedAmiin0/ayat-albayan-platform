@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { CONFIG, LESSON_ID } from './classroom.fakes';
-import { LivekitApi, type HttpPost } from './livekit-api';
-import { leftEventOf, peopleIn } from './livekit-webhook.room';
+import { LivekitApi, type HttpPost } from './livekit/livekit-api';
+import { leftEventOf, peopleIn } from './livekit/livekit-webhook.room';
 import { recordingQueries } from './moderation.fakes';
 import { RecordingLifecycle } from './recording.lifecycle';
 import type { RecordingQueries } from './recording.queries';
