@@ -4,9 +4,9 @@
 // listed for the owner (merge_candidate warn: every imported lesson and report will hang off that
 // row). Similar-but-not-equal names and rows already claimed by another record go to review.
 import { arabicNameSimilar } from '@ab/shared';
-import { keyId, personName } from '../keys.ts';
-import type { RowIssue } from '../types.ts';
-import type { Desired } from './resolve.ts';
+import { keyId, personName } from '../../keys.ts';
+import type { RowIssue } from '../../types.ts';
+import type { Desired } from '../resolve.ts';
 import { splitStudentKey } from './similar.ts';
 
 export interface TeacherRow {

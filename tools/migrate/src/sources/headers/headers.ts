@@ -1,7 +1,7 @@
 // Real header → field maps for every workbook tab we read (inspected 2026-10-02: sheet names and
 // header rows only). Mappers read SourceRow.fields by these field names, never by column letter,
 // because the same tab has different columns in different workbooks (HUB vs BOOK bookings).
-import type { SourceAlias } from '../types.ts';
+import type { SourceAlias } from '../../types.ts';
 import { FIN_SHEETS } from './headers.fin.ts';
 import { HUB_PEOPLE } from './headers.hub.ts';
 import { MONEY_SHEETS } from './headers.money.ts';

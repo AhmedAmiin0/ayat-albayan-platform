@@ -105,6 +105,9 @@ importers:
 
   apps/mobile:
     dependencies:
+      '@ab/client-core':
+        specifier: workspace:*
+        version: link:../../packages/client-core
       '@ab/shared':
         specifier: workspace:*
         version: link:../../packages/shared
@@ -214,6 +217,9 @@ importers:
 
   apps/web:
     dependencies:
+      '@ab/client-core':
+        specifier: workspace:*
+        version: link:../../packages/client-core
       '@ab/shared':
         specifier: workspace:*
         version: link:../../packages/shared
