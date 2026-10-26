@@ -15,10 +15,11 @@ vi.mock('@/features/people/auth/use-permissions', () => ({ usePermissions: () =>
 const FAMILY = thread({ guardian_id: 'g-1', lead_id: null, lead_status: null, guardian_name: 'أم سهيلة' });
 const JUD = 'f7c1a0de-3333-4a8e-9b00-000000000003';
 const TWO_ENDED = [student({ status: 'expired', open: [OPEN_SUB] }), student({ id: JUD, name: 'جود', status: 'pending_renewal' })];
+const TWO_DUE = TWO_ENDED.map((s) => ({ ...s, renew_due: true }));
 
-function renderActions(compact = false) {
+function renderActions(compact = false, students = TWO_ENDED) {
   routeFetch(apiFetch, [
-    ['/sales/money/family', { students: TWO_ENDED }],
+    ['/sales/money/family', { students }],
     ['/settings', {}],
     ['/sales/money/chat-receipts', []],
   ]);
@@ -39,7 +40,7 @@ describe('SalesChatActions: one visible action, the rest in «المزيد» (W3
     apiSend.mockReset();
   });
 
-  it('a family with 2 ended children: «اشتراك جديد» is the only visible action, secondary', async () => {
+  it('a family with none due for renewal: «اشتراك جديد» is the only visible action, secondary', async () => {
     renderActions();
     const visible = await screen.findByRole('button', { name: t.salesMoney.newSubscription });
     expect(visible.className).toContain('bg-secondary');
@@ -50,25 +51,25 @@ describe('SalesChatActions: one visible action, the rest in «المزيد» (W3
     expect(screen.queryByRole('button', renewOf('جود'))).toBeNull();
   });
 
-  it('the menu lists «تحقق من التسجيل», both renewals, the transfer and the course days', async () => {
+  it('the menu lists «تحقق من التسجيل», the transfer and the course days; no renewal hides in it', async () => {
     renderActions();
     await screen.findByRole('button', { name: t.salesMoney.newSubscription });
     fireEvent.click(more());
     expect(screen.getByRole('button', { name: t.registrationCheck.action })).toBeTruthy();
-    expect(screen.getByRole('button', renewOf('سهيلة'))).toBeTruthy();
-    expect(screen.getByRole('button', renewOf('جود'))).toBeTruthy();
+    expect(screen.queryByRole('button', { name: new RegExp(t.students.renew) })).toBeNull();
     expect(screen.getByRole('button', { name: t.salesMoney.recordTransfer })).toBeTruthy();
     expect(screen.getByRole('button', { name: `${t.booking.courseDays} — جود` })).toBeTruthy();
   });
 
-  it('renew opens SalesMoneyFlow with that child, and it stays open after the menu closed', async () => {
-    renderActions();
-    await screen.findByRole('button', { name: t.salesMoney.newSubscription });
+  it('two due: «جدّد الاشتراك» is the visible action; «اشتراك جديد» from the menu stays open after it closed', async () => {
+    renderActions(false, TWO_DUE);
+    expect((await screen.findByRole('button', { name: t.students.renew })).className).toContain('bg-secondary');
+    expect(screen.queryByRole('button', renewOf('جود'))).toBeNull();
     fireEvent.click(more());
-    fireEvent.click(screen.getByRole('button', renewOf('جود')));
+    fireEvent.click(screen.getByRole('button', { name: t.salesMoney.newSubscription }));
     expect(more().getAttribute('aria-expanded')).toBe('false');
     const dialog = within(await screen.findByRole('dialog', { name: t.salesMoney.newSubscription }));
-    expect(dialog.getByRole<HTMLSelectElement>('combobox', { name: t.salesMoney.pickChild }).value).toBe(JUD);
+    expect(dialog.getByRole<HTMLSelectElement>('combobox', { name: t.salesMoney.pickChild }).value).toBe('');
   });
 
   it('compact (phones): the visible action is an icon button with the same name', async () => {
@@ -76,6 +77,11 @@ describe('SalesChatActions: one visible action, the rest in «المزيد» (W3
     const icon = await screen.findByRole('button', { name: t.salesMoney.newSubscription });
     expect(icon.textContent).toBe('');
     expect(more()).toBeTruthy();
+  });
+
+  it('compact with one due: the icon button renews that child', async () => {
+    renderActions(true, [TWO_DUE[0] ?? student(), ...TWO_ENDED.slice(1)]);
+    expect((await screen.findByRole('button', renewOf('سهيلة'))).textContent).toBe('');
   });
 
   it('outside sales mode: nothing, and the family is never asked', () => {
