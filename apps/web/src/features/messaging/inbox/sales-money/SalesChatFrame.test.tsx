@@ -38,25 +38,22 @@ afterEach(() => {
 describe('SalesChatFrame: crossing 900px keeps an open sales dialog (m13)', () => {
   it('a renewal dialog with a changed child stays open, the same node, after the width flips', async () => {
     routeFetch(apiFetch, [
-      ['/sales/money/family', { students: [student({ status: 'expired', open: [OPEN_SUB] }), student({ id: JUD, name: 'جود', status: 'pending_renewal' })] }],
+      ['/sales/money/family', { students: [student({ status: 'expired', open: [OPEN_SUB], renew_due: true }), student({ id: JUD, name: 'جود', status: 'pending_renewal', renew_due: true })] }],
       ['/settings', {}],
       ['/sales/money/chat-receipts', []],
     ]);
     apiSend.mockResolvedValue(SALES_QUOTE);
     const view = render(pane(false));
-    await screen.findByRole('button', { name: t.salesMoney.newSubscription });
-    fireEvent.click(screen.getByRole('button', { name: t.common.more }));
-    fireEvent.click(screen.getByRole('button', { name: `${t.students.renew} — جود` }));
-    const dialog = await screen.findByRole('dialog', { name: t.salesMoney.newSubscription });
+    fireEvent.click(await screen.findByRole('button', { name: t.students.renew }));
+    const dialog = await screen.findByRole('dialog', { name: t.students.renew });
     const child = within(dialog).getByRole<HTMLSelectElement>('combobox', { name: t.salesMoney.pickChild });
-    const other = [...child.options].find((o) => o.value && o.value !== JUD)?.value ?? '';
-    fireEvent.change(child, { target: { value: other } });
+    fireEvent.change(child, { target: { value: JUD } });
 
     view.rerender(pane(true));
-    expect(screen.getByRole('dialog', { name: t.salesMoney.newSubscription })).toBe(dialog);
-    expect(within(dialog).getByRole<HTMLSelectElement>('combobox', { name: t.salesMoney.pickChild }).value).toBe(other);
+    expect(screen.getByRole('dialog', { name: t.students.renew })).toBe(dialog);
+    expect(within(dialog).getByRole<HTMLSelectElement>('combobox', { name: t.salesMoney.pickChild }).value).toBe(JUD);
     // The phone header got the icon button.
-    expect(screen.getByRole('button', { name: t.salesMoney.newSubscription }).textContent).toBe('');
+    expect(screen.getByRole('button', { name: t.students.renew }).textContent).toBe('');
   });
 
   it('outside sales mode: no sales buttons, «المزيد» holds «القوائم» only (docs/22), the pane still renders', () => {

@@ -1,10 +1,11 @@
-import type {
-  SalesChatReceipt,
-  SalesFamilyStudent,
-  SalesFamilyView,
-  SalesMoneySubscriptionView,
-  SalesPaymentView,
-  SalesQuoteView,
+import {
+  DEFAULT_RENEWAL_PRICING,
+  type SalesChatReceipt,
+  type SalesFamilyStudent,
+  type SalesFamilyView,
+  type SalesMoneySubscriptionView,
+  type SalesPaymentView,
+  type SalesQuoteView,
 } from '@ab/shared';
 import { thread } from '@/inbox/shared/thread-fixtures';
 
@@ -36,7 +37,7 @@ export function openSub(fields: Partial<SalesMoneySubscriptionView> = {}): Sales
 }
 
 export function kid(fields: Partial<SalesFamilyStudent> = {}): SalesFamilyStudent {
-  return { id: KID, code: 'AB-0201', name: 'ريم', status: 'trial', open: [], ...fields };
+  return { id: KID, code: 'AB-0201', name: 'ريم', status: 'trial', open: [], renew_due: false, renewal: DEFAULT_RENEWAL_PRICING, ...fields };
 }
 
 export const familyOf = (...students: SalesFamilyStudent[]): SalesFamilyView => ({ students });
