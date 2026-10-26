@@ -27,10 +27,6 @@
     "files": 16,
     "dirs": 4
   },
-  "apps/web/src/features/numbers": {
-    "files": 26,
-    "dirs": 0
-  },
   "apps/web/src/features/payments": {
     "files": 22,
     "dirs": 0
@@ -41,10 +37,6 @@
   },
   "apps/web/src/features/subscriptions": {
     "files": 17,
-    "dirs": 0
-  },
-  "apps/web/src/features/templates": {
-    "files": 28,
     "dirs": 0
   },
   "apps/web/src/routes": {

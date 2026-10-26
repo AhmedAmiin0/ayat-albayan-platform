@@ -3,13 +3,13 @@ import { createColumnHelper } from '@tanstack/react-table';
 import type { DataTableFeatures } from '@/components/DataTable';
 import { fullTime } from '@/features/inbox/format';
 import { t } from '@/lib/i18n/i18n';
-import { CrmNameButton } from './CrmNameButton';
-import { CrmStatusActions, type CrmStatusActionsProps } from './CrmStatusActions';
-import { SendFromCell, type SendFromCellProps } from './SendFromCell';
+import { CrmNameButton } from './crm/CrmNameButton';
+import { CrmStatusActions, type CrmStatusActionsProps } from './crm/CrmStatusActions';
+import { SendFromCell, type SendFromCellProps } from './lines/SendFromCell';
 import { StarterToggle } from './StarterToggle';
 import { otherLine } from './api';
 import { Label, NameCell, NumberCell, RowActions, StatusCell, templateName } from './template-cells';
-import type { PhoneMap } from './use-template-lines';
+import type { PhoneMap } from './lines/use-template-lines';
 import { categoryOptions, lineOptions, qualityOptions, statusOptions } from './template-filters';
 
 const col = createColumnHelper<DataTableFeatures, TemplateView>();

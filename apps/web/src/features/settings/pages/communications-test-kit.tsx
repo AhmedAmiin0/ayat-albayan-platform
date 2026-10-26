@@ -4,7 +4,7 @@ import { useState, type ReactNode } from 'react';
 import type { Mock } from 'vitest';
 import { renderWithClient, routeFetch } from '@/features/inbox/testing/test-utils';
 import { NUMBERS, PARITY_SAME } from '@/features/numbers/numbers.fixture';
-import { LINES } from '@/features/templates/template-lines-fixture';
+import { LINES } from '@/features/templates/lines/template-lines-fixture';
 import { CATALOGUE_ROUTE, SETTINGS } from '@/test/settings-fixture';
 import { CommunicationsPage } from './CommunicationsPage';
 import type { CommunicationsTab } from './page-search';

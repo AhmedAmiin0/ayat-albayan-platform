@@ -4,14 +4,14 @@ import { Section } from '@/components/settings/Section';
 import { Button } from '@/components/ui/form/button';
 import { t } from '@/lib/i18n/i18n';
 import { usePermissions } from '../auth/use-permissions';
-import { ImportButton } from './ImportButton';
-import { NumberFormDialog } from './NumberFormDialog';
+import { ImportButton } from './import/ImportButton';
+import { NumberFormDialog } from './form/NumberFormDialog';
 import { numbersQuery, parityQuery } from './numbers-api';
 import { NumbersList } from './NumbersList';
 import { NumbersNote } from './numbers-note';
 import { NUMBERS_SECTION, numbersMatch } from './numbers-section';
-import { ParityList } from './ParityList';
-import { SourceSwitch } from './SourceSwitch';
+import { ParityList } from './card/ParityList';
+import { SourceSwitch } from './import/SourceSwitch';
 
 const n = t.numbers;
 
