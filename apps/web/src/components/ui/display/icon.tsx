@@ -12,6 +12,8 @@ const PATHS = {
   menu: 'M3.5 5.5h13M3.5 10h13M3.5 14.5h13',
   'chevron-left': 'M12.5 5 7.5 10l5 5',
   'chevron-right': 'm7.5 5 5 5-5 5',
+  /** Not directional: «تصغير» of the call screen (docs/28). */
+  'chevron-down': 'm5 7.5 5 5 5-5',
   x: 'm5.5 5.5 9 9M14.5 5.5l-9 9',
   check: 'm4.5 10.5 3.5 3.5 7.5-8',
   chat: 'M10 3.5a6.5 6.5 0 0 0-5.6 9.8L3.5 16.5l3.3-.9A6.5 6.5 0 1 0 10 3.5Z',

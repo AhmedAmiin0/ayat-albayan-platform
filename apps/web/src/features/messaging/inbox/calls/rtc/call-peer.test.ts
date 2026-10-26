@@ -62,6 +62,15 @@ describe('the browser peer (no network: fakes)', () => {
   });
 });
 
+describe('a peer that cannot be built', () => {
+  it('stops the microphone it opened', async () => {
+    const { deps, track } = fakes();
+    const broken: RtcDeps = { ...deps, createPeer: () => { throw new Error('no peer'); } };
+    await expect(createCallPeer({ deps: broken, iceServers: [] })).rejects.toThrow('no peer');
+    expect(track.stop).toHaveBeenCalled();
+  });
+});
+
 describe('the microphone', () => {
   it('no WebRTC = unsupported; a refusal = denied', async () => {
     await expect(openMic(null)).rejects.toMatchObject({ problem: 'unsupported' });

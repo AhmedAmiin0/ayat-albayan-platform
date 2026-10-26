@@ -19,10 +19,19 @@ export const callConfigQuery = queryOptions({
   retry: false,
 });
 
+/** One poll of /calls/active and when it STARTED: a slow poll begun before a call existed must not read as «ended». */
+export interface ActivePoll {
+  startedAt: number;
+  rows: ActiveCallView[];
+}
+
 export const activeCallsQuery = (input: { enabled: boolean; live: boolean }) =>
   queryOptions({
     queryKey: [...CALLS_KEY, 'active'],
-    queryFn: () => apiFetch<ActiveCallView[]>('/calls/active'),
+    queryFn: async (): Promise<ActivePoll> => {
+      const startedAt = Date.now();
+      return { startedAt, rows: await apiFetch<ActiveCallView[]>('/calls/active') };
+    },
     enabled: input.enabled,
     refetchInterval: input.enabled ? (input.live ? LIVE_POLL_MS : ACTIVE_POLL_MS) : false,
     retry: false,

@@ -42,9 +42,10 @@ export function CallProvider({ children, showsPhone = true, rtc }: CallProviderP
   const s = useCallSession({ config, rtc: deps, play: (stream) => playOn(audio.current, stream) });
   const [ask, setAsk] = useState<Ask | null>(null);
   const [sent, setSent] = useState(false);
+  const [silenced, setSilenced] = useState<string | null>(null);
   const on = config?.enabled === true && config.canCall;
   useCallsRealtime(config?.enabled === true);
-  useIncomingRing(on && !!s.incoming);
+  useIncomingRing(on && !!s.incoming && s.incoming.id !== silenced);
 
   const call = async (target: CallTarget) => {
     try {
@@ -58,7 +59,7 @@ export function CallProvider({ children, showsPhone = true, rtc }: CallProviderP
   const ui: CallsUi | null = config ? { config, busy: s.session !== null, call: (target) => void call(target) } : null;
   const overlay = (
     <>
-      <CallOverlay s={s} showsPhone={showsPhone} ask={ask} onAsk={(next) => (setAsk(null), setSent(next === 'sent'))} />
+      <CallOverlay s={s} showsPhone={showsPhone} ask={ask} onAsk={(next) => (setAsk(null), setSent(next === 'sent'))} onSilence={setSilenced} />
       {sent && <Toast message={t.calls.permission.requestSent} onDismiss={() => setSent(false)} />}
       {s.notice && <Toast tone="error" message={s.notice} onDismiss={() => s.store.notify(null)} />}
       {/* The family's voice (the device's output; the web has no speaker switch). */}

@@ -1,6 +1,6 @@
 // The incoming-call ring (docs/28 §5), made with WebAudio: no audio file, two soft tones every 2 s.
-// Browsers start audio only after a user gesture on the page; before that the ring stays silent and
-// the full-screen incoming call is still shown.
+// Browsers start audio only after a user gesture on the page: the context is resumed at once and on
+// the next pointerdown; until then the full-screen incoming call is still shown.
 
 export interface Ringtone {
   stop(): void;
@@ -35,11 +35,22 @@ export function startRingtone(make: AudioCtor | null = audioCtor()): Ringtone {
       osc.stop(at + offset + 0.4);
     }
   };
+  // Autoplay policy: a context made before any gesture starts suspended; resume it now and again on the
+  // next pointerdown (the user touching the page) if it is still suspended.
+  const resume = () => void ctx.resume().catch(() => undefined);
+  const retry = () => {
+    if (ctx.state === 'suspended') resume();
+  };
+  if (ctx.state === 'suspended') {
+    resume();
+    window.addEventListener('pointerdown', retry, { once: true });
+  }
   ring();
   const timer = setInterval(ring, 2_000);
   return {
     stop() {
       clearInterval(timer);
+      window.removeEventListener('pointerdown', retry);
       void ctx.close().catch(() => undefined);
     },
   };

@@ -43,8 +43,15 @@ export async function createCallPeer(input: { deps: RtcDeps | null; iceServers: 
   const mic = await openMic(input.deps);
   const deps = input.deps;
   if (!deps) throw new Error('unreachable: openMic refused');
-  const pc = deps.createPeer(rtcConfig(input.iceServers));
-  for (const track of mic.getAudioTracks()) pc.addTrack(track, mic);
+  let pc: RTCPeerConnection;
+  try {
+    pc = deps.createPeer(rtcConfig(input.iceServers));
+    for (const track of mic.getAudioTracks()) pc.addTrack(track, mic);
+  } catch (e) {
+    // Never leave the microphone on after a peer that could not be built.
+    for (const track of mic.getTracks()) track.stop();
+    throw e;
+  }
   return {
     async offer() {
       await pc.setLocalDescription(await pc.createOffer({ offerToReceiveAudio: true }));

@@ -22,8 +22,8 @@ export function useCallSession(input: { config: CallConfigView | undefined; rtc:
   const state = useSyncExternalStore(store.subscribe, store.get);
   const enabled = input.config?.enabled === true && input.config.canCall;
   const active = useQuery(activeCallsQuery({ enabled, live: state.session !== null }));
-  const rows: readonly ActiveCallView[] = useMemo(() => active.data ?? [], [active.data]);
-  const d = deriveCall(state, { rows, fetchedAt: active.dataUpdatedAt });
+  const rows: readonly ActiveCallView[] = useMemo(() => active.data?.rows ?? [], [active.data]);
+  const d = deriveCall(state, { rows, startedAt: active.data?.startedAt ?? 0 });
 
   const iceServers = input.config?.iceServers ?? NO_ICE;
   useEffect(() => store.configure(rtc, iceServers), [store, rtc, iceServers]);

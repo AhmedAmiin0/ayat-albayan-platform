@@ -1,5 +1,5 @@
 import type { ActiveCallView, CallIceServer } from '@ab/shared';
-import { rejectCall } from '../api/calls-api';
+import { endCall, rejectCall } from '../api/calls-api';
 import type { CallPeer } from '../rtc/call-peer';
 import type { RtcDeps } from '../rtc/media';
 import { acceptRinging, beginCall, hangUp, teardown, type CallRuntime } from './call-actions';
@@ -28,6 +28,7 @@ export class CallStore implements CallRuntime {
   rtc: RtcDeps | null = null;
   iceServers: readonly CallIceServer[] = [];
   readonly peer: { current: CallPeer | null } = { current: null };
+  readonly attempt = { current: 0 };
   private state: CallStoreState = { session: null, notice: null, dismissed: new Set(), idAt: 0 };
   private readonly listeners = new Set<() => void>();
   private clearTimer: ReturnType<typeof setTimeout> | null = null;
@@ -44,6 +45,7 @@ export class CallStore implements CallRuntime {
   refresh = () => this.env.refresh();
   notify = (notice: string | null) => this.set({ notice });
   markId = () => this.set({ idAt: Date.now() });
+  currentSession = () => this.state.session;
   setSession = (update: (s: CallSession | null) => CallSession | null) => this.set({ session: update(this.state.session) });
 
   /** The device's WebRTC and the academy's ICE servers (from /calls/config). */
@@ -78,9 +80,15 @@ export class CallStore implements CallRuntime {
     this.setSession((s) => (s ? { ...s, minimised } : s));
   }
 
-  /** The server stopped listing the call: close the media, say «انتهت المكالمة», then close the screen. */
+  /**
+   * The server stopped listing the call: close the media, end it on the server too (a no-op when it
+   * already ended there), say «انتهت المكالمة», then close the screen.
+   */
   serverEnded(): void {
+    const id = this.state.session?.id;
+    this.attempt.current += 1;
     teardown(this);
+    if (id) void endCall(id).catch(() => undefined);
     this.setSession((s) => (s ? { ...s, ended: true } : s));
     if (this.clearTimer) clearTimeout(this.clearTimer);
     this.clearTimer = setTimeout(() => this.setSession(() => null), 1_500);

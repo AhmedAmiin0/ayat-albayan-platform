@@ -66,11 +66,10 @@ describe('calling a chat', () => {
     mount([['/calls/config', CONFIG], ['/calls/active', []], ['/calls/permission/', { state: 'granted', expires_at: null }]]);
     apiSend.mockResolvedValue(activeRow({ direction: 'outbound', status: 'connecting', offer_sdp: null }));
     fireEvent.click(await screen.findByRole('button', { name: 'probe' }));
-    await waitFor(() => expect(apiSend).toHaveBeenCalledTimes(1));
-    const [method, path, body] = apiSend.mock.calls[0] ?? [];
-    expect([method, path]).toEqual(['POST', '/calls']);
-    expect(body).toMatchObject({ phone: '+966501234567', sdp: 'v=0 ours' });
     expect(await screen.findByRole('dialog', { name: 'أم سهيلة' })).toBeTruthy();
+    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', '/calls', expect.objectContaining({ phone: '+966501234567', sdp: 'v=0 ours' })));
+    // Never a second connect (a poll that no longer lists the call may only end it).
+    expect(apiSend.mock.calls.filter(([, path]) => path === '/calls')).toHaveLength(1);
   });
 
   it('without permission inside the window: «اطلب إذن الاتصال» sends the request', async () => {

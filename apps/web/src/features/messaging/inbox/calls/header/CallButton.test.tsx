@@ -41,5 +41,7 @@ describe('the thread header phone icon', () => {
     const button = screen.getByRole('button', { name });
     expect(button).toHaveProperty('disabled', true);
     expect(button.getAttribute('title')).toBe(t.calls.errors.calls_unavailable);
+    const reason = document.getElementById(button.getAttribute('aria-describedby') ?? '');
+    expect(reason?.textContent).toBe(t.calls.errors.calls_unavailable);
   });
 });

@@ -12,6 +12,8 @@ export interface CallOverlayProps {
   showsPhone: boolean;
   ask: { phone: string; state: Exclude<CallPermissionState, 'granted'> } | null;
   onAsk: (next: 'closed' | 'sent') => void;
+  /** Esc on the incoming call: silence its ring. */
+  onSilence: (callId: string) => void;
 }
 
 const callerOf = (row: ActiveCallView, showsPhone: boolean): string =>
@@ -27,12 +29,19 @@ function SessionView({ s }: { s: CallSessionApi }) {
 }
 
 /** What the calls put above every page: the ring, the call or its bar, and the permission dialog. */
-export function CallOverlay({ s, showsPhone, ask, onAsk }: CallOverlayProps) {
+export function CallOverlay({ s, showsPhone, ask, onAsk, onSilence }: CallOverlayProps) {
   const { store, incoming } = s;
   const caller = incoming ? callerOf(incoming, showsPhone) : '';
   return (
     <>
-      {incoming && <IncomingCall name={caller} onAccept={() => store.accept(incoming, caller)} onDecline={() => store.reject(incoming)} />}
+      {incoming && (
+        <IncomingCall
+          name={caller}
+          onAccept={() => store.accept(incoming, caller)}
+          onDecline={() => store.reject(incoming)}
+          onSilence={() => onSilence(incoming.id)}
+        />
+      )}
       <SessionView s={s} />
       {ask && <PermissionDialog {...ask} onClose={() => onAsk('closed')} onSent={() => onAsk('sent')} />}
     </>

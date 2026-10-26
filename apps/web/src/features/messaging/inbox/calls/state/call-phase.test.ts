@@ -32,18 +32,20 @@ describe('the incoming ring', () => {
 });
 
 describe('ending', () => {
-  it('a poll newer than the id that no longer lists the call means it ended', () => {
-    expect(endedOnServer({ session: session(), rows: [], fetchedAt: 20, idAt: 10 })).toBe(true);
-    expect(endedOnServer({ session: session(), rows: [], fetchedAt: 5, idAt: 10 })).toBe(false);
-    expect(endedOnServer({ session: session(), rows: [row()], fetchedAt: 20, idAt: 10 })).toBe(false);
-    expect(endedOnServer({ session: session({ id: null }), rows: [], fetchedAt: 20, idAt: 10 })).toBe(false);
+  it('a poll STARTED after the id that no longer lists the call means it ended; an older slow poll does not', () => {
+    expect(endedOnServer({ session: session(), rows: [], pollStartedAt: 20, idAt: 10 })).toBe(true);
+    expect(endedOnServer({ session: session(), rows: [], pollStartedAt: 5, idAt: 10 })).toBe(false);
+    expect(endedOnServer({ session: session(), rows: [row()], pollStartedAt: 20, idAt: 10 })).toBe(false);
+    expect(endedOnServer({ session: session({ id: null }), rows: [], pollStartedAt: 20, idAt: 10 })).toBe(false);
   });
 
-  it('an unanswered outbound call gets the 45 s deadline; an answered one none', () => {
+  it('an unanswered outbound call gets the 45 s deadline from its server id; an answered one none', () => {
     const state = { session: session(), dismissed: new Set<string>(), idAt: 10 };
-    expect(deriveCall(state, { rows: [row()], fetchedAt: 20 }).deadline).toBe(1_000 + UNANSWERED_MS);
-    expect(deriveCall(state, { rows: [row({ status: 'active' })], fetchedAt: 20 }).deadline).toBeNull();
-    expect(deriveCall({ ...state, session: null }, { rows: [row({ direction: 'inbound', offer_sdp: 'v=0' })], fetchedAt: 20 }).incoming?.id).toBe('c1');
+    expect(deriveCall(state, { rows: [row()], startedAt: 20 }).deadline).toBe(10 + UNANSWERED_MS);
+    expect(deriveCall(state, { rows: [row({ status: 'active' })], startedAt: 20 }).deadline).toBeNull();
+    // Before the server knows the call (mic prompt, POST in flight) no timer runs yet.
+    expect(deriveCall({ ...state, session: session({ id: null }) }, { rows: [], startedAt: 20 }).deadline).toBeNull();
+    expect(deriveCall({ ...state, session: null }, { rows: [row({ direction: 'inbound', offer_sdp: 'v=0' })], startedAt: 20 }).incoming?.id).toBe('c1');
   });
 
   it('talk time counts from the server answer', () => {
