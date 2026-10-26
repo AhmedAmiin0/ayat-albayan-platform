@@ -3,9 +3,9 @@ import { FlatList, StyleSheet, useWindowDimensions, View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/more/Note';
 import { shape, useTheme } from '@/theme';
-import { useSavedReplies } from './api';
+import { useSavedReplies } from '../api';
 import { QuickReplyRow } from './QuickReplyRow';
-import { matchReplies } from './reply-text';
+import { matchReplies } from '../reply-text';
 import { type ReplyContact, useFillReply } from './use-fill-reply';
 
 export interface SlashSuggestionsProps {

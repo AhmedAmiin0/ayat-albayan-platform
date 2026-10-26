@@ -1,19 +1,14 @@
-import type { SavedReply, SavedReplyScope } from '@ab/shared';
+import type { SavedReply } from '@ab/shared';
+import { useRef } from 'react';
 import { Button } from '@/components/ui/form/button';
-import { Icon } from '@/components/ui/display/icon';
-import { IconButton } from '@/components/ui/form/icon-button';
-import { SearchInput } from '@/components/ui/form/search-input';
-import { Tabs } from '@/components/ui/layout/tabs';
 import { t } from '@/lib/i18n/i18n';
 import { MineActions } from './MineActions';
-import { optionId, ReplyOptions } from './ReplyOptions';
+import { PanelHead } from './panel/PanelHead';
+import { ReplyOptions } from './ReplyOptions';
+import { useOutsideClose } from './panel/use-outside-close';
 import type { RepliesPicker } from './use-replies-picker';
 
 const S = t.savedReplies;
-const TABS: { value: SavedReplyScope; label: string }[] = [
-  { value: 'shared', label: S.tabShared },
-  { value: 'mine', label: S.tabMine },
-];
 
 export interface RepliesPanelProps {
   picker: RepliesPicker;
@@ -27,66 +22,50 @@ export interface RepliesPanelProps {
 function emptyText(picker: RepliesPicker): string {
   if (picker.failed) return S.loadError;
   if (picker.loading) return t.common.loading;
-  if (picker.search || picker.bySlash) return S.noMatch;
-  return picker.tab === 'shared' ? S.emptyShared : S.emptyMine;
+  if (picker.query) return S.noMatch;
+  return picker.tab === 'shared' || picker.bySlash ? S.emptyShared : S.emptyMine;
 }
 
 /**
- * «الردود السريعة» above the message box: «المشتركة» / «ردودي», a search (the button's; after «/» the
- * box's own text searches), the list, and in «ردودي» «رد جديد» plus each row's own edit / delete. Picking only fills the box.
+ * «الردود السريعة» docked right above the message box, as WhatsApp Business (owner 2026-10-26). After «/»
+ * it is only the list: both tabs, searched by the box's own text, driven from the box (↑ ↓ Enter Esc).
+ * From the button it has a head (PanelHead): tabs, «إدارة», its own search. A press outside the
+ * composer closes it. Picking only fills the box.
  */
 export function RepliesPanel({ picker, listId, onAdd, onEdit, onDelete }: RepliesPanelProps) {
   const { list, keys } = picker;
-  const active = list[keys.active];
+  const ref = useRef<HTMLElement>(null);
+  useOutsideClose(ref, picker.close);
+  const managing = !picker.bySlash && picker.manage && picker.tab === 'mine';
   return (
     <section
+      ref={ref}
       aria-label={S.title}
-      className="grid gap-1.5 rounded-lg border border-rule bg-raised p-2 shadow-pop"
-      // After «/» the message box drives the list: a click on a tab or button keeps its focus (and ↑ ↓ Enter Esc).
+      className="grid gap-1 overflow-hidden rounded-lg border border-rule bg-raised pb-1 shadow-pop"
+      // After «/» the message box drives the list: a click in it keeps the box's focus (and ↑ ↓ Enter Esc).
       onMouseDown={picker.bySlash ? (e) => e.preventDefault() : undefined}
     >
-      <div className="flex items-center gap-1">
-        <Tabs label={S.title} tabs={TABS} value={picker.tab} onChange={picker.setTab} className="min-w-0 flex-1 text-sm" />
-        <IconButton label={t.common.close} className="rounded-full" onClick={picker.close}>
-          <Icon name="x" className="size-5" />
-        </IconButton>
-      </div>
-      {!picker.bySlash && (
-        <SearchInput
-          autoFocus
-          role="combobox"
-          aria-expanded
-          aria-controls={listId}
-          aria-activedescendant={active ? optionId(listId, keys.active) : undefined}
-          aria-label={S.search}
-          placeholder={S.search}
-          value={picker.search}
-          onChange={(e) => {
-            picker.setSearch(e.target.value);
-            keys.setActive(0);
-          }}
-          onKeyDown={(e) => void keys.onKey(e)}
-        />
-      )}
+      {!picker.bySlash && <PanelHead picker={picker} listId={listId} />}
       {list.length ? (
         <ReplyOptions
-          {...{ id: listId, replies: list, active: keys.active, onActive: keys.setActive, onPick: picker.pick }}
-          manage={picker.tab === 'mine' ? { onEdit, onDelete } : undefined}
+          {...{ id: listId, replies: list, query: picker.query, active: keys.active, onActive: keys.setActive, onPick: picker.pick }}
+          manage={managing ? { onEdit, onDelete } : undefined}
         />
       ) : (
-        <div className="flex flex-wrap items-center gap-2 px-2 py-2">
+        <div className="grid gap-1 px-3 py-2">
           <p role="status" className="text-sm text-ink-2">
             {emptyText(picker)}
           </p>
+          {!picker.failed && !picker.loading && !picker.bySlash && <p className="text-xs text-ink-3">{S.slashHint}</p>}
           {picker.failed && (
-            <Button type="button" size="sm" variant="secondary" onClick={picker.retry}>
+            <Button type="button" size="sm" variant="secondary" className="justify-self-start" onClick={picker.retry}>
               {S.retry}
             </Button>
           )}
         </div>
       )}
-      <div className="flex flex-wrap items-center gap-2 px-1">
-        {picker.tab === 'mine' && <MineActions onAdd={onAdd} />}
+      <div className="flex flex-wrap items-center gap-2 px-2 empty:hidden">
+        {managing && <MineActions onAdd={onAdd} />}
         <span className="ms-auto hidden text-2xs text-ink-3 pointer-fine:inline">{S.keyboardHint}</span>
       </div>
     </section>

@@ -1,4 +1,5 @@
-import { highlightParts } from './highlight';
+import { expect, test } from 'vitest';
+import { highlightParts } from './saved-reply-text.js';
 
 const bold = (text: string, query: string) =>
   highlightParts(text, query)

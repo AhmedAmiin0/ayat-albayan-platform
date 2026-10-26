@@ -27,10 +27,10 @@ async function openMine(replies = REPLIES) {
   renderWithClient(<ReplyComposer thread={thread({ session_open: true })} context={{}} leading={null} />);
   fireEvent.click(screen.getByRole('button', { name: S.open }));
   await screen.findByRole('listbox');
-  fireEvent.click(screen.getByRole('tab', { name: S.tabMine }));
+  fireEvent.click(screen.getByRole('button', { name: S.manage }));
 }
 
-describe('«ردودي» in the picker', () => {
+describe('«ردودي» behind «إدارة» in the picker', () => {
   it('adds a personal reply (scope mine)', async () => {
     apiSend.mockResolvedValue(MINE);
     await openMine();
@@ -55,6 +55,20 @@ describe('«ردودي» in the picker', () => {
     fireEvent.click(screen.getByRole('button', { name: t.common.cancel }));
     fireEvent.click(screen.getByRole('button', { name: S.deleteReply.replace('{title}', 'متابعة') }));
     expect(await screen.findByRole('dialog', { name: S.deleteTitle.replace('{title}', 'متابعة') })).toBeTruthy();
+  });
+
+  it('the pick list is clean: no add / edit / delete until «إدارة»', async () => {
+    routeFetch(apiFetch, [['/saved-replies', REPLIES], ['/me/profile', PROFILE]]);
+    renderWithClient(<ReplyComposer thread={thread({ session_open: true })} context={{}} leading={null} />);
+    fireEvent.click(screen.getByRole('button', { name: S.open }));
+    fireEvent.click(await screen.findByRole('tab', { name: S.tabMine }));
+    await screen.findByRole('option', { name: /متابعة/ });
+    expect(screen.queryByRole('button', { name: S.add })).toBeNull();
+    expect(screen.queryByRole('button', { name: S.editReply.replace('{title}', 'متابعة') })).toBeNull();
+    fireEvent.click(screen.getByRole('button', { name: S.manage }));
+    expect(screen.getByRole('button', { name: S.editReply.replace('{title}', 'متابعة') })).toBeTruthy();
+    fireEvent.click(screen.getByRole('button', { name: S.manageDone }));
+    expect(screen.queryByRole('button', { name: S.add })).toBeNull();
   });
 
   it('the row buttons sit outside the options, and only under «ردودي»', async () => {

@@ -9,7 +9,7 @@ import { OpenRow } from '../threads-list/OpenRow';
 import { QuoteStrip } from '../messages/components/QuoteStrip';
 import { SavedReplyChip } from '../saved-replies/SavedReplyChip';
 import { SavedReplyPicker } from '../saved-replies/SavedReplyPicker';
-import { SlashSuggestions } from '../saved-replies/SlashSuggestions';
+import { SlashSuggestions } from '../saved-replies/quick-list/SlashSuggestions';
 import { useSavedReplyDraft } from '../saved-replies/use-saved-reply';
 import { TemplatePicker } from './TemplatePicker';
 import { useThreadMode } from '../thread/hooks/thread-mode';

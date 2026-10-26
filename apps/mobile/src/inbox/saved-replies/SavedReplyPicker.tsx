@@ -1,6 +1,6 @@
 import type { SavedReply } from '@ab/shared';
 import { SavedRepliesSheet } from './SavedRepliesSheet';
-import { type ReplyContact, useFillReply } from './use-fill-reply';
+import { type ReplyContact, useFillReply } from './quick-list/use-fill-reply';
 
 export interface SavedReplyPickerProps {
   contact: ReplyContact;

@@ -1,6 +1,6 @@
 import type { TextStyle } from 'react-native';
 import { AppText } from '@/core/ui/primitives/AppText';
-import { highlightParts } from './highlight';
+import { highlightParts } from '@ab/shared';
 
 export interface HighlightTextProps {
   text: string;

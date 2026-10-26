@@ -43,7 +43,7 @@ export function ReplySheetFrame({ onClose, children }: { onClose: () => void; ch
             transform: [{ translateY: y }],
           }}
         >
-          <View {...pan.panHandlers} style={{ alignItems: 'center', paddingVertical: 8 }}>
+          <View {...pan.panHandlers} style={{ alignItems: 'center', paddingTop: 10, paddingBottom: 14 }}>
             <View style={{ width: 36, height: 5, borderRadius: shape.radius.pill, backgroundColor: color.ruleInput }} />
           </View>
           {children}

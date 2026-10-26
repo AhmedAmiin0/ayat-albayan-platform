@@ -4,10 +4,10 @@ import { FlatList, View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/more/Note';
 import { Button } from '@/core/ui/primitives/Button';
-import { DeleteConfirm } from './DeleteConfirm';
-import { EditDelete } from './MineActions';
-import { ReplyEditor } from './ReplyEditor';
-import { ReplyRow } from './ReplyRow';
+import { DeleteConfirm } from '../DeleteConfirm';
+import { EditDelete } from '../MineActions';
+import { ReplyEditor } from '../ReplyEditor';
+import { ReplyRow } from '../ReplyRow';
 
 /**
  * «إدارة» in the quick-replies sheet (owner 2026-10-26): her own replies with «رد جديد» and each row's
