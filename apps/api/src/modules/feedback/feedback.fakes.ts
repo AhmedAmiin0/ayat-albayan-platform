@@ -1,8 +1,8 @@
 // Test fixtures for the feedback tests (not shipped; excluded from the build by *.fakes.ts).
 import type { AuthUser } from '../../common/auth/verify-token';
 import type { FeedbackRow, PublicContext, RequestContext } from './feedback.queries';
-import type { FeedbackListRow } from './feedback.read.queries';
-import { hashToken, signToken } from './feedback.token';
+import type { FeedbackListRow } from './read/feedback.read.queries';
+import { hashToken, signToken } from './public/feedback.token';
 
 export const SECRET = 's'.repeat(40);
 export const LESSON_ID = '00000000-0000-4000-8000-0000000000d1';

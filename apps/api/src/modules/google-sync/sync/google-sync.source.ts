@@ -3,7 +3,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../../common/db/db.module';
 import { loadEnv } from '../../../config/env/env';
 import { firstWebOrigin } from '../../classroom/classroom.config';
-import { classroomUrl } from '../../reminders/reminders.links';
+import { classroomUrl } from '../../reminders/plan/reminders.links';
 import type { EventLesson, LessonKind } from '../writers/calendar/event-format';
 import { GoogleSyncAcademySettings } from './google-sync.settings';
 

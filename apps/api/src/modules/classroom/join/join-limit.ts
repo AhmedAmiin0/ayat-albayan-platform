@@ -1,5 +1,5 @@
 import { HttpException, HttpStatus } from '@nestjs/common';
-import { WindowCounter } from '../../feedback/feedback.rate-limit';
+import { WindowCounter } from '../../feedback/public/feedback.rate-limit';
 
 /**
  * The public join route's limit, per 10 minutes: 10 requests per link and IP, 60 per IP (the same

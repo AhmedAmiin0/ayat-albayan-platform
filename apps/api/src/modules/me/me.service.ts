@@ -1,8 +1,8 @@
 import { Inject, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { DB, type Db } from '../../common/db/db.module';
 import { dbError } from '../../common/http/http';
-import { claimDevice, type DeviceClaim } from './push-device.claim';
-import { withoutPushToken, withPushToken } from './push-tokens';
+import { claimDevice, type DeviceClaim } from './push/push-device.claim';
+import { withoutPushToken, withPushToken } from './push/push-tokens';
 
 /**
  * The signed-in user's own profile settings. Push tokens (R-MOB-01) live on profiles.push_tokens,

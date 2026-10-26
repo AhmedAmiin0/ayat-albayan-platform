@@ -3,7 +3,7 @@ import { Controller, Get, Param, ParseUUIDPipe } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser, Permissions } from '../../../common/auth/decorators';
 import type { AuthUser } from '../../../common/auth/verify-token';
-import { PaymentAttachments } from '../../payments/payment-attachments.service';
+import { PaymentAttachments } from '../../payments/attachments/payment-attachments.service';
 import { MyService } from './my.service';
 
 /**

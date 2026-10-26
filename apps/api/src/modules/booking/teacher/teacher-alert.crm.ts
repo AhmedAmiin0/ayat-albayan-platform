@@ -1,6 +1,6 @@
 import { joinNames, lessonWhenText, type CrmValues } from '@ab/shared';
 import { ar } from '../../../common/i18n/server-text';
-import { classroomUrl, teacherReportUrl } from '../../reminders/reminders.links';
+import { classroomUrl, teacherReportUrl } from '../../reminders/plan/reminders.links';
 import type { AlertLesson, AlertTeacher } from './teacher-alert.plan';
 
 // The teacher's new-student alert as the CRM's teacher_lesson_v2 (the old Apps Script's, docs/19 «crm

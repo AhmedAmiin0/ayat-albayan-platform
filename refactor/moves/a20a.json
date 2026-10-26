@@ -1,0 +1,108 @@
+{
+  "id": "a20a",
+  "seq": 29,
+  "moves": [
+    {
+      "from": "apps/api/src/modules/payments/payment-attachments.queries.ts",
+      "to": "apps/api/src/modules/payments/attachments/"
+    },
+    {
+      "from": "apps/api/src/modules/payments/payment-attachments.service.ts",
+      "to": "apps/api/src/modules/payments/attachments/"
+    },
+    {
+      "from": "apps/api/src/modules/payments/payment-files*",
+      "to": "apps/api/src/modules/payments/attachments"
+    },
+    {
+      "from": "apps/api/src/modules/payments/receipts*",
+      "to": "apps/api/src/modules/payments/attachments"
+    },
+    {
+      "from": "apps/api/src/modules/reminders/reminders.plan*",
+      "to": "apps/api/src/modules/reminders/plan"
+    },
+    {
+      "from": "apps/api/src/modules/reminders/reminders.rules*",
+      "to": "apps/api/src/modules/reminders/plan"
+    },
+    {
+      "from": "apps/api/src/modules/reminders/reminders.links*",
+      "to": "apps/api/src/modules/reminders/plan"
+    },
+    {
+      "from": "apps/api/src/modules/reminders/reminders.room*",
+      "to": "apps/api/src/modules/reminders/plan"
+    },
+    {
+      "from": "apps/api/src/modules/reminders/staff-reachable*",
+      "to": "apps/api/src/modules/reminders/plan"
+    }
+  ],
+  "files": [
+    [
+      "apps/api/src/modules/payments/payment-attachments.queries.ts",
+      "apps/api/src/modules/payments/attachments/payment-attachments.queries.ts"
+    ],
+    [
+      "apps/api/src/modules/payments/payment-attachments.service.ts",
+      "apps/api/src/modules/payments/attachments/payment-attachments.service.ts"
+    ],
+    [
+      "apps/api/src/modules/payments/payment-files.ts",
+      "apps/api/src/modules/payments/attachments/payment-files.ts"
+    ],
+    [
+      "apps/api/src/modules/payments/receipts.service.limit.test.ts",
+      "apps/api/src/modules/payments/attachments/receipts.service.limit.test.ts"
+    ],
+    [
+      "apps/api/src/modules/payments/receipts.service.ts",
+      "apps/api/src/modules/payments/attachments/receipts.service.ts"
+    ],
+    [
+      "apps/api/src/modules/reminders/reminders.links.mode.test.ts",
+      "apps/api/src/modules/reminders/plan/reminders.links.mode.test.ts"
+    ],
+    [
+      "apps/api/src/modules/reminders/reminders.links.test.ts",
+      "apps/api/src/modules/reminders/plan/reminders.links.test.ts"
+    ],
+    [
+      "apps/api/src/modules/reminders/reminders.links.ts",
+      "apps/api/src/modules/reminders/plan/reminders.links.ts"
+    ],
+    [
+      "apps/api/src/modules/reminders/reminders.plan.test.ts",
+      "apps/api/src/modules/reminders/plan/reminders.plan.test.ts"
+    ],
+    [
+      "apps/api/src/modules/reminders/reminders.plan.ts",
+      "apps/api/src/modules/reminders/plan/reminders.plan.ts"
+    ],
+    [
+      "apps/api/src/modules/reminders/reminders.room.test.ts",
+      "apps/api/src/modules/reminders/plan/reminders.room.test.ts"
+    ],
+    [
+      "apps/api/src/modules/reminders/reminders.room.ts",
+      "apps/api/src/modules/reminders/plan/reminders.room.ts"
+    ],
+    [
+      "apps/api/src/modules/reminders/reminders.rules.test.ts",
+      "apps/api/src/modules/reminders/plan/reminders.rules.test.ts"
+    ],
+    [
+      "apps/api/src/modules/reminders/reminders.rules.ts",
+      "apps/api/src/modules/reminders/plan/reminders.rules.ts"
+    ],
+    [
+      "apps/api/src/modules/reminders/staff-reachable.test.ts",
+      "apps/api/src/modules/reminders/plan/staff-reachable.test.ts"
+    ],
+    [
+      "apps/api/src/modules/reminders/staff-reachable.ts",
+      "apps/api/src/modules/reminders/plan/staff-reachable.ts"
+    ]
+  ]
+}

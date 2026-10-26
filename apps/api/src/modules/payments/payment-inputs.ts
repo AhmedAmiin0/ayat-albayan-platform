@@ -4,8 +4,8 @@ import { FxService } from '../fx/fx.service';
 import { InvoicesService } from '../invoices/invoices.service';
 import { badRequest, errorCode } from '../../common/http/errors';
 import type { PaymentRow, PaymentSubscription } from './payments.queries';
-import { PaymentFiles } from './payment-files';
-import type { ReceiptsService } from './receipts.service';
+import { PaymentFiles } from './attachments/payment-files';
+import type { ReceiptsService } from './attachments/receipts.service';
 
 export type Converted = {
   amount: number;

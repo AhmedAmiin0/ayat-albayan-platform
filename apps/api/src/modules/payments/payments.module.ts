@@ -2,15 +2,15 @@ import { Module } from '@nestjs/common';
 import { FxModule } from '../fx/fx.module';
 import { InvoicesModule } from '../invoices/invoices.module';
 import { SubscriptionsModule } from '../subscriptions/subscriptions.module';
-import { PaymentAttachmentsQueries } from './payment-attachments.queries';
-import { PaymentAttachments } from './payment-attachments.service';
-import { PaymentFiles } from './payment-files';
+import { PaymentAttachmentsQueries } from './attachments/payment-attachments.queries';
+import { PaymentAttachments } from './attachments/payment-attachments.service';
+import { PaymentFiles } from './attachments/payment-files';
 import { PaymentInputs } from './payment-inputs';
 import { PaymentsController } from './payments.controller';
 import { PaymentsQueries } from './payments.queries';
 import { PaymentsService } from './payments.service';
 import { PaymentsSettings } from './payments.settings';
-import { ReceiptsService } from './receipts.service';
+import { ReceiptsService } from './attachments/receipts.service';
 
 /**
  * Payments CRUD + receipt upload URL + «المرفقات» (payment_attachments); subscription status recomputed after a payment.

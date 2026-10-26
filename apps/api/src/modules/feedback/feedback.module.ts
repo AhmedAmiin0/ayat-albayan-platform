@@ -4,14 +4,14 @@ import { InboxModule } from '../inbox/inbox.module';
 import { TeachersModule } from '../teachers/teachers.module';
 import { FEEDBACK_CONFIG, type FeedbackConfig } from './feedback.config';
 import { FeedbackController } from './feedback.controller';
-import { FeedbackPublicController } from './feedback.public.controller';
-import { FeedbackPublicService } from './feedback.public.service';
+import { FeedbackPublicController } from './public/feedback.public.controller';
+import { FeedbackPublicService } from './public/feedback.public.service';
 import { FeedbackQueries } from './feedback.queries';
-import { PublicFeedbackLimit } from './feedback.rate-limit';
-import { FeedbackReadQueries } from './feedback.read.queries';
-import { FeedbackReadService } from './feedback.read.service';
-import { FeedbackRequestService } from './feedback.request.service';
-import { FeedbackSender } from './feedback.sender';
+import { PublicFeedbackLimit } from './public/feedback.rate-limit';
+import { FeedbackReadQueries } from './read/feedback.read.queries';
+import { FeedbackReadService } from './read/feedback.read.service';
+import { FeedbackRequestService } from './request/feedback.request.service';
+import { FeedbackSender } from './request/feedback.sender';
 import { FeedbackSettings } from './feedback.settings';
 
 /**

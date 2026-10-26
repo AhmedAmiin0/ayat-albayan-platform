@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { TeachersModule } from '../teachers/teachers.module';
 import { TeacherMyEarningsController } from './earnings.mine.controller';
 import { TeacherEarningsController } from './earnings.controller';
-import { CorrectionsQueries } from './corrections.queries';
+import { CorrectionsQueries } from './summary/corrections.queries';
 import { EarningsQueries } from './earnings.queries';
 import { EarningsReceipts } from './earnings.receipts';
 import { EarningsService } from './earnings.service';

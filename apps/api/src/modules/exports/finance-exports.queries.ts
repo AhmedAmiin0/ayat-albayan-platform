@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../common/db/db.module';
-import type { Window } from '../dashboard/finance.queries';
+import type { Window } from '../dashboard/finance/finance.queries';
 import type { SessionIn } from './finance.rows';
 import { readAll } from '../scheduling/read-all';
 

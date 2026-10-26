@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { at, fakeJob } from './reminders.fakes';
-import { lookaheadHours } from './reminders.rules';
+import { lookaheadHours } from './plan/reminders.rules';
 
 // A fixed day-before hour (send_at_local, as early as 06:00 the previous day) is up to ~42 h ahead:
 // the read widens to 48 h only then; otherwise it is reminder_lookahead_hours, unchanged.

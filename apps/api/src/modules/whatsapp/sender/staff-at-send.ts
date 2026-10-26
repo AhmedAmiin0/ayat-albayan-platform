@@ -1,5 +1,5 @@
 import type { Db } from '../../../common/db/db.module';
-import { isStaffAlert, staffTeacherId, type StaffAtSend } from '../../reminders/staff-reachable';
+import { isStaffAlert, staffTeacherId, type StaffAtSend } from '../../reminders/plan/staff-reachable';
 
 /**
  * A staff alert's teacher as on record right now (send-stale staffStale): by the teacher id in its

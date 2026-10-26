@@ -13,7 +13,7 @@ import { TemplateRegistry } from '../whatsapp/templates/catalog/template.registr
 import { FEEDBACK_CONFIG } from './feedback.config';
 import { ADMIN, GUARDIAN, listRow, OTHER_TEACHER, SECRET, TEACHER, TEACHER_ID } from './feedback.fakes';
 import { FeedbackQueries } from './feedback.queries';
-import { FeedbackReadQueries } from './feedback.read.queries';
+import { FeedbackReadQueries } from './read/feedback.read.queries';
 import { fakeSettings } from '../../common/settings/settings.fakes';
 import { SettingsService } from '../../common/settings/settings.service';
 

@@ -1,5 +1,5 @@
 import type { ExpenseYearView } from '@ab/shared';
-import { convert, round2, type Conversion } from '../dashboard/conversion';
+import { convert, round2, type Conversion } from '../dashboard/work/conversion';
 
 type Row = { month: string; category: string; amount: number; currency: string; is_draft: boolean };
 

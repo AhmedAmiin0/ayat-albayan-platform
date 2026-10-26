@@ -7,7 +7,7 @@ import type {
   TeacherFeedbackSummary,
 } from '@ab/shared';
 import type { Answer, PublicContext } from './feedback.queries';
-import type { AverageRow, FeedbackListRow } from './feedback.read.queries';
+import type { AverageRow, FeedbackListRow } from './read/feedback.read.queries';
 
 export type People = {
   students: ReadonlyMap<string, { id: string; code: string | null; name: string }>;

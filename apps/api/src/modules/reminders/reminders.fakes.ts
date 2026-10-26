@@ -7,8 +7,8 @@ import { fakePolicy, type FakePolicyInput } from '../notification-rules/policy/p
 import type { QueuedMessage } from './queued-row';
 import { RemindersDeps } from './reminders.deps';
 import { RemindersJob } from './reminders.job';
-import type { RoomCandidate } from './reminders.links';
-import type { ReminderLesson } from './reminders.plan';
+import type { RoomCandidate } from './plan/reminders.links';
+import type { ReminderLesson } from './plan/reminders.plan';
 import type { RemindersQueries } from './reminders.queries';
 import { RemindersSettings } from './reminders.settings';
 

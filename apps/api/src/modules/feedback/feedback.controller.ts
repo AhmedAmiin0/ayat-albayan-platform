@@ -11,8 +11,8 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser, Permissions } from '../../common/auth/decorators';
 import type { AuthUser } from '../../common/auth/verify-token';
 import { pageQuerySchema, parseOrThrow, type Page } from '../../common/http/http';
-import { FeedbackReadService } from './feedback.read.service';
-import { FeedbackRequestService } from './feedback.request.service';
+import { FeedbackReadService } from './read/feedback.read.service';
+import { FeedbackRequestService } from './request/feedback.request.service';
 
 /**
  * «رأيك يهمّنا», the staff side: the admin asks a family for it and reads every answer; a teacher

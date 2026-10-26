@@ -1,0 +1,168 @@
+{
+  "id": "a19b",
+  "seq": 28,
+  "moves": [
+    {
+      "from": "apps/api/src/modules/dashboard/finance*",
+      "to": "apps/api/src/modules/dashboard/finance"
+    },
+    {
+      "from": "apps/api/src/modules/dashboard/fx-converter*",
+      "to": "apps/api/src/modules/dashboard/finance"
+    },
+    {
+      "from": "apps/api/src/modules/dashboard/work.*",
+      "to": "apps/api/src/modules/dashboard/work"
+    },
+    {
+      "from": "apps/api/src/modules/dashboard/conversion*",
+      "to": "apps/api/src/modules/dashboard/work"
+    },
+    {
+      "from": "apps/api/src/modules/feedback/feedback.public*",
+      "to": "apps/api/src/modules/feedback/public"
+    },
+    {
+      "from": "apps/api/src/modules/feedback/feedback.rate-limit*",
+      "to": "apps/api/src/modules/feedback/public"
+    },
+    {
+      "from": "apps/api/src/modules/feedback/feedback.token*",
+      "to": "apps/api/src/modules/feedback/public"
+    },
+    {
+      "from": "apps/api/src/modules/feedback/feedback.read*",
+      "to": "apps/api/src/modules/feedback/read"
+    },
+    {
+      "from": "apps/api/src/modules/feedback/feedback.request*",
+      "to": "apps/api/src/modules/feedback/request"
+    },
+    {
+      "from": "apps/api/src/modules/feedback/feedback.sender*",
+      "to": "apps/api/src/modules/feedback/request"
+    }
+  ],
+  "files": [
+    [
+      "apps/api/src/modules/dashboard/conversion.test.ts",
+      "apps/api/src/modules/dashboard/work/conversion.test.ts"
+    ],
+    [
+      "apps/api/src/modules/dashboard/conversion.ts",
+      "apps/api/src/modules/dashboard/work/conversion.ts"
+    ],
+    [
+      "apps/api/src/modules/dashboard/finance.mapper.test.ts",
+      "apps/api/src/modules/dashboard/finance/finance.mapper.test.ts"
+    ],
+    [
+      "apps/api/src/modules/dashboard/finance.mapper.ts",
+      "apps/api/src/modules/dashboard/finance/finance.mapper.ts"
+    ],
+    [
+      "apps/api/src/modules/dashboard/finance.queries.ts",
+      "apps/api/src/modules/dashboard/finance/finance.queries.ts"
+    ],
+    [
+      "apps/api/src/modules/dashboard/finance.service.test.ts",
+      "apps/api/src/modules/dashboard/finance/finance.service.test.ts"
+    ],
+    [
+      "apps/api/src/modules/dashboard/finance.service.ts",
+      "apps/api/src/modules/dashboard/finance/finance.service.ts"
+    ],
+    [
+      "apps/api/src/modules/dashboard/finance.test.ts",
+      "apps/api/src/modules/dashboard/finance/finance.test.ts"
+    ],
+    [
+      "apps/api/src/modules/dashboard/finance.ts",
+      "apps/api/src/modules/dashboard/finance/finance.ts"
+    ],
+    [
+      "apps/api/src/modules/dashboard/fx-converter.test.ts",
+      "apps/api/src/modules/dashboard/finance/fx-converter.test.ts"
+    ],
+    [
+      "apps/api/src/modules/dashboard/fx-converter.ts",
+      "apps/api/src/modules/dashboard/finance/fx-converter.ts"
+    ],
+    [
+      "apps/api/src/modules/dashboard/work.mapper.test.ts",
+      "apps/api/src/modules/dashboard/work/work.mapper.test.ts"
+    ],
+    [
+      "apps/api/src/modules/dashboard/work.mapper.ts",
+      "apps/api/src/modules/dashboard/work/work.mapper.ts"
+    ],
+    [
+      "apps/api/src/modules/dashboard/work.queries.ts",
+      "apps/api/src/modules/dashboard/work/work.queries.ts"
+    ],
+    [
+      "apps/api/src/modules/feedback/feedback.public.controller.ts",
+      "apps/api/src/modules/feedback/public/feedback.public.controller.ts"
+    ],
+    [
+      "apps/api/src/modules/feedback/feedback.public.http.test.ts",
+      "apps/api/src/modules/feedback/public/feedback.public.http.test.ts"
+    ],
+    [
+      "apps/api/src/modules/feedback/feedback.public.limit.http.test.ts",
+      "apps/api/src/modules/feedback/public/feedback.public.limit.http.test.ts"
+    ],
+    [
+      "apps/api/src/modules/feedback/feedback.public.service.ts",
+      "apps/api/src/modules/feedback/public/feedback.public.service.ts"
+    ],
+    [
+      "apps/api/src/modules/feedback/feedback.rate-limit.test.ts",
+      "apps/api/src/modules/feedback/public/feedback.rate-limit.test.ts"
+    ],
+    [
+      "apps/api/src/modules/feedback/feedback.rate-limit.ts",
+      "apps/api/src/modules/feedback/public/feedback.rate-limit.ts"
+    ],
+    [
+      "apps/api/src/modules/feedback/feedback.read.http.test.ts",
+      "apps/api/src/modules/feedback/read/feedback.read.http.test.ts"
+    ],
+    [
+      "apps/api/src/modules/feedback/feedback.read.queries.test.ts",
+      "apps/api/src/modules/feedback/read/feedback.read.queries.test.ts"
+    ],
+    [
+      "apps/api/src/modules/feedback/feedback.read.queries.ts",
+      "apps/api/src/modules/feedback/read/feedback.read.queries.ts"
+    ],
+    [
+      "apps/api/src/modules/feedback/feedback.read.service.ts",
+      "apps/api/src/modules/feedback/read/feedback.read.service.ts"
+    ],
+    [
+      "apps/api/src/modules/feedback/feedback.read.sort.test.ts",
+      "apps/api/src/modules/feedback/read/feedback.read.sort.test.ts"
+    ],
+    [
+      "apps/api/src/modules/feedback/feedback.request.http.test.ts",
+      "apps/api/src/modules/feedback/request/feedback.request.http.test.ts"
+    ],
+    [
+      "apps/api/src/modules/feedback/feedback.request.service.ts",
+      "apps/api/src/modules/feedback/request/feedback.request.service.ts"
+    ],
+    [
+      "apps/api/src/modules/feedback/feedback.sender.ts",
+      "apps/api/src/modules/feedback/request/feedback.sender.ts"
+    ],
+    [
+      "apps/api/src/modules/feedback/feedback.token.test.ts",
+      "apps/api/src/modules/feedback/public/feedback.token.test.ts"
+    ],
+    [
+      "apps/api/src/modules/feedback/feedback.token.ts",
+      "apps/api/src/modules/feedback/public/feedback.token.ts"
+    ]
+  ]
+}
