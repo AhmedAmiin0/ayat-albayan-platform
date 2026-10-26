@@ -8,7 +8,7 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser, Permissions } from '../../common/auth/decorators';
 import type { AuthUser } from '../../common/auth/verify-token';
 import { parseOrThrow } from '../../common/http/http';
-import { RecordingDeleteService } from './recording-delete.service';
+import { RecordingDeleteService } from './retention/recording-delete.service';
 import { RecordingVisibilityService } from './recording-visibility.service';
 import { StudentRecordingsService } from './student-recordings.service';
 

@@ -6,7 +6,7 @@ import { loadEnv, webPushEnv } from '../../config/env/env';
 import { CurrentUser, Permissions } from '../auth/decorators';
 import type { AuthUser } from '../auth/verify-token';
 import { NotificationsQueries } from './notifications.queries';
-import { webPushEndpointQuery, webPushSubscriptionSchema } from './web-push.endpoint';
+import { webPushEndpointQuery, webPushSubscriptionSchema } from './web/web-push.endpoint';
 
 /** The bell (R-NOT-01): the caller's own notifications only, never an id from the request. */
 @ApiTags('me')

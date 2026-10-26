@@ -1,6 +1,6 @@
 import { publicSettings, readSettings, type AcademySettings, type PublicSettings } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
-import { ConfigStore } from '../config-store/config-store.service';
+import { ConfigStore } from '../config-store/store/config-store.service';
 import { DEFAULT_TTL_MS, SETTINGS_CACHE_MS } from '../config-store/config-store.types';
 import { DB, type Db } from '../db/db.module';
 import { writeLatest } from './settings-write';
