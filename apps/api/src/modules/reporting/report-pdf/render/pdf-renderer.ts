@@ -1,8 +1,14 @@
 import { Injectable, type OnModuleDestroy } from '@nestjs/common';
-import { chromium, type Browser } from 'playwright-core';
+import type { Browser } from 'playwright-core';
 import { footerTemplate, pageCount } from './pdf-pages';
 
 const A4 = { format: 'A4', printBackground: true, preferCSSPageSize: true } as const;
+
+/** playwright-core (≈ 250 ms and ≈ 80 MB to load) is required on the first report, not at boot. */
+async function launchChromium(): Promise<Browser> {
+  const { chromium } = await import('playwright-core');
+  return chromium.launch({ headless: true });
+}
 
 /**
  * HTML → A4 PDF with headless Chromium (docs/07 §13). playwright-core is pinned to the version
@@ -53,7 +59,7 @@ export class PdfRenderer implements OnModuleDestroy {
 
   private open(): Promise<Browser> {
     if (!this.browser) {
-      const launching = chromium.launch({ headless: true }).then((b) => {
+      const launching = launchChromium().then((b) => {
         b.on('disconnected', () => {
           if (this.browser === launching) this.browser = null;
         });
