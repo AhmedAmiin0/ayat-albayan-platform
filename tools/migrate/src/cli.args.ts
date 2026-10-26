@@ -2,7 +2,7 @@
 import { parseArgs } from 'node:util';
 import { parseOnly } from './delta/only.ts';
 
-export const COMMANDS = [
+const COMMANDS = [
   'extract-sheets',
   'extract-crm',
   'dry-run',

@@ -30,7 +30,7 @@ export function machineEvent(e: CallWebhookEvent): CallEvent | null {
  * Our outbound row already ended (a connect that timed out, a hang-up before WhatsApp named the call)
  * but WhatsApp says the call rings, was answered or got its answer: it is still up there, so end it.
  */
-export function stillUpOnWhatsapp(row: CallRow, event: CallEvent): boolean {
+function stillUpOnWhatsapp(row: CallRow, event: CallEvent): boolean {
   return row.direction === 'outbound' && row.status === 'ended' && ['ringing', 'accepted', 'answer_sdp'].includes(event.type);
 }
 

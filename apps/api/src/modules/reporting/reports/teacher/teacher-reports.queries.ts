@@ -21,7 +21,7 @@ export type ReportStudent = { id: string; code: string | null; name: string };
 const COLUMNS = 'id, lesson_id, student_id, attendance, grade_overall, status, submitted_at, pdf_status, sent_at' as const;
 
 /** R-NFR-08: newest submit first by default; empty attendance/grade last; ties by id (stable pages). */
-export const TEACHER_REPORT_SORT: SortSpec<TeacherReportSortKey> = {
+const TEACHER_REPORT_SORT: SortSpec<TeacherReportSortKey> = {
   columns: {
     submitted: { column: 'submitted_at' },
     attendance: { column: 'attendance', nullsFirst: false },

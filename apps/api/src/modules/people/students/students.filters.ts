@@ -11,7 +11,7 @@ export interface FilterableQuery<Q> {
 }
 
 /** «الباقة» → the boolean column of v_student_list and the value it must have. */
-export const PACKAGE_COLUMN: Record<StudentPackageFilter, [string, boolean]> = {
+const PACKAGE_COLUMN: Record<StudentPackageFilter, [string, boolean]> = {
   active: ['has_package', true],
   none: ['has_package', false],
   low: ['low_balance', true],

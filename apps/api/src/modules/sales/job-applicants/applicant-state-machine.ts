@@ -7,7 +7,7 @@ export type ApplicantStatus = JobApplicantStatus;
  * Applicant pipeline (R-LEAD-04): new → reviewing → interview → accepted | rejected.
  * TODO(R-LEAD-04): can an applicant be rejected before the interview? Not allowed until confirmed.
  */
-export const APPLICANT_TRANSITIONS: Record<ApplicantStatus, readonly ApplicantStatus[]> = {
+const APPLICANT_TRANSITIONS: Record<ApplicantStatus, readonly ApplicantStatus[]> = {
   new: ['reviewing'],
   reviewing: ['interview'],
   interview: ['accepted', 'rejected'],

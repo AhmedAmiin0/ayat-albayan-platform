@@ -46,7 +46,7 @@ function recordRefusal(actor: Actor, role: UserRole): Refusal | null {
  * (custom ones too) need an admin actor; the system admin role needs a system admin; then the usual
  * "no role beyond your own grants".
  */
-export function assignRefusal(actor: Actor, state: UserState, role: RoleRecord): Refusal | null {
+function assignRefusal(actor: Actor, state: UserState, role: RoleRecord): Refusal | null {
   if (role.base_role === 'admin' && myProfile(state, actor)?.role !== 'admin') return { code: 'admin_role_only' };
   if (isSystemAdmin(role) && !isSystemAdminActor(state, actor)) return { code: 'system_admin_only' };
   const gap = missingFor(actor.permissions, roleView(state, role).permissions);

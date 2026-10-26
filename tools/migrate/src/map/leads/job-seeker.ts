@@ -15,7 +15,7 @@ const PATTERNS: Readonly<Record<string, RegExp>> = {
 };
 
 /** How many of a contact's first inbound texts are read. */
-export const FIRST_TEXTS = 3;
+const FIRST_TEXTS = 3;
 
 /** Names of the patterns that match (empty = no hint). */
 export function jobSeekerHints(texts: readonly string[]): string[] {

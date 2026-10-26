@@ -9,7 +9,7 @@ const isRecord = (v: Json): v is { [key: string]: Json | undefined } =>
 const list = <T>(v: Json | undefined): T[] => (Array.isArray(v) ? (v as unknown as T[]) : []);
 
 /** teacher_payouts.breakdown is written only by generate (payouts.plan); a hand edit reads empty. */
-export function readBreakdown(v: Json): Breakdown {
+function readBreakdown(v: Json): Breakdown {
   if (!isRecord(v)) return { lines: [], lesson_ids: [], statuses: [] };
   return {
     lines: list<PayoutLine>(v['lines']),

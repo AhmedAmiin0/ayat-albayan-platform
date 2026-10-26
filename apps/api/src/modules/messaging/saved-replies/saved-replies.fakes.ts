@@ -30,7 +30,7 @@ let seq = 0;
 export const replyId = (n: number) => `5a000000-0000-4000-8000-${String(n).padStart(12, '0')}`;
 
 /** saved_replies in memory: the same reads and writes SavedRepliesQueries makes. */
-export function memoryReplies(rows: SavedReplyRow[] = []) {
+function memoryReplies(rows: SavedReplyRow[] = []) {
   const table = rows;
   return {
     table,

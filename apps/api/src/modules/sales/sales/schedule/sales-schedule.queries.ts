@@ -5,7 +5,7 @@ import { DB, type Db } from '../../../../common/db/db.module';
 import { dbError } from '../../../../common/http/http';
 
 /** Whitelisted lesson columns for sales: never meeting_link, reasons, attendance, notes or money. */
-export const SALES_SCHEDULE_SELECT =
+const SALES_SCHEDULE_SELECT =
   'id, starts_at, ends_at, status, makeup_of_id, rule:schedule_rules!lessons_rule_id_fkey(package), teacher:teachers(id, display_name_ar, display_name_en, tz), lesson_students(student:students(id, code, name, tz))' as const;
 
 export interface SalesScheduleRow {
