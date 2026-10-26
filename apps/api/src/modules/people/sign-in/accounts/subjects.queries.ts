@@ -4,20 +4,20 @@ import { dbError } from '../../../../common/http/http';
 import { conflict } from '../../../../common/http/errors';
 import { isStaff, type GuardianRec, type NewProfile, type ProfileRec, type StudentRec, type SubjectStore } from '../sign-in.ports';
 
-const PROFILE = 'id, role, disabled_at, phone_e164, teacher:teachers(phone_e164)';
+const PROFILE = 'id, role, disabled_at, phone_e164';
 
 interface ProfileRow {
   id: string;
   role: ProfileRec['role'];
   disabled_at: string | null;
   phone_e164: string | null;
-  teacher: { phone_e164: string | null }[] | { phone_e164: string | null } | null;
 }
 
-function toProfile(r: ProfileRow): ProfileRec {
-  const teacher = Array.isArray(r.teacher) ? r.teacher[0] : r.teacher;
-  return { id: r.id, role: r.role, disabled: r.disabled_at !== null, phone: r.phone_e164 ?? teacher?.phone_e164 ?? null };
-}
+/**
+ * The phone a staff reset code may go to is the profile's own (admins and the user edit it), never the
+ * teacher row's: anyone with teachers.write could point that one at their own WhatsApp (review, docs/30 §3).
+ */
+const toProfile = (r: ProfileRow): ProfileRec => ({ id: r.id, role: r.role, disabled: r.disabled_at !== null, phone: r.phone_e164 });
 
 /** SubjectStore on the service-role client: who a phone, a student code or a username names. */
 @Injectable()

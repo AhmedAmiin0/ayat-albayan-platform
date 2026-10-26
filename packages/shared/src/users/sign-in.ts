@@ -28,7 +28,9 @@ export const isFamilyEmail = (email: string | null | undefined): boolean =>
 
 /** The 6-digit code: Arabic-Indic digits and spaces are folded first (a pasted «١٢٣ ٤٥٦» works). */
 export const LOGIN_CODE_LENGTH = 6;
-const digits = (s: string) => s.replace(/[٠-٩]/g, (d) => String(d.charCodeAt(0) - 0x0660)).replace(/\s/g, '');
+const asciiDigits = (s: string) =>
+  s.replace(/[٠-٩]/g, (d) => String(d.charCodeAt(0) - 0x0660)).replace(/[۰-۹]/g, (d) => String(d.charCodeAt(0) - 0x06f0));
+const digits = (s: string) => asciiDigits(s).replace(/\s/g, '');
 export const loginCode = z.string().transform(digits).pipe(z.string().regex(/^\d{6}$/, 'invalid_code'));
 
 const phone = z.string().trim().min(1).max(40);
@@ -56,11 +58,11 @@ export type SignInIdentifier =
 
 /** email | student code (AB-1234, any case) | phone (any format) | username; null = none of them. */
 export function parseIdentifier(raw: string): SignInIdentifier | null {
-  const value = raw.trim();
+  const value = asciiDigits(raw.trim());
   if (value.includes('@')) return { kind: 'email', value: value.toLowerCase() };
   const code = normalizeStudentCode(value.replace(/\s/g, ''));
   if (code) return { kind: 'student', value: code };
-  if (/^[+0٠]|^\d/.test(value)) {
+  if (/^[+(\d]/.test(value)) {
     const p = normalizePhone(value);
     return p.ok ? { kind: 'phone', value: p.e164 } : null;
   }

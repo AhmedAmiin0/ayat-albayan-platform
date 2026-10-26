@@ -20,7 +20,7 @@ export function ForgotCodeStep({ forgot }: { forgot: Forgot }) {
         keyboardType="number-pad"
         textContentType="oneTimeCode"
         autoComplete="sms-otp"
-        maxLength={6}
+        maxLength={12}
         value={code}
         onChangeText={setCode}
       />

@@ -47,6 +47,16 @@ describe('CodeSend — the account_code template, sent now, never queued (docs/3
     expect(dispatch.send).not.toHaveBeenCalled();
   });
 
+  it('never over a crm line (its inbox would show the code)', async () => {
+    vi.stubEnv('WA_PROVIDER', 'crm');
+    try {
+      await expect(make().send({ phone: '+966500000001', code: '1' })).resolves.toEqual({ status: 'unavailable' });
+    } finally {
+      vi.unstubAllEnvs();
+    }
+    expect(dispatch.send).not.toHaveBeenCalled();
+  });
+
   it('module mode without routes sends nothing', async () => {
     setNumbersOverlay({ values: {}, numberIds: {} });
     try {

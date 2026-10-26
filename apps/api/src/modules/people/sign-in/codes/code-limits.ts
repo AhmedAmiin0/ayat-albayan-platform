@@ -12,6 +12,13 @@ const PHONE_LIMITS = { per15Min: 3, perDay: 10, failedPerDay: 10 } as const;
 export const phoneMaySend = (s: PhoneStats): boolean =>
   s.sentLast15Min < PHONE_LIMITS.per15Min && s.sentLastDay < PHONE_LIMITS.perDay && s.failedLastDay < PHONE_LIMITS.failedPerDay;
 
+/**
+ * The site-wide breaker (security review): wrong codes over EVERY phone in an hour. Past it no code is
+ * sent or checked until the hour rolls on, so guessing across many families (sequential student codes)
+ * stalls however many IPs it uses. ~25 times the busiest hour a real academy should see.
+ */
+export const GLOBAL_FAILED_PER_HOUR = 200;
+
 /** May this phone's code still be checked? (10 wrong codes a day, across codes.) */
 export const phoneMayCheck = (s: PhoneStats): boolean => s.failedLastDay < PHONE_LIMITS.failedPerDay;
 

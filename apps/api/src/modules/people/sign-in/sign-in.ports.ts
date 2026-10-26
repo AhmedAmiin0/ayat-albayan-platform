@@ -44,6 +44,8 @@ export interface CodeStore {
   spend(id: string): Promise<boolean>;
   delivered(id: string, error: string | null): Promise<void>;
   phoneStats(phone: string, now: Date): Promise<PhoneStats>;
+  /** Wrong attempts over every phone in the last hour (the site-wide breaker). */
+  failedLastHour(now: Date): Promise<number>;
 }
 
 export interface GuardianRec {
@@ -67,7 +69,7 @@ export interface ProfileRec {
   id: string;
   role: UserRole;
   disabled: boolean;
-  /** profiles.phone_e164, else the linked teacher row's phone. */
+  /** profiles.phone_e164 only (never the teacher row's: see subjects.queries toProfile). */
   phone: string | null;
 }
 
@@ -84,7 +86,7 @@ export interface SubjectStore {
   studentByCode(code: string): Promise<StudentRec | null>;
   profileById(id: string): Promise<ProfileRec | null>;
   profileByUsername(username: string): Promise<ProfileRec | null>;
-  /** A staff profile whose own phone, or whose teacher row's phone, is this one. */
+  /** A staff profile whose own phone, or whose teacher row's phone, is this one (a conflict / lookup key only). */
   staffByPhone(phone: string): Promise<ProfileRec | null>;
   /** Any profile holding this phone (profiles.phone_e164 is unique). */
   profileByPhone(phone: string): Promise<ProfileRec | null>;

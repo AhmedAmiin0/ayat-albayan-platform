@@ -14,6 +14,8 @@ describe('parseIdentifier (docs/30 §6)', () => {
   it('reads a phone in any format as E.164 (a lookup key only)', () => {
     expect(parseIdentifier('+966 50 000 0001')).toEqual({ kind: 'phone', value: '+966500000001' });
     expect(parseIdentifier('00966500000001')).toEqual({ kind: 'phone', value: '+966500000001' });
+    expect(parseIdentifier('+٩٦٦٥٠٠٠٠٠٠٠١')).toEqual({ kind: 'phone', value: '+966500000001' });
+    expect(parseIdentifier('(+966) 500000001')).toEqual({ kind: 'phone', value: '+966500000001' });
     expect(parseIdentifier('123')).toBeNull();
   });
 

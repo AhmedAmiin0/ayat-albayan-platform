@@ -50,6 +50,11 @@ export class FakeCodes implements CodeStore {
     if (row) row.sendError = error;
   }
 
+  async failedLastHour(now: Date): Promise<number> {
+    const hour = this.rows.filter((r) => now.getTime() - r.createdAt.getTime() < 3600_000);
+    return hour.reduce((n, r) => n + r.attempts - (r.usedAt ? 1 : 0), 0);
+  }
+
   async phoneStats(phone: string, now: Date): Promise<PhoneStats> {
     const day = this.rows.filter((r) => r.phone === phone && now.getTime() - r.createdAt.getTime() < 24 * 3600_000);
     return {

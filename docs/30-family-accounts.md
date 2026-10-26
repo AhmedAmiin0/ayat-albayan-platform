@@ -79,11 +79,17 @@ is only said after a correct code, so it reveals nothing to someone who does not
   - per identifier as typed (after normalising: trimmed, lower-cased, spaces / dashes / `+` folded, so
     `AB-1234`, `ab 1234` and `ab1234` share a bucket): 5 requests and 10 checks per 15 minutes;
   - per IP: 20 code requests, 30 checks and 30 username sign-ins per 15 minutes.
+  - site-wide (security review): 200 wrong codes in an hour across all phones pause every send and check
+    until the hour rolls on (logged as a warning), so guessing across many families stalls however many
+    IPs it uses.
   - Brute force on sequential student codes: each guess needs a code the attacker does not see (it goes to
-    the guardian's WhatsApp); 10 failed attempts per phone per day caps a student at 10 guesses of 10⁶ a day.
+    the guardian's WhatsApp); 10 failed attempts per phone per day caps a student at 10 guesses of 10⁶ a
+    day, and the site-wide breaker caps the sum.
 - Codes go **only to phones on file**: the guardian's phone (for the guardian and each of their child
-  students), a teacher row's phone, a staff profile's `phone_e164`. Never to a number the caller typed that
-  is not on file: a typed phone is only a lookup key.
+  students) and a staff profile's own `phone_e164` (admins and the user edit it). Never a teacher row's
+  phone (anyone with `teachers.write` could point it at their own WhatsApp) and never a number the caller
+  typed: a typed phone is only a lookup key. A staff member with no phone on their profile resets through
+  the admin, as before.
 - Every request / forgot response is the same `202` «إن كان الحساب موجودًا فقد أرسلنا رمزًا إلى رقم الواتساب
   المسجّل», whatever exists. The WhatsApp send runs after the response, so timing does not tell either.
   Sign-in failures are one generic message.
@@ -103,14 +109,15 @@ is only said after a correct code, so it reveals nothing to someone who does not
   COPY_CODE button).
 - **crm driver**: the CRM builds Meta's components from its own synced list and gets only body values and
   `buttonParams`. Whether it fills an OTP copy-code button is not documented, so authentication codes are
-  **not supported on a crm line** until tested: keep the notifications line on meta or kapso for codes.
+  **not supported on a crm line**, and the CRM's inbox would show the code to its users: `CodeSend` refuses a
+  crm line or number (the code is then unavailable). Keep the notifications line on meta or kapso for codes.
 - Settings (registry, «القيم» → academy group): `family_login_enabled` (bool, default **false**),
   `login_code_ttl_minutes` (default 10, 3–30), `login_code_max_attempts` (default 5, 3–10).
 - Codes are available only when `family_login_enabled` is on, `account_code` is approved, the pepper is
   set and the send gate is open. Otherwise:
   - the family tab and «أول دخول» show «الدخول للأسر غير متاح بعد»;
-  - staff «نسيت كلمة المرور؟» shows «تواصل مع الإدارة لإعادة تعيين كلمة المرور» (the admin's existing
-    «إعادة تعيين كلمة المرور» dialog on «المستخدمون»).
+  - staff «نسيت كلمة السر؟» shows «تواصل مع الإدارة لإعادة تعيين كلمة السر» (the admin's existing
+    «إعادة تعيين كلمة السر» dialog on «المستخدمون»).
   - `GET /auth/code/status` → `{ available }` tells the pages which one to show.
 
 ## 5. Sessions without touching Supabase project settings
@@ -123,7 +130,8 @@ The phone provider stays off and no hosted Supabase setting changes.
 - Username sign-in = `POST /auth/login { username, password }`: the API resolves the user's email, signs
   in on an **isolated** client (no stored session, the precedent of `SupabaseAccountAuth.passwordMatches`)
   and returns the session for `supabase.auth.setSession`. An identifier with `@` keeps signing in directly
-  with GoTrue, as today.
+  with GoTrue, as today, and `/auth/login` refuses it (relayed through the API, every email guess would
+  share the API's IP at GoTrue).
 - The landing is the role's home (`HOME_BY_ROLE`); a disabled account stays refused (`account_disabled`).
 
 ## 6. Endpoints (all public, zod-validated in `packages/shared`)
@@ -145,10 +153,10 @@ still answer `202`) while §4's gates are closed. Password rules are the existin
 ## 7. UI
 
 - **Web /login**: two tabs. «فريق الأكاديمية» (default; email or username + password) and «الأسرة والطلاب»
-  (phone → code, or «اسم المستخدم» + password, and «أول دخول؟» for a child). «نسيت كلمة المرور؟» on both. The
+  (phone → code, or «اسم المستخدم» + password, and «أول دخول؟» for a child). «نسيت كلمة السر؟» on both. The
   code input is 6 boxes, paste-friendly, `autocomplete="one-time-code"`, with a resend timer.
 - **Mobile** (OTA only, JS-only, no new dependency): the staff login accepts email or username;
-  «نسيت كلمة المرور؟» (identifier → code → new password). Families keep the «use the website» notice.
+  «نسيت كلمة السر؟» (identifier → code → new password). Families keep the «use the website» notice.
 - **Admin**: the teacher form gets «اسم المستخدم» (written to the teacher's login profile; it needs the login,
   which «المستخدمون» creates); the users list shows usernames.
 
@@ -179,3 +187,8 @@ still answer `202`) while §4's gates are closed. Password rules are the existin
    project's «sign-ins and sign-ups» rate limit) counts every username sign-in together. Watch it once
    children use usernames; raising that limit is a project setting (an owner decision, not changed here).
    Email sign-ins (staff) still go from the browser straight to GoTrue, as before.
+6. Residual risks the security review named, accepted for now: a role holding `guardians.write` can change a
+   family's phone and then sign in as that family (the portal is read-only family data); `/auth/login` is
+   slower for a username that exists (GoTrue's password check), within its 10-per-15-minutes limit; the
+   site-wide breaker can be tripped on purpose (codes pause for up to an hour, nothing else); Kapso stores
+   sent messages, so whoever has the Kapso console sees codes in flight (10 minutes, single use).

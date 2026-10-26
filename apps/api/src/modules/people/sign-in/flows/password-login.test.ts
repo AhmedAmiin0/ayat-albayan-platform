@@ -4,10 +4,10 @@ import { signInWorld } from '../sign-in.world';
 const IP = '203.0.113.3';
 
 describe('POST /auth/login: username + password on an isolated client (docs/30 §5)', () => {
-  it('a teacher signs in with the username (any case) or with the email', async () => {
+  it('a teacher signs in with the username (any case); an email is GoTrue\'s, never relayed here', async () => {
     const w = signInWorld();
     await expect(w.passwords.login({ username: 'Omar', password: 'Teacher-pass-1' }, IP)).resolves.toMatchObject({ access_token: 'at-p-teacher' });
-    await expect(w.passwords.login({ username: 'teacher@example.com', password: 'Teacher-pass-1' }, IP)).resolves.toMatchObject({ access_token: 'at-p-teacher' });
+    await expect(w.passwords.login({ username: 'teacher@example.com', password: 'Teacher-pass-1' }, IP)).rejects.toThrow('invalid_credentials');
   });
 
   it('a child signs in with the student code in any case', async () => {

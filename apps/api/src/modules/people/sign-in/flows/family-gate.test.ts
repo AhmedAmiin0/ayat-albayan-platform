@@ -55,4 +55,21 @@ describe('rate limits', () => {
     await w.kit.idle();
     expect(w.send.sent).toHaveLength(2);
   });
+
+  it('the site-wide breaker: 200 wrong codes in an hour across phones pause every send and check', async () => {
+    const w = signInWorld();
+    w.family.request({ phone: PHONES.guardian }, '192.0.2.200');
+    await w.kit.idle();
+    const code = w.send.lastTo(PHONES.guardian);
+    const other = { purpose: 'sign_in' as const, subject: { kind: 'guardian' as const, id: 'gx' }, phone: PHONES.other, hash: 'x', maxAttempts: 5, expiresAt: new Date(Date.now() + 60_000) };
+    for (let i = 0; i < 40; i += 1) {
+      await w.codes.insert(other);
+      const row = w.codes.rows.at(-1);
+      if (row) row.attempts = 5;
+    }
+    await expect(w.family.verify({ phone: PHONES.guardian, code }, '192.0.2.201')).rejects.toThrow('invalid_code');
+    w.family.request({ phone: PHONES.teacher }, '192.0.2.202');
+    await w.kit.idle();
+    expect(w.send.sent).toHaveLength(1);
+  });
 });

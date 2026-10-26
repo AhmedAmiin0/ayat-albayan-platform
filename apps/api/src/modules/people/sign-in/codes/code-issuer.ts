@@ -3,7 +3,7 @@ import { CodeSend } from '../../../messaging/whatsapp';
 import { CODE_STORE, type CodePurpose, type CodeStore, type Subject } from '../sign-in.ports';
 import { SignInSettings } from '../sign-in.settings';
 import { expiryOf, hashCode, newCode, sameHash } from './code-crypto';
-import { phoneMayCheck, phoneMaySend } from './code-limits';
+import { GLOBAL_FAILED_PER_HOUR, phoneMayCheck, phoneMaySend } from './code-limits';
 
 /** A code to issue: the phone is always one ON FILE for the subject, never a number the caller typed. */
 export interface CodeTarget {
@@ -45,7 +45,7 @@ export class CodeIssuer {
 
   private async issueNow(target: CodeTarget, now: Date): Promise<boolean> {
     const pepper = this.settings.config.pepper;
-    if (!pepper || !phoneMaySend(await this.store.phoneStats(target.phone, now))) return false;
+    if (!pepper || !(await this.calm(now)) || !phoneMaySend(await this.store.phoneStats(target.phone, now))) return false;
     const values = await this.settings.read();
     const code = newCode();
     const id = await this.store.insert({
@@ -69,9 +69,16 @@ export class CodeIssuer {
   async check(input: { subject: Subject; purposes: readonly CodePurpose[]; code: string }, now = new Date()): Promise<boolean> {
     const pepper = this.settings.config.pepper;
     const row = pepper ? await this.store.latest(input.subject, input.purposes) : null;
-    if (!pepper || !row || !phoneMayCheck(await this.store.phoneStats(row.phone, now))) return false;
+    if (!pepper || !row || !(await this.calm(now)) || !phoneMayCheck(await this.store.phoneStats(row.phone, now))) return false;
     const stored = await this.store.take(row.id);
     if (!stored || !sameHash(stored, hashCode(pepper, { purpose: row.purpose, subject: input.subject, code: input.code }))) return false;
     return this.store.spend(row.id);
+  }
+
+  /** false while the site-wide breaker is tripped (logged: the admin should know someone is guessing). */
+  private async calm(now: Date): Promise<boolean> {
+    if ((await this.store.failedLastHour(now)) < GLOBAL_FAILED_PER_HOUR) return true;
+    this.log.warn('login codes paused: too many wrong codes in the last hour');
+    return false;
   }
 }

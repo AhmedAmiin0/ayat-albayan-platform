@@ -2,7 +2,7 @@ import { FAMILY_EMAIL_DOMAIN } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { AuditService } from '../../../../common/audit/audit.service';
 import { conflict, forbidden } from '../../../../common/http/errors';
-import { AUTH_GATE, isStaff, SUBJECT_STORE, type AuthGate, type GuardianRec, type NewProfile, type StudentRec, type SubjectStore } from '../sign-in.ports';
+import { AUTH_GATE, SUBJECT_STORE, type AuthGate, type GuardianRec, type NewProfile, type StudentRec, type SubjectStore } from '../sign-in.ports';
 
 /** The synthetic, never-delivered auth email of a family login (docs/30 §2). */
 export const familyEmail = (kind: 'g' | 's', id: string): string => `${kind}-${id}@${FAMILY_EMAIL_DOMAIN}`;
@@ -23,8 +23,9 @@ export class Provisioner {
   /** The guardian's profile id (made now if missing). 409 phone_belongs_to_staff, 403 account_disabled. */
   async guardian(g: GuardianRec): Promise<string> {
     if (g.profileId) return this.usable(g.profileId);
+    // A staff phone is a staff profile's own or its teacher row's (staffByPhone); any holder keeps the phone.
+    if (await this.subjects.staffByPhone(g.phone)) throw conflict('phone_belongs_to_staff');
     const holder = await this.subjects.profileByPhone(g.phone);
-    if (holder && isStaff(holder.role)) throw conflict('phone_belongs_to_staff');
     const profile = { role: 'guardian' as const, fullName: g.name, phone: holder ? null : g.phone, tz: g.tz };
     const made = await this.make({ email: familyEmail('g', g.id), profile, record: { kind: 'guardian', id: g.id } });
     if (made) return made;
@@ -46,6 +47,12 @@ export class Provisioner {
     return p.id;
   }
 
+  /** A login left by a failed attempt: whatever it held no longer opens it (as POST /users adopts one). */
+  private async adopt(id: string, password: string | undefined): Promise<void> {
+    if (password) await this.auth.setPassword(id, password);
+    await this.auth.revokeSessions(id);
+  }
+
   /** null = the record got a login from elsewhere meanwhile (what this call made is removed). */
   private async make(input: {
     email: string;
@@ -56,9 +63,11 @@ export class Provisioner {
     const { email, profile, record, password } = input;
     const left = await this.auth.idByEmail(email);
     const id = left ?? (await this.auth.createUser({ email, fullName: profile.fullName, ...(password && { password }) }));
-    if (left && password) await this.auth.setPassword(left, password);
+    if (left) await this.adopt(left, password);
     try {
-      if (!(await this.subjects.profileById(id))) await this.subjects.insertProfile({ id, ...profile });
+      const existing = await this.subjects.profileById(id);
+      if (existing && existing.role !== profile.role) throw new Error('family login has another role');
+      if (!existing) await this.subjects.insertProfile({ id, ...profile });
       if (!(await this.subjects.link({ kind: record.kind, recordId: record.id, profileId: id }))) {
         await this.auth.removeUser(id);
         return null;

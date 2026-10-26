@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { fakeDb } from '../../guardians/fake-db';
 import { SubjectsQueries } from './subjects.queries';
 
-const teacherProfile = { id: 'p1', role: 'teacher', disabled_at: null, phone_e164: null, teacher: [{ phone_e164: '+966500000002' }] };
+const teacherProfile = { id: 'p1', role: 'teacher', disabled_at: null, phone_e164: null };
 
 describe('SubjectsQueries', () => {
   it('a guardian by the phone on file', async () => {
@@ -17,13 +17,13 @@ describe('SubjectsQueries', () => {
     await expect(new SubjectsQueries(db).studentByCode('AB-1234')).resolves.toMatchObject({ id: 's1', guardianPhone: '+966500000001' });
   });
 
-  it('a profile\'s phone falls back to its teacher row\'s phone', async () => {
+  it('a profile\'s reset phone is its own, never the teacher row\'s (teachers.write could change that one)', async () => {
     const { db } = fakeDb({ profiles: [{ data: teacherProfile }] });
-    await expect(new SubjectsQueries(db).profileByUsername('omar')).resolves.toEqual({ id: 'p1', role: 'teacher', disabled: false, phone: '+966500000002' });
+    await expect(new SubjectsQueries(db).profileByUsername('omar')).resolves.toEqual({ id: 'p1', role: 'teacher', disabled: false, phone: null });
   });
 
   it('staffByPhone: a staff profile\'s own phone, never a family profile\'s, else a linked teacher row', async () => {
-    const family = { ...teacherProfile, role: 'guardian', phone_e164: '+966500000001', teacher: null };
+    const family = { ...teacherProfile, role: 'guardian', phone_e164: '+966500000001' };
     const own = fakeDb({ profiles: [{ data: family }] });
     await expect(new SubjectsQueries(own.db).staffByPhone('+966500000001')).resolves.toBeNull();
     const viaTeacher = fakeDb({ profiles: [{ data: null }, { data: teacherProfile }], teachers: [{ data: { profile_id: 'p1' } }] });

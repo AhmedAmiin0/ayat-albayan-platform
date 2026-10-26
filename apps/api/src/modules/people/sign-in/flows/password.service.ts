@@ -63,11 +63,14 @@ export class PasswordService {
     await this.kit.record({ userId: made, action: 'password_set', via: 'student' });
   }
 
-  /** A student code → that student's login; a username → that profile; an email as typed. A phone never signs in with a password. */
+  /**
+   * A student code → that student's login; a username → that profile. An email is refused here: web and
+   * mobile send it straight to GoTrue, which then limits by the caller's own IP (relayed from the API
+   * server, every guess would share one IP). A phone never signs in with a password.
+   */
   private async emailFor(raw: string): Promise<string | null> {
     const id = parseIdentifier(raw);
-    if (!id || id.kind === 'phone') return null;
-    if (id.kind === 'email') return id.value;
+    if (!id || id.kind === 'phone' || id.kind === 'email') return null;
     const profileId =
       id.kind === 'student'
         ? ((await this.accounts.subjects.studentByCode(id.value))?.profileId ?? null)

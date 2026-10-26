@@ -32,7 +32,7 @@ export function CodeStep({ flow, submitLabel, busyLabel, onSubmit, backLabel, ch
       }}
     >
       <StatusNote>{t.familyAuth.codeSent}</StatusNote>
-      <CodeBoxes digits={flow.digits} onDigits={flow.setDigits} invalid={flow.error !== undefined} />
+      <CodeBoxes digits={flow.digits} onDigits={flow.setDigits} invalid={flow.error === t.familyAuth.errors.invalid_code || flow.error === t.familyAuth.errors.code_incomplete} />
       {children}
       {flow.error && <FormAlert>{flow.error}</FormAlert>}
       <Button type="submit" disabled={flow.busy} className="min-h-11 w-full">

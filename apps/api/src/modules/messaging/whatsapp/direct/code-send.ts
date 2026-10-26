@@ -1,6 +1,7 @@
 import { ACCOUNT_CODE_TEMPLATE } from '@ab/shared';
 import { Inject, Injectable, Optional } from '@nestjs/common';
 import { overlayNumbers } from '../../../../common/integrations/numbers-overlay';
+import { lineProvider, loadEnv } from '../../../../config/env/env';
 import { SendGate } from '../gate/send-gate';
 import { routeOf } from '../numbers/number-route';
 import { NumberRoutes } from '../numbers/number-routes';
@@ -53,13 +54,20 @@ export class CodeSend {
     return (await this.queries.approvedTemplates()).find((t) => t.key === ACCOUNT_CODE_TEMPLATE) ?? null;
   }
 
-  /** Legacy: the template's line (notifications). Module mode: the number routing picks, as for any template. */
+  /**
+   * Legacy: the template's line (notifications). Module mode: the number routing picks, as for any
+   * template. Never a crm line (docs/30 §4): the CRM's inbox would show the code to its users, and
+   * whether it fills an OTP button is untested.
+   */
   private async via(row: DueMessage, template: TemplateRow): Promise<SendVia | null> {
     const numbers = overlayNumbers();
-    if (numbers === null) return lineOf(row, template, this.queries.chatConfigured);
+    if (numbers === null) {
+      const line = lineOf(row, template, this.queries.chatConfigured);
+      return lineProvider(loadEnv(), line) === 'crm' ? null : line;
+    }
     if (!this.routes) return null;
-    const { pass } = await this.routes.pass(numbers);
-    return routeOf(pass, { row, template });
+    const route = routeOf((await this.routes.pass(numbers)).pass, { row, template });
+    return route && numbers.find((n) => n.id === route.numberId)?.env?.provider !== 'crm' ? route : null;
   }
 }
 

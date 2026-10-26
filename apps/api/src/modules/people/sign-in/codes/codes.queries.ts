@@ -66,6 +66,13 @@ export class CodesQueries implements CodeStore {
     if (error) throw dbError(error);
   }
 
+  async failedLastHour(now: Date): Promise<number> {
+    const since = new Date(now.getTime() - 3600_000).toISOString();
+    const { data, error } = await this.db.from('login_codes').select('attempts, used_at').gte('created_at', since);
+    if (error) throw dbError(error);
+    return data.reduce((n, r) => n + r.attempts - (r.used_at ? 1 : 0), 0);
+  }
+
   /** The phone's codes of the last 24 hours; a spent code's last attempt was the right one. */
   async phoneStats(phone: string, now: Date): Promise<PhoneStats> {
     const since = new Date(now.getTime() - DAY_MS).toISOString();

@@ -24,6 +24,11 @@ describe('CodeBoxes (docs/30 §7)', () => {
     expect(screen.getByRole('group', { name: t.familyAuth.code })).toBeTruthy();
   });
 
+  it('starts with the focus in the first box (the form that had it is gone)', () => {
+    render(<Harness />);
+    expect(document.activeElement).toBe(box(1));
+  });
+
   it('typing a digit fills the box and moves to the next one', () => {
     render(<Harness />);
     fireEvent.change(box(1), { target: { value: '7' } });
