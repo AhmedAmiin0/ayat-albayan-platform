@@ -22,7 +22,7 @@ export const SECRET = 'stub-app-secret';
 export const CHAT_SECRET = 'stub-chat-app-secret';
 export const VERIFY = 'local-verify-token';
 export const KAPSO_SECRET = 'stub-kapso-webhook-secret';
-export const WACRM_SECRET = 'stub-wacrm-webhook-secret';
+const WACRM_SECRET = 'stub-wacrm-webhook-secret';
 
 /** The CRM's X-Wacrm-Signature: «t=<unix seconds>,v1=<hex HMAC-SHA256 of `${t}.${body}`>». */
 export const wacrmSign = (body: string, at: { t?: number; secret?: string } = {}) => {

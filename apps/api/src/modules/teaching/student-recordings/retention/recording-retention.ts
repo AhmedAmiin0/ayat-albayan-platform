@@ -5,7 +5,7 @@ import { RecordingSettings } from '../recordings.settings';
 
 export const RETENTION_KEY = 'recording_retention_days';
 /** A lesson never runs this long: a row still `recording` after it lost its egress webhook. */
-export const STUCK_AFTER_MS = 6 * 3_600_000;
+const STUCK_AFTER_MS = 6 * 3_600_000;
 const BATCH = 100;
 const MAX_BATCHES = 10;
 const DAY_MS = 86_400_000;

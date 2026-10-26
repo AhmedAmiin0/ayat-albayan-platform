@@ -5,7 +5,7 @@ import { StorageService } from '../../../common/storage/storage.service';
 import { badRequest, notFound } from '../../../common/http/errors';
 
 /** Expense receipts live in the private receipts bucket under receipts/expenses/{uuid}.{ext}. */
-export const EXPENSE_FOLDER = 'expenses';
+const EXPENSE_FOLDER = 'expenses';
 
 /** Signed upload (the payments pattern), path check before storing, signed download. */
 @Injectable()

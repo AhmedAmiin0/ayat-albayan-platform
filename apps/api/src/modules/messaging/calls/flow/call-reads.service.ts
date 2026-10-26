@@ -11,7 +11,7 @@ import type { CallRow } from '../store/call-row';
 import { CallsKit } from './call-kit';
 
 /** A live row this user's device should show: their own call, or an inbound one ringing in a chat they may answer (inbox.send). */
-export function showsLive(row: CallRow, actor: CallActor): boolean {
+function showsLive(row: CallRow, actor: CallActor): boolean {
   const me = actor.user.id;
   if (row.direction === 'outbound') return row.created_by === me;
   if (row.accepted_by === me) return true;

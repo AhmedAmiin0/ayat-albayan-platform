@@ -5,7 +5,7 @@ import { join } from 'node:path';
 // Everything else goes through MessageDispatch (send), ReadReceipts (markRead) or InboundMedia
 // (getMedia), so the per-line routing and the WA_ALLOWED_RECIPIENTS guard cannot be bypassed.
 
-export const WHITELIST = new Set([
+const WHITELIST = new Set([
   'config/env/env.ts',
   'config/env/env.gaps.ts',
   'config/env/whatsapp/env.kapso.ts',

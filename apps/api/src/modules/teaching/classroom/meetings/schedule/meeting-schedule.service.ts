@@ -19,7 +19,7 @@ const HOUR_MS = 3_600_000;
  * one of its texts went out, whatever a later resend did (failed, invite_limit). Never a family that
  * never got the invitation (markStale only marks never-delivered phones, so a stale row never matches).
  */
-export const mayTell = (i: StoredInvitee, delivered: ReadonlySet<string>): boolean =>
+const mayTell = (i: StoredInvitee, delivered: ReadonlySet<string>): boolean =>
   i.status === 'window_closed' || delivered.has(i.phone_e164 ?? '');
 
 /** The invitation side of scheduling (one injectable, so constructors stay at ≤ 3 params). */

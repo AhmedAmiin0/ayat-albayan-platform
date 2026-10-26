@@ -30,7 +30,7 @@ const TEACHER_EVENTS: ReadonlySet<LessonEvent> = new Set([
 export type ViewContext = { role: Role | null; seq: SeqMap; academyAuto?: boolean };
 
 /** Event list for the caller's role (LessonView.allowed_events). */
-export function eventsFor(row: Pick<LessonRow, 'status'>, role: Role | null): LessonEvent[] {
+function eventsFor(row: Pick<LessonRow, 'status'>, role: Role | null): LessonEvent[] {
   const all = allowedLessonEvents(row.status);
   return role === 'admin' ? all : all.filter((e) => TEACHER_EVENTS.has(e));
 }
