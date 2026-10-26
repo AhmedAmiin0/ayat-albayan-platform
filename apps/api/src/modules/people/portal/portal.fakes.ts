@@ -10,7 +10,8 @@ import { fakeSettings } from '../../../common/settings/settings.fakes';
 import { SettingsService } from '../../../common/settings/settings.service';
 import { StorageService } from '../../../common/storage/storage.service';
 import { BalanceQueries } from '../../finance/subscriptions';
-import { ClassroomQueries } from '../../teaching/classroom/classroom.queries';
+import { RoomAdmission } from '../../teaching/classroom/join/room-admission';
+import { StudentLinkQueries } from '../../teaching/classroom/student-link/student-link.queries';
 import { ChatNumber } from './home/chat-number';
 import type { PortalLessonRow } from './lessons/portal-lessons.queries';
 import { PortalLessonsQueries } from './lessons/portal-lessons.queries';
@@ -71,9 +72,14 @@ export async function portalApp() {
   const packages = { packages: vi.fn(async () => [{ id: 'p1', package: '8', duration: 30, lessons_total: 8, starts_on: '2026-10-01', renews_on: '2026-11-01', status: 'active', price: 290, currency: 'SAR', notes: 'سر' }]) };
   const balances = { forStudents: vi.fn(async () => [{ subscription_id: 'p1', remaining: 5 }]), forSubscriptions: vi.fn() };
   const classroom = {
-    lesson: vi.fn(async () => ({ id: L1, teacher_id: 'tc', starts_at: '2026-10-27T16:00:00.000Z', ends_at: '2026-10-27T16:30:00.000Z', status: 'confirmed', room_opened_at: null })),
+    student: vi.fn(async () => ({ id: S1, name: 'سلمى أحمد' })),
     joinWindow: vi.fn(async () => ({ opensBeforeMin: 10, closesAfterMin: 15 })),
-    rotateStudentLink: vi.fn(async () => undefined),
+    lessonsAhead: vi.fn(async () => [{ id: L1, starts_at: '2026-10-27T16:00:00.000Z', ends_at: '2026-10-27T16:30:00.000Z', room_opened_at: null, teacher_name: 'أبرار' }]),
+    lessonLinkId: vi.fn(async () => 'jl-1'),
+  };
+  const admission = {
+    livekit: vi.fn(() => ({ url: 'wss://lk.example.org' })),
+    admit: vi.fn(async () => ({ url: 'wss://lk.example.org', token: 'room-token', role: 'guest' })),
   };
   const storage = { signedDownload: vi.fn(async (ref: { seconds?: number }) => ({ url: 'https://files.example.org/signed', expires_at: `+${ref.seconds}` })) };
   const chat = { e164: vi.fn(async (): Promise<string | null> => '+966500000000') };
@@ -84,7 +90,8 @@ export async function portalApp() {
     .overrideProvider(PortalReportsQueries).useValue(reports)
     .overrideProvider(PortalPackageQueries).useValue(packages)
     .overrideProvider(BalanceQueries).useValue(balances)
-    .overrideProvider(ClassroomQueries).useValue(classroom)
+    .overrideProvider(StudentLinkQueries).useValue(classroom)
+    .overrideProvider(RoomAdmission).useValue(admission)
     .overrideProvider(StorageService).useValue(storage)
     .overrideProvider(ChatNumber).useValue(chat)
     .overrideProvider(SettingsService).useValue(fakeSettings({ meeting_link_auto: false }))
@@ -94,7 +101,7 @@ export async function portalApp() {
   await app.getHttpAdapter().getInstance().ready();
   const call = (method: 'GET' | 'POST', url: string, who?: Who) =>
     app.inject({ method, url, headers: who ? { authorization: `Bearer ${who}` } : {} });
-  return { app, call, scope, lessons, reports, packages, balances, classroom, storage, chat };
+  return { app, call, scope, lessons, reports, packages, balances, classroom, admission, storage, chat };
 }
 
 /** Every key at any depth of a JSON value. */

@@ -28,6 +28,8 @@ describe('/portal responses are whitelists (no money, notes or contacts)', () =>
       package: { package: '8', duration: 30, lessons_total: 8, remaining: 5, starts_on: '2026-10-01', renews_on: '2026-11-01', status: 'active' },
     });
     expect(t.balances.forStudents).toHaveBeenCalledWith([S1]);
+    t.balances.forStudents.mockResolvedValueOnce([{ subscription_id: 'p1', remaining: -2 }]);
+    expect((await t.call('GET', `/portal/students/${S1}/package`, 'student1')).json().package.remaining).toBe(0);
     t.packages.packages.mockResolvedValueOnce([]);
     expect((await t.call('GET', `/portal/students/${S1}/package`, 'student1')).json()).toEqual({ package: null });
   });
@@ -54,10 +56,10 @@ describe('/portal responses are whitelists (no money, notes or contacts)', () =>
     expect((await t.call('POST', `/portal/students/${S1}/reports/${R1}/url`, 'guardianA')).json().code).toBe('report_not_found');
   });
 
-  it('a recording opens only when it is visible to the student; otherwise 404', async () => {
+  it('a recording opens (an hour, for playback) only when it is visible to the student; otherwise 404', async () => {
     const ok = await t.call('POST', `/portal/students/${S1}/recordings/${REC}/url`, 'student1');
     expect(ok.statusCode).toBe(200);
-    expect(t.storage.signedDownload).toHaveBeenLastCalledWith({ bucket: 'recordings', path: `lessons/${L1}/a.mp4`, seconds: 300 });
+    expect(t.storage.signedDownload).toHaveBeenLastCalledWith({ bucket: 'recordings', path: `lessons/${L1}/a.mp4`, seconds: 3600 });
     t.reports.visibleRecordings.mockResolvedValueOnce([]);
     const hidden = await t.call('POST', `/portal/students/${S1}/recordings/${REC}/url`, 'student1');
     expect([hidden.statusCode, hidden.json().code]).toEqual([404, 'recording_not_found']);

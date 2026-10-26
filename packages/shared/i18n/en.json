@@ -30,7 +30,6 @@
     "dashboardTitle": "Student progress",
     "myChildren": "My children",
     "myAccount": "My account",
-    "studentPicker": "Choose the student",
     "sections": "Portal sections",
     "lessonsTab": "Upcoming lessons",
     "reportsTab": "Lesson reports",
@@ -69,7 +68,9 @@
       "paused": "Paused",
       "expired": "Ended",
       "unpaid": "Awaiting activation"
-    }
+    },
+    "cancelled": "This lesson was cancelled",
+    "remainingHint": "across all of the student’s packages"
   },
   "mobile": {
     "pushTitle": "Turn on notifications",

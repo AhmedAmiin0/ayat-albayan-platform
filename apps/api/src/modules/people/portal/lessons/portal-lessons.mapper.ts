@@ -14,6 +14,8 @@ interface WayContext {
   academyAuto: boolean;
   /** students.meeting_link_override of the caller's student. */
   override: string | null;
+  /** LIVEKIT_* configured: without it our classroom cannot open. */
+  classroom: boolean;
   win: JoinWindowConfig;
   now: Date;
 }
@@ -27,10 +29,15 @@ export function externalLink(row: PortalLessonRow, override: string | null): str
   return own || row.meeting_link?.trim() || null;
 }
 
-/** classroom = held in our room (the teacher's mode, else the academy default); external = a link. */
-export function wayIn(row: PortalLessonRow, ctx: Pick<WayContext, 'academyAuto' | 'override'>): PortalWayIn {
-  if (usesPlatform(meetingModeOf(row.teacher?.meeting_mode), ctx.academyAuto)) return 'classroom';
-  return externalLink(row, ctx.override) ? 'external' : 'none';
+/**
+ * The reminders' rule (reminders.links.ts roomFor): our room for a platform lesson, or for a lesson with
+ * no link of its own, once LiveKit is configured; a platform lesson never falls back to a fixed link.
+ */
+export function wayIn(row: PortalLessonRow, ctx: Pick<WayContext, 'academyAuto' | 'override' | 'classroom'>): PortalWayIn {
+  const platform = usesPlatform(meetingModeOf(row.teacher?.meeting_mode), ctx.academyAuto);
+  const link = externalLink(row, ctx.override);
+  if (ctx.classroom && (platform || !link)) return 'classroom';
+  return !platform && link ? 'external' : 'none';
 }
 
 /** Whitelist: time, status, the teacher's display names, the way in. The URL only while the room is open. */

@@ -30,7 +30,6 @@
     "dashboardTitle": "متابعة الطالب",
     "myChildren": "أبنائي",
     "myAccount": "حسابي",
-    "studentPicker": "اختر الطالب",
     "sections": "أقسام المتابعة",
     "lessonsTab": "الحلقات القادمة",
     "reportsTab": "تقارير الحلقات",
@@ -69,7 +68,9 @@
       "paused": "موقوفة مؤقتًا",
       "expired": "انتهت",
       "unpaid": "بانتظار التفعيل"
-    }
+    },
+    "cancelled": "أُلغيت هذه الحلقة",
+    "remainingHint": "من كل باقات الطالب"
   },
   "mobile": {
     "pushTitle": "تفعيل الإشعارات",

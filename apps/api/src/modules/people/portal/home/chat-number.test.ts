@@ -13,7 +13,14 @@ describe('ChatNumber: the academy chat line from the configured numbers', () => 
     expect(f.argsOf('wa_numbers', 'eq')).toEqual(['id', 'n1']);
   });
 
-  it('module mode without a chat number: null, no read', async () => {
+  it('module mode on one number: the notifications role answers', async () => {
+    setNumbersOverlay({ values: {}, numberIds: { notifications: 'n2' } });
+    const f = fakeDb({ wa_numbers: [{ data: { display_phone_e164: '+966533333333' } }] });
+    expect(await new ChatNumber(f.db).e164()).toBe('+966533333333');
+    expect(f.argsOf('wa_numbers', 'eq')).toEqual(['id', 'n2']);
+  });
+
+  it('module mode without any number: null, no read', async () => {
     setNumbersOverlay({ values: {}, numberIds: {} });
     const f = fakeDb({});
     expect(await new ChatNumber(f.db).e164()).toBeNull();
@@ -24,6 +31,6 @@ describe('ChatNumber: the academy chat line from the configured numbers', () => 
     const row = { line: 'chat', display_phone_e164: '+966522222222', verified_name: null, checked_at: 'x', phone_number_id: 'not-configured' };
     const f = fakeDb({ wa_line_health: [{ data: [row] }] });
     expect(await new ChatNumber(f.db).e164()).toBeNull();
-    expect(f.argsOf('wa_line_health', 'eq')).toEqual(['line', 'chat']);
+    expect(f.argsOf('wa_line_health', 'in')).toEqual(['line', ['chat', 'notifications']]);
   });
 });

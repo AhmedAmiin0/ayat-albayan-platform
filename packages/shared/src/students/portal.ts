@@ -31,8 +31,8 @@ export interface PortalTeacher {
 }
 
 /**
- * How the family enters: `classroom` = our platform room (POST …/join gives a one-lesson guest link inside
- * the window), `external` = the lesson's own meeting link, `none` = no way in is known yet.
+ * How the family enters: `classroom` = our platform room (POST …/join admits the student as a guest inside
+ * the window), `external` = the lesson's own meeting link, `none` = no way in is known (or not open).
  */
 export type PortalWayIn = 'classroom' | 'external' | 'none';
 
@@ -53,12 +53,6 @@ export interface PortalLessons {
   lessons: PortalLesson[];
 }
 
-/** POST /portal/students/:id/lessons/:lessonId/join: the same guest link /join/<token> staff copy. */
-export interface PortalJoinLink {
-  url: string;
-  expires_at: string;
-}
-
 export interface PortalReport {
   id: string;
   lesson_id: string;
@@ -74,7 +68,7 @@ export interface PortalReports {
   reports: PortalReport[];
 }
 
-/** POST …/reports/:id/url and …/recordings/:id/url: a short-lived signed link, opened at once. */
+/** POST …/reports/:id/url (5 minutes) and …/recordings/:id/url (an hour, for playback): a signed link, opened at once. */
 export interface PortalFileUrl {
   url: string;
   expires_at: string;

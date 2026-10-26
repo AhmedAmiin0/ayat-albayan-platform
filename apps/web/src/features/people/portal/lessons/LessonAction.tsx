@@ -1,4 +1,4 @@
-import { clockTime, type PortalLesson } from '@ab/shared';
+import { clockTime, isOpenLesson, type PortalLesson, type RoomJoinResult } from '@ab/shared';
 import { useMutation } from '@tanstack/react-query';
 import { buttonVariants, Button } from '@/components/ui/form/button';
 import { FormAlert } from '@/components/ui/form/form-alert';
@@ -11,26 +11,32 @@ interface Props {
   studentId: string;
   tz: string;
   now: Date;
+  /** Our classroom admitted the student: the panel opens the room. */
+  onJoined: (join: RoomJoinResult) => void;
+}
+
+const Hint = ({ text }: { text: string }) => <p className="text-sm text-ink-2">{text}</p>;
+
+/** Why there is no button: cancelled, over, not open yet, or no way in known. */
+function waitText(lesson: PortalLesson, now: Date, tz: string): string | null {
+  if (lesson.status.startsWith('cancelled')) return t.portal.cancelled;
+  const state = windowStateAt(lesson.window, now);
+  if (state === 'closed' || !isOpenLesson(lesson.status)) return t.portal.closed;
+  if (lesson.way_in === 'none') return t.portal.noWayIn;
+  if (state === 'early') return t.portal.opensAt.replace('{time}', clockTime(new Date(lesson.window.opens_at), tz));
+  // The API sends the external link only while the room is open; until the next refresh it may be missing.
+  return lesson.way_in === 'external' && !lesson.meeting_url ? t.portal.noWayIn : null;
 }
 
 /**
- * «ادخل الحلقة», only inside the join window: our classroom asks the API for the student's guest link and
- * goes there; an external lesson opens its own meeting link (sent by the API only while the room is open).
+ * «ادخل الحلقة», only inside the join window: our classroom admits the student through the API and the
+ * room opens here; an external lesson opens its own meeting link (sent only while the room is open).
  */
-export function LessonAction({ lesson, studentId, tz, now }: Props) {
-  const join = useMutation({
-    mutationFn: () => portalJoin({ studentId, lessonId: lesson.id }),
-    onSuccess: (link) => window.location.assign(link.url),
-  });
-  if (lesson.way_in === 'none') return <p className="text-sm text-ink-2">{t.portal.noWayIn}</p>;
-  const state = windowStateAt(lesson.window, now);
-  if (state === 'closed') return <p className="text-sm text-ink-3">{t.portal.closed}</p>;
-  if (state === 'early') {
-    return <p className="text-sm text-ink-2">{t.portal.opensAt.replace('{time}', clockTime(new Date(lesson.window.opens_at), tz))}</p>;
-  }
-  if (lesson.way_in === 'external') {
-    // The API sends the link only while the room is open; until the next refresh it may still be missing.
-    if (!lesson.meeting_url) return <p className="text-sm text-ink-2">{t.portal.noWayIn}</p>;
+export function LessonAction({ lesson, studentId, tz, now, onJoined }: Props) {
+  const join = useMutation({ mutationFn: () => portalJoin({ studentId, lessonId: lesson.id }), onSuccess: (room) => onJoined(room) });
+  const wait = waitText(lesson, now, tz);
+  if (wait) return <Hint text={wait} />;
+  if (lesson.way_in === 'external' && lesson.meeting_url) {
     return (
       <a href={lesson.meeting_url} target="_blank" rel="noopener noreferrer" className={buttonVariants({ size: 'lg' })}>
         {t.portal.join}

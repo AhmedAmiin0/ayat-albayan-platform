@@ -16,7 +16,7 @@ interface FileCall {
 
 /**
  * «تقارير الحلقات» (docs/31): the reports already sent to the family, newest first. A file opens by a
- * signed link minted per tap that lives SIGNED_URL_SECONDS.portal (5 minutes); the list carries none.
+ * signed link minted per tap (a PDF 5 minutes, a recording an hour for playback); the list carries none.
  */
 @Injectable()
 export class PortalReportsService {
@@ -48,6 +48,7 @@ export class PortalReportsService {
     const visible = await this.queries.visibleRecordings(rows.map((r) => r.lesson_id));
     const row = visible.find((r) => r.id === call.id);
     if (!row) throw notFound('recording_not_found');
-    return this.storage.signedDownload({ bucket: BUCKETS.recordings, path: row.file_path, seconds: SIGNED_URL_SECONDS.portal });
+    // A video player keeps range-requesting the same URL while it plays: the UI lifetime (an hour).
+    return this.storage.signedDownload({ bucket: BUCKETS.recordings, path: row.file_path, seconds: SIGNED_URL_SECONDS.ui });
   }
 }

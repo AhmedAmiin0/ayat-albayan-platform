@@ -1,4 +1,4 @@
-import type { PortalFileUrl, PortalHome, PortalJoinLink, PortalLessons, PortalPackageView, PortalReports } from '@ab/shared';
+import type { PortalFileUrl, PortalHome, PortalLessons, PortalPackageView, PortalReports, RoomJoinResult } from '@ab/shared';
 import { queryOptions } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@/lib/http/api';
 
@@ -32,9 +32,10 @@ export const portalPackageQuery = (studentId: string) =>
     queryFn: () => apiFetch<PortalPackageView>(`/portal/students/${studentId}/package`),
   });
 
+/** The student's guest admission to our classroom (inside the window only). */
 export const portalJoin = (input: { studentId: string; lessonId: string }) =>
-  apiSend<PortalJoinLink>('POST', `/portal/students/${input.studentId}/lessons/${input.lessonId}/join`);
+  apiSend<RoomJoinResult>('POST', `/portal/students/${input.studentId}/lessons/${input.lessonId}/join`);
 
-/** A 5-minute signed link to a sent report's PDF or a visible recording, minted per tap. */
+/** A signed link to a sent report's PDF (5 minutes) or a visible recording (an hour), minted per tap. */
 export const portalFileUrl = (input: { studentId: string; kind: 'reports' | 'recordings'; id: string }) =>
   apiSend<PortalFileUrl>('POST', `/portal/students/${input.studentId}/${input.kind}/${input.id}/url`);

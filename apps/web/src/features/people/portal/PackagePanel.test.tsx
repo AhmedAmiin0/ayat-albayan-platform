@@ -1,6 +1,8 @@
+import { intlLocale } from '@ab/shared';
 import { screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n/i18n';
+import { locale } from '@/lib/i18n/locale';
 import { PackagePanel } from './PackagePanel';
 import { kid } from './portal.fixtures';
 import { renderPortal } from './portal.render';
@@ -18,7 +20,9 @@ describe('PackagePanel «الباقة»', () => {
     renderPortal(<PackagePanel student={kid()} renewUrl="https://wa.me/966500000000" />);
     expect(await screen.findByText(t.enums.packageSize['8'])).toBeTruthy();
     expect(screen.getByText('5')).toBeTruthy();
-    expect(screen.getByText('2026-11-01')).toBeTruthy();
+    const day = new Intl.DateTimeFormat(intlLocale(locale), { dateStyle: 'medium', timeZone: 'UTC' }).format(new Date('2026-11-01T00:00:00Z'));
+    expect(screen.getByText(day)).toBeTruthy();
+    expect(screen.queryByText('2026-11-01')).toBeNull();
     expect(screen.getByText(t.portal.packageStatus.unpaid)).toBeTruthy();
     expect(screen.getByRole('link', { name: t.portal.renew }).getAttribute('href')).toBe('https://wa.me/966500000000');
     expect(document.body.textContent).not.toMatch(/SAR|ر\.س|ريال|مدفوع/);

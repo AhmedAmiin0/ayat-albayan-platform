@@ -9,23 +9,33 @@ const apiSend = vi.hoisted(() => vi.fn());
 vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiSend }));
 
 const NOW_OPEN = new Date('2026-10-27T15:55:00.000Z');
+const onJoined = vi.fn();
 const show = (over: Parameters<typeof lesson>[0], now = NOW_OPEN) =>
-  renderPortal(<LessonAction lesson={lesson(over)} studentId="s1" tz="Africa/Cairo" now={now} />);
+  renderPortal(<LessonAction lesson={lesson(over)} studentId="s1" tz="Africa/Cairo" now={now} onJoined={onJoined} />);
 
 describe('LessonAction «ادخل الحلقة»', () => {
   afterEach(() => {
     apiSend.mockReset();
-    vi.unstubAllGlobals();
+    onJoined.mockReset();
   });
 
-  it('a platform lesson inside the window asks for the student’s guest link and goes there', async () => {
-    const assign = vi.fn();
-    vi.stubGlobal('location', { ...window.location, assign });
-    apiSend.mockResolvedValue({ url: 'https://app.example.org/join/tok', expires_at: 'x' });
+  it('a classroom lesson inside the window asks the API to admit the student and hands the room on', async () => {
+    const room = { url: 'wss://lk.example.org', token: 'tok', role: 'guest' };
+    apiSend.mockResolvedValue(room);
     show({});
     fireEvent.click(screen.getByRole('button', { name: t.portal.join }));
-    await vi.waitFor(() => expect(assign).toHaveBeenCalledWith('https://app.example.org/join/tok'));
+    await vi.waitFor(() => expect(onJoined).toHaveBeenCalledWith(room));
     expect(apiSend).toHaveBeenCalledWith('POST', '/portal/students/s1/lessons/l1/join');
+  });
+
+  it('a cancelled lesson says so; a finished one says the time is over, before anything else', () => {
+    show({ status: 'cancelled_by_teacher', way_in: 'none' });
+    expect(screen.getByText(t.portal.cancelled)).toBeTruthy();
+  });
+
+  it('a completed lesson inside the window is over, not «the link will come»', () => {
+    show({ status: 'completed', way_in: 'none' });
+    expect(screen.getByText(t.portal.closed)).toBeTruthy();
   });
 
   it('before the window: no button, the opening time on the family clock', () => {

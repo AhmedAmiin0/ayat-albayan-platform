@@ -5,6 +5,8 @@
  */
 export async function openAfter(getUrl: () => Promise<string>): Promise<void> {
   const tab = window.open('', '_blank');
+  // The new tab must not reach back into the portal (window.opener), like rel="noopener" on a link.
+  if (tab) tab.opener = null;
   try {
     const url = await getUrl();
     if (tab) tab.location.href = url;

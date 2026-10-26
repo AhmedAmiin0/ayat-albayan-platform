@@ -23,7 +23,8 @@ export class PortalPackageService {
     const rows = await this.queries.packages(input.studentId);
     const last = rows.at(-1);
     if (!last) return { package: null };
-    const remaining = studentRemaining(await this.balances.forStudents([input.studentId]));
+    // Lessons taken beyond the packages (a negative balance) read as none left.
+    const remaining = Math.max(0, studentRemaining(await this.balances.forStudents([input.studentId])));
     return {
       package: {
         package: last.package,

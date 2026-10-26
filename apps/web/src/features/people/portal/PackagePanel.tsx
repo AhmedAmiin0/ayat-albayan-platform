@@ -1,12 +1,17 @@
-import { subscriptionStatusStyle, type PortalPackage, type PortalStudent } from '@ab/shared';
+import { intlLocale, subscriptionStatusStyle, type PortalPackage, type PortalStudent } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import type { ReactNode } from 'react';
 import { EmptyState } from '@/components/ui/display/empty-state';
 import { StatusChip } from '@/components/ui/display/status-chip';
 import { buttonVariants } from '@/components/ui/form/button';
 import { t } from '@/lib/i18n/i18n';
+import { locale } from '@/lib/i18n/locale';
 import { portalPackageQuery } from './api';
 import { LoadState } from './LoadState';
+
+const DAY = new Intl.DateTimeFormat(intlLocale(locale), { dateStyle: 'medium', timeZone: 'UTC' });
+/** A calendar day «YYYY-MM-DD» as the UI writes dates (no zone: it is a day, not an instant). */
+const dayText = (day: string): string => DAY.format(new Date(`${day}T00:00:00Z`));
 
 interface Props {
   student: PortalStudent;
@@ -42,8 +47,8 @@ function PackageCard({ pkg, renew }: { pkg: PortalPackage; renew: ReactNode }) {
   const facts: [string, string][] = [
     [t.portal.lessonsTotal, String(pkg.lessons_total)],
     [t.portal.lessonLength, t.portal.minutes.replace('{n}', String(pkg.duration))],
-    [t.portal.startsOn, pkg.starts_on],
-    ...(pkg.renews_on ? [[t.portal.renewsOn, pkg.renews_on] as [string, string]] : []),
+    [t.portal.startsOn, dayText(pkg.starts_on)],
+    ...(pkg.renews_on ? [[t.portal.renewsOn, dayText(pkg.renews_on)] as [string, string]] : []),
   ];
   return (
     <section className="grid gap-4 rounded-lg border border-rule bg-raised p-4" aria-label={t.portal.packageTab}>
@@ -54,6 +59,7 @@ function PackageCard({ pkg, renew }: { pkg: PortalPackage; renew: ReactNode }) {
       <p className="grid gap-0.5">
         <span className="text-sm text-ink-2">{t.portal.remaining}</span>
         <span className="font-display text-h2 font-bold tabular-nums">{pkg.remaining}</span>
+        <span className="text-xs text-ink-3">{t.portal.remainingHint}</span>
       </p>
       <dl className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
         {facts.map(([label, value]) => (

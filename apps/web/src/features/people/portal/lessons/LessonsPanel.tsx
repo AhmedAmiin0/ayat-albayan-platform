@@ -1,8 +1,9 @@
-import { lessonStatusStyle, type PortalStudent } from '@ab/shared';
+import { lessonStatusStyle, type PortalStudent, type RoomJoinResult } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
+import { useState } from 'react';
 import { EmptyState } from '@/components/ui/display/empty-state';
 import { StatusChip } from '@/components/ui/display/status-chip';
-import { useNow } from '@/features/teaching/classroom';
+import { ClassroomRoom, useNow } from '@/features/teaching/classroom';
 import { t } from '@/lib/i18n/i18n';
 import { teacherLabel } from '@/lib/i18n/teacher-label';
 import { PORTAL_REFRESH_MS, portalLessonsQuery } from '../api';
@@ -10,10 +11,21 @@ import { LessonAction } from './LessonAction';
 import { LessonWhen } from './LessonWhen';
 import { LoadState } from '../LoadState';
 
-/** «الحلقات القادمة»: the next 14 days, one card per lesson, re-read every 30 seconds. */
+/**
+ * «الحلقات القادمة»: the next 14 days, one card per lesson, re-read every 30 seconds. Once admitted, the
+ * classroom covers the page (as on the student's own link) until it ends.
+ */
 export function LessonsPanel({ student }: { student: PortalStudent }) {
   const now = useNow(PORTAL_REFRESH_MS);
   const query = useQuery(portalLessonsQuery(student.id));
+  const [room, setRoom] = useState<RoomJoinResult | null>(null);
+  if (room) {
+    return (
+      <div className="fixed inset-0 z-50 overflow-auto bg-page">
+        <ClassroomRoom join={room} onRejoin={() => setRoom(null)} />
+      </div>
+    );
+  }
   return (
     <LoadState query={query}>
       {({ lessons }) =>
@@ -30,7 +42,7 @@ export function LessonsPanel({ student }: { student: PortalStudent }) {
                 {lesson.teacher.display_name_ar && (
                   <p className="text-sm text-ink-2">{t.portal.withTeacher.replace('{teacher}', teacherLabel(lesson.teacher))}</p>
                 )}
-                <LessonAction lesson={lesson} studentId={student.id} tz={student.tz} now={now} />
+                <LessonAction lesson={lesson} studentId={student.id} tz={student.tz} now={now} onJoined={setRoom} />
               </li>
             ))}
           </ul>

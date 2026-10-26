@@ -1,4 +1,4 @@
-import type { PortalFileUrl, PortalHome, PortalJoinLink, PortalLessons, PortalPackageView, PortalReports } from '@ab/shared';
+import type { PortalFileUrl, PortalHome, PortalLessons, PortalPackageView, PortalReports, RoomJoinResult } from '@ab/shared';
 import { Controller, Get, HttpCode, Param, ParseUUIDPipe, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser, Permissions } from '../../../common/auth/decorators';
@@ -36,10 +36,10 @@ export class PortalController {
     return this.lessons.upcoming({ user, studentId });
   }
 
-  /** «ادخل الحلقة» of a platform lesson: 404, 409 not_classroom_lesson, 403 join_not_open_yet, 410 join_closed. */
+  /** «ادخل الحلقة» of a classroom lesson: the room join itself; 404, 409 not_classroom_lesson, 403, 410, 429, 503. */
   @Post('students/:id/lessons/:lessonId/join')
   @HttpCode(200)
-  join(@Param('id', UUID) studentId: string, @Param('lessonId', UUID) lessonId: string, @CurrentUser() user: AuthUser): Promise<PortalJoinLink> {
+  join(@Param('id', UUID) studentId: string, @Param('lessonId', UUID) lessonId: string, @CurrentUser() user: AuthUser): Promise<RoomJoinResult> {
     return this.lessons.join({ user, studentId, lessonId });
   }
 }
