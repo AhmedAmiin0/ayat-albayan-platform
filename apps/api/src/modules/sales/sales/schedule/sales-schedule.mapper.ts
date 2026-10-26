@@ -1,4 +1,4 @@
-import { isOpenLesson, RIYADH_TZ, type SalesScheduleLesson } from '@ab/shared';
+import { isOpenLesson, meetingModeOf, RIYADH_TZ, usesPlatform, type SalesScheduleLesson } from '@ab/shared';
 import { DAY, localDay, zonedToUtc } from '../../../people/teachers/availability/zoned-time';
 import type { SalesScheduleRow, UpcomingRow } from './sales-schedule.queries';
 
@@ -26,7 +26,11 @@ export function upcomingRange(now: Date): { from: Date; to: Date } {
   return { from: now, to: new Date(now.getTime() + UPCOMING_DAYS * DAY) };
 }
 
-export function toScheduleLesson(row: SalesScheduleRow): SalesScheduleLesson {
+/**
+ * One lesson for sales. `academyAuto` is settings.meeting_link_auto: the default of a teacher whose
+ * meeting_mode is null (same resolver as the admin lessons and the sales teachers).
+ */
+export function toScheduleLesson(row: SalesScheduleRow, academyAuto: boolean): SalesScheduleLesson {
   const teacher = row.teacher;
   return {
     id: row.id,
@@ -35,6 +39,8 @@ export function toScheduleLesson(row: SalesScheduleRow): SalesScheduleLesson {
     status: row.status,
     trial: row.rule?.package === 'trial',
     makeup: row.makeup_of_id !== null,
+    meeting_link: row.meeting_link?.trim() || null,
+    platform_classroom: usesPlatform(meetingModeOf(teacher?.meeting_mode), academyAuto),
     teacher: {
       id: teacher?.id ?? '',
       display_name_ar: teacher?.display_name_ar ?? '',

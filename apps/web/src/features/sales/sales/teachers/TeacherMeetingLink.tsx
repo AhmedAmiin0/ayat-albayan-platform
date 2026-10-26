@@ -1,31 +1,20 @@
 import { safeHttpUrl } from '@ab/shared';
-import { useState } from 'react';
 import { Button, buttonVariants } from '@/components/ui/form/button';
 import { Ltr } from '@/components/ui/display/ltr';
 import { t } from '@/lib/i18n/i18n';
+import { useCopy } from '../schedule/use-copy';
 
 const L = t.studentLists;
 
-type CopyState = 'idle' | 'copied' | 'failed';
-
 /**
- * «رابط الحلقة الثابت» in the teacher's drawer (owner 2026-10-12: the one place sales sees a meeting
- * link): the URL as an LTR island, «انسخ الرابط» and «افتح الرابط». Only an http(s) URL is shown, anything
+ * «رابط الحلقة الثابت» in the teacher's drawer (owner 2026-10-12; since 2026-10-26 the schedule shows
+ * the lesson's link too, LessonMeetingLink): the URL as an LTR island, «انسخ الرابط» and «افتح الرابط». Only an http(s) URL is shown, anything
  * else reads «لا يوجد رابط ثابت». When the teacher's lessons go out with
  * the platform classroom (SalesTeacherView.platform_classroom) a line says families get that link.
  */
 export function TeacherMeetingLink({ link, platform }: { link: string | null; platform: boolean }) {
-  const [copy, setCopy] = useState<CopyState>('idle');
+  const [copy, onCopy] = useCopy();
   const url = safeHttpUrl(link);
-  const onCopy = async (text: string) => {
-    try {
-      await navigator.clipboard.writeText(text);
-      setCopy('copied');
-    } catch {
-      // Clipboard blocked (http, old browser): the URL stays on screen to copy by hand.
-      setCopy('failed');
-    }
-  };
   return (
     <section aria-label={L.meetingLink} className="grid gap-1.5">
       <h3 className="font-semibold">{L.meetingLink}</h3>

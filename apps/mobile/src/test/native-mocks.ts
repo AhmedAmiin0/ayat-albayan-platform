@@ -66,3 +66,15 @@ export function armCamera(uri = 'file:///cache/slip.jpg'): void {
     assets: [{ uri, width: 900, height: 1200, base64: 'aGVsbG8=', mimeType: 'image/jpeg' }],
   });
 }
+
+/**
+ * React Native core's `Clipboard` as a plain double: its export is a deprecated getter whose warnOnce
+ * would print in every suite that copies, so the getter is replaced here (not by muting warnings).
+ * Returns setString; make it throw for a missing or failing native module.
+ */
+export function mockClipboard(): jest.Mock {
+  const setString = jest.fn();
+  const clipboard = { setString, getString: jest.fn(async () => '') };
+  Object.defineProperty(jest.requireActual('react-native'), 'Clipboard', { value: clipboard, configurable: true });
+  return setString;
+}

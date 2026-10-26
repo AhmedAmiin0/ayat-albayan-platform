@@ -12,7 +12,7 @@ interface CopySheetProps {
 }
 
 /**
- * «نسخ النص» / «نسخ الرقم» without a clipboard module (owner 2026-10-26): the exact text, selectable.
+ * «نسخ النص» / «نسخ الرقم» as a sheet (owner 2026-10-26; core/lib/clipboard is not wired here yet): the exact text, selectable.
  * Nothing on the sheet handles a long press, so the OS selection handles copy all of it or a part.
  */
 export function CopySheet({ request, onClose }: CopySheetProps) {
