@@ -45,6 +45,7 @@ pnpm migrate extract-sheets [--zip <path>]
 pnpm migrate extract-crm [--since <ISO>|last]        # 'last' = per-table cursor in cache/crm/cursor.json
 pnpm migrate:dry --target local|staging              # never writes to the target
 pnpm migrate:apply --target local|staging            # production: --target production --confirm-production
+  # dry-run / apply options: --creates-only, --from YYYY-MM-DD, --only <entity,…> (RUNBOOK §7c)
 pnpm migrate validate --target local|staging
 pnpm migrate review                                  # rebuild out/review.xlsx from out/plan.json
 ```
@@ -79,8 +80,8 @@ link tables with `returning: null`, Storage uploads).
 | guardians                        | E.164 phone                                     | hub_students, hub_registrations, bookings, HEART            |
 | students                         | `phone\|personName(name)`                       | same (AB code = identity), siblings split (A4); SUBS + ATT checked |
 | leads / job_applicants           | E.164 phone                                     | CRM contacts+tags first, conversations sheets fill gaps     |
-| schedule_rules                   | `teacher\|students[@HH:mm]`                     | bookings (status مؤكد/مشترك), then HEART timetables         |
-| lessons                          | `teacher\|students\|date or UTC start`          | hub_reports (completed), rules                              |
+| schedule_rules                   | `teacher\|students[@HH:mm]`                     | bookings (مؤكد/مشترك/يحتاج تأكيد, from --from), then HEART  |
+| lessons                          | `teacher\|students\|date or UTC start`          | hub_reports (completed), one-off bookings ≥ --from          |
 | lesson_students / lesson_reports | `lessonKey\|studentKey`                         | hub_reports (primary), rep_reports, att                     |
 | report_pdfs                      | report key                                      | zip `تقارير آيات البيان/<student>/*.pdf` → bucket `reports` |
 | subscriptions / payments         | `student\|starts_on` / `sub\|paid_on\|amount`   | heart_subscriptions, FIN                                    |

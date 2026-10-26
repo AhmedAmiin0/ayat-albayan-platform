@@ -1,6 +1,9 @@
 // schedule_rules + schedule_rule_students ← bookings.ts, then the HEART timetables
 // (heart.rules.ts; the later row wins, B1). Imported rules keep rule_id off past lessons (reports
-// make those); the app's generator fills the future from max(now, starts_on).
+// make those). The importer creates no lesson for a rule: the API's daily horizon job
+// (OccurrenceGenerator.topUp) books every active rule from max(now, starts_on) to
+// booking_horizon_weeks ahead, idempotent on (rule_id, starts_at), as `scheduled` lessons with
+// confirmed_at null; Google sync skips them because the rule has an import item.
 import type { EntityModule, SourceBundle, WriteContext } from '../../entities/contract.ts';
 import { keyId, keys } from '../../keys.ts';
 import { accepted, issueOnly, issuesFor } from '../../sources/sheets/issues.ts';

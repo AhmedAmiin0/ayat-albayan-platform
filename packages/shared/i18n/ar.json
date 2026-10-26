@@ -96,6 +96,14 @@
         "already_submitted": "ردّ ولي الأمر على هذا الطلب بالفعل",
         "lesson_not_completed": "يُرسل طلب الرأي بعد انتهاء الحلقة"
       }
+    },
+    "connection": {
+      "connecting": "جارٍ الاتصال…",
+      "startupConnecting": "جارٍ الاتصال",
+      "checkInternet": "تحقّق من اتصالك بالإنترنت",
+      "connected": "تم الاتصال",
+      "retry": "إعادة المحاولة",
+      "loading": "جارٍ فتح التطبيق"
     }
   },
   "common": {
@@ -6135,7 +6143,11 @@
       "retryFile": "أعد إرسال المرفق",
       "fileFailed": "لم يُرسل المرفق: {reason}"
     },
-    "retry": "أعد المحاولة"
+    "retry": "أعد المحاولة",
+    "slashHint": "اكتب / في خانة الرسالة لاختيار رد سريع",
+    "manage": "إدارة",
+    "manageDone": "تم",
+    "sheetClose": "أغلق الردود السريعة"
   },
   "trialDate": {
     "action": "موعد تجريبي جديد",

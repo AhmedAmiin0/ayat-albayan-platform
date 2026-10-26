@@ -10,9 +10,11 @@ import { shape, type, useTheme } from '@/theme';
 export function ComposerInput({
   value,
   onChange,
+  onBlur,
 }: {
   value: string;
   onChange: (text: string) => void;
+  onBlur?: () => void;
 }) {
   const { color } = useTheme();
   return (
@@ -21,6 +23,7 @@ export function ComposerInput({
       value={value}
       maxLength={WA_TEXT_MAX}
       onChangeText={onChange}
+      onBlur={onBlur}
       accessibilityLabel={t.inbox.composer.placeholder}
       placeholder={t.inbox.composer.placeholder}
       placeholderTextColor={color.ink3}

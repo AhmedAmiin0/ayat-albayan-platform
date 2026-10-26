@@ -14,6 +14,8 @@ export interface SourceBundle {
   earlier: ReadonlyMap<EntityName, readonly Desired[]>;
   /** Local date in Asia/Riyadh at run time ('YYYY-MM-DD'); the A6 window is 2026-08-01..today. */
   today: string;
+  /** First local date ('YYYY-MM-DD', Asia/Riyadh) bookings may create lessons on (`--from`); default today. */
+  from?: string;
   /** Zip paths of PDFs the owner accepted despite a weak match (cache/pdf-approved.json). */
   approvedPdfs?: ReadonlySet<string>;
 }

@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { clearQueryCaches } from '@/core/lib/query/query-client';
 import { supabase } from '@/core/lib/http/supabase';
 import { silencePush } from '@/core/push/silence-push';
+import { onGateRetry } from './gate-retry';
 import type { AppRole } from './role-claim';
 import { verifyRole } from './verify-role';
 
@@ -26,7 +27,7 @@ export async function resolveGate(
   session: Session | null,
   set: (status: GateStatus) => void,
 ): Promise<void> {
-  if (session) return set(await verifyRole(session));
+  if (session) return set(await verifyRole(session, set));
   // Before the login screen shows; registerPush also waits for a slower one (silenceSettled).
   await Promise.race([silencePush(), new Promise((resolve) => setTimeout(resolve, SILENCE_WAIT_MS))]);
   set('out');
@@ -43,18 +44,27 @@ export function useAuthGate(): GateStatus {
   useEffect(() => {
     let latest = 0;
     let live = true;
-    const { data } = supabase.auth.onAuthStateChange((event, session) => {
-      if (!movesGate(event, session)) return;
+    const check = (session: Session | null) => {
       const mine = ++latest;
       const set = (next: GateStatus) => {
         if (live && mine === latest) setStatus(next);
       };
+      return resolveGate(session, set);
+    };
+    const { data } = supabase.auth.onAuthStateChange((event, session) => {
+      if (!movesGate(event, session)) return;
       // Supabase holds its auth lock during this callback; calling back into it here deadlocks.
-      setTimeout(() => void resolveGate(session, set), 0);
+      setTimeout(() => void check(session), 0);
+    });
+    // Still booting (a slow /auth/me): ask again; the newest check wins, as above. Only with a session
+    // in hand: offline, an expired token whose refresh failed reads as none, and that must never sign out.
+    const offRetry = onGateRetry(() => {
+      void supabase.auth.getSession().then(({ data: current }) => (current.session ? check(current.session) : undefined));
     });
     return () => {
       live = false;
       data.subscription.unsubscribe();
+      offRetry();
     };
   }, []);
   return status;
