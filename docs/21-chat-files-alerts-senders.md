@@ -62,7 +62,7 @@ export const chatFileMaxBytes = (m: string | null): number => isPlayableMime(m) 
 ```
 
 - `INVOICE_*` and `RECEIPT_*` stay as they are. They are test-locked to each other.
-- `apps/api/src/modules/whatsapp/messages/inbound-media.service.ts` re-exports `baseMime` from `@ab/shared` instead of defining it. The imports in `thread-media.service.ts` and `booking.invoice.ts` stay unchanged.
+- `apps/api/src/modules/messaging/whatsapp/messages/inbound-media.service.ts` re-exports `baseMime` from `@ab/shared` instead of defining it. The imports in `thread-media.service.ts` and `booking.invoice.ts` stay unchanged.
 - `apps/web/src/features/inbox/messages/components/MessageMedia.tsx` drops its local `baseMime`.
 
 ### 1.2 `packages/shared/src/messaging/chat-files.ts` (new, plus `chat-files.test.ts`; exported from `messaging/index.ts`)
@@ -193,7 +193,7 @@ end $$;
 
 ### 2.5 Migration tests
 
-- `apps/api/src/modules/whatsapp/wa-media-bucket.migration.test.ts`: a SQL-text test in the style of `restricted-templates.migration.test.ts`. It asserts that every entry of `PLAYABLE_MIMES` and `INVOICE_MIMES` appears in migration 500, and that `16777216` and `messages_media_cached_idx` are present. This keeps the bucket and the shared list in sync.
+- `apps/api/src/modules/messaging/whatsapp/wa-media-bucket.migration.test.ts`: a SQL-text test in the style of `restricted-templates.migration.test.ts`. It asserts that every entry of `PLAYABLE_MIMES` and `INVOICE_MIMES` appears in migration 500, and that `16777216` and `messages_media_cached_idx` are present. This keeps the bucket and the shared list in sync.
 - `e2e/tests/chat-files.sql.spec.ts`, in the style of `student-recordings-rls.sql.spec.ts` and `apply-lesson-changes-v3.sql.spec.ts`:
   - wa-media has `file_size_limit = 16777216` and its `allowed_mime_types` include `audio/ogg` and `video/mp4`;
   - an insert with `media_name = '   '` violates the check;
@@ -204,7 +204,7 @@ end $$;
 
 This change reads data only. `created_by` writes stay as they are, because `isAutomatic` and `sender.queries.ts:70 .is('created_by', null)` depend on jobs leaving it null.
 
-**API: `apps/api/src/modules/whatsapp/messages/message.mapper.ts`** (84 lines, about 95 after)
+**API: `apps/api/src/modules/messaging/whatsapp/messages/message.mapper.ts`** (84 lines, about 95 after)
 
 - `MESSAGE_SELECT` becomes `'*, sent_by_teacher:teachers!messages_sent_by_teacher_id_fkey(display_name_ar), sender:profiles!messages_created_by_fkey(full_name)'`.
 - `ThreadMessageRow` gains `sender?: { full_name: string } | null`.
@@ -227,7 +227,7 @@ This change reads data only. `created_by` writes stay as they are, because `isAu
 
 **Tests**
 
-- `apps/api/src/modules/whatsapp/messages/message.mapper.sender.test.ts` (new): the teacher's name wins; `full_name` is used for admin and sales; `automatic` is true only for outbound with created_by null and dedup_key set; imported history (dedup_key null) gives false and no name; inbound gives null and false; one assertion that `MESSAGE_SELECT` contains `sender:profiles!messages_created_by_fkey`.
+- `apps/api/src/modules/messaging/whatsapp/messages/message.mapper.sender.test.ts` (new): the teacher's name wins; `full_name` is used for admin and sales; `automatic` is true only for outbound with created_by null and dedup_key set; imported history (dedup_key null) gives false and no name; inbound gives null and false; one assertion that `MESSAGE_SELECT` contains `sender:profiles!messages_created_by_fkey`.
 - `apps/web/src/features/inbox/messages/components/MessageBubble.sender.test.tsx` (new): an assistant's row shows «أرسلها: سارة», a job row shows «رسالة تلقائية», and an imported or inbound row shows neither.
 - Extend `apps/mobile/src/inbox/thread/hooks/thread-mode.test.ts` with the same cases.
 - Grep `e2e/tests` for assertions on the whole text of outbound bubbles. Every outbound bubble now has a sender line, so those may need updating.
@@ -243,9 +243,9 @@ Teachers still get labels only. Docs/20 :231 stays open with today's default.
 1. **`InboundMedia`** (`inbound-media.service.ts`, 86 lines)
    - Split the gate out as an exported function `servable(msg, allow = isInvoiceMime)`. It throws `invoice_message` unless the row is inbound, has a `media_id`, and `allow(media_mime)` is true.
    - `load(messageId, allow = isInvoiceMime)` uses it.
-   - The default keeps `booking.invoice.ts` fromChat and `apps/api/src/modules/sales-money/chat/sales-chat-files.ts` `copy()` limited to images and PDFs.
+   - The default keeps `booking.invoice.ts` fromChat and `apps/api/src/modules/sales/sales-money/chat/sales-chat-files.ts` `copy()` limited to images and PDFs.
    - `cache()` caps the size with `chatFileMaxBytes(mime)` instead of `INVOICE_MAX_BYTES`. It still answers 413 `invoice_too_large`.
-2. **`ThreadMediaService`** (`apps/api/src/modules/inbox/files/thread-media.service.ts`, 55 lines)
+2. **`ThreadMediaService`** (`apps/api/src/modules/messaging/inbox/files/thread-media.service.ts`, 55 lines)
    - `file()` and `list()` stay **unchanged**. The admin `/media/:id` route and `SalesChatFiles.sign` keep images and PDFs only.
    - Add `bubbleFile({ phone, messageId })`, used only by W6:
      1. `queries.message(id)`. 404 `message_not_found` when it is missing or belongs to another phone. The ownership check now runs first.
@@ -261,7 +261,7 @@ Teachers still get labels only. Docs/20 :231 stays open with today's default.
    - `StorageService` gains `removeMany({ bucket, paths })`: one Supabase `remove(paths)` call. Removing a path that does not exist is a no-op.
    - `InboundMediaQueries` gains `cachedBefore({ before, limit })`: id and media_path of inbound rows with `media_path` set and `created_at < before`, oldest first.
    - It also gains `clearPaths(ids)`: `update media_path = null where id in ids and direction = 'inbound'`.
-   - New `apps/api/src/modules/whatsapp/messages/wa-media.retention.job.ts`, an in-process timer modelled on `apps/api/src/common/activity/activity.retention.job.ts`:
+   - New `apps/api/src/modules/messaging/whatsapp/messages/wa-media.retention.job.ts`, an in-process timer modelled on `apps/api/src/common/activity/activity.retention.job.ts`:
      - first run 15 min after boot, then every 24 h;
      - `runOnce()` loops batches of 100 until a batch is empty, with a cap of 50 batches per run (the staging backlog);
      - each batch calls `removeMany`, then `clearPaths`;
@@ -328,12 +328,12 @@ Only inside the 24 h window, stored and logged under her name. Sending is by lin
 
 ### API
 
-1. **`apps/api/src/modules/inbox/send/thread-send.service.ts`**: export `dedupKey`, `outboundBase` and `sendLine` as module functions. Behaviour does not change and the file does not grow.
+1. **`apps/api/src/modules/messaging/inbox/send/thread-send.service.ts`**: export `dedupKey`, `outboundBase` and `sendLine` as module functions. Behaviour does not change and the file does not grow.
 2. **`storage.paths.ts`**
    - `chatOutPath({ actorId, requestId, mime })` returns `out/${actorId}/${requestId}/${uuid}.${ext}`.
    - `isChatOutPathOf(path, { actorId, requestId })` requires exactly 4 segments, with the first three matching.
    - Add tests.
-3. **`apps/api/src/modules/inbox/files/thread-file-send.service.ts`** (new, class `ThreadFileSender`)
+3. **`apps/api/src/modules/messaging/inbox/files/thread-file-send.service.ts`** (new, class `ThreadFileSender`)
    - Constructor: `(queries: ThreadsQueries, outbox: Outbox, storage: StorageService)`.
    - Settings are property-injected, following the `thread-reads.ts:19-21` precedent: `@Inject(SettingsService) private readonly settings?: SettingsService`. `maxBytes = uploadMaxBytes(this.settings ? await this.settings.all() : {})`.
    - `uploadUrl(s)`: `chatFileProblem` gives 400 `file_type` or 413 `file_too_large`; then `storage.signedUpload({ bucket: BUCKETS.waMedia, path: chatOutPath(…) })`.
@@ -346,14 +346,14 @@ Only inside the 24 h window, stored and logged under her name. Sending is by lin
      6. `outbox.send({ ...outboundBase(s, thread), dedup_key: key, body: caption ?? null, media_path, media_mime: mime, media_name: filename, ...line })`.
    - `outboundBase` sets `created_by = actorId`, which drives the D4 name and the audit.
    - A replayed `clientRequestId` returns the first row. Each attachment needs a fresh UUID, because the dedup namespace is shared with text sends.
-4. **`apps/api/src/modules/inbox/files/thread-file-send.controller.ts`** (new, `ThreadFileSendController`)
+4. **`apps/api/src/modules/messaging/inbox/files/thread-file-send.controller.ts`** (new, `ThreadFileSendController`)
    - Constructor: `(reads: ThreadReads, files: ThreadFileSender, audit: AuditService)`.
    - Class: `@Permissions('inbox.read')` and `@Controller('threads')`.
    - `POST :phone/file-upload-url` is handler `uploadUrl` (201). `POST :phone/file` is handler `send` (201). Both carry method-level `@Permissions('inbox.send')`.
    - A teacher gets 403 `files_forbidden`: `!sales && (await reads.scope(user))`, the same check as `thread-file.controller.ts:38`.
    - `send` is audited with action `thread_file` and `after = { phone, media_mime, media_name, status, sales_id }`, skipped on a replay.
    - Register it in `inbox.module.ts`.
-5. **`apps/api/src/modules/inbox/send/send-audit.ts`** (new)
+5. **`apps/api/src/modules/messaging/inbox/send/send-audit.ts`** (new)
    - `export async function recordSend(audit, input)` holds the body moved out of `ThreadsController.audited()` (`threads.controller.ts:78-93`). That method becomes a one-line call.
    - The `after` payload accepts the extra media fields.
 6. **`apps/api/src/common/auth/parity/access-before.json`**: add `"ThreadFileSendController.uploadUrl": ["admin","sales","teacher"]` and `"ThreadFileSendController.send": ["admin","sales","teacher"]`. The file records who passes the guard; the teacher's 403 happens in code.
@@ -378,7 +378,7 @@ Only inside the 24 h window, stored and logged under her name. Sending is by lin
    - Kapso needs no code change: same path, same body, `X-API-Key`.
 9. **Views and fallback**
    - `message.mapper.ts`: add `media_name`, and set `click_to_chat = null` for an outbound row with `media_path`. A file cannot ride along in wa.me.
-   - `apps/api/src/modules/whatsapp/messages/messages.service.ts` `handOff`: a media row gives 409 `media_handoff`. Retry stays allowed.
+   - `apps/api/src/modules/messaging/whatsapp/messages/messages.service.ts` `handOff`: a media row gives 409 `media_handoff`. Retry stays allowed.
 10. **wa-stub** (`tools/wa-stub/src/send.ts` `refusal()`): an `image` or `document` body without `link` or `id` gets 400 with Meta code 100. Add `tools/wa-stub/src/stub.media.test.ts`.
 
 ### Web
@@ -467,10 +467,10 @@ async notifySales(kind: PushKind, event: PushEvent, owners: readonly string[]): 
 
 1. **`apps/api/src/common/push/dispatch/push.audience.ts`** (69 lines): `private roleIds(role: 'admin' | 'sales')`, with `adminIds()` and `salesIds()` as one-liners.
 2. **`push.service.ts`** (105 lines, about 115 after): add `notifySales` as above.
-3. **`apps/api/src/modules/sales/sales-ownership.ts`** (44 lines): add `guardianOwnerIds(db, guardianId)`. It runs two parallel queries and returns the union with nulls dropped:
+3. **`apps/api/src/modules/sales/sales/sales-ownership.ts`** (44 lines): add `guardianOwnerIds(db, guardianId)`. It runs two parallel queries and returns the union with nulls dropped:
    - students' `brought_by` where `guardian_id = guardianId`;
    - leads' `assigned_to` where `converted_guardian_id = guardianId`.
-4. **`apps/api/src/modules/webhook/inbound/webhook.inbound.store.ts`**
+4. **`apps/api/src/modules/messaging/webhook/inbound/webhook.inbound.store.ts`**
    - `LeadLink` gains `owner: string | null`. In `sender()` it is `row.assigned_to` from the `upsertByPhone` row. That row comes back from the `assigned()` / `touch()` path with `select('*')` (`leads.queries.ts:59` and `:69`) and already reflects auto-assign. This costs no query, and `identify()` and `Contact` are unchanged.
    - It is null for the guardian, teacher and applicant paths.
    - Add `owners(who: Contact, lead: LeadLink): Promise<string[]>`: `lead.owner`, plus `guardianOwnerIds(guardian.id)` when a guardian wrote, de-duplicated. `webhook.queries.ts` (130 lines) is not touched; the store calls `guardianOwnerIds` with its db through a 3-line `WebhookQueries.guardianOwners`, or directly if the store already holds a Db.
@@ -492,7 +492,7 @@ async notifySales(kind: PushKind, event: PushEvent, owners: readonly string[]): 
   - no owners gives all sales;
   - the dedup key is `new_message:{subject}:{id}`, and a second identical call writes no row;
   - a throw from `salesIds` is swallowed.
-- `apps/api/src/modules/webhook/inbound/webhook.inbound.owners.test.ts`:
+- `apps/api/src/modules/messaging/webhook/inbound/webhook.inbound.owners.test.ts`:
   - lead owner A gives owners `['A']`;
   - a guardian whose children were brought by A and B, plus converted-lead owner C, gives A, B, C;
   - unowned gives `[]`;

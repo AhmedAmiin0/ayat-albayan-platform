@@ -5,7 +5,7 @@ import {
   PERMISSION_RESOLVER,
   type PermissionResolver,
 } from '../../auth/permissions';
-import { NotificationPolicy } from '../../../modules/notification-rules/policy/policy';
+import { NotificationPolicy } from '../../../modules/messaging/notification-rules/policy/policy';
 import { DB, type Db } from '../../db/db.module';
 import { pushRoute, type PushRoute } from './push.rules';
 import { liveTokens } from './push.sessions';
