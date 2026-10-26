@@ -65,4 +65,3 @@ export {
 } from './saved-replies/api';
 export { useReplyDialogs } from './saved-replies/use-reply-dialogs';
 export { clearTabMemories } from './shared/tab-memory';
-export { MockLink, renderWithClient, routeFetch } from './testing/test-utils';

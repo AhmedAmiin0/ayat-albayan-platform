@@ -12,4 +12,3 @@ export {
   updateNumber,
 } from './numbers-api';
 export { NUMBERS_SECTION, numbersMatch } from './numbers-section';
-export { importResult, NUMBERS, numberView, PARITY_DIFF, PARITY_SAME } from './numbers.fixture';

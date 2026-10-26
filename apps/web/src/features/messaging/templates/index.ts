@@ -16,5 +16,4 @@ export {
   templateLinesQuery,
   templatesQuery,
 } from './api';
-export { checked, LINES, lineSync, lineView } from './lines/template-lines-fixture';
 export { templatesMatch } from './templates-match';

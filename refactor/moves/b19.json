@@ -7656,8 +7656,7 @@
         "sales-money/api.ts",
         "saved-replies/api.ts",
         "saved-replies/use-reply-dialogs.tsx",
-        "shared/tab-memory.ts",
-        "testing/test-utils.tsx"
+        "shared/tab-memory.ts"
       ]
     },
     {
@@ -7702,8 +7701,7 @@
       "files": [
         "NumbersPanel.tsx",
         "numbers-api.ts",
-        "numbers-section.ts",
-        "numbers.fixture.ts"
+        "numbers-section.ts"
       ]
     },
     {
@@ -7711,7 +7709,6 @@
       "files": [
         "TemplateHealth.tsx",
         "api.ts",
-        "lines/template-lines-fixture.ts",
         "templates-match.ts"
       ]
     },
@@ -7880,8 +7877,7 @@
         "steps/slots/DayTimesList.tsx",
         "steps/slots/SlotStep.tsx",
         "trial-date/TrialDatesSection.tsx",
-        "trial-date/dialog/TrialDateDialog.tsx",
-        "wizard-fixture.ts"
+        "trial-date/dialog/TrialDateDialog.tsx"
       ]
     },
     {

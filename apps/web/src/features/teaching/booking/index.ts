@@ -73,22 +73,3 @@ export { dayAtText, DayTimesList, type DayTimesListProps } from './steps/slots/D
 export { courseNear, pickedText, SlotStep, type SlotStepProps } from './steps/slots/SlotStep';
 export { TrialDatesSection } from './trial-date/TrialDatesSection';
 export { TrialDateDialog, type TrialDateDialogProps } from './trial-date/dialog/TrialDateDialog';
-export {
-  ABRAR,
-  addInvoice,
-  bookingBodies,
-  INVOICE_PATH,
-  next,
-  NOOR,
-  pickSlot,
-  pickTeacher,
-  pickTeacherAndSlot,
-  pickWednesday,
-  respond,
-  RESPONSES,
-  routeSend,
-  SISTER_ID,
-  SLOT,
-  STUDENT_ID,
-  WED_SLOT,
-} from './wizard-fixture';
