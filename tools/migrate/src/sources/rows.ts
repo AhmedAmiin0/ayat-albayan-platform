@@ -1,7 +1,7 @@
 // Sheet grid → SourceRow[] by a SheetSpec. Pure: the zip/xlsx reading lives in zip.ts.
 import { wallClock } from '../time.ts';
 import type { Cell, SourceRow } from '../types.ts';
-import type { SheetSpec } from './headers.ts';
+import type { SheetSpec } from './headers/headers.ts';
 
 /** Library cell → Cell: trimmed text ('' → null), dates as zone-less wall clock. */
 export function cellOf(v: unknown): Cell {

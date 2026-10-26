@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest';
 import { keys } from '../keys.ts';
 import type { Mapped, NaturalKey, TargetRecord } from '../types.ts';
 import { mergeRecords, resolve } from './resolve.ts';
-import { samePhoneTeachers, similarStudents, splitStudentKey } from './similar.ts';
+import { samePhoneTeachers, similarStudents, splitStudentKey } from './match/similar.ts';
 
 const ref = (row: number) => ({ source: 'HUB' as const, tab: 't', row });
 const rec = (columns: TargetRecord['columns'], refs: TargetRecord['refs'] = {}): TargetRecord => ({
