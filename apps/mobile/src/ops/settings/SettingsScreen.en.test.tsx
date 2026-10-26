@@ -6,7 +6,7 @@ import { catalogue as mockCatalogue, settings as mockSettings } from '../shared/
 import { numbersAnswer as mockNumbersAnswer } from '../numbers/numbers-fixtures';
 import { CommunicationsScreen } from './CommunicationsScreen';
 import { SettingsScreen } from './SettingsScreen';
-import { ValuesScreen } from '../values/ValuesScreen';
+import { ValuesScreen } from '../values/screens/ValuesScreen';
 
 jest.mock('react-native/Libraries/ReactNative/I18nManager', () => {
   const actual = jest.requireActual('react-native/Libraries/ReactNative/I18nManager').default;

@@ -1,6 +1,6 @@
 import type { NotificationAudience, NotificationEntryView } from '@ab/shared';
-import { audienceTabs, rowsOf, type AudienceTab } from '../notif-rules/audience-tabs';
-import { nameOf } from '../notif-rules/rule-words';
+import { audienceTabs, rowsOf, type AudienceTab } from '../notif-rules/lib/audience-tabs';
+import { nameOf } from '../notif-rules/lib/rule-words';
 
 // «ماذا يُرسل الآن» on the overview: per audience, how many of its notifications go out now and how
 // many do not. The grouping, labels and order are the catalogue's pills (audience-tabs); the state is

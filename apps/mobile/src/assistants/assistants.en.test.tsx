@@ -2,8 +2,8 @@ import en from '@ab/shared/i18n/en.json';
 import { fireEvent, screen } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
-import { AssistantsScreen } from './AssistantsScreen';
-import { ALL, ASSISTANT, routes, statement, termsRowOf } from './fixtures';
+import { AssistantsScreen } from './screens/AssistantsScreen';
+import { ALL, ASSISTANT, routes, statement, termsRowOf } from './api/fixtures';
 
 jest.mock('react-native/Libraries/ReactNative/I18nManager', () => {
   const actual = jest.requireActual('react-native/Libraries/ReactNative/I18nManager').default;

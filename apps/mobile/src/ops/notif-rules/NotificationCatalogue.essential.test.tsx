@@ -5,7 +5,7 @@ import { ApiError } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
 import { NotificationCatalogue } from '../settings/NotificationCatalogue';
-import { answer, catalogueV2, MANAGER, openAudience } from './rules-fixtures';
+import { answer, catalogueV2, MANAGER, openAudience } from './testing/rules-fixtures';
 
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();

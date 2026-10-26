@@ -1,0 +1,336 @@
+{
+  "id": "c7b",
+  "seq": 86,
+  "moves": [
+    {
+      "from": "apps/mobile/src/ops/values/ValuesScreen*",
+      "to": "apps/mobile/src/ops/values/screens/"
+    },
+    {
+      "from": "apps/mobile/src/ops/values/ValueSheet*",
+      "to": "apps/mobile/src/ops/values/sheet/"
+    },
+    {
+      "from": "apps/mobile/src/ops/values/SheetNotes*",
+      "to": "apps/mobile/src/ops/values/sheet/"
+    },
+    {
+      "from": "apps/mobile/src/ops/values/SheetQuestion*",
+      "to": "apps/mobile/src/ops/values/sheet/"
+    },
+    {
+      "from": "apps/mobile/src/ops/values/ValueEditor*",
+      "to": "apps/mobile/src/ops/values/sheet/"
+    },
+    {
+      "from": "apps/mobile/src/ops/values/DescriptionEditor*",
+      "to": "apps/mobile/src/ops/values/sheet/"
+    },
+    {
+      "from": "apps/mobile/src/ops/values/DevKey*",
+      "to": "apps/mobile/src/ops/values/sheet/"
+    },
+    {
+      "from": "apps/mobile/src/ops/values/ValuesTable*",
+      "to": "apps/mobile/src/ops/values/table/"
+    },
+    {
+      "from": "apps/mobile/src/ops/values/ValueRow*",
+      "to": "apps/mobile/src/ops/values/table/"
+    },
+    {
+      "from": "apps/mobile/src/ops/values/GoogleValuesTable*",
+      "to": "apps/mobile/src/ops/values/table/"
+    },
+    {
+      "from": "apps/mobile/src/ops/values/description-text*",
+      "to": "apps/mobile/src/ops/values/lib/"
+    },
+    {
+      "from": "apps/mobile/src/ops/values/google-values*",
+      "to": "apps/mobile/src/ops/values/lib/"
+    },
+    {
+      "from": "apps/mobile/src/ops/values/value-draft*",
+      "to": "apps/mobile/src/ops/values/lib/"
+    },
+    {
+      "from": "apps/mobile/src/ops/values/value-groups*",
+      "to": "apps/mobile/src/ops/values/lib/"
+    },
+    {
+      "from": "apps/mobile/src/ops/values/value-text*",
+      "to": "apps/mobile/src/ops/values/lib/"
+    },
+    {
+      "from": "apps/mobile/src/ops/values/use-config-entries*",
+      "to": "apps/mobile/src/ops/values/hooks/"
+    },
+    {
+      "from": "apps/mobile/src/ops/values/use-description-editor*",
+      "to": "apps/mobile/src/ops/values/hooks/"
+    },
+    {
+      "from": "apps/mobile/src/ops/values/use-save-value*",
+      "to": "apps/mobile/src/ops/values/hooks/"
+    },
+    {
+      "from": "apps/mobile/src/ops/values/use-value-sheet*",
+      "to": "apps/mobile/src/ops/values/hooks/"
+    },
+    {
+      "from": "apps/mobile/src/ops/values/entries-fixtures*",
+      "to": "apps/mobile/src/ops/values/testing/"
+    },
+    {
+      "from": "apps/mobile/src/ops/values/values-fixtures*",
+      "to": "apps/mobile/src/ops/values/testing/"
+    },
+    {
+      "from": "apps/mobile/src/ops/notif-rules/CatalogueAudience*",
+      "to": "apps/mobile/src/ops/notif-rules/components/"
+    },
+    {
+      "from": "apps/mobile/src/ops/notif-rules/CatalogueRow*",
+      "to": "apps/mobile/src/ops/notif-rules/components/"
+    },
+    {
+      "from": "apps/mobile/src/ops/notif-rules/EssentialOffSheet*",
+      "to": "apps/mobile/src/ops/notif-rules/components/"
+    },
+    {
+      "from": "apps/mobile/src/ops/notif-rules/RowAsk*",
+      "to": "apps/mobile/src/ops/notif-rules/components/"
+    },
+    {
+      "from": "apps/mobile/src/ops/notif-rules/RuleControl*",
+      "to": "apps/mobile/src/ops/notif-rules/components/"
+    },
+    {
+      "from": "apps/mobile/src/ops/notif-rules/TypedOffSheet*",
+      "to": "apps/mobile/src/ops/notif-rules/components/"
+    },
+    {
+      "from": "apps/mobile/src/ops/notif-rules/audience-tabs*",
+      "to": "apps/mobile/src/ops/notif-rules/lib/"
+    },
+    {
+      "from": "apps/mobile/src/ops/notif-rules/rule-words*",
+      "to": "apps/mobile/src/ops/notif-rules/lib/"
+    },
+    {
+      "from": "apps/mobile/src/ops/notif-rules/use-catalogue*",
+      "to": "apps/mobile/src/ops/notif-rules/hooks/"
+    },
+    {
+      "from": "apps/mobile/src/ops/notif-rules/use-focus-on-open*",
+      "to": "apps/mobile/src/ops/notif-rules/hooks/"
+    },
+    {
+      "from": "apps/mobile/src/ops/notif-rules/use-toggle-rule*",
+      "to": "apps/mobile/src/ops/notif-rules/hooks/"
+    },
+    {
+      "from": "apps/mobile/src/ops/notif-rules/rules-fixtures*",
+      "to": "apps/mobile/src/ops/notif-rules/testing/"
+    }
+  ],
+  "files": [
+    [
+      "apps/mobile/src/ops/notif-rules/audience-tabs.test.ts",
+      "apps/mobile/src/ops/notif-rules/lib/audience-tabs.test.ts"
+    ],
+    [
+      "apps/mobile/src/ops/notif-rules/audience-tabs.ts",
+      "apps/mobile/src/ops/notif-rules/lib/audience-tabs.ts"
+    ],
+    [
+      "apps/mobile/src/ops/notif-rules/CatalogueAudience.tsx",
+      "apps/mobile/src/ops/notif-rules/components/CatalogueAudience.tsx"
+    ],
+    [
+      "apps/mobile/src/ops/notif-rules/CatalogueRow.tsx",
+      "apps/mobile/src/ops/notif-rules/components/CatalogueRow.tsx"
+    ],
+    [
+      "apps/mobile/src/ops/notif-rules/EssentialOffSheet.tsx",
+      "apps/mobile/src/ops/notif-rules/components/EssentialOffSheet.tsx"
+    ],
+    [
+      "apps/mobile/src/ops/notif-rules/RowAsk.tsx",
+      "apps/mobile/src/ops/notif-rules/components/RowAsk.tsx"
+    ],
+    [
+      "apps/mobile/src/ops/notif-rules/rule-words.test.ts",
+      "apps/mobile/src/ops/notif-rules/lib/rule-words.test.ts"
+    ],
+    [
+      "apps/mobile/src/ops/notif-rules/rule-words.ts",
+      "apps/mobile/src/ops/notif-rules/lib/rule-words.ts"
+    ],
+    [
+      "apps/mobile/src/ops/notif-rules/RuleControl.tsx",
+      "apps/mobile/src/ops/notif-rules/components/RuleControl.tsx"
+    ],
+    [
+      "apps/mobile/src/ops/notif-rules/rules-fixtures.ts",
+      "apps/mobile/src/ops/notif-rules/testing/rules-fixtures.ts"
+    ],
+    [
+      "apps/mobile/src/ops/notif-rules/TypedOffSheet.tsx",
+      "apps/mobile/src/ops/notif-rules/components/TypedOffSheet.tsx"
+    ],
+    [
+      "apps/mobile/src/ops/notif-rules/use-catalogue-toggles.ts",
+      "apps/mobile/src/ops/notif-rules/hooks/use-catalogue-toggles.ts"
+    ],
+    [
+      "apps/mobile/src/ops/notif-rules/use-catalogue.ts",
+      "apps/mobile/src/ops/notif-rules/hooks/use-catalogue.ts"
+    ],
+    [
+      "apps/mobile/src/ops/notif-rules/use-focus-on-open.test.ts",
+      "apps/mobile/src/ops/notif-rules/hooks/use-focus-on-open.test.ts"
+    ],
+    [
+      "apps/mobile/src/ops/notif-rules/use-focus-on-open.ts",
+      "apps/mobile/src/ops/notif-rules/hooks/use-focus-on-open.ts"
+    ],
+    [
+      "apps/mobile/src/ops/notif-rules/use-toggle-rule.ts",
+      "apps/mobile/src/ops/notif-rules/hooks/use-toggle-rule.ts"
+    ],
+    [
+      "apps/mobile/src/ops/values/description-text.test.ts",
+      "apps/mobile/src/ops/values/lib/description-text.test.ts"
+    ],
+    [
+      "apps/mobile/src/ops/values/description-text.ts",
+      "apps/mobile/src/ops/values/lib/description-text.ts"
+    ],
+    [
+      "apps/mobile/src/ops/values/DescriptionEditor.tsx",
+      "apps/mobile/src/ops/values/sheet/DescriptionEditor.tsx"
+    ],
+    [
+      "apps/mobile/src/ops/values/DevKey.tsx",
+      "apps/mobile/src/ops/values/sheet/DevKey.tsx"
+    ],
+    [
+      "apps/mobile/src/ops/values/entries-fixtures.ts",
+      "apps/mobile/src/ops/values/testing/entries-fixtures.ts"
+    ],
+    [
+      "apps/mobile/src/ops/values/google-values.ts",
+      "apps/mobile/src/ops/values/lib/google-values.ts"
+    ],
+    [
+      "apps/mobile/src/ops/values/GoogleValuesTable.tsx",
+      "apps/mobile/src/ops/values/table/GoogleValuesTable.tsx"
+    ],
+    [
+      "apps/mobile/src/ops/values/SheetNotes.tsx",
+      "apps/mobile/src/ops/values/sheet/SheetNotes.tsx"
+    ],
+    [
+      "apps/mobile/src/ops/values/SheetQuestion.tsx",
+      "apps/mobile/src/ops/values/sheet/SheetQuestion.tsx"
+    ],
+    [
+      "apps/mobile/src/ops/values/use-config-entries.ts",
+      "apps/mobile/src/ops/values/hooks/use-config-entries.ts"
+    ],
+    [
+      "apps/mobile/src/ops/values/use-description-editor.ts",
+      "apps/mobile/src/ops/values/hooks/use-description-editor.ts"
+    ],
+    [
+      "apps/mobile/src/ops/values/use-save-value.ts",
+      "apps/mobile/src/ops/values/hooks/use-save-value.ts"
+    ],
+    [
+      "apps/mobile/src/ops/values/use-value-sheet.ts",
+      "apps/mobile/src/ops/values/hooks/use-value-sheet.ts"
+    ],
+    [
+      "apps/mobile/src/ops/values/value-draft.test.ts",
+      "apps/mobile/src/ops/values/lib/value-draft.test.ts"
+    ],
+    [
+      "apps/mobile/src/ops/values/value-draft.ts",
+      "apps/mobile/src/ops/values/lib/value-draft.ts"
+    ],
+    [
+      "apps/mobile/src/ops/values/value-groups.ts",
+      "apps/mobile/src/ops/values/lib/value-groups.ts"
+    ],
+    [
+      "apps/mobile/src/ops/values/value-text.test.ts",
+      "apps/mobile/src/ops/values/lib/value-text.test.ts"
+    ],
+    [
+      "apps/mobile/src/ops/values/value-text.ts",
+      "apps/mobile/src/ops/values/lib/value-text.ts"
+    ],
+    [
+      "apps/mobile/src/ops/values/ValueEditor.tsx",
+      "apps/mobile/src/ops/values/sheet/ValueEditor.tsx"
+    ],
+    [
+      "apps/mobile/src/ops/values/ValueRow.tsx",
+      "apps/mobile/src/ops/values/table/ValueRow.tsx"
+    ],
+    [
+      "apps/mobile/src/ops/values/values-fixtures.ts",
+      "apps/mobile/src/ops/values/testing/values-fixtures.ts"
+    ],
+    [
+      "apps/mobile/src/ops/values/ValueSheet.tsx",
+      "apps/mobile/src/ops/values/sheet/ValueSheet.tsx"
+    ],
+    [
+      "apps/mobile/src/ops/values/ValueSheetBody.tsx",
+      "apps/mobile/src/ops/values/sheet/ValueSheetBody.tsx"
+    ],
+    [
+      "apps/mobile/src/ops/values/ValuesScreen.confirm.test.tsx",
+      "apps/mobile/src/ops/values/screens/ValuesScreen.confirm.test.tsx"
+    ],
+    [
+      "apps/mobile/src/ops/values/ValuesScreen.description-a11y.test.tsx",
+      "apps/mobile/src/ops/values/screens/ValuesScreen.description-a11y.test.tsx"
+    ],
+    [
+      "apps/mobile/src/ops/values/ValuesScreen.description-access.test.tsx",
+      "apps/mobile/src/ops/values/screens/ValuesScreen.description-access.test.tsx"
+    ],
+    [
+      "apps/mobile/src/ops/values/ValuesScreen.description.test.tsx",
+      "apps/mobile/src/ops/values/screens/ValuesScreen.description.test.tsx"
+    ],
+    [
+      "apps/mobile/src/ops/values/ValuesScreen.groups.test.tsx",
+      "apps/mobile/src/ops/values/screens/ValuesScreen.groups.test.tsx"
+    ],
+    [
+      "apps/mobile/src/ops/values/ValuesScreen.readonly.test.tsx",
+      "apps/mobile/src/ops/values/screens/ValuesScreen.readonly.test.tsx"
+    ],
+    [
+      "apps/mobile/src/ops/values/ValuesScreen.sheet.test.tsx",
+      "apps/mobile/src/ops/values/screens/ValuesScreen.sheet.test.tsx"
+    ],
+    [
+      "apps/mobile/src/ops/values/ValuesScreen.test.tsx",
+      "apps/mobile/src/ops/values/screens/ValuesScreen.test.tsx"
+    ],
+    [
+      "apps/mobile/src/ops/values/ValuesScreen.tsx",
+      "apps/mobile/src/ops/values/screens/ValuesScreen.tsx"
+    ],
+    [
+      "apps/mobile/src/ops/values/ValuesTable.tsx",
+      "apps/mobile/src/ops/values/table/ValuesTable.tsx"
+    ]
+  ]
+}
