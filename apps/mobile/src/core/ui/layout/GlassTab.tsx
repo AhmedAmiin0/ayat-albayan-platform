@@ -5,7 +5,7 @@ import { AppText } from '../primitives/AppText';
 import { TabBadge } from './TabBadge';
 import { TAB_ICONS, type TabIconName } from './tab-icons';
 
-export interface GlassTabProps {
+interface GlassTabProps {
   title: string;
   icon: TabIconName;
   badge?: string;

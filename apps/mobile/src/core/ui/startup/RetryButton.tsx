@@ -3,7 +3,7 @@ import { AppText } from '@/core/ui/primitives/AppText';
 import { pressScale } from '@/core/ui/primitives/Button';
 import { shape, type, useTheme } from '@/theme';
 
-export interface RetryButtonProps {
+interface RetryButtonProps {
   label: string;
   onPress: () => void;
   /** Before Noto Sans Arabic is registered the system Arabic font (an unknown family is an error on iOS). */

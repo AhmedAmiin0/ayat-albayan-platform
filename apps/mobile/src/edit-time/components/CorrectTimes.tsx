@@ -10,7 +10,7 @@ import { localDate } from '@/today/lib/timeline';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { correctStarts } from '../lib/edit-time-body';
 
-export interface CorrectTimesProps {
+interface CorrectTimesProps {
   lesson: LessonView;
   durationMin: number;
   /** The family's zone: the small clock under each start. */

@@ -12,7 +12,7 @@ const FullScreenContext = createContext(false);
 /** Set by a stack above the tabs (ChatStack): no tab bar under its screens, they own the bottom. */
 export const FullScreenProvider = FullScreenContext.Provider;
 
-export interface ScreenProps {
+interface ScreenProps {
   children: ReactNode;
   scroll?: boolean;
   /** A chat: 8pt top and between blocks, and the bottom safe area too (a full screen above the tabs). */
