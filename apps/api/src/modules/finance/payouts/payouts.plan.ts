@@ -50,7 +50,7 @@ export function linesOf(lessons: readonly PayoutLesson[]): PayoutLine[] {
   return [...lines.values()].sort((a, b) => a.duration - b.duration || (a.rate ?? 0) - (b.rate ?? 0));
 }
 
-export type ApproveBlock = 'month_not_over' | 'reports_pending' | 'payout_stale';
+type ApproveBlock = 'month_not_over' | 'reports_pending' | 'payout_stale';
 
 /**
  * Approving freezes the month (E3), so it waits until the month has ended in the teacher's tz

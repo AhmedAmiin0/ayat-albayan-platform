@@ -3,14 +3,14 @@ import { Injectable } from '@nestjs/common';
 import { AuditService } from '../../audit/audit.service';
 import { SINGLETON_ENTITY_ID } from '../../audit/singleton-entity';
 
-export interface ValueAudit {
+interface ValueAudit {
   actorId: string;
   key: string;
   before: unknown;
   after: unknown;
 }
 
-export interface DescriptionAudit {
+interface DescriptionAudit {
   actorId: string;
   key: string;
   before: string | null;

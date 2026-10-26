@@ -21,7 +21,7 @@ export function changedBy(row: ConfigRow | undefined, names: ReadonlyMap<string,
   return { updatedAt: row.updatedAt, updatedByName: row.updatedBy ? (names.get(row.updatedBy) ?? null) : null };
 }
 
-export interface EntryParts {
+interface EntryParts {
   seed: SeedEntry;
   def: SettingDef;
   row: ConfigRow | undefined;
