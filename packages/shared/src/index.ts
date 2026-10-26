@@ -1,5 +1,6 @@
 export * from './async/index.js';
 export * from './format/arabic.js';
+export * from './format/chat-day.js';
 export * from './enums/index.js';
 export * from './format/highlight-diff.js';
 export * from './classroom/index.js';

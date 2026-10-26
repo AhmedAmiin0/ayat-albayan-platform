@@ -1,4 +1,4 @@
-import { clockTime, isUnavailableMessage, isUnsupportedMessage, type MessageView, SESSION_WINDOW_MS, type ThreadView } from '@ab/shared';
+import { clockTime, dayParts, isUnavailableMessage, isUnsupportedMessage, type MessageView, SESSION_WINDOW_MS, type ThreadView } from '@ab/shared';
 import { ApiError } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
 
@@ -36,32 +36,21 @@ export function templateLine(key: string): string {
   return t.inbox.templateLine.replace('{name}', names[key] ?? key);
 }
 
-/** A thread row's last message: «إنت: …» for ours, media and templates named. */
+/**
+ * A thread row's last message: «إنت: …» for ours, media and templates named; Meta's `unsupported`
+ * (131060 on a new number's first message) is «رسالة لم يصل محتواها», not the generic line.
+ */
 export function threadPreview(th: ThreadView): string {
   const media = th.last_media_mime ? t.inbox.media[mediaKind(th.last_media_mime)] : null;
+  const other = th.last_unsupported ? t.inbox.previewUnsupported : t.inbox.media.other;
   const text = media
     ? [media, th.last_body].filter(Boolean).join(': ')
-    : (th.last_body ?? (th.last_template_key ? templateLine(th.last_template_key) : t.inbox.media.other));
+    : (th.last_body ?? (th.last_template_key ? templateLine(th.last_template_key) : other));
   return th.last_direction === 'outbound' ? `${t.inbox.you} ${text}` : text;
 }
 
 export function deviceTimeZone(): string {
   return Intl.DateTimeFormat().resolvedOptions().timeZone;
-}
-
-const dayFormats = new Map<string, Intl.DateTimeFormat>();
-/**
- * [day, month, year] of the instant in `tz`, as plain numbers (engines differ on zero-padding).
- * Not display text, so a fixed locale whatever the UI language (the parts are compared, not shown).
- */
-function dayOf(at: Date, tz: string): number[] {
-  let f = dayFormats.get(tz);
-  if (!f) {
-    f = new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'numeric', year: 'numeric', timeZone: tz });
-    dayFormats.set(tz, f);
-  }
-  const parts = f.formatToParts(at);
-  return (['day', 'month', 'year'] as const).map((k) => Number(parts.find((p) => p.type === k)?.value));
 }
 
 interface StampOptions {
@@ -72,11 +61,16 @@ interface StampOptions {
 /** «08:05» today, «30/9 08:05» another day, in the device's zone (or `tz`). */
 export function stamp(iso: string, { now = new Date(), tz = deviceTimeZone() }: StampOptions = {}): string {
   const at = new Date(iso);
-  const clock = clockTime(at, tz);
-  const [day, month, year] = dayOf(at, tz);
-  const [today, thisMonth, thisYear] = dayOf(now, tz);
-  if (day === today && month === thisMonth && year === thisYear) return clock;
-  return `${day}/${month} ${clock}`;
+  const time = clockTime(at, tz);
+  const { day, month, year } = dayParts(at, tz);
+  const today = dayParts(now, tz);
+  if (day === today.day && month === today.month && year === today.year) return time;
+  return `${day}/${month} ${time}`;
+}
+
+/** «16:39» in the device's zone (or `tz`): a bubble's time, its day is in the separator above it. */
+export function clock(iso: string, tz = deviceTimeZone()): string {
+  return clockTime(new Date(iso), tz);
 }
 
 /** «تقدر ترد برسالة عادية لحد …»: 24 h after their last message (R-MSG-03). */
