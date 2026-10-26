@@ -24,6 +24,17 @@ describe('sales schedule mappers', () => {
     expect([bare.teacher.display_name_ar, bare.trial, bare.makeup, bare.students[0]?.code]).toEqual(['', false, true, '']);
   });
 
+  it('toScheduleLesson carries the teacher’s and students’ zones (local times in the details sheet), nothing else', () => {
+    const out = toScheduleLesson(
+      scheduleRow({
+        teacher: { id: 'tc1', display_name_ar: 'أبرار', display_name_en: null, tz: 'Africa/Cairo' },
+        lesson_students: [{ student: { id: 's1', code: 'AB-0101', name: 'ياسمين', tz: 'Asia/Muscat' } }],
+      }),
+    );
+    expect(out.teacher).toEqual({ id: 'tc1', display_name_ar: 'أبرار', display_name_en: null, tz: 'Africa/Cairo' });
+    expect(out.students).toEqual([{ id: 's1', code: 'AB-0101', name: 'ياسمين', tz: 'Asia/Muscat' }]);
+  });
+
   it('teacherDayFacts counts today’s lessons but not cancelled ones, and flags one running now', () => {
     const facts = teacherDayFacts(
       [

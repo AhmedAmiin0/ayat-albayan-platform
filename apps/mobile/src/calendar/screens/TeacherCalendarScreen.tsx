@@ -2,6 +2,7 @@ import { RIYADH_TZ, teacherName, type LessonView } from '@ab/shared';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import { FlatList } from 'react-native';
+import { JoinClassroomButton } from '@/classroom/links/JoinClassroomButton';
 import { EditTimeSheet } from '@/edit-time/components/EditTimeSheet';
 import { t } from '@/core/lib/i18n/i18n';
 import { locale } from '@/core/lib/i18n/locale';
@@ -14,6 +15,9 @@ import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { agendaDays, availabilityLine, headerLine } from '../agenda/agenda';
 import { AgendaDayView } from '../agenda/AgendaDayView';
+import { RowDefaultActions } from '../agenda/RowDefaultActions';
+import { LessonDetailsSheet } from '../details/LessonDetailsSheet';
+import { useLessonDetails } from '../details/use-lesson-details';
 import { PeriodSwitcher } from '../overview/PeriodSwitcher';
 import { useAvailability, useTeacher, useWeekLessons } from '../lib/queries';
 import { addDays, riyadhToday, weekLabel, weekStart, weekWindow } from '../lib/week';
@@ -22,7 +26,7 @@ import { addDays, riyadhToday, weekLabel, weekStart, weekWindow } from '../lib/w
  * «جدول المعلم/ة» (R-TCH-02, R-SCH-01): one teacher's week, السبت → الجمعة, as a day-by-day agenda
  * in Riyadh time with the teacher's own clock beside it when it differs, and each day's
  * availability as a faint line. ‹ › moves a week; a lesson's «غيّر الميعاد» opens the reschedule
- * sheet and «عدّل الوقت» the in-place edit sheet. Pull to refresh; offline the saved week stays with its «آخر تحديث».
+ * sheet and «عدّل الوقت» the in-place edit sheet; a tap on the row opens «تفاصيل الحلقة». Pull to refresh; offline the saved week stays with its «آخر تحديث».
  */
 export function TeacherCalendarScreen() {
   const { id = '' } = useLocalSearchParams<{ id: string }>();
@@ -33,6 +37,7 @@ export function TeacherCalendarScreen() {
   const grid = useAvailability(id);
   const [moving, setMoving] = useState<LessonView | null>(null);
   const [editing, setEditing] = useState<LessonView | null>(null);
+  const details = useLessonDetails(lessons.data);
   const loaded = lessons.data !== undefined;
   const days = agendaDays(lessons.data ?? [], start);
   const empty = days.every((d) => d.lessons.length === 0);
@@ -68,6 +73,7 @@ export function TeacherCalendarScreen() {
             available={availabilityLine(grid.data ?? [], item.date, teacher.data?.tz ?? RIYADH_TZ)}
             onReschedule={setMoving}
             onEditTime={setEditing}
+            onOpen={details.open}
           />
         )}
         refreshing={lessons.isRefetching}
@@ -78,8 +84,23 @@ export function TeacherCalendarScreen() {
         // A new week has no data yet: say it is loading rather than show a blank screen.
         ListEmptyComponent={lessons.isPending ? <Note>{t.common.loading}</Note> : <ErrorState onRetry={() => void lessons.refetch()} />}
       />
-      <RescheduleSheet lesson={moving} onClose={() => setMoving(null)} />
-      <EditTimeSheet lesson={editing} onClose={() => setEditing(null)} />
+      <LessonDetailsSheet
+        lesson={details.lesson}
+        role="admin"
+        onClose={details.close}
+        actions={(l) => (
+          <>
+            <RowDefaultActions lesson={l} onReschedule={setMoving} onEditTime={setEditing} />
+            <JoinClassroomButton lesson={l} />
+          </>
+        )}
+        sheets={
+          <>
+            <RescheduleSheet lesson={moving} onClose={() => setMoving(null)} />
+            <EditTimeSheet lesson={editing} onClose={() => setEditing(null)} />
+          </>
+        }
+      />
     </Screen>
   );
 }

@@ -47,6 +47,7 @@ export function toLessonView(row: LessonRow, ctx: ViewContext): LessonView {
       chargeable: s.chargeable,
       seq: ctx.seq.get(`${row.id}:${s.student_id}`) ?? null,
       makeup: activeMakeup(row, s.student_id),
+      report: s.report ? { id: s.report.id, status: s.report.status } : null,
     }))
     .sort((a, b) => a.name.localeCompare(b.name, 'ar'));
   return {

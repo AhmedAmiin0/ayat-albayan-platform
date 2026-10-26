@@ -927,6 +927,19 @@
       "payoutLink": "Calculate this month's payouts",
       "overrideEdit": "Save despite the conflict",
       "overrideReasonEdit": "Reason for the edit despite the conflict"
+    },
+    "sheet": {
+      "openRow": "Lesson details — {names}",
+      "about": "About the lesson",
+      "series": "Repeats weekly: {days} · {time}",
+      "live": "In progress",
+      "openStudent": "Open {name}’s file",
+      "report": {
+        "submitted": "Report sent",
+        "draft": "Report is a draft",
+        "none": "No report written yet"
+      },
+      "readOnly": "View only: no edit or cancel from here"
     }
   },
   "teacherDash": {
