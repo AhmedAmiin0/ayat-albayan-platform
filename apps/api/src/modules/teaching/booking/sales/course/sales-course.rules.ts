@@ -24,7 +24,7 @@ export type CourseFacts = {
   /** The subscription already has its course (a rule with its subscription_id, any status). */
   booked: boolean;
 };
-export type CourseProblem = { status: HttpStatus; code: string };
+type CourseProblem = { status: HttpStatus; code: string };
 
 const problem = (status: HttpStatus, code: string): CourseProblem => ({ status, code });
 
@@ -64,7 +64,7 @@ export function courseProblem({ req, sub, rules, endsOn, booked }: CourseFacts):
   return null;
 }
 
-export type BlockFacts = { sub: CourseSubscription | null; rules: readonly CourseRule[]; today: string; booked: boolean };
+type BlockFacts = { sub: CourseSubscription | null; rules: readonly CourseRule[]; today: string; booked: boolean };
 
 /**
  * The course wizard's gate before anything is picked (GET /sales/booking/course): no subscription,

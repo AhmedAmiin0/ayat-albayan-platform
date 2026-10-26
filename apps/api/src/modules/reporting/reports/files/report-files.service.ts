@@ -14,8 +14,8 @@ import { badRequest, conflict } from '../../../../common/http/errors';
 import { ReportAttachmentsQueries } from './report-attachments.queries';
 import { ReportGate } from '../submit/report-gate';
 
-export type FileRef = { id: string; user: AuthUser };
-export type AttachmentRef = FileRef & { attachmentId: string };
+type FileRef = { id: string; user: AuthUser };
+type AttachmentRef = FileRef & { attachmentId: string };
 
 /** Report files through signed URLs: the PDF (R6) and attachments (R7–R10; R-REP-02/03). */
 @Injectable()

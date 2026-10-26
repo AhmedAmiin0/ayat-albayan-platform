@@ -6,7 +6,7 @@ import { withInvoice } from './booking.payload';
 import type { Prepared } from '../plan/booking.planner';
 import { BookingQueries } from './booking.queries';
 
-export type BookingWrite = { req: BookingRequest; prepared: Prepared; actorId: string };
+type BookingWrite = { req: BookingRequest; prepared: Prepared; actorId: string };
 
 /**
  * The write half of POST /booking: the invoice file is resolved only now, after the plan passed

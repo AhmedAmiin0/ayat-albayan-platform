@@ -30,7 +30,7 @@ type Saved = Pick<InvoiceRow, 'path' | 'mime' | 'size_bytes'>;
  * server-side option (BookingPlanner PrepareOptions.invoiceWaived, the assistant's course): no
  * invoice is then null instead of 400 invoice_required.
  */
-export type InvoiceScope = { phones: readonly string[]; maxBytes: number; waived?: boolean };
+type InvoiceScope = { phones: readonly string[]; maxBytes: number; waived?: boolean };
 
 /**
  * The فاتورة of a non-trial booking (R-PAY-03, R-MSG-06): a file in the private `invoices` bucket,

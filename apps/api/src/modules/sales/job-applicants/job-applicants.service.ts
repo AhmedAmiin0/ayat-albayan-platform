@@ -10,13 +10,13 @@ import {
   type JobApplicantRow,
 } from './job-applicants.queries';
 
-export interface ApplicantAction {
+interface ApplicantAction {
   id: string;
   actorId: string | null;
 }
 
-export type ApplicantInput = Omit<JobApplicantCreate, 'status' | 'from_lead_id'>;
-export type ApplicantPatch = Omit<TablesUpdate<'job_applicants'>, 'status' | 'from_lead_id'>;
+type ApplicantInput = Omit<JobApplicantCreate, 'status' | 'from_lead_id'>;
+type ApplicantPatch = Omit<TablesUpdate<'job_applicants'>, 'status' | 'from_lead_id'>;
 
 /** Job applicants: separate from leads, never in the sales funnel (R-LEAD-04). */
 @Injectable()
