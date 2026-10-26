@@ -1,9 +1,9 @@
 import type { FxRate, SubscriptionCreate } from '@ab/shared';
 import { describe, expect, it, vi } from 'vitest';
-import type { FxService } from '../fx/fx.service';
-import { PricingService } from '../pricing/pricing.service';
+import type { FxService } from '../../fx/fx.service';
+import { PricingService } from '../../pricing/pricing.service';
 import { subscriptionRow } from './subscription-row';
-import { quoteQueryFor } from './subscriptions.dto';
+import { quoteQueryFor } from '../subscriptions.dto';
 
 const ACTOR = 'a0000000-0000-4000-8000-000000000001';
 const input: SubscriptionCreate = {

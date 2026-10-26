@@ -8,7 +8,7 @@ import {
   type StatusEvent,
   type WebhookBatch,
 } from '../webhook.events';
-import { acceptsNumber, lineFor, receivingNumber, type Receiving, type ReceivingNumber } from '../webhook.lines';
+import { acceptsNumber, lineFor, receivingNumber, type Receiving, type ReceivingNumber } from '../lines/webhook.lines';
 
 // Meta's webhook envelope → flat inbound messages and delivery statuses (docs/12 §3.5). Fields
 // are read by their Meta path («interactive.button_reply.id»). Lenient: an item we can't read is

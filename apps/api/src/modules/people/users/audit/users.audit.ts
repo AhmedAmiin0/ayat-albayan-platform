@@ -1,7 +1,7 @@
 import type { Json } from '@ab/db';
-import type { AuditService } from '../../../common/audit/audit.service';
+import type { AuditService } from '../../../../common/audit/audit.service';
 import { redact } from './users.redact';
-import type { UserRow } from './store/users.store';
+import type { UserRow } from '../store/users.store';
 
 /** What the audit trail keeps of a login: who they are, never a credential. */
 type Fields = Record<string, Json>;

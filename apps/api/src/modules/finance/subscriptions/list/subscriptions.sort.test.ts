@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
-import { fakeDb } from '../../people/guardians/fake-db';
-import { subscriptionListQuery } from './subscriptions.dto';
+import { fakeDb } from '../../../people/guardians/fake-db';
+import { subscriptionListQuery } from '../subscriptions.dto';
 import { listSelect } from './subscriptions.list-query';
-import { SubscriptionsQueries } from './subscriptions.queries';
+import { SubscriptionsQueries } from '../subscriptions.queries';
 
 const page = { page: 1, pageSize: 20 };
 const on = (calls: { method: string; args: unknown[] }[], method: string) =>

@@ -1208,7 +1208,7 @@ Branch `develop`. Six branches merged with `--no-ff`, in order: `phase7/foundati
   - The teacher reminder link wording in `@ab/shared` messaging is fixed Arabic.
 - **Report history links:** the admin student profile has «سجل التقارير» linking to `/admin/students/$id/reports`. In the teacher's MyStudents list, each student name links to `/teacher/reports/$id`.
 - **List joiners:** `common.listJoiner` is «، » in Arabic and «, » in English. It is used in the web finance notes, the web settings follow-up hours, the mobile lesson student names, and (verifier fix) the web and mobile slot lines, the mobile slot a11y label, the web conflict lines and the pricing live-region summary. Group names on screens use `joinNames(names, locale)` («سهيلة وجود» / «Suhaila and Joud»). The payout «missing rate» sentence joins durations with the new `payouts.durationsJoiner` («45 والـ60» / «45 and 60»).
-- **USD subscription FX snapshot:** `apps/api/src/modules/finance/subscriptions/subscription-row.test.ts`.
+- **USD subscription FX snapshot:** `apps/api/src/modules/finance/subscriptions/list/subscription-row.test.ts`.
   - EG at 0.266667 gives $39 and saves the same rate and date.
   - The 1/3.75 peg fallback is saved with `fx_date` null.
   - GCC countries make no FX call.

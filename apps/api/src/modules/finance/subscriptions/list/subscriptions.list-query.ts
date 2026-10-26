@@ -1,6 +1,6 @@
 import type { ListSort, PackageSize, SUBSCRIPTION_SORT_KEYS, SubscriptionStatus } from '@ab/shared';
-import type { SortSpec } from '../../../common/list-sort';
-import type { PageQuery } from '../../../common/http/http';
+import type { SortSpec } from '../../../../common/list-sort';
+import type { PageQuery } from '../../../../common/http/http';
 
 type SubSortKey = (typeof SUBSCRIPTION_SORT_KEYS)[number];
 

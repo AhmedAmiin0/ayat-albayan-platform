@@ -1,0 +1,521 @@
+{
+  "id": "a22",
+  "seq": 34,
+  "moves": [
+    {
+      "from": "apps/api/src/modules/finance/subscriptions/subscription-row*",
+      "to": "apps/api/src/modules/finance/subscriptions/list/"
+    },
+    {
+      "from": "apps/api/src/modules/finance/subscriptions/subscriptions.list-query*",
+      "to": "apps/api/src/modules/finance/subscriptions/list/"
+    },
+    {
+      "from": "apps/api/src/modules/finance/subscriptions/subscriptions.sort.test.ts",
+      "to": "apps/api/src/modules/finance/subscriptions/list/"
+    },
+    {
+      "from": "apps/api/src/modules/messaging/webhook/webhook.lines*",
+      "to": "apps/api/src/modules/messaging/webhook/lines/"
+    },
+    {
+      "from": "apps/api/src/modules/people/users/users.redact*",
+      "to": "apps/api/src/modules/people/users/audit/"
+    },
+    {
+      "from": "apps/api/src/modules/people/users/users.audit.ts",
+      "to": "apps/api/src/modules/people/users/audit/"
+    },
+    {
+      "from": "apps/api/src/modules/teaching/lesson-rating/rating.queue*",
+      "to": "apps/api/src/modules/teaching/lesson-rating/queue/"
+    },
+    {
+      "from": "apps/api/src/modules/teaching/lesson-rating/rating.job.ts",
+      "to": "apps/api/src/modules/teaching/lesson-rating/queue/"
+    }
+  ],
+  "barrels": [
+    {
+      "dir": "apps/api/src/modules/finance/assistant-pay",
+      "files": [
+        "assistant-pay.module.ts"
+      ]
+    },
+    {
+      "dir": "apps/api/src/modules/finance/expenses",
+      "files": [
+        "expenses.module.ts",
+        "expenses.queries.ts",
+        "expenses.settings.ts"
+      ]
+    },
+    {
+      "dir": "apps/api/src/modules/finance/fx",
+      "files": [
+        "fx.fetcher.ts",
+        "fx.module.ts",
+        "fx.queries.ts",
+        "fx.service.ts",
+        "fx.settings.ts"
+      ]
+    },
+    {
+      "dir": "apps/api/src/modules/finance/invoices",
+      "files": [
+        "invoices.dto.ts",
+        "invoices.module.ts",
+        "invoices.queries.ts",
+        "invoices.service.ts",
+        "invoices.settings.ts"
+      ]
+    },
+    {
+      "dir": "apps/api/src/modules/finance/payments",
+      "files": [
+        "attachments/payment-attachments.queries.ts",
+        "attachments/payment-attachments.service.ts",
+        "attachments/receipts.service.ts",
+        "payments.dto.ts",
+        "payments.mapper.ts",
+        "payments.module.ts",
+        "payments.queries.ts",
+        "payments.service.ts",
+        "payments.settings.ts"
+      ]
+    },
+    {
+      "dir": "apps/api/src/modules/finance/payouts",
+      "files": [
+        "payouts.module.ts",
+        "payouts.queries.ts",
+        "payouts.settings.ts"
+      ]
+    },
+    {
+      "dir": "apps/api/src/modules/finance/pricing",
+      "files": [
+        "pricing.dto.ts",
+        "pricing.module.ts",
+        "pricing.service.ts"
+      ]
+    },
+    {
+      "dir": "apps/api/src/modules/finance/receivables",
+      "files": [
+        "receivables.module.ts",
+        "receivables.service.ts",
+        "receivables.settings.ts"
+      ]
+    },
+    {
+      "dir": "apps/api/src/modules/finance/subscriptions",
+      "files": [
+        "alerts/alerts.queries.ts",
+        "alerts/unpaid-flags.service.ts",
+        "money/balance.queries.ts",
+        "money/money-writes.ts",
+        "money/packages.service.ts",
+        "subscription-creator.ts",
+        "subscriptions.mapper.ts",
+        "subscriptions.module.ts",
+        "subscriptions.queries.ts",
+        "subscriptions.service.ts",
+        "trial/student-trial-status.ts",
+        "trial/student-trial.plan.ts",
+        "trial/student-trial.queries.ts"
+      ]
+    },
+    {
+      "dir": "apps/api/src/modules/finance/teacher-earnings",
+      "files": [
+        "earnings.module.ts",
+        "earnings.queries.ts",
+        "earnings.receipts.ts",
+        "summary/corrections.queries.ts"
+      ]
+    },
+    {
+      "dir": "apps/api/src/modules/messaging/chat-lists",
+      "files": [
+        "chat-lists.guard.ts",
+        "chat-lists.module.ts",
+        "chat-lists.queries.ts"
+      ]
+    },
+    {
+      "dir": "apps/api/src/modules/messaging/follow-ups",
+      "files": [
+        "follow-ups.job.ts",
+        "follow-ups.module.ts",
+        "follow-ups.settings.ts"
+      ]
+    },
+    {
+      "dir": "apps/api/src/modules/messaging/inbox",
+      "files": [
+        "files/thread-media.service.ts",
+        "inbox.module.ts",
+        "send/outbox.ts",
+        "send/send-number.ts",
+        "teacher-threads/teacher-scope.ts",
+        "threads/phone-param.ts",
+        "threads/threads.queries.ts"
+      ]
+    },
+    {
+      "dir": "apps/api/src/modules/messaging/messaging-jobs",
+      "files": [
+        "messaging-jobs.module.ts"
+      ]
+    },
+    {
+      "dir": "apps/api/src/modules/messaging/notification-rules",
+      "files": [
+        "notification-rules.settings.ts",
+        "policy/policy.ts",
+        "rules.module.ts",
+        "rules.service.ts",
+        "store/rules.reader.ts",
+        "sync/rules.parity.ts"
+      ]
+    },
+    {
+      "dir": "apps/api/src/modules/messaging/numbers",
+      "files": [
+        "lines/numbers.health.ts",
+        "numbers.module.ts"
+      ]
+    },
+    {
+      "dir": "apps/api/src/modules/messaging/push",
+      "files": [
+        "push-receipts.module.ts"
+      ]
+    },
+    {
+      "dir": "apps/api/src/modules/messaging/reminders",
+      "files": [
+        "plan/reminders.links.ts",
+        "plan/staff-reachable.ts",
+        "queued-row.ts",
+        "reminders.job.ts",
+        "reminders.module.ts",
+        "reminders.queries.ts",
+        "reminders.settings.ts",
+        "ticker.ts"
+      ]
+    },
+    {
+      "dir": "apps/api/src/modules/messaging/saved-replies",
+      "files": [
+        "saved-replies.module.ts"
+      ]
+    },
+    {
+      "dir": "apps/api/src/modules/messaging/webhook",
+      "files": [
+        "webhook.module.ts",
+        "webhook.settings.ts"
+      ]
+    },
+    {
+      "dir": "apps/api/src/modules/messaging/whatsapp",
+      "files": [
+        "gate/send-gate.ts",
+        "lines/line-health.store.ts",
+        "messages/inbound-media.queries.ts",
+        "messages/inbound-media.service.ts",
+        "messages/message.mapper.ts",
+        "messages/message.views.ts",
+        "sender/message.job.ts",
+        "sender/message.sender.ts",
+        "sender/send-plan.ts",
+        "sender/send-stale.ts",
+        "templates/catalog/template.mapper.ts",
+        "templates/catalog/template.registry.ts",
+        "templates/catalog/templates.queries.ts",
+        "whatsapp.module.ts"
+      ]
+    },
+    {
+      "dir": "apps/api/src/modules/people/guardians",
+      "files": [
+        "guardians.mapper.ts",
+        "guardians.module.ts",
+        "guardians.service.ts",
+        "http.ts"
+      ]
+    },
+    {
+      "dir": "apps/api/src/modules/people/me",
+      "files": [
+        "me.module.ts",
+        "push/push-tokens.ts"
+      ]
+    },
+    {
+      "dir": "apps/api/src/modules/people/roles",
+      "files": [
+        "roles.logic.ts",
+        "roles.module.ts",
+        "roles.store.ts"
+      ]
+    },
+    {
+      "dir": "apps/api/src/modules/people/students",
+      "files": [
+        "duplicate-detector.ts",
+        "students.mapper.ts",
+        "students.module.ts"
+      ]
+    },
+    {
+      "dir": "apps/api/src/modules/people/teacher-students",
+      "files": [
+        "teacher-students.module.ts"
+      ]
+    },
+    {
+      "dir": "apps/api/src/modules/people/teachers",
+      "files": [
+        "availability/availability.queries.ts",
+        "availability/availability.query.ts",
+        "availability/free-slots.ts",
+        "availability/intervals.ts",
+        "availability/zoned-time.ts",
+        "meeting-view.ts",
+        "teachers.module.ts",
+        "teachers.queries.ts"
+      ]
+    },
+    {
+      "dir": "apps/api/src/modules/people/users",
+      "files": [
+        "store/users.links.queries.ts",
+        "users.errors.ts",
+        "users.module.ts"
+      ]
+    },
+    {
+      "dir": "apps/api/src/modules/platform/google-sync",
+      "files": [
+        "google-sync.module.ts",
+        "http/backoff.ts"
+      ]
+    },
+    {
+      "dir": "apps/api/src/modules/platform/health",
+      "files": [
+        "health.controller.ts"
+      ]
+    },
+    {
+      "dir": "apps/api/src/modules/platform/translations",
+      "files": [
+        "translations.module.ts",
+        "translations.service.ts"
+      ]
+    },
+    {
+      "dir": "apps/api/src/modules/reporting/dashboard",
+      "files": [
+        "dashboard.module.ts",
+        "dashboard.settings.ts",
+        "finance/finance.mapper.ts",
+        "finance/finance.queries.ts",
+        "finance/fx-converter.ts",
+        "range.ts",
+        "work/conversion.ts"
+      ]
+    },
+    {
+      "dir": "apps/api/src/modules/reporting/exports",
+      "files": [
+        "exports.module.ts"
+      ]
+    },
+    {
+      "dir": "apps/api/src/modules/reporting/report-pdf",
+      "files": [
+        "render/pdf-text.ts",
+        "report-pdf.job.ts",
+        "report-pdf.module.ts",
+        "report-pdf.settings.ts",
+        "report-ready.ts"
+      ]
+    },
+    {
+      "dir": "apps/api/src/modules/reporting/reports",
+      "files": [
+        "history/report-history.queries.ts",
+        "reports.module.ts",
+        "reports.settings.ts"
+      ]
+    },
+    {
+      "dir": "apps/api/src/modules/sales/job-applicants",
+      "files": [
+        "job-applicants.module.ts",
+        "job-applicants.queries.ts"
+      ]
+    },
+    {
+      "dir": "apps/api/src/modules/sales/leads",
+      "files": [
+        "http.ts",
+        "lead-state-machine.ts",
+        "leads.module.ts",
+        "leads.service.ts"
+      ]
+    },
+    {
+      "dir": "apps/api/src/modules/sales/sales",
+      "files": [
+        "assign/sales-assign.service.ts",
+        "sales-ownership.ts",
+        "sales-scope.ts",
+        "sales.module.ts",
+        "sales.queries.ts",
+        "schedule/sales-lessons.ts",
+        "schedule/sales-schedule.mapper.ts"
+      ]
+    },
+    {
+      "dir": "apps/api/src/modules/sales/sales-money",
+      "files": [
+        "reads/sales-family.queries.ts",
+        "sales-money.module.ts"
+      ]
+    },
+    {
+      "dir": "apps/api/src/modules/sales/sales-registration",
+      "files": [
+        "sales-registration.module.ts"
+      ]
+    },
+    {
+      "dir": "apps/api/src/modules/teaching/booking",
+      "files": [
+        "booking.module.ts",
+        "invoice/invoice-sniff.ts"
+      ]
+    },
+    {
+      "dir": "apps/api/src/modules/teaching/classroom",
+      "files": [
+        "classroom.config.ts",
+        "classroom.module.ts",
+        "classroom.settings.ts",
+        "join/join-link.token.ts",
+        "livekit/livekit-webhook.controller.ts",
+        "recordings/recording-list.service.ts",
+        "recordings/recording.queries.ts"
+      ]
+    },
+    {
+      "dir": "apps/api/src/modules/teaching/feedback",
+      "files": [
+        "feedback.module.ts",
+        "feedback.settings.ts",
+        "public/feedback.rate-limit.ts"
+      ]
+    },
+    {
+      "dir": "apps/api/src/modules/teaching/lesson-rating",
+      "files": [
+        "lesson-rating.module.ts",
+        "lesson-rating.settings.ts",
+        "rating.rows.ts",
+        "rating.store.ts"
+      ]
+    },
+    {
+      "dir": "apps/api/src/modules/teaching/lessons",
+      "files": [
+        "lessons.module.ts",
+        "reschedule/rule-plan.ts",
+        "status/confirmation-messages.ts",
+        "status/lesson-status.service.ts",
+        "status/outcomes.ts",
+        "teacher-me/teacher-me.queries.ts"
+      ]
+    },
+    {
+      "dir": "apps/api/src/modules/teaching/scheduling",
+      "files": [
+        "change-set.ts",
+        "conflicts/busy.queries.ts",
+        "conflicts/conflict-checker.ts",
+        "conflicts/conflicts.ts",
+        "meeting-link.ts",
+        "occurrences/dst-probe.ts",
+        "occurrences/horizon.ts",
+        "occurrences/lesson-writer.ts",
+        "occurrences/occurrences.ts",
+        "read-all.ts",
+        "rpc.ts",
+        "rules/rule-projection.queries.ts",
+        "rules/rule-projection.ts",
+        "schedule.queries.ts",
+        "scheduling.module.ts"
+      ]
+    },
+    {
+      "dir": "apps/api/src/modules/teaching/student-recordings",
+      "files": [
+        "student-recordings.module.ts"
+      ]
+    }
+  ],
+  "files": [
+    [
+      "apps/api/src/modules/finance/subscriptions/subscription-row.test.ts",
+      "apps/api/src/modules/finance/subscriptions/list/subscription-row.test.ts"
+    ],
+    [
+      "apps/api/src/modules/finance/subscriptions/subscription-row.ts",
+      "apps/api/src/modules/finance/subscriptions/list/subscription-row.ts"
+    ],
+    [
+      "apps/api/src/modules/finance/subscriptions/subscriptions.list-query.ts",
+      "apps/api/src/modules/finance/subscriptions/list/subscriptions.list-query.ts"
+    ],
+    [
+      "apps/api/src/modules/finance/subscriptions/subscriptions.sort.test.ts",
+      "apps/api/src/modules/finance/subscriptions/list/subscriptions.sort.test.ts"
+    ],
+    [
+      "apps/api/src/modules/messaging/webhook/webhook.lines.test.ts",
+      "apps/api/src/modules/messaging/webhook/lines/webhook.lines.test.ts"
+    ],
+    [
+      "apps/api/src/modules/messaging/webhook/webhook.lines.ts",
+      "apps/api/src/modules/messaging/webhook/lines/webhook.lines.ts"
+    ],
+    [
+      "apps/api/src/modules/people/users/users.audit.ts",
+      "apps/api/src/modules/people/users/audit/users.audit.ts"
+    ],
+    [
+      "apps/api/src/modules/people/users/users.redact.test.ts",
+      "apps/api/src/modules/people/users/audit/users.redact.test.ts"
+    ],
+    [
+      "apps/api/src/modules/people/users/users.redact.ts",
+      "apps/api/src/modules/people/users/audit/users.redact.ts"
+    ],
+    [
+      "apps/api/src/modules/teaching/lesson-rating/rating.job.ts",
+      "apps/api/src/modules/teaching/lesson-rating/queue/rating.job.ts"
+    ],
+    [
+      "apps/api/src/modules/teaching/lesson-rating/rating.queue.test.ts",
+      "apps/api/src/modules/teaching/lesson-rating/queue/rating.queue.test.ts"
+    ],
+    [
+      "apps/api/src/modules/teaching/lesson-rating/rating.queue.ts",
+      "apps/api/src/modules/teaching/lesson-rating/queue/rating.queue.ts"
+    ]
+  ]
+}
