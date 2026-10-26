@@ -3,3 +3,4 @@
 export * from './http/index.js';
 export * from './keys/index.js';
 export * from './auth/index.js';
+export * from './users/index.js';
