@@ -6,7 +6,7 @@ import { useMinuteClock } from '@/classroom/sessions/use-minute-clock';
 import { t } from '@/core/lib/i18n/i18n';
 import { locale } from '@/core/lib/i18n/locale';
 import { type, useTheme } from '@/theme';
-import { riyadhTime } from '@/today/lesson-text';
+import { riyadhTime } from '@/today/lib/lesson-text';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { StatusChip } from '@/core/ui/feedback/StatusChip';
 

@@ -7,7 +7,7 @@ import { addDays, riyadhToday, weekLabel, weekStart } from '@/calendar/lib/week'
 import { t } from '@/core/lib/i18n/i18n';
 import { FormLabel } from '@/payments/FormLabel';
 import { type, useTheme } from '@/theme';
-import { localDate } from '@/today/timeline';
+import { localDate } from '@/today/lib/timeline';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { FilterPills } from '@/core/ui/form/FilterPills';

@@ -1,6 +1,6 @@
 import { t } from '@/core/lib/i18n/i18n';
 import { ltr } from '@/core/ui/primitives/Ltr';
-import { jana, lesson, muscat, pending, yusuf } from './fixtures';
+import { jana, lesson, muscat, pending, yusuf } from '../testing/fixtures';
 import { durationLabel, lessonSubtitle, riyadhTime, studentNames, studentTimes } from './lesson-text';
 
 test('the spine time is the start in Riyadh, 24h, Western digits', () => {

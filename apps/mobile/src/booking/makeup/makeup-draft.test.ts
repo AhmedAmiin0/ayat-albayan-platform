@@ -1,4 +1,4 @@
-import { lesson, yusuf } from '@/today/fixtures';
+import { lesson, yusuf } from '@/today/testing/fixtures';
 import { lengthOf, makeupDraft, makeupParams, sourceFromParams } from './makeup-draft';
 
 const missed = lesson({ id: 'm1', status: 'no_show' });

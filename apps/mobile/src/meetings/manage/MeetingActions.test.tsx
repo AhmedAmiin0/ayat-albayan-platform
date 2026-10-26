@@ -3,7 +3,7 @@ import { router } from 'expo-router';
 import { ApiError } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
-import { CreateMeeting } from './CreateMeeting';
+import { CreateMeeting } from '../create/CreateMeeting';
 import { MeetingActions } from './MeetingActions';
 
 let mockSegments: string[] = ['(tabs)'];

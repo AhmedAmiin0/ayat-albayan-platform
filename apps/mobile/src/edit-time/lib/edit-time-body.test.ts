@@ -1,4 +1,4 @@
-import { lesson, yusuf } from '@/today/fixtures';
+import { lesson, yusuf } from '@/today/testing/fixtures';
 import { canSubmit, correctStarts, editBody, willNotify, type EditState } from './edit-time-body';
 import { held, NOW, SAT_17, SUN_17, upcoming } from '../testing/fixtures';
 

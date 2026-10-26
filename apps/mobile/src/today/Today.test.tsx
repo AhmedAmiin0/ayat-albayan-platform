@@ -4,7 +4,7 @@ import { t } from '@/core/lib/i18n/i18n';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { ltr } from '@/core/ui/primitives/Ltr';
 import TodayRoute from '../../app/(tabs)/index';
-import { cancelled, done, muscat, pending } from './fixtures';
+import { cancelled, done, muscat, pending } from './testing/fixtures';
 
 const mockApiFetch = jest.fn();
 jest.mock('@/core/lib/http/api', () => ({

@@ -5,7 +5,7 @@ import { whenText } from '@/booking/shared/slots';
 import { ErrorLine } from '@/inbox/ErrorLine';
 import { t } from '@/core/lib/i18n/i18n';
 import { type, useTheme } from '@/theme';
-import { studentNames } from '@/today/lesson-text';
+import { studentNames } from '@/today/lib/lesson-text';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { MoveFields } from './MoveFields';
 import { useReschedule } from './queries';

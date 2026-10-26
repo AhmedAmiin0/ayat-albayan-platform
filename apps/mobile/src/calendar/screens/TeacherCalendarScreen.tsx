@@ -7,7 +7,7 @@ import { t } from '@/core/lib/i18n/i18n';
 import { locale } from '@/core/lib/i18n/locale';
 import { Note } from '@/more/Note';
 import { RescheduleSheet } from '@/reschedule/RescheduleSheet';
-import { useNow } from '@/today/use-day-lessons';
+import { useNow } from '@/today/lib/use-day-lessons';
 import { Button } from '@/core/ui/primitives/Button';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { Screen } from '@/core/ui/layout/Screen';

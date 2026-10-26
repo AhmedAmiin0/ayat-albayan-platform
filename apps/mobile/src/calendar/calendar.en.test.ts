@@ -1,5 +1,5 @@
 import type { AvailabilityRow } from '@/more/types';
-import { lesson } from '@/today/fixtures';
+import { lesson } from '@/today/testing/fixtures';
 import { ltr } from '@/core/ui/primitives/Ltr';
 import { availabilityLine, teacherClock } from './agenda/agenda';
 import { abrar, omar } from './overview/overview-fixtures';

@@ -12,7 +12,7 @@ jest.mock('react-native/Libraries/ReactNative/I18nManager', () => {
 jest.mock('expo-router', () => ({ router: { push: jest.fn(), back: jest.fn() } }));
 jest.mock('@/core/lib/http/api', () => ({
   ...jest.requireActual('@/core/lib/http/api'),
-  apiFetch: jest.fn(async () => [jest.requireActual('@/today/fixtures').lesson({ id: 'now' })]),
+  apiFetch: jest.fn(async () => [jest.requireActual('@/today/testing/fixtures').lesson({ id: 'now' })]),
   apiSend: jest.fn(),
 }));
 

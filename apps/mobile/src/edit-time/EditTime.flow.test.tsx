@@ -4,7 +4,7 @@ import { t } from '@/core/lib/i18n/i18n';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { EditTimeSheet } from './components/EditTimeSheet';
 import { GRID, NOW, SAT_17, SUN_17, result, upcoming } from './testing/fixtures';
-import { lesson } from '@/today/fixtures';
+import { lesson } from '@/today/testing/fixtures';
 
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();

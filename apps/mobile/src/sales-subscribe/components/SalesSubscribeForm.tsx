@@ -7,7 +7,7 @@ import { t } from '@/core/lib/i18n/i18n';
 import { inTree, useTreeBase } from '@/core/nav/tree-base';
 import { PricingInputs } from '@/subscribe/PricingInputs';
 import { INITIAL_FORM, pricingOf, startDays } from '@/subscribe/subscribe-form';
-import { localDate } from '@/today/timeline';
+import { localDate } from '@/today/lib/timeline';
 import { Button } from '@/core/ui/primitives/Button';
 import { ChildPills } from './ChildPills';
 import { SalesPriceSection } from './SalesPriceSection';

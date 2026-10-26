@@ -1,0 +1,380 @@
+{
+  "id": "c10c",
+  "seq": 93,
+  "moves": [
+    {
+      "from": "apps/mobile/src/meetings/MeetingsScreen*",
+      "to": "apps/mobile/src/meetings/screens/"
+    },
+    {
+      "from": "apps/mobile/src/meetings/CreateMeeting*",
+      "to": "apps/mobile/src/meetings/create/"
+    },
+    {
+      "from": "apps/mobile/src/meetings/ScheduleFields*",
+      "to": "apps/mobile/src/meetings/create/"
+    },
+    {
+      "from": "apps/mobile/src/meetings/create-body*",
+      "to": "apps/mobile/src/meetings/create/"
+    },
+    {
+      "from": "apps/mobile/src/meetings/schedule-time*",
+      "to": "apps/mobile/src/meetings/create/"
+    },
+    {
+      "from": "apps/mobile/src/meetings/RescheduleMeeting*",
+      "to": "apps/mobile/src/meetings/create/"
+    },
+    {
+      "from": "apps/mobile/src/meetings/InviteResultRow*",
+      "to": "apps/mobile/src/meetings/invite/"
+    },
+    {
+      "from": "apps/mobile/src/meetings/InviteResults*",
+      "to": "apps/mobile/src/meetings/invite/"
+    },
+    {
+      "from": "apps/mobile/src/meetings/InviteeChips*",
+      "to": "apps/mobile/src/meetings/invite/"
+    },
+    {
+      "from": "apps/mobile/src/meetings/InviteePicker*",
+      "to": "apps/mobile/src/meetings/invite/"
+    },
+    {
+      "from": "apps/mobile/src/meetings/InviteeSearch*",
+      "to": "apps/mobile/src/meetings/invite/"
+    },
+    {
+      "from": "apps/mobile/src/meetings/PhoneInvitee*",
+      "to": "apps/mobile/src/meetings/invite/"
+    },
+    {
+      "from": "apps/mobile/src/meetings/invite-api*",
+      "to": "apps/mobile/src/meetings/invite/"
+    },
+    {
+      "from": "apps/mobile/src/meetings/invite-text*",
+      "to": "apps/mobile/src/meetings/invite/"
+    },
+    {
+      "from": "apps/mobile/src/meetings/invitee-draft*",
+      "to": "apps/mobile/src/meetings/invite/"
+    },
+    {
+      "from": "apps/mobile/src/meetings/use-may-invite-phones*",
+      "to": "apps/mobile/src/meetings/invite/"
+    },
+    {
+      "from": "apps/mobile/src/meetings/MeetingActions*",
+      "to": "apps/mobile/src/meetings/manage/"
+    },
+    {
+      "from": "apps/mobile/src/meetings/MeetingLinkShare*",
+      "to": "apps/mobile/src/meetings/manage/"
+    },
+    {
+      "from": "apps/mobile/src/meetings/MeetingManageButtons*",
+      "to": "apps/mobile/src/meetings/manage/"
+    },
+    {
+      "from": "apps/mobile/src/meetings/MeetingRow*",
+      "to": "apps/mobile/src/meetings/manage/"
+    },
+    {
+      "from": "apps/mobile/src/meetings/api*",
+      "to": "apps/mobile/src/meetings/manage/"
+    },
+    {
+      "from": "apps/mobile/src/meetings/meeting-text*",
+      "to": "apps/mobile/src/meetings/manage/"
+    },
+    {
+      "from": "apps/mobile/src/meetings/use-enter-meeting*",
+      "to": "apps/mobile/src/meetings/manage/"
+    },
+    {
+      "from": "apps/mobile/src/meetings/use-meeting-manage*",
+      "to": "apps/mobile/src/meetings/manage/"
+    },
+    {
+      "from": "apps/mobile/src/meetings/use-viewer-tz*",
+      "to": "apps/mobile/src/meetings/manage/"
+    },
+    {
+      "from": "apps/mobile/src/today/TodayScreen*",
+      "to": "apps/mobile/src/today/screens/"
+    },
+    {
+      "from": "apps/mobile/src/today/CancelLesson*",
+      "to": "apps/mobile/src/today/components/"
+    },
+    {
+      "from": "apps/mobile/src/today/LessonActions*",
+      "to": "apps/mobile/src/today/components/"
+    },
+    {
+      "from": "apps/mobile/src/today/LessonCard*",
+      "to": "apps/mobile/src/today/components/"
+    },
+    {
+      "from": "apps/mobile/src/today/Notice*",
+      "to": "apps/mobile/src/today/components/"
+    },
+    {
+      "from": "apps/mobile/src/today/NowLine*",
+      "to": "apps/mobile/src/today/components/"
+    },
+    {
+      "from": "apps/mobile/src/today/PackageLine*",
+      "to": "apps/mobile/src/today/components/"
+    },
+    {
+      "from": "apps/mobile/src/today/PastLessonRow*",
+      "to": "apps/mobile/src/today/components/"
+    },
+    {
+      "from": "apps/mobile/src/today/TimelineRow*",
+      "to": "apps/mobile/src/today/components/"
+    },
+    {
+      "from": "apps/mobile/src/today/lesson-text*",
+      "to": "apps/mobile/src/today/lib/"
+    },
+    {
+      "from": "apps/mobile/src/today/timeline*",
+      "to": "apps/mobile/src/today/lib/"
+    },
+    {
+      "from": "apps/mobile/src/today/use-day-lessons*",
+      "to": "apps/mobile/src/today/lib/"
+    },
+    {
+      "from": "apps/mobile/src/today/use-lesson-action*",
+      "to": "apps/mobile/src/today/lib/"
+    },
+    {
+      "from": "apps/mobile/src/today/fixtures*",
+      "to": "apps/mobile/src/today/testing/"
+    }
+  ],
+  "files": [
+    [
+      "apps/mobile/src/meetings/api.ts",
+      "apps/mobile/src/meetings/manage/api.ts"
+    ],
+    [
+      "apps/mobile/src/meetings/create-body.test.ts",
+      "apps/mobile/src/meetings/create/create-body.test.ts"
+    ],
+    [
+      "apps/mobile/src/meetings/create-body.ts",
+      "apps/mobile/src/meetings/create/create-body.ts"
+    ],
+    [
+      "apps/mobile/src/meetings/CreateMeeting.tsx",
+      "apps/mobile/src/meetings/create/CreateMeeting.tsx"
+    ],
+    [
+      "apps/mobile/src/meetings/CreateMeetingDone.tsx",
+      "apps/mobile/src/meetings/create/CreateMeetingDone.tsx"
+    ],
+    [
+      "apps/mobile/src/meetings/CreateMeetingForm.tsx",
+      "apps/mobile/src/meetings/create/CreateMeetingForm.tsx"
+    ],
+    [
+      "apps/mobile/src/meetings/invite-api.ts",
+      "apps/mobile/src/meetings/invite/invite-api.ts"
+    ],
+    [
+      "apps/mobile/src/meetings/invite-text.test.ts",
+      "apps/mobile/src/meetings/invite/invite-text.test.ts"
+    ],
+    [
+      "apps/mobile/src/meetings/invite-text.ts",
+      "apps/mobile/src/meetings/invite/invite-text.ts"
+    ],
+    [
+      "apps/mobile/src/meetings/invitee-draft.test.ts",
+      "apps/mobile/src/meetings/invite/invitee-draft.test.ts"
+    ],
+    [
+      "apps/mobile/src/meetings/invitee-draft.ts",
+      "apps/mobile/src/meetings/invite/invitee-draft.ts"
+    ],
+    [
+      "apps/mobile/src/meetings/InviteeChips.tsx",
+      "apps/mobile/src/meetings/invite/InviteeChips.tsx"
+    ],
+    [
+      "apps/mobile/src/meetings/InviteePicker.tsx",
+      "apps/mobile/src/meetings/invite/InviteePicker.tsx"
+    ],
+    [
+      "apps/mobile/src/meetings/InviteeSearch.tsx",
+      "apps/mobile/src/meetings/invite/InviteeSearch.tsx"
+    ],
+    [
+      "apps/mobile/src/meetings/InviteResultRow.tsx",
+      "apps/mobile/src/meetings/invite/InviteResultRow.tsx"
+    ],
+    [
+      "apps/mobile/src/meetings/InviteResults.tsx",
+      "apps/mobile/src/meetings/invite/InviteResults.tsx"
+    ],
+    [
+      "apps/mobile/src/meetings/meeting-text.test.ts",
+      "apps/mobile/src/meetings/manage/meeting-text.test.ts"
+    ],
+    [
+      "apps/mobile/src/meetings/meeting-text.ts",
+      "apps/mobile/src/meetings/manage/meeting-text.ts"
+    ],
+    [
+      "apps/mobile/src/meetings/MeetingActions.test.tsx",
+      "apps/mobile/src/meetings/manage/MeetingActions.test.tsx"
+    ],
+    [
+      "apps/mobile/src/meetings/MeetingActions.tsx",
+      "apps/mobile/src/meetings/manage/MeetingActions.tsx"
+    ],
+    [
+      "apps/mobile/src/meetings/MeetingLinkShare.tsx",
+      "apps/mobile/src/meetings/manage/MeetingLinkShare.tsx"
+    ],
+    [
+      "apps/mobile/src/meetings/MeetingManageButtons.tsx",
+      "apps/mobile/src/meetings/manage/MeetingManageButtons.tsx"
+    ],
+    [
+      "apps/mobile/src/meetings/MeetingRow.tsx",
+      "apps/mobile/src/meetings/manage/MeetingRow.tsx"
+    ],
+    [
+      "apps/mobile/src/meetings/MeetingsScreen.en.test.tsx",
+      "apps/mobile/src/meetings/screens/MeetingsScreen.en.test.tsx"
+    ],
+    [
+      "apps/mobile/src/meetings/MeetingsScreen.list.test.tsx",
+      "apps/mobile/src/meetings/screens/MeetingsScreen.list.test.tsx"
+    ],
+    [
+      "apps/mobile/src/meetings/MeetingsScreen.schedule.test.tsx",
+      "apps/mobile/src/meetings/screens/MeetingsScreen.schedule.test.tsx"
+    ],
+    [
+      "apps/mobile/src/meetings/MeetingsScreen.test.tsx",
+      "apps/mobile/src/meetings/screens/MeetingsScreen.test.tsx"
+    ],
+    [
+      "apps/mobile/src/meetings/MeetingsScreen.tsx",
+      "apps/mobile/src/meetings/screens/MeetingsScreen.tsx"
+    ],
+    [
+      "apps/mobile/src/meetings/PhoneInvitee.tsx",
+      "apps/mobile/src/meetings/invite/PhoneInvitee.tsx"
+    ],
+    [
+      "apps/mobile/src/meetings/RescheduleMeeting.tsx",
+      "apps/mobile/src/meetings/create/RescheduleMeeting.tsx"
+    ],
+    [
+      "apps/mobile/src/meetings/schedule-time.test.ts",
+      "apps/mobile/src/meetings/create/schedule-time.test.ts"
+    ],
+    [
+      "apps/mobile/src/meetings/schedule-time.ts",
+      "apps/mobile/src/meetings/create/schedule-time.ts"
+    ],
+    [
+      "apps/mobile/src/meetings/ScheduleFields.tsx",
+      "apps/mobile/src/meetings/create/ScheduleFields.tsx"
+    ],
+    [
+      "apps/mobile/src/meetings/use-enter-meeting.ts",
+      "apps/mobile/src/meetings/manage/use-enter-meeting.ts"
+    ],
+    [
+      "apps/mobile/src/meetings/use-may-invite-phones.ts",
+      "apps/mobile/src/meetings/invite/use-may-invite-phones.ts"
+    ],
+    [
+      "apps/mobile/src/meetings/use-meeting-manage.ts",
+      "apps/mobile/src/meetings/manage/use-meeting-manage.ts"
+    ],
+    [
+      "apps/mobile/src/meetings/use-viewer-tz.ts",
+      "apps/mobile/src/meetings/manage/use-viewer-tz.ts"
+    ],
+    [
+      "apps/mobile/src/today/CancelLesson.tsx",
+      "apps/mobile/src/today/components/CancelLesson.tsx"
+    ],
+    [
+      "apps/mobile/src/today/fixtures.ts",
+      "apps/mobile/src/today/testing/fixtures.ts"
+    ],
+    [
+      "apps/mobile/src/today/lesson-text.en.test.ts",
+      "apps/mobile/src/today/lib/lesson-text.en.test.ts"
+    ],
+    [
+      "apps/mobile/src/today/lesson-text.test.ts",
+      "apps/mobile/src/today/lib/lesson-text.test.ts"
+    ],
+    [
+      "apps/mobile/src/today/lesson-text.ts",
+      "apps/mobile/src/today/lib/lesson-text.ts"
+    ],
+    [
+      "apps/mobile/src/today/LessonActions.tsx",
+      "apps/mobile/src/today/components/LessonActions.tsx"
+    ],
+    [
+      "apps/mobile/src/today/LessonCard.tsx",
+      "apps/mobile/src/today/components/LessonCard.tsx"
+    ],
+    [
+      "apps/mobile/src/today/Notice.tsx",
+      "apps/mobile/src/today/components/Notice.tsx"
+    ],
+    [
+      "apps/mobile/src/today/NowLine.tsx",
+      "apps/mobile/src/today/components/NowLine.tsx"
+    ],
+    [
+      "apps/mobile/src/today/PackageLine.tsx",
+      "apps/mobile/src/today/components/PackageLine.tsx"
+    ],
+    [
+      "apps/mobile/src/today/PastLessonRow.tsx",
+      "apps/mobile/src/today/components/PastLessonRow.tsx"
+    ],
+    [
+      "apps/mobile/src/today/timeline.test.ts",
+      "apps/mobile/src/today/lib/timeline.test.ts"
+    ],
+    [
+      "apps/mobile/src/today/timeline.ts",
+      "apps/mobile/src/today/lib/timeline.ts"
+    ],
+    [
+      "apps/mobile/src/today/TimelineRow.tsx",
+      "apps/mobile/src/today/components/TimelineRow.tsx"
+    ],
+    [
+      "apps/mobile/src/today/TodayScreen.tsx",
+      "apps/mobile/src/today/screens/TodayScreen.tsx"
+    ],
+    [
+      "apps/mobile/src/today/use-day-lessons.ts",
+      "apps/mobile/src/today/lib/use-day-lessons.ts"
+    ],
+    [
+      "apps/mobile/src/today/use-lesson-action.ts",
+      "apps/mobile/src/today/lib/use-lesson-action.ts"
+    ]
+  ]
+}

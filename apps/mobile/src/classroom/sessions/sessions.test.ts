@@ -1,4 +1,4 @@
-import { lesson } from '@/today/fixtures';
+import { lesson } from '@/today/testing/fixtures';
 import { groupOf, groupSessions } from './sessions';
 
 // Lesson 16:00–16:45 Riyadh (13:00Z–13:45Z): opens 12:45Z, closes 15:45Z.

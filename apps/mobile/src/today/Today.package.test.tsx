@@ -4,7 +4,7 @@ import { balanceOf, subscription } from '@/payments/fixtures';
 import { renderWithQuery } from '@/test/query';
 import { palette } from '@/theme';
 import TodayRoute from '../../app/(tabs)/index';
-import { done, lesson, muscat, pending } from './fixtures';
+import { done, lesson, muscat, pending } from './testing/fixtures';
 
 const mockApiFetch = jest.fn();
 jest.mock('@/core/lib/http/api', () => ({

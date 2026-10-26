@@ -1,8 +1,8 @@
 import { render, screen } from '@testing-library/react-native';
 import { AgendaLessonRow } from '@/calendar/agenda/AgendaLessonRow';
 import { t } from '@/core/lib/i18n/i18n';
-import { lesson } from '@/today/fixtures';
-import { LessonCard } from '@/today/LessonCard';
+import { lesson } from '@/today/testing/fixtures';
+import { LessonCard } from '@/today/components/LessonCard';
 import { renderWithQuery } from '@/test/query';
 
 test('the agenda row (admin schedule and teacher calendar) carries «ادخل الحلقة»', async () => {

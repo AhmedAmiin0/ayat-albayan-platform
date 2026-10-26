@@ -8,7 +8,7 @@ import {
   type ScheduleOverview,
   type Span,
 } from '@ab/shared';
-import { localDate, visibleLessons } from '@/today/timeline';
+import { localDate, visibleLessons } from '@/today/lib/timeline';
 import { agendaDays } from '../agenda/agenda';
 import { addDays, riyadhMidnight } from '../lib/week';
 

@@ -7,7 +7,7 @@ import { PeriodSwitcher } from '@/calendar/overview/PeriodSwitcher';
 import { addDays, riyadhToday, weekLabel, weekStart, weekWindow } from '@/calendar/lib/week';
 import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/more/Note';
-import { useNow } from '@/today/use-day-lessons';
+import { useNow } from '@/today/lib/use-day-lessons';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';

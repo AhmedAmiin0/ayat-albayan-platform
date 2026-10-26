@@ -2,8 +2,8 @@ import { fireEvent, screen, waitFor, within } from '@testing-library/react-nativ
 import { ApiError } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
-import { done, lesson, muscat, pending } from './fixtures';
-import { TodayScreen } from './TodayScreen';
+import { done, lesson, muscat, pending } from './testing/fixtures';
+import { TodayScreen } from './screens/TodayScreen';
 
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();

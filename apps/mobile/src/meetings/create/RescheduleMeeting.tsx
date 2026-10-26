@@ -6,8 +6,8 @@ import { ErrorLine } from '@/inbox/ErrorLine';
 import { t } from '@/core/lib/i18n/i18n';
 import { Button } from '@/core/ui/primitives/Button';
 import { rescheduleBody } from './create-body';
-import { updateMeeting } from './invite-api';
-import { inviteError } from './invite-text';
+import { updateMeeting } from '../invite/invite-api';
+import { inviteError } from '../invite/invite-text';
 import { ScheduleFields } from './ScheduleFields';
 import { slotOf, type Slot } from './schedule-time';
 

@@ -1,5 +1,5 @@
 import { createBody, rescheduleBody } from './create-body';
-import { fromPhone } from './invitee-draft';
+import { fromPhone } from '../invite/invitee-draft';
 
 const phone = fromPhone('+201000000101');
 const slot = { date: '2026-10-20', hour: 17, minute: 15, durationMin: 45 };

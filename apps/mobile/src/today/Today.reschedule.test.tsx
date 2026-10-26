@@ -2,8 +2,8 @@ import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { SLOTS, SUN_17 } from '@/reschedule/fixtures';
 import { renderWithQuery } from '@/test/query';
-import { done, lesson, pending } from './fixtures';
-import { TodayScreen } from './TodayScreen';
+import { done, lesson, pending } from './testing/fixtures';
+import { TodayScreen } from './screens/TodayScreen';
 
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();

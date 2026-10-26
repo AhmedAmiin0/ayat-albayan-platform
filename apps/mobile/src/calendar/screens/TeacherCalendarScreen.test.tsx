@@ -4,7 +4,7 @@ import { t } from '@/core/lib/i18n/i18n';
 import type { AvailabilityRow, Teacher } from '@/more/types';
 import { fakeNow } from '@/test/fake-now';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
-import { cancelled, done, lesson, muscat, pending } from '@/today/fixtures';
+import { cancelled, done, lesson, muscat, pending } from '@/today/testing/fixtures';
 import { ltr } from '@/core/ui/primitives/Ltr';
 import { TeacherCalendarScreen } from './TeacherCalendarScreen';
 

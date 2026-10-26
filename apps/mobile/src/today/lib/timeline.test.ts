@@ -1,4 +1,4 @@
-import { cancelled, done, lesson, muscat, pending } from './fixtures';
+import { cancelled, done, lesson, muscat, pending } from '../testing/fixtures';
 import {
   applyFilter,
   filterCounts,

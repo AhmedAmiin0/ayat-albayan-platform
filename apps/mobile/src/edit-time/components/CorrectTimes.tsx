@@ -6,7 +6,7 @@ import { t } from '@/core/lib/i18n/i18n';
 import { FormLabel } from '@/payments/FormLabel';
 import { SlotButton } from '@/reschedule/SlotButton';
 import { type, useTheme } from '@/theme';
-import { localDate } from '@/today/timeline';
+import { localDate } from '@/today/lib/timeline';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { correctStarts } from '../lib/edit-time-body';
 

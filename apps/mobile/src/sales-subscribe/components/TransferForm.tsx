@@ -5,7 +5,7 @@ import { ErrorLine } from '@/inbox/ErrorLine';
 import { t } from '@/core/lib/i18n/i18n';
 import { AmountField } from '@/payments/components/AmountField';
 import { PaidDayPicker } from '@/payments/components/PaidDayPicker';
-import { useNow } from '@/today/use-day-lessons';
+import { useNow } from '@/today/lib/use-day-lessons';
 import { Button } from '@/core/ui/primitives/Button';
 import { Field } from '@/core/ui/form/Field';
 import { SalesReceiptField } from './SalesReceiptField';

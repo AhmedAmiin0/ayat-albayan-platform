@@ -9,7 +9,7 @@ import { InlineConfirm } from '@/core/ui/feedback/InlineConfirm';
 import { manageOf, meetingsBase } from './meeting-text';
 import { MeetingLinkShare } from './MeetingLinkShare';
 import { MeetingManageButtons } from './MeetingManageButtons';
-import { RescheduleMeeting } from './RescheduleMeeting';
+import { RescheduleMeeting } from '../create/RescheduleMeeting';
 import { useEnterMeeting } from './use-enter-meeting';
 import { useMeetingManage } from './use-meeting-manage';
 

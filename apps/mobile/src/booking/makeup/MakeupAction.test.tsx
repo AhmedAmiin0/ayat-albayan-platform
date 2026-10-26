@@ -1,6 +1,6 @@
 import { fireEvent, render, screen } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
-import { jana, lesson, yusuf } from '@/today/fixtures';
+import { jana, lesson, yusuf } from '@/today/testing/fixtures';
 import { MakeupAction } from './MakeupAction';
 
 const mockPush = jest.fn();

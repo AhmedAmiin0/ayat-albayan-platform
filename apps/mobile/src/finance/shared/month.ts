@@ -1,5 +1,5 @@
 import { RIYADH_TZ } from '@ab/shared';
-import { localDate } from '@/today/timeline';
+import { localDate } from '@/today/lib/timeline';
 
 /** This month in Riyadh, `YYYY-MM` (the academy's reporting clock, as the web's currentMonth). */
 export const currentMonth = (now: Date = new Date()): string => localDate(now, RIYADH_TZ).slice(0, 7);

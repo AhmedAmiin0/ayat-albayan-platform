@@ -1,5 +1,5 @@
 import type { PendingReportView } from '@ab/shared';
-import { lesson } from '@/today/fixtures';
+import { lesson } from '@/today/testing/fixtures';
 import { dayWindow, lessonsOn, reportAction } from './day';
 
 const CAIRO = 'Africa/Cairo';

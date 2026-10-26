@@ -7,10 +7,10 @@ import { EmptyState } from '@/core/ui/feedback/EmptyState';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
-import { useMeetings } from './api';
-import { CreateMeeting } from './CreateMeeting';
-import { MeetingRow } from './MeetingRow';
-import { useViewerTz } from './use-viewer-tz';
+import { useMeetings } from '../manage/api';
+import { CreateMeeting } from '../create/CreateMeeting';
+import { MeetingRow } from '../manage/MeetingRow';
+import { useViewerTz } from '../manage/use-viewer-tz';
 
 /**
  * «الاجتماعات الداخلية» (admin, teacher, assistant, sales): create now or scheduled with invitees,

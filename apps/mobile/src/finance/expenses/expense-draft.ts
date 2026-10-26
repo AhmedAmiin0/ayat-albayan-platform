@@ -2,7 +2,7 @@ import { RIYADH_TZ, amountProblem, parseAmount, type ExpenseCreate, type Payment
 import { t } from '@/core/lib/i18n/i18n';
 import { paidAtFor } from '@/payments/lib/paid-day';
 import type { Receipt } from '@/payments/receipt';
-import { localDate } from '@/today/timeline';
+import { localDate } from '@/today/lib/timeline';
 
 /** What the admin entered in «مصروف جديد». The tracker is in EGP (web: the default currency). */
 export interface ExpenseDraft {

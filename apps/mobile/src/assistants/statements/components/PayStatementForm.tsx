@@ -10,7 +10,7 @@ import { FormLabel } from '@/payments/FormLabel';
 import { PaidDayPicker } from '@/payments/components/PaidDayPicker';
 import { ReceiptPicker } from '@/payments/ReceiptPicker';
 import { statementMonth } from '@/sales-money/lib/money-text';
-import { useNow } from '@/today/use-day-lessons';
+import { useNow } from '@/today/lib/use-day-lessons';
 import { Button } from '@/core/ui/primitives/Button';
 import { Field } from '@/core/ui/form/Field';
 import { FilterPills, type FilterPill } from '@/core/ui/form/FilterPills';

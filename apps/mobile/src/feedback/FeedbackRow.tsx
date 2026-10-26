@@ -2,7 +2,7 @@ import { formatPhone } from '@ab/shared';
 import { View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/more/Note';
-import { localDate } from '@/today/timeline';
+import { localDate } from '@/today/lib/timeline';
 import { shape, type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { ltr } from '@/core/ui/primitives/Ltr';

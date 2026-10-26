@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react-native';
 import { fakeNow } from '@/test/fake-now';
-import { lesson } from '@/today/fixtures';
+import { lesson } from '@/today/testing/fixtures';
 import { LiveSessions } from './LiveSessions';
 
 // An English run: the native flag is LTR (jest.setup reports RTL, the Arabic default).
