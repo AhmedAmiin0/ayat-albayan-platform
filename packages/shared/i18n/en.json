@@ -2492,6 +2492,7 @@
     "viewMedia": "View {kind}",
     "mediaExpired": "This file has expired",
     "mediaInCrm": "This file reached a number that runs through the CRM: open it there",
+    "photoFailed": "Couldn't load the photo. Tap to try again",
     "sendFailed": "The message wasn't sent. Try again",
     "leadPanel": "Lead",
     "leadSheet": "Lead details & registration",

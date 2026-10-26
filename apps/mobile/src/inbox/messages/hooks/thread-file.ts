@@ -14,18 +14,32 @@ export interface ThreadFile {
 export const threadFilePath = (phone: string, messageId: string): string =>
   `${threadPath(phone)}/messages/${encodeURIComponent(messageId)}/file`;
 
+/** The API signs for an hour (SIGNED_URL_SECONDS.ui); a URL is re-signed 5 minutes before it ends. */
+const MARGIN_MS = 5 * 60_000;
+const SIGNED_MS = 60 * 60_000;
+
+/** How long a signed URL stays fresh: until `expires_at` less the margin. An error stays put as long. */
+export function signedStaleTime(file: ThreadFile | undefined, now: number = Date.now()): number {
+  if (!file) return SIGNED_MS - MARGIN_MS;
+  const left = Date.parse(file.expires_at) - MARGIN_MS - now;
+  return Number.isFinite(left) ? Math.max(0, left) : 0;
+}
+
 /**
  * The file of one bubble (owner 2026-10-19 #1), as booking/invoice-queries.ts: signed URLs expire,
  * so `noPersist` keeps them off the disk cache. Not under ['threads'] (as the web): a send or an
- * opened chat invalidates those, and that would sign the file again mid-play.
+ * opened chat invalidates those, and that would sign the file again mid-play. A photo thumbnail
+ * mounts it on every scroll back: `retryOnMount: false` and an hour of cache keep a 410 from asking again.
  */
 export const threadFileQuery = (phone: string, messageId: string) =>
   queryOptions({
     queryKey: ['thread-file', phone, messageId],
     queryFn: () => apiFetch<ThreadFile>(threadFilePath(phone, messageId)),
     meta: { noPersist: true },
-    staleTime: 30 * 60_000,
+    staleTime: (query) => signedStaleTime(query.state.data),
+    gcTime: SIGNED_MS,
     retry: false,
+    retryOnMount: false,
   });
 
 /** Fetches a bubble's file only when asked (a tap): rendering the thread never signs a URL. */
