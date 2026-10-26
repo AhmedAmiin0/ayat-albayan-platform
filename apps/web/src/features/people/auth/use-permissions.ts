@@ -1,11 +1,10 @@
-import type { Permission } from '@ab/shared';
+import { permissionsView, type PermissionsView } from '@ab/client-core';
 import { useQuery } from '@tanstack/react-query';
-import { canDo, meQuery } from './me';
+import { meQuery } from './me';
 
-export type Can = (permission: Permission) => boolean;
+export type { Can } from '@ab/client-core';
 
-/** The signed-in user's permissions (from /auth/me) and a `can('payments.read')` helper. */
-export function usePermissions(): { permissions: readonly Permission[]; can: Can } {
-  const me = useQuery(meQuery).data;
-  return { permissions: me?.permissions ?? [], can: (permission) => canDo(me, permission) };
+/** The signed-in user's permissions (from /auth/me) and a `can('payments.read')` helper; nothing until it loads (D6). */
+export function usePermissions(): PermissionsView {
+  return permissionsView(useQuery(meQuery).data);
 }
