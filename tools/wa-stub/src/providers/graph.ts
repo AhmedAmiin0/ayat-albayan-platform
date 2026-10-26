@@ -1,10 +1,10 @@
 // The Graph routes WhatsappClient calls (docs/12 §5), shared by Meta's paths and the kapso prefix
 // (kapso.ts), which swaps in its own media lookup and template edit.
-import { phoneInfo } from './diagnostics.ts';
+import { phoneInfo } from '../diagnostics.ts';
 import { ERR, onWaba, templateJson } from './meta.ts';
-import { postMessage } from './send.ts';
-import { readJson, type Route } from './state.ts';
-import { createTemplate, editTemplate } from './templates.ts';
+import { postMessage } from '../send.ts';
+import { readJson, type Route } from '../state.ts';
+import { createTemplate, editTemplate } from '../templates.ts';
 
 export const V = String.raw`\/v\d+\.\d+`;
 

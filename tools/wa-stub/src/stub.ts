@@ -4,12 +4,12 @@
 // academy CRM's REST API under /crm/api/v1 (crm.ts).
 import type { IncomingMessage, ServerResponse } from 'node:http';
 import { controlRoutes } from './control.ts';
-import { CRM_PREFIX, crmRoute } from './crm.ts';
+import { CRM_PREFIX, crmRoute } from './providers/crm.ts';
 import { diagnosticRoutes } from './diagnostics.ts';
-import { graphRoutes } from './graph.ts';
-import { authKind, KAPSO_PREFIX, kapsoAuthorized, kapsoMediaDownload, kapsoRoutes } from './kapso.ts';
+import { graphRoutes } from './providers/graph.ts';
+import { authKind, KAPSO_PREFIX, kapsoAuthorized, kapsoMediaDownload, kapsoRoutes } from './providers/kapso.ts';
 import { authorized, initialHealth } from './lines.ts';
-import { ERR, metaError } from './meta.ts';
+import { ERR, metaError } from './providers/meta.ts';
 import type { Reply, StubOptions, StubState } from './state.ts';
 import { initialTemplates } from './templates.ts';
 import { uploadRoutes } from './uploads.ts';

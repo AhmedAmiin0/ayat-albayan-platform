@@ -344,7 +344,7 @@ Order: **26-P0 → 23-P3 → 26-P1 → 23-P4 → 26-P2 → 26-P3 → 23-P5 → 2
   `packages/shared/src/settings/validation/patch.ts`, `apps/api/src/common/settings/settings.controller.ts`, `settings-patch.ts`;
   ownership in code: `packages/shared/src/settings/ownership.ts` (`OWNED_SETTING_KEYS`). `comms_source` is written only
   by `POST /admin/communications/source` (`modules/numbers/numbers.settings.ts`). Migration guard:
-  `tools/scripts/owned-keys-check.mjs` + `.github/workflows/owned-keys-guard.yml` (cutoff `20261023000621`).
+  `tools/scripts/ci-checks/owned-keys-check.mjs` + `.github/workflows/owned-keys-guard.yml` (cutoff `20261023000621`).
   `X-AB-Client`: web `apps/web/src/lib/http/client-tag.ts` (`web/<VITE_BUILD_ID|dev>`), mobile
   `apps/mobile/src/core/lib/http/client-tag.ts` (JS only), API counting `apps/api/src/common/client-usage/` (in memory, one log
   line per 15 min). Web switches: `apps/web/src/features/messaging/messaging/gate-api.ts`. Not done here (left to 26-P3 /

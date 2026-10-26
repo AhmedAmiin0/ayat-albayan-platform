@@ -7,7 +7,7 @@ import { parse } from 'yaml';
 
 const load = (f) =>
   parse(
-    readFileSync(fileURLToPath(new URL(`../../.github/workflows/${f}`, import.meta.url)), 'utf8'),
+    readFileSync(fileURLToPath(new URL(`../../../.github/workflows/${f}`, import.meta.url)), 'utf8'),
   );
 const deploy = load('deploy-staging.yml');
 const ci = load('ci.yml');

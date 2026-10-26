@@ -284,7 +284,7 @@ Headline findings:
 - **Live SQL readers of `public.settings`: 7 objects** (5 functions, 1 helper used by 2 views, 1 view). Every one of them reads `value` (jsonb) by `key`. None reads `updated_at`/`updated_by`.
 - **`public.custom_config` and `public.integration_config` have no SQL readers at all.** Only the API (service role, PostgREST) and e2e SQL specs touch them.
 - **No pg_cron, no realtime publication, no DB audit trigger** on any of the three tables. The only "cron" (`prune_activity_log`) runs from a Nest timer in the API (`M/20261005000205_activity_log.sql:48` says "pg_cron is not used in this repo").
-- `seed.sql`, `tools/migrate`, `tools/scripts/seed-demo.mjs`, `clear-demo*`, `seed-test-account*` and `fix-teacher-data.sql`/`sync-roster.sql` touch **none** of the three tables.
+- `seed.sql`, `tools/migrate`, `tools/scripts/seed/seed-demo.mjs`, `clear-demo*`, `seed-test-account*` and `fix-teacher-data.sql`/`sync-roster.sql` touch **none** of the three tables.
 
 ---
 

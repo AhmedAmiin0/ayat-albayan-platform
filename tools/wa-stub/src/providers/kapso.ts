@@ -1,11 +1,11 @@
 // Kapso's Meta proxy (docs/19): the same Graph routes under /kapso/{version}/…, authenticated by
 // X-API-Key (a Bearer or OAuth header is refused), with Kapso's own media lookup and template edit.
 import type { IncomingMessage } from 'node:http';
-import { phoneInfo } from './diagnostics.ts';
+import { phoneInfo } from '../diagnostics.ts';
 import { createTemplateRoute, listTemplatesRoute, messagesRoute, V } from './graph.ts';
 import { ERR, metaError } from './meta.ts';
-import { readJson, type Route, type StubOptions } from './state.ts';
-import { createTemplate, editTemplate } from './templates.ts';
+import { readJson, type Route, type StubOptions } from '../state.ts';
+import { createTemplate, editTemplate } from '../templates.ts';
 
 export const KAPSO_PREFIX = '/kapso';
 export type AuthKind = 'api-key' | 'bearer' | 'oauth' | 'none';

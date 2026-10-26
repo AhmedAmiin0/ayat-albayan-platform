@@ -1,6 +1,6 @@
 // Stub state and route types shared by the Graph routes (stub.ts) and the control routes.
 import type { IncomingMessage } from 'node:http';
-import type { Json, StubTemplate } from './meta.ts';
+import type { Json, StubTemplate } from './providers/meta.ts';
 
 /** The optional second Meta number (docs/12 §13.12): its own phone id, WABA, token and secret. */
 export interface ChatLineOptions {

@@ -3,7 +3,7 @@
 // e2e to drive a crm line; never the real CRM.
 import { randomUUID } from 'node:crypto';
 import type { IncomingMessage } from 'node:http';
-import { readJson, type Reply, type StubState } from './state.ts';
+import { readJson, type Reply, type StubState } from '../state.ts';
 
 export const CRM_PREFIX = '/crm/api/v1';
 

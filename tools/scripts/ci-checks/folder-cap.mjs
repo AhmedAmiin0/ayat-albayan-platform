@@ -61,7 +61,7 @@ export function check(counts, allow) {
 const allowFile = (root, app) => join(root, 'refactor', 'folder-cap', `${app}.json`);
 
 function main(args) {
-  const root = fileURLToPath(new URL('../..', import.meta.url));
+  const root = fileURLToPath(new URL('../../..', import.meta.url));
   const roots = appRoots(root);
   const write = args.includes('--write') ? args.filter((a) => !a.startsWith('--')) : [];
   let total = 0;

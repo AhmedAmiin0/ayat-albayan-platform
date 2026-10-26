@@ -44,6 +44,6 @@ test('checkAll only lints added files', () => {
 });
 
 test('the repository migrations have valid, unique, ordered names', () => {
-  const files = readdirSync(fileURLToPath(new URL(`../../${DIR}`, import.meta.url))).sort();
+  const files = readdirSync(fileURLToPath(new URL(`../../../${DIR}`, import.meta.url))).sort();
   assert.deepEqual(checkNames(files), []);
 });
