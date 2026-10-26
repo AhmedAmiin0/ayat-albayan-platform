@@ -11,6 +11,8 @@ export interface OpenRowProps {
   phone: string;
   text: string;
   onText: (text: string) => void;
+  /** The box lost focus (a tap on the chat): closes the «/» list. */
+  onLeave?: () => void;
   /** Staff (not a teacher): «الردود السريعة» in the row. */
   staff: boolean;
   onTemplate: () => void;
@@ -31,7 +33,7 @@ export function OpenRow(p: OpenRowProps) {
       </IconButton>
       {p.staff ? <SavedRepliesButton open onPress={p.onReplies} /> : null}
       <AttachFile phone={p.phone} onError={p.onFileError} />
-      <ComposerInput value={p.text} onChange={p.onText} />
+      <ComposerInput value={p.text} onChange={p.onText} onBlur={p.onLeave} />
       <IconButton variant="filled" label={t.inbox.composer.send} disabled={p.sending} onPress={p.onSend}>
         <SendIcon color={color.onLapis} />
       </IconButton>
