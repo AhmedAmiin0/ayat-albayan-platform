@@ -4,7 +4,7 @@ import type { Sql, TransactionSql } from 'postgres';
 import { withSql } from './schedule';
 
 /** The payload the API's ConfigSeeder sends at boot (docs/26 §2b): metadata only, never a value. */
-export const SEED_PAYLOAD = seedPayload(bundleText(ar));
+const SEED_PAYLOAD = seedPayload(bundleText(ar));
 
 /** One «boot» of the seeder: config_seed with the real registry payload (JSON text, not sql.json). */
 export async function runConfigSeed(sql: Sql | TransactionSql): Promise<Record<string, unknown>> {

@@ -18,7 +18,7 @@ import { RemindersSettings } from './reminders.settings';
 export const STARTS_AT = '2026-10-04T14:00:00Z';
 
 export const RIYADH_GUARDIAN = { id: 'g-riyadh', phone_e164: '+966500000101', tz: 'Asia/Riyadh' };
-export const LONDON_GUARDIAN = { id: 'g-london', phone_e164: '+447700900102', tz: 'Europe/London' };
+const LONDON_GUARDIAN = { id: 'g-london', phone_e164: '+447700900102', tz: 'Europe/London' };
 
 export function sampleLesson(over: Partial<ReminderLesson> = {}): ReminderLesson {
   return {
@@ -40,7 +40,7 @@ export function sampleLesson(over: Partial<ReminderLesson> = {}): ReminderLesson
 /** `at` as a Date (tests read better with ISO strings). */
 export const at = (iso: string) => new Date(iso);
 
-export type JobOpts = {
+type JobOpts = {
   settings?: Partial<AcademySettings>;
   approved?: string[];
   pushed?: string[];

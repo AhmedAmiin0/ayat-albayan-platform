@@ -15,7 +15,7 @@ import { t } from '@/core/lib/i18n/i18n';
 import { locale } from '@/core/lib/i18n/locale';
 
 /** The admin's and the salesperson's clock (as useViewerTz outside the teacher tree): the academy's. */
-export const VIEWER_TZ = RIYADH_TZ;
+const VIEWER_TZ = RIYADH_TZ;
 
 /** Each outcome in the existing status grammar (docs/07 §6): saffron only where a report is due. */
 export const trialOutcomeStyle: Record<TrialOutcome, StatusStyle> = {
@@ -27,7 +27,7 @@ export const trialOutcomeStyle: Record<TrialOutcome, StatusStyle> = {
   moved: lessonStatusStyle.rescheduled,
 };
 
-export interface WhenLines {
+interface WhenLines {
   /** In the viewer's zone. */
   when: string;
   /** «بتوقيت الأسرة: …» when the family's zone differs; else null. */

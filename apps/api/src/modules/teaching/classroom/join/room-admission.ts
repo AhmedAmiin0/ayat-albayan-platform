@@ -8,7 +8,7 @@ import { ModerationQueries, principalColumns, type Principal } from '../moderati
 import { RecordingStarter } from '../recordings/recording.starter';
 import { lessonTarget, type RoomTarget } from '../recordings/recording-target';
 
-export interface Admission {
+interface Admission {
   lessonId: string;
   role: JoinRole;
   name: string;
@@ -17,7 +17,7 @@ export interface Admission {
 }
 
 /** 403 removed_from_room: this login or link was removed from the lesson's room. */
-export const removedFromRoom = (): HttpException =>
+const removedFromRoom = (): HttpException =>
   new HttpException({ code: 'removed_from_room', message: 'removed_from_room' }, HttpStatus.FORBIDDEN);
 
 /**

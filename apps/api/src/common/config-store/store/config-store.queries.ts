@@ -6,7 +6,7 @@ import { ConfigConflictError, type ConfigChange, type ConfigRow, type ConfigSnap
 const COLUMNS = 'key, value, version, description, description_seed, description_edited, updated_at, updated_by, retired_at';
 
 /** The bits of a PostgREST error the mapping reads. */
-export interface RpcError {
+interface RpcError {
   code?: string;
   message: string;
   details?: string | null;
@@ -34,7 +34,7 @@ interface DbRow {
   retired_at: string | null;
 }
 
-export const toConfigRow = (r: DbRow): ConfigRow => ({
+const toConfigRow = (r: DbRow): ConfigRow => ({
   key: r.key,
   value: r.value,
   version: r.version,
@@ -46,7 +46,7 @@ export const toConfigRow = (r: DbRow): ConfigRow => ({
   retiredAt: r.retired_at,
 });
 
-export interface DescribeCall {
+interface DescribeCall {
   key: string;
   text: string | null;
   hintKey: string | null;

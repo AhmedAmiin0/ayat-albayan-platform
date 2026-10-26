@@ -33,7 +33,7 @@ export const RENEWAL_DUE_SEED = templateRow({
 لو حابين تجددوا عشان الحلقات تفضل ماشية في مواعيدها، ابعتولنا هنا ونرتّب معاكم.`,
 });
 
-export const FOLLOW_UP_SLOTS_SEED = templateRow({
+const FOLLOW_UP_SLOTS_SEED = templateRow({
   ...fresh,
   key: 'follow_up_slots',
   meta_name: 'follow_up_slots',
@@ -50,7 +50,7 @@ export const FOLLOW_UP_SLOTS_SEED = templateRow({
 أي موعد أنسب؟ رد علينا هنا وأثبّت الحجز فورًا.`,
 });
 
-export const REMINDER_24H_SEED = templateRow({
+const REMINDER_24H_SEED = templateRow({
   ...fresh,
   key: 'lesson_reminder_24h',
   meta_name: 'lesson_reminder_24h',

@@ -44,7 +44,7 @@ export function loadBundle(today: string, from?: string): SourceBundle {
   return { sheets, crm, earlier: new Map(), today, from, approvedPdfs };
 }
 
-export interface MapResult {
+interface MapResult {
   desired: Desired[];
   issues: RowIssue[];
 }
@@ -67,7 +67,7 @@ export function mapAll(bundle: SourceBundle, modules: readonly EntityModule[]): 
 }
 
 /** import_items of the planned entities + adoptable rows found by each module's unique column. */
-export async function loadExisting(o: {
+async function loadExisting(o: {
   db: TargetDb;
   modules: readonly EntityModule[];
   desired: readonly Desired[];
@@ -92,7 +92,7 @@ export async function loadExisting(o: {
   return existing;
 }
 
-export interface BuildPlanInput {
+interface BuildPlanInput {
   db: TargetDb;
   modules: readonly EntityModule[];
   target: TargetName;

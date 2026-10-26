@@ -10,7 +10,7 @@ export const stamp = (): string => `${Date.now() % 1_000_000}${Math.floor(Math.r
 export const detailDialog = (page: Page): Locator => page.getByRole('dialog', { name: ar.users.detail.title });
 
 /** /admin/users, searched for `term`; the row's name button, ready to click. */
-export async function findUser(page: Page, term: string, name = term): Promise<Locator> {
+async function findUser(page: Page, term: string, name = term): Promise<Locator> {
   await page.goto('/admin/users');
   await page.getByRole('textbox', { name: ar.common.search, exact: true }).fill(term);
   const row = page.getByRole('button', { name, exact: true });

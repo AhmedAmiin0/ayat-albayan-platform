@@ -25,7 +25,7 @@ export type CrmBody =
  * needs the producer's CRM values; a row without them (queued before they existed, or a value missing) keeps
  * meta_name and its Meta values, as before the mapping. An admin's crm_name is always sent as set.
  */
-export function crmRowName(input: TemplateSend): string {
+function crmRowName(input: TemplateSend): string {
   const { template } = input;
   const name = crmTemplateName(template);
   const byDefault = !template.crm_name && name === CRM_DEFAULT_NAMES[template.key];
@@ -51,7 +51,7 @@ function crmButtons(input: TemplateSend): [string, string][] {
  * knows the CRM's own template (params.crm, e.g. teacher_lesson_v2) gives its body values and buttons; the
  * meta driver's checks still run on the meta values, so a row a Meta line would refuse is refused here too.
  */
-export function crmTemplateParams(input: TemplateSend): CrmTemplateParams {
+function crmTemplateParams(input: TemplateSend): CrmTemplateParams {
   const meta = bodyValues(input.template, input.params);
   const body = ownCrm(input)?.body ?? meta;
   const header = documentHeader(input);

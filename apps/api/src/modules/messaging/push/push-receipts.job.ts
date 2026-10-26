@@ -8,11 +8,11 @@ const MINUTE = 60_000;
 const EVERY_MS = 15 * MINUTE;
 const FIRST_RUN_MS = 2 * MINUTE;
 /** Expo: check receipts 15 minutes after sending … */
-export const RECEIPT_DELAY_MS = 15 * MINUTE;
+const RECEIPT_DELAY_MS = 15 * MINUTE;
 /** … they are cleared after 24 hours. */
-export const RECEIPT_TTL_MS = 24 * 60 * MINUTE;
+const RECEIPT_TTL_MS = 24 * 60 * MINUTE;
 
-export type ReceiptsSummary = { rows: number; settled: number; pruned: number };
+type ReceiptsSummary = { rows: number; settled: number; pruned: number };
 
 /**
  * R-MOB-01 push receipts (completes common/push, which prunes on ticket errors): every 15 minutes,

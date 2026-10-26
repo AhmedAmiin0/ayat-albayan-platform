@@ -29,7 +29,7 @@ function cell(label: string, value: string, sub?: string): string {
 }
 
 /** «6 من 8» inside a package, else the plain lesson number (R-LES-03). */
-export function lessonNoText(m: Pick<ReportPdfModel, 'lessonNo' | 'slot'>): string {
+function lessonNoText(m: Pick<ReportPdfModel, 'lessonNo' | 'slot'>): string {
   return m.slot
     ? fill(esc(r.lessonNoValue), { n: ltr(String(m.slot.position)), total: ltr(String(m.slot.total)) })
     : ltr(String(m.lessonNo));
@@ -51,7 +51,7 @@ export function metaHtml(m: ReportPdfModel): string {
 }
 
 /** Shape carries the state, colour only confirms it (docs/07 principle 3). */
-export function chipHtml(input: { tone: string; glyph: string; label: string }): string {
+function chipHtml(input: { tone: string; glyph: string; label: string }): string {
   return `<span class="chip tone-${input.tone}"><i class="nuqta ${input.glyph}"></i><span>${esc(input.label)}</span></span>`;
 }
 

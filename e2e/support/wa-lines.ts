@@ -9,11 +9,11 @@ import { stub, stubSent, type StubSent } from './wa-stub';
 /** = playwright.config.ts E2E_WA.WA_PHONE_NUMBER_ID / E2E_WA_CHAT_KEYS.WA_CHAT_PHONE_NUMBER_ID. */
 export const NOTIF_PN = 'e2e-phone';
 export const CHAT_PN = 'e2e-chat-phone';
-export const LINE_PN: Record<WaLine, string> = { notifications: NOTIF_PN, chat: CHAT_PN };
+const LINE_PN: Record<WaLine, string> = { notifications: NOTIF_PN, chat: CHAT_PN };
 /** E2E_LINES=single (playwright.config.ts): no chat line configured, so two-line specs skip. */
 export const SINGLE_LINE = process.env['E2E_LINES'] === 'single';
 
-export interface LineInbound {
+interface LineInbound {
   from: string;
   name?: string;
   text?: string;
@@ -36,7 +36,7 @@ export async function sentVia(pn: string): Promise<StubSent[]> {
   return (await stubSent()).filter((m) => m.phoneNumberId === pn);
 }
 
-export interface StubReadMark {
+interface StubReadMark {
   phoneNumberId: string;
   messageId: string;
 }
@@ -44,7 +44,7 @@ export interface StubReadMark {
 /** Read receipts with the phone-number id each was sent through. */
 export const stubReadsByLine = () => stub<StubReadMark[]>('/__stub/reads/by-line');
 
-export interface LineHealthPatch {
+interface LineHealthPatch {
   subscribed?: boolean;
   status?: string;
   quality_rating?: string;
@@ -56,7 +56,7 @@ export interface LineHealthPatch {
 /** Plays an unhealthy / unsubscribed number for the diagnostics; /__stub/reset restores it. */
 export const stubLineHealth = (pn: string, patch: LineHealthPatch) => stub<unknown>(`/__stub/lines/${pn}`, patch);
 
-export interface QueuedTemplate {
+interface QueuedTemplate {
   phone: string;
   /** An approved registry key whose stub template has exactly the two body params below. */
   key?: string;

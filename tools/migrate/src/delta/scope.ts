@@ -9,13 +9,13 @@ import type { EntityName, Plan, SourceRow } from '../types.ts';
 import { type OnlyScope, parseOnly } from './only.ts';
 import type { RecreateScope } from './orphans.ts';
 
-export interface RunScope {
+interface RunScope {
   build: { today: string; from: string; recreate?: Omit<RecreateScope, 'tableOf'> };
   only?: OnlyScope;
 }
 
 /** UTC ISO of local midnight starting `day` in Asia/Riyadh. */
-export const fromUtcOf = (day: string): string =>
+const fromUtcOf = (day: string): string =>
   zonedToUtc({ date: day, time: '00:00', tz: 'Asia/Riyadh' }).toISOString();
 
 /** Orphaned import items come back only under --creates-only with an explicit --only list. */

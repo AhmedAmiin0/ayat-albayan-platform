@@ -42,8 +42,8 @@ export type Route = [method: string, path: RegExp, handler: Handler];
 
 export const FOLDER = 'application/vnd.google-apps.folder';
 export const SHEET = 'application/vnd.google-apps.spreadsheet';
-export const ROOT_NAME = 'تقارير آيات البيان';
-export const SUMMARY_NAME = 'سجل الطلاب المشتركين';
+const ROOT_NAME = 'تقارير آيات البيان';
+const SUMMARY_NAME = 'سجل الطلاب المشتركين';
 export const SUMMARY_HEADER = ['اسم الطالب', 'المعلمة', 'البرنامج', 'تاريخ أول حلقة', 'آخر حلقة', 'عدد الحلقات', 'مجلد الطالب', 'سجل الحضور'];
 
 export function nextId(s: StubState, prefix: string): string {

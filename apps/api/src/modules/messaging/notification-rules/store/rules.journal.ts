@@ -6,7 +6,7 @@ import { AuditService } from '../../../../common/audit/audit.service';
 import { SINGLETON_ENTITY_ID } from '../../../../common/audit/singleton-entity';
 import type { AuthUser } from '../../../../common/auth/verify-token';
 
-export interface RuleChange {
+interface RuleChange {
   key: string;
   actor: AuthUser;
   before: EffectiveRule;
@@ -17,7 +17,7 @@ export interface RuleChange {
 }
 
 /** The activity-log action of an essential row switched off (owner answer 3, docs/23). */
-export const ESSENTIAL_OFF_ACTION = 'notification_essential_off';
+const ESSENTIAL_OFF_ACTION = 'notification_essential_off';
 
 const json = (v: unknown): Json => JSON.parse(JSON.stringify(v)) as Json;
 

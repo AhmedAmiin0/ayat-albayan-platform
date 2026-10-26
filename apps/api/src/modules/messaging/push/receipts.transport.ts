@@ -2,9 +2,9 @@ import type { ExpoConn } from '../../../common/push/push.module';
 import type { ExpoReceipt } from './push-receipts';
 
 /** Under EXPO_API_BASE («https://exp.host»). */
-export const EXPO_RECEIPTS_PATH = '/--/api/v2/push/getReceipts';
+const EXPO_RECEIPTS_PATH = '/--/api/v2/push/getReceipts';
 /** Expo's limit of ids per getReceipts request. */
-export const RECEIPTS_BATCH = 1000;
+const RECEIPTS_BATCH = 1000;
 
 /** Receipts by ticket id; ids without a receipt yet are absent. Injectable so tests never fetch. */
 export type ReceiptsTransport = (ids: readonly string[]) => Promise<Record<string, ExpoReceipt>>;

@@ -8,11 +8,11 @@ import { WaError } from '../whatsapp.types';
 // test message. The number, its WABA and its phone facts are the CRM's: every Meta field stays null.
 
 /** The scope POST /messages needs. */
-export const CRM_SEND_SCOPE = 'messages:send';
+const CRM_SEND_SCOPE = 'messages:send';
 
 const meSchema = z.object({ key: z.object({ scopes: z.array(z.string()) }) });
 
-export interface CrmCheckInput {
+interface CrmCheckInput {
   line: WaLine;
   conn: CrmConn;
   checkedAt: string;

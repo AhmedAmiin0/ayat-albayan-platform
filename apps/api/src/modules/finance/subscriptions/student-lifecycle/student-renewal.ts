@@ -7,10 +7,10 @@ import { SubscriptionsQueries } from '../subscriptions.queries';
 
 /** What triggered the evaluation: a payment create (its id), the periodic sweep, or any other write / lesson change. */
 export type RenewalCause = { via: 'payment'; paymentId: string } | { via: 'sweep' } | { via: 'event' };
-export type RenewalInput = { studentId: string; state: StudentState; actorId: string | null; now: Date; cause: RenewalCause };
+type RenewalInput = { studentId: string; state: StudentState; actorId: string | null; now: Date; cause: RenewalCause };
 
 /** The packages as subscriptionEnded reads them (stored row + balance + payments). */
-export function endPackages(state: StudentState): EndPackage[] {
+function endPackages(state: StudentState): EndPackage[] {
   return state.rows.map((r) => ({
     status: r.status,
     renews_on: r.renews_on,

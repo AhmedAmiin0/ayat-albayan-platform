@@ -17,7 +17,7 @@ export const TEXTS: Record<TextKey, string> = {
   nextPlan: 'نكمل الملك 11-15',
 };
 /** The five the Google Form required when the student attended (research-forms 12). */
-export const REQUIRED_TEXTS = ['recited', 'newMemorization', 'revision', 'notes', 'homework'] as const;
+const REQUIRED_TEXTS = ['recited', 'newMemorization', 'revision', 'notes', 'homework'] as const;
 
 const identity = (page: Page) => page.getByRole('region', { name: ar.reports.identity });
 const labelOf = (radio: Locator) => radio.locator('xpath=ancestor::label');
@@ -35,7 +35,7 @@ export async function pickGrade(page: Page, input: { row: string; grade: Grade }
 }
 
 /** The six rubric rows and the overall grade, all the same grade. */
-export async function gradeAll(page: Page, grade: Grade): Promise<void> {
+async function gradeAll(page: Page, grade: Grade): Promise<void> {
   for (const rubric of REPORT_RUBRICS) await pickGrade(page, { row: ar.reports.rubric[rubric], grade });
   await pickGrade(page, { row: ar.reports.overall, grade });
 }
@@ -55,7 +55,7 @@ export async function fillAttended(page: Page, texts: Partial<Record<TextKey, st
   await fillTexts(page, { ...required, ...texts });
 }
 
-export interface ReportDb {
+interface ReportDb {
   id: string;
   student_id: string;
   version: number;
@@ -111,7 +111,7 @@ export async function backdateSubmit(reportId: string, hours: number): Promise<v
     where id = ${reportId}`);
 }
 
-export interface StoredObject {
+interface StoredObject {
   etag: string | null;
   updated_at: Date;
 }

@@ -10,7 +10,7 @@ import { AccountService } from './account.service';
 export const ME: AuthUser = { id: 'user-1', email: 'old@example.test', role: 'teacher' };
 export const PASSWORD = 'Current-pass-1';
 
-export class FakeAccountStore implements AccountStore {
+class FakeAccountStore implements AccountStore {
   rows = new Map<string, AccountRow>([
     ['user-1', { id: 'user-1', full_name: 'Huda', phone_e164: null, avatar_path: null, role: { base: 'teacher', key: 'teacher', name_ar: 'teacher-ar', name_en: 'Teacher' } }],
   ]);
@@ -31,7 +31,7 @@ export class FakeAccountStore implements AccountStore {
   }
 }
 
-export class FakeAccountAuth implements AccountAuth {
+class FakeAccountAuth implements AccountAuth {
   emails = new Map([['user-1', 'old@example.test']]);
   passwords = new Map([['old@example.test', PASSWORD]]);
   updates: { id: string; patch: { email?: string; password?: string } }[] = [];
@@ -54,7 +54,7 @@ export class FakeAccountAuth implements AccountAuth {
   }
 }
 
-export class FakeAccountFiles implements AccountFiles {
+class FakeAccountFiles implements AccountFiles {
   objects = new Map<string, { size: number; contentType: string; bytes: Uint8Array }>();
   removed: string[] = [];
 

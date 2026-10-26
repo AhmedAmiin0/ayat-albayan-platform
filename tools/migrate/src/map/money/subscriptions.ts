@@ -11,7 +11,7 @@ import { SHEET_TZ } from '../schedule/bookings.ts';
 import { type HeartSub, heartSubs, packageOf } from './heart.ts';
 
 /** FIN amounts are EGP (income statement currency). */
-export const IMPORT_CURRENCY = 'EGP';
+const IMPORT_CURRENCY = 'EGP';
 
 const isSub = (r: ReturnType<typeof heartSubs>[number]): r is HeartSub => 'key' in r;
 
@@ -20,7 +20,7 @@ function status(s: HeartSub): string {
   return s.remaining > 0 ? 'active' : 'expired';
 }
 
-export function mapSubscriptions(bundle: SourceBundle): Mapped[] {
+function mapSubscriptions(bundle: SourceBundle): Mapped[] {
   return heartSubs(bundle).flatMap((s) =>
     isSub(s)
       ? [
@@ -49,7 +49,7 @@ export function mapSubscriptions(bundle: SourceBundle): Mapped[] {
   );
 }
 
-export function mapPayments(bundle: SourceBundle): Mapped[] {
+function mapPayments(bundle: SourceBundle): Mapped[] {
   return heartSubs(bundle).flatMap((s): Mapped[] => {
     if (!isSub(s) || !s.paid || !s.price) return [];
     const amount = s.price.amount;
