@@ -26,6 +26,17 @@ const REPORT: Record<ReportState, { tone: Tone; glyph: Glyph }> = {
   none: { tone: 'act', glyph: 'hollow' },
 };
 
+/** «الباقة غير مدفوعة» (admin) and the report state, on one wrapping line; nothing when neither. */
+function StudentChips({ unpaid, report }: { unpaid: boolean; report: ReportState | null }) {
+  if (!unpaid && !report) return null;
+  return (
+    <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 6 }}>
+      {unpaid ? <StatusChip {...subscriptionStatusStyle.unpaid} label={t.subscriptions.unpaidFlag} size="sm" /> : null}
+      {report ? <StatusChip {...REPORT[report]} label={t.lessons.sheet.report[report]} size="sm" /> : null}
+    </View>
+  );
+}
+
 export interface DetailsStudentRowProps {
   lesson: DetailsLesson;
   student: DetailsStudent;
@@ -91,20 +102,7 @@ export function DetailsStudentRow({ lesson, student, role, onLeave }: DetailsStu
       ) : (
         <View style={line}>{name}</View>
       )}
-      {unpaid || report ? (
-        <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 6 }}>
-          {unpaid ? (
-            <StatusChip
-              {...subscriptionStatusStyle.unpaid}
-              label={t.subscriptions.unpaidFlag}
-              size="sm"
-            />
-          ) : null}
-          {report ? (
-            <StatusChip {...REPORT[report]} label={t.lessons.sheet.report[report]} size="sm" />
-          ) : null}
-        </View>
-      ) : null}
+      <StudentChips unpaid={unpaid} report={report} />
       {role === 'admin' ? <StudentPackageLine studentId={student.id} /> : null}
       {toReport ? (
         <View style={{ alignSelf: 'flex-start' }}>

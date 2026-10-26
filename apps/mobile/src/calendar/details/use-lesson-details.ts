@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 
 /**
  * Which lesson's details sheet is open. It keeps the id and reads the lesson from the screen's
@@ -7,13 +7,8 @@ import { useRef, useState } from 'react';
  */
 export function useLessonDetails<L extends { id: string }>(lessons: readonly L[] | undefined) {
   const [picked, setPicked] = useState<L | null>(null);
-  const seen = useRef<L | null>(null);
   const found = picked ? lessons?.find((l) => l.id === picked.id) : undefined;
-  if (found) seen.current = found;
-  const lesson = picked ? (seen.current ?? picked) : null;
-  const open = (l: L) => {
-    seen.current = null;
-    setPicked(l);
-  };
-  return { lesson, open, close: () => setPicked(null) };
+  // Remember the newest version seen (React's «adjust state while rendering» pattern).
+  if (found && found !== picked) setPicked(found);
+  return { lesson: found ?? picked, open: (l: L) => setPicked(l), close: () => setPicked(null) };
 }
