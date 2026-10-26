@@ -8,7 +8,7 @@ import { ReportLessonQueries } from './report-lesson.queries';
 import { formColumns, reportView } from './report.mapper';
 import { ReportsQueries } from './reports.queries';
 
-export type DraftInput = { id: string; form: Partial<ReportDraft>; user: AuthUser };
+type DraftInput = { id: string; form: Partial<ReportDraft>; user: AuthUser };
 
 /** Report form, read and autosave (docs/11 §4 R1, R2, R4; R-REP-01/02/04, issues A7, D1). */
 @Injectable()

@@ -10,7 +10,7 @@ import type { BookingQueries } from '../core/booking.queries';
 
 export const REQ = 'c1111111-1111-4111-8111-111111111111';
 export const MSG = 'd1111111-1111-4111-8111-111111111111';
-export const PHONE = '+966552147730';
+const PHONE = '+966552147730';
 /** The booked family's phone and the default 10 MB limit (settings.upload_max_mb). */
 export const SCOPE = { phones: [PHONE], maxBytes: INVOICE_MAX_BYTES };
 export const PATH = `${REQ}/0f0e0d0c-0000-4000-8000-000000000001.png`;

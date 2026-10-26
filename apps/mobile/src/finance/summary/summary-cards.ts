@@ -3,7 +3,7 @@ import { t } from '@/core/lib/i18n/i18n';
 import { wholeText } from '../shared/format';
 import type { FinanceSummary } from './summary-types';
 
-export interface Card {
+interface Card {
   label: string;
   value: string;
   tone: 'ink' | 'bad';

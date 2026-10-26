@@ -43,7 +43,7 @@ export const STUDENTS = [
   student(IDS.s3, 'يوسف', cairo),
 ];
 /** Sun + Tue 16:00–22:00 Cairo: Sun 17:00 Riyadh (14:00Z) fits both before and after DST. */
-export const GRID = [0, 2].map((weekday) => ({
+const GRID = [0, 2].map((weekday) => ({
   id: `a${weekday}`,
   weekday,
   start_time: '16:00',
