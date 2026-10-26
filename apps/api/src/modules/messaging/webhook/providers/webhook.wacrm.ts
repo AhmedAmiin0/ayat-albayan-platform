@@ -13,7 +13,7 @@ const envelopeSchema = z.object({
 
 const statusSchema = z.object({ whatsapp_message_id: z.string().min(1), status: z.string() });
 
-export type WacrmDelivery =
+type WacrmDelivery =
   | { id: string; kind: 'status'; status: StatusEvent }
   | { id: string; kind: 'received' | 'other'; event: string };
 

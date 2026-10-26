@@ -4,13 +4,13 @@ import { createCipheriv, createDecipheriv, createECDH, hkdfSync, randomBytes } f
 // only (no web-push dependency). One record: the payload is small (≤ 4 KB with the padding byte).
 
 /** PushSubscription.toJSON().keys: the browser's P-256 public key and its 16-byte auth secret, base64url. */
-export interface WebPushKeys {
+interface WebPushKeys {
   p256dh: string;
   auth: string;
 }
 
 /** The application server's ephemeral key pair and the salt; fixed only in tests (the RFC vector). */
-export interface EncryptionSecrets {
+interface EncryptionSecrets {
   /** 32-byte P-256 private key. */
   serverPrivateKey: Buffer;
   /** 16 bytes. */

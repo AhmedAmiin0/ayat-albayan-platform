@@ -5,7 +5,7 @@ import { SETTINGS_CACHE_MS, SettingsService } from '../../../common/settings/set
 
 /** What the rules read from settings: where producers read (comms_source) and the 8 legacy keys. */
 const KEYS = ['comms_source', ...RULE_SETTING_KEYS] as const satisfies readonly SettingKey[];
-export type RulesSourceValues = SettingsSlice<(typeof KEYS)[number]>;
+type RulesSourceValues = SettingsSlice<(typeof KEYS)[number]>;
 
 /**
  * The notification rules' academy settings (docs/23b). Also the one writer of the 8 legacy keys

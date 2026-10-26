@@ -10,7 +10,7 @@ import type { NumberRow } from '../numbers.queries';
 // KAPSO_API_VERSION and the project-wide KAPSO_API_KEY (env.kapso.ts kapsoLine); crm = WACRM_API_BASE and
 // WACRM_API_KEY (env.crm.ts crmLine). Never logs a value.
 
-export interface NumberSource {
+interface NumberSource {
   row: NumberRow;
   secrets: Partial<Record<NumberSecretName, string>>;
 }

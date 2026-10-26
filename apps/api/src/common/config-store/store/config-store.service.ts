@@ -18,7 +18,7 @@ interface CacheEntry {
   value: Promise<ConfigSnapshot>;
 }
 
-export interface DescribeInput {
+interface DescribeInput {
   key: string;
   text: string | null;
   actorId: string;

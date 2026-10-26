@@ -10,7 +10,7 @@ import { QuickReplies } from './webhook.quick-reply';
 /** Time an undo (one DELETE) gets before the controller's 200 goes out. */
 const UNDO_MARGIN_MS = 500;
 
-export interface InboundOptions {
+interface InboundOptions {
   /** Epoch ms when Meta gets its 200 regardless (WebhookService); none = it waits for us. */
   deadline?: number;
 }

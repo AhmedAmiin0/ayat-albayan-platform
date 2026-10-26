@@ -18,7 +18,7 @@ export const LOOKBACK_MS = 24 * 3_600_000;
 /** Pages per number per run (100 each); the rest waits for the next run. */
 export const MAX_PAGES = 20;
 
-export type CatchUpCounts = Record<ExternalOutcome | 'listed', number>;
+type CatchUpCounts = Record<ExternalOutcome | 'listed', number>;
 
 /** From the newest stored external message (none: FLOOR), or the last day when that is newer; never before FLOOR. */
 export function catchUpSince(newest: Date | null, now: Date): Date {

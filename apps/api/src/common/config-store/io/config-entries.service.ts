@@ -20,7 +20,7 @@ import { isModuleOwned, mayDescribe, mayView, ownerOf } from '../boundaries/conf
 import { ConfigStore } from '../store/config-store.service';
 import { ConfigConflictError, neverWritten, type ConfigSnapshot } from '../config-store.types';
 
-export interface EntryCall<B> {
+interface EntryCall<B> {
   key: string;
   body: B;
   user: AuthUser;

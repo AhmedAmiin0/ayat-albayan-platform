@@ -1,6 +1,6 @@
 import type { Env } from '../../config/env/env';
 
-export type IntegrationRefreshEnv = Pick<Env, 'INTEGRATION_CONFIG_FROM_DB' | 'INTEGRATION_REFRESH_MS' | 'SETTINGS_CACHE_MS'>;
+type IntegrationRefreshEnv = Pick<Env, 'INTEGRATION_CONFIG_FROM_DB' | 'INTEGRATION_REFRESH_MS' | 'SETTINGS_CACHE_MS'>;
 
 /**
  * How often IntegrationConfigService re-reads the database's integration values, in ms.
