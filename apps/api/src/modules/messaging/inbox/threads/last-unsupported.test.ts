@@ -22,8 +22,8 @@ describe('markUnsupported', () => {
       ['in', ['id', ['m1', 'm2']]],
     ]);
     expect(out.map((r) => r.last_unsupported ?? false)).toEqual([true, false, false]);
-    expect(toThreadView(out[0] ?? rows[0], NOW).last_unsupported).toBe(true);
-    expect(toThreadView(out[2] ?? rows[0], NOW)).not.toHaveProperty('last_unsupported');
+    expect(toThreadView(out[0] ?? threadRow(), NOW).last_unsupported).toBe(true);
+    expect(toThreadView(out[2] ?? threadRow(), NOW)).not.toHaveProperty('last_unsupported');
   });
 
   it('a page with text, files and templates only reads nothing more', async () => {
