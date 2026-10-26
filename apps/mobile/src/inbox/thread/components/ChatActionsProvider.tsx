@@ -2,7 +2,9 @@ import { formatPhone, sessionWindowOpen, type MessageView, type ThreadView } fro
 import { type ReactNode, useMemo, useState } from 'react';
 import { ltr } from '@/core/ui/primitives/Ltr';
 import { type ChatActions, ChatActionsContext, type ChatNoticeValue } from '../hooks/chat-actions';
+import { CopySheet } from './CopySheet';
 import { ForwardSheet } from './ForwardSheet';
+import type { CopyRequest } from '../../messages/hooks/chat-tools';
 import { MessageMenu } from '../../messages/components/MessageMenu';
 import { isOwnThread, useThreadMode } from '../hooks/thread-mode';
 
@@ -13,14 +15,16 @@ export interface ChatActionsProviderProps {
 }
 
 /**
- * «رد» and «إعادة توجيه» (owner 2026-10-25) for one open chat. The state lives with the chat screen, so
- * leaving the chat drops the reply target. The menu and the forward sheet are drawn once here, not per bubble.
+ * «رد» and «إعادة توجيه» (owner 2026-10-25), «نسخ» (2026-10-26) for one open chat. The state lives
+ * with the chat screen, so leaving the chat drops the reply target. The menu, the forward and copy
+ * sheets are drawn once here, not per bubble.
  */
 export function ChatActionsProvider({ phone, thread, children }: ChatActionsProviderProps) {
   const mode = useThreadMode();
   const [reply, setReply] = useState<MessageView | null>(null);
   const [menu, setMenu] = useState<MessageView | null>(null);
   const [forward, setForward] = useState<MessageView | null>(null);
+  const [copy, setCopy] = useState<CopyRequest | null>(null);
   const [notice, say] = useState<ChatNoticeValue | null>(null);
   const canSend =
     !isOwnThread(mode, thread) && sessionWindowOpen(thread?.last_inbound_at ?? null, new Date());
@@ -34,6 +38,7 @@ export function ChatActionsProvider({ phone, thread, children }: ChatActionsProv
       threadName,
       openMenu: setMenu,
       openForward: setForward,
+      showCopy: setCopy,
       notice,
       say,
     }),
@@ -42,8 +47,9 @@ export function ChatActionsProvider({ phone, thread, children }: ChatActionsProv
   return (
     <ChatActionsContext.Provider value={value}>
       {children}
-      <MessageMenu message={menu} onClose={() => setMenu(null)} />
+      <MessageMenu message={menu} phone={phone} onClose={() => setMenu(null)} />
       <ForwardSheet phone={phone} message={forward} onClose={() => setForward(null)} />
+      <CopySheet request={copy} onClose={() => setCopy(null)} />
     </ChatActionsContext.Provider>
   );
 }

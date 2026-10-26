@@ -1,5 +1,6 @@
 import type { MessageView } from '@ab/shared';
 import { createContext, type Dispatch, type SetStateAction, useContext } from 'react';
+import type { CopyRequest } from '../../messages/hooks/chat-tools';
 
 // One open chat's «رد» / «إعادة توجيه» state (ChatActionsProvider). Without a provider: all off.
 
@@ -22,6 +23,8 @@ export interface ChatActions {
   threadName: string | null;
   openMenu: (m: MessageView) => void;
   openForward: (m: MessageView) => void;
+  /** «نسخ النص» / «نسخ الرقم»: the selectable copy sheet (chat-tools). */
+  showCopy: (req: CopyRequest) => void;
   notice: ChatNoticeValue | null;
   say: (notice: ChatNoticeValue | null) => void;
 }
@@ -35,6 +38,7 @@ export const ChatActionsContext = createContext<ChatActions>({
   threadName: null,
   openMenu: noop,
   openForward: noop,
+  showCopy: noop,
   notice: null,
   say: noop,
 });

@@ -12,11 +12,13 @@ export type MediaMessage = {
   media_path: string | null;
   /** The file's caption. */
   body: string | null;
+  /** A sent file's name (thread-file-send); «تنزيل» saves under it. */
+  media_name?: string | null;
   created_at: string;
   /** The receiving line: its token is the only one that can fetch the media id (null = notifications). */
   line: WaLine | null;
 };
-const COLUMNS = 'id, phone_e164, direction, media_id, media_mime, media_path, body, created_at, line';
+const COLUMNS = 'id, phone_e164, direction, media_id, media_mime, media_path, body, media_name, created_at, line';
 
 /** A cached inbound voice note or video, for the 30-day purge (WaMediaRetentionJob). */
 export type CachedMedia = { id: string; media_path: string; media_mime: string | null };
