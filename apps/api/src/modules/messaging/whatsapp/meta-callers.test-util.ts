@@ -34,6 +34,8 @@ export const WHITELIST = new Set([
   'modules/messaging/whatsapp/drivers/crm/crm-http.ts',
   'modules/messaging/whatsapp/whatsapp.module.ts',
   'modules/messaging/whatsapp/whatsapp.types.ts',
+  // Kapso's message history (owner report 2026-10-26): read-only GETs that store messages sent outside the app.
+  'modules/messaging/webhook/external/kapso-history.ts',
 ]);
 
 const METHODS = 'sendTemplate|sendText|sendDocument|markRead|getMedia|getTemplates|submitTemplate|uploadSample';

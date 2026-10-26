@@ -27,6 +27,17 @@ export interface ReceivingNumber {
 export interface Receiving {
   line: WaLine | null;
   numberId?: string;
+  /** Meta's phone_number_id of the change, when it carried one. */
+  phoneNumberId?: string;
+}
+
+/** The event fields of a Receiving: line always, numberId / phoneNumberId only when known. */
+export function where(at: Receiving): Receiving {
+  return {
+    line: at.line,
+    ...(at.numberId ? { numberId: at.numberId } : {}),
+    ...(at.phoneNumberId ? { phoneNumberId: at.phoneNumberId } : {}),
+  };
 }
 
 /**
