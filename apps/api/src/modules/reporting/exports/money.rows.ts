@@ -7,7 +7,7 @@ import { riyadhStamp, safeText, type Cell } from './csv';
 
 const { students: S, payments: P, payouts: Y, subscriptions: SUB, exports: X } = ar;
 
-export interface PaymentIn {
+interface PaymentIn {
   paid_at: string;
   amount: number;
   currency: string;

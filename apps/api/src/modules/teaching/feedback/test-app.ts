@@ -24,7 +24,7 @@ const verify: TokenVerifier = async (token) => {
   return user;
 };
 
-export type Token = keyof typeof USERS;
+type Token = keyof typeof USERS;
 export type Call = { method: 'GET' | 'POST'; url: string; token?: Token | null; body?: object; ip?: string };
 
 function mocks() {

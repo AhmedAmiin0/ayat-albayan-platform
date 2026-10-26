@@ -25,7 +25,7 @@ export interface UpcomingRow {
   lesson_students: { student_id: string }[];
 }
 
-export interface DayRange {
+interface DayRange {
   from: Date;
   to: Date;
   teacherId?: string | undefined;

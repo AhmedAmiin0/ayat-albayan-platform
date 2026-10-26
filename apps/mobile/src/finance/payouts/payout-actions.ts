@@ -2,7 +2,7 @@ import type { PaymentMethod, PayoutView } from '@ab/shared';
 import { paidAtFor } from '@/payments/lib/paid-day';
 import type { Receipt } from '@/payments/receipt';
 
-export type PayoutAction = 'approve' | 'pay' | 'reopen' | 'unpay' | 'receipt';
+type PayoutAction = 'approve' | 'pay' | 'reopen' | 'unpay' | 'receipt';
 
 /** The web's buttons per state: draft → approve; approved → pay / reopen; paid → receipt / unpay. */
 export function payoutActions(p: Pick<PayoutView, 'status' | 'has_receipt'>): PayoutAction[] {

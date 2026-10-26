@@ -8,7 +8,7 @@ import { FeedbackQueries, type PublicContext } from '../feedback.queries';
 import { PublicFeedbackLimit } from './feedback.rate-limit';
 import { hashToken, verifyToken, type TokenPayload } from './feedback.token';
 
-export type PublicCall = { token: string; ip: string };
+type PublicCall = { token: string; ip: string };
 
 const expired = () => new GoneException({ code: 'feedback_expired', message: 'feedback_expired' });
 const invalid = () => notFound('feedback_not_found');

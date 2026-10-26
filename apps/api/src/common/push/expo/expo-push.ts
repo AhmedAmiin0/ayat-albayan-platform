@@ -7,7 +7,7 @@ import { fill } from '../../../modules/reporting/report-pdf/render/pdf-text';
 /** Under EXPO_API_BASE («https://exp.host»). */
 export const EXPO_PUSH_PATH = '/--/api/v2/push/send';
 /** = apps/mobile/src/push/registerPush.ts ANDROID_CHANNEL, created before permission is asked. */
-export const ANDROID_CHANNEL = 'default';
+const ANDROID_CHANNEL = 'default';
 
 export interface PushText {
   title: string;

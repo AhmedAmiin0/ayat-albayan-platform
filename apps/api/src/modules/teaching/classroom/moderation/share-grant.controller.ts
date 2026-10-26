@@ -9,7 +9,7 @@ import { MeetingShareGrantService, ShareGrantService } from './share-grant.servi
 const IDENTITY = /^[a-z]+-[0-9a-f]{12}$/;
 const uuid = new ParseUUIDPipe();
 
-export interface Target {
+interface Target {
   id: string;
   identity: string;
 }

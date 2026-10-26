@@ -18,7 +18,7 @@ export interface ExpenseDraft {
 
 export const emptyExpense = (): ExpenseDraft => ({ category: '', amountText: '', daysAgo: 0, vendor: '', method: null, note: '', receipt: null });
 
-export interface ExpenseCheck {
+interface ExpenseCheck {
   errors: { category?: string; amount?: string };
   ok: boolean;
 }

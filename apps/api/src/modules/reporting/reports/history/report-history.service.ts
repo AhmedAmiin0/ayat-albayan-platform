@@ -6,7 +6,7 @@ import { ReportAccess } from '../report-access';
 import { historyResponse, pendingViews } from './report-history.mapper';
 import { ReportHistoryQueries } from './report-history.queries';
 
-export type HistoryInput = { studentId: string; page: PageQuery; user: AuthUser };
+type HistoryInput = { studentId: string; page: PageQuery; user: AuthUser };
 
 /** A student's report history + grade series (R5) and a teacher's missing reports (R11). */
 @Injectable()

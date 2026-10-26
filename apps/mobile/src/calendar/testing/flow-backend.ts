@@ -9,7 +9,7 @@ import { abrar, omar } from '../overview/overview-fixtures';
 // أبرار (a Cairo teacher) on Thursday: 16:00 waiting and 17:00 confirmed; عمر has nothing booked.
 
 export const NOW = new Date('2026-10-01T13:20:00Z');
-export const TEACHER = { id: 't1', display_name_ar: 'أبرار', phone_e164: null, status: 'active', tz: 'Africa/Cairo' };
+const TEACHER = { id: 't1', display_name_ar: 'أبرار', phone_e164: null, status: 'active', tz: 'Africa/Cairo' };
 const TEACHERS: OverviewTeacher[] = [
   { ...abrar, windows: [], free: [] },
   { ...omar, windows: [], free: [] },
