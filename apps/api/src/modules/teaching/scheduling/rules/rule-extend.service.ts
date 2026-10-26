@@ -5,7 +5,7 @@ import { OccurrenceGenerator } from '../occurrences/occurrence-generator';
 import { ScheduleQueries } from '../schedule.queries';
 import { SchedulingSettings } from '../scheduling.settings';
 
-export type ExtendInput = { ruleId: string; weeks?: number; actorId: string };
+type ExtendInput = { ruleId: string; weeks?: number; actorId: string };
 /** POST /schedule-rules/:id/extend 200 (docs/10 route 11). */
 export type ExtendResult = { rule_id: string; until: string; inserted: number; conflicts: Conflict[] };
 

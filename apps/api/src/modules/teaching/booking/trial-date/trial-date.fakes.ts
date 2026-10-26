@@ -48,7 +48,7 @@ export function trialRow(over: LessonOver = {}): TrialLessonRead {
 export const trialRequest = (over: Record<string, unknown> = {}) =>
   bookingRequest({ package: 'trial', durationMin: 30, invoice: undefined, studentIds: [IDS.s1], clientRequestId: REQUEST, ...over });
 
-export type TrialSetup = { status?: StudentStatus; rows?: TrialLessonRead[]; lessonStudents?: string[] };
+type TrialSetup = { status?: StudentStatus; rows?: TrialLessonRead[]; lessonStudents?: string[] };
 
 export function fakeTrialDates(o: TrialSetup = {}) {
   const deps = fakePlanner();

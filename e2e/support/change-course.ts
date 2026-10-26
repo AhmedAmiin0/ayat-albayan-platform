@@ -10,7 +10,7 @@ const day = (ms: number) => iso(ms).slice(0, 10);
 /** The change point: the course's second week (BASE + 7 days). */
 export const CHANGE = BASE + 7 * DAY;
 
-export type Course = DaySeed & { sub: string; rules: string[]; lessons: { id: string; rule_id: string; starts_at: string }[] };
+type Course = DaySeed & { sub: string; rules: string[]; lessons: { id: string; rule_id: string; starts_at: string }[] };
 
 /** One child, an 8-lesson subscription and its course: 17:00 on BASE's weekday + 19:30 two days later, two weeks each. */
 export async function seedCourse(tx: Tx): Promise<Course> {
@@ -49,7 +49,7 @@ function newRule(c: Course, o: NewRuleInput & { id: string }) {
   };
 }
 
-export type ChangeOptions = {
+type ChangeOptions = {
   requestId: string;
   /** Overrides the second new rule's course. */
   sub?: string;
@@ -86,7 +86,7 @@ export function changeOf(c: Course, o: ChangeOptions) {
 }
 
 type Move = { id: string; from_status: string; to_status: string; chargeable: boolean };
-export type ChangeResult = { rule_ids: string[]; ends_on: string | null };
+type ChangeResult = { rule_ids: string[]; ends_on: string | null };
 
 export async function change(tx: Tx, payload: ReturnType<typeof changeOf> & { changes?: Move[] }): Promise<ChangeResult> {
   const [row] = await tx<{ r: ChangeResult }[]>`select public.change_course(${tx.json(payload)}) as r`;

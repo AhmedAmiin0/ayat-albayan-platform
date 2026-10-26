@@ -9,7 +9,7 @@ import { ModerationQueries, principalOf } from './moderation.queries';
 
 const asJoinRole = (role: string): JoinRole | null => JOIN_ROLES.find((r) => r === role) ?? null;
 
-export interface KickInput {
+interface KickInput {
   user: AuthUser;
   lessonId: string;
   identity: string;

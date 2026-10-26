@@ -6,7 +6,7 @@ import type { LivekitEnv } from '../../../../config/env/env';
 
 const SKEW_S = 60;
 
-export interface WebhookCheck {
+interface WebhookCheck {
   rawBody: Buffer | undefined;
   authorization: string | undefined;
   config: Pick<LivekitEnv, 'apiKey' | 'apiSecret'>;
@@ -55,7 +55,7 @@ export function verifyWebhook(input: WebhookCheck): boolean {
 }
 
 /** What an egress event means for its lesson_recordings row; null = nothing to change. */
-export interface EgressOutcome {
+interface EgressOutcome {
   egressId: string;
   status: 'done' | 'failed';
   endedAt: string;

@@ -25,7 +25,7 @@ export class LivekitError extends Error {
 export const twirpBase = (url: string): string =>
   url.replace(/^wss:/i, 'https:').replace(/^ws:/i, 'http:').replace(/\/+$/, '');
 
-export interface TwirpCall {
+interface TwirpCall {
   /** e.g. livekit.RoomService/RemoveParticipant */
   method: string;
   body: object;

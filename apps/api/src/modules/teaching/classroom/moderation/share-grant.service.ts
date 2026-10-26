@@ -10,7 +10,7 @@ import { LessonRoleService } from '../join/lesson-role.service';
 import { LivekitApi, LivekitError } from '../livekit/livekit-api';
 import { ModerationQueries } from './moderation.queries';
 
-export interface ShareGrantInput {
+interface ShareGrantInput {
   user: AuthUser;
   /** The lesson id, or the internal meeting id. */
   id: string;
