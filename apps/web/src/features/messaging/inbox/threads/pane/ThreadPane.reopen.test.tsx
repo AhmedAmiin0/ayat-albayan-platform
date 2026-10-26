@@ -55,6 +55,12 @@ describe('reopen on open', () => {
     expect((await screen.findByTestId('reopen-note')).textContent).toBe(t.inbox.reopen.requestedToday);
   });
 
+  it('the reopen template not approved yet: reopened, template not available yet', async () => {
+    apiSend.mockResolvedValue({ kapso_reopened: true, template: 'template_unavailable' });
+    openThread(false);
+    expect((await screen.findByTestId('reopen-note')).textContent).toBe(t.inbox.reopen.unavailable);
+  });
+
   it('a restricted role (Kapso only): no note', async () => {
     apiSend.mockResolvedValue({ kapso_reopened: true, template: 'not_allowed' });
     openThread(false);

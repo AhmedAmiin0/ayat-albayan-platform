@@ -27,6 +27,7 @@ import { ThreadsService } from './threads/threads.service';
 import { KapsoReopener } from './reopen/kapso-reopener';
 import { ReopenQueries } from './reopen/reopen.queries';
 import { ReopenTemplate } from './reopen/reopen-template';
+import { ReopenSettings } from './reopen/reopen.settings';
 import { ThreadReopenController } from './reopen/thread-reopen.controller';
 import { ThreadReopenService } from './reopen/thread-reopen.service';
 
@@ -66,6 +67,7 @@ import { ThreadReopenService } from './reopen/thread-reopen.service';
     KapsoReopener,
     ReopenQueries,
     ReopenTemplate,
+    ReopenSettings,
     ThreadReopenService,
   ],
   // The feedback module sends «ابعت طلب الرأي» through the same send-now path; meeting invitations

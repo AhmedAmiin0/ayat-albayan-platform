@@ -21,6 +21,7 @@ export function forgetReopens(): void {
 export function reopenNote(outcome: ReopenTemplateOutcome | null): string | null {
   if (outcome === 'template_queued') return t.inbox.reopen.requested;
   if (outcome === 'already_requested_today') return t.inbox.reopen.requestedToday;
+  if (outcome === 'template_unavailable') return t.inbox.reopen.unavailable;
   return null;
 }
 

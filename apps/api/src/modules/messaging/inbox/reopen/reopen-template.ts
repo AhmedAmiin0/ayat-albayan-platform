@@ -1,4 +1,4 @@
-import { REOPEN_TEMPLATE_KEY, reopenDedupKey, type ReopenTemplateOutcome } from '@ab/shared';
+import { reopenDedupKey, type ReopenTemplateOutcome } from '@ab/shared';
 import { HttpException, Injectable, Logger } from '@nestjs/common';
 import type { SalesScope } from '../../../sales/sales/sales-scope';
 import { TemplateRegistry } from '../../whatsapp/templates/catalog/template.registry';
@@ -9,6 +9,7 @@ import type { ThreadRow } from '../threads/threads.mapper';
 import { last4 } from './kapso-reopener';
 import { ReopenQueries } from './reopen.queries';
 import { reopenParams } from './reopen-params';
+import { ReopenSettings } from './reopen.settings';
 
 const DAY_MS = 24 * 60 * 60_000;
 
@@ -28,7 +29,9 @@ export interface ReopenSend {
 }
 
 /**
- * The one reopen template (owner 2026-10-26: inquiry_followup_ar) through the composer's own path,
+ * The reopen template, the `chat_reopen_template` setting (owner 2026-10-26: inquiry_followup_ar_v2, and
+ * no fallback: while the registry has it not approved on the thread's line, template_unavailable and nothing queued; once the
+ * template sync brings it approved, this same path queues it), through the composer's own path,
  * ThreadSendService.template (approved, allow-list, params, its line), then the Outbox: the send gate
  * and the sender decide as for any send. `created_by` = the staff member (a staff send, not a job's).
  * Once per phone per 24 h (any reopen row since, or one still queued behind a closed gate, so days of
@@ -42,16 +45,21 @@ export class ReopenTemplate {
     private readonly sends: ThreadSendService,
     private readonly templates: TemplateRegistry,
     private readonly reopens: ReopenQueries,
+    private readonly settings: ReopenSettings,
   ) {}
 
   async queue(r: ReopenSend): Promise<Queued> {
-    if (await this.reopens.requestedSince(r.phone, new Date(r.now.getTime() - DAY_MS))) return { outcome: 'already_requested_today' };
-    const template = await this.templates.approved(REOPEN_TEMPLATE_KEY);
-    if (!template) return this.skipped(r.phone, 'template_not_approved');
+    const key = (await this.settings.read()).chat_reopen_template;
+    if (await this.reopens.requestedSince(r.phone, new Date(r.now.getTime() - DAY_MS), key)) return { outcome: 'already_requested_today' };
+    const template = await this.templates.approved(key);
+    if (!template || !onThreadLine(template.line, r.thread)) {
+      this.log.log(`reopen template ${key} not approved on the thread's line yet: Kapso reopen only for ${last4(r.phone)}`);
+      return { outcome: 'template_unavailable' };
+    }
     try {
       const sent = await this.sends.template({
         phone: r.phone,
-        input: { key: REOPEN_TEMPLATE_KEY, params: reopenParams(template, r.thread) },
+        input: { key, params: reopenParams(template, r.thread) },
         actorId: r.actorId,
         scope: r.scope,
         sales: r.sales,
@@ -69,6 +77,11 @@ export class ReopenTemplate {
     this.log.warn(`reopen template not queued for ${last4(phone)}: ${code}`);
     return { outcome: 'not_sent' };
   }
+}
+
+/** The thread's line is the one its last inbound came on (unknown: any line, the sender picks the template's). */
+function onThreadLine(line: string, thread: ThreadRow | null): boolean {
+  return !thread?.last_inbound_line || thread.last_inbound_line === line;
 }
 
 function codeOf(e: HttpException): string {

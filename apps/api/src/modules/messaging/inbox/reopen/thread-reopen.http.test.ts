@@ -4,6 +4,7 @@ import { messageRow } from '../../whatsapp/sender/sender.fakes';
 import { templateRow } from '../../whatsapp/whatsapp.fakes';
 import { PHONE, threadRow } from '../inbox.fakes';
 import { ADMIN, inboxApp } from '../test-app';
+import { ReopenSettings } from './reopen.settings';
 
 // POST /threads/:phone/reopen (owner 2026-10-26). Fakes only: Kapso is the KapsoReopener mock, the
 // sender is mocked, nothing leaves the process.
@@ -12,7 +13,7 @@ type App = Awaited<ReturnType<typeof inboxApp>>;
 const URL = `/threads/${encodeURIComponent(PHONE)}/reopen`;
 const FRESH = new Date(Date.now() - 3_600_000).toISOString();
 const STALE = '2026-01-01T00:00:00Z';
-const REOPEN = templateRow({ key: 'inquiry_followup_ar', meta_name: 'inquiry_followup_ar', line: 'chat', params: ['contact_name'], buttons: [], body_ar: 'أهلًا {{1}}' });
+const REOPEN = templateRow({ key: 'inquiry_followup_ar_v2', meta_name: 'inquiry_followup_ar_v2', line: 'chat', params: ['contact_name'], buttons: [], body_ar: 'أهلًا {{1}}' });
 const reopen = (token = 'admin') => t.call({ method: 'POST', url: URL, token });
 let t: App;
 
@@ -23,6 +24,7 @@ describe('POST /threads/:phone/reopen', () => {
   afterAll(() => t.app.close());
   beforeEach(() => {
     vi.resetAllMocks();
+    vi.spyOn(t.app.get(ReopenSettings), 'read').mockResolvedValue({ chat_reopen_template: 'inquiry_followup_ar_v2' });
     t.queries.thread.mockResolvedValue(threadRow({ last_inbound_at: STALE }));
     t.queries.enqueue.mockImplementation(async (row: object) => messageRow({ ...row, id: 'm9', status: 'queued' }));
     t.queries.get.mockResolvedValue(null);
@@ -46,7 +48,7 @@ describe('POST /threads/:phone/reopen', () => {
     expect(t.queries.enqueue).toHaveBeenCalledTimes(1);
     expect(t.queries.enqueue).toHaveBeenCalledWith(expect.objectContaining({
       direction: 'outbound', status: 'queued', phone_e164: PHONE, created_by: ADMIN.id,
-      template_key: 'inquiry_followup_ar', template_params: { '1': 'أم ياسمين' },
+      template_key: 'inquiry_followup_ar_v2', template_params: { '1': 'أم ياسمين' },
       dedup_key: reopenDedupKey(PHONE, new Date()),
     }));
     // The sender (and its gate) decides whether it goes out, as for any send; audited like the composer's.
@@ -89,9 +91,7 @@ describe('POST /threads/:phone/reopen', () => {
     expect([res.statusCode, res.json()]).toEqual([200, { kapso_reopened: false, template: 'template_queued' }]);
   });
 
-  it('template not approved or a variable it cannot fill: not_sent, nothing queued', async () => {
-    t.templates.get.mockResolvedValue({ ...REOPEN, status: 'pending' });
-    expect((await reopen()).json().template).toBe('not_sent');
+  it('a variable it cannot fill: not_sent, nothing queued', async () => {
     t.templates.get.mockResolvedValue({ ...REOPEN, params: ['var_1'] });
     expect((await reopen()).json().template).toBe('not_sent');
     expect(t.queries.enqueue).not.toHaveBeenCalled();

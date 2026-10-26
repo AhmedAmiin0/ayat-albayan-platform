@@ -63,6 +63,12 @@ test('already requested today: says so; a restricted role: no note', async () =>
   expect(screen.queryByTestId('reopen-note')).toBeNull();
 });
 
+test('the reopen template not approved yet: reopened, template not available yet', async () => {
+  mockApiSend.mockResolvedValue({ kapso_reopened: true, template: 'template_unavailable' });
+  await open(CLOSED);
+  expect((await screen.findByTestId('reopen-note')).props.children).toBe(t.inbox.reopen.unavailable);
+});
+
 test('an open window asks nothing', async () => {
   await open(OPEN);
   expect(reopens()).toBe(0);
