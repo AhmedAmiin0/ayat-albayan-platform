@@ -5,15 +5,20 @@ import type { PersistQueryClientOptions } from '@tanstack/react-query-persist-cl
 import Constants from 'expo-constants';
 import { AppState } from 'react-native';
 import { isAccountDisabled, setLoginNotice } from '@/auth/login-notice';
+import { isNetworkError } from '../connectivity/network-error';
 import { ApiError } from '../http/api';
 import { supabase } from '../http/supabase';
 
 // R-MOB-03: reads survive a restart or a dead connection (the last good answer stays on screen).
 const DAY = 24 * 60 * 60 * 1000;
 
-/** A 4xx never succeeds on retry; network errors and 5xx get TanStack's default three tries. */
+/**
+ * A 4xx never succeeds on retry; a 5xx gets TanStack's default three tries. A request with no answer
+ * is not retried: the connection probe takes over (lib/connectivity) and the reconnect refetches.
+ */
 export function shouldRetry(failureCount: number, error: unknown): boolean {
   if (error instanceof ApiError && error.status < 500) return false;
+  if (isNetworkError(error)) return false;
   return failureCount < 3;
 }
 
@@ -39,7 +44,13 @@ export const queryClient = new QueryClient({
   queryCache: new QueryCache({ onError: signOutOnAuthError }),
   mutationCache: new MutationCache({ onError: signOutOnAuthError }),
   // gcTime must be ≥ the persist maxAge, or restored queries are collected before a screen reads them.
-  defaultOptions: { queries: { gcTime: DAY, retry: shouldRetry } },
+  // Offline (lib/connectivity sets onlineManager): a query still tries once, so its error keeps the
+  // saved list's «آخر تحديث» note and the offline messages; a 5xx retry waits for the connection, and
+  // the reconnect refetches. Saves are never parked: they fail at once with their offline message.
+  defaultOptions: {
+    queries: { gcTime: DAY, retry: shouldRetry, networkMode: 'offlineFirst' },
+    mutations: { networkMode: 'always' },
+  },
 });
 
 export const persister = createAsyncStoragePersister({
@@ -60,6 +71,13 @@ export const persistOptions: Omit<PersistQueryClientOptions, 'queryClient'> = {
       query.state.data !== undefined && query.meta?.['noPersist'] !== true,
   },
 };
+
+let markRestored: () => void = () => undefined;
+/** Settles once PersistQueryClientProvider has put the saved cache back (or given up): app/_layout. */
+export const cacheRestored = new Promise<void>((resolve) => {
+  markRestored = resolve;
+});
+export const onCacheRestored = (): void => markRestored();
 
 /** Sign-out: nothing of the previous session survives, in memory or on disk. */
 export async function clearQueryCaches(): Promise<void> {

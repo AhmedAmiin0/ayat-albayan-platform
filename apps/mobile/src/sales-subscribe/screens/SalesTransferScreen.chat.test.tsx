@@ -79,7 +79,8 @@ test('a file from the chat → receipt-from-chat → POST /sales/payments with i
     subscriptionId: SUB,
     amount: 180,
     currency: 'SAR',
-    paidAt: '2026-10-12T09:00:00.000Z',
+    // The clock runs (advanceTimers: true): «now» is read at mount, a few ms after 09:00:00.
+    paidAt: expect.stringMatching(/^2026-10-12T09:00:0\d\.\d{3}Z$/),
     attachments: [PATH],
     note: 'تحويل الراجحي',
     clientRequestId: expect.stringMatching(/^[0-9a-f-]{36}$/),

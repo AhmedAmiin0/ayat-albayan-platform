@@ -1,6 +1,7 @@
 import type { ReactNode, Ref } from 'react';
 import { View } from 'react-native';
 import { type, useTheme } from '@/theme';
+import { HeaderConnectingBar } from '../connecting/HeaderConnectingBar';
 import { Mark } from '../primitives/Mark';
 import { AppText, type AppTextNode } from '../primitives/AppText';
 
@@ -11,7 +12,7 @@ export interface ScreenHeaderProps {
   subtitle?: string;
   /** At the inline-end; defaults to the small gold mark. */
   trailing?: ReactNode;
-  /** h1 for a screen; a sheet or dialog takes h2 so the title fits beside «إغلاق» (docs/07 §6). */
+  /** h1 for a screen (the reconnecting bar shows under it); a sheet or dialog takes h2 so the title fits beside «إغلاق» (docs/07 §6). */
   size?: 'h1' | 'h2';
   /** The title's node, e.g. to move screen-reader focus to it when a sheet changes mode. */
   titleRef?: Ref<AppTextNode>;
@@ -63,6 +64,7 @@ export function ScreenHeader({
           {subtitle}
         </AppText>
       ) : null}
+      {size === 'h1' ? <HeaderConnectingBar /> : null}
     </View>
   );
 }
