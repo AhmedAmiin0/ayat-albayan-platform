@@ -78,6 +78,27 @@ describe('the «/» list, as WhatsApp Business', () => {
     expect(apiSend).not.toHaveBeenCalled();
   });
 
+  it('after Esc, deleting the «/» and typing it again opens the list again', async () => {
+    show();
+    type('/ت');
+    await listbox();
+    fireEvent.keyDown(box(), { key: 'Escape' });
+    expect(screen.queryByRole('listbox')).toBeNull();
+    type('');
+    type('/');
+    expect(await listbox()).toBeTruthy();
+  });
+
+  it('a new search starts on its first match', async () => {
+    show();
+    type('/');
+    await listbox();
+    fireEvent.keyDown(box(), { key: 'ArrowDown' });
+    type('/ا');
+    const [first] = within(await listbox()).getAllByRole('option');
+    expect(first?.getAttribute('aria-selected')).toBe('true');
+  });
+
   it('the button panel says how to use «/» when there is nothing yet', async () => {
     show([]);
     fireEvent.click(screen.getByRole('button', { name: S.open }));

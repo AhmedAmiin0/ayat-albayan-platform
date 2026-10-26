@@ -52,3 +52,12 @@ test('the button opens the sheet, never the docked list', async () => {
   expect(result.current.sheet).toBe(true);
   expect(result.current.search).toBeNull();
 });
+
+test('a pick from the sheet still replaces a «/search» left in the box', async () => {
+  const { result, type, setText } = await setup();
+  await type('/');
+  await type('/تر');
+  await act(async () => result.current.open());
+  await act(async () => result.current.fill('السلام عليكم', WELCOME));
+  expect(setText).toHaveBeenLastCalledWith('السلام عليكم');
+});

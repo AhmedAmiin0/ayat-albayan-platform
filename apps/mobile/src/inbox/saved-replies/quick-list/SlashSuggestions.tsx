@@ -17,7 +17,8 @@ export interface SlashSuggestionsProps {
 
 /** About five rows tall at most, never more than a third of the window (the keyboard is up). */
 const MAX_ROWS = 5;
-const ROW = 56;
+/** A row with its two lines of text. */
+const ROW = 76;
 
 /**
  * WhatsApp Business's «/» list (owner 2026-10-26), docked right over the composer: the chat stays in

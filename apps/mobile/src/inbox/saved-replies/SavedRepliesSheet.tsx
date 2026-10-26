@@ -44,7 +44,10 @@ export function SavedRepliesSheet({ onClose, onPick }: SavedRepliesSheetProps) {
         <Button variant="ghost" label={manage ? t.savedReplies.manageDone : t.savedReplies.manage} onPress={() => setManage((v) => !v)} />
       </View>
       {manage ? (
-        <ManageReplies mine={filterReplies(replies.data ?? [], { scope: 'mine', query: '' })} />
+        <ManageReplies
+          mine={filterReplies(replies.data ?? [], { scope: 'mine', query: '' })}
+          state={replies.isError ? 'failed' : replies.isPending ? 'loading' : 'ready'}
+        />
       ) : (
         <View style={{ flex: 1, gap: 8, paddingTop: 4 }}>
           <View style={{ gap: 8, paddingHorizontal: 16 }}>

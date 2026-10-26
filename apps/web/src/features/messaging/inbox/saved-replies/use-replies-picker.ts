@@ -29,6 +29,8 @@ export interface RepliesPicker {
   pick: (index: number) => void;
   toggle: () => void;
   close: () => void;
+  /** A press outside the composer: closes without pulling the focus back into the box. */
+  dismiss: () => void;
 }
 
 export interface PickerInput {
@@ -52,17 +54,22 @@ export function useRepliesPicker({ text, enabled, onPick, onClose }: PickerInput
   const [search, setSearch] = useState('');
   const [manage, setManage] = useState(false);
   const slash = enabled ? slashQuery(text) : null;
+  // A deleted «/» forgets its dismissal: the next «/» opens the list again.
+  if (slash === null && dismissedAt !== null) setDismissedAt(null);
   const slashOpen = slash !== null && dismissedAt !== slashStart(text);
   const open = enabled && (manual || slashOpen);
   const bySlash = open && !manual;
   const replies = useQuery({ ...savedRepliesQuery, enabled: open });
   const all = replies.data ?? [];
   const list = bySlash ? matchReplies(all, slash ?? '') : filterReplies(all, { scope: tab, query: search });
-  const close = () => {
+  const dismiss = () => {
     setManual(false);
     setManage(false);
     setSearch('');
     setDismissedAt(slash === null ? null : slashStart(text));
+  };
+  const close = () => {
+    dismiss();
     onClose?.();
   };
   const pick = (index: number) => {
@@ -73,9 +80,15 @@ export function useRepliesPicker({ text, enabled, onPick, onClose }: PickerInput
     onPick(reply);
   };
   const keys = usePickerKeys({ count: list.length, onPick: pick, onClose: close });
+  const query = bySlash ? (slash ?? '') : search;
+  // Each new search starts on its best (first) match, as WhatsApp.
+  const [seen, setSeen] = useState(query);
+  if (seen !== query) {
+    setSeen(query);
+    keys.setActive(0);
+  }
   return {
-    ...{ open, bySlash, tab, search, setSearch, manage, list, keys, close, pick },
-    query: bySlash ? (slash ?? '') : search,
+    ...{ open, bySlash, tab, search, setSearch, manage, list, keys, close, dismiss, pick, query },
     // «إدارة» is for her own replies: it shows «ردودي».
     setManage: (next) => {
       setManage(next);
@@ -83,6 +96,8 @@ export function useRepliesPicker({ text, enabled, onPick, onClose }: PickerInput
     },
     setTab: (next) => {
       setTab(next);
+      // The shared list is managed in «الإعدادات»: nothing to manage there.
+      if (next === 'shared') setManage(false);
       keys.setActive(0);
     },
     loading: replies.isPending && open,

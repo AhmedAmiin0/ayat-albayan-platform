@@ -75,7 +75,10 @@ export function Composer({
           onTemplate={pick}
           onReplies={replies.open}
           onFileError={setFileError}
-          onSend={sendText}
+          onSend={() => {
+            replies.dismiss();
+            sendText();
+          }}
           sending={pending}
         />
       ) : (

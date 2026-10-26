@@ -14,7 +14,15 @@ import { ReplyRow } from '../ReplyRow';
  * edit / delete, so the pick list itself stays clean as WhatsApp's. The shared list is managed in
  * «الإعدادات».
  */
-export function ManageReplies({ mine }: { mine: SavedReply[] }) {
+export interface ManageRepliesProps {
+  mine: SavedReply[];
+  /** The list is still loading, or failed: said instead of «none yet». */
+  state: 'ready' | 'loading' | 'failed';
+}
+
+const NOTE = { ready: () => t.savedReplies.emptyMine, loading: () => t.common.loading, failed: () => t.savedReplies.loadError };
+
+export function ManageReplies({ mine, state }: ManageRepliesProps) {
   const [editing, setEditing] = useState<{ reply: SavedReply | null } | null>(null);
   const [deleting, setDeleting] = useState<string | null>(null);
   if (editing) return <ReplyEditor reply={editing.reply} scope="mine" onDone={() => setEditing(null)} />;
@@ -39,7 +47,7 @@ export function ManageReplies({ mine }: { mine: SavedReply[] }) {
         )}
         ListEmptyComponent={
           <View style={{ padding: 16 }}>
-            <Note>{t.savedReplies.emptyMine}</Note>
+            <Note>{NOTE[state]()}</Note>
           </View>
         }
       />

@@ -33,7 +33,7 @@ export function useSavedReplyDraft(input: { text: string; setText: (text: string
       setSheet(false);
       setSlash(null);
     },
-    /** Leaving the box (a tap on the chat) closes the «/» list, not the sheet. */
+    /** Leaving the box (a tap on the chat) or sending closes the «/» list, not the sheet. */
     dismiss: () => setSlash(null),
     clearStaged: () => setStaged(null),
     /** Call with each new box text: «/» at the start of the box or of a line docks the list. */
@@ -43,8 +43,9 @@ export function useSavedReplyDraft(input: { text: string; setText: (text: string
       else if (slashSearch(next, slash) === null) setSlash(null);
     },
     fill: (reply: string, picked: SavedReply) => {
-      // From the list the «/search» is replaced; from the sheet the reply follows what is typed.
-      input.setText(filledText({ text: input.text, reply, slash: search === null ? null : slash }));
+      // A «/search» still in the box is replaced (from the list or the sheet); else the reply follows the text.
+      const open = slashSearch(input.text, slash) === null ? null : slash;
+      input.setText(filledText({ text: input.text, reply, slash: open }));
       const file = picked.attachment;
       // The same reply again keeps its id; a different reply is a new request.
       if (file) setStaged((now) => (now?.replyId === picked.id ? { ...now, file } : { replyId: picked.id, file, requestId: requestId() }));

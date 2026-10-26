@@ -35,7 +35,7 @@ function emptyText(picker: RepliesPicker): string {
 export function RepliesPanel({ picker, listId, onAdd, onEdit, onDelete }: RepliesPanelProps) {
   const { list, keys } = picker;
   const ref = useRef<HTMLElement>(null);
-  useOutsideClose(ref, picker.close);
+  useOutsideClose(ref, picker.dismiss);
   const managing = !picker.bySlash && picker.manage && picker.tab === 'mine';
   return (
     <section
