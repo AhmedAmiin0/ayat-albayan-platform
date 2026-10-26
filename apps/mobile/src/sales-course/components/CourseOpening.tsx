@@ -11,7 +11,7 @@ export interface CourseChangeEntry {
   open: () => void;
 }
 
-export interface CourseOpeningProps {
+interface CourseOpeningProps {
   view: SalesCourseView;
   /** 'continue': a renewal's choice (when its start is known); 'teacher': the teacher list. */
   step: 'continue' | 'teacher';

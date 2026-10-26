@@ -1,7 +1,7 @@
 import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 
-export interface FormLabelProps {
+interface FormLabelProps {
   children: string;
   /** Draws the «*»; a screen reader hears the label without it («نجمة»), the hint says it is required. */
   required?: boolean;

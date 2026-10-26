@@ -9,7 +9,7 @@ import { FinanceQueries } from './finance.queries';
 import { FxConverter } from './fx-converter';
 import { monthsOf, rangeWindow } from '../range';
 
-export interface FinanceInput {
+interface FinanceInput {
   range: DateRangeQuery;
   /** Leads created in the range, for the source rows. */
   leads: readonly { source: LeadSource; status: LeadStatus }[];

@@ -8,7 +8,7 @@ import { LeadFilterSheet } from './LeadFilterSheet';
 import { activeFilterCount, type LeadFilters } from './lead-filters';
 import { useSalesPeople } from '../detail/use-sales-people';
 
-export interface LeadsFilterBarProps {
+interface LeadsFilterBarProps {
   filters: LeadFilters;
   onChange: (next: LeadFilters) => void;
   total: number | undefined;

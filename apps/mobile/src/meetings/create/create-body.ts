@@ -2,7 +2,7 @@ import type { CreateMeeting, UpdateMeeting } from '@ab/shared';
 import type { DraftInvitee } from '../invite/invitee-draft';
 import { startsAtUtc, type Slot } from './schedule-time';
 
-export interface CreateDraft {
+interface CreateDraft {
   title: string;
   /** null = an instant meeting («الآن»). */
   slot: Slot | null;

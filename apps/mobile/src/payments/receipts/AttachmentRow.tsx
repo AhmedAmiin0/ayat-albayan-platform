@@ -5,7 +5,7 @@ import { Button } from '@/core/ui/primitives/Button';
 import { NuqtaGlyph } from '@/core/ui/primitives/NuqtaGlyph';
 import type { Attachment } from './attachments';
 
-export interface AttachmentRowProps {
+interface AttachmentRowProps {
   item: Attachment;
   /** 1-based, for «مرفق n». */
   n: number;

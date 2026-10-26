@@ -4,7 +4,7 @@ import { apiSend } from '@/core/lib/http/api';
 import { threadKey, type ThreadCache } from '../thread/hooks/thread-cache';
 import { listPath, listsKey, threadsKey } from './use-chat-lists';
 
-export interface MemberChange {
+interface MemberChange {
   list: ChatListRef;
   /** true: add the chat to the list (PUT); false: take it out (DELETE). Both idempotent. */
   member: boolean;

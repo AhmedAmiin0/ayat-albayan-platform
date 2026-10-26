@@ -6,7 +6,7 @@ import { Animated } from 'react-native';
 const OMEGA = (2 * Math.PI) / 0.3;
 export const PILL_SPRING = { stiffness: OMEGA ** 2, damping: 2 * OMEGA, mass: 1, overshootClamping: true };
 
-export interface PillTarget {
+interface PillTarget {
   index: number;
   tabWidth: number;
   rtl: boolean;

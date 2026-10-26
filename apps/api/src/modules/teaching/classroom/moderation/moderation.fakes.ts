@@ -85,7 +85,7 @@ export const teachersFake = () => ({
   idByProfile: vi.fn(async (id: string) => (id === TEACHER.id ? TEACHER_ID : id === OTHER_TEACHER.id ? 'other' : null)),
 });
 
-export interface JoinDeps {
+interface JoinDeps {
   q: ReturnType<typeof queries>;
   mod?: ReturnType<typeof moderation>;
   rec?: ReturnType<typeof recorder>;

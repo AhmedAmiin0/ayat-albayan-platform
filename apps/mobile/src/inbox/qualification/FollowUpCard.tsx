@@ -15,7 +15,7 @@ import { saveErrorText, useFollowUpTotal, useLeadPatch, type LeadProfile } from 
 
 const f = t.followUps;
 
-export interface FollowUpCardProps {
+interface FollowUpCardProps {
   lead: LeadProfile;
   /** The lead's read got no answer: the pause stays as it is until the network is back. */
   offline: boolean;

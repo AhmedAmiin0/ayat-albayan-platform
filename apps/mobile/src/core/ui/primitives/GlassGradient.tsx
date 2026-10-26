@@ -2,7 +2,7 @@ import { StyleSheet } from 'react-native';
 import Svg, { Defs, LinearGradient, Rect, Stop } from 'react-native-svg';
 import type { GlassStop } from '@/theme';
 
-export interface GlassGradientProps {
+interface GlassGradientProps {
   /** Unique within its Svg root. */
   id: string;
   color: string;

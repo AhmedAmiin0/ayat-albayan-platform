@@ -3,7 +3,7 @@ import type { Occurrence, RuleTiming } from '../../scheduling/occurrences/occurr
 import { localDay, MINUTE, offsetMs, weekdayOf } from '../../../people/teachers/availability/zoned-time';
 import { lessonRows, type BookingPayload } from '../core/booking.mapper';
 
-export type InstantPlan = { timing: RuleTiming; occurrence: Occurrence };
+type InstantPlan = { timing: RuleTiming; occurrence: Occurrence };
 
 const pad = (n: number) => String(n).padStart(2, '0');
 
@@ -31,7 +31,7 @@ export function instantPlan(input: { now: Date; tz: string; durationMin: number 
   };
 }
 
-export type InstantPayloadInput = {
+type InstantPayloadInput = {
   plan: InstantPlan;
   teacherId: string;
   studentIds: string[];

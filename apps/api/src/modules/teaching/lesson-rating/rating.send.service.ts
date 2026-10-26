@@ -6,7 +6,7 @@ import { TemplateRegistry } from '../../messaging/whatsapp/templates/catalog/tem
 import { ratingFamilies } from './rating.plan';
 import { RatingQueries } from './rating.queries';
 
-export interface RatingSend {
+interface RatingSend {
   phone: string;
   actorId: string;
   clientRequestId: string;

@@ -27,7 +27,7 @@ type Position = BodySlot;
 const POSITIONS: readonly Position[] = BODY_SLOTS;
 const NAMES: Record<string, string | undefined> = t.inbox.composer.paramNames;
 
-export interface TemplateFormProps {
+interface TemplateFormProps {
   template: TemplateView;
   lessons: readonly ThreadLesson[];
   /** The thread's display name (guardian ?? lead's WhatsApp name ?? teacher): contact_name starts as it. */

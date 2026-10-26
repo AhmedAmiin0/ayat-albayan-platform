@@ -9,7 +9,7 @@ import type { AlertLesson, AlertTeacher } from './teacher-alert.plan';
 /** A URL button's {{1}}: the platform link without the web origin (the CRM's button base is `<WEB_ORIGIN>/{{1}}`). */
 const suffix = (url: string): string => url.replace(/^\/+/, '');
 
-export interface CrmAlertInput {
+interface CrmAlertInput {
   teacher: AlertTeacher;
   lesson: AlertLesson;
   students: readonly { name: string; code?: string | null }[];

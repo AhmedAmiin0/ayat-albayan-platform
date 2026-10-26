@@ -20,7 +20,7 @@ export function money(n: number): string {
   return r < 0 ? `-${formatAmount(-r)}` : formatAmount(r);
 }
 
-export interface DashboardSeed {
+interface DashboardSeed {
   price: number;
   expense: number;
   studentId: string;

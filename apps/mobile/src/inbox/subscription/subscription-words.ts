@@ -52,12 +52,12 @@ export function dueLine(sub: ThreadSubscriptionView | null): string | null {
 
 const running = (student: ThreadStudentView) => subscriptionBadge([student]) === 'subscribed';
 
-export interface SubscribeAction {
+interface SubscribeAction {
   label: string;
   href: Href;
 }
 
-export interface ActionInput {
+interface ActionInput {
   people: ThreadPeople;
   phone: string;
   /** The thread row: the lead's WhatsApp name prefills the booking wizard's guardian. */

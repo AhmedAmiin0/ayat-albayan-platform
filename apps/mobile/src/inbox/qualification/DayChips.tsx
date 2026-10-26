@@ -6,7 +6,7 @@ import { WEEK_ORDER } from './qualification-form';
 
 const weekday: Record<string, string> = t.enums.weekday;
 
-export interface DayChipsProps {
+interface DayChipsProps {
   /** Picked weekdays (0 = الأحد), sorted. */
   value: readonly number[];
   onChange: (days: number[]) => void;

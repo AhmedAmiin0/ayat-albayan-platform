@@ -26,7 +26,7 @@ export function useConfigEntry(key: SettingKey): ConfigEntry | undefined {
   return Array.isArray(entries) ? entries.find((e) => e.key === key) : undefined;
 }
 
-export interface DescriptionSave {
+interface DescriptionSave {
   key: SettingKey;
   /** The trimmed text, or null to restore the seeded text. */
   text: string | null;

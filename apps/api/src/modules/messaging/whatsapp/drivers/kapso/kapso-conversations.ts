@@ -43,7 +43,7 @@ async function call(fetch: FetchLike, req: { env: KapsoLineEnv; url: string; ini
   return res.json();
 }
 
-export interface KapsoReopen {
+interface KapsoReopen {
   env: KapsoLineEnv;
   /** E.164; Kapso is asked by its digits. */
   phone: string;

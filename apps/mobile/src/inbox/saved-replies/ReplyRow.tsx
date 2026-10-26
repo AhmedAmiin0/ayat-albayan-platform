@@ -6,7 +6,7 @@ import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { AttachIcon } from '../shared/chat-icons';
 
-export interface ReplyRowProps {
+interface ReplyRowProps {
   reply: SavedReply;
   /** Picks it (the composer) or opens it (settings); without it the row is text. */
   onPress?: () => void;

@@ -8,7 +8,7 @@ import { QuickReplyRow } from './QuickReplyRow';
 import { matchReplies } from '../reply-text';
 import { type ReplyContact, useFillReply } from './use-fill-reply';
 
-export interface SlashSuggestionsProps {
+interface SlashSuggestionsProps {
   /** What was typed after «/». */
   search: string;
   contact: ReplyContact;

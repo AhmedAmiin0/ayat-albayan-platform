@@ -4,7 +4,7 @@ import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import type { RowControl } from '../lib/rule-words';
 
-export interface RuleControlProps {
+interface RuleControlProps {
   control: RowControl;
   /** The row's name: the switch is announced as «تشغيل «…»». */
   name: string;

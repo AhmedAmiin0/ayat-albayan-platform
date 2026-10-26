@@ -37,7 +37,7 @@ function StudentChips({ unpaid, report }: { unpaid: boolean; report: ReportState
   );
 }
 
-export interface DetailsStudentRowProps {
+interface DetailsStudentRowProps {
   lesson: DetailsLesson;
   student: DetailsStudent;
   role: DetailsRole;

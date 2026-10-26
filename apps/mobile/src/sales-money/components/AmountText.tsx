@@ -2,7 +2,7 @@ import { money } from '@/payments/format';
 import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 
-export interface AmountTextProps {
+interface AmountTextProps {
   amount: number;
   currency: string;
   /** The total of a block reads bold; its parts regular. */

@@ -21,7 +21,7 @@ export function barLook(phase: ShownPhase, color: Palette) {
 }
 
 /** «جارٍ الاتصال…» with the gold dots; from 10 s the amber hint; «تم الاتصال» with its check badge. */
-export interface BarCardProps {
+interface BarCardProps {
   phase: ShownPhase;
   still: boolean;
   /** Side margin: 16 under the safe area; 0 under a title already in the screen's 16 pt column. */

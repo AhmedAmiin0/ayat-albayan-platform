@@ -49,7 +49,7 @@ export function removeMessage(data: ThreadCache | undefined, id: string) {
   return mapMessages(data, (messages) => messages.filter((m) => m.id !== id));
 }
 
-export interface Provisional {
+interface Provisional {
   id: string;
   phone: string;
   body: string;

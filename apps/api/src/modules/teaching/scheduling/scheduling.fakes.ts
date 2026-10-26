@@ -35,7 +35,7 @@ export function ruleRow(over: Partial<RuleWithLinks> = {}): RuleWithLinks {
   };
 }
 
-export type StoredLesson = {
+type StoredLesson = {
   id: string;
   rule_id: string;
   starts_at: string;

@@ -24,7 +24,7 @@ export function assertCanPick(student: TrialStudent | null): TrialStudent {
   return student;
 }
 
-export type TargetInput = { req: BookingRequest; studentId: string; old: MovedTrial | null; requestId: string };
+type TargetInput = { req: BookingRequest; studentId: string; old: MovedTrial | null; requestId: string };
 
 /** A move books the trial's own students (siblings of one trial lesson move together, like a reschedule). */
 export function targetOf({ req, studentId, old, requestId }: TargetInput): TrialTarget {

@@ -16,7 +16,7 @@ import { defaultSlot, type Slot } from './schedule-time';
 const L = t.meetings.internal;
 const I = t.meetingInvites;
 
-export interface CreateMeetingFormProps {
+interface CreateMeetingFormProps {
   scheduled: boolean;
   tz: string;
   busy: boolean;

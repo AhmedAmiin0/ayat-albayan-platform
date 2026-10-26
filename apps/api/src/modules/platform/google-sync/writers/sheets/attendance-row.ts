@@ -5,7 +5,7 @@ import type { CellValue, Rows } from '../../google-client.port';
 import { sheetDate } from './sheet-dates';
 
 /** One platform report as its attendance row needs it. */
-export interface AttendanceInput {
+interface AttendanceInput {
   /** yyyy-mm-dd in Riyadh. */
   date: string;
   seq: number | null;
@@ -48,7 +48,7 @@ export function attendanceRow(r: AttendanceInput): CellValue[] {
 }
 
 /** Where a date stands in the sheet: our own row (its PDF link is ours), the script's row, or none. */
-export type DateMatch = { kind: 'ours'; row: number } | { kind: 'script' } | { kind: 'none' };
+type DateMatch = { kind: 'ours'; row: number } | { kind: 'script' } | { kind: 'none' };
 
 /** rows = A2:M (data rows, sheet row = index + 2). */
 export function matchDate(rows: Rows, input: { date: string; pdfFileId: string | null }): DateMatch {

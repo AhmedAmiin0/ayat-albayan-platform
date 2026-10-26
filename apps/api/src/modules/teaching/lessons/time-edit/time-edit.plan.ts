@@ -81,8 +81,8 @@ export function planTimeEdit(input: TimeEditInput): TimeEditPlan {
   };
 }
 
-export type PayoutScope = { month: string };
-export type PayoutScopeInput = {
+type PayoutScope = { month: string };
+type PayoutScopeInput = {
   plan: TimeEditPlan;
   status: LessonStatus;
   teacherTz: string;

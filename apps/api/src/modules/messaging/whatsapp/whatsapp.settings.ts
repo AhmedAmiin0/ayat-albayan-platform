@@ -5,7 +5,7 @@ import type { SettingsSlice } from '../../../common/settings/settings-slice';
 
 /** The admin's two sending switches: the kill switch (fail-closed) and «الرسائل التلقائية». */
 const KEYS = ['messaging_enabled', 'auto_messages_enabled'] as const satisfies readonly SettingKey[];
-export type WhatsappSettingsValues = SettingsSlice<(typeof KEYS)[number]>;
+type WhatsappSettingsValues = SettingsSlice<(typeof KEYS)[number]>;
 
 /**
  * The send gate's two switches, read by SendGate (docs/26 §5, 26-P4). Never cached: every call is one

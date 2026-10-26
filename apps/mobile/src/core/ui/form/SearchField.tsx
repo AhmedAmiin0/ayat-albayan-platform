@@ -3,7 +3,7 @@ import { TextInput } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { shape, type, useTheme } from '@/theme';
 
-export interface SearchFieldProps {
+interface SearchFieldProps {
   /** Called with the trimmed text once typing pauses (and at once on the keyboard's search key). */
   onSearch: (q: string) => void;
   initial?: string;
