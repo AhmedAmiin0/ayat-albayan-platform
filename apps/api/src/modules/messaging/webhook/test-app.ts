@@ -9,6 +9,9 @@ import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER } from '../../../co
 import { PushService } from '../../../common/push/push.service';
 import { LeadsService } from '../../sales/leads/leads.service';
 import { LessonStatusService } from '../../teaching/lessons/status/lesson-status.service';
+import { fakeExternalQueries, fakeKapso } from './external/external.fakes';
+import { KAPSO_HISTORY } from './external/external-status';
+import { ExternalQueries } from './external/external.queries';
 import { fakeDeps } from './webhook.fakes';
 import { PHONE_NUMBER_ID } from './meta.fakes';
 import { WebhookModule } from './webhook.module';
@@ -35,6 +38,8 @@ export const sign = (body: string, secret = SECRET) =>
 
 export async function webhookApp(config: Partial<WebhookConfig> = {}) {
   const deps = fakeDeps();
+  const external = fakeExternalQueries(deps.queries.stored);
+  const kapso = fakeKapso();
   const mod = await Test.createTestingModule({ imports: [AppModule, WebhookModule] })
     .overrideProvider(PERMISSION_RESOLVER).useValue(systemResolver).overrideProvider(TOKEN_VERIFIER)
     .useValue(async () => {
@@ -52,6 +57,10 @@ export async function webhookApp(config: Partial<WebhookConfig> = {}) {
     .useValue(deps.push)
     .overrideProvider(AuditService)
     .useValue(deps.audit)
+    .overrideProvider(ExternalQueries)
+    .useValue(external)
+    .overrideProvider(KAPSO_HISTORY)
+    .useValue(kapso)
     .compile();
   const app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter(), { rawBody: true });
   await app.init();
@@ -75,5 +84,5 @@ export async function webhookApp(config: Partial<WebhookConfig> = {}) {
       headers: { 'content-type': 'application/json', ...(signature === null ? {} : { 'x-wacrm-signature': signature }) },
       payload: body,
     });
-  return { ...deps, app, post, postKapso, postWacrm };
+  return { ...deps, external, kapso, app, post, postKapso, postWacrm };
 }

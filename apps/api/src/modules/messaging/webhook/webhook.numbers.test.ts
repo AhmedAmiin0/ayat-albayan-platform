@@ -55,7 +55,7 @@ describe('parseWebhook in module mode', () => {
     const onIgnored = vi.fn();
     const raw = envelope({ ...inboundValue(textPart('x')), ...{ statuses: [] } }, 'other');
     const batch = parseWebhook(raw, { now: NOW, overlay: NUMBERS, onIgnored });
-    expect(batch).toEqual({ messages: [], statuses: [] });
+    expect(batch).toEqual({ messages: [], statuses: [], echoes: [] });
     expect(onIgnored).toHaveBeenCalledWith('other');
   });
 

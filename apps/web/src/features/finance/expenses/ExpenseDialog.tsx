@@ -1,5 +1,6 @@
+import { uploadOnce } from '@ab/client-core';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { useId, useRef, useState, type FormEvent } from 'react';
+import { useId, useState, type FormEvent } from 'react';
 import { Button } from '@/components/ui/form/button';
 import { Dialog } from '@/components/ui/overlay/dialog';
 import { FormAlert } from '@/components/ui/form/form-alert';
@@ -26,13 +27,12 @@ export function ExpenseDialog({ month, expense, onClose, onSaved }: Props) {
   const [amountError, setAmountError] = useState<string | undefined>();
   const [file, setFile] = useState<File | null>(null);
   const [problem, setProblem] = useState<string | null>(null);
-  const uploaded = useRef<{ file: File; path: string } | null>(null);
+  const [receiptOnce] = useState(() => uploadOnce<File>());
   const save = useMutation({
     mutationFn: async (body: Parameters<typeof saveExpense>[0]['body']) => {
       let receiptPath: string | undefined;
       if (file) {
-        receiptPath = uploaded.current?.file === file ? uploaded.current.path : await uploadExpenseReceipt(file);
-        uploaded.current = { file, path: receiptPath };
+        receiptPath = await receiptOnce(file, () => uploadExpenseReceipt(file));
       }
       return saveExpense({ id: expense?.id ?? null, body: { ...body, ...(receiptPath ? { receiptPath } : {}) } });
     },

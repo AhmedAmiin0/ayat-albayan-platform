@@ -36,4 +36,13 @@ export const MESSAGING_SETTINGS = {
     type: 'int', default: 48, min: 1, max: 168,
     labelKey: 'settings.quickReplyWindowHours', hintKey: 'settings.hints.quickReplyWindowHours',
   },
+  /**
+   * The template a closed chat's open queues (POST /threads/:phone/reopen; owner 2026-10-26: v2, and
+   * no fallback while it is not approved: Kapso's reopen only, answer template_unavailable).
+   */
+  chat_reopen_template: {
+    module: 'messaging', group: 'messaging', reachesFamilies: true,
+    type: 'string', default: 'inquiry_followup_ar_v2', minLength: 1, maxLength: 512,
+    labelKey: 'settings.chatReopenTemplate', hintKey: 'settings.hints.chatReopenTemplate',
+  },
 } as const satisfies Record<string, SettingDef>;

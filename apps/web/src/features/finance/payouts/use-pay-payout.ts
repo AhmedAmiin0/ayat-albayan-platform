@@ -1,6 +1,7 @@
+import { uploadOnce } from '@ab/client-core';
 import type { PaymentMethod } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useRef } from 'react';
+import { useState } from 'react';
 import { paidAtFor } from '@/features/finance/payments/api';
 import { MONEY_KEY } from '@/features/finance/subscriptions/api';
 import { uploadTeacherReceipt } from '@/features/finance/teacher-earnings/api';
@@ -14,15 +15,10 @@ export type PayPayoutInput = { day: string; method: PaymentMethod; note: string;
  */
 export function usePayPayout(payout: PayoutView, onSaved: () => void) {
   const queryClient = useQueryClient();
-  const uploaded = useRef<{ file: File; path: string } | null>(null);
+  const [receiptOnce] = useState(() => uploadOnce<File>());
 
-  async function receiptPath(file: File | null): Promise<string | null> {
-    if (!file) return null;
-    if (uploaded.current?.file === file) return uploaded.current.path;
-    const path = await uploadTeacherReceipt({ teacherId: payout.teacher.id, file });
-    uploaded.current = { file, path };
-    return path;
-  }
+  const receiptPath = (file: File | null): Promise<string | null> =>
+    file ? receiptOnce(file, () => uploadTeacherReceipt({ teacherId: payout.teacher.id, file })) : Promise.resolve(null);
 
   return useMutation({
     mutationFn: async (input: PayPayoutInput) =>

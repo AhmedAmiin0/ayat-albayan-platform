@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { View } from 'react-native';
 import { ClosedRow } from '../threads-list/ClosedRow';
 import { ComposerNotes } from './ComposerNotes';
+import { ReopenNote } from './ReopenNote';
 import { ErrorLine } from '../ErrorLine';
 import { GateNote } from '../thread/components/GateNote';
 import { OpenRow } from '../threads-list/OpenRow';
@@ -24,6 +25,7 @@ import { errorLines, useComposerSend } from './use-composer-send';
  * the list over the row, the button opens its sheet; a pick fills the box and stages its file (the
  * chip). «أرسل» sends the text, then the file.
  * «رد» (owner 2026-10-25): the quoted strip over the row; the text answers it (useComposerSend).
+ * A closed chat, once opened, asks the server to reopen it (ReopenNote, owner 2026-10-26).
  */
 export function Composer({
   phone,
@@ -60,6 +62,7 @@ export function Composer({
       ))}
       <GateNote />
       <ComposerNotes thread={thread} open={open} />
+      <ReopenNote phone={phone} closed={thread !== null && !open} />
       {open ? <QuoteStrip /> : null}
       {open && replies.staged ? <SavedReplyChip file={replies.staged.file} onRemove={replies.clearStaged} /> : null}
       {open && replies.search !== null ? (

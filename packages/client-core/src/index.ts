@@ -4,3 +4,7 @@ export * from './http/index.js';
 export * from './keys/index.js';
 export * from './auth/index.js';
 export * from './users/index.js';
+export * from './payments/index.js';
+export * from './assistants/index.js';
+export * from './reports/index.js';
+export * from './booking/index.js';

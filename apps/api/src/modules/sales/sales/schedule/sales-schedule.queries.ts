@@ -6,7 +6,7 @@ import { dbError } from '../../../../common/http/http';
 
 /** Whitelisted lesson columns for sales: never meeting_link, reasons, attendance, notes or money. */
 export const SALES_SCHEDULE_SELECT =
-  'id, starts_at, ends_at, status, makeup_of_id, rule:schedule_rules!lessons_rule_id_fkey(package), teacher:teachers(id, display_name_ar, display_name_en), lesson_students(student:students(id, code, name))' as const;
+  'id, starts_at, ends_at, status, makeup_of_id, rule:schedule_rules!lessons_rule_id_fkey(package), teacher:teachers(id, display_name_ar, display_name_en, tz), lesson_students(student:students(id, code, name, tz))' as const;
 
 export interface SalesScheduleRow {
   id: string;
@@ -15,8 +15,9 @@ export interface SalesScheduleRow {
   status: Tables<'lessons'>['status'];
   makeup_of_id: string | null;
   rule: { package: string | null } | null;
-  teacher: { id: string; display_name_ar: string; display_name_en: string | null } | null;
-  lesson_students: { student: { id: string; code: string | null; name: string } | null }[];
+  /** tz optional in test fakes. */
+  teacher: { id: string; display_name_ar: string; display_name_en: string | null; tz?: string } | null;
+  lesson_students: { student: { id: string; code: string | null; name: string; tz?: string } | null }[];
 }
 
 export interface UpcomingRow {

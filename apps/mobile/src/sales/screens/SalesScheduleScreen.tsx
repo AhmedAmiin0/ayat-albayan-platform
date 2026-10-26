@@ -1,8 +1,11 @@
-import { localizedName } from '@ab/shared';
+import { isRunningLesson, localizedName } from '@ab/shared';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import { ActivityIndicator, FlatList, View } from 'react-native';
+import { LessonDetailsSheet } from '@/calendar/details/LessonDetailsSheet';
+import { useLessonDetails } from '@/calendar/details/use-lesson-details';
 import { SchedulePeriod } from '@/calendar/overview/SchedulePeriod';
+import { JoinClassroomButton } from '@/classroom/links/JoinClassroomButton';
 import { riyadhToday } from '@/calendar/lib/week';
 import { useMinuteClock } from '@/classroom/sessions/use-minute-clock';
 import { t } from '@/core/lib/i18n/i18n';
@@ -24,17 +27,19 @@ const DATE = /^\d{4}-\d{2}-\d{2}$/;
 /**
  * «جدول الحلقات» of the salesperson (web /sales/schedule): one Riyadh day of the academy, read-only,
  * a day at a time (the admin schedule's switcher) and one teacher or all; «ادخل الحلقة» on a running
- * lesson. `?teacherId=` opens it on a teacher (from «المعلمون»), `?date=` on a day. `asTab`: the sales
+ * lesson; a tap on a lesson opens its read-only «تفاصيل الحلقة». `?teacherId=` opens it on a teacher (from «المعلمون»), `?date=` on a day. `asTab`: the sales
  * tree's «جدول الحلقات» tab (no «رجوع»).
  */
 export function SalesScheduleScreen({ asTab = false }: { asTab?: boolean }) {
   const { color } = useTheme();
   const params = useLocalSearchParams<{ teacherId?: string; date?: string }>();
-  const today = riyadhToday(useMinuteClock());
+  const now = useMinuteClock();
+  const today = riyadhToday(now);
   const [date, setDate] = useState(params.date && DATE.test(params.date) ? params.date : today);
   const [teacherId, setTeacherId] = useState(params.teacherId ?? '');
   const day = useSalesSchedule(date, teacherId);
   const teachers = useSalesTeachers();
+  const details = useLessonDetails(day.data?.lessons);
   const inset = useTabBarInset();
   const pills = [
     { value: '', label: t.schedule.allTeachers },
@@ -59,7 +64,7 @@ export function SalesScheduleScreen({ asTab = false }: { asTab?: boolean }) {
         accessibilityLabel={t.schedule.dayBoard}
         data={day.data?.lessons ?? []}
         keyExtractor={(l) => l.id}
-        renderItem={({ item }) => <SalesLessonRow lesson={item} />}
+        renderItem={({ item }) => <SalesLessonRow lesson={item} onOpen={details.open} />}
         refreshing={day.isRefetching}
         onRefresh={() => void day.refetch()}
         ListEmptyComponent={
@@ -71,6 +76,12 @@ export function SalesScheduleScreen({ asTab = false }: { asTab?: boolean }) {
             <ActivityIndicator accessibilityLabel={t.common.loading} color={color.lapis} style={{ paddingVertical: 32 }} />
           )
         }
+      />
+      <LessonDetailsSheet
+        lesson={details.lesson}
+        role="sales"
+        onClose={details.close}
+        actions={(l) => (isRunningLesson(l, now) ? <JoinClassroomButton lesson={l} /> : null)}
       />
     </Screen>
   );

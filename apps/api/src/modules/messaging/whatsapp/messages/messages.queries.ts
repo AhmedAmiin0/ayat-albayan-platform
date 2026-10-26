@@ -21,13 +21,17 @@ export class MessagesQueries {
     return data;
   }
 
-  /** failed → queued with a fresh attempt budget; null when it is no longer failed. */
+  /**
+   * failed → queued with a fresh attempt budget; null when it is no longer failed, or it was never
+   * ours to send: a message sent outside the app or imported (created_by null, attempts 0, a wamid).
+   */
   async requeue(id: string): Promise<ThreadMessageRow | null> {
     const { data, error } = await this.db
       .from('messages')
       .update({ status: 'queued', attempts: 0, next_attempt_at: null, error_code: null, error_text: null })
       .eq('id', id)
       .eq('status', 'failed')
+      .or('attempts.gt.0,wa_message_id.is.null,created_by.not.is.null')
       .select(MESSAGE_SELECT)
       .maybeSingle();
     if (error) throw new Error(`message retry failed: ${error.message}`);

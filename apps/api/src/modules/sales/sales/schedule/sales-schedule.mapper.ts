@@ -35,8 +35,15 @@ export function toScheduleLesson(row: SalesScheduleRow): SalesScheduleLesson {
     status: row.status,
     trial: row.rule?.package === 'trial',
     makeup: row.makeup_of_id !== null,
-    teacher: { id: teacher?.id ?? '', display_name_ar: teacher?.display_name_ar ?? '', display_name_en: teacher?.display_name_en ?? null },
-    students: row.lesson_students.flatMap(({ student: s }) => (s ? [{ id: s.id, code: s.code ?? '', name: s.name }] : [])),
+    teacher: {
+      id: teacher?.id ?? '',
+      display_name_ar: teacher?.display_name_ar ?? '',
+      display_name_en: teacher?.display_name_en ?? null,
+      ...(teacher?.tz ? { tz: teacher.tz } : {}),
+    },
+    students: row.lesson_students.flatMap(({ student: s }) =>
+      s ? [{ id: s.id, code: s.code ?? '', name: s.name, ...(s.tz ? { tz: s.tz } : {}) }] : [],
+    ),
   };
 }
 

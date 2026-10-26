@@ -1,3 +1,4 @@
+import { bookingInvoiceInput } from '@ab/client-core';
 import { dayTimesFromPicks, normalizePhone, registrationStatus } from '@ab/shared';
 import type { BookingBody, InvoiceDraft, InvoiceInput } from '../../shared/contract';
 import type { StudentChoice, TrialDraft } from './draft';
@@ -10,12 +11,8 @@ export interface BodyOptions {
   choice?: StudentChoice;
 }
 
-/** The invoice as the API takes it: the signed path of the upload, or the chat message to copy. */
-export function toInvoiceInput(invoice: InvoiceDraft): InvoiceInput {
-  return invoice.source === 'upload'
-    ? { source: 'upload', path: invoice.path }
-    : { source: 'whatsapp', messageId: invoice.messageId };
-}
+/** The invoice as the API takes it: the signed path of the upload, or the chat message to copy (@ab/client-core). */
+export const toInvoiceInput: (invoice: InvoiceDraft) => InvoiceInput = bookingInvoiceInput;
 
 /**
  * The rule's timing: a trial one lesson on the slot's local day (invariant 4); a package every

@@ -337,6 +337,7 @@
   "ThreadForwardController.forward": ["admin","sales","teacher"],
   "ThreadMediaController.file": ["admin"],
   "ThreadMediaController.list": ["admin"],
+  "ThreadReopenController.reopen": ["admin","sales","teacher"],
   "ThreadsController.detail": ["admin","sales","teacher"],
   "ThreadsController.list": ["admin","sales","teacher"],
   "ThreadsController.template": ["admin","sales","teacher"],

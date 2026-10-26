@@ -57,12 +57,18 @@ export class InboundStore {
    */
   async save(input: RowInput & { stage: number }): Promise<boolean> {
     const latest = await this.queries.latestInSecond(input.phone, input.m.at);
-    const m = { ...input.m, at: orderedAt(input.m.at, latest) };
+    const numberId = input.m.numberId ?? (await this.numberOf(input.m));
+    const m = { ...input.m, at: orderedAt(input.m.at, latest), ...(numberId ? { numberId } : {}) };
     const stored = await this.queries.insertInbound(inboundRow({ ...input, m }));
     if (stored && input.leadId && input.stage > 0) {
       await this.queries.updateLead(input.leadId, { follow_up_stage: 0 });
     }
     return stored;
+  }
+
+  /** Legacy mode: the wa_numbers row of the receiving phone_number_id, as the chat import stamps it. Never blocks the row. */
+  private async numberOf(m: InboundEvent): Promise<string | null> {
+    return m.phoneNumberId ? this.queries.numberIdFor(m.phoneNumberId).catch(() => null) : null;
   }
 
   /** A guardian's lesson_rating tap on lesson_feedback (migration 195); runs only for a new wamid. */
