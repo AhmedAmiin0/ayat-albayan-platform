@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { OWNED_SETTING_KEYS } from './ownership.js';
-import { SETTING_KEYS, SETTINGS_REGISTRY } from './registry.js';
+import { OWNED_SETTING_KEYS } from '../ownership.js';
+import { SETTING_KEYS, SETTINGS_REGISTRY } from '../registry.js';
 import { SEED_ENTRIES } from './seed-entries.js';
 
 const byKey = new Map(SEED_ENTRIES.map((e) => [e.key, e]));

@@ -1,4 +1,4 @@
-import type { SettingDef } from '../defs.js';
+import type { SettingDef } from '../../defs.js';
 
 /**
  * Custom-config request (2026-10-05): the recording consent notice and the recordings' retention.

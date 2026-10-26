@@ -1,7 +1,7 @@
-import { ownedKeyOfField } from './ownership.js';
-import { SETTING_KEY_OF, SETTINGS_REGISTRY, type AcademySettings, type SettingField, type SettingKey } from './registry.js';
+import { ownedKeyOfField } from '../ownership.js';
+import { SETTING_KEY_OF, SETTINGS_REGISTRY, type AcademySettings, type SettingField, type SettingKey } from '../registry.js';
 import { settingZod } from './schema.js';
-import type { SettingDef } from './defs.js';
+import type { SettingDef } from '../defs.js';
 
 /** One rejected field, worded like parseOrThrow's 400 (path = the camelCase field, then the inner path). */
 export type SettingsPatchIssue = { path: string; message: string };

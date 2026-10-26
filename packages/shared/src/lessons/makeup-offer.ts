@@ -1,5 +1,5 @@
 import { makeupEligible } from '../schemas/lessons/booking-extras.js';
-import { SCHEDULING_SETTINGS } from '../settings/domains/scheduling.js';
+import { SCHEDULING_SETTINGS } from '../settings/domains/teaching/scheduling.js';
 import type { LessonStudentView, LessonView } from './views.js';
 
 /** Who a lesson's «حجز تعويضي» is for: a makeup to book, and a makeup already booked. */

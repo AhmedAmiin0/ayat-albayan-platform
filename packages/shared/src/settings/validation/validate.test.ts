@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { PUBLIC_SETTING_DEFAULTS, PUBLIC_SETTING_KEYS, publicSettings } from './public.js';
-import { SETTING_DEFAULTS, SETTINGS_REGISTRY } from './registry.js';
+import { PUBLIC_SETTING_DEFAULTS, PUBLIC_SETTING_KEYS, publicSettings } from '../public.js';
+import { SETTING_DEFAULTS, SETTINGS_REGISTRY } from '../registry.js';
 import { isValidSetting, readSettings } from './validate.js';
 
 describe('readSettings', () => {

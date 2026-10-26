@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { PUBLIC_SETTING_KEYS } from '../public.js';
 import { SETTING_DEFAULTS, settingDef } from '../registry.js';
-import { settingsChanges, settingsUpdateSchema } from '../schema.js';
-import { readSettings } from '../validate.js';
+import { settingsChanges, settingsUpdateSchema } from '../validation/schema.js';
+import { readSettings } from '../validation/validate.js';
 import { academyWhatsappUrl } from './academy.js';
 
 const ok = (b: object) => settingsUpdateSchema.safeParse(b).success;

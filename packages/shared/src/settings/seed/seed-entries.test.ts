@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
-import type { SettingDef } from './defs.js';
-import { GOOGLE_SEED_DEFS } from './google-defs.js';
-import { SETTING_GROUPS } from './groups.js';
-import { SETTING_KEYS, SETTINGS_REGISTRY } from './registry.js';
+import type { SettingDef } from '../defs.js';
+import { GOOGLE_SEED_DEFS } from '../google-defs.js';
+import { SETTING_GROUPS } from '../groups.js';
+import { SETTING_KEYS, SETTINGS_REGISTRY } from '../registry.js';
 import { looksLikeSecretKey, REGISTRY_VERSION, SEED_ENTRIES, SEED_KEY_RE, seedEntry } from './seed-entries.js';
 
 /** The google-sync rows (google/seed-defs.test.ts pins them to GOOGLE_SETTING_KEYS). */

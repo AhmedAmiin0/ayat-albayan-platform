@@ -1,6 +1,6 @@
 import { z } from 'zod';
-import { E164_RE } from '../format/phone.js';
-import type { ShapeField } from './defs.js';
+import { E164_RE } from '../../format/phone.js';
+import type { ShapeField } from '../defs.js';
 
 const FORMATS = {
   e164: E164_RE,

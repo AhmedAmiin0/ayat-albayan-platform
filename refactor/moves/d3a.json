@@ -1,0 +1,168 @@
+{
+  "id": "d3a",
+  "seq": 101,
+  "moves": [
+    {
+      "from": "packages/shared/src/settings/seed-entries.ts",
+      "to": "packages/shared/src/settings/seed/"
+    },
+    {
+      "from": "packages/shared/src/settings/seed-entries.test.ts",
+      "to": "packages/shared/src/settings/seed/"
+    },
+    {
+      "from": "packages/shared/src/settings/seed-entries.metadata.test.ts",
+      "to": "packages/shared/src/settings/seed/"
+    },
+    {
+      "from": "packages/shared/src/settings/seed-payload*",
+      "to": "packages/shared/src/settings/seed/"
+    },
+    {
+      "from": "packages/shared/src/settings/sql-readers*",
+      "to": "packages/shared/src/settings/seed/"
+    },
+    {
+      "from": "packages/shared/src/settings/entries*",
+      "to": "packages/shared/src/settings/seed/"
+    },
+    {
+      "from": "packages/shared/src/settings/schema*",
+      "to": "packages/shared/src/settings/validation/"
+    },
+    {
+      "from": "packages/shared/src/settings/validate*",
+      "to": "packages/shared/src/settings/validation/"
+    },
+    {
+      "from": "packages/shared/src/settings/patch*",
+      "to": "packages/shared/src/settings/validation/"
+    },
+    {
+      "from": "packages/shared/src/settings/shape*",
+      "to": "packages/shared/src/settings/validation/"
+    },
+    {
+      "from": "packages/shared/src/settings/domains/finance*",
+      "to": "packages/shared/src/settings/domains/finance/"
+    },
+    {
+      "from": "packages/shared/src/settings/domains/payouts*",
+      "to": "packages/shared/src/settings/domains/finance/"
+    },
+    {
+      "from": "packages/shared/src/settings/domains/subscriptions*",
+      "to": "packages/shared/src/settings/domains/finance/"
+    },
+    {
+      "from": "packages/shared/src/settings/domains/classroom*",
+      "to": "packages/shared/src/settings/domains/teaching/"
+    },
+    {
+      "from": "packages/shared/src/settings/domains/recordings*",
+      "to": "packages/shared/src/settings/domains/teaching/"
+    },
+    {
+      "from": "packages/shared/src/settings/domains/reports*",
+      "to": "packages/shared/src/settings/domains/teaching/"
+    },
+    {
+      "from": "packages/shared/src/settings/domains/scheduling*",
+      "to": "packages/shared/src/settings/domains/teaching/"
+    }
+  ],
+  "files": [
+    [
+      "packages/shared/src/settings/domains/classroom.ts",
+      "packages/shared/src/settings/domains/teaching/classroom.ts"
+    ],
+    [
+      "packages/shared/src/settings/domains/finance.ts",
+      "packages/shared/src/settings/domains/finance/finance.ts"
+    ],
+    [
+      "packages/shared/src/settings/domains/payouts.ts",
+      "packages/shared/src/settings/domains/finance/payouts.ts"
+    ],
+    [
+      "packages/shared/src/settings/domains/recordings.ts",
+      "packages/shared/src/settings/domains/teaching/recordings.ts"
+    ],
+    [
+      "packages/shared/src/settings/domains/reports.ts",
+      "packages/shared/src/settings/domains/teaching/reports.ts"
+    ],
+    [
+      "packages/shared/src/settings/domains/scheduling.ts",
+      "packages/shared/src/settings/domains/teaching/scheduling.ts"
+    ],
+    [
+      "packages/shared/src/settings/domains/subscriptions.ts",
+      "packages/shared/src/settings/domains/finance/subscriptions.ts"
+    ],
+    [
+      "packages/shared/src/settings/entries.test.ts",
+      "packages/shared/src/settings/seed/entries.test.ts"
+    ],
+    [
+      "packages/shared/src/settings/entries.ts",
+      "packages/shared/src/settings/seed/entries.ts"
+    ],
+    [
+      "packages/shared/src/settings/patch.test.ts",
+      "packages/shared/src/settings/validation/patch.test.ts"
+    ],
+    [
+      "packages/shared/src/settings/patch.ts",
+      "packages/shared/src/settings/validation/patch.ts"
+    ],
+    [
+      "packages/shared/src/settings/schema.test.ts",
+      "packages/shared/src/settings/validation/schema.test.ts"
+    ],
+    [
+      "packages/shared/src/settings/schema.ts",
+      "packages/shared/src/settings/validation/schema.ts"
+    ],
+    [
+      "packages/shared/src/settings/seed-entries.metadata.test.ts",
+      "packages/shared/src/settings/seed/seed-entries.metadata.test.ts"
+    ],
+    [
+      "packages/shared/src/settings/seed-entries.test.ts",
+      "packages/shared/src/settings/seed/seed-entries.test.ts"
+    ],
+    [
+      "packages/shared/src/settings/seed-entries.ts",
+      "packages/shared/src/settings/seed/seed-entries.ts"
+    ],
+    [
+      "packages/shared/src/settings/seed-payload.test.ts",
+      "packages/shared/src/settings/seed/seed-payload.test.ts"
+    ],
+    [
+      "packages/shared/src/settings/seed-payload.ts",
+      "packages/shared/src/settings/seed/seed-payload.ts"
+    ],
+    [
+      "packages/shared/src/settings/shape.ts",
+      "packages/shared/src/settings/validation/shape.ts"
+    ],
+    [
+      "packages/shared/src/settings/sql-readers.test.ts",
+      "packages/shared/src/settings/seed/sql-readers.test.ts"
+    ],
+    [
+      "packages/shared/src/settings/sql-readers.ts",
+      "packages/shared/src/settings/seed/sql-readers.ts"
+    ],
+    [
+      "packages/shared/src/settings/validate.test.ts",
+      "packages/shared/src/settings/validation/validate.test.ts"
+    ],
+    [
+      "packages/shared/src/settings/validate.ts",
+      "packages/shared/src/settings/validation/validate.ts"
+    ]
+  ]
+}

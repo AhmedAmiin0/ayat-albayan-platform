@@ -1,9 +1,9 @@
 import { z } from 'zod';
-import { E164_RE } from '../format/phone.js';
-import { timeZone } from '../schemas/common.js';
-import { SETTING_FIELD_OF, SETTING_KEY_OF, SETTING_KEYS, SETTINGS_REGISTRY, type AcademySettings, type SettingField, type SettingsUpdate } from './registry.js';
+import { E164_RE } from '../../format/phone.js';
+import { timeZone } from '../../schemas/common.js';
+import { SETTING_FIELD_OF, SETTING_KEY_OF, SETTING_KEYS, SETTINGS_REGISTRY, type AcademySettings, type SettingField, type SettingsUpdate } from '../registry.js';
 import { shapeZod } from './shape.js';
-import type { SettingDef } from './defs.js';
+import type { SettingDef } from '../defs.js';
 
 /** One entry's PATCH field. The follow-up list keeps its 'not_ascending' message (the web names it). */
 export function settingZod(def: SettingDef): z.ZodType {
