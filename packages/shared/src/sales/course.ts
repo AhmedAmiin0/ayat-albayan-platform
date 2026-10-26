@@ -1,5 +1,5 @@
 import type { Duration, Gender, PackageSize, Program } from '../enums/index.js';
-import { packagePerWeek } from '../money/tiers.js';
+import { packagePerWeek } from '../money/usage/tiers.js';
 import { wallParts } from '../lessons/day-times.js';
 import { continueFrom, type BookedCourse } from './course-follow.js';
 

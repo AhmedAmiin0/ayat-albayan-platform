@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { settingsUpdateSchema } from '../settings/schema.js';
+import { settingsUpdateSchema } from '../../settings/schema.js';
 import {
   bookingRequestSchema,
   lessonProposalRequestSchema,

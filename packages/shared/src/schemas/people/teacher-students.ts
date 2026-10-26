@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import type { Program, StudentStatus } from '../enums/index.js';
+import type { Program, StudentStatus } from '../../enums/index.js';
 
 /** The two separate lists of the teacher's «الطلاب» tab: never one mixed list. */
 export const TEACHER_STUDENT_KINDS = ['subscribed', 'trial'] as const;

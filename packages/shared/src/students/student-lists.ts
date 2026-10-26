@@ -1,5 +1,5 @@
 import type { StudentStatus } from '../enums/index.js';
-import { parseStatusList } from '../schemas/student-filters.js';
+import { parseStatusList } from '../schemas/people/student-filters.js';
 import { isNotSubscribed, NOT_SUBSCRIBED_STATUSES, PACKAGE_ENDED_STATUSES } from './status-flow.js';
 
 // «مشترك / تجريبي» (owner 2026-10-12): a teacher's students split by status, the same rules on the

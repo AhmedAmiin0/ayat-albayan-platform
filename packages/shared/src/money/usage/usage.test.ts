@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import type { LessonStatus } from '../enums/index.js';
+import type { LessonStatus } from '../../enums/index.js';
 import { consumesPackage, subscriptionBalances, type PackageLesson } from './usage.js';
 
 // The same scenario the migration 123 SQL check ran (begin … rollback on the local DB): a free

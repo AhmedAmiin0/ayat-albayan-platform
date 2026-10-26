@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { INVOICE_MAX_BYTES, INVOICE_MIMES } from './booking-extras.js';
+import { INVOICE_MAX_BYTES, INVOICE_MIMES } from './lessons/booking-extras.js';
 import {
   CHAT_VIEW_MIMES,
   PLAYABLE_MAX_BYTES,

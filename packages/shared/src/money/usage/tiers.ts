@@ -1,5 +1,5 @@
-import type { PackageSize } from '../enums/index.js';
-import type { PackageId } from '../pricing/catalog.js';
+import type { PackageSize } from '../../enums/index.js';
+import type { PackageId } from '../../pricing/catalog.js';
 
 /**
  * Calculator package (docs/08 §2) → subscriptions.package. A custom lesson count has no size

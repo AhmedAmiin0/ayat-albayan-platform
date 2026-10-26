@@ -1,7 +1,7 @@
 import type { Enums } from '@ab/db';
 import { z } from 'zod';
-import type { LessonStatus } from '../enums/index.js';
-import { SCHEDULING_SETTINGS } from '../settings/domains/scheduling.js';
+import type { LessonStatus } from '../../enums/index.js';
+import { SCHEDULING_SETTINGS } from '../../settings/domains/scheduling.js';
 
 // Booking kind, invoice and makeup (R-SCH-10, R-PAY-03, R-MSG-06). Kept apart from scheduling.ts
 // (file size); scheduling.ts adds `bookingExtras` to the booking body and refines it.

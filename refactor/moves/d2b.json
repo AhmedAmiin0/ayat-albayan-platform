@@ -1,0 +1,144 @@
+{
+  "id": "d2b",
+  "seq": 99,
+  "moves": [
+    {
+      "from": "packages/shared/src/money/earnings*",
+      "to": "packages/shared/src/money/earnings/"
+    },
+    {
+      "from": "packages/shared/src/money/earning-sync*",
+      "to": "packages/shared/src/money/earnings/"
+    },
+    {
+      "from": "packages/shared/src/money/pay-rule*",
+      "to": "packages/shared/src/money/earnings/"
+    },
+    {
+      "from": "packages/shared/src/money/payout*",
+      "to": "packages/shared/src/money/earnings/"
+    },
+    {
+      "from": "packages/shared/src/money/package-progress*",
+      "to": "packages/shared/src/money/usage/"
+    },
+    {
+      "from": "packages/shared/src/money/usage*",
+      "to": "packages/shared/src/money/usage/"
+    },
+    {
+      "from": "packages/shared/src/money/tiers*",
+      "to": "packages/shared/src/money/usage/"
+    },
+    {
+      "from": "packages/shared/src/money/receivables*",
+      "to": "packages/shared/src/money/usage/"
+    },
+    {
+      "from": "packages/shared/src/money/payment-state*",
+      "to": "packages/shared/src/money/usage/"
+    }
+  ],
+  "files": [
+    [
+      "packages/shared/src/money/earning-sync.test.ts",
+      "packages/shared/src/money/earnings/earning-sync.test.ts"
+    ],
+    [
+      "packages/shared/src/money/earning-sync.ts",
+      "packages/shared/src/money/earnings/earning-sync.ts"
+    ],
+    [
+      "packages/shared/src/money/earnings-pay.test.ts",
+      "packages/shared/src/money/earnings/earnings-pay.test.ts"
+    ],
+    [
+      "packages/shared/src/money/earnings-pay.ts",
+      "packages/shared/src/money/earnings/earnings-pay.ts"
+    ],
+    [
+      "packages/shared/src/money/earnings-schemas.test.ts",
+      "packages/shared/src/money/earnings/earnings-schemas.test.ts"
+    ],
+    [
+      "packages/shared/src/money/earnings-schemas.ts",
+      "packages/shared/src/money/earnings/earnings-schemas.ts"
+    ],
+    [
+      "packages/shared/src/money/earnings-views.ts",
+      "packages/shared/src/money/earnings/earnings-views.ts"
+    ],
+    [
+      "packages/shared/src/money/earnings.test.ts",
+      "packages/shared/src/money/earnings/earnings.test.ts"
+    ],
+    [
+      "packages/shared/src/money/earnings.ts",
+      "packages/shared/src/money/earnings/earnings.ts"
+    ],
+    [
+      "packages/shared/src/money/package-progress.test.ts",
+      "packages/shared/src/money/usage/package-progress.test.ts"
+    ],
+    [
+      "packages/shared/src/money/package-progress.ts",
+      "packages/shared/src/money/usage/package-progress.ts"
+    ],
+    [
+      "packages/shared/src/money/pay-rule.test.ts",
+      "packages/shared/src/money/earnings/pay-rule.test.ts"
+    ],
+    [
+      "packages/shared/src/money/pay-rule.ts",
+      "packages/shared/src/money/earnings/pay-rule.ts"
+    ],
+    [
+      "packages/shared/src/money/payment-state.test.ts",
+      "packages/shared/src/money/usage/payment-state.test.ts"
+    ],
+    [
+      "packages/shared/src/money/payment-state.ts",
+      "packages/shared/src/money/usage/payment-state.ts"
+    ],
+    [
+      "packages/shared/src/money/payout.test.ts",
+      "packages/shared/src/money/earnings/payout.test.ts"
+    ],
+    [
+      "packages/shared/src/money/payout.ts",
+      "packages/shared/src/money/earnings/payout.ts"
+    ],
+    [
+      "packages/shared/src/money/receivables.test.ts",
+      "packages/shared/src/money/usage/receivables.test.ts"
+    ],
+    [
+      "packages/shared/src/money/receivables.ts",
+      "packages/shared/src/money/usage/receivables.ts"
+    ],
+    [
+      "packages/shared/src/money/tiers.test.ts",
+      "packages/shared/src/money/usage/tiers.test.ts"
+    ],
+    [
+      "packages/shared/src/money/tiers.ts",
+      "packages/shared/src/money/usage/tiers.ts"
+    ],
+    [
+      "packages/shared/src/money/usage.instant.test.ts",
+      "packages/shared/src/money/usage/usage.instant.test.ts"
+    ],
+    [
+      "packages/shared/src/money/usage.makeup.test.ts",
+      "packages/shared/src/money/usage/usage.makeup.test.ts"
+    ],
+    [
+      "packages/shared/src/money/usage.test.ts",
+      "packages/shared/src/money/usage/usage.test.ts"
+    ],
+    [
+      "packages/shared/src/money/usage.ts",
+      "packages/shared/src/money/usage/usage.ts"
+    ]
+  ]
+}

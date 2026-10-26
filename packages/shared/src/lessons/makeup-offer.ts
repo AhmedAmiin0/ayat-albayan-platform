@@ -1,4 +1,4 @@
-import { makeupEligible } from '../schemas/booking-extras.js';
+import { makeupEligible } from '../schemas/lessons/booking-extras.js';
 import { SCHEDULING_SETTINGS } from '../settings/domains/scheduling.js';
 import type { LessonStudentView, LessonView } from './views.js';
 

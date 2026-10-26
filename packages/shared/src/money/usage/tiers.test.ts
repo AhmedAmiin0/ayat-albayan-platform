@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { lessonsOf, PACKAGE_IDS } from '../pricing/catalog.js';
+import { lessonsOf, PACKAGE_IDS } from '../../pricing/catalog.js';
 import { packagePerWeek, TIER_PACKAGE_SIZE } from './tiers.js';
 
 describe('TIER_PACKAGE_SIZE (R-SUB-01: subscriptions.package from the catalog)', () => {

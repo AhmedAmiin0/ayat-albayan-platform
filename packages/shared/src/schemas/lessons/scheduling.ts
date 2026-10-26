@@ -1,10 +1,10 @@
 import { z } from 'zod';
-import { DURATIONS, PACKAGE_SIZES } from '../enums/index.js';
-import { CANCEL_BY, STATUS_ROUTE_EVENTS } from '../lessons/state-machine.js';
+import { DURATIONS, PACKAGE_SIZES } from '../../enums/index.js';
+import { CANCEL_BY, STATUS_ROUTE_EVENTS } from '../../lessons/state-machine.js';
 import { bookingExtras, refineBookingKind } from './booking-extras.js';
-import { requiredText, timeOfDay, timeZone } from './common.js';
+import { requiredText, timeOfDay, timeZone } from '../common.js';
 import { dayTimesSchema, refineDayTimes } from './day-times.js';
-import { guardianCreateSchema, studentCreateSchema } from './people.js';
+import { guardianCreateSchema, studentCreateSchema } from '../people/people.js';
 
 // Scheduling commands (docs/10-phase2-contracts.md). Command DTOs are camelCase; the nested
 // `newStudent` / `guardian` reuse the snake_case row schemas. Times are never free text (rule 6):

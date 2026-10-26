@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { makeupNames } from '../messaging/lesson/booking-confirmation.js';
+import { makeupNames } from '../../messaging/lesson/booking-confirmation.js';
 import { makeupEligible, type MakeupOriginal } from './booking-extras.js';
 
 describe('makeupEligible: only a charged student miss within 60 days', () => {

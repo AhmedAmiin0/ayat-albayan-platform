@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import ar from '../../i18n/ar.json' with { type: 'json' };
+import ar from '../../../i18n/ar.json' with { type: 'json' };
 import { packageProgress } from './package-progress.js';
 
 const forms = ar.subscriptions.progress;

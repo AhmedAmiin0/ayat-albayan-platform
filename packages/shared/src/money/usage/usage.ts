@@ -1,4 +1,4 @@
-import type { LessonStatus } from '../enums/index.js';
+import type { LessonStatus } from '../../enums/index.js';
 
 // Package balance rules, the TypeScript mirror of migration 123 (v_package_lessons,
 // v_subscription_balance). The view is what the API reads; this mirror pins the same rules in unit

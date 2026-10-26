@@ -80,7 +80,7 @@ Collected from the `TODO(R-…)` comments in the code:
 - R-AUTH-01: the guardian magic-link portal is not built (open question 4).
 
 Raised by the verifiers and builders:
-- **Shared schema bug:** every `*UpdateSchema` in `packages/shared` is built with `.partial()`, and zod 4 still applies `.default()` values. A partial update therefore resets fields such as `status` or `program`. Students works around it with `studentPatchSchema` and teachers with `sentOnly()`. The root fix belongs in `packages/shared/src/schemas/people.ts` and `leads.ts`.
+- **Shared schema bug:** every `*UpdateSchema` in `packages/shared` is built with `.partial()`, and zod 4 still applies `.default()` values. A partial update therefore resets fields such as `status` or `program`. Students works around it with `studentPatchSchema` and teachers with `sentOnly()`. The root fix belongs in `packages/shared/src/schemas/people/people.ts` and `leads.ts`.
 - **Reclassify:** it deletes the lead, and the foreign key (`on delete set null`) nulls `from_lead_id`. The audit row is the only link back, so the `jobApplicants.fromLead` label can never be shown. Reclassify also does not block leads that are already `converted`. Please decide whether to add a marker column instead.
 - **Merge does not copy fields:** empty fields on the kept student are not filled from the merged one; that data survives only in the snapshot. The profile's merge tool only offers students on the same guardian phone, so the same child under two phones needs a student picker, which is not built. Old `audit_log` rows keep the merged student's id.
 - R-STU-05: should `meeting_link_override` be cleared when the teacher changes? It is currently kept.

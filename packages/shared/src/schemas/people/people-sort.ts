@@ -1,6 +1,6 @@
 import { z } from 'zod';
-import { PROGRAMS, TEACHER_STATUSES } from '../enums/index.js';
-import { listSortShape } from './list-sort.js';
+import { PROGRAMS, TEACHER_STATUSES } from '../../enums/index.js';
+import { listSortShape } from '../list-sort.js';
 
 // Sort keys + column filters of the people lists (R-NFR-08): the API allowlists them, the web
 // uses the same keys for `sort=` and `f_<key>`. Text filters are «contains», trimmed, ≤ 100 chars.

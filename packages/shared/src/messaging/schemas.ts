@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { WA_LINES } from '../enums/messaging.js';
-import { leadQualificationSchema } from '../schemas/leads.js';
+import { leadQualificationSchema } from '../schemas/people/leads.js';
 import { CHAT_SEND_MIMES, WA_CAPTION_MAX } from './chat/chat-files.js';
 import { BODY_SLOTS, type BodySlot } from './templates/templates.js';
 

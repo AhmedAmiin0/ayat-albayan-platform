@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import type { LessonView } from '../lessons/views.js';
+import type { LessonView } from '../../lessons/views.js';
 import { instant, lessonDuration, overrideSchema } from './scheduling.js';
 
 /**
