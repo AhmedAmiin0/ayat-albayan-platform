@@ -20,6 +20,8 @@ const LESSONS = [
     status: 'scheduled',
     teacher: { id: 't1', display_name_ar: 'أبرار محمد', display_name_en: null, tz: 'Africa/Cairo' },
     students: [{ id: 'st3', code: 'AB-0200', name: 'سلمى', tz: 'Asia/Muscat' }],
+    meeting_link: 'https://meet.example.org/salma',
+    platform_classroom: false,
   }),
 ];
 
@@ -33,8 +35,11 @@ afterEach(() => jest.useRealTimers());
 const openRow = async (who: string) =>
   fireEvent.press(await screen.findByRole('button', { name: t.lessons.sheet.openRow.replace('{names}', who) }));
 
-test('sales: a tap opens the read-only details with every clock; no admin action, no link, no file', async () => {
+test('sales: a tap opens the read-only details with every clock and the lesson link; no admin action, no file', async () => {
   await renderWithQuery(<SalesScheduleScreen />);
+  // The agenda row never paints the URL: the tap opens the sheet that has it.
+  await screen.findByRole('button', { name: t.lessons.sheet.openRow.replace('{names}', 'سلمى') });
+  expect(screen.queryByText('https://meet.example.org/salma')).toBeNull();
   await openRow('سلمى');
   expect(screen.getByRole('header', { name: 'سلمى' })).toBeTruthy();
   expect(screen.getByText(t.lessons.sheet.readOnly)).toBeTruthy();
@@ -44,7 +49,9 @@ test('sales: a tap opens the read-only details with every clock; no admin action
   for (const label of [t.today.confirm, t.today.cancel, t.lessons.rescheduleSubmit, t.editTime.action, t.reports.view]) {
     expect(screen.queryByRole('button', { name: new RegExp(`^${label}`) })).toBeNull();
   }
-  expect(screen.queryByText(t.lessons.joinLink)).toBeNull();
+  // Owner 2026-10-26: sales see the lesson's link, full, with «انسخ الرابط».
+  expect(screen.getByText('https://meet.example.org/salma')).toBeTruthy();
+  expect(screen.getByRole('button', { name: t.lessons.copyLink })).toBeTruthy();
   expect(screen.queryByRole('button', { name: t.lessons.sheet.openStudent.replace('{name}', 'سلمى') })).toBeNull();
   // Not running: no «ادخل الحلقة» in the sheet (the running row keeps its own).
   expect(screen.getAllByRole('button', { name: t.classroom.enter })).toHaveLength(1);

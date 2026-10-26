@@ -33,7 +33,10 @@ export class SalesScheduleService {
   /** «الجدول»: one Riyadh day (today by default), optionally one teacher's. */
   async day(q: SalesScheduleQuery, now = new Date()): Promise<SalesScheduleDay> {
     const date = q.date ?? riyadhToday(now);
-    const rows = await this.schedule.day({ ...riyadhDayRange(date), teacherId: q.teacherId });
-    return { date, lessons: rows.map(toScheduleLesson) };
+    const [rows, settings] = await Promise.all([
+      this.schedule.day({ ...riyadhDayRange(date), teacherId: q.teacherId }),
+      this.settings.read(),
+    ]);
+    return { date, lessons: rows.map((row) => toScheduleLesson(row, settings.meeting_link_auto)) };
   }
 }

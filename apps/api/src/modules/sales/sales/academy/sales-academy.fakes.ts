@@ -54,7 +54,7 @@ export const liveRow = (): SalesLiveRow =>
 export const scheduleRow = (over: Partial<SalesScheduleRow> = {}): SalesScheduleRow =>
   ({
     id: 'les-2', starts_at: '2026-10-11T16:00:00.000Z', ends_at: '2026-10-11T16:30:00.000Z', status: 'confirmed', makeup_of_id: null,
-    meeting_link: 'https://meet/secret', cancel_reason: 'سر', rule: { package: 'trial', price: 99 },
+    meeting_link: ' https://meet.example.org/les-2 ', cancel_reason: 'سر', rule: { package: 'trial', price: 99 },
     teacher: { id: 'tc1', display_name_ar: 'أبرار', display_name_en: 'Abrar', phone_e164: '+201001234567' },
     lesson_students: [{ student: { id: 's1', code: 'AB-0101', name: 'ياسمين', notes: 'سر' } }, { student: null }],
     ...over,

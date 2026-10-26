@@ -17,7 +17,7 @@ export interface CredentialResultProps {
 /**
  * The password or invite link, shown ONCE: it lives in the caller's state only (never the query
  * cache or storage) and is gone when this closes. Selectable text (long-press to copy) and the
- * phone's share sheet are the ways to keep it (no clipboard module: the app ships by OTA).
+ * phone's share sheet are the ways to keep it (its Copy; core/lib/clipboard is the direct copy, not wired here yet).
  */
 export function CredentialResult({ title, credential, onClose }: CredentialResultProps) {
   const R = t.users.result;
