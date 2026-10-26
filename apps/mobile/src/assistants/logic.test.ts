@@ -1,12 +1,12 @@
 import { ApiError } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
 import { ReceiptUploadError } from '@/payments/upload-receipt';
-import { commissionsPath, statementsPath } from './api';
-import { assistantsErrorText, fieldError } from './errors';
-import { statement } from './fixtures';
-import { generateTargets } from './generate-targets';
-import { statementActions } from './statement-can';
-import { sumByCurrency } from './totals';
+import { commissionsPath, statementsPath } from './api/api';
+import { assistantsErrorText, fieldError } from './api/errors';
+import { statement } from './api/fixtures';
+import { generateTargets } from './statements/hooks/generate-targets';
+import { statementActions } from './statements/hooks/statement-can';
+import { sumByCurrency } from './statements/hooks/totals';
 
 const ALL = { write: true, approve: true };
 

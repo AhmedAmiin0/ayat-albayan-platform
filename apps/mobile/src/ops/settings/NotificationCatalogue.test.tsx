@@ -5,7 +5,7 @@ import { ltr } from '@/core/ui/primitives/Ltr';
 import { catalogue, settings } from '../shared/fixtures';
 import { NotificationCatalogue } from './NotificationCatalogue';
 import { whenOf } from './catalogue-words';
-import { openAudience } from '../notif-rules/rules-fixtures';
+import { openAudience } from '../notif-rules/testing/rules-fixtures';
 
 const mockApiFetch = jest.fn();
 jest.mock('@/core/lib/http/api', () => ({

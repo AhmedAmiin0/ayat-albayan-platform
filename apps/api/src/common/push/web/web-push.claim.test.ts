@@ -1,6 +1,6 @@
 import { ConflictException } from '@nestjs/common';
 import { describe, expect, it } from 'vitest';
-import { fakeDb, type FakeResult } from '../../../modules/guardians/fake-db';
+import { fakeDb, type FakeResult } from '../../../modules/people/guardians/fake-db';
 import { assertBrowserClaim } from './web-push.claim';
 
 // Review of #172 (PR #175): another person's live browser never moves on its endpoint alone.

@@ -184,7 +184,7 @@ to live (stub) ⇒ events created on the stub; cancel ⇒ deleted; submit a repo
 - **Settings** live in `public.settings` but outside the generic registry: they have their own switches with a
   confirmation in «التكاملات» → Google, so the generic form never flips `live`.
 - **Formats**: the event / sheet texts of §1 and §2.3 are kept byte for byte in
-  `apps/api/src/modules/google-sync/google-format.ts` (a data format shared with the script, not UI copy).
+  `apps/api/src/modules/platform/google-sync/google-format.ts` (a data format shared with the script, not UI copy).
 - **Students**: nothing is written for a student until an admin confirms an existing folder (from the summary
   sheet's suggestion or a pasted link) or «مجلد جديد»; the Drive root must be confirmed too.
 - **e2e**: `tools/google-stub` (port 4120) answers OAuth (auto-consent), Calendar v3, Drive v3 and Sheets v4.

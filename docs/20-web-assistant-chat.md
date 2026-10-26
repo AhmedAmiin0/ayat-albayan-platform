@@ -92,7 +92,7 @@ All modes. Keep TextComposer ≤ 150 lines: the store and W2's key helper are se
 
 ### W6 (major) Photos and PDFs from families open in the chat (access bug: docs/16 row 1b promises bubble media for sales) — ✅ done
 
-Files: `apps/api/src/modules/inbox/files/thread-file.controller.ts`, `apps/api/src/modules/inbox/files/thread-file.http.test.ts`, `apps/api/src/modules/inbox/inbox.module.ts`, `apps/web/src/features/messaging/inbox/api/api.ts`, `apps/web/src/features/messaging/inbox/messages/components/MessageMedia.tsx`, `apps/web/src/features/messaging/inbox/messages/components/MessageBubble.tsx`, `e2e/tests/inbox-media.spec.ts`, `packages/shared/i18n/ar.json`, `packages/shared/i18n/en.json`
+Files: `apps/api/src/modules/messaging/inbox/files/thread-file.controller.ts`, `apps/api/src/modules/messaging/inbox/files/thread-file.http.test.ts`, `apps/api/src/modules/messaging/inbox/inbox.module.ts`, `apps/web/src/features/messaging/inbox/api/api.ts`, `apps/web/src/features/messaging/inbox/messages/components/MessageMedia.tsx`, `apps/web/src/features/messaging/inbox/messages/components/MessageBubble.tsx`, `e2e/tests/inbox-media.spec.ts`, `packages/shared/i18n/ar.json`, `packages/shared/i18n/en.json`
 
 This is the only API change in the routine, allowed because docs/16 row 1b says media inside messages «shows in every thread» for sales, while MessageViews.view is always called without a URL (sales-threads.service.ts:47).
 

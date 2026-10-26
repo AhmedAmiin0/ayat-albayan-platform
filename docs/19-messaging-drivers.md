@@ -17,7 +17,7 @@ There is **one** messaging engine: the outbox and its queue, the send gate and k
 - **Half-configured = off, loudly.** A line switched to kapso without `KAPSO_API_BASE`, `KAPSO_API_KEY` or its ids refuses every call (its rows stay `queued`, nothing fails). «افحص الخطوط» shows each line's driver and NAMES the missing keys (never values; a meta chat line names `WA_API_BASE` too when it is unset), a chat phone id equal to the notifications one as its own flag (`duplicate_chat_phone`), and for a kapso line a note that inbound arrives via `/webhooks/kapso` instead of Meta's subscribed-app verdict; the API logs the same names once at boot. The send gate requires the notifications line to be configured under its own driver.
 - **Mobile:** no integrations screen in the Expo app; the per-line driver switch is on «نظرة عامة» (see «Mobile» in the crm section).
 
-## Where Kapso differs from Meta (all handled in `apps/api/src/modules/whatsapp/drivers/kapso/kapso.ts`)
+## Where Kapso differs from Meta (all handled in `apps/api/src/modules/messaging/whatsapp/drivers/kapso/kapso.ts`)
 
 | Topic | Meta | Kapso |
 | --- | --- | --- |

@@ -1,5 +1,5 @@
 import type { PostgrestError } from '@supabase/supabase-js';
-import { orSafe } from '../modules/guardians/http';
+import { orSafe } from '../modules/people/guardians/http';
 import { dbError } from './http/http';
 import type { Db } from './db/db.module';
 

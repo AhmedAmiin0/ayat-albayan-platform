@@ -2,8 +2,8 @@ import { fireEvent, screen } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
 import { NotificationCatalogue } from '../settings/NotificationCatalogue';
-import { rowsOf } from './audience-tabs';
-import { answer, catalogueV2, MANAGER, openAudience } from './rules-fixtures';
+import { rowsOf } from './lib/audience-tabs';
+import { answer, catalogueV2, MANAGER, openAudience } from './testing/rules-fixtures';
 
 const mockApiFetch = jest.fn();
 jest.mock('@/core/lib/http/api', () => ({

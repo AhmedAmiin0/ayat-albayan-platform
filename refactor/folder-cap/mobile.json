@@ -7,10 +7,6 @@
     "files": 19,
     "dirs": 0
   },
-  "apps/mobile/src/assistants": {
-    "files": 38,
-    "dirs": 0
-  },
   "apps/mobile/src/calendar": {
     "files": 19,
     "dirs": 0
@@ -42,14 +38,6 @@
   "apps/mobile/src/more": {
     "files": 25,
     "dirs": 1
-  },
-  "apps/mobile/src/ops/notif-rules": {
-    "files": 13,
-    "dirs": 0
-  },
-  "apps/mobile/src/ops/values": {
-    "files": 22,
-    "dirs": 0
   },
   "apps/mobile/src/student-file": {
     "files": 21,

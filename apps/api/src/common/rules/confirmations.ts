@@ -1,5 +1,5 @@
 import { Logger } from '@nestjs/common';
-import type { NotificationPolicy } from '../../modules/notification-rules/policy/policy';
+import type { NotificationPolicy } from '../../modules/messaging/notification-rules/policy/policy';
 
 // W1–W3 (docs/23a §B2): the booking / reschedule / time-edit confirmations ride inside the write's own
 // transaction (create_booking, apply_lesson_changes, edit_lesson_time, change_course). The

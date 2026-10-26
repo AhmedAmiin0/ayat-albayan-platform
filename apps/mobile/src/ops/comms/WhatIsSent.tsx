@@ -7,7 +7,7 @@ import { shape, type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { Chevron } from '@/core/ui/primitives/Chevron';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';
-import { useCatalogue } from '../notif-rules/use-catalogue';
+import { useCatalogue } from '../notif-rules/hooks/use-catalogue';
 import { useSettings } from '../settings/use-settings';
 import { sentCounts, type SentRow } from './sent-counts';
 

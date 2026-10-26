@@ -7,7 +7,7 @@ import {
   type RuleTiming,
   type TimedNotificationKey,
 } from '@ab/shared';
-import type { RulesSnapshot } from '../../modules/notification-rules/store/rules.reader';
+import type { RulesSnapshot } from '../../modules/messaging/notification-rules/store/rules.reader';
 
 // Producers that resolve several rows in one pass (a job tick) read ONE NotificationPolicy.snapshot()
 // and resolve each key from it, so a tick never mixes two versions of the rules (docs/23 §2c).
