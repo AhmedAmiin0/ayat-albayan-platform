@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import { ApiError } from '@/lib/http/api';
 import { reportErrorText } from './api';
-import { fileLabel } from './AttachmentsField';
+import { fileLabel } from './entry/AttachmentsField';
 import { reportFormHref, reportHistoryHref, reportOpen } from './paths';
-import { isPlainClick } from './ReportLink';
+import { isPlainClick } from './history/ReportLink';
 
 describe('report links (R-REP-01: opened from the lesson)', () => {
   it('teacher form per lesson; admin per student', () => {

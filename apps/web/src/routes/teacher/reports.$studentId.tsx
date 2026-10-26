@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { createFileRoute } from '@tanstack/react-router';
-import { StudentReportsPage } from '@/features/reports/StudentReportsPage';
+import { StudentReportsPage } from '@/features/reports/history/StudentReportsPage';
 import { StudentRecordings } from '@/features/students/recordings/StudentRecordings';
 import { RIYADH_TZ } from '@/features/schedule/tz';
 import { teacherMeQuery } from '@/features/teacher/api';

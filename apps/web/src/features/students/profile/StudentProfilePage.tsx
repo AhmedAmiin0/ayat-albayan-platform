@@ -25,7 +25,7 @@ import { StudentPayments } from './StudentPayments';
 import { StudentProfileForm } from './StudentProfileForm';
 import { HeadActions } from '@/components/ui/layout/head-actions';
 import { StudentRecordings } from '../recordings/StudentRecordings';
-import { CreateAccountButton } from '@/features/users/CreateAccountButton';
+import { CreateAccountButton } from '@/features/users/create/CreateAccountButton';
 import { TrialDatesSection } from '@/features/booking/trial-date/TrialDatesSection';
 
 /** Once the package ended «جدّد الاشتراك» is the head's primary action and booking moves beside it. */

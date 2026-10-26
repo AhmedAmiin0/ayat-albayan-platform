@@ -1,6 +1,6 @@
 import { useRouter } from '@tanstack/react-router';
 import type { MouseEvent, ReactNode } from 'react';
-import { isPlainClick } from '@/features/reports/ReportLink';
+import { isPlainClick } from '@/features/reports/history/ReportLink';
 
 export interface HubLinkProps {
   /** A path with its query (`/admin/settings/values?group=academy&q=…`). */

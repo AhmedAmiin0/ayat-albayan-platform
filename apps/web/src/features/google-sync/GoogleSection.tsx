@@ -1,15 +1,15 @@
 import { useQuery } from '@tanstack/react-query';
 import { Toast } from '@/components/ui/overlay/toast';
 import { t } from '@/lib/i18n/i18n';
-import { ConnectionCard } from './ConnectionCard';
-import { DriveCard } from './DriveCard';
+import { ConnectionCard } from './connection/ConnectionCard';
+import { DriveCard } from './connection/DriveCard';
 import { BlockSkeleton, LoadError } from './GoogleBlock';
 import { googleStatusQuery } from './google-api';
-import { StudentMap } from './StudentMap';
-import { SyncLog } from './SyncLog';
+import { StudentMap } from './mapping/StudentMap';
+import { SyncLog } from './log/SyncLog';
 import { SyncSwitches } from './SyncSwitches';
-import { TeacherMap } from './TeacherMap';
-import { useOauthReturn } from './use-oauth-return';
+import { TeacherMap } from './mapping/TeacherMap';
+import { useOauthReturn } from './connection/use-oauth-return';
 
 const s = t.googleSync;
 

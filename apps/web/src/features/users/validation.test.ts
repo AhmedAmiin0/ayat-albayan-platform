@@ -1,7 +1,7 @@
 import type { LinkCandidate } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
 import { t } from '@/lib/i18n/i18n';
-import { initialCreateForm, type CreateForm } from './create-form';
+import { initialCreateForm, type CreateForm } from './create/create-form';
 import { createBody, createErrors, emailError, nameError, passwordError, phoneError } from './validation';
 
 const STUDENT: LinkCandidate = { kind: 'student', id: '0b0c53a6-6f0e-4f56-9d5d-0d6a3a0e6a11', name: 'يوسف', code: 'AB-0007' };

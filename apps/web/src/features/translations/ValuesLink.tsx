@@ -1,6 +1,6 @@
 import { useRouter } from '@tanstack/react-router';
 import type { MouseEvent } from 'react';
-import { isPlainClick } from '@/features/reports/ReportLink';
+import { isPlainClick } from '@/features/reports/history/ReportLink';
 import { t } from '@/lib/i18n/i18n';
 import type { RegistryHint } from './registry-hints';
 import { valuesHref } from './registry-hints';

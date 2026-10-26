@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Cartouche } from '@/components/ui/display/cartouche';
 import { FormAlert } from '@/components/ui/form/form-alert';
 import { PageHead } from '@/components/ui/layout/page';
-import { PendingReports } from '@/features/reports/PendingReports';
+import { PendingReports } from '@/features/reports/history/PendingReports';
 import { errorCode } from '@/features/schedule/api';
 import { RIYADH_TZ } from '@/features/schedule/tz';
 import { t } from '@/lib/i18n/i18n';
