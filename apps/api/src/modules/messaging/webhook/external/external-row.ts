@@ -7,7 +7,8 @@ import type { ExternalMessage } from './external-message';
 
 // The outbound row of a message sent outside the app (Kapso's inbox, the WhatsApp Business app).
 // Pure. History, never work: never 'queued' (the sender only picks queued rows), created_by null
-// and attempts 0 (the sender's claim counts every try), so nothing can ever send it again.
+// and attempts 0 (the sender's claim counts every try); a failed one is refused by the admin's retry
+// (MessagesQueries.requeue), so nothing can ever send it again.
 
 /** Registry keys whose Meta name differs (migration 141, as the chat import maps them); else key = Meta name. */
 const SEEDED_KEYS: Readonly<Record<string, string>> = { lesson_reminder_v2: 'lesson_reminder' };

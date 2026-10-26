@@ -30,10 +30,11 @@ export interface ExternalMessage {
 const list = (value: unknown): unknown[] => (Array.isArray(value) ? value : []);
 const first = (...values: (string | null)[]): string | null => values.find((v) => v !== null) ?? null;
 
-/** Unix seconds (Meta) or an ISO string → Date; null when missing or unreadable. */
+/** Unix seconds (Meta; 13 digits = milliseconds) or an ISO string → Date; null when missing or unreadable. */
 export function messageTime(ts: string | null): Date | null {
   if (!ts) return null;
-  const at = /^\d+$/.test(ts) ? new Date(Number(ts) * 1000) : new Date(ts);
+  const digits = /^\d+$/.test(ts) ? Number(ts) : null;
+  const at = digits === null ? new Date(ts) : new Date(ts.length >= 13 ? digits : digits * 1000);
   return at.getTime() > 0 ? at : null;
 }
 

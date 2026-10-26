@@ -55,6 +55,7 @@ describe('messageTime / templateParams', () => {
     expect(messageTime(SENT_TS)).toEqual(SENT_AT);
     expect(messageTime(null)).toBeNull();
     expect(messageTime('0')).toBeNull();
+    expect(messageTime(String(SENT_AT.getTime()))).toEqual(SENT_AT);
   });
 
   it('no parameters → null', () => {

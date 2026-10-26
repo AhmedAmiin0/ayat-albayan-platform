@@ -3,6 +3,7 @@ import type { WaLine } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import type { PostgrestError } from '@supabase/supabase-js';
 import { DB, type Db } from '../../../../common/db/db.module';
+import { SENDING } from '../../whatsapp/sender/send-plan';
 
 function check(error: PostgrestError | null): void {
   if (error) throw new Error(`db: ${error.message}`);
@@ -25,6 +26,24 @@ export class ExternalQueries {
     const { data, error } = await this.db.from('messages').select('wa_message_id').in('wa_message_id', [...waMessageIds]);
     check(error);
     return new Set((data ?? []).flatMap((r) => (r.wa_message_id ? [r.wa_message_id] : [])));
+  }
+
+  /**
+   * True while our sender holds a claimed, unrecorded try for this phone (queued + SENDING): the
+   * message Kapso reports may be that very send, whose wamid the sender writes only after Meta
+   * answered. Storing it now would take its wamid; the catch-up job's day-long re-read stores it later.
+   */
+  async inFlight(phone: string): Promise<boolean> {
+    const { data, error } = await this.db
+      .from('messages')
+      .select('id')
+      .eq('phone_e164', phone)
+      .eq('direction', 'outbound')
+      .eq('status', 'queued')
+      .eq('error_code', SENDING)
+      .limit(1);
+    check(error);
+    return (data ?? []).length > 0;
   }
 
   /** Inserts the row; false when the wamid is already stored (unique wa_message_id: on conflict do nothing). */

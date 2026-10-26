@@ -20,10 +20,11 @@ export const MAX_PAGES = 20;
 
 export type CatchUpCounts = Record<ExternalOutcome | 'listed', number>;
 
-/** From the newest stored external message, or the last day when that is newer; never before FLOOR. */
+/** From the newest stored external message (none: FLOOR), or the last day when that is newer; never before FLOOR. */
 export function catchUpSince(newest: Date | null, now: Date): Date {
+  if (!newest) return FLOOR;
   const back = new Date(now.getTime() - LOOKBACK_MS);
-  const from = newest && newest < back ? newest : back;
+  const from = newest < back ? newest : back;
   return from < FLOOR ? FLOOR : from;
 }
 

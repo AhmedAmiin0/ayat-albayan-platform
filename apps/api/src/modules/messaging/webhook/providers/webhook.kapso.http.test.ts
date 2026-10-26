@@ -12,6 +12,7 @@ let ctx: Awaited<ReturnType<typeof webhookApp>> | undefined;
 afterEach(async () => {
   await ctx?.app.close();
   ctx = undefined;
+  setNumbersOverlay(null);
   vi.restoreAllMocks();
 });
 async function boot(config?: Parameters<typeof webhookApp>[0]) {
@@ -76,7 +77,6 @@ describe('POST /webhooks/kapso', () => {
     kapso.message.mockRejectedValue(new Error('WhatsApp HTTP 500'));
     expect((await postKapso(status('wamid.EXT2'))).statusCode).toBe(200);
     expect(queries.stored).toHaveLength(1);
-    setNumbersOverlay(null);
   });
 
   it('is in the OpenAPI document next to the Meta route', async () => {

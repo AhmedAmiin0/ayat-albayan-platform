@@ -91,6 +91,14 @@ describe('StatusService + ExternalStatus', () => {
     expect(s.push.notifyAdmins).not.toHaveBeenCalled();
   });
 
+  it('our own send to the phone still unrecorded (queued + SENDING) → not stored now: the catch-up job does it later', async () => {
+    const s = services();
+    s.external.ext.inFlight.mockResolvedValue(true);
+    await s.statuses.handle(status());
+    expect(s.external.ext.inFlight).toHaveBeenCalledWith('+966501234567');
+    expect(s.queries.stored).toEqual([]);
+  });
+
   it('an inbound item or an unreadable message from Kapso is skipped', async () => {
     const s = services();
     s.external.kapso.message.mockResolvedValueOnce(kapsoText({ kapso: { direction: 'inbound' } })).mockResolvedValueOnce(null);

@@ -25,7 +25,7 @@ afterEach(() => {
 
 describe('catchUpSince', () => {
   it('first run (only the import, or nothing) → the newest external message, never before 2026-10-25', () => {
-    expect(catchUpSince(null, NOW)).toEqual(new Date(NOW.getTime() - LOOKBACK_MS));
+    expect(catchUpSince(null, NOW)).toEqual(FLOOR);
     const imported = new Date('2026-10-25T00:54:00Z');
     expect(catchUpSince(imported, NOW)).toEqual(imported);
     expect(catchUpSince(new Date('2026-10-01T00:00:00Z'), NOW)).toEqual(FLOOR);

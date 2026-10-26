@@ -59,6 +59,7 @@ export function fakeExternalQueries(stored: TablesInsert<'messages'>[]) {
       return true;
     }),
     newestExternal: vi.fn().mockResolvedValue(null as Date | null),
+    inFlight: vi.fn().mockResolvedValue(false),
   };
 }
 

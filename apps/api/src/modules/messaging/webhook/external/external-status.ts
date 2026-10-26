@@ -32,9 +32,9 @@ export class ExternalStatus {
 
   /** True when a row for the wamid now exists (stored now, or by a concurrent run). */
   async adopt(e: StatusEvent): Promise<boolean> {
-    const number = e.phoneNumberId ? kapsoNumberFor(e.phoneNumberId) : null;
-    if (!number) return false;
     try {
+      const number = e.phoneNumberId ? kapsoNumberFor(e.phoneNumberId) : null;
+      if (!number) return false;
       const message = await this.kapso.message(number.env, e.waMessageId);
       if (!message) return false;
       const from = { line: e.line ?? number.line, numberId: e.numberId ?? number.numberId, phoneNumberId: e.phoneNumberId };
