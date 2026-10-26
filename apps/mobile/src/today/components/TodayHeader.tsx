@@ -41,11 +41,8 @@ export function TodayHeader({ now, stale }: TodayHeaderProps) {
             {stale ? `${dateLine} · ${stale}` : dateLine}
           </AppText>
         </View>
-        {/* The shadow outside, the clip inside: the bell's pressed wash takes the circle. */}
         <View style={{ borderRadius: 22, backgroundColor: color.raised, boxShadow: hairline(color.rule) }}>
-          <View style={{ width: 44, height: 44, borderRadius: 22, overflow: 'hidden' }}>
-            <BellButton tree="admin" />
-          </View>
+          <BellButton tree="admin" round />
         </View>
       </View>
       <HeaderConnectingBar />

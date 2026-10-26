@@ -10,7 +10,7 @@ import { RowsCard } from './RowsCard';
 export interface EndedFoldProps {
   lessons: readonly LessonView[];
   onOpen: (lesson: LessonView) => void;
-  /** Open from the start (the «انتهت» column is the filter: the fold is all there is). Read on mount. */
+  /** Open from the start under a column filter (the filtered ended lessons are in view). Read on mount. */
   open?: boolean;
 }
 

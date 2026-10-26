@@ -14,7 +14,7 @@ const TABS: TabItem[] = [
 const stub = () => <Text>screen</Text>;
 const app = { _layout: () => <AppNativeTabs tabs={TABS} />, a: stub, b: stub, c: stub, d: stub };
 
-test('floats 20pt from both sides and 24pt above the safe area: 62pt high, fully rounded, 0.5pt edge', async () => {
+test('floats 20pt from both sides and 24pt above the safe area: 62pt high, fully rounded, 0.5pt inset edge', async () => {
   await renderRouter(app, { initialUrl: '/a' });
   expect(screen.getByTestId('glass-capsule')).toHaveStyle({
     start: 20,
@@ -23,9 +23,7 @@ test('floats 20pt from both sides and 24pt above the safe area: 62pt high, fully
     height: 62,
     borderRadius: 31,
     padding: 4,
-    borderWidth: 0.5,
-    borderColor: glass.light.border,
-    boxShadow: glass.light.shadow,
+    boxShadow: `${glass.light.shadow}, inset 0 0 0 0.5px ${glass.light.border}`,
   });
 });
 

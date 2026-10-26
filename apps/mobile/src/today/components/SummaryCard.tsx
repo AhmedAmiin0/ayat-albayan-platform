@@ -23,7 +23,7 @@ export function SummaryCard({ counts, filter, onFilter }: SummaryCardProps) {
     <View
       accessibilityRole="toolbar"
       accessibilityLabel={t.today.summaryLabel}
-      style={{ ...raisedCard(color), flexDirection: 'row', alignItems: 'center', paddingVertical: 8, paddingHorizontal: 14 }}
+      style={{ ...raisedCard(color), flexDirection: 'row', alignItems: 'center', paddingVertical: 14, paddingHorizontal: 8 }}
     >
       {TODAY_FILTERS.map((value, i) => {
         const active = filter === value;
@@ -35,7 +35,7 @@ export function SummaryCard({ counts, filter, onFilter }: SummaryCardProps) {
             <Pressable
               accessibilityRole="button"
               accessibilityState={{ selected: active }}
-              accessibilityLabel={t.today.summaryFilter.replace('{n}', String(counts[value])).replace('{label}', label)}
+              accessibilityLabel={(active && value !== 'all' ? t.today.summaryFilterActive : t.today.summaryFilter).replace('{n}', String(counts[value])).replace('{label}', label)}
               onPress={() => onFilter(active ? 'all' : value)}
               style={({ pressed }) => ({
                 flex: 1,

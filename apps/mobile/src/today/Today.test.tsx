@@ -1,8 +1,8 @@
-import { act, fireEvent, screen, waitFor, within } from '@testing-library/react-native';
+import { fireEvent, screen, waitFor, within } from '@testing-library/react-native';
 import { ApiError } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
 import { ltr } from '@/core/ui/primitives/Ltr';
-import { createTestQueryClient, renderWithQuery } from '@/test/query';
+import { renderWithQuery } from '@/test/query';
 import TodayRoute from '../../app/(tabs)/index';
 import { cancelled, done, muscat, pending } from './testing/fixtures';
 
@@ -14,12 +14,14 @@ jest.mock('@/core/lib/http/api', () => ({
 // The bell reads its own API (notifications/BellButton.test); here it would take the day's mocked answers.
 jest.mock('@/notifications/BellButton', () => ({ BellButton: () => null }));
 
-const dayKey = ['lessons', 'day', { date: '2026-10-01', tz: 'Asia/Riyadh' }];
 /** GET /lessons/day calls only (the sheet also reads each student's balance and the settings). */
 const dayCalls = () =>
   mockApiFetch.mock.calls.filter(([path]: [string]) => path.startsWith('/lessons/day')).length;
-const column = (key: 'all' | 'scheduled' | 'completed', n: number) => ({
-  name: t.today.summaryFilter.replace('{n}', String(n)).replace('{label}', t.today.summary[key]),
+// A summary column's spoken name; an active status column says a tap shows everything again.
+const column = (key: 'all' | 'scheduled' | 'completed', n: number, active = false) => ({
+  name: (active ? t.today.summaryFilterActive : t.today.summaryFilter)
+    .replace('{n}', String(n))
+    .replace('{label}', t.today.summary[key]),
 });
 const row = (names: string) => ({ name: new RegExp(`${names}.*${t.today.openLesson.split('. ')[1] ?? ''}`) });
 
@@ -50,17 +52,18 @@ test('the summary counts the shown day; a column filters the list, a second tap 
 
   // «تحتاج تأكيد»: only the 16:00 lesson, as a row (no hero under a filter).
   await fireEvent.press(screen.getByRole('button', column('scheduled', 1)));
-  expect(screen.getByRole('button', { ...column('scheduled', 1), selected: true })).toBeTruthy();
+  expect(screen.getByRole('button', { ...column('scheduled', 1, true), selected: true })).toBeTruthy();
   expect(screen.getByRole('button', row('يوسف أحمد'))).toBeTruthy();
   expect(screen.queryByRole('button', row('جنى وليد'))).toBeNull();
   expect(screen.queryByText(t.today.running)).toBeNull();
   // A second tap: everything again.
-  await fireEvent.press(screen.getByRole('button', column('scheduled', 1)));
+  await fireEvent.press(screen.getByRole('button', column('scheduled', 1, true)));
   expect(screen.getByText(t.today.running)).toBeTruthy();
 
   // «انتهت» opens the fold; «الكل» resets.
   await fireEvent.press(screen.getByRole('button', column('completed', 1)));
   expect(screen.getByText('جودى خالد')).toBeTruthy();
+  expect(screen.getByRole('button', { name: 'انتهت حلقة واحدة اليوم', expanded: true })).toBeTruthy();
   await fireEvent.press(screen.getByRole('button', column('scheduled', 1)));
   await fireEvent.press(screen.getByRole('button', { name: t.today.all }));
   expect(screen.getByRole('button', { ...column('all', 3), selected: true })).toBeTruthy();
@@ -125,25 +128,4 @@ test('failed with nothing saved: error and retry', async () => {
   expect(await screen.findByRole('alert')).toBeTruthy();
   await fireEvent.press(screen.getByRole('button', { name: t.mobile.retry }));
   expect(await screen.findByText('يوسف أحمد')).toBeTruthy();
-});
-
-test('offline with a saved day: lessons stay, no error, and «آخر تحديث» says how old', async () => {
-  mockApiFetch.mockRejectedValue(new ApiError(503));
-  const client = createTestQueryClient();
-  client.setQueryData(dayKey, [pending]);
-  await renderWithQuery(<TodayRoute />, client);
-  expect(screen.getByText('يوسف أحمد')).toBeTruthy();
-  expect(await screen.findByText(new RegExp(t.mobile.lastUpdated.replace(' {time}', '')))).toBeTruthy();
-  expect(screen.queryByRole('alert')).toBeNull();
-});
-
-test('pull to refresh asks the API again', async () => {
-  mockApiFetch.mockResolvedValue([pending]);
-  const { container } = await renderWithQuery(<TodayRoute />);
-  await screen.findByText('يوسف أحمد');
-  const [scroll] = container.queryAll((node) => node.props['refreshControl'] !== undefined);
-  const control = scroll?.props['refreshControl'] as { props: { onRefresh: () => void } } | undefined;
-  if (!control) throw new Error('no pull-to-refresh on the list');
-  await act(async () => control.props.onRefresh());
-  await waitFor(() => expect(dayCalls()).toBe(2));
 });

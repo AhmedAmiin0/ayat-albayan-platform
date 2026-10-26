@@ -59,11 +59,10 @@ export function GlassTabBar({ state, navigation, insets, tabs }: GlassTabBarProp
           height: BAR_HEIGHT,
           padding: 4,
           borderRadius: BAR_HEIGHT / 2,
-          borderWidth: 0.5,
-          borderColor: opaque ? color.rule : glass.border,
           flexDirection: 'row',
           backgroundColor: opaque ? color.raised : glass.fill,
-          boxShadow: glass.shadow,
+          // The 0.5pt edge as an inset ring: a border would take a point from the 54pt tabs.
+          boxShadow: `${glass.shadow}, inset 0 0 0 0.5px ${opaque ? color.rule : glass.border}`,
         }}
       >
         <GlassGradient id="tab-sheen" color={glass.sheen.color} stops={glass.sheen.stops} radius={BAR_HEIGHT / 2} />

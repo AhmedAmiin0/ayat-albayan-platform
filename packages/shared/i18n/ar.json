@@ -1008,6 +1008,7 @@
       "completed": "انتهت"
     },
     "summaryFilter": "{n} {label}، اعرض هذه الحلقات فقط",
+    "summaryFilterActive": "{n} {label}، اعرض كل الحلقات",
     "next": "الحلقة التالية",
     "running": "جارية الآن",
     "inMinutes": {

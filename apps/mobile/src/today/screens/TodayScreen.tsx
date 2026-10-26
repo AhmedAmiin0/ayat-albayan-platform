@@ -81,7 +81,7 @@ export function TodayScreen() {
             ) : null}
             {plan.quiet && filter === 'all' ? <QuietDay now={now} /> : null}
             <RestSection lessons={plan.rest} onOpen={details.open} onShowAll={() => setFilter('all')} />
-            <EndedFold key={filter} lessons={plan.ended} onOpen={details.open} open={filter === 'completed'} />
+            <EndedFold key={filter} lessons={plan.ended} onOpen={details.open} open={filter !== 'all'} />
             <DayState
               pending={day.isPending}
               failed={!loaded}

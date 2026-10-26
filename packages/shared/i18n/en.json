@@ -1008,6 +1008,7 @@
       "completed": "ended"
     },
     "summaryFilter": "{n} {label}, show only these lessons",
+    "summaryFilterActive": "{n} {label}, show all lessons",
     "next": "Next lesson",
     "running": "In progress",
     "inMinutes": {
