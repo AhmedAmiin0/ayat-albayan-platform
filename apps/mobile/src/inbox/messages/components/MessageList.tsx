@@ -30,7 +30,7 @@ function useOlder(query: ThreadQuery) {
   return () => {
     if (!query.hasNextPage || query.isFetchingNextPage || asking.current) return;
     asking.current = true;
-    void Promise.resolve(query.fetchNextPage()).finally(() => (asking.current = false));
+    void Promise.resolve(query.fetchNextPage({ cancelRefetch: false })).finally(() => (asking.current = false));
   };
 }
 
@@ -73,8 +73,9 @@ export function MessageList({ phone, query }: { phone: string; query: ThreadQuer
         onScrollToIndexFailed={onScrollToIndexFailed}
         renderItem={({ item, index }) => (
           // Each cell is flipped back upright, so its top is still the visual top: the older neighbour.
+          // The oldest loaded row gets its chip only once no older page can continue its day.
           <View testID={`message-row-${item.id}`} style={{ paddingTop: messageGap(rows[index + 1], item) }}>
-            {opensDay(rows, index) ? <DayChip testID={`day-${item.id}`} label={dayLabel(item.created_at)} /> : null}
+            {opensDay(rows, index) && (index < rows.length - 1 || !query.hasNextPage) ? <DayChip testID={`day-${item.id}`} label={dayLabel(item.created_at)} /> : null}
             <MessageBubble message={item} phone={phone} onJump={jump} highlight={lit === item.id} />
           </View>
         )}

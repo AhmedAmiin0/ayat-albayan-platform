@@ -23,7 +23,8 @@ type OlderPages = Pick<ReturnType<typeof useThread>, 'hasNextPage' | 'fetchNextP
  * A tap on a quote (owner 2026-10-25): the inverted list scrolls to the original (centred) and lights it
  * up a moment. A row not laid out yet: jump near it by the average row height, then once more exactly.
  * Older than the loaded pages: older pages load (as the top of the list does) until it is there,
- * then the list goes to it once it renders; no more pages, or JUMP_PAGES without it: the chat says so.
+ * then the list goes to it once it renders; no more pages, or JUMP_PAGES without it: the chat says so;
+ * a page that fails stops the search with the load error.
  */
 export function useJump(list: RefObject<FlatList<MessageView> | null>, rows: readonly MessageView[], older: OlderPages) {
   const { say } = useChatActions();
@@ -56,6 +57,8 @@ export function useJump(list: RefObject<FlatList<MessageView> | null>, rows: rea
     for (let n = 0; n < JUMP_PAGES; n += 1) {
       // Shares a page already loading (the top of the list) instead of cancelling it.
       const page = await older.fetchNextPage({ cancelRefetch: false });
+      // A page that failed (fetchNextPage does not throw): stop, it is not «not found».
+      if (page.isFetchNextPageError) return say({ text: t.common.error });
       if (threadMessages(page.data).some((m) => m.id === id)) {
         pending.current = id;
         return rerender();

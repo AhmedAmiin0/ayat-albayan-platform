@@ -1,4 +1,4 @@
-import { chatDay, chatDayKey, intlLocale } from '@ab/shared';
+import { chatDay, chatDayKey, dayParts, intlLocale } from '@ab/shared';
 import { t } from '@/core/lib/i18n/i18n';
 import { locale } from '@/core/lib/i18n/locale';
 import { deviceTimeZone } from '../hooks/message-text';
@@ -23,7 +23,7 @@ export function dayLabel(iso: string, { now = new Date(), tz = deviceTimeZone() 
   const weekdays: Record<string, string> = t.enums.weekday;
   if (day.kind === 'weekday') return weekdays[String(day.weekday)] ?? '';
   // The calendar date at noon UTC, formatted in UTC: the same day whatever the device's zone.
-  const at = new Date(Date.UTC(day.year ?? now.getUTCFullYear(), day.month - 1, day.day, 12));
+  const at = new Date(Date.UTC(day.year ?? dayParts(now, tz).year, day.month - 1, day.day, 12));
   return (day.year === null ? dayMonth : dayMonthYear).format(at);
 }
 

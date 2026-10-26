@@ -74,7 +74,7 @@ test('the sheet shows the exact Arabic text; «أرسل» sends it once through 
   await waitFor(() => expect(screen.queryByTestId('resend-sheet')).toBeNull());
 });
 
-test('a refused send stays on the sheet with the reason; a new sheet is a new clientRequestId', async () => {
+test('a refused send stays on the sheet with the reason; asking again reuses the bubble’s clientRequestId', async () => {
   mockApiSend.mockRejectedValue(new Error('offline'));
   await show(unavailable);
   await fireEvent.press(ask() ?? screen.getByText('missing'));
@@ -85,5 +85,5 @@ test('a refused send stays on the sheet with the reason; a new sheet is a new cl
   await fireEvent.press(screen.getByRole('button', { name: t.inbox.resend.send }));
   const ids = mockApiSend.mock.calls.map((c) => (c[2] as { clientRequestId: string }).clientRequestId);
   expect(ids).toHaveLength(2);
-  expect(ids[0]).not.toBe(ids[1]);
+  expect(ids[0]).toBe(ids[1]);
 });

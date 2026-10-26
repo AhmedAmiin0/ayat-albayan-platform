@@ -32,6 +32,15 @@ test('no button: reaching the top loads the next older page once', async () => {
   expect(screen.getByTestId('message-list').props.onEndReachedThreshold).toBe(OLDER_THRESHOLD);
   await reachTop();
   expect(fetchNextPage).toHaveBeenCalledTimes(1);
+  // Never cancels a page a quote jump is already loading.
+  expect(fetchNextPage).toHaveBeenCalledWith({ cancelRefetch: false });
+});
+
+test('the oldest loaded row gets its day chip only once no older page can continue that day', async () => {
+  const view = await show(stub([[inbound]]));
+  expect(screen.queryByTestId(`day-${inbound.id}`)).toBeNull();
+  await view.rerender(<MessageList phone={PHONE} query={stub([[inbound]], { hasNextPage: false })} />);
+  expect(screen.getByTestId(`day-${inbound.id}`)).toBeTruthy();
 });
 
 test('the list reporting the top twice before the page is in asks once; after it lands, once more', async () => {

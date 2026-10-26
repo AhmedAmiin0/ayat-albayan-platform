@@ -81,3 +81,13 @@ test('it gives up after JUMP_PAGES pages, and when a page fails', async () => {
   await fireEvent.press(screen.getByTestId(`quote-${ORIGINAL.id}`));
   expect(failing).toHaveBeenCalledTimes(1);
 });
+
+test('a page that fails (fetchNextPage answers with the error) stops the search with the load error', async () => {
+  const fetchNextPage = jest.fn().mockResolvedValue({ ...page([[inbound, answer]], true), isFetchNextPageError: true });
+  await renderWithQuery(tree(stub([[inbound, answer]], fetchNextPage)));
+  await act(async () => undefined);
+  await fireEvent.press(screen.getByTestId(`quote-${ORIGINAL.id}`));
+  expect(fetchNextPage).toHaveBeenCalledTimes(1);
+  expect(await screen.findByText(t.common.error)).toBeTruthy();
+  expect(screen.queryByText(t.inbox.reply.notFound)).toBeNull();
+});

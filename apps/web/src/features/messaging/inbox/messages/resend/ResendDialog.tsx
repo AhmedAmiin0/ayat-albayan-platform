@@ -1,6 +1,5 @@
 import ar from '@ab/shared/i18n/ar.json';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useState } from 'react';
 import { Button } from '@/components/ui/form/button';
 import { FormAlert } from '@/components/ui/form/form-alert';
 import { Dialog } from '@/components/ui/overlay/dialog';
@@ -13,12 +12,12 @@ const RESEND_TEXT = ar.inbox.resend.text;
 
 /**
  * «اطلب إعادة الإرسال» confirmed (owner 2026-10-27): the exact text, then «أرسل» through POST
- * /threads/:phone/text. One clientRequestId per opened dialog and the button off while it goes, so a
- * double click or a retry after a lost answer sends once. The composer's draft is never touched.
+ * /threads/:phone/text. The clientRequestId is the bubble's (ResendAsk), the same for every opening,
+ * and the button is off while it goes: a double click, a retry or asking again sends once (the API
+ * answers a known id with the first row). The composer's draft is never touched.
  */
-export function ResendDialog({ phone, onClose }: { phone: string; onClose: () => void }) {
+export function ResendDialog({ phone, clientRequestId, onClose }: { phone: string; clientRequestId: string; onClose: () => void }) {
   const queryClient = useQueryClient();
-  const [clientRequestId] = useState(() => crypto.randomUUID());
   const send = useMutation({
     mutationFn: () => sendText({ phone, text: RESEND_TEXT, clientRequestId }),
     onSuccess: async () => {
@@ -26,9 +25,11 @@ export function ResendDialog({ phone, onClose }: { phone: string; onClose: () =>
       await queryClient.invalidateQueries({ queryKey: ['threads'] });
     },
   });
+  // While it goes, the dialog stays: closing then could lose the answer of a send already on its way.
+  const close = () => (send.isPending ? undefined : onClose());
   const actions = (
     <>
-      <Button type="button" variant="ghost" onClick={onClose}>
+      <Button type="button" variant="ghost" onClick={close}>
         {t.common.cancel}
       </Button>
       <Button type="button" disabled={send.isPending || send.isSuccess} onClick={() => send.mutate()}>
@@ -37,7 +38,7 @@ export function ResendDialog({ phone, onClose }: { phone: string; onClose: () =>
     </>
   );
   return (
-    <Dialog compact title={t.inbox.resend.title} onClose={onClose} actions={actions}>
+    <Dialog compact title={t.inbox.resend.title} onClose={close} actions={actions}>
       <div className="grid gap-3">
         <p className="text-sm text-ink-2">{t.inbox.resend.hint}</p>
         <p dir="rtl" data-testid="resend-text" className="rounded-md bg-sunk p-3 text-body">

@@ -1,7 +1,5 @@
 import ar from '@ab/shared/i18n/ar.json';
-import { useState } from 'react';
 import { Modal, Pressable, View } from 'react-native';
-import { requestId } from '@/core/lib/http/request-id';
 import { t } from '@/core/lib/i18n/i18n';
 import { shape, type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
@@ -16,14 +14,16 @@ const RESEND_TEXT = ar.inbox.resend.text;
 
 /**
  * «اطلب إعادة الإرسال» confirmed (owner 2026-10-27): the exact text, then «أرسل» through the chat's
- * normal text send. One clientRequestId per opened sheet and no second tap while it goes, so a double
- * tap or a retry after a lost answer sends it once. The composer's own text is never touched.
+ * normal text send. The clientRequestId is the bubble's (ResendAsk), the same for every opening, and
+ * no second tap while it goes: a double tap, a retry after a lost answer or asking again sends it
+ * once (the API answers a known id with the first row). The composer's own text is never touched.
  */
-export function ResendSheet({ phone, onClose }: { phone: string; onClose: () => void }) {
+export function ResendSheet({ phone, id, onClose }: { phone: string; id: string; onClose: () => void }) {
   const { color } = useTheme();
   const { say } = useChatActions();
   const send = useSendMessage(phone);
-  const [id] = useState(requestId);
+  // While it goes, the sheet stays: closing then could lose the answer of a send already on its way.
+  const close = () => (send.isPending ? undefined : onClose());
   const confirm = () => {
     if (send.isPending || send.isSuccess) return;
     send.mutate(
@@ -38,8 +38,8 @@ export function ResendSheet({ phone, onClose }: { phone: string; onClose: () => 
   };
   const words = { fontFamily: type.ui[400], fontSize: type.size.sm, lineHeight: type.lineHeight(type.size.sm), color: color.ink2 };
   return (
-    <Modal visible transparent animationType="fade" onRequestClose={onClose}>
-      <Pressable accessibilityRole="button" accessibilityLabel={t.common.cancel} onPress={onClose} style={{ flex: 1, backgroundColor: color.scrim }} />
+    <Modal visible transparent animationType="fade" onRequestClose={close}>
+      <Pressable accessibilityRole="button" accessibilityLabel={t.common.cancel} onPress={close} style={{ flex: 1, backgroundColor: color.scrim }} />
       <View testID="resend-sheet" style={{ gap: 12, padding: 16, paddingBottom: 32, backgroundColor: color.raised, borderTopStartRadius: shape.radius.lg, borderTopEndRadius: shape.radius.lg }}>
         <AppText accessibilityRole="header" style={{ fontFamily: type.ui[700], fontSize: type.size.body, color: color.ink }}>
           {t.inbox.resend.title}
@@ -50,7 +50,7 @@ export function ResendSheet({ phone, onClose }: { phone: string; onClose: () => 
         </AppText>
         {send.isError ? <ErrorLine message={sendError(send.error)} /> : null}
         <Button label={send.isPending ? t.inbox.resend.sending : t.inbox.resend.send} busy={send.isPending} onPress={confirm} />
-        <Button variant="ghost" label={t.common.cancel} onPress={onClose} />
+        <Button variant="ghost" label={t.common.cancel} onPress={close} />
       </View>
     </Modal>
   );
