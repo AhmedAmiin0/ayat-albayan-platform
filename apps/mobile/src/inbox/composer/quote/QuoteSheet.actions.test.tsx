@@ -86,7 +86,8 @@ test('a sheet reopened while its send is in flight cannot send again, and cannot
   const client = createTestQueryClient();
   const onClose = jest.fn();
   const first = await renderWithQuery(<QuoteSheet phone={PHONE} open onClose={onClose} />, client);
-  await fireEvent.press(await screen.findByRole('button', { name: q.send }));
+  await screen.findByTestId('quote-preview');
+  await fireEvent.press(button(q.send));
   await waitFor(() => expect(mockApiSend).toHaveBeenCalledTimes(1));
   await fireEvent.press(screen.getByRole('button', { name: q.close }));
   expect(onClose).not.toHaveBeenCalled();
