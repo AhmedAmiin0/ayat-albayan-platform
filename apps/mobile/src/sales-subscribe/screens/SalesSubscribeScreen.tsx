@@ -10,8 +10,11 @@ import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { useSalesFamily } from '../lib/family';
 import { SalesSubscribeForm } from '../components/SalesSubscribeForm';
 
-/** The chat's number; a child to preselect (any zone the link carries is ignored: the academy's day rules). */
-type Params = { phone?: string; studentId?: string };
+/**
+ * The chat's number; a child to preselect (any zone the link carries is ignored: the academy's day rules);
+ * `renew` '1' = «جدّد الاشتراك»: the form opens on that child's last package.
+ */
+type Params = { phone?: string; studentId?: string; renew?: string };
 
 /**
  * /inbox/sales-subscribe?phone=… (R-ASST-01, owner 2026-10-12): «اشتراك جديد» from a family's chat by
@@ -27,6 +30,7 @@ export function SalesSubscribeScreen() {
   const base = useTreeBase();
   const back = () => (router.canGoBack() ? router.back() : router.replace(inTree(base, '/inbox')));
   const own = students.find((s) => s.id === params.studentId);
+  const renew = params.renew === '1' && !!own;
   const courseDays = own
     ? () => router.push(inTree(base, { pathname: '/inbox/sales-course', params: { studentId: own.id } }))
     : undefined;
@@ -38,7 +42,7 @@ export function SalesSubscribeScreen() {
         keyboardShouldPersistTaps="handled"
       >
         <ScreenHeader
-          title={t.salesMoney.newSubscription}
+          title={renew ? t.students.renew : t.salesMoney.newSubscription}
           trailing={<Button variant="ghost" label={t.common.back} onPress={back} />}
         />
         {family.isError ? (
@@ -51,6 +55,7 @@ export function SalesSubscribeScreen() {
             <SalesSubscribeForm
               phone={phone}
               students={students}
+              renew={renew}
               {...(params.studentId ? { studentId: params.studentId } : {})}
             />
           </>

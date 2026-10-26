@@ -1,4 +1,3 @@
-import { STUDENT_STATUSES } from '@ab/shared';
 import { t } from '@/core/lib/i18n/i18n';
 import { chosenOpen, familyPath, openPackages, renewTargets, withOpenPackage } from './family';
 import { familyOf, KID2, kid, openSub, SUB } from '../testing/fixtures';
@@ -27,11 +26,10 @@ test('a just-created package joins its student once; nothing cached stays nothin
   expect(withOpenPackage(undefined, openSub())).toBeUndefined();
 });
 
-test('«جدّد الاشتراك»: only her pending_renewal / expired students; the child named when she has several', () => {
-  const shown = STUDENT_STATUSES.filter((status) => renewTargets(familyOf(kid({ status }))).length > 0);
-  expect(shown).toEqual(['pending_renewal', 'expired']);
-  expect(renewTargets(familyOf(kid({ status: 'expired' })))).toEqual([{ studentId: kid().id, label: t.students.renew }]);
-  const two = familyOf(kid({ status: 'active' }), kid({ id: KID2, name: 'سلمى', status: 'pending_renewal' }));
+test('«جدّد الاشتراك»: only her students the API marks renew_due; the child named when she has several', () => {
+  expect(renewTargets(familyOf(kid({ status: 'expired' })))).toEqual([]);
+  expect(renewTargets(familyOf(kid({ status: 'active', renew_due: true })))).toEqual([{ studentId: kid().id, label: t.students.renew }]);
+  const two = familyOf(kid({ status: 'active' }), kid({ id: KID2, name: 'سلمى', status: 'pending_renewal', renew_due: true }));
   expect(renewTargets(two)).toEqual([{ studentId: KID2, label: `${t.students.renew} — سلمى` }]);
   expect(renewTargets(undefined)).toEqual([]);
 });

@@ -111,3 +111,10 @@ test('failed with nothing cached: error + retry', async () => {
   await fireEvent.press(screen.getByRole('button', { name: t.mobile.retry }));
   expect(await screen.findByText(p.packages.bulk.name)).toBeTruthy();
 });
+
+test('the calculator keeps the free discount field beside the pills (the chat sheet has pills only)', async () => {
+  mockApiFetch.mockResolvedValue(bulkSa);
+  await renderWithQuery(<PricingScreen />);
+  await screen.findByText(p.packages.bulk.name);
+  expect(screen.getAllByLabelText(p.steps.discount)).toHaveLength(2);
+});

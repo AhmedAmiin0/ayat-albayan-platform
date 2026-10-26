@@ -9,6 +9,7 @@ import { AttachButton } from './AttachButton';
 import { FileComposer } from './FileComposer';
 import { sessionUntil } from '../../format';
 import { useInboxMode } from '../../shared/mode';
+import { QuoteButton } from '../quote/QuoteButton';
 import { replyFromText } from '../lib/reply-from';
 import { ReplyComposer } from '../../saved-replies/ReplyComposer';
 import { SavedRepliesButton } from '../../saved-replies/SavedRepliesButton';
@@ -75,12 +76,14 @@ function noticeLines(input: Pick<ComposerPhoneProps, 'thread' | 'gateNote' | 'mo
  * Staff (not teachers) also get a paperclip inside the window (D2): a picked file swaps the box for
  * FileComposer. The File lives here only (never in the draft store), for this chat only.
  * Staff also get «الردود السريعة» (ReplyComposer); after the window its button shows locked.
+ * «عرض سعر» (owner 2026-10-26, staff with pricing.read) sits beside them at every window (copy still works).
  */
 export function ComposerPhone({ thread, context, gateNote, mode, onMode, teacher }: ComposerPhoneProps) {
   const open = thread.session_open;
   const noneAllowed = useNoneAllowed(teacher);
   const notes = noticeLines({ thread, gateNote, mode, noneAllowed });
-  const { files, replies } = useChatAccess(useInboxMode());
+  const access = useChatAccess(useInboxMode());
+  const { files, replies } = access;
   const [picked, setPicked] = useState<{ phone: string; file: File } | null>(null);
   const [problem, setProblem] = useState<ChatFileProblem | null>(null);
   const file = picked?.phone === thread.phone_e164 ? picked.file : null;
@@ -97,6 +100,7 @@ export function ComposerPhone({ thread, context, gateNote, mode, onMode, teacher
   );
   // «الردود السريعة» after the window: shown locked with why (session messages only).
   const locked = !open && replies && <SavedRepliesButton locked />;
+  const quote = access.quote && <QuoteButton thread={thread} onFilled={() => onMode('text')} />;
   const attach = open && files && (
     <AttachButton
       onPick={(next) => {
@@ -111,7 +115,7 @@ export function ComposerPhone({ thread, context, gateNote, mode, onMode, teacher
     <div className="grid max-h-[70dvh] shrink-0 gap-1.5 overflow-y-auto border-t border-rule bg-page px-2 pt-1.5 pb-[max(0.5rem,env(safe-area-inset-bottom))]">
       <Notices notes={notes} />
       {!open && <SendRatingButton thread={thread} />}
-      {template && (toggle || locked) && <div className="flex gap-1.5">{toggle}{locked}</div>}
+      {template && (toggle || locked || quote) && <div className="flex gap-1.5">{toggle}{locked}{quote}</div>}
       {!open && noneAllowed ? (
         <p className="px-1 text-xs text-ink-2">{noneAllowedText(noneAllowed, t.inbox.composer.noAllowedHelp)}</p>
       ) : template ? (
@@ -119,9 +123,9 @@ export function ComposerPhone({ thread, context, gateNote, mode, onMode, teacher
       ) : file ? (
         <FileComposer phone={thread.phone_e164} file={file} onDone={() => setPicked(null)} />
       ) : replies ? (
-        <ReplyComposer thread={thread} context={context} leading={<>{toggle}{attach}</>} />
+        <ReplyComposer thread={thread} context={context} leading={<>{toggle}{attach}{quote}</>} />
       ) : (
-        <TextComposer phone={thread.phone_e164} leading={<>{toggle}{attach}</>} />
+        <TextComposer phone={thread.phone_e164} leading={<>{toggle}{attach}{quote}</>} />
       )}
       {problem && !template && (
         <p role="alert" className="px-1 text-xs text-danger">

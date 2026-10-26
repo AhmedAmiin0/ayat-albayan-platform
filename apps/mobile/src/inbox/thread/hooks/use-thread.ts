@@ -53,12 +53,17 @@ function body({ out, id }: SendInput) {
  * Optimistic send: the row shows at once as queued; the API's row replaces it, or a refusal takes
  * it out again (the caller shows `sendError`). Either way the thread refetches.
  */
+/** The mutation key of a chat's text / template send. */
+export const sendKey = (phone: string) => ['inbox-send', phone];
+
 export function useSendMessage(phone: string) {
   const client = useQueryClient();
   const queryKey = threadKey(phone);
   const edit = (fn: (old: ThreadCache | undefined) => ThreadCache | undefined) =>
     client.setQueryData<ThreadCache>(queryKey, fn);
   return useMutation({
+    // One key per chat: the composer and «عرض سعر» see each other's send in flight (useIsMutating).
+    mutationKey: sendKey(phone),
     mutationFn: (input: SendInput) =>
       apiSend<MessageView>('POST', `${threadPath(phone)}/${input.out.kind}`, body(input)),
     onMutate: async ({ out, id }) => {

@@ -1,8 +1,11 @@
 import { sessionWindowOpen, type ThreadLesson, type ThreadView } from '@ab/shared';
 import { useState } from 'react';
 import { View } from 'react-native';
+import { usePermissions } from '@/auth';
 import { ClosedRow } from '../threads-list/ClosedRow';
 import { ComposerNotes } from './ComposerNotes';
+import { useComposerText } from './draft-store';
+import { QuoteSheet } from './quote/QuoteSheet';
 import { ReopenNote } from './ReopenNote';
 import { ErrorLine } from '../ErrorLine';
 import { GateNote } from '../thread/components/GateNote';
@@ -26,6 +29,8 @@ import { errorLines, useComposerSend } from './use-composer-send';
  * chip). «أرسل» sends the text, then the file.
  * «رد» (owner 2026-10-25): the quoted strip over the row; the text answers it (useComposerSend).
  * A closed chat, once opened, asks the server to reopen it (ReopenNote, owner 2026-10-26).
+ * «عرض سعر» (owner 2026-10-26, staff with pricing.read): its sheet sends the offer or fills the box; the
+ * box's text lives in draft-store for that.
  */
 export function Composer({
   phone,
@@ -40,7 +45,10 @@ export function Composer({
   student?: string | null;
 }) {
   const staff = useThreadMode().kind !== 'teacher';
-  const [text, setText] = useState('');
+  const can = usePermissions();
+  const quote = staff && can('pricing.read');
+  const [quoting, setQuoting] = useState(false);
+  const [text, setText] = useComposerText(phone);
   const replies = useSavedReplyDraft({ text, setText, enabled: staff });
   const { sendTemplate, sendText, renew, errors, pending } = useComposerSend({ phone, text, setText, ...replies });
   const [picking, setPicking] = useState(false);
@@ -78,6 +86,7 @@ export function Composer({
           onTemplate={pick}
           onReplies={replies.open}
           onFileError={setFileError}
+          onQuote={quote ? () => setQuoting(true) : undefined}
           onSend={() => {
             replies.dismiss();
             sendText();
@@ -85,7 +94,7 @@ export function Composer({
           sending={pending}
         />
       ) : (
-        <ClosedRow known={thread !== null} staff={staff} onTemplate={pick} />
+        <ClosedRow known={thread !== null} staff={staff} onTemplate={pick} onQuote={quote ? () => setQuoting(true) : undefined} />
       )}
       {replies.sheet ? (
         <SavedReplyPicker
@@ -94,6 +103,7 @@ export function Composer({
           onFill={replies.fill}
         />
       ) : null}
+      {quoting ? <QuoteSheet phone={phone} open={open} onClose={() => setQuoting(false)} /> : null}
       <TemplatePicker
         visible={picking}
         lessons={lessons}

@@ -74,6 +74,8 @@ export const AttachIcon = (p: IconProps) => (
 export const SavedReplyIcon = (p: IconProps) => (
   <Line {...p} d="M20 11.5a7.5 7.5 0 0 1-11 6.6L4 19.5l1.4-4.6A7.5 7.5 0 1 1 20 11.5ZM13 7.5l-3 4.5h4l-3 4.5" />
 );
+/** «عرض سعر»: a price tag. */
+export const PriceIcon = (p: IconProps) => <Line {...p} d="M3 12V4a1 1 0 0 1 1-1h8l9 9-9 9-9-9ZM7.5 7.5h.01" />;
 /** «أزل»: a cross. */
 export const CrossIcon = (p: IconProps) => <Line {...p} d="M6 6l12 12M18 6 6 18" />;
 /** «عدّل»: a pencil. */

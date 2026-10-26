@@ -39,10 +39,15 @@ const DISCOUNT_PILLS = DISCOUNTS.map((d) => {
 interface PricingStepsProps {
   selection: Selection;
   onChange: (patch: Partial<Selection>) => void;
+  /** The free 0–100 field beside the pills (the calculator); the chat's «عرض سعر» has the pills only. */
+  freeDiscount?: boolean;
 }
 
-/** The site's five steps: country, duration, lessons a week (or a custom count), students, discount. */
-export function PricingSteps({ selection: s, onChange }: PricingStepsProps) {
+/**
+ * The site's five steps: country, duration, lessons a week (or a custom count), students, discount.
+ * Shared by «حاسبة الأسعار» and the chat's «عرض سعر» sheet.
+ */
+export function PricingSteps({ selection: s, onChange, freeDiscount = true }: PricingStepsProps) {
   return (
     <>
       <Section title={p.steps.country}>
@@ -103,7 +108,7 @@ export function PricingSteps({ selection: s, onChange }: PricingStepsProps) {
           accessibilityLabel={p.steps.discount}
           role="radiogroup"
         />
-        <DiscountField value={s.discount} onChange={(discount) => onChange({ discount })} />
+        {freeDiscount ? <DiscountField value={s.discount} onChange={(discount) => onChange({ discount })} /> : null}
       </Section>
     </>
   );
