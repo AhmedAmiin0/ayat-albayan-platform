@@ -25,7 +25,7 @@ export const VALUE_GROUPS = {
     'academy_contact',
     'recording_consent_notice',
   ],
-  messages: ['quick_reply_window_hours', 'reminder_lookahead_hours'],
+  messages: ['quick_reply_window_hours', 'reminder_lookahead_hours', 'whatsapp_calls_enabled'],
   sales: ['sales_auto_assign'],
   retention: ['recording_retention_days', 'activity_retention_days'],
 } as const satisfies Record<string, readonly SettingKey[]>;
@@ -68,4 +68,5 @@ export const VALUE_CONFIRM: Partial<Record<SettingKey, 'typed' | 'plain'>> = {
   teachers_always_available: 'plain',
   meeting_link_auto: 'plain',
   sales_auto_assign: 'plain',
+  whatsapp_calls_enabled: 'plain',
 };

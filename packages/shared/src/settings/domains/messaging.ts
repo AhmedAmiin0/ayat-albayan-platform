@@ -30,6 +30,14 @@ export const MESSAGING_SETTINGS = {
     type: 'enum', default: 'legacy', options: COMMS_SOURCES, form: false, patch: false,
     labelKey: 'settings.commsSource', hintKey: 'settings.hints.commsSource',
   },
+  /**
+   * In-app WhatsApp voice calls from the chat number (docs/28), built dark: false hides the phone icon
+   * and every /calls route answers 404. The owner turns it on after the Kapso / Meta steps of docs/28 §7.
+   */
+  whatsapp_calls_enabled: {
+    module: 'messaging', group: 'messaging', confirm: 'simple', reachesFamilies: true,
+    type: 'bool', default: false, labelKey: 'calls.settings.enabled', hintKey: 'calls.settings.enabledHint',
+  },
   /** A typed «نعم» confirms only a lesson we messaged the guardian about within this many hours. */
   quick_reply_window_hours: {
     module: 'messaging', group: 'messaging', reachesFamilies: true,

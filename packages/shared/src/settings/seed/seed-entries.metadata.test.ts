@@ -16,7 +16,7 @@ const CONFIG_GROUPS: Record<string, string[]> = {
   payouts: ['payout_count_late', 'payout_count_no_show', 'payout_count_trials'],
   uploads: ['upload_max_mb'],
   academy: ['academy_whatsapp_e164', 'academy_timezone', 'academy_contact', 'recording_consent_notice', 'feedback_rate_window_min'],
-  messaging: ['quick_reply_window_hours', 'reminder_lookahead_hours'],
+  messaging: ['quick_reply_window_hours', 'reminder_lookahead_hours', 'whatsapp_calls_enabled'],
   sales: ['sales_auto_assign'],
   retention: ['recording_retention_days', 'activity_retention_days'],
 };
@@ -36,9 +36,9 @@ describe('registry metadata (docs/26 §1, §2b; owner defaults 2026-10-23)', () 
     expect(missing).toEqual([]);
   });
 
-  it('the 28 CONFIG keys sit in their «القيم» group, scope config', () => {
+  it('the 29 CONFIG keys (28 + whatsapp_calls_enabled, docs/28) sit in their «القيم» group, scope config', () => {
     const config = Object.values(CONFIG_GROUPS).flat();
-    expect(config).toHaveLength(28);
+    expect(config).toHaveLength(29);
     for (const [group, keys] of Object.entries(CONFIG_GROUPS)) expect([group, keysWhere((e) => e.group === group)]).toEqual([group, [...keys].sort()]);
     expect(keysWhere((e) => e.scope === 'config')).toEqual([...config].sort());
   });
@@ -61,7 +61,7 @@ describe('registry metadata (docs/26 §1, §2b; owner defaults 2026-10-23)', () 
 
   it('confirmations are exactly the owner defaults', () => {
     expect(keysWhere((e) => e.confirm === 'typed')).toEqual(['activity_retention_days', 'recording_retention_days']);
-    expect(keysWhere((e) => e.confirm === 'simple')).toEqual(['meeting_link_auto', 'sales_auto_assign', 'teachers_always_available']);
+    expect(keysWhere((e) => e.confirm === 'simple')).toEqual(['meeting_link_auto', 'sales_auto_assign', 'teachers_always_available', 'whatsapp_calls_enabled']);
   });
 
   it('reachesFamilies marks what families see or receive, and only that', () => {

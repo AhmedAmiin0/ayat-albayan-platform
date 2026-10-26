@@ -8,6 +8,7 @@ import {
   type StatusEvent,
   type WebhookBatch,
 } from '../webhook.events';
+import { readCalls } from './webhook.calls';
 import { acceptsNumber, lineFor, receivingNumber, type Receiving, type ReceivingNumber } from '../lines/webhook.lines';
 
 // Meta's webhook envelope → flat inbound messages and delivery statuses (docs/12 §3.5). Fields
@@ -108,13 +109,24 @@ function receiving(number: string | undefined, ctx: ParseOptions): Receiving | n
   return at;
 }
 
-/** One `messages` change → the batch; another field, or a number that is neither line, is skipped. */
+/**
+ * One `messages` change → the batch; a `calls` change → batch.calls (docs/28: its statuses are call
+ * statuses, never ingested as message ticks); another field, or a number that is neither line, is skipped.
+ */
 function readChange(change: unknown, ctx: ParseOptions & { batch: WebhookBatch }): void {
-  if (field(change, 'field') !== 'messages') return;
+  const kind = field(change, 'field');
+  if (kind !== 'messages' && kind !== 'calls') return;
   const value = get(change, 'value');
   const number = field(value, 'metadata.phone_number_id') ?? undefined;
   const at = receiving(number, ctx);
   if (!at) return;
+  if (kind === 'calls') return readCalls(value, { now: ctx.now, phoneNumberId: number ?? null, out: (ctx.batch.calls ??= []) });
+  readMessages(value, { ...ctx, at });
+}
+
+/** A `messages` change's inbound messages and delivery statuses. */
+function readMessages(value: unknown, ctx: ParseOptions & { batch: WebhookBatch; at: Receiving }): void {
+  const at = ctx.at;
   const contacts = list(get(value, 'contacts'));
   const names = new Map(contacts.map((c) => [field(c, 'wa_id') ?? '', field(c, 'profile.name')?.trim() ?? '']));
   for (const m of list(get(value, 'messages'))) {

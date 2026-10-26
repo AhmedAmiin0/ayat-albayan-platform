@@ -4,7 +4,7 @@
 // server env, which stays the fallback. Every other env key (PORT, SUPABASE_*, …) stays in env.
 
 /** The form's groups, in page order. */
-export const INTEGRATION_GROUPS = ['wa_notifications', 'wa_chat', 'kapso', 'wacrm', 'wa_safety', 'livekit', 'expo', 'web_push', 'fx', 'google'] as const;
+export const INTEGRATION_GROUPS = ['wa_notifications', 'wa_chat', 'kapso', 'wacrm', 'wa_safety', 'calls', 'livekit', 'expo', 'web_push', 'fx', 'google'] as const;
 export type IntegrationGroup = (typeof INTEGRATION_GROUPS)[number];
 
 export const INTEGRATION_PLAIN_KEYS = [
@@ -23,6 +23,9 @@ export const INTEGRATION_PLAIN_KEYS = [
   'WACRM_API_BASE',
   'WA_ALLOWED_RECIPIENTS',
   'WA_TEMPLATE_SYNC',
+  'CALLS_STUN_URLS',
+  'CALLS_TURN_URLS',
+  'CALLS_TURN_USERNAME',
   'LIVEKIT_URL',
   'EXPO_API_BASE',
   'WEB_PUSH_VAPID_PUBLIC_KEY',
@@ -47,6 +50,7 @@ export const INTEGRATION_SECRET_KEYS = [
   'WACRM_API_KEY',
   'WACRM_WEBHOOK_SECRET',
   'GOOGLE_CLIENT_SECRET',
+  'CALLS_TURN_CREDENTIAL',
 ] as const;
 
 export type IntegrationPlainKey = (typeof INTEGRATION_PLAIN_KEYS)[number];
@@ -88,6 +92,11 @@ const GROUP_OF: Record<IntegrationKey, IntegrationGroup> = {
   WACRM_WEBHOOK_SECRET: 'wacrm',
   WA_ALLOWED_RECIPIENTS: 'wa_safety',
   WA_TEMPLATE_SYNC: 'wa_safety',
+  // WhatsApp voice calls (docs/28): the staff device is the WebRTC peer; STUN (default a public one) and an optional TURN.
+  CALLS_STUN_URLS: 'calls',
+  CALLS_TURN_URLS: 'calls',
+  CALLS_TURN_USERNAME: 'calls',
+  CALLS_TURN_CREDENTIAL: 'calls',
   LIVEKIT_URL: 'livekit',
   LIVEKIT_API_KEY: 'livekit',
   LIVEKIT_API_SECRET: 'livekit',
