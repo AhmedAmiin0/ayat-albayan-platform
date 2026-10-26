@@ -1,0 +1,108 @@
+{
+  "id": "a18b",
+  "seq": 26,
+  "moves": [
+    {
+      "from": "apps/api/src/modules/assistant-pay/my.*",
+      "to": "apps/api/src/modules/assistant-pay/my"
+    },
+    {
+      "from": "apps/api/src/modules/assistant-pay/statements.*",
+      "to": "apps/api/src/modules/assistant-pay/statements"
+    },
+    {
+      "from": "apps/api/src/modules/assistant-pay/assistant-statements*",
+      "to": "apps/api/src/modules/assistant-pay/statements"
+    },
+    {
+      "from": "apps/api/src/modules/assistant-pay/corrections*",
+      "to": "apps/api/src/modules/assistant-pay/statements"
+    },
+    {
+      "from": "apps/api/src/modules/assistant-pay/terms.*",
+      "to": "apps/api/src/modules/assistant-pay/terms"
+    },
+    {
+      "from": "apps/api/src/modules/assistant-pay/commissions*",
+      "to": "apps/api/src/modules/assistant-pay/commissions"
+    }
+  ],
+  "files": [
+    [
+      "apps/api/src/modules/assistant-pay/assistant-statements.controller.ts",
+      "apps/api/src/modules/assistant-pay/statements/assistant-statements.controller.ts"
+    ],
+    [
+      "apps/api/src/modules/assistant-pay/commissions.mapper.ts",
+      "apps/api/src/modules/assistant-pay/commissions/commissions.mapper.ts"
+    ],
+    [
+      "apps/api/src/modules/assistant-pay/commissions.queries.ts",
+      "apps/api/src/modules/assistant-pay/commissions/commissions.queries.ts"
+    ],
+    [
+      "apps/api/src/modules/assistant-pay/corrections.service.ts",
+      "apps/api/src/modules/assistant-pay/statements/corrections.service.ts"
+    ],
+    [
+      "apps/api/src/modules/assistant-pay/my.controller.ts",
+      "apps/api/src/modules/assistant-pay/my/my.controller.ts"
+    ],
+    [
+      "apps/api/src/modules/assistant-pay/my.earnings.test.ts",
+      "apps/api/src/modules/assistant-pay/my/my.earnings.test.ts"
+    ],
+    [
+      "apps/api/src/modules/assistant-pay/my.earnings.ts",
+      "apps/api/src/modules/assistant-pay/my/my.earnings.ts"
+    ],
+    [
+      "apps/api/src/modules/assistant-pay/my.http.test.ts",
+      "apps/api/src/modules/assistant-pay/my/my.http.test.ts"
+    ],
+    [
+      "apps/api/src/modules/assistant-pay/my.mapper.ts",
+      "apps/api/src/modules/assistant-pay/my/my.mapper.ts"
+    ],
+    [
+      "apps/api/src/modules/assistant-pay/my.queries.test.ts",
+      "apps/api/src/modules/assistant-pay/my/my.queries.test.ts"
+    ],
+    [
+      "apps/api/src/modules/assistant-pay/my.queries.ts",
+      "apps/api/src/modules/assistant-pay/my/my.queries.ts"
+    ],
+    [
+      "apps/api/src/modules/assistant-pay/my.service.ts",
+      "apps/api/src/modules/assistant-pay/my/my.service.ts"
+    ],
+    [
+      "apps/api/src/modules/assistant-pay/statements.mapper.ts",
+      "apps/api/src/modules/assistant-pay/statements/statements.mapper.ts"
+    ],
+    [
+      "apps/api/src/modules/assistant-pay/statements.permissions.test.ts",
+      "apps/api/src/modules/assistant-pay/statements/statements.permissions.test.ts"
+    ],
+    [
+      "apps/api/src/modules/assistant-pay/statements.queries.ts",
+      "apps/api/src/modules/assistant-pay/statements/statements.queries.ts"
+    ],
+    [
+      "apps/api/src/modules/assistant-pay/statements.service.ts",
+      "apps/api/src/modules/assistant-pay/statements/statements.service.ts"
+    ],
+    [
+      "apps/api/src/modules/assistant-pay/terms.mapper.ts",
+      "apps/api/src/modules/assistant-pay/terms/terms.mapper.ts"
+    ],
+    [
+      "apps/api/src/modules/assistant-pay/terms.queries.ts",
+      "apps/api/src/modules/assistant-pay/terms/terms.queries.ts"
+    ],
+    [
+      "apps/api/src/modules/assistant-pay/terms.service.ts",
+      "apps/api/src/modules/assistant-pay/terms/terms.service.ts"
+    ]
+  ]
+}

@@ -3,7 +3,7 @@ import { isSystemAdmin, roleView } from '../roles/roles.logic';
 import type { RoleRecord } from '../roles/roles.store';
 import { forbidden } from '../../common/http/errors';
 import { assertOutranks, isSystemAdminProfile, missingFor, type UserState } from './users.logic';
-import type { StaffProfile } from './users.store';
+import type { StaffProfile } from './store/users.store';
 
 // Who may touch whom (review of the users-control PR, M2-M4). The actor's own profile comes from the
 // DB state, not from the JWT claim, so a demotion applies at once.

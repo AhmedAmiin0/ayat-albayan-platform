@@ -3,7 +3,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../common/db/db.module';
 import { dbError } from '../../common/http/http';
 import { phoneAware } from '../users/users.errors';
-import { phoneTaken } from '../users/users.links.queries';
+import { phoneTaken } from '../users/store/users.links.queries';
 import { selfWritable, type AccountRow, type AccountStore, type SelfPatch } from './account.ports';
 
 interface RoleName {

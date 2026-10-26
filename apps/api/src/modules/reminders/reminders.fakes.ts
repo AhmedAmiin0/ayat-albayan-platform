@@ -3,7 +3,7 @@ import { vi } from 'vitest';
 import type { PushService } from '../../common/push/push.service';
 import { ruleSettingsOf } from '../../common/rules/rule-settings.fakes';
 import { readerOf } from '../../common/settings/settings.fakes';
-import { fakePolicy, type FakePolicyInput } from '../notification-rules/policy.fakes';
+import { fakePolicy, type FakePolicyInput } from '../notification-rules/policy/policy.fakes';
 import type { QueuedMessage } from './queued-row';
 import { RemindersDeps } from './reminders.deps';
 import { RemindersJob } from './reminders.job';

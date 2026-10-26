@@ -5,7 +5,7 @@ import { CurrentUser, Permissions } from '../../common/auth/decorators';
 import type { AuthUser } from '../../common/auth/verify-token';
 import { CLIENT_HEADER, parseClientTag, UNTAGGED } from '../../common/client-usage/client-tag';
 import { RulesService } from './rules.service';
-import { RulesWriter } from './rules.writer';
+import { RulesWriter } from './store/rules.writer';
 
 /**
  * «ماذا يُرسل ومتى» (docs/23 §3 phases 1 and 4). GET for whoever may read the settings page

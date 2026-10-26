@@ -2,7 +2,7 @@ import { isLinkedRole, type Permission, type UserRole } from '@ab/shared';
 import { grantsOf, heldRole, isSystemAdmin, permissionsOf, roleView, type RoleState } from '../roles/roles.logic';
 import type { RoleRecord } from '../roles/roles.store';
 import { forbidden } from '../../common/http/errors';
-import type { ProfilePatch, StaffProfile } from './users.store';
+import type { ProfilePatch, StaffProfile } from './store/users.store';
 
 // Pure rules of «المستخدمون»: who may touch whom, and that the academy always keeps an active admin.
 

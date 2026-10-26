@@ -4,7 +4,7 @@ import { z } from 'zod';
 import { DB, type Db } from '../../../common/db/db.module';
 import { LessonEvents } from '../../../common/events/lesson-events';
 import { gateConfirmations } from '../../../common/rules/confirmations';
-import { NotificationPolicy } from '../../notification-rules/policy';
+import { NotificationPolicy } from '../../notification-rules/policy/policy';
 import { ConflictChecker } from '../../scheduling/conflicts/conflict-checker';
 import { callRpc } from '../../scheduling/rpc';
 import { dbError } from '../../../common/http/http';

@@ -1,5 +1,5 @@
 import { ruleOf, timingOf } from '../../common/rules/rule-of';
-import type { RulesSnapshot } from '../notification-rules/rules.reader';
+import type { RulesSnapshot } from '../notification-rules/store/rules.reader';
 
 /**
  * What one reminder tick needs from the notification rules (docs/23 §2c), resolved from ONE

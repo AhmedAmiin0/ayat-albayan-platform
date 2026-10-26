@@ -7,8 +7,8 @@ import {
   type NotificationsOverview,
 } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import { NotificationPolicy } from './policy';
-import { RulesFacts } from './rules.facts';
+import { NotificationPolicy } from './policy/policy';
+import { RulesFacts } from './policy/rules.facts';
 import { ruleView, v1Entry } from './rules.views';
 
 interface V2Context {

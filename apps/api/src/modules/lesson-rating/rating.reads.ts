@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { NotificationPolicy } from '../notification-rules/policy';
+import { NotificationPolicy } from '../notification-rules/policy/policy';
 import { LessonRatingSettings } from './lesson-rating.settings';
 
 /** What RatingQueue reads: the automatic-messages switch and the lesson_rating rule (one injectable: max-params). */

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { fakePolicy, type FakePolicyInput } from '../notification-rules/policy.fakes';
+import { fakePolicy, type FakePolicyInput } from '../notification-rules/policy/policy.fakes';
 import { LeadProfileService, mergeQualification } from './lead-profile.service';
 import { fakeDeps, lead, LEAD_ID } from './leads.fakes';
 

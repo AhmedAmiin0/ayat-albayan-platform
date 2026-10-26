@@ -8,10 +8,10 @@ import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier
 import type { AuthUser } from '../../common/auth/verify-token';
 import { EarningsReceipts } from '../teacher-earnings/earnings.receipts';
 import { AssistantRpc } from './assistant-pay.rpc';
-import { CommissionsQueries } from './commissions.queries';
-import { MyQueries } from './my.queries';
-import { StatementsQueries } from './statements.queries';
-import { TermsQueries } from './terms.queries';
+import { CommissionsQueries } from './commissions/commissions.queries';
+import { MyQueries } from './my/my.queries';
+import { StatementsQueries } from './statements/statements.queries';
+import { TermsQueries } from './terms/terms.queries';
 
 import { A, ADMIN, B } from './rows.fakes';
 

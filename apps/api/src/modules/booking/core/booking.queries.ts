@@ -3,7 +3,7 @@ import type { BookingResult, Gender, LeadStatus, LessonStatus, PackageSize, Prog
 import { HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../../common/db/db.module';
 import { gateConfirmations } from '../../../common/rules/confirmations';
-import { NotificationPolicy } from '../../notification-rules/policy';
+import { NotificationPolicy } from '../../notification-rules/policy/policy';
 import { domainError } from '../booking.errors';
 import { dbError } from '../../../common/http/http';
 import type { LeadFacts } from './booking.lead-merge';

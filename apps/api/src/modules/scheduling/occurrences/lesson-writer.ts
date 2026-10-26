@@ -3,7 +3,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { z } from 'zod';
 import { DB, type Db } from '../../../common/db/db.module';
 import { gateConfirmations } from '../../../common/rules/confirmations';
-import { NotificationPolicy } from '../../notification-rules/policy';
+import { NotificationPolicy } from '../../notification-rules/policy/policy';
 import type { ChangeSet, TimeEditChange } from '../change-set';
 import { callRpc } from '../rpc';
 import { dbError } from '../../../common/http/http';

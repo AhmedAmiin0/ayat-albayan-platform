@@ -1,7 +1,7 @@
 import type { AdminTaskKind } from '@ab/shared';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { DB, type Db } from '../../../common/db/db.module';
-import { NotificationPolicy } from '../../notification-rules/policy';
+import { NotificationPolicy } from '../../notification-rules/policy/policy';
 import { readAll, readChunked } from '../../scheduling/read-all';
 import { dbError } from '../../../common/http/http';
 

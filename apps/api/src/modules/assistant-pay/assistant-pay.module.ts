@@ -3,16 +3,16 @@ import { PaymentsModule } from '../payments/payments.module';
 import { TeacherEarningsModule } from '../teacher-earnings/earnings.module';
 import { AssistantPayController } from './assistant-pay.controller';
 import { AssistantRpc } from './assistant-pay.rpc';
-import { AssistantStatementsController } from './assistant-statements.controller';
-import { CommissionsQueries } from './commissions.queries';
-import { CorrectionsService } from './corrections.service';
-import { MyController } from './my.controller';
-import { MyQueries } from './my.queries';
-import { MyService } from './my.service';
-import { StatementsQueries } from './statements.queries';
-import { StatementsService } from './statements.service';
-import { TermsQueries } from './terms.queries';
-import { TermsService } from './terms.service';
+import { AssistantStatementsController } from './statements/assistant-statements.controller';
+import { CommissionsQueries } from './commissions/commissions.queries';
+import { CorrectionsService } from './statements/corrections.service';
+import { MyController } from './my/my.controller';
+import { MyQueries } from './my/my.queries';
+import { MyService } from './my/my.service';
+import { StatementsQueries } from './statements/statements.queries';
+import { StatementsService } from './statements/statements.service';
+import { TermsQueries } from './terms/terms.queries';
+import { TermsService } from './terms/terms.service';
 
 /**
  * The assistant's (base role sales) pay: commission terms and salary per assistant, the commission ledger,

@@ -4,14 +4,14 @@ import { AuditService } from '../../common/audit/audit.service';
 import { PermissionCache } from '../../common/auth/permission.cache';
 import { FakeRoleStore } from '../roles/roles.fakes';
 import { UserAccess } from './users.access';
-import { UsersCreateService } from './users.create.service';
-import { FakeAuthAdmin } from './users.fakes.auth';
-import { FakeUserStore, row, type Link } from './users.fakes.store';
-import { UsersLifecycleService } from './users.lifecycle.service';
+import { UsersCreateService } from './lifecycle/users.create.service';
+import { FakeAuthAdmin } from './auth/users.fakes.auth';
+import { FakeUserStore, row, type Link } from './store/users.fakes.store';
+import { UsersLifecycleService } from './lifecycle/users.lifecycle.service';
 import { UserEffects, UserPorts } from './users.ports';
 import type { Actor } from './users.rules';
 import { UsersService } from './users.service';
-import type { UserRow } from './users.store';
+import type { UserRow } from './store/users.store';
 
 /** The system admin: every grantable permission. */
 export const ADMIN_ACTOR: Actor = { id: 'admin1', permissions: [...GRANTABLE_PERMISSIONS] };

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { AuditService } from '../../../common/audit/audit.service';
-import { RulesParity } from '../../notification-rules/rules.parity';
+import { RulesParity } from '../../notification-rules/sync/rules.parity';
 
 /**
  * CommunicationsService's collaborators beyond the numbers config (kept to ≤ 3 constructor params):

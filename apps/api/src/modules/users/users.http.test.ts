@@ -9,7 +9,7 @@ import type { AuthUser } from '../../common/auth/verify-token';
 import { FakeRoleStore } from '../roles/roles.fakes';
 import { ROLE_STORE } from '../roles/roles.store';
 import { FakeAuthAdmin, FakeUserStore, row } from './users.fakes';
-import { AUTH_ADMIN, USER_STORE } from './users.store';
+import { AUTH_ADMIN, USER_STORE } from './store/users.store';
 
 const user = (id: string, role: AuthUser['role']): AuthUser => ({ id, email: null, role });
 const USERS: Record<string, AuthUser> = {
