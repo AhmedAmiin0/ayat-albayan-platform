@@ -7,7 +7,7 @@ export {
   PLAYABLE_FILTER,
 } from './messages/inbound-media.queries';
 export {
-  type baseMime,
+  baseMime,
   CRM_NO_MEDIA,
   type InboundFile,
   InboundMedia,
@@ -39,7 +39,7 @@ export {
   AUTH_HOLD_MS,
   CLAIM_LEASE_MS,
   CRM_AUTH,
-  type CRM_RATE_LIMITED,
+  CRM_RATE_LIMITED,
   errorCode,
   failurePlan,
   type FailurePlan,

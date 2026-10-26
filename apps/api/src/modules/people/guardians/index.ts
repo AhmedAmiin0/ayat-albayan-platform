@@ -1,4 +1,3 @@
-export { type FakeCall, fakeDb, type FakeResult } from './fake-db';
 export {
   guardianSearchFilter,
   inferCountry,
