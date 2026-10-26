@@ -4,7 +4,7 @@
 // vitest/jest/tsconfig/eslint configs, refactor/ maps and allow-lists, the generated route tree). Anything else fails.
 import { execFileSync } from 'node:child_process';
 import { pathToFileURL } from 'node:url';
-import { renameTable, samePath } from './pure-move-paths.mjs';
+import { reexportsOf, renameTable, samePath } from './pure-move-paths.mjs';
 import { sameButRenames, substitutions } from './pure-move-tokens.mjs';
 
 const CODE = /\.[cm]?[jt]sx?$/;
@@ -55,7 +55,7 @@ export function normalize(text) {
 export function onlyPathsChanged(before, after, ctx = {}) {
   const a = normalize(before);
   const b = normalize(after);
-  const c = { from: ctx.from ?? 'x.ts', to: ctx.to ?? 'x.ts', table: ctx.table ?? new Map() };
+  const c = { from: ctx.from ?? 'x.ts', to: ctx.to ?? 'x.ts', table: ctx.table ?? new Map(), reexports: ctx.reexports };
   if (JSON.stringify(a.statements) !== JSON.stringify(b.statements) || a.paths.length !== b.paths.length) return false;
   if (!a.paths.every((p, i) => p === b.paths[i] || samePath(c, p, b.paths[i] ?? ''))) return false;
   return a.body === b.body || sameButRenames(a.raw, b.raw, { subs: ctx.subs ?? new Map(), from: c.from, to: c.to });
@@ -68,6 +68,9 @@ export function isBarrel(file, text) {
   const lines = text.match(STATEMENTS) ?? [];
   return rest === '' && lines.length > 0 && lines.every((l) => /^\s*export\b/.test(l));
 }
+
+/** The module paths of a barrel's `export … from` lines (null when the file is not a barrel). */
+export const barrelPaths = (file, text) => (text && isBarrel(file, text) ? normalize(text).paths : null);
 
 /** Docs and JSON/YAML data: only whole repo paths of moved files may change (as the codemod writes them). */
 const TEXT = /(^docs\/.*|\.md|(?<!tsconfig[^/]*)\.json|\.ya?ml)$/;
@@ -121,7 +124,8 @@ function main([base, head = 'HEAD']) {
   const entries = parseNameStatus(git('diff', '--name-status', '-M50%', '--no-color', mergeBase, head));
   const renames = entries.filter((e) => e.status.startsWith('R')).map((e) => [e.from, e.to]);
   const gone = (dir) => git('ls-tree', '-d', '--name-only', head, '--', dir).trim() === '';
-  const ctx = { renames, table: renameTable(renames), subs: substitutions(renames, gone) };
+  const readHead = (file) => (git('ls-tree', '--name-only', head, '--', file).trim() ? read('head', file) : '');
+  const ctx = { renames, table: renameTable(renames), subs: substitutions(renames, gone), reexports: reexportsOf(readHead, barrelPaths) };
   const counts = { rename: 0, paths: 0, barrel: 0, config: 0, bad: 0 };
   for (const e of entries) {
     const result = classify(e, read, ctx);
