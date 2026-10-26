@@ -9,6 +9,7 @@ import { SALES_NAV_ITEMS, SalesNav } from '@/features/sales/sales/SalesNav';
 import { useSalesUnread } from '@/features/sales/sales/use-sales-unread';
 import { TEACHER_NAV_ITEMS, TeacherNav } from '@/features/teaching/teacher/TeacherNav';
 import { t } from '@/lib/i18n/i18n';
+import { NavSkeleton } from './NavSkeleton';
 import { useNavCounts } from './use-nav-counts';
 
 // Each role's own shell (docs/07 §7), shared by its section route (/admin, /teacher, …) and by
@@ -23,23 +24,28 @@ const ADMIN_TITLES = [...ADMIN_NAV_ITEMS, { to: '/admin/book', label: t.booking.
 const TEACHER_TITLES = [...TEACHER_NAV_ITEMS, { to: '/teacher/report', label: t.reports.formTitle }, ACCOUNT_TITLE];
 const SALES_TITLES = [...SALES_NAV_ITEMS, ACCOUNT_TITLE];
 
-/** Admin: ONE permission-filtered AdminNav, rendered by the sidebar and the «القائمة» sheet alike. */
+/**
+ * Admin: ONE permission-filtered AdminNav, rendered by the sidebar and the «القائمة» sheet alike; a
+ * skeleton until /auth/me has loaded (docs/27 E2, D6).
+ */
 export function AdminShell() {
-  const { can } = usePermissions();
+  const { can, loaded } = usePermissions();
   const counts = useNavCounts(can);
+  const nav = loaded ? <AdminNav counts={counts} can={can} /> : <NavSkeleton />;
   return (
     <CallProvider>
-      <AppShell title={t.admin.dashboardTitle} home="/admin" titles={ADMIN_TITLES} nav={<AdminNav counts={counts} can={can} />} />
+      <AppShell title={t.admin.dashboardTitle} home="/admin" titles={ADMIN_TITLES} nav={nav} />
     </CallProvider>
   );
 }
 
 /** Teacher: the nav shows only the pages the held role's permissions open (row and sheet). */
 export function TeacherShell() {
-  const { can } = usePermissions();
+  const { can, loaded } = usePermissions();
+  const nav = loaded ? <TeacherNav can={can} /> : <NavSkeleton layout="row" />;
   return (
     <CallProvider showsPhone={false}>
-      <AppShell title={t.teacher.dashboardTitle} home="/teacher" titles={TEACHER_TITLES} topNav={<TeacherNav can={can} />} />
+      <AppShell title={t.teacher.dashboardTitle} home="/teacher" titles={TEACHER_TITLES} topNav={nav} />
     </CallProvider>
   );
 }
@@ -49,11 +55,12 @@ export function TeacherShell() {
  * Every page in the chat's full width and frame (owner 2026-10-20).
  */
 export function SalesShell() {
-  const { can } = usePermissions();
+  const { can, loaded } = usePermissions();
   const unread = useSalesUnread(can);
+  const nav = loaded ? <SalesNav can={can} unread={unread} /> : <NavSkeleton layout="row" />;
   return (
     <CallProvider>
-      <AppShell title={t.assistantPortal.title} home="/sales" titles={SALES_TITLES} topNav={<SalesNav can={can} unread={unread} />} wide />
+      <AppShell title={t.assistantPortal.title} home="/sales" titles={SALES_TITLES} topNav={nav} wide />
     </CallProvider>
   );
 }

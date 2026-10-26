@@ -5,7 +5,7 @@ import { InboxScreen } from '@/inbox/screens/InboxScreen';
 import { thread } from '@/inbox/shared/thread-fixtures';
 import { t } from '@/core/lib/i18n/i18n';
 import { TreeBaseProvider } from '@/core/nav/tree-base';
-import { renderWithQuery } from '@/test/query';
+import { createTestQueryClient, renderWithQuery } from '@/test/query';
 
 // The bell in the sales home («المحادثات») and the assistant home («حلقاتي»), as on the admin's Today.
 const mockApiFetch = jest.fn();
@@ -29,6 +29,7 @@ async function openInbox() {
     <TreeBaseProvider value="/sales">
       <InboxScreen />
     </TreeBaseProvider>,
+    createTestQueryClient({ meFromApi: true }),
   );
   await screen.findByText(thread.display_name ?? '');
 }
@@ -51,7 +52,7 @@ test('sales without notifications.push: no bell', async () => {
 
 test('assistant: the bell in the «حلقاتي» header opens the assistant notifications', async () => {
   answer(['self.assistant', 'notifications.push']);
-  await renderWithQuery(<AssistantHomeScreen can={() => true} />);
+  await renderWithQuery(<AssistantHomeScreen can={() => true} />, createTestQueryClient({ meFromApi: true }));
   fireEvent.press(await screen.findByRole('button', { name: unreadName }));
   expect(router.push).toHaveBeenCalledWith('/assistant/more/notifications');
 });

@@ -2,6 +2,7 @@ import type { LessonView } from '@ab/shared';
 import { router } from 'expo-router';
 import { useState } from 'react';
 import { SectionList } from 'react-native';
+import { JoinClassroomButton } from '@/classroom/links/JoinClassroomButton';
 import { EditTimeSheet } from '@/edit-time/components/EditTimeSheet';
 import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/more/Note';
@@ -19,6 +20,8 @@ import { headerLine } from '../agenda/agenda';
 import { AgendaItemRow } from '../agenda/AgendaItemRow';
 import { AgendaLessonRow } from '../agenda/AgendaLessonRow';
 import { LessonRowActions } from '../agenda/LessonRowActions';
+import { LessonDetailsSheet } from '../details/LessonDetailsSheet';
+import { useLessonDetails } from '../details/use-lesson-details';
 import {
   dayCounts,
   itemKey,
@@ -39,7 +42,7 @@ const ALL: TeacherFilter = { program: 'all', gender: 'all' };
  * «الجدول» (R-SCH-01, R-TCH-02): every teacher, even one with nothing booked, on one Riyadh day
  * (lessons and free gaps by time) or the whole week (lessons by day), from GET /lessons/overview,
  * fetched once per week. Each lesson shows تأكيد / إلغاء (optimistic, R-MOB-03) and «غيّر الميعاد»
- * (the reschedule sheet, R-SCH-07) and «عدّل الوقت» (the in-place edit sheet, R-SCH-11). Filter by program and gender. `back` when it is pushed from
+ * (the reschedule sheet, R-SCH-07) and «عدّل الوقت» (the in-place edit sheet, R-SCH-11); a tap on the row opens «تفاصيل الحلقة» with the same actions. Filter by program and gender. `back` when it is pushed from
  * «المزيد» rather than opened as its tab; `initialDate` (YYYY-MM-DD) opens it on that day.
  */
 export function DayScheduleScreen({ back = false, initialDate }: { back?: boolean; initialDate?: string }) {
@@ -55,19 +58,18 @@ export function DayScheduleScreen({ back = false, initialDate }: { back?: boolea
   const start = weekStart(date);
   const overview = useOverview(weekWindow(start));
   const data = overview.data;
+  const details = useLessonDetails(data?.lessons);
   const day = view === 'day';
   const agendas = data ? teacherAgendas(data, { start: day ? date : start, view, filter, now }) : [];
   const subtitle = headerLine(
     [t.availability.tzHint.replace('{tz}', t.runningHead.riyadh)],
     overview,
   );
+  const actionsOf = (lesson: LessonView, onLeave?: () => void) => (
+    <LessonRowActions lesson={lesson} action={action} onReschedule={setMoving} onEditTime={setEditing} onLeave={onLeave} />
+  );
   const lessonRow = (lesson: LessonView) => (
-    <AgendaLessonRow
-      key={lesson.id}
-      lesson={lesson}
-      onReschedule={setMoving}
-      actions={<LessonRowActions lesson={lesson} action={action} onReschedule={setMoving} onEditTime={setEditing} />}
-    />
+    <AgendaLessonRow key={lesson.id} lesson={lesson} onReschedule={setMoving} actions={actionsOf(lesson)} onOpen={details.open} />
   );
 
   return (
@@ -120,8 +122,18 @@ export function DayScheduleScreen({ back = false, initialDate }: { back?: boolea
           )
         }
       />
-      <RescheduleSheet lesson={moving} onClose={() => setMoving(null)} />
-      <EditTimeSheet lesson={editing} onClose={() => setEditing(null)} />
+      <LessonDetailsSheet
+        lesson={details.lesson}
+        role="admin"
+        onClose={details.close}
+        actions={(l) => <>{actionsOf(l, details.close)}<JoinClassroomButton lesson={l} /></>}
+        sheets={
+          <>
+            <RescheduleSheet lesson={moving} onClose={() => setMoving(null)} />
+            <EditTimeSheet lesson={editing} onClose={() => setEditing(null)} />
+          </>
+        }
+      />
     </Screen>
   );
 }

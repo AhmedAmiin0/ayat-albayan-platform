@@ -11,6 +11,7 @@ import type { InboxSearch } from '../../shared/search';
 import { ThreadListChips } from '../../lists/ThreadListChips';
 import { leadChip } from '../../sales/subscription';
 import { SubscriptionChip } from '../../sales/SubscriptionChip';
+import { CopyPhoneButton } from './CopyPhoneButton';
 import { WindowBanner } from './WindowBanner';
 import { CallButton } from '../../calls/header/CallButton';
 
@@ -56,6 +57,7 @@ export function ThreadHeader({ thread: th, listSearch, headingId, badge, action,
         </h2>
         {th.display_name && showsPhone(mode) && <Ltr className="shrink-0 text-xs text-ink-3">{formatPhone(th.phone_e164)}</Ltr>}
         <span className="ms-auto flex shrink-0 items-center gap-1">
+          {showsPhone(mode) && <CopyPhoneButton phone={th.phone_e164} />}
           <CallButton phone={th.phone_e164} name={threadTitle(th, mode)} canSend={callable} />
           {action}
         </span>

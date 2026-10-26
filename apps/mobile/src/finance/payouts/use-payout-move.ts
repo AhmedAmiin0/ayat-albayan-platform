@@ -1,6 +1,7 @@
+import { uploadOnce } from '@ab/client-core';
 import type { PayoutView } from '@ab/shared';
 import { useMutation, useQueryClient, type QueryClient } from '@tanstack/react-query';
-import { useRef } from 'react';
+import { useState } from 'react';
 import { uploadTeacherReceipt } from '@/earnings/hooks/upload-receipt';
 import { apiSend } from '@/core/lib/http/api';
 import { payBody, type PayDraft } from './payout-actions';
@@ -27,13 +28,11 @@ export function usePayoutMove() {
  */
 export function usePayPayout(payout: PayoutView) {
   const client = useQueryClient();
-  const uploaded = useRef<{ uri: string; path: string } | null>(null);
+  const [receiptOnce] = useState(() => uploadOnce<string>());
   return useMutation({
     mutationFn: async (draft: PayDraft) => {
-      if (draft.receipt && uploaded.current?.uri !== draft.receipt.uri) {
-        uploaded.current = { uri: draft.receipt.uri, path: await uploadTeacherReceipt(payout.teacher.id, draft.receipt) };
-      }
-      const path = draft.receipt ? (uploaded.current?.path ?? null) : null;
+      const { receipt } = draft;
+      const path = receipt ? await receiptOnce(receipt.uri, () => uploadTeacherReceipt(payout.teacher.id, receipt)) : null;
       return apiSend<PayoutView>('POST', `/payouts/${payout.id}/pay`, payBody(draft, path, new Date()));
     },
     onSuccess: () => refreshMoney(client),

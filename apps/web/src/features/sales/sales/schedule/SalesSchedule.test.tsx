@@ -49,10 +49,11 @@ describe('SalesSchedule «جدول الحلقات» (read-only)', () => {
     expect(document.body.textContent).not.toContain('meet.example.org');
   });
 
-  it('no edit, cancel, move, book or report action: lesson chips are not buttons', async () => {
+  it('no edit, cancel, move, book or report action: the only buttons are the chips opening the read-only details', async () => {
     renderDay({ date: '2026-10-12' });
     const board = await screen.findByRole('region', { name: t.schedule.dayBoard });
-    expect(within(board).queryAllByRole('button').filter((b) => !b.hasAttribute('disabled'))).toEqual([]);
+    const live = within(board).queryAllByRole('button').filter((b) => !b.hasAttribute('disabled'));
+    expect(live.map((b) => b.textContent?.includes('سهيلة') || b.textContent?.includes('يوسف'))).toEqual([true, true, true]);
     expect(board.textContent).not.toMatch(new RegExp([t.lessons.event.cancel_by_admin, t.lessons.event.reschedule, t.schedule.book].join('|')));
   });
 

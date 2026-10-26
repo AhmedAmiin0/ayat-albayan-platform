@@ -1,7 +1,7 @@
 import en from '@ab/shared/i18n/en.json';
 import { screen } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
-import { renderWithQuery } from '@/test/query';
+import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { recording, recordingsPage } from '../testing/fixtures';
 import { StudentRecordingsScreen } from './StudentRecordingsScreen';
 
@@ -28,7 +28,7 @@ test('an English run reads en.json: title, count, English teacher name, status, 
     if (path === '/students/teacher-options') return [];
     return { name: 'Huda' };
   });
-  await renderWithQuery(<StudentRecordingsScreen />);
+  await renderWithQuery(<StudentRecordingsScreen />, createTestQueryClient({ meFromApi: true }));
   expect(await screen.findByRole('header', { name: 'Lesson recordings' })).toBeTruthy();
   expect(await screen.findByText('Recordings: 1')).toBeTruthy();
   expect(screen.getByText('Teacher: Abrar')).toBeTruthy();

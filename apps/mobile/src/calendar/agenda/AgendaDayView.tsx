@@ -16,13 +16,15 @@ export interface AgendaDayViewProps {
   onReschedule: (lesson: LessonView) => void;
   /** «عدّل الوقت» on a row that allows it; absent for a teacher's own calendar. */
   onEditTime?: (lesson: LessonView) => void;
+  /** A tap on a lesson row opens its details sheet. */
+  onOpen?: (lesson: LessonView) => void;
 }
 
 /**
  * One day of the week agenda: «السبت 3 أكتوبر», the teacher's availability as a faint line, then
  * the lessons in time order. A day without lessons stays, light, so the week reads whole.
  */
-export function AgendaDayView({ day, today, available, onReschedule, onEditTime }: AgendaDayViewProps) {
+export function AgendaDayView({ day, today, available, onReschedule, onEditTime, onOpen }: AgendaDayViewProps) {
   const { color } = useTheme();
   const empty = day.lessons.length === 0;
   const faint = { fontFamily: type.ui[400], fontSize: type.size.xs, lineHeight: type.lineHeight(type.size.xs), color: color.ink3 };
@@ -58,7 +60,7 @@ export function AgendaDayView({ day, today, available, onReschedule, onEditTime 
       {available ? <AppText style={faint}>{available}</AppText> : null}
       {empty ? <AppText style={faint}>{t.schedule.noLessons}</AppText> : null}
       {day.lessons.map((lesson) => (
-        <AgendaLessonRow key={lesson.id} lesson={lesson} onReschedule={onReschedule} onEditTime={onEditTime} />
+        <AgendaLessonRow key={lesson.id} lesson={lesson} onReschedule={onReschedule} onEditTime={onEditTime} onOpen={onOpen} />
       ))}
     </View>
   );

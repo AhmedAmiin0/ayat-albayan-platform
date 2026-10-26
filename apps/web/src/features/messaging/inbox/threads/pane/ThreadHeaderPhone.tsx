@@ -12,6 +12,7 @@ import { ThreadListChips } from '../../lists/ThreadListChips';
 import { leadChip } from '../../sales/subscription';
 import { SubscriptionChip } from '../../sales/SubscriptionChip';
 import type { ThreadHeaderProps } from './ThreadHeader';
+import { CopyPhoneButton } from './CopyPhoneButton';
 import { WindowBanner } from './WindowBanner';
 import { CallButton } from '../../calls/header/CallButton';
 
@@ -45,6 +46,7 @@ export function ThreadHeaderPhone({ thread: th, listSearch, headingId, badge, ac
             <Ltr className="block truncate text-2xs text-ink-3">{formatPhone(th.phone_e164)}</Ltr>
           )}
         </div>
+        {showsPhone(mode) && <CopyPhoneButton phone={th.phone_e164} />}
         <CallButton phone={th.phone_e164} name={title} canSend={callable} />
         {action}
       </div>

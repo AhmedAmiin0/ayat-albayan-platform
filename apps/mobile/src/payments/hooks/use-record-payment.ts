@@ -1,6 +1,7 @@
+import { pendingRequestId, uploadOnce } from '@ab/client-core';
 import type { PaymentView, StudentBalanceView } from '@ab/shared';
 import { useMutation, useQueryClient, type Query } from '@tanstack/react-query';
-import { useRef } from 'react';
+import { useState } from 'react';
 import { apiSend } from '@/core/lib/http/api';
 import type { Page } from '@/core/lib/query/paging';
 import { requestId } from '@/core/lib/http/request-id';
@@ -33,17 +34,14 @@ function studentLists(studentId: string) {
  */
 export function useRecordPayment(studentId: string) {
   const client = useQueryClient();
-  const uploaded = useRef<{ key: string; path: string } | null>(null);
-  const request = useRef<string | null>(null);
+  const [receiptOnce] = useState(() => uploadOnce<string>());
+  const [request] = useState(() => pendingRequestId(requestId));
   const attachmentPaths = useAttachmentPaths(uploadReceipt);
 
   async function receiptPath(input: PaymentInput): Promise<string | undefined> {
     if (!input.receipt) return undefined;
-    const key = `${input.subscriptionId} ${input.receipt.uri}`;
-    if (uploaded.current?.key !== key) {
-      uploaded.current = { key, path: await uploadReceipt(input.subscriptionId, input.receipt) };
-    }
-    return uploaded.current.path;
+    const { receipt } = input;
+    return receiptOnce(`${input.subscriptionId} ${receipt.uri}`, () => uploadReceipt(input.subscriptionId, receipt));
   }
 
   return useMutation({
@@ -51,9 +49,8 @@ export function useRecordPayment(studentId: string) {
     mutationFn: async (input: PaymentInput) => {
       const path = await receiptPath(input);
       const attachments = await attachmentPaths(input.subscriptionId, input.attachments ?? []);
-      request.current ??= requestId();
       return apiSend<PaymentView>('POST', '/payments', {
-        clientRequestId: request.current,
+        clientRequestId: request.current(),
         subscriptionId: input.subscriptionId,
         amount: input.amount,
         currency: input.currency,
@@ -74,7 +71,7 @@ export function useRecordPayment(studentId: string) {
       return { snapshot };
     },
     onSuccess: () => {
-      request.current = null;
+      request.settle();
     },
     onError: (_error, _input, context) => {
       context?.snapshot.forEach(([key, data]) => client.setQueryData(key, data));

@@ -1,49 +1,50 @@
-import { isPermission, sendsAllTemplates, type Permission } from '@ab/shared';
+import { meLoaded, permissionsOf, permissionsView, type Can } from '@ab/client-core';
+import { sendsAllTemplates, type Permission } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { apiFetch } from '@/core/lib/http/api';
 import { pathKey } from '@/core/lib/query/query-keys';
 
-/** The `permissions` of GET /auth/me, unknown keys dropped (an older app on a newer API). */
-export function permissionsOf(me: unknown): Permission[] {
-  if (typeof me !== 'object' || me === null) return [];
-  const list: unknown = Reflect.get(me, 'permissions');
-  return Array.isArray(list) ? list.filter(isPermission) : [];
-}
+export { permissionsOf, type Can };
 
-export type Can = (permission: Permission) => boolean;
+const meQuery = () => ({ queryKey: pathKey('/auth/me'), queryFn: () => apiFetch<unknown>('/auth/me') });
 
 /**
  * Dynamic roles: the app stays role-gated (admin, teacher, sales and assistant trees, verify-role.ts), and the
- * admin screens that map to a permission hide what the held role does not grant. Until /auth/me
- * answers (offline, first paint) nothing is hidden: the API refuses anything not granted anyway.
+ * admin screens that map to a permission hide what the held role does not grant. One behaviour with web
+ * (@ab/client-core, docs/27 E2, owner D6): until /auth/me has answered nothing is granted. The tab bars never
+ * see that state: the startup screen stays up until /auth/me is loaded (useMeReady).
  */
 export function usePermissions(): Can {
-  const me = useQuery({ queryKey: pathKey('/auth/me'), queryFn: () => apiFetch<unknown>('/auth/me') });
-  // No answer yet, or an API from before dynamic roles (no `permissions`): hide nothing.
-  if (typeof me.data !== 'object' || me.data === null || !Array.isArray(Reflect.get(me.data, 'permissions'))) return () => true;
-  const held = permissionsOf(me.data);
-  return (permission) => held.includes(permission);
+  return permissionsView(useQuery(meQuery()).data).can;
 }
 
 /**
- * Strict: does /auth/me list this key? false until it answers. For a key that switches a screen to
- * another role's view (self.sales: a salesperson's chat), where usePermissions' «hide nothing» would
- * flash the wrong one.
+ * Is /auth/me loaded (the persisted copy or a live answer) for a signed-in gate? Fetches it while it is
+ * missing. Signed out (or still booting) needs none. The root layout keeps «جارٍ الاتصال» up until true.
+ */
+export function useMeReady(signedIn: boolean): boolean {
+  const me = useQuery({ ...meQuery(), enabled: signedIn });
+  return !signedIn || meLoaded(me.data);
+}
+
+/**
+ * Does /auth/me list this key? false until it answers, as usePermissions. For a key that switches a
+ * screen to another role's view (self.sales: a salesperson's chat).
  */
 export function useHolds(permission: Permission): boolean {
-  const me = useQuery({ queryKey: pathKey('/auth/me'), queryFn: () => apiFetch<unknown>('/auth/me') });
+  const me = useQuery(meQuery());
   return permissionsOf(me.data).includes(permission);
 }
 
 /** Strict: is /auth/me a base-role admin? false until it answers (the Google card's API is admins only). */
 export function useIsAdmin(): boolean {
-  const me = useQuery({ queryKey: pathKey('/auth/me'), queryFn: () => apiFetch<unknown>('/auth/me') });
+  const me = useQuery(meQuery());
   return typeof me.data === 'object' && me.data !== null && Reflect.get(me.data, 'role') === 'admin';
 }
 
 /** Every template from the picker (shared sendsAllTemplates: never an assistant); false until /auth/me answers. */
 export function useSendsAllTemplates(): boolean {
-  const me = useQuery({ queryKey: pathKey('/auth/me'), queryFn: () => apiFetch<unknown>('/auth/me') });
+  const me = useQuery(meQuery());
   const role: unknown = typeof me.data === 'object' && me.data !== null ? Reflect.get(me.data, 'role') : null;
   return sendsAllTemplates({ role: typeof role === 'string' ? role : null, permissions: permissionsOf(me.data) });
 }

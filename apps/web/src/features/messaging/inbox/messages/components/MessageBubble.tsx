@@ -12,6 +12,12 @@ import { Content, SenderLine } from './MessageContent';
 import { useInboxMode } from '../../shared/mode';
 import { canRetry, canSendByHand, deliveryTitle, isHandedOff, outboundNotes } from '../lib/message-notes';
 
+/** Some of the bubble's text is selected with the mouse. */
+function selectedIn(el: HTMLElement): boolean {
+  const sel = window.getSelection();
+  return Boolean(sel && !sel.isCollapsed && sel.toString().trim() && el.contains(sel.anchorNode));
+}
+
 export interface MessageBubbleProps {
   message: MessageView;
   /** Its template is not approved yet, so the sender leaves it queued. */
@@ -50,6 +56,8 @@ export function MessageBubble({ message: m, waitingTemplate, now }: MessageBubbl
         onContextMenu={
           acts
             ? (e) => {
+                // Text selected in this bubble (partial copy): the browser's own menu copies it.
+                if (selectedIn(e.currentTarget)) return;
                 e.preventDefault();
                 setMenu(true);
               }

@@ -927,6 +927,19 @@
       "payoutLink": "Calculate this month's payouts",
       "overrideEdit": "Save despite the conflict",
       "overrideReasonEdit": "Reason for the edit despite the conflict"
+    },
+    "sheet": {
+      "openRow": "Lesson details — {names}",
+      "about": "About the lesson",
+      "series": "Repeats weekly: {days} · {time}",
+      "live": "In progress",
+      "openStudent": "Open {name}’s file",
+      "report": {
+        "submitted": "Report sent",
+        "draft": "Report is a draft",
+        "none": "No report written yet"
+      },
+      "readOnly": "View only: no edit or cancel from here"
     }
   },
   "teacherDash": {
@@ -2341,6 +2354,22 @@
         "files_forbidden": "Sending files is not available to you",
         "send_failed": "Could not send"
       }
+    },
+    "copy": {
+      "action": "Copy",
+      "text": "Copy text",
+      "label": "Copy message",
+      "done": "Copied",
+      "failed": "Couldn't copy — select the text and copy it by hand",
+      "phone": "Copy number",
+      "phoneTitle": "Chat number",
+      "hint": "Long-press the text to select it, then choose «Copy»"
+    },
+    "download": {
+      "action": "Download",
+      "label": "Download file — {name}",
+      "busy": "Downloading…",
+      "failed": "Couldn't download the file, try again"
     },
     "quickReply": {
       "confirmed": "Confirmed the {when} lesson (Riyadh time)",

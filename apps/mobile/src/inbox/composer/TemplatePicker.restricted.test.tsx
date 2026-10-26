@@ -1,7 +1,7 @@
 import { RESTRICTED_TEMPLATE_DEFAULTS, type TemplateView } from '@ab/shared';
 import { fireEvent, screen } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
-import { renderWithQuery } from '@/test/query';
+import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { plainReminder } from '../shared/thread-fixtures';
 import { TemplatePicker } from './TemplatePicker';
 
@@ -34,7 +34,7 @@ const onSend = jest.fn();
 
 function show(rows: TemplateView[], permissions: string[], role = 'teacher') {
   mockApiFetch.mockImplementation(async (path: string) => (path === '/auth/me' ? { id: 'u1', role, permissions } : rows));
-  return renderWithQuery(<TemplatePicker visible lessons={[]} teacher={false} onClose={jest.fn()} onSend={onSend} />);
+  return renderWithQuery(<TemplatePicker visible lessons={[]} teacher={false} onClose={jest.fn()} onSend={onSend} />, createTestQueryClient({ meFromApi: true }));
 }
 
 beforeEach(() => {
@@ -65,7 +65,7 @@ test('the assistant reads each default by its Arabic name, never a Meta key, and
 test('while the list loads the sheet says so, not an empty white page', async () => {
   const me = { id: 'u1', role: 'sales', permissions: ['messages.read'] };
   mockApiFetch.mockImplementation((path: string) => (path === '/auth/me' ? Promise.resolve(me) : new Promise(() => undefined)));
-  await renderWithQuery(<TemplatePicker visible lessons={[]} teacher={false} onClose={jest.fn()} onSend={onSend} />);
+  await renderWithQuery(<TemplatePicker visible lessons={[]} teacher={false} onClose={jest.fn()} onSend={onSend} />, createTestQueryClient({ meFromApi: true }));
   expect(await screen.findByText(t.common.loading)).toBeTruthy();
   expect(screen.queryByText(t.inbox.composer.noAllowed)).toBeNull();
 });

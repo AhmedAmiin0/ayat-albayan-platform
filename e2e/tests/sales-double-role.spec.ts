@@ -51,7 +51,17 @@ test.describe('sales double role', () => {
     await expect(day).toContainText(names.mine);
     await expect(day).toContainText(ar.sales.academySchedule.liveNow);
     await expect(day.getByRole('link', { name: ar.classroom.enter })).toBeVisible();
-    await expect(page.getByRole('region', { name: ar.schedule.dayBoard }).getByRole('button', { disabled: false })).toHaveCount(0);
+    // The only buttons are the lesson chips: one opens the read-only lesson drawer (no admin action).
+    const board = page.getByRole('region', { name: ar.schedule.dayBoard });
+    await expect(board.getByRole('button', { disabled: false })).toHaveCount(1);
+    await board.getByRole('button', { name: new RegExp(names.mine) }).click();
+    const details = page.getByRole('dialog', { name: names.mine });
+    await expect(details).toContainText(ar.lessons.sheet.readOnly);
+    await expect(details.getByRole('link', { name: ar.classroom.enter })).toBeVisible();
+    // «إغلاق» is its only button: no confirm, cancel, move, edit, invoice or report.
+    await expect(details.getByRole('button')).toHaveCount(1);
+    await details.getByRole('button', { name: ar.common.close }).click();
+    await expect(details).toBeHidden();
 
     await (await salesNav(page)).getByRole('link', { name: ar.sales.nav.allStudents }).click();
     await page.getByRole('searchbox', { name: ar.sales.allStudents.search }).fill(names.foreign);

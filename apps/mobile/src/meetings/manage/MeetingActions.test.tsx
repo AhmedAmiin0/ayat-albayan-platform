@@ -32,14 +32,14 @@ test.each([
   [['teacher'], '/teacher/more/meetings/m1'],
 ])('recordings opens the route of the current stack %j', async (segments, path) => {
   mockSegments = segments;
-  await renderWithQuery(<MeetingActions meeting={meeting} tz="Asia/Riyadh" />);
+  await renderWithQuery(<MeetingActions meeting={meeting} tz="Asia/Riyadh" />, createTestQueryClient({ meFromApi: true }));
   await press(t.classroom.recordings.title);
   expect(router.push).toHaveBeenCalledWith(path);
 });
 
 test('cancel is ignored while ending is in flight', async () => {
   mockApiSend.mockReturnValue(new Promise(() => undefined));
-  await renderWithQuery(<MeetingActions meeting={meeting} tz="Asia/Riyadh" />);
+  await renderWithQuery(<MeetingActions meeting={meeting} tz="Asia/Riyadh" />, createTestQueryClient({ meFromApi: true }));
   await press(t.meetings.internal.end);
   await press(t.mobileClassroom.endAction);
   await waitFor(() => expect(screen.getByRole('button', { name: t.mobileClassroom.endAction }).props.accessibilityState.busy).toBe(true));
@@ -49,7 +49,7 @@ test('cancel is ignored while ending is in flight', async () => {
 
 test('a failed end is cleared when a new link is asked for', async () => {
   mockApiSend.mockRejectedValueOnce(new ApiError(500, null));
-  await renderWithQuery(<MeetingActions meeting={meeting} tz="Asia/Riyadh" />);
+  await renderWithQuery(<MeetingActions meeting={meeting} tz="Asia/Riyadh" />, createTestQueryClient({ meFromApi: true }));
   await press(t.meetings.internal.end);
   await press(t.mobileClassroom.endAction);
   expect(await screen.findByText(t.meetings.internal.actionError)).toBeTruthy();
@@ -59,7 +59,7 @@ test('a failed end is cleared when a new link is asked for', async () => {
 
 test('a cancel refused because the meeting ended says so and refreshes the list', async () => {
   mockApiSend.mockRejectedValueOnce(new ApiError(410, { code: 'meeting_ended' }));
-  const client = createTestQueryClient();
+  const client = createTestQueryClient({ meFromApi: true });
   const invalidate = jest.spyOn(client, 'invalidateQueries');
   await renderWithQuery(<MeetingActions meeting={{ ...meeting, starts_at: '2026-10-20T14:00:00.000Z' }} tz="Asia/Riyadh" />, client);
   await press(t.meetingInvites.list.cancel);
@@ -70,7 +70,7 @@ test('a cancel refused because the meeting ended says so and refreshes the list'
 
 test('a join refused as not open yet names the opening time on the viewer clock (UTC)', async () => {
   mockApiSend.mockRejectedValueOnce(new ApiError(403, { code: 'join_not_open_yet', opens_at: '2026-10-05T11:30:00.000Z' }));
-  await renderWithQuery(<MeetingActions meeting={meeting} tz="UTC" />);
+  await renderWithQuery(<MeetingActions meeting={meeting} tz="UTC" />, createTestQueryClient({ meFromApi: true }));
   await press(t.meetings.internal.enter);
   expect(await screen.findByText(/11:30/)).toBeTruthy();
   expect(screen.queryByText(/14:30/)).toBeNull();
@@ -78,6 +78,6 @@ test('a join refused as not open yet names the opening time on the viewer clock 
 
 test('«اجتماع جديد» needs meetings.write', async () => {
   mockApiFetch.mockResolvedValue({ permissions: ['meetings.read'] });
-  await renderWithQuery(<CreateMeeting />);
+  await renderWithQuery(<CreateMeeting />, createTestQueryClient({ meFromApi: true }));
   await waitFor(() => expect(screen.queryByRole('button', { name: t.meetings.new })).toBeNull());
 });

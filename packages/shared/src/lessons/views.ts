@@ -1,4 +1,4 @@
-import type { Attendance, Gender, LessonStatus, Program, StudentStatus } from '../enums/index.js';
+import type { Attendance, Gender, LessonStatus, Program, ReportStatus, StudentStatus } from '../enums/index.js';
 import type { Conflict } from './conflicts.js';
 import type { LessonEvent } from './state-machine.js';
 import type { LessonTimeEditView, TimeEditMode } from './series/time-edit.js';
@@ -24,6 +24,8 @@ export interface LessonStudentView {
   unpaid?: boolean;
   /** The active حجز تعويضي booked for this student's miss of the lesson (a group's others may have none). */
   makeup?: { lesson_id: string; starts_at: string } | null;
+  /** This student's تقرير الحلقة (draft or submitted), null before one is opened. Absent in an old cache. */
+  report?: { id: string; status: ReportStatus } | null;
 }
 
 /** GET /lessons, /lessons/day, /teachers/me/lessons, /students/:id/lessons items. */

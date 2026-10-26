@@ -1,8 +1,10 @@
-import { canForward, canReply, type MessageView } from '@ab/shared';
+import type { MessageView } from '@ab/shared';
 import { useCallback } from 'react';
 import type { AccessibilityActionEvent, AccessibilityActionInfo } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { useChatActions } from '../../thread/hooks/chat-actions';
+import { useThreadMode } from '../../thread/hooks/thread-mode';
+import { bubbleOffers, offersAny } from './bubble-offers';
 
 export interface BubbleA11y {
   accessible?: boolean;
@@ -12,7 +14,7 @@ export interface BubbleA11y {
 }
 
 export interface BubbleActions {
-  /** «رد» or «إعادة توجيه» applies: the bubble opens the menu on a long press. */
+  /** «رد», «نسخ النص», «إعادة توجيه» or «تنزيل» applies: the bubble opens the menu on a long press. */
   has: boolean;
   openMenu: () => void;
   /** Swipe to answer: only while free text can go out. */
@@ -24,8 +26,8 @@ export interface BubbleActions {
 /** What one bubble offers (owner 2026-10-25). Off outside a chat screen (no ChatActionsProvider). */
 export function useBubbleActions(m: MessageView): BubbleActions {
   const { enabled, canSend, setReply, openMenu, openForward } = useChatActions();
-  const reply = enabled && canReply(m);
-  const forward = enabled && canForward(m);
+  const offers = bubbleOffers(m, { enabled, teacher: useThreadMode().kind === 'teacher' });
+  const { reply, forward } = offers;
   const answer = useCallback(() => setReply(m), [setReply, m]);
   const actions: AccessibilityActionInfo[] = [
     ...(reply && canSend ? [{ name: 'reply', label: t.inbox.reply.action }] : []),
@@ -37,7 +39,7 @@ export function useBubbleActions(m: MessageView): BubbleActions {
     else if (e.nativeEvent.actionName === 'forward') openForward(m);
     else openMenu(m);
   };
-  const has = reply || forward;
+  const has = offersAny(offers);
   return {
     has,
     openMenu: () => openMenu(m),

@@ -27,12 +27,16 @@ export function StartupOverlay({ ready, onRetry, fontsLoaded }: StartupOverlayPr
   const [opacity] = useState(() => new Animated.Value(1));
   const [gone, setGone] = useState(false);
   useEffect(() => {
-    if (!ready) return undefined;
+    // Not ready again (an in-session sign-in still waiting on /auth/me): the cover comes back, opaque.
+    if (!ready) {
+      opacity.setValue(1);
+      return undefined;
+    }
     const run = Animated.timing(opacity, { toValue: 0, duration: still ? motion.fast : HAND_OFF_MS, useNativeDriver: true });
     run.start(({ finished }) => (finished ? setGone(true) : undefined));
     return () => run.stop();
   }, [ready, still, opacity]);
-  if (gone) return null;
+  if (gone && ready) return null;
   const mode = startupMode({ restoring, hasSaved: !restoring && hasSavedData(client) });
   return (
     <Animated.View pointerEvents={ready ? 'none' : 'auto'} style={[StyleSheet.absoluteFill, { opacity }]}>
