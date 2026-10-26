@@ -9,7 +9,7 @@ import { RowAsk } from './RowAsk';
 import { RuleControl } from './RuleControl';
 import type { CatalogueToggles } from '../hooks/use-catalogue-toggles';
 
-export interface CatalogueRowProps {
+interface CatalogueRowProps {
   entry: NotificationEntryView;
   /** notifications.manage held: editable rows get a switch. */
   canManage: boolean;

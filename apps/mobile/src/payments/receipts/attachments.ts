@@ -25,7 +25,7 @@ export function withoutAttachment(list: readonly Attachment[], index: number): A
   return list.filter((_, i) => i !== index);
 }
 
-export type UploadReceipt = (subscriptionId: string, receipt: Receipt) => Promise<string>;
+type UploadReceipt = (subscriptionId: string, receipt: Receipt) => Promise<string>;
 
 /**
  * The storage paths for POST …/payments `attachments`, in order. Each photo goes up once through

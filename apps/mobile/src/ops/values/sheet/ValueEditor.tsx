@@ -6,7 +6,7 @@ import { FilterPills } from '@/core/ui/form/FilterPills';
 import { choicesOf, editorOf, type Draft } from '../lib/value-draft';
 import { labelOf, optionLabel, textAt } from '../lib/value-text';
 
-export interface ValueEditorProps {
+interface ValueEditorProps {
   valueKey: SettingKey;
   draft: Draft;
   setDraft: (patch: Partial<Draft>) => void;

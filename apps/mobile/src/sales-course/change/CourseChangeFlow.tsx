@@ -16,7 +16,7 @@ import { useChangeCourse } from './change-queries';
 import { CourseChangeDone } from './CourseChangeDone';
 import { CourseChangeReview } from './CourseChangeReview';
 
-export interface CourseChangeFlowProps {
+interface CourseChangeFlowProps {
   student: SalesCourseView['student'];
   /** The course to change (view.current: running today, else the next one booked ahead). */
   course: BookedCourse;

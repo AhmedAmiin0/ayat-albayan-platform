@@ -29,7 +29,7 @@ export function controlOf(entry: NotificationEntryView, canManage: boolean): Row
 }
 
 /** What a switch asks first: family ON names whom it reaches; essential OFF needs the typed word. */
-export type ToggleAsk = 'plain' | 'family' | 'typed';
+type ToggleAsk = 'plain' | 'family' | 'typed';
 
 export function askOf(entry: Pick<NotificationEntryView, 'audience' | 'essential'>, next: boolean): ToggleAsk {
   if (next && (entry.audience === 'guardian' || entry.audience === 'lead')) return 'family';
