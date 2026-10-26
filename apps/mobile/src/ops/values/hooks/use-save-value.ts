@@ -8,7 +8,7 @@ const META = '/config/meta';
 
 export type SaveOutcome = 'saved' | 'moved' | 'invalid';
 
-export interface ValueSave {
+interface ValueSave {
   key: SettingKey;
   value: unknown;
 }

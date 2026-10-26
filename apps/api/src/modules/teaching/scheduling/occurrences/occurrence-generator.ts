@@ -8,7 +8,7 @@ import { resolveMeetingLink } from '../meeting-link';
 import { ruleOccurrences } from './occurrences';
 import { ruleStudents, type RuleWithLinks } from '../schedule.queries';
 
-export type TopUpOptions = {
+type TopUpOptions = {
   /** Weeks ahead of now (settings.booking_horizon_weeks, resolved by the caller). */
   weeks: number;
   /** null for the daily job. */
@@ -16,7 +16,7 @@ export type TopUpOptions = {
   now?: Date;
 };
 /** `conflicts`: clashes of the inserted rows, also stored on them (lessons.conflicts). */
-export type TopUp = { until: Date; lessons: GeneratedLesson[]; conflicts: Conflict[] };
+type TopUp = { until: Date; lessons: GeneratedLesson[]; conflicts: Conflict[] };
 
 const toOccurrence = (l: GeneratedLesson) => ({ starts_at: new Date(l.starts_at), ends_at: new Date(l.ends_at) });
 

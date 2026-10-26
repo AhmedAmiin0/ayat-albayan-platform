@@ -10,7 +10,7 @@ import { fromOption, type DraftInvitee } from './invitee-draft';
 
 const L = t.meetingInvites;
 
-export interface InviteeSearchProps {
+interface InviteeSearchProps {
   kind: Exclude<MeetingInviteeKind, 'phone'>;
   onAdd: (d: DraftInvitee) => void;
   /** Already 30: the results show, but none can be added. */

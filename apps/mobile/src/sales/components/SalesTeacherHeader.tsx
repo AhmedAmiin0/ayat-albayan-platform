@@ -12,7 +12,7 @@ import { useSalesHrefs } from '../lib/sales-href';
 import { teacherCounts } from '../lib/sales-text';
 import { TeacherMeetingLink } from './TeacherMeetingLink';
 
-export interface SalesTeacherHeaderProps {
+interface SalesTeacherHeaderProps {
   teacher: SalesTeacherView;
   kind: StudentListKind;
   onKind: (kind: StudentListKind) => void;

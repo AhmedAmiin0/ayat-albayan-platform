@@ -6,7 +6,7 @@ import type { SeriesRule } from '../plan/booking.series-plan';
 
 const WEEK = 7 * DAY;
 
-export type CourseEndInput = { rule: SeriesRule; now: Date; lessonsTotal: number };
+type CourseEndInput = { rule: SeriesRule; now: Date; lessonsTotal: number };
 
 /**
  * The assistant's course ends on its N-th lesson (owner 2026-10-18 decision 1): the local date (in the

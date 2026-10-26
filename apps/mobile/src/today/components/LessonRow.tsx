@@ -6,7 +6,7 @@ import { toneColors } from '@/core/ui/feedback/StatusChip';
 import { type, useTheme } from '@/theme';
 import { riyadhTime, rowSubtitle, studentNames } from '../lib/lesson-text';
 
-export interface LessonRowProps {
+interface LessonRowProps {
   lesson: LessonView;
   /** Opens the lesson details sheet, where the lesson's actions live. */
   onOpen: (lesson: LessonView) => void;

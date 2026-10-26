@@ -3,14 +3,14 @@
 import type { Param } from '../db/sql.ts';
 import type { ImportItemWrite, TargetDb, TargetTx } from '../db/target.ts';
 
-export interface FakeDbOptions {
+interface FakeDbOptions {
   /** Rows for db.select by query text; findByColumn asks for 'find <table>.<column>'. */
   select?: (text: string, params: readonly Param[]) => object[];
   /** Insert into this table throws. */
   failOn?: string;
 }
 
-export interface FakeDb {
+interface FakeDb {
   db: TargetDb;
   log: string[];
   items: ImportItemWrite[];

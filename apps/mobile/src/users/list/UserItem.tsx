@@ -8,7 +8,7 @@ import { Ltr } from '@/core/ui/primitives/Ltr';
 import { StatusChip } from '@/core/ui/feedback/StatusChip';
 import { lastSignIn, recordText, roleText, statusStyle } from '../shared/format';
 
-export interface UserItemProps {
+interface UserItemProps {
   user: UserView;
   onPress: () => void;
 }

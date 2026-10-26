@@ -7,7 +7,7 @@ import { locale } from '@/core/lib/i18n/locale';
 /** GET /me/profile (R-ACC-01): the caller's own login, whatever the role. */
 export const PROFILE_KEY = ['me', 'profile'] as const;
 
-export const profileQuery = queryOptions({
+const profileQuery = queryOptions({
   queryKey: PROFILE_KEY,
   queryFn: () => apiFetch<AccountProfile>('/me/profile'),
   // The photo URL is signed for an hour: refetch well before it lapses.

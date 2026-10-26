@@ -6,7 +6,7 @@ import { ornament } from './template.header';
 const r = AR.reports;
 
 /** The built-in contact: used when the settings cannot be read, or academy_contact has no site. */
-export const CONTACT = { site: 'ayatalbayan.com', whatsapp: '+966 56 610 1447' } as const;
+const CONTACT = { site: 'ayatalbayan.com', whatsapp: '+966 56 610 1447' } as const;
 
 /** A «۞ title» section rule. */
 export function sectionHtml(title: string): string {
@@ -54,7 +54,7 @@ export function closingHtml(): string {
 }
 
 /** «فاضل 2 حلقة» as of this lesson (docs/07 §6 packageProgress); empty outside a package. */
-export function packageLine(m: Pick<ReportPdfModel, 'slot'>): string {
+function packageLine(m: Pick<ReportPdfModel, 'slot'>): string {
   if (!m.slot) return '';
   const p = packageProgress(m.slot.position, m.slot.total, { forms: AR.subscriptions.progress });
   return `<span class="pkg">${esc(AR.subscriptions.package)}: ${esc(p.remainingLabel)}</span>`;

@@ -12,7 +12,7 @@ import {
 } from './match.ts';
 import type { Desired } from '../resolve.ts';
 
-export interface MatchTargetInput {
+interface MatchTargetInput {
   db: TargetDb;
   desired: readonly Desired[];
   /** Mutated: adopted rows are added as { targetId, hash: null }. */

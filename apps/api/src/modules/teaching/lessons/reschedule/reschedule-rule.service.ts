@@ -24,7 +24,7 @@ function moveFrom(lesson: LessonRow, tz: string): string {
   return day > today ? day : today;
 }
 
-export type RescheduleRuleInput = { lessonId: string; body: RuleScope; actor: AuthUser };
+type RescheduleRuleInput = { lessonId: string; body: RuleScope; actor: AuthUser };
 
 /**
  * Move the tapped lesson and every later one (R-SCH-07, docs/10 route 8 `rule`): the old rule ends

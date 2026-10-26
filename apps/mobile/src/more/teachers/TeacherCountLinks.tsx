@@ -9,7 +9,7 @@ import type { TeacherListItem } from '../types';
 
 const L = t.studentLists;
 
-export interface TeacherCountLinksProps {
+interface TeacherCountLinksProps {
   teacher: TeacherListItem;
   /** The teacher's name as the row shows it, for the spoken label of each count. */
   name: string;

@@ -17,7 +17,7 @@ export function bellLabel(unread: number): string {
   return unread > 0 ? bell.openUnread.replace('{n}', String(unread)) : bell.open;
 }
 
-export interface MarkRead {
+interface MarkRead {
   /** The rows to mark; none = every unread row («تحديد الكل كمقروء»). */
   ids?: readonly string[];
   /** read_at to stamp (ISO). */

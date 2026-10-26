@@ -15,7 +15,7 @@ import type { BookingTeacher } from './booking.queries';
 
 export type { CourseLabel } from './booking.course-label';
 
-export type PayloadInput = {
+type PayloadInput = {
   req: BookingRequest;
   kind: BookingKind;
   teacher: BookingTeacher;

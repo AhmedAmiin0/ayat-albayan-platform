@@ -13,7 +13,7 @@ export interface Desired {
   ref: SourceRef;
 }
 
-export interface ResolveResult {
+interface ResolveResult {
   kept: Desired[];
   issues: RowIssue[];
 }

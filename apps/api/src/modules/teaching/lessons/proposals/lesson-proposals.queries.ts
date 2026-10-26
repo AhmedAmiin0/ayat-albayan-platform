@@ -4,15 +4,15 @@ import { conflict } from '../../../../common/http/errors';
 import { readAll } from '../../scheduling/read-all';
 import { dbError } from '../../../../common/http/http';
 
-export type ProposalRow = { id: string; lesson_id: string; proposed_starts_at: string; status: string };
-export type NewProposal = {
+type ProposalRow = { id: string; lesson_id: string; proposed_starts_at: string; status: string };
+type NewProposal = {
   lesson_id: string;
   teacher_id: string;
   proposed_starts_at: string;
   note: string | null;
   created_by: string;
 };
-export type Decision = { status: 'approved' | 'rejected'; decided_by: string; new_lesson_id?: string };
+type Decision = { status: 'approved' | 'rejected'; decided_by: string; new_lesson_id?: string };
 
 /** lesson_proposals (migration 110, R-SCH-08). The table itself is the trail: who, when, outcome. */
 @Injectable()

@@ -9,7 +9,7 @@ import { CONFIG_DEFS, defaultOf } from './config-defs';
 /** The send switches: ON only for a stored JSON boolean `true` ("true", 1, null, missing → off). */
 export const GATE_KEYS: ReadonlySet<string> = new Set(['messaging_enabled', 'auto_messages_enabled']);
 
-export interface Decoded {
+interface Decoded {
   value: unknown;
   /** A stored, non-null value that is not valid for its entry (it reads as the default). */
   malformed: boolean;

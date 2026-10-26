@@ -6,7 +6,7 @@ import { seedFullAccess } from './staff-me';
 // Test-only helpers: a fresh client per test. No retries; gcTime Infinity so nothing is collected
 // mid-test and no 5-minute gc timer keeps the jest worker alive after a mutation settles.
 
-export interface TestClientOptions {
+interface TestClientOptions {
   /** The test answers GET /auth/me through its apiFetch mock: nothing seeded. */
   meFromApi?: boolean;
 }

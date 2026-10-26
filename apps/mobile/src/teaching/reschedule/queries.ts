@@ -4,7 +4,7 @@ import { addDays, riyadhMidnight } from '@/calendar/lib/week';
 import { apiFetch, apiSend, toQueryString } from '@/core/lib/http/api';
 import { pathKey } from '@/core/lib/query/query-keys';
 
-export interface RescheduleSlotsParams {
+interface RescheduleSlotsParams {
   teacherId: string;
   durationMin: number;
   /** The lesson's students: their other lessons count as clashes. */

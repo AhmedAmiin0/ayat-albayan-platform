@@ -87,7 +87,7 @@ export function guardianLine(student: SalesStudentView): string {
   return t.sales.mobile.guardianLine.replace('{name}', student.guardian_name);
 }
 
-export interface HistoryLines {
+interface HistoryLines {
   heading: string;
   dates: string[];
   lessons: string;

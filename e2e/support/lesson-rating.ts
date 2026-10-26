@@ -5,7 +5,7 @@ import { stubSent, type StubSent } from './wa-stub';
 
 export const RATING = 'lesson_rating';
 
-export interface RatingScene {
+interface RatingScene {
   lessonId: string;
   studentId: string;
   guardianId: string;

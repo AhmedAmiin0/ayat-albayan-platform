@@ -8,7 +8,7 @@ export const STUDENT = '00000000-0000-4000-8000-0000000000c1';
 export const SIBLING = '00000000-0000-4000-8000-0000000000c2';
 export const REC_ID = '00000000-0000-4000-8000-0000000000aa';
 export const TEACHER_ID = 'teacher-1';
-export const OTHER_TEACHER_ID = 'teacher-2';
+const OTHER_TEACHER_ID = 'teacher-2';
 
 const user = (prefix: string, role: AuthUser['role']): AuthUser => ({ id: `${prefix}0000000-0000-4000-8000-000000000001`, email: null, role });
 export const ADMIN = user('a', 'admin');

@@ -19,7 +19,7 @@ export type MessageDraft = {
   template_params: Record<string, string>;
 };
 
-export type DraftInput = {
+type DraftInput = {
   students: readonly BookedStudent[];
   firstStart: Date;
   meetingLink: string | null;

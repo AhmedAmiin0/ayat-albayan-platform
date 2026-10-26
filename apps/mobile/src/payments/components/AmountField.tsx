@@ -7,7 +7,7 @@ import { AppText } from '@/core/ui/primitives/AppText';
 import { currencyName } from '../format';
 import { FormLabel } from '../FormLabel';
 
-export interface AmountFieldProps {
+interface AmountFieldProps {
   /** Raw text; parseAmount reads it (Arabic digits and «٫» too). */
   value: string;
   onChange: (text: string) => void;

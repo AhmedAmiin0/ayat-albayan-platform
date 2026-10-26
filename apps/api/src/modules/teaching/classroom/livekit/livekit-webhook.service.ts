@@ -5,7 +5,7 @@ import { leftEventOf } from './livekit-webhook.room';
 import { RecordingLifecycle } from '../recordings/recording.lifecycle';
 import { RecordingQueries } from '../recordings/recording.queries';
 
-export interface WebhookPost {
+interface WebhookPost {
   /** The exact bytes LiveKit sent. */
   rawBody: Buffer | undefined;
   authorization: string | undefined;

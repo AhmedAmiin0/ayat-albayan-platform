@@ -7,7 +7,7 @@ import { Field } from '@/core/ui/form/Field';
 import { FilterPills } from '@/core/ui/form/FilterPills';
 import type { CheckBy } from '../lib/registration-check';
 
-export interface RegistrationFormProps {
+interface RegistrationFormProps {
   by: CheckBy;
   onBy: (by: CheckBy) => void;
   text: string;

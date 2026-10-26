@@ -28,7 +28,7 @@ function letterIndex(letter: string): number {
   return [...letter].reduce((acc, ch) => acc * 26 + (ch.charCodeAt(0) - 64), 0) - 1;
 }
 
-export interface SheetRowsResult {
+interface SheetRowsResult {
   rows: SourceRow[];
   /** Spec headers not found: the owner changed the sheet; extraction should stop. */
   missing: string[];
@@ -36,7 +36,7 @@ export interface SheetRowsResult {
   unknown: string[];
 }
 
-export interface SheetRowsInput {
+interface SheetRowsInput {
   spec: SheetSpec;
   data: readonly (readonly unknown[])[];
   /** Zip path, recorded on each row for multi-file specs. */

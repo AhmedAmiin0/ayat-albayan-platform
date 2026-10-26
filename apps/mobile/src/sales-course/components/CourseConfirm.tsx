@@ -16,7 +16,7 @@ import { courseRows } from '../lib/course-summary';
 import { useCourseCheck } from '../hooks/course-queries';
 import { CourseCheckNotice } from './CourseCheckNotice';
 
-export interface CourseConfirmProps {
+interface CourseConfirmProps {
   view: SalesCourseView;
   teacherName: string;
   picks: readonly string[];

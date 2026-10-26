@@ -19,7 +19,7 @@ import { StudentLinkQueries, type StudentLesson } from './student-link.queries';
 const MS = 1000;
 const ONE_DAY_S = 86_400;
 
-export type PublicCall = { token: string; ip: string };
+type PublicCall = { token: string; ip: string };
 type Resolved = { student: { id: string; name: string }; lesson: StudentLesson | null; win: JoinWindowConfig };
 
 /**

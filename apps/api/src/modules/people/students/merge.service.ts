@@ -2,7 +2,7 @@ import { Inject, Injectable, InternalServerErrorException } from '@nestjs/common
 import { DB, type Db } from '../../../common/db/db.module';
 import { dbError } from '../guardians/http';
 
-export type MergeOptions = { keptId: string; mergedId: string; actorId: string };
+type MergeOptions = { keptId: string; mergedId: string; actorId: string };
 
 /**
  * Merges student B into A (R-STU-03, R-NFR-03). The whole merge — re-pointing every reference,

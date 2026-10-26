@@ -11,7 +11,7 @@ import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import type { StartDraft } from '../lib/start-date';
 
-export interface StartDateFieldProps {
+interface StartDateFieldProps {
   /** Holds subscriptions.set_start_date. */
   canSet: boolean;
   /** The day chips from the academy's (Riyadh) today, the day the API checks against. */

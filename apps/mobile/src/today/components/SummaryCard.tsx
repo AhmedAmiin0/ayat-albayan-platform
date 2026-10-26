@@ -6,7 +6,7 @@ import { type, useTheme } from '@/theme';
 import { raisedCard } from '../lib/surface';
 import { TODAY_FILTERS, type TodayFilter } from '../lib/timeline';
 
-export interface SummaryCardProps {
+interface SummaryCardProps {
   counts: Record<TodayFilter, number>;
   filter: TodayFilter;
   onFilter: (filter: TodayFilter) => void;
