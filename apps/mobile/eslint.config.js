@@ -1,6 +1,9 @@
-import { reactConfig } from '@ab/config/eslint';
+import { boundaries, reactConfig } from '@ab/config/eslint';
 export default reactConfig(
   { ignores: ['jest.config.cjs', 'jest.setup.cjs'] },
+  // docs/27 §1 rule 6: another feature only through its index.ts; core/ and test/ are shared
+  // (existing deep imports: eslint-suppressions.json).
+  boundaries({ files: ['src/**/*.{ts,tsx}'], module: 'src/(?!core/|test/)[^/]+', alias: { '@/': 'src/' } }),
   {
     // RTL: a raw Text with no textAlign can sit at the physical left (docs/07 §14.1). Use AppText.
     files: ['app/**/*.tsx', 'src/**/*.tsx'],

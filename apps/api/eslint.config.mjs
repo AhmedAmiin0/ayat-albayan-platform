@@ -1,21 +1,25 @@
-import { config } from '@ab/config/eslint';
+import { boundaries, config } from '@ab/config/eslint';
 
-// Modules read settings through their own typed reader (<module>.settings.ts), never the
-// store itself (docs/25-settings-and-config.md), nor ConfigStore (docs/26 §2e). Readers, tests and test harnesses may.
-export default config({
-  files: ['src/modules/**/*.ts'],
-  ignores: ['**/*.settings.ts', '**/*.test.ts', '**/*.fakes.ts', '**/test-app*.ts', '**/*.test-app.ts'],
-  rules: {
-    'no-restricted-imports': [
-      'error',
-      {
-        patterns: [
-          {
-            regex: 'common/(settings/settings|config-store/store/config-store)\\.service(\\.js)?$',
-            message: 'Read settings through this module\'s <module>.settings.ts reader.',
-          },
-        ],
-      },
-    ],
+export default config(
+  // docs/27 §1 rule 6: another module only through its index.ts (existing deep imports: eslint-suppressions.json).
+  boundaries({ files: ['src/**/*.ts'], module: 'src/modules/[^/]+/[^/]+' }),
+  // Modules read settings through their own typed reader (<module>.settings.ts), never the
+  // store itself (docs/25-settings-and-config.md), nor ConfigStore (docs/26 §2e). Readers, tests and test harnesses may.
+  {
+    files: ['src/modules/**/*.ts'],
+    ignores: ['**/*.settings.ts', '**/*.test.ts', '**/*.fakes.ts', '**/test-app*.ts', '**/*.test-app.ts'],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            {
+              regex: 'common/(settings/settings|config-store/store/config-store)\\.service(\\.js)?$',
+              message: 'Read settings through this module\'s <module>.settings.ts reader.',
+            },
+          ],
+        },
+      ],
+    },
   },
-});
+);

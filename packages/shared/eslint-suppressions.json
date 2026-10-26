@@ -1,0 +1,437 @@
+{
+  "src/account/account.schemas.ts": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/account/account.views.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/assistant/commission.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/assistant/first-paid.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/assistant/schemas.ts": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/assistant/statement.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/classroom/join-window.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/classroom/meetings.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/custom-config/public-config.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/custom-config/public.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/custom-config/schema.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/format/running-head.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/index.ts": {
+    "ab/module-boundaries": {
+      "count": 29
+    }
+  },
+  "src/integrations/driver-keys.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/integrations/recipients.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/lessons/makeup-offer.ts": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/lessons/makeup-views.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/lessons/pick-progress.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/lessons/series/day-times.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/lessons/teacher-name.ts": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/lessons/views.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/messaging/calls/call-schemas.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/messaging/chat/chat-files.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/messaging/chat/chat-lists.ts": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/messaging/chat/line-views.ts": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/messaging/chat/status-style.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/messaging/chat/views.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/messaging/lesson/booking-confirmation.ts": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/messaging/lesson/rating.ts": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/messaging/lesson/timing.day-before.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/messaging/lesson/trial-chat.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/messaging/replies/quick-reply.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/messaging/replies/reply-forward.ts": {
+    "ab/module-boundaries": {
+      "count": 3
+    }
+  },
+  "src/messaging/replies/reply-line.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/messaging/replies/reply-note.ts": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/messaging/replies/saved-reply-text.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/messaging/schemas.ts": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/messaging/templates/lesson-params.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/messaging/templates/params.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/messaging/templates/restricted-templates.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/messaging/templates/template-sync-views.ts": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/messaging/wa.ts": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/money/earnings/earnings-schemas.ts": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/money/expense-schemas.ts": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/money/schemas.ts": {
+    "ab/module-boundaries": {
+      "count": 3
+    }
+  },
+  "src/money/usage/package-progress.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/money/usage/tiers.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/money/views.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/notifications/catalogue/catalogue.types.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/notifications/kind-permissions.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/notifications/web-path.ts": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/numbers/routing.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/numbers/schemas.ts": {
+    "ab/module-boundaries": {
+      "count": 3
+    }
+  },
+  "src/numbers/views.ts": {
+    "ab/module-boundaries": {
+      "count": 4
+    }
+  },
+  "src/pricing/offer-text.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/pricing/renewal.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/reports/rules.ts": {
+    "ab/module-boundaries": {
+      "count": 3
+    }
+  },
+  "src/reports/teacher-list.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/reports/views.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/sales/academy.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/sales/course/course-change.ts": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/sales/course/course-follow.ts": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/sales/course/course-picks.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/sales/course/course.ts": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/sales/money-views.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/sales/money.ts": {
+    "ab/module-boundaries": {
+      "count": 3
+    }
+  },
+  "src/sales/qualification-form.ts": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/sales/registration.ts": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/sales/teacher-filter.ts": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/sales/views.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/schemas/activity.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/schemas/common.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/schemas/feedback.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/schemas/lessons/booking-extras.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/schemas/lessons/lesson-time.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/schemas/lessons/scheduling.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/schemas/people/people.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/settings/validation/schema.ts": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/settings/validation/shape.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/settings/validation/validate.ts": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/status-style/commission-status-style.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/status-style/status-style.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/students/student-lists.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/time-zone/riyadh-day.ts": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/users/users.schemas.ts": {
+    "ab/module-boundaries": {
+      "count": 3
+    }
+  },
+  "src/users/users.views.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/users/validation.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  }
+}

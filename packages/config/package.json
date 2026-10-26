@@ -7,11 +7,16 @@
     "./prettier": "./prettier.json",
     "./tsconfig/*": "./tsconfig/*"
   },
+  "scripts": {
+    "lint": "eslint .",
+    "test": "node --test"
+  },
   "dependencies": {
     "@eslint/js": "^10.0.0",
     "eslint-plugin-react-hooks": "^7.1.1",
     "globals": "^16.0.0",
     "typescript-eslint": "^8.71.0"
   },
-  "peerDependencies": { "eslint": "^10.0.0" }
+  "peerDependencies": { "eslint": "^10.0.0" },
+  "devDependencies": { "eslint": "^10.0.0" }
 }

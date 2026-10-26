@@ -39,11 +39,19 @@ test('the automatic OTA only dispatches mobile.yml ota-update to preview on deve
   assert.doesNotMatch(run, /build-android-apk|production|force_ota|ios/i);
 });
 
-test('ci: check covers changes and every verify job; docs-only passes only when verify was skipped', () => {
-  assert.deepEqual(ci.jobs.check.needs, ['changes', 'verify']);
+test('ci: check covers changes, every verify job and the guards; docs-only passes only when both were skipped', () => {
+  assert.deepEqual(ci.jobs.check.needs, ['changes', 'verify', 'guards']);
   const run = ci.jobs.check.steps.map((s) => s.run).join('\n');
   assert.match(run, /test "\$CHANGES" = success/);
-  assert.match(run, /\[ "\$CODE" = false \] && \[ "\$VERIFY" = skipped \]/);
+  assert.match(run, /\[ "\$CODE" = false \] && \[ "\$VERIFY" = skipped \] && \[ "\$GUARDS" = skipped \]/);
+  assert.match(run, /test "\$GUARDS" = success/);
+});
+
+test('ci: Wave F guards fail the build (folder cap strict, jscpd and knip gates)', () => {
+  assert.ok(ci.jobs.refactor.steps.some((s) => s.run === 'node tools/scripts/ci-checks/folder-cap.mjs --strict'));
+  const runs = ci.jobs.guards.steps.map((s) => s.run);
+  assert.ok(runs.includes('pnpm guard:dup') && runs.includes('pnpm guard:knip'));
+  assert.equal(ci.jobs.guards.if, "needs.changes.outputs.code == 'true'");
 });
 
 test('ci: e2e keeps the RUN_E2E switch and one database per shard', () => {

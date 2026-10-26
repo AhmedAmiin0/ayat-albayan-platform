@@ -1,0 +1,1362 @@
+{
+  "src/app.module.ts": {
+    "ab/module-boundaries": {
+      "count": 42
+    }
+  },
+  "src/common/activity/activity.controller.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/common/push/dispatch/push.audience.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/common/push/dispatch/push.rules.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/common/push/expo/expo-push.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/common/rules/confirmations.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/common/rules/rule-of.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/common/student-ids.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/main.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/finance/assistant-pay/assistant-pay.module.ts": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/modules/finance/assistant-pay/my/my.controller.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/finance/assistant-pay/statements/statements.service.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/finance/expenses/expense-year.service.ts": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/modules/finance/expenses/expense-year.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/finance/expenses/expenses.module.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/finance/invoices/invoices.dto.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/finance/payments/attachments/payment-attachments.service.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/finance/payments/payment-inputs.ts": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/modules/finance/payments/payments.dto.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/finance/payments/payments.mapper.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/finance/payments/payments.module.ts": {
+    "ab/module-boundaries": {
+      "count": 3
+    }
+  },
+  "src/modules/finance/payments/payments.queries.ts": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/modules/finance/payments/payments.service.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/finance/payouts/payouts.ledger.ts": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/modules/finance/payouts/payouts.module.ts": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/modules/finance/payouts/payouts.payment.ts": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/modules/finance/payouts/payouts.plan.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/finance/payouts/payouts.queries.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/finance/payouts/payouts.service.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/finance/pricing/pricing.controller.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/finance/pricing/pricing.module.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/finance/pricing/pricing.service.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/finance/receivables/receivables.module.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/finance/receivables/receivables.queries.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/finance/receivables/receivables.service.ts": {
+    "ab/module-boundaries": {
+      "count": 3
+    }
+  },
+  "src/modules/finance/subscriptions/alerts/alerts.queries.ts": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/modules/finance/subscriptions/money/balance.queries.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/finance/subscriptions/student-lifecycle/lead-conversion.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/finance/subscriptions/student-lifecycle/student-access.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/finance/subscriptions/student-lifecycle/student-expiry.queries.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/finance/subscriptions/subscription-creator.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/finance/subscriptions/subscriptions.dto.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/finance/subscriptions/subscriptions.module.ts": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/modules/finance/subscriptions/subscriptions.queries.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/finance/subscriptions/trial/student-trial.queries.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/finance/teacher-earnings/earnings.mine.controller.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/finance/teacher-earnings/earnings.module.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/messaging/calls/access/call-access.ts": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/modules/messaging/calls/calls.module.ts": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/modules/messaging/calls/flow/call-errors.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/messaging/calls/flow/call-events.service.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/messaging/calls/flow/call-kit.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/messaging/calls/flow/call-permission.service.ts": {
+    "ab/module-boundaries": {
+      "count": 4
+    }
+  },
+  "src/modules/messaging/calls/http/call-permission.controller.ts": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/modules/messaging/calls/kapso/kapso-calls.ts": {
+    "ab/module-boundaries": {
+      "count": 4
+    }
+  },
+  "src/modules/messaging/follow-ups/follow-up-slots.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/messaging/follow-ups/follow-ups.deps.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/messaging/follow-ups/follow-ups.job.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/messaging/follow-ups/follow-ups.module.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/messaging/follow-ups/follow-ups.plan.ts": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/modules/messaging/follow-ups/follow-ups.queries.ts": {
+    "ab/module-boundaries": {
+      "count": 3
+    }
+  },
+  "src/modules/messaging/inbox/files/forward-files.ts": {
+    "ab/module-boundaries": {
+      "count": 3
+    }
+  },
+  "src/modules/messaging/inbox/files/thread-file-send.controller.ts": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/modules/messaging/inbox/files/thread-file-send.service.ts": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/modules/messaging/inbox/files/thread-file.controller.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/messaging/inbox/files/thread-forward.service.ts": {
+    "ab/module-boundaries": {
+      "count": 3
+    }
+  },
+  "src/modules/messaging/inbox/files/thread-media.service.ts": {
+    "ab/module-boundaries": {
+      "count": 3
+    }
+  },
+  "src/modules/messaging/inbox/inbox.module.ts": {
+    "ab/module-boundaries": {
+      "count": 4
+    }
+  },
+  "src/modules/messaging/inbox/people/thread-people.mapper.ts": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/modules/messaging/inbox/people/thread-people.ts": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/modules/messaging/inbox/reads/read-receipts.ts": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/modules/messaging/inbox/reads/thread-reads.ts": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/modules/messaging/inbox/reopen/kapso-reopener.ts": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/modules/messaging/inbox/reopen/reopen-template.ts": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/modules/messaging/inbox/reopen/thread-reopen.service.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/messaging/inbox/sales-threads/sales-threads.service.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/messaging/inbox/sales-threads/sales-threads.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/messaging/inbox/send/outbox.ts": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/modules/messaging/inbox/send/send-audit.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/messaging/inbox/send/thread-send.service.ts": {
+    "ab/module-boundaries": {
+      "count": 3
+    }
+  },
+  "src/modules/messaging/inbox/teacher-threads/teacher-scope.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/messaging/inbox/teacher-threads/teacher-threads.queries.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/messaging/inbox/teacher-threads/teacher-threads.service.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/messaging/inbox/threads/chat-list-filter.ts": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/modules/messaging/inbox/threads/phone-param.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/messaging/inbox/threads/thread-quotes.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/messaging/inbox/threads/threads.controller.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/messaging/inbox/threads/threads.mapper.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/messaging/inbox/threads/threads.queries.ts": {
+    "ab/module-boundaries": {
+      "count": 3
+    }
+  },
+  "src/modules/messaging/inbox/threads/threads.service.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/messaging/messaging-jobs/messaging-jobs.module.ts": {
+    "ab/module-boundaries": {
+      "count": 3
+    }
+  },
+  "src/modules/messaging/notification-rules/policy/rules.facts.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/messaging/notification-rules/rules.queries.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/messaging/numbers/communications/communications.deps.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/messaging/numbers/numbers.mapper.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/messaging/push/push-receipts.job.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/messaging/push/push-receipts.queries.ts": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/modules/messaging/reminders/plan/reminders.links.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/messaging/reminders/plan/reminders.room.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/messaging/reminders/plan/reminders.rules.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/messaging/reminders/reminders.deps.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/messaging/reminders/reminders.job.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/messaging/reminders/reminders.queries.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/messaging/saved-replies/saved-replies.files.ts": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/modules/messaging/saved-replies/saved-replies.queries.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/messaging/webhook/external/external-catchup.job.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/messaging/webhook/external/external.queries.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/messaging/webhook/external/kapso-history.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/messaging/webhook/inbound/webhook.inbound.store.ts": {
+    "ab/module-boundaries": {
+      "count": 3
+    }
+  },
+  "src/modules/messaging/webhook/inbound/webhook.inbound.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/messaging/webhook/inbound/webhook.quick-reply.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/messaging/webhook/webhook.module.ts": {
+    "ab/module-boundaries": {
+      "count": 4
+    }
+  },
+  "src/modules/messaging/webhook/webhook.queries.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/messaging/webhook/webhook.service.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/messaging/whatsapp/lines/lines.controller.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/messaging/whatsapp/numbers/number-routes.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/messaging/whatsapp/sender/send-stale.ts": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/modules/messaging/whatsapp/sender/sender.queries.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/messaging/whatsapp/sender/staff-at-send.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/messaging/whatsapp/whatsapp.module.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/people/me/account/account.avatar.service.ts": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/modules/people/me/account/account.queries.ts": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/modules/people/students/lead-link.ts": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/modules/people/students/merge.service.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/people/students/students.controller.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/people/students/students.mapper.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/people/students/students.module.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/people/students/students.queries.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/people/students/students.service.ts": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/modules/people/teacher-students/teacher-students.module.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/people/teacher-students/teacher-students.service.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/people/teachers/availability/availability.queries.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/people/teachers/teachers.mapper.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/people/teachers/teachers.queries.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/people/users/store/users.store.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/people/users/users.access.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/people/users/users.logic.ts": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/modules/people/users/users.module.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/people/users/users.rules.ts": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/modules/platform/google-sync/oauth/google-callback.controller.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/platform/google-sync/sync/google-sync.source.ts": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/modules/reporting/dashboard/dashboard.module.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/reporting/dashboard/dashboard.queries.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/reporting/dashboard/finance/finance.queries.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/reporting/dashboard/finance/fx-converter.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/reporting/dashboard/range.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/reporting/dashboard/work/work.queries.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/reporting/exports/csv.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/reporting/exports/exports.controller.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/reporting/exports/exports.module.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/reporting/exports/exports.queries.ts": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/modules/reporting/exports/exports.rows.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/reporting/exports/exports.service.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/reporting/exports/finance-exports.controller.ts": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/modules/reporting/exports/finance-exports.queries.ts": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/modules/reporting/report-pdf/render/pdf-text.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/reporting/report-pdf/report-pdf.job.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/reporting/reports/files/report-files.service.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/reporting/reports/history/report-history.queries.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/reporting/reports/report-access.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/reporting/reports/reports.module.ts": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/modules/reporting/reports/submit/report-pdf.queue.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/reporting/reports/submit/report-rpc.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/reporting/reports/submit/submit-plan.ts": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/modules/sales/job-applicants/job-applicants.controller.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/sales/job-applicants/job-applicants.queries.ts": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/modules/sales/job-applicants/job-applicants.service.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/sales/leads/lead-profile.service.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/sales/leads/leads.module.ts": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/modules/sales/leads/leads.queries.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/sales/leads/leads.service.ts": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/modules/sales/sales-money/chat/sales-chat-files.ts": {
+    "ab/module-boundaries": {
+      "count": 3
+    }
+  },
+  "src/modules/sales/sales-money/reads/sales-money.reads.ts": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/modules/sales/sales-money/sales-money.module.ts": {
+    "ab/module-boundaries": {
+      "count": 4
+    }
+  },
+  "src/modules/sales/sales-money/sales-money.scope.ts": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/modules/sales/sales-money/sales-money.service.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/sales/sales-money/sales-money.services.ts": {
+    "ab/module-boundaries": {
+      "count": 3
+    }
+  },
+  "src/modules/sales/sales-registration/sales-registration.queries.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/sales/sales-registration/sales-registration.service.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/sales/sales/academy/sales-academy.queries.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/sales/sales/schedule/sales-schedule.mapper.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/teaching/booking/booking.module.ts": {
+    "ab/module-boundaries": {
+      "count": 4
+    }
+  },
+  "src/modules/teaching/booking/core/booking.course-end.ts": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/modules/teaching/booking/core/booking.follow-ups.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/teaching/booking/core/booking.mapper.ts": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/modules/teaching/booking/core/booking.parties.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/teaching/booking/core/booking.payload.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/teaching/booking/core/booking.queries.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/teaching/booking/course-change/course-change.lessons.ts": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/modules/teaching/booking/course-change/course-change.payload.ts": {
+    "ab/module-boundaries": {
+      "count": 4
+    }
+  },
+  "src/modules/teaching/booking/course-change/course-change.planner.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/teaching/booking/course-change/course-change.projection.ts": {
+    "ab/module-boundaries": {
+      "count": 3
+    }
+  },
+  "src/modules/teaching/booking/course-change/course-change.queries.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/teaching/booking/course-change/course-change.writer.ts": {
+    "ab/module-boundaries": {
+      "count": 3
+    }
+  },
+  "src/modules/teaching/booking/instant/instant.plan.ts": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/modules/teaching/booking/instant/instant.service.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/teaching/booking/invoice/booking.invoice.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/teaching/booking/plan/booking.plan.ts": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/modules/teaching/booking/plan/booking.planner.ts": {
+    "ab/module-boundaries": {
+      "count": 3
+    }
+  },
+  "src/modules/teaching/booking/plan/booking.series-plan.ts": {
+    "ab/module-boundaries": {
+      "count": 3
+    }
+  },
+  "src/modules/teaching/booking/plan/conflict-context.ts": {
+    "ab/module-boundaries": {
+      "count": 3
+    }
+  },
+  "src/modules/teaching/booking/plan/slots.service.ts": {
+    "ab/module-boundaries": {
+      "count": 4
+    }
+  },
+  "src/modules/teaching/booking/sales/booking/sales-booking.ownership.ts": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/modules/teaching/booking/sales/booking/sales-booking.scope.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/teaching/booking/teacher/teacher-alert.crm.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/teaching/booking/teacher/teacher-alert.plan.ts": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/modules/teaching/booking/teacher/teacher-alert.queries.ts": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/modules/teaching/booking/teacher/teacher-alert.service.ts": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/modules/teaching/booking/teacher/teacher-options.service.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/teaching/booking/trial-date/trial-date.history.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/teaching/booking/trial-date/trial-date.plan.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/teaching/booking/trial-date/trial-date.service.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/teaching/classroom/classroom.module.ts": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/modules/teaching/classroom/classroom.queries.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/teaching/classroom/join/join-limit.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/teaching/classroom/join/join-link.copy.service.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/teaching/classroom/join/join-link.service.ts": {
+    "ab/module-boundaries": {
+      "count": 3
+    }
+  },
+  "src/modules/teaching/classroom/join/lesson-role.service.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/teaching/classroom/meetings/invites/meeting-invite.policy.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/teaching/classroom/meetings/invites/meeting-invite.sender.ts": {
+    "ab/module-boundaries": {
+      "count": 3
+    }
+  },
+  "src/modules/teaching/classroom/meetings/invites/meeting-invite.text.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/teaching/classroom/meetings/invites/meeting-invitee.queries.ts": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/modules/teaching/classroom/meetings/invites/meeting-invitees.queries.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/teaching/classroom/moderation/mute-limit.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/teaching/feedback/feedback.module.ts": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/modules/teaching/feedback/read/feedback.read.service.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/teaching/feedback/request/feedback.request.service.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/teaching/feedback/request/feedback.sender.ts": {
+    "ab/module-boundaries": {
+      "count": 3
+    }
+  },
+  "src/modules/teaching/lesson-rating/lesson-rating.module.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/teaching/lesson-rating/queue/rating.job.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/teaching/lesson-rating/queue/rating.queue.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/teaching/lesson-rating/rating.controller.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/teaching/lesson-rating/rating.plan.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/teaching/lesson-rating/rating.queries.ts": {
+    "ab/module-boundaries": {
+      "count": 3
+    }
+  },
+  "src/modules/teaching/lesson-rating/rating.reads.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/teaching/lesson-rating/rating.send.service.ts": {
+    "ab/module-boundaries": {
+      "count": 3
+    }
+  },
+  "src/modules/teaching/lessons/lessons.module.ts": {
+    "ab/module-boundaries": {
+      "count": 3
+    }
+  },
+  "src/modules/teaching/lessons/lessons.queries.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/teaching/lessons/overview/free-windows.ts": {
+    "ab/module-boundaries": {
+      "count": 3
+    }
+  },
+  "src/modules/teaching/lessons/overview/overview.mapper.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/teaching/lessons/overview/overview.queries.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/teaching/lessons/overview/overview.service.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/teaching/lessons/proposals/lesson-proposals.queries.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/teaching/lessons/reschedule/reschedule-one.service.ts": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/modules/teaching/lessons/reschedule/reschedule-rule.service.ts": {
+    "ab/module-boundaries": {
+      "count": 3
+    }
+  },
+  "src/modules/teaching/lessons/reschedule/rule-plan.ts": {
+    "ab/module-boundaries": {
+      "count": 5
+    }
+  },
+  "src/modules/teaching/lessons/reschedule/rule-planner.ts": {
+    "ab/module-boundaries": {
+      "count": 3
+    }
+  },
+  "src/modules/teaching/lessons/status/confirmation-messages.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/teaching/lessons/status/lesson-cancel.service.ts": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/modules/teaching/lessons/status/outcomes.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/teaching/lessons/status/transition.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/teaching/lessons/store/lesson-access.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/teaching/lessons/store/lesson-queries.schema.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/teaching/lessons/store/lesson-store.ts": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/modules/teaching/lessons/store/lesson-views.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/teaching/lessons/teacher-me/teacher-me.queries.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/teaching/lessons/time-edit/time-edit.messages.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/teaching/lessons/time-edit/time-edit.plan.ts": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/modules/teaching/lessons/time-edit/time-edit.service.ts": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/modules/teaching/scheduling/conflicts/conflict-checker.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/teaching/scheduling/conflicts/conflicts.ts": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/modules/teaching/scheduling/occurrences/dst-probe.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/teaching/scheduling/occurrences/horizon.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/teaching/scheduling/occurrences/lesson-writer.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/teaching/scheduling/occurrences/occurrences.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/teaching/scheduling/scheduling.module.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/teaching/student-recordings/recording-admin.queries.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/teaching/student-recordings/recording-visibility.service.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/teaching/student-recordings/student-recordings.access.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/teaching/student-recordings/student-recordings.mapper.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/teaching/student-recordings/student-recordings.module.ts": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/modules/teaching/student-recordings/student-recordings.service.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  }
+}

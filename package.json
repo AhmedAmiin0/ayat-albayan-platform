@@ -20,12 +20,16 @@
     "migrate": "pnpm --filter @ab/migrate cli",
     "migrate:dry": "pnpm --filter @ab/migrate cli dry-run",
     "migrate:apply": "pnpm --filter @ab/migrate cli apply",
-    "test:all": "turbo lint typecheck test e2e --force"
+    "test:all": "turbo lint typecheck test e2e --force",
+    "guard:dup": "jscpd && node tools/scripts/ci-checks/jscpd-gate.mjs",
+    "guard:knip": "knip --reporter json --no-exit-code | node tools/scripts/ci-checks/knip-gate.mjs"
   },
   "prettier": "@ab/config/prettier",
   "devDependencies": {
     "@ab/config": "workspace:*",
     "@ab/shared": "workspace:*",
+    "jscpd": "4.0.5",
+    "knip": "5.88.1",
     "postgres": "^3.4.9",
     "prettier": "^3.6.0",
     "turbo": "^2.11.6"
