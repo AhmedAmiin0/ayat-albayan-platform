@@ -1,0 +1,368 @@
+{
+  "id": "c9b",
+  "seq": 90,
+  "moves": [
+    {
+      "from": "apps/mobile/src/teacher/MyAvailabilityScreen*",
+      "to": "apps/mobile/src/teacher/screens/"
+    },
+    {
+      "from": "apps/mobile/src/teacher/MyFeedbackScreen*",
+      "to": "apps/mobile/src/teacher/screens/"
+    },
+    {
+      "from": "apps/mobile/src/teacher/MyPayoutsScreen*",
+      "to": "apps/mobile/src/teacher/screens/"
+    },
+    {
+      "from": "apps/mobile/src/teacher/NotLinkedScreen*",
+      "to": "apps/mobile/src/teacher/screens/"
+    },
+    {
+      "from": "apps/mobile/src/teacher/StudentReportsScreen*",
+      "to": "apps/mobile/src/teacher/screens/"
+    },
+    {
+      "from": "apps/mobile/src/teacher/TeacherChatsScreen*",
+      "to": "apps/mobile/src/teacher/screens/"
+    },
+    {
+      "from": "apps/mobile/src/teacher/TeacherMoreScreen*",
+      "to": "apps/mobile/src/teacher/screens/"
+    },
+    {
+      "from": "apps/mobile/src/teacher/TeacherReportsScreen*",
+      "to": "apps/mobile/src/teacher/screens/"
+    },
+    {
+      "from": "apps/mobile/src/teacher/TeacherScheduleScreen*",
+      "to": "apps/mobile/src/teacher/screens/"
+    },
+    {
+      "from": "apps/mobile/src/teacher/TeacherStudentsScreen*",
+      "to": "apps/mobile/src/teacher/screens/"
+    },
+    {
+      "from": "apps/mobile/src/teacher/TeacherTodayScreen*",
+      "to": "apps/mobile/src/teacher/screens/"
+    },
+    {
+      "from": "apps/mobile/src/teacher/ReportRows*",
+      "to": "apps/mobile/src/teacher/components/"
+    },
+    {
+      "from": "apps/mobile/src/teacher/SignOutButton*",
+      "to": "apps/mobile/src/teacher/components/"
+    },
+    {
+      "from": "apps/mobile/src/teacher/StudentRow*",
+      "to": "apps/mobile/src/teacher/components/"
+    },
+    {
+      "from": "apps/mobile/src/teacher/TeacherLessonCard*",
+      "to": "apps/mobile/src/teacher/components/"
+    },
+    {
+      "from": "apps/mobile/src/teacher/TeacherScope*",
+      "to": "apps/mobile/src/teacher/components/"
+    },
+    {
+      "from": "apps/mobile/src/teacher/TeacherTabs*",
+      "to": "apps/mobile/src/teacher/components/"
+    },
+    {
+      "from": "apps/mobile/src/teacher/TrialChatNote*",
+      "to": "apps/mobile/src/teacher/components/"
+    },
+    {
+      "from": "apps/mobile/src/teacher/day*",
+      "to": "apps/mobile/src/teacher/lib/"
+    },
+    {
+      "from": "apps/mobile/src/teacher/payout-text*",
+      "to": "apps/mobile/src/teacher/lib/"
+    },
+    {
+      "from": "apps/mobile/src/teacher/queries*",
+      "to": "apps/mobile/src/teacher/lib/"
+    },
+    {
+      "from": "apps/mobile/src/teacher/students-queries*",
+      "to": "apps/mobile/src/teacher/lib/"
+    },
+    {
+      "from": "apps/mobile/src/teacher/report/ReportFormScreen*",
+      "to": "apps/mobile/src/teacher/report/screens/"
+    },
+    {
+      "from": "apps/mobile/src/teacher/report/AttachmentsField*",
+      "to": "apps/mobile/src/teacher/report/components/"
+    },
+    {
+      "from": "apps/mobile/src/teacher/report/ChoiceChips*",
+      "to": "apps/mobile/src/teacher/report/components/"
+    },
+    {
+      "from": "apps/mobile/src/teacher/report/IdentityBlock*",
+      "to": "apps/mobile/src/teacher/report/components/"
+    },
+    {
+      "from": "apps/mobile/src/teacher/report/ReportEntryCard*",
+      "to": "apps/mobile/src/teacher/report/components/"
+    },
+    {
+      "from": "apps/mobile/src/teacher/report/ReportFooter*",
+      "to": "apps/mobile/src/teacher/report/components/"
+    },
+    {
+      "from": "apps/mobile/src/teacher/report/ReportTextField*",
+      "to": "apps/mobile/src/teacher/report/components/"
+    },
+    {
+      "from": "apps/mobile/src/teacher/report/RubricSection*",
+      "to": "apps/mobile/src/teacher/report/components/"
+    },
+    {
+      "from": "apps/mobile/src/teacher/report/api*",
+      "to": "apps/mobile/src/teacher/report/hooks/"
+    },
+    {
+      "from": "apps/mobile/src/teacher/report/use-autosave*",
+      "to": "apps/mobile/src/teacher/report/hooks/"
+    },
+    {
+      "from": "apps/mobile/src/teacher/report/use-report-entry*",
+      "to": "apps/mobile/src/teacher/report/hooks/"
+    },
+    {
+      "from": "apps/mobile/src/teacher/report/use-scroll-to-invalid*",
+      "to": "apps/mobile/src/teacher/report/hooks/"
+    },
+    {
+      "from": "apps/mobile/src/teacher/report/fixtures*",
+      "to": "apps/mobile/src/teacher/report/testing/"
+    }
+  ],
+  "files": [
+    [
+      "apps/mobile/src/teacher/day.test.ts",
+      "apps/mobile/src/teacher/lib/day.test.ts"
+    ],
+    [
+      "apps/mobile/src/teacher/day.ts",
+      "apps/mobile/src/teacher/lib/day.ts"
+    ],
+    [
+      "apps/mobile/src/teacher/MyAvailabilityScreen.tsx",
+      "apps/mobile/src/teacher/screens/MyAvailabilityScreen.tsx"
+    ],
+    [
+      "apps/mobile/src/teacher/MyFeedbackScreen.test.tsx",
+      "apps/mobile/src/teacher/screens/MyFeedbackScreen.test.tsx"
+    ],
+    [
+      "apps/mobile/src/teacher/MyFeedbackScreen.tsx",
+      "apps/mobile/src/teacher/screens/MyFeedbackScreen.tsx"
+    ],
+    [
+      "apps/mobile/src/teacher/MyPayoutsScreen.test.tsx",
+      "apps/mobile/src/teacher/screens/MyPayoutsScreen.test.tsx"
+    ],
+    [
+      "apps/mobile/src/teacher/MyPayoutsScreen.tsx",
+      "apps/mobile/src/teacher/screens/MyPayoutsScreen.tsx"
+    ],
+    [
+      "apps/mobile/src/teacher/NotLinkedScreen.tsx",
+      "apps/mobile/src/teacher/screens/NotLinkedScreen.tsx"
+    ],
+    [
+      "apps/mobile/src/teacher/payout-text.ts",
+      "apps/mobile/src/teacher/lib/payout-text.ts"
+    ],
+    [
+      "apps/mobile/src/teacher/queries.ts",
+      "apps/mobile/src/teacher/lib/queries.ts"
+    ],
+    [
+      "apps/mobile/src/teacher/report/api.test.ts",
+      "apps/mobile/src/teacher/report/hooks/api.test.ts"
+    ],
+    [
+      "apps/mobile/src/teacher/report/api.ts",
+      "apps/mobile/src/teacher/report/hooks/api.ts"
+    ],
+    [
+      "apps/mobile/src/teacher/report/AttachmentsField.tsx",
+      "apps/mobile/src/teacher/report/components/AttachmentsField.tsx"
+    ],
+    [
+      "apps/mobile/src/teacher/report/ChoiceChips.tsx",
+      "apps/mobile/src/teacher/report/components/ChoiceChips.tsx"
+    ],
+    [
+      "apps/mobile/src/teacher/report/fixtures.ts",
+      "apps/mobile/src/teacher/report/testing/fixtures.ts"
+    ],
+    [
+      "apps/mobile/src/teacher/report/IdentityBlock.tsx",
+      "apps/mobile/src/teacher/report/components/IdentityBlock.tsx"
+    ],
+    [
+      "apps/mobile/src/teacher/report/ReportEntryCard.tsx",
+      "apps/mobile/src/teacher/report/components/ReportEntryCard.tsx"
+    ],
+    [
+      "apps/mobile/src/teacher/report/ReportFooter.tsx",
+      "apps/mobile/src/teacher/report/components/ReportFooter.tsx"
+    ],
+    [
+      "apps/mobile/src/teacher/report/ReportFormScreen.order.test.tsx",
+      "apps/mobile/src/teacher/report/screens/ReportFormScreen.order.test.tsx"
+    ],
+    [
+      "apps/mobile/src/teacher/report/ReportFormScreen.submit.test.tsx",
+      "apps/mobile/src/teacher/report/screens/ReportFormScreen.submit.test.tsx"
+    ],
+    [
+      "apps/mobile/src/teacher/report/ReportFormScreen.test.tsx",
+      "apps/mobile/src/teacher/report/screens/ReportFormScreen.test.tsx"
+    ],
+    [
+      "apps/mobile/src/teacher/report/ReportFormScreen.tsx",
+      "apps/mobile/src/teacher/report/screens/ReportFormScreen.tsx"
+    ],
+    [
+      "apps/mobile/src/teacher/report/ReportTextField.tsx",
+      "apps/mobile/src/teacher/report/components/ReportTextField.tsx"
+    ],
+    [
+      "apps/mobile/src/teacher/report/RubricSection.tsx",
+      "apps/mobile/src/teacher/report/components/RubricSection.tsx"
+    ],
+    [
+      "apps/mobile/src/teacher/report/use-autosave.ts",
+      "apps/mobile/src/teacher/report/hooks/use-autosave.ts"
+    ],
+    [
+      "apps/mobile/src/teacher/report/use-report-entry.ts",
+      "apps/mobile/src/teacher/report/hooks/use-report-entry.ts"
+    ],
+    [
+      "apps/mobile/src/teacher/report/use-scroll-to-invalid.test.tsx",
+      "apps/mobile/src/teacher/report/hooks/use-scroll-to-invalid.test.tsx"
+    ],
+    [
+      "apps/mobile/src/teacher/report/use-scroll-to-invalid.ts",
+      "apps/mobile/src/teacher/report/hooks/use-scroll-to-invalid.ts"
+    ],
+    [
+      "apps/mobile/src/teacher/ReportRows.tsx",
+      "apps/mobile/src/teacher/components/ReportRows.tsx"
+    ],
+    [
+      "apps/mobile/src/teacher/SignOutButton.tsx",
+      "apps/mobile/src/teacher/components/SignOutButton.tsx"
+    ],
+    [
+      "apps/mobile/src/teacher/StudentReportsScreen.test.tsx",
+      "apps/mobile/src/teacher/screens/StudentReportsScreen.test.tsx"
+    ],
+    [
+      "apps/mobile/src/teacher/StudentReportsScreen.trial.test.tsx",
+      "apps/mobile/src/teacher/screens/StudentReportsScreen.trial.test.tsx"
+    ],
+    [
+      "apps/mobile/src/teacher/StudentReportsScreen.tsx",
+      "apps/mobile/src/teacher/screens/StudentReportsScreen.tsx"
+    ],
+    [
+      "apps/mobile/src/teacher/StudentRow.tsx",
+      "apps/mobile/src/teacher/components/StudentRow.tsx"
+    ],
+    [
+      "apps/mobile/src/teacher/students-queries.ts",
+      "apps/mobile/src/teacher/lib/students-queries.ts"
+    ],
+    [
+      "apps/mobile/src/teacher/TeacherChatsScreen.tsx",
+      "apps/mobile/src/teacher/screens/TeacherChatsScreen.tsx"
+    ],
+    [
+      "apps/mobile/src/teacher/TeacherLessonCard.test.tsx",
+      "apps/mobile/src/teacher/components/TeacherLessonCard.test.tsx"
+    ],
+    [
+      "apps/mobile/src/teacher/TeacherLessonCard.tsx",
+      "apps/mobile/src/teacher/components/TeacherLessonCard.tsx"
+    ],
+    [
+      "apps/mobile/src/teacher/TeacherMoreScreen.account.test.tsx",
+      "apps/mobile/src/teacher/screens/TeacherMoreScreen.account.test.tsx"
+    ],
+    [
+      "apps/mobile/src/teacher/TeacherMoreScreen.meetings.test.tsx",
+      "apps/mobile/src/teacher/screens/TeacherMoreScreen.meetings.test.tsx"
+    ],
+    [
+      "apps/mobile/src/teacher/TeacherMoreScreen.test.tsx",
+      "apps/mobile/src/teacher/screens/TeacherMoreScreen.test.tsx"
+    ],
+    [
+      "apps/mobile/src/teacher/TeacherMoreScreen.tsx",
+      "apps/mobile/src/teacher/screens/TeacherMoreScreen.tsx"
+    ],
+    [
+      "apps/mobile/src/teacher/TeacherReportsScreen.test.tsx",
+      "apps/mobile/src/teacher/screens/TeacherReportsScreen.test.tsx"
+    ],
+    [
+      "apps/mobile/src/teacher/TeacherReportsScreen.tsx",
+      "apps/mobile/src/teacher/screens/TeacherReportsScreen.tsx"
+    ],
+    [
+      "apps/mobile/src/teacher/TeacherScheduleScreen.test.tsx",
+      "apps/mobile/src/teacher/screens/TeacherScheduleScreen.test.tsx"
+    ],
+    [
+      "apps/mobile/src/teacher/TeacherScheduleScreen.tsx",
+      "apps/mobile/src/teacher/screens/TeacherScheduleScreen.tsx"
+    ],
+    [
+      "apps/mobile/src/teacher/TeacherScope.tsx",
+      "apps/mobile/src/teacher/components/TeacherScope.tsx"
+    ],
+    [
+      "apps/mobile/src/teacher/TeacherStudentsScreen.test.tsx",
+      "apps/mobile/src/teacher/screens/TeacherStudentsScreen.test.tsx"
+    ],
+    [
+      "apps/mobile/src/teacher/TeacherStudentsScreen.tsx",
+      "apps/mobile/src/teacher/screens/TeacherStudentsScreen.tsx"
+    ],
+    [
+      "apps/mobile/src/teacher/TeacherTabs.test.tsx",
+      "apps/mobile/src/teacher/components/TeacherTabs.test.tsx"
+    ],
+    [
+      "apps/mobile/src/teacher/TeacherTabs.tsx",
+      "apps/mobile/src/teacher/components/TeacherTabs.tsx"
+    ],
+    [
+      "apps/mobile/src/teacher/TeacherTodayScreen.test.tsx",
+      "apps/mobile/src/teacher/screens/TeacherTodayScreen.test.tsx"
+    ],
+    [
+      "apps/mobile/src/teacher/TeacherTodayScreen.tsx",
+      "apps/mobile/src/teacher/screens/TeacherTodayScreen.tsx"
+    ],
+    [
+      "apps/mobile/src/teacher/TrialChatNote.en.test.tsx",
+      "apps/mobile/src/teacher/components/TrialChatNote.en.test.tsx"
+    ],
+    [
+      "apps/mobile/src/teacher/TrialChatNote.tsx",
+      "apps/mobile/src/teacher/components/TrialChatNote.tsx"
+    ]
+  ]
+}

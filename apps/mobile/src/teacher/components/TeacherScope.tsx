@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import { ThreadModeProvider } from '@/inbox/thread/hooks/thread-mode';
-import { NotLinkedScreen } from './NotLinkedScreen';
-import { isNotLinked, useTeacherMe } from './queries';
+import { NotLinkedScreen } from '../screens/NotLinkedScreen';
+import { isNotLinked, useTeacherMe } from '../lib/queries';
 
 /**
  * What every teacher screen runs inside, her tabs and her chat above them ((teacher-chat)): the

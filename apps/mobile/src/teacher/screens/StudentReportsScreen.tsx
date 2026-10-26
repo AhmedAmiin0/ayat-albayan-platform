@@ -14,10 +14,10 @@ import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { useStudentName } from '@/ops/reports/use-student-name';
 import { RecordingsButton } from '@/student-file/RecordingsButton';
-import { useTeacherMe } from './queries';
-import { openSigned } from './report/api';
-import { reportFormHref } from './ReportRows';
-import { TrialChatNote } from './TrialChatNote';
+import { useTeacherMe } from '../lib/queries';
+import { openSigned } from '../report/hooks/api';
+import { reportFormHref } from '../components/ReportRows';
+import { TrialChatNote } from '../components/TrialChatNote';
 
 /** «الحلقة 12 · ممتاز»: the lesson number, then the overall grade or, without grades, the attendance. */
 function summaryLine(r: ReportSummaryView): string {

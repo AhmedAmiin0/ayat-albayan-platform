@@ -1,6 +1,6 @@
 import { ApiError } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
-import { monthLabel } from '@/teacher/payout-text';
+import { monthLabel } from '@/teacher/lib/payout-text';
 import { lengthOf, type EditState } from './edit-time-body';
 import { failureCode } from './edit-time-errors';
 import type { EditableLesson } from './types';

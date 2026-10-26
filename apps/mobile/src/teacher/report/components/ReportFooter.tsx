@@ -6,9 +6,9 @@ import { locale } from '@/core/lib/i18n/locale';
 import { Note } from '@/more/Note';
 import { Button } from '@/core/ui/primitives/Button';
 import { StatusChip } from '@/core/ui/feedback/StatusChip';
-import { reportErrorText } from './api';
-import type { SaveState } from './use-autosave';
-import type { ReportEntryState } from './use-report-entry';
+import { reportErrorText } from '../hooks/api';
+import type { SaveState } from '../hooks/use-autosave';
+import type { ReportEntryState } from '../hooks/use-report-entry';
 
 const ERRORS: Record<string, string> = t.reports.error;
 

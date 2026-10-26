@@ -1,10 +1,10 @@
 import { screen } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
-import { MyPayoutsScreen } from './MyPayoutsScreen';
-import { TeacherReportsScreen } from './TeacherReportsScreen';
-import { TeacherScheduleScreen } from './TeacherScheduleScreen';
-import { TeacherTodayScreen } from './TeacherTodayScreen';
+import { MyPayoutsScreen } from './screens/MyPayoutsScreen';
+import { TeacherReportsScreen } from './screens/TeacherReportsScreen';
+import { TeacherScheduleScreen } from './screens/TeacherScheduleScreen';
+import { TeacherTodayScreen } from './screens/TeacherTodayScreen';
 
 // A request that never answers: the screen is "loading", and says so instead of showing a blank body.
 jest.mock('@/core/lib/http/api', () => ({ ...jest.requireActual('@/core/lib/http/api'), apiFetch: () => new Promise(() => undefined) }));

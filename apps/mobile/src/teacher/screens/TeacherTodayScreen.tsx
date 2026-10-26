@@ -18,9 +18,9 @@ import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { StatusChip } from '@/core/ui/feedback/StatusChip';
 import { useTabBarInset } from '@/core/ui/layout/tab-bar-inset';
-import { dayWindow, lessonsOn, reportAction } from './day';
-import { useMyLessons, usePendingReports, useTeacherMe } from './queries';
-import { TeacherLessonCard } from './TeacherLessonCard';
+import { dayWindow, lessonsOn, reportAction } from '../lib/day';
+import { useMyLessons, usePendingReports, useTeacherMe } from '../lib/queries';
+import { TeacherLessonCard } from '../components/TeacherLessonCard';
 
 const cities: Record<string, string | undefined> = t.tz;
 

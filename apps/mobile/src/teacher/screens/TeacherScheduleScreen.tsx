@@ -12,7 +12,7 @@ import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { useTabBarInset } from '@/core/ui/layout/tab-bar-inset';
-import { useMyAvailability, useMyLessons, useTeacherMe } from './queries';
+import { useMyAvailability, useMyLessons, useTeacherMe } from '../lib/queries';
 
 /** A teacher has no «غيّر الميعاد» (the API never offers her `reschedule`), so the row's action is idle. */
 const noMove = () => undefined;

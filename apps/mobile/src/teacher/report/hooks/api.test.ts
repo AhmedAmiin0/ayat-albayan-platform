@@ -1,7 +1,7 @@
 import { ApiError } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
 import { reportErrorText, withReport } from './api';
-import { formResponse, reportView } from './fixtures';
+import { formResponse, reportView } from '../testing/fixtures';
 
 test('a domain code or the first validation issue, in the form’s words', () => {
   expect(reportErrorText(new ApiError(409, { code: 'version_conflict' }))).toBe(t.reports.error.version_conflict);

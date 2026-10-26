@@ -39,14 +39,6 @@
     "files": 21,
     "dirs": 0
   },
-  "apps/mobile/src/teacher": {
-    "files": 22,
-    "dirs": 1
-  },
-  "apps/mobile/src/teacher/report": {
-    "files": 13,
-    "dirs": 0
-  },
   "apps/mobile/src/today": {
     "files": 14,
     "dirs": 0

@@ -12,8 +12,8 @@ import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { StatusChip } from '@/core/ui/feedback/StatusChip';
-import { breakdownLines, monthLabel, payoutSummary, payoutWhen } from './payout-text';
-import { useMyPayouts } from './queries';
+import { breakdownLines, monthLabel, payoutSummary, payoutWhen } from '../lib/payout-text';
+import { useMyPayouts } from '../lib/queries';
 
 function PayoutCard({ payout }: { payout: PayoutView }) {
   const { color } = useTheme();

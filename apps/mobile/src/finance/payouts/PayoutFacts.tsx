@@ -2,7 +2,7 @@ import { payoutStatusStyle, type PayoutView } from '@ab/shared';
 import { View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/more/Note';
-import { breakdownLines, monthLabel, payoutWhen } from '@/teacher/payout-text';
+import { breakdownLines, monthLabel, payoutWhen } from '@/teacher/lib/payout-text';
 import { shape, type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { StatusChip } from '@/core/ui/feedback/StatusChip';

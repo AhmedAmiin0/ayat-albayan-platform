@@ -1,6 +1,6 @@
 import { ApiError } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
-import { monthLabel } from '@/teacher/payout-text';
+import { monthLabel } from '@/teacher/lib/payout-text';
 import { lengthLocked, lockedText, payoutLockOf } from './edit-time-lock';
 import { lengthText } from './edit-time-text';
 import { held, upcoming } from './fixtures';

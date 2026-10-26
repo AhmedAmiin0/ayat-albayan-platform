@@ -10,8 +10,8 @@ import { FilterPills, type FilterPill } from '@/core/ui/form/FilterPills';
 import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { useTabBarInset } from '@/core/ui/layout/tab-bar-inset';
-import { usePendingReports, useTeacherMe } from './queries';
-import { PendingReportRow, StudentHistoryRow, SubmittedReportRow } from './ReportRows';
+import { usePendingReports, useTeacherMe } from '../lib/queries';
+import { PendingReportRow, StudentHistoryRow, SubmittedReportRow } from '../components/ReportRows';
 
 type View = 'pending' | 'submitted' | 'students';
 

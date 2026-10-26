@@ -4,7 +4,7 @@ import { t } from '@/core/lib/i18n/i18n';
 import { locale } from '@/core/lib/i18n/locale';
 import { FinanceSection } from '@/more/sections/FinanceSection';
 import { renderWithQuery } from '@/test/query';
-import { monthLabel } from '@/teacher/payout-text';
+import { monthLabel } from '@/teacher/lib/payout-text';
 import { amountText } from './shared/format';
 import { APPROVED } from './shared/fixtures';
 import { PayoutsScreen } from './payouts/PayoutsScreen';

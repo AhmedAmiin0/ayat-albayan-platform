@@ -7,7 +7,7 @@ import { AccountRow } from '@/account/components/AccountRow';
 import { t } from '@/core/lib/i18n/i18n';
 import { AppearancePicker } from '@/more/appearance/AppearancePicker';
 import { LanguageRow } from '@/more/appearance/LanguageRow';
-import { SignOutButton } from '@/teacher/SignOutButton';
+import { SignOutButton } from '@/teacher/components/SignOutButton';
 import { ListRow } from '@/core/ui/layout/ListRow';
 import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';

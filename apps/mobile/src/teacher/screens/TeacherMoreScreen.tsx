@@ -9,8 +9,8 @@ import { LanguageRow } from '@/more/appearance/LanguageRow';
 import { ListRow } from '@/core/ui/layout/ListRow';
 import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
-import { useTeacherMe } from './queries';
-import { SignOutButton } from './SignOutButton';
+import { useTeacherMe } from '../lib/queries';
+import { SignOutButton } from '../components/SignOutButton';
 import { locale } from '@/core/lib/i18n/locale';
 
 /**

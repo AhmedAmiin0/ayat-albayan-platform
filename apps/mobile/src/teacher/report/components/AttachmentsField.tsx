@@ -8,7 +8,7 @@ import { Note } from '@/more/Note';
 import { FormLabel } from '@/payments/FormLabel';
 import { pickReceipt, type Receipt } from '@/payments/receipt';
 import { Button } from '@/core/ui/primitives/Button';
-import { openSigned, reportErrorText, uploadAttachment } from './api';
+import { openSigned, reportErrorText, uploadAttachment } from '../hooks/api';
 
 export interface AttachmentsFieldProps {
   reportId: string;

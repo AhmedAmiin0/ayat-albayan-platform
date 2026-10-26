@@ -20,8 +20,8 @@ import { IdentityBlock, MeetingLink } from './IdentityBlock';
 import { ReportFooter } from './ReportFooter';
 import { ReportTextField } from './ReportTextField';
 import { RubricSection } from './RubricSection';
-import { useReportEntry } from './use-report-entry';
-import { useScrollToInvalid } from './use-scroll-to-invalid';
+import { useReportEntry } from '../hooks/use-report-entry';
+import { useScrollToInvalid } from '../hooks/use-scroll-to-invalid';
 
 const attendances = ATTENDANCES.map((a) => ({ value: a, label: t.enums.attendance[a] }));
 const programs = PROGRAMS.map((p) => ({ value: p, label: t.enums.program[p] }));

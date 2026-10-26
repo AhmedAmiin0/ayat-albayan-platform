@@ -3,7 +3,7 @@ import { View } from 'react-native';
 import { ErrorLine } from '@/inbox/ErrorLine';
 import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/more/Note';
-import { monthLabel } from '@/teacher/payout-text';
+import { monthLabel } from '@/teacher/lib/payout-text';
 import { Button } from '@/core/ui/primitives/Button';
 import { InlineConfirm } from '@/core/ui/feedback/InlineConfirm';
 import { assistantsErrorText } from '../../api/errors';

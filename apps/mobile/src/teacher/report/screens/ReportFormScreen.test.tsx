@@ -3,8 +3,8 @@ import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { ltr } from '@/core/ui/primitives/Ltr';
-import { reportFormKey } from './api';
-import { formResponse } from './fixtures';
+import { reportFormKey } from '../hooks/api';
+import { formResponse } from '../testing/fixtures';
 import { ReportFormScreen } from './ReportFormScreen';
 
 const mockApiFetch = jest.fn();

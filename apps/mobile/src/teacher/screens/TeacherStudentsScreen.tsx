@@ -8,9 +8,9 @@ import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { FilterPills, type FilterPill } from '@/core/ui/form/FilterPills';
 import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
-import { useTeacherMe } from './queries';
-import { StudentRow } from './StudentRow';
-import { useMyStudents } from './students-queries';
+import { useTeacherMe } from '../lib/queries';
+import { StudentRow } from '../components/StudentRow';
+import { useMyStudents } from '../lib/students-queries';
 
 const kinds = (): FilterPill<TeacherStudentKind>[] => [
   { value: 'subscribed', label: t.teacherStudents.subscribed },
