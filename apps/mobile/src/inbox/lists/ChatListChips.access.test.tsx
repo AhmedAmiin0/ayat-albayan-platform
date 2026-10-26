@@ -1,7 +1,7 @@
 import { screen } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { TreeBaseProvider } from '@/core/nav/tree-base';
-import { renderWithQuery } from '@/test/query';
+import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { thread } from '../shared/thread-fixtures';
 import { ThreadModeProvider } from '../thread/hooks/thread-mode';
 import { ThreadsList } from '../threads-list/ThreadsList';
@@ -21,7 +21,7 @@ beforeEach(() => mockApiFetch.mockReset());
 
 test('without inbox.lists: no chip row and the lists are never fetched', async () => {
   mockApiFetch.mockImplementation(answer({ me: withoutLists }));
-  await renderWithQuery(<ThreadsList />);
+  await renderWithQuery(<ThreadsList />, createTestQueryClient({ meFromApi: true }));
   expect(await screen.findByText(NAME)).toBeTruthy();
   expect(screen.queryByLabelText(t.inbox.lists.rowLabel)).toBeNull();
   expect(screen.queryByText(`＋ ${t.inbox.lists.new}`)).toBeNull();

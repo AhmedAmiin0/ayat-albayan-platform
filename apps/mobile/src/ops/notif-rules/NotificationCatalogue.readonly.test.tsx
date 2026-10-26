@@ -1,6 +1,6 @@
 import { screen } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
-import { renderWithQuery } from '@/test/query';
+import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { catalogue } from '../shared/fixtures';
 import { NotificationCatalogue } from '../settings/NotificationCatalogue';
 import { answer, catalogueV2, MANAGER, READER, withUnknownBlocker } from './testing/rules-fixtures';
@@ -18,7 +18,7 @@ beforeEach(() => jest.clearAllMocks());
 
 test('without notifications.manage the v2 list is read-only, as before', async () => {
   mockApiFetch.mockImplementation(answer(catalogueV2, READER));
-  await renderWithQuery(<NotificationCatalogue />);
+  await renderWithQuery(<NotificationCatalogue />, createTestQueryClient({ meFromApi: true }));
   expect(await screen.findByText(c.entries.report_ready.name)).toBeTruthy();
   expect(screen.queryAllByRole('switch')).toHaveLength(0);
   expect(screen.queryByText(r.locked)).toBeNull();
@@ -29,7 +29,7 @@ test('without notifications.manage the v2 list is read-only, as before', async (
 
 test('a v1 answer (no rule) renders read-only even for a manager', async () => {
   mockApiFetch.mockImplementation(answer(catalogue, MANAGER));
-  await renderWithQuery(<NotificationCatalogue />);
+  await renderWithQuery(<NotificationCatalogue />, createTestQueryClient({ meFromApi: true }));
   expect(await screen.findByText(c.entries.report_ready.name)).toBeTruthy();
   expect(screen.queryAllByRole('switch')).toHaveLength(0);
   expect(screen.queryByText(r.locked)).toBeNull();
@@ -39,7 +39,7 @@ test('a v1 answer (no rule) renders read-only even for a manager', async () => {
 
 test('a row held by the classroom says why, and «معتمد جزئيًا» on its own line', async () => {
   mockApiFetch.mockImplementation(answer(catalogueV2, MANAGER));
-  await renderWithQuery(<NotificationCatalogue />);
+  await renderWithQuery(<NotificationCatalogue />, createTestQueryClient({ meFromApi: true }));
   await screen.findByText(c.entries.lesson_join_link.name);
   expect(screen.getByText(r.heldNow.replace('{reason}', r.blockers.classroom_off))).toBeTruthy();
   expect(screen.getByText(r.partial)).toBeTruthy();
@@ -48,7 +48,7 @@ test('a row held by the classroom says why, and «معتمد جزئيًا» on i
 
 test('a blocker this build does not know renders no reason and nothing breaks', async () => {
   mockApiFetch.mockImplementation(answer(withUnknownBlocker, MANAGER));
-  await renderWithQuery(<NotificationCatalogue />);
+  await renderWithQuery(<NotificationCatalogue />, createTestQueryClient({ meFromApi: true }));
   expect(await screen.findByText(c.entries.renewal_due.name)).toBeTruthy();
   expect(screen.queryByText(/future_reason|undefined/)).toBeNull();
   expect(screen.getByRole('switch', { name: r.switchLabel.replace('{name}', c.entries.renewal_due.name) })).toBeTruthy();
@@ -57,7 +57,7 @@ test('a blocker this build does not know renders no reason and nothing breaks', 
 test('a key this build does not know is left out', async () => {
   const extra = { ...catalogueV2.entries[0], key: 'future_key' };
   mockApiFetch.mockImplementation(answer({ ...catalogueV2, entries: [...catalogueV2.entries, extra] } as unknown as typeof catalogueV2, MANAGER));
-  await renderWithQuery(<NotificationCatalogue />);
+  await renderWithQuery(<NotificationCatalogue />, createTestQueryClient({ meFromApi: true }));
   expect(await screen.findByText(c.entries.report_ready.name)).toBeTruthy();
   expect(screen.queryByText('future_key')).toBeNull();
 });

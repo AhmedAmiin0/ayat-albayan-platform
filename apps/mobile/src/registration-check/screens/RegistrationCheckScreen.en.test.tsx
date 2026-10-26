@@ -1,7 +1,7 @@
 import en from '@ab/shared/i18n/en.json';
 import { fireEvent, screen } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
-import { renderWithQuery } from '@/test/query';
+import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { RegistrationCheckScreen } from './RegistrationCheckScreen';
 
 jest.mock('react-native/Libraries/ReactNative/I18nManager', () => {
@@ -23,7 +23,7 @@ jest.mock('expo-router', () => ({
 
 test('an English run: the registration check reads en.json', async () => {
   expect(t).toEqual(en);
-  await renderWithQuery(<RegistrationCheckScreen />);
+  await renderWithQuery(<RegistrationCheckScreen />, createTestQueryClient({ meFromApi: true }));
   expect(await screen.findByRole('header', { name: en.registrationCheck.title })).toBeTruthy();
   expect(screen.getByRole('radio', { name: en.registrationCheck.byName, checked: true })).toBeTruthy();
   expect(screen.getByText(en.registrationCheck.queryHint)).toBeTruthy();

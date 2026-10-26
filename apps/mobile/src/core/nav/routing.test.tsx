@@ -2,6 +2,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { act, renderRouter, screen } from 'expo-router/testing-library';
 import { Appearance, Text } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
+import { queryClient } from '@/core/lib/query/query-client';
+import { pathKey } from '@/core/lib/query/query-keys';
+import { fullAccessMe } from '@/test/staff-me';
 import { APPEARANCE_KEY } from '@/more/appearance/appearance';
 import { TabStack } from '@/core/nav/TabStack';
 import { registerPush } from '@/core/push/registerPush';
@@ -11,10 +14,10 @@ import RootLayout from '../../../app/_layout';
 // The real root + tabs layouts with stub screens: proves the gate decides what can be reached.
 jest.mock('expo-font', () => ({ useFonts: () => [true, null] }));
 jest.mock('@/core/push/registerPush', () => ({ registerPush: jest.fn(async () => undefined) }));
-// Permissions and the inbox badge read the API: an admin whose /auth/me lists no permissions sees every tab.
+// Permissions and the inbox badge read the API: an admin holding every permission sees every tab.
 jest.mock('@/core/lib/http/api', () => ({
   ...jest.requireActual('@/core/lib/http/api'),
-  apiFetch: async (path: string) => (path === '/auth/me' ? { role: 'admin' } : { total: 0 }),
+  apiFetch: async (path: string) => (path === '/auth/me' ? jest.requireActual('@/test/staff-me').fullAccessMe('admin') : { total: 0 }),
 }));
 jest.mock('@/auth/use-auth-gate', () => {
   const { useState } = jest.requireActual('react');
@@ -47,7 +50,11 @@ const app = {
   '(tabs)/more/index': stub('more-screen'),
 };
 
-beforeEach(() => jest.clearAllMocks());
+beforeEach(() => {
+  jest.clearAllMocks();
+  // As verifyRole: /auth/me is in the cache when the gate opens a tree (docs/27 E2).
+  queryClient.setQueryData(pathKey('/auth/me'), fullAccessMe('admin'));
+});
 afterEach(() => jest.useRealTimers());
 
 /** RNTL 14 renders asynchronously, so renderRouter hands back the pending render with getters on it. */

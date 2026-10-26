@@ -2,7 +2,7 @@ import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { Linking } from 'react-native';
 import { ApiError } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
-import { renderWithQuery } from '@/test/query';
+import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { recording, recordingsPage } from '../testing/fixtures';
 import { StudentRecordingsScreen } from './StudentRecordingsScreen';
 
@@ -42,7 +42,7 @@ afterEach(() => openURL.mockRestore());
 
 test('rows: count, teacher, duration, size, status chips; a deleted row has no play', async () => {
   serve();
-  await renderWithQuery(<StudentRecordingsScreen />);
+  await renderWithQuery(<StudentRecordingsScreen />, createTestQueryClient({ meFromApi: true }));
   expect(await screen.findByText(R.count.replace('{n}', '2'))).toBeTruthy();
   expect(mockApiFetch).toHaveBeenCalledWith('/students/s1/recordings?page=1&pageSize=10');
   expect(screen.getByText(`${R.teacher}: أبرار`)).toBeTruthy();
@@ -55,7 +55,7 @@ test('rows: count, teacher, duration, size, status chips; a deleted row has no p
 
 test('play refetches for a fresh signed link and opens it in the system player', async () => {
   serve();
-  await renderWithQuery(<StudentRecordingsScreen />);
+  await renderWithQuery(<StudentRecordingsScreen />, createTestQueryClient({ meFromApi: true }));
   await screen.findByText(R.status.done);
   mockApiFetch.mockClear();
   serve([recording({ url: 'https://files.test/fresh.mp3?t=2' })]);
@@ -66,7 +66,7 @@ test('play refetches for a fresh signed link and opens it in the system player',
 
 test('the switch PATCHes the visibility; a 409 group lesson shows its message', async () => {
   serve([recording()]);
-  await renderWithQuery(<StudentRecordingsScreen />);
+  await renderWithQuery(<StudentRecordingsScreen />, createTestQueryClient({ meFromApi: true }));
   const toggle = await screen.findByRole('switch', { name: R.visible.label });
   await fireEvent(toggle, 'valueChange', true);
   await waitFor(() => expect(mockApiSend).toHaveBeenCalledWith('PATCH', '/recordings/r1/visibility', { visible: true }));
@@ -77,7 +77,7 @@ test('the switch PATCHes the visibility; a 409 group lesson shows its message', 
 
 test('delete asks first, then DELETEs; a 409 says it is still recording', async () => {
   serve([recording()]);
-  await renderWithQuery(<StudentRecordingsScreen />);
+  await renderWithQuery(<StudentRecordingsScreen />, createTestQueryClient({ meFromApi: true }));
   await fireEvent.press(await screen.findByText(R.delete.action));
   expect(screen.getByText(R.delete.question)).toBeTruthy();
   expect(mockApiSend).not.toHaveBeenCalled();
@@ -90,7 +90,7 @@ test('delete asks first, then DELETEs; a 409 says it is still recording', async 
 
 test('date and teacher pills filter on the server', async () => {
   serve();
-  await renderWithQuery(<StudentRecordingsScreen />);
+  await renderWithQuery(<StudentRecordingsScreen />, createTestQueryClient({ meFromApi: true }));
   await screen.findByText(R.status.done);
   await fireEvent.press(await screen.findByRole('tab', { name: 'منى' }));
   await waitFor(() => expect(recordingCalls().some((p) => p.includes('teacherId=t2'))).toBe(true));
@@ -101,7 +101,7 @@ test('date and teacher pills filter on the server', async () => {
 test('without recordings.manage there is no delete and the switch is read-only', async () => {
   permissions = ['recordings.read'];
   serve([recording()]);
-  await renderWithQuery(<StudentRecordingsScreen />);
+  await renderWithQuery(<StudentRecordingsScreen />, createTestQueryClient({ meFromApi: true }));
   await screen.findByText(R.status.done);
   await waitFor(() => expect(screen.queryByText(R.delete.action)).toBeNull());
   expect(screen.getByRole('switch', { name: R.visible.label }).props.accessibilityState?.disabled ?? screen.getByRole('switch').props.disabled).toBeTruthy();
@@ -109,13 +109,13 @@ test('without recordings.manage there is no delete and the switch is read-only',
 
 test('teacher mode never shows delete; an empty list and an error have their states', async () => {
   serve([]);
-  const view = await renderWithQuery(<StudentRecordingsScreen admin={false} />);
+  const view = await renderWithQuery(<StudentRecordingsScreen admin={false} />, createTestQueryClient({ meFromApi: true }));
   expect(await screen.findByText(R.empty)).toBeTruthy();
   view.unmount();
   mockApiFetch.mockReset().mockImplementation(async (p: string) => {
     if (p === '/auth/me') return { permissions };
     throw new ApiError(500);
   });
-  await renderWithQuery(<StudentRecordingsScreen />);
+  await renderWithQuery(<StudentRecordingsScreen />, createTestQueryClient({ meFromApi: true }));
   expect(await screen.findByText(R.error, undefined, { timeout: 3000 })).toBeTruthy();
 });

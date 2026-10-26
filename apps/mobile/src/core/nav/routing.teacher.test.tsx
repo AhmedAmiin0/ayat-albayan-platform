@@ -1,6 +1,9 @@
 import { act, renderRouter, screen } from 'expo-router/testing-library';
 import { Text } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
+import { queryClient } from '@/core/lib/query/query-client';
+import { pathKey } from '@/core/lib/query/query-keys';
+import { fullAccessMe } from '@/test/staff-me';
 import { TabStack } from '@/core/nav/TabStack';
 import { registerPush } from '@/core/push/registerPush';
 import TabsLayout from '../../../app/(tabs)/_layout';
@@ -63,7 +66,10 @@ async function open(initialUrl: string) {
 
 beforeEach(() => {
   jest.clearAllMocks();
-  mockApiFetch.mockResolvedValue({ id: 't1', display_name_ar: 'أبرار', tz: 'Africa/Cairo', students: [] });
+  const teacher = { id: 't1', display_name_ar: 'أبرار', tz: 'Africa/Cairo', students: [] };
+  mockApiFetch.mockImplementation(async (path: string) => (path === '/auth/me' ? fullAccessMe('teacher') : teacher));
+  // As verifyRole: /auth/me is in the cache when the gate opens a tree (docs/27 E2).
+  queryClient.setQueryData(pathKey('/auth/me'), fullAccessMe('teacher'));
 });
 
 test('teacher: her five native tabs in RTL order, «اليوم» first, and this device registered for her pushes', async () => {

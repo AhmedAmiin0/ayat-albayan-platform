@@ -1,7 +1,7 @@
 import type { IntegrationConfigItem } from '@ab/shared';
 import { fireEvent, screen, waitFor, within } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
-import { renderWithQuery } from '@/test/query';
+import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { ltr } from '@/core/ui/primitives/Ltr';
 import { LineDrivers } from './LineDrivers';
 
@@ -31,7 +31,7 @@ beforeEach(() => {
 const pick = async (line: string, label: string) => fireEvent.press(within(screen.getByTestId(`driver-${line}`)).getByRole('radio', { name: label }));
 
 test('picking «نظام CRM» saves nothing yet: it names what the CRM lacks and asks first; cancel keeps meta', async () => {
-  await renderWithQuery(<LineDrivers />);
+  await renderWithQuery(<LineDrivers />, createTestQueryClient({ meFromApi: true }));
   expect(await screen.findByText(h.driverTitle)).toBeTruthy();
   await pick('notifications', t.integrations.options.crm);
   expect(screen.getByText(h.driverConfirm.replace('{driver}', t.integrations.options.crm))).toBeTruthy();
@@ -45,7 +45,7 @@ test('picking «نظام CRM» saves nothing yet: it names what the CRM lacks an
 
 test('the confirm saves only that line\'s key, like the web', async () => {
   mockApiSend.mockResolvedValue(ITEMS.map((i) => (i.key === 'WA_PROVIDER' ? { ...i, value: 'crm' } : i)));
-  await renderWithQuery(<LineDrivers />);
+  await renderWithQuery(<LineDrivers />, createTestQueryClient({ meFromApi: true }));
   await screen.findByText(h.driverTitle);
   await pick('notifications', t.integrations.options.crm);
   await fireEvent.press(screen.getByRole('button', { name: h.driverConfirmYes }));
@@ -56,7 +56,7 @@ test('the confirm saves only that line\'s key, like the web', async () => {
 
 test('without settings.write the choice is shown, not offered', async () => {
   mockPermissions = ['settings.read'];
-  await renderWithQuery(<LineDrivers />);
+  await renderWithQuery(<LineDrivers />, createTestQueryClient({ meFromApi: true }));
   expect(await screen.findByText(h.driverReadOnly)).toBeTruthy();
   await pick('chat', t.integrations.options.kapso);
   expect(screen.queryByText(h.driverConfirmYes)).toBeNull();
@@ -67,14 +67,14 @@ test('module mode (comms_source = module): each number\'s provider sends, so a n
     if (path === '/auth/me') return { permissions: mockPermissions };
     return path === '/settings' ? { comms_source: 'module' } : ITEMS;
   });
-  await renderWithQuery(<LineDrivers />);
+  await renderWithQuery(<LineDrivers />, createTestQueryClient({ meFromApi: true }));
   expect(await screen.findByText(h.driverModule)).toBeTruthy();
   expect(screen.queryByTestId('driver-notifications')).toBeNull();
 });
 
 test('one save at a time: while a line saves, the other line\'s choices wait', async () => {
   mockApiSend.mockReturnValue(new Promise(() => undefined));
-  await renderWithQuery(<LineDrivers />);
+  await renderWithQuery(<LineDrivers />, createTestQueryClient({ meFromApi: true }));
   await screen.findByText(h.driverTitle);
   await pick('notifications', t.integrations.options.crm);
   await fireEvent.press(screen.getByRole('button', { name: h.driverConfirmYes }));
@@ -90,14 +90,14 @@ test('an unreadable list (no settings.read): nothing shown', async () => {
     if (path === '/auth/me') return { permissions: [] };
     throw new Error('403');
   });
-  await renderWithQuery(<LineDrivers />);
+  await renderWithQuery(<LineDrivers />, createTestQueryClient({ meFromApi: true }));
   await waitFor(() => expect(mockApiFetch).toHaveBeenCalledWith('/settings/integrations'));
   expect(screen.queryByText(h.driverTitle)).toBeNull();
 });
 
 test('a failed save says so and keeps the confirm, to try again', async () => {
   mockApiSend.mockRejectedValue(new Error('500'));
-  await renderWithQuery(<LineDrivers />);
+  await renderWithQuery(<LineDrivers />, createTestQueryClient({ meFromApi: true }));
   await screen.findByText(h.driverTitle);
   await pick('chat', t.integrations.options.kapso);
   await fireEvent.press(screen.getByRole('button', { name: h.driverConfirmYes }));

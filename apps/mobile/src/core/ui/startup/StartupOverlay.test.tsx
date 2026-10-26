@@ -39,3 +39,18 @@ test('ready: it stops taking touches, fades over the screen and leaves', async (
   await advance(400);
   expect(screen.queryByTestId('startup-screen')).toBeNull();
 });
+
+test('not ready again after it left (a sign-in waiting on /auth/me): the cover comes back', async () => {
+  const client = new QueryClient();
+  const ui = (isReady: boolean) => (
+    <QueryClientProvider client={client}>
+      <StartupOverlay ready={isReady} onRetry={jest.fn()} fontsLoaded />
+    </QueryClientProvider>
+  );
+  await render(ui(true));
+  await advance(400);
+  expect(screen.queryByTestId('startup-screen')).toBeNull();
+  await screen.rerender(ui(false));
+  expect(screen.getByTestId('startup-screen')).toBeOnTheScreen();
+  expect(screen.getByText(c.startupConnecting)).toBeOnTheScreen();
+});

@@ -1,11 +1,14 @@
-import type { Permission } from '@ab/shared';
+import { permissionsView, type Can, type PermissionsView } from '@ab/client-core';
 import { useQuery } from '@tanstack/react-query';
-import { canDo, meQuery } from './me';
+import { meQuery } from './me';
 
-export type Can = (permission: Permission) => boolean;
+export type { Can, PermissionsView };
 
-/** The signed-in user's permissions (from /auth/me) and a `can('payments.read')` helper. */
-export function usePermissions(): { permissions: readonly Permission[]; can: Can } {
-  const me = useQuery(meQuery).data;
-  return { permissions: me?.permissions ?? [], can: (permission) => canDo(me, permission) };
+/**
+ * The signed-in user's permissions (from /auth/me), a `can('payments.read')` helper and `loaded`. One
+ * behaviour with mobile (@ab/client-core, docs/27 E2, owner D6): nothing is granted until /auth/me has
+ * answered, and the navigation shows a skeleton until `loaded` (never a partial menu).
+ */
+export function usePermissions(): PermissionsView {
+  return permissionsView(useQuery(meQuery).data);
 }
