@@ -6,7 +6,7 @@ import type { PhoneStats } from '../sign-in.ports';
 const WINDOW_MS = 15 * 60_000;
 
 /** docs/30 §3: per phone on file, counted in the database (login_codes). */
-export const PHONE_LIMITS = { per15Min: 3, perDay: 10, failedPerDay: 10 } as const;
+const PHONE_LIMITS = { per15Min: 3, perDay: 10, failedPerDay: 10 } as const;
 
 /** May another code go to this phone now? Over a limit the request still answers 202 (no enumeration). */
 export const phoneMaySend = (s: PhoneStats): boolean =>
@@ -15,7 +15,7 @@ export const phoneMaySend = (s: PhoneStats): boolean =>
 /** May this phone's code still be checked? (10 wrong codes a day, across codes.) */
 export const phoneMayCheck = (s: PhoneStats): boolean => s.failedLastDay < PHONE_LIMITS.failedPerDay;
 
-export type LimitKind = 'request' | 'check' | 'login';
+type LimitKind = 'request' | 'check' | 'login';
 
 const BUDGET: Record<LimitKind, { ip: number; identifier: number }> = {
   request: { ip: 20, identifier: 5 },

@@ -11,7 +11,7 @@ export const codesUnavailable = () =>
   new HttpException({ code: 'codes_unavailable', message: 'codes_unavailable' }, HttpStatus.SERVICE_UNAVAILABLE);
 
 /** One sign-in / password event in audit_log (entity `auth`). Never a code, a hash or a password. */
-export interface AuthEvent {
+interface AuthEvent {
   userId: string;
   action: 'code_sign_in' | 'password_set' | 'password_reset';
   via: string;

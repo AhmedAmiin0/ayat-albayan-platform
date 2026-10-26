@@ -11,7 +11,7 @@ import { SenderQueries } from '../sender/sender.queries';
 import { WaError, type TemplateRow } from '../whatsapp.types';
 
 /** sent | unavailable (gate closed, template not approved, no line / number can send it) | failed (the provider refused). */
-export type CodeSendResult = { status: 'sent' } | { status: 'unavailable' } | { status: 'failed'; error: string };
+type CodeSendResult = { status: 'sent' } | { status: 'unavailable' } | { status: 'failed'; error: string };
 
 /**
  * The sign-in / password code (docs/30 §4): ONE authentication-template send, now, through the same
