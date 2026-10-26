@@ -15,6 +15,8 @@ export type CreateStudentValues = {
   program: Program;
   /** «المعلم/المعلمه»; '' = none yet (the form's empty option). */
   teacher_id: string;
+  /** «رقم الواتساب لـ: الطالب نفسه» (docs/30 §1); false = «ولي الأمر» (the default). */
+  contactIsSelf: boolean;
 };
 
 export const EMPTY_STUDENT: CreateStudentValues = {
@@ -27,6 +29,7 @@ export const EMPTY_STUDENT: CreateStudentValues = {
   tz: 'Asia/Riyadh',
   program: 'quran',
   teacher_id: '',
+  contactIsSelf: false,
 };
 
 /** «الخانة دي مطلوبة» for a blank (or spaces-only) value. */
@@ -65,6 +68,7 @@ export function toCreateBody(v: CreateStudentValues, force: boolean, leadId?: st
     tz: v.tz,
     program: v.program,
     ...(v.teacher_id ? { teacher_id: v.teacher_id } : {}),
+    ...(v.contactIsSelf ? { contact_is_self: true } : {}),
     guardian: { name: v.guardianName.trim(), phone_e164: v.guardianPhone, tz: v.tz, source: v.source || null },
     force,
     ...(leadId ? { lead_id: leadId } : {}),

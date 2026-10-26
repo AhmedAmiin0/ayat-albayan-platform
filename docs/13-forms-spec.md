@@ -35,6 +35,8 @@ Two fields the Google Form never had, in clear Modern Standard Arabic. They are 
 
 DEVIATION from the form: in the wizard «الباقة المطلوبة» lists only the four paid sizes (4 / 8 / 12 / 16); the form's option «حلقة تجريبية مجانية بس» moved to «نوع الحجز» (a trial has no package and no invoice).
 
+DEVIATION from the form (owner request 2026-10-27, docs/30 §1): registration gets one choice the Google Form never had, «رقم الواتساب لـ: ولي الأمر / الطالب نفسه» (one choice, default «ولي الأمر», next to «رقم الواتساب (مع كود الدولة)»), stored as `students.contact_is_self` (migration 771; `create_booking` v7, migration 775, inserts it). It is on the booking wizard's first step (admin and sales registration, web + mobile), on «إضافة طالب», on the web student profile and on the mobile student file (`PATCH /students/:id`). Wording only: «الطالب نفسه» (an adult student) shows «حسابي» instead of «أبنائي» in the portal.
+
 Errors with a string in `booking.error.*`: `invoice_required`, `invoice_type`, `invoice_too_large`, `invoice_path`, `invoice_message`, `media_expired`, `message_not_found`, `request_id_required`, `makeup_not_eligible`, `makeup_exists`, `makeup_student`, `makeup_scope_one`.
 
 Tables and buckets (migrations 170-172): `invoices` (admin-only RLS, no teacher or guardian policy), private buckets `invoices` and `wa-media`, `lessons.makeup_of_id` (partial unique index: one active makeup per missed lesson; a one-lesson move keeps the tag), `create_booking` v3, balance views without makeups. Payouts count by lesson status only, so a completed makeup is paid like any completed lesson. The report PDF shows no package progress on a makeup (it has no package slot).

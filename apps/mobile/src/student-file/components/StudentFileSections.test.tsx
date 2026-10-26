@@ -37,4 +37,11 @@ test('controls the role lacks are hidden once /auth/me answers', async () => {
   expect(await screen.findByText(S.money.button)).toBeTruthy();
   expect(screen.queryByText(S.recordings.button)).toBeNull();
   expect(screen.queryByText(S.joinLink.create)).toBeNull();
+  expect(screen.queryByText(t.familyAuth.contactIsSelf.label)).toBeNull();
+});
+
+test('«رقم الواتساب لـ» is offered with students.write (docs/30 §1)', async () => {
+  serve(['students.write']);
+  await renderWithQuery(<StudentFileSections student={profile} />, createTestQueryClient({ meFromApi: true }));
+  expect(await screen.findByText(t.familyAuth.contactIsSelf.label)).toBeTruthy();
 });

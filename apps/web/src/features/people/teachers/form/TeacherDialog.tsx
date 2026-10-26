@@ -1,3 +1,4 @@
+import { tidyUsername, usernameApiError, usernameChange } from '@ab/client-core';
 import type { TeacherCreate } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useId, useState, type FormEvent } from 'react';
@@ -15,37 +16,47 @@ import {
   type SetField,
 } from './teacher-form';
 import { TeacherFormFields } from './TeacherFormFields';
+import { TeacherUsernameField } from './TeacherUsernameField';
 import { TeacherWorkFields } from './TeacherWorkFields';
 
 type Props = { teacher: Teacher | null; onClose: () => void };
+/** The POST / PATCH body; `username` only when it changed (docs/30). */
+type Payload = TeacherCreate & { username?: string | null };
 
-/** Create (teacher = null) or edit a teacher. R-TCH-01. */
+/** Create (teacher = null) or edit a teacher (R-TCH-01); editing also sets the login's username (docs/30). */
 export function TeacherDialog({ teacher, onClose }: Props) {
   const queryClient = useQueryClient();
   const formId = useId();
   const [form, setForm] = useState(() => (teacher ? toTeacherForm(teacher) : emptyTeacherForm()));
+  const [username, setUsername] = useState(teacher?.username ?? '');
   const [error, setError] = useState<string | null>(null);
   const set: SetField = (key, value) => setForm((f) => ({ ...f, [key]: value }));
 
   const save = useMutation({
-    mutationFn: (payload: TeacherCreate) =>
+    mutationFn: (payload: Payload) =>
       teacher
         ? apiSend<Teacher>('PATCH', `/teachers/${teacher.id}`, payload)
         : apiSend<Teacher>('POST', '/teachers', payload),
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ['teachers'] });
+      await queryClient.invalidateQueries({ queryKey: ['users'] });
       onClose();
     },
-    onError: (e) => setError(apiErrorMessage(e)),
+    onError: (e) =>
+      setError(usernameApiError(e, t.familyAuth.teacherUsername) ?? apiErrorMessage(e)),
   });
 
   const submit = (e: FormEvent) => {
     e.preventDefault();
     const result = validateTeacher(form);
-    if (result.ok) {
-      setError(null);
-      save.mutate(result.payload);
-    } else setError(result.error);
+    if (!result.ok) return setError(result.error);
+    setUsername(tidyUsername(username));
+    const name = teacher
+      ? usernameChange(teacher.username, username, t.familyAuth.teacherUsername)
+      : null;
+    if (name && !name.ok) return setError(name.error);
+    setError(null);
+    save.mutate({ ...result.payload, ...name?.body });
   };
 
   return (
@@ -65,6 +76,9 @@ export function TeacherDialog({ teacher, onClose }: Props) {
     >
       <form id={formId} className="flex flex-col gap-6" onSubmit={submit} noValidate>
         <TeacherFormFields form={form} set={set} teacher={teacher} />
+        {teacher && (
+          <TeacherUsernameField teacher={teacher} value={username} onChange={setUsername} />
+        )}
         <TeacherWorkFields form={form} set={set} />
         {error && <FormAlert>{error}</FormAlert>}
       </form>

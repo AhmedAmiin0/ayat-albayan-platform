@@ -10,11 +10,12 @@ const col = createColumnHelper<DataTableFeatures, UserView>();
 const C = t.users.cols;
 const quiet = (phone: string) => `text-xs text-ink-2 ${phone}`;
 
-/** Phone rows: name + status, then email, role, linked record, phone and last sign-in. */
+/** Phone rows: name + status, then email, username, role, linked record, phone and last sign-in. */
 const stacked = {
   name: 'max-sm:order-1 max-sm:flex-[1_1_60%] max-sm:text-base',
   status: 'max-sm:order-2 max-sm:basis-[35%] max-sm:text-end',
   email: 'max-sm:order-3 max-sm:basis-full',
+  username: 'max-sm:order-3',
   role: 'max-sm:order-4',
   linked: 'max-sm:order-5',
   phone: 'max-sm:order-6',
@@ -44,6 +45,12 @@ export function usersColumns(onOpen: (userId: string) => void) {
       header: () => C.email,
       cell: (c) => (c.getValue() ? <Ltr>{c.getValue()}</Ltr> : '—'),
       meta: { className: quiet(stacked.email) },
+    }),
+    col.accessor((u) => u.username ?? null, {
+      id: 'username',
+      header: () => t.familyAuth.usersColumn,
+      cell: (c) => (c.getValue() ? <Ltr>{c.getValue()}</Ltr> : '—'),
+      meta: { className: quiet(stacked.username) },
     }),
     col.accessor('phone_e164', {
       header: () => C.phone,

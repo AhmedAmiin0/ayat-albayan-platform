@@ -36,7 +36,7 @@ export {
   studentTableControls,
   toStudentsUrl,
 } from './list/search';
-export { AgeField, type AgeFieldProps, GenderField } from './profile/FactFields';
+export { AgeField, type AgeFieldProps, ContactIsSelfField, GenderField } from './profile/FactFields';
 export { durationText, sizeText } from './recordings/recording-format';
 export {
   deleteRecording,

@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { fakeQueries, IDS, leadRequest } from '../booking.fakes';
+import { fakeQueries, leadRequest } from '../booking.fakes';
 import { readerOf } from '../../../../common/settings/settings.fakes';
 import { BookingParties } from './booking.parties';
 import type { BookingQueries } from './booking.queries';

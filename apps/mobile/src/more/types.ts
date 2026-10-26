@@ -9,6 +9,9 @@ export interface Teacher {
   phone_e164: string | null;
   status: TeacherStatus;
   tz: string;
+  /** The teacher's login (null = none yet, created on «المستخدمون») and its sign-in username (docs/30). */
+  profile_id?: string | null;
+  username?: string | null;
 }
 
 /** GET /teachers row: the teacher and their current students by kind («مشترك n · تجريبي n»). */

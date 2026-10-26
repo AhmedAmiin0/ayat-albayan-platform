@@ -65,6 +65,8 @@ export type CreateStudentBody = {
   tz: string;
   program: string;
   teacher_id?: string;
+  /** «الطالب نفسه» (docs/30 §1); absent = «ولي الأمر». */
+  contact_is_self?: boolean;
   guardian: { name: string; phone_e164: string; tz: string; source: LeadSource | null };
   force: boolean;
   /** The inbox lead this registration converts (R-LEAD-06). */
