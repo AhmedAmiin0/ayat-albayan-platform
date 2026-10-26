@@ -11,7 +11,7 @@ import { MediaNote, problemText } from './MediaNote';
 import { mediaProblem, type PhotoBox } from './media-problem';
 import { PhotoViewer } from './PhotoViewer';
 
-export interface PhotoPreviewProps {
+interface PhotoPreviewProps {
   message: MessageView;
   phone: string;
   box: PhotoBox;

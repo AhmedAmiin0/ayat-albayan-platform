@@ -3,7 +3,7 @@ import { useEffect, useRef } from 'react';
 /** As the bubble's Pressable (delayLongPress={350}): RN's Text has no delayLongPress, its own is 500 ms. */
 export const HOLD_MS = 350;
 
-export interface HoldPress {
+interface HoldPress {
   onPressIn: () => void;
   onPressOut: () => void;
   onPress: () => void;

@@ -83,7 +83,7 @@ function FileOpener({ message: m, phone, kind }: { message: MessageView; phone: 
   );
 }
 
-export interface MessageFileProps {
+interface MessageFileProps {
   message: MessageView;
   phone: string;
   /** The bubble's menu, for a thumbnail that takes the long press. */

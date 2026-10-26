@@ -37,7 +37,7 @@ function LinkSpan({ text, href, onHold, onFail }: LinkSpanProps) {
   );
 }
 
-export interface LinkedTextProps {
+interface LinkedTextProps {
   text: string;
   touch: BubbleActions;
   /** The screen reader's way to the bubble menu sits on this text. */

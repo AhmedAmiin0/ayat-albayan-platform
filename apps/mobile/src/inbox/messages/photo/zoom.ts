@@ -1,13 +1,13 @@
 // The photo viewer's gesture maths (pure, unit-tested): pinch 1×–4×, pan only as far as the zoomed
 // photo reaches, a double tap toggling 1× and 2.5×. use-zoom.ts feeds it PanResponder's touches.
 
-export const MIN_SCALE = 1;
-export const MAX_SCALE = 4;
-export const DOUBLE_SCALE = 2.5;
+const MIN_SCALE = 1;
+const MAX_SCALE = 4;
+const DOUBLE_SCALE = 2.5;
 /** Two taps closer than this are a double tap. */
-export const DOUBLE_TAP_MS = 300;
+const DOUBLE_TAP_MS = 300;
 /** A finger that moved less than this (pt) tapped instead of dragging. */
-export const TAP_SLOP = 10;
+const TAP_SLOP = 10;
 
 export interface Point {
   x: number;

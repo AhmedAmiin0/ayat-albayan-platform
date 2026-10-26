@@ -183,7 +183,6 @@
   "apps/mobile/src/inbox/messages/components/DeliveryTicks.tsx types DeliveryTicksProps",
   "apps/mobile/src/inbox/messages/components/MessageBubble.tsx types MessageBubbleProps",
   "apps/mobile/src/inbox/messages/components/QuoteBlock.tsx types QuoteBlockProps",
-  "apps/mobile/src/inbox/messages/hooks/bubble-actions.ts types BubbleActions",
   "apps/mobile/src/inbox/messages/hooks/bubble-offers.ts types BubbleOffers",
   "apps/mobile/src/inbox/messages/hooks/swipe.ts types Move",
   "apps/mobile/src/inbox/qualification/QualificationForm.tsx types QualificationFormProps",

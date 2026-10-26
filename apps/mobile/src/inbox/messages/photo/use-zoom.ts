@@ -12,7 +12,7 @@ interface Frame {
   offset: Point;
 }
 
-export interface Zoom {
+interface Zoom {
   handlers: GestureResponderHandlers;
   /** For the Animated.View around the photo: pan first, so the offset is in screen points. */
   style: { transform: [{ translateX: Animated.Value }, { translateY: Animated.Value }, { scale: Animated.Value }] };

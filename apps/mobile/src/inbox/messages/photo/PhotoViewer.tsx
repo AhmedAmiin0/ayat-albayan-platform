@@ -9,7 +9,7 @@ import { useA11yPref } from '@/core/ui/primitives/use-a11y-pref';
 import { DownloadLink } from '../copy-download/DownloadLink';
 import { useZoom } from './use-zoom';
 
-export interface PhotoViewerProps {
+interface PhotoViewerProps {
   uri: string;
   /** Its kind and caption, for the screen reader. */
   label: string;
