@@ -33,53 +33,61 @@ function open(students: ReturnType<typeof student>[]) {
 }
 
 const renewOf = (name: string) => ({ name: `${t.students.renew} — ${name}` });
+const PREMIUM = { pkg: 'premium', count: 10, duration: 60, discount: 10, country: 'AE' } as const;
 
 /** The header's «المزيد» (W3): the secondary sales actions live in it. */
 const openMore = async () => fireEvent.click(await screen.findByRole('button', { name: t.common.more }));
+const subscribeDialog = (name: string) => within(screen.getByRole('dialog', { name }));
 
-describe('«جدّد الاشتراك» in a sales chat (owner 2026-10-15)', () => {
+describe('«جدّد الاشتراك» in a sales chat: the visible action while a student is due (owner 2026-10-26)', () => {
   afterEach(() => {
     apiFetch.mockReset();
     apiSend.mockReset();
   });
 
-  it('one per student whose package ended (pending_renewal, expired); «اشتراك جديد» stays', async () => {
+  it('one student due: «جدّد الاشتراك» is the header action, «اشتراك جديد» moves to «المزيد»', async () => {
+    open([student({ status: 'active', renew_due: true })]);
+    const renew = await screen.findByRole('button', { name: t.students.renew });
+    expect(renew.textContent).toContain(t.students.renew);
+    await openMore();
+    expect(screen.getByRole('button', { name: t.salesMoney.newSubscription })).toBeTruthy();
+    expect(screen.getAllByRole('button', { name: new RegExp(t.students.renew) })).toHaveLength(1);
+  });
+
+  it('opens the subscribe step for that student, prefilled from `renewal`; still editable', async () => {
+    open([student({ status: 'trial' }), student({ id: JUD, name: 'جود', status: 'expired', renew_due: true, renewal: PREMIUM })]);
+    fireEvent.click(await screen.findByRole('button', renewOf('جود')));
+    const dialog = subscribeDialog(t.students.renew);
+    expect(dialog.getByRole<HTMLSelectElement>('combobox', { name: t.salesMoney.pickChild }).value).toBe(JUD);
+    expect(dialog.getByLabelText(t.subscriptions.package)).toHaveProperty('value', 'premium');
+    expect(dialog.getByLabelText(t.subscriptions.duration)).toHaveProperty('value', '60');
+    expect(dialog.getByLabelText(t.subscriptions.country)).toHaveProperty('value', 'AE');
+    expect(dialog.getByRole('button', { name: '10%', pressed: true })).toBeTruthy();
+    fireEvent.change(dialog.getByLabelText(t.subscriptions.package), { target: { value: 'standard' } });
+    expect(dialog.getByLabelText(t.subscriptions.package)).toHaveProperty('value', 'standard');
+  });
+
+  it('several due: one «جدّد الاشتراك» whose picker lists only the students due, each prefilled when picked', async () => {
     open([
-      student({ status: 'pending_renewal' }),
-      student({ id: JUD, name: 'جود', status: 'expired' }),
+      student({ status: 'pending_renewal', renew_due: true }),
+      student({ id: JUD, name: 'جود', status: 'active', renew_due: true, renewal: PREMIUM }),
       student({ id: 'x', name: 'يوسف', status: 'active' }),
     ]);
-    await openMore();
-    expect(await screen.findByRole('button', renewOf('سهيلة'))).toBeTruthy();
-    expect(screen.getByRole('button', renewOf('جود'))).toBeTruthy();
-    expect(screen.queryByRole('button', renewOf('يوسف'))).toBeNull();
-    expect(screen.getByRole('button', { name: t.salesMoney.newSubscription })).toBeTruthy();
+    fireEvent.click(await screen.findByRole('button', { name: t.students.renew }));
+    const dialog = subscribeDialog(t.students.renew);
+    const picker = dialog.getByRole<HTMLSelectElement>('combobox', { name: t.salesMoney.pickChild });
+    expect([...picker.options].map((o) => o.text)).toEqual([t.salesMoney.pickChild, expect.stringContaining('سهيلة'), expect.stringContaining('جود')]);
+    fireEvent.change(picker, { target: { value: JUD } });
+    expect(dialog.getByLabelText(t.subscriptions.package)).toHaveProperty('value', 'premium');
   });
 
-  it('several children: each button shows the child it renews (visible text = accessible name)', async () => {
-    open([student({ status: 'pending_renewal' }), student({ id: JUD, name: 'جود', status: 'expired' })]);
-    await openMore();
-    expect((await screen.findByRole('button', renewOf('جود'))).textContent).toBe(`${t.students.renew} — جود`);
-    expect(screen.getByRole('button', renewOf('سهيلة')).textContent).toBe(`${t.students.renew} — سهيلة`);
-  });
-
-  it('a single student: the plain «جدّد الاشتراك»', async () => {
-    open([student({ status: 'expired' })]);
-    await openMore();
-    expect((await screen.findByRole('button', { name: t.students.renew })).textContent).toBe(t.students.renew);
-  });
-
-  it.each(['new', 'trial', 'pending_subscription', 'active', 'paused', 'churned'] as const)('%s: no renewal', async (status) => {
-    open([student({ status })]);
-    await screen.findByRole('button', { name: t.salesMoney.newSubscription });
-    expect(screen.queryByRole('button', { name: new RegExp(t.students.renew) })).toBeNull();
-  });
-
-  it('opens the chat subscribe step with that student already picked', async () => {
-    open([student({ status: 'trial' }), student({ id: JUD, name: 'جود', status: 'expired' })]);
-    await openMore();
-    fireEvent.click(await screen.findByRole('button', renewOf('جود')));
-    const dialog = within(screen.getByRole('dialog', { name: t.salesMoney.newSubscription }));
-    expect(dialog.getByRole<HTMLSelectElement>('combobox', { name: t.salesMoney.pickChild }).value).toBe(JUD);
-  });
+  it.each(['new', 'trial', 'pending_subscription', 'active', 'paused', 'churned', 'expired'] as const)(
+    '%s, not due: «اشتراك جديد» stays the action, empty calculator, no renewal',
+    async (status) => {
+      open([student({ status, renewal: PREMIUM })]);
+      fireEvent.click(await screen.findByRole('button', { name: t.salesMoney.newSubscription }));
+      expect(screen.queryByRole('button', { name: new RegExp(t.students.renew) })).toBeNull();
+      expect(subscribeDialog(t.salesMoney.newSubscription).getByLabelText(t.subscriptions.package)).toHaveProperty('value', 'standard');
+    },
+  );
 });

@@ -7,7 +7,7 @@ import { withSql } from './schedule';
 import { studentStatusOf } from './student-statuses';
 import { stubSent } from './wa-stub';
 
-export { expectInChatMore, fromChatMore } from './chat-more';
+export { fromChatMore } from './chat-more';
 
 // Helpers of journey 7 (owner 2026-10-15): the assistant's (base role sales) whole student cycle. Real API
 // (:3100), local Supabase and tools/wa-stub; every number is a fake. The status is read three ways: the

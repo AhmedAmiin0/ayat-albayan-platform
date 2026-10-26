@@ -1,4 +1,4 @@
-import { quote, type SalesFamilyStudent, type SalesMoneySubscriptionView, type SalesPaymentView, type SalesQuoteView } from '@ab/shared';
+import { DEFAULT_RENEWAL_PRICING, quote, type SalesFamilyStudent, type SalesMoneySubscriptionView, type SalesPaymentView, type SalesQuoteView } from '@ab/shared';
 
 // Test rows shaped like the sales money endpoints (docs/16). Not imported by app code.
 
@@ -17,7 +17,7 @@ export const OPEN_SUB: SalesMoneySubscriptionView = {
 };
 
 export function student(patch: Partial<SalesFamilyStudent> = {}): SalesFamilyStudent {
-  return { ...OPEN_SUB.student, status: 'trial', open: [], ...patch };
+  return { ...OPEN_SUB.student, status: 'trial', open: [], renew_due: false, renewal: DEFAULT_RENEWAL_PRICING, ...patch };
 }
 
 export const SALES_QUOTE: SalesQuoteView = (() => {

@@ -24,6 +24,15 @@ describe('sales options «التحقق من التسجيل» and «تحديد ت
   });
 });
 
+// Owner 2026-10-26: «عرض سعر» in the chat calls the calculator's routes; sales hold pricing.read by default.
+describe('pricing.read', () => {
+  it('is a default of sales (and the admin), never of a teacher or an assistant', () => {
+    expect(defaultGrantsOf('sales')).toContain('pricing.read');
+    expect(systemPermissionsOf('admin')).toContain('pricing.read');
+    for (const role of ['teacher', 'assistant', 'guardian', 'student'] as const) expect(systemPermissionsOf(role)).not.toContain('pricing.read');
+  });
+});
+
 describe('editable system roles', () => {
   it('are teacher, assistant and sales; never the admin or the portal roles', () => {
     expect([...EDITABLE_SYSTEM_ROLES]).toEqual(['teacher', 'assistant', 'sales']);
