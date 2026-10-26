@@ -1,6 +1,6 @@
 // Invented, anonymised grid (no real rows).
 import { describe, expect, it } from 'vitest';
-import type { SheetSpec } from './headers.ts';
+import type { SheetSpec } from './headers/headers.ts';
 import { cellOf, headerNames, sheetRows } from './rows.ts';
 
 const spec: SheetSpec = {

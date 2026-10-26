@@ -2,7 +2,7 @@
 import { basename } from 'node:path';
 import { cachePath, writeJson } from '../cache.ts';
 import type { SourceRow } from '../types.ts';
-import { SHEETS, specsFor } from './headers.ts';
+import { SHEETS, specsFor } from './headers/headers.ts';
 import { sheetRows } from './rows.ts';
 import { openZip, readWorkbook, resolveZipPath } from './zip.ts';
 
