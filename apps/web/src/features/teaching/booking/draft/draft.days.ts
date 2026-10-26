@@ -1,3 +1,4 @@
+import { bookingPicksFrom } from '@ab/client-core';
 import { courseEndsOn, dayTimesKeeping, inWeekOrder, timeGroups, togglePick, wallParts, type PickedRule } from '@ab/shared';
 import type { BookingDraft } from './draft';
 
@@ -16,11 +17,8 @@ export function draftPicks(d: PickFields): string[] {
   return d.kind === 'package' ? [d.startsAt, ...d.extra] : [d.startsAt];
 }
 
-/** The draft fields for these picks: the earliest becomes `startsAt`. */
-export function withPicks(picks: readonly string[]): Pick<BookingDraft, 'startsAt' | 'extra'> {
-  const sorted = [...picks].sort((a, b) => Date.parse(a) - Date.parse(b));
-  return { startsAt: sorted[0] ?? null, extra: sorted.slice(1) };
-}
+/** The draft fields for these picks: the earliest becomes `startsAt` (@ab/client-core, docs/27 E5). */
+export const withPicks: (picks: readonly string[]) => Pick<BookingDraft, 'startsAt' | 'extra'> = bookingPicksFrom;
 
 /** Tapping a slot: a package toggles it among the picks (togglePick), else it replaces the one lesson. */
 export function pickPatch(d: ZonedPicks, slot: string): Pick<BookingDraft, 'startsAt' | 'extra'> {
