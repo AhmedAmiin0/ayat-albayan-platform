@@ -1,47 +1,19 @@
-import { CLIENT_HEADER, WEB_CLIENT_TAG } from './client-tag';
+import { createApiClient } from '@ab/client-core';
+import { WEB_CLIENT_TAG } from './client-tag';
 import { env } from './env';
 import { supabase } from './supabase';
 
-/** Non-2xx API response. `body` is the parsed JSON error (e.g. duplicate candidates on 409), if any. */
-export class ApiError extends Error {
-  constructor(
-    readonly status: number,
-    readonly body: unknown = null,
-  ) {
-    super(`API ${status}`);
-  }
-}
+// The one client lives in @ab/client-core (docs/27 E1); this module injects web's env, session and tag.
+export { ApiError, type SendMethod } from '@ab/client-core';
 
-async function readJson(res: Response): Promise<unknown> {
-  const text = await res.text();
-  if (!text) return undefined;
-  try {
-    return JSON.parse(text);
-  } catch {
-    return text;
-  }
-}
+const client = createApiClient({
+  baseUrl: () => env.apiUrl,
+  accessToken: async () => (await supabase.auth.getSession()).data.session?.access_token ?? null,
+  clientTag: () => WEB_CLIENT_TAG,
+});
 
 /** fetch against the Nest API with the current Supabase access token and the client tag (`X-AB-Client`). */
-export async function apiFetch<T>(path: string, init: RequestInit = {}): Promise<T> {
-  const { data } = await supabase.auth.getSession();
-  const headers = new Headers(init.headers);
-  headers.set(CLIENT_HEADER, WEB_CLIENT_TAG);
-  if (data.session) headers.set('Authorization', `Bearer ${data.session.access_token}`);
-  const res = await fetch(`${env.apiUrl}${path}`, { ...init, headers });
-  const body = await readJson(res);
-  if (!res.ok) throw new ApiError(res.status, body ?? null);
-  return body as T;
-}
-
-export type SendMethod = 'POST' | 'PUT' | 'PATCH' | 'DELETE';
+export const apiFetch = client.apiFetch;
 
 /** JSON mutation helper for TanStack Query `mutationFn`s. Resolves undefined on 204. */
-export function apiSend<T = void>(method: SendMethod, path: string, body?: unknown): Promise<T> {
-  const init: RequestInit = { method };
-  if (body !== undefined) {
-    init.headers = { 'Content-Type': 'application/json' };
-    init.body = JSON.stringify(body);
-  }
-  return apiFetch<T>(path, init);
-}
+export const apiSend = client.apiSend;
