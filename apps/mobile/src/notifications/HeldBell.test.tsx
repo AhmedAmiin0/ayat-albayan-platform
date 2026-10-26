@@ -1,7 +1,7 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { router } from 'expo-router';
 import { t } from '@/core/lib/i18n/i18n';
-import { renderWithQuery } from '@/test/query';
+import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { HeldBell } from './HeldBell';
 
 const mockApiFetch = jest.fn();
@@ -18,7 +18,7 @@ beforeEach(() => jest.clearAllMocks());
 
 test('without notifications.push there is no bell and no notifications read', async () => {
   answer(['inbox.read']);
-  await renderWithQuery(<HeldBell tree="sales" />);
+  await renderWithQuery(<HeldBell tree="sales" />, createTestQueryClient({ meFromApi: true }));
   await waitFor(() => expect(mockApiFetch).toHaveBeenCalledWith('/auth/me'));
   expect(screen.queryByRole('button', { name: t.bell.mobile.open })).toBeNull();
   expect(mockApiFetch).not.toHaveBeenCalledWith('/me/notifications?page=1&pageSize=20');
@@ -26,7 +26,7 @@ test('without notifications.push there is no bell and no notifications read', as
 
 test('while /auth/me has not answered no bell flashes', async () => {
   mockApiFetch.mockReturnValue(new Promise(() => undefined));
-  await renderWithQuery(<HeldBell tree="assistant" />);
+  await renderWithQuery(<HeldBell tree="assistant" />, createTestQueryClient({ meFromApi: true }));
   expect(screen.queryByRole('button', { name: t.bell.mobile.open })).toBeNull();
 });
 
@@ -35,7 +35,7 @@ test.each([
   ['assistant', '/assistant/more/notifications'],
 ] as const)('with notifications.push the %s bell opens %s', async (tree, href) => {
   answer(['notifications.push']);
-  await renderWithQuery(<HeldBell tree={tree} />);
+  await renderWithQuery(<HeldBell tree={tree} />, createTestQueryClient({ meFromApi: true }));
   fireEvent.press(await screen.findByRole('button', { name: t.bell.mobile.open }));
   expect(router.push).toHaveBeenCalledWith(href);
 });

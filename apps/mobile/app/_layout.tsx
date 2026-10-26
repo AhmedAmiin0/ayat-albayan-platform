@@ -8,20 +8,22 @@ import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
 import { View } from 'react-native';
-import { retryGate, useAuthGate } from '@/auth';
+import { type GateStatus, retryGate, useAuthGate, useMeReady } from '@/auth';
 import { connectivity } from '@/core/lib/connectivity/connectivity';
 import { useOverridesReady } from '@/core/lib/i18n/i18n-overrides';
 import { useLocaleReady } from '@/core/lib/i18n/locale-switch';
 import { onCacheRestored, persistOptions, queryClient } from '@/core/lib/query/query-client';
+import { pathKey } from '@/core/lib/query/query-keys';
 import { TopConnectingBar } from '@/core/ui/connecting/TopConnectingBar';
 import { StartupOverlay } from '@/core/ui/startup/StartupOverlay';
 import { restoreAppearance } from '@/more';
 import { useTheme } from '@/theme';
 
 // Bundled files: Noto Sans Arabic for everything, titles at 700 (owner, 2026-10-05); names match theme.type.
-/** «إعادة المحاولة» on the startup screen: the session and its role again, and the connection now. */
+/** «إعادة المحاولة» on the startup screen: the session and its role again, /auth/me, and the connection now. */
 function retryStartup() {
   retryGate();
+  void queryClient.refetchQueries({ queryKey: pathKey('/auth/me') });
   connectivity.probeNow();
 }
 
@@ -52,7 +54,6 @@ export default function RootLayout() {
   const localeReady = useLocaleReady();
   // The admins' translation overrides saved by the last run, in `t` before the first screen.
   const overridesReady = useOverridesReady();
-  const { color } = useTheme();
   // «المظهر»: the saved light/dark override, re-applied while fonts and the session load.
   useEffect(() => {
     void restoreAppearance();
@@ -66,6 +67,29 @@ export default function RootLayout() {
       onSuccess={onCacheRestored}
       onError={onCacheRestored}
     >
+      <GatedRoot gate={gate} settled={Boolean(ready)} fontsLoaded={loaded} />
+    </PersistQueryClientProvider>
+  );
+}
+
+interface GatedRootProps {
+  gate: GateStatus;
+  /** Fonts, language, overrides and the session gate are settled. */
+  settled: boolean;
+  fontsLoaded: boolean;
+}
+
+/**
+ * Inside the query provider, so the persisted /auth/me counts: a signed-in tree mounts only once
+ * /auth/me is loaded (saved or live), and its tab bar renders once, complete (docs/27 E2, D6). Until
+ * then «جارٍ الاتصال» stays up; useMeReady fetches /auth/me meanwhile.
+ */
+function GatedRoot({ gate, settled, fontsLoaded }: GatedRootProps) {
+  const { color } = useTheme();
+  const meReady = useMeReady(gate !== 'booting' && gate !== 'out');
+  const ready = settled && meReady;
+  return (
+    <>
       {ready ? (
         <View style={{ flex: 1, backgroundColor: color.margin }}>
           <StatusBar style="auto" />
@@ -94,7 +118,7 @@ export default function RootLayout() {
           </Stack>
         </View>
       ) : null}
-      <StartupOverlay ready={Boolean(ready)} onRetry={retryStartup} fontsLoaded={loaded} />
-    </PersistQueryClientProvider>
+      <StartupOverlay ready={ready} onRetry={retryStartup} fontsLoaded={fontsLoaded} />
+    </>
   );
 }

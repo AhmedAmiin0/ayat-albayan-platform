@@ -2,7 +2,10 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { renderRouter, screen } from 'expo-router/testing-library';
 import { Text } from 'react-native';
 import { useThreadMode } from '@/inbox/thread/hooks/thread-mode';
+import type { UserRole } from '@ab/shared';
 import { queryClient } from '@/core/lib/query/query-client';
+import { pathKey } from '@/core/lib/query/query-keys';
+import { fullAccessMe } from '@/test/staff-me';
 import { TabStack } from '@/core/nav/TabStack';
 import { useTreeBase } from '@/core/nav/tree-base';
 import { type PushTree, routeIn } from '@/core/push/notification-route';
@@ -18,7 +21,7 @@ import TeacherLayout from '../../../app/teacher/_layout';
 // above the tabs (a full screen, react-native-screens#4132), behind its tree's gate, under the same URL.
 jest.mock('expo-font', () => ({ useFonts: () => [true, null] }));
 jest.mock('@/core/push/registerPush', () => ({ registerPush: jest.fn(async () => undefined) }));
-// /auth/me with no `permissions` list: nothing hidden, so each tree opens on its first tab.
+// /auth/me holding every permission of its role: nothing hidden, so each tree opens on its first tab.
 const mockMe = { answer: {} as object };
 const mockTeacher = { id: 't1', display_name_ar: 'أبرار', tz: 'Africa/Cairo', students: [] };
 jest.mock('@/core/lib/http/api', () => ({
@@ -57,7 +60,8 @@ const ENC = encodeURIComponent(PHONE);
 
 async function open(gate: string, url: string) {
   (globalThis as { gate?: string }).gate = gate;
-  mockMe.answer = { role: gate };
+  mockMe.answer = fullAccessMe(gate as UserRole);
+  queryClient.setQueryData(pathKey('/auth/me'), mockMe.answer); // as verifyRole, before the gate opens
   const pending = renderRouter(app, { initialUrl: url });
   await pending;
   return { pathname: () => pending.getPathname(), segments: () => pending.getSegments() };

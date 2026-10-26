@@ -1,7 +1,7 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { router } from 'expo-router';
 import { t } from '@/core/lib/i18n/i18n';
-import { renderWithQuery } from '@/test/query';
+import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { AssistantsScreen } from './AssistantsScreen';
 import { ALL, ASSISTANT, commission, routes, statement, termsRowOf } from '../api/fixtures';
 
@@ -16,7 +16,7 @@ beforeEach(() => jest.clearAllMocks());
 
 test('«فريق المبيعات» lists each salesperson with salary and commission; a tap opens their page', async () => {
   mockApiFetch.mockImplementation(routes(ALL, { '/assistant-pay/terms': [termsRowOf(ASSISTANT)] }));
-  await renderWithQuery(<AssistantsScreen />);
+  await renderWithQuery(<AssistantsScreen />, createTestQueryClient({ meFromApi: true }));
   expect(screen.getByRole('header', { name: t.assistants.title })).toBeTruthy();
   const row = await screen.findByText(ASSISTANT.name);
   expect(screen.getByText(/3,000/)).toBeTruthy();
@@ -27,20 +27,20 @@ test('«فريق المبيعات» lists each salesperson with salary and commi
 
 test('no salesperson yet: the web’s empty words', async () => {
   mockApiFetch.mockImplementation(routes(ALL, { '/assistant-pay/terms': [] }));
-  await renderWithQuery(<AssistantsScreen />);
+  await renderWithQuery(<AssistantsScreen />, createTestQueryClient({ meFromApi: true }));
   expect(await screen.findByText(t.assistants.empty)).toBeTruthy();
 });
 
 test('a failed read with nothing cached shows the error and a retry', async () => {
   mockApiFetch.mockImplementation(routes(ALL, { '/assistant-pay/terms': () => { throw new Error('offline'); } }));
-  await renderWithQuery(<AssistantsScreen />);
+  await renderWithQuery(<AssistantsScreen />, createTestQueryClient({ meFromApi: true }));
   expect(await screen.findByText(t.sales.loadFailed)).toBeTruthy();
 });
 
 test('the commissions tab reads the ledger of all, totals the earned ones per currency and filters by status', async () => {
   const rows = [commission(), commission({ id: 'c2', amount: 30, currency: 'EGP' }), commission({ id: 'c3', status: 'voided', amount: 99, void_reason: 'خطأ' })];
   mockApiFetch.mockImplementation(routes(ALL, { '/assistant-pay/terms': [termsRowOf(ASSISTANT)], '/assistant-pay/commissions': rows }));
-  await renderWithQuery(<AssistantsScreen />);
+  await renderWithQuery(<AssistantsScreen />, createTestQueryClient({ meFromApi: true }));
   await fireEvent.press(screen.getByRole('tab', { name: t.assistants.tabs.commissions }));
   expect(await screen.findByText(t.assistants.ledger.total)).toBeTruthy();
   expect(mockApiFetch).toHaveBeenCalledWith('/assistant-pay/commissions');
@@ -53,7 +53,7 @@ test('the commissions tab reads the ledger of all, totals the earned ones per cu
 
 test('the statements tab reads this month for everyone and offers «احسب كشوف الشهر» to a writer', async () => {
   mockApiFetch.mockImplementation(routes(ALL, { '/assistant-pay/terms': [termsRowOf(ASSISTANT)], '/assistant-pay/statements': [statement()] }));
-  await renderWithQuery(<AssistantsScreen />);
+  await renderWithQuery(<AssistantsScreen />, createTestQueryClient({ meFromApi: true }));
   await fireEvent.press(screen.getByRole('tab', { name: t.assistants.tabs.statements }));
   expect(await screen.findByTestId('statement-total-EGP')).toHaveTextContent(/3,000/);
   expect(mockApiFetch).toHaveBeenCalledWith(expect.stringMatching(/^\/assistant-pay\/statements\?month=\d{4}-\d{2}$/));
@@ -68,7 +68,7 @@ test('a reader only (assistantpay.read): no void, no generate, no approve', asyn
       '/assistant-pay/statements': [statement()],
     }),
   );
-  await renderWithQuery(<AssistantsScreen />);
+  await renderWithQuery(<AssistantsScreen />, createTestQueryClient({ meFromApi: true }));
   await fireEvent.press(screen.getByRole('tab', { name: t.assistants.tabs.commissions }));
   await screen.findByText(t.assistants.ledger.total);
   expect(screen.queryByRole('button', { name: t.assistants.ledger.void })).toBeNull();

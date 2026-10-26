@@ -3,7 +3,7 @@ import { Share } from 'react-native';
 import { ApiError } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
 import { fakeNow } from '@/test/fake-now';
-import { renderWithQuery } from '@/test/query';
+import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { ltr } from '@/core/ui/primitives/Ltr';
 import { MeetingsScreen } from './MeetingsScreen';
 
@@ -39,7 +39,7 @@ beforeEach(() => {
 afterEach(() => jest.useRealTimers());
 
 async function openForm() {
-  await renderWithQuery(<MeetingsScreen />);
+  await renderWithQuery(<MeetingsScreen />, createTestQueryClient({ meFromApi: true }));
   await screen.findByText(t.meetings.internal.empty);
   await press(I.scheduledItem);
 }

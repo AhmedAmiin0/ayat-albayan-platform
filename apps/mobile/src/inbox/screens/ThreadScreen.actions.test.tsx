@@ -2,7 +2,7 @@ import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { Linking } from 'react-native';
 import { ApiError } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
-import { renderWithQuery } from '@/test/query';
+import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { delivered, detail, failed, inbound, message } from '../shared/thread-fixtures';
 import { ThreadScreen } from './ThreadScreen';
 import { ticksLabel } from '../shared/ticks.helpers';
@@ -26,7 +26,7 @@ const word = t.enums.messageStatus;
 
 async function open(rows = [inbound, delivered, failed]) {
   mockApiFetch.mockResolvedValue(detail(rows));
-  await renderWithQuery(<ThreadScreen />);
+  await renderWithQuery(<ThreadScreen />, createTestQueryClient({ meFromApi: true }));
   await screen.findByText(inbound.body ?? '');
 }
 

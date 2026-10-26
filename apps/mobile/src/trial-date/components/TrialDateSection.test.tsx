@@ -2,7 +2,7 @@ import type { StudentStatus } from '@ab/shared';
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { profile } from '@/students/shared/test-data';
-import { renderWithQuery } from '@/test/query';
+import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { historyOf, trialRow } from '../testing/fixtures';
 import { TrialDateSection } from './TrialDateSection';
 
@@ -25,7 +25,7 @@ beforeEach(() => jest.clearAllMocks());
 
 test.each(['new', 'trial', 'pending_subscription'] as const)('%s: the action opens the trial-date screen; the history under it', async (status) => {
   serve(status);
-  await renderWithQuery(<TrialDateSection student={{ ...profile, status }} />);
+  await renderWithQuery(<TrialDateSection student={{ ...profile, status }} />, createTestQueryClient({ meFromApi: true }));
   await screen.findByText(t.trialDate.count.one);
   expect(mockApiFetch).toHaveBeenCalledWith(`/booking/trial-dates?studentId=${profile.id}`);
   expect(screen.queryByText(t.trialDate.notAllowed)).toBeNull();
@@ -40,7 +40,7 @@ test.each(['new', 'trial', 'pending_subscription'] as const)('%s: the action ope
 
 test('active: no action, the reason in its place, the history still shown', async () => {
   serve('active');
-  await renderWithQuery(<TrialDateSection student={profile} />);
+  await renderWithQuery(<TrialDateSection student={profile} />, createTestQueryClient({ meFromApi: true }));
   expect(await screen.findByText(t.trialDate.notAllowed)).toBeTruthy();
   expect(action()).toBeNull();
   expect(await screen.findByText(t.trialDate.outcome.upcoming)).toBeTruthy();
@@ -48,7 +48,7 @@ test('active: no action, the reason in its place, the history still shown', asyn
 
 test('without booking.write: nothing once /auth/me answers', async () => {
   serve('trial', ['students.read']);
-  await renderWithQuery(<TrialDateSection student={{ ...profile, status: 'trial' }} />);
+  await renderWithQuery(<TrialDateSection student={{ ...profile, status: 'trial' }} />, createTestQueryClient({ meFromApi: true }));
   await waitFor(() => expect(screen.queryByTestId('trial-date-section')).toBeNull());
   expect(action()).toBeNull();
 });

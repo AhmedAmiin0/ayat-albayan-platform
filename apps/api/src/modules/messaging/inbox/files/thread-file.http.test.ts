@@ -78,6 +78,21 @@ describe('W6 GET /threads/:phone/messages/:id/file: bubble media for admin and s
     expect(client.getMedia).not.toHaveBeenCalled();
   });
 
+  it('?download=1 («تنزيل») signs the same copy to save under the sent name; no name: a dated one', async () => {
+    queries.message.mockResolvedValue(row({ direction: 'outbound', media_path: 'out/a.pdf', media_mime: 'application/pdf', media_name: 'خطة الحفظ.pdf' }));
+    expect((await call('sales', `${URL}?download=1`)).statusCode).toBe(200);
+    expect(storage.signedDownload).toHaveBeenCalledWith({ bucket: 'wa-media', path: 'out/a.pdf', download: 'خطة الحفظ.pdf' });
+    queries.message.mockResolvedValue(row({ media_path: `${M1}.jpg`, created_at: '2026-10-26T14:32:00.000Z' }));
+    await call('admin', `${URL}?download=1`);
+    expect(storage.signedDownload).toHaveBeenLastCalledWith({ bucket: 'wa-media', path: `${M1}.jpg`, download: 'whatsapp-2026-10-26-1432.jpg' });
+  });
+
+  it('?download=1 keeps the same rules: a teacher is still 403 media_forbidden', async () => {
+    const res = await call('teacher', `${URL}?download=1`);
+    expect([res.statusCode, res.json().code]).toEqual([403, 'media_forbidden']);
+    expect(storage.signedDownload).not.toHaveBeenCalled();
+  });
+
   it('a message of another phone is 404 message_not_found, and nothing is fetched or signed', async () => {
     queries.message.mockResolvedValue(row({ phone_e164: '+201001234567' }));
     const res = await call('sales');
