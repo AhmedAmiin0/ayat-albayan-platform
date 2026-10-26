@@ -1,7 +1,7 @@
 import type { Permission } from '@ab/shared';
 import { fireEvent, screen } from '@testing-library/react-native';
 import { router } from 'expo-router';
-import { PROFILE_KEY } from '@/account/queries';
+import { PROFILE_KEY } from '@/account/hooks/queries';
 import { t } from '@/core/lib/i18n/i18n';
 import { profileFixture } from '@/test/account';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';

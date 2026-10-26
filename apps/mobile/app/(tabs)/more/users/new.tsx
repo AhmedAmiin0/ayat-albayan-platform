@@ -1,1 +1,1 @@
-export { CreateUserScreen as default } from '@/users/CreateUserScreen';
+export { CreateUserScreen as default } from '@/users/screens/CreateUserScreen';

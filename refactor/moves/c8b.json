@@ -1,0 +1,488 @@
+{
+  "id": "c8b",
+  "seq": 88,
+  "moves": [
+    {
+      "from": "apps/mobile/src/users/CreateUserScreen*",
+      "to": "apps/mobile/src/users/screens/"
+    },
+    {
+      "from": "apps/mobile/src/users/UserDetailScreen*",
+      "to": "apps/mobile/src/users/screens/"
+    },
+    {
+      "from": "apps/mobile/src/users/UsersScreen*",
+      "to": "apps/mobile/src/users/screens/"
+    },
+    {
+      "from": "apps/mobile/src/users/CreateAccountButton*",
+      "to": "apps/mobile/src/users/create/"
+    },
+    {
+      "from": "apps/mobile/src/users/CreateUserFields*",
+      "to": "apps/mobile/src/users/create/"
+    },
+    {
+      "from": "apps/mobile/src/users/CreateUserForm*",
+      "to": "apps/mobile/src/users/create/"
+    },
+    {
+      "from": "apps/mobile/src/users/CredentialPicker*",
+      "to": "apps/mobile/src/users/create/"
+    },
+    {
+      "from": "apps/mobile/src/users/CredentialResult*",
+      "to": "apps/mobile/src/users/create/"
+    },
+    {
+      "from": "apps/mobile/src/users/NewTeacherFields*",
+      "to": "apps/mobile/src/users/create/"
+    },
+    {
+      "from": "apps/mobile/src/users/RolePicker*",
+      "to": "apps/mobile/src/users/create/"
+    },
+    {
+      "from": "apps/mobile/src/users/LinkPicker*",
+      "to": "apps/mobile/src/users/create/"
+    },
+    {
+      "from": "apps/mobile/src/users/create-form*",
+      "to": "apps/mobile/src/users/create/"
+    },
+    {
+      "from": "apps/mobile/src/users/UserEditFields*",
+      "to": "apps/mobile/src/users/edit/"
+    },
+    {
+      "from": "apps/mobile/src/users/UserEditor*",
+      "to": "apps/mobile/src/users/edit/"
+    },
+    {
+      "from": "apps/mobile/src/users/edit-form*",
+      "to": "apps/mobile/src/users/edit/"
+    },
+    {
+      "from": "apps/mobile/src/users/ActionPanel*",
+      "to": "apps/mobile/src/users/panels/"
+    },
+    {
+      "from": "apps/mobile/src/users/DeletePanel*",
+      "to": "apps/mobile/src/users/panels/"
+    },
+    {
+      "from": "apps/mobile/src/users/DisablePanel*",
+      "to": "apps/mobile/src/users/panels/"
+    },
+    {
+      "from": "apps/mobile/src/users/PanelButtons*",
+      "to": "apps/mobile/src/users/panels/"
+    },
+    {
+      "from": "apps/mobile/src/users/ResetPasswordPanel*",
+      "to": "apps/mobile/src/users/panels/"
+    },
+    {
+      "from": "apps/mobile/src/users/UserActions*",
+      "to": "apps/mobile/src/users/panels/"
+    },
+    {
+      "from": "apps/mobile/src/users/HistoryReferences*",
+      "to": "apps/mobile/src/users/panels/"
+    },
+    {
+      "from": "apps/mobile/src/users/UserItem*",
+      "to": "apps/mobile/src/users/list/"
+    },
+    {
+      "from": "apps/mobile/src/users/UserSummary*",
+      "to": "apps/mobile/src/users/list/"
+    },
+    {
+      "from": "apps/mobile/src/users/UsersFilters*",
+      "to": "apps/mobile/src/users/list/"
+    },
+    {
+      "from": "apps/mobile/src/users/Choice*",
+      "to": "apps/mobile/src/users/shared/"
+    },
+    {
+      "from": "apps/mobile/src/users/TextField*",
+      "to": "apps/mobile/src/users/shared/"
+    },
+    {
+      "from": "apps/mobile/src/users/api*",
+      "to": "apps/mobile/src/users/shared/"
+    },
+    {
+      "from": "apps/mobile/src/users/errors*",
+      "to": "apps/mobile/src/users/shared/"
+    },
+    {
+      "from": "apps/mobile/src/users/fixtures*",
+      "to": "apps/mobile/src/users/shared/"
+    },
+    {
+      "from": "apps/mobile/src/users/format*",
+      "to": "apps/mobile/src/users/shared/"
+    },
+    {
+      "from": "apps/mobile/src/users/nav*",
+      "to": "apps/mobile/src/users/shared/"
+    },
+    {
+      "from": "apps/mobile/src/users/validation*",
+      "to": "apps/mobile/src/users/shared/"
+    },
+    {
+      "from": "apps/mobile/src/account/AccountScreen*",
+      "to": "apps/mobile/src/account/screens/"
+    },
+    {
+      "from": "apps/mobile/src/account/AccountCard*",
+      "to": "apps/mobile/src/account/components/"
+    },
+    {
+      "from": "apps/mobile/src/account/AccountField*",
+      "to": "apps/mobile/src/account/components/"
+    },
+    {
+      "from": "apps/mobile/src/account/AccountHeaderAvatar*",
+      "to": "apps/mobile/src/account/components/"
+    },
+    {
+      "from": "apps/mobile/src/account/AccountRow*",
+      "to": "apps/mobile/src/account/components/"
+    },
+    {
+      "from": "apps/mobile/src/account/AccountSummary*",
+      "to": "apps/mobile/src/account/components/"
+    },
+    {
+      "from": "apps/mobile/src/account/EmailSection*",
+      "to": "apps/mobile/src/account/sections/"
+    },
+    {
+      "from": "apps/mobile/src/account/NameSection*",
+      "to": "apps/mobile/src/account/sections/"
+    },
+    {
+      "from": "apps/mobile/src/account/PasswordSection*",
+      "to": "apps/mobile/src/account/sections/"
+    },
+    {
+      "from": "apps/mobile/src/account/PhoneSection*",
+      "to": "apps/mobile/src/account/sections/"
+    },
+    {
+      "from": "apps/mobile/src/account/AvatarSection*",
+      "to": "apps/mobile/src/account/sections/"
+    },
+    {
+      "from": "apps/mobile/src/account/AvatarButtons*",
+      "to": "apps/mobile/src/account/sections/"
+    },
+    {
+      "from": "apps/mobile/src/account/ProfileAvatar*",
+      "to": "apps/mobile/src/account/sections/"
+    },
+    {
+      "from": "apps/mobile/src/account/account-errors*",
+      "to": "apps/mobile/src/account/lib/"
+    },
+    {
+      "from": "apps/mobile/src/account/avatar*",
+      "to": "apps/mobile/src/account/lib/"
+    },
+    {
+      "from": "apps/mobile/src/account/password-checks*",
+      "to": "apps/mobile/src/account/lib/"
+    },
+    {
+      "from": "apps/mobile/src/account/account-api*",
+      "to": "apps/mobile/src/account/hooks/"
+    },
+    {
+      "from": "apps/mobile/src/account/queries*",
+      "to": "apps/mobile/src/account/hooks/"
+    },
+    {
+      "from": "apps/mobile/src/account/use-account-action*",
+      "to": "apps/mobile/src/account/hooks/"
+    }
+  ],
+  "files": [
+    [
+      "apps/mobile/src/account/account-api.test.ts",
+      "apps/mobile/src/account/hooks/account-api.test.ts"
+    ],
+    [
+      "apps/mobile/src/account/account-api.ts",
+      "apps/mobile/src/account/hooks/account-api.ts"
+    ],
+    [
+      "apps/mobile/src/account/account-errors.test.ts",
+      "apps/mobile/src/account/lib/account-errors.test.ts"
+    ],
+    [
+      "apps/mobile/src/account/account-errors.ts",
+      "apps/mobile/src/account/lib/account-errors.ts"
+    ],
+    [
+      "apps/mobile/src/account/AccountCard.tsx",
+      "apps/mobile/src/account/components/AccountCard.tsx"
+    ],
+    [
+      "apps/mobile/src/account/AccountField.tsx",
+      "apps/mobile/src/account/components/AccountField.tsx"
+    ],
+    [
+      "apps/mobile/src/account/AccountHeaderAvatar.tsx",
+      "apps/mobile/src/account/components/AccountHeaderAvatar.tsx"
+    ],
+    [
+      "apps/mobile/src/account/AccountRow.tsx",
+      "apps/mobile/src/account/components/AccountRow.tsx"
+    ],
+    [
+      "apps/mobile/src/account/AccountScreen.avatar.test.tsx",
+      "apps/mobile/src/account/screens/AccountScreen.avatar.test.tsx"
+    ],
+    [
+      "apps/mobile/src/account/AccountScreen.security.test.tsx",
+      "apps/mobile/src/account/screens/AccountScreen.security.test.tsx"
+    ],
+    [
+      "apps/mobile/src/account/AccountScreen.test.tsx",
+      "apps/mobile/src/account/screens/AccountScreen.test.tsx"
+    ],
+    [
+      "apps/mobile/src/account/AccountScreen.tsx",
+      "apps/mobile/src/account/screens/AccountScreen.tsx"
+    ],
+    [
+      "apps/mobile/src/account/AccountSummary.tsx",
+      "apps/mobile/src/account/components/AccountSummary.tsx"
+    ],
+    [
+      "apps/mobile/src/account/avatar.test.ts",
+      "apps/mobile/src/account/lib/avatar.test.ts"
+    ],
+    [
+      "apps/mobile/src/account/avatar.ts",
+      "apps/mobile/src/account/lib/avatar.ts"
+    ],
+    [
+      "apps/mobile/src/account/AvatarButtons.tsx",
+      "apps/mobile/src/account/sections/AvatarButtons.tsx"
+    ],
+    [
+      "apps/mobile/src/account/AvatarSection.tsx",
+      "apps/mobile/src/account/sections/AvatarSection.tsx"
+    ],
+    [
+      "apps/mobile/src/account/EmailSection.tsx",
+      "apps/mobile/src/account/sections/EmailSection.tsx"
+    ],
+    [
+      "apps/mobile/src/account/NameSection.tsx",
+      "apps/mobile/src/account/sections/NameSection.tsx"
+    ],
+    [
+      "apps/mobile/src/account/password-checks.test.ts",
+      "apps/mobile/src/account/lib/password-checks.test.ts"
+    ],
+    [
+      "apps/mobile/src/account/password-checks.ts",
+      "apps/mobile/src/account/lib/password-checks.ts"
+    ],
+    [
+      "apps/mobile/src/account/PasswordSection.tsx",
+      "apps/mobile/src/account/sections/PasswordSection.tsx"
+    ],
+    [
+      "apps/mobile/src/account/PhoneSection.tsx",
+      "apps/mobile/src/account/sections/PhoneSection.tsx"
+    ],
+    [
+      "apps/mobile/src/account/ProfileAvatar.tsx",
+      "apps/mobile/src/account/sections/ProfileAvatar.tsx"
+    ],
+    [
+      "apps/mobile/src/account/queries.ts",
+      "apps/mobile/src/account/hooks/queries.ts"
+    ],
+    [
+      "apps/mobile/src/account/use-account-action.ts",
+      "apps/mobile/src/account/hooks/use-account-action.ts"
+    ],
+    [
+      "apps/mobile/src/users/ActionPanel.tsx",
+      "apps/mobile/src/users/panels/ActionPanel.tsx"
+    ],
+    [
+      "apps/mobile/src/users/api.ts",
+      "apps/mobile/src/users/shared/api.ts"
+    ],
+    [
+      "apps/mobile/src/users/Choice.tsx",
+      "apps/mobile/src/users/shared/Choice.tsx"
+    ],
+    [
+      "apps/mobile/src/users/create-form.ts",
+      "apps/mobile/src/users/create/create-form.ts"
+    ],
+    [
+      "apps/mobile/src/users/CreateAccountButton.test.tsx",
+      "apps/mobile/src/users/create/CreateAccountButton.test.tsx"
+    ],
+    [
+      "apps/mobile/src/users/CreateAccountButton.tsx",
+      "apps/mobile/src/users/create/CreateAccountButton.tsx"
+    ],
+    [
+      "apps/mobile/src/users/CreateUserFields.tsx",
+      "apps/mobile/src/users/create/CreateUserFields.tsx"
+    ],
+    [
+      "apps/mobile/src/users/CreateUserForm.tsx",
+      "apps/mobile/src/users/create/CreateUserForm.tsx"
+    ],
+    [
+      "apps/mobile/src/users/CreateUserScreen.test.tsx",
+      "apps/mobile/src/users/screens/CreateUserScreen.test.tsx"
+    ],
+    [
+      "apps/mobile/src/users/CreateUserScreen.tsx",
+      "apps/mobile/src/users/screens/CreateUserScreen.tsx"
+    ],
+    [
+      "apps/mobile/src/users/CredentialPicker.tsx",
+      "apps/mobile/src/users/create/CredentialPicker.tsx"
+    ],
+    [
+      "apps/mobile/src/users/CredentialResult.tsx",
+      "apps/mobile/src/users/create/CredentialResult.tsx"
+    ],
+    [
+      "apps/mobile/src/users/DeletePanel.tsx",
+      "apps/mobile/src/users/panels/DeletePanel.tsx"
+    ],
+    [
+      "apps/mobile/src/users/DisablePanel.tsx",
+      "apps/mobile/src/users/panels/DisablePanel.tsx"
+    ],
+    [
+      "apps/mobile/src/users/edit-form.test.ts",
+      "apps/mobile/src/users/edit/edit-form.test.ts"
+    ],
+    [
+      "apps/mobile/src/users/edit-form.ts",
+      "apps/mobile/src/users/edit/edit-form.ts"
+    ],
+    [
+      "apps/mobile/src/users/errors.test.ts",
+      "apps/mobile/src/users/shared/errors.test.ts"
+    ],
+    [
+      "apps/mobile/src/users/errors.ts",
+      "apps/mobile/src/users/shared/errors.ts"
+    ],
+    [
+      "apps/mobile/src/users/fixtures.ts",
+      "apps/mobile/src/users/shared/fixtures.ts"
+    ],
+    [
+      "apps/mobile/src/users/format.ts",
+      "apps/mobile/src/users/shared/format.ts"
+    ],
+    [
+      "apps/mobile/src/users/HistoryReferences.tsx",
+      "apps/mobile/src/users/panels/HistoryReferences.tsx"
+    ],
+    [
+      "apps/mobile/src/users/LinkPicker.tsx",
+      "apps/mobile/src/users/create/LinkPicker.tsx"
+    ],
+    [
+      "apps/mobile/src/users/nav.ts",
+      "apps/mobile/src/users/shared/nav.ts"
+    ],
+    [
+      "apps/mobile/src/users/NewTeacherFields.tsx",
+      "apps/mobile/src/users/create/NewTeacherFields.tsx"
+    ],
+    [
+      "apps/mobile/src/users/PanelButtons.tsx",
+      "apps/mobile/src/users/panels/PanelButtons.tsx"
+    ],
+    [
+      "apps/mobile/src/users/ResetPasswordPanel.tsx",
+      "apps/mobile/src/users/panels/ResetPasswordPanel.tsx"
+    ],
+    [
+      "apps/mobile/src/users/RolePicker.tsx",
+      "apps/mobile/src/users/create/RolePicker.tsx"
+    ],
+    [
+      "apps/mobile/src/users/TextField.tsx",
+      "apps/mobile/src/users/shared/TextField.tsx"
+    ],
+    [
+      "apps/mobile/src/users/UserActions.test.tsx",
+      "apps/mobile/src/users/panels/UserActions.test.tsx"
+    ],
+    [
+      "apps/mobile/src/users/UserActions.tsx",
+      "apps/mobile/src/users/panels/UserActions.tsx"
+    ],
+    [
+      "apps/mobile/src/users/UserDetailScreen.test.tsx",
+      "apps/mobile/src/users/screens/UserDetailScreen.test.tsx"
+    ],
+    [
+      "apps/mobile/src/users/UserDetailScreen.tsx",
+      "apps/mobile/src/users/screens/UserDetailScreen.tsx"
+    ],
+    [
+      "apps/mobile/src/users/UserEditFields.tsx",
+      "apps/mobile/src/users/edit/UserEditFields.tsx"
+    ],
+    [
+      "apps/mobile/src/users/UserEditor.tsx",
+      "apps/mobile/src/users/edit/UserEditor.tsx"
+    ],
+    [
+      "apps/mobile/src/users/UserItem.tsx",
+      "apps/mobile/src/users/list/UserItem.tsx"
+    ],
+    [
+      "apps/mobile/src/users/UsersFilters.tsx",
+      "apps/mobile/src/users/list/UsersFilters.tsx"
+    ],
+    [
+      "apps/mobile/src/users/UsersScreen.en.test.tsx",
+      "apps/mobile/src/users/screens/UsersScreen.en.test.tsx"
+    ],
+    [
+      "apps/mobile/src/users/UsersScreen.test.tsx",
+      "apps/mobile/src/users/screens/UsersScreen.test.tsx"
+    ],
+    [
+      "apps/mobile/src/users/UsersScreen.tsx",
+      "apps/mobile/src/users/screens/UsersScreen.tsx"
+    ],
+    [
+      "apps/mobile/src/users/UserSummary.tsx",
+      "apps/mobile/src/users/list/UserSummary.tsx"
+    ],
+    [
+      "apps/mobile/src/users/validation.test.ts",
+      "apps/mobile/src/users/shared/validation.test.ts"
+    ],
+    [
+      "apps/mobile/src/users/validation.ts",
+      "apps/mobile/src/users/shared/validation.ts"
+    ]
+  ]
+}

@@ -4,7 +4,7 @@ import { usePermissions } from '@/auth/use-permissions';
 import { t } from '@/core/lib/i18n/i18n';
 import type { StudentProfile } from '@/students/types';
 import { Button } from '@/core/ui/primitives/Button';
-import { CreateAccountButton } from '@/users/CreateAccountButton';
+import { CreateAccountButton } from '@/users/create/CreateAccountButton';
 import { JoinLinkCard } from './JoinLinkCard';
 import { RecordingsButton } from './RecordingsButton';
 

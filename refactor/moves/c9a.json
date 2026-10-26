@@ -1,0 +1,228 @@
+{
+  "id": "c9a",
+  "seq": 89,
+  "moves": [
+    {
+      "from": "apps/mobile/src/more/MoreScreen*",
+      "to": "apps/mobile/src/more/screens/"
+    },
+    {
+      "from": "apps/mobile/src/more/TeachersScreen*",
+      "to": "apps/mobile/src/more/screens/"
+    },
+    {
+      "from": "apps/mobile/src/more/TeacherDetailScreen*",
+      "to": "apps/mobile/src/more/screens/"
+    },
+    {
+      "from": "apps/mobile/src/more/JobApplicantsScreen*",
+      "to": "apps/mobile/src/more/screens/"
+    },
+    {
+      "from": "apps/mobile/src/more/AdminOpsSection*",
+      "to": "apps/mobile/src/more/sections/"
+    },
+    {
+      "from": "apps/mobile/src/more/ClassroomSection*",
+      "to": "apps/mobile/src/more/sections/"
+    },
+    {
+      "from": "apps/mobile/src/more/FinanceSection*",
+      "to": "apps/mobile/src/more/sections/"
+    },
+    {
+      "from": "apps/mobile/src/more/MoneySection*",
+      "to": "apps/mobile/src/more/sections/"
+    },
+    {
+      "from": "apps/mobile/src/more/TeacherStudentsSection*",
+      "to": "apps/mobile/src/more/sections/"
+    },
+    {
+      "from": "apps/mobile/src/more/TeacherContact*",
+      "to": "apps/mobile/src/more/teachers/"
+    },
+    {
+      "from": "apps/mobile/src/more/TeacherCountLinks*",
+      "to": "apps/mobile/src/more/teachers/"
+    },
+    {
+      "from": "apps/mobile/src/more/TeacherRow*",
+      "to": "apps/mobile/src/more/teachers/"
+    },
+    {
+      "from": "apps/mobile/src/more/TimeOffRow*",
+      "to": "apps/mobile/src/more/availability/"
+    },
+    {
+      "from": "apps/mobile/src/more/UpcomingTimeOff*",
+      "to": "apps/mobile/src/more/availability/"
+    },
+    {
+      "from": "apps/mobile/src/more/WeekdayRow*",
+      "to": "apps/mobile/src/more/availability/"
+    },
+    {
+      "from": "apps/mobile/src/more/WeeklyAvailability*",
+      "to": "apps/mobile/src/more/availability/"
+    },
+    {
+      "from": "apps/mobile/src/more/AppearancePicker*",
+      "to": "apps/mobile/src/more/appearance/"
+    },
+    {
+      "from": "apps/mobile/src/more/appearance*",
+      "to": "apps/mobile/src/more/appearance/"
+    },
+    {
+      "from": "apps/mobile/src/more/useAppearancePref*",
+      "to": "apps/mobile/src/more/appearance/"
+    },
+    {
+      "from": "apps/mobile/src/more/LanguageRow*",
+      "to": "apps/mobile/src/more/appearance/"
+    }
+  ],
+  "files": [
+    [
+      "apps/mobile/src/more/AdminOpsSection.test.tsx",
+      "apps/mobile/src/more/sections/AdminOpsSection.test.tsx"
+    ],
+    [
+      "apps/mobile/src/more/AdminOpsSection.tsx",
+      "apps/mobile/src/more/sections/AdminOpsSection.tsx"
+    ],
+    [
+      "apps/mobile/src/more/appearance.test.ts",
+      "apps/mobile/src/more/appearance/appearance.test.ts"
+    ],
+    [
+      "apps/mobile/src/more/appearance.ts",
+      "apps/mobile/src/more/appearance/appearance.ts"
+    ],
+    [
+      "apps/mobile/src/more/AppearancePicker.tsx",
+      "apps/mobile/src/more/appearance/AppearancePicker.tsx"
+    ],
+    [
+      "apps/mobile/src/more/ClassroomSection.test.tsx",
+      "apps/mobile/src/more/sections/ClassroomSection.test.tsx"
+    ],
+    [
+      "apps/mobile/src/more/ClassroomSection.tsx",
+      "apps/mobile/src/more/sections/ClassroomSection.tsx"
+    ],
+    [
+      "apps/mobile/src/more/FinanceSection.test.tsx",
+      "apps/mobile/src/more/sections/FinanceSection.test.tsx"
+    ],
+    [
+      "apps/mobile/src/more/FinanceSection.tsx",
+      "apps/mobile/src/more/sections/FinanceSection.tsx"
+    ],
+    [
+      "apps/mobile/src/more/JobApplicantsScreen.en.test.tsx",
+      "apps/mobile/src/more/screens/JobApplicantsScreen.en.test.tsx"
+    ],
+    [
+      "apps/mobile/src/more/JobApplicantsScreen.test.tsx",
+      "apps/mobile/src/more/screens/JobApplicantsScreen.test.tsx"
+    ],
+    [
+      "apps/mobile/src/more/JobApplicantsScreen.tsx",
+      "apps/mobile/src/more/screens/JobApplicantsScreen.tsx"
+    ],
+    [
+      "apps/mobile/src/more/LanguageRow.test.tsx",
+      "apps/mobile/src/more/appearance/LanguageRow.test.tsx"
+    ],
+    [
+      "apps/mobile/src/more/LanguageRow.tsx",
+      "apps/mobile/src/more/appearance/LanguageRow.tsx"
+    ],
+    [
+      "apps/mobile/src/more/MoneySection.test.tsx",
+      "apps/mobile/src/more/sections/MoneySection.test.tsx"
+    ],
+    [
+      "apps/mobile/src/more/MoneySection.tsx",
+      "apps/mobile/src/more/sections/MoneySection.tsx"
+    ],
+    [
+      "apps/mobile/src/more/MoreScreen.account.test.tsx",
+      "apps/mobile/src/more/screens/MoreScreen.account.test.tsx"
+    ],
+    [
+      "apps/mobile/src/more/MoreScreen.en.test.tsx",
+      "apps/mobile/src/more/screens/MoreScreen.en.test.tsx"
+    ],
+    [
+      "apps/mobile/src/more/MoreScreen.test.tsx",
+      "apps/mobile/src/more/screens/MoreScreen.test.tsx"
+    ],
+    [
+      "apps/mobile/src/more/MoreScreen.tsx",
+      "apps/mobile/src/more/screens/MoreScreen.tsx"
+    ],
+    [
+      "apps/mobile/src/more/TeacherContact.tsx",
+      "apps/mobile/src/more/teachers/TeacherContact.tsx"
+    ],
+    [
+      "apps/mobile/src/more/TeacherCountLinks.tsx",
+      "apps/mobile/src/more/teachers/TeacherCountLinks.tsx"
+    ],
+    [
+      "apps/mobile/src/more/TeacherDetailScreen.test.tsx",
+      "apps/mobile/src/more/screens/TeacherDetailScreen.test.tsx"
+    ],
+    [
+      "apps/mobile/src/more/TeacherDetailScreen.tsx",
+      "apps/mobile/src/more/screens/TeacherDetailScreen.tsx"
+    ],
+    [
+      "apps/mobile/src/more/TeacherRow.tsx",
+      "apps/mobile/src/more/teachers/TeacherRow.tsx"
+    ],
+    [
+      "apps/mobile/src/more/TeachersScreen.test.tsx",
+      "apps/mobile/src/more/screens/TeachersScreen.test.tsx"
+    ],
+    [
+      "apps/mobile/src/more/TeachersScreen.tsx",
+      "apps/mobile/src/more/screens/TeachersScreen.tsx"
+    ],
+    [
+      "apps/mobile/src/more/TeacherStudentsSection.en.test.tsx",
+      "apps/mobile/src/more/sections/TeacherStudentsSection.en.test.tsx"
+    ],
+    [
+      "apps/mobile/src/more/TeacherStudentsSection.test.tsx",
+      "apps/mobile/src/more/sections/TeacherStudentsSection.test.tsx"
+    ],
+    [
+      "apps/mobile/src/more/TeacherStudentsSection.tsx",
+      "apps/mobile/src/more/sections/TeacherStudentsSection.tsx"
+    ],
+    [
+      "apps/mobile/src/more/TimeOffRow.tsx",
+      "apps/mobile/src/more/availability/TimeOffRow.tsx"
+    ],
+    [
+      "apps/mobile/src/more/UpcomingTimeOff.tsx",
+      "apps/mobile/src/more/availability/UpcomingTimeOff.tsx"
+    ],
+    [
+      "apps/mobile/src/more/useAppearancePref.ts",
+      "apps/mobile/src/more/appearance/useAppearancePref.ts"
+    ],
+    [
+      "apps/mobile/src/more/WeekdayRow.tsx",
+      "apps/mobile/src/more/availability/WeekdayRow.tsx"
+    ],
+    [
+      "apps/mobile/src/more/WeeklyAvailability.tsx",
+      "apps/mobile/src/more/availability/WeeklyAvailability.tsx"
+    ]
+  ]
+}

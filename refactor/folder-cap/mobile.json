@@ -3,10 +3,6 @@
     "files": 1,
     "dirs": 36
   },
-  "apps/mobile/src/account": {
-    "files": 19,
-    "dirs": 0
-  },
   "apps/mobile/src/calendar": {
     "files": 19,
     "dirs": 0
@@ -35,10 +31,6 @@
     "files": 27,
     "dirs": 0
   },
-  "apps/mobile/src/more": {
-    "files": 25,
-    "dirs": 1
-  },
   "apps/mobile/src/student-file": {
     "files": 21,
     "dirs": 0
@@ -57,10 +49,6 @@
   },
   "apps/mobile/src/today": {
     "files": 14,
-    "dirs": 0
-  },
-  "apps/mobile/src/users": {
-    "files": 33,
     "dirs": 0
   }
 }

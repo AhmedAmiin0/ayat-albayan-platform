@@ -1,5 +1,5 @@
 import { resolveSavedReply, type SavedReply, type ThreadView } from '@ab/shared';
-import { useMyProfile } from '@/account/queries';
+import { useMyProfile } from '@/account/hooks/queries';
 import { SavedRepliesSheet } from './SavedRepliesSheet';
 
 export interface SavedReplyPickerProps {
