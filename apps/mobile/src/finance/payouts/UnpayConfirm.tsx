@@ -7,7 +7,7 @@ import { Button } from '@/core/ui/primitives/Button';
 import { Field } from '@/core/ui/form/Field';
 import { AppText } from '@/core/ui/primitives/AppText';
 
-export interface UnpayConfirmProps {
+interface UnpayConfirmProps {
   message: string;
   busy: boolean;
   onConfirm: (reason: string) => void;

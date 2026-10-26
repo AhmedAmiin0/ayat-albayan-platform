@@ -2,7 +2,7 @@ import { View } from 'react-native';
 import { shape, type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 
-export interface KpiCardProps {
+interface KpiCardProps {
   label: string;
   /** Already formatted (amountText); «—» while it loads. */
   value: string;

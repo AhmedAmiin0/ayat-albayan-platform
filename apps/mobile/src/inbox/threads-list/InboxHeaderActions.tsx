@@ -3,7 +3,7 @@ import type { TreeBase } from '@/core/nav/tree-base';
 import { HeldBell } from '@/notifications/HeldBell';
 import { NewChatSheet } from './NewChatSheet';
 
-export interface InboxHeaderActionsProps {
+interface InboxHeaderActionsProps {
   base: TreeBase;
 }
 

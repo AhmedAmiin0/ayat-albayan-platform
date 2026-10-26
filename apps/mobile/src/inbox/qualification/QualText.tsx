@@ -4,7 +4,7 @@ import { ErrorLine } from '../ErrorLine';
 import type { TextField } from './qualification-form';
 import type { QualFieldsProps } from './QualificationFields';
 
-export type QualTextProps = QualFieldsProps & {
+type QualTextProps = QualFieldsProps & {
   field: TextField;
   label: string;
 } & Omit<FieldProps, 'label' | 'value' | 'onChangeText'>;
