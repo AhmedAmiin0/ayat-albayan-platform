@@ -13,7 +13,7 @@ export interface CrmConn {
   timeoutMs: number;
 }
 
-export interface CrmRequest {
+interface CrmRequest {
   /** Relative to the base («messages», «me»). */
   path: string;
   method?: 'GET' | 'POST';

@@ -7,7 +7,7 @@ import { WebPushSender, type WebPushPayload } from '../web/web-push.sender';
 export const PUSH_TRANSPORT = Symbol('PUSH_TRANSPORT');
 
 /** One new bell row to carry to the profile's browsers and app devices. */
-export interface ChannelDelivery {
+interface ChannelDelivery {
   profile: { id: string; push_tokens: string[] };
   rowId: string;
   text: PushText;

@@ -6,7 +6,7 @@ import { ListRow } from '@/core/ui/layout/ListRow';
 import { categoryLabel } from './categories';
 import { amountText } from '../shared/format';
 
-export interface ExpenseRowProps {
+interface ExpenseRowProps {
   expense: ExpenseView;
   categories: readonly ExpenseCategoryView[] | undefined;
 }

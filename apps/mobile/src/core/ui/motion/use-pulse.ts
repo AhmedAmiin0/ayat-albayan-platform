@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Animated, Easing } from 'react-native';
 
-export interface PulseOptions {
+interface PulseOptions {
   /** One way, ms: the value goes 0 → 1 → 0 in twice this. */
   duration: number;
   /** Wait before rising and after falling, so staggered pulses keep one period (dots in a row). */

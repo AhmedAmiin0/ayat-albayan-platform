@@ -7,7 +7,7 @@ import { studentNames } from '@/today/lib/lesson-text';
 import { Button } from '@/core/ui/primitives/Button';
 import { canReschedule } from './can-reschedule';
 
-export interface RowDefaultActionsProps {
+interface RowDefaultActionsProps {
   lesson: LessonView;
   onReschedule: (lesson: LessonView) => void;
   onEditTime?: ((lesson: LessonView) => void) | undefined;

@@ -14,7 +14,7 @@ import type { WhatsappLines } from '../../whatsapp.types';
 
 const SUBMITTABLE: ReadonlySet<TemplateStatus> = new Set(['not_submitted', 'rejected', 'missing']);
 
-export interface SubmitDeps {
+interface SubmitDeps {
   queries: Pick<TemplatesQueries, 'get' | 'update'>;
   lines: WhatsappLines;
   audit: Pick<AuditService, 'record'>;

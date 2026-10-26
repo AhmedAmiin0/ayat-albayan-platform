@@ -26,7 +26,7 @@ export const APPLICANT_SORT: SortSpec<ApplicantSortKey> = {
   fallback: { column: 'created_at', ascending: false },
 };
 
-export interface ApplicantFilterable<Q> {
+interface ApplicantFilterable<Q> {
   ilike(column: string, pattern: string): Q;
   is(column: string, value: null): Q;
   not(column: string, operator: string, value: null): Q;

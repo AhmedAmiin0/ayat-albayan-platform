@@ -108,7 +108,7 @@ export function draftFromLead(lead: BookingLead, pkg: PackageSize = 'trial'): Tr
   };
 }
 
-export type PhoneProblem = 'empty' | 'not_a_number' | 'invalid_length' | 'missing_country_code';
+type PhoneProblem = 'empty' | 'not_a_number' | 'invalid_length' | 'missing_country_code';
 
 /** Why the typed phone is not a WhatsApp number we can store (rule 7), or null when it is. */
 export function phoneProblem(phone: string): PhoneProblem | null {

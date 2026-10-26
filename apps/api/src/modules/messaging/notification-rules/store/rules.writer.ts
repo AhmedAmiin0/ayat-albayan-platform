@@ -6,7 +6,7 @@ import { RulesJournal } from './rules.journal';
 import { planPatch, type PatchPlan } from '../rules.patch';
 import { RulesPersist } from './rules.persist';
 
-export interface RuleWrite {
+interface RuleWrite {
   key: string;
   body: unknown;
   actor: AuthUser;

@@ -5,7 +5,7 @@ import { SettingsService } from '../../../common/settings/settings.service';
 
 /** whatsapp_calls_enabled (docs/28 §6): the calls feature's one switch, default false. */
 const KEYS = ['whatsapp_calls_enabled'] as const satisfies readonly SettingKey[];
-export type CallsSettingsValues = SettingsSlice<(typeof KEYS)[number]>;
+type CallsSettingsValues = SettingsSlice<(typeof KEYS)[number]>;
 
 /** The academy settings the calls module reads (common/settings/settings-slice.ts). */
 @Injectable()

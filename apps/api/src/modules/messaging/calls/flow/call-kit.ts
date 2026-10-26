@@ -9,7 +9,7 @@ import { CallsQueries } from '../store/calls.queries';
 const MAX_ATTEMPTS = 4;
 
 /** Extra columns a move may write beside the machine's patch (who took it, why it failed). */
-export type MoveExtra = Pick<CallMove['patch'], 'accepted_by' | 'error_code'>;
+type MoveExtra = Pick<CallMove['patch'], 'accepted_by' | 'error_code'>;
 
 /**
  * What every call flow needs: the store, the Kapso calls API, the chats (v_threads: who a phone is)

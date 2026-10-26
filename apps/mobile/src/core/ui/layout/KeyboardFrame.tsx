@@ -14,7 +14,7 @@ export function keyboardAvoidProps(windowTop: number) {
   return { behavior: 'padding', keyboardVerticalOffset: windowTop } as const;
 }
 
-export interface KeyboardFrameProps {
+interface KeyboardFrameProps {
   children: ReactNode;
   style?: StyleProp<ViewStyle>;
   /**

@@ -4,7 +4,7 @@ import type { WaError } from '../../whatsapp.types';
 /** messages.error_code while the CRM's rate limit (429) holds the row until its Retry-After. */
 export const CRM_RATE_LIMITED = 'crm_rate_limited';
 
-export interface CrmPlanInput {
+interface CrmPlanInput {
   info: WaError['info'] | null;
   /** This try included (the claim's +1). */
   attempts: number;

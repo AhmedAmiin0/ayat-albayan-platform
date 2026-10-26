@@ -10,7 +10,7 @@ import type { TemplatesQueries } from '../catalog/templates.queries';
 // the other line (WABA). Its Meta state belonged to the old WABA, so it starts over as not_submitted
 // and the new line is synced at once: approved if the template is there, else the admin submits it.
 
-export interface MoveDeps extends LineSyncDeps {
+interface MoveDeps extends LineSyncDeps {
   queries: Pick<TemplatesQueries, 'all' | 'get' | 'update' | 'insert'>;
   audit: Pick<AuditService, 'record'>;
   /** The registry keeps each line's last sync (GET /messaging/templates/lines). */

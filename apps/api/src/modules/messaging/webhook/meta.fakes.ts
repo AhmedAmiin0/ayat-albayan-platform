@@ -14,7 +14,7 @@ export function envelope(value: object, phoneNumberId = PHONE_NUMBER_ID): object
   };
 }
 
-export interface InboundOpts {
+interface InboundOpts {
   from?: string;
   id?: string;
   name?: string;
@@ -45,7 +45,7 @@ export const mediaPart = (kind: string, extra: object = {}) => ({
   [kind]: { id: 'media-1', mime_type: 'image/jpeg', sha256: 'stub', ...extra },
 });
 
-export interface StatusOpts {
+interface StatusOpts {
   id?: string;
   status: 'sent' | 'delivered' | 'read' | 'failed';
   errorCode?: number;

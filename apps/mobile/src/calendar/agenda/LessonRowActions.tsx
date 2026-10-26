@@ -11,7 +11,7 @@ import { studentNames } from '@/today/lib/lesson-text';
 import type { useLessonAction } from '@/today/lib/use-lesson-action';
 import { Button, type ButtonVariant } from '@/core/ui/primitives/Button';
 
-export interface LessonRowActionsProps {
+interface LessonRowActionsProps {
   lesson: LessonView;
   /** The screen's one confirm / cancel mutation (Today's, R-MOB-03). */
   action: ReturnType<typeof useLessonAction>;

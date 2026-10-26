@@ -21,7 +21,7 @@ export function forTeacher(view: ThreadView, unread: ReadonlyMap<string, number>
   };
 }
 
-export interface TeacherPeopleInput {
+interface TeacherPeopleInput {
   row: ThreadRow | null;
   /** The guardian's students (TeacherThreadsQueries.guardianStudents), oldest first. */
   students: readonly PeopleStudentRow[];

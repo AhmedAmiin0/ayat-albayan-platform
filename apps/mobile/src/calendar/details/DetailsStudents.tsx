@@ -30,7 +30,7 @@ function teacherReport(lesson: DetailsLesson, now: Date): ReportState | null {
 }
 
 /** «الطلاب»: one row per student, hairlines between them, and the teacher's report button under them. */
-export interface DetailsStudentsProps {
+interface DetailsStudentsProps {
   lesson: DetailsLesson;
   role: DetailsRole;
   /** Closes the sheet before a tap navigates (the next screen would open under the modal). */

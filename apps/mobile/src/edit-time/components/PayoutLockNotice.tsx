@@ -6,7 +6,7 @@ import { Button } from '@/core/ui/primitives/Button';
 import { lockedText, type PayoutLock } from '../lib/edit-time-lock';
 import { lengthText } from '../lib/edit-time-text';
 
-export interface PayoutLockNoticeProps {
+interface PayoutLockNoticeProps {
   lock: PayoutLock;
   /** The recorded length: the one that can still be saved. */
   original: number;

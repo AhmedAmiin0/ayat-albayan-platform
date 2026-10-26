@@ -4,7 +4,7 @@ import { expoMessages, readTickets, type ExpoMessage, type ExpoTicket, type Push
 /** Sends a batch to Expo and returns one ticket per message (injectable for tests). */
 export type PushTransport = (messages: ExpoMessage[]) => Promise<ExpoTicket[]>;
 
-export interface ExpoDelivery {
+interface ExpoDelivery {
   db: Db;
   transport: PushTransport;
   profile: { id: string; push_tokens: string[] };
