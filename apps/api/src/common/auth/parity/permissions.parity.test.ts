@@ -92,6 +92,13 @@ describe('system-role parity with the old @Roles table', () => {
     expect(WHO.filter((who) => who !== null && systemPermissionsOf(who).includes('inbox.lists'))).toEqual(['admin', 'sales']);
   });
 
+  // Owner 2026-10-26 «عرض سعر» in the chat: the calculator's two routes, for admin and sales (never a teacher).
+  it('pricing.read gates the two pricing routes only, for admin and sales', () => {
+    const gated = routes.filter((r) => r.permission === 'pricing.read').map((r) => r.key).sort();
+    expect(gated).toEqual(['PricingController.catalog', 'PricingController.quote']);
+    expect(WHO.filter((who) => who !== null && systemPermissionsOf(who).includes('pricing.read'))).toEqual(['admin', 'sales']);
+  });
+
   // Owner 2026-10-25 «الردود السريعة»: writing the shared list is an inline check (SavedRepliesService),
   // never a route gate; by default only the system admin holds it (grantable to assistants).
   it('saved_replies.manage gates no route and is held by the system admin only', () => {

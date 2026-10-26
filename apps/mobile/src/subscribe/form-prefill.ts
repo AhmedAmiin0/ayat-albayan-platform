@@ -6,6 +6,7 @@ import {
   PACKAGE_IDS,
   PRICING_DURATIONS,
   SITE_COUNTRIES,
+  type RenewalPricing,
 } from '@ab/shared';
 import type { PlanChoice } from '@/finance/pricing/selection';
 import { INITIAL_FORM, type SubscribeForm } from './subscribe-form';
@@ -59,4 +60,9 @@ export function formFrom(p: FormPrefill): SubscribeForm {
     ...(discount === undefined ? {} : { discount }),
     ...(country ? { country } : {}),
   };
+}
+
+/** A renewal's calculator inputs (renewalPricing, e.g. GET /sales/money/family `renewal`) as the form. */
+export function renewalForm(p: RenewalPricing): SubscribeForm {
+  return { plan: p.pkg, count: p.count, duration: `${p.duration}`, discount: String(p.discount), country: p.country || 'guardian' };
 }
