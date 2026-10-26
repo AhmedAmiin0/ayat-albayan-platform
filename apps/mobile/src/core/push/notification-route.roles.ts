@@ -6,7 +6,7 @@ import { pushKind, pushPhone } from './push-data';
 // The sales and classroom-assistant trees (owner 2026-10-12: a bell in every staff portal). Each
 // map returns only its own tree's routes: never an admin URL, and never a tab the role cannot see.
 
-export const SALES_MORE = '/sales/more';
+const SALES_MORE = '/sales/more';
 
 const toSalesThread = (data: unknown, can: Can) => {
   if (!canOpen(can, 'inbox')) return SALES_MORE;

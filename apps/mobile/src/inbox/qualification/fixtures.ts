@@ -26,7 +26,7 @@ export const hudaProfile: LeadProfile = {
 };
 
 /** settings.follow_up_hours: three follow-ups. */
-export const FOLLOW_UP_HOURS = [24, 72, 168];
+const FOLLOW_UP_HOURS = [24, 72, 168];
 
 /** GET /leads?q=… (the exact-phone read) and GET /settings, as the lead screen asks for them. */
 export function answer(row: LeadProfile | null) {

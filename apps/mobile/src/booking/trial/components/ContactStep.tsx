@@ -24,7 +24,7 @@ type Contact = Pick<
   | 'durationMin'
 >;
 
-export interface ContactStepProps {
+interface ContactStepProps {
   value: Contact;
   /** The trial asks «المده» here; a package asks it on its own step. */
   withDuration: boolean;

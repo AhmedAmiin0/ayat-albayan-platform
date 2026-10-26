@@ -5,7 +5,7 @@ import { shape, type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 
 /** The text the guardian will read: body with the params filled in, then the footer. */
-export function templatePreview(template: TemplateView, params: TemplateParamsInput): string {
+function templatePreview(template: TemplateView, params: TemplateParamsInput): string {
   const body = renderTemplateBody(template.body_ar, params);
   return template.footer_ar ? `${body}\n\n${template.footer_ar}` : body;
 }

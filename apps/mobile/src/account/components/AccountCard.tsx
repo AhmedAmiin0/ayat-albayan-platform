@@ -7,7 +7,7 @@ import { shape, type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { Button } from '@/core/ui/primitives/Button';
 
-export interface AccountCardProps {
+interface AccountCardProps {
   title: string;
   children: ReactNode;
   /** The section's save; omitted for a card without one (the photo has its own buttons). */

@@ -10,7 +10,7 @@ import type { StudentChoice, TrialDraft } from '../lib/draft';
 import { DuplicateNotice } from './DuplicateNotice';
 import { packageDaysNote } from '../lib/package-choice';
 
-export interface FailureNoticeProps {
+interface FailureNoticeProps {
   failure: BookFailure;
   busy: boolean;
   onSubmit: (choice?: StudentChoice) => void;

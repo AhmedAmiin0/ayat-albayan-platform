@@ -4,7 +4,7 @@ import { apiFetch } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
 import { pathKey } from '@/core/lib/query/query-keys';
 
-export const GOOGLE_STATUS_PATH = '/admin/google/status';
+const GOOGLE_STATUS_PATH = '/admin/google/status';
 
 /** GET /admin/google/status (admin, read-only here: docs/24 §3, no OAuth on mobile). */
 export function useGoogleStatus() {

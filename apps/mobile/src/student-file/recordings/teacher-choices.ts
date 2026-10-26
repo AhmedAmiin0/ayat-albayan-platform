@@ -15,7 +15,7 @@ export function mergeChoices(rows: StudentRecordingView[], all: Option[]): Teach
 }
 
 /** `a` then whatever `b` adds; the same list back when `b` adds nothing (no state churn). */
-export function unionChoices(a: TeacherChoice[], b: TeacherChoice[]): TeacherChoice[] {
+function unionChoices(a: TeacherChoice[], b: TeacherChoice[]): TeacherChoice[] {
   const extra = b.filter((c) => !a.some((x) => x.id === c.id));
   return extra.length ? [...a, ...extra] : a;
 }
