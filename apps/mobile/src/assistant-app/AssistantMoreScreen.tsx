@@ -1,9 +1,9 @@
 import { View } from 'react-native';
-import { AccountHeaderAvatar } from '@/account/AccountHeaderAvatar';
-import { AccountRow } from '@/account/AccountRow';
+import { AccountHeaderAvatar } from '@/account/components/AccountHeaderAvatar';
+import { AccountRow } from '@/account/components/AccountRow';
 import { t } from '@/core/lib/i18n/i18n';
-import { AppearancePicker } from '@/more/AppearancePicker';
-import { LanguageRow } from '@/more/LanguageRow';
+import { AppearancePicker } from '@/more/appearance/AppearancePicker';
+import { LanguageRow } from '@/more/appearance/LanguageRow';
 import { SignOutButton } from '@/teacher/SignOutButton';
 import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';

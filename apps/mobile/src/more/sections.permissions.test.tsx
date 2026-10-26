@@ -1,9 +1,9 @@
 import { render, screen } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
-import { AdminOpsSection } from './AdminOpsSection';
-import { FinanceSection } from './FinanceSection';
-import { MoneySection } from './MoneySection';
-import { MoreScreen } from './MoreScreen';
+import { AdminOpsSection } from './sections/AdminOpsSection';
+import { FinanceSection } from './sections/FinanceSection';
+import { MoneySection } from './sections/MoneySection';
+import { MoreScreen } from './screens/MoreScreen';
 
 jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
 jest.mock('./sign-out', () => ({ signOutDevice: jest.fn(async () => undefined) }));

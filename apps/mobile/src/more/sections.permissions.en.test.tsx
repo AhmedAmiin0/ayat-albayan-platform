@@ -1,6 +1,6 @@
 import en from '@ab/shared/i18n/en.json';
 import { render, screen } from '@testing-library/react-native';
-import { MoreScreen } from './MoreScreen';
+import { MoreScreen } from './screens/MoreScreen';
 
 // An English run: the native flag is LTR.
 jest.mock('react-native/Libraries/ReactNative/I18nManager', () => {

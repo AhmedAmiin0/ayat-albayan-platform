@@ -2,7 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { act, renderRouter, screen } from 'expo-router/testing-library';
 import { Appearance, Text } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
-import { APPEARANCE_KEY } from '@/more/appearance';
+import { APPEARANCE_KEY } from '@/more/appearance/appearance';
 import { TabStack } from '@/core/nav/TabStack';
 import { registerPush } from '@/core/push/registerPush';
 import TabsLayout from '../../../app/(tabs)/_layout';

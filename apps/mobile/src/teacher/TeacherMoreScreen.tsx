@@ -1,11 +1,11 @@
 import { teacherName } from '@ab/shared';
 import { router } from 'expo-router';
 import { View } from 'react-native';
-import { AccountHeaderAvatar } from '@/account/AccountHeaderAvatar';
-import { AccountRow } from '@/account/AccountRow';
+import { AccountHeaderAvatar } from '@/account/components/AccountHeaderAvatar';
+import { AccountRow } from '@/account/components/AccountRow';
 import { t } from '@/core/lib/i18n/i18n';
-import { AppearancePicker } from '@/more/AppearancePicker';
-import { LanguageRow } from '@/more/LanguageRow';
+import { AppearancePicker } from '@/more/appearance/AppearancePicker';
+import { LanguageRow } from '@/more/appearance/LanguageRow';
 import { ListRow } from '@/core/ui/layout/ListRow';
 import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
