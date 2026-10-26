@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { GOOGLE_SEED_DEFS } from '../settings/google-defs.js';
-import { SEED_ENTRIES } from '../settings/seed-entries.js';
+import { SEED_ENTRIES } from '../settings/seed/seed-entries.js';
 import { GOOGLE_SYNC_MODES, GOOGLE_WINDOW_DAYS } from './enums.js';
 import { GOOGLE_SETTING_KEYS } from './settings-keys.js';
 

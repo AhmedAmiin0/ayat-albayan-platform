@@ -2,18 +2,18 @@ import { camelKey, type CamelKey } from './camel.js';
 import type { SettingDef, SettingsOf } from './defs.js';
 import { ACADEMY_SETTINGS } from './domains/academy.js';
 import { ACTIVITY_SETTINGS } from './domains/activity.js';
-import { CLASSROOM_SETTINGS } from './domains/classroom.js';
+import { CLASSROOM_SETTINGS } from './domains/teaching/classroom.js';
 import { FEEDBACK_SETTINGS } from './domains/feedback.js';
-import { FINANCE_SETTINGS } from './domains/finance.js';
+import { FINANCE_SETTINGS } from './domains/finance/finance.js';
 import { FOLLOW_UP_SETTINGS } from './domains/follow-ups.js';
 import { MESSAGING_SETTINGS } from './domains/messaging.js';
 import { NOTIFICATION_SETTINGS } from './domains/notifications.js';
-import { PAYOUT_SETTINGS } from './domains/payouts.js';
-import { RECORDING_SETTINGS } from './domains/recordings.js';
-import { REPORT_SETTINGS } from './domains/reports.js';
+import { PAYOUT_SETTINGS } from './domains/finance/payouts.js';
+import { RECORDING_SETTINGS } from './domains/teaching/recordings.js';
+import { REPORT_SETTINGS } from './domains/teaching/reports.js';
 import { SALES_SETTINGS } from './domains/sales.js';
-import { SCHEDULING_SETTINGS } from './domains/scheduling.js';
-import { SUBSCRIPTION_SETTINGS } from './domains/subscriptions.js';
+import { SCHEDULING_SETTINGS } from './domains/teaching/scheduling.js';
+import { SUBSCRIPTION_SETTINGS } from './domains/finance/subscriptions.js';
 import { UPLOAD_SETTINGS } from './domains/uploads.js';
 
 /**

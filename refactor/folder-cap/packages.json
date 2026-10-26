@@ -2,25 +2,5 @@
   "packages/shared/src": {
     "files": 1,
     "dirs": 26
-  },
-  "packages/shared/src/lessons": {
-    "files": 14,
-    "dirs": 0
-  },
-  "packages/shared/src/notifications": {
-    "files": 15,
-    "dirs": 0
-  },
-  "packages/shared/src/sales": {
-    "files": 13,
-    "dirs": 0
-  },
-  "packages/shared/src/settings": {
-    "files": 20,
-    "dirs": 1
-  },
-  "packages/shared/src/settings/domains": {
-    "files": 16,
-    "dirs": 0
   }
 }

@@ -1,4 +1,4 @@
-import { CLASSROOM_SETTINGS } from '../settings/domains/classroom.js';
+import { CLASSROOM_SETTINGS } from '../settings/domains/teaching/classroom.js';
 
 /** The classroom window in minutes (joinWindow's third argument). */
 export interface JoinWindowConfig {
