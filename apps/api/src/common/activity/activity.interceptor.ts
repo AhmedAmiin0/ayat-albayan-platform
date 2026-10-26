@@ -19,7 +19,7 @@ function pathOf(meta: unknown): string {
 }
 
 /** Status of a thrown error: its HTTP status, else 500 (what Nest answers). */
-export function errorStatus(e: unknown): number {
+function errorStatus(e: unknown): number {
   return e instanceof HttpException ? e.getStatus() : 500;
 }
 

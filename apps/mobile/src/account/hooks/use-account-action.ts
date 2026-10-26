@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { type AccountField, type AccountFieldErrors, accountErrors } from '../lib/account-errors';
 import { PROFILE_KEY } from './queries';
 
-export interface AccountActionOptions<V> {
+interface AccountActionOptions<V> {
   /** The /me call; a returned profile replaces ['me','profile'] (header, row and form update at once). */
   run: (vars: V) => Promise<AccountProfile | undefined>;
   /** account.toast.* shown once it lands. */

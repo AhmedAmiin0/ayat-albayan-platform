@@ -3,7 +3,7 @@ import { AccessibilityInfo, findNodeHandle } from 'react-native';
 import type { AppTextNode } from '@/core/ui/primitives/AppText';
 
 /** After the sheet's slide-in, so the node exists on both platforms. */
-export const FOCUS_DELAY_MS = 250;
+const FOCUS_DELAY_MS = 250;
 
 /** Moves screen-reader focus to the node, if it has one; never throws (an old OS, a gone node). */
 export function focusNode(target: AppTextNode | null): boolean {

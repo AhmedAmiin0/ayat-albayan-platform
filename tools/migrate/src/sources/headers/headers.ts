@@ -44,7 +44,7 @@ export const SKIPPED_TABS: Record<string, string> = {
 };
 
 /** Files in the export that are never read (docs/06 «Not migration data»), by exact path or pattern. */
-export const EXCLUDED_FILES: readonly (string | RegExp)[] = [
+const EXCLUDED_FILES: readonly (string | RegExp)[] = [
   'Backup  keys.docx', // recovery codes: never open
   'data.zip', // Facebook account export: never open
   'SKILL.md.docx',

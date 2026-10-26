@@ -2,7 +2,7 @@ import type { StatusStyle } from '@ab/shared';
 import { t } from '@/core/lib/i18n/i18n';
 import { FilterPills } from '@/core/ui/form/FilterPills';
 
-export interface StatusPillsProps<S extends string> {
+interface StatusPillsProps<S extends string> {
   statuses: readonly S[];
   labels: Readonly<Record<S, string>>;
   styles: Readonly<Record<S, StatusStyle>>;

@@ -13,7 +13,7 @@ export const BUMP_CODE_SEQ = `select setval(s.seq, greatest(x.m, coalesce(pg_seq
        (select max(code_seq) as m from public.students) x where x.m >= 183`;
 
 /** Columns an update writes: never code_seq (generated) nor status (the app owns it). */
-export function updateColumns(columns: Record<string, ColumnValue>): Record<string, ColumnValue> {
+function updateColumns(columns: Record<string, ColumnValue>): Record<string, ColumnValue> {
   const rest = { ...columns };
   delete rest['code_seq'];
   delete rest['status'];

@@ -9,7 +9,7 @@ const lengths: Record<string, string | undefined> = t.enums.duration;
 const pills = () =>
   DURATIONS.map((d) => ({ value: `${d}` as const, label: lengths[String(d)] ?? String(d) }));
 
-export interface DurationPillsProps {
+interface DurationPillsProps {
   value: Duration;
   onChange: (minutes: Duration) => void;
 }

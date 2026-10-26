@@ -4,7 +4,7 @@
 import type { EntityModule, WriteContext, WriteResult } from '../entities/contract.ts';
 import { matchPdfs } from './match.ts';
 
-export const REPORTS_BUCKET = 'reports';
+const REPORTS_BUCKET = 'reports';
 
 function text(ctx: WriteContext, col: string): string {
   const v = ctx.columns[col];

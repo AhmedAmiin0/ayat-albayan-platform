@@ -5,7 +5,7 @@ import { useContext } from 'react';
 export const BAR_HEIGHT = 62;
 
 /** The capsule floats 24pt above the bottom safe area (the home indicator / nav bar). */
-export const BAR_GAP = 24;
+const BAR_GAP = 24;
 
 /** The capsule's distance from the screen's bottom edge. */
 export const barBottom = (insetBottom: number) => insetBottom + BAR_GAP;

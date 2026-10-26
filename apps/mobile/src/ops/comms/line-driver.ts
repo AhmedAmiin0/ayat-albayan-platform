@@ -3,7 +3,7 @@ import { t } from '@/core/lib/i18n/i18n';
 
 // The per-line driver switch on the phone (docs/19), the same key the web's «التكاملات» saves.
 
-export const LINE_DRIVER_KEY = { notifications: 'WA_PROVIDER', chat: 'WA_CHAT_PROVIDER' } as const satisfies Record<WaLine, string>;
+const LINE_DRIVER_KEY = { notifications: 'WA_PROVIDER', chat: 'WA_CHAT_PROVIDER' } as const satisfies Record<WaLine, string>;
 
 const isProvider = (v: string | null | undefined): v is WaProvider => WA_PROVIDERS.some((p) => p === v);
 

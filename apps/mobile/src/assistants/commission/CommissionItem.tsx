@@ -11,7 +11,7 @@ import { CommissionFacts } from './CommissionFacts';
 import { useVoidCommission } from '../api/mutations';
 import { ReasonConfirm } from '../statements/components/ReasonConfirm';
 
-export interface CommissionItemProps {
+interface CommissionItemProps {
   commission: AssistantCommissionView;
   /** assistantpay.write: «إلغاء العمولة» on an earned commission (web commission-columns). */
   canWrite: boolean;

@@ -13,7 +13,7 @@ const durations: Record<string, string | undefined> = t.enums.duration;
 const durationText = (min: number) => durations[String(min)] ?? String(min);
 
 /** «من الشات» or «اترفعت من الجهاز»: where the invoice came from. */
-export function invoiceLine(invoice: InvoiceDraft): string {
+function invoiceLine(invoice: InvoiceDraft): string {
   return invoice.source === 'whatsapp' ? t.booking.invoice.fromChat : t.booking.mobile.invoiceUploaded;
 }
 

@@ -18,7 +18,7 @@ export function copyText(req: CopyRequest, show: (req: CopyRequest) => void): vo
 }
 
 /** Hands the signed URL to the phone's browser, which saves or opens it (Content-Disposition: its name). */
-export async function saveFile(url: string): Promise<void> {
+async function saveFile(url: string): Promise<void> {
   await Linking.openURL(url);
 }
 

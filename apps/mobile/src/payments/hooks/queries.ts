@@ -37,7 +37,7 @@ export function useRenewalThreshold(): number | undefined {
 }
 
 /** The student's latest payments on the quick view (P1, newest first). */
-export const recentParams = (studentId: string) => ({ studentId, pageSize: 5 });
+const recentParams = (studentId: string) => ({ studentId, pageSize: 5 });
 
 export function useRecentPayments(studentId: string) {
   const params = recentParams(studentId);

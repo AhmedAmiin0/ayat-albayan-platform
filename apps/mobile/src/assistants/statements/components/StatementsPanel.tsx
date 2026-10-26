@@ -14,7 +14,7 @@ import type { StatementCan } from '../hooks/statement-can';
 import { StatementItem } from './StatementItem';
 import { StatusPills } from '../../list/StatusPills';
 
-export interface StatementsPanelProps {
+interface StatementsPanelProps {
   assistants: readonly AssistantRow[];
   /** One salesperson's own page: no salesperson filter. */
   assistantId?: string;
