@@ -1,4 +1,4 @@
-import { formFrom, type FormPrefill } from './form-prefill';
+import { formFrom, renewalForm, type FormPrefill } from './form-prefill';
 import { INITIAL_FORM } from './subscribe-form';
 
 test('after a booking: its package size and lesson length prefill the plan', () => {
@@ -43,4 +43,15 @@ test.each<[string, FormPrefill]>([
 ])('an invalid %s keeps the default', (_name, params) => {
   const plan = params.plan === 'custom' ? 'custom' : INITIAL_FORM.plan;
   expect(formFrom(params)).toEqual({ ...INITIAL_FORM, plan });
+});
+
+test('renewalForm: the renewal seed as the form; no country = the guardian\'s', () => {
+  expect(renewalForm({ pkg: 'premium', count: 10, duration: 60, discount: 10, country: 'AE' })).toEqual({
+    plan: 'premium',
+    count: 10,
+    duration: '60',
+    discount: '10',
+    country: 'AE',
+  });
+  expect(renewalForm({ pkg: 'custom', count: 14, duration: 30, discount: 0, country: '' })).toMatchObject({ plan: 'custom', count: 14, country: 'guardian' });
 });
