@@ -4,7 +4,7 @@ import { t } from '@/core/lib/i18n/i18n';
 import { Section } from '@/more/Section';
 import { FormLabel } from '@/payments/FormLabel';
 import { ChoiceChips } from './ChoiceChips';
-import type { ReportEntryState } from './use-report-entry';
+import type { ReportEntryState } from '../hooks/use-report-entry';
 
 const grades = GRADES.map((g) => ({ value: g, label: t.enums.grade[g] }));
 

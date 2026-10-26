@@ -10,7 +10,7 @@ import { durationLabel, studentNames } from '@/today/lesson-text';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { Button } from '@/core/ui/primitives/Button';
 import { StatusChip } from '@/core/ui/feedback/StatusChip';
-import type { ReportAction } from './day';
+import type { ReportAction } from '../lib/day';
 
 const reportLabel: Record<ReportAction, string> = { open: t.reports.open, edit: t.reports.resume, view: t.reports.view };
 

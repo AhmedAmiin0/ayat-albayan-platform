@@ -3,7 +3,7 @@ import { screen } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
 import { MyPayoutsScreen } from './MyPayoutsScreen';
-import { breakdownLines, monthLabel, payoutSummary, payoutWhen } from './payout-text';
+import { breakdownLines, monthLabel, payoutSummary, payoutWhen } from '../lib/payout-text';
 
 const mockApiFetch = jest.fn();
 jest.mock('@/core/lib/http/api', () => ({ ...jest.requireActual('@/core/lib/http/api'), apiFetch: (p: string) => mockApiFetch(p) }));

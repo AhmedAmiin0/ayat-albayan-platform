@@ -1,1 +1,1 @@
-export { MyPayoutsScreen as default } from '@/teacher/MyPayoutsScreen';
+export { MyPayoutsScreen as default } from '@/teacher/screens/MyPayoutsScreen';

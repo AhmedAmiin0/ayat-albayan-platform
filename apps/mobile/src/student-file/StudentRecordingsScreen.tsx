@@ -6,7 +6,7 @@ import { usePermissions } from '@/auth/use-permissions';
 import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/more/Note';
 import { useStudentName } from '@/ops/reports/use-student-name';
-import { useTeacherMe } from '@/teacher/queries';
+import { useTeacherMe } from '@/teacher/lib/queries';
 import { useTheme } from '@/theme';
 import { Button } from '@/core/ui/primitives/Button';
 import { EmptyState } from '@/core/ui/feedback/EmptyState';

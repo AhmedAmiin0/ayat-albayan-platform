@@ -1,7 +1,7 @@
 import { formatAmount, type AssistantStatementLineView, type AssistantStatementView, type AssistantTermsView } from '@ab/shared';
 import { t } from '@/core/lib/i18n/i18n';
 import { localDay, instantDay, money } from '@/payments/format';
-import { monthLabel } from '@/teacher/payout-text';
+import { monthLabel } from '@/teacher/lib/payout-text';
 
 // The words of the salesperson's money (web EarningsTerms, StatementCard, terms-summary). Pure.
 

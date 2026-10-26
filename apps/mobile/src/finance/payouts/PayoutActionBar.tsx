@@ -8,7 +8,7 @@ import { InlineConfirm } from '@/core/ui/feedback/InlineConfirm';
 import { financeErrorText } from '../shared/errors';
 import { amountText } from '../shared/format';
 import { payoutActions } from './payout-actions';
-import { monthLabel } from '@/teacher/payout-text';
+import { monthLabel } from '@/teacher/lib/payout-text';
 import { openPayoutReceipt } from '../shared/receipt-link';
 import { UnpayConfirm } from './UnpayConfirm';
 import { usePayoutMove } from './use-payout-move';

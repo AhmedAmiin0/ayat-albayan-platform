@@ -11,9 +11,9 @@ import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { KeyboardFrame } from '@/core/ui/layout/KeyboardFrame';
 import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
-import { useTeacherMe } from '../queries';
-import { reportErrorText, useReportForm } from './api';
-import { ReportEntryCard } from './ReportEntryCard';
+import { useTeacherMe } from '../../lib/queries';
+import { reportErrorText, useReportForm } from '../hooks/api';
+import { ReportEntryCard } from '../components/ReportEntryCard';
 
 const back = () => (router.canGoBack() ? router.back() : router.replace('/teacher/reports'));
 

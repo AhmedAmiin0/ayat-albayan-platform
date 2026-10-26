@@ -12,7 +12,7 @@ import { Button } from '@/core/ui/primitives/Button';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
-import { openSigned } from '@/teacher/report/api';
+import { openSigned } from '@/teacher/report/hooks/api';
 import { ReportFieldRow } from './ReportFieldRow';
 import { reportFields } from './report-fields';
 

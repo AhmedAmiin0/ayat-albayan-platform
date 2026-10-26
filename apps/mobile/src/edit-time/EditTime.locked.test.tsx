@@ -1,7 +1,7 @@
 import { fireEvent, screen } from '@testing-library/react-native';
 import { ApiError } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
-import { monthLabel } from '@/teacher/payout-text';
+import { monthLabel } from '@/teacher/lib/payout-text';
 import { renderWithQuery } from '@/test/query';
 import { EditTimeSheet } from './EditTimeSheet';
 import { held, NOW, result } from './fixtures';

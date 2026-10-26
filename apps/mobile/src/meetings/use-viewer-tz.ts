@@ -1,6 +1,6 @@
 import { RIYADH_TZ } from '@ab/shared';
 import { useSegments } from 'expo-router';
-import { useTeacherMe } from '@/teacher/queries';
+import { useTeacherMe } from '@/teacher/lib/queries';
 
 /**
  * The zone meeting times read in (rule 6): a teacher's own tz (GET /teachers/me, as on their other
