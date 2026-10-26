@@ -3,7 +3,7 @@ import { t } from '@/core/lib/i18n/i18n';
 import type { StudentProfile } from '../shared/types';
 import { locale } from '@/core/lib/i18n/locale';
 
-export interface Fact {
+interface Fact {
   label: string;
   value: string;
   /** IANA zone and the like: render inside <Ltr>. */

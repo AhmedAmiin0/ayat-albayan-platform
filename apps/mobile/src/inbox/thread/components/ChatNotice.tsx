@@ -8,7 +8,7 @@ import { useChatActions } from '../hooks/chat-actions';
 import { CloseIcon } from '../../shared/chat-icons';
 
 /** A notice with nothing to read twice goes by itself after this long (ms). */
-export const NOTICE_MS = 5000;
+const NOTICE_MS = 5000;
 
 /**
  * The chat's short notice over the composer (owner 2026-10-25): why a jump found no original, what a

@@ -1,14 +1,14 @@
 // An in-memory stand-in for the Nest API behind @/lib/api, for the multi-screen flow tests.
 // Handlers match "METHOD /path/:param"; every call is recorded; an unknown route rejects loudly.
 
-export interface Req {
+interface Req {
   method: string;
   path: string;
   params: Record<string, string>;
   query: Record<string, string>;
   body: unknown;
 }
-export type Handler = (req: Req) => unknown;
+type Handler = (req: Req) => unknown;
 export interface Call {
   method: string;
   path: string;

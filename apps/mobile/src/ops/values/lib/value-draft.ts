@@ -21,7 +21,7 @@ export interface Draft {
   text: string;
 }
 
-export type Parsed = { ok: true; value: unknown } | { ok: false; error: string };
+type Parsed = { ok: true; value: unknown } | { ok: false; error: string };
 
 /** Scalars are edited here; shapes, lists and module-owned keys stay on the web. */
 export function editorOf(key: SettingKey): EditorKind {

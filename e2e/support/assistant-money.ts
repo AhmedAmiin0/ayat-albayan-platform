@@ -4,7 +4,7 @@ import { call } from './assistant-api';
 
 // Admin-side money steps of the assistant API specs: a package for a student, a payment, the ledger.
 
-export interface Sub {
+interface Sub {
   id: string;
   price: number;
   currency: string;

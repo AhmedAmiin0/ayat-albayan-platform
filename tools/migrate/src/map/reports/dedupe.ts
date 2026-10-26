@@ -12,7 +12,7 @@ import { issuesFor } from '../../sources/sheets/issues.ts';
 import type { RowIssue } from '../../types.ts';
 import type { ParsedReport } from './parse.ts';
 
-export interface Deduped {
+interface Deduped {
   reports: ParsedReport[];
   issues: RowIssue[];
 }
