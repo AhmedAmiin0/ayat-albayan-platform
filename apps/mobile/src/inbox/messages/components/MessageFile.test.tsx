@@ -46,9 +46,9 @@ beforeEach(() => {
   openURL.mockReset().mockResolvedValue(true);
 });
 
-test('a photo: nothing is signed on render; the tap asks W6 and opens the signed URL', async () => {
-  serve(async () => ({ url: SIGNED, mime: 'image/jpeg', expires_at: '2026-10-19T10:00:00Z' }));
-  await show(row({ media_mime: 'image/jpeg' }));
+test('a HEIC photo keeps «عرض صورة»: nothing is signed on render; the tap asks W6 and opens the signed URL', async () => {
+  serve(async () => ({ url: SIGNED, mime: 'image/heic', expires_at: '2026-10-19T10:00:00Z' }));
+  await show(row({ media_mime: 'image/heic' }));
   expect(mockApiFetch).not.toHaveBeenCalledWith(PATH);
   await press(t.inbox.viewMedia.replace('{kind}', kind.image));
   expect(mockApiFetch).toHaveBeenCalledWith(PATH);
@@ -95,18 +95,18 @@ test('410: the file expired', async () => {
 
 test('403: the label and «not allowed», no button left', async () => {
   serve(async () => { throw new ApiError(403, { code: 'media_forbidden' }); });
-  await show(row({ media_mime: 'image/png' }));
-  await press(t.inbox.viewMedia.replace('{kind}', kind.image));
-  expect(await screen.findByText(`${kind.image} · ${t.inbox.mediaNotAllowed}`)).toBeTruthy();
-  expect(screen.queryByRole('button', { name: t.inbox.viewMedia.replace('{kind}', kind.image) })).toBeNull();
+  await show(row({ media_mime: 'application/pdf' }));
+  await press(t.inbox.viewMedia.replace('{kind}', kind.document));
+  expect(await screen.findByText(`${kind.document} · ${t.inbox.mediaNotAllowed}`)).toBeTruthy();
+  expect(screen.queryByRole('button', { name: t.inbox.viewMedia.replace('{kind}', kind.document) })).toBeNull();
 });
 
 test('another failure says so and keeps the button for another try', async () => {
   serve(async () => { throw new ApiError(500); });
-  await show(row({ media_mime: 'image/png' }));
-  await press(t.inbox.viewMedia.replace('{kind}', kind.image));
+  await show(row({ media_mime: 'application/pdf' }));
+  await press(t.inbox.viewMedia.replace('{kind}', kind.document));
   expect(await screen.findByText(t.common.error)).toBeTruthy();
-  expect(screen.getByRole('button', { name: t.inbox.viewMedia.replace('{kind}', kind.image) })).toBeTruthy();
+  expect(screen.getByRole('button', { name: t.inbox.viewMedia.replace('{kind}', kind.document) })).toBeTruthy();
 });
 
 test('teacher mode: the label only, and no request', async () => {

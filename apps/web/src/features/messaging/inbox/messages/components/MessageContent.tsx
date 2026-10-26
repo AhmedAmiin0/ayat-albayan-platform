@@ -1,9 +1,8 @@
-import { isUnavailableMessage, isUnsupportedMessage, replyNote, senderLine, type MessageView } from '@ab/shared';
+import { isUnavailableMessage, isUnsupportedMessage, replyNote, senderLine, splitLinks, type MessageView } from '@ab/shared';
 import { Icon } from '@/components/ui/display/icon';
 import { t } from '@/lib/i18n/i18n';
 import { locale } from '@/lib/i18n/locale';
 import { templateLine } from '../../format';
-import { splitLinks } from '../lib/linkify';
 import { MessageMedia } from './MessageMedia';
 import { QuoteBlock } from './QuoteBlock';
 import { RatingChip } from '../../sales/RatingChip';
@@ -20,7 +19,7 @@ function ForwardedLabel() {
   );
 }
 
-/** The text with its http(s) links clickable (W11). */
+/** The text with its http(s) and www. links clickable (W11, splitLinks). */
 function Body({ text }: { text: string }) {
   return (
     <p dir="auto" className="whitespace-pre-wrap [overflow-wrap:anywhere]">

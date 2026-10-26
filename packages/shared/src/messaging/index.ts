@@ -15,6 +15,7 @@ export * from './schemas.js';
 export * from './chat/chat-files.js';
 export * from './chat/chat-lists.js';
 export * from './chat/crm-names.js';
+export * from './chat/linkify.js';
 export * from './chat/sender.js';
 export * from './chat/status-style.js';
 export * from './templates/templates.js';

@@ -101,6 +101,7 @@ This is the only API change in the routine, allowed because docs/16 row 1b says 
 - A teacher (TeacherScope) gets 403 `media_forbidden`, keeping today's rule «a teacher never sees a payment proof» (thread-media.controller.ts:9-10). See the owner question.
 - Do not sign URLs inside detail(): the detail query polls every 10s over up to 50 rows.
 - MIME: keep InboundMedia's INVOICE_MIMES (jpeg, png, webp, heic, pdf). Audio and video stay labels until the owner answers. **Superseded 2026-10-19 (docs/21 D1, D2):** W6 now also serves inbound audio/video (`CHAT_VIEW_MIMES`, up to 16 MB, `ThreadMediaService.bubbleFile`) and the files staff sent (`out/…`); the daily purge deletes stored inbound audio/video 30 days after it arrived (photos and PDFs are kept).
+- **Superseded 2026-10-26 (owner, mobile, photos only):** the mobile bubble signs a photo (not HEIC) as it renders, to show its thumbnail (`PhotoPreview`); PDFs, voice notes, videos and HEIC are still signed only on the tap.
 - Add the route to parity/access-before.json as ["admin","sales"] if the parity check requires it.
 (2) Web: move Media (MessageBubble.tsx:21-35) into a new MessageMedia.tsx.
 - For an inbound image or PDF MIME, render a button «عرض {kind}». On click it runs `threadFileQuery(m.phone_e164, m.id)` (useQuery, enabled after the click, staleTime under the signed URL's TTL), then shows an `<img>` thumbnail that opens full size in a new tab, or a named link for a PDF. HEIC is a link.
@@ -169,6 +170,8 @@ MessageLog.tsx:54: use `withDays(messages, now)` for every fill, not only 'phone
 Files: `apps/web/src/features/messaging/inbox/messages/lib/linkify.ts`, `apps/web/src/features/messaging/inbox/messages/components/MessageBubble.tsx`
 
 New linkify.ts: `splitLinks(text): Array<{ text: string; href?: string }>`, matching only /https?:\/\/[^\s]+/ and trimming trailing . , ، ؛ ) from the match. MessageBubble Content (:51-55) renders a link part as `<a href target="_blank" rel="noopener noreferrer" dir="ltr" className="break-all underline underline-offset-4 text-lapis">`. Signed links are already stripped server-side for sales (withoutLinks). Quoted replies need an API change and are left out.
+
+**Changed 2026-10-26 (owner):** `splitLinks` moved to `packages/shared` (web and mobile); `www.` and a host is a link too, opened as `https://www.…`; bare domains stay text.
 
 **Test:** New linkify.test.ts: «رابط https://a.b/c.» → the link without the trailing dot; http is linked; javascript:alert(1), www.x.com and ftp:// stay text; Arabic text around a link is kept in order.
 

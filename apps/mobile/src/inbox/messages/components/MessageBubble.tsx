@@ -13,6 +13,7 @@ import { MessageMeta, useSmall } from './MessageMeta';
 import { errorLine, mediaLine, templateLine } from '../hooks/message-text';
 import { QuoteBlock } from './QuoteBlock';
 import { SwipeReply } from './SwipeReply';
+import { LinkedText } from '../text/LinkedText';
 import { useThreadMode } from '../../thread/hooks/thread-mode';
 
 /** A file line: a link to the signed URL once the API has the file, else its kind and why not. */
@@ -46,8 +47,8 @@ export interface MessageBubbleProps {
  * One message (R-MSG-05). As WhatsApp (owner 2026-10-26): ours on the right, theirs on the left, in
  * Arabic and English alike (bubbleSide), the sharp tail corner at the top of the screen-edge side.
  * Ours carry WhatsApp-style delivery ticks (DeliveryTicks, named by the status word); a template
- * row says which template, its body already rendered by the API. Ours say who sent them
- * («أرسلها: سارة», «رسالة تلقائية»); a photo, PDF, voice note or video opens from MessageFile. Why a send failed is for everyone (as the web's
+ * row says which template, its body already rendered by the API; links in the text open (LinkedText). Ours say who sent them
+ * («أرسلها: سارة», «رسالة تلقائية»); a photo previews, a PDF, voice note or video opens from MessageFile. Why a send failed is for everyone (as the web's
  * outboundNotes); retry / sent-by-hand stay the admin's (R-MSG-05).
  */
 export function MessageBubble({ message: m, phone, onJump, highlight = false }: MessageBubbleProps) {
@@ -91,24 +92,9 @@ export function MessageBubble({ message: m, phone, onJump, highlight = false }: 
           {templateLine(m.template_key)}
         </AppText>
       ) : null}
-      {file ? <MessageFile message={m} phone={phone} /> : null}
+      {file ? <MessageFile message={m} phone={phone} onLongPress={touch.has ? touch.openMenu : undefined} /> : null}
       {media && !file ? <MediaLine label={media} url={m.media_url} file={m.media_mime !== null} /> : null}
-      {m.body ? (
-        <AppText
-          // Selecting text would swallow the long press that opens «رد» / «إعادة توجيه».
-          selectable={!touch.has}
-          {...(a11yOn === 'body' ? touch.a11y : {})}
-          style={{
-            fontFamily: type.ui[400],
-            fontSize: type.size.body,
-            lineHeight: type.lineHeight(type.size.body),
-            color: color.ink,
-            writingDirection: 'auto',
-          }}
-        >
-          {m.body}
-        </AppText>
-      ) : null}
+      {m.body ? <LinkedText text={m.body} touch={touch} a11y={a11yOn === 'body'} /> : null}
       {note ? (
         <AppText style={{ ...small, fontFamily: type.ui[600] }}>
           {t.inbox.quickReply[note.key].replace('{when}', note.when ?? '')}
