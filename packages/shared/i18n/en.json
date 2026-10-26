@@ -2349,7 +2349,17 @@
       "other": "A message that can’t be shown here"
     },
     "unsupported": "The content of this message did not reach us from WhatsApp — ask the sender to send it again",
-    "unavailable": "This message is unavailable — ask the sender to send it again",
+    "unavailable": "The content of this message did not reach us from WhatsApp. This sometimes happens with the first message from a new number; the message shows in the WhatsApp Business app on the academy phone.",
+    "previewUnsupported": "Message whose content did not arrive",
+    "resend": {
+      "action": "Ask to resend",
+      "title": "Ask them to resend the message",
+      "hint": "This message will be sent to the chat as is (families always get it in Arabic):",
+      "text": "Welcome to Ayat Al-Bayan Academy. Your first message did not reach us because of a WhatsApp fault. Please send it again, thank you.",
+      "send": "Send",
+      "sending": "Sending…",
+      "sent": "Resend request sent"
+    },
     "openThread": "Open conversation with {name}",
     "loadOlder": "Older messages",
     "jumpLatest": "Jump to the latest message",
@@ -2365,6 +2375,7 @@
       "template": "Template message",
       "jump": "Go to the original message",
       "notLoaded": "The original message is older than the loaded ones. Load older messages and try again",
+      "notFound": "The original message could not be found in this chat",
       "swipeHint": "Swipe to reply, or long-press for message options"
     },
     "forward": {

@@ -14,6 +14,7 @@ import { applySort } from '../../../../common/list-sort';
 import { THREAD_SORT, type ThreadListFilter } from './threads.list';
 import { threadSearchFilter, type ThreadRow } from './threads.mapper';
 import { newestPerLine, type ReadMark } from '../reads/read-marks';
+import { markUnsupported, type ListedThreadRow } from './last-unsupported';
 
 export type { ThreadListFilter } from './threads.list';
 
@@ -34,7 +35,7 @@ export class ThreadsQueries {
    * H1: one page of v_threads (of v_list_threads for a chat list «القوائم», docs/22); filters, then the
    * requested order (default newest message first).
    */
-  async list(f: ThreadListFilter): Promise<{ items: ThreadRow[]; total: number }> {
+  async list(f: ThreadListFilter): Promise<{ items: ListedThreadRow[]; total: number }> {
     let query = f.list
       ? this.db.from('v_list_threads').select('*', { count: 'exact' }).eq('list_id', f.list)
       : this.db.from('v_threads').select('*', { count: 'exact' });
@@ -46,7 +47,7 @@ export class ThreadsQueries {
     const from = (f.page - 1) * f.pageSize;
     const { data, error, count } = await applySort(query, f, THREAD_SORT).range(from, from + f.pageSize - 1);
     check(error, 'threads read');
-    return { items: data ?? [], total: count ?? 0 };
+    return { items: await markUnsupported(this.db, data ?? []), total: count ?? 0 };
   }
 
   async thread(phone: string): Promise<ThreadRow | null> {

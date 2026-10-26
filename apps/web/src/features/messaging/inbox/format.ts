@@ -52,6 +52,8 @@ function lastText(th: ThreadView): string {
   if (media) return th.last_body ? `${media}: ${th.last_body}` : media;
   if (th.last_body) return th.last_body;
   if (th.last_template_key) return templateLine(th.last_template_key);
+  // Meta's `unsupported` (131060 on a new number's first message): its content never arrived.
+  if (th.last_unsupported) return t.inbox.previewUnsupported;
   return t.inbox.media.other; // an inbound type we can't show (location, contacts, …)
 }
 

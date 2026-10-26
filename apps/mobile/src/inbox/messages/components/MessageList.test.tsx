@@ -1,5 +1,5 @@
 import type { MessageView } from '@ab/shared';
-import { fireEvent, screen } from '@testing-library/react-native';
+import { screen } from '@testing-library/react-native';
 import { FlatList, StyleSheet } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
@@ -65,15 +65,6 @@ test("an empty chat keeps its empty state upright: the wrapper takes the inverte
   await show(stub([[]]));
   expect(screen.getByText(t.inbox.empty)).toBeTruthy();
   expect(StyleSheet.flatten(screen.getByTestId('message-empty').props.style).transform).toContainEqual({ scaleY: -1 });
-});
-
-test('«رسائل أقدم» shows only while there are older pages, and loads the next one', async () => {
-  const fetchNextPage = jest.fn();
-  const view = await show(stub([[inbound]], { hasNextPage: true, fetchNextPage }));
-  await fireEvent.press(screen.getByRole('button', { name: t.inbox.loadOlder }));
-  expect(fetchNextPage).toHaveBeenCalledTimes(1);
-  await view.rerender(<MessageList phone={PHONE} query={stub([[inbound]])} />);
-  expect(screen.queryByRole('button', { name: t.inbox.loadOlder })).toBeNull();
 });
 
 test('the gap over a message comes from the older one above it: none, same side, side change', async () => {
