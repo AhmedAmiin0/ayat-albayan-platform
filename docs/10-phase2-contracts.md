@@ -8,7 +8,7 @@ The single source for the Phase 2 builders (API B1–B3, web, mobile) so they ca
 
 | Area | Owner | Edits only | Migrations |
 |---|---|---|---|
-| Foundation (done, **read-only** for everyone) | — | migrations `070–073`; `packages/shared/src/lessons/*`, `messaging/booking-confirmation.ts`, `schemas/scheduling.ts`; `apps/api/src/modules/scheduling/occurrences/occurrences.ts` + `conflicts.ts`; `common/settings/`; `app.module.ts`; `e2e/support/*` | `2026100100007x` |
+| Foundation (done, **read-only** for everyone) | — | migrations `070–073`; `packages/shared/src/lessons/*`, `messaging/booking-confirmation.ts`, `schemas/scheduling.ts`; `apps/api/src/modules/teaching/scheduling/occurrences/occurrences.ts` + `conflicts.ts`; `common/settings/`; `app.module.ts`; `e2e/support/*` | `2026100100007x` |
 | Rules + horizon | **B1** | `apps/api/src/modules/scheduling/**` (not the two pure files) | `2026100100008x` |
 | Booking wizard API | **B2** | `apps/api/src/modules/booking/**`, `teachers/availability/availability.query.ts` (its `TODO(Phase 2)` busy intervals) | `2026100100009x` |
 | Lessons + teacher self-service API | **B3** | `apps/api/src/modules/lessons/**` (incl. the controllers mounted at `teachers/me`, `students/:id/lessons`, `schedule-rules/:id/cancel`) | `202610010001xx` (100–109) |
@@ -44,7 +44,7 @@ The single source for the Phase 2 builders (API B1–B3, web, mobile) so they ca
 ## 3. Conventions
 
 - **Casing:** commands are camelCase (`@ab/shared` schemas below); responses are snake_case rows (`@ab/shared` `views.ts`). Nested `newStudent` / `guardian` reuse the snake_case row schemas.
-- **Times:** request instants ISO-8601 with offset (`instant`); local dates `YYYY-MM-DD` (`localDate`); wall-clock `HH:MM` (`timeOfDay`). Responses: instants via `toISOString()` (UTC), Postgres `time` trimmed to `HH:MM`. tz math only with `apps/api/src/modules/teachers/availability/zoned-time.ts` (`zonedToUtc`, `localDay`, `weekdayOf`, `DAY`) — no tz library.
+- **Times:** request instants ISO-8601 with offset (`instant`); local dates `YYYY-MM-DD` (`localDate`); wall-clock `HH:MM` (`timeOfDay`). Responses: instants via `toISOString()` (UTC), Postgres `time` trimmed to `HH:MM`. tz math only with `apps/api/src/modules/people/teachers/availability/zoned-time.ts` (`zonedToUtc`, `localDay`, `weekdayOf`, `DAY`) — no tz library.
 - **Errors:** 400 `{ message: 'validation_failed', issues }` (from `parseOrThrow`). Domain errors carry **both** keys, `{ code, message: code, …details }`, e.g. `409 { code: 'conflict', message: 'conflict', conflicts: Conflict[] }` (`ConflictResponse`). Clients switch on `code`. Codes: `conflict`, `invalid_transition` (+ `from`, `event`), `not_started`, `slot_taken`, `rule_not_active`, `no_rule` (400), `range_too_large` (400), `teacher_not_linked` (404).
 - **Lists:** time-window lists (`/lessons`, `/teachers/me/lessons`) take `from`/`to` instants, half-open `[from, to)` on `starts_at`, max **31 days** (else 400 `range_too_large`) — the window is the page (R-NFR-08). `/students/:id/lessons` is paginated `{ items, total, page, pageSize }`.
 - **Guards:** `@Roles('admin')` or `@Roles('admin', 'teacher')`. A teacher may touch a lesson only if `lesson.teacher_id === TeachersQueries.idByProfile(user.id)`, else 403. `allowed_events` in a `LessonView` = `allowedLessonEvents(status)`, and for teachers only `confirm | complete | mark_late | mark_no_show | excuse`.
