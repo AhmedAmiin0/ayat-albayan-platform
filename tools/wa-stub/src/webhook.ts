@@ -12,6 +12,8 @@ export interface WebhookTarget {
   entryId?: string;
   /** Kapso forwarding a raw Meta payload (docs/19): X-Webhook-Signature (bare hex) instead. */
   kapso?: boolean;
+  /** The change's field (default `messages`; `calls` for WhatsApp Calling, docs/28). */
+  field?: string;
 }
 
 /** X-Hub-Signature-256: HMAC-SHA256 of the exact body bytes with the app secret. */
@@ -23,7 +25,7 @@ function envelope(target: WebhookTarget, value: Json): string {
   const metadata = { display_phone_number: target.displayPhone ?? '15550001111', phone_number_id: target.phoneNumberId };
   return JSON.stringify({
     object: 'whatsapp_business_account',
-    entry: [{ id: target.entryId ?? 'stub-waba', changes: [{ field: 'messages', value: { messaging_product: 'whatsapp', metadata, ...value } }] }],
+    entry: [{ id: target.entryId ?? 'stub-waba', changes: [{ field: target.field ?? 'messages', value: { messaging_product: 'whatsapp', metadata, ...value } }] }],
   });
 }
 

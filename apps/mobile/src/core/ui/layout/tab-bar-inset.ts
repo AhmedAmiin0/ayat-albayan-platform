@@ -1,11 +1,17 @@
 import { BottomTabBarHeightContext } from 'expo-router/js-tabs';
 import { useContext } from 'react';
 
-/** The floating capsule: 4 + 56 tab + 4. */
-export const BAR_HEIGHT = 64;
+/** The floating capsule: 4 + 54 tab + 4 (docs/29 §7). */
+export const BAR_HEIGHT = 62;
 
-/** The capsule's gap to the screen's bottom edge: the home indicator / nav bar, never under 16. */
-export const barBottom = (insetBottom: number) => Math.max(insetBottom, 16);
+/** The capsule floats 24pt above the bottom safe area (the home indicator / nav bar). */
+export const BAR_GAP = 24;
+
+/** The capsule's distance from the screen's bottom edge. */
+export const barBottom = (insetBottom: number) => insetBottom + BAR_GAP;
+
+/** The capsule's gap to the screen's sides. */
+export const BAR_SIDE = 20;
 
 /**
  * How far the floating tab bar reaches up from the screen's bottom edge (its gap + the capsule):

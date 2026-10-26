@@ -1,8 +1,7 @@
 import {
-  clockTime,
-  intlLocale,
   localizedName,
   RIYADH_TZ,
+  riyadhWhenText,
   type SalesHistoryEntry,
   type SalesStudentView,
   type SalesTeacherStudent,
@@ -20,8 +19,6 @@ import type { SalesSubscription } from './sales-api';
 const STATUS: Record<string, string | undefined> = t.enums.subscriptionStatus;
 const PACKAGE: Record<string, string | undefined> = t.enums.packageSize;
 const DAY = new Intl.DateTimeFormat('en-CA', { timeZone: RIYADH_TZ, year: 'numeric', month: '2-digit', day: '2-digit' });
-const DAY_MONTH = new Intl.DateTimeFormat(intlLocale(locale), { timeZone: RIYADH_TZ, day: 'numeric', month: 'long' });
-const WEEKDAY: Record<string, string> = t.enums.weekday;
 
 /** «{a} … {b}» → the values, every placeholder named once. */
 export function fill(text: string, values: Record<string, string>): string {
@@ -78,11 +75,7 @@ export function nextLessonLine(student: Pick<SalesTeacherStudent, 'next_lesson_a
 }
 
 /** «الاثنين 12 أكتوبر 18:00»: weekday, day, month and the Riyadh clock, Western digits (the web's words). */
-export function riyadhWhen(iso: string): string {
-  const at = new Date(iso);
-  const weekday = new Date(`${riyadhDate(iso)}T00:00:00Z`).getUTCDay();
-  return `${WEEKDAY[String(weekday)] ?? ''} ${DAY_MONTH.format(at)} ${clockTime(at, RIYADH_TZ)}`;
-}
+export const riyadhWhen = (iso: string): string => riyadhWhenText(iso, { weekday: t.enums.weekday, locale });
 
 /** «المعلم/ة · البرنامج» of a student (or «بلا معلم»). */
 export function studentSubtitle(student: SalesStudentView): string {

@@ -73,6 +73,8 @@ export interface WhatsappClient {
   sendText(input: { to: string; text: string; replyTo?: string | null }): Promise<WaSent>;
   /** Session image or document by link (a signed Storage URL); same body on both drivers. */
   sendDocument(input: MediaSend): Promise<WaSent>;
+  /** Interactive call_permission_request (docs/28); Graph drivers only (absent = this driver cannot). */
+  sendCallPermissionRequest?(input: { to: string; text: string }): Promise<WaSent>;
   /** Blue ticks for an inbound wamid (POST /messages {status:'read'}). */
   markRead(waMessageId: string): Promise<void>;
   /** All pages of the WABA's templates. Read-only: safe for the health check. */

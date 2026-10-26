@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { loadEnv } from '../../../config/env/env';
+import { CallsModule } from '../calls/calls.module';
 import { LeadsModule } from '../../sales/leads/leads.module';
 import { LessonRatingModule } from '../../teaching/lesson-rating/lesson-rating.module';
 import { LessonsModule } from '../../teaching/lessons/lessons.module';
@@ -25,7 +26,7 @@ import { KapsoHistory } from './external/kapso-history';
  * the send gate. PushService and AuditService are global.
  */
 @Module({
-  imports: [LeadsModule, LessonsModule, LessonRatingModule],
+  imports: [LeadsModule, LessonsModule, LessonRatingModule, CallsModule],
   controllers: [WebhookController, KapsoWebhookController, WacrmWebhookController],
   providers: [
     {

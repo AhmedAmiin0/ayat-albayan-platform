@@ -39,4 +39,9 @@ describe('parseInboxSearch', () => {
     expect(parseInboxSearch({ list: 'بانتظار الدفع' })).toEqual({ page: 1 });
     expect(parseInboxSearch({ list: 42 })).toEqual({ page: 1 });
   });
+
+  it('keeps «المكالمات» (docs/28) as calls=true', () => {
+    expect(parseInboxSearch({ calls: 'true' }).calls).toBe(true);
+    expect(parseInboxSearch({ calls: 'no' }).calls).toBeUndefined();
+  });
 });

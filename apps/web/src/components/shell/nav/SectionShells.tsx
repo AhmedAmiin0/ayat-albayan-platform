@@ -3,6 +3,7 @@ import type { ComponentType } from 'react';
 import { ADMIN_NAV_ITEMS } from '@/components/admin-nav-items';
 import { AdminNav } from '@/components/AdminNav';
 import { AppShell } from '@/components/AppShell';
+import { CallProvider } from '@/features/messaging/inbox';
 import { usePermissions } from '@/features/people/auth/use-permissions';
 import { SALES_NAV_ITEMS, SalesNav } from '@/features/sales/sales/SalesNav';
 import { useSalesUnread } from '@/features/sales/sales/use-sales-unread';
@@ -31,14 +32,22 @@ export function AdminShell() {
   const { can, loaded } = usePermissions();
   const counts = useNavCounts(can);
   const nav = loaded ? <AdminNav counts={counts} can={can} /> : <NavSkeleton />;
-  return <AppShell title={t.admin.dashboardTitle} home="/admin" titles={ADMIN_TITLES} nav={nav} />;
+  return (
+    <CallProvider>
+      <AppShell title={t.admin.dashboardTitle} home="/admin" titles={ADMIN_TITLES} nav={nav} />
+    </CallProvider>
+  );
 }
 
 /** Teacher: the nav shows only the pages the held role's permissions open (row and sheet). */
 export function TeacherShell() {
   const { can, loaded } = usePermissions();
   const nav = loaded ? <TeacherNav can={can} /> : <NavSkeleton layout="row" />;
-  return <AppShell title={t.teacher.dashboardTitle} home="/teacher" titles={TEACHER_TITLES} topNav={nav} />;
+  return (
+    <CallProvider showsPhone={false}>
+      <AppShell title={t.teacher.dashboardTitle} home="/teacher" titles={TEACHER_TITLES} topNav={nav} />
+    </CallProvider>
+  );
 }
 
 /**
@@ -49,7 +58,11 @@ export function SalesShell() {
   const { can, loaded } = usePermissions();
   const unread = useSalesUnread(can);
   const nav = loaded ? <SalesNav can={can} unread={unread} /> : <NavSkeleton layout="row" />;
-  return <AppShell title={t.assistantPortal.title} home="/sales" titles={SALES_TITLES} topNav={nav} wide />;
+  return (
+    <CallProvider>
+      <AppShell title={t.assistantPortal.title} home="/sales" titles={SALES_TITLES} topNav={nav} wide />
+    </CallProvider>
+  );
 }
 
 /** A teaching assistant's own page (no nav: one list). */

@@ -9,6 +9,7 @@ import { CRM_SHAPE } from './whatsapp/env.crm';
 import { KAPSO_SHAPE } from './whatsapp/env.kapso';
 import type { LineMode } from './whatsapp/env.whatsapp';
 import { WEB_PUSH_SHAPE } from './env.web-push';
+import { CALLS_SHAPE } from './env.calls';
 
 export { whatsappEnv, sendingAllowed, lineEnvs, appSecrets, lineNumbers, lineProvider } from './whatsapp/env.whatsapp';
 export { lineGaps, duplicatePhone, bootGaps, DUPLICATE_CHAT_PHONE } from './env.gaps';
@@ -16,6 +17,7 @@ export { allowedRecipients, recipientAllowed, parseAllowedRecipients, kapsoWebho
 export type { WhatsappEnv, GraphEnv, MetaLineEnv, KapsoLineEnv, CrmLineEnv, LineEnvs, LineNumbers } from './whatsapp/env.whatsapp';
 export { livekitEnv, type LivekitEnv } from './env.livekit';
 export { webPushEnv } from './env.web-push';
+export { iceServers } from './env.calls';
 export { googleEnv, googleRedirectUri, type GoogleEnv, type GoogleEndpoints } from './env.google';
 
 // Secrets via env or Vault (rule 9). Fails fast at boot when something required is missing.
@@ -71,11 +73,9 @@ const schema = z.object({
    */
   EXPO_API_BASE: z.preprocess(blankIsUnset, z.url().optional()),
   ...WEB_PUSH_SHAPE,
+  ...CALLS_SHAPE,
   ...GOOGLE_SHAPE,
-  /**
-   * HMAC key of the «رأيك يهمّنا» links (>= 32 chars, via Vault). Unset = feedback requests are 503
-   * not_configured and every public link is refused; nothing else depends on it.
-   */
+  /** HMAC key of the «رأيك يهمّنا» links (>= 32 chars, Vault). Unset = 503 not_configured, every public link refused. */
   FEEDBACK_TOKEN_SECRET: z.preprocess(blankIsUnset, z.string().min(32).optional()),
   /**
    * Self-hosted LiveKit (online classrooms, tools/livekit/README.md). All three or none: unset =

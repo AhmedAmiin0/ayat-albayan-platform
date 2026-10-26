@@ -8,6 +8,7 @@ import { NumberClients } from '../numbers/number-clients';
 import type { NumberRoute } from '../numbers/number-route';
 import { quickReplyPayloads } from './send-plan';
 import type { DueMessage } from './sender.queries';
+import { isCallPermissionRequest } from '../messages/wa-call-permission';
 import { templateButtons, templateParams } from '../messages/wa-json';
 import { WaError, WHATSAPP_LINES, type TemplateRow, type WaSent, type WhatsappClient, type WhatsappLines } from '../whatsapp.types';
 
@@ -84,11 +85,17 @@ export class MessageDispatch {
         payloads: quickReplyPayloads(templateButtons(template.buttons), { params, ref }),
       });
     }
+    if (!row.template_key) return this.sendSession(row, via);
+    throw new WaError('nothing to send: no approved template and no text', { code: 100, status: 0 });
+  }
+
+  /** A session row (no template): a call-permission request, a file or a text. */
+  private sendSession(row: DueMessage, via: SendVia): Promise<WaSent> {
+    // Before the text branch: «اطلب إذن الاتصال» carries its text in body (docs/28).
+    if (row.body && isCallPermissionRequest(row.interactive_payload)) return this.sendCallPermission(row, via);
     // Before the text branch: a captioned file must not go out as plain text.
-    if (!row.template_key && row.media_path) return this.sendFile(row, { via, path: row.media_path });
-    if (!row.template_key && row.body) {
-      return this.client(via).sendText({ to: row.phone_e164, text: row.body, replyTo: row.reply_to_wa_id });
-    }
+    if (row.media_path) return this.sendFile(row, { via, path: row.media_path });
+    if (row.body) return this.client(via).sendText({ to: row.phone_e164, text: row.body, replyTo: row.reply_to_wa_id });
     throw new WaError('nothing to send: no approved template and no text', { code: 100, status: 0 });
   }
 
@@ -98,6 +105,12 @@ export class MessageDispatch {
     const kind = waSendKind(row.media_mime ?? null);
     const filename = row.media_name ?? undefined;
     return this.client(at.via).sendDocument({ to: row.phone_e164, kind, url, filename, caption: row.body, replyTo: row.reply_to_wa_id });
+  }
+
+  private sendCallPermission(row: DueMessage, via: SendVia): Promise<WaSent> {
+    const client = this.client(via);
+    if (!client.sendCallPermissionRequest) throw new WaError('this line cannot send a call permission request', { code: 100, status: 0 });
+    return client.sendCallPermissionRequest({ to: row.phone_e164, text: row.body ?? '' });
   }
 
   /** A line's client, or the number's own; a number that cannot send now gets a client that refuses every call. */

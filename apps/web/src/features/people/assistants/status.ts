@@ -1,12 +1,8 @@
-import type { AssistantCommissionStatus, StatusStyle } from '@ab/shared';
 import { t } from '@/lib/i18n/i18n';
 import { apiErrorText } from '@/features/finance/subscriptions/format';
 
-/** Earned is settled money (fill); voided is struck, in the danger tone (shape carries the state). */
-export const commissionStatusStyle: Record<AssistantCommissionStatus, StatusStyle> = {
-  earned: { tone: 'ok', glyph: 'fill' },
-  voided: { tone: 'bad', glyph: 'struck' },
-};
+/** Earned is settled money (fill); voided is struck, in the danger tone: @ab/shared since docs/27 E6. */
+export { commissionStatusStyle } from '@ab/shared';
 
 /** The API's P0001 codes and the schema's messages, in Arabic. */
 export const errorText = (e: unknown): string => apiErrorText(e, { ...t.assistants.error });

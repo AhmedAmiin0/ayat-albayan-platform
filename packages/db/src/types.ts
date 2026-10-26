@@ -4003,6 +4003,95 @@ export type Database = {
         };
         Relationships: [];
       };
+      wa_call_sdp: {
+        Row: {
+          answer_sdp: string | null;
+          call_id: string;
+          offer_sdp: string | null;
+        };
+        Insert: {
+          answer_sdp?: string | null;
+          call_id: string;
+          offer_sdp?: string | null;
+        };
+        Update: {
+          answer_sdp?: string | null;
+          call_id?: string;
+          offer_sdp?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'wa_call_sdp_call_id_fkey';
+            columns: ['call_id'];
+            isOneToOne: true;
+            referencedRelation: 'wa_calls';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      wa_calls: {
+        Row: {
+          accepted_by: string | null;
+          answered_at: string | null;
+          client_request_id: string | null;
+          created_by: string | null;
+          direction: string;
+          duration_seconds: number | null;
+          end_reason: string | null;
+          ended_at: string | null;
+          error_code: string | null;
+          guardian_id: string | null;
+          id: string;
+          lead_id: string | null;
+          number_id: string | null;
+          phone_e164: string;
+          started_at: string;
+          status: string;
+          updated_at: string;
+          wa_call_id: string | null;
+        };
+        Insert: {
+          accepted_by?: string | null;
+          answered_at?: string | null;
+          client_request_id?: string | null;
+          created_by?: string | null;
+          direction: string;
+          duration_seconds?: number | null;
+          end_reason?: string | null;
+          ended_at?: string | null;
+          error_code?: string | null;
+          guardian_id?: string | null;
+          id?: string;
+          lead_id?: string | null;
+          number_id?: string | null;
+          phone_e164: string;
+          started_at?: string;
+          status: string;
+          updated_at?: string;
+          wa_call_id?: string | null;
+        };
+        Update: {
+          accepted_by?: string | null;
+          answered_at?: string | null;
+          client_request_id?: string | null;
+          created_by?: string | null;
+          direction?: string;
+          duration_seconds?: number | null;
+          end_reason?: string | null;
+          ended_at?: string | null;
+          error_code?: string | null;
+          guardian_id?: string | null;
+          id?: string;
+          lead_id?: string | null;
+          number_id?: string | null;
+          phone_e164?: string;
+          started_at?: string;
+          status?: string;
+          updated_at?: string;
+          wa_call_id?: string | null;
+        };
+        Relationships: [];
+      };
       wa_line_health: {
         Row: {
           checked_at: string;

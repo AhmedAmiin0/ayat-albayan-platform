@@ -3,11 +3,11 @@ import { type, useTheme } from '@/theme';
 import { AppText } from '../primitives/AppText';
 
 /**
- * The count at the icon's top end (the left in Arabic), ringed in what lies behind it: the pill on the
- * active tab, the capsule elsewhere. Hidden from screen readers: the tab's own label says the count.
+ * The count at the icon's top end (the left in Arabic), ringed in the capsule's colour (on the active
+ * tab's grey capsule too, like the iOS badge). Hidden from screen readers: the tab's own label says the count.
  * Its text does not scale: the 18pt pill would clip it.
  */
-export function TabBadge({ text, onPill }: { text: string; onPill: boolean }) {
+export function TabBadge({ text }: { text: string }) {
   const { color } = useTheme();
   return (
     <View
@@ -22,7 +22,7 @@ export function TabBadge({ text, onPill }: { text: string; onPill: boolean }) {
         paddingHorizontal: 4,
         borderRadius: 9,
         backgroundColor: color.lapisFill,
-        boxShadow: `0 0 0 2px ${onPill ? color.lapisWash : color.raised}`,
+        boxShadow: `0 0 0 2px ${color.raised}`,
       }}
     >
       <AppText

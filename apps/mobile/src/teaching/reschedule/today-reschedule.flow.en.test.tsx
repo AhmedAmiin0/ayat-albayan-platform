@@ -17,12 +17,11 @@ beforeEach(async () => {
 });
 afterEach(() => jest.useRealTimers());
 
-test('English: Today card → reschedule this lesson only → the body, the confirmation and the done text', async () => {
+test('English: Today → Details → reschedule this lesson only → the body, the confirmation and the done text', async () => {
   const { backend } = calendarBackend();
   await renderApp({ url: '/', backend, storage: { [LOCALE_STORAGE_KEY]: 'en' } });
-  const [card] = await screen.findAllByRole('button', { name: en.lessons.rescheduleSubmit });
-  if (!card) throw new Error('no reschedule on the card');
-  await fireEvent.press(card);
+  await fireEvent.press(await screen.findByRole('button', { name: en.today.details }));
+  await fireEvent.press(await screen.findByRole('button', { name: new RegExp(`^${en.lessons.rescheduleSubmit} — `) }));
   expect(await screen.findByRole('header', { name: en.lessons.rescheduleTitle })).toBeTruthy();
   expect(screen.getByRole('radio', { name: en.lessons.scope.one, checked: true })).toBeTruthy();
 

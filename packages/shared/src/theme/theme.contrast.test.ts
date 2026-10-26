@@ -28,6 +28,10 @@ const WASHES: Key[] = ['goldWash', 'lapisWash', 'okSoft', 'actSoft', 'badSoft', 
 const PAIRS: [Key, Key][] = [
   // a tone on its own soft background (chips, accent rows, alerts)
   ['lapis', 'lapisWash'],
+  // the Today hero card's time, an active summary column's label and count (docs/29 §2–3)
+  ['coverInk', 'lapisWash'],
+  ['ink3', 'lapisWash'],
+  ['act', 'lapisWash'],
   ['ok', 'okSoft'],
   ['act', 'actSoft'],
   ['bad', 'badSoft'],

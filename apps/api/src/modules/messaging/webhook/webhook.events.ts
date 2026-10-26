@@ -61,8 +61,36 @@ export interface EchoEvent {
   phoneNumberId?: string;
 }
 
+/**
+ * One WhatsApp Calling item (docs/28 §2), from a change whose field is `calls`: a `connect` (an inbound
+ * call's offer, or WhatsApp's answer to our outbound offer), a `terminate`, or a call `status`
+ * (RINGING / ACCEPTED / REJECTED of our outbound call). Message statuses never come here.
+ */
+export interface CallWebhookEvent {
+  kind: 'connect' | 'terminate' | 'status';
+  /** Meta's call id (wacid). */
+  waCallId: string;
+  /** The receiving number's phone_number_id (metadata); null when Meta left it out. */
+  phoneNumberId: string | null;
+  /** inbound = USER_INITIATED; outbound = BUSINESS_INITIATED (statuses are always ours). */
+  direction: 'inbound' | 'outbound';
+  /** The family's wa_id (digits): `from` of an inbound call, `to` / recipient_id of ours. */
+  peer: string | null;
+  /** session.sdp of a connect (offer inbound, answer outbound). */
+  sdp: string | null;
+  /** biz_opaque_callback_data: our wa_calls.id on outbound calls. */
+  ref: string | null;
+  /** Upper case: RINGING / ACCEPTED / REJECTED (status), COMPLETED / FAILED (terminate). */
+  status: string | null;
+  /** terminate: Meta's talk time in seconds. */
+  duration: number | null;
+  at: Date;
+}
+
 export interface WebhookBatch {
   messages: InboundEvent[];
   statuses: StatusEvent[];
   echoes: EchoEvent[];
+  /** Present only when the body carried a `calls` change. */
+  calls?: CallWebhookEvent[];
 }

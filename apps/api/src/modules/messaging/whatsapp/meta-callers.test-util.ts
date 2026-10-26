@@ -35,6 +35,8 @@ export const WHITELIST = new Set([
   'modules/messaging/whatsapp/drivers/crm/crm.client.ts',
   'modules/messaging/whatsapp/drivers/crm/crm-http.ts',
   'modules/messaging/whatsapp/whatsapp.module.ts',
+  // WhatsApp voice calls (docs/28): the one Kapso calling client, one request per method, never a retry.
+  'modules/messaging/calls/kapso/kapso-calls.ts',
   'modules/messaging/whatsapp/whatsapp.types.ts',
   // Kapso's message history (owner report 2026-10-26): read-only GETs that store messages sent outside the app.
   'modules/messaging/webhook/external/kapso-history.ts',

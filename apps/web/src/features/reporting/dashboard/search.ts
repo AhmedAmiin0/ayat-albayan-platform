@@ -1,5 +1,5 @@
-import { dateRangeQuery, RIYADH_TZ } from '@ab/shared';
-import { addDays, weekStart, zonedParts } from '@/features/teaching/schedule/tz';
+import { dateRangeQuery, riyadhToday } from '@ab/shared';
+import { addDays, weekStart } from '@/features/teaching/schedule/tz';
 import type { DayRange } from './types';
 
 /** The admin's queue under the KPI strip. */
@@ -18,10 +18,8 @@ export function parseDashboardSearch(s: Record<string, unknown>): DashboardSearc
   return Object.fromEntries(Object.entries(out).filter(([, v]) => v !== undefined));
 }
 
-/** Today in Riyadh, "YYYY-MM-DD" (ranges are Riyadh days, docs/11 §3). */
-export function riyadhToday(now: Date = new Date()): string {
-  return zonedParts(now, RIYADH_TZ).date;
-}
+/** Today in Riyadh, "YYYY-MM-DD" (ranges are Riyadh days, docs/11 §3); shared with the mobile calendar. */
+export { riyadhToday };
 
 /** Default period: the 1st of the month five months back → today (six bars in «by month»). */
 export function defaultPeriod(today: string): DayRange {

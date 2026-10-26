@@ -19,6 +19,8 @@ export interface KapsoOptions {
   webhookUrl?: string;
   /** X-Webhook-Signature key (KAPSO_WEBHOOK_SECRET). */
   webhookSecret?: string;
+  /** GET …/call_permissions: false = no permission yet (a request may be sent); default granted. */
+  callPermission?: boolean;
 }
 
 /** The academy CRM's REST API (docs/19 «crm driver»): its Bearer key and the key's scopes. */
@@ -110,6 +112,8 @@ export interface StubState {
   handles: Set<string>;
   /** Every Graph call (not /__stub), Meta's paths and the kapso prefix: GET /__stub/requests. */
   requests: RequestLog[];
+  /** Every POST …/calls action (docs/28: connect, pre_accept, accept, reject, terminate): GET /__stub/calls. */
+  calls: Json[];
 }
 
 export type Reply = [number, unknown] | { status: number; mime: string; bytes: Buffer };

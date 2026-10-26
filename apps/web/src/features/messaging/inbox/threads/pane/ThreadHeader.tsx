@@ -13,6 +13,7 @@ import { leadChip } from '../../sales/subscription';
 import { SubscriptionChip } from '../../sales/SubscriptionChip';
 import { CopyPhoneButton } from './CopyPhoneButton';
 import { WindowBanner } from './WindowBanner';
+import { CallButton } from '../../calls/header/CallButton';
 
 export interface ThreadHeaderProps {
   thread: ThreadView;
@@ -27,6 +28,8 @@ export interface ThreadHeaderProps {
   line?: ReactNode;
   /** The chat's lists «القوائم» (admin and sales with inbox.lists), quiet chips in the second row. */
   lists?: readonly ChatListRef[] | undefined;
+  /** May this user call from this chat (docs/28: the phone icon, shown only while calls are on)? */
+  callable?: boolean;
 }
 
 /**
@@ -35,7 +38,7 @@ export interface ThreadHeaderProps {
  * window, «مشترك» and the source (admin), the sales children line, the chat's lists and the times' city
  * (principle 7).
  */
-export function ThreadHeader({ thread: th, listSearch, headingId, badge, action, line, lists }: ThreadHeaderProps) {
+export function ThreadHeader({ thread: th, listSearch, headingId, badge, action, line, lists, callable = false }: ThreadHeaderProps) {
   const kind = threadKind(th);
   const mode = useInboxMode();
   return (
@@ -53,8 +56,11 @@ export function ThreadHeader({ thread: th, listSearch, headingId, badge, action,
           {threadTitle(th, mode)}
         </h2>
         {th.display_name && showsPhone(mode) && <Ltr className="shrink-0 text-xs text-ink-3">{formatPhone(th.phone_e164)}</Ltr>}
-        {showsPhone(mode) && <CopyPhoneButton phone={th.phone_e164} />}
-        {action}
+        <span className="ms-auto flex shrink-0 items-center gap-1">
+          {showsPhone(mode) && <CopyPhoneButton phone={th.phone_e164} />}
+          <CallButton phone={th.phone_e164} name={threadTitle(th, mode)} canSend={callable} />
+          {action}
+        </span>
       </div>
       <div className="mt-1 flex items-center gap-1.5 overflow-x-auto text-2xs whitespace-nowrap text-ink-3 [scrollbar-width:none]">
         {kind === 'lead' && th.lead_status ? (

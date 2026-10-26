@@ -17,6 +17,8 @@ export type InboxSearch = {
   f_status?: LeadStatus;
   /** A chat list «القوائم» (docs/22 §4): its id; the chip row falls back to «الكل» for an unknown one. */
   list?: string;
+  /** «المكالمات» (docs/28): the calls log instead of the chats list. */
+  calls?: true;
   page: number;
 };
 
@@ -39,5 +41,6 @@ export function parseInboxSearch(s: Record<string, unknown>): InboxSearch {
   const status = pick(LEAD_STATUSES, s['f_status']);
   if (status) out.f_status = status;
   if (typeof s['list'] === 'string' && UUID.test(s['list'])) out.list = s['list'];
+  if (s['calls'] === true || s['calls'] === 'true') out.calls = true;
   return out;
 }

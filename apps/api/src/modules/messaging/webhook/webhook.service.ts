@@ -1,9 +1,10 @@
-import { Inject, Injectable, InternalServerErrorException, Logger } from '@nestjs/common';
+import { Inject, Injectable, InternalServerErrorException, Logger, Optional } from '@nestjs/common';
 import type { LineNumbers } from '../../../config/env/env';
 import { InboundService } from './inbound/webhook.inbound.service';
 import type { ReceivingNumber } from './lines/webhook.lines';
 import { parseWebhook } from './parse/webhook.parse';
 import { StatusService } from './status/webhook.status.service';
+import { CALL_EVENTS, type CallEventsPort } from '../calls/flow/call-events.service';
 
 /** WhatsApp webhook settings from env (docs/12 §3.1, §13.6); a token so tests can swap them. */
 export const WEBHOOK_CONFIG = Symbol('WEBHOOK_CONFIG');
@@ -53,6 +54,8 @@ export class WebhookService {
   private readonly log = new Logger(WebhookService.name);
   /** phone_number_ids already warned about: one warning per distinct id per process. */
   private readonly ignored = new Set<string>();
+  /** WhatsApp Calling items (docs/28; property-injected: the constructor is at the 3-parameter limit). */
+  @Optional() @Inject(CALL_EVENTS) private readonly calls?: CallEventsPort;
 
   constructor(
     @Inject(WEBHOOK_CONFIG) private readonly config: WebhookConfig,
@@ -70,6 +73,7 @@ export class WebhookService {
     for (const m of batch.messages) failed += await this.safely(m.waMessageId, () => this.inbound.handle(m, { deadline }));
     for (const s of batch.statuses) failed += await this.safely(s.waMessageId, () => this.statuses.handle(s));
     for (const e of batch.echoes) failed += await this.safely('echo', () => this.statuses.echo(e));
+    for (const c of batch.calls ?? []) failed += await this.safely(c.waCallId, () => this.calls?.handle(c) ?? Promise.resolve());
     if (failed > 0) throw new InternalServerErrorException({ code: 'webhook_items_failed', failed });
   }
 

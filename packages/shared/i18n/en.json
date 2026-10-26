@@ -996,7 +996,42 @@
     "all": "All",
     "statusFilter": "Lesson status",
     "emptyFilter": "No lessons with this status today",
-    "studentTime": "{time} {city} time"
+    "studentTime": "{time} {city} time",
+    "greeting": {
+      "morning": "Good morning",
+      "evening": "Good evening"
+    },
+    "summaryLabel": "Today at a glance",
+    "summary": {
+      "all": "lessons today",
+      "scheduled": "need confirmation",
+      "completed": "ended"
+    },
+    "summaryFilter": "{n} {label}, show only these lessons",
+    "summaryFilterActive": "{n} {label}, show all lessons",
+    "next": "Next lesson",
+    "running": "In progress",
+    "inMinutes": {
+      "one": "in 1 minute",
+      "two": "in 2 minutes",
+      "few": "in {n} minutes",
+      "other": "in {n} minutes"
+    },
+    "teacherTitled": "{teacher}",
+    "confirmLesson": "Confirm lesson",
+    "details": "Details",
+    "rest": "Rest of the day · {n}",
+    "endedFold": {
+      "one": "1 lesson ended today",
+      "two": "2 lessons ended today",
+      "few": "{n} lessons ended today",
+      "other": "{n} lessons ended today"
+    },
+    "quietTitle": "Today's lessons are done",
+    "tomorrowLine": "Tomorrow: {count}, the first at {time}.",
+    "tomorrowSchedule": "Tomorrow's schedule",
+    "openLesson": "{time}, {names}, {status}. Show details",
+    "dateLine": "{date} · Riyadh time"
   },
   "calendar": {
     "teacherCalendar": "Teacher schedule",
@@ -4690,6 +4725,7 @@
       "kapso": "Kapso (alternative WhatsApp provider)",
       "wacrm": "CRM (sending provider through the academy's CRM)",
       "wa_safety": "Test environment safety",
+      "calls": "Voice calls (WebRTC)",
       "livekit": "Online classrooms (LiveKit)",
       "expo": "Mobile push (Expo)",
       "web_push": "Browser notifications (Web Push)",
@@ -4866,6 +4902,18 @@
       "GOOGLE_CLIENT_SECRET": {
         "label": "OAuth client secret",
         "hint": "Kept in the vault and never shown after saving."
+      },
+      "CALLS_STUN_URLS": {
+        "label": "STUN servers for calls",
+        "hint": "Comma-separated ⁦stun:⁩ URLs. Blank = a public STUN server."
+      },
+      "CALLS_TURN_URLS": {
+        "label": "TURN servers for calls",
+        "hint": "Optional: comma-separated ⁦turn:⁩ or ⁦turns:⁩ URLs, for networks that block direct connections."
+      },
+      "CALLS_TURN_SECRET": {
+        "label": "TURN shared secret",
+        "hint": "Optional: coturn's ⁦use-auth-secret⁩ secret. Kept in the vault and never shown; the platform mints six-hour credentials per staff member from it."
       }
     },
     "developer": "For developers",
@@ -6237,6 +6285,71 @@
       "showAll": "Show all dates ({n})",
       "showFewer": "Show fewer",
       "hideHistory": "Hide dates"
+    }
+  },
+  "calls": {
+    "settings": {
+      "enabled": "WhatsApp voice calls",
+      "enabledHint": "Shows the call button in chats and allows in-app voice calls from the chat number through Kapso. Keep it off until the Kapso and Meta activation steps are done."
+    },
+    "call": "Voice call",
+    "callBack": "Call back",
+    "voiceCall": "WhatsApp voice call",
+    "status": {
+      "connecting": "Calling…",
+      "ringing": "Ringing…",
+      "accepting": "Answering…",
+      "incoming": "Incoming WhatsApp voice call",
+      "ended": "Call ended"
+    },
+    "controls": {
+      "mute": "Mute",
+      "unmute": "Unmute",
+      "speaker": "Speaker",
+      "end": "End",
+      "accept": "Accept",
+      "decline": "Decline",
+      "minimise": "Minimise",
+      "expand": "Back to the call"
+    },
+    "entry": {
+      "outgoing": "Outgoing voice call",
+      "incoming": "Incoming call",
+      "missed": "Missed call",
+      "unanswered": "No answer",
+      "live": "Call in progress"
+    },
+    "log": {
+      "title": "Calls",
+      "empty": "No calls yet.",
+      "chats": "Chats",
+      "outgoing": "Outgoing",
+      "incoming": "Incoming"
+    },
+    "permission": {
+      "title": "Call permission",
+      "request": "Ask for call permission",
+      "requestHint": "The number's owner has not allowed the academy to call them on WhatsApp yet. Send a permission request, then call once they accept.",
+      "requestBody": "Ayat Al-Bayan Academy would like to call you on WhatsApp. Do you allow us to call you?",
+      "requestSent": "Permission request sent. You can call once they accept.",
+      "needsTemplate": "The 24-hour chat window has closed, so permission can only be requested with an approved permission-request template. You can wait until the number's owner messages the academy.",
+      "limited": "WhatsApp does not allow a call or a new permission request right now. Try again later.",
+      "checking": "Checking call permission…"
+    },
+    "mic": {
+      "denied": "The call needs microphone access. Allow the microphone, then try again.",
+      "unsupported": "This device or browser does not support voice calls."
+    },
+    "errors": {
+      "calls_disabled": "Calls are turned off in settings.",
+      "calls_unavailable": "The chat line is not set up for calls: it needs the Kapso driver and its key.",
+      "call_busy": "You already have a call in progress.",
+      "already_taken": "A colleague already answered this call.",
+      "call_ended": "This call has ended.",
+      "recipient_not_allowed": "This number is not on the test allow-list.",
+      "no_permission": "There is no permission to call this number.",
+      "call_failed": "The call could not be placed. It was not retried automatically, so it is never billed twice.",
+      "media_failed": "The audio dropped. End the call and call again."
     }
   }
 }
