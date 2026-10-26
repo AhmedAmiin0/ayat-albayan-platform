@@ -39,16 +39,21 @@ const rule = {
     schema: [
       {
         type: 'object',
-        properties: { module: { type: 'string' }, alias: { type: 'object', additionalProperties: { type: 'string' } } },
-        required: ['module'],
+        properties: {
+          root: { type: 'string' },
+          module: { type: 'string' },
+          alias: { type: 'object', additionalProperties: { type: 'string' } },
+        },
+        required: ['root', 'module'],
         additionalProperties: false,
       },
     ],
     messages: { deep: "Import '{{module}}' through its index.ts, not '{{spec}}'." },
   },
   create(context) {
-    const { module, alias } = context.options[0];
-    const opts = { file: context.filename, cwd: context.cwd, alias, module };
+    // Paths are relative to the package root, so linting from the repo root gives the same result.
+    const { root, module, alias } = context.options[0];
+    const opts = { file: context.filename, cwd: root, alias, module };
     const check = (node) => {
       const spec = node?.source?.value;
       if (typeof spec !== 'string' || !isDeep(spec, opts)) return;
@@ -66,15 +71,15 @@ const rule = {
 
 export const boundariesPlugin = { rules: { 'module-boundaries': rule } };
 
-// Test code may import another module's fakes and mock its internals by path.
-const TESTS = ['**/*.test.*', '**/*.spec.*', '**/*.fakes.ts', '**/*test-app*.ts', '**/test/**', '**/testing/**'];
+// Test code may import another module's fakes and fixtures and mock its internals by path.
+const TESTS = ['**/*.test.*', '**/*.spec.*', '**/*.fake.ts', '**/*.fakes.ts', '**/*fixture*', '**/*test-app*.ts', '**/test/**', '**/testing/**'];
 
-/** Flat-config block: the rule as an error for `files`, with the module pattern of this package. */
-export function boundaries({ files, module, alias }) {
+/** Flat-config block: the rule as an error for `files` of the package at `root` (its config's directory). */
+export function boundaries({ root, files, module, alias, ignores = [] }) {
   return {
     files,
-    ignores: TESTS,
+    ignores: [...TESTS, ...ignores],
     plugins: { ab: boundariesPlugin },
-    rules: { 'ab/module-boundaries': ['error', alias ? { module, alias } : { module }] },
+    rules: { 'ab/module-boundaries': ['error', alias ? { root, module, alias } : { root, module }] },
   };
 }

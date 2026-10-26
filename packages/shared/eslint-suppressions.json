@@ -59,11 +59,6 @@
       "count": 1
     }
   },
-  "src/index.ts": {
-    "ab/module-boundaries": {
-      "count": 29
-    }
-  },
   "src/integrations/driver-keys.ts": {
     "ab/module-boundaries": {
       "count": 1

@@ -154,9 +154,10 @@ jobs:
       - run: pnpm guard:knip
 
   # The required aggregate for branch protection: every verify job and the guards passed, or a docs-only change
-  # skipped them all (changes said code=false). Anything else (a failed or cancelled job, a failed changes job) is red.
+  # skipped them all (changes said code=false); on a PR the refactor job (folder cap, pure moves) passed too.
+  # Anything else (a failed or cancelled job, a failed changes job) is red.
   check:
-    needs: [changes, verify, guards]
+    needs: [changes, verify, guards, refactor]
     if: always()
     runs-on: ubuntu-latest
     timeout-minutes: 2
@@ -166,8 +167,10 @@ jobs:
           CODE: ${{ needs.changes.outputs.code }}
           VERIFY: ${{ needs.verify.result }}
           GUARDS: ${{ needs.guards.result }}
+          REFACTOR: ${{ needs.refactor.result }}
         run: |
           test "$CHANGES" = success
+          test "$REFACTOR" = success || { [ "$GITHUB_EVENT_NAME" != pull_request ] && [ "$REFACTOR" = skipped ]; }
           if [ "$CODE" = false ] && [ "$VERIFY" = skipped ] && [ "$GUARDS" = skipped ]; then echo "docs only: verify skipped"; exit 0; fi
           test "$VERIFY" = success
           test "$GUARDS" = success

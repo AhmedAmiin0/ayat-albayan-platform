@@ -40,7 +40,7 @@ RuleTester.it = it;
 const tester = new RuleTester({ languageOptions: { ecmaVersion: 2024, sourceType: 'module' } });
 // RuleTester lints from process.cwd(), so the file sits under it.
 const filename = `${process.cwd()}/src/modules/sales/leads/a.ts`;
-const options = [{ module: api.module }];
+const options = [{ root: process.cwd(), module: api.module }];
 tester.run('module-boundaries', boundariesPlugin.rules['module-boundaries'], {
   valid: [
     { code: "import { x } from '../sales/index.js';", filename, options },

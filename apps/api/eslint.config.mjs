@@ -2,7 +2,7 @@ import { boundaries, config } from '@ab/config/eslint';
 
 export default config(
   // docs/27 §1 rule 6: another module only through its index.ts (existing deep imports: eslint-suppressions.json).
-  boundaries({ files: ['src/**/*.ts'], module: 'src/modules/[^/]+/[^/]+' }),
+  boundaries({ root: import.meta.dirname, files: ['src/**/*.ts'], module: 'src/modules/[^/]+/[^/]+' }),
   // Modules read settings through their own typed reader (<module>.settings.ts), never the
   // store itself (docs/25-settings-and-config.md), nor ConfigStore (docs/26 §2e). Readers, tests and test harnesses may.
   {

@@ -1,6 +1,6 @@
 // Duplicated-code gate (docs/27 §4 Wave F): jscpd (.jscpd.json, --min-lines 8, tests ignored) may not report
-// more clones, more duplicated lines or more cross-app clones than refactor/guards/jscpd.json. Lower the
-// baseline with --write after a dedup PR. Cross-app = the two copies sit in different apps/packages/tools,
+// more clones, more duplicated lines or more cross-app clones than refactor/guards/jscpd.json, and a
+// measure below it fails too until the baseline is lowered with --write (the freed room is not reused). Cross-app = the two copies sit in different apps/packages/tools,
 // fixtures and fakes not counted.
 // Usage: node tools/scripts/ci-checks/jscpd-gate.mjs [--write]   (after `jscpd`, which writes the report)
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
@@ -20,11 +20,11 @@ export function measure(report) {
   return { clones, duplicatedLines, crossApp };
 }
 
-/** One line per measure that went above its baseline. */
+/** One line per measure that differs from its baseline: above it is new duplication, below it a stale baseline. */
 export function check(now, baseline) {
   return Object.entries(now)
-    .filter(([k, v]) => v > (baseline[k] ?? 0))
-    .map(([k, v]) => `${k}: ${v} > baseline ${baseline[k] ?? 0}`);
+    .filter(([k, v]) => v !== (baseline[k] ?? 0))
+    .map(([k, v]) => (v > (baseline[k] ?? 0) ? `${k}: ${v} > baseline ${baseline[k] ?? 0}` : `${k}: ${v} < baseline ${baseline[k]}, lower it: pnpm guard:dup -- --write`));
 }
 
 function main(args) {
@@ -36,7 +36,7 @@ function main(args) {
   const baseline = existsSync(file) ? JSON.parse(readFileSync(file, 'utf8')) : {};
   console.log(`jscpd: ${JSON.stringify(now)} (baseline ${JSON.stringify(baseline)})`);
   const problems = check(now, baseline);
-  for (const p of problems) console.log(`  ${p}: move the shared code to packages/shared or packages/client-core`);
+  for (const p of problems) console.log(`  ${p}${p.includes(' > ') ? ': move the shared code to packages/shared or packages/client-core' : ''}`);
   if (problems.length > 0) process.exit(1);
 }
 

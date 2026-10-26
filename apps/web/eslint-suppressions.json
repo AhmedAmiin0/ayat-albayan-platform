@@ -434,11 +434,6 @@
       "count": 4
     }
   },
-  "src/features/messaging/inbox/sales-money/course/course-fixture.ts": {
-    "ab/module-boundaries": {
-      "count": 1
-    }
-  },
   "src/features/messaging/inbox/sales-money/errors.ts": {
     "ab/module-boundaries": {
       "count": 1

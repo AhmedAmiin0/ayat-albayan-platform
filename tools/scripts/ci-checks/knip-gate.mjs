@@ -1,7 +1,7 @@
 // Dead-code gate (docs/27 §4 Wave F): knip (knip.json) may not report an issue that is not in
 // refactor/guards/knip.json. The baseline lists what knip still reports on purpose (module barrels'
-// public API, names kept by e8; see docs/27 §5a e8). Fixed entries only print a note: shrink the
-// baseline with --write.
+// public API, names kept by e8; see docs/27 §5a e8). A fixed entry fails too until it leaves the
+// baseline (--write), so the same name cannot come back unnoticed.
 // Usage: knip --reporter json --no-exit-code | node tools/scripts/ci-checks/knip-gate.mjs [--write]
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
@@ -12,7 +12,8 @@ const nameOf = (item) => (Array.isArray(item) ? item.map(nameOf).join('|') : (it
 /** One sorted `<file> <kind> <name>` line per issue of a knip json report. */
 export function flatten(report) {
   const out = (report.files ?? []).map((f) => `${f} files`);
-  for (const { file, ...kinds } of report.issues ?? []) {
+  // `owners` (CODEOWNERS) is metadata of the row, not an issue.
+  for (const { file, owners: _owners, ...kinds } of report.issues ?? []) {
     for (const [kind, items] of Object.entries(kinds)) {
       const list = Array.isArray(items) ? items.map(nameOf) : Object.keys(items ?? {}).flatMap((k) => (items[k] ?? []).map((i) => `${k}.${nameOf(i)}`));
       for (const name of list) out.push(`${file} ${kind} ${name}`);
@@ -37,8 +38,9 @@ function main(args) {
   const { added, fixed } = compare(now, baseline);
   console.log(`knip: ${now.length} issues, baseline ${baseline.length}, new ${added.length}, fixed ${fixed.length}`);
   for (const l of added) console.log(`  new: ${l}`);
-  if (fixed.length > 0) console.log('  (fixed entries can leave the baseline: pnpm guard:knip -- --write)');
-  if (added.length > 0) process.exit(1);
+  for (const l of fixed) console.log(`  fixed: ${l}`);
+  if (fixed.length > 0) console.log('  fixed entries leave the baseline: pnpm guard:knip -- --write');
+  if (added.length + fixed.length > 0) process.exit(1);
 }
 
 if (import.meta.url === pathToFileURL(process.argv[1] ?? '').href) main(process.argv.slice(2));

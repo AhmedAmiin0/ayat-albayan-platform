@@ -349,11 +349,6 @@
       "count": 1
     }
   },
-  "src/calendar/overview/overview-fixtures.ts": {
-    "ab/module-boundaries": {
-      "count": 1
-    }
-  },
   "src/calendar/overview/overview-text.ts": {
     "ab/module-boundaries": {
       "count": 3
@@ -980,11 +975,6 @@
     }
   },
   "src/money/receivables/ReceivablesSummary.tsx": {
-    "ab/module-boundaries": {
-      "count": 1
-    }
-  },
-  "src/money/shared/fixtures.ts": {
     "ab/module-boundaries": {
       "count": 1
     }
@@ -1652,11 +1642,6 @@
   "src/subscribe/SubscribeScreen.tsx": {
     "ab/module-boundaries": {
       "count": 3
-    }
-  },
-  "src/subscribe/fixtures.ts": {
-    "ab/module-boundaries": {
-      "count": 2
     }
   },
   "src/subscribe/flow-backend.ts": {
