@@ -6,7 +6,7 @@ import { ListRow } from '@/core/ui/layout/ListRow';
 import { StatusChip } from '@/core/ui/feedback/StatusChip';
 
 /** «الحلقة الجاية: الأحد 5 أكتوبر 17:00» in the teacher's own time zone, or «مفيش حلقة جاية». */
-export function nextLessonLine(startsAt: string | null, tz: string): string {
+function nextLessonLine(startsAt: string | null, tz: string): string {
   if (!startsAt) return t.teacherStudents.noNextLesson;
   const at = new Date(startsAt);
   return t.teacherStudents.nextLesson.replace('{when}', `${lessonWhenText(at, tz, locale)} ${clockTime(at, tz)}`);

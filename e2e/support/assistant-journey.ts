@@ -22,7 +22,7 @@ export interface Family {
   name: string;
 }
 
-export interface StatusRow {
+interface StatusRow {
   from: string | null;
   to: string | null;
   reason: string | null;

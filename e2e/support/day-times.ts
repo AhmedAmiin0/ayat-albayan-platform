@@ -6,7 +6,7 @@ import { USERS } from './users';
 // transaction.
 
 const DAY = 24 * 60 * MIN;
-export const PHONE = '+966500000996';
+const PHONE = '+966500000996';
 
 export interface DaySeed {
   teacher: string;

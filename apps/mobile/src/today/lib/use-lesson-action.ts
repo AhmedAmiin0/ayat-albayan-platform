@@ -9,7 +9,7 @@ import {
 } from '@/core/lib/query/use-optimistic-status';
 
 /** A confirm, or a cancel carrying its body (docs/10 routes 6 and 9). */
-export interface LessonChange extends StatusChange<LessonStatus> {
+interface LessonChange extends StatusChange<LessonStatus> {
   cancel?: CancelRequest;
 }
 

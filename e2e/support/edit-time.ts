@@ -47,7 +47,7 @@ export async function seed(tx: Tx) {
     on conflict do nothing`;
   return { teacher, guardian: g.id, student: s.id, rule: rule.id, lesson: lesson.id };
 }
-export type Seeded = Awaited<ReturnType<typeof seed>>;
+type Seeded = Awaited<ReturnType<typeof seed>>;
 
 export type Edit = {
   s: Seeded;
