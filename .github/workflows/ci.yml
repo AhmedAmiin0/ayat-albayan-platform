@@ -108,9 +108,10 @@ jobs:
             turbo-${{ matrix.key }}-${{ runner.os }}-
       - run: pnpm turbo ${{ matrix.task }} ${{ matrix.filter }} --cache-dir=.turbo/cache ${{ matrix.args }}
 
-  # Refactor guards (docs/27 §4). Folder cap: report only until Wave F. Pure-move check: only for the
-  # move PRs of the refactor chain (cloud/refactor-a*, b*, c*, d* heads); it fails on any hunk that is not a
-  # rename, a module path, a new index.ts barrel or path-dependent config. No install, no secrets.
+  # Refactor guards (docs/27 §4). Folder cap: an error since Wave F (a new crowded folder, an allow-listed one
+  # that grew, a stale allow-list entry). Pure-move check: only for the move PRs of the refactor chain
+  # (cloud/refactor-a*, b*, c*, d* heads); it fails on any hunk that is not a rename, a module path, a new
+  # index.ts barrel or path-dependent config. No install, no secrets.
   refactor:
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
@@ -122,7 +123,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version-file: .nvmrc
-      - run: node tools/scripts/ci-checks/folder-cap.mjs
+      - run: node tools/scripts/ci-checks/folder-cap.mjs --strict
       - name: Pure-move check
         env:
           HEAD_REF: ${{ github.head_ref }}
@@ -133,10 +134,30 @@ jobs:
             *) echo "not a move PR ($HEAD_REF): skipped" ;;
           esac
 
-  # The required aggregate for branch protection: every verify job passed, or a docs-only change skipped
-  # them all (changes said code=false). Anything else (a failed or cancelled job, a failed changes job) is red.
+  # Code-health gates (docs/27 Wave F), against baselines in refactor/guards/ that only shrink: jscpd (no
+  # more clones, duplicated lines or cross-app clones) and knip (no new unused file, export, type or
+  # dependency). Module boundaries are an eslint error, checked by the lint job. No secrets.
+  guards:
+    needs: changes
+    if: needs.changes.outputs.code == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm i --frozen-lockfile
+      - run: pnpm guard:dup
+      - run: pnpm guard:knip
+
+  # The required aggregate for branch protection: every verify job and the guards passed, or a docs-only change
+  # skipped them all (changes said code=false); on a PR the refactor job (folder cap, pure moves) passed too.
+  # Anything else (a failed or cancelled job, a failed changes job) is red.
   check:
-    needs: [changes, verify]
+    needs: [changes, verify, guards, refactor]
     if: always()
     runs-on: ubuntu-latest
     timeout-minutes: 2
@@ -145,10 +166,14 @@ jobs:
           CHANGES: ${{ needs.changes.result }}
           CODE: ${{ needs.changes.outputs.code }}
           VERIFY: ${{ needs.verify.result }}
+          GUARDS: ${{ needs.guards.result }}
+          REFACTOR: ${{ needs.refactor.result }}
         run: |
           test "$CHANGES" = success
-          if [ "$CODE" = false ] && [ "$VERIFY" = skipped ]; then echo "docs only: verify skipped"; exit 0; fi
+          test "$REFACTOR" = success || { [ "$GITHUB_EVENT_NAME" != pull_request ] && [ "$REFACTOR" = skipped ]; }
+          if [ "$CODE" = false ] && [ "$VERIFY" = skipped ] && [ "$GUARDS" = skipped ]; then echo "docs only: verify skipped"; exit 0; fi
           test "$VERIFY" = success
+          test "$GUARDS" = success
 
   # The e2e suite shares one database per run and runs with one worker, so it is split across machines
   # instead: each shard has its own local Supabase, API and web server (docs/04 §9). A failing shard does

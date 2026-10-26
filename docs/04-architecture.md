@@ -19,38 +19,37 @@
 
 ## 2. Repository layout
 
+Folder trees and the per-module sub-trees are in `docs/27-refactor-plan.md §3` (approved 2026-10-25, built 2026-10-26).
+
 ```
 ayat-albayan/
 ├─ apps/
-│  ├─ api/                 # NestJS
-│  │  └─ src/
-│  │     ├─ main.ts
-│  │     ├─ app.module.ts
-│  │     ├─ common/        # guards, interceptors, filters, pipes, dto helpers
-│  │     └─ modules/
-│  │        ├─ auth/        ├─ leads/        ├─ students/     ├─ teachers/
-│  │        ├─ scheduling/  ├─ lessons/      ├─ reports/      ├─ subscriptions/
-│  │        ├─ payments/    ├─ messaging/    ├─ calendar-mirror/ ├─ dashboard/
-│  │        └─ jobs/        # queue processors
-│  ├─ web/                 # React + TanStack
-│  │  └─ src/
-│  │     ├─ routes/        # file-based TanStack Router (admin/, teacher/, portal/)
-│  │     ├─ features/<feature>/{components,hooks,api,schemas}
-│  │     ├─ components/ui/ # shadcn
-│  │     └─ lib/
-│  └─ mobile/              # Expo
-│     └─ app/              # expo-router: (auth)/, (tabs)/inbox, today, students, payments
+│  ├─ api/src/                   # NestJS
+│  │  ├─ main.ts  app.module.ts  openapi.ts
+│  │  ├─ config/env/             # env schema, one file per area
+│  │  ├─ common/                 # guards, http, auth, audit, activity, config-store, push, settings, …
+│  │  └─ modules/<domain>/<module>/   # 7 domains: messaging, sales, teaching, reporting, people, finance, platform
+│  │                                  # each module: index.ts (public API) + <m>.module.ts + sub-folders
+│  ├─ web/src/                   # React + TanStack
+│  │  ├─ routes/                 # TanStack file routes (admin/, teacher/, sales/, assistant/, account/; pathless groups)
+│  │  ├─ features/<domain>/<feature>/{index.ts, components/, hooks/, api/, lib/}   # same 7 domains
+│  │  ├─ components/{ui, shell, settings, table-toolbar}
+│  │  └─ lib/
+│  └─ mobile/                    # Expo
+│     ├─ app/                    # expo-router route files only; they import feature indexes (@/<feature>)
+│     └─ src/<feature>/{index.ts, screens/, components/, hooks/, api/}   # core/ and test/ are shared
 ├─ packages/
-│  ├─ db/                  # supabase/ (config, migrations, seed), generated types, Kysely schema
-│  ├─ shared/              # enums, zod schemas, constants, i18n/ar.json, utils (phone, arabic-normalize, tz)
-│  ├─ api-client/          # OpenAPI-generated typed client + TanStack Query hooks factory
-│  ├─ ui/                  # web design system (RTL), tokens
-│  └─ config/              # eslint-config, tsconfig, prettier, vitest preset
+│  ├─ db/                        # supabase/ (config, migrations, seed), generated types
+│  ├─ shared/                    # enums, zod schemas, i18n/ar.json + en.json, pure utils (phone, tz, money, …)
+│  ├─ client-core/               # web + mobile: http client, query keys and options, non-UI hooks (usePermissions)
+│  └─ config/                    # eslint config (+ the module-boundaries rule), tsconfig, prettier
 ├─ tools/
-│  ├─ migrate/             # Google Sheets → Supabase import (dry-run + apply)
-│  └─ scripts/
-├─ e2e/                    # Playwright project (web), fixtures, seeds
-├─ turbo.json  pnpm-workspace.yaml  package.json  .github/workflows/ci.yml
+│  ├─ migrate/                   # Google Sheets → Supabase import (dry-run + apply)
+│  ├─ wa-stub/  google-stub/  livekit/
+│  └─ scripts/{ci-checks, env, seed, calendar}   # ci-checks: folder cap, jscpd/knip gates, pure-move, native-changes
+├─ refactor/                     # move maps, folder-cap allow-lists, guards/ baselines (jscpd, knip)
+├─ e2e/                          # Playwright project (web), fixtures, seeds
+├─ turbo.json  pnpm-workspace.yaml  package.json  knip.json  .jscpd.json  .github/workflows/
 └─ CLAUDE.md  docs/
 ```
 
@@ -173,6 +172,17 @@ OpenAPI generated from Nest decorators → `packages/api-client`.
 'complexity': ['warn', 10],
 ```
 Patterns to stay under limits: options objects instead of positional params; one component/service per file; split Nest services into `*.service.ts` + `*.queries.ts` + `*.mapper.ts`; colocate tests as `*.test.ts` (tests also ≤150 lines — split by scenario).
+
+Structure guards (docs/27 §1, Wave F). Each fails CI against a committed baseline that may only shrink:
+
+| Guard | Rule | Baseline | Run |
+|-------|------|----------|-----|
+| Module boundaries | import another module (api `modules/<domain>/<module>`, web `features/<domain>/<feature>`, mobile `src/<feature>`, a `packages/*/src/<folder>`) only through its `index.ts`; tests, fakes and `test/`/`testing/` folders are exempt | `eslint-suppressions.json` per package (ESLint bulk suppressions) | `pnpm turbo lint`; after removing deep imports `eslint . --prune-suppressions` in that package |
+| Folder cap | ≤ 12 code files (tests not counted) and ≤ 12 sub-folders per folder | `refactor/folder-cap/<app>.json` (a new, grown or stale entry fails) | `node tools/scripts/ci-checks/folder-cap.mjs --strict` (`--write <app>` after a split) |
+| Duplicated code | jscpd `--min-lines 8` (`.jscpd.json`, tests ignored): clones, duplicated lines and cross-app clones (fixtures aside) | `refactor/guards/jscpd.json` | `pnpm guard:dup` (`-- --write` after a dedup PR) |
+| Dead code | knip (`knip.json`): no new unused file, export, type or dependency | `refactor/guards/knip.json` | `pnpm guard:knip` (`-- --write` after a clean-up) |
+
+Code used by two apps goes to `packages/shared` (pure TS) or `packages/client-core` (web + mobile), never a copy.
 
 ## 9. Testing strategy
 

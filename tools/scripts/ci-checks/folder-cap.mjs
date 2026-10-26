@@ -1,7 +1,7 @@
 // Folder cap (docs/27 §1 rule 4): ≈ 12 code files (tests not counted) and ≈ 12 sub-folders per folder.
 // Usage: node tools/scripts/folder-cap.mjs [--strict] [--write <app>…]
 //   default   report only (exit 0): new crowded folders, allow-listed folders that grew, stale entries
-//   --strict  exit 1 on any of those (Wave F turns this on with empty allow-lists)
+//   --strict  exit 1 on any of those (CI runs it since Wave F; the allow-lists may only shrink)
 //   --write   rewrite refactor/folder-cap/<app>.json from today's tree (one file per app: lanes never share one)
 import { existsSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';

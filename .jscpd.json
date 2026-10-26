@@ -1,0 +1,20 @@
+{
+  "minLines": 8,
+  "format": ["typescript", "tsx", "javascript"],
+  "path": ["apps", "packages", "tools", "e2e"],
+  "ignore": [
+    "**/node_modules/**",
+    "**/dist/**",
+    "**/coverage/**",
+    "**/.expo/**",
+    "**/*.test.*",
+    "**/*.spec.*",
+    "**/*.gen.ts",
+    "packages/db/src/types.ts",
+    "packages/db/supabase/**"
+  ],
+  "reporters": ["json"],
+  "output": "coverage/jscpd",
+  "silent": true,
+  "gitignore": true
+}
