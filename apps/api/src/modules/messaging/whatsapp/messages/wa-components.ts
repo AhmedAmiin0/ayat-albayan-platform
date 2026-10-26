@@ -1,5 +1,6 @@
 import { BODY_SLOTS, type TemplateParams } from '@ab/shared';
 import { bodyExamples } from '../template-review';
+import { authSubmitComponents } from '../direct/auth-template';
 import { templateButtons } from './wa-json';
 import { WaError, type MediaSend, type TemplateRow, type TemplateSend } from '../whatsapp.types';
 
@@ -121,6 +122,7 @@ export const readReceipt = (waMessageId: string): GraphBody => ({
  * handle, BODY with a sample value for every {{n}} (Meta requires them), FOOTER, BUTTONS.
  */
 export function submitPayload(row: TemplateRow, headerHandle?: string): GraphBody {
+  if (row.category === 'authentication') return { name: row.meta_name, language: row.language, category: 'AUTHENTICATION', components: authSubmitComponents(row) };
   const examples = bodyExamples(row);
   const components: GraphBody[] = [];
   if (row.header_format === 'document') {

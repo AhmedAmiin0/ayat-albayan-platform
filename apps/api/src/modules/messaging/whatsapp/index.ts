@@ -1,3 +1,4 @@
+export { CodeSend, type CodeSendResult } from './direct/code-send';
 export { SendGate } from './gate/send-gate';
 export { currentRows, displayE164, healthRows, LineHealthStore } from './lines/line-health.store';
 export {

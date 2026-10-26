@@ -8,7 +8,7 @@ import {
 } from '../../enums/index.js';
 import { TEACHER_MEETING_MODES } from '../../classroom/meeting-mode.js';
 import { optionalText, phoneE164, requiredText, timeZone } from '../common.js';
-import { username } from '../../users/sign-in.js';
+import { username } from '../../users/index.js';
 
 // DTOs use DB column names (snake_case) so they map 1:1 onto TablesInsert<...>.
 // Server-derived columns (code, name_normalized, created_by, …) are deliberately absent.
