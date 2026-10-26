@@ -25,6 +25,8 @@ export interface ThreadSend<T> {
   restricted?: boolean;
   /** «إعادة توجيه»: the message this copy was forwarded from (messages.forwarded_from_id). */
   forwardedFrom?: string;
+  /** A server-made idempotency key (the reopen request's `reopen:<phone>:<day>`) instead of the client's request id. */
+  dedup?: string;
 }
 
 /**
@@ -34,6 +36,7 @@ export interface ThreadSend<T> {
  * phone, or by another teacher, is a new send, never the first family's row.
  */
 export function dedupKey<T>(s: ThreadSend<T>): string {
+  if (s.dedup) return s.dedup;
   if (!s.input.clientRequestId) throw waHttpError('missing_client_request_id', 400);
   const who = s.sales ? `sales:${s.sales.salesId}` : s.scope ? `teacher:${s.scope.teacherId}` : 'admin';
   return `${who}:${s.phone}:${s.input.clientRequestId}`;

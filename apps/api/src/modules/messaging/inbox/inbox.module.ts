@@ -24,6 +24,11 @@ import { ThreadSendService } from './send/thread-send.service';
 import { ThreadsController } from './threads/threads.controller';
 import { ThreadsQueries } from './threads/threads.queries';
 import { ThreadsService } from './threads/threads.service';
+import { KapsoReopener } from './reopen/kapso-reopener';
+import { ReopenQueries } from './reopen/reopen.queries';
+import { ReopenTemplate } from './reopen/reopen-template';
+import { ThreadReopenController } from './reopen/thread-reopen.controller';
+import { ThreadReopenService } from './reopen/thread-reopen.service';
 
 /**
  * The WhatsApp inbox routes H1–H4 (docs/12 §4). The webhook lives in WebhookModule and the lead
@@ -36,10 +41,11 @@ import { ThreadsService } from './threads/threads.service';
  * ThreadFileSendController lets them send images / PDFs from the chat (owner 2026-10-19 #2).
  * ChatListsModule: GET /threads?list= and the open chat's «القوائم» (docs/22).
  * «رد» / «إعادة توجيه» (owner 2026-10-25): ThreadQuotes, ThreadForwardController.
+ * «إعادة فتح المحادثة» (owner 2026-10-26): ThreadReopenController (Kapso's record + the reopen template).
  */
 @Module({
   imports: [SubscriptionsModule, LessonsModule, SalesModule, ChatListsModule],
-  controllers: [ThreadsController, ThreadMediaController, ThreadFileController, ThreadFileSendController, ThreadForwardController],
+  controllers: [ThreadsController, ThreadMediaController, ThreadFileController, ThreadFileSendController, ThreadForwardController, ThreadReopenController],
   providers: [
     ThreadsQueries,
     ThreadsService,
@@ -57,6 +63,10 @@ import { ThreadsService } from './threads/threads.service';
     ThreadQuotes,
     ForwardFiles,
     ThreadForwardService,
+    KapsoReopener,
+    ReopenQueries,
+    ReopenTemplate,
+    ThreadReopenService,
   ],
   // The feedback module sends «ابعت طلب الرأي» through the same send-now path; meeting invitations
   // (ClassroomModule) read the thread and queue their chat text (R-MEET-02), a teacher only to the

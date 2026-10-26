@@ -22,6 +22,8 @@ import type { KnownNumber } from './threads/known-number';
 import type { FamilyTag } from './people/thread-people.mapper';
 import { TeacherThreadsQueries } from './teacher-threads/teacher-threads.queries';
 import { ThreadsQueries } from './threads/threads.queries';
+import { KapsoReopener } from './reopen/kapso-reopener';
+import { ReopenQueries } from './reopen/reopen.queries';
 
 export const NO_PEOPLE: ThreadPeople = { guardian: null, lead: null, students: [] };
 export const ADMIN: AuthUser = { id: 'a0000000-0000-4000-8000-000000000001', email: null, role: 'admin' };
@@ -67,6 +69,8 @@ function mocks() {
     gate: { open: vi.fn() },
     sender: { kick: vi.fn() },
     audit: { record: vi.fn() },
+    reopens: { requestedSince: vi.fn(async () => false) },
+    kapso: { reopen: vi.fn(async () => false) },
   };
 }
 
@@ -85,6 +89,8 @@ export async function inboxApp(resolve: PermissionResolver = systemResolver) {
     .overrideProvider(SendGate).useValue(m.gate)
     .overrideProvider(MessageSender).useValue(m.sender)
     .overrideProvider(AuditService).useValue(m.audit)
+    .overrideProvider(ReopenQueries).useValue(m.reopens)
+    .overrideProvider(KapsoReopener).useValue(m.kapso)
     .compile();
   const app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter());
   await app.init();

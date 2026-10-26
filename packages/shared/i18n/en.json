@@ -2468,6 +2468,10 @@
       "closed": "Chat closed — send a template or a rating to reopen it",
       "closedStaff": "Chat closed — it reopens when the guardian messages you, or with a template available to you"
     },
+    "reopen": {
+      "requested": "A request to reopen the chat was sent — waiting for the other side to reply",
+      "requestedToday": "Today’s request was already sent"
+    },
     "rating": {
       "send": "Send lesson rating",
       "sending": "Sending…",

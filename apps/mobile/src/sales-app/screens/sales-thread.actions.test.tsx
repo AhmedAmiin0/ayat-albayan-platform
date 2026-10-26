@@ -39,5 +39,6 @@ test('a failed send in the sales tree: its status word, but no retry / click-to-
   expect(screen.queryByRole('button', { name: t.messages.retry })).toBeNull();
   expect(screen.queryByRole('button', { name: t.messages.clickToChat })).toBeNull();
   expect(screen.queryByText(t.messages.handedOff)).toBeNull();
-  expect(mockApiSend).not.toHaveBeenCalled();
+  // Only the closed chat's reopen request (owner 2026-10-26), never a retry or hand-off.
+  expect(mockApiSend.mock.calls.filter((c) => !String(c[1]).endsWith('/reopen'))).toEqual([]);
 });
