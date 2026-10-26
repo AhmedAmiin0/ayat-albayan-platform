@@ -19,7 +19,7 @@ import {
 // `turbo test` can push past 30 s. Importing this file first pays that while the test file loads.
 // It only reads the exports (no render, no state), so every test still starts clean.
 
-const warmedComponents = [
+export const warmedComponents = [
   ActivityIndicator,
   Animated,
   Image,
