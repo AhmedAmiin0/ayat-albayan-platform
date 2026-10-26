@@ -5,7 +5,7 @@ import { TabStack } from '@/core/nav/TabStack';
 import TabsLayout from '../../../app/(tabs)/_layout';
 import MakeupRoute from '../../../app/(tabs)/students/makeup/[lessonId]';
 import { makeupParams } from '../makeup/makeup-draft';
-import { lesson, yusuf } from '@/today/fixtures';
+import { lesson, yusuf } from '@/today/testing/fixtures';
 
 // The makeup wizard is a screen of the Students tab's stack, so the root stack's admin gate
 // (Stack.Protected on (tabs)) covers it: a teacher never reaches it.

@@ -19,7 +19,7 @@ import { Ltr } from '@/core/ui/primitives/Ltr';
 import { StatusChip } from '@/core/ui/feedback/StatusChip';
 import { CancelLesson } from './CancelLesson';
 import { LessonActions } from './LessonActions';
-import { lessonSubtitle } from './lesson-text';
+import { lessonSubtitle } from '../lib/lesson-text';
 import { PackageLine } from './PackageLine';
 
 export interface LessonCardProps {

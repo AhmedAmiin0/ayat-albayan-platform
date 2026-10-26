@@ -1,7 +1,7 @@
 import { fireEvent, screen } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
-import { lesson, pending } from '@/today/fixtures';
+import { lesson, pending } from '@/today/testing/fixtures';
 import { NOW, SAT_17, SLOTS, SUN_17 } from './fixtures';
 import { RescheduleSheet } from './RescheduleSheet';
 

@@ -15,20 +15,12 @@
     "files": 16,
     "dirs": 0
   },
-  "apps/mobile/src/meetings": {
-    "files": 27,
-    "dirs": 0
-  },
   "apps/mobile/src/student-file": {
     "files": 21,
     "dirs": 0
   },
   "apps/mobile/src/students": {
     "files": 21,
-    "dirs": 0
-  },
-  "apps/mobile/src/today": {
-    "files": 14,
     "dirs": 0
   }
 }

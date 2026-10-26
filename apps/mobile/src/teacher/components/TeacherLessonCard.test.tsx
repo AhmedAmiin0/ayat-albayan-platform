@@ -4,7 +4,7 @@ import { Linking } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { publicConfigQuery } from '@/core/lib/query/public-config';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
-import { lesson } from '@/today/fixtures';
+import { lesson } from '@/today/testing/fixtures';
 import { TeacherLessonCard } from './TeacherLessonCard';
 
 jest.mock('@/core/lib/http/api', () => ({

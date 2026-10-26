@@ -4,7 +4,7 @@ import { t } from '@/core/lib/i18n/i18n';
 import { shape, type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { StatusChip } from '@/core/ui/feedback/StatusChip';
-import { opensLine, scheduleLine } from './invite-text';
+import { opensLine, scheduleLine } from '../invite/invite-text';
 import { meetingWhen } from './meeting-text';
 import { MeetingActions } from './MeetingActions';
 

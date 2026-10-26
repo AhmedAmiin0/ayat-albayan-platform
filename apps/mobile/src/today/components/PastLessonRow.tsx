@@ -5,7 +5,7 @@ import { EditTimeIconButton } from '@/edit-time/components/EditTimeIconButton';
 import { t } from '@/core/lib/i18n/i18n';
 import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
-import { riyadhTime, studentNames } from './lesson-text';
+import { riyadhTime, studentNames } from '../lib/lesson-text';
 import { TimelineRow } from './TimelineRow';
 import { locale } from '@/core/lib/i18n/locale';
 

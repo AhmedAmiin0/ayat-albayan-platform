@@ -2,7 +2,7 @@ import { Pressable } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
 import { t } from '@/core/lib/i18n/i18n';
 import { shape, useTheme } from '@/theme';
-import { studentNames } from '@/today/lesson-text';
+import { studentNames } from '@/today/lib/lesson-text';
 import { editMode, type EditableLesson } from '../lib/types';
 
 export interface EditTimeIconButtonProps {

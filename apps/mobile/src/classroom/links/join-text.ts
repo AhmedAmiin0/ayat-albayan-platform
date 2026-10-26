@@ -1,6 +1,6 @@
 import { ApiError } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
-import { riyadhTime } from '@/today/lesson-text';
+import { riyadhTime } from '@/today/lib/lesson-text';
 
 const errors: Record<string, string | undefined> = t.classroom.error;
 

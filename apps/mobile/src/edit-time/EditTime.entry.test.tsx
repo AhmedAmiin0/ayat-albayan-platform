@@ -3,8 +3,8 @@ import { AgendaLessonRow } from '@/calendar/agenda/AgendaLessonRow';
 import { LessonRowActions } from '@/calendar/agenda/LessonRowActions';
 import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
-import { PastLessonRow } from '@/today/PastLessonRow';
-import { lesson } from '@/today/fixtures';
+import { PastLessonRow } from '@/today/components/PastLessonRow';
+import { lesson } from '@/today/testing/fixtures';
 import { held, upcoming } from './testing/fixtures';
 
 jest.mock('@/core/lib/http/api', () => ({ ...jest.requireActual('@/core/lib/http/api'), apiFetch: async () => [] }));

@@ -2,7 +2,7 @@ import { clockTime, lessonWhenText, RIYADH_TZ, utcOffsetMinutes, type SlotView }
 import { t } from '@/core/lib/i18n/i18n';
 import { locale } from '@/core/lib/i18n/locale';
 import { ltr } from '@/core/ui/primitives/Ltr';
-import { localDate } from '@/today/timeline';
+import { localDate } from '@/today/lib/timeline';
 
 // Free trial slots (R-SCH-06, R-SCH-01): the next 7 days of GET /booking/slots, laid out by the
 // Riyadh day, Riyadh time first and the student's own clock beside it. Picked, never typed (rule 6).

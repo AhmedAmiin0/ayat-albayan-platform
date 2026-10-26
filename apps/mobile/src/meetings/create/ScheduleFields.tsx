@@ -7,7 +7,7 @@ import { t } from '@/core/lib/i18n/i18n';
 import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { FilterPills } from '@/core/ui/form/FilterPills';
-import { dayChipLabel, minutesText, tzNote } from './invite-text';
+import { dayChipLabel, minutesText, tzNote } from '../invite/invite-text';
 import { dateChoices, type Slot } from './schedule-time';
 
 const L = t.meetingInvites;

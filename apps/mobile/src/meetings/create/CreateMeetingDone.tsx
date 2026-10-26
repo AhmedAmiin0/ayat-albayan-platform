@@ -3,9 +3,9 @@ import { View } from 'react-native';
 import { ErrorLine } from '@/inbox/ErrorLine';
 import { t } from '@/core/lib/i18n/i18n';
 import { Button } from '@/core/ui/primitives/Button';
-import { InviteResults } from './InviteResults';
-import { MeetingLinkShare } from './MeetingLinkShare';
-import { useEnterMeeting } from './use-enter-meeting';
+import { InviteResults } from '../invite/InviteResults';
+import { MeetingLinkShare } from '../manage/MeetingLinkShare';
+import { useEnterMeeting } from '../manage/use-enter-meeting';
 
 const L = t.meetings.internal;
 

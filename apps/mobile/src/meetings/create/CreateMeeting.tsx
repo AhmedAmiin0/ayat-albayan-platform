@@ -6,9 +6,9 @@ import { t } from '@/core/lib/i18n/i18n';
 import { Button } from '@/core/ui/primitives/Button';
 import { CreateMeetingDone } from './CreateMeetingDone';
 import { CreateMeetingForm } from './CreateMeetingForm';
-import { createMeetingWith } from './invite-api';
-import { inviteError } from './invite-text';
-import { useViewerTz } from './use-viewer-tz';
+import { createMeetingWith } from '../invite/invite-api';
+import { inviteError } from '../invite/invite-text';
+import { useViewerTz } from '../manage/use-viewer-tz';
 
 type Mode = 'instant' | 'scheduled' | null;
 

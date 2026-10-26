@@ -14,10 +14,10 @@ import { FilterPills, type FilterPill } from '@/core/ui/form/FilterPills';
 import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { useTabBarInset } from '@/core/ui/layout/tab-bar-inset';
-import { LessonCard } from './LessonCard';
-import { NowLine } from './NowLine';
-import { Notice } from './Notice';
-import { PastLessonRow } from './PastLessonRow';
+import { LessonCard } from '../components/LessonCard';
+import { NowLine } from '../components/NowLine';
+import { Notice } from '../components/Notice';
+import { PastLessonRow } from '../components/PastLessonRow';
 import {
   applyFilter,
   filterCounts,
@@ -25,11 +25,11 @@ import {
   timelineKey,
   visibleLessons,
   type TodayFilter,
-} from './timeline';
-import { TimelineRow } from './TimelineRow';
-import { riyadhTime } from './lesson-text';
-import { useDayLessons, useNow } from './use-day-lessons';
-import { useLessonAction } from './use-lesson-action';
+} from '../lib/timeline';
+import { TimelineRow } from '../components/TimelineRow';
+import { riyadhTime } from '../lib/lesson-text';
+import { useDayLessons, useNow } from '../lib/use-day-lessons';
+import { useLessonAction } from '../lib/use-lesson-action';
 
 const filterPills = (): FilterPill<TodayFilter>[] => [
   { value: 'all', label: t.today.all },

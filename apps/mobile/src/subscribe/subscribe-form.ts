@@ -12,7 +12,7 @@ import { t } from '@/core/lib/i18n/i18n';
 import { isOffline } from '@/payments/lib/payment-errors';
 import type { PlanChoice } from '@/pricing/selection';
 import { dayLabel } from '@/booking/shared/slots';
-import { localDate } from '@/today/timeline';
+import { localDate } from '@/today/lib/timeline';
 
 // «اشتراك جديد» from a chat (R-SUB-01): the calculator inputs for ONE student and the package's
 // first day. Pure. The price is never computed here: POST /subscriptions(/quote) prices it.

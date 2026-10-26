@@ -2,8 +2,8 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { t } from '@/core/lib/i18n/i18n';
 import { endMeeting, newMeetingLink } from './api';
-import { cancelMeeting } from './invite-api';
-import { inviteError } from './invite-text';
+import { cancelMeeting } from '../invite/invite-api';
+import { inviteError } from '../invite/invite-text';
 import { meetingError } from './meeting-text';
 
 export type Asking = 'end' | 'link' | 'cancel';

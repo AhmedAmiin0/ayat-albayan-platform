@@ -1,5 +1,5 @@
 import { reportBlock, type LessonStatus, type LessonView, type PendingReportView } from '@ab/shared';
-import { localDate } from '@/today/timeline';
+import { localDate } from '@/today/lib/timeline';
 
 // «اليوم» for the teacher (R-TCH-03): her own lessons on her own calendar day, in her zone. Pure.
 

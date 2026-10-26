@@ -8,8 +8,8 @@ import { Note } from '@/more/Note';
 import { Button } from '@/core/ui/primitives/Button';
 import { Field } from '@/core/ui/form/Field';
 import { createBody } from './create-body';
-import { InviteePicker } from './InviteePicker';
-import type { DraftInvitee } from './invitee-draft';
+import { InviteePicker } from '../invite/InviteePicker';
+import type { DraftInvitee } from '../invite/invitee-draft';
 import { ScheduleFields } from './ScheduleFields';
 import { defaultSlot, type Slot } from './schedule-time';
 

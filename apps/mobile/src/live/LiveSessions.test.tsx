@@ -3,7 +3,7 @@ import { Linking } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { fakeNow } from '@/test/fake-now';
 import { renderWithQuery } from '@/test/query';
-import { jana, lesson } from '@/today/fixtures';
+import { jana, lesson } from '@/today/testing/fixtures';
 import { LiveSessions } from './LiveSessions';
 
 const mockApiSend = jest.fn();

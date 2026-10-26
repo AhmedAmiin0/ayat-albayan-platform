@@ -1,6 +1,6 @@
 import type { LessonView, OverviewTeacher } from '@ab/shared';
 import { SLOTS } from '@/reschedule/fixtures';
-import { muscat, pending } from '@/today/fixtures';
+import { muscat, pending } from '@/today/testing/fixtures';
 import { FakeBackend } from '@/test/fake-backend';
 import { abrar, omar } from '../overview/overview-fixtures';
 

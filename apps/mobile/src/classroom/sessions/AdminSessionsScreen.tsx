@@ -10,7 +10,7 @@ import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { AppText } from '@/core/ui/primitives/AppText';
-import { useDayLessons } from '@/today/use-day-lessons';
+import { useDayLessons } from '@/today/lib/use-day-lessons';
 import { DaySwitcher } from './DaySwitcher';
 import { SessionGroupList } from './SessionGroupList';
 import { groupSessions, SESSION_GROUPS } from './sessions';

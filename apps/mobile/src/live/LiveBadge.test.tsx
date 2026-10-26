@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { fakeNow } from '@/test/fake-now';
-import { lesson } from '@/today/fixtures';
+import { lesson } from '@/today/testing/fixtures';
 import { LiveBadge } from './LiveBadge';
 
 const row = lesson({ id: 'a', status: 'confirmed' }); // 13:00Z-13:45Z

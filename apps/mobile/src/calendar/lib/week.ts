@@ -1,7 +1,7 @@
 import { intlLocale, RIYADH_TZ } from '@ab/shared';
 import { t } from '@/core/lib/i18n/i18n';
 import { locale } from '@/core/lib/i18n/locale';
-import { localDate } from '@/today/timeline';
+import { localDate } from '@/today/lib/timeline';
 
 // Calendar days for the mobile schedule (R-SCH-01, R-TCH-02): the academy week runs السبت →
 // الجمعة on the Riyadh calendar, like the web grid. Dates are local YYYY-MM-DD; pure, unit-tested.

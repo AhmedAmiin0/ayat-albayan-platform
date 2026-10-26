@@ -8,7 +8,7 @@ import { AmountField } from '@/payments/components/AmountField';
 import { FormLabel } from '@/payments/FormLabel';
 import { PaidDayPicker } from '@/payments/components/PaidDayPicker';
 import { ReceiptPicker } from '@/payments/ReceiptPicker';
-import { useNow } from '@/today/use-day-lessons';
+import { useNow } from '@/today/lib/use-day-lessons';
 import { Button } from '@/core/ui/primitives/Button';
 import { Field } from '@/core/ui/form/Field';
 import { FilterPills } from '@/core/ui/form/FilterPills';

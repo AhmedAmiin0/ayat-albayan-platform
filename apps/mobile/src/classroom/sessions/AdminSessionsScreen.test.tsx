@@ -4,7 +4,7 @@ import { dayLabel } from '@/calendar/lib/week';
 import { t } from '@/core/lib/i18n/i18n';
 import { fakeNow } from '@/test/fake-now';
 import { renderWithQuery } from '@/test/query';
-import { lesson } from '@/today/fixtures';
+import { lesson } from '@/today/testing/fixtures';
 import { AdminSessionsScreen } from './AdminSessionsScreen';
 
 const mockApiFetch = jest.fn();

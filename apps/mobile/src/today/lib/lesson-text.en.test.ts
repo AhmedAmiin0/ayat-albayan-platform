@@ -1,4 +1,4 @@
-import { jana, lesson, yusuf } from './fixtures';
+import { jana, lesson, yusuf } from '../testing/fixtures';
 import { studentNames } from './lesson-text';
 
 // The UI in English: the compact row joins names with en.json's «, ».

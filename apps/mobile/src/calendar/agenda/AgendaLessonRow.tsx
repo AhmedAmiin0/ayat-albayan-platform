@@ -7,7 +7,7 @@ import { editMode } from '@/edit-time/lib/types';
 import { t } from '@/core/lib/i18n/i18n';
 import { LiveBadge } from '@/live/LiveBadge';
 import { type, useTheme } from '@/theme';
-import { durationLabel, riyadhTime, studentNames } from '@/today/lesson-text';
+import { durationLabel, riyadhTime, studentNames } from '@/today/lib/lesson-text';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { Button } from '@/core/ui/primitives/Button';
 import { StatusChip } from '@/core/ui/feedback/StatusChip';

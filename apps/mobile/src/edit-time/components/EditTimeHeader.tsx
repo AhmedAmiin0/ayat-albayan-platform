@@ -2,7 +2,7 @@ import { View } from 'react-native';
 import { whenText } from '@/booking/shared/slots';
 import { t } from '@/core/lib/i18n/i18n';
 import { type, useTheme } from '@/theme';
-import { studentNames } from '@/today/lesson-text';
+import { studentNames } from '@/today/lib/lesson-text';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { lengthOf } from '../lib/edit-time-body';
 import { lengthText } from '../lib/edit-time-text';

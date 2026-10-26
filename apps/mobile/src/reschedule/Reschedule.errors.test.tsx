@@ -2,7 +2,7 @@ import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { ApiError } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
-import { lesson, pending } from '@/today/fixtures';
+import { lesson, pending } from '@/today/testing/fixtures';
 import { NOW, SAT_17, SLOTS } from './fixtures';
 import { RescheduleSheet } from './RescheduleSheet';
 

@@ -4,7 +4,7 @@ import { clockAt } from '@/inbox/shared/format';
 import { t } from '@/core/lib/i18n/i18n';
 import { gridTz, slotRange } from '@/more/schedule';
 import type { AvailabilityRow } from '@/more/types';
-import { localDate, visibleLessons } from '@/today/timeline';
+import { localDate, visibleLessons } from '@/today/lib/timeline';
 import { ltr } from '@/core/ui/primitives/Ltr';
 import { addDays, weekdayOf } from '../lib/week';
 

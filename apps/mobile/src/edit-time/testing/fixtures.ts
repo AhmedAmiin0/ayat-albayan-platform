@@ -1,5 +1,5 @@
 import { SLOTS, SUN_17 } from '@/reschedule/fixtures';
-import { done, lesson } from '@/today/fixtures';
+import { done, lesson } from '@/today/testing/fixtures';
 import type { EditableLesson, TimeEditResult } from '../lib/types';
 
 export { NOW, SLOTS, SAT_17, SUN_17 } from '@/reschedule/fixtures';

@@ -3,7 +3,7 @@ import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { publicConfigQuery } from '@/core/lib/query/public-config';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
-import { jana, lesson, yusuf } from '@/today/fixtures';
+import { jana, lesson, yusuf } from '@/today/testing/fixtures';
 import { TeacherTodayScreen } from './TeacherTodayScreen';
 
 const mockApiFetch = jest.fn();
@@ -16,7 +16,7 @@ jest.mock('@/core/lib/http/api', () => ({
 const mockPush = jest.fn();
 jest.mock('expo-router', () => ({ router: { push: (h: string) => mockPush(h) } }));
 // 1 Oct 2026, 17:00 in Cairo (UTC+3 summer time).
-jest.mock('@/today/use-day-lessons', () => ({ useNow: () => new Date('2026-10-01T14:00:00Z') }));
+jest.mock('@/today/lib/use-day-lessons', () => ({ useNow: () => new Date('2026-10-01T14:00:00Z') }));
 
 const me = { id: 't-abrar', display_name_ar: 'أبرار', tz: 'Africa/Cairo', students: [] };
 const teacherEvents = { allowed_events: ['confirm' as const] };

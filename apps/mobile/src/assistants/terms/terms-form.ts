@@ -8,7 +8,7 @@ import {
   type AssistantTermsInput,
   type AssistantTermsView,
 } from '@ab/shared';
-import { localDate } from '@/today/timeline';
+import { localDate } from '@/today/lib/timeline';
 
 // The web's terms-form.ts on the phone: the same state, the same shared schema, the same start-day rule.
 

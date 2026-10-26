@@ -1,7 +1,7 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
-import { yusuf } from '@/today/fixtures';
+import { yusuf } from '@/today/testing/fixtures';
 import { SendLinkAction } from './SendLinkAction';
 
 const mockApiSend = jest.fn();

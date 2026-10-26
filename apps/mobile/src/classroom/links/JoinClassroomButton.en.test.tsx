@@ -1,5 +1,5 @@
 import { act, render, screen } from '@testing-library/react-native';
-import { lesson } from '@/today/fixtures';
+import { lesson } from '@/today/testing/fixtures';
 import { JoinClassroomButton } from './JoinClassroomButton';
 
 // An English run: the native flag is LTR (jest.setup reports RTL, the Arabic default).

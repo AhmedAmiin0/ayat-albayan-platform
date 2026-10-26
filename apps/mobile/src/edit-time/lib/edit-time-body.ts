@@ -1,5 +1,5 @@
 import { DURATIONS, lessonDuration, type LessonView } from '@ab/shared';
-import { localDate } from '@/today/timeline';
+import { localDate } from '@/today/lib/timeline';
 import { editMode, type EditableLesson, type LessonTimeEditBody } from './types';
 
 // PATCH /lessons/:id/time bodies and the pure rules behind the sheet (R-SCH-11, docs/10 §10), the
