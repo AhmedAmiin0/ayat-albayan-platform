@@ -7,7 +7,7 @@ import { KapsoReopener } from './kapso-reopener';
 import type { Sent } from '../send/outbox';
 import { ReopenTemplate } from './reopen-template';
 
-export interface ReopenRequest {
+interface ReopenRequest {
   phone: string;
   actorId: string;
   /** Teacher mode: the teacher's scope (own families only, like a send). */

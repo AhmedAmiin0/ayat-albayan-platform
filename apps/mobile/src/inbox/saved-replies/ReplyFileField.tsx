@@ -14,7 +14,7 @@ import { SavedReplyChip } from './SavedReplyChip';
 /** The editor's file: kept as it was (no path), a new upload (path), or none. */
 export type EditorFile = { name: string; path?: string } | null;
 
-export interface ReplyFileFieldProps {
+interface ReplyFileFieldProps {
   file: EditorFile;
   onChange: (file: EditorFile) => void;
   /** An upload is running: the editor's «حفظ» waits for it (else the reply is saved without its file). */

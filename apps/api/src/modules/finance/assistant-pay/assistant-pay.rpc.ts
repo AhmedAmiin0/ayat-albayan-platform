@@ -3,7 +3,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../../common/db/db.module';
 import { assistantError } from './assistant-pay.errors';
 
-export type PaidArgs = { paidAt: string; method: string | null; note: string | null; receiptPath: string | null };
+type PaidArgs = { paidAt: string; method: string | null; note: string | null; receiptPath: string | null };
 
 const field = (data: Json, key: string): unknown =>
   typeof data === 'object' && data !== null && !Array.isArray(data) ? data[key] : undefined;

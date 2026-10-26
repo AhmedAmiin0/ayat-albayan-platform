@@ -10,7 +10,7 @@ function check(error: PostgrestError | null): void {
 }
 
 /** Where the catch-up looks: the number's rows, else (legacy, no wa_numbers row) the line's. */
-export interface ExternalScope {
+interface ExternalScope {
   line: WaLine;
   numberId: string | null;
 }

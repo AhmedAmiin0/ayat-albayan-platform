@@ -5,7 +5,7 @@ import { AuditService } from '../../../common/audit/audit.service';
 import { NotificationPolicy } from '../../messaging/notification-rules/policy/policy';
 import { LeadsQueries, type LeadRow } from './leads.queries';
 
-export interface LeadPatch<T> {
+interface LeadPatch<T> {
   id: string;
   patch: T;
   actorId: string;

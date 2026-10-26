@@ -8,7 +8,7 @@ import { CheckIcon } from '../../shared/chat-icons';
 import { initialOf } from '../../shared/format';
 import { chatName } from '../hooks/forward-text';
 
-export interface ForwardRowProps {
+interface ForwardRowProps {
   thread: ThreadView;
   checked: boolean;
   /** Five are picked already: this one cannot join (the counter says why). */

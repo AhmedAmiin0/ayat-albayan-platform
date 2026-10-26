@@ -18,7 +18,7 @@ function stateOf(q: Query, empty: string): ReactElement {
   return q.isPending ? <Note>{t.common.loading}</Note> : <EmptyState title={empty} />;
 }
 
-export interface SessionsListProps extends Common {
+interface SessionsListProps extends Common {
   filter: SessionFilter;
   selected?: ReadonlyMap<string, TeacherEarningView>;
   onToggle?: (row: TeacherEarningView) => void;

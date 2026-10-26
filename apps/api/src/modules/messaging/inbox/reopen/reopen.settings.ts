@@ -5,7 +5,7 @@ import { SettingsService } from '../../../../common/settings/settings.service';
 
 /** The reopen template's key (owner 2026-10-26: inquiry_followup_ar_v2 by default; admins edit it in «القيم»). */
 const KEYS = ['chat_reopen_template'] as const satisfies readonly SettingKey[];
-export type ReopenSettingsValues = SettingsSlice<(typeof KEYS)[number]>;
+type ReopenSettingsValues = SettingsSlice<(typeof KEYS)[number]>;
 
 /** ReopenTemplate's academy setting (common/settings/settings-slice.ts). One cached store.all(), only this key. */
 @Injectable()

@@ -11,7 +11,7 @@ import { locale } from './locale';
 export const RELOAD_KEY = 'ab.locale.reload';
 
 /** What «اللغة» got: restarting now, saved but needs a manual restart, or nothing changed. */
-export type SwitchResult = 'reloading' | 'restart' | 'error';
+type SwitchResult = 'reloading' | 'restart' | 'error';
 
 /**
  * Persists `next`'s direction natively, then reloads the JS. Both flags: RN's isRTL is

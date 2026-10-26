@@ -6,7 +6,7 @@ import { dbError } from '../../../../common/http/http';
 import { familyTags, toThreadStudent, type FamilyTag } from './thread-people.mapper';
 import type { ThreadRow } from '../threads/threads.mapper';
 
-export interface PeopleDeps {
+interface PeopleDeps {
   db: Db;
   packages: PackagesService;
   balances: BalanceQueries;

@@ -9,7 +9,7 @@ import { ConfigStore } from '../store/config-store.service';
 export const SEED_DELAY_MS = 1_000;
 
 /** What config_seed answered: applied/failed, or skipped ('locked' | 'older_build'). */
-export interface SeedOutcome {
+interface SeedOutcome {
   applied?: number;
   failed?: string[];
   skipped?: string;

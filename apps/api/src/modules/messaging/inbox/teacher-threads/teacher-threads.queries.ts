@@ -4,7 +4,7 @@ import { TeacherMeQueries } from '../../../teaching/lessons/teacher-me/teacher-m
 import { dbError } from '../../../../common/http/http';
 import type { PeopleStudentRow } from '../people/thread-people.mapper';
 
-export interface ScopeTeacher {
+interface ScopeTeacher {
   id: string;
   display_name_ar: string;
   phone_e164: string | null;

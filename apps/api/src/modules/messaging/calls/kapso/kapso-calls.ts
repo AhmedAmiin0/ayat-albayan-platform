@@ -15,7 +15,7 @@ const permissionSchema = z.object({
   actions: z.array(z.object({ action_name: z.string(), can_perform_action: z.boolean() })).optional(),
 });
 
-export interface KapsoCallsOpts {
+interface KapsoCallsOpts {
   fetch?: FetchLike;
   timeoutMs?: number;
 }

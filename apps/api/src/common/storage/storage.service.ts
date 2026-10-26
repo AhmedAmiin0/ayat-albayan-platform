@@ -3,7 +3,7 @@ import { Global, Inject, Injectable, Module } from '@nestjs/common';
 import { DB, type Db } from '../db/db.module';
 import { SIGNED_URL_SECONDS, type Bucket } from './storage.paths';
 
-export interface ObjectRef {
+interface ObjectRef {
   bucket: Bucket;
   path: string;
 }
