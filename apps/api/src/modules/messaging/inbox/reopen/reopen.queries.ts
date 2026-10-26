@@ -1,10 +1,19 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../../../common/db/db.module';
+import { ReopenSettings } from './reopen.settings';
 
-/** The reopen dedupe's read (the per-day dedup_key is the write side's). */
+/** The reopen's reads: the configured template and the dedupe (the per-day dedup_key is the write side's). */
 @Injectable()
 export class ReopenQueries {
-  constructor(@Inject(DB) private readonly db: Db) {}
+  constructor(
+    @Inject(DB) private readonly db: Db,
+    private readonly settings: ReopenSettings,
+  ) {}
+
+  /** The `chat_reopen_template` setting (default inquiry_followup_ar_v2; no fallback key). */
+  async templateKey(): Promise<string> {
+    return (await this.settings.read()).chat_reopen_template;
+  }
 
   /**
    * Any row of the configured reopen template `key` (`reopen:` dedup key) for this phone since `since`

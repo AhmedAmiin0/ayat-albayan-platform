@@ -3,7 +3,6 @@ import { messageRow } from '../../whatsapp/sender/sender.fakes';
 import { templateRow } from '../../whatsapp/whatsapp.fakes';
 import { PHONE, threadRow } from '../inbox.fakes';
 import { inboxApp } from '../test-app';
-import { ReopenSettings } from './reopen.settings';
 
 // The reopen template is the `chat_reopen_template` setting (owner 2026-10-26: inquiry_followup_ar_v2,
 // «Wait for v2»: no fallback to inquiry_followup_ar). Fakes only: nothing leaves the process.
@@ -26,7 +25,7 @@ describe('POST /threads/:phone/reopen — the configured template', () => {
   beforeEach(() => {
     vi.resetAllMocks();
     registry = { inquiry_followup_ar: row('inquiry_followup_ar') };
-    vi.spyOn(t.app.get(ReopenSettings), 'read').mockResolvedValue({ chat_reopen_template: 'inquiry_followup_ar_v2' });
+    t.reopens.templateKey.mockResolvedValue('inquiry_followup_ar_v2');
     t.queries.thread.mockResolvedValue(threadRow({ last_inbound_at: STALE }));
     t.queries.enqueue.mockImplementation(async (r: object) => messageRow({ ...r, id: 'm9', status: 'queued' }));
     t.queries.get.mockResolvedValue(null);
@@ -60,7 +59,7 @@ describe('POST /threads/:phone/reopen — the configured template', () => {
   });
 
   it('the setting changed: that key is read, deduped and queued', async () => {
-    vi.spyOn(t.app.get(ReopenSettings), 'read').mockResolvedValue({ chat_reopen_template: 'reopen_custom' });
+    t.reopens.templateKey.mockResolvedValue('reopen_custom');
     registry.reopen_custom = row('reopen_custom');
     expect((await reopen()).json().template).toBe('template_queued');
     expect(t.reopens.requestedSince).toHaveBeenCalledWith(PHONE, expect.any(Date), 'reopen_custom');

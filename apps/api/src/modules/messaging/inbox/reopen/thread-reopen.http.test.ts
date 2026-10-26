@@ -4,7 +4,6 @@ import { messageRow } from '../../whatsapp/sender/sender.fakes';
 import { templateRow } from '../../whatsapp/whatsapp.fakes';
 import { PHONE, threadRow } from '../inbox.fakes';
 import { ADMIN, inboxApp } from '../test-app';
-import { ReopenSettings } from './reopen.settings';
 
 // POST /threads/:phone/reopen (owner 2026-10-26). Fakes only: Kapso is the KapsoReopener mock, the
 // sender is mocked, nothing leaves the process.
@@ -24,7 +23,7 @@ describe('POST /threads/:phone/reopen', () => {
   afterAll(() => t.app.close());
   beforeEach(() => {
     vi.resetAllMocks();
-    vi.spyOn(t.app.get(ReopenSettings), 'read').mockResolvedValue({ chat_reopen_template: 'inquiry_followup_ar_v2' });
+    t.reopens.templateKey.mockResolvedValue('inquiry_followup_ar_v2');
     t.queries.thread.mockResolvedValue(threadRow({ last_inbound_at: STALE }));
     t.queries.enqueue.mockImplementation(async (row: object) => messageRow({ ...row, id: 'm9', status: 'queued' }));
     t.queries.get.mockResolvedValue(null);

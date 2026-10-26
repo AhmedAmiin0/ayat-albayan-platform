@@ -69,7 +69,7 @@ function mocks() {
     gate: { open: vi.fn() },
     sender: { kick: vi.fn() },
     audit: { record: vi.fn() },
-    reopens: { requestedSince: vi.fn(async () => false) },
+    reopens: { requestedSince: vi.fn(async () => false), templateKey: vi.fn(async () => 'inquiry_followup_ar_v2') },
     kapso: { reopen: vi.fn(async () => false) },
   };
 }

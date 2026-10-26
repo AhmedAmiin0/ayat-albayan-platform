@@ -9,7 +9,6 @@ import type { ThreadRow } from '../threads/threads.mapper';
 import { last4 } from './kapso-reopener';
 import { ReopenQueries } from './reopen.queries';
 import { reopenParams } from './reopen-params';
-import { ReopenSettings } from './reopen.settings';
 
 const DAY_MS = 24 * 60 * 60_000;
 
@@ -45,11 +44,10 @@ export class ReopenTemplate {
     private readonly sends: ThreadSendService,
     private readonly templates: TemplateRegistry,
     private readonly reopens: ReopenQueries,
-    private readonly settings: ReopenSettings,
   ) {}
 
   async queue(r: ReopenSend): Promise<Queued> {
-    const key = (await this.settings.read()).chat_reopen_template;
+    const key = await this.reopens.templateKey();
     if (await this.reopens.requestedSince(r.phone, new Date(r.now.getTime() - DAY_MS), key)) return { outcome: 'already_requested_today' };
     const template = await this.templates.approved(key);
     if (!template || !onThreadLine(template.line, r.thread)) {
