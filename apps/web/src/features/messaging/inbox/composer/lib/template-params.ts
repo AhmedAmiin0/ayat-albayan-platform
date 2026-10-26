@@ -3,7 +3,9 @@ import {
   forAudience as audienceOf,
   lessonParams,
   LESSON_TIME_PARAMS,
+  prefillParams as prefillTemplateParams,
   type BodySlot,
+  type TemplatePrefill,
   type TemplateParamsInput,
   type TemplateView,
   type ThreadLesson,
@@ -37,35 +39,15 @@ export function urlButton(tpl: Pick<TemplateView, 'buttons'>): string | null {
 /** Teacher templates go to teachers only, and a teacher gets nothing else (docs/12 §2.1). */
 export const forAudience = (tpl: Pick<TemplateView, 'key'>, teacher: boolean): boolean => audienceOf(tpl.key, teacher);
 
-export interface PrefillContext {
-  /** qualification.student_name of the thread's lead. */
-  studentName?: string | null;
+export interface PrefillContext extends TemplatePrefill {
   /** The family's first student (ThreadDetail.people.students[0]): a saved reply's {student}. */
   firstStudentName?: string | null;
-  /** The thread is a teacher's. */
-  teacherName?: string | null;
-  /** ThreadView.display_name, the name the thread header shows (guardian ?? lead ?? teacher). */
-  contactName?: string | null;
   /** The guardian's / teacher's next open lessons (ThreadDetail.lessons). */
   lessons?: readonly ThreadLesson[];
 }
 
-/** What the thread already knows: the student's, the teacher's or the recipient's name (still editable). */
-export function prefillParams(tpl: Pick<TemplateView, 'params'>, ctx: PrefillContext): ParamValues {
-  const known: Record<string, string | null | undefined> = {
-    student_names: ctx.studentName,
-    student_name: ctx.studentName,
-    teacher_name: ctx.teacherName,
-    contact_name: ctx.contactName,
-  };
-  const out: ParamValues = {};
-  tpl.params.slice(0, SLOTS.length).forEach((name, i) => {
-    const value = known[name]?.trim();
-    const slot = SLOTS[i];
-    if (value && slot) out[slot] = value;
-  });
-  return out;
-}
+/** What the thread already knows: the student's, the teacher's or the recipient's name (still editable; shared with mobile). */
+export const prefillParams = (tpl: Pick<TemplateView, 'params'>, ctx: PrefillContext): ParamValues => prefillTemplateParams(tpl, ctx);
 
 /** The picked lesson's values: its time in the recipient's tz, the names, the meeting code. */
 export const lessonValues = (tpl: Pick<TemplateView, 'params' | 'buttons'>, lesson: ThreadLesson): ParamValues =>

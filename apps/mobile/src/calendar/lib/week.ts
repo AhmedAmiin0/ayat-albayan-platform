@@ -1,32 +1,12 @@
-import { intlLocale, RIYADH_TZ } from '@ab/shared';
+import { addDays, intlLocale, riyadhToday, weekdayOf, weekStart } from '@ab/shared';
 import { t } from '@/core/lib/i18n/i18n';
 import { locale } from '@/core/lib/i18n/locale';
-import { localDate } from '@/today/lib/timeline';
 
 // Calendar days for the mobile schedule (R-SCH-01, R-TCH-02): the academy week runs السبت →
 // الجمعة on the Riyadh calendar, like the web grid. Dates are local YYYY-MM-DD; pure, unit-tested.
 
-const DAY = 86_400_000;
-
-/** YYYY-MM-DD `n` days later (plain calendar arithmetic, no zone involved). */
-export function addDays(date: string, n: number): string {
-  return new Date(Date.parse(`${date}T00:00:00Z`) + n * DAY).toISOString().slice(0, 10);
-}
-
-/** 0 = الأحد … 6 = السبت (the availability grid's numbering). */
-export function weekdayOf(date: string): number {
-  return new Date(`${date}T00:00:00Z`).getUTCDay();
-}
-
-/** The Saturday that starts `date`'s week. */
-export function weekStart(date: string): string {
-  return addDays(date, -((weekdayOf(date) + 1) % 7));
-}
-
-/** Today on the Riyadh calendar. */
-export function riyadhToday(now: Date): string {
-  return localDate(now, RIYADH_TZ);
-}
+/** Academy-week math and today's Riyadh day, the web grid's own (shared since docs/27 E6). */
+export { addDays, riyadhToday, weekdayOf, weekStart };
 
 /**
  * Riyadh midnight of `date` as a UTC instant. ponytail: Riyadh keeps UTC+3 all year (no DST), so

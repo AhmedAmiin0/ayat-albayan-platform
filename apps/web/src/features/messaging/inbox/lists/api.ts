@@ -1,6 +1,7 @@
-import { isChatListError, type ChatList } from '@ab/shared';
+import { chatListErrorWords } from '@ab/client-core';
+import type { ChatList } from '@ab/shared';
 import { queryOptions, type QueryClient } from '@tanstack/react-query';
-import { ApiError, apiFetch, apiSend } from '@/lib/http/api';
+import { apiFetch, apiSend } from '@/lib/http/api';
 import { t } from '@/lib/i18n/i18n';
 
 // «القوائم» (docs/22 §3): the academy's ONE shared set of chat lists. Lists only organise chats.
@@ -35,9 +36,4 @@ export const refreshLists = (queryClient: QueryClient) =>
   ]);
 
 /** The dialogs' inline error: a taken name, the 30-list cap, a list deleted meanwhile, or a generic one. */
-export function listErrorText(error: unknown): string {
-  const code = error instanceof ApiError && typeof error.body === 'object' && error.body !== null && 'code' in error.body ? error.body.code : null;
-  if (isChatListError(code)) return code === 'list_limit' ? t.inbox.lists.limit : t.inbox.lists.nameTaken;
-  if (error instanceof ApiError && error.status === 404) return t.inbox.lists.notFound;
-  return t.inbox.lists.saveError;
-}
+export const listErrorText: (error: unknown) => string = chatListErrorWords(() => t.inbox.lists);
