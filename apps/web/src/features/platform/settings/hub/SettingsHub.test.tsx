@@ -24,7 +24,7 @@ describe('SettingsHub (/admin/settings, R-MSG-01, docs/26b §1)', () => {
     expect(search().getAttribute('placeholder')).toBe(H.placeholder);
     expect(screen.getByRole('table', { name: H.caption })).toBeTruthy();
     expect(screen.getAllByRole('rowheader')).toHaveLength(5);
-    expect(await screen.findByText(new RegExp(counted(H.valuesCount, 30)))).toBeTruthy();
+    expect(await screen.findByText(new RegExp(counted(H.valuesCount, 33)))).toBeTruthy();
   });
 
   it('says «5 أقسام» with the plural forms, and adds no frame of its own (the shell frames it)', () => {
