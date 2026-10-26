@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { assistant, brought, commissionOf, iso, openMonth, one, paidStatement, pay, student, subscription } from '../support/assistant';
+import { assistant, brought, commissionOf, iso, openMonth, one, paidStatement, pay, renewalOf, student, subscription } from '../support/assistant';
 import { rolledBack } from '../support/rls';
 
 // Nothing is retroactive, and a re-attributed student's commission (migration 20261006000272) against
@@ -11,15 +11,17 @@ const FIXED = { commission_type: 'fixed', commission_value: 30, commission_curre
 test.describe('assistant commission: nothing retroactive, re-attribution (20261006000272)', () => {
   test.beforeEach(() => test.skip(test.info().project.name !== 'desktop', 'database only: one run'));
 
-  test('a student who had already paid in full before they were brought earns nothing, for any later package too', async () => {
+  test('a student who had already paid in full before they were brought earns no first commission; a later package is a renewal', async () => {
     await rolledBack(async (tx) => {
       const a = await assistant(tx, 'retro', PERCENT);
       const kid = await student(tx, { phone: '+966500000301' });
       await pay(tx, await subscription(tx, kid, { price: 100 }), { amount: 100, at: iso(-3) });
       await tx`select public.set_student_brought_by(${kid}, ${a}, null)`; // brought today, paid three days ago
       expect(await commissionOf(tx, kid)).toBeUndefined();
-      await pay(tx, await subscription(tx, kid, { price: 200 }), 200); // only the FIRST package counts, and it was paid before
+      const second = await subscription(tx, kid, { price: 200 });
+      await pay(tx, second, 200); // the first package was paid before: no first; the second is a renewal (owner 2026-10-26)
       expect(await commissionOf(tx, kid)).toBeUndefined();
+      expect(await renewalOf(tx, second)).toMatchObject({ amount: '10.00', share_percent: 50 });
     });
   });
 

@@ -17,9 +17,9 @@ export class TermsService {
 
   /** Every assistant, with their terms (both null until set). */
   async list(): Promise<AssistantTermsRow[]> {
-    const [people, rows] = await Promise.all([this.queries.assistants(), this.queries.all()]);
+    const [people, rows, share] = await Promise.all([this.queries.assistants(), this.queries.all(), this.queries.renewalShare()]);
     const byId = new Map(rows.map((r) => [r.assistant_id, r]));
-    return people.map((p) => ({ ...toTermsView(p.id, byId.get(p.id) ?? null), name: p.full_name }));
+    return people.map((p) => ({ ...toTermsView(p.id, byId.get(p.id) ?? null, share), name: p.full_name }));
   }
 
   /** 404 student_not_found. */
@@ -32,21 +32,23 @@ export class TermsService {
 
   async get(assistantId: string): Promise<AssistantTermsView> {
     if (!(await this.queries.isAssistant(assistantId))) throw notFound('assistant_not_found');
-    return toTermsView(assistantId, await this.queries.get(assistantId));
+    const [row, share] = await Promise.all([this.queries.get(assistantId), this.queries.renewalShare()]);
+    return toTermsView(assistantId, row, share);
   }
 
   /**
    * Replaces both parts (null clears one) in one RPC, which refuses a start day in the past for a new part
    * and a start day moved earlier (400 commission_start_in_past / commission_start_earlier / salary_...).
    * Nothing is retroactive: the commission rule only looks at subscriptions fully paid on or after
-   * commission.startsOn and the day the student was brought, and each commission keeps the rate it was
-   * earned at. Students already brought are evaluated now.
+   * commission.startsOn and the day the student was brought, and each commission keeps the rate (and a
+   * renewal its share) it was earned at. Students already brought are evaluated now, every package.
    */
   async set(input: { assistantId: string; terms: AssistantTermsInput; actorId: string }): Promise<AssistantTermsView> {
     const before = await this.get(input.assistantId);
     const columns = termsColumns(input.assistantId, input.terms, input.actorId);
     await this.rpc.setTerms({ assistantId: input.assistantId, columns, actorId: input.actorId });
-    const after = toTermsView(input.assistantId, await this.queries.get(input.assistantId));
+    const [row, share] = await Promise.all([this.queries.get(input.assistantId), this.queries.renewalShare()]);
+    const after = toTermsView(input.assistantId, row, share);
     await this.audit.record({ actorId: input.actorId, entity: 'assistant_terms', entityId: input.assistantId, action: 'set', before: { ...before }, after: { ...after } });
     if (after.commission) await this.evaluateBrought(input.assistantId);
     return after;

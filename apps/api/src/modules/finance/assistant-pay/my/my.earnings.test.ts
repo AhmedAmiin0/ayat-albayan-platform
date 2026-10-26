@@ -8,6 +8,7 @@ const TERMS = {
   assistant_id: 'a1',
   commission: { type: 'percent' as const, value: 10, currency: null, starts_on: '2026-10-01' },
   salary: { amount: 1000, currency: 'SAR', starts_on: '2026-10-01' },
+  renewal_share_percent: 50,
 };
 const commission = (id: string, amount: number, over: object = {}) => ({ id, amount, currency: 'SAR', earned_at: '2026-10-05T10:00:00Z', statement: null, ...over });
 const statement = (over: Partial<AssistantStatementView> = {}): AssistantStatementView => ({

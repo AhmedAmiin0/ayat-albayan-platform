@@ -1,5 +1,6 @@
 import type { PaymentKind, PaymentMethod, PayoutStatus } from '../enums/index.js';
 import type { AssistantCommissionStatus, AssistantCommissionType } from './commission.js';
+import type { AssistantCommissionKind } from './kind.js';
 import type { CurrencyTotals, StatementLineKind } from './statement.js';
 
 // Assistant (base role sales) responses (owner, 2026-10-06). snake_case, instants ISO UTC, months and
@@ -10,6 +11,8 @@ export interface AssistantTermsView {
   assistant_id: string;
   commission: { type: AssistantCommissionType; value: number; currency: string | null; starts_on: string } | null;
   salary: { amount: number; currency: string; starts_on: string } | null;
+  /** settings.renewal_commission_percent now: the share of the commission earned on each renewal (owner 2026-10-26). */
+  renewal_share_percent: number;
 }
 
 /** GET /assistant-pay/terms rows: every assistant with their terms (both null until an admin sets them). */
@@ -34,6 +37,10 @@ export interface AssistantCommissionView {
   assistant: { id: string; name: string };
   student: { id: string; code: string; name: string };
   subscription_id: string | null;
+  /** 'first' (once per student) or 'renewal' (each later package, at share_percent of the normal commission). */
+  kind: AssistantCommissionKind;
+  /** The share of the normal commission it was earned at: 100 for a first, the setting at earn time for a renewal. */
+  share_percent: number;
   type: AssistantCommissionType;
   /** The term's value when it was earned: percent points, or the fixed amount. */
   rate: number;
@@ -54,6 +61,8 @@ export interface AssistantStatementLineView {
   currency: string;
   /** commission lines: the student; adjustment lines: the reason. */
   student: { code: string; name: string } | null;
+  /** commission lines: «عمولة» or «عمولة تجديد»; null on the other lines. */
+  commission_kind: AssistantCommissionKind | null;
   reason: string | null;
 }
 
@@ -82,6 +91,8 @@ export interface MyStudentRow {
   /** Has any of their subscriptions been paid in full? (No price, no amounts.) */
   first_subscription_paid: boolean;
   commission: { amount: number; currency: string; status: AssistantCommissionStatus; earned_at: string } | null;
+  /** How many renewal commissions this student earned her (no amounts per student beyond the first). */
+  renewal_commissions: number;
 }
 
 /** GET /sales/me/earnings. */

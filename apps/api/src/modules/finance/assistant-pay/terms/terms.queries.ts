@@ -1,12 +1,21 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../../../common/db/db.module';
 import { dbError } from '../../../../common/http/http';
+import { AssistantPaySettings } from '../assistant-pay.settings';
 import type { TermsRow } from './terms.mapper';
 
 /** assistant_terms (one row per assistant) and the people those terms are for (service role; the controllers guard). */
 @Injectable()
 export class TermsQueries {
-  constructor(@Inject(DB) private readonly db: Db) {}
+  constructor(
+    @Inject(DB) private readonly db: Db,
+    private readonly settings: AssistantPaySettings,
+  ) {}
+
+  /** settings.renewal_commission_percent: the share of the commission earned on each renewal (0..100). */
+  async renewalShare(): Promise<number> {
+    return (await this.settings.read()).renewal_commission_percent;
+  }
 
   /** Every assistant (base role sales), by name. */
   async assistants(): Promise<{ id: string; full_name: string }[]> {
@@ -45,8 +54,9 @@ export class TermsQueries {
   }
 
   /**
-   * One subscription id per student this assistant brought that has no commission row yet: what the
-   * commission rule is run on when terms are set (it only runs on payment and price changes otherwise).
+   * Every priced subscription of a student this assistant brought that has no commission row yet, oldest
+   * first: what the commission rule is run on when terms are set (it only runs on payment and price changes
+   * otherwise). The rule itself decides first / renewal and refuses what is retroactive or before the cutoff.
    */
   async uncommissioned(assistantId: string): Promise<string[]> {
     const students = await this.db.from('students').select('id').eq('brought_by', assistantId);
@@ -54,14 +64,12 @@ export class TermsQueries {
     const ids = students.data.map((s) => s.id);
     if (ids.length === 0) return [];
     const [commissions, subs] = await Promise.all([
-      this.db.from('assistant_commissions').select('student_id').in('student_id', ids),
-      this.db.from('subscriptions').select('id, student_id').in('student_id', ids).order('created_at'),
+      this.db.from('assistant_commissions').select('subscription_id').in('student_id', ids),
+      this.db.from('subscriptions').select('id').in('student_id', ids).gt('price', 0).order('created_at').order('id'),
     ]);
     if (commissions.error) throw dbError(commissions.error);
     if (subs.error) throw dbError(subs.error);
-    const done = new Set(commissions.data.map((c) => c.student_id));
-    const first = new Map<string, string>();
-    for (const s of subs.data) if (!done.has(s.student_id) && !first.has(s.student_id)) first.set(s.student_id, s.id);
-    return [...first.values()];
+    const done = new Set(commissions.data.map((c) => c.subscription_id));
+    return subs.data.filter((s) => !done.has(s.id)).map((s) => s.id);
   }
 }

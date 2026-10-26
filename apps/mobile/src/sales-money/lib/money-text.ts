@@ -35,10 +35,17 @@ export const salaryText = (s: AssistantTermsView['salary']): string => (s ? mone
 /** «ابتداءً من 1 أكتوبر 2026» under a term, or null when it is not set. */
 export const sinceText = (day: string | undefined): string | null => (day ? t.assistants.startsOn.replace('{date}', localDay(day)) : null);
 
-/** One line of a statement: «الراتب», «عمولة يوسف», «تسوية: سبب». */
+/** «تُحسب العمولة كاملة … ولك 50% منها عن كل تجديد … اعتبارًا من …» (owner 2026-10-26: renewals earn a share). */
+export const commissionNote = (startsOn: string, renewalShare: number | undefined): string =>
+  p.commissionNote.replace('{n}', String(renewalShare ?? '')).replace('{date}', localDay(startsOn));
+
+/** One line of a statement: «الراتب», «عمولة يوسف», «عمولة تجديد يوسف», «تسوية: سبب». */
 export function lineText(l: AssistantStatementLineView): string {
   if (l.kind === 'salary') return p.line.salary;
-  if (l.kind === 'commission') return p.line.commission.replace('{student}', l.student?.name ?? '');
+  if (l.kind === 'commission') {
+    const text = l.commission_kind === 'renewal' ? p.line.commissionRenewal : p.line.commission;
+    return text.replace('{student}', l.student?.name ?? '');
+  }
   return p.line.adjustment.replace('{reason}', l.reason ?? '');
 }
 

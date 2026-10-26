@@ -15,6 +15,7 @@ const row = (over: Partial<MyStudentRow>): MyStudentRow => ({
   brought_at: '2026-09-20T09:00:00.000Z',
   first_subscription_paid: false,
   commission: null,
+  renewal_commissions: 0,
   ...over,
 });
 const ROWS = [

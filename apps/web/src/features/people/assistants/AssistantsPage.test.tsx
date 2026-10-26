@@ -14,7 +14,7 @@ vi.mock('@/features/people/auth/use-permissions', () => ({
 }));
 vi.mock('@tanstack/react-router', async () => ({ Link: (await import('@/features/reporting/dashboard/link-mock')).Link }));
 
-const NEW = { id: 'a2', name: 'سارة', terms: { assistant_id: 'a2', salary: null, commission: { type: 'fixed' as const, value: 50, currency: 'SAR', starts_on: '2026-10-01' } } };
+const NEW = { id: 'a2', name: 'سارة', terms: { assistant_id: 'a2', salary: null, commission: { type: 'fixed' as const, value: 50, currency: 'SAR', starts_on: '2026-10-01' }, renewal_share_percent: 50 } };
 
 function wrap(ui: React.ReactNode) {
   apiFetch.mockImplementation(async (path: string) => {
