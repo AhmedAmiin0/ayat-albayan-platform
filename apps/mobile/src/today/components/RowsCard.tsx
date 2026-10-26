@@ -5,7 +5,7 @@ import { useTheme } from '@/theme';
 import { raisedCard } from '../lib/surface';
 import { LessonRow } from './LessonRow';
 
-export interface RowsCardProps {
+interface RowsCardProps {
   lessons: readonly LessonView[];
   onOpen: (lesson: LessonView) => void;
   compact?: boolean;

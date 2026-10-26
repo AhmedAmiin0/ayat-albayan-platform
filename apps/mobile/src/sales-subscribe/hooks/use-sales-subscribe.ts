@@ -15,7 +15,7 @@ export function useSalesQuote(studentId: string, pricing: SubscriptionPricing) {
   });
 }
 
-export interface SalesSubscribeInput {
+interface SalesSubscribeInput {
   studentId: string;
   pricing: SubscriptionPricing;
   /** Local YYYY-MM-DD, only with subscriptions.set_start_date (else the API's default day). */

@@ -5,7 +5,7 @@ import { ErrorLine } from '@/inbox/ErrorLine';
 import { t } from '@/core/lib/i18n/i18n';
 import { HeroButton } from './HeroButton';
 
-export interface HeroActionsProps {
+interface HeroActionsProps {
   lesson: LessonView;
   busy: boolean;
   onConfirm: () => void;

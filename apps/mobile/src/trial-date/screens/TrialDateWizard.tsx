@@ -19,7 +19,7 @@ type Step = 'teacher' | 'slot' | 'confirm';
 const STEPS: readonly Step[] = ['teacher', 'slot', 'confirm'];
 const stepName = (s: Step) => ({ teacher: t.booking.steps.teacher, slot: t.booking.steps.slot, confirm: t.booking.steps.review })[s];
 
-export interface TrialDateWizardProps {
+interface TrialDateWizardProps {
   history: TrialHistory;
   title: string;
   program: Program;
