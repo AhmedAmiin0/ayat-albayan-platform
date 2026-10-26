@@ -927,6 +927,19 @@
       "payoutLink": "احسب مستحقات الشهر",
       "overrideEdit": "احفظ رغم التعارض",
       "overrideReasonEdit": "سبب التعديل رغم التعارض"
+    },
+    "sheet": {
+      "openRow": "تفاصيل الحلقة — {names}",
+      "about": "بيانات الحلقة",
+      "series": "تتكرر أسبوعيًا: {days} · {time}",
+      "live": "جارية الآن",
+      "openStudent": "افتح ملف {name}",
+      "report": {
+        "submitted": "أُرسل التقرير",
+        "draft": "التقرير مسودة",
+        "none": "لم يُكتب التقرير بعد"
+      },
+      "readOnly": "للاطلاع فقط: لا تعديل ولا إلغاء من هنا"
     }
   },
   "teacherDash": {

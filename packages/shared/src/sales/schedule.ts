@@ -20,8 +20,9 @@ export interface SalesScheduleLesson {
   status: LessonStatus;
   trial: boolean;
   makeup: boolean;
-  teacher: { id: string; display_name_ar: string; display_name_en: string | null };
-  students: { id: string; code: string; name: string }[];
+  /** tz: the teacher's and each student's zone, for the details sheet's local times. Absent in an old cache. */
+  teacher: { id: string; display_name_ar: string; display_name_en: string | null; tz?: string };
+  students: { id: string; code: string; name: string; tz?: string }[];
 }
 
 /** GET /sales/schedule: the Riyadh day shown and its lessons by start (a moved-away lesson is left out). */

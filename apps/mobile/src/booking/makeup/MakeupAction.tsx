@@ -16,7 +16,7 @@ import { makeupParams } from './makeup-draft';
  * student and lesson; a student whose makeup is already booked sees «التعويض محجوز · <date>»
  * instead. Admin schedule only.
  */
-export function MakeupAction({ lesson }: { lesson: LessonView }) {
+export function MakeupAction({ lesson, onLeave }: { lesson: LessonView; onLeave?: (() => void) | undefined }) {
   const { color } = useTheme();
   const { makeup_window_days: days } = usePublicConfig();
   const { open, booked } = makeupOffer(lesson, new Date(), days);
@@ -31,12 +31,14 @@ export function MakeupAction({ lesson }: { lesson: LessonView }) {
             variant="ghost"
             label={t.booking.makeup.action}
             accessibilityLabel={`${t.booking.makeup.action} — ${student.name}`}
-            onPress={() =>
+            onPress={() => {
+              // From inside the lesson details sheet: close it first, or the wizard opens under it.
+              onLeave?.();
               router.push({
                 pathname: '/students/makeup/[lessonId]',
                 params: makeupParams(lesson, student),
-              })
-            }
+              });
+            }}
           />
         ))}
       </View>

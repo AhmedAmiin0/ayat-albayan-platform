@@ -18,6 +18,8 @@ export interface LessonRowActionsProps {
   onReschedule: (lesson: LessonView) => void;
   /** «عدّل الوقت» (R-SCH-11): opens the edit sheet; the button shows when the lesson allows it. */
   onEditTime?: (lesson: LessonView) => void;
+  /** Inside the details sheet: closes it before an action navigates away (حجز تعويضي). */
+  onLeave?: () => void;
 }
 
 /**
@@ -28,7 +30,7 @@ export interface LessonRowActionsProps {
  * allows it from the status on screen (maybe already the optimistic one).
  * A finished lesson also offers «ابعت طلب الرأي» (FeedbackRequestButton).
  */
-export function LessonRowActions({ lesson, action, onReschedule, onEditTime }: LessonRowActionsProps) {
+export function LessonRowActions({ lesson, action, onReschedule, onEditTime, onLeave }: LessonRowActionsProps) {
   const [cancelling, setCancelling] = useState(false);
   const can = (e: LessonEvent) =>
     lesson.allowed_events.includes(e) && applyLessonEvent(lesson.status, e) !== null;
@@ -61,7 +63,7 @@ export function LessonRowActions({ lesson, action, onReschedule, onEditTime }: L
         {onEditTime ? <EditTimeButton lesson={lesson} busy={busy} onPress={() => onEditTime(lesson)} /> : null}
         {can('reschedule') ? act(t.lessons.rescheduleSubmit, 'ghost', () => onReschedule(lesson)) : null}
       </View>
-      <MakeupAction lesson={lesson} />
+      <MakeupAction lesson={lesson} onLeave={onLeave} />
       <FeedbackRequestButton lesson={lesson} />
       {error ? <ErrorLine message={error} /> : null}
     </View>
