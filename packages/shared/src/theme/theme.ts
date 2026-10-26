@@ -60,7 +60,8 @@ export const elevation: Record<ThemeName, Elevation> = {
 export type GlassStop = readonly [offset: number, opacity: number];
 
 export interface Glass {
-  /** The tab capsule's fill: `raised` at 80 % (light) / 84 % (dark); no backdrop blur in this APK. */
+  /** The tab capsule's fill: `raised` at 92 %. No backdrop blur in this APK, so a row scrolled under
+   *  the capsule must not read through it (0.8 / 0.84 did, 2026-10-26). */
   fill: string;
   /** The vertical sheen over the capsule (white in both themes): bright top, dim middle, a lift at the foot. */
   sheen: { color: string; stops: readonly GlassStop[] };
@@ -76,14 +77,14 @@ export interface Glass {
 // boxShadow strings, like `elevation` above. The mobile app only; the web has no tab bar.
 export const glass: Record<ThemeName, Glass> = {
   light: {
-    fill: 'rgba(255, 255, 255, 0.8)',
+    fill: 'rgba(255, 255, 255, 0.92)',
     sheen: { color: '#ffffff', stops: [[0, 0.62], [0.5, 0.22], [1, 0.36]] },
     border: 'rgba(255, 255, 255, 0.75)',
     shadow: '0 0 0 0.5px rgba(23, 32, 28, 0.08), 0 10px 30px rgba(23, 32, 28, 0.14), 0 2px 6px rgba(23, 32, 28, 0.06)',
     pill: { fill: 'rgba(120, 120, 128, 0.14)', shadow: 'inset 0 0.5px 0 rgba(255, 255, 255, 0.9)' },
   },
   dark: {
-    fill: 'rgba(39, 49, 45, 0.84)',
+    fill: 'rgba(39, 49, 45, 0.92)',
     sheen: { color: '#ffffff', stops: [[0, 0.12], [0.5, 0.03], [1, 0.07]] },
     border: 'rgba(255, 255, 255, 0.14)',
     shadow: '0 12px 32px rgba(0, 0, 0, 0.5), 0 2px 8px rgba(0, 0, 0, 0.3)',
