@@ -190,7 +190,7 @@ jobs:
         run: |
           test -n "$VITE_SUPABASE_ANON_KEY" || { echo "::error::add STAGING_SUPABASE_ANON_KEY (secret) or VITE_SUPABASE_ANON_KEY (variable)"; exit 1; }
           pnpm i --frozen-lockfile
-          pnpm --filter @ab/db --filter @ab/shared build >/dev/null
+          pnpm --filter @ab/db --filter @ab/shared --filter @ab/client-core build >/dev/null
           pnpm --filter web build
 
       - name: SSH key

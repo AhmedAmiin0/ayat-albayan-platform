@@ -1,15 +1,2 @@
-// Query keys are the API path's segments, so invalidating ['students'] reaches every list and
-// detail under /students. Paged lists add 'list' + their filter params:
-//   GET /students/:id          → ['students', id]
-//   GET /leads?status=new&q=…  → ['leads', 'list', { status: 'new', q: '…' }]
-//   GET /auth/me               → ['auth', 'me']
-
-export type ListParams = Record<string, string | number | undefined>;
-
-export function pathKey(path: string): string[] {
-  return path.split('/').filter(Boolean);
-}
-
-export function listKey(path: string, params: ListParams = {}): unknown[] {
-  return [...pathKey(path), 'list', params];
-}
+// The key convention moved to @ab/client-core (docs/27 E1); this path stays as an alias for its callers.
+export { listKey, pathKey, type ListParams } from '@ab/client-core';

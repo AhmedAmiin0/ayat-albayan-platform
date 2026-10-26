@@ -1,30 +1,12 @@
+import { createApiClient } from '@ab/client-core';
 import { connectivity } from '../connectivity/connectivity';
 import { isNetworkError } from '../connectivity/network-error';
-import { CLIENT_HEADER, mobileClientTag } from './client-tag';
+import { mobileClientTag } from './client-tag';
 import { env } from './env';
 import { supabase } from './supabase';
 
-// Same shape as apps/web/src/lib/api.ts on purpose: one mental model for both apps.
-
-/** Non-2xx API response. `body` is the parsed JSON error (e.g. duplicate candidates on 409), if any. */
-export class ApiError extends Error {
-  constructor(
-    readonly status: number,
-    readonly body: unknown = null,
-  ) {
-    super(`API ${status}`);
-  }
-}
-
-async function readJson(res: Response): Promise<unknown> {
-  const text = await res.text();
-  if (!text) return undefined;
-  try {
-    return JSON.parse(text);
-  } catch {
-    return text;
-  }
-}
+// The one client lives in @ab/client-core (docs/27 E1); this module injects mobile's env, session and tag.
+export { ApiError, toQueryString, type SendMethod } from '@ab/client-core';
 
 /** fetch that tells the connection state what happened: any response is an answer, a rejection is none. */
 async function reach(url: string, init: RequestInit): Promise<Response> {
@@ -38,36 +20,15 @@ async function reach(url: string, init: RequestInit): Promise<Response> {
   }
 }
 
-/** fetch against the Nest API with the current Supabase access token and the client tag (`X-AB-Client`). */
-export async function apiFetch<T>(path: string, init: RequestInit = {}): Promise<T> {
-  const { data } = await supabase.auth.getSession();
-  const headers = new Headers(init.headers);
-  headers.set(CLIENT_HEADER, mobileClientTag());
-  if (data.session) headers.set('Authorization', `Bearer ${data.session.access_token}`);
-  const res = await reach(`${env.apiUrl}${path}`, { ...init, headers });
-  const body = await readJson(res);
-  if (!res.ok) throw new ApiError(res.status, body ?? null);
-  return body as T;
-}
+const client = createApiClient({
+  baseUrl: () => env.apiUrl,
+  accessToken: async () => (await supabase.auth.getSession()).data.session?.access_token ?? null,
+  clientTag: mobileClientTag,
+  fetch: reach,
+});
 
-export type SendMethod = 'POST' | 'PUT' | 'PATCH' | 'DELETE';
+/** fetch against the Nest API with the current Supabase access token and the client tag (`X-AB-Client`). */
+export const apiFetch = client.apiFetch;
 
 /** JSON mutation helper for TanStack Query `mutationFn`s. Resolves undefined on 204. */
-export function apiSend<T = void>(method: SendMethod, path: string, body?: unknown): Promise<T> {
-  const init: RequestInit = { method };
-  if (body !== undefined) {
-    init.headers = { 'Content-Type': 'application/json' };
-    init.body = JSON.stringify(body);
-  }
-  return apiFetch<T>(path, init);
-}
-
-/** `?a=1&b=x` from defined values only (RN's URLSearchParams is partial, so no dependency on it). */
-export function toQueryString(params: Record<string, string | number | undefined>): string {
-  const parts = Object.entries(params)
-    .filter(
-      (entry): entry is [string, string | number] => entry[1] !== undefined && entry[1] !== '',
-    )
-    .map(([k, v]) => `${encodeURIComponent(k)}=${encodeURIComponent(String(v))}`);
-  return parts.length ? `?${parts.join('&')}` : '';
-}
+export const apiSend = client.apiSend;

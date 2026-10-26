@@ -1,3 +1,4 @@
+import { pathKey } from '@ab/client-core';
 import type { Permission, UserRole } from '@ab/shared';
 import { queryOptions, type QueryClient } from '@tanstack/react-query';
 import { redirect } from '@tanstack/react-router';
@@ -25,7 +26,7 @@ export function isAccountDisabled(error: unknown): boolean {
  * signed out here, then the error goes on (sign-in shows the message, requireRole redirects).
  */
 export const meQuery = queryOptions({
-  queryKey: ['auth', 'me'],
+  queryKey: pathKey('/auth/me'),
   queryFn: async (): Promise<Me | null> => {
     const { data } = await supabase.auth.getSession();
     if (!data.session) return null;
