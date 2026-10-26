@@ -12,7 +12,7 @@ const AR_TEST = /(?:تجربه|اختبار|نمنم)/;
 /** Placeholder numbers used while testing the forms (docs/06 step 6). */
 export const DUMMY_PHONES: ReadonlySet<string> = new Set(['+966500000000', '+966501234567']);
 
-export interface TestRowInput {
+interface TestRowInput {
   /** Name and teacher cells: Latin Lorem words or Arabic test markers. */
   names: readonly (Cell | undefined)[];
   /** Every other cell: Latin Lorem words only (links are skipped). */

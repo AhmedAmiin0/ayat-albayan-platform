@@ -8,7 +8,7 @@ import type { ReportEntryState } from '../hooks/use-report-entry';
 
 const grades = GRADES.map((g) => ({ value: g, label: t.enums.grade[g] }));
 
-export interface RubricSectionProps {
+interface RubricSectionProps {
   s: ReportEntryState;
   locked: boolean;
   /** useScrollToInvalid's registrar: a failed send scrolls to the first ungraded row. */

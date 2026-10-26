@@ -9,7 +9,7 @@ import { NuqtaGlyph } from '@/core/ui/primitives/NuqtaGlyph';
 import { StatusChip } from '@/core/ui/feedback/StatusChip';
 import type { Scope } from './reschedule-body';
 
-export interface RescheduleDoneProps {
+interface RescheduleDoneProps {
   /** The API's answer: the new lesson (for a series, its first lesson). */
   moved: LessonView;
   scope: Scope;

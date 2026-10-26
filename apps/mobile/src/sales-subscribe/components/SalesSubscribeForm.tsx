@@ -16,7 +16,7 @@ import { checkStart, type StartDraft } from '../lib/start-date';
 import { StartDateField } from './StartDateField';
 import { useSalesCreateSubscription, useSalesQuote } from '../hooks/use-sales-subscribe';
 
-export interface SalesSubscribeFormProps {
+interface SalesSubscribeFormProps {
   phone: string;
   /** Her students of the family (at least one). */
   students: readonly SalesFamilyStudent[];

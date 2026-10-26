@@ -15,7 +15,7 @@ export function useBookingTeachers(f: { program: Program; gender: Gender | null;
   });
 }
 
-export interface SlotsParams {
+interface SlotsParams {
   teacherId: string;
   from: string;
   to: string;

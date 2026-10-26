@@ -4,7 +4,7 @@ import type { AssistantCommissionView, AssistantStatementView, AssistantTermsVie
 // two currencies, never summed.
 
 /** The apps' `AssistantRow` (GET /assistant-pay/terms joined to the assistants list). */
-export interface AssistantRowFixture {
+interface AssistantRowFixture {
   id: string;
   name: string;
   terms: AssistantTermsView;

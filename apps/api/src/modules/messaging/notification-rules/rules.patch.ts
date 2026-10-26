@@ -16,7 +16,7 @@ import { ruleConfirmationRequired, ruleError } from './rules.errors';
 import type { RulesSnapshot } from './store/rules.reader';
 import type { RuleRowWrite } from './store/rules.table';
 
-export interface PlanInput {
+interface PlanInput {
   entry: NotificationEntry<NotificationKey>;
   snapshot: RulesSnapshot;
   patch: RulePatchInput;

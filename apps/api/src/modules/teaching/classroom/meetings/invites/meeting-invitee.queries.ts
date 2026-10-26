@@ -6,7 +6,7 @@ import { studentNameOrCodeFilter } from '../../../../people/students/students.ma
 import { dbError } from '../../../../../common/http/http';
 
 /** Who may be invited as staff (base roles; never a guardian or a student login). */
-export const STAFF_ROLES = ['admin', 'teacher', 'assistant', 'sales'] as const;
+const STAFF_ROLES = ['admin', 'teacher', 'assistant', 'sales'] as const;
 const PICK_LIMIT = 20;
 /** «لم يشترك بعد» (new, trial, pending_subscription; owner 2026-10-15) as a PostgREST in-list. */
 const NOT_SUBSCRIBED = `(${NOT_SUBSCRIBED_STATUSES.join(',')})`;
@@ -26,7 +26,7 @@ interface StaffPick {
   tz: string;
 }
 
-export interface StudentPick {
+interface StudentPick {
   id: string;
   name: string;
   code: string | null;

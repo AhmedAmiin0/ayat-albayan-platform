@@ -59,7 +59,7 @@ const { mockGate } = jest.requireMock('@/auth/use-auth-gate') as {
   mockGate: { initial: string; set: (status: string) => void };
 };
 
-export interface AppOptions {
+interface AppOptions {
   url: string;
   backend: FakeBackend;
   /** Who is signed in (default admin). */

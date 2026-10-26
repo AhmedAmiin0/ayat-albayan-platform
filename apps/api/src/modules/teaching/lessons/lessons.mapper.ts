@@ -27,7 +27,7 @@ const TEACHER_EVENTS: ReadonlySet<LessonEvent> = new Set([
 ]);
 
 /** academyAuto: settings.meeting_link_auto, the default of a teacher whose meeting_mode is null (false when absent). */
-export type ViewContext = { role: Role | null; seq: SeqMap; academyAuto?: boolean };
+type ViewContext = { role: Role | null; seq: SeqMap; academyAuto?: boolean };
 
 /** Event list for the caller's role (LessonView.allowed_events). */
 function eventsFor(row: Pick<LessonRow, 'status'>, role: Role | null): LessonEvent[] {

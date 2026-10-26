@@ -12,7 +12,7 @@ import { userErrorText } from '../shared/errors';
 import { PanelButtons } from '../panels/PanelButtons';
 import { createBody, createErrors, type FormErrors } from '../shared/validation';
 
-export interface CreateUserFormProps {
+interface CreateUserFormProps {
   onClose: () => void;
   /** Start with a role and a record already picked (the student file's «إنشاء حساب»). */
   prefill?: Prefill;

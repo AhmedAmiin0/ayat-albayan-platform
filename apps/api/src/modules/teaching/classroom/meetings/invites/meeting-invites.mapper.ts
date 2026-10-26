@@ -49,7 +49,7 @@ export const toInviteeView = (r: InviteeRow): MeetingInviteeView => ({
   sent_at: r.sent_at,
 });
 
-export interface ViewContext {
+interface ViewContext {
   user: Pick<AuthUser, 'id' | 'role'>;
   now: Date;
   win: JoinWindowConfig;

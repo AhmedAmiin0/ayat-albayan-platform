@@ -36,7 +36,7 @@ const DISCOUNT_PILLS = DISCOUNTS.map((d) => {
   return { value, label: p.discounts[value] };
 });
 
-export interface PricingInputsProps {
+interface PricingInputsProps {
   form: SubscribeForm;
   onChange: (patch: Partial<SubscribeForm>) => void;
   /** false (sales): only the site's pills 0/5/10/15 %, no free number field. Default true (admin). */

@@ -4,7 +4,7 @@ import { Section } from '@/more/Section';
 import { FilterPills } from '@/core/ui/form/FilterPills';
 import { ltr } from '@/core/ui/primitives/Ltr';
 
-export interface ChildPillsProps {
+interface ChildPillsProps {
   students: readonly SalesFamilyStudent[];
   /** '' = none picked yet (more than one of hers in the family). */
   value: string;

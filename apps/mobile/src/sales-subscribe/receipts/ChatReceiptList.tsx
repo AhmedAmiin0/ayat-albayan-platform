@@ -6,7 +6,7 @@ import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { ChatReceiptRow } from './ChatReceiptRow';
 import { useChatReceipts } from './chat-receipts';
 
-export interface ChatReceiptListProps {
+interface ChatReceiptListProps {
   studentId: string;
   /** The message being copied, if any. */
   busyId: string | undefined;

@@ -7,7 +7,7 @@ import { AppText } from '@/core/ui/primitives/AppText';
 import { FilterPills } from '@/core/ui/form/FilterPills';
 import { dueText, packageLabel } from '../lib/package-text';
 
-export interface OpenPackagePickerProps {
+interface OpenPackagePickerProps {
   /** Her open packages in the family (at least one). */
   packages: readonly SalesMoneySubscriptionView[];
   value: SalesMoneySubscriptionView | undefined;

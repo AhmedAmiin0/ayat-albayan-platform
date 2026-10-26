@@ -61,7 +61,7 @@ function adoptedRows(items: Plan['items']): Row[] {
 /** A plan.json from before field changes existed has no `changes`. */
 export type ReviewPlan = Plan & { changes?: readonly FieldChange[] };
 
-export interface ReviewSheet {
+interface ReviewSheet {
   sheet: string;
   data: Row[];
 }

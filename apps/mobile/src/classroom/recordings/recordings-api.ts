@@ -8,7 +8,7 @@ import { recordingsPath, type RecordingSource } from './recording-format';
 // The list carries 1-hour signed URLs, so `noPersist` keeps it off the disk cache (lib/query-client).
 const meta = { noPersist: true };
 
-export const recordingsQuery = (source: RecordingSource) =>
+const recordingsQuery = (source: RecordingSource) =>
   queryOptions({
     queryKey: pathKey(recordingsPath(source)),
     queryFn: () => apiFetch<LessonRecordingView[]>(recordingsPath(source)),

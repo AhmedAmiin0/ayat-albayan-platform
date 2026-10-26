@@ -23,7 +23,7 @@ export interface TargetConfig {
   storage?: StorageConfig;
 }
 
-export interface ResolveTargetInput {
+interface ResolveTargetInput {
   name: string | undefined;
   confirmProduction: boolean;
   env: NodeJS.ProcessEnv;

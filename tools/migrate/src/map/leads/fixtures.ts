@@ -13,7 +13,7 @@ export function contact(id: string, phone: string, name: string | null = null): 
   return { id, phone, phone_normalized: phone, name, created_at: '2026-09-12T08:00:00+00:00' };
 }
 
-export interface MessageInput {
+interface MessageInput {
   id: string;
   conv: string;
   sender: 'customer' | 'agent' | 'bot' | string;
@@ -56,7 +56,7 @@ export function message(m: MessageInput): CrmRow {
   };
 }
 
-export interface CrmInput {
+interface CrmInput {
   contacts?: CrmRow[];
   /** contact id → tag names. */
   tags?: Record<string, string[]>;

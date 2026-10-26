@@ -10,7 +10,7 @@ import { userErrorText } from '../shared/errors';
 import { PanelButtons } from './PanelButtons';
 import { TextField } from '../shared/TextField';
 
-export interface DisablePanelProps {
+interface DisablePanelProps {
   user: UserDetail;
   onBack: () => void;
   onDone: (message: string) => void;

@@ -12,7 +12,7 @@ import { userErrorText } from '../shared/errors';
 import { PanelButtons } from './PanelButtons';
 import { passwordError } from '../shared/validation';
 
-export interface ResetPasswordPanelProps {
+interface ResetPasswordPanelProps {
   user: UserDetail;
   onBack: () => void;
 }

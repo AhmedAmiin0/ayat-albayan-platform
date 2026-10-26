@@ -8,7 +8,7 @@ const { expenses: E, earnings: L, payments: P, finance: F, students: S } = ar;
 const method = (m: PaymentMethod | null) => (m ? ar.enums.paymentMethod[m] : '');
 const seeded = ar.enums.expenseCategory as Record<string, string>;
 
-export interface ExpenseIn {
+interface ExpenseIn {
   month: string;
   paid_on: string | null;
   category: string;

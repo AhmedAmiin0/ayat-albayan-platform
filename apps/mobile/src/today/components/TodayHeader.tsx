@@ -9,7 +9,7 @@ import { type, useTheme } from '@/theme';
 import { hairline } from '../lib/surface';
 import { greetingPart } from '../lib/today-plan';
 
-export interface TodayHeaderProps {
+interface TodayHeaderProps {
   now: Date;
   /** «آخر تحديث 16:20» while offline with the saved day on screen. */
   stale?: string;
