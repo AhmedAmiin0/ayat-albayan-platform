@@ -4,7 +4,7 @@ import type { AuthUser } from '../../../../common/auth/verify-token';
 import { notFound } from '../../../../common/http/errors';
 import { PortalScopeQueries } from './portal-scope.queries';
 
-interface PortalScope {
+export interface PortalScope {
   kind: 'guardian' | 'student';
   students: PortalStudent[];
 }

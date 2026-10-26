@@ -7,3 +7,4 @@ export { type CommsTab, commsTabs, CommunicationsScreen } from './settings/Commu
 export { SETTINGS_HREF, SettingsScreen } from './settings/SettingsScreen';
 export { SharedRepliesScreen } from './settings/SharedRepliesScreen';
 export { ValuesScreen } from './values/screens/ValuesScreen';
+export { useStudentName } from './reports/use-student-name';

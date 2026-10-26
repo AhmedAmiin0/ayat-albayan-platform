@@ -13,6 +13,7 @@ const ROW_OF: Record<PushKind, NotificationKey> = {
   new_student: 'new_student',
   meeting_invite: 'meeting_invite',
   google_sync_alert: 'google_sync_alert',
+  channel_message: 'channel_message',
 };
 
 /** Where a staff notification goes: the bell row (push_notifications), and the browser / app push. */

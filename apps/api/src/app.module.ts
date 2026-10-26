@@ -46,6 +46,7 @@ import { RolesModule } from './modules/people/roles/roles.module';
 import { SalesModule } from './modules/sales/sales/sales.module';
 import { SalesRegistrationModule } from './modules/sales/sales-registration/sales-registration.module';
 import { SchedulingModule } from './modules/teaching/scheduling/scheduling.module';
+import { StudentChannelsModule } from './modules/teaching/student-channels';
 import { StudentRecordingsModule } from './modules/teaching/student-recordings/student-recordings.module';
 import { StudentsModule } from './modules/people/students/students.module';
 import { SubscriptionsModule } from './modules/finance/subscriptions/subscriptions.module';
@@ -111,6 +112,7 @@ import { WhatsappModule } from './modules/messaging/whatsapp/whatsapp.module';
     LessonRatingModule,
     ClassroomModule,
     StudentRecordingsModule,
+    StudentChannelsModule,
     MessagingJobsModule,
     WebhookModule,
   ],

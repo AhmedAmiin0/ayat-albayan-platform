@@ -507,6 +507,81 @@ export type Database = {
         };
         Relationships: [];
       };
+      channel_messages: {
+        Row: {
+          body: string;
+          channel_id: string;
+          created_at: string;
+          id: string;
+          sender_profile_id: string | null;
+          sender_role: string;
+        };
+        Insert: {
+          body: string;
+          channel_id: string;
+          created_at?: string;
+          id?: string;
+          sender_profile_id?: string | null;
+          sender_role: string;
+        };
+        Update: {
+          body?: string;
+          channel_id?: string;
+          created_at?: string;
+          id?: string;
+          sender_profile_id?: string | null;
+          sender_role?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'channel_messages_channel_id_fkey';
+            columns: ['channel_id'];
+            isOneToOne: false;
+            referencedRelation: 'student_channels';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'channel_messages_sender_profile_id_fkey';
+            columns: ['sender_profile_id'];
+            isOneToOne: false;
+            referencedRelation: 'profiles';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      channel_reads: {
+        Row: {
+          channel_id: string;
+          last_read_at: string;
+          profile_id: string;
+        };
+        Insert: {
+          channel_id: string;
+          last_read_at?: string;
+          profile_id: string;
+        };
+        Update: {
+          channel_id?: string;
+          last_read_at?: string;
+          profile_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'channel_reads_channel_id_fkey';
+            columns: ['channel_id'];
+            isOneToOne: false;
+            referencedRelation: 'student_channels';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'channel_reads_profile_id_fkey';
+            columns: ['profile_id'];
+            isOneToOne: false;
+            referencedRelation: 'profiles';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       chat_list_threads: {
         Row: {
           added_at: string;
@@ -3228,6 +3303,32 @@ export type Database = {
           },
         ];
       };
+      student_channels: {
+        Row: {
+          created_at: string;
+          id: string;
+          student_id: string;
+        };
+        Insert: {
+          created_at?: string;
+          id?: string;
+          student_id: string;
+        };
+        Update: {
+          created_at?: string;
+          id?: string;
+          student_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'student_channels_student_id_fkey';
+            columns: ['student_id'];
+            isOneToOne: true;
+            referencedRelation: 'students';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       student_join_links: {
         Row: {
           created_at: string;
@@ -4827,6 +4928,19 @@ export type Database = {
         Args: { p_student_id: string; p_teacher_id: string };
         Returns: boolean;
       };
+      channel_summaries: {
+        Args: { p_profile: string; p_student_ids: string[] };
+        Returns: {
+          channel_id: string;
+          last_at: string | null;
+          last_body: string | null;
+          last_role: string | null;
+          student_id: string;
+          unread: number;
+        }[];
+      };
+      channel_teacher_ids: { Args: { p_student_id: string }; Returns: string[] };
+      teacher_channel_student_ids: { Args: { p_teacher_id: string }; Returns: string[] };
       teacher_student_ids: { Args: { p_teacher_id: string }; Returns: string[] };
       teacher_thread_phones: {
         Args: { p_teacher_id: string };
@@ -4901,7 +5015,8 @@ export type Database = {
         | 'payment_due'
         | 'new_student'
         | 'meeting_invite'
-        | 'google_sync_alert';
+        | 'google_sync_alert'
+        | 'channel_message';
       report_status: 'draft' | 'submitted';
       schedule_rule_status: 'active' | 'paused' | 'ended';
       student_status:
@@ -5097,6 +5212,7 @@ export const Constants = {
         'new_student',
         'meeting_invite',
         'google_sync_alert',
+        'channel_message',
       ],
       report_status: ['draft', 'submitted'],
       schedule_rule_status: ['active', 'paused', 'ended'],

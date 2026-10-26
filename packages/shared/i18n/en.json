@@ -3180,6 +3180,10 @@
     "google_sync_alert": {
       "title": "Google sync needs attention",
       "body": "{reason}"
+    },
+    "channel_message": {
+      "title": "New message from a student's family",
+      "body": "{student}: {text}"
     }
   },
   "bell": {
@@ -3399,7 +3403,8 @@
       "payment_due": "Package needs payment or renewal",
       "new_student": "New student",
       "meeting_invite": "Meeting invitation",
-      "google_sync_alert": "Google sync alert"
+      "google_sync_alert": "Google sync alert",
+      "channel_message": "Student channel message"
     },
     "paymentKind": {
       "payment": "Payment",
@@ -3614,7 +3619,8 @@
     "feedback": "Feedback",
     "chats": "Chats",
     "students": "Students",
-    "statements": "Monthly statements"
+    "statements": "Monthly statements",
+    "messages": "Student messages"
   },
   "teacherStudents": {
     "levelCol": "Level",
@@ -4713,7 +4719,8 @@
       "subscriptions.set_start_date": "Set the subscription start date",
       "numbers.manage": "Manage WhatsApp numbers",
       "notifications.manage": "Manage notifications",
-      "saved_replies.manage": "Manage shared quick replies"
+      "saved_replies.manage": "Manage shared quick replies",
+      "student_channels.monitor": "Read student–teacher channels"
     },
     "hints": {
       "students.check_registration": "Search by the guardian's phone or the student's name or code; shows only the name, code, status and teacher.",
@@ -5446,6 +5453,10 @@
       "google_sync_alert": {
         "name": "Google sync alert",
         "trigger": "When the Google account link expires or a teacher has no mapped calendar"
+      },
+      "channel_message": {
+        "name": "Family message in the student channel",
+        "trigger": "When the student or guardian writes in the student channel"
       }
     }
   },
@@ -6407,5 +6418,36 @@
       "call_failed": "The call could not be placed. It was not retried automatically, so it is never billed twice.",
       "media_failed": "The audio dropped. End the call and call again."
     }
+  },
+  "studentChannel": {
+    "title": "Student messages",
+    "portalTab": "Chat with the teacher",
+    "monitorTitle": "Teacher–family chat",
+    "readOnly": "Read only: you cannot write in this chat.",
+    "placeholder": "Write your message…",
+    "messageLabel": "Message",
+    "send": "Send",
+    "sending": "Sending…",
+    "empty": "No messages yet",
+    "emptyHint": "Start the chat with a message.",
+    "older": "Older messages",
+    "loadFailed": "Couldn't load the chat.",
+    "retry": "Try again",
+    "sendFailed": "Couldn't send the message. Try again.",
+    "tooLong": "The message is longer than {n} characters.",
+    "you": "You",
+    "roles": {
+      "teacher": "Teacher",
+      "guardian": "Guardian",
+      "student": "Student"
+    },
+    "listEmpty": "No current students yet",
+    "listEmptyHint": "The chat of every student you teach now appears here.",
+    "pick": "Choose a student to see the chat.",
+    "unread": "{n} unread",
+    "open": "Chat",
+    "back": "All students",
+    "students": "Students",
+    "noMessageYet": "No messages yet"
   }
 }

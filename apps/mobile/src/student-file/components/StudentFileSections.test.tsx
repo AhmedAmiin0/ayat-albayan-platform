@@ -38,3 +38,17 @@ test('controls the role lacks are hidden once /auth/me answers', async () => {
   expect(screen.queryByText(S.recordings.button)).toBeNull();
   expect(screen.queryByText(S.joinLink.create)).toBeNull();
 });
+
+test('student_channels.monitor opens the read-only teacher–family channel (docs/31 §2); without it, no button', async () => {
+  serve(['student_channels.monitor']);
+  await renderWithQuery(<StudentFileSections student={profile} />, createTestQueryClient({ meFromApi: true }));
+  await fireEvent.press(await screen.findByText(t.studentChannel.monitorTitle));
+  expect(mockPush).toHaveBeenCalledWith(`/students/channel/${profile.id}`);
+});
+
+test('without student_channels.monitor the channel button is hidden', async () => {
+  serve(['payments.read']);
+  await renderWithQuery(<StudentFileSections student={profile} />, createTestQueryClient({ meFromApi: true }));
+  expect(await screen.findByText(S.money.button)).toBeTruthy();
+  expect(screen.queryByText(t.studentChannel.monitorTitle)).toBeNull();
+});

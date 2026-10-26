@@ -59,6 +59,12 @@ const ROUTES: Record<PushKind, (area: Area, data: Data) => string> = {
   },
   // «مزامنة Google» (docs/24, docs/26b §1); only admins get this kind.
   google_sync_alert: (area) => (area === 'admin' ? '/admin/settings/google' : HOME_BY_ROLE[area]),
+  // docs/31 §2: the teacher's «رسائل الطلاب» on that student; only teachers get this kind.
+  channel_message: (area, data) => {
+    const id = uuid(data, 'studentId');
+    if (area !== 'teacher') return HOME_BY_ROLE[area];
+    return id ? `/teacher/messages?student=${id}` : '/teacher/messages';
+  },
 };
 
 const isArea = (role: UserRole | null): role is Area =>

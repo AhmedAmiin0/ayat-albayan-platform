@@ -3180,6 +3180,10 @@
     "google_sync_alert": {
       "title": "مزامنة Google تحتاج إلى انتباه",
       "body": "{reason}"
+    },
+    "channel_message": {
+      "title": "رسالة جديدة من أسرة طالب",
+      "body": "{student}: {text}"
     }
   },
   "bell": {
@@ -3399,7 +3403,8 @@
       "payment_due": "باقة تحتاج إلى دفع أو تجديد",
       "new_student": "طالب جديد",
       "meeting_invite": "دعوة إلى اجتماع",
-      "google_sync_alert": "تنبيه مزامنة Google"
+      "google_sync_alert": "تنبيه مزامنة Google",
+      "channel_message": "رسالة في محادثة طالب"
     },
     "paymentKind": {
       "payment": "دفعة",
@@ -3614,7 +3619,8 @@
     "feedback": "الآراء",
     "chats": "المحادثات",
     "students": "الطلاب",
-    "statements": "كشوف الشهر"
+    "statements": "كشوف الشهر",
+    "messages": "رسائل الطلاب"
   },
   "teacherStudents": {
     "levelCol": "المستوى",
@@ -4713,7 +4719,8 @@
       "subscriptions.set_start_date": "تحديد تاريخ بداية الاشتراك",
       "numbers.manage": "إدارة أرقام واتساب",
       "notifications.manage": "إدارة الإشعارات",
-      "saved_replies.manage": "إدارة الردود السريعة المشتركة"
+      "saved_replies.manage": "إدارة الردود السريعة المشتركة",
+      "student_channels.monitor": "الاطلاع على محادثات الطلاب مع المعلمين"
     },
     "hints": {
       "students.check_registration": "البحث برقم ولي الأمر أو باسم الطالب أو كوده، وعرض الاسم والكود والحالة والمعلم فقط.",
@@ -5446,6 +5453,10 @@
       "google_sync_alert": {
         "name": "تنبيه مزامنة Google",
         "trigger": "عند انتهاء صلاحية ربط حساب Google أو عند وجود معلم غير مربوط بتقويم"
+      },
+      "channel_message": {
+        "name": "رسالة من أسرة الطالب في المحادثة",
+        "trigger": "عند وصول رسالة من الطالب أو ولي الأمر في محادثة الطالب"
       }
     }
   },
@@ -6407,5 +6418,36 @@
       "call_failed": "تعذّر إجراء المكالمة. لم تُعَد المحاولة تلقائيًا تجنّبًا لاحتسابها مرتين.",
       "media_failed": "انقطع الصوت. أنهِ المكالمة ثم اتصل مرة أخرى."
     }
+  },
+  "studentChannel": {
+    "title": "رسائل الطلاب",
+    "portalTab": "المحادثة مع المعلم/ة",
+    "monitorTitle": "المحادثة بين المعلم/ة والأسرة",
+    "readOnly": "للاطلاع فقط: لا يمكنك الكتابة في هذه المحادثة.",
+    "placeholder": "اكتب رسالتك…",
+    "messageLabel": "الرسالة",
+    "send": "أرسل",
+    "sending": "جارٍ الإرسال…",
+    "empty": "لا توجد رسائل بعد",
+    "emptyHint": "ابدأ المحادثة برسالة.",
+    "older": "الرسائل الأقدم",
+    "loadFailed": "تعذّر تحميل المحادثة.",
+    "retry": "أعد المحاولة",
+    "sendFailed": "تعذّر إرسال الرسالة، أعد المحاولة.",
+    "tooLong": "الرسالة أطول من {n} حرف.",
+    "you": "أنت",
+    "roles": {
+      "teacher": "المعلم/ة",
+      "guardian": "ولي الأمر",
+      "student": "الطالب"
+    },
+    "listEmpty": "لا يوجد طلاب حاليون بعد",
+    "listEmptyHint": "تظهر هنا محادثة كل طالب تدرّسه الآن.",
+    "pick": "اختر طالبًا لعرض المحادثة.",
+    "unread": "{n} غير مقروءة",
+    "open": "المحادثة",
+    "back": "كل الطلاب",
+    "students": "الطلاب",
+    "noMessageYet": "لا رسائل بعد"
   }
 }
