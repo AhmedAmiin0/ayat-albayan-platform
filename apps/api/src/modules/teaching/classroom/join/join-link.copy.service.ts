@@ -5,6 +5,7 @@ import { notFound } from '../../../../common/http/errors';
 import { TeachersQueries } from '../../../people/teachers/teachers.queries';
 import { CLASSROOM_WEB_ORIGIN } from '../classroom.config';
 import { ClassroomQueries } from '../classroom.queries';
+import { assertWindowOpen } from './join-gate';
 import { hashLinkToken, linkExpiry, newLinkToken } from './join-link.token';
 
 /**
@@ -30,6 +31,22 @@ export class JoinLinkCopyService {
     const token = newLinkToken();
     const expires_at = linkExpiry(lesson, await this.queries.joinWindow());
     await this.queries.insertLink({ lesson_id: lesson.id, token_hash: hashLinkToken(token), expires_at, created_by: user.id });
+    return { url: `${this.origin}/join/${token}`, expires_at };
+  }
+
+  /**
+   * The family portal's «ادخل الحلقة» (docs/31): the same guest URL and lifetime, for ONE student of this
+   * lesson, and only while the room is open (403 join_not_open_yet with opens_at, 410 join_closed). The
+   * caller (the portal) has checked the student is the login's own and on this lesson.
+   */
+  async forStudent(input: { lessonId: string; studentId: string }, now = new Date()): Promise<JoinLinkUrl> {
+    const lesson = await this.queries.lesson(input.lessonId);
+    if (!lesson) throw notFound('lesson_not_found');
+    const win = await this.queries.joinWindow();
+    assertWindowOpen(lesson, now, win);
+    const token = newLinkToken();
+    const expires_at = linkExpiry(lesson, win);
+    await this.queries.rotateStudentLink({ lesson_id: lesson.id, student_id: input.studentId, token_hash: hashLinkToken(token), expires_at });
     return { url: `${this.origin}/join/${token}`, expires_at };
   }
 }

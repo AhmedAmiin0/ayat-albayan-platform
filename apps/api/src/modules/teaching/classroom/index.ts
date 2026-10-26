@@ -10,6 +10,7 @@ export {
 } from './classroom.config';
 export { ClassroomModule } from './classroom.module';
 export { ClassroomSettings, type ClassroomSettingsValues } from './classroom.settings';
+export { JoinLinkCopyService } from './join/join-link.copy.service';
 export {
   checkLink,
   hashLinkToken,

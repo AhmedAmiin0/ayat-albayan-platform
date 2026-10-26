@@ -1,0 +1,41 @@
+import { lessonStatusStyle, type PortalStudent } from '@ab/shared';
+import { useQuery } from '@tanstack/react-query';
+import { EmptyState } from '@/components/ui/display/empty-state';
+import { StatusChip } from '@/components/ui/display/status-chip';
+import { useNow } from '@/features/teaching/classroom';
+import { t } from '@/lib/i18n/i18n';
+import { teacherLabel } from '@/lib/i18n/teacher-label';
+import { PORTAL_REFRESH_MS, portalLessonsQuery } from '../api';
+import { LessonAction } from './LessonAction';
+import { LessonWhen } from './LessonWhen';
+import { LoadState } from '../LoadState';
+
+/** «الحلقات القادمة»: the next 14 days, one card per lesson, re-read every 30 seconds. */
+export function LessonsPanel({ student }: { student: PortalStudent }) {
+  const now = useNow(PORTAL_REFRESH_MS);
+  const query = useQuery(portalLessonsQuery(student.id));
+  return (
+    <LoadState query={query}>
+      {({ lessons }) =>
+        lessons.length === 0 ? (
+          <EmptyState title={t.portal.lessonsEmpty}>{t.portal.lessonsEmptyHint}</EmptyState>
+        ) : (
+          <ul className="grid gap-3">
+            {lessons.map((lesson) => (
+              <li key={lesson.id} className="grid gap-3 rounded-lg border border-rule bg-raised p-4">
+                <div className="flex flex-wrap items-start justify-between gap-2">
+                  <LessonWhen startsAt={lesson.starts_at} tz={student.tz} />
+                  <StatusChip {...lessonStatusStyle[lesson.status]} label={t.enums.lessonStatus[lesson.status]} size="sm" />
+                </div>
+                {lesson.teacher.display_name_ar && (
+                  <p className="text-sm text-ink-2">{t.portal.withTeacher.replace('{teacher}', teacherLabel(lesson.teacher))}</p>
+                )}
+                <LessonAction lesson={lesson} studentId={student.id} tz={student.tz} now={now} />
+              </li>
+            ))}
+          </ul>
+        )
+      }
+    </LoadState>
+  );
+}

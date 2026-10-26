@@ -9,6 +9,7 @@ import { dbError } from '../../../common/http/http';
 export type JoinLesson = Pick<Tables<'lessons'>, 'id' | 'teacher_id' | 'starts_at' | 'ends_at' | 'status' | 'room_opened_at'>;
 const JOIN_COLUMNS = 'id, teacher_id, starts_at, ends_at, status, room_opened_at';
 export type JoinLinkRow = Tables<'lesson_join_links'>;
+const UNIQUE_VIOLATION = '23505';
 
 /** Who the family's link goes to: the student's guardian. */
 interface SendContext {
@@ -93,6 +94,23 @@ export class ClassroomQueries {
     const { data, error } = await this.db.from('lesson_join_links').insert(row).select('*').single();
     if (error) throw dbError(error);
     return data;
+  }
+
+  /**
+   * The family portal's link (docs/31): a new token on THE (lesson, student) row (migration 191), so a
+   * removal from the room (classroom_blocks.join_link_id) holds whichever way the family comes back.
+   * The row's previous token dies; the student-link join never hands its token out.
+   */
+  async rotateStudentLink(row: { lesson_id: string; student_id: string; token_hash: string; expires_at: string }): Promise<void> {
+    const keys = { lesson_id: row.lesson_id, student_id: row.student_id };
+    const patch = { token_hash: row.token_hash, expires_at: row.expires_at };
+    const updated = await this.db.from('lesson_join_links').update(patch).match(keys).select('id');
+    if (updated.error) throw dbError(updated.error);
+    if (updated.data.length > 0) return;
+    const { error } = await this.db.from('lesson_join_links').insert(row);
+    // Two presses at once: the other one created the row; this token goes on it.
+    if (error?.code === UNIQUE_VIOLATION) return this.rotateStudentLink(row);
+    if (error) throw dbError(error);
   }
 
   async linkByHash(hash: string): Promise<JoinLinkRow | null> {
