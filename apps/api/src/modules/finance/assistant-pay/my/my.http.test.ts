@@ -22,6 +22,7 @@ describe('GET /sales/me/* (the assistant portal): who may call, and only ever my
   afterAll(() => t.app.close());
   beforeEach(() => {
     vi.resetAllMocks();
+    t.terms.renewalShare.mockResolvedValue(50);
     t.my.students.mockImplementation(async (id: string) => (id === A ? [dirtyStudent] : []));
     t.my.payments.mockImplementation(async (id: string) => (id === A ? [dirtyPayment] : []));
     t.my.tz.mockResolvedValue('Asia/Riyadh');
@@ -50,7 +51,7 @@ describe('GET /sales/me/* (the assistant portal): who may call, and only ever my
     expect(res.statusCode).toBe(200);
     expect(t.my.students).toHaveBeenCalledWith(A);
     const [row] = res.json();
-    expect(Object.keys(row)).toEqual(['id', 'code', 'name', 'brought_at', 'first_subscription_paid', 'commission']);
+    expect(Object.keys(row)).toEqual(['id', 'code', 'name', 'brought_at', 'first_subscription_paid', 'commission', 'renewal_commissions']);
     expect(Object.keys(row.commission)).toEqual(['amount', 'currency', 'status', 'earned_at']);
     expect(keys(res.json()).filter((k) => /price|fx_|notes|guardian|assistant|paid_amount|due/i.test(k))).toEqual([]);
     expect(res.body).not.toContain('290');

@@ -46,6 +46,12 @@ const PINS: Pin[] = [
     re: /s\.key = 'google_calendar_window_days' and jsonb_typeof\(s\.value\) = 'number'\), (\d+)\)/,
     parse: Number,
   },
+  {
+    fn: 'public.renewal_commission_share',
+    key: 'renewal_commission_percent',
+    re: /s\.key = 'renewal_commission_percent' and jsonb_typeof\(s\.value\) = 'number'\), (\d+)\)/,
+    parse: Number,
+  },
 ];
 
 /** Known differences today: none. Add `'fn:key'` here (with a comment and a follow-up) rather than changing SQL in a test PR. */

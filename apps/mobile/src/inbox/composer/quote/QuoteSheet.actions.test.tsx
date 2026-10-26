@@ -89,6 +89,8 @@ test('a sheet reopened while its send is in flight cannot send again, and cannot
   await screen.findByTestId('quote-preview');
   await fireEvent.press(button(q.send));
   await waitFor(() => expect(mockApiSend).toHaveBeenCalledTimes(1));
+  // The press lands once the sheet shows the send in flight (useIsMutating re-renders async).
+  await screen.findByRole('button', { name: t.inbox.composer.sending });
   await fireEvent.press(screen.getByRole('button', { name: q.close }));
   expect(onClose).not.toHaveBeenCalled();
   await first.unmount();

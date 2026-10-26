@@ -22,6 +22,7 @@ const LEGACY_PAGE_ORDER = [
   'recording_consent_notice', 'family_login_enabled', 'login_code_ttl_minutes', 'login_code_max_attempts',
   'recording_retention_days', 'activity_retention_days',
   'sales_auto_assign',
+  'renewal_commission_percent',
 ];
 
 const flat = (): SettingKey[] => SETTINGS_SECTIONS.flatMap((id): readonly SettingKey[] => SETTINGS_LAYOUT[id]);

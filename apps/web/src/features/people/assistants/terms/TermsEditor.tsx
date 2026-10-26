@@ -41,7 +41,7 @@ export function TermsEditor({ assistant }: { assistant: AssistantRow }) {
     <form className="mb-8 grid max-w-3xl gap-6" onSubmit={submit} noValidate aria-label={t.assistants.terms.title}>
       <h2 className="font-display text-h4 font-bold">{t.assistants.terms.title}</h2>
       <TermsFields form={form} errors={errors} set={set} mins={startMins(rules)} />
-      <p className="text-xs text-ink-3">{t.assistants.terms.hint}</p>
+      <p className="text-xs text-ink-3">{t.assistants.terms.hint.replace('{n}', String(assistant.terms.renewal_share_percent))}</p>
       {save.isError && <FormAlert>{errorText(save.error)}</FormAlert>}
       <div className="flex items-center gap-3">
         <Button type="submit" disabled={save.isPending}>

@@ -37,8 +37,8 @@ export async function student(tx: Tx, input: { phone: string; broughtBy?: string
 
 export async function subscription(tx: Tx, studentId: string, input: { price: number; currency?: string }): Promise<string> {
   const [s] = await tx<{ id: string }[]>`insert into public.subscriptions
-    (student_id, package, duration, lessons_total, price, currency, price_source, starts_on)
-    values (${studentId}, '8', 30, 8, ${input.price}, ${input.currency ?? 'SAR'}, '{}'::jsonb, current_date)
+    (student_id, package, duration, lessons_total, price, currency, price_source, starts_on, created_at)
+    values (${studentId}, '8', 30, 8, ${input.price}, ${input.currency ?? 'SAR'}, '{}'::jsonb, current_date, clock_timestamp())
     returning id`;
   if (!s) throw new Error('subscription not written');
   return s.id;
@@ -65,9 +65,15 @@ export function one<T>(rows: readonly T[]): T {
 
 export type CommissionRow = { assistant_id: string; amount: string; currency: string; status: string; subscription_id: string | null; statement_id: string | null };
 
+/** The student's 'first' commission (one per student). */
 export const commissionOf = async (tx: Tx, studentId: string): Promise<CommissionRow | undefined> =>
   (await tx<CommissionRow[]>`select assistant_id, amount::text, currency, status, subscription_id, statement_id
-    from public.assistant_commissions where student_id = ${studentId}`)[0];
+    from public.assistant_commissions where student_id = ${studentId} and kind = 'first'`)[0];
+
+/** The 'renewal' commission of one subscription (one per subscription), with its share. */
+export const renewalOf = async (tx: Tx, subscriptionId: string): Promise<(CommissionRow & { share_percent: number }) | undefined> =>
+  (await tx<(CommissionRow & { share_percent: number })[]>`select assistant_id, amount::text, currency, status, subscription_id,
+    statement_id, share_percent from public.assistant_commissions where subscription_id = ${subscriptionId} and kind = 'renewal'`)[0];
 
 /** A one-student family: brought by `by` (at `broughtAt`, default now), one package of `price`, nothing paid yet. */
 export async function brought(tx: Tx, input: { by: string; phone: string; price: number; currency?: string; broughtAt?: string }) {

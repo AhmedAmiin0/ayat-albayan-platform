@@ -2,8 +2,8 @@ import { expect, test } from '@playwright/test';
 import { assistant, brought, code, commissionOf, iso, one, pay, student, subscription, today } from '../support/assistant';
 import { rolledBack } from '../support/rls';
 
-// Assistant commission (migrations 270-274) against the real database: ONE commission per brought
-// student, on the first fully paid subscription, from commission_starts_on, percent or fixed, reversed
+// Assistant commission (migrations 270-274, 750-751) against the real database: ONE first commission per
+// brought student, on the first fully paid subscription (renewals: assistant-renewal-commission.sql.spec.ts), from commission_starts_on, percent or fixed, reversed
 // when the payment goes away. Each case is rolled back. Twin: @ab/shared sales/commission.ts.
 
 const PERCENT = { commission_type: 'percent', commission_value: 10, commission_starts_on: '2000-01-01' } as const;
@@ -11,7 +11,7 @@ const PERCENT = { commission_type: 'percent', commission_value: 10, commission_s
 test.describe('assistant commission (20261006000270-274)', () => {
   test.beforeEach(() => test.skip(test.info().project.name !== 'desktop', 'database only: one run'));
 
-  test('percent of the price, once, on the first fully paid subscription; a second one earns nothing', async () => {
+  test('percent of the price, once, on the first fully paid subscription; a second one is a renewal at half', async () => {
     await rolledBack(async (tx) => {
       const a = await assistant(tx, 'pct', PERCENT);
       const { student: s, sub } = await brought(tx, { by: a, phone: '+966500000101', price: 250 });
@@ -22,7 +22,11 @@ test.describe('assistant commission (20261006000270-274)', () => {
       const second = await subscription(tx, s, { price: 400 });
       await pay(tx, second, 400);
       expect(await commissionOf(tx, s)).toMatchObject({ amount: '25.00', subscription_id: sub });
-      expect((await tx`select 1 from public.assistant_commissions where student_id = ${s}`).length).toBe(1);
+      // Owner 2026-10-26: one 'first' per student; the second package earns the renewal share (10 % x 50 %).
+      expect(await tx`select kind, amount::text from public.assistant_commissions where student_id = ${s} order by kind`).toEqual([
+        { kind: 'first', amount: '25.00' },
+        { kind: 'renewal', amount: '20.00' },
+      ]);
     });
   });
 

@@ -21,7 +21,7 @@ export type ThreadRow = Tables<'v_threads'>;
  * The family tags come from the guardian's students (ThreadsQueries.familyTags / people); a
  * guardian without students is «مش مشترك», a row without a guardian has no badge.
  */
-export function toThreadView(row: ThreadRow, now: Date, tag: FamilyTag | null = null): ThreadView {
+export function toThreadView(row: ThreadRow & { last_unsupported?: boolean }, now: Date, tag: FamilyTag | null = null): ThreadView {
   return {
     phone_e164: row.phone_e164 ?? '',
     display_name: row.display_name,
@@ -31,6 +31,7 @@ export function toThreadView(row: ThreadRow, now: Date, tag: FamilyTag | null = 
     last_template_key: row.last_template_key,
     last_status: row.last_status ?? 'delivered',
     last_media_mime: row.last_media_mime,
+    ...(row.last_unsupported ? { last_unsupported: true } : {}),
     last_message_at: row.last_message_at ?? '',
     last_inbound_at: row.last_inbound_at,
     last_inbound_line: row.last_inbound_line,

@@ -13,8 +13,9 @@ export function isUnsupportedMessage(payload: unknown): payload is Record<string
 
 /**
  * Whether an inbound row's stored payload (messages.interactive_payload, as the webhook keeps it:
- * `{ type: 'unsupported', errors: [{ code }], unsupported }`) is Meta's 131060. Our numbers run on
- * the Cloud API, so nobody can open it in a WhatsApp app: the bubble asks for it again instead.
+ * `{ type: 'unsupported', errors: [{ code }], unsupported }`) is Meta's 131060: typically the first
+ * message to a number in coexistence with the WhatsApp Business app. Its content never reaches the
+ * Cloud API but shows in that app on the academy phone; the bubble says so and can ask for it again.
  */
 export function isUnavailableMessage(payload: unknown): boolean {
   if (!isUnsupportedMessage(payload)) return false;
