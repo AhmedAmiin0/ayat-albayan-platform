@@ -26,8 +26,10 @@ describe('MessageBubble links (W11)', () => {
     expect(link.parentElement?.textContent).toBe('رابط الحلقة https://meet.example/ab.');
   });
 
-  it('javascript: and www. stay text', () => {
+  it('javascript: stays text; www. and a host opens over https', () => {
     const bubble = renderBody('javascript:alert(1) و www.x.com');
-    expect(within(bubble).queryByRole('link')).toBeNull();
+    const links = within(bubble).getAllByRole('link');
+    expect(links.map((l) => l.getAttribute('href'))).toEqual(['https://www.x.com']);
+    expect(links[0]?.textContent).toBe('www.x.com');
   });
 });

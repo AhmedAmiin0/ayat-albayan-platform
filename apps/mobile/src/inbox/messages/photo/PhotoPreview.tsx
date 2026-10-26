@@ -1,6 +1,6 @@
 import type { MessageView } from '@ab/shared';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import { ActivityIndicator, Image, Pressable, StyleSheet, View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { shape, type, useTheme } from '@/theme';
@@ -19,6 +19,9 @@ export interface PhotoPreviewProps {
   /** The bubble's menu («رد», «إعادة توجيه»): the thumbnail takes the touch, so it opens it too. */
   onLongPress?: () => void;
 }
+
+/** The photos already re-signed once after a failed load, by message: kept across a remount (scroll back). */
+const resigned = new Set<string>();
 
 /** «تعذّر تحميل الصورة»: a tap asks again. */
 function RetryLine({ onPress }: { onPress: () => void }) {
@@ -43,7 +46,6 @@ export function PhotoPreview({ message: m, phone, box, kind, onLongPress }: Phot
   const query = threadFileQuery(phone, m.id);
   const file = useQuery(query);
   const client = useQueryClient();
-  const resigned = useRef(false);
   const [broken, setBroken] = useState(false);
   const [loaded, setLoaded] = useState<string | null>(null);
   const [open, setOpen] = useState(false);
@@ -59,8 +61,8 @@ export function PhotoPreview({ message: m, phone, box, kind, onLongPress }: Phot
   }
   if (broken) return <RetryLine onPress={retry} />;
   const onError = () => {
-    if (resigned.current) return setBroken(true);
-    resigned.current = true;
+    if (resigned.has(m.id)) return setBroken(true);
+    resigned.add(m.id);
     void client.invalidateQueries({ queryKey: query.queryKey, exact: true });
   };
   const label = t.inbox.viewMedia.replace('{kind}', kind);

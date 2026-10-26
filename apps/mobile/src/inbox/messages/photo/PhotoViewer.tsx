@@ -1,4 +1,5 @@
 import type { MessageView } from '@ab/shared';
+import { useState } from 'react';
 import { Animated, Image, Modal, Pressable, useWindowDimensions, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { t } from '@/core/lib/i18n/i18n';
@@ -19,10 +20,16 @@ export interface PhotoViewerProps {
 
 /** The photo at full size, pinch to zoom 1×–4×, pan when zoomed, a double tap 1× ⇄ 2.5× (use-zoom). */
 function ZoomPhoto({ uri, label }: { uri: string; label: string }) {
-  const size = useWindowDimensions();
+  const window = useWindowDimensions();
+  // The pan limit is the photo's area (under «إغلاق», above «تنزيل»), measured once laid out.
+  const [size, setSize] = useState({ width: window.width, height: window.height });
   const zoom = useZoom({ size, reduceMotion: useA11yPref('reduceMotion') });
   return (
-    <View style={{ flex: 1, overflow: 'hidden' }} {...zoom.handlers}>
+    <View
+      style={{ flex: 1, overflow: 'hidden' }}
+      onLayout={(e) => setSize({ width: e.nativeEvent.layout.width, height: e.nativeEvent.layout.height })}
+      {...zoom.handlers}
+    >
       <Animated.View style={[{ flex: 1 }, zoom.style]}>
         <Image
           source={{ uri }}
