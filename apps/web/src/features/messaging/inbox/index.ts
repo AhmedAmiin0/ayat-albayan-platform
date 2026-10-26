@@ -34,6 +34,7 @@ export {
   timesInText,
   unreadLabel,
 } from './format';
+export { CallProvider, type CallProviderProps } from './calls/state/CallProvider';
 export { DeliveryTicks, type DeliveryTicksProps } from './messages/components/DeliveryTicks';
 export {
   chatReceiptFileQuery,

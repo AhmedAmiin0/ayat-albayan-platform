@@ -13,6 +13,7 @@ import { leadChip } from '../../sales/subscription';
 import { SubscriptionChip } from '../../sales/SubscriptionChip';
 import type { ThreadHeaderProps } from './ThreadHeader';
 import { WindowBanner } from './WindowBanner';
+import { CallButton } from '../../calls/header/CallButton';
 
 /**
  * The full-screen chat's header below 900px (owner 2026-10-05): one compact row (back to
@@ -20,7 +21,7 @@ import { WindowBanner } from './WindowBanner';
  * icons plus «المزيد»), then the status chips (and the sales children line) on one line that
  * scrolls sideways instead of wrapping, ending with the times' city like ThreadHeader (principle 7).
  */
-export function ThreadHeaderPhone({ thread: th, listSearch, headingId, badge, action, line, lists }: ThreadHeaderProps) {
+export function ThreadHeaderPhone({ thread: th, listSearch, headingId, badge, action, line, lists, callable = false }: ThreadHeaderProps) {
   const kind = threadKind(th);
   const mode = useInboxMode();
   const title = threadTitle(th, mode);
@@ -44,6 +45,7 @@ export function ThreadHeaderPhone({ thread: th, listSearch, headingId, badge, ac
             <Ltr className="block truncate text-2xs text-ink-3">{formatPhone(th.phone_e164)}</Ltr>
           )}
         </div>
+        <CallButton phone={th.phone_e164} name={title} canSend={callable} />
         {action}
       </div>
       <div className="-mx-1.5 mt-1 flex items-center gap-1.5 overflow-x-auto px-3 text-2xs whitespace-nowrap text-ink-3 [scrollbar-width:none]">

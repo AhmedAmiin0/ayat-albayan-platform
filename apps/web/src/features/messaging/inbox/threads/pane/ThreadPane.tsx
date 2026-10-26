@@ -90,9 +90,9 @@ export function ThreadPane({ phone, listSearch }: ThreadPaneProps) {
   const toast = notice && <Toast {...notice} onDismiss={() => setNotice(null)} />; // inside an open phone sheet
   // Until /teachers/me answers, a teacher's number counts as their own (no composer).
   const ownThread = teacherMode && !!th.teacher_id && (!me.data || me.data.id === th.teacher_id);
-
   const line = mode === 'sales' && people && <SalesFamilyLine phone={phone} people={people} lessons={first?.lessons ?? []} />;
-  const headerProps = { thread: th, listSearch, headingId, badge: admin && people ? threadBadge(people) : null, line, lists: first?.lists };
+  const readOnly = ownThread ? t.inbox.ownThreadReadOnly : access.send ? null : t.inbox.sendNotAllowed;
+  const headerProps = { thread: th, listSearch, headingId, badge: admin && people ? threadBadge(people) : null, line, lists: first?.lists, callable: !readOnly };
   const log = (fill: 'shell' | 'xl' | 'phone') => (
     <>
       {detail.isError && (
@@ -108,10 +108,10 @@ export function ThreadPane({ phone, listSearch }: ThreadPaneProps) {
         onOlder={() => void detail.fetchNextPage()}
         waitingKeys={waiting}
         fill={fill}
+        canCall={!readOnly}
       />
     </>
   );
-  const readOnly = ownThread ? t.inbox.ownThreadReadOnly : access.send ? null : t.inbox.sendNotAllowed;
   const reply = readOnly ? (
     <p className="mt-4 shrink-0 border-t border-rule pt-4 text-sm text-ink-2 max-shell:mt-0 max-shell:px-3 max-shell:pb-[max(0.75rem,env(safe-area-inset-bottom))] max-shell:pt-3">
       {readOnly}
@@ -119,7 +119,6 @@ export function ThreadPane({ phone, listSearch }: ThreadPaneProps) {
   ) : (
     <Composer key={phone} thread={th} context={context} />
   );
-
   const body = (actions: ReactNode) =>
     phoneView ? (
       <PhoneChat labelledBy={headingId}>

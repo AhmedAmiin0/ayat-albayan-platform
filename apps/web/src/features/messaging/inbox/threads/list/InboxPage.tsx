@@ -15,6 +15,9 @@ import { useListsAccess } from '../../lists/use-lists-access';
 import { parseInboxSearch, type InboxSearch } from '../../shared/search';
 import { ThreadList } from './ThreadList';
 import { ThreadPane } from '../pane/ThreadPane';
+import { CallsLog } from '../../calls/log/CallsLog';
+import { CallsTabs } from '../../calls/log/CallsTabs';
+import { useCallsEnabled } from '../../calls/state/call-context';
 
 export interface InboxPageProps {
   search: InboxSearch;
@@ -39,6 +42,8 @@ export function InboxPage({ search, onSearch, head }: InboxPageProps) {
   const list = lists ? activeList(search.list, all.isError ? [] : all.data) : undefined;
   const shown = parseInboxSearch({ ...search, list });
   const threads = useQuery(threadsQuery(shown));
+  // «المكالمات» (docs/28) replaces the chats list only while calls are on.
+  const callsLog = useCallsEnabled() && !!shown.calls;
   const { phone, ...listSearch } = shown;
   const filter = (patch: Record<string, unknown>) =>
     onSearch(parseInboxSearch({ ...shown, ...patch, page: 1 }));
@@ -60,10 +65,12 @@ export function InboxPage({ search, onSearch, head }: InboxPageProps) {
         aria-busy={threads.isPlaceholderData || undefined}
       >
         <InboxListHead total={threads.data?.total} head={head} onOpen={(next) => onSearch({ ...shown, phone: next })} />
-        {lists && <ChatListsBar active={list} onPick={(next) => filter({ list: next })} />}
-        {threads.isError && <p role="alert">{t.common.error}</p>}
-        {threads.isPending && <ListSkeleton rows={6} />}
-        {threads.data && (
+        <CallsTabs calls={callsLog} onPick={(calls) => filter({ calls: calls || undefined })} />
+        {callsLog && <CallsLog />}
+        {!callsLog && lists && <ChatListsBar active={list} onPick={(next) => filter({ list: next })} />}
+        {!callsLog && threads.isError && <p role="alert">{t.common.error}</p>}
+        {!callsLog && threads.isPending && <ListSkeleton rows={6} />}
+        {!callsLog && threads.data && (
           <>
             <ThreadList search={shown} threads={threads.data.items} onFilter={filter} total={threads.isPlaceholderData ? undefined : threads.data.total} />
             <Pager

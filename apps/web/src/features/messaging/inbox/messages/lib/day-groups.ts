@@ -1,4 +1,4 @@
-import { intlLocale, type MessageView } from '@ab/shared';
+import { intlLocale, mergeChat, type CallView, type MessageView } from '@ab/shared';
 import { t } from '@/lib/i18n/i18n';
 import { locale } from '@/lib/i18n/locale';
 
@@ -7,7 +7,10 @@ import { locale } from '@/lib/i18n/locale';
 
 const dayDate = new Intl.DateTimeFormat(intlLocale(locale), { weekday: 'long', day: 'numeric', month: 'long' });
 
-export type LogItem = { kind: 'day'; key: string; label: string } | { kind: 'message'; message: MessageView };
+export type LogItem =
+  | { kind: 'day'; key: string; label: string }
+  | { kind: 'message'; message: MessageView }
+  | { kind: 'call'; call: CallView };
 
 const dayKey = (at: Date): string => at.toDateString();
 
@@ -20,15 +23,18 @@ export function dayLabel(at: Date, now: Date): string {
   return dayDate.format(at);
 }
 
-/** The messages (oldest → newest) with a separator before the first message of each day. */
-export function withDays(messages: readonly MessageView[], now: Date): LogItem[] {
+/**
+ * The messages (oldest → newest) and the chat's calls (docs/28), merged by time, with a separator
+ * before the first entry of each day. `from`: calls before the oldest loaded page wait for it.
+ */
+export function withDays(messages: readonly MessageView[], now: Date, calls?: { list: readonly CallView[]; from: string | null }): LogItem[] {
   const items: LogItem[] = [];
   let last = '';
-  for (const message of messages) {
-    const at = new Date(message.created_at);
+  for (const entry of mergeChat(messages, calls?.list ?? [], { from: calls?.from ?? null })) {
+    const at = new Date(entry.at);
     const key = dayKey(at);
     if (key !== last) items.push({ kind: 'day', key, label: dayLabel(at, now) });
-    items.push({ kind: 'message', message });
+    items.push(entry.kind === 'message' ? { kind: 'message', message: entry.message } : { kind: 'call', call: entry.call });
     last = key;
   }
   return items;
