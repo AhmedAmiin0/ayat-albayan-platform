@@ -14,6 +14,7 @@ export {
   tabOpen,
   type TabRoute,
 } from './route-permissions';
+export { retryGate } from './gate-retry';
 export { type Credentials, signIn, type SignInResult } from './sign-in';
 export {
   type GateStatus,

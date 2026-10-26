@@ -43,7 +43,7 @@ describe('schedule rules', () => {
         start_time_local: '09:30',
         tz: 'Asia/Riyadh',
         byday: [1, 4],
-        starts_on: '2026-08-20',
+        starts_on: '2026-08-20', // clamped to --from on create (delta/scope.ts)
         ends_on: null,
         status: 'active',
         package: '8',
@@ -55,17 +55,23 @@ describe('schedule rules', () => {
     ]);
   });
 
-  it('skips one-off trials and unconfirmed rows; ends past rules', () => {
+  it('skips one-off rows, unsynced statuses and series that ended before --from', () => {
     const r = run([
       booking({ recurrence: null, package_text: 'حلقة تجريبية مجانية' }),
-      booking({ status: 'يحتاج تأكيد' }),
+      booking({ status: 'مبدئي' }),
+      booking({ status: 'ملغي' }),
       booking({ status: 'مؤكد', recurrence: 'أسبوعي: السبت حتى 2026-09-01', teacher: 'Hend' }),
+      booking({ status: 'مؤكد', recurrence: 'أسبوعي: السبت حتى 2026-12-01', teacher: 'Hend' }),
     ]);
     expect(
       r
         .by('schedule_rules')
-        .map((d) => [d.record.columns['status'], d.record.refs['teacher_id']?.key]),
-    ).toEqual([['ended', 'hend']]);
+        .map((d) => [
+          d.record.columns['status'],
+          d.record.columns['ends_on'],
+          d.record.refs['teacher_id']?.key,
+        ]),
+    ).toEqual([['active', '2026-12-01', 'hend']]);
   });
 
   it('one row naming two children makes one group rule (A4)', () => {
