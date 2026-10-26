@@ -1,6 +1,7 @@
 import { safeHttpUrl } from '@ab/shared';
 import { useState } from 'react';
 import { Linking, Share, View } from 'react-native';
+import { copyOrShare } from '@/core/lib/clipboard';
 import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/more/Note';
 import { type, useTheme } from '@/theme';
@@ -12,8 +13,9 @@ const L = t.studentLists;
 
 /**
  * «رابط الحلقة الثابت» on the sales teacher's page (owner 2026-10-12: the one place sales sees a
- * meeting link, web parity): the URL as selectable LTR text (long-press to copy), «شارك الرابط» (the
- * phone's share sheet: no clipboard module, the app ships by OTA) and «افتح الرابط». Only an http(s)
+ * meeting link besides the schedule's lesson link, web parity): the URL as selectable LTR text,
+ * «انسخ الرابط» (core/lib/clipboard: React Native core's clipboard, the share sheet when it fails),
+ * «شارك الرابط» (the phone's share sheet) and «افتح الرابط». Only an http(s)
  * URL is shown, anything else reads «لا يوجد رابط ثابت». When the teacher holds her lessons in our
  * classroom (SalesTeacherView.platform_classroom, per-teacher meeting mode) a line says families get
  * the platform link instead.
@@ -21,10 +23,18 @@ const L = t.studentLists;
 export function TeacherMeetingLink({ link, platform }: { link: string | null; platform: boolean }) {
   const { color } = useTheme();
   const [failed, setFailed] = useState(false);
+  const [copied, setCopied] = useState(false);
   const url = safeHttpUrl(link);
   const share = (text: string) => {
     setFailed(false);
+    setCopied(false);
     Share.share({ message: text }).catch(() => setFailed(true));
+  };
+  const copy = async (text: string) => {
+    setFailed(false);
+    const result = await copyOrShare(text);
+    setCopied(result === 'copied');
+    setFailed(result === 'failed');
   };
   return (
     <View accessibilityLabel={L.meetingLink} style={{ gap: 6, alignSelf: 'stretch' }}>
@@ -40,9 +50,15 @@ export function TeacherMeetingLink({ link, platform }: { link: string | null; pl
             {url}
           </AppText>
           <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
+            <Button variant="secondary" label={L.copyLink} onPress={() => void copy(url)} />
             <Button variant="secondary" label={L.shareLink} onPress={() => share(url)} />
             <Button variant="secondary" label={L.openLink} onPress={() => void Linking.openURL(url).catch(() => setFailed(true))} />
           </View>
+          {copied ? (
+            <AppText accessibilityLiveRegion="polite" style={{ fontFamily: type.ui[500], fontSize: type.size.xs, color: color.ink2 }}>
+              {L.copied}
+            </AppText>
+          ) : null}
           {failed ? (
             <AppText accessibilityRole="alert" style={{ fontFamily: type.ui[500], fontSize: type.size.xs, color: color.ink2 }}>
               {L.shareFailed}

@@ -16,11 +16,11 @@ describe('sales schedule mappers', () => {
   });
 
   it('toScheduleLesson whitelists: secret columns of the row never come out', () => {
-    const out = toScheduleLesson(scheduleRow());
-    expect(Object.keys(out).sort()).toEqual(['ends_at', 'id', 'makeup', 'starts_at', 'status', 'students', 'teacher', 'trial']);
+    const out = toScheduleLesson(scheduleRow(), false);
+    expect(Object.keys(out).sort()).toEqual(['ends_at', 'id', 'makeup', 'meeting_link', 'platform_classroom', 'starts_at', 'status', 'students', 'teacher', 'trial']);
     expect(out.teacher).toEqual({ id: 'tc1', display_name_ar: 'أبرار', display_name_en: 'Abrar' });
     expect(out.students).toEqual([{ id: 's1', code: 'AB-0101', name: 'ياسمين' }]);
-    const bare = toScheduleLesson(scheduleRow({ teacher: null, rule: null, makeup_of_id: 'x', lesson_students: [{ student: { id: 's9', code: null, name: 'ن' } }] }));
+    const bare = toScheduleLesson(scheduleRow({ teacher: null, rule: null, makeup_of_id: 'x', lesson_students: [{ student: { id: 's9', code: null, name: 'ن' } }] }), false);
     expect([bare.teacher.display_name_ar, bare.trial, bare.makeup, bare.students[0]?.code]).toEqual(['', false, true, '']);
   });
 
@@ -30,9 +30,26 @@ describe('sales schedule mappers', () => {
         teacher: { id: 'tc1', display_name_ar: 'أبرار', display_name_en: null, tz: 'Africa/Cairo' },
         lesson_students: [{ student: { id: 's1', code: 'AB-0101', name: 'ياسمين', tz: 'Asia/Muscat' } }],
       }),
+      false,
     );
     expect(out.teacher).toEqual({ id: 'tc1', display_name_ar: 'أبرار', display_name_en: null, tz: 'Africa/Cairo' });
     expect(out.students).toEqual([{ id: 's1', code: 'AB-0101', name: 'ياسمين', tz: 'Asia/Muscat' }]);
+  });
+
+  it('toScheduleLesson: the lesson link trimmed, blank or missing → null (owner 2026-10-26)', () => {
+    expect(toScheduleLesson(scheduleRow(), false).meeting_link).toBe('https://meet.example.org/les-2');
+    expect(toScheduleLesson(scheduleRow({ meeting_link: '   ' }), false).meeting_link).toBeNull();
+    expect(toScheduleLesson(scheduleRow({ meeting_link: null }), false).meeting_link).toBeNull();
+    expect(toScheduleLesson(scheduleRow({ meeting_link: undefined }), false).meeting_link).toBeNull();
+  });
+
+  it('toScheduleLesson: platform_classroom from the teacher’s meeting_mode, else the academy default', () => {
+    const mode = (meeting_mode: string | null) => scheduleRow({ teacher: { id: 'tc1', display_name_ar: 'أبرار', display_name_en: null, meeting_mode } });
+    expect(toScheduleLesson(mode('platform'), false).platform_classroom).toBe(true);
+    expect(toScheduleLesson(mode('static'), true).platform_classroom).toBe(false);
+    expect(toScheduleLesson(mode(null), true).platform_classroom).toBe(true);
+    expect(toScheduleLesson(mode(null), false).platform_classroom).toBe(false);
+    expect(toScheduleLesson(scheduleRow({ teacher: null }), true).platform_classroom).toBe(true);
   });
 
   it('teacherDayFacts counts today’s lessons but not cancelled ones, and flags one running now', () => {

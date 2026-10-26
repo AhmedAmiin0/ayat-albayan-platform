@@ -18,8 +18,8 @@ function issueJoinLink(studentId: string): Promise<{ url: string }> {
 }
 
 /**
- * «رابط دخول الطالب» (web: StudentJoinLink): there is no clipboard module, so the link goes through
- * the system share sheet. Only the hash is stored and the old link is already revoked, so the new
+ * «رابط دخول الطالب» (web: StudentJoinLink): the link goes through the system share sheet (it has
+ * Copy; core/lib/clipboard is not wired here yet). Only the hash is stored and the old link is already revoked, so the new
  * link stays on screen (selectable, with a re-share button) until the card goes away.
  */
 export function JoinLinkCard({ studentId, studentName }: { studentId: string; studentName: string }) {

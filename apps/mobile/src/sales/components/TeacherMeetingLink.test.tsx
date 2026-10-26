@@ -3,6 +3,7 @@ import { fireEvent, screen } from '@testing-library/react-native';
 import { Linking, Share } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { publicConfigQuery } from '@/core/lib/query/public-config';
+import { mockClipboard } from '@/test/native-mocks';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { TeacherMeetingLink } from './TeacherMeetingLink';
 
@@ -31,6 +32,22 @@ test('an http(s) link: selectable LTR text, «شارك الرابط» opens the 
   expect(open).toHaveBeenCalledWith(URL);
   expect(screen.queryByText(L.meetingLinkNone)).toBeNull();
   expect(screen.queryByText(L.meetingLinkAuto)).toBeNull();
+});
+
+test('«انسخ الرابط» puts exactly the URL on the clipboard and says so; a failing clipboard opens the share sheet', async () => {
+  const setString = mockClipboard();
+  const share = jest.spyOn(Share, 'share').mockResolvedValue({ action: 'sharedAction' });
+  await renderWithQuery(<TeacherMeetingLink link={URL} platform={false} />);
+  await fireEvent.press(screen.getByRole('button', { name: L.copyLink }));
+  expect(setString).toHaveBeenCalledWith(URL);
+  expect(await screen.findByText(L.copied)).toBeTruthy();
+  expect(share).not.toHaveBeenCalled();
+  setString.mockImplementation(() => {
+    throw new Error('no native module');
+  });
+  await fireEvent.press(screen.getByRole('button', { name: L.copyLink }));
+  expect(share).toHaveBeenCalledWith({ message: URL });
+  expect(screen.queryByText(L.copied)).toBeNull();
 });
 
 test('a failed share says to copy it by hand', async () => {
