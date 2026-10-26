@@ -2,7 +2,7 @@ import { View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { Button } from '@/core/ui/primitives/Button';
 
-export interface PanelButtonsProps {
+interface PanelButtonsProps {
   confirmLabel: string;
   onConfirm: () => void;
   onCancel: () => void;

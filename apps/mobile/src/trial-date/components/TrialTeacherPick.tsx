@@ -8,7 +8,7 @@ import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { Button } from '@/core/ui/primitives/Button';
 
-export interface TrialTeacherPickProps {
+interface TrialTeacherPickProps {
   /** The last trial's teacher, kept with one tap; null when the student never had one. */
   current: { id: string; name: string } | null;
   /** The student's program, the filter's start (quran when unknown). */

@@ -7,7 +7,7 @@ import { Button } from '@/core/ui/primitives/Button';
 import { NuqtaGlyph } from '@/core/ui/primitives/NuqtaGlyph';
 import { whenLines } from '../lib/trial-date-text';
 
-export interface TrialDateDoneProps {
+interface TrialDateDoneProps {
   /** The API's answer: its own starts_at, so a replayed request shows the truth. */
   result: TrialDateResult;
   teacherName: string;

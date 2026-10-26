@@ -2,7 +2,7 @@ import type { BookFailure } from '@/booking/shared/booking-errors';
 import { ConflictNotice } from '@/booking/shared/ConflictNotice';
 import { ErrorLine } from '@/inbox/ErrorLine';
 
-export interface ReviewNoticesProps {
+interface ReviewNoticesProps {
   /** The check's clashes, one line each (booking.conflict.<kind>). */
   clashes: readonly string[];
   /** The failed «احجز», if any. */

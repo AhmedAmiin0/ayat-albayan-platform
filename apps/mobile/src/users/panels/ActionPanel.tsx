@@ -4,7 +4,7 @@ import { DisablePanel } from './DisablePanel';
 import { ResetPasswordPanel } from './ResetPasswordPanel';
 import type { ActionMode } from './UserActions';
 
-export interface ActionPanelProps {
+interface ActionPanelProps {
   mode: ActionMode;
   user: UserDetail;
   onBack: () => void;

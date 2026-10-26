@@ -18,7 +18,7 @@ const CHIP = {
   deleted: { tone: 'neutral', glyph: 'hollow' },
 } as const;
 
-export interface RecordingRowProps {
+interface RecordingRowProps {
   rec: StudentRecordingView;
   studentId: string;
   tz?: string;

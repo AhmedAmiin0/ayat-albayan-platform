@@ -28,7 +28,7 @@ export function useChatReceiptThumb(studentId: string, item: SalesChatReceipt) {
   });
 }
 
-export interface ChatCopyInput {
+interface ChatCopyInput {
   subscriptionId: string;
   messageId: string;
 }

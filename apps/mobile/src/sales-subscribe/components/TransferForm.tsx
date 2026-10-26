@@ -13,7 +13,7 @@ import { salesErrorText } from '../lib/sales-errors';
 import { checkTransfer, draftFor, type TransferDraft } from '../lib/transfer-form';
 import { useSalesPayment } from '../hooks/use-sales-payment';
 
-export interface TransferFormProps {
+interface TransferFormProps {
   sub: SalesMoneySubscriptionView;
   phone: string;
   onDone: (payment: SalesPaymentView) => void;

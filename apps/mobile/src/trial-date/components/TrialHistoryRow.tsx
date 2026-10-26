@@ -6,7 +6,7 @@ import { AppText } from '@/core/ui/primitives/AppText';
 import { StatusChip } from '@/core/ui/feedback/StatusChip';
 import { pickedLine, trialOutcomeStyle, whenLines } from '../lib/trial-date-text';
 
-export interface TrialHistoryRowProps {
+interface TrialHistoryRowProps {
   row: TrialDateRow;
   /** The family's zone: its own clock under the viewer's when it differs. */
   familyTz: string;

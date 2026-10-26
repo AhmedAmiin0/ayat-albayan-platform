@@ -10,7 +10,7 @@ import type { Hero } from '../lib/today-plan';
 import { HeroActions } from './HeroActions';
 import { heroLead, heroSubtitle } from './hero-text';
 
-export interface HeroCardProps {
+interface HeroCardProps {
   hero: Hero;
   busy: boolean;
   /** Why the last confirm was refused (the status already rolled back). */

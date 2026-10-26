@@ -6,7 +6,7 @@ import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { ChatReceiptThumb } from './ChatReceiptThumb';
 
-export interface ChatReceiptRowProps {
+interface ChatReceiptRowProps {
   studentId: string;
   item: SalesChatReceipt;
   /** This file is being copied now. */
