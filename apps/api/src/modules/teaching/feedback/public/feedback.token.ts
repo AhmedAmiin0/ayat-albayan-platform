@@ -7,7 +7,7 @@ import { createHash, createHmac, timingSafeEqual } from 'node:crypto';
 // new hash, so the old link no longer finds its row).
 
 /** Link lifetime. */
-export const FEEDBACK_TTL_DAYS = 14;
+const FEEDBACK_TTL_DAYS = 14;
 const DAY_S = 86_400;
 const BODY_BYTES = 36;
 const SIG_BYTES = 16;
@@ -20,7 +20,7 @@ export interface TokenPayload {
   exp: number;
 }
 
-export type TokenCheck =
+type TokenCheck =
   | { ok: true; payload: TokenPayload }
   | { ok: false; reason: 'malformed' | 'bad_signature' | 'expired' };
 

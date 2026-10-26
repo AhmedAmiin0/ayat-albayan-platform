@@ -29,7 +29,7 @@ export interface StudentIn {
   teacher: { display_name_ar: string } | null;
 }
 
-export const studentHeader = (): Cell[] => [
+const studentHeader = (): Cell[] => [
   S.code, S.name, S.status, S.program, S.age, S.teacher, S.guardian, S.guardianPhone, G.country, G.source, S.tz, S.createdAt,
 ];
 
@@ -61,7 +61,7 @@ export interface LessonIn {
   lesson_students: { attendance: Attendance | null; chargeable: boolean; student: { code: string | null; name: string } | null }[];
 }
 
-export const lessonHeader = (): Cell[] => [
+const lessonHeader = (): Cell[] => [
   X.columns.date, X.columns.time, SUB.duration, S.teacher, S.code, S.name, X.columns.lessonStatus, X.columns.attendance, X.columns.chargeable,
 ];
 

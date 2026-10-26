@@ -5,7 +5,7 @@ import type { StudentChoice, TrialDraft } from './draft';
 import { picksOf } from '../../shared/picks';
 import { ruleFromSlot } from '../../shared/slots';
 
-export interface BodyOptions {
+interface BodyOptions {
   /** Idempotency key, the same on every retry of this wizard (rule 8). */
   requestId: string;
   choice?: StudentChoice;
@@ -18,7 +18,7 @@ export const toInvoiceInput: (invoice: InvoiceDraft) => InvoiceInput = bookingIn
  * The rule's timing: a trial one lesson on the slot's local day (invariant 4); a package every
  * pick's weekday from the earliest pick, with `dayTimes` for the days at another time.
  */
-export function ruleTiming(d: TrialDraft, startsAt: string) {
+function ruleTiming(d: TrialDraft, startsAt: string) {
   const picked = d.kind === 'package' ? dayTimesFromPicks(picksOf(d), d.tz) : null;
   if (!picked) {
     const rule = ruleFromSlot(startsAt, d.tz);

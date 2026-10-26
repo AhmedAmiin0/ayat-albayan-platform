@@ -28,7 +28,7 @@ export interface AlertLesson {
   teacher: AlertTeacher | null;
 }
 
-export interface AlertInput {
+interface AlertInput {
   lessons: readonly AlertLesson[];
   students: readonly { id: string; name: string; code?: string | null }[];
   kind: BookingKind;
@@ -36,7 +36,7 @@ export interface AlertInput {
 }
 
 /** One teacher's alert: the bell row (a profile to show it to) and the WhatsApp row (a phone to send to). */
-export interface TeacherAlertPlan {
+interface TeacherAlertPlan {
   push: PushTarget | null;
   message: QueuedMessage | null;
 }
@@ -51,7 +51,7 @@ function firstLessons(lessons: readonly AlertLesson[]): { teacher: AlertTeacher;
 }
 
 /** teacher_new_student: {{1}} the students, {{2}} the first lesson in the teacher's tz, {{3}} «تجريبية» | «اشتراك». */
-export function teacherNewStudentMessage(input: { names: readonly string[]; startsAt: Date; tz: string; kind: BookingKind }): OutboundTemplate {
+function teacherNewStudentMessage(input: { names: readonly string[]; startsAt: Date; tz: string; kind: BookingKind }): OutboundTemplate {
   const kinds = ar.templates.teacherNewStudentKind;
   return {
     key: 'teacher_new_student',

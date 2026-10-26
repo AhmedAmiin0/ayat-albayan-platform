@@ -1,0 +1,55 @@
+{
+  "$schema": "https://unpkg.com/knip@5/schema.json",
+  "workspaces": {
+    ".": {
+      "entry": [
+        "docs/design/brand/tools/*.mjs",
+        "tools/livekit/token-server.mjs"
+      ],
+      "ignoreBinaries": ["supabase"]
+    },
+    "apps/api": {
+      "entry": ["src/main.ts", "src/scripts/*.ts"],
+      "project": ["src/**/*.ts"],
+      "ignore": ["src/modules/*/*/index.ts"],
+      "ignoreDependencies": ["@fontsource/amiri", "@fontsource/ibm-plex-sans-arabic"]
+    },
+    "apps/web": {
+      "entry": ["src/main.tsx", "src/routes/**/*.{ts,tsx}"],
+      "project": ["src/**/*.{ts,tsx}"],
+      "ignore": ["src/routeTree.gen.ts"]
+    },
+    "apps/mobile": {
+      "entry": ["app/**/*.{ts,tsx}", "app.config.ts", "jest.setup.cjs"],
+      "project": ["{app,src}/**/*.{ts,tsx}"],
+      "ignoreDependencies": ["react-test-renderer", "expo-system-ui"]
+    },
+    "packages/db": {
+      "ignore": ["src/types.ts", "supabase/**"]
+    },
+    "tools/scripts": {
+      "entry": ["**/*.{mjs,ts}", "!**/*.test.*"],
+      "project": ["**/*.{mjs,ts}"]
+    },
+    "tools/migrate": {
+      "entry": ["src/cli.ts"]
+    },
+    "tools/wa-stub": {
+      "entry": ["src/server.ts"]
+    },
+    "tools/google-stub": {
+      "entry": ["src/server.ts"]
+    },
+    "e2e": {
+      "entry": [
+        "playwright.config.ts",
+        "tests/**/*.ts",
+        "support/durations-reporter.ts",
+        "scripts/*.ts"
+      ],
+      "project": ["**/*.ts"],
+      "ignoreDependencies": ["api", "web"]
+    }
+  },
+  "ignoreUnresolved": ["vite/client"]
+}

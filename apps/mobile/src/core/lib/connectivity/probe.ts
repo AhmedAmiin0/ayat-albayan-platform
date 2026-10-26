@@ -1,7 +1,7 @@
 /** A probe that gets no answer within this long counts as failed (a hanging request never ends the loop). */
-export const PROBE_TIMEOUT_MS = 8000;
+const PROBE_TIMEOUT_MS = 8000;
 
-export interface ProbeOptions {
+interface ProbeOptions {
   url: string;
   fetch?: typeof fetch;
   timeoutMs?: number;

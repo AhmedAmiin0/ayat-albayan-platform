@@ -19,7 +19,7 @@ export interface PaymentIn {
   subscription: { package: PackageSize | null; lessons_total: number; student: { code: string | null; name: string } | null } | null;
 }
 
-export const paymentHeader = (): Cell[] => [P.paidAt, S.code, S.name, SUB.package, SUB.lessonsTotal, ar.finance.kind, P.amount, P.currency, P.method, ar.finance.originalAmount, P.note];
+const paymentHeader = (): Cell[] => [P.paidAt, S.code, S.name, SUB.package, SUB.lessonsTotal, ar.finance.kind, P.amount, P.currency, P.method, ar.finance.originalAmount, P.note];
 
 export function paymentRows(rows: readonly PaymentIn[]): Cell[][] {
   return [
@@ -77,7 +77,7 @@ export function payoutLines(breakdown: Json): Line[] {
   });
 }
 
-export const payoutHeader = (): Cell[] => [Y.teacher, Y.month, S.status, SUB.duration, Y.lessons, Y.rate, Y.amount, P.currency, P.paidAt];
+const payoutHeader = (): Cell[] => [Y.teacher, Y.month, S.status, SUB.duration, Y.lessons, Y.rate, Y.amount, P.currency, P.paidAt];
 
 /** One total row per teacher (by name), then one row per breakdown line. */
 export function payoutRows(rows: readonly PayoutIn[]): Cell[][] {

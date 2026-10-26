@@ -8,7 +8,7 @@ import { RetryButton } from './RetryButton';
 import type { StartupStage } from './startup-mode';
 
 /** Always reserved under the status, so nothing moves when the hint and the retry come. */
-export const RETRY_AREA = 112;
+const RETRY_AREA = 112;
 const STATUS = type.size.body;
 const HINT = type.size.sm;
 
@@ -21,7 +21,7 @@ function FadeIn({ children, gap = 0 }: { children: ReactNode; gap?: number }) {
   return <Animated.View style={{ opacity, alignItems: 'center', gap }}>{children}</Animated.View>;
 }
 
-export interface StartupStatusProps {
+interface StartupStatusProps {
   stage: StartupStage;
   still: boolean;
   onRetry: () => void;

@@ -21,7 +21,7 @@ export interface Deduped {
 const content = (r: ParsedReport): string =>
   stableJson({ b: r.body, a: r.attendance, s: r.startsAt, e: r.endsAt, m: r.meetingLink });
 
-export const RESUBMIT_WINDOW_MS = 30 * 60_000;
+const RESUBMIT_WINDOW_MS = 30 * 60_000;
 
 /** One day's reports → lessons: same number, or sent within the window of a member, = one. */
 function lessonsOf(day: readonly ParsedReport[]): ParsedReport[][] {
@@ -66,7 +66,7 @@ function pickOne(group: readonly ParsedReport[], issues: RowIssue[]): ParsedRepo
 }
 
 /** The n-th distinct lesson of one day gets its own natural key: at = 'YYYY-MM-DD#n'. */
-export function asOtherLesson(r: ParsedReport, n: number): ParsedReport {
+function asOtherLesson(r: ParsedReport, n: number): ParsedReport {
   const lessonKey = keys.lesson({
     teacher: r.teacher,
     students: [r.student.key],

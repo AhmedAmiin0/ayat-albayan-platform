@@ -4,7 +4,7 @@ import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { Chevron } from '@/core/ui/primitives/Chevron';
 
-export interface ValueRowProps {
+interface ValueRowProps {
   label: string;
   value: string;
   /** settings.write and an editable scalar: the spoken name says «عدّل». */
@@ -16,7 +16,7 @@ export interface ValueRowProps {
 }
 
 /** The spoken name: «عدّل «…»: …» when editable, else «الاسم: القيمة»; then the saving line. */
-export function rowName({ label, value, editable, saving }: Omit<ValueRowProps, 'onPress'>): string {
+function rowName({ label, value, editable, saving }: Omit<ValueRowProps, 'onPress'>): string {
   const name = editable ? t.mobileValues.edit.replace('{label}', label).replace('{value}', value) : `${label}: ${value}`;
   return saving ? `${name}${t.common.listSeparator}${t.settingsValues.saving}` : name;
 }

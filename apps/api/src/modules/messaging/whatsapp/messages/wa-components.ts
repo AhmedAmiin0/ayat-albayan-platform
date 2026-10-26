@@ -37,7 +37,7 @@ export function documentHeader(input: TemplateSend): { link: string; filename: s
 }
 
 /** One send-time button value: a URL suffix ({{1}}) or a quick-reply payload, by the button's index. */
-export interface ButtonValue {
+interface ButtonValue {
   index: number;
   kind: 'url' | 'quick_reply';
   value: string;
@@ -67,7 +67,7 @@ function buttonComponents(input: TemplateSend): GraphBody[] {
 }
 
 /** The template's components in Meta's order: header, body, buttons by index. */
-export function templateComponents(input: TemplateSend): GraphBody[] {
+function templateComponents(input: TemplateSend): GraphBody[] {
   const parameters = bodyValues(input.template, input.params).map((text) => ({ type: 'text', text }));
   const doc = documentHeader(input);
   const header = doc ? { type: 'header', parameters: [{ type: 'document', document: doc }] } : null;

@@ -11,7 +11,7 @@ import { LESSON_STATUS } from '../reports/fields.ts';
 import { collectReports } from '../reports/collect.ts';
 import { oneOffLessonStudents, oneOffLessons } from '../schedule/one-offs.ts';
 
-export function mapLessons(bundle: SourceBundle): Mapped[] {
+function mapLessons(bundle: SourceBundle): Mapped[] {
   const reported = collectReports(bundle).reports.map((r) =>
     accepted({
       key: r.lessonKey,
@@ -28,7 +28,7 @@ export function mapLessons(bundle: SourceBundle): Mapped[] {
   return [...reported, ...oneOffLessons(bundle)];
 }
 
-export function mapLessonStudents(bundle: SourceBundle): Mapped[] {
+function mapLessonStudents(bundle: SourceBundle): Mapped[] {
   const reported = collectReports(bundle).reports.map((r) =>
     accepted({
       key: keys.lessonStudent({ lesson: r.lessonKey.key, student: r.student.key }),

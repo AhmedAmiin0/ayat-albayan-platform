@@ -30,7 +30,7 @@ export interface StatusRow {
 }
 
 /** The newest status_change audit row of the student. */
-export async function lastStatusRow(studentId: string): Promise<StatusRow | undefined> {
+async function lastStatusRow(studentId: string): Promise<StatusRow | undefined> {
   const [row] = await withSql(
     (sql) => sql<StatusRow[]>`
     select before->>'status' as "from", after->>'status' as "to", after->>'reason' as reason, after->>'via' as via
@@ -57,7 +57,7 @@ export async function checkRegistration(page: Page, expected: string): Promise<v
 }
 
 /** The status line of one registered child in the check's answer. */
-export const statusLine = (status: StudentStatus) => `${R.status}: ${ar.enums.studentStatus[status]}`;
+const statusLine = (status: StudentStatus) => `${R.status}: ${ar.enums.studentStatus[status]}`;
 
 export interface Expected {
   to: StudentStatus;

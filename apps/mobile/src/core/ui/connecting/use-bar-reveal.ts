@@ -1,11 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
 import { Animated, Easing } from 'react-native';
 
-export const REVEAL_MS = 260;
+const REVEAL_MS = 260;
 /** Reduce Motion: no slide, only this opacity fade in and out. */
-export const STILL_FADE_MS = 150;
+const STILL_FADE_MS = 150;
 
-export interface RevealOptions {
+interface RevealOptions {
   open: boolean;
   /** The card's measured height (its 12 pt top margin included); 0 until its first layout. */
   content: number;

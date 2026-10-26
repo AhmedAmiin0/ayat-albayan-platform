@@ -8,7 +8,7 @@ import { keyId } from '../keys.ts';
 import { APPLY_ORDER } from '../types.ts';
 import type { ColumnValue, Existing, Plan, PlanItem } from '../types.ts';
 
-export interface ApplyInput {
+interface ApplyInput {
   db: TargetDb;
   plan: Plan;
   /** Same map the plan was diffed against: refs to rows imported by earlier runs resolve here. */
@@ -22,7 +22,7 @@ export interface ApplyInput {
   batchSize?: number;
 }
 
-export const BATCH_SIZE = 500;
+const BATCH_SIZE = 500;
 
 export function batches<T>(xs: readonly T[], size: number): T[][] {
   const out: T[][] = [];

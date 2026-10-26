@@ -10,7 +10,7 @@ import type { TeacherScope } from '../teacher-threads/teacher-scope';
 import { ThreadSendService } from '../send/thread-send.service';
 import { ThreadsQueries } from '../threads/threads.queries';
 
-export interface ForwardInput {
+interface ForwardInput {
   input: ThreadForward;
   actorId: string;
   scope: TeacherScope | null;
@@ -40,7 +40,7 @@ export function skipOf(e: unknown): ForwardSkip {
 }
 
 /** 404 for a message the actor cannot read (never reveal another chat), 400 for a template or an empty row. */
-export function assertForwardable(row: ThreadMessageRow | null, who: Omit<ForwardInput, 'input' | 'actorId'>): ThreadMessageRow {
+function assertForwardable(row: ThreadMessageRow | null, who: Omit<ForwardInput, 'input' | 'actorId'>): ThreadMessageRow {
   const hidden = !row || (who.scope && !who.scope.phones.has(row.phone_e164)) || (who.sales && !visibleToSales(row));
   if (hidden) throw waHttpError('message_not_found', HttpStatus.NOT_FOUND);
   if (row.template_key || (!row.body?.trim() && !row.media_mime)) throw waHttpError('not_forwardable', HttpStatus.BAD_REQUEST);

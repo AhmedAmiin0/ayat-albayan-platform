@@ -18,7 +18,7 @@ const SLOT = /@\d{2}:\d{2}$/;
  * Booking rules, then HEART rules. A HEART row split by time (key …@HH:mm) replaces a booking rule
  * of the same teacher + students, which is sent to review instead of running twice.
  */
-export function allRules(bundle: SourceBundle): RuleResult[] {
+function allRules(bundle: SourceBundle): RuleResult[] {
   const heart = heartRules(bundle, studentIndex(bundle.earlier.get('students')));
   const split = new Set(
     heart.flatMap((r) => ('key' in r && SLOT.test(r.key.key) ? [r.key.key.replace(SLOT, '')] : [])),
@@ -35,7 +35,7 @@ export function allRules(bundle: SourceBundle): RuleResult[] {
   return [...booked, ...heart];
 }
 
-export function mapRules(bundle: SourceBundle): Mapped[] {
+function mapRules(bundle: SourceBundle): Mapped[] {
   return allRules(bundle).flatMap((r) =>
     'key' in r
       ? [accepted({ key: r.key, ref: r.ref, ...r.record, issues: r.issues })]
@@ -47,7 +47,7 @@ const sameRow = (a: SourceRef, b: SourceRef | undefined) =>
   a.source === b?.source && a.tab === b.tab && a.row === b.row;
 
 /** Links of the booking row that won resolve for each rule (issues were raised by mapRules). */
-export function mapRuleStudents(bundle: SourceBundle): Mapped[] {
+function mapRuleStudents(bundle: SourceBundle): Mapped[] {
   const kept = new Map(
     (bundle.earlier.get('schedule_rules') ?? []).map((d) => [keyId(d.key), d.ref]),
   );
@@ -65,7 +65,7 @@ export function mapRuleStudents(bundle: SourceBundle): Mapped[] {
 }
 
 /** Link tables have no id: insert … on conflict do nothing (an unchanged pair is a no-op). */
-export async function writeLink(ctx: WriteContext, table: string) {
+async function writeLink(ctx: WriteContext, table: string) {
   await ctx.tx.insert({ table, columns: ctx.columns, returning: null });
   return { targetId: null };
 }

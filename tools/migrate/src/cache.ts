@@ -4,8 +4,8 @@ import { dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 export const PKG_DIR = fileURLToPath(new URL('..', import.meta.url));
-export const CACHE_DIR = fileURLToPath(new URL('../cache/', import.meta.url));
-export const OUT_DIR = fileURLToPath(new URL('../out/', import.meta.url));
+const CACHE_DIR = fileURLToPath(new URL('../cache/', import.meta.url));
+const OUT_DIR = fileURLToPath(new URL('../out/', import.meta.url));
 
 export function writeJson(path: string, value: unknown): void {
   mkdirSync(dirname(path), { recursive: true });

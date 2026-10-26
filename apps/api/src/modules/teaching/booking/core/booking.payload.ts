@@ -43,7 +43,7 @@ export type PayloadInput = {
 
 
 /** The rule's package: the request's, or none for a makeup (it has no package of its own). */
-export const rulePackage = (req: BookingRequest, kind: BookingKind): PackageSize | null =>
+const rulePackage = (req: BookingRequest, kind: BookingKind): PackageSize | null =>
   kind === 'makeup' ? null : (req.package ?? null);
 
 /**
@@ -51,7 +51,7 @@ export const rulePackage = (req: BookingRequest, kind: BookingKind): PackageSize
  * trial (registrationStatus), else as the request says (the schema default is new). create_booking
  * keeps this explicit status.
  */
-export function newStudentRow(who: Resolved, kind: BookingKind): Resolved['new_student'] {
+function newStudentRow(who: Resolved, kind: BookingKind): Resolved['new_student'] {
   const s = who.new_student;
   if (!s || kind !== 'trial' || s.status !== 'new') return s;
   return { ...s, status: registrationStatus(true) };

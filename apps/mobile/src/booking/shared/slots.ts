@@ -8,7 +8,7 @@ import { localDate } from '@/today/lib/timeline';
 // Riyadh day, Riyadh time first and the student's own clock beside it. Picked, never typed (rule 6).
 
 const DAY = 86_400_000;
-export const WINDOW_DAYS = 7;
+const WINDOW_DAYS = 7;
 const cities: Record<string, string | undefined> = t.tz;
 
 export const cityOf = (tz: string): string => cities[tz] ?? ltr(tz);
@@ -45,7 +45,7 @@ export function ruleFromSlot(
   };
 }
 
-export interface SlotDay {
+interface SlotDay {
   /** Riyadh local date, YYYY-MM-DD. */
   date: string;
   /** «الأحد 4 أكتوبر». */

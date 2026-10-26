@@ -10,7 +10,7 @@ import { t } from '@/core/lib/i18n/i18n';
 export type CheckBy = 'phone' | 'name';
 export type CheckSearch = { by: 'phone'; phone: string } | { by: 'name'; q: string };
 export type CheckErrorCode = keyof typeof t.registrationCheck.error;
-export type SearchResult = { search: CheckSearch } | { error: CheckErrorCode };
+type SearchResult = { search: CheckSearch } | { error: CheckErrorCode };
 
 /** What she typed as the API's query, or the reason it is not one yet. */
 export function searchOf(by: CheckBy, text: string): SearchResult {
@@ -21,7 +21,7 @@ export function searchOf(by: CheckBy, text: string): SearchResult {
   return phone.ok ? { search: { by, phone: phone.e164 } } : { error: 'invalid_phone' };
 }
 
-export function checkPath(search: CheckSearch): string {
+function checkPath(search: CheckSearch): string {
   const params = search.by === 'phone' ? { phone: search.phone } : { q: search.q };
   return `/sales/registration-check${toQueryString(params)}`;
 }
