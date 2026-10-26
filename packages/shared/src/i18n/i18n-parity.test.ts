@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import ar from '../i18n/ar.json' with { type: 'json' };
-import en from '../i18n/en.json' with { type: 'json' };
+import ar from '../../i18n/ar.json' with { type: 'json' };
+import en from '../../i18n/en.json' with { type: 'json' };
 
 // en.json mirrors ar.json (Phase 7): the same key tree, and every string keeps the same
 // {placeholders}, so `t` can swap dictionaries without any call site changing.

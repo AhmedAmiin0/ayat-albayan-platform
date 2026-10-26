@@ -1,5 +1,5 @@
-import type { Locale } from '../locale.js';
-import { RIYADH_TZ } from '../running-head.js';
+import type { Locale } from '../i18n/locale.js';
+import { RIYADH_TZ } from '../format/running-head.js';
 import { lessonWhenText } from './booking-confirmation.js';
 import { quickReplyIntent } from './quick-reply.js';
 import type { MessageView } from './views.js';

@@ -1,7 +1,7 @@
 import type { Attendance, Grade, LessonStatus } from '../enums/index.js';
 import type { StatusRouteEvent } from '../lessons/state-machine.js';
-import type { UserRole } from '../roles.js';
-import { gradeStyle } from '../status-style.js';
+import type { UserRole } from '../permissions/roles.js';
+import { gradeStyle } from '../status-style/status-style.js';
 
 const HOUR = 3_600_000;
 

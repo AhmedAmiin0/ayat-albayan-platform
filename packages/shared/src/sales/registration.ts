@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { normalizeArabic } from '../arabic.js';
+import { normalizeArabic } from '../format/arabic.js';
 import type { StudentStatus } from '../enums/index.js';
 import { phoneE164 } from '../schemas/common.js';
 

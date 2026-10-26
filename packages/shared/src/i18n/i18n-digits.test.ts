@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import ar from '../i18n/ar.json' with { type: 'json' };
+import ar from '../../i18n/ar.json' with { type: 'json' };
 
 // docs/07 §2: one numeral system. Western digits everywhere, so no ar.json value may carry
 // Eastern-Arabic digits (U+0660–U+0669); they would sit next to Western times and prices.

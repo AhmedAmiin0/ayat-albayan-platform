@@ -1,4 +1,4 @@
-import { normalizeArabic } from '../arabic.js';
+import { normalizeArabic } from '../format/arabic.js';
 
 // Quick replies (R-MSG-04, R-SCH-03): a guardian answers a reminder with a button or a short text.
 // Precision over recall: anything unclear is null, and the admin reads it in the inbox.

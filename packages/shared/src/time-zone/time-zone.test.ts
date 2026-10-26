@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import ar from '../i18n/ar.json' with { type: 'json' };
+import ar from '../../i18n/ar.json' with { type: 'json' };
 import { nextDstTransition, TZ_OPTIONS, tzChoices, tzOptionLabel } from './time-zone.js';
 
 const localDay = (tz: string, d: Date) =>

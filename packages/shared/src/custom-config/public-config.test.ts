@@ -6,7 +6,7 @@ import {
   withPublicDefaults,
   type PublicConfig,
 } from './public-config.js';
-import { PUBLIC_SETTING_DEFAULTS, type PublicSettings } from './settings/public.js';
+import { PUBLIC_SETTING_DEFAULTS, type PublicSettings } from '../settings/public.js';
 
 describe('public config (GET /settings/public)', () => {
   it('the clients share one path, query key and stale time', () => {

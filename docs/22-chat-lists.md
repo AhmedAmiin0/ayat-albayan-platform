@@ -15,7 +15,7 @@ Owner request 2026-10-20: «add the ability to create lists like whatsapp busine
 ## 1. Model
 
 - A list = an academy-wide name (1–30 characters, trimmed, unique ignoring case and Arabic letter
-  variants: reuse the shared Arabic normalisation `normalizeArabic` in `packages/shared/src/arabic.ts`), at most 30
+  variants: reuse the shared Arabic normalisation `normalizeArabic` in `packages/shared/src/format/arabic.ts`), at most 30
   lists. Order: oldest first (no reordering in v1).
 - A member = a chat, keyed by its `phone_e164` (the merged inbox thread across both WhatsApp lines).
   A chat can be in many lists. Adding twice is a no-op; removing a non-member is a no-op.

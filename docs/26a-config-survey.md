@@ -155,7 +155,7 @@ Shared (`packages/shared/src/custom-config/`):
 - `CUSTOM_VALUE_MAX_BYTES = 8192` — `schema.ts:7` (UTF-8 bytes of `JSON.stringify`).
 - `customKeySchema` refuses registry keys (`reserved_key`) — `schema.ts:9-12`. It does **not** reserve `GOOGLE_SETTING_KEYS` (different table, so no collision today — but a merged store would collide).
 - `customConfigUpsertSchema` `schema.ts:26-30`: `value` any JSON except null, ≤8 KB; `description` ≤300 nullable; `isPublic` default false.
-- `publicCustom(rows)` `public.ts:11`: public rows only, drops any row shadowing a registry key → `GET /settings/public` `custom` (`packages/shared/src/public-config.ts:8`).
+- `publicCustom(rows)` `public.ts:11`: public rows only, drops any row shadowing a registry key → `GET /settings/public` `custom` (`packages/shared/src/custom-config/public-config.ts:8`).
 - API: `apps/api/src/common/custom-config/custom-config.controller.ts` (`GET /config/custom`, `PUT/DELETE /config/custom/:key`, `settings.read`/`settings.write`, audit entity `custom_config`).
 
 Seeded rows: **none** (no migration or `seed.sql` inserts into `custom_config`). Consumers: **none** in web/mobile/api beyond the admin panel and the `custom` block of `/settings/public` — no code reads any custom key.
