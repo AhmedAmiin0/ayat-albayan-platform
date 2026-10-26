@@ -1,6 +1,6 @@
 import type { MessageView } from '@ab/shared';
 import { createContext, type Dispatch, type SetStateAction, useContext } from 'react';
-import type { CopyRequest } from '../../messages/hooks/chat-tools';
+import type { CopyRequest } from '../../messages/copy-download/chat-tools';
 
 // One open chat's «رد» / «إعادة توجيه» state (ChatActionsProvider). Without a provider: all off.
 

@@ -1,7 +1,7 @@
 import { inTree, useTreeBase } from '@/core/nav/tree-base';
 import { CheckRegistrationButton } from '@/registration-check/components/CheckRegistrationButton';
 import { ThreadListsButton } from '../../lists/ThreadListsButton';
-import { CopyPhoneButton } from './CopyPhoneButton';
+import { CopyPhoneButton } from '../../messages/copy-download/CopyPhoneButton';
 import type { ThreadCache } from '../hooks/thread-cache';
 
 export interface ThreadHeaderActionsProps {

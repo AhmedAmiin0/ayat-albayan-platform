@@ -1,8 +1,8 @@
 import { t } from '@/core/lib/i18n/i18n';
 import { useTheme } from '@/theme';
 import { IconButton } from '@/core/ui/primitives/IconButton';
-import { copyText } from '../../messages/hooks/chat-tools';
-import { useChatActions } from '../hooks/chat-actions';
+import { copyText } from './chat-tools';
+import { useChatActions } from '../../thread/hooks/chat-actions';
 import { CopyIcon } from '../../shared/chat-icons';
 
 /** «نسخ الرقم» in the chat header (owner 2026-10-26): the number in E.164 on the copy sheet. */

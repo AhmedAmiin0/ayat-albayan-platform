@@ -8,7 +8,7 @@ import { Button } from '@/core/ui/primitives/Button';
 import { useChatActions } from '../../thread/hooks/chat-actions';
 import { quoteOf, quoteText } from '../hooks/quote-text';
 import { bubbleOffers, downloadLabel } from '../hooks/bubble-offers';
-import { copyText, downloadFile, downloadProblem } from '../hooks/chat-tools';
+import { copyText, downloadFile, downloadProblem } from '../copy-download/chat-tools';
 import { useThreadMode } from '../../thread/hooks/thread-mode';
 
 /** iOS presents one modal at a time: the forward sheet waits for this menu to finish closing. */

@@ -3,7 +3,7 @@ import { t } from '@/core/lib/i18n/i18n';
 import { shape, type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { Button } from '@/core/ui/primitives/Button';
-import type { CopyRequest } from '../../messages/hooks/chat-tools';
+import type { CopyRequest } from './chat-tools';
 
 export interface CopySheetProps {
   /** What to copy; null hides the sheet. */

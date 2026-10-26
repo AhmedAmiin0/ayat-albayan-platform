@@ -2,9 +2,9 @@ import { formatPhone, sessionWindowOpen, type MessageView, type ThreadView } fro
 import { type ReactNode, useMemo, useState } from 'react';
 import { ltr } from '@/core/ui/primitives/Ltr';
 import { type ChatActions, ChatActionsContext, type ChatNoticeValue } from '../hooks/chat-actions';
-import { CopySheet } from './CopySheet';
+import { CopySheet } from '../../messages/copy-download/CopySheet';
 import { ForwardSheet } from './ForwardSheet';
-import type { CopyRequest } from '../../messages/hooks/chat-tools';
+import type { CopyRequest } from '../../messages/copy-download/chat-tools';
 import { MessageMenu } from '../../messages/components/MessageMenu';
 import { isOwnThread, useThreadMode } from '../hooks/thread-mode';
 

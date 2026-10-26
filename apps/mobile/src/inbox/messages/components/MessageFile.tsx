@@ -6,7 +6,7 @@ import { t } from '@/core/lib/i18n/i18n';
 import { shape, type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { AudioPlayer } from './AudioPlayer';
-import { DownloadLink } from './DownloadLink';
+import { DownloadLink } from '../copy-download/DownloadLink';
 import { mediaKind } from '../hooks/message-text';
 import { useSmall } from './MessageMeta';
 import { type ThreadFile, useThreadFile } from '../hooks/thread-file';

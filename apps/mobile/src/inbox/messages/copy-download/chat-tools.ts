@@ -1,7 +1,7 @@
 import { Linking } from 'react-native';
 import { ApiError } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
-import { fetchDownload } from './thread-file';
+import { fetchDownload } from '../hooks/thread-file';
 
 // «نسخ» and «تنزيل» in a chat (owner 2026-10-26), in one place: the installed APK has no clipboard,
 // sharing or media-library module, so this file is the only one a later build swaps.

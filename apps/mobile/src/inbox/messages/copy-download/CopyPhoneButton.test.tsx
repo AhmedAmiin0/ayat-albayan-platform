@@ -1,7 +1,7 @@
 import { fireEvent, screen } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
-import { ChatActionsProvider } from './ChatActionsProvider';
+import { ChatActionsProvider } from '../../thread/components/ChatActionsProvider';
 import { CopyPhoneButton } from './CopyPhoneButton';
 import { PHONE, thread } from '../../shared/thread-fixtures';
 
