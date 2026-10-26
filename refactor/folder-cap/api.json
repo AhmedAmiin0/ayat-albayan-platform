@@ -2,9 +2,5 @@
   "apps/api/src/common": {
     "files": 2,
     "dirs": 17
-  },
-  "apps/api/src/modules": {
-    "files": 0,
-    "dirs": 47
   }
 }

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { fakeDb } from '../modules/guardians/fake-db';
+import { fakeDb } from '../modules/people/guardians/fake-db';
 import { STUDENT_MATCH_LIMIT, studentIdsMatching } from './student-ids';
 
 describe('studentIdsMatching', () => {

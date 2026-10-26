@@ -2,7 +2,7 @@ import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fa
 import { Test } from '@nestjs/testing';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { AppModule } from '../../app.module';
-import { TranslationsService } from '../../modules/translations/translations.service';
+import { TranslationsService } from '../../modules/platform/translations/translations.service';
 import { SettingsService } from '../settings/settings.service';
 import { ConfigSeeder } from './boundaries/config-seeder';
 import { ConfigStore } from './store/config-store.service';

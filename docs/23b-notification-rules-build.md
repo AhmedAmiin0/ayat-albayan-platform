@@ -2,7 +2,7 @@
 
 Build notes for docs/23 §3 phase 4 as amended by docs/26 §6 row 23-P4 (branch `cloud/notif-rules`). The
 shared contract is code: `packages/shared/src/notifications/rules.types.ts`, `rules.legacy.ts`,
-`rules.effective.ts`; the API port `apps/api/src/modules/notification-rules/policy/policy.ts` + `rules.reader.ts`.
+`rules.effective.ts`; the API port `apps/api/src/modules/messaging/notification-rules/policy/policy.ts` + `rules.reader.ts`.
 
 ## Decisions
 

@@ -339,7 +339,7 @@ Order: **26-P0 → 23-P3 → 26-P1 → 23-P4 → 26-P2 → 26-P3 → 23-P5 → 2
 **Built (2026-10-23, branch `cloud/config-p0-p1`):**
 - **26-P0 — built.** Gate routes `PUT /messages/gate/sending|auto` (ON needs `GATE_CONFIRM_TEXT`, checked by the
   server, 428 `confirmation_required`; OFF always accepted) and `PUT /messages/gate/cutover`:
-  `apps/api/src/modules/whatsapp/gate/gate.controller.ts`, `gate.settings.ts`, `gate.errors.ts`; contract
+  `apps/api/src/modules/messaging/whatsapp/gate/gate.controller.ts`, `gate.settings.ts`, `gate.errors.ts`; contract
   `packages/shared/src/settings/gate.ts`. Per-key `PATCH /settings` answering `{...settings, saved, moved, invalid}`:
   `packages/shared/src/settings/patch.ts`, `apps/api/src/common/settings/settings.controller.ts`, `settings-patch.ts`;
   ownership in code: `packages/shared/src/settings/ownership.ts` (`OWNED_SETTING_KEYS`). `comms_source` is written only
@@ -398,7 +398,7 @@ Order: **26-P0 → 23-P3 → 26-P1 → 23-P4 → 26-P2 → 26-P3 → 23-P5 → 2
 - **23-P6 — built (2026-10-24, branch `cloud/communications-hub`).** «التواصل» uses the docs/26b tabs (نظرة عامة · الأرقام · الإشعارات · القوالب · الحماية); the switches still write only through the 26-P0 gate routes; the CRM cut-over moved to «الحماية» and now asks both ways. `/admin/settings/communications` stays the page, `/admin/communications` redirects to it with the query string (and has an `ADMIN_PAGES` entry). No migration, no API change, no stored value touched. Next: 26-P4 (send gate last).
 
 - **26-P4 — built (2026-10-24, branch `cloud/send-gate-last`).** `WhatsappSettings.read()`
-  (`apps/api/src/modules/whatsapp/whatsapp.settings.ts`) is now one uncached primary-key read of `settings`
+  (`apps/api/src/modules/messaging/whatsapp/whatsapp.settings.ts`) is now one uncached primary-key read of `settings`
   (`key in ('messaging_enabled', 'auto_messages_enabled')`) on every `SendGate` call: no SettingsService or
   ConfigStore cache; only a stored JSON `true` is ON; a failed read rejects. Nothing else changed (no migration, no
   route, no stored value). Tests: `send-gate.fail-closed.test.ts` (missing row, JSON null, string, number, object,

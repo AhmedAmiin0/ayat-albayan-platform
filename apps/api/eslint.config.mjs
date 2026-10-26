@@ -11,7 +11,7 @@ export default config({
       {
         patterns: [
           {
-            regex: 'common/(settings/settings|config-store/config-store)\\.service(\\.js)?$',
+            regex: 'common/(settings/settings|config-store/store/config-store)\\.service(\\.js)?$',
             message: 'Read settings through this module\'s <module>.settings.ts reader.',
           },
         ],
