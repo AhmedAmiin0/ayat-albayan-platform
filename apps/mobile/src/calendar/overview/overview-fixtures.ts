@@ -59,7 +59,7 @@ export const omar: OverviewTeacher = {
 };
 
 /** Saturday 26 Sep 13:00 Riyadh, a trial. */
-export const trialSat = {
+const trialSat = {
   ...lesson({
     id: 'sat',
     starts_at: '2026-09-26T10:00:00.000Z',

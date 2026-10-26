@@ -8,7 +8,7 @@ const PIPS = 5;
  * Five rhombi, filled first (ممتاز = 5 … يحتاج إلى مراجعة = 1): drawn boxes, not glyphs, so they
  * need no font and read in greyscale (docs/07 §13). The word beside them carries the meaning.
  */
-export function pipsHtml(grade: Grade | null): string {
+function pipsHtml(grade: Grade | null): string {
   if (grade === null) return '';
   const on = gradeStyle[grade].pips;
   const pips = Array.from({ length: PIPS }, (_, i) => `<i class="pip${i < on ? ' on' : ''}"></i>`);

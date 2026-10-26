@@ -7,7 +7,7 @@ import { Button } from '@/core/ui/primitives/Button';
 import { type, useTheme } from '@/theme';
 import { dayLine } from './picks';
 
-export interface PicksListProps {
+interface PicksListProps {
   picks: readonly string[];
   /** The family's zone: each day's weekday and time. */
   tz: string;

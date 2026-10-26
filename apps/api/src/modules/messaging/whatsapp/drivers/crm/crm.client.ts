@@ -9,7 +9,7 @@ import { WaError, type MediaSend, type MetaTemplate, type TemplateSend, type WaS
 // The crm driver (docs/19 «crm driver»): a line that sends through the academy CRM's POST /messages. The
 // CRM owns the number, its templates and its conversations, so only sending is supported here.
 
-export interface CrmClientOpts {
+interface CrmClientOpts {
   fetch?: FetchLike;
   timeoutMs?: number;
   allowed?: readonly string[] | null;

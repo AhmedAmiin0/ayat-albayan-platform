@@ -2,7 +2,7 @@ import { baseMime } from '@ab/shared';
 import { extFor } from '../../../../common/storage/storage.paths';
 
 /** The columns a saved file is named from. */
-export interface NamedFile {
+interface NamedFile {
   /** A file staff sent keeps the name the family saw (thread-file-send). */
   media_name?: string | null;
   media_mime: string | null;

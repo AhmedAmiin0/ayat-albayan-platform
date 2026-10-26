@@ -1,12 +1,12 @@
 import { ConfigConflictError, type ConfigChange, type ConfigSnapshot } from '../config-store/config-store.types';
 
 /** The bit of ConfigStore the alias write needs. */
-export interface WriteStore {
+interface WriteStore {
   fresh(): Promise<ConfigSnapshot>;
   set(changes: readonly ConfigChange[], actorId: string): Promise<void>;
 }
 
-export interface LatestWrite {
+interface LatestWrite {
   values: Readonly<Record<string, unknown>>;
   actorId: string;
 }

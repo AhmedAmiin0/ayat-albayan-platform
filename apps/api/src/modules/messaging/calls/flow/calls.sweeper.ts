@@ -8,11 +8,11 @@ import { CallsKit } from './call-kit';
 /** An outbound call nobody answered within this is ended (and terminated on WhatsApp). */
 export const UNANSWERED_MS = 45_000;
 /** An inbound call still ringing this long (its terminate webhook lost) is a missed call. */
-export const RINGING_MS = 60_000;
+const RINGING_MS = 60_000;
 /** An accept that never completed. */
-export const ACCEPTING_MS = 30_000;
+const ACCEPTING_MS = 30_000;
 /** A call still «active» this long lost its terminate webhook. */
-export const ACTIVE_MS = 4 * 3_600_000;
+const ACTIVE_MS = 4 * 3_600_000;
 const EVERY_MS = 10_000;
 
 type Overdue = CallEndReason | 'hangup';

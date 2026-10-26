@@ -102,7 +102,7 @@ export function fakeDeps() {
     ratings: { record: vi.fn().mockResolvedValue(1) },
   };
 }
-export type Deps = ReturnType<typeof fakeDeps>;
+type Deps = ReturnType<typeof fakeDeps>;
 
 /** The real services over the fakes. */
 export function services(d: Deps = fakeDeps()) {

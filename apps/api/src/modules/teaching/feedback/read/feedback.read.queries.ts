@@ -15,7 +15,7 @@ const LIST_COLUMNS =
   'id, lesson_id, student_id, teacher_id, kind, requested_at, expires_at, rating, recommend, note, contact_phone, submitted_at, quick_rating, quick_rated_at, teachers(display_name_ar)' as const;
 
 /** R-NFR-08: allowlisted keys; unanswered rows (null) last either way; ties newest request first. */
-export const FEEDBACK_SORT: SortSpec<FeedbackSortKey> = {
+const FEEDBACK_SORT: SortSpec<FeedbackSortKey> = {
   columns: {
     teacher: { column: 'teachers(display_name_ar)' },
     kind: { column: 'kind' },

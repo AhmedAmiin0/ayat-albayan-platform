@@ -5,7 +5,7 @@ import { AppText } from '@/core/ui/primitives/AppText';
 import { Button } from '@/core/ui/primitives/Button';
 import type { AvatarSource } from '../lib/avatar';
 
-export interface AvatarButtonsProps {
+interface AvatarButtonsProps {
   /** A new photo is in the preview, not uploaded yet. */
   picked: boolean;
   /** The profile has a photo now (removable). */

@@ -86,7 +86,7 @@ export const CRM_TABLES: readonly CrmTableSpec[] = [
  * CRM tag → lead_status. A contact with several tags takes the first in TAG_PRECEDENCE.
  * «مشكلة تقنية», «whatsapp», «imported» are not statuses (kept in qualification.crm_tags).
  */
-export const TAG_LEAD_STATUS: Record<string, Enums<'lead_status'>> = {
+const TAG_LEAD_STATUS: Record<string, Enums<'lead_status'>> = {
   مشترك: 'converted',
   'حضر التجربة': 'trial_done',
   'تجريبي محجوز': 'trial_booked',

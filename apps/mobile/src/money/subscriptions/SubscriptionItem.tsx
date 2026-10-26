@@ -11,7 +11,7 @@ import { ListRow } from '@/core/ui/layout/ListRow';
 import { StatusChip } from '@/core/ui/feedback/StatusChip';
 
 /** The web's renewal highlight: saffron «فاضل حلقتان» once the package is at the alert threshold. */
-export function subscriptionProgress(sub: SubscriptionView, threshold?: number) {
+function subscriptionProgress(sub: SubscriptionView, threshold?: number) {
   const { lessons_used, lessons_total } = sub.balance;
   return packageProgress(lessons_used, lessons_total, {
     forms: t.subscriptions.progress,

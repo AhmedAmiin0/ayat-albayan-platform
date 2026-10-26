@@ -9,7 +9,7 @@ import { ReportsQueries } from '../reports.queries';
 import { ReportsSettings } from '../reports.settings';
 
 /** The caller, now, the teacher's edit window and the late-cancel policy. */
-export type ReportContext = ViewContext & { lateCancelHours: number | null };
+type ReportContext = ViewContext & { lateCancelHours: number | null };
 
 /** Every report route goes through here: load + ownership (rule 9) and the edit window (R-REP-02). */
 @Injectable()

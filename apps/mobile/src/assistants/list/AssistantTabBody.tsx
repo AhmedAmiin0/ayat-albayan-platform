@@ -7,7 +7,7 @@ import { TermsView } from '../terms/TermsView';
 
 export type AssistantTab = 'terms' | 'commissions' | 'statements';
 
-export interface AssistantTabBodyProps {
+interface AssistantTabBodyProps {
   tab: AssistantTab;
   assistant: AssistantRow;
   can: StatementCan;

@@ -6,7 +6,7 @@ import { parseOrThrow } from '../../../../common/http/http';
 import { AssistantLessonsQueries } from './assistants.lessons';
 import { AssistantsQueries } from './assistants.queries';
 
-export const rangeSchema = z.object({ from: z.iso.datetime(), to: z.iso.datetime() });
+const rangeSchema = z.object({ from: z.iso.datetime(), to: z.iso.datetime() });
 
 /** The admin's assistants manager and the assistant's own list. An assistant never sees another's students. */
 @Injectable()

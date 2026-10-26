@@ -26,7 +26,7 @@ export function useRecordingStatus() {
 }
 
 /** The recording has no (valid) link any more: finished files only, links last an hour. */
-export class RecordingUnavailable extends Error {}
+class RecordingUnavailable extends Error {}
 
 /**
  * Play = ask for a fresh list at the moment of the tap (a link seen minutes ago may have expired),

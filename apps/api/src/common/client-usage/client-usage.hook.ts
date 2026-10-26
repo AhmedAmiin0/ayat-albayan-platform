@@ -14,7 +14,7 @@ export const UNMATCHED_ROUTE = '(unmatched)';
  * CORS: main.ts sets no `allowedHeaders`, so @fastify/cors reflects the preflight's
  * Access-Control-Request-Headers and browsers may send X-AB-Client (client-usage.hook.test.ts).
  */
-export function addClientUsageHook(fastify: Fastify, sink: HitSink): void {
+function addClientUsageHook(fastify: Fastify, sink: HitSink): void {
   fastify.addHook('onResponse', async (req) => {
     // CORS preflights carry no client header: noise, not usage.
     if (req.method === 'OPTIONS') return;

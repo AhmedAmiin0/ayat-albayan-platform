@@ -7,7 +7,7 @@ import { WaError, type TemplateSend } from '../../whatsapp.types';
 // admin pointed at the CRM's report_session (crm_name), the PDF goes as a document message, then the CRM
 // template report_trial_session (a trial lesson) or report_session (a regular one), without variables.
 
-export interface CrmReportBodies {
+interface CrmReportBodies {
   document: CrmBody;
   template: CrmBody;
 }

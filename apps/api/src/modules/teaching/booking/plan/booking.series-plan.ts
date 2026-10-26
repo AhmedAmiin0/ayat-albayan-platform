@@ -7,7 +7,7 @@ import { domainError } from '../booking.errors';
 import { planBooking, type Plan, type PlanRule } from './booking.plan';
 
 export type SeriesRule = PlanRule & Pick<BookingRequest, 'dayTimes'>;
-export type SeriesInput = {
+type SeriesInput = {
   rule: SeriesRule;
   now: Date;
   horizonWeeks: number;

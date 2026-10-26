@@ -65,7 +65,7 @@ export const failed = message({
 });
 
 /** A thread with nobody on file: no guardian, no lead row, no students. */
-export const noPeople: ThreadPeople = { guardian: null, lead: null, students: [] };
+const noPeople: ThreadPeople = { guardian: null, lead: null, students: [] };
 
 export function detail(messages: MessageView[], fields: Partial<ThreadDetail> = {}): ThreadDetail {
   return { thread, messages, has_more: false, lessons: [], people: noPeople, ...fields };

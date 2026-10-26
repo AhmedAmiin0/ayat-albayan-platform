@@ -24,7 +24,7 @@ export const CALLS_SHAPE = {
 const urls = (raw: string): string[] => raw.split(',').map((u) => u.trim()).filter(Boolean);
 
 /** TURN REST: username «<expiry unix s>:<user>», credential base64(HMAC-SHA1(secret, username)). */
-export function turnCredential(input: { secret: string; userId: string; now: Date }): { username: string; credential: string } {
+function turnCredential(input: { secret: string; userId: string; now: Date }): { username: string; credential: string } {
   const username = `${Math.floor(input.now.getTime() / 1000) + TURN_TTL_S}:${input.userId}`;
   return { username, credential: createHmac('sha1', input.secret).update(username).digest('base64') };
 }

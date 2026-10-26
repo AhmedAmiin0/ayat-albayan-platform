@@ -10,7 +10,7 @@ import { BookingQueries } from '../core/booking.queries';
 import { BookingSettings } from '../booking.settings';
 import { ConflictContext } from './conflict-context';
 
-export const MAX_SLOT_RANGE_DAYS = 14;
+const MAX_SLOT_RANGE_DAYS = 14;
 /**
  * Default step while settings.teachers_always_available is on: the one window starts at midnight,
  * so stepping by a 45-min lesson would give 15:45, 16:30 and never 16:00. 30 keeps :00 and :30.

@@ -4,7 +4,7 @@ import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { Field, type FieldProps } from '@/core/ui/form/Field';
 
-export interface AccountFieldProps extends FieldProps {
+interface AccountFieldProps extends FieldProps {
   /** The field's own message (account.errors.*), announced as an alert under it. */
   error?: string;
   /** A short line under the input (format, length). */

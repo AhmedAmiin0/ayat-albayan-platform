@@ -5,7 +5,7 @@ import { safeEqual } from './webhook.signature';
 // refused. Only the Kapso secret is tried here; the Meta route never tries it (and vice versa).
 
 /** The signature headers this route reads, in lower case as Fastify gives them. */
-export const KAPSO_SIGNATURE_HEADERS = ['x-webhook-signature', 'x-hub-signature-256'] as const;
+const KAPSO_SIGNATURE_HEADERS = ['x-webhook-signature', 'x-hub-signature-256'] as const;
 type SignatureHeader = (typeof KAPSO_SIGNATURE_HEADERS)[number];
 
 export interface KapsoSignedRequest {

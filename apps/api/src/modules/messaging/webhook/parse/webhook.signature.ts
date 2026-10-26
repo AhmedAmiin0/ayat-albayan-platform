@@ -35,7 +35,7 @@ export function verifySignature({ rawBody, header, secrets }: SignedRequest): bo
   return usable.some((secret) => safeEqual(given, signatureOf(rawBody, secret)));
 }
 
-export interface ChallengeQuery {
+interface ChallengeQuery {
   mode?: string;
   token?: string;
   challenge?: string;

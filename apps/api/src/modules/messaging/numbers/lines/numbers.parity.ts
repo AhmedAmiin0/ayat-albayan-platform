@@ -51,7 +51,7 @@ function relevant(field: ParityField, legacy: Facts, module: Facts): boolean {
   return field !== 'app_secret' || legacy.webhook_phone_number_id !== null || module.webhook_phone_number_id !== null;
 }
 
-export interface ParityInput {
+interface ParityInput {
   legacy: Env;
   module: Env;
   /** The role's default enabled number (module side), for the labels. */
