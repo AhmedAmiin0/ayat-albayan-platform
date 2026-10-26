@@ -6,6 +6,8 @@ import { useCallback, useEffect, useSyncExternalStore } from 'react';
 
 const drafts = new Map<string, string>();
 const listeners = new Set<() => void>();
+/** Boxes mounted per chat: a second screen of the same chat leaving keeps the first one's text. */
+const mounted = new Map<string, number>();
 
 export function getComposerText(phone: string): string {
   return drafts.get(phone) ?? '';
@@ -24,10 +26,18 @@ function subscribe(listener: () => void): () => void {
 
 type Next = string | ((now: string) => string);
 
-/** The chat's box text and its setter (a value or an updater, as useState's); forgotten on unmount. */
+/** The chat's box text and its setter (a value or an updater, as useState's); forgotten when its last box unmounts. */
 export function useComposerText(phone: string): [string, (next: Next) => void] {
   const text = useSyncExternalStore(subscribe, () => getComposerText(phone));
-  useEffect(() => () => void drafts.delete(phone), [phone]);
+  useEffect(() => {
+    mounted.set(phone, (mounted.get(phone) ?? 0) + 1);
+    return () => {
+      const left = (mounted.get(phone) ?? 1) - 1;
+      if (left > 0) return void mounted.set(phone, left);
+      mounted.delete(phone);
+      setComposerText(phone, '');
+    };
+  }, [phone]);
   const set = useCallback(
     (next: Next) => setComposerText(phone, typeof next === 'function' ? next(getComposerText(phone)) : next),
     [phone],

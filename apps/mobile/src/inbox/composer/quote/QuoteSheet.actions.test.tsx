@@ -4,7 +4,7 @@ import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { Share } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { bulkSa } from '@/finance/pricing/fixtures';
-import { renderWithQuery } from '@/test/query';
+import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { getComposerText, setComposerText } from '../draft-store';
 import { QuoteSheet } from './QuoteSheet';
 
@@ -78,4 +78,20 @@ test('outside the 24 h window: send and edit are disabled with the closed note; 
   await fireEvent.press(button(q.copy));
   expect(share).toHaveBeenCalledWith({ message: TEXT });
   expect(mockApiSend).not.toHaveBeenCalled();
+});
+
+test('a sheet reopened while its send is in flight cannot send again, and cannot be dismissed meanwhile', async () => {
+  mockApiSend.mockReturnValue(new Promise(() => undefined));
+  const client = createTestQueryClient();
+  const onClose = jest.fn();
+  const first = await renderWithQuery(<QuoteSheet phone={PHONE} open onClose={onClose} />, client);
+  await fireEvent.press(await screen.findByRole('button', { name: q.send }));
+  await waitFor(() => expect(mockApiSend).toHaveBeenCalledTimes(1));
+  await fireEvent.press(screen.getByRole('button', { name: q.close }));
+  expect(onClose).not.toHaveBeenCalled();
+  await first.unmount();
+  await renderWithQuery(<QuoteSheet phone={PHONE} open onClose={onClose} />, client);
+  await screen.findByTestId('quote-preview');
+  expect(screen.getByRole('button', { name: t.inbox.composer.sending }).props.accessibilityState.disabled).toBe(true);
+  expect(mockApiSend).toHaveBeenCalledTimes(1);
 });

@@ -78,3 +78,14 @@ it('outside the 24 h window: send and edit are disabled with the closed note; co
   expect(await screen.findByText(q.copied)).toBeTruthy();
   expect(apiSend).not.toHaveBeenCalled();
 });
+
+it('a 409 session_closed refetches the thread so the sheet locks send and edit', async () => {
+  const { ApiError } = await import('@/lib/http/api');
+  apiSend.mockRejectedValue(new ApiError(409, { code: 'session_closed' }));
+  const client = renderWithClient(<QuoteDialog thread={thread({ phone_e164: PHONE, session_open: true })} onClose={vi.fn()} onFilled={vi.fn()} />);
+  const refetch = vi.spyOn(client, 'invalidateQueries');
+  await screen.findByTestId('quote-text');
+  fireEvent.click(button(q.send));
+  expect(await screen.findByText(t.inbox.error.session_closed)).toBeTruthy();
+  await waitFor(() => expect(refetch).toHaveBeenCalledWith({ queryKey: ['threads'] }));
+});

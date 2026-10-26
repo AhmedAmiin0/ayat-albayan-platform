@@ -32,4 +32,15 @@ describe('composer draft store («عرض سعر» fills the box)', () => {
     await unmount();
     expect(getComposerText(A)).toBe('');
   });
+
+  it('keeps the text while another box of the same chat is still mounted (a stacked screen)', async () => {
+    const first = await renderHook(() => useComposerText(A));
+    const second = await renderHook(() => useComposerText(A));
+    await act(() => setComposerText(A, 'draft'));
+    await second.unmount();
+    expect(getComposerText(A)).toBe('draft');
+    expect(first.result.current[0]).toBe('draft');
+    await first.unmount();
+    expect(getComposerText(A)).toBe('');
+  });
 });

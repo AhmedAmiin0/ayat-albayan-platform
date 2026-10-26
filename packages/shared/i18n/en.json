@@ -2607,7 +2607,8 @@
       "edit": "Edit before sending",
       "copy": "Copy",
       "copied": "Offer copied",
-      "copyFailed": "Could not copy the offer"
+      "copyFailed": "Could not copy the offer",
+      "close": "Close the price quote"
     }
   },
   "mobileFinance": {

@@ -30,7 +30,7 @@ export function ReplySheetFrame({ onClose, children, tall = false }: { onClose: 
       <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} style={{ flex: 1, justifyContent: 'flex-end' }}>
         <Pressable
           accessibilityRole="button"
-          accessibilityLabel={t.savedReplies.sheetClose}
+          accessibilityLabel={tall ? t.inbox.quote.close : t.savedReplies.sheetClose}
           onPress={onClose}
           style={{ position: 'absolute', top: 0, bottom: 0, start: 0, end: 0, backgroundColor: color.scrim }}
         />

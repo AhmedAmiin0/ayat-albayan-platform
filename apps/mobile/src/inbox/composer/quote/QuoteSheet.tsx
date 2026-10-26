@@ -36,7 +36,7 @@ export function QuoteSheet({ phone, open, onClose }: QuoteSheetProps) {
     onClose();
   };
   return (
-    <ReplySheetFrame onClose={onClose} tall>
+    <ReplySheetFrame onClose={() => !sender.pending && onClose()} tall>
       <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={{ gap: 16, paddingHorizontal: 16, paddingBottom: 32 }}>
         <AppText accessibilityRole="header" style={{ fontFamily: type.ui[700], fontSize: type.size.lg, lineHeight: type.lineHeight(type.size.lg), color: color.ink }}>
           {t.inbox.quote.title}

@@ -4,7 +4,8 @@ import { useIsMutating, useMutation, useQuery, useQueryClient } from '@tanstack/
 import { useRef, useState } from 'react';
 import { INITIAL_SELECTION, OTHER, quoteQuery, type Selection, useDebounced } from '@/features/finance/pricing';
 import { sendText } from '../../api/api';
-import { ownSendGeneration, recordOwnSend } from '../lib/own-send';
+import { sendErrorCode } from '../lib/send-error';
+import { sendStart, settleOwnSend } from '../lib/send-start';
 
 /** The calculator's default choice, with the country of the chat's number (+966 → SA …, else USD). */
 export function initialSelection(phone: string): Selection {
@@ -32,7 +33,8 @@ export function useQuoteOffer(phone: string) {
 /**
  * «أرسل العرض»: the chat's own POST /threads/:phone/text with a new clientRequestId per tap. It
  * shares the composer's mutation key, so neither sends while the other is in flight, and a second
- * tap before the re-render sends nothing (the ref). `onSent` closes the sheet.
+ * tap before the re-render sends nothing (the ref). `onSent` closes the sheet. Like a template, a sent
+ * offer settles a failed text attempt (settleOwnSend).
  */
 export function useQuoteSend(phone: string, onSent: () => void) {
   const queryClient = useQueryClient();
@@ -40,14 +42,16 @@ export function useQuoteSend(phone: string, onSent: () => void) {
   const busy = useRef(false);
   const send = useMutation({
     mutationKey,
-    mutationFn: async (text: string) => {
-      const gen = ownSendGeneration();
-      return { view: await sendText({ phone, text, clientRequestId: crypto.randomUUID() }), gen };
-    },
-    onSuccess: async ({ view, gen }) => {
-      recordOwnSend(phone, view.id, gen);
+    mutationFn: (text: string) => sendText({ phone, text, clientRequestId: crypto.randomUUID() }),
+    onMutate: sendStart,
+    onSuccess: async (view, _text, start) => {
+      settleOwnSend(phone, view.id, start);
       onSent();
       await queryClient.invalidateQueries({ queryKey: ['threads'] });
+    },
+    // The window closed since the page loaded: refetch so the sheet disables send and edit.
+    onError: async (e) => {
+      if (sendErrorCode(e) === 'session_closed') await queryClient.invalidateQueries({ queryKey: ['threads'] });
     },
     onSettled: () => {
       busy.current = false;
