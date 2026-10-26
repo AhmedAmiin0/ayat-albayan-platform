@@ -1,4 +1,4 @@
-import { clockTime, intlLocale, RIYADH_TZ } from '@ab/shared';
+import { addDays, clockTime, intlLocale, RIYADH_TZ, weekdayOf, weekStart } from '@ab/shared';
 import { locale } from '@/lib/i18n/locale';
 
 // Wall-clock math for the schedule screens (R-SCH-01, rule 6). The DB and the API speak UTC
@@ -6,6 +6,9 @@ import { locale } from '@/lib/i18n/locale';
 // same approach as apps/api zoned-time.ts). Local dates are "YYYY-MM-DD", times "HH:MM".
 
 export { RIYADH_TZ };
+
+/** Academy-week math on "YYYY-MM-DD" (same as the mobile calendar): shared since docs/27 E6. */
+export { addDays, weekdayOf, weekStart };
 
 export interface ZonedParts {
   /** Local calendar day, "YYYY-MM-DD". */
@@ -43,26 +46,9 @@ export function zonedParts(instant: Date, tz: string): ZonedParts {
   return { date, time: clockTime(instant, tz), weekday: weekdayOf(date) };
 }
 
-const DAY_MS = 86_400_000;
-
 function utcOf(date: string): number {
   const [y = 0, m = 1, d = 1] = date.split('-').map(Number);
   return Date.UTC(y, m - 1, d);
-}
-
-/** Weekday of a calendar date (0 = الأحد). */
-export function weekdayOf(date: string): number {
-  return new Date(utcOf(date)).getUTCDay();
-}
-
-/** Calendar arithmetic on "YYYY-MM-DD". */
-export function addDays(date: string, days: number): string {
-  return new Date(utcOf(date) + days * DAY_MS).toISOString().slice(0, 10);
-}
-
-/** The Saturday on or before `date`: weeks run السبت → الجمعة like the availability grid. */
-export function weekStart(date: string): string {
-  return addDays(date, -((weekdayOf(date) + 1) % 7));
 }
 
 /** The 7 local days of the week starting `start`. */

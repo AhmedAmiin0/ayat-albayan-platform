@@ -4,6 +4,7 @@ import {
   LESSON_TIME_PARAMS,
   lessonWhenText,
   needsLesson,
+  prefillParams,
   renderTemplateBody,
   type BodySlot,
   type TemplateParamsInput,
@@ -26,14 +27,6 @@ type Position = BodySlot;
 const POSITIONS: readonly Position[] = BODY_SLOTS;
 const NAMES: Record<string, string | undefined> = t.inbox.composer.paramNames;
 
-/** contact_name's starting value (still editable): the name the thread header shows. */
-function prefill(template: TemplateView, contactName?: string | null): TemplateParamsInput {
-  const name = contactName?.trim();
-  const at = template.params.indexOf('contact_name');
-  const slot = POSITIONS[at];
-  return name && slot ? { [slot]: name } : {};
-}
-
 export interface TemplateFormProps {
   template: TemplateView;
   lessons: readonly ThreadLesson[];
@@ -49,7 +42,7 @@ export interface TemplateFormProps {
  * the meeting code. The meeting code when it has a link button, and the live preview.
  */
 export function TemplateForm({ template, lessons, contactName, onBack, onSend }: TemplateFormProps) {
-  const [params, setParams] = useState<TemplateParamsInput>(() => prefill(template, contactName));
+  const [params, setParams] = useState<TemplateParamsInput>(() => prefillParams(template, { contactName }));
   const [lessonId, setLessonId] = useState('');
   const [missing, setMissing] = useState(false);
   const positions = POSITIONS.slice(0, template.params.length);

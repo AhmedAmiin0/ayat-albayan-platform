@@ -9,8 +9,8 @@ import type {
   DraftBody,
   SubmitBody,
 } from '@ab/shared';
+import { reportErrorWords } from '@ab/client-core';
 import { queryOptions } from '@tanstack/react-query';
-import { errorCode } from '@/features/teaching/schedule/api';
 import { ApiError, apiFetch, apiSend } from '@/lib/http/api';
 import { t } from '@/lib/i18n/i18n';
 import { supabase } from '@/lib/http/supabase';
@@ -68,20 +68,12 @@ export async function uploadAttachment({ id, file }: { id: string; file: File })
   return apiSend<ReportAttachmentView>('POST', `/reports/${id}/attachments`, { ...meta, path: slot.path });
 }
 
-const ERROR_TEXT: Record<string, string> = { ...t.reports.error, invalid_transition: t.lessons.invalidTransition };
-
 /**
  * Arabic line for a failed report call: the domain `code` (docs/11 §3), or the first validation
- * issue (`missing_grades`, `attachment_type`, …), else the generic error.
+ * issue (`missing_grades`, `attachment_type`, …), else the generic error (@ab/client-core, docs/27 E5).
  */
-export function reportErrorText(error: unknown): string {
-  const code = errorCode(error) ?? issueCode(error);
-  return ERROR_TEXT[code ?? ''] ?? t.common.error;
-}
-
-function issueCode(error: unknown): string | null {
-  if (!(error instanceof ApiError)) return null;
-  const issues = (error.body as { issues?: { message?: unknown }[] } | null)?.issues;
-  const first = issues?.[0]?.message;
-  return typeof first === 'string' ? first : null;
-}
+export const reportErrorText: (error: unknown) => string = reportErrorWords(() => ({
+  errors: t.reports.error,
+  invalidTransition: t.lessons.invalidTransition,
+  generic: t.common.error,
+}));
