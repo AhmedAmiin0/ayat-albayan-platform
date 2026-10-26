@@ -5,7 +5,7 @@ import { pageQuerySchema } from '../../../../common/http/http';
 
 // H1 list order and filters (R-LEAD-02, R-NFR-08). No `sort` = newest message first (the old order).
 
-export const THREAD_SORT_KEYS = ['unread', 'name'] as const;
+const THREAD_SORT_KEYS = ['unread', 'name'] as const;
 export type ThreadSortKey = (typeof THREAD_SORT_KEYS)[number];
 
 /** «غير مقروءة أولًا» (admin's unread_count) and «الاسم» (unnamed numbers last); ties: newest message. */

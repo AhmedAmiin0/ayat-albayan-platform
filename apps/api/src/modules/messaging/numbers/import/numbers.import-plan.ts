@@ -63,7 +63,7 @@ function fieldView(input: PlanInput, role: WaLine, field: ImportField): ImportFi
   return { field, secret, source: sourceOf(input, key), value };
 }
 
-export function planRole(input: PlanInput, role: WaLine): RolePlan {
+function planRole(input: PlanInput, role: WaLine): RolePlan {
   const raw = IMPORT_FIELDS.map((f) => fieldView(input, role, f));
   const phone = lineNumbers(input.legacy)[role];
   if (!phone) return { role, action: 'unconfigured', number_id: null, fields: raw, secrets_to_copy: [], copies: [], row: null };

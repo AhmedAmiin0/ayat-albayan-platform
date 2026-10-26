@@ -18,7 +18,7 @@ const CATEGORY: Record<string, string> = {
 };
 
 /** Statement tab → its month (`general` is August). */
-export const STATEMENT_MONTHS: Record<string, string> = {
+const STATEMENT_MONTHS: Record<string, string> = {
   fin_aug: '2026-08-01',
   fin_sept: '2026-09-01',
 };

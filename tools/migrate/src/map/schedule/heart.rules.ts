@@ -13,7 +13,7 @@ import { packageOf } from '../money/heart.ts';
 import { type StudentIndex, findStudent } from '../people/match.ts';
 import { type RuleResult, SHEET_TZ } from './bookings.ts';
 
-export const HEART_TIMETABLES = ['heart_abrar', 'heart_rabia', 'heart_hend'] as const;
+const HEART_TIMETABLES = ['heart_abrar', 'heart_rabia', 'heart_hend'] as const;
 const DAYS = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'] as const;
 const lower = (s: string | null) => (s ?? '').trim().toLowerCase();
 

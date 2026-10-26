@@ -7,7 +7,7 @@ const HOUR = 60 * 60_000;
 /** Lessons that started this long ago or less still get their rating (the job's look-back). */
 export const RATING_LOOKBACK_MS = 36 * HOUR;
 /** A rating still queued this long after the lesson started is failed «expired», never sent late. */
-export const RATING_EXPIRES_MS = 72 * HOUR;
+const RATING_EXPIRES_MS = 72 * HOUR;
 
 export interface RatingGuardian {
   id: string;

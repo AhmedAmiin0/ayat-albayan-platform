@@ -45,7 +45,7 @@ export function reminderRules(snap: RulesSnapshot): ReminderRules {
 }
 
 /** A day-before send_at_local can be as early as 06:00 the previous day: up to ~42 h ahead (DST included). */
-export const DAY_BEFORE_AT_HOURS = 48;
+const DAY_BEFORE_AT_HOURS = 48;
 
 /**
  * How many hours ahead one tick reads lessons: settings.reminder_lookahead_hours (≥ 25: the day-before

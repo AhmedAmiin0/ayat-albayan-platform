@@ -7,7 +7,7 @@ import { STUB_URL } from './wa-stub';
 // currency API at nothing. Used to boot the API twice and check that the send gate stays closed.
 
 const API_DIR = fileURLToPath(new URL('../../apps/api/', import.meta.url));
-export const BOOT_PORT = 3101;
+const BOOT_PORT = 3101;
 
 const BOOT_ENV = {
   PORT: String(BOOT_PORT),

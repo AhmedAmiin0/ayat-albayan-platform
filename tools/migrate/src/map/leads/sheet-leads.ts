@@ -7,7 +7,7 @@ import { leadSource, sheetLeadStatus } from '../../sources/values.ts';
 import type { RowIssue, SourceRef, SourceRow } from '../../types.ts';
 import { type PhoneInfo, toE164 } from './phone.ts';
 
-export const CONVERSATION_SPECS = ['hub_conversations', 'book_conversations'] as const;
+const CONVERSATION_SPECS = ['hub_conversations', 'book_conversations'] as const;
 
 export interface SheetLead {
   ref: SourceRef;
