@@ -7,7 +7,7 @@ import { useTheme } from '@/theme';
 import type { TabItem } from './AppNativeTabs';
 import { GlassGradient } from '../primitives/GlassGradient';
 import { GlassTab } from './GlassTab';
-import { BAR_HEIGHT, barBottom } from './tab-bar-inset';
+import { BAR_HEIGHT, BAR_SIDE, barBottom } from './tab-bar-inset';
 import { useA11yPref } from '../primitives/use-a11y-pref';
 import { usePillOffset } from './use-pill-offset';
 
@@ -18,11 +18,13 @@ export interface GlassTabBarProps extends BottomTabBarProps {
 }
 
 /**
- * The bottom tabs as a floating glass capsule (owner 2026-10-24, design C): a translucent fill with a
- * top sheen and a 1px inner highlight (no backdrop blur: no blur library in the APK), a pill that
- * springs to the active tab, and a fade of the screen colour behind it so rows scrolling under it melt
- * away. Reports its reach (gap + capsule) to the screens (useTabBarInset). Reduce Transparency: an
- * opaque fill.
+ * The bottom tabs as a floating glass capsule «like iOS» (owner 2026-10-26, docs/29 §7): 20pt from
+ * both sides and 24pt above the bottom safe area, a translucent fill with a white sheen and a 0.5pt
+ * edge (no backdrop blur: no blur library in this APK), a grey capsule that springs to the active
+ * tab, and a fade of the screen colour behind it so rows scrolling under it melt away. Only the
+ * capsule takes touches: the fade passes them through, so nothing beside or above the capsule is a
+ * dead strip. Reports its reach (gap + capsule) to the screens (useTabBarInset). Reduce
+ * Transparency: an opaque fill.
  */
 export function GlassTabBar({ state, navigation, insets, tabs }: GlassTabBarProps) {
   const { color, glass } = useTheme();
@@ -30,7 +32,7 @@ export function GlassTabBar({ state, navigation, insets, tabs }: GlassTabBarProp
   const opaque = useA11yPref('reduceTransparency');
   const reduceMotion = useA11yPref('reduceMotion');
   const bottom = barBottom(insets.bottom);
-  const tabWidth = (width - 40) / state.routes.length;
+  const tabWidth = (width - 2 * BAR_SIDE - 8) / state.routes.length;
   const x = usePillOffset({ index: state.index, tabWidth, rtl: I18nManager.isRTL, reduceMotion });
   const report = useContext(BottomTabBarHeightCallbackContext);
   useEffect(() => {
@@ -40,6 +42,7 @@ export function GlassTabBar({ state, navigation, insets, tabs }: GlassTabBarProp
   return (
     <>
       <View
+        testID="tab-edge"
         style={{ position: 'absolute', start: 0, end: 0, bottom: 0, height: bottom + BAR_HEIGHT + 32, pointerEvents: 'none' }}
       >
         <GlassGradient id="tab-edge" color={color.margin} stops={EDGE} />
@@ -50,28 +53,31 @@ export function GlassTabBar({ state, navigation, insets, tabs }: GlassTabBarProp
         accessibilityLabel={t.mobileNav.tabsLabel}
         style={{
           position: 'absolute',
-          start: 16,
-          end: 16,
+          start: BAR_SIDE,
+          end: BAR_SIDE,
           bottom,
           height: BAR_HEIGHT,
           padding: 4,
-          borderRadius: 32,
+          borderRadius: BAR_HEIGHT / 2,
+          borderWidth: 0.5,
+          borderColor: opaque ? color.rule : glass.border,
           flexDirection: 'row',
           backgroundColor: opaque ? color.raised : glass.fill,
           boxShadow: glass.shadow,
         }}
       >
-        <GlassGradient id="tab-sheen" color={glass.sheen.color} stops={glass.sheen.stops} radius={32} />
+        <GlassGradient id="tab-sheen" color={glass.sheen.color} stops={glass.sheen.stops} radius={BAR_HEIGHT / 2} />
         <Animated.View
+          testID="tab-pill"
           style={{
             position: 'absolute',
             start: 4,
             top: 4,
             bottom: 4,
             width: tabWidth,
-            borderRadius: 28,
-            backgroundColor: color.lapisWash,
-            boxShadow: glass.pillShadow,
+            borderRadius: 27,
+            backgroundColor: glass.pill.fill,
+            boxShadow: glass.pill.shadow,
             transform: [{ translateX: x }],
           }}
         />

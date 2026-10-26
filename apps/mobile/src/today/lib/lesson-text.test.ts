@@ -1,7 +1,7 @@
 import { t } from '@/core/lib/i18n/i18n';
 import { ltr } from '@/core/ui/primitives/Ltr';
 import { jana, lesson, muscat, pending, yusuf } from '../testing/fixtures';
-import { durationLabel, lessonSubtitle, riyadhTime, studentNames, studentTimes } from './lesson-text';
+import { durationLabel, lessonSubtitle, riyadhTime, rowSubtitle, studentNames, studentTimes } from './lesson-text';
 
 test('the spine time is the start in Riyadh, 24h, Western digits', () => {
   expect(riyadhTime('2026-10-01T13:00:00.000Z')).toBe('16:00');
@@ -39,4 +39,12 @@ test('subtitle: teacher, duration, then the student clocks', () => {
 
 test('names of every student on the lesson', () => {
   expect(studentNames(lesson({ id: 'g', students: [yusuf, jana] }))).toBe('يوسف أحمد، جنى وليد');
+});
+
+test('a row line: the titled teacher, the length, then trial or makeup', () => {
+  expect(rowSubtitle(pending)).toBe(`أ. أبرار · ${t.enums.duration['45']}`);
+  expect(rowSubtitle(lesson({ id: 'tr', trial: true }))).toBe(`أ. أبرار · ${t.enums.duration['45']} · ${t.schedule.trialTag}`);
+  expect(rowSubtitle(lesson({ id: 'mk', makeup: true, trial: true }))).toBe(
+    `أ. أبرار · ${t.enums.duration['45']} · ${t.booking.makeup.tag}`,
+  );
 });

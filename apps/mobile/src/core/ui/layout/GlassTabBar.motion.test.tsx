@@ -37,7 +37,7 @@ test('no spring on mount; a tap springs the pill one tab toward the end (left in
   await open();
   expect(pillMoves()).toEqual([]);
   await fireEvent.press(screen.getByRole('button', { name: 'b' }));
-  const tabWidth = (Dimensions.get('window').width - 40) / TABS.length;
+  const tabWidth = (Dimensions.get('window').width - 48) / TABS.length;
   expect(pillMoves()).toEqual([expect.objectContaining({ toValue: -tabWidth, useNativeDriver: true, mass: 1 })]);
 });
 

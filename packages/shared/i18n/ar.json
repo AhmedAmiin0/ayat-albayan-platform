@@ -996,7 +996,41 @@
     "all": "الكل",
     "statusFilter": "حالة الحلقة",
     "emptyFilter": "لا توجد حلقات بهذه الحالة اليوم",
-    "studentTime": "{time} بتوقيت {city}"
+    "studentTime": "{time} بتوقيت {city}",
+    "greeting": {
+      "morning": "صباح الخير",
+      "evening": "مساء الخير"
+    },
+    "summaryLabel": "ملخص اليوم",
+    "summary": {
+      "all": "حلقة اليوم",
+      "scheduled": "تحتاج تأكيد",
+      "completed": "انتهت"
+    },
+    "summaryFilter": "{n} {label}، اعرض هذه الحلقات فقط",
+    "next": "الحلقة التالية",
+    "running": "جارية الآن",
+    "inMinutes": {
+      "one": "بعد دقيقة",
+      "two": "بعد دقيقتين",
+      "few": "بعد {n} دقائق",
+      "other": "بعد {n} دقيقة"
+    },
+    "teacherTitled": "أ. {teacher}",
+    "confirmLesson": "تأكيد الحلقة",
+    "details": "التفاصيل",
+    "rest": "بقية اليوم · {n}",
+    "endedFold": {
+      "one": "انتهت حلقة واحدة اليوم",
+      "two": "انتهت حلقتان اليوم",
+      "few": "انتهت {n} حلقات اليوم",
+      "other": "انتهت {n} حلقة اليوم"
+    },
+    "quietTitle": "انتهت حلقات اليوم",
+    "tomorrowLine": "غدًا {count}، أولها الساعة {time}.",
+    "tomorrowSchedule": "جدول الغد",
+    "openLesson": "{time}، {names}، {status}. اعرض التفاصيل",
+    "dateLine": "{date} · بتوقيت الرياض"
   },
   "calendar": {
     "teacherCalendar": "جدول المعلم/ة",
