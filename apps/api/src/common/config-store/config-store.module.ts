@@ -1,12 +1,12 @@
 import { Global, Module } from '@nestjs/common';
 import { loadEnv } from '../../config/env/env';
-import { ConfigEntriesAudit } from './config-entries.audit';
-import { ConfigEntriesController } from './config-entries.controller';
-import { ConfigEntriesService } from './config-entries.service';
-import { ConfigParityController } from './config-parity';
-import { ConfigSeeder } from './config-seeder';
-import { ConfigStoreQueries } from './config-store.queries';
-import { ConfigStore } from './config-store.service';
+import { ConfigEntriesAudit } from './io/config-entries.audit';
+import { ConfigEntriesController } from './io/config-entries.controller';
+import { ConfigEntriesService } from './io/config-entries.service';
+import { ConfigParityController } from './boundaries/config-parity';
+import { ConfigSeeder } from './boundaries/config-seeder';
+import { ConfigStoreQueries } from './store/config-store.queries';
+import { ConfigStore } from './store/config-store.service';
 import { SETTINGS_CACHE_MS } from './config-store.types';
 
 /**

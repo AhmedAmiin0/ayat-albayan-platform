@@ -1,12 +1,12 @@
 import { Global, Module } from '@nestjs/common';
 import { loadEnv, webPushEnv } from '../../config/env/env';
-import { EXPO_PUSH_PATH, type ExpoMessage, type ExpoTicket } from './expo-push';
+import { EXPO_PUSH_PATH, type ExpoMessage, type ExpoTicket } from './expo/expo-push';
 import { NotificationsController, WebPushController } from './notifications.controller';
 import { NotificationsQueries } from './notifications.queries';
-import { PushAudience } from './push.audience';
-import { PushChannels } from './push.channels';
+import { PushAudience } from './dispatch/push.audience';
+import { PushChannels } from './dispatch/push.channels';
 import { PUSH_TRANSPORT, PushService, type PushTransport } from './push.service';
-import { fetchTransport, WEB_PUSH_KEYS, WEB_PUSH_TRANSPORT, WebPushSender, type WebPushKeysSource } from './web-push.sender';
+import { fetchTransport, WEB_PUSH_KEYS, WEB_PUSH_TRANSPORT, WebPushSender, type WebPushKeysSource } from './web/web-push.sender';
 
 /** Expo's batch limit per request. */
 const EXPO_BATCH = 100;

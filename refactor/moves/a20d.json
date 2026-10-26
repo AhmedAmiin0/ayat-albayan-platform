@@ -1,0 +1,144 @@
+{
+  "id": "a20d",
+  "seq": 32,
+  "moves": [
+    {
+      "from": "apps/api/src/common/push/expo-*",
+      "to": "apps/api/src/common/push/expo"
+    },
+    {
+      "from": "apps/api/src/common/push/push-claim*",
+      "to": "apps/api/src/common/push/expo"
+    },
+    {
+      "from": "apps/api/src/common/push/web-push.*",
+      "to": "apps/api/src/common/push/web"
+    },
+    {
+      "from": "apps/api/src/common/push/push.audience*",
+      "to": "apps/api/src/common/push/dispatch"
+    },
+    {
+      "from": "apps/api/src/common/push/push.channels*",
+      "to": "apps/api/src/common/push/dispatch"
+    },
+    {
+      "from": "apps/api/src/common/push/push.rules*",
+      "to": "apps/api/src/common/push/dispatch"
+    },
+    {
+      "from": "apps/api/src/common/push/push.lock-screen*",
+      "to": "apps/api/src/common/push/dispatch"
+    },
+    {
+      "from": "apps/api/src/common/push/push.sessions*",
+      "to": "apps/api/src/common/push/dispatch"
+    }
+  ],
+  "files": [
+    [
+      "apps/api/src/common/push/expo-deliver.ts",
+      "apps/api/src/common/push/expo/expo-deliver.ts"
+    ],
+    [
+      "apps/api/src/common/push/expo-push.test.ts",
+      "apps/api/src/common/push/expo/expo-push.test.ts"
+    ],
+    [
+      "apps/api/src/common/push/expo-push.ts",
+      "apps/api/src/common/push/expo/expo-push.ts"
+    ],
+    [
+      "apps/api/src/common/push/push-claim.test.ts",
+      "apps/api/src/common/push/expo/push-claim.test.ts"
+    ],
+    [
+      "apps/api/src/common/push/push-claim.ts",
+      "apps/api/src/common/push/expo/push-claim.ts"
+    ],
+    [
+      "apps/api/src/common/push/push.audience.sales.test.ts",
+      "apps/api/src/common/push/dispatch/push.audience.sales.test.ts"
+    ],
+    [
+      "apps/api/src/common/push/push.audience.test.ts",
+      "apps/api/src/common/push/dispatch/push.audience.test.ts"
+    ],
+    [
+      "apps/api/src/common/push/push.audience.ts",
+      "apps/api/src/common/push/dispatch/push.audience.ts"
+    ],
+    [
+      "apps/api/src/common/push/push.channels.ts",
+      "apps/api/src/common/push/dispatch/push.channels.ts"
+    ],
+    [
+      "apps/api/src/common/push/push.lock-screen.test.ts",
+      "apps/api/src/common/push/dispatch/push.lock-screen.test.ts"
+    ],
+    [
+      "apps/api/src/common/push/push.lock-screen.ts",
+      "apps/api/src/common/push/dispatch/push.lock-screen.ts"
+    ],
+    [
+      "apps/api/src/common/push/push.rules.test.ts",
+      "apps/api/src/common/push/dispatch/push.rules.test.ts"
+    ],
+    [
+      "apps/api/src/common/push/push.rules.ts",
+      "apps/api/src/common/push/dispatch/push.rules.ts"
+    ],
+    [
+      "apps/api/src/common/push/push.sessions.test.ts",
+      "apps/api/src/common/push/dispatch/push.sessions.test.ts"
+    ],
+    [
+      "apps/api/src/common/push/push.sessions.ts",
+      "apps/api/src/common/push/dispatch/push.sessions.ts"
+    ],
+    [
+      "apps/api/src/common/push/web-push.claim.test.ts",
+      "apps/api/src/common/push/web/web-push.claim.test.ts"
+    ],
+    [
+      "apps/api/src/common/push/web-push.claim.ts",
+      "apps/api/src/common/push/web/web-push.claim.ts"
+    ],
+    [
+      "apps/api/src/common/push/web-push.crypto.test.ts",
+      "apps/api/src/common/push/web/web-push.crypto.test.ts"
+    ],
+    [
+      "apps/api/src/common/push/web-push.crypto.ts",
+      "apps/api/src/common/push/web/web-push.crypto.ts"
+    ],
+    [
+      "apps/api/src/common/push/web-push.endpoint.test.ts",
+      "apps/api/src/common/push/web/web-push.endpoint.test.ts"
+    ],
+    [
+      "apps/api/src/common/push/web-push.endpoint.ts",
+      "apps/api/src/common/push/web/web-push.endpoint.ts"
+    ],
+    [
+      "apps/api/src/common/push/web-push.http.test.ts",
+      "apps/api/src/common/push/web/web-push.http.test.ts"
+    ],
+    [
+      "apps/api/src/common/push/web-push.sender.test.ts",
+      "apps/api/src/common/push/web/web-push.sender.test.ts"
+    ],
+    [
+      "apps/api/src/common/push/web-push.sender.ts",
+      "apps/api/src/common/push/web/web-push.sender.ts"
+    ],
+    [
+      "apps/api/src/common/push/web-push.vapid.test.ts",
+      "apps/api/src/common/push/web/web-push.vapid.test.ts"
+    ],
+    [
+      "apps/api/src/common/push/web-push.vapid.ts",
+      "apps/api/src/common/push/web/web-push.vapid.ts"
+    ]
+  ]
+}

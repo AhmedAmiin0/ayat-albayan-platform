@@ -3,11 +3,11 @@ import { fakePolicy } from '../../modules/notification-rules/policy/policy.fakes
 import type { NotificationPolicy } from '../../modules/notification-rules/policy/policy';
 import { systemResolver, type PermissionResolver } from '../auth/permissions';
 import type { Db } from '../db/db.module';
-import type { ExpoTicket } from './expo-push';
-import { PushAudience } from './push.audience';
-import { PushChannels } from './push.channels';
+import type { ExpoTicket } from './expo/expo-push';
+import { PushAudience } from './dispatch/push.audience';
+import { PushChannels } from './dispatch/push.channels';
 import { PushService, type PushTransport } from './push.service';
-import type { WebPushSender } from './web-push.sender';
+import type { WebPushSender } from './web/web-push.sender';
 
 /** Tests only. A profile as PushService reads it; disabled_at set = a disabled account. */
 export type FakeProfile = {

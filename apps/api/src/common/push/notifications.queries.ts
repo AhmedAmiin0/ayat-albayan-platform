@@ -3,8 +3,8 @@ import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { dbError } from '../http/http';
 import { DB, type Db } from '../db/db.module';
 import { notificationItem } from './notifications.mapper';
-import { assertBrowserClaim } from './web-push.claim';
-import type { WebPushSubscriptionInput } from './web-push.endpoint';
+import { assertBrowserClaim } from './web/web-push.claim';
+import type { WebPushSubscriptionInput } from './web/web-push.endpoint';
 
 /** A retimed lesson's superseded rows (migration 174 appends «:old:<uuid>» to their dedup_key). */
 const SUPERSEDED = '%:old:%';

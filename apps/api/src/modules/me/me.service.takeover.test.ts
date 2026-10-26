@@ -1,6 +1,6 @@
 import { ConflictException, UnauthorizedException } from '@nestjs/common';
 import { describe, expect, it } from 'vitest';
-import { deviceKeyHash, mintDeviceKey } from '../../common/push/push-claim';
+import { deviceKeyHash, mintDeviceKey } from '../../common/push/expo/push-claim';
 import { fakeDb, type FakeResult } from '../guardians/fake-db';
 import { MeService } from './me.service';
 
