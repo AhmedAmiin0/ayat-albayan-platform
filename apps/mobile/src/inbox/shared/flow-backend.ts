@@ -16,7 +16,7 @@ import {
 // POST /threads/forward (a copy into each open chat; a closed one is skipped, as the API does).
 
 export const GUARDIAN_PHONE = '+966501112223';
-export const LESSON: ThreadLesson = {
+const LESSON: ThreadLesson = {
   id: 'l-1',
   starts_at: '2026-10-04T14:00:00Z',
   meeting_link: null,
@@ -39,7 +39,7 @@ const leadThread: ThreadView = {
 };
 
 /** A guardian whose last message is two days old: the session is closed, only templates go out. */
-export const guardianThread: ThreadView = {
+const guardianThread: ThreadView = {
   ...leadRow,
   phone_e164: GUARDIAN_PHONE,
   display_name: 'أم يوسف',

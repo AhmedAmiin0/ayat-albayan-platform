@@ -8,7 +8,7 @@ import { studentsModule } from '../people/students.ts';
 import { teachersModule } from '../teachers/teachers.ts';
 import { scheduleRuleStudentsModule, scheduleRulesModule } from './rules.ts';
 
-export const MODULES = [
+const MODULES = [
   teachersModule,
   guardiansModule,
   studentsModule,

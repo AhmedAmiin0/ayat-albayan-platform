@@ -10,7 +10,7 @@ const errors: Record<string, string | undefined> = L.errors;
 const extra: Record<string, string | undefined> = { meeting_ended: t.classroom.error.meeting_ended };
 
 /** «الأحد 4 أكتوبر 17:00» in the viewer's zone (Western digits). */
-export const whenText = (iso: string, tz: string): string => lessonWhenText(new Date(iso), tz, locale);
+const whenText = (iso: string, tz: string): string => lessonWhenText(new Date(iso), tz, locale);
 
 /** «الموعد: …» for a scheduled meeting, «اجتماع فوري» for an instant one. */
 export function scheduleLine(meeting: Pick<MeetingView, 'starts_at'>, tz: string): string {

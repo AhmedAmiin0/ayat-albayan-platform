@@ -18,7 +18,7 @@ export interface SalesSubscription {
 }
 
 /** The running lessons are re-read every minute: one ends, another starts (same as the web). */
-export const LIVE_REFRESH_MS = 60_000;
+const LIVE_REFRESH_MS = 60_000;
 
 /** A body that is not a list (an older API, a stub) reads as an empty list rather than crashing. */
 const asList = <T>(data: T[]): T[] => (Array.isArray(data) ? data : []);

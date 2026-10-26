@@ -38,7 +38,7 @@ export async function backdateInbound(input: { phone: string; hoursAgo: number }
     where phone_e164 = ${input.phone} and direction = 'inbound'`);
 }
 
-export interface InboundRow {
+interface InboundRow {
   media_mime: string | null;
   body: string | null;
 }

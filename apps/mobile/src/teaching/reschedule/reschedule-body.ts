@@ -46,7 +46,7 @@ export function seriesDays(
   return repeatDays(startsAt, tz, shiftByday({ byday: lesson.rule_byday ?? [], from, to }));
 }
 
-export interface RescheduleInput {
+interface RescheduleInput {
   lesson: LessonView;
   scope: Scope;
   /** The picked free slot (UTC instant from GET /booking/slots). */

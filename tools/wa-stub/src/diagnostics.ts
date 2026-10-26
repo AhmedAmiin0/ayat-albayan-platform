@@ -5,7 +5,7 @@ import { initialHealth, stubLines } from './lines.ts';
 import { ERR, type Json } from './providers/meta.ts';
 import { readJson, type LineHealth, type Reply, type Route, type StubState } from './state.ts';
 
-export const PHONE_FIELDS = [
+const PHONE_FIELDS = [
   'display_phone_number',
   'verified_name',
   'quality_rating',

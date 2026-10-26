@@ -4,7 +4,7 @@ import { dayTimesKeeping, type CourseChangeRequest, type PrefilledPick } from '@
 // that have not happened yet. The teacher, the length and the zone stay the course's. Pure. The
 // slot step's first picks are shared changePicks (from the later of changeOpensOn and startsOn).
 
-export interface ChangeInput {
+interface ChangeInput {
   subscriptionId: string;
   /** The picked slots (UTC instants), one per weekday of `tz`. */
   picks: readonly string[];

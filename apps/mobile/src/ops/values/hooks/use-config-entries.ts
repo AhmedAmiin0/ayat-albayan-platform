@@ -12,7 +12,7 @@ const ENTRIES = '/config/entries';
  * GET /config/entries (docs/26 §2f): the stored descriptions. No retry: an older API has no such
  * route, and the sheet then shows today's text without «عدّل الوصف» (never an error).
  */
-export function useConfigEntries() {
+function useConfigEntries() {
   return useQuery({
     queryKey: pathKey(ENTRIES),
     queryFn: () => apiFetch<ConfigEntriesResponse>(ENTRIES),

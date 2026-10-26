@@ -40,7 +40,7 @@ export type At = { m: RegExpExecArray; s: StubState; url: URL };
 export type Handler = (req: IncomingMessage, at: At) => Promise<Reply>;
 export type Route = [method: string, path: RegExp, handler: Handler];
 
-export const FOLDER = 'application/vnd.google-apps.folder';
+const FOLDER = 'application/vnd.google-apps.folder';
 export const SHEET = 'application/vnd.google-apps.spreadsheet';
 const ROOT_NAME = 'تقارير آيات البيان';
 const SUMMARY_NAME = 'سجل الطلاب المشتركين';

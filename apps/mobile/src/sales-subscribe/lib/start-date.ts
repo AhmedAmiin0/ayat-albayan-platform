@@ -17,7 +17,7 @@ export interface StartDraft {
 }
 
 /** What POST /sales/subscriptions gets: nothing, a day, or a past day with alreadyStarted. */
-export type StartBody = { startsOn?: string; alreadyStarted?: true };
+type StartBody = { startsOn?: string; alreadyStarted?: true };
 type StartCheck = { ok: true; body: StartBody } | { ok: false; error: string };
 
 /** `today`: the academy's (Riyadh) day, as the API checks it. */
