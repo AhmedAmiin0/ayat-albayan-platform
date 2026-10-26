@@ -9,7 +9,7 @@ import { signOut } from './sign-in';
 const auth = vi.hoisted(() => ({ signOut: vi.fn(async () => undefined) }));
 vi.mock('@/lib/http/supabase', () => ({ supabase: { auth } }));
 vi.mock('./session-activity', () => ({ reportSession: vi.fn(async () => undefined) }));
-vi.mock('@/features/messaging/notifications/web-push', () => ({ forgetWebPush: vi.fn(async () => undefined) }));
+vi.mock('@/features/messaging/notifications/web-push/web-push', () => ({ forgetWebPush: vi.fn(async () => undefined) }));
 
 const PHONE = '+966501234567';
 

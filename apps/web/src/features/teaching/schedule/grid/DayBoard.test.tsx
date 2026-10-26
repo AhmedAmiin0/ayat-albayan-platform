@@ -5,7 +5,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n/i18n';
 import { lesson } from '../lesson/lesson-fixture';
 import { overview } from '../overview-fixture';
-import type { ScheduleSearch } from '../search';
+import type { ScheduleSearch } from '../filters/search';
 import { WeekSchedule } from './WeekSchedule';
 
 const apiFetch = vi.hoisted(() => vi.fn());

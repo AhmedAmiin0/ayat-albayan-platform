@@ -1,6 +1,6 @@
 import { LEGACY_LINE_GROUPS } from '@/features/platform/integrations/integration-places';
 import { IntegrationsPanel } from '@/features/platform/integrations/IntegrationsPanel';
-import { LinesCard } from '@/features/messaging/messaging/LinesCard';
+import { LinesCard } from '@/features/messaging/messaging/lines/LinesCard';
 import { NumbersPanel } from '@/features/messaging/numbers/NumbersPanel';
 import { t } from '@/lib/i18n/i18n';
 

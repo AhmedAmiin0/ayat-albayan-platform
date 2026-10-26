@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/form/button';
 import { Toast } from '@/components/ui/overlay/toast';
 import { t } from '@/lib/i18n/i18n';
-import { checkLines, linesCheckQuery } from './api';
+import { checkLines, linesCheckQuery } from '../api';
 import { LineRow } from './LineRow';
 
 /**

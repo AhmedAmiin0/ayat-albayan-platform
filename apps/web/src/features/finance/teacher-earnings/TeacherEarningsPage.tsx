@@ -14,8 +14,8 @@ import { ListSkeleton } from '@/components/ui/display/skeleton';
 import { t } from '@/lib/i18n/i18n';
 import { balanceQuery, type Scope } from './api';
 import { EarningsCards } from './EarningsCards';
-import { PayDialog } from './PayDialog';
-import { PaymentsHistory } from './PaymentsHistory';
+import { PayDialog } from './payments/PayDialog';
+import { PaymentsHistory } from './payments/PaymentsHistory';
 import { SessionsPanel } from './SessionsPanel';
 import { teacherLabel } from '@/lib/i18n/teacher-label';
 

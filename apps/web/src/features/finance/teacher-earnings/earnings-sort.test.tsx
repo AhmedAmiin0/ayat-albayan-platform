@@ -5,7 +5,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n/i18n';
 import { findFilters, openFilters } from '@/test/open-filters';
 import { page, PAYMENT, SESSIONS } from './fixtures';
-import { PaymentsHistory } from './PaymentsHistory';
+import { PaymentsHistory } from './payments/PaymentsHistory';
 import { SessionsPanel } from './SessionsPanel';
 
 const apiFetch = vi.hoisted(() => vi.fn());

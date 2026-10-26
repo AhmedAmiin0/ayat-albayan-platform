@@ -257,12 +257,12 @@
     "apps/web/src/features/messaging/messaging/api.ts",
     "apps/web/src/features/messaging/SettingsSections.tsx",
     "apps/web/src/features/messaging/messaging/ServerGateNote.tsx",
-    "apps/web/src/features/messaging/messaging/LinesCard.tsx",
-    "apps/web/src/features/messaging/messaging/LineRow.tsx",
-    "apps/web/src/features/messaging/messaging/LineFacts.tsx",
-    "apps/web/src/features/messaging/messaging/line-status.ts",
-    "apps/web/src/features/messaging/messaging/line-status.test.ts",
-    "apps/web/src/features/messaging/messaging/LinesCard.test.tsx",
+    "apps/web/src/features/messaging/messaging/lines/LinesCard.tsx",
+    "apps/web/src/features/messaging/messaging/lines/LineRow.tsx",
+    "apps/web/src/features/messaging/messaging/lines/LineFacts.tsx",
+    "apps/web/src/features/messaging/messaging/lines/line-status.ts",
+    "apps/web/src/features/messaging/messaging/lines/line-status.test.ts",
+    "apps/web/src/features/messaging/messaging/lines/LinesCard.test.tsx",
     "apps/web/src/features/messaging/messaging/ServerGateNote.test.tsx"
    ],
    "tasks": [

@@ -12,7 +12,7 @@ const auth = vi.hoisted(() => ({
 }));
 vi.mock('@/lib/http/supabase', () => ({ supabase: { auth } }));
 vi.mock('./session-activity', () => ({ reportSession: vi.fn(async () => void order.push('report')) }));
-vi.mock('@/features/messaging/notifications/web-push', () => ({ forgetWebPush: vi.fn(async () => void order.push('forget')) }));
+vi.mock('@/features/messaging/notifications/web-push/web-push', () => ({ forgetWebPush: vi.fn(async () => void order.push('forget')) }));
 
 beforeEach(() => {
   order.length = 0;

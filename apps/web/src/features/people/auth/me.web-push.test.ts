@@ -12,7 +12,7 @@ const apiFetch = vi.hoisted(() => vi.fn());
 vi.mock('@/lib/http/supabase', () => ({ supabase: { auth } }));
 vi.mock('@/lib/http/api', () => ({ apiFetch }));
 vi.mock('./session-activity', () => ({ reportSession: vi.fn(async () => undefined) }));
-vi.mock('@/features/messaging/notifications/web-push', () => ({
+vi.mock('@/features/messaging/notifications/web-push/web-push', () => ({
   forgetWebPush: vi.fn(async () => void order.push('forget')),
 }));
 

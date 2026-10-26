@@ -2,7 +2,7 @@ import { OWNED_VALUE_GROUPS, SETTING_KEYS, VALUE_GROUPS, type SettingKey } from 
 import { matchesSetting, matchesText } from '@/components/settings/search/settings-search';
 import { settingText } from '@/components/settings/search/setting-text';
 import { groupsMatch, INTEGRATIONS_PAGE_GROUPS, LEGACY_LINE_GROUPS, SAFETY_GROUPS } from '@/features/platform/integrations/integration-places';
-import { linesMatch } from '@/features/messaging/messaging/lines-match';
+import { linesMatch } from '@/features/messaging/messaging/lines/lines-match';
 import { catalogueMatch } from '@/features/messaging/notification-catalogue/catalogue-match';
 import { numbersMatch } from '@/features/messaging/numbers/numbers-section';
 import { themeMatch } from '@/features/platform/settings/sections/AppearanceSection';

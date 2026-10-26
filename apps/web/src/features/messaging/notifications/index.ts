@@ -9,4 +9,4 @@ export {
   subscribeWebPush,
   SW_URL,
   unsubscribeWebPush,
-} from './web-push';
+} from './web-push/web-push';

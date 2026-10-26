@@ -3,7 +3,7 @@ import { ConfirmDialog } from '@/features/finance/payments/record/ConfirmDialog'
 import { MONEY_KEY } from '@/features/finance/subscriptions/api';
 import { apiErrorText, moneyText } from '@/features/finance/subscriptions/format';
 import { t } from '@/lib/i18n/i18n';
-import { voidTeacherPayment, type TeacherPaymentView } from './api';
+import { voidTeacherPayment, type TeacherPaymentView } from '../api';
 
 /**
  * «إلغاء الدفعة»: a wrong transfer is voided with a reason, never deleted. Its sessions are owed

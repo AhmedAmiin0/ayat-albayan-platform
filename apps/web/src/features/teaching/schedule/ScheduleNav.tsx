@@ -2,7 +2,7 @@ import { Button } from '@/components/ui/form/button';
 import { Icon } from '@/components/ui/display/icon';
 import { SegmentedControl } from '@/components/ui/form/segmented-control';
 import { t } from '@/lib/i18n/i18n';
-import type { ScheduleSearch } from './search';
+import type { ScheduleSearch } from './filters/search';
 import { addDays, dayMonthLabel, weekdayOf, weekStart } from './tz';
 
 export interface ScheduleNavProps {

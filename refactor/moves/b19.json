@@ -7,7 +7,43 @@
       "to": "apps/web/src/features/messaging/inbox/"
     },
     {
-      "from": "apps/web/src/features/messaging/",
+      "from": "apps/web/src/features/messaging/Line*",
+      "to": "apps/web/src/features/messaging/messaging/lines/"
+    },
+    {
+      "from": "apps/web/src/features/messaging/line-status*",
+      "to": "apps/web/src/features/messaging/messaging/lines/"
+    },
+    {
+      "from": "apps/web/src/features/messaging/lines-match*",
+      "to": "apps/web/src/features/messaging/messaging/lines/"
+    },
+    {
+      "from": "apps/web/src/features/messaging/AutoMessagesSwitch.tsx",
+      "to": "apps/web/src/features/messaging/messaging/"
+    },
+    {
+      "from": "apps/web/src/features/messaging/MessagingSwitch.tsx",
+      "to": "apps/web/src/features/messaging/messaging/"
+    },
+    {
+      "from": "apps/web/src/features/messaging/ServerGateNote.tsx",
+      "to": "apps/web/src/features/messaging/messaging/"
+    },
+    {
+      "from": "apps/web/src/features/messaging/api.ts",
+      "to": "apps/web/src/features/messaging/messaging/"
+    },
+    {
+      "from": "apps/web/src/features/messaging/gate-api.ts",
+      "to": "apps/web/src/features/messaging/messaging/"
+    },
+    {
+      "from": "apps/web/src/features/messaging/sending-chip.ts",
+      "to": "apps/web/src/features/messaging/messaging/"
+    },
+    {
+      "from": "apps/web/src/features/messaging/use-gate-switch.test.tsx",
       "to": "apps/web/src/features/messaging/messaging/"
     },
     {
@@ -23,7 +59,51 @@
       "to": "apps/web/src/features/messaging/notification-rules/"
     },
     {
-      "from": "apps/web/src/features/notifications/",
+      "from": "apps/web/src/features/notifications/WebPushToggle*",
+      "to": "apps/web/src/features/messaging/notifications/web-push/"
+    },
+    {
+      "from": "apps/web/src/features/notifications/use-web-push*",
+      "to": "apps/web/src/features/messaging/notifications/web-push/"
+    },
+    {
+      "from": "apps/web/src/features/notifications/web-push*",
+      "to": "apps/web/src/features/messaging/notifications/web-push/"
+    },
+    {
+      "from": "apps/web/src/features/notifications/NotificationBell.en.test.tsx",
+      "to": "apps/web/src/features/messaging/notifications/"
+    },
+    {
+      "from": "apps/web/src/features/notifications/NotificationBell.tsx",
+      "to": "apps/web/src/features/messaging/notifications/"
+    },
+    {
+      "from": "apps/web/src/features/notifications/NotificationItem.tsx",
+      "to": "apps/web/src/features/messaging/notifications/"
+    },
+    {
+      "from": "apps/web/src/features/notifications/NotificationList.tsx",
+      "to": "apps/web/src/features/messaging/notifications/"
+    },
+    {
+      "from": "apps/web/src/features/notifications/NotificationPanel.tsx",
+      "to": "apps/web/src/features/messaging/notifications/"
+    },
+    {
+      "from": "apps/web/src/features/notifications/api.ts",
+      "to": "apps/web/src/features/messaging/notifications/"
+    },
+    {
+      "from": "apps/web/src/features/notifications/format.ts",
+      "to": "apps/web/src/features/messaging/notifications/"
+    },
+    {
+      "from": "apps/web/src/features/notifications/notifications-test-kit.ts",
+      "to": "apps/web/src/features/messaging/notifications/"
+    },
+    {
+      "from": "apps/web/src/features/notifications/sw.test.ts",
       "to": "apps/web/src/features/messaging/notifications/"
     },
     {
@@ -43,7 +123,71 @@
       "to": "apps/web/src/features/teaching/booking/"
     },
     {
-      "from": "apps/web/src/features/schedule/",
+      "from": "apps/web/src/features/schedule/ScheduleFilters*",
+      "to": "apps/web/src/features/teaching/schedule/filters/"
+    },
+    {
+      "from": "apps/web/src/features/schedule/schedule-filters*",
+      "to": "apps/web/src/features/teaching/schedule/filters/"
+    },
+    {
+      "from": "apps/web/src/features/schedule/TeacherPicker*",
+      "to": "apps/web/src/features/teaching/schedule/filters/"
+    },
+    {
+      "from": "apps/web/src/features/schedule/search*",
+      "to": "apps/web/src/features/teaching/schedule/filters/"
+    },
+    {
+      "from": "apps/web/src/features/schedule/Drawer.tsx",
+      "to": "apps/web/src/features/teaching/schedule/"
+    },
+    {
+      "from": "apps/web/src/features/schedule/ScheduleCounts.tsx",
+      "to": "apps/web/src/features/teaching/schedule/"
+    },
+    {
+      "from": "apps/web/src/features/schedule/ScheduleNav.tsx",
+      "to": "apps/web/src/features/teaching/schedule/"
+    },
+    {
+      "from": "apps/web/src/features/schedule/SyncScheduleButton.tsx",
+      "to": "apps/web/src/features/teaching/schedule/"
+    },
+    {
+      "from": "apps/web/src/features/schedule/api.ts",
+      "to": "apps/web/src/features/teaching/schedule/"
+    },
+    {
+      "from": "apps/web/src/features/schedule/edit-time/",
+      "to": "apps/web/src/features/teaching/schedule/edit-time/"
+    },
+    {
+      "from": "apps/web/src/features/schedule/grid/",
+      "to": "apps/web/src/features/teaching/schedule/grid/"
+    },
+    {
+      "from": "apps/web/src/features/schedule/lesson/",
+      "to": "apps/web/src/features/teaching/schedule/lesson/"
+    },
+    {
+      "from": "apps/web/src/features/schedule/overview-fixture.ts",
+      "to": "apps/web/src/features/teaching/schedule/"
+    },
+    {
+      "from": "apps/web/src/features/schedule/overview.ts",
+      "to": "apps/web/src/features/teaching/schedule/"
+    },
+    {
+      "from": "apps/web/src/features/schedule/reschedule/",
+      "to": "apps/web/src/features/teaching/schedule/reschedule/"
+    },
+    {
+      "from": "apps/web/src/features/schedule/schedule.en.test.tsx",
+      "to": "apps/web/src/features/teaching/schedule/"
+    },
+    {
+      "from": "apps/web/src/features/schedule/tz.ts",
       "to": "apps/web/src/features/teaching/schedule/"
     },
     {
@@ -139,7 +283,55 @@
       "to": "apps/web/src/features/finance/finance/"
     },
     {
-      "from": "apps/web/src/features/teacher-earnings/",
+      "from": "apps/web/src/features/teacher-earnings/PayDialog*",
+      "to": "apps/web/src/features/finance/teacher-earnings/payments/"
+    },
+    {
+      "from": "apps/web/src/features/teacher-earnings/PaymentsHistory*",
+      "to": "apps/web/src/features/finance/teacher-earnings/payments/"
+    },
+    {
+      "from": "apps/web/src/features/teacher-earnings/VoidPaymentDialog*",
+      "to": "apps/web/src/features/finance/teacher-earnings/payments/"
+    },
+    {
+      "from": "apps/web/src/features/teacher-earnings/teacher-payment-columns*",
+      "to": "apps/web/src/features/finance/teacher-earnings/payments/"
+    },
+    {
+      "from": "apps/web/src/features/teacher-earnings/use-pay-teacher*",
+      "to": "apps/web/src/features/finance/teacher-earnings/payments/"
+    },
+    {
+      "from": "apps/web/src/features/teacher-earnings/EarningsCards.tsx",
+      "to": "apps/web/src/features/finance/teacher-earnings/"
+    },
+    {
+      "from": "apps/web/src/features/teacher-earnings/MyEarnings.tsx",
+      "to": "apps/web/src/features/finance/teacher-earnings/"
+    },
+    {
+      "from": "apps/web/src/features/teacher-earnings/SessionsPanel.tsx",
+      "to": "apps/web/src/features/finance/teacher-earnings/"
+    },
+    {
+      "from": "apps/web/src/features/teacher-earnings/TeacherEarningsPage.tsx",
+      "to": "apps/web/src/features/finance/teacher-earnings/"
+    },
+    {
+      "from": "apps/web/src/features/teacher-earnings/api.ts",
+      "to": "apps/web/src/features/finance/teacher-earnings/"
+    },
+    {
+      "from": "apps/web/src/features/teacher-earnings/earnings-sort.test.tsx",
+      "to": "apps/web/src/features/finance/teacher-earnings/"
+    },
+    {
+      "from": "apps/web/src/features/teacher-earnings/fixtures.ts",
+      "to": "apps/web/src/features/finance/teacher-earnings/"
+    },
+    {
+      "from": "apps/web/src/features/teacher-earnings/session-columns.tsx",
       "to": "apps/web/src/features/finance/teacher-earnings/"
     },
     {
@@ -3826,63 +4018,63 @@
     ],
     [
       "apps/web/src/features/messaging/line-status.test.ts",
-      "apps/web/src/features/messaging/messaging/line-status.test.ts"
+      "apps/web/src/features/messaging/messaging/lines/line-status.test.ts"
     ],
     [
       "apps/web/src/features/messaging/line-status.ts",
-      "apps/web/src/features/messaging/messaging/line-status.ts"
+      "apps/web/src/features/messaging/messaging/lines/line-status.ts"
     ],
     [
       "apps/web/src/features/messaging/LineDriver.test.tsx",
-      "apps/web/src/features/messaging/messaging/LineDriver.test.tsx"
+      "apps/web/src/features/messaging/messaging/lines/LineDriver.test.tsx"
     ],
     [
       "apps/web/src/features/messaging/LineDriver.tsx",
-      "apps/web/src/features/messaging/messaging/LineDriver.tsx"
+      "apps/web/src/features/messaging/messaging/lines/LineDriver.tsx"
     ],
     [
       "apps/web/src/features/messaging/LineFacts.tsx",
-      "apps/web/src/features/messaging/messaging/LineFacts.tsx"
+      "apps/web/src/features/messaging/messaging/lines/LineFacts.tsx"
     ],
     [
       "apps/web/src/features/messaging/LineRow.crm.test.tsx",
-      "apps/web/src/features/messaging/messaging/LineRow.crm.test.tsx"
+      "apps/web/src/features/messaging/messaging/lines/LineRow.crm.test.tsx"
     ],
     [
       "apps/web/src/features/messaging/LineRow.kapso.test.tsx",
-      "apps/web/src/features/messaging/messaging/LineRow.kapso.test.tsx"
+      "apps/web/src/features/messaging/messaging/lines/LineRow.kapso.test.tsx"
     ],
     [
       "apps/web/src/features/messaging/LineRow.test.tsx",
-      "apps/web/src/features/messaging/messaging/LineRow.test.tsx"
+      "apps/web/src/features/messaging/messaging/lines/LineRow.test.tsx"
     ],
     [
       "apps/web/src/features/messaging/LineRow.tsx",
-      "apps/web/src/features/messaging/messaging/LineRow.tsx"
+      "apps/web/src/features/messaging/messaging/lines/LineRow.tsx"
     ],
     [
       "apps/web/src/features/messaging/lines-match.test.ts",
-      "apps/web/src/features/messaging/messaging/lines-match.test.ts"
+      "apps/web/src/features/messaging/messaging/lines/lines-match.test.ts"
     ],
     [
       "apps/web/src/features/messaging/lines-match.ts",
-      "apps/web/src/features/messaging/messaging/lines-match.ts"
+      "apps/web/src/features/messaging/messaging/lines/lines-match.ts"
     ],
     [
       "apps/web/src/features/messaging/LinesCard.cache.test.tsx",
-      "apps/web/src/features/messaging/messaging/LinesCard.cache.test.tsx"
+      "apps/web/src/features/messaging/messaging/lines/LinesCard.cache.test.tsx"
     ],
     [
       "apps/web/src/features/messaging/LinesCard.recheck.test.tsx",
-      "apps/web/src/features/messaging/messaging/LinesCard.recheck.test.tsx"
+      "apps/web/src/features/messaging/messaging/lines/LinesCard.recheck.test.tsx"
     ],
     [
       "apps/web/src/features/messaging/LinesCard.test.tsx",
-      "apps/web/src/features/messaging/messaging/LinesCard.test.tsx"
+      "apps/web/src/features/messaging/messaging/lines/LinesCard.test.tsx"
     ],
     [
       "apps/web/src/features/messaging/LinesCard.tsx",
-      "apps/web/src/features/messaging/messaging/LinesCard.tsx"
+      "apps/web/src/features/messaging/messaging/lines/LinesCard.tsx"
     ],
     [
       "apps/web/src/features/messaging/MessagingSwitch.tsx",
@@ -4162,43 +4354,43 @@
     ],
     [
       "apps/web/src/features/notifications/use-web-push.test.ts",
-      "apps/web/src/features/messaging/notifications/use-web-push.test.ts"
+      "apps/web/src/features/messaging/notifications/web-push/use-web-push.test.ts"
     ],
     [
       "apps/web/src/features/notifications/use-web-push.ts",
-      "apps/web/src/features/messaging/notifications/use-web-push.ts"
+      "apps/web/src/features/messaging/notifications/web-push/use-web-push.ts"
     ],
     [
       "apps/web/src/features/notifications/web-push-session.test.ts",
-      "apps/web/src/features/messaging/notifications/web-push-session.test.ts"
+      "apps/web/src/features/messaging/notifications/web-push/web-push-session.test.ts"
     ],
     [
       "apps/web/src/features/notifications/web-push-session.ts",
-      "apps/web/src/features/messaging/notifications/web-push-session.ts"
+      "apps/web/src/features/messaging/notifications/web-push/web-push-session.ts"
     ],
     [
       "apps/web/src/features/notifications/web-push-support.test.ts",
-      "apps/web/src/features/messaging/notifications/web-push-support.test.ts"
+      "apps/web/src/features/messaging/notifications/web-push/web-push-support.test.ts"
     ],
     [
       "apps/web/src/features/notifications/web-push-support.ts",
-      "apps/web/src/features/messaging/notifications/web-push-support.ts"
+      "apps/web/src/features/messaging/notifications/web-push/web-push-support.ts"
     ],
     [
       "apps/web/src/features/notifications/web-push.test.ts",
-      "apps/web/src/features/messaging/notifications/web-push.test.ts"
+      "apps/web/src/features/messaging/notifications/web-push/web-push.test.ts"
     ],
     [
       "apps/web/src/features/notifications/web-push.ts",
-      "apps/web/src/features/messaging/notifications/web-push.ts"
+      "apps/web/src/features/messaging/notifications/web-push/web-push.ts"
     ],
     [
       "apps/web/src/features/notifications/WebPushToggle.test.tsx",
-      "apps/web/src/features/messaging/notifications/WebPushToggle.test.tsx"
+      "apps/web/src/features/messaging/notifications/web-push/WebPushToggle.test.tsx"
     ],
     [
       "apps/web/src/features/notifications/WebPushToggle.tsx",
-      "apps/web/src/features/messaging/notifications/WebPushToggle.tsx"
+      "apps/web/src/features/messaging/notifications/web-push/WebPushToggle.tsx"
     ],
     [
       "apps/web/src/features/numbers/card/NumberActions.test.tsx",
@@ -5446,11 +5638,11 @@
     ],
     [
       "apps/web/src/features/schedule/schedule-filters.test.ts",
-      "apps/web/src/features/teaching/schedule/schedule-filters.test.ts"
+      "apps/web/src/features/teaching/schedule/filters/schedule-filters.test.ts"
     ],
     [
       "apps/web/src/features/schedule/schedule-filters.ts",
-      "apps/web/src/features/teaching/schedule/schedule-filters.ts"
+      "apps/web/src/features/teaching/schedule/filters/schedule-filters.ts"
     ],
     [
       "apps/web/src/features/schedule/schedule.en.test.tsx",
@@ -5462,11 +5654,11 @@
     ],
     [
       "apps/web/src/features/schedule/ScheduleFilters.test.tsx",
-      "apps/web/src/features/teaching/schedule/ScheduleFilters.test.tsx"
+      "apps/web/src/features/teaching/schedule/filters/ScheduleFilters.test.tsx"
     ],
     [
       "apps/web/src/features/schedule/ScheduleFilters.tsx",
-      "apps/web/src/features/teaching/schedule/ScheduleFilters.tsx"
+      "apps/web/src/features/teaching/schedule/filters/ScheduleFilters.tsx"
     ],
     [
       "apps/web/src/features/schedule/ScheduleNav.tsx",
@@ -5474,11 +5666,11 @@
     ],
     [
       "apps/web/src/features/schedule/search.test.ts",
-      "apps/web/src/features/teaching/schedule/search.test.ts"
+      "apps/web/src/features/teaching/schedule/filters/search.test.ts"
     ],
     [
       "apps/web/src/features/schedule/search.ts",
-      "apps/web/src/features/teaching/schedule/search.ts"
+      "apps/web/src/features/teaching/schedule/filters/search.ts"
     ],
     [
       "apps/web/src/features/schedule/SyncScheduleButton.test.tsx",
@@ -5490,11 +5682,11 @@
     ],
     [
       "apps/web/src/features/schedule/TeacherPicker.test.tsx",
-      "apps/web/src/features/teaching/schedule/TeacherPicker.test.tsx"
+      "apps/web/src/features/teaching/schedule/filters/TeacherPicker.test.tsx"
     ],
     [
       "apps/web/src/features/schedule/TeacherPicker.tsx",
-      "apps/web/src/features/teaching/schedule/TeacherPicker.tsx"
+      "apps/web/src/features/teaching/schedule/filters/TeacherPicker.tsx"
     ],
     [
       "apps/web/src/features/schedule/tz.test.ts",
@@ -6594,15 +6786,15 @@
     ],
     [
       "apps/web/src/features/teacher-earnings/PayDialog.tsx",
-      "apps/web/src/features/finance/teacher-earnings/PayDialog.tsx"
+      "apps/web/src/features/finance/teacher-earnings/payments/PayDialog.tsx"
     ],
     [
       "apps/web/src/features/teacher-earnings/PaymentsHistory.test.tsx",
-      "apps/web/src/features/finance/teacher-earnings/PaymentsHistory.test.tsx"
+      "apps/web/src/features/finance/teacher-earnings/payments/PaymentsHistory.test.tsx"
     ],
     [
       "apps/web/src/features/teacher-earnings/PaymentsHistory.tsx",
-      "apps/web/src/features/finance/teacher-earnings/PaymentsHistory.tsx"
+      "apps/web/src/features/finance/teacher-earnings/payments/PaymentsHistory.tsx"
     ],
     [
       "apps/web/src/features/teacher-earnings/session-columns.tsx",
@@ -6614,7 +6806,7 @@
     ],
     [
       "apps/web/src/features/teacher-earnings/teacher-payment-columns.tsx",
-      "apps/web/src/features/finance/teacher-earnings/teacher-payment-columns.tsx"
+      "apps/web/src/features/finance/teacher-earnings/payments/teacher-payment-columns.tsx"
     ],
     [
       "apps/web/src/features/teacher-earnings/TeacherEarningsPage.test.tsx",
@@ -6626,11 +6818,11 @@
     ],
     [
       "apps/web/src/features/teacher-earnings/use-pay-teacher.ts",
-      "apps/web/src/features/finance/teacher-earnings/use-pay-teacher.ts"
+      "apps/web/src/features/finance/teacher-earnings/payments/use-pay-teacher.ts"
     ],
     [
       "apps/web/src/features/teacher-earnings/VoidPaymentDialog.tsx",
-      "apps/web/src/features/finance/teacher-earnings/VoidPaymentDialog.tsx"
+      "apps/web/src/features/finance/teacher-earnings/payments/VoidPaymentDialog.tsx"
     ],
     [
       "apps/web/src/features/teacher-students/api.ts",
@@ -7472,11 +7664,11 @@
       "dir": "apps/web/src/features/messaging/messaging",
       "files": [
         "AutoMessagesSwitch.tsx",
-        "LinesCard.tsx",
         "MessagingSwitch.tsx",
         "api.ts",
         "gate-api.ts",
-        "lines-match.ts",
+        "lines/LinesCard.tsx",
+        "lines/lines-match.ts",
         "sending-chip.ts"
       ]
     },
@@ -7502,7 +7694,7 @@
     {
       "dir": "apps/web/src/features/messaging/notifications",
       "files": [
-        "web-push.ts"
+        "web-push/web-push.ts"
       ]
     },
     {

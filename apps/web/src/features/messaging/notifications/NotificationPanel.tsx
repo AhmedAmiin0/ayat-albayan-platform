@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/form/button';
 import { t } from '@/lib/i18n/i18n';
 import { notificationsQuery, useMarkRead } from './api';
 import { NotificationList } from './NotificationList';
-import { WebPushToggle } from './WebPushToggle';
+import { WebPushToggle } from './web-push/WebPushToggle';
 
 export interface NotificationPanelProps {
   /** Close the panel (a row was opened). */

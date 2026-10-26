@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
-import { webPushKeyQuery } from './api';
+import { webPushKeyQuery } from '../api';
 import { rebindWebPush, subscribeWebPush, unsubscribeWebPush } from './web-push';
 import { readPushEnv, webPushSupport, type WebPushSupport } from './web-push-support';
 

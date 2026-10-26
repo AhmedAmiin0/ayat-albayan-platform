@@ -1,5 +1,5 @@
 import { GENDERS, LESSON_STATUSES, PROGRAMS, type Gender, type LessonStatus, type Program } from '@ab/shared';
-import { weekStart } from './tz';
+import { weekStart } from '../tz';
 
 /** /admin/schedule URL state; defaults (this week, everyone, open lessons) stay out of the URL. */
 export type ScheduleSearch = {

@@ -1,5 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router';
-import { parseScheduleSearch } from '@/features/teaching/schedule/search';
+import { parseScheduleSearch } from '@/features/teaching/schedule/filters/search';
 import { WeekSchedule } from '@/features/teaching/schedule/grid/WeekSchedule';
 
 /**

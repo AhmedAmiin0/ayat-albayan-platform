@@ -1,7 +1,7 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n/i18n';
-import { renderWithClient } from './notifications-test-kit';
+import { renderWithClient } from '../notifications-test-kit';
 import type { PushEnv } from './web-push-support';
 import { WebPushToggle } from './WebPushToggle';
 

@@ -8,7 +8,7 @@ import { Pager } from '@/components/ui/layout/pager';
 import { apiErrorText } from '@/features/finance/subscriptions/format';
 import { t } from '@/lib/i18n/i18n';
 import type { FilterSearch, SortSearch } from '@/lib/list/list-search';
-import { paymentsQuery, receiptUrl, type Scope } from './api';
+import { paymentsQuery, receiptUrl, type Scope } from '../api';
 import { teacherPaymentColumns } from './teacher-payment-columns';
 import { VoidPaymentDialog } from './VoidPaymentDialog';
 

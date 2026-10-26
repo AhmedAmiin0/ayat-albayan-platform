@@ -8,7 +8,7 @@ import { apiErrorText } from '@/features/finance/subscriptions/format';
 import { t } from '@/lib/i18n/i18n';
 import { balanceQuery, type Scope } from './api';
 import { EarningsCards } from './EarningsCards';
-import { PaymentsHistory } from './PaymentsHistory';
+import { PaymentsHistory } from './payments/PaymentsHistory';
 import { SessionsPanel } from './SessionsPanel';
 
 const MINE: Scope = { kind: 'mine' };
