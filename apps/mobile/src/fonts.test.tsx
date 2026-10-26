@@ -1,6 +1,9 @@
 import { render as renderRaw, screen } from '@testing-library/react-native';
 import type { ReactElement } from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { queryClient } from '@/core/lib/query/query-client';
+import { pathKey } from '@/core/lib/query/query-keys';
+import { fullAccessMe } from '@/test/staff-me';
 import RootLayout from '../app/_layout';
 
 // Fonts and the auth gate are mocked: the root layout's waiting is what is tested here
@@ -19,7 +22,11 @@ jest.mock('expo-router', () => {
   return { Stack };
 });
 
-beforeEach(() => mockGate.mockReturnValue('admin'));
+beforeEach(() => {
+  mockGate.mockReturnValue('admin');
+  // As verifyRole: /auth/me is in the cache when the gate opens a tree (docs/27 E2).
+  queryClient.setQueryData(pathKey('/auth/me'), fullAccessMe('admin'));
+});
 
 // expo-router's root provides the safe area in the app (the reconnecting bar reads it).
 const metrics = { frame: { x: 0, y: 0, width: 390, height: 844 }, insets: { top: 47, left: 0, right: 0, bottom: 34 } };

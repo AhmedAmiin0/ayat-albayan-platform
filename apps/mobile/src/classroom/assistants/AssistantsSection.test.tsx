@@ -71,7 +71,7 @@ test('a refused change shows the error line', async () => {
 
 test('without assistants.read nothing is fetched for the student', async () => {
   mockApiFetch.mockImplementation(async (path: string) => (path === '/auth/me' ? { permissions: [] } : mine));
-  const client = createTestQueryClient();
+  const client = createTestQueryClient({ meFromApi: true });
   client.setQueryData(pathKey('/auth/me'), { permissions: [] }); // the signed-in session already knows its role
   await renderWithQuery(<AssistantsSection studentId="s1" />, client);
   await waitFor(() => expect(mockApiFetch).toHaveBeenCalledWith('/auth/me'));

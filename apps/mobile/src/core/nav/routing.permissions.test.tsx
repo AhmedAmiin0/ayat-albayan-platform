@@ -11,9 +11,11 @@ import TeacherLayout from '../../../app/teacher/_layout';
 // Permission-aware tabs: the real layouts, /auth/me answered by the test.
 jest.mock('expo-font', () => ({ useFonts: () => [true, null] }));
 jest.mock('@/core/push/registerPush', () => ({ registerPush: jest.fn(async () => undefined) }));
-const mockMe = { answer: null as null | { role: string; permissions: string[] } };
+type MeAnswer = { role: string; permissions: string[] };
+const mockMe = { answer: null as null | MeAnswer, pending: null as null | Promise<MeAnswer> };
 const mockApiFetch = jest.fn(async (path: string) => {
   if (path === '/auth/me') {
+    if (mockMe.pending) return mockMe.pending; // answers when the test resolves it
     if (!mockMe.answer) return new Promise(() => undefined); // still loading
     return mockMe.answer;
   }
@@ -52,11 +54,24 @@ const labels = () => screen.getAllByRole('button').map((tab) => tab.props.access
 beforeEach(() => {
   queryClient.clear(); // the app's own client is shared: no answer from the previous test
   mockMe.answer = null;
+  mockMe.pending = null;
   (globalThis as { gate?: string }).gate = 'admin';
 });
 
-test('while /auth/me is loading nothing is hidden (no flicker)', async () => {
+test('D6: with no /auth/me saved, «جارٍ الاتصال» stays up and no tab bar renders until it answers', async () => {
   await renderRouter(app, { initialUrl: '/' });
+  expect(screen.getByTestId('startup-screen')).toBeTruthy();
+  expect(screen.queryByRole('button', { name: t.mobile.today })).toBeNull();
+  expect(screen.queryByRole('button', { name: t.mobile.more })).toBeNull(); // never lands on «المزيد» alone
+});
+
+test('D6: once /auth/me answers the tabs render once, complete (never a partial bar first)', async () => {
+  let answer: (me: MeAnswer) => void = () => undefined;
+  mockMe.pending = new Promise((resolve) => (answer = resolve));
+  await renderRouter(app, { initialUrl: '/' });
+  expect(screen.queryByRole('button', { name: t.mobile.more })).toBeNull();
+  await act(async () => answer({ role: 'admin', permissions: ['lessons.read', 'inbox.read', 'students.read'] }));
+  await waitFor(() => expect(screen.getByText('today')).toBeTruthy());
   expect(labels()).toEqual([t.mobile.today, t.schedule.nav, t.nav.conversations, t.nav.students, t.mobile.more]);
 });
 
@@ -87,8 +102,7 @@ test('a role with inbox.read and students.read keeps those tabs only (plus «ا�
 test('the system admin (every permission) sees all five', async () => {
   mockMe.answer = { role: 'admin', permissions: ['lessons.read', 'inbox.read', 'students.read'] };
   await renderRouter(app, { initialUrl: '/' });
-  await waitFor(() => expect(mockApiFetch).toHaveBeenCalledWith('/auth/me'));
-  expect(labels()).toEqual([t.mobile.today, t.schedule.nav, t.nav.conversations, t.nav.students, t.mobile.more]);
+  await waitFor(() => expect(labels()).toEqual([t.mobile.today, t.schedule.nav, t.nav.conversations, t.nav.students, t.mobile.more]));
 });
 
 test('a teacher without inbox.read loses «المحادثات»; with it she keeps all five', async () => {
@@ -104,7 +118,7 @@ test('a teacher holding inbox.read keeps «المحادثات»', async () => {
   (globalThis as { gate?: string }).gate = 'teacher';
   mockMe.answer = { role: 'teacher', permissions: ['inbox.read'] };
   await renderRouter(app, { initialUrl: '/teacher' });
-  await waitFor(() => expect(mockApiFetch).toHaveBeenCalledWith('/auth/me'));
-  await act(async () => undefined);
-  expect(labels()).toEqual([t.teacherNav.today, t.teacherNav.calendar, t.nav.conversations, t.teacherNav.reports, t.mobile.more]);
+  await waitFor(() =>
+    expect(labels()).toEqual([t.teacherNav.today, t.teacherNav.calendar, t.nav.conversations, t.teacherNav.reports, t.mobile.more]),
+  );
 });

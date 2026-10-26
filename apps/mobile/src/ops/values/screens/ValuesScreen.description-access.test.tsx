@@ -1,7 +1,7 @@
 import { fireEvent, screen } from '@testing-library/react-native';
 import { ApiError } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
-import { renderWithQuery } from '@/test/query';
+import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { entriesAnswer, entryOf, type EntriesAnswer } from '../testing/entries-fixtures';
 import { groupLabel } from '../lib/value-groups';
 import { labelOf } from '../lib/value-text';
@@ -24,14 +24,14 @@ const HORIZON = labelOf('booking_horizon_weeks');
 
 const open = async (answer: EntriesAnswer) => {
   mockApiFetch.mockImplementation(entriesAnswer(answer));
-  await renderWithQuery(<ValuesScreen />);
+  await renderWithQuery(<ValuesScreen />, createTestQueryClient({ meFromApi: true }));
   await fireEvent.press(await screen.findByRole('button', { name: new RegExp(`^(عدّل «)?${HORIZON}`) }));
 };
 
 const openComms = async (permissions: string[]) => {
   const entries = [entryOf('comms_source', { ownedBy: 'communications', description: 'مصدر الرسائل' })];
   mockApiFetch.mockImplementation(entriesAnswer({ permissions, entries }));
-  await renderWithQuery(<ValuesScreen />);
+  await renderWithQuery(<ValuesScreen />, createTestQueryClient({ meFromApi: true }));
   await screen.findByText(HORIZON);
   await fireEvent.press(screen.getByRole('radio', { name: new RegExp(groupLabel('sending').replace(/[()]/g, '.')) }));
   await fireEvent.press(await screen.findByRole('button', { name: new RegExp(`^${labelOf('comms_source')}: `) }));
