@@ -7,7 +7,7 @@ import {
   type FeedbackRating,
   type FeedbackRecommend,
 } from '../enums/index.js';
-import { LESSON_RATINGS, type LessonRating } from '../messaging/rating.js';
+import { LESSON_RATINGS, type LessonRating } from '../messaging/lesson/rating.js';
 import { phoneE164 } from './common.js';
 import { listSortShape } from './list-sort.js';
 import type { Attendance, LessonStatus } from '../enums/index.js';

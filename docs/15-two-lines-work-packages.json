@@ -5,9 +5,9 @@
     "packages/db/src/types.ts",
     "packages/shared/src/enums/messaging.ts",
     "packages/shared/src/enums/enums.test.ts",
-    "packages/shared/src/messaging/views.ts",
-    "packages/shared/src/messaging/template-views.ts",
-    "packages/shared/src/messaging/line-views.ts",
+    "packages/shared/src/messaging/chat/views.ts",
+    "packages/shared/src/messaging/templates/template-views.ts",
+    "packages/shared/src/messaging/chat/line-views.ts",
     "packages/shared/src/messaging/index.ts",
     "packages/shared/i18n/ar.json",
     "packages/shared/i18n/en.json"

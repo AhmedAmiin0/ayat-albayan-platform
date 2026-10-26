@@ -121,7 +121,7 @@ visible focus, 44px targets, loading/empty/error states, light/dark, 390px with 
   `GET /threads?list=` (ThreadsQueries reads `v_list_threads`) and the detail's `lists` go through
   `inbox/chat-list-filter.ts` (ThreadReads). Names that are only tashkeel / tatweel are refused (400);
   any E.164 chat number may be a member (landlines too).
-- **Shared**: `packages/shared/src/messaging/chat-lists.ts` (name schema, key, phone check, error codes,
+- **Shared**: `packages/shared/src/messaging/chat/chat-lists.ts` (name schema, key, phone check, error codes,
   `ChatList` / `ChatListRef`); `ThreadDetail.lists?`.
 - **Web**: `apps/web/src/features/inbox/lists/` — the chip row (`ChatListsBar`, `ChatListChips`, `ListChip`),
   create / edit / delete dialogs, the thread checklist (`ThreadListsDialog`, `use-membership.ts`:

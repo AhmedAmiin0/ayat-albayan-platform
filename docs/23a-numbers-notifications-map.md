@@ -18,10 +18,10 @@ Contents: A. Lines · B. Notification engine · C. Admin UI · D. Data model · 
 | Generated `wa_line` type + constant | `packages/db/src/types.ts:4056`, `:4242` |
 | `WA_LINES` (`as const satisfies readonly Enums<'wa_line'>[]`), `type WaLine` | `packages/shared/src/enums/messaging.ts:45`, `:52` |
 | Zod `templateHealthSchema` / `templateLineSchema` (`z.enum(WA_LINES)`) | `packages/shared/src/messaging/schemas.ts:65`, `:68` |
-| `LineCheckView` (line, provider, gaps, `duplicate_chat_phone`, `kapso_webhook_secret`, app_id) | `packages/shared/src/messaging/line-views.ts:8-37` |
-| `ThreadView.last_inbound_line`, `reply_line`; `MessageView.line` | `packages/shared/src/messaging/views.ts:47,53,92` |
+| `LineCheckView` (line, provider, gaps, `duplicate_chat_phone`, `kapso_webhook_secret`, app_id) | `packages/shared/src/messaging/chat/line-views.ts:8-37` |
+| `ThreadView.last_inbound_line`, `reply_line`; `MessageView.line` | `packages/shared/src/messaging/chat/views.ts:47,53,92` |
 | `TemplateView.line`, `TemplateLineSync.line` | `template-views.ts:25`, `template-sync-views.ts:10` |
-| `replyLine()` 24 h window rule, literal `'chat'`/`'notifications'` | `packages/shared/src/messaging/reply-line.ts:4-29` |
+| `replyLine()` 24 h window rule, literal `'chat'`/`'notifications'` | `packages/shared/src/messaging/replies/reply-line.ts:4-29` |
 | Integration groups `wa_notifications`, `wa_chat`; key lists; `GROUP_OF`; `WA_PROVIDERS`, `INTEGRATION_ENUMS` | `packages/shared/src/integrations/keys.ts:7`, `:10-91`, `:106-113` |
 | Per-key value checks | `packages/shared/src/integrations/checks.ts:25-45` |
 | i18n `enums.waLine` («خط الإشعارات» / «خط المحادثات»), groups, `WA_CHAT_*` labels, «افحص الخطوط», `chatOptional`, `duplicateChatPhone` | `packages/shared/i18n/ar.json:3125-3128`, `:4481-4482`, `:4554-4578`, `:2652`, `:2657`, `:2679` |
