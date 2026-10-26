@@ -1,1 +1,1 @@
-export { ValuesScreen as default } from '@/ops/values/screens/ValuesScreen';
+export { ValuesScreen as default } from '@/ops';

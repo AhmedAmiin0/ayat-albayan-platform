@@ -1,1 +1,1 @@
-export { SettingsScreen as default } from '@/ops/settings/SettingsScreen';
+export { SettingsScreen as default } from '@/ops';

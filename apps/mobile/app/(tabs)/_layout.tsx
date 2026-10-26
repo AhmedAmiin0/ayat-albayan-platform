@@ -1,5 +1,5 @@
-import { tabOpen } from '@/auth/route-permissions';
-import { type Can, usePermissions } from '@/auth/use-permissions';
+import { tabOpen } from '@/auth';
+import { type Can, usePermissions } from '@/auth';
 import { t } from '@/core/lib/i18n/i18n';
 import { useInboxBadge } from '@/core/nav/use-inbox-badge';
 import { usePushRegistration } from '@/core/push/usePushRegistration';

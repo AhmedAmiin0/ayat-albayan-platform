@@ -1,1 +1,1 @@
-export { SalesLiveScreen as default } from '@/sales/screens/SalesLiveScreen';
+export { SalesLiveScreen as default } from '@/sales';

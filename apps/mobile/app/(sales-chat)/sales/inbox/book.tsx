@@ -1,1 +1,1 @@
-export { BookTrialScreen as default } from '@/booking/screens/BookTrialScreen';
+export { BookTrialScreen as default } from '@/booking';

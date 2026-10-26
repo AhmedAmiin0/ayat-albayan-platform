@@ -1,1 +1,1 @@
-export { MeetingsScreen as default } from '@/meetings/screens/MeetingsScreen';
+export { MeetingsScreen as default } from '@/meetings';

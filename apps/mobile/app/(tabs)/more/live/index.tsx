@@ -1,1 +1,1 @@
-export { AdminSessionsScreen as default } from '@/classroom/sessions/AdminSessionsScreen';
+export { AdminSessionsScreen as default } from '@/classroom';

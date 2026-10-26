@@ -1,5 +1,5 @@
-import { usePermissions } from '@/auth/use-permissions';
-import { UserDetailScreen } from '@/users/screens/UserDetailScreen';
+import { usePermissions } from '@/auth';
+import { UserDetailScreen } from '@/users';
 
 export default function UserRoute() {
   return <UserDetailScreen can={usePermissions()} />;

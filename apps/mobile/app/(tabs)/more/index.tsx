@@ -1,5 +1,5 @@
-import { usePermissions } from '@/auth/use-permissions';
-import { MoreScreen } from '@/more/screens/MoreScreen';
+import { usePermissions } from '@/auth';
+import { MoreScreen } from '@/more';
 
 export default function MoreRoute() {
   return <MoreScreen can={usePermissions()} />;

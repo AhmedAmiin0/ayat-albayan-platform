@@ -1,5 +1,5 @@
 import { usePushRegistration } from '@/core/push/usePushRegistration';
-import { TeacherTabs } from '@/teacher/components/TeacherTabs';
+import { TeacherTabs } from '@/teacher';
 
 /** The teacher tree: her tabs, and this device registered for her pushes (R-MOB-01, R-NOT-01). */
 export default function TeacherLayout() {

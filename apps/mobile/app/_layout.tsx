@@ -7,11 +7,11 @@ import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
-import { useAuthGate } from '@/auth/use-auth-gate';
+import { useAuthGate } from '@/auth';
 import { useOverridesReady } from '@/core/lib/i18n/i18n-overrides';
 import { useLocaleReady } from '@/core/lib/i18n/locale-switch';
 import { persistOptions, queryClient } from '@/core/lib/query/query-client';
-import { restoreAppearance } from '@/more/appearance/appearance';
+import { restoreAppearance } from '@/more';
 import { useTheme } from '@/theme';
 
 // Bundled files: Noto Sans Arabic for everything, titles at 700 (owner, 2026-10-05); names match theme.type.

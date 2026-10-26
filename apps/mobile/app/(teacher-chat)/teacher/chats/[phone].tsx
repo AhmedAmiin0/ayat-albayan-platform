@@ -1,1 +1,1 @@
-export { ThreadScreen as default } from '@/inbox/screens/ThreadScreen';
+export { ThreadScreen as default } from '@/inbox';
