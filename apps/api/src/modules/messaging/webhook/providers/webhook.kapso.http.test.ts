@@ -1,7 +1,9 @@
 import { Logger } from '@nestjs/common';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { buildOpenApi } from '../../../../openapi';
-import { envelope, inboundValue, textPart } from '../meta.fakes';
+import { setNumbersOverlay } from '../../../../common/integrations/numbers-overlay';
+import { kapsoEnv, kapsoOverlay } from '../external/external.fakes';
+import { envelope, inboundValue, PHONE_NUMBER_ID, statusValue, textPart } from '../meta.fakes';
 import { KAPSO_SECRET, kapsoSign, sign, webhookApp } from '../test-app';
 
 // POST /webhooks/kapso (docs/19): Kapso forwards Meta's raw payload; only the Kapso secret signs it.
@@ -10,6 +12,7 @@ let ctx: Awaited<ReturnType<typeof webhookApp>> | undefined;
 afterEach(async () => {
   await ctx?.app.close();
   ctx = undefined;
+  setNumbersOverlay(null);
   vi.restoreAllMocks();
 });
 async function boot(config?: Parameters<typeof webhookApp>[0]) {
@@ -62,6 +65,18 @@ describe('POST /webhooks/kapso', () => {
     const { post, queries } = await boot();
     expect((await post(text, sign(text, KAPSO_SECRET))).statusCode).toBe(401);
     expect(queries.stored).toEqual([]);
+  });
+
+  it('a status for a message staff sent from Kapso\'s inbox → read back and stored; a Kapso error still answers 200', async () => {
+    kapsoOverlay({ phone_number_id: PHONE_NUMBER_ID, env: kapsoEnv({ phoneNumberId: PHONE_NUMBER_ID }) });
+    const { postKapso, queries, kapso } = await boot();
+    const status = (id: string) => JSON.stringify(envelope(statusValue({ id, status: 'delivered' })));
+    expect((await postKapso(status('wamid.EXT1'))).statusCode).toBe(200);
+    expect(queries.stored).toEqual([expect.objectContaining({ direction: 'outbound', wa_message_id: 'wamid.EXT1', created_by: null })]);
+    vi.spyOn(Logger.prototype, 'warn').mockImplementation(() => undefined);
+    kapso.message.mockRejectedValue(new Error('WhatsApp HTTP 500'));
+    expect((await postKapso(status('wamid.EXT2'))).statusCode).toBe(200);
+    expect(queries.stored).toHaveLength(1);
   });
 
   it('is in the OpenAPI document next to the Meta route', async () => {

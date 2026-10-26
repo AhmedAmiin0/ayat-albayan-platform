@@ -14,6 +14,8 @@ export const WHITELIST = new Set([
   'modules/messaging/whatsapp/drivers/meta/graph.ts',
   'modules/messaging/whatsapp/messages/inbound-media.service.ts',
   'modules/messaging/whatsapp/drivers/kapso/kapso.ts',
+  // Kapso's own conversation record (owner 2026-10-26): its Platform API, beside the Meta proxy.
+  'modules/messaging/whatsapp/drivers/kapso/kapso-conversations.ts',
   'modules/messaging/whatsapp/lines/lines.check.ts',
   'modules/messaging/whatsapp/sender/message.dispatch.ts',
   'modules/messaging/whatsapp/templates/catalog/template.registry.ts',
@@ -34,6 +36,8 @@ export const WHITELIST = new Set([
   'modules/messaging/whatsapp/drivers/crm/crm-http.ts',
   'modules/messaging/whatsapp/whatsapp.module.ts',
   'modules/messaging/whatsapp/whatsapp.types.ts',
+  // Kapso's message history (owner report 2026-10-26): read-only GETs that store messages sent outside the app.
+  'modules/messaging/webhook/external/kapso-history.ts',
 ]);
 
 const METHODS = 'sendTemplate|sendText|sendDocument|markRead|getMedia|getTemplates|submitTemplate|uploadSample';

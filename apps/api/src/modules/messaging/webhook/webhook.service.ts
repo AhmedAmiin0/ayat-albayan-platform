@@ -69,6 +69,7 @@ export class WebhookService {
     let failed = 0;
     for (const m of batch.messages) failed += await this.safely(m.waMessageId, () => this.inbound.handle(m, { deadline }));
     for (const s of batch.statuses) failed += await this.safely(s.waMessageId, () => this.statuses.handle(s));
+    for (const e of batch.echoes) failed += await this.safely('echo', () => this.statuses.echo(e));
     if (failed > 0) throw new InternalServerErrorException({ code: 'webhook_items_failed', failed });
   }
 

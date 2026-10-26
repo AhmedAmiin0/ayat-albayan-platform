@@ -1,3 +1,4 @@
+import { bookingInvoiceInput } from '@ab/client-core';
 import type { Duration } from '@ab/shared';
 import type { InvoiceInput } from './contract';
 
@@ -14,6 +15,5 @@ export interface MissedPick {
   durationMin: Duration;
 }
 
-export function invoiceInput(i: InvoiceDraft): InvoiceInput {
-  return i.source === 'upload' ? { source: 'upload', path: i.path } : { source: 'whatsapp', messageId: i.messageId };
-}
+/** The invoice as POST /booking takes it: the upload's path or the chat message (@ab/client-core, docs/27 E5). */
+export const invoiceInput: (i: InvoiceDraft) => InvoiceInput = bookingInvoiceInput;

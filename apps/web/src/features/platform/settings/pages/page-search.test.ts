@@ -58,9 +58,9 @@ describe('«التواصل» ?tab=', () => {
     expect(timingRedirect({})).toBeNull();
   });
 
-  it('that group holds both timing values, editable there; the public number sits in «الأكاديمية»', () => {
+  it('that group holds both timing values and the reopen template, editable there; the public number sits in «الأكاديمية»', () => {
     const timing = ['quick_reply_window_hours', 'reminder_lookahead_hours'] as const;
-    expect([...VALUE_GROUPS[VALUES_GROUP.timing]].sort()).toEqual([...timing]);
+    expect([...VALUE_GROUPS[VALUES_GROUP.timing]].sort()).toEqual(['chat_reopen_template', ...timing]);
     expect(timing.every((k) => isEditableValueKey(k))).toBe(true);
     expect(VALUE_GROUPS[VALUES_GROUP.academy]).toContain('academy_whatsapp_e164');
   });

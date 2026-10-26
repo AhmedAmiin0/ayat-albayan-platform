@@ -36,6 +36,7 @@ describe('parseWebhook — inbound messages', () => {
       mediaMime: null,
       payload: null,
       line: null,
+      phoneNumberId: PHONE_NUMBER_ID,
     });
   });
 
@@ -90,6 +91,8 @@ describe('parseWebhook — statuses', () => {
       errorText: null,
       conversationId: 'conv-966501234567',
       pricingCategory: 'utility',
+      line: null,
+      phoneNumberId: PHONE_NUMBER_ID,
     });
   });
 
@@ -102,8 +105,8 @@ describe('parseWebhook — statuses', () => {
 
 describe('parseWebhook — envelope', () => {
   it('ignores garbage, other fields, unknown statuses and malformed items', () => {
-    expect(parseWebhook('nope', { now: NOW })).toEqual({ messages: [], statuses: [] });
-    expect(parseWebhook({ entry: 'x' }, { now: NOW })).toEqual({ messages: [], statuses: [] });
+    expect(parseWebhook('nope', { now: NOW })).toEqual({ messages: [], statuses: [], echoes: [] });
+    expect(parseWebhook({ entry: 'x' }, { now: NOW })).toEqual({ messages: [], statuses: [], echoes: [] });
     const other = { entry: [{ changes: [{ field: 'account_update', value: inboundValue(textPart('x')) }] }] };
     expect(parseWebhook(other, { now: NOW }).messages).toEqual([]);
     expect(parse({ statuses: [{ id: 'w', status: 'deleted' }, { status: 'read' }] }).statuses).toEqual([]);
@@ -119,7 +122,7 @@ describe('parseWebhook — envelope', () => {
   it('skips an unknown number for messages AND statuses and reports it via onIgnored', () => {
     const onIgnored = vi.fn();
     const value = { ...inboundValue(textPart('x')), ...statusValue({ status: 'read' }) };
-    expect(parseWebhook(envelope(value, 'someone-else'), { now: NOW, numbers: TWO, onIgnored })).toEqual({ messages: [], statuses: [] });
+    expect(parseWebhook(envelope(value, 'someone-else'), { now: NOW, numbers: TWO, onIgnored })).toEqual({ messages: [], statuses: [], echoes: [] });
     expect(onIgnored).toHaveBeenCalledExactlyOnceWith('someone-else');
   });
 

@@ -19,11 +19,13 @@ const sql = Object.values(FILES)[0] ?? '';
 // The 23-P4 notification keys became owned after this migration shipped; it copies only their
 // description (never a value), so they stay in the pinned list.
 const ownedAtCopy = (key: string): boolean => isOwnedSettingKey(key) && OWNED_SETTING_KEYS[key] !== 'notifications';
+/** Keys added after the copy shipped: no override of theirs existed; the seeder writes their description. */
+const AFTER_COPY: readonly string[] = ['chat_reopen_template'];
 
 describe('migration config_describe', () => {
   it('copies exactly the registry hint keys, never a key owned at copy time (send gate, Google)', () => {
     const pairs = [...sql.matchAll(/\('([a-z0-9_]+)', '([A-Za-z0-9_.]+)'\)/g)].map((m) => [m[1], m[2]]);
-    const want = SEED_ENTRIES.filter((e) => e.hintKey && !ownedAtCopy(e.key)).map((e) => [e.key, e.hintKey]);
+    const want = SEED_ENTRIES.filter((e) => e.hintKey && !ownedAtCopy(e.key) && !AFTER_COPY.includes(e.key)).map((e) => [e.key, e.hintKey]);
     expect(pairs).toEqual(want);
   });
 
