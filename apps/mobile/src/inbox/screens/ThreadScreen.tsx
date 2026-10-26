@@ -10,6 +10,7 @@ import { Screen } from '@/core/ui/layout/Screen';
 import { ChatActionsProvider } from '../thread/components/ChatActionsProvider';
 import { ChatHeader } from '../thread/components/ChatHeader';
 import { ChatNotice } from '../thread/components/ChatNotice';
+import { CallButton } from '../thread/calls/entries/CallButton';
 import { Composer } from '../composer/Composer';
 import { clockAt, kindLabel } from '../shared/format';
 import { MessageList } from '../messages/components/MessageList';
@@ -57,6 +58,8 @@ export function ThreadScreen() {
   const query = useThread(phone);
   const thread = query.data?.pages[0]?.thread ?? null;
   // Pushed from the tabs, back pops the whole chat group; a cold start on the chat opens its list.
+  const title = thread?.display_name ?? (teacher ? kindLabel(thread) : ltr(formatPhone(phone)));
+  const call = <CallButton phone={phone} name={title} canSend={!isOwnThread(mode, thread)} />;
   const back = () =>
     router.canGoBack() ? router.back() : router.replace(inTree(base, threadBase(mode)));
   return (
@@ -64,13 +67,18 @@ export function ThreadScreen() {
     <ChatActionsProvider key={phone} phone={phone} thread={thread}>
       <Screen chat>
         <ChatHeader
-          title={thread?.display_name ?? (teacher ? kindLabel(thread) : ltr(formatPhone(phone)))}
+          title={title}
           subtitle={subtitleOf(phone, query, teacher)}
           onBack={back}
           trailing={
             mode.kind === 'admin' ? (
-              <ThreadHeaderActions phone={phone} data={query.data} sales={sales} />
-            ) : null
+              <>
+                {call}
+                <ThreadHeaderActions phone={phone} data={query.data} sales={sales} />
+              </>
+            ) : (
+              call
+            )
           }
         />
         {mode.kind !== 'admin' ? null : sales ? (

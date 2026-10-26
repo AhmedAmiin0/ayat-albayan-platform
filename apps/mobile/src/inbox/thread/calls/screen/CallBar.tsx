@@ -1,0 +1,41 @@
+import type { ActiveCallView } from '@ab/shared';
+import { Pressable, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { t } from '@/core/lib/i18n/i18n';
+import { shape, type, useTheme } from '@/theme';
+import { AppText } from '@/core/ui/primitives/AppText';
+import type { CallPhase, CallSession } from '../state/call-phase';
+import { callStatusText } from './call-status';
+import { PhoneIcon } from './call-icons';
+import { useNow } from './use-now';
+
+export interface CallBarProps {
+  session: CallSession;
+  row: ActiveCallView | undefined;
+  phase: CallPhase;
+  onExpand: () => void;
+}
+
+/** The minimised call (WhatsApp's green bar): a floating pill over the bottom; a tap goes back to the call. */
+export function CallBar({ session, row, phase, onExpand }: CallBarProps) {
+  const { color } = useTheme();
+  const insets = useSafeAreaInsets();
+  const now = useNow(phase === 'active');
+  return (
+    <View pointerEvents="box-none" style={{ position: 'absolute', start: 16, end: 16, bottom: insets.bottom + 72, alignItems: 'center' }}>
+      <Pressable
+        testID="call-bar"
+        accessibilityRole="button"
+        accessibilityLabel={`${t.calls.controls.expand} — ${session.name}`}
+        onPress={onExpand}
+        style={({ pressed }) => ({ flexDirection: 'row', alignItems: 'center', gap: 8, paddingHorizontal: 16, minHeight: 44, borderRadius: shape.radius.pill, backgroundColor: pressed ? color.lapisHover : color.lapisFill })}
+      >
+        <PhoneIcon color={color.onLapis} size={18} />
+        <AppText numberOfLines={1} style={{ maxWidth: 180, fontFamily: type.ui[600], fontSize: type.size.sm, color: color.onLapis }}>
+          {session.name}
+        </AppText>
+        <AppText style={{ fontSize: type.size.sm, color: color.onLapis, fontVariant: ['tabular-nums'] }}>{callStatusText(phase, { row, now })}</AppText>
+      </Pressable>
+    </View>
+  );
+}

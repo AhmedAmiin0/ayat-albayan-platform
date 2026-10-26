@@ -6303,7 +6303,8 @@
     },
     "mic": {
       "denied": "The call needs microphone access. Allow the microphone, then try again.",
-      "unsupported": "This device or browser does not support voice calls."
+      "unsupported": "This device or browser does not support voice calls.",
+      "rationale": "We need the microphone for in-app WhatsApp voice calls with families."
     },
     "errors": {
       "calls_disabled": "Calls are turned off in settings.",

@@ -1,13 +1,19 @@
-import { type MessageView, senderLine } from '@ab/shared';
+import { senderLine } from '@ab/shared';
 import { useEffect, useRef, useState } from 'react';
 import { FlatList, View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { Button } from '@/core/ui/primitives/Button';
 import { EmptyState } from '@/core/ui/feedback/EmptyState';
+import { callerName } from '../../thread/calls/entries/call-text';
+import { CallEntry } from '../../thread/calls/entries/CallEntry';
+import { logRows, type LogRow } from '../../thread/calls/entries/log-rows';
+import { useThreadCalls } from '../../thread/calls/entries/use-thread-calls';
+import { useCalls } from '../../thread/calls/state/call-context';
 import { messageGap } from '../hooks/list-gap';
 import { MessageBubble } from './MessageBubble';
 import { threadMessages } from '../../thread/hooks/thread-cache';
 import { useJump } from '../../thread/hooks/use-jump';
+import { useThreadMode } from '../../thread/hooks/thread-mode';
 import type { useThread } from '../../thread/hooks/use-thread';
 
 type ThreadQuery = ReturnType<typeof useThread>;
@@ -24,11 +30,15 @@ export const AT_NEWEST = 48;
  * mutations and read useMutationState if it must always follow.
  */
 export function MessageList({ phone, query }: { phone: string; query: ThreadQuery }) {
-  const list = useRef<FlatList<MessageView>>(null);
+  const list = useRef<FlatList<LogRow>>(null);
   // Her own pull only: a background refetch (open, send, push) must not spin over the newest bubble.
   const [pulling, setPulling] = useState(false);
-  const rows = threadMessages(query.data).reverse();
-  const newest = rows[0];
+  // Calls merged in by time (docs/28 §5); none while calls are off.
+  const calls = useThreadCalls(phone);
+  const ui = useCalls();
+  const teacher = useThreadMode().kind === 'teacher';
+  const rows = logRows(threadMessages(query.data), { calls, hasMore: query.hasNextPage });
+  const newest = rows[0]?.message;
   const ours = newest?.direction === 'outbound' && !senderLine(newest) ? newest.id : undefined;
   useEffect(() => {
     if (ours) list.current?.scrollToOffset({ offset: 0, animated: true });
@@ -60,7 +70,11 @@ export function MessageList({ phone, query }: { phone: string; query: ThreadQuer
           testID={`message-row-${item.id}`}
           style={{ paddingTop: messageGap(rows[index + 1], item) }}
         >
-          <MessageBubble message={item} phone={phone} onJump={jump} highlight={lit === item.id} />
+          {item.message ? (
+            <MessageBubble message={item.message} phone={phone} onJump={jump} highlight={lit === item.id} />
+          ) : item.call ? (
+            <CallEntry call={item.call} onCallBack={ui && !ui.busy ? () => ui.call({ phone, name: callerName(item.call ?? { display_name: null, phone_e164: phone }, !teacher) }) : undefined} />
+          ) : null}
         </View>
       )}
       maintainVisibleContentPosition={{ minIndexForVisible: 0, autoscrollToTopThreshold: AT_NEWEST }}

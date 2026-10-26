@@ -1,4 +1,3 @@
-import type { MessageView } from '@ab/shared';
 import { type RefObject, useEffect, useRef, useState } from 'react';
 import type { FlatList } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
@@ -17,9 +16,9 @@ interface IndexFailed {
  * up a moment. A row not laid out yet: jump near it by the average row height, then once more exactly.
  * Older than the loaded pages: the chat says so (inbox.reply.notLoaded) instead of loading pages blindly.
  */
-export function useJump(
-  list: RefObject<FlatList<MessageView> | null>,
-  rows: readonly MessageView[],
+export function useJump<T extends { id: string }>(
+  list: RefObject<FlatList<T> | null>,
+  rows: readonly T[],
 ) {
   const { say } = useChatActions();
   const [lit, setLit] = useState<string | null>(null);
