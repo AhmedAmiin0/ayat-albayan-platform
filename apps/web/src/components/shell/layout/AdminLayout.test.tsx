@@ -12,12 +12,12 @@ vi.mock('@tanstack/react-router', () => ({
   ),
   useRouterState: () => '/admin/students',
 }));
-vi.mock('@/features/auth/me', () => ({ meQuery: {} }));
+vi.mock('@/features/people/auth/me', () => ({ meQuery: {} }));
 vi.mock('../nav/Crumbs', () => ({ Crumbs: () => null }));
 vi.mock('../header/MenuBar', () => ({ MenuBar: () => <header data-menu-bar /> }));
 vi.mock('../account/SideFoot', () => ({ SideFoot: () => <div data-side-foot /> }));
 vi.mock('@/components/ui/layout/running-head', () => ({ RunningHead: ({ end }: { end?: ReactNode }) => <div data-running-head>{end}</div> }));
-vi.mock('@/features/notifications/NotificationBell', () => ({ NotificationBell: () => <button type="button" data-bell /> }));
+vi.mock('@/features/messaging/notifications/NotificationBell', () => ({ NotificationBell: () => <button type="button" data-bell /> }));
 
 const nav = (
   <nav>

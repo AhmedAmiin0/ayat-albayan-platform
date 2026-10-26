@@ -26,7 +26,7 @@ Classification column: **CONFIG** = scalar (or small shape-validated JSON), inde
 
 ### 1. Settings registry (`public.settings`, `SETTINGS_REGISTRY`)
 
-Registry: `packages/shared/src/settings/registry.ts:25-41` spreads 15 domain files (order: messaging, notifications, follow-ups, feedback, scheduling, classroom, recordings, reports, subscriptions, payouts, finance, uploads, academy, sales, activity). Types: `packages/shared/src/settings/defs.ts:17-74` (`int` [nullable + toggle], `bool`, `string`, `e164`/`tz`/`currency`, `int_list`, `enum`, `json` [shape, nullable]). Page sections: `L:7-17` (`messaging, schedule, classroom, reports, accounts, uploads, academy, sales, appearance`; `appearance` is empty — the theme is per browser, `apps/web/src/features/settings/sections/AppearanceSection.tsx:10`).
+Registry: `packages/shared/src/settings/registry.ts:25-41` spreads 15 domain files (order: messaging, notifications, follow-ups, feedback, scheduling, classroom, recordings, reports, subscriptions, payouts, finance, uploads, academy, sales, activity). Types: `packages/shared/src/settings/defs.ts:17-74` (`int` [nullable + toggle], `bool`, `string`, `e164`/`tz`/`currency`, `int_list`, `enum`, `json` [shape, nullable]). Page sections: `L:7-17` (`messaging, schedule, classroom, reports, accounts, uploads, academy, sales, appearance`; `appearance` is empty — the theme is per browser, `apps/web/src/features/platform/settings/sections/AppearanceSection.tsx:10`).
 
 Table `public.settings`: `M/20261001000073_settings.sql:2-7` — `key text pk, value jsonb not null, updated_at, updated_by → auth.users`; RLS admin read (`:19-21`), service role writes. No `description` column, no type column, no check on key. `SettingsService.write` deletes the row when the value is `null` (`apps/api/src/common/settings/settings.service.ts:51-63`), so nullable keys "OFF" = no row.
 
@@ -72,7 +72,7 @@ i18n: every `labelKey`/`hintKey`/`toggle*Key` below exists in `packages/shared/i
 | 36 | `academy_timezone` | `D/academy.ts:15` | tz (IANA) | `Asia/Riyadh` | valid IANA | | | `settings.academyTimezone` / `h.…` | academy (`L:53`) | `M/…000206_settings_registry.sql:24` | **yes** `M/20261006000273_assistant_statements.sql:323` (coalesce `Asia/Riyadh`) | expenses, invoices, lessons, payments | CONFIG |
 | 37 | `academy_contact` | `D/academy.ts:23` | json `{site? host≤100, email? ≤120}` | `{site: ayatalbayan.com}` | shape | **yes** | | `config.academyContact` / `config.academyContactHint` | academy (`L:55`) | **none** (default from code) | — | report-pdf | CONFIG (structured JSON; branding candidate) |
 | 38 | `activity_retention_days` | `D/activity.ts:9` | int | 180 | 1..3650 | | | `config.activityRetentionDays` / `config.activityRetentionDaysHint` | academy (`L:58`) | **none** (SQL falls back to 180) | **yes** `M/20261005000250_custom_config.sql:38` `prune_activity_log()` (accepts only `^[1-9][0-9]{0,3}$`) | **none in TS** (SQL only) | CONFIG (destructive prune, no confirm) |
-| 39 | `sales_auto_assign` | `D/sales.ts:5` | bool | true | — | | **yes** | `sales.assign.auto` / `sales.assign.autoHint` | sales (`L:60`) | `M/20261001000187_sales_scope.sql:66` | — | booking, sales | CONFIG (own switch `apps/web/src/features/sales/SalesAutoAssignSwitch.tsx`, saves instantly, no confirm) |
+| 39 | `sales_auto_assign` | `D/sales.ts:5` | bool | true | — | | **yes** | `sales.assign.auto` / `sales.assign.autoHint` | sales (`L:60`) | `M/20261001000187_sales_scope.sql:66` | — | booking, sales | CONFIG (own switch `apps/web/src/features/sales/sales/SalesAutoAssignSwitch.tsx`, saves instantly, no confirm) |
 
 Key facts:
 - **39 registry keys**; `SETTINGS_LAYOUT` places all 39 (messaging 13, schedule 4, classroom 4, reports 1, accounts 8, uploads 1, academy 7, sales 1, appearance 0).
@@ -112,15 +112,15 @@ None of today's confirmations is a **typed** confirmation; all are a dialog with
 
 | key / value | control | confirmation | ref |
 |---|---|---|---|
-| `messaging_enabled` on **and** off | `MessagingSwitch` inside `DangerFrame` | `ConfirmSwitchDialog` (shows queued count, CRM warning) | `apps/web/src/features/messaging/MessagingSwitch.tsx:103-128`; `apps/web/src/features/settings/sections/MessagingSection.tsx:37-40` |
-| `auto_messages_enabled` on and off | `AutoMessagesSwitch` inside `DangerFrame` | `ConfirmSwitchDialog` | `apps/web/src/features/messaging/AutoMessagesSwitch.tsx:60`; `MessagingSection.tsx:42-44` |
+| `messaging_enabled` on **and** off | `MessagingSwitch` inside `DangerFrame` | `ConfirmSwitchDialog` (shows queued count, CRM warning) | `apps/web/src/features/messaging/messaging/MessagingSwitch.tsx:103-128`; `apps/web/src/features/settings/sections/MessagingSection.tsx:37-40` |
+| `auto_messages_enabled` on and off | `AutoMessagesSwitch` inside `DangerFrame` | `ConfirmSwitchDialog` | `apps/web/src/features/messaging/messaging/AutoMessagesSwitch.tsx:60`; `MessagingSection.tsx:42-44` |
 | `crm_cutover_done` | button in `MessagingSwitch` | none (instant `useSettingSwitch`) | `MessagingSwitch.tsx:51,65` |
 | `feedback_mode` | `FeedbackModeSwitch` | none (instant) | `apps/web/src/features/messaging/FeedbackModeSwitch.tsx:18` |
-| `sales_auto_assign` | `SalesAutoAssignSwitch` | none (instant) | `apps/web/src/features/sales/SalesAutoAssignSwitch.tsx:16` |
-| `WA_ALLOWED_RECIPIENTS` emptied (integration key) | `IntegrationsForm` | `ConfirmSwitchDialog` | `apps/web/src/features/integrations/IntegrationsForm.tsx:59` |
-| integration secret clear | `SecretIntegrationRow` | `Dialog` | `apps/web/src/features/integrations/rows/SecretIntegrationRow.tsx:82` |
-| `google_sync_enabled` on (off is instant) | `SyncSwitches` | `LiveConfirmDialog` (names targets) when live, else plain `Dialog` | `apps/web/src/features/google-sync/SyncSwitches.tsx:23-60` |
-| `google_sync_mode` → `live` (back to dry_run instant) | `ModeControl` | `LiveConfirmDialog` | `apps/web/src/features/google-sync/connection/ModeControl.tsx:16-46` |
+| `sales_auto_assign` | `SalesAutoAssignSwitch` | none (instant) | `apps/web/src/features/sales/sales/SalesAutoAssignSwitch.tsx:16` |
+| `WA_ALLOWED_RECIPIENTS` emptied (integration key) | `IntegrationsForm` | `ConfirmSwitchDialog` | `apps/web/src/features/platform/integrations/IntegrationsForm.tsx:59` |
+| integration secret clear | `SecretIntegrationRow` | `Dialog` | `apps/web/src/features/platform/integrations/rows/SecretIntegrationRow.tsx:82` |
+| `google_sync_enabled` on (off is instant) | `SyncSwitches` | `LiveConfirmDialog` (names targets) when live, else plain `Dialog` | `apps/web/src/features/platform/google-sync/SyncSwitches.tsx:23-60` |
+| `google_sync_mode` → `live` (back to dry_run instant) | `ModeControl` | `LiveConfirmDialog` | `apps/web/src/features/platform/google-sync/connection/ModeControl.tsx:16-46` |
 
 Shared kit: `apps/web/src/components/settings/dialogs/ConfirmSwitchDialog.tsx:23`, `apps/web/src/components/settings/fields/DangerFrame.tsx:5`, `apps/web/src/lib/settings/use-setting-switch.ts:15` (instant PATCH /settings for a form:false key). docs/23a §C1 still says auto messages has «no confirm» — stale since docs/23 phase 2.
 
@@ -631,7 +631,7 @@ Because the gate depends on `SettingsService` cache, a kill switch flipped by PA
 |---|---|---|
 | Boundary test | `common/config-boundaries.test.ts:43-76` | `common/settings` must not import `custom-config`/`public-config` (:55-57); `common/custom-config` must not import `settings`/`public-config` (:59-61); `common/config/` must not exist (:63-65). Scanner = regex over relative specifiers. A merged store must rewrite/replace this test. |
 | ESLint | `apps/api/eslint.config.mjs:5-21` | for `src/modules/**/*.ts` (ignoring `*.settings.ts`, tests, fakes, test-apps): `no-restricted-imports` regex `common/settings/settings\.service(\.js)?$`. Does **not** catch `db.from('settings')` (google-settings.ts bypasses it legally). Base config `packages/config/eslint.js:9-11`: max-lines 150, `@typescript-eslint/max-params` 3. |
-| Shared boundary tests (outside API) | `packages/shared/src/settings/boundaries.test.ts`, `exports.test.ts`, `layout.test.ts`; `apps/web/src/features/settings/boundaries.test.ts` | per docs/25 §3. |
+| Shared boundary tests (outside API) | `packages/shared/src/settings/boundaries.test.ts`, `exports.test.ts`, `layout.test.ts`; `apps/web/src/features/platform/settings/boundaries.test.ts` | per docs/25 §3. |
 | Instances | `deploy/staging/docker-compose.yml:6-14` (single `ayat-api` service, no replicas); `main.ts:21` plain `app.listen`, no cluster; docs/09:17 "single API instance" assumption (feedback limiter) | **Today exactly 1 instance.** All caches are in-process: `SettingsService` (30 s), integration overlay (refresh `SETTINGS_CACHE_MS`), `PermissionCache` (30 s), translations (`translations.service.ts:9` 5 min). Invalidation is local only; cross-instance staleness bounded by TTL. Jobs comment "move to pg_cron / pg-boss when the API scales out" (`scheduling/horizon.job.ts:23`, `reminders/ticker.ts:16`). |
 | LISTEN/NOTIFY / realtime | grep over `apps/api/src` | **none** (no `pg_notify`, `LISTEN`, Supabase realtime channel). |
 | pg-boss | not used (only comments: `webhook/webhook.service.ts:23`, `google-sync/google-sync.job.ts:22`). | |

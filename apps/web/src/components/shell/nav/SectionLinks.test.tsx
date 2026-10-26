@@ -3,7 +3,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n/i18n';
 import { SectionLinks, type SectionLink } from './SectionLinks';
 
-vi.mock('@tanstack/react-router', async () => ({ Link: (await import('@/features/dashboard/link-mock')).Link }));
+vi.mock('@tanstack/react-router', async () => ({ Link: (await import('@/features/reporting/dashboard/link-mock')).Link }));
 
 const unread = t.nav.unread.replace('{n}', '3');
 const ITEMS: readonly SectionLink[] = [

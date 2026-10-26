@@ -1,8 +1,8 @@
 import { createFileRoute } from '@tanstack/react-router';
-import { requireRole } from '@/features/auth/me';
-import { StaffClassroomPage } from '@/features/classroom/join/StaffClassroomPage';
-import { joinMeeting } from '@/features/meetings/internal/internal-api';
-import { meetingJoinProblem } from '@/features/meetings/rows/meeting-join-errors';
+import { requireRole } from '@/features/people/auth/me';
+import { StaffClassroomPage } from '@/features/teaching/classroom/join/StaffClassroomPage';
+import { joinMeeting } from '@/features/teaching/meetings/internal/internal-api';
+import { meetingJoinProblem } from '@/features/teaching/meetings/rows/meeting-join-errors';
 
 /**
  * /meeting/:id: an internal meeting's room («اجتماع داخلي») for any staff login, the classroom room UI

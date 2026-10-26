@@ -1,7 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router';
-import { currentMonth } from '@/features/payouts/api';
-import { PayoutsPage } from '@/features/payouts/PayoutsPage';
-import { parseMonthSearch } from '@/features/subscriptions/search';
+import { currentMonth } from '@/features/finance/payouts/api';
+import { PayoutsPage } from '@/features/finance/payouts/PayoutsPage';
+import { parseMonthSearch } from '@/features/finance/subscriptions/search';
 
 /** /admin/payouts — teacher payouts by month: generate, approve, pay, CSV (R-PAY-02, R-TCH-04). */
 export const Route = createFileRoute('/admin/(finance)/payouts')({

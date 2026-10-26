@@ -1,7 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router';
-import { GuestJoinPage } from '@/features/classroom/join/GuestJoinPage';
-import { lessonPathOfLink } from '@/features/classroom/join/staff-link';
-import { StaffLinkGate } from '@/features/classroom/join/StaffLinkGate';
+import { GuestJoinPage } from '@/features/teaching/classroom/join/GuestJoinPage';
+import { lessonPathOfLink } from '@/features/teaching/classroom/join/staff-link';
+import { StaffLinkGate } from '@/features/teaching/classroom/join/StaffLinkGate';
 
 /**
  * /join/:linkToken: the family's lesson link. Outside every guard: no login, no app shell. The

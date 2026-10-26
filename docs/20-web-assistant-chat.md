@@ -8,7 +8,7 @@ Owner 2026-10-19: «for the assistant the chat is not good … in the web». Aud
 
 ### W1 (major) The inbox fits the window: about 150px less chrome, no 1180px width cap, and the page itself stops scrolling — ✅ done
 
-Files: `apps/web/src/components/shell/layout/FixedTopBarLayout.tsx`, `apps/web/src/components/shell/layout/TopBarLayout.tsx`, `apps/web/src/components/ui/layout/running-head.tsx`, `apps/web/src/components/shell/layout/inbox-route.ts`, `apps/web/src/features/inbox/threads/list/InboxPage.tsx`, `apps/web/src/features/inbox/threads/list/NewChatForm.tsx`, `apps/web/src/features/inbox/threads/list/ThreadList.tsx`, `apps/web/src/features/sales/live/SalesLiveStrip.tsx`, `apps/web/src/routes/sales/inbox.tsx`, `apps/web/src/components/shell/layout/inbox-route.test.ts`
+Files: `apps/web/src/components/shell/layout/FixedTopBarLayout.tsx`, `apps/web/src/components/shell/layout/TopBarLayout.tsx`, `apps/web/src/components/ui/layout/running-head.tsx`, `apps/web/src/components/shell/layout/inbox-route.ts`, `apps/web/src/features/messaging/inbox/threads/list/InboxPage.tsx`, `apps/web/src/features/messaging/inbox/threads/list/NewChatForm.tsx`, `apps/web/src/features/messaging/inbox/threads/list/ThreadList.tsx`, `apps/web/src/features/sales/sales/live/SalesLiveStrip.tsx`, `apps/web/src/routes/sales/inbox.tsx`, `apps/web/src/components/shell/layout/inbox-route.test.ts`
 
 Scope: FixedTopBarLayout serves both sales and teacher, so the /sales/inbox and /teacher/inbox shells change. The admin shell (AdminLayout.tsx:72) stays as it is: do not edit the shared INBOX_PAGE. Add a new constant for the top-bar layout instead.
 
@@ -27,7 +27,7 @@ Result: about 150px of chrome. At 1366 the chat column is about 850px.
 
 ### W2 (major) The desktop composer becomes the compact one: one line capped at 128px, a round send button, Enter sends, focus stays in the box — ✅ done
 
-Files: `apps/web/src/features/inbox/composer/components/Composer.tsx`, `apps/web/src/features/inbox/composer/components/ComposerPhone.tsx`, `apps/web/src/features/inbox/composer/components/TextComposer.tsx`, `apps/web/src/features/inbox/composer/lib/composer-keys.ts`, `packages/shared/i18n/ar.json`, `packages/shared/i18n/en.json`
+Files: `apps/web/src/features/messaging/inbox/composer/components/Composer.tsx`, `apps/web/src/features/messaging/inbox/composer/components/ComposerPhone.tsx`, `apps/web/src/features/messaging/inbox/composer/components/TextComposer.tsx`, `apps/web/src/features/messaging/inbox/composer/lib/composer-keys.ts`, `packages/shared/i18n/ar.json`, `packages/shared/i18n/en.json`
 
 Scope: all three inbox modes get the compact composer. This is the #112 pass that mobile already got.
 
@@ -43,7 +43,7 @@ TextComposer must stay ≤ 150 lines; deleting the branch frees about 15.
 
 ### W3 (major) One-row thread header: secondary sales actions go in «المزيد», and sales sees which children the chat is about — ✅ done
 
-Files: `apps/web/src/features/inbox/threads/pane/ThreadHeader.tsx`, `apps/web/src/features/inbox/threads/pane/ThreadHeaderPhone.tsx`, `apps/web/src/features/inbox/sales-money/SalesChatActions.tsx`, `apps/web/src/features/inbox/sales-money/SalesSubscribeAction.tsx`, `apps/web/src/features/inbox/sales-money/use-sales-family-actions.tsx`, `apps/web/src/features/inbox/sales/SalesFamilyLine.tsx`, `apps/web/src/features/inbox/threads/pane/ThreadPane.tsx`, `apps/web/src/features/inbox/threads/pane/ThreadPaneWide.tsx`, `packages/shared/i18n/ar.json`, `packages/shared/i18n/en.json`
+Files: `apps/web/src/features/messaging/inbox/threads/pane/ThreadHeader.tsx`, `apps/web/src/features/messaging/inbox/threads/pane/ThreadHeaderPhone.tsx`, `apps/web/src/features/messaging/inbox/sales-money/SalesChatActions.tsx`, `apps/web/src/features/messaging/inbox/sales-money/SalesSubscribeAction.tsx`, `apps/web/src/features/messaging/inbox/sales-money/use-sales-family-actions.tsx`, `apps/web/src/features/messaging/inbox/sales/SalesFamilyLine.tsx`, `apps/web/src/features/messaging/inbox/threads/pane/ThreadPane.tsx`, `apps/web/src/features/messaging/inbox/threads/pane/ThreadPaneWide.tsx`, `packages/shared/i18n/ar.json`, `packages/shared/i18n/en.json`
 
 (0) Line budget first. ThreadPane.tsx is exactly 150 lines, so move its wide return block (:128-149) into ThreadPaneWide.tsx, which takes one props object: header, log, reply, aside, side, toast. W4, W5 and W12 build on this split.
 
@@ -65,7 +65,7 @@ Files: `apps/web/src/features/inbox/threads/pane/ThreadHeader.tsx`, `apps/web/sr
 
 ### W4 (major) The chat follows the conversation: full-screen chat below 900px, a jump-to-latest button with a count, and a snap to the bottom after she sends — ✅ done
 
-Files: `apps/web/src/components/ui/layout/use-narrow.ts`, `apps/web/src/features/inbox/threads/pane/ThreadPane.tsx`, `apps/web/src/features/inbox/messages/components/MessageBubble.tsx`, `apps/web/src/features/inbox/messages/components/MessageLog.tsx`, `apps/web/src/features/inbox/messages/components/JumpToLatest.tsx`, `packages/shared/i18n/ar.json`, `packages/shared/i18n/en.json`
+Files: `apps/web/src/components/ui/layout/use-narrow.ts`, `apps/web/src/features/messaging/inbox/threads/pane/ThreadPane.tsx`, `apps/web/src/features/messaging/inbox/messages/components/MessageBubble.tsx`, `apps/web/src/features/messaging/inbox/messages/components/MessageLog.tsx`, `apps/web/src/features/messaging/inbox/messages/components/JumpToLatest.tsx`, `packages/shared/i18n/ar.json`, `packages/shared/i18n/en.json`
 
 (1) use-narrow.ts: add `useBelowShell()` for '(max-width: 56.24rem)'. Leave usePhone alone; the dialogs depend on it.
 - ThreadPane.tsx:42 uses `phoneView = useBelowShell()`. From 640 to 899px the thread is then the existing PhoneChat, ThreadHeaderPhone and compact composer (after W2 the composer no longer branches on width).
@@ -80,7 +80,7 @@ Applies to all modes. MessageLog stays well under 150 lines with the button in i
 
 ### W5 (major) Unsent work survives: a reply draft per chat, text typed during a send is kept, and a failed background poll no longer blanks the chat — ✅ done
 
-Files: `apps/web/src/features/inbox/composer/lib/draft-store.ts`, `apps/web/src/features/inbox/composer/components/TextComposer.tsx`, `apps/web/src/features/inbox/threads/pane/ThreadPane.tsx`, `apps/web/src/features/inbox/threads/pane/ThreadPaneWide.tsx`
+Files: `apps/web/src/features/messaging/inbox/composer/lib/draft-store.ts`, `apps/web/src/features/messaging/inbox/composer/components/TextComposer.tsx`, `apps/web/src/features/messaging/inbox/threads/pane/ThreadPane.tsx`, `apps/web/src/features/messaging/inbox/threads/pane/ThreadPaneWide.tsx`
 
 (1) New draft-store.ts: a module-level, subscribable `Map<phone, { text, failed: { text, id, code } | null }>` with get, set and clear (as built, review M2; the plan's single `requestId` per draft was replaced). TextComposer reads it through useSyncExternalStore (subscribeDrafts) and writes to it on change; the id is picked at submit with requestIdFor. The draft therefore survives a thread switch (InboxPage.tsx:76 and ThreadPane.tsx:102 key by phone), the قالب toggle, and the window flipping. A retried draft keeps its clientRequestId (rule 8).
 (2) Submit (as built): the clientRequestId is chosen AT SUBMIT: the failed send's id when the box holds exactly that failed text (trimmed), else a fresh `crypto.randomUUID()` (rule 8). The box empties at once. onError: the text comes back only if the box is still empty (new typing is never overwritten), and `failed = { text, id, code }` is stored. The failed id is dropped on ANY successful send for that phone and as soon as the box text differs from `failed.text` (round 2 C), so it is never replayed later for an unrelated identical text. While a chat's send is in flight no box for it can send (`mutationKey ['inbox-send', phone]`), even one mounted since. Never call setText('') after the POST returns; that is what wipes text typed during the send.
@@ -92,7 +92,7 @@ All modes. Keep TextComposer ≤ 150 lines: the store and W2's key helper are se
 
 ### W6 (major) Photos and PDFs from families open in the chat (access bug: docs/16 row 1b promises bubble media for sales) — ✅ done
 
-Files: `apps/api/src/modules/inbox/files/thread-file.controller.ts`, `apps/api/src/modules/inbox/files/thread-file.http.test.ts`, `apps/api/src/modules/inbox/inbox.module.ts`, `apps/web/src/features/inbox/api/api.ts`, `apps/web/src/features/inbox/messages/components/MessageMedia.tsx`, `apps/web/src/features/inbox/messages/components/MessageBubble.tsx`, `e2e/tests/inbox-media.spec.ts`, `packages/shared/i18n/ar.json`, `packages/shared/i18n/en.json`
+Files: `apps/api/src/modules/inbox/files/thread-file.controller.ts`, `apps/api/src/modules/inbox/files/thread-file.http.test.ts`, `apps/api/src/modules/inbox/inbox.module.ts`, `apps/web/src/features/messaging/inbox/api/api.ts`, `apps/web/src/features/messaging/inbox/messages/components/MessageMedia.tsx`, `apps/web/src/features/messaging/inbox/messages/components/MessageBubble.tsx`, `e2e/tests/inbox-media.spec.ts`, `packages/shared/i18n/ar.json`, `packages/shared/i18n/en.json`
 
 This is the only API change in the routine, allowed because docs/16 row 1b says media inside messages «shows in every thread» for sales, while MessageViews.view is always called without a URL (sales-threads.service.ts:47).
 
@@ -112,7 +112,7 @@ This is the only API change in the routine, allowed because docs/16 row 1b says 
 
 ### W7 (major) Closed window or no allowed template: tell sales what she can do, instead of offering a template and a rating she does not have — ✅ done
 
-Files: `apps/web/src/features/inbox/threads/pane/window-state.ts`, `apps/web/src/features/inbox/threads/pane/WindowBanner.tsx`, `apps/web/src/features/inbox/composer/components/ComposerPhone.tsx`, `apps/web/src/features/inbox/composer/components/TemplateComposer.tsx`, `apps/web/src/features/inbox/composer/lib/allowed-templates.ts`, `apps/web/src/features/inbox/threads/pane/NewThread.tsx`, `packages/shared/i18n/ar.json`, `packages/shared/i18n/en.json`
+Files: `apps/web/src/features/messaging/inbox/threads/pane/window-state.ts`, `apps/web/src/features/messaging/inbox/threads/pane/WindowBanner.tsx`, `apps/web/src/features/messaging/inbox/composer/components/ComposerPhone.tsx`, `apps/web/src/features/messaging/inbox/composer/components/TemplateComposer.tsx`, `apps/web/src/features/messaging/inbox/composer/lib/allowed-templates.ts`, `apps/web/src/features/messaging/inbox/threads/pane/NewThread.tsx`, `packages/shared/i18n/ar.json`, `packages/shared/i18n/en.json`
 
 Sales and teacher modes only. The admin's wording and controls stay as they are.
 
@@ -129,7 +129,7 @@ All strings MSA, with en parity. The real fix (an enabled template) is the templ
 
 ### W8 (major) Unread count on «المحادثات» and in the tab title, still updating while the tab is in the background — ✅ done
 
-Files: `apps/web/src/features/sales/use-sales-unread.ts`, `apps/web/src/components/shell/nav/SectionShells.tsx`, `apps/web/src/features/sales/SalesNav.tsx`, `apps/web/src/components/shell/nav/SectionLinks.tsx`
+Files: `apps/web/src/features/sales/sales/use-sales-unread.ts`, `apps/web/src/components/shell/nav/SectionShells.tsx`, `apps/web/src/features/sales/sales/SalesNav.tsx`, `apps/web/src/components/shell/nav/SectionLinks.tsx`
 
 (1) New use-sales-unread.ts.
 - useQuery with queryKey ['threads','nav-count','unread'], under ['threads'] so ThreadPane's existing invalidation refreshes it.
@@ -144,7 +144,7 @@ Sales shell only. The count is the shared academy unread, the same number the ad
 
 ### W9 (major) «تسجيل طالب جديد» keeps its draft and step when she closes it to re-read the chat — ✅ done
 
-Files: `apps/web/src/features/inbox/sales/SalesRegisterAction.tsx`, `apps/web/src/features/inbox/sales/register-drafts.ts`, `apps/web/src/features/booking/BookingWizard.tsx`
+Files: `apps/web/src/features/messaging/inbox/sales/SalesRegisterAction.tsx`, `apps/web/src/features/messaging/inbox/sales/register-drafts.ts`, `apps/web/src/features/teaching/booking/BookingWizard.tsx`
 
 Do NOT keep the Dialog mounted with `hidden`: dialog.tsx:56-60 locks body scroll on mount, and the focus trap would stay active.
 
@@ -158,7 +158,7 @@ Ceiling: the drawer still covers the thread while it is open. A non-modal pane i
 
 ### W10 (minor) Day separators at every width, and only the clock time on each bubble — ✅ done
 
-Files: `apps/web/src/features/inbox/messages/components/MessageLog.tsx`, `apps/web/src/features/inbox/messages/components/MessageBubble.tsx`
+Files: `apps/web/src/features/messaging/inbox/messages/components/MessageLog.tsx`, `apps/web/src/features/messaging/inbox/messages/components/MessageBubble.tsx`
 
 MessageLog.tsx:54: use `withDays(messages, now)` for every fill, not only 'phone'. Update the doc comment at :43. With separators drawn, the bubble stamp uses clockText(created_at) instead of stampText (format.ts:75), and keeps fullTime in the `title` tooltip. All modes.
 
@@ -166,7 +166,7 @@ MessageLog.tsx:54: use `withDays(messages, now)` for every fill, not only 'phone
 
 ### W11 (minor) Links in messages are clickable — ✅ done
 
-Files: `apps/web/src/features/inbox/messages/lib/linkify.ts`, `apps/web/src/features/inbox/messages/components/MessageBubble.tsx`
+Files: `apps/web/src/features/messaging/inbox/messages/lib/linkify.ts`, `apps/web/src/features/messaging/inbox/messages/components/MessageBubble.tsx`
 
 New linkify.ts: `splitLinks(text): Array<{ text: string; href?: string }>`, matching only /https?:\/\/[^\s]+/ and trimming trailing . , ، ؛ ) from the match. MessageBubble Content (:51-55) renders a link part as `<a href target="_blank" rel="noopener noreferrer" dir="ltr" className="break-all underline underline-offset-4 text-lapis">`. Signed links are already stripped server-side for sales (withoutLinks). Quoted replies need an API change and are left out.
 
@@ -174,7 +174,7 @@ New linkify.ts: `splitLinks(text): Array<{ text: string; href?: string }>`, matc
 
 ### W12 (minor) The chat's controls follow the editable sales role's permissions instead of breaking with a generic error — ✅ done
 
-Files: `apps/web/src/features/inbox/threads/pane/ThreadPane.tsx`, `apps/web/src/features/inbox/composer/components/Composer.tsx`, `apps/web/src/features/inbox/composer/components/TemplateComposer.tsx`, `apps/web/src/features/inbox/composer/components/TextComposer.tsx`, `apps/web/src/routes/sales/index.tsx`, `packages/shared/i18n/ar.json`, `packages/shared/i18n/en.json`
+Files: `apps/web/src/features/messaging/inbox/threads/pane/ThreadPane.tsx`, `apps/web/src/features/messaging/inbox/composer/components/Composer.tsx`, `apps/web/src/features/messaging/inbox/composer/components/TemplateComposer.tsx`, `apps/web/src/features/messaging/inbox/composer/components/TextComposer.tsx`, `apps/web/src/routes/sales/index.tsx`, `packages/shared/i18n/ar.json`, `packages/shared/i18n/en.json`
 
 Non-admin modes. Admin mode is unchanged.
 
@@ -187,7 +187,7 @@ Non-admin modes. Admin mode is unchanged.
 
 ### W13 (minor) An open chat in an unfocused window no longer marks new messages read for everyone — ✅ done
 
-Files: `apps/web/src/features/inbox/api/api.ts`
+Files: `apps/web/src/features/messaging/inbox/api/api.ts`
 
 Web-only, replacing the API `peek` idea. api.ts threadQuery uses `refetchInterval: () => (document.hasFocus() ? INBOX_REFRESH_MS : false)`. The list query keeps polling, so the unread rows and W8's count still rise. TanStack's refetchOnWindowFocus follows `visibilitychange` only, which never fires when she switches back from another window, so (as built, review M4) ThreadPane calls `useWindowFocus(detail.refetch, phone)`: the window's `focus` event refetches the open chat (marking it read) and re-arms the focus-gated poll.
 

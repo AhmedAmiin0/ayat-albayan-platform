@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router';
-import { LeadsInbox } from '@/features/leads/LeadsInbox';
-import { parseLeadSearch } from '@/features/leads/types';
+import { LeadsInbox } from '@/features/sales/leads/LeadsInbox';
+import { parseLeadSearch } from '@/features/sales/leads/types';
 
 export const Route = createFileRoute('/admin/(people)/leads')({
   validateSearch: parseLeadSearch,

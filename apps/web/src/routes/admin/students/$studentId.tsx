@@ -1,5 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router';
-import { StudentProfilePage } from '@/features/students/profile/StudentProfilePage';
+import { StudentProfilePage } from '@/features/people/students/profile/StudentProfilePage';
 
 /** /admin/students/$studentId — student profile (R-STU-05). */
 export const Route = createFileRoute('/admin/students/$studentId')({

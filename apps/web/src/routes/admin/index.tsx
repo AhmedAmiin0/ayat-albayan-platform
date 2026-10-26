@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router';
-import { DashboardPage } from '@/features/dashboard/DashboardPage';
-import { parseDashboardSearch } from '@/features/dashboard/search';
+import { DashboardPage } from '@/features/reporting/dashboard/DashboardPage';
+import { parseDashboardSearch } from '@/features/reporting/dashboard/search';
 
 /** /admin — the dashboard (R-RPT-01, R-RPT-02, R-RPT-03): KPI strip, queue, week, period, exports. */
 export const Route = createFileRoute('/admin/')({

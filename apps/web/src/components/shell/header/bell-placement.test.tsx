@@ -5,7 +5,7 @@ import {
   page,
   READ_ITEM,
   renderWithClient,
-} from '@/features/notifications/notifications-test-kit';
+} from '@/features/messaging/notifications/notifications-test-kit';
 import { t } from '@/lib/i18n/i18n';
 import { MenuBar } from './MenuBar';
 import { WideHeader } from '../layout/TopBarLayout';
@@ -13,13 +13,13 @@ import { WideHeader } from '../layout/TopBarLayout';
 const granted = vi.hoisted(() => new Set<string>());
 const apiFetch = vi.hoisted(() => vi.fn());
 vi.mock('@tanstack/react-router', async () => ({
-  Link: (await import('@/features/dashboard/link-mock')).Link,
+  Link: (await import('@/features/reporting/dashboard/link-mock')).Link,
   useRouterState: ({ select }: { select: (s: { location: { pathname: string } }) => string }) =>
     select({ location: { pathname: '/teacher' } }),
   useNavigate: () => vi.fn(),
 }));
 vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
-vi.mock('@/features/auth/use-permissions', () => ({
+vi.mock('@/features/people/auth/use-permissions', () => ({
   usePermissions: () => ({ permissions: [], can: (p: string) => granted.has(p) }),
 }));
 

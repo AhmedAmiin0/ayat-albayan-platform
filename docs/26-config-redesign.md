@@ -347,7 +347,7 @@ Order: **26-P0 → 23-P3 → 26-P1 → 23-P4 → 26-P2 → 26-P3 → 23-P5 → 2
   `tools/scripts/owned-keys-check.mjs` + `.github/workflows/owned-keys-guard.yml` (cutoff `20261023000621`).
   `X-AB-Client`: web `apps/web/src/lib/http/client-tag.ts` (`web/<VITE_BUILD_ID|dev>`), mobile
   `apps/mobile/src/core/lib/http/client-tag.ts` (JS only), API counting `apps/api/src/common/client-usage/` (in memory, one log
-  line per 15 min). Web switches: `apps/web/src/features/messaging/gate-api.ts`. Not done here (left to 26-P3 /
+  line per 15 min). Web switches: `apps/web/src/features/messaging/messaging/gate-api.ts`. Not done here (left to 26-P3 /
   `cloud/config-ui`): «the web form sends only changed keys».
   `PATCH /settings` answers 400 (today's body) only when nothing could be saved and a field was invalid, so the
   0.2.0 phone keeps its field errors; owned keys alone are 200 with `saved: []`. Gate routes: only the write can fail

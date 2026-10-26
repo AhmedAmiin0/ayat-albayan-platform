@@ -1,5 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router';
-import { FinanceSummaryPage } from '@/features/finance/FinanceSummaryPage';
+import { FinanceSummaryPage } from '@/features/finance/finance/FinanceSummaryPage';
 
 /** /admin/finance — «الملخص المالي»: a year's revenue − teacher cost − expenses by month, converted. */
 export const Route = createFileRoute('/admin/(finance)/finance')({ component: FinanceSummaryPage });

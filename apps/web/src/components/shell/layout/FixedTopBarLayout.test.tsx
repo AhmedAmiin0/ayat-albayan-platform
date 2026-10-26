@@ -6,14 +6,14 @@ import { FixedTopBarLayout } from './FixedTopBarLayout';
 
 const path = vi.hoisted(() => ({ current: '/sales/inbox' }));
 vi.mock('@tanstack/react-router', async () => ({
-  Link: (await import('@/features/dashboard/link-mock')).Link,
+  Link: (await import('@/features/reporting/dashboard/link-mock')).Link,
   useRouterState: ({ select }: { select: (s: { resolvedLocation: { pathname: string } }) => string }) =>
     select({ resolvedLocation: { pathname: path.current } }),
   useNavigate: () => vi.fn(),
 }));
-vi.mock('@/features/auth/me', () => ({ meQuery: { queryKey: ['auth', 'me'], queryFn: async () => null } }));
+vi.mock('@/features/people/auth/me', () => ({ meQuery: { queryKey: ['auth', 'me'], queryFn: async () => null } }));
 vi.mock('../header/MenuBar', () => ({ MenuBar: () => null }));
-vi.mock('@/features/notifications/NotificationBell', () => ({
+vi.mock('@/features/messaging/notifications/NotificationBell', () => ({
   NotificationBell: () => <button type="button">{t.bell.open}</button>,
 }));
 

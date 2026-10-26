@@ -5,8 +5,8 @@ import { AdminShell, AssistantShell, PortalShell, SalesShell, SHELL_OF, TeacherS
 
 const appShell = vi.hoisted(() => vi.fn<(props: { wide?: boolean }) => null>(() => null));
 vi.mock('@/components/AppShell', () => ({ AppShell: appShell }));
-vi.mock('@/features/auth/use-permissions', () => ({ usePermissions: () => ({ permissions: [], can: () => true }) }));
-vi.mock('@/features/sales/use-sales-unread', () => ({ useSalesUnread: () => 0 }));
+vi.mock('@/features/people/auth/use-permissions', () => ({ usePermissions: () => ({ permissions: [], can: () => true }) }));
+vi.mock('@/features/sales/sales/use-sales-unread', () => ({ useSalesUnread: () => 0 }));
 
 // R-ACC-01: /account opens inside the shell each base role normally gets.
 describe('SHELL_OF', () => {

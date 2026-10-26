@@ -1,5 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router';
-import { ReportFormPage } from '@/features/reports/ReportFormPage';
+import { ReportFormPage } from '@/features/reporting/reports/ReportFormPage';
 
 /** /admin/students/$studentId/reports/$lessonId — the admin opens / edits one student's report. */
 export const Route = createFileRoute('/admin/students/$studentId_/reports/$lessonId')({ component: AdminReportRoute });

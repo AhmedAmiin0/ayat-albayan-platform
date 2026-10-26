@@ -1,10 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
 import { createFileRoute } from '@tanstack/react-router';
-import { StudentReportsPage } from '@/features/reports/history/StudentReportsPage';
-import { StudentRecordings } from '@/features/students/recordings/StudentRecordings';
-import { RIYADH_TZ } from '@/features/schedule/tz';
-import { teacherMeQuery } from '@/features/teacher/api';
-import { TrialChatNote } from '@/features/teacher/lessons/TrialChatNote';
+import { StudentReportsPage } from '@/features/reporting/reports/history/StudentReportsPage';
+import { StudentRecordings } from '@/features/people/students/recordings/StudentRecordings';
+import { RIYADH_TZ } from '@/features/teaching/schedule/tz';
+import { teacherMeQuery } from '@/features/teaching/teacher/api';
+import { TrialChatNote } from '@/features/teaching/teacher/lessons/TrialChatNote';
 
 /** /teacher/reports/$studentId — one of my students' report history + grade chart (R-REP-05). */
 export const Route = createFileRoute('/teacher/reports/$studentId')({ component: TeacherStudentReportsRoute });

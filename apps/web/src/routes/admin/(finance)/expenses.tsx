@@ -1,7 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router';
-import { ExpensesPage } from '@/features/expenses/ExpensesPage';
-import { currentMonth } from '@/features/payouts/api';
-import { parseMonthSearch } from '@/features/subscriptions/search';
+import { ExpensesPage } from '@/features/finance/expenses/ExpensesPage';
+import { currentMonth } from '@/features/finance/payouts/api';
+import { parseMonthSearch } from '@/features/finance/subscriptions/search';
 
 /** /admin/expenses — ads / content / tools spend per month (R-RPT-02). */
 export const Route = createFileRoute('/admin/(finance)/expenses')({

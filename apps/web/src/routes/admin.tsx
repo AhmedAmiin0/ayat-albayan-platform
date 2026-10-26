@@ -1,7 +1,7 @@
 import { createFileRoute, redirect } from '@tanstack/react-router';
 import { AdminShell } from '@/components/shell/nav/SectionShells';
-import { adminRedirect } from '@/features/auth/admin-access';
-import { requireRole } from '@/features/auth/me';
+import { adminRedirect } from '@/features/people/auth/admin-access';
+import { requireRole } from '@/features/people/auth/me';
 
 export const Route = createFileRoute('/admin')({
   // Base role admin gets the admin app; each page then needs its permission (features/auth/admin-access).
