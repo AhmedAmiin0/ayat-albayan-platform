@@ -9,10 +9,11 @@ on:
 permissions:
   contents: read
 
-# A new push to the same branch or PR cancels the run it replaces.
+# A new push to the same PR cancels the run it replaces. On develop/main a running run always finishes
+# (its success starts deploy-staging): newer pushes queue behind it, and only the newest queued one runs.
 concurrency:
   group: ci-${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 # Remote Turborepo cache: with both set, unchanged packages skip lint, typecheck and test.
 # Unset (forks, no secret) = a normal uncached run, nothing breaks.
