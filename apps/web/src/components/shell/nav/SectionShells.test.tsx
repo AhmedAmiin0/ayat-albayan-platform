@@ -1,4 +1,5 @@
 import { USER_ROLES } from '@ab/shared';
+import type { ReactNode } from 'react';
 import { render } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { AdminShell, AssistantShell, PortalShell, SalesShell, SHELL_OF, TeacherShell } from './SectionShells';
@@ -7,6 +8,8 @@ const appShell = vi.hoisted(() => vi.fn<(props: { wide?: boolean }) => null>(() 
 vi.mock('@/components/AppShell', () => ({ AppShell: appShell }));
 vi.mock('@/features/people/auth/use-permissions', () => ({ usePermissions: () => ({ permissions: [], can: () => true }) }));
 vi.mock('@/features/sales/sales/use-sales-unread', () => ({ useSalesUnread: () => 0 }));
+// The calls provider (docs/28) has its own tests; here it only passes the shell through.
+vi.mock('@/features/messaging/inbox', () => ({ CallProvider: ({ children }: { children: ReactNode }) => children }));
 
 // R-ACC-01: /account opens inside the shell each base role normally gets.
 describe('SHELL_OF', () => {

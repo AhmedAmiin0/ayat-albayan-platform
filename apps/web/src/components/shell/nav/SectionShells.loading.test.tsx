@@ -15,6 +15,8 @@ vi.mock('@/features/teaching/teacher/TeacherNav', () => ({ TEACHER_NAV_ITEMS: []
 vi.mock('@/features/sales/sales/SalesNav', () => ({ SALES_NAV_ITEMS: [], SalesNav: () => <nav>sales-nav</nav> }));
 vi.mock('@/features/sales/sales/use-sales-unread', () => ({ useSalesUnread: () => 0 }));
 vi.mock('./use-nav-counts', () => ({ useNavCounts: () => ({}) }));
+// The calls provider (docs/28) reads the inbox API; these tests are about the nav only.
+vi.mock('@/features/messaging/inbox', () => ({ CallProvider: ({ children }: { children: ReactNode }) => children }));
 
 // docs/27 E2 (owner D6): never a partial menu while /auth/me loads, a skeleton in its place.
 describe('the navigation while /auth/me loads', () => {

@@ -10,6 +10,7 @@ import {
   uploadHandleSchema,
   uploadSessionSchema,
 } from './drivers/meta/meta-shapes';
+import { callPermissionMessage } from './messages/wa-call-permission';
 import { mediaMessage, readReceipt, submitPayload, templateMessage, textMessage, type GraphBody } from './messages/wa-components';
 import {
   WaError,
@@ -62,6 +63,10 @@ export class HttpWhatsappClient implements WhatsappClient {
 
   sendDocument(input: Parameters<WhatsappClient['sendDocument']>[0]): Promise<WaSent> {
     return this.send(input.to, () => mediaMessage(input));
+  }
+
+  sendCallPermissionRequest(input: { to: string; text: string }): Promise<WaSent> {
+    return this.send(input.to, () => callPermissionMessage(input));
   }
 
   async markRead(waMessageId: string): Promise<void> {

@@ -8,6 +8,7 @@ import {
   type StatusEvent,
   type WebhookBatch,
 } from '../webhook.events';
+import { readCalls } from './webhook.calls';
 import { acceptsNumber, lineFor, receivingNumber, where, type Receiving, type ReceivingNumber } from '../lines/webhook.lines';
 import { ECHO_FIELD, readEchoes } from './webhook.echoes';
 
@@ -112,26 +113,29 @@ function receiving(number: string | undefined, ctx: ParseOptions): Receiving | n
   return number ? { ...at, phoneNumberId: number } : at;
 }
 
-/**
- * One `messages` change → the batch; `smb_message_echoes` → its echoes (sent outside the app); another
- * field, or a number that is neither line, is skipped.
- */
+/** `messages` → the batch; `smb_message_echoes` → echoes; `calls` → batch.calls (docs/28, never ticks); else skipped. */
 function readChange(change: unknown, ctx: ParseOptions & { batch: WebhookBatch }): void {
   const kind = field(change, 'field');
-  if (kind !== 'messages' && kind !== ECHO_FIELD) return;
+  if (kind !== 'messages' && kind !== ECHO_FIELD && kind !== 'calls') return;
   const value = get(change, 'value');
   const number = field(value, 'metadata.phone_number_id') ?? undefined;
   const at = receiving(number, ctx);
   if (!at) return;
+  if (kind === 'calls') return readCalls(value, { now: ctx.now, phoneNumberId: number ?? null, out: (ctx.batch.calls ??= []) });
   if (kind === ECHO_FIELD) return void ctx.batch.echoes.push(...readEchoes(value, at));
+  readMessages(value, { ...ctx, at });
+}
+
+/** A `messages` change's inbound messages and delivery statuses. */
+function readMessages(value: unknown, ctx: ParseOptions & { batch: WebhookBatch; at: Receiving }): void {
   const contacts = list(get(value, 'contacts'));
   const names = new Map(contacts.map((c) => [field(c, 'wa_id') ?? '', field(c, 'profile.name')?.trim() ?? '']));
   for (const m of list(get(value, 'messages'))) {
-    const event = toInbound(m, { names, now: ctx.now, at });
+    const event = toInbound(m, { names, now: ctx.now, at: ctx.at });
     if (event) ctx.batch.messages.push(event);
   }
   for (const s of list(get(value, 'statuses'))) {
-    const event = toStatus(s, { now: ctx.now, at });
+    const event = toStatus(s, { now: ctx.now, at: ctx.at });
     if (event) ctx.batch.statuses.push(event);
   }
 }

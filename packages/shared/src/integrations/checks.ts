@@ -22,6 +22,12 @@ export const vapidSubject = z.string().max(200).regex(/^(mailto:[^\s@]+@[^\s@]+|
 /** A Google Cloud OAuth client id: «<digits>-<id>.apps.googleusercontent.com». */
 export const googleClientId = z.string().max(200).regex(/^[0-9]+-[a-z0-9]+\.apps\.googleusercontent\.com$/);
 
+/** Comma-separated ICE server URLs (RFC 7064 / 7065): stun:, turn: or turns: with a host. */
+export const iceUrls = z
+  .string()
+  .max(1000)
+  .refine((raw) => raw.split(',').every((u) => /^(stun|turns?):[A-Za-z0-9.-]+(:\d{1,5})?(\?transport=(udp|tcp))?$/.test(u.trim())), 'ice_url');
+
 const version = z.string().regex(/^v\d+\.\d+$/);
 const provider = z.enum(WA_PROVIDERS);
 
@@ -41,6 +47,8 @@ export const INTEGRATION_VALUE_CHECKS: Record<IntegrationPlainKey, z.ZodType> = 
   WACRM_API_BASE: url,
   WA_ALLOWED_RECIPIENTS: recipients,
   WA_TEMPLATE_SYNC: z.stringbool(),
+  CALLS_STUN_URLS: iceUrls,
+  CALLS_TURN_URLS: iceUrls,
   LIVEKIT_URL: url,
   EXPO_API_BASE: url,
   WEB_PUSH_VAPID_PUBLIC_KEY: vapidPublicKey,

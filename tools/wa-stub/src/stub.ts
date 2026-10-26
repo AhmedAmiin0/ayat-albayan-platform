@@ -8,6 +8,7 @@ import { CRM_PREFIX, crmRoute } from './providers/crm.ts';
 import { diagnosticRoutes } from './diagnostics.ts';
 import { graphRoutes } from './providers/graph.ts';
 import { authKind, KAPSO_PREFIX, kapsoAuthorized, kapsoMediaDownload, kapsoRoutes } from './providers/kapso.ts';
+import { kapsoCallRoutes } from './providers/kapso-calls.ts';
 import { authorized, initialHealth } from './lines.ts';
 import { ERR, metaError } from './providers/meta.ts';
 import type { Reply, StubOptions, StubState } from './state.ts';
@@ -30,6 +31,7 @@ function initialState(opts: StubOptions): StubState {
     uploads: new Map(),
     handles: new Set(),
     requests: [],
+    calls: [],
   };
 }
 
@@ -49,7 +51,7 @@ function refusal(req: IncomingMessage, s: StubState, at: { viaKapso: boolean; is
 export function createStub(opts: StubOptions = {}) {
   const state = initialState(opts);
   const routes = [...controlRoutes, kapsoMediaDownload, ...uploadRoutes, ...diagnosticRoutes, ...graphRoutes];
-  const kapso = [...diagnosticRoutes, ...kapsoRoutes];
+  const kapso = [...diagnosticRoutes, ...kapsoRoutes, ...kapsoCallRoutes];
 
   async function route(req: IncomingMessage, fullPath: string): Promise<Reply | null> {
     if (fullPath.startsWith(`${CRM_PREFIX}/`)) return crmRoute(req, fullPath.slice(CRM_PREFIX.length), state);

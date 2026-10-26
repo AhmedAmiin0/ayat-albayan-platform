@@ -5,6 +5,10 @@ import { t } from '@/lib/i18n/i18n';
 import { withDays, type LogItem } from '../lib/day-groups';
 import { JumpToLatest } from './JumpToLatest';
 import { MessageBubble } from './MessageBubble';
+import { CallEntry } from '../../calls/entries/CallEntry';
+import type { CallView } from '@ab/shared';
+import { WithThreadCalls } from '../../calls/entries/use-thread-calls';
+import { useCallsEnabled } from '../../calls/state/call-context';
 import { lastOwnSend } from '../../composer/lib/own-send';
 import { isNearBottom } from '../lib/stick-to-bottom';
 
@@ -25,6 +29,8 @@ export interface MessageLogProps {
    * full-screen chat, where the log always fills the room between the header and the composer.
    */
   fill?: 'shell' | 'xl' | 'phone';
+  /** May this user call from this chat: its call entries (docs/28) then call back when tapped. */
+  canCall?: boolean;
 }
 
 const BOX = {
@@ -48,7 +54,14 @@ function Day({ label }: { label: string }) {
  * counts what came in below. Her own send (the id her composer recorded) always snaps to the bottom; «رسائل أقدم» pages back.
  * A separator before each day's first message, at every width (the bubbles show the clock only).
  */
-export function MessageLog({ phone, messages, hasMore, loadingOlder, onOlder, waitingKeys, fill = 'shell' }: MessageLogProps) {
+export function MessageLog({ phone, messages, hasMore, loadingOlder, onOlder, waitingKeys, fill = 'shell', canCall = false }: MessageLogProps) {
+  // The chat's WhatsApp calls (docs/28), at their time among the messages; nothing asked while calls are off.
+  const props = { phone, messages, hasMore, loadingOlder, onOlder, waitingKeys, fill, canCall };
+  if (!useCallsEnabled()) return <LogView {...props} />;
+  return <WithThreadCalls phone={phone}>{(calls) => <LogView {...props} calls={calls} />}</WithThreadCalls>;
+}
+
+function LogView({ phone, messages, hasMore, loadingOlder, onOlder, waitingKeys, fill = 'shell', canCall = false, calls }: MessageLogProps & { calls?: readonly CallView[] | undefined }) {
   const box = useRef<HTMLDivElement>(null);
   const pinned = useRef(true);
   const newest = messages.at(-1)?.id;
@@ -75,7 +88,8 @@ export function MessageLog({ phone, messages, hasMore, loadingOlder, onOlder, wa
     setAwayAt(null);
   };
   const now = new Date();
-  const items: LogItem[] = withDays(messages, now);
+  const from = hasMore ? (messages[0]?.created_at ?? null) : null;
+  const items: LogItem[] = withDays(messages, now, calls && { list: calls, from });
   const seen = awayAt === null ? -1 : messages.findIndex((m) => m.id === awayAt);
   const unseen = seen < 0 ? 0 : messages.length - 1 - seen;
 
@@ -103,6 +117,8 @@ export function MessageLog({ phone, messages, hasMore, loadingOlder, onOlder, wa
           {items.map((item) =>
             item.kind === 'day' ? (
               <Day key={item.key} label={item.label} />
+            ) : item.kind === 'call' ? (
+              <CallEntry key={item.call.id} call={item.call} canCall={canCall} />
             ) : (
               <MessageBubble
                 key={item.message.id}

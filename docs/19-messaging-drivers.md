@@ -39,6 +39,7 @@ There is **one** messaging engine: the outbox and its queue, the send gate and k
 - The Meta route `POST /webhooks/whatsapp` keeps verifying only `WA_APP_SECRET` / `WA_CHAT_APP_SECRET`; neither route ever accepts the other's secret.
 - Like the Meta route it is never written to the activity log (`SKIPPED_ROUTES`), so refused or high-volume deliveries cannot flood it.
 - «افحص الخطوط» on a kapso line says inbound arrives via the Kapso webhook (neutral) instead of comparing the WABA's subscribed apps with a Meta app id; with `KAPSO_WEBHOOK_SECRET` unset it says every Kapso delivery is refused (act). It reports only whether the secret is set, never its value.
+- WhatsApp voice calls (docs/28): the same route also reads changes whose field is `calls` (subscribe the webhook to `calls`); they move `wa_calls` rows and never become messages or ticks.
 - Answered within 5 s (`RESPONSE_BUDGET_MS`); Kapso times out at 10 s, retries 3 times within ~50 s and pauses a webhook that fails ≥ 85 % of the time, so a webhook item that fails answers 500 for a retry like the Meta route.
 
 ## Keys

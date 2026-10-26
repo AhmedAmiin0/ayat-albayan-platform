@@ -21,7 +21,7 @@ export const SAFETY_GROUPS: readonly IntegrationGroup[] = [...SAFETY_GUARD_GROUP
 export const LEGACY_LINE_GROUPS: readonly IntegrationGroup[] = ['wa_notifications', 'wa_chat'];
 
 /** «التكاملات»: everything that is not messaging. */
-export const INTEGRATIONS_PAGE_GROUPS: readonly IntegrationGroup[] = ['livekit', 'expo', 'web_push', 'fx', 'google'];
+export const INTEGRATIONS_PAGE_GROUPS: readonly IntegrationGroup[] = ['calls', 'livekit', 'expo', 'web_push', 'fx', 'google'];
 
 /** Does the search match a key of these groups (label, hint or name)? Static: no fetch. */
 export const groupsMatch =

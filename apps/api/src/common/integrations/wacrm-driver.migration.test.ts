@@ -10,15 +10,16 @@ const sql = readFileSync(join(dir, FILE), 'utf8');
 const code = sql.split('\n').filter((l) => !l.trim().startsWith('--')).join('\n');
 
 describe('migration 640: the crm driver', () => {
-  it('holds the latest integration_secret_key_ok (a later migration that re-creates it must keep every key)', () => {
+  it('is followed by the calls migration (740) as the latest integration_secret_key_ok', () => {
     const defines = (f: string) => /function public\.integration_secret_key_ok\(/.test(readFileSync(join(dir, f), 'utf8'));
-    expect(readdirSync(dir).filter((f) => f.endsWith('.sql')).sort().filter(defines).at(-1)).toBe(FILE);
+    const defining = readdirSync(dir).filter((f) => f.endsWith('.sql')).sort().filter(defines);
+    expect(defining.slice(-2)).toEqual([FILE, '20261026000740_wa_calls.sql']);
   });
 
-  it('integration_secret_key_ok lists exactly the shared secret keys, the two CRM keys included', () => {
+  it('integration_secret_key_ok lists the shared secret keys of its day, the two CRM keys included', () => {
     const fn = /integration_secret_key_ok\(p_key text\)[\s\S]*?array\[([\s\S]*?)\]/.exec(sql)?.[1] ?? '';
     const listed = [...fn.matchAll(/'([A-Z_]+)'/g)].map((m) => m[1]);
-    expect(listed.sort()).toEqual([...INTEGRATION_SECRET_KEYS].sort());
+    expect(listed.sort()).toEqual(INTEGRATION_SECRET_KEYS.filter((k) => !k.startsWith('CALLS_')).sort());
     expect(listed).toEqual(expect.arrayContaining(['WACRM_API_KEY', 'WACRM_WEBHOOK_SECRET']));
     expect(code).toContain('grant execute on function public.integration_secret_key_ok(text) to service_role;');
   });

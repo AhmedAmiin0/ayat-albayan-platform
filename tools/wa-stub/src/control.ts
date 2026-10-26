@@ -6,6 +6,7 @@ import { lineOf, stubLines } from './lines.ts';
 import { metaError } from './providers/meta.ts';
 import { digits, readJson, type Route, type StubState } from './state.ts';
 import { initialTemplates, reviewTemplate } from './templates.ts';
+import { callValue, type CallSpec } from './providers/kapso-calls.ts';
 import { forward, inboundValue, statusValue, type InboundSpec, type StatusSpec, type WebhookTarget } from './webhook.ts';
 
 /**
@@ -77,12 +78,21 @@ export const controlRoutes: Route[] = [
     s.uploads.clear();
     s.handles.clear();
     s.requests.length = 0;
+    s.calls.length = 0;
     resetHealth(s);
     return [200, { reset: true }];
   }],
   ['POST', /^\/__stub\/inbound$/, async (req, _m, s) => [...(await inbound(s, (await readJson(req)) as unknown as InboundSpec))]],
   /** The same inbound, forwarded by «Kapso» to its webhook URL with X-Webhook-Signature (docs/19). */
   ['POST', /^\/__stub\/kapso\/inbound$/, async (req, _m, s) => [...(await inbound(s, (await readJson(req)) as unknown as InboundSpec, true))]],
+  /** WhatsApp Calling (docs/28): the logged …/calls actions, and a Kapso-signed `calls` change to the API. */
+  ['GET', /^\/__stub\/calls$/, async (_r, _m, s) => [200, s.calls]],
+  ['POST', /^\/__stub\/kapso\/call$/, async (req, _m, s) => {
+    const spec = (await readJson(req)) as unknown as CallSpec;
+    const t = kapsoTarget(s, spec.phoneNumberId);
+    if (!t) return [400, { error: 'kapso webhookUrl not configured' }];
+    return [200, { forwarded: true, status: await forward({ ...t, field: 'calls' }, callValue(spec)) }];
+  }],
   /** Every Graph call with its prefix and credential kind (bearer / api-key / …). */
   ['GET', /^\/__stub\/requests$/, async (_r, _m, s) => [200, s.requests]],
   ['POST', /^\/__stub\/status$/, async (req, _m, s) => [...(await deliveryStatus(s, (await readJson(req)) as unknown as StatusSpec))]],
