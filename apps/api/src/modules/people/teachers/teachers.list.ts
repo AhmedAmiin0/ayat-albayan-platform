@@ -35,7 +35,7 @@ export const TEACHER_SORT: SortSpec<TeacherSortKey> = {
   fallback: { column: 'display_name_ar', ascending: true },
 };
 
-export interface TeacherFilterable<Q> {
+interface TeacherFilterable<Q> {
   ilike(column: string, pattern: string): Q;
   eq(column: string, value: string): Q;
   contains(column: string, value: string[]): Q;

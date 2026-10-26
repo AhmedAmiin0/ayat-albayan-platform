@@ -6,7 +6,7 @@ type RequestOpts = Parameters<OAuth2Client['request']>[0];
 type Method = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
 
 /** One authorised call: the OAuth2Client adds the bearer and refreshes it (google-auth-library). */
-export interface HttpCall {
+interface HttpCall {
   method: Method;
   url: string;
   query?: Record<string, string>;

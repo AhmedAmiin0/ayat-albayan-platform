@@ -62,7 +62,7 @@ export class ExportsQueries {
   }
 }
 
-export type StudentExportRow = Awaited<ReturnType<ExportsQueries['students']>>[number];
-export type LessonExportRow = Awaited<ReturnType<ExportsQueries['lessons']>>[number];
-export type PaymentExportRow = Awaited<ReturnType<ExportsQueries['payments']>>[number];
-export type PayoutExportRow = Awaited<ReturnType<ExportsQueries['payouts']>>[number];
+type StudentExportRow = Awaited<ReturnType<ExportsQueries['students']>>[number];
+type LessonExportRow = Awaited<ReturnType<ExportsQueries['lessons']>>[number];
+type PaymentExportRow = Awaited<ReturnType<ExportsQueries['payments']>>[number];
+type PayoutExportRow = Awaited<ReturnType<ExportsQueries['payouts']>>[number];

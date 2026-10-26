@@ -7,7 +7,7 @@ export type FakeResult = {
   error?: { code?: string; message: string } | null;
   count?: number | null;
 };
-export type FakeCall = { table: string; method: string; args: unknown[] };
+type FakeCall = { table: string; method: string; args: unknown[] };
 
 /**
  * Every builder method is recorded and chains; awaiting a query on `table` resolves to the

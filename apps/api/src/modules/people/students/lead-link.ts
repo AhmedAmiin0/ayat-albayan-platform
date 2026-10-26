@@ -6,7 +6,7 @@ import { dbError } from '../guardians/http';
 import { canTransitionLead } from '../../sales/leads/lead-state-machine';
 
 export type LinkedLead = { id: string; status: LeadStatus; converted_guardian_id: string | null };
-export type LeadLinkInput = { lead: LinkedLead; guardianId: string; actorId: string };
+type LeadLinkInput = { lead: LinkedLead; guardianId: string; actorId: string };
 
 /**
  * «تسجيل الطالب» from the inbox thread (R-LEAD-06, R-STU-02): POST /students with `lead_id` links

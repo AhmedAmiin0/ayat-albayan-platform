@@ -122,7 +122,7 @@ export function currentCourse(rows: readonly CourseRuleRow[], courses: readonly 
   return ahead[0]?.c ?? null;
 }
 
-export type CourseFactsInput = {
+type CourseFactsInput = {
   rows: readonly CourseRuleRow[];
   now: Date;
   /** The newest unpaid / active subscription (the one the wizard books), if any. */

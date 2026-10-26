@@ -23,7 +23,7 @@ export const STUDENT_SORT: SortSpec<StudentSortKey> = {
   fallback: { column: 'created_at', ascending: false },
 };
 
-export interface IlikeQuery<Q> {
+interface IlikeQuery<Q> {
   ilike(column: string, pattern: string): Q;
 }
 

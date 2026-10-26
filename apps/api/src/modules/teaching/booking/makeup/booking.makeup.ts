@@ -4,7 +4,7 @@ import { domainError } from '../booking.errors';
 import type { BookingQueries } from '../core/booking.queries';
 
 /** windowDays: settings.makeup_window_days. */
-export type MakeupLookup = { lessonId: string; studentId: string; now: Date; windowDays: number };
+type MakeupLookup = { lessonId: string; studentId: string; now: Date; windowDays: number };
 
 /**
  * The missed lesson a makeup replaces (R-SCH-10): 404 lesson_not_found, 400 makeup_student (the

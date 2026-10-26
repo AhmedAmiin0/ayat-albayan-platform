@@ -72,7 +72,7 @@ export type BookingPayload = {
   audit: { after: { [key: string]: Json | undefined } };
 };
 
-export type LinkInput = {
+type LinkInput = {
   requested?: string | null;
   /** meeting_link_override of every booked student. */
   overrides: readonly (string | null | undefined)[];
@@ -97,7 +97,7 @@ export function leadTarget(status: LeadStatus, pkg: PackageSize | null): LeadSta
   return canTransitionLead(status, to) ? to : null;
 }
 
-export type LessonRowsInput = {
+type LessonRowsInput = {
   occurrences: readonly Occurrence[];
   conflicts: readonly Conflict[];
   reason: string | null;
