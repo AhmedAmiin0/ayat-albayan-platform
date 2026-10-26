@@ -4,9 +4,9 @@ import { DB, type Db } from '../../../common/db/db.module';
 import { applySort, ilikeContains } from '../../../common/list-sort';
 import { dbError, type Page } from '../../../common/http/http';
 import { readChunked } from '../../teaching/scheduling/read-all';
-import { listSelect, SELECT, SUB_SORT, type SubListQuery } from './subscriptions.list-query';
+import { listSelect, SELECT, SUB_SORT, type SubListQuery } from './list/subscriptions.list-query';
 
-export type { SubListQuery } from './subscriptions.list-query';
+export type { SubListQuery } from './list/subscriptions.list-query';
 
 export type StudentRef = { id: string; code: string | null; name: string };
 export type SubRow = Tables<'subscriptions'> & { student: StudentRef | null };

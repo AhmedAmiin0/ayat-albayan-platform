@@ -2,7 +2,7 @@ import type { QuoteResponse, SubscriptionCreate, SubscriptionView } from '@ab/sh
 import { Injectable } from '@nestjs/common';
 import { PricingService } from '../pricing/pricing.service';
 import { notFound } from '../../../common/http/errors';
-import { subscriptionRow } from './subscription-row';
+import { subscriptionRow } from './list/subscription-row';
 import { quoteQueryFor, type SubscriptionQuote } from './subscriptions.dto';
 import { SubscriptionsQueries } from './subscriptions.queries';
 import { SubscriptionsService } from './subscriptions.service';

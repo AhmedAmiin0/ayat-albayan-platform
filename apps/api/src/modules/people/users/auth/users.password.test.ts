@@ -1,7 +1,7 @@
 import { passwordProblem } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
 import { generatePassword } from './users.password';
-import { redact } from '../users.redact';
+import { redact } from '../audit/users.redact';
 
 describe('generatePassword', () => {
   it('is at least 16 characters and at least the configured minimum', () => {
