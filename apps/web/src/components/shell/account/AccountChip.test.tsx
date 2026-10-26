@@ -9,7 +9,7 @@ import { SideFoot } from './SideFoot';
 import { WideHeader } from '../layout/TopBarLayout';
 
 vi.mock('@tanstack/react-router', async () => ({
-  Link: (await import('@/features/dashboard/link-mock')).Link,
+  Link: (await import('@/features/reporting/dashboard/link-mock')).Link,
   useNavigate: () => vi.fn(),
 }));
 const apiFetch = vi.hoisted(() => vi.fn());

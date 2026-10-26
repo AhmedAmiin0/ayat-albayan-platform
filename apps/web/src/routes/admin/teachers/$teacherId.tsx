@@ -1,5 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router';
-import { TeacherDetailPage } from '@/features/teachers/detail/TeacherDetailPage';
+import { TeacherDetailPage } from '@/features/people/teachers/detail/TeacherDetailPage';
 
 /** /admin/teachers/:teacherId — profile, availability grid, time-off (R-TCH-01, R-TCH-02). */
 export const Route = createFileRoute('/admin/teachers/$teacherId')({

@@ -3,10 +3,10 @@ import type { ComponentType } from 'react';
 import { ADMIN_NAV_ITEMS } from '@/components/admin-nav-items';
 import { AdminNav } from '@/components/AdminNav';
 import { AppShell } from '@/components/AppShell';
-import { usePermissions } from '@/features/auth/use-permissions';
-import { SALES_NAV_ITEMS, SalesNav } from '@/features/sales/SalesNav';
-import { useSalesUnread } from '@/features/sales/use-sales-unread';
-import { TEACHER_NAV_ITEMS, TeacherNav } from '@/features/teacher/TeacherNav';
+import { usePermissions } from '@/features/people/auth/use-permissions';
+import { SALES_NAV_ITEMS, SalesNav } from '@/features/sales/sales/SalesNav';
+import { useSalesUnread } from '@/features/sales/sales/use-sales-unread';
+import { TEACHER_NAV_ITEMS, TeacherNav } from '@/features/teaching/teacher/TeacherNav';
 import { t } from '@/lib/i18n/i18n';
 import { useNavCounts } from './use-nav-counts';
 

@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { Link } from '@tanstack/react-router';
 import { Avatar } from '@/components/ui/display/avatar';
-import { profileQuery } from '@/features/account/api';
+import { profileQuery } from '@/features/people/account/api';
 import { t } from '@/lib/i18n/i18n';
 import { cn } from '@/lib/utils';
 

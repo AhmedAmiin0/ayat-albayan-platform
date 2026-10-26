@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router';
-import { MY_FEEDBACK_LIST_KEYS } from '@/features/feedback/search';
-import { MyFeedback } from '@/features/teacher/reports/MyFeedback';
+import { MY_FEEDBACK_LIST_KEYS } from '@/features/teaching/feedback/search';
+import { MyFeedback } from '@/features/teaching/teacher/reports/MyFeedback';
 import { parseServerListSearch } from '@/lib/list/server-list-search';
 
 /** /teacher/feedback?page&sort&dir&f_<key> «آراء الطلاب» — what my students said, and my average. */

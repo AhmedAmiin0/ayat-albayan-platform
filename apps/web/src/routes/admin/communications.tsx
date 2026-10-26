@@ -1,5 +1,5 @@
 import { createFileRoute, redirect } from '@tanstack/react-router';
-import { communicationsAliasRedirect } from '@/features/settings/pages/page-search';
+import { communicationsAliasRedirect } from '@/features/platform/settings/pages/page-search';
 
 /**
  * /admin/communications — the address docs/23 §2d gives «التواصل»: it opens

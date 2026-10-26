@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router';
-import { SalesStudents } from '@/features/sales/students/SalesStudents';
-import { parseStudentsSearch } from '@/features/sales/search';
+import { SalesStudents } from '@/features/sales/sales/students/SalesStudents';
+import { parseStudentsSearch } from '@/features/sales/sales/search';
 
 /** /sales/students?view=mine «الطلاب» — every student of the academy; «طلابي» is a filter. */
 export const Route = createFileRoute('/sales/students')({

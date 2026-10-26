@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router';
-import { SalesMoney } from '@/features/sales/money/SalesMoney';
-import { parseMoneySearch } from '@/features/sales/search';
+import { SalesMoney } from '@/features/sales/sales/money/SalesMoney';
+import { parseMoneySearch } from '@/features/sales/sales/search';
 
 /** /sales/earnings?view=payments «أرباحي» — my salary, commissions and statements; «مدفوعاتي» is a filter. */
 export const Route = createFileRoute('/sales/earnings')({

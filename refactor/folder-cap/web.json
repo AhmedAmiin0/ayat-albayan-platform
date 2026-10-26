@@ -1,13 +1,9 @@
 {
-  "apps/web/src/features": {
-    "files": 0,
-    "dirs": 40
-  },
-  "apps/web/src/features/inbox/lists": {
+  "apps/web/src/features/messaging/inbox/lists": {
     "files": 17,
     "dirs": 0
   },
-  "apps/web/src/features/inbox/saved-replies": {
+  "apps/web/src/features/messaging/inbox/saved-replies": {
     "files": 20,
     "dirs": 0
   },

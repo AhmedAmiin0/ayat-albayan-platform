@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router';
-import { SalesSubscriptions } from '@/features/sales/subscriptions/SalesSubscriptions';
-import { parseSalesSubscriptionsSearch } from '@/features/sales/search';
+import { SalesSubscriptions } from '@/features/sales/sales/subscriptions/SalesSubscriptions';
+import { parseSalesSubscriptionsSearch } from '@/features/sales/sales/search';
 
 /** /sales/subscriptions?kind=&history= «الاشتراكات» — pending and confirmed, two separate lists; a confirmed one's history. */
 export const Route = createFileRoute('/sales/subscriptions')({

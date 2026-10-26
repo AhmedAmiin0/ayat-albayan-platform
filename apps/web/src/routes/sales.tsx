@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { SalesShell } from '@/components/shell/nav/SectionShells';
-import { requireRole } from '@/features/auth/me';
+import { requireRole } from '@/features/people/auth/me';
 
 export const Route = createFileRoute('/sales')({
   beforeLoad: ({ context }) => requireRole(context.queryClient, 'sales'),

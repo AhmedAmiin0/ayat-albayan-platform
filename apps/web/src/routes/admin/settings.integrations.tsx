@@ -1,6 +1,6 @@
 import { createFileRoute, redirect } from '@tanstack/react-router';
-import { oauthReturnRedirect, parseOauthReturnSearch } from '@/features/settings/pages/page-search';
-import { IntegrationsPage } from '@/features/settings/pages/IntegrationsPage';
+import { oauthReturnRedirect, parseOauthReturnSearch } from '@/features/platform/settings/pages/page-search';
+import { IntegrationsPage } from '@/features/platform/settings/pages/IntegrationsPage';
 
 /**
  * /admin/settings/integrations «التكاملات» — docs/26b §3. Google's OAuth return (`?google=…`, forwarded

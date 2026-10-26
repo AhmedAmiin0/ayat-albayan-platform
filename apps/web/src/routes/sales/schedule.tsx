@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router';
-import { SalesSchedule } from '@/features/sales/schedule/SalesSchedule';
-import { parseSalesScheduleSearch } from '@/features/sales/schedule/schedule-search';
+import { SalesSchedule } from '@/features/sales/sales/schedule/SalesSchedule';
+import { parseSalesScheduleSearch } from '@/features/sales/sales/schedule/schedule-search';
 
 /** /sales/schedule «جدول الحلقات» — the academy's day, read-only, with «ادخل الحلقة» on a running lesson. */
 export const Route = createFileRoute('/sales/schedule')({

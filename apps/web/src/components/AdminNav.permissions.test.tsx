@@ -2,7 +2,7 @@ import type { Permission } from '@ab/shared';
 import { render, screen } from '@testing-library/react';
 import type { ReactNode } from 'react';
 import { describe, expect, it, vi } from 'vitest';
-import { pagePermission } from '@/features/auth/admin-access';
+import { pagePermission } from '@/features/people/auth/admin-access';
 import { t } from '@/lib/i18n/i18n';
 import { AdminNav, visibleGroups } from './AdminNav';
 

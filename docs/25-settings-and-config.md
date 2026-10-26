@@ -65,7 +65,7 @@ Arrows point at what is imported. Nothing points back:
 - `packages/shared/src/settings/boundaries.test.ts`: `settings/` imports nothing from `custom-config`, `integrations`, `google`, `public-config`, `notifications` or `classroom`. `settings/exports.test.ts` pins the root export names and `settings/layout.test.ts` pins the page order.
 - `apps/api/src/common/config-boundaries.test.ts`: `common/settings` never imports `custom-config` or `public-config`; `common/custom-config` never imports `settings`; `common/config/` no longer exists.
 - ESLint (`apps/api/eslint.config.mjs`, `no-restricted-imports`): under `src/modules/**` only readers (`*.settings.ts`), tests, fakes and test apps may import `common/settings/settings.service`.
-- `apps/web/src/features/settings/boundaries.test.ts`: no file outside `features/settings` imports it; `components/settings` and `lib` import no feature folder.
+- `apps/web/src/features/platform/settings/boundaries.test.ts`: no file outside `features/settings` imports it; `components/settings` and `lib` import no feature folder.
 - `apps/api/src/common/auth/parity/permissions.parity.test.ts` with `access-before.json`: the same permissions on the same handlers.
 
 ## 4. The per-module reader rule (API)

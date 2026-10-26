@@ -7,7 +7,7 @@ import { MenuBar } from './MenuBar';
 
 const path = vi.hoisted(() => ({ current: '/admin/students' }));
 vi.mock('@tanstack/react-router', async () => ({
-  Link: (await import('@/features/dashboard/link-mock')).Link,
+  Link: (await import('@/features/reporting/dashboard/link-mock')).Link,
   useRouterState: ({ select }: { select: (s: { location: { pathname: string } }) => string }) =>
     select({ location: { pathname: path.current } }),
   useNavigate: () => vi.fn(),

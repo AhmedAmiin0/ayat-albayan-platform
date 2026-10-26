@@ -1,8 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
 import { createFileRoute, Outlet, useChildMatches } from '@tanstack/react-router';
-import { StudentReportsPage } from '@/features/reports/history/StudentReportsPage';
-import { RIYADH_TZ } from '@/features/schedule/tz';
-import { studentQuery } from '@/features/students/api';
+import { StudentReportsPage } from '@/features/reporting/reports/history/StudentReportsPage';
+import { RIYADH_TZ } from '@/features/teaching/schedule/tz';
+import { studentQuery } from '@/features/people/students/api';
 
 /**
  * /admin/students/$studentId/reports — «سجل التقارير» + grade chart (R-REP-05, issue D2).

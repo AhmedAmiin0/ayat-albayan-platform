@@ -2,7 +2,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from '@tanstack/react-router';
 import { Icon } from '@/components/ui/display/icon';
 import { IconButton } from '@/components/ui/form/icon-button';
-import { signOut } from '@/features/auth/sign-in';
+import { signOut } from '@/features/people/auth/sign-in';
 import { t } from '@/lib/i18n/i18n';
 
 /** «تسجيل الخروج» icon button (the door glyph is drawn RTL-native). Visible at every width. */

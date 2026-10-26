@@ -32,7 +32,7 @@ Requirement IDs covered: R-MSG-03, R-MSG-04, R-MSG-05, R-MSG-06, R-NOT-01, R-MOB
   - Arabic strings are MSA in `packages/shared/i18n/ar.json`, with matching keys in `en.json` (the shared `i18n.test.ts` checks key parity).
   - Jobs are idempotent and RLS stays on every table.
   - Two WhatsApp drivers, set per line (`meta|kapso`, docs/19).
-- **Precondition: `origin/fix/chat-round3` must be merged first.** The routine checks this before anything else: `git show origin/develop:apps/web/src/features/inbox/composer/lib/send-start.ts`. If the file is absent, the routine stops and reports. It does not copy the file in. FileComposer uses `sendStart()` and `settleOwnSend()` from it, and that branch also edits `TextComposer.tsx` and `docs/20`.
+- **Precondition: `origin/fix/chat-round3` must be merged first.** The routine checks this before anything else: `git show origin/develop:apps/web/src/features/messaging/inbox/composer/lib/send-start.ts`. If the file is absent, the routine stops and reports. It does not copy the file in. FileComposer uses `sendStart()` and `settleOwnSend()` from it, and that branch also edits `TextComposer.tsx` and `docs/20`.
 - **WhatsApp in tests:** only `tools/wa-stub`. Never call the real Meta number, the Kapso number +966536900446, or real families.
 - **Mobile:** JS-only, shipped by OTA. Do **not** add `expo-audio`, `expo-video` or `expo-document-picker`. `app.json` uses `runtimeVersion.policy: appVersion`, so a native dependency added without a new APK would crash the installed app.
 - **Running checks:** never run anything on the owner's PC. Run `pnpm turbo lint typecheck test` and `e2e` in the routine's sandbox or GitHub Actions. CI must be green.
@@ -63,7 +63,7 @@ export const chatFileMaxBytes = (m: string | null): number => isPlayableMime(m) 
 
 - `INVOICE_*` and `RECEIPT_*` stay as they are. They are test-locked to each other.
 - `apps/api/src/modules/messaging/whatsapp/messages/inbound-media.service.ts` re-exports `baseMime` from `@ab/shared` instead of defining it. The imports in `thread-media.service.ts` and `booking.invoice.ts` stay unchanged.
-- `apps/web/src/features/inbox/messages/components/MessageMedia.tsx` drops its local `baseMime`.
+- `apps/web/src/features/messaging/inbox/messages/components/MessageMedia.tsx` drops its local `baseMime`.
 
 ### 1.2 `packages/shared/src/messaging/chat-files.ts` (new, plus `chat-files.test.ts`; exported from `messaging/index.ts`)
 
@@ -215,7 +215,7 @@ This change reads data only. `created_by` writes stay as they are, because `isAu
 - Every caller inherits this with no service change: admin `threads.service.ts:51`, `sales-threads.service.ts:47`, `teacher-threads.service.ts:53`, Outbox and messages.service.
 - The sales redaction (`sales-threads.ts`) is unchanged.
 
-**Web: `apps/web/src/features/inbox/messages/components/MessageBubble.tsx:85-87`** (106 lines)
+**Web: `apps/web/src/features/messaging/inbox/messages/components/MessageBubble.tsx:85-87`** (106 lines)
 
 - Replace the teacher-only line with `senderLine(m)`. It renders `t.inbox.sentBy` with the name, or `t.inbox.automaticMessage`, in the same `text-2xs` style.
 
@@ -228,7 +228,7 @@ This change reads data only. `created_by` writes stay as they are, because `isAu
 **Tests**
 
 - `apps/api/src/modules/messaging/whatsapp/messages/message.mapper.sender.test.ts` (new): the teacher's name wins; `full_name` is used for admin and sales; `automatic` is true only for outbound with created_by null and dedup_key set; imported history (dedup_key null) gives false and no name; inbound gives null and false; one assertion that `MESSAGE_SELECT` contains `sender:profiles!messages_created_by_fkey`.
-- `apps/web/src/features/inbox/messages/components/MessageBubble.sender.test.tsx` (new): an assistant's row shows «أرسلها: سارة», a job row shows «رسالة تلقائية», and an imported or inbound row shows neither.
+- `apps/web/src/features/messaging/inbox/messages/components/MessageBubble.sender.test.tsx` (new): an assistant's row shows «أرسلها: سارة», a job row shows «رسالة تلقائية», and an imported or inbound row shows neither.
 - Extend `apps/mobile/src/inbox/thread/hooks/thread-mode.test.ts` with the same cases.
 - Grep `e2e/tests` for assertions on the whole text of outbound bubbles. Every outbound bubble now has a sender line, so those may need updating.
 
@@ -383,7 +383,7 @@ Only inside the 24 h window, stored and logged under her name. Sending is by lin
 
 ### Web
 
-11. **`apps/web/src/features/inbox/api/api.files.ts`** (new; `api.ts` is at 133 lines)
+11. **`apps/web/src/features/messaging/inbox/api/api.files.ts`** (new; `api.ts` is at 133 lines)
     - `fileUploadUrl`;
     - `uploadChatFile({ phone, requestId, file })`, a signed PUT via `supabase.storage.uploadToSignedUrl`, copied from `booking/api.invoice.ts:18-27`;
     - `sendFile`.

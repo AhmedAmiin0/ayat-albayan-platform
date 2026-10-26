@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router';
-import { GooglePage } from '@/features/settings/pages/GooglePage';
-import { parseOauthReturnSearch } from '@/features/settings/pages/page-search';
+import { GooglePage } from '@/features/platform/settings/pages/GooglePage';
+import { parseOauthReturnSearch } from '@/features/platform/settings/pages/page-search';
 
 /**
  * /admin/settings/google «مزامنة Google» — docs/26b §3. Keeps Google's OAuth return (`?google=…`):
