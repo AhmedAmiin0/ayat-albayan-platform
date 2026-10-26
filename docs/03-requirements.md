@@ -17,6 +17,7 @@ Decisions already taken with the owner (2026-10-01):
 | `guardian` (parent / adult student) | Read-only portal via WhatsApp magic link: upcoming lessons, reports (PDF), homework, remaining lessons, payment status |
 
 - **R-AUTH-01** Each role signs in with its own login and lands on its own home. Phone app (Expo, owner 2026-10-12): `admin`, `teacher`, `sales` («المبيعات») and the classroom `assistant` («مساعد حلقة») sign in, each to its own tree mirroring its web pages; `guardian` and `student` are told the app is not theirs («wrongApp»: they follow the links they receive on WhatsApp; the guardian/student web portal `/portal` is not built yet, an empty shell (open question 4)), a disabled account is told so, offline the token's `user_role` claim keeps the right tree open.
+- **R-AUTH-02** Family accounts (owner 2026-10-27, docs/30): the family's WhatsApp contact (`guardian`: a parent or an adult student) signs in on the web with the phone on file + a WhatsApp code; a child student with username = `students.code` + a password they set themselves through a code sent to the guardian; teachers with a username the admin picks or their email; admins and sales keep email. Forgot password for every role = a WhatsApp code to the phone on file. Accounts are created on the first verified code (never at registration). Off until `family_login_enabled` and the `account_code` authentication template is approved.
 
 ## 2. Domain model (entities)
 

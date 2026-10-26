@@ -175,3 +175,7 @@ still answer `202`) while §4's gates are closed. Password rules are the existin
    accepts them. If a later version validates MX records, switch the domain (one constant,
    `FAMILY_EMAIL_DOMAIN`); the logins already made keep working.
 4. The crm driver and authentication templates (§4).
+5. `POST /auth/login` signs in from the API server, so GoTrue's own per-IP limit on password sign-ins (the
+   project's «sign-ins and sign-ups» rate limit) counts every username sign-in together. Watch it once
+   children use usernames; raising that limit is a project setting (an owner decision, not changed here).
+   Email sign-ins (staff) still go from the browser straight to GoTrue, as before.
