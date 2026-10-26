@@ -6,13 +6,13 @@ import { APPLY_ORDER } from '../types.ts';
 import type { Existing, PlanAction, PlanCounts, PlanItem, RowIssue } from '../types.ts';
 import type { Desired } from './resolve.ts';
 
-export interface DiffInput {
+interface DiffInput {
   desired: readonly Desired[];
   /** keyId → existing: import_items rows, plus adopted rows found by unique column (hash null). */
   existing: ReadonlyMap<string, Existing>;
 }
 
-export interface DiffResult {
+interface DiffResult {
   items: PlanItem[];
   issues: RowIssue[];
 }

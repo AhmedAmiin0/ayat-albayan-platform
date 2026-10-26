@@ -23,7 +23,7 @@ export function attByStudent(rows: readonly SourceRow[]): Map<string, number> {
   return tally(rows.map((r) => personName((r.ref.file ?? '').split('/').at(-2) ?? '')));
 }
 
-export interface StudentLessons {
+interface StudentLessons {
   name: string;
   n: number;
 }

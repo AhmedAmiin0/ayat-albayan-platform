@@ -6,9 +6,9 @@ import { type CrmReader, maxCursor, mergeById, selectAll } from './crm.ts';
 import { CRM_TABLES } from './crm.schema.ts';
 
 /** Per table: the newest cursor value extracted. `--since last` resumes from here. */
-export type CrmCursor = Record<string, string>;
+type CrmCursor = Record<string, string>;
 
-export interface ExtractCrmOptions {
+interface ExtractCrmOptions {
   reader: CrmReader;
   /** ISO instant, or 'last' = per-table values from cache/crm/cursor.json. */
   since?: string;

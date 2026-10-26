@@ -10,7 +10,7 @@ import type { PlanWithChanges } from './changes.ts';
 import { createsOnly } from './creates-only.ts';
 import { countPlan } from './diff.ts';
 
-export interface Stale {
+interface Stale {
   /** keyIds whose import item names a row the target no longer has. */
   missing: ReadonlySet<string>;
   /** 'table.column' pairs that are NOT NULL in the target. */
