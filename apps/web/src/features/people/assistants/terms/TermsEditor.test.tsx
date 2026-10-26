@@ -10,7 +10,7 @@ const apiSend = vi.hoisted(() => vi.fn());
 vi.mock('@/lib/http/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiSend }));
 
 const T = t.assistants.terms;
-const empty = { ...ASSISTANT, terms: { assistant_id: 'a1', salary: null, commission: null } };
+const empty = { ...ASSISTANT, terms: { assistant_id: 'a1', salary: null, commission: null, renewal_share_percent: 50 } };
 
 function renderEditor(assistant = ASSISTANT) {
   render(

@@ -29,8 +29,9 @@ export class MyService {
   }
 
   async earnings(user: AuthUser, now = new Date()): Promise<MyEarnings> {
-    const [terms, tz, commissions, adjustments, statements] = await Promise.all([
+    const [terms, share, tz, commissions, adjustments, statements] = await Promise.all([
       this.terms.get(user.id),
+      this.terms.renewalShare(),
       this.queries.tz(user.id),
       this.queries.commissions(user.id),
       this.queries.adjustments(user.id),
@@ -39,7 +40,7 @@ export class MyService {
     return buildEarnings({
       now: now.toISOString(),
       tz,
-      terms: terms ? toTermsView(user.id, terms) : null,
+      terms: terms ? toTermsView(user.id, terms, share) : null,
       commissions,
       adjustments,
       statements: statements.map(toStatementView),

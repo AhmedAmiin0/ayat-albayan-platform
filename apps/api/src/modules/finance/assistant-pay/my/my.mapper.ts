@@ -13,10 +13,11 @@ export interface MyStudentSource {
   commission_amount: number | null;
   commission_currency: string | null;
   commission_earned_at: string | null;
+  renewal_commission_count: number | null;
 }
 
 export const MY_STUDENT_COLUMNS =
-  'student_id, code, name, brought_at, first_subscription_paid, commission_id, commission_status, commission_amount, commission_currency, commission_earned_at';
+  'student_id, code, name, brought_at, first_subscription_paid, commission_id, commission_status, commission_amount, commission_currency, commission_earned_at, renewal_commission_count';
 
 /** A whitelist: no price, no subscription, no guardian. Only whether the first subscription is paid, and the commission. */
 export function toMyStudent(r: MyStudentSource): MyStudentRow | null {
@@ -32,6 +33,7 @@ export function toMyStudent(r: MyStudentSource): MyStudentRow | null {
       r.commission_id && status && currency && earnedAt
         ? { amount: Number(r.commission_amount), currency, status, earned_at: earnedAt }
         : null,
+    renewal_commissions: r.renewal_commission_count ?? 0,
   };
 }
 

@@ -3,6 +3,7 @@ import { PaymentsModule } from '../payments/payments.module';
 import { TeacherEarningsModule } from '../teacher-earnings/earnings.module';
 import { AssistantPayController } from './assistant-pay.controller';
 import { AssistantRpc } from './assistant-pay.rpc';
+import { AssistantPaySettings } from './assistant-pay.settings';
 import { AssistantStatementsController } from './statements/assistant-statements.controller';
 import { CommissionsQueries } from './commissions/commissions.queries';
 import { CorrectionsService } from './statements/corrections.service';
@@ -24,6 +25,7 @@ import { TermsService } from './terms/terms.service';
   imports: [TeacherEarningsModule, PaymentsModule], // PaymentsModule: her payments' «المرفقات»
   controllers: [AssistantPayController, AssistantStatementsController, MyController],
   providers: [
+    AssistantPaySettings,
     AssistantRpc,
     CommissionsQueries,
     CorrectionsService,

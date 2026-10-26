@@ -24,6 +24,8 @@ export interface ThreadView {
   last_template_key: string | null;
   last_status: MessageStatus;
   last_media_mime: string | null;
+  /** The last message is Meta's `unsupported` (its content never reached us, e.g. 131060); absent = no. */
+  last_unsupported?: boolean;
   last_message_at: string;
   last_inbound_at: string | null;
   /** Inbound rows no admin has opened yet (read_at null); a teacher's own (teacher_unread). */

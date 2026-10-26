@@ -100,5 +100,5 @@ test('an original older than the loaded pages: the chat says so, nothing scrolls
   await show([inbound, older]);
   await fireEvent.press(screen.getByTestId('quote-gone'));
   expect(toIndex).not.toHaveBeenCalled();
-  expect(screen.getByText(t.inbox.reply.notLoaded)).toBeTruthy();
+  expect(screen.getByText(t.inbox.reply.notFound)).toBeTruthy();
 });

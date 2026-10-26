@@ -23,7 +23,7 @@ function renderBubble(patch: Partial<MessageView>) {
 }
 
 describe('MessageBubble: a message whose content never reached us', () => {
-  it('Meta’s 131060 says «هذه الرسالة غير متاحة» and to ask for it again', () => {
+  it('Meta’s 131060 says why (a new number’s first message) and where it shows', () => {
     const bubble = renderBubble({ interactive_payload: unsupported(131060) });
     expect(bubble.textContent).toContain(t.inbox.unavailable);
   });

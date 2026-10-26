@@ -21,6 +21,7 @@ const LEGACY_PAGE_ORDER = [
   'academy_whatsapp_e164', 'academy_timezone', 'feedback_rate_window_min', 'academy_contact',
   'recording_consent_notice', 'recording_retention_days', 'activity_retention_days',
   'sales_auto_assign',
+  'renewal_commission_percent',
 ];
 
 const flat = (): SettingKey[] => SETTINGS_SECTIONS.flatMap((id): readonly SettingKey[] => SETTINGS_LAYOUT[id]);

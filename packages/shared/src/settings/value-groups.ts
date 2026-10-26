@@ -26,7 +26,7 @@ export const VALUE_GROUPS = {
     'recording_consent_notice',
   ],
   messages: ['quick_reply_window_hours', 'reminder_lookahead_hours', 'chat_reopen_template', 'whatsapp_calls_enabled'],
-  sales: ['sales_auto_assign'],
+  sales: ['sales_auto_assign', 'renewal_commission_percent'],
   retention: ['recording_retention_days', 'activity_retention_days'],
 } as const satisfies Record<string, readonly SettingKey[]>;
 export type ValueGroupId = keyof typeof VALUE_GROUPS;

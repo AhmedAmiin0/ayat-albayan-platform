@@ -107,19 +107,22 @@ test('pull to refresh asks the API again', async () => {
   await waitFor(() => expect(threadCalls()).toHaveLength(2));
 });
 
-test('«رسائل أقدم» pages back from the oldest loaded message', async () => {
+test('reaching the top pages back from the oldest loaded message, with no button (owner 2026-10-27)', async () => {
   const older = message({ id: 'm0', direction: 'inbound', body: 'رسالة قديمة', created_at: '2026-09-29T10:00:00Z' });
   const pages = [detail([inbound, delivered], { has_more: true }), detail([older])];
   mockApiFetch.mockImplementation(async (path: string) =>
     path.startsWith('/threads') ? pages.shift() : { open: true, reason: null, queued: 0 },
   );
   await renderWithQuery(<ThreadScreen />);
-  await fireEvent.press(await screen.findByRole('button', { name: t.inbox.loadOlder }));
+  await screen.findByText(inbound.body ?? '');
+  expect(screen.queryByRole('button', { name: t.inbox.loadOlder })).toBeNull();
+  await fireEvent(screen.getByTestId('message-list'), 'endReached');
   expect(await screen.findByText('رسالة قديمة')).toBeTruthy();
   // The last thread fetch (a new bubble may re-read /auth/me for messages.manage after it).
   const threadCalls = mockApiFetch.mock.calls.filter(([p]) => String(p).startsWith('/threads'));
   expect(threadCalls.at(-1)).toEqual([`/threads/%2B966552147730?before=${encodeURIComponent(inbound.created_at)}`]);
-  expect(screen.queryByRole('button', { name: t.inbox.loadOlder })).toBeNull();
+  await fireEvent(screen.getByTestId('message-list'), 'endReached');
+  expect(mockApiFetch.mock.calls.filter(([p]) => String(p).startsWith('/threads'))).toHaveLength(threadCalls.length);
 });
 
 test('«رجوع» from a push-opened thread lands on the inbox', async () => {

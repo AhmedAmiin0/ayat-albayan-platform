@@ -1371,7 +1371,7 @@
   },
   "src/sales-money/components/EarningsTermsCard.tsx": {
     "ab/module-boundaries": {
-      "count": 2
+      "count": 1
     }
   },
   "src/sales-money/components/LoadState.tsx": {

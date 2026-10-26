@@ -198,7 +198,9 @@ export type Database = {
           currency: string;
           earned_at: string;
           id: string;
+          kind: string;
           rate: number;
+          share_percent: number;
           statement_id: string | null;
           status: Database['public']['Enums']['assistant_commission_status'];
           student_id: string;
@@ -218,7 +220,9 @@ export type Database = {
           currency: string;
           earned_at: string;
           id?: string;
+          kind?: string;
           rate: number;
+          share_percent?: number;
           statement_id?: string | null;
           status?: Database['public']['Enums']['assistant_commission_status'];
           student_id: string;
@@ -238,7 +242,9 @@ export type Database = {
           currency?: string;
           earned_at?: string;
           id?: string;
+          kind?: string;
           rate?: number;
+          share_percent?: number;
           statement_id?: string | null;
           status?: Database['public']['Enums']['assistant_commission_status'];
           student_id?: string;
@@ -266,21 +272,21 @@ export type Database = {
           {
             foreignKeyName: 'assistant_commissions_student_id_fkey';
             columns: ['student_id'];
-            isOneToOne: true;
+            isOneToOne: false;
             referencedRelation: 'students';
             referencedColumns: ['id'];
           },
           {
             foreignKeyName: 'assistant_commissions_student_id_fkey';
             columns: ['student_id'];
-            isOneToOne: true;
+            isOneToOne: false;
             referencedRelation: 'v_assistant_students';
             referencedColumns: ['student_id'];
           },
           {
             foreignKeyName: 'assistant_commissions_student_id_fkey';
             columns: ['student_id'];
-            isOneToOne: true;
+            isOneToOne: false;
             referencedRelation: 'v_student_list';
             referencedColumns: ['id'];
           },
@@ -4247,6 +4253,7 @@ export type Database = {
           first_paid_at: string | null;
           first_subscription_paid: boolean | null;
           name: string | null;
+          renewal_commission_count: number | null;
           student_id: string | null;
         };
         Relationships: [

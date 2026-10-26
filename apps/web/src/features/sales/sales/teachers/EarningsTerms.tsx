@@ -26,7 +26,9 @@ export function EarningsTerms({ terms }: { terms: AssistantTermsView | null }) {
           {commission.type === 'percent'
             ? p.commissionPercent.replace('{value}', String(commission.value))
             : p.commissionFixed.replace('{amount}', moneyText(commission.value, commission.currency ?? ''))}
-          <span className="mt-0.5 block text-xs text-ink-3">{p.commissionNote.replace('{date}', formatDate(commission.starts_on))}</span>
+          <span className="mt-0.5 block text-xs text-ink-3">
+            {p.commissionNote.replace('{n}', String(terms?.renewal_share_percent ?? '')).replace('{date}', formatDate(commission.starts_on))}
+          </span>
         </p>
       )}
       {terms && !commission && salary && <p className="text-xs text-ink-3">{p.noCommission}</p>}
