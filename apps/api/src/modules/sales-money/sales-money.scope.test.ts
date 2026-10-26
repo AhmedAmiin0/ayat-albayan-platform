@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 import type { AuthUser } from '../../common/auth/verify-token';
 import type { SalesQueries } from '../sales/sales.queries';
-import type { SalesFamilyQueries } from './sales-family.queries';
+import type { SalesFamilyQueries } from './reads/sales-family.queries';
 import { assertOwnStudent, assertSalesDiscount, SalesMoneyScope } from './sales-money.scope';
 
 const USER: AuthUser = { id: 'u1', email: null, role: 'sales' };

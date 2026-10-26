@@ -1,6 +1,6 @@
 import { vi } from 'vitest';
-import { fakePolicy } from '../../modules/notification-rules/policy.fakes';
-import type { NotificationPolicy } from '../../modules/notification-rules/policy';
+import { fakePolicy } from '../../modules/notification-rules/policy/policy.fakes';
+import type { NotificationPolicy } from '../../modules/notification-rules/policy/policy';
 import { systemResolver, type PermissionResolver } from '../auth/permissions';
 import type { Db } from '../db/db.module';
 import type { ExpoTicket } from './expo-push';

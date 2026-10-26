@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 import { readerOf } from '../../common/settings/settings.fakes';
-import type { FxConverter } from '../dashboard/fx-converter';
+import type { FxConverter } from '../dashboard/finance/fx-converter';
 import type { ReceivablesQueries } from './receivables.queries';
 import { ReceivablesService } from './receivables.service';
 import { ReceivablesSettings } from './receivables.settings';

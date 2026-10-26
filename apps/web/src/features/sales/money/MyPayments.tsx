@@ -1,7 +1,7 @@
 import type { MyPaymentRow } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { useMemo, useState } from 'react';
-import { AttachmentsDialog } from '@/features/payments/AttachmentsDialog';
+import { AttachmentsDialog } from '@/features/payments/attachments/AttachmentsDialog';
 import { studentLabel } from '@/features/subscriptions/format';
 import { t } from '@/lib/i18n/i18n';
 import { myPaymentsQuery } from '../api';

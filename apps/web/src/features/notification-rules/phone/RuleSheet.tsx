@@ -7,12 +7,12 @@ import { t } from '@/lib/i18n/i18n';
 import { ChannelsPart } from '../cells/ChannelsPart';
 import { NumberPart } from '../cells/NumberPart';
 import { StatePart } from '../cells/StatePart';
-import { editableRule } from '../RuleRow';
-import { RuleRowActions } from '../RuleRowActions';
+import { editableRule } from '../table/RuleRow';
+import { RuleRowActions } from '../table/RuleRowActions';
 import { useRules } from '../rules-context';
 import { RuleSwitch } from '../switch/RuleSwitch';
 import { TimingPart } from '../timing/TimingPart';
-import { useRuleRow, type RuleRowState } from '../use-rule-row';
+import { useRuleRow, type RuleRowState } from '../table/use-rule-row';
 
 const c = t.notificationCatalogue;
 const r = t.notificationRules;

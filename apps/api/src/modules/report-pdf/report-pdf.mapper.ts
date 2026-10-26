@@ -1,5 +1,5 @@
 import { REPORT_RUBRICS, RUBRIC_COLUMN, type Grade, type Rubric } from '@ab/shared';
-import { packageSlot, type ReportPdfModel } from './pdf-model';
+import { packageSlot, type ReportPdfModel } from './render/pdf-model';
 import type { ReportSource } from './report-pdf.source';
 import { reportReadyMessage, type ReportReadyMessage } from './report-ready';
 

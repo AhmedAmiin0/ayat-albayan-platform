@@ -2,7 +2,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render, screen } from '@testing-library/react';
 import type { ReactNode } from 'react';
 import { describe, expect, it, vi } from 'vitest';
-import { StudentProfilePage } from '@/features/students/StudentProfilePage';
+import { StudentProfilePage } from '@/features/students/profile/StudentProfilePage';
 import { t } from '@/lib/i18n/i18n';
 import { respond, STUDENT_ID } from './wizard-fixture';
 

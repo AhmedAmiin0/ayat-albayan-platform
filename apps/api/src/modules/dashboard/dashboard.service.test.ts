@@ -1,8 +1,8 @@
 import { describe, expect, it, vi } from 'vitest';
 import type { DashboardQueries } from './dashboard.queries';
 import { DashboardService } from './dashboard.service';
-import type { FinanceService } from './finance.service';
-import type { WorkQueries } from './work.queries';
+import type { FinanceService } from './finance/finance.service';
+import type { WorkQueries } from './work/work.queries';
 
 const NOW = new Date('2026-10-02T09:00:00.000Z');
 const SUHAILA = { id: 's1', code: 'AB-0183', name: 'سهيلة' };

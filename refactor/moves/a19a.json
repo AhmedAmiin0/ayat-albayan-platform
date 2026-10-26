@@ -1,0 +1,120 @@
+{
+  "id": "a19a",
+  "seq": 27,
+  "moves": [
+    {
+      "from": "apps/api/src/modules/notification-rules/rules.store*",
+      "to": "apps/api/src/modules/notification-rules/store"
+    },
+    {
+      "from": "apps/api/src/modules/notification-rules/rules.persist*",
+      "to": "apps/api/src/modules/notification-rules/store"
+    },
+    {
+      "from": "apps/api/src/modules/notification-rules/rules.journal*",
+      "to": "apps/api/src/modules/notification-rules/store"
+    },
+    {
+      "from": "apps/api/src/modules/notification-rules/rules.writer*",
+      "to": "apps/api/src/modules/notification-rules/store"
+    },
+    {
+      "from": "apps/api/src/modules/notification-rules/rules.reader*",
+      "to": "apps/api/src/modules/notification-rules/store"
+    },
+    {
+      "from": "apps/api/src/modules/notification-rules/rules.table*",
+      "to": "apps/api/src/modules/notification-rules/store"
+    },
+    {
+      "from": "apps/api/src/modules/notification-rules/policy*",
+      "to": "apps/api/src/modules/notification-rules/policy"
+    },
+    {
+      "from": "apps/api/src/modules/notification-rules/rules.facts*",
+      "to": "apps/api/src/modules/notification-rules/policy"
+    },
+    {
+      "from": "apps/api/src/modules/notification-rules/rules.bridge*",
+      "to": "apps/api/src/modules/notification-rules/sync"
+    },
+    {
+      "from": "apps/api/src/modules/notification-rules/rules.mirror*",
+      "to": "apps/api/src/modules/notification-rules/sync"
+    },
+    {
+      "from": "apps/api/src/modules/notification-rules/rules.parity*",
+      "to": "apps/api/src/modules/notification-rules/sync"
+    }
+  ],
+  "files": [
+    [
+      "apps/api/src/modules/notification-rules/policy.fakes.ts",
+      "apps/api/src/modules/notification-rules/policy/policy.fakes.ts"
+    ],
+    [
+      "apps/api/src/modules/notification-rules/policy.test.ts",
+      "apps/api/src/modules/notification-rules/policy/policy.test.ts"
+    ],
+    [
+      "apps/api/src/modules/notification-rules/policy.ts",
+      "apps/api/src/modules/notification-rules/policy/policy.ts"
+    ],
+    [
+      "apps/api/src/modules/notification-rules/rules.bridge.test.ts",
+      "apps/api/src/modules/notification-rules/sync/rules.bridge.test.ts"
+    ],
+    [
+      "apps/api/src/modules/notification-rules/rules.bridge.ts",
+      "apps/api/src/modules/notification-rules/sync/rules.bridge.ts"
+    ],
+    [
+      "apps/api/src/modules/notification-rules/rules.facts.ts",
+      "apps/api/src/modules/notification-rules/policy/rules.facts.ts"
+    ],
+    [
+      "apps/api/src/modules/notification-rules/rules.journal.ts",
+      "apps/api/src/modules/notification-rules/store/rules.journal.ts"
+    ],
+    [
+      "apps/api/src/modules/notification-rules/rules.mirror.test.ts",
+      "apps/api/src/modules/notification-rules/sync/rules.mirror.test.ts"
+    ],
+    [
+      "apps/api/src/modules/notification-rules/rules.mirror.ts",
+      "apps/api/src/modules/notification-rules/sync/rules.mirror.ts"
+    ],
+    [
+      "apps/api/src/modules/notification-rules/rules.parity.test.ts",
+      "apps/api/src/modules/notification-rules/sync/rules.parity.test.ts"
+    ],
+    [
+      "apps/api/src/modules/notification-rules/rules.parity.ts",
+      "apps/api/src/modules/notification-rules/sync/rules.parity.ts"
+    ],
+    [
+      "apps/api/src/modules/notification-rules/rules.persist.ts",
+      "apps/api/src/modules/notification-rules/store/rules.persist.ts"
+    ],
+    [
+      "apps/api/src/modules/notification-rules/rules.reader.ts",
+      "apps/api/src/modules/notification-rules/store/rules.reader.ts"
+    ],
+    [
+      "apps/api/src/modules/notification-rules/rules.store.test.ts",
+      "apps/api/src/modules/notification-rules/store/rules.store.test.ts"
+    ],
+    [
+      "apps/api/src/modules/notification-rules/rules.store.ts",
+      "apps/api/src/modules/notification-rules/store/rules.store.ts"
+    ],
+    [
+      "apps/api/src/modules/notification-rules/rules.table.ts",
+      "apps/api/src/modules/notification-rules/store/rules.table.ts"
+    ],
+    [
+      "apps/api/src/modules/notification-rules/rules.writer.ts",
+      "apps/api/src/modules/notification-rules/store/rules.writer.ts"
+    ]
+  ]
+}

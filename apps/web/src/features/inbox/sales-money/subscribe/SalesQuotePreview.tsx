@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { FormAlert } from '@/components/ui/form/form-alert';
 import { durationLabel, packageCopy, sessionsOf } from '@/features/pricing/format';
 import { useDebounced } from '@/features/pricing/use-debounced';
-import { Amount } from '@/features/subscriptions/Amount';
+import { Amount } from '@/features/subscriptions/balance/Amount';
 import { t } from '@/lib/i18n/i18n';
 import { quoteSalesSubscription, SALES_MONEY_KEY } from '../api';
 import { salesErrorText } from '../errors';

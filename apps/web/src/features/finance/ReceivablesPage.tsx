@@ -7,7 +7,7 @@ import { EmptyState } from '@/components/ui/display/empty-state';
 import { FormAlert } from '@/components/ui/form/form-alert';
 import { PageHead } from '@/components/ui/layout/page';
 import { downloadCsv } from '@/features/exports/api';
-import { Amount } from '@/features/subscriptions/Amount';
+import { Amount } from '@/features/subscriptions/balance/Amount';
 import { t } from '@/lib/i18n/i18n';
 import { receivablesQuery } from './api';
 import { receivableColumns } from './receivable-columns';

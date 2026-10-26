@@ -1,0 +1,212 @@
+{
+  "id": "b17c",
+  "seq": 63,
+  "moves": [
+    {
+      "from": "apps/web/src/features/numbers/NumberFormDialog*",
+      "to": "apps/web/src/features/numbers/form/"
+    },
+    {
+      "from": "apps/web/src/features/numbers/NumberFormFields*",
+      "to": "apps/web/src/features/numbers/form/"
+    },
+    {
+      "from": "apps/web/src/features/numbers/number-form*",
+      "to": "apps/web/src/features/numbers/form/"
+    },
+    {
+      "from": "apps/web/src/features/numbers/FallbackRankField*",
+      "to": "apps/web/src/features/numbers/form/"
+    },
+    {
+      "from": "apps/web/src/features/numbers/fallback-rank*",
+      "to": "apps/web/src/features/numbers/form/"
+    },
+    {
+      "from": "apps/web/src/features/numbers/NumberSecretRow*",
+      "to": "apps/web/src/features/numbers/form/"
+    },
+    {
+      "from": "apps/web/src/features/numbers/SecretChip*",
+      "to": "apps/web/src/features/numbers/form/"
+    },
+    {
+      "from": "apps/web/src/features/numbers/number-errors*",
+      "to": "apps/web/src/features/numbers/form/"
+    },
+    {
+      "from": "apps/web/src/features/numbers/NumberCard*",
+      "to": "apps/web/src/features/numbers/card/"
+    },
+    {
+      "from": "apps/web/src/features/numbers/NumberActions*",
+      "to": "apps/web/src/features/numbers/card/"
+    },
+    {
+      "from": "apps/web/src/features/numbers/NumberDetails*",
+      "to": "apps/web/src/features/numbers/card/"
+    },
+    {
+      "from": "apps/web/src/features/numbers/NumberHealthLine*",
+      "to": "apps/web/src/features/numbers/card/"
+    },
+    {
+      "from": "apps/web/src/features/numbers/NumberTemplateSync*",
+      "to": "apps/web/src/features/numbers/card/"
+    },
+    {
+      "from": "apps/web/src/features/numbers/ParityList*",
+      "to": "apps/web/src/features/numbers/card/"
+    },
+    {
+      "from": "apps/web/src/features/numbers/ImportButton*",
+      "to": "apps/web/src/features/numbers/import/"
+    },
+    {
+      "from": "apps/web/src/features/numbers/ImportRoles*",
+      "to": "apps/web/src/features/numbers/import/"
+    },
+    {
+      "from": "apps/web/src/features/numbers/SourceButtons*",
+      "to": "apps/web/src/features/numbers/import/"
+    },
+    {
+      "from": "apps/web/src/features/numbers/SourceSwitch*",
+      "to": "apps/web/src/features/numbers/import/"
+    }
+  ],
+  "files": [
+    [
+      "apps/web/src/features/numbers/fallback-rank.test.ts",
+      "apps/web/src/features/numbers/form/fallback-rank.test.ts"
+    ],
+    [
+      "apps/web/src/features/numbers/fallback-rank.ts",
+      "apps/web/src/features/numbers/form/fallback-rank.ts"
+    ],
+    [
+      "apps/web/src/features/numbers/FallbackRankField.test.tsx",
+      "apps/web/src/features/numbers/form/FallbackRankField.test.tsx"
+    ],
+    [
+      "apps/web/src/features/numbers/FallbackRankField.tsx",
+      "apps/web/src/features/numbers/form/FallbackRankField.tsx"
+    ],
+    [
+      "apps/web/src/features/numbers/ImportButton.invalid.test.tsx",
+      "apps/web/src/features/numbers/import/ImportButton.invalid.test.tsx"
+    ],
+    [
+      "apps/web/src/features/numbers/ImportButton.nothing.test.tsx",
+      "apps/web/src/features/numbers/import/ImportButton.nothing.test.tsx"
+    ],
+    [
+      "apps/web/src/features/numbers/ImportButton.test.tsx",
+      "apps/web/src/features/numbers/import/ImportButton.test.tsx"
+    ],
+    [
+      "apps/web/src/features/numbers/ImportButton.tsx",
+      "apps/web/src/features/numbers/import/ImportButton.tsx"
+    ],
+    [
+      "apps/web/src/features/numbers/ImportRoles.tsx",
+      "apps/web/src/features/numbers/import/ImportRoles.tsx"
+    ],
+    [
+      "apps/web/src/features/numbers/number-errors.test.ts",
+      "apps/web/src/features/numbers/form/number-errors.test.ts"
+    ],
+    [
+      "apps/web/src/features/numbers/number-errors.ts",
+      "apps/web/src/features/numbers/form/number-errors.ts"
+    ],
+    [
+      "apps/web/src/features/numbers/number-form.test.ts",
+      "apps/web/src/features/numbers/form/number-form.test.ts"
+    ],
+    [
+      "apps/web/src/features/numbers/number-form.ts",
+      "apps/web/src/features/numbers/form/number-form.ts"
+    ],
+    [
+      "apps/web/src/features/numbers/NumberActions.test.tsx",
+      "apps/web/src/features/numbers/card/NumberActions.test.tsx"
+    ],
+    [
+      "apps/web/src/features/numbers/NumberActions.tsx",
+      "apps/web/src/features/numbers/card/NumberActions.tsx"
+    ],
+    [
+      "apps/web/src/features/numbers/NumberCard.tsx",
+      "apps/web/src/features/numbers/card/NumberCard.tsx"
+    ],
+    [
+      "apps/web/src/features/numbers/NumberDetails.tsx",
+      "apps/web/src/features/numbers/card/NumberDetails.tsx"
+    ],
+    [
+      "apps/web/src/features/numbers/NumberFormDialog.add.test.tsx",
+      "apps/web/src/features/numbers/form/NumberFormDialog.add.test.tsx"
+    ],
+    [
+      "apps/web/src/features/numbers/NumberFormDialog.edit.test.tsx",
+      "apps/web/src/features/numbers/form/NumberFormDialog.edit.test.tsx"
+    ],
+    [
+      "apps/web/src/features/numbers/NumberFormDialog.tsx",
+      "apps/web/src/features/numbers/form/NumberFormDialog.tsx"
+    ],
+    [
+      "apps/web/src/features/numbers/NumberFormFields.tsx",
+      "apps/web/src/features/numbers/form/NumberFormFields.tsx"
+    ],
+    [
+      "apps/web/src/features/numbers/NumberHealthLine.tsx",
+      "apps/web/src/features/numbers/card/NumberHealthLine.tsx"
+    ],
+    [
+      "apps/web/src/features/numbers/NumberSecretRow.test.tsx",
+      "apps/web/src/features/numbers/form/NumberSecretRow.test.tsx"
+    ],
+    [
+      "apps/web/src/features/numbers/NumberSecretRow.tsx",
+      "apps/web/src/features/numbers/form/NumberSecretRow.tsx"
+    ],
+    [
+      "apps/web/src/features/numbers/NumberTemplateSync.test.tsx",
+      "apps/web/src/features/numbers/card/NumberTemplateSync.test.tsx"
+    ],
+    [
+      "apps/web/src/features/numbers/NumberTemplateSync.tsx",
+      "apps/web/src/features/numbers/card/NumberTemplateSync.tsx"
+    ],
+    [
+      "apps/web/src/features/numbers/ParityList.test.tsx",
+      "apps/web/src/features/numbers/card/ParityList.test.tsx"
+    ],
+    [
+      "apps/web/src/features/numbers/ParityList.tsx",
+      "apps/web/src/features/numbers/card/ParityList.tsx"
+    ],
+    [
+      "apps/web/src/features/numbers/SecretChip.tsx",
+      "apps/web/src/features/numbers/form/SecretChip.tsx"
+    ],
+    [
+      "apps/web/src/features/numbers/SourceButtons.tsx",
+      "apps/web/src/features/numbers/import/SourceButtons.tsx"
+    ],
+    [
+      "apps/web/src/features/numbers/SourceSwitch.blocked.test.tsx",
+      "apps/web/src/features/numbers/import/SourceSwitch.blocked.test.tsx"
+    ],
+    [
+      "apps/web/src/features/numbers/SourceSwitch.confirm.test.tsx",
+      "apps/web/src/features/numbers/import/SourceSwitch.confirm.test.tsx"
+    ],
+    [
+      "apps/web/src/features/numbers/SourceSwitch.tsx",
+      "apps/web/src/features/numbers/import/SourceSwitch.tsx"
+    ]
+  ]
+}

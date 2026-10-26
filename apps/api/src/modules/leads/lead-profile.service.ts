@@ -2,7 +2,7 @@ import type { Json } from '@ab/db';
 import { nextFollowUpAt, SETTING_DEFAULTS, validTiming, type LeadFollowUp, type LeadQualificationPatch } from '@ab/shared';
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { AuditService } from '../../common/audit/audit.service';
-import { NotificationPolicy } from '../notification-rules/policy';
+import { NotificationPolicy } from '../notification-rules/policy/policy';
 import { LeadsQueries, type LeadRow } from './leads.queries';
 
 export interface LeadPatch<T> {

@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { fakeDb } from '../guardians/fake-db';
-import { fakePolicy } from '../notification-rules/policy.fakes';
-import { BusyQueries } from './busy.queries';
-import { LessonWriter } from './lesson-writer';
+import { fakePolicy } from '../notification-rules/policy/policy.fakes';
+import { BusyQueries } from './conflicts/busy.queries';
+import { LessonWriter } from './occurrences/lesson-writer';
 import { ruleRow } from './scheduling.fakes';
 import { ruleStudents, ScheduleQueries } from './schedule.queries';
 

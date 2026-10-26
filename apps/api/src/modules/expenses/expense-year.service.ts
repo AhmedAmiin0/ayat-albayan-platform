@@ -1,7 +1,7 @@
 import type { ExpenseYearView } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import { currenciesOf } from '../dashboard/finance.mapper';
-import { FxConverter } from '../dashboard/fx-converter';
+import { currenciesOf } from '../dashboard/finance/finance.mapper';
+import { FxConverter } from '../dashboard/finance/fx-converter';
 import { expenseYear } from './expense-year';
 import { ExpensesQueries } from './expenses.queries';
 import { ExpensesSettings } from './expenses.settings';

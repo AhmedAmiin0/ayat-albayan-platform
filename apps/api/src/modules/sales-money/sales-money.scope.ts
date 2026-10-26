@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 import type { AuthUser } from '../../common/auth/verify-token';
 import { forbidden } from '../../common/http/errors';
 import { SalesQueries } from '../sales/sales.queries';
-import { SalesFamilyQueries } from './sales-family.queries';
+import { SalesFamilyQueries } from './reads/sales-family.queries';
 import type { SalesOwnership } from '../sales/sales-ownership';
 
 /** 403 not_your_student unless the student is one of hers. */

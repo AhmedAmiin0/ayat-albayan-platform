@@ -2,7 +2,7 @@ import { CURRENCY_ISOS, SETTING_FIELD_OF, settingDef } from '@ab/shared';
 import { Select } from '@/components/ui/form/select';
 import { TimeZoneSelect } from '@/components/ui/form/time-zone-select';
 import { str } from '../../registry-form/settings-form';
-import { valueText } from '../value-format';
+import { valueText } from '../lib/value-format';
 import { useValues } from '../values-context';
 import { denseClass, describedBy, type EditorProps } from './editor-props';
 

@@ -1,7 +1,7 @@
 import { ESSENTIAL_OFF_TEXT, notificationEntry, RULE_SETTING_KEYS, SETTING_DEFAULTS, type NotificationKey, type NotificationRuleRow, type RulePatchInput, type RuleSettings, type RulesMode } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
 import { planPatch } from './rules.patch';
-import type { RulesSnapshot } from './rules.reader';
+import type { RulesSnapshot } from './store/rules.reader';
 
 const SETTINGS = Object.fromEntries(RULE_SETTING_KEYS.map((k) => [k, SETTING_DEFAULTS[k]])) as RuleSettings;
 

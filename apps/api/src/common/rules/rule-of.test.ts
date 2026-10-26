@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { fakeRulesReader } from '../../modules/notification-rules/policy.fakes';
+import { fakeRulesReader } from '../../modules/notification-rules/policy/policy.fakes';
 import { ruleOf, timingOf } from './rule-of';
 
 describe('ruleOf / timingOf', () => {

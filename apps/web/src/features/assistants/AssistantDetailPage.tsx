@@ -7,11 +7,11 @@ import { PageHead } from '@/components/ui/layout/page';
 import { ListSkeleton } from '@/components/ui/display/skeleton';
 import { t } from '@/lib/i18n/i18n';
 import { assistantsQuery } from './api';
-import { CommissionLedger } from './CommissionLedger';
-import { StatementsPanel } from './StatementsPanel';
-import { TermsEditor } from './TermsEditor';
-import { commissionText, salaryText } from './terms-summary';
-import { useStatementCan } from './use-statement-can';
+import { CommissionLedger } from './commissions/CommissionLedger';
+import { StatementsPanel } from './statements/StatementsPanel';
+import { TermsEditor } from './terms/TermsEditor';
+import { commissionText, salaryText } from './terms/terms-summary';
+import { useStatementCan } from './statements/use-statement-can';
 
 /** /admin/assistants/:assistantId: this assistant's terms, then their commissions and monthly statements. */
 export function AssistantDetailPage({ assistantId }: { assistantId: string }) {

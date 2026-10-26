@@ -1,7 +1,7 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n/i18n';
-import { LeaveGuard } from './LeaveGuard';
+import { LeaveGuard } from './sheet/LeaveGuard';
 import { ValuesPage } from './ValuesPage';
 
 type BlockOpts = { shouldBlockFn: (a: { current: { pathname: string }; next: { pathname: string } }) => boolean; enableBeforeUnload: boolean };

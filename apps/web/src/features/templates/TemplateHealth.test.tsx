@@ -4,7 +4,7 @@ import { template } from '@/features/inbox/testing/inbox-fixture';
 import { renderWithClient, routeFetch } from '@/features/inbox/testing/test-utils';
 import { ApiError } from '@/lib/http/api';
 import { t } from '@/lib/i18n/i18n';
-import { LINES, lineSync } from './template-lines-fixture';
+import { LINES, lineSync } from './lines/template-lines-fixture';
 import { TemplateHealth } from './TemplateHealth';
 
 const apiFetch = vi.hoisted(() => vi.fn());

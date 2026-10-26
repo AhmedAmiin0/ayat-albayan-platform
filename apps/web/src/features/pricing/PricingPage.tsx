@@ -7,11 +7,11 @@ import { ListSkeleton } from '@/components/ui/display/skeleton';
 import { t } from '@/lib/i18n/i18n';
 import { cn } from '@/lib/utils';
 import { catalogQuery, INITIAL_SELECTION, quoteQuery, type Selection } from './api';
-import { CalcSteps } from './CalcSteps';
+import { CalcSteps } from './calculator/CalcSteps';
 import { quoteSummary } from './format';
-import { FxNote } from './FxNote';
+import { FxNote } from './calculator/FxNote';
 import { PlansTable } from './PlansTable';
-import { QuoteResult } from './QuoteResult';
+import { QuoteResult } from './calculator/QuoteResult';
 import { useDebounced } from './use-debounced';
 
 const sectionTitle = 'font-display text-h4 font-bold text-ink';

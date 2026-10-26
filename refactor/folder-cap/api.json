@@ -15,68 +15,8 @@
     "files": 0,
     "dirs": 47
   },
-  "apps/api/src/modules/assistant-pay": {
-    "files": 23,
-    "dirs": 0
-  },
-  "apps/api/src/modules/dashboard": {
-    "files": 16,
-    "dirs": 0
-  },
-  "apps/api/src/modules/feedback": {
-    "files": 16,
-    "dirs": 0
-  },
-  "apps/api/src/modules/me": {
-    "files": 14,
-    "dirs": 0
-  },
-  "apps/api/src/modules/notification-rules": {
-    "files": 22,
-    "dirs": 0
-  },
-  "apps/api/src/modules/numbers": {
-    "files": 22,
-    "dirs": 0
-  },
-  "apps/api/src/modules/payments": {
-    "files": 14,
-    "dirs": 0
-  },
-  "apps/api/src/modules/reminders": {
-    "files": 14,
-    "dirs": 0
-  },
-  "apps/api/src/modules/report-pdf": {
-    "files": 20,
-    "dirs": 0
-  },
-  "apps/api/src/modules/reports": {
-    "files": 28,
-    "dirs": 0
-  },
-  "apps/api/src/modules/sales": {
-    "files": 25,
-    "dirs": 0
-  },
-  "apps/api/src/modules/sales-money": {
-    "files": 14,
-    "dirs": 0
-  },
-  "apps/api/src/modules/scheduling": {
-    "files": 21,
-    "dirs": 0
-  },
   "apps/api/src/modules/student-recordings": {
     "files": 15,
-    "dirs": 0
-  },
-  "apps/api/src/modules/teacher-earnings": {
-    "files": 13,
-    "dirs": 0
-  },
-  "apps/api/src/modules/users": {
-    "files": 23,
     "dirs": 0
   }
 }

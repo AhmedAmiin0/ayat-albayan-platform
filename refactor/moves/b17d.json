@@ -1,0 +1,172 @@
+{
+  "id": "b17d",
+  "seq": 64,
+  "moves": [
+    {
+      "from": "apps/web/src/features/templates/Crm*",
+      "to": "apps/web/src/features/templates/crm/"
+    },
+    {
+      "from": "apps/web/src/features/templates/use-crm-*",
+      "to": "apps/web/src/features/templates/crm/"
+    },
+    {
+      "from": "apps/web/src/features/templates/LineSyncResult*",
+      "to": "apps/web/src/features/templates/lines/"
+    },
+    {
+      "from": "apps/web/src/features/templates/MoveLineDialog*",
+      "to": "apps/web/src/features/templates/lines/"
+    },
+    {
+      "from": "apps/web/src/features/templates/TemplateLine*",
+      "to": "apps/web/src/features/templates/lines/"
+    },
+    {
+      "from": "apps/web/src/features/templates/template-lines-fixture*",
+      "to": "apps/web/src/features/templates/lines/"
+    },
+    {
+      "from": "apps/web/src/features/templates/use-line-sync*",
+      "to": "apps/web/src/features/templates/lines/"
+    },
+    {
+      "from": "apps/web/src/features/templates/use-template-lines*",
+      "to": "apps/web/src/features/templates/lines/"
+    },
+    {
+      "from": "apps/web/src/features/templates/SendFromCell*",
+      "to": "apps/web/src/features/templates/lines/"
+    },
+    {
+      "from": "apps/web/src/features/templates/NumberApprovals*",
+      "to": "apps/web/src/features/templates/numbers/"
+    },
+    {
+      "from": "apps/web/src/features/templates/number-approvals*",
+      "to": "apps/web/src/features/templates/numbers/"
+    },
+    {
+      "from": "apps/web/src/features/templates/TemplateNumberDialog*",
+      "to": "apps/web/src/features/templates/numbers/"
+    },
+    {
+      "from": "apps/web/src/features/templates/use-template-number*",
+      "to": "apps/web/src/features/templates/numbers/"
+    },
+    {
+      "from": "apps/web/src/features/templates/Submit*",
+      "to": "apps/web/src/features/templates/numbers/"
+    }
+  ],
+  "files": [
+    [
+      "apps/web/src/features/templates/CrmNameButton.tsx",
+      "apps/web/src/features/templates/crm/CrmNameButton.tsx"
+    ],
+    [
+      "apps/web/src/features/templates/CrmNameDialog.test.tsx",
+      "apps/web/src/features/templates/crm/CrmNameDialog.test.tsx"
+    ],
+    [
+      "apps/web/src/features/templates/CrmNameDialog.tsx",
+      "apps/web/src/features/templates/crm/CrmNameDialog.tsx"
+    ],
+    [
+      "apps/web/src/features/templates/CrmStatusActions.test.tsx",
+      "apps/web/src/features/templates/crm/CrmStatusActions.test.tsx"
+    ],
+    [
+      "apps/web/src/features/templates/CrmStatusActions.tsx",
+      "apps/web/src/features/templates/crm/CrmStatusActions.tsx"
+    ],
+    [
+      "apps/web/src/features/templates/LineSyncResult.tsx",
+      "apps/web/src/features/templates/lines/LineSyncResult.tsx"
+    ],
+    [
+      "apps/web/src/features/templates/MoveLineDialog.test.tsx",
+      "apps/web/src/features/templates/lines/MoveLineDialog.test.tsx"
+    ],
+    [
+      "apps/web/src/features/templates/MoveLineDialog.tsx",
+      "apps/web/src/features/templates/lines/MoveLineDialog.tsx"
+    ],
+    [
+      "apps/web/src/features/templates/number-approvals.test.ts",
+      "apps/web/src/features/templates/numbers/number-approvals.test.ts"
+    ],
+    [
+      "apps/web/src/features/templates/number-approvals.ts",
+      "apps/web/src/features/templates/numbers/number-approvals.ts"
+    ],
+    [
+      "apps/web/src/features/templates/NumberApprovals.tsx",
+      "apps/web/src/features/templates/numbers/NumberApprovals.tsx"
+    ],
+    [
+      "apps/web/src/features/templates/SendFromCell.tsx",
+      "apps/web/src/features/templates/lines/SendFromCell.tsx"
+    ],
+    [
+      "apps/web/src/features/templates/SubmitTarget.tsx",
+      "apps/web/src/features/templates/numbers/SubmitTarget.tsx"
+    ],
+    [
+      "apps/web/src/features/templates/SubmitTemplateDialog.tsx",
+      "apps/web/src/features/templates/numbers/SubmitTemplateDialog.tsx"
+    ],
+    [
+      "apps/web/src/features/templates/template-lines-fixture.ts",
+      "apps/web/src/features/templates/lines/template-lines-fixture.ts"
+    ],
+    [
+      "apps/web/src/features/templates/TemplateLineBlock.catalogue.test.tsx",
+      "apps/web/src/features/templates/lines/TemplateLineBlock.catalogue.test.tsx"
+    ],
+    [
+      "apps/web/src/features/templates/TemplateLineBlock.crm.test.tsx",
+      "apps/web/src/features/templates/lines/TemplateLineBlock.crm.test.tsx"
+    ],
+    [
+      "apps/web/src/features/templates/TemplateLineBlock.test.tsx",
+      "apps/web/src/features/templates/lines/TemplateLineBlock.test.tsx"
+    ],
+    [
+      "apps/web/src/features/templates/TemplateLineBlock.tsx",
+      "apps/web/src/features/templates/lines/TemplateLineBlock.tsx"
+    ],
+    [
+      "apps/web/src/features/templates/TemplateLines.test.tsx",
+      "apps/web/src/features/templates/lines/TemplateLines.test.tsx"
+    ],
+    [
+      "apps/web/src/features/templates/TemplateLines.tsx",
+      "apps/web/src/features/templates/lines/TemplateLines.tsx"
+    ],
+    [
+      "apps/web/src/features/templates/TemplateNumberDialog.tsx",
+      "apps/web/src/features/templates/numbers/TemplateNumberDialog.tsx"
+    ],
+    [
+      "apps/web/src/features/templates/use-crm-name.ts",
+      "apps/web/src/features/templates/crm/use-crm-name.ts"
+    ],
+    [
+      "apps/web/src/features/templates/use-crm-status.ts",
+      "apps/web/src/features/templates/crm/use-crm-status.ts"
+    ],
+    [
+      "apps/web/src/features/templates/use-line-sync.ts",
+      "apps/web/src/features/templates/lines/use-line-sync.ts"
+    ],
+    [
+      "apps/web/src/features/templates/use-template-lines.ts",
+      "apps/web/src/features/templates/lines/use-template-lines.ts"
+    ],
+    [
+      "apps/web/src/features/templates/use-template-number.ts",
+      "apps/web/src/features/templates/numbers/use-template-number.ts"
+    ]
+  ]
+}

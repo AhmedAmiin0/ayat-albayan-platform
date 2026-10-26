@@ -1,0 +1,220 @@
+{
+  "id": "b17a",
+  "seq": 61,
+  "moves": [
+    {
+      "from": "apps/web/src/features/reports/ChartPoints*",
+      "to": "apps/web/src/features/reports/chart/"
+    },
+    {
+      "from": "apps/web/src/features/reports/GradeChart*",
+      "to": "apps/web/src/features/reports/chart/"
+    },
+    {
+      "from": "apps/web/src/features/reports/chart*",
+      "to": "apps/web/src/features/reports/chart/"
+    },
+    {
+      "from": "apps/web/src/features/reports/ReportEntry*",
+      "to": "apps/web/src/features/reports/entry/"
+    },
+    {
+      "from": "apps/web/src/features/reports/use-report-entry*",
+      "to": "apps/web/src/features/reports/entry/"
+    },
+    {
+      "from": "apps/web/src/features/reports/use-autosave*",
+      "to": "apps/web/src/features/reports/entry/"
+    },
+    {
+      "from": "apps/web/src/features/reports/use-focus-invalid*",
+      "to": "apps/web/src/features/reports/entry/"
+    },
+    {
+      "from": "apps/web/src/features/reports/AttachmentsField*",
+      "to": "apps/web/src/features/reports/entry/"
+    },
+    {
+      "from": "apps/web/src/features/reports/AttendanceField*",
+      "to": "apps/web/src/features/reports/entry/"
+    },
+    {
+      "from": "apps/web/src/features/reports/GradePicker*",
+      "to": "apps/web/src/features/reports/entry/"
+    },
+    {
+      "from": "apps/web/src/features/reports/ProgramField*",
+      "to": "apps/web/src/features/reports/entry/"
+    },
+    {
+      "from": "apps/web/src/features/reports/ReportTextField*",
+      "to": "apps/web/src/features/reports/entry/"
+    },
+    {
+      "from": "apps/web/src/features/reports/IdentityBlock*",
+      "to": "apps/web/src/features/reports/entry/"
+    },
+    {
+      "from": "apps/web/src/features/reports/ReportHistoryList*",
+      "to": "apps/web/src/features/reports/history/"
+    },
+    {
+      "from": "apps/web/src/features/reports/ReportLink*",
+      "to": "apps/web/src/features/reports/history/"
+    },
+    {
+      "from": "apps/web/src/features/reports/LessonReportLinks*",
+      "to": "apps/web/src/features/reports/history/"
+    },
+    {
+      "from": "apps/web/src/features/reports/PdfAction*",
+      "to": "apps/web/src/features/reports/history/"
+    },
+    {
+      "from": "apps/web/src/features/reports/ReportStatusLine*",
+      "to": "apps/web/src/features/reports/history/"
+    },
+    {
+      "from": "apps/web/src/features/reports/StudentReportsPage*",
+      "to": "apps/web/src/features/reports/history/"
+    },
+    {
+      "from": "apps/web/src/features/reports/PendingReports*",
+      "to": "apps/web/src/features/reports/history/"
+    },
+    {
+      "from": "apps/web/src/features/reports/use-recorded-lessons*",
+      "to": "apps/web/src/features/reports/history/"
+    },
+    {
+      "from": "apps/web/src/features/reports/RecordingLink*",
+      "to": "apps/web/src/features/reports/history/"
+    }
+  ],
+  "files": [
+    [
+      "apps/web/src/features/reports/AttachmentsField.tsx",
+      "apps/web/src/features/reports/entry/AttachmentsField.tsx"
+    ],
+    [
+      "apps/web/src/features/reports/AttendanceField.tsx",
+      "apps/web/src/features/reports/entry/AttendanceField.tsx"
+    ],
+    [
+      "apps/web/src/features/reports/chart-labels.ts",
+      "apps/web/src/features/reports/chart/chart-labels.ts"
+    ],
+    [
+      "apps/web/src/features/reports/chart.test.ts",
+      "apps/web/src/features/reports/chart/chart.test.ts"
+    ],
+    [
+      "apps/web/src/features/reports/chart.ts",
+      "apps/web/src/features/reports/chart/chart.ts"
+    ],
+    [
+      "apps/web/src/features/reports/ChartPoints.tsx",
+      "apps/web/src/features/reports/chart/ChartPoints.tsx"
+    ],
+    [
+      "apps/web/src/features/reports/GradeChart.tsx",
+      "apps/web/src/features/reports/chart/GradeChart.tsx"
+    ],
+    [
+      "apps/web/src/features/reports/GradePicker.test.tsx",
+      "apps/web/src/features/reports/entry/GradePicker.test.tsx"
+    ],
+    [
+      "apps/web/src/features/reports/GradePicker.tsx",
+      "apps/web/src/features/reports/entry/GradePicker.tsx"
+    ],
+    [
+      "apps/web/src/features/reports/IdentityBlock.tsx",
+      "apps/web/src/features/reports/entry/IdentityBlock.tsx"
+    ],
+    [
+      "apps/web/src/features/reports/LessonReportLinks.test.tsx",
+      "apps/web/src/features/reports/history/LessonReportLinks.test.tsx"
+    ],
+    [
+      "apps/web/src/features/reports/LessonReportLinks.tsx",
+      "apps/web/src/features/reports/history/LessonReportLinks.tsx"
+    ],
+    [
+      "apps/web/src/features/reports/PdfAction.tsx",
+      "apps/web/src/features/reports/history/PdfAction.tsx"
+    ],
+    [
+      "apps/web/src/features/reports/PendingReports.tsx",
+      "apps/web/src/features/reports/history/PendingReports.tsx"
+    ],
+    [
+      "apps/web/src/features/reports/ProgramField.tsx",
+      "apps/web/src/features/reports/entry/ProgramField.tsx"
+    ],
+    [
+      "apps/web/src/features/reports/RecordingLink.tsx",
+      "apps/web/src/features/reports/history/RecordingLink.tsx"
+    ],
+    [
+      "apps/web/src/features/reports/ReportEntry.tsx",
+      "apps/web/src/features/reports/entry/ReportEntry.tsx"
+    ],
+    [
+      "apps/web/src/features/reports/ReportEntryFooter.tsx",
+      "apps/web/src/features/reports/entry/ReportEntryFooter.tsx"
+    ],
+    [
+      "apps/web/src/features/reports/ReportHistoryList.tsx",
+      "apps/web/src/features/reports/history/ReportHistoryList.tsx"
+    ],
+    [
+      "apps/web/src/features/reports/ReportLink.tsx",
+      "apps/web/src/features/reports/history/ReportLink.tsx"
+    ],
+    [
+      "apps/web/src/features/reports/ReportStatusLine.tsx",
+      "apps/web/src/features/reports/history/ReportStatusLine.tsx"
+    ],
+    [
+      "apps/web/src/features/reports/ReportTextField.tsx",
+      "apps/web/src/features/reports/entry/ReportTextField.tsx"
+    ],
+    [
+      "apps/web/src/features/reports/StudentReportsPage.notice.test.tsx",
+      "apps/web/src/features/reports/history/StudentReportsPage.notice.test.tsx"
+    ],
+    [
+      "apps/web/src/features/reports/StudentReportsPage.recording.test.tsx",
+      "apps/web/src/features/reports/history/StudentReportsPage.recording.test.tsx"
+    ],
+    [
+      "apps/web/src/features/reports/StudentReportsPage.test.tsx",
+      "apps/web/src/features/reports/history/StudentReportsPage.test.tsx"
+    ],
+    [
+      "apps/web/src/features/reports/StudentReportsPage.tsx",
+      "apps/web/src/features/reports/history/StudentReportsPage.tsx"
+    ],
+    [
+      "apps/web/src/features/reports/use-autosave.ts",
+      "apps/web/src/features/reports/entry/use-autosave.ts"
+    ],
+    [
+      "apps/web/src/features/reports/use-focus-invalid.test.tsx",
+      "apps/web/src/features/reports/entry/use-focus-invalid.test.tsx"
+    ],
+    [
+      "apps/web/src/features/reports/use-focus-invalid.ts",
+      "apps/web/src/features/reports/entry/use-focus-invalid.ts"
+    ],
+    [
+      "apps/web/src/features/reports/use-recorded-lessons.ts",
+      "apps/web/src/features/reports/history/use-recorded-lessons.ts"
+    ],
+    [
+      "apps/web/src/features/reports/use-report-entry.ts",
+      "apps/web/src/features/reports/entry/use-report-entry.ts"
+    ]
+  ]
+}

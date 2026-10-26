@@ -1,5 +1,5 @@
 import type { PdfAssets } from './pdf-assets';
-import type { ReportPdfModel } from './pdf-model';
+import type { ReportPdfModel } from './render/pdf-model';
 import type { ReportSource } from './report-pdf.source';
 
 // Invented sample data for the template, smoke and job tests: no real student, teacher or

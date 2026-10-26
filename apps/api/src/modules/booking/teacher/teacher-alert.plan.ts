@@ -2,7 +2,7 @@ import { joinNames, lessonWhenText, type BookingKind, type OutboundTemplate } fr
 import { ar } from '../../../common/i18n/server-text';
 import type { PushTarget } from '../../../common/push/push.service';
 import { queuedRow, type QueuedMessage } from '../../reminders/queued-row';
-import { staffReachable, type StaffOnRecord } from '../../reminders/staff-reachable';
+import { staffReachable, type StaffOnRecord } from '../../reminders/plan/staff-reachable';
 import { teacherAlertCrm } from './teacher-alert.crm';
 
 // R-NOT-03 (owner 2026-10-12): after a booking, the teacher hears about the new student in the bell

@@ -1,5 +1,5 @@
 import { SwitchTrack, switchInputClass } from '@/components/settings/fields/SwitchTrack';
-import { onOff } from '../value-format';
+import { onOff } from '../lib/value-format';
 
 export interface ValueSwitchProps {
   checked: boolean;

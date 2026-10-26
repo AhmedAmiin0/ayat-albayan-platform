@@ -1,6 +1,6 @@
-import { addDays, localDateOf, startOfLocalDay } from '../../scheduling/horizon';
-import { ruleOccurrences } from '../../scheduling/occurrences';
-import { generatedKey } from '../../scheduling/rule-projection';
+import { addDays, localDateOf, startOfLocalDay } from '../../scheduling/occurrences/horizon';
+import { ruleOccurrences } from '../../scheduling/occurrences/occurrences';
+import { generatedKey } from '../../scheduling/rules/rule-projection';
 import type { ChangeRule } from './course-change.queries';
 
 // REMAINING's lessons that do not exist yet (review fix 2b): an old active rule stays active until the

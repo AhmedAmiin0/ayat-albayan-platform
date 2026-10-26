@@ -3,11 +3,11 @@ import { MONEY_KEY } from '@/features/subscriptions/api';
 import { apiErrorText, moneyText, studentLabel } from '@/features/subscriptions/format';
 import { t } from '@/lib/i18n/i18n';
 import { deletePayment, type PaymentView } from './api';
-import { ConfirmDialog } from './ConfirmDialog';
-import { EditPaymentDialog } from './EditPaymentDialog';
-import { AttachmentsDialog } from './AttachmentsDialog';
+import { ConfirmDialog } from './record/ConfirmDialog';
+import { EditPaymentDialog } from './record/EditPaymentDialog';
+import { AttachmentsDialog } from './attachments/AttachmentsDialog';
 import type { PaymentAction } from './payment-columns';
-import { ReceiptDialog } from './ReceiptDialog';
+import { ReceiptDialog } from './attachments/ReceiptDialog';
 
 type Props = { payment: PaymentView; action: PaymentAction; onClose: () => void; onDone: (message: string) => void };
 

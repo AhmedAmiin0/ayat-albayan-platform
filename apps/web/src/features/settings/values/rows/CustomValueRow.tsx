@@ -5,7 +5,7 @@ import { t } from '@/lib/i18n/i18n';
 import { DefaultCell } from '../cells/InfoCells';
 import { keyItem } from '../cells/key-item';
 import { NameCell } from '../cells/NameCell';
-import { RowMenu } from '../RowMenu';
+import { RowMenu } from '../sheet/RowMenu';
 import { cellClass, headClass, rowClass } from './row-classes';
 
 const c = t.config.custom;

@@ -1,0 +1,100 @@
+{
+  "id": "b18c",
+  "seq": 67,
+  "moves": [
+    {
+      "from": "apps/web/src/features/integrations/PlainIntegrationRow*",
+      "to": "apps/web/src/features/integrations/rows/"
+    },
+    {
+      "from": "apps/web/src/features/integrations/SecretIntegrationRow*",
+      "to": "apps/web/src/features/integrations/rows/"
+    },
+    {
+      "from": "apps/web/src/features/integrations/SecretStatusChip*",
+      "to": "apps/web/src/features/integrations/rows/"
+    },
+    {
+      "from": "apps/web/src/features/integrations/IntegrationGroup*",
+      "to": "apps/web/src/features/integrations/rows/"
+    },
+    {
+      "from": "apps/web/src/features/integrations/DeveloperKey*",
+      "to": "apps/web/src/features/integrations/rows/"
+    },
+    {
+      "from": "apps/web/src/features/notification-rules/RulesTable*",
+      "to": "apps/web/src/features/notification-rules/table/"
+    },
+    {
+      "from": "apps/web/src/features/notification-rules/RuleRow*",
+      "to": "apps/web/src/features/notification-rules/table/"
+    },
+    {
+      "from": "apps/web/src/features/notification-rules/RuleCheck*",
+      "to": "apps/web/src/features/notification-rules/table/"
+    },
+    {
+      "from": "apps/web/src/features/notification-rules/RulesHead*",
+      "to": "apps/web/src/features/notification-rules/table/"
+    },
+    {
+      "from": "apps/web/src/features/notification-rules/ManualTable*",
+      "to": "apps/web/src/features/notification-rules/table/"
+    },
+    {
+      "from": "apps/web/src/features/notification-rules/use-rule-row*",
+      "to": "apps/web/src/features/notification-rules/table/"
+    }
+  ],
+  "files": [
+    [
+      "apps/web/src/features/integrations/DeveloperKey.tsx",
+      "apps/web/src/features/integrations/rows/DeveloperKey.tsx"
+    ],
+    [
+      "apps/web/src/features/integrations/IntegrationGroup.tsx",
+      "apps/web/src/features/integrations/rows/IntegrationGroup.tsx"
+    ],
+    [
+      "apps/web/src/features/integrations/PlainIntegrationRow.tsx",
+      "apps/web/src/features/integrations/rows/PlainIntegrationRow.tsx"
+    ],
+    [
+      "apps/web/src/features/integrations/SecretIntegrationRow.tsx",
+      "apps/web/src/features/integrations/rows/SecretIntegrationRow.tsx"
+    ],
+    [
+      "apps/web/src/features/integrations/SecretStatusChip.tsx",
+      "apps/web/src/features/integrations/rows/SecretStatusChip.tsx"
+    ],
+    [
+      "apps/web/src/features/notification-rules/ManualTable.tsx",
+      "apps/web/src/features/notification-rules/table/ManualTable.tsx"
+    ],
+    [
+      "apps/web/src/features/notification-rules/RuleCheck.tsx",
+      "apps/web/src/features/notification-rules/table/RuleCheck.tsx"
+    ],
+    [
+      "apps/web/src/features/notification-rules/RuleRow.tsx",
+      "apps/web/src/features/notification-rules/table/RuleRow.tsx"
+    ],
+    [
+      "apps/web/src/features/notification-rules/RuleRowActions.tsx",
+      "apps/web/src/features/notification-rules/table/RuleRowActions.tsx"
+    ],
+    [
+      "apps/web/src/features/notification-rules/RulesHead.tsx",
+      "apps/web/src/features/notification-rules/table/RulesHead.tsx"
+    ],
+    [
+      "apps/web/src/features/notification-rules/RulesTable.tsx",
+      "apps/web/src/features/notification-rules/table/RulesTable.tsx"
+    ],
+    [
+      "apps/web/src/features/notification-rules/use-rule-row.ts",
+      "apps/web/src/features/notification-rules/table/use-rule-row.ts"
+    ]
+  ]
+}

@@ -2,7 +2,7 @@ import type { Tables } from '@ab/db';
 import { OCCUPYING_LESSON_STATUSES, RIYADH_TZ, type AvailabilitySlot, type TimeOffCreate } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../../common/db/db.module';
-import type { BusyLesson } from '../../scheduling/conflicts';
+import type { BusyLesson } from '../../scheduling/conflicts/conflicts';
 import { dbError } from '../../../common/http/http';
 import { TeachersSettings } from '../teachers.settings';
 import { allDayRows, type WeeklyRow } from './free-slots';

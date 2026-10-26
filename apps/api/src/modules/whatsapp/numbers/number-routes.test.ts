@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import type { RulesReader } from '../../notification-rules/rules.reader';
+import type { RulesReader } from '../../notification-rules/store/rules.reader';
 import { NumberRoutes } from './number-routes';
 import { N2, overlayNum, THREE } from './number-route.fakes';
 import type { RouteQueries } from './route.queries';

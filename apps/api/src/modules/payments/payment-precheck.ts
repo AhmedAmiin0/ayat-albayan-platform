@@ -1,6 +1,6 @@
 import type { PaymentCreate } from '@ab/shared';
 import { conflict } from '../../common/http/errors';
-import type { CheckedAttachment } from './payment-attachments.service';
+import type { CheckedAttachment } from './attachments/payment-attachments.service';
 import type { Converted, PaymentInputs } from './payment-inputs';
 import type { PaymentsQueries, PaymentSubscription } from './payments.queries';
 

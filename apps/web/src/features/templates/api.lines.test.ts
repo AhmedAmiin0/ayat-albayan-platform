@@ -2,8 +2,8 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { ApiError } from '@/lib/http/api';
 import { t } from '@/lib/i18n/i18n';
 import { canSubmit, checkTemplateHealth, lineSyncErrorText, moveTemplateLine, otherLine, templateErrorText } from './api';
-import { checked } from './template-lines-fixture';
-import { phonesOf } from './use-template-lines';
+import { checked } from './lines/template-lines-fixture';
+import { phonesOf } from './lines/use-template-lines';
 
 const apiSend = vi.hoisted(() => vi.fn());
 vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiSend }));

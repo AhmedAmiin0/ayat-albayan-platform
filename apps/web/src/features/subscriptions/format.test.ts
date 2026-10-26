@@ -11,7 +11,7 @@ import {
   unpaidFlagged,
 } from './format';
 import { WEEKLY } from './money-fixture';
-import { pricingBody, todayIn, INITIAL_PRICING } from './pricing-form';
+import { pricingBody, todayIn, INITIAL_PRICING } from './create/pricing-form';
 import { parseMonthSearch, parsePage, parseSubscriptionsSearch, subscriptionsTable } from './search';
 
 describe('money text (docs/07 §6, Western digits)', () => {

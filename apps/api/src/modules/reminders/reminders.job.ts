@@ -4,10 +4,10 @@ import { livekitEnv, loadEnv } from '../../config/env/env';
 import { firstWebOrigin } from '../classroom/classroom.config';
 import type { QueuedMessage } from './queued-row';
 import { RemindersDeps } from './reminders.deps';
-import { joinCandidates, sentLinks, type RoomCandidate, type RoomContext } from './reminders.links';
-import { confirmationPush, needsConfirmation, planReminders, type ReminderLesson } from './reminders.plan';
+import { joinCandidates, sentLinks, type RoomCandidate, type RoomContext } from './plan/reminders.links';
+import { confirmationPush, needsConfirmation, planReminders, type ReminderLesson } from './plan/reminders.plan';
 import { RemindersQueries } from './reminders.queries';
-import { lookaheadHours, reminderRules, type ReminderRules } from './reminders.rules';
+import { lookaheadHours, reminderRules, type ReminderRules } from './plan/reminders.rules';
 import { RemindersSettings, type RemindersSettingsValues } from './reminders.settings';
 import { Ticker } from './ticker';
 

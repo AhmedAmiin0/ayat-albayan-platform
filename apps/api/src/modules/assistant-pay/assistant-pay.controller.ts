@@ -15,8 +15,8 @@ import { CurrentUser, Permissions } from '../../common/auth/decorators';
 import type { AuthUser } from '../../common/auth/verify-token';
 import { parseOrThrow } from '../../common/http/http';
 import { commissionsQuery } from './assistant-pay.dto';
-import { CorrectionsService } from './corrections.service';
-import { TermsService } from './terms.service';
+import { CorrectionsService } from './statements/corrections.service';
+import { TermsService } from './terms/terms.service';
 
 /**
  * The admin side of the assistants' pay (R-ASST-02, R-ASST-03, R-ASST-05): terms per assistant, the

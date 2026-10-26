@@ -1,0 +1,268 @@
+{
+  "id": "b14a",
+  "seq": 55,
+  "moves": [
+    {
+      "from": "apps/web/src/features/meetings/Internal*",
+      "to": "apps/web/src/features/meetings/internal/"
+    },
+    {
+      "from": "apps/web/src/features/meetings/internal-api*",
+      "to": "apps/web/src/features/meetings/internal/"
+    },
+    {
+      "from": "apps/web/src/features/meetings/CreatedMeeting*",
+      "to": "apps/web/src/features/meetings/internal/"
+    },
+    {
+      "from": "apps/web/src/features/meetings/InstantLessonDialog*",
+      "to": "apps/web/src/features/meetings/instant/"
+    },
+    {
+      "from": "apps/web/src/features/meetings/instant-form*",
+      "to": "apps/web/src/features/meetings/instant/"
+    },
+    {
+      "from": "apps/web/src/features/meetings/ScheduledMeetingDialog*",
+      "to": "apps/web/src/features/meetings/scheduled/"
+    },
+    {
+      "from": "apps/web/src/features/meetings/ScheduleFields*",
+      "to": "apps/web/src/features/meetings/scheduled/"
+    },
+    {
+      "from": "apps/web/src/features/meetings/schedule-form*",
+      "to": "apps/web/src/features/meetings/scheduled/"
+    },
+    {
+      "from": "apps/web/src/features/meetings/RescheduleDialog*",
+      "to": "apps/web/src/features/meetings/scheduled/"
+    },
+    {
+      "from": "apps/web/src/features/meetings/meeting-when*",
+      "to": "apps/web/src/features/meetings/scheduled/"
+    },
+    {
+      "from": "apps/web/src/features/meetings/MeetingRow*",
+      "to": "apps/web/src/features/meetings/rows/"
+    },
+    {
+      "from": "apps/web/src/features/meetings/MeetingManageButtons*",
+      "to": "apps/web/src/features/meetings/rows/"
+    },
+    {
+      "from": "apps/web/src/features/meetings/MeetingLinkBox*",
+      "to": "apps/web/src/features/meetings/rows/"
+    },
+    {
+      "from": "apps/web/src/features/meetings/CancelMeetingDialog*",
+      "to": "apps/web/src/features/meetings/rows/"
+    },
+    {
+      "from": "apps/web/src/features/meetings/meeting-join-errors*",
+      "to": "apps/web/src/features/meetings/rows/"
+    },
+    {
+      "from": "apps/web/src/features/meetings/Invite*",
+      "to": "apps/web/src/features/meetings/invitees/"
+    },
+    {
+      "from": "apps/web/src/features/meetings/invite*",
+      "to": "apps/web/src/features/meetings/invitees/"
+    },
+    {
+      "from": "apps/web/src/features/meetings/MeetingInviteesDialog*",
+      "to": "apps/web/src/features/meetings/invitees/"
+    },
+    {
+      "from": "apps/web/src/features/meetings/PhoneInviteeInput*",
+      "to": "apps/web/src/features/meetings/invitees/"
+    },
+    {
+      "from": "apps/web/src/features/meetings/meeting-invites-api*",
+      "to": "apps/web/src/features/meetings/invitees/"
+    },
+    {
+      "from": "apps/web/src/features/meetings/use-may-invite-phones*",
+      "to": "apps/web/src/features/meetings/invitees/"
+    }
+  ],
+  "files": [
+    [
+      "apps/web/src/features/meetings/CancelMeetingDialog.tsx",
+      "apps/web/src/features/meetings/rows/CancelMeetingDialog.tsx"
+    ],
+    [
+      "apps/web/src/features/meetings/CreatedMeeting.tsx",
+      "apps/web/src/features/meetings/internal/CreatedMeeting.tsx"
+    ],
+    [
+      "apps/web/src/features/meetings/instant-form.test.ts",
+      "apps/web/src/features/meetings/instant/instant-form.test.ts"
+    ],
+    [
+      "apps/web/src/features/meetings/instant-form.ts",
+      "apps/web/src/features/meetings/instant/instant-form.ts"
+    ],
+    [
+      "apps/web/src/features/meetings/InstantLessonDialog.test.tsx",
+      "apps/web/src/features/meetings/instant/InstantLessonDialog.test.tsx"
+    ],
+    [
+      "apps/web/src/features/meetings/InstantLessonDialog.tsx",
+      "apps/web/src/features/meetings/instant/InstantLessonDialog.tsx"
+    ],
+    [
+      "apps/web/src/features/meetings/internal-api.ts",
+      "apps/web/src/features/meetings/internal/internal-api.ts"
+    ],
+    [
+      "apps/web/src/features/meetings/InternalMeetingButton.tsx",
+      "apps/web/src/features/meetings/internal/InternalMeetingButton.tsx"
+    ],
+    [
+      "apps/web/src/features/meetings/InternalMeetingDialog.test.tsx",
+      "apps/web/src/features/meetings/internal/InternalMeetingDialog.test.tsx"
+    ],
+    [
+      "apps/web/src/features/meetings/InternalMeetingDialog.tsx",
+      "apps/web/src/features/meetings/internal/InternalMeetingDialog.tsx"
+    ],
+    [
+      "apps/web/src/features/meetings/InternalMeetingsList.manage.test.tsx",
+      "apps/web/src/features/meetings/internal/InternalMeetingsList.manage.test.tsx"
+    ],
+    [
+      "apps/web/src/features/meetings/InternalMeetingsList.recordings.test.tsx",
+      "apps/web/src/features/meetings/internal/InternalMeetingsList.recordings.test.tsx"
+    ],
+    [
+      "apps/web/src/features/meetings/InternalMeetingsList.test.tsx",
+      "apps/web/src/features/meetings/internal/InternalMeetingsList.test.tsx"
+    ],
+    [
+      "apps/web/src/features/meetings/InternalMeetingsList.tsx",
+      "apps/web/src/features/meetings/internal/InternalMeetingsList.tsx"
+    ],
+    [
+      "apps/web/src/features/meetings/invite-status.ts",
+      "apps/web/src/features/meetings/invitees/invite-status.ts"
+    ],
+    [
+      "apps/web/src/features/meetings/invitee-list.test.ts",
+      "apps/web/src/features/meetings/invitees/invitee-list.test.ts"
+    ],
+    [
+      "apps/web/src/features/meetings/invitee-list.ts",
+      "apps/web/src/features/meetings/invitees/invitee-list.ts"
+    ],
+    [
+      "apps/web/src/features/meetings/InviteeChips.tsx",
+      "apps/web/src/features/meetings/invitees/InviteeChips.tsx"
+    ],
+    [
+      "apps/web/src/features/meetings/InviteePicker.tsx",
+      "apps/web/src/features/meetings/invitees/InviteePicker.tsx"
+    ],
+    [
+      "apps/web/src/features/meetings/InviteeSearch.tsx",
+      "apps/web/src/features/meetings/invitees/InviteeSearch.tsx"
+    ],
+    [
+      "apps/web/src/features/meetings/InviteeViewRow.test.tsx",
+      "apps/web/src/features/meetings/invitees/InviteeViewRow.test.tsx"
+    ],
+    [
+      "apps/web/src/features/meetings/InviteeViewRow.tsx",
+      "apps/web/src/features/meetings/invitees/InviteeViewRow.tsx"
+    ],
+    [
+      "apps/web/src/features/meetings/InviteResultRow.tsx",
+      "apps/web/src/features/meetings/invitees/InviteResultRow.tsx"
+    ],
+    [
+      "apps/web/src/features/meetings/InviteResults.tsx",
+      "apps/web/src/features/meetings/invitees/InviteResults.tsx"
+    ],
+    [
+      "apps/web/src/features/meetings/meeting-invites-api.test.ts",
+      "apps/web/src/features/meetings/invitees/meeting-invites-api.test.ts"
+    ],
+    [
+      "apps/web/src/features/meetings/meeting-invites-api.ts",
+      "apps/web/src/features/meetings/invitees/meeting-invites-api.ts"
+    ],
+    [
+      "apps/web/src/features/meetings/meeting-join-errors.test.ts",
+      "apps/web/src/features/meetings/rows/meeting-join-errors.test.ts"
+    ],
+    [
+      "apps/web/src/features/meetings/meeting-join-errors.ts",
+      "apps/web/src/features/meetings/rows/meeting-join-errors.ts"
+    ],
+    [
+      "apps/web/src/features/meetings/meeting-when.ts",
+      "apps/web/src/features/meetings/scheduled/meeting-when.ts"
+    ],
+    [
+      "apps/web/src/features/meetings/MeetingInviteesDialog.tsx",
+      "apps/web/src/features/meetings/invitees/MeetingInviteesDialog.tsx"
+    ],
+    [
+      "apps/web/src/features/meetings/MeetingLinkBox.tsx",
+      "apps/web/src/features/meetings/rows/MeetingLinkBox.tsx"
+    ],
+    [
+      "apps/web/src/features/meetings/MeetingManageButtons.tsx",
+      "apps/web/src/features/meetings/rows/MeetingManageButtons.tsx"
+    ],
+    [
+      "apps/web/src/features/meetings/MeetingRow.tsx",
+      "apps/web/src/features/meetings/rows/MeetingRow.tsx"
+    ],
+    [
+      "apps/web/src/features/meetings/MeetingRowDialogs.tsx",
+      "apps/web/src/features/meetings/rows/MeetingRowDialogs.tsx"
+    ],
+    [
+      "apps/web/src/features/meetings/MeetingRowInfo.tsx",
+      "apps/web/src/features/meetings/rows/MeetingRowInfo.tsx"
+    ],
+    [
+      "apps/web/src/features/meetings/PhoneInviteeInput.tsx",
+      "apps/web/src/features/meetings/invitees/PhoneInviteeInput.tsx"
+    ],
+    [
+      "apps/web/src/features/meetings/RescheduleDialog.tsx",
+      "apps/web/src/features/meetings/scheduled/RescheduleDialog.tsx"
+    ],
+    [
+      "apps/web/src/features/meetings/schedule-form.test.ts",
+      "apps/web/src/features/meetings/scheduled/schedule-form.test.ts"
+    ],
+    [
+      "apps/web/src/features/meetings/schedule-form.ts",
+      "apps/web/src/features/meetings/scheduled/schedule-form.ts"
+    ],
+    [
+      "apps/web/src/features/meetings/ScheduledMeetingDialog.en.test.tsx",
+      "apps/web/src/features/meetings/scheduled/ScheduledMeetingDialog.en.test.tsx"
+    ],
+    [
+      "apps/web/src/features/meetings/ScheduledMeetingDialog.test.tsx",
+      "apps/web/src/features/meetings/scheduled/ScheduledMeetingDialog.test.tsx"
+    ],
+    [
+      "apps/web/src/features/meetings/ScheduledMeetingDialog.tsx",
+      "apps/web/src/features/meetings/scheduled/ScheduledMeetingDialog.tsx"
+    ],
+    [
+      "apps/web/src/features/meetings/ScheduleFields.tsx",
+      "apps/web/src/features/meetings/scheduled/ScheduleFields.tsx"
+    ],
+    [
+      "apps/web/src/features/meetings/use-may-invite-phones.ts",
+      "apps/web/src/features/meetings/invitees/use-may-invite-phones.ts"
+    ]
+  ]
+}

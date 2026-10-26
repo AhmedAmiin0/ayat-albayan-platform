@@ -7,7 +7,7 @@ import { NuqtaGlyph } from '@/components/ui/display/nuqta-glyph';
 import { t } from '@/lib/i18n/i18n';
 import { rowUpdate, rowValue } from '../../registry-form/row-form';
 import type { SettingsForm } from '../../registry-form/settings-form';
-import { valueText } from '../value-format';
+import { valueText } from '../lib/value-format';
 import { useValues } from '../values-context';
 import type { EditorProps } from './editor-props';
 import { ShapeFields } from './ShapeFields';

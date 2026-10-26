@@ -2,7 +2,7 @@ import { parseAmount } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRef, useState } from 'react';
 import { paidAtFor } from '@/features/payments/api';
-import type { PaymentForm } from '@/features/payments/PaymentFields';
+import type { PaymentForm } from '@/features/payments/record/PaymentFields';
 import { earningsKey, payTeacher, uploadTeacherReceipt, type Scope } from './api';
 
 export type PayInput = { form: PaymentForm; file: File | null; earningIds: string[] | undefined };

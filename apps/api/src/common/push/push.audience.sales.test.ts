@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { systemResolver } from '../auth/permissions';
-import { fakePolicy } from '../../modules/notification-rules/policy.fakes';
+import { fakePolicy } from '../../modules/notification-rules/policy/policy.fakes';
 import { PushAudience } from './push.audience';
 import { fakePushDb } from './push.fakes';
 

@@ -1,7 +1,7 @@
 import { Cartouche } from '@/components/ui/display/cartouche';
 import { PageHead } from '@/components/ui/layout/page';
-import { InternalMeetingButton } from '@/features/meetings/InternalMeetingButton';
-import { InternalMeetingsList } from '@/features/meetings/InternalMeetingsList';
+import { InternalMeetingButton } from '@/features/meetings/internal/InternalMeetingButton';
+import { InternalMeetingsList } from '@/features/meetings/internal/InternalMeetingsList';
 import { t } from '@/lib/i18n/i18n';
 
 /**

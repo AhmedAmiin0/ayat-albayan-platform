@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { at, fakeJob as setup, sampleLesson } from './reminders.fakes';
-import { confirmationPush, needsConfirmation } from './reminders.plan';
+import { confirmationPush, needsConfirmation } from './plan/reminders.plan';
 
 describe('RemindersJob.runOnce (R-MSG-02)', () => {
   // LiveKit unset whatever the shell says (the classroom link mode: reminders.job.room.test.ts).

@@ -6,8 +6,8 @@ import { vi } from 'vitest';
 import { AppModule } from '../../app.module';
 import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '../../common/auth/auth.guard';
 import type { AuthUser } from '../../common/auth/verify-token';
-import { CommunicationsService } from './communications.service';
-import { NumbersImport } from './numbers.import';
+import { CommunicationsService } from './communications/communications.service';
+import { NumbersImport } from './import/numbers.import';
 import { NumbersService } from './numbers.service';
 
 const USERS: Record<string, AuthUser> = {

@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { fakePolicy } from '../../modules/notification-rules/policy.fakes';
+import { fakePolicy } from '../../modules/notification-rules/policy/policy.fakes';
 import { gateConfirmations, isConfirmation } from './confirmations';
 
 const confirmation = { template_key: 'booking_confirmation_meet', dedup_key: 'booking_confirmation:l1:g1' };

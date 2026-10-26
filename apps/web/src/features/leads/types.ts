@@ -1,5 +1,5 @@
 import { LEAD_SOURCES, LEAD_STATUSES, NO_ASSIGNEE, type LeadSource, type LeadStatus } from '@ab/shared';
-import { parseLeadSort, type LeadSort } from './lead-sort';
+import { parseLeadSort, type LeadSort } from './list/lead-sort';
 
 // Row shapes returned by the API (`type`, not `interface`, for DataTable's RowData).
 export type LeadRow = {

@@ -1,7 +1,7 @@
 import { daysBefore } from '@ab/shared';
 import { fireEvent, screen, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { todayIn } from '@/features/subscriptions/pricing-form';
+import { todayIn } from '@/features/subscriptions/create/pricing-form';
 import { t } from '@/lib/i18n/i18n';
 import { renderWithClient, routeFetch } from '../../testing/test-utils';
 import { OPEN_SUB, SALES_QUOTE, student } from '../sales-money-fixture';

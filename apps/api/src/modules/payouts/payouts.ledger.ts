@@ -1,7 +1,7 @@
 import { PAYOUT_CORRECTIONS, type PayoutView } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
 import { conflict, notFound } from '../../common/http/errors';
-import { CorrectionsQueries } from '../teacher-earnings/corrections.queries';
+import { CorrectionsQueries } from '../teacher-earnings/summary/corrections.queries';
 import { EarningsQueries } from '../teacher-earnings/earnings.queries';
 import { toPayoutView } from './payouts.mapper';
 import { PayoutsQueries, type PayoutRow } from './payouts.queries';

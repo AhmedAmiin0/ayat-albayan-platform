@@ -2,14 +2,14 @@ import { Module } from '@nestjs/common';
 import { loadEnv } from '../../config/env/env';
 import { RolesModule } from '../roles/roles.module';
 import { UserAccess } from './users.access';
-import { SupabaseAuthAdmin } from './users.auth.supabase';
+import { SupabaseAuthAdmin } from './auth/users.auth.supabase';
 import { UsersController } from './users.controller';
-import { UsersCreateService } from './users.create.service';
-import { UsersLifecycleService } from './users.lifecycle.service';
+import { UsersCreateService } from './lifecycle/users.create.service';
+import { UsersLifecycleService } from './lifecycle/users.lifecycle.service';
 import { UserEffects, UserPorts } from './users.ports';
-import { UsersQueries } from './users.queries';
+import { UsersQueries } from './store/users.queries';
 import { UsersService } from './users.service';
-import { AUTH_ADMIN, USER_STORE, USERS_CONFIG, type UsersConfig } from './users.store';
+import { AUTH_ADMIN, USER_STORE, USERS_CONFIG, type UsersConfig } from './store/users.store';
 
 /** «المستخدمون» (owner, 2026-10-06). PermissionCache comes from AuthModule, AuditService from AuditModule. */
 @Module({

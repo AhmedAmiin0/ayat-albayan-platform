@@ -1,6 +1,6 @@
 import type { NumberView } from '@ab/shared';
 import { t } from '@/lib/i18n/i18n';
-import { NumberCard } from './NumberCard';
+import { NumberCard } from './card/NumberCard';
 
 export interface NumbersListProps {
   numbers: readonly NumberView[] | undefined;

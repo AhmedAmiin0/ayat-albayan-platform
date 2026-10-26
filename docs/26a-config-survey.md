@@ -118,9 +118,9 @@ None of today's confirmations is a **typed** confirmation; all are a dialog with
 | `feedback_mode` | `FeedbackModeSwitch` | none (instant) | `apps/web/src/features/messaging/FeedbackModeSwitch.tsx:18` |
 | `sales_auto_assign` | `SalesAutoAssignSwitch` | none (instant) | `apps/web/src/features/sales/SalesAutoAssignSwitch.tsx:16` |
 | `WA_ALLOWED_RECIPIENTS` emptied (integration key) | `IntegrationsForm` | `ConfirmSwitchDialog` | `apps/web/src/features/integrations/IntegrationsForm.tsx:59` |
-| integration secret clear | `SecretIntegrationRow` | `Dialog` | `apps/web/src/features/integrations/SecretIntegrationRow.tsx:82` |
+| integration secret clear | `SecretIntegrationRow` | `Dialog` | `apps/web/src/features/integrations/rows/SecretIntegrationRow.tsx:82` |
 | `google_sync_enabled` on (off is instant) | `SyncSwitches` | `LiveConfirmDialog` (names targets) when live, else plain `Dialog` | `apps/web/src/features/google-sync/SyncSwitches.tsx:23-60` |
-| `google_sync_mode` → `live` (back to dry_run instant) | `ModeControl` | `LiveConfirmDialog` | `apps/web/src/features/google-sync/ModeControl.tsx:16-46` |
+| `google_sync_mode` → `live` (back to dry_run instant) | `ModeControl` | `LiveConfirmDialog` | `apps/web/src/features/google-sync/connection/ModeControl.tsx:16-46` |
 
 Shared kit: `apps/web/src/components/settings/dialogs/ConfirmSwitchDialog.tsx:23`, `apps/web/src/components/settings/fields/DangerFrame.tsx:5`, `apps/web/src/lib/settings/use-setting-switch.ts:15` (instant PATCH /settings for a form:false key). docs/23a §C1 still says auto messages has «no confirm» — stale since docs/23 phase 2.
 

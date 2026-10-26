@@ -14,7 +14,7 @@ import type { AuthUser } from '../../common/auth/verify-token';
 import { SETTINGS_CACHE_MS, SettingsService } from '../../common/settings/settings.service';
 import { SendGate } from '../whatsapp/gate/send-gate';
 import { RulesQueries } from './rules.queries';
-import { RulesTable, type RuleRowWrite } from './rules.table';
+import { RulesTable, type RuleRowWrite } from './store/rules.table';
 
 export const ADMIN_ID = 'a0000000-0000-4000-8000-000000000001';
 const LITE_ID = 'l0000000-0000-4000-8000-000000000004';

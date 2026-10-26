@@ -1,0 +1,148 @@
+{
+  "id": "b17b",
+  "seq": 62,
+  "moves": [
+    {
+      "from": "apps/web/src/features/google-sync/Connection*",
+      "to": "apps/web/src/features/google-sync/connection/"
+    },
+    {
+      "from": "apps/web/src/features/google-sync/DriveCard*",
+      "to": "apps/web/src/features/google-sync/connection/"
+    },
+    {
+      "from": "apps/web/src/features/google-sync/RedirectUri*",
+      "to": "apps/web/src/features/google-sync/connection/"
+    },
+    {
+      "from": "apps/web/src/features/google-sync/use-drive-actions*",
+      "to": "apps/web/src/features/google-sync/connection/"
+    },
+    {
+      "from": "apps/web/src/features/google-sync/use-oauth-return*",
+      "to": "apps/web/src/features/google-sync/connection/"
+    },
+    {
+      "from": "apps/web/src/features/google-sync/ModeControl*",
+      "to": "apps/web/src/features/google-sync/connection/"
+    },
+    {
+      "from": "apps/web/src/features/google-sync/LiveConfirmDialog*",
+      "to": "apps/web/src/features/google-sync/connection/"
+    },
+    {
+      "from": "apps/web/src/features/google-sync/Student*",
+      "to": "apps/web/src/features/google-sync/mapping/"
+    },
+    {
+      "from": "apps/web/src/features/google-sync/TeacherCalendarSelect*",
+      "to": "apps/web/src/features/google-sync/mapping/"
+    },
+    {
+      "from": "apps/web/src/features/google-sync/TeacherMap*",
+      "to": "apps/web/src/features/google-sync/mapping/"
+    },
+    {
+      "from": "apps/web/src/features/google-sync/TeacherRow*",
+      "to": "apps/web/src/features/google-sync/mapping/"
+    },
+    {
+      "from": "apps/web/src/features/google-sync/SyncLog*",
+      "to": "apps/web/src/features/google-sync/log/"
+    }
+  ],
+  "files": [
+    [
+      "apps/web/src/features/google-sync/ConnectionActions.tsx",
+      "apps/web/src/features/google-sync/connection/ConnectionActions.tsx"
+    ],
+    [
+      "apps/web/src/features/google-sync/ConnectionCard.test.tsx",
+      "apps/web/src/features/google-sync/connection/ConnectionCard.test.tsx"
+    ],
+    [
+      "apps/web/src/features/google-sync/ConnectionCard.tsx",
+      "apps/web/src/features/google-sync/connection/ConnectionCard.tsx"
+    ],
+    [
+      "apps/web/src/features/google-sync/DriveCard.test.tsx",
+      "apps/web/src/features/google-sync/connection/DriveCard.test.tsx"
+    ],
+    [
+      "apps/web/src/features/google-sync/DriveCard.tsx",
+      "apps/web/src/features/google-sync/connection/DriveCard.tsx"
+    ],
+    [
+      "apps/web/src/features/google-sync/LiveConfirmDialog.tsx",
+      "apps/web/src/features/google-sync/connection/LiveConfirmDialog.tsx"
+    ],
+    [
+      "apps/web/src/features/google-sync/ModeControl.tsx",
+      "apps/web/src/features/google-sync/connection/ModeControl.tsx"
+    ],
+    [
+      "apps/web/src/features/google-sync/RedirectUri.tsx",
+      "apps/web/src/features/google-sync/connection/RedirectUri.tsx"
+    ],
+    [
+      "apps/web/src/features/google-sync/StudentActions.tsx",
+      "apps/web/src/features/google-sync/mapping/StudentActions.tsx"
+    ],
+    [
+      "apps/web/src/features/google-sync/StudentManualLink.tsx",
+      "apps/web/src/features/google-sync/mapping/StudentManualLink.tsx"
+    ],
+    [
+      "apps/web/src/features/google-sync/StudentMap.test.tsx",
+      "apps/web/src/features/google-sync/mapping/StudentMap.test.tsx"
+    ],
+    [
+      "apps/web/src/features/google-sync/StudentMap.tsx",
+      "apps/web/src/features/google-sync/mapping/StudentMap.tsx"
+    ],
+    [
+      "apps/web/src/features/google-sync/StudentRow.tsx",
+      "apps/web/src/features/google-sync/mapping/StudentRow.tsx"
+    ],
+    [
+      "apps/web/src/features/google-sync/SyncLog.test.tsx",
+      "apps/web/src/features/google-sync/log/SyncLog.test.tsx"
+    ],
+    [
+      "apps/web/src/features/google-sync/SyncLog.tsx",
+      "apps/web/src/features/google-sync/log/SyncLog.tsx"
+    ],
+    [
+      "apps/web/src/features/google-sync/SyncLogRow.tsx",
+      "apps/web/src/features/google-sync/log/SyncLogRow.tsx"
+    ],
+    [
+      "apps/web/src/features/google-sync/TeacherCalendarSelect.tsx",
+      "apps/web/src/features/google-sync/mapping/TeacherCalendarSelect.tsx"
+    ],
+    [
+      "apps/web/src/features/google-sync/TeacherMap.test.tsx",
+      "apps/web/src/features/google-sync/mapping/TeacherMap.test.tsx"
+    ],
+    [
+      "apps/web/src/features/google-sync/TeacherMap.tsx",
+      "apps/web/src/features/google-sync/mapping/TeacherMap.tsx"
+    ],
+    [
+      "apps/web/src/features/google-sync/TeacherRow.tsx",
+      "apps/web/src/features/google-sync/mapping/TeacherRow.tsx"
+    ],
+    [
+      "apps/web/src/features/google-sync/use-drive-actions.ts",
+      "apps/web/src/features/google-sync/connection/use-drive-actions.ts"
+    ],
+    [
+      "apps/web/src/features/google-sync/use-oauth-return.test.tsx",
+      "apps/web/src/features/google-sync/connection/use-oauth-return.test.tsx"
+    ],
+    [
+      "apps/web/src/features/google-sync/use-oauth-return.ts",
+      "apps/web/src/features/google-sync/connection/use-oauth-return.ts"
+    ]
+  ]
+}

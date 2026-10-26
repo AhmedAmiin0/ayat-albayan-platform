@@ -1,7 +1,7 @@
 import type { PaymentKind, PaymentMethod } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../common/db/db.module';
-import type { Window } from '../dashboard/finance.queries';
+import type { Window } from '../dashboard/finance/finance.queries';
 import { readAll } from '../scheduling/read-all';
 
 const STUDENT =

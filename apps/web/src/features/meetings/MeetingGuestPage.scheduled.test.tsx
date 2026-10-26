@@ -4,7 +4,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { fakeClient } from '@/features/classroom/room/livekit/fake-client';
 import { ApiError } from '@/lib/http/api';
 import { t } from '@/lib/i18n/i18n';
-import { meetingJoinProblem } from './meeting-join-errors';
+import { meetingJoinProblem } from './rows/meeting-join-errors';
 import { MeetingGuestPage } from './MeetingGuestPage';
 
 const fetchMock = vi.fn();

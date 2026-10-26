@@ -5,7 +5,7 @@ import { renderWithClient, routeFetch } from '@/features/inbox/testing/test-util
 import { numberView } from '@/features/numbers/numbers.fixture';
 import { ApiError } from '@/lib/http/api';
 import { t } from '@/lib/i18n/i18n';
-import { LINES } from './template-lines-fixture';
+import { LINES } from './lines/template-lines-fixture';
 import { TemplateHealth } from './TemplateHealth';
 
 const apiFetch = vi.hoisted(() => vi.fn());

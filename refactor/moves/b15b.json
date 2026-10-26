@@ -1,0 +1,136 @@
+{
+  "id": "b15b",
+  "seq": 58,
+  "moves": [
+    {
+      "from": "apps/web/src/features/teacher/LessonDayList*",
+      "to": "apps/web/src/features/teacher/lessons/"
+    },
+    {
+      "from": "apps/web/src/features/teacher/TeacherLessonCard*",
+      "to": "apps/web/src/features/teacher/lessons/"
+    },
+    {
+      "from": "apps/web/src/features/teacher/MyWeek*",
+      "to": "apps/web/src/features/teacher/lessons/"
+    },
+    {
+      "from": "apps/web/src/features/teacher/JoinLink*",
+      "to": "apps/web/src/features/teacher/lessons/"
+    },
+    {
+      "from": "apps/web/src/features/teacher/TrialChatNote*",
+      "to": "apps/web/src/features/teacher/lessons/"
+    },
+    {
+      "from": "apps/web/src/features/teacher/MyReports*",
+      "to": "apps/web/src/features/teacher/reports/"
+    },
+    {
+      "from": "apps/web/src/features/teacher/SubmittedReports*",
+      "to": "apps/web/src/features/teacher/reports/"
+    },
+    {
+      "from": "apps/web/src/features/teacher/submitted-report-columns*",
+      "to": "apps/web/src/features/teacher/reports/"
+    },
+    {
+      "from": "apps/web/src/features/teacher/MyFeedback*",
+      "to": "apps/web/src/features/teacher/reports/"
+    },
+    {
+      "from": "apps/web/src/features/teacher/ProposeForm*",
+      "to": "apps/web/src/features/teacher/proposals/"
+    },
+    {
+      "from": "apps/web/src/features/teacher/TeacherProposal*",
+      "to": "apps/web/src/features/teacher/proposals/"
+    },
+    {
+      "from": "apps/web/src/features/teacher/TeacherAvailability*",
+      "to": "apps/web/src/features/teacher/proposals/"
+    }
+  ],
+  "files": [
+    [
+      "apps/web/src/features/teacher/JoinLink.tsx",
+      "apps/web/src/features/teacher/lessons/JoinLink.tsx"
+    ],
+    [
+      "apps/web/src/features/teacher/LessonDayList.tsx",
+      "apps/web/src/features/teacher/lessons/LessonDayList.tsx"
+    ],
+    [
+      "apps/web/src/features/teacher/MyFeedback.test.tsx",
+      "apps/web/src/features/teacher/reports/MyFeedback.test.tsx"
+    ],
+    [
+      "apps/web/src/features/teacher/MyFeedback.tsx",
+      "apps/web/src/features/teacher/reports/MyFeedback.tsx"
+    ],
+    [
+      "apps/web/src/features/teacher/MyReports.test.tsx",
+      "apps/web/src/features/teacher/reports/MyReports.test.tsx"
+    ],
+    [
+      "apps/web/src/features/teacher/MyReports.tsx",
+      "apps/web/src/features/teacher/reports/MyReports.tsx"
+    ],
+    [
+      "apps/web/src/features/teacher/MyWeek.test.tsx",
+      "apps/web/src/features/teacher/lessons/MyWeek.test.tsx"
+    ],
+    [
+      "apps/web/src/features/teacher/MyWeek.tsx",
+      "apps/web/src/features/teacher/lessons/MyWeek.tsx"
+    ],
+    [
+      "apps/web/src/features/teacher/ProposeForm.tsx",
+      "apps/web/src/features/teacher/proposals/ProposeForm.tsx"
+    ],
+    [
+      "apps/web/src/features/teacher/submitted-report-columns.tsx",
+      "apps/web/src/features/teacher/reports/submitted-report-columns.tsx"
+    ],
+    [
+      "apps/web/src/features/teacher/SubmittedReports.tsx",
+      "apps/web/src/features/teacher/reports/SubmittedReports.tsx"
+    ],
+    [
+      "apps/web/src/features/teacher/TeacherAvailability.tsx",
+      "apps/web/src/features/teacher/proposals/TeacherAvailability.tsx"
+    ],
+    [
+      "apps/web/src/features/teacher/TeacherLessonCard.join.test.tsx",
+      "apps/web/src/features/teacher/lessons/TeacherLessonCard.join.test.tsx"
+    ],
+    [
+      "apps/web/src/features/teacher/TeacherLessonCard.propose.phone.test.tsx",
+      "apps/web/src/features/teacher/lessons/TeacherLessonCard.propose.phone.test.tsx"
+    ],
+    [
+      "apps/web/src/features/teacher/TeacherLessonCard.propose.test.tsx",
+      "apps/web/src/features/teacher/lessons/TeacherLessonCard.propose.test.tsx"
+    ],
+    [
+      "apps/web/src/features/teacher/TeacherLessonCard.tsx",
+      "apps/web/src/features/teacher/lessons/TeacherLessonCard.tsx"
+    ],
+    [
+      "apps/web/src/features/teacher/TeacherProposal.tsx",
+      "apps/web/src/features/teacher/proposals/TeacherProposal.tsx"
+    ],
+    [
+      "apps/web/src/features/teacher/TrialChatNote.en.test.tsx",
+      "apps/web/src/features/teacher/lessons/TrialChatNote.en.test.tsx"
+    ],
+    [
+      "apps/web/src/features/teacher/TrialChatNote.test.tsx",
+      "apps/web/src/features/teacher/lessons/TrialChatNote.test.tsx"
+    ],
+    [
+      "apps/web/src/features/teacher/TrialChatNote.tsx",
+      "apps/web/src/features/teacher/lessons/TrialChatNote.tsx"
+    ]
+  ]
+}

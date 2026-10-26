@@ -8,18 +8,18 @@ import { Tabs } from '@/components/ui/layout/tabs';
 import { Toast } from '@/components/ui/overlay/toast';
 import { ListSkeleton } from '@/components/ui/display/skeleton';
 import { errorCode } from '@/features/schedule/api';
-import { InternalMeetingButton } from '@/features/meetings/InternalMeetingButton';
-import { InternalMeetingsList } from '@/features/meetings/InternalMeetingsList';
-import { PendingReports } from '@/features/reports/PendingReports';
+import { InternalMeetingButton } from '@/features/meetings/internal/InternalMeetingButton';
+import { InternalMeetingsList } from '@/features/meetings/internal/InternalMeetingsList';
+import { PendingReports } from '@/features/reports/history/PendingReports';
 import { lessonsOnDay } from '@/features/schedule/lesson/lessons';
 import { addDays, dayMonthLabel, weekWindow, zonedParts } from '@/features/schedule/tz';
 import { t } from '@/lib/i18n/i18n';
 import { usePlatformClassroom } from '@/lib/settings/public-config';
 import { myLessonsQuery, teacherMeQuery } from './api';
-import { JoinLink } from './JoinLink';
-import { LessonDayList } from './LessonDayList';
+import { JoinLink } from './lessons/JoinLink';
+import { LessonDayList } from './lessons/LessonDayList';
 import { MyStudents } from './MyStudents';
-import { TeacherAvailability } from './TeacherAvailability';
+import { TeacherAvailability } from './proposals/TeacherAvailability';
 
 type Tab = 'today' | 'week' | 'students' | 'availability';
 const TABS: { value: Tab; label: string }[] = [

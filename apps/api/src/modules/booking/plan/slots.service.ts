@@ -1,7 +1,7 @@
 import type { Conflict, SlotsResponse, SlotView } from '@ab/shared';
 import { HttpStatus, Injectable } from '@nestjs/common';
-import { findConflicts } from '../../scheduling/conflicts';
-import type { Occurrence } from '../../scheduling/occurrences';
+import { findConflicts } from '../../scheduling/conflicts/conflicts';
+import type { Occurrence } from '../../scheduling/occurrences/occurrences';
 import { freeSlots } from '../../teachers/availability/free-slots';
 import { DAY } from '../../teachers/availability/zoned-time';
 import type { SlotsQuery } from '../booking.dto';

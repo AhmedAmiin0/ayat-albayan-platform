@@ -1,5 +1,5 @@
 import type { UserDetail, UserView } from '@ab/shared';
-import type { UserRow } from './users.store';
+import type { UserRow } from './store/users.store';
 
 export function toUserView(r: UserRow): UserView {
   return {

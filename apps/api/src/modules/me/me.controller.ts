@@ -4,7 +4,7 @@ import { CurrentUser, Permissions } from '../../common/auth/decorators';
 import type { AuthUser } from '../../common/auth/verify-token';
 import { parseOrThrow } from '../../common/http/http';
 import { MeService } from './me.service';
-import { pushTokenBody, pushTokenSchema } from './push-tokens';
+import { pushTokenBody, pushTokenSchema } from './push/push-tokens';
 
 /** The admin app's device registration (R-MOB-01). Always the caller's own profile, never an id. */
 @ApiTags('me')

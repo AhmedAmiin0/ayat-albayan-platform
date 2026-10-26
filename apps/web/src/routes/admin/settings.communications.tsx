@@ -1,7 +1,7 @@
 import { createFileRoute, redirect } from '@tanstack/react-router';
 import { CommunicationsPage } from '@/features/settings/pages/CommunicationsPage';
 import { communicationsSearch, parseCommunicationsSearch, shownTab, timingRedirect } from '@/features/settings/pages/page-search';
-import { LeaveGuard } from '@/features/settings/values/LeaveGuard';
+import { LeaveGuard } from '@/features/settings/values/sheet/LeaveGuard';
 
 /**
  * /admin/settings/communications «التواصل» — docs/23 §2d, docs/26b §3: one tab at a time (`?tab=`),

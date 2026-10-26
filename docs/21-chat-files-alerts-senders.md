@@ -243,7 +243,7 @@ Teachers still get labels only. Docs/20 :231 stays open with today's default.
 1. **`InboundMedia`** (`inbound-media.service.ts`, 86 lines)
    - Split the gate out as an exported function `servable(msg, allow = isInvoiceMime)`. It throws `invoice_message` unless the row is inbound, has a `media_id`, and `allow(media_mime)` is true.
    - `load(messageId, allow = isInvoiceMime)` uses it.
-   - The default keeps `booking.invoice.ts` fromChat and `apps/api/src/modules/sales-money/sales-chat-files.ts` `copy()` limited to images and PDFs.
+   - The default keeps `booking.invoice.ts` fromChat and `apps/api/src/modules/sales-money/chat/sales-chat-files.ts` `copy()` limited to images and PDFs.
    - `cache()` caps the size with `chatFileMaxBytes(mime)` instead of `INVOICE_MAX_BYTES`. It still answers 413 `invoice_too_large`.
 2. **`ThreadMediaService`** (`apps/api/src/modules/inbox/files/thread-media.service.ts`, 55 lines)
    - `file()` and `list()` stay **unchanged**. The admin `/media/:id` route and `SalesChatFiles.sign` keep images and PDFs only.

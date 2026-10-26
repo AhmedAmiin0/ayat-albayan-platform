@@ -2,7 +2,7 @@
 import type { AcademySettings, LessonTimeEdit } from '@ab/shared';
 import { vi } from 'vitest';
 import type { TimeEditChange } from '../../scheduling/change-set';
-import type { ConflictChecker } from '../../scheduling/conflict-checker';
+import type { ConflictChecker } from '../../scheduling/conflicts/conflict-checker';
 import { fakeSettings } from '../../../common/settings/settings.fakes';
 import type { LessonRow } from '../store/lesson-row';
 import { ADMIN, fakeStore, LESSON_ID, lessonRow } from '../lessons.fakes';

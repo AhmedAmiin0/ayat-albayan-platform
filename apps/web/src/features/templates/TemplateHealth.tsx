@@ -6,17 +6,17 @@ import { DataTable } from '@/components/DataTable';
 import { Toast } from '@/components/ui/overlay/toast';
 import { t } from '@/lib/i18n/i18n';
 import { otherLine, templatesQuery } from './api';
-import { CrmNameDialog } from './CrmNameDialog';
-import { MoveLineDialog } from './MoveLineDialog';
-import { SubmitTemplateDialog } from './SubmitTemplateDialog';
+import { CrmNameDialog } from './crm/CrmNameDialog';
+import { MoveLineDialog } from './lines/MoveLineDialog';
+import { SubmitTemplateDialog } from './numbers/SubmitTemplateDialog';
 import { templateColumns } from './template-columns';
-import { TemplateLines } from './TemplateLines';
-import { TemplateNumberDialog } from './TemplateNumberDialog';
-import { useCrmName } from './use-crm-name';
-import { useCrmStatus } from './use-crm-status';
+import { TemplateLines } from './lines/TemplateLines';
+import { TemplateNumberDialog } from './numbers/TemplateNumberDialog';
+import { useCrmName } from './crm/use-crm-name';
+import { useCrmStatus } from './crm/use-crm-status';
 import { useTemplateActions } from './use-template-actions';
-import { useTemplateLines } from './use-template-lines';
-import { useTemplateNumber } from './use-template-number';
+import { useTemplateLines } from './lines/use-template-lines';
+import { useTemplateNumber } from './numbers/use-template-number';
 
 /**
  * Template health (R-MSG-01, issue C1): every registry row with Meta's status. Each number syncs

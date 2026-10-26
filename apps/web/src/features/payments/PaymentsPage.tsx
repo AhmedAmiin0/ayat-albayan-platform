@@ -18,7 +18,7 @@ import { filterParams, paymentsQuery, type PaymentFilters, type PaymentView } fr
 import { paymentColumns, type PaymentAction } from './payment-columns';
 import { PaymentDialogs } from './PaymentDialogs';
 import { PeriodTotals } from './PeriodTotals';
-import { RecordPaymentDialog } from './RecordPaymentDialog';
+import { RecordPaymentDialog } from './record/RecordPaymentDialog';
 import { paymentsView, type PaymentsUrlSearch } from './search';
 import { usePaymentFilters } from './use-payment-filters';
 import { HeadActions } from '@/components/ui/layout/head-actions';

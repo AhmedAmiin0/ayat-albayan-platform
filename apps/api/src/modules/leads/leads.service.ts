@@ -8,7 +8,7 @@ import {
   Optional,
 } from '@nestjs/common';
 import { AuditService } from '../../common/audit/audit.service';
-import { SalesAssignService } from '../sales/sales-assign.service';
+import { SalesAssignService } from '../sales/assign/sales-assign.service';
 import { JobApplicantsQueries, type JobApplicantRow } from '../job-applicants/job-applicants.queries';
 import type { Page } from './http';
 import { canTransitionLead } from './lead-state-machine';

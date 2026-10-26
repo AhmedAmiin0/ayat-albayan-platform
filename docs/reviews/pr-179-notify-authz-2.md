@@ -26,7 +26,7 @@ No Critical or Important findings.
    `is not distinct from` would let a key-less claim prove a null-hash binding). Added.
 2. Same file: «the holder registering again clears its own contest» was no longer tested. Added.
 3. Same file: the intermediate key-less claim in the «proven» test now asserts `in_use`.
-4. `apps/api/src/modules/me/push-tokens.ts:8`: comment still named the removed `claimDeviceKey`.
+4. `apps/api/src/modules/me/push/push-tokens.ts:8`: comment still named the removed `claimDeviceKey`.
 
 ## Minor (not fixed)
 
