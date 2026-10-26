@@ -1,4 +1,4 @@
-import { toCents } from '../money/earnings.js';
+import { toCents } from '../money/earnings/earnings.js';
 import { computeCommission, type AssistantCommissionType, type CommissionAmount } from './commission.js';
 
 // "Fully paid" and "first" (migration 20261006000272: subscription_full_at, evaluate_assistant_commission).

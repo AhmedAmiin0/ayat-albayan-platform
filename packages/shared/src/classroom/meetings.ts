@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { lessonDuration, overrideSchema } from '../schemas/scheduling.js';
+import { lessonDuration, overrideSchema } from '../schemas/lessons/scheduling.js';
 import type { JoinWindow } from './join-window.js';
 
 // «حلقة فورية» (instant lesson), «افتح الحلقة الآن» (open the room early) and the student's own

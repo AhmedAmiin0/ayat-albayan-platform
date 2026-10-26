@@ -1,7 +1,7 @@
 name: staging-test-account
 # Owner-run (2026-10-05: "create a test teacher and assign it to a test student"). Creates or
 # removes, on the STAGING database, a teacher login (role teacher) + its DEMO teacher row and a DEMO
-# guardian + student assigned to it: tools/scripts/seed-test-account.mjs. Idempotent; `create`
+# guardian + student assigned to it: tools/scripts/seed/seed-test-account.mjs. Idempotent; `create`
 # again resets the password. The repo is public, so the log shows ids and counts only — never the
 # email, the password or a phone. Setup (develop environment): docs/09-deployment.md
 # «Test teacher on staging». Actions → staging-test-account → Run workflow.
@@ -71,4 +71,4 @@ jobs:
           if [ -n "$SUPABASE_SERVICE_ROLE_KEY" ]; then echo "account via: Supabase Admin API"; else echo "account via: SQL (no SUPABASE_SERVICE_ROLE_KEY)"; fi
           flags="--allow-remote-staging"
           if [ "$ACTION" = remove ]; then flags="$flags --remove"; fi
-          node tools/scripts/seed-test-account.mjs $flags
+          node tools/scripts/seed/seed-test-account.mjs $flags

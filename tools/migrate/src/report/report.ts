@@ -1,5 +1,5 @@
 // out/report.md: counts only (R-MIG-02). Safe to paste into a PR or chat: no names, no phones.
-import { SKIPPED_TABS } from '../sources/headers.ts';
+import { SKIPPED_TABS } from '../sources/headers/headers.ts';
 import type { SheetManifest } from '../sources/extract-sheets.ts';
 import { APPLY_ORDER } from '../types.ts';
 import type { Plan, RowIssue } from '../types.ts';

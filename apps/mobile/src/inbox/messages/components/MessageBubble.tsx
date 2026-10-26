@@ -1,11 +1,12 @@
 import { isChatViewMime, type MessageView, replyNote } from '@ab/shared';
-import { Linking, Pressable, View, type ViewStyle } from 'react-native';
+import { I18nManager, Linking, Pressable, View, type ViewStyle } from 'react-native';
 import { useHolds } from '@/auth/use-permissions';
 import { t } from '@/core/lib/i18n/i18n';
 import { locale } from '@/core/lib/i18n/locale';
 import { shape, type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { useBubbleActions } from '../hooks/bubble-actions';
+import { bubbleSide } from '../hooks/bubble-side';
 import { MessageActions } from './MessageActions';
 import { MessageFile } from './MessageFile';
 import { MessageMeta, useSmall } from './MessageMeta';
@@ -42,7 +43,8 @@ export interface MessageBubbleProps {
 }
 
 /**
- * One message (R-MSG-05). Theirs at the inline-start, ours at the end, as WhatsApp lays out Arabic.
+ * One message (R-MSG-05). As WhatsApp (owner 2026-10-26): ours on the right, theirs on the left, in
+ * Arabic and English alike (bubbleSide), the sharp tail corner at the top of the screen-edge side.
  * Ours carry WhatsApp-style delivery ticks (DeliveryTicks, named by the status word); a template
  * row says which template, its body already rendered by the API. Ours say who sent them
  * («أرسلها: سارة», «رسالة تلقائية»); a photo, PDF, voice note or video opens from MessageFile. Why a send failed is for everyone (as the web's
@@ -67,13 +69,15 @@ export function MessageBubble({ message: m, phone, onJump, highlight = false }: 
   const why = ours && m.status === 'failed' && m.error_code !== 'handed_off';
   // The screen reader's way to the menu sits on the text; a file-only bubble keeps its own buttons.
   const a11yOn = m.body ? 'body' : m.template_key ? 'template' : null;
+  const side = bubbleSide(ours, I18nManager.isRTL);
   const box: ViewStyle = {
-    alignSelf: ours ? 'flex-end' : 'flex-start',
+    alignSelf: side.align,
     maxWidth: '88%',
     gap: 4,
     paddingHorizontal: 10,
     paddingVertical: 6,
     borderRadius: shape.radius.lg,
+    ...(side.outer === 'start' ? { borderTopStartRadius: shape.radius.xs } : { borderTopEndRadius: shape.radius.xs }),
     borderWidth: 1,
     borderColor: highlight ? color.lapis : ours ? color.lapisWash : color.rule,
     backgroundColor: ours ? color.lapisWash : color.raised,
@@ -117,7 +121,7 @@ export function MessageBubble({ message: m, phone, onJump, highlight = false }: 
   );
   if (!touch.has) return <View testID={`bubble-${m.id}`} style={box}>{content}</View>;
   return (
-    <SwipeReply onReply={touch.swipe}>
+    <SwipeReply onReply={touch.swipe} side={side}>
       <Pressable testID={`bubble-${m.id}`} accessible={false} onLongPress={touch.openMenu} delayLongPress={350} style={box}>
         {content}
       </Pressable>

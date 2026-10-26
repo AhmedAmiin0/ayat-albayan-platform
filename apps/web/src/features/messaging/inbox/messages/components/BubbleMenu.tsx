@@ -7,7 +7,7 @@ import { useChatActions } from '../../shared/chat-actions';
 
 export interface BubbleMenuProps {
   message: MessageView;
-  /** Opens toward the middle of the chat: from the inline-end edge for ours. */
+  /** Opens toward the middle of the chat: leftward for ours (on the right), rightward for theirs. */
   outbound: boolean;
   /** Closes the menu and puts focus back on its trigger (before the pick runs). */
   onClose: () => void;
@@ -36,7 +36,7 @@ export function BubbleMenu({ message: m, outbound, onClose }: BubbleMenuProps) {
       ref={first}
       className={cn(
         'absolute top-full z-30 mt-1 grid w-max min-w-44 gap-0.5 rounded-md border border-rule bg-card p-1.5 shadow-pop',
-        outbound ? 'end-0' : 'start-0',
+        outbound ? 'right-0' : 'left-0',
       )}
     >
       {canReply(m) && (

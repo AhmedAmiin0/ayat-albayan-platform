@@ -341,10 +341,10 @@ Order: **26-P0 → 23-P3 → 26-P1 → 23-P4 → 26-P2 → 26-P3 → 23-P5 → 2
   server, 428 `confirmation_required`; OFF always accepted) and `PUT /messages/gate/cutover`:
   `apps/api/src/modules/messaging/whatsapp/gate/gate.controller.ts`, `gate.settings.ts`, `gate.errors.ts`; contract
   `packages/shared/src/settings/gate.ts`. Per-key `PATCH /settings` answering `{...settings, saved, moved, invalid}`:
-  `packages/shared/src/settings/patch.ts`, `apps/api/src/common/settings/settings.controller.ts`, `settings-patch.ts`;
+  `packages/shared/src/settings/validation/patch.ts`, `apps/api/src/common/settings/settings.controller.ts`, `settings-patch.ts`;
   ownership in code: `packages/shared/src/settings/ownership.ts` (`OWNED_SETTING_KEYS`). `comms_source` is written only
   by `POST /admin/communications/source` (`modules/numbers/numbers.settings.ts`). Migration guard:
-  `tools/scripts/owned-keys-check.mjs` + `.github/workflows/owned-keys-guard.yml` (cutoff `20261023000621`).
+  `tools/scripts/ci-checks/owned-keys-check.mjs` + `.github/workflows/owned-keys-guard.yml` (cutoff `20261023000621`).
   `X-AB-Client`: web `apps/web/src/lib/http/client-tag.ts` (`web/<VITE_BUILD_ID|dev>`), mobile
   `apps/mobile/src/core/lib/http/client-tag.ts` (JS only), API counting `apps/api/src/common/client-usage/` (in memory, one log
   line per 15 min). Web switches: `apps/web/src/features/messaging/messaging/gate-api.ts`. Not done here (left to 26-P3 /
@@ -357,14 +357,14 @@ Order: **26-P0 → 23-P3 → 26-P1 → 23-P4 → 26-P2 → 26-P3 → 23-P5 → 2
   `settings_version_seq`, `settings_revision` bumped by a deferred row constraint trigger at commit, `config_seed`,
   `config_set`, `NOT VALID` checks); types `packages/db/src/types.ts`; registry metadata in
   `packages/shared/src/settings/domains/*.ts` + `groups.ts`; `SEED_ENTRIES` / `REGISTRY_VERSION` in
-  `packages/shared/src/settings/seed-entries.ts` (+ `google-defs.ts`); tests `seed-entries*.test.ts`,
+  `packages/shared/src/settings/seed/seed-entries.ts` (+ `google-defs.ts`); tests `seed-entries*.test.ts`,
   `sql-defaults.migration.test.ts`, `apps/api/src/common/settings/config-expand.migration.test.ts`,
   `e2e/tests/config-expand.sql.spec.ts`.
 
 - **26-P2 — built (branch `cloud/config-p2`).** See the PR for the full file list. Migration
   `packages/db/supabase/migrations/20261024000631_config_describe.sql` (`config_describe` RPC + the one-time copy of
   ar overrides into `description`; pinned by `packages/shared/src/settings/config-describe.migration.test.ts`).
-  Shared: `packages/shared/src/settings/entries.ts` (the `/config/entries` and parity contract),
+  Shared: `packages/shared/src/settings/seed/entries.ts` (the `/config/entries` and parity contract),
   `seed-payload.ts` (`seedPayload(bundleText(ar))`, the one payload the API boot, `pnpm migrate:apply`
   (`tools/migrate/src/db/config-seed.ts`) and e2e (`e2e/support/config-seed.ts`) send). API:
   `apps/api/src/common/config-store/` (ConfigStore, ConfigSeeder, parity, entries routes). e2e:

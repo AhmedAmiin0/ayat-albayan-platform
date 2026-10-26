@@ -85,7 +85,7 @@ Key facts:
 - **Owner file ≠ page section:** `feedback_rate_window_min` (feedback.ts → academy section); `payout_*`, `fx_fresh_hours`, `reporting_currency` sit in «accounts».
 - **Mobile** edits 7 keys by hand (`apps/mobile/src/ops/settings-form.ts:9-20`): `late_cancel_hours`, `booking_horizon_weeks`, `follow_up_hours`, `renewal_alert_remaining`, `subscription_expiry_days`, `report_teacher_edit_hours`, `reporting_currency`; shows the 3 messaging-safety switches read-only.
 - **No `comms_source` key exists yet** (planned by docs/23 §2e step 5 / phase 3 as a DB setting `legacy | module`).
-- Notification catalogue slice `CATALOGUE_SETTING_KEYS` (`packages/shared/src/notifications/catalogue-settings.ts:7-17`): `messaging_enabled, auto_messages_enabled, reminder_24h_enabled, teacher_whatsapp_lesson_reminder, teacher_whatsapp_new_student, feedback_mode, reminder_minutes_before, renewal_alert_remaining, follow_up_hours`.
+- Notification catalogue slice `CATALOGUE_SETTING_KEYS` (`packages/shared/src/notifications/catalogue/catalogue-settings.ts:7-17`): `messaging_enabled, auto_messages_enabled, reminder_24h_enabled, teacher_whatsapp_lesson_reminder, teacher_whatsapp_new_student, feedback_mode, reminder_minutes_before, renewal_alert_remaining, follow_up_hours`.
 
 #### 1a. Messaging / send-gate relevant keys (one place)
 
@@ -248,7 +248,7 @@ Drift: `apps/api/.env.example` lists 20 keys explicitly; the WA_CHAT_*, KAPSO_*,
 | `teacher_availability`, `teacher_time_off` | `M/20261001000012_teacher_availability.sql:3,17` | teacher | schedule data (bypassed when `teachers_always_available`). |
 | `notification_rules` | **not created yet** (docs/23 phase 4) | catalogue key | will absorb keys #5-8, #10-13 (and per docs/23 #26) as `enabled/channels/timing`. |
 | `wa_numbers` | **not created yet** (docs/23 phase 3) | uuid | will absorb the WA_* line keys + `wa_line_health`. |
-| Pricing (packages, prices, currencies) | **no table** — code constants `packages/shared/src/pricing/catalog.ts`, `packages/shared/src/money/tiers.ts` (docs/08) | — | not admin-editable today; if made editable it is structured (package × duration × currency) → MODULE:pricing, never flat keys. |
+| Pricing (packages, prices, currencies) | **no table** — code constants `packages/shared/src/pricing/catalog.ts`, `packages/shared/src/money/usage/tiers.ts` (docs/08) | — | not admin-editable today; if made editable it is structured (package × duration × currency) → MODULE:pricing, never flat keys. |
 | Theme / appearance | **no store** (per-browser theme toggle) | — | `appearance` section empty; branding (name, logo) not configurable today. |
 | Storage bucket size limits | migrations 122, 170 | bucket | hard ceiling (10 MB) that bounds `upload_max_mb.max`. |
 
@@ -284,7 +284,7 @@ Headline findings:
 - **Live SQL readers of `public.settings`: 7 objects** (5 functions, 1 helper used by 2 views, 1 view). Every one of them reads `value` (jsonb) by `key`. None reads `updated_at`/`updated_by`.
 - **`public.custom_config` and `public.integration_config` have no SQL readers at all.** Only the API (service role, PostgREST) and e2e SQL specs touch them.
 - **No pg_cron, no realtime publication, no DB audit trigger** on any of the three tables. The only "cron" (`prune_activity_log`) runs from a Nest timer in the API (`M/20261005000205_activity_log.sql:48` says "pg_cron is not used in this repo").
-- `seed.sql`, `tools/migrate`, `tools/scripts/seed-demo.mjs`, `clear-demo*`, `seed-test-account*` and `fix-teacher-data.sql`/`sync-roster.sql` touch **none** of the three tables.
+- `seed.sql`, `tools/migrate`, `tools/scripts/seed/seed-demo.mjs`, `clear-demo*`, `seed-test-account*` and `fix-teacher-data.sql`/`sync-roster.sql` touch **none** of the three tables.
 
 ---
 
@@ -321,7 +321,7 @@ Realtime: no `alter publication supabase_realtime …` anywhere in migrations; `
 | 6 | `public.google_sync_on()` (sql stable) | `M/20261022000611_google_sync_outbox.sql:37-40` | — | read | `google_sync_enabled` | `coalesce(value = 'true'::jsonb, false)` | not in registry; `GOOGLE_SETTING_KEYS` (`packages/shared/src/google/settings-keys.ts`), API `GOOGLE_DEFAULTS.enabled = false` (`apps/api/src/modules/platform/google-sync/google-settings.ts:5`) | yes (false) | **SECURITY DEFINER**; execute only service_role (611:177-186) | only JSON `true` opens; missing / null / anything else → off. Called by triggers `lessons_google_sync_insert`, `lessons_google_sync_update` (via `google_sync_lessons_trg`, 611:121-126,141-149), `lesson_reports_google_sync` (`google_sync_reports_trg`, 611:129-134,150-152) and `google_sync_reconcile()` (611:107-119). **Every insert/update of `public.lessons` reads `settings`.** |
 | 7 | `public.google_sync_window_days()` (sql stable) | `M/20261022000611_google_sync_outbox.sql:43-47` | — | read | `google_calendar_window_days` | `coalesce(least(greatest((value #>> '{}')::int, 7), 180) … where jsonb_typeof(value)='number', 60)` | `GOOGLE_WINDOW_DAYS = {min 7, max 180, default 60}` (`packages/shared/src/google/enums.ts:50`) | yes (60, clamp 7..180) | **SECURITY DEFINER**; service_role only | missing / null / non-number → 60; out of range clamped; **a fractional number (`60.5`) raises** `invalid input syntax for type integer` inside the lessons trigger (only reachable by direct SQL; the API writes integers). Used by `google_sync_enqueue_lesson` (611:82-90), `google_sync_reconcile` (611:113). |
 
-No SQL reader exists for `late_cancel_hours`, `messaging_enabled`, `auto_messages_enabled`, `booking_horizon_weeks` or any other key. Their missing-vs-null semantics live only in the API (`readSettings`, `packages/shared/src/settings/validate.ts:40`):
+No SQL reader exists for `late_cancel_hours`, `messaging_enabled`, `auto_messages_enabled`, `booking_horizon_weeks` or any other key. Their missing-vs-null semantics live only in the API (`readSettings`, `packages/shared/src/settings/validation/validate.ts:40`):
 - `late_cancel_hours`: seeded as **JSON null** (`M/073:14-16`); the API **deletes the row** for null (`apps/api/src/common/settings/settings.service.ts:50-58`, "PostgREST cannot store a JSON null"); both read back as the registry default `null` = OFF (`scheduling.ts:10-13`).
 - `messaging_enabled`: only `=== true` opens (`apps/api/src/modules/messaging/whatsapp/gate/send-gate.ts:47`); seeded `false` (`M/20261001000142_messaging.sql:85-90`).
 - Google keys: `readGoogleSettings` — enabled only `=== true`, mode falls back to `dry_run`, window to 60 (`google-settings.ts:8-16`).
@@ -519,7 +519,7 @@ Other `settings.read/write`-gated controllers: `modules/google-sync/google-map.c
 **Route count**: 11 routes in the four config modules (settings 2 + meta 1 + custom 3 + public 1 + integrations 4); +2 directly settings-adjacent (`GET /admin/notifications`, `PUT /admin/google/settings`).
 
 #### 1.6 PATCH `/settings` semantics
-- Body schema is generated from the registry: one **optional camelCase** field per key (`SETTING_FIELD_OF[k]`), each `settingZod(def)` (`packages/shared/src/settings/schema.ts:9-36`): int (min/max, `.nullable()` if def.nullable), bool, trimmed string (min/max length), e164, tz, currency `^[A-Z]{3}$`, int_list (ascending, `not_ascending`), enum, json (shape, nullable).
+- Body schema is generated from the registry: one **optional camelCase** field per key (`SETTING_FIELD_OF[k]`), each `settingZod(def)` (`packages/shared/src/settings/validation/schema.ts:9-36`): int (min/max, `.nullable()` if def.nullable), bool, trimmed string (min/max length), e164, tz, currency `^[A-Z]{3}$`, int_list (ascending, `not_ascending`), enum, json (shape, nullable).
 - `z.object(shape)` is **non-strict**: unknown fields are silently stripped (no 400).
 - `settingsChanges()` (`schema.ts:46-53`) maps camelCase → snake_case keys, drops `undefined`.
 - `null` (nullable keys only, e.g. `late_cancel_hours`) **deletes the row** → reads back as default (PostgREST can't store JSON null; `settings.service.ts:48-58`).

@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { localDate } from '../schemas/scheduling.js';
+import { localDate } from '../schemas/lessons/scheduling.js';
 import { optionalText, phoneE164 } from '../schemas/common.js';
 import { currencyIso, moneyAmount, pastInstant, paymentAttachmentPaths, receiptUploadSchema, subscriptionPricingSchema } from '../money/schemas.js';
 

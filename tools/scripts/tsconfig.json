@@ -12,5 +12,5 @@
     "skipLibCheck": true,
     "types": ["node"]
   },
-  "include": ["move-module.ts", "move-module/**/*.ts"]
+  "include": ["ci-checks/move-module.ts", "ci-checks/move-module/**/*.ts"]
 }

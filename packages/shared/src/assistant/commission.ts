@@ -1,5 +1,5 @@
 import type { Enums } from '@ab/db';
-import { fromCents, toCents } from '../money/earnings.js';
+import { fromCents, toCents } from '../money/earnings/earnings.js';
 
 // Assistant (base role sales) commission, the rule of migration 20261006000272 in pure code
 // (owner, 2026-10-06). The database decides; this twin is what the API and the screens preview with,
