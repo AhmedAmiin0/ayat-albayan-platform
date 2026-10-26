@@ -45,6 +45,6 @@ export class FinanceExportsQueries {
   }
 }
 
-type ExpenseCsvRow = Awaited<ReturnType<FinanceExportsQueries['expenses']>>[number];
-type SessionCsvRow = Awaited<ReturnType<FinanceExportsQueries['sessions']>>[number];
-type TeacherPaymentCsvRow = Awaited<ReturnType<FinanceExportsQueries['teacherPayments']>>[number];
+export type ExpenseCsvRow = Awaited<ReturnType<FinanceExportsQueries['expenses']>>[number];
+export type SessionCsvRow = Awaited<ReturnType<FinanceExportsQueries['sessions']>>[number];
+export type TeacherPaymentCsvRow = Awaited<ReturnType<FinanceExportsQueries['teacherPayments']>>[number];
