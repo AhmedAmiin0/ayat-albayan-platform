@@ -5,7 +5,9 @@ import { useTheme } from '@/theme';
 
 const AnimatedPath = Animated.createAnimatedComponent(Path);
 const SIZE = 20;
-const TICK = 24;
+/** The design's dash travel (24 → 0), mapped onto the tick's real length so it draws over the full 360 ms. */
+const TRAVEL = 24;
+const TICK_LENGTH = 11.4;
 const POP_MS = 320;
 const DRAW_MS = 360;
 const DRAW_DELAY_MS = 120;
@@ -18,7 +20,7 @@ const DRAW_DELAY_MS = 120;
 export function CheckBadge({ still }: { still: boolean }) {
   const { color } = useTheme();
   const [scale] = useState(() => new Animated.Value(still ? 1 : 0.6));
-  const [dash] = useState(() => new Animated.Value(still ? 0 : TICK));
+  const [dash] = useState(() => new Animated.Value(still ? 0 : TRAVEL));
   useEffect(() => {
     if (still) {
       scale.setValue(1);
@@ -35,19 +37,19 @@ export function CheckBadge({ still }: { still: boolean }) {
   return (
     <View testID="check-badge" accessibilityElementsHidden importantForAccessibility="no-hide-descendants">
       <Animated.View testID="check-badge-pop" style={{ transform: [{ scale }] }}>
-        <Svg viewBox="0 0 24 24" width={SIZE} height={SIZE}>
-          <Circle cx={12} cy={12} r={12} fill={color.ok} />
+        <Svg viewBox={`0 0 ${SIZE} ${SIZE}`} width={SIZE} height={SIZE}>
+          <Circle cx={10} cy={10} r={10} fill={color.ok} />
           {/* onLapis: the theme's white, the same in both schemes. */}
           <AnimatedPath
             testID="check-badge-tick"
-            d="M7 12.5l3.2 3.2L17 8.8"
+            d="M6 10.2l2.7 2.7L14 7.6"
             fill="none"
             stroke={color.onLapis}
             strokeWidth={2}
             strokeLinecap="round"
             strokeLinejoin="round"
-            strokeDasharray={TICK}
-            strokeDashoffset={dash}
+            strokeDasharray={TICK_LENGTH}
+            strokeDashoffset={dash.interpolate({ inputRange: [0, TRAVEL], outputRange: [0, TICK_LENGTH] })}
           />
         </Svg>
       </Animated.View>

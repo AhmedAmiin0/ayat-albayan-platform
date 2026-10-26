@@ -21,7 +21,8 @@ test('pops on the native driver and draws its white tick on the ok circle', asyn
   // onLapis (#ffffff, white in both schemes), as react-native-svg hands it to the native view.
   expect(palette.light.onLapis).toBe(palette.dark.onLapis);
   expect(badge('check-badge-tick')).toHaveProp('stroke', { type: 0, payload: 0xffffffff });
-  expect(badge('check-badge-tick')).toHaveProp('strokeDasharray', [24, 24]);
+  expect(badge('check-badge-tick')).toHaveProp('strokeDasharray', [11.4, 11.4]);
+  expect(configs).toContainEqual(expect.objectContaining({ toValue: 0 }));
 });
 
 test('Reduce Motion: the finished badge at once, no pop', async () => {

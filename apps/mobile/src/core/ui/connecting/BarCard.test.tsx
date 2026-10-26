@@ -18,7 +18,7 @@ test.each(['light', 'dark'] as const)('%s: neutral + gold dots, amber + act dots
 });
 
 test('connecting: 12 pt radius, 9 / 14 padding, a centred row, 14 / 22 semibold ink-2', async () => {
-  await render(<BarCard phase="connecting" still={false} />);
+  await render(<BarCard phase="connecting" still={false} gutter={16} />);
   expect(card()).toHaveStyle({
     marginTop: 12,
     marginHorizontal: 16,
@@ -36,7 +36,7 @@ test('connecting: 12 pt radius, 9 / 14 padding, a centred row, 14 / 22 semibold 
 
 test('dark, after 10 s: the amber wash, act dots, a second 13 / 21 line in act, rows from the top', async () => {
   scheme.mockReturnValue('dark');
-  await render(<BarCard phase="check" still={false} />);
+  await render(<BarCard phase="check" still={false} gutter={0} />);
   expect(card()).toHaveStyle({ alignItems: 'flex-start', backgroundColor: palette.dark.actSoft });
   expect(card()).toHaveProp('accessibilityLabel', `${c.connecting} ${c.checkInternet}`);
   expect(screen.getByText(c.checkInternet)).toHaveStyle({ fontSize: 13, lineHeight: 21, color: palette.dark.act });
@@ -45,7 +45,7 @@ test('dark, after 10 s: the amber wash, act dots, a second 13 / 21 line in act, 
 });
 
 test('«تم الاتصال»: the ok wash, the check badge, 14 / 22 semibold cover ink', async () => {
-  await render(<BarCard phase="connected" still={false} />);
+  await render(<BarCard phase="connected" still={false} gutter={0} />);
   expect(card()).toHaveStyle({ backgroundColor: palette.light.okSoft });
   expect(screen.getByTestId('check-badge', { includeHiddenElements: true })).toBeOnTheScreen();
   expect(screen.queryByTestId('connecting-dot', { includeHiddenElements: true })).toBeNull();

@@ -24,7 +24,7 @@ async function mountConnecting() {
 test('under the top inset, painted with the margin colour', async () => {
   await mountConnecting();
   expect(screen.getByTestId('connecting-bar-frame')).toHaveStyle({ paddingTop: 47, backgroundColor: palette.light.margin });
-  expect(screen.getByTestId('connecting-bar')).toBeOnTheScreen();
+  expect(screen.getByTestId('connecting-bar')).toHaveStyle({ marginHorizontal: 16 });
 });
 
 test('steps aside while a focused screen header shows the bar', async () => {

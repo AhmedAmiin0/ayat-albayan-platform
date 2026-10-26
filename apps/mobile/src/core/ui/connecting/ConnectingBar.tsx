@@ -25,6 +25,8 @@ export interface ConnectingBarProps {
   inset?: number;
   /** Paints the inset and the card's margins (the screen's own background), when there is an inset. */
   background?: string;
+  /** The card's side margin (16 pt from the screen edge either way). */
+  gutter?: number;
 }
 
 /**
@@ -32,7 +34,7 @@ export interface ConnectingBarProps {
  * and pushes the content down, never covering it. It measures its card and animates to that height,
  * so the hint's second line and large OS text sizes never clip.
  */
-export function ConnectingBar({ store = connectivity, inset = 0, background }: ConnectingBarProps) {
+export function ConnectingBar({ store = connectivity, inset = 0, background, gutter = 0 }: ConnectingBarProps) {
   const phase = useBarPhase(useConnectivity(store));
   const still = useA11yPref('reduceMotion');
   // The card keeps its last words («تم الاتصال») while it closes.
@@ -47,7 +49,7 @@ export function ConnectingBar({ store = connectivity, inset = 0, background }: C
     <View testID="connecting-bar-frame" style={{ paddingTop: inset, backgroundColor: background }}>
       <Animated.View testID="connecting-bar-reveal" style={{ height, overflow: 'hidden' }}>
         <Animated.View testID="connecting-bar-measure" style={{ opacity }} onLayout={(e) => setContent(Math.ceil(e.nativeEvent.layout.height))}>
-          <BarCard phase={shown} still={still} />
+          <BarCard phase={shown} still={still} gutter={gutter} />
         </Animated.View>
       </Animated.View>
     </View>

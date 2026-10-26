@@ -14,5 +14,5 @@ export function TopConnectingBar({ store }: { store?: ConnectivityStore }) {
   const { color } = useTheme();
   const claimed = useBarSlotClaimed();
   if (claimed) return null;
-  return <ConnectingBar store={store} inset={top} background={color.margin} />;
+  return <ConnectingBar store={store} inset={top} background={color.margin} gutter={16} />;
 }

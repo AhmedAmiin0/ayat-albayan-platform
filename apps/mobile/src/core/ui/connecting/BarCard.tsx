@@ -21,7 +21,14 @@ export function barLook(phase: ShownPhase, color: Palette) {
 }
 
 /** «جارٍ الاتصال…» with the gold dots; from 10 s the amber hint; «تم الاتصال» with its check badge. */
-export function BarCard({ phase, still }: { phase: ShownPhase; still: boolean }) {
+export interface BarCardProps {
+  phase: ShownPhase;
+  still: boolean;
+  /** Side margin: 16 under the safe area; 0 under a title already in the screen's 16 pt column. */
+  gutter: number;
+}
+
+export function BarCard({ phase, still, gutter }: BarCardProps) {
   const { color } = useTheme();
   const look = barLook(phase, color);
   const c = t.mobile.connection;
@@ -35,7 +42,7 @@ export function BarCard({ phase, still }: { phase: ShownPhase; still: boolean })
       accessibilityLabel={phase === 'check' ? `${title} ${c.checkInternet}` : title}
       style={{
         marginTop: 12,
-        marginHorizontal: 16,
+        marginHorizontal: gutter,
         borderRadius: shape.radius.lg,
         paddingVertical: 9,
         paddingHorizontal: 14,
