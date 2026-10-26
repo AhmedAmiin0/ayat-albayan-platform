@@ -7,6 +7,7 @@ import type {
   SignedUpload,
   SubmitBody,
 } from '@ab/shared';
+import { reportErrorWords } from '@ab/client-core';
 import { useQuery } from '@tanstack/react-query';
 import { Linking } from 'react-native';
 import { ApiError, apiFetch, apiSend } from '@/core/lib/http/api';
@@ -60,20 +61,17 @@ export async function openSigned(path: string): Promise<void> {
   await Linking.openURL(url);
 }
 
-const ERRORS: Record<string, string> = { ...t.reports.error, invalid_transition: t.lessons.invalidTransition };
-
-function codeOf(error: unknown): string | null {
-  if (!(error instanceof ApiError) || typeof error.body !== 'object' || error.body === null) return null;
-  const body = error.body as { code?: unknown; issues?: { message?: unknown }[] };
-  const code = typeof body.code === 'string' ? body.code : body.issues?.[0]?.message;
-  return typeof code === 'string' ? code : null;
-}
+const errorWords = reportErrorWords(() => ({
+  errors: t.reports.error,
+  invalidTransition: t.lessons.invalidTransition,
+  generic: t.common.error,
+}));
 
 /**
  * The line for a failed report call: the domain `code` or first validation issue, said in the
- * form's words. No connection: the report was not sent, and the form says so (R-MOB-03).
+ * form's words (@ab/client-core). No connection: the report was not sent, and the form says so (R-MOB-03).
  */
 export function reportErrorText(error: unknown): string {
   if (!(error instanceof ApiError)) return t.reports.offlineNotSent;
-  return ERRORS[codeOf(error) ?? ''] ?? t.common.error;
+  return errorWords(error);
 }

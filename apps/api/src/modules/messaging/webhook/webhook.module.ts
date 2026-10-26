@@ -15,6 +15,11 @@ import { QuickReplies } from './inbound/webhook.quick-reply';
 import { WEBHOOK_CONFIG, WebhookService, type WebhookConfig } from './webhook.service';
 import { WebhookSettings } from './webhook.settings';
 import { StatusService } from './status/webhook.status.service';
+import { ExternalCatchUpJob } from './external/external-catchup.job';
+import { ExternalStatus, KAPSO_HISTORY } from './external/external-status';
+import { ExternalQueries } from './external/external.queries';
+import { ExternalStore } from './external/external.store';
+import { KapsoHistory } from './external/kapso-history';
 
 /**
  * GET/POST /webhooks/whatsapp (docs/12 §3.5, routes W1–W2), POST /webhooks/kapso and /webhooks/wacrm (docs/19). Inbound processing does not depend on
@@ -35,6 +40,12 @@ import { StatusService } from './status/webhook.status.service';
     QuickReplies,
     WebhookSettings,
     WebhookQueries,
+    // Messages staff send outside the app (Kapso's inbox, WhatsApp Business app echoes).
+    { provide: KAPSO_HISTORY, useFactory: () => new KapsoHistory() },
+    ExternalQueries,
+    ExternalStore,
+    ExternalStatus,
+    ExternalCatchUpJob,
   ],
 })
 export class WebhookModule {}

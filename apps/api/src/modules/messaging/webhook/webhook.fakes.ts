@@ -13,6 +13,7 @@ import { InboundStore } from './inbound/webhook.inbound.store';
 import type { Contact, OutboundRow, WebhookQueries } from './webhook.queries';
 import { QuickReplies } from './inbound/webhook.quick-reply';
 import { StatusService } from './status/webhook.status.service';
+import { externalServices } from './external/external.fakes';
 
 export const LESSON_ID = '00000000-0000-4000-8000-0000000000a1';
 export const GUARDIAN_ID = '00000000-0000-4000-8000-0000000000b1';
@@ -50,6 +51,7 @@ export function outbound(over: Partial<OutboundRow> = {}): OutboundRow {
     sent_at: '2026-10-03T12:00:00.000Z',
     delivered_at: null,
     read_at: null,
+    attempts: 1,
     guardians: { name: 'أم سهيلة' },
     leads: null,
     ...over,
@@ -80,6 +82,7 @@ export function fakeQueries() {
       if (i >= 0) stored.splice(i, 1);
     }),
     outboundByWaId: vi.fn().mockResolvedValue(null),
+    numberIdFor: vi.fn().mockResolvedValue(null as string | null),
     moveStatus: vi.fn().mockResolvedValue(true),
     guardianLesson: vi.fn().mockResolvedValue(true),
     recentLessonOutbound: vi.fn().mockResolvedValue(null),
@@ -112,6 +115,7 @@ export function services(d: Deps = fakeDeps()) {
   );
   const store = new InboundStore(queries, d.leads as unknown as LeadsService, d.ratings as unknown as RatingStore);
   const inbound = new InboundService(store, replies, push);
-  const statuses = new StatusService(queries, push);
-  return { ...d, replies, inbound, statuses };
+  const external = externalServices(d.queries);
+  const statuses = new StatusService(queries, push, external.status);
+  return { ...d, replies, inbound, statuses, external };
 }

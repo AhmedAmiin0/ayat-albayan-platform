@@ -61,6 +61,13 @@ export class WebhookQueries {
     return data ? new Date(data.created_at) : null;
   }
 
+  /** The wa_numbers row Meta names by this phone_number_id (as the chat import stamps it); null when none. */
+  async numberIdFor(phoneNumberId: string): Promise<string | null> {
+    const { data, error } = await this.db.from('wa_numbers').select('id').eq('phone_number_id', phoneNumberId).maybeSingle();
+    check(error);
+    return data?.id ?? null;
+  }
+
   /** Removes an inbound row by wamid (its quick reply failed: Meta's re-send must not be a replay). */
   async deleteInbound(waMessageId: string): Promise<void> {
     const { error } = await this.db.from('messages').delete().eq('wa_message_id', waMessageId).eq('direction', 'inbound');
@@ -71,7 +78,7 @@ export class WebhookQueries {
     const { data, error } = await this.db
       .from('messages')
       .select(
-        'id, status, phone_e164, lesson_id, template_key, body, sent_at, delivered_at, read_at, guardians(name), leads(name)',
+        'id, status, phone_e164, lesson_id, template_key, body, sent_at, delivered_at, read_at, attempts, guardians(name), leads(name)',
       )
       .eq('wa_message_id', waMessageId)
       .eq('direction', 'outbound')

@@ -1,7 +1,8 @@
 import { ar } from '../../../../common/i18n/server-text';
 import { Injectable } from '@nestjs/common';
 import { PushService } from '../../../../common/push/push.service';
-import type { StatusEvent } from '../webhook.events';
+import { ExternalStatus } from '../external/external-status';
+import type { EchoEvent, StatusEvent } from '../webhook.events';
 import { WebhookQueries, type OutboundRow } from '../webhook.queries';
 import { statusPatch } from './webhook.status';
 
@@ -17,26 +18,44 @@ export function failedLabel(row: Pick<OutboundRow, 'template_key' | 'body'>): st
 
 /**
  * Meta delivery statuses → our outbound rows (R-MSG-05), matched by wa_message_id. A status for a
- * wamid we never sent (the CRM's, before cut-over) is ignored. failed → reminder_failed push.
+ * wamid we hold no row for is ignored (the CRM's, before cut-over), except on a Kapso number: there
+ * staff also send from Kapso's inbox, so the message is read back and stored first (external/), and
+ * its later statuses move it forward here. failed → reminder_failed push (only for a row we had).
  */
 @Injectable()
 export class StatusService {
   constructor(
     private readonly queries: WebhookQueries,
     private readonly push: PushService,
+    private readonly external: ExternalStatus,
   ) {}
 
   async handle(e: StatusEvent): Promise<void> {
     // Two tries: the compare-and-set loses only when another status landed meanwhile.
     for (let attempt = 0; attempt < 2; attempt++) {
       const row = await this.queries.outboundByWaId(e.waMessageId);
-      const patch = row && statusPatch(row, e);
-      if (!row || !patch) return;
-      if (await this.queries.moveStatus({ id: row.id, from: row.status, patch })) {
-        if (patch.status === 'failed') await this.pushFailed(row, e.waMessageId);
-        return;
+      if (row) {
+        if (await this.move(row, e)) return;
+        continue;
       }
+      // Stored (with this status) or found stored: the next pass moves it on if it is behind.
+      if (attempt > 0 || !(await this.external.adopt(e))) return;
     }
+  }
+
+  /** false = another status landed meanwhile (compare-and-set lost): read the row again. */
+  private async move(row: OutboundRow, e: StatusEvent): Promise<boolean> {
+    const patch = statusPatch(row, e);
+    if (!patch) return true;
+    if (!(await this.queries.moveStatus({ id: row.id, from: row.status, patch }))) return false;
+    // Only for a message we sent: one sent outside the app (attempts 0) never pushes.
+    if (patch.status === 'failed' && row.attempts > 0) await this.pushFailed(row, e.waMessageId);
+    return true;
+  }
+
+  /** A message sent from the WhatsApp Business app (smb_message_echoes): stored like one from Kapso's inbox. */
+  async echo(e: EchoEvent): Promise<void> {
+    await this.external.echo(e);
   }
 
   /** Keyed by the send (wamid), so a row that fails again after the admin's retry pushes again. */

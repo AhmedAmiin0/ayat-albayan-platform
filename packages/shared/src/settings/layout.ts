@@ -34,6 +34,7 @@ export const SETTINGS_LAYOUT = {
     'follow_up_slots_from_hours',
     'follow_up_slots_to_days',
     'quick_reply_window_hours',
+    'chat_reopen_template',
     'whatsapp_calls_enabled',
   ],
   schedule: ['booking_horizon_weeks', 'late_cancel_hours', 'makeup_window_days', 'teachers_always_available'],

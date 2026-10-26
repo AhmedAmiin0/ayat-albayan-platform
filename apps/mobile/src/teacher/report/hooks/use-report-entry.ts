@@ -1,7 +1,7 @@
+import { reportEntryValues } from '@ab/client-core';
 import {
   submitBody,
   submitProblem,
-  valuesOf,
   type FormValues,
   type Grade,
   type Program,
@@ -15,8 +15,8 @@ import { pathKey } from '@/core/lib/query/query-keys';
 import { submitReport } from './api';
 import { useAutosave } from './use-autosave';
 
-/** Form values; «البرنامج *» is the report's own, else the student's (the prefill). */
-const entryValuesOf = (r: ReportView, student: Program): FormValues => ({ ...valuesOf(r), program: r.program ?? student });
+/** Form values; «البرنامج *» is the report's own, else the student's (the prefill; @ab/client-core). */
+const entryValuesOf = reportEntryValues;
 
 /**
  * One student's report on the form (R-REP-02): local values, the debounced draft autosave while a

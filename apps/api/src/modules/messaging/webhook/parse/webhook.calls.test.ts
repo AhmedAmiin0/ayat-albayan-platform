@@ -61,6 +61,6 @@ describe('parseWebhook — calls (docs/28)', () => {
   });
 
   it('a messages-only body keeps its old shape (no calls key)', () => {
-    expect(parse(change('messages', { messages: [] }))).toEqual({ messages: [], statuses: [] });
+    expect(parse(change('messages', { messages: [] }))).toEqual({ messages: [], statuses: [], echoes: [] });
   });
 });

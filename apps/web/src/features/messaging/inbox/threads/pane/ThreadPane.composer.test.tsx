@@ -6,6 +6,7 @@ import { t } from '@/lib/i18n/i18n';
 import { detail, lead, message, PHONE, template } from '../../testing/inbox-fixture';
 import { renderWithClient, routeFetch } from '../../testing/test-utils';
 import { ThreadPane } from './ThreadPane';
+import { forgetReopens } from '../../composer/lib/use-thread-reopen';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
@@ -33,6 +34,7 @@ function renderThread(open: boolean, gate: Gate = null) {
 }
 
 afterEach(() => {
+  forgetReopens();
   apiFetch.mockReset();
   apiSend.mockReset();
 });
@@ -89,7 +91,8 @@ describe('after the 24 h window: approved templates only', () => {
     expect(when.readOnly).toBe(true);
     fireEvent.click(screen.getByRole('button', { name: t.inbox.composer.sendTemplate }));
     expect((await screen.findAllByText(t.inbox.composer.pickLesson)).length).toBeGreaterThan(1);
-    expect(apiSend).not.toHaveBeenCalled();
+    // Only the open's reopen request went out (useThreadReopen), no template yet.
+    expect(apiSend.mock.calls.map((c) => c[1])).toEqual([`${PATH}/reopen`]);
 
     apiSend.mockResolvedValue(message({ id: 'm-t', direction: 'outbound', status: 'queued' }));
     fireEvent.change(screen.getByRole('combobox', { name: t.inbox.composer.pickLesson }), { target: { value: 'l-1' } });
@@ -116,6 +119,6 @@ describe('after the 24 h window: approved templates only', () => {
     fireEvent.click(screen.getByRole('button', { name: t.inbox.composer.sendTemplate }));
     const name = t.inbox.composer.paramNames.student_names;
     expect(await screen.findByText(t.inbox.composer.required.replace('{field}', name))).toBeTruthy();
-    expect(apiSend).not.toHaveBeenCalled();
+    expect(apiSend.mock.calls.map((c) => c[1])).toEqual([`${PATH}/reopen`]); // the open's reopen request only
   });
 });

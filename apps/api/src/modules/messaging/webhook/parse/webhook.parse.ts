@@ -9,7 +9,8 @@ import {
   type WebhookBatch,
 } from '../webhook.events';
 import { readCalls } from './webhook.calls';
-import { acceptsNumber, lineFor, receivingNumber, type Receiving, type ReceivingNumber } from '../lines/webhook.lines';
+import { acceptsNumber, lineFor, receivingNumber, where, type Receiving, type ReceivingNumber } from '../lines/webhook.lines';
+import { ECHO_FIELD, readEchoes } from './webhook.echoes';
 
 // Meta's webhook envelope → flat inbound messages and delivery statuses (docs/12 §3.5). Fields
 // are read by their Meta path («interactive.button_reply.id»). Lenient: an item we can't read is
@@ -71,23 +72,23 @@ function toInbound(m: unknown, ctx: MessageContext): InboundEvent | null {
     mediaId: mf('id'),
     mediaMime: mf('mime_type'),
     payload: payloadOf(m, type),
-    line: ctx.at.line,
-    ...(ctx.at.numberId ? { numberId: ctx.at.numberId } : {}),
+    ...where(ctx.at),
   };
 }
 
-function toStatus(s: unknown, now: Date): StatusEvent | null {
+function toStatus(s: unknown, ctx: Omit<MessageContext, 'names'>): StatusEvent | null {
   const [id, status] = [field(s, 'id'), field(s, 'status')];
   if (!id || !(DELIVERY_STATUSES as readonly (string | null)[]).includes(status)) return null;
   const f = (path: string) => field(s, path);
   return {
     waMessageId: id,
     status: status as DeliveryStatus,
-    at: metaTime(f('timestamp'), now),
+    at: metaTime(f('timestamp'), ctx.now),
     errorCode: f('errors.0.code'),
     errorText: first(f('errors.0.title'), f('errors.0.message')),
     conversationId: f('conversation.id'),
     pricingCategory: f('pricing.category'),
+    ...where(ctx.at),
   };
 }
 
@@ -105,42 +106,42 @@ export interface ParseOptions {
 function receiving(number: string | undefined, ctx: ParseOptions): Receiving | null {
   const numbers = ctx.numbers ?? {};
   const at = ctx.overlay ? receivingNumber(ctx.overlay, number) : acceptsNumber(numbers, number) ? { line: lineFor(numbers, number) } : null;
-  if (!at && number) ctx.onIgnored?.(number);
-  return at;
+  if (!at) {
+    if (number) ctx.onIgnored?.(number);
+    return null;
+  }
+  return number ? { ...at, phoneNumberId: number } : at;
 }
 
-/**
- * One `messages` change → the batch; a `calls` change → batch.calls (docs/28: its statuses are call
- * statuses, never ingested as message ticks); another field, or a number that is neither line, is skipped.
- */
+/** `messages` → the batch; `smb_message_echoes` → echoes; `calls` → batch.calls (docs/28, never ticks); else skipped. */
 function readChange(change: unknown, ctx: ParseOptions & { batch: WebhookBatch }): void {
   const kind = field(change, 'field');
-  if (kind !== 'messages' && kind !== 'calls') return;
+  if (kind !== 'messages' && kind !== ECHO_FIELD && kind !== 'calls') return;
   const value = get(change, 'value');
   const number = field(value, 'metadata.phone_number_id') ?? undefined;
   const at = receiving(number, ctx);
   if (!at) return;
   if (kind === 'calls') return readCalls(value, { now: ctx.now, phoneNumberId: number ?? null, out: (ctx.batch.calls ??= []) });
+  if (kind === ECHO_FIELD) return void ctx.batch.echoes.push(...readEchoes(value, at));
   readMessages(value, { ...ctx, at });
 }
 
 /** A `messages` change's inbound messages and delivery statuses. */
 function readMessages(value: unknown, ctx: ParseOptions & { batch: WebhookBatch; at: Receiving }): void {
-  const at = ctx.at;
   const contacts = list(get(value, 'contacts'));
   const names = new Map(contacts.map((c) => [field(c, 'wa_id') ?? '', field(c, 'profile.name')?.trim() ?? '']));
   for (const m of list(get(value, 'messages'))) {
-    const event = toInbound(m, { names, now: ctx.now, at });
+    const event = toInbound(m, { names, now: ctx.now, at: ctx.at });
     if (event) ctx.batch.messages.push(event);
   }
   for (const s of list(get(value, 'statuses'))) {
-    const event = toStatus(s, ctx.now);
+    const event = toStatus(s, { now: ctx.now, at: ctx.at });
     if (event) ctx.batch.statuses.push(event);
   }
 }
 
 export function parseWebhook(body: unknown, opts: ParseOptions): WebhookBatch {
-  const batch: WebhookBatch = { messages: [], statuses: [] };
+  const batch: WebhookBatch = { messages: [], statuses: [], echoes: [] };
   for (const entry of list(get(body, 'entry'))) {
     for (const change of list(get(entry, 'changes'))) readChange(change, { ...opts, batch });
   }
