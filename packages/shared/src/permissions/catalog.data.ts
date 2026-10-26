@@ -52,7 +52,9 @@ export const PERMISSION_ROWS = [
   { key: 'lessons.status', area: 'schedule', grants: T },
   { key: 'lessons.write', area: 'schedule', grants: [] },
   { key: 'booking.write', area: 'schedule', grants: [] },
-  { key: 'pricing.read', area: 'schedule', grants: [] },
+  // «حاسبة الأسعار» GET /pricing/quote and /pricing/catalog. Sales by default (owner 2026-10-26: «عرض سعر» in the
+  // chat, migration 20261026000760); teachers never.
+  { key: 'pricing.read', area: 'schedule', grants: ['sales'] },
   { key: 'tasks.manage', area: 'schedule', grants: [] },
   { key: 'classroom.join', area: 'classroom', grants: TAS },
   { key: 'classroom.kick', area: 'classroom', grants: TAS },

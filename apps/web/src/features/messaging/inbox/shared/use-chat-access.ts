@@ -11,6 +11,8 @@ export interface ChatAccess {
   files: boolean;
   /** «الردود السريعة» (owner 2026-10-25): the admin and assistants who may send; never teachers. */
   replies: boolean;
+  /** «عرض سعر» (owner 2026-10-26): GET /pricing/quote (pricing.read, sales by default); never teachers. */
+  quote: boolean;
 }
 
 /**
@@ -20,7 +22,8 @@ export interface ChatAccess {
  */
 export function useChatAccess(mode: InboxMode): ChatAccess {
   const me = useQuery(meQuery).data;
-  const lacks = (p: 'inbox.send' | 'messages.read') => mode !== 'admin' && !!me && !canDo(me, p);
+  const lacks = (p: 'inbox.send' | 'messages.read' | 'pricing.read') => mode !== 'admin' && !!me && !canDo(me, p);
   const send = !lacks('inbox.send');
-  return { send, templates: !lacks('messages.read'), files: send && mode !== 'teacher', replies: send && mode !== 'teacher' };
+  const staff = send && mode !== 'teacher';
+  return { send, templates: !lacks('messages.read'), files: staff, replies: staff, quote: staff && !lacks('pricing.read') };
 }

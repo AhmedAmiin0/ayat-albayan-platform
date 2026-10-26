@@ -1,3 +1,4 @@
+import { useIsMutating } from '@tanstack/react-query';
 import { useEffect, useRef, useState } from 'react';
 import { requestId } from '@/core/lib/http/request-id';
 import { useChatActions } from '../thread/hooks/chat-actions';
@@ -6,7 +7,7 @@ import { quoteOf } from '../messages/hooks/quote-text';
 import { useSendStagedFile } from '../saved-replies/send-staged';
 import type { StagedFile } from '../saved-replies/use-saved-reply';
 import { fileError } from './send-file';
-import { type Outgoing, useSendMessage } from '../thread/hooks/use-thread';
+import { type Outgoing, sendKey, useSendMessage } from '../thread/hooks/use-thread';
 
 /** One template draft = one key + params: re-sending it after an error keeps its clientRequestId. */
 const draftOf = (out: Outgoing): string =>
@@ -28,11 +29,15 @@ interface ComposerSendInput {
  */
 export function useComposerSend({ phone, text, setText, staged, clearStaged }: ComposerSendInput) {
   const send = useSendMessage(phone);
+  // Any send of this chat in flight (this box's or «عرض سعر»'s): one at a time.
+  const inFlight = useIsMutating({ mutationKey: sendKey(phone) }) > 0;
   const sendStaged = useSendStagedFile(phone);
   const [draftId, setDraftId] = useState(requestId);
   // «رد» (owner 2026-10-25): the message the next text answers; another target is another send.
   const { reply, setReply } = useChatActions();
   const draftReply = useRef<string | undefined>(undefined);
+  // The text that id was minted for: a box filled from outside since (a quote, a saved reply) is a new request.
+  const draftText = useRef<string | null>(null);
   // The same for a template: the same template + params sent again (after «جرّب تاني») reuses its id.
   const templateDraft = useRef<{ draft: string; id: string } | null>(null);
   const sendTemplate = (out: Outgoing) => {
@@ -53,14 +58,15 @@ export function useComposerSend({ phone, text, setText, staged, clearStaged }: C
     sendStaged.mutate(file, { onSuccess: () => still() && clearStaged() });
   };
   const sendText = () => {
-    if (send.isPending || sendStaged.isPending) return;
+    if (inFlight || send.isPending || sendStaged.isPending) return;
     const body = text.trim();
     const tapped = staged?.requestId;
     if (!body) return sendFile(staged);
     setText('');
     const replyTo = reply ? quoteOf(reply) : undefined;
-    const id = draftReply.current === replyTo?.id ? draftId : requestId();
+    const id = draftReply.current === replyTo?.id && draftText.current === body ? draftId : requestId();
     draftReply.current = replyTo?.id;
+    draftText.current = body;
     setDraftId(id);
     send.mutate(
       { out: { kind: 'text', text: body, ...(replyTo ? { replyTo } : {}) }, id },
@@ -76,7 +82,7 @@ export function useComposerSend({ phone, text, setText, staged, clearStaged }: C
     );
   };
   const errors = [send.isError ? sendError(send.error) : null, sendStaged.isError ? fileError(sendStaged.error) : null];
-  return { sendTemplate, sendText, renew: () => setDraftId(requestId()), errors, pending: send.isPending || sendStaged.isPending };
+  return { sendTemplate, sendText, renew: () => setDraftId(requestId()), errors, pending: inFlight || send.isPending || sendStaged.isPending };
 }
 
 /** The failures under the box: the text's always; the file's only while the window is open. */
