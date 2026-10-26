@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { Link } from '@tanstack/react-router';
 import { earningsSummaryQuery } from '@/features/payouts/api';
-import { Amount } from '@/features/subscriptions/Amount';
+import { Amount } from '@/features/subscriptions/balance/Amount';
 import { t } from '@/lib/i18n/i18n';
 import { receivablesQuery } from './api';
 

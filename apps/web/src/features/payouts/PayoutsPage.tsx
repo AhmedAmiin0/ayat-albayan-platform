@@ -10,7 +10,7 @@ import { PageHead } from '@/components/ui/layout/page';
 import { downloadCsv } from '@/features/exports/api';
 import { ListSkeleton } from '@/components/ui/display/skeleton';
 import { MONEY_KEY } from '@/features/subscriptions/api';
-import { Amount } from '@/features/subscriptions/Amount';
+import { Amount } from '@/features/subscriptions/balance/Amount';
 import { apiErrorText } from '@/features/subscriptions/format';
 import { t } from '@/lib/i18n/i18n';
 import {

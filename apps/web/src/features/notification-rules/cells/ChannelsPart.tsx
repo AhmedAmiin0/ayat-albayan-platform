@@ -1,8 +1,8 @@
 import type { NotificationEntryView } from '@ab/shared';
 import { t } from '@/lib/i18n/i18n';
-import { RuleCheck } from '../RuleCheck';
+import { RuleCheck } from '../table/RuleCheck';
 import { availableChannels, channelWords, fillText } from '../rule-text';
-import type { RuleRowState } from '../use-rule-row';
+import type { RuleRowState } from '../table/use-rule-row';
 
 const r = t.notificationRules;
 

@@ -8,7 +8,7 @@ import { t } from '@/lib/i18n/i18n';
 import { sendGateQuery } from '../messaging/api';
 import { integrationsQuery, putIntegrationValues } from './integrations-api';
 import { changesOf, draftOf, emptiesAllowList, invalidKeys, matchesIntegration, type IntegrationDraft } from './integrations-form';
-import { IntegrationGroup } from './IntegrationGroup';
+import { IntegrationGroup } from './rows/IntegrationGroup';
 
 const s = t.integrations;
 

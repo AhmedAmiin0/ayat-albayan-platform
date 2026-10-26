@@ -3,7 +3,7 @@ import { Icon } from '@/components/ui/display/icon';
 import { t } from '@/lib/i18n/i18n';
 import { stateChip } from '../../notification-catalogue/catalogue-text';
 import { NamePart } from '../cells/NamePart';
-import { editableRule } from '../RuleRow';
+import { editableRule } from '../table/RuleRow';
 import { fillText, shortReasonText } from '../rule-text';
 import { useRules } from '../rules-context';
 import { onOffWord } from '../switch/RuleSwitchInput';

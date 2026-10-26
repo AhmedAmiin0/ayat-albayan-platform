@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { Button, buttonVariants } from '@/components/ui/form/button';
 import { Icon } from '@/components/ui/display/icon';
 import { reclassifyLead } from '@/features/leads/leads.api';
-import { ReclassifyConfirm } from '@/features/leads/ReclassifyConfirm';
+import { ReclassifyConfirm } from '@/features/leads/list/ReclassifyConfirm';
 import { t } from '@/lib/i18n/i18n';
 import type { InboxLead } from '../../api/api';
 import { LeadStatusChange } from '../../lead/LeadStatusChange';

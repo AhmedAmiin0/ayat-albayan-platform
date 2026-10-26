@@ -3,7 +3,7 @@ import { createColumnHelper } from '@tanstack/react-table';
 import type { DataTableFeatures } from '@/components/DataTable';
 import { Button } from '@/components/ui/form/button';
 import { formatDate } from '@/features/leads/format';
-import { Amount } from '@/features/subscriptions/Amount';
+import { Amount } from '@/features/subscriptions/balance/Amount';
 import { t } from '@/lib/i18n/i18n';
 
 const col = createColumnHelper<DataTableFeatures, TeacherPaymentView>();

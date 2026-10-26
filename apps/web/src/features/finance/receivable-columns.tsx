@@ -2,7 +2,7 @@ import { AGING_BUCKETS, type ReceivableRow } from '@ab/shared';
 import { Link } from '@tanstack/react-router';
 import { createColumnHelper } from '@tanstack/react-table';
 import type { DataTableFeatures } from '@/components/DataTable';
-import { Amount } from '@/features/subscriptions/Amount';
+import { Amount } from '@/features/subscriptions/balance/Amount';
 import { t } from '@/lib/i18n/i18n';
 
 const col = createColumnHelper<DataTableFeatures, ReceivableRow>();

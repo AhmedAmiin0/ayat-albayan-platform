@@ -6,7 +6,7 @@ import {
   type AssistantTermsInput,
   type AssistantTermsView,
 } from '@ab/shared';
-import { paidAtDay } from '@/features/payments/pay-day';
+import { paidAtDay } from '@/features/payments/record/pay-day';
 
 /** The terms editor's state: every field a string, so half-typed input never throws. */
 export type TermsForm = {

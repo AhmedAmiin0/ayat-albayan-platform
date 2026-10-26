@@ -8,7 +8,7 @@ const apiFetch = vi.hoisted(() => vi.fn());
 vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 vi.mock('@tanstack/react-router', async () => ({ Link: (await import('@/features/dashboard/link-mock')).Link }));
 // The page's own head is under test; the cards below it have their own tests.
-vi.mock('@/features/subscriptions/BalanceCard', () => ({ BalanceCard: () => null }));
+vi.mock('@/features/subscriptions/balance/BalanceCard', () => ({ BalanceCard: () => null }));
 vi.mock('./StudentProfileForm', () => ({ StudentProfileForm: () => null }));
 vi.mock('../duplicates/SiblingMerge', () => ({ SiblingMerge: () => null }));
 

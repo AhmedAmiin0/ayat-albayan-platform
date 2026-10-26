@@ -7,7 +7,7 @@ import { FormAlert } from '@/components/ui/form/form-alert';
 import { PageHead } from '@/components/ui/layout/page';
 import { Pager } from '@/components/ui/layout/pager';
 import { Toast } from '@/components/ui/overlay/toast';
-import { RecordPaymentDialog } from '@/features/payments/RecordPaymentDialog';
+import { RecordPaymentDialog } from '@/features/payments/record/RecordPaymentDialog';
 import { t } from '@/lib/i18n/i18n';
 import { clearFilterSearch, toFilterSearch, toSortSearch } from '@/lib/list/list-search';
 import { invoiceDownload, invoicesQuery, type InvoiceView } from './api';

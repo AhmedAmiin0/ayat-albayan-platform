@@ -3,40 +3,12 @@
     "files": 0,
     "dirs": 40
   },
-  "apps/web/src/features/feedback": {
-    "files": 16,
-    "dirs": 0
-  },
   "apps/web/src/features/inbox/lists": {
     "files": 17,
     "dirs": 0
   },
   "apps/web/src/features/inbox/saved-replies": {
     "files": 20,
-    "dirs": 0
-  },
-  "apps/web/src/features/integrations": {
-    "files": 13,
-    "dirs": 0
-  },
-  "apps/web/src/features/leads": {
-    "files": 16,
-    "dirs": 0
-  },
-  "apps/web/src/features/notification-rules": {
-    "files": 16,
-    "dirs": 4
-  },
-  "apps/web/src/features/payments": {
-    "files": 22,
-    "dirs": 0
-  },
-  "apps/web/src/features/pricing": {
-    "files": 13,
-    "dirs": 0
-  },
-  "apps/web/src/features/subscriptions": {
-    "files": 17,
     "dirs": 0
   },
   "apps/web/src/routes": {
