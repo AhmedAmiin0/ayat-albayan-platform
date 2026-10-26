@@ -9,4 +9,4 @@ export function sanitizeBuild(raw: unknown): string {
  */
 export const WEB_CLIENT_TAG = `web/${sanitizeBuild(import.meta.env['VITE_BUILD_ID'])}`;
 
-export const CLIENT_HEADER = 'X-AB-Client';
+export { CLIENT_HEADER } from '@ab/client-core';

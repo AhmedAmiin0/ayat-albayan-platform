@@ -6,7 +6,7 @@ import { join } from 'node:path';
 import { unzipSync } from 'fflate';
 import readXlsxFile from 'read-excel-file/node';
 import { PKG_DIR } from '../cache.ts';
-import { isExcluded } from './headers.ts';
+import { isExcluded } from './headers/headers.ts';
 
 export interface ZipEntryInfo {
   name: string;

@@ -1,0 +1,72 @@
+{
+  "id": "d4b",
+  "seq": 105,
+  "moves": [
+    {
+      "from": "tools/migrate/src/plan/match*",
+      "to": "tools/migrate/src/plan/match/"
+    },
+    {
+      "from": "tools/migrate/src/plan/similar*",
+      "to": "tools/migrate/src/plan/match/"
+    },
+    {
+      "from": "tools/migrate/src/plan/templates.target*",
+      "to": "tools/migrate/src/plan/match/"
+    },
+    {
+      "from": "tools/migrate/src/sources/headers*",
+      "to": "tools/migrate/src/sources/headers/"
+    }
+  ],
+  "files": [
+    [
+      "tools/migrate/src/plan/match.target.ts",
+      "tools/migrate/src/plan/match/match.target.ts"
+    ],
+    [
+      "tools/migrate/src/plan/match.test.ts",
+      "tools/migrate/src/plan/match/match.test.ts"
+    ],
+    [
+      "tools/migrate/src/plan/match.ts",
+      "tools/migrate/src/plan/match/match.ts"
+    ],
+    [
+      "tools/migrate/src/plan/similar.ts",
+      "tools/migrate/src/plan/match/similar.ts"
+    ],
+    [
+      "tools/migrate/src/plan/templates.target.test.ts",
+      "tools/migrate/src/plan/match/templates.target.test.ts"
+    ],
+    [
+      "tools/migrate/src/plan/templates.target.ts",
+      "tools/migrate/src/plan/match/templates.target.ts"
+    ],
+    [
+      "tools/migrate/src/sources/headers.common.ts",
+      "tools/migrate/src/sources/headers/headers.common.ts"
+    ],
+    [
+      "tools/migrate/src/sources/headers.fin.ts",
+      "tools/migrate/src/sources/headers/headers.fin.ts"
+    ],
+    [
+      "tools/migrate/src/sources/headers.hub.ts",
+      "tools/migrate/src/sources/headers/headers.hub.ts"
+    ],
+    [
+      "tools/migrate/src/sources/headers.money.ts",
+      "tools/migrate/src/sources/headers/headers.money.ts"
+    ],
+    [
+      "tools/migrate/src/sources/headers.ops.ts",
+      "tools/migrate/src/sources/headers/headers.ops.ts"
+    ],
+    [
+      "tools/migrate/src/sources/headers.ts",
+      "tools/migrate/src/sources/headers/headers.ts"
+    ]
+  ]
+}

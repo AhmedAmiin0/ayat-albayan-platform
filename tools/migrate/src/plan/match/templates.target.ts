@@ -2,12 +2,12 @@
 // import syncs Meta's own columns onto them by (meta_name, language) (map/templates/write.ts), so
 // the plan says so: such a template is an `update` with its field changes in review.xlsx, never a
 // silent overwrite planned as a `create`. SELECT only; a target without the table plans creates.
-import type { TargetDb } from '../db/target.ts';
-import { keyId } from '../keys.ts';
-import { SYNCED } from '../map/templates/write.ts';
-import type { Existing } from '../types.ts';
-import { type FieldChange, sameValue } from './changes.ts';
-import type { Desired } from './resolve.ts';
+import type { TargetDb } from '../../db/target.ts';
+import { keyId } from '../../keys.ts';
+import { SYNCED } from '../../map/templates/write.ts';
+import type { Existing } from '../../types.ts';
+import { type FieldChange, sameValue } from '../changes.ts';
+import type { Desired } from '../resolve.ts';
 
 interface TemplateRow {
   meta_name: string;

@@ -32,7 +32,7 @@ ssh "$SSH_HOST" "cd $DEST && rm -rf src.old && { [ ! -d src ] || mv src src.old;
 
 step "3/5 web build against staging"
 set -a; . "$ART/web.env"; set +a
-pnpm --dir "$ROOT" --filter @ab/shared build >/dev/null
+pnpm --dir "$ROOT" --filter @ab/shared --filter @ab/client-core build >/dev/null
 pnpm --dir "$ROOT" --filter web build
 
 step "4/5 upload web (atomic swap)"
