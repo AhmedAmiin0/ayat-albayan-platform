@@ -2,7 +2,7 @@ import { Button } from '@/components/ui/form/button';
 import { Dialog } from '@/components/ui/overlay/dialog';
 import { Ltr } from '@/components/ui/display/ltr';
 import { monthLabel } from '@/features/payouts/MonthSelect';
-import { Amount } from '@/features/subscriptions/Amount';
+import { Amount } from '@/features/subscriptions/balance/Amount';
 import { t } from '@/lib/i18n/i18n';
 import type { AssistantStatementView } from '../api';
 import { StatementTotals } from './StatementTotals';

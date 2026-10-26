@@ -6,7 +6,7 @@ import { FormAlert } from '@/components/ui/form/form-alert';
 import { Input } from '@/components/ui/form/input';
 import { Select } from '@/components/ui/form/select';
 import { usePermissions } from '@/features/auth/use-permissions';
-import { paidAtDay } from '@/features/payments/pay-day';
+import { paidAtDay } from '@/features/payments/record/pay-day';
 import { t } from '@/lib/i18n/i18n';
 import { ASSISTANTS_KEY, assistantsQuery, broughtByQuery, setBroughtBy } from '../api';
 import { broughtAtOf } from './brought-at';

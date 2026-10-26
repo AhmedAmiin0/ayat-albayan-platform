@@ -2,7 +2,7 @@ import { PUBLIC_SETTING_DEFAULTS } from '@ab/shared';
 import { screen, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { EnterButton } from '@/features/classroom/join/JoinButton';
-import { receiptProblem } from '@/features/payments/ReceiptField';
+import { receiptProblem } from '@/features/payments/attachments/ReceiptField';
 import { renderWithClient } from '@/features/inbox/testing/test-utils';
 import { t } from '@/lib/i18n/i18n';
 import { publicConfigQuery, usePublicConfig } from './public-config';

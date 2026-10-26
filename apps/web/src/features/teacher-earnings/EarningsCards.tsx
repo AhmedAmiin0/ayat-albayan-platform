@@ -1,5 +1,5 @@
 import type { TeacherEarningsBalanceView } from '@ab/shared';
-import { Amount } from '@/features/subscriptions/Amount';
+import { Amount } from '@/features/subscriptions/balance/Amount';
 import { moneyText } from '@/features/subscriptions/format';
 import { t } from '@/lib/i18n/i18n';
 import { cn } from '@/lib/utils';

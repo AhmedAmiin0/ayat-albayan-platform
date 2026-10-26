@@ -5,7 +5,7 @@ import { StatusChip } from '@/components/ui/display/status-chip';
 import { formatDate } from '@/features/leads/format';
 import { LedgerPaid } from './LedgerPaid';
 import { PayoutActions } from './PayoutActions';
-import { Amount } from '@/features/subscriptions/Amount';
+import { Amount } from '@/features/subscriptions/balance/Amount';
 import { durationLabel } from '@/features/pricing/format';
 import { moneyText } from '@/features/subscriptions/format';
 import { t } from '@/lib/i18n/i18n';

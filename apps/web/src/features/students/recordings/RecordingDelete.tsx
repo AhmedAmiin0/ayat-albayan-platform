@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/form/button';
 import { Icon } from '@/components/ui/display/icon';
 import { ApiError } from '@/lib/http/api';
-import { ConfirmDialog } from '@/features/payments/ConfirmDialog';
+import { ConfirmDialog } from '@/features/payments/record/ConfirmDialog';
 import { t } from '@/lib/i18n/i18n';
 import { deleteRecording, RECORDINGS_KEY } from './recordings-api';
 

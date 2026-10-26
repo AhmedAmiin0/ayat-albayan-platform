@@ -7,8 +7,8 @@ import { Button } from '@/components/ui/form/button';
 import { Ltr } from '@/components/ui/display/ltr';
 import { StatusChip } from '@/components/ui/display/status-chip';
 import { Toast } from '@/components/ui/overlay/toast';
-import { CreateSubscriptionDialog } from '@/features/subscriptions/CreateSubscriptionDialog';
-import type { PickedStudent } from '@/features/subscriptions/StudentPicker';
+import { CreateSubscriptionDialog } from '@/features/subscriptions/create/CreateSubscriptionDialog';
+import type { PickedStudent } from '@/features/subscriptions/create/StudentPicker';
 import { t } from '@/lib/i18n/i18n';
 import { dueText, packageChipProps, packageLine, subscribeLabel } from './subscription';
 

@@ -1,4 +1,4 @@
-import { Amount } from '@/features/subscriptions/Amount';
+import { Amount } from '@/features/subscriptions/balance/Amount';
 import { cn } from '@/lib/utils';
 
 type Props = { totals: Readonly<Record<string, number>>; className?: string };

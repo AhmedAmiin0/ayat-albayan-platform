@@ -1,0 +1,228 @@
+{
+  "id": "b18a",
+  "seq": 65,
+  "moves": [
+    {
+      "from": "apps/web/src/features/payments/Attachment*",
+      "to": "apps/web/src/features/payments/attachments/"
+    },
+    {
+      "from": "apps/web/src/features/payments/attachments*",
+      "to": "apps/web/src/features/payments/attachments/"
+    },
+    {
+      "from": "apps/web/src/features/payments/ReceiptDialog*",
+      "to": "apps/web/src/features/payments/attachments/"
+    },
+    {
+      "from": "apps/web/src/features/payments/ReceiptField*",
+      "to": "apps/web/src/features/payments/attachments/"
+    },
+    {
+      "from": "apps/web/src/features/payments/RecordPaymentDialog*",
+      "to": "apps/web/src/features/payments/record/"
+    },
+    {
+      "from": "apps/web/src/features/payments/use-record-payment*",
+      "to": "apps/web/src/features/payments/record/"
+    },
+    {
+      "from": "apps/web/src/features/payments/PaymentFields*",
+      "to": "apps/web/src/features/payments/record/"
+    },
+    {
+      "from": "apps/web/src/features/payments/EditPaymentDialog*",
+      "to": "apps/web/src/features/payments/record/"
+    },
+    {
+      "from": "apps/web/src/features/payments/ConfirmDialog*",
+      "to": "apps/web/src/features/payments/record/"
+    },
+    {
+      "from": "apps/web/src/features/payments/SubscriptionPicker*",
+      "to": "apps/web/src/features/payments/record/"
+    },
+    {
+      "from": "apps/web/src/features/payments/pay-day*",
+      "to": "apps/web/src/features/payments/record/"
+    },
+    {
+      "from": "apps/web/src/features/subscriptions/CreateSubscriptionDialog*",
+      "to": "apps/web/src/features/subscriptions/create/"
+    },
+    {
+      "from": "apps/web/src/features/subscriptions/PricingFields*",
+      "to": "apps/web/src/features/subscriptions/create/"
+    },
+    {
+      "from": "apps/web/src/features/subscriptions/pricing-form*",
+      "to": "apps/web/src/features/subscriptions/create/"
+    },
+    {
+      "from": "apps/web/src/features/subscriptions/QuotePreview*",
+      "to": "apps/web/src/features/subscriptions/create/"
+    },
+    {
+      "from": "apps/web/src/features/subscriptions/StudentPicker*",
+      "to": "apps/web/src/features/subscriptions/create/"
+    },
+    {
+      "from": "apps/web/src/features/subscriptions/RenewSubscriptionButton*",
+      "to": "apps/web/src/features/subscriptions/create/"
+    },
+    {
+      "from": "apps/web/src/features/subscriptions/BalanceCard*",
+      "to": "apps/web/src/features/subscriptions/balance/"
+    },
+    {
+      "from": "apps/web/src/features/subscriptions/BalanceDetails*",
+      "to": "apps/web/src/features/subscriptions/balance/"
+    },
+    {
+      "from": "apps/web/src/features/subscriptions/OpenTasks*",
+      "to": "apps/web/src/features/subscriptions/balance/"
+    },
+    {
+      "from": "apps/web/src/features/subscriptions/Amount.*",
+      "to": "apps/web/src/features/subscriptions/balance/"
+    }
+  ],
+  "files": [
+    [
+      "apps/web/src/features/payments/AttachmentItems.tsx",
+      "apps/web/src/features/payments/attachments/AttachmentItems.tsx"
+    ],
+    [
+      "apps/web/src/features/payments/AttachmentPicker.tsx",
+      "apps/web/src/features/payments/attachments/AttachmentPicker.tsx"
+    ],
+    [
+      "apps/web/src/features/payments/attachments.test.ts",
+      "apps/web/src/features/payments/attachments/attachments.test.ts"
+    ],
+    [
+      "apps/web/src/features/payments/attachments.ts",
+      "apps/web/src/features/payments/attachments/attachments.ts"
+    ],
+    [
+      "apps/web/src/features/payments/AttachmentsDialog.en.test.tsx",
+      "apps/web/src/features/payments/attachments/AttachmentsDialog.en.test.tsx"
+    ],
+    [
+      "apps/web/src/features/payments/AttachmentsDialog.test.tsx",
+      "apps/web/src/features/payments/attachments/AttachmentsDialog.test.tsx"
+    ],
+    [
+      "apps/web/src/features/payments/AttachmentsDialog.tsx",
+      "apps/web/src/features/payments/attachments/AttachmentsDialog.tsx"
+    ],
+    [
+      "apps/web/src/features/payments/AttachmentsField.tsx",
+      "apps/web/src/features/payments/attachments/AttachmentsField.tsx"
+    ],
+    [
+      "apps/web/src/features/payments/ConfirmDialog.test.tsx",
+      "apps/web/src/features/payments/record/ConfirmDialog.test.tsx"
+    ],
+    [
+      "apps/web/src/features/payments/ConfirmDialog.tsx",
+      "apps/web/src/features/payments/record/ConfirmDialog.tsx"
+    ],
+    [
+      "apps/web/src/features/payments/EditPaymentDialog.tsx",
+      "apps/web/src/features/payments/record/EditPaymentDialog.tsx"
+    ],
+    [
+      "apps/web/src/features/payments/pay-day.ts",
+      "apps/web/src/features/payments/record/pay-day.ts"
+    ],
+    [
+      "apps/web/src/features/payments/PaymentFields.tsx",
+      "apps/web/src/features/payments/record/PaymentFields.tsx"
+    ],
+    [
+      "apps/web/src/features/payments/ReceiptDialog.tsx",
+      "apps/web/src/features/payments/attachments/ReceiptDialog.tsx"
+    ],
+    [
+      "apps/web/src/features/payments/ReceiptField.tsx",
+      "apps/web/src/features/payments/attachments/ReceiptField.tsx"
+    ],
+    [
+      "apps/web/src/features/payments/RecordPaymentDialog.attachments.test.tsx",
+      "apps/web/src/features/payments/record/RecordPaymentDialog.attachments.test.tsx"
+    ],
+    [
+      "apps/web/src/features/payments/RecordPaymentDialog.test.tsx",
+      "apps/web/src/features/payments/record/RecordPaymentDialog.test.tsx"
+    ],
+    [
+      "apps/web/src/features/payments/RecordPaymentDialog.tsx",
+      "apps/web/src/features/payments/record/RecordPaymentDialog.tsx"
+    ],
+    [
+      "apps/web/src/features/payments/SubscriptionPicker.tsx",
+      "apps/web/src/features/payments/record/SubscriptionPicker.tsx"
+    ],
+    [
+      "apps/web/src/features/payments/use-record-payment.ts",
+      "apps/web/src/features/payments/record/use-record-payment.ts"
+    ],
+    [
+      "apps/web/src/features/subscriptions/Amount.tsx",
+      "apps/web/src/features/subscriptions/balance/Amount.tsx"
+    ],
+    [
+      "apps/web/src/features/subscriptions/BalanceCard.test.tsx",
+      "apps/web/src/features/subscriptions/balance/BalanceCard.test.tsx"
+    ],
+    [
+      "apps/web/src/features/subscriptions/BalanceCard.tsx",
+      "apps/web/src/features/subscriptions/balance/BalanceCard.tsx"
+    ],
+    [
+      "apps/web/src/features/subscriptions/BalanceDetails.tsx",
+      "apps/web/src/features/subscriptions/balance/BalanceDetails.tsx"
+    ],
+    [
+      "apps/web/src/features/subscriptions/CreateSubscriptionDialog.retry.test.tsx",
+      "apps/web/src/features/subscriptions/create/CreateSubscriptionDialog.retry.test.tsx"
+    ],
+    [
+      "apps/web/src/features/subscriptions/CreateSubscriptionDialog.tsx",
+      "apps/web/src/features/subscriptions/create/CreateSubscriptionDialog.tsx"
+    ],
+    [
+      "apps/web/src/features/subscriptions/OpenTasks.tsx",
+      "apps/web/src/features/subscriptions/balance/OpenTasks.tsx"
+    ],
+    [
+      "apps/web/src/features/subscriptions/pricing-form.ts",
+      "apps/web/src/features/subscriptions/create/pricing-form.ts"
+    ],
+    [
+      "apps/web/src/features/subscriptions/PricingFields.test.tsx",
+      "apps/web/src/features/subscriptions/create/PricingFields.test.tsx"
+    ],
+    [
+      "apps/web/src/features/subscriptions/PricingFields.tsx",
+      "apps/web/src/features/subscriptions/create/PricingFields.tsx"
+    ],
+    [
+      "apps/web/src/features/subscriptions/QuotePreview.tsx",
+      "apps/web/src/features/subscriptions/create/QuotePreview.tsx"
+    ],
+    [
+      "apps/web/src/features/subscriptions/RenewSubscriptionButton.test.tsx",
+      "apps/web/src/features/subscriptions/create/RenewSubscriptionButton.test.tsx"
+    ],
+    [
+      "apps/web/src/features/subscriptions/RenewSubscriptionButton.tsx",
+      "apps/web/src/features/subscriptions/create/RenewSubscriptionButton.tsx"
+    ],
+    [
+      "apps/web/src/features/subscriptions/StudentPicker.tsx",
+      "apps/web/src/features/subscriptions/create/StudentPicker.tsx"
+    ]
+  ]
+}

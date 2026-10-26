@@ -4,7 +4,7 @@ import { ConfirmSwitchDialog } from '@/components/settings/dialogs/ConfirmSwitch
 import { t } from '@/lib/i18n/i18n';
 import { failureText, fillText, isFamilyFacing, reachText } from '../rule-text';
 import { useRules } from '../rules-context';
-import type { RuleRowState } from '../use-rule-row';
+import type { RuleRowState } from '../table/use-rule-row';
 import { EssentialOffDialog } from './EssentialOffDialog';
 import { onOffWord, RuleSwitchInput } from './RuleSwitchInput';
 

@@ -5,7 +5,7 @@ import { useMemo } from 'react';
 import { DataTable, type DataTableFeatures } from '@/components/DataTable';
 import { FormAlert } from '@/components/ui/form/form-alert';
 import { monthLabel } from '@/features/payouts/MonthSelect';
-import { Amount } from '@/features/subscriptions/Amount';
+import { Amount } from '@/features/subscriptions/balance/Amount';
 import { t } from '@/lib/i18n/i18n';
 import { categoriesQuery, categoryLabel, expenseYearQuery } from './api';
 

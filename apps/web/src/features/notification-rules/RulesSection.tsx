@@ -14,9 +14,9 @@ import { numbersQuery } from '../numbers/numbers-api';
 import { useRuleDrafts, type RuleDrafts } from './rule-drafts';
 import { RulesContext } from './rules-context';
 import { canManageNotifications } from './rules-api';
-import { RulesHead } from './RulesHead';
+import { RulesHead } from './table/RulesHead';
 import { RulesStateStrip } from './RulesStateStrip';
-import { RulesTable } from './RulesTable';
+import { RulesTable } from './table/RulesTable';
 
 const r = t.notificationRules;
 const c = t.notificationCatalogue;

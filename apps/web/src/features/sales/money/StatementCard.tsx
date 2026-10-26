@@ -2,7 +2,7 @@ import { payoutStatusStyle, type AssistantStatementLineView, type AssistantState
 import { StatusChip } from '@/components/ui/display/status-chip';
 import { formatDate } from '@/features/leads/format';
 import { monthLabel } from '@/features/payouts/MonthSelect';
-import { Amount } from '@/features/subscriptions/Amount';
+import { Amount } from '@/features/subscriptions/balance/Amount';
 import { t } from '@/lib/i18n/i18n';
 import { CurrencyTotalsList } from './CurrencyTotalsList';
 

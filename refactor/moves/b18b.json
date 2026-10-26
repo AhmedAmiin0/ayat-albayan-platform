@@ -1,0 +1,188 @@
+{
+  "id": "b18b",
+  "seq": 66,
+  "moves": [
+    {
+      "from": "apps/web/src/features/pricing/CalcSteps*",
+      "to": "apps/web/src/features/pricing/calculator/"
+    },
+    {
+      "from": "apps/web/src/features/pricing/SegmentStep*",
+      "to": "apps/web/src/features/pricing/calculator/"
+    },
+    {
+      "from": "apps/web/src/features/pricing/Stepper*",
+      "to": "apps/web/src/features/pricing/calculator/"
+    },
+    {
+      "from": "apps/web/src/features/pricing/QuoteResult*",
+      "to": "apps/web/src/features/pricing/calculator/"
+    },
+    {
+      "from": "apps/web/src/features/pricing/FxNote*",
+      "to": "apps/web/src/features/pricing/calculator/"
+    },
+    {
+      "from": "apps/web/src/features/leads/LeadList*",
+      "to": "apps/web/src/features/leads/list/"
+    },
+    {
+      "from": "apps/web/src/features/leads/LeadStatusTabs*",
+      "to": "apps/web/src/features/leads/list/"
+    },
+    {
+      "from": "apps/web/src/features/leads/LeadsToolbar*",
+      "to": "apps/web/src/features/leads/list/"
+    },
+    {
+      "from": "apps/web/src/features/leads/LeadFilterFields*",
+      "to": "apps/web/src/features/leads/list/"
+    },
+    {
+      "from": "apps/web/src/features/leads/lead-filters*",
+      "to": "apps/web/src/features/leads/list/"
+    },
+    {
+      "from": "apps/web/src/features/leads/lead-sort*",
+      "to": "apps/web/src/features/leads/list/"
+    },
+    {
+      "from": "apps/web/src/features/leads/LeadAssignSelect*",
+      "to": "apps/web/src/features/leads/list/"
+    },
+    {
+      "from": "apps/web/src/features/leads/AssignUnassignedButton*",
+      "to": "apps/web/src/features/leads/list/"
+    },
+    {
+      "from": "apps/web/src/features/leads/ReclassifyConfirm*",
+      "to": "apps/web/src/features/leads/list/"
+    },
+    {
+      "from": "apps/web/src/features/feedback/FeedbackForm*",
+      "to": "apps/web/src/features/feedback/public/"
+    },
+    {
+      "from": "apps/web/src/features/feedback/FeedbackPublicPage*",
+      "to": "apps/web/src/features/feedback/public/"
+    },
+    {
+      "from": "apps/web/src/features/feedback/RatingScale*",
+      "to": "apps/web/src/features/feedback/public/"
+    },
+    {
+      "from": "apps/web/src/features/feedback/ThankYou*",
+      "to": "apps/web/src/features/feedback/public/"
+    },
+    {
+      "from": "apps/web/src/features/feedback/KindLine*",
+      "to": "apps/web/src/features/feedback/public/"
+    }
+  ],
+  "files": [
+    [
+      "apps/web/src/features/feedback/FeedbackForm.en.test.tsx",
+      "apps/web/src/features/feedback/public/FeedbackForm.en.test.tsx"
+    ],
+    [
+      "apps/web/src/features/feedback/FeedbackForm.test.tsx",
+      "apps/web/src/features/feedback/public/FeedbackForm.test.tsx"
+    ],
+    [
+      "apps/web/src/features/feedback/FeedbackForm.tsx",
+      "apps/web/src/features/feedback/public/FeedbackForm.tsx"
+    ],
+    [
+      "apps/web/src/features/feedback/FeedbackPublicPage.test.tsx",
+      "apps/web/src/features/feedback/public/FeedbackPublicPage.test.tsx"
+    ],
+    [
+      "apps/web/src/features/feedback/FeedbackPublicPage.tsx",
+      "apps/web/src/features/feedback/public/FeedbackPublicPage.tsx"
+    ],
+    [
+      "apps/web/src/features/feedback/KindLine.tsx",
+      "apps/web/src/features/feedback/public/KindLine.tsx"
+    ],
+    [
+      "apps/web/src/features/feedback/RatingScale.tsx",
+      "apps/web/src/features/feedback/public/RatingScale.tsx"
+    ],
+    [
+      "apps/web/src/features/feedback/ThankYou.tsx",
+      "apps/web/src/features/feedback/public/ThankYou.tsx"
+    ],
+    [
+      "apps/web/src/features/leads/AssignUnassignedButton.tsx",
+      "apps/web/src/features/leads/list/AssignUnassignedButton.tsx"
+    ],
+    [
+      "apps/web/src/features/leads/lead-filters.test.ts",
+      "apps/web/src/features/leads/list/lead-filters.test.ts"
+    ],
+    [
+      "apps/web/src/features/leads/lead-filters.ts",
+      "apps/web/src/features/leads/list/lead-filters.ts"
+    ],
+    [
+      "apps/web/src/features/leads/lead-sort.test.ts",
+      "apps/web/src/features/leads/list/lead-sort.test.ts"
+    ],
+    [
+      "apps/web/src/features/leads/lead-sort.ts",
+      "apps/web/src/features/leads/list/lead-sort.ts"
+    ],
+    [
+      "apps/web/src/features/leads/LeadAssignSelect.tsx",
+      "apps/web/src/features/leads/list/LeadAssignSelect.tsx"
+    ],
+    [
+      "apps/web/src/features/leads/LeadFilterFields.tsx",
+      "apps/web/src/features/leads/list/LeadFilterFields.tsx"
+    ],
+    [
+      "apps/web/src/features/leads/LeadList.tsx",
+      "apps/web/src/features/leads/list/LeadList.tsx"
+    ],
+    [
+      "apps/web/src/features/leads/LeadListItem.tsx",
+      "apps/web/src/features/leads/list/LeadListItem.tsx"
+    ],
+    [
+      "apps/web/src/features/leads/LeadStatusTabs.tsx",
+      "apps/web/src/features/leads/list/LeadStatusTabs.tsx"
+    ],
+    [
+      "apps/web/src/features/leads/LeadsToolbar.tsx",
+      "apps/web/src/features/leads/list/LeadsToolbar.tsx"
+    ],
+    [
+      "apps/web/src/features/leads/ReclassifyConfirm.tsx",
+      "apps/web/src/features/leads/list/ReclassifyConfirm.tsx"
+    ],
+    [
+      "apps/web/src/features/pricing/CalcSteps.tsx",
+      "apps/web/src/features/pricing/calculator/CalcSteps.tsx"
+    ],
+    [
+      "apps/web/src/features/pricing/FxNote.tsx",
+      "apps/web/src/features/pricing/calculator/FxNote.tsx"
+    ],
+    [
+      "apps/web/src/features/pricing/QuoteResult.tsx",
+      "apps/web/src/features/pricing/calculator/QuoteResult.tsx"
+    ],
+    [
+      "apps/web/src/features/pricing/SegmentStep.tsx",
+      "apps/web/src/features/pricing/calculator/SegmentStep.tsx"
+    ],
+    [
+      "apps/web/src/features/pricing/Stepper.test.tsx",
+      "apps/web/src/features/pricing/calculator/Stepper.test.tsx"
+    ],
+    [
+      "apps/web/src/features/pricing/Stepper.tsx",
+      "apps/web/src/features/pricing/calculator/Stepper.tsx"
+    ]
+  ]
+}
