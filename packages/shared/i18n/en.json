@@ -2609,6 +2609,17 @@
         "subscribed": "Every guardian with a running subscription is added automatically; nobody is removed automatically",
         "teachers": "Every active teacher is added automatically; nobody is removed automatically"
       }
+    },
+    "quote": {
+      "open": "Price quote",
+      "title": "Price quote for the client",
+      "preview": "Offer text",
+      "send": "Send the offer",
+      "edit": "Edit before sending",
+      "copy": "Copy",
+      "copied": "Offer copied",
+      "copyFailed": "Could not copy the offer",
+      "close": "Close the price quote"
     }
   },
   "mobileFinance": {
