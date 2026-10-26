@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { teacherUpdateSchema } from '../schemas/people.js';
+import { teacherUpdateSchema } from '../schemas/people/people.js';
 import { meetingModeOf, TEACHER_MEETING_MODES, usesPlatform } from './meeting-mode.js';
 
 describe('usesPlatform', () => {

@@ -1,0 +1,140 @@
+{
+  "id": "d2c",
+  "seq": 100,
+  "moves": [
+    {
+      "from": "packages/shared/src/schemas/people*",
+      "to": "packages/shared/src/schemas/people/"
+    },
+    {
+      "from": "packages/shared/src/schemas/student-filters*",
+      "to": "packages/shared/src/schemas/people/"
+    },
+    {
+      "from": "packages/shared/src/schemas/student-update.test.ts",
+      "to": "packages/shared/src/schemas/people/"
+    },
+    {
+      "from": "packages/shared/src/schemas/teacher-students*",
+      "to": "packages/shared/src/schemas/people/"
+    },
+    {
+      "from": "packages/shared/src/schemas/leads*",
+      "to": "packages/shared/src/schemas/people/"
+    },
+    {
+      "from": "packages/shared/src/schemas/scheduling*",
+      "to": "packages/shared/src/schemas/lessons/"
+    },
+    {
+      "from": "packages/shared/src/schemas/lesson-time*",
+      "to": "packages/shared/src/schemas/lessons/"
+    },
+    {
+      "from": "packages/shared/src/schemas/availability*",
+      "to": "packages/shared/src/schemas/lessons/"
+    },
+    {
+      "from": "packages/shared/src/schemas/day-times*",
+      "to": "packages/shared/src/schemas/lessons/"
+    },
+    {
+      "from": "packages/shared/src/schemas/booking-extras*",
+      "to": "packages/shared/src/schemas/lessons/"
+    },
+    {
+      "from": "packages/shared/src/schemas/course-change*",
+      "to": "packages/shared/src/schemas/lessons/"
+    }
+  ],
+  "files": [
+    [
+      "packages/shared/src/schemas/availability.ts",
+      "packages/shared/src/schemas/lessons/availability.ts"
+    ],
+    [
+      "packages/shared/src/schemas/booking-extras.makeup.test.ts",
+      "packages/shared/src/schemas/lessons/booking-extras.makeup.test.ts"
+    ],
+    [
+      "packages/shared/src/schemas/booking-extras.test.ts",
+      "packages/shared/src/schemas/lessons/booking-extras.test.ts"
+    ],
+    [
+      "packages/shared/src/schemas/booking-extras.ts",
+      "packages/shared/src/schemas/lessons/booking-extras.ts"
+    ],
+    [
+      "packages/shared/src/schemas/course-change.test.ts",
+      "packages/shared/src/schemas/lessons/course-change.test.ts"
+    ],
+    [
+      "packages/shared/src/schemas/course-change.ts",
+      "packages/shared/src/schemas/lessons/course-change.ts"
+    ],
+    [
+      "packages/shared/src/schemas/day-times.test.ts",
+      "packages/shared/src/schemas/lessons/day-times.test.ts"
+    ],
+    [
+      "packages/shared/src/schemas/day-times.ts",
+      "packages/shared/src/schemas/lessons/day-times.ts"
+    ],
+    [
+      "packages/shared/src/schemas/leads.ts",
+      "packages/shared/src/schemas/people/leads.ts"
+    ],
+    [
+      "packages/shared/src/schemas/lesson-time.ts",
+      "packages/shared/src/schemas/lessons/lesson-time.ts"
+    ],
+    [
+      "packages/shared/src/schemas/people-sort.test.ts",
+      "packages/shared/src/schemas/people/people-sort.test.ts"
+    ],
+    [
+      "packages/shared/src/schemas/people-sort.ts",
+      "packages/shared/src/schemas/people/people-sort.ts"
+    ],
+    [
+      "packages/shared/src/schemas/people.ts",
+      "packages/shared/src/schemas/people/people.ts"
+    ],
+    [
+      "packages/shared/src/schemas/scheduling.booking.test.ts",
+      "packages/shared/src/schemas/lessons/scheduling.booking.test.ts"
+    ],
+    [
+      "packages/shared/src/schemas/scheduling.commands.test.ts",
+      "packages/shared/src/schemas/lessons/scheduling.commands.test.ts"
+    ],
+    [
+      "packages/shared/src/schemas/scheduling.fixes.test.ts",
+      "packages/shared/src/schemas/lessons/scheduling.fixes.test.ts"
+    ],
+    [
+      "packages/shared/src/schemas/scheduling.ts",
+      "packages/shared/src/schemas/lessons/scheduling.ts"
+    ],
+    [
+      "packages/shared/src/schemas/student-filters.test.ts",
+      "packages/shared/src/schemas/people/student-filters.test.ts"
+    ],
+    [
+      "packages/shared/src/schemas/student-filters.ts",
+      "packages/shared/src/schemas/people/student-filters.ts"
+    ],
+    [
+      "packages/shared/src/schemas/student-update.test.ts",
+      "packages/shared/src/schemas/people/student-update.test.ts"
+    ],
+    [
+      "packages/shared/src/schemas/teacher-students.test.ts",
+      "packages/shared/src/schemas/people/teacher-students.test.ts"
+    ],
+    [
+      "packages/shared/src/schemas/teacher-students.ts",
+      "packages/shared/src/schemas/people/teacher-students.ts"
+    ]
+  ]
+}

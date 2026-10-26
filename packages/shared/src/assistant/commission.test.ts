@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { fromCents, toCents } from '../money/earnings.js';
+import { fromCents, toCents } from '../money/earnings/earnings.js';
 import { commissionAction, computeCommission } from './commission.js';
 
 const pct = (value: number, base: number, baseCurrency = 'SAR') =>

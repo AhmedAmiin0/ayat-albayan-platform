@@ -1,0 +1,388 @@
+{
+  "id": "d2a",
+  "seq": 98,
+  "moves": [
+    {
+      "from": "packages/shared/src/messaging/templates*",
+      "to": "packages/shared/src/messaging/templates/"
+    },
+    {
+      "from": "packages/shared/src/messaging/template-number*",
+      "to": "packages/shared/src/messaging/templates/"
+    },
+    {
+      "from": "packages/shared/src/messaging/template-views*",
+      "to": "packages/shared/src/messaging/templates/"
+    },
+    {
+      "from": "packages/shared/src/messaging/template-sync-views*",
+      "to": "packages/shared/src/messaging/templates/"
+    },
+    {
+      "from": "packages/shared/src/messaging/restricted-templates*",
+      "to": "packages/shared/src/messaging/templates/"
+    },
+    {
+      "from": "packages/shared/src/messaging/manages-templates.test.ts",
+      "to": "packages/shared/src/messaging/templates/"
+    },
+    {
+      "from": "packages/shared/src/messaging/params*",
+      "to": "packages/shared/src/messaging/templates/"
+    },
+    {
+      "from": "packages/shared/src/messaging/render*",
+      "to": "packages/shared/src/messaging/templates/"
+    },
+    {
+      "from": "packages/shared/src/messaging/lesson-params*",
+      "to": "packages/shared/src/messaging/templates/"
+    },
+    {
+      "from": "packages/shared/src/messaging/i18n.test.ts",
+      "to": "packages/shared/src/messaging/templates/"
+    },
+    {
+      "from": "packages/shared/src/messaging/quick-reply*",
+      "to": "packages/shared/src/messaging/replies/"
+    },
+    {
+      "from": "packages/shared/src/messaging/reply-line*",
+      "to": "packages/shared/src/messaging/replies/"
+    },
+    {
+      "from": "packages/shared/src/messaging/reply-number*",
+      "to": "packages/shared/src/messaging/replies/"
+    },
+    {
+      "from": "packages/shared/src/messaging/reply-note*",
+      "to": "packages/shared/src/messaging/replies/"
+    },
+    {
+      "from": "packages/shared/src/messaging/reply-forward*",
+      "to": "packages/shared/src/messaging/replies/"
+    },
+    {
+      "from": "packages/shared/src/messaging/saved-replies*",
+      "to": "packages/shared/src/messaging/replies/"
+    },
+    {
+      "from": "packages/shared/src/messaging/saved-reply-text*",
+      "to": "packages/shared/src/messaging/replies/"
+    },
+    {
+      "from": "packages/shared/src/messaging/chat-files*",
+      "to": "packages/shared/src/messaging/chat/"
+    },
+    {
+      "from": "packages/shared/src/messaging/chat-lists*",
+      "to": "packages/shared/src/messaging/chat/"
+    },
+    {
+      "from": "packages/shared/src/messaging/crm-names*",
+      "to": "packages/shared/src/messaging/chat/"
+    },
+    {
+      "from": "packages/shared/src/messaging/thread-people*",
+      "to": "packages/shared/src/messaging/chat/"
+    },
+    {
+      "from": "packages/shared/src/messaging/ticks*",
+      "to": "packages/shared/src/messaging/chat/"
+    },
+    {
+      "from": "packages/shared/src/messaging/status-style*",
+      "to": "packages/shared/src/messaging/chat/"
+    },
+    {
+      "from": "packages/shared/src/messaging/sender*",
+      "to": "packages/shared/src/messaging/chat/"
+    },
+    {
+      "from": "packages/shared/src/messaging/views.ts",
+      "to": "packages/shared/src/messaging/chat/"
+    },
+    {
+      "from": "packages/shared/src/messaging/line-views*",
+      "to": "packages/shared/src/messaging/chat/"
+    },
+    {
+      "from": "packages/shared/src/messaging/unavailable*",
+      "to": "packages/shared/src/messaging/chat/"
+    },
+    {
+      "from": "packages/shared/src/messaging/booking-confirmation*",
+      "to": "packages/shared/src/messaging/lesson/"
+    },
+    {
+      "from": "packages/shared/src/messaging/join-names.test.ts",
+      "to": "packages/shared/src/messaging/lesson/"
+    },
+    {
+      "from": "packages/shared/src/messaging/meeting-link*",
+      "to": "packages/shared/src/messaging/lesson/"
+    },
+    {
+      "from": "packages/shared/src/messaging/rating*",
+      "to": "packages/shared/src/messaging/lesson/"
+    },
+    {
+      "from": "packages/shared/src/messaging/timing*",
+      "to": "packages/shared/src/messaging/lesson/"
+    },
+    {
+      "from": "packages/shared/src/messaging/trial-chat*",
+      "to": "packages/shared/src/messaging/lesson/"
+    }
+  ],
+  "files": [
+    [
+      "packages/shared/src/messaging/booking-confirmation.test.ts",
+      "packages/shared/src/messaging/lesson/booking-confirmation.test.ts"
+    ],
+    [
+      "packages/shared/src/messaging/booking-confirmation.ts",
+      "packages/shared/src/messaging/lesson/booking-confirmation.ts"
+    ],
+    [
+      "packages/shared/src/messaging/chat-files.test.ts",
+      "packages/shared/src/messaging/chat/chat-files.test.ts"
+    ],
+    [
+      "packages/shared/src/messaging/chat-files.ts",
+      "packages/shared/src/messaging/chat/chat-files.ts"
+    ],
+    [
+      "packages/shared/src/messaging/chat-lists.test.ts",
+      "packages/shared/src/messaging/chat/chat-lists.test.ts"
+    ],
+    [
+      "packages/shared/src/messaging/chat-lists.ts",
+      "packages/shared/src/messaging/chat/chat-lists.ts"
+    ],
+    [
+      "packages/shared/src/messaging/crm-names.test.ts",
+      "packages/shared/src/messaging/chat/crm-names.test.ts"
+    ],
+    [
+      "packages/shared/src/messaging/crm-names.ts",
+      "packages/shared/src/messaging/chat/crm-names.ts"
+    ],
+    [
+      "packages/shared/src/messaging/i18n.test.ts",
+      "packages/shared/src/messaging/templates/i18n.test.ts"
+    ],
+    [
+      "packages/shared/src/messaging/join-names.test.ts",
+      "packages/shared/src/messaging/lesson/join-names.test.ts"
+    ],
+    [
+      "packages/shared/src/messaging/lesson-params.test.ts",
+      "packages/shared/src/messaging/templates/lesson-params.test.ts"
+    ],
+    [
+      "packages/shared/src/messaging/lesson-params.ts",
+      "packages/shared/src/messaging/templates/lesson-params.ts"
+    ],
+    [
+      "packages/shared/src/messaging/line-views.ts",
+      "packages/shared/src/messaging/chat/line-views.ts"
+    ],
+    [
+      "packages/shared/src/messaging/manages-templates.test.ts",
+      "packages/shared/src/messaging/templates/manages-templates.test.ts"
+    ],
+    [
+      "packages/shared/src/messaging/meeting-link.ts",
+      "packages/shared/src/messaging/lesson/meeting-link.ts"
+    ],
+    [
+      "packages/shared/src/messaging/params.test.ts",
+      "packages/shared/src/messaging/templates/params.test.ts"
+    ],
+    [
+      "packages/shared/src/messaging/params.ts",
+      "packages/shared/src/messaging/templates/params.ts"
+    ],
+    [
+      "packages/shared/src/messaging/quick-reply.test.ts",
+      "packages/shared/src/messaging/replies/quick-reply.test.ts"
+    ],
+    [
+      "packages/shared/src/messaging/quick-reply.ts",
+      "packages/shared/src/messaging/replies/quick-reply.ts"
+    ],
+    [
+      "packages/shared/src/messaging/rating.test.ts",
+      "packages/shared/src/messaging/lesson/rating.test.ts"
+    ],
+    [
+      "packages/shared/src/messaging/rating.ts",
+      "packages/shared/src/messaging/lesson/rating.ts"
+    ],
+    [
+      "packages/shared/src/messaging/render.test.ts",
+      "packages/shared/src/messaging/templates/render.test.ts"
+    ],
+    [
+      "packages/shared/src/messaging/render.ts",
+      "packages/shared/src/messaging/templates/render.ts"
+    ],
+    [
+      "packages/shared/src/messaging/reply-forward.test.ts",
+      "packages/shared/src/messaging/replies/reply-forward.test.ts"
+    ],
+    [
+      "packages/shared/src/messaging/reply-forward.ts",
+      "packages/shared/src/messaging/replies/reply-forward.ts"
+    ],
+    [
+      "packages/shared/src/messaging/reply-line.test.ts",
+      "packages/shared/src/messaging/replies/reply-line.test.ts"
+    ],
+    [
+      "packages/shared/src/messaging/reply-line.ts",
+      "packages/shared/src/messaging/replies/reply-line.ts"
+    ],
+    [
+      "packages/shared/src/messaging/reply-note.test.ts",
+      "packages/shared/src/messaging/replies/reply-note.test.ts"
+    ],
+    [
+      "packages/shared/src/messaging/reply-note.ts",
+      "packages/shared/src/messaging/replies/reply-note.ts"
+    ],
+    [
+      "packages/shared/src/messaging/reply-number.test.ts",
+      "packages/shared/src/messaging/replies/reply-number.test.ts"
+    ],
+    [
+      "packages/shared/src/messaging/reply-number.ts",
+      "packages/shared/src/messaging/replies/reply-number.ts"
+    ],
+    [
+      "packages/shared/src/messaging/restricted-templates.test.ts",
+      "packages/shared/src/messaging/templates/restricted-templates.test.ts"
+    ],
+    [
+      "packages/shared/src/messaging/restricted-templates.ts",
+      "packages/shared/src/messaging/templates/restricted-templates.ts"
+    ],
+    [
+      "packages/shared/src/messaging/saved-replies.test.ts",
+      "packages/shared/src/messaging/replies/saved-replies.test.ts"
+    ],
+    [
+      "packages/shared/src/messaging/saved-replies.ts",
+      "packages/shared/src/messaging/replies/saved-replies.ts"
+    ],
+    [
+      "packages/shared/src/messaging/saved-reply-text.match.test.ts",
+      "packages/shared/src/messaging/replies/saved-reply-text.match.test.ts"
+    ],
+    [
+      "packages/shared/src/messaging/saved-reply-text.test.ts",
+      "packages/shared/src/messaging/replies/saved-reply-text.test.ts"
+    ],
+    [
+      "packages/shared/src/messaging/saved-reply-text.ts",
+      "packages/shared/src/messaging/replies/saved-reply-text.ts"
+    ],
+    [
+      "packages/shared/src/messaging/sender.test.ts",
+      "packages/shared/src/messaging/chat/sender.test.ts"
+    ],
+    [
+      "packages/shared/src/messaging/sender.ts",
+      "packages/shared/src/messaging/chat/sender.ts"
+    ],
+    [
+      "packages/shared/src/messaging/status-style.ts",
+      "packages/shared/src/messaging/chat/status-style.ts"
+    ],
+    [
+      "packages/shared/src/messaging/template-number.test.ts",
+      "packages/shared/src/messaging/templates/template-number.test.ts"
+    ],
+    [
+      "packages/shared/src/messaging/template-number.ts",
+      "packages/shared/src/messaging/templates/template-number.ts"
+    ],
+    [
+      "packages/shared/src/messaging/template-sync-views.ts",
+      "packages/shared/src/messaging/templates/template-sync-views.ts"
+    ],
+    [
+      "packages/shared/src/messaging/template-views.ts",
+      "packages/shared/src/messaging/templates/template-views.ts"
+    ],
+    [
+      "packages/shared/src/messaging/templates.test.ts",
+      "packages/shared/src/messaging/templates/templates.test.ts"
+    ],
+    [
+      "packages/shared/src/messaging/templates.ts",
+      "packages/shared/src/messaging/templates/templates.ts"
+    ],
+    [
+      "packages/shared/src/messaging/thread-people.chips.test.ts",
+      "packages/shared/src/messaging/chat/thread-people.chips.test.ts"
+    ],
+    [
+      "packages/shared/src/messaging/thread-people.test.ts",
+      "packages/shared/src/messaging/chat/thread-people.test.ts"
+    ],
+    [
+      "packages/shared/src/messaging/thread-people.ts",
+      "packages/shared/src/messaging/chat/thread-people.ts"
+    ],
+    [
+      "packages/shared/src/messaging/ticks.test.ts",
+      "packages/shared/src/messaging/chat/ticks.test.ts"
+    ],
+    [
+      "packages/shared/src/messaging/ticks.ts",
+      "packages/shared/src/messaging/chat/ticks.ts"
+    ],
+    [
+      "packages/shared/src/messaging/timing.day-before.test.ts",
+      "packages/shared/src/messaging/lesson/timing.day-before.test.ts"
+    ],
+    [
+      "packages/shared/src/messaging/timing.day-before.ts",
+      "packages/shared/src/messaging/lesson/timing.day-before.ts"
+    ],
+    [
+      "packages/shared/src/messaging/timing.keys.test.ts",
+      "packages/shared/src/messaging/lesson/timing.keys.test.ts"
+    ],
+    [
+      "packages/shared/src/messaging/timing.test.ts",
+      "packages/shared/src/messaging/lesson/timing.test.ts"
+    ],
+    [
+      "packages/shared/src/messaging/timing.ts",
+      "packages/shared/src/messaging/lesson/timing.ts"
+    ],
+    [
+      "packages/shared/src/messaging/trial-chat.test.ts",
+      "packages/shared/src/messaging/lesson/trial-chat.test.ts"
+    ],
+    [
+      "packages/shared/src/messaging/trial-chat.ts",
+      "packages/shared/src/messaging/lesson/trial-chat.ts"
+    ],
+    [
+      "packages/shared/src/messaging/unavailable.test.ts",
+      "packages/shared/src/messaging/chat/unavailable.test.ts"
+    ],
+    [
+      "packages/shared/src/messaging/unavailable.ts",
+      "packages/shared/src/messaging/chat/unavailable.ts"
+    ],
+    [
+      "packages/shared/src/messaging/views.ts",
+      "packages/shared/src/messaging/chat/views.ts"
+    ]
+  ]
+}

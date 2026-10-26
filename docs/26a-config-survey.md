@@ -248,7 +248,7 @@ Drift: `apps/api/.env.example` lists 20 keys explicitly; the WA_CHAT_*, KAPSO_*,
 | `teacher_availability`, `teacher_time_off` | `M/20261001000012_teacher_availability.sql:3,17` | teacher | schedule data (bypassed when `teachers_always_available`). |
 | `notification_rules` | **not created yet** (docs/23 phase 4) | catalogue key | will absorb keys #5-8, #10-13 (and per docs/23 #26) as `enabled/channels/timing`. |
 | `wa_numbers` | **not created yet** (docs/23 phase 3) | uuid | will absorb the WA_* line keys + `wa_line_health`. |
-| Pricing (packages, prices, currencies) | **no table** — code constants `packages/shared/src/pricing/catalog.ts`, `packages/shared/src/money/tiers.ts` (docs/08) | — | not admin-editable today; if made editable it is structured (package × duration × currency) → MODULE:pricing, never flat keys. |
+| Pricing (packages, prices, currencies) | **no table** — code constants `packages/shared/src/pricing/catalog.ts`, `packages/shared/src/money/usage/tiers.ts` (docs/08) | — | not admin-editable today; if made editable it is structured (package × duration × currency) → MODULE:pricing, never flat keys. |
 | Theme / appearance | **no store** (per-browser theme toggle) | — | `appearance` section empty; branding (name, logo) not configurable today. |
 | Storage bucket size limits | migrations 122, 170 | bucket | hard ceiling (10 MB) that bounds `upload_max_mb.max`. |
 

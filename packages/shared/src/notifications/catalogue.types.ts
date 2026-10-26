@@ -1,5 +1,5 @@
 import type { PushKind } from '../enums/index.js';
-import type { TemplateKey } from '../messaging/templates.js';
+import type { TemplateKey } from '../messaging/templates/templates.js';
 import type { SettingKey } from '../settings/index.js';
 import type { CatalogueSettings } from './catalogue-settings.js';
 

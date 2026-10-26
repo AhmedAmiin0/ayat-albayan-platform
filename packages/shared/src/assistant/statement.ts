@@ -1,4 +1,4 @@
-import { fromCents, toCents } from '../money/earnings.js';
+import { fromCents, toCents } from '../money/earnings/earnings.js';
 import { localDay } from './first-paid.js';
 
 // An assistant's monthly statement (migration 20261006000273: build_assistant_statement) in pure code:

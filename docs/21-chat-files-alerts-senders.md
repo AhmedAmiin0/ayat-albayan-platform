@@ -65,7 +65,7 @@ export const chatFileMaxBytes = (m: string | null): number => isPlayableMime(m) 
 - `apps/api/src/modules/messaging/whatsapp/messages/inbound-media.service.ts` re-exports `baseMime` from `@ab/shared` instead of defining it. The imports in `thread-media.service.ts` and `booking.invoice.ts` stay unchanged.
 - `apps/web/src/features/messaging/inbox/messages/components/MessageMedia.tsx` drops its local `baseMime`.
 
-### 1.2 `packages/shared/src/messaging/chat-files.ts` (new, plus `chat-files.test.ts`; exported from `messaging/index.ts`)
+### 1.2 `packages/shared/src/messaging/chat/chat-files.ts` (new, plus `chat-files.test.ts`; exported from `messaging/index.ts`)
 
 ```ts
 import { baseMime } from '../schemas/chat-media';
@@ -86,7 +86,7 @@ export function chatFileProblem(f: { mime: string; size: number; maxBytes: numbe
 - `threadFileSendSchema` = `{ clientRequestId: uuid, path: string, filename: trimmed 1–200 with no "/" or "\", caption?: trimmed ≤ WA_CAPTION_MAX }`.
 - Name the input type `ThreadFileSendInput`. `ThreadFile` is already taken in `thread-media.service.ts`.
 
-### 1.4 `packages/shared/src/messaging/views.ts`: MessageView gets three optional fields only
+### 1.4 `packages/shared/src/messaging/chat/views.ts`: MessageView gets three optional fields only
 
 ```ts
 /** A sent file's name (D2); null for inbound, text and template rows. */
@@ -99,7 +99,7 @@ automatic?: boolean;
 
 - Mark `sent_by_teacher_name` `@deprecated` in its comment, but keep filling it. Old mobile builds and cached rows read it.
 
-### 1.5 `packages/shared/src/messaging/sender.ts` (new, plus `sender.test.ts`)
+### 1.5 `packages/shared/src/messaging/chat/sender.ts` (new, plus `sender.test.ts`)
 
 - `senderLine(m): { kind: 'name'; name: string } | { kind: 'auto' } | null`:
   - inbound → null;

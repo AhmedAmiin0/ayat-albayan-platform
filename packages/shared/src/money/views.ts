@@ -9,7 +9,7 @@ import type {
   SubscriptionStatus,
 } from '../enums/index.js';
 import type { QuoteResponse } from '../pricing/quote.js';
-import type { PayoutLine } from './payout.js';
+import type { PayoutLine } from './earnings/payout.js';
 
 // Phase 3 money responses (docs/11 §5–9). snake_case rows; instants ISO UTC; money as numbers
 // with at most 2 decimals; local dates YYYY-MM-DD; months YYYY-MM.

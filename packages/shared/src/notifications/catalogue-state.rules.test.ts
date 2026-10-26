@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { TemplateStatus, WaLine } from '../enums/index.js';
-import { TEMPLATE_KEYS } from '../messaging/templates.js';
+import { TEMPLATE_KEYS } from '../messaging/templates/templates.js';
 import { SETTING_DEFAULTS, type AcademySettings } from '../settings/index.js';
 import { catalogueViews, entryView, type CatalogueInputs } from './catalogue-state.js';
 import { NOTIFICATION_CATALOGUE, notificationEntry, type NotificationKey } from './catalogue.js';
