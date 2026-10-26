@@ -1,4 +1,6 @@
-import { ActivityIndicator, ScrollView, Share, View } from 'react-native';
+import { useState } from 'react';
+import { ActivityIndicator, ScrollView, View } from 'react-native';
+import { copyOrShare } from '@/core/lib/clipboard';
 import { t } from '@/core/lib/i18n/i18n';
 import { shape, type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
@@ -21,12 +23,14 @@ interface QuoteSheetProps {
 /**
  * «عرض سعر» (owner 2026-10-26): the calculator's steps (pills only for the discount), the offer text
  * exactly as «حاسبة الأسعار» copies it, then send it in this chat, put it in the box to edit, or copy
- * it (the share sheet has Copy). Works for a lead with no student; nothing is created.
+ * it (copyOrShare: the share sheet when the clipboard fails). Works for a lead with no student; nothing is created.
  */
 export function QuoteSheet({ phone, open, onClose }: QuoteSheetProps) {
   const { color } = useTheme();
   const sheet = useQuoteSheet(phone);
   const sender = useQuoteSend(phone, onClose);
+  // «انسخ»: the clipboard, else the share sheet (it has Copy); a line says how it went.
+  const [copied, setCopied] = useState<'copied' | 'shared' | 'failed' | null>(null);
   const text = sheet.text;
   const ready = text !== null && !sheet.stale;
   const edit = () => {
@@ -63,13 +67,19 @@ export function QuoteSheet({ phone, open, onClose }: QuoteSheetProps) {
         </View>
         {open ? null : <ClosedNote known />}
         {sender.error ? <ErrorLine message={sender.error} /> : null}
+        {copied === 'failed' ? <ErrorLine message={t.inbox.quote.copyFailed} /> : null}
+        {copied === 'copied' ? (
+          <AppText accessibilityLiveRegion="polite" style={{ fontFamily: type.ui[500], fontSize: type.size.sm, color: color.ok }}>
+            {t.inbox.quote.copied}
+          </AppText>
+        ) : null}
         <QuoteActions
           open={open}
           ready={ready}
           sending={sender.pending}
           onSend={() => text && sender.send(text)}
           onEdit={edit}
-          onCopy={() => text && void Share.share({ message: text })}
+          onCopy={() => text && void copyOrShare(text).then(setCopied)}
         />
       </ScrollView>
     </ReplySheetFrame>

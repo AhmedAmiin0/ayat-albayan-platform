@@ -1,7 +1,7 @@
 import { offerText } from '@ab/shared';
 import ar from '@ab/shared/i18n/ar.json';
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
-import { Share } from 'react-native';
+import { Clipboard } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { bulkSa } from '@/finance/pricing/fixtures';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
@@ -70,13 +70,14 @@ test('«عدّل قبل الإرسال» puts the offer in the box (after what w
 });
 
 test('outside the 24 h window: send and edit are disabled with the closed note; copy still shares the text', async () => {
-  const share = jest.spyOn(Share, 'share').mockResolvedValue({ action: 'sharedAction' });
+  const copy = jest.spyOn(Clipboard, 'setString').mockImplementation(() => undefined);
   await sheet(false);
   expect(screen.getByTestId('closed-note')).toBeTruthy();
   expect(button(q.send).props.accessibilityState.disabled).toBe(true);
   expect(button(q.edit).props.accessibilityState.disabled).toBe(true);
   await fireEvent.press(button(q.copy));
-  expect(share).toHaveBeenCalledWith({ message: TEXT });
+  expect(copy).toHaveBeenCalledWith(TEXT);
+  expect(await screen.findByText(q.copied)).toBeTruthy();
   expect(mockApiSend).not.toHaveBeenCalled();
 });
 
