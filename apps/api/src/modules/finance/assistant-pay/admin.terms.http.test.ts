@@ -22,6 +22,7 @@ describe('terms and attribution of one student (admin)', () => {
     t.terms.get.mockResolvedValue(null);
     t.rpc.setTerms.mockResolvedValue(undefined);
     t.terms.uncommissioned.mockResolvedValue(['sub-1', 'sub-2']);
+    t.terms.renewalShare.mockResolvedValue(50);
   });
 
   it('GET /terms lists every assistant with their terms, both null until set', async () => {
@@ -29,8 +30,8 @@ describe('terms and attribution of one student (admin)', () => {
     t.terms.all.mockResolvedValue([row()]);
     const res = await t.call({ method: 'GET', url: '/assistant-pay/terms', token: 'admin' });
     expect(res.json()).toEqual([
-      { assistant_id: A, name: 'الزهراء', commission: { type: 'percent', value: 10, currency: null, starts_on: '2026-10-01' }, salary: { amount: 1000, currency: 'SAR', starts_on: '2026-10-01' } },
-      { assistant_id: 'b', name: 'منى', commission: null, salary: null },
+      { assistant_id: A, name: 'الزهراء', commission: { type: 'percent', value: 10, currency: null, starts_on: '2026-10-01' }, salary: { amount: 1000, currency: 'SAR', starts_on: '2026-10-01' }, renewal_share_percent: 50 },
+      { assistant_id: 'b', name: 'منى', commission: null, salary: null, renewal_share_percent: 50 },
     ]);
   });
 

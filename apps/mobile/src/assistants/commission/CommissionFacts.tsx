@@ -22,6 +22,7 @@ export function CommissionFacts({ commission: c }: { commission: AssistantCommis
       </View>
       <Ltr style={{ alignSelf: 'flex-start' }}>{c.student.code}</Ltr>
       <Note>{`${L.assistant}: ${c.assistant.name}`}</Note>
+      <Note>{`${L.kindLabel}: ${c.kind === 'renewal' ? L.kind.renewal.replace('{n}', String(c.share_percent)) : L.kind.first}`}</Note>
       <Note>
         {t.mobileSalesMoney.earnedLine
           .replace('{rate}', rate)

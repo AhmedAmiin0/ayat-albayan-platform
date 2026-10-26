@@ -84,7 +84,7 @@ test.describe('assistant scope: what a salesperson can read directly (2026100600
       const row = (await as(tx, a, () => tx`select * from public.v_assistant_students where student_id = ${mine.student}`))[0];
       expect(Object.keys(row ?? {}).sort()).toEqual([
         'assistant_id', 'brought_at', 'code', 'commission_amount', 'commission_currency', 'commission_earned_at', 'commission_id',
-        'commission_status', 'first_paid_at', 'first_subscription_paid', 'name', 'student_id',
+        'commission_status', 'first_paid_at', 'first_subscription_paid', 'name', 'renewal_commission_count', 'student_id',
       ]);
       expect(row).toMatchObject({ first_subscription_paid: true, commission_amount: '10.00' });
       await tx`set local role anon`;

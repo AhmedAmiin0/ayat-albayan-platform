@@ -32,7 +32,7 @@ export function TermsEditor({ assistant, onNotice }: { assistant: AssistantRow; 
     <ScrollView style={{ flex: 1 }} contentContainerStyle={{ gap: 20, paddingBottom: 32 }} keyboardShouldPersistTaps="handled">
       <SalaryFields form={form} errors={errors} set={set} min={mins.salary} />
       <CommissionFields form={form} errors={errors} set={set} min={mins.commission} />
-      <Note>{T.hint}</Note>
+      <Note>{T.hint.replace('{n}', String(assistant.terms.renewal_share_percent))}</Note>
       {save.isError ? <ErrorLine message={assistantsErrorText(save.error)} /> : null}
       <View>
         <Button label={save.isPending ? T.saving : T.save} busy={save.isPending} onPress={submit} />

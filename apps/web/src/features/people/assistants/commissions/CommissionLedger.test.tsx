@@ -43,6 +43,13 @@ describe('CommissionLedger (R-ASST-02, R-ASST-05)', () => {
     expect(screen.getAllByRole('button', { name: t.assistants.ledger.void })).toHaveLength(2);
   });
 
+  it('says which kind each row is: the first in full, a renewal at its share (owner 2026-10-26)', async () => {
+    renderLedger([COMMISSION, { ...EGP, kind: 'renewal', share_percent: 50 }]);
+    await screen.findByText('سهيلة');
+    expect(screen.getByText(t.assistants.ledger.kind.first)).toBeTruthy();
+    expect(screen.getByText(t.assistants.ledger.kind.renewal.replace('{n}', '50'))).toBeTruthy();
+  });
+
   it('read-only admins get no void button', async () => {
     renderLedger([COMMISSION], false);
     await screen.findByText('سهيلة');

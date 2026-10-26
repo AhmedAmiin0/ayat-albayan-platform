@@ -7,7 +7,8 @@ import { USERS } from '../support/users';
 
 // The money journey of an assistant through the REAL API and database (R-ASST-01, R-ASST-02): she
 // registers a student from her chat (POST /sales/booking, her as the actor), the student is credited
-// to her, and the commission follows the payments: none while partly paid, once when fully paid,
+// to her, and the commission follows the payments: none while partly paid, once when fully paid (each later
+// package a renewal at half, owner 2026-10-26),
 // never twice, voided when a payment is deleted. Two terms: 10 percent and a fixed 50 SAR.
 
 type Reg = { student: string; phone: string };
@@ -84,31 +85,35 @@ test.describe.serial('assistant money: registration and commission (API + DB)', 
     expect(rows[0]).toMatchObject({ status: 'earned', type: 'percent', rate: 10, base_amount: sub.price, base_currency: sub.currency, currency: 'SAR', subscription_id: sub.id, amount: Math.round(sub.price * 10) / 100 });
   });
 
-  test('a second package of the same student, paid in full later, earns no second commission', async ({ request }) => {
+  test('a second package of the same student, paid in full later, is a renewal: half of the normal commission (owner 2026-10-26)', async ({ request }) => {
     const m = money(request, admin);
     const sub = await m.subscribe(need(regA).student, 'SA');
     subs.push({ ...sub, payments: [await m.payIn(sub, sub.price)] });
-    expect(await m.ledger(need(a).id)).toHaveLength(1);
+    const rows = await m.ledger(need(a).id);
+    expect(rows.map((r: AssistantCommissionView) => r.kind).sort()).toEqual(['first', 'renewal']);
+    const renewal = rows.find((r: AssistantCommissionView) => r.kind === 'renewal');
+    expect(renewal).toMatchObject({ status: 'earned', share_percent: 50, subscription_id: sub.id, amount: Math.round(sub.price * 5) / 100 });
   });
 
-  test('deleting the first payment: the first package is no longer full, so the commission moves to the next full one (same row, 10 percent of that price)', async ({ request }) => {
+  test('deleting the first payment voids the first commission; the renewal row of the second package is untouched', async ({ request }) => {
     const m = money(request, admin);
     const [one, two] = [need(subs[0]), need(subs[1])];
     const del = await call(request, { token: admin, method: 'DELETE', path: `/payments/${need(one.payments[0])}` });
     expect(del.status).toBe(204);
     const rows = await m.ledger(need(a).id);
-    expect(rows).toHaveLength(1);
-    expect(rows[0]).toMatchObject({ status: 'earned', subscription_id: two.id, base_amount: two.price, amount: Math.round(two.price * 10) / 100 });
+    const byKind = (k: string) => rows.find((r: AssistantCommissionView) => r.kind === k);
+    expect(byKind('first')).toMatchObject({ status: 'voided', subscription_id: one.id });
+    expect(byKind('renewal')).toMatchObject({ status: 'earned', subscription_id: two.id, amount: Math.round(two.price * 5) / 100 });
   });
 
-  test('deleting the payment of the only other full package voids the commission (automatic, kept for a later full payment)', async ({ request }) => {
+  test('deleting the payment of the second package voids its renewal row too (automatic, kept for a later full payment)', async ({ request }) => {
     const m = money(request, admin);
     const two = need(subs[1]);
     expect((await call(request, { token: admin, method: 'DELETE', path: `/payments/${need(two.payments[0])}` })).status).toBe(204);
     const rows = await m.ledger(need(a).id);
-    expect(rows.map((r: AssistantCommissionView) => r.status)).toEqual(['voided']);
-    const [auto] = await withSql((sql) => sql<{ void_auto: boolean }[]>`select void_auto from public.assistant_commissions where student_id = ${need(regA).student}`);
-    expect(auto?.void_auto).toBe(true);
+    expect(rows.map((r: AssistantCommissionView) => r.status)).toEqual(['voided', 'voided']);
+    const auto = await withSql((sql) => sql<{ void_auto: boolean }[]>`select void_auto from public.assistant_commissions where student_id = ${need(regA).student}`);
+    expect(auto.map((x) => x.void_auto)).toEqual([true, true]);
   });
 
   test('fixed 50 SAR: C registers a student; partial = nothing; final = exactly 50 SAR, whatever the price', async ({ request }) => {
