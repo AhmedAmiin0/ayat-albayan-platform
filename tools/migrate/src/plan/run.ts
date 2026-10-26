@@ -4,7 +4,7 @@ import type { EntityModule, SourceBundle } from '../entities/contract.ts';
 import type { TargetDb } from '../db/target.ts';
 import { keyId } from '../keys.ts';
 import { CRM_TABLES } from '../sources/crm.schema.ts';
-import { SHEETS } from '../sources/headers.ts';
+import { SHEETS } from '../sources/headers/headers.ts';
 import { loadTeacherDirectory } from '../sources/teachers.dir.ts';
 import type { ZipEntryInfo } from '../sources/zip.ts';
 import { ZIP_FILES, zipFileRows } from '../pdf-import/files.ts';
@@ -20,12 +20,12 @@ import type {
 } from '../types.ts';
 import { type PlanWithChanges, loadChanges } from './changes.ts';
 import { checkCodes } from './codes.ts';
-import { matchTemplates } from './templates.target.ts';
+import { matchTemplates } from './match/templates.target.ts';
 import { countPlan, diffPlan } from './diff.ts';
-import { matchTarget } from './match.target.ts';
+import { matchTarget } from './match/match.target.ts';
 import { type RecreateScope, dropOrphans } from '../delta/orphans.ts';
 import { type Desired, resolve } from './resolve.ts';
-import { samePhoneTeachers, similarStudents } from './similar.ts';
+import { samePhoneTeachers, similarStudents } from './match/similar.ts';
 
 /**
  * Everything extract-sheets / extract-crm left in cache/ (missing files read as empty), plus the
