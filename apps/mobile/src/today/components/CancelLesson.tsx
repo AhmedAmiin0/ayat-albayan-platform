@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { View } from 'react-native';
 import { ErrorLine } from '@/inbox/ErrorLine';
 import { t } from '@/core/lib/i18n/i18n';
-import { SectionLabel } from '@/students/SectionLabel';
+import { SectionLabel } from '@/students/list/SectionLabel';
 import { Field } from '@/core/ui/form/Field';
 import { FilterPills } from '@/core/ui/form/FilterPills';
 import { InlineConfirm } from '@/core/ui/feedback/InlineConfirm';

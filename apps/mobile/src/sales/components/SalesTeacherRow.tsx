@@ -2,7 +2,7 @@ import type { SalesTeacherView } from '@ab/shared';
 import { router } from 'expo-router';
 import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/more/Note';
-import { countsLine } from '@/students/student-kinds';
+import { countsLine } from '@/students/list/student-kinds';
 import { ListRow } from '@/core/ui/layout/ListRow';
 import { StatusChip } from '@/core/ui/feedback/StatusChip';
 import { useSalesHrefs } from '../lib/sales-href';

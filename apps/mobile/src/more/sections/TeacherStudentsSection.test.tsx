@@ -1,7 +1,7 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
-import { listItem } from '@/students/test-data';
+import { listItem } from '@/students/shared/test-data';
 import { TeacherStudentsSection } from './TeacherStudentsSection';
 
 const mockApiFetch = jest.fn();

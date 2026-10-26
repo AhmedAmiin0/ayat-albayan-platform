@@ -1,7 +1,7 @@
 {
   "apps/mobile/src": {
     "files": 1,
-    "dirs": 36
+    "dirs": 35
   },
   "apps/mobile/src/inbox/lists": {
     "files": 14,
@@ -13,14 +13,6 @@
   },
   "apps/mobile/src/inbox/saved-replies": {
     "files": 16,
-    "dirs": 0
-  },
-  "apps/mobile/src/student-file": {
-    "files": 21,
-    "dirs": 0
-  },
-  "apps/mobile/src/students": {
-    "files": 21,
     "dirs": 0
   }
 }

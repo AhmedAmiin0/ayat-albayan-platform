@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { ActivityIndicator, FlatList, View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/more/Note';
-import { KIND_EMPTY } from '@/students/student-kinds';
+import { KIND_EMPTY } from '@/students/list/student-kinds';
 import { useTheme } from '@/theme';
 import { Button } from '@/core/ui/primitives/Button';
 import { EmptyState } from '@/core/ui/feedback/EmptyState';

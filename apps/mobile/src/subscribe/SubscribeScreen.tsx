@@ -7,7 +7,7 @@ import { ErrorLine } from '@/inbox/ErrorLine';
 import { apiFetch } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
 import { pathKey } from '@/core/lib/query/query-keys';
-import type { StudentProfile, StudentRef } from '@/students/types';
+import type { StudentProfile, StudentRef } from '@/students/shared/types';
 import { localDate } from '@/today/lib/timeline';
 import { Button } from '@/core/ui/primitives/Button';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';

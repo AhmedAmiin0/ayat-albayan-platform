@@ -5,7 +5,7 @@ import { SectionList } from 'react-native';
 import { EditTimeSheet } from '@/edit-time/components/EditTimeSheet';
 import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/more/Note';
-import { RescheduleSheet } from '@/reschedule/RescheduleSheet';
+import { RescheduleSheet } from '@/teaching/reschedule/RescheduleSheet';
 import { Notice } from '@/today/components/Notice';
 import { useNow } from '@/today/lib/use-day-lessons';
 import { useLessonAction } from '@/today/lib/use-lesson-action';

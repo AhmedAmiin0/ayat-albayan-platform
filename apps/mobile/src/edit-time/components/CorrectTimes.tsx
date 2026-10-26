@@ -4,7 +4,7 @@ import { slotLegend } from '@/booking/shared/slots';
 import { dayLabel } from '@/calendar/lib/week';
 import { t } from '@/core/lib/i18n/i18n';
 import { FormLabel } from '@/payments/FormLabel';
-import { SlotButton } from '@/reschedule/SlotButton';
+import { SlotButton } from '@/teaching/reschedule/SlotButton';
 import { type, useTheme } from '@/theme';
 import { localDate } from '@/today/lib/timeline';
 import { AppText } from '@/core/ui/primitives/AppText';

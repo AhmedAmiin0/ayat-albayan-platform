@@ -3,7 +3,7 @@ import { router } from 'expo-router';
 import { View } from 'react-native';
 import { usePermissions } from '@/auth/use-permissions';
 import { t } from '@/core/lib/i18n/i18n';
-import type { StudentProfile } from '@/students/types';
+import type { StudentProfile } from '@/students/shared/types';
 import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { Button } from '@/core/ui/primitives/Button';

@@ -6,7 +6,7 @@ import { EditTimeSheet } from '@/edit-time/components/EditTimeSheet';
 import { t } from '@/core/lib/i18n/i18n';
 import { locale } from '@/core/lib/i18n/locale';
 import { Note } from '@/more/Note';
-import { RescheduleSheet } from '@/reschedule/RescheduleSheet';
+import { RescheduleSheet } from '@/teaching/reschedule/RescheduleSheet';
 import { useNow } from '@/today/lib/use-day-lessons';
 import { Button } from '@/core/ui/primitives/Button';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';

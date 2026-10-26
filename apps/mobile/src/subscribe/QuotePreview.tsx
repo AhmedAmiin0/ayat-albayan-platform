@@ -3,7 +3,7 @@ import { View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/more/Note';
 import { money } from '@/payments/format';
-import { FxNote } from '@/pricing/FxNote';
+import { FxNote } from '@/finance/pricing/FxNote';
 import { shape, type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { ltr } from '@/core/ui/primitives/Ltr';
