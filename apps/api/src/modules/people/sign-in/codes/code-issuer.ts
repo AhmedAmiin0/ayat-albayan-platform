@@ -19,6 +19,8 @@ export interface CodeTarget {
 @Injectable()
 export class CodeIssuer {
   private readonly log = new Logger(CodeIssuer.name);
+  /** One issue at a time per phone on this instance, so parallel requests cannot pass the count together. */
+  private readonly queues = new Map<string, Promise<boolean>>();
 
   constructor(
     @Inject(CODE_STORE) private readonly store: CodeStore,
@@ -33,7 +35,15 @@ export class CodeIssuer {
   }
 
   /** false = not sent (unavailable, or the phone is over its limits). Never throws for a send failure. */
-  async issue(target: CodeTarget, now = new Date()): Promise<boolean> {
+  issue(target: CodeTarget): Promise<boolean> {
+    const before = this.queues.get(target.phone) ?? Promise.resolve(true);
+    const next = before.catch(() => false).then(() => this.issueNow(target, new Date()));
+    this.queues.set(target.phone, next);
+    void next.finally(() => this.queues.get(target.phone) === next && this.queues.delete(target.phone)).catch(() => undefined);
+    return next;
+  }
+
+  private async issueNow(target: CodeTarget, now: Date): Promise<boolean> {
     const pepper = this.settings.config.pepper;
     if (!pepper || !phoneMaySend(await this.store.phoneStats(target.phone, now))) return false;
     const values = await this.settings.read();
