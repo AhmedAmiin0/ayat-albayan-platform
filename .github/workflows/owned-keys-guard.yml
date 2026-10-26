@@ -11,7 +11,7 @@ on:
     branches: [develop, main]
     paths:
       - packages/db/supabase/migrations/**
-      - tools/scripts/owned-keys-check*
+      - tools/scripts/ci-checks/owned-keys-check*
       - .github/workflows/owned-keys-guard.yml
 
 permissions:
@@ -32,6 +32,6 @@ jobs:
           node-version-file: .nvmrc
           package-manager-cache: false
       - name: No migration writes a code-owned settings key
-        run: node tools/scripts/owned-keys-check.mjs
+        run: node tools/scripts/ci-checks/owned-keys-check.mjs
       - name: The check's own tests
-        run: node --test tools/scripts/owned-keys-check.test.mjs
+        run: node --test tools/scripts/ci-checks/owned-keys-check.test.mjs

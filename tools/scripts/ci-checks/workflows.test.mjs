@@ -5,7 +5,7 @@ import { test } from 'node:test';
 import { fileURLToPath } from 'node:url';
 import { parse } from 'yaml';
 
-const root = (p) => fileURLToPath(new URL(`../../${p}`, import.meta.url));
+const root = (p) => fileURLToPath(new URL(`../../../${p}`, import.meta.url));
 const dir = root('.github/workflows');
 const workflows = readdirSync(dir).filter((f) => f.endsWith('.yml')).map((f) => ({
   file: f,

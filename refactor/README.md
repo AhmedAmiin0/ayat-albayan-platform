@@ -9,10 +9,10 @@
   One file per app, so the parallel lanes never edit the same file. Each move PR removes the folders it fixes.
 
 ```
-node tools/scripts/move-module.ts refactor/moves/<id>.json   # apply one map (run twice = no diff)
-node tools/scripts/move-module.ts --replay                   # an open feature branch follows every committed move
-node tools/scripts/pure-move-check.mjs origin/develop        # only renames, module paths, barrels, path config
-node tools/scripts/folder-cap.mjs [--strict] [--write <app>] # report crowded folders (strict in Wave F)
+node tools/scripts/ci-checks/move-module.ts refactor/moves/<id>.json   # apply one map (run twice = no diff)
+node tools/scripts/ci-checks/move-module.ts --replay                   # an open feature branch follows every committed move
+node tools/scripts/ci-checks/pure-move-check.mjs origin/develop        # only renames, module paths, barrels, path config
+node tools/scripts/ci-checks/folder-cap.mjs [--strict] [--write <app>] # report crowded folders (strict in Wave F)
 ```
 
 A move PR may also update a guard's path list in a test (for example the Meta callers whitelist): the pure-move

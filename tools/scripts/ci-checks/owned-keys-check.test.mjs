@@ -89,7 +89,7 @@ test('statements: splits on top-level ; only and pulls dollar bodies out', () =>
 });
 
 test('the real migrations directory passes (incl. 20261023000630 when present)', () => {
-  const dir = fileURLToPath(new URL(`../../${DIR}`, import.meta.url));
+  const dir = fileURLToPath(new URL(`../../../${DIR}`, import.meta.url));
   const { files, errors } = checkDir(dir);
   assert.deepEqual(errors, []);
   assert.ok(files.every((f) => f > `${CUTOFF}_`));

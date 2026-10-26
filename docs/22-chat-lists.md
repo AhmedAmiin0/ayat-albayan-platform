@@ -80,7 +80,7 @@ Owner request 2026-10-20: «add the ability to create lists like whatsapp busine
 - «＋» opens a sheet with the name field; long-press (and an accessible action) on a list chip opens
   rename / delete (with the same confirmation).
 - ThreadScreen header actions get «القوائم»: a sheet with the checklist + «قائمة جديدة».
-- Must ship as an OTA: `node tools/scripts/native-changes.mjs c140b4cc` has to keep saying «no
+- Must ship as an OTA: `node tools/scripts/ci-checks/native-changes.mjs c140b4cc` has to keep saying «no
   native change».
 
 ## 6. Copy (packages/shared/i18n ar.json in clear MSA + en.json parity), namespace `inbox.lists`

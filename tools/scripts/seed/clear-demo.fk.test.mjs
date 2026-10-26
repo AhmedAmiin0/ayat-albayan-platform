@@ -5,7 +5,7 @@ import { readdirSync, readFileSync } from 'node:fs';
 import { test } from 'node:test';
 import { DELETE_ORDER, SET_NULL_DEPENDENTS } from './clear-demo.plan.mjs';
 
-const dir = new URL('../../packages/db/supabase/migrations/', import.meta.url);
+const dir = new URL('../../../packages/db/supabase/migrations/', import.meta.url);
 const TABLE = /^\s*(?:create|alter) table (?:if not exists |if exists |only )*public\.(\w+)/i;
 const FK =
   /^\s*(?:add column (?:if not exists )?)?(\w+) uuid[^,]* references public\.(\w+) \(id\) on delete (set null|cascade)/i;

@@ -9,7 +9,7 @@
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 
-const DURATIONS = fileURLToPath(new URL('../../e2e/shard-durations.json', import.meta.url));
+const DURATIONS = fileURLToPath(new URL('../../../e2e/shard-durations.json', import.meta.url));
 
 /** The groups e2e/support/durations-reporter.ts wrote with --list (E2E_GROUPS_FILE), checked. */
 export function checkGroups(groups) {

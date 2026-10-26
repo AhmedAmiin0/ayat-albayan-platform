@@ -2,7 +2,7 @@
 // and GET /{waba}/subscribed_apps, plus POST /__stub/lines/{pn} to play an unhealthy number.
 import type { IncomingMessage } from 'node:http';
 import { initialHealth, stubLines } from './lines.ts';
-import { ERR, type Json } from './meta.ts';
+import { ERR, type Json } from './providers/meta.ts';
 import { readJson, type LineHealth, type Reply, type Route, type StubState } from './state.ts';
 
 export const PHONE_FIELDS = [

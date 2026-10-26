@@ -7,7 +7,7 @@ import { posix } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { replay, runMap, type RunReport } from './move-module/run.ts';
 
-const root = posix.resolve(fileURLToPath(new URL('../..', import.meta.url)));
+const root = posix.resolve(fileURLToPath(new URL('../../..', import.meta.url)));
 const args = process.argv.slice(2);
 const at = args.indexOf('--root');
 const base = at >= 0 ? posix.resolve(args[at + 1] ?? '.') : root;
