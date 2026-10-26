@@ -2,6 +2,7 @@
 // lessons the platform generates unconfirmed; «حتى» → ends_on; nothing before --from.
 import { describe, expect, it } from 'vitest';
 import { studentRow } from '../../sources/sheets/fixtures.ts';
+import { clampRuleStarts } from '../../delta/scope.ts';
 import { bookingSkips } from './booking-slot.ts';
 import { TODAY, booking, runBookings } from './bookings.fixture.ts';
 
@@ -16,7 +17,7 @@ describe('booking rules from --from', () => {
         status: 'active',
         byday: [0, 2],
         start_time_local: '18:00',
-        starts_on: TODAY,
+        starts_on: '2026-09-01', // clamped on create (delta/scope.ts)
         ends_on: null,
       },
     ]);
@@ -25,7 +26,7 @@ describe('booking rules from --from', () => {
     expect(r.issues).toEqual([]);
   });
 
-  it('starts_on is the later of the row date and --from; ends_on is the «حتى» day', () => {
+  it('a created rule starts on the later of the row date and --from; ends_on is the «حتى» day', () => {
     const r = runBookings({
       from: '2026-10-28',
       bookings: [
@@ -34,10 +35,20 @@ describe('booking rules from --from', () => {
       ],
       students: [studentRow({}), studentRow({ student_name: 'سارة', phone: '966551110002' })],
     });
-    expect(cols(r)).toMatchObject([
-      { starts_on: '2026-10-28', ends_on: '2026-12-20' },
-      { starts_on: '2026-11-03', ends_on: null },
+    const plan = (action: 'create' | 'skip') => ({
+      items: r.by('schedule_rules').map((d) => ({ ...d, action, targetId: null })),
+    });
+    const starts = (p: ReturnType<typeof plan>) =>
+      p.items.map((i) => i.record.columns['starts_on']);
+    expect(starts(clampRuleStarts(plan('create'), '2026-10-28'))).toEqual([
+      '2026-10-28',
+      '2026-11-03',
     ]);
+    expect(starts(clampRuleStarts(plan('skip'), '2026-10-28'))).toEqual([
+      '2026-09-01',
+      '2026-11-03',
+    ]);
+    expect(cols(r).map((c) => c['ends_on'])).toEqual(['2026-12-20', null]);
   });
 
   it('a series that ended before --from creates nothing and is counted, not reported', () => {

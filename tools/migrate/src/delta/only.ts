@@ -74,6 +74,32 @@ export function skipUnresolvable(plan: PlanWithChanges): PlanWithChanges {
   return { ...plan, ...all, counts: countPlan(all) };
 }
 
+/** Parent entity → its link table and the link's ref to it. */
+const LINKS = [
+  ['lesson_students', 'lesson_id'],
+  ['schedule_rule_students', 'rule_id'],
+] as const;
+
+/**
+ * A new lesson or rule any of whose new student links was skipped (its student left out) is
+ * skipped too: the platform would otherwise book it with no student, or a group short of a child.
+ * Only link tables named in --only count (leaving a link table out is the caller's choice).
+ */
+export function skipPartialParents(plan: PlanWithChanges, only: ReadonlySet<EntityName>) {
+  const lost = new Set<string>();
+  for (const [table, col] of LINKS) {
+    if (!only.has(table)) continue;
+    for (const l of plan.items) {
+      const parent = l.key.entity === table ? l.record.refs[col] : undefined;
+      if (parent && l.action === 'skip' && l.targetId === null) lost.add(keyId(parent));
+    }
+  }
+  const items = plan.items.map((i) =>
+    i.action === 'create' && lost.has(keyId(i.key)) ? skip(i) : i,
+  );
+  return skipUnresolvable({ ...plan, items, counts: countPlan({ items, issues: plan.issues }) });
+}
+
 export function onlyEntities(plan: PlanWithChanges, scope: OnlyScope): PlanWithChanges {
   const past = pastLessons(plan.items, scope.fromUtc);
   const untouched = (i: PlanItem): boolean => {
@@ -84,11 +110,6 @@ export function onlyEntities(plan: PlanWithChanges, scope: OnlyScope): PlanWithC
   const items = plan.items.map((i) => (untouched(i) ? skip(i) : i));
   const issues = plan.issues.filter((i) => scope.only.has(i.entity));
   const changes = plan.changes.filter((c) => scope.only.has(c.entity));
-  return skipUnresolvable({
-    ...plan,
-    items,
-    issues,
-    changes,
-    counts: countPlan({ items, issues }),
-  });
+  const scoped = { ...plan, items, issues, changes, counts: countPlan({ items, issues }) };
+  return skipPartialParents(skipUnresolvable(scoped), scope.only);
 }

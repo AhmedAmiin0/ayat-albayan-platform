@@ -11,7 +11,7 @@ describe('one-off bookings', () => {
   it('a future trial becomes one scheduled, unconfirmed, non-chargeable lesson', () => {
     const r = runBookings({ bookings: [once({ package_text: 'حلقة تجريبية مجانية' })] });
     const at = '2026-11-02T14:30:00.000Z'; // 17:30 Asia/Riyadh
-    const key = keys.lesson({ teacher: 'abrar', students: [LAYAN.key], at });
+    const key = keys.lesson({ teacher: 'abrar', students: [LAYAN.key], at: 'booking:2026-11-02' });
     expect(r.by('lessons').map((d) => [d.key, d.record])).toEqual([
       [
         key,
@@ -37,6 +37,16 @@ describe('one-off bookings', () => {
       { chargeable: true },
       { chargeable: true },
     ]);
+  });
+
+  it('the key names the booking, so a re-timed booking stays one lesson', () => {
+    const first = runBookings({ bookings: [once({ calendar_event_id: 'evt-1' })] });
+    const moved = runBookings({
+      bookings: [once({ calendar_event_id: 'evt-1', date: '2026-11-04', start_time: '19:00' })],
+    });
+    const later = runBookings({ bookings: [once({ start_time: '20:00' })] });
+    expect(moved.by('lessons')[0]?.key).toEqual(first.by('lessons')[0]?.key);
+    expect(later.by('lessons')[0]?.key.key).toContain('booking:2026-11-02');
   });
 
   it('a one-off dated before --from creates nothing; one on --from does', () => {

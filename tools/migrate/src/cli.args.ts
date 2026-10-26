@@ -36,7 +36,9 @@ export const USAGE = `usage: pnpm --filter @ab/migrate cli <command> [options]
   review                                    out/plan.json → out/review.xlsx`;
 
 const validDay = (s: string): boolean =>
-  /^\d{4}-\d{2}-\d{2}$/.test(s) && new Date(`${s}T00:00:00Z`).toISOString().startsWith(s);
+  /^\d{4}-\d{2}-\d{2}$/.test(s) &&
+  !Number.isNaN(Date.parse(`${s}T00:00:00Z`)) &&
+  new Date(`${s}T00:00:00Z`).toISOString().startsWith(s);
 
 /** --only names entities; --from is a real calendar day. */
 function checkScope(v: { from?: string; only?: string }): void {

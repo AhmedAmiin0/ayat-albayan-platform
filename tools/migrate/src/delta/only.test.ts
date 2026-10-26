@@ -60,6 +60,41 @@ describe('onlyEntities', () => {
   });
 });
 
+describe('skipPartialParents (via onlyEntities)', () => {
+  it('a new rule and lesson whose student was left out are skipped, not booked empty', () => {
+    const S = keys.student({ guardianPhone: '+966500000004', name: 'ليان' });
+    const RULE = keys.scheduleRule({ teacher: 'rabia', students: [S.key] });
+    const only = parseOnly(
+      'students,schedule_rules,schedule_rule_students,lessons,lesson_students',
+    );
+    const p = onlyEntities(
+      planOf([
+        item({ key: T, action: 'skip', targetId: 't-1' }),
+        item({ key: keys.guardian('+966500000004') }), // new, but guardians are not in --only
+        item({
+          key: S,
+          record: { columns: {}, refs: { guardian_id: keys.guardian('+966500000004') } },
+        }),
+        item({ key: RULE, record: { columns: {}, refs: { teacher_id: T } } }),
+        item({
+          key: keys.scheduleRuleStudent({ rule: RULE.key, student: S.key }),
+          record: { columns: {}, refs: { rule_id: RULE, student_id: S } },
+        }),
+        item({
+          key: LESSON,
+          record: { columns: { starts_at: '2026-11-01T10:00:00.000Z' }, refs: { teacher_id: T } },
+        }),
+        item({
+          key: keys.lessonStudent({ lesson: LESSON.key, student: S.key }),
+          record: { columns: {}, refs: { lesson_id: LESSON, student_id: S } },
+        }),
+      ]),
+      { ...FROM, only },
+    );
+    expect(p.items.filter((i) => i.action !== 'skip')).toEqual([]);
+  });
+});
+
 describe('skipUnresolvable / parseOnly / runScope', () => {
   it('keeps records whose refs have a target row', () => {
     const lesson = item({ key: LESSON, record: { columns: {}, refs: { teacher_id: T } } });

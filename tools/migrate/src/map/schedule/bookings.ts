@@ -58,7 +58,7 @@ function ruleOf(
         start_time_local: slot.time,
         tz: SHEET_TZ,
         byday: rec.byday,
-        starts_on: slot.startsOn,
+        starts_on: slot.date, // clamped to --from on create only (delta/scope.ts)
         ends_on: rec.until,
         status: rec.until && rec.until < o.today ? 'ended' : 'active',
         package: pkg,

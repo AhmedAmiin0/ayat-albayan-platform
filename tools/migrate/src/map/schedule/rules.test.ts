@@ -43,7 +43,7 @@ describe('schedule rules', () => {
         start_time_local: '09:30',
         tz: 'Asia/Riyadh',
         byday: [1, 4],
-        starts_on: '2026-10-02', // the booking's date (2026-08-20) clamped to --from (today)
+        starts_on: '2026-08-20', // clamped to --from on create (delta/scope.ts)
         ends_on: null,
         status: 'active',
         package: '8',

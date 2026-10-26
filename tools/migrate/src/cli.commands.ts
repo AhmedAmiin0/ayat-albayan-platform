@@ -12,7 +12,7 @@ import { unqueueImportedLessons } from './db/unqueue-imported.ts';
 import type { PlanWithChanges } from './plan/changes.ts';
 import { deltaPlan } from './plan/stale-refs.ts';
 import { buildPlan, loadBundle } from './plan/run.ts';
-import { logScope, runScope } from './delta/scope.ts';
+import { clampRuleStarts, logScope, runScope } from './delta/scope.ts';
 import { onlyEntities } from './delta/only.ts';
 import { reportMarkdown } from './report/report.ts';
 import { writeReview } from './report/review.ts';
@@ -73,7 +73,10 @@ export function planOrApply(args: CliArgs, apply: boolean): Promise<void> {
     const delta = args.createsOnly
       ? await deltaPlan({ db, built, modules: ENTITY_MODULES })
       : built.plan;
-    const plan = scope.only ? onlyEntities(delta, scope.only) : delta;
+    const plan = clampRuleStarts(
+      scope.only ? onlyEntities(delta, scope.only) : delta,
+      scope.build.from,
+    );
     logScope({ plan, recreated: built.recreated, from: scope.build.from });
     await writeOutputs(plan);
     if (!apply) return;

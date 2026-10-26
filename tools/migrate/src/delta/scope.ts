@@ -29,6 +29,26 @@ export function runScope(
   return { build: { today, from, ...(args.createsOnly ? { recreate: only } : {}) }, only };
 }
 
+/**
+ * A new rule starts on max(starts_on, --from): the platform never books before the import date.
+ * Creates only, and the hash stays the mapped one, so a re-run with the same sheets is a skip and an
+ * existing rule's start is never moved (no daily update of every rule).
+ */
+export function clampRuleStarts<P extends Pick<Plan, 'items'>>(plan: P, from: string): P {
+  const items = plan.items.map((i) => {
+    const on = i.record.columns['starts_on'];
+    if (
+      i.key.entity !== 'schedule_rules' ||
+      i.action !== 'create' ||
+      typeof on !== 'string' ||
+      on >= from
+    )
+      return i;
+    return { ...i, record: { ...i.record, columns: { ...i.record.columns, starts_on: from } } };
+  });
+  return { ...plan, items };
+}
+
 /** Per entity: planned creates that recreate a record whose import item named a deleted row. */
 export function recreatedCounts(plan: Pick<Plan, 'items'>, recreated: ReadonlySet<string>) {
   const out: Partial<Record<EntityName, number>> = {};

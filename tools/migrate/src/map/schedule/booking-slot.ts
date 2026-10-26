@@ -19,7 +19,7 @@ interface When {
 }
 
 export type BookingSlot =
-  | ({ kind: 'rule'; rec: Recurrence; startsOn: string } & When)
+  | ({ kind: 'rule'; rec: Recurrence } & When)
   | ({ kind: 'once' } & When)
   | { kind: 'skip'; reason: SkipReason }
   | { kind: 'issue'; issue: IssueInput };
@@ -41,12 +41,11 @@ function placed(rec: Recurrence | null, when: When, from: string): BookingSlot {
   if (rec.until && rec.until < when.date)
     return { kind: 'issue', issue: { code: 'bad_date', severity: 'reject', field: 'recurrence' } };
   if (rec.until && rec.until < from) return { kind: 'skip', reason: 'ended_before_from' };
-  const startsOn = when.date > from ? when.date : from;
-  return { kind: 'rule', rec, startsOn, ...when };
+  return { kind: 'rule', rec, ...when };
 }
 
 /**
- * A weekly row → a rule from max(date, from) to its «حتى» day; a row without «التكرار» → one
+ * A weekly row → a rule to its «حتى» day (starts_on clamped to `from` on create); a row without «التكرار» → one
  * lesson on its date. Nothing before `from` ('YYYY-MM-DD', Asia/Riyadh): a series that ended
  * before it and a one-off dated before it are skipped. No date or time («ناقص تاريخ أو وقت») →
  * missing_field reject, reported.

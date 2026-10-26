@@ -1,8 +1,10 @@
 // One-off «تقويم الحجوزات» rows (no «التكرار») dated on or after the import date, status مؤكد /
 // مشترك / يحتاج تأكيد → one upcoming lesson + its lesson_students rows (owner 2026-10-26), the free
 // trial included (not chargeable). The lesson is created `scheduled`, never confirmed, and carries
-// only its time: an update in a later run moves the time and never rewrites what the app set
-// (status, attendance, link). rule_id stays null. Pure.
+// only its time. Its key names the booking, not the time (the calendar event id, else the local
+// day), so a booking re-timed in the sheet stays one lesson: a full apply moves it, --creates-only
+// leaves the app's copy. Moved to another day without an event id it is a new lesson (cancel the
+// old one in the app). rule_id stays null. Pure.
 import type { SourceBundle } from '../../entities/contract.ts';
 import { keys } from '../../keys.ts';
 import { text } from '../../sources/sheets/cells.ts';
@@ -42,7 +44,7 @@ function oneOf(row: SourceRow, o: { ix: StudentIndex; from: string }): OneOffRes
     key: keys.lesson({
       teacher: who.teacher,
       students: who.students.map((k) => k.key),
-      at: startsAt,
+      at: `booking:${text(f['calendar_event_id']) ?? slot.date}`,
     }),
     teacher: who.teacher,
     students: who.students,

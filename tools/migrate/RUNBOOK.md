@@ -131,7 +131,8 @@ pnpm --filter @ab/migrate cli apply   --target staging --creates-only --from <to
 ```
 
 - `--from YYYY-MM-DD` (default: today, Asia/Riyadh): nothing before it is created. A weekly row
-  becomes a rule from max(row date, `--from`) to its «حتى» day (`ends_on`); a series that ended
+  becomes a rule from max(row date, `--from`) to its «حتى» day (`ends_on`); the start is clamped
+  on create only, so a re-run never moves an existing rule's start. A series that ended
   before `--from` and a one-off dated before it are left out. A one-off on or after it (the free
   trial too) becomes one lesson.
 - Statuses: مؤكد, مشترك and يحتاج تأكيد are imported; يحتاج تأكيد lessons are scheduled and not
@@ -150,6 +151,13 @@ pnpm --filter @ab/migrate cli apply   --target staging --creates-only --from <to
 - Google sync stays clear of all of it: every imported rule and lesson has an import item, so
   `v_platform_origin_lessons` excludes them and every lesson generated from an imported rule; the
   apply also drops queue rows of imported lessons as in 7b. The importer queues no messages.
+- **Reminders: check `auto_messages_enabled` is false on the target before the apply.** The
+  importer sends nothing, but the platform's reminder job picks up every upcoming `scheduled`
+  lesson, imported or not. While the old Apps Script still messages families, turning automatic
+  WhatsApp on would remind them twice.
+- A new lesson or rule whose student (or one of a group's children) is left out of the plan is
+  skipped too, never booked without its students. A one-off's key is its calendar event id (else
+  its day): re-timing it in the sheet keeps one lesson.
 - Before the apply: check «rejected» for `missing_ref` bookings (student not in «الطلاب») and
   `unknown_teacher` (add the spelling to `cache/teachers.json`).
 
