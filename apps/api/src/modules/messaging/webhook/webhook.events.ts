@@ -28,6 +28,8 @@ export interface InboundEvent {
   line: WaLine | null;
   /** Module mode only: the receiving wa_numbers row (messages.number_id, docs/23c decision 7). */
   numberId?: string;
+  /** Meta's metadata.phone_number_id of the change (stamps number_id under legacy too). */
+  phoneNumberId?: string;
 }
 
 export const DELIVERY_STATUSES = ['sent', 'delivered', 'read', 'failed'] as const;
@@ -41,9 +43,26 @@ export interface StatusEvent {
   errorText: string | null;
   conversationId: string | null;
   pricingCategory: string | null;
+  /** Where the status came in (an unknown wamid on a Kapso number is fetched and stored, external/). */
+  line?: WaLine | null;
+  numberId?: string;
+  phoneNumberId?: string;
+}
+
+/**
+ * A message the business sent OUTSIDE the app (Kapso's inbox, the WhatsApp Business app): Meta's
+ * smb_message_echoes item, or a message read back from Kapso's history. Stored as an outbound row.
+ */
+export interface EchoEvent {
+  /** The Meta message object (id, to, timestamp, type, text / template / media). */
+  message: unknown;
+  line: WaLine | null;
+  numberId?: string;
+  phoneNumberId?: string;
 }
 
 export interface WebhookBatch {
   messages: InboundEvent[];
   statuses: StatusEvent[];
+  echoes: EchoEvent[];
 }
