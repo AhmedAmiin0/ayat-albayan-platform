@@ -3,22 +3,19 @@ import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { calendarBackend, NOW } from '@/calendar/testing/flow-backend';
 import { t } from '@/core/lib/i18n/i18n';
 
-// The «جلسات مباشرة» section repeats the live card; it has its own tests (src/live).
-jest.mock('@/live/LiveSessions', () => ({ LiveSessions: () => null }));
-
 beforeEach(async () => {
   await resetApp();
   jest.useFakeTimers({ now: NOW, advanceTimers: true });
 });
 afterEach(() => jest.useRealTimers());
 
-test('Today card → «غيّر الموعد» → «هذه الحلقة وكل ما بعدها» → a weekly rule; Today refetches and the card leaves', async () => {
+test('Today → «التفاصيل» → «غيّر الموعد» → «هذه الحلقة وكل ما بعدها» → a weekly rule; Today refetches and the lesson leaves', async () => {
   const { backend } = calendarBackend();
   const app = await renderApp({ url: '/', backend });
   expect(await screen.findByText('يوسف أحمد')).toBeTruthy();
-  const [card] = screen.getAllByRole('button', { name: t.lessons.rescheduleSubmit });
-  if (!card) throw new Error('no reschedule on the card');
-  await fireEvent.press(card);
+  // The 16:00 lesson runs: it is the hero; its actions are in «تفاصيل الحلقة».
+  await fireEvent.press(screen.getByRole('button', { name: t.today.details }));
+  await fireEvent.press(await screen.findByRole('button', { name: `${t.lessons.rescheduleSubmit} — يوسف أحمد` }));
   expect(await screen.findByRole('header', { name: t.lessons.rescheduleTitle })).toBeTruthy();
 
   await fireEvent.press(await screen.findByRole('radio', { name: t.lessons.scope.rule }));
@@ -46,7 +43,8 @@ test('Today card → «غيّر الموعد» → «هذه الحلقة وكل 
   expect(backend.sent('GET /booking/slots')[0]?.query).toMatchObject({ teacherId: 't1', durationMin: '45', studentIds: 's1' });
 
   await fireEvent.press(screen.getByRole('button', { name: t.reschedule.done }));
+  await fireEvent.press(screen.getByRole('button', { name: t.common.close }));
   expect(app.pathname()).toBe('/');
-  await waitFor(() => expect(screen.getAllByRole('button', { name: t.lessons.rescheduleSubmit })).toHaveLength(1));
+  await waitFor(() => expect(screen.queryByText('يوسف أحمد')).toBeNull());
   expect(backend.sent('GET /lessons/day').length).toBeGreaterThan(1);
 });

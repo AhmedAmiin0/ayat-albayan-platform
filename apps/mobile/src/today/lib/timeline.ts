@@ -1,9 +1,9 @@
 import type { LessonStatus, LessonView } from '@ab/shared';
 
-// «النهارده» timeline (R-MOB-02, docs/07 §12): which lessons show, the pill counts, and where the
-// «دلوقتي» line falls. Pure, so the screen only lays it out.
+// «اليوم» (R-MOB-02, docs/29): which lessons show and the summary card's counts, each column also
+// its filter. Pure, so the screen only lays it out.
 
-export const TODAY_FILTERS = ['all', 'scheduled', 'confirmed', 'completed'] as const;
+export const TODAY_FILTERS = ['all', 'scheduled', 'completed'] as const;
 export type TodayFilter = (typeof TODAY_FILTERS)[number];
 
 /**
@@ -28,40 +28,13 @@ export function applyFilter(lessons: readonly LessonView[], filter: TodayFilter)
   return filter === 'all' ? [...lessons] : lessons.filter((l) => l.status === filter);
 }
 
-/** Pill counts, counted from the day the API returned (it is the whole day, not a page). */
+/** The summary counts, from the day the API returned (it is the whole day, not a page). */
 export function filterCounts(lessons: readonly LessonView[]): Record<TodayFilter, number> {
-  const counts: Record<TodayFilter, number> = { all: lessons.length, scheduled: 0, confirmed: 0, completed: 0 };
+  const counts: Record<TodayFilter, number> = { all: lessons.length, scheduled: 0, completed: 0 };
   for (const l of lessons) {
-    if (l.status === 'scheduled' || l.status === 'confirmed' || l.status === 'completed') {
-      counts[l.status] += 1;
-    }
+    if (l.status === 'scheduled' || l.status === 'completed') counts[l.status] += 1;
   }
   return counts;
-}
-
-export type TimelineItem =
-  | { kind: 'past'; lesson: LessonView }
-  | { kind: 'now' }
-  | { kind: 'lesson'; lesson: LessonView };
-
-/**
- * Finished lessons (ended by `now`) collapse into compact rows above the «دلوقتي» line; a lesson
- * under way stays a full card so its actions are still there. No lessons → [] (the empty state).
- */
-export function timeline(lessons: readonly LessonView[], now: Date): TimelineItem[] {
-  if (lessons.length === 0) return [];
-  const at = now.getTime();
-  const past: TimelineItem[] = [];
-  const rest: TimelineItem[] = [];
-  for (const lesson of lessons) {
-    if (Date.parse(lesson.ends_at) <= at) past.push({ kind: 'past', lesson });
-    else rest.push({ kind: 'lesson', lesson });
-  }
-  return [...past, { kind: 'now' }, ...rest];
-}
-
-export function timelineKey(item: TimelineItem): string {
-  return item.kind === 'now' ? 'now' : item.lesson.id;
 }
 
 /** The local calendar day in `tz` as YYYY-MM-DD, for GET /lessons/day?date (a key, not display). */

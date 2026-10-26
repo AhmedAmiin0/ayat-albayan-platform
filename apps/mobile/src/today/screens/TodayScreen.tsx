@@ -1,52 +1,36 @@
-import { formatRunningHead, lessonStatusStyle, type LessonView } from '@ab/shared';
+import type { LessonView } from '@ab/shared';
 import { useState } from 'react';
-import { FlatList } from 'react-native';
+import { FlatList, RefreshControl, View } from 'react-native';
+import { LessonDetailsSheet } from '@/calendar/details/LessonDetailsSheet';
+import { useLessonDetails } from '@/calendar/details/use-lesson-details';
+import { LessonRowActions } from '@/calendar/agenda/LessonRowActions';
+import { JoinClassroomButton } from '@/classroom/links/JoinClassroomButton';
 import { EditTimeSheet } from '@/edit-time/components/EditTimeSheet';
 import { clockAt } from '@/inbox/shared/format';
 import { t } from '@/core/lib/i18n/i18n';
-import { locale } from '@/core/lib/i18n/locale';
-import { BellButton } from '@/notifications/BellButton';
-import { LiveSessions } from '@/live/LiveSessions';
 import { RescheduleSheet } from '@/teaching/reschedule/RescheduleSheet';
-import { EmptyState } from '@/core/ui/feedback/EmptyState';
-import { ErrorState } from '@/core/ui/feedback/ErrorState';
-import { FilterPills, type FilterPill } from '@/core/ui/form/FilterPills';
 import { Screen } from '@/core/ui/layout/Screen';
-import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { useTabBarInset } from '@/core/ui/layout/tab-bar-inset';
-import { LessonCard } from '../components/LessonCard';
-import { NowLine } from '../components/NowLine';
+import { DayState } from '../components/DayState';
+import { EndedFold } from '../components/EndedFold';
 import { Notice } from '../components/Notice';
-import { PastLessonRow } from '../components/PastLessonRow';
-import {
-  applyFilter,
-  filterCounts,
-  timeline,
-  timelineKey,
-  visibleLessons,
-  type TodayFilter,
-} from '../lib/timeline';
-import { TimelineRow } from '../components/TimelineRow';
-import { riyadhTime } from '../lib/lesson-text';
+import { QuietDay } from '../components/QuietDay';
+import { RestSection } from '../components/RestSection';
+import { SummaryCard } from '../components/SummaryCard';
+import { TodayHeader } from '../components/TodayHeader';
+import { HeroCard } from '../hero/HeroCard';
+import { filterCounts, visibleLessons, type TodayFilter } from '../lib/timeline';
+import { todayPlan } from '../lib/today-plan';
 import { useDayLessons, useNow } from '../lib/use-day-lessons';
 import { useLessonAction } from '../lib/use-lesson-action';
 
-const filterPills = (): FilterPill<TodayFilter>[] => [
-  { value: 'all', label: t.today.all },
-  ...(['scheduled', 'confirmed', 'completed'] as const).map((s) => ({
-    value: s,
-    label: t.enums.lessonStatus[s],
-    ...lessonStatusStyle[s],
-  })),
-];
-
 /**
- * «النهارده» (R-MOB-02, docs/07 §12): every teacher's lessons today on one spine. Ended lessons
- * are one line each, a «دلوقتي» line marks the time, the rest are cards with تأكيد / إلغاء
- * (optimistic, R-MOB-03), «غيّر الميعاد» (the reschedule sheet, R-SCH-07) and «عدّل الوقت» (the
- * in-place edit sheet, R-SCH-11, also on an ended lesson). Pull to refresh;
+ * «اليوم» (R-MOB-02, docs/29): a calm landing. The greeting and date, a summary card whose columns
+ * filter the day, the hero «الحلقة التالية» (the one under way wins), «بقية اليوم» as quiet rows and
+ * the ended lessons folded away; a quiet day once all is done. A tap on any lesson opens «تفاصيل
+ * الحلقة», where its actions live: تأكيد / إلغاء (optimistic, R-MOB-03), «غيّر الميعاد» (R-SCH-07),
+ * «عدّل الوقت» (R-SCH-11, on an ended lesson too), «حجز تعويضي» and «ادخل الحلقة». Pull to refresh;
  * offline the saved day stays with its «آخر تحديث».
- * TODO(R-MOB-02): Hijri date from the API (Hermes ICU has no reliable islamic-umalqura, docs/07 §2).
  */
 export function TodayScreen() {
   const now = useNow();
@@ -56,67 +40,70 @@ export function TodayScreen() {
   const [filter, setFilter] = useState<TodayFilter>('all');
   const [moving, setMoving] = useState<LessonView | null>(null);
   const [editing, setEditing] = useState<LessonView | null>(null);
+  const details = useLessonDetails(day.data);
   const loaded = day.data !== undefined;
   const lessons = visibleLessons(day.data ?? []);
-  const counts = filterCounts(lessons);
-  const items = timeline(applyFilter(lessons, filter), now);
-  const pills = loaded ? filterPills().map((p) => ({ ...p, count: counts[p.value] })) : filterPills();
-  const dateLine = `${formatRunningHead(now, locale).gregorian}. ${t.availability.tzHint.replace('{tz}', t.runningHead.riyadh)}`;
+  const plan = todayPlan(lessons, filter, now);
   // Offline (no NetInfo): the refetch failed but the saved day is on screen; say how old it is.
-  const stale = day.isError && loaded;
-  const subtitle = stale
-    ? `${dateLine} · ${t.mobile.lastUpdated.replace('{time}', clockAt(day.dataUpdatedAt))}`
-    : dateLine;
+  const stale = day.isError && loaded ? t.mobile.lastUpdated.replace('{time}', clockAt(day.dataUpdatedAt)) : undefined;
+  const { hero } = plan;
+  const nothing = hero === null && plan.rest.length === 0 && plan.ended.length === 0;
+  const actionsOf = (lesson: LessonView) => (
+    <>
+      <LessonRowActions lesson={lesson} action={action} onReschedule={setMoving} onEditTime={setEditing} onLeave={details.close} />
+      <JoinClassroomButton lesson={lesson} />
+    </>
+  );
 
   return (
     <Screen list>
-      <ScreenHeader title={t.today.title} subtitle={subtitle} trailing={<BellButton tree="admin" />} />
-      <LiveSessions lessons={lessons} showTeacher />
-      <FilterPills
-        items={pills}
-        value={filter}
-        onChange={setFilter}
-        accessibilityLabel={t.today.statusFilter}
-      />
-      {action.notice ? <Notice message={action.notice} /> : null}
+      {/* The page is one block of cards (rows share one card), so a list with only a header: it keeps
+          FlatList's refresh and keyboard behaviour, as before. */}
       <FlatList
-        style={{ flex: 1 }}
-        contentContainerStyle={{ paddingBottom: 24 + inset }}
-        // The cancel reason is typed inside the list: a tap on «إلغاء الحلقة» must land with the keyboard up.
-        keyboardShouldPersistTaps="handled"
-        automaticallyAdjustKeyboardInsets
-        data={items}
-        keyExtractor={timelineKey}
-        renderItem={({ item }) => {
-          if (item.kind === 'now') return <NowLine now={now} />;
-          if (item.kind === 'past') return <PastLessonRow lesson={item.lesson} onEditTime={setEditing} />;
-          const { lesson } = item;
-          return (
-            <TimelineRow time={riyadhTime(lesson.starts_at)} status={lesson.status}>
-              <LessonCard
-                lesson={lesson}
-                busy={action.busyId === lesson.id}
-                error={action.errorFor(lesson.id)}
-                onConfirm={() => action.confirm(lesson.id)}
-                onCancel={(cancel) => action.cancel(lesson.id, cancel)}
-                onReschedule={() => setMoving(lesson)}
-                onEditTime={() => setEditing(lesson)}
+        style={{ flex: 1, marginHorizontal: -16 }}
+        contentContainerStyle={{ paddingHorizontal: 20, paddingBottom: 24 + inset }}
+        refreshControl={<RefreshControl refreshing={day.isRefetching} onRefresh={() => void day.refetch()} />}
+        data={[]}
+        renderItem={() => null}
+        ListHeaderComponent={
+          <View style={{ gap: 18 }}>
+            <TodayHeader now={now} stale={stale} />
+            {loaded && lessons.length > 0 ? <SummaryCard counts={filterCounts(lessons)} filter={filter} onFilter={setFilter} /> : null}
+            {action.notice ? <Notice message={action.notice} /> : null}
+            {hero ? (
+              <HeroCard
+                hero={hero}
+                busy={action.busyId === hero.lesson.id}
+                error={action.errorFor(hero.lesson.id)}
+                onConfirm={() => action.confirm(hero.lesson.id)}
+                onDetails={() => details.open(hero.lesson)}
               />
-            </TimelineRow>
-          );
-        }}
-        refreshing={day.isRefetching}
-        onRefresh={() => void day.refetch()}
-        ListEmptyComponent={
-          day.isPending ? null : loaded ? (
-            <EmptyState title={filter === 'all' ? t.today.empty : t.today.emptyFilter} />
-          ) : (
-            <ErrorState onRetry={() => void day.refetch()} />
-          )
+            ) : null}
+            {plan.quiet && filter === 'all' ? <QuietDay now={now} /> : null}
+            <RestSection lessons={plan.rest} onOpen={details.open} onShowAll={() => setFilter('all')} />
+            <EndedFold key={filter} lessons={plan.ended} onOpen={details.open} open={filter !== 'all'} />
+            <DayState
+              pending={day.isPending}
+              failed={!loaded}
+              empty={lessons.length === 0}
+              filteredOut={nothing}
+              onRetry={() => void day.refetch()}
+            />
+          </View>
         }
       />
-      <RescheduleSheet lesson={moving} onClose={() => setMoving(null)} />
-      <EditTimeSheet lesson={editing} onClose={() => setEditing(null)} />
+      <LessonDetailsSheet
+        lesson={details.lesson}
+        role="admin"
+        onClose={details.close}
+        actions={actionsOf}
+        sheets={
+          <>
+            <RescheduleSheet lesson={moving} onClose={() => setMoving(null)} />
+            <EditTimeSheet lesson={editing} onClose={() => setEditing(null)} />
+          </>
+        }
+      />
     </Screen>
   );
 }

@@ -32,9 +32,9 @@ test('the tabs in order, the hidden one off the bar, a count in its tab’s name
   expect(screen.getByLabelText(t.mobileNav.tabsLabel).props.accessibilityRole).toBe('tabbar');
 });
 
-test('the screens know how far the bar reaches: a 16pt gap (no inset in jest) + the 64pt capsule', async () => {
+test('the screens know how far the bar reaches: a 24pt gap (no inset in jest) + the 62pt capsule', async () => {
   await open(app, '/a');
-  expect(await screen.findByText('inset 80')).toBeTruthy();
+  expect(await screen.findByText('inset 86')).toBeTruthy();
 });
 
 test('a tap opens its tab; a tap on the open tab stays there', async () => {

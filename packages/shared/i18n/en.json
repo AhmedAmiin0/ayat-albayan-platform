@@ -996,7 +996,42 @@
     "all": "All",
     "statusFilter": "Lesson status",
     "emptyFilter": "No lessons with this status today",
-    "studentTime": "{time} {city} time"
+    "studentTime": "{time} {city} time",
+    "greeting": {
+      "morning": "Good morning",
+      "evening": "Good evening"
+    },
+    "summaryLabel": "Today at a glance",
+    "summary": {
+      "all": "lessons today",
+      "scheduled": "need confirmation",
+      "completed": "ended"
+    },
+    "summaryFilter": "{n} {label}, show only these lessons",
+    "summaryFilterActive": "{n} {label}, show all lessons",
+    "next": "Next lesson",
+    "running": "In progress",
+    "inMinutes": {
+      "one": "in 1 minute",
+      "two": "in 2 minutes",
+      "few": "in {n} minutes",
+      "other": "in {n} minutes"
+    },
+    "teacherTitled": "{teacher}",
+    "confirmLesson": "Confirm lesson",
+    "details": "Details",
+    "rest": "Rest of the day · {n}",
+    "endedFold": {
+      "one": "1 lesson ended today",
+      "two": "2 lessons ended today",
+      "few": "{n} lessons ended today",
+      "other": "{n} lessons ended today"
+    },
+    "quietTitle": "Today's lessons are done",
+    "tomorrowLine": "Tomorrow: {count}, the first at {time}.",
+    "tomorrowSchedule": "Tomorrow's schedule",
+    "openLesson": "{time}, {names}, {status}. Show details",
+    "dateLine": "{date} · Riyadh time"
   },
   "calendar": {
     "teacherCalendar": "Teacher schedule",
