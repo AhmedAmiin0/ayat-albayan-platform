@@ -178,6 +178,10 @@ jobs:
       # Only what the e2e suite uses: Postgres, auth, PostgREST, storage and the gateway.
       SUPABASE_EXCLUDE: studio,imgproxy,mailpit,edge-runtime,logflare,vector,realtime,postgres-meta,supavisor
     steps:
+      # Supabase's host ports (54321 API, 54322 db, … 54329) sit inside Linux's ephemeral range: an outgoing
+      # socket took 54322 first ("address already in use"), twice on 2026-10-25 even with the ports reserved
+      # just before the start, so they are reserved first thing, before checkout and pnpm open any socket.
+      - run: sudo sysctl -qw net.ipv4.ip_local_reserved_ports=54320-54329
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v4
@@ -188,13 +192,12 @@ jobs:
       # In the background: the browser and the build below get ready at the same time (was ~80 s in a row).
       # Measured 2026-10-23: caching the images (docker save/load, 0.9 GB) was SLOWER than pulling them
       # (load 70 s + start 30 s against ~80 s for pull + start), so the images are pulled.
+      # One retry if the start fails; the log first lists the sockets on 54320-54329 (who held the port).
       - name: Start local Supabase (background)
         run: |
-          # Supabase's host ports (54321 API, 54322 db, … 54329) sit inside Linux's ephemeral range: with
-          # downloads running alongside, an outgoing socket once took 54322 first ("address already in use").
-          sudo sysctl -qw net.ipv4.ip_local_reserved_ports=54320-54329
-          nohup bash -c 'time pnpm supabase start -x "$SUPABASE_EXCLUDE"; echo $? > "$RUNNER_TEMP/supabase.rc"' \
-            > "$RUNNER_TEMP/supabase.log" 2>&1 &
+          nohup bash -c 'up() { pnpm supabase start -x "$SUPABASE_EXCLUDE"; }
+            time up || { sudo ss -tanp | grep -E ":5432[0-9] " || true; pnpm supabase stop --no-backup; up; }
+            echo $? > "$RUNNER_TEMP/supabase.rc"' > "$RUNNER_TEMP/supabase.log" 2>&1 &
       # apt's man-db trigger rebuilds the manual index after every install (skipped with this file gone).
       - run: sudo rm -f /var/lib/man-db/auto-update
       - name: Playwright version
