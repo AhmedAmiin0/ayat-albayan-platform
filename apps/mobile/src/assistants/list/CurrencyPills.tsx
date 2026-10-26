@@ -5,7 +5,7 @@ import { FormLabel } from '@/payments/FormLabel';
 import { FilterPills } from '@/core/ui/form/FilterPills';
 import { TERM_CURRENCIES } from '../terms/terms-form';
 
-export interface CurrencyPillsProps {
+interface CurrencyPillsProps {
   label: string;
   value: string;
   onChange: (currency: string) => void;

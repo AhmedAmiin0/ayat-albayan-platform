@@ -12,7 +12,7 @@ import { MonthFilter } from './MonthFilter';
 import { StatusPills } from '../list/StatusPills';
 import { sumByCurrency } from '../statements/hooks/totals';
 
-export interface CommissionLedgerProps {
+interface CommissionLedgerProps {
   /** The list for the salesperson filter; omit on one salesperson's page and pass `assistantId`. */
   assistants?: readonly AssistantRow[];
   assistantId?: string;

@@ -2,7 +2,7 @@ import { DEFAULT_PASSWORD_MIN, passwordProblem } from '@ab/shared';
 import { t } from '@/core/lib/i18n/i18n';
 import type { AccountFieldErrors } from './account-errors';
 
-export interface PasswordDraft {
+interface PasswordDraft {
   current: string;
   next: string;
   confirm: string;

@@ -8,7 +8,7 @@ import type { ThreadMediaItem } from '../shared/contract';
 import { useThreadMedia } from './invoice-queries';
 import { MediaCard } from './MediaCard';
 
-export interface ChatMediaSheetProps {
+interface ChatMediaSheetProps {
   /** The guardian's WhatsApp number (E.164): the API only copies files from that conversation. */
   phone: string;
   onPick: (item: ThreadMediaItem, thumbnail: string | null) => void;

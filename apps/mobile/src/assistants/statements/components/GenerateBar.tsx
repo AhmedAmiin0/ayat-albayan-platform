@@ -9,7 +9,7 @@ import { InlineConfirm } from '@/core/ui/feedback/InlineConfirm';
 import { assistantsErrorText } from '../../api/errors';
 import { useGenerateStatements } from '../../api/mutations';
 
-export interface GenerateBarProps {
+interface GenerateBarProps {
   /** Who would be built: the chosen salesperson or all, minus the frozen ones (generateTargets). */
   targets: readonly string[];
   month: string;

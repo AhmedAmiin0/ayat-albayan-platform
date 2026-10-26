@@ -6,7 +6,7 @@ import { FilterPills, type FilterPill } from '@/core/ui/form/FilterPills';
 import type { BookingKind } from '../../shared/contract';
 import type { TrialDraft } from '../lib/draft';
 
-export interface KindPillsProps {
+interface KindPillsProps {
   value: TrialDraft['kind'];
   onChange: (kind: TrialDraft['kind']) => void;
 }

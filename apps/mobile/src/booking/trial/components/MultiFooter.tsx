@@ -6,7 +6,7 @@ import { type, useTheme } from '@/theme';
 import { PicksList } from '../../shared/PicksList';
 import type { SlotMulti } from './SlotStep';
 
-export interface MultiFooterProps {
+interface MultiFooterProps {
   multi: SlotMulti;
   /** The family's zone: each picked day's weekday and time. */
   tz: string;

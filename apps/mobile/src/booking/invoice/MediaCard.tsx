@@ -8,7 +8,7 @@ import type { ThreadMediaItem } from '../shared/contract';
 import { useMediaUrl } from './invoice-queries';
 import { ReceiptIcon } from './ReceiptIcon';
 
-export interface MediaCardProps {
+interface MediaCardProps {
   phone: string;
   item: ThreadMediaItem;
   /** The file, with its thumbnail when the API has already served it. */

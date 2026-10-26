@@ -4,7 +4,7 @@ import { AppText } from '@/core/ui/primitives/AppText';
 import { shape, type, useTheme } from '@/theme';
 import { ReceiptIcon } from './ReceiptIcon';
 
-export interface InvoicePreviewProps {
+interface InvoicePreviewProps {
   /** The photo, or the chat file's thumbnail; null shows a file tile instead. */
   uri: string | null;
   mime: string;
