@@ -8,7 +8,7 @@ import * as Updates from 'expo-updates';
 const BUILD = /^[A-Za-z0-9._+-]{1,40}$/;
 
 /** What the build is made of: the app version and, after an OTA update, that update's id. */
-export interface BuildFacts {
+interface BuildFacts {
   version?: string | null;
   updateId?: string | null;
 }

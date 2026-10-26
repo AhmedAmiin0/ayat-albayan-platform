@@ -11,7 +11,7 @@ import { DetailsStudents } from './DetailsStudents';
 import { DetailsWhen } from './DetailsWhen';
 import type { DetailsLesson, DetailsRole } from './details-text';
 
-export interface LessonDetailsSheetProps<L extends DetailsLesson> {
+interface LessonDetailsSheetProps<L extends DetailsLesson> {
   /** The lesson to show; null = closed. */
   lesson: L | null;
   role: DetailsRole;

@@ -3,7 +3,7 @@ import { studentNames } from '@/today/lib/lesson-text';
 import { Button } from '@/core/ui/primitives/Button';
 import { editMode, type EditableLesson } from '../lib/types';
 
-export interface EditTimeButtonProps {
+interface EditTimeButtonProps {
   lesson: EditableLesson;
   onPress: () => void;
   busy?: boolean;

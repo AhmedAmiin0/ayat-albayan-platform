@@ -10,7 +10,7 @@ export function ltr(value: string): string {
   return `⁦${value}⁩`;
 }
 
-export interface LtrProps extends Omit<TextProps, 'children'> {
+interface LtrProps extends Omit<TextProps, 'children'> {
   /** Code, E.164 phone (format it with formatPhone), email or URL. */
   children: string;
 }

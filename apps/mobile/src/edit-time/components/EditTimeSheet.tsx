@@ -6,7 +6,7 @@ import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { EditTimeForm } from './EditTimeForm';
 import { editMode, type EditableLesson } from '../lib/types';
 
-export interface EditTimeSheetProps {
+interface EditTimeSheetProps {
   /** The lesson to edit; null = closed. */
   lesson: EditableLesson | null;
   onClose: () => void;

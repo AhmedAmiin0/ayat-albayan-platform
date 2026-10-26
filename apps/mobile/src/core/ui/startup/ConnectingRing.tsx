@@ -5,7 +5,7 @@ import { useCycle } from '@/core/ui/motion/use-cycle';
 const SIZE = 220;
 const TURN_MS = 1600;
 
-export interface ConnectingRingProps {
+interface ConnectingRingProps {
   track: string;
   arc: string;
   /** Reduce Motion: the ring stands still. */

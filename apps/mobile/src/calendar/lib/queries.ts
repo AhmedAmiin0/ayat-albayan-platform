@@ -8,7 +8,7 @@ import type { AvailabilityRow, Teacher } from '@/more/types';
 // invalidates ['lessons'] refreshes the week, and the app's persisted cache keeps the last week
 // for an offline start (R-MOB-03). The teacher and grid share the teacher screen's keys.
 
-export interface WeekParams {
+interface WeekParams {
   from: string;
   to: string;
   teacherId: string;

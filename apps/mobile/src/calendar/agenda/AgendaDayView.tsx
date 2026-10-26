@@ -7,7 +7,7 @@ import type { AgendaDay } from './agenda';
 import { AgendaLessonRow } from './AgendaLessonRow';
 import { dayLabel } from '../lib/week';
 
-export interface AgendaDayViewProps {
+interface AgendaDayViewProps {
   day: AgendaDay;
   /** Today on the Riyadh calendar: a gold-soft start rule and a plain «النهارده» (gold marks, green acts, §1.1). */
   today: boolean;
