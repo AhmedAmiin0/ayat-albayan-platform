@@ -3,7 +3,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { template } from '@/features/inbox/testing/inbox-fixture';
 import { renderWithClient, routeFetch } from '@/features/inbox/testing/test-utils';
 import { t } from '@/lib/i18n/i18n';
-import { lineView } from './template-lines-fixture';
+import { lineView } from './lines/template-lines-fixture';
 import { TemplateHealth } from './TemplateHealth';
 
 const apiFetch = vi.hoisted(() => vi.fn());
