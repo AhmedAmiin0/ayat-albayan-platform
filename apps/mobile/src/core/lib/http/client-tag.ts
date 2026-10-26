@@ -21,7 +21,7 @@ export function buildId(facts: BuildFacts): string {
   return BUILD.test(id) ? id : 'dev';
 }
 
-export const CLIENT_HEADER = 'X-AB-Client';
+export { CLIENT_HEADER } from '@ab/client-core';
 
 let tag: string | null = null;
 

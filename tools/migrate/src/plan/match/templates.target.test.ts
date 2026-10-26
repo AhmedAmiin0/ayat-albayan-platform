@@ -1,11 +1,11 @@
 // Templates already in the target are planned as updates with their field changes (invented rows).
 import { describe, expect, it } from 'vitest';
-import { recordHash } from '../hash.ts';
-import { keys } from '../keys.ts';
-import type { Existing } from '../types.ts';
-import { diffPlan } from './diff.ts';
-import { fakeDb } from './fake-db.ts';
-import type { Desired } from './resolve.ts';
+import { recordHash } from '../../hash.ts';
+import { keys } from '../../keys.ts';
+import type { Existing } from '../../types.ts';
+import { diffPlan } from '../diff.ts';
+import { fakeDb } from '../fake-db.ts';
+import type { Desired } from '../resolve.ts';
 import { matchTemplates, templateChanges } from './templates.target.ts';
 
 function template(name: string, body: string): Desired {

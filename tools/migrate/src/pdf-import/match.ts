@@ -7,7 +7,7 @@
 import { arabicNameSimilar } from '@ab/shared';
 import type { SourceBundle } from '../entities/contract.ts';
 import { keys, personName } from '../keys.ts';
-import { splitStudentKey } from '../plan/similar.ts';
+import { splitStudentKey } from '../plan/match/similar.ts';
 import type { Desired } from '../plan/resolve.ts';
 import { localToday } from '../time.ts';
 import type { Mapped, NaturalKey, RowIssue, SourceRow } from '../types.ts';

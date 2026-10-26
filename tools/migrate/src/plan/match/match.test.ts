@@ -1,11 +1,11 @@
 // Target-side resolve on invented rows: adopt exact matches, review look-alikes, never merge.
 import { describe, expect, it } from 'vitest';
-import { keyId, keys } from '../keys.ts';
-import type { Existing, NaturalKey, TargetRecord } from '../types.ts';
-import { fakeDb } from './fake-db.ts';
+import { keyId, keys } from '../../keys.ts';
+import type { Existing, NaturalKey, TargetRecord } from '../../types.ts';
+import { fakeDb } from '../fake-db.ts';
 import { matchStudents, matchTeachers } from './match.ts';
 import { matchTarget } from './match.target.ts';
-import { type Desired, resolve } from './resolve.ts';
+import { type Desired, resolve } from '../resolve.ts';
 
 const one = (key: NaturalKey, record: TargetRecord, row = 2): Desired[] =>
   resolve([{ ok: true, key, value: record, ref: { source: 'HUB', tab: 't', row }, issues: [] }])

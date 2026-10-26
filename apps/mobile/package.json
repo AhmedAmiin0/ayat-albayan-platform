@@ -10,9 +10,10 @@
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "test": "jest",
-    "eas-build-post-install": "pnpm --dir ../.. --filter @ab/shared build"
+    "eas-build-post-install": "pnpm --dir ../.. --filter @ab/shared --filter @ab/client-core build"
   },
   "dependencies": {
+    "@ab/client-core": "workspace:*",
     "@ab/shared": "workspace:*",
     "@expo-google-fonts/noto-sans-arabic": "^0.4.3",
     "@react-native-async-storage/async-storage": "2.2.0",
