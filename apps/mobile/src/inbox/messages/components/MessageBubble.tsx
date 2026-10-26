@@ -14,6 +14,7 @@ import { errorLine, mediaLine, templateLine } from '../hooks/message-text';
 import { QuoteBlock } from './QuoteBlock';
 import { SwipeReply } from './SwipeReply';
 import { LinkedText } from '../text/LinkedText';
+import { ResendAsk } from '../resend/ResendAsk';
 import { useThreadMode } from '../../thread/hooks/thread-mode';
 
 /** A file line: a link to the signed URL once the API has the file, else its kind and why not. */
@@ -94,6 +95,7 @@ export function MessageBubble({ message: m, phone, onJump, highlight = false }: 
       ) : null}
       {file ? <MessageFile message={m} phone={phone} onLongPress={touch.has ? touch.openMenu : undefined} /> : null}
       {media && !file ? <MediaLine label={media} url={m.media_url} file={m.media_mime !== null} /> : null}
+      <ResendAsk message={m} phone={phone} />
       {m.body ? <LinkedText text={m.body} touch={touch} a11y={a11yOn === 'body'} /> : null}
       {note ? (
         <AppText style={{ ...small, fontFamily: type.ui[600] }}>
