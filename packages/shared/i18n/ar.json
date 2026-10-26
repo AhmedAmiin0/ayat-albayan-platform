@@ -96,6 +96,13 @@
         "already_submitted": "ردّ ولي الأمر على هذا الطلب بالفعل",
         "lesson_not_completed": "يُرسل طلب الرأي بعد انتهاء الحلقة"
       }
+    },
+    "connection": {
+      "connecting": "جارٍ الاتصال…",
+      "checkInternet": "تحقّق من اتصالك بالإنترنت",
+      "connected": "تم الاتصال",
+      "retry": "إعادة المحاولة",
+      "loading": "جارٍ فتح التطبيق"
     }
   },
   "common": {

@@ -96,6 +96,13 @@
         "already_submitted": "The parent already answered this request",
         "lesson_not_completed": "A feedback request is sent after the lesson is finished"
       }
+    },
+    "connection": {
+      "connecting": "Connecting…",
+      "checkInternet": "Check your internet connection",
+      "connected": "Connected",
+      "retry": "Try again",
+      "loading": "Opening the app"
     }
   },
   "common": {
