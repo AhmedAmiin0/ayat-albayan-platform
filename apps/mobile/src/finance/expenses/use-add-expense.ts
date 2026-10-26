@@ -1,6 +1,7 @@
+import { uploadOnce } from '@ab/client-core';
 import type { ExpenseView } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useRef } from 'react';
+import { useState } from 'react';
 import { apiSend } from '@/core/lib/http/api';
 import { expenseBody, type ExpenseDraft } from './expense-draft';
 import { uploadExpenseReceipt } from './upload-expense-receipt';
@@ -11,13 +12,11 @@ import { uploadExpenseReceipt } from './upload-expense-receipt';
  */
 export function useAddExpense() {
   const client = useQueryClient();
-  const uploaded = useRef<{ uri: string; path: string } | null>(null);
+  const [receiptOnce] = useState(() => uploadOnce<string>());
   return useMutation({
     mutationFn: async (draft: ExpenseDraft) => {
-      if (draft.receipt && uploaded.current?.uri !== draft.receipt.uri) {
-        uploaded.current = { uri: draft.receipt.uri, path: await uploadExpenseReceipt(draft.receipt) };
-      }
-      const path = draft.receipt ? (uploaded.current?.path ?? null) : null;
+      const { receipt } = draft;
+      const path = receipt ? await receiptOnce(receipt.uri, () => uploadExpenseReceipt(receipt)) : null;
       return apiSend<ExpenseView>('POST', '/expenses', expenseBody(draft, path, new Date()));
     },
     onSuccess: () => Promise.all(['expenses', 'dashboard'].map((key) => client.invalidateQueries({ queryKey: [key] }))),

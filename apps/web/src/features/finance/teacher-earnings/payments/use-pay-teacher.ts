@@ -1,6 +1,7 @@
+import { uploadOnce } from '@ab/client-core';
 import { parseAmount } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import { paidAtFor } from '@/features/finance/payments/api';
 import type { PaymentForm } from '@/features/finance/payments/record/PaymentFields';
 import { earningsKey, payTeacher, uploadTeacherReceipt, type Scope } from '../api';
@@ -16,15 +17,10 @@ export function usePayTeacher(teacherId: string, onSaved: (replayed: boolean) =>
   const queryClient = useQueryClient();
   const scope: Scope = { kind: 'admin', teacherId };
   const [requestId] = useState(() => crypto.randomUUID());
-  const uploaded = useRef<{ file: File; path: string } | null>(null);
+  const [receiptOnce] = useState(() => uploadOnce<File>());
 
-  async function receiptPath(file: File | null): Promise<string | null> {
-    if (!file) return null;
-    if (uploaded.current?.file === file) return uploaded.current.path;
-    const path = await uploadTeacherReceipt({ teacherId, file });
-    uploaded.current = { file, path };
-    return path;
-  }
+  const receiptPath = (file: File | null): Promise<string | null> =>
+    file ? receiptOnce(file, () => uploadTeacherReceipt({ teacherId, file })) : Promise.resolve(null);
 
   return useMutation({
     mutationFn: async ({ form, file, earningIds }: PayInput) => {
