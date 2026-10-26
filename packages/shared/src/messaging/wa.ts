@@ -1,5 +1,5 @@
 import { backoffDelay } from '../async/retry.js';
-import { normalizePhone } from '../phone.js';
+import { normalizePhone } from '../format/phone.js';
 
 // WhatsApp Cloud API rules the sender, the webhook and the inbox share (docs/12 §3).
 

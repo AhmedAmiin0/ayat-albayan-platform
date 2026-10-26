@@ -1,6 +1,6 @@
 import type { Enums } from '@ab/db';
-import { normalizeArabic } from '../arabic.js';
-import { intlLocale } from '../locale.js';
+import { normalizeArabic } from '../format/arabic.js';
+import { intlLocale } from '../i18n/locale.js';
 import { joinNames } from './booking-confirmation.js';
 import { quickReplyPayload, type QuickReplyIntent } from './quick-reply.js';
 import type { OutboundTemplate } from './templates.js';

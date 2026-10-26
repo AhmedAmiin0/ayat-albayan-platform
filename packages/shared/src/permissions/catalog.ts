@@ -1,4 +1,4 @@
-import type { UserRole } from '../roles.js';
+import type { UserRole } from './roles.js';
 import { PERMISSION_AREAS, PERMISSION_ROWS, type PermissionArea } from './catalog.data.js';
 
 export { PERMISSION_AREAS, PERMISSION_ROWS, type PermissionArea } from './catalog.data.js';

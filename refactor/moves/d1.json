@@ -1,0 +1,216 @@
+{
+  "id": "d1",
+  "seq": 97,
+  "moves": [
+    {
+      "from": "packages/shared/src/arabic*",
+      "to": "packages/shared/src/format/"
+    },
+    {
+      "from": "packages/shared/src/phone*",
+      "to": "packages/shared/src/format/"
+    },
+    {
+      "from": "packages/shared/src/plural*",
+      "to": "packages/shared/src/format/"
+    },
+    {
+      "from": "packages/shared/src/highlight-diff*",
+      "to": "packages/shared/src/format/"
+    },
+    {
+      "from": "packages/shared/src/running-head*",
+      "to": "packages/shared/src/format/"
+    },
+    {
+      "from": "packages/shared/src/time-zone*",
+      "to": "packages/shared/src/time-zone/"
+    },
+    {
+      "from": "packages/shared/src/status-style*",
+      "to": "packages/shared/src/status-style/"
+    },
+    {
+      "from": "packages/shared/src/earning-status-style.test.ts",
+      "to": "packages/shared/src/status-style/"
+    },
+    {
+      "from": "packages/shared/src/theme*",
+      "to": "packages/shared/src/theme/"
+    },
+    {
+      "from": "packages/shared/src/locale*",
+      "to": "packages/shared/src/i18n/"
+    },
+    {
+      "from": "packages/shared/src/i18n-digits.test.ts",
+      "to": "packages/shared/src/i18n/"
+    },
+    {
+      "from": "packages/shared/src/i18n-parity.test.ts",
+      "to": "packages/shared/src/i18n/"
+    },
+    {
+      "from": "packages/shared/src/forms-wording.test.ts",
+      "to": "packages/shared/src/i18n/"
+    },
+    {
+      "from": "packages/shared/src/roles*",
+      "to": "packages/shared/src/permissions/"
+    },
+    {
+      "from": "packages/shared/src/student-lists*",
+      "to": "packages/shared/src/students/"
+    },
+    {
+      "from": "packages/shared/src/public-config*",
+      "to": "packages/shared/src/custom-config/"
+    }
+  ],
+  "files": [
+    [
+      "packages/shared/src/arabic.normalize.test.ts",
+      "packages/shared/src/format/arabic.normalize.test.ts"
+    ],
+    [
+      "packages/shared/src/arabic.similar.test.ts",
+      "packages/shared/src/format/arabic.similar.test.ts"
+    ],
+    [
+      "packages/shared/src/arabic.ts",
+      "packages/shared/src/format/arabic.ts"
+    ],
+    [
+      "packages/shared/src/earning-status-style.test.ts",
+      "packages/shared/src/status-style/earning-status-style.test.ts"
+    ],
+    [
+      "packages/shared/src/forms-wording.test.ts",
+      "packages/shared/src/i18n/forms-wording.test.ts"
+    ],
+    [
+      "packages/shared/src/highlight-diff.test.ts",
+      "packages/shared/src/format/highlight-diff.test.ts"
+    ],
+    [
+      "packages/shared/src/highlight-diff.ts",
+      "packages/shared/src/format/highlight-diff.ts"
+    ],
+    [
+      "packages/shared/src/i18n-digits.test.ts",
+      "packages/shared/src/i18n/i18n-digits.test.ts"
+    ],
+    [
+      "packages/shared/src/i18n-parity.test.ts",
+      "packages/shared/src/i18n/i18n-parity.test.ts"
+    ],
+    [
+      "packages/shared/src/locale.test.ts",
+      "packages/shared/src/i18n/locale.test.ts"
+    ],
+    [
+      "packages/shared/src/locale.ts",
+      "packages/shared/src/i18n/locale.ts"
+    ],
+    [
+      "packages/shared/src/phone.accept.test.ts",
+      "packages/shared/src/format/phone.accept.test.ts"
+    ],
+    [
+      "packages/shared/src/phone.format.test.ts",
+      "packages/shared/src/format/phone.format.test.ts"
+    ],
+    [
+      "packages/shared/src/phone.gulf.test.ts",
+      "packages/shared/src/format/phone.gulf.test.ts"
+    ],
+    [
+      "packages/shared/src/phone.reject.test.ts",
+      "packages/shared/src/format/phone.reject.test.ts"
+    ],
+    [
+      "packages/shared/src/phone.search.test.ts",
+      "packages/shared/src/format/phone.search.test.ts"
+    ],
+    [
+      "packages/shared/src/phone.ts",
+      "packages/shared/src/format/phone.ts"
+    ],
+    [
+      "packages/shared/src/plural.test.ts",
+      "packages/shared/src/format/plural.test.ts"
+    ],
+    [
+      "packages/shared/src/plural.ts",
+      "packages/shared/src/format/plural.ts"
+    ],
+    [
+      "packages/shared/src/public-config.test.ts",
+      "packages/shared/src/custom-config/public-config.test.ts"
+    ],
+    [
+      "packages/shared/src/public-config.ts",
+      "packages/shared/src/custom-config/public-config.ts"
+    ],
+    [
+      "packages/shared/src/roles.test.ts",
+      "packages/shared/src/permissions/roles.test.ts"
+    ],
+    [
+      "packages/shared/src/roles.ts",
+      "packages/shared/src/permissions/roles.ts"
+    ],
+    [
+      "packages/shared/src/running-head.fallback.test.ts",
+      "packages/shared/src/format/running-head.fallback.test.ts"
+    ],
+    [
+      "packages/shared/src/running-head.test.ts",
+      "packages/shared/src/format/running-head.test.ts"
+    ],
+    [
+      "packages/shared/src/running-head.ts",
+      "packages/shared/src/format/running-head.ts"
+    ],
+    [
+      "packages/shared/src/status-style.test.ts",
+      "packages/shared/src/status-style/status-style.test.ts"
+    ],
+    [
+      "packages/shared/src/status-style.ts",
+      "packages/shared/src/status-style/status-style.ts"
+    ],
+    [
+      "packages/shared/src/student-lists.test.ts",
+      "packages/shared/src/students/student-lists.test.ts"
+    ],
+    [
+      "packages/shared/src/student-lists.ts",
+      "packages/shared/src/students/student-lists.ts"
+    ],
+    [
+      "packages/shared/src/theme.brand.test.ts",
+      "packages/shared/src/theme/theme.brand.test.ts"
+    ],
+    [
+      "packages/shared/src/theme.contrast.test.ts",
+      "packages/shared/src/theme/theme.contrast.test.ts"
+    ],
+    [
+      "packages/shared/src/theme.glass.test.ts",
+      "packages/shared/src/theme/theme.glass.test.ts"
+    ],
+    [
+      "packages/shared/src/theme.ts",
+      "packages/shared/src/theme/theme.ts"
+    ],
+    [
+      "packages/shared/src/time-zone.test.ts",
+      "packages/shared/src/time-zone/time-zone.test.ts"
+    ],
+    [
+      "packages/shared/src/time-zone.ts",
+      "packages/shared/src/time-zone/time-zone.ts"
+    ]
+  ]
+}
