@@ -1324,6 +1324,54 @@ export type Database = {
           },
         ];
       };
+      login_codes: {
+        Row: {
+          attempts: number;
+          code_hash: string;
+          created_at: string;
+          expires_at: string;
+          id: string;
+          max_attempts: number;
+          phone_e164: string;
+          purpose: string;
+          send_error: string | null;
+          sent_at: string | null;
+          subject_id: string;
+          subject_kind: string;
+          used_at: string | null;
+        };
+        Insert: {
+          attempts?: number;
+          code_hash: string;
+          created_at?: string;
+          expires_at: string;
+          id?: string;
+          max_attempts: number;
+          phone_e164: string;
+          purpose: string;
+          send_error?: string | null;
+          sent_at?: string | null;
+          subject_id: string;
+          subject_kind: string;
+          used_at?: string | null;
+        };
+        Update: {
+          attempts?: number;
+          code_hash?: string;
+          created_at?: string;
+          expires_at?: string;
+          id?: string;
+          max_attempts?: number;
+          phone_e164?: string;
+          purpose?: string;
+          send_error?: string | null;
+          sent_at?: string | null;
+          subject_id?: string;
+          subject_kind?: string;
+          used_at?: string | null;
+        };
+        Relationships: [];
+      };
       leads: {
         Row: {
           assigned_to: string | null;
@@ -2685,6 +2733,7 @@ export type Database = {
           role_id: string | null;
           tz: string;
           updated_at: string;
+          username: string | null;
         };
         Insert: {
           avatar_path?: string | null;
@@ -2701,6 +2750,7 @@ export type Database = {
           role_id?: string | null;
           tz?: string;
           updated_at?: string;
+          username?: string | null;
         };
         Update: {
           avatar_path?: string | null;
@@ -2717,6 +2767,7 @@ export type Database = {
           role_id?: string | null;
           tz?: string;
           updated_at?: string;
+          username?: string | null;
         };
         Relationships: [
           {
@@ -3312,6 +3363,7 @@ export type Database = {
           brought_by: string | null;
           code: string | null;
           code_seq: number;
+          contact_is_self: boolean;
           created_at: string;
           created_by: string | null;
           gender: Database['public']['Enums']['gender'] | null;
@@ -3339,6 +3391,7 @@ export type Database = {
           brought_by?: string | null;
           code?: never;
           code_seq?: never;
+          contact_is_self?: boolean;
           created_at?: string;
           created_by?: string | null;
           gender?: Database['public']['Enums']['gender'] | null;
@@ -3366,6 +3419,7 @@ export type Database = {
           brought_by?: string | null;
           code?: never;
           code_seq?: never;
+          contact_is_self?: boolean;
           created_at?: string;
           created_by?: string | null;
           gender?: Database['public']['Enums']['gender'] | null;
@@ -4577,6 +4631,7 @@ export type Database = {
           role_id: string | null;
           role_key: string | null;
           total: number;
+          username: string | null;
         }[];
       };
       auth_user_id_by_email: { Args: { p_email: string }; Returns: string };
@@ -4762,6 +4817,8 @@ export type Database = {
       };
       revoke_other_user_sessions: { Args: { p_keep: string | null; p_user: string }; Returns: number };
       revoke_user_sessions: { Args: { p_user: string }; Returns: number };
+      login_code_spend: { Args: { p_id: string }; Returns: boolean };
+      login_code_take: { Args: { p_id: string }; Returns: string | null };
       saved_replies_manager: { Args: never; Returns: boolean };
       saved_replies_reader: { Args: never; Returns: boolean };
       set_role_permissions: { Args: { perms: string[]; role_id: string }; Returns: undefined };
@@ -4906,7 +4963,7 @@ export type Database = {
       subscription_status: 'trial' | 'active' | 'paused' | 'expired' | 'unpaid';
       teacher_earning_status: 'earned' | 'partially_paid' | 'paid';
       teacher_status: 'active' | 'inactive';
-      template_category: 'utility' | 'marketing';
+      template_category: 'utility' | 'marketing' | 'authentication';
       template_status:
         'not_submitted' | 'pending' | 'approved' | 'rejected' | 'paused' | 'disabled' | 'missing';
       user_role: 'admin' | 'teacher' | 'guardian' | 'assistant' | 'sales' | 'student';
@@ -5103,7 +5160,7 @@ export const Constants = {
       subscription_status: ['trial', 'active', 'paused', 'expired', 'unpaid'],
       teacher_earning_status: ['earned', 'partially_paid', 'paid'],
       teacher_status: ['active', 'inactive'],
-      template_category: ['utility', 'marketing'],
+      template_category: ['utility', 'marketing', 'authentication'],
       template_status: [
         'not_submitted',
         'pending',

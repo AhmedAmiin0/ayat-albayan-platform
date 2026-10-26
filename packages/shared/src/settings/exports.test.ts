@@ -69,6 +69,7 @@ const DEFAULTS_LITERAL = Object.freeze({
   academy_timezone: 'Asia/Riyadh', feedback_rate_window_min: 10, sales_auto_assign: true,
   academy_contact: { site: 'ayatalbayan.com' }, recording_consent_notice: null, recording_retention_days: null,
   activity_retention_days: 180,
+  family_login_enabled: false, login_code_ttl_minutes: 10, login_code_max_attempts: 5,
 });
 
 const surface: Record<string, unknown> = root;
@@ -78,9 +79,9 @@ describe('@ab/shared export surface (settings, custom config, integrations, goog
     expect(surface[name]).toBeDefined();
   });
 
-  it('SETTING_DEFAULTS holds the 42 keys with today\'s values', () => {
-    expect(Object.keys(DEFAULTS_LITERAL)).toHaveLength(42);
-    expect(root.SETTING_KEYS).toHaveLength(42);
+  it('SETTING_DEFAULTS holds the 45 keys with today\'s values', () => {
+    expect(Object.keys(DEFAULTS_LITERAL)).toHaveLength(45);
+    expect(root.SETTING_KEYS).toHaveLength(45);
     expect(root.SETTING_DEFAULTS).toEqual(DEFAULTS_LITERAL);
   });
 

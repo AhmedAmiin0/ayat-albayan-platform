@@ -3,6 +3,7 @@ import type { SettingDef, SettingsOf } from './defs.js';
 import { ACADEMY_SETTINGS } from './domains/academy.js';
 import { ACTIVITY_SETTINGS } from './domains/activity.js';
 import { CLASSROOM_SETTINGS } from './domains/teaching/classroom.js';
+import { FAMILY_LOGIN_SETTINGS } from './domains/family-login.js';
 import { FEEDBACK_SETTINGS } from './domains/feedback.js';
 import { FINANCE_SETTINGS } from './domains/finance/finance.js';
 import { FOLLOW_UP_SETTINGS } from './domains/follow-ups.js';
@@ -38,6 +39,7 @@ export const SETTINGS_REGISTRY = {
   ...ACADEMY_SETTINGS,
   ...SALES_SETTINGS,
   ...ACTIVITY_SETTINGS,
+  ...FAMILY_LOGIN_SETTINGS,
 } as const satisfies Record<string, SettingDef>;
 
 type Registry = typeof SETTINGS_REGISTRY;
