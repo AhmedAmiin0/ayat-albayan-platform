@@ -1,8 +1,8 @@
 // Reads the target for plan/match.ts (SELECT only) and folds adoptions into `existing`.
 // Order matters: guardians are adopted before students are matched under them.
-import type { TargetDb } from '../db/target.ts';
-import { keyId } from '../keys.ts';
-import type { Existing, RowIssue } from '../types.ts';
+import type { TargetDb } from '../../db/target.ts';
+import { keyId } from '../../keys.ts';
+import type { Existing, RowIssue } from '../../types.ts';
 import {
   type MatchResult,
   type StudentRow,
@@ -10,7 +10,7 @@ import {
   matchStudents,
   matchTeachers,
 } from './match.ts';
-import type { Desired } from './resolve.ts';
+import type { Desired } from '../resolve.ts';
 
 export interface MatchTargetInput {
   db: TargetDb;
