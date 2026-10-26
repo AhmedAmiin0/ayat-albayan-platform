@@ -65,7 +65,8 @@ test('the sheet shows the exact Arabic text; «أرسل» sends it once through 
   expect(screen.getByTestId('resend-text')).toHaveTextContent(ar.inbox.resend.text);
   const send = screen.getByRole('button', { name: t.inbox.resend.send });
   await fireEvent.press(send);
-  await fireEvent.press(screen.getByRole('button', { name: t.inbox.resend.sending }));
+  // The second tap lands once the button says it is sending (the state change is async).
+  await fireEvent.press(await screen.findByRole('button', { name: t.inbox.resend.sending }));
   expect(mockApiSend).toHaveBeenCalledTimes(1);
   const [method, path, body] = mockApiSend.mock.calls[0] as [string, string, { text: string; clientRequestId: string }];
   expect([method, path, body.text]).toEqual(['POST', `/threads/${encodeURIComponent(PHONE)}/text`, ar.inbox.resend.text]);
