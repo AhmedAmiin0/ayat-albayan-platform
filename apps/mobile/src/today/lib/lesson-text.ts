@@ -42,3 +42,10 @@ export function lessonSubtitle(lesson: LessonView): string {
 export function studentNames(lesson: LessonView): string {
   return lesson.students.map((s) => s.name).join(t.common.listSeparator);
 }
+
+/** «أ. سلمى · 30 دقيقة · تجريبية»: a Today row's second line (docs/29 §4). */
+export function rowSubtitle(lesson: LessonView): string {
+  const teacher = t.today.teacherTitled.replace('{teacher}', teacherName(lesson.teacher, locale));
+  const kind = lesson.makeup ? t.booking.makeup.tag : lesson.trial ? t.schedule.trialTag : undefined;
+  return [teacher, durationLabel(lesson), kind].filter((part): part is string => part !== undefined).join(' · ');
+}

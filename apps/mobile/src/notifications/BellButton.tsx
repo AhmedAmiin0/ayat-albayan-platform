@@ -10,13 +10,15 @@ import { useNotifications } from './use-notifications';
 export interface BellButtonProps {
   /** Which tree's notifications screen it opens. */
   tree: PushTree;
+  /** A round button (the calm Today header's 44pt circle): the pressed wash takes the circle. */
+  round?: boolean;
 }
 
 /**
  * The bell in a Today header (R-NOT-01): a 44pt button with the unread count («9+» above nine) at
  * its top corner. The spoken name carries the count; the drawn badge is hidden from it.
  */
-export function BellButton({ tree }: BellButtonProps) {
+export function BellButton({ tree, round = false }: BellButtonProps) {
   const { color } = useTheme();
   const unread = useNotifications().data?.unread ?? 0;
   const badge = bellBadge(unread);
@@ -28,7 +30,7 @@ export function BellButton({ tree }: BellButtonProps) {
       style={({ pressed }) => ({
         width: shape.control.touch,
         height: shape.control.touch,
-        borderRadius: shape.radius.md,
+        borderRadius: round ? shape.control.touch / 2 : shape.radius.md,
         alignItems: 'center',
         justifyContent: 'center',
         backgroundColor: pressed ? color.lapisWash : 'transparent',

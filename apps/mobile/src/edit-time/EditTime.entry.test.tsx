@@ -3,7 +3,6 @@ import { AgendaLessonRow } from '@/calendar/agenda/AgendaLessonRow';
 import { LessonRowActions } from '@/calendar/agenda/LessonRowActions';
 import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
-import { PastLessonRow } from '@/today/components/PastLessonRow';
 import { lesson } from '@/today/testing/fixtures';
 import { held, upcoming } from './testing/fixtures';
 
@@ -49,9 +48,3 @@ test('a teacher calendar row (no `actions`): «عدّل الوقت» beside «غ
   expect(onEditTime).toHaveBeenCalledWith(upcoming);
 });
 
-test('an ended lesson on Today gets a trailing «عدّل الوقت»', async () => {
-  const onEditTime = jest.fn();
-  await renderWithQuery(<PastLessonRow lesson={held} onEditTime={onEditTime} />);
-  await fireEvent.press(screen.getByRole('button', edit('جودى خالد')));
-  expect(onEditTime).toHaveBeenCalledWith(held);
-});

@@ -11,8 +11,6 @@ jest.mock('@/core/lib/http/api', () => ({
   apiFetch: (mockPath: string) => mockApiFetch(mockPath),
   apiSend: jest.fn(),
 }));
-// The «جلسات مباشرة» section repeats the live card; it has its own tests (src/live).
-jest.mock('@/live/LiveSessions', () => ({ LiveSessions: () => null }));
 // The bell reads its own API (notifications/BellButton.test); here it would take the day's mocked answers.
 jest.mock('@/notifications/BellButton', () => ({ BellButton: () => null }));
 
@@ -29,28 +27,30 @@ function serve(day: unknown[]) {
     return null;
   });
 }
+const edit = (who: string) => ({ name: `${t.editTime.action} — ${who}` });
 
-test('an open card offers «عدّل الوقت» beside «غيّر الموعد», and it opens the edit sheet over Today', async () => {
+test('the sheet of an open lesson offers «عدّل الوقت» beside «غيّر الموعد»; it opens the edit sheet', async () => {
   serve([{ ...pending, time_edit_mode: 'move' }]);
   await renderWithQuery(<TodayScreen />);
-  await screen.findByText('يوسف أحمد');
-  expect(screen.getByRole('button', { name: t.lessons.rescheduleSubmit })).toBeTruthy();
-  await fireEvent.press(screen.getByRole('button', { name: t.editTime.action }));
+  await fireEvent.press(await screen.findByRole('button', { name: t.today.details }));
+  expect(screen.getByRole('button', { name: `${t.lessons.rescheduleSubmit} — يوسف أحمد` })).toBeTruthy();
+  await fireEvent.press(screen.getByRole('button', edit('يوسف أحمد')));
   expect(await screen.findByRole('header', { name: t.editTime.title })).toBeTruthy();
-  await fireEvent.press(screen.getByRole('button', { name: t.common.close }));
-  expect(screen.queryByRole('header', { name: t.editTime.title })).toBeNull();
 });
 
-test('an ended lesson opens the correction sheet from its line', async () => {
+test('an ended lesson, unfolded, opens its sheet and the correction (R-SCH-11)', async () => {
   serve([held]);
   await renderWithQuery(<TodayScreen />);
-  await fireEvent.press(await screen.findByRole('button', { name: `${t.editTime.action} — جودى خالد` }));
+  await fireEvent.press(await screen.findByRole('button', { name: 'انتهت حلقة واحدة اليوم' }));
+  await fireEvent.press(screen.getByRole('button', { name: /^10:00، جودى خالد/ }));
+  await fireEvent.press(await screen.findByRole('button', edit('جودى خالد')));
   expect(await screen.findByRole('header', { name: t.editTime.correctTitle })).toBeTruthy();
 });
 
-test('without the API’s mode (a cache from before) there is no «عدّل الوقت»', async () => {
+test('without the API’s mode (a cache from before) the sheet has no «عدّل الوقت»', async () => {
   serve([pending]);
   await renderWithQuery(<TodayScreen />);
-  await screen.findByText('يوسف أحمد');
-  expect(screen.queryByRole('button', { name: t.editTime.action })).toBeNull();
+  await fireEvent.press(await screen.findByRole('button', { name: t.today.details }));
+  await screen.findByRole('header', { name: 'يوسف أحمد' });
+  expect(screen.queryByRole('button', edit('يوسف أحمد'))).toBeNull();
 });

@@ -60,32 +60,34 @@ export const elevation: Record<ThemeName, Elevation> = {
 export type GlassStop = readonly [offset: number, opacity: number];
 
 export interface Glass {
-  /** The tab capsule's fill: `raised` at 80 % (light) / 84 % (dark); no backdrop blur in the APK. */
+  /** The tab capsule's fill: `raised` at 80 % (light) / 84 % (dark); no backdrop blur in this APK. */
   fill: string;
-  /** The sheen over the capsule's top: white in both themes. */
+  /** The vertical sheen over the capsule (white in both themes): bright top, dim middle, a lift at the foot. */
   sheen: { color: string; stops: readonly GlassStop[] };
-  /** Hairline ring, 1px inner top highlight, inner bottom line, the two floating shadows. */
+  /** The capsule's 0.5px edge. */
+  border: string;
+  /** Outer hairline (light) and the two floating shadows. */
   shadow: string;
-  /** The sliding pill under the active tab. */
-  pillShadow: string;
+  /** The active tab's capsule: its fill and its 0.5px top highlight. */
+  pill: { fill: string; shadow: string };
 }
 
-// The floating mobile tab bar (owner 2026-10-24, design C «Capsule with sliding pill»): the mockup's
-// values as RN boxShadow strings, like `elevation` above. The mobile app only; the web has no tab bar.
+// The floating mobile tab bar «like iOS» (owner 2026-10-26, docs/29 §7): the approved values as RN
+// boxShadow strings, like `elevation` above. The mobile app only; the web has no tab bar.
 export const glass: Record<ThemeName, Glass> = {
   light: {
     fill: 'rgba(255, 255, 255, 0.8)',
-    sheen: { color: '#ffffff', stops: [[0, 0.75], [0.42, 0.2], [0.62, 0]] },
-    shadow:
-      '0 0 0 0.5px rgba(23, 32, 28, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.95), inset 0 -1px 0 rgba(23, 32, 28, 0.04), 0 8px 32px rgba(23, 32, 28, 0.14), 0 2px 8px rgba(23, 32, 28, 0.06)',
-    pillShadow: 'inset 0 0 0 0.5px rgba(4, 120, 87, 0.14), 0 1px 4px rgba(4, 120, 87, 0.1)',
+    sheen: { color: '#ffffff', stops: [[0, 0.62], [0.5, 0.22], [1, 0.36]] },
+    border: 'rgba(255, 255, 255, 0.75)',
+    shadow: '0 0 0 0.5px rgba(23, 32, 28, 0.08), 0 10px 30px rgba(23, 32, 28, 0.14), 0 2px 6px rgba(23, 32, 28, 0.06)',
+    pill: { fill: 'rgba(120, 120, 128, 0.14)', shadow: 'inset 0 0.5px 0 rgba(255, 255, 255, 0.9)' },
   },
   dark: {
     fill: 'rgba(39, 49, 45, 0.84)',
-    sheen: { color: '#ffffff', stops: [[0, 0.11], [0.42, 0.03], [0.62, 0]] },
-    shadow:
-      '0 0 0 0.5px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.16), inset 0 -1px 0 rgba(0, 0, 0, 0.2), 0 12px 32px rgba(0, 0, 0, 0.45), 0 4px 8px rgba(0, 0, 0, 0.3)',
-    pillShadow: 'inset 0 0 0 0.5px rgba(94, 234, 212, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.06)',
+    sheen: { color: '#ffffff', stops: [[0, 0.12], [0.5, 0.03], [1, 0.07]] },
+    border: 'rgba(255, 255, 255, 0.14)',
+    shadow: '0 12px 32px rgba(0, 0, 0, 0.5), 0 2px 8px rgba(0, 0, 0, 0.3)',
+    pill: { fill: 'rgba(255, 255, 255, 0.12)', shadow: 'inset 0 0.5px 0 rgba(255, 255, 255, 0.18)' },
   },
 };
 

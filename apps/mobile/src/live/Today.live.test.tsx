@@ -29,13 +29,12 @@ beforeEach(() => {
 });
 afterEach(() => jest.useRealTimers());
 
-test('admin Today: «جلسات مباشرة» on top, with the teacher, the live chip and the soon line', async () => {
+test('admin Today (docs/29): no «جلسات مباشرة» box; the hero carries the running lesson and «ادخل الحلقة»', async () => {
   await renderWithQuery(<TodayRoute />);
-  expect(await screen.findByRole('header', { name: t.live.title })).toBeTruthy();
-  expect(screen.getAllByText(t.live.teacher.replace('{name}', 'أبرار'))).toHaveLength(2);
-  expect(screen.getByText(t.live.startsAt.replace('{time}', '16:20'))).toBeTruthy();
-  // The section's chip plus the badge on the running lesson's own card.
-  expect(screen.getAllByText(t.live.now)).toHaveLength(2);
+  expect(await screen.findByText(t.today.running)).toBeTruthy();
+  expect(screen.queryByRole('header', { name: t.live.title })).toBeNull();
+  // Confirmed already: the hero's primary is the classroom.
+  expect(screen.getByRole('button', { name: t.classroom.enter })).toBeTruthy();
 });
 
 test('teacher Today: the same section, own lessons, no teacher line', async () => {

@@ -2,6 +2,7 @@ export * from './lesson/booking-confirmation.js';
 export * from './templates/lesson-params.js';
 export * from './lesson/meeting-link.js';
 export * from './templates/params.js';
+export * from './templates/prefill.js';
 export * from './replies/quick-reply.js';
 export * from './lesson/rating.js';
 export * from './templates/render.js';
