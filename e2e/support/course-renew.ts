@@ -22,7 +22,7 @@ export async function countedLessons(subscriptionId: string): Promise<number> {
   return row?.n ?? 0;
 }
 
-export type CourseRuleFacts = { start: string; byday: number[]; ends_on: string; status: string; created_by: string | null };
+type CourseRuleFacts = { start: string; byday: number[]; ends_on: string; status: string; created_by: string | null };
 
 /** The rules of a course, oldest first. */
 export async function courseRules(subscriptionId: string): Promise<CourseRuleFacts[]> {

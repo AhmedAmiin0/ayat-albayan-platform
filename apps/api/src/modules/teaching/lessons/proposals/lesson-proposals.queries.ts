@@ -5,7 +5,7 @@ import { readAll } from '../../scheduling/read-all';
 import { dbError } from '../../../../common/http/http';
 
 export type ProposalRow = { id: string; lesson_id: string; proposed_starts_at: string; status: string };
-export type NewProposal = {
+type NewProposal = {
   lesson_id: string;
   teacher_id: string;
   proposed_starts_at: string;

@@ -6,7 +6,7 @@ import { ClassroomSettings } from '../classroom.settings';
 import { dbError } from '../../../../common/http/http';
 import { hashLinkToken, linkExpiry, newLinkToken } from '../join/join-link.token';
 
-export type StudentLinkRow = Pick<Tables<'student_join_links'>, 'id' | 'student_id' | 'revoked_at'>;
+type StudentLinkRow = Pick<Tables<'student_join_links'>, 'id' | 'student_id' | 'revoked_at'>;
 export type StudentLesson = Pick<Tables<'lessons'>, 'id' | 'starts_at' | 'ends_at' | 'room_opened_at'> & {
   teacher_name: string;
 };

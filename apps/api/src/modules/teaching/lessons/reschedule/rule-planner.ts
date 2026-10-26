@@ -8,7 +8,7 @@ import type { LessonRow } from '../store/lesson-row';
 import { LessonsSettings } from '../lessons.settings';
 import { planNewRule, type RulePlan } from './rule-plan';
 
-export type PlannedMove = { old: RuleWithLinks; plan: RulePlan; teacherLink: string | null };
+type PlannedMove = { old: RuleWithLinks; plan: RulePlan; teacherLink: string | null };
 
 /** Loads what a whole-rule reschedule needs and plans the replacement rule (R-SCH-07). */
 @Injectable()

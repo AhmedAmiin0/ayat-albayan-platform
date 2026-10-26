@@ -93,7 +93,7 @@ export async function seedFamily(guardian: string, students: string[]): Promise<
   });
 }
 
-export interface LessonSeed {
+interface LessonSeed {
   teacherId: string;
   studentId: string;
   startsAt: Date;
