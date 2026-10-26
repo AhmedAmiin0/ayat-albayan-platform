@@ -5,7 +5,7 @@ import { Button } from '../primitives/Button';
 import { NuqtaGlyph } from '../primitives/NuqtaGlyph';
 import { AppText } from '../primitives/AppText';
 
-export interface ErrorStateProps {
+interface ErrorStateProps {
   /** Usually the query's `refetch`. */
   onRetry: () => void;
   /** Defaults to t.common.error «حصلت مشكلة، حاول تاني». */

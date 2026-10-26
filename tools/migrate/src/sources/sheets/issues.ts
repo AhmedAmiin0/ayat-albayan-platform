@@ -41,7 +41,7 @@ export function issueOnly(issues: readonly RowIssue[]): Mapped[] {
   return [...byRow.values()].flatMap((list) => (list[0] ? [rejected(list[0].ref, list)] : []));
 }
 
-export interface OkInput {
+interface OkInput {
   key: NaturalKey;
   ref: SourceRef;
   columns: TargetRecord['columns'];

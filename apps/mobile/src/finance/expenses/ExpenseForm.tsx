@@ -17,7 +17,7 @@ import { checkExpense, emptyExpense, type ExpenseDraft } from './expense-draft';
 import { financeErrorText } from '../shared/errors';
 import { useAddExpense } from './use-add-expense';
 
-export interface ExpenseFormProps {
+interface ExpenseFormProps {
   categories: readonly ExpenseCategoryView[] | undefined;
   onDone: () => void;
 }

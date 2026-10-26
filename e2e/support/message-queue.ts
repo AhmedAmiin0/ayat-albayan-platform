@@ -18,7 +18,7 @@ export async function clearQueue(): Promise<void> {
   await withSql((sql) => sql`delete from public.messages where direction = 'outbound' and status = 'queued'`);
 }
 
-export interface QueuedText {
+interface QueuedText {
   phone: string;
   leadId: string;
   body: string;

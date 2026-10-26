@@ -11,7 +11,7 @@ import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { activeFilterCount, NO_FILTERS, type LeadFilters } from './lead-filters';
 import { leadSortChoices, leadSortFromValue, leadSortValue } from './lead-sort';
 
-export interface LeadFilterSheetProps {
+interface LeadFilterSheetProps {
   visible: boolean;
   filters: LeadFilters;
   /** The salespeople (empty when the role cannot list them): only «الكل» and «بدون مسؤول» then. */

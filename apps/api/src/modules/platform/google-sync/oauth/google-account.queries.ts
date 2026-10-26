@@ -16,7 +16,7 @@ export type AccountRow = {
   drive_confirmed_at: string | null;
   last_run_at: string | null;
 };
-export type AccountPatch = Partial<AccountRow> & { drive_confirmed_by?: string | null };
+type AccountPatch = Partial<AccountRow> & { drive_confirmed_by?: string | null };
 
 const COLUMNS =
   'status, email, scopes, connected_at, connected_by, last_error, discovery, root_folder_id, root_folder_name, summary_sheet_id, drive_confirmed_at, last_run_at';

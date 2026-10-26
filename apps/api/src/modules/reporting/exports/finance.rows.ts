@@ -43,7 +43,7 @@ export function expenseCsv(rows: readonly ExpenseIn[]): Cell[][] {
 
 type Named = { teacher: { display_name_ar: string } | null };
 export type SessionIn = Named & { starts_at: string; minutes: number; amount: number; paid_amount: number; status: string };
-export type TeacherPayIn = Named & {
+type TeacherPayIn = Named & {
   paid_at: string;
   amount: number;
   method: PaymentMethod;

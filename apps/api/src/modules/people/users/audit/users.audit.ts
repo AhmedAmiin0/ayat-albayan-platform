@@ -18,7 +18,7 @@ export function snapshot(row: UserRow): Fields {
   };
 }
 
-export interface UserAuditEntry {
+interface UserAuditEntry {
   actorId: string;
   userId: string;
   action: string;

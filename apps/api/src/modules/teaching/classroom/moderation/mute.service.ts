@@ -11,7 +11,7 @@ import { LivekitApi, LivekitError } from '../livekit/livekit-api';
 import { muteTrack } from '../livekit/livekit-api.mute';
 import { ModerationQueries } from './moderation.queries';
 
-export interface MuteInput {
+interface MuteInput {
   user: AuthUser;
   /** The lesson id, or the internal meeting id. */
   id: string;

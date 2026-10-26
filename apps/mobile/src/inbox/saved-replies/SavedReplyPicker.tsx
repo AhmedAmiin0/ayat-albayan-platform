@@ -2,7 +2,7 @@ import type { SavedReply } from '@ab/shared';
 import { SavedRepliesSheet } from './SavedRepliesSheet';
 import { type ReplyContact, useFillReply } from './quick-list/use-fill-reply';
 
-export interface SavedReplyPickerProps {
+interface SavedReplyPickerProps {
   contact: ReplyContact;
   onClose: () => void;
   /** The reply's text with its placeholders filled ({assistant} = the signed-in person's name). */

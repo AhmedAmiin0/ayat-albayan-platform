@@ -28,7 +28,7 @@ function submitLabel(pending: boolean, draft: PaymentDraft): string {
   return draft.receipt || draft.attachments.some((a) => a.kind === 'file') ? t.payments.uploading : t.common.saving;
 }
 
-export interface PaymentFormProps {
+interface PaymentFormProps {
   studentId: string;
   /** Has a current package (the screen shows the empty state otherwise). */
   balance: StudentBalanceView;

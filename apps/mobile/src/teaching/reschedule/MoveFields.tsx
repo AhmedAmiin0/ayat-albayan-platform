@@ -17,7 +17,7 @@ import { SlotPicker } from './SlotPicker';
 const scopePills = () =>
   (['one', 'rule'] as const).map((s) => ({ value: s, label: t.lessons.scope[s] }));
 
-export interface MoveFieldsProps {
+interface MoveFieldsProps {
   lesson: LessonView;
   /** A bookable length (lessonDuration). */
   durationMin: number;

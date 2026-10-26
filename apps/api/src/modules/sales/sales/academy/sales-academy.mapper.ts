@@ -3,7 +3,7 @@ import type { SalesLiveRow, SalesStudentRow, SalesTeacherRow } from './sales-aca
 import type { TeacherDayFacts } from '../schedule/sales-schedule.mapper';
 
 /** What the schedule adds to a teacher row: today's facts by teacher id, the next lesson by student id. */
-export interface TeacherContext {
+interface TeacherContext {
   facts: ReadonlyMap<string, TeacherDayFacts>;
   next: ReadonlyMap<string, string>;
   /** settings.meeting_link_auto: the default of a teacher whose meeting_mode is null (migration 490). */

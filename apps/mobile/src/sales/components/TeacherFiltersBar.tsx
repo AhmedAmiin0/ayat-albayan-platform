@@ -4,7 +4,7 @@ import { t } from '@/core/lib/i18n/i18n';
 import { FilterPills } from '@/core/ui/form/FilterPills';
 import { SearchField } from '@/core/ui/form/SearchField';
 
-export interface TeacherFiltersBarProps {
+interface TeacherFiltersBarProps {
   value: SalesTeacherFilter;
   programs: readonly Program[];
   onChange: (next: SalesTeacherFilter) => void;

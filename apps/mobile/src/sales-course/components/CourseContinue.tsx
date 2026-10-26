@@ -9,7 +9,7 @@ import { type, useTheme } from '@/theme';
 import { daysText } from '../lib/course-days';
 import type { KnownTeacher } from '../hooks/use-known-teacher';
 
-export interface CourseContinueProps {
+interface CourseContinueProps {
   /** The latest course of the student's earlier subscription. */
   previous: BookedCourse;
   /** The first local day the new course may start (courseOpensOn). */

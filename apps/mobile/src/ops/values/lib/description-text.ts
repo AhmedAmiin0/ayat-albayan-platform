@@ -4,7 +4,7 @@ import { t } from '@/core/lib/i18n/i18n';
 
 // «القيم» on the phone: a key's description (docs/26 §3) and who may edit it (§2f, §5).
 
-export interface DescriptionSource {
+interface DescriptionSource {
   /** The row of GET /config/entries; undefined on an older API (no route) or while loading. */
   entry: ConfigEntry | undefined;
   /** Today's text: the registry hint through `t` (with the admins' overrides). */
@@ -21,7 +21,7 @@ export function descriptionOf({ entry, hint, locale }: DescriptionSource): strin
   return entry.description ?? hint ?? entry.descriptionSeed ?? undefined;
 }
 
-export interface DescribeAccess {
+interface DescribeAccess {
   entry: ConfigEntry | undefined;
   can: (permission: Permission) => boolean;
   /** /auth/me is a base-role admin. */

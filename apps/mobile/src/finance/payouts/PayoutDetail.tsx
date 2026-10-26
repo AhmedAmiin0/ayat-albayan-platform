@@ -5,7 +5,7 @@ import { PayoutActionBar } from './PayoutActionBar';
 import { PayoutFacts } from './PayoutFacts';
 import { PayoutPayForm } from './PayoutPayForm';
 
-export interface PayoutDetailProps {
+interface PayoutDetailProps {
   payout: PayoutView;
   /** The pay form replaces the facts; the screen's back button closes it first. */
   paying: boolean;

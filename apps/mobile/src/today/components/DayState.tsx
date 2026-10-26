@@ -2,7 +2,7 @@ import { t } from '@/core/lib/i18n/i18n';
 import { EmptyState } from '@/core/ui/feedback/EmptyState';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';
 
-export interface DayStateProps {
+interface DayStateProps {
   /** The first answer has not come yet: nothing to say. */
   pending: boolean;
   /** No day at all (it failed with nothing saved). */

@@ -6,7 +6,7 @@ export type CourseStep = 'continue' | 'teacher' | 'slot' | 'confirm';
 /** The numbered steps («الخطوة 1 من 3»); «تابِع بنفس الأيام» counts as the first. */
 export const COURSE_STEPS: readonly CourseStep[] = ['teacher', 'slot', 'confirm'];
 
-export interface StepState {
+interface StepState {
   step: CourseStep;
   /** The previous course's days were taken («تابِع بنفس الأيام»): the teacher step was skipped. */
   same: boolean;

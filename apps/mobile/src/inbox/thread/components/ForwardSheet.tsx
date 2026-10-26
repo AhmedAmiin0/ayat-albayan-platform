@@ -6,7 +6,7 @@ import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { ForwardPicker } from './ForwardPicker';
 
-export interface ForwardSheetProps {
+interface ForwardSheetProps {
   /** The message chosen for «إعادة توجيه»; null hides the sheet. */
   message: MessageView | null;
   /** The open chat: never offered as a target. */

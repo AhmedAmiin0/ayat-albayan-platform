@@ -26,7 +26,7 @@ import { useScrollToInvalid } from '../hooks/use-scroll-to-invalid';
 const attendances = ATTENDANCES.map((a) => ({ value: a, label: t.enums.attendance[a] }));
 const programs = PROGRAMS.map((p) => ({ value: p, label: t.enums.program[p] }));
 
-export interface ReportEntryCardProps {
+interface ReportEntryCardProps {
   form: ReportFormResponse;
   entry: ReportFormEntry;
   /** The teacher's zone for «اتحفظت 17:42» and the edit window. */

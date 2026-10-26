@@ -8,7 +8,7 @@ import { Button } from '@/core/ui/primitives/Button';
 import { StatusChip } from '@/core/ui/feedback/StatusChip';
 import { badgeChip, childChip, dueLine, packageText, subscribeAction } from './subscription-words';
 
-export interface SubscriptionPanelProps {
+interface SubscriptionPanelProps {
   /** The cached thread; its newest page's `people` (absent on a thread saved before it existed). */
   data: InfiniteData<Partial<Pick<ThreadDetail, 'people' | 'thread'>>> | undefined;
   phone: string;

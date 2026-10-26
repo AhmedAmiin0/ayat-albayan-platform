@@ -35,7 +35,7 @@ export async function setLateCancelHours(hours: number | null): Promise<void> {
     on conflict (key) do update set value = excluded.value`);
 }
 
-export interface RuleSeed {
+interface RuleSeed {
   teacherId: string;
   studentIds: string[];
   /** First lesson; the rule repeats weekly at its Riyadh wall clock. */
@@ -83,7 +83,7 @@ export async function seedPaidStudent(input: { teacherId: string; guardian: stri
   return seed;
 }
 
-export interface CancelState {
+interface CancelState {
   status: string;
   cancel_reason: string | null;
   chargeable: boolean;
@@ -99,7 +99,7 @@ export async function cancelStateOf(lessonId: string): Promise<CancelState | und
   });
 }
 
-export interface RuleState {
+interface RuleState {
   status: string;
   ends_on: string | null;
 }

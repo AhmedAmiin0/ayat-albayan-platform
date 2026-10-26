@@ -3,7 +3,7 @@ import { AppText } from '@/core/ui/primitives/AppText';
 import { type, useTheme } from '@/theme';
 import { hairline } from '../lib/surface';
 
-export interface HeroButtonProps {
+interface HeroButtonProps {
   label: string;
   onPress: () => void;
   /** The one filled button of the card; else a raised one. */

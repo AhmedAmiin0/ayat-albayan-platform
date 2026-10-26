@@ -4,7 +4,7 @@ import { t } from '@/core/lib/i18n/i18n';
 import { shape, type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 
-export interface DiscountFieldProps {
+interface DiscountFieldProps {
   /** The raw text; the selection parses it (parseDiscount) when it asks for a quote. */
   value: string;
   onChange: (text: string) => void;

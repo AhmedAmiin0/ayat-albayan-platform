@@ -86,7 +86,7 @@ export function matchTeachers(input: MatchInput<TeacherRow>): MatchResult {
   return out;
 }
 
-export interface StudentMatchInput extends MatchInput<StudentRow> {
+interface StudentMatchInput extends MatchInput<StudentRow> {
   /** guardian keyId → target guardian id (imported earlier or adopted). */
   guardianIds: ReadonlyMap<string, string>;
 }

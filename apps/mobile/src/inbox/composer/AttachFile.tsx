@@ -49,7 +49,7 @@ function AttachSheet({ visible, onPick, onClose }: SheetProps) {
   );
 }
 
-export interface AttachFileProps {
+interface AttachFileProps {
   phone: string;
   /** Why the file did not go (inbox.error.<code>), or null when a new pick starts. */
   onError: (message: string | null) => void;

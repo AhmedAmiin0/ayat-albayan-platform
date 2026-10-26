@@ -5,7 +5,7 @@ import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { Button } from '@/core/ui/primitives/Button';
 
-export interface DaySwitcherProps {
+interface DaySwitcherProps {
   /** YYYY-MM-DD on the Riyadh calendar. */
   date: string;
   isToday: boolean;

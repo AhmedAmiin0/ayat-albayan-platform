@@ -3,7 +3,7 @@ import Svg, { Path } from 'react-native-svg';
 import { t } from '@/core/lib/i18n/i18n';
 import { shape, useTheme } from '@/theme';
 
-export interface PasswordToggleProps {
+interface PasswordToggleProps {
   shown: boolean;
   onToggle: () => void;
 }

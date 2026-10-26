@@ -6,7 +6,7 @@ import { MEETING_COLUMNS, type MeetingRow } from '../../internal-meetings/intern
 
 const LIST_LIMIT = 20;
 
-export interface MyInviteRow {
+interface MyInviteRow {
   meeting_id: string;
   status: MeetingInviteStatus;
   channel: MeetingInviteChannel;

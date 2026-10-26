@@ -10,7 +10,7 @@ function formStudent(s: ReportLessonStudent): ReportFormEntry['student'] {
   return { id: s.student_id, code: st?.code ?? '', name: st?.name ?? '', tz: st?.tz ?? '', program: st?.program ?? 'quran' };
 }
 
-export type FormParts = {
+type FormParts = {
   lesson: ReportLessonRow;
   reports: readonly ReportRow[];
   numbers: ReadonlyMap<string, number>;

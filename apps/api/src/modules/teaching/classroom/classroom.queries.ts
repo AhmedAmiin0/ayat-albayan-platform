@@ -11,7 +11,7 @@ const JOIN_COLUMNS = 'id, teacher_id, starts_at, ends_at, status, room_opened_at
 export type JoinLinkRow = Tables<'lesson_join_links'>;
 
 /** Who the family's link goes to: the student's guardian. */
-export interface SendContext {
+interface SendContext {
   student: { id: string; name: string };
   guardian: { id: string; phone: string };
 }

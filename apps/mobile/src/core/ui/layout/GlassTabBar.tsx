@@ -13,7 +13,7 @@ import { usePillOffset } from './use-pill-offset';
 
 const EDGE = [[0, 0], [1, 1]] as const;
 
-export interface GlassTabBarProps extends BottomTabBarProps {
+interface GlassTabBarProps extends BottomTabBarProps {
   tabs: readonly TabItem[];
 }
 

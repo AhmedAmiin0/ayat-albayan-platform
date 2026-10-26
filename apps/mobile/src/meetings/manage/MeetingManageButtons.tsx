@@ -5,7 +5,7 @@ import type { Asking } from './use-meeting-manage';
 const L = t.meetings.internal;
 const M = t.meetingInvites.list;
 
-export interface MeetingManageButtonsProps {
+interface MeetingManageButtonsProps {
   /** A scheduled meeting: «غيّر الموعد» and «ألغِ الاجتماع» instead of «إنهاء» (like web MeetingRow). */
   scheduled: boolean;
   onAsk: (asking: Asking) => void;

@@ -15,7 +15,7 @@ export interface StatusRequest {
   body?: unknown;
 }
 
-export interface OptimisticStatusOptions<C> {
+interface OptimisticStatusOptions<C> {
   /** Resource path, e.g. '/leads' → PATCH /leads/:id/status { status }. Also the cache key. */
   path: string;
   /** PATCH URL for one row when the resource has no /status route, e.g. students: (id) => `/students/${id}`. */

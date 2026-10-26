@@ -3,7 +3,7 @@ import type { ScheduleView } from './overview';
 import { PeriodSwitcher } from './PeriodSwitcher';
 import { addDays, dayLabel, weekLabel, weekStart } from '../lib/week';
 
-export interface SchedulePeriodProps {
+interface SchedulePeriodProps {
   view: ScheduleView;
   /** The picked Riyadh day; the week view shows its week. */
   date: string;

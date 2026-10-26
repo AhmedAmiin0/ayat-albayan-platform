@@ -64,7 +64,7 @@ function dayOf(at: Date, tz: string): number[] {
   return (['day', 'month', 'year'] as const).map((k) => Number(parts.find((p) => p.type === k)?.value));
 }
 
-export interface StampOptions {
+interface StampOptions {
   now?: Date;
   tz?: string;
 }

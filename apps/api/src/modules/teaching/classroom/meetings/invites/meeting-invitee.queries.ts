@@ -19,7 +19,7 @@ const NOT_SUBSCRIBED = `(${NOT_SUBSCRIBED_STATUSES.join(',')})`;
  */
 export type StudentScope = { kind: 'all' } | { kind: 'ids'; ids: readonly string[] };
 
-export interface StaffPick {
+interface StaffPick {
   id: string;
   full_name: string;
   role: string;

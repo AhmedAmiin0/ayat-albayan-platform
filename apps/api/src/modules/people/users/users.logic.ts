@@ -38,7 +38,7 @@ export const isSystemAdminProfile = (state: UserState, p: StaffProfile): boolean
   return p.role === 'admin' && role !== null && isSystemAdmin(role);
 };
 
-export type AdminProblem = 'last_admin' | 'self_lockout';
+type AdminProblem = 'last_admin' | 'self_lockout';
 
 /**
  * After a change (already applied to `after`): an ACTIVE system admin must remain and somebody
@@ -66,7 +66,7 @@ export const replaced = (state: UserState, next: StaffProfile): UserState => ({
 
 export const disabledCopy = (p: StaffProfile): StaffProfile => ({ ...p, disabled_at: p.disabled_at ?? 'now' });
 
-export type RoleChoice = { role: UserRole; role_id: string | null };
+type RoleChoice = { role: UserRole; role_id: string | null };
 
 /**
  * The (base role, role_id) a request names: a custom role fixes the base role; a bare base role

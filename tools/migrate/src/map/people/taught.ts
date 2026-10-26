@@ -7,7 +7,7 @@ import { keyId } from '../../keys.ts';
 import type { Desired } from '../../plan/resolve.ts';
 import { collectReports } from '../reports/collect.ts';
 
-export interface Taught {
+interface Taught {
   /** student keyId → teacher slug, for students whose reports all name the same teacher. */
   teacher: Map<string, string>;
   /** student keyIds with at least one non-trial (chargeable) reported lesson. */

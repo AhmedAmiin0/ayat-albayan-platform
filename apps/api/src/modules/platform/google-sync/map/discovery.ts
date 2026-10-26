@@ -6,7 +6,7 @@ import type { SummaryLink } from './suggest';
 import { summaryLinks } from '../writers/sheets/summary-row';
 
 /** google_account.discovery: the view plus the summary sheet's student links (for suggestions). */
-export type StoredDiscovery = GoogleDiscoveryView & { students: SummaryLink[] };
+type StoredDiscovery = GoogleDiscoveryView & { students: SummaryLink[] };
 
 const found = z.object({ id: z.string(), name: z.string() });
 const stored = z.object({

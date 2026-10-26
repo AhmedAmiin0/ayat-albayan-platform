@@ -11,7 +11,7 @@ import { useSheetDescription, type SheetDescription } from '../hooks/use-descrip
 import { ValueSheetBody } from './ValueSheetBody';
 import { labelOf } from '../lib/value-text';
 
-export interface ValueSheetProps {
+interface ValueSheetProps {
   valueKey: SettingKey;
   saved: unknown;
   canWrite: boolean;

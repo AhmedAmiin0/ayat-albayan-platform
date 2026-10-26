@@ -10,7 +10,7 @@ import { useStartupStage } from './use-startup-stage';
 
 const TITLE = 22;
 
-export interface StartupScreenProps {
+interface StartupScreenProps {
   mode: StartupMode;
   /** «إعادة المحاولة»: ask for the session and the connection again. */
   onRetry: () => void;

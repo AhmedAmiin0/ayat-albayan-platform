@@ -12,7 +12,7 @@ import type { TrialDateBody, TrialDateDraft } from '../lib/trial-date-body';
 import { effectLine } from '../lib/trial-date-text';
 import { TrialDateWarn } from './TrialDateWarn';
 
-export interface TrialDateReviewProps {
+interface TrialDateReviewProps {
   draft: TrialDateDraft;
   history: TrialHistory;
   /** The body «احجز» sends (null until a teacher and a time are picked). */

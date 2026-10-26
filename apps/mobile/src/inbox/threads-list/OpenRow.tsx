@@ -7,7 +7,7 @@ import { SendIcon, TemplateIcon } from '../shared/chat-icons';
 import { ComposerInput } from '../composer/ComposerInput';
 import { SavedRepliesButton } from '../saved-replies/SavedRepliesButton';
 
-export interface OpenRowProps {
+interface OpenRowProps {
   phone: string;
   text: string;
   onText: (text: string) => void;

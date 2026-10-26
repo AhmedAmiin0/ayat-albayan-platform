@@ -6,7 +6,7 @@ import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { RescheduleForm } from './RescheduleForm';
 
-export interface RescheduleSheetProps {
+interface RescheduleSheetProps {
   /** The lesson to move; null = closed. */
   lesson: LessonView | null;
   onClose: () => void;

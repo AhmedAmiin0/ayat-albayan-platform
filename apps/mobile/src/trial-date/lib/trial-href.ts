@@ -1,7 +1,7 @@
 import { PROGRAMS, type Program } from '@ab/shared';
 import type { Href } from 'expo-router';
 
-export interface TrialDateTarget {
+interface TrialDateTarget {
   studentId: string;
   name: string;
   /** The teacher filter's start; the sales family view knows none (quran then). */

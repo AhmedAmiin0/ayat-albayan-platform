@@ -35,7 +35,7 @@ export function pickHero(lessons: readonly LessonView[], now: Date): Hero | null
   return { kind: 'next', lesson: next, minutes: Math.ceil((Date.parse(next.starts_at) - at) / MINUTE) };
 }
 
-export interface TodayPlan {
+interface TodayPlan {
   /** Only under «الكل»: a column filter shows that status's lessons as rows, the hero among them. */
   hero: Hero | null;
   /** «بقية اليوم»: not ended and not the hero, under the filter. */

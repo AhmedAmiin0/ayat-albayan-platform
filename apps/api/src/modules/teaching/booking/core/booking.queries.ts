@@ -10,7 +10,7 @@ import type { LeadFacts } from './booking.lead-merge';
 import { toBookingResult, type BookingPayload, type InvoiceRow } from './booking.mapper';
 
 export type Range = { from: Date; to: Date };
-export type GuardianOnFile = {
+type GuardianOnFile = {
   id: string;
   tz: string;
   students: { id: string; code: string | null; name: string; status: StudentStatus }[];

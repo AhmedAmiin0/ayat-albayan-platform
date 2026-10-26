@@ -25,7 +25,7 @@ export interface HeartSub {
   issues: RowIssue[];
 }
 
-export type HeartResult = HeartSub | { ref: SourceRow['ref']; issues: RowIssue[] };
+type HeartResult = HeartSub | { ref: SourceRow['ref']; issues: RowIssue[] };
 
 function teacherCheck(o: { ix: StudentIndex; student: NaturalKey; raw: string | null }): boolean {
   const slug = teacherFromText(o.raw);

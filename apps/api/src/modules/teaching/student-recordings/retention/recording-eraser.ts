@@ -5,7 +5,7 @@ import { BUCKETS } from '../../../../common/storage/storage.paths';
 import { StorageService } from '../../../../common/storage/storage.service';
 import { RecordingAdminQueries } from '../recording-admin.queries';
 
-export interface EraseInput {
+interface EraseInput {
   id: string;
   filePath: string;
   /** The admin; null for the retention job. */
