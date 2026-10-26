@@ -17,6 +17,8 @@ export interface UserRow {
   last_sign_in_at: string | null;
   created_at: string;
   linked: LinkedRecord | null;
+  /** A teacher's sign-in username (docs/30). */
+  username?: string | null;
   /** Detail only (the list RPC does not return them). */
   locale?: string;
   tz?: string;
