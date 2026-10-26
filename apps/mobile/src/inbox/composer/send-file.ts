@@ -57,7 +57,7 @@ export async function pickChatFile(source: ChatFileSource, maxBytes: number): Pr
   return { mime: photo.mime, bytes: photo.bytes, size: photo.size, filename: `photo.${ext}` };
 }
 
-export interface SendFileInput {
+interface SendFileInput {
   phone: string;
   file: ChatFilePick;
   /** The clientRequestId: one per picked file (rule 8: a replay returns the first row). */

@@ -1,4 +1,4 @@
-export interface StepRange {
+interface StepRange {
   min: number;
   max: number;
   step: number;

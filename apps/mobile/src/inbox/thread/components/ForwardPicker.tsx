@@ -16,7 +16,7 @@ import { useThreadList } from '../../threads-list/use-thread-list';
 
 const MAX = FORWARD_MAX_TARGETS;
 
-export interface ForwardPickerProps {
+interface ForwardPickerProps {
   message: MessageView;
   /** The chat it comes from: left out of the list. */
   from: string;

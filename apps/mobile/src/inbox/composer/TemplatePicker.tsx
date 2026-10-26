@@ -33,7 +33,7 @@ export function useApprovedTemplates(enabled: boolean) {
 
 const names: Record<string, string> = t.templates.names;
 
-export interface TemplatePickerProps {
+interface TemplatePickerProps {
   visible: boolean;
   /** The guardian's / teacher's next open lessons: a lesson time is picked, never typed (rule 6). */
   lessons: readonly ThreadLesson[];

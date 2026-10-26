@@ -3,7 +3,7 @@ import { Note } from '@/more/Note';
 import { EmptyState } from '@/core/ui/feedback/EmptyState';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';
 
-export interface StateNoteProps {
+interface StateNoteProps {
   /** The query's state: no data yet, failed, or loaded (then `empty` decides). */
   status: { data: unknown; isError: boolean; refetch: () => unknown };
   empty: boolean;
