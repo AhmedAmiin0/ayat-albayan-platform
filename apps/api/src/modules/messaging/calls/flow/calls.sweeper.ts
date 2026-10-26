@@ -17,19 +17,23 @@ const EVERY_MS = 10_000;
 
 type Overdue = CallEndReason | 'hangup';
 
-/** How long a live row may stay as it is, and how it ends after that. */
-function limitOf(row: CallRow): { ms: number; why: Overdue } | null {
+/**
+ * How long a live row may stay as it is, from when it got there, and how it ends after that: rings from
+ * started_at, an accept from its claim (updated_at, set by the claim's write), talk from answered_at.
+ */
+function limitOf(row: CallRow): { ms: number; since: string; why: Overdue } | null {
   if (row.status === 'connecting' || row.status === 'ringing') {
-    return row.direction === 'outbound' ? { ms: UNANSWERED_MS, why: 'no_answer' } : { ms: RINGING_MS, why: 'missed' };
+    const ring = row.direction === 'outbound' ? { ms: UNANSWERED_MS, why: 'no_answer' as const } : { ms: RINGING_MS, why: 'missed' as const };
+    return { ...ring, since: row.started_at };
   }
-  if (row.status === 'accepting') return { ms: ACCEPTING_MS, why: 'failed' };
-  return row.status === 'active' ? { ms: ACTIVE_MS, why: 'hangup' } : null;
+  if (row.status === 'accepting') return { ms: ACCEPTING_MS, since: row.updated_at, why: 'failed' };
+  return row.status === 'active' ? { ms: ACTIVE_MS, since: row.answered_at ?? row.started_at, why: 'hangup' } : null;
 }
 
 /** Why a live row is overdue at `now`, or null while it may still go on. */
 export function overdue(row: CallRow, now: Date): Overdue | null {
   const limit = limitOf(row);
-  return limit && now.getTime() - Date.parse(row.started_at) > limit.ms ? limit.why : null;
+  return limit && now.getTime() - Date.parse(limit.since) > limit.ms ? limit.why : null;
 }
 
 /**

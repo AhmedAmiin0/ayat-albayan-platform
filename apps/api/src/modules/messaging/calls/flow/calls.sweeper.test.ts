@@ -7,9 +7,16 @@ vi.mock('../kapso/calling-line', () => ({ callingLine: vi.fn(() => LINE) }));
 
 const T0 = '2026-10-26T10:00:00.000Z';
 const at = (ms: number) => new Date(Date.parse(T0) + ms);
-const row = (over: Partial<CallRow>) => ({ direction: 'outbound', status: 'ringing', started_at: T0, ...over }) as CallRow;
+const row = (over: Partial<CallRow>) => ({ direction: 'outbound', status: 'ringing', started_at: T0, updated_at: T0, answered_at: null, ...over }) as CallRow;
 
 describe('overdue', () => {
+  it('an accept counts from its claim and talk from the answer, never from the first ring', () => {
+    const late = at(50_000).toISOString();
+    expect(overdue(row({ direction: 'inbound', status: 'accepting', updated_at: late }), at(70_000))).toBeNull();
+    expect(overdue(row({ direction: 'inbound', status: 'accepting', updated_at: late }), at(81_000))).toBe('failed');
+    expect(overdue(row({ status: 'active', answered_at: late }), at(4 * 3_600_000 + 1))).toBeNull();
+  });
+
   it('outbound unanswered after 45 s; inbound ringing after 60 s; accepting after 30 s; active after 4 h', () => {
     expect(overdue(row({}), at(UNANSWERED_MS))).toBeNull();
     expect(overdue(row({}), at(UNANSWERED_MS + 1))).toBe('no_answer');

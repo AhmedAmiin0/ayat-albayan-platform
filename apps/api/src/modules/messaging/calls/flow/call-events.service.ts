@@ -5,6 +5,7 @@ import type { CallWebhookEvent } from '../../webhook/webhook.events';
 import { CallsGate } from '../access/calls-gate';
 import { callingLine, type CallingLine } from '../kapso/calling-line';
 import type { CallRow } from '../store/call-row';
+import { logCallError } from './call-errors';
 import { CallsKit } from './call-kit';
 
 /** The port WebhookService calls for every parsed `calls` item (docs/28 §2). */
@@ -23,6 +24,14 @@ export function machineEvent(e: CallWebhookEvent): CallEvent | null {
   if (e.status === 'RINGING') return { type: 'ringing' };
   if (e.status === 'ACCEPTED') return { type: 'accepted', at };
   return e.status === 'REJECTED' ? { type: 'rejected', at } : null;
+}
+
+/**
+ * Our outbound row already ended (a connect that timed out, a hang-up before WhatsApp named the call)
+ * but WhatsApp says the call rings, was answered or got its answer: it is still up there, so end it.
+ */
+export function stillUpOnWhatsapp(row: CallRow, event: CallEvent): boolean {
+  return row.direction === 'outbound' && row.status === 'ended' && ['ringing', 'accepted', 'answer_sdp'].includes(event.type);
 }
 
 /**
@@ -48,7 +57,14 @@ export class CallEvents implements CallEventsPort {
     if (!row) return;
     if (!row.wa_call_id) await this.kit.queries.setWaCallId(row.id, e.waCallId);
     const event = machineEvent(e);
-    if (event) await this.kit.apply(row, event);
+    if (!event) return;
+    if (stillUpOnWhatsapp(row, event)) return this.terminate(line, e.waCallId);
+    await this.kit.apply(row, event);
+  }
+
+  /** Best effort, never a connect: a terminate is not billed. */
+  private async terminate(line: CallingLine, waCallId: string): Promise<void> {
+    await this.kit.api.terminate(line, waCallId).catch((err: unknown) => logCallError(this.log, { what: 'stray call terminate', callId: waCallId, error: err }));
   }
 
   /** Our outbound call by its biz_opaque_callback_data (our id), else any call by its wacid. */

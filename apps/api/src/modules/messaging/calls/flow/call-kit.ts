@@ -5,6 +5,9 @@ import { CALLS_API, type CallsApi } from '../kapso/calls-api';
 import { callState, type CallMove, type CallRow } from '../store/call-row';
 import { CallsQueries } from '../store/calls.queries';
 
+/** Concurrent webhook items on one call: each re-read judges the event again, a few times at most. */
+const MAX_ATTEMPTS = 4;
+
 /** Extra columns a move may write beside the machine's patch (who took it, why it failed). */
 export type MoveExtra = Pick<CallMove['patch'], 'accepted_by' | 'error_code'>;
 
@@ -22,11 +25,11 @@ export class CallsKit {
 
   /**
    * The row after `event`, or null when the machine ignores it (duplicate, late, wrong side). A
-   * concurrent writer that moved the row first gets one re-read and the event is judged again.
+   * concurrent writer that moved the row first means a re-read and the event is judged again (MAX_ATTEMPTS).
    */
   async apply(row: CallRow, event: CallEvent, extra: MoveExtra = {}): Promise<CallRow | null> {
     let current: CallRow | null = row;
-    for (let attempt = 0; attempt < 2 && current; attempt += 1) {
+    for (let attempt = 0; attempt < MAX_ATTEMPTS && current; attempt += 1) {
       const patch = nextCall(callState(current), event);
       if (!patch) return null;
       const moved = await this.queries.move({ id: current.id, from: current.status as CallStatus, patch: { ...patch, ...extra } });

@@ -74,6 +74,21 @@ describe('OutboundCalls.start (staff → family)', () => {
   });
 });
 
+describe('a hang-up while the connect is in flight', () => {
+  it('ends the row, and once WhatsApp names the call it is terminated (never left ringing)', async () => {
+    const { calls, api, queries } = setup();
+    api.connect.mockImplementation(async (_line, req: { ref: string }) => {
+      await calls.end(ADMIN_ACTOR, req.ref);
+      return { waCallId: 'wacid.late' };
+    });
+    const view = await calls.start(ADMIN_ACTOR, input);
+    expect(view.status).toBe('ended');
+    expect(api.terminate).toHaveBeenCalledTimes(1);
+    expect(api.terminate).toHaveBeenCalledWith(expect.anything(), 'wacid.late');
+    expect(queries.rows.get(view.id)?.end_reason).toBe('cancelled');
+  });
+});
+
 describe('OutboundCalls.end', () => {
   it('terminates on WhatsApp, then ends the row as cancelled before an answer', async () => {
     const { calls, api, queries } = setup();

@@ -4,7 +4,7 @@
 -- webhook / routes move its status forward only (packages/shared call-machine.ts). The clients read
 -- through the API; the realtime publication only nudges them to re-read (no data path of its own).
 --
--- Expand-only and idempotent: a new table, its policies, its publication entry and one more Vault key
+-- Expand-only and idempotent: two new tables (the SDPs apart, API-only), its policies, its publication entry and one more Vault key
 -- name in integration_secret_key_ok. No existing row or setting value is read or written (the setting
 -- whatsapp_calls_enabled is seeded by the API's config seeder as JSON null = its default false).
 
@@ -22,8 +22,6 @@ create table if not exists public.wa_calls (
   end_reason text check (end_reason in ('completed', 'no_answer', 'rejected', 'cancelled', 'missed', 'declined', 'failed')),
   -- Meta's call id (wacid); null until Kapso answered our connect (outbound).
   wa_call_id text check (char_length(wa_call_id) between 1 and 200),
-  offer_sdp text check (char_length(offer_sdp) <= 20000),
-  answer_sdp text check (char_length(answer_sdp) <= 20000),
   -- Outbound: who placed it; inbound: null. accepted_by: who took an inbound call (first wins).
   created_by uuid references auth.users (id) on delete set null,
   accepted_by uuid references auth.users (id) on delete set null,
@@ -52,6 +50,16 @@ create index if not exists wa_calls_guardian_id_idx on public.wa_calls (guardian
 create index if not exists wa_calls_lead_id_idx on public.wa_calls (lead_id) where lead_id is not null;
 create index if not exists wa_calls_created_by_idx on public.wa_calls (created_by) where created_by is not null;
 create index if not exists wa_calls_accepted_by_idx on public.wa_calls (accepted_by) where accepted_by is not null;
+
+-- The SDPs (ICE candidates, ice-pwd, DTLS fingerprint) live apart, readable by the API only: no client
+-- policy, no grant, not in the realtime publication. The API hands an SDP to the call's own parties only.
+create table if not exists public.wa_call_sdp (
+  call_id uuid primary key references public.wa_calls (id) on delete cascade,
+  offer_sdp text check (char_length(offer_sdp) <= 20000),
+  answer_sdp text check (char_length(answer_sdp) <= 20000)
+);
+alter table public.wa_call_sdp enable row level security;
+revoke all on public.wa_call_sdp from anon, authenticated;
 
 drop trigger if exists wa_calls_updated_at on public.wa_calls;
 create trigger wa_calls_updated_at before update on public.wa_calls
@@ -85,15 +93,16 @@ begin
 end
 $$;
 
--- The TURN server's password (optional, «التكاملات» → «المكالمات الصوتية») lives in Vault: the latest list
--- (migration 640) plus CALLS_TURN_CREDENTIAL.
+-- The TURN server's shared secret (optional, TURN REST / coturn use-auth-secret: the API mints short-lived
+-- per-user credentials from it; «التكاملات» → «المكالمات الصوتية») lives in Vault: the latest list
+-- (migration 640) plus CALLS_TURN_SECRET.
 create or replace function public.integration_secret_key_ok(p_key text) returns boolean
   language sql immutable set search_path = '' as $$
   select p_key = any (array[
     'WA_ACCESS_TOKEN', 'WA_APP_SECRET', 'WA_VERIFY_TOKEN', 'WA_CHAT_ACCESS_TOKEN', 'WA_CHAT_APP_SECRET',
     'LIVEKIT_API_KEY', 'LIVEKIT_API_SECRET', 'EXPO_ACCESS_TOKEN', 'WEB_PUSH_VAPID_PRIVATE_KEY',
     'KAPSO_API_KEY', 'KAPSO_WEBHOOK_SECRET', 'GOOGLE_CLIENT_SECRET',
-    'WACRM_API_KEY', 'WACRM_WEBHOOK_SECRET', 'CALLS_TURN_CREDENTIAL'
+    'WACRM_API_KEY', 'WACRM_WEBHOOK_SECRET', 'CALLS_TURN_SECRET'
   ]);
 $$;
 
@@ -101,7 +110,8 @@ revoke execute on function public.integration_secret_key_ok(text) from public, a
 grant execute on function public.integration_secret_key_ok(text) to service_role;
 
 -- MANUAL ROLLBACK (only after the code rollback; clear the TURN secret first):
---   select public.integration_secret_clear('CALLS_TURN_CREDENTIAL');
+--   select public.integration_secret_clear('CALLS_TURN_SECRET');
 --   alter publication supabase_realtime drop table public.wa_calls;
+--   drop table public.wa_call_sdp;
 --   drop table public.wa_calls;
 --   (then re-run migration 640's integration_secret_key_ok)

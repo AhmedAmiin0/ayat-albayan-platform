@@ -47,7 +47,19 @@ export class OutboundCalls {
       await this.kit.apply(row, { type: 'hangup', at: new Date().toISOString(), reason: 'failed' }, { error_code: code });
       throw callFailed(code);
     }
-    return this.view((await this.kit.queries.get(row.id)) ?? row, userId);
+    return this.view(await this.hungUpMeanwhile(row, line), userId);
+  }
+
+  /**
+   * «إنهاء» may have ended the row while the connect was in flight (no wacid yet, so nothing was
+   * terminated): now that WhatsApp named the call, terminate it once (terminate is never billed).
+   */
+  private async hungUpMeanwhile(row: CallRow, line: CallingLine): Promise<CallRow> {
+    const now = (await this.kit.queries.get(row.id)) ?? row;
+    if (now.status === 'ended' && now.wa_call_id) {
+      await this.kit.api.terminate(line, now.wa_call_id).catch((e: unknown) => logCallError(this.log, { what: 'late terminate', callId: row.id, error: e }));
+    }
+    return now;
   }
 
   /** «إنهاء» by the person in the call (either direction): terminate on WhatsApp, then end the row. */

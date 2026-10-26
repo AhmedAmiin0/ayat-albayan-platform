@@ -7,11 +7,12 @@ const out = (over: Partial<CallState> = {}): CallState => ({
 const at = '2026-10-26T10:00:00.000Z';
 
 describe('nextCall, outbound (staff calls the family)', () => {
-  it('stores the answer SDP once, while it is still early', () => {
+  it('stores the answer SDP once, at any live status (ACCEPTED may come first)', () => {
     expect(nextCall(out(), { type: 'answer_sdp', sdp: 'v=0 a' })).toEqual({ answer_sdp: 'v=0 a' });
     expect(nextCall(out({ status: 'ringing' }), { type: 'answer_sdp', sdp: 'v=0 a' })).toEqual({ answer_sdp: 'v=0 a' });
+    expect(nextCall(out({ status: 'active', answered_at: '2026-10-26T10:00:00Z' }), { type: 'answer_sdp', sdp: 'v=0 a' })).toEqual({ answer_sdp: 'v=0 a' });
     expect(nextCall(out({ answer_sdp: 'v=0 a' }), { type: 'answer_sdp', sdp: 'v=0 b' })).toBeNull();
-    expect(nextCall(out({ status: 'active' }), { type: 'answer_sdp', sdp: 'v=0 a' })).toBeNull();
+    expect(nextCall(out({ status: 'ended', end_reason: 'completed' }), { type: 'answer_sdp', sdp: 'v=0 a' })).toBeNull();
   });
 
   it('rings from connecting only (a duplicate RINGING is ignored)', () => {

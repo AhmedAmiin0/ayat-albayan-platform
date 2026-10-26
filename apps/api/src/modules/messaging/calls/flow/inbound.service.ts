@@ -34,6 +34,8 @@ export class InboundCalls {
       await this.kit.api.accept(line, { waCallId: row.wa_call_id, sdp: input.sdp, ref: row.id });
     } catch (e) {
       const code = logCallError(this.log, { what: 'accept', callId: row.id, error: e });
+      // Tell WhatsApp too, so the family stops ringing (best effort; nothing is billed).
+      await this.kit.api.reject(line, row.wa_call_id).catch((r: unknown) => logCallError(this.log, { what: 'reject after a failed accept', callId: row.id, error: r }));
       await this.kit.apply(claimed, { type: 'hangup', at: new Date().toISOString(), reason: 'failed' }, { error_code: code });
       throw callFailed(code);
     }

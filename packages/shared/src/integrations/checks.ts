@@ -49,7 +49,6 @@ export const INTEGRATION_VALUE_CHECKS: Record<IntegrationPlainKey, z.ZodType> = 
   WA_TEMPLATE_SYNC: z.stringbool(),
   CALLS_STUN_URLS: iceUrls,
   CALLS_TURN_URLS: iceUrls,
-  CALLS_TURN_USERNAME: z.string().min(1).max(200),
   LIVEKIT_URL: url,
   EXPO_API_BASE: url,
   WEB_PUSH_VAPID_PUBLIC_KEY: vapidPublicKey,

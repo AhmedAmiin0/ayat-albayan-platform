@@ -23,7 +23,9 @@ function toCall(c: unknown, ctx: CallsContext): CallWebhookEvent | null {
   const f = (path: string) => field(c, path);
   const [id, event] = [f('id'), f('event')];
   if (!id || (event !== 'connect' && event !== 'terminate')) return null;
-  const inbound = upper(f('direction')) !== 'BUSINESS_INITIATED';
+  // A missing direction with our callback ref is our own call (only outbound calls carry biz_opaque_callback_data).
+  const direction = upper(f('direction'));
+  const inbound = direction === null ? f('biz_opaque_callback_data') === null : direction !== 'BUSINESS_INITIATED';
   return {
     kind: event,
     waCallId: id,

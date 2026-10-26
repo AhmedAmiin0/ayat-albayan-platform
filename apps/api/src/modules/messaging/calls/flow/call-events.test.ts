@@ -53,6 +53,23 @@ describe('CallEvents: our outbound call', () => {
     expect(s.queries.rows.get(s.id)).toMatchObject({ status: 'ended', end_reason: 'rejected' });
   });
 
+  it('the answer SDP is kept even when ACCEPTED was processed first', async () => {
+    await s.events.handle(ev({ status: 'ACCEPTED', ref: s.id }));
+    await s.events.handle(ev({ kind: 'connect', sdp: 'v=0 late answer', ref: s.id }));
+    expect(s.queries.rows.get(s.id)).toMatchObject({ status: 'active', answer_sdp: 'v=0 late answer' });
+  });
+
+  it('a call our row already ended (lost connect answer, early hang-up) is terminated when WhatsApp says it is up', async () => {
+    const row = s.queries.rows.get(s.id);
+    if (row) Object.assign(row, { status: 'ended', end_reason: 'failed' });
+    await s.events.handle(ev({ status: 'ACCEPTED', ref: s.id }));
+    expect(s.api.terminate).toHaveBeenCalledWith(LINE, 'wacid.OUT');
+    expect(s.queries.rows.get(s.id)?.status).toBe('ended');
+    s.api.terminate.mockClear();
+    await s.events.handle(ev({ kind: 'terminate', status: 'COMPLETED', ref: s.id }));
+    expect(s.api.terminate).not.toHaveBeenCalled();
+  });
+
   it('an unknown call id changes nothing', async () => {
     await s.events.handle(ev({ waCallId: 'wacid.unknown', status: 'ACCEPTED' }));
     expect(s.queries.rows.get(s.id)?.status).toBe('connecting');

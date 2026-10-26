@@ -41,6 +41,11 @@ describe('parseWebhook — calls (docs/28)', () => {
     expect(calls[1]?.duration).toBe(134);
   });
 
+  it('a connect without a direction but with our callback ref is our own outbound call', () => {
+    const body = change('calls', { calls: [{ id: 'w', event: 'connect', to: '201001234567', session: { sdp: 'v=0' }, biz_opaque_callback_data: 'ref-1' }] });
+    expect(parse(body).calls?.[0]).toMatchObject({ direction: 'outbound', peer: '201001234567' });
+  });
+
   it('a calls change never becomes a message or a delivery tick (no double ingest)', () => {
     const batch = parse(change('calls', { statuses: [{ id: 'wacid.OUT', type: 'call', status: 'ACCEPTED' }] }));
     expect(batch.messages).toEqual([]);

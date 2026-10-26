@@ -16,10 +16,12 @@ export const LINE: CallingLine = {
   numberId: null,
 };
 export const FAMILY = '+201001234567';
-export const ADMIN_ACTOR: CallActor = { user: { id: 'a0000000-0000-4000-8000-000000000001', email: null, role: 'admin' }, teacher: null, sales: null };
-export const SALES_ACTOR: CallActor = { user: { id: 's1', email: null, role: 'sales' }, teacher: null, sales: { salesId: 's1' } };
+/** The send permission every calling role holds (inbox.send). */
+const SEND = ['inbox.read', 'inbox.send'] as const;
+export const ADMIN_ACTOR: CallActor = { user: { id: 'a0000000-0000-4000-8000-000000000001', email: null, role: 'admin', permissions: SEND }, teacher: null, sales: null };
+export const SALES_ACTOR: CallActor = { user: { id: 's1', email: null, role: 'sales', permissions: SEND }, teacher: null, sales: { salesId: 's1' } };
 export const teacherActor = (phones: string[]): CallActor => ({
-  user: { id: 't1', email: null, role: 'teacher' },
+  user: { id: 't1', email: null, role: 'teacher', permissions: SEND },
   teacher: { teacherId: 'tch1', teacherName: 'م', phones: new Set(phones), ownPhone: '+201009999999' },
   sales: null,
 });
@@ -66,7 +68,9 @@ export class FakeCallsQueries {
   async move(m: CallMove) {
     const r = this.rows.get(m.id);
     if (!r || r.status !== m.from) return null;
-    Object.assign(r, m.patch);
+    const { answer_sdp, ...patch } = m.patch;
+    if (answer_sdp !== undefined && r.answer_sdp !== null) return null;
+    Object.assign(r, patch, answer_sdp === undefined ? {} : { answer_sdp }, Object.keys(patch).length ? { updated_at: new Date().toISOString() } : {});
     return { ...r };
   }
   async live() {

@@ -38,6 +38,7 @@ export class CallPermissions {
     await this.gate.assertOn();
     const line = this.gate.line();
     assertMayCall(actor, phone);
+    this.gate.assertRecipient(phone);
     const facts = await this.kit.api.permission(line, phone).catch((e: unknown) => {
       throw callFailed(logCallError(this.log, { what: 'permission check', callId: 'permission', error: e }));
     });

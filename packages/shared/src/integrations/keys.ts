@@ -25,7 +25,6 @@ export const INTEGRATION_PLAIN_KEYS = [
   'WA_TEMPLATE_SYNC',
   'CALLS_STUN_URLS',
   'CALLS_TURN_URLS',
-  'CALLS_TURN_USERNAME',
   'LIVEKIT_URL',
   'EXPO_API_BASE',
   'WEB_PUSH_VAPID_PUBLIC_KEY',
@@ -50,7 +49,7 @@ export const INTEGRATION_SECRET_KEYS = [
   'WACRM_API_KEY',
   'WACRM_WEBHOOK_SECRET',
   'GOOGLE_CLIENT_SECRET',
-  'CALLS_TURN_CREDENTIAL',
+  'CALLS_TURN_SECRET',
 ] as const;
 
 export type IntegrationPlainKey = (typeof INTEGRATION_PLAIN_KEYS)[number];
@@ -92,11 +91,11 @@ const GROUP_OF: Record<IntegrationKey, IntegrationGroup> = {
   WACRM_WEBHOOK_SECRET: 'wacrm',
   WA_ALLOWED_RECIPIENTS: 'wa_safety',
   WA_TEMPLATE_SYNC: 'wa_safety',
-  // WhatsApp voice calls (docs/28): the staff device is the WebRTC peer; STUN (default a public one) and an optional TURN.
+  // WhatsApp voice calls (docs/28): the staff device is the WebRTC peer; STUN (default a public one) and an optional TURN
+  // whose shared secret (TURN REST, coturn use-auth-secret) mints short-lived per-user credentials.
   CALLS_STUN_URLS: 'calls',
   CALLS_TURN_URLS: 'calls',
-  CALLS_TURN_USERNAME: 'calls',
-  CALLS_TURN_CREDENTIAL: 'calls',
+  CALLS_TURN_SECRET: 'calls',
   LIVEKIT_URL: 'livekit',
   LIVEKIT_API_KEY: 'livekit',
   LIVEKIT_API_SECRET: 'livekit',

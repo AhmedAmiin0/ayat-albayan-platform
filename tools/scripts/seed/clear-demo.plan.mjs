@@ -40,6 +40,9 @@ export const SET_NULL_DEPENDENTS = [
   { table: 'messages', column: 'guardian_id', parent: 'guardians' },
   // A reply a demo teacher sent from the inbox keeps its «بعتها:» (migration 164).
   { table: 'messages', column: 'sent_by_teacher_id', parent: 'teachers' },
+  // A WhatsApp call with a demo family keeps its chat links (docs/28).
+  { table: 'wa_calls', column: 'lead_id', parent: 'leads' },
+  { table: 'wa_calls', column: 'guardian_id', parent: 'guardians' },
 ];
 
 /** FK-safe: rows that point at others go first (leads → guardians, students → guardians/teachers). */

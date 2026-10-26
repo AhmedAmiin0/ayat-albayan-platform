@@ -18,6 +18,8 @@ describe('InboundCalls: the first accept wins, the others stop ringing', () => {
     expect(await reads.active(SALES_ACTOR)).toHaveLength(1);
     expect(await reads.active(teacherActor([]))).toHaveLength(0);
     expect(await reads.active(teacherActor([FAMILY]))).toHaveLength(1);
+    const readOnly = { ...ADMIN_ACTOR, user: { ...ADMIN_ACTOR.user, permissions: ['inbox.read' as const] } };
+    expect(await reads.active(readOnly)).toHaveLength(0);
   });
 
   it('accept: pre_accept + accept once, the row active and taken by the first; the second gets 409', async () => {
@@ -36,6 +38,7 @@ describe('InboundCalls: the first accept wins, the others stop ringing', () => {
     api.accept.mockRejectedValue(new WaError('x', { code: 131042, status: 400 }));
     await expect(calls.accept(ADMIN_ACTOR, { id, sdp: 'v=0 answer' })).rejects.toMatchObject({ status: 502, response: { reason: 'meta_131042' } });
     expect(api.accept).toHaveBeenCalledTimes(1);
+    expect(api.reject).toHaveBeenCalledWith(expect.anything(), 'wacid.IN');
     expect(queries.rows.get(id)).toMatchObject({ status: 'ended', end_reason: 'failed' });
   });
 

@@ -1,9 +1,15 @@
 import type { Tables, TablesInsert } from '@ab/db';
 import type { CallDirection, CallEndReason, CallPatch, CallState, CallStatus } from '@ab/shared';
 
-/** One wa_calls row (migration 20261026000740). The text checks hold the shared enums. */
-export type CallRow = Tables<'wa_calls'>;
-export type NewCall = TablesInsert<'wa_calls'>;
+/** The SDPs, kept in wa_call_sdp (API-only: no client grant, not in the realtime publication). */
+export interface CallSdp {
+  offer_sdp: string | null;
+  answer_sdp: string | null;
+}
+
+/** One wa_calls row (migration 20261026000740) with its SDPs. The text checks hold the shared enums. */
+export type CallRow = Tables<'wa_calls'> & CallSdp;
+export type NewCall = TablesInsert<'wa_calls'> & { offer_sdp?: string | null };
 
 /** The machine's view of a row (call-machine.ts); the checks guarantee the casts. */
 export function callState(row: CallRow): CallState {

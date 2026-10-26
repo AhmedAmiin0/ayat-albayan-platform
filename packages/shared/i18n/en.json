@@ -4840,13 +4840,9 @@
         "label": "TURN servers for calls",
         "hint": "Optional: comma-separated ⁦turn:⁩ or ⁦turns:⁩ URLs, for networks that block direct connections."
       },
-      "CALLS_TURN_USERNAME": {
-        "label": "TURN username",
-        "hint": "The TURN server's username, if it has one."
-      },
-      "CALLS_TURN_CREDENTIAL": {
-        "label": "TURN password",
-        "hint": "Kept in the vault and never shown. Sent only to the devices of staff allowed to call."
+      "CALLS_TURN_SECRET": {
+        "label": "TURN shared secret",
+        "hint": "Optional: coturn's ⁦use-auth-secret⁩ secret. Kept in the vault and never shown; the platform mints six-hour credentials per staff member from it."
       }
     },
     "developer": "For developers",
@@ -6262,10 +6258,10 @@
     "permission": {
       "title": "Call permission",
       "request": "Ask for call permission",
-      "requestHint": "This contact has not allowed the academy to call them on WhatsApp yet. Send a permission request, then call once they accept.",
+      "requestHint": "The number's owner has not allowed the academy to call them on WhatsApp yet. Send a permission request, then call once they accept.",
       "requestBody": "Ayat Al-Bayan Academy would like to call you on WhatsApp. Do you allow us to call you?",
       "requestSent": "Permission request sent. You can call once they accept.",
-      "needsTemplate": "The 24-hour chat window has closed, so permission can only be requested with an approved permission-request template. You can wait until the contact messages the academy.",
+      "needsTemplate": "The 24-hour chat window has closed, so permission can only be requested with an approved permission-request template. You can wait until the number's owner messages the academy.",
       "limited": "WhatsApp does not allow a call or a new permission request right now. Try again later.",
       "checking": "Checking call permission…"
     },

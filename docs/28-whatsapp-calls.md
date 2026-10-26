@@ -16,7 +16,8 @@ Two PRs: PR 1 `cloud/whatsapp-calls` (API, web, this doc; JS only, no native cha
   provide**, and that peer is the staff member's own device: the browser's `RTCPeerConnection` on the web,
   `react-native-webrtc` in the Expo app (PR 2). There is **no media server** of ours.
 - ICE: STUN from «التكاملات» → «المكالمات الصوتية» (`CALLS_STUN_URLS`, default a public STUN server),
-  optional TURN (`CALLS_TURN_URLS`, `CALLS_TURN_USERNAME`, and the password `CALLS_TURN_CREDENTIAL` in Vault).
+  optional TURN (`CALLS_TURN_URLS`, and its shared secret `CALLS_TURN_SECRET` in Vault: TURN REST / coturn
+  `use-auth-secret`; the API mints six-hour per-user credentials, so no device holds a long-lived TURN password).
 - Voice only, foreground only. No push notification for an incoming call (a later PR), no recording, no
   transcription, no call from a template button, no group calls.
 
@@ -24,7 +25,8 @@ Two PRs: PR 1 `cloud/whatsapp-calls` (API, web, this doc; JS only, no native cha
 
 | Piece | Where | What |
 |---|---|---|
-| `wa_calls` table | migration `20261026000740_wa_calls.sql` | one row per call: number, phone (E.164), guardian / lead links, direction, status, end reason, Meta call id (wacid), offer / answer SDP, who placed / took it, started / answered / ended (UTC), duration, a short error code. RLS like `messages` (admin; a teacher's families; a salesperson's chats), writes by the API only, in the `supabase_realtime` publication |
+| `wa_calls` table | migration `20261026000740_wa_calls.sql` | one row per call: number, phone (E.164), guardian / lead links, direction, status, end reason, Meta call id (wacid), who placed / took it, started / answered / ended (UTC), duration, a short error code. RLS like `messages` (admin; a teacher's families; a salesperson's chats), writes by the API only, in the `supabase_realtime` publication |
+| `wa_call_sdp` table | same migration | the offer / answer SDPs (ICE candidates, ice-pwd, DTLS fingerprint), **API only**: RLS on with no policy, no client grant, not in the publication; the API gives an SDP to the call's own parties only |
 | State machine | `packages/shared/src/messaging/calls/call-machine.ts` | `connecting → ringing → accepting → active → ended`; statuses only move forward; duplicates, late and out-of-order events are ignored (null patch); every write is compare-and-set on the status read |
 | Kapso calls client | `apps/api/src/modules/messaging/calls/kapso/kapso-calls.ts` | `POST /{phone_number_id}/calls` (`connect`, `pre_accept`, `accept`, `reject`, `terminate`) and `GET /{phone_number_id}/call_permissions`, with the chat line's Kapso project key (the same lookup as the Kapso driver: `lineEnvs(loadEnv()).chat`, or the chat number in module mode). **One request per method, never a retry** |
 | Webhook | `webhook/parse/webhook.calls.ts` | the existing `POST /webhooks/kapso` (Kapso `meta`-kind webhook) now also reads changes whose field is `calls`: `connect` (an inbound offer, or the answer to our offer), `terminate`, and call `statuses` (RINGING / ACCEPTED / REJECTED). A `calls` change never becomes a message or a delivery tick (no double ingest) |
@@ -56,7 +58,8 @@ Two PRs: PR 1 `cloud/whatsapp-calls` (API, web, this doc; JS only, no native cha
    business calls are billed).
 4. The `connect` webhook brings WhatsApp's SDP answer; the client (polling `/calls/active`, nudged by
    Realtime) applies it. RINGING → «يرنّ…», ACCEPTED → the timer starts, REJECTED / terminate → ended.
-5. **Unanswered for 45 s** → terminate on WhatsApp and end as `no_answer` (the client ends it at 45 s, and the
+5. A hang-up while the connect is in flight ends the row; once WhatsApp names the call the API terminates it.
+6. **Unanswered for 45 s** → terminate on WhatsApp and end as `no_answer` (the client ends it at 45 s, and the
    API sweeper does too, every 10 s, so a closed tab never leaves a call ringing).
 
 ### 3.2 Inbound (family → academy)
@@ -66,17 +69,21 @@ Two PRs: PR 1 `cloud/whatsapp-calls` (API, web, this doc; JS only, no native cha
 2. Every signed-in staff member who may write in that chat (the same guard and scopes as a send: admin,
    sales, the family's teacher; never the teacher's own chat) sees the full-screen incoming call with a
    ringtone (web now, mobile in PR 2; foreground only).
-3. The first «قبول» wins: compare-and-set `ringing → accepting` with `accepted_by`; the device makes the SDP
-   answer; the API sends `pre_accept` then `accept`; the row becomes `active`. Every other screen stops ringing
+3. A salesperson's Realtime nudge covers their own chats (RLS like `messages`); other chats ring for them through
+   the 3 s poll of `/calls/active`. The first «قبول» wins: compare-and-set `ringing → accepting` with `accepted_by`; the device makes the SDP
+   answer; the API sends `pre_accept` then `accept`; the row becomes `active` (a failed accept also sends `reject`,
+   so the family stops ringing). Every other screen stops ringing
    because the row left `ringing` (a late «قبول» answers 409 `already_taken`).
-4. «رفض» → Kapso `reject`, the row ends as `declined` (shown as «مكالمة فائتة», like WhatsApp). Hang up →
+4. «رفض» → Kapso `reject`, the row ends as `declined` for everyone (as the brief asks; a local «silence» that keeps
+   the call ringing for colleagues is a possible follow-up for the owner to decide) (shown as «مكالمة فائتة», like WhatsApp). Hang up →
    `terminate`. A call nobody takes ends as `missed` (Meta's terminate, or the sweeper after 60 s).
 
 ### 3.3 Status rules
 
 | Event | From | To |
 |---|---|---|
-| connect answer (outbound) | connecting / ringing, no answer yet | answer stored |
+| connect answer (outbound) | any live status, no answer yet (it may come after ACCEPTED) | answer stored |
+| RINGING / ACCEPTED / connect for an outbound row we already ended | ended | one best-effort `terminate` (a lost connect answer or a hang-up before WhatsApp named the call never leaves it up) |
 | RINGING | connecting | ringing |
 | ACCEPTED (outbound) / our accept (inbound) | connecting, ringing / accepting | active |
 | REJECTED | connecting / ringing | ended · rejected |
@@ -120,8 +127,8 @@ All need a login; reads `inbox.read`, actions `inbox.send`; scopes as for sends 
 |---|---|---|
 | `whatsapp_calls_enabled` | «القيم» → الرسائل (simple confirmation); seeded by the config seeder as JSON null = default | **false** |
 | `CALLS_STUN_URLS` | «التكاملات» → المكالمات الصوتية (plain) | `stun:stun.l.google.com:19302` |
-| `CALLS_TURN_URLS`, `CALLS_TURN_USERNAME` | same (plain) | unset (no TURN) |
-| `CALLS_TURN_CREDENTIAL` | same, **Vault** (migration 740 adds it to `integration_secret_key_ok`) | unset |
+| `CALLS_TURN_URLS` | same (plain) | unset (no TURN) |
+| `CALLS_TURN_SECRET` | same, **Vault** (migration 740 adds it to `integration_secret_key_ok`): the TURN REST shared secret | unset |
 
 No stored value changes on any environment: the migration writes no row, and the seeder never writes a value.
 

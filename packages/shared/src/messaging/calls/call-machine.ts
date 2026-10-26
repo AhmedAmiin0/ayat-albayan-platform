@@ -16,7 +16,7 @@ export interface CallState {
 }
 
 export type CallEvent =
-  /** Outbound: the connect webhook brought WhatsApp's SDP answer. */
+  /** Outbound: the connect webhook brought WhatsApp's SDP answer (stored once, whatever the live status). */
   | { type: 'answer_sdp'; sdp: string }
   /** Outbound: status RINGING (the family's phone rings). */
   | { type: 'ringing' }
@@ -83,7 +83,8 @@ const early = (call: CallState): boolean => RANK[call.status] <= RANK.ringing;
 
 /** One rule per event; each returns null when the event does not apply to this call now. */
 const STEPS: { [K in CallEvent['type']]: Step<K> } = {
-  answer_sdp: (call, e) => (outbound(call) && early(call) && call.answer_sdp === null ? { answer_sdp: e.sdp } : null),
+  // Any live moment: Meta may send the connect answer after (or with) ACCEPTED; dropping it would mean no audio.
+  answer_sdp: (call, e) => (outbound(call) && call.answer_sdp === null ? { answer_sdp: e.sdp } : null),
   ringing: (call) => (outbound(call) && call.status === 'connecting' ? { status: 'ringing' } : null),
   accepted: (call, e) =>
     (outbound(call) ? early(call) : call.status === 'accepting') ? { status: 'active', answered_at: e.at } : null,

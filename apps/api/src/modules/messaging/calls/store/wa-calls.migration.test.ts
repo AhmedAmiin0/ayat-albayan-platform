@@ -23,6 +23,14 @@ describe('migration 740: wa_calls', () => {
     expect(code).toContain('revoke insert, update, delete, truncate, references, trigger on public.wa_calls from authenticated;');
   });
 
+  it('the SDPs live in wa_call_sdp: RLS on, no client grant, never in the realtime publication', () => {
+    expect(code).not.toMatch(/(offer|answer)_sdp[^\n]*\n[^]*create table if not exists public\.wa_call_sdp/);
+    expect(code).toContain('alter table public.wa_call_sdp enable row level security;');
+    expect(code).toContain('revoke all on public.wa_call_sdp from anon, authenticated;');
+    expect(code).not.toMatch(/create policy \w+ on public\.wa_call_sdp/);
+    expect(code).not.toMatch(/publication supabase_realtime add table public\.wa_call_sdp/);
+  });
+
   it('unique keys make the request id and the wacid idempotent; the table joins the realtime publication', () => {
     expect(code).toContain('wa_calls_wa_call_id_key on public.wa_calls (wa_call_id)');
     expect(code).toContain('wa_calls_request_key on public.wa_calls (created_by, client_request_id)');
@@ -35,10 +43,10 @@ describe('migration 740: wa_calls', () => {
     expect(sql).toContain('MANUAL ROLLBACK');
   });
 
-  it('holds the latest integration_secret_key_ok: every shared secret key, the TURN password included', () => {
+  it('holds the latest integration_secret_key_ok: every shared secret key, the TURN secret included', () => {
     const fn = /integration_secret_key_ok\(p_key text\)[\s\S]*?array\[([\s\S]*?)\]/.exec(sql)?.[1] ?? '';
     const listed = [...fn.matchAll(/'([A-Z_]+)'/g)].map((m) => m[1]);
     expect(listed.sort()).toEqual([...INTEGRATION_SECRET_KEYS].sort());
-    expect(listed).toContain('CALLS_TURN_CREDENTIAL');
+    expect(listed).toContain('CALLS_TURN_SECRET');
   });
 });

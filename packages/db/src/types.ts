@@ -4003,10 +4003,35 @@ export type Database = {
         };
         Relationships: [];
       };
+      wa_call_sdp: {
+        Row: {
+          answer_sdp: string | null;
+          call_id: string;
+          offer_sdp: string | null;
+        };
+        Insert: {
+          answer_sdp?: string | null;
+          call_id: string;
+          offer_sdp?: string | null;
+        };
+        Update: {
+          answer_sdp?: string | null;
+          call_id?: string;
+          offer_sdp?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'wa_call_sdp_call_id_fkey';
+            columns: ['call_id'];
+            isOneToOne: true;
+            referencedRelation: 'wa_calls';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       wa_calls: {
         Row: {
           accepted_by: string | null;
-          answer_sdp: string | null;
           answered_at: string | null;
           client_request_id: string | null;
           created_by: string | null;
@@ -4019,7 +4044,6 @@ export type Database = {
           id: string;
           lead_id: string | null;
           number_id: string | null;
-          offer_sdp: string | null;
           phone_e164: string;
           started_at: string;
           status: string;
@@ -4028,7 +4052,6 @@ export type Database = {
         };
         Insert: {
           accepted_by?: string | null;
-          answer_sdp?: string | null;
           answered_at?: string | null;
           client_request_id?: string | null;
           created_by?: string | null;
@@ -4041,7 +4064,6 @@ export type Database = {
           id?: string;
           lead_id?: string | null;
           number_id?: string | null;
-          offer_sdp?: string | null;
           phone_e164: string;
           started_at?: string;
           status: string;
@@ -4050,7 +4072,6 @@ export type Database = {
         };
         Update: {
           accepted_by?: string | null;
-          answer_sdp?: string | null;
           answered_at?: string | null;
           client_request_id?: string | null;
           created_by?: string | null;
@@ -4063,7 +4084,6 @@ export type Database = {
           id?: string;
           lead_id?: string | null;
           number_id?: string | null;
-          offer_sdp?: string | null;
           phone_e164?: string;
           started_at?: string;
           status?: string;

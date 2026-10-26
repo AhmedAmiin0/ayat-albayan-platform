@@ -3,11 +3,10 @@ import { integrationValueValid } from './checks.js';
 import { integrationDef } from './keys.js';
 
 describe('voice-call ICE keys (docs/28)', () => {
-  it('STUN / TURN urls and the username are plain; the TURN password is a Vault secret', () => {
+  it('STUN / TURN urls are plain; the TURN REST shared secret is a Vault secret', () => {
     expect(integrationDef('CALLS_STUN_URLS')).toMatchObject({ group: 'calls', secret: false });
     expect(integrationDef('CALLS_TURN_URLS')).toMatchObject({ group: 'calls', secret: false });
-    expect(integrationDef('CALLS_TURN_USERNAME')).toMatchObject({ group: 'calls', secret: false });
-    expect(integrationDef('CALLS_TURN_CREDENTIAL')).toMatchObject({ group: 'calls', secret: true });
+    expect(integrationDef('CALLS_TURN_SECRET')).toMatchObject({ group: 'calls', secret: true });
   });
 
   it('accepts comma-separated stun: / turn: / turns: urls only', () => {
