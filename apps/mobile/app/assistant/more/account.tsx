@@ -1,4 +1,4 @@
-import { AccountScreen } from '@/account/screens/AccountScreen';
+import { AccountScreen } from '@/account';
 
 /** «حسابي» for the assistant shell (R-ACC-01). */
 export default function AssistantAccountRoute() {

@@ -1,1 +1,1 @@
-export { StudentsScreen as default } from '@/students/screens/StudentsScreen';
+export { StudentsScreen as default } from '@/students';

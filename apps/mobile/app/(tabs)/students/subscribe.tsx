@@ -1,1 +1,1 @@
-export { SubscribeScreen as default } from '@/subscribe/SubscribeScreen';
+export { SubscribeScreen as default } from '@/subscribe';

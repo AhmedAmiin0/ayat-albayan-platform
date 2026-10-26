@@ -1,1 +1,1 @@
-export { ReceivablesScreen as default } from '@/money/receivables/ReceivablesScreen';
+export { ReceivablesScreen as default } from '@/money';

@@ -1,1 +1,1 @@
-export { ExpensesScreen as default } from '@/finance/expenses/ExpensesScreen';
+export { ExpensesScreen as default } from '@/finance';

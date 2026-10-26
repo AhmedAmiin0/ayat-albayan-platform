@@ -1,1 +1,1 @@
-export { SalesTabs as default } from '@/sales-app/screens/SalesTabs';
+export { SalesTabs as default } from '@/sales-app';

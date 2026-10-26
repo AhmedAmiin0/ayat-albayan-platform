@@ -1,1 +1,1 @@
-export { SharedRepliesScreen as default } from '@/ops/settings/SharedRepliesScreen';
+export { SharedRepliesScreen as default } from '@/ops';

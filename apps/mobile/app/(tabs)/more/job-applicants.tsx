@@ -1,1 +1,1 @@
-export { JobApplicantsScreen as default } from '@/more/screens/JobApplicantsScreen';
+export { JobApplicantsScreen as default } from '@/more';

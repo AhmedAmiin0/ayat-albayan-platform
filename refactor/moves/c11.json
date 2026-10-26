@@ -1,0 +1,244 @@
+{
+  "id": "c11",
+  "seq": 96,
+  "moves": [],
+  "barrels": [
+    {
+      "dir": "apps/mobile/src/account",
+      "files": [
+        "screens/AccountScreen.tsx"
+      ]
+    },
+    {
+      "dir": "apps/mobile/src/assistant-app",
+      "files": [
+        "AssistantHomeScreen.tsx",
+        "AssistantMoreScreen.tsx",
+        "AssistantTabs.tsx"
+      ]
+    },
+    {
+      "dir": "apps/mobile/src/assistants",
+      "files": [
+        "screens/AssistantDetailScreen.tsx",
+        "screens/AssistantsScreen.tsx"
+      ]
+    },
+    {
+      "dir": "apps/mobile/src/auth",
+      "files": [
+        "login-notice.ts",
+        "route-permissions.ts",
+        "sign-in.ts",
+        "use-auth-gate.ts",
+        "use-permissions.ts"
+      ]
+    },
+    {
+      "dir": "apps/mobile/src/booking",
+      "files": [
+        "makeup/MakeupScreen.tsx",
+        "screens/BookTrialScreen.tsx"
+      ]
+    },
+    {
+      "dir": "apps/mobile/src/calendar",
+      "files": [
+        "screens/DayScheduleScreen.tsx",
+        "screens/TeacherCalendarScreen.tsx"
+      ]
+    },
+    {
+      "dir": "apps/mobile/src/classroom",
+      "files": [
+        "recordings/RecordingsScreen.tsx",
+        "sessions/AdminSessionsScreen.tsx"
+      ]
+    },
+    {
+      "dir": "apps/mobile/src/earnings",
+      "files": [
+        "screens/MyEarningsScreen.tsx",
+        "screens/TeacherEarningsScreen.tsx"
+      ]
+    },
+    {
+      "dir": "apps/mobile/src/feedback",
+      "files": [
+        "FeedbackScreen.tsx"
+      ]
+    },
+    {
+      "dir": "apps/mobile/src/finance",
+      "files": [
+        "expenses/ExpensesScreen.tsx",
+        "invoices/InvoicesScreen.tsx",
+        "payouts/PayoutsScreen.tsx",
+        "pricing/PricingScreen.tsx",
+        "summary/SummaryScreen.tsx"
+      ]
+    },
+    {
+      "dir": "apps/mobile/src/inbox",
+      "files": [
+        "screens/InboxScreen.tsx",
+        "screens/LeadDetailScreen.tsx",
+        "screens/ThreadScreen.tsx"
+      ]
+    },
+    {
+      "dir": "apps/mobile/src/meetings",
+      "files": [
+        "screens/MeetingsScreen.tsx"
+      ]
+    },
+    {
+      "dir": "apps/mobile/src/money",
+      "files": [
+        "payments/PaymentsScreen.tsx",
+        "receivables/ReceivablesScreen.tsx",
+        "subscriptions/SubscriptionsScreen.tsx"
+      ]
+    },
+    {
+      "dir": "apps/mobile/src/more",
+      "files": [
+        "appearance/appearance.ts",
+        "screens/JobApplicantsScreen.tsx",
+        "screens/MoreScreen.tsx",
+        "screens/TeacherDetailScreen.tsx",
+        "screens/TeachersScreen.tsx"
+      ]
+    },
+    {
+      "dir": "apps/mobile/src/notifications",
+      "files": [
+        "NotificationsScreen.tsx"
+      ]
+    },
+    {
+      "dir": "apps/mobile/src/ops",
+      "files": [
+        "activity/ActivityScreen.tsx",
+        "dashboard/DashboardScreen.tsx",
+        "google-sync/GoogleSyncScreen.tsx",
+        "reports/AdminReportScreen.tsx",
+        "reports/AdminStudentReportsScreen.tsx",
+        "settings/CommunicationsScreen.tsx",
+        "settings/SettingsScreen.tsx",
+        "settings/SharedRepliesScreen.tsx",
+        "values/screens/ValuesScreen.tsx"
+      ]
+    },
+    {
+      "dir": "apps/mobile/src/payments",
+      "files": [
+        "screens/PaymentScreen.tsx"
+      ]
+    },
+    {
+      "dir": "apps/mobile/src/registration-check",
+      "files": [
+        "screens/RegistrationCheckScreen.tsx"
+      ]
+    },
+    {
+      "dir": "apps/mobile/src/sales",
+      "files": [
+        "screens/AllStudentsScreen.tsx",
+        "screens/SalesLiveScreen.tsx",
+        "screens/SalesScheduleScreen.tsx",
+        "screens/SalesSubscriptionsScreen.tsx",
+        "screens/SalesTeacherScreen.tsx",
+        "screens/SalesTeachersScreen.tsx",
+        "screens/SubscriptionHistoryScreen.tsx"
+      ]
+    },
+    {
+      "dir": "apps/mobile/src/sales-app",
+      "files": [
+        "screens/SalesMoreScreen.tsx",
+        "screens/SalesTabs.tsx"
+      ]
+    },
+    {
+      "dir": "apps/mobile/src/sales-course",
+      "files": [
+        "screens/CourseScreen.tsx"
+      ]
+    },
+    {
+      "dir": "apps/mobile/src/sales-money",
+      "files": [
+        "screens/MyMoneyScreen.tsx"
+      ]
+    },
+    {
+      "dir": "apps/mobile/src/sales-subscribe",
+      "files": [
+        "screens/SalesSubscribeScreen.tsx",
+        "screens/SalesTransferScreen.tsx"
+      ]
+    },
+    {
+      "dir": "apps/mobile/src/student-file",
+      "files": [
+        "screens/StudentMoneyScreen.tsx",
+        "screens/StudentRecordingsScreen.tsx",
+        "screens/TeacherStudentRecordingsScreen.tsx"
+      ]
+    },
+    {
+      "dir": "apps/mobile/src/students",
+      "files": [
+        "screens/StudentScreen.tsx",
+        "screens/StudentsScreen.tsx"
+      ]
+    },
+    {
+      "dir": "apps/mobile/src/subscribe",
+      "files": [
+        "SubscribeScreen.tsx"
+      ]
+    },
+    {
+      "dir": "apps/mobile/src/teacher",
+      "files": [
+        "components/TeacherScope.tsx",
+        "components/TeacherTabs.tsx",
+        "report/screens/ReportFormScreen.tsx",
+        "screens/MyAvailabilityScreen.tsx",
+        "screens/MyFeedbackScreen.tsx",
+        "screens/MyPayoutsScreen.tsx",
+        "screens/StudentReportsScreen.tsx",
+        "screens/TeacherChatsScreen.tsx",
+        "screens/TeacherMoreScreen.tsx",
+        "screens/TeacherReportsScreen.tsx",
+        "screens/TeacherScheduleScreen.tsx",
+        "screens/TeacherStudentsScreen.tsx",
+        "screens/TeacherTodayScreen.tsx"
+      ]
+    },
+    {
+      "dir": "apps/mobile/src/today",
+      "files": [
+        "screens/TodayScreen.tsx"
+      ]
+    },
+    {
+      "dir": "apps/mobile/src/trial-date",
+      "files": [
+        "screens/TrialDateScreen.tsx"
+      ]
+    },
+    {
+      "dir": "apps/mobile/src/users",
+      "files": [
+        "screens/CreateUserScreen.tsx",
+        "screens/UserDetailScreen.tsx",
+        "screens/UsersScreen.tsx"
+      ]
+    }
+  ],
+  "files": []
+}

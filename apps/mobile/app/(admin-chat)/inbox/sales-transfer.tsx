@@ -1,1 +1,1 @@
-export { SalesTransferScreen as default } from '@/sales-subscribe/screens/SalesTransferScreen';
+export { SalesTransferScreen as default } from '@/sales-subscribe';

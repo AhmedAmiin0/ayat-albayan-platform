@@ -1,1 +1,1 @@
-export { DashboardScreen as default } from '@/ops/dashboard/DashboardScreen';
+export { DashboardScreen as default } from '@/ops';

@@ -1,1 +1,1 @@
-export { FeedbackScreen as default } from '@/feedback/FeedbackScreen';
+export { FeedbackScreen as default } from '@/feedback';

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { ScrollView, View } from 'react-native';
-import { setLoginNotice, useLoginNotice } from '@/auth/login-notice';
-import { signIn } from '@/auth/sign-in';
+import { setLoginNotice, useLoginNotice } from '@/auth';
+import { signIn } from '@/auth';
 import { t } from '@/core/lib/i18n/i18n';
 import { shape, type, useTheme } from '@/theme';
 import { Button } from '@/core/ui/primitives/Button';
