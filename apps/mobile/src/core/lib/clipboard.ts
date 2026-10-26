@@ -15,7 +15,7 @@ export function copyToClipboard(text: string): boolean {
   }
 }
 
-export type CopyResult = 'copied' | 'shared' | 'failed';
+type CopyResult = 'copied' | 'shared' | 'failed';
 
 /** Copy, else hand the text to the share sheet (it has Copy); 'failed' when both fail. */
 export async function copyOrShare(text: string): Promise<CopyResult> {
