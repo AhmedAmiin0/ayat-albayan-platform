@@ -4,9 +4,12 @@ import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../../../common/db/db.module';
 import { dbError } from '../../../../common/http/http';
 
-/** Whitelisted lesson columns for sales: never meeting_link, reasons, attendance, notes or money. */
+/**
+ * Whitelisted lesson columns for sales: never reasons, attendance, notes or money. The lesson's
+ * meeting_link and the teacher's meeting_mode (for «عبر الفصل») are in since owner 2026-10-26.
+ */
 const SALES_SCHEDULE_SELECT =
-  'id, starts_at, ends_at, status, makeup_of_id, rule:schedule_rules!lessons_rule_id_fkey(package), teacher:teachers(id, display_name_ar, display_name_en, tz), lesson_students(student:students(id, code, name, tz))' as const;
+  'id, starts_at, ends_at, status, makeup_of_id, meeting_link, rule:schedule_rules!lessons_rule_id_fkey(package), teacher:teachers(id, display_name_ar, display_name_en, tz, meeting_mode), lesson_students(student:students(id, code, name, tz))' as const;
 
 export interface SalesScheduleRow {
   id: string;
@@ -14,9 +17,11 @@ export interface SalesScheduleRow {
   ends_at: string;
   status: Tables<'lessons'>['status'];
   makeup_of_id: string | null;
+  /** Optional in test fakes. */
+  meeting_link?: string | null;
   rule: { package: string | null } | null;
-  /** tz optional in test fakes. */
-  teacher: { id: string; display_name_ar: string; display_name_en: string | null; tz?: string } | null;
+  /** tz and meeting_mode optional in test fakes. */
+  teacher: { id: string; display_name_ar: string; display_name_en: string | null; tz?: string; meeting_mode?: string | null } | null;
   lesson_students: { student: { id: string; code: string | null; name: string; tz?: string } | null }[];
 }
 

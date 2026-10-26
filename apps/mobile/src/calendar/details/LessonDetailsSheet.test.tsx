@@ -53,7 +53,7 @@ test('admin: status, tags, every clock, length, series, students with code / unp
   expect(screen.getByText(ltr('AB-0185'))).toBeTruthy();
   expect(screen.getByText(t.subscriptions.unpaidFlag)).toBeTruthy();
   expect(screen.getByText(t.lessons.sheet.report.submitted)).toBeTruthy();
-  expect(screen.getByText(ltr('meet.example/abc'))).toBeTruthy();
+  expect(screen.getByText('https://meet.example/abc')).toBeTruthy();
   expect(screen.getByText('موافقة ولي الأمر')).toBeTruthy();
   expect(screen.getByText(t.schedule.generatedConflict)).toBeTruthy();
   // The admin's package line, from the student's balance.
@@ -84,11 +84,11 @@ test('teacher: her students’ reports page and one report button; no package re
   }
 });
 
-test('sales: read-only, no link, no report, no student file, no package', async () => {
+test('sales: read-only, the lesson link (owner 2026-10-26), no report, no student file, no package', async () => {
   await show('sales');
   expect(screen.getByText(t.lessons.sheet.readOnly)).toBeTruthy();
-  expect(screen.queryByText(t.lessons.joinLink)).toBeNull();
-  expect(screen.queryByText(ltr('meet.example/abc'))).toBeNull();
+  expect(screen.getByText(t.lessons.joinLink)).toBeTruthy();
+  expect(screen.getByText('https://meet.example/abc')).toBeTruthy();
   expect(screen.queryByText(t.lessons.sheet.report.submitted)).toBeNull();
   expect(screen.queryByRole('button', { name: t.lessons.sheet.openStudent.replace('{name}', 'جنى وليد') })).toBeNull();
   expect(mockApiFetch).not.toHaveBeenCalledWith('/students/s2/balance');

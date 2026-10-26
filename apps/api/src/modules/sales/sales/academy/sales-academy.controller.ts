@@ -42,7 +42,7 @@ export class SalesAcademyController {
     return this.schedule.teachers();
   }
 
-  /** `?date=YYYY-MM-DD&teacherId=`: the day's lessons, no meeting link, note or money (400 on a bad date/id). */
+  /** `?date=YYYY-MM-DD&teacherId=`: the day's lessons with their meeting link (owner 2026-10-26), no note or money (400 on a bad date/id). */
   @Get('schedule')
   @Permissions('self.sales_academy')
   day(@Query() query: unknown): Promise<SalesScheduleDay> {
