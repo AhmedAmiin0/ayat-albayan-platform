@@ -41,7 +41,7 @@ export function useTrialDateCheck(body: TrialDateBody | null) {
 }
 
 /** What a new trial date changes: its history, the lessons and calendars, the student and the chats. */
-export function refreshAfterTrialDate(client: QueryClient, o: { mode: BookingMode; studentId: string }): void {
+function refreshAfterTrialDate(client: QueryClient, o: { mode: BookingMode; studentId: string }): void {
   void client.invalidateQueries({ queryKey: historyKey(o.mode, o.studentId) });
   void client.invalidateQueries({ queryKey: pathKey('/lessons') });
   void client.invalidateQueries({ queryKey: pathKey(`/students/${o.studentId}`) });

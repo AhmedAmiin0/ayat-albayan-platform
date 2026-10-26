@@ -53,7 +53,7 @@ export async function guardianName(guardianId: string): Promise<string> {
   });
 }
 
-export interface LessonView {
+interface LessonView {
   status: string;
   confirmed_by: string | null;
   confirmed_at: Date | null;

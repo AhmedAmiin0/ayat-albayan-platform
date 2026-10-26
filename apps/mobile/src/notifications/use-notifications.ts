@@ -5,7 +5,7 @@ import { markedRead } from './notifications-cache';
 
 // The bell (R-NOT-01): GET /me/notifications (newest 20, polled) and POST /me/notifications/read.
 
-export const NOTIFICATIONS_KEY = ['notifications'] as const;
+const NOTIFICATIONS_KEY = ['notifications'] as const;
 const NOTIFICATIONS_LIST_KEY = ['notifications', 'list'] as const;
 /** The badge stays fresh without a push (a refused permission, a teacher on the web). */
 const NOTIFICATIONS_POLL_MS = 30_000;

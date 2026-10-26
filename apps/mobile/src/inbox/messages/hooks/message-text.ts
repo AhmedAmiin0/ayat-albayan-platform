@@ -5,7 +5,7 @@ import { t } from '@/core/lib/i18n/i18n';
 // The words a thread shows (R-MOB-02): media labels, template names, times, send errors.
 // All Arabic comes from ar.json; times are the device's zone, Western digits.
 
-export type MediaKind = keyof typeof t.inbox.media;
+type MediaKind = keyof typeof t.inbox.media;
 
 /** inbox.media.<kind> for a WhatsApp mime type. WhatsApp stickers are webp images. */
 export function mediaKind(mime: string | null): MediaKind {
