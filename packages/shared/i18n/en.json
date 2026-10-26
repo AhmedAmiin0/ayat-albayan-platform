@@ -6135,7 +6135,11 @@
       "retryFile": "Resend the attachment",
       "fileFailed": "The attachment was not sent: {reason}"
     },
-    "retry": "Try again"
+    "retry": "Try again",
+    "slashHint": "Type / in the message box to pick a quick reply",
+    "manage": "Manage",
+    "manageDone": "Done",
+    "sheetClose": "Close quick replies"
   },
   "trialDate": {
     "action": "New trial date",

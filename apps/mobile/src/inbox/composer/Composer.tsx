@@ -9,6 +9,7 @@ import { OpenRow } from '../threads-list/OpenRow';
 import { QuoteStrip } from '../messages/components/QuoteStrip';
 import { SavedReplyChip } from '../saved-replies/SavedReplyChip';
 import { SavedReplyPicker } from '../saved-replies/SavedReplyPicker';
+import { SlashSuggestions } from '../saved-replies/quick-list/SlashSuggestions';
 import { useSavedReplyDraft } from '../saved-replies/use-saved-reply';
 import { TemplatePicker } from './TemplatePicker';
 import { useThreadMode } from '../thread/hooks/thread-mode';
@@ -19,8 +20,9 @@ import { errorLines, useComposerSend } from './use-composer-send';
  * 24 h of their last message: free text, a photo or PDF, plus a template if wanted. After that WhatsApp allows only an
  * approved template, so the row says why (ClosedNote) beside «أرسل قالبًا». The window is checked
  * against the device clock on every render (a refetch, a keystroke), not only when the thread loaded.
- * «الردود السريعة» (owner 2026-10-25, staff only): the button or «/» at a line's start opens the
- * picker; a pick fills the box and stages its file (the chip). «أرسل» sends the text, then the file.
+ * «الردود السريعة» (owner 2026-10-25/26, staff only, as WhatsApp Business): «/» at a line's start docks
+ * the list over the row, the button opens its sheet; a pick fills the box and stages its file (the
+ * chip). «أرسل» sends the text, then the file.
  * «رد» (owner 2026-10-25): the quoted strip over the row; the text answers it (useComposerSend).
  */
 export function Composer({
@@ -60,24 +62,30 @@ export function Composer({
       <ComposerNotes thread={thread} open={open} />
       {open ? <QuoteStrip /> : null}
       {open && replies.staged ? <SavedReplyChip file={replies.staged.file} onRemove={replies.clearStaged} /> : null}
+      {open && replies.search !== null ? (
+        <SlashSuggestions search={replies.search} contact={{ thread, student }} onFill={replies.fill} />
+      ) : null}
       {open ? (
         <OpenRow
           phone={phone}
           text={text}
           onText={type}
+          onLeave={replies.dismiss}
           staff={staff}
           onTemplate={pick}
           onReplies={replies.open}
           onFileError={setFileError}
-          onSend={sendText}
+          onSend={() => {
+            replies.dismiss();
+            sendText();
+          }}
           sending={pending}
         />
       ) : (
         <ClosedRow known={thread !== null} staff={staff} onTemplate={pick} />
       )}
-      {replies.picker ? (
+      {replies.sheet ? (
         <SavedReplyPicker
-          initialQuery=""
           contact={{ thread, student }}
           onClose={replies.close}
           onFill={replies.fill}

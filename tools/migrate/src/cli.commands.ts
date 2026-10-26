@@ -12,6 +12,8 @@ import { unqueueImportedLessons } from './db/unqueue-imported.ts';
 import type { PlanWithChanges } from './plan/changes.ts';
 import { deltaPlan } from './plan/stale-refs.ts';
 import { buildPlan, loadBundle } from './plan/run.ts';
+import { clampRuleStarts, logScope, runScope } from './delta/scope.ts';
+import { onlyEntities } from './delta/only.ts';
 import { reportMarkdown } from './report/report.ts';
 import { writeReview } from './report/review.ts';
 import type { SheetManifest } from './sources/extract-sheets.ts';
@@ -60,16 +62,22 @@ async function writeOutputs(plan: PlanWithChanges): Promise<void> {
 export function planOrApply(args: CliArgs, apply: boolean): Promise<void> {
   return withTarget(args, async (config, db) => {
     if (apply) await db.lockApply();
+    const scope = runScope(args, today());
     const built = await buildPlan({
       db,
       modules: ENTITY_MODULES,
       target: config.name,
-      today: today(),
+      ...scope.build,
     });
     const { existing } = built;
-    const plan = args.createsOnly
+    const delta = args.createsOnly
       ? await deltaPlan({ db, built, modules: ENTITY_MODULES })
       : built.plan;
+    const plan = clampRuleStarts(
+      scope.only ? onlyEntities(delta, scope.only) : delta,
+      scope.build.from,
+    );
+    logScope({ plan, recreated: built.recreated, from: scope.build.from });
     await writeOutputs(plan);
     if (!apply) return;
     const manifest = readJson<SheetManifest | undefined>(cachePath.sheetManifest(), undefined);
@@ -92,7 +100,9 @@ export function planOrApply(args: CliArgs, apply: boolean): Promise<void> {
     });
     console.log(`applied to ${config.name}: import_runs ${runId}`);
     console.log(`settings seed: ${await seedConfig(db)}`);
-    console.log(`google sync rows of imported lessons dropped: ${await unqueueImportedLessons(db)}`);
+    console.log(
+      `google sync rows of imported lessons dropped: ${await unqueueImportedLessons(db)}`,
+    );
   });
 }
 
