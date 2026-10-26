@@ -18,7 +18,8 @@ export function useCallsRealtime(input: { enabled: boolean; active: boolean }): 
     let channel: Channel | null = null;
     try {
       channel = supabase
-        .channel('wa_calls')
+        // A topic of its own: a quick resubscribe never reuses the channel that is still leaving.
+        .channel(`wa_calls:${Math.random().toString(36).slice(2)}`)
         .on('postgres_changes', { event: '*', schema: 'public', table: 'wa_calls' }, () => {
           void client.invalidateQueries({ queryKey: CALLS_KEY, predicate: (q) => q.queryKey[1] !== 'config' });
         })

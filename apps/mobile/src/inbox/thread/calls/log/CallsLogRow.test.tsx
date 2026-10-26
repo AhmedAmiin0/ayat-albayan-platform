@@ -15,7 +15,7 @@ describe('CallsLogRow («المكالمات»)', () => {
     await render(<CallsLogRow call={call()} showsPhone={false} onOpen={open} />);
     expect(screen.getByText(t.inbox.unknownNumber)).toBeTruthy();
     expect(screen.getByText(t.calls.entry.missed)).toBeTruthy();
-    fireEvent.press(screen.getByText(t.inbox.unknownNumber));
+    await fireEvent.press(screen.getByText(t.inbox.unknownNumber));
     expect(open).toHaveBeenCalled();
   });
 

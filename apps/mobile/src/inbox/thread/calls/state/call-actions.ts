@@ -8,25 +8,28 @@ import { createCallPeer, type CallPeer } from '../rtc/call-peer';
 import { MicError, type RtcDeps } from '../rtc/media';
 import type { CallSession, CallTarget } from './call-phase';
 
+/** A notice's own action: «افتح الإعدادات» when the microphone was refused for good. */
+export type NoticeAction = 'settings';
+
 /** What the async call steps read and write (CallStore). */
 export interface CallRuntime {
   rtc: RtcDeps | null;
   iceServers: readonly CallIceServer[];
   peer: { current: CallPeer | null };
-  /** Bumped by every hang-up: a step that awaited across one is cancelled. */
+  /** Bumped by every attempt and hang-up: a step that awaited across one is cancelled. */
   attempt: { current: number };
   setSession: (update: (s: CallSession | null) => CallSession | null) => void;
   currentSession: () => CallSession | null;
   /** The moment the session learnt its server id (endedOnServer and the 45 s timer count from it). */
   markId: () => void;
-  notify: (text: string) => void;
+  notify: (text: string | null, action?: NoticeAction) => void;
   /** Re-reads /calls/active now. */
   refresh: () => void;
 }
 
 /** The sentence for a failed step: the microphone's own words, else the API's code. */
 export function failureText(e: unknown): string {
-  if (e instanceof MicError) return e.problem === 'denied' ? t.calls.mic.denied : t.calls.mic.unsupported;
+  if (e instanceof MicError) return e.problem === 'unsupported' ? t.calls.mic.unsupported : t.calls.mic.denied;
   return callErrorText(e);
 }
 
@@ -36,22 +39,22 @@ const fresh = (target: CallTarget, direction: CallSession['direction'], id: stri
   ...{ muted: false, speaker: false, minimised: false, ended: false },
 });
 
-/** Closes the media and gives the app its playback audio mode back. */
+/** Closes the media (the mic released) and, if a call routed the audio, gives the app its playback mode back. */
 export function teardown(rt: CallRuntime): void {
-  const had = rt.peer.current !== null;
   rt.peer.current?.close();
   rt.peer.current = null;
-  if (had) void restorePlayback();
+  void restorePlayback();
 }
 
-/** A new attempt: its token stays current until the next hang-up or attempt. */
+/** A new attempt: whatever an earlier one left is closed; its token stays current until the next hang-up or attempt. */
 function nextAttempt(rt: CallRuntime): () => boolean {
+  teardown(rt);
   rt.attempt.current += 1;
   const token = rt.attempt.current;
   return () => rt.attempt.current === token;
 }
 
-/** The microphone and the peer; closed again at once (mic stopped) when the attempt was cancelled meanwhile. */
+/** The microphone and the peer, with the mute and speaker chosen meanwhile; closed at once if cancelled. */
 async function peerFor(rt: CallRuntime, live: () => boolean): Promise<CallPeer | null> {
   const peer = await createCallPeer({ deps: rt.rtc, iceServers: rt.iceServers });
   if (!live()) {
@@ -59,7 +62,9 @@ async function peerFor(rt: CallRuntime, live: () => boolean): Promise<CallPeer |
     return null;
   }
   rt.peer.current = peer;
-  void routeCallAudio(false);
+  const session = rt.currentSession();
+  peer.setMuted(session?.muted ?? false);
+  void routeCallAudio(session?.speaker ?? false);
   // The media dropped for good: say so and end the call (WhatsApp terminate through the API).
   peer.onFailed(() => {
     rt.notify(t.calls.errors.media_failed);
@@ -68,11 +73,17 @@ async function peerFor(rt: CallRuntime, live: () => boolean): Promise<CallPeer |
   return peer;
 }
 
+/** Cancelled after the peer existed: close ours if the hang-up did not (it closes only the current one). */
+function dropLocal(rt: CallRuntime, peer: CallPeer | null): void {
+  if (peer && rt.peer.current !== peer) peer.close();
+}
+
 function failed(rt: CallRuntime, input: { live: () => boolean; error: unknown }): void {
   if (!input.live()) return;
   teardown(rt);
   rt.setSession(() => null);
-  rt.notify(failureText(input.error));
+  const blocked = input.error instanceof MicError && input.error.problem === 'blocked';
+  rt.notify(failureText(input.error), blocked ? 'settings' : undefined);
   rt.refresh();
 }
 
@@ -83,10 +94,10 @@ export async function beginCall(rt: CallRuntime, target: CallTarget): Promise<vo
   try {
     const peer = await peerFor(rt, live);
     const sdp = peer ? await peer.offer() : null;
-    if (!sdp || !live()) return;
+    if (!sdp || !live()) return dropLocal(rt, peer);
     const view = await startCall({ phone: target.phone, sdp, clientRequestId: requestId() });
     // Hung up while the request was in flight: the call exists now, so end it.
-    if (!live()) return void (await endCall(view.id).catch(() => undefined));
+    if (!live()) return void (dropLocal(rt, peer), await endCall(view.id).catch(() => undefined));
     rt.markId();
     rt.setSession((s) => (s ? { ...s, id: view.id } : s));
     rt.refresh();
@@ -103,9 +114,9 @@ export async function acceptRinging(rt: CallRuntime, input: { row: ActiveCallVie
   try {
     const peer = await peerFor(rt, live);
     const sdp = peer ? await peer.answer(row.offer_sdp ?? '') : null;
-    if (!sdp || !live()) return;
+    if (!sdp || !live()) return dropLocal(rt, peer);
     await acceptCall(row.id, sdp);
-    if (!live()) return void (await endCall(row.id).catch(() => undefined));
+    if (!live()) return void (dropLocal(rt, peer), await endCall(row.id).catch(() => undefined));
     rt.markId();
     rt.refresh();
   } catch (error) {

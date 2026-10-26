@@ -6339,7 +6339,8 @@
     "mic": {
       "denied": "The call needs microphone access. Allow the microphone, then try again.",
       "unsupported": "This device or browser does not support voice calls.",
-      "rationale": "We need the microphone for in-app WhatsApp voice calls with families."
+      "rationale": "We need the microphone for in-app WhatsApp voice calls with families.",
+      "openSettings": "Open settings"
     },
     "errors": {
       "calls_disabled": "Calls are turned off in settings.",
@@ -6351,6 +6352,7 @@
       "no_permission": "There is no permission to call this number.",
       "call_failed": "The call could not be placed. It was not retried automatically, so it is never billed twice.",
       "media_failed": "The audio dropped. End the call and call again."
-    }
+    },
+    "backgrounded": "The app was in the background during the call, so your voice may not have been heard meanwhile."
   }
 }

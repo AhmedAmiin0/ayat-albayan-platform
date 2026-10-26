@@ -1,5 +1,5 @@
 import type { CallIceServer } from '@ab/shared';
-import { openMic, rtcConfig, type PeerLike, type RtcDeps, type StreamLike } from './media';
+import { openMic, releaseMic, rtcConfig, type PeerLike, type RtcDeps } from './media';
 
 /** ICE gathering normally ends in well under a second; the SDP goes with what it has after this. */
 export const GATHER_MS = 3_000;
@@ -35,10 +35,6 @@ export function gathered(pc: PeerLike, ms = GATHER_MS): Promise<void> {
   });
 }
 
-const stopAll = (mic: StreamLike) => {
-  for (const track of mic.getTracks()) track.stop();
-};
-
 /** The peer for a call: the microphone opened (or MicError), its track added; nothing leaks on failure. */
 export async function createCallPeer(input: { deps: RtcDeps | null; iceServers: readonly CallIceServer[] }): Promise<CallPeer> {
   const mic = await openMic(input.deps);
@@ -48,7 +44,7 @@ export async function createCallPeer(input: { deps: RtcDeps | null; iceServers: 
     pc = input.deps.createPeer(rtcConfig(input.iceServers));
     for (const track of mic.getAudioTracks()) pc.addTrack(track, mic);
   } catch (e) {
-    stopAll(mic);
+    releaseMic(mic);
     throw e;
   }
   const sdpOf = () => pc.localDescription?.sdp ?? '';
@@ -77,7 +73,7 @@ export async function createCallPeer(input: { deps: RtcDeps | null; iceServers: 
       });
     },
     close() {
-      stopAll(mic);
+      releaseMic(mic);
       pc.close();
     },
   };

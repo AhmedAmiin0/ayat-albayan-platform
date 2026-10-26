@@ -22,8 +22,8 @@ describe('CallEntry (a call in the chat)', () => {
   it('a tap calls back; without a call-back it is plain text', async () => {
     const back = jest.fn();
     await render(<CallEntry call={call()} onCallBack={back} />);
-    fireEvent.press(screen.getByLabelText(`${t.calls.entry.outgoing} · 2:14 — ${t.calls.callBack}`));
-    expect(back).toHaveBeenCalled();
+    await fireEvent.press(screen.getByLabelText(`${t.calls.entry.outgoing} · 2:14 — ${t.calls.callBack}`));
+    expect(back).toHaveBeenCalledWith(expect.objectContaining({ id: 'c1' }));
     await render(<CallEntry call={call()} />);
     expect(screen.getByTestId('call-entry-c1')).toBeDisabled();
   });

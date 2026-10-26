@@ -9,6 +9,9 @@ import { callStatusText } from './call-status';
 import { PhoneIcon } from './call-icons';
 import { useNow } from './use-now';
 
+/** Below a screen's header (ChatHeader / ScreenHeader are ~52pt). */
+const HEADER = 56;
+
 export interface CallBarProps {
   session: CallSession;
   row: ActiveCallView | undefined;
@@ -16,13 +19,16 @@ export interface CallBarProps {
   onExpand: () => void;
 }
 
-/** The minimised call (WhatsApp's green bar): a floating pill over the bottom; a tap goes back to the call. */
+/**
+ * The minimised call (WhatsApp's green bar): a pill at the top, under the safe area and the screen's
+ * one-line header, so it never covers the newest bubble or the composer; a tap goes back to the call.
+ */
 export function CallBar({ session, row, phase, onExpand }: CallBarProps) {
   const { color } = useTheme();
   const insets = useSafeAreaInsets();
   const now = useNow(phase === 'active');
   return (
-    <View pointerEvents="box-none" style={{ position: 'absolute', start: 16, end: 16, bottom: insets.bottom + 72, alignItems: 'center' }}>
+    <View pointerEvents="box-none" style={{ position: 'absolute', start: 16, end: 16, top: insets.top + HEADER, alignItems: 'center' }}>
       <Pressable
         testID="call-bar"
         accessibilityRole="button"

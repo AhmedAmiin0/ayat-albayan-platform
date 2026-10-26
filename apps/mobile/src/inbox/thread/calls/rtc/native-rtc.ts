@@ -1,22 +1,37 @@
 import { PermissionsAndroid, Platform } from 'react-native';
-import { mediaDevices, RTCPeerConnection } from 'react-native-webrtc';
-import type { PeerLike, RtcDeps, StreamLike } from './media';
+import type { MicAnswer, PeerLike, RtcDeps, StreamLike } from './media';
+
+type WebRtc = typeof import('react-native-webrtc');
 
 /** RECORD_AUDIO at call time (the manifest declares it, docs/28 PR 2); iOS prompts on getUserMedia. */
-async function askMic(): Promise<boolean> {
-  if (Platform.OS !== 'android') return true;
+async function askMic(): Promise<MicAnswer> {
+  if (Platform.OS !== 'android') return 'granted';
   const result = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.RECORD_AUDIO);
-  return result === PermissionsAndroid.RESULTS.GRANTED;
+  if (result === PermissionsAndroid.RESULTS.GRANTED) return 'granted';
+  return result === PermissionsAndroid.RESULTS.NEVER_ASK_AGAIN ? 'blocked' : 'denied';
+}
+
+/** The native module, loaded on first use: a binary without it (an old APK) gets null, never a crash at boot. */
+function load(): WebRtc | null {
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    return require('react-native-webrtc') as WebRtc;
+  } catch {
+    return null;
+  }
 }
 
 /**
- * The device's WebRTC (react-native-webrtc, a native module: a new APK, docs/28 PR 2). The family's
- * audio plays by itself once its track arrives; the shapes match media.ts structurally.
+ * The device's WebRTC (react-native-webrtc, a native module: a new APK, docs/28 PR 2), or null where it
+ * is missing (the calls then say «هذا الجهاز لا يدعم المكالمات»). The family's audio plays by itself
+ * once its track arrives; the shapes match media.ts structurally.
  */
-export function nativeRtc(): RtcDeps {
+export function nativeRtc(): RtcDeps | null {
+  const rtc = load();
+  if (!rtc) return null;
   return {
-    createPeer: (config) => new RTCPeerConnection(config) as unknown as PeerLike,
+    createPeer: (config) => new rtc.RTCPeerConnection(config) as unknown as PeerLike,
     askMic,
-    getMic: async () => (await mediaDevices.getUserMedia({ audio: true, video: false })) as unknown as StreamLike,
+    getMic: async () => (await rtc.mediaDevices.getUserMedia({ audio: true, video: false })) as unknown as StreamLike,
   };
 }

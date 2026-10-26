@@ -4,16 +4,13 @@ import { FlatList, View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { Button } from '@/core/ui/primitives/Button';
 import { EmptyState } from '@/core/ui/feedback/EmptyState';
-import { callerName } from '../../thread/calls/entries/call-text';
 import { CallEntry } from '../../thread/calls/entries/CallEntry';
 import { logRows, type LogRow } from '../../thread/calls/entries/log-rows';
-import { useThreadCalls } from '../../thread/calls/entries/use-thread-calls';
-import { useCalls } from '../../thread/calls/state/call-context';
+import { useCallBack, useThreadCalls } from '../../thread/calls/entries/use-thread-calls';
 import { messageGap } from '../hooks/list-gap';
 import { MessageBubble } from './MessageBubble';
 import { threadMessages } from '../../thread/hooks/thread-cache';
 import { useJump } from '../../thread/hooks/use-jump';
-import { useThreadMode } from '../../thread/hooks/thread-mode';
 import type { useThread } from '../../thread/hooks/use-thread';
 
 type ThreadQuery = ReturnType<typeof useThread>;
@@ -35,8 +32,7 @@ export function MessageList({ phone, query }: { phone: string; query: ThreadQuer
   const [pulling, setPulling] = useState(false);
   // Calls merged in by time (docs/28 §5); none while calls are off.
   const calls = useThreadCalls(phone);
-  const ui = useCalls();
-  const teacher = useThreadMode().kind === 'teacher';
+  const callBack = useCallBack({ phone, thread: query.data?.pages[0]?.thread ?? null });
   const rows = logRows(threadMessages(query.data), { calls, hasMore: query.hasNextPage });
   const newest = rows[0]?.message;
   const ours = newest?.direction === 'outbound' && !senderLine(newest) ? newest.id : undefined;
@@ -73,7 +69,7 @@ export function MessageList({ phone, query }: { phone: string; query: ThreadQuer
           {item.message ? (
             <MessageBubble message={item.message} phone={phone} onJump={jump} highlight={lit === item.id} />
           ) : item.call ? (
-            <CallEntry call={item.call} onCallBack={ui && !ui.busy ? () => ui.call({ phone, name: callerName(item.call ?? { display_name: null, phone_e164: phone }, !teacher) }) : undefined} />
+            <CallEntry call={item.call} onCallBack={callBack} />
           ) : null}
         </View>
       )}

@@ -1,8 +1,10 @@
 import type { ActiveCallView, CallConfigView } from '@ab/shared';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { useEffect, useMemo, useState, useSyncExternalStore } from 'react';
+import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react';
+import { t } from '@/core/lib/i18n/i18n';
 import { activeCallsQuery, CALLS_KEY } from '../api/calls-api';
 import type { RtcDeps } from '../rtc/media';
+import type { NoticeAction } from './call-actions';
 import { CallStore } from './call-store';
 import { deriveCall, type CallDerived, type CallSession } from './call-phase';
 
@@ -10,9 +12,20 @@ export interface CallSessionApi extends Omit<CallDerived, 'gone' | 'deadline'> {
   store: CallStore;
   session: CallSession | null;
   notice: string | null;
+  noticeAction: NoticeAction | null;
 }
 
 const NO_ICE: CallConfigView['iceServers'] = [];
+
+/** Back from the background during a call: no foreground service (docs/28 §9), so the mic may have been off. */
+function useBackgroundNote(input: { store: CallStore; foreground: boolean; live: boolean }): void {
+  const { store, foreground, live } = input;
+  const was = useRef(foreground);
+  useEffect(() => {
+    if (foreground && !was.current && live) store.notify(t.calls.backgrounded);
+    was.current = foreground;
+  }, [store, foreground, live]);
+}
 
 /** The device's call and the incoming rings (docs/28 §3), polled while calls are on and the app is in front. */
 export function useCallSession(input: { config: CallConfigView | undefined; rtc: RtcDeps | null; foreground: boolean }): CallSessionApi {
@@ -24,10 +37,17 @@ export function useCallSession(input: { config: CallConfigView | undefined; rtc:
   const active = useQuery(activeCallsQuery({ enabled, live: state.session !== null, polling: input.foreground }));
   const rows: readonly ActiveCallView[] = useMemo(() => active.data?.rows ?? [], [active.data]);
   const d = deriveCall(state, { rows, startedAt: active.data?.startedAt ?? 0 });
+  const live = state.session !== null && !state.session.ended;
 
   const iceServers = input.config?.iceServers ?? NO_ICE;
   useEffect(() => store.configure(rtc, iceServers), [store, rtc, iceServers]);
   useEffect(() => () => store.dispose(), [store]);
+  useBackgroundNote({ store, foreground: input.foreground, live });
+
+  // Calls switched off (or this user lost inbox.send) during a call: end it.
+  useEffect(() => {
+    if (!enabled && live) store.hangup();
+  }, [store, enabled, live]);
 
   // WhatsApp's answer to our offer arrived (connect webhook): apply it once.
   const answer = d.row?.direction === 'outbound' ? d.row.answer_sdp : null;
@@ -48,5 +68,6 @@ export function useCallSession(input: { config: CallConfigView | undefined; rtc:
     return () => clearTimeout(id);
   }, [store, deadline]);
 
-  return { store, session: state.session, row: d.row, phase: d.phase, incoming: d.incoming, notice: state.notice };
+  const { session, notice, noticeAction } = state;
+  return { store, session, row: d.row, phase: d.phase, incoming: d.incoming, notice, noticeAction };
 }

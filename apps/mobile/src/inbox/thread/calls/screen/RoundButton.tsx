@@ -17,8 +17,11 @@ export interface RoundButtonProps {
 /** A call control (WhatsApp's round buttons): a 64pt circle and its word under it. */
 export function RoundButton({ label, tone, onPress, pressed, icon }: RoundButtonProps) {
   const { color } = useTheme();
-  const fill = tone === 'end' ? color.badSolid : tone === 'accept' ? color.lapisFill : pressed ? color.coverInk : color.leatherDeep;
+  // A visible edge on the cover (≥ 3:1 non-text contrast): the neutral control is outlined in coverInk
+  // and fills with it while on; «إنهاء» / «رفض» and «قبول» are their solid action fills.
+  const fill = tone === 'end' ? color.badSolid : tone === 'accept' ? color.lapisFill : pressed ? color.coverInk : 'transparent';
   const ink = tone === 'end' ? color.onBad : tone === 'accept' ? color.onLapis : pressed ? color.cover : color.coverInk;
+  const edge = tone === 'plain' ? { borderWidth: 1.5, borderColor: color.coverInk } : {};
   return (
     <View style={{ alignItems: 'center', gap: 8, minWidth: 72 }}>
       <Pressable
@@ -26,7 +29,7 @@ export function RoundButton({ label, tone, onPress, pressed, icon }: RoundButton
         accessibilityLabel={label}
         accessibilityState={pressed === undefined ? undefined : { selected: pressed }}
         onPress={onPress}
-        style={({ pressed: down }) => ({ width: 64, height: 64, borderRadius: 32, backgroundColor: fill, alignItems: 'center', justifyContent: 'center', opacity: down ? 0.85 : 1 })}
+        style={({ pressed: down }) => ({ width: 64, height: 64, borderRadius: 32, backgroundColor: fill, ...edge, alignItems: 'center', justifyContent: 'center', opacity: down ? 0.85 : 1 })}
       >
         {icon(ink)}
       </Pressable>

@@ -64,7 +64,11 @@ jest.mock('./src/core/lib/i18n/i18n-overrides', () => ({
 jest.mock('expo-audio', () => {
   const player = { play: jest.fn(), pause: jest.fn(), seekTo: jest.fn(async () => undefined) };
   const status = { playing: false, currentTime: 0, duration: 0, didJustFinish: false, isLoaded: false };
-  return { useAudioPlayer: jest.fn(() => player), useAudioPlayerStatus: jest.fn(() => status) };
+  return {
+    useAudioPlayer: jest.fn(() => player),
+    useAudioPlayerStatus: jest.fn(() => status),
+    setAudioModeAsync: jest.fn(async () => undefined),
+  };
 });
 jest.mock('expo-video', () => {
   const { createElement } = require('react');

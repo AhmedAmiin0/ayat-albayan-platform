@@ -11,7 +11,7 @@ import { callEntryText, callInk } from './call-text';
 export interface CallEntryProps {
   call: CallView;
   /** Tap to call back (the header icon's flow); absent while calling is not possible. */
-  onCallBack?: (() => void) | undefined;
+  onCallBack?: ((call: CallView) => void) | undefined;
 }
 
 /**
@@ -32,7 +32,7 @@ export function CallEntry({ call, onCallBack }: CallEntryProps) {
       accessibilityRole={onCallBack ? 'button' : 'text'}
       accessibilityLabel={onCallBack ? `${text} — ${t.calls.callBack}` : text}
       disabled={!onCallBack}
-      onPress={onCallBack}
+      onPress={onCallBack ? () => onCallBack(call) : undefined}
       style={({ pressed }) => ({
         alignSelf: side.align,
         maxWidth: '80%',

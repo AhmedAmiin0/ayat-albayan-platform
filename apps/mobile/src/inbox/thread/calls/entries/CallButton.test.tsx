@@ -19,7 +19,7 @@ describe('CallButton (the phone icon in the chat header)', () => {
   it('calls this chat', async () => {
     const value = ui();
     await show(value);
-    fireEvent.press(screen.getByTestId('call-button'));
+    await fireEvent.press(screen.getByTestId('call-button'));
     expect(value.call).toHaveBeenCalledWith({ phone: '+966501234567', name: 'أم سهيلة' });
   });
 

@@ -12,6 +12,8 @@ export interface TrackLike {
 export interface StreamLike {
   getAudioTracks(): TrackLike[];
   getTracks(): TrackLike[];
+  /** react-native-webrtc: frees the native stream (track.stop() alone keeps the microphone held). */
+  release?(): void;
 }
 
 export interface SdpInit {
@@ -36,13 +38,15 @@ export interface PeerLike {
 
 export interface RtcDeps {
   createPeer: (config: { iceServers: CallIceServer[] }) => PeerLike;
-  /** Android's runtime prompt for RECORD_AUDIO (iOS asks inside getMic); false = refused. */
-  askMic: () => Promise<boolean>;
+  /** Android's runtime prompt for RECORD_AUDIO (iOS asks inside getMic); `blocked` = «don't ask again». */
+  askMic: () => Promise<MicAnswer>;
   getMic: () => Promise<StreamLike>;
 }
 
-/** Why the microphone could not be opened: the user refused, or no WebRTC on this device. */
-export type MicProblem = 'denied' | 'unsupported';
+export type MicAnswer = 'granted' | 'denied' | 'blocked';
+
+/** Why the microphone could not be opened: refused, refused for good (only Settings helps), or no WebRTC here. */
+export type MicProblem = 'denied' | 'blocked' | 'unsupported';
 
 export class MicError extends Error {
   constructor(readonly problem: MicProblem) {
@@ -50,10 +54,17 @@ export class MicError extends Error {
   }
 }
 
+/** Stops every track and frees the native stream (the microphone light goes off). */
+export function releaseMic(mic: StreamLike): void {
+  for (const track of mic.getTracks()) track.stop();
+  mic.release?.();
+}
+
 /** The microphone (asked for at call time); MicError when it cannot be had. */
 export async function openMic(deps: RtcDeps | null): Promise<StreamLike> {
   if (!deps) throw new MicError('unsupported');
-  if (!(await deps.askMic())) throw new MicError('denied');
+  const answer = await deps.askMic();
+  if (answer !== 'granted') throw new MicError(answer);
   try {
     return await deps.getMic();
   } catch {

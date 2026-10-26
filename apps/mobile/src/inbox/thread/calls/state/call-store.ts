@@ -3,12 +3,15 @@ import { endCall, rejectCall } from '../api/calls-api';
 import { routeCallAudio } from '../rtc/audio-route';
 import type { CallPeer } from '../rtc/call-peer';
 import type { RtcDeps } from '../rtc/media';
-import { acceptRinging, beginCall, hangUp, teardown, type CallRuntime } from './call-actions';
+import { t } from '@/core/lib/i18n/i18n';
+import { acceptRinging, beginCall, hangUp, teardown, type CallRuntime, type NoticeAction } from './call-actions';
 import type { CallSession, CallTarget } from './call-phase';
 
 export interface CallStoreState {
   session: CallSession | null;
   notice: string | null;
+  /** The notice's action button («افتح الإعدادات»), if any. */
+  noticeAction: NoticeAction | null;
   /** Inbound calls declined here: they stop ringing at once, before the next poll. */
   dismissed: ReadonlySet<string>;
   /** When the session learnt its server id (endedOnServer compares polls with it). */
@@ -24,7 +27,7 @@ export class CallStore implements CallRuntime {
   iceServers: readonly CallIceServer[] = [];
   readonly peer: { current: CallPeer | null } = { current: null };
   readonly attempt = { current: 0 };
-  private state: CallStoreState = { session: null, notice: null, dismissed: new Set(), idAt: 0 };
+  private state: CallStoreState = { session: null, notice: null, noticeAction: null, dismissed: new Set(), idAt: 0 };
   private readonly listeners = new Set<() => void>();
   private clearTimer: ReturnType<typeof setTimeout> | null = null;
 
@@ -37,7 +40,7 @@ export class CallStore implements CallRuntime {
   };
   readonly get = (): CallStoreState => this.state;
 
-  notify = (notice: string | null) => this.set({ notice });
+  notify = (notice: string | null, action?: NoticeAction) => this.set({ notice, noticeAction: notice ? (action ?? null) : null });
   markId = () => this.set({ idAt: Date.now() });
   currentSession = () => this.state.session;
   setSession = (update: (s: CallSession | null) => CallSession | null) => this.set({ session: update(this.state.session) });
@@ -61,8 +64,12 @@ export class CallStore implements CallRuntime {
   hangup(): void {
     void hangUp(this, this.state.session);
   }
+  /** WhatsApp's answer could not be applied: never a silent «active» call, end it and say so. */
   applyAnswer(sdp: string): void {
-    void this.peer.current?.applyAnswer(sdp).catch(() => undefined);
+    void this.peer.current?.applyAnswer(sdp).catch(() => {
+      this.notify(t.calls.errors.media_failed);
+      this.hangup();
+    });
   }
   toggleMute(): void {
     const s = this.state.session;
@@ -92,9 +99,13 @@ export class CallStore implements CallRuntime {
     this.clearTimer = setTimeout(() => this.setSession(() => null), 1_500);
   }
 
+  /** The provider goes away (sign-out, calls off): cancel a start in flight and end a live call on WhatsApp too. */
   dispose(): void {
     if (this.clearTimer) clearTimeout(this.clearTimer);
+    const id = this.state.session?.ended ? null : this.state.session?.id;
+    this.attempt.current += 1;
     teardown(this);
+    if (id) void endCall(id).catch(() => undefined);
   }
 
   private set(patch: Partial<CallStoreState>): void {

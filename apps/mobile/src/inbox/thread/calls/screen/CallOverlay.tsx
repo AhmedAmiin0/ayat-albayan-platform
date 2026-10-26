@@ -1,4 +1,6 @@
 import { formatPhone, type ActiveCallView, type CallPermissionState } from '@ab/shared';
+import type { ReactNode } from 'react';
+import { Modal } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import type { CallSessionApi } from '../state/use-call-session';
 import { CallBar } from './CallBar';
@@ -16,41 +18,48 @@ export interface CallOverlayProps {
   onAsk: (next: 'closed' | 'sent') => void;
   /** Back on the incoming screen: silence this call's ring. */
   onSilence: (callId: string) => void;
+  /** The call notice, shown inside the Modal while it is up (else over the screen). */
+  notice: ReactNode;
 }
 
 const callerOf = (row: ActiveCallView, showsPhone: boolean): string =>
   row.display_name ?? (showsPhone ? formatPhone(row.phone_e164) : t.inbox.unknownNumber);
 
-/** The call this device is in: full screen, or the bar once minimised. */
-function SessionView({ s }: { s: CallSessionApi }) {
-  const { store, session, phase } = s;
-  if (!session || !phase) return null;
-  if (session.minimised) return <CallBar session={session} row={s.row} phase={phase} onExpand={() => store.setMinimised(false)} />;
-  const actions = {
-    hangup: () => store.hangup(),
-    toggleMute: () => store.toggleMute(),
-    toggleSpeaker: () => store.toggleSpeaker(),
-    minimise: () => store.setMinimised(true),
-  };
-  return <CallScreen session={session} row={s.row} phase={phase} actions={actions} />;
+/** The full-screen content: the call (unless minimised), else the ring; null when neither is up. */
+function hostContent(p: CallOverlayProps): { body: ReactNode; back: () => void } | null {
+  const { store, session, phase, incoming } = p.s;
+  if (session && phase && !session.minimised) {
+    const actions = {
+      hangup: () => store.hangup(),
+      toggleMute: () => store.toggleMute(),
+      toggleSpeaker: () => store.toggleSpeaker(),
+      minimise: () => store.setMinimised(true),
+    };
+    return { body: <CallScreen session={session} row={p.s.row} phase={phase} actions={actions} />, back: actions.minimise };
+  }
+  if (!incoming || session) return null;
+  const caller = callerOf(incoming, p.showsPhone);
+  const body = <IncomingCall name={caller} onAccept={() => store.accept(incoming, caller)} onDecline={() => store.reject(incoming)} />;
+  return { body, back: () => p.onSilence(incoming.id) };
 }
 
-/** What the calls put above every screen: the ring, the call or its bar, and the permission sheet. */
-export function CallOverlay({ s, showsPhone, ask, onAsk, onSilence }: CallOverlayProps) {
-  const { store, incoming } = s;
-  const caller = incoming ? callerOf(incoming, showsPhone) : '';
+/**
+ * What the calls put above every screen: ONE Modal host whose content switches between the ring and
+ * the call (two Modals swapped in one commit trip iOS's presentation), the minimised bar, and the
+ * permission sheet when no call screen is up. The notice sits inside the host while it is visible.
+ */
+export function CallOverlay(p: CallOverlayProps) {
+  const { store, session, phase } = p.s;
+  const host = hostContent(p);
   return (
     <>
-      {incoming ? (
-        <IncomingCall
-          name={caller}
-          onAccept={() => store.accept(incoming, caller)}
-          onDecline={() => store.reject(incoming)}
-          onSilence={() => onSilence(incoming.id)}
-        />
-      ) : null}
-      <SessionView s={s} />
-      {ask ? <PermissionDialog {...ask} onClose={() => onAsk('closed')} onSent={() => onAsk('sent')} /> : null}
+      <Modal visible={host !== null} animationType="fade" onRequestClose={host?.back} statusBarTranslucent>
+        {host?.body}
+        {host ? p.notice : null}
+      </Modal>
+      {session?.minimised && phase ? <CallBar session={session} row={p.s.row} phase={phase} onExpand={() => store.setMinimised(false)} /> : null}
+      {p.ask && !host ? <PermissionDialog {...p.ask} onClose={() => p.onAsk('closed')} onSent={() => p.onAsk('sent')} /> : null}
+      {host ? null : p.notice}
     </>
   );
 }
