@@ -3,7 +3,7 @@
 // (POST /upload:{id}?sig=… with `Authorization: OAuth …` and `file_offset: 0`) → { h }.
 import { randomUUID } from 'node:crypto';
 import type { IncomingMessage } from 'node:http';
-import { ERR } from './meta.ts';
+import { ERR } from './providers/meta.ts';
 import { readBytes, type Reply, type Route, type StubState } from './state.ts';
 
 const FILE_TYPES = new Set(['application/pdf', 'image/jpeg', 'image/jpg', 'image/png', 'video/mp4']);

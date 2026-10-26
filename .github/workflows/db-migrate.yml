@@ -58,7 +58,7 @@ jobs:
       - name: Numbering and SQL sanity (read-only)
         env:
           BASE_REF: ${{ github.event_name == 'pull_request' && format('origin/{0}', github.base_ref) || '' }}
-        run: node tools/scripts/migration-check.mjs $BASE_REF
+        run: node tools/scripts/ci-checks/migration-check.mjs $BASE_REF
 
   apply:
     needs: check

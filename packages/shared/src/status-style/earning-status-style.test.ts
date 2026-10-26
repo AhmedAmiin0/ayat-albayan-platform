@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { EARNING_STATUSES } from '../money/earnings.js';
+import { EARNING_STATUSES } from '../money/earnings/earnings.js';
 import { earningStatusStyle } from './status-style.js';
 
 describe('earningStatusStyle', () => {

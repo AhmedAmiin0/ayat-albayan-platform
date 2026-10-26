@@ -4,7 +4,7 @@ Owner 2026-10-19, after the web chat for the assistant (#123, #125): four decisi
 
 ## Owner answers (2026-10-19), overriding the spec
 
-1. **Phone: build a NEW APK now so voice notes and videos play INSIDE the chat** (not «open in the phone's player»). Add `expo-audio` (playback only: its config plugin with `microphonePermission: false`; no recording) and `expo-video` with versions from `npx expo install` for SDK 57, and since a new APK is built anyway, `expo-document-picker` so the assistant can also send **PDFs** from the phone (§5 mobile: images AND PDFs). Bump `expo.version` in `apps/mobile/app.json` from `0.1.0` to `0.2.0` (runtimeVersion policy `appVersion`: the new APK gets runtime 0.2.0; phones on the old APK stop receiving OTAs until they install it). Never re-add `forcesRTL`. `tools/scripts/native-changes.mjs` will report the native change: expected. §4 Mobile becomes inline players (audio: play/pause + progress + duration; video: inline player with native controls), loaded lazily on tap through the same file route; §10's «inline playback / PDFs from mobile» items are IN scope; §12/§13: after merge and the staging deploy, the release is a new APK (`mobile` workflow `build-android-apk`), not an OTA.
+1. **Phone: build a NEW APK now so voice notes and videos play INSIDE the chat** (not «open in the phone's player»). Add `expo-audio` (playback only: its config plugin with `microphonePermission: false`; no recording) and `expo-video` with versions from `npx expo install` for SDK 57, and since a new APK is built anyway, `expo-document-picker` so the assistant can also send **PDFs** from the phone (§5 mobile: images AND PDFs). Bump `expo.version` in `apps/mobile/app.json` from `0.1.0` to `0.2.0` (runtimeVersion policy `appVersion`: the new APK gets runtime 0.2.0; phones on the old APK stop receiving OTAs until they install it). Never re-add `forcesRTL`. `tools/scripts/ci-checks/native-changes.mjs` will report the native change: expected. §4 Mobile becomes inline players (audio: play/pause + progress + duration; video: inline player with native controls), loaded lazily on tap through the same file route; §10's «inline playback / PDFs from mobile» items are IN scope; §12/§13: after merge and the staging deploy, the release is a new APK (`mobile` workflow `build-android-apk`), not an OTA.
 2. **30-day deletion: ONLY voice notes and videos.** The purge job deletes stored inbound **audio/video** files 30 days after the family sent them. Photos and PDFs stay exactly as today (never purged); nothing that already exists other than audio/video is deleted. Wherever the spec says the 30-day purge covers all inbound chat files, restrict it to `PLAYABLE_MIMES`.
 3. **New-lead alerts go to EVERY assistant** (as the spec builds it); a chat of a family owned by an assistant alerts only that assistant; unowned chats go to all assistants; admins unchanged.
 4. **Teachers see staff names** on academy messages in their own family chats (the same names everyone sees).
@@ -65,7 +65,7 @@ export const chatFileMaxBytes = (m: string | null): number => isPlayableMime(m) 
 - `apps/api/src/modules/messaging/whatsapp/messages/inbound-media.service.ts` re-exports `baseMime` from `@ab/shared` instead of defining it. The imports in `thread-media.service.ts` and `booking.invoice.ts` stay unchanged.
 - `apps/web/src/features/messaging/inbox/messages/components/MessageMedia.tsx` drops its local `baseMime`.
 
-### 1.2 `packages/shared/src/messaging/chat-files.ts` (new, plus `chat-files.test.ts`; exported from `messaging/index.ts`)
+### 1.2 `packages/shared/src/messaging/chat/chat-files.ts` (new, plus `chat-files.test.ts`; exported from `messaging/index.ts`)
 
 ```ts
 import { baseMime } from '../schemas/chat-media';
@@ -86,7 +86,7 @@ export function chatFileProblem(f: { mime: string; size: number; maxBytes: numbe
 - `threadFileSendSchema` = `{ clientRequestId: uuid, path: string, filename: trimmed 1–200 with no "/" or "\", caption?: trimmed ≤ WA_CAPTION_MAX }`.
 - Name the input type `ThreadFileSendInput`. `ThreadFile` is already taken in `thread-media.service.ts`.
 
-### 1.4 `packages/shared/src/messaging/views.ts`: MessageView gets three optional fields only
+### 1.4 `packages/shared/src/messaging/chat/views.ts`: MessageView gets three optional fields only
 
 ```ts
 /** A sent file's name (D2); null for inbound, text and template rows. */
@@ -99,7 +99,7 @@ automatic?: boolean;
 
 - Mark `sent_by_teacher_name` `@deprecated` in its comment, but keep filling it. Old mobile builds and cached rows read it.
 
-### 1.5 `packages/shared/src/messaging/sender.ts` (new, plus `sender.test.ts`)
+### 1.5 `packages/shared/src/messaging/chat/sender.ts` (new, plus `sender.test.ts`)
 
 - `senderLine(m): { kind: 'name'; name: string } | { kind: 'auto' } | null`:
   - inbound → null;

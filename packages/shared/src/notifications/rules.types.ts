@@ -1,6 +1,6 @@
 import { z } from 'zod';
-import type { NotificationKey } from './catalogue.js';
-import type { NotificationChannel } from './catalogue.types.js';
+import type { NotificationKey } from './catalogue/catalogue.js';
+import type { NotificationChannel } from './catalogue/catalogue.types.js';
 
 // docs/23 §3 phase 4 (amended by docs/26 §6 23-P4): the admin's overrides of the catalogue, one row of
 // public.notification_rules per catalogue key that was copied or edited. Code still defines what exists.

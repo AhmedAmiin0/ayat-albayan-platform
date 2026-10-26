@@ -2,7 +2,7 @@
 // read records the phone-number id of its Graph path, so e2e can tell which line it left from.
 import { randomUUID } from 'node:crypto';
 import { lineOf } from './lines.ts';
-import { bodyParamCount, ERR, onWaba, type Json } from './meta.ts';
+import { bodyParamCount, ERR, onWaba, type Json } from './providers/meta.ts';
 import { DAY_MS, digits, type Reply, type StubState } from './state.ts';
 
 type TemplateSend = { name?: string; language?: { code?: string }; components?: Json[] };

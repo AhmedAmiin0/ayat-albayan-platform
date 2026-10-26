@@ -40,12 +40,19 @@ test('back in the foreground, mounted queries refetch (RN has no window focus ev
   client.clear();
 });
 
-test('4xx is final, network errors and 5xx retry up to three times', () => {
+test('4xx is final, 5xx retries up to three times, no answer is left to the connection probe', () => {
   expect(shouldRetry(0, new ApiError(401))).toBe(false);
   expect(shouldRetry(0, new ApiError(404))).toBe(false);
   expect(shouldRetry(0, new ApiError(503))).toBe(true);
-  expect(shouldRetry(2, new TypeError('Network request failed'))).toBe(true);
-  expect(shouldRetry(3, new TypeError('Network request failed'))).toBe(false);
+  expect(shouldRetry(2, new ApiError(503))).toBe(true);
+  expect(shouldRetry(3, new ApiError(503))).toBe(false);
+  expect(shouldRetry(0, new TypeError('Network request failed'))).toBe(false);
+});
+
+test('offline, a query still tries once (its error keeps the saved list note); a save is never parked', () => {
+  const { queries, mutations } = queryClient.getDefaultOptions();
+  expect(queries?.networkMode).toBe('offlineFirst');
+  expect(mutations?.networkMode).toBe('always');
 });
 
 test('a 403 account_disabled signs out and leaves the reason for the login screen', () => {

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { SETTING_DEFAULTS } from '../settings/index.js';
-import { notificationEntry } from './catalogue.js';
+import { notificationEntry } from './catalogue/catalogue.js';
 import { resolveRule, validTiming } from './rules.effective.js';
 import { RULE_SETTING_KEYS, type RuleSettings } from './rules.legacy.js';
 

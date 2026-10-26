@@ -66,7 +66,7 @@ A keeps the door open: the table, Vault naming and UI are already per number; go
 
 ### 2b. The notification catalogue
 
-**Code defines what exists; the DB holds the admin's choices.** A notification type needs a trigger in code, so the list of types is a typed const in `packages/shared/src/notifications/catalogue.ts` (one entry per row of §B2/§B3 that is automatic or system-made; hand sends such as W8, W15–W17 are listed as «يدوي» and not toggleable). New table `public.notification_rules` stores only overrides:
+**Code defines what exists; the DB holds the admin's choices.** A notification type needs a trigger in code, so the list of types is a typed const in `packages/shared/src/notifications/catalogue/catalogue.ts` (one entry per row of §B2/§B3 that is automatic or system-made; hand sends such as W8, W15–W17 are listed as «يدوي» and not toggleable). New table `public.notification_rules` stores only overrides:
 
 | Column | Notes |
 |---|---|

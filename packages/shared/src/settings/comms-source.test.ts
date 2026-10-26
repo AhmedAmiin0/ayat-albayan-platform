@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { settingsUpdateSchema } from './schema.js';
-import { readSettings } from './validate.js';
+import { settingsUpdateSchema } from './validation/schema.js';
+import { readSettings } from './validation/validate.js';
 import { SETTING_DEFAULTS, SETTINGS_REGISTRY } from './registry.js';
 
 // comms_source (docs/23 §3 phase 3): a registry row only its own guarded endpoint writes.

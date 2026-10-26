@@ -12,7 +12,7 @@ consumer of `inbox.media.other`, push preview, webhook payload shape); MSA Arabi
   the top inset — so `keyboardVerticalOffset = insets.top` is exact. ChatHeader / SubscriptionPanel
   sit in the same parent and are already counted in `frame.y`. ReportFormScreen and login checked
   the same way; no `KeyboardAvoidingView` with `'height'` is left in `src` or `app`.
-- JS-only: `node tools/scripts/native-changes.mjs c140b4cc` → «no native change: an OTA update is
+- JS-only: `node tools/scripts/ci-checks/native-changes.mjs c140b4cc` → «no native change: an OTA update is
   enough».
 - Tests run the real KeyboardAvoidingView (the 40pt offset is load-bearing: 260 ≠ 300).
 - Minor, not fixed: split-screen / Stage Manager (window not at the screen's top) would under-pad
