@@ -11,8 +11,8 @@ import type {
   StudentStatus,
   SubscriptionStatus,
   TeacherStatus,
-} from './enums/index.js';
-import type { EarningStatus } from './money/earnings.js';
+} from '../enums/index.js';
+import type { EarningStatus } from '../money/earnings.js';
 
 // Status → visual grammar (docs/07 §6). Labels come from ar.json `enums.*`; this map is shape only.
 // Tone: act = admin must do something now («دورك»), bad = didn't happen through someone's fault,

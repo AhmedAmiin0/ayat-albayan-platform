@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { USER_ROLES } from '../roles.js';
+import { USER_ROLES } from '../permissions/roles.js';
 import { listSortShape } from './list-sort.js';
 
 // «سجل النشاط» (owner, 2026-10-05): GET /activity, admin only, paged (R-NFR-08). The API logs

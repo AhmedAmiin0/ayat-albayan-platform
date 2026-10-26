@@ -1,4 +1,4 @@
-import type { UserRole } from '../roles.js';
+import type { UserRole } from '../permissions/roles.js';
 import type { LinkKind, UserStatus } from './users.schemas.js';
 
 /** The teacher / student / guardian row a login belongs to. */

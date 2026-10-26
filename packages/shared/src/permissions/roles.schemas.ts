@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import type { UserRole } from '../roles.js';
+import type { UserRole } from './roles.js';
 import { GRANTABLE_PERMISSIONS, type Permission } from './catalog.js';
 
 // «الأدوار والصلاحيات»: the bodies of POST/PATCH /roles and PATCH /users/:id/role, and the rows

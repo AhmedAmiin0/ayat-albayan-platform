@@ -1,5 +1,5 @@
 import type { MessageStatus, TemplateStatus } from '../enums/index.js';
-import type { StatusStyle } from '../status-style.js';
+import type { StatusStyle } from '../status-style/status-style.js';
 
 // Phase 4 status chips (docs/07 §6 grammar: act = the admin must do something, «دورك»).
 // Labels: ar.json enums.messageStatus / enums.templateStatus.

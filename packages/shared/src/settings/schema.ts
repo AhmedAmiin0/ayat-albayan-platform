@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { E164_RE } from '../phone.js';
+import { E164_RE } from '../format/phone.js';
 import { timeZone } from '../schemas/common.js';
 import { SETTING_FIELD_OF, SETTING_KEY_OF, SETTING_KEYS, SETTINGS_REGISTRY, type AcademySettings, type SettingField, type SettingsUpdate } from './registry.js';
 import { shapeZod } from './shape.js';

@@ -1,4 +1,4 @@
-import { E164_RE } from '../phone.js';
+import { E164_RE } from '../format/phone.js';
 import { isTimeZone } from '../schemas/common.js';
 import { SETTING_DEFAULTS, SETTING_KEYS, SETTINGS_REGISTRY, type AcademySettings, type SettingKey } from './registry.js';
 import { shapeValid } from './shape.js';
