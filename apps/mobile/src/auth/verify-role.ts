@@ -28,10 +28,13 @@ function savedRoleLater(): Promise<AppRole> {
 
 /**
  * The live answer, or the saved role if the live one is slow. A late live answer still counts: a
- * revoked session or a role that lost the app signs out (SIGNED_OUT moves the gate), as below.
+ * revoked session or a role that lost the app signs out (SIGNED_OUT moves the gate), as below, and
+ * another app role goes to `onLive` (the gate), so a changed role never keeps the saved tree.
  */
-export function verifyRole(session: Session): Promise<AppRole | 'out'> {
-  return Promise.race([checkRole(session), savedRoleLater()]);
+export function verifyRole(session: Session, onLive?: (role: AppRole) => void): Promise<AppRole | 'out'> {
+  const live = checkRole(session);
+  void live.then((role) => (role !== 'out' ? onLive?.(role) : undefined));
+  return Promise.race([live, savedRoleLater()]);
 }
 
 /**

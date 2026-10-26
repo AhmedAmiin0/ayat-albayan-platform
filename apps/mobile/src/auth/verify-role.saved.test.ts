@@ -56,3 +56,16 @@ test('a late answer that revokes the role still signs out', async () => {
   await jest.advanceTimersByTimeAsync(0);
   expect(mockSignOut).toHaveBeenCalled();
 });
+
+test('saved admin, live teacher: the late answer moves the gate to the teacher app', async () => {
+  queryClient.setQueryData(pathKey('/auth/me'), { role: 'admin' });
+  let answer: (me: unknown) => void = () => undefined;
+  mockApiFetch.mockImplementation(() => new Promise((resolve) => (answer = resolve)));
+  const onLive = jest.fn();
+  const role = verifyRole(session, onLive);
+  await jest.advanceTimersByTimeAsync(SAVED_ROLE_WAIT_MS);
+  await expect(role).resolves.toBe('admin');
+  answer({ role: 'teacher' });
+  await jest.advanceTimersByTimeAsync(0);
+  expect(onLive).toHaveBeenLastCalledWith('teacher');
+});

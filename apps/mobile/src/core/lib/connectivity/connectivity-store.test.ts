@@ -100,3 +100,16 @@ test('probeNow skips the rest of the backoff; listeners hear every change', asyn
   expect(heard).toHaveBeenCalledTimes(2);
   off();
 });
+
+test('a probe overtaken by a request that answered is ignored when it fails late', async () => {
+  const store = make();
+  store.reportFailure();
+  let fail: (ok: boolean) => void = () => undefined;
+  probe.mockImplementation(() => new Promise((resolve) => (fail = resolve)));
+  await jest.advanceTimersByTimeAsync(1000);
+  store.reportReached();
+  fail(false);
+  await settle();
+  expect(store.getState().status).toBe('online');
+  expect(onlineManager.isOnline()).toBe(true);
+});
