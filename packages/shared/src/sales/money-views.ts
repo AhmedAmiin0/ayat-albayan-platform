@@ -1,5 +1,6 @@
 import type { Duration, PackageSize, PaymentKind, PaymentMethod, StudentStatus, SubscriptionStatus } from '../enums/index.js';
 import type { Quote } from '../pricing/quote.js';
+import type { RenewalPricing } from '../pricing/index.js';
 
 // Whitelisted responses of the salesperson's money endpoints (docs/16): only her student and the package
 // she is creating or paying, never the fx internals (rate, provider, date), the quote source, notes or
@@ -50,6 +51,10 @@ export interface SalesPaymentView {
 export interface SalesFamilyStudent extends SalesStudentRef {
   status: StudentStatus;
   open: SalesMoneySubscriptionView[];
+  /** «جدّد الاشتراك» is her primary action: the package ended, or an active one is down to the renewal alert. */
+  renew_due: boolean;
+  /** The renewal's calculator inputs, from the last priced package (renewalPricing; pill discounts only). */
+  renewal: RenewalPricing;
 }
 
 export interface SalesFamilyView {

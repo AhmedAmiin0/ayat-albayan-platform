@@ -7,9 +7,10 @@ import { PillButton } from '@/core/ui/primitives/PillButton';
 import { openPackages, renewTargets, useSalesFamily } from '../lib/family';
 
 /**
- * Over a salesperson's chat with a family (R-ASST-01/04, owner 2026-10-12): «اشتراك جديد» when one
- * of the family's students is hers, «جدّد الاشتراك» for each of hers whose package ended (the same
- * screen, that child picked; owner 2026-10-15), and «سجّل تحويلًا بنكيًا» while one of their packages is owed.
+ * Over a salesperson's chat with a family (R-ASST-01/04, owner 2026-10-12): «جدّد الاشتراك» FIRST for
+ * each of hers due for a renewal (the same screen, that child picked and the form prefilled from her last
+ * package; owner 2026-10-15/26), «اشتراك جديد» when one of the family's students is hers, and
+ * «سجّل تحويلًا بنكيًا» while one of their packages is owed.
  * Needs self.sales_money; nothing on a lead's chat (RegisterFromChat is there) or another's family.
  * Pills in the chat's action strip (SalesChatActions).
  */
@@ -25,15 +26,15 @@ export function SalesChatMoney({ thread }: { thread: ThreadView | null }) {
     router.push(
       inTree(base, {
         pathname: '/inbox/sales-subscribe',
-        params: { phone, ...(studentId ? { studentId } : {}), ...(tz ? { tz } : {}) },
+        params: { phone, ...(studentId ? { studentId, renew: '1' } : {}), ...(tz ? { tz } : {}) },
       }),
     );
   return (
     <>
-      <PillButton label={t.salesMoney.newSubscription} onPress={() => subscribe()} />
       {renewTargets(family.data).map((r) => (
         <PillButton key={r.studentId} label={r.label} onPress={() => subscribe(r.studentId)} />
       ))}
+      <PillButton label={t.salesMoney.newSubscription} onPress={() => subscribe()} />
       {owed ? (
         <PillButton
           label={t.salesMoney.recordTransfer}

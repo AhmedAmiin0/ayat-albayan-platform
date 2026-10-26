@@ -88,7 +88,6 @@
   "apps/api/src/modules/sales/leads/leads.service.ts types LeadAction",
   "apps/api/src/modules/sales/leads/leads.service.ts types LeadView",
   "apps/api/src/modules/sales/leads/test-app.ts types InjectArgs",
-  "apps/api/src/modules/sales/sales-money/reads/sales-family.queries.ts types FamilyStudentRow",
   "apps/api/src/modules/sales/sales-money/sales-money.fakes.ts exports NONE",
   "apps/api/src/modules/sales/sales/schedule/sales-lessons.ts exports MEETING_STATUSES",
   "apps/api/src/modules/sales/sales/schedule/sales-schedule.mapper.ts exports UPCOMING_DAYS",

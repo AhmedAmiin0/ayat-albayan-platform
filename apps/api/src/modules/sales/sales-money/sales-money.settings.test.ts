@@ -3,8 +3,8 @@ import { describe, expect, expectTypeOf, it } from 'vitest';
 import { fakeSettings, readerOf } from '../../../common/settings/settings.fakes';
 import { SalesMoneySettings, type SalesMoneySettingsValues } from './sales-money.settings';
 
-/** Pinned by hand: every key SalesPaymentsController reads. */
-const EXPECTED = ['upload_max_mb'] as const;
+/** Pinned by hand: every key SalesPaymentsController and SalesMoneyReads read. */
+const EXPECTED = ['upload_max_mb', 'renewal_alert_remaining'] as const;
 
 describe('SalesMoneySettings', () => {
   it('reads exactly the keys its consumers use, with the registry defaults', async () => {

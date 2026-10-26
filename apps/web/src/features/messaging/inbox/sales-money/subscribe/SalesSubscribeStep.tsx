@@ -19,6 +19,8 @@ type Props = {
   students: SalesFamilyStudent[];
   /** The student already picked (a renewal); else the only one, or none. */
   picked?: string | undefined;
+  /** «جدّد الاشتراك»: only her students due for a renewal, the calculator prefilled from the picked one's. */
+  renew?: boolean | undefined;
   onClose: () => void;
   onSaved: (sub: SalesMoneySubscriptionView) => void;
 };
@@ -26,13 +28,21 @@ type Props = {
 /**
  * Step 1 «اشتراك جديد» (R-ASST-01): one of her students, the calculator's inputs, the API's quote and the
  * first day (only with subscriptions.set_start_date, else the API's default) → POST /sales/subscriptions.
- * One clientRequestId per body: a retry gets the first package back.
+ * One clientRequestId per body: a retry gets the first package back. A renewal (owner 2026-10-26) opens on
+ * the student's last package (GET /sales/money/family `renewal`, the admin's renewalPricing); she may change
+ * anything; the first day is the same default as any package (today, Riyadh), like the admin's renewal.
  */
-export function SalesSubscribeStep({ students, picked, onClose, onSaved }: Props) {
+export function SalesSubscribeStep({ students, picked, renew = false, onClose, onSaved }: Props) {
   const queryClient = useQueryClient();
   const formId = useId();
-  const [studentId, setStudentId] = useState(() => picked ?? (students.length === 1 ? (students[0]?.id ?? '') : ''));
-  const [form, setForm] = useState<PricingForm>(INITIAL_PRICING);
+  const choices = renew ? students.filter((s) => s.renew_due || s.id === picked) : students;
+  const seedOf = (id: string): PricingForm => (renew ? students.find((s) => s.id === id)?.renewal : undefined) ?? INITIAL_PRICING;
+  const [studentId, setStudentId] = useState(() => picked ?? (choices.length === 1 ? (choices[0]?.id ?? '') : ''));
+  const [form, setForm] = useState<PricingForm>(() => seedOf(studentId));
+  const pick = (id: string) => {
+    setStudentId(id);
+    if (renew) setForm(seedOf(id));
+  };
   const canSet = usePermissions().can('subscriptions.set_start_date');
   const [today] = useState(() => todayIn('Asia/Riyadh'));
   const [start, setStart] = useState<StartValue>({ startsOn: today, alreadyStarted: false });
@@ -61,7 +71,7 @@ export function SalesSubscribeStep({ students, picked, onClose, onSaved }: Props
 
   return (
     <Dialog
-      title={t.salesMoney.newSubscription}
+      title={renew ? t.students.renew : t.salesMoney.newSubscription}
       onClose={onClose}
       actions={
         <>
@@ -75,7 +85,7 @@ export function SalesSubscribeStep({ students, picked, onClose, onSaved }: Props
       }
     >
       <form id={formId} className="grid gap-5" onSubmit={submit} noValidate>
-        <ChildPicker students={students} value={studentId} onChange={setStudentId} />
+        <ChildPicker students={choices} value={studentId} onChange={pick} />
         <PricingFields form={form} discounts={DISCOUNTS} set={(patch) => setForm((f) => ({ ...f, ...patch }))} />
         {studentId && <SalesQuotePreview studentId={studentId} pricing={pricing} />}
         <SalesStartField canSet={canSet} today={today} value={start} onChange={(patch) => setStart((v) => ({ ...v, ...patch }))} error={startError} />

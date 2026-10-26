@@ -1,4 +1,4 @@
-import { isPackageEnded, type SalesFamilyView, type SalesMoneySubscriptionView } from '@ab/shared';
+import type { SalesFamilyView, SalesMoneySubscriptionView } from '@ab/shared';
 import { useQuery, type QueryClient } from '@tanstack/react-query';
 import { apiFetch } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
@@ -26,13 +26,14 @@ export function openPackages(family: SalesFamilyView | undefined): SalesMoneySub
 }
 
 /**
- * «جدّد الاشتراك» (owner 2026-10-15): one per student of hers whose package ended (pending_renewal,
- * expired), naming the child when the family has several of hers.
+ * «جدّد الاشتراك» (owner 2026-10-15): one per student of hers due for a renewal (the API's `renew_due`,
+ * owner 2026-10-26: the package ended or is down to the renewal alert), naming the child when the
+ * family has several of hers.
  */
 export function renewTargets(family: SalesFamilyView | undefined): { studentId: string; label: string }[] {
   const students = family?.students ?? [];
   return students
-    .filter((s) => isPackageEnded(s.status))
+    .filter((s) => s.renew_due)
     .map((s) => ({ studentId: s.id, label: students.length > 1 ? `${t.students.renew} — ${s.name}` : t.students.renew }));
 }
 
