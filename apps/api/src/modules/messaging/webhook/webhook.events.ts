@@ -3,7 +3,7 @@ import type { WaLine } from '@ab/shared';
 
 // What the webhook reads out of Meta's envelope (webhook.parse.ts), one item per message / status.
 
-export type MediaType = 'image' | 'audio' | 'video' | 'document' | 'sticker';
+type MediaType = 'image' | 'audio' | 'video' | 'document' | 'sticker';
 export const MEDIA_TYPES: readonly MediaType[] = ['image', 'audio', 'video', 'document', 'sticker'];
 
 export interface InboundEvent {

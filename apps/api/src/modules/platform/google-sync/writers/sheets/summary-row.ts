@@ -15,7 +15,7 @@ export interface SummaryStudent {
   attendanceSheetId: string;
 }
 
-export interface SummaryStats {
+interface SummaryStats {
   first: string | null;
   last: string | null;
   count: number;

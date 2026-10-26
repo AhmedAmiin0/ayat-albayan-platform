@@ -6,7 +6,7 @@ import { AppText } from '@/core/ui/primitives/AppText';
 import { StatusChip } from '@/core/ui/feedback/StatusChip';
 import { egp, sessionDetail, sessionWhen } from '../lib/format';
 
-export interface SessionItemProps {
+interface SessionItemProps {
   row: TeacherEarningView;
   /** Admin only: tick the session for the next payment. A teacher's list has no ticks. */
   checked?: boolean;

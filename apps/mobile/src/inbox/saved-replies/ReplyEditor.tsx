@@ -10,7 +10,7 @@ import { insertToken, PlaceholderChips } from './PlaceholderChips';
 import { replyError } from './reply-error';
 import { type EditorFile, ReplyFileField } from './ReplyFileField';
 
-export interface ReplyEditorProps {
+interface ReplyEditorProps {
   /** null = a new reply in `scope`. */
   reply: SavedReply | null;
   scope: SavedReplyScope;

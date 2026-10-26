@@ -7,7 +7,7 @@ import { createHash, createHmac, randomBytes, timingSafeEqual } from 'node:crypt
 
 export const STATE_TTL_MS = 10 * 60_000;
 
-export interface StatePayload {
+interface StatePayload {
   u: string;
   n: string;
   e: number;

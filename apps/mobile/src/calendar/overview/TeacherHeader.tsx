@@ -9,7 +9,7 @@ import { Chevron } from '@/core/ui/primitives/Chevron';
 import type { TeacherAgenda } from './overview';
 import { teacherMeta, timeOffLine, windowsLine } from './overview-text';
 
-export interface TeacherHeaderProps {
+interface TeacherHeaderProps {
   agenda: TeacherAgenda;
   /** Day view: the day's windows as a faint «متاح …» line. */
   showWindows: boolean;

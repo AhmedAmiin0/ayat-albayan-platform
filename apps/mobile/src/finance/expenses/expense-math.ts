@@ -1,6 +1,6 @@
 import type { ExpenseView } from '@ab/shared';
 
-export interface CategoryTotal {
+interface CategoryTotal {
   category: string;
   amount: number;
 }

@@ -9,7 +9,7 @@ const DAY_MS = 86_400_000;
 /** Not on boot: every API test boots AppModule, and a restart loop must not hammer the DB. */
 const FIRST_RUN_MS = 10 * 60_000;
 
-export type ExpirySummary = { students: number; expired: number; failed: number };
+type ExpirySummary = { students: number; expired: number; failed: number };
 
 /**
  * Transition 6 (owner 2026-10-15, docs/11 §7, R-STU-05): a student still «بانتظار التجديد»

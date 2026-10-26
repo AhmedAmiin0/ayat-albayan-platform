@@ -6,7 +6,7 @@ import { AppText } from '@/core/ui/primitives/AppText';
 import { Chevron } from '@/core/ui/primitives/Chevron';
 import { IconButton } from '@/core/ui/primitives/IconButton';
 
-export interface ChatHeaderProps {
+interface ChatHeaderProps {
   /** The name (or the number); one line, cut with an ellipsis. */
   title: string;
   /** «عميل محتمل · +966 …» or when the saved thread was fetched; one smaller line. */

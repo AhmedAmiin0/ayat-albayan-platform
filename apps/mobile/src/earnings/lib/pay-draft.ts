@@ -22,7 +22,7 @@ export interface PayInput {
   earningIds: string[] | undefined;
 }
 
-export interface PayCheck {
+interface PayCheck {
   input?: PayInput;
   errors: { amount?: string; method?: string };
 }

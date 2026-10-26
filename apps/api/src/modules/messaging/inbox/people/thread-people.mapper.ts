@@ -54,7 +54,7 @@ export function toThreadStudent(row: PeopleStudentRow, balance: StudentBalanceVi
   };
 }
 
-export interface BadgeStudentRow {
+interface BadgeStudentRow {
   id: string;
   guardian_id: string;
   subscriptions: { id: string; status: SubscriptionStatus }[];

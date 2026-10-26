@@ -14,7 +14,7 @@ import { ReplyRow } from '../ReplyRow';
  * edit / delete, so the pick list itself stays clean as WhatsApp's. The shared list is managed in
  * «الإعدادات».
  */
-export interface ManageRepliesProps {
+interface ManageRepliesProps {
   mine: SavedReply[];
   /** The list is still loading, or failed: said instead of «none yet». */
   state: 'ready' | 'loading' | 'failed';

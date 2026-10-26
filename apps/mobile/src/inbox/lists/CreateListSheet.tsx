@@ -5,7 +5,7 @@ import { ListNameForm } from './ListNameForm';
 import { ListSheet } from './ListSheet';
 import { useCreateList } from './use-chat-lists';
 
-export interface CreateListSheetProps {
+interface CreateListSheetProps {
   open: boolean;
   onClose: () => void;
   /** The new list: the chip row makes it the active one. */

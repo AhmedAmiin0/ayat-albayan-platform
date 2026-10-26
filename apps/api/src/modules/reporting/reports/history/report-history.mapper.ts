@@ -12,7 +12,7 @@ import type { PageQuery } from '../../../../common/http/http';
 import type { HistoryLesson, HistoryRow, PendingRow } from './report-history.queries';
 import { iso } from '../submit/report-form.mapper';
 
-export type HistoryParts = {
+type HistoryParts = {
   rows: readonly HistoryRow[];
   lessons: readonly HistoryLesson[];
   /** lesson_id → «رقم الحلقة» (v_lesson_sequence). */

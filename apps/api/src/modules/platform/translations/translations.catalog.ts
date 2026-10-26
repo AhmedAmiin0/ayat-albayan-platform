@@ -58,7 +58,7 @@ export function listKeys(query: TranslationKeysQuery, overrides: OverrideMaps): 
   };
 }
 
-export type OverrideProblem = { kind: 'unknown_key' } | { kind: 'placeholders_missing'; missing: string[] };
+type OverrideProblem = { kind: 'unknown_key' } | { kind: 'placeholders_missing'; missing: string[] };
 
 /** Why `value` cannot override `key` in `locale`, or null: the key must exist, slots must stay. */
 export function overrideProblem(locale: Locale, key: string, value: string): OverrideProblem | null {

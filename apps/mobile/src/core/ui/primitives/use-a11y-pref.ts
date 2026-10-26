@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { AccessibilityInfo } from 'react-native';
 
-export type A11yPref = 'reduceMotion' | 'reduceTransparency';
+type A11yPref = 'reduceMotion' | 'reduceTransparency';
 
 const READ = {
   reduceMotion: () => AccessibilityInfo.isReduceMotionEnabled(),

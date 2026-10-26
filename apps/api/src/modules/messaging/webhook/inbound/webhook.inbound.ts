@@ -98,7 +98,7 @@ export function pushPreview(m: InboundEvent): string {
   return fill(ar.notifications.media, { kind: MEDIA_LABELS[m.type] ?? ar.inbox.media.other });
 }
 
-export interface PushInput {
+interface PushInput {
   m: InboundEvent;
   phone: string;
   who: Contact;

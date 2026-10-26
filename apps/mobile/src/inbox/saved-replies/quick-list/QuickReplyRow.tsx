@@ -5,7 +5,7 @@ import { type, useTheme } from '@/theme';
 import { AttachIcon } from '../../shared/chat-icons';
 import { HighlightText } from './HighlightText';
 
-export interface QuickReplyRowProps {
+interface QuickReplyRowProps {
   reply: SavedReply;
   /** What was typed after «/» (or in the sheet's search): its letters are bold. */
   query: string;

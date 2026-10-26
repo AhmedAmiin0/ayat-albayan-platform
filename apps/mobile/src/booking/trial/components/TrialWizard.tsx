@@ -26,7 +26,7 @@ const stepNames = (): Record<Step, string> => ({
   confirm: t.booking.steps.review,
 });
 
-export interface TrialWizardProps {
+interface TrialWizardProps {
   lead: BookingLead;
   /** The chat's «اشترك»: starts as a package (a paid size), then its subscription. */
   subscribe?: boolean;

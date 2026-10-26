@@ -13,7 +13,7 @@ import { FollowUpsSettings } from './follow-ups.settings';
 /** Sun 4 Oct 17:00, Sun 17:45, Mon 5 Oct 18:00 Riyadh. */
 const FREE = ['2026-10-04T14:00:00Z', '2026-10-04T14:45:00Z', '2026-10-05T15:00:00Z'].map((s) => new Date(s));
 
-export interface JobSetup {
+interface JobSetup {
   leads?: FollowUpLeadRow[];
   approved?: boolean;
   free?: Date[];

@@ -4,7 +4,7 @@ import { shape, type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { Chevron } from '@/core/ui/primitives/Chevron';
 
-export interface PeriodSwitcherProps {
+interface PeriodSwitcherProps {
   /** «3 أكتوبر – 9 أكتوبر» or «الخميس 1 أكتوبر». */
   label: string;
   /** The shown week/day holds today: no «النهارده» jump. */

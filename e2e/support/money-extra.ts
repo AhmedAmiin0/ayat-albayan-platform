@@ -17,7 +17,7 @@ export function riyadhToday(now = new Date()): string {
   return now.toLocaleDateString('en-CA', { timeZone: 'Asia/Riyadh' });
 }
 
-export interface NearEmpty extends PackageSeed {
+interface NearEmpty extends PackageSeed {
   /** Tomorrow's scheduled lesson: flagged once the package hits 0 while unpaid. */
   futureLessonId: string;
 }

@@ -18,7 +18,7 @@ import { usePayTeacher } from '../hooks/use-pay-teacher';
 
 const methodPills = (): FilterPill<PaymentMethod | ''>[] => PAYMENT_METHODS.map((m) => ({ value: m, label: t.enums.paymentMethod[m] }));
 
-export interface PayFormProps {
+interface PayFormProps {
   teacherId: string;
   selected: ReadonlyMap<string, TeacherEarningView>;
   /** The whole outstanding balance (used when no session is ticked). */

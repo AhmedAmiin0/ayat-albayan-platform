@@ -13,7 +13,7 @@ export const withoutLists = { role: 'sales', permissions: ['inbox.read', 'inbox.
 
 export const page = (items = [thread]) => ({ items, total: items.length, page: 1, pageSize: 25 });
 
-export interface Backend {
+interface Backend {
   me: unknown;
   lists?: ChatList[];
   /** Anything else under /threads (the list pages, or a thread detail). */

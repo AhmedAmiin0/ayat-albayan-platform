@@ -4,7 +4,7 @@ import { DB, type Db } from '../../../../common/db/db.module';
 import { dbError } from '../../../../common/http/http';
 import { BookingSettings } from '../booking.settings';
 
-export type TeacherOptionRow = {
+type TeacherOptionRow = {
   id: string;
   display_name_ar: string;
   gender: Gender;

@@ -5,7 +5,7 @@ import { HeaderConnectingBar } from '../connecting/HeaderConnectingBar';
 import { Mark } from '../primitives/Mark';
 import { AppText, type AppTextNode } from '../primitives/AppText';
 
-export interface ScreenHeaderProps {
+interface ScreenHeaderProps {
   /** Amiri title, e.g. t.mobile.today. Mobile has no cartouche: this is the screen's one title. */
   title: string;
   /** One line under it (date line, «عرض 25 من 107»…), 13pt ink-2, tabular digits. */

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Animated, Easing } from 'react-native';
 
-export interface CycleOptions {
+interface CycleOptions {
   /** One turn, ms: the value runs 0 → 1 linearly, then starts again at 0. */
   duration: number;
   /** Once, before the first turn: staggered dots in a row keep one period. */

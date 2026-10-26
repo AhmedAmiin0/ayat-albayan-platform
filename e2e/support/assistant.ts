@@ -44,7 +44,7 @@ export async function subscription(tx: Tx, studentId: string, input: { price: nu
   return s.id;
 }
 
-export type PayOpts = { amount: number; kind?: 'payment' | 'refund'; at?: string; by?: string };
+type PayOpts = { amount: number; kind?: 'payment' | 'refund'; at?: string; by?: string };
 
 /** A payment (or refund) of the package, in the package currency: a bare number is a payment of now. */
 export async function pay(tx: Tx, sub: string, p: number | PayOpts) {

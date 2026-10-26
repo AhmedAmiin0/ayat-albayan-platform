@@ -3,14 +3,14 @@ import { badRequest } from '../../../../common/http/errors';
 import { generatePassword } from './users.password';
 import type { AuthAdmin } from '../store/users.store';
 
-export interface CredentialRequest {
+interface CredentialRequest {
   mode: CredentialMode;
   password?: string | undefined;
   min: number;
 }
 
 /** The password to set now (undefined in link mode) and what to show the admin once. */
-export interface PreparedCredential {
+interface PreparedCredential {
   password: string | undefined;
   issued: IssuedCredential | null;
 }

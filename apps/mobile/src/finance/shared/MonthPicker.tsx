@@ -6,7 +6,7 @@ import { AppText } from '@/core/ui/primitives/AppText';
 import { Chevron } from '@/core/ui/primitives/Chevron';
 import { canGoNext, shiftMonth } from './month';
 
-export interface MonthPickerProps {
+interface MonthPickerProps {
   month: string;
   onChange: (month: string) => void;
 }

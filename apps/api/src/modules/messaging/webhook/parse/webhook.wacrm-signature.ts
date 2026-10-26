@@ -7,7 +7,7 @@ import { safeEqual } from './webhook.signature';
 /** A delivery signed longer ago (or further ahead) than this is a replay: refused. */
 export const WACRM_TOLERANCE_MS = 5 * 60_000;
 
-export interface WacrmSignedRequest {
+interface WacrmSignedRequest {
   /** The exact bytes the CRM sent (req.rawBody). */
   rawBody: Buffer | undefined;
   /** X-Wacrm-Signature: «t=<unix seconds>,v1=<hex>». */
@@ -18,7 +18,7 @@ export interface WacrmSignedRequest {
 }
 
 /** ok, or why not: bad (no secret / body / header, malformed, wrong HMAC) or stale (t outside 5 minutes). */
-export type WacrmVerdict = 'ok' | 'bad' | 'stale';
+type WacrmVerdict = 'ok' | 'bad' | 'stale';
 
 /** The t and v1 parts, in any order; null when either is missing or malformed. */
 export function signatureParts(header: string): { t: string; v1: string } | null {

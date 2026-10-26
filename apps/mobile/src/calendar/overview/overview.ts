@@ -37,7 +37,7 @@ export interface TeacherAgenda {
   timeOff: OverviewTimeOff[];
 }
 
-export interface AgendaOptions {
+interface AgendaOptions {
   /** First Riyadh day shown (YYYY-MM-DD). */
   start: string;
   view: ScheduleView;

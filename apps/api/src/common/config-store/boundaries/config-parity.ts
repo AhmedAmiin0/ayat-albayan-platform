@@ -18,7 +18,7 @@ function ruleValue(key: string, stored: unknown): unknown {
 
 const RULE_KEYS = [...GATE_KEYS, 'comms_source'];
 
-export interface ParitySides {
+interface ParitySides {
   legacy: Readonly<Record<string, unknown>>;
   store: Readonly<Record<string, unknown>>;
   rows: Rows;

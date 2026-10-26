@@ -15,7 +15,7 @@ const SEEDED_KEYS: Readonly<Record<string, string>> = { lesson_reminder_v2: 'les
 
 export const templateKeyFor = (metaName: string): string => SEEDED_KEYS[metaName] ?? metaName;
 
-export interface ExternalRowInput {
+interface ExternalRowInput {
   msg: ExternalMessage;
   phone: string;
   who: Contact;

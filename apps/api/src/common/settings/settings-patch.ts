@@ -2,7 +2,7 @@ import { parseSettingField, splitSettingsPatch, type SettingsPatchSplit } from '
 import { BadRequestException } from '@nestjs/common';
 
 /** The alias split plus the followUpHours the caller may write through the follow-up rule (23-P4). */
-export type AliasPatchSplit = SettingsPatchSplit & { followUpHours: number[] | null };
+type AliasPatchSplit = SettingsPatchSplit & { followUpHours: number[] | null };
 
 const FOLLOW_UP_FIELDS = ['followUpHours', 'follow_up_hours'] as const;
 

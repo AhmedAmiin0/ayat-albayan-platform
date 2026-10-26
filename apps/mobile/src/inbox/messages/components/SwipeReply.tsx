@@ -12,7 +12,7 @@ import { SWIPE_MAX as MAX, swipeAnswers, swipeClaims, swipeOffset } from '../hoo
  * hands it back whenever the list asks, so a vertical scroll of the inverted list always wins.
  * The long-press menu is the main way; this is the shortcut. Without `onReply` it is a plain row.
  */
-export interface SwipeReplyProps {
+interface SwipeReplyProps {
   onReply?: () => void;
   side: BubbleSide;
   children: ReactNode;

@@ -36,7 +36,7 @@ const DISCOUNT_PILLS = DISCOUNTS.map((d) => {
   return { value, label: p.discounts[value] };
 });
 
-export interface PricingStepsProps {
+interface PricingStepsProps {
   selection: Selection;
   onChange: (patch: Partial<Selection>) => void;
 }

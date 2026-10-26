@@ -10,7 +10,7 @@ import { PushService, type PushTransport } from './push.service';
 import type { WebPushSender } from './web/web-push.sender';
 
 /** Tests only. A profile as PushService reads it; disabled_at set = a disabled account. */
-export type FakeProfile = {
+type FakeProfile = {
   id: string;
   role: string;
   push_tokens: string[];
@@ -25,9 +25,9 @@ const enabled = (profiles: FakeProfile[]) => ({
 });
 
 /** A push_device_sessions row (migration 700). */
-export type FakeBinding = { token: string; profile_id: string; session_id: string; contested_at?: string | null };
+type FakeBinding = { token: string; profile_id: string; session_id: string; contested_at?: string | null };
 
-export interface FakePushOptions {
+interface FakePushOptions {
   /** Every upsert hits an existing dedup key. */
   duplicate?: boolean;
   /** Default: every profile token bound to its profile, session 'live'. */

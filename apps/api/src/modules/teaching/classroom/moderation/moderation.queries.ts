@@ -21,7 +21,7 @@ export function principalOf(row: Pick<ParticipantRow, 'user_id' | 'join_link_id'
   return row.user_id ? { userId: row.user_id } : null;
 }
 
-export interface BlockInput {
+interface BlockInput {
   lessonId: string;
   principal: Principal;
   /** The remover (admin or the lesson's teacher). */

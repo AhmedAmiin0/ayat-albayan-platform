@@ -26,7 +26,7 @@ export function freshDigits(): string {
   return `9665${String(Date.now()).slice(-8)}`;
 }
 
-export interface LeadSeed {
+interface LeadSeed {
   phone: string;
   name?: string;
   status?: string;

@@ -20,7 +20,7 @@ export interface PlanBalance {
   lessons_used: number;
   remaining: number;
 }
-export interface StudentPackages {
+interface StudentPackages {
   subs: readonly PlanPackage[];
   balances: ReadonlyMap<string, PlanBalance>;
 }

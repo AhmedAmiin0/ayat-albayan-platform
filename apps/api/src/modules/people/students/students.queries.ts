@@ -19,7 +19,7 @@ import { applyStudentColumnFilters, STUDENT_SORT, type StudentColumnFilters, typ
 const LIST_COLUMNS = `id, code, name, status, program, tz, created_at, package_remaining, has_weekly, guardian:guardians!inner(name, phone_e164), teacher:teachers(display_name_ar)`;
 const PROFILE_COLUMNS = `*, guardian:guardians!inner(id, name, phone_e164, students(id, code, name, status)), teacher:teachers(id, display_name_ar, display_name_en, meeting_link)`;
 
-export type StudentListQuery = ListQuery & StudentListFilters & StudentColumnFilters & StudentListSort;
+type StudentListQuery = ListQuery & StudentListFilters & StudentColumnFilters & StudentListSort;
 
 /**
  * Paginated list (v_student_list), searchable by name / code / guardian phone and filtered by

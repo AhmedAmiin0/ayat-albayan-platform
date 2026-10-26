@@ -7,7 +7,7 @@ import { dayBounds, type RecordingJoinRow } from './student-recordings.mapper';
 const SELECT =
   '*, lessons!inner(starts_at, teacher_id, teachers(id, display_name_ar, display_name_en), lesson_students!inner(student_id))';
 
-export interface RecordingsPageInput {
+interface RecordingsPageInput {
   studentId: string;
   /** Only lessons this teacher taught (a teacher who does not have the student assigned); null = all. */
   onlyTeacherId: string | null;

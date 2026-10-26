@@ -25,7 +25,7 @@ export interface FollowUpLeadRow extends FollowUpLead {
   follow_up_note: string | null;
 }
 
-export interface LeadZone {
+interface LeadZone {
   tz: string;
   /** ar.json tz.<id>: {{3}} in «المواعيد بتوقيت {{3}}». */
   city: string;
@@ -92,7 +92,7 @@ export function followUpStep(row: StageRow | null): 'queue' | 'requeue' | 'wait'
   return UNSENT_CODES.has(row.error_code ?? '') ? 'requeue' : 'advance';
 }
 
-export interface FollowUpRowInput {
+interface FollowUpRowInput {
   lead: FollowUpLeadRow;
   slots: [Date, Date];
   zone: LeadZone;

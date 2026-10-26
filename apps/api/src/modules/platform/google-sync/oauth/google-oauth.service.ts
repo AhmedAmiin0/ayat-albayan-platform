@@ -8,7 +8,7 @@ import { GoogleRuntime } from '../google-runtime';
 import { newState, nonceHash, readState, stateKey } from './oauth-state';
 
 /** The callback's outcome, shown by the web as a toast (?google=connected | ?google=error&reason=…). */
-export type CallbackOutcome = 'connected' | 'denied' | 'state' | 'exchange' | 'scopes' | 'not_configured' | 'account';
+type CallbackOutcome = 'connected' | 'denied' | 'state' | 'exchange' | 'scopes' | 'not_configured' | 'account';
 export const GOOGLE_ENTITY_ID = '00000000-0000-0000-0000-000000000000';
 
 /** Every https scope must be granted (the openid/email pair comes back as userinfo.email). */

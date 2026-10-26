@@ -8,7 +8,7 @@ import { lengthOf } from '../lib/edit-time-body';
 import { lengthText } from '../lib/edit-time-text';
 import type { EditableLesson, TimeEditMode } from '../lib/types';
 
-export interface EditTimeHeaderProps {
+interface EditTimeHeaderProps {
   lesson: EditableLesson;
   mode: TimeEditMode;
   /** The family's zone, for the student's clock. */

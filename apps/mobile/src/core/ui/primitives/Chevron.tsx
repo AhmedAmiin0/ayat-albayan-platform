@@ -1,7 +1,7 @@
 import { I18nManager } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
 
-export interface ChevronProps {
+interface ChevronProps {
   /** prev = towards the inline-start (left in LTR, right in RTL); next = towards the inline-end. */
   to: 'prev' | 'next';
   color: string;

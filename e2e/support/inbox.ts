@@ -16,7 +16,7 @@ async function post<T>(path: string, body: unknown): Promise<T> {
   return (await res.json()) as T;
 }
 
-export interface StubMedia {
+interface StubMedia {
   kind: 'image' | 'audio' | 'video' | 'document' | 'sticker';
   mime: string;
   caption?: string;

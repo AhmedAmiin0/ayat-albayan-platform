@@ -7,7 +7,7 @@ import {
   reduceConn,
 } from './connectivity-machine';
 
-export interface ConnectivityDeps {
+interface ConnectivityDeps {
   /** One cheap request to the API: true when anything answered (any HTTP status). */
   probe: () => Promise<boolean>;
   /** TanStack's onlineManager in the app: offline pauses queries instead of burning retries. */

@@ -7,7 +7,7 @@ import { FeedbackQueries, type FeedbackRow, type RequestContext } from '../feedb
 import { FEEDBACK_TEMPLATE, FeedbackSender } from './feedback.sender';
 import { expiryOf, hashToken, signToken } from '../public/feedback.token';
 
-export type RequestInput = { lessonId: string; body: FeedbackRequest; actorId: string };
+type RequestInput = { lessonId: string; body: FeedbackRequest; actorId: string };
 type Link = { row: FeedbackRow; token: string; exp: number };
 
 /**
