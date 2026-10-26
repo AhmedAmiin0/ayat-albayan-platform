@@ -7,7 +7,7 @@ const SOURCE: Record<MuteSource, { name: string; num: number }> = {
   microphone: { name: 'MICROPHONE', num: 2 },
 };
 
-export interface MuteTrackInput {
+interface MuteTrackInput {
   room: string;
   identity: string;
   source: MuteSource;

@@ -22,7 +22,7 @@ const NAMES: Record<string, string | undefined> = ar.templates.names;
 /** What a composer's picker shows for a key: its Arabic name, else the Meta name. */
 export const pickerLabel = (key: string): string => NAMES[key] ?? key;
 
-export interface FlagRow {
+interface FlagRow {
   key: string;
   line: string;
   sales_starter: boolean;

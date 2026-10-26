@@ -11,7 +11,7 @@ import { Field } from '@/core/ui/form/Field';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { useFocusOnOpen } from '../hooks/use-focus-on-open';
 
-export interface EssentialOffSheetProps {
+interface EssentialOffSheetProps {
   /** The row's name («تأكيد الحجز وتغيير الموعد»). */
   name: string;
   busy: boolean;

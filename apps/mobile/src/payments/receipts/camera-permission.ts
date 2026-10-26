@@ -5,7 +5,7 @@ import { t } from '@/core/lib/i18n/i18n';
 const m = t.payments.mobile;
 
 /** Why the camera is needed and the button that opens it; the receipt's by default. */
-export interface CameraCopy {
+interface CameraCopy {
   rationale: string;
   confirm: string;
 }

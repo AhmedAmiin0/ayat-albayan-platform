@@ -68,7 +68,7 @@ export async function lessonView(lessonId: string): Promise<LessonView> {
   });
 }
 
-export interface OutboundSeed {
+interface OutboundSeed {
   phone: string;
   guardianId: string;
   lessonId: string;
@@ -92,7 +92,7 @@ export async function auditActions(entityId: string): Promise<string[]> {
   });
 }
 
-export interface PushView {
+interface PushView {
   kind: string;
   title: string;
   body: string;

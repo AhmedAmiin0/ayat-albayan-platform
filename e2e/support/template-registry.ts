@@ -53,7 +53,7 @@ export async function templateRow(key: string): Promise<{ status: string; last_c
   });
 }
 
-export interface StubTemplateView {
+interface StubTemplateView {
   name: string;
   status: string;
   components: { type: string; format?: string; example?: { header_handle?: string[] } }[];

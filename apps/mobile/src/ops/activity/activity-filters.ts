@@ -28,7 +28,7 @@ export const isDay = (v: string): boolean => {
   );
 };
 
-export type DateError = 'dateInvalid' | 'dateOrder';
+type DateError = 'dateInvalid' | 'dateOrder';
 
 /** A typed date that is not a day, or a start after the end; blank is fine (no bound). */
 export function dateError(f: Pick<ActivityFilters, 'from' | 'to'>): DateError | null {

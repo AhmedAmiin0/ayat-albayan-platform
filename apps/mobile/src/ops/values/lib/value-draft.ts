@@ -13,7 +13,7 @@ import { ascii } from '../../shared/ascii-digits';
 // The bottom sheet's editor model: which editor a key gets, the typed draft, and the draft parsed
 // and checked with the API's own schema (settingZod) before anything is sent.
 
-export type EditorKind = 'int' | 'nullableInt' | 'bool' | 'choice' | 'text' | 'readonly';
+type EditorKind = 'int' | 'nullableInt' | 'bool' | 'choice' | 'text' | 'readonly';
 
 /** on: a switch (bool, or a number that can be off); text: the typed or picked value. */
 export interface Draft {

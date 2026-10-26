@@ -19,7 +19,7 @@ export function num(v: Cell | undefined): number | null {
   return m ? Number(m[0]) : null;
 }
 
-export type PhoneCell =
+type PhoneCell =
   | { ok: true; e164: string }
   | { ok: false; reason: 'empty' | 'not_a_number' | 'missing_country_code' | 'invalid_length' };
 

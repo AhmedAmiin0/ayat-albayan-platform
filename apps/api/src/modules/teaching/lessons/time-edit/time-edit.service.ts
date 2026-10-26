@@ -11,9 +11,9 @@ import { isSameTime, planTimeEdit, type TimeEditInput, type TimeEditPlan } from 
 import { forMessages } from '../status/confirmation-messages';
 import { timeEditMessages } from './time-edit.messages';
 
-export type TimeEditArgs = { lessonId: string; body: LessonTimeEdit; actor: AuthUser };
+type TimeEditArgs = { lessonId: string; body: LessonTimeEdit; actor: AuthUser };
 /** What the edit set in motion; the controller adds the lesson view. */
-export type TimeEditEffects = Omit<TimeEditResult, 'lesson'>;
+type TimeEditEffects = Omit<TimeEditResult, 'lesson'>;
 
 const NOTHING: TimeEditEffects = { notified: 0, payout: 'none', pdf_refresh: false };
 const iso = (d: Date): string => d.toISOString();

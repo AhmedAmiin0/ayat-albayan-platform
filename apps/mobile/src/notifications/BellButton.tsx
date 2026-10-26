@@ -7,7 +7,7 @@ import { AppText } from '@/core/ui/primitives/AppText';
 import { bellBadge, bellLabel } from './notifications-cache';
 import { useNotifications } from './use-notifications';
 
-export interface BellButtonProps {
+interface BellButtonProps {
   /** Which tree's notifications screen it opens. */
   tree: PushTree;
   /** A round button (the calm Today header's 44pt circle): the pressed wash takes the circle. */

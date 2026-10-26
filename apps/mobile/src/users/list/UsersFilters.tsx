@@ -4,7 +4,7 @@ import { FilterPills } from '@/core/ui/form/FilterPills';
 import type { UsersView } from '../shared/api';
 import { roleText, statusStyle } from '../shared/format';
 
-export interface UsersFiltersProps {
+interface UsersFiltersProps {
   view: UsersView;
   onChange: (next: UsersView) => void;
 }

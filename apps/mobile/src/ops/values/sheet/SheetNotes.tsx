@@ -9,7 +9,7 @@ import { DevKey } from './DevKey';
 import { sameValue } from '../lib/value-draft';
 import { boundsOf, valueText } from '../lib/value-text';
 
-export interface SheetNotesProps {
+interface SheetNotesProps {
   valueKey: SettingKey;
   /** The value GET /settings holds now. */
   saved: unknown;

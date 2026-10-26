@@ -22,7 +22,7 @@ export function studentIndex(students: readonly Desired[] | undefined): StudentI
 type Found =
   { ok: true; student: Desired } | { ok: false; reason: 'not_found' | 'ambiguous' };
 
-export interface StudentQuery {
+interface StudentQuery {
   phone?: string | null;
   name?: string | null;
   /** keys.teacher slug: narrows a phone-less search (old report rows). */

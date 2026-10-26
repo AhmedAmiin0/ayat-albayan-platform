@@ -13,7 +13,7 @@ import { slotOf, type Slot } from './schedule-time';
 
 const I = t.meetingInvites;
 
-export interface RescheduleMeetingProps {
+interface RescheduleMeetingProps {
   meeting: MeetingView & { starts_at: string };
   tz: string;
   onDone: () => void;

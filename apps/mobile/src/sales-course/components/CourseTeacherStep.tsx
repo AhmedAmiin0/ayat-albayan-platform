@@ -6,7 +6,7 @@ import { t } from '@/core/lib/i18n/i18n';
 import { locale } from '@/core/lib/i18n/locale';
 import { Button } from '@/core/ui/primitives/Button';
 
-export interface CourseTeacherStepProps {
+interface CourseTeacherStepProps {
   student: SalesCourseView['student'];
   onPick: (teacher: { id: string; name: string }) => void;
   /** «سجّل التحويل البنكي»: the days later, the transfer now (from «احفظ الاشتراك»). */

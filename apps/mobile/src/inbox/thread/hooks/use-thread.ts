@@ -34,7 +34,7 @@ export type Outgoing =
   | { kind: 'text'; text: string; replyTo?: MessageQuote }
   | { kind: 'template'; key: ThreadTemplate['key']; params: TemplateParamsInput; preview: string; lessonId?: string };
 
-export interface SendInput {
+interface SendInput {
   out: Outgoing;
   /** The provisional row's id and the clientRequestId (rule 8: a retried send returns the first row). */
   id: string;
@@ -76,7 +76,7 @@ export function useSendMessage(phone: string) {
   });
 }
 
-export type MessageAction = 'retry' | 'sent-manually' | 'hand-off';
+type MessageAction = 'retry' | 'sent-manually' | 'hand-off';
 
 /**
  * POST /messages/:id/retry (failed → queued), /sent-manually (the admin sent it from WhatsApp, so

@@ -2,7 +2,7 @@ import type { TextStyle } from 'react-native';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { highlightParts } from '@ab/shared';
 
-export interface HighlightTextProps {
+interface HighlightTextProps {
   text: string;
   /** What was typed after «/»: those letters are drawn in `strong`. */
   query: string;

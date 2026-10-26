@@ -11,7 +11,7 @@ import { HistoryReferences } from './HistoryReferences';
 import { backToUsers } from '../shared/nav';
 import { PanelButtons } from './PanelButtons';
 
-export interface DeletePanelProps {
+interface DeletePanelProps {
   user: UserDetail;
   onBack: () => void;
   onDone: (message: string) => void;

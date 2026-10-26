@@ -58,7 +58,7 @@ function base(phone: PhoneInfo, sheet: SheetLead | undefined): Record<string, Co
   };
 }
 
-export interface CrmLeadInput {
+interface CrmLeadInput {
   contact: CrmContact & { phone: PhoneInfo };
   sheet: SheetLead | undefined;
   messages: readonly CrmRow[];

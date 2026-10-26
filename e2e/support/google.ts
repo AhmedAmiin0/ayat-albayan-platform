@@ -49,7 +49,7 @@ export async function googleApi<T>(page: Page, input: { method: string; path: st
   return res.json() as Promise<T>;
 }
 
-export interface ItemRow {
+interface ItemRow {
   kind: string;
   state: string;
   skip_reason: string | null;

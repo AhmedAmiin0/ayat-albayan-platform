@@ -5,7 +5,7 @@ import { LivekitApi } from '../livekit/livekit-api';
 import { RecordingQueries } from './recording.queries';
 import { roomNameOf, type RoomTarget } from './recording-target';
 
-export type StartOutcome = 'off' | 'running' | 'started' | 'failed';
+type StartOutcome = 'off' | 'running' | 'started' | 'failed';
 
 /**
  * Every room is recorded in full (lessons and internal meetings): any join starts the room's

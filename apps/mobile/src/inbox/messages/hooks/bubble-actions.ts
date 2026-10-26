@@ -6,7 +6,7 @@ import { useChatActions } from '../../thread/hooks/chat-actions';
 import { useThreadMode } from '../../thread/hooks/thread-mode';
 import { bubbleOffers, offersAny } from './bubble-offers';
 
-export interface BubbleA11y {
+interface BubbleA11y {
   accessible?: boolean;
   accessibilityHint?: string;
   accessibilityActions?: AccessibilityActionInfo[];

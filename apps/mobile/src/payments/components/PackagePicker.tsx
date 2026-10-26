@@ -7,7 +7,7 @@ import { FilterPills } from '@/core/ui/form/FilterPills';
 import { FormLabel } from '../FormLabel';
 import { packageFrom, paidOf } from '../format';
 
-export interface PackagePickerProps {
+interface PackagePickerProps {
   /** payablePackages: more than one only when an older package is still owed money. */
   packages: SubscriptionView[];
   value: SubscriptionView;

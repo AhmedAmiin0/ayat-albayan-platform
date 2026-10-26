@@ -13,7 +13,7 @@ type Scope = CancelRequest['scope'];
 const scopePills = () => (['one', 'rule'] as const).map((s) => ({ value: s, label: t.lessons.scope[s] }));
 const byPills = () => CANCEL_BY.map((b) => ({ value: b, label: t.lessons.by[b] }));
 
-export interface CancelLessonProps {
+interface CancelLessonProps {
   lesson: LessonView;
   onSubmit: (cancel: CancelRequest) => void;
   onClose: () => void;

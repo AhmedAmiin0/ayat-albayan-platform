@@ -5,7 +5,7 @@ import { AppText } from '@/core/ui/primitives/AppText';
 import { Button } from '@/core/ui/primitives/Button';
 import type { CopyRequest } from './chat-tools';
 
-export interface CopySheetProps {
+interface CopySheetProps {
   /** What to copy; null hides the sheet. */
   request: CopyRequest | null;
   onClose: () => void;

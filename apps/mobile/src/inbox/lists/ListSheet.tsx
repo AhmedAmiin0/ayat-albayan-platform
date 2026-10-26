@@ -5,7 +5,7 @@ import { Button } from '@/core/ui/primitives/Button';
 import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 
-export interface ListSheetProps {
+interface ListSheetProps {
   open: boolean;
   title: string;
   onClose: () => void;

@@ -2,7 +2,7 @@
 // Quick-reply buttons need an intent (confirm / reschedule / stop) the CRM does not know: such a
 // template goes to review instead of guessing.
 
-export interface UrlButton {
+interface UrlButton {
   type: 'url';
   url: string;
   text?: string;
