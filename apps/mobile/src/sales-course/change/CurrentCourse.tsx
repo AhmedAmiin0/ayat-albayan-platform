@@ -6,7 +6,7 @@ import { Button } from '@/core/ui/primitives/Button';
 import { type, useTheme } from '@/theme';
 import { daysText } from '../lib/course-days';
 
-export interface CurrentCourseProps {
+interface CurrentCourseProps {
   course: BookedCourse;
   /** «تغيير أيام الحلقات»: opens the change flow. */
   onChange: () => void;

@@ -11,7 +11,7 @@ import { LessonStore } from '../store/lesson-store';
 import { invalidTransition } from '../status/transition';
 
 type One = Extract<RescheduleRequest, { scope: 'one' }>;
-export type RescheduleOneInput = { lessonId: string; body: One; actor: AuthUser };
+type RescheduleOneInput = { lessonId: string; body: One; actor: AuthUser };
 
 /**
  * Move one occurrence (R-SCH-07, docs/10 route 8 `one`): the old row becomes `rescheduled`

@@ -2,7 +2,7 @@ import { View } from 'react-native';
 import { ErrorLine } from '@/inbox/ErrorLine';
 import { Field, type FieldProps } from '@/core/ui/form/Field';
 
-export interface TextFieldProps extends FieldProps {
+interface TextFieldProps extends FieldProps {
   /** The validation message under the input (the web's Field `error`). */
   error?: string | undefined;
 }

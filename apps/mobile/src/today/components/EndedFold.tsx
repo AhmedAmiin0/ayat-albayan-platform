@@ -7,7 +7,7 @@ import { AppText } from '@/core/ui/primitives/AppText';
 import { type, useTheme } from '@/theme';
 import { RowsCard } from './RowsCard';
 
-export interface EndedFoldProps {
+interface EndedFoldProps {
   lessons: readonly LessonView[];
   onOpen: (lesson: LessonView) => void;
   /** Open from the start under a column filter (the filtered ended lessons are in view). Read on mount. */

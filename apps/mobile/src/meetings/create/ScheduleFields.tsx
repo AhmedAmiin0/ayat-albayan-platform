@@ -13,7 +13,7 @@ import { dateChoices, type Slot } from './schedule-time';
 const L = t.meetingInvites;
 const two = (n: number) => String(n).padStart(2, '0');
 
-export interface ScheduleFieldsProps {
+interface ScheduleFieldsProps {
   slot: Slot;
   onChange: (slot: Slot) => void;
   /** The viewer's zone: the chips are its days, the steppers its wall clock. */

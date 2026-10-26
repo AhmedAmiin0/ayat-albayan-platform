@@ -11,7 +11,7 @@ import { ShowAll } from './ShowAll';
 import { TrialHistoryRow } from './TrialHistoryRow';
 
 
-export interface TrialHistoryListProps {
+interface TrialHistoryListProps {
   /** GET …/trial-dates; undefined while it loads (or after it failed). */
   history: TrialHistory | undefined;
   /** The read failed: «تعذّر تحميل…» with a retry. */

@@ -8,7 +8,7 @@ import { LessonCancelService } from '../status/lesson-cancel.service';
 import { LessonViews } from '../store/lesson-views';
 
 /** docs/10 route 10 response. */
-export type RuleCancelResult = { rule_id: string; cancelled: LessonView[] };
+type RuleCancelResult = { rule_id: string; cancelled: LessonView[] };
 
 /** POST /schedule-rules/:id/cancel — ends a rule and cancels its open lessons (R-SCH-07). */
 @ApiTags('schedule-rules')

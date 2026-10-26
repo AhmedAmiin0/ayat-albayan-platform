@@ -4,7 +4,7 @@ import { BadRequestException } from '@nestjs/common';
 // R-MEET-01: a scheduled meeting starts in the future, at most 90 days ahead, and lasts 15..240
 // minutes (the schema checks the range). No startsAt = an instant meeting, exactly as before.
 
-export interface ScheduleTimes {
+interface ScheduleTimes {
   startsAt: string | null;
   plannedEndAt: string | null;
 }

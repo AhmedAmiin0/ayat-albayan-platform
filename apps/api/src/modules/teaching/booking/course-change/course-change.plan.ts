@@ -45,7 +45,7 @@ export function assertChange(req: CourseChangeRequest, facts: ChangeFacts, now: 
 }
 
 /** What the change point is checked against (review fix 4, 7). */
-export type StartFacts = {
+type StartFacts = {
   /** subscriptions.starts_on. */
   subStartsOn: string;
   /** Every rule of the course (any status). */
@@ -75,7 +75,7 @@ export type ChangePlan = {
   endsOn: string;
 };
 
-export type ChangePlanInput = {
+type ChangePlanInput = {
   req: CourseChangeRequest;
   facts: ChangeFacts;
   now: Date;

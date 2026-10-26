@@ -6,7 +6,7 @@ import { AppText } from '@/core/ui/primitives/AppText';
 import { ListRow } from '@/core/ui/layout/ListRow';
 import { StatusChip } from '@/core/ui/feedback/StatusChip';
 
-export interface NotificationRowProps {
+interface NotificationRowProps {
   item: NotificationItem;
   onPress: (item: NotificationItem) => void;
 }

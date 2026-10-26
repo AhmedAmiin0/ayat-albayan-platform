@@ -14,7 +14,7 @@ import { useCopyChatReceipt } from '../receipts/chat-receipts';
 import { salesErrorText } from '../lib/sales-errors';
 import type { ReceiptChoice } from '../lib/transfer-form';
 
-export interface SalesReceiptFieldProps {
+interface SalesReceiptFieldProps {
   /** The package's student (whose family chat is listed) and the package (where the copy goes). */
   target: { studentId: string; subscriptionId: string };
   value: readonly ReceiptChoice[];

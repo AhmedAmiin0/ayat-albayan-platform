@@ -6,7 +6,7 @@ import type { RoleRecord } from './roles.store';
 // «استعادة الافتراضي» (owner 2026-10-12): the built-in teacher / sales / assistant roles go back to
 // the grants they were seeded with; the system admin stays fixed and custom roles have no default.
 
-export type ResetProblem = 'admin_role_fixed' | 'not_system_role';
+type ResetProblem = 'admin_role_fixed' | 'not_system_role';
 
 /** The grants a reset writes, or why the role cannot be reset (both 400). */
 export function resetGrants(role: RoleRecord): { ok: true; permissions: Permission[] } | { ok: false; code: ResetProblem } {

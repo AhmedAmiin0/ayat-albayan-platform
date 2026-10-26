@@ -7,8 +7,8 @@ import { attendanceSheetName, studentFolderName } from './pdf-name';
 import { brandStyle } from '../sheets/sheet-style';
 
 /** A confirmed student's folder and attendance sheet; `null` = not confirmed / no Drive root. */
-export type StudentDrive = { folderId: string; sheetId: string };
-export type DriveNeed = { kind: 'ready'; drive: StudentDrive } | { kind: 'create'; folder: boolean; sheet: boolean; rootId: string | null } | { kind: 'unmapped' } | { kind: 'no_root' };
+type StudentDrive = { folderId: string; sheetId: string };
+type DriveNeed = { kind: 'ready'; drive: StudentDrive } | { kind: 'create'; folder: boolean; sheet: boolean; rootId: string | null } | { kind: 'unmapped' } | { kind: 'no_root' };
 
 /**
  * The student's Drive place (docs/24 §3): the admin-confirmed folder and sheet, or — confirmed as

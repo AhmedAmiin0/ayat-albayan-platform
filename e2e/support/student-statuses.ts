@@ -9,7 +9,7 @@ import { addDays, nextWeekSaturday, riyadh, withSql } from './schedule';
 // status_change audit trail, the admin profile chip, and the API calls that move a student along.
 // Real API (:3100) and database; WhatsApp is tools/wa-stub, never Meta.
 
-export interface StatusStep {
+interface StatusStep {
   from: string | null;
   to: string | null;
   reason: string | null;
@@ -90,7 +90,7 @@ export async function completeLesson(page: Page, lessonId: string): Promise<numb
   return res.status();
 }
 
-export interface UnpaidPackage {
+interface UnpaidPackage {
   subscriptionId: string;
   price: number;
   currency: string;

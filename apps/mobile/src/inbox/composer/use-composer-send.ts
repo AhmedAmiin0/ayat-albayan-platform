@@ -12,7 +12,7 @@ import { type Outgoing, useSendMessage } from '../thread/hooks/use-thread';
 const draftOf = (out: Outgoing): string =>
   out.kind === 'template' ? JSON.stringify([out.key, out.params, out.lessonId]) : '';
 
-export interface ComposerSendInput {
+interface ComposerSendInput {
   phone: string;
   text: string;
   setText: (next: string | ((now: string) => string)) => void;

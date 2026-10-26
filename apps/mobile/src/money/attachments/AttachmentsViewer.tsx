@@ -8,7 +8,7 @@ import { AttachmentItem } from './AttachmentItem';
 import { attachmentRows } from './attachments';
 import { usePaymentAttachments } from '../shared/queries';
 
-export interface AttachmentsViewerProps {
+interface AttachmentsViewerProps {
   /** The API path to GET: /payments/:id/attachments, or /sales/me/payments/:id/attachments. */
   path: string;
   /** Said after the button's label so a list of them reads apart («عرض المرفقات · هدى»). */

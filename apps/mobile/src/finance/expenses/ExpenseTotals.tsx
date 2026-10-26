@@ -8,7 +8,7 @@ import { categoryLabel } from './categories';
 import { totalsByCurrency } from './expense-math';
 import { amountText } from '../shared/format';
 
-export interface ExpenseTotalsProps {
+interface ExpenseTotalsProps {
   rows: readonly ExpenseView[];
   categories: readonly ExpenseCategoryView[] | undefined;
 }

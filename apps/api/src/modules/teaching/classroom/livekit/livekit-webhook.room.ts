@@ -1,5 +1,5 @@
 /** A participant_left event: who left which room (the room may now be empty). */
-export interface LeftEvent {
+interface LeftEvent {
   room: string;
   identity: string;
 }

@@ -5,7 +5,7 @@ import { t } from '@/core/lib/i18n/i18n';
 import { FilterPills } from '@/core/ui/form/FilterPills';
 import { monthLabel, recentMonths } from '../shared/months';
 
-export interface PaymentFiltersProps {
+interface PaymentFiltersProps {
   kind: PaymentKind | 'all';
   month: string;
   onKind: (kind: PaymentKind | 'all') => void;

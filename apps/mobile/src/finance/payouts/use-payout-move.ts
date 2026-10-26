@@ -10,7 +10,7 @@ import { payBody, type PayDraft } from './payout-actions';
 export const refreshMoney = (client: QueryClient) =>
   Promise.all(['payouts', 'teacher-earnings', 'dashboard', 'payments', 'receivables'].map((key) => client.invalidateQueries({ queryKey: [key] })));
 
-export type PayoutMove = { id: string; move: 'approve' | 'reopen' } | { id: string; move: 'unpay'; reason: string };
+type PayoutMove = { id: string; move: 'approve' | 'reopen' } | { id: string; move: 'unpay'; reason: string };
 
 /** approve / reopen / unpay: the server owns every rule (month over, reports done, a reason of 3+ letters). */
 export function usePayoutMove() {

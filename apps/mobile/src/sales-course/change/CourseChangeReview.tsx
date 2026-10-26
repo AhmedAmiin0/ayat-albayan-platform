@@ -13,7 +13,7 @@ import { CourseCheckNotice } from '../components/CourseCheckNotice';
 import { daysText, requestDays } from '../lib/course-days';
 import { useCourseChangeCheck } from './change-queries';
 
-export interface CourseChangeReviewProps {
+interface CourseChangeReviewProps {
   course: BookedCourse;
   picks: readonly string[];
   /** The request «احفظ الأيام الجديدة» sends; null until a day is picked. */

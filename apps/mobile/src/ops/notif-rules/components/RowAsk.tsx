@@ -6,7 +6,7 @@ import { InlineConfirm } from '@/core/ui/feedback/InlineConfirm';
 import { reachLine } from '../lib/rule-words';
 import type { CatalogueToggles } from '../hooks/use-catalogue-toggles';
 
-export interface RowAskProps {
+interface RowAskProps {
   entry: NotificationEntryView;
   name: string;
   reach: NotificationsOverview['reach'];

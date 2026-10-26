@@ -32,7 +32,7 @@ export interface TransferInput {
   attachments: ReceiptChoice[];
 }
 
-export interface TransferCheck {
+interface TransferCheck {
   input?: TransferInput;
   errors: { amount?: string };
 }

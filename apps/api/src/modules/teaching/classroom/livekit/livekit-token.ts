@@ -12,7 +12,7 @@ const SKEW_S = 10;
 
 type Source = 'camera' | 'microphone' | 'screen_share' | 'screen_share_audio';
 
-export interface VideoGrant {
+interface VideoGrant {
   roomJoin: true;
   room: string;
   canPublish: boolean;
@@ -34,7 +34,7 @@ export function grantsFor(role: JoinRole, room: string): VideoGrant {
 export const newIdentity = (role: JoinRole, bytes: (n: number) => Buffer = randomBytes): string =>
   `${role}-${bytes(6).toString('hex')}`;
 
-export interface TokenInput {
+interface TokenInput {
   room: string;
   role: JoinRole;
   /** Shown to the others in the room. */

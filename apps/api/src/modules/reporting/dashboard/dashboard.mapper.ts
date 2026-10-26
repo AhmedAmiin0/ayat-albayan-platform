@@ -20,7 +20,7 @@ export function countBy<K extends string>(keys: readonly K[], values: Iterable<K
   return out;
 }
 
-export interface LoadInput {
+interface LoadInput {
   teachers: readonly { id: string; display_name_ar: string; max_students: number | null }[];
   lessons: readonly { status: LessonStatus; teacher_id: string }[];
   students: readonly { teacher_id: string | null }[];

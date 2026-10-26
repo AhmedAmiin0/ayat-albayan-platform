@@ -7,7 +7,7 @@ import { IconButton } from '@/core/ui/primitives/IconButton';
 import { ListsIcon } from '../shared/chat-icons';
 import { ThreadListsSheet } from './ThreadListsSheet';
 
-export interface ThreadListsButtonProps {
+interface ThreadListsButtonProps {
   phone: string;
   /** The thread detail's `lists` (absent from an API that predates lists). */
   member?: readonly ChatListRef[];

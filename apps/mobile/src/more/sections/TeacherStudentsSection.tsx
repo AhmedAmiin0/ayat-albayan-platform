@@ -16,7 +16,7 @@ import { Section } from '../Section';
 
 const L = t.studentLists;
 
-export interface TeacherStudentsSectionProps {
+interface TeacherStudentsSectionProps {
   teacherId: string;
   /** The `status` route param (a tapped count on «المعلمين»); none opens on «مشترك». */
   status?: string;

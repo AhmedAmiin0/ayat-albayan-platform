@@ -11,7 +11,7 @@ export interface PendingIn {
   student: Student;
   lesson: { starts_at: string; status: LessonStatus; teacher: { id: string; display_name_ar: string } | null } | null;
 }
-export interface UnpaidIn {
+interface UnpaidIn {
   id: string;
   package: PackageSize | null;
   lessons_total: number;
@@ -31,7 +31,7 @@ export interface TaskIn {
   done_at: string | null;
   created_at: string;
 }
-export interface SubjectIn {
+interface SubjectIn {
   id: string;
   student: Student;
   balance: { lessons_total: number | null; lessons_used: number | null } | null;

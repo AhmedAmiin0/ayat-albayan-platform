@@ -5,7 +5,7 @@ import { PublicNumber } from './PublicNumber';
 import { SendState } from './SendState';
 import { WhatIsSent } from './WhatIsSent';
 
-export interface CommsOverviewProps {
+interface CommsOverviewProps {
   /** A «ماذا يُرسل الآن» row: open «الإشعارات» on that audience. */
   onOpenAudience: (audience: NotificationAudience) => void;
   /** «افتح «الأرقام»»: the numbers tab. */

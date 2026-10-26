@@ -3,7 +3,7 @@ import { t } from '@/core/lib/i18n/i18n';
 import { Button } from '@/core/ui/primitives/Button';
 import { HISTORY_CAP } from '../lib/history-cap';
 
-export interface ShowAllProps {
+interface ShowAllProps {
   total: number;
   all: boolean;
   onToggle: () => void;

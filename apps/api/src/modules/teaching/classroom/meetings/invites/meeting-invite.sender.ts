@@ -14,7 +14,7 @@ export interface DeliveryOutcome {
   error_code: string | null;
 }
 
-export interface StaffNotice {
+interface StaffNotice {
   meeting: { id: string; title: string; starts_at: string | null };
   invitee: StoredInvitee;
   /** PushService subject (dedup): inviteSubject(), or `cancel:<meeting>`. */
@@ -23,7 +23,7 @@ export interface StaffNotice {
   title?: string;
 }
 
-export interface ChatSend {
+interface ChatSend {
   phone: string;
   body: string;
   dedupKey: string;

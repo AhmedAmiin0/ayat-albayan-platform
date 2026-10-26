@@ -8,7 +8,7 @@ import { InlineConfirm } from '@/core/ui/feedback/InlineConfirm';
 import { Ltr } from '@/core/ui/primitives/Ltr';
 import { driverName, lineDriver } from './line-driver';
 
-export interface LineDriverRowProps {
+interface LineDriverRowProps {
   line: WaLine;
   items: readonly IntegrationConfigItem[];
   /** settings.write: without it the choice is shown, not offered. */

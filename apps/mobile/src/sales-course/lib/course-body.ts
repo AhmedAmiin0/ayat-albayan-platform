@@ -19,7 +19,7 @@ export function courseBlock(view: SalesCourseView): CourseBlock | null {
   return view.perWeek === null ? 'custom_count_admin' : null;
 }
 
-export interface CourseInput {
+interface CourseInput {
   view: SalesCourseView;
   teacherId: string;
   /** The picked slots (UTC instants), one per weekday of the student's zone. */

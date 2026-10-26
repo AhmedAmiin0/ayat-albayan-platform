@@ -5,7 +5,7 @@ import { shape, type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { AutoListChip } from './AutoListNote';
 
-export interface ListCheckRowProps {
+interface ListCheckRowProps {
   list: ChatList;
   /** This chat is in the list. */
   checked: boolean;

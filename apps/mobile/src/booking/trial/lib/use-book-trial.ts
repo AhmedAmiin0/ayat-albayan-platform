@@ -9,7 +9,7 @@ import { toBookingRequest } from './booking-body';
 import { bookingPath, useBookingMode } from '../../shared/booking-mode';
 import type { StudentChoice, TrialDraft } from './draft';
 
-export interface BookTrialInput {
+interface BookTrialInput {
   draft: TrialDraft;
   choice?: StudentChoice;
 }

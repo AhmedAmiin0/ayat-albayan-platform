@@ -8,8 +8,8 @@ import { reportView, submitColumns } from '../report.mapper';
 import { ReportsQueries } from '../reports.queries';
 import { submitPayload } from './submit-plan';
 
-export type SubmitInput = { id: string; form: ReportSubmit; user: AuthUser };
-export type RetryInput = { id: string; user: AuthUser };
+type SubmitInput = { id: string; form: ReportSubmit; user: AuthUser };
+type RetryInput = { id: string; user: AuthUser };
 
 /**
  * POST /reports/:id/submit (docs/11 §4 R3; R-REP-02/03/04): first submit or an edit in one

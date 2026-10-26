@@ -44,7 +44,7 @@ export function readIsOffline(query: { failureReason: unknown; error: unknown })
   return isOffline(query.failureReason ?? query.error);
 }
 
-export interface LeadPatchInput<B> {
+interface LeadPatchInput<B> {
   id: string;
   body: B;
 }

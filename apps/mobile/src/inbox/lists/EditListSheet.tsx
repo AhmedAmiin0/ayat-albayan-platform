@@ -10,7 +10,7 @@ import { ListNameForm } from './ListNameForm';
 import { ListSheet } from './ListSheet';
 import { useDeleteList, useRenameList } from './use-chat-lists';
 
-export interface EditListSheetProps {
+interface EditListSheetProps {
   /** The list being edited; null keeps the sheet closed. */
   list: ChatList | null;
   onClose: () => void;

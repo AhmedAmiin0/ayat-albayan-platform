@@ -15,7 +15,7 @@ export function courseFixedText(sub: SalesCourseView['subscription']): string {
   return `${size} · ${durations[String(sub.duration)] ?? String(sub.duration)}`;
 }
 
-export interface CourseRowsInput {
+interface CourseRowsInput {
   view: SalesCourseView;
   teacherName: string;
   body: BookingRequest | null;

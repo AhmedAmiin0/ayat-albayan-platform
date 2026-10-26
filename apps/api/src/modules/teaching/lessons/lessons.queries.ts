@@ -8,7 +8,7 @@ import { LESSON_SELECT, type LessonRow } from './store/lesson-row';
 import { LessonsSettings } from './lessons.settings';
 
 export type LessonWindow = { from: Date; to: Date; teacherId?: string };
-export type OpenLesson = { id: string; status: LessonStatus; starts_at: string };
+type OpenLesson = { id: string; status: LessonStatus; starts_at: string };
 /** `${lesson_id}:${student_id}` → lesson number (v_lesson_sequence). */
 export type SeqMap = ReadonlyMap<string, number>;
 

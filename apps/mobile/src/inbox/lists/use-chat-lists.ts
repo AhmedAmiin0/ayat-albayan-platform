@@ -43,7 +43,7 @@ export function useCreateList() {
   });
 }
 
-export interface RenameInput {
+interface RenameInput {
   id: string;
   name: string;
 }
