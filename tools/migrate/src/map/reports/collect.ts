@@ -14,7 +14,7 @@ export interface Reports {
   issues: RowIssue[];
 }
 
-export function reportRows(bundle: SourceBundle): SourceRow[] {
+function reportRows(bundle: SourceBundle): SourceRow[] {
   const hub = bundle.sheets['hub_reports'] ?? [];
   const seen = new Set(hub.map((r) => text(r.fields['submitted_at'])));
   const rep = (bundle.sheets['rep_reports'] ?? []).filter(

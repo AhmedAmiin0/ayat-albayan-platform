@@ -13,7 +13,7 @@ import { effectiveByday } from '../lib/package-choice';
 import { picksOf } from '../../shared/picks';
 import { PicksList } from '../../shared/PicksList';
 
-export interface ConfirmStepProps {
+interface ConfirmStepProps {
   draft: TrialDraft;
   onSubmit: (choice?: StudentChoice) => void;
   busy: boolean;

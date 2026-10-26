@@ -34,7 +34,7 @@ const STALE = ['invalid_transition', 'trial_changed'];
 const iso = (t: string) => new Date(t).toISOString();
 
 /** pick_trial_date / trial_date_result's jsonb → TrialDateResult with UTC ISO instants. */
-export function toTrialDateResult(data: unknown): TrialDateResult {
+function toTrialDateResult(data: unknown): TrialDateResult {
   const r = result.parse(data);
   return { ...r, starts_at: iso(r.starts_at), ends_at: iso(r.ends_at) };
 }

@@ -4,7 +4,7 @@ import type { Db } from '../../../common/db/db.module';
 // chain resolves to the next queued result for that table ({ data: [], error: null } by default).
 
 export type Result = { data?: unknown; error?: { message: string } | null };
-export type ChainLog = { table: string; calls: [string, unknown[]][] };
+type ChainLog = { table: string; calls: [string, unknown[]][] };
 
 export function chainDb(results: Record<string, Result[]> = {}) {
   const log: ChainLog[] = [];

@@ -7,7 +7,7 @@ import { externalMessage, type ExternalMessage } from './external-message';
 import { externalRow } from './external-row';
 import { ExternalQueries } from './external.queries';
 
-export interface ExternalInput {
+interface ExternalInput {
   /** Meta's message object (an echo, or an item of Kapso's history). */
   message: unknown;
   from: { line: WaLine | null; numberId?: string | null; phoneNumberId?: string | null };

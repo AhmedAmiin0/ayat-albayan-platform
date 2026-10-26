@@ -20,7 +20,7 @@ export function deadToken(receipt: ExpoReceipt): string | null {
   return receipt.details.expoPushToken ?? TOKEN.exec(receipt.message ?? '')?.[0] ?? null;
 }
 
-export interface ReceiptOutcome {
+interface ReceiptOutcome {
   /** Tickets Expo has no receipt for yet: checked again next run (receipts live 24 h). */
   pending: string[];
   /** Tokens to drop from the admin's profile. */

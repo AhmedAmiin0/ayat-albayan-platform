@@ -38,7 +38,7 @@ export type ExpoTicket =
   | { status: 'ok'; id: string }
   | { status: 'error'; message: string; details?: { error?: string } };
 
-export interface TicketOutcome {
+interface TicketOutcome {
   ticketIds: string[];
   /** Tokens Expo says are gone (app uninstalled): drop them from the profile. */
   deadTokens: string[];

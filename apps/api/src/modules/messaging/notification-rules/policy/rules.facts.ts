@@ -4,7 +4,7 @@ import { SendGate } from '../../whatsapp/gate/send-gate';
 import { NotificationRulesSettings } from '../notification-rules.settings';
 import { RulesQueries, type Reach } from '../rules.queries';
 
-export interface CatalogueFacts {
+interface CatalogueFacts {
   inputs: Omit<CatalogueInputs, 'rules'>;
   lines: LineHealthView[];
   /** Only when asked (v2): the head counts behind «سيصل إلى N». */

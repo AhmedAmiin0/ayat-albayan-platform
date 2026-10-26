@@ -7,7 +7,7 @@ import { accepted, issueOnly } from '../../sources/sheets/issues.ts';
 import type { Mapped } from '../../types.ts';
 import { collectReports } from './collect.ts';
 
-export function mapLessonReports(bundle: SourceBundle): Mapped[] {
+function mapLessonReports(bundle: SourceBundle): Mapped[] {
   const { reports, issues } = collectReports(bundle);
   const ok = reports.map((r) =>
     accepted({

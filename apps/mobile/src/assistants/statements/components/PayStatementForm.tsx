@@ -19,7 +19,7 @@ import { usePayStatement } from '../hooks/use-pay-statement';
 
 const methodPills = (): FilterPill<PaymentMethod>[] => PAYMENT_METHODS.map((m) => ({ value: m, label: t.enums.paymentMethod[m] }));
 
-export interface PayStatementFormProps {
+interface PayStatementFormProps {
   statement: AssistantStatementView;
   onDone: () => void;
   onCancel: () => void;

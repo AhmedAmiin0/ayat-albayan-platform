@@ -28,7 +28,7 @@ const ago = (ms: number) => new Date(Date.now() - ms).toISOString();
 const HOUR = 3_600_000;
 
 /** A lead (new, Facebook ad) inside the 24 h window, with one unread message from her. */
-export const leadThread: ThreadView = {
+const leadThread: ThreadView = {
   ...leadRow,
   last_direction: 'inbound',
   last_body: inbound.body,

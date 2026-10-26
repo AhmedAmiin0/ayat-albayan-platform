@@ -9,7 +9,7 @@ import { NumberRow } from '../numbers/NumberRow';
 import { useNumbers } from '../numbers/use-numbers';
 
 /** How many numbers the overview shows in full; the rest are counted (the screen stays one phone high). */
-export const SHOWN_NUMBERS = 1;
+const SHOWN_NUMBERS = 1;
 
 const h = () => t.communicationsHub;
 

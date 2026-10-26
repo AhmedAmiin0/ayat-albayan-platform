@@ -14,7 +14,7 @@ export interface AuthUser {
   permissions?: readonly Permission[];
 }
 
-export interface VerifierOptions {
+interface VerifierOptions {
   supabaseUrl: string;
   /** Legacy HS256 secret. Asymmetric keys (ES256/RS256) are verified via the project JWKS. */
   jwtSecret?: string;

@@ -6,7 +6,7 @@ import { numbers } from '../numbers/numbers-fixtures';
 
 export const PUBLIC_PHONE = '+966566101447';
 export const closedGate: SendGateView = { open: false, reason: 'switch_off', queued: 3 };
-export const threeNumbers = [...numbers, { ...numbers[0], id: 'num-3', label: 'Spare line', is_default: false }];
+const threeNumbers = [...numbers, { ...numbers[0], id: 'num-3', label: 'Spare line', is_default: false }];
 
 export const overviewAnswer = async (path: string): Promise<unknown> => {
   if (path === '/admin/notifications') return catalogue;

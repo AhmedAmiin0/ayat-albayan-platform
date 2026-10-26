@@ -7,7 +7,7 @@ import { Button } from '@/core/ui/primitives/Button';
 import { openStatementReceipt } from '../hooks/receipt-link';
 import { statementActions, type StatementAction, type StatementCan } from '../hooks/statement-can';
 
-export interface StatementButtonsProps {
+interface StatementButtonsProps {
   statement: AssistantStatementView;
   can: StatementCan;
   linesOpen: boolean;

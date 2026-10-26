@@ -10,7 +10,7 @@ const lengths: Record<string, string | undefined> = t.enums.duration;
 export const lengthText = (min: number): string => durationText(min, lengths, t.editTime.durationOther);
 
 /** «الخميس 1 أكتوبر 16:00 · 45 دقيقة»: a start in Riyadh time and its length. */
-export function timeSummary(startsAt: string, durationMin: number): string {
+function timeSummary(startsAt: string, durationMin: number): string {
   const when = lessonWhenText(new Date(startsAt), RIYADH_TZ, locale);
   return `${when} · ${lengthText(durationMin)}`;
 }

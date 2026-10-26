@@ -3,7 +3,7 @@ import { View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { Button } from '@/core/ui/primitives/Button';
 
-export interface InvoiceActionsProps {
+interface InvoiceActionsProps {
   /** An invoice is already picked: the camera says «صوّر تاني», and «شيلها» shows. */
   picked: boolean;
   /** An upload is running: nothing else can start. */

@@ -6,7 +6,7 @@ import { maryam, SUN_17 } from '@/booking/testing/fixtures';
 export const STUDENT = '44444444-4444-4444-8444-444444444444';
 export const UPCOMING = 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa';
 export const OLD = 'bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb';
-export const NEW_LESSON = 'cccccccc-cccc-4ccc-8ccc-cccccccccccc';
+const NEW_LESSON = 'cccccccc-cccc-4ccc-8ccc-cccccccccccc';
 
 /** Thursday 1 Oct 2026, 18:00 Riyadh: an upcoming trial with مريم. */
 export const THU_1_18 = '2026-10-01T15:00:00.000Z';

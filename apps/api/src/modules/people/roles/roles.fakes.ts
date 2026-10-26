@@ -68,7 +68,7 @@ export const profile = (id: string, role: ProfileRecord['role'], role_id: string
 });
 
 /** AuditService stand-in: keeps the rows it was asked to write. */
-export class FakeAudit {
+class FakeAudit {
   rows: AuditEntry[] = [];
 
   async record(entry: AuditEntry): Promise<void> {

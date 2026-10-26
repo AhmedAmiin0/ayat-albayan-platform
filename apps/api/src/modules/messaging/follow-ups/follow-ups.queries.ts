@@ -11,7 +11,7 @@ const LEAD_SELECT =
   'id, phone_e164, tz, qualification, status, follow_up_paused, follow_up_stage, last_inbound_at, created_at, next_follow_up_at, follow_up_note' as const;
 
 /** leads columns the job keeps current for the lead panel (followUps.next / followUps.note). */
-export interface LeadFollowUpState {
+interface LeadFollowUpState {
   next_follow_up_at: string | null;
   follow_up_note: FollowUpNote | null;
 }

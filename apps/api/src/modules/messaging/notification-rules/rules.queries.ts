@@ -3,7 +3,7 @@ import { Inject, Injectable, Logger } from '@nestjs/common';
 import { DB, type Db } from '../../../common/db/db.module';
 import { LineHealthStore } from '../whatsapp/lines/line-health.store';
 
-export type TemplateFacts = ReadonlyMap<string, { status: TemplateStatus; line: WaLine }>;
+type TemplateFacts = ReadonlyMap<string, { status: TemplateStatus; line: WaLine }>;
 export type Reach = NonNullable<NotificationsOverview['reach']>;
 
 /** Is the academy classroom in use (LiveKit configured)? Read per call: LIVEKIT_* may come from the DB. */

@@ -5,7 +5,7 @@ import { num, text } from '../../sources/sheets/cells.ts';
 import type { SourceRow } from '../../types.ts';
 
 /** Statement tab per month (`general` is August). */
-export const FIN_MONTHS: Record<string, string> = { '2026-08': 'fin_aug', '2026-09': 'fin_sept' };
+const FIN_MONTHS: Record<string, string> = { '2026-08': 'fin_aug', '2026-09': 'fin_sept' };
 
 const tokens = (s: string): string[] =>
   s

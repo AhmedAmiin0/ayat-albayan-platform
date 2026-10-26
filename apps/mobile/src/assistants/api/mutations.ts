@@ -30,7 +30,7 @@ export function useVoidCommission() {
   });
 }
 
-export type StatementMove = { id: string; move: 'approve' | 'reopen' } | { id: string; move: 'unpay'; reason: string };
+type StatementMove = { id: string; move: 'approve' | 'reopen' } | { id: string; move: 'unpay'; reason: string };
 
 /** POST /assistant-pay/statements/:id/{approve|reopen|unpay}; un-paying carries its reason. */
 export function useStatementMove() {

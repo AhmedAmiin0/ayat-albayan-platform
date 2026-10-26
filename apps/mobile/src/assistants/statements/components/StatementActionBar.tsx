@@ -12,7 +12,7 @@ import { StatementButtons } from './StatementButtons';
 import type { StatementCan } from '../hooks/statement-can';
 
 type Move = 'approve' | 'reopen' | 'unpay';
-export interface StatementActionBarProps {
+interface StatementActionBarProps {
   statement: AssistantStatementView;
   can: StatementCan;
   linesOpen: boolean;

@@ -8,7 +8,7 @@ import { PackagesService } from '../money/packages.service';
 import { StudentRenewal, type RenewalCause } from '../student-lifecycle/student-renewal';
 import { SubscriptionsSettings } from '../subscriptions.settings';
 
-export type EvaluateOptions = { actorId?: string | null; now?: Date; cause?: RenewalCause };
+type EvaluateOptions = { actorId?: string | null; now?: Date; cause?: RenewalCause };
 
 /**
  * R-SUB-02 «2 lessons remaining» → renewal reminder to the guardian + an admin task; at 0 the

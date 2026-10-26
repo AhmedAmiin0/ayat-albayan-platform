@@ -5,7 +5,7 @@ import type { CommissionsQuery } from '../assistant-pay.dto';
 import { COMMISSION_SELECT, type CommissionRow } from './commissions.mapper';
 
 /** The admin's ledger cap: the newest rows first; narrow by assistant, status or date for more. */
-export const LEDGER_LIMIT = 500;
+const LEDGER_LIMIT = 500;
 
 /** assistant_commissions reads for the admin (service role; the controllers guard). */
 @Injectable()

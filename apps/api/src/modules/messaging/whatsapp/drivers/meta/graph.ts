@@ -55,7 +55,7 @@ function parse(text: string): unknown {
 }
 
 /** Meta's `{ error: { code, message, error_data.details } }`; anything else keeps code null. */
-export function waErrorFrom(status: number, text: string): WaError {
+function waErrorFrom(status: number, text: string): WaError {
   const r = metaErrorSchema.safeParse(parse(text));
   if (!r.success) {
     return new WaError(`WhatsApp HTTP ${status}`, { code: null, status, details: text.slice(0, 300) || undefined });
