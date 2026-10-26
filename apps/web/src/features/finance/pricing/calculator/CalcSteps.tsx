@@ -46,10 +46,15 @@ const DISCOUNT_OPTIONS = DISCOUNTS.map((d) => ({
 export interface CalcStepsProps {
   sel: Selection;
   onChange: (patch: Partial<Selection>) => void;
+  /** The free 0–100 field beside the pills (the calculator); the chat's «عرض سعر» has the pills only. */
+  freeDiscount?: boolean;
 }
 
-/** The five calculator steps (docs/08 §3): country, duration, package, students, discount. */
-export function CalcSteps({ sel, onChange }: CalcStepsProps) {
+/**
+ * The five calculator steps (docs/08 §3): country, duration, package, students, discount. Shared by
+ * «حاسبة الأسعار» and the chat's «عرض سعر» sheet.
+ */
+export function CalcSteps({ sel, onChange, freeDiscount = true }: CalcStepsProps) {
   const weekly = sel.pkg === 'weekly';
   return (
     <div className="grid content-start gap-6">
@@ -103,21 +108,23 @@ export function CalcSteps({ sel, onChange }: CalcStepsProps) {
         onChange={(v) => onChange({ discount: parseDiscount(v) })}
       >
         {/* The site's free field beside the pills: any 0–100, decimals allowed. */}
-        <span className="flex items-center gap-1.5 text-sm text-ink-2">
-          <Input
-            type="number"
-            inputMode="decimal"
-            dir="ltr"
-            min={0}
-            max={DISCOUNT_MAX}
-            step="any"
-            aria-label={t.pricing.steps.discount}
-            value={sel.discount}
-            onChange={(e) => onChange({ discount: parseDiscount(e.target.value) })}
-            className="w-20 text-center tabular-nums [&[dir=ltr]]:text-center"
-          />
-          <span aria-hidden="true">%</span>
-        </span>
+        {freeDiscount && (
+          <span className="flex items-center gap-1.5 text-sm text-ink-2">
+            <Input
+              type="number"
+              inputMode="decimal"
+              dir="ltr"
+              min={0}
+              max={DISCOUNT_MAX}
+              step="any"
+              aria-label={t.pricing.steps.discount}
+              value={sel.discount}
+              onChange={(e) => onChange({ discount: parseDiscount(e.target.value) })}
+              className="w-20 text-center tabular-nums [&[dir=ltr]]:text-center"
+            />
+            <span aria-hidden="true">%</span>
+          </span>
+        )}
       </SegmentStep>
     </div>
   );
