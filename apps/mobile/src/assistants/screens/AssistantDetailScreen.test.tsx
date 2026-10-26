@@ -1,7 +1,7 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { ApiError } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
-import { renderWithQuery } from '@/test/query';
+import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { AssistantDetailScreen } from './AssistantDetailScreen';
 import { ALL, ASSISTANT, commission, routes, termsRowOf } from '../api/fixtures';
 
@@ -20,7 +20,7 @@ const show = (permissions: readonly string[] = ALL) => {
   mockApiFetch.mockImplementation(
     routes(permissions, { '/assistant-pay/terms': [termsRowOf(ASSISTANT)], '/assistant-pay/commissions': [commission()] }),
   );
-  return renderWithQuery(<AssistantDetailScreen />);
+  return renderWithQuery(<AssistantDetailScreen />, createTestQueryClient({ meFromApi: true }));
 };
 
 beforeEach(() => {

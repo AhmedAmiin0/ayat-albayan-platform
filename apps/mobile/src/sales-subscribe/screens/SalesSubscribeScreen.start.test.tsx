@@ -2,7 +2,7 @@ import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { dayLabel } from '@/booking/shared/slots';
 import { t } from '@/core/lib/i18n/i18n';
 import { localDay, money } from '@/payments/format';
-import { renderWithQuery } from '@/test/query';
+import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { familyOf, kid, openSub, salesQuote } from '../testing/fixtures';
 import { SalesSubscribeScreen } from './SalesSubscribeScreen';
 
@@ -28,7 +28,7 @@ function asSales(...permissions: string[]) {
   );
 }
 async function open() {
-  await renderWithQuery(<SalesSubscribeScreen />);
+  await renderWithQuery(<SalesSubscribeScreen />, createTestQueryClient({ meFromApi: true }));
   expect(await screen.findByText(money(180, 'SAR'))).toBeTruthy();
 }
 const save = async () => fireEvent.press(await screen.findByRole('button', { name: m.saveSubscription, disabled: false }));

@@ -1,6 +1,6 @@
 import { fireEvent, screen, waitFor, within } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
-import { renderWithQuery } from '@/test/query';
+import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { MeetingsScreen } from './MeetingsScreen';
 
 const mockApiFetch = jest.fn();
@@ -32,7 +32,7 @@ beforeEach(() => {
 });
 
 test('my meetings and the ones I am invited to, each with its time and state', async () => {
-  await renderWithQuery(<MeetingsScreen />);
+  await renderWithQuery(<MeetingsScreen />, createTestQueryClient({ meFromApi: true }));
   expect(await screen.findByText('مجلس الإدارة')).toBeTruthy();
   expect(screen.getByText(`${M.scheduledFor.replace('{when}', 'الثلاثاء 20 أكتوبر 17:00')} · ${M.inviteesCount.replace('{n}', '2')}`)).toBeTruthy();
   expect(screen.getByText(M.opensAt.replace('{when}', 'الثلاثاء 20 أكتوبر 16:45'))).toBeTruthy();
@@ -47,7 +47,7 @@ test('my meetings and the ones I am invited to, each with its time and state', a
 
 test('reschedule: the same steppers, prefilled; PATCH the new UTC time, then the list refreshes', async () => {
   mockApiSend.mockResolvedValue(undefined);
-  await renderWithQuery(<MeetingsScreen />);
+  await renderWithQuery(<MeetingsScreen />, createTestQueryClient({ meFromApi: true }));
   await screen.findByText('مجلس الإدارة');
   await press(M.reschedule);
   expect(screen.getByLabelText(`${I.mobile.hour}: 17`)).toBeTruthy();
@@ -60,7 +60,7 @@ test('reschedule: the same steppers, prefilled; PATCH the new UTC time, then the
 
 test('cancel asks first, then POSTs /cancel; a refusal reads its line', async () => {
   mockApiSend.mockResolvedValueOnce(undefined);
-  await renderWithQuery(<MeetingsScreen />);
+  await renderWithQuery(<MeetingsScreen />, createTestQueryClient({ meFromApi: true }));
   await screen.findByText('مجلس الإدارة');
   await press(M.cancel);
   expect(screen.getByText(M.cancelConfirm)).toBeTruthy();
@@ -75,7 +75,7 @@ test('an instant meeting can invite too: a team member found by search', async (
   const student = { kind: 'student', id: '7b0c5f1e-2222-4a1a-8a1a-000000000002', name: 'يوسف', code: 'AB-0182' };
   mockApiFetch.mockImplementation(async (path: string) => (path.startsWith('/meetings/invitee-options') ? [staff, student] : path === '/meetings' ? [] : {}));
   mockApiSend.mockResolvedValue({ id: 'm9', url: 'https://app/m/new', invitees: [], replayed: false });
-  await renderWithQuery(<MeetingsScreen />);
+  await renderWithQuery(<MeetingsScreen />); // full-access staff (staff-me.ts): this mock serves no /auth/me
   await screen.findByText(t.meetings.internal.empty);
   await press(t.meetings.new);
   await press(I.addInvitees);

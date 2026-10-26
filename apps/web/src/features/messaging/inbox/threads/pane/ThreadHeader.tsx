@@ -11,6 +11,7 @@ import type { InboxSearch } from '../../shared/search';
 import { ThreadListChips } from '../../lists/ThreadListChips';
 import { leadChip } from '../../sales/subscription';
 import { SubscriptionChip } from '../../sales/SubscriptionChip';
+import { CopyPhoneButton } from './CopyPhoneButton';
 import { WindowBanner } from './WindowBanner';
 
 export interface ThreadHeaderProps {
@@ -52,6 +53,7 @@ export function ThreadHeader({ thread: th, listSearch, headingId, badge, action,
           {threadTitle(th, mode)}
         </h2>
         {th.display_name && showsPhone(mode) && <Ltr className="shrink-0 text-xs text-ink-3">{formatPhone(th.phone_e164)}</Ltr>}
+        {showsPhone(mode) && <CopyPhoneButton phone={th.phone_e164} />}
         {action}
       </div>
       <div className="mt-1 flex items-center gap-1.5 overflow-x-auto text-2xs whitespace-nowrap text-ink-3 [scrollbar-width:none]">

@@ -28,6 +28,7 @@ export {
   permissionsOf,
   useHolds,
   useIsAdmin,
+  useMeReady,
   usePermissions,
   useSendsAllTemplates,
 } from './use-permissions';

@@ -50,8 +50,15 @@ describe('the bubble’s «رد» / «إعادة توجيه»', () => {
     expect(fireEvent.contextMenu(article())).toBe(true); // not prevented
   });
 
-  it('a message WhatsApp does not know (no wamid) and not forwardable: nothing', () => {
+  it('a message WhatsApp does not know (no wamid) and not forwardable: «نسخ» only; no text either: nothing', () => {
     renderLog({ enabled: true, m: { ...M, replyable: false, forwardable: false } });
+    fireEvent.click(menuButton());
+    expect(screen.getByRole('button', { name: t.inbox.copy.label })).toBeTruthy();
+    expect(screen.queryByRole('button', { name: t.inbox.forward.action })).toBeNull();
+  });
+
+  it('no text, no file, not replyable or forwardable: no actions', () => {
+    renderLog({ enabled: true, m: { ...M, body: null, replyable: false, forwardable: false } });
     expect(screen.queryByRole('button', { name: t.inbox.reply.menu })).toBeNull();
   });
 });

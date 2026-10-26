@@ -1,4 +1,4 @@
-import { canForward, canReply, type MessageView } from '@ab/shared';
+import type { MessageView } from '@ab/shared';
 import { Modal, Platform, Pressable, View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/more/Note';
@@ -7,6 +7,9 @@ import { AppText } from '@/core/ui/primitives/AppText';
 import { Button } from '@/core/ui/primitives/Button';
 import { useChatActions } from '../../thread/hooks/chat-actions';
 import { quoteOf, quoteText } from '../hooks/quote-text';
+import { bubbleOffers, downloadLabel } from '../hooks/bubble-offers';
+import { copyText, downloadFile, downloadProblem } from '../copy-download/chat-tools';
+import { useThreadMode } from '../../thread/hooks/thread-mode';
 
 /** iOS presents one modal at a time: the forward sheet waits for this menu to finish closing. */
 export const AFTER_MENU_MS = Platform.OS === 'ios' ? 350 : 0;
@@ -14,18 +17,28 @@ export const AFTER_MENU_MS = Platform.OS === 'ios' ? 350 : 0;
 export interface MessageMenuProps {
   /** The long-pressed message; null hides the menu. */
   message: MessageView | null;
+  /** The chat's number: «تنزيل» asks this chat's file endpoint. */
+  phone: string;
   onClose: () => void;
 }
 
 /**
- * A long press on a bubble: «رد» and «إعادة توجيه» at the bottom of the screen, as the attach sheet. «رد»
- * stays visible but off after the 24 h window (only a template can go then), with the reason under it.
+ * A long press on a bubble, at the bottom of the screen as the attach sheet, in WhatsApp's order: «رد»,
+ * «نسخ النص» (the copy sheet), «إعادة توجيه», «تنزيل» (owner 2026-10-26). «رد» stays visible but off
+ * after the 24 h window (only a template can go then), with the reason under it.
  */
-export function MessageMenu({ message: m, onClose }: MessageMenuProps) {
+export function MessageMenu({ message: m, phone, onClose }: MessageMenuProps) {
   const { color } = useTheme();
-  const { canSend, setReply, openForward } = useChatActions();
-  const reply = m !== null && canReply(m);
-  const forward = m !== null && canForward(m);
+  const { enabled, canSend, setReply, openForward, showCopy, say } = useChatActions();
+  const teacher = useThreadMode().kind === 'teacher';
+  const offers = m ? bubbleOffers(m, { enabled, teacher }) : null;
+  const reply = offers?.reply === true;
+  const forward = offers?.forward === true;
+  // After the menu has closed (iOS shows one modal at a time).
+  const later = (run: () => void) => {
+    onClose();
+    setTimeout(run, AFTER_MENU_MS);
+  };
   return (
     <Modal visible={m !== null} transparent animationType="fade" onRequestClose={onClose}>
       <Pressable
@@ -73,13 +86,29 @@ export function MessageMenu({ message: m, onClose }: MessageMenuProps) {
             />
           ) : null}
           {reply && !canSend ? <Note>{t.inbox.sessionClosed}</Note> : null}
-          {forward ? (
+          {m && offers?.copy ? (
+            <Button
+              variant="secondary"
+              label={t.inbox.copy.text}
+              accessibilityLabel={t.inbox.copy.label}
+              onPress={() => later(() => copyText({ title: t.inbox.copy.label, text: m.body ?? '' }, showCopy))}
+            />
+          ) : null}
+          {m && forward ? (
             <Button
               variant="secondary"
               label={t.inbox.forward.action}
+              onPress={() => later(() => openForward(m))}
+            />
+          ) : null}
+          {m && offers?.download ? (
+            <Button
+              variant="secondary"
+              label={t.inbox.download.action}
+              accessibilityLabel={downloadLabel(m)}
               onPress={() => {
                 onClose();
-                setTimeout(() => openForward(m), AFTER_MENU_MS);
+                downloadFile({ phone, messageId: m.id }).catch((e: unknown) => say({ text: downloadProblem(e) }));
               }}
             />
           ) : null}

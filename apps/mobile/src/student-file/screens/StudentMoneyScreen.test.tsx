@@ -4,7 +4,7 @@ import { ApiError } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
 import { money } from '@/payments/format';
 import { payment } from '@/payments/fixtures';
-import { renderWithQuery } from '@/test/query';
+import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { StudentMoneyScreen } from './StudentMoneyScreen';
 
 const M = t.mobileStudentFile.money;
@@ -43,7 +43,7 @@ afterEach(() => openURL.mockRestore());
 
 test('payments of the student with the net, from GET /payments?studentId=', async () => {
   serve();
-  await renderWithQuery(<StudentMoneyScreen />);
+  await renderWithQuery(<StudentMoneyScreen />, createTestQueryClient({ meFromApi: true }));
   expect((await screen.findAllByText(money(145, 'SAR'))).length).toBe(2);
   expect(mockApiFetch).toHaveBeenCalledWith('/payments?studentId=s1&page=1&pageSize=25');
   expect(screen.getByRole('header', { name: M.title })).toBeTruthy();
@@ -51,7 +51,7 @@ test('payments of the student with the net, from GET /payments?studentId=', asyn
 
 test('the invoices tab lists them and opens a fresh signed link in the system viewer', async () => {
   serve();
-  await renderWithQuery(<StudentMoneyScreen />);
+  await renderWithQuery(<StudentMoneyScreen />, createTestQueryClient({ meFromApi: true }));
   await fireEvent.press(await screen.findByRole('tab', { name: M.tabInvoices }));
   await fireEvent.press(await screen.findByText(M.viewInvoice));
   await waitFor(() => expect(openURL).toHaveBeenCalledWith('https://files.test/inv.pdf?t=1'));
@@ -60,11 +60,15 @@ test('the invoices tab lists them and opens a fresh signed link in the system vi
 test('empty and failed states; a missing permission hides its tab', async () => {
   serve([]);
   permissions = ['invoices.read'];
-  const view = await renderWithQuery(<StudentMoneyScreen />);
+  const view = await renderWithQuery(<StudentMoneyScreen />, createTestQueryClient({ meFromApi: true }));
   expect(await screen.findByText(M.invoicesEmpty)).toBeTruthy();
   expect(screen.queryByRole('tab', { name: M.tabPayments })).toBeNull();
   view.unmount();
-  mockApiFetch.mockReset().mockRejectedValue(new ApiError(500));
-  await renderWithQuery(<StudentMoneyScreen />);
+  // D6: /auth/me answers (a failed one hides every tab); the lists fail.
+  mockApiFetch.mockReset().mockImplementation(async (path: string) => {
+    if (path === '/auth/me') return { permissions: ['payments.read', 'invoices.read'] };
+    throw new ApiError(500);
+  });
+  await renderWithQuery(<StudentMoneyScreen />, createTestQueryClient({ meFromApi: true }));
   expect(await screen.findByText(M.error, undefined, { timeout: 3000 })).toBeTruthy();
 });

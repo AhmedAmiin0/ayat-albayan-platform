@@ -3,6 +3,7 @@ import { renderRouter, screen, waitFor } from 'expo-router/testing-library';
 import { Text } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { queryClient } from '@/core/lib/query/query-client';
+import { pathKey } from '@/core/lib/query/query-keys';
 import { TabStack } from '@/core/nav/TabStack';
 import { registerPush } from '@/core/push/registerPush';
 import TabsLayout from '../../../app/(tabs)/_layout';
@@ -48,6 +49,7 @@ const app = {
 
 async function open(gate: string, url: string) {
   (globalThis as { gate?: string }).gate = gate;
+  queryClient.setQueryData(pathKey('/auth/me'), mockMe.answer); // as verifyRole, before the gate opens
   const pending = renderRouter(app, { initialUrl: url });
   await pending;
   return { pathname: () => pending.getPathname() };

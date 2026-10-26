@@ -2,7 +2,7 @@ import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { ApiError } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
 import { money } from '@/payments/format';
-import { renderWithQuery } from '@/test/query';
+import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { ltr } from '@/core/ui/primitives/Ltr';
 import { familyKey } from '../lib/family';
 import { familyOf, KID, KID2, kid, openSub, PHONE, salesQuote, SUB } from '../testing/fixtures';
@@ -44,7 +44,7 @@ test('her only child is picked; the sales quote; a failed save retried keeps ONE
     if (sent('/sales/subscriptions').length === 1) throw new ApiError(502, null);
     return openSub();
   });
-  const { client } = await renderWithQuery(<SalesSubscribeScreen />);
+  const { client } = await renderWithQuery(<SalesSubscribeScreen />, createTestQueryClient({ meFromApi: true }));
   expect(await screen.findByText(money(180, 'SAR'))).toBeTruthy();
   expect(mockApiFetch).toHaveBeenCalledWith(`/sales/money/family?phone=${encodeURIComponent(PHONE)}`);
   expect(screen.getByRole('radio', { name: `ريم · ${ltr('AB-0201')}`, checked: true })).toBeTruthy();
@@ -78,7 +78,7 @@ test('her only child is picked; the sales quote; a failed save retried keeps ONE
 
 test('two of her children: none picked, «احفظ الاشتراك» stays off until one is', async () => {
   mockApiFetch.mockResolvedValue(familyOf(kid(), kid({ id: KID2, code: 'AB-0202', name: 'سلمى' })));
-  await renderWithQuery(<SalesSubscribeScreen />);
+  await renderWithQuery(<SalesSubscribeScreen />, createTestQueryClient({ meFromApi: true }));
   await fireEvent.press(await screen.findByRole('radio', { name: `سلمى · ${ltr('AB-0202')}` }));
   await waitFor(() => expect(sent('/sales/subscriptions/quote').at(-1)?.[2]).toMatchObject({ studentId: KID2 }));
   expect(await saveButton()).toBeTruthy();
@@ -86,7 +86,7 @@ test('two of her children: none picked, «احفظ الاشتراك» stays off 
 
 test('no student of hers in the family: says so, nothing to price', async () => {
   mockApiFetch.mockResolvedValue(familyOf());
-  await renderWithQuery(<SalesSubscribeScreen />);
+  await renderWithQuery(<SalesSubscribeScreen />, createTestQueryClient({ meFromApi: true }));
   expect(await screen.findByText(m.noOwnStudents)).toBeTruthy();
   expect(mockApiSend).not.toHaveBeenCalled();
 });
@@ -96,14 +96,14 @@ test('not her student (403): the API’s reason', async () => {
     if (path === '/sales/subscriptions/quote') return salesQuote;
     throw new ApiError(403, { code: 'not_your_student' });
   });
-  await renderWithQuery(<SalesSubscribeScreen />);
+  await renderWithQuery(<SalesSubscribeScreen />, createTestQueryClient({ meFromApi: true }));
   await fireEvent.press(await saveButton());
   expect(await screen.findByText(m.error.not_your_student)).toBeTruthy();
   expect(mockReplace).not.toHaveBeenCalled();
 });
 
 test('discount: only the site pills 0/5/10/15 %, no free number field; a pill is what is sent', async () => {
-  await renderWithQuery(<SalesSubscribeScreen />);
+  await renderWithQuery(<SalesSubscribeScreen />, createTestQueryClient({ meFromApi: true }));
   expect(await screen.findByText(money(180, 'SAR'))).toBeTruthy();
   for (const d of ['0', '5', '10', '15'] as const) expect(screen.getByRole('radio', { name: t.pricing.discounts[d] })).toBeTruthy();
   expect(screen.getByRole('radio', { name: t.pricing.discounts['0'], checked: true })).toBeTruthy();
