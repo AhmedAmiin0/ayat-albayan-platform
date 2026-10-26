@@ -1,5 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
 import { Inject, Injectable } from '@nestjs/common';
+import { authEmailOf } from '../../../../common/auth/auth-users';
 import { DB, type Db } from '../../../../common/db/db.module';
 import { badRequest, conflict } from '../../../../common/http/errors';
 import { ACCOUNT_CONFIG, type AccountAuth, type AccountConfig } from './account.ports';
@@ -28,10 +29,8 @@ export class SupabaseAccountAuth implements AccountAuth {
     @Inject(ACCOUNT_CONFIG) private readonly config: AccountConfig,
   ) {}
 
-  async emailOf(id: string): Promise<string | null> {
-    const { data, error } = await this.db.auth.admin.getUserById(id);
-    if (error) throw authError(error);
-    return data.user.email ?? null;
+  emailOf(id: string): Promise<string | null> {
+    return authEmailOf(this.db, id, authError);
   }
 
   async passwordMatches(input: { email: string; password: string }): Promise<boolean> {

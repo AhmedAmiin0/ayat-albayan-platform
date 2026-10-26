@@ -1,6 +1,7 @@
 import type { CodeSession, PasswordSession } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { createClient } from '@supabase/supabase-js';
+import { authEmailOf, createAuthUser } from '../../../../common/auth/auth-users';
 import { DB, type Db } from '../../../../common/db/db.module';
 import { badRequest } from '../../../../common/http/errors';
 import { dbError } from '../../../../common/http/http';
@@ -30,21 +31,12 @@ export class SupabaseAuthGate implements AuthGate {
     return data;
   }
 
-  async emailOf(id: string): Promise<string | null> {
-    const { data, error } = await this.db.auth.admin.getUserById(id);
-    if (error) throw authError(error);
-    return data.user.email ?? null;
+  emailOf(id: string): Promise<string | null> {
+    return authEmailOf(this.db, id, authError);
   }
 
-  async createUser(input: { email: string; password?: string; fullName: string }): Promise<string> {
-    const { data, error } = await this.db.auth.admin.createUser({
-      email: input.email,
-      ...(input.password && { password: input.password }),
-      email_confirm: true,
-      user_metadata: { full_name: input.fullName },
-    });
-    if (error) throw authError(error);
-    return data.user.id;
+  createUser(input: { email: string; password?: string; fullName: string }): Promise<string> {
+    return createAuthUser(this.db, input, authError);
   }
 
   async removeUser(id: string): Promise<void> {
