@@ -6,6 +6,7 @@ import type {
   MessageView,
   ThreadDetail,
   ThreadRating,
+  ThreadReopenView,
   ThreadTemplate,
   ThreadText,
   ThreadView,
@@ -85,6 +86,9 @@ export const sendText = ({ phone, ...body }: ThreadText & { phone: string }) =>
 
 export const sendTemplate = ({ phone, ...body }: ThreadTemplate & { phone: string }) =>
   apiSend<MessageView>('POST', `${threadPath(phone)}/template`, body);
+
+/** A closed window opened by a staff member: Kapso's record + the reopen template, once a day (owner 2026-10-26). */
+export const reopenThread = (phone: string) => apiSend<ThreadReopenView>('POST', `${threadPath(phone)}/reopen`);
 
 /** «إرسال تقييم الحلقة»: lesson_rating for the guardian's latest lesson that took place (migration 195). */
 export const sendRating = ({ phone, ...body }: ThreadRating & { phone: string }) =>

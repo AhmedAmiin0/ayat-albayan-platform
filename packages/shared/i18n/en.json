@@ -2497,6 +2497,11 @@
       "closed": "Chat closed — send a template or a rating to reopen it",
       "closedStaff": "Chat closed — it reopens when the guardian messages you, or with a template available to you"
     },
+    "reopen": {
+      "requested": "A request to reopen the chat was sent — waiting for the other side to reply",
+      "requestedToday": "Today’s request was already sent",
+      "unavailable": "Chat reopened — the reopen template is not available yet"
+    },
     "rating": {
       "send": "Send lesson rating",
       "sending": "Sending…",
@@ -3364,6 +3369,7 @@
       "followUpSlotsFromHours": "No slot sooner than this is offered to the lead.",
       "followUpSlotsToDays": "Free slots are offered up to this many days ahead.",
       "quickReplyWindowHours": "A guardian’s typed reply confirms only a lesson we messaged them about within this many hours.",
+      "chatReopenTemplate": "The WhatsApp template sent when a closed chat is opened, to reopen it. Until it is approved on the line, only the Kapso conversation is reopened and nothing is sent.",
       "makeupWindowDays": "After this, the makeup button no longer shows for the lesson.",
       "joinOpensBeforeMin": "Students and teachers can join from this time.",
       "joinClosesAfterMin": "After this nobody can join; guest links created from now on expire then.",
@@ -3384,6 +3390,7 @@
     "followUpSlotsFromHours": "Earliest follow-up slot offered (hours ahead)",
     "followUpSlotsToDays": "Latest follow-up slot offered (days ahead)",
     "quickReplyWindowHours": "A typed “yes” counts within (hours)",
+    "chatReopenTemplate": "Chat reopen template",
     "makeupWindowDays": "A missed lesson can be made up within (days)",
     "joinOpensBeforeMin": "Room opens before the lesson (minutes)",
     "joinClosesAfterMin": "Room closes after the lesson (minutes)",
