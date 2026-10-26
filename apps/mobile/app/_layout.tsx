@@ -11,7 +11,7 @@ import { useAuthGate } from '@/auth/use-auth-gate';
 import { useOverridesReady } from '@/core/lib/i18n/i18n-overrides';
 import { useLocaleReady } from '@/core/lib/i18n/locale-switch';
 import { persistOptions, queryClient } from '@/core/lib/query/query-client';
-import { restoreAppearance } from '@/more/appearance';
+import { restoreAppearance } from '@/more/appearance/appearance';
 import { useTheme } from '@/theme';
 
 // Bundled files: Noto Sans Arabic for everything, titles at 700 (owner, 2026-10-05); names match theme.type.

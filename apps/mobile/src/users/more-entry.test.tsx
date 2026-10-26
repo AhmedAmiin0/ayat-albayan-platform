@@ -1,7 +1,7 @@
 import { fireEvent, render, screen } from '@testing-library/react-native';
 import { router } from 'expo-router';
 import { t } from '@/core/lib/i18n/i18n';
-import { MoreScreen } from '@/more/MoreScreen';
+import { MoreScreen } from '@/more/screens/MoreScreen';
 
 jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
 jest.mock('@/more/sign-out', () => ({ signOutDevice: jest.fn(async () => undefined) }));

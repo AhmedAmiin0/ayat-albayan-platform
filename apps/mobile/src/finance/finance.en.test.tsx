@@ -2,7 +2,7 @@ import en from '@ab/shared/i18n/en.json';
 import { fireEvent, render, screen } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { locale } from '@/core/lib/i18n/locale';
-import { FinanceSection } from '@/more/FinanceSection';
+import { FinanceSection } from '@/more/sections/FinanceSection';
 import { renderWithQuery } from '@/test/query';
 import { monthLabel } from '@/teacher/payout-text';
 import { amountText } from './shared/format';

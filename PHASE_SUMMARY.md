@@ -296,7 +296,7 @@ E2E: **18 passed**. That is 2 setup runs plus 8 tests, each on desktop and Pixel
   - `AppText` is in place, `Field` uses it, and the TextInput starts at the inline-start.
   - The screen-level Text was left to the mobile/phase5a merge. The merge itself missed it; the Phase 5a verifier fixes did it: every app Text is now `AppText`, and lint forbids a raw `Text` (see Phase 5a, Verifier fixes).
   - Not yet verified on a device: it still needs a check on the Android emulator and on the iOS simulator with the device language set to English (Phase 5a owner input 5).
-- **Theme on phones (low):** fixed on web. The Expo manual «تلقائي / فاتح / ليلي» override shipped in Phase 5a (المزيد → المظهر, `apps/mobile/src/more/appearance.ts`).
+- **Theme on phones (low):** fixed on web. The Expo manual «تلقائي / فاتح / ليلي» override shipped in Phase 5a (المزيد → المظهر, `apps/mobile/src/more/appearance/appearance.ts`).
 - **RN theme as one source (medium):** done, and the contrast test runs in CI. Generating the web raw-token CSS from the same object is still a TODO (docs/07 §12).
 
 **Rejected or deferred (2):**
