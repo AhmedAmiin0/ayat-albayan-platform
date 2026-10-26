@@ -1,10 +1,12 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { act, renderRouter } from 'expo-router/testing-library';
 import { queryClient } from '@/core/lib/query/query-client';
+import { pathKey } from '@/core/lib/query/query-keys';
 import type { NavState } from '@/core/nav/chat-groups';
 import { currentBackend, type FakeBackend, setBackend } from './fake-backend';
 import { resetNative } from './native-mocks';
 import { routes } from './app-routes';
+import { fullAccessMe } from './staff-me';
 
 // Flow-test harness: the REAL root + tabs layouts and the REAL route modules (app/**), driven by
 // expo-router's renderRouter, over an in-memory API (fake-backend). Only the edges are doubled:
@@ -75,7 +77,12 @@ export async function resetApp(): Promise<void> {
 }
 
 export async function renderApp({ url, backend, gate = 'admin', storage = {} }: AppOptions) {
-  setBackend(backend);
+  // Staff holding every permission unless the test answers GET /auth/me itself (staff-me.ts); seeded as
+  // verifyRole does before the gate opens a tree, so the tab bar is there on the first render.
+  const own = backend.handles('GET /auth/me');
+  const me = fullAccessMe(gate === 'out' ? 'admin' : gate);
+  setBackend(own ? backend : backend.fallback('GET /auth/me', () => me));
+  if (!own && gate !== 'out' && !queryClient.getQueryData(pathKey('/auth/me'))) queryClient.setQueryData(pathKey('/auth/me'), me);
   mockGate.initial = gate;
   await AsyncStorage.multiSet(Object.entries(storage));
   const pending = renderRouter(routes, { initialUrl: url });

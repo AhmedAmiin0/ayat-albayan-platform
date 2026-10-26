@@ -20,7 +20,7 @@ beforeEach(() => {
 });
 
 test('the current owner is the chosen pill; the people come from GET /sales/people', async () => {
-  await renderWithQuery(<LeadAssign lead={owned} />);
+  await renderWithQuery(<LeadAssign lead={owned} />, createTestQueryClient({ meFromApi: true }));
   expect(await screen.findByRole('radio', { name: 'عمر' })).toBeTruthy();
   expect(screen.getByRole('radio', { name: 'سارة', checked: true })).toBeTruthy();
   expect(screen.getByRole('radio', { name: t.sales.assign.none })).toBeTruthy();
@@ -28,7 +28,7 @@ test('the current owner is the chosen pill; the people come from GET /sales/peop
 
 test('picking a person POSTs profileId, patches the detail and refetches the lists', async () => {
   mockApiSend.mockResolvedValue({});
-  const client = createTestQueryClient();
+  const client = createTestQueryClient({ meFromApi: true });
   client.setQueryData(['leads', free.id], free);
   const invalidate = jest.spyOn(client, 'invalidateQueries');
   await renderWithQuery(<LeadAssign lead={free} />, client);
@@ -41,7 +41,7 @@ test('picking a person POSTs profileId, patches the detail and refetches the lis
 
 test('«بدون مسؤول» takes the lead back with profileId null', async () => {
   mockApiSend.mockResolvedValue({});
-  await renderWithQuery(<LeadAssign lead={owned} />);
+  await renderWithQuery(<LeadAssign lead={owned} />, createTestQueryClient({ meFromApi: true }));
   await screen.findByRole('radio', { name: 'عمر' });
   await fireEvent.press(screen.getByRole('radio', { name: t.sales.assign.none }));
   expect(mockApiSend).toHaveBeenCalledWith('POST', `/leads/${owned.id}/assign`, { profileId: null });
@@ -49,13 +49,13 @@ test('«بدون مسؤول» takes the lead back with profileId null', async ()
 
 test('a refused assignment shows the error', async () => {
   mockApiSend.mockRejectedValue(new ApiError(400, { code: 'not_a_salesperson' }));
-  await renderWithQuery(<LeadAssign lead={free} />);
+  await renderWithQuery(<LeadAssign lead={free} />, createTestQueryClient({ meFromApi: true }));
   await fireEvent.press(await screen.findByRole('radio', { name: 'سارة' }));
   expect(await screen.findByText(t.common.error)).toBeTruthy();
 });
 
 test('an owner the list no longer has still shows by the name the API sent', async () => {
-  await renderWithQuery(<LeadAssign lead={{ ...huda, assigned_to: 'gone', assigned_to_name: 'منى' }} />);
+  await renderWithQuery(<LeadAssign lead={{ ...huda, assigned_to: 'gone', assigned_to_name: 'منى' }} />, createTestQueryClient({ meFromApi: true }));
   expect(await screen.findByRole('radio', { name: 'منى', checked: true })).toBeTruthy();
 });
 
@@ -63,11 +63,11 @@ test('the people list failing offers a retry; no leads.assign renders nothing', 
   mockApiFetch.mockImplementation((path: string) =>
     path === '/auth/me' ? Promise.resolve({ permissions: ['leads.assign'] }) : Promise.reject(new Error('offline')),
   );
-  const first = await renderWithQuery(<LeadAssign lead={free} />);
+  const first = await renderWithQuery(<LeadAssign lead={free} />, createTestQueryClient({ meFromApi: true }));
   expect(await screen.findByText(t.mobileLeads.peopleFailed)).toBeTruthy();
   expect(screen.getByRole('button', { name: t.mobile.retry })).toBeTruthy();
   first.unmount();
   mockApiFetch.mockImplementation(leadsBackend(['leads.read']));
-  await renderWithQuery(<LeadAssign lead={free} />);
+  await renderWithQuery(<LeadAssign lead={free} />, createTestQueryClient({ meFromApi: true }));
   await waitFor(() => expect(screen.queryByText(t.mobileLeads.assignTitle)).toBeNull());
 });

@@ -1,6 +1,6 @@
 import { fireEvent, screen } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
-import { renderWithQuery } from '@/test/query';
+import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { groupLabel } from '../lib/value-groups';
 import { labelOf } from '../lib/value-text';
 import { READER, valuesAnswer, WRITER } from '../testing/values-fixtures';
@@ -22,7 +22,7 @@ const chip = (id: Parameters<typeof groupLabel>[0]) =>
 
 test('without settings.write: an info note, and the sheet has no editor or «احفظ»', async () => {
   mockApiFetch.mockImplementation(valuesAnswer(READER));
-  await renderWithQuery(<ValuesScreen />);
+  await renderWithQuery(<ValuesScreen />, createTestQueryClient({ meFromApi: true }));
   expect(await screen.findByText(t.mobileValues.readOnly)).toBeTruthy();
   await fireEvent.press(
     await screen.findByRole('button', { name: `${labelOf('booking_horizon_weeks')}: 5` }),
@@ -35,7 +35,7 @@ test('without settings.write: an info note, and the sheet has no editor or «ا�
 
 test('owned keys are read-only with «تُدار من صفحة أخرى», even with settings.write', async () => {
   mockApiFetch.mockImplementation(valuesAnswer(WRITER));
-  await renderWithQuery(<ValuesScreen />);
+  await renderWithQuery(<ValuesScreen />, createTestQueryClient({ meFromApi: true }));
   await screen.findByText(labelOf('booking_horizon_weeks'));
   expect(screen.queryByText(t.mobileValues.readOnly)).toBeNull();
   await fireEvent.press(chip('notifications'));
@@ -48,7 +48,7 @@ test('owned keys are read-only with «تُدار من صفحة أخرى», even 
 
 test('a multi-field value says «عدّلها من الموقع»', async () => {
   mockApiFetch.mockImplementation(valuesAnswer(WRITER));
-  await renderWithQuery(<ValuesScreen />);
+  await renderWithQuery(<ValuesScreen />, createTestQueryClient({ meFromApi: true }));
   await screen.findByText(labelOf('booking_horizon_weeks'));
   await fireEvent.press(chip('academy'));
   const label = labelOf('academy_contact');

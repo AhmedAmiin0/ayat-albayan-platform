@@ -1,7 +1,7 @@
 import en from '@ab/shared/i18n/en.json';
 import { screen } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
-import { renderWithQuery } from '@/test/query';
+import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { familyOf, familyThread, kid, openSub } from '../testing/fixtures';
 import { SalesChatMoney } from './SalesChatMoney';
 
@@ -22,7 +22,7 @@ test('an English run reads en.json for both chat buttons', async () => {
   mockApiFetch.mockImplementation(async (path: string) =>
     path === '/auth/me' ? { permissions: ['self.sales', 'self.sales_money'] } : familyOf(kid({ open: [openSub()] })),
   );
-  await renderWithQuery(<SalesChatMoney thread={familyThread} />);
+  await renderWithQuery(<SalesChatMoney thread={familyThread} />, createTestQueryClient({ meFromApi: true }));
   expect(await screen.findByRole('button', { name: en.salesMoney.newSubscription })).toBeTruthy();
   expect(screen.getByRole('button', { name: en.salesMoney.recordTransfer })).toBeTruthy();
 });

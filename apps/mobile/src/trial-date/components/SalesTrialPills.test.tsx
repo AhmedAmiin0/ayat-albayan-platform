@@ -4,7 +4,7 @@ import { SalesChatActions } from '@/inbox/leads/sales/SalesChatActions';
 import { t } from '@/core/lib/i18n/i18n';
 import { TreeBaseProvider } from '@/core/nav/tree-base';
 import { familyOf, familyThread, KID, KID2, kid } from '@/sales-subscribe/testing/fixtures';
-import { renderWithQuery } from '@/test/query';
+import { createTestQueryClient, renderWithQuery } from '@/test/query';
 
 // The salesperson's family chat: «موعد تجريبي جديد» per student of hers with no running subscription.
 const mockApiFetch = jest.fn();
@@ -24,6 +24,7 @@ async function open() {
     <TreeBaseProvider value="/sales">
       <SalesChatActions thread={familyThread} />
     </TreeBaseProvider>,
+    createTestQueryClient({ meFromApi: true }),
   );
   return within(await screen.findByTestId('sales-chat-actions'));
 }

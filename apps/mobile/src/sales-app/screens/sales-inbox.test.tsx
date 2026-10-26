@@ -4,7 +4,7 @@ import { InboxScreen } from '@/inbox/screens/InboxScreen';
 import { thread } from '@/inbox/shared/thread-fixtures';
 import { t } from '@/core/lib/i18n/i18n';
 import { TreeBaseProvider } from '@/core/nav/tree-base';
-import { renderWithQuery } from '@/test/query';
+import { createTestQueryClient, renderWithQuery } from '@/test/query';
 
 // The salesperson's «المحادثات» tab (/sales/inbox): the chats alone, as the web /sales/inbox.
 const mockApiFetch = jest.fn();
@@ -24,6 +24,7 @@ async function open(base: '' | '/sales') {
     <TreeBaseProvider value={base}>
       <InboxScreen />
     </TreeBaseProvider>,
+    createTestQueryClient({ meFromApi: true }),
   );
   await screen.findByText(thread.display_name ?? '');
 }

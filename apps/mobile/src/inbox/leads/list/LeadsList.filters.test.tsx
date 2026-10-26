@@ -1,6 +1,6 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
-import { renderWithQuery } from '@/test/query';
+import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { LeadsList } from './LeadsList';
 import { leadsBackend } from './leads-fixtures';
 
@@ -20,13 +20,13 @@ beforeEach(() => {
 });
 
 test('the row names its sales owner, an unassigned lead names none', async () => {
-  await renderWithQuery(<LeadsList switcher={null} />);
+  await renderWithQuery(<LeadsList switcher={null} />, createTestQueryClient({ meFromApi: true }));
   expect(await screen.findByText(new RegExp(t.mobileLeads.assignedTo.replace('{name}', 'سارة')))).toBeTruthy();
   expect(screen.queryAllByText(new RegExp(t.mobileLeads.assignedTo.replace('{name}', '')))).toHaveLength(1);
 });
 
 test('source, owner and order go to GET /leads as the web sends them', async () => {
-  await renderWithQuery(<LeadsList switcher={null} />);
+  await renderWithQuery(<LeadsList switcher={null} />, createTestQueryClient({ meFromApi: true }));
   await screen.findByText('هدى سالم');
   await fireEvent.press(screen.getByRole('button', { name: t.mobileLeads.filter }));
   await fireEvent.press(screen.getByRole('radio', { name: t.enums.leadSource.facebook_ad }));
@@ -39,7 +39,7 @@ test('source, owner and order go to GET /leads as the web sends them', async () 
 });
 
 test('«بدون مسؤول» asks for assignee=none and «مسح التصفية» drops every filter', async () => {
-  await renderWithQuery(<LeadsList switcher={null} />);
+  await renderWithQuery(<LeadsList switcher={null} />, createTestQueryClient({ meFromApi: true }));
   await screen.findByText('هدى سالم');
   await fireEvent.press(screen.getByRole('button', { name: t.mobileLeads.filter }));
   await fireEvent.press(screen.getByRole('radio', { name: t.sales.assign.none }));
@@ -49,7 +49,7 @@ test('«بدون مسؤول» asks for assignee=none and «مسح التصفية
 });
 
 test('the result button carries the total the API returned', async () => {
-  await renderWithQuery(<LeadsList switcher={null} />);
+  await renderWithQuery(<LeadsList switcher={null} />, createTestQueryClient({ meFromApi: true }));
   await screen.findByText('هدى سالم');
   await fireEvent.press(screen.getByRole('button', { name: t.mobileLeads.filter }));
   expect(screen.getByRole('button', { name: t.mobileLeads.showResults.replace('{n}', '2') })).toBeTruthy();
@@ -57,7 +57,7 @@ test('the result button carries the total the API returned', async () => {
 
 test('a role without leads.assign gets no bulk button and no salespeople to filter by', async () => {
   mockApiFetch.mockImplementation(leadsBackend(['leads.read']));
-  await renderWithQuery(<LeadsList switcher={null} />);
+  await renderWithQuery(<LeadsList switcher={null} />, createTestQueryClient({ meFromApi: true }));
   await screen.findByText('هدى سالم');
   await waitFor(() => expect(screen.queryByRole('button', { name: t.sales.assign.assignAll })).toBeNull());
   await fireEvent.press(screen.getByRole('button', { name: t.mobileLeads.filter }));
@@ -67,7 +67,7 @@ test('a role without leads.assign gets no bulk button and no salespeople to filt
 
 test('a filter with no results says «no match»; an empty inbox without filters says «no leads»', async () => {
   mockApiFetch.mockImplementation(leadsBackend(['leads.assign'], []));
-  await renderWithQuery(<LeadsList switcher={null} />);
+  await renderWithQuery(<LeadsList switcher={null} />, createTestQueryClient({ meFromApi: true }));
   expect(await screen.findByRole('header', { name: t.leads.empty })).toBeTruthy();
   await fireEvent.press(screen.getByRole('button', { name: t.mobileLeads.filter }));
   await fireEvent.press(screen.getByRole('radio', { name: t.sales.assign.none }));

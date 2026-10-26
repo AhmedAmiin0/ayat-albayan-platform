@@ -2,7 +2,7 @@ import { screen } from '@testing-library/react-native';
 import { InboxScreen } from '@/inbox/screens/InboxScreen';
 import { thread } from '@/inbox/shared/thread-fixtures';
 import { TreeBaseProvider } from '@/core/nav/tree-base';
-import { renderWithQuery } from '@/test/query';
+import { createTestQueryClient, renderWithQuery } from '@/test/query';
 
 jest.mock('react-native/Libraries/ReactNative/I18nManager', () => {
   const actual = jest.requireActual('react-native/Libraries/ReactNative/I18nManager').default;
@@ -23,6 +23,7 @@ test('the sales inbox bell reads in English', async () => {
     <TreeBaseProvider value="/sales">
       <InboxScreen />
     </TreeBaseProvider>,
+    createTestQueryClient({ meFromApi: true }),
   );
   expect(await screen.findByRole('button', { name: 'Notifications, 5 unread' })).toBeTruthy();
 });
