@@ -8,7 +8,7 @@ import { LessonStore } from '../store/lesson-store';
 import { LessonsSettings } from '../lessons.settings';
 import { CANCEL_EVENT, cancelChange, invalidTransition, type CancelContext } from './transition';
 
-export type CancelInput = { lessonId: string; body: CancelRequest; actor: AuthUser };
+type CancelInput = { lessonId: string; body: CancelRequest; actor: AuthUser };
 export type RuleCancelInput = { ruleId: string; body: RuleCancelRequest; actor: AuthUser };
 
 type Cancel = { by: CancelRequest['by']; reason: string };

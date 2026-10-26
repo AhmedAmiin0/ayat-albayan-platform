@@ -5,7 +5,7 @@ import { notFound } from '../../../../common/http/errors';
 import { TeachersQueries } from '../../../people/teachers/teachers.queries';
 import { ClassroomQueries, type JoinLesson } from '../classroom.queries';
 
-export type StaffRole = Exclude<JoinRole, 'guest'>;
+type StaffRole = Exclude<JoinRole, 'guest'>;
 
 /**
  * A login's role in one lesson's room (rule 9, the API being the only gate): any admin; the

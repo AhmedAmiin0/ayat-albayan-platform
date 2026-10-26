@@ -6,7 +6,7 @@ import { DB, type Db } from '../../../../common/db/db.module';
 import { dbError } from '../../../../common/http/http';
 import type { StatusChangeRow } from './student-renewal.plan';
 
-export type StatusMove = { studentId: string; from: StudentStatus; to: StudentStatus };
+type StatusMove = { studentId: string; from: StudentStatus; to: StudentStatus };
 type MoveAudit = { actorId: string | null; after: Record<string, Json> };
 
 /** The reads and the compare-and-set writes of the automatic student status changes (docs/11 §7). */

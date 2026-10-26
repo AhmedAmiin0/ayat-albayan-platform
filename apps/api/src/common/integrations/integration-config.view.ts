@@ -1,7 +1,7 @@
 import { INTEGRATION_KEYS, type IntegrationConfigItem } from '@ab/shared';
 import type { PlainRow, SecretStatus } from './integration-config.queries';
 
-export interface ViewInput {
+interface ViewInput {
   plain: readonly PlainRow[];
   secrets: readonly SecretStatus[];
   /** The server env (raw strings), the fallback. */

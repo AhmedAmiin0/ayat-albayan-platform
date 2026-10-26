@@ -108,7 +108,7 @@ interface PushInput {
 }
 
 /** How the admin knows this phone: guardian, lead, teacher, WhatsApp profile name, else the number. */
-export function senderName({ m, phone, who }: Pick<PushInput, 'm' | 'phone' | 'who'>): string {
+function senderName({ m, phone, who }: Pick<PushInput, 'm' | 'phone' | 'who'>): string {
   return who.guardian?.name ?? who.lead?.name ?? who.teacher?.name ?? m.name ?? phone;
 }
 

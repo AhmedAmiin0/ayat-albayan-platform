@@ -52,7 +52,7 @@ async function searchFilter(db: Db, term: string): Promise<string | null> {
   return studentPhoneOrCodeFilter(data.map((g) => g.id), digits);
 }
 
-export type StatusCounts = Record<StudentStatus, number>;
+type StatusCounts = Record<StudentStatus, number>;
 
 /** Students per status under the other filters, e.g. one teacher's «١٢ مشترك · ٣ تجريبي». */
 export async function countStudentsByStatus(db: Db, f: StudentListFilters): Promise<StatusCounts> {

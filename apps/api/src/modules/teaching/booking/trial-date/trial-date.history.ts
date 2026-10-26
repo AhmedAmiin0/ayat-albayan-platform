@@ -35,7 +35,7 @@ export interface TrialLessonRead {
   } | null;
 }
 
-export type TrialLesson = NonNullable<TrialLessonRead['lesson']> & { attendance: Attendance | null };
+type TrialLesson = NonNullable<TrialLessonRead['lesson']> & { attendance: Attendance | null };
 
 const iso = (t: string) => new Date(t).toISOString();
 
@@ -50,7 +50,7 @@ export function trialLessonsOf(rows: readonly TrialLessonRead[]): TrialLesson[] 
   return [...byId.values()].sort((a, b) => at(b) - at(a) || Date.parse(b.starts_at) - Date.parse(a.starts_at));
 }
 
-export interface HistoryInput {
+interface HistoryInput {
   student: TrialStudent;
   lessons: readonly TrialLesson[];
   /** profiles.full_name by id (who picked each date). */

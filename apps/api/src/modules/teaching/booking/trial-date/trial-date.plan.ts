@@ -27,7 +27,7 @@ export interface MovedTrial {
   student_ids: string[];
 }
 
-export interface PickInput {
+interface PickInput {
   payload: BookingPayload;
   actorId: string;
 }

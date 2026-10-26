@@ -4,7 +4,7 @@ import { DB, type Db } from '../../../../common/db/db.module';
 import { dbError } from '../../../../common/http/http';
 import { STATEMENT_SELECT, type StatementRow } from './statements.mapper';
 
-export interface StatementFilter {
+interface StatementFilter {
   assistantId?: string;
   /** YYYY-MM-01 */
   month?: string;

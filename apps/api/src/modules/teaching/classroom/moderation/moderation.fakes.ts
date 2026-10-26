@@ -81,7 +81,7 @@ export function http(answer: { status?: number; body?: object } = {}) {
   return fn;
 }
 
-export const teachersFake = () => ({
+const teachersFake = () => ({
   idByProfile: vi.fn(async (id: string) => (id === TEACHER.id ? TEACHER_ID : id === OTHER_TEACHER.id ? 'other' : null)),
 });
 

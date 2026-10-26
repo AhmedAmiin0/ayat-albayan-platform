@@ -20,7 +20,7 @@ interface HistoryPage {
   after: string | undefined;
 }
 
-export interface PageQuery {
+interface PageQuery {
   /** ISO time: messages from then on. */
   since: string;
   after?: string;

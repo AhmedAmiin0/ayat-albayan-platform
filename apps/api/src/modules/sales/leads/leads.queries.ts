@@ -28,7 +28,7 @@ const LEAD_SORT: SortSpec<LeadSortKey> = {
   fallback: { column: 'created_at', ascending: false },
 };
 
-export interface StatusMove {
+interface StatusMove {
   id: string;
   from: LeadStatus;
   to: LeadStatus;

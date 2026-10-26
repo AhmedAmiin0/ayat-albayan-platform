@@ -38,7 +38,7 @@ function json(text: string): unknown {
 }
 
 /** Retry-After in seconds (an HTTP date counts too); unreadable = one minute, at most an hour. */
-export function retryAfterMs(header: string | null, now: Date = new Date()): number {
+function retryAfterMs(header: string | null, now: Date = new Date()): number {
   const raw = header?.trim() ?? '';
   const ms = /^\d+$/.test(raw) ? Number(raw) * 1000 : Date.parse(raw) - now.getTime();
   return Number.isFinite(ms) && ms > 0 ? Math.min(ms, RETRY_MAX_MS) : RETRY_DEFAULT_MS;
