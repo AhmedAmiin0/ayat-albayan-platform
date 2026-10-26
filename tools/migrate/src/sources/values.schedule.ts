@@ -1,7 +1,7 @@
 // «تقويم الحجوزات» vocabulary: booking status, weekdays, the «التكرار» recurrence text.
 import { lookup } from './values.ts';
 
-/** «الحالة». docs/06: schedule rules only from confirmed/subscribed. */
+/** «الحالة». docs/06: rules and one-off lessons from confirmed / subscribed / needs confirmation. */
 export const bookingStatus = lookup<
   'confirmed' | 'subscribed' | 'needs_confirmation' | 'tentative' | 'done' | 'cancelled'
 >({
@@ -44,10 +44,12 @@ export interface Recurrence {
  */
 export function parseRecurrence(raw: string | null): Recurrence | null | undefined {
   if (!raw) return null;
-  const m = /^أسبوعي\s*:\s*(.+?)(?:\s+حتى\s+(\d{4}-\d{2}-\d{2}))?$/.exec(raw.trim());
+  // The Apps Script's parseRepeat: /حتى\s*(\d{4})-(\d{1,2})-(\d{1,2})/ → that day 23:59 Asia/Riyadh.
+  const m = /^أسبوعي\s*:\s*(.+?)(?:\s*حتى\s*(\d{4})-(\d{1,2})-(\d{1,2}))?$/.exec(raw.trim());
   if (!m?.[1]) return undefined;
   const days = m[1].split(/[,،]/).map((d) => weekday(d.trim()));
   if (days.length === 0 || days.some((d) => d === undefined)) return undefined;
   const byday = [...new Set(days as number[])].sort((a, b) => a - b);
-  return { byday, until: m[2] ?? null };
+  const pad = (n: string | undefined) => (n ?? '').padStart(2, '0');
+  return { byday, until: m[2] ? `${m[2]}-${pad(m[3])}-${pad(m[4])}` : null };
 }
