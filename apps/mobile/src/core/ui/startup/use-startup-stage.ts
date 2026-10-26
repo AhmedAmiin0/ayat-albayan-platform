@@ -7,7 +7,7 @@ const later = (a: StartupStage, b: StartupStage) => (ORDER.indexOf(b) > ORDER.in
 /** The startup stage, moved on by timers from mount; `restart` («إعادة المحاولة») counts again from now. */
 export function useStartupStage(mode: StartupMode): { stage: StartupStage; restart: () => void } {
   const [start, setStart] = useState(() => Date.now());
-  const [stage, setStage] = useState<StartupStage>('mark');
+  const [stage, setStage] = useState<StartupStage>(() => startupStage(mode, 0));
   useEffect(() => {
     // Only forward: a quiet screen that already said «جارٍ الاتصال…» never goes back to the mark alone.
     const update = () => setStage((now) => later(now, startupStage(mode, Date.now() - start)));

@@ -13,7 +13,7 @@ import { connectivity } from '@/core/lib/connectivity/connectivity';
 import { useOverridesReady } from '@/core/lib/i18n/i18n-overrides';
 import { useLocaleReady } from '@/core/lib/i18n/locale-switch';
 import { onCacheRestored, persistOptions, queryClient } from '@/core/lib/query/query-client';
-import { ConnectingBar } from '@/core/ui/connecting/ConnectingBar';
+import { TopConnectingBar } from '@/core/ui/connecting/TopConnectingBar';
 import { StartupOverlay } from '@/core/ui/startup/StartupOverlay';
 import { restoreAppearance } from '@/more';
 import { useTheme } from '@/theme';
@@ -42,7 +42,8 @@ const fonts = {
  * sits in its tree's guard (an unlisted route is unprotected), after the tree, which stays first.
  * When the gate flips, Stack.Protected moves the screen by itself: no screen navigates after sign-in/out.
  * Until then the branded startup screen lies over it and fades out on the first screen; the
- * reconnecting bar sits above the stack and pushes it down while the app has no connection.
+ * reconnecting bar shows under the focused screen's header (ScreenHeader), or above the stack under the
+ * top safe area for a screen with none, and pushes the content down while the app has no connection.
  */
 export default function RootLayout() {
   const [loaded, error] = useFonts(fonts);
@@ -68,7 +69,7 @@ export default function RootLayout() {
       {ready ? (
         <View style={{ flex: 1, backgroundColor: color.margin }}>
           <StatusBar style="auto" />
-          <ConnectingBar />
+          <TopConnectingBar />
           <Stack
             screenOptions={{ headerShown: false, contentStyle: { backgroundColor: color.margin } }}
           >

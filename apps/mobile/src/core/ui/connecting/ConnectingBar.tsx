@@ -1,17 +1,16 @@
-import { useEffect, useRef, useState } from 'react';
-import { AccessibilityInfo, Animated, Easing, Platform } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useCallback, useEffect, useState } from 'react';
+import { AccessibilityInfo, Animated, Platform, View } from 'react-native';
 import { connectivity } from '@/core/lib/connectivity/connectivity';
 import type { ConnectivityStore } from '@/core/lib/connectivity/connectivity-store';
 import { useConnectivity } from '@/core/lib/connectivity/use-connectivity';
 import { t } from '@/core/lib/i18n/i18n';
 import { useA11yPref } from '@/core/ui/primitives/use-a11y-pref';
-import { motion, useTheme } from '@/theme';
 import type { BarPhase } from './bar-phase';
-import { BarStrip, stripHeight } from './BarStrip';
+import { BarCard, type ShownPhase } from './BarCard';
 import { useBarPhase } from './use-bar-phase';
+import { useBarReveal } from './use-bar-reveal';
 
-/** iOS has no live regions: say each message once (Android's liveRegion on the strip speaks it). */
+/** iOS has no live regions: say each message once (Android's liveRegion on the card speaks it). */
 function useAnnounce(phase: BarPhase) {
   useEffect(() => {
     if (Platform.OS !== 'ios') return;
@@ -20,40 +19,37 @@ function useAnnounce(phase: BarPhase) {
   }, [phase]);
 }
 
+export interface ConnectingBarProps {
+  store?: ConnectivityStore;
+  /** Space kept above the card (the top safe area when the bar sits above a screen with no header). */
+  inset?: number;
+  /** Paints the inset and the card's margins (the screen's own background), when there is an inset. */
+  background?: string;
+}
+
 /**
- * App-wide reconnecting bar (root layout, above the stack). It takes its own height under the status
- * bar and pushes the screen down, never covering it: it starts at the top inset (where the screen's
- * own safe area already was) and grows by the strip, so the screen moves only by the strip. The height
- * is layout, so that one animation runs on the JS driver; the dots run on the native driver.
+ * The reconnecting bar: a card that grows in under a screen's header (or under the top safe area)
+ * and pushes the content down, never covering it. It measures its card and animates to that height,
+ * so the hint's second line and large OS text sizes never clip.
  */
-export function ConnectingBar({ store = connectivity }: { store?: ConnectivityStore }) {
+export function ConnectingBar({ store = connectivity, inset = 0, background }: ConnectingBarProps) {
   const phase = useBarPhase(useConnectivity(store));
   const still = useA11yPref('reduceMotion');
-  const { top } = useSafeAreaInsets();
-  const { color } = useTheme();
-  const [height] = useState(() => new Animated.Value(0));
-  const [shown, setShown] = useState<Exclude<BarPhase, 'hidden'> | null>(null);
-  const wasOpen = useRef(false);
-  // The strip keeps its last words («تم الاتصال») while it slides away.
+  // The card keeps its last words («تم الاتصال») while it closes.
+  const [shown, setShown] = useState<ShownPhase | null>(phase === 'hidden' ? null : phase);
   if (phase !== 'hidden' && shown !== phase) setShown(phase);
+  const [content, setContent] = useState(0);
+  const onClosed = useCallback(() => setShown(null), []);
+  const { height, opacity } = useBarReveal({ open: phase !== 'hidden', content, still, onClosed });
   useAnnounce(phase);
-
-  useEffect(() => {
-    const open = phase !== 'hidden';
-    // Opening starts at the top inset, where the screen's own safe area was: only the strip pushes.
-    if (open && !wasOpen.current) height.setValue(top);
-    wasOpen.current = open;
-    const toValue = open ? top + stripHeight(phase) : top;
-    const duration = still ? 0 : motion.base;
-    const run = Animated.timing(height, { toValue, duration, easing: Easing.out(Easing.cubic), useNativeDriver: false });
-    run.start(({ finished }) => (finished && !open ? setShown(null) : undefined));
-    return () => run.stop();
-  }, [phase, top, still, height]);
-
   if (shown === null) return null;
   return (
-    <Animated.View style={{ height, paddingTop: top, overflow: 'hidden', backgroundColor: color.margin }}>
-      <BarStrip phase={shown} still={still} />
-    </Animated.View>
+    <View testID="connecting-bar-frame" style={{ paddingTop: inset, backgroundColor: background }}>
+      <Animated.View testID="connecting-bar-reveal" style={{ height, overflow: 'hidden' }}>
+        <Animated.View testID="connecting-bar-measure" style={{ opacity }} onLayout={(e) => setContent(Math.ceil(e.nativeEvent.layout.height))}>
+          <BarCard phase={shown} still={still} />
+        </Animated.View>
+      </Animated.View>
+    </View>
   );
 }

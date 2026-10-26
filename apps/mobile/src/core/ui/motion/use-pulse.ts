@@ -7,7 +7,7 @@ export interface PulseOptions {
   /** Wait before rising and after falling, so staggered pulses keep one period (dots in a row). */
   lead?: number;
   trail?: number;
-  /** Reduce Motion (or nothing to animate): the value rests at 1, no loop runs. */
+  /** Reduce Motion (or nothing to animate): the value rests at 0 (the loop's first frame), no loop runs. */
   still: boolean;
 }
 
@@ -16,7 +16,7 @@ export function usePulse({ duration, lead = 0, trail = 0, still }: PulseOptions)
   const [value] = useState(() => new Animated.Value(0));
   useEffect(() => {
     if (still) {
-      value.setValue(1);
+      value.setValue(0);
       return undefined;
     }
     const ease = Easing.inOut(Easing.sin);

@@ -1,23 +1,17 @@
 import { act, fireEvent, render, screen } from '@testing-library/react-native';
 import { AccessibilityInfo, Animated } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
+import { palette } from '@/theme';
 import { StartupScreen } from './StartupScreen';
 
-// The branded wait: when the words and the retry come, what a retry does, Reduce Motion.
+// The branded wait: the status from the start, the 10 s hint and retry in a reserved space, Reduce Motion.
 jest.useFakeTimers();
 const reduceMotion = jest.mocked(AccessibilityInfo.isReduceMotionEnabled);
-const realLoop = Animated.loop;
-const stops: jest.Mock[] = [];
-/** Every loop started, with a spy on its stop. */
-const loop = jest.spyOn(Animated, 'loop').mockImplementation((animation, config) => {
-  const real = realLoop(animation, config);
-  const stop = jest.fn(() => real.stop());
-  stops.push(stop);
-  return { ...real, start: (cb) => real.start(cb), stop };
-});
+const loop = jest.spyOn(Animated, 'loop');
 const c = t.mobile.connection;
 const onRetry = jest.fn();
 const advance = (ms: number) => act(async () => void jest.advanceTimersByTime(ms));
+const retryButton = () => screen.queryByRole('button', { name: c.retry });
 
 async function open(mode: 'quiet' | 'loading' = 'loading') {
   await render(<StartupScreen mode={mode} onRetry={onRetry} fontsLoaded />);
@@ -26,57 +20,59 @@ async function open(mode: 'quiet' | 'loading' = 'loading') {
 
 beforeEach(() => {
   loop.mockClear();
-  stops.length = 0;
   onRetry.mockClear();
   reduceMotion.mockResolvedValue(false);
 });
 
-test('the academy first; «جارٍ الاتصال…» after 1 s; «إعادة المحاولة» after 10 s', async () => {
+test('cover background, 32 pt sides; the title 22 / 33 in cover ink, 32 pt under the emblem', async () => {
   await open();
+  expect(screen.getByTestId('startup-screen')).toHaveStyle({ backgroundColor: palette.light.cover, paddingHorizontal: 32, justifyContent: 'center' });
+  expect(screen.getByText(t.app.name)).toHaveStyle({ marginTop: 32, fontSize: 22, lineHeight: 33, color: palette.light.coverInk });
   expect(screen.getByLabelText(`${t.app.name} — ${c.loading}`)).toBeOnTheScreen();
-  expect(screen.queryByText(c.connecting)).toBeNull();
-  await advance(1000);
-  expect(screen.getByText(c.connecting)).toBeOnTheScreen();
-  expect(screen.queryByRole('button', { name: c.retry })).toBeNull();
-  await advance(9000);
-  expect(screen.getByRole('button', { name: c.retry })).toBeOnTheScreen();
 });
 
-test('a retry asks again, keeps the words and waits another 10 s before offering it again', async () => {
+test('«جارٍ الاتصال» (15 / 24 ink-3, polite) with the gold dots from the first frame; the hint and retry at 10 s', async () => {
+  await open();
+  expect(screen.getByText(c.startupConnecting)).toHaveStyle({ fontSize: 15, lineHeight: 24, color: palette.light.ink3 });
+  expect(screen.getByLabelText(c.startupConnecting)).toHaveProp('accessibilityLiveRegion', 'polite');
+  expect(screen.getAllByTestId('connecting-dot', { includeHiddenElements: true })[0]).toHaveStyle({ backgroundColor: palette.light.gold });
+  expect(screen.getByTestId('startup-retry-area')).toHaveStyle({ height: 112, paddingTop: 18 });
+  await advance(9999);
+  expect(retryButton()).toBeNull();
+  expect(screen.queryByText(c.checkInternet)).toBeNull();
+  await advance(1);
+  expect(screen.getByText(c.checkInternet)).toHaveStyle({ fontSize: 14, lineHeight: 22, color: palette.light.ink3 });
+  expect(retryButton()).toHaveStyle({ height: 48, paddingHorizontal: 28, borderRadius: 12, backgroundColor: palette.light.lapisFill });
+  expect(screen.getByText(c.retry)).toHaveStyle({ fontSize: 16, color: palette.light.onLapis });
+});
+
+test('a retry probes at once and waits another 10 s before offering it again', async () => {
   await open();
   await advance(10_000);
-  await fireEvent.press(screen.getByRole('button', { name: c.retry }));
+  const button = retryButton();
+  if (!button) throw new Error('no retry');
+  await fireEvent.press(button);
   expect(onRetry).toHaveBeenCalledTimes(1);
-  expect(screen.queryByRole('button', { name: c.retry })).toBeNull();
-  expect(screen.getByText(c.connecting)).toBeOnTheScreen();
+  expect(retryButton()).toBeNull();
+  expect(screen.getByText(c.startupConnecting)).toBeOnTheScreen();
   await advance(10_000);
-  expect(screen.getByRole('button', { name: c.retry })).toBeOnTheScreen();
+  expect(retryButton()).toBeOnTheScreen();
 });
 
-test('quiet (saved data coming): the mark alone until 3 s', async () => {
+test('quiet (saved data coming): the emblem alone until 3 s', async () => {
   await open('quiet');
   await advance(2999);
-  expect(screen.queryByText(c.connecting)).toBeNull();
+  expect(screen.queryByText(c.startupConnecting)).toBeNull();
   await advance(1);
-  expect(screen.getByText(c.connecting)).toBeOnTheScreen();
+  expect(screen.getByText(c.startupConnecting)).toBeOnTheScreen();
 });
 
-test('the mark breathes and the khatam turns on the native driver', async () => {
-  const timing = jest.spyOn(Animated, 'timing');
-  await open();
-  expect(loop).toHaveBeenCalledTimes(2);
-  expect(timing.mock.calls.every(([, config]) => config.useNativeDriver === true)).toBe(true);
-  timing.mockRestore();
-});
-
-test('Reduce Motion: a still emblem (stopped as soon as the setting is read), the words still come', async () => {
+test('Reduce Motion: no ring turn, breath or dot wave; the words and the retry still come', async () => {
   reduceMotion.mockResolvedValue(true);
   await open();
-  expect(screen.getByTestId('khatam-star', { includeHiddenElements: true })).toBeOnTheScreen();
-  expect(stops.every((stop) => stop.mock.calls.length > 0)).toBe(true);
   loop.mockClear();
-  await advance(5000);
+  await advance(10_000);
   expect(loop).not.toHaveBeenCalled();
-  await advance(1000);
-  expect(screen.getByText(c.connecting)).toBeOnTheScreen();
+  for (const dot of screen.getAllByTestId('connecting-dot', { includeHiddenElements: true })) expect(dot).toHaveStyle({ opacity: 0.7 });
+  expect(retryButton()).toBeOnTheScreen();
 });

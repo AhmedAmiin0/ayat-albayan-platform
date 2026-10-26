@@ -99,6 +99,7 @@
     },
     "connection": {
       "connecting": "Connecting…",
+      "startupConnecting": "Connecting",
       "checkInternet": "Check your internet connection",
       "connected": "Connected",
       "retry": "Try again",

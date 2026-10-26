@@ -1,35 +1,38 @@
-import { act, render, screen } from '@testing-library/react-native';
+import { act, fireEvent, render, screen } from '@testing-library/react-native';
 import { AccessibilityInfo, Animated } from 'react-native';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { createConnectivity } from '@/core/lib/connectivity/connectivity-store';
 import { t } from '@/core/lib/i18n/i18n';
 import { ConnectingBar } from './ConnectingBar';
 
-// The bar against a real store (probe never answers): 800 ms delay, 10 s hint, «تم الاتصال», Reduce Motion.
+// The bar against a real store (probe never answers): 800 ms delay, the 260 ms reveal to the measured
+// card, the 10 s hint, «تم الاتصال» for 1.5 s then the exit, a bar mounted mid-outage.
 jest.useFakeTimers();
 const reduceMotion = jest.mocked(AccessibilityInfo.isReduceMotionEnabled);
-const loop = jest.spyOn(Animated, 'loop');
+const timing = jest.spyOn(Animated, 'timing');
 const c = t.mobile.connection;
-const metrics = { frame: { x: 0, y: 0, width: 390, height: 844 }, insets: { top: 47, left: 0, right: 0, bottom: 34 } };
+const CARD = 52;
 
-async function mountBar() {
+async function mountBar({ connectingFor }: { connectingFor?: number } = {}) {
   const store = createConnectivity({ probe: () => new Promise(() => undefined), setOnline: jest.fn() });
-  await render(
-    <SafeAreaProvider initialMetrics={metrics}>
-      <ConnectingBar store={store} />
-    </SafeAreaProvider>,
-  );
+  if (connectingFor !== undefined) {
+    store.reportFailure();
+    jest.advanceTimersByTime(connectingFor);
+  }
+  await render(<ConnectingBar store={store} />);
   await act(async () => undefined); // Reduce Motion is read asynchronously
   return store;
 }
 const advance = (ms: number) => act(async () => void jest.advanceTimersByTime(ms));
+const measure = () => fireEvent(screen.getByTestId('connecting-bar-measure'), 'layout', { nativeEvent: { layout: { height: CARD } } });
+const height = () => screen.getByTestId('connecting-bar-reveal');
+const heightRuns = () => timing.mock.calls.map(([, config]) => config).filter((config) => config.useNativeDriver === false);
 
 beforeEach(() => {
-  loop.mockClear();
+  timing.mockClear();
   reduceMotion.mockResolvedValue(false);
 });
 
-test('hidden while online and for the first 800 ms of connecting', async () => {
+test('hidden while online and for the first 800 ms; then it grows to its card over 260 ms', async () => {
   const store = await mountBar();
   expect(screen.queryByTestId('connecting-bar')).toBeNull();
   await act(async () => store.reportFailure());
@@ -37,38 +40,54 @@ test('hidden while online and for the first 800 ms of connecting', async () => {
   expect(screen.queryByTestId('connecting-bar')).toBeNull();
   await advance(1);
   expect(screen.getByText(c.connecting)).toBeOnTheScreen();
-  expect(screen.queryByText(c.checkInternet)).toBeNull();
-  expect(screen.getAllByTestId('connecting-dot', { includeHiddenElements: true })).toHaveLength(3);
+  expect(height()).toHaveStyle({ height: 0, overflow: 'hidden' });
+  await measure();
+  expect(heightRuns()).toEqual([expect.objectContaining({ toValue: CARD, duration: 260 })]);
+  expect(timing).toHaveBeenCalledWith(expect.anything(), expect.objectContaining({ toValue: 1, duration: 260, useNativeDriver: true }));
+  await advance(300);
+  expect(height()).toHaveStyle({ height: CARD });
 });
 
-test('after 10 s the hint; back online «تم الاتصال», then it slides away', async () => {
+test('after 10 s the hint; back online «تم الاتصال» for 1.5 s, then it closes', async () => {
   const store = await mountBar();
   await act(async () => store.reportFailure());
-  await advance(10_000);
+  await advance(800);
+  await measure();
+  await advance(9200);
   expect(screen.getByText(c.checkInternet)).toBeOnTheScreen();
-  expect(screen.getByTestId('connecting-bar')).toHaveProp('accessibilityLiveRegion', 'polite');
   await act(async () => store.reportReached());
   expect(screen.getByText(c.connected)).toBeOnTheScreen();
-  await advance(1500);
-  await advance(400); // the slide away starts once «تم الاتصال» has had its time
+  await advance(1499);
+  expect(screen.getByText(c.connected)).toBeOnTheScreen();
+  await advance(1);
+  expect(heightRuns().at(-1)).toEqual(expect.objectContaining({ toValue: 0, duration: 260 }));
+  await advance(300);
   expect(screen.queryByTestId('connecting-bar')).toBeNull();
 });
 
-test('the dots pulse on the native driver', async () => {
-  const timing = jest.spyOn(Animated, 'timing');
-  const store = await mountBar();
-  await act(async () => store.reportFailure());
-  await advance(800);
-  expect(loop).toHaveBeenCalledTimes(3);
-  expect(timing.mock.calls.some(([, config]) => config.useNativeDriver === true)).toBe(true);
-  timing.mockRestore();
+test('mounted mid-outage (a screen pushed while connecting): there at once, no slide', async () => {
+  await mountBar({ connectingFor: 2000 });
+  expect(screen.getByText(c.connecting)).toBeOnTheScreen();
+  await measure();
+  expect(heightRuns()).toEqual([]);
+  expect(height()).toHaveStyle({ height: CARD });
 });
 
-test('Reduce Motion: the same three dots, still', async () => {
+test('Reduce Motion: no slide (the height jumps), a 150 ms fade, the dots still', async () => {
   reduceMotion.mockResolvedValue(true);
+  const loop = jest.spyOn(Animated, 'loop');
+  loop.mockClear();
   const store = await mountBar();
   await act(async () => store.reportFailure());
   await advance(800);
-  expect(screen.getAllByTestId('connecting-dot', { includeHiddenElements: true })).toHaveLength(3);
+  await measure();
+  expect(height()).toHaveStyle({ height: CARD });
+  expect(heightRuns()).toEqual([]);
+  expect(timing).toHaveBeenCalledWith(expect.anything(), expect.objectContaining({ toValue: 1, duration: 150 }));
   expect(loop).not.toHaveBeenCalled();
+  await act(async () => store.reportReached());
+  await advance(1500);
+  expect(timing).toHaveBeenLastCalledWith(expect.anything(), expect.objectContaining({ toValue: 0, duration: 150 }));
+  await advance(200);
+  expect(screen.queryByTestId('connecting-bar')).toBeNull();
 });

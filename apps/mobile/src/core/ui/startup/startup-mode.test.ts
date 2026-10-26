@@ -7,14 +7,15 @@ test('saved data on disk (or still being read) → quiet; nothing saved → load
   expect(startupMode({ restoring: false, hasSaved: false })).toBe('loading');
 });
 
-test('loading: the mark, «جارٍ الاتصال…» from 1 s, «إعادة المحاولة» from 10 s', () => {
-  expect(startupStage('loading', TEXT_AFTER_MS - 1)).toBe('mark');
-  expect(startupStage('loading', TEXT_AFTER_MS)).toBe('connecting');
+test('loading: «جارٍ الاتصال» from the first frame, «إعادة المحاولة» from 10 s', () => {
+  expect(TEXT_AFTER_MS).toBe(0);
+  expect(startupStage('loading', 0)).toBe('connecting');
+  expect(startupStage('loading', RETRY_AFTER_MS - 1)).toBe('connecting');
   expect(startupStage('loading', RETRY_AFTER_MS)).toBe('retry');
 });
 
 test('quiet: the mark alone for longer, the same retry at 10 s', () => {
-  expect(startupStage('quiet', TEXT_AFTER_MS)).toBe('mark');
+  expect(startupStage('quiet', QUIET_TEXT_AFTER_MS - 1)).toBe('mark');
   expect(startupStage('quiet', QUIET_TEXT_AFTER_MS)).toBe('connecting');
   expect(startupStage('quiet', RETRY_AFTER_MS)).toBe('retry');
 });

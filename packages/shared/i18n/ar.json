@@ -99,6 +99,7 @@
     },
     "connection": {
       "connecting": "جارٍ الاتصال…",
+      "startupConnecting": "جارٍ الاتصال",
       "checkInternet": "تحقّق من اتصالك بالإنترنت",
       "connected": "تم الاتصال",
       "retry": "إعادة المحاولة",
