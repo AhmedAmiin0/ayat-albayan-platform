@@ -1,5 +1,5 @@
 import type { LessonView } from '@ab/shared';
-import { useMinuteClock } from '@/classroom/use-minute-clock';
+import { useMinuteClock } from '@/classroom/sessions/use-minute-clock';
 import { t } from '@/core/lib/i18n/i18n';
 import { useJoinWindow } from '@/core/lib/query/public-config';
 import { StatusChip } from '@/core/ui/feedback/StatusChip';

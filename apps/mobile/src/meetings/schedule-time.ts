@@ -1,5 +1,5 @@
 import { DEFAULT_MEETING_DURATION, MEETING_DURATION_MAX, MEETING_DURATION_MIN, utcOffsetMinutes } from '@ab/shared';
-import { addDays } from '@/calendar/week';
+import { addDays } from '@/calendar/lib/week';
 
 // The schedule form's wall clock (rule 6): a local day, an hour and a minute in the viewer's zone,
 // turned into a UTC instant for the API. No date-picker and no tz library: Intl offsets only.

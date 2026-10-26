@@ -1,7 +1,7 @@
 import { router } from 'expo-router';
 import { ActivityIndicator, FlatList, View } from 'react-native';
-import { AssistantLessonItem } from '@/classroom/AssistantLessonItem';
-import { joinableRows } from '@/classroom/assistant-lessons';
+import { AssistantLessonItem } from '@/classroom/assistants/AssistantLessonItem';
+import { joinableRows } from '@/classroom/assistants/assistant-lessons';
 import { t } from '@/core/lib/i18n/i18n';
 import { useTheme } from '@/theme';
 import { Button } from '@/core/ui/primitives/Button';

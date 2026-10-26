@@ -1,0 +1,340 @@
+{
+  "id": "c10a",
+  "seq": 91,
+  "moves": [
+    {
+      "from": "apps/mobile/src/calendar/DayScheduleScreen*",
+      "to": "apps/mobile/src/calendar/screens/"
+    },
+    {
+      "from": "apps/mobile/src/calendar/TeacherCalendarScreen*",
+      "to": "apps/mobile/src/calendar/screens/"
+    },
+    {
+      "from": "apps/mobile/src/calendar/AgendaDayView*",
+      "to": "apps/mobile/src/calendar/agenda/"
+    },
+    {
+      "from": "apps/mobile/src/calendar/AgendaItemRow*",
+      "to": "apps/mobile/src/calendar/agenda/"
+    },
+    {
+      "from": "apps/mobile/src/calendar/AgendaLessonRow*",
+      "to": "apps/mobile/src/calendar/agenda/"
+    },
+    {
+      "from": "apps/mobile/src/calendar/LessonRowActions*",
+      "to": "apps/mobile/src/calendar/agenda/"
+    },
+    {
+      "from": "apps/mobile/src/calendar/Tag*",
+      "to": "apps/mobile/src/calendar/agenda/"
+    },
+    {
+      "from": "apps/mobile/src/calendar/agenda*",
+      "to": "apps/mobile/src/calendar/agenda/"
+    },
+    {
+      "from": "apps/mobile/src/calendar/overview*",
+      "to": "apps/mobile/src/calendar/overview/"
+    },
+    {
+      "from": "apps/mobile/src/calendar/use-overview*",
+      "to": "apps/mobile/src/calendar/overview/"
+    },
+    {
+      "from": "apps/mobile/src/calendar/PeriodSwitcher*",
+      "to": "apps/mobile/src/calendar/overview/"
+    },
+    {
+      "from": "apps/mobile/src/calendar/ScheduleFilters*",
+      "to": "apps/mobile/src/calendar/overview/"
+    },
+    {
+      "from": "apps/mobile/src/calendar/SchedulePeriod*",
+      "to": "apps/mobile/src/calendar/overview/"
+    },
+    {
+      "from": "apps/mobile/src/calendar/TeacherHeader*",
+      "to": "apps/mobile/src/calendar/overview/"
+    },
+    {
+      "from": "apps/mobile/src/calendar/queries*",
+      "to": "apps/mobile/src/calendar/lib/"
+    },
+    {
+      "from": "apps/mobile/src/calendar/week*",
+      "to": "apps/mobile/src/calendar/lib/"
+    },
+    {
+      "from": "apps/mobile/src/calendar/flow-backend*",
+      "to": "apps/mobile/src/calendar/testing/"
+    },
+    {
+      "from": "apps/mobile/src/edit-time/CorrectTimes*",
+      "to": "apps/mobile/src/edit-time/components/"
+    },
+    {
+      "from": "apps/mobile/src/edit-time/EditTimeButton*",
+      "to": "apps/mobile/src/edit-time/components/"
+    },
+    {
+      "from": "apps/mobile/src/edit-time/EditTimeConfirm*",
+      "to": "apps/mobile/src/edit-time/components/"
+    },
+    {
+      "from": "apps/mobile/src/edit-time/EditTimeDone*",
+      "to": "apps/mobile/src/edit-time/components/"
+    },
+    {
+      "from": "apps/mobile/src/edit-time/EditTimeFields*",
+      "to": "apps/mobile/src/edit-time/components/"
+    },
+    {
+      "from": "apps/mobile/src/edit-time/EditTimeForm*",
+      "to": "apps/mobile/src/edit-time/components/"
+    },
+    {
+      "from": "apps/mobile/src/edit-time/EditTimeHeader*",
+      "to": "apps/mobile/src/edit-time/components/"
+    },
+    {
+      "from": "apps/mobile/src/edit-time/EditTimeIconButton*",
+      "to": "apps/mobile/src/edit-time/components/"
+    },
+    {
+      "from": "apps/mobile/src/edit-time/EditTimeSheet*",
+      "to": "apps/mobile/src/edit-time/components/"
+    },
+    {
+      "from": "apps/mobile/src/edit-time/PayoutLockNotice*",
+      "to": "apps/mobile/src/edit-time/components/"
+    },
+    {
+      "from": "apps/mobile/src/edit-time/edit-time-body*",
+      "to": "apps/mobile/src/edit-time/lib/"
+    },
+    {
+      "from": "apps/mobile/src/edit-time/edit-time-errors*",
+      "to": "apps/mobile/src/edit-time/lib/"
+    },
+    {
+      "from": "apps/mobile/src/edit-time/edit-time-lock*",
+      "to": "apps/mobile/src/edit-time/lib/"
+    },
+    {
+      "from": "apps/mobile/src/edit-time/edit-time-text*",
+      "to": "apps/mobile/src/edit-time/lib/"
+    },
+    {
+      "from": "apps/mobile/src/edit-time/types*",
+      "to": "apps/mobile/src/edit-time/lib/"
+    },
+    {
+      "from": "apps/mobile/src/edit-time/queries*",
+      "to": "apps/mobile/src/edit-time/lib/"
+    },
+    {
+      "from": "apps/mobile/src/edit-time/fixtures*",
+      "to": "apps/mobile/src/edit-time/testing/"
+    }
+  ],
+  "files": [
+    [
+      "apps/mobile/src/calendar/agenda.test.ts",
+      "apps/mobile/src/calendar/agenda/agenda.test.ts"
+    ],
+    [
+      "apps/mobile/src/calendar/agenda.ts",
+      "apps/mobile/src/calendar/agenda/agenda.ts"
+    ],
+    [
+      "apps/mobile/src/calendar/AgendaDayView.tsx",
+      "apps/mobile/src/calendar/agenda/AgendaDayView.tsx"
+    ],
+    [
+      "apps/mobile/src/calendar/AgendaItemRow.tsx",
+      "apps/mobile/src/calendar/agenda/AgendaItemRow.tsx"
+    ],
+    [
+      "apps/mobile/src/calendar/AgendaLessonRow.makeup.test.tsx",
+      "apps/mobile/src/calendar/agenda/AgendaLessonRow.makeup.test.tsx"
+    ],
+    [
+      "apps/mobile/src/calendar/AgendaLessonRow.tsx",
+      "apps/mobile/src/calendar/agenda/AgendaLessonRow.tsx"
+    ],
+    [
+      "apps/mobile/src/calendar/DayScheduleScreen.actions.test.tsx",
+      "apps/mobile/src/calendar/screens/DayScheduleScreen.actions.test.tsx"
+    ],
+    [
+      "apps/mobile/src/calendar/DayScheduleScreen.editTime.test.tsx",
+      "apps/mobile/src/calendar/screens/DayScheduleScreen.editTime.test.tsx"
+    ],
+    [
+      "apps/mobile/src/calendar/DayScheduleScreen.test.tsx",
+      "apps/mobile/src/calendar/screens/DayScheduleScreen.test.tsx"
+    ],
+    [
+      "apps/mobile/src/calendar/DayScheduleScreen.tsx",
+      "apps/mobile/src/calendar/screens/DayScheduleScreen.tsx"
+    ],
+    [
+      "apps/mobile/src/calendar/flow-backend.ts",
+      "apps/mobile/src/calendar/testing/flow-backend.ts"
+    ],
+    [
+      "apps/mobile/src/calendar/LessonRowActions.hierarchy.test.tsx",
+      "apps/mobile/src/calendar/agenda/LessonRowActions.hierarchy.test.tsx"
+    ],
+    [
+      "apps/mobile/src/calendar/LessonRowActions.tsx",
+      "apps/mobile/src/calendar/agenda/LessonRowActions.tsx"
+    ],
+    [
+      "apps/mobile/src/calendar/overview-fixtures.ts",
+      "apps/mobile/src/calendar/overview/overview-fixtures.ts"
+    ],
+    [
+      "apps/mobile/src/calendar/overview-text.ts",
+      "apps/mobile/src/calendar/overview/overview-text.ts"
+    ],
+    [
+      "apps/mobile/src/calendar/overview.now.test.ts",
+      "apps/mobile/src/calendar/overview/overview.now.test.ts"
+    ],
+    [
+      "apps/mobile/src/calendar/overview.test.ts",
+      "apps/mobile/src/calendar/overview/overview.test.ts"
+    ],
+    [
+      "apps/mobile/src/calendar/overview.ts",
+      "apps/mobile/src/calendar/overview/overview.ts"
+    ],
+    [
+      "apps/mobile/src/calendar/PeriodSwitcher.tsx",
+      "apps/mobile/src/calendar/overview/PeriodSwitcher.tsx"
+    ],
+    [
+      "apps/mobile/src/calendar/queries.ts",
+      "apps/mobile/src/calendar/lib/queries.ts"
+    ],
+    [
+      "apps/mobile/src/calendar/ScheduleFilters.tsx",
+      "apps/mobile/src/calendar/overview/ScheduleFilters.tsx"
+    ],
+    [
+      "apps/mobile/src/calendar/SchedulePeriod.tsx",
+      "apps/mobile/src/calendar/overview/SchedulePeriod.tsx"
+    ],
+    [
+      "apps/mobile/src/calendar/Tag.tsx",
+      "apps/mobile/src/calendar/agenda/Tag.tsx"
+    ],
+    [
+      "apps/mobile/src/calendar/TeacherCalendarScreen.test.tsx",
+      "apps/mobile/src/calendar/screens/TeacherCalendarScreen.test.tsx"
+    ],
+    [
+      "apps/mobile/src/calendar/TeacherCalendarScreen.tsx",
+      "apps/mobile/src/calendar/screens/TeacherCalendarScreen.tsx"
+    ],
+    [
+      "apps/mobile/src/calendar/TeacherHeader.tsx",
+      "apps/mobile/src/calendar/overview/TeacherHeader.tsx"
+    ],
+    [
+      "apps/mobile/src/calendar/use-overview.ts",
+      "apps/mobile/src/calendar/overview/use-overview.ts"
+    ],
+    [
+      "apps/mobile/src/calendar/week.test.ts",
+      "apps/mobile/src/calendar/lib/week.test.ts"
+    ],
+    [
+      "apps/mobile/src/calendar/week.ts",
+      "apps/mobile/src/calendar/lib/week.ts"
+    ],
+    [
+      "apps/mobile/src/edit-time/CorrectTimes.tsx",
+      "apps/mobile/src/edit-time/components/CorrectTimes.tsx"
+    ],
+    [
+      "apps/mobile/src/edit-time/edit-time-body.test.ts",
+      "apps/mobile/src/edit-time/lib/edit-time-body.test.ts"
+    ],
+    [
+      "apps/mobile/src/edit-time/edit-time-body.ts",
+      "apps/mobile/src/edit-time/lib/edit-time-body.ts"
+    ],
+    [
+      "apps/mobile/src/edit-time/edit-time-errors.test.ts",
+      "apps/mobile/src/edit-time/lib/edit-time-errors.test.ts"
+    ],
+    [
+      "apps/mobile/src/edit-time/edit-time-errors.ts",
+      "apps/mobile/src/edit-time/lib/edit-time-errors.ts"
+    ],
+    [
+      "apps/mobile/src/edit-time/edit-time-lock.test.ts",
+      "apps/mobile/src/edit-time/lib/edit-time-lock.test.ts"
+    ],
+    [
+      "apps/mobile/src/edit-time/edit-time-lock.ts",
+      "apps/mobile/src/edit-time/lib/edit-time-lock.ts"
+    ],
+    [
+      "apps/mobile/src/edit-time/edit-time-text.ts",
+      "apps/mobile/src/edit-time/lib/edit-time-text.ts"
+    ],
+    [
+      "apps/mobile/src/edit-time/EditTimeButton.tsx",
+      "apps/mobile/src/edit-time/components/EditTimeButton.tsx"
+    ],
+    [
+      "apps/mobile/src/edit-time/EditTimeConfirm.tsx",
+      "apps/mobile/src/edit-time/components/EditTimeConfirm.tsx"
+    ],
+    [
+      "apps/mobile/src/edit-time/EditTimeDone.tsx",
+      "apps/mobile/src/edit-time/components/EditTimeDone.tsx"
+    ],
+    [
+      "apps/mobile/src/edit-time/EditTimeFields.tsx",
+      "apps/mobile/src/edit-time/components/EditTimeFields.tsx"
+    ],
+    [
+      "apps/mobile/src/edit-time/EditTimeForm.tsx",
+      "apps/mobile/src/edit-time/components/EditTimeForm.tsx"
+    ],
+    [
+      "apps/mobile/src/edit-time/EditTimeHeader.tsx",
+      "apps/mobile/src/edit-time/components/EditTimeHeader.tsx"
+    ],
+    [
+      "apps/mobile/src/edit-time/EditTimeIconButton.tsx",
+      "apps/mobile/src/edit-time/components/EditTimeIconButton.tsx"
+    ],
+    [
+      "apps/mobile/src/edit-time/EditTimeSheet.tsx",
+      "apps/mobile/src/edit-time/components/EditTimeSheet.tsx"
+    ],
+    [
+      "apps/mobile/src/edit-time/fixtures.ts",
+      "apps/mobile/src/edit-time/testing/fixtures.ts"
+    ],
+    [
+      "apps/mobile/src/edit-time/PayoutLockNotice.tsx",
+      "apps/mobile/src/edit-time/components/PayoutLockNotice.tsx"
+    ],
+    [
+      "apps/mobile/src/edit-time/queries.ts",
+      "apps/mobile/src/edit-time/lib/queries.ts"
+    ],
+    [
+      "apps/mobile/src/edit-time/types.ts",
+      "apps/mobile/src/edit-time/lib/types.ts"
+    ]
+  ]
+}

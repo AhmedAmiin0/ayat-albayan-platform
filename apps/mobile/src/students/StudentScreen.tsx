@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { router, useLocalSearchParams } from 'expo-router';
 import { ScrollView } from 'react-native';
-import { AssistantsSection } from '@/classroom/AssistantsSection';
+import { AssistantsSection } from '@/classroom/assistants/AssistantsSection';
 import { ApiError, apiFetch } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
 import { pathKey } from '@/core/lib/query/query-keys';

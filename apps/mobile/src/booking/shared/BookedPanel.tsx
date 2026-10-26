@@ -7,7 +7,7 @@ import { AppText } from '@/core/ui/primitives/AppText';
 import { Button } from '@/core/ui/primitives/Button';
 import { NuqtaGlyph } from '@/core/ui/primitives/NuqtaGlyph';
 import { type, useTheme } from '@/theme';
-import { riyadhToday } from '@/calendar/week';
+import { riyadhToday } from '@/calendar/lib/week';
 import { whenText } from './slots';
 
 export interface BookedPanelProps {

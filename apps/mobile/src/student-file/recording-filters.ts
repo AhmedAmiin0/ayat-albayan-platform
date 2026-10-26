@@ -1,4 +1,4 @@
-import { addDays } from '@/calendar/week';
+import { addDays } from '@/calendar/lib/week';
 import { monthRange } from '@/money/shared/months';
 
 export const DATE_PRESETS = ['all', 'last7', 'last30', 'month'] as const;

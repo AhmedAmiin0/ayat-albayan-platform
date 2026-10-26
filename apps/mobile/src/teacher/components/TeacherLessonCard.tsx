@@ -1,6 +1,6 @@
 import { applyLessonEvent, clockTime, isOpenLesson, lessonStatusStyle, type LessonView } from '@ab/shared';
 import { Linking, View } from 'react-native';
-import { JoinClassroomButton } from '@/classroom/JoinClassroomButton';
+import { JoinClassroomButton } from '@/classroom/links/JoinClassroomButton';
 import { ErrorLine } from '@/inbox/ErrorLine';
 import { t } from '@/core/lib/i18n/i18n';
 import { usePlatformClassroom } from '@/core/lib/query/public-config';

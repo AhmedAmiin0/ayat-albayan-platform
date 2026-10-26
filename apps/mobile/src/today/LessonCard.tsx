@@ -8,8 +8,8 @@ import {
 } from '@ab/shared';
 import { useState } from 'react';
 import { View } from 'react-native';
-import { JoinClassroomButton } from '@/classroom/JoinClassroomButton';
-import { editMode } from '@/edit-time/types';
+import { JoinClassroomButton } from '@/classroom/links/JoinClassroomButton';
+import { editMode } from '@/edit-time/lib/types';
 import { ErrorLine } from '@/inbox/ErrorLine';
 import { t } from '@/core/lib/i18n/i18n';
 import { LiveBadge } from '@/live/LiveBadge';

@@ -3,18 +3,6 @@
     "files": 1,
     "dirs": 36
   },
-  "apps/mobile/src/calendar": {
-    "files": 19,
-    "dirs": 0
-  },
-  "apps/mobile/src/classroom": {
-    "files": 19,
-    "dirs": 1
-  },
-  "apps/mobile/src/edit-time": {
-    "files": 17,
-    "dirs": 0
-  },
   "apps/mobile/src/inbox/lists": {
     "files": 14,
     "dirs": 0

@@ -1,7 +1,7 @@
 import { teacherName } from '@ab/shared';
 import type { LessonView } from '@ab/shared';
 import { View } from 'react-native';
-import { EditTimeIconButton } from '@/edit-time/EditTimeIconButton';
+import { EditTimeIconButton } from '@/edit-time/components/EditTimeIconButton';
 import { t } from '@/core/lib/i18n/i18n';
 import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';

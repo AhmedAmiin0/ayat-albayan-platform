@@ -2,7 +2,7 @@ import { renderApp, resetApp } from '@/test/app-router'; // first: its jest.mock
 import { LOCALE_STORAGE_KEY } from '@ab/shared';
 import en from '@ab/shared/i18n/en.json';
 import { fireEvent, screen } from '@testing-library/react-native';
-import { calendarBackend, NOW } from '@/calendar/flow-backend';
+import { calendarBackend, NOW } from '@/calendar/testing/flow-backend';
 
 // An English run: LTR native flag and English saved, so the boot gate does not reload.
 jest.mock('react-native/Libraries/ReactNative/I18nManager', () => {
