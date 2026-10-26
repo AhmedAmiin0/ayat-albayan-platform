@@ -33,7 +33,7 @@ const roundDiv = (n: number, d: number): number => Math.floor((n + d / 2) / d);
 
 /**
  * percent = value % of the subscription price in its own currency; fixed = value in its currency; either
- * times share % (a renewal, migration 20261026000751). Rounded half up to 2 decimals, once (SQL
+ * times share % (a renewal, migration 20261027000751). Rounded half up to 2 decimals, once (SQL
  * round(numeric, 2)). null when nothing is earned: zero amount, a fixed commission without a currency, or
  * a value or share outside its limits.
  */

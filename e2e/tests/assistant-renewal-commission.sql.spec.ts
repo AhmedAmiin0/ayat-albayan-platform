@@ -2,7 +2,7 @@ import { expect, test } from '@playwright/test';
 import { assistant, brought, code, commissionOf, openMonth, paidStatement, pay, renewalOf, subscription } from '../support/assistant';
 import { rolledBack, type Tx } from '../support/rls';
 
-// Renewal commission (migrations 20261026000750-751, owner 2026-10-26): «half of the value» = half of her
+// Renewal commission (migrations 20261027000750-751, owner 2026-10-26): «half of the value» = half of her
 // NORMAL commission on each renewal (settings.renewal_commission_percent, default 50), kind decided by
 // subscription order, never by payment order. Each case is rolled back. Twin: @ab/shared assistant/renewal.ts.
 
@@ -13,7 +13,7 @@ const setShare = (tx: Tx, n: number) => tx`insert into public.settings (key, val
 const rows = (tx: Tx, s: string) => tx<{ kind: string; amount: string }[]>`select kind, amount::text from public.assistant_commissions
   where student_id = ${s} order by earned_at, kind`;
 
-test.describe('renewal commission (20261026000750-751)', () => {
+test.describe('renewal commission (20261027000750-751)', () => {
   test.beforeEach(() => test.skip(test.info().project.name !== 'desktop', 'database only: one run'));
 
   test('first + renewal on one student: the first in full, each renewal at half; fixed terms halve the fixed amount', async () => {
