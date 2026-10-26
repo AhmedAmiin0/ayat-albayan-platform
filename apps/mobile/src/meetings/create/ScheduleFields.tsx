@@ -2,7 +2,7 @@ import { MEETING_DURATION_MAX, MEETING_DURATION_MIN } from '@ab/shared';
 import { useMemo } from 'react';
 import { View } from 'react-native';
 import { Note } from '@/more/Note';
-import { Stepper } from '@/pricing/Stepper';
+import { Stepper } from '@/finance/pricing/Stepper';
 import { t } from '@/core/lib/i18n/i18n';
 import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';

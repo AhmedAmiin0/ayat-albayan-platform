@@ -1,7 +1,7 @@
 import type { StudentStatus } from '@ab/shared';
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
-import { profile } from '@/students/test-data';
+import { profile } from '@/students/shared/test-data';
 import { renderWithQuery } from '@/test/query';
 import { historyOf, trialRow } from '../testing/fixtures';
 import { TrialDateSection } from './TrialDateSection';

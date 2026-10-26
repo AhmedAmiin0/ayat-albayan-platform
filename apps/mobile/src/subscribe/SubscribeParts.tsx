@@ -4,7 +4,7 @@ import { View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/more/Note';
 import { Section } from '@/more/Section';
-import type { StudentRef } from '@/students/types';
+import type { StudentRef } from '@/students/shared/types';
 import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { Button } from '@/core/ui/primitives/Button';

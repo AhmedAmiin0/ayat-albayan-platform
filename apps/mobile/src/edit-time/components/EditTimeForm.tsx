@@ -3,7 +3,7 @@ import { View } from 'react-native';
 import { ConflictNotice } from '@/booking/shared/ConflictNotice';
 import { ErrorLine } from '@/inbox/ErrorLine';
 import { t } from '@/core/lib/i18n/i18n';
-import { familyTz } from '@/reschedule/reschedule-body';
+import { familyTz } from '@/teaching/reschedule/reschedule-body';
 import { Button } from '@/core/ui/primitives/Button';
 import { canSubmit, editBody, lengthOf, type EditState } from '../lib/edit-time-body';
 import { editTimeFailure } from '../lib/edit-time-errors';

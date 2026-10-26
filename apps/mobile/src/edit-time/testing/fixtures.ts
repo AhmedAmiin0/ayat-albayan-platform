@@ -1,8 +1,8 @@
-import { SLOTS, SUN_17 } from '@/reschedule/fixtures';
+import { SLOTS, SUN_17 } from '@/teaching/reschedule/fixtures';
 import { done, lesson } from '@/today/testing/fixtures';
 import type { EditableLesson, TimeEditResult } from '../lib/types';
 
-export { NOW, SLOTS, SAT_17, SUN_17 } from '@/reschedule/fixtures';
+export { NOW, SLOTS, SAT_17, SUN_17 } from '@/teaching/reschedule/fixtures';
 
 // Rows in the GET /lessons shape with the R-SCH-11 fields. «Now» is Thursday 1 Oct 2026 16:20
 // Riyadh (reschedule/fixtures NOW); the teacher is in Cairo (also UTC+3 in October).

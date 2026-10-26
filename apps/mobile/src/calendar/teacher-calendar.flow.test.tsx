@@ -2,7 +2,7 @@ import { renderApp, resetApp } from '@/test/app-router'; // first: its jest.mock
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { ApiError } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
-import { SAT_18, SUN_17 } from '@/reschedule/fixtures';
+import { SAT_18, SUN_17 } from '@/teaching/reschedule/fixtures';
 import { calendarBackend, NOW } from './testing/flow-backend';
 
 const THIS_WEEK = { from: '2026-09-25T21:00:00.000Z', to: '2026-10-02T21:00:00.000Z' };

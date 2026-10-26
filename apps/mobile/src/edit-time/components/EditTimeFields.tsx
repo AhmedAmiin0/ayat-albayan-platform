@@ -2,7 +2,7 @@ import { DURATIONS, type LessonView } from '@ab/shared';
 import { View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { FormLabel } from '@/payments/FormLabel';
-import { SlotPicker } from '@/reschedule/SlotPicker';
+import { SlotPicker } from '@/teaching/reschedule/SlotPicker';
 import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { Field } from '@/core/ui/form/Field';

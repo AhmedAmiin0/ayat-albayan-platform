@@ -1,6 +1,6 @@
 import type { QuoteResponse, StudentBalanceView, SubscriptionView } from '@ab/shared';
 import { subscription } from '@/payments/fixtures';
-import type { StudentProfile } from '@/students/types';
+import type { StudentProfile } from '@/students/shared/types';
 
 // Invented API answers for the subscribe screen tests (no real people).
 

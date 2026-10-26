@@ -1,1 +1,1 @@
-export { PricingScreen as default } from '@/pricing/PricingScreen';
+export { PricingScreen as default } from '@/finance/pricing/PricingScreen';

@@ -7,7 +7,7 @@ import { t } from '@/core/lib/i18n/i18n';
 import { locale } from '@/core/lib/i18n/locale';
 import { BellButton } from '@/notifications/BellButton';
 import { LiveSessions } from '@/live/LiveSessions';
-import { RescheduleSheet } from '@/reschedule/RescheduleSheet';
+import { RescheduleSheet } from '@/teaching/reschedule/RescheduleSheet';
 import { EmptyState } from '@/core/ui/feedback/EmptyState';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { FilterPills, type FilterPill } from '@/core/ui/form/FilterPills';

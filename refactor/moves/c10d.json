@@ -1,0 +1,432 @@
+{
+  "id": "c10d",
+  "seq": 94,
+  "moves": [
+    {
+      "from": "apps/mobile/src/students/StudentScreen*",
+      "to": "apps/mobile/src/students/screens/"
+    },
+    {
+      "from": "apps/mobile/src/students/StudentsScreen*",
+      "to": "apps/mobile/src/students/screens/"
+    },
+    {
+      "from": "apps/mobile/src/students/BalanceCard*",
+      "to": "apps/mobile/src/students/profile/"
+    },
+    {
+      "from": "apps/mobile/src/students/GuardianCard*",
+      "to": "apps/mobile/src/students/profile/"
+    },
+    {
+      "from": "apps/mobile/src/students/RenewButton*",
+      "to": "apps/mobile/src/students/profile/"
+    },
+    {
+      "from": "apps/mobile/src/students/SiblingsList*",
+      "to": "apps/mobile/src/students/profile/"
+    },
+    {
+      "from": "apps/mobile/src/students/StatusChanger*",
+      "to": "apps/mobile/src/students/profile/"
+    },
+    {
+      "from": "apps/mobile/src/students/StudentFacts*",
+      "to": "apps/mobile/src/students/profile/"
+    },
+    {
+      "from": "apps/mobile/src/students/StudentNote*",
+      "to": "apps/mobile/src/students/profile/"
+    },
+    {
+      "from": "apps/mobile/src/students/profile-facts*",
+      "to": "apps/mobile/src/students/profile/"
+    },
+    {
+      "from": "apps/mobile/src/students/renew*",
+      "to": "apps/mobile/src/students/profile/"
+    },
+    {
+      "from": "apps/mobile/src/students/student-note*",
+      "to": "apps/mobile/src/students/profile/"
+    },
+    {
+      "from": "apps/mobile/src/students/StudentFilterBar*",
+      "to": "apps/mobile/src/students/list/"
+    },
+    {
+      "from": "apps/mobile/src/students/StudentFilterGroups*",
+      "to": "apps/mobile/src/students/list/"
+    },
+    {
+      "from": "apps/mobile/src/students/StudentRow*",
+      "to": "apps/mobile/src/students/list/"
+    },
+    {
+      "from": "apps/mobile/src/students/SectionLabel*",
+      "to": "apps/mobile/src/students/list/"
+    },
+    {
+      "from": "apps/mobile/src/students/student-filters*",
+      "to": "apps/mobile/src/students/list/"
+    },
+    {
+      "from": "apps/mobile/src/students/student-kinds*",
+      "to": "apps/mobile/src/students/list/"
+    },
+    {
+      "from": "apps/mobile/src/students/use-student-list-data*",
+      "to": "apps/mobile/src/students/list/"
+    },
+    {
+      "from": "apps/mobile/src/students/test-data*",
+      "to": "apps/mobile/src/students/shared/"
+    },
+    {
+      "from": "apps/mobile/src/students/types*",
+      "to": "apps/mobile/src/students/shared/"
+    },
+    {
+      "from": "apps/mobile/src/student-file/StudentMoneyScreen*",
+      "to": "apps/mobile/src/student-file/screens/"
+    },
+    {
+      "from": "apps/mobile/src/student-file/StudentRecordingsScreen*",
+      "to": "apps/mobile/src/student-file/screens/"
+    },
+    {
+      "from": "apps/mobile/src/student-file/TeacherStudentRecordingsScreen*",
+      "to": "apps/mobile/src/student-file/screens/"
+    },
+    {
+      "from": "apps/mobile/src/student-file/JoinLinkCard*",
+      "to": "apps/mobile/src/student-file/components/"
+    },
+    {
+      "from": "apps/mobile/src/student-file/StudentFileSections*",
+      "to": "apps/mobile/src/student-file/components/"
+    },
+    {
+      "from": "apps/mobile/src/student-file/RecordingDelete*",
+      "to": "apps/mobile/src/student-file/recordings/"
+    },
+    {
+      "from": "apps/mobile/src/student-file/RecordingFiltersBar*",
+      "to": "apps/mobile/src/student-file/recordings/"
+    },
+    {
+      "from": "apps/mobile/src/student-file/RecordingPlay*",
+      "to": "apps/mobile/src/student-file/recordings/"
+    },
+    {
+      "from": "apps/mobile/src/student-file/RecordingRow*",
+      "to": "apps/mobile/src/student-file/recordings/"
+    },
+    {
+      "from": "apps/mobile/src/student-file/RecordingVisibility*",
+      "to": "apps/mobile/src/student-file/recordings/"
+    },
+    {
+      "from": "apps/mobile/src/student-file/RecordingsButton*",
+      "to": "apps/mobile/src/student-file/recordings/"
+    },
+    {
+      "from": "apps/mobile/src/student-file/recording-actions*",
+      "to": "apps/mobile/src/student-file/recordings/"
+    },
+    {
+      "from": "apps/mobile/src/student-file/recording-filters*",
+      "to": "apps/mobile/src/student-file/recordings/"
+    },
+    {
+      "from": "apps/mobile/src/student-file/recording-format*",
+      "to": "apps/mobile/src/student-file/recordings/"
+    },
+    {
+      "from": "apps/mobile/src/student-file/recordings-queries*",
+      "to": "apps/mobile/src/student-file/recordings/"
+    },
+    {
+      "from": "apps/mobile/src/student-file/teacher-choices*",
+      "to": "apps/mobile/src/student-file/recordings/"
+    },
+    {
+      "from": "apps/mobile/src/student-file/StudentInvoiceRow*",
+      "to": "apps/mobile/src/student-file/money/"
+    },
+    {
+      "from": "apps/mobile/src/student-file/StudentInvoicesList*",
+      "to": "apps/mobile/src/student-file/money/"
+    },
+    {
+      "from": "apps/mobile/src/student-file/StudentPaymentsList*",
+      "to": "apps/mobile/src/student-file/money/"
+    },
+    {
+      "from": "apps/mobile/src/student-file/money-queries*",
+      "to": "apps/mobile/src/student-file/money/"
+    },
+    {
+      "from": "apps/mobile/src/student-file/fixtures*",
+      "to": "apps/mobile/src/student-file/testing/"
+    }
+  ],
+  "files": [
+    [
+      "apps/mobile/src/student-file/fixtures.ts",
+      "apps/mobile/src/student-file/testing/fixtures.ts"
+    ],
+    [
+      "apps/mobile/src/student-file/JoinLinkCard.test.tsx",
+      "apps/mobile/src/student-file/components/JoinLinkCard.test.tsx"
+    ],
+    [
+      "apps/mobile/src/student-file/JoinLinkCard.tsx",
+      "apps/mobile/src/student-file/components/JoinLinkCard.tsx"
+    ],
+    [
+      "apps/mobile/src/student-file/money-queries.ts",
+      "apps/mobile/src/student-file/money/money-queries.ts"
+    ],
+    [
+      "apps/mobile/src/student-file/recording-actions.test.ts",
+      "apps/mobile/src/student-file/recordings/recording-actions.test.ts"
+    ],
+    [
+      "apps/mobile/src/student-file/recording-actions.ts",
+      "apps/mobile/src/student-file/recordings/recording-actions.ts"
+    ],
+    [
+      "apps/mobile/src/student-file/recording-filters.test.ts",
+      "apps/mobile/src/student-file/recordings/recording-filters.test.ts"
+    ],
+    [
+      "apps/mobile/src/student-file/recording-filters.ts",
+      "apps/mobile/src/student-file/recordings/recording-filters.ts"
+    ],
+    [
+      "apps/mobile/src/student-file/recording-format.test.ts",
+      "apps/mobile/src/student-file/recordings/recording-format.test.ts"
+    ],
+    [
+      "apps/mobile/src/student-file/recording-format.ts",
+      "apps/mobile/src/student-file/recordings/recording-format.ts"
+    ],
+    [
+      "apps/mobile/src/student-file/RecordingDelete.tsx",
+      "apps/mobile/src/student-file/recordings/RecordingDelete.tsx"
+    ],
+    [
+      "apps/mobile/src/student-file/RecordingFiltersBar.tsx",
+      "apps/mobile/src/student-file/recordings/RecordingFiltersBar.tsx"
+    ],
+    [
+      "apps/mobile/src/student-file/RecordingPlay.tsx",
+      "apps/mobile/src/student-file/recordings/RecordingPlay.tsx"
+    ],
+    [
+      "apps/mobile/src/student-file/RecordingRow.tsx",
+      "apps/mobile/src/student-file/recordings/RecordingRow.tsx"
+    ],
+    [
+      "apps/mobile/src/student-file/recordings-queries.test.ts",
+      "apps/mobile/src/student-file/recordings/recordings-queries.test.ts"
+    ],
+    [
+      "apps/mobile/src/student-file/recordings-queries.ts",
+      "apps/mobile/src/student-file/recordings/recordings-queries.ts"
+    ],
+    [
+      "apps/mobile/src/student-file/RecordingsButton.tsx",
+      "apps/mobile/src/student-file/recordings/RecordingsButton.tsx"
+    ],
+    [
+      "apps/mobile/src/student-file/RecordingVisibility.tsx",
+      "apps/mobile/src/student-file/recordings/RecordingVisibility.tsx"
+    ],
+    [
+      "apps/mobile/src/student-file/StudentFileSections.test.tsx",
+      "apps/mobile/src/student-file/components/StudentFileSections.test.tsx"
+    ],
+    [
+      "apps/mobile/src/student-file/StudentFileSections.tsx",
+      "apps/mobile/src/student-file/components/StudentFileSections.tsx"
+    ],
+    [
+      "apps/mobile/src/student-file/StudentInvoiceRow.tsx",
+      "apps/mobile/src/student-file/money/StudentInvoiceRow.tsx"
+    ],
+    [
+      "apps/mobile/src/student-file/StudentInvoicesList.tsx",
+      "apps/mobile/src/student-file/money/StudentInvoicesList.tsx"
+    ],
+    [
+      "apps/mobile/src/student-file/StudentMoneyScreen.test.tsx",
+      "apps/mobile/src/student-file/screens/StudentMoneyScreen.test.tsx"
+    ],
+    [
+      "apps/mobile/src/student-file/StudentMoneyScreen.tsx",
+      "apps/mobile/src/student-file/screens/StudentMoneyScreen.tsx"
+    ],
+    [
+      "apps/mobile/src/student-file/StudentPaymentsList.tsx",
+      "apps/mobile/src/student-file/money/StudentPaymentsList.tsx"
+    ],
+    [
+      "apps/mobile/src/student-file/StudentRecordingsScreen.en.test.tsx",
+      "apps/mobile/src/student-file/screens/StudentRecordingsScreen.en.test.tsx"
+    ],
+    [
+      "apps/mobile/src/student-file/StudentRecordingsScreen.fixes.test.tsx",
+      "apps/mobile/src/student-file/screens/StudentRecordingsScreen.fixes.test.tsx"
+    ],
+    [
+      "apps/mobile/src/student-file/StudentRecordingsScreen.test.tsx",
+      "apps/mobile/src/student-file/screens/StudentRecordingsScreen.test.tsx"
+    ],
+    [
+      "apps/mobile/src/student-file/StudentRecordingsScreen.tsx",
+      "apps/mobile/src/student-file/screens/StudentRecordingsScreen.tsx"
+    ],
+    [
+      "apps/mobile/src/student-file/teacher-choices.test.ts",
+      "apps/mobile/src/student-file/recordings/teacher-choices.test.ts"
+    ],
+    [
+      "apps/mobile/src/student-file/teacher-choices.ts",
+      "apps/mobile/src/student-file/recordings/teacher-choices.ts"
+    ],
+    [
+      "apps/mobile/src/student-file/TeacherStudentRecordingsScreen.tsx",
+      "apps/mobile/src/student-file/screens/TeacherStudentRecordingsScreen.tsx"
+    ],
+    [
+      "apps/mobile/src/students/BalanceCard.test.tsx",
+      "apps/mobile/src/students/profile/BalanceCard.test.tsx"
+    ],
+    [
+      "apps/mobile/src/students/BalanceCard.tsx",
+      "apps/mobile/src/students/profile/BalanceCard.tsx"
+    ],
+    [
+      "apps/mobile/src/students/GuardianCard.tsx",
+      "apps/mobile/src/students/profile/GuardianCard.tsx"
+    ],
+    [
+      "apps/mobile/src/students/profile-facts.test.ts",
+      "apps/mobile/src/students/profile/profile-facts.test.ts"
+    ],
+    [
+      "apps/mobile/src/students/profile-facts.ts",
+      "apps/mobile/src/students/profile/profile-facts.ts"
+    ],
+    [
+      "apps/mobile/src/students/renew.test.ts",
+      "apps/mobile/src/students/profile/renew.test.ts"
+    ],
+    [
+      "apps/mobile/src/students/renew.ts",
+      "apps/mobile/src/students/profile/renew.ts"
+    ],
+    [
+      "apps/mobile/src/students/RenewButton.tsx",
+      "apps/mobile/src/students/profile/RenewButton.tsx"
+    ],
+    [
+      "apps/mobile/src/students/SectionLabel.tsx",
+      "apps/mobile/src/students/list/SectionLabel.tsx"
+    ],
+    [
+      "apps/mobile/src/students/SiblingsList.tsx",
+      "apps/mobile/src/students/profile/SiblingsList.tsx"
+    ],
+    [
+      "apps/mobile/src/students/StatusChanger.test.tsx",
+      "apps/mobile/src/students/profile/StatusChanger.test.tsx"
+    ],
+    [
+      "apps/mobile/src/students/StatusChanger.tsx",
+      "apps/mobile/src/students/profile/StatusChanger.tsx"
+    ],
+    [
+      "apps/mobile/src/students/student-filters.test.ts",
+      "apps/mobile/src/students/list/student-filters.test.ts"
+    ],
+    [
+      "apps/mobile/src/students/student-filters.ts",
+      "apps/mobile/src/students/list/student-filters.ts"
+    ],
+    [
+      "apps/mobile/src/students/student-kinds.test.ts",
+      "apps/mobile/src/students/list/student-kinds.test.ts"
+    ],
+    [
+      "apps/mobile/src/students/student-kinds.ts",
+      "apps/mobile/src/students/list/student-kinds.ts"
+    ],
+    [
+      "apps/mobile/src/students/student-note.test.ts",
+      "apps/mobile/src/students/profile/student-note.test.ts"
+    ],
+    [
+      "apps/mobile/src/students/student-note.ts",
+      "apps/mobile/src/students/profile/student-note.ts"
+    ],
+    [
+      "apps/mobile/src/students/StudentFacts.tsx",
+      "apps/mobile/src/students/profile/StudentFacts.tsx"
+    ],
+    [
+      "apps/mobile/src/students/StudentFilterBar.test.tsx",
+      "apps/mobile/src/students/list/StudentFilterBar.test.tsx"
+    ],
+    [
+      "apps/mobile/src/students/StudentFilterBar.tsx",
+      "apps/mobile/src/students/list/StudentFilterBar.tsx"
+    ],
+    [
+      "apps/mobile/src/students/StudentFilterGroups.tsx",
+      "apps/mobile/src/students/list/StudentFilterGroups.tsx"
+    ],
+    [
+      "apps/mobile/src/students/StudentNote.tsx",
+      "apps/mobile/src/students/profile/StudentNote.tsx"
+    ],
+    [
+      "apps/mobile/src/students/StudentRow.tsx",
+      "apps/mobile/src/students/list/StudentRow.tsx"
+    ],
+    [
+      "apps/mobile/src/students/StudentScreen.renew.test.tsx",
+      "apps/mobile/src/students/screens/StudentScreen.renew.test.tsx"
+    ],
+    [
+      "apps/mobile/src/students/StudentScreen.test.tsx",
+      "apps/mobile/src/students/screens/StudentScreen.test.tsx"
+    ],
+    [
+      "apps/mobile/src/students/StudentScreen.tsx",
+      "apps/mobile/src/students/screens/StudentScreen.tsx"
+    ],
+    [
+      "apps/mobile/src/students/StudentsScreen.test.tsx",
+      "apps/mobile/src/students/screens/StudentsScreen.test.tsx"
+    ],
+    [
+      "apps/mobile/src/students/StudentsScreen.tsx",
+      "apps/mobile/src/students/screens/StudentsScreen.tsx"
+    ],
+    [
+      "apps/mobile/src/students/test-data.ts",
+      "apps/mobile/src/students/shared/test-data.ts"
+    ],
+    [
+      "apps/mobile/src/students/types.ts",
+      "apps/mobile/src/students/shared/types.ts"
+    ],
+    [
+      "apps/mobile/src/students/use-student-list-data.ts",
+      "apps/mobile/src/students/list/use-student-list-data.ts"
+    ]
+  ]
+}

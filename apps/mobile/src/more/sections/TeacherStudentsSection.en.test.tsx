@@ -2,7 +2,7 @@ import en from '@ab/shared/i18n/en.json';
 import { screen } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
-import { listItem } from '@/students/test-data';
+import { listItem } from '@/students/shared/test-data';
 import { TeacherStudentsSection } from './TeacherStudentsSection';
 
 jest.mock('react-native/Libraries/ReactNative/I18nManager', () => {
