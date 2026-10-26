@@ -6,6 +6,7 @@ import { t } from '@/core/lib/i18n/i18n';
 import { shape, type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { AudioPlayer } from './AudioPlayer';
+import { DownloadLink } from '../copy-download/DownloadLink';
 import { mediaKind } from '../hooks/message-text';
 import { useSmall } from './MessageMeta';
 import { type ThreadFile, useThreadFile } from '../hooks/thread-file';
@@ -57,7 +58,14 @@ function FileOpener({ message: m, phone, kind }: { message: MessageView; phone: 
     }
   };
 
-  if (state.step === 'loaded') return <Player file={state.file} kind={kind} />;
+  if (state.step === 'loaded') {
+    return (
+      <View style={{ gap: 2 }}>
+        <Player file={state.file} kind={kind} />
+        <DownloadLink message={m} phone={phone} />
+      </View>
+    );
+  }
   if (state.step === 'expired') return <Note text={t.inbox.mediaExpired} />;
   if (state.step === 'forbidden') return <Note text={`${kind} · ${t.inbox.mediaNotAllowed}`} />;
   const busy = state.step === 'loading';
@@ -85,6 +93,7 @@ function FileOpener({ message: m, phone, kind }: { message: MessageView; phone: 
         </AppText>
       </Pressable>
       {m.media_name ? <AppText style={small}>{m.media_name}</AppText> : null}
+      <DownloadLink message={m} phone={phone} />
       {state.step === 'failed' ? <AppText accessibilityRole="alert" style={small}>{t.common.error}</AppText> : null}
     </View>
   );
@@ -93,7 +102,7 @@ function FileOpener({ message: m, phone, kind }: { message: MessageView; phone: 
 /**
  * A bubble's photo, PDF, voice note or video (owner 2026-10-19 #1, W6), ours or theirs: «عرض صورة»
  * opens a photo or PDF in the phone's viewer; «تشغيل رسالة صوتية» / «تشغيل فيديو» plays it inside
- * the bubble. A teacher gets the label only: the API refuses her the file (403 media_forbidden),
+ * the bubble; «تنزيل» under either saves it (DownloadLink). A teacher gets the label only: the API refuses her the file (403 media_forbidden),
  * so no request is made.
  */
 export function MessageFile({ message: m, phone }: { message: MessageView; phone: string }) {

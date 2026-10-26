@@ -76,6 +76,10 @@ export const threadFileQuery = (phone: string, messageId: string) =>
     retry: false,
   });
 
+/** «تنزيل» (owner 2026-10-26): never cached, a fresh URL each click, signed to save under the file's name. */
+export const threadFileDownload = (phone: string, messageId: string) =>
+  apiFetch<ThreadFile>(`${threadPath(phone)}/messages/${encodeURIComponent(messageId)}/file?download=1`);
+
 /** H3; `replyToMessageId` (owner 2026-10-25): the message of this chat it answers (400 reply_not_in_thread otherwise). */
 export const sendText = ({ phone, ...body }: ThreadText & { phone: string }) =>
   apiSend<MessageView>('POST', `${threadPath(phone)}/text`, body);

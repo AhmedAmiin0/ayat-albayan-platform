@@ -1,4 +1,4 @@
-import { canForward, canReply, type MessageView } from '@ab/shared';
+import type { MessageView } from '@ab/shared';
 import { useRef } from 'react';
 import { Icon } from '@/components/ui/display/icon';
 import { IconButton } from '@/components/ui/form/icon-button';
@@ -7,6 +7,9 @@ import { t } from '@/lib/i18n/i18n';
 import { cn } from '@/lib/utils';
 import { BubbleMenu } from './BubbleMenu';
 import { useChatActions } from '../../shared/chat-actions';
+import { useInboxMode } from '../../shared/mode';
+import { bubbleOffers, offersAny, type BubbleOffers } from '../lib/bubble-offers';
+import { useBubbleTools } from '../lib/use-bubble-tools';
 
 export interface BubbleActionsProps {
   message: MessageView;
@@ -15,18 +18,26 @@ export interface BubbleActionsProps {
   onMenu: (open: boolean) => void;
 }
 
-/** The bubble offers «رد» or «إعادة توجيه» in this chat. */
+/** What this bubble's menu offers here (teacher mode: never «تنزيل», as MessageMedia). */
+export function useBubbleOffers(m: MessageView): BubbleOffers {
+  return bubbleOffers(m, { teacher: useInboxMode() === 'teacher' });
+}
+
+/** The bubble offers «رد», «نسخ», «إعادة توجيه» or «تنزيل» in this chat. */
 export function useHasBubbleActions(m: MessageView): boolean {
-  return useChatActions().enabled && (canReply(m) || canForward(m));
+  const offers = useBubbleOffers(m);
+  return useChatActions().enabled && offersAny(offers);
 }
 
 /**
- * «رد» and «خيارات الرسالة» beside a bubble (owner 2026-10-25): shown on hover and on keyboard
+ * «رد» and «خيارات الرسالة» beside a bubble (owner 2026-10-25; «نسخ» / «تنزيل» 2026-10-26): shown on hover and on keyboard
  * focus; on touch screens only the 44px ⋯ shows, always (its menu has «رد»). Outside the 24 h window
  * «رد» stays focusable but off, with the closed-window notice as its hint. Esc and a pick put focus back on ⋯.
  */
 export function BubbleActions({ message: m, menu, onMenu }: BubbleActionsProps) {
   const actions = useChatActions();
+  const offers = useBubbleOffers(m);
+  const tools = useBubbleTools();
   const box = useRef<HTMLDivElement>(null);
   const trigger = useRef<HTMLButtonElement>(null);
   const close = (focus: boolean) => {
@@ -34,7 +45,7 @@ export function BubbleActions({ message: m, menu, onMenu }: BubbleActionsProps) 
     onMenu(false);
   };
   useDismiss(box, { open: menu, onDismiss: (how) => close(how === 'escape') });
-  if (!actions.enabled || !(canReply(m) || canForward(m))) return null;
+  if (!actions.enabled || !offersAny(offers)) return null;
   const blocked = actions.replyBlocked;
   const outbound = m.direction === 'outbound';
 
@@ -46,7 +57,7 @@ export function BubbleActions({ message: m, menu, onMenu }: BubbleActionsProps) 
         menu && 'opacity-100',
       )}
     >
-      {canReply(m) && (
+      {offers.reply && (
         <IconButton
           label={t.inbox.reply.action}
           aria-disabled={blocked ? true : undefined}
@@ -62,7 +73,8 @@ export function BubbleActions({ message: m, menu, onMenu }: BubbleActionsProps) 
       <IconButton ref={trigger} label={t.inbox.reply.menu} aria-expanded={menu} className="rounded-full" onClick={() => onMenu(!menu)}>
         <Icon name="more" />
       </IconButton>
-      {menu && <BubbleMenu message={m} outbound={outbound} onClose={() => close(true)} />}
+      {menu && <BubbleMenu message={m} outbound={outbound} offers={offers} tools={tools} onClose={() => close(true)} />}
+      {tools.toast}
     </div>
   );
 }

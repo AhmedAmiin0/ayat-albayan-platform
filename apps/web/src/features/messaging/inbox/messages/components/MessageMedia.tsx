@@ -7,6 +7,7 @@ import { ApiError } from '@/lib/http/api';
 import { t } from '@/lib/i18n/i18n';
 import { threadFileQuery, type ThreadFile } from '../../api/api';
 import { mediaKind } from '../../format';
+import { DownloadButton } from './DownloadButton';
 import { MediaPlayer } from './MediaPlayer';
 import { useInboxMode } from '../../shared/mode';
 
@@ -55,7 +56,14 @@ function FileView({ message: m, kind }: { message: MessageView; kind: string }) 
     );
   }
   // A loaded file stays even when a background refetch fails (the error is only for no file at all).
-  if (file.data) return <Loaded file={file.data} kind={kind} fileName={m.media_name ?? null} />;
+  if (file.data) {
+    return (
+      <div className="grid gap-1">
+        <Loaded file={file.data} kind={kind} fileName={m.media_name ?? null} />
+        <DownloadButton message={m} name={m.media_name ?? kind} />
+      </div>
+    );
+  }
   if (file.isPending) return <p className="text-xs text-ink-3">{t.common.loading}</p>;
   // 403 media_forbidden (a role that may not open files): the label, as in teacher mode.
   if (file.error instanceof ApiError && file.error.status === 403) return <Label kind={kind} forbidden />;
