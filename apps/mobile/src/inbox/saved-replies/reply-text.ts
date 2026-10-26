@@ -28,3 +28,18 @@ export function filledText(input: { text: string; reply: string; slash: number |
   if (!text.trim()) return reply;
   return `${text.replace(/\s+$/, '')}\n${reply}`;
 }
+
+/**
+ * What the docked list searches (owner 2026-10-26, as WhatsApp): the text after the open «/» at
+ * `slash`; null once that «/» is deleted (or sent) or the search runs onto a new line.
+ */
+export function slashSearch(text: string, slash: number | null): string | null {
+  if (slash === null || text[slash] !== '/') return null;
+  const query = text.slice(slash + 1);
+  return query.includes('\n') ? null : query;
+}
+
+/** The «/» list: both tabs in one list, as WhatsApp, the served order kept. */
+export function matchReplies(list: readonly SavedReply[], query: string): SavedReply[] {
+  return [...filterReplies(list, { scope: 'shared', query }), ...filterReplies(list, { scope: 'mine', query })];
+}
