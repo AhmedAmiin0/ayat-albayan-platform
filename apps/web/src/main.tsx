@@ -12,13 +12,14 @@ import { loadOverrides } from './lib/i18n/i18n-overrides';
 import { loadLocaleStrings } from './lib/i18n/locale-strings';
 import { locale } from './lib/i18n/locale';
 
-// index.html paints Arabic RTL; an English choice flips <html> before React renders anything.
-document.documentElement.lang = locale;
-document.documentElement.dir = localeDir(locale);
-
-// The chosen language's texts (English is its own chunk) and then the admins' translation
-// overrides (≤ 1.5 s, else the bundle) go into `t` FIRST, THEN the app: boot.tsx pulls in the
-// router and every screen, some of which copy strings at module load.
+// index.html paints Arabic RTL. The chosen language's texts (English is its own chunk) and then
+// the admins' translation overrides (≤ 1.5 s, else the bundle) go into `t` FIRST, and an English
+// page flips <html>, THEN the app: boot.tsx pulls in the router and every screen, some of which
+// copy strings at module load. An English chunk that fails to load leaves the page fully Arabic.
 void loadLocaleStrings(t, locale)
-  .then(() => loadOverrides(t, { apiUrl: env.apiUrl, locale }))
+  .then((shown) => {
+    document.documentElement.lang = shown;
+    document.documentElement.dir = localeDir(shown);
+    return loadOverrides(t, { apiUrl: env.apiUrl, locale: shown });
+  })
   .then(() => import('./boot'));

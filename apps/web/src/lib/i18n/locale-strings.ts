@@ -14,7 +14,7 @@ const childOf = (node: object, key: string): unknown => (Object.hasOwn(node, key
 
 /**
  * Writes `source`'s string leaves over `target`'s IN PLACE (walking the trees, so a key that holds
- * a dot — 'permissions.items' has 'leads.read' — is written like any other), and how many it wrote.
+ * a dot — 'permissions.items' has 'leads.read' — is written like any other); how many it wrote.
  */
 function writeTree(target: object, source: object): number {
   let written = 0;
@@ -34,15 +34,16 @@ function writeTree(target: object, source: object): number {
 }
 
 /**
- * Writes the chosen language's texts into `target` (lib/i18n `t`) IN PLACE; how many were written.
- * Arabic is bundled, so it loads nothing. A failed chunk leaves the Arabic texts, which are always
- * complete — the same fallback as a failed overrides request.
+ * Writes the chosen language's texts into `target` (lib/i18n `t`) IN PLACE and returns the language
+ * now shown. Arabic is bundled, so it loads nothing. A failed chunk leaves the Arabic texts, which
+ * are always complete, and returns 'ar' so the page direction and the overrides follow them too.
  */
-export async function loadLocaleStrings(target: object, locale: Locale, load: LoadBundle = importEnglish): Promise<number> {
-  if (locale !== 'en') return 0;
+export async function loadLocaleStrings(target: object, locale: Locale, load: LoadBundle = importEnglish): Promise<Locale> {
+  if (locale !== 'en') return locale;
   try {
-    return writeTree(target, await load());
+    writeTree(target, await load());
+    return 'en';
   } catch {
-    return 0;
+    return 'ar';
   }
 }

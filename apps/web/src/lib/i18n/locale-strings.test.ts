@@ -1,6 +1,6 @@
-import { cloneBundle, flattenStrings } from '@ab/shared';
 import ar from '@ab/shared/i18n/ar.json';
 import en from '@ab/shared/i18n/en.json';
+import { cloneBundle } from '@ab/shared';
 import { describe, expect, it, vi } from 'vitest';
 import { loadLocaleStrings } from './locale-strings';
 
@@ -11,14 +11,15 @@ import { loadLocaleStrings } from './locale-strings';
 describe('loadLocaleStrings', () => {
   it('Arabic is already bundled, so nothing is loaded', async () => {
     const target = cloneBundle(ar);
-    expect(await loadLocaleStrings(target, 'ar')).toBe(0);
+    const load = vi.fn(async () => en);
+    expect(await loadLocaleStrings(target, 'ar', load)).toBe('ar');
+    expect(load).not.toHaveBeenCalled();
     expect(target).toEqual(ar);
   });
 
   it('writes every English string into the Arabic copy, giving the old `en` bundle', async () => {
     const target = cloneBundle(ar);
-    const applied = await loadLocaleStrings(target, 'en');
-    expect(applied).toBe(Object.keys(flattenStrings(en)).length);
+    expect(await loadLocaleStrings(target, 'en')).toBe('en');
     expect(target).toEqual(en);
   });
 
@@ -35,12 +36,12 @@ describe('loadLocaleStrings', () => {
     expect(nav.inbox).toBe(en.nav.inbox);
   });
 
-  it('keeps the Arabic texts when the chunk cannot be fetched', async () => {
+  it('a chunk that cannot be fetched keeps the page fully Arabic', async () => {
     const target = cloneBundle(ar);
     const load = vi.fn(async () => {
       throw new Error('offline');
     });
-    expect(await loadLocaleStrings(target, 'en', load)).toBe(0);
+    expect(await loadLocaleStrings(target, 'en', load)).toBe('ar');
     expect(target).toEqual(ar);
   });
 });
