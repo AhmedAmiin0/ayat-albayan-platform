@@ -12,7 +12,7 @@ import { teacherFromText } from '../../sources/values.ts';
 import type { RowIssue, SourceRow } from '../../types.ts';
 import { type StudentIndex, findStudent, studentIndex } from './match.ts';
 
-export interface SubsFacts {
+interface SubsFacts {
   /** student keyIds with SUBS «عدد الحلقات» > 1. */
   active: Set<string>;
   issues: RowIssue[];

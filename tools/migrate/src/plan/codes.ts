@@ -24,7 +24,7 @@ export function plannedCodes(desired: readonly Desired[]): number[] {
   });
 }
 
-export interface DropCodesInput {
+interface DropCodesInput {
   desired: readonly Desired[];
   existing: ReadonlyMap<string, Existing>;
   /** code_seq → id of the target student holding it. */

@@ -8,7 +8,7 @@ import { readJson, type Route, type StubOptions } from '../state.ts';
 import { createTemplate, editTemplate } from '../templates.ts';
 
 export const KAPSO_PREFIX = '/kapso';
-export type AuthKind = 'api-key' | 'bearer' | 'oauth' | 'none';
+type AuthKind = 'api-key' | 'bearer' | 'oauth' | 'none';
 
 /** Which credential a request carried; an authorization header wins (it is what a mix-up would send). */
 export function authKind(req: IncomingMessage): AuthKind {

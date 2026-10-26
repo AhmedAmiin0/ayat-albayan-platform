@@ -36,7 +36,7 @@ export function sameValue(a: unknown, b: unknown): boolean {
   return stableJson(norm(a)) === stableJson(norm(b));
 }
 
-export interface FieldChangesInput {
+interface FieldChangesInput {
   item: PlanItem;
   /** The target row as to_jsonb. */
   row: Readonly<Record<string, unknown>>;
@@ -62,7 +62,7 @@ export function fieldChanges(input: FieldChangesInput): FieldChange[] {
     }));
 }
 
-export interface LoadChangesInput {
+interface LoadChangesInput {
   db: TargetDb;
   items: readonly PlanItem[];
   modules: readonly EntityModule[];

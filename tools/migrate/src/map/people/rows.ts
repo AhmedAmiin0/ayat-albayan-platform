@@ -43,7 +43,7 @@ export interface PhoneOnly {
   fields: PersonFields;
 }
 
-export interface PeopleRowsResult {
+interface PeopleRowsResult {
   rows: PersonRow[];
   issues: RowIssue[];
   phoneOnly?: PhoneOnly;
