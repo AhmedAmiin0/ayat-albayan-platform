@@ -39,19 +39,23 @@ describe('ReplyComposer: «/» opens the picker', () => {
     type('نعم/لا');
     expect(screen.queryByRole('listbox')).toBeNull();
     type('سطر\n/');
-    expect(await options()).toHaveLength(2);
+    expect(await options()).toHaveLength(3);
     type('/');
-    expect(await options()).toHaveLength(2);
+    expect(await options()).toHaveLength(3);
   });
 
-  it('the text after «/» searches title and text; the tabs switch to «ردودي»', async () => {
+  it('the text after «/» searches title and text over both tabs, as WhatsApp: no tabs, no search box', async () => {
     show();
     type('/قائمة');
     expect((await options()).map((o) => o.textContent)).toEqual([expect.stringContaining('الأسعار')]);
     type('/');
-    await options();
-    fireEvent.click(screen.getByRole('tab', { name: S.tabMine }));
-    expect((await options()).map((o) => o.textContent)).toEqual([expect.stringContaining('متابعة')]);
+    expect((await options()).map((o) => o.textContent)).toEqual([
+      expect.stringContaining('/الترحيب'),
+      expect.stringContaining('/الأسعار'),
+      expect.stringContaining('/متابعة'),
+    ]);
+    expect(screen.queryByRole('tab')).toBeNull();
+    expect(screen.queryByRole('combobox')).toBeNull();
   });
 
   it('Enter fills the box with the placeholders resolved and sends nothing; ↓ moves', async () => {

@@ -4,6 +4,7 @@ import { cn } from '@/lib/utils';
 import { BubbleActions, useHasBubbleActions } from './BubbleActions';
 import { DeliveryTicks } from './DeliveryTicks';
 import { clockText, fullTime } from '../../format';
+import { BUBBLE_ROW } from '../lib/bubble-side';
 import { bubbleId } from '../lib/jump-to-message';
 import { LineBadge } from '../../shared/LineBadge';
 import { MessageActions } from './MessageActions';
@@ -19,7 +20,8 @@ export interface MessageBubbleProps {
 }
 
 /**
- * One message (R-MSG-05). Theirs at the inline-start, ours at the end; the clock time (the log's day
+ * One message (R-MSG-05). As WhatsApp (owner 2026-10-26): ours on the right, theirs on the left, in
+ * Arabic and English alike (BUBBLE_ROW), the text inside keeping its own direction; the clock time (the log's day
  * separators carry the day, the tooltip the full date), and on ours WhatsApp-style delivery ticks
  * right after the time (DeliveryTicks), the reason when it failed and what to do next. In a chat she
  * can write in, «رد» / «إعادة توجيه» beside it (BubbleActions; also a right-click), and an id a
@@ -40,7 +42,7 @@ export function MessageBubble({ message: m, waitingTemplate, now }: MessageBubbl
       tabIndex={-1}
       className={cn(
         'group flex items-start gap-1 rounded-lg transition-colors duration-500 data-[flash]:bg-lapis-wash motion-reduce:transition-none',
-        outbound ? 'justify-end' : 'justify-start',
+        BUBBLE_ROW[outbound ? 'outbound' : 'inbound'],
       )}
     >
       {outbound && actions}
@@ -55,10 +57,11 @@ export function MessageBubble({ message: m, waitingTemplate, now }: MessageBubbl
         }
         className={cn(
           'min-w-0 max-w-[min(85%,560px)] rounded-lg px-3.5 py-2.5 text-sm',
-          // Below 900px (the full-screen chat on a sunk ground): ours mint with its tail at the end, theirs white.
+          // Below 900px (the full-screen chat on a sunk ground): ours mint, theirs white, each with its
+          // sharp tail corner at the top of its screen edge.
           outbound
-            ? 'bg-sunk max-shell:rounded-ee-sm max-shell:border max-shell:border-lapis/25 max-shell:bg-lapis-wash'
-            : 'border border-rule bg-raised max-shell:rounded-es-sm',
+            ? 'bg-sunk max-shell:rounded-tr-sm max-shell:border max-shell:border-lapis/25 max-shell:bg-lapis-wash'
+            : 'border border-rule bg-raised max-shell:rounded-tl-sm',
           m.status === 'failed' && 'shadow-[inset_0_0_0_1px_var(--color-act)]',
         )}
       >

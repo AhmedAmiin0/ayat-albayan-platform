@@ -24,6 +24,22 @@ jest.mock('./src/core/lib/http/supabase', () => ({
   },
 }));
 
+// The connection probe loop would call fetch (stealing a test's mocked responses) and flip TanStack's
+// onlineManager: a still store here. The connectivity tests build their own with createConnectivity.
+jest.mock('./src/core/lib/connectivity/connectivity', () => {
+  const state = { status: 'online', since: null, attempt: 0, active: true, hiddenAt: null };
+  return {
+    connectivity: {
+      getState: () => state,
+      subscribe: () => () => undefined,
+      reportFailure: jest.fn(),
+      reportReached: jest.fn(),
+      setActive: jest.fn(),
+      probeNow: jest.fn(),
+    },
+  };
+});
+
 // The translation-overrides refresh would call the real API from every flow test: off here.
 // lib/i18n-overrides.test.ts tests the real module (jest.requireActual).
 jest.mock('./src/core/lib/i18n/i18n-overrides', () => ({

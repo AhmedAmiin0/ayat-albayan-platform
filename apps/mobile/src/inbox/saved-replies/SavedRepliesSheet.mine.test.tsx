@@ -18,9 +18,9 @@ jest.mock('../composer/send-file', () => ({ ...jest.requireActual('../composer/s
 
 const onPick = jest.fn();
 async function openMine() {
-  await renderWithQuery(<SavedRepliesSheet initialQuery="" onClose={jest.fn()} onPick={onPick} />);
+  await renderWithQuery(<SavedRepliesSheet onClose={jest.fn()} onPick={onPick} />);
   await screen.findByRole('button', { name: 'ترحيب' });
-  await fireEvent.press(screen.getByRole('tab', { name: t.savedReplies.tabMine }));
+  await fireEvent.press(screen.getByRole('button', { name: t.savedReplies.manage }));
 }
 const field = (label: string) => screen.getByLabelText(label);
 
@@ -40,7 +40,7 @@ test('«رد جديد»: title, text with a placeholder pill, saved as her own r
   expect(field(t.savedReplies.fieldBody).props.value).toBe('أهلًا {name}');
   await fireEvent.press(screen.getByRole('button', { name: t.common.save }));
   expect(mockApiSend).toHaveBeenCalledWith('POST', '/saved-replies', { scope: 'mine', title: 'متابعة الدفع', body: 'أهلًا {name}', attachment: null });
-  expect(await screen.findByRole('button', { name: 'متابعة' })).toBeTruthy();
+  expect(await screen.findByText('متابعة')).toBeTruthy();
   expect(onPick).not.toHaveBeenCalled();
 });
 
@@ -69,11 +69,17 @@ test('delete asks first, then removes her reply', async () => {
   expect(mockApiSend).toHaveBeenCalledWith('DELETE', `/saved-replies/${MINE.id}`);
 });
 
-test('the shared tab has no edit or delete', async () => {
-  await renderWithQuery(<SavedRepliesSheet initialQuery="" onClose={jest.fn()} onPick={onPick} />);
+test('the pick list is clean: add / edit / delete only behind «إدارة», and only for her own', async () => {
+  await renderWithQuery(<SavedRepliesSheet onClose={jest.fn()} onPick={onPick} />);
   await screen.findByRole('button', { name: 'ترحيب' });
+  await fireEvent.press(screen.getByRole('tab', { name: t.savedReplies.tabMine }));
+  expect(screen.getByRole('button', { name: 'متابعة' })).toBeTruthy();
   expect(screen.queryByRole('button', { name: t.savedReplies.add })).toBeNull();
+  expect(screen.queryByRole('button', { name: t.savedReplies.editReply.replace('{title}', MINE.title) })).toBeNull();
+  await fireEvent.press(screen.getByRole('button', { name: t.savedReplies.manage }));
   expect(screen.queryByRole('button', { name: t.savedReplies.deleteReply.replace('{title}', 'ترحيب') })).toBeNull();
+  await fireEvent.press(screen.getByRole('button', { name: t.savedReplies.manageDone }));
+  expect(screen.getByRole('tab', { name: t.savedReplies.tabShared })).toBeTruthy();
 });
 
 test('«حفظ» waits while the file is uploading (the reply is never saved without it)', async () => {
@@ -90,4 +96,11 @@ test('«حفظ» waits while the file is uploading (the reply is never saved wit
   finish({ bucket: 'wa-media', path: 'saved/s1/x.pdf', token: 'tok', signed_url: 'u' });
   await screen.findByTestId('saved-reply-chip');
   expect(screen.getByRole('button', { name: t.common.save }).props.accessibilityState).toMatchObject({ disabled: false });
+});
+
+test('empty: the one-line hint to type «/» in the message box', async () => {
+  mockApiFetch.mockResolvedValue([]);
+  await renderWithQuery(<SavedRepliesSheet onClose={jest.fn()} onPick={onPick} />);
+  expect(await screen.findByText(t.savedReplies.slashHint)).toBeTruthy();
+  expect(screen.getByText(t.savedReplies.emptyShared)).toBeTruthy();
 });

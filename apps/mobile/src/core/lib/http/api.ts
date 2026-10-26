@@ -1,3 +1,5 @@
+import { connectivity } from '../connectivity/connectivity';
+import { isNetworkError } from '../connectivity/network-error';
 import { CLIENT_HEADER, mobileClientTag } from './client-tag';
 import { env } from './env';
 import { supabase } from './supabase';
@@ -24,13 +26,25 @@ async function readJson(res: Response): Promise<unknown> {
   }
 }
 
+/** fetch that tells the connection state what happened: any response is an answer, a rejection is none. */
+async function reach(url: string, init: RequestInit): Promise<Response> {
+  try {
+    const res = await fetch(url, init);
+    connectivity.reportReached();
+    return res;
+  } catch (error) {
+    if (isNetworkError(error)) connectivity.reportFailure();
+    throw error;
+  }
+}
+
 /** fetch against the Nest API with the current Supabase access token and the client tag (`X-AB-Client`). */
 export async function apiFetch<T>(path: string, init: RequestInit = {}): Promise<T> {
   const { data } = await supabase.auth.getSession();
   const headers = new Headers(init.headers);
   headers.set(CLIENT_HEADER, mobileClientTag());
   if (data.session) headers.set('Authorization', `Bearer ${data.session.access_token}`);
-  const res = await fetch(`${env.apiUrl}${path}`, { ...init, headers });
+  const res = await reach(`${env.apiUrl}${path}`, { ...init, headers });
   const body = await readJson(res);
   if (!res.ok) throw new ApiError(res.status, body ?? null);
   return body as T;

@@ -277,6 +277,10 @@
       "packages/shared/src/messaging/replies/saved-replies.ts"
     ],
     [
+      "packages/shared/src/messaging/saved-reply-text.match.test.ts",
+      "packages/shared/src/messaging/replies/saved-reply-text.match.test.ts"
+    ],
+    [
       "packages/shared/src/messaging/saved-reply-text.test.ts",
       "packages/shared/src/messaging/replies/saved-reply-text.test.ts"
     ],

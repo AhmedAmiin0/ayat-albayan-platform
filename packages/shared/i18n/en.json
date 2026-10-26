@@ -96,6 +96,14 @@
         "already_submitted": "The parent already answered this request",
         "lesson_not_completed": "A feedback request is sent after the lesson is finished"
       }
+    },
+    "connection": {
+      "connecting": "Connecting…",
+      "startupConnecting": "Connecting",
+      "checkInternet": "Check your internet connection",
+      "connected": "Connected",
+      "retry": "Try again",
+      "loading": "Opening the app"
     }
   },
   "common": {
@@ -6135,7 +6143,11 @@
       "retryFile": "Resend the attachment",
       "fileFailed": "The attachment was not sent: {reason}"
     },
-    "retry": "Try again"
+    "retry": "Try again",
+    "slashHint": "Type / in the message box to pick a quick reply",
+    "manage": "Manage",
+    "manageDone": "Done",
+    "sheetClose": "Close quick replies"
   },
   "trialDate": {
     "action": "New trial date",

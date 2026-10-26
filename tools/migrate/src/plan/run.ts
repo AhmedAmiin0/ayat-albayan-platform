@@ -23,6 +23,7 @@ import { checkCodes } from './codes.ts';
 import { matchTemplates } from './match/templates.target.ts';
 import { countPlan, diffPlan } from './diff.ts';
 import { matchTarget } from './match/match.target.ts';
+import { type RecreateScope, dropOrphans } from '../delta/orphans.ts';
 import { type Desired, resolve } from './resolve.ts';
 import { samePhoneTeachers, similarStudents } from './match/similar.ts';
 
@@ -30,7 +31,7 @@ import { samePhoneTeachers, similarStudents } from './match/similar.ts';
  * Everything extract-sheets / extract-crm left in cache/ (missing files read as empty), plus the
  * owner's teacher directory (required) and approved PDF matches.
  */
-export function loadBundle(today: string): SourceBundle {
+export function loadBundle(today: string, from?: string): SourceBundle {
   loadTeacherDirectory();
   const sheets = Object.fromEntries(
     SHEETS.map((s) => [s.id, readJson<SourceRow[]>(cachePath.sheet(s.id), [])]),
@@ -40,7 +41,7 @@ export function loadBundle(today: string): SourceBundle {
     CRM_TABLES.map((t) => [t.table, readJson<CrmRow[]>(cachePath.crm(t.table), [])]),
   );
   const approvedPdfs = new Set(readJson<string[]>(cachePath.pdfApproved(), []));
-  return { sheets, crm, earlier: new Map(), today, approvedPdfs };
+  return { sheets, crm, earlier: new Map(), today, from, approvedPdfs };
 }
 
 export interface MapResult {
@@ -70,8 +71,11 @@ export async function loadExisting(o: {
   db: TargetDb;
   modules: readonly EntityModule[];
   desired: readonly Desired[];
+  /** Runs before adoption: may drop import items (orphans.ts), which are then planned as new. */
+  prune?: (existing: Map<string, Existing>) => Promise<void>;
 }): Promise<Map<string, Existing>> {
   const existing = await o.db.loadImportItems(o.modules.map((m) => m.entity));
+  await o.prune?.(existing);
   for (const mod of o.modules) {
     if (!mod.adoptBy) continue;
     const fresh = o.desired.filter(
@@ -93,15 +97,27 @@ export interface BuildPlanInput {
   modules: readonly EntityModule[];
   target: TargetName;
   today: string;
+  /** --from ('YYYY-MM-DD'); default today. */
+  from?: string;
+  /** --creates-only with --only: recreate orphaned import items (orphans.ts). */
+  recreate?: Omit<RecreateScope, 'tableOf'>;
 }
 
 /** Read-only against the target: dry-run and apply share it, apply then writes the result. */
 export async function buildPlan(
   input: BuildPlanInput,
-): Promise<{ plan: PlanWithChanges; existing: Map<string, Existing> }> {
+): Promise<{ plan: PlanWithChanges; existing: Map<string, Existing>; recreated: Set<string> }> {
   const { db, modules } = input;
-  const mapped = mapAll(loadBundle(input.today), modules);
-  const existing = await loadExisting({ db, modules, desired: mapped.desired });
+  const mapped = mapAll(loadBundle(input.today, input.from), modules);
+  let recreated = new Set<string>();
+  const scope = input.recreate && {
+    ...input.recreate,
+    tableOf: (e: EntityName) => modules.find((m) => m.entity === e)?.table ?? e,
+  };
+  const prune = async (existing: Map<string, Existing>) => {
+    if (scope) recreated = await dropOrphans({ db, existing, desired: mapped.desired, scope });
+  };
+  const existing = await loadExisting({ db, modules, desired: mapped.desired, prune });
   const matched = await matchTarget({ db, desired: mapped.desired, existing });
   const codes = await checkCodes({ db, desired: mapped.desired, existing });
   const synced = await matchTemplates({ db, desired: codes.desired, existing });
@@ -115,5 +131,5 @@ export async function buildPlan(
     counts: countPlan(all),
   };
   const changes = [...(await loadChanges({ db, items: diff.items, modules, existing })), ...synced];
-  return { plan: { ...plan, changes }, existing };
+  return { plan: { ...plan, changes }, existing, recreated };
 }
