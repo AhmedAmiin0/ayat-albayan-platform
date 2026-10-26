@@ -1,7 +1,7 @@
 import { formatRunningHead, lessonStatusStyle, type LessonView } from '@ab/shared';
 import { useState } from 'react';
 import { FlatList } from 'react-native';
-import { EditTimeSheet } from '@/edit-time/EditTimeSheet';
+import { EditTimeSheet } from '@/edit-time/components/EditTimeSheet';
 import { clockAt } from '@/inbox/shared/format';
 import { t } from '@/core/lib/i18n/i18n';
 import { locale } from '@/core/lib/i18n/locale';

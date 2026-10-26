@@ -2,8 +2,8 @@ import '@/test/warm-rn';
 import { fireEvent, screen } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
-import { EditTimeSheet } from './EditTimeSheet';
-import { GRID, NOW, SAT_17, SUN_17, result, upcoming } from './fixtures';
+import { EditTimeSheet } from './components/EditTimeSheet';
+import { GRID, NOW, SAT_17, SUN_17, result, upcoming } from './testing/fixtures';
 import { lesson } from '@/today/fixtures';
 
 const mockApiFetch = jest.fn();

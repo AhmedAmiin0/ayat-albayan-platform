@@ -2,8 +2,8 @@ import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { ApiError } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
-import { EditTimeSheet } from './EditTimeSheet';
-import { GRID, NOW, SAT_17, upcoming } from './fixtures';
+import { EditTimeSheet } from './components/EditTimeSheet';
+import { GRID, NOW, SAT_17, upcoming } from './testing/fixtures';
 
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();

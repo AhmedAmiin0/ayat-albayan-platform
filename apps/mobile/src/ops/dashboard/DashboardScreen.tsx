@@ -2,7 +2,7 @@ import { router } from 'expo-router';
 import { useState } from 'react';
 import { ScrollView, View } from 'react-native';
 import { clockAt } from '@/inbox/shared/format';
-import { weekLabel } from '@/calendar/week';
+import { weekLabel } from '@/calendar/lib/week';
 import { t } from '@/core/lib/i18n/i18n';
 import { Section } from '@/more/Section';
 import { Button } from '@/core/ui/primitives/Button';

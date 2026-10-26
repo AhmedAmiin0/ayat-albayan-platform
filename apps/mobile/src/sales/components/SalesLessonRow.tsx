@@ -1,8 +1,8 @@
 import { isRunningLesson, lessonStatusStyle, localizedName, type SalesScheduleLesson } from '@ab/shared';
 import { View } from 'react-native';
-import { Tag } from '@/calendar/Tag';
-import { JoinClassroomButton } from '@/classroom/JoinClassroomButton';
-import { useMinuteClock } from '@/classroom/use-minute-clock';
+import { Tag } from '@/calendar/agenda/Tag';
+import { JoinClassroomButton } from '@/classroom/links/JoinClassroomButton';
+import { useMinuteClock } from '@/classroom/sessions/use-minute-clock';
 import { t } from '@/core/lib/i18n/i18n';
 import { locale } from '@/core/lib/i18n/locale';
 import { type, useTheme } from '@/theme';

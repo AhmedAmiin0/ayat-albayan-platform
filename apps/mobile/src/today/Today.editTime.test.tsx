@@ -1,5 +1,5 @@
 import { fireEvent, screen } from '@testing-library/react-native';
-import { GRID, held } from '@/edit-time/fixtures';
+import { GRID, held } from '@/edit-time/testing/fixtures';
 import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
 import { pending } from './fixtures';

@@ -1,5 +1,5 @@
 import { useLocalSearchParams } from 'expo-router';
-import { DayScheduleScreen } from '@/calendar/DayScheduleScreen';
+import { DayScheduleScreen } from '@/calendar/screens/DayScheduleScreen';
 
 /** The «الجدول» tab; `?date=YYYY-MM-DD` opens it on that Riyadh day (after a makeup is booked). */
 export default function ScheduleTab() {

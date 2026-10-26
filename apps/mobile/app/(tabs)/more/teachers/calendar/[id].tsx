@@ -1,1 +1,1 @@
-export { TeacherCalendarScreen as default } from '@/calendar/TeacherCalendarScreen';
+export { TeacherCalendarScreen as default } from '@/calendar/screens/TeacherCalendarScreen';

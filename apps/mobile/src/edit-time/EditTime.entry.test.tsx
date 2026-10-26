@@ -1,11 +1,11 @@
 import { fireEvent, screen } from '@testing-library/react-native';
-import { AgendaLessonRow } from '@/calendar/AgendaLessonRow';
-import { LessonRowActions } from '@/calendar/LessonRowActions';
+import { AgendaLessonRow } from '@/calendar/agenda/AgendaLessonRow';
+import { LessonRowActions } from '@/calendar/agenda/LessonRowActions';
 import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
 import { PastLessonRow } from '@/today/PastLessonRow';
 import { lesson } from '@/today/fixtures';
-import { held, upcoming } from './fixtures';
+import { held, upcoming } from './testing/fixtures';
 
 jest.mock('@/core/lib/http/api', () => ({ ...jest.requireActual('@/core/lib/http/api'), apiFetch: async () => [] }));
 

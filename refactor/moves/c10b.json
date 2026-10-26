@@ -1,0 +1,224 @@
+{
+  "id": "c10b",
+  "seq": 92,
+  "moves": [
+    {
+      "from": "apps/mobile/src/classroom/AdminSessionsScreen*",
+      "to": "apps/mobile/src/classroom/sessions/"
+    },
+    {
+      "from": "apps/mobile/src/classroom/SessionActions*",
+      "to": "apps/mobile/src/classroom/sessions/"
+    },
+    {
+      "from": "apps/mobile/src/classroom/SessionCard*",
+      "to": "apps/mobile/src/classroom/sessions/"
+    },
+    {
+      "from": "apps/mobile/src/classroom/SessionGroupList*",
+      "to": "apps/mobile/src/classroom/sessions/"
+    },
+    {
+      "from": "apps/mobile/src/classroom/DaySwitcher*",
+      "to": "apps/mobile/src/classroom/sessions/"
+    },
+    {
+      "from": "apps/mobile/src/classroom/sessions*",
+      "to": "apps/mobile/src/classroom/sessions/"
+    },
+    {
+      "from": "apps/mobile/src/classroom/use-minute-clock*",
+      "to": "apps/mobile/src/classroom/sessions/"
+    },
+    {
+      "from": "apps/mobile/src/classroom/AssistantLessonItem*",
+      "to": "apps/mobile/src/classroom/assistants/"
+    },
+    {
+      "from": "apps/mobile/src/classroom/AssistantLessonsList*",
+      "to": "apps/mobile/src/classroom/assistants/"
+    },
+    {
+      "from": "apps/mobile/src/classroom/AssistantPicker*",
+      "to": "apps/mobile/src/classroom/assistants/"
+    },
+    {
+      "from": "apps/mobile/src/classroom/AssistantsSection*",
+      "to": "apps/mobile/src/classroom/assistants/"
+    },
+    {
+      "from": "apps/mobile/src/classroom/assistant-lessons*",
+      "to": "apps/mobile/src/classroom/assistants/"
+    },
+    {
+      "from": "apps/mobile/src/classroom/assistants-api*",
+      "to": "apps/mobile/src/classroom/assistants/"
+    },
+    {
+      "from": "apps/mobile/src/classroom/CopyLinkAction*",
+      "to": "apps/mobile/src/classroom/links/"
+    },
+    {
+      "from": "apps/mobile/src/classroom/JoinClassroomButton*",
+      "to": "apps/mobile/src/classroom/links/"
+    },
+    {
+      "from": "apps/mobile/src/classroom/SendLinkAction*",
+      "to": "apps/mobile/src/classroom/links/"
+    },
+    {
+      "from": "apps/mobile/src/classroom/join-text*",
+      "to": "apps/mobile/src/classroom/links/"
+    },
+    {
+      "from": "apps/mobile/src/classroom/link-api*",
+      "to": "apps/mobile/src/classroom/links/"
+    },
+    {
+      "from": "apps/mobile/src/classroom/web-origin*",
+      "to": "apps/mobile/src/classroom/links/"
+    }
+  ],
+  "files": [
+    [
+      "apps/mobile/src/classroom/AdminSessionsScreen.en.test.tsx",
+      "apps/mobile/src/classroom/sessions/AdminSessionsScreen.en.test.tsx"
+    ],
+    [
+      "apps/mobile/src/classroom/AdminSessionsScreen.test.tsx",
+      "apps/mobile/src/classroom/sessions/AdminSessionsScreen.test.tsx"
+    ],
+    [
+      "apps/mobile/src/classroom/AdminSessionsScreen.tsx",
+      "apps/mobile/src/classroom/sessions/AdminSessionsScreen.tsx"
+    ],
+    [
+      "apps/mobile/src/classroom/assistant-lessons.test.ts",
+      "apps/mobile/src/classroom/assistants/assistant-lessons.test.ts"
+    ],
+    [
+      "apps/mobile/src/classroom/assistant-lessons.ts",
+      "apps/mobile/src/classroom/assistants/assistant-lessons.ts"
+    ],
+    [
+      "apps/mobile/src/classroom/AssistantLessonItem.tsx",
+      "apps/mobile/src/classroom/assistants/AssistantLessonItem.tsx"
+    ],
+    [
+      "apps/mobile/src/classroom/AssistantLessonsList.test.tsx",
+      "apps/mobile/src/classroom/assistants/AssistantLessonsList.test.tsx"
+    ],
+    [
+      "apps/mobile/src/classroom/AssistantLessonsList.tsx",
+      "apps/mobile/src/classroom/assistants/AssistantLessonsList.tsx"
+    ],
+    [
+      "apps/mobile/src/classroom/AssistantPicker.tsx",
+      "apps/mobile/src/classroom/assistants/AssistantPicker.tsx"
+    ],
+    [
+      "apps/mobile/src/classroom/assistants-api.ts",
+      "apps/mobile/src/classroom/assistants/assistants-api.ts"
+    ],
+    [
+      "apps/mobile/src/classroom/AssistantsSection.test.tsx",
+      "apps/mobile/src/classroom/assistants/AssistantsSection.test.tsx"
+    ],
+    [
+      "apps/mobile/src/classroom/AssistantsSection.tsx",
+      "apps/mobile/src/classroom/assistants/AssistantsSection.tsx"
+    ],
+    [
+      "apps/mobile/src/classroom/CopyLinkAction.test.tsx",
+      "apps/mobile/src/classroom/links/CopyLinkAction.test.tsx"
+    ],
+    [
+      "apps/mobile/src/classroom/CopyLinkAction.tsx",
+      "apps/mobile/src/classroom/links/CopyLinkAction.tsx"
+    ],
+    [
+      "apps/mobile/src/classroom/DaySwitcher.tsx",
+      "apps/mobile/src/classroom/sessions/DaySwitcher.tsx"
+    ],
+    [
+      "apps/mobile/src/classroom/join-text.test.ts",
+      "apps/mobile/src/classroom/links/join-text.test.ts"
+    ],
+    [
+      "apps/mobile/src/classroom/join-text.ts",
+      "apps/mobile/src/classroom/links/join-text.ts"
+    ],
+    [
+      "apps/mobile/src/classroom/JoinClassroomButton.en.test.tsx",
+      "apps/mobile/src/classroom/links/JoinClassroomButton.en.test.tsx"
+    ],
+    [
+      "apps/mobile/src/classroom/JoinClassroomButton.rows.test.tsx",
+      "apps/mobile/src/classroom/links/JoinClassroomButton.rows.test.tsx"
+    ],
+    [
+      "apps/mobile/src/classroom/JoinClassroomButton.test.tsx",
+      "apps/mobile/src/classroom/links/JoinClassroomButton.test.tsx"
+    ],
+    [
+      "apps/mobile/src/classroom/JoinClassroomButton.tsx",
+      "apps/mobile/src/classroom/links/JoinClassroomButton.tsx"
+    ],
+    [
+      "apps/mobile/src/classroom/link-api.test.ts",
+      "apps/mobile/src/classroom/links/link-api.test.ts"
+    ],
+    [
+      "apps/mobile/src/classroom/link-api.ts",
+      "apps/mobile/src/classroom/links/link-api.ts"
+    ],
+    [
+      "apps/mobile/src/classroom/SendLinkAction.status.test.tsx",
+      "apps/mobile/src/classroom/links/SendLinkAction.status.test.tsx"
+    ],
+    [
+      "apps/mobile/src/classroom/SendLinkAction.test.tsx",
+      "apps/mobile/src/classroom/links/SendLinkAction.test.tsx"
+    ],
+    [
+      "apps/mobile/src/classroom/SendLinkAction.tsx",
+      "apps/mobile/src/classroom/links/SendLinkAction.tsx"
+    ],
+    [
+      "apps/mobile/src/classroom/SessionActions.test.tsx",
+      "apps/mobile/src/classroom/sessions/SessionActions.test.tsx"
+    ],
+    [
+      "apps/mobile/src/classroom/SessionActions.tsx",
+      "apps/mobile/src/classroom/sessions/SessionActions.tsx"
+    ],
+    [
+      "apps/mobile/src/classroom/SessionCard.tsx",
+      "apps/mobile/src/classroom/sessions/SessionCard.tsx"
+    ],
+    [
+      "apps/mobile/src/classroom/SessionGroupList.tsx",
+      "apps/mobile/src/classroom/sessions/SessionGroupList.tsx"
+    ],
+    [
+      "apps/mobile/src/classroom/sessions.test.ts",
+      "apps/mobile/src/classroom/sessions/sessions.test.ts"
+    ],
+    [
+      "apps/mobile/src/classroom/sessions.ts",
+      "apps/mobile/src/classroom/sessions/sessions.ts"
+    ],
+    [
+      "apps/mobile/src/classroom/use-minute-clock.ts",
+      "apps/mobile/src/classroom/sessions/use-minute-clock.ts"
+    ],
+    [
+      "apps/mobile/src/classroom/web-origin.test.ts",
+      "apps/mobile/src/classroom/links/web-origin.test.ts"
+    ],
+    [
+      "apps/mobile/src/classroom/web-origin.ts",
+      "apps/mobile/src/classroom/links/web-origin.ts"
+    ]
+  ]
+}

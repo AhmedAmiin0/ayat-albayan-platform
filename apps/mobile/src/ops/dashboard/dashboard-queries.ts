@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { apiFetch, toQueryString } from '@/core/lib/http/api';
 import { pathKey } from '@/core/lib/query/query-keys';
-import { addDays, riyadhToday, weekStart } from '@/calendar/week';
+import { addDays, riyadhToday, weekStart } from '@/calendar/lib/week';
 import type { DashboardWork, Summary } from './dashboard-types';
 
 /** The Riyadh week (Saturday → Friday) holding `now`: the range of the web's KPI strip. */

@@ -3,8 +3,8 @@ import { ApiError } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
 import { monthLabel } from '@/teacher/lib/payout-text';
 import { renderWithQuery } from '@/test/query';
-import { EditTimeSheet } from './EditTimeSheet';
-import { held, NOW, result } from './fixtures';
+import { EditTimeSheet } from './components/EditTimeSheet';
+import { held, NOW, result } from './testing/fixtures';
 
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();

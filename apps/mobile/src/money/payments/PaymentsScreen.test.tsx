@@ -1,6 +1,6 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { Linking } from 'react-native';
-import { riyadhToday } from '@/calendar/week';
+import { riyadhToday } from '@/calendar/lib/week';
 import { t } from '@/core/lib/i18n/i18n';
 import { money } from '@/payments/format';
 import { payment } from '@/payments/fixtures';

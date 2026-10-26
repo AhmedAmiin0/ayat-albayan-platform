@@ -1,7 +1,7 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { router } from 'expo-router';
 import { Linking } from 'react-native';
-import { dayLabel } from '@/calendar/week';
+import { dayLabel } from '@/calendar/lib/week';
 import { t } from '@/core/lib/i18n/i18n';
 import { fakeNow } from '@/test/fake-now';
 import { renderWithQuery } from '@/test/query';

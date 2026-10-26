@@ -1,7 +1,7 @@
 import { fireEvent, screen } from '@testing-library/react-native';
 import { renderWithQuery } from '@/test/query';
-import { EditTimeSheet } from './EditTimeSheet';
-import { GRID, NOW, SAT_17, SUN_17, held, result, upcoming } from './fixtures';
+import { EditTimeSheet } from './components/EditTimeSheet';
+import { GRID, NOW, SAT_17, SUN_17, held, result, upcoming } from './testing/fixtures';
 
 // An English run: the native flag is LTR (jest.setup reports RTL, the Arabic default).
 jest.mock('react-native/Libraries/ReactNative/I18nManager', () => {
