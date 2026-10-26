@@ -19,7 +19,7 @@ import { useKnownTeacher } from '../hooks/use-known-teacher';
 
 type Teacher = { id: string; name: string };
 
-export interface CourseWizardProps {
+interface CourseWizardProps {
   /** A bookable course (courseBlock is null): a subscription and its weekly days are known. */
   view: SalesCourseView;
   onLeave: () => void;

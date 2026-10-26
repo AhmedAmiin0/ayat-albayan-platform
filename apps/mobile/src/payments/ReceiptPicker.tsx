@@ -8,7 +8,7 @@ import { Button } from '@/core/ui/primitives/Button';
 import { FormLabel } from './FormLabel';
 import { pickReceipt, type Receipt, type ReceiptSource } from './receipt';
 
-export interface ReceiptPickerProps {
+interface ReceiptPickerProps {
   receipt: Receipt | null;
   onChange: (receipt: Receipt) => void;
 }

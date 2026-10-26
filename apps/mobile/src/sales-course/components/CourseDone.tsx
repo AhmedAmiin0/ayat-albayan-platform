@@ -9,7 +9,7 @@ import { NuqtaGlyph } from '@/core/ui/primitives/NuqtaGlyph';
 import { type, useTheme } from '@/theme';
 import { courseEnd } from '../lib/course-body';
 
-export interface CourseDoneProps {
+interface CourseDoneProps {
   result: BookingResult;
   body: BookingRequest;
   view: SalesCourseView;

@@ -51,7 +51,7 @@ export function chosenPackage(
   return payablePackages(balance).find((p) => p.id === subscriptionId) ?? defaultPackage(balance);
 }
 
-export interface DraftCheck {
+interface DraftCheck {
   input?: PaymentInput;
   errors: { amount?: string; method?: string };
 }

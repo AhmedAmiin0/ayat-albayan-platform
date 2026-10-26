@@ -7,9 +7,9 @@ import { confirmOf, draftOf, parseDraft, sameValue, type Draft } from '../lib/va
 import { useSaveValue } from './use-save-value';
 
 /** edit: the editor; confirm: «احفظ» asked its question; closing: closing would drop the edit. */
-export type SheetStage = 'edit' | 'confirm' | 'closing';
+type SheetStage = 'edit' | 'confirm' | 'closing';
 
-export interface ValueSheetOptions {
+interface ValueSheetOptions {
   valueKey: SettingKey;
   /** The value GET /settings holds now. */
   saved: unknown;
