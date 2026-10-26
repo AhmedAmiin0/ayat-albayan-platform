@@ -1,0 +1,172 @@
+{
+  "id": "a20c",
+  "seq": 31,
+  "moves": [
+    {
+      "from": "apps/api/src/modules/student-recordings/recording-retention*",
+      "to": "apps/api/src/modules/student-recordings/retention"
+    },
+    {
+      "from": "apps/api/src/modules/student-recordings/recording-eraser*",
+      "to": "apps/api/src/modules/student-recordings/retention"
+    },
+    {
+      "from": "apps/api/src/modules/student-recordings/recording-maintenance*",
+      "to": "apps/api/src/modules/student-recordings/retention"
+    },
+    {
+      "from": "apps/api/src/modules/student-recordings/recording-delete*",
+      "to": "apps/api/src/modules/student-recordings/retention"
+    },
+    {
+      "from": "apps/api/src/common/config-store/config-entries*",
+      "to": "apps/api/src/common/config-store/io"
+    },
+    {
+      "from": "apps/api/src/common/config-store/config-store.queries*",
+      "to": "apps/api/src/common/config-store/store"
+    },
+    {
+      "from": "apps/api/src/common/config-store/config-store.service*",
+      "to": "apps/api/src/common/config-store/store"
+    },
+    {
+      "from": "apps/api/src/common/config-store/config-decode*",
+      "to": "apps/api/src/common/config-store/store"
+    },
+    {
+      "from": "apps/api/src/common/config-store/config-defs*",
+      "to": "apps/api/src/common/config-store/store"
+    },
+    {
+      "from": "apps/api/src/common/config-store/config-ownership*",
+      "to": "apps/api/src/common/config-store/boundaries"
+    },
+    {
+      "from": "apps/api/src/common/config-store/config-parity*",
+      "to": "apps/api/src/common/config-store/boundaries"
+    },
+    {
+      "from": "apps/api/src/common/config-store/config-seeder*",
+      "to": "apps/api/src/common/config-store/boundaries"
+    }
+  ],
+  "files": [
+    [
+      "apps/api/src/common/config-store/config-decode.test.ts",
+      "apps/api/src/common/config-store/store/config-decode.test.ts"
+    ],
+    [
+      "apps/api/src/common/config-store/config-decode.ts",
+      "apps/api/src/common/config-store/store/config-decode.ts"
+    ],
+    [
+      "apps/api/src/common/config-store/config-defs.ts",
+      "apps/api/src/common/config-store/store/config-defs.ts"
+    ],
+    [
+      "apps/api/src/common/config-store/config-entries.audit.ts",
+      "apps/api/src/common/config-store/io/config-entries.audit.ts"
+    ],
+    [
+      "apps/api/src/common/config-store/config-entries.controller.ts",
+      "apps/api/src/common/config-store/io/config-entries.controller.ts"
+    ],
+    [
+      "apps/api/src/common/config-store/config-entries.errors.ts",
+      "apps/api/src/common/config-store/io/config-entries.errors.ts"
+    ],
+    [
+      "apps/api/src/common/config-store/config-entries.mapper.ts",
+      "apps/api/src/common/config-store/io/config-entries.mapper.ts"
+    ],
+    [
+      "apps/api/src/common/config-store/config-entries.patch.http.test.ts",
+      "apps/api/src/common/config-store/io/config-entries.patch.http.test.ts"
+    ],
+    [
+      "apps/api/src/common/config-store/config-entries.read.http.test.ts",
+      "apps/api/src/common/config-store/io/config-entries.read.http.test.ts"
+    ],
+    [
+      "apps/api/src/common/config-store/config-entries.service.ts",
+      "apps/api/src/common/config-store/io/config-entries.service.ts"
+    ],
+    [
+      "apps/api/src/common/config-store/config-entries.test-util.ts",
+      "apps/api/src/common/config-store/io/config-entries.test-util.ts"
+    ],
+    [
+      "apps/api/src/common/config-store/config-ownership.test.ts",
+      "apps/api/src/common/config-store/boundaries/config-ownership.test.ts"
+    ],
+    [
+      "apps/api/src/common/config-store/config-ownership.ts",
+      "apps/api/src/common/config-store/boundaries/config-ownership.ts"
+    ],
+    [
+      "apps/api/src/common/config-store/config-parity.test.ts",
+      "apps/api/src/common/config-store/boundaries/config-parity.test.ts"
+    ],
+    [
+      "apps/api/src/common/config-store/config-parity.ts",
+      "apps/api/src/common/config-store/boundaries/config-parity.ts"
+    ],
+    [
+      "apps/api/src/common/config-store/config-seeder.test.ts",
+      "apps/api/src/common/config-store/boundaries/config-seeder.test.ts"
+    ],
+    [
+      "apps/api/src/common/config-store/config-seeder.ts",
+      "apps/api/src/common/config-store/boundaries/config-seeder.ts"
+    ],
+    [
+      "apps/api/src/common/config-store/config-store.queries.test.ts",
+      "apps/api/src/common/config-store/store/config-store.queries.test.ts"
+    ],
+    [
+      "apps/api/src/common/config-store/config-store.queries.ts",
+      "apps/api/src/common/config-store/store/config-store.queries.ts"
+    ],
+    [
+      "apps/api/src/common/config-store/config-store.service.test.ts",
+      "apps/api/src/common/config-store/store/config-store.service.test.ts"
+    ],
+    [
+      "apps/api/src/common/config-store/config-store.service.ts",
+      "apps/api/src/common/config-store/store/config-store.service.ts"
+    ],
+    [
+      "apps/api/src/modules/student-recordings/recording-delete.service.test.ts",
+      "apps/api/src/modules/student-recordings/retention/recording-delete.service.test.ts"
+    ],
+    [
+      "apps/api/src/modules/student-recordings/recording-delete.service.ts",
+      "apps/api/src/modules/student-recordings/retention/recording-delete.service.ts"
+    ],
+    [
+      "apps/api/src/modules/student-recordings/recording-eraser.ts",
+      "apps/api/src/modules/student-recordings/retention/recording-eraser.ts"
+    ],
+    [
+      "apps/api/src/modules/student-recordings/recording-maintenance.job.ts",
+      "apps/api/src/modules/student-recordings/retention/recording-maintenance.job.ts"
+    ],
+    [
+      "apps/api/src/modules/student-recordings/recording-retention.queries.test.ts",
+      "apps/api/src/modules/student-recordings/retention/recording-retention.queries.test.ts"
+    ],
+    [
+      "apps/api/src/modules/student-recordings/recording-retention.queries.ts",
+      "apps/api/src/modules/student-recordings/retention/recording-retention.queries.ts"
+    ],
+    [
+      "apps/api/src/modules/student-recordings/recording-retention.test.ts",
+      "apps/api/src/modules/student-recordings/retention/recording-retention.test.ts"
+    ],
+    [
+      "apps/api/src/modules/student-recordings/recording-retention.ts",
+      "apps/api/src/modules/student-recordings/retention/recording-retention.ts"
+    ]
+  ]
+}

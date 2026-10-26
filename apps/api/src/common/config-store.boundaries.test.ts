@@ -25,7 +25,7 @@ const STORE_MAY_IMPORT = [/^common\/(db|auth|audit)\//, /^config\/env\/env$/, /^
  * the others are legacy and go with the read switch / phase 5 (docs/26 §4, §6). Do not add to it.
  */
 const TABLE_ACCESS_ALLOWED = [
-  'common/config-store/config-store.queries.ts',
+  'common/config-store/store/config-store.queries.ts',
   'common/settings/settings.service.ts', // legacy read until the read switch
   'common/settings/settings-meta.queries.ts', // GET /config/meta
   'common/custom-config/custom-config.service.ts', // until phase 5 folds custom_config in

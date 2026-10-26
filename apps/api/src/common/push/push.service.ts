@@ -1,13 +1,13 @@
 import { webNotificationPath, type PushKind } from '@ab/shared';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { DB, type Db } from '../db/db.module';
-import { pushText, type PushText } from './expo-push';
-import { PushAudience, type Recipient } from './push.audience';
-import { PushChannels } from './push.channels';
-import { lockScreenText } from './push.lock-screen';
+import { pushText, type PushText } from './expo/expo-push';
+import { PushAudience, type Recipient } from './dispatch/push.audience';
+import { PushChannels } from './dispatch/push.channels';
+import { lockScreenText } from './dispatch/push.lock-screen';
 
-export type { PushTransport } from './expo-deliver';
-export { PUSH_TRANSPORT } from './push.channels';
+export type { PushTransport } from './expo/expo-deliver';
+export { PUSH_TRANSPORT } from './dispatch/push.channels';
 
 export interface PushEvent {
   /** What the event is about, for the dedup key: a lead id, message id, lesson id, … */

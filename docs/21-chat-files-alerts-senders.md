@@ -465,7 +465,7 @@ async notifySales(kind: PushKind, event: PushEvent, owners: readonly string[]): 
 
 ### Build
 
-1. **`apps/api/src/common/push/push.audience.ts`** (69 lines): `private roleIds(role: 'admin' | 'sales')`, with `adminIds()` and `salesIds()` as one-liners.
+1. **`apps/api/src/common/push/dispatch/push.audience.ts`** (69 lines): `private roleIds(role: 'admin' | 'sales')`, with `adminIds()` and `salesIds()` as one-liners.
 2. **`push.service.ts`** (105 lines, about 115 after): add `notifySales` as above.
 3. **`apps/api/src/modules/sales/sales-ownership.ts`** (44 lines): add `guardianOwnerIds(db, guardianId)`. It runs two parallel queries and returns the union with nulls dropped:
    - students' `brought_by` where `guardian_id = guardianId`;

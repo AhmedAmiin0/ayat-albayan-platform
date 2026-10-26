@@ -4,8 +4,8 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { AppModule } from '../../app.module';
 import { TranslationsService } from '../../modules/translations/translations.service';
 import { SettingsService } from '../settings/settings.service';
-import { ConfigSeeder } from './config-seeder';
-import { ConfigStore } from './config-store.service';
+import { ConfigSeeder } from './boundaries/config-seeder';
+import { ConfigStore } from './store/config-store.service';
 
 describe('ConfigStoreModule wiring', () => {
   afterEach(() => vi.unstubAllGlobals());
