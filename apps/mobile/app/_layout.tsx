@@ -7,14 +7,26 @@ import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
-import { useAuthGate } from '@/auth';
+import { View } from 'react-native';
+import { type GateStatus, retryGate, useAuthGate, useMeReady } from '@/auth';
+import { connectivity } from '@/core/lib/connectivity/connectivity';
 import { useOverridesReady } from '@/core/lib/i18n/i18n-overrides';
 import { useLocaleReady } from '@/core/lib/i18n/locale-switch';
-import { persistOptions, queryClient } from '@/core/lib/query/query-client';
+import { onCacheRestored, persistOptions, queryClient } from '@/core/lib/query/query-client';
+import { pathKey } from '@/core/lib/query/query-keys';
+import { TopConnectingBar } from '@/core/ui/connecting/TopConnectingBar';
+import { StartupOverlay } from '@/core/ui/startup/StartupOverlay';
 import { restoreAppearance } from '@/more';
 import { useTheme } from '@/theme';
 
 // Bundled files: Noto Sans Arabic for everything, titles at 700 (owner, 2026-10-05); names match theme.type.
+/** «إعادة المحاولة» on the startup screen: the session and its role again, /auth/me, and the connection now. */
+function retryStartup() {
+  retryGate();
+  void queryClient.refetchQueries({ queryKey: pathKey('/auth/me') });
+  connectivity.probeNow();
+}
+
 const fonts = {
   NotoSansArabic_400Regular,
   NotoSansArabic_500Medium,
@@ -31,6 +43,9 @@ const fonts = {
  * (react-native-screens#4132); groups add no URL segment, so every link stays the same. Each group
  * sits in its tree's guard (an unlisted route is unprotected), after the tree, which stays first.
  * When the gate flips, Stack.Protected moves the screen by itself: no screen navigates after sign-in/out.
+ * Until then the branded startup screen lies over it and fades out on the first screen; the
+ * reconnecting bar shows under the focused screen's header (ScreenHeader), or above the stack under the
+ * top safe area for a screen with none, and pushes the content down while the app has no connection.
  */
 export default function RootLayout() {
   const [loaded, error] = useFonts(fonts);
@@ -39,7 +54,6 @@ export default function RootLayout() {
   const localeReady = useLocaleReady();
   // The admins' translation overrides saved by the last run, in `t` before the first screen.
   const overridesReady = useOverridesReady();
-  const { color } = useTheme();
   // «المظهر»: the saved light/dark override, re-applied while fonts and the session load.
   useEffect(() => {
     void restoreAppearance();
@@ -47,10 +61,39 @@ export default function RootLayout() {
   // On a font error fall through: the system Arabic font is better than a blank app.
   const ready = (loaded || error) && localeReady && overridesReady && gate !== 'booting';
   return (
-    <PersistQueryClientProvider client={queryClient} persistOptions={persistOptions}>
+    <PersistQueryClientProvider
+      client={queryClient}
+      persistOptions={persistOptions}
+      onSuccess={onCacheRestored}
+      onError={onCacheRestored}
+    >
+      <GatedRoot gate={gate} settled={Boolean(ready)} fontsLoaded={loaded} />
+    </PersistQueryClientProvider>
+  );
+}
+
+interface GatedRootProps {
+  gate: GateStatus;
+  /** Fonts, language, overrides and the session gate are settled. */
+  settled: boolean;
+  fontsLoaded: boolean;
+}
+
+/**
+ * Inside the query provider, so the persisted /auth/me counts: a signed-in tree mounts only once
+ * /auth/me is loaded (saved or live), and its tab bar renders once, complete (docs/27 E2, D6). Until
+ * then «جارٍ الاتصال» stays up; useMeReady fetches /auth/me meanwhile.
+ */
+function GatedRoot({ gate, settled, fontsLoaded }: GatedRootProps) {
+  const { color } = useTheme();
+  const meReady = useMeReady(gate !== 'booting' && gate !== 'out');
+  const ready = settled && meReady;
+  return (
+    <>
       {ready ? (
-        <>
+        <View style={{ flex: 1, backgroundColor: color.margin }}>
           <StatusBar style="auto" />
+          <TopConnectingBar />
           <Stack
             screenOptions={{ headerShown: false, contentStyle: { backgroundColor: color.margin } }}
           >
@@ -73,8 +116,9 @@ export default function RootLayout() {
               <Stack.Screen name="login" />
             </Stack.Protected>
           </Stack>
-        </>
+        </View>
       ) : null}
-    </PersistQueryClientProvider>
+      <StartupOverlay ready={ready} onRetry={retryStartup} fontsLoaded={fontsLoaded} />
+    </>
   );
 }

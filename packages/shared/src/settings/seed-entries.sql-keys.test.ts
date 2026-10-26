@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { SEED_ENTRIES } from './seed-entries.js';
-import { sqlSettingsReaders } from './sql-readers.js';
+import { SEED_ENTRIES } from './seed/seed-entries.js';
+import { sqlSettingsReaders } from './seed/sql-readers.js';
 
 // Vite's raw import (vitest): the shared lib has no Node typings, so the migrations are read this way.
 declare global {

@@ -4,7 +4,7 @@
 // characters.
 import { randomUUID } from 'node:crypto';
 import { stubLines } from './lines.ts';
-import { defaultChatTemplates, defaultTemplates, ERR, onWaba, type Json, type StubTemplate } from './meta.ts';
+import { defaultChatTemplates, defaultTemplates, ERR, onWaba, type Json, type StubTemplate } from './providers/meta.ts';
 import type { Reply, StubOptions, StubState } from './state.ts';
 
 /** createStub's and /__stub/reset's templates: the given (or default) ones, plus the chat line's starter. */

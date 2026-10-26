@@ -2,7 +2,7 @@ import type { RegistrationCheckView } from '@ab/shared';
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { ApiError } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
-import { renderWithQuery } from '@/test/query';
+import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { RegistrationCheckScreen } from './RegistrationCheckScreen';
 
 const mockApiFetch = jest.fn();
@@ -46,7 +46,7 @@ beforeEach(() => {
 test('from the chat: the thread number is checked at once → the children, status, teacher or «none», «more»', async () => {
   mockParams.phone = PHONE;
   answer(found);
-  await renderWithQuery(<RegistrationCheckScreen />);
+  await renderWithQuery(<RegistrationCheckScreen />, createTestQueryClient({ meFromApi: true }));
   expect(await screen.findByText(rc.found.replace('{n}', '2'))).toBeTruthy();
   expect(checks()).toEqual([`/sales/registration-check?phone=${encodeURIComponent(PHONE)}`]);
   expect(screen.getByText('ريم')).toBeTruthy();
@@ -59,7 +59,7 @@ test('from the chat: the thread number is checked at once → the children, stat
 
 test('by name: not found says so for a name', async () => {
   answer({ found: false, matches: [], more: false });
-  await renderWithQuery(<RegistrationCheckScreen />);
+  await renderWithQuery(<RegistrationCheckScreen />, createTestQueryClient({ meFromApi: true }));
   await fireEvent.changeText(await screen.findByLabelText(rc.query), '  يوسف ');
   await fireEvent.press(screen.getByRole('button', { name: rc.submit }));
   expect(await screen.findByText(rc.notFoundName)).toBeTruthy();
@@ -68,7 +68,7 @@ test('by name: not found says so for a name', async () => {
 
 test('too short a name, an empty or a bad phone: said here, nothing sent', async () => {
   answer(found);
-  await renderWithQuery(<RegistrationCheckScreen />);
+  await renderWithQuery(<RegistrationCheckScreen />, createTestQueryClient({ meFromApi: true }));
   await fireEvent.changeText(await screen.findByLabelText(rc.query), 'رم');
   await fireEvent.press(screen.getByRole('button', { name: rc.submit }));
   expect(await screen.findByText(rc.error.query_too_short)).toBeTruthy();
@@ -83,7 +83,7 @@ test('too short a name, an empty or a bad phone: said here, nothing sent', async
 
 test('the API refuses: its validation issue or code in her words, else generic', async () => {
   answer(new ApiError(400, { message: 'validation_failed', issues: [{ path: 'q', message: 'query_too_short' }] }));
-  await renderWithQuery(<RegistrationCheckScreen />);
+  await renderWithQuery(<RegistrationCheckScreen />, createTestQueryClient({ meFromApi: true }));
   await fireEvent.changeText(await screen.findByLabelText(rc.query), 'AB-0201');
   await fireEvent.press(screen.getByRole('button', { name: rc.submit }));
   expect(await screen.findByText(rc.error.query_too_short)).toBeTruthy();
@@ -97,7 +97,7 @@ test('the API refuses: its validation issue or code in her words, else generic',
 
 test('without students.check_registration: no form', async () => {
   mockApiFetch.mockImplementation(async () => ({ role: 'sales', permissions: ['self.sales'] }));
-  await renderWithQuery(<RegistrationCheckScreen />);
+  await renderWithQuery(<RegistrationCheckScreen />, createTestQueryClient({ meFromApi: true }));
   expect(await screen.findByRole('header', { name: rc.title })).toBeTruthy();
   await waitFor(() => expect(screen.queryByRole('button', { name: rc.submit })).toBeNull());
   expect(checks()).toEqual([]);

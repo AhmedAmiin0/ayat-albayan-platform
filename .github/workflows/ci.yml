@@ -65,7 +65,7 @@ jobs:
           e2e=false; code=false
           # Here-strings, not pipes: with pipefail an early `grep -q` exit could make the test read false.
           if grep -qvE '^(apps/mobile/|docs/|tools/migrate/|tools/scripts/|.*\.md$)' <<< "$files" \
-            || grep -qE '^tools/scripts/(e2e-shards|write-local-env)\.mjs$' <<< "$files"; then e2e=true; fi
+            || grep -qE '^tools/scripts/(ci-checks/e2e-shards|env/write-local-env)\.mjs$' <<< "$files"; then e2e=true; fi
           if grep -qvE '^docs/|\.md$' <<< "$files" || grep -qx 'docs/09-deployment.md' <<< "$files"; then code=true; fi
           printf 'e2e=%s\ncode=%s\n' "$e2e" "$code" | tee -a "$GITHUB_OUTPUT"
 
@@ -121,14 +121,14 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version-file: .nvmrc
-      - run: node tools/scripts/folder-cap.mjs
+      - run: node tools/scripts/ci-checks/folder-cap.mjs
       - name: Pure-move check
         env:
           HEAD_REF: ${{ github.head_ref }}
           BASE_REF: ${{ github.base_ref }}
         run: |
           case "$HEAD_REF" in
-            cloud/refactor-[abcd][0-9]*) node tools/scripts/pure-move-check.mjs "origin/$BASE_REF" HEAD ;;
+            cloud/refactor-[abcd][0-9]*) node tools/scripts/ci-checks/pure-move-check.mjs "origin/$BASE_REF" HEAD ;;
             *) echo "not a move PR ($HEAD_REF): skipped" ;;
           esac
 
@@ -257,7 +257,7 @@ jobs:
           cat "$RUNNER_TEMP/supabase.log"
           test "$(cat "$RUNNER_TEMP/supabase.rc" 2>/dev/null)" = 0
       - run: pnpm env:local
-      # Shard sizes from the measured durations (tools/scripts/e2e-shards.mjs, e2e/shard-durations.json): the
+      # Shard sizes from the measured durations (tools/scripts/ci-checks/e2e-shards.mjs, e2e/shard-durations.json): the
       # shards keep Playwright's own order and contiguous cuts, only the cut points move. FAIL SAFE: any error
       # leaves the value empty and Playwright splits by equal test counts, as before. Every test still runs:
       # Playwright itself assigns every group to exactly one shard whatever the sizes.
@@ -269,7 +269,7 @@ jobs:
           E2E_GROUPS_FILE: ${{ runner.temp }}/groups.json
         run: |
           if pnpm --filter e2e exec playwright test --list --reporter=./support/durations-reporter.ts $PROJECT >/dev/null \
-            && w=$(node tools/scripts/e2e-shards.mjs weights "$SHARDS" "$RUNNER_TEMP/groups.json") \
+            && w=$(node tools/scripts/ci-checks/e2e-shards.mjs weights "$SHARDS" "$RUNNER_TEMP/groups.json") \
             && [[ "$w" =~ ^[0-9]+(:[0-9]+)*$ ]]; then
             echo "weights=$w" >> "$GITHUB_OUTPUT"
           else
@@ -303,7 +303,7 @@ jobs:
             e2e/playwright-report
             e2e/test-results
           retention-days: 7
-      # Per-file durations of this shard, to refresh e2e/shard-durations.json (tools/scripts/e2e-shards.mjs merge).
+      # Per-file durations of this shard, to refresh e2e/shard-durations.json (tools/scripts/ci-checks/e2e-shards.mjs merge).
       - uses: actions/upload-artifact@v4
         if: always() && matrix.shard != 'single'
         with:

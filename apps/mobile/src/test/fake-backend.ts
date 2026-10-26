@@ -51,6 +51,17 @@ export class FakeBackend {
     return this;
   }
 
+  /** Does the test answer `route` itself (an `on` handler)? */
+  handles(route: string): boolean {
+    return this.handlers.some(([r]) => r === route);
+  }
+
+  /** Answers `route` only when no `on` handler matches (a default the test can override). */
+  fallback(route: string, handler: Handler): this {
+    this.handlers.push([route, handler]);
+    return this;
+  }
+
   /** The next `route` call rejects with `error` (then it behaves normally again). */
   failOnce(route: string, error: unknown): this {
     this.failures.set(route, [...(this.failures.get(route) ?? []), error]);

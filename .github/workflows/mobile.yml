@@ -5,7 +5,7 @@ name: mobile
 # Never production, never iOS/Apple. The repo is public: no pull_request trigger; EXPO_TOKEN lives
 # in the environment `mobile` (restrict it to develop). An OTA replaces JavaScript only, so it is
 # refused when a native dependency, plugin or app.json native field changed since the last build.
-# deploy-staging.yml «plan» finds the last preview OTA by this title (tools/scripts/deploy-baseline.mjs).
+# deploy-staging.yml «plan» finds the last preview OTA by this title (tools/scripts/env/deploy-baseline.mjs).
 run-name: mobile ${{ inputs.action }} ${{ inputs.branch }}
 on:
   workflow_dispatch:
@@ -107,7 +107,7 @@ jobs:
             echo "::warning::no finished preview build found, so a native change cannot be ruled out"
             rc=1
           else
-            rc=0; node tools/scripts/native-changes.mjs "$last" || rc=$?
+            rc=0; node tools/scripts/ci-checks/native-changes.mjs "$last" || rc=$?
           fi
           if [ "$rc" != 0 ] && [ "$FORCE" != true ]; then
             echo "::error::native change (or unknown last build): an OTA would not reach it. Build a new APK (action build-android-apk), or tick force_ota to ship anyway."

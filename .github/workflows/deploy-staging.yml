@@ -69,7 +69,7 @@ jobs:
 
   # What changed since staging last got it (owner 2026-10-23: no approval click when no migration changed,
   # automatic OTA). GitHub API with actions: read only; no environment, no secret.
-  #  - migrations: false only when the last deploy that pushed migrations is known (tools/scripts/deploy-baseline.mjs)
+  #  - migrations: false only when the last deploy that pushed migrations is known (tools/scripts/env/deploy-baseline.mjs)
   #    AND nothing under packages/db/supabase/migrations/ changed since. FAIL SAFE: an unknown or unfound
   #    baseline, an API or git error, or an empty output all leave the gated migrate job ON.
   #  - ota: true only when apps/mobile or packages/shared (the JS the app bundles) changed since the last green
@@ -98,7 +98,7 @@ jobs:
       - id: base
         env:
           GITHUB_TOKEN: ${{ github.token }}
-        run: node tools/scripts/deploy-baseline.mjs | tee -a "$GITHUB_OUTPUT"
+        run: node tools/scripts/env/deploy-baseline.mjs | tee -a "$GITHUB_OUTPUT"
       - id: migrations
         env:
           BASE: ${{ steps.base.outputs.migrate_base }}
@@ -127,7 +127,7 @@ jobs:
           if [ -z "$BASE" ]; then echo "::notice::no earlier OTA or deploy known: no automatic OTA (run mobile by hand)"
           elif ! git merge-base --is-ancestor "$BASE" HEAD; then echo "::notice::${BASE:0:7} is not behind this commit: no automatic OTA"
           elif [ -z "$(js)" ]; then echo "no mobile JS change since ${BASE:0:7}: no OTA"
-          elif ! node tools/scripts/native-changes.mjs "$NATIVE_BASE"; then
+          elif ! node tools/scripts/ci-checks/native-changes.mjs "$NATIVE_BASE"; then
             echo "::warning::native change since the last APK ($NATIVE_BASE): no automatic OTA. Build an APK by hand (mobile → build-android-apk), then set OTA_BASELINE_SHA."
           else ota=true; echo "mobile JS changed since ${BASE:0:7} and no native change: OTA to preview after the deploy"; fi
           echo "ota=$ota" >> "$GITHUB_OUTPUT"
@@ -248,7 +248,7 @@ jobs:
             WA_WABA_ID WA_ACCESS_TOKEN WA_APP_ID WA_APP_SECRET WA_VERIFY_TOKEN
             FEEDBACK_TOKEN_SECRET LIVEKIT_URL LIVEKIT_API_KEY LIVEKIT_API_SECRET RECORDING_S3_ENDPOINT RECORDING_S3_REGION
             RECORDING_S3_BUCKET RECORDING_S3_ACCESS_KEY RECORDING_S3_SECRET EXPO_ACCESS_TOKEN EXPO_API_BASE FX_API_URL"
-          node tools/scripts/env-merge.mjs current.env $keys > new.env
+          node tools/scripts/env/env-merge.mjs current.env $keys > new.env
           if cmp -s current.env new.env; then echo "server .env unchanged"; else
             ssh target "cp $DEST/.env $DEST/.env.bak-\$(date +%F-%H%M%S) 2>/dev/null || true; umask 077; cat > $DEST/.env.new && mv $DEST/.env.new $DEST/.env" < new.env
             echo "server .env updated (backup kept next to it)"; fi

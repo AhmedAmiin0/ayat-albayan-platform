@@ -74,3 +74,14 @@ describe('createApiClient', () => {
     await expect(apiFetch('/s')).rejects.toMatchObject({ status: 500, body: null });
   });
 });
+
+describe('createApiClient transport', () => {
+  it('sends through the injected fetch when one is given (mobile reachability)', async () => {
+    const send = vi.fn<NonNullable<ApiClientOptions['fetch']>>();
+    send.mockResolvedValue(new Response(JSON.stringify({ ok: true }), { status: 200 }));
+    const { apiFetch } = createApiClient(opts({ fetch: send }));
+    await expect(apiFetch('/auth/me')).resolves.toEqual({ ok: true });
+    expect(send).toHaveBeenCalledWith('http://api.test/auth/me', expect.anything());
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+});

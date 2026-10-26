@@ -3,7 +3,7 @@
 import { randomUUID } from 'node:crypto';
 import { diagnosticControlRoutes, resetHealth } from './diagnostics.ts';
 import { lineOf, stubLines } from './lines.ts';
-import { metaError } from './meta.ts';
+import { metaError } from './providers/meta.ts';
 import { digits, readJson, type Route, type StubState } from './state.ts';
 import { initialTemplates, reviewTemplate } from './templates.ts';
 import { forward, inboundValue, statusValue, type InboundSpec, type StatusSpec, type WebhookTarget } from './webhook.ts';

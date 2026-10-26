@@ -1,0 +1,116 @@
+{
+  "id": "d3b",
+  "seq": 102,
+  "moves": [
+    {
+      "from": "packages/shared/src/notifications/catalogue*",
+      "to": "packages/shared/src/notifications/catalogue/"
+    },
+    {
+      "from": "packages/shared/src/lessons/day-times*",
+      "to": "packages/shared/src/lessons/series/"
+    },
+    {
+      "from": "packages/shared/src/lessons/course-end.test.ts",
+      "to": "packages/shared/src/lessons/series/"
+    },
+    {
+      "from": "packages/shared/src/lessons/series-days*",
+      "to": "packages/shared/src/lessons/series/"
+    },
+    {
+      "from": "packages/shared/src/lessons/time-edit*",
+      "to": "packages/shared/src/lessons/series/"
+    },
+    {
+      "from": "packages/shared/src/lessons/zoned*",
+      "to": "packages/shared/src/lessons/series/"
+    }
+  ],
+  "files": [
+    [
+      "packages/shared/src/lessons/course-end.test.ts",
+      "packages/shared/src/lessons/series/course-end.test.ts"
+    ],
+    [
+      "packages/shared/src/lessons/day-times.test.ts",
+      "packages/shared/src/lessons/series/day-times.test.ts"
+    ],
+    [
+      "packages/shared/src/lessons/day-times.ts",
+      "packages/shared/src/lessons/series/day-times.ts"
+    ],
+    [
+      "packages/shared/src/lessons/series-days.test.ts",
+      "packages/shared/src/lessons/series/series-days.test.ts"
+    ],
+    [
+      "packages/shared/src/lessons/series-days.ts",
+      "packages/shared/src/lessons/series/series-days.ts"
+    ],
+    [
+      "packages/shared/src/lessons/time-edit.test.ts",
+      "packages/shared/src/lessons/series/time-edit.test.ts"
+    ],
+    [
+      "packages/shared/src/lessons/time-edit.ts",
+      "packages/shared/src/lessons/series/time-edit.ts"
+    ],
+    [
+      "packages/shared/src/lessons/zoned.test.ts",
+      "packages/shared/src/lessons/series/zoned.test.ts"
+    ],
+    [
+      "packages/shared/src/lessons/zoned.ts",
+      "packages/shared/src/lessons/series/zoned.ts"
+    ],
+    [
+      "packages/shared/src/notifications/catalogue-settings.test.ts",
+      "packages/shared/src/notifications/catalogue/catalogue-settings.test.ts"
+    ],
+    [
+      "packages/shared/src/notifications/catalogue-settings.ts",
+      "packages/shared/src/notifications/catalogue/catalogue-settings.ts"
+    ],
+    [
+      "packages/shared/src/notifications/catalogue-state.rules.test.ts",
+      "packages/shared/src/notifications/catalogue/catalogue-state.rules.test.ts"
+    ],
+    [
+      "packages/shared/src/notifications/catalogue-state.test.ts",
+      "packages/shared/src/notifications/catalogue/catalogue-state.test.ts"
+    ],
+    [
+      "packages/shared/src/notifications/catalogue-state.ts",
+      "packages/shared/src/notifications/catalogue/catalogue-state.ts"
+    ],
+    [
+      "packages/shared/src/notifications/catalogue-timing.ts",
+      "packages/shared/src/notifications/catalogue/catalogue-timing.ts"
+    ],
+    [
+      "packages/shared/src/notifications/catalogue-views.ts",
+      "packages/shared/src/notifications/catalogue/catalogue-views.ts"
+    ],
+    [
+      "packages/shared/src/notifications/catalogue.other.ts",
+      "packages/shared/src/notifications/catalogue/catalogue.other.ts"
+    ],
+    [
+      "packages/shared/src/notifications/catalogue.test.ts",
+      "packages/shared/src/notifications/catalogue/catalogue.test.ts"
+    ],
+    [
+      "packages/shared/src/notifications/catalogue.ts",
+      "packages/shared/src/notifications/catalogue/catalogue.ts"
+    ],
+    [
+      "packages/shared/src/notifications/catalogue.types.ts",
+      "packages/shared/src/notifications/catalogue/catalogue.types.ts"
+    ],
+    [
+      "packages/shared/src/notifications/catalogue.whatsapp.ts",
+      "packages/shared/src/notifications/catalogue/catalogue.whatsapp.ts"
+    ]
+  ]
+}

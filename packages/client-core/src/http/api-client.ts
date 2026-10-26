@@ -11,6 +11,8 @@ export interface ApiClientOptions {
   accessToken: () => Promise<string | null>;
   /** `web/<build>` or `mobile/<build>`. */
   clientTag: () => string;
+  /** The transport; mobile wraps fetch to report reachability (connectivity). Default: global fetch. */
+  fetch?: (url: string, init: RequestInit) => Promise<Response>;
 }
 
 export interface ApiClient {
@@ -25,7 +27,8 @@ export function createApiClient(opts: ApiClientOptions): ApiClient {
     const headers = new Headers(init.headers);
     headers.set(CLIENT_HEADER, opts.clientTag());
     if (token) headers.set('Authorization', `Bearer ${token}`);
-    const res = await fetch(`${opts.baseUrl()}${path}`, { ...init, headers });
+    const send = opts.fetch ?? fetch;
+    const res = await send(`${opts.baseUrl()}${path}`, { ...init, headers });
     const body = await readJson(res);
     if (!res.ok) throw new ApiError(res.status, body ?? null);
     return body as T;

@@ -1,6 +1,6 @@
 // Signed Meta webhooks the stub sends to the API (docs/12 §5): inbound messages and statuses.
 import { createHmac } from 'node:crypto';
-import type { Json } from './meta.ts';
+import type { Json } from './providers/meta.ts';
 
 export interface WebhookTarget {
   url: string;

@@ -1,0 +1,360 @@
+{
+  "id": "d4a",
+  "seq": 104,
+  "moves": [
+    {
+      "from": "tools/scripts/calendar-*",
+      "to": "tools/scripts/calendar/"
+    },
+    {
+      "from": "tools/scripts/calendar.fixture.mjs",
+      "to": "tools/scripts/calendar/"
+    },
+    {
+      "from": "tools/scripts/seed-demo*",
+      "to": "tools/scripts/seed/"
+    },
+    {
+      "from": "tools/scripts/seed-test-account*",
+      "to": "tools/scripts/seed/"
+    },
+    {
+      "from": "tools/scripts/clear-demo*",
+      "to": "tools/scripts/seed/"
+    },
+    {
+      "from": "tools/scripts/fix-teacher-data*",
+      "to": "tools/scripts/seed/"
+    },
+    {
+      "from": "tools/scripts/sync-roster*",
+      "to": "tools/scripts/seed/"
+    },
+    {
+      "from": "tools/scripts/env-merge*",
+      "to": "tools/scripts/env/"
+    },
+    {
+      "from": "tools/scripts/write-local-env*",
+      "to": "tools/scripts/env/"
+    },
+    {
+      "from": "tools/scripts/deploy-baseline*",
+      "to": "tools/scripts/env/"
+    },
+    {
+      "from": "tools/scripts/deploy-staging.sh",
+      "to": "tools/scripts/env/"
+    },
+    {
+      "from": "tools/scripts/e2e-shards*",
+      "to": "tools/scripts/ci-checks/"
+    },
+    {
+      "from": "tools/scripts/migration-check*",
+      "to": "tools/scripts/ci-checks/"
+    },
+    {
+      "from": "tools/scripts/owned-keys-check*",
+      "to": "tools/scripts/ci-checks/"
+    },
+    {
+      "from": "tools/scripts/native-changes*",
+      "to": "tools/scripts/ci-checks/"
+    },
+    {
+      "from": "tools/scripts/folder-cap*",
+      "to": "tools/scripts/ci-checks/"
+    },
+    {
+      "from": "tools/scripts/pure-move-*",
+      "to": "tools/scripts/ci-checks/"
+    },
+    {
+      "from": "tools/scripts/move-module.ts",
+      "to": "tools/scripts/ci-checks/"
+    },
+    {
+      "from": "tools/scripts/workflows.test.mjs",
+      "to": "tools/scripts/ci-checks/"
+    },
+    {
+      "from": "tools/scripts/workflows-fast.test.mjs",
+      "to": "tools/scripts/ci-checks/"
+    },
+    {
+      "from": "tools/scripts/move-module/",
+      "to": "tools/scripts/ci-checks/move-module/"
+    },
+    {
+      "from": "tools/wa-stub/src/crm.ts",
+      "to": "tools/wa-stub/src/providers/"
+    },
+    {
+      "from": "tools/wa-stub/src/graph.ts",
+      "to": "tools/wa-stub/src/providers/"
+    },
+    {
+      "from": "tools/wa-stub/src/kapso.ts",
+      "to": "tools/wa-stub/src/providers/"
+    },
+    {
+      "from": "tools/wa-stub/src/meta.ts",
+      "to": "tools/wa-stub/src/providers/"
+    }
+  ],
+  "files": [
+    [
+      "tools/scripts/calendar-diff.mjs",
+      "tools/scripts/calendar/calendar-diff.mjs"
+    ],
+    [
+      "tools/scripts/calendar-diff.test.mjs",
+      "tools/scripts/calendar/calendar-diff.test.mjs"
+    ],
+    [
+      "tools/scripts/calendar-ics.mjs",
+      "tools/scripts/calendar/calendar-ics.mjs"
+    ],
+    [
+      "tools/scripts/calendar-slots.mjs",
+      "tools/scripts/calendar/calendar-slots.mjs"
+    ],
+    [
+      "tools/scripts/calendar-sql.mjs",
+      "tools/scripts/calendar/calendar-sql.mjs"
+    ],
+    [
+      "tools/scripts/calendar.fixture.mjs",
+      "tools/scripts/calendar/calendar.fixture.mjs"
+    ],
+    [
+      "tools/scripts/clear-demo.fk.test.mjs",
+      "tools/scripts/seed/clear-demo.fk.test.mjs"
+    ],
+    [
+      "tools/scripts/clear-demo.mjs",
+      "tools/scripts/seed/clear-demo.mjs"
+    ],
+    [
+      "tools/scripts/clear-demo.plan.mjs",
+      "tools/scripts/seed/clear-demo.plan.mjs"
+    ],
+    [
+      "tools/scripts/clear-demo.plan.test.mjs",
+      "tools/scripts/seed/clear-demo.plan.test.mjs"
+    ],
+    [
+      "tools/scripts/deploy-baseline.mjs",
+      "tools/scripts/env/deploy-baseline.mjs"
+    ],
+    [
+      "tools/scripts/deploy-baseline.test.mjs",
+      "tools/scripts/env/deploy-baseline.test.mjs"
+    ],
+    [
+      "tools/scripts/deploy-staging.sh",
+      "tools/scripts/env/deploy-staging.sh"
+    ],
+    [
+      "tools/scripts/e2e-shards.mjs",
+      "tools/scripts/ci-checks/e2e-shards.mjs"
+    ],
+    [
+      "tools/scripts/e2e-shards.test.mjs",
+      "tools/scripts/ci-checks/e2e-shards.test.mjs"
+    ],
+    [
+      "tools/scripts/env-merge.mjs",
+      "tools/scripts/env/env-merge.mjs"
+    ],
+    [
+      "tools/scripts/env-merge.test.mjs",
+      "tools/scripts/env/env-merge.test.mjs"
+    ],
+    [
+      "tools/scripts/fix-teacher-data.sql",
+      "tools/scripts/seed/fix-teacher-data.sql"
+    ],
+    [
+      "tools/scripts/fix-teacher-data.test.mjs",
+      "tools/scripts/seed/fix-teacher-data.test.mjs"
+    ],
+    [
+      "tools/scripts/folder-cap.mjs",
+      "tools/scripts/ci-checks/folder-cap.mjs"
+    ],
+    [
+      "tools/scripts/folder-cap.test.mjs",
+      "tools/scripts/ci-checks/folder-cap.test.mjs"
+    ],
+    [
+      "tools/scripts/migration-check.mjs",
+      "tools/scripts/ci-checks/migration-check.mjs"
+    ],
+    [
+      "tools/scripts/migration-check.test.mjs",
+      "tools/scripts/ci-checks/migration-check.test.mjs"
+    ],
+    [
+      "tools/scripts/move-module.ts",
+      "tools/scripts/ci-checks/move-module.ts"
+    ],
+    [
+      "tools/scripts/move-module/barrels.ts",
+      "tools/scripts/ci-checks/move-module/barrels.ts"
+    ],
+    [
+      "tools/scripts/move-module/files.ts",
+      "tools/scripts/ci-checks/move-module/files.ts"
+    ],
+    [
+      "tools/scripts/move-module/fixture.test-util.ts",
+      "tools/scripts/ci-checks/move-module/fixture.test-util.ts"
+    ],
+    [
+      "tools/scripts/move-module/map.test.ts",
+      "tools/scripts/ci-checks/move-module/map.test.ts"
+    ],
+    [
+      "tools/scripts/move-module/map.ts",
+      "tools/scripts/ci-checks/move-module/map.ts"
+    ],
+    [
+      "tools/scripts/move-module/resolve.test.ts",
+      "tools/scripts/ci-checks/move-module/resolve.test.ts"
+    ],
+    [
+      "tools/scripts/move-module/resolve.ts",
+      "tools/scripts/ci-checks/move-module/resolve.ts"
+    ],
+    [
+      "tools/scripts/move-module/rewrite.ts",
+      "tools/scripts/ci-checks/move-module/rewrite.ts"
+    ],
+    [
+      "tools/scripts/move-module/run.test.ts",
+      "tools/scripts/ci-checks/move-module/run.test.ts"
+    ],
+    [
+      "tools/scripts/move-module/run.ts",
+      "tools/scripts/ci-checks/move-module/run.ts"
+    ],
+    [
+      "tools/scripts/move-module/specifiers.test.ts",
+      "tools/scripts/ci-checks/move-module/specifiers.test.ts"
+    ],
+    [
+      "tools/scripts/move-module/specifiers.ts",
+      "tools/scripts/ci-checks/move-module/specifiers.ts"
+    ],
+    [
+      "tools/scripts/native-changes.mjs",
+      "tools/scripts/ci-checks/native-changes.mjs"
+    ],
+    [
+      "tools/scripts/native-changes.test.mjs",
+      "tools/scripts/ci-checks/native-changes.test.mjs"
+    ],
+    [
+      "tools/scripts/owned-keys-check.mjs",
+      "tools/scripts/ci-checks/owned-keys-check.mjs"
+    ],
+    [
+      "tools/scripts/owned-keys-check.test.mjs",
+      "tools/scripts/ci-checks/owned-keys-check.test.mjs"
+    ],
+    [
+      "tools/scripts/pure-move-check.mjs",
+      "tools/scripts/ci-checks/pure-move-check.mjs"
+    ],
+    [
+      "tools/scripts/pure-move-check.test.mjs",
+      "tools/scripts/ci-checks/pure-move-check.test.mjs"
+    ],
+    [
+      "tools/scripts/pure-move-paths.mjs",
+      "tools/scripts/ci-checks/pure-move-paths.mjs"
+    ],
+    [
+      "tools/scripts/pure-move-paths.test.mjs",
+      "tools/scripts/ci-checks/pure-move-paths.test.mjs"
+    ],
+    [
+      "tools/scripts/pure-move-tokens.mjs",
+      "tools/scripts/ci-checks/pure-move-tokens.mjs"
+    ],
+    [
+      "tools/scripts/pure-move-tokens.test.mjs",
+      "tools/scripts/ci-checks/pure-move-tokens.test.mjs"
+    ],
+    [
+      "tools/scripts/seed-demo.data.mjs",
+      "tools/scripts/seed/seed-demo.data.mjs"
+    ],
+    [
+      "tools/scripts/seed-demo.mjs",
+      "tools/scripts/seed/seed-demo.mjs"
+    ],
+    [
+      "tools/scripts/seed-test-account.auth.mjs",
+      "tools/scripts/seed/seed-test-account.auth.mjs"
+    ],
+    [
+      "tools/scripts/seed-test-account.data.mjs",
+      "tools/scripts/seed/seed-test-account.data.mjs"
+    ],
+    [
+      "tools/scripts/seed-test-account.mjs",
+      "tools/scripts/seed/seed-test-account.mjs"
+    ],
+    [
+      "tools/scripts/seed-test-account.plan.mjs",
+      "tools/scripts/seed/seed-test-account.plan.mjs"
+    ],
+    [
+      "tools/scripts/seed-test-account.plan.test.mjs",
+      "tools/scripts/seed/seed-test-account.plan.test.mjs"
+    ],
+    [
+      "tools/scripts/seed-test-account.rows.mjs",
+      "tools/scripts/seed/seed-test-account.rows.mjs"
+    ],
+    [
+      "tools/scripts/sync-roster.sql",
+      "tools/scripts/seed/sync-roster.sql"
+    ],
+    [
+      "tools/scripts/sync-roster.test.mjs",
+      "tools/scripts/seed/sync-roster.test.mjs"
+    ],
+    [
+      "tools/scripts/workflows-fast.test.mjs",
+      "tools/scripts/ci-checks/workflows-fast.test.mjs"
+    ],
+    [
+      "tools/scripts/workflows.test.mjs",
+      "tools/scripts/ci-checks/workflows.test.mjs"
+    ],
+    [
+      "tools/scripts/write-local-env.mjs",
+      "tools/scripts/env/write-local-env.mjs"
+    ],
+    [
+      "tools/wa-stub/src/crm.ts",
+      "tools/wa-stub/src/providers/crm.ts"
+    ],
+    [
+      "tools/wa-stub/src/graph.ts",
+      "tools/wa-stub/src/providers/graph.ts"
+    ],
+    [
+      "tools/wa-stub/src/kapso.ts",
+      "tools/wa-stub/src/providers/kapso.ts"
+    ],
+    [
+      "tools/wa-stub/src/meta.ts",
+      "tools/wa-stub/src/providers/meta.ts"
+    ]
+  ]
+}

@@ -1,6 +1,6 @@
 import { screen } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
-import { renderWithQuery } from '@/test/query';
+import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { detail, inbound } from '../shared/thread-fixtures';
 import { ThreadModeProvider } from '../thread/hooks/thread-mode';
 import { ThreadScreen } from '../screens/ThreadScreen';
@@ -23,13 +23,13 @@ beforeEach(() => mockApiFetch.mockReset());
 
 test('with inbox.lists the chat header has «القوائم»', async () => {
   mockApiFetch.mockImplementation(answer({ me: withLists, threads: () => detail([inbound]) }));
-  await renderWithQuery(<ThreadScreen />);
+  await renderWithQuery(<ThreadScreen />, createTestQueryClient({ meFromApi: true }));
   expect(await screen.findByRole('button', { name: t.inbox.lists.title })).toBeTruthy();
 });
 
 test('without inbox.lists: no «القوائم»', async () => {
   mockApiFetch.mockImplementation(answer({ me: withoutLists, threads: () => detail([inbound]) }));
-  await renderWithQuery(<ThreadScreen />);
+  await renderWithQuery(<ThreadScreen />, createTestQueryClient({ meFromApi: true }));
   await screen.findByText(inbound.body ?? '');
   expect(listsButton()).toBeNull();
 });

@@ -1,4 +1,4 @@
-import { pathKey, permissionsView } from '@ab/client-core';
+import { pathKey } from '@ab/client-core';
 import type { Permission, UserRole } from '@ab/shared';
 import { queryOptions, type QueryClient } from '@tanstack/react-query';
 import { redirect } from '@tanstack/react-router';
@@ -60,5 +60,5 @@ export async function requireRole(queryClient: QueryClient, role: UserRole | rea
 
 /** Does this user hold `permission`? Signed out holds nothing. */
 export function canDo(me: Me | null | undefined, permission: Permission): boolean {
-  return permissionsView(me).can(permission);
+  return me?.permissions.includes(permission) ?? false;
 }

@@ -1,7 +1,7 @@
 import type { Attendance, Gender, LessonStatus, Program, StudentStatus } from '../enums/index.js';
 import type { Conflict } from './conflicts.js';
 import type { LessonEvent } from './state-machine.js';
-import type { LessonTimeEditView, TimeEditMode } from './time-edit.js';
+import type { LessonTimeEditView, TimeEditMode } from './series/time-edit.js';
 import type { TeacherMeetingMode } from '../classroom/meeting-mode.js';
 
 // Phase 2 API response shapes (docs/10-phase2-contracts.md §3). Responses are snake_case like
