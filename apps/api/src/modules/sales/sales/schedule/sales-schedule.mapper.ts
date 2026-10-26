@@ -26,6 +26,14 @@ export function upcomingRange(now: Date): { from: Date; to: Date } {
   return { from: now, to: new Date(now.getTime() + UPCOMING_DAYS * DAY) };
 }
 
+/** The way in: the trimmed link (blank → null) and whether the teacher holds it in our classroom. */
+function wayIn(row: SalesScheduleRow, academyAuto: boolean): Pick<SalesScheduleLesson, 'meeting_link' | 'platform_classroom'> {
+  return {
+    meeting_link: row.meeting_link?.trim() || null,
+    platform_classroom: usesPlatform(meetingModeOf(row.teacher?.meeting_mode), academyAuto),
+  };
+}
+
 /**
  * One lesson for sales. `academyAuto` is settings.meeting_link_auto: the default of a teacher whose
  * meeting_mode is null (same resolver as the admin lessons and the sales teachers).
@@ -39,8 +47,7 @@ export function toScheduleLesson(row: SalesScheduleRow, academyAuto: boolean): S
     status: row.status,
     trial: row.rule?.package === 'trial',
     makeup: row.makeup_of_id !== null,
-    meeting_link: row.meeting_link?.trim() || null,
-    platform_classroom: usesPlatform(meetingModeOf(teacher?.meeting_mode), academyAuto),
+    ...wayIn(row, academyAuto),
     teacher: {
       id: teacher?.id ?? '',
       display_name_ar: teacher?.display_name_ar ?? '',

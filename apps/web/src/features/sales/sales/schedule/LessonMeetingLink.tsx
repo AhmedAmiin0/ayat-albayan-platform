@@ -1,5 +1,5 @@
 import { safeHttpUrl, type SalesScheduleLesson } from '@ab/shared';
-import { Button } from '@/components/ui/form/button';
+import { Button, buttonVariants } from '@/components/ui/form/button';
 import { t } from '@/lib/i18n/i18n';
 import { usePlatformClassroom } from '@/lib/settings/public-config';
 import { useCopy } from './use-copy';
@@ -8,7 +8,7 @@ const L = t.studentLists;
 
 /**
  * The value of «رابط الحلقة» in sales' lesson details (owner 2026-10-26, mobile parity): «عبر الفصل» in our
- * classroom, else the full http(s) URL (LTR, wraps) with «انسخ الرابط», else «لا يوجد رابط».
+ * classroom, else the full http(s) URL (LTR, wraps) with «انسخ الرابط» and «افتح الرابط», else «لا يوجد رابط».
  */
 export function LessonMeetingLink({ lesson }: { lesson: SalesScheduleLesson }) {
   const platform = usePlatformClassroom(lesson.platform_classroom);
@@ -25,6 +25,9 @@ export function LessonMeetingLink({ lesson }: { lesson: SalesScheduleLesson }) {
         <Button type="button" variant="secondary" size="sm" onClick={() => void onCopy(url)}>
           {L.copyLink}
         </Button>
+        <a href={url} target="_blank" rel="noopener noreferrer" className={buttonVariants({ variant: 'secondary', size: 'sm' })}>
+          {L.openLink}
+        </a>
         {copy !== 'idle' && (
           <span role="status" className="text-xs text-ink-2">
             {copy === 'copied' ? L.copied : L.copyFailed}

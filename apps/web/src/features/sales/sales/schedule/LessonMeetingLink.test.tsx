@@ -31,10 +31,12 @@ describe('LessonMeetingLink «رابط الحلقة» (sales lesson details, own
     apiFetch.mockReset();
   });
 
-  it('shows the full URL LTR and copies exactly it', async () => {
+  it('shows the full URL LTR, opens it in a new tab and copies exactly it', async () => {
     writeText.mockResolvedValue(undefined);
     show({ meeting_link: LINK, platform_classroom: false });
     expect(screen.getByText(LINK).getAttribute('dir')).toBe('ltr');
+    const open = screen.getByRole('link', { name: L.openLink });
+    expect([open.getAttribute('href'), open.getAttribute('target'), open.getAttribute('rel')]).toEqual([LINK, '_blank', 'noopener noreferrer']);
     fireEvent.click(screen.getByRole('button', { name: L.copyLink }));
     expect((await screen.findByRole('status')).textContent).toBe(L.copied);
     expect(writeText).toHaveBeenCalledWith(LINK);
@@ -53,6 +55,7 @@ describe('LessonMeetingLink «رابط الحلقة» (sales lesson details, own
     expect(screen.getByText(t.lessons.viaClassroom)).toBeTruthy();
     expect(screen.queryByText(LINK)).toBeNull();
     expect(screen.queryByRole('button')).toBeNull();
+    expect(screen.queryByRole('link')).toBeNull();
   });
 
   it.each([null, 'javascript:alert(1)'])('no usable link (%s): «لا يوجد رابط»', (link) => {
