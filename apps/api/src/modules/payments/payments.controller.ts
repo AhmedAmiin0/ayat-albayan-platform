@@ -17,7 +17,7 @@ import { paymentFilter, paymentListQuery } from './payments.dto';
 import type { PeriodTotal } from './payments.queries';
 import { PaymentsService } from './payments.service';
 import { PaymentsSettings } from './payments.settings';
-import { ReceiptsService } from './receipts.service';
+import { ReceiptsService } from './attachments/receipts.service';
 
 /** Payments + receipts (P1–P7, R-PAY-01, R-MOB-02). Admin only. */
 @ApiTags('payments')

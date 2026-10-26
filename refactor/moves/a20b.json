@@ -1,0 +1,144 @@
+{
+  "id": "a20b",
+  "seq": 30,
+  "moves": [
+    {
+      "from": "apps/api/src/modules/me/account.*",
+      "to": "apps/api/src/modules/me/account"
+    },
+    {
+      "from": "apps/api/src/modules/me/push-*",
+      "to": "apps/api/src/modules/me/push"
+    },
+    {
+      "from": "apps/api/src/modules/teacher-earnings/earnings.lists*",
+      "to": "apps/api/src/modules/teacher-earnings/summary"
+    },
+    {
+      "from": "apps/api/src/modules/teacher-earnings/earnings.summary*",
+      "to": "apps/api/src/modules/teacher-earnings/summary"
+    },
+    {
+      "from": "apps/api/src/modules/teacher-earnings/earnings.names*",
+      "to": "apps/api/src/modules/teacher-earnings/summary"
+    },
+    {
+      "from": "apps/api/src/modules/teacher-earnings/corrections*",
+      "to": "apps/api/src/modules/teacher-earnings/summary"
+    }
+  ],
+  "files": [
+    [
+      "apps/api/src/modules/me/account.activity.test.ts",
+      "apps/api/src/modules/me/account/account.activity.test.ts"
+    ],
+    [
+      "apps/api/src/modules/me/account.auth.ts",
+      "apps/api/src/modules/me/account/account.auth.ts"
+    ],
+    [
+      "apps/api/src/modules/me/account.avatar.service.ts",
+      "apps/api/src/modules/me/account/account.avatar.service.ts"
+    ],
+    [
+      "apps/api/src/modules/me/account.avatar.test.ts",
+      "apps/api/src/modules/me/account/account.avatar.test.ts"
+    ],
+    [
+      "apps/api/src/modules/me/account.controller.test.ts",
+      "apps/api/src/modules/me/account/account.controller.test.ts"
+    ],
+    [
+      "apps/api/src/modules/me/account.controller.ts",
+      "apps/api/src/modules/me/account/account.controller.ts"
+    ],
+    [
+      "apps/api/src/modules/me/account.email.test.ts",
+      "apps/api/src/modules/me/account/account.email.test.ts"
+    ],
+    [
+      "apps/api/src/modules/me/account.fakes.ts",
+      "apps/api/src/modules/me/account/account.fakes.ts"
+    ],
+    [
+      "apps/api/src/modules/me/account.files.ts",
+      "apps/api/src/modules/me/account/account.files.ts"
+    ],
+    [
+      "apps/api/src/modules/me/account.migration.test.ts",
+      "apps/api/src/modules/me/account/account.migration.test.ts"
+    ],
+    [
+      "apps/api/src/modules/me/account.password.test.ts",
+      "apps/api/src/modules/me/account/account.password.test.ts"
+    ],
+    [
+      "apps/api/src/modules/me/account.phone.test.ts",
+      "apps/api/src/modules/me/account/account.phone.test.ts"
+    ],
+    [
+      "apps/api/src/modules/me/account.ports.provider.ts",
+      "apps/api/src/modules/me/account/account.ports.provider.ts"
+    ],
+    [
+      "apps/api/src/modules/me/account.ports.ts",
+      "apps/api/src/modules/me/account/account.ports.ts"
+    ],
+    [
+      "apps/api/src/modules/me/account.profile.test.ts",
+      "apps/api/src/modules/me/account/account.profile.test.ts"
+    ],
+    [
+      "apps/api/src/modules/me/account.queries.test.ts",
+      "apps/api/src/modules/me/account/account.queries.test.ts"
+    ],
+    [
+      "apps/api/src/modules/me/account.queries.ts",
+      "apps/api/src/modules/me/account/account.queries.ts"
+    ],
+    [
+      "apps/api/src/modules/me/account.service.ts",
+      "apps/api/src/modules/me/account/account.service.ts"
+    ],
+    [
+      "apps/api/src/modules/me/account.whitelist.test.ts",
+      "apps/api/src/modules/me/account/account.whitelist.test.ts"
+    ],
+    [
+      "apps/api/src/modules/me/push-device.claim.ts",
+      "apps/api/src/modules/me/push/push-device.claim.ts"
+    ],
+    [
+      "apps/api/src/modules/me/push-tokens.test.ts",
+      "apps/api/src/modules/me/push/push-tokens.test.ts"
+    ],
+    [
+      "apps/api/src/modules/me/push-tokens.ts",
+      "apps/api/src/modules/me/push/push-tokens.ts"
+    ],
+    [
+      "apps/api/src/modules/teacher-earnings/corrections.queries.ts",
+      "apps/api/src/modules/teacher-earnings/summary/corrections.queries.ts"
+    ],
+    [
+      "apps/api/src/modules/teacher-earnings/earnings.lists.test.ts",
+      "apps/api/src/modules/teacher-earnings/summary/earnings.lists.test.ts"
+    ],
+    [
+      "apps/api/src/modules/teacher-earnings/earnings.lists.ts",
+      "apps/api/src/modules/teacher-earnings/summary/earnings.lists.ts"
+    ],
+    [
+      "apps/api/src/modules/teacher-earnings/earnings.names.ts",
+      "apps/api/src/modules/teacher-earnings/summary/earnings.names.ts"
+    ],
+    [
+      "apps/api/src/modules/teacher-earnings/earnings.summary.test.ts",
+      "apps/api/src/modules/teacher-earnings/summary/earnings.summary.test.ts"
+    ],
+    [
+      "apps/api/src/modules/teacher-earnings/earnings.summary.ts",
+      "apps/api/src/modules/teacher-earnings/summary/earnings.summary.ts"
+    ]
+  ]
+}

@@ -3,10 +3,10 @@ import { Injectable } from '@nestjs/common';
 import { countBy, teacherLoad } from './dashboard.mapper';
 import { DashboardQueries } from './dashboard.queries';
 import type { DashboardResponse, DashboardWork } from './dashboard.types';
-import { FinanceService } from './finance.service';
+import { FinanceService } from './finance/finance.service';
 import { rangeWindow } from './range';
-import { pendingList, taskList, unpaidList } from './work.mapper';
-import { WorkQueries } from './work.queries';
+import { pendingList, taskList, unpaidList } from './work/work.mapper';
+import { WorkQueries } from './work/work.queries';
 
 /** GET /dashboard/summary and /dashboard/work (R-RPT-01, R-RPT-02). */
 @Injectable()

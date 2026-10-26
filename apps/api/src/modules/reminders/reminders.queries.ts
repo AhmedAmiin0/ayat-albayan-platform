@@ -4,9 +4,9 @@ import { DB, type Db } from '../../common/db/db.module';
 import { readAll } from '../scheduling/read-all';
 import { dbError } from '../../common/http/http';
 import type { QueuedMessage } from './queued-row';
-import type { RoomCandidate } from './reminders.links';
-import { REMINDER_LESSON_STATUSES, type ReminderLesson } from './reminders.plan';
-import { roomLinkRows } from './reminders.room';
+import type { RoomCandidate } from './plan/reminders.links';
+import { REMINDER_LESSON_STATUSES, type ReminderLesson } from './plan/reminders.plan';
+import { roomLinkRows } from './plan/reminders.room';
 
 const LESSON_SELECT =
   'id, starts_at, ends_at, status, meeting_link, teacher:teachers(id, display_name_ar, phone_e164, tz, meeting_mode, status, profile:profiles!teachers_profile_id_fkey(disabled_at)), lesson_students(student:students(id, name, guardian:guardians(id, phone_e164, tz)))' as const;

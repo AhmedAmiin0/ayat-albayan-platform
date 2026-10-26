@@ -1,7 +1,7 @@
 import { registrationView, type RegistrationCheckQuery, type RegistrationCheckView } from '@ab/shared';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import type { AuthUser } from '../../common/auth/verify-token';
-import { WindowCounter } from '../feedback/feedback.rate-limit';
+import { WindowCounter } from '../feedback/public/feedback.rate-limit';
 import { SalesRegistrationQueries } from './sales-registration.queries';
 
 /** Checks per user per 10 minutes (WindowCounter's default window): plenty for a chat, too few to walk the roll. */

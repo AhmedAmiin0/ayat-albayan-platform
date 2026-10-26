@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { fakeDb } from '../guardians/fake-db';
 import { DashboardQueries } from './dashboard.queries';
-import { FinanceQueries } from './finance.queries';
-import { WorkQueries } from './work.queries';
+import { FinanceQueries } from './finance/finance.queries';
+import { WorkQueries } from './work/work.queries';
 
 const W = { from: new Date('2026-09-30T21:00:00.000Z'), to: new Date('2026-10-07T21:00:00.000Z') };
 const NOW = new Date('2026-10-02T09:00:00.000Z');

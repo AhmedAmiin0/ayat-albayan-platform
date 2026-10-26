@@ -1,8 +1,8 @@
 import { receivablesOf, receivableTotals, type ReceivablesView } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import { convert, round2 } from '../dashboard/conversion';
+import { convert, round2 } from '../dashboard/work/conversion';
 import { riyadhDate } from '../dashboard/range';
-import { FxConverter } from '../dashboard/fx-converter';
+import { FxConverter } from '../dashboard/finance/fx-converter';
 import { ReceivablesQueries } from './receivables.queries';
 import { ReceivablesSettings } from './receivables.settings';
 

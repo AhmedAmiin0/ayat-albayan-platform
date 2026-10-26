@@ -4,7 +4,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../common/db/db.module';
 import { dbError, type Page } from '../../common/http/http';
 import { ledgerError } from './earnings.errors';
-import { paymentsPage, sessionsPage } from './earnings.lists';
+import { paymentsPage, sessionsPage } from './summary/earnings.lists';
 
 export type EarningRow = Tables<'teacher_session_earnings'>;
 export type SessionRow = EarningRow & {

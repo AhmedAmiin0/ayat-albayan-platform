@@ -7,9 +7,9 @@ import {
   type LessonStatus,
   type SourceRow,
 } from '@ab/shared';
-import { round2 } from './conversion';
+import { round2 } from './work/conversion';
 import type { SourceKey } from './dashboard.types';
-import type { SourceMoney } from './finance';
+import type { SourceMoney } from './finance/finance';
 
 // Pure shaping of the dashboard counts: each number is a count of statuses (R-RPT-01, issue F3).
 

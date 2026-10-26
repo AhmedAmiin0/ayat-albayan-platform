@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../common/db/db.module';
-import { withoutPushToken } from '../me/push-tokens';
+import { withoutPushToken } from '../me/push/push-tokens';
 import { readAll } from '../scheduling/read-all';
 import { dbError } from '../../common/http/http';
 

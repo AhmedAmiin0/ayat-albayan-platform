@@ -4,10 +4,10 @@ import { DashboardController } from './dashboard.controller';
 import { DashboardQueries } from './dashboard.queries';
 import { DashboardService } from './dashboard.service';
 import { DashboardSettings } from './dashboard.settings';
-import { FinanceQueries } from './finance.queries';
-import { FinanceService } from './finance.service';
-import { FxConverter } from './fx-converter';
-import { WorkQueries } from './work.queries';
+import { FinanceQueries } from './finance/finance.queries';
+import { FinanceService } from './finance/finance.service';
+import { FxConverter } from './finance/fx-converter';
+import { WorkQueries } from './work/work.queries';
 
 /**
  * Dashboard summary: funnel, lessons, pending reports, unpaid, teacher load, finance by month and

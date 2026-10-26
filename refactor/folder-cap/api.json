@@ -15,32 +15,8 @@
     "files": 0,
     "dirs": 47
   },
-  "apps/api/src/modules/dashboard": {
-    "files": 16,
-    "dirs": 0
-  },
-  "apps/api/src/modules/feedback": {
-    "files": 16,
-    "dirs": 0
-  },
-  "apps/api/src/modules/me": {
-    "files": 14,
-    "dirs": 0
-  },
-  "apps/api/src/modules/payments": {
-    "files": 14,
-    "dirs": 0
-  },
-  "apps/api/src/modules/reminders": {
-    "files": 14,
-    "dirs": 0
-  },
   "apps/api/src/modules/student-recordings": {
     "files": 15,
-    "dirs": 0
-  },
-  "apps/api/src/modules/teacher-earnings": {
-    "files": 13,
     "dirs": 0
   }
 }
