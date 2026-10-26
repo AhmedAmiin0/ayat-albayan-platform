@@ -1,11 +1,11 @@
 import { describe, expect, it } from 'vitest';
-import type { TemplateStatus, WaLine } from '../enums/index.js';
-import { TEMPLATE_KEYS } from '../messaging/templates/templates.js';
-import { SETTING_DEFAULTS, type AcademySettings } from '../settings/index.js';
+import type { TemplateStatus, WaLine } from '../../enums/index.js';
+import { TEMPLATE_KEYS } from '../../messaging/templates/templates.js';
+import { SETTING_DEFAULTS, type AcademySettings } from '../../settings/index.js';
 import { catalogueViews, entryView, type CatalogueInputs } from './catalogue-state.js';
 import { NOTIFICATION_CATALOGUE, notificationEntry, type NotificationKey } from './catalogue.js';
-import { resolveRule } from './rules.effective.js';
-import type { EffectiveRule } from './rules.types.js';
+import { resolveRule } from '../rules.effective.js';
+import type { EffectiveRule } from '../rules.types.js';
 
 const approvedAll = new Map(TEMPLATE_KEYS.map((k) => [k, { status: 'approved' as TemplateStatus, line: 'notifications' as WaLine }]));
 const ALL_ON: AcademySettings = { ...SETTING_DEFAULTS, messaging_enabled: true, auto_messages_enabled: true };

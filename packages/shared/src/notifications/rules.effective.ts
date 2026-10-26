@@ -1,5 +1,5 @@
-import type { NotificationKey } from './catalogue.js';
-import type { NotificationChannel, NotificationEntry } from './catalogue.types.js';
+import type { NotificationKey } from './catalogue/catalogue.js';
+import type { NotificationChannel, NotificationEntry } from './catalogue/catalogue.types.js';
 import { legacyParts, type RuleSettings } from './rules.legacy.js';
 import { isTimedKey, RULE_TIMING_SCHEMAS, type AnyRuleTiming, type EffectiveRule, type NotificationRuleRow, type RulesMode } from './rules.types.js';
 

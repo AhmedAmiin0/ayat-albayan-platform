@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { SETTING_DEFAULTS } from '../settings/index.js';
-import { NOTIFICATION_KEYS } from './catalogue.js';
+import { NOTIFICATION_KEYS } from './catalogue/catalogue.js';
 import { defaultTiming } from './rules.effective.js';
 import { legacyParts, legacyValues, RULE_LEGACY_MAP, RULE_SETTING_KEYS, type RuleSettings } from './rules.legacy.js';
 

@@ -1,7 +1,7 @@
-import type { TemplateStatus, WaLine } from '../enums/index.js';
+import type { TemplateStatus, WaLine } from '../../enums/index.js';
 import type { NotificationKey } from './catalogue.js';
 import type { NotificationAudience, NotificationChannel, TimingKey } from './catalogue.types.js';
-import type { NotificationRuleView } from './rules.types.js';
+import type { NotificationRuleView } from '../rules.types.js';
 
 // GET /admin/notifications (docs/23 §3 phase 1): the catalogue with each row's effective state,
 // computed from today's settings, the send gate and the template registry. Read-only.

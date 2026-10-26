@@ -1,0 +1,44 @@
+{
+  "id": "d3c",
+  "seq": 103,
+  "moves": [
+    {
+      "from": "packages/shared/src/sales/course*",
+      "to": "packages/shared/src/sales/course/"
+    }
+  ],
+  "files": [
+    [
+      "packages/shared/src/sales/course-change.test.ts",
+      "packages/shared/src/sales/course/course-change.test.ts"
+    ],
+    [
+      "packages/shared/src/sales/course-change.ts",
+      "packages/shared/src/sales/course/course-change.ts"
+    ],
+    [
+      "packages/shared/src/sales/course-follow.test.ts",
+      "packages/shared/src/sales/course/course-follow.test.ts"
+    ],
+    [
+      "packages/shared/src/sales/course-follow.ts",
+      "packages/shared/src/sales/course/course-follow.ts"
+    ],
+    [
+      "packages/shared/src/sales/course-picks.test.ts",
+      "packages/shared/src/sales/course/course-picks.test.ts"
+    ],
+    [
+      "packages/shared/src/sales/course-picks.ts",
+      "packages/shared/src/sales/course/course-picks.ts"
+    ],
+    [
+      "packages/shared/src/sales/course.test.ts",
+      "packages/shared/src/sales/course/course.test.ts"
+    ],
+    [
+      "packages/shared/src/sales/course.ts",
+      "packages/shared/src/sales/course/course.ts"
+    ]
+  ]
+}

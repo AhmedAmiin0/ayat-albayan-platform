@@ -1,10 +1,10 @@
-import type { TemplateStatus, WaLine } from '../enums/index.js';
+import type { TemplateStatus, WaLine } from '../../enums/index.js';
 import { NOTIFICATION_CATALOGUE, type NotificationKey } from './catalogue.js';
 import type { CatalogueSettings } from './catalogue-settings.js';
 import type { NotificationEntry } from './catalogue.types.js';
 import type { NotificationBlocker, NotificationEntryView, NotificationTemplateView } from './catalogue-views.js';
 import { approvalOf, timingOf } from './catalogue-timing.js';
-import type { EffectiveRule } from './rules.types.js';
+import type { EffectiveRule } from '../rules.types.js';
 
 /** What decides a row's state today: the settings, the send gate and the template registry. */
 export interface CatalogueInputs {

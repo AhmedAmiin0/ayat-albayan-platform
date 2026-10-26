@@ -1,4 +1,4 @@
-import { clockTime } from '../format/running-head.js';
+import { clockTime } from '../../format/running-head.js';
 
 // A weekly package where each picked weekday has its own time (owner 2026-10-18: «اختر موعدًا لكل
 // يوم»). The DB keeps ONE schedule_rules row per distinct time (days sharing a time stay one rule,

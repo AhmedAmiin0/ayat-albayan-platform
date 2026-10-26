@@ -85,7 +85,7 @@ Key facts:
 - **Owner file ≠ page section:** `feedback_rate_window_min` (feedback.ts → academy section); `payout_*`, `fx_fresh_hours`, `reporting_currency` sit in «accounts».
 - **Mobile** edits 7 keys by hand (`apps/mobile/src/ops/settings-form.ts:9-20`): `late_cancel_hours`, `booking_horizon_weeks`, `follow_up_hours`, `renewal_alert_remaining`, `subscription_expiry_days`, `report_teacher_edit_hours`, `reporting_currency`; shows the 3 messaging-safety switches read-only.
 - **No `comms_source` key exists yet** (planned by docs/23 §2e step 5 / phase 3 as a DB setting `legacy | module`).
-- Notification catalogue slice `CATALOGUE_SETTING_KEYS` (`packages/shared/src/notifications/catalogue-settings.ts:7-17`): `messaging_enabled, auto_messages_enabled, reminder_24h_enabled, teacher_whatsapp_lesson_reminder, teacher_whatsapp_new_student, feedback_mode, reminder_minutes_before, renewal_alert_remaining, follow_up_hours`.
+- Notification catalogue slice `CATALOGUE_SETTING_KEYS` (`packages/shared/src/notifications/catalogue/catalogue-settings.ts:7-17`): `messaging_enabled, auto_messages_enabled, reminder_24h_enabled, teacher_whatsapp_lesson_reminder, teacher_whatsapp_new_student, feedback_mode, reminder_minutes_before, renewal_alert_remaining, follow_up_hours`.
 
 #### 1a. Messaging / send-gate relevant keys (one place)
 

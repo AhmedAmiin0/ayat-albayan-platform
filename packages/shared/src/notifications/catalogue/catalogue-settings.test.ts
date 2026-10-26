@@ -1,7 +1,7 @@
 import { describe, expect, expectTypeOf, it } from 'vitest';
-import type { TemplateStatus, WaLine } from '../enums/index.js';
-import { TEMPLATE_KEYS } from '../messaging/templates/templates.js';
-import { isSettingKey, SETTING_DEFAULTS, type AcademySettings } from '../settings/index.js';
+import type { TemplateStatus, WaLine } from '../../enums/index.js';
+import { TEMPLATE_KEYS } from '../../messaging/templates/templates.js';
+import { isSettingKey, SETTING_DEFAULTS, type AcademySettings } from '../../settings/index.js';
 import { CATALOGUE_SETTING_KEYS, type CatalogueSettings } from './catalogue-settings.js';
 import { catalogueViews } from './catalogue-state.js';
 import type { RowSwitchKey, TimingKey } from './catalogue.types.js';
