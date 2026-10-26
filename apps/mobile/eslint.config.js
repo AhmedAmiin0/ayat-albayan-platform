@@ -15,6 +15,7 @@ export default reactConfig(
   {
     // docs/27 §1 rules 5–6: a route file imports a feature only through its index (`@/inbox`); `@/core/**` is shared.
     files: ['app/**/*.tsx'],
+    ignores: ['**/*.test.tsx'],
     rules: {
       'no-restricted-imports': [
         'error',
