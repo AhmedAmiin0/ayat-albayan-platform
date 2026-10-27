@@ -1,6 +1,6 @@
 import type { SalesStudentDetails, SalesStudentLesson } from '@ab/shared';
 
-// GET /sales/students/:id as the API answers it (docs/16 row 36): no price, payment, note or phone.
+// GET /sales/students/:id as the API answers it (docs/16 row 36): no price, payment or note; the guardian's (fake) phone.
 
 /** One of the student's upcoming lessons (hers: `mine`), no link: 45 minutes from `starts_at`. */
 export const upcoming = (id: string, starts_at: string): SalesStudentLesson => ({
@@ -14,7 +14,7 @@ export const weeklySlot = { rule_id: 'r1', byday: [0, 2, 4], start_time_local: '
   next: ['2026-11-01T17:00:00.000Z', '2026-11-03T17:00:00.000Z', '2026-11-05T17:00:00.000Z'] };
 
 export const details = (over: Partial<SalesStudentDetails> = {}): SalesStudentDetails => ({
-  student: { id: 'st1', code: 'AB-0183', name: 'يوسف أحمد', status: 'active', program: 'quran', teacher_name: 'أبرار محمد' },
+  student: { id: 'st1', code: 'AB-0183', name: 'يوسف أحمد', status: 'active', program: 'quran', teacher_name: 'أبرار محمد', guardian_phone: '+201001112223' },
   subscriptions: [
     { id: 'sub2', package: '8', status: 'active', starts_on: '2026-10-01', renews_on: '2026-11-01', ended_at: null, created_at: '2026-09-30T10:00:00.000Z', lessons_total: 8, lessons_used: 3, lessons_remaining: 5 },
     { id: 'sub1', package: '4', status: 'expired', starts_on: '2026-09-01', renews_on: null, ended_at: '2026-09-29T16:00:00.000Z', created_at: '2026-08-30T10:00:00.000Z', lessons_total: 4, lessons_used: 4, lessons_remaining: 0 },

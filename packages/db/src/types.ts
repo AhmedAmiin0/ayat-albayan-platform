@@ -4172,6 +4172,57 @@ export type Database = {
           },
         ];
       };
+      thread_summaries: {
+        Row: {
+          last_body: string | null;
+          last_chat_inbound_at: string | null;
+          last_direction: Database['public']['Enums']['message_direction'];
+          last_inbound_at: string | null;
+          last_inbound_line: Database['public']['Enums']['wa_line'] | null;
+          last_media_mime: string | null;
+          last_message_at: string;
+          last_message_id: string;
+          last_notifications_inbound_at: string | null;
+          last_status: Database['public']['Enums']['message_status'];
+          last_template_key: string | null;
+          phone_e164: string;
+          unread_count: number;
+          updated_at: string;
+        };
+        Insert: {
+          last_body?: string | null;
+          last_chat_inbound_at?: string | null;
+          last_direction: Database['public']['Enums']['message_direction'];
+          last_inbound_at?: string | null;
+          last_inbound_line?: Database['public']['Enums']['wa_line'] | null;
+          last_media_mime?: string | null;
+          last_message_at: string;
+          last_message_id: string;
+          last_notifications_inbound_at?: string | null;
+          last_status: Database['public']['Enums']['message_status'];
+          last_template_key?: string | null;
+          phone_e164: string;
+          unread_count?: number;
+          updated_at?: string;
+        };
+        Update: {
+          last_body?: string | null;
+          last_chat_inbound_at?: string | null;
+          last_direction?: Database['public']['Enums']['message_direction'];
+          last_inbound_at?: string | null;
+          last_inbound_line?: Database['public']['Enums']['wa_line'] | null;
+          last_media_mime?: string | null;
+          last_message_at?: string;
+          last_message_id?: string;
+          last_notifications_inbound_at?: string | null;
+          last_status?: Database['public']['Enums']['message_status'];
+          last_template_key?: string | null;
+          phone_e164?: string;
+          unread_count?: number;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
       translation_overrides: {
         Row: {
           key: string;
@@ -5057,6 +5108,8 @@ export type Database = {
           unread: number;
         }[];
       };
+      thread_summary_refresh: { Args: { p_phone: string }; Returns: undefined };
+      thread_summary_refresh_all: { Args: { p_phones: string[] }; Returns: undefined };
       unpay_assistant_statement: {
         Args: { p_actor: string; p_reason: string; p_statement: string };
         Returns: Json;

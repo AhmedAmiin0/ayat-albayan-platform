@@ -36,7 +36,7 @@ async function openInbox() {
 
 beforeEach(() => jest.clearAllMocks());
 
-test('sales: the bell sits beside «محادثة جديدة» and opens the sales notifications', async () => {
+test('sales: the bell opens the sales notifications; «محادثة جديدة» floats over the chats', async () => {
   answer(['inbox.read', 'inbox.send', 'notifications.push', 'self.sales']);
   await openInbox();
   fireEvent.press(await screen.findByRole('button', { name: unreadName }));

@@ -4,16 +4,11 @@ import type { Page } from '../../../../common/http/http';
 import { MessageViews } from '../../whatsapp/messages/message.views';
 import { ReadReceipts } from '../reads/read-receipts';
 import { familyTag, type FamilyTag } from '../people/thread-people.mapper';
-import type { KnownNumber } from './known-number';
+import { asRead, pageRows, stampRead, type ThreadPageQuery } from '../reads/thread-page';
 import { toThreadView, type ThreadRow } from './threads.mapper';
 import { ThreadsQueries, type ThreadListFilter } from './threads.queries';
 
-export interface ThreadPageQuery {
-  phone: string;
-  /** created_at of the oldest loaded message: the page before it. */
-  before?: string;
-  limit: number;
-}
+export type { ThreadPageQuery } from '../reads/thread-page';
 
 /** H1/H2 (docs/12 §4, R-LEAD-02, R-MSG-05): the WhatsApp inbox over v_threads and messages. */
 @Injectable()
@@ -33,32 +28,25 @@ export class ThreadsService {
   }
 
   /**
-   * One page, oldest → newest. The first page (no `before`) marks the inbound rows read and
-   * carries the people; an older page gets the list's cheap tags instead (one read, not 1 + 3 a child).
-   * ponytail: one registry read per templated row (≤ 50, by pk); batch if threads get slow.
-   * Two parallel rounds after the read stamp: the thread + its messages, then people, tag, views, lessons.
+   * One page, oldest → newest, in two parallel stages (thread-page.ts): the thread and the page, then
+   * the people, lessons, bubbles (templates from TemplatesQueries' copy) and, only when something is
+   * unread, the read stamp. The first page carries the people; an older page (`before`) gets the
+   * list's cheap tags instead (one read, not 1 + 3 a child).
    */
   async detail(q: ThreadPageQuery, now = new Date()): Promise<ThreadDetail> {
     const first = !q.before;
-    if (first) await this.receipts.open(q.phone, now);
-    const [row, rows] = await Promise.all([this.queries.thread(q.phone), this.queries.messages(q)]);
-    // A number with no message yet (a booked family, «محادثة جديدة»): its people and lessons, for the first template.
-    const who = row ?? (first ? await this.queries.known(q.phone) : null);
-    const [people, olderTag, messages, lessons] = await this.pageReads({ first, row, who, page: rows.slice(0, q.limit).reverse(), now });
-    const thread = row ? toThreadView(row, now, first ? familyTag(people.students) : olderTag) : null;
-    return { thread, messages, has_more: rows.length > q.limit, lessons, people };
-  }
-
-  /** The second round, all in parallel: people, an older page's tag, the bubbles and the lessons. */
-  private pageReads(p: { first: boolean; row: ThreadRow | null; who: ThreadRow | KnownNumber | null; page: Parameters<MessageViews['view']>[0][]; now: Date }) {
-    // The lessons need the guardian / teacher only, never the tag.
-    const lessonsOf = p.row ? toThreadView(p.row, p.now) : p.who;
-    return Promise.all([
-      p.first ? this.queries.people(p.who) : NO_PEOPLE,
-      p.first ? null : this.tagOf(p.row),
-      Promise.all(p.page.map((m) => this.views.view(m))),
-      p.first && lessonsOf ? this.queries.lessons(lessonsOf, p.now) : [],
+    const at = await pageRows(this.queries, q);
+    const page = at.rows.slice(0, q.limit).reverse();
+    const [people, lessons, messages, tag, read] = await Promise.all([
+      first ? this.queries.people(at.who) : NO_PEOPLE,
+      first && at.who ? this.queries.lessons(at.who, now) : [],
+      Promise.all(page.map((m) => this.views.view(m))),
+      first ? null : this.tagOf(at.found),
+      stampRead(this.receipts, { q, page: at, now }),
     ]);
+    const thread = at.found ? toThreadView(at.found, now, first ? familyTag(people.students) : tag) : null;
+    const detail: ThreadDetail = { thread, messages, has_more: at.rows.length > q.limit, lessons, people };
+    return read ? asRead(detail, now) : detail;
   }
 
   private async tagOf(row: ThreadRow | null): Promise<FamilyTag | null> {

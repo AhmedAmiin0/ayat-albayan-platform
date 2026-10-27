@@ -104,7 +104,7 @@ export class ThreadSendService {
     const thread = await this.queries.thread(s.phone);
     const from = await sendLine(thread, { now, windows: () => this.queries.numberWindows(s.phone) });
     const reply = await replyOf(this.quotes, s, from);
-    return this.outbox.send({ ...outboundBase(s, thread), dedup_key: key, body: s.input.text, ...from, ...reply });
+    return this.outbox.queue({ ...outboundBase(s, thread), dedup_key: key, body: s.input.text, ...from, ...reply });
   }
 
   /**
@@ -131,7 +131,7 @@ export class ThreadSendService {
     const missing = missingParams(template, s.input.params);
     if (missing.length) throw waHttpError('missing_params', 400, { missing });
     const thread = await this.queries.thread(s.phone);
-    return this.outbox.send({
+    return this.outbox.queue({
       ...outboundBase(s, thread),
       dedup_key: key,
       template_key: s.input.key,

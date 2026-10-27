@@ -64,7 +64,7 @@ describe('useSalesUnread (W8)', () => {
 });
 
 describe('salesUnreadQuery', () => {
-  it('lives under ["threads"] and keeps polling in a background tab', () => {
+  it('lives under ["threads"] and never polls from a hidden tab', () => {
     const q = salesUnreadQuery(true);
     expect(q.queryKey).toEqual(['threads', 'nav-count', 'unread']);
     expect(q.refetchInterval).toBe(inboxPollMs);
@@ -72,7 +72,7 @@ describe('salesUnreadQuery', () => {
     inboxLive.setLive(true);
     expect(inboxPollMs()).toBe(60_000); // realtime connected: its events refresh the count sooner
     inboxLive.setLive(false);
-    expect(q.refetchIntervalInBackground).toBe(true);
+    expect('refetchIntervalInBackground' in q).toBe(false);
     expect(salesUnreadQuery(false).enabled).toBe(false);
   });
 

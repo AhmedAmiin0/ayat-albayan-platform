@@ -92,6 +92,10 @@ export const PlayIcon = (p: IconProps) => <Line {...p} d="M7 4.5v15l12-7.5-12-7.
 export const PauseIcon = (p: IconProps) => <Line {...p} d="M8 5v14M16 5v14" />;
 /** «القوائم»: three bulleted lines (the chat's lists). */
 export const ListsIcon = (p: IconProps) => <Line {...p} d="M9 6h11M9 12h11M9 18h11M4.5 6h.01M4.5 12h.01M4.5 18h.01" />;
+/** «محادثة جديدة»: a speech bubble with a plus (start a chat by number). */
+export const ComposeIcon = (p: IconProps) => (
+  <Line {...p} d="M20 11.5a7.5 7.5 0 0 1-11 6.6L4 19.5l1.4-4.6A7.5 7.5 0 1 1 20 11.5ZM12.5 8.5v6M9.5 11.5h6" />
+);
 /** «نسخ الرقم»: two overlapping sheets. */
 export const CopyIcon = (p: IconProps) => <Line {...p} d="M9 9h10a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1V10a1 1 0 0 1 1-1ZM16 9V5a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h3" />;
 /** «إلغاء الرد»: a cross. */

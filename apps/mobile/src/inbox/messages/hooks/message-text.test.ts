@@ -7,7 +7,6 @@ import {
   mediaLine,
   queuedLine,
   sendError,
-  sessionUntil,
   stamp,
   templateLine,
 } from './message-text';
@@ -63,12 +62,6 @@ test('stamp: the clock today, day/month + clock another day, in the given zone',
   expect(stamp('2026-09-30T20:30:00Z', RIYADH)).toBe('30/9 23:30');
   // 22:30 UTC on the 1st is already the 2nd in Riyadh.
   expect(stamp('2026-10-01T22:30:00Z', RIYADH)).toBe('01:30');
-});
-
-test('the session hint ends 24 h after their last message', () => {
-  expect(sessionUntil('2026-10-02T08:00:00Z', RIYADH)).toBe(
-    t.inbox.sessionOpenUntil.replace('{time}', '3/10 11:00'),
-  );
 });
 
 test('queued line only for a row scheduled later', () => {

@@ -5,9 +5,10 @@ import { DB, type Db } from '../../../../common/db/db.module';
 import { dbError } from '../../../../common/http/http';
 import type { SalesScheduleRow } from '../../sales';
 
-/** Whitelisted: never notes, a balance, a guardian contact or a meeting link. */
+/** Whitelisted: never notes, a balance or a meeting link; of the guardian the phone only (owner 2026-10-27). */
 export type DetailsStudentRow = Pick<Tables<'students'>, 'id' | 'code' | 'name' | 'status' | 'program'> & {
   teacher: { display_name_ar: string } | null;
+  guardian: { phone_e164: string } | null;
 };
 
 /** A past lesson of the student with every student's attendance (the mapper keeps the student's own). */
@@ -60,7 +61,7 @@ export class SalesStudentQueries {
   async student(id: string): Promise<DetailsStudentRow | null> {
     const { data, error } = await this.db
       .from('students')
-      .select('id, code, name, status, program, teacher:teachers(display_name_ar)')
+      .select('id, code, name, status, program, teacher:teachers(display_name_ar), guardian:guardians(phone_e164)')
       .eq('id', id)
       .maybeSingle();
     if (error) throw dbError(error);

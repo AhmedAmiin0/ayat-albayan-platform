@@ -61,6 +61,7 @@ export function toStudentDetails(p: DetailsParts): SalesStudentDetails {
       status: p.student.status,
       program: p.student.program,
       teacher_name: p.student.teacher?.display_name_ar ?? null,
+      guardian_phone: p.student.guardian?.phone_e164 || null,
     },
     subscriptions,
     current_id: current?.id ?? null,

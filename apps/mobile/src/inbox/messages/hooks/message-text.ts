@@ -1,4 +1,4 @@
-import { type ClockCycle, dayParts, isUnavailableMessage, isUnsupportedMessage, type MessageView, reactionText, SESSION_WINDOW_MS, type ThreadView } from '@ab/shared';
+import { type ClockCycle, dayParts, isUnavailableMessage, isUnsupportedMessage, type MessageView, reactionText, type ThreadView } from '@ab/shared';
 import { clockIn } from '@/core/lib/clock';
 import { ApiError } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
@@ -76,12 +76,6 @@ export function stamp(iso: string, { now = new Date(), tz = deviceTimeZone(), cy
 /** «16:39» / «4:39 م» in the device's zone (or `tz`): a bubble's time, its day is in the separator above it. */
 export function clock(iso: string, cycle: ClockCycle, tz = deviceTimeZone()): string {
   return clockIn(new Date(iso), tz, cycle);
-}
-
-/** «تقدر ترد برسالة عادية لحد …»: 24 h after their last message (R-MSG-03). */
-export function sessionUntil(lastInboundAt: string, options: StampOptions): string {
-  const end = new Date(Date.parse(lastInboundAt) + SESSION_WINDOW_MS).toISOString();
-  return t.inbox.sessionOpenUntil.replace('{time}', stamp(end, options));
 }
 
 /** «هتتبعت …» for a row scheduled later (a booking confirmation, a reminder), else null. */

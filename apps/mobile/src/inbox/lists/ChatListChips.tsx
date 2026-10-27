@@ -10,57 +10,105 @@ import { EditListSheet } from './EditListSheet';
 import { ListChip } from './ListChip';
 import { listsOf, useChatLists } from './use-chat-lists';
 
+/** The row's one choice (single, as WhatsApp): every chat, the unread ones, or one list by id. */
+export type ChatChoice = 'all' | 'unread' | { list: string };
+
+/** The active list's id, or null for «الكل» / «غير مقروءة». */
+export const listOf = (choice: ChatChoice): string | null => (typeof choice === 'object' ? choice.list : null);
+
 export interface ChatListChipsProps {
-  /** The active list's id; null = «الكل». */
-  value: string | null;
-  onChange: (id: string | null) => void;
+  value: ChatChoice;
+  onChange: (choice: ChatChoice) => void;
+  /** The academy's lists in the row (admin and sales); a teacher's row is «الكل» · «غير مقروءة» only. */
+  lists?: boolean;
 }
 
 /**
- * «القوائم» over the chats (docs/22 §5, like WhatsApp Business): «الكل», the academy's lists oldest
- * first, then «＋ قائمة جديدة». One row that scrolls sideways (RTL order). Only for a holder of
- * inbox.lists, never in teacher mode (the caller leaves it out). An active list that is gone (deleted
- * here or by another assistant) falls back to «الكل». Loading or failing stays quiet: the chats
- * never wait for the lists.
+ * The row's lists: only for a holder of inbox.lists where the caller wants them. An active list
+ * that is gone (deleted, or the lists are off) falls back to «الكل».
  */
-export function ChatListChips({ value, onChange }: ChatListChipsProps) {
-  const allowed = useHolds('inbox.lists');
+function useRowLists({ wanted, value, onChange }: Omit<ChatListChipsProps, 'lists'> & { wanted: boolean }) {
+  const allowed = useHolds('inbox.lists') && wanted;
   const query = useChatLists(allowed);
-  const lists = listsOf(query.data);
+  const lists = allowed ? listsOf(query.data) : [];
+  const listId = listOf(value);
+  const gone = listId !== null && (!allowed || (query.isSuccess && !lists.some((l) => l.id === listId)));
+  useEffect(() => {
+    if (gone) onChange('all');
+  }, [gone, onChange]);
+  return { allowed, query, lists, listId, gone };
+}
+
+interface ListExtrasProps {
+  active: ChatList | undefined;
+  loadError: boolean;
+  creating: boolean;
+  editing: ChatList | null;
+  onCreated: (list: ChatList) => void;
+  onClose: () => void;
+}
+
+/** Under the row, for a lists holder only: the auto list's note, the quiet load error, the two sheets. */
+function ListExtras({ active, loadError, creating, editing, onCreated, onClose }: ListExtrasProps) {
+  return (
+    <>
+      {active?.auto_rule ? <AutoListNote rule={active.auto_rule} /> : null}
+      {loadError ? <Note>{t.inbox.lists.loadError}</Note> : null}
+      <CreateListSheet open={creating} onClose={onClose} onCreated={onCreated} />
+      <EditListSheet list={editing} onClose={onClose} />
+    </>
+  );
+}
+
+/**
+ * The chats' ONE chip row (docs/22 §5, owner 2026-10-27, like WhatsApp: All · Unread · lists · +):
+ * «الكل», «غير مقروءة», the academy's lists oldest first, then «＋» (a new list). It scrolls sideways
+ * (RTL order). The lists only for a holder of inbox.lists outside teacher mode. An active list that
+ * is gone (deleted here or by another assistant) falls back to «الكل». Loading or failing stays
+ * quiet: the chats never wait for the lists.
+ */
+export function ChatListChips({ value, onChange, lists: wanted = false }: ChatListChipsProps) {
+  const { allowed, query, lists, listId, gone } = useRowLists({ wanted, value, onChange });
   const [creating, setCreating] = useState(false);
   const [editing, setEditing] = useState<ChatList | null>(null);
-  const gone = value !== null && query.isSuccess && !lists.some((l) => l.id === value);
-  useEffect(() => {
-    if (gone) onChange(null);
-  }, [gone, onChange]);
-  if (!allowed) return null;
-  const active = lists.find((l) => l.id === value);
+  const close = () => {
+    setCreating(false);
+    setEditing(null);
+  };
   return (
     <>
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
         accessibilityRole="tablist"
-        accessibilityLabel={t.inbox.lists.rowLabel}
+        accessibilityLabel={t.inbox.filterRow}
         style={{ flexGrow: 0, flexShrink: 0 }}
-        contentContainerStyle={{ gap: 8, paddingVertical: 4 }}
+        // 6 + 32 + 6: the row is 44pt, so each chip's 6pt hitSlop stays inside it (a ScrollView clips touches).
+        contentContainerStyle={{ gap: 8, paddingVertical: 6 }}
       >
-        <ListChip label={t.inbox.lists.all} selected={value === null || gone} onPress={() => onChange(null)} />
+        <ListChip label={t.inbox.filterAll} selected={value === 'all' || gone} onPress={() => onChange('all')} />
+        <ListChip label={t.inbox.filterUnread} selected={value === 'unread'} onPress={() => onChange('unread')} />
         {lists.map((list) => (
           <ListChip
             key={list.id}
             label={list.name}
-            selected={list.id === value}
-            onPress={() => onChange(list.id)}
+            selected={list.id === listId}
+            onPress={() => onChange({ list: list.id })}
             onEdit={() => setEditing(list)}
           />
         ))}
-        <ListChip action label={`＋ ${t.inbox.lists.new}`} onPress={() => setCreating(true)} />
+        {allowed ? <ListChip action label="＋" name={t.inbox.lists.new} onPress={() => setCreating(true)} /> : null}
       </ScrollView>
-      {active?.auto_rule ? <AutoListNote rule={active.auto_rule} /> : null}
-      {query.isError && !query.data ? <Note>{t.inbox.lists.loadError}</Note> : null}
-      <CreateListSheet open={creating} onClose={() => setCreating(false)} onCreated={(list) => onChange(list.id)} />
-      <EditListSheet list={editing} onClose={() => setEditing(null)} />
+      {allowed ? (
+        <ListExtras
+          active={lists.find((l) => l.id === listId)}
+          loadError={query.isError && !query.data}
+          creating={creating}
+          editing={editing}
+          onCreated={(list) => onChange({ list: list.id })}
+          onClose={close}
+        />
+      ) : null}
     </>
   );
 }

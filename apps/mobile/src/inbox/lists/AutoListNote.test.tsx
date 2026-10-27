@@ -22,7 +22,7 @@ beforeEach(() => {
 
 test('an automatic list chip, once shown, says «تُحدَّث تلقائيًا» and who is added; a hand list says nothing', async () => {
   await renderWithQuery(<ThreadsList />);
-  const row = within(await screen.findByLabelText(L.rowLabel));
+  const row = within(await screen.findByLabelText(t.inbox.filterRow));
   expect(screen.queryByTestId('auto-list-chip')).toBeNull();
   await fireEvent.press(await row.findByRole('tab', { name: SUBSCRIBED.name }));
   expect(await screen.findByText(L.autoRule.subscribed)).toBeTruthy();

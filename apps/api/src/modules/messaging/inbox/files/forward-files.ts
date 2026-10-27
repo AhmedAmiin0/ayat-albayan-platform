@@ -63,7 +63,7 @@ export class ForwardFiles {
     const key = dedupKey(s);
     const thread = await this.queries.thread(s.phone);
     const line = await sendLine(thread, { now, windows: () => this.queries.numberWindows(s.phone) });
-    return this.outbox.send({
+    return this.outbox.queue({
       ...outboundBase(s, thread),
       dedup_key: key,
       body: file.caption,

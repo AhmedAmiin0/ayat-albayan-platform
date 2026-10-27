@@ -3,7 +3,7 @@ import type { HistoryBundle } from '../../sales';
 import { toStudentDetails } from './sales-student.mapper';
 import type { DetailsStudentRow } from './sales-student.queries';
 
-const student = { id: 's1', code: null, name: 'ياسمين', status: 'trial', program: 'quran', teacher: null } as DetailsStudentRow;
+const student = { id: 's1', code: null, name: 'ياسمين', status: 'trial', program: 'quran', teacher: null, guardian: null } as DetailsStudentRow;
 const sub = (id: string, status: string, starts_on: string) => ({ id, package: '8', status, starts_on, renews_on: null, lessons_total: 8, created_at: `${starts_on}T00:00:00Z` });
 const history = (subs: ReturnType<typeof sub>[]) =>
   ({ student: { id: 's1', code: null, name: 'ياسمين' }, subscriptions: subs, balances: [], payments: [], audit: [] }) as unknown as HistoryBundle;
@@ -20,7 +20,9 @@ describe('toStudentDetails', () => {
   it('a student with no subscription (a trial): empty list, no current, zero totals, code never null', () => {
     const d = toStudentDetails(parts(null));
     expect(d).toMatchObject({ subscriptions: [], current_id: null, attendance: { items: [], totals: { present: 0, absent: 0 } } });
-    expect(d.student).toEqual({ id: 's1', code: '', name: 'ياسمين', status: 'trial', program: 'quran', teacher_name: null });
+    expect(d.student).toEqual({ id: 's1', code: '', name: 'ياسمين', status: 'trial', program: 'quran', teacher_name: null, guardian_phone: null });
+    const withPhone = toStudentDetails({ ...parts(null), student: { ...student, guardian: { phone_e164: '+201001112223' } } });
+    expect(withPhone.student.guardian_phone).toBe('+201001112223');
   });
 
   it('lessons used / left fall back to the total when the balance view has no row', () => {

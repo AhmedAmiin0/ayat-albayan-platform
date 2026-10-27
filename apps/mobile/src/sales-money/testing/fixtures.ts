@@ -41,6 +41,7 @@ export const myStudent = (over: Partial<MyStudentRow> = {}): MyStudentRow => ({
   code: 'AB-1001',
   name: 'سهيلة',
   brought_at: '2026-10-02T10:00:00Z',
+  guardian_phone: null,
   first_subscription_paid: true,
   commission: { amount: 50, currency: 'SAR', status: 'earned', earned_at: '2026-10-03T10:00:00Z' },
   renewal_commissions: 0,

@@ -1,3 +1,4 @@
+import { formatPhone } from '@ab/shared';
 import { router, useLocalSearchParams } from 'expo-router';
 import { ScrollView, View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
@@ -7,6 +8,7 @@ import { ltr } from '@/core/ui/primitives/Ltr';
 import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { SalesLoadScreen } from '../components/SalesLoadScreen';
+import { familyChatHref } from '../lib/sales-href';
 import { fill } from '../lib/sales-text';
 import { AttendanceSection } from './AttendanceSection';
 import { ReportsSection } from './ReportsSection';
@@ -17,7 +19,8 @@ import { useSalesStudent } from './student-api';
 /**
  * «تفاصيل الطالب» of the salesperson (owner 2026-10-27, docs/16 row 36): one of HER students — the
  * subscription (start, renewal / end, lessons used / left, past ones folded), the attendance of the
- * past lessons and the sent reports as the teacher sees them. Read-only, no money. Another student
+ * past lessons and the sent reports as the teacher sees them. Read-only, no money. Under the name: the
+ * code · the guardian's phone, and «محادثة ولي الأمر» opens that family's chat (owner 2026-10-27). Another student
  * answers 404: «هذا الطالب ليس من طلابك أو غير موجود».
  */
 export function SalesStudentScreen() {
@@ -26,17 +29,21 @@ export function SalesStudentScreen() {
   const data = student.data;
   if (!data) return <SalesLoadScreen title={t.sales.student.title} query={student} notFound={t.sales.student.notFound} />;
   const teacher = data.student.teacher_name;
+  const phone = data.student.guardian_phone;
   const about = [t.enums.program[data.student.program], ...(teacher ? [fill(t.sales.student.teacher, { name: teacher })] : [])];
   return (
     <Screen>
       <ScreenHeader
         title={data.student.name}
-        subtitle={ltr(data.student.code)}
+        subtitle={[data.student.code, ...(phone ? [formatPhone(phone)] : [])].map(ltr).join(' · ')}
         trailing={<Button variant="ghost" label={t.common.back} onPress={() => router.back()} />}
       />
       <ScrollView style={{ flex: 1 }} contentContainerStyle={{ paddingBottom: 24 }}>
         <View style={{ gap: 20 }}>
           <Note>{about.join(' · ')}</Note>
+          {phone ? (
+            <Button variant="secondary" label={`${t.sales.student.chat} ${ltr(formatPhone(phone))}`} onPress={() => router.push(familyChatHref('/sales', phone))} />
+          ) : null}
           <SubscriptionSection data={data} />
           <ScheduleSection schedule={data.schedule} />
           <AttendanceSection attendance={data.attendance} />
