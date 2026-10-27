@@ -43,3 +43,12 @@ describe('formatRunningHead (docs/07 §7)', () => {
     expect(all).not.toMatch(/[٠-٩۰-۹]/);
   });
 });
+
+describe('formatRunningHead in 12 h', () => {
+  it('both clocks with ص / م (AM / PM)', () => {
+    const head = formatRunningHead(new Date('2026-12-01T12:20:00Z'), 'ar', '12');
+    expect(head.riyadhTime).toBe('3:20 م');
+    expect(head.cairoTime).toBe('2:20 م');
+    expect(formatRunningHead(new Date('2026-12-01T21:30:00Z'), 'en', '12').riyadhTime).toBe('12:30 AM');
+  });
+});

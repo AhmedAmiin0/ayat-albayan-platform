@@ -1,5 +1,6 @@
 // Running head (docs/07 §1.7, §7): Gregorian + Hijri date and the Riyadh / Cairo clocks.
 // Western digits everywhere (one numeral system), Hijri via Umm al-Qura. DB stays UTC.
+import { clockOf, type ClockCycle } from '../clock/index.js';
 import { intlLocale, type Locale } from '../i18n/locale.js';
 
 export const RIYADH_TZ = 'Asia/Riyadh';
@@ -10,7 +11,7 @@ export interface RunningHead {
   gregorian: string;
   /** «20 ربيع الآخر 1448 هـ». */
   hijri: string;
-  /** «15:20», 24h. */
+  /** «15:20» (24 h) or «3:20 م» (12 h). */
   riyadhTime: string;
   cairoTime: string;
 }
@@ -57,7 +58,7 @@ function hijriLine(date: Date, locale: Locale): string {
   return hijris.get(locale)?.format(date) ?? '';
 }
 
-/** «HH:mm» in `timeZone`, 24h, Western digits. */
+/** «HH:mm» in `timeZone`, 24h, Western digits: keys, computation, server texts (screens use clockOf). */
 export function clockTime(date: Date, timeZone: string): string {
   return new Intl.DateTimeFormat('en-GB', {
     hour: '2-digit',
@@ -74,12 +75,12 @@ function gregorianLine(date: Date, locale: Locale): string {
   return [part('weekday'), part('day'), part('month'), part('year')].join(' ');
 }
 
-/** Screen text in the UI language (Arabic by default); the clocks are the same in both. */
-export function formatRunningHead(date: Date, locale: Locale = 'ar'): RunningHead {
+/** Screen text in the UI language (Arabic by default); the clocks in the viewer's cycle (24 h by default). */
+export function formatRunningHead(date: Date, locale: Locale = 'ar', cycle: ClockCycle = '24'): RunningHead {
   return {
     gregorian: gregorianLine(date, locale),
     hijri: hijriLine(date, locale),
-    riyadhTime: clockTime(date, RIYADH_TZ),
-    cairoTime: clockTime(date, CAIRO_TZ),
+    riyadhTime: clockOf(date, { tz: RIYADH_TZ, cycle, locale }),
+    cairoTime: clockOf(date, { tz: CAIRO_TZ, cycle, locale }),
   };
 }
