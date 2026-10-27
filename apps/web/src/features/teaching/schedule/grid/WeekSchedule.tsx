@@ -10,6 +10,7 @@ import { PageHead } from '@/components/ui/layout/page';
 import { Toast } from '@/components/ui/overlay/toast';
 import { ListSkeleton } from '@/components/ui/display/skeleton';
 import { t } from '@/lib/i18n/i18n';
+import { useNow } from '@/lib/time/use-now';
 import { cn } from '@/lib/utils';
 import { NewMeetingMenu } from '@/features/teaching/meetings/NewMeetingMenu';
 import { overviewQuery, proposalsQuery } from '../api';
@@ -39,7 +40,7 @@ export interface WeekScheduleProps {
  * one GET /lessons/overview per window. A chip opens its drawer; writes refresh the calendar.
  */
 export function WeekSchedule({ search, onSearch }: WeekScheduleProps) {
-  const [now] = useState(() => new Date());
+  const now = useNow();
   const today = zonedParts(now, RIYADH_TZ).date;
   const day = search.view === 'day' ? (search.day ?? today) : null;
   const week = search.week ?? currentWeekStart(now);

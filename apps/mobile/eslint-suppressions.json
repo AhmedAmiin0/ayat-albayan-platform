@@ -16,7 +16,7 @@
   },
   "src/assistant-app/AssistantHomeScreen.tsx": {
     "ab/module-boundaries": {
-      "count": 8
+      "count": 7
     }
   },
   "src/assistant-app/AssistantMoreScreen.tsx": {
@@ -106,7 +106,7 @@
   },
   "src/assistants/statements/components/PayStatementForm.tsx": {
     "ab/module-boundaries": {
-      "count": 9
+      "count": 8
     }
   },
   "src/assistants/statements/components/ReasonConfirm.tsx": {
@@ -319,21 +319,6 @@
       "count": 1
     }
   },
-  "src/calendar/details/DetailsHead.tsx": {
-    "ab/module-boundaries": {
-      "count": 1
-    }
-  },
-  "src/calendar/details/DetailsStudentRow.tsx": {
-    "ab/module-boundaries": {
-      "count": 1
-    }
-  },
-  "src/calendar/details/DetailsStudents.tsx": {
-    "ab/module-boundaries": {
-      "count": 1
-    }
-  },
   "src/calendar/details/LessonDetailsSheet.tsx": {
     "ab/module-boundaries": {
       "count": 1
@@ -361,12 +346,12 @@
   },
   "src/calendar/screens/DayScheduleScreen.tsx": {
     "ab/module-boundaries": {
-      "count": 7
+      "count": 6
     }
   },
   "src/calendar/screens/TeacherCalendarScreen.tsx": {
     "ab/module-boundaries": {
-      "count": 5
+      "count": 4
     }
   },
   "src/classroom/assistants/AssistantLessonItem.tsx": {
@@ -481,7 +466,7 @@
   },
   "src/earnings/components/PayForm.tsx": {
     "ab/module-boundaries": {
-      "count": 7
+      "count": 6
     }
   },
   "src/earnings/components/PaymentItem.tsx": {
@@ -586,7 +571,7 @@
   },
   "src/finance/expenses/ExpenseForm.tsx": {
     "ab/module-boundaries": {
-      "count": 7
+      "count": 6
     }
   },
   "src/finance/expenses/ExpenseRow.tsx": {
@@ -636,7 +621,7 @@
   },
   "src/finance/payouts/PayoutPayForm.tsx": {
     "ab/module-boundaries": {
-      "count": 6
+      "count": 5
     }
   },
   "src/finance/payouts/PayoutsScreen.tsx": {
@@ -859,14 +844,9 @@
       "count": 1
     }
   },
-  "src/live/LiveBadge.tsx": {
-    "ab/module-boundaries": {
-      "count": 1
-    }
-  },
   "src/live/LiveSessions.tsx": {
     "ab/module-boundaries": {
-      "count": 3
+      "count": 2
     }
   },
   "src/meetings/create/CreateMeeting.tsx": {
@@ -1086,7 +1066,7 @@
   },
   "src/ops/dashboard/DashboardScreen.tsx": {
     "ab/module-boundaries": {
-      "count": 4
+      "count": 3
     }
   },
   "src/ops/dashboard/WorkPanel.tsx": {
@@ -1221,7 +1201,7 @@
   },
   "src/payments/components/PaymentForm.tsx": {
     "ab/module-boundaries": {
-      "count": 2
+      "count": 1
     }
   },
   "src/payments/components/RecentPayments.tsx": {
@@ -1436,7 +1416,7 @@
   },
   "src/sales-subscribe/components/TransferForm.tsx": {
     "ab/module-boundaries": {
-      "count": 4
+      "count": 3
     }
   },
   "src/sales-subscribe/hooks/upload-sales-receipt.ts": {
@@ -1491,7 +1471,7 @@
   },
   "src/sales/components/SalesLessonRow.tsx": {
     "ab/module-boundaries": {
-      "count": 4
+      "count": 3
     }
   },
   "src/sales/components/SalesSection.tsx": {
@@ -1536,7 +1516,7 @@
   },
   "src/sales/screens/SalesScheduleScreen.tsx": {
     "ab/module-boundaries": {
-      "count": 4
+      "count": 3
     }
   },
   "src/sales/screens/SalesTeacherScreen.tsx": {
@@ -1746,7 +1726,7 @@
   },
   "src/teacher/screens/TeacherScheduleScreen.tsx": {
     "ab/module-boundaries": {
-      "count": 9
+      "count": 8
     }
   },
   "src/teacher/screens/TeacherStudentsScreen.tsx": {
@@ -1756,7 +1736,7 @@
   },
   "src/teacher/screens/TeacherTodayScreen.tsx": {
     "ab/module-boundaries": {
-      "count": 8
+      "count": 7
     }
   },
   "src/teaching/reschedule/MoveFields.tsx": {

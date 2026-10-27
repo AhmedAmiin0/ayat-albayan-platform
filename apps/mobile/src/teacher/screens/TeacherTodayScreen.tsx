@@ -9,7 +9,7 @@ import { Note } from '@/more/Note';
 import { BellButton } from '@/notifications/BellButton';
 import { Notice } from '@/today/components/Notice';
 import { localDate } from '@/today/lib/timeline';
-import { useNow } from '@/today/lib/use-day-lessons';
+import { useNow } from '@/core/lib/time/use-now';
 import { useLessonAction } from '@/today/lib/use-lesson-action';
 import { Button } from '@/core/ui/primitives/Button';
 import { EmptyState } from '@/core/ui/feedback/EmptyState';

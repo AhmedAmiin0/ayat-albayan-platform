@@ -17,7 +17,7 @@ import { useJoinWindow } from '@/lib/settings/public-config';
 import { adminDayQuery, dayAround } from '../api/api';
 import { SessionCard } from './SessionCard';
 import { groupSessions, SESSION_GROUPS, type SessionGroup } from './sessions';
-import { useNow } from './use-now';
+import { useNow } from '@/lib/time/use-now';
 
 // The day in the UI language with Western digits («الاثنين 5 أكتوبر»), not English.
 const DAY = new Intl.DateTimeFormat(intlLocale(locale), { weekday: 'long', day: 'numeric', month: 'long' });

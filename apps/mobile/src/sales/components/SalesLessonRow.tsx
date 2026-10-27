@@ -2,7 +2,7 @@ import { isRunningLesson, lessonStatusStyle, localizedName, type SalesScheduleLe
 import { Pressable, View } from 'react-native';
 import { Tag } from '@/calendar/agenda/Tag';
 import { JoinClassroomButton } from '@/classroom/links/JoinClassroomButton';
-import { useMinuteClock } from '@/classroom/sessions/use-minute-clock';
+import { useNow } from '@/core/lib/time/use-now';
 import { t } from '@/core/lib/i18n/i18n';
 import { locale } from '@/core/lib/i18n/locale';
 import { type, useTheme } from '@/theme';
@@ -18,7 +18,7 @@ import { StatusChip } from '@/core/ui/feedback/StatusChip';
  */
 export function SalesLessonRow({ lesson, onOpen }: { lesson: SalesScheduleLesson; onOpen?: (lesson: SalesScheduleLesson) => void }) {
   const { color } = useTheme();
-  const now = useMinuteClock();
+  const now = useNow();
   const running = isRunningLesson(lesson, now);
   const body = { fontFamily: type.ui[600], fontSize: type.size.body, lineHeight: type.lineHeight(type.size.body), color: color.ink };
   const small = { fontFamily: type.ui[400], fontSize: type.size.xs, lineHeight: type.lineHeight(type.size.xs), color: color.ink2 };

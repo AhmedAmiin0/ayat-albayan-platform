@@ -5,7 +5,7 @@ import { EmptyState } from '@/components/ui/display/empty-state';
 import { FormAlert } from '@/components/ui/form/form-alert';
 import { PageHead } from '@/components/ui/layout/page';
 import { ListSkeleton } from '@/components/ui/display/skeleton';
-import { useNow } from '@/features/teaching/classroom/sessions/use-now';
+import { useNow } from '@/lib/time/use-now';
 import { RIYADH_TZ, zonedParts } from '@/features/teaching/schedule/tz';
 import { t } from '@/lib/i18n/i18n';
 import { salesScheduleQuery, salesTeachersQuery } from '../academy-api';
