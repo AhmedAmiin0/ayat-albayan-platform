@@ -1,6 +1,18 @@
-import type { SalesStudentDetails } from '@ab/shared';
+import type { SalesStudentDetails, SalesStudentLesson } from '@ab/shared';
 
 // GET /sales/students/:id as the API answers it (docs/16 row 36): no price, payment or note; the guardian's (fake) phone.
+
+/** One of the student's upcoming lessons (hers: `mine`), no link: 45 minutes from `starts_at`. */
+export const upcoming = (id: string, starts_at: string): SalesStudentLesson => ({
+  id, starts_at, ends_at: new Date(Date.parse(starts_at) + 45 * 60_000).toISOString(), status: 'scheduled', trial: false, makeup: false,
+  teacher: { id: 't1', display_name_ar: 'أبرار محمد', display_name_en: 'Abrar Mohamed', tz: 'Africa/Cairo' },
+  students: [{ id: 'st1', code: 'AB-0183', name: 'يوسف أحمد', tz: 'Africa/Cairo', mine: true }],
+});
+
+/** An imported-style rule (in Riyadh): Sun, Tue, Thu 20:00 Riyadh (19:00 Cairo) from Sunday 1 November 2026. */
+export const weeklySlot = { rule_id: 'r1', byday: [0, 2, 4], start_time_local: '20:00', tz: 'Asia/Riyadh', duration_min: 45,
+  teacher: { display_name_ar: 'أبرار محمد', display_name_en: 'Abrar Mohamed' },
+  next: ['2026-11-01T17:00:00.000Z', '2026-11-03T17:00:00.000Z', '2026-11-05T17:00:00.000Z'] };
 
 export const details = (over: Partial<SalesStudentDetails> = {}): SalesStudentDetails => ({
   student: { id: 'st1', code: 'AB-0183', name: 'يوسف أحمد', status: 'active', program: 'quran', teacher_name: 'أبرار محمد', guardian_phone: '+201001112223' },
@@ -24,5 +36,6 @@ export const details = (over: Partial<SalesStudentDetails> = {}): SalesStudentDe
       attendance: 'on_time', grade_overall: 'excellent', status: 'submitted', version: 1, pdf_status: 'ready', sent_at: '2026-10-04T16:00:00.000Z',
     }],
   },
+  schedule: { student_tz: 'Africa/Cairo', weekly: [weeklySlot], upcoming: [upcoming('u1', '2026-11-01T17:00:00.000Z'), upcoming('u2', '2026-11-03T17:00:00.000Z')] },
   ...over,
 });

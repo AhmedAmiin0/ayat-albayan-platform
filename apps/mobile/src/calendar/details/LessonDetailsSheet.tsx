@@ -25,6 +25,8 @@ interface LessonDetailsSheetProps<L extends DetailsLesson> {
   sheets?: ReactNode;
   /** «للاطلاع فقط» under the actions; sales' default, false on a lesson she may move or cancel (docs/16 row 37). */
   readOnly?: boolean;
+  /** Opened from this student's own file: their name stays plain (no second copy of that screen). */
+  hereStudentId?: string | undefined;
 }
 
 /**
@@ -35,7 +37,7 @@ interface LessonDetailsSheetProps<L extends DetailsLesson> {
  * فقط» and only «ادخل الحلقة». A tap that navigates closes the sheet first.
  */
 export function LessonDetailsSheet<L extends DetailsLesson>(props: LessonDetailsSheetProps<L>) {
-  const { lesson, role, onClose, actions, sheets, readOnly = role === 'sales' } = props;
+  const { lesson, role, onClose, actions, sheets, readOnly = role === 'sales', hereStudentId } = props;
   const title = lesson ? lesson.students.map((s) => s.name).join(t.common.listSeparator) : '';
   return (
     <>
@@ -61,7 +63,7 @@ export function LessonDetailsSheet<L extends DetailsLesson>(props: LessonDetails
                 {actions ? <View style={{ gap: 8 }}>{actions(lesson)}</View> : null}
                 {readOnly ? <Note>{t.lessons.sheet.readOnly}</Note> : null}
                 <DetailsWhen lesson={lesson} />
-                <DetailsStudents lesson={lesson} role={role} onLeave={onClose} />
+                <DetailsStudents lesson={lesson} role={role} onLeave={onClose} hereStudentId={hereStudentId} />
                 <DetailsAbout lesson={lesson} role={role} />
               </>
             ) : null}

@@ -26,4 +26,6 @@ export {
   toScheduleLesson,
   UPCOMING_DAYS,
   upcomingRange,
+  withMine,
 } from './schedule/sales-schedule.mapper';
+export type { SalesScheduleRow } from './schedule/sales-schedule.queries';
