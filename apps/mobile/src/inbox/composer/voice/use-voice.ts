@@ -30,7 +30,8 @@ export function useVoice({ phone, onError, busy }: VoiceInput) {
     now.current = voiceReducer(now.current, e);
     setState(now.current);
   };
-  const [down, startedAt, keeping, aborted] = [useRef(false), useRef(0), useRef(false), useRef(false)];
+  const [down, startedAt, keeping] = [useRef(false), useRef(0), useRef(false)];
+  const aborted = useRef(false); // keep() during arming: press() must not go live (its own line: a ref the compiler sees)
   const [drag] = useState(() => new Animated.Value(0));
   const [hint] = useState(() => new Animated.Value(1));
   const sender = useSendVoice(phone);
