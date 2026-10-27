@@ -1,8 +1,10 @@
-import { INVOICE_MIMES, baseMime, chatFileMaxBytes, isWaAuthError } from '@ab/shared';
+import { INVOICE_MIMES, baseMime, chatFileMaxBytes, isChatViewMime, isWaAuthError } from '@ab/shared';
 import { HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { BUCKETS, waMediaPath } from '../../../../common/storage/storage.paths';
 import { StorageService } from '../../../../common/storage/storage.service';
 import { InboundMediaQueries, type MediaMessage } from './inbound-media.queries';
+import { mediaSource } from '../numbers/media-client';
+import { NumberClients } from '../numbers/number-clients';
 import { KAPSO_AUTH } from '../sender/send-plan';
 import { waHttpError } from '../templates/catalog/template.mapper';
 import { WHATSAPP_LINES, WaError, type WhatsappLines } from '../whatsapp.types';
@@ -32,6 +34,19 @@ export function servable(msg: MediaMessage, allow: (mime: string | null) => bool
   return msg;
 }
 
+/**
+ * W6's gate (a chat bubble, a forward): a family's file (servable with isChatViewMime), or an ECHO, a
+ * file the academy phone sent from the WhatsApp Business app (outbound with Meta's media id, docs/19
+ * coexistence). An echo is fetched and cached exactly as an inbound file; an outbound row with neither
+ * a stored file nor a media id (imported history) is 410 media_expired.
+ */
+export function chatServable(msg: MediaMessage): MediaMessage {
+  if (msg.direction === 'inbound') return servable(msg, isChatViewMime);
+  if (!msg.media_id) throw waHttpError('media_expired', HttpStatus.GONE);
+  if (!isChatViewMime(msg.media_mime)) throw waHttpError('invoice_message', HttpStatus.BAD_REQUEST);
+  return msg;
+}
+
 /** Older than WhatsApp keeps the file (and never cached by us): it cannot be fetched any more. */
 export function mediaExpired(msg: Pick<MediaMessage, 'created_at' | 'media_path'>, now: Date): boolean {
   return msg.media_path === null && now.getTime() - Date.parse(msg.created_at) > MEDIA_FETCH_DAYS * DAY_MS;
@@ -43,12 +58,16 @@ export function mediaExpired(msg: Pick<MediaMessage, 'created_at' | 'media_path'
  * fetched from Meta and cached in the private `wa-media` bucket; later calls read the cache.
  * 404 message_not_found, 400 invoice_message (not inbound, or not an image / PDF), 410 media_expired
  * (older than 29 days, or Meta refuses the id), 413 invoice_too_large (chatFileMaxBytes). The file is fetched with the
- * RECEIVING line's client (docs/12 §13.4): 503 line_not_configured for a chat message while the chat
+ * client of the NUMBER it came in on (mediaSource; docs/12 §13.4, docs/23c): 409 crm_no_media for the old
+ * CRM number's history (no call), 503 line_not_configured for a chat message while the chat
  * line is not configured, 502 meta_error when Meta refuses the line's token (190 / 10 / 200),
  * 502 kapso_auth when Kapso refuses the project key (docs/19).
  */
 @Injectable()
 export class InboundMedia {
+  /** Module mode's per-number clients (in memory; legacy finds none and uses the lines). */
+  private readonly numbers = new NumberClients();
+
   constructor(
     private readonly queries: InboundMediaQueries,
     @Inject(WHATSAPP_LINES) private readonly lines: WhatsappLines,
@@ -60,6 +79,13 @@ export class InboundMedia {
     const msg = await this.queries.message(messageId);
     if (!msg) throw waHttpError('message_not_found', HttpStatus.NOT_FOUND);
     return servable(msg, allow);
+  }
+
+  /** As load, through chatServable: an echo of the WhatsApp Business app too. */
+  async loadChat(messageId: string): Promise<MediaMessage> {
+    const msg = await this.queries.message(messageId);
+    if (!msg) throw waHttpError('message_not_found', HttpStatus.NOT_FOUND);
+    return chatServable(msg);
   }
 
   async ensure(messageId: string): Promise<InboundFile> {
@@ -83,10 +109,11 @@ export class InboundMedia {
 
   /** A Meta 4xx means the id is gone (expired, deleted): 410, not a server error; a dead token is 502. */
   private async download(msg: MediaMessage, mediaId: string): Promise<{ bytes: Uint8Array }> {
-    const client = this.lines[msg.line ?? 'notifications'];
-    if (msg.line === 'chat' && !client.configured()) throw waHttpError('line_not_configured', HttpStatus.SERVICE_UNAVAILABLE);
+    const from = mediaSource(msg, { lines: this.lines, numbers: this.numbers });
+    if (from.kind === 'crm') throw waHttpError(CRM_NO_MEDIA, HttpStatus.CONFLICT);
+    if (from.line === 'chat' && !from.client.configured()) throw waHttpError('line_not_configured', HttpStatus.SERVICE_UNAVAILABLE);
     try {
-      return await client.getMedia(mediaId);
+      return await from.client.getMedia(mediaId);
     } catch (e) {
       throw e instanceof WaError ? mediaHttpError(e) : e;
     }

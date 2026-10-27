@@ -47,19 +47,23 @@ jest.mock('./src/core/lib/i18n/i18n-overrides', () => ({
   refreshOverrides: jest.fn(async () => false),
 }));
 
-// Every chat bubble can mount the inline players (owner 2026-10-19 #1) and the composer the PDF
+// Every chat bubble can mount a voice note or a video viewer (owner 2026-10-19 #1) and the composer the PDF
 // picker; jest has none of their native modules. The player and picker tests mock them again.
 jest.mock('expo-audio', () => {
-  const player = { play: jest.fn(), pause: jest.fn(), seekTo: jest.fn(async () => undefined) };
-  const status = { playing: false, currentTime: 0, duration: 0, didJustFinish: false, isLoaded: false };
-  return { useAudioPlayer: jest.fn(() => player), useAudioPlayerStatus: jest.fn(() => status) };
+  const player = { play: jest.fn(), pause: jest.fn(), seekTo: jest.fn(async () => undefined), setPlaybackRate: jest.fn() };
+  const status = { playing: false, currentTime: 0, duration: 0, didJustFinish: false, isLoaded: false, isBuffering: false };
+  return {
+    useAudioPlayer: jest.fn(() => player),
+    useAudioPlayerStatus: jest.fn(() => status),
+    setAudioModeAsync: jest.fn(async () => undefined),
+  };
 });
 jest.mock('expo-video', () => {
   const { createElement } = require('react');
   const { View } = require('react-native');
   return {
     useVideoPlayer: jest.fn((source, setup) => {
-      const player = { source, play: jest.fn(), pause: jest.fn() };
+      const player = { source, status: 'loading', play: jest.fn(), pause: jest.fn(), addListener: jest.fn(() => ({ remove: jest.fn() })) };
       if (setup) setup(player);
       return player;
     }),
