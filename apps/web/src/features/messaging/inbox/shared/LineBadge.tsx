@@ -1,3 +1,4 @@
+// probe: throwaway comment for the e2e selection measurement (PR #310), never merged.
 import type { WaLine } from '@ab/shared';
 import { t } from '@/lib/i18n/i18n';
 
