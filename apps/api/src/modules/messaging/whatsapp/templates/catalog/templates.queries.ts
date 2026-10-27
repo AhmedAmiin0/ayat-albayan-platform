@@ -1,4 +1,5 @@
-import type { Tables, TablesInsert } from '@ab/db';
+import type { Json, Tables, TablesInsert } from '@ab/db';
+import type { TemplateLineSync, WaLine } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../../../../common/db/db.module';
 import type { ImportRow } from '../sync/template-import';
@@ -89,6 +90,19 @@ export class TemplatesQueries {
     const { error } = await this.db.from('message_template_numbers').upsert([...rows], { onConflict: 'template_key,number_id' });
     if (error) throw new Error(`template numbers write failed: ${error.message}`);
     return rows.length;
+  }
+
+  /** A line's last sync result (migration 923), so every API copy shows the same «last sync». */
+  async saveLineSync(sync: TemplateLineSync): Promise<void> {
+    const row = { line: sync.line, result: sync as unknown as Json, synced_at: sync.checked_at };
+    const { error } = await this.db.from('wa_template_line_syncs').upsert(row, { onConflict: 'line' });
+    if (error) throw new Error(`template line sync write failed: ${error.message}`);
+  }
+
+  async lineSyncs(): Promise<Map<WaLine, TemplateLineSync>> {
+    const { data, error } = await this.db.from('wa_template_line_syncs').select('line, result');
+    if (error) throw new Error(`template line syncs read failed: ${error.message}`);
+    return new Map(data.map((r) => [r.line, r.result as unknown as TemplateLineSync]));
   }
 
   /** null = no such wa_numbers row. */

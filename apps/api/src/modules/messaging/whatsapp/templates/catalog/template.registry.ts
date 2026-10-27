@@ -32,8 +32,6 @@ const newest = (rows: readonly TemplateRow[], line: WaLine): string | null =>
 export class TemplateRegistry implements OnApplicationBootstrap, OnModuleDestroy {
   private readonly log = new Logger(TemplateRegistry.name);
   private timer: NodeJS.Timeout | null = null;
-  /** Each line's last sync since boot (this instance): GET /messaging/templates/lines. */
-  private readonly last = new Map<WaLine, TemplateLineSync>();
 
   constructor(
     private readonly queries: TemplatesQueries,
@@ -69,13 +67,13 @@ export class TemplateRegistry implements OnApplicationBootstrap, OnModuleDestroy
    * unreadable approvals table (e.g. the API deployed before migration 633) lists the rows without numbers[].
    */
   async list(): Promise<TemplateView[]> {
-    const [rows, approvals] = await Promise.all([this.queries.all(), this.queries.approvals().catch((e: unknown) => this.noApprovals(e))]);
+    const [rows, approvals] = await Promise.all([this.queries.all(), this.queries.approvals().catch((e: unknown) => this.unread(e, null))]);
     return approvals ? withNumbers(rows, approvals) : rows.map((row) => toTemplateView(row));
   }
 
-  private noApprovals(e: unknown): null {
-    this.log.warn(`template numbers unread, listing without them: ${errText(e)}`);
-    return null;
+  private unread<T>(e: unknown, instead: T): T {
+    this.log.warn(`template ${instead === null ? 'numbers' : 'line syncs'} unread, listing without them: ${errText(e)}`);
+    return instead;
   }
 
   /** The row when `key` is approved, else null (B2: H4 answers 409 template_not_approved). */
@@ -98,21 +96,30 @@ export class TemplateRegistry implements OnApplicationBootstrap, OnModuleDestroy
     const results: TemplateLineSync[] = [];
     for (const line of targets) {
       const result = await syncLine({ queries: this.queries, lines: this.lines, log: this.log }, line, now);
-      this.last.set(line, result);
+      await this.remember(result);
       results.push(result);
     }
     return { lines: results, templates: await this.list() };
   }
 
-  /** GET /messaging/templates/lines: each line's facts (env only), its newest check, its last sync. */
+  /**
+   * GET /messaging/templates/lines: each line's facts (env only), its newest check, its last sync (stored,
+   * so the copy that ran the sync and the one answering may differ; unreadable = none).
+   */
   async lineViews(): Promise<TemplateLineView[]> {
-    const rows = await this.queries.all();
+    const [rows, last] = await Promise.all([this.queries.all(), this.queries.lineSyncs().catch((e: unknown) => this.unread(e, new Map<WaLine, TemplateLineSync>()))]);
     return WA_LINES.map((line) => ({
       ...lineFacts(line, this.lines[line]),
       last_checked_at: newest(rows, line),
-      last_sync: this.last.get(line) ?? null,
+      last_sync: last.get(line) ?? null,
     }));
   }
+
+  /** A line's sync result for lineViews(); a failed write only logs (the sync itself is done). */
+  private async remember(sync: TemplateLineSync): Promise<void> {
+    await this.queries.saveLineSync(sync).catch((e: unknown) => this.log.warn(`template line sync not stored: ${errText(e)}`));
+  }
+
 
   /** POST /messaging/templates/:key/submit (template-submit.ts). */
   submit(key: string, actorId: string): Promise<TemplateView> {
@@ -132,7 +139,7 @@ export class TemplateRegistry implements OnApplicationBootstrap, OnModuleDestroy
   /** PATCH /messaging/templates/:key/line (template-move.ts). */
   moveLine(input: { key: string; line: WaLine }, actorId: string): Promise<TemplateMoveView> {
     const deps = { queries: this.queries, lines: this.lines, audit: this.audit, log: this.log };
-    return moveTemplate({ ...deps, remember: (sync) => this.last.set(sync.line, sync) }, input, actorId);
+    return moveTemplate({ ...deps, remember: (sync) => this.remember(sync) }, input, actorId);
   }
 
   private configuredLines(): WaLine[] {

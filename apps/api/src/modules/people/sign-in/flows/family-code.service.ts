@@ -47,6 +47,6 @@ export class FamilyCodeService {
     if (!phone.ok || !(await this.available())) return;
     const guardian = await this.accounts.subjects.guardianByPhone(phone.e164);
     if (!guardian) return;
-    await this.kit.codes.issue({ purpose: 'sign_in', subject: { kind: 'guardian', id: guardian.id }, phone: guardian.phone });
+    await this.kit.issue({ purpose: 'sign_in', subject: { kind: 'guardian', id: guardian.id }, phone: guardian.phone });
   }
 }

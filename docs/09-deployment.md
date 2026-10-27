@@ -12,48 +12,28 @@
 | Mobile | EAS project `@holdmycup/ayat-albayan-admin`, profile `preview` (internal APK), EAS environment `preview` holds the `EXPO_PUBLIC_*` values |
 | Server | Hostinger VPS `srv939652` (148.230.116.195), ssh alias `hostinger`; files in `/opt/ayat-albayan-staging` (`.env` is root-only, `src/` = shipped HEAD, `web/` = built SPA) |
 
-The same VPS runs the owner's **live WhatsApp CRM** (`/opt/wacrm`, container `wacrm-app-1`, `crm.ayatalbayan.com`). Never stop, rebuild or edit it. The staging API is reached on `127.0.0.1:3110` only (since 2026-10-27 that is `ayat-lb`, the load balancer in our own compose project, see «Two API copies + one worker»); Caddy (`/etc/caddy/Caddyfile`, backups `Caddyfile.bak-*`) terminates TLS for the two staging hosts, which were appended as separate site blocks.
+The same VPS runs the owner's **live WhatsApp CRM** (`/opt/wacrm`, container `wacrm-app-1`, `crm.ayatalbayan.com`). Never stop, rebuild or edit it. The staging API listens on `127.0.0.1:3110` only; Caddy (`/etc/caddy/Caddyfile`, backups `Caddyfile.bak-*`) terminates TLS for the two staging hosts, which were appended as separate site blocks.
 
-The rate limits key on `req.ip`, which is only the visitor while Fastify trusts exactly the proxies in front of it: `TRUST_PROXY_HOPS` (default 1 = the host Caddy alone; staging's API copies set 2 = the host Caddy + `ayat-lb`). Never publish an API copy's port, and change `TRUST_PROXY_HOPS` with the proxy depth. The family sign-in limits are in the database (migration 840, shared by both copies); the feedback, classroom-join, mute and activity limiters are still in memory per copy, so behind two copies their budgets are per copy (at most twice the number); the hard guards (unique rows, compare-and-set) do not depend on them.
+The rate limits key on `req.ip`, which is only the visitor while Fastify trusts exactly the proxies in front of it: `TRUST_PROXY_HOPS` (default 1 = the host Caddy alone, today's single container; a load balancer behind it makes 2). Never publish an API copy's port, and change `TRUST_PROXY_HOPS` with the proxy depth. The family sign-in limits, and the per-phone send buckets taken before a sign-in code is sent, are in the database (migration 923, shared by every copy); the feedback, classroom-join, mute and activity limiters are still in memory per copy, so behind two copies their budgets are per copy (at most twice the number); the hard guards (unique rows, compare-and-set) do not depend on them.
 
 `*.sslip.io` hosts resolve to the VPS IP, so no DNS change was needed. To move to real names, add A records for e.g. `app-staging.ayatalbayan.com` and `api-staging.ayatalbayan.com` → `148.230.116.195` at **Namecheap** (the domain's DNS), then rename the two Caddy blocks, update `WEB_ORIGIN` in `/opt/ayat-albayan-staging/.env`, the `[remotes.staging.auth]` URLs in `packages/db/supabase/config.toml` (`supabase config push --project-ref knxfwiimjcifwckhwbim`), `.claude/artifacts/staging/web.env` and the EAS `preview` variables.
 
-## Two API copies + one worker (since 2026-10-27)
+## Two API copies + one worker (code since 2026-10-28)
 
-The owner asked for «threads and instances» because the API got slow. Staging now runs **four containers** in the compose project `ayat-albayan-staging` (`deploy/staging/docker-compose.yml`), all from **one image** (`ayat-api:staging`, built once per deploy by `ayat-worker`'s `build:`, never pulled):
+The owner asked for «threads and instances» because the API got slow. The API can run as separate processes: API copies behind a load balancer that serve HTTP, and one worker that runs every background job. The code ships first and is **inert on today's single container** (`APP_ROLE` unset = `all`, `TRUST_PROXY_HOPS` unset = 1, `WORKER_URL` unset = no forwarding); the staging layout that switches it on (`ayat-worker`, `ayat-api-a`/`-b`, `ayat-lb`) ships separately, after this code is deployed, so the server's `src.old` already knows the roles.
 
-| Service | `APP_ROLE` | Does | Port | Memory |
-|---|---|---|---|---|
-| `ayat-api-a`, `ayat-api-b` | `api` | every HTTP route and webhook; **no** background job, poller or timer; a «run now» (inbox send, admin retry, report submit, Google sync action) goes to the worker over the project network (`WORKER_URL`) | none on the host | 512 MB each |
-| `ayat-worker` | `worker` | **every** background job: the WhatsApp outbox sender, reminders, follow-ups, lesson ratings, report PDFs (Chromium), Google sync, alerts, expiry, horizon, retention jobs, push receipts, the calls sweeper, the Kapso catch-up, the config seed and template boot check; HTTP for `/health` and `POST /internal/jobs/:name/kick` only | none | 768 MB |
-| `ayat-lb` | — | `caddy:2.10.2-alpine` (`deploy/staging/lb/Caddyfile`): round robin over both copies, active health checks on `/health` every 2 s, a refused connection retried on the other copy (never a request a copy already received) | `127.0.0.1:3110` | 64 MB |
+**The role switch** (`apps/api/src/config/role/`: `app-role.ts`, `background-job.ts`, `worker-kick.ts`; the kick route and the HTTP filter in `modules/platform/process-role`): `APP_ROLE=api|worker|all`, default `all` (local dev, tests and e2e behave exactly as one process did). Every job class carries `@BackgroundJob({ name, kick? })`, the one place that decides: its `onApplicationBootstrap` (where its timers start) runs only where the role runs jobs, and its `kick` in an `api` process becomes an authenticated call to the worker (an HMAC of the service-role key, `x-ab-internal`). So two API copies can never both run the outbox sender, the reminders or the Google sync; the row claims and dedup keys stay as the second wall. Not gated, on purpose: per-process caches every copy needs (translations, integration config, numbers config refresh; an admin save also kicks the worker's `config-reload`, below), the usage log, and request-driven listeners (lesson events → alerts, ratings, trial status). An unknown `APP_ROLE` stops the boot. `vitest` boots the real `AppModule` in each role and checks which jobs run (`roles.boot.test.ts`).
 
-The host Caddy and `/opt/wacrm` are **unchanged**: Caddy still proxies the API domain to `127.0.0.1:3110`. About 1.9 GB in total beside the CRM on the 8 GB VPS.
+**Real client IP:** the host Caddy sets `X-Forwarded-For` to the visitor; a load balancer behind it keeps that header and appends the host Caddy's address, and the copies then trust 2 hops (`TRUST_PROXY_HOPS=2`), so `req.ip` is the visitor and a forged header cannot choose it (`trust-proxy.test.ts`).
 
-**The role switch** (`apps/api/src/config/role/`: `app-role.ts`, `background-job.ts`, `worker-kick.ts`; the kick route and the HTTP filter in `modules/platform/process-role`): `APP_ROLE=api|worker|all`, default `all` (local dev, tests and e2e behave exactly as one process did). Every job class carries `@BackgroundJob({ name, kick? })`, the one place that decides: its `onApplicationBootstrap` (where its timers start) runs only where the role runs jobs, and its `kick` in an `api` process becomes an authenticated call to the worker (an HMAC of the service-role key, `x-ab-internal`). So two API copies can never both run the outbox sender, the reminders or the Google sync; the row claims and dedup keys stay as the second wall. Not gated, on purpose: per-process caches every copy needs (translations, integration config, numbers config refresh), the usage log, and request-driven listeners (lesson events → alerts, ratings, trial status). An unknown `APP_ROLE` stops the boot. `vitest` boots the real `AppModule` in each role and checks which jobs run (`roles.boot.test.ts`).
-
-**Real client IP:** the host Caddy sets `X-Forwarded-For` to the visitor; `ayat-lb` trusts private ranges, keeps that header and appends the host Caddy's address; the copies trust 2 hops (`TRUST_PROXY_HOPS=2`), so `req.ip` is the visitor and a forged header cannot choose it (`trust-proxy.test.ts`).
-
-**Deploy roll** (`deploy/staging/roll.sh`, run by `deploy-staging` and `tools/scripts/env/deploy-staging.sh`): build the image once → recreate `ayat-worker`, wait healthy → `ayat-api-a`, wait healthy (`ayat-lb` serves from `b`; SIGTERM makes Fastify finish the requests in flight) → `ayat-api-b`, wait healthy → `ayat-lb` reloaded (`caddy reload`, no restart) only when its Caddyfile changed → `/health` on `127.0.0.1:3110` → remove orphans and prune **this project's** images only. The first run after the switch moves the old single `ayat-api` container off port 3110 in one step (copies up first, then the LB takes 3110 within a second or two, then the worker), so the old process and the worker never run jobs side by side. `docker builder prune` is **not** run: the build cache is shared with the CRM and cannot be limited to one project. `env_only` runs `roll.sh --env-only` (no build, every container recreated one at a time).
-
-**Roll back:** automatic when a container never gets healthy or the health check fails: the workflow puts back `src.old`, `docker-compose.yml.old`, `roll.sh.old`, `lb/Caddyfile.old` (and `web.old` only when that run swapped the web) and rolls again; if the previous layout was the single container it runs `docker compose down --remove-orphans && docker compose up -d --build` (a short gap, only then). By hand on the VPS:
-
-```bash
-cd /opt/ayat-albayan-staging
-mv src src.bad && mv src.old src && sh roll.sh     # previous code, same layout
-docker compose ps; docker compose logs --tail 100 ayat-worker
-```
-
-**Known windows (accepted):** an admin save refreshes the in-memory caches (translations, integration and numbers config) only in the copy that took it; the other copy and the worker catch up on their own refresh (translations within 5 minutes, the others within `INTEGRATION_REFRESH_MS` / `SETTINGS_CACHE_MS`). The in-memory feedback, sales-registration, classroom and activity limiters count per copy (see the top of this file). During a roll a POST that `ayat-lb` sends on a keep-alive connection just as a copy closes it can answer 502 (rare; the copy finishes every request it already received).
-
-**Scale:** add `ayat-api-c` (copy `ayat-api-b`), add it to the `reverse_proxy` line in `lb/Caddyfile`, add `roll ayat-api-c` to `roll.sh` and the compose test; keep the memory sum in budget. Never a second `APP_ROLE=worker` (or `all`) container: one job runner only. CPU-heavy PDF rendering already runs only in the worker; give `ayat-worker` more memory before adding anything there.
+**Known windows (accepted, when the roles are split):** an admin save reloads the copy that took it at once and kicks the worker's `config-reload` (`modules/platform/process-role/config-reload.job.ts`: integration config and allow-list, numbers overlay, notification-rules snapshot and the settings it reads, Google settings and connection), so the jobs never send on a stale config; a failed kick only leaves the worker on its own refresh. The *other* API copy catches up on its own refresh: integration and numbers config within the integration refresh (at least 60 s since 2026-10-27, `INTEGRATION_REFRESH_MS`), settings within `SETTINGS_CACHE_MS` (30 s), translations within 5 minutes. The worker's Google caches (settings 30 s, connection 10 min) are cleared by the same kick on a save, an OFF, a connect or a disconnect; the sync still checks the settings uncached before each Google write. Permissions are cached 30 s per copy: a revoked permission is honoured up to 30 s on the other copy. A new call wakes the worker's calls sweeper (kick `wake`); with nothing live it still looks once a minute, calls ON or OFF. Each line's last template sync is stored (migration 923), so either copy shows it. The in-memory feedback, sales-registration, classroom and activity limiters count per copy (see the top of this file).
 
 ## Redeploy
 
 ```bash
 bash tools/scripts/env/deploy-staging.sh
 ```
-Pushes migrations, ships the committed `HEAD` with `git archive` (never `node_modules` or `.env`), rolls the API containers (`roll.sh`), builds the web app against staging, swaps it in atomically and waits for `/health`. Secrets come from the git-ignored `.claude/artifacts/staging/` of the main checkout (`supabase.md`, `api.env`, `web.env`, `mobile.env`, `credentials.md`).
+Pushes migrations, ships the committed `HEAD` with `git archive` (never `node_modules` or `.env`), rebuilds the API container, builds the web app against staging, swaps it in atomically and waits for `/health`. Secrets come from the git-ignored `.claude/artifacts/staging/` of the main checkout (`supabase.md`, `api.env`, `web.env`, `mobile.env`, `credentials.md`).
 
 ### From GitHub (no laptop secrets)
 
@@ -85,7 +65,7 @@ Teachers 24/7 (owner 2026-10-12): migration 320 seeds `settings.teachers_always_
 
 ## Report PDFs (Chromium in the API image)
 
-Lesson report PDFs (R-REP-03) are rendered by the job runner (`ayat-worker` on staging, never an API copy) by `playwright-core` (pinned to `1.63.0`, browser build chromium-1243, the same one the e2e suite installs). `chromium.launch()` takes no executable path: playwright-core finds the browser through `PLAYWRIGHT_BROWSERS_PATH`.
+Lesson report PDFs (R-REP-03) are rendered by the job runner (the API process today; the worker once the roles are split, never an API copy) by `playwright-core` (pinned to `1.63.0`, browser build chromium-1243, the same one the e2e suite installs). `chromium.launch()` takes no executable path: playwright-core finds the browser through `PLAYWRIGHT_BROWSERS_PATH`.
 
 - **API image** (`apps/api/Dockerfile`): the runtime stage sets `PLAYWRIGHT_BROWSERS_PATH=/ms-playwright` and runs `playwright-core/cli.js install --with-deps --only-shell chromium` (headless shell + system libraries), plus `fonts-hosny-amiri` as a fallback font. The PDF embeds its own Amiri and IBM Plex Sans Arabic, so the container needs no other fonts.
 - **Local dev / e2e**: leave `PLAYWRIGHT_BROWSERS_PATH` unset; playwright-core uses the default cache (`%LOCALAPPDATA%\ms-playwright` on Windows, `~/.cache/ms-playwright` on Linux) that `pnpm --filter e2e exec playwright install chromium` fills.
@@ -94,7 +74,7 @@ Lesson report PDFs (R-REP-03) are rendered by the job runner (`ayat-worker` on s
 
 ## Roll back
 
-- API: on the VPS `cd /opt/ayat-albayan-staging && mv src src.bad && mv src.old src && sh roll.sh` (see «Two API copies + one worker»).
+- API: on the VPS `cd /opt/ayat-albayan-staging && mv src src.bad && mv src.old src && docker compose up -d --build`.
 - Web: `mv web web.bad && mv web.old web` (Caddy serves the folder directly; no reload needed).
 - Caddy: restore the newest `/etc/caddy/Caddyfile.bak-*`, `caddy validate`, `systemctl reload caddy`.
 - Database: migrations are forward-only; restore from the Supabase dashboard backup if needed.
@@ -274,8 +254,8 @@ Owner request 2026-10-12: «try not to use .env and make most of the config in t
 
 ```bash
 # On the VPS, in /opt/ayat-albayan-staging (the container reads .env through compose):
-docker compose exec ayat-worker node dist/scripts/config-import-env.js            # keeps values already in the DB
-docker compose exec ayat-worker node dist/scripts/config-import-env.js --overwrite # replaces them
+docker compose exec ayat-api node dist/scripts/config-import-env.js            # keeps values already in the DB
+docker compose exec ayat-api node dist/scripts/config-import-env.js --overwrite # replaces them
 # Locally: pnpm --filter api build && pnpm --filter api config:import-env
 ```
 
@@ -358,7 +338,7 @@ Notes on `claude-tasks`: PRs it opens with the built-in token do not start `ci` 
 
 ### Roll back
 
-- **Staging deploy:** automatic. If a container never gets healthy or `/health` fails after the swap, the workflow restores `src.old`, the previous compose files and (when it was swapped) `web.old` (kept as `src.bad` / `web.bad`) and rolls again. By hand see «Roll back» above.
+- **Staging deploy:** automatic. If `/health` fails after the swap the workflow restores `src.old` and `web.old` (kept as `src.bad` / `web.bad`). By hand see «Roll back» above.
 - **A good deploy you do not want:** revert the commit on `develop`; the next deploy replaces it.
 - **Migrations:** forward-only, no automatic undo. Write a new migration that reverses the change, or restore the Supabase backup (dashboard → Database → Backups).
 - **OTA:** run `mobile` with `ota-update` on a `develop` that is reverted, or on expo.dev → Updates → republish an older update to the branch.
@@ -367,7 +347,7 @@ Notes on `claude-tasks`: PRs it opens with the built-in token do not start `ci` 
 ### Deliberately NOT automated
 
 - `WA_PHONE_NUMBER_ID`, `WA_CHAT_*`, `WA_ALLOWED_RECIPIENTS` and `WA_TEMPLATE_SYNC`: no workflow sets them (`tools/scripts/ci-checks/workflows.test.mjs` guards `WA_PHONE_NUMBER_ID`, `WA_CHAT_PHONE_NUMBER_ID` and `WA_ALLOWED_RECIPIENTS`). Sending is switched on only in `/admin/settings` (cut-over runbook); a repository variable or server env `MESSAGING_ENABLED` has no effect any more.
-- The WhatsApp CRM cut-over, and anything on `/opt/wacrm` (live CRM on the same VPS). The only Docker clean-up is `docker image prune` limited to the label `com.docker.compose.project=ayat-albayan-staging` (no `docker builder prune`: the build cache cannot be limited to one project).
+- The WhatsApp CRM cut-over, and anything on `/opt/wacrm` (live CRM on the same VPS). The only Docker clean-up is `docker image prune` limited to the label `com.docker.compose.project=ayat-albayan-staging`.
 - Production: no production deploy, import (docs/06) or `production` EAS profile.
 - iOS / Apple builds, signing and store submission.
 - Creating, rotating or reading secrets.

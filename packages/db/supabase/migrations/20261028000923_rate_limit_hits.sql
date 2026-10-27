@@ -1,7 +1,7 @@
--- Sign-in rate limits shared by every API copy (docs/09 «Two API copies + one worker»): the per-IP and
+-- State shared by every API copy. Sign-in rate limits (docs/09 «Two API copies + one worker»): the per-IP and
 -- per-identifier buckets of the public sign-in routes (SignInLimits) were in memory per process, so two
--- copies behind the load balancer would double every budget. The per-phone limits and the site-wide breaker
--- were already counted in login_codes and do not change.
+-- copies behind the load balancer would double every budget. The per-phone send limits, counted in login_codes,
+-- also get send:phone buckets here, taken before the send (two copies could each pass the count at once).
 --
 -- rate_limit_hits: one row per allowed hit. The bucket is a sha256 digest made by the API (never a
 -- raw IP or phone number). API-only (service role): RLS on with no policy, no grant to anon / authenticated.
@@ -9,8 +9,12 @@
 -- (transaction advisory lock), counted and, when under its max, hit, in order; the first full bucket answers
 -- false and the later ones are not touched (the old `a && b`). Rows older than a day are dropped, 100 per call.
 --
+-- wa_template_line_syncs: each WhatsApp line's last template sync result (GET /messaging/templates/lines
+-- «last sync»), which was kept in the memory of the copy that ran it. API-only, as above.
+--
 -- Idempotent and expand-only: the previous API never reads or writes them.
 -- Rollback: drop function public.rate_limit_take(text[], int[], int); drop table public.rate_limit_hits;
+--           drop table public.wa_template_line_syncs;
 
 set local lock_timeout = '5s';
 
@@ -51,3 +55,13 @@ $$;
 
 revoke all on function public.rate_limit_take(text[], int[], int) from public, anon, authenticated;
 grant execute on function public.rate_limit_take(text[], int[], int) to service_role;
+
+create table if not exists public.wa_template_line_syncs (
+  line public.wa_line primary key,
+  result jsonb not null check (jsonb_typeof(result) = 'object'),
+  synced_at timestamptz not null default now()
+);
+alter table public.wa_template_line_syncs enable row level security;
+revoke all on table public.wa_template_line_syncs from anon, authenticated;
+comment on table public.wa_template_line_syncs is
+  'Each WhatsApp line''s last template sync result (TemplateLineSync), shared by every API copy. API (service role) only.';

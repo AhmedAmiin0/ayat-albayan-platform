@@ -1,7 +1,7 @@
 import { createHmac, timingSafeEqual } from 'node:crypto';
 import { Logger } from '@nestjs/common';
 import { loadEnv } from '../env/env';
-import { workerUrl } from './app-role';
+import { appRole, workerUrl } from './app-role';
 
 /** The longest a request waits for the worker's pass (the inbox «send now» awaits one sender pass). */
 const KICK_TIMEOUT_MS = 30_000;
@@ -43,4 +43,12 @@ export async function kickWorker(name: string): Promise<void> {
       `${name}: worker kick failed (${e instanceof Error ? e.message : String(e)}), left for its next poll`,
     );
   }
+}
+
+/**
+ * After an admin save in an `api` process (which reloaded its own config already): the worker reloads
+ * its copy too (ConfigReloadJob). Elsewhere a no-op: `all` is one process, a `worker` serves no saves.
+ */
+export function kickConfigReload(): Promise<void> {
+  return appRole() === 'api' ? kickWorker('config-reload') : Promise.resolve();
 }

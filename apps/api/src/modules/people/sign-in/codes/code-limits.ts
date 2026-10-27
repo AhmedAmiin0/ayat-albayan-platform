@@ -4,6 +4,7 @@ import { LIMIT_STORE, type LimitStore } from './limit-store';
 import type { PhoneStats } from '../sign-in.ports';
 
 const WINDOW_MS = 15 * 60_000;
+const DAY_MS = 24 * 3_600_000;
 
 /** docs/30 §3: per phone on file, counted in the database (login_codes). */
 const PHONE_LIMITS = { per15Min: 3, perDay: 10, failedPerDay: 10 } as const;
@@ -49,5 +50,16 @@ export class SignInLimits {
     if (!(await this.store.take({ buckets, windowMs: WINDOW_MS, now }))) {
       throw new HttpException({ code: 'too_many_requests', message: 'too_many_requests' }, HttpStatus.TOO_MANY_REQUESTS);
     }
+  }
+
+  /**
+   * May a code go to this phone (E.164, on file)? The per-phone send limits (3 per 15 minutes, 10 a day)
+   * as shared buckets, taken before the send: atomic across API copies, unlike the login_codes count.
+   */
+  async maySend(phone: string, now = Date.now()): Promise<boolean> {
+    const key = `send:phone:${phone}`;
+    const take = (suffix: string, max: number, windowMs: number) =>
+      this.store.take({ buckets: [{ key: `${key}${suffix}`, max }], windowMs, now });
+    return (await take('', PHONE_LIMITS.per15Min, WINDOW_MS)) && take(':day', PHONE_LIMITS.perDay, DAY_MS);
   }
 }

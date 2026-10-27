@@ -8,7 +8,12 @@ import { WaError, type MetaTemplate, type WhatsappLines } from '../../whatsapp.t
 // The health check per number (owner 2026-10-12, 2026-10-18, docs/12 §3.4): each line syncs only its own
 // rows against its own WABA's list, imports that WABA's new templates, and reports its own failure.
 
-const queries = { all: vi.fn(), get: vi.fn(), update: vi.fn(), insert: vi.fn(), approvals: vi.fn(async () => []) };
+const synced = new Map<string, unknown>();
+const queries = {
+  ...{ all: vi.fn(), get: vi.fn(), update: vi.fn(), insert: vi.fn(), approvals: vi.fn(async () => []) },
+  saveLineSync: vi.fn(async (s: { line: string }) => void synced.set(s.line, s)),
+  lineSyncs: vi.fn(async () => new Map(synced)),
+};
 const client = () => ({ configured: vi.fn(), getTemplates: vi.fn(), submitTemplate: vi.fn() });
 let notifications = client();
 let chat = client();
@@ -27,6 +32,7 @@ const patched = (key: string) => queries.update.mock.calls.filter(([k]) => k ===
 describe('TemplateRegistry — per-number sync', () => {
   beforeEach(() => {
     vi.resetAllMocks();
+    synced.clear();
     notifications = client();
     chat = client();
     notifications.configured.mockReturnValue(true);
@@ -100,11 +106,11 @@ describe('TemplateRegistry — per-number sync', () => {
     await expect(registry().verifyAll({ line: 'chat' })).rejects.toMatchObject({ response: { code: 'not_configured', line: 'chat' } });
   });
 
-  it('GET lines: facts per line, the newest check of its rows, its last sync since boot', async () => {
+  it('GET lines: facts per line, the newest check of its rows, its stored last sync (another API copy sees it)', async () => {
     queries.all.mockResolvedValue([templateRow({ last_checked_at: '2026-10-01T00:00:00Z' }), crm]);
-    const r = registry();
-    await r.verifyAll({ line: 'chat', now: NOW });
-    const views = await r.lineViews();
+    await registry().verifyAll({ line: 'chat', now: NOW });
+    expect(queries.saveLineSync).toHaveBeenCalledWith(expect.objectContaining({ line: 'chat', ok: true, checked_at: NOW.toISOString() }));
+    const views = await registry().lineViews();
     expect(views.map((v) => [v.line, v.configured, v.last_checked_at, v.last_sync?.ok ?? null])).toEqual([
       ['notifications', true, '2026-10-01T00:00:00Z', null],
       ['chat', true, null, true],

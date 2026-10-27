@@ -4435,6 +4435,24 @@ export type Database = {
         };
         Relationships: [];
       };
+      wa_template_line_syncs: {
+        Row: {
+          line: Database['public']['Enums']['wa_line'];
+          result: Json;
+          synced_at: string;
+        };
+        Insert: {
+          line: Database['public']['Enums']['wa_line'];
+          result: Json;
+          synced_at?: string;
+        };
+        Update: {
+          line?: Database['public']['Enums']['wa_line'];
+          result?: Json;
+          synced_at?: string;
+        };
+        Relationships: [];
+      };
       web_push_subscriptions: {
         Row: {
           auth: string;

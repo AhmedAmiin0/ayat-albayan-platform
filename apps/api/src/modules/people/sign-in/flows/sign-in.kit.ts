@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Inject, Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import { AuditService } from '../../../../common/audit/audit.service';
 import { Provisioner } from '../accounts/provision';
-import { CodeIssuer } from '../codes/code-issuer';
+import { CodeIssuer, type CodeTarget } from '../codes/code-issuer';
 import { SignInLimits } from '../codes/code-limits';
 import { AUTH_GATE, SUBJECT_STORE, type AuthGate, type SubjectStore } from '../sign-in.ports';
 
@@ -32,6 +32,14 @@ export class SignInKit {
     readonly limits: SignInLimits,
     private readonly audit: AuditService,
   ) {}
+
+  /**
+   * Issue a code when the phone's shared send buckets allow it (SignInLimits.maySend): the login_codes
+   * count alone lets two API copies each send one past the limit at the same moment.
+   */
+  async issue(target: CodeTarget): Promise<boolean> {
+    return (await this.limits.maySend(target.phone)) && this.codes.issue(target);
+  }
 
   later(task: () => Promise<unknown>): void {
     const run: Promise<void> = task()

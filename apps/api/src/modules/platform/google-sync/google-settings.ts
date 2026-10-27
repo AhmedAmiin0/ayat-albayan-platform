@@ -3,6 +3,7 @@ import { Inject, Injectable, Optional } from '@nestjs/common';
 import { TtlCache } from '../../../common/async/ttl-cache';
 import { DEFAULT_TTL_MS, SETTINGS_CACHE_MS } from '../../../common/config-store/config-store.types';
 import { DB, type Db } from '../../../common/db/db.module';
+import { kickConfigReload } from '../../../config/role/worker-kick';
 
 export const GOOGLE_DEFAULTS: GoogleSyncSettings = { enabled: false, mode: 'dry_run', window_days: GOOGLE_WINDOW_DAYS.default };
 
@@ -21,7 +22,8 @@ export function readGoogleSettings(rows: readonly { key: string; value: unknown 
 /**
  * settings.google_* rows. Cached for SETTINGS_CACHE_MS (0 in e2e): read once per job tick and per synced
  * item before, now at most once per TTL. Only write() stores google_sync_enabled / google_sync_mode
- * («القيم» refuses them: owned_by_module) and it drops the cache, so an OFF from this API applies at once.
+ * («القيم» refuses them: owned_by_module) and it drops the cache, here and on the worker (kickConfigReload),
+ * so an OFF applies at once.
  * An OFF written by raw SQL reaches read() within the TTL; fresh() (the per-item stop) sees it at once.
  */
 @Injectable()
@@ -54,7 +56,13 @@ export class GoogleSettings {
       }
     } finally {
       this.cache.clear();
+      await kickConfigReload();
     }
+  }
+
+  /** The next read() asks the database (the worker's config-reload kick). */
+  forget(): void {
+    this.cache.clear();
   }
 
   private async load(): Promise<GoogleSyncSettings> {

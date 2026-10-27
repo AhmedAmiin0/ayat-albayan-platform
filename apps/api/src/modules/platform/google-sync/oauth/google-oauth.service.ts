@@ -1,6 +1,7 @@
 import { GOOGLE_SCOPES } from '@ab/shared';
 import { ConflictException, Inject, Injectable, Logger } from '@nestjs/common';
 import { loadEnv } from '../../../../config/env/env';
+import { kickConfigReload } from '../../../../config/role/worker-kick';
 import { GoogleAccountQueries } from './google-account.queries';
 import { GOOGLE_CLIENT_FACTORY, type GoogleClientFactory } from '../google-client.port';
 import { GoogleData } from '../google-data';
@@ -71,6 +72,7 @@ export class GoogleOAuthService {
     await this.account.setToken(tokens.refreshToken);
     await this.account.update({ status: 'connected', email, scopes: tokens.scopes, connected_at: new Date().toISOString(), connected_by: payload.u, last_error: null });
     this.run.connection.forget();
+    await kickConfigReload();
     await this.run.audit.record({ actorId: payload.u, entity: 'google_account', entityId: GOOGLE_ENTITY_ID, action: 'connect', before: null, after: { email } });
     return 'connected';
   }
@@ -81,6 +83,7 @@ export class GoogleOAuthService {
     await this.account.clearToken();
     await this.account.update({ status: 'disconnected', last_error: null });
     this.run.connection.forget();
+    await kickConfigReload();
     await this.run.audit.record({ actorId: userId, entity: 'google_account', entityId: GOOGLE_ENTITY_ID, action: 'disconnect', before: null, after: null });
   }
 }

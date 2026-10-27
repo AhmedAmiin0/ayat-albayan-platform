@@ -59,3 +59,33 @@ describe('SignInLimits (per IP and per identifier, 15 minutes)', () => {
     ]);
   });
 });
+
+describe('SignInLimits.maySend (send:phone buckets shared by every API copy)', () => {
+  const PHONE = '+966500000001';
+
+  it('3 sends per 15 minutes and 10 a day per phone; another phone has its own', async () => {
+    const limits = new SignInLimits(new MemoryLimitStore());
+    const sends = async (count: number, now: number) => {
+      const out: boolean[] = [];
+      for (let i = 0; i < count; i += 1) out.push(await limits.maySend(PHONE, now));
+      return out;
+    };
+    expect(await sends(4, 0)).toEqual([true, true, true, false]);
+    expect(await limits.maySend('+966500000002', 0)).toBe(true);
+    for (const quarter of [1, 2]) expect(await sends(3, quarter * 15 * 60_000 + 1)).toEqual([true, true, true]);
+    expect(await sends(2, 3 * 15 * 60_000 + 2)).toEqual([true, false]);
+    expect(await limits.maySend(PHONE, 24 * 3_600_000 + 1)).toBe(true);
+  });
+
+  it('takes the 15-minute bucket, then the day bucket (never the day one when the first is full)', async () => {
+    const seen: LimitTake[] = [];
+    const limits = new SignInLimits({ take: (input) => (seen.push(input), Promise.resolve(seen.length > 1)) });
+    expect(await limits.maySend(PHONE, 7)).toBe(false);
+    expect(await limits.maySend(PHONE, 8)).toBe(true);
+    expect(seen.map((t) => [t.buckets, t.windowMs])).toEqual([
+      [[{ key: `send:phone:${PHONE}`, max: 3 }], 15 * 60_000],
+      [[{ key: `send:phone:${PHONE}`, max: 3 }], 15 * 60_000],
+      [[{ key: `send:phone:${PHONE}:day`, max: 10 }], 24 * 3_600_000],
+    ]);
+  });
+});

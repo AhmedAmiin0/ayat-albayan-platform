@@ -1,6 +1,5 @@
 import { Injectable, Logger, type OnApplicationBootstrap, type OnModuleDestroy } from '@nestjs/common';
 import type { CallEndReason } from '@ab/shared';
-import { CallsGate } from '../access/calls-gate';
 import { callingLine } from '../kapso/calling-line';
 import type { CallRow } from '../store/call-row';
 import { logCallError } from './call-errors';
@@ -16,7 +15,7 @@ const ACCEPTING_MS = 30_000;
 /** A call still «active» this long lost its terminate webhook. */
 const ACTIVE_MS = 4 * 3_600_000;
 const EVERY_MS = 10_000;
-/** Calls ON and none live: one look a minute (a call this API inserts is swept from the next 10 s tick). */
+/** None live: one look a minute, calls ON or OFF (a wake() after an insert sweeps from the next 10 s tick). */
 export const IDLE_MS = 60_000;
 
 type Overdue = CallEndReason | 'hangup';
@@ -43,11 +42,12 @@ export function overdue(row: CallRow, now: Date): Overdue | null {
 /**
  * The unanswered timeout (docs/28 §3.1) and the safety net for lost webhooks. Sweeps whatever the
  * setting says while a call is (or may be) live, so a call left live when calls were switched off still
- * ends. Idle (the last sweep left none live, no insert since): nothing at all while calls are OFF, one
- * sweep per IDLE_MS while ON. Idempotent: every end is compare-and-set, so two API instances sweeping
- * together end a row once (a second terminate is a no-op).
+ * ends. Idle (the last sweep left none live, no wake since): one sweep per IDLE_MS, calls ON or OFF (the
+ * backstop for a lost wake). Inserts run on the API copies and this runs on the worker (docs/09), so an
+ * insert calls wake(), which the API copy forwards to the worker. Idempotent: every end is compare-and-set,
+ * so two sweeps together end a row once (a second terminate is a no-op).
  */
-@BackgroundJob({ name: 'calls-sweeper' })
+@BackgroundJob({ name: 'calls-sweeper', kick: 'wake' })
 @Injectable()
 export class CallsSweeper implements OnApplicationBootstrap, OnModuleDestroy {
   private readonly log = new Logger(CallsSweeper.name);
@@ -55,12 +55,8 @@ export class CallsSweeper implements OnApplicationBootstrap, OnModuleDestroy {
   /** Rows the last sweep left live; null = unknown (boot, or the sweep failed): sweep. */
   private left: number | null = null;
   private sweptAt = 0;
-  private seenInserts = 0;
 
-  constructor(
-    private readonly kit: CallsKit,
-    private readonly gate: CallsGate,
-  ) {}
+  constructor(private readonly kit: CallsKit) {}
 
   onApplicationBootstrap(): void {
     this.timer = setInterval(() => void this.tick(), EVERY_MS).unref();
@@ -70,27 +66,28 @@ export class CallsSweeper implements OnApplicationBootstrap, OnModuleDestroy {
     if (this.timer) clearInterval(this.timer);
   }
 
-  /** The 10 s tick: a sweep only when one may end something (idle rules above). Never throws. */
-  async tick(now: Date = new Date()): Promise<number> {
-    return (await this.due(now)) ? this.runOnce(now) : 0;
+  /** A call was inserted: sweep from the next tick (its 45 s timeout must not wait for the idle pace). */
+  wake(): Promise<void> {
+    this.left = null;
+    return Promise.resolve();
   }
 
-  private async due(now: Date): Promise<boolean> {
-    if (this.left !== 0 || this.kit.queries.inserts !== this.seenInserts) return true;
-    // An unreadable setting sweeps: the safety net never stops on an error.
-    const on = await this.gate.enabled().catch(() => true);
-    return on && now.getTime() - this.sweptAt >= IDLE_MS;
+  /** The 10 s tick: a sweep only when one may end something (idle rules above). Never throws. */
+  async tick(now: Date = new Date()): Promise<number> {
+    return this.due(now) ? this.runOnce(now) : 0;
+  }
+
+  private due(now: Date): boolean {
+    return this.left !== 0 || now.getTime() - this.sweptAt >= IDLE_MS;
   }
 
   /** One sweep now. Never throws; the number of calls ended. */
   async runOnce(now: Date = new Date()): Promise<number> {
     let ended = 0;
-    const inserts = this.kit.queries.inserts;
     try {
       const rows = await this.kit.queries.live();
       for (const row of rows) ended += await this.endIfOverdue(row, now);
       this.left = rows.length - ended;
-      this.seenInserts = inserts;
     } catch (e) {
       this.left = null;
       this.log.error(`calls sweep failed: ${e instanceof Error ? e.message : String(e)}`);

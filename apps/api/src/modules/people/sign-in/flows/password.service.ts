@@ -32,7 +32,7 @@ export class PasswordService {
     this.kit.later(async () => {
       if (!(await this.kit.codes.available())) return;
       const target = await this.targets.resolve(body.identifier);
-      if (target) await this.kit.codes.issue(target.code);
+      if (target) await this.kit.issue(target.code);
     });
   }
 
