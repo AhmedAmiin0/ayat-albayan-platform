@@ -211,7 +211,7 @@ that fails three times is left as is and counted as failed; a row that cannot be
 link, a file over the cap) is skipped. When no row is left the switch turns itself off and one audit row
 (`crm_media_copy_done`, `{copied, failed, skipped}`) is written. Message bodies are never changed and nothing is
 deleted. Failed or skipped rows are listed in `crm_media_copy_failures` (migration
-`20261028000880_crm_media_copy.sql`). The 30-day purge of cached voice notes and videos (`WaMediaRetentionJob`)
+`20261028000891_crm_media_copy.sql`). The 30-day purge of cached voice notes and videos (`WaMediaRetentionJob`)
 skips these copies: only rows with Meta's media id are purged, because once the CRM's storage is private our copy
 is the only one.
 

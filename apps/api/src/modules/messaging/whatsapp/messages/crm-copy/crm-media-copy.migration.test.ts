@@ -5,11 +5,11 @@ import { CRM_MEDIA_PREFIX } from '../crm-history/crm-history-url';
 
 // No database runs in unit tests: this pins migration 880's safety properties.
 const dir = join(__dirname, '../../../../../../../../packages/db/supabase/migrations');
-const sql = readFileSync(join(dir, '20261028000880_crm_media_copy.sql'), 'utf8');
+const sql = readFileSync(join(dir, '20261028000891_crm_media_copy.sql'), 'utf8');
 const code = sql.replace(/--[^\n]*/g, '');
 const LINK = `m.body like 'https://%${CRM_MEDIA_PREFIX}%'`;
 
-describe('migration 20261028000880: copy every old-CRM file', () => {
+describe('migration 20261028000891: copy every old-CRM file', () => {
   it('the batch repeats the partial index predicate, so it reads only rows still waiting for a copy', () => {
     expect(code).toContain(`and body like 'https://%${CRM_MEDIA_PREFIX}%'`);
     expect(code).toMatch(/where direction = 'inbound' and media_id is null and media_path is null and media_mime is not null/);
