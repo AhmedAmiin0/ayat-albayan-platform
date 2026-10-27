@@ -16,7 +16,8 @@ const rt = vi.hoisted(() => {
   const supabase = {
     channel: vi.fn(() => channel),
     removeChannel: vi.fn(async () => 'ok'),
-    realtime: { setAuth: vi.fn(async () => undefined) },
+    getChannels: vi.fn(() => []),
+    realtime: { setAuth: vi.fn(async () => undefined), disconnect: vi.fn(async () => 'ok') },
   };
   return { hooks, channel, supabase };
 });
