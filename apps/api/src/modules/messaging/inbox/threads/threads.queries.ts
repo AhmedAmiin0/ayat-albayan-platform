@@ -15,6 +15,7 @@ import { THREAD_SORT, type ThreadListFilter } from './threads.list';
 import { threadSearchFilter, type ThreadRow } from './threads.mapper';
 import { newestPerLine, type ReadMark } from '../reads/read-marks';
 import { markUnsupported, type ListedThreadRow } from './last-unsupported';
+import { phoneList } from '../../numbers';
 
 export type { ThreadListFilter } from './threads.list';
 
@@ -41,6 +42,7 @@ export class ThreadsQueries {
       : this.db.from('v_threads').select('*', { count: 'exact' });
     if (f.unread) query = query.gt('unread_count', 0);
     if (f.phones) query = query.in('phone_e164', [...f.phones]);
+    if (f.hide?.length) query = query.not('phone_e164', 'in', phoneList(f.hide));
     if (f.status) query = query.eq('lead_status', f.status);
     const search = f.search ? threadSearchFilter(f.search) : null;
     if (search) query = query.or(search);

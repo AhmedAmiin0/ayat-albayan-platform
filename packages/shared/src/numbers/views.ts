@@ -136,3 +136,11 @@ export interface RuleParityDiff {
 export interface CommsSourceView {
   source: CommsSource;
 }
+
+/**
+ * GET /admin/numbers/own-traffic (owner 2026-10-27): inbound rows FROM one of the academy's own numbers
+ * in the last 7 days (an old system still sending to us). Kept for audit, hidden from every list.
+ */
+export interface OwnTrafficView {
+  inbound_7d: number;
+}
