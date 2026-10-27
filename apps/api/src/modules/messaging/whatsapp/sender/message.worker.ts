@@ -1,6 +1,6 @@
 import { retry, type WaLine } from '@ab/shared';
 import { Injectable, Logger } from '@nestjs/common';
-import { sleep } from '../../../../common/async/sleep';
+import { sleep } from '../../../../common/cache/sleep';
 import { activeNumberId } from '../../../../common/integrations/numbers-overlay';
 import { PushService } from '../../../../common/push/push.service';
 import { MessageDispatch } from './message.dispatch';

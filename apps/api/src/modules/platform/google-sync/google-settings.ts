@@ -1,6 +1,8 @@
 import { GOOGLE_SETTING_KEYS, GOOGLE_SYNC_MODES, GOOGLE_WINDOW_DAYS, type GoogleSettingsInput, type GoogleSyncSettings } from '@ab/shared';
 import { Inject, Injectable, Optional } from '@nestjs/common';
-import { TtlCache } from '../../../common/async/ttl-cache';
+import { CACHE_KEYS } from '../../../common/cache/cache-keys';
+import { SharedCache } from '../../../common/cache/shared-cache';
+import { TtlCache } from '../../../common/cache/ttl-cache';
 import { DEFAULT_TTL_MS, SETTINGS_CACHE_MS } from '../../../common/config-store/config-store.types';
 import { DB, type Db } from '../../../common/db/db.module';
 import { kickConfigReload } from '../../../config/role/worker-kick';
@@ -25,6 +27,7 @@ export function readGoogleSettings(rows: readonly { key: string; value: unknown 
  * («القيم» refuses them: owned_by_module) and it drops the cache, here and on the worker (kickConfigReload),
  * so an OFF applies at once.
  * An OFF written by raw SQL reaches read() within the TTL; fresh() (the per-item stop) sees it at once.
+ * With Redis a write here announces `settings`, so the worker (which runs the sync) drops its copy at once.
  */
 @Injectable()
 export class GoogleSettings {
@@ -33,8 +36,10 @@ export class GoogleSettings {
   constructor(
     @Inject(DB) private readonly db: Db,
     @Optional() @Inject(SETTINGS_CACHE_MS) ttlMs: number = DEFAULT_TTL_MS,
+    @Optional() private readonly shared?: SharedCache,
   ) {
     this.cache = new TtlCache(ttlMs, () => this.load());
+    shared?.on('settings', () => this.cache.clear());
   }
 
   read(): Promise<GoogleSyncSettings> {
@@ -57,6 +62,7 @@ export class GoogleSettings {
     } finally {
       this.cache.clear();
       kickConfigReload();
+      await this.shared?.invalidate({ topic: 'settings', keys: [CACHE_KEYS.settingsRows] });
     }
   }
 

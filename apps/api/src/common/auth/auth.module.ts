@@ -2,6 +2,7 @@ import { Controller, Get, Global, Module } from '@nestjs/common';
 import { APP_GUARD } from '@nestjs/core';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { loadEnv } from '../../config/env/env';
+import { SharedCache } from '../cache/shared-cache';
 import { DB, type Db } from '../db/db.module';
 import { AuthGuard, TOKEN_VERIFIER } from './auth.guard';
 import { dbPermissionResolver } from './db-permission.resolver';
@@ -34,7 +35,11 @@ export class AuthController {
         return createTokenVerifier({ supabaseUrl: env.SUPABASE_URL, jwtSecret: env.SUPABASE_JWT_SECRET });
       },
     },
-    { provide: PermissionCache, useFactory: () => new PermissionCache() },
+    {
+      provide: PermissionCache,
+      inject: [{ token: SharedCache, optional: true }],
+      useFactory: (shared?: SharedCache) => new PermissionCache(Date.now, shared),
+    },
     {
       provide: PERMISSION_RESOLVER,
       inject: [DB, PermissionCache],

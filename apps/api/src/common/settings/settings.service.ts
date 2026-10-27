@@ -1,5 +1,7 @@
 import { publicSettings, readSettings, type AcademySettings, type PublicSettings } from '@ab/shared';
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, Optional } from '@nestjs/common';
+import { CACHE_KEYS } from '../cache/cache-keys';
+import { SharedCache } from '../cache/shared-cache';
 import { ConfigStore } from '../config-store/store/config-store.service';
 import { DEFAULT_TTL_MS, SETTINGS_CACHE_MS } from '../config-store/config-store.types';
 import { DB, type Db } from '../db/db.module';
@@ -18,6 +20,10 @@ export { SETTINGS_CACHE_MS };
 @Injectable()
 export class SettingsService {
   private cached: { at: number; value: Promise<AcademySettings> } | null = null;
+  /** After an invalidation the next load reads the database (not the shared copy) and shares it. */
+  private fresh = false;
+  /** The rows shared with the other API copies (REDIS_URL); absent in unit tests = this process only. */
+  @Optional() @Inject(SharedCache) private readonly shared?: SharedCache;
 
   constructor(
     @Inject(DB) private readonly db: Db,
@@ -48,6 +54,7 @@ export class SettingsService {
   /** Forget the cached rows (after a write). */
   invalidate(): void {
     this.cached = null;
+    this.fresh = true;
   }
 
   /**
@@ -80,8 +87,14 @@ export class SettingsService {
   }
 
   private async load(): Promise<AcademySettings> {
-    const { data, error } = await this.db.from('settings').select('key, value');
-    if (error) throw new Error(`settings read failed: ${error.message}`);
-    return readSettings(data);
+    const fresh = this.fresh;
+    this.fresh = false;
+    const load = async (): Promise<{ key: string; value: unknown }[]> => {
+      const { data, error } = await this.db.from('settings').select('key, value');
+      if (error) throw new Error(`settings read failed: ${error.message}`);
+      return data;
+    };
+    const rows = this.shared ? await this.shared.read({ key: CACHE_KEYS.settingsRows, ttlMs: this.ttlMs, load, fresh }) : await load();
+    return readSettings(rows);
   }
 }

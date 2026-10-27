@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { ActivityModule } from './common/activity/activity.module';
 import { AuditModule } from './common/audit/audit.service';
 import { AuthModule } from './common/auth/auth.module';
+import { CacheModule } from './common/cache/cache.module';
 import { ClientUsageModule } from './common/client-usage/client-usage.module';
 import { ConfigStoreModule } from './common/config-store/config-store.module';
 import { CustomConfigModule } from './common/custom-config/custom-config.module';
@@ -64,6 +65,7 @@ import { WhatsappModule } from './modules/messaging/whatsapp/whatsapp.module';
 @Module({
   imports: [
     DbModule,
+    CacheModule,
     ProcessRoleModule,
     IntegrationConfigModule,
     AuditModule,
