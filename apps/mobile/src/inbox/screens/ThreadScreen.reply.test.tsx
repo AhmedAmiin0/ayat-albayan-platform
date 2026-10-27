@@ -82,7 +82,9 @@ test('a bubble with actions tells the screen reader how to reach them', async ()
 test('«رد» shows one strip: the chat name and only the first line; ✕ cancels it', async () => {
   await open();
   await replyTo('m1');
-  expect(within(strip() ?? menu()).getByText(/^هدى سالم · السلام عليكم$/)).toBeTruthy();
+  // The sender and the line are two texts in one row (each on the side of its own language).
+  expect(within(strip() ?? menu()).getByText('هدى سالم ·')).toBeTruthy();
+  expect(within(strip() ?? menu()).getByText('السلام عليكم')).toBeTruthy();
   await fireEvent.press(screen.getByRole('button', { name: t.inbox.reply.cancel }));
   expect(strip()).toBeNull();
 });
@@ -90,7 +92,8 @@ test('«رد» shows one strip: the chat name and only the first line; ✕ cance
 test('answering our own message names its sender, else «أنت»', async () => {
   await open();
   await replyTo('m2');
-  expect(within(strip() ?? menu()).getByText(new RegExp(`^${t.inbox.reply.you} · أهلًا وسهلًا$`))).toBeTruthy();
+  expect(within(strip() ?? menu()).getByText(`${t.inbox.reply.you} ·`)).toBeTruthy();
+  expect(within(strip() ?? menu()).getByText('أهلًا وسهلًا')).toBeTruthy();
 });
 
 test('the text goes with replyToMessageId; its row shows the quote at once; success clears the strip', async () => {

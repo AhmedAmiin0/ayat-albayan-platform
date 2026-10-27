@@ -6,7 +6,7 @@ import { hasAttachments } from '@/money/attachments/receipt-file';
 import { instantDay, money } from '@/payments/format';
 import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
-import { Ltr } from '@/core/ui/primitives/Ltr';
+import { isolate, Ltr } from '@/core/ui/primitives/Ltr';
 
 /** One payment I recorded (web my-payment-columns): student and code, amount in its currency, kind · method · day, note, then «المرفقات» of a bank transfer. */
 export function MyPaymentItem({ payment }: { payment: MyPaymentRow }) {
@@ -23,7 +23,7 @@ export function MyPaymentItem({ payment }: { payment: MyPaymentRow }) {
       </View>
       <Ltr style={{ ...small, alignSelf: 'flex-start' }}>{payment.student.code}</Ltr>
       <AppText style={small}>{line}</AppText>
-      {payment.note ? <AppText style={small}>{`${t.assistantPortal.payments.note}: ${payment.note}`}</AppText> : null}
+      {payment.note ? <AppText style={small}>{`${t.assistantPortal.payments.note}: ${isolate(payment.note)}`}</AppText> : null}
       {hasAttachments(payment) ? (
         <AttachmentsViewer path={`/sales/me/payments/${payment.id}/attachments`} name={payment.student.name} />
       ) : null}

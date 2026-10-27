@@ -7,6 +7,7 @@ import { paneScroll } from '@/components/ui/layout/rail';
 import { t } from '@/lib/i18n/i18n';
 import { cn } from '@/lib/utils';
 import { threadsQuery } from '../../api/api';
+import { useInboxLive } from '../../api/live';
 import { InboxListHead } from './InboxListHead';
 import { activeList } from '../../lists/active-list';
 import { chatListsQuery } from '../../lists/api';
@@ -41,6 +42,7 @@ export function InboxPage({ search, onSearch, head }: InboxPageProps) {
   // Lists that failed to load leave no chip to go back with: «الكل».
   const list = lists ? activeList(search.list, all.isError ? [] : all.data) : undefined;
   const shown = parseInboxSearch({ ...search, list });
+  useInboxLive(); // a realtime connect / drop re-reads the poll interval (docs/12 §15)
   const threads = useQuery(threadsQuery(shown));
   // «المكالمات» (docs/28) replaces the chats list only while calls are on.
   const callsLog = useCallsEnabled() && !!shown.calls;

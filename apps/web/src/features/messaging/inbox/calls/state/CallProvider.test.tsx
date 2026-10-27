@@ -26,7 +26,8 @@ function mount(routes: readonly (readonly [string, unknown])[]) {
 
 afterEach(() => {
   apiFetch.mockReset();
-  apiSend.mockReset();
+  // The provider unmounts after this and ends a live call (POST /end): always a promise.
+  apiSend.mockReset().mockResolvedValue(undefined);
   channel.mockClear();
 });
 

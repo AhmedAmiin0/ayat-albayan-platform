@@ -52,6 +52,10 @@ export const PERMISSION_ROWS = [
   { key: 'lessons.status', area: 'schedule', grants: T },
   { key: 'lessons.write', area: 'schedule', grants: [] },
   { key: 'booking.write', area: 'schedule', grants: [] },
+  // Sales' «تغيير الموعد» / «إلغاء الحلقة» on ONE lesson of her own students from «جدول الحلقات» (owner 2026-10-27,
+  // docs/16 row 37): POST /sales/lessons/:id/reschedule and /cancel only. Never a series, an outcome or teacher pay.
+  { key: 'lessons.reschedule', area: 'schedule', grants: ['sales'] },
+  { key: 'lessons.cancel', area: 'schedule', grants: ['sales'] },
   // «حاسبة الأسعار» GET /pricing/quote and /pricing/catalog. Sales by default (owner 2026-10-26: «عرض سعر» in the
   // chat, migration 20261026000760); teachers never.
   { key: 'pricing.read', area: 'schedule', grants: ['sales'] },

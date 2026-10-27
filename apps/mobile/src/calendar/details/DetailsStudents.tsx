@@ -1,7 +1,7 @@
 import { router } from 'expo-router';
 import { Fragment } from 'react';
 import { View } from 'react-native';
-import { useMinuteClock } from '@/classroom/sessions/use-minute-clock';
+import { useNow } from '@/core/lib/time/use-now';
 import { t } from '@/core/lib/i18n/i18n';
 import { useTheme } from '@/theme';
 import { Button } from '@/core/ui/primitives/Button';
@@ -39,7 +39,7 @@ interface DetailsStudentsProps {
 
 export function DetailsStudents({ lesson, role, onLeave }: DetailsStudentsProps) {
   const { color } = useTheme();
-  const now = useMinuteClock();
+  const now = useNow();
   const mine = role === 'teacher' ? teacherReport(lesson, now) : null;
   const first = lesson.students[0];
   const href = mine && first ? reportHref(role, lesson, first) : null;

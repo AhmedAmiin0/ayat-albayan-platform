@@ -4,6 +4,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { AdminShell, SalesShell, TeacherShell } from './SectionShells';
 
 type Shell = { nav?: ReactNode; topNav?: ReactNode };
+const inboxRealtime = vi.hoisted(() => vi.fn<(enabled: boolean) => void>());
 const appShell = vi.hoisted(() => vi.fn((props: Shell) => <div>{props.nav ?? props.topNav}</div>));
 const perms = vi.hoisted(() => ({ loaded: false }));
 vi.mock('@/components/AppShell', () => ({ AppShell: appShell }));
@@ -16,7 +17,10 @@ vi.mock('@/features/sales/sales/SalesNav', () => ({ SALES_NAV_ITEMS: [], SalesNa
 vi.mock('@/features/sales/sales/use-sales-unread', () => ({ useSalesUnread: () => 0 }));
 vi.mock('./use-nav-counts', () => ({ useNavCounts: () => ({}) }));
 // The calls provider (docs/28) reads the inbox API; these tests are about the nav only.
-vi.mock('@/features/messaging/inbox', () => ({ CallProvider: ({ children }: { children: ReactNode }) => children }));
+vi.mock('@/features/messaging/inbox', () => ({
+  CallProvider: ({ children }: { children: ReactNode }) => children,
+  useInboxRealtime: inboxRealtime,
+}));
 
 // docs/27 E2 (owner D6): never a partial menu while /auth/me loads, a skeleton in its place.
 describe('the navigation while /auth/me loads', () => {

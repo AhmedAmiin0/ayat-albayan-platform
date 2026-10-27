@@ -1,4 +1,3 @@
-import type { MessageView } from '@ab/shared';
 import { type RefObject, useEffect, useEffectEvent, useReducer, useRef, useState } from 'react';
 import type { FlatList } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
@@ -26,7 +25,11 @@ type OlderPages = Pick<ReturnType<typeof useThread>, 'hasNextPage' | 'fetchNextP
  * then the list goes to it once it renders; no more pages, or JUMP_PAGES without it: the chat says so;
  * a page that fails stops the search with the load error.
  */
-export function useJump(list: RefObject<FlatList<MessageView> | null>, rows: readonly MessageView[], older: OlderPages) {
+export function useJump<T extends { id: string }>(
+  list: RefObject<FlatList<T> | null>,
+  rows: readonly T[],
+  older: OlderPages,
+) {
   const { say } = useChatActions();
   const [lit, setLit] = useState<string | null>(null);
   // The original found on an older page: gone to once that page renders (a render is forced).

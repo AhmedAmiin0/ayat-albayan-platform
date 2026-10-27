@@ -2,7 +2,7 @@ import { lessonStatusStyle, type LessonView } from '@ab/shared';
 import { ListSkeleton } from '@/components/ui/display/skeleton';
 import { StatusChip } from '@/components/ui/display/status-chip';
 import { StaffJoinButton } from '@/features/teaching/classroom/join/StaffJoinButton';
-import { useNow } from '@/features/teaching/classroom/sessions/use-now';
+import { useNow } from '@/lib/time/use-now';
 import { t } from '@/lib/i18n/i18n';
 import { useJoinWindow } from '@/lib/settings/public-config';
 import { cn } from '@/lib/utils';

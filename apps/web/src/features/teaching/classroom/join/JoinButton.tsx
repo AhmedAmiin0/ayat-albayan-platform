@@ -3,7 +3,7 @@ import { Button, buttonVariants } from '@/components/ui/form/button';
 import { t } from '@/lib/i18n/i18n';
 import { useJoinWindow } from '@/lib/settings/public-config';
 import { cn } from '@/lib/utils';
-import { useNow } from '../sessions/use-now';
+import { useNow } from '@/lib/time/use-now';
 import { joinHint } from '../room/livekit/window-hint';
 
 export interface JoinableLesson {

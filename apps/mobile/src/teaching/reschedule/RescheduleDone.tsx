@@ -10,8 +10,8 @@ import { StatusChip } from '@/core/ui/feedback/StatusChip';
 import type { Scope } from './reschedule-body';
 
 interface RescheduleDoneProps {
-  /** The API's answer: the new lesson (for a series, its first lesson). */
-  moved: LessonView;
+  /** The API's answer: the new lesson (for a series, its first lesson); sales get its time and status only. */
+  moved: Pick<LessonView, 'starts_at' | 'status'>;
   scope: Scope;
   /** The family's zone, for the student's clock. */
   tz: string;

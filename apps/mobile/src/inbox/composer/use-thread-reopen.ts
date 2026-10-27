@@ -4,7 +4,8 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import { apiSend } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
-import { threadKey, threadPath } from '../thread/hooks/thread-cache';
+import { refreshInbox } from '../thread/hooks/inbox-sync';
+import { threadPath } from '../thread/hooks/thread-cache';
 
 // «إعادة فتح المحادثة» (owner 2026-10-26): opening a chat whose 24 h window is closed asks the server
 // once per thread per app session (it dedupes per day anyway). Lives in the composer, which mounts
@@ -37,8 +38,8 @@ export function useThreadReopen(phone: string, closedNow: boolean): ReopenState 
         const { template } = await apiSend<ThreadReopenView>('POST', `${threadPath(phone)}/reopen`);
         asked.set(phone, template);
         setOutcome(template);
-        // The queued template shows in the chat like any sent one.
-        if (template === 'template_queued') await client.invalidateQueries({ queryKey: threadKey(phone) });
+        // The queued template shows in the chat, and the chat in its lists, like any sent one.
+        if (template === 'template_queued') await refreshInbox(client, phone);
       } catch {
         // Failed: say so (send it by hand), and not asked again this session (the server logs its side).
         asked.set(phone, 'failed');

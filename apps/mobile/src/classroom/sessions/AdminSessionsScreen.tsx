@@ -1,8 +1,8 @@
 import { router } from 'expo-router';
-import { useState } from 'react';
 import { ScrollView, View } from 'react-native';
 import { addDays, riyadhNoon, riyadhToday } from '@/calendar/lib/week';
 import { t } from '@/core/lib/i18n/i18n';
+import { useFollowingDay } from '@/core/lib/time/use-following-day';
 import { useJoinWindow } from '@/core/lib/query/public-config';
 import { Button } from '@/core/ui/primitives/Button';
 import { EmptyState } from '@/core/ui/feedback/EmptyState';
@@ -14,7 +14,7 @@ import { useDayLessons } from '@/today/lib/use-day-lessons';
 import { DaySwitcher } from './DaySwitcher';
 import { SessionGroupList } from './SessionGroupList';
 import { groupSessions, SESSION_GROUPS } from './sessions';
-import { useMinuteClock } from './use-minute-clock';
+import { useNow } from '@/core/lib/time/use-now';
 
 /**
  * «الحلقات المباشرة» (admin): every teacher's lessons of a Riyadh day in three groups (now,
@@ -22,10 +22,10 @@ import { useMinuteClock } from './use-minute-clock';
  * /admin/classrooms; the day shares Today's cache key, so a lesson change refreshes both.
  */
 export function AdminSessionsScreen() {
-  const now = useMinuteClock();
+  const now = useNow();
   const win = useJoinWindow();
   const today = riyadhToday(now);
-  const [date, setDate] = useState(today);
+  const [date, setDate] = useFollowingDay(today);
   const lessons = useDayLessons(riyadhNoon(date));
   const groups = groupSessions(lessons.data ?? [], now, win);
   const none = SESSION_GROUPS.every((g) => groups[g].length === 0);

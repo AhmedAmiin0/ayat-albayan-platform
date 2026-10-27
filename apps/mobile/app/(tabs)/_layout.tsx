@@ -1,9 +1,9 @@
-import { tabOpen } from '@/auth';
-import { type Can, usePermissions } from '@/auth';
+import { canOpen, type Can, tabOpen, usePermissions } from '@/auth';
 import { t } from '@/core/lib/i18n/i18n';
 import { useInboxBadge } from '@/core/nav/use-inbox-badge';
 import { usePushRegistration } from '@/core/push/usePushRegistration';
 import { AppNativeTabs, type TabItem } from '@/core/ui/layout/AppNativeTabs';
+import { useInboxRealtime } from '@/inbox';
 
 // docs/07 §12 bottom tabs, native. The first tab sits at the inline-start (right in Arabic). A tab the held
 // role cannot read is hidden (`can` allows all while /auth/me loads: no flicker); المحادثات carries the
@@ -21,5 +21,7 @@ export default function TabsLayout() {
   usePushRegistration('admin');
   const can = usePermissions();
   const badge = useInboxBadge(can);
+  // The inbox live while the app is open (docs/12 §15); push when it is closed.
+  useInboxRealtime(canOpen(can, 'inbox'));
   return <AppNativeTabs tabs={tabItems(can, badge)} />;
 }

@@ -7,7 +7,7 @@ import { TeacherScheduleScreen } from './TeacherScheduleScreen';
 const mockApiFetch = jest.fn();
 jest.mock('@/core/lib/http/api', () => ({ ...jest.requireActual('@/core/lib/http/api'), apiFetch: (p: string) => mockApiFetch(p) }));
 jest.mock('expo-router', () => ({ router: { push: jest.fn(), back: jest.fn() } }));
-jest.mock('@/today/lib/use-day-lessons', () => ({ useNow: () => new Date('2026-10-01T09:00:00Z') }));
+jest.mock('@/core/lib/time/use-now', () => ({ useNow: () => new Date('2026-10-01T09:00:00Z') }));
 
 const me = { id: 't-abrar', display_name_ar: 'أبرار', tz: 'Africa/Cairo', students: [] };
 // What the API answers a teacher: no `reschedule` or admin cancel among her lesson's events.

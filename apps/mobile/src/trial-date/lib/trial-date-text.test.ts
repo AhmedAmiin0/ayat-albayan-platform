@@ -1,5 +1,6 @@
 import { lessonWhenText } from '@ab/shared';
 import { t } from '@/core/lib/i18n/i18n';
+import { isolate } from '@/core/ui/primitives/Ltr';
 import { historyOf, OLD, THU_1_18, trialRow } from '../testing/fixtures';
 import { countText, effectLine, pickedLine, warnLine, whenLines } from './trial-date-text';
 
@@ -22,7 +23,7 @@ test('the viewer’s clock, and the family’s only when it differs', () => {
 
 test('who picked it and when; an imported row says «غير معروف»', () => {
   const when = lessonWhenText(new Date('2026-09-28T09:00:00.000Z'), 'Asia/Riyadh', 'ar');
-  expect(pickedLine(trialRow())).toBe(t.trialDate.pickedAt.replace('{name}', 'فاطمة').replace('{when}', when));
+  expect(pickedLine(trialRow())).toBe(t.trialDate.pickedAt.replace('{name}', isolate('فاطمة')).replace('{when}', when));
   expect(pickedLine(trialRow({ picked_by: null }))).toContain(t.trialDate.unknownPicker);
 });
 

@@ -4,9 +4,12 @@ import { messageGap } from '../hooks/list-gap';
 import { dayLabel, hasDayChip } from './day-label';
 import { CHIP_MARGIN, type Separator } from './top-band';
 
+/** A row of the thread's list: a message, or a call merged in by its time (docs/28 §5). */
+export type DayRow = Pick<MessageView, 'id' | 'created_at' | 'direction'>;
+
 /** The rows of the inverted list (newest first) and whether an older page exists. */
 export interface Loaded {
-  rows: readonly MessageView[];
+  rows: readonly DayRow[];
   more: boolean;
 }
 
@@ -16,7 +19,7 @@ export interface Loaded {
  */
 export function separatorsOf(
   { rows, more }: Loaded,
-  tokens: readonly ViewToken<MessageView>[],
+  tokens: readonly ViewToken<DayRow>[],
 ): Separator[] {
   return tokens.flatMap((v) => {
     const index = v.index ?? -1;
@@ -27,8 +30,8 @@ export function separatorsOf(
 }
 
 /** The topmost row on screen (the highest index of the inverted list), if any. */
-export function topmost(tokens: readonly ViewToken<MessageView>[]): MessageView | null {
-  let top: ViewToken<MessageView> | null = null;
+export function topmost(tokens: readonly ViewToken<DayRow>[]): DayRow | null {
+  let top: ViewToken<DayRow> | null = null;
   for (const v of tokens) if ((v.index ?? -1) > (top?.index ?? -1)) top = v;
   return top?.item ?? null;
 }

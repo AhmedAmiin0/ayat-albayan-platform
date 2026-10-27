@@ -2,11 +2,13 @@ import { localizedName } from '@ab/shared';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import { ActivityIndicator, FlatList, View } from 'react-native';
+import { usePermissions } from '@/auth';
 import { useLessonDetails } from '@/calendar';
 import { SchedulePeriod } from '@/calendar/overview/SchedulePeriod';
 import { riyadhToday } from '@/calendar/lib/week';
-import { useMinuteClock } from '@/classroom/sessions/use-minute-clock';
+import { useNow } from '@/core/lib/time/use-now';
 import { t } from '@/core/lib/i18n/i18n';
+import { useFollowingDay } from '@/core/lib/time/use-following-day';
 import { locale } from '@/core/lib/i18n/locale';
 import { Note } from '@/more/Note';
 import { useTheme } from '@/theme';
@@ -24,7 +26,8 @@ import { SalesLessonSheet } from '../components/SalesLessonSheet';
 const DATE = /^\d{4}-\d{2}-\d{2}$/;
 
 /**
- * «جدول الحلقات» of the salesperson (web /sales/schedule): one Riyadh day of the academy, read-only,
+ * «جدول الحلقات» of the salesperson (web /sales/schedule): one Riyadh day of the academy, read-only
+ * except her own students' lessons, which she may move or cancel one at a time (docs/16 row 37),
  * a day at a time (the admin schedule's switcher) and one teacher or all; «ادخل الحلقة» on a running
  * lesson; a tap on a lesson opens its read-only «تفاصيل الحلقة». `?teacherId=` opens it on a teacher (from «المعلمون»), `?date=` on a day. `asTab`: the sales
  * tree's «جدول الحلقات» tab (no «رجوع»).
@@ -32,14 +35,17 @@ const DATE = /^\d{4}-\d{2}-\d{2}$/;
 export function SalesScheduleScreen({ asTab = false }: { asTab?: boolean }) {
   const { color } = useTheme();
   const params = useLocalSearchParams<{ teacherId?: string; date?: string }>();
-  const now = useMinuteClock();
+  const now = useNow();
   const today = riyadhToday(now);
-  const [date, setDate] = useState(params.date && DATE.test(params.date) ? params.date : today);
+  const [date, setDate] = useFollowingDay(today, params.date && DATE.test(params.date) ? params.date : undefined);
   const [teacherId, setTeacherId] = useState(params.teacherId ?? '');
   const day = useSalesSchedule(date, teacherId);
   const teachers = useSalesTeachers();
   const details = useLessonDetails(day.data?.lessons);
   const inset = useTabBarInset();
+  const can = usePermissions();
+  // docs/16 row 37: she may move or cancel her own students' lessons.
+  const changes = can('lessons.reschedule') || can('lessons.cancel');
   const pills = [
     { value: '', label: t.schedule.allTeachers },
     ...(teachers.data ?? []).map((tc) => ({ value: tc.id, label: localizedName({ ar: tc.name, en: tc.name_en }, locale) })),
@@ -53,7 +59,7 @@ export function SalesScheduleScreen({ asTab = false }: { asTab?: boolean }) {
         trailing={asTab ? undefined : <Button variant="ghost" label={t.common.back} onPress={() => router.back()} />}
       />
       <View style={{ gap: 8, paddingBottom: 8 }}>
-        <Note>{t.sales.academySchedule.readOnly}</Note>
+        <Note>{changes ? t.sales.lessonActions.ownNote : t.sales.academySchedule.readOnly}</Note>
         <SchedulePeriod view="day" date={date} today={today} onDate={setDate} />
         <FilterPills accessibilityLabel={t.schedule.teacherFilter} items={pills} value={teacherId} onChange={setTeacherId} />
       </View>

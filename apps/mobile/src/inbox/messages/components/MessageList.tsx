@@ -1,9 +1,12 @@
-import { type MessageView, senderLine } from '@ab/shared';
+import { senderLine } from '@ab/shared';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { ActivityIndicator, FlatList, View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { useTheme } from '@/theme';
 import { EmptyState } from '@/core/ui/feedback/EmptyState';
+import { CallEntry } from '../../thread/calls/entries/CallEntry';
+import { logRows, type LogRow } from '../../thread/calls/entries/log-rows';
+import { useCallBack, useThreadCalls } from '../../thread/calls/entries/use-thread-calls';
 import { messageGap } from '../hooks/list-gap';
 import { MessageBubble } from './MessageBubble';
 import { DayChip } from '../days/DayChip';
@@ -47,12 +50,16 @@ function useOlder(query: ThreadQuery) {
  */
 export function MessageList({ phone, query }: { phone: string; query: ThreadQuery }) {
   const { color } = useTheme();
-  const list = useRef<FlatList<MessageView>>(null);
+  const list = useRef<FlatList<LogRow>>(null);
   // Her own pull only: a background refetch (open, send, push) must not spin over the newest bubble.
   const [pulling, setPulling] = useState(false);
-  // One array per page change: a new one each render would reset the list's viewability (the floating day).
-  const rows = useMemo(() => threadMessages(query.data).reverse(), [query.data]);
-  const newest = rows[0];
+  // Calls merged in by time (docs/28 §5); none while calls are off. One array per change: a new one each
+  // render would reset the list's viewability (the floating day).
+  const calls = useThreadCalls(phone);
+  const callBack = useCallBack({ phone, thread: query.data?.pages[0]?.thread ?? null });
+  const more = query.hasNextPage;
+  const rows = useMemo(() => logRows(threadMessages(query.data), { calls, hasMore: more }), [query.data, calls, more]);
+  const newest = rows[0]?.message;
   const ours = newest?.direction === 'outbound' && !senderLine(newest) ? newest.id : undefined;
   useEffect(() => {
     if (ours) list.current?.scrollToOffset({ offset: 0, animated: true });
@@ -79,7 +86,11 @@ export function MessageList({ phone, query }: { phone: string; query: ThreadQuer
             // The oldest loaded row gets its chip only once no older page can continue its day.
             <View testID={`message-row-${item.id}`} style={{ paddingTop: messageGap(rows[index + 1], item) }}>
               {hasDayChip(rows, index, query.hasNextPage) ? <DayChip testID={`day-${item.id}`} label={dayLabel(item.created_at)} /> : null}
-              <MessageBubble message={item} phone={phone} onJump={jump} highlight={lit === item.id} />
+              {item.message ? (
+                <MessageBubble message={item.message} phone={phone} onJump={jump} highlight={lit === item.id} />
+              ) : item.call ? (
+                <CallEntry call={item.call} onCallBack={callBack} />
+              ) : null}
             </View>
           )}
           maintainVisibleContentPosition={{ minIndexForVisible: 0, autoscrollToTopThreshold: AT_NEWEST }}

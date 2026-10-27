@@ -25,7 +25,7 @@ describe('students', () => {
       name_normalized: 'ليان',
       age: 9,
       gender: 'female',
-      status: 'active',
+      status: 'new', // «طالب حالي» alone is no subscription (docs/06 «Student status»)
       level: 'مبتدئ',
       tz: 'Asia/Riyadh',
       code_seq: 12,
@@ -45,11 +45,13 @@ describe('students', () => {
     expect(run.issues.map((i) => i.field)).toEqual(['age', 'gender']);
   });
 
-  it('marks families in HEART «subscription» active and has no code without a legacy one', () => {
+  it('a paid HEART period covering the import date is active; no code without a legacy one', () => {
     const run = pipeline(
       bundleOf({
         hub_students: [studentRow({})],
-        heart_subscriptions: [row({ name: 'Layan', phone: 966551110001 })],
+        heart_subscriptions: [
+          row({ name: 'Layan', phone: 966551110001, date: '2026-09-20', paid_status: 'Paid' }),
+        ],
       }),
       MODULES,
     );
