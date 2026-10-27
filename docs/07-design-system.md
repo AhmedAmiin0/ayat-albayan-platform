@@ -811,7 +811,11 @@ export type ThemeName = keyof typeof palette;
 
 Expo specifics:
 
-- `I18nManager.forceRTL(true)` at boot.
+- Direction follows the language in effect, like WhatsApp: the phone's by default (an RTL phone = Arabic RTL, an LTR phone = English LTR), «اللغة» overrides it (docs/31).
+- Only `core/lib/i18n/locale-switch.ts` touches `I18nManager.allowRTL`/`forceRTL` (then reloads); nothing else sets the flags.
+- Rows are logical (`flexDirection: 'row'`, `start`/`end`); read `I18nManager.isRTL` only for `translateX`, gesture `dx`, `scaleX` mirroring and SVG paths.
+- User-authored text (messages, notes, names) uses `ContentText` (aligned by its own first strong letter); inputs set no `textAlign`.
+- LTR islands (codes, E.164 phones, emails) use `ltr()`/`<Ltr>`; free text spliced into a UI sentence uses `isolate()`.
 - Use `start`/`end` style props (`marginStart`, `paddingEnd`), never left/right.
 - Mirror directional icons with `transform: [{ scaleX: I18nManager.isRTL ? -1 : 1 }]`.
 - Text inputs are at least 16pt.

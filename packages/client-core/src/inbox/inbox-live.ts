@@ -14,6 +14,11 @@ export const LIVE_CHAT_THROTTLE_MS = 1_000;
 /** …the chats list and the unread badge at most once every 3 s (GET /threads is the costliest read). */
 export const LIVE_LIST_THROTTLE_MS = 3_000;
 
+/** A hidden web tab leaves the channel after this long (shown again: rejoin, resync). */
+export const INBOX_HIDDEN_LEAVE_MS = 5 * 60_000;
+/** iOS 'inactive' (app switcher, control centre) longer than this leaves too; 'background' at once. */
+export const INBOX_INACTIVE_LEAVE_MS = 5_000;
+
 /** What a change refreshes: the chats list, one open chat, the unread badge. */
 export type LiveKey = 'list' | 'badge' | `chat:${string}`;
 

@@ -68,8 +68,12 @@ export class ThreadReads {
     const scope = mine ? null : await this.scopes.of(user);
     if (scope) return this.reactable(await this.quoted(await this.teacher.detail(q, scope), q.phone), q.phone !== scope.ownPhone);
     const detail = mine ? await this.salesService().detail(q) : await this.admin.detail(q);
-    const listed = await withLists(await this.quoted(detail, q.phone), { user, lists: this.chatLists, phone: q.phone, first: !q.before });
-    return this.reactable(listed, true);
+    // The quoted bubbles and the chat's lists are independent reads: in parallel.
+    const [quoted, listed] = await Promise.all([
+      this.quoted(detail, q.phone),
+      withLists(detail, { user, lists: this.chatLists, phone: q.phone, first: !q.before }),
+    ]);
+    return this.reactable({ ...listed, messages: quoted.messages }, true);
   }
 
   /** thread.reactable: may this caller's bubbles offer «تفاعل» (a teacher never on their own chat). */

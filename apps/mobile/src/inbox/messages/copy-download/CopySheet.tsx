@@ -2,6 +2,7 @@ import { Modal, Pressable, ScrollView, View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { shape, type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
+import { ContentText } from '@/core/ui/primitives/ContentText';
 import { Button } from '@/core/ui/primitives/Button';
 import type { CopyRequest } from './chat-tools';
 
@@ -50,8 +51,9 @@ export function CopySheet({ request, onClose }: CopySheetProps) {
           <ScrollView
             style={{ maxHeight: 320, borderRadius: shape.radius.md, backgroundColor: color.sunk }}
           >
-            <AppText
+            <ContentText
               testID="copy-text"
+              source={request?.text ?? ''}
               selectable
               style={{
                 padding: 12,
@@ -59,11 +61,10 @@ export function CopySheet({ request, onClose }: CopySheetProps) {
                 fontSize: type.size.body,
                 lineHeight: type.lineHeight(type.size.body),
                 color: color.ink,
-                writingDirection: 'auto',
               }}
             >
               {request?.text}
-            </AppText>
+            </ContentText>
           </ScrollView>
           <Button variant="ghost" label={t.common.close} onPress={onClose} />
         </View>

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { isUnavailableMessage, isUnsupportedMessage } from './unavailable.js';
+import { isUnavailableMessage, isUnsupportedMessage, reactionText } from './unavailable.js';
 
 const unsupported = (errors: unknown) => ({ type: 'unsupported', errors, unsupported: { type: 'unknown' } });
 
@@ -25,5 +25,22 @@ describe('isUnsupportedMessage', () => {
     expect(isUnsupportedMessage({ type: 'location', location: { latitude: 1, longitude: 2 } })).toBe(false);
     expect(isUnsupportedMessage({ type: 'contacts' })).toBe(false);
     expect(isUnsupportedMessage(null)).toBe(false);
+  });
+});
+
+describe('reactionText', () => {
+  const words = { reacted: 'تفاعل: {emoji}', removed: 'أُزيل التفاعل' };
+  const reaction = (emoji?: string) => ({ type: 'reaction', reaction: { message_id: 'wamid.x', ...(emoji === undefined ? {} : { emoji }) } });
+
+  it('names the emoji of a reaction row, and its removal (empty or missing emoji)', () => {
+    expect(reactionText(reaction('👍🏻'), words)).toBe('تفاعل: 👍🏻');
+    expect(reactionText(reaction(''), words)).toBe('أُزيل التفاعل');
+    expect(reactionText(reaction(), words)).toBe('أُزيل التفاعل');
+  });
+
+  it('is null for anything that is not a reaction', () => {
+    expect(reactionText(unsupported([{ code: 131051 }]), words)).toBeNull();
+    expect(reactionText({ type: 'location' }, words)).toBeNull();
+    expect(reactionText(null, words)).toBeNull();
   });
 });

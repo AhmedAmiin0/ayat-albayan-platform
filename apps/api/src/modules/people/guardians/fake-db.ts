@@ -11,16 +11,19 @@ type FakeCall = { table: string; method: string; args: unknown[] };
 
 /**
  * Every builder method is recorded and chains; awaiting a query on `table` resolves to the
- * next queued result for that table (rpc calls queue under `rpc:<fn>`).
+ * next queued result for that table (rpc calls queue under `rpc:<fn>`). `trips` lists the table of
+ * every awaited query in order: one entry = one PostgREST round trip (the round-trip counts).
  */
 export function fakeDb(results: Record<string, FakeResult[]>) {
   const calls: FakeCall[] = [];
+  const trips: string[] = [];
   const builder = (table: string): unknown => {
     const proxy: unknown = new Proxy(
       {},
       {
         get(_target, prop) {
           if (prop === 'then') {
+            trips.push(table);
             const r = results[table]?.shift() ?? {};
             const value = { data: r.data ?? null, error: r.error ?? null, count: r.count ?? null };
             return (resolve: (v: unknown) => unknown) => resolve(value);
@@ -44,5 +47,5 @@ export function fakeDb(results: Record<string, FakeResult[]>) {
   /** Args of the first `method` call recorded on `table`. */
   const argsOf = (table: string, method: string): unknown[] | undefined =>
     calls.find((c) => c.table === table && c.method === method)?.args;
-  return { db: db as unknown as Db, calls, argsOf };
+  return { db: db as unknown as Db, calls, trips, argsOf };
 }

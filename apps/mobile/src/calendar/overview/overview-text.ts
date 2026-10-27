@@ -42,9 +42,13 @@ export function windowsLine(windows: readonly Span[]): string | null {
     .replace('{city}', t.runningHead.riyadh);
 }
 
-/** «فاضي 17:00 – 19:00». */
+const RANGE = '{from} – {to}';
+
+/** «فاضي 17:00 – 19:00»: the whole range one LTR island, so Arabic never reads it «19:00 – 17:00». */
 export function freeLabel(span: Span): string {
   const { from, to } = spanClock(span);
+  if (t.schedule.free.includes(RANGE)) return t.schedule.free.replace(RANGE, ltr(`${from} – ${to}`));
+  // A translation override that splits the range: each time its own island.
   return t.schedule.free.replace('{from}', ltr(from)).replace('{to}', ltr(to));
 }
 

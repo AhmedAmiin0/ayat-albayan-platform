@@ -13,6 +13,7 @@ function world() {
   const rows = new Map<string, Row>([['r1', { status: 'pending', version: 1 }]]);
   const sent = new Set<string>();
   const queries = {
+    hasWork: vi.fn(async () => true),
     recoverStale: vi.fn(async () => 0),
     pendingIds: vi.fn(async () => [...rows].filter(([, r]) => r.status === 'pending').map(([id]) => id)),
     claim: vi.fn(async (id: string) => {

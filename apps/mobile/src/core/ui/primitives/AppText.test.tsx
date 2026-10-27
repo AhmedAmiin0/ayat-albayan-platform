@@ -15,8 +15,8 @@ test('aligns to the start (textAlign left, swapped in RTL); a caller style still
   expect(StyleSheet.flatten(screen.getByText(t.mobile.today).props.style).textAlign).toBe('center');
 });
 
-test('Field: the label and the input both start at the inline-start', async () => {
+test('Field: the label starts at the inline-start; the input leaves alignment to the typed text', async () => {
   await render(<Field label={t.auth.email} ltr value="" onChangeText={() => undefined} />);
   expect(StyleSheet.flatten(screen.getByText(t.auth.email).props.style).textAlign).toBe('left');
-  expect(StyleSheet.flatten(screen.getByLabelText(t.auth.email).props.style).textAlign).toBe('left');
+  expect(StyleSheet.flatten(screen.getByLabelText(t.auth.email).props.style).textAlign).toBeUndefined();
 });

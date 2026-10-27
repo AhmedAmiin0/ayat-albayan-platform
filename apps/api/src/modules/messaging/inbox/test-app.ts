@@ -53,6 +53,7 @@ function mocks() {
       lessons: vi.fn(async (): Promise<ThreadLesson[]> => []),
       people: vi.fn(async () => NO_PEOPLE),
       familyTags: vi.fn(async () => new Map<string, FamilyTag>()),
+      unsupported: vi.fn(async <T>(rows: T[]) => rows),
     },
     teacher: {
       ...{ teacher: vi.fn(), phones: vi.fn(), unread: vi.fn(), stampRead: vi.fn() },

@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { FAMILY, LINE, fakeKit } from '../calls.fakes';
+import { FAMILY, LINE, fakeGate, fakeKit } from '../calls.fakes';
 import type { CallRow } from '../store/call-row';
 import { CallsSweeper, overdue, UNANSWERED_MS } from './calls.sweeper';
 
@@ -35,7 +35,7 @@ describe('CallsSweeper.runOnce', () => {
     const { kit, queries, api } = fakeKit();
     const out = await queries.insert({ direction: 'outbound', status: 'ringing', phone_e164: FAMILY, wa_call_id: 'w.out', started_at: T0 });
     const inb = await queries.insert({ direction: 'inbound', status: 'ringing', phone_e164: FAMILY, wa_call_id: 'w.in', started_at: T0 });
-    const sweeper = new CallsSweeper(kit);
+    const sweeper = new CallsSweeper(kit, fakeGate());
     expect(await sweeper.runOnce(at(61_000))).toBe(2);
     expect(api.terminate).toHaveBeenCalledTimes(1);
     expect(api.terminate).toHaveBeenCalledWith(LINE, 'w.out');
@@ -47,6 +47,6 @@ describe('CallsSweeper.runOnce', () => {
   it('never throws', async () => {
     const { kit, queries } = fakeKit();
     vi.spyOn(queries, 'live').mockRejectedValue(new Error('db down'));
-    await expect(new CallsSweeper(kit).runOnce()).resolves.toBe(0);
+    await expect(new CallsSweeper(kit, fakeGate()).runOnce()).resolves.toBe(0);
   });
 });

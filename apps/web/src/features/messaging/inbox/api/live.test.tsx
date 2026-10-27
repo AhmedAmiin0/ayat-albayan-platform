@@ -16,7 +16,8 @@ const rt = vi.hoisted(() => {
   const supabase = {
     channel: vi.fn(() => channel),
     removeChannel: vi.fn(async () => 'ok'),
-    realtime: { setAuth: vi.fn(async () => undefined) },
+    getChannels: vi.fn(() => []),
+    realtime: { setAuth: vi.fn(async () => undefined), disconnect: vi.fn(async () => 'ok') },
   };
   return { hooks, channel, supabase };
 });
@@ -82,8 +83,8 @@ describe('useInboxRealtime (web)', () => {
   });
 
   it('a hidden tab does not re-read the list (shown again, TanStack re-reads it); the badge still updates', async () => {
-    vi.spyOn(document, 'visibilityState', 'get').mockReturnValue('hidden');
     const m = await mount();
+    vi.spyOn(document, 'visibilityState', 'get').mockReturnValue('hidden'); // hidden after the join
     await send(OTHER);
     expect([m.keys(), m.badges()]).toEqual([[], 1]);
     m.hook.unmount();

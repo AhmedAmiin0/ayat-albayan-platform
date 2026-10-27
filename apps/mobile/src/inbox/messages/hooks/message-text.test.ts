@@ -45,6 +45,12 @@ test('media line: Meta’s unsupported says «غير متاحة» for 131060, el
   expect(mediaLine({ body: null, media_mime: null, interactive_payload: location })).toBe(t.inbox.media.other);
 });
 
+test('media line: a WhatsApp reaction row names its emoji, never «رسالة لا يمكن عرضها هنا»', () => {
+  const reaction = (emoji: string) => ({ type: 'reaction', reaction: { emoji, message_id: 'wamid.x' } });
+  expect(mediaLine({ body: null, media_mime: null, interactive_payload: reaction('👍🏻') })).toBe(t.inbox.reacted.replace('{emoji}', '👍🏻'));
+  expect(mediaLine({ body: null, media_mime: null, interactive_payload: reaction('') })).toBe(t.inbox.reactionRemoved);
+});
+
 test('template line uses the registry name; an unknown key shows as itself', () => {
   expect(templateLine('renewal_due')).toBe(
     t.inbox.templateLine.replace('{name}', t.templates.names.renewal_due),

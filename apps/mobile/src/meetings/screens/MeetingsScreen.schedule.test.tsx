@@ -1,3 +1,4 @@
+import { formatPhone } from '@ab/shared';
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { Share } from 'react-native';
 import { ApiError } from '@/core/lib/http/api';
@@ -66,7 +67,7 @@ test('tomorrow 14:45 for 75 minutes in Riyadh is sent as 11:45 UTC, with the typ
   await fireEvent.press(screen.getByRole('tab', { name: I.tabs.phone }));
   await fireEvent.changeText(screen.getByLabelText(I.tabs.phone), '+20 100 000 0101');
   await press(I.addPhone);
-  expect(screen.getByRole('button', { name: I.removeInvitee.replace('{name}', '+201000000101') })).toBeTruthy();
+  expect(screen.getByRole('button', { name: I.removeInvitee.replace('{name}', ltr(formatPhone('+201000000101'))) })).toBeTruthy();
   await press(t.meetings.internal.create);
   await waitFor(() =>
     expect(mockApiSend).toHaveBeenCalledWith('POST', '/meetings', {
@@ -85,7 +86,9 @@ test('after create: each recipient outcome; a closed window has the hint and sha
   expect(await screen.findByText(I.results.windowClosed)).toBeTruthy();
   expect(screen.getByText(I.results.windowClosedHint)).toBeTruthy();
   expect(screen.getByText(I.results.inApp)).toBeTruthy();
-  expect(screen.getByText(ltr('https://app/m/new'))).toBeTruthy();
+  // The link is plain: a copied URL carries no isolate marks.
+  const link = screen.getByText('https://app/m/new');
+  expect(String(link.props.children)).not.toMatch(/[\u2066-\u2069]/);
   expect(screen.queryByRole('button', { name: t.meetings.internal.enter })).toBeNull(); // not open yet
   await press(`${I.results.share} — +201000000101`);
   expect(share).toHaveBeenCalledWith({ message: invitation });

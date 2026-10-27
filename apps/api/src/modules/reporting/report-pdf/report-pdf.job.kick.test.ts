@@ -6,6 +6,7 @@ import type { ReportPdfQueries } from './report-pdf.queries';
 
 function job() {
   const queries = {
+    hasWork: vi.fn(async () => true),
     recoverStale: vi.fn(async () => 0),
     pendingIds: vi.fn(async () => [] as string[]),
   };

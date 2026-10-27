@@ -1,5 +1,7 @@
 import { GOOGLE_SETTING_KEYS, GOOGLE_SYNC_MODES, GOOGLE_WINDOW_DAYS, type GoogleSettingsInput, type GoogleSyncSettings } from '@ab/shared';
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, Optional } from '@nestjs/common';
+import { TtlCache } from '../../../common/async/ttl-cache';
+import { DEFAULT_TTL_MS, SETTINGS_CACHE_MS } from '../../../common/config-store/config-store.types';
 import { DB, type Db } from '../../../common/db/db.module';
 
 export const GOOGLE_DEFAULTS: GoogleSyncSettings = { enabled: false, mode: 'dry_run', window_days: GOOGLE_WINDOW_DAYS.default };
@@ -16,23 +18,48 @@ export function readGoogleSettings(rows: readonly { key: string; value: unknown 
   };
 }
 
-/** settings.google_* rows (outside the generic registry: they have their own switch with a confirmation). Read fresh: the job must see an OFF at once. */
+/**
+ * settings.google_* rows. Cached for SETTINGS_CACHE_MS (0 in e2e): read once per job tick and per synced
+ * item before, now at most once per TTL. Only write() stores google_sync_enabled / google_sync_mode
+ * («القيم» refuses them: owned_by_module) and it drops the cache, so an OFF from this API applies at once.
+ * An OFF written by raw SQL reaches read() within the TTL; fresh() (the per-item stop) sees it at once.
+ */
 @Injectable()
 export class GoogleSettings {
-  constructor(@Inject(DB) private readonly db: Db) {}
+  private readonly cache: TtlCache<GoogleSyncSettings>;
 
-  async read(): Promise<GoogleSyncSettings> {
-    const { data, error } = await this.db.from('settings').select('key, value').in('key', Object.values(GOOGLE_SETTING_KEYS));
-    if (error) throw new Error(`google settings read failed: ${error.message}`);
-    return readGoogleSettings(data);
+  constructor(
+    @Inject(DB) private readonly db: Db,
+    @Optional() @Inject(SETTINGS_CACHE_MS) ttlMs: number = DEFAULT_TTL_MS,
+  ) {
+    this.cache = new TtlCache(ttlMs, () => this.load());
+  }
+
+  read(): Promise<GoogleSyncSettings> {
+    return this.cache.get();
+  }
+
+  /** Uncached: the processor's check before each Google write (only when items were claimed). */
+  fresh(): Promise<GoogleSyncSettings> {
+    return this.load();
   }
 
   async write(input: { values: GoogleSettingsInput; actorId: string }): Promise<void> {
-    for (const [field, key] of Object.entries(GOOGLE_SETTING_KEYS) as [keyof GoogleSettingsInput, string][]) {
-      const value = input.values[field];
-      if (value === undefined) continue;
-      const { error } = await this.db.from('settings').upsert({ key, value, updated_by: input.actorId });
-      if (error) throw new Error(`google settings write failed: ${error.message}`);
+    try {
+      for (const [field, key] of Object.entries(GOOGLE_SETTING_KEYS) as [keyof GoogleSettingsInput, string][]) {
+        const value = input.values[field];
+        if (value === undefined) continue;
+        const { error } = await this.db.from('settings').upsert({ key, value, updated_by: input.actorId });
+        if (error) throw new Error(`google settings write failed: ${error.message}`);
+      }
+    } finally {
+      this.cache.clear();
     }
+  }
+
+  private async load(): Promise<GoogleSyncSettings> {
+    const { data, error } = await this.db.from('settings').select('key, value').in('key', Object.values(GOOGLE_SETTING_KEYS));
+    if (error) throw new Error(`google settings read failed: ${error.message}`);
+    return readGoogleSettings(data);
   }
 }

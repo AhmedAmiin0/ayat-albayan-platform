@@ -13,6 +13,7 @@ import {
 } from '@ab/shared';
 import { t } from '@/core/lib/i18n/i18n';
 import { locale } from '@/core/lib/i18n/locale';
+import { isolate } from '@/core/ui/primitives/Ltr';
 
 /** The admin's and the salesperson's clock (as useViewerTz outside the teacher tree): the academy's. */
 const VIEWER_TZ = RIYADH_TZ;
@@ -48,7 +49,7 @@ export function whenLines(startsAt: string, familyTz: string): WhenLines {
 /** «فاطمة، الأحد 4 أكتوبر 17:00»: who picked it and when; «غير معروف» for an imported row. */
 export function pickedLine(row: TrialDateRow): string {
   return t.trialDate.pickedAt
-    .replace('{name}', row.picked_by ?? t.trialDate.unknownPicker)
+    .replace('{name}', row.picked_by ? isolate(row.picked_by) : t.trialDate.unknownPicker)
     .replace('{when}', lessonWhenText(new Date(row.picked_at), VIEWER_TZ, locale));
 }
 

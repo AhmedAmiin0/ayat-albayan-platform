@@ -3,6 +3,7 @@ import { Modal, Pressable, View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { shape, type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
+import { ContentText } from '@/core/ui/primitives/ContentText';
 import { Button } from '@/core/ui/primitives/Button';
 import { ErrorLine } from '../../ErrorLine';
 import { useChatActions } from '../../thread/hooks/chat-actions';
@@ -45,9 +46,9 @@ export function ResendSheet({ phone, id, onClose }: { phone: string; id: string;
           {t.inbox.resend.title}
         </AppText>
         <AppText style={words}>{t.inbox.resend.hint}</AppText>
-        <AppText testID="resend-text" style={{ ...words, color: color.ink, padding: 12, borderRadius: shape.radius.md, backgroundColor: color.sunk, writingDirection: 'rtl' }}>
+        <ContentText testID="resend-text" source={RESEND_TEXT} style={{ ...words, color: color.ink, padding: 12, borderRadius: shape.radius.md, backgroundColor: color.sunk }}>
           {RESEND_TEXT}
-        </AppText>
+        </ContentText>
         {send.isError ? <ErrorLine message={sendError(send.error)} /> : null}
         <Button label={send.isPending ? t.inbox.resend.sending : t.inbox.resend.send} busy={send.isPending} onPress={confirm} />
         <Button variant="ghost" label={t.common.cancel} onPress={close} />
