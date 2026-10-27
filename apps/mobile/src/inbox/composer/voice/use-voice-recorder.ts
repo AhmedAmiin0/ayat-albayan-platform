@@ -14,10 +14,10 @@ const voiceOptions = (): RecordingOptions => ({ ...RecordingPresets.HIGH_QUALITY
 const OWNER = 'voice-recorder';
 
 /** recording; asked = the system prompt was shown (the next press records, as WhatsApp); blocked = only Settings can allow it. */
-export type StartResult = 'recording' | 'asked' | 'blocked' | 'failed';
+type StartResult = 'recording' | 'asked' | 'blocked' | 'failed';
 
 /** A stopped recording's file and length. */
-export interface Recorded {
+interface Recorded {
   uri: string;
   ms: number;
 }

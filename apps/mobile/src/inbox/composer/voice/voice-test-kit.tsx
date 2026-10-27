@@ -36,6 +36,7 @@ type Perm = { granted: boolean; canAskAgain: boolean };
 export const perms: { now: Perm; asked: Perm } = { now: { granted: true, canAskAgain: true }, asked: { granted: true, canAskAgain: true } };
 export const askMic = jest.fn(async () => perms.asked);
 
+/** The expo-audio module for `jest.mock` (loaded with jest.requireActual). @public */
 export function audioMock() {
   return {
     AudioModule: { AudioRecorder: function AudioRecorder() {} },
@@ -67,7 +68,7 @@ export function resetVoice() {
 }
 
 const minutesAgo = (n: number) => new Date(Date.now() - n * 60_000).toISOString();
-export const asked = message({ id: 'm1', direction: 'inbound', status: 'delivered', body: 'أرسل لي تسجيلًا', replyable: true, created_at: minutesAgo(9) });
+const asked = message({ id: 'm1', direction: 'inbound', status: 'delivered', body: 'أرسل لي تسجيلًا', replyable: true, created_at: minutesAgo(9) });
 
 /** The chat with an open window; `mockApiFetch` answers the gate and the thread. */
 export async function openChat(mockApiFetch: jest.Mock) {

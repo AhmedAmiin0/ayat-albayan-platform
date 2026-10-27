@@ -5,7 +5,7 @@ import { type ChatFilePick, useSendFile } from '../send-file';
 import type { Take } from './voice-machine';
 
 /** The recorded m4a's bytes (fetch on the local file, as a picked PDF is read: no file-system module). */
-export async function voiceFile(uri: string): Promise<ChatFilePick> {
+async function voiceFile(uri: string): Promise<ChatFilePick> {
   const bytes = await (await fetch(uri)).arrayBuffer();
   return { mime: CHAT_VOICE_MIME, bytes, size: bytes.byteLength, filename: 'voice.m4a' };
 }

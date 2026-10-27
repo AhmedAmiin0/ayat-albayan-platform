@@ -4,7 +4,7 @@ import type { StorageService } from '../../../../common/storage/storage.service'
 import { toVoiceOgg } from './voice-ogg';
 
 /** What the outbox row carries for a file. */
-export interface SentMedia {
+interface SentMedia {
   media_path: string;
   media_mime: string;
   media_name: string;

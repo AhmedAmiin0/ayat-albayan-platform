@@ -20,7 +20,7 @@ export function hintOpacity(toStart: number, cancel: number): number {
   return Math.min(1, Math.max(0, 1 - toStart / cancel));
 }
 
-export type DragVerdict = 'cancel' | 'lock' | 'none';
+type DragVerdict = 'cancel' | 'lock' | 'none';
 
 interface Drag {
   dx: number;
