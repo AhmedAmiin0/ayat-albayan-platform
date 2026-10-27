@@ -32,6 +32,7 @@ describe('MessageDispatch — a sent file', () => {
       filename: 'واجب.jpg',
       caption: 'الواجب',
       replyTo: null,
+      voice: false,
     });
   });
 

@@ -1,7 +1,7 @@
 import type { Json } from '@ab/db';
 import {
   backoff,
-  waMediaKind,
+  waSendKind,
   isRetryableWaError,
   isWaAuthFailure,
   MAX_SEND_ATTEMPTS,
@@ -123,13 +123,13 @@ const LABEL_TEXT_MAX = 40;
 
 /**
  * What failed, for the reminder_failed push: «تذكير الحلقة النهاردة — Jitsi» for a template (the
- * raw key when unknown), the start of the text for a session message, «صورة» / «ملف» for a file sent
- * without a caption.
+ * raw key when unknown), the start of the text for a session message, «صورة» / «رسالة صوتية» / «فيديو» /
+ * «ملف» for a file sent without a caption.
  */
 export function messageLabel(row: { template_key: string | null; body: string | null; media_path?: string | null; media_mime?: string | null }): string {
   const names: Record<string, string> = ar.templates.names;
   if (row.template_key) return names[row.template_key] ?? row.template_key;
   const text = (row.body ?? '').trim();
-  if (!text && row.media_path) return ar.inbox.media[waMediaKind(row.media_mime ?? null)];
+  if (!text && row.media_path) return ar.inbox.media[waSendKind(row.media_mime ?? null)];
   return text.length > LABEL_TEXT_MAX ? `${text.slice(0, LABEL_TEXT_MAX)}…` : text;
 }

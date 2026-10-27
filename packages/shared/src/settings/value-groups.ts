@@ -28,7 +28,7 @@ export const VALUE_GROUPS = {
     'login_code_ttl_minutes',
     'login_code_max_attempts',
   ],
-  messages: ['quick_reply_window_hours', 'reminder_lookahead_hours', 'chat_reopen_template', 'whatsapp_calls_enabled', 'crm_media_host'],
+  messages: ['quick_reply_window_hours', 'reminder_lookahead_hours', 'chat_reopen_template', 'whatsapp_calls_enabled', 'crm_media_host', 'crm_media_copy_all'],
   sales: ['sales_auto_assign', 'renewal_commission_percent'],
   retention: ['recording_retention_days', 'activity_retention_days'],
 } as const satisfies Record<string, readonly SettingKey[]>;
@@ -72,5 +72,6 @@ export const VALUE_CONFIRM: Partial<Record<SettingKey, 'typed' | 'plain'>> = {
   meeting_link_auto: 'plain',
   sales_auto_assign: 'plain',
   whatsapp_calls_enabled: 'plain',
+  crm_media_copy_all: 'plain',
   family_login_enabled: 'plain',
 };

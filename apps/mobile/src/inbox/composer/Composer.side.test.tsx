@@ -1,12 +1,13 @@
 import { screen } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
+import { pathKey } from '@/core/lib/query/query-keys';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { leftToRight } from '../shared/physical-row.helpers';
 import { detail, inbound, thread } from '../shared/thread-fixtures';
 import { ThreadScreen } from '../screens/ThreadScreen';
 
-// The typing bar as WhatsApp (owner 2026-10-27), in Arabic (jest.setup: RTL): icons on the physical
-// left, «أرسل» / «أرسل قالبًا» on the right.
+// The typing bar on an Arabic phone (jest.setup: RTL): the row is mirrored, the round button on the
+// physical left, the box on the right. Owner 2026-10-27: only the price tag and the paperclip stay in it.
 const mockApiFetch = jest.fn();
 jest.mock('@/core/lib/http/api', () => ({
   ...jest.requireActual('@/core/lib/http/api'),
@@ -22,32 +23,34 @@ jest.mock('expo-router', () => ({
 const ago = (minutes: number) => new Date(Date.now() - minutes * 60_000).toISOString();
 const gate = { open: true, reason: null, queued: 0 };
 
-async function show(lastInbound: string) {
+async function show(lastInbound: string, permissions?: string[]) {
   const th = { ...thread, last_inbound_at: lastInbound, reply_line: 'chat' as const };
   mockApiFetch.mockImplementation(async (p: string) => (p === '/messages/gate' ? gate : detail([inbound], { thread: th })));
-  await renderWithQuery(<ThreadScreen />, createTestQueryClient());
+  const client = createTestQueryClient();
+  if (permissions) client.setQueryData(pathKey('/auth/me'), { role: 'sales', permissions });
+  await renderWithQuery(<ThreadScreen />, client);
   await screen.findByText(inbound.body ?? '');
 }
 
 const shown = (names: string[]) => names.filter((n) => n !== '?');
 
-test('open window: [template] … [file] [text] then «أرسل» last on the physical right', async () => {
+test('open window with pricing.read: [round] [paperclip] [price tag] [text], left → right; nothing else', async () => {
   await show(ago(5));
-  const order = shown(leftToRight(screen.getByTestId('open-row'), true));
-  expect(order).toEqual([
-    t.inbox.composer.sendTemplate,
-    t.savedReplies.open,
-    'quote-button',
+  expect(leftToRight(screen.getByTestId('open-row'), true)).toEqual(['round-action', 'composer-pill']);
+  expect(shown(leftToRight(screen.getByTestId('composer-pill'), true))).toEqual([
     t.inbox.composer.attach,
+    'quote-button',
     t.inbox.composer.placeholder,
-    t.inbox.composer.send,
   ]);
 });
 
-test('closed window: the icons on the left, the note between, «أرسل قالبًا» on the physical right', async () => {
+test('open window without pricing.read: [round] [paperclip] [text]', async () => {
+  await show(ago(5), ['inbox.read', 'inbox.send']);
+  expect(shown(leftToRight(screen.getByTestId('composer-pill'), true))).toEqual([t.inbox.composer.attach, t.inbox.composer.placeholder]);
+});
+
+test('closed window: «أرسل قالبًا» on the physical left, the note, then the icons on the right', async () => {
   await show(ago(3 * 24 * 60));
   const order = shown(leftToRight(screen.getByTestId('closed-row'), true));
-  expect(order.at(-1)).toBe(t.inbox.composer.sendTemplate);
-  expect(order.at(-2)).toBe('closed-note');
-  expect(order.slice(0, 2)).toEqual([t.savedReplies.open, 'quote-button']);
+  expect(order).toEqual([t.inbox.composer.sendTemplate, 'closed-note', 'quote-button', t.savedReplies.open]);
 });

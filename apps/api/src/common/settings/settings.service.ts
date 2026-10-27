@@ -66,9 +66,10 @@ export class SettingsService {
   /**
    * One switch written WITHOUT a version (the gate routes, comms_source): one upsert, as before 26-P2,
    * so turning a switch OFF never depends on a version read or a concurrent write (docs/26 §2f: OFF is
-   * always accepted). Never null: those switches are booleans or one of two words.
+   * always accepted). Never null: those switches are booleans or one of two words. actorId null = a
+   * system job (CrmMediaCopyJob turning its own switch off).
    */
-  async writeSwitch(key: string, value: boolean | string, actorId: string): Promise<void> {
+  async writeSwitch(key: string, value: boolean | string, actorId: string | null): Promise<void> {
     try {
       const { error } = await this.db.from('settings').upsert({ key, value, updated_by: actorId });
       if (error) throw new Error(`settings write failed: ${error.message}`);

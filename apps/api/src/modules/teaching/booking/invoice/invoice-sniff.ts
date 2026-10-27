@@ -10,9 +10,15 @@ const FORMATS: readonly (readonly [string, (b: Uint8Array) => boolean])[] = [
   ['application/pdf', (b) => ascii(b, 0, 5) === '%PDF-'],
   ['image/webp', (b) => ascii(b, 0, 4) === 'RIFF' && ascii(b, 8, 12) === 'WEBP'],
   ['image/heic', (b) => ascii(b, 4, 8) === 'ftyp' && HEIC_BRANDS.has(ascii(b, 8, 12))],
+  // A chat voice note (owner 2026-10-27): Android records AAC in MP4; ogg is its WhatsApp form.
+  ['audio/ogg', (b) => ascii(b, 0, 4) === 'OggS'],
+  ['audio/mp4', (b) => ascii(b, 4, 8) === 'ftyp' && !HEIC_BRANDS.has(ascii(b, 8, 12))],
 ];
 
-/** The mime the first bytes say the file is: JPEG, PNG, WebP, HEIC or PDF; null for anything else. */
+/**
+ * The mime the first bytes say the file is: JPEG, PNG, WebP, HEIC, PDF, ogg or MP4 audio; null for
+ * anything else. Each caller compares it with its own list (an invoice still refuses audio).
+ */
 export function sniffMime(b: Uint8Array): string | null {
   return FORMATS.find(([, is]) => is(b))?.[0] ?? null;
 }
