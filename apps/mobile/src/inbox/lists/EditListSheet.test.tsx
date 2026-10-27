@@ -15,7 +15,7 @@ jest.mock('@/core/lib/http/api', () => ({
 jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
 
 let mockLists = [PAID, TRIAL];
-const chips = () => within(screen.getByLabelText(t.inbox.lists.rowLabel));
+const chips = () => within(screen.getByLabelText(t.inbox.filterRow));
 const editTitle = t.inbox.lists.editNamed.replace('{name}', PAID.name);
 
 async function editPaid() {
@@ -38,7 +38,7 @@ test('a list chip names its edit action and hint for screen readers; the action 
   const chip = await screen.findByRole('tab', { name: TRIAL.name });
   expect(chip.props.accessibilityHint).toBe(t.inbox.lists.editHint);
   expect(chip.props.accessibilityActions).toEqual([{ name: 'longpress', label: t.inbox.lists.edit }]);
-  expect(chips().getByRole('tab', { name: t.inbox.lists.all }).props.accessibilityActions).toBeUndefined();
+  expect(chips().getByRole('tab', { name: t.inbox.filterAll }).props.accessibilityActions).toBeUndefined();
   await fireEvent(chip, 'accessibilityAction', { nativeEvent: { actionName: 'longpress' } });
   expect(await screen.findByText(t.inbox.lists.editNamed.replace('{name}', TRIAL.name))).toBeTruthy();
 });
@@ -73,6 +73,6 @@ test('delete asks first (the chats stay); «إلغاء» keeps it, yes deletes a
   await fireEvent.press(screen.getByRole('button', { name: t.inbox.lists.deleteYes }));
   expect(mockApiSend).toHaveBeenCalledWith('DELETE', `/chat-lists/${PAID.id}`);
   await waitFor(() => expect(screen.queryByRole('tab', { name: PAID.name })).toBeNull());
-  expect(chips().getByRole('tab', { name: t.inbox.lists.all, selected: true })).toBeTruthy();
+  expect(chips().getByRole('tab', { name: t.inbox.filterAll, selected: true })).toBeTruthy();
   expect(screen.queryByText(editTitle)).toBeNull();
 });

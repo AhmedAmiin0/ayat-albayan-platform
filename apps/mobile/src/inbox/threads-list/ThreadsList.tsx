@@ -1,13 +1,12 @@
 import { counted, formatPhone, messageStatusStyle, type ThreadView } from '@ab/shared';
 import { router } from 'expo-router';
 import { type ReactNode, useState } from 'react';
-import { FlatList } from 'react-native';
+import { FlatList, View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { inTree, useTreeBase } from '@/core/nav/tree-base';
 import { Avatar } from '@/core/ui/primitives/Avatar';
 import { EmptyState } from '@/core/ui/feedback/EmptyState';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';
-import { FilterPills, type FilterPill } from '@/core/ui/form/FilterPills';
 import { ListRow } from '@/core/ui/layout/ListRow';
 import { ltr } from '@/core/ui/primitives/Ltr';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
@@ -17,19 +16,13 @@ import { StatusChip } from '@/core/ui/feedback/StatusChip';
 import { clockAt, initialOf, kindLabel } from '../shared/format';
 import { DeliveryTicks } from '../messages/components/DeliveryTicks';
 import { InboxHeaderActions } from './InboxHeaderActions';
-import { ChatListChips } from '../lists/ChatListChips';
+import { type ChatChoice, ChatListChips, listOf } from '../lists/ChatListChips';
 import { threadPreview } from '../messages/hooks/message-text';
 import { threadLink, useThreadMode } from '../thread/hooks/thread-mode';
 import { threadsEmptyTitle } from './threads-empty';
 import { ThreadTags } from './ThreadTags';
 import { useThreadList } from './use-thread-list';
 import { useClockCycle } from '@/core/lib/clock';
-
-type Filter = 'all' | 'unread';
-const filterPills = (): FilterPill<Filter>[] => [
-  { value: 'all', label: t.inbox.filterAll },
-  { value: 'unread', label: t.inbox.filterUnread },
-];
 
 /** Our last send failed (the admin's turn), else the unread count, else nothing (no empty slot). */
 function turnChip(th: ThreadView): ReactNode {
@@ -58,14 +51,17 @@ function ticksWord(th: ThreadView): string | undefined {
  * sales (the same tabs) start a chat by number: «محادثة جديدة»; the lead / family tags stay in the admin
  * tree (as the web, where /sales/inbox shows none). Admin and sales filter by the academy's chat
  * lists «القوائم» (docs/22); a teacher gets no lists.
+ * The top is compact as WhatsApp's (owner 2026-10-27, «This topbar takes alot of space»): a one-line
+ * h2 title with its icon actions, a pill search, ONE chip row (All · Unread · lists · ＋), 8pt apart.
  */
 export function ThreadsList({ switcher }: { switcher?: ReactNode }) {
   const cycle = useClockCycle();
   const mode = useThreadMode();
   const base = useTreeBase();
   const [search, setSearch] = useState('');
-  const [filter, setFilter] = useState<Filter>('all');
-  const [listId, setListId] = useState<string | null>(null);
+  const [choice, setChoice] = useState<ChatChoice>('all');
+  const listId = listOf(choice);
+  const filter = choice === 'unread' ? 'unread' : 'all';
   const inset = useTabBarInset();
   const list = useThreadList({ search, unread: filter === 'unread', list: listId ?? undefined, live: true });
   const loaded = list.data !== undefined;
@@ -73,12 +69,17 @@ export function ThreadsList({ switcher }: { switcher?: ReactNode }) {
   const subtitle = stale ? t.mobile.lastUpdated.replace('{time}', clockAt(list.dataUpdatedAt, cycle)) : undefined;
 
   return (
-    <>
-      <ScreenHeader title={t.nav.conversations} subtitle={subtitle} trailing={mode.kind === 'admin' ? <InboxHeaderActions base={base} /> : undefined} />
+    <View testID="chats-list" style={{ flex: 1, gap: 8 }}>
+      <ScreenHeader
+        title={t.nav.chats}
+        size="h2"
+        connecting
+        subtitle={subtitle}
+        trailing={mode.kind === 'admin' ? <InboxHeaderActions base={base} /> : undefined}
+      />
       {switcher}
-      <SearchField onSearch={setSearch} label={t.inbox.searchPlaceholder} />
-      <FilterPills items={filterPills()} value={filter} onChange={setFilter} accessibilityLabel={t.inbox.title} />
-      {mode.kind === 'admin' ? <ChatListChips value={listId} onChange={setListId} /> : null}
+      <SearchField compact onSearch={setSearch} label={t.inbox.searchPlaceholder} />
+      <ChatListChips value={choice} onChange={setChoice} lists={mode.kind === 'admin'} />
       <FlatList
         style={{ flex: 1, marginHorizontal: -16 }}
         contentContainerStyle={{ paddingBottom: 24 + inset }}
@@ -113,6 +114,6 @@ export function ThreadsList({ switcher }: { switcher?: ReactNode }) {
           )
         }
       />
-    </>
+    </View>
   );
 }

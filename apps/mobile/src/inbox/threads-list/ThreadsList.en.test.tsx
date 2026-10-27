@@ -38,3 +38,17 @@ test('an LTR run tags threads with the en.json words', async () => {
   expect(row.getByText(en.inbox.unread.one)).toBeTruthy();
   expect(screen.getByText(en.inbox.kind.teacher)).toBeTruthy();
 });
+
+test('an LTR run: the compact top reads «Chats» on one line, a pill search, one row All · Unread', async () => {
+  mockApiFetch.mockResolvedValue({ items: [teacher], total: 1, page: 1, pageSize: 25 });
+  await renderWithQuery(<InboxScreen />);
+  await screen.findByText('Fatma');
+  const title = screen.getByRole('header', { name: en.nav.chats });
+  expect(title).toHaveStyle({ fontSize: 28 });
+  expect(title.props.numberOfLines).toBe(1);
+  expect(screen.getByLabelText(en.inbox.searchPlaceholder)).toHaveStyle({ minHeight: 40 });
+  const row = within(screen.getByLabelText(en.inbox.filterRow));
+  expect(row.getByRole('tab', { name: en.inbox.filterAll, selected: true })).toBeTruthy();
+  expect(row.getByRole('tab', { name: en.inbox.filterUnread })).toBeTruthy();
+  expect(screen.getByRole('button', { name: en.inbox.newChat.title })).toBeTruthy();
+});
