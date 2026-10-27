@@ -43,12 +43,10 @@ export function messageRow(over: Partial<MessageRow> = {}): MessageRow {
   };
 }
 
-/** The send gate as the pass reads it: switches() is the two mocks together, as SendGate does with one read. */
-export function senderGate() {
-  const gate = {
-    open: vi.fn<() => Promise<boolean>>(),
-    automaticOn: vi.fn<() => Promise<boolean>>(),
-    switches: async () => ({ open: await gate.open(), autoOn: await gate.automaticOn() }),
-  };
-  return gate;
+/** A SendGate stand-in: mock open() / automaticOn(); switches() answers both from them, as the real one does from one read. */
+export function fakeSwitches() {
+  const open = vi.fn<() => Promise<boolean>>();
+  const automaticOn = vi.fn<() => Promise<boolean>>();
+  const switches = async () => ({ open: await open(), automaticOn: await automaticOn() });
+  return { open, automaticOn, switches };
 }

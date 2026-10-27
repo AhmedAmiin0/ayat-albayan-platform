@@ -16,6 +16,7 @@ import { onCacheRestored, persistOptions, queryClient } from '@/core/lib/query/q
 import { pathKey } from '@/core/lib/query/query-keys';
 import { TopConnectingBar } from '@/core/ui/connecting/TopConnectingBar';
 import { StartupOverlay } from '@/core/ui/startup/StartupOverlay';
+import { StaffCalls } from '@/inbox';
 import { restoreAppearance } from '@/more';
 import { useTheme } from '@/theme';
 
@@ -94,28 +95,30 @@ function GatedRoot({ gate, settled, fontsLoaded }: GatedRootProps) {
         <View style={{ flex: 1, backgroundColor: color.margin }}>
           <StatusBar style="auto" />
           <TopConnectingBar />
-          <Stack
-            screenOptions={{ headerShown: false, contentStyle: { backgroundColor: color.margin } }}
-          >
-            <Stack.Protected guard={gate === 'admin'}>
-              <Stack.Screen name="(tabs)" />
-              <Stack.Screen name="(admin-chat)" />
-            </Stack.Protected>
-            <Stack.Protected guard={gate === 'teacher'}>
-              <Stack.Screen name="teacher" />
-              <Stack.Screen name="(teacher-chat)" />
-            </Stack.Protected>
-            <Stack.Protected guard={gate === 'sales'}>
-              <Stack.Screen name="sales" />
-              <Stack.Screen name="(sales-chat)" />
-            </Stack.Protected>
-            <Stack.Protected guard={gate === 'assistant'}>
-              <Stack.Screen name="assistant" />
-            </Stack.Protected>
-            <Stack.Protected guard={gate === 'out'}>
-              <Stack.Screen name="login" />
-            </Stack.Protected>
-          </Stack>
+          <StaffCalls gate={gate}>
+            <Stack
+              screenOptions={{ headerShown: false, contentStyle: { backgroundColor: color.margin } }}
+            >
+              <Stack.Protected guard={gate === 'admin'}>
+                <Stack.Screen name="(tabs)" />
+                <Stack.Screen name="(admin-chat)" />
+              </Stack.Protected>
+              <Stack.Protected guard={gate === 'teacher'}>
+                <Stack.Screen name="teacher" />
+                <Stack.Screen name="(teacher-chat)" />
+              </Stack.Protected>
+              <Stack.Protected guard={gate === 'sales'}>
+                <Stack.Screen name="sales" />
+                <Stack.Screen name="(sales-chat)" />
+              </Stack.Protected>
+              <Stack.Protected guard={gate === 'assistant'}>
+                <Stack.Screen name="assistant" />
+              </Stack.Protected>
+              <Stack.Protected guard={gate === 'out'}>
+                <Stack.Screen name="login" />
+              </Stack.Protected>
+            </Stack>
+          </StaffCalls>
         </View>
       ) : null}
       <StartupOverlay ready={ready} onRetry={retryStartup} fontsLoaded={fontsLoaded} />

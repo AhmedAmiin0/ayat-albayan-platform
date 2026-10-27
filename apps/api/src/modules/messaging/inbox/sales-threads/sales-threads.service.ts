@@ -25,9 +25,9 @@ export class SalesThreadsService {
   ) {}
 
   async list(f: ThreadListFilter, now = new Date()): Promise<Page<ThreadView>> {
-    const { items, total } = await this.queries.list(f);
-    const guardians = items.flatMap((r) => (r.guardian_id ? [r.guardian_id] : []));
-    const tags = await this.queries.familyTags(guardians);
+    const { items: rows, total } = await this.queries.list(f);
+    const guardians = rows.flatMap((r) => (r.guardian_id ? [r.guardian_id] : []));
+    const [items, tags] = await Promise.all([this.queries.unsupported(rows), this.queries.familyTags(guardians)]);
     const view = (r: ThreadRow) => forSales(toThreadView(r, now, r.guardian_id ? (tags.get(r.guardian_id) ?? null) : null));
     return { items: items.map(view), total, page: f.page, pageSize: f.pageSize };
   }

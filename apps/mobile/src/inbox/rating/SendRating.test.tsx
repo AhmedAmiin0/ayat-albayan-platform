@@ -75,7 +75,8 @@ test('a queued send says it waits for the send gate and refetches the threads', 
   await ask();
   await confirm();
   expect(await screen.findByText(t.inbox.rating.queued)).toBeTruthy();
-  expect(invalidate).toHaveBeenCalledWith({ queryKey: ['threads'] });
+  expect(invalidate).toHaveBeenCalledWith({ queryKey: ['threads', guardian.phone_e164] });
+  expect(invalidate).toHaveBeenCalledWith({ queryKey: ['threads', 'list'] }); // the chats list too
 });
 
 test('a row Meta refused (201, failed) is shown as an error and may be asked again with a new id', async () => {

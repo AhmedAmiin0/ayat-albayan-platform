@@ -21,11 +21,11 @@ test('/students/payment/:id opens the payment screen, beside the student quick v
   expect(pending.getPathname()).toBe('/students/payment/s1');
 });
 
-test('the OS permission texts in app.json are the ar.json rationales; no microphone', () => {
+test('the OS permission texts in app.json are the ar.json rationales (the microphone: the calls, docs/28)', () => {
   const plugin = appJson.expo.plugins.find((p) => Array.isArray(p) && p[0] === 'expo-image-picker');
   expect(Array.isArray(plugin) ? plugin[1] : undefined).toEqual({
     cameraPermission: t.payments.mobile.cameraRationale,
     photosPermission: t.payments.mobile.photosRationale,
-    microphonePermission: false,
+    microphonePermission: t.calls.mic.rationale,
   });
 });

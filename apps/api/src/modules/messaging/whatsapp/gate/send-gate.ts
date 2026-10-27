@@ -28,14 +28,15 @@ export class SendGate {
   }
 
   /**
-   * Both switches from ONE settings read (the sender asks before every row, so OFF still stops a long
-   * pass at once, docs/09): open() and automaticOn() together, half the reads per row.
+   * Both switches from ONE uncached settings read (the sender asks before every row): open() and
+   * automaticOn() together, so the per-row cost is one round trip instead of two. Closed config = no read.
    */
-  async switches(): Promise<{ open: boolean; autoOn: boolean }> {
-    if (!sendingAllowed(this.env, true)) return { open: false, autoOn: false }; // not configured: no DB read
+  async switches(): Promise<{ open: boolean; automaticOn: boolean }> {
+    if (!sendingAllowed(this.env, true)) return { open: false, automaticOn: false };
     const s = await this.settings.read();
-    return { open: sendingAllowed(this.env, s.messaging_enabled), autoOn: s.auto_messages_enabled };
+    return { open: sendingAllowed(this.env, s.messaging_enabled), automaticOn: s.auto_messages_enabled };
   }
+
   /** settings.auto_messages_enabled: job-made reminders, follow-ups and renewals go out only when ON. */
   async automaticOn(): Promise<boolean> {
     return (await this.settings.read()).auto_messages_enabled;

@@ -1,19 +1,20 @@
-import { deltaSearch, INBOX_REFRESH_MS, mergeDelta, needsFullRead, THREAD_FULL_MS } from '@ab/client-core';
+import { chatLiveKey, deltaSearch, INBOX_REFRESH_MS, mergeDelta, needsFullRead, THREAD_FULL_MS } from '@ab/client-core';
 import type { ThreadDelta, ThreadDetail } from '@ab/shared';
 import { useQuery, useQueryClient, type QueryClient } from '@tanstack/react-query';
 import { apiFetch } from '@/core/lib/http/api';
 import { useScreenFocused } from '@/core/ui/connecting/use-screen-focus';
+import { useInboxLive, useLiveWatch } from '../live/inbox-live';
 import { leavesGap, mergeNewest, sendKey, threadKey, threadPath, type ThreadCache } from './thread-cache';
 
 /** The polls' own keys: outside threadKey, so a push's invalidation never runs them too. */
-const threadPollKey = (phone: string) => ['thread-poll', phone];
+export const threadPollKey = (phone: string) => ['thread-poll', phone];
 const threadDeltaKey = (phone: string) => ['thread-delta', phone];
 
 /** A send or a thread fetch in flight wins: its answer would overwrite a merge, or show a sent row twice. */
 const busy = (client: QueryClient, phone: string) =>
   client.isMutating({ mutationKey: sendKey(phone) }) + client.isFetching({ queryKey: threadKey(phone) }) > 0;
 
-/** Polls that run on their own timer while live; no fetch on open (the thread query just read the page). */
+/** Polls that run on their own timer while on screen; no fetch on open (the thread query just read the page). */
 const POLL = { initialData: 0, staleTime: Infinity, gcTime: 0, meta: { noPersist: true } } as const;
 
 /**
@@ -23,10 +24,14 @@ const POLL = { initialData: 0, staleTime: Infinity, gcTime: 0, meta: { noPersist
  *   every THREAD_FULL_MS    the newest page (GET /threads/:phone), folded in by mergeNewest; the loaded
  *                           older pages are not re-read.
  * Too many new rows for one answer (a gap) re-read the whole thread instead.
+ * Realtime (docs/12 §15) runs the page poll sooner on an event; while it is connected the delta pauses
+ * (one page read per THREAD_FULL_MS = INBOX_FALLBACK_MS); a change under another screen re-reads it on return.
  */
 export function useThreadPoll(phone: string, loaded: boolean) {
   const client = useQueryClient();
-  const live = useScreenFocused() && loaded;
+  const onScreen = useScreenFocused() && loaded;
+  const live = useInboxLive();
+  useLiveWatch(chatLiveKey(phone), onScreen);
   const queryKey = threadKey(phone);
   useQuery({
     queryKey: threadDeltaKey(phone),
@@ -42,8 +47,8 @@ export function useThreadPoll(phone: string, loaded: boolean) {
       return Date.now();
     },
     ...POLL,
-    enabled: live,
-    refetchInterval: live ? INBOX_REFRESH_MS : false,
+    enabled: onScreen,
+    refetchInterval: onScreen && !live ? INBOX_REFRESH_MS : false,
   });
   useQuery({
     queryKey: threadPollKey(phone),
@@ -55,7 +60,7 @@ export function useThreadPoll(phone: string, loaded: boolean) {
       return Date.now();
     },
     ...POLL,
-    enabled: live,
-    refetchInterval: live ? THREAD_FULL_MS : false,
+    enabled: onScreen,
+    refetchInterval: onScreen ? THREAD_FULL_MS : false,
   });
 }

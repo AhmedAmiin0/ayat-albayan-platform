@@ -1,5 +1,6 @@
 import { act, renderRouter, screen } from 'expo-router/testing-library';
 import { Text } from 'react-native';
+import { supabase } from '@/core/lib/http/supabase';
 import { t } from '@/core/lib/i18n/i18n';
 import { queryClient } from '@/core/lib/query/query-client';
 import { pathKey } from '@/core/lib/query/query-keys';
@@ -119,4 +120,20 @@ test('sign-in as a teacher opens her tabs; sign-out returns to login', async () 
   expect(screen.getByText('teacher-today')).toBeTruthy();
   await act(async () => mockGate.set('out'));
   expect(screen.getByText('login-screen')).toBeTruthy();
+});
+
+test('the inbox live channel (docs/12 §15): the admin tree joins it, sign-out leaves it, the teacher tree never', async () => {
+  mockGate.initial = 'teacher';
+  await open('/');
+  await act(async () => undefined);
+  expect(supabase.channel).not.toHaveBeenCalled();
+  await act(async () => mockGate.set('admin'));
+  await act(async () => undefined);
+  expect(supabase.channel).toHaveBeenCalledTimes(1);
+  expect(supabase.channel).toHaveBeenCalledWith('inbox:staff', { config: { private: true } });
+  await act(async () => mockGate.set('out'));
+  expect(supabase.removeChannel).toHaveBeenCalledTimes(1);
+  await act(async () => mockGate.set('teacher'));
+  await act(async () => undefined);
+  expect(supabase.channel).toHaveBeenCalledTimes(1);
 });

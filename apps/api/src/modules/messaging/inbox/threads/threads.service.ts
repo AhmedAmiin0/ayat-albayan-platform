@@ -19,10 +19,10 @@ export class ThreadsService {
     private readonly receipts: ReadReceipts,
   ) {}
 
-  /** Each row's family tags come from its guardian's students (one read for the whole page). */
+  /** Each row's family tags come from its guardian's students (one read for the whole page, beside the unsupported marks). */
   async list(f: ThreadListFilter, now = new Date()): Promise<Page<ThreadView>> {
-    const { items, total } = await this.queries.list(f);
-    const tags = await this.queries.familyTags(guardiansOf(items));
+    const { items: rows, total } = await this.queries.list(f);
+    const [items, tags] = await Promise.all([this.queries.unsupported(rows), this.queries.familyTags(guardiansOf(rows))]);
     const view = (r: ThreadRow) => toThreadView(r, now, r.guardian_id ? (tags.get(r.guardian_id) ?? null) : null);
     return { items: items.map(view), total, page: f.page, pageSize: f.pageSize };
   }

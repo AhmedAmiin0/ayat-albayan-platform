@@ -1,6 +1,7 @@
 import type { MessageQuote, TemplateParamsInput, ThreadDetail, ThreadTemplate, MessageView } from '@ab/shared';
 import { useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiFetch, apiSend, toQueryString } from '@/core/lib/http/api';
+import { refreshInbox, touchInbox } from './inbox-sync';
 import {
   appendMessage,
   provisionalMessage,
@@ -79,10 +80,11 @@ export function useSendMessage(phone: string) {
       const quote = out.kind === 'text' && out.replyTo ? { reply_to_message_id: out.replyTo.id, reply_to: out.replyTo } : {};
       const row = { ...provisionalMessage({ id, phone, body: text, templateKey: key }), ...quote };
       edit((old) => appendMessage(old, row));
+      await touchInbox(client, row);
     },
     onSuccess: (row, { id }) => edit((old) => replaceMessage(old, id, row)),
     onError: (_error, { id }) => edit((old) => removeMessage(old, id)),
-    onSettled: () => client.invalidateQueries({ queryKey }),
+    onSettled: () => refreshInbox(client, phone),
   });
 }
 
@@ -100,6 +102,6 @@ export function useMessageAction(phone: string, action: MessageAction) {
     mutationFn: (id: string) => apiSend<MessageView>('POST', `/messages/${id}/${action}`),
     onSuccess: (row) =>
       client.setQueryData<ThreadCache>(queryKey, (old) => replaceMessage(old, row.id, row)),
-    onSettled: () => client.invalidateQueries({ queryKey }),
+    onSettled: () => refreshInbox(client, phone),
   });
 }

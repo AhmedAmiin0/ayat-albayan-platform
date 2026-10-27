@@ -1,15 +1,11 @@
-import { callEntryKind, formatCallDuration, formatPhone, type CallEntryKind, type CallView } from '@ab/shared';
+import { callEntryText as entryText } from '@ab/client-core';
+import { formatPhone, type CallEntryKind, type CallView } from '@ab/shared';
 import type { IconName } from '@/components/ui/display/icon';
 import { t } from '@/lib/i18n/i18n';
 import { showsPhone, type InboxMode } from '../../shared/mode';
 
 /** «مكالمة صوتية صادرة · 2:14», «مكالمة واردة · 0:40», «مكالمة فائتة», «لم يُرَدّ», «مكالمة جارية». */
-export function callEntryText(call: CallView): string {
-  const kind = callEntryKind(call);
-  const word = t.calls.entry[kind];
-  const talked = (kind === 'outgoing' || kind === 'incoming') && call.duration_seconds !== null;
-  return talked ? `${word} · ${formatCallDuration(call.duration_seconds ?? 0)}` : word;
-}
+export const callEntryText = (call: CallView): string => entryText(call, t.calls);
 
 /** The glyph WhatsApp puts beside a call: an arrow out for ours, in for theirs. */
 export const callGlyph = (call: Pick<CallView, 'direction'>): IconName => (call.direction === 'outbound' ? 'call-out' : 'call-in');

@@ -1,13 +1,11 @@
+import { callClock, callPhaseText, callStatusText, type CallPhase, type CallSession } from '@ab/client-core';
 import type { ActiveCallView } from '@ab/shared';
-import { useId, useRef } from 'react';
+import { useId, useRef, useSyncExternalStore } from 'react';
 import { Avatar } from '@/components/ui/display/avatar';
 import { Icon } from '@/components/ui/display/icon';
 import { useFocusTrap } from '@/components/ui/overlay/use-focus-trap';
 import { t } from '@/lib/i18n/i18n';
-import type { CallPhase, CallSession } from '../state/call-phase';
-import { callPhaseText, callStatusText } from './call-status';
 import { RoundButton } from './RoundButton';
-import { useNow } from './use-now';
 
 export interface CallScreenProps {
   session: CallSession;
@@ -25,7 +23,7 @@ export interface CallScreenProps {
 export function CallScreen({ session, row, phase, actions }: CallScreenProps) {
   const ref = useRef<HTMLDivElement>(null);
   const nameId = useId();
-  const now = useNow(phase === 'active');
+  const now = useSyncExternalStore(phase === 'active' ? callClock.subscribe : callClock.still, callClock.read);
   useFocusTrap(ref, actions.minimise);
   return (
     <div
@@ -55,10 +53,10 @@ export function CallScreen({ session, row, phase, actions }: CallScreenProps) {
           {session.name}
         </h2>
         <p aria-hidden="true" className="text-sm text-cover-ink/80 tabular-nums" dir={phase === 'active' ? 'ltr' : undefined}>
-          {callStatusText(phase, { row, now })}
+          {callStatusText(phase, { row, now, text: t.calls })}
         </p>
         <p role="status" className="sr-only">
-          {callPhaseText(phase)}
+          {callPhaseText(phase, t.calls)}
         </p>
       </div>
       {phase !== 'ended' && (

@@ -3,6 +3,7 @@ import type { ThreadDelta } from '@ab/shared';
 import { useInfiniteQuery, useQuery, useQueryClient } from '@tanstack/react-query';
 import { apiFetch } from '@/lib/http/api';
 import { INBOX_REFRESH_MS, threadPath, threadQuery } from './api';
+import { inboxLive, useLiveChat } from './live';
 
 /**
  * The open chat, live (owner 2026-10-27): threadQuery (a full read on open, on window focus and every
@@ -10,11 +11,13 @@ import { INBOX_REFRESH_MS, threadPath, threadQuery } from './api';
  * gating: a chat open in a background window never stamps new rows read) — GET /threads/:phone?after=…
  * (~2 reads), folded into the cache by mergeDelta. A thread fetch or a send in flight wins (its answer
  * would overwrite the merge); more new rows than one page re-read the whole thread instead.
+ * Realtime (docs/12 §15) re-reads it on a change; while connected the delta pauses (the full read every 60 s stays).
  */
 export function useLiveThread(phone: string) {
   const options = threadQuery(phone);
   const detail = useInfiniteQuery(options);
   const client = useQueryClient();
+  useLiveChat(phone);
   const queryKey = options.queryKey;
   useQuery({
     // Outside ['threads']: a send's or an opened chat's invalidation never runs it.
@@ -36,7 +39,7 @@ export function useLiveThread(phone: string) {
     initialData: 0,
     staleTime: Infinity,
     gcTime: 0,
-    refetchInterval: INBOX_REFRESH_MS,
+    refetchInterval: () => (inboxLive.isLive() ? false : INBOX_REFRESH_MS),
   });
   return detail;
 }
