@@ -13,6 +13,7 @@ import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { FilterPills } from '@/core/ui/form/FilterPills';
 import { slotWindow, useRescheduleSlots } from './queries';
 import { SlotButton } from './SlotButton';
+import { useClockCycle } from '@/core/lib/clock';
 
 /** What the picker reads of a lesson: the admin's LessonView or sales' schedule lesson. */
 type SlotLesson = Pick<LessonView, 'starts_at'> & { teacher: { id: string }; students: readonly { id: string }[] };
@@ -49,6 +50,7 @@ export function SlotPicker({
   edit,
   slotsPath,
 }: SlotPickerProps) {
+  const cycle = useClockCycle();
   const { color } = useTheme();
   const [now] = useState(() => new Date());
   const thisWeek = weekStart(riyadhToday(now));
@@ -96,7 +98,7 @@ export function SlotPicker({
         <AppText style={note}>{t.common.loading}</AppText>
       )}
       <AppText accessibilityLiveRegion="polite" style={note}>
-        {value ? t.booking.picked.replace('{when}', whenText(value, tz)) : t.lessons.newTimeHint}
+        {value ? t.booking.picked.replace('{when}', whenText(value, tz, cycle)) : t.lessons.newTimeHint}
       </AppText>
     </View>
   );
@@ -110,12 +112,7 @@ function WeekSlots({ slots, tz, value, onPick }: WeekSlotsProps) {
   const days = freeSlotDays(slots);
   const [chosen, setChosen] = useState<string | null>(null);
   const day = days.find((d) => d.date === chosen) ?? days[0];
-  const note = {
-    fontFamily: type.ui[500],
-    fontSize: type.size.sm,
-    lineHeight: type.lineHeight(type.size.sm),
-    color: color.ink2,
-  };
+  const note = { fontFamily: type.ui[500], fontSize: type.size.sm, lineHeight: type.lineHeight(type.size.sm), color: color.ink2 };
   if (!day) return <AppText style={note}>{t.reschedule.noSlots}</AppText>;
   return (
     <>

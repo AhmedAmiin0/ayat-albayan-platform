@@ -6,6 +6,7 @@ import { t } from '@/lib/i18n/i18n';
 import { GoogleBlock } from '../GoogleBlock';
 import { fill, formatAt } from '../google-format';
 import { useDriveActions } from './use-drive-actions';
+import { useClock } from '@/lib/clock';
 
 const s = t.googleSync.drive;
 
@@ -25,21 +26,23 @@ function FoundLine({ label, found }: { label: string; found: GoogleFound | null 
 
 /** The confirmed root folder, when an admin confirmed one. */
 function ConfirmedDrive({ drive }: { drive: GoogleStatusView['drive'] }) {
+  const clock = useClock();
   if (!drive.confirmed_at) return null;
   return (
     <div className="flex flex-wrap items-center gap-2">
       <StatusChip tone="ok" glyph="fill" label={t.googleSync.common.confirmed} />
       <span className="min-w-0 text-sm break-words">{drive.root_folder_name}</span>
-      <span className="text-xs text-ink-3">{fill(s.confirmed, { at: formatAt(drive.confirmed_at) })}</span>
+      <span className="text-xs text-ink-3">{fill(s.confirmed, { at: formatAt(drive.confirmed_at, clock) })}</span>
     </div>
   );
 }
 
 /** What the last search found: the root folder and the summary sheet (or «غير موجود»). */
 function DriveFound({ found }: { found: GoogleStatusView['discovery'] }) {
+  const clock = useClock();
   return (
     <>
-      <p className="text-xs text-ink-3">{found ? fill(s.discovered, { at: formatAt(found.at) }) : s.never}</p>
+      <p className="text-xs text-ink-3">{found ? fill(s.discovered, { at: formatAt(found.at, clock) }) : s.never}</p>
       {found && (
         <dl className="grid gap-3 sm:grid-cols-2">
           <FoundLine label={s.rootFolder} found={found.root_folder} />

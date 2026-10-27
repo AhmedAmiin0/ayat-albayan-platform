@@ -43,8 +43,9 @@ test('tzLabel: Arabic names for the two academy zones, any other zone as an LTR 
   expect(tzLabel('Europe/London')).toBe(ltr('Europe/London'));
 });
 
-test('slotRange: «HH:MM – HH:MM» as the API sends it', () => {
-  expect(slotRange({ start_time: '16:00', end_time: '18:30' })).toBe('16:00 – 18:30');
+test('slotRange: the stored «HH:MM» pair as an isolated range, 24 h or 12 h', () => {
+  expect(slotRange({ start_time: '16:00', end_time: '18:30' }, '24')).toBe('\u206616:00 – 18:30\u2069');
+  expect(slotRange({ start_time: '16:00', end_time: '18:30' }, '12')).toBe('\u20674:00 م – 6:30 م\u2069');
 });
 
 test('upcomingTimeOff: drops what has ended, soonest first (the API sends newest first)', () => {
@@ -61,7 +62,7 @@ test('upcomingTimeOff: drops what has ended, soonest first (the API sends newest
 
 describe('formatTimeOff (device zone, Western digits)', () => {
   const span = (start: Date, end: Date) =>
-    formatTimeOff({ starts_at: start.toISOString(), ends_at: end.toISOString() });
+    formatTimeOff({ starts_at: start.toISOString(), ends_at: end.toISOString() }, '24');
 
   test('whole days read as days, the end exclusive', () => {
     const text = span(new Date(2026, 9, 10), new Date(2026, 9, 13));
@@ -77,5 +78,11 @@ describe('formatTimeOff (device zone, Western digits)', () => {
     expect(text).toContain('09:00');
     expect(text).toContain('13:30');
     expect(text).not.toMatch(/[٠-٩]/);
+  });
+
+  test('part of a day in 12 h: ص / م', () => {
+    const text = formatTimeOff({ starts_at: new Date(2026, 9, 10, 9, 0).toISOString(), ends_at: new Date(2026, 9, 10, 13, 30).toISOString() }, '12');
+    expect(text).toContain('9:00 ص');
+    expect(text).toContain('1:30 م');
   });
 });

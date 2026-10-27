@@ -2,6 +2,7 @@ import { channelTimeText } from '@ab/client-core';
 import { splitLinks, type ChannelMessageView } from '@ab/shared';
 import { Linking, View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
+import { useClockCycle } from '@/core/lib/clock';
 import { locale } from '@/core/lib/i18n/locale';
 import { shape, type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
@@ -15,6 +16,7 @@ const small = { fontFamily: type.ui[500], fontSize: type.size.xs, lineHeight: ty
  */
 export function ChannelBubble({ message: m, tz }: { message: ChannelMessageView; tz: string }) {
   const { color } = useTheme();
+  const cycle = useClockCycle();
   const who = m.mine ? t.studentChannel.you : [m.sender_name, t.studentChannel.roles[m.sender_role]].filter(Boolean).join(' · ');
   return (
     <View
@@ -44,7 +46,7 @@ export function ChannelBubble({ message: m, tz }: { message: ChannelMessageView;
           ),
         )}
       </ContentText>
-      <AppText style={{ ...small, color: color.ink3, textAlign: 'right' }}>{channelTimeText({ iso: m.created_at, tz, now: new Date(), locale })}</AppText>
+      <AppText style={{ ...small, color: color.ink3, textAlign: 'right' }}>{channelTimeText({ iso: m.created_at, tz, now: new Date(), locale, cycle })}</AppText>
     </View>
   );
 }

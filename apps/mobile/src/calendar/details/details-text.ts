@@ -1,6 +1,6 @@
-import { clockTime, lessonWhenText, reportBlock, RIYADH_TZ, type LessonStudentView, type LessonView } from '@ab/shared';
+import { reportBlock, RIYADH_TZ, type ClockCycle, type LessonStudentView, type LessonView } from '@ab/shared';
+import { clockIn, whenIn } from '@/core/lib/clock';
 import { t } from '@/core/lib/i18n/i18n';
-import { locale } from '@/core/lib/i18n/locale';
 import { ltr } from '@/core/ui/primitives/Ltr';
 
 // What the lesson details sheet says (R-SCH-01): the Riyadh time with every student's and the
@@ -49,21 +49,21 @@ const durations: Record<string, string | undefined> = t.enums.duration;
 const weekdays: Record<string, string | undefined> = t.enums.weekday;
 
 /** «16:00 بتوقيت القاهرة»; a zone without an ar.json city keeps its id (LTR). */
-export function inCity(iso: string, tz: string): string {
-  return t.schedule.inCity.replace('{time}', clockTime(new Date(iso), tz)).replace('{city}', cities[tz] ?? ltr(tz));
+export function inCity(iso: string, tz: string, cycle: ClockCycle): string {
+  return t.schedule.inCity.replace('{time}', clockIn(new Date(iso), tz, cycle)).replace('{city}', cities[tz] ?? ltr(tz));
 }
 
 /** «الخميس 1 أكتوبر 16:00 بتوقيت الرياض». */
-export function whenLine(lesson: Pick<DetailsLesson, 'starts_at'>): string {
-  return `${lessonWhenText(new Date(lesson.starts_at), RIYADH_TZ, locale)} ${t.schedule.riyadhTime}`;
+export function whenLine(lesson: Pick<DetailsLesson, 'starts_at'>, cycle: ClockCycle): string {
+  return `${whenIn(new Date(lesson.starts_at), RIYADH_TZ, cycle)} ${t.schedule.riyadhTime}`;
 }
 
 /** «عند الطالب 16:00 بتوقيت مسقط» once per student zone, then «عند المعلم/ة …», each only when it is not Riyadh. */
-export function clockLines(lesson: Pick<DetailsLesson, 'starts_at' | 'students' | 'teacher'>): string[] {
+export function clockLines(lesson: Pick<DetailsLesson, 'starts_at' | 'students' | 'teacher'>, cycle: ClockCycle): string[] {
   const zones = [...new Set(lesson.students.map((s) => s.tz ?? RIYADH_TZ))].filter((tz) => tz !== RIYADH_TZ);
-  const lines = zones.map((tz) => t.schedule.studentTime.replace('{time}', inCity(lesson.starts_at, tz)));
+  const lines = zones.map((tz) => t.schedule.studentTime.replace('{time}', inCity(lesson.starts_at, tz, cycle)));
   const teacherTz = lesson.teacher.tz;
-  if (teacherTz && teacherTz !== RIYADH_TZ) lines.push(t.schedule.teacherTime.replace('{time}', inCity(lesson.starts_at, teacherTz)));
+  if (teacherTz && teacherTz !== RIYADH_TZ) lines.push(t.schedule.teacherTime.replace('{time}', inCity(lesson.starts_at, teacherTz, cycle)));
   return lines;
 }
 
@@ -77,12 +77,12 @@ export function lengthLine(lesson: Pick<DetailsLesson, 'starts_at' | 'ends_at'>)
  * «تتكرر أسبوعيًا: الأحد، الأربعاء · 16:00 بتوقيت مسقط» for a lesson of a weekly rule: its days
  * are kept in the family's zone (the first student's), so the time is read there. null for a one-off.
  */
-export function seriesLine(lesson: Pick<DetailsLesson, 'rule_id' | 'rule_byday' | 'starts_at' | 'students'>): string | null {
+export function seriesLine(lesson: Pick<DetailsLesson, 'rule_id' | 'rule_byday' | 'starts_at' | 'students'>, cycle: ClockCycle): string | null {
   const days = lesson.rule_byday ?? [];
   if (!lesson.rule_id || days.length === 0) return null;
   const tz = lesson.students[0]?.tz ?? RIYADH_TZ;
   const names = [...days].sort((a, b) => a - b).map((d) => weekdays[String(d)] ?? String(d));
-  return t.lessons.sheet.series.replace('{days}', names.join(t.common.listSeparator)).replace('{time}', inCity(lesson.starts_at, tz));
+  return t.lessons.sheet.series.replace('{days}', names.join(t.common.listSeparator)).replace('{time}', inCity(lesson.starts_at, tz, cycle));
 }
 
 export type ReportState = 'submitted' | 'draft' | 'none';

@@ -3,6 +3,7 @@ import { ar, expect, test } from '../support/fixtures';
 import { approveTemplate, completedLesson, tokenSentTo, unapproveTemplate } from '../support/feedback';
 import { nextWeekSaturday, resetAbrar, setAvailability, withSql } from '../support/schedule';
 import { setMessaging, stubReset } from '../support/wa-stub';
+import { AR_LOCALE } from '../support/locale';
 
 // «رأيك يهمّنا» (owner 2026-10-03): admin presses «أرسل طلب الرأي» on a completed lesson → the
 // WhatsApp stub gets the template with the signed token as the button value → the guardian opens
@@ -50,7 +51,7 @@ test.describe('رأيك يهمّنا (feedback)', () => {
 
     // The guardian: a clean browser, no session.
     const token = await tokenSentTo(lesson.guardianId);
-    const guardian = await (await browser.newContext({ locale: 'ar' })).newPage();
+    const guardian = await (await browser.newContext({ locale: AR_LOCALE })).newPage();
     await guardian.goto(`/feedback/${token}`);
     await expect(guardian.getByLabel(ar.feedback.teacher)).toHaveValue('أبرار');
     // The lesson’s own kind is shown as a fixed line (the server sets it); the number is hers to correct.
@@ -95,7 +96,7 @@ test.describe('رأيك يهمّنا (feedback)', () => {
     await press(await asRole('admin'), teacherId, student);
     const token = await tokenSentTo(lesson.guardianId);
 
-    const guardian = await (await browser.newContext({ locale: 'ar' })).newPage();
+    const guardian = await (await browser.newContext({ locale: AR_LOCALE })).newPage();
     await guardian.goto('/feedback/not-a-real-token');
     await expect(guardian.getByText(ar.feedback.invalid)).toBeVisible();
     await expect(guardian.getByRole('link', { name: ar.feedback.openWhatsapp })).toBeVisible();

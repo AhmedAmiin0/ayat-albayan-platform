@@ -11,6 +11,7 @@ import { makeupCandidatesQuery } from '../../invoice/api.invoice';
 import type { MakeupCandidate } from '../../draft/contract';
 import type { BookingDraft } from '../../draft/draft';
 import { pickedText } from '../slots/SlotStep';
+import { useClock } from '@/lib/clock';
 
 export interface MissedLessonStepProps {
   draft: Pick<BookingDraft, 'students' | 'missed' | 'tz' | 'teacher'>;
@@ -35,6 +36,7 @@ function pickPatch(c: MakeupCandidate, current: BookingDraft['teacher']) {
  * 60 days that have no makeup yet. The pick fixes the length and preselects the teacher (editable).
  */
 export function MissedLessonStep({ draft, preselectId, onChange }: MissedLessonStepProps) {
+  const clock = useClock();
   const studentId = draft.students[0]?.id ?? '';
   const list = useQuery({ ...makeupCandidatesQuery(studentId), enabled: studentId !== '' });
   const done = useRef(false);
@@ -74,7 +76,7 @@ export function MissedLessonStep({ draft, preselectId, onChange }: MissedLessonS
                 onChange={() => onChange(pickPatch(c, teacher))}
                 className="size-4 accent-[var(--lapis)]"
               />
-              <span className="min-w-0 flex-1 text-sm font-semibold">{pickedText(c.starts_at, draft.tz)}</span>
+              <span className="min-w-0 flex-1 text-sm font-semibold">{pickedText(c.starts_at, draft.tz, clock)}</span>
               <StatusChip {...lessonStatusStyle[c.status]} label={t.enums.lessonStatus[c.status]} size="sm" />
               <span className="basis-full ps-7 text-xs text-ink-3">{teacherLabel(c.teacher)}</span>
             </label>

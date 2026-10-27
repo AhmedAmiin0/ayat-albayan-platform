@@ -1,5 +1,6 @@
 import { lessonStatusStyle } from '@ab/shared';
 import { View } from 'react-native';
+import { useClockCycle } from '@/core/lib/clock';
 import { t } from '@/core/lib/i18n/i18n';
 import { ErrorLine } from '@/inbox/ErrorLine';
 import { AppText } from '@/core/ui/primitives/AppText';
@@ -27,6 +28,7 @@ interface HeroCardProps {
  */
 export function HeroCard({ hero, busy = false, error, onConfirm, onDetails }: HeroCardProps) {
   const { color } = useTheme();
+  const cycle = useClockCycle();
   const { lesson } = hero;
   return (
     <View style={{ gap: 12, paddingTop: 18, paddingHorizontal: 18, paddingBottom: 16, borderRadius: 24, backgroundColor: color.lapisWash }}>
@@ -46,14 +48,14 @@ export function HeroCard({ hero, busy = false, error, onConfirm, onDetails }: He
             fontVariant: ['tabular-nums'],
           }}
         >
-          {riyadhTime(lesson.starts_at)}
+          {riyadhTime(lesson.starts_at, cycle)}
         </AppText>
         <View style={{ flex: 1 }}>
           <AppText numberOfLines={2} style={{ fontFamily: type.ui[700], fontSize: type.size.lg, lineHeight: 28, color: color.ink }}>
             {studentNames(lesson)}
           </AppText>
           <AppText style={{ fontFamily: type.ui[400], fontSize: type.size.xs, lineHeight: 20, color: color.ink2, fontVariant: ['tabular-nums'] }}>
-            {heroSubtitle(lesson)}
+            {heroSubtitle(lesson, cycle)}
           </AppText>
         </View>
       </View>

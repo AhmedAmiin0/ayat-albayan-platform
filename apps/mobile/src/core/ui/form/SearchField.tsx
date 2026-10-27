@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { TextInput } from 'react-native';
+import { StyleSheet, TextInput } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { shape, type, useTheme } from '@/theme';
 
@@ -10,16 +10,45 @@ interface SearchFieldProps {
   /** Placeholder and screen-reader name; defaults to «بحث». */
   label?: string;
   delayMs?: number;
+  /**
+   * A compact pill (the chats list, as WhatsApp): 40pt drawn with the touch area stretched to 44pt
+   * (iOS; Android keeps the 40pt box), a grey fill and a hairline edge in place of the heavy border. Text stays 16pt (no iOS zoom).
+   */
+  compact?: boolean;
 }
 
-/** 16pt search input (no iOS zoom), 44pt tall, debounced. Put the query into usePagedList params.q. */
+type Theme = ReturnType<typeof useTheme>;
+
+/** The box: the 44pt bordered field, or the compact pill (WhatsApp's grey fill and a hairline edge). */
+const boxStyle = ({ color, glass }: Theme, compact: boolean) =>
+  compact
+    ? {
+        minHeight: 40,
+        paddingHorizontal: 16,
+        borderRadius: shape.radius.pill,
+        borderWidth: StyleSheet.hairlineWidth,
+        borderColor: color.ruleInput,
+        backgroundColor: glass.pill.fill,
+      }
+    : {
+        minHeight: shape.control.touch,
+        paddingHorizontal: 12,
+        borderWidth: 1,
+        borderColor: color.ruleInput,
+        borderRadius: shape.radius.md,
+        backgroundColor: color.raised,
+      };
+
+/** 16pt search input (no iOS zoom), 44pt tall (or the compact pill), debounced. Put the query into usePagedList params.q. */
 export function SearchField({
   onSearch,
   initial = '',
   label = t.common.search,
   delayMs = 300,
+  compact = false,
 }: SearchFieldProps) {
-  const { color } = useTheme();
+  const theme = useTheme();
+  const { color } = theme;
   const [text, setText] = useState(initial);
   const timer = useRef<ReturnType<typeof setTimeout>>(undefined);
   useEffect(() => () => clearTimeout(timer.current), []);
@@ -47,13 +76,9 @@ export function SearchField({
       clearButtonMode="while-editing"
       autoCorrect={false}
       autoCapitalize="none"
+      hitSlop={compact ? { top: 2, bottom: 2 } : undefined}
       style={{
-        minHeight: shape.control.touch,
-        paddingHorizontal: 12,
-        borderWidth: 1,
-        borderColor: color.ruleInput,
-        borderRadius: shape.radius.md,
-        backgroundColor: color.raised,
+        ...boxStyle(theme, compact),
         color: color.ink,
         fontFamily: type.ui[400],
         fontSize: type.size.base,

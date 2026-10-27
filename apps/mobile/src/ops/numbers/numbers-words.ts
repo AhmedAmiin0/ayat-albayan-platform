@@ -1,4 +1,4 @@
-import { formatPhone, type Glyph, type NumberView, type ParityView, type Tone } from '@ab/shared';
+import { formatPhone, type ClockCycle, type Glyph, type NumberView, type ParityView, type Tone } from '@ab/shared';
 import { t } from '@/core/lib/i18n/i18n';
 import { ltr } from '@/core/ui/primitives/Ltr';
 import { formatAt } from '../activity/activity-format';
@@ -54,6 +54,6 @@ export function healthChip(view: Pick<NumberView, 'health'>): ChipWords | null {
 }
 
 /** «آخر فحص: …» in Riyadh time, or null. */
-export function checkedLine(view: Pick<NumberView, 'checked_at'>): string | null {
-  return view.checked_at ? n().chips.checkedAt.replace('{{at}}', formatAt(view.checked_at)) : null;
+export function checkedLine(view: Pick<NumberView, 'checked_at'>, cycle: ClockCycle): string | null {
+  return view.checked_at ? n().chips.checkedAt.replace('{{at}}', formatAt(view.checked_at, cycle)) : null;
 }

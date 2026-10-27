@@ -1,14 +1,14 @@
-import { lessonWhenText, type LessonView } from '@ab/shared';
+import { type LessonView, lessonWhenAt } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { NuqtaGlyph } from '@/components/ui/display/nuqta-glyph';
 import { t } from '@/lib/i18n/i18n';
 import { teacherLabel } from '@/lib/i18n/teacher-label';
-import { locale } from '@/lib/i18n/locale';
 import { proposalsQuery } from '../api';
 import { studentNames } from '../lesson/lessons';
 import { RIYADH_TZ } from '../tz';
+import { type Clock, useClock } from '@/lib/clock';
 
-const when = (iso: string) => lessonWhenText(new Date(iso), RIYADH_TZ, locale);
+const when = (iso: string, clock: Clock) => lessonWhenAt(new Date(iso), { tz: RIYADH_TZ, ...clock });
 
 /**
  * «طلبات تغيير الميعاد» above the week (R-SCH-08): every lesson a teacher proposed to move, in any
@@ -16,6 +16,7 @@ const when = (iso: string) => lessonWhenText(new Date(iso), RIYADH_TZ, locale);
  * drawer with «وافق» / «ارفض». Nothing pending → nothing rendered.
  */
 export function ProposalsPanel({ onOpen }: { onOpen: (lesson: LessonView) => void }) {
+  const clock = useClock();
   const proposals = useQuery(proposalsQuery);
   const list = proposals.data ?? [];
   if (list.length === 0) return null;
@@ -39,8 +40,8 @@ export function ProposalsPanel({ onOpen }: { onOpen: (lesson: LessonView) => voi
               {': '}
               <span>
                 {t.lessons.proposal.change
-                  .replace('{from}', when(lesson.starts_at))
-                  .replace('{to}', when(lesson.pending_proposal?.proposed_starts_at ?? lesson.starts_at))}
+                  .replace('{from}', when(lesson.starts_at, clock))
+                  .replace('{to}', when(lesson.pending_proposal?.proposed_starts_at ?? lesson.starts_at, clock))}
               </span>
             </button>
           </li>

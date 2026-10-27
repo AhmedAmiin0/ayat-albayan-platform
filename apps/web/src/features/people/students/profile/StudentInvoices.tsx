@@ -3,6 +3,7 @@ import { invoicesQuery } from '@/features/teaching/booking/invoice/api.invoice';
 import { InvoiceButton } from '@/features/teaching/booking/invoice/InvoiceDialog';
 import { fullTime } from '@/features/messaging/inbox/format';
 import { t } from '@/lib/i18n/i18n';
+import { useClock } from '@/lib/clock';
 
 /**
  * «الفواتير» on the student's profile (R-PAY-03): the payment proofs of this student's bookings,
@@ -11,6 +12,7 @@ import { t } from '@/lib/i18n/i18n';
  */
 export function StudentInvoices({ studentId }: { studentId: string }) {
   const invoices = useQuery(invoicesQuery({ studentId }));
+  const clock = useClock();
   if (!invoices.data || invoices.data.length === 0) return null;
   return (
     <section aria-labelledby="student-invoices" className="mb-6 grid gap-2">
@@ -20,7 +22,7 @@ export function StudentInvoices({ studentId }: { studentId: string }) {
       <ul className="grid gap-1">
         {invoices.data.map((i) => (
           <li key={i.id} className="flex flex-wrap items-center gap-x-3 gap-y-1 border-b border-rule py-2 text-sm">
-            <span className="tabular-nums">{fullTime(i.created_at)}</span>
+            <span className="tabular-nums">{fullTime(i.created_at, clock)}</span>
             <span className="text-ink-2">{t.booking.kind[i.kind]}</span>
             <span className="text-xs text-ink-3">
               {i.source === 'whatsapp' ? t.booking.invoice.sourceWhatsapp : t.booking.invoice.sourceUpload}

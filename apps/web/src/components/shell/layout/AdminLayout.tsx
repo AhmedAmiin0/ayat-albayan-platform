@@ -41,14 +41,14 @@ export function AdminLayout({ nav, title, children }: AdminLayoutProps) {
       <MenuBar home="/admin" title={title} nav={nav} email={me?.email} className="shell:hidden sm:mx-2" />
       {/* `relative`: absolutely positioned sr-only text in a long sidebar stays inside its scroll clip.
           From 900px the rhythm is a 4px grid: 24 on top, 24 logo → fihris, 16 between groups; the sticky
-          foot owns the 24 at the bottom, so it stays on screen on short viewports. scroll-pb-56 (224px)
-          is the foot's height (~180px with the «حسابي» chip) and more: a focused or current link
+          foot owns the 24 at the bottom, so it stays on screen on short viewports. scroll-pb-64 (256px)
+          is the foot's height (~230px with the clock format and the «حسابي» chip) and more: a focused or current link
           scrolls clear of the sticky foot. It scrolls down only, never sideways (owner 2026-10-18). */}
       <aside
         ref={aside}
         className={cn(
           'relative hidden shrink-0 px-3',
-          'shell:flex shell:h-dvh shell:flex-col shell:gap-y-6 shell:scroll-pb-56 shell:overflow-y-auto shell:overflow-x-hidden shell:border-e shell:border-rule shell:bg-cover shell:pt-6 shell:pb-0',
+          'shell:flex shell:h-dvh shell:flex-col shell:gap-y-6 shell:scroll-pb-64 shell:overflow-y-auto shell:overflow-x-hidden shell:border-e shell:border-rule shell:bg-cover shell:pt-6 shell:pb-0',
         )}
       >
         <Link to="/admin" activeOptions={{ exact: true }} aria-label={t.app.name} className="shrink-0 rounded-md px-1.5 no-underline shell:px-3">

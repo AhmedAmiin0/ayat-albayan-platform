@@ -67,7 +67,7 @@ const adjustHint = async (days: BookedCourse['days'], adjustTo: number) => {
   const previous = bookedCourse({ days, perWeek: days.length });
   const props = { previous, opensOn: '2026-10-11', teacher, adjustTo, onSame: jest.fn(), onOther: jest.fn() };
   await renderWithQuery(<CourseContinue {...props} />);
-  return counted(t.booking.courseChange.continueAdjust, adjustTo).replace('{days}', daysText(days, previous.tz));
+  return counted(t.booking.courseChange.continueAdjust, adjustTo).replace('{days}', daysText(days, previous.tz, '24'));
 };
 
 test('1 → 3 days a week: the target count, never «add or remove one day»', async () => {

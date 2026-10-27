@@ -1,4 +1,6 @@
-import { MEETING_DURATION_MAX, MEETING_DURATION_MIN } from '@ab/shared';
+import { hourLabel, MEETING_DURATION_MAX, MEETING_DURATION_MIN } from '@ab/shared';
+import { useClockCycle } from '@/core/lib/clock';
+import { locale } from '@/core/lib/i18n/locale';
 import { useMemo } from 'react';
 import { View } from 'react-native';
 import { Note } from '@/more/Note';
@@ -22,10 +24,11 @@ interface ScheduleFieldsProps {
 
 /**
  * The time of a scheduled meeting without a date picker: 14 day chips (today first, the viewer's
- * calendar), hour ±1 and minute ±15 steppers, a length of 15..240 by 15, and the zone it reads in.
+ * calendar), hour ±1 (0–23, shown «5 م» in 12 h; the slot keeps 24 h) and minute ±15 steppers, a length of 15..240 by 15, and the zone it reads in.
  */
 export function ScheduleFields({ slot, onChange, tz }: ScheduleFieldsProps) {
   const { color } = useTheme();
+  const cycle = useClockCycle();
   const days = useMemo(() => dateChoices(new Date(), tz), [tz]);
   const items = days.map((d, i) => ({ value: d, label: dayChipLabel(d, i === 0) }));
   if (!days.includes(slot.date)) items.unshift({ value: slot.date, label: dayChipLabel(slot.date, false) });
@@ -37,7 +40,7 @@ export function ScheduleFields({ slot, onChange, tz }: ScheduleFieldsProps) {
       <FilterPills items={items} value={slot.date} onChange={(date) => set({ date })} accessibilityLabel={L.date} role="radiogroup" />
       <AppText style={caption}>{L.time}</AppText>
       <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 16 }}>
-        <Stepper label={L.mobile.hour} value={slot.hour} min={0} max={23} wrap format={two} onChange={(hour) => set({ hour })} />
+        <Stepper label={L.mobile.hour} value={slot.hour} min={0} max={23} wrap format={(h) => hourLabel(h, cycle, locale)} onChange={(hour) => set({ hour })} />
         <Stepper label={L.mobile.minute} value={slot.minute} min={0} max={45} step={15} wrap format={two} onChange={(minute) => set({ minute })} />
       </View>
       <AppText style={caption}>{L.duration}</AppText>

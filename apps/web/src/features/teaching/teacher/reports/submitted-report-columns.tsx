@@ -1,4 +1,4 @@
-import { ATTENDANCES, GRADES, gradeStyle, lessonWhenText, type TeacherReportView } from '@ab/shared';
+import { ATTENDANCES, GRADES, gradeStyle, lessonWhenAt, type TeacherReportView } from '@ab/shared';
 import { createColumnHelper } from '@tanstack/react-table';
 import type { DataTableFeatures } from '@/components/DataTable';
 import { Ltr } from '@/components/ui/display/ltr';
@@ -7,19 +7,19 @@ import { reportFormHref } from '@/features/reporting/reports/paths';
 import { PdfAction } from '@/features/reporting/reports/history/PdfAction';
 import { ReportLink } from '@/features/reporting/reports/history/ReportLink';
 import { t } from '@/lib/i18n/i18n';
-import { locale } from '@/lib/i18n/locale';
+import type { Clock } from '@/lib/clock';
 
 const col = createColumnHelper<DataTableFeatures, TeacherReportView>();
 const attendanceOptions = ATTENDANCES.map((a) => ({ value: a, label: t.enums.attendance[a] }));
 const gradeOptions = GRADES.map((g) => ({ value: g, label: t.enums.grade[g] }));
-const when = (iso: string, tz: string) => lessonWhenText(new Date(iso), tz, locale);
+const when = (iso: string, tz: string, clock: Clock) => lessonWhenAt(new Date(iso), { tz, ...clock });
 
 /**
  * «تقارير مُرسلة» columns (server sort/filter, R-NFR-08): student (name or code search), the lesson,
  * when it was sent (sorts), attendance and grade (sort + select), then edit/view and the PDF. The
  * lesson date has no sort (lesson_reports has no FK to lessons); the default order is newest sent.
  */
-export function submittedReportColumns(tz: string) {
+export function submittedReportColumns(tz: string, clock: Clock) {
   return col.columns([
     col.accessor((r) => r.student.name, {
       id: 'student',
@@ -34,14 +34,14 @@ export function submittedReportColumns(tz: string) {
     }),
     col.accessor('starts_at', {
       header: () => t.reports.date,
-      cell: (c) => <span className="text-sm text-ink-2">{when(c.getValue(), tz)}</span>,
+      cell: (c) => <span className="text-sm text-ink-2">{when(c.getValue(), tz, clock)}</span>,
       meta: { className: 'max-sm:order-2' },
     }),
     col.accessor('submitted_at', {
       header: () => t.reports.submittedAtCol,
       cell: (c) => {
         const at = c.getValue();
-        return at ? <span className="text-xs text-ink-3">{when(at, tz)}</span> : '—';
+        return at ? <span className="text-xs text-ink-3">{when(at, tz, clock)}</span> : '—';
       },
       meta: { className: 'max-sm:hidden', sortKey: 'submitted' },
     }),
@@ -67,7 +67,7 @@ export function submittedReportColumns(tz: string) {
       header: () => t.reports.actionsCol,
       cell: (c) => {
         const r = c.row.original;
-        const until = r.can_edit && r.edit_until ? t.reports.editUntil.replace('{when}', when(r.edit_until, tz)) : null;
+        const until = r.can_edit && r.edit_until ? t.reports.editUntil.replace('{when}', when(r.edit_until, tz, clock)) : null;
         return (
           <span className="grid justify-items-start gap-1">
             <span className="flex flex-wrap items-center gap-2">

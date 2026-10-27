@@ -46,14 +46,14 @@ test('only free slots, grouped by Riyadh day (not UTC), earliest first', () => {
 });
 
 test('slot times: big Riyadh clock, the student clock only when the zone differs', () => {
-  expect(slotTimes(SUN_17, 'Asia/Riyadh')).toEqual({ riyadh: '17:00', local: null });
-  expect(slotTimes(SUN_17, 'Asia/Dubai')).toEqual({ riyadh: '17:00', local: '18:00 بتوقيت دبي' });
-  expect(slotTimes(SUN_17, 'Pacific/Fiji').local).toMatch(/بتوقيت ⁦Pacific\/Fiji⁩$/);
+  expect(slotTimes(SUN_17, 'Asia/Riyadh', '24')).toEqual({ riyadh: '17:00', local: null });
+  expect(slotTimes(SUN_17, 'Asia/Dubai', '24')).toEqual({ riyadh: '17:00', local: '18:00 بتوقيت دبي' });
+  expect(slotTimes(SUN_17, 'Pacific/Fiji', '24').local).toMatch(/بتوقيت ⁦Pacific\/Fiji⁩$/);
 });
 
 test('whenText: Riyadh first, then the student day and clock', () => {
-  expect(whenText(SUN_17, 'Asia/Riyadh')).toBe('الأحد 4 أكتوبر 17:00 بتوقيت الرياض');
-  expect(whenText(SUN_17, 'Asia/Dubai')).toBe(
+  expect(whenText(SUN_17, 'Asia/Riyadh', '24')).toBe('الأحد 4 أكتوبر 17:00 بتوقيت الرياض');
+  expect(whenText(SUN_17, 'Asia/Dubai', '24')).toBe(
     'الأحد 4 أكتوبر 17:00 بتوقيت الرياض، عند الطالب الأحد 4 أكتوبر 18:00 بتوقيت دبي',
   );
 });

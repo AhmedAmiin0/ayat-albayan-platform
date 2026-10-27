@@ -14,6 +14,7 @@ import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { useTeacherMe } from '../../lib/queries';
 import { reportErrorText, useReportForm } from '../hooks/api';
 import { ReportEntryCard } from '../components/ReportEntryCard';
+import { useClockCycle } from '@/core/lib/clock';
 
 const back = () => (router.canGoBack() ? router.back() : router.replace('/teacher/reports'));
 
@@ -23,6 +24,7 @@ const back = () => (router.canGoBack() ? router.back() : router.replace('/teache
  * saved form still opens with its «آخر تحديث», and nothing claims to be sent until the API says so.
  */
 export function ReportFormScreen() {
+  const cycle = useClockCycle();
   const { lessonId = '' } = useLocalSearchParams<{ lessonId: string }>();
   const form = useReportForm(lessonId);
   const tz = useTeacherMe().data?.tz ?? RIYADH_TZ;
@@ -36,7 +38,7 @@ export function ReportFormScreen() {
     <Screen>
       <ScreenHeader
         title={t.reports.formTitle}
-        subtitle={stale ? t.mobile.lastUpdated.replace('{time}', clockAt(form.dataUpdatedAt)) : undefined}
+        subtitle={stale ? t.mobile.lastUpdated.replace('{time}', clockAt(form.dataUpdatedAt, cycle)) : undefined}
         trailing={<Button variant="ghost" label={t.common.back} onPress={back} />}
       />
       {data ? (

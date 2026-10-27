@@ -1,4 +1,4 @@
-import { clockTime, DURATIONS } from '@ab/shared';
+import { clockOf, clockTime, DURATIONS } from '@ab/shared';
 import { Field } from '@/components/ui/form/field';
 import { Input } from '@/components/ui/form/input';
 import { RadioChips } from '@/components/ui/form/radio-chips';
@@ -9,6 +9,9 @@ import { validLength } from './edit-time';
 import { lengthText } from './edit-time-text';
 import type { TimeEditMode } from './edit-time.contract';
 import { dateLabel, dayMonthLabel, RIYADH_TZ, weekdayOf, zonedToUtc } from '../tz';
+import { ClockOptions } from '@/lib/clock-options';
+import { clockDir } from '@/lib/clock-text';
+import { type Clock, useClock } from '@/lib/clock';
 
 export interface FieldState {
   date: string;
@@ -37,10 +40,12 @@ const lengths = (current: number): number[] => (DURATIONS.some((d) => d === curr
 const dayText = (date: string) => `${weekday[String(weekdayOf(date))] ?? ''} ${dayMonthLabel(date)}`;
 
 /** «= 18:00 بتوقيت الرياض» when the picked teacher-clock time reads differently in Riyadh (Cairo's DST), else nothing. */
-function riyadhHint(p: { tz: string; date: string; time: string }): string | undefined {
+function riyadhHint(p: { tz: string; date: string; time: string }, clock: Clock): string | undefined {
   if (p.tz === RIYADH_TZ) return undefined;
-  const riyadh = clockTime(zonedToUtc(p.date, p.time, p.tz), RIYADH_TZ);
-  return riyadh === p.time ? undefined : t.lessons.timeEdit.riyadhEquiv.replace('{time}', riyadh);
+  const at = zonedToUtc(p.date, p.time, p.tz);
+  // Compared as 24 h keys; shown in the viewer's cycle.
+  if (clockTime(at, RIYADH_TZ) === p.time) return undefined;
+  return t.lessons.timeEdit.riyadhEquiv.replace('{time}', clockOf(at, { ...clock, tz: RIYADH_TZ }));
 }
 
 /**
@@ -49,6 +54,7 @@ function riyadhHint(p: { tz: string; date: string; time: string }): string | und
  * the reason (required for a correction). An odd migrated length is flagged until a valid one is picked.
  */
 export function EditTimeFields({ mode, tz, value, onChange, times, days, reasonMissing }: EditTimeFieldsProps) {
+  const clock = useClock();
   const move = mode === 'move';
   const offChip = !days.includes(value.date);
   return (
@@ -79,12 +85,10 @@ export function EditTimeFields({ mode, tz, value, onChange, times, days, reasonM
         </div>
       )}
       <div className="grid grid-cols-2 gap-3">
-        <Field label={t.lessons.timeEdit.time.replace('{city}', tzCity(tz) ?? tz)} hint={riyadhHint({ tz, date: value.date, time: value.time })}>
+        <Field label={t.lessons.timeEdit.time.replace('{city}', tzCity(tz) ?? tz)} hint={riyadhHint({ tz, date: value.date, time: value.time }, clock)}>
           {(p) => (
-            <Select {...p} dir="ltr" value={value.time} onChange={(e) => onChange({ time: e.target.value })}>
-              {times.map((x) => (
-                <option key={x} value={x}>{x}</option>
-              ))}
+            <Select {...p} dir={clockDir(clock)} value={value.time} onChange={(e) => onChange({ time: e.target.value })}>
+              <ClockOptions times={times} />
             </Select>
           )}
         </Field>

@@ -7,6 +7,7 @@ import { BUBBLE_ROW } from '../../messages/lib/bubble-side';
 import { useInboxMode } from '../../shared/mode';
 import { useCalls } from '../state/call-context';
 import { callEntryText, callerName, callGlyph, callTone } from './call-text';
+import { useClock } from '@/lib/clock';
 
 export interface CallEntryProps {
   call: CallView;
@@ -24,6 +25,7 @@ export function CallEntry({ call, canCall }: CallEntryProps) {
   const name = callerName(call, useInboxMode());
   const kind = callEntryKind(call);
   const text = callEntryText(call);
+  const clock = useClock();
   const back = ui && canCall && ui.config.available && !ui.busy && kind !== 'live';
   const body = (
     <>
@@ -32,8 +34,8 @@ export function CallEntry({ call, canCall }: CallEntryProps) {
       </span>
       <span className="min-w-0 text-start">
         <span className={cn('block text-sm font-semibold', kind === 'missed' ? 'text-danger' : 'text-ink')}>{text}</span>
-        <time dateTime={call.started_at} title={fullTime(call.started_at)} className="block text-2xs text-ink-3 tabular-nums">
-          {clockText(call.started_at)}
+        <time dateTime={call.started_at} title={fullTime(call.started_at, clock)} className="block text-2xs text-ink-3 tabular-nums">
+          {clockText(call.started_at, clock)}
         </time>
       </span>
     </>

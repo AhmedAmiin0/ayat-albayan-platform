@@ -1,5 +1,6 @@
 import { VALUE_GROUP_IDS, VALUE_GROUPS, type NotificationEntryView } from '@ab/shared';
 import { Link } from '@tanstack/react-router';
+import { useClock } from '@/lib/clock';
 import { t } from '@/lib/i18n/i18n';
 import { fillText, timingText } from '../rule-text';
 import type { RuleRowState } from '../table/use-rule-row';
@@ -21,6 +22,7 @@ function legacyText(entry: NotificationEntryView): string | null {
  * else the timing in words; renewal_due by reference to «القيم», the join link «مع تذكير الحلقة».
  */
 export function TimingPart({ entry, row }: { entry: NotificationEntryView; row: RuleRowState | null }) {
+  const clock = useClock();
   if (entry.key === 'renewal_due') {
     return (
       <span className="flex flex-wrap items-center gap-x-2 text-xs text-ink-2">
@@ -42,7 +44,7 @@ export function TimingPart({ entry, row }: { entry: NotificationEntryView; row: 
     const error = row.result.ok ? null : row.result.error;
     return <TimingEditor draft={row.draft.timing} onChange={(timing) => row.set({ timing })} disabled={row.saving} error={error} />;
   }
-  const text = entry.rule ? timingText(entry.key, entry.rule.timing) : null;
+  const text = entry.rule ? timingText(entry.key, entry.rule.timing, clock) : null;
   const shown = text ?? legacyText(entry);
   return shown ? <span className="text-xs text-ink-2">{shown}</span> : null;
 }

@@ -1,15 +1,15 @@
-import { lessonWhenText, type StudentLinkLesson } from '@ab/shared';
+import { lessonWhenAt, type StudentLinkLesson } from '@ab/shared';
 import { useState } from 'react';
 import { Button } from '@/components/ui/form/button';
 import { Field } from '@/components/ui/form/field';
 import { FormAlert } from '@/components/ui/form/form-alert';
 import { Input } from '@/components/ui/form/input';
 import { t } from '@/lib/i18n/i18n';
-import { locale } from '@/lib/i18n/locale';
 import { classroomErrorText, opensAtOf } from '../room/livekit/errors';
 import { isLessonNow, viewerTz, windowStateAt } from './student-link';
 import { RecordedNotice } from '../recordings/RecordedNotice';
 import { opensAtText } from '../room/livekit/window-hint';
+import { useClock } from '@/lib/clock';
 
 interface Props {
   lesson: StudentLinkLesson;
@@ -27,6 +27,7 @@ const problemText = (error: unknown): string => {
 
 /** «حلقتك القادمة / الآن»: when (viewer's clock), with whom, an optional name and the big «ادخل الحلقة». */
 export function StudentLessonPanel({ lesson, firstName, now, pending, error, onJoin }: Props) {
+  const clock = useClock();
   const [name, setName] = useState('');
   const state = windowStateAt(lesson.window, now);
   const title = isLessonNow(lesson, now) ? t.studentLink.page.now : t.studentLink.page.next;
@@ -35,7 +36,7 @@ export function StudentLessonPanel({ lesson, firstName, now, pending, error, onJ
     <>
       <section aria-label={title} className="grid gap-1">
         <h2 className="font-display text-h3 font-bold">{title}</h2>
-        <p className="text-body">{lessonWhenText(new Date(lesson.starts_at), viewerTz(), locale)}</p>
+        <p className="text-body">{lessonWhenAt(new Date(lesson.starts_at), { tz: viewerTz(), ...clock })}</p>
         {lesson.teacher_name && <p className="text-sm text-ink-2">{t.studentLink.page.with.replace('{teacher}', lesson.teacher_name)}</p>}
       </section>
       <Field label={t.studentLink.page.name}>

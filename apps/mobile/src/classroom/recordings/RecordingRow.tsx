@@ -9,13 +9,15 @@ import { Button } from '@/core/ui/primitives/Button';
 import { StatusChip } from '@/core/ui/feedback/StatusChip';
 import { RECORDING_CHIP, recordingTime, type RecordingSource } from './recording-format';
 import { playRecording } from './recordings-api';
+import { useClockCycle } from '@/core/lib/clock';
 
 /** One recording: start time, status chip, and «شغّل» once the file exists (a fresh link on every tap). */
 export function RecordingRow({ source, rec }: { source: RecordingSource; rec: LessonRecordingView }) {
+  const cycle = useClockCycle();
   const { color } = useTheme();
   const client = useQueryClient();
   const play = useMutation({ mutationFn: () => playRecording(client, source, rec.id) });
-  const time = recordingTime(rec.started_at);
+  const time = recordingTime(rec.started_at, cycle);
   return (
     <View style={{ gap: 8, paddingVertical: 10, borderBottomWidth: 1, borderBottomColor: color.rule }}>
       <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>

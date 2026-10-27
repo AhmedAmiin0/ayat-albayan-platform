@@ -1,5 +1,6 @@
 import { View } from 'react-native';
 import { ErrorLine } from '@/inbox/ErrorLine';
+import { useClockCycle } from '@/core/lib/clock';
 import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/more/Note';
 import { Button } from '@/core/ui/primitives/Button';
@@ -17,9 +18,10 @@ const text = t.classroom;
  */
 export function JoinClassroomButton({ lesson }: { lesson: JoinableLesson }) {
   const { win, busy, error, join } = useJoinClassroom(lesson);
+  const cycle = useClockCycle();
   if (!win) return null;
   const hint =
-    win.state === 'early' ? opensAtLine(win.opens_at) : win.state === 'closed' ? text.closedHint : null;
+    win.state === 'early' ? opensAtLine(win.opens_at, cycle) : win.state === 'closed' ? text.closedHint : null;
   return (
     <View style={{ gap: 2, alignSelf: 'flex-start' }}>
       <Button

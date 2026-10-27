@@ -1,4 +1,4 @@
-import type { ThreadDetail, ThreadView } from '@ab/shared';
+import type { MessageView, ThreadDelta, ThreadDetail, ThreadView } from '@ab/shared';
 import { ForbiddenException, Inject, Injectable, Optional } from '@nestjs/common';
 import type { AuthUser } from '../../../../common/auth/verify-token';
 import { ChatListsQueries } from '../../chat-lists/chat-lists.queries';
@@ -7,6 +7,7 @@ import type { Page } from '../../../../common/http/http';
 import { SalesScopes, type SalesScope } from '../../../sales/sales/sales-scope';
 import { listFilter, withLists } from '../threads/chat-list-filter';
 import { SalesThreadsService } from '../sales-threads/sales-threads.service';
+import { ThreadDeltaService, type DeltaCaller, type ThreadDeltaQuery } from '../delta/thread-delta.service';
 import { TeacherScopes, type TeacherScope } from '../teacher-threads/teacher-scope';
 import { TeacherThreadsService } from '../teacher-threads/teacher-threads.service';
 import { ThreadQuotes } from '../threads/thread-quotes';
@@ -28,6 +29,8 @@ export class ThreadReads {
   @Inject(ChatListsQueries) private readonly chatLists?: ChatListsQueries;
   /** «رد»: the messages a page's bubbles answer (owner 2026-10-25). */
   @Inject(ThreadQuotes) private readonly quotes?: ThreadQuotes;
+  /** The open chat's delta refresh (owner 2026-10-27). */
+  @Inject(ThreadDeltaService) private readonly deltas?: ThreadDeltaService;
   /** The academy's own numbers: never listed, for any role (owner 2026-10-27). */
   @Optional() @Inject(OwnNumbers) private readonly own?: OwnNumbers;
   /** «تفاعل»: the first page's `reactable` (the chat's send line, migration 900). */
@@ -83,6 +86,17 @@ export class ThreadReads {
     return { ...detail, thread: { ...detail.thread, reactable } };
   }
 
+  /** GET /threads/:phone?after=: the same three scopes as detail, resolved per request (rule 9). */
+  async delta(q: ThreadDeltaQuery, user: AuthUser): Promise<ThreadDelta> {
+    const mine = await this.salesScope(user);
+    const scope = mine ? null : await this.scopes.of(user);
+    const caller: DeltaCaller = scope ? { kind: 'teacher', scope } : mine ? { kind: 'sales' } : { kind: 'admin' };
+    if (!this.deltas) throw new ForbiddenException();
+    const delta = await this.deltas.read(q, caller);
+    const all = await this.quotes?.attach([...delta.messages, ...delta.pending], q.phone);
+    return all ? { ...delta, ...splitAt(all, delta.messages.length) } : delta;
+  }
+
   private async withoutOwn(f: ThreadListFilter): Promise<ThreadListFilter> {
     const own = this.own ? await this.own.phones() : new Set<string>();
     return own.size > 0 ? { ...f, hide: [...own] } : f;
@@ -97,3 +111,5 @@ export class ThreadReads {
     return this.sales;
   }
 }
+
+const splitAt = (all: MessageView[], n: number) => ({ messages: all.slice(0, n), pending: all.slice(n) });

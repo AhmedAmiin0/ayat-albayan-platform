@@ -5,6 +5,7 @@ import type { ColumnFilterDef, DataTableFeatures } from '@/components/DataTable'
 import { StatusChip } from '@/components/ui/display/status-chip';
 import { t } from '@/lib/i18n/i18n';
 import { actionLabel, entityLabel, entityLink, formatAt, resultLabel, resultStyle, roleLabel } from './activity-format';
+import { useClock } from '@/lib/clock';
 
 const col = createColumnHelper<DataTableFeatures, ActivityView>();
 
@@ -39,6 +40,11 @@ function EntityCell({ row }: { row: ActivityView }) {
   );
 }
 
+/** The row's time in the viewer's cycle (12 or 24 h). */
+function AtCell({ iso }: { iso: string }) {
+  return <span className="tabular-nums text-ink-2">{formatAt(iso, useClock())}</span>;
+}
+
 /**
  * «سجل النشاط» columns. Time, action, result and duration sort server-side; user (by role),
  * action (key prefix), entity and result filter (R-NFR-08). Under 640px: action + result, then
@@ -47,7 +53,7 @@ function EntityCell({ row }: { row: ActivityView }) {
 export const activityColumns = col.columns([
   col.accessor('at', {
     header: () => t.activity.at,
-    cell: (c) => <span className="tabular-nums text-ink-2">{formatAt(c.getValue())}</span>,
+    cell: (c) => <AtCell iso={c.getValue()} />,
     meta: { className: 'whitespace-nowrap max-sm:order-4 max-sm:text-xs', sortKey: 'at' },
   }),
   col.accessor('actor_name', {

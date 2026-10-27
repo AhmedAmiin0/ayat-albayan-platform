@@ -1,7 +1,11 @@
 import { describe, expect, it } from 'vitest';
 import { t } from '@/lib/i18n/i18n';
-import { errorText, listTime, mediaKind, previewText, sessionUntil, threadKind, threadName, unreadLabel } from './format';
+import { clockText, errorText, fullTime, listTime, mediaKind, previewText, sessionUntil, threadKind, threadName, unreadLabel } from './format';
 import { PHONE, thread } from './testing/inbox-fixture';
+import { locale } from '@/lib/i18n/locale';
+
+/** The cycle the suite reads times in (test-setup saves 24 h). */
+const C24 = { cycle: '24', locale } as const;
 
 describe('inbox display text (docs/07 §9)', () => {
   it.each([
@@ -51,13 +55,24 @@ describe('inbox display text (docs/07 §9)', () => {
 
   it('list time: the clock today, the date otherwise, Western digits', () => {
     const now = new Date('2026-10-01T15:00:00');
-    expect(listTime(new Date('2026-10-01T09:05:00').toISOString(), now)).toBe('09:05');
-    expect(listTime(new Date('2026-09-28T09:05:00').toISOString(), now)).toMatch(/^28 /);
+    expect(listTime(new Date('2026-10-01T09:05:00').toISOString(), C24, now)).toBe('09:05');
+    expect(listTime(new Date('2026-09-28T09:05:00').toISOString(), C24, now)).toMatch(/^28 /);
+  });
+
+  it('12 h: ص / م in Arabic, AM / PM in English; midnight and noon read 12', () => {
+    const now = new Date('2026-10-01T15:00:00');
+    const at = (hhmm: string) => new Date(`2026-10-01T${hhmm}:00`).toISOString();
+    expect(listTime(at('17:30'), { cycle: '12', locale: 'ar' }, now)).toBe('5:30 م');
+    expect(listTime(at('09:05'), { cycle: '12', locale: 'en' }, now)).toBe('9:05 AM');
+    expect(clockText(at('00:00'), { cycle: '12', locale: 'ar' })).toBe('12:00 ص');
+    expect(clockText(at('12:00'), { cycle: '12', locale: 'en' })).toBe('12:00 PM');
+    expect(clockText(at('17:30'), C24)).toBe('17:30');
+    expect(fullTime(at('17:30'), { cycle: '12', locale: 'ar' })).toMatch(/2026، 5:30 م$/);
   });
 
   it('the session window closes 24 h after their last message', () => {
-    expect(sessionUntil('2026-10-01T10:00:00Z')).toMatch(/2026/);
-    expect(sessionUntil('2026-10-01T10:00:00Z')).not.toMatch(/[٠-٩]/);
+    expect(sessionUntil('2026-10-01T10:00:00Z', C24)).toMatch(/2026/);
+    expect(sessionUntil('2026-10-01T10:00:00Z', C24)).not.toMatch(/[٠-٩]/);
   });
 
   it('errors: known Meta codes in words, anything else with its code', () => {

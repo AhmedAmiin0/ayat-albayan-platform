@@ -5,6 +5,7 @@ import { StatusChip } from '@/components/ui/display/status-chip';
 import { t } from '@/lib/i18n/i18n';
 import { fullTime } from '../format';
 import { salesFamilyQuery } from '../sales-money/api';
+import { useClock } from '@/lib/clock';
 
 export interface SalesFamilyLineProps {
   phone: string;
@@ -24,6 +25,7 @@ export function SalesFamilyLine({ phone, people, lessons }: SalesFamilyLineProps
   const children = people.students;
   const family = useQuery({ ...salesFamilyQuery(phone), enabled: children.length > 0 });
   const next = lessons[0];
+  const clock = useClock();
   if (children.length === 0 && !next) return null;
   const notHers = children.length > 0 && family.isSuccess && family.data.students.length === 0;
   return (
@@ -36,7 +38,7 @@ export function SalesFamilyLine({ phone, people, lessons }: SalesFamilyLineProps
           {s.teacher_name && <span>{s.teacher_name}</span>}
         </span>
       ))}
-      {next && <span>{t.inbox.nextLesson.replace('{when}', fullTime(next.starts_at))}</span>}
+      {next && <span>{t.inbox.nextLesson.replace('{when}', fullTime(next.starts_at, clock))}</span>}
       {notHers && <span className="font-semibold text-ink-2">{t.inbox.salesNotYours}</span>}
     </>
   );

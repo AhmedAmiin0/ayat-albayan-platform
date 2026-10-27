@@ -6,6 +6,7 @@ import { t } from '@/lib/i18n/i18n';
 import { cn } from '@/lib/utils';
 import { useMarkRead } from './api';
 import { notificationStamp, notificationTime } from './format';
+import { useClock } from '@/lib/clock';
 
 export interface NotificationItemProps {
   item: Item;
@@ -23,6 +24,7 @@ export function NotificationItem({ item, onPick }: NotificationItemProps) {
   const navigate = useNavigate();
   const markRead = useMarkRead();
   const unread = item.read_at === null;
+  const clock = useClock();
   const open = () => {
     if (unread) markRead.mutate([item.id]);
     void navigate({ href: webNotificationPath({ ...item.data, kind: item.kind }, role) });
@@ -51,10 +53,10 @@ export function NotificationItem({ item, onPick }: NotificationItemProps) {
           )}
           <time
             dateTime={item.created_at}
-            title={notificationStamp(item.created_at)}
+            title={notificationStamp(item.created_at, clock)}
             className="text-2xs text-ink-3 tabular-nums"
           >
-            {notificationTime(item.created_at)}
+            {notificationTime(item.created_at, clock)}
           </time>
         </span>
       </button>

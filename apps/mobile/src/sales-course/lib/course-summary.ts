@@ -1,4 +1,4 @@
-import { counted, type BookingRequest, type SalesCourseView } from '@ab/shared';
+import { counted, type BookingRequest, type ClockCycle, type SalesCourseView } from '@ab/shared';
 import type { SummaryRow } from '@/booking/trial/lib/confirm-summary';
 import { whenText } from '@/booking/shared/slots';
 import { t } from '@/core/lib/i18n/i18n';
@@ -19,15 +19,16 @@ interface CourseRowsInput {
   view: SalesCourseView;
   teacherName: string;
   body: BookingRequest | null;
+  cycle: ClockCycle;
 }
 
 /** The review's lines: the student, the teacher (no row while her name is unknown), the plan, the first lesson. */
-export function courseRows({ view, teacherName, body }: CourseRowsInput): SummaryRow[] {
+export function courseRows({ view, teacherName, body, cycle }: CourseRowsInput): SummaryRow[] {
   const rows: SummaryRow[] = [
     [t.booking.studentSection, view.student.name],
     ...(teacherName ? [[t.booking.steps.teacher, teacherName] satisfies SummaryRow] : []),
     [t.booking.steps.package, courseFixedText(view.subscription)],
   ];
-  if (body?.startsAt) rows.push([t.booking.startsOn, whenText(body.startsAt, view.student.tz)]);
+  if (body?.startsAt) rows.push([t.booking.startsOn, whenText(body.startsAt, view.student.tz, cycle)]);
   return rows;
 }

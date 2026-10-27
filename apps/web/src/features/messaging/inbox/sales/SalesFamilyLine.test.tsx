@@ -7,6 +7,10 @@ import { PHONE, pupil } from '../testing/inbox-fixture';
 import { student } from '../sales-money/sales-money-fixture';
 import { SalesFamilyLine } from './SalesFamilyLine';
 import { renderWithClient, routeFetch } from '../testing/test-utils';
+import { locale } from '@/lib/i18n/locale';
+
+/** The cycle the suite reads times in (test-setup saves 24 h). */
+const C24 = { cycle: '24', locale } as const;
 
 const apiFetch = vi.hoisted(() => vi.fn());
 vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
@@ -40,7 +44,7 @@ describe('SalesFamilyLine: which children a sales chat is about (W3)', () => {
     expect(screen.getByText('أبرار')).toBeTruthy();
     expect(screen.getByText('جود')).toBeTruthy();
     expect(screen.getByText(t.enums.studentStatus.trial)).toBeTruthy();
-    expect(text()).toContain(t.inbox.nextLesson.replace('{when}', fullTime(LESSON.starts_at)));
+    expect(text()).toContain(t.inbox.nextLesson.replace('{when}', fullTime(LESSON.starts_at, C24)));
     await vi.waitFor(() => expect(apiFetch).toHaveBeenCalledWith(`/sales/money/family?phone=${encodeURIComponent(PHONE)}`));
     expect(text()).not.toContain(t.inbox.salesNotYours);
   });

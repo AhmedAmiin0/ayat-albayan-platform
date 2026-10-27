@@ -1,8 +1,9 @@
-import { clockTime, joinNames, type LessonStatus, type LessonView } from '@ab/shared';
+import { clockOf, joinNames, type LessonStatus, type LessonView } from '@ab/shared';
 import { tzCity } from '@/components/ui/form/time-zone-select';
 import { t } from '@/lib/i18n/i18n';
 import { locale } from '@/lib/i18n/locale';
 import { RIYADH_TZ, zonedParts } from '../tz';
+import type { Clock } from '@/lib/clock';
 
 // Pure view logic for lesson lists (R-SCH-01, R-SCH-03). No React, unit-tested.
 
@@ -61,17 +62,17 @@ export function lessonsOnDay(lessons: readonly LessonView[], day: { date: string
 }
 
 /** «16:00 بتوقيت القاهرة»; a zone without an ar.json city keeps its IANA id. */
-export function timeInCity(instant: string, tz: string): string {
-  return t.schedule.inCity.replace('{time}', clockTime(new Date(instant), tz)).replace('{city}', tzCity(tz) ?? tz);
+export function timeInCity(instant: string, tz: string, clock: Clock): string {
+  return t.schedule.inCity.replace('{time}', clockOf(new Date(instant), { ...clock, tz })).replace('{city}', tzCity(tz) ?? tz);
 }
 
 /**
  * Other zones a lesson time must also be shown in (R-SCH-01): each student's zone that differs
  * from `base`, once. «عند الطالب 16:00 بتوقيت القاهرة».
  */
-export function studentTimes(lesson: Pick<LessonView, 'starts_at' | 'students'>, base: string): string[] {
+export function studentTimes(lesson: Pick<LessonView, 'starts_at' | 'students'>, base: string, clock: Clock): string[] {
   const zones = [...new Set(lesson.students.map((s) => s.tz))].filter((tz) => tz !== base);
-  return zones.map((tz) => t.schedule.studentTime.replace('{time}', timeInCity(lesson.starts_at, tz)));
+  return zones.map((tz) => t.schedule.studentTime.replace('{time}', timeInCity(lesson.starts_at, tz, clock)));
 }
 
 /** Count of lessons still waiting for a confirm («{n} يحتاج تأكيد», saffron = دورك). */

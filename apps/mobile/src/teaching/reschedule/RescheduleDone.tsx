@@ -8,6 +8,7 @@ import { Button } from '@/core/ui/primitives/Button';
 import { NuqtaGlyph } from '@/core/ui/primitives/NuqtaGlyph';
 import { StatusChip } from '@/core/ui/feedback/StatusChip';
 import type { Scope } from './reschedule-body';
+import { useClockCycle } from '@/core/lib/clock';
 
 interface RescheduleDoneProps {
   /** The API's answer: the new lesson (for a series, its first lesson); sales get its time and status only. */
@@ -24,6 +25,7 @@ interface RescheduleDoneProps {
  * the WhatsApp confirmation is on its way (the API queued it with the move). No box.
  */
 export function RescheduleDone({ moved, scope, tz, onClose }: RescheduleDoneProps) {
+  const cycle = useClockCycle();
   const { color } = useTheme();
   const text = { fontFamily: type.ui[500], fontSize: type.size.body, lineHeight: type.lineHeight(type.size.body), color: color.ink };
   return (
@@ -38,7 +40,7 @@ export function RescheduleDone({ moved, scope, tz, onClose }: RescheduleDoneProp
           {scope === 'rule' ? t.reschedule.seriesMoved : t.lessons.rescheduled}
         </AppText>
       </View>
-      <AppText style={text}>{t.reschedule.newWhen.replace('{when}', whenText(moved.starts_at, tz))}</AppText>
+      <AppText style={text}>{t.reschedule.newWhen.replace('{when}', whenText(moved.starts_at, tz, cycle))}</AppText>
       <StatusChip {...lessonStatusStyle[moved.status]} label={t.enums.lessonStatus[moved.status]} />
       <AppText style={{ ...text, fontSize: type.size.sm, color: color.ink2 }}>{t.reschedule.guardianNote}</AppText>
       <Button label={t.reschedule.done} onPress={onClose} />

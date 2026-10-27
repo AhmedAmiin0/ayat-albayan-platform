@@ -61,3 +61,9 @@ test('a focused screen title takes the bar, a blurred one gives it back, a sheet
   await render(<ScreenHeader title="ورقة" size="h2" />);
   expect(result.current).toBe(false);
 });
+
+test('a compact h2 screen title that asks for the bar takes it (the chats list)', async () => {
+  const { result } = await renderHook(() => useBarSlotClaimed());
+  await render(<ScreenHeader title="المحادثات" size="h2" connecting />);
+  expect(result.current).toBe(true);
+});

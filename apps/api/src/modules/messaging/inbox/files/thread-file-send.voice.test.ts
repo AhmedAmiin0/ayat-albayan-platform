@@ -15,7 +15,7 @@ const M4A = Uint8Array.from('\0\0\0\x18ftypisom', (c) => c.charCodeAt(0));
 const OGG = new TextEncoder().encode('OggS');
 
 const queries = { thread: vi.fn() };
-const outbox = { send: vi.fn() };
+const outbox = { queue: vi.fn() };
 const storage = { info: vi.fn(), head: vi.fn(), download: vi.fn(), upload: vi.fn() };
 const toOgg = vi.fn();
 const sender = () => {
@@ -25,7 +25,7 @@ const sender = () => {
 };
 const send = (phone = PHONE) =>
   sender().send({ phone, input: { clientRequestId: REQ, path: PATH, filename: 'voice.m4a' }, actorId: ACTOR, sales: { salesId: ACTOR } as never }, NOW);
-const sent = () => outbox.send.mock.calls[0]?.[0] as Record<string, unknown>;
+const sent = () => outbox.queue.mock.calls[0]?.[0] as Record<string, unknown>;
 
 describe('ThreadFileSender.send: a voice note', () => {
   beforeEach(() => {
@@ -36,7 +36,7 @@ describe('ThreadFileSender.send: a voice note', () => {
     storage.head.mockResolvedValue(M4A);
     storage.download.mockResolvedValue(M4A);
     toOgg.mockResolvedValue(OGG);
-    outbox.send.mockImplementation(async (row: object) => ({ view: { id: 'm1', ...row }, replayed: false }));
+    outbox.queue.mockImplementation(async (row: object) => ({ view: { id: 'm1', ...row }, replayed: false }));
   });
   afterEach(() => vi.unstubAllEnvs());
 
@@ -56,7 +56,7 @@ describe('ThreadFileSender.send: a voice note', () => {
   });
 
   it('a replayed request id returns the first row (the ogg written to the same fixed path)', async () => {
-    outbox.send.mockResolvedValue({ view: { id: 'first' }, replayed: true });
+    outbox.queue.mockResolvedValue({ view: { id: 'first' }, replayed: true });
     await expect(send()).resolves.toEqual({ view: { id: 'first' }, replayed: true });
     expect(storage.upload).toHaveBeenCalledWith(expect.objectContaining({ path: OGG_PATH }));
   });
@@ -65,7 +65,7 @@ describe('ThreadFileSender.send: a voice note', () => {
     storage.head.mockResolvedValue(new TextEncoder().encode('%PDF-1.7\n   '));
     await expect(send()).rejects.toMatchObject({ status: 400 });
     expect(toOgg).not.toHaveBeenCalled();
-    expect(outbox.send).not.toHaveBeenCalled();
+    expect(outbox.queue).not.toHaveBeenCalled();
   });
 
   it('a closed window: 409 before any download or transcode', async () => {
@@ -79,6 +79,6 @@ describe('ThreadFileSender.send: a voice note', () => {
     storage.info.mockResolvedValue({ size: 36_000, contentType: 'audio/ogg' });
     storage.head.mockResolvedValue(OGG);
     await expect(send()).rejects.toMatchObject({ status: 400 });
-    expect(outbox.send).not.toHaveBeenCalled();
+    expect(outbox.queue).not.toHaveBeenCalled();
   });
 });

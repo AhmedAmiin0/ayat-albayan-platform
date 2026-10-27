@@ -4,6 +4,7 @@ import { NuqtaGlyph } from '@/components/ui/display/nuqta-glyph';
 import { t } from '@/lib/i18n/i18n';
 import { useChatReturn } from '../../mode';
 import { pickedText } from '../../steps/slots/SlotStep';
+import { useClock } from '@/lib/clock';
 
 export interface TrialDonePanelProps {
   result: TrialDateResult;
@@ -13,6 +14,7 @@ export interface TrialDonePanelProps {
 
 /** After POST {base}/trial-date: booked or moved, the new time, the guardian's confirmation, «إغلاق». */
 export function TrialDonePanel({ result, tz }: TrialDonePanelProps) {
+  const clock = useClock();
   const close = useChatReturn();
   return (
     <section aria-labelledby="trial-done-title" data-testid="trial-date-done" className="grid justify-items-start gap-3 py-2">
@@ -20,7 +22,7 @@ export function TrialDonePanel({ result, tz }: TrialDonePanelProps) {
         <NuqtaGlyph shape="fill" className="text-ok" />
         <span>{result.moved_from_id ? t.trialDate.doneMoved : t.trialDate.done}</span>
       </h2>
-      <p>{pickedText(result.starts_at, tz)}</p>
+      <p>{pickedText(result.starts_at, tz, clock)}</p>
       <p className="text-sm text-ink-2">{t.trialDate.doneNote}</p>
       {close && (
         <Button type="button" onClick={close}>

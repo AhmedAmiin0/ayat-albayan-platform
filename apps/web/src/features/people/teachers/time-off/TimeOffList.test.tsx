@@ -4,6 +4,10 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n/i18n';
 import { formatTimeOff } from './time-off';
 import { TimeOffList } from './TimeOffList';
+import { locale } from '@/lib/i18n/locale';
+
+/** The cycle the suite reads times in (test-setup saves 24 h). */
+const C24 = { cycle: '24', locale } as const;
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
@@ -28,7 +32,7 @@ describe('TimeOffList (R-TCH-02, docs/07 §8)', () => {
 
   it('shows each span with its reason and the device-zone hint', async () => {
     renderList();
-    expect(await screen.findByText(formatTimeOff(OFF.starts_at, OFF.ends_at))).toBeTruthy();
+    expect(await screen.findByText(formatTimeOff(OFF.starts_at, OFF.ends_at, C24))).toBeTruthy();
     expect(screen.getByText(`${t.availability.reason}: سفر`)).toBeTruthy();
     expect(screen.getByText(t.availability.timeOffTzHint)).toBeTruthy();
   });
@@ -41,7 +45,7 @@ describe('TimeOffList (R-TCH-02, docs/07 §8)', () => {
   it('deletes one entry by its named icon button', async () => {
     apiSend.mockResolvedValue(null);
     renderList();
-    const span = formatTimeOff(OFF.starts_at, OFF.ends_at);
+    const span = formatTimeOff(OFF.starts_at, OFF.ends_at, C24);
     fireEvent.click(await screen.findByRole('button', { name: `${t.availability.timeOffDelete} ${span}` }));
     await waitFor(() => expect(apiSend).toHaveBeenCalledWith('DELETE', '/teachers/t1/time-off/o1'));
   });

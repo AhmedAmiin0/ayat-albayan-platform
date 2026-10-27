@@ -1,11 +1,11 @@
-import { isOpenLesson, lessonWhenText, type LessonView } from '@ab/shared';
+import { isOpenLesson, type LessonView, lessonWhenAt } from '@ab/shared';
 import { useState } from 'react';
 import { Button } from '@/components/ui/form/button';
 import { Dialog } from '@/components/ui/overlay/dialog';
 import { usePhone } from '@/components/ui/layout/use-narrow';
 import { t } from '@/lib/i18n/i18n';
-import { locale } from '@/lib/i18n/locale';
 import { ProposeForm } from './ProposeForm';
+import { useClock } from '@/lib/clock';
 
 export interface TeacherProposalProps {
   lesson: LessonView;
@@ -20,11 +20,12 @@ export interface TeacherProposalProps {
  * phones (owner, 2026-10-05: no inline form bars on the phone).
  */
 export function TeacherProposal({ lesson, tz, onDone }: TeacherProposalProps) {
+  const clock = useClock();
   const [proposing, setProposing] = useState(false);
   const phone = usePhone();
   const proposal = lesson.pending_proposal;
   if (proposal) {
-    const when = lessonWhenText(new Date(proposal.proposed_starts_at), tz, locale);
+    const when = lessonWhenAt(new Date(proposal.proposed_starts_at), { tz, ...clock });
     return <p className="text-sm text-act">{t.teacherDash.propose.pending.replace('{when}', when)}</p>;
   }
   if (!isOpenLesson(lesson.status)) return null;

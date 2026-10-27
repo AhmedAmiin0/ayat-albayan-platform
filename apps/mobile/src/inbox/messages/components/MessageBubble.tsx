@@ -1,6 +1,7 @@
 import { isChatViewMime, type MessageView, replyNote } from '@ab/shared';
 import { type GestureResponderEvent, Linking, Pressable, View, type ViewStyle } from 'react-native';
 import { useHolds } from '@/auth/use-permissions';
+import { useClockCycle } from '@/core/lib/clock';
 import { t } from '@/core/lib/i18n/i18n';
 import { locale } from '@/core/lib/i18n/locale';
 import { shape, type, useTheme } from '@/theme';
@@ -70,7 +71,7 @@ export function MessageBubble({ message: m, phone, onJump, highlight = false }: 
   // A photo, PDF, voice note or video we can serve (W6): opened or played from the bubble.
   const file = m.media_url === null && isChatViewMime(m.media_mime);
   // What a quick reply did (R-SCH-03): «اتأكدت حلقة …» only when its lesson is confirmed now.
-  const note = replyNote(m, locale);
+  const note = replyNote(m, { locale, cycle: useClockCycle() });
   const stuck = admin && manages && ours && (m.status === 'failed' || m.click_to_chat !== null);
   // A hand-off asks «بعتّها؟» in MessageActions instead of a reason.
   const why = ours && m.status === 'failed' && m.error_code !== 'handed_off';

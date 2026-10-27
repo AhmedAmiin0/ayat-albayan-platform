@@ -1,5 +1,5 @@
 import { intlLocale, type Locale } from '../../i18n/locale.js';
-import { clockTime } from '../../format/running-head.js';
+import { clockOf, type ClockOptions } from '../../format/index.js';
 import { meetingLinkParts, type MeetingHost } from './meeting-link.js';
 
 // Queued booking confirmation (R-SCH-06, R-LES-02). Three Meta-approved templates, all with
@@ -34,26 +34,31 @@ export function bookingConfirmationTemplate(
 
 const whenFormatters = new Map<string, Intl.DateTimeFormat>();
 
-/**
- * {{2}}: «الأحد 4 أكتوبر 17:00», wall-clock in `tz` (the guardian's), Western digits, 24h.
- * WhatsApp text is always Arabic (the default); a screen passes its UI language, so the English
- * UI reads «Sunday 4 October 17:00».
- */
-export function lessonWhenText(startsAt: Date, tz: string, locale: Locale = 'ar'): string {
-  const key = `${locale}|${tz}`;
+/** «الأحد 4 أكتوبر 5:00 م» on a screen: lessonWhenText in the cycle the viewer chose (12 or 24 h). */
+export function lessonWhenAt(startsAt: Date, opts: ClockOptions): string {
+  const key = `${opts.locale}|${opts.tz}`;
   let f = whenFormatters.get(key);
   if (!f) {
-    f = new Intl.DateTimeFormat(intlLocale(locale), {
+    f = new Intl.DateTimeFormat(intlLocale(opts.locale), {
       weekday: 'long',
       day: 'numeric',
       month: 'long',
-      timeZone: tz,
+      timeZone: opts.tz,
     });
     whenFormatters.set(key, f);
   }
   const parts = f.formatToParts(startsAt);
   const part = (type: Intl.DateTimeFormatPartTypes) => parts.find((p) => p.type === type)?.value;
-  return [part('weekday'), part('day'), part('month'), clockTime(startsAt, tz)].join(' ');
+  return [part('weekday'), part('day'), part('month'), clockOf(startsAt, opts)].join(' ');
+}
+
+/**
+ * {{2}}: «الأحد 4 أكتوبر 17:00», wall-clock in `tz` (the guardian's), Western digits, 24h.
+ * WhatsApp text is always Arabic (the default) and always 24 h; a screen passes its UI language,
+ * so the English UI reads «Sunday 4 October 17:00» (screens with a clock choice use lessonWhenAt).
+ */
+export function lessonWhenText(startsAt: Date, tz: string, locale: Locale = 'ar'): string {
+  return lessonWhenAt(startsAt, { tz, locale, cycle: '24' });
 }
 
 const listFormats = new Map<Locale, Intl.ListFormat>();

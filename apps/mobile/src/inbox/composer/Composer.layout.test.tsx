@@ -3,7 +3,6 @@ import { StyleSheet } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { shape, type } from '@/theme';
-import { sessionUntil } from '../messages/hooks/message-text';
 import { detail, inbound, thread } from '../shared/thread-fixtures';
 import { ThreadScreen } from '../screens/ThreadScreen';
 
@@ -46,17 +45,15 @@ test('open window: one pill with the box, «أرسل» once there is text; the t
   expect(await screen.findByText(t.inbox.composer.chooseTemplate)).toBeTruthy();
 });
 
-test('open window: the notes are never cut (owner 2026-10-27): they wrap or stack', async () => {
+test('open window: no line or «until» note over the box (owner 2026-10-27: «Remove this»)', async () => {
   await open(OPEN);
-  expect(StyleSheet.flatten(screen.getByTestId('composer-notes').props.style)).toMatchObject({ flexDirection: 'row', flexWrap: 'wrap' });
-  const line = screen.getByTestId('line-note');
-  expect(line.props.numberOfLines).toBeUndefined();
-  expect(StyleSheet.flatten(line.props.style).flexShrink).toBe(1);
-  const until = screen.getByTestId('session-until');
-  expect(until.props.numberOfLines).toBeUndefined();
-  expect(StyleSheet.flatten(until.props.style).flexShrink).toBe(0);
-  expect(until.props.children).toBe(sessionUntil(OPEN.last_inbound_at));
-  expect(until.props.children).toMatch(new RegExp(t.inbox.sessionOpenUntil.replace(' {time}', '')));
+  expect(screen.queryByTestId('composer-notes')).toBeNull();
+  expect(screen.queryByText(new RegExp(t.inbox.sessionOpenUntil.replace(' {time}', '')))).toBeNull();
+});
+
+test('the box: text and placeholder centred vertically, 12pt from the pill’s inline-start edge', async () => {
+  await open(OPEN);
+  expect(screen.getByLabelText(t.inbox.composer.placeholder)).toHaveStyle({ textAlignVertical: 'center', paddingStart: 12 });
 });
 
 test('open window: one line of text makes the pill exactly 44pt (26 line + 8 + 8 + the pill’s border)', async () => {
@@ -70,7 +67,7 @@ test('open window: one line of text makes the pill exactly 44pt (26 line + 8 + 8
   expect(pill.borderRadius).toBe(shape.radius.pill);
 });
 
-test('closed window: one compact note beside a labelled «أرسل قالبًا», no free-text box', async () => {
+test('closed window: one compact note over a labelled «أرسل قالبًا», no free-text box', async () => {
   await open(CLOSED);
   expect(screen.queryByLabelText(t.inbox.composer.placeholder)).toBeNull();
   const note = screen.getByText(t.inbox.sessionClosed);

@@ -14,6 +14,7 @@ import { ImpactNote } from './ImpactNote';
 import { useSheetDescription } from '../description/use-sheet-description';
 import { boundsText, defaultText, valueText } from '../lib/value-format';
 import { useValues } from '../values-context';
+import { useClock } from '@/lib/clock';
 
 const v = t.settingsValues;
 
@@ -26,6 +27,7 @@ const DISCARD_WORDS = { title: v.sheet.discardTitle, body: v.sheet.discardBody, 
  */
 export function ValueSheet({ settingKey, onClose }: { settingKey: SettingKey; onClose: () => void }) {
   const api = useValues();
+  const clock = useClock();
   const ids = useRowIds();
   const [asking, setAsking] = useState(false);
   const words = settingText(settingKey);
@@ -78,7 +80,7 @@ export function ValueSheet({ settingKey, onClose }: { settingKey: SettingKey; on
             </Button>
           )}
         </p>
-        <p className="text-sm text-ink-2">{v.sheet.last.replace('{value}', lastChangeText(api.meta[settingKey]))}</p>
+        <p className="text-sm text-ink-2">{v.sheet.last.replace('{value}', lastChangeText(api.meta[settingKey], clock))}</p>
         {confirm && <ImpactNote settingKey={settingKey} />}
         <ConflictNotice settingKey={settingKey} />
         {status === 'moved' && <p className="text-sm text-ink-2">{v.moved}</p>}

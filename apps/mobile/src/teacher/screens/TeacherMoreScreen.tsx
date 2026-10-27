@@ -5,6 +5,7 @@ import { AccountHeaderAvatar } from '@/account/components/AccountHeaderAvatar';
 import { AccountRow } from '@/account/components/AccountRow';
 import { t } from '@/core/lib/i18n/i18n';
 import { AppearancePicker } from '@/more/appearance/AppearancePicker';
+import { ClockFormatPicker } from '@/more';
 import { LanguageRow } from '@/more/appearance/LanguageRow';
 import { ListRow } from '@/core/ui/layout/ListRow';
 import { Screen } from '@/core/ui/layout/Screen';
@@ -37,6 +38,7 @@ export function TeacherMoreScreen() {
         <ListRow title={t.availability.title} onPress={() => router.push('/teacher/more/availability')} />
       </View>
       <AppearancePicker />
+      <ClockFormatPicker />
       <LanguageRow />
       <SignOutButton />
     </Screen>

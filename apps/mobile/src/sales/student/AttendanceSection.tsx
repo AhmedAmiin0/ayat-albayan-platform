@@ -1,7 +1,7 @@
-import { lessonWhenText, RIYADH_TZ, type SalesStudentDetails } from '@ab/shared';
+import { RIYADH_TZ, type SalesStudentDetails } from '@ab/shared';
 import { View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
-import { locale } from '@/core/lib/i18n/locale';
+import { useClockCycle, whenIn } from '@/core/lib/clock';
 import { Note } from '@/more';
 import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
@@ -12,6 +12,7 @@ import { ATTENDANCE_STYLE, totalsLines } from './attendance-text';
 /** «الحضور»: the totals, then one line per past lesson (Riyadh time) with «حضر» / «غاب» / … newest first. */
 export function AttendanceSection({ attendance }: { attendance: SalesStudentDetails['attendance'] }) {
   const { color } = useTheme();
+  const cycle = useClockCycle();
   const s = t.sales.student;
   const text = { flex: 1, fontFamily: type.ui[500], fontSize: type.size.sm, lineHeight: type.lineHeight(type.size.sm), color: color.ink };
   return (
@@ -32,7 +33,7 @@ export function AttendanceSection({ attendance }: { attendance: SalesStudentDeta
               key={day.lesson_id}
               style={{ flexDirection: 'row', alignItems: 'center', gap: 8, minHeight: 36, borderBottomWidth: 1, borderBottomColor: color.rule }}
             >
-              <AppText style={text}>{lessonWhenText(new Date(day.starts_at), RIYADH_TZ, locale)}</AppText>
+              <AppText style={text}>{whenIn(new Date(day.starts_at), RIYADH_TZ, cycle)}</AppText>
               <StatusChip {...ATTENDANCE_STYLE[day.kind]} label={s.kind[day.kind]} size="sm" />
             </View>
           ))}

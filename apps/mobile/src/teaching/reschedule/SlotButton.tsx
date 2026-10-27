@@ -3,6 +3,7 @@ import { slotTimes } from '@/booking/shared/slots';
 import { t } from '@/core/lib/i18n/i18n';
 import { shape, type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
+import { useClockCycle } from '@/core/lib/clock';
 
 export interface SlotButtonProps {
   startsAt: string;
@@ -16,8 +17,9 @@ export interface SlotButtonProps {
 
 /** A free start: big Riyadh time, the student's clock under it; picked = inverse (docs/07 §6). */
 export function SlotButton({ startsAt, tz, selected, onPick, role = 'radio' }: SlotButtonProps) {
+  const cycle = useClockCycle();
   const { color } = useTheme();
-  const { riyadh, local } = slotTimes(startsAt, tz);
+  const { riyadh, local } = slotTimes(startsAt, tz, cycle);
   const ink = selected ? color.onInverse : color.ink;
   return (
     <Pressable

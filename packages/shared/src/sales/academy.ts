@@ -51,6 +51,8 @@ export interface SalesStudentView {
   program: Program;
   teacher_name: string | null;
   guardian_name: string;
+  /** The guardian's E.164 phone (owner 2026-10-27: sales see every chat with its phone): the row opens that chat. */
+  guardian_phone: string | null;
   /** One of hers (the ownership of «الاشتراكات»): the row opens «تفاصيل الطالب». Absent in an old cache. */
   mine?: boolean;
 }

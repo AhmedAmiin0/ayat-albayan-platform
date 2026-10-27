@@ -6,6 +6,7 @@ import { whenWithLength } from './edit-time-text';
 import type { TimeEditMode } from './edit-time.contract';
 import { durationMin, studentTimes, timeInCity } from '../lesson/lessons';
 import { RIYADH_TZ } from '../tz';
+import { useClock } from '@/lib/clock';
 
 export interface EditTimeConfirmProps {
   lesson: LessonView;
@@ -39,16 +40,17 @@ const Side = ({ children }: { children: string }) => <span className="whitespace
  * the teacher's payout and the report file. Shown once something differs.
  */
 export function EditTimeConfirm(p: EditTimeConfirmProps) {
+  const clock = useClock();
   const { lesson, mode, next, change, canNotify, notify, onNotify, payoutLocked = false } = p;
   const teacherTz = lesson.teacher.tz;
   // The teacher's own clock is only worth a line when it reads differently from Riyadh's.
   const sameClock = clockTime(new Date(next.startsAt), teacherTz) === clockTime(new Date(next.startsAt), RIYADH_TZ);
   const clocks = [
-    ...(sameClock ? [] : [t.schedule.teacherTime.replace('{time}', timeInCity(next.startsAt, teacherTz))]),
-    ...studentTimes({ starts_at: next.startsAt, students: lesson.students }, RIYADH_TZ),
+    ...(sameClock ? [] : [t.schedule.teacherTime.replace('{time}', timeInCity(next.startsAt, teacherTz, clock))]),
+    ...studentTimes({ starts_at: next.startsAt, students: lesson.students }, RIYADH_TZ, clock),
   ];
   const correct = mode === 'correct';
-  const sides = { '{from}': whenWithLength(lesson.starts_at, durationMin(lesson)), '{to}': whenWithLength(next.startsAt, next.durationMin) };
+  const sides = { '{from}': whenWithLength(lesson.starts_at, durationMin(lesson), clock), '{to}': whenWithLength(next.startsAt, next.durationMin, clock) };
   return (
     <div className="grid gap-2.5 rounded-md bg-sunk px-3.5 py-3" aria-live="polite">
       <p className="text-sm font-semibold">

@@ -4,6 +4,10 @@ import { t } from '@/lib/i18n/i18n';
 import { fullTime } from '../../format';
 import { message, PHONE } from '../../testing/inbox-fixture';
 import { MessageLog } from './MessageLog';
+import { locale } from '@/lib/i18n/locale';
+
+/** The cycle the suite reads times in (test-setup saves 24 h). */
+const C24 = { cycle: '24', locale } as const;
 
 // Day separators at every width; each bubble shows the clock only, the full date in its tooltip (W10).
 vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch: vi.fn(), apiSend: vi.fn() }));
@@ -41,9 +45,9 @@ describe('MessageLog day separators (W10)', () => {
     });
     const shown = (x: Element) => x.querySelector('[aria-hidden="true"]')?.textContent;
     expect(times.map(shown)).toEqual(['09:05', '08:05']);
-    expect(times[0]?.getAttribute('title')).toBe(fullTime(Y.created_at));
+    expect(times[0]?.getAttribute('title')).toBe(fullTime(Y.created_at, C24));
     // The day separators are aria-hidden: the date is read from the bubble's own <time>.
-    expect(times[0]?.querySelector('.sr-only')?.textContent).toBe(fullTime(Y.created_at));
+    expect(times[0]?.querySelector('.sr-only')?.textContent).toBe(fullTime(Y.created_at, C24));
     const visible = within(screen.getAllByRole('article')[0] as HTMLElement).queryAllByText(/أكتوبر|Oct/);
     expect(visible.every((el) => el.classList.contains('sr-only'))).toBe(true);
   });

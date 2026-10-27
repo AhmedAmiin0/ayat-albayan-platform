@@ -538,6 +538,8 @@
     "teacher-meeting-mode.sql.spec.ts",
     "teacher-payments.sql.spec.ts",
     "teacher-rls.sql.spec.ts",
+    "thread-summaries.race.sql.spec.ts",
+    "thread-summaries.sql.spec.ts",
     "trial-no-teacher-chat.sql.spec.ts",
     "users-control.sql.spec.ts",
     "wa-line-health.sql.spec.ts",

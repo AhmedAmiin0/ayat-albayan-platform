@@ -33,6 +33,8 @@ import { ThreadReopenService } from './reopen/thread-reopen.service';
 import { ReactionQueries } from './reactions/reaction.queries';
 import { ThreadReactionController } from './reactions/thread-reaction.controller';
 import { ThreadReactionService } from './reactions/thread-reaction.service';
+import { DeltaQueries } from './delta/delta.queries';
+import { ThreadDeltaService } from './delta/thread-delta.service';
 
 /**
  * The WhatsApp inbox routes H1–H4 (docs/12 §4). The webhook lives in WebhookModule and the lead
@@ -46,7 +48,8 @@ import { ThreadReactionService } from './reactions/thread-reaction.service';
  * ChatListsModule: GET /threads?list= and the open chat's «القوائم» (docs/22).
  * «رد» / «إعادة توجيه» (owner 2026-10-25): ThreadQuotes, ThreadForwardController.
  * «إعادة فتح المحادثة» (owner 2026-10-26): ThreadReopenController (Kapso's record + the reopen template).
- * «تفاعل» (owner 2026-10-27): ThreadReactionController (WhatsApp message reactions, migration 900).
+ * «تفاعل» (owner 2026-10-27): ThreadReactionController (WhatsApp message reactions, migration 930).
+ * Delta refresh (owner 2026-10-27): ThreadDeltaService answers GET /threads/:phone?after=.
  */
 @Module({
   imports: [SubscriptionsModule, LessonsModule, SalesModule, ChatListsModule],
@@ -75,6 +78,8 @@ import { ThreadReactionService } from './reactions/thread-reaction.service';
     ThreadReopenService,
     ReactionQueries,
     ThreadReactionService,
+    DeltaQueries,
+    ThreadDeltaService,
   ],
   // The feedback module sends «ابعت طلب الرأي» through the same send-now path; meeting invitations
   // (ClassroomModule) read the thread and queue their chat text (R-MEET-02), a teacher only to the

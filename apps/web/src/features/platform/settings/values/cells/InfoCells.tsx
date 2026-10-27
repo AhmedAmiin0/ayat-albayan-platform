@@ -1,13 +1,14 @@
 import type { SettingMeta } from '@ab/shared';
 import { formatDateTime } from '@/features/sales/leads/format';
 import { t } from '@/lib/i18n/i18n';
+import { useClock, type Clock } from '@/lib/clock';
 
 const v = t.settingsValues;
 
 /** «آخر تعديل» as one line of text («أحمد، 21 أكتوبر 14:05»), or «لم تُعدَّل بعد». */
-export function lastChangeText(meta: SettingMeta | undefined): string {
+export function lastChangeText(meta: SettingMeta | undefined, clock: Clock): string {
   if (!meta) return v.never;
-  const at = formatDateTime(meta.updatedAt);
+  const at = formatDateTime(meta.updatedAt, clock);
   return meta.updatedByName ? v.lastBy.replace('{name}', meta.updatedByName).replace('{at}', at) : at;
 }
 
@@ -33,6 +34,7 @@ export interface LastCellProps {
 
 /** «آخر تعديل»: who and when (two lines), «لم تُعدَّل بعد», or «لم يُحفظ · المحفوظ: …» for a dirty row. */
 export function LastCell({ meta, unsavedWas }: LastCellProps) {
+  const clock = useClock();
   if (unsavedWas !== undefined) {
     return (
       <span className="grid gap-0.5 text-xs">
@@ -45,7 +47,7 @@ export function LastCell({ meta, unsavedWas }: LastCellProps) {
   return (
     <span className="grid gap-0.5 text-xs text-ink-2">
       <span>{meta.updatedByName ?? '—'}</span>
-      <small className="text-ink-3">{formatDateTime(meta.updatedAt)}</small>
+      <small className="text-ink-3">{formatDateTime(meta.updatedAt, clock)}</small>
     </span>
   );
 }

@@ -1,4 +1,4 @@
-import { inWeekOrder, timeGroups, wallParts, WEEK_ORDER, type Conflict, type CourseChangeRequest, type DayTime } from '@ab/shared';
+import { inWeekOrder, timeGroups, wallParts, WEEK_ORDER, type ClockCycle, type Conflict, type CourseChangeRequest, type DayTime } from '@ab/shared';
 import { dayAtText } from '@/booking/shared/picks';
 import { t } from '@/core/lib/i18n/i18n';
 
@@ -10,9 +10,9 @@ const weekdays: Record<string, string | undefined> = t.enums.weekday;
 export const weekdayName = (weekday: number): string => weekdays[String(weekday)] ?? '';
 
 /** «السبت الساعة 9:00، الأحد الساعة 17:00»: each day with its time in `tz`, السبت → الجمعة. */
-export function daysText(days: readonly DayTime[], tz: string): string {
+export function daysText(days: readonly DayTime[], tz: string, cycle: ClockCycle): string {
   return inWeekOrder(days)
-    .map((d) => dayAtText({ weekday: d.weekday, time: d.startTimeLocal }, tz))
+    .map((d) => dayAtText({ weekday: d.weekday, time: d.startTimeLocal }, tz, cycle))
     .join(t.common.listSeparator);
 }
 

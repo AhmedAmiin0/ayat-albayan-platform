@@ -1,4 +1,4 @@
-import { screen } from '@testing-library/react-native';
+import { screen, within } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { pathKey } from '@/core/lib/query/query-keys';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
@@ -49,8 +49,10 @@ test('open window without pricing.read: [round] [paperclip] [text]', async () =>
   expect(shown(leftToRight(screen.getByTestId('composer-pill'), true))).toEqual([t.inbox.composer.attach, t.inbox.composer.placeholder]);
 });
 
-test('closed window: «أرسل قالبًا» on the physical left, the note, then the icons on the right', async () => {
+test('closed window: the note on its own line; under it «أرسل قالبًا» on the physical left, the icons on the right', async () => {
   await show(ago(3 * 24 * 60));
   const order = shown(leftToRight(screen.getByTestId('closed-row'), true));
-  expect(order).toEqual([t.inbox.composer.sendTemplate, 'closed-note', 'quote-button', t.savedReplies.open]);
+  expect(order).toEqual([t.inbox.composer.sendTemplate, 'quote-button', t.savedReplies.open]);
+  expect(within(screen.getByTestId('closed-row')).queryByTestId('closed-note')).toBeNull();
+  expect(screen.getByTestId('closed-note')).toBeTruthy();
 });

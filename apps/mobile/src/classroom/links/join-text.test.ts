@@ -19,5 +19,5 @@ test('an unknown code or a non-API error reads «unknown»', () => {
 });
 
 test('the opening time is on the Riyadh clock (UTC+3)', () => {
-  expect(opensAtLine('2026-10-03T12:45:00.000Z')).toBe(t.classroom.opensAt.replace('{time}', '15:45'));
+  expect(opensAtLine('2026-10-03T12:45:00.000Z', '24')).toBe(t.classroom.opensAt.replace('{time}', '15:45'));
 });

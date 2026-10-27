@@ -8,7 +8,7 @@ import type {
 } from '@ab/shared';
 import type { SalesSubscription } from '../lib/sales-api';
 
-// Test data shaped like the sales API (docs/16): no price or phone; a teacher's fixed link only where a test sets one.
+// Test data shaped like the sales API (docs/16): no price; the guardian's (fake) phone only on a student row; a teacher's fixed link only where a test sets one.
 
 export const subscription = (over: Partial<SalesSubscription> = {}): SalesSubscription => ({
   id: 's1',
@@ -87,6 +87,7 @@ export const student = (over: Partial<SalesStudentView> = {}): SalesStudentView 
   program: 'quran',
   teacher_name: 'أبرار محمد',
   guardian_name: 'أحمد سالم',
+  guardian_phone: '+201001112223',
   ...over,
 });
 

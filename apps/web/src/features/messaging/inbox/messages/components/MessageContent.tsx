@@ -1,7 +1,7 @@
 import { isUnavailableMessage, isUnsupportedMessage, reactionText, replyNote, senderLine, type MessageView } from '@ab/shared';
 import { Icon } from '@/components/ui/display/icon';
 import { t } from '@/lib/i18n/i18n';
-import { locale } from '@/lib/i18n/locale';
+import { useClock } from '@/lib/clock';
 import { templateLine } from '../../format';
 import { MessageMedia } from './MessageMedia';
 import { LinkedBody } from '@/components/ui/display/linked-body';
@@ -23,7 +23,7 @@ function ForwardedLabel() {
 
 /** What a quick reply did (R-SCH-03): «اتأكدت حلقة …» only when its lesson is confirmed now. */
 function ReplyLine({ message: m }: { message: MessageView }) {
-  const note = replyNote(m, locale);
+  const note = replyNote(m, useClock());
   if (!note) return null;
   return <p className="mt-1 text-xs font-semibold text-ink-2">{t.inbox.quickReply[note.key].replace('{when}', note.when ?? '')}</p>;
 }

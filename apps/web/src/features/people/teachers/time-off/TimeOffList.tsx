@@ -8,12 +8,14 @@ import { t } from '@/lib/i18n/i18n';
 import { timeOffQuery } from '../api';
 import { TimeOffDialog } from './TimeOffDialog';
 import { formatTimeOff } from './time-off';
+import { useClock } from '@/lib/clock';
 
 /**
  * «الإجازات» panel (docs/07 §8): date span, reason, delete; add opens a dialog. R-TCH-02.
  * TODO(R-SCH-07): the impact note «{n} حلقات واقعة في الإجازة دي…» + «انقل الحلقات» once lessons exist.
  */
 export function TimeOffList({ teacherId }: { teacherId: string }) {
+  const clock = useClock();
   const queryClient = useQueryClient();
   const list = useQuery(timeOffQuery(teacherId));
   const [adding, setAdding] = useState(false);
@@ -39,7 +41,7 @@ export function TimeOffList({ teacherId }: { teacherId: string }) {
       {list.data?.length === 0 && <p className="border-b border-rule py-3 text-sm text-ink-3">{t.availability.timeOffEmpty}</p>}
       <ul>
         {list.data?.map((off) => {
-          const span = formatTimeOff(off.starts_at, off.ends_at);
+          const span = formatTimeOff(off.starts_at, off.ends_at, clock);
           return (
             <li key={off.id} className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-x-3 gap-y-0.5 border-b border-rule py-3">
               <span className="font-semibold tabular-nums">{span}</span>

@@ -5,8 +5,15 @@ import { Ltr } from '@/components/ui/display/ltr';
 import { StatusChip } from '@/components/ui/display/status-chip';
 import { formatDateTime } from '@/features/sales/leads/format';
 import { t } from '@/lib/i18n/i18n';
+import { useClock } from '@/lib/clock';
 
 const col = createColumnHelper<DataTableFeatures, UserView>();
+
+/** «آخر دخول» in the viewer's cycle (12 or 24 h), or «لم يدخل بعد». */
+function LastSignIn({ iso }: { iso: string | null }) {
+  const clock = useClock();
+  return <>{iso ? formatDateTime(iso, clock) : t.users.never}</>;
+}
 const C = t.users.cols;
 const quiet = (phone: string) => `text-xs text-ink-2 ${phone}`;
 
@@ -89,7 +96,7 @@ export function usersColumns(onOpen: (userId: string) => void) {
     }),
     col.accessor('last_sign_in_at', {
       header: () => C.lastSignIn,
-      cell: (c) => (c.getValue() ? formatDateTime(c.getValue()) : t.users.never),
+      cell: (c) => <LastSignIn iso={c.getValue()} />,
       meta: { className: quiet(stacked.last) },
     }),
   ]);

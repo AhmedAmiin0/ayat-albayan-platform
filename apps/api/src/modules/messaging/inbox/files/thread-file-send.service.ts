@@ -91,7 +91,7 @@ export class ThreadFileSender {
     const media = mime === CHAT_VOICE_MIME
       ? await voiceMedia(this.storage, ref, this.toOgg)
       : { media_path: path, media_mime: mime, media_name: sentFileName(filename, mime) };
-    return this.outbox.send({
+    return this.outbox.queue({
       ...outboundBase(s, thread),
       dedup_key: key,
       body: caption || null,

@@ -2,6 +2,7 @@ import { type TemplateLineView, type TemplateView, type WaLine } from '@ab/share
 import { createColumnHelper } from '@tanstack/react-table';
 import type { DataTableFeatures } from '@/components/DataTable';
 import { fullTime } from '@/features/messaging/inbox/format';
+import { useClock } from '@/lib/clock';
 import { t } from '@/lib/i18n/i18n';
 import { CrmNameButton } from './crm/CrmNameButton';
 import { CrmStatusActions, type CrmStatusActionsProps } from './crm/CrmStatusActions';
@@ -14,6 +15,15 @@ import { categoryOptions, lineOptions, qualityOptions, statusOptions } from './t
 
 const col = createColumnHelper<DataTableFeatures, TemplateView>();
 const QUALITY: Record<string, string | undefined> = t.templates.qualityScore;
+
+function CheckedAt({ at }: { at: string }) {
+  const clock = useClock();
+  return (
+    <time dateTime={at} className="tabular-nums text-ink-2">
+      {fullTime(at, clock)}
+    </time>
+  );
+}
 
 export interface TemplateColumnsInput {
   onSubmit: (tpl: TemplateView) => void;
@@ -99,9 +109,7 @@ export function templateColumns({ onSubmit, onMove, onStarter, saving, phones, f
           <span>
             <Label text={t.templates.lastChecked} />
             {at ? (
-              <time dateTime={at} className="tabular-nums text-ink-2">
-                {fullTime(at)}
-              </time>
+              <CheckedAt at={at} />
             ) : (
               <span className="text-ink-3">{t.templates.neverChecked}</span>
             )}

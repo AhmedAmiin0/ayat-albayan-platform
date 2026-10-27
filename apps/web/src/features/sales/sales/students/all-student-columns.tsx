@@ -1,4 +1,4 @@
-import type { SalesStudentView } from '@ab/shared';
+import { formatPhone, type SalesStudentView } from '@ab/shared';
 import { createColumnHelper } from '@tanstack/react-table';
 import type { DataTableFeatures } from '@/components/DataTable';
 import { Ltr } from '@/components/ui/display/ltr';
@@ -6,8 +6,9 @@ import { t } from '@/lib/i18n/i18n';
 
 const col = createColumnHelper<DataTableFeatures, SalesStudentView>();
 
-// «كل الطلاب» (sales, read-only): who, which teacher and program, the status and the guardian's name.
-// Never a balance, package, note, phone or meeting link. The server pages and searches.
+// «كل الطلاب» (sales, read-only): who, which teacher and program, the status, the guardian's name and
+// phone (owner 2026-10-27: sales see every chat with its phone). Never a balance, package, note or
+// meeting link. The server pages and searches.
 export const allStudentColumns = col.columns([
   col.accessor('name', {
     header: () => t.sales.allStudents.student,
@@ -37,5 +38,13 @@ export const allStudentColumns = col.columns([
   col.accessor('guardian_name', {
     header: () => t.sales.allStudents.guardian,
     meta: { className: 'text-xs text-ink-3 max-sm:order-5 max-sm:basis-full' },
+  }),
+  col.accessor('guardian_phone', {
+    header: () => t.sales.allStudents.guardianPhone,
+    cell: (c) => {
+      const phone = c.getValue();
+      return phone ? <Ltr className="tabular-nums text-ink-2">{formatPhone(phone)}</Ltr> : null;
+    },
+    meta: { className: 'text-sm max-sm:order-6 max-sm:basis-full' },
   }),
 ]);

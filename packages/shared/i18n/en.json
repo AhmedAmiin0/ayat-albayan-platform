@@ -195,6 +195,7 @@
     "teachers": "Teachers",
     "leads": "New leads",
     "conversations": "Conversations",
+    "chats": "Chats",
     "jobApplicants": "Job applications",
     "label": "Menu",
     "menu": "Menu",
@@ -2375,6 +2376,7 @@
     "searchPlaceholder": "Search by name or number",
     "filterAll": "All",
     "filterUnread": "Unread",
+    "filterRow": "Filter chats",
     "empty": "No messages yet",
     "emptyUnread": "No new messages",
     "unknownNumber": "Unknown number",
@@ -3580,6 +3582,14 @@
     "restart": "The app will restart in the other language.",
     "restartManually": "Close the app and open it again to switch the language."
   },
+  "clock": {
+    "label": "Time format",
+    "auto": "Automatic (device)",
+    "autoShort": "Auto",
+    "h12": "12-hour",
+    "h24": "24-hour",
+    "hint": "Saved on this device only."
+  },
   "mobileStudentFile": {
     "recordings": {
       "title": "Lesson recordings",
@@ -4127,7 +4137,12 @@
       "program": "Program",
       "status": "Status",
       "guardian": "Guardian",
-      "noTeacher": "No teacher"
+      "noTeacher": "No teacher",
+      "guardianPhone": "Guardian's phone",
+      "noPhone": "This student has no saved phone number, so there is no chat to open",
+      "detailsHint": "Opens the student details",
+      "chatHint": "Opens the guardian's chat",
+      "noPhoneHint": "No guardian phone"
     },
     "live": {
       "title": "Lessons running now",
@@ -4157,6 +4172,7 @@
       "title": "Student details",
       "open": "Open {name}'s details",
       "teacher": "Teacher: {name}",
+      "chat": "Guardian's chat",
       "notFound": "This student is not one of yours or does not exist",
       "subscription": "Subscription",
       "current": "Current subscription",

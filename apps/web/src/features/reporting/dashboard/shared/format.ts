@@ -1,6 +1,7 @@
-import { clockTime, formatAmount, intlLocale, RIYADH_TZ } from '@ab/shared';
+import { clockOf, formatAmount, intlLocale, RIYADH_TZ } from '@ab/shared';
 import { t } from '@/lib/i18n/i18n';
 import { locale } from '@/lib/i18n/locale';
+import type { Clock } from '@/lib/clock';
 
 // Display text for the dashboard: Western digits everywhere (docs/07 §2), money rounded to whole
 // units (the table and the CSV keep the exact amounts), Riyadh times with the zone said once.
@@ -33,9 +34,9 @@ export function monthLabel(month: string): string {
 const dayFormat = new Intl.DateTimeFormat(intlLocale(locale), { weekday: 'long', day: 'numeric', month: 'long', timeZone: RIYADH_TZ });
 
 /** «الخميس، 1 أكتوبر 16:00» in Riyadh time. */
-export function whenRiyadh(iso: string): string {
+export function whenRiyadh(iso: string, clock: Clock): string {
   const at = new Date(iso);
-  return `${dayFormat.format(at)} ${clockTime(at, RIYADH_TZ)}`;
+  return `${dayFormat.format(at)} ${clockOf(at, { tz: RIYADH_TZ, ...clock })}`;
 }
 
 const dateFormat = new Intl.DateTimeFormat(intlLocale(locale), { day: 'numeric', month: 'long', year: 'numeric', timeZone: RIYADH_TZ });

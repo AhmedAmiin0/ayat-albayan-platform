@@ -11,7 +11,7 @@ describe('intervalMs: an optional poll interval from the build env', () => {
     expect(intervalMs('500', 10_000)).toBe(500);
   });
 
-  it('the inbox keeps its 10 s refresh when VITE_INBOX_REFRESH_MS is not set', () => {
-    expect(env.inboxRefreshMs).toBe(10_000);
+  it('unset VITE_INBOX_REFRESH_MS: the chat delta every 10 s, the chats list every 15 s, a full chat read every 60 s', () => {
+    expect([env.inboxRefreshMs, env.inboxListRefreshMs, env.threadFullRefreshMs]).toEqual([10_000, 15_000, 60_000]);
   });
 });

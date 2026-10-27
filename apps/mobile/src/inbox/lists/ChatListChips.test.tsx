@@ -17,7 +17,7 @@ const NAME = thread.display_name ?? '';
 const threadCalls = () => mockApiFetch.mock.calls.map(([p]: [string]) => p).filter((p) => p.startsWith('/threads'));
 
 async function row() {
-  return within(await screen.findByLabelText(t.inbox.lists.rowLabel));
+  return within(await screen.findByLabelText(t.inbox.filterRow));
 }
 
 beforeEach(() => {
@@ -25,7 +25,7 @@ beforeEach(() => {
   mockApiFetch.mockImplementation(answer({ me: withLists, threads: (p) => (p.includes('list=') ? page([]) : page()) }));
 });
 
-test('the row: «الكل» selected, the lists oldest first, then «＋ قائمة جديدة»', async () => {
+test('ONE row: «الكل» selected, «غير مقروءة», the lists oldest first, then «＋» (named «قائمة جديدة»)', async () => {
   await renderWithQuery(<ThreadsList />);
   const chips = await row();
   await chips.findByRole('tab', { name: PAID.name });
@@ -33,10 +33,15 @@ test('the row: «الكل» selected, the lists oldest first, then «＋ قائ�
     { selected: true },
     { selected: false },
     { selected: false },
+    { selected: false },
   ]);
-  expect(chips.getByRole('tab', { name: t.inbox.lists.all, selected: true })).toBeTruthy();
+  expect(chips.getByRole('tab', { name: t.inbox.filterAll, selected: true })).toBeTruthy();
+  expect(chips.getByRole('tab', { name: t.inbox.filterUnread, selected: false })).toBeTruthy();
   expect(chips.getByRole('tab', { name: TRIAL.name, selected: false })).toBeTruthy();
-  expect(chips.getByRole('button', { name: `＋ ${t.inbox.lists.new}` })).toBeTruthy();
+  expect(chips.getByRole('button', { name: t.inbox.lists.new })).toBeTruthy();
+  expect(chips.getByText('＋')).toBeTruthy();
+  expect(screen.getAllByLabelText(t.inbox.filterRow)).toHaveLength(1);
+  expect(screen.queryByLabelText(t.inbox.title)).toBeNull();
   expect(await screen.findByText(NAME)).toBeTruthy();
 });
 
@@ -47,7 +52,7 @@ test('a list chip filters the chats by list=<id>; an empty list says how to add 
   expect(threadCalls()).toContain(`/threads?list=${PAID.id}&page=1&pageSize=25`);
   expect((await row()).getByRole('tab', { name: PAID.name, selected: true })).toBeTruthy();
   expect(screen.queryByText(NAME)).toBeNull();
-  await fireEvent.press((await row()).getByRole('tab', { name: t.inbox.lists.all }));
+  await fireEvent.press((await row()).getByRole('tab', { name: t.inbox.filterAll }));
   expect(await screen.findByText(NAME)).toBeTruthy();
 });
 
@@ -58,7 +63,7 @@ test('an active list that is gone (deleted elsewhere) falls back to «الكل»
   client.setQueryData(listsKey, [TRIAL]);
   await waitFor(() => expect(screen.queryByRole('tab', { name: PAID.name })).toBeNull());
   expect(await screen.findByText(NAME)).toBeTruthy();
-  expect((await row()).getByRole('tab', { name: t.inbox.lists.all, selected: true })).toBeTruthy();
+  expect((await row()).getByRole('tab', { name: t.inbox.filterAll, selected: true })).toBeTruthy();
   expect(threadCalls().at(-1)).toBe('/threads?page=1&pageSize=25');
 });
 
@@ -70,5 +75,5 @@ test('the lists failing to load stay quiet: the chats still show, with a small n
   await renderWithQuery(<ThreadsList />);
   expect(await screen.findByText(t.inbox.lists.loadError)).toBeTruthy();
   expect(await screen.findByText(NAME)).toBeTruthy();
-  expect((await row()).getByRole('tab', { name: t.inbox.lists.all, selected: true })).toBeTruthy();
+  expect((await row()).getByRole('tab', { name: t.inbox.filterAll, selected: true })).toBeTruthy();
 });

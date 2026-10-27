@@ -3,11 +3,13 @@ import { StatusChip } from '@/components/ui/display/status-chip';
 import { Ltr } from '@/components/ui/display/ltr';
 import { formatDateTime } from '@/features/sales/leads/format';
 import { t } from '@/lib/i18n/i18n';
+import { useClock } from '@/lib/clock';
 
 const L = t.users.link;
 
 /** Status, the linked record and the dates, above the edit fields. */
 export function UserSummary({ user }: { user: UserDetail }) {
+  const clock = useClock();
   const disabled = user.status === 'disabled';
   return (
     <dl className="grid gap-2 border-b border-rule pb-4 text-sm">
@@ -38,7 +40,7 @@ export function UserSummary({ user }: { user: UserDetail }) {
       </div>
       <div className="flex flex-wrap gap-2">
         <dt className="text-xs text-ink-3">{t.users.cols.lastSignIn}</dt>
-        <dd className="text-ink-2">{user.last_sign_in_at ? formatDateTime(user.last_sign_in_at) : t.users.never}</dd>
+        <dd className="text-ink-2">{user.last_sign_in_at ? formatDateTime(user.last_sign_in_at, clock) : t.users.never}</dd>
       </div>
     </dl>
   );

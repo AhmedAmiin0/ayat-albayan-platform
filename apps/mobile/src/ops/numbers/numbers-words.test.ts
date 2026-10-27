@@ -34,6 +34,6 @@ test('health chip and last check', () => {
   expect(healthChip(chat)).toBeNull();
   expect(healthChip({ health: { ok: false, status: null, quality_rating: null, verified_name: null, gaps: [], errors: 1 } }))
     .toEqual({ tone: 'bad', glyph: 'struck', label: n.health.failed });
-  expect(checkedLine(main)).toMatch(/2026/);
-  expect(checkedLine(chat)).toBeNull();
+  expect(checkedLine(main, '24')).toMatch(/2026/);
+  expect(checkedLine(chat, '24')).toBeNull();
 });

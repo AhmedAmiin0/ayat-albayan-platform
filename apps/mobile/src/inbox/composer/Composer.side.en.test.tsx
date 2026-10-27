@@ -52,8 +52,9 @@ test('open window without pricing.read: [text] [paperclip] [round]; typing keeps
   expect(screen.getByRole('button', { name: c.send })).toBeTruthy();
 });
 
-test('closed window: the icons on the left, the note, «Send template» on the right', async () => {
+test('closed window: the note on its own line; under it the icons on the left, «Send template» on the right', async () => {
   await show(ago(3 * 24 * 60));
   const order = shown(leftToRight(screen.getByTestId('closed-row'), false));
-  expect(order).toEqual([en.savedReplies.open, 'quote-button', 'closed-note', c.sendTemplate]);
+  expect(order).toEqual([en.savedReplies.open, 'quote-button', c.sendTemplate]);
+  expect(screen.getByTestId('closed-note')).toBeTruthy();
 });

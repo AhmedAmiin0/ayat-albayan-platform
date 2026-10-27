@@ -24,6 +24,7 @@ import { TeacherThreadsQueries } from './teacher-threads/teacher-threads.queries
 import { ThreadsQueries } from './threads/threads.queries';
 import { KapsoReopener } from './reopen/kapso-reopener';
 import { ReopenQueries } from './reopen/reopen.queries';
+import { DeltaQueries } from './delta/delta.queries';
 
 export const NO_PEOPLE: ThreadPeople = { guardian: null, lead: null, students: [] };
 export const ADMIN: AuthUser = { id: 'a0000000-0000-4000-8000-000000000001', email: null, role: 'admin' };
@@ -72,19 +73,22 @@ function mocks() {
     audit: { record: vi.fn() },
     reopens: { requestedSince: vi.fn(async () => false), templateKey: vi.fn(async () => 'inquiry_followup_ar_v2') },
     kapso: { reopen: vi.fn(async () => false) },
+    delta: { newer: vi.fn(), pending: vi.fn() },
   };
 }
 
 /** `resolve`: the system roles as seeded by default; a test may grant a role more (a DB-edited role). */
 export async function inboxApp(resolve: PermissionResolver = systemResolver) {
   const m = mocks();
+  // MessageViews reads TemplatesQueries.cached: the test's `get` mock, never a copy kept between tests.
+  const templates = { ...m.templates, cached: (key: string) => m.templates.get(key) };
   const mod = await Test.createTestingModule({ imports: [AppModule] })
     .overrideProvider(PERMISSION_RESOLVER).useValue(resolve).overrideProvider(TOKEN_VERIFIER).useValue(verify)
     .overrideProvider(ThreadsQueries).useValue(m.queries)
     .overrideProvider(TeacherThreadsQueries).useValue(m.teacher)
     .overrideProvider(SalesQueries).useValue(m.sales)
     .overrideProvider(ChatListsQueries).useValue(m.lists)
-    .overrideProvider(TemplatesQueries).useValue(m.templates)
+    .overrideProvider(TemplatesQueries).useValue(templates)
     .overrideProvider(WHATSAPP_CLIENT).useValue(m.client)
     .overrideProvider(WHATSAPP_LINES).useValue({ notifications: m.client, chat: m.chatClient })
     .overrideProvider(SendGate).useValue(m.gate)
@@ -92,6 +96,7 @@ export async function inboxApp(resolve: PermissionResolver = systemResolver) {
     .overrideProvider(AuditService).useValue(m.audit)
     .overrideProvider(ReopenQueries).useValue(m.reopens)
     .overrideProvider(KapsoReopener).useValue(m.kapso)
+    .overrideProvider(DeltaQueries).useValue(m.delta)
     .compile();
   const app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter());
   await app.init();

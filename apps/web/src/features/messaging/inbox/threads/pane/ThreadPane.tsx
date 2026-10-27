@@ -1,5 +1,5 @@
 import { threadBadge } from '@ab/shared';
-import { useInfiniteQuery, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useId, useState, type ReactNode } from 'react';
 import { FormAlert } from '@/components/ui/form/form-alert';
 import { Toast } from '@/components/ui/overlay/toast';
@@ -7,8 +7,8 @@ import { useBelowShell } from '@/components/ui/layout/use-narrow';
 import { teacherMeQuery } from '@/features/teaching/teacher/api';
 import { templatesQuery } from '@/features/messaging/templates/api';
 import { t } from '@/lib/i18n/i18n';
-import { leadByPhoneQuery, threadQuery } from '../../api/api';
-import { useLiveChat } from '../../api/live';
+import { leadByPhoneQuery } from '../../api/api';
+import { useLiveThread } from '../../api/thread-delta';
 import { ChatActionsProvider } from '../../shared/ChatActionsProvider';
 import { Composer } from '../../composer/components/Composer';
 import { LeadPanel, type LeadNotice } from '../../lead/LeadPanel';
@@ -49,10 +49,9 @@ export function ThreadPane({ phone, listSearch }: ThreadPaneProps) {
   const [sheet, setSheet] = useState(false);
   const mode = useInboxMode();
   const access = useChatAccess(mode);
-  const detail = useInfiniteQuery(threadQuery(phone));
+  const detail = useLiveThread(phone);
   // Back to this window: fetch now, which also re-arms the focus-gated poll (W13).
   useWindowFocus(detail.refetch, phone);
-  useLiveChat(phone); // realtime re-reads it on a change (docs/12 §15)
   const templates = useQuery({ ...templatesQuery, enabled: access.templates });
   const th = detail.data?.pages[0]?.thread ?? null;
   const admin = mode === 'admin';

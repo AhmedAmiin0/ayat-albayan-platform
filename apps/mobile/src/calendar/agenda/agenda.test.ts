@@ -50,17 +50,17 @@ test('lessons outside the week are left out', () => {
 
 test('the teacher clock shows only when it reads differently from Riyadh', () => {
   const winter = at('w', '2026-11-04T14:00:00.000Z'); // 17:00 Riyadh, 16:00 Cairo
-  expect(teacherClock(winter)).toBe(t.booking.teacherClock.replace('{time}', '16:00').replace('{city}', 'القاهرة'));
+  expect(teacherClock(winter, '24')).toBe(t.booking.teacherClock.replace('{time}', '16:00').replace('{city}', 'القاهرة'));
   const summer = at('s', '2026-10-01T14:00:00.000Z'); // Cairo on summer time: 17:00 both
-  expect(teacherClock(summer)).toBeNull();
+  expect(teacherClock(summer, '24')).toBeNull();
   const riyadh = { ...winter, teacher: { ...winter.teacher, tz: 'Asia/Riyadh' } };
-  expect(teacherClock(riyadh)).toBeNull();
+  expect(teacherClock(riyadh, '24')).toBeNull();
 });
 
 test('past midnight the teacher clock names the teacher’s own day (verifier: Sat 00:30 Riyadh = Fri 23:30 Cairo)', () => {
   const late = at('late', '2026-10-30T21:30:00.000Z');
   const friday = `${t.enums.weekday['5']} 23:30`;
-  expect(teacherClock(late)).toBe(t.booking.teacherClock.replace('{time}', friday).replace('{city}', 'القاهرة'));
+  expect(teacherClock(late, '24')).toBe(t.booking.teacherClock.replace('{time}', friday).replace('{city}', 'القاهرة'));
 });
 
 /** `range` is «HH:MM-HH:MM», Cairo wall clock. */
@@ -71,16 +71,16 @@ const row = (id: string, weekday: number, range: string): AvailabilityRow => {
 
 test('a day’s availability: its weekday’s windows by start, named in the grid’s zone', () => {
   const grid = [row('b', 3, '20:00-22:00'), row('a', 3, '16:00-18:00'), row('c', 6, '10:00-12:00')];
-  expect(availabilityLine(grid, '2026-11-04', 'Asia/Riyadh')).toBe(
+  expect(availabilityLine(grid, { date: '2026-11-04', teacherTz: 'Asia/Riyadh', cycle: '24' })).toBe(
     `متاح ${ltr('16:00 – 18:00')}، ${ltr('20:00 – 22:00')} بتوقيت القاهرة`,
   );
-  expect(availabilityLine(grid, '2026-11-05', 'Asia/Riyadh')).toBeNull();
-  expect(availabilityLine([], '2026-11-04', 'Asia/Riyadh')).toBeNull();
+  expect(availabilityLine(grid, { date: '2026-11-05', teacherTz: 'Asia/Riyadh', cycle: '24' })).toBeNull();
+  expect(availabilityLine([], { date: '2026-11-04', teacherTz: 'Asia/Riyadh', cycle: '24' })).toBeNull();
 });
 
 test('the subtitle says how old a saved list is only while its refetch fails', () => {
   const ok = { isError: false, data: [], dataUpdatedAt: 0 };
-  expect(headerLine(['أ', 'ب'], ok)).toBe('أ · ب');
-  expect(headerLine(['أ'], { ...ok, isError: true, data: undefined })).toBe('أ');
-  expect(headerLine(['أ'], { ...ok, isError: true })).toMatch(/^أ · آخر تحديث \d{2}:\d{2}$/);
+  expect(headerLine(['أ', 'ب'], ok, '24')).toBe('أ · ب');
+  expect(headerLine(['أ'], { ...ok, isError: true, data: undefined }, '24')).toBe('أ');
+  expect(headerLine(['أ'], { ...ok, isError: true }, '24')).toMatch(/^أ · آخر تحديث \d{2}:\d{2}$/);
 });

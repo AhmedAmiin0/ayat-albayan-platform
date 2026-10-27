@@ -5,6 +5,10 @@ import { fullTime } from '@/features/messaging/inbox/format';
 import { t } from '@/lib/i18n/i18n';
 import { lineSync, lineView } from './template-lines-fixture';
 import { newerSync, TemplateLineBlock } from './TemplateLineBlock';
+import { locale } from '@/lib/i18n/locale';
+
+/** The cycle the suite reads times in (test-setup saves 24 h). */
+const C24 = { cycle: '24', locale } as const;
 
 const apiSend = vi.hoisted(() => vi.fn());
 vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiSend }));
@@ -26,7 +30,7 @@ describe('TemplateLineBlock', () => {
       <TemplateLineBlock line="notifications" facts={lineView('notifications', { last_sync: last })} phone="+20 100 000 0000" onNotice={vi.fn()} />,
     );
     expect(screen.getByText('+20 100 000 0000').closest('bdi')?.getAttribute('dir')).toBe('ltr');
-    expect(screen.getByText(p.lastSync.replace('{time}', fullTime('2026-10-17T06:30:00Z')))).toBeTruthy();
+    expect(screen.getByText(p.lastSync.replace('{time}', fullTime('2026-10-17T06:30:00Z', C24)))).toBeTruthy();
     expect(screen.getByText(p.metaCount).nextElementSibling?.textContent).toBe('12');
     expect(screen.getByText(p.noneImported)).toBeTruthy();
     expect(screen.getByText(t.integrations.options.meta)).toBeTruthy();

@@ -23,7 +23,7 @@ function service() {
     lessons: slow([]),
   };
   const views = { view: vi.fn((m: { id: string }) => new Promise((done) => setTimeout(() => done({ id: m.id }), RTT))) };
-  const receipts = { open: slow(undefined) };
+  const receipts = { open: slow({ stamped: false, receipts: Promise.resolve() }) };
   const svc = new ThreadsService(queries as unknown as ThreadsQueries, views as unknown as MessageViews, receipts as unknown as ReadReceipts);
   return { svc, queries };
 }
@@ -46,10 +46,10 @@ describe('ThreadsService — independent reads in parallel (owner 2026-10-27: en
     expect(queries.familyTags).toHaveBeenCalledWith(['g1']);
   });
 
-  it('GET /threads/:phone, first page: 3 rounds (was 5: stamp, thread, messages + people, views, lessons)', async () => {
+  it('GET /threads/:phone, first page: 2 rounds (was 5: stamp, thread, messages + people, views, lessons, the stamp beside them)', async () => {
     const { svc, queries } = service();
     const detail = svc.detail({ phone: '+966551234567', limit: 50 });
-    expect(await rounds(() => detail)).toBe(3);
+    expect(await rounds(() => detail)).toBe(2);
     await expect(detail).resolves.toMatchObject({ has_more: false, lessons: [], people: NO_PEOPLE });
     expect(queries.lessons).toHaveBeenCalledWith(expect.objectContaining({ guardian_id: 'g1' }), expect.any(Date));
   });

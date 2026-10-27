@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/form/button';
 import { t } from '@/lib/i18n/i18n';
 import { wasText } from './edit-time-text';
 import { timeEditInfo, timeEditMode } from './edit-time.contract';
+import { useClock } from '@/lib/clock';
 
 /**
  * Under the time in the drawer (R-SCH-11): «كان: …» and «السبب: …» once it was edited (the
@@ -11,10 +12,11 @@ import { timeEditInfo, timeEditMode } from './edit-time.contract';
  * report and payments. «غيّر الميعاد» below is the other one: it closes this lesson and books a new one.
  */
 export function EditTimeLink({ lesson, onEdit }: { lesson: LessonView; onEdit?: (() => void) | undefined }) {
+  const clock = useClock();
   const info = timeEditInfo(lesson);
   return (
     <>
-      {info && <span className="block text-xs text-ink-2">{wasText(info)}</span>}
+      {info && <span className="block text-xs text-ink-2">{wasText(info, clock)}</span>}
       {info?.reason && <span className="block text-xs text-ink-2">{t.lessons.timeEdit.reasonLine.replace('{reason}', info.reason)}</span>}
       {onEdit && timeEditMode(lesson) && (
         <span className="mt-1.5 grid justify-items-start gap-1">

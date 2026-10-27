@@ -8,6 +8,7 @@ import { makeupSummary } from '../trial/lib/confirm-summary';
 import { FailureNotice } from '../trial/components/ConfirmNotices';
 import { SummaryList } from '../trial/components/ConfirmStep';
 import type { MakeupDraft } from './makeup-draft';
+import { useClockCycle } from '@/core/lib/clock';
 
 interface MakeupConfirmProps {
   draft: MakeupDraft;
@@ -24,11 +25,12 @@ interface MakeupConfirmProps {
  * request (rule 8), so an offline failure is safe to repeat.
  */
 export function MakeupConfirm({ draft, busy, failure, onSubmit, ...go }: MakeupConfirmProps) {
+  const cycle = useClockCycle();
   const { color } = useTheme();
   const note = { fontFamily: type.ui[500], fontSize: type.size.sm, color: color.ink2 };
   return (
     <View style={{ gap: 14 }}>
-      <SummaryList rows={makeupSummary(draft)} />
+      <SummaryList rows={makeupSummary(draft, cycle)} />
       <AppText style={note}>{t.booking.confirmationNote}</AppText>
       {failure ? (
         <FailureNotice failure={failure} busy={busy} onSubmit={onSubmit} {...go} />

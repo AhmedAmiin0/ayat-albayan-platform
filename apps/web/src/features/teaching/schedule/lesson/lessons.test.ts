@@ -13,6 +13,10 @@ import {
   timeInCity,
 } from './lessons';
 import { RIYADH_TZ } from '../tz';
+import { locale } from '@/lib/i18n/locale';
+
+/** The cycle the suite reads times in (test-setup saves 24 h). */
+const C24 = { cycle: '24', locale } as const;
 
 const A = lesson({ id: 'a', status: 'scheduled' });
 const B = lesson({ id: 'b', status: 'confirmed', teacher: FATMA, starts_at: '2026-10-05T10:00:00.000Z' });
@@ -60,15 +64,15 @@ describe('lessonsOnDay', () => {
 describe('times with their zone (R-SCH-01)', () => {
   it('timeInCity names the city', () => {
     const want = t.schedule.inCity.replace('{time}', '17:00').replace('{city}', t.tz['Asia/Riyadh']);
-    expect(timeInCity('2026-10-04T14:00:00.000Z', RIYADH_TZ)).toBe(want);
-    expect(timeInCity('2026-10-04T14:00:00.000Z', 'Pacific/Fiji')).toContain('Pacific/Fiji');
+    expect(timeInCity('2026-10-04T14:00:00.000Z', RIYADH_TZ, C24)).toBe(want);
+    expect(timeInCity('2026-10-04T14:00:00.000Z', 'Pacific/Fiji', C24)).toContain('Pacific/Fiji');
   });
 
   it('studentTimes lists each other zone once', () => {
     const group = lesson({ students: [SUHAILA, { ...SUHAILA, id: 's-9' }, JOUD] });
-    const cairo = t.schedule.studentTime.replace('{time}', timeInCity(group.starts_at, 'Africa/Cairo'));
-    expect(studentTimes(group, RIYADH_TZ)).toEqual([cairo]);
-    expect(studentTimes(lesson({ students: [JOUD] }), RIYADH_TZ)).toEqual([]);
+    const cairo = t.schedule.studentTime.replace('{time}', timeInCity(group.starts_at, 'Africa/Cairo', C24));
+    expect(studentTimes(group, RIYADH_TZ, C24)).toEqual([cairo]);
+    expect(studentTimes(lesson({ students: [JOUD] }), RIYADH_TZ, C24)).toEqual([]);
   });
 });
 

@@ -7,6 +7,7 @@ import { t } from '@/lib/i18n/i18n';
 import { teacherLabel } from '@/lib/i18n/teacher-label';
 import { timeInCity } from '../lesson/lessons';
 import { RIYADH_TZ } from '../tz';
+import { useClock } from '@/lib/clock';
 
 export interface TeacherCellProps {
   teacher: OverviewTeacher;
@@ -20,6 +21,7 @@ export interface TeacherCellProps {
  * the admin's work, so no saffron), and any time off in the window as one marginal note each.
  */
 export function TeacherCell({ teacher, now }: TeacherCellProps) {
+  const clock = useClock();
   const programs = teacher.programs.map((p) => t.enums.program[p]).join(t.common.listSeparator);
   const load = { students: teacher.students_count, max_students: teacher.max_students };
   return (
@@ -34,7 +36,7 @@ export function TeacherCell({ teacher, now }: TeacherCellProps) {
       <span className="text-xs font-normal text-ink-3">{`${t.teachers.genderLabel[teacher.gender]} · ${programs}`}</span>
       {teacher.tz !== RIYADH_TZ && (
         <span className="text-2xs font-normal text-ink-3">
-          {t.schedule.teacherTime.replace('{time}', timeInCity(now.toISOString(), teacher.tz))}
+          {t.schedule.teacherTime.replace('{time}', timeInCity(now.toISOString(), teacher.tz, clock))}
         </span>
       )}
       <span className="flex items-center gap-2 text-2xs font-normal text-ink-2">
@@ -45,7 +47,7 @@ export function TeacherCell({ teacher, now }: TeacherCellProps) {
       </span>
       {teacher.time_off.map((off) => (
         <span key={off.id} className="border-s-2 border-danger ps-1.5 text-2xs font-normal text-ink-2">
-          {[t.schedule.dayOff, formatTimeOff(off.starts_at, off.ends_at), off.reason].filter(Boolean).join(' · ')}
+          {[t.schedule.dayOff, formatTimeOff(off.starts_at, off.ends_at, clock), off.reason].filter(Boolean).join(' · ')}
         </span>
       ))}
     </div>

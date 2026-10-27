@@ -1,12 +1,13 @@
 import {
   localizedName,
   RIYADH_TZ,
-  riyadhWhenText,
+  type ClockCycle,
   type SalesHistoryEntry,
   type SalesStudentView,
   type SalesTeacherStudent,
   type SalesTeacherView,
 } from '@ab/shared';
+import { whenIn } from '@/core/lib/clock';
 import { t } from '@/core/lib/i18n/i18n';
 import { locale } from '@/core/lib/i18n/locale';
 import { money } from '@/payments/format';
@@ -14,7 +15,8 @@ import { ltr } from '@/core/ui/primitives/Ltr';
 import type { SalesSubscription } from './sales-api';
 
 // Row lines of the salesperson's pages (docs/16), same words as the web. Western digits; dates and
-// codes are LTR islands. Never a price, phone or link: the API does not send them.
+// codes are LTR islands. Never a price or link: the API does not send them (the guardian's phone, owner
+// 2026-10-27, is its own LTR element, PhoneText).
 
 const STATUS: Record<string, string | undefined> = t.enums.subscriptionStatus;
 const PACKAGE: Record<string, string | undefined> = t.enums.packageSize;
@@ -69,13 +71,11 @@ export function teacherCounts(teacher: SalesTeacherView): string {
 }
 
 /** «الحلقة القادمة: الاثنين 12 أكتوبر 18:00» (Riyadh), or «لا حلقة خلال الأيام الثمانية القادمة». */
-export function nextLessonLine(student: Pick<SalesTeacherStudent, 'next_lesson_at'>): string {
+export function nextLessonLine(student: Pick<SalesTeacherStudent, 'next_lesson_at'>, cycle: ClockCycle): string {
   const s = t.sales.teachers;
-  return student.next_lesson_at ? `${s.nextLesson}: ${riyadhWhen(student.next_lesson_at)}` : s.noNextLesson;
+  return student.next_lesson_at ? `${s.nextLesson}: ${whenIn(new Date(student.next_lesson_at), RIYADH_TZ, cycle)}` : s.noNextLesson;
 }
 
-/** «الاثنين 12 أكتوبر 18:00»: weekday, day, month and the Riyadh clock, Western digits (the web's words). */
-export const riyadhWhen = (iso: string): string => riyadhWhenText(iso, { weekday: t.enums.weekday, locale });
 
 /** «المعلم/ة · البرنامج» of a student (or «بلا معلم»). */
 export function studentSubtitle(student: SalesStudentView): string {
