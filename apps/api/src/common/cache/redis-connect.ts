@@ -32,12 +32,12 @@ export function connectRedis(url: string, onError: (e: unknown) => void): { comm
       scan: (pattern) => cmd.scanStream({ match: pattern, count: SCAN_BATCH }),
       publish: (channel, message) => cmd.publish(channel, message),
       ready: () => cmd.status === 'ready',
-      quit: () => cmd.quit(),
+      close: () => cmd.disconnect(),
     },
     subscriber: {
       subscribe: (channel) => sub.subscribe(channel),
       onMessage: (listener) => void sub.on('message', listener),
-      quit: () => sub.quit(),
+      close: () => sub.disconnect(),
     },
   };
 }

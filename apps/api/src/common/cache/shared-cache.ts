@@ -6,6 +6,10 @@ import type { CacheMode, CacheStore } from './cache-store';
 
 export const CACHE_STORE = Symbol('CACHE_STORE');
 const CHANNEL = 'invalidate';
+/** The safety-net TTL never exceeds this, whatever the caller asks (SETTINGS_CACHE_MS has no upper bound). */
+const MAX_TTL_MS = 300_000;
+/** A slower copy may store a pre-write value just after the delete: the writer deletes again after this. */
+export const SECOND_DELETE_MS = 1_000;
 const log = new Logger('SharedCache');
 
 /** A stored value or message that is not JSON reads as a miss (never a thrown request). */
@@ -82,7 +86,8 @@ export class SharedCache implements OnModuleInit, OnModuleDestroy {
     const epoch = this.epoch;
     const value = await input.load();
     // A write announced while this load ran: its value may predate the write, so it is not shared.
-    if (epoch === this.epoch) void this.guard.run(() => this.store.set(input.key, JSON.stringify(value), input.ttlMs), undefined);
+    const ttlMs = Math.min(input.ttlMs, MAX_TTL_MS);
+    if (epoch === this.epoch) void this.guard.run(() => this.store.set(input.key, JSON.stringify(value), ttlMs), undefined);
     return value;
   }
 
@@ -91,15 +96,20 @@ export class SharedCache implements OnModuleInit, OnModuleDestroy {
     this.epoch += 1;
     if (!this.shared) return;
     this.pending += 1;
-    const { keys, prefix } = change;
     try {
-      if (keys?.length) await this.guard.run(() => this.store.del(keys), undefined);
-      if (prefix) await this.guard.run(() => this.store.delByPrefix(prefix), undefined);
+      await this.drop(change);
       const message = JSON.stringify({ origin: this.origin, topic: change.topic });
-      await this.guard.run(() => this.store.publish(CHANNEL, message), undefined);
+      await this.guard.attempt(() => this.store.publish(CHANNEL, message), undefined);
     } finally {
       this.pending -= 1;
     }
+    if (change.keys?.length || change.prefix) setTimeout(() => void this.drop(change), SECOND_DELETE_MS).unref();
+  }
+
+  /** Deletes are tried even right after a failure; one failing never stops the announcement. */
+  private async drop({ keys, prefix }: CacheChange): Promise<void> {
+    if (keys?.length) await this.guard.attempt(() => this.store.del(keys), undefined);
+    if (prefix) await this.guard.attempt(() => this.store.delByPrefix(prefix), undefined);
   }
 
   /** Called when ANOTHER process announces this topic (never for this process's own writes). */

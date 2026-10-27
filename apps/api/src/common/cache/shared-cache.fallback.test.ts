@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 import { fakeRedis, settle } from './cache.fakes';
 import { SKIP_AFTER_FAILURE_MS } from './cache-guard';
+import { SECOND_DELETE_MS } from './shared-cache';
 
 describe('SharedCache when Redis is down or slow', () => {
   it('reads fall back to the database and never throw', async () => {
@@ -68,5 +69,44 @@ describe('SharedCache when Redis is down or slow', () => {
     } finally {
       vi.useRealTimers();
     }
+  });
+});
+
+describe('SharedCache invalidation is never lost', () => {
+  it('a write right after a failure (inside the skip window) still deletes and announces', async () => {
+    const { copy, server } = fakeRedis();
+    const a = copy();
+    const b = copy();
+    const heard = vi.fn();
+    b.cache.on('permissions', heard);
+    await a.cache.read({ key: 'perm:u1', ttlMs: 30_000, load: async () => ['x'] });
+    await settle();
+    server.down = true;
+    await a.cache.read({ key: 'other', ttlMs: 30_000, load: async () => 1 });
+    server.down = false;
+    await a.cache.invalidate({ topic: 'permissions', prefix: 'perm:' });
+    expect(heard).toHaveBeenCalledTimes(1);
+    expect(server.data.size).toBe(0);
+  });
+
+  it('a stale value stored just after the delete by a slower copy is deleted again a second later', async () => {
+    vi.useFakeTimers();
+    try {
+      const { copy, server } = fakeRedis();
+      const a = copy();
+      await a.cache.invalidate({ topic: 'settings', keys: ['settings:rows'] });
+      server.data.set('ab:cache:settings:rows', { value: '"old"', expires: 30_000 });
+      await vi.advanceTimersByTimeAsync(SECOND_DELETE_MS);
+      expect(server.data.size).toBe(0);
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it('the shared TTL is capped at 5 minutes', async () => {
+    const { copy, server } = fakeRedis();
+    await copy().cache.read({ key: 'k', ttlMs: 3_600_000, load: async () => 1 });
+    await settle();
+    expect(server.data.get('ab:cache:k')?.expires).toBe(300_000);
   });
 });

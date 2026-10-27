@@ -12,14 +12,15 @@ export interface RedisCommands {
   scan(pattern: string): AsyncIterable<string[]>;
   publish(channel: string, message: string): Promise<unknown>;
   ready(): boolean;
-  quit(): Promise<unknown>;
+  /** Closes at once (never waits for a queued command: Redis may be down). */
+  close(): void;
 }
 
 /** A second connection that only listens (a subscribed Redis connection can send nothing else). */
 export interface RedisSubscriber {
   subscribe(channel: string): Promise<unknown>;
   onMessage(listener: (channel: string, message: string) => void): void;
-  quit(): Promise<unknown>;
+  close(): void;
 }
 
 /** The Redis CacheStore (REDIS_URL set): shared by every API copy and the worker. */
@@ -67,7 +68,9 @@ export class RedisCacheStore implements CacheStore {
     await this.clients.subscriber.subscribe(KEY_PREFIX + channel);
   }
 
-  async close(): Promise<void> {
-    await Promise.allSettled([this.clients.commands.quit(), this.clients.subscriber.quit()]);
+  close(): Promise<void> {
+    this.clients.commands.close();
+    this.clients.subscriber.close();
+    return Promise.resolve();
   }
 }

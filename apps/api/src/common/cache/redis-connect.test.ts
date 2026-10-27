@@ -22,7 +22,7 @@ vi.mock('ioredis', () => ({
     publish = (...a: unknown[]) => this.call('publish', ...a);
     subscribe = (c: string) => this.call('subscribe', c);
     scanStream = (o: unknown) => (this.call('scanStream', o), [][Symbol.iterator]());
-    quit = () => this.call('quit');
+    disconnect = () => void this.call('disconnect');
   },
 }));
 
@@ -46,5 +46,9 @@ describe('connectRedis', () => {
     expect(made[0]?.calls).toEqual(expect.arrayContaining([['set', 'k', 'v', 'PX', 500], ['unlink', 'a', 'b'], ['scanStream', { match: 'p*', count: 200 }]]));
     expect(made[1]?.calls).toContainEqual(['subscribe', 'c']);
     expect(commands.ready()).toBe(true);
+    commands.close();
+    subscriber.close();
+    expect(made[0]?.calls).toContainEqual(['disconnect']);
+    expect(made[1]?.calls).toContainEqual(['disconnect']);
   });
 });

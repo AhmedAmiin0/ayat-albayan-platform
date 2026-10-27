@@ -39,14 +39,14 @@ export function fakeRedis() {
       for (const l of listeners) if (l.channel === channel) l.listener(channel, message);
     },
     ready: () => !server.down,
-    quit: async () => 'OK',
+    close: () => undefined,
   });
   const subscriber = (): RedisSubscriber => {
     const mine: Listener[] = [];
     return {
       subscribe: async (channel) => mine.forEach((listener) => listeners.push({ channel, listener })),
       onMessage: (listener) => void mine.push(listener),
-      quit: async () => 'OK',
+      close: () => undefined,
     };
   };
   /** One API copy: its own SharedCache (and guard, with a spied logger) on this server. */

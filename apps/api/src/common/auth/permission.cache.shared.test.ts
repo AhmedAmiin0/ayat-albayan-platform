@@ -49,11 +49,11 @@ describe('PermissionCache with Redis (two API copies)', () => {
     expect(redis.server.sets).toEqual([]);
   });
 
-  it('stores permission names only, with the 30 s TTL', async () => {
+  it('stores permission names only, with a 15 s TTL', async () => {
     const { redis, a } = copies();
     await a.get('u1', perms('payments.read'));
     await settle();
     expect(redis.server.sets).toEqual(['ab:cache:perm:u1=["payments.read"]']);
-    expect(redis.server.data.get('ab:cache:perm:u1')?.expires).toBe(30_000);
+    expect(redis.server.data.get('ab:cache:perm:u1')?.expires).toBe(15_000);
   });
 });

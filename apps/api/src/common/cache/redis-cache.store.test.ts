@@ -48,11 +48,12 @@ describe('RedisCacheStore', () => {
     expect(s.ready()).toBe(true);
   });
 
-  it('close quits both connections even when one fails', async () => {
+  it('close disconnects both connections at once (never waits on a dead Redis)', async () => {
     const { commands, subscriber, store: s } = store();
-    vi.spyOn(commands, 'quit').mockRejectedValue(new Error('gone'));
-    const quit = vi.spyOn(subscriber, 'quit');
+    const a = vi.spyOn(commands, 'close');
+    const b = vi.spyOn(subscriber, 'close');
     await expect(s.close()).resolves.toBeUndefined();
-    expect(quit).toHaveBeenCalled();
+    expect(a).toHaveBeenCalled();
+    expect(b).toHaveBeenCalled();
   });
 });

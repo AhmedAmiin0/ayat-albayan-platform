@@ -4,6 +4,8 @@ import type { SharedCache } from '../cache/shared-cache';
 
 /** How long a user's resolved permission set is reused before the DB is read again. */
 export const PERMISSION_TTL_MS = 30_000;
+/** The shared copy lives half as long: a local copy taken from it is then at most 45 s old. */
+const SHARED_TTL_MS = PERMISSION_TTL_MS / 2;
 
 type Perms = readonly Permission[];
 
@@ -16,7 +18,7 @@ interface Entry {
  * Per-user cache of resolved permission sets: a short TTL bounds staleness, and clear() (called by
  * every role / assignment change) makes changes immediate here and, with Redis, in every other API
  * copy and the worker (the `permissions` topic). On a miss the shared copy (permission names only,
- * PERMISSION_TTL_MS) is asked before the DB. Provided as a plain value by AuthModule (the clock is
+ * 15 s) is asked before the DB. Provided as a plain value by AuthModule (the clock is
  * injectable for tests). Concurrent requests of one user share a single load; a failed load (a
  * disabled account included) is never cached.
  */
@@ -36,7 +38,7 @@ export class PermissionCache {
     if (hit && hit.expires > this.now()) return hit.value;
     const generation = this.generation;
     const shared = this.shared;
-    const value = shared ? shared.read({ key: permissionKey(key), ttlMs: PERMISSION_TTL_MS, load }) : load();
+    const value = shared ? shared.read({ key: permissionKey(key), ttlMs: SHARED_TTL_MS, load }) : load();
     this.entries.set(key, { value, expires: this.now() + PERMISSION_TTL_MS });
     value.catch(() => {
       if (this.generation === generation && this.entries.get(key)?.value === value) this.entries.delete(key);

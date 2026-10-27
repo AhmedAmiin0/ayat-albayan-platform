@@ -35,6 +35,11 @@ export class CacheGuard {
 
   async run<T>(op: () => Promise<T>, fallback: T): Promise<T> {
     if (this.now() < this.skipUntil) return fallback;
+    return this.attempt(op, fallback);
+  }
+
+  /** As run() but even inside the skip window: an invalidation is always tried (it must not be lost). */
+  async attempt<T>(op: () => Promise<T>, fallback: T): Promise<T> {
     try {
       return await withTimeout(op(), OP_TIMEOUT_MS);
     } catch (e) {
