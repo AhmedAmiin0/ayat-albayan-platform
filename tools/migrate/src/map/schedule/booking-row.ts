@@ -9,7 +9,7 @@ import { teacherFromText } from '../../sources/values.ts';
 import { type StudentIndex, findStudent } from '../people/match.ts';
 
 /** Students the row names, or the reject: test row, bad phone, no name, student not imported. */
-function bookingStudents(row: SourceRow, ix: StudentIndex): NaturalKey[] | IssueInput {
+export function bookingStudents(row: SourceRow, ix: StudentIndex): NaturalKey[] | IssueInput {
   const phone = phoneCell(row.fields['phone']);
   const raw = text(row.fields['name']);
   const reason = testReason({

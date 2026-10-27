@@ -1,4 +1,5 @@
-import { MAX_MEETING_INVITEES, normalizePhone, type MeetingInviteeInput, type MeetingInviteeOption } from '@ab/shared';
+import { formatPhone, MAX_MEETING_INVITEES, normalizePhone, type MeetingInviteeInput, type MeetingInviteeOption } from '@ab/shared';
+import { ltr } from '@/core/ui/primitives/Ltr';
 
 // The invitees picked before a create: what the chip says and what POST /meetings receives. A staff
 // member or student is keyed by id, a phone by its E.164 form, so picking one twice adds it once.
@@ -15,11 +16,11 @@ export function fromOption(option: MeetingInviteeOption): DraftInvitee {
   return { key: `student:${option.id}`, label: `${option.name} · ${option.code}`, input: { kind: 'student', studentId: option.id } };
 }
 
-/** A typed phone (rule 7: E.164 only), or null when shared normalizePhone refuses it. */
+/** A typed phone (rule 7: E.164 only; the label alone is formatted and isolated), or null when normalizePhone refuses it. */
 export function fromPhone(typed: string): DraftInvitee | null {
   const result = normalizePhone(typed);
   if (!result.ok) return null;
-  return { key: `phone:${result.e164}`, label: result.e164, input: { kind: 'phone', phone: result.e164 } };
+  return { key: `phone:${result.e164}`, label: ltr(formatPhone(result.e164)), input: { kind: 'phone', phone: result.e164 } };
 }
 
 /** Adds one unless it is already there or the list is full (30). */

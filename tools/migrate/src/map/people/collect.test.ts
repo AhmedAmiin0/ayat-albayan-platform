@@ -113,7 +113,7 @@ describe('collectPeople', () => {
         book_bookings: [b('مشترك', 'دانة'), b('يحتاج تأكيد', 'سلمى'), b('مبدئي', 'منى')],
       }),
     );
-    expect(p.people).toMatchObject([{ name: 'دانة', legacy: 31, active: true }]);
+    expect(p.people).toMatchObject([{ name: 'دانة', legacy: 31, claims: ['subscribed_booking'] }]);
   });
 
   it('warns on teacher text that is no teacher (A3)', () => {

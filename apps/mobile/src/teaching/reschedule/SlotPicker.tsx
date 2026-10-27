@@ -14,8 +14,11 @@ import { FilterPills } from '@/core/ui/form/FilterPills';
 import { slotWindow, useRescheduleSlots } from './queries';
 import { SlotButton } from './SlotButton';
 
+/** What the picker reads of a lesson: the admin's LessonView or sales' schedule lesson. */
+type SlotLesson = Pick<LessonView, 'starts_at'> & { teacher: { id: string }; students: readonly { id: string }[] };
+
 export interface SlotPickerProps {
-  lesson: LessonView;
+  lesson: SlotLesson;
   durationMin: number;
   /** The family's zone: the small clocks. */
   tz: string;
@@ -26,6 +29,8 @@ export interface SlotPickerProps {
   fromLessonDay?: boolean;
   /** «عدّل الوقت»: 15-minute starts, the lesson itself not counted as busy (useRescheduleSlots). */
   edit?: { stepMin: number; excludeLessonId: string };
+  /** Sales: GET /sales/booking/slots (useRescheduleSlots `path`). */
+  slotsPath?: string;
 }
 
 /**
@@ -42,6 +47,7 @@ export function SlotPicker({
   onPick,
   fromLessonDay,
   edit,
+  slotsPath,
 }: SlotPickerProps) {
   const { color } = useTheme();
   const [now] = useState(() => new Date());
@@ -56,6 +62,7 @@ export function SlotPicker({
     studentIds: lesson.students.map((s) => s.id),
     ...slotWindow(week, now),
     ...edit,
+    path: slotsPath,
   });
   const notBefore = fromLessonDay ? localDate(new Date(lesson.starts_at), tz) : '';
   const note = {

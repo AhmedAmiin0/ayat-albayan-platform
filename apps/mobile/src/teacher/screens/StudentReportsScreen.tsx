@@ -1,30 +1,21 @@
-import { lessonWhenText, RIYADH_TZ, type ReportSummaryView, type TeacherMe } from '@ab/shared';
+import { RIYADH_TZ, type ReportSummaryView, type TeacherMe } from '@ab/shared';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import { FlatList } from 'react-native';
 import { ErrorLine } from '@/inbox/ErrorLine';
 import { t } from '@/core/lib/i18n/i18n';
-import { locale } from '@/core/lib/i18n/locale';
 import { usePagedList } from '@/core/lib/query/use-paged-list';
 import { Button } from '@/core/ui/primitives/Button';
 import { EmptyState } from '@/core/ui/feedback/EmptyState';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';
-import { ListRow } from '@/core/ui/layout/ListRow';
 import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { useStudentName } from '@/ops/reports/use-student-name';
 import { RecordingsButton } from '@/student-file/recordings/RecordingsButton';
 import { useTeacherMe } from '../lib/queries';
 import { openSigned } from '../report/hooks/api';
-import { reportFormHref } from '../components/ReportRows';
+import { ReportHistoryRow, reportFormHref } from '../components/ReportRows';
 import { TrialChatNote } from '../components/TrialChatNote';
-
-/** «الحلقة 12 · ممتاز»: the lesson number, then the overall grade or, without grades, the attendance. */
-function summaryLine(r: ReportSummaryView): string {
-  const no = r.lesson_no === null ? null : t.reports.lessonNoShort.replace('{n}', String(r.lesson_no));
-  const grade = r.grade_overall ? t.enums.grade[r.grade_overall] : r.attendance ? t.enums.attendance[r.attendance] : null;
-  return [no, grade].filter((part): part is string => part !== null).join(' · ');
-}
 
 const teacherStudent = (me: TeacherMe | undefined, id: string) => me?.students.find((s) => s.id === id);
 const teacherStudentName = (me: TeacherMe | undefined, id: string): string => teacherStudent(me, id)?.name ?? t.reports.history;
@@ -62,18 +53,10 @@ export function StudentReportsScreen({ admin = false }: { admin?: boolean }) {
         data={list.items}
         keyExtractor={(r) => r.id}
         renderItem={({ item: r }) => (
-          <ListRow
-            title={lessonWhenText(new Date(r.starts_at), tz, locale)}
-            subtitle={summaryLine(r)}
-            trailing={
-              r.pdf_status === 'ready' ? (
-                <Button
-                  variant="ghost"
-                  label={t.reports.downloadPdf}
-                  onPress={() => void openSigned(`/reports/${r.id}/pdf`).catch(() => setError(true))}
-                />
-              ) : undefined
-            }
+          <ReportHistoryRow
+            row={r}
+            tz={tz}
+            onPdf={() => void openSigned(`/reports/${r.id}/pdf`).catch(() => setError(true))}
             // Only my own lessons' reports open as a form; another teacher's stays a history line.
             // The admin reads any report (read-only, ops/AdminReportScreen).
             onPress={rowPress(r, admin ? 'admin' : me.data?.id)}

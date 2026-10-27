@@ -1,7 +1,8 @@
-import { gradeStyle, lessonWhenText, type PendingReportView, type TeacherReportView } from '@ab/shared';
+import { gradeStyle, lessonWhenText, type PendingReportView, type ReportSummaryView, type TeacherReportView } from '@ab/shared';
 import { router } from 'expo-router';
 import { t } from '@/core/lib/i18n/i18n';
 import { locale } from '@/core/lib/i18n/locale';
+import { Button } from '@/core/ui/primitives/Button';
 import { ListRow } from '@/core/ui/layout/ListRow';
 import { StatusChip } from '@/core/ui/feedback/StatusChip';
 
@@ -54,6 +55,34 @@ export function StudentHistoryRow({ student }: { student: { id: string; code: st
       meta={student.code}
       subtitle={t.reports.history}
       onPress={() => router.push(`/teacher/reports/student/${student.id}`)}
+    />
+  );
+}
+
+/** «الحلقة 12 · ممتاز»: the lesson number, then the overall grade or, without grades, the attendance. */
+function summaryLine(r: ReportSummaryView): string {
+  const no = r.lesson_no === null ? null : t.reports.lessonNoShort.replace('{n}', String(r.lesson_no));
+  const grade = r.grade_overall ? t.enums.grade[r.grade_overall] : r.attendance ? t.enums.attendance[r.attendance] : null;
+  return [no, grade].filter((part): part is string => part !== null).join(' · ');
+}
+
+interface ReportHistoryRowProps {
+  row: ReportSummaryView;
+  tz: string;
+  /** «تحميل PDF», shown once the PDF is ready. */
+  onPdf: () => void;
+  /** Opens the report (the teacher's own lesson, the admin); without it the row is a history line. */
+  onPress?: () => void;
+}
+
+/** One sent report of a student's «سجل التقارير» (teacher, admin, and sales' «تفاصيل الطالب» read-only). */
+export function ReportHistoryRow({ row, tz, onPdf, onPress }: ReportHistoryRowProps) {
+  return (
+    <ListRow
+      title={lessonWhenText(new Date(row.starts_at), tz, locale)}
+      subtitle={summaryLine(row)}
+      trailing={row.pdf_status === 'ready' ? <Button variant="ghost" label={t.reports.downloadPdf} onPress={onPdf} /> : undefined}
+      onPress={onPress}
     />
   );
 }

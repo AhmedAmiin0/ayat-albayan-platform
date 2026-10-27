@@ -3,7 +3,7 @@ import { Modal, Platform, Pressable, View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/more/Note';
 import { shape, type, useTheme } from '@/theme';
-import { AppText } from '@/core/ui/primitives/AppText';
+import { ContentText } from '@/core/ui/primitives/ContentText';
 import { Button } from '@/core/ui/primitives/Button';
 import { useChatActions } from '../../thread/hooks/chat-actions';
 import { quoteOf, quoteText } from '../hooks/quote-text';
@@ -62,17 +62,13 @@ export function MessageMenu({ message: m, phone, onClose }: MessageMenuProps) {
           }}
         >
           {m ? (
-            <AppText
+            <ContentText
+              source={quoteText(quoteOf(m))}
               numberOfLines={2}
-              style={{
-                fontFamily: type.ui[400],
-                fontSize: type.size.sm,
-                color: color.ink2,
-                writingDirection: 'auto',
-              }}
+              style={{ fontFamily: type.ui[400], fontSize: type.size.sm, color: color.ink2 }}
             >
               {quoteText(quoteOf(m))}
-            </AppText>
+            </ContentText>
           ) : null}
           {reply ? (
             <Button

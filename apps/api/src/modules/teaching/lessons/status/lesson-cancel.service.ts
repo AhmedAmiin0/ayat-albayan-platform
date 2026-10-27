@@ -8,10 +8,12 @@ import { LessonStore } from '../store/lesson-store';
 import { LessonsSettings } from '../lessons.settings';
 import { CANCEL_EVENT, cancelChange, invalidTransition, type CancelContext } from './transition';
 
-type CancelInput = { lessonId: string; body: CancelRequest; actor: AuthUser };
+/** The admin's body, or a salesperson's single lesson with no reason (null). */
+type CancelBody = Omit<CancelRequest, 'reason'> & { reason: string | null };
+type CancelInput = { lessonId: string; body: CancelBody; actor: AuthUser };
 type RuleCancelInput = { ruleId: string; body: RuleCancelRequest; actor: AuthUser };
 
-type Cancel = { by: CancelRequest['by']; reason: string };
+type Cancel = { by: CancelRequest['by']; reason: string | null };
 type EndRule = {
   rule: RuleWithLinks;
   /** First local day without lessons; the rule's ends_on becomes the day before. */

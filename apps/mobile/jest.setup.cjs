@@ -6,6 +6,12 @@ jest.mock('react-native/Libraries/ReactNative/I18nManager', () => {
   return { __esModule: true, default: { ...actual, isRTL: true, getConstants } };
 });
 
+// The phone's language (locale-switch: nothing saved follows it). jest-expo ships no ExpoLocalization
+// mock, so without this the import could throw. An Arabic phone, like the RTL default above.
+jest.mock('expo-localization', () => ({
+  getLocales: jest.fn(() => [{ languageTag: 'ar', languageCode: 'ar', textDirection: 'rtl' }]),
+}));
+
 // The query persister and Supabase auth write to AsyncStorage; jest has no native module for it.
 jest.mock('@react-native-async-storage/async-storage', () =>
   require('@react-native-async-storage/async-storage/jest/async-storage-mock'),

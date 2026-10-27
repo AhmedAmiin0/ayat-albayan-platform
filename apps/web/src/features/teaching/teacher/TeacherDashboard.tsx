@@ -14,6 +14,7 @@ import { PendingReports } from '@/features/reporting/reports/history/PendingRepo
 import { lessonsOnDay } from '@/features/teaching/schedule/lesson/lessons';
 import { addDays, dayMonthLabel, weekWindow, zonedParts } from '@/features/teaching/schedule/tz';
 import { t } from '@/lib/i18n/i18n';
+import { useNow } from '@/lib/time/use-now';
 import { usePlatformClassroom } from '@/lib/settings/public-config';
 import { myLessonsQuery, teacherMeQuery } from './api';
 import { JoinLink } from './lessons/JoinLink';
@@ -53,7 +54,7 @@ export function TeacherDashboard() {
  * the coming days), their students, their availability.
  */
 function Dashboard({ me }: { me: TeacherMe }) {
-  const [now] = useState(() => new Date());
+  const now = useNow();
   const platform = usePlatformClassroom(me.platform_classroom);
   const today = zonedParts(now, me.tz).date;
   const lessons = useQuery(myLessonsQuery(weekWindow(today, me.tz)));

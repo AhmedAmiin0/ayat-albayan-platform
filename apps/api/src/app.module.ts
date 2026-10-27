@@ -45,6 +45,7 @@ import { ReportsModule } from './modules/reporting/reports/reports.module';
 import { RolesModule } from './modules/people/roles/roles.module';
 import { SalesModule } from './modules/sales/sales/sales.module';
 import { SalesRegistrationModule } from './modules/sales/sales-registration/sales-registration.module';
+import { SalesStudentsModule } from './modules/sales/sales-students';
 import { SignInModule } from './modules/people/sign-in';
 import { SchedulingModule } from './modules/teaching/scheduling/scheduling.module';
 import { StudentChannelsModule } from './modules/teaching/student-channels';
@@ -101,6 +102,7 @@ import { WhatsappModule } from './modules/messaging/whatsapp/whatsapp.module';
     SubscriptionsModule,
     PaymentsModule,
     SalesMoneyModule,
+    SalesStudentsModule,
     PayoutsModule,
     AssistantPayModule,
     TeacherEarningsModule,

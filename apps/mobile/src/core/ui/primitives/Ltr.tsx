@@ -10,6 +10,12 @@ export function ltr(value: string): string {
   return `⁦${value}⁩`;
 }
 
+/**
+ * Free text (a name, a note) spliced into a UI-language sentence, in a first-strong isolate (FSI … PDI):
+ * it keeps its own direction and never reorders the sentence around it.
+ */
+export const isolate = (s: string): string => `\u2068${s}\u2069`;
+
 interface LtrProps extends Omit<TextProps, 'children'> {
   /** Code, E.164 phone (format it with formatPhone), email or URL. */
   children: string;

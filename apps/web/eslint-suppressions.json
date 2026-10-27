@@ -1161,7 +1161,7 @@
   },
   "src/features/reporting/dashboard/DashboardPage.tsx": {
     "ab/module-boundaries": {
-      "count": 4
+      "count": 3
     }
   },
   "src/features/reporting/dashboard/PeriodFilter.tsx": {
@@ -1176,7 +1176,7 @@
   },
   "src/features/reporting/dashboard/today/TodayLessons.tsx": {
     "ab/module-boundaries": {
-      "count": 2
+      "count": 1
     }
   },
   "src/features/reporting/dashboard/today/UnpaidList.tsx": {
@@ -1306,7 +1306,7 @@
   },
   "src/features/sales/sales/schedule/SalesSchedule.tsx": {
     "ab/module-boundaries": {
-      "count": 2
+      "count": 1
     }
   },
   "src/features/sales/sales/schedule/ScheduleLessonItem.tsx": {
