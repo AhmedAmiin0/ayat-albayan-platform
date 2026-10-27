@@ -79,7 +79,13 @@ test('src with the roles: the guard lets it through to the build', () => {
 
 test('first switch: the LB image is pulled before the old container stops (only the port changes hands)', () => {
   const pull = roll.indexOf('dc pull ayat-lb');
-  assert.ok(pull > 0 && pull < roll.indexOf('docker stop -t 30 $legacy'));
+  const stop = roll.indexOf('docker stop -t 30 $legacy');
+  assert.ok(pull > 0 && pull < stop);
+  // The worker (the one job runner) starts only once the old container (which ran every job) is gone.
+  const legacyBranch = roll.slice(roll.indexOf('if [ -n "$legacy" ]'), roll.indexOf('\nelse\n'));
+  assert.ok(
+    legacyBranch.indexOf('roll ayat-worker') > legacyBranch.indexOf('docker stop -t 30 $legacy'),
+  );
   assert.ok(roll.indexOf(ROLE_FILE) < roll.indexOf('dc build ayat-worker'));
 });
 

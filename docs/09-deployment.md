@@ -42,11 +42,14 @@ The host Caddy and `/opt/wacrm` are **unchanged**: Caddy still proxies the API d
 
 ```bash
 cd /opt/ayat-albayan-staging
-mv src src.bad && mv src.old src
-if [ -f src/apps/api/src/config/role/app-role.ts ]; then
-  sh roll.sh                                          # previous code knows APP_ROLE: same layout
-else                                                  # previous code predates APP_ROLE: the single container
-  cp docker-compose.yml.old docker-compose.yml && docker compose build
+# The previous code and, with it, the previous compose files (as the workflow does); stop on any error.
+set -e
+rm -rf src.bad && mv src src.bad && mv src.old src
+for f in docker-compose.yml roll.sh lb/Caddyfile; do [ ! -f $f.old ] || cat $f.old > $f; done
+if grep -q '^  ayat-lb:' docker-compose.yml; then
+  sh roll.sh                                          # previous layout was this one (roll.sh refuses code without APP_ROLE)
+else                                                  # previous layout was the single container
+  docker compose build
   for s in ayat-lb ayat-api-a ayat-api-b ayat-worker; do
     ids=$(docker ps -aq --filter label=com.docker.compose.project=ayat-albayan-staging --filter label=com.docker.compose.service=$s)
     [ -z "$ids" ] || docker rm -f $ids
@@ -56,9 +59,9 @@ fi
 docker compose ps
 ```
 
-**Known windows (accepted, when the roles are split):** an admin save reloads the copy that took it at once and kicks the worker's `config-reload` (`modules/platform/process-role/config-reload.job.ts`: integration config and allow-list, numbers overlay, notification-rules snapshot and the settings it reads, Google settings and connection), so the jobs never send on a stale config; a failed kick only leaves the worker on its own refresh. The *other* API copy catches up on its own refresh: integration and numbers config within the integration refresh (at least 60 s since 2026-10-27, `INTEGRATION_REFRESH_MS`), settings within `SETTINGS_CACHE_MS` (30 s), translations within 5 minutes. The worker's Google caches (settings 30 s, connection 10 min) are cleared by the same kick on a save, an OFF, a connect or a disconnect; the sync still checks the settings uncached before each Google write. Permissions are cached 30 s per copy: a revoked permission is honoured up to 30 s on the other copy. A new call wakes the worker's calls sweeper (kick `wake`); with nothing live it still looks once a minute, calls ON or OFF. Each line's last template sync is stored (migration 923), so either copy shows it. The in-memory feedback, sales-registration, classroom and activity limiters count per copy (see the top of this file).
+**Known windows (accepted, when the roles are split):** an admin save reloads the copy that took it at once and kicks the worker's `config-reload` (`modules/platform/process-role/config-reload.job.ts`: integration config and allow-list, numbers overlay and own numbers, notification-rules snapshot and the settings it reads, Google settings and connection; not awaited, so a save never waits on a busy worker), so the jobs move to the new config within moments; a failed kick only leaves the worker on its own refresh. Every timer started at boot is a `@BackgroundJob` (`job-guard.test.ts`; translations, a per-copy cache, aside). The *other* API copy catches up on its own refresh: integration and numbers config within the integration refresh (at least 60 s since 2026-10-27, `INTEGRATION_REFRESH_MS`), settings within `SETTINGS_CACHE_MS` (30 s), translations within 5 minutes. The worker's Google caches (settings 30 s, connection 10 min) are cleared by the same kick on a save, an OFF, a connect or a disconnect; the sync still checks the settings uncached before each Google write. Permissions are cached 30 s per copy: a revoked permission is honoured up to 30 s on the other copy. A new call wakes the worker's calls sweeper (kick `wake`); with nothing live it still looks once a minute, calls ON or OFF. Each line's last template sync is stored (migration 923), so either copy shows it. The in-memory feedback, sales-registration, classroom and activity limiters count per copy (see the top of this file).
 
-During a roll a POST that `ayat-lb` sends on a keep-alive connection just as a copy closes it can answer 502 (rare; the copy finishes every request it already received).
+On the first switch the API copies serve before `ayat-worker` exists (it starts once the old container is gone, up to its health wait): «run now» kicks in that minute or so fail and the worker's own polls catch up when it starts; nothing runs a job twice. During a roll a POST that `ayat-lb` sends on a keep-alive connection just as a copy closes it can answer 502 (rare; the copy finishes every request it already received).
 
 **Scale:** add `ayat-api-c` (copy `ayat-api-b`), add it to the `reverse_proxy` line in `lb/Caddyfile`, add `roll ayat-api-c` to `roll.sh` and the compose test; keep the memory sum in budget. Never a second `APP_ROLE=worker` (or `all`) container: one job runner only. CPU-heavy PDF rendering already runs only in the worker; give `ayat-worker` more memory before adding anything there.
 

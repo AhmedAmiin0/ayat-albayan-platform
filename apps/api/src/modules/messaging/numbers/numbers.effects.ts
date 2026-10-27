@@ -23,7 +23,7 @@ export class NumbersEffects {
     } finally {
       this.own.forget();
       await this.config.reload();
-      await kickConfigReload();
+      kickConfigReload();
     }
   }
 }

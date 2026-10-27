@@ -154,7 +154,9 @@ jobs:
     # A skipped migrate (env_only / migrate unticked) is fine; a failed or declined one stops the deploy.
     if: ${{ !cancelled() && needs.preflight.outputs.ready == 'true' && (needs.migrate.result == 'success' || needs.migrate.result == 'skipped') }}
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    # A build, four health waits (≤ 3 min each) and, on failure, the rollback's build and roll: a cancelled run
+    # (failure() false) would skip the rollback.
+    timeout-minutes: 60
     environment: develop
     permissions:
       contents: read
@@ -284,7 +286,7 @@ jobs:
       - name: Restart the API with the new .env
         if: ${{ inputs.env_only }}
         run: |
-          ssh target "cd $DEST && if [ -f roll.sh ] && grep -q '^  ayat-lb:' docker-compose.yml; then sh roll.sh --env-only; \
+          ssh target "cd $DEST && if [ -f roll.sh ] && grep -q ayat-lb roll.sh && grep -q '^  ayat-lb:' docker-compose.yml; then sh roll.sh --env-only; \
             else docker compose up -d --force-recreate --remove-orphans; fi"
 
       - name: Upload the web app (atomic swap)

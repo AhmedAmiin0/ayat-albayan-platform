@@ -45,7 +45,7 @@ export class CommunicationsService {
     } finally {
       this.deps.rules.invalidate();
       await this.config.reload();
-      await kickConfigReload();
+      kickConfigReload();
     }
     try {
       // Again, now that legacy reads: a rule PATCH that landed between the first copy and the flip

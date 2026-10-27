@@ -34,7 +34,7 @@ export class RulesPersist {
       await this.settings.writeLegacy(input.legacy, input.actorId);
     } finally {
       this.reader.invalidate();
-      await kickConfigReload();
+      kickConfigReload();
     }
   }
 
@@ -43,7 +43,7 @@ export class RulesPersist {
       await this.settings.writeLegacy(values, actorId);
     } finally {
       this.reader.invalidate();
-      await kickConfigReload();
+      kickConfigReload();
     }
   }
 

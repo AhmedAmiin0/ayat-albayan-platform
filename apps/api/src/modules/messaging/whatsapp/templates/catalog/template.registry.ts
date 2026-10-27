@@ -120,7 +120,6 @@ export class TemplateRegistry implements OnApplicationBootstrap, OnModuleDestroy
     await this.queries.saveLineSync(sync).catch((e: unknown) => this.log.warn(`template line sync not stored: ${errText(e)}`));
   }
 
-
   /** POST /messaging/templates/:key/submit (template-submit.ts). */
   submit(key: string, actorId: string): Promise<TemplateView> {
     return submitTemplate({ queries: this.queries, lines: this.lines, audit: this.audit }, key, actorId);
