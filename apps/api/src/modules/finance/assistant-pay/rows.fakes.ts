@@ -15,7 +15,7 @@ export const statementRow = (over: Partial<StatementRow> = {}): StatementRow => 
   receipt_path: 'receipts/a/secret.pdf', created_at: '2026-10-01T00:00:00Z', updated_at: '2026-10-01T00:00:00Z', created_by: ADMIN,
   assistant: { id: A, full_name: 'الزهراء' },
   lines: [
-    { kind: 'commission', amount: 100, currency: 'SAR', commission: { student: { code: 'AB-1001', name: 'ياسمين' } }, adjustment: null },
+    { kind: 'commission', amount: 100, currency: 'SAR', commission: { kind: 'renewal', student: { code: 'AB-1001', name: 'ياسمين' } }, adjustment: null },
     { kind: 'salary', amount: 1000, currency: 'SAR', commission: null, adjustment: null },
   ],
   ...over,

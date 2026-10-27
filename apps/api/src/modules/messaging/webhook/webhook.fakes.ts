@@ -1,5 +1,6 @@
 // Test fakes for the webhook services (not shipped behaviour).
 import type { TablesInsert } from '@ab/db';
+import { isUnsupportedMessage } from '@ab/shared';
 import { vi } from 'vitest';
 import type { AuditService } from '../../../common/audit/audit.service';
 import type { PushService } from '../../../common/push/push.service';
@@ -10,6 +11,7 @@ import type { LessonStatusService } from '../../teaching/lessons/status/lesson-s
 import type { InboundEvent } from './webhook.events';
 import { InboundService } from './inbound/webhook.inbound.service';
 import { InboundStore } from './inbound/webhook.inbound.store';
+import { refillPatch } from './inbound/inbound-refill';
 import type { Contact, OutboundRow, WebhookQueries } from './webhook.queries';
 import { QuickReplies } from './inbound/webhook.quick-reply';
 import { StatusService } from './status/webhook.status.service';
@@ -73,9 +75,12 @@ export function fakeQueries() {
       return times.length ? new Date(Math.max(...times)) : null;
     }),
     insertInbound: vi.fn(async (row: TablesInsert<'messages'>) => {
-      if (stored.some((r) => r.wa_message_id === row.wa_message_id)) return false;
-      stored.push(row);
-      return true;
+      const old = stored.find((r) => r.wa_message_id === row.wa_message_id);
+      if (!old) return stored.push(row) > 0;
+      // As refillUnsupported's compare-and-set: only a stored `unsupported` row takes the content.
+      const patch = refillPatch(row);
+      if (patch && isUnsupportedMessage(old.interactive_payload)) Object.assign(old, patch);
+      return false;
     }),
     deleteInbound: vi.fn(async (waMessageId: string) => {
       const i = stored.findIndex((r) => r.wa_message_id === waMessageId);
@@ -102,7 +107,7 @@ export function fakeDeps() {
     ratings: { record: vi.fn().mockResolvedValue(1) },
   };
 }
-export type Deps = ReturnType<typeof fakeDeps>;
+type Deps = ReturnType<typeof fakeDeps>;
 
 /** The real services over the fakes. */
 export function services(d: Deps = fakeDeps()) {

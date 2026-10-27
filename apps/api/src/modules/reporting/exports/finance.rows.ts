@@ -8,7 +8,7 @@ const { expenses: E, earnings: L, payments: P, finance: F, students: S } = ar;
 const method = (m: PaymentMethod | null) => (m ? ar.enums.paymentMethod[m] : '');
 const seeded = ar.enums.expenseCategory as Record<string, string>;
 
-export interface ExpenseIn {
+interface ExpenseIn {
   month: string;
   paid_on: string | null;
   category: string;
@@ -43,7 +43,7 @@ export function expenseCsv(rows: readonly ExpenseIn[]): Cell[][] {
 
 type Named = { teacher: { display_name_ar: string } | null };
 export type SessionIn = Named & { starts_at: string; minutes: number; amount: number; paid_amount: number; status: string };
-export type TeacherPayIn = Named & {
+type TeacherPayIn = Named & {
   paid_at: string;
   amount: number;
   method: PaymentMethod;

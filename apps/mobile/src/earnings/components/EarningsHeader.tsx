@@ -14,7 +14,7 @@ const tabs = (): FilterPill<Tab>[] => [
 const filters = (): FilterPill<SessionFilter>[] =>
   (['all', 'unpaid', 'paid'] as const).map((value) => ({ value, label: t.earnings.filter[value] }));
 
-export interface EarningsHeaderProps {
+interface EarningsHeaderProps {
   balance: TeacherEarningsBalanceView | undefined;
   tab: Tab;
   onTab: (tab: Tab) => void;

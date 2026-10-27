@@ -5,7 +5,7 @@ import { isPackageEnded, renewalPricing, type LastPackage, type StudentStatus } 
 // prefilled from the student's last package (renewalPricing, shared with web: its tier or custom
 // count, lesson length, discount and country), titled as a renewal.
 
-export interface RenewHref {
+interface RenewHref {
   pathname: '/students/subscribe';
   params: {
     studentId: string;

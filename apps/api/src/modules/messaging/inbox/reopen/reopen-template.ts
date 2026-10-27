@@ -18,7 +18,7 @@ export interface Queued {
   sent?: Sent;
 }
 
-export interface ReopenSend {
+interface ReopenSend {
   phone: string;
   thread: ThreadRow | null;
   actorId: string;

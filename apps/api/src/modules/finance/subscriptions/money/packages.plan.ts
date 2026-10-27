@@ -20,12 +20,12 @@ export interface PlanBalance {
   lessons_used: number;
   remaining: number;
 }
-export interface StudentPackages {
+interface StudentPackages {
   subs: readonly PlanPackage[];
   balances: ReadonlyMap<string, PlanBalance>;
 }
 
-export type StatusChange = { id: string; from: SubscriptionStatus; to: SubscriptionStatus };
+type StatusChange = { id: string; from: SubscriptionStatus; to: SubscriptionStatus };
 
 const balanceOf = (p: StudentPackages, s: PlanPackage): PlanBalance =>
   p.balances.get(s.id) ?? { lessons_used: 0, remaining: s.lessons_total };

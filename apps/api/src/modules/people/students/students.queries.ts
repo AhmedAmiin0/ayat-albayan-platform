@@ -19,7 +19,7 @@ import { applyStudentColumnFilters, STUDENT_SORT, type StudentColumnFilters, typ
 const LIST_COLUMNS = `id, code, name, status, program, tz, created_at, package_remaining, has_weekly, guardian:guardians!inner(name, phone_e164), teacher:teachers(display_name_ar)`;
 const PROFILE_COLUMNS = `*, guardian:guardians!inner(id, name, phone_e164, students(id, code, name, status)), teacher:teachers(id, display_name_ar, display_name_en, meeting_link)`;
 
-export type StudentListQuery = ListQuery & StudentListFilters & StudentColumnFilters & StudentListSort;
+type StudentListQuery = ListQuery & StudentListFilters & StudentColumnFilters & StudentListSort;
 
 /**
  * Paginated list (v_student_list), searchable by name / code / guardian phone and filtered by
@@ -52,7 +52,7 @@ async function searchFilter(db: Db, term: string): Promise<string | null> {
   return studentPhoneOrCodeFilter(data.map((g) => g.id), digits);
 }
 
-export type StatusCounts = Record<StudentStatus, number>;
+type StatusCounts = Record<StudentStatus, number>;
 
 /** Students per status under the other filters, e.g. one teacher's «١٢ مشترك · ٣ تجريبي». */
 export async function countStudentsByStatus(db: Db, f: StudentListFilters): Promise<StatusCounts> {

@@ -9,6 +9,7 @@ import { SalesFamilyQueries } from './reads/sales-family.queries';
 import { SalesMoneyReadsController } from './reads/sales-money-reads.controller';
 import { SalesPaymentsController, SalesSubscribeController } from './sales-money.controller';
 import { SalesMoneyReads } from './reads/sales-money.reads';
+import { SalesRenewals } from './reads/sales-renewals';
 import { SalesMoneyScope } from './sales-money.scope';
 import { SalesMoney } from './sales-money.service';
 import { SalesMoneyServices } from './sales-money.services';
@@ -25,7 +26,7 @@ import { SalesMoneySettings } from './sales-money.settings';
   controllers: [SalesSubscribeController, SalesPaymentsController, SalesMoneyReadsController],
   providers: [
     ...[SalesMoney, SalesMoneyServices, SalesMoneyScope, SalesMoneyReads, SalesFamilyQueries],
-    ...[SalesChatReceipts, SalesChatFiles, ThreadMediaService, SalesMoneySettings],
+    ...[SalesChatReceipts, SalesChatFiles, ThreadMediaService, SalesMoneySettings, SalesRenewals],
   ],
 })
 export class SalesMoneyModule {}

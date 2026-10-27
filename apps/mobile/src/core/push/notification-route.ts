@@ -23,10 +23,10 @@ const toStudent = (data: unknown) => {
 };
 
 /** The internal meetings list (the room itself opens from there, in the browser). */
-export const ADMIN_MEETINGS = '/more/live/meetings';
+const ADMIN_MEETINGS = '/more/live/meetings';
 
 /** «إعدادات الأكاديمية»: the Google sync status card is on it (docs/24 §3). */
-export const ADMIN_SETTINGS = '/more/ops/settings';
+const ADMIN_SETTINGS = '/more/ops/settings';
 
 /**
  * new lead / new message / failed reminder → that number's thread; lesson needs confirmation →
@@ -45,6 +45,8 @@ const ROUTES: Record<PushKind, (data: unknown) => string> = {
   new_student: toStudent,
   meeting_invite: () => ADMIN_MEETINGS,
   google_sync_alert: () => ADMIN_SETTINGS,
+  // docs/31 §2: teachers only; never sent to an admin.
+  channel_message: () => '/',
 };
 
 const tabOf = (href: string): TabRoute => (href.startsWith('/inbox') ? 'inbox' : href.startsWith('/students') ? 'students' : 'today');
@@ -67,7 +69,13 @@ export function routeFor(data: unknown, can: Can = () => true): string | null {
   return adminOpens(href, can) ? href : '/more';
 }
 
-export const TEACHER_TODAY = '/teacher/today';
+const TEACHER_TODAY = '/teacher/today';
+
+/** A family's message in a student channel (docs/31 §2) → «رسائل الطلاب» on that student. */
+const toTeacherChannel = (data: unknown) => {
+  const student = pushField(data, 'studentId');
+  return student && /^[\w-]+$/.test(student) ? `/teacher/more/messages/${student}` : '/teacher/more/messages';
+};
 
 const toTeacherThread = (data: unknown, can: Can) => {
   if (!canOpen(can, 'chats')) return TEACHER_TODAY;
@@ -91,6 +99,7 @@ const TEACHER_ROUTES: Record<PushKind, (data: unknown, can: Can) => string> = {
   meeting_invite: () => '/teacher/more/meetings',
   // Admins only (settings.read); never sent to a teacher.
   google_sync_alert: () => TEACHER_TODAY,
+  channel_message: (data) => toTeacherChannel(data),
 };
 
 /** The teacher screen a tapped push opens; null for anything that is not one of our pushes. */

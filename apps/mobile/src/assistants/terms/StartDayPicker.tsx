@@ -9,7 +9,7 @@ import { AppText } from '@/core/ui/primitives/AppText';
 import { Button } from '@/core/ui/primitives/Button';
 import { shiftDay } from './terms-form';
 
-export interface StartDayPickerProps {
+interface StartDayPickerProps {
   label: string;
   /** YYYY-MM-DD. */
   day: string;

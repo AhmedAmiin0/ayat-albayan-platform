@@ -7,7 +7,7 @@ import { BookingQueries } from '../core/booking.queries';
 import { instantPayload, instantPlan } from './instant.plan';
 import { InstantQueries } from './instant.queries';
 
-export type InstantInput = { req: InstantLessonRequest; actorId: string };
+type InstantInput = { req: InstantLessonRequest; actorId: string };
 
 const firstLesson = (r: BookingResult): InstantLessonResult => {
   const [first] = r.lessons;

@@ -35,11 +35,11 @@ export function keyId(nk: NaturalKey): string {
   return `${nk.entity}:${nk.key}`;
 }
 
-export interface StudentKeyInput {
+interface StudentKeyInput {
   guardianPhone: string;
   name: string;
 }
-export interface LessonKeyInput {
+interface LessonKeyInput {
   teacher: string;
   /** Student natural keys (key part). One for a 1:1 lesson, several for a group. */
   students: readonly string[];

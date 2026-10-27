@@ -43,7 +43,7 @@ export function duplicatePhone(env: Env, line: WaLine): boolean {
 /** The boot log's words for a duplicate chat phone id («افحص الخطوط» shows duplicate_chat_phone instead). */
 export const DUPLICATE_CHAT_PHONE = 'WA_CHAT_PHONE_NUMBER_ID (same as WA_PHONE_NUMBER_ID)';
 /** The boot log's words when both lines are on crm. */
-export const BOTH_ON_CRM = 'WA_CHAT_PROVIDER (crm, same as WA_PROVIDER)';
+const BOTH_ON_CRM = 'WA_CHAT_PROVIDER (crm, same as WA_PROVIDER)';
 
 /**
  * What the boot log names for a line: lineGaps plus the duplicate-id sentence. An unset meta

@@ -10,7 +10,7 @@ import { useStatusCounts, useTeacherOptions } from './use-student-list-data';
 
 const L = t.mobileStudentFile.list;
 
-export interface StudentFilterBarProps {
+interface StudentFilterBarProps {
   value: StudentFilters;
   onChange: (next: StudentFilters) => void;
   /** A search is set: the counts know the filters only, so the pills show none (they would not match the list). */

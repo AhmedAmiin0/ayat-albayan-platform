@@ -7,9 +7,9 @@ import { payloadLesson } from './webhook.inbound';
 import { WebhookQueries, type Contact } from '../webhook.queries';
 
 /** Audit trail marker for what the webhook does on a guardian's / lead's behalf. */
-export const WHATSAPP_ACTOR = 'system:whatsapp';
+const WHATSAPP_ACTOR = 'system:whatsapp';
 
-export interface ReplyAction {
+interface ReplyAction {
   intent: QuickReplyIntent | null;
   m: InboundEvent;
   lessonId: string | null;

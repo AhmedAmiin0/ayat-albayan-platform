@@ -18,7 +18,7 @@ export interface FilterPill<V extends string> {
   disabled?: boolean;
 }
 
-export interface FilterPillsProps<V extends string> {
+interface FilterPillsProps<V extends string> {
   items: readonly FilterPill<V>[];
   value: V;
   onChange: (value: V) => void;

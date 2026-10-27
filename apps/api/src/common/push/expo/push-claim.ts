@@ -1,7 +1,7 @@
 import { createHash, randomBytes } from 'node:crypto';
 
 /** Who holds a device (an app token or a browser endpoint) right now, as the API sees it. */
-export interface DeviceHolder {
+interface DeviceHolder {
   profileId: string;
   /** Its binding's auth session is still live (push_live_sessions). */
   live: boolean;

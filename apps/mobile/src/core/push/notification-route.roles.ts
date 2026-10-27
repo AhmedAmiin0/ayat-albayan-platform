@@ -6,7 +6,7 @@ import { pushKind, pushPhone } from './push-data';
 // The sales and classroom-assistant trees (owner 2026-10-12: a bell in every staff portal). Each
 // map returns only its own tree's routes: never an admin URL, and never a tab the role cannot see.
 
-export const SALES_MORE = '/sales/more';
+const SALES_MORE = '/sales/more';
 
 const toSalesThread = (data: unknown, can: Can) => {
   if (!canOpen(can, 'inbox')) return SALES_MORE;
@@ -35,6 +35,8 @@ const SALES_ROUTES: Record<PushKind, (data: unknown, can: Can) => string> = {
   meeting_invite: toSalesMeetings,
   // Admins only (settings.read); never sent to a salesperson.
   google_sync_alert: () => SALES_MORE,
+  // docs/31 §2: teachers only; never sent to a salesperson.
+  channel_message: () => SALES_MORE,
 };
 
 /** The sales screen a tapped push opens; null for anything that is not one of our pushes. */

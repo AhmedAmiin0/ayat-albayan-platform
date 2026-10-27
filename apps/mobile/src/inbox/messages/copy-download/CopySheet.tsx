@@ -5,14 +5,14 @@ import { AppText } from '@/core/ui/primitives/AppText';
 import { Button } from '@/core/ui/primitives/Button';
 import type { CopyRequest } from './chat-tools';
 
-export interface CopySheetProps {
+interface CopySheetProps {
   /** What to copy; null hides the sheet. */
   request: CopyRequest | null;
   onClose: () => void;
 }
 
 /**
- * «نسخ النص» / «نسخ الرقم» without a clipboard module (owner 2026-10-26): the exact text, selectable.
+ * «نسخ النص» / «نسخ الرقم» as a sheet (owner 2026-10-26; core/lib/clipboard is not wired here yet): the exact text, selectable.
  * Nothing on the sheet handles a long press, so the OS selection handles copy all of it or a part.
  */
 export function CopySheet({ request, onClose }: CopySheetProps) {

@@ -7,7 +7,7 @@
 import { normalizeArabic } from '@ab/shared';
 import { cachePath, readJson } from '../cache.ts';
 
-export interface TeacherDirectory {
+interface TeacherDirectory {
   names: Readonly<Record<string, string>>;
   aliases: Readonly<Record<string, string>>;
 }

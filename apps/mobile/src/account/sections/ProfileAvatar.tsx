@@ -4,7 +4,7 @@ import { t } from '@/core/lib/i18n/i18n';
 import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 
-export interface ProfileAvatarProps {
+interface ProfileAvatarProps {
   name: string;
   /** The photo (signed URL or a local preview); null shows the initials. */
   uri: string | null;

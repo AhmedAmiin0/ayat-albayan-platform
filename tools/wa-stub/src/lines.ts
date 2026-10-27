@@ -16,7 +16,7 @@ export interface StubLine {
 }
 
 /** stub.webhook.test.ts deep-equals these two for the notifications line: never change them. */
-export const NOTIFICATIONS_DISPLAY = '15550001111';
+const NOTIFICATIONS_DISPLAY = '15550001111';
 const NOTIFICATIONS_ENTRY = 'stub-waba';
 const CHAT_DISPLAY = '15550002222';
 
@@ -53,7 +53,7 @@ export function lineOf(opts: StubOptions, phoneNumberId: string | undefined): St
 }
 
 /** Every configured bearer; empty = lenient (any bearer passes). */
-export function acceptedTokens(opts: StubOptions): Set<string> {
+function acceptedTokens(opts: StubOptions): Set<string> {
   const tokens = [opts.accessToken, opts.chat?.accessToken];
   return new Set(tokens.filter((t): t is string => typeof t === 'string' && t !== ''));
 }

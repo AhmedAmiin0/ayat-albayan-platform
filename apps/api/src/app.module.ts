@@ -29,6 +29,7 @@ import { LeadsModule } from './modules/sales/leads/leads.module';
 import { LessonRatingModule } from './modules/teaching/lesson-rating/lesson-rating.module';
 import { LessonsModule } from './modules/teaching/lessons/lessons.module';
 import { MeModule } from './modules/people/me/me.module';
+import { PortalModule } from './modules/people/portal';
 import { MessagingJobsModule } from './modules/messaging/messaging-jobs/messaging-jobs.module';
 import { NotificationRulesModule } from './modules/messaging/notification-rules/rules.module';
 import { PaymentsModule } from './modules/finance/payments/payments.module';
@@ -44,7 +45,9 @@ import { ReportsModule } from './modules/reporting/reports/reports.module';
 import { RolesModule } from './modules/people/roles/roles.module';
 import { SalesModule } from './modules/sales/sales/sales.module';
 import { SalesRegistrationModule } from './modules/sales/sales-registration/sales-registration.module';
+import { SignInModule } from './modules/people/sign-in';
 import { SchedulingModule } from './modules/teaching/scheduling/scheduling.module';
+import { StudentChannelsModule } from './modules/teaching/student-channels';
 import { StudentRecordingsModule } from './modules/teaching/student-recordings/student-recordings.module';
 import { StudentsModule } from './modules/people/students/students.module';
 import { SubscriptionsModule } from './modules/finance/subscriptions/subscriptions.module';
@@ -80,6 +83,7 @@ import { WhatsappModule } from './modules/messaging/whatsapp/whatsapp.module';
     SalesRegistrationModule,
     JobApplicantsModule,
     MeModule,
+    PortalModule,
     FxModule,
     PricingModule,
     SchedulingModule,
@@ -90,6 +94,7 @@ import { WhatsappModule } from './modules/messaging/whatsapp/whatsapp.module';
     ReportsModule,
     RolesModule,
     UsersModule,
+    SignInModule,
     ReportPdfModule,
     GoogleSyncModule,
     SubscriptionsModule,
@@ -109,6 +114,7 @@ import { WhatsappModule } from './modules/messaging/whatsapp/whatsapp.module';
     LessonRatingModule,
     ClassroomModule,
     StudentRecordingsModule,
+    StudentChannelsModule,
     MessagingJobsModule,
     WebhookModule,
   ],

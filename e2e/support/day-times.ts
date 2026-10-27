@@ -6,7 +6,7 @@ import { USERS } from './users';
 // transaction.
 
 const DAY = 24 * 60 * MIN;
-export const PHONE = '+966500000996';
+const PHONE = '+966500000996';
 
 export interface DaySeed {
   teacher: string;
@@ -40,7 +40,7 @@ const timing = (at: number, time: string) => ({
   starts_on: iso(BASE).slice(0, 10), ends_on: null, meeting_link: null, package: '8',
 });
 
-export type PayloadOptions = { requestId: string | null; siblings: boolean; invoice: boolean };
+type PayloadOptions = { requestId: string | null; siblings: boolean; invoice: boolean };
 
 /** A package booking of both children: a weekly 17:00 first rule, optionally a 19:30 sibling two days later. */
 export function dayTimesPayload(s: DaySeed, o: PayloadOptions) {
@@ -61,7 +61,7 @@ export function dayTimesPayload(s: DaySeed, o: PayloadOptions) {
   };
 }
 
-export type BookingRow = { rule_id: string; lessons: { id: string }[]; message_ids: string[]; invoice_id: string | null };
+type BookingRow = { rule_id: string; lessons: { id: string }[]; message_ids: string[]; invoice_id: string | null };
 
 export async function book(tx: Tx, payload: ReturnType<typeof dayTimesPayload>, actor: string): Promise<BookingRow> {
   const [row] = await tx<{ r: BookingRow }[]>`select public.create_booking(${tx.json(payload)}, ${actor}) as r`;
@@ -78,7 +78,7 @@ export async function bookInstant(tx: Tx, s: DaySeed): Promise<BookingRow> {
   return row.r;
 }
 
-export type RuleFacts = { id: string; first_rule_id: string | null; client_request_id: string | null; start_time_local: string };
+type RuleFacts = { id: string; first_rule_id: string | null; client_request_id: string | null; start_time_local: string };
 
 /** The rules of the seeded teacher written in this transaction, first rule first. */
 export async function rulesOf(tx: Tx, s: DaySeed): Promise<RuleFacts[]> {

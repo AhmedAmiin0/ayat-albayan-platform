@@ -21,6 +21,7 @@ export {
   studentLinkView,
 } from './api/meetings-api';
 export { ClassroomActions } from './join/ClassroomActions';
+export { ClassroomRoom } from './room/components/ClassroomRoom';
 export { CopyLinkButton } from './join/CopyLinkButton';
 export { GuestJoinPage } from './join/GuestJoinPage';
 export { EnterButton, type JoinableLesson, JoinButton } from './join/JoinButton';

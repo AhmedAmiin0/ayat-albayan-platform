@@ -18,8 +18,11 @@ export const BUCKETS = {
 } as const;
 export type Bucket = (typeof BUCKETS)[keyof typeof BUCKETS];
 
-/** Signed download lifetimes: the UI opens a file now; WhatsApp fetches a document later. */
-export const SIGNED_URL_SECONDS = { ui: 3600, whatsapp: 7 * 24 * 3600 } as const;
+/**
+ * Signed download lifetimes: the UI opens a file now; WhatsApp fetches a document later; the family
+ * portal signs one file per tap and opens it at once (docs/31), so its link dies within minutes.
+ */
+export const SIGNED_URL_SECONDS = { ui: 3600, whatsapp: 7 * 24 * 3600, portal: 300 } as const;
 
 const EXT: Record<string, string> = {
   'image/jpeg': 'jpg',

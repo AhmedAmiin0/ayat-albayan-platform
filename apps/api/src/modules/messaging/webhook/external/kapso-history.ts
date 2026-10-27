@@ -12,15 +12,15 @@ export const KAPSO_FIELDS = 'kapso(direction,status,phone_number,media_data)';
 /** Kapso's page size cap. */
 export const PAGE_LIMIT = 100;
 /** A webhook item must answer within the 5 s budget; the job is not in a hurry. */
-export const READ_TIMEOUT_MS = 4_000;
+const READ_TIMEOUT_MS = 4_000;
 
-export interface HistoryPage {
+interface HistoryPage {
   messages: unknown[];
   /** The next page's cursor; undefined when the list is done. */
   after: string | undefined;
 }
 
-export interface PageQuery {
+interface PageQuery {
   /** ISO time: messages from then on. */
   since: string;
   after?: string;

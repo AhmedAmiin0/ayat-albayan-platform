@@ -4,6 +4,8 @@ import { mergeChat, type CallView, type MessageView } from '@ab/shared';
 export interface LogRow {
   id: string;
   direction: MessageView['direction'];
+  /** When it happened (a call's start), for the day chips. */
+  created_at: string;
   message?: MessageView;
   call?: CallView;
 }
@@ -15,6 +17,6 @@ export interface LogRow {
 export function logRows(messages: readonly MessageView[], input: { calls: readonly CallView[]; hasMore: boolean }): LogRow[] {
   const from = input.hasMore ? (messages[0]?.created_at ?? null) : null;
   return mergeChat(messages, input.calls, { from })
-    .map((e): LogRow => (e.kind === 'message' ? { id: e.message.id, direction: e.message.direction, message: e.message } : { id: e.call.id, direction: e.call.direction, call: e.call }))
+    .map((e): LogRow => (e.kind === 'message' ? { id: e.message.id, direction: e.message.direction, created_at: e.at, message: e.message } : { id: e.call.id, direction: e.call.direction, created_at: e.at, call: e.call }))
     .reverse();
 }

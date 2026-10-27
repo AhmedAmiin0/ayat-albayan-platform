@@ -45,7 +45,7 @@ export const stored = (r: TablesInsert<'meeting_invitees'>): StoredInvitee => ({
   sent_at: null,
 });
 
-export const listQueries = () => ({
+const listQueries = () => ({
   latest: vi.fn().mockResolvedValue([meetingRow()]),
   upcoming: vi.fn().mockResolvedValue([]),
   myInvites: vi.fn().mockResolvedValue([]),
@@ -53,7 +53,7 @@ export const listQueries = () => ({
   counts: vi.fn().mockResolvedValue(new Map<string, number>()),
 });
 
-export const inviteesQueries = () => ({
+const inviteesQueries = () => ({
   forMeeting: vi.fn().mockResolvedValue([]),
   byId: vi.fn().mockResolvedValue(null),
   insert: vi.fn(async (rows: TablesInsert<'meeting_invitees'>[]) => rows.map(stored)),
@@ -79,7 +79,7 @@ export const teacherScopesFake = () => ({
   of: vi.fn().mockResolvedValue({ teacherId: 't1', teacherName: 'مريم', phones: new Set([OPEN_PHONE, CLOSED_PHONE]), ownPhone: null }),
 });
 
-export const threadsFake = () => ({ thread: vi.fn().mockResolvedValue(null), enqueue: vi.fn().mockResolvedValue({ id: 'm1' }) });
+const threadsFake = () => ({ thread: vi.fn().mockResolvedValue(null), enqueue: vi.fn().mockResolvedValue({ id: 'm1' }) });
 
 export function meetingInviteMocks() {
   return {
@@ -92,7 +92,7 @@ export function meetingInviteMocks() {
     sender: { kick: vi.fn().mockResolvedValue(undefined) },
   };
 }
-export type MeetingInviteMocks = ReturnType<typeof meetingInviteMocks>;
+type MeetingInviteMocks = ReturnType<typeof meetingInviteMocks>;
 
 /** The HTTP harness: every DB-facing piece of the invitations replaced by the mocks. */
 export const overrideMeetingInvites = (b: TestingModuleBuilder, m: MeetingInviteMocks): TestingModuleBuilder =>

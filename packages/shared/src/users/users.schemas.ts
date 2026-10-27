@@ -3,6 +3,7 @@ import { phoneE164 } from '../schemas/common.js';
 import { USER_ROLES } from '../permissions/roles.js';
 import { isTimeZone } from '../schemas/common.js';
 import { needsExistingRecord, PASSWORD_MAX } from './validation.js';
+import { isFamilyEmail } from './sign-in.js';
 
 // «المستخدمون»: the bodies and query of /users (owner, 2026-10-06). The API answers with the views
 // in users.views.ts. Passwords are never part of a view or a log.
@@ -15,7 +16,8 @@ export const CREDENTIAL_MODES = ['set', 'generate', 'link'] as const;
 export type CredentialMode = (typeof CREDENTIAL_MODES)[number];
 
 const blank = (v: unknown) => (typeof v === 'string' && v.trim() === '' ? undefined : v);
-const email = z.string().trim().toLowerCase().pipe(z.email().max(254));
+// The family logins' synthetic domain (docs/30 §2) is the API's alone: never typed for a staff login.
+const email = z.string().trim().toLowerCase().pipe(z.email().max(254)).refine((v) => !isFamilyEmail(v), 'invalid_email');
 const fullName = z.string().trim().min(2).max(120);
 const zone = z.string().refine(isTimeZone, 'invalid_tz');
 const locale = z.enum(['ar', 'en']);

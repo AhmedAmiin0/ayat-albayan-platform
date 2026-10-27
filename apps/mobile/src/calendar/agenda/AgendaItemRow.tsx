@@ -8,7 +8,7 @@ import type { AgendaItem } from '../overview/overview';
 import { freeLabel } from '../overview/overview-text';
 import { dayLabel } from '../lib/week';
 
-export interface AgendaItemRowProps {
+interface AgendaItemRowProps {
   item: AgendaItem;
   /** One lesson's agenda row, with its actions. */
   lessonRow: (lesson: LessonView) => ReactNode;

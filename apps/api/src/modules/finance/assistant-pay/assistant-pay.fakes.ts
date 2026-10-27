@@ -32,7 +32,7 @@ const verify: TokenVerifier = async (token) => {
 
 export async function assistantApp() {
   const my = { students: vi.fn(), payments: vi.fn(), tz: vi.fn(), commissions: vi.fn(), adjustments: vi.fn() };
-  const terms = { assistants: vi.fn(), isAssistant: vi.fn(), all: vi.fn(), get: vi.fn(), uncommissioned: vi.fn(), broughtBy: vi.fn() };
+  const terms = { assistants: vi.fn(), isAssistant: vi.fn(), all: vi.fn(), get: vi.fn(), uncommissioned: vi.fn(), broughtBy: vi.fn(), renewalShare: vi.fn() };
   const statements = { list: vi.fn(), get: vi.fn() };
   const ledger = { list: vi.fn() };
   const rpc = {

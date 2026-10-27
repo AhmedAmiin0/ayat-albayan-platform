@@ -10,7 +10,7 @@ const DURATIONS = new Set([30, 45, 60, 90]);
 const SYNCED = new Set(['confirmed', 'subscribed', 'needs_confirmation']);
 
 /** Rows that are left out on purpose: counted, not issues. */
-export type SkipReason = 'status_not_synced' | 'ended_before_from' | 'once_before_from';
+type SkipReason = 'status_not_synced' | 'ended_before_from' | 'once_before_from';
 
 interface When {
   date: string;
@@ -18,7 +18,7 @@ interface When {
   duration: number;
 }
 
-export type BookingSlot =
+type BookingSlot =
   | ({ kind: 'rule'; rec: Recurrence } & When)
   | ({ kind: 'once' } & When)
   | { kind: 'skip'; reason: SkipReason }

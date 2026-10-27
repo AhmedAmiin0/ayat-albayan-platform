@@ -14,7 +14,7 @@ import { UnpayConfirm } from './UnpayConfirm';
 import { usePayoutMove } from './use-payout-move';
 
 type Move = 'approve' | 'reopen' | 'unpay';
-export interface PayoutActionBarProps {
+interface PayoutActionBarProps {
   payout: PayoutView;
   onPay: () => void;
   onDone: (move: Move) => void;

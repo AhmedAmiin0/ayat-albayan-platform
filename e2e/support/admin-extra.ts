@@ -2,7 +2,7 @@ import { withSql } from './schedule';
 
 // Seed/read helpers for the admin-web profile, teachers and search specs (B6, B7, A14).
 
-export interface TeacherSeed {
+interface TeacherSeed {
   name: string;
   meetingLink?: string;
   phone?: string;
@@ -76,7 +76,7 @@ export async function studentIdsOf(guardianId: string): Promise<string[]> {
   });
 }
 
-export interface ScheduledLesson {
+interface ScheduledLesson {
   teacherId: string;
   studentId: string;
   startsAt: Date;

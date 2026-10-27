@@ -16,7 +16,7 @@ async function post<T>(path: string, body: unknown): Promise<T> {
   return (await res.json()) as T;
 }
 
-export interface StubMedia {
+interface StubMedia {
   kind: 'image' | 'audio' | 'video' | 'document' | 'sticker';
   mime: string;
   caption?: string;
@@ -38,7 +38,7 @@ export async function backdateInbound(input: { phone: string; hoursAgo: number }
     where phone_e164 = ${input.phone} and direction = 'inbound'`);
 }
 
-export interface InboundRow {
+interface InboundRow {
   media_mime: string | null;
   body: string | null;
 }

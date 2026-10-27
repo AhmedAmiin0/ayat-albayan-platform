@@ -8,6 +8,7 @@ import {
 } from '../../enums/index.js';
 import { TEACHER_MEETING_MODES } from '../../classroom/meeting-mode.js';
 import { optionalText, phoneE164, requiredText, timeZone } from '../common.js';
+import { username } from '../../users/index.js';
 
 // DTOs use DB column names (snake_case) so they map 1:1 onto TablesInsert<...>.
 // Server-derived columns (code, name_normalized, created_by, …) are deliberately absent.
@@ -41,6 +42,8 @@ export const studentCreateSchema = z.object({
   teacher_gender_pref: z.enum(GENDERS).nullish(),
   meeting_link_override: z.url().nullish(),
   notes: optionalText,
+  /** «رقم الواتساب لـ: الطالب نفسه» (docs/30, a docs/13 deviation): wording only; the DB default is false. */
+  contact_is_self: z.boolean().optional(),
 });
 /**
  * PATCH /students/:id. `expected_status`: the status the client last saw; the API writes only while
@@ -71,7 +74,8 @@ export const teacherCreateSchema = z.object({
   status: z.enum(TEACHER_STATUSES).default('active'),
   tz: timeZone,
 });
-export const teacherUpdateSchema = teacherCreateSchema.partial();
+/** `username`: written to the teacher's login profile (docs/30); null clears it. Needs a linked login. */
+export const teacherUpdateSchema = teacherCreateSchema.partial().extend({ username: username.nullish() });
 
 export type GuardianCreate = z.infer<typeof guardianCreateSchema>;
 export type GuardianUpdate = z.infer<typeof guardianUpdateSchema>;

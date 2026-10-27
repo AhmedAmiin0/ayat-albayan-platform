@@ -12,9 +12,9 @@ import { copyText, downloadFile, downloadProblem } from '../copy-download/chat-t
 import { useThreadMode } from '../../thread/hooks/thread-mode';
 
 /** iOS presents one modal at a time: the forward sheet waits for this menu to finish closing. */
-export const AFTER_MENU_MS = Platform.OS === 'ios' ? 350 : 0;
+const AFTER_MENU_MS = Platform.OS === 'ios' ? 350 : 0;
 
-export interface MessageMenuProps {
+interface MessageMenuProps {
   /** The long-pressed message; null hides the menu. */
   message: MessageView | null;
   /** The chat's number: «تنزيل» asks this chat's file endpoint. */

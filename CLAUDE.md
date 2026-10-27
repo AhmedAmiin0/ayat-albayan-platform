@@ -24,6 +24,7 @@ Turborepo + pnpm · Supabase (Postgres, Auth, Storage, pg_cron/pg-boss) · NestJ
 8. Idempotent jobs (dedup keys); idempotent occurrence generation (`unique(rule_id, starts_at)`).
 9. RLS on every table + guards in Nest. Secrets only via env/Vault.
 10. Arabic UI strings in `packages/shared/i18n/ar.json`, written in clear Modern Standard Arabic (owner, 2026-10-03: no Egyptian dialect); keep the domain vocabulary below.
+11. **Imports only through a module's `index.ts`** (api `modules/<domain>/<module>`, web `features/<domain>/<feature>`, mobile `src/<feature>`); ≤ 12 code files and ≤ 12 sub-folders per folder; no new duplicate (jscpd) or unused code (knip). Baselines only shrink: `eslint-suppressions.json`, `refactor/folder-cap/`, `refactor/guards/` (docs/04 §8). Shared web + mobile logic lives in `packages/client-core`.
 
 ## How to execute (speed)
 - Use the **Workflow** tool for every phase with ≥ 3 independent modules (owner opted in). Builders in worktrees → verifiers → integrator (see `docs/05-build-plan.md §2`). ≤ 10 agents per run.

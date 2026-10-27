@@ -7,7 +7,7 @@ import { pathKey } from '@/core/lib/query/query-keys';
 export const CATALOGUE_KEY = ['admin', 'notifications'] as const;
 
 /** PATCH /admin/notifications/:key body: the new state and, for an essential OFF, the typed word. */
-export interface RuleToggle {
+interface RuleToggle {
   key: NotificationEntryView['key'];
   enabled: boolean;
   confirmText?: string;

@@ -6,7 +6,7 @@ import { useUploadMaxBytes } from '@/core/lib/query/public-config';
 import { Button } from '@/core/ui/primitives/Button';
 import { pickReceipt, type Receipt, type ReceiptSource } from '../receipt';
 
-export interface PhotoButtonsProps {
+interface PhotoButtonsProps {
   camera: string;
   library: string;
   /** Said when the photo is over the bucket's limit. */

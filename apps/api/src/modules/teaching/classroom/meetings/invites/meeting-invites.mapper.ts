@@ -24,9 +24,9 @@ const oneOf =
   (v: string): T =>
     all.find((x) => x === v) ?? fallback;
 
-export const asInviteKind = oneOf<MeetingInviteeKind>(MEETING_INVITEE_KINDS, 'phone');
-export const asInviteStatus = oneOf<MeetingInviteStatus>(MEETING_INVITE_STATUSES, 'pending');
-export const asInviteChannel = oneOf<MeetingInviteChannel>(MEETING_INVITE_CHANNELS, 'link');
+const asInviteKind = oneOf<MeetingInviteeKind>(MEETING_INVITEE_KINDS, 'phone');
+const asInviteStatus = oneOf<MeetingInviteStatus>(MEETING_INVITE_STATUSES, 'pending');
+const asInviteChannel = oneOf<MeetingInviteChannel>(MEETING_INVITE_CHANNELS, 'link');
 
 /** The invitee columns a client may see (no phone_e164, no token_hash). */
 export interface InviteeRow {
@@ -49,7 +49,7 @@ export const toInviteeView = (r: InviteeRow): MeetingInviteeView => ({
   sent_at: r.sent_at,
 });
 
-export interface ViewContext {
+interface ViewContext {
   user: Pick<AuthUser, 'id' | 'role'>;
   now: Date;
   win: JoinWindowConfig;

@@ -16,7 +16,7 @@ import {
 } from './activity-filters';
 import { entityLabel, roleLabel } from './activity-format';
 
-export interface ActivityFilterBarProps {
+interface ActivityFilterBarProps {
   value: ActivityFilters;
   onChange: (next: ActivityFilters) => void;
 }

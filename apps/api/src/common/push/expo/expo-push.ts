@@ -7,7 +7,7 @@ import { fill } from '../../../modules/reporting/report-pdf/render/pdf-text';
 /** Under EXPO_API_BASE («https://exp.host»). */
 export const EXPO_PUSH_PATH = '/--/api/v2/push/send';
 /** = apps/mobile/src/push/registerPush.ts ANDROID_CHANNEL, created before permission is asked. */
-export const ANDROID_CHANNEL = 'default';
+const ANDROID_CHANNEL = 'default';
 
 export interface PushText {
   title: string;
@@ -38,7 +38,7 @@ export type ExpoTicket =
   | { status: 'ok'; id: string }
   | { status: 'error'; message: string; details?: { error?: string } };
 
-export interface TicketOutcome {
+interface TicketOutcome {
   ticketIds: string[];
   /** Tokens Expo says are gone (app uninstalled): drop them from the profile. */
   deadTokens: string[];

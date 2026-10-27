@@ -22,6 +22,7 @@ export const PUSH_KIND_PERMISSIONS: Readonly<Record<PushKind, readonly Permissio
   new_student: BELL,
   meeting_invite: BELL,
   google_sync_alert: SETTINGS,
+  channel_message: BELL,
 };
 
 /** May a profile holding `held` be told about `kind`? */

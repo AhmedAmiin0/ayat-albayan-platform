@@ -9,7 +9,7 @@ import { FailureNotice } from '../trial/components/ConfirmNotices';
 import { SummaryList } from '../trial/components/ConfirmStep';
 import type { MakeupDraft } from './makeup-draft';
 
-export interface MakeupConfirmProps {
+interface MakeupConfirmProps {
   draft: MakeupDraft;
   busy: boolean;
   failure: BookFailure | null;

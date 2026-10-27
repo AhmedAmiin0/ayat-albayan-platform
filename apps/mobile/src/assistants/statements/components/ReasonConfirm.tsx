@@ -7,7 +7,7 @@ import { AppText } from '@/core/ui/primitives/AppText';
 import { Button } from '@/core/ui/primitives/Button';
 import { Field } from '@/core/ui/form/Field';
 
-export interface ReasonConfirmProps {
+interface ReasonConfirmProps {
   message: string;
   confirmLabel: string;
   busy: boolean;

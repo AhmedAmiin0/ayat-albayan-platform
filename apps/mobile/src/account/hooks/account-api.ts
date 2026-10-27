@@ -5,7 +5,7 @@ import type { PickedAvatar } from '../lib/avatar';
 
 // The /me writes (R-ACC-02..05). Each answers the fresh profile, except the password (204).
 
-export interface ProfilePatch {
+interface ProfilePatch {
   full_name?: string;
   phone_e164?: string | null;
   current_password?: string;

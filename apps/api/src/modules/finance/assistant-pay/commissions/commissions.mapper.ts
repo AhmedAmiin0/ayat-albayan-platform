@@ -1,5 +1,5 @@
 import type { Tables } from '@ab/db';
-import type { AssistantCommissionView } from '@ab/shared';
+import { isCommissionKind, type AssistantCommissionView } from '@ab/shared';
 import { reasonText } from '../reasons';
 
 export type CommissionRow = Tables<'assistant_commissions'> & {
@@ -15,6 +15,9 @@ export function toCommissionView(row: CommissionRow): AssistantCommissionView {
     assistant: { id: row.assistant_id, name: row.assistant?.full_name ?? '' },
     student: { id: row.student_id, code: row.student?.code ?? '', name: row.student?.name ?? '' },
     subscription_id: row.subscription_id,
+    // A check constraint keeps it 'first' | 'renewal'; an unknown value reads as the older 'first'.
+    kind: isCommissionKind(row.kind) ? row.kind : 'first',
+    share_percent: row.share_percent,
     type: row.commission_type,
     rate: Number(row.rate),
     base_amount: Number(row.base_amount),

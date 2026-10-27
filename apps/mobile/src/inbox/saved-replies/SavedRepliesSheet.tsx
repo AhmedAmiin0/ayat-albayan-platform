@@ -15,7 +15,7 @@ import { filterReplies } from './reply-text';
 import { ReplySheetFrame } from './quick-list/ReplySheetFrame';
 import { ScopeTabs } from './quick-list/ScopeTabs';
 
-export interface SavedRepliesSheetProps {
+interface SavedRepliesSheetProps {
   onClose: () => void;
   /** Fills the composer; nothing is sent. */
   onPick: (reply: SavedReply) => void;

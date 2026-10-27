@@ -7,7 +7,7 @@ import { withSql } from './schedule';
 import { studentStatusOf } from './student-statuses';
 import { stubSent } from './wa-stub';
 
-export { expectInChatMore, fromChatMore } from './chat-more';
+export { fromChatMore } from './chat-more';
 
 // Helpers of journey 7 (owner 2026-10-15): the assistant's (base role sales) whole student cycle. Real API
 // (:3100), local Supabase and tools/wa-stub; every number is a fake. The status is read three ways: the
@@ -22,7 +22,7 @@ export interface Family {
   name: string;
 }
 
-export interface StatusRow {
+interface StatusRow {
   from: string | null;
   to: string | null;
   reason: string | null;
@@ -30,7 +30,7 @@ export interface StatusRow {
 }
 
 /** The newest status_change audit row of the student. */
-export async function lastStatusRow(studentId: string): Promise<StatusRow | undefined> {
+async function lastStatusRow(studentId: string): Promise<StatusRow | undefined> {
   const [row] = await withSql(
     (sql) => sql<StatusRow[]>`
     select before->>'status' as "from", after->>'status' as "to", after->>'reason' as reason, after->>'via' as via
@@ -57,7 +57,7 @@ export async function checkRegistration(page: Page, expected: string): Promise<v
 }
 
 /** The status line of one registered child in the check's answer. */
-export const statusLine = (status: StudentStatus) => `${R.status}: ${ar.enums.studentStatus[status]}`;
+const statusLine = (status: StudentStatus) => `${R.status}: ${ar.enums.studentStatus[status]}`;
 
 export interface Expected {
   to: StudentStatus;

@@ -13,7 +13,7 @@ export interface ZipEntryInfo {
   size: number;
 }
 
-export interface OpenZip {
+interface OpenZip {
   path: string;
   sha256: string;
   entries: ZipEntryInfo[];
@@ -51,7 +51,7 @@ export function openZip(path: string): OpenZip {
   };
 }
 
-export interface SheetGrid {
+interface SheetGrid {
   sheet: string;
   data: unknown[][];
 }

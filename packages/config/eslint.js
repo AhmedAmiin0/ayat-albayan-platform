@@ -5,6 +5,8 @@ import reactHooks from 'eslint-plugin-react-hooks';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
 
+export { boundaries } from './eslint-boundaries.js';
+
 export const hardRules = {
   'max-lines': ['error', { max: 150, skipBlankLines: false, skipComments: false }],
   'max-params': 'off',

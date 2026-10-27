@@ -4,7 +4,7 @@ import { type, useTheme } from '@/theme';
 import { Ltr } from '../primitives/Ltr';
 import { AppText } from '../primitives/AppText';
 
-export interface ListRowProps {
+interface ListRowProps {
   /** At the inline-start, usually an <Avatar>. */
   leading?: ReactNode;
   /** Arabic name, one line. */

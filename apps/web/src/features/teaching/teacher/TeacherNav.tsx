@@ -8,6 +8,7 @@ export const TEACHER_NAV_ITEMS = [
   { to: '/teacher/calendar', label: t.teacherNav.calendar, icon: 'calendar', permission: 'self.teacher' },
   { to: '/teacher/inbox', label: t.teacherNav.chats, icon: 'chat', permission: 'inbox.read' },
   { to: '/teacher/students', label: t.teacherNav.students, icon: 'users', permission: 'self.teacher' },
+  { to: '/teacher/messages', label: t.teacherNav.messages, icon: 'chat', permission: 'self.teacher' },
   { to: '/teacher/reports', label: t.teacherNav.reports, icon: 'receipt', permission: 'self.teacher' },
   { to: '/teacher/earnings', label: t.teacherNav.payouts, icon: 'wallet', permission: 'self.teacher' },
   { to: '/teacher/payouts', label: t.teacherNav.statements, icon: 'receipt', permission: 'self.teacher' },

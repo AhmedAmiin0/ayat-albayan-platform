@@ -9,7 +9,7 @@ import { integrationItems } from './integration-config.view';
 export const INTEGRATION_REFRESH_MS = Symbol('INTEGRATION_REFRESH_MS');
 const MIN_REFRESH_MS = 1_000;
 /** A slow database never holds the boot longer than this. */
-export const LOAD_TIMEOUT_MS = 5_000;
+const LOAD_TIMEOUT_MS = 5_000;
 
 function timeout(ms: number): Promise<never> {
   return new Promise((_, reject) => setTimeout(() => reject(new Error(`timed out after ${ms} ms`)), ms).unref());

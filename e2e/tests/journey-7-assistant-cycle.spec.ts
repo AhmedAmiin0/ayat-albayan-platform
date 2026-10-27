@@ -6,17 +6,18 @@ import { riyadhDay } from '../support/sales-options';
 import { resetAbrar, setAvailability } from '../support/schedule';
 import { completeLesson, profileChip, startNow } from '../support/student-statuses';
 import { setMessaging, stubInbound, stubReset } from '../support/wa-stub';
-import { expectInMyPayments, registerWithTrial, saveSubscription, saveTransfer } from '../support/assistant-journey-ui';
+import { expectInMyPayments, registerWithTrial, renewFromChat, saveSubscription, saveTransfer } from '../support/assistant-journey-ui';
+import { chatRenew, expectRenewVisible } from '../support/chat-more';
 import { bookCourseDays, courseOf } from '../support/assistant-course';
 import {
-  apiAs, checkRegistration, childAndTrial, expectInChatMore, expectQuietStub, expectStatus, fromChatMore, leadIdOf, newestPackage, openChat, shot,
+  apiAs, checkRegistration, childAndTrial, expectQuietStub, expectStatus, fromChatMore, leadIdOf, newestPackage, openChat, shot,
 } from '../support/assistant-journey';
 
 // Journey 7 (owner 2026-10-15): the WHOLE student cycle as an assistant (base role sales), docs/16 + docs/18.
 // A family writes in → the assistant checks the number, registers the child with a trial (written at once as
 // «بانتظار الحلقة التجريبية») → the trial is attended («بانتظار الاشتراك») → she subscribes the family and
 // books the course days, records the bank transfer («مشترك», in «مدفوعاتي») → the package ends («بانتظار التجديد») → expired
-// («انتهى الاشتراك») → she renews from the chat («مشترك» again). The assistant's buttons in the web UI;
+// («انتهى الاشتراك») → one tap renews from the chat, prefilled («مشترك» again; owner 2026-10-26). The assistant's buttons in the web UI;
 // the API only where she has no action (the trial outcome, the renewal date, the expiry). Local Supabase
 // and tools/wa-stub only, fake numbers; messaging stays off and nothing reaches the stub as a template.
 // Expiry: the API has no hook to run StudentExpiryJob in e2e (and none is added to production), so the
@@ -117,7 +118,7 @@ test.describe('journey 7 — the assistant’s full student cycle (docs/16, docs
       const res = await apiAs(admin, { method: 'PATCH', path: `/subscriptions/${pkg.id}`, data: { renewsOn: riyadhDay(-1) } });
       expect(res.status, res.body).toBe(200);
       await expectStatus(page, who(), { from: 'active', to: 'pending_renewal', reason: null, via: 'subscription_ended' });
-      await expectInChatMore(page, ar.students.renew);
+      await expectRenewVisible(page);
       await shot(page, info, '06-pending-renewal');
       await expectQuietStub(phone);
     });
@@ -135,13 +136,12 @@ test.describe('journey 7 — the assistant’s full student cycle (docs/16, docs
     });
 
     await test.step('8. «جدّد الاشتراك» from the chat + bank transfer → «مشترك» again', async () => {
-      await fromChatMore(page, ar.students.renew);
-      await saveSubscription(page, WEEKLY);
+      await renewFromChat(page, WEEKLY);
       const pkg = await newestPackage(ids.studentId);
       await saveTransfer(page, pkg.currency);
       await shot(page, info, '08-renewed');
       await expectStatus(page, who(), { from: 'expired', to: 'active', reason: 'payment' });
-      await expectInChatMore(page, ar.students.renew, 0);
+      await expect(chatRenew(page)).toHaveCount(0);
       await shot(page, info, '08b-active-again');
       await expectQuietStub(phone);
     });

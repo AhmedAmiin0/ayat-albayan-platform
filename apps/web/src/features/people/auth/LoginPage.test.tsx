@@ -5,7 +5,7 @@ import { t } from '@/lib/i18n/i18n';
 import { LoginPage } from './LoginPage';
 
 const signIn = vi.hoisted(() => vi.fn());
-vi.mock('./sign-in', () => ({ signIn }));
+vi.mock('./sign-in', () => ({ signIn, signInWithCode: vi.fn() }));
 vi.mock('@tanstack/react-router', () => ({ useNavigate: () => vi.fn() }));
 
 function renderPage() {

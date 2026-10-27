@@ -10,7 +10,7 @@ import type { StagedFile } from './use-saved-reply';
  * clientRequestId for both, minted when the reply was staged: a retry of the same send is the same
  * request (rule 8).
  */
-export async function sendStagedFile(input: { phone: string; replyId: string; id: string }): Promise<MessageView> {
+async function sendStagedFile(input: { phone: string; replyId: string; id: string }): Promise<MessageView> {
   const staged = await apiSend<SavedReplyStaged>('POST', `/saved-replies/${input.replyId}/stage`, { clientRequestId: input.id });
   return apiSend<MessageView>('POST', `${threadPath(input.phone)}/file`, {
     clientRequestId: input.id,

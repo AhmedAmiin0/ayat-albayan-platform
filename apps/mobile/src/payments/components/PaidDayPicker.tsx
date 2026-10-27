@@ -6,7 +6,7 @@ import { Button } from '@/core/ui/primitives/Button';
 import { FormLabel } from '../FormLabel';
 import { paidDayLabel } from '../lib/paid-day';
 
-export interface PaidDayPickerProps {
+interface PaidDayPickerProps {
   /** Days back on the Riyadh calendar; 0 = today. */
   daysAgo: number;
   onChange: (daysAgo: number) => void;

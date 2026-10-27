@@ -28,7 +28,7 @@ interface Built {
   issues: RowIssue[];
 }
 
-export function studentRecord(p: Person, paying: ReadonlySet<string>): Built {
+function studentRecord(p: Person, paying: ReadonlySet<string>): Built {
   const issue = issuesFor('students', p.ref);
   const issues: RowIssue[] = [];
   const f = p.fields;
@@ -78,7 +78,7 @@ function reportTeacher(o: { p: Person; refs: TargetRecord['refs']; slug: string 
   return { refs, issues: [issue] };
 }
 
-export function mapStudents(bundle: SourceBundle): Mapped[] {
+function mapStudents(bundle: SourceBundle): Mapped[] {
   const { people, issues } = collectPeople(bundle);
   const paying = payingPhones(bundle);
   const built = people.map((p) => ({ p, ...studentRecord(p, paying) }));

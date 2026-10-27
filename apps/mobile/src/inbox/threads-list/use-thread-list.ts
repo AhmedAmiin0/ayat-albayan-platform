@@ -6,7 +6,7 @@ import { nextPageParam, type Page } from '@/core/lib/query/paging';
 
 const PAGE_SIZE = 25;
 
-export interface ThreadListParams {
+interface ThreadListParams {
   search: string;
   unread: boolean;
   /** A chat list's id «القوائم» (docs/22): only its chats. Unknown id → an empty page. */

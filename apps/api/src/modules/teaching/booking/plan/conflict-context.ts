@@ -4,7 +4,7 @@ import { BusyQueries } from '../../scheduling/conflicts/busy.queries';
 import { AvailabilityQueries } from '../../../people/teachers/availability/availability.queries';
 import type { Range } from '../core/booking.queries';
 
-export type ContextQuery = Range & {
+type ContextQuery = Range & {
   teacherId: string;
   studentIds: readonly string[];
   /** A lesson being edited in place (R-SCH-11): it must not count as busy against itself. */
@@ -12,7 +12,7 @@ export type ContextQuery = Range & {
   /** «تغيير أيام الحلقات»: the lessons of this course (of these students) move, so they are not busy. */
   excludeCourse?: string | undefined;
 };
-export type ConflictContextRows = Omit<ConflictInput, 'proposed'>;
+type ConflictContextRows = Omit<ConflictInput, 'proposed'>;
 
 /**
  * Loads what findConflicts checks against (R-SCH-04, issue B3): the teacher's bookable grid and

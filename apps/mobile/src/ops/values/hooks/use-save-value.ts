@@ -6,9 +6,9 @@ import { pathKey } from '@/core/lib/query/query-keys';
 const SETTINGS = '/settings';
 const META = '/config/meta';
 
-export type SaveOutcome = 'saved' | 'moved' | 'invalid';
+type SaveOutcome = 'saved' | 'moved' | 'invalid';
 
-export interface ValueSave {
+interface ValueSave {
   key: SettingKey;
   value: unknown;
 }

@@ -28,6 +28,8 @@ export interface NewStudentDraft {
   gender?: Gender | '';
   /** «عرفت عننا منين؟», prefilled from the lead's source. */
   source?: LeadSource | '';
+  /** «رقم الواتساب لـ: الطالب نفسه» (docs/30 §1); absent / false = «ولي الأمر». */
+  contactIsSelf?: boolean;
   carried?: CarriedFacts;
 }
 
@@ -82,6 +84,8 @@ export function leadParts(s: NewStudentDraft, f: Family): LeadParts {
       goal: blankToNull(c.goal),
       riwaya: blankToNull(c.riwaya),
       notes: blankToNull(c.notes),
+      // Only «الطالب نفسه» is sent: absent = the column default «ولي الأمر» (false).
+      ...(s.contactIsSelf ? { contact_is_self: true } : {}),
     },
     guardian: { name: s.guardianName.trim(), phone_e164: s.guardianPhone, tz: f.tz, country: f.country, source: s.source || null },
   };

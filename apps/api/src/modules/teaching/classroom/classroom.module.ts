@@ -120,7 +120,8 @@ import { StudentLinkService } from './student-link/student-link.service';
     LivekitWebhookService,
     ...INTERNAL_MEETING_PROVIDERS,
   ],
-  // The student file's recordings (modules/student-recordings) sign links and read rows the same way.
-  exports: [RecordingViews, RecordingQueries],
+  // The student file's recordings (modules/student-recordings) sign links and read rows the same way; the
+  // family portal (modules/people/portal) admits its own student like the student's link does.
+  exports: [RecordingViews, RecordingQueries, StudentLinkService],
 })
 export class ClassroomModule {}

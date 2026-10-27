@@ -17,7 +17,7 @@ const SORT: SortSpec<ActivitySortKey> = {
 
 /** The academy's calendar day (Asia/Riyadh, UTC+3 all year) → its UTC bounds. */
 const RIYADH = '+03:00';
-export const dayStart = (day: string): string => `${day}T00:00:00${RIYADH}`;
+const dayStart = (day: string): string => `${day}T00:00:00${RIYADH}`;
 export function nextDayStart(day: string): string {
   const d = new Date(`${day}T00:00:00Z`);
   d.setUTCDate(d.getUTCDate() + 1);

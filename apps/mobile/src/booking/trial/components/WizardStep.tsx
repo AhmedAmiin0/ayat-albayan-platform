@@ -16,7 +16,7 @@ import { TeacherStep } from './TeacherStep';
 
 export type { Step } from '../lib/steps';
 
-export interface WizardStepProps {
+interface WizardStepProps {
   step: Step;
   /** This wizard's steps in order: «التالي» / a pick moves to the one after `step`. */
   steps: readonly Step[];

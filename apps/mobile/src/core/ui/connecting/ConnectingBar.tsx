@@ -19,7 +19,7 @@ function useAnnounce(phase: BarPhase) {
   }, [phase]);
 }
 
-export interface ConnectingBarProps {
+interface ConnectingBarProps {
   store?: ConnectivityStore;
   /** Space kept above the card (the top safe area when the bar sits above a screen with no header). */
   inset?: number;

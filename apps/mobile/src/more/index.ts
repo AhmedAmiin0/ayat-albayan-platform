@@ -11,3 +11,4 @@ export { JobApplicantsScreen } from './screens/JobApplicantsScreen';
 export { MoreScreen } from './screens/MoreScreen';
 export { TeacherDetailScreen } from './screens/TeacherDetailScreen';
 export { TeachersScreen } from './screens/TeachersScreen';
+export { Note } from './Note';

@@ -8,7 +8,7 @@ const DAY_MS = 86_400_000;
 const EVERY_MS = 24 * 3_600_000;
 /** Not on boot: every API test boots AppModule (the AlertsJob rule). */
 const FIRST_RUN_MS = 15 * 60_000;
-export const RETENTION_DAYS = 30;
+const RETENTION_DAYS = 30;
 export const BATCH = 100;
 /** Per run: enough for the staging backlog; the rest waits for the next day. */
 export const MAX_BATCHES = 50;

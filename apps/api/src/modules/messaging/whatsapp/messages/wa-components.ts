@@ -1,5 +1,6 @@
 import { BODY_SLOTS, type TemplateParams } from '@ab/shared';
 import { bodyExamples } from '../template-review';
+import { authSubmitComponents } from '../direct/auth-template';
 import { templateButtons } from './wa-json';
 import { WaError, type MediaSend, type TemplateRow, type TemplateSend } from '../whatsapp.types';
 
@@ -37,7 +38,7 @@ export function documentHeader(input: TemplateSend): { link: string; filename: s
 }
 
 /** One send-time button value: a URL suffix ({{1}}) or a quick-reply payload, by the button's index. */
-export interface ButtonValue {
+interface ButtonValue {
   index: number;
   kind: 'url' | 'quick_reply';
   value: string;
@@ -67,7 +68,7 @@ function buttonComponents(input: TemplateSend): GraphBody[] {
 }
 
 /** The template's components in Meta's order: header, body, buttons by index. */
-export function templateComponents(input: TemplateSend): GraphBody[] {
+function templateComponents(input: TemplateSend): GraphBody[] {
   const parameters = bodyValues(input.template, input.params).map((text) => ({ type: 'text', text }));
   const doc = documentHeader(input);
   const header = doc ? { type: 'header', parameters: [{ type: 'document', document: doc }] } : null;
@@ -121,6 +122,7 @@ export const readReceipt = (waMessageId: string): GraphBody => ({
  * handle, BODY with a sample value for every {{n}} (Meta requires them), FOOTER, BUTTONS.
  */
 export function submitPayload(row: TemplateRow, headerHandle?: string): GraphBody {
+  if (row.category === 'authentication') return { name: row.meta_name, language: row.language, category: 'AUTHENTICATION', components: authSubmitComponents(row) };
   const examples = bodyExamples(row);
   const components: GraphBody[] = [];
   if (row.header_format === 'document') {

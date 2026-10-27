@@ -4,7 +4,7 @@ import { shape, type, useTheme } from '@/theme';
 import { Button } from '../primitives/Button';
 import { AppText } from '../primitives/AppText';
 
-export interface InlineConfirmProps {
+interface InlineConfirmProps {
   /** The question, e.g. «شكلها طلب توظيف مش طالب.» */
   message: string;
   /** Primary action, named by its verb («نقل لطلبات التوظيف»); defaults to «تأكيد». */

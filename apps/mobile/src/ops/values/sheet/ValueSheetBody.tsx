@@ -15,7 +15,7 @@ import { labelOf, valueText } from '../lib/value-text';
 import type { SheetDescription } from '../hooks/use-description-editor';
 import type { ValueSheetState } from '../hooks/use-value-sheet';
 
-export interface ValueSheetBodyProps {
+interface ValueSheetBodyProps {
   valueKey: SettingKey;
   saved: unknown;
   /** settings.write held: scalars get an editor. */

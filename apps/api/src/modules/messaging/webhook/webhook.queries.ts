@@ -3,6 +3,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import type { PostgrestError } from '@supabase/supabase-js';
 import { DB, type Db } from '../../../common/db/db.module';
 import { guardianOwnerIds } from '../../sales/sales/sales-ownership';
+import { refillUnsupported } from './inbound/inbound-refill';
 import { WebhookSettings } from './webhook.settings';
 import type { Contact, OutboundRow, StatusMove } from './webhook.types';
 
@@ -35,14 +36,19 @@ export class WebhookQueries {
     return { guardian: g.data, teacher: t.data, lead: l.data };
   }
 
-  /** Inserts an inbound row; false when Meta re-sent a wamid we already stored (replay). */
+  /**
+   * Inserts an inbound row; false when Meta re-sent a wamid we already stored (replay). A replay
+   * with content fills a stored `unsupported` row in place (refillUnsupported), still false.
+   */
   async insertInbound(row: TablesInsert<'messages'>): Promise<boolean> {
     const { data, error } = await this.db
       .from('messages')
       .upsert(row, { onConflict: 'wa_message_id', ignoreDuplicates: true })
       .select('id');
     check(error);
-    return (data ?? []).length > 0;
+    if ((data ?? []).length > 0) return true;
+    await refillUnsupported(this.db, row);
+    return false;
   }
 
   /** The latest message time on this phone within the whole second of `at` (orderedAt), or null. */

@@ -5,13 +5,15 @@ import { setLoginNotice } from './login-notice';
 
 const mockSignIn = jest.fn();
 jest.mock('@/auth/sign-in', () => ({ signIn: (c: unknown) => mockSignIn(c) }));
+const mockApiFetch = jest.fn();
+jest.mock('@/core/lib/http/api', () => ({ ...jest.requireActual('@/core/lib/http/api'), apiFetch: (p: string) => mockApiFetch(p) }));
 
 beforeEach(() => jest.clearAllMocks());
 
 test('shows Arabic error on failure', async () => {
   mockSignIn.mockResolvedValue({ ok: false, error: t.auth.invalidCredentials });
   await render(<Login />);
-  await fireEvent.press(screen.getByRole('button'));
+  await fireEvent.press(screen.getByRole('button', { name: t.auth.submit }));
   expect(await screen.findByText(t.auth.invalidCredentials)).toBeTruthy();
 });
 
@@ -19,19 +21,19 @@ test('error is an alert with the struck glyph, not colour alone', async () => {
   mockSignIn.mockResolvedValue({ ok: false, error: t.auth.noRole });
   await render(<Login />);
   expect(screen.queryByRole('alert')).toBeNull();
-  await fireEvent.press(screen.getByRole('button'));
+  await fireEvent.press(screen.getByRole('button', { name: t.auth.submit }));
   const alert = await screen.findByRole('alert');
   expect(alert).toHaveTextContent(t.auth.noRole);
   expect(screen.getByTestId('nuqta-struck', { includeHiddenElements: true })).toBeTruthy();
 });
 
-test('success signs in with the trimmed email and stays busy for the auth gate', async () => {
+test('success signs in with the trimmed identifier and stays busy for the auth gate', async () => {
   mockSignIn.mockResolvedValue({ ok: true });
   await render(<Login />);
   await fireEvent.changeText(screen.getByLabelText(t.auth.email), ' a@b.c ');
   await fireEvent.changeText(screen.getByLabelText(t.auth.password), 'pw');
-  await fireEvent.press(screen.getByRole('button'));
-  await waitFor(() => expect(mockSignIn).toHaveBeenCalledWith({ email: 'a@b.c', password: 'pw' }));
+  await fireEvent.press(screen.getByRole('button', { name: t.auth.submit }));
+  await waitFor(() => expect(mockSignIn).toHaveBeenCalledWith({ identifier: 'a@b.c', password: 'pw' }));
   // No navigation here: Stack.Protected in app/_layout swaps the screen when the gate says admin.
   expect(screen.getByRole('button', { name: t.auth.submitting })).toBeDisabled();
   expect(screen.queryByRole('alert')).toBeNull();
@@ -60,13 +62,23 @@ test('after a mid-session sign-out the login screen says why (disabled account),
   await act(async () => setLoginNotice('accountDisabled'));
   await render(<Login />);
   expect(await screen.findByRole('alert')).toHaveTextContent(t.mobileNav.accountDisabled);
-  await fireEvent.press(screen.getByRole('button'));
+  await fireEvent.press(screen.getByRole('button', { name: t.auth.submit }));
   await waitFor(() => expect(screen.queryByRole('alert')).toBeNull());
 });
 
 test('the wrong-app message reads as an alert too', async () => {
   mockSignIn.mockResolvedValue({ ok: false, error: t.mobileRoles.wrongApp });
   await render(<Login />);
-  await fireEvent.press(screen.getByRole('button'));
+  await fireEvent.press(screen.getByRole('button', { name: t.auth.submit }));
   expect(await screen.findByRole('alert')).toHaveTextContent(t.mobileRoles.wrongApp);
+});
+
+test('«نسيت كلمة المرور؟» opens the reset flow in the screen and comes back', async () => {
+  mockApiFetch.mockResolvedValue({ available: false });
+  await render(<Login />);
+  await fireEvent.press(screen.getByRole('button', { name: t.familyAuth.forgot }));
+  expect(screen.getByRole('header', { name: t.familyAuth.forgotTitle })).toBeTruthy();
+  expect(await screen.findByText(t.familyAuth.staffResetByAdmin)).toBeTruthy();
+  await fireEvent.press(screen.getByRole('button', { name: t.familyAuth.backToLogin }));
+  expect(screen.getByLabelText(t.auth.email)).toBeTruthy();
 });

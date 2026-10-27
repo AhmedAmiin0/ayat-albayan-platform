@@ -4,7 +4,7 @@ import { t } from '@/core/lib/i18n/i18n';
 /** The chip after the module-owned groups: «مزامنة Google», read from GET /admin/google/status. */
 export const GOOGLE_GROUP = 'google';
 
-export interface GoogleValue {
+interface GoogleValue {
   label: string;
   value: string;
 }

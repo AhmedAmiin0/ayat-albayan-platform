@@ -19,6 +19,8 @@ export interface CommissionInput {
   /** The subscription price, in its own currency. */
   base: number;
   baseCurrency: string;
+  /** Percent of the normal commission earned (a renewal: settings.renewal_commission_percent); default 100. */
+  share?: number;
 }
 
 export interface CommissionAmount {
@@ -26,19 +28,26 @@ export interface CommissionAmount {
   currency: string;
 }
 
+/** n / d rounded half up, for n >= 0 (exact while n stays a safe integer: prices up to ~90 billion cents). */
+const roundDiv = (n: number, d: number): number => Math.floor((n + d / 2) / d);
+
 /**
- * percent = value % of the subscription price in its own currency; fixed = value in its currency.
- * Rounded half up to 2 decimals (SQL round(numeric, 2)). null when nothing is earned: zero amount, a
- * fixed commission without a currency, or a value outside the terms' limits.
+ * percent = value % of the subscription price in its own currency; fixed = value in its currency; either
+ * times share % (a renewal, migration 20261027000751). Rounded half up to 2 decimals, once (SQL
+ * round(numeric, 2)). null when nothing is earned: zero amount, a fixed commission without a currency, or
+ * a value or share outside its limits.
  */
 export function computeCommission(input: CommissionInput): CommissionAmount | null {
-  if (!(input.value > 0) || !(input.base >= 0)) return null;
+  const share = input.share ?? 100;
+  if (!(input.value > 0) || !(input.base >= 0) || !(share >= 0 && share <= 100)) return null;
   if (input.type === 'fixed') {
-    return input.currency ? { amount: fromCents(toCents(input.value)), currency: input.currency } : null;
+    if (!input.currency) return null;
+    const fixed = roundDiv(toCents(input.value) * share, 100);
+    return fixed > 0 ? { amount: fromCents(fixed), currency: input.currency } : null;
   }
   if (input.value > 100) return null;
-  // value in hundredths of a percent x price in cents, / 10 000, rounded half up: exact integer maths.
-  const cents = Math.floor((toCents(input.base) * toCents(input.value) + 5000) / 10000);
+  // price in cents x value in hundredths of a percent x share, / 1 000 000, rounded half up: exact integer maths.
+  const cents = roundDiv(toCents(input.base) * toCents(input.value) * share, 1_000_000);
   return cents > 0 ? { amount: fromCents(cents), currency: input.baseCurrency } : null;
 }
 

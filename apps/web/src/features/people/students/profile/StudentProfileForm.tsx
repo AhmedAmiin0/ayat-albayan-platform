@@ -14,10 +14,11 @@ import { FormAlert } from '@/components/ui/form/form-alert';
 import { PROFILE_LABELS, toProfileValues, type ProfileValues } from './profile-form';
 import { saveProfile } from './save-profile';
 import { SavedNote } from './SavedNote';
+import { ContactIsSelfField } from './FactFields';
 import type { StudentProfile } from '../types';
 
 type SelectName = 'gender' | 'program' | 'status' | 'teacher_id';
-type FieldName = keyof ProfileValues;
+type FieldName = Exclude<keyof ProfileValues, 'contact_is_self'>;
 
 /** Reading order: who (with the form's «سن الطالب» and «النوع») and with whom, what they study, then logistics. */
 const FIELDS: FieldName[] = [
@@ -96,6 +97,9 @@ export function StudentProfileForm({ student }: { student: StudentProfile }) {
           )}
         </form.Field>
       ))}
+      <form.Field name="contact_is_self">
+        {(field) => <ContactIsSelfField name="p-contact_is_self" value={field.state.value} onChange={field.handleChange} />}
+      </form.Field>
       <div className="flex flex-wrap items-center gap-3 border-t border-rule pt-4 sm:col-span-full">
         <form.Subscribe selector={(s) => s.isSubmitting}>
           {(submitting) => (

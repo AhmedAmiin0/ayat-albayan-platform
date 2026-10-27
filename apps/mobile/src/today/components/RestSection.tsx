@@ -5,7 +5,7 @@ import { AppText } from '@/core/ui/primitives/AppText';
 import { type, useTheme } from '@/theme';
 import { RowsCard } from './RowsCard';
 
-export interface RestSectionProps {
+interface RestSectionProps {
   lessons: readonly LessonView[];
   onOpen: (lesson: LessonView) => void;
   /** «الكل»: back to every lesson of the day. */

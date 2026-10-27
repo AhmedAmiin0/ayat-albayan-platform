@@ -3,6 +3,7 @@ import { Global, Logger, Module, type OnModuleInit } from '@nestjs/common';
 import { IntegrationConfigModule } from '../../../common/integrations/integration-config.module';
 import { NumbersModule } from '../numbers/numbers.module';
 import { bootGaps, lineProvider, loadEnv } from '../../../config/env/env';
+import { CodeSend } from './direct/code-send';
 import { GateController } from './gate/gate.controller';
 import { GateSettings } from './gate/gate.settings';
 import { InboundMedia } from './messages/inbound-media.service';
@@ -70,6 +71,7 @@ function lines(): WhatsappLines {
     RouteQueries,
     NumberRoutes,
     MessageDispatch,
+    CodeSend,
     MessageWorker,
     MessageSender,
     MessagesQueries,
@@ -79,7 +81,7 @@ function lines(): WhatsappLines {
     InboundMedia,
     WaMediaRetentionJob,
   ],
-  exports: [WHATSAPP_CLIENT, WHATSAPP_LINES, TemplateRegistry, SendGate, MessageSender, MessageViews, InboundMedia, InboundMediaQueries, LineHealthStore],
+  exports: [WHATSAPP_CLIENT, WHATSAPP_LINES, TemplateRegistry, SendGate, CodeSend, MessageSender, MessageViews, InboundMedia, InboundMediaQueries, LineHealthStore],
 })
 export class WhatsappModule implements OnModuleInit {
   /**

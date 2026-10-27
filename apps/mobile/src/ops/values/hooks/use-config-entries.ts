@@ -12,7 +12,7 @@ const ENTRIES = '/config/entries';
  * GET /config/entries (docs/26 §2f): the stored descriptions. No retry: an older API has no such
  * route, and the sheet then shows today's text without «عدّل الوصف» (never an error).
  */
-export function useConfigEntries() {
+function useConfigEntries() {
   return useQuery({
     queryKey: pathKey(ENTRIES),
     queryFn: () => apiFetch<ConfigEntriesResponse>(ENTRIES),
@@ -26,7 +26,7 @@ export function useConfigEntry(key: SettingKey): ConfigEntry | undefined {
   return Array.isArray(entries) ? entries.find((e) => e.key === key) : undefined;
 }
 
-export interface DescriptionSave {
+interface DescriptionSave {
   key: SettingKey;
   /** The trimmed text, or null to restore the seeded text. */
   text: string | null;

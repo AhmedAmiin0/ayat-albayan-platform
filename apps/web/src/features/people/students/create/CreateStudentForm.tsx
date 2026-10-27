@@ -11,7 +11,7 @@ import { TimeZoneSelect } from '@/components/ui/form/time-zone-select';
 import { SourceField } from '@/features/people/guardians/SourceField';
 import { t } from '@/lib/i18n/i18n';
 import { ageError, EMPTY_STUDENT, phoneError, requiredError, type CreateStudentValues } from './create-student';
-import { AgeField, GenderField } from '../profile/FactFields';
+import { AgeField, ContactIsSelfField, GenderField } from '../profile/FactFields';
 import { ProgramField } from '../profile/ProgramField';
 import { TeacherField } from '../profile/TeacherField';
 
@@ -95,6 +95,9 @@ export function CreateStudentForm({ onSubmit, onCancel, error, initial, title }:
         </div>
         {textField('name')}
         {textField('guardianPhone')}
+        <form.Field name="contactIsSelf">
+          {(field) => <ContactIsSelfField name={`${formId}-contact`} value={field.state.value} onChange={field.handleChange} />}
+        </form.Field>
         <form.Field name="age" validators={{ onSubmit: ({ value }) => ageError(value) }}>
           {(field) => <AgeField value={field.state.value} error={field.state.meta.errors[0]} onChange={field.handleChange} />}
         </form.Field>

@@ -27,7 +27,7 @@ export interface MovedTrial {
   student_ids: string[];
 }
 
-export interface PickInput {
+interface PickInput {
   payload: BookingPayload;
   actorId: string;
 }
@@ -49,7 +49,7 @@ function queued(drafts: readonly MessageDraft[], lessonId: string): QueuedMessag
   );
 }
 
-export type MoveInput = PickInput & { old: MovedTrial; lessonId: string };
+type MoveInput = PickInput & { old: MovedTrial; lessonId: string };
 
 /** The upcoming trial moves: `lessonId` (the request id) is the new row's id, so a replay finds it. */
 export function movePick({ payload, actorId, old, lessonId }: MoveInput): TrialPick | null {

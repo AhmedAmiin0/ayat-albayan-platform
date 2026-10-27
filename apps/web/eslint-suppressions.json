@@ -1,0 +1,2102 @@
+{
+  "src/boot.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/components/shell/account/AccountChip.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/components/shell/account/LogoutButton.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/components/shell/header/MenuBell.tsx": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/components/shell/header/SheetBell.tsx": {
+    "ab/module-boundaries": {
+      "count": 4
+    }
+  },
+  "src/components/shell/layout/AdminLayout.tsx": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/components/shell/layout/FixedTopBarLayout.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/components/shell/layout/TopBarLayout.tsx": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/components/shell/nav/SectionShells.tsx": {
+    "ab/module-boundaries": {
+      "count": 4
+    }
+  },
+  "src/features/finance/expenses/AddCategory.tsx": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/features/finance/expenses/ExpenseDialog.tsx": {
+    "ab/module-boundaries": {
+      "count": 4
+    }
+  },
+  "src/features/finance/expenses/ExpenseFields.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/finance/expenses/ExpenseYearTable.tsx": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/features/finance/expenses/ExpensesPage.tsx": {
+    "ab/module-boundaries": {
+      "count": 6
+    }
+  },
+  "src/features/finance/expenses/api.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/finance/expenses/expense-columns.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/finance/finance/FinanceSummaryPage.tsx": {
+    "ab/module-boundaries": {
+      "count": 4
+    }
+  },
+  "src/features/finance/finance/InvoicesPage.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/finance/finance/MoneyKpis.tsx": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/features/finance/finance/ReceivablesPage.tsx": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/features/finance/finance/api.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/finance/finance/invoice-columns.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/finance/finance/receivable-columns.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/finance/finance/search.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/finance/payments/PaymentDialogs.tsx": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/features/finance/payments/PaymentFilterFields.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/finance/payments/PaymentsPage.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/finance/payments/PeriodTotals.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/finance/payments/api.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/finance/payments/attachments/AttachmentsDialog.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/finance/payments/attachments/ReceiptDialog.tsx": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/features/finance/payments/payment-columns.tsx": {
+    "ab/module-boundaries": {
+      "count": 3
+    }
+  },
+  "src/features/finance/payments/record/EditPaymentDialog.tsx": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/features/finance/payments/record/PaymentFields.tsx": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/features/finance/payments/record/RecordPaymentDialog.tsx": {
+    "ab/module-boundaries": {
+      "count": 3
+    }
+  },
+  "src/features/finance/payments/record/SubscriptionPicker.tsx": {
+    "ab/module-boundaries": {
+      "count": 3
+    }
+  },
+  "src/features/finance/payments/record/use-record-payment.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/finance/payments/search.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/finance/payouts/LedgerPaid.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/finance/payouts/PayPayoutDialog.tsx": {
+    "ab/module-boundaries": {
+      "count": 3
+    }
+  },
+  "src/features/finance/payouts/PayoutDialogs.tsx": {
+    "ab/module-boundaries": {
+      "count": 3
+    }
+  },
+  "src/features/finance/payouts/PayoutsPage.tsx": {
+    "ab/module-boundaries": {
+      "count": 4
+    }
+  },
+  "src/features/finance/payouts/TeacherDuesSummary.tsx": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/features/finance/payouts/api.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/finance/payouts/payout-columns.tsx": {
+    "ab/module-boundaries": {
+      "count": 4
+    }
+  },
+  "src/features/finance/payouts/use-pay-payout.ts": {
+    "ab/module-boundaries": {
+      "count": 3
+    }
+  },
+  "src/features/finance/pricing/format.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/finance/subscriptions/SubscriptionsPage.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/finance/subscriptions/balance/BalanceCard.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/finance/subscriptions/balance/BalanceDetails.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/finance/subscriptions/balance/OpenTasks.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/finance/subscriptions/create/PricingFields.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/finance/subscriptions/create/QuotePreview.tsx": {
+    "ab/module-boundaries": {
+      "count": 3
+    }
+  },
+  "src/features/finance/subscriptions/create/StudentPicker.tsx": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/features/finance/teacher-earnings/EarningsCards.tsx": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/features/finance/teacher-earnings/MyEarnings.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/finance/teacher-earnings/TeacherEarningsPage.tsx": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/features/finance/teacher-earnings/api.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/finance/teacher-earnings/payments/PayDialog.tsx": {
+    "ab/module-boundaries": {
+      "count": 4
+    }
+  },
+  "src/features/finance/teacher-earnings/payments/PaymentsHistory.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/finance/teacher-earnings/payments/VoidPaymentDialog.tsx": {
+    "ab/module-boundaries": {
+      "count": 3
+    }
+  },
+  "src/features/finance/teacher-earnings/payments/teacher-payment-columns.tsx": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/features/finance/teacher-earnings/payments/use-pay-teacher.ts": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/features/finance/teacher-earnings/session-columns.tsx": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/features/messaging/inbox/api/api.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/messaging/inbox/composer/components/Composer.tsx": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/features/messaging/inbox/composer/components/FileComposer.tsx": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/features/messaging/inbox/composer/components/QuickActions.tsx": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/features/messaging/inbox/composer/components/TemplateComposer.tsx": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/features/messaging/inbox/composer/components/TextComposer.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/messaging/inbox/composer/lib/allowed-templates.ts": {
+    "ab/module-boundaries": {
+      "count": 4
+    }
+  },
+  "src/features/messaging/inbox/composer/lib/send-error.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/messaging/inbox/lead/LeadDataActions.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/messaging/inbox/lead/LeadStatusChange.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/messaging/inbox/lead/lead-summary.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/messaging/inbox/lead/qualification/PreferenceFields.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/messaging/inbox/lists/use-lists-access.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/messaging/inbox/messages/components/MessageActions.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/messaging/inbox/messages/components/MessageMedia.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/messaging/inbox/messages/forward/ForwardDialog.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/messaging/inbox/messages/lib/use-bubble-tools.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/messaging/inbox/sales-money/SalesDoneStep.tsx": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/features/messaging/inbox/sales-money/course/ContinueChoice.tsx": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/features/messaging/inbox/sales-money/course/SalesCourseDialog.tsx": {
+    "ab/module-boundaries": {
+      "count": 4
+    }
+  },
+  "src/features/messaging/inbox/sales-money/course/SalesRunningCourse.tsx": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/features/messaging/inbox/sales-money/course/course-continue.ts": {
+    "ab/module-boundaries": {
+      "count": 4
+    }
+  },
+  "src/features/messaging/inbox/sales-money/course/course-draft.ts": {
+    "ab/module-boundaries": {
+      "count": 4
+    }
+  },
+  "src/features/messaging/inbox/sales-money/errors.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/messaging/inbox/sales-money/subscribe/ChildPicker.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/messaging/inbox/sales-money/subscribe/SalesQuotePreview.tsx": {
+    "ab/module-boundaries": {
+      "count": 3
+    }
+  },
+  "src/features/messaging/inbox/sales-money/subscribe/SalesStartField.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/messaging/inbox/sales-money/subscribe/SalesSubscribeStep.tsx": {
+    "ab/module-boundaries": {
+      "count": 3
+    }
+  },
+  "src/features/messaging/inbox/sales-money/transfer/PackagePicker.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/messaging/inbox/sales-money/transfer/ReceiptChooser.tsx": {
+    "ab/module-boundaries": {
+      "count": 3
+    }
+  },
+  "src/features/messaging/inbox/sales-money/transfer/SalesTransferStep.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/messaging/inbox/sales-money/transfer/TransferFields.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/messaging/inbox/sales-money/transfer/receipt.ts": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/features/messaging/inbox/sales-money/transfer/use-sales-payment.ts": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/features/messaging/inbox/sales-money/use-sales-family-actions.tsx": {
+    "ab/module-boundaries": {
+      "count": 4
+    }
+  },
+  "src/features/messaging/inbox/sales/SalesRegisterAction.tsx": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/features/messaging/inbox/sales/SendRatingButton.tsx": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/features/messaging/inbox/sales/SubscribePanel.tsx": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/features/messaging/inbox/sales/register-drafts.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/messaging/inbox/sales/sales-register.ts": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/features/messaging/inbox/sales/subscription.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/messaging/inbox/saved-replies/AttachmentField.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/messaging/inbox/saved-replies/StagedChip.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/messaging/inbox/saved-replies/api.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/messaging/inbox/saved-replies/use-reply-values.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/messaging/inbox/saved-replies/use-staged-send.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/messaging/inbox/shared/use-chat-access.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/messaging/inbox/threads/list/ThreadRow.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/messaging/inbox/threads/pane/ThreadPane.tsx": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/features/messaging/inbox/threads/pane/read-error.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/messaging/messaging/lines/LineDriver.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/messaging/messaging/lines/LineRow.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/messaging/notification-catalogue/NumbersLine.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/messaging/notification-catalogue/use-catalogue.ts": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/features/messaging/notification-rules/RulesSection.tsx": {
+    "ab/module-boundaries": {
+      "count": 5
+    }
+  },
+  "src/features/messaging/notification-rules/RulesStateStrip.tsx": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/features/messaging/notification-rules/cells/NamePart.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/messaging/notification-rules/cells/NumberPart.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/messaging/notification-rules/cells/StatePart.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/messaging/notification-rules/phone/RulePhoneRow.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/messaging/notification-rules/rule-text.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/messaging/notification-rules/rules-test-kit.tsx": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/features/messaging/notification-rules/table/RulesTable.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/messaging/notification-rules/table/use-rule-row.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/messaging/notifications/NotificationBell.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/messaging/notifications/NotificationItem.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/messaging/notifications/web-push/web-push-session.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/messaging/numbers/NumbersPanel.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/messaging/numbers/card/NumberHealthLine.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/messaging/numbers/card/NumberTemplateSync.tsx": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/features/messaging/numbers/form/SecretChip.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/messaging/numbers/numbers-test-kit.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/messaging/numbers/use-numbers-mutation.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/messaging/templates/TemplateHealth.tsx": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/features/messaging/templates/api.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/messaging/templates/lines/TemplateLineBlock.tsx": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/features/messaging/templates/lines/use-line-sync.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/messaging/templates/lines/use-template-lines.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/messaging/templates/numbers/SubmitTarget.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/messaging/templates/template-columns.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/people/account/sections/PasswordField.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/people/account/use-account-save.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/people/assistants/commissions/CurrencyList.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/people/assistants/commissions/CurrencySelect.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/people/assistants/commissions/VoidCommissionDialog.tsx": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/features/people/assistants/commissions/commission-columns.tsx": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/features/people/assistants/statements/PayStatementDialog.tsx": {
+    "ab/module-boundaries": {
+      "count": 4
+    }
+  },
+  "src/features/people/assistants/statements/StatementDialogs.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/people/assistants/statements/StatementLinesDialog.tsx": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/features/people/assistants/statements/StatementTotals.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/people/assistants/statements/StatementsPanel.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/people/assistants/statements/statement-columns.tsx": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/features/people/assistants/statements/use-pay-statement.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/people/assistants/statements/use-statement-can.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/people/assistants/status.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/people/assistants/students/BroughtByField.tsx": {
+    "ab/module-boundaries": {
+      "count": 3
+    }
+  },
+  "src/features/people/assistants/students/BulkAssign.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/people/assistants/students/FilterBar.tsx": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/features/people/assistants/students/brought-at.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/people/assistants/students/pick-column.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/people/assistants/students/use-student-pick.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/people/assistants/terms/TermsEditor.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/people/assistants/terms/terms-form.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/people/assistants/terms/terms-summary.ts": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/features/people/auth/me.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/people/auth/sign-in.ts": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/features/people/guardians/GuardianEditForm.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/people/guardians/guardian-form.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/people/roles/RoleDialog.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/people/roles/UsersList.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/people/students/create/CreateStudentForm.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/people/students/list/StudentsPage.tsx": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/features/people/students/list/studentColumns.tsx": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/features/people/students/profile/StudentInvoices.tsx": {
+    "ab/module-boundaries": {
+      "count": 3
+    }
+  },
+  "src/features/people/students/profile/StudentPayments.tsx": {
+    "ab/module-boundaries": {
+      "count": 4
+    }
+  },
+  "src/features/people/students/profile/StudentProfilePage.tsx": {
+    "ab/module-boundaries": {
+      "count": 9
+    }
+  },
+  "src/features/people/students/recordings/RecordingDelete.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/people/students/recordings/StudentRecordingRow.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/people/teachers/detail/TeacherDetailPage.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/people/teachers/detail/TeacherStudentsPanel.tsx": {
+    "ab/module-boundaries": {
+      "count": 3
+    }
+  },
+  "src/features/people/teachers/detail/teacher-student-columns.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/people/teachers/detail/teacher-students-view.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/people/teachers/form/MeetingModeWarnings.tsx": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/features/people/users/UsersPage.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/people/users/actions/SetPasswordPage.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/people/users/actions/set-password.ts": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/features/people/users/create/CreateAccountButton.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/people/users/create/CredentialPicker.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/people/users/create/LinkPicker.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/people/users/create/RolePicker.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/people/users/edit/UserSummary.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/people/users/usersColumns.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/platform/google-sync/google-test-utils.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/platform/google-sync/mapping/StudentMap.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/platform/integrations/IntegrationSourceNote.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/platform/integrations/IntegrationsForm.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/platform/integrations/rows/SecretIntegrationRow.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/platform/integrations/rows/SecretStatusChip.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/platform/settings/hub/HubLink.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/platform/settings/hub/HubStatus.tsx": {
+    "ab/module-boundaries": {
+      "count": 5
+    }
+  },
+  "src/features/platform/settings/hub/hub-search.ts": {
+    "ab/module-boundaries": {
+      "count": 5
+    }
+  },
+  "src/features/platform/settings/hub/hub-status.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/platform/settings/pages/GooglePage.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/platform/settings/pages/IntegrationsPage.tsx": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/features/platform/settings/pages/communications-test-kit.tsx": {
+    "ab/module-boundaries": {
+      "count": 3
+    }
+  },
+  "src/features/platform/settings/pages/communications/CommunicationsBody.tsx": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/features/platform/settings/pages/communications/CrmCutoverCard.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/platform/settings/pages/communications/SendingState.tsx": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/features/platform/settings/pages/communications/overview/OverviewNumbers.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/platform/settings/pages/communications/overview/OverviewTab.tsx": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/features/platform/settings/pages/communications/overview/OverviewWhat.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/platform/settings/pages/communications/overview/overview-counts.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/platform/settings/pages/communications/tabs/NumbersTab.tsx": {
+    "ab/module-boundaries": {
+      "count": 4
+    }
+  },
+  "src/features/platform/settings/pages/communications/tabs/SafetyTab.tsx": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/features/platform/settings/pages/communications/tabs/SavedRepliesTab.tsx": {
+    "ab/module-boundaries": {
+      "count": 3
+    }
+  },
+  "src/features/platform/settings/pages/communications/tabs/SavedRepliesTable.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/platform/settings/pages/communications/tabs/TemplatesTab.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/platform/settings/registry-form/RowNotes.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/platform/settings/values/ValuesBody.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/platform/settings/values/ValuesView.tsx": {
+    "ab/module-boundaries": {
+      "count": 3
+    }
+  },
+  "src/features/platform/settings/values/cells/InfoCells.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/platform/settings/values/conflicts/conflict-text.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/platform/settings/values/description/use-describe-rights.ts": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/features/platform/settings/values/hooks/use-values-view.ts": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/features/platform/settings/values/rows/CustomValueRow.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/platform/settings/values/rows/ValueRowView.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/platform/settings/values/values-test-utils.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/platform/translations/ValuesLink.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/reporting/dashboard/DashboardPage.tsx": {
+    "ab/module-boundaries": {
+      "count": 4
+    }
+  },
+  "src/features/reporting/dashboard/PeriodFilter.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/reporting/dashboard/search.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/reporting/dashboard/today/TodayLessons.tsx": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/features/reporting/dashboard/today/UnpaidList.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/reporting/dashboard/today/WeekSection.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/reporting/dashboard/work/QuickActions.tsx": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/features/reporting/dashboard/work/RecentInbox.tsx": {
+    "ab/module-boundaries": {
+      "count": 3
+    }
+  },
+  "src/features/reporting/exports/ExportsPanel.tsx": {
+    "ab/module-boundaries": {
+      "count": 3
+    }
+  },
+  "src/features/reporting/reports/ReportFormPage.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/reporting/reports/chart/chart-labels.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/reporting/reports/entry/use-autosave.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/reporting/reports/entry/use-report-entry.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/reporting/reports/history/PendingReports.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/reporting/reports/history/use-recorded-lessons.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/sales/leads/list/AssignUnassignedButton.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/sales/leads/list/LeadAssignSelect.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/sales/leads/list/LeadsToolbar.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/sales/sales/live/SalesLive.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/sales/sales/live/SalesMeetings.tsx": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/features/sales/sales/money/CurrencyTotalsList.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/sales/sales/money/MyPayments.tsx": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/features/sales/sales/money/StatementCard.tsx": {
+    "ab/module-boundaries": {
+      "count": 3
+    }
+  },
+  "src/features/sales/sales/money/my-payment-columns.tsx": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/features/sales/sales/registration/RegistrationCheckButton.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/sales/sales/registration/RegistrationCheckDialog.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/sales/sales/schedule/SalesDayNav.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/sales/sales/schedule/SalesLessonDetails.tsx": {
+    "ab/module-boundaries": {
+      "count": 5
+    }
+  },
+  "src/features/sales/sales/schedule/SalesLessonDrawer.tsx": {
+    "ab/module-boundaries": {
+      "count": 3
+    }
+  },
+  "src/features/sales/sales/schedule/SalesSchedule.tsx": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/features/sales/sales/schedule/ScheduleLessonItem.tsx": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/features/sales/sales/students/my-student-columns.tsx": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/features/sales/sales/subscriptions/HistoryEntryCard.tsx": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/features/sales/sales/teachers/EarningsTerms.tsx": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/features/sales/sales/teachers/MyEarnings.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/sales/sales/teachers/SalesTeachers.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/sales/sales/use-sales-unread.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/teaching/booking/BookingWizard.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/teaching/booking/WizardBody.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/teaching/booking/booking-entries.tsx": {
+    "ab/module-boundaries": {
+      "count": 3
+    }
+  },
+  "src/features/teaching/booking/course-change/AdminCourseChange.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/teaching/booking/course-change/ChangePicker.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/teaching/booking/course-change/ChangeReview.tsx": {
+    "ab/module-boundaries": {
+      "count": 3
+    }
+  },
+  "src/features/teaching/booking/course-change/refresh.ts": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/features/teaching/booking/draft/draft.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/teaching/booking/invoice/ChatMediaPicker.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/teaching/booking/invoice/InvoiceDialog.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/teaching/booking/invoice/InvoiceField.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/teaching/booking/steps/package/PackageStep.tsx": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/features/teaching/booking/steps/package/price.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/teaching/booking/steps/review/BookedPanel.tsx": {
+    "ab/module-boundaries": {
+      "count": 3
+    }
+  },
+  "src/features/teaching/booking/steps/review/CourseCheckNotice.tsx": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/features/teaching/booking/steps/review/DuplicateNotice.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/teaching/booking/steps/review/ReviewDays.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/teaching/booking/steps/review/ReviewStep.tsx": {
+    "ab/module-boundaries": {
+      "count": 3
+    }
+  },
+  "src/features/teaching/booking/steps/review/SeriesCheck.tsx": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/features/teaching/booking/steps/review/course-taken.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/teaching/booking/steps/slots/ByDayPicker.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/teaching/booking/steps/slots/DayTimesList.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/teaching/booking/steps/slots/GapChip.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/teaching/booking/steps/slots/SlotStep.tsx": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/features/teaching/booking/steps/who/LeadStudentStep.tsx": {
+    "ab/module-boundaries": {
+      "count": 3
+    }
+  },
+  "src/features/teaching/booking/steps/who/StudentStep.tsx": {
+    "ab/module-boundaries": {
+      "count": 3
+    }
+  },
+  "src/features/teaching/booking/steps/who/new-student.ts": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/features/teaching/booking/trial-date/TrialDatesSection.tsx": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/features/teaching/booking/trial-date/api.ts": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/features/teaching/booking/trial-date/dialog/TrialReviewStep.tsx": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/features/teaching/booking/trial-date/history/history-text.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/teaching/classroom/api/moderation-api.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/teaching/classroom/join/SendLinkButton.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/teaching/classroom/join/StaffJoinButton.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/teaching/classroom/join/StaffLinkGate.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/teaching/classroom/kick/ParticipantsSheet.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/teaching/classroom/recordings/RecordingsPanel.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/teaching/classroom/room/livekit/errors.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/teaching/classroom/sessions/AdminSessions.tsx": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/features/teaching/feedback/FeedbackPage.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/teaching/feedback/FeedbackRequestButton.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/teaching/feedback/api.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/teaching/meetings/MeetingGuestPage.tsx": {
+    "ab/module-boundaries": {
+      "count": 3
+    }
+  },
+  "src/features/teaching/meetings/MeetingStudentPicker.tsx": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/features/teaching/meetings/instant/InstantLessonDialog.tsx": {
+    "ab/module-boundaries": {
+      "count": 4
+    }
+  },
+  "src/features/teaching/meetings/internal/InternalMeetingsList.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/teaching/meetings/invitees/InviteeSearch.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/teaching/meetings/invitees/meeting-invites-api.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/teaching/meetings/invitees/use-may-invite-phones.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/teaching/meetings/rows/MeetingRowDialogs.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/teaching/meetings/rows/meeting-join-errors.ts": {
+    "ab/module-boundaries": {
+      "count": 3
+    }
+  },
+  "src/features/teaching/meetings/scheduled/ScheduleFields.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/teaching/meetings/scheduled/ScheduledMeetingDialog.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/teaching/meetings/scheduled/schedule-form.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/teaching/schedule/api.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/teaching/schedule/edit-time/edit-time-text.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/teaching/schedule/grid/DayBoard.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/teaching/schedule/grid/ScheduleTrack.tsx": {
+    "ab/module-boundaries": {
+      "count": 3
+    }
+  },
+  "src/features/teaching/schedule/grid/TeacherCell.tsx": {
+    "ab/module-boundaries": {
+      "count": 3
+    }
+  },
+  "src/features/teaching/schedule/grid/WeekSchedule.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/teaching/schedule/lesson/LessonDrawer.tsx": {
+    "ab/module-boundaries": {
+      "count": 4
+    }
+  },
+  "src/features/teaching/schedule/lesson/LessonInvoice.tsx": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/features/teaching/schedule/lesson/LessonTags.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/teaching/schedule/overview.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/teaching/schedule/reschedule/RescheduleForm.tsx": {
+    "ab/module-boundaries": {
+      "count": 4
+    }
+  },
+  "src/features/teaching/schedule/reschedule/SlotPicker.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/teaching/schedule/reschedule/reschedule.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/teaching/teacher-students/next-lesson.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/features/teaching/teacher/MyPayouts.tsx": {
+    "ab/module-boundaries": {
+      "count": 5
+    }
+  },
+  "src/features/teaching/teacher/TeacherDashboard.tsx": {
+    "ab/module-boundaries": {
+      "count": 6
+    }
+  },
+  "src/features/teaching/teacher/api.ts": {
+    "ab/module-boundaries": {
+      "count": 4
+    }
+  },
+  "src/features/teaching/teacher/lessons/LessonDayList.tsx": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/features/teaching/teacher/lessons/MyWeek.tsx": {
+    "ab/module-boundaries": {
+      "count": 5
+    }
+  },
+  "src/features/teaching/teacher/lessons/TeacherLessonCard.tsx": {
+    "ab/module-boundaries": {
+      "count": 5
+    }
+  },
+  "src/features/teaching/teacher/proposals/ProposeForm.tsx": {
+    "ab/module-boundaries": {
+      "count": 3
+    }
+  },
+  "src/features/teaching/teacher/proposals/TeacherAvailability.tsx": {
+    "ab/module-boundaries": {
+      "count": 4
+    }
+  },
+  "src/features/teaching/teacher/reports/MyFeedback.tsx": {
+    "ab/module-boundaries": {
+      "count": 4
+    }
+  },
+  "src/features/teaching/teacher/reports/MyReports.tsx": {
+    "ab/module-boundaries": {
+      "count": 3
+    }
+  },
+  "src/features/teaching/teacher/reports/submitted-report-columns.tsx": {
+    "ab/module-boundaries": {
+      "count": 3
+    }
+  },
+  "src/routes/account.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/routes/account/index.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/routes/admin.tsx": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/routes/admin/(finance)/expenses.tsx": {
+    "ab/module-boundaries": {
+      "count": 3
+    }
+  },
+  "src/routes/admin/(finance)/finance.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/routes/admin/(finance)/invoices.tsx": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/routes/admin/(finance)/payments.tsx": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/routes/admin/(finance)/payouts.tsx": {
+    "ab/module-boundaries": {
+      "count": 3
+    }
+  },
+  "src/routes/admin/(finance)/pricing.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/routes/admin/(finance)/receivables.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/routes/admin/(finance)/subscriptions.tsx": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/routes/admin/(ops)/activity.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/routes/admin/(ops)/book.tsx": {
+    "ab/module-boundaries": {
+      "count": 3
+    }
+  },
+  "src/routes/admin/(ops)/classrooms.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/routes/admin/(ops)/feedback.tsx": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/routes/admin/(ops)/schedule.tsx": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/routes/admin/(ops)/translations.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/routes/admin/(people)/inbox.tsx": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/routes/admin/(people)/job-applicants.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/routes/admin/(people)/leads.tsx": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/routes/admin/(people)/roles.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/routes/admin/(people)/users.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/routes/admin/assistants/$assistantId.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/routes/admin/assistants/route.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/routes/admin/communications.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/routes/admin/index.tsx": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/routes/admin/settings.appearance.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/routes/admin/settings.communications.tsx": {
+    "ab/module-boundaries": {
+      "count": 3
+    }
+  },
+  "src/routes/admin/settings.google.tsx": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/routes/admin/settings.integrations.tsx": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/routes/admin/settings.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/routes/admin/settings.values.tsx": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/routes/admin/students/$studentId.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/routes/admin/students/$studentId_.reports.$lessonId.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/routes/admin/students/$studentId_.reports.tsx": {
+    "ab/module-boundaries": {
+      "count": 3
+    }
+  },
+  "src/routes/admin/students/route.tsx": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/routes/admin/teachers/$teacherId.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/routes/admin/teachers/$teacherId_.earnings.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/routes/admin/teachers/route.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/routes/assistant.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/routes/assistant/index.tsx": {
+    "ab/module-boundaries": {
+      "count": 3
+    }
+  },
+  "src/routes/classroom.$lessonId.tsx": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/routes/feedback.$token.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/routes/join.$linkToken.tsx": {
+    "ab/module-boundaries": {
+      "count": 3
+    }
+  },
+  "src/routes/login.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/routes/m.$token.tsx": {
+    "ab/module-boundaries": {
+      "count": 3
+    }
+  },
+  "src/routes/meeting.$id.tsx": {
+    "ab/module-boundaries": {
+      "count": 4
+    }
+  },
+  "src/routes/portal.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/routes/s.$token.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/routes/sales.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/routes/sales/earnings.tsx": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/routes/sales/inbox.tsx": {
+    "ab/module-boundaries": {
+      "count": 5
+    }
+  },
+  "src/routes/sales/index.tsx": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/routes/sales/live.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/routes/sales/meetings.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/routes/sales/register.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/routes/sales/schedule.tsx": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/routes/sales/students.tsx": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/routes/sales/subscriptions.tsx": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/routes/sales/teachers.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/routes/set-password.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/routes/teacher.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/routes/teacher/calendar.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/routes/teacher/earnings.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/routes/teacher/feedback.tsx": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/routes/teacher/inbox.tsx": {
+    "ab/module-boundaries": {
+      "count": 3
+    }
+  },
+  "src/routes/teacher/index.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/routes/teacher/payouts.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/routes/teacher/report.$lessonId.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/routes/teacher/reports.$studentId.tsx": {
+    "ab/module-boundaries": {
+      "count": 5
+    }
+  },
+  "src/routes/teacher/reports.index.tsx": {
+    "ab/module-boundaries": {
+      "count": 2
+    }
+  },
+  "src/routes/teacher/students.tsx": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  }
+}

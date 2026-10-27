@@ -5,7 +5,7 @@ import { isOffline } from '@/payments/lib/payment-errors';
 
 // What a failed PATCH /lessons/:id/time means (docs/10 §3: clients switch on `code`).
 
-export type EditTimeFailure = Extract<BookFailure, { kind: 'conflict' | 'error' }>;
+type EditTimeFailure = Extract<BookFailure, { kind: 'conflict' | 'error' }>;
 
 const own: Record<string, string | undefined> = t.editTime.error;
 const shared: Record<string, string | undefined> = t.lessons.error;

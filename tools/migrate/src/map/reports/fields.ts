@@ -4,7 +4,7 @@ import { text } from '../../sources/sheets/cells.ts';
 import { grade, teacherFromText } from '../../sources/values.ts';
 import type { Cell, ColumnValue } from '../../types.ts';
 
-export const GRADE_FIELDS = [
+const GRADE_FIELDS = [
   'grade_recitation',
   'grade_memorization',
   'grade_revision',
@@ -24,7 +24,7 @@ export const TEXT_FIELDS = [
 ] as const;
 
 /** grade() plus the form's «يحتاج إلى مراجعة» spelling of needs_review. */
-export function gradeOf(raw: string | null) {
+function gradeOf(raw: string | null) {
   return grade(raw) ?? grade(raw ? raw.replace(/\s+إلى\s+/, ' ') : null);
 }
 

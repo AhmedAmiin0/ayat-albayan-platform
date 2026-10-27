@@ -5,7 +5,7 @@ import type { ReportAttachmentRow } from '../report-row';
 
 const COLUMNS = 'id, storage_path, mime, size, created_at' as const;
 
-export type NewAttachment = {
+type NewAttachment = {
   report_id: string;
   storage_path: string;
   mime: string;
@@ -13,7 +13,7 @@ export type NewAttachment = {
   created_by: string;
 };
 
-export type PdfNameInput = { code: string; startsAt: Date; tz: string };
+type PdfNameInput = { code: string; startsAt: Date; tz: string };
 
 /** report_attachments rows (R-REP-02); the objects live in the report-attachments bucket. */
 @Injectable()

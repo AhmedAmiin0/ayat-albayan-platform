@@ -9,6 +9,7 @@ import { RIYADH_TZ } from '@/features/teaching/schedule/tz';
 import { t } from '@/lib/i18n/i18n';
 import { teacherLabel } from '@/lib/i18n/teacher-label';
 import { locale } from '@/lib/i18n/locale';
+import { LessonMeetingLink } from './LessonMeetingLink';
 
 /** «عند الطالب 16:00 بتوقيت القاهرة» per student zone, then the teacher's, each only when not Riyadh. */
 export function salesClockLines(lesson: SalesScheduleLesson): string[] {
@@ -22,7 +23,8 @@ export function salesClockLines(lesson: SalesScheduleLesson): string[] {
 /**
  * The admin drawer's details, read-only for sales (docs/16): status and tags, the Riyadh time with
  * each student's and the teacher's own clock, the length, the teacher and the students with their
- * codes. Sales' lesson never carries a link, a reason, a flag or money, so none of them is shown.
+ * codes, and the lesson's link (owner 2026-10-26). Sales' lesson never carries a reason, a flag or
+ * money, so none of them is shown.
  */
 export function SalesLessonDetails({ lesson }: { lesson: SalesScheduleLesson }) {
   return (
@@ -40,6 +42,9 @@ export function SalesLessonDetails({ lesson }: { lesson: SalesScheduleLesson }) 
         </DetailRow>
         <DetailRow label={t.schedule.duration}>{lengthText(durationMin(lesson))}</DetailRow>
         <DetailRow label={t.schedule.teacher}>{teacherLabel(lesson.teacher)}</DetailRow>
+        <DetailRow label={t.lessons.joinLink}>
+          <LessonMeetingLink lesson={lesson} />
+        </DetailRow>
         <DetailRow label={t.schedule.students}>
           {lesson.students.map((s) => (
             <span key={s.id} className="me-3 inline-flex items-baseline gap-1.5">

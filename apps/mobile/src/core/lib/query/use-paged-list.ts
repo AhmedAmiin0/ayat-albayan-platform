@@ -4,7 +4,7 @@ import { apiFetch, toQueryString } from '../http/api';
 import { flattenPages, nextPageParam, type Page, type WithId } from './paging';
 import { listKey, type ListParams } from './query-keys';
 
-export interface PagedListOptions {
+interface PagedListOptions {
   /** List endpoint, e.g. '/leads'. Also the query key: ['leads', 'list', params]. */
   path: string;
   /** Filters and `q`; undefined and '' are left out of the request. */

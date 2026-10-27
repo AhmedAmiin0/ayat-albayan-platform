@@ -7,7 +7,7 @@ export type LeadFilters = LeadSort & { source?: LeadSource; assignee?: string };
 
 export const NO_FILTERS: LeadFilters = {};
 
-export interface LeadListQuery {
+interface LeadListQuery {
   q: string;
   status: LeadStatus | 'all';
   filters: LeadFilters;

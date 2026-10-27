@@ -20,6 +20,8 @@ export interface AppShellProps {
   titles?: readonly NavTitleItem[];
   /** Top-bar layout only: every page gets the chat's full width and frame (the assistant's shell). */
   wide?: boolean;
+  /** What the section home shows instead of the title cartouche (the family portal's one page). */
+  homePage?: ReactNode;
 }
 
 /**
@@ -28,11 +30,11 @@ export interface AppShellProps {
  * the same compact bar with «القائمة» (MenuBar). Admin and teacher layouts are viewport-high
  * frames: only the page content scrolls, never the browser page.
  */
-export function AppShell({ title, home, nav, topNav, titles = [], wide }: AppShellProps) {
+export function AppShell({ title, home, nav, topNav, titles = [], wide, homePage }: AppShellProps) {
   const isHome = useChildMatches().length === 0;
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const bar = { home, title: isHome ? title : titleFor(pathname, titles, title) };
-  const content = <RouteFade>{isHome ? <Cartouche>{title}</Cartouche> : <Outlet />}</RouteFade>;
+  const content = <RouteFade>{isHome ? (homePage ?? <Cartouche>{title}</Cartouche>) : <Outlet />}</RouteFade>;
   if (nav) return <AdminLayout nav={nav} title={bar.title}>{content}</AdminLayout>;
   if (topNav) return <FixedTopBarLayout topNav={topNav} bar={bar} wide={wide}>{content}</FixedTopBarLayout>;
   return <TopBarLayout bar={bar}>{content}</TopBarLayout>;

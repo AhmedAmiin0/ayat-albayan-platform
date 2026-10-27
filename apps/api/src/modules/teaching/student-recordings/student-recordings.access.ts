@@ -6,7 +6,7 @@ import type { ManageRule } from './student-recordings.mapper';
 import { StudentRecordingQueries } from './student-recordings.queries';
 
 /** Which of a student's lessons a login may see recordings of: `onlyTeacherId` null = all of them. */
-export interface RecordingScope {
+interface RecordingScope {
   onlyTeacherId: string | null;
   /** Which rows the login may show/hide from the student. */
   manage: ManageRule;

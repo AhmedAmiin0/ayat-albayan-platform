@@ -5,11 +5,11 @@ import { markedRead } from './notifications-cache';
 
 // The bell (R-NOT-01): GET /me/notifications (newest 20, polled) and POST /me/notifications/read.
 
-export const NOTIFICATIONS_KEY = ['notifications'] as const;
-export const NOTIFICATIONS_LIST_KEY = ['notifications', 'list'] as const;
+const NOTIFICATIONS_KEY = ['notifications'] as const;
+const NOTIFICATIONS_LIST_KEY = ['notifications', 'list'] as const;
 /** The badge stays fresh without a push (a refused permission, a teacher on the web). */
-export const NOTIFICATIONS_POLL_MS = 30_000;
-export const NOTIFICATIONS_PATH = '/me/notifications?page=1&pageSize=20';
+const NOTIFICATIONS_POLL_MS = 30_000;
+const NOTIFICATIONS_PATH = '/me/notifications?page=1&pageSize=20';
 
 /** The newest page and the caller's unread count, refetched every 30 s while the app is open. */
 export function useNotifications() {

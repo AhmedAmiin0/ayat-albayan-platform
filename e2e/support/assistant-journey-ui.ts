@@ -33,11 +33,11 @@ export async function registerWithTrial(page: Page, family: { name: string; guar
 }
 
 /**
- * The open «اشتراك جديد» dialog: the discount is the site's pills only (0 / 5 / 10 / 15 %, no free
- * number), `pkg` is picked and the package saved; the transfer step opens next.
+ * The open «اشتراك جديد» dialog (`title`: «جدّد الاشتراك» for a renewal): the discount is the site's pills
+ * only (0 / 5 / 10 / 15 %, no free number), `pkg` is picked and the package saved; the transfer step opens next.
  */
-export async function saveSubscription(page: Page, pkg: string): Promise<Locator> {
-  const dialog = page.getByRole('dialog', { name: SM.newSubscription });
+export async function saveSubscription(page: Page, pkg: string, title = SM.newSubscription): Promise<Locator> {
+  const dialog = page.getByRole('dialog', { name: title });
   const pills = dialog.getByRole('group', { name: ar.subscriptions.discount }).getByRole('button');
   await expect(pills).toHaveText(DISCOUNTS.map((d) => ar.pricing.discounts[`${d}`]));
   await expect(dialog.getByRole('spinbutton', { name: ar.subscriptions.discount })).toHaveCount(0);
@@ -68,4 +68,12 @@ export async function expectInMyPayments(done: Locator, name: string): Promise<v
   await done.getByRole('link', { name: SM.openMyPayments }).click();
   await page.waitForURL(/\/sales\/earnings/);
   await expect(page.getByRole('row').filter({ hasText: name }).first()).toBeVisible();
+}
+
+/** «جدّد الاشتراك» from the chat: the dialog opens prefilled from the last package (`pkg`), then is saved. */
+export async function renewFromChat(page: Page, pkg: string): Promise<Locator> {
+  await page.getByRole('button', { name: ar.students.renew, exact: true }).click();
+  const dialog = page.getByRole('dialog', { name: ar.students.renew });
+  await expect(dialog.getByLabel(ar.subscriptions.package, { exact: true })).toHaveValue(pkg);
+  return saveSubscription(page, pkg, ar.students.renew);
 }

@@ -12,7 +12,7 @@ import { StatementActionBar } from './StatementActionBar';
 import type { StatementCan } from '../hooks/statement-can';
 import { StatementTotals } from './StatementTotals';
 
-export interface StatementItemProps {
+interface StatementItemProps {
   statement: AssistantStatementView;
   can: StatementCan;
   onPay: () => void;

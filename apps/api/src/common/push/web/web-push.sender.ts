@@ -21,8 +21,8 @@ export interface WebPushPayload {
 }
 
 /** Push services keep an undelivered message this long (the browser was offline). */
-export const WEB_PUSH_TTL_S = 86_400;
-export const WEB_PUSH_BODY_MAX = 240;
+const WEB_PUSH_TTL_S = 86_400;
+const WEB_PUSH_BODY_MAX = 240;
 
 /** fetch without following redirects (the allow-list is checked on the URL we were given only). */
 export const fetchTransport: WebPushTransport = async ({ url, headers, body }) => {

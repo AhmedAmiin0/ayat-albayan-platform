@@ -11,7 +11,7 @@ import { ListSheet } from './ListSheet';
 import { listsOf, useChatLists, useCreateList } from './use-chat-lists';
 import { useListMembership } from './use-list-membership';
 
-export interface ThreadListsSheetProps {
+interface ThreadListsSheetProps {
   phone: string;
   /** The lists this chat is in (the thread detail's `lists`). */
   member: readonly ChatListRef[];

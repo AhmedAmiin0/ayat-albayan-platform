@@ -8,7 +8,7 @@ import { audienceTabs, rowsOf, type AudienceTab } from '../lib/audience-tabs';
 import { CatalogueRow } from './CatalogueRow';
 import type { CatalogueToggles } from '../hooks/use-catalogue-toggles';
 
-export interface CatalogueAudienceProps {
+interface CatalogueAudienceProps {
   data: NotificationsOverview;
   /** notifications.manage held: editable rows get a switch. */
   canManage: boolean;

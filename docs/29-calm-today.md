@@ -81,10 +81,10 @@ Every tab layout on AppNativeTabs (admin, teacher, sales, assistant):
 
 - A capsule 20 px from both sides and 24 px above the bottom safe area; 62 px high, radius 31, padding 4.
   Content scrolls under it (bottom inset = bar + gap, `useTabBarInset`).
-- Light: fill `rgba(255,255,255,0.8)` (no blur in this APK), a vertical white sheen (react-native-svg
+- Light: fill `rgba(255,255,255,0.92)` (no blur in this APK: 0.8 let rows read through, 2026-10-26), a vertical white sheen (react-native-svg
   LinearGradient) 0.62 → 0.22 at 50 % → 0.36, a 0.5 px border `rgba(255,255,255,0.75)`, an outer hairline
   `rgba(23,32,28,0.08)` and the shadows `0 10 30 rgba(23,32,28,0.14)` + `0 2 6 rgba(23,32,28,0.06)`.
-- Dark: fill `rgba(39,49,45,0.84)`, sheen 0.12 → 0.03 → 0.07, border `rgba(255,255,255,0.14)`, shadows
+- Dark: fill `rgba(39,49,45,0.92)`, sheen 0.12 → 0.03 → 0.07, border `rgba(255,255,255,0.14)`, shadows
   `0 12 32 rgba(0,0,0,0.5)` + `0 2 8 rgba(0,0,0,0.3)`.
 - Active tab: a 54 px capsule (radius 27) `rgba(120,120,128,0.14)` light / `rgba(255,255,255,0.12)` dark
   with a 0.5 px top highlight; icon + label `lapis`. Labels 11 px. The inbox badge stays.

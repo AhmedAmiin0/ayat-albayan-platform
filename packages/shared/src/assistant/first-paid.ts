@@ -1,5 +1,6 @@
 import { toCents } from '../money/earnings/earnings.js';
 import { computeCommission, type AssistantCommissionType, type CommissionAmount } from './commission.js';
+import { commissionKindOf } from './kind.js';
 
 // "Fully paid" and "first" (migration 20261006000272: subscription_full_at, evaluate_assistant_commission).
 // Derived from the payments, never stored: net paid (payments - refunds, in the package currency) has
@@ -84,27 +85,46 @@ export interface PlannedCommission extends CommissionAmount {
   baseCurrency: string;
 }
 
-/**
- * The commission a student would earn: null unless somebody brought them, the assistant has terms, the
- * first fully paid subscription became fully paid on or after BOTH startsOn and the day the student was
- * brought (in the assistant's tz: nothing is retroactive, so attributing a student who already paid in
- * full earns nothing) and the amount is above zero. A later subscription never earns one: only the
- * FIRST counts.
- */
-export function planCommission(input: {
+/** Who brought the student, when, on which terms and zone: what every commission is checked against. */
+export interface CommissionContext {
   broughtBy: string | null;
   /** When the student was brought (students.brought_at, an instant). */
   broughtAt: string | null;
   terms: CommissionTermsInput | null;
   tz: string;
+}
+
+/**
+ * What one subscription earns at `share` % of the normal commission: null unless somebody brought the
+ * student, the assistant has terms, it is fully paid on or after BOTH startsOn and the day the student was
+ * brought (in the assistant's tz: nothing is retroactive) and the amount is above zero.
+ */
+export function planOn(ctx: CommissionContext, sub: SubscriptionFact, share: number): PlannedCommission | null {
+  const fullAt = subscriptionFullAt(sub);
+  if (!ctx.broughtBy || !ctx.broughtAt || !ctx.terms || !fullAt) return null;
+  const day = localDay(fullAt, ctx.tz);
+  if (day < ctx.terms.startsOn || day < localDay(ctx.broughtAt, ctx.tz)) return null;
+  const { price, currency, id } = sub;
+  const amount = computeCommission({ ...ctx.terms, base: price, baseCurrency: currency, share });
+  return amount ? { ...amount, subscriptionId: id, fullAt, base: price, baseCurrency: currency } : null;
+}
+
+/**
+ * The student's ONE 'first' commission (evaluate_assistant_commission): on the first fully paid of its
+ * candidates, the first subscription BY ORDER (commissionKindOf; owner 2026-10-26) and the subscription an
+ * existing 'first' row already sits on (`firstRowSubscriptionId`: a row never flips). A later package is a
+ * renewal (planRenewalCommission), never a second first.
+ */
+export function planCommission(input: CommissionContext & {
   subscriptions: readonly SubscriptionFact[];
+  firstRowSubscriptionId?: string | null;
+  /** Subscriptions already holding a 'renewal' row: never a first (a row never flips). */
+  renewalRowSubscriptionIds?: readonly string[];
 }): PlannedCommission | null {
-  if (!input.broughtBy || !input.broughtAt || !input.terms) return null;
-  const first = firstFullyPaid(input.subscriptions);
-  if (!first) return null;
-  const day = localDay(first.fullAt, input.tz);
-  if (day < input.terms.startsOn || day < localDay(input.broughtAt, input.tz)) return null;
-  const { price, currency, id } = first.subscription;
-  const amount = computeCommission({ ...input.terms, base: price, baseCurrency: currency });
-  return amount ? { ...amount, subscriptionId: id, fullAt: first.fullAt, base: price, baseCurrency: currency } : null;
+  const subs = input.subscriptions;
+  const held = new Set(input.renewalRowSubscriptionIds ?? []);
+  const isFirst = (s: SubscriptionFact) => commissionKindOf(subs, s.id) === 'first' && !held.has(s.id);
+  const candidates = subs.filter((s) => s.id === input.firstRowSubscriptionId || isFirst(s));
+  const first = firstFullyPaid(candidates);
+  return first ? planOn(input, first.subscription, 100) : null;
 }

@@ -3,8 +3,8 @@ import { ApiError } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
 import { fetchDownload } from '../hooks/thread-file';
 
-// «نسخ» and «تنزيل» in a chat (owner 2026-10-26), in one place: the installed APK has no clipboard,
-// sharing or media-library module, so this file is the only one a later build swaps.
+// «نسخ» and «تنزيل» in a chat (owner 2026-10-26), in one place: the installed APK has no sharing or
+// media-library module (core/lib/clipboard copies, not wired here yet), so this file is the only one a later build swaps.
 
 /** What «نسخ النص» / «نسخ الرقم» shows: the sheet's title and the exact text. */
 export interface CopyRequest {
@@ -18,7 +18,7 @@ export function copyText(req: CopyRequest, show: (req: CopyRequest) => void): vo
 }
 
 /** Hands the signed URL to the phone's browser, which saves or opens it (Content-Disposition: its name). */
-export async function saveFile(url: string): Promise<void> {
+async function saveFile(url: string): Promise<void> {
   await Linking.openURL(url);
 }
 

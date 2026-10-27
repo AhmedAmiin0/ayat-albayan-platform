@@ -13,7 +13,7 @@ const cities: Record<string, string | undefined> = t.tz;
 type Pill = { value: string; label: string };
 
 /** Each select filter's options, «الكل» first (value '' = no filter), as the web's studentFilterOptions. */
-export function filterOptions(teachers: TeacherOption[], tz: string): Record<Exclude<FilterKey, 'status'>, Pill[]> {
+function filterOptions(teachers: TeacherOption[], tz: string): Record<Exclude<FilterKey, 'status'>, Pill[]> {
   return {
     teacher: [{ value: '', label: S.teacherAll }, { value: NO_TEACHER, label: S.teacherNone }, ...teachers.map((x) => ({ value: x.id, label: teacherName(x, locale) }))],
     program: [{ value: '', label: S.programAll }, ...PROGRAMS.map((p) => ({ value: p, label: t.enums.program[p] }))],
@@ -31,7 +31,7 @@ const LABELS: Record<Exclude<FilterKey, 'status'>, string> = {
   tz: S.tz,
 };
 
-export interface StudentFilterGroupsProps {
+interface StudentFilterGroupsProps {
   value: StudentFilters;
   teachers: TeacherOption[];
   onChange: (next: StudentFilters) => void;

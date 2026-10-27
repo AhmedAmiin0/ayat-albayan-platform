@@ -20,7 +20,7 @@ import type { MetaTemplate, TemplateRow } from '../../whatsapp.types';
 
 export type ImportRow = TablesInsert<'message_templates'>;
 
-export interface ImportPlan {
+interface ImportPlan {
   rows: ImportRow[];
   /** Returned by the line's sync: not imported, and why. */
   skipped: TemplateSkip[];
@@ -63,12 +63,13 @@ function importButtons(comps: readonly Component[]) {
 const flagged = (line: WaLine, name: string): boolean => line === 'chat' && (RESTRICTED_TEMPLATE_DEFAULTS as readonly string[]).includes(name);
 
 /** A skip reason, not a row: rows never carry `code`. */
-export const isSkip = (r: ImportRow | TemplateSkipReason): r is TemplateSkipReason => 'code' in r;
+const isSkip = (r: ImportRow | TemplateSkipReason): r is TemplateSkipReason => 'code' in r;
 
 /** The registry row for one template of `line`'s WABA, or the reason code it is not imported. */
 export function starterRow(meta: MetaTemplate, now: Date, line: WaLine = 'chat'): ImportRow | TemplateSkipReason {
   const category = meta.category.toLowerCase();
-  if (!isCategory(category)) return { code: 'category', category: meta.category };
+  // An authentication template (account_code, docs/30) is never a chat starter: only our own seeded row sends one.
+  if (!isCategory(category) || category === 'authentication') return { code: 'category', category: meta.category };
   if (!TEMPLATE_KEY_PATTERN.test(meta.name)) return { code: 'bad_key' };
   const comps = components(meta.components);
   if (!headerOk(comps)) return { code: 'media_header' };
@@ -99,7 +100,7 @@ export function starterRow(meta: MetaTemplate, now: Date, line: WaLine = 'chat')
   };
 }
 
-export interface StarterInput {
+interface StarterInput {
   meta: readonly MetaTemplate[];
   /** Every registry row, of both lines: one Meta name + language is one row (unique). */
   known: readonly TemplateRow[];

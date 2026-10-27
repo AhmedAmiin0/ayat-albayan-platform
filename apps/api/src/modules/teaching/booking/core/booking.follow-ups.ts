@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { StudentTrialStatus } from '../../../finance/subscriptions/trial/student-trial-status';
 import { TeacherAlert, type BookedEvent } from '../teacher/teacher-alert.service';
 
-export type BookingDone = BookedEvent & { actorId: string };
+type BookingDone = BookedEvent & { actorId: string };
 
 /**
  * What a saved booking (the admin's and the assistant's wizard) changes next: a trial booking moves its

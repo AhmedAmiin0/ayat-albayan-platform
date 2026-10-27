@@ -27,6 +27,8 @@ import { HeadActions } from '@/components/ui/layout/head-actions';
 import { StudentRecordings } from '../recordings/StudentRecordings';
 import { CreateAccountButton } from '@/features/people/users/create/CreateAccountButton';
 import { TrialDatesSection } from '@/features/teaching/booking/trial-date/TrialDatesSection';
+import { MonitorChannel } from '@/features/teaching/student-channel';
+import { usePermissions } from '@/features/people/auth';
 
 /** Once the package ended «جدّد الاشتراك» is the head's primary action and booking moves beside it. */
 const headOf = (ended: boolean, nodes: { renew: ReactNode; book: ReactNode }) =>
@@ -40,6 +42,7 @@ export function StudentProfilePage({ studentId }: { studentId: string }) {
   const { data: student, error, isPending } = useQuery(studentQuery(studentId));
   const [editGuardian, setEditGuardian] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
+  const { can } = usePermissions();
 
   if (isPending) return <p className="text-ink-3">{t.common.loading}</p>;
   if (error) {
@@ -104,6 +107,7 @@ export function StudentProfilePage({ studentId }: { studentId: string }) {
       <StudentPayments studentId={student.id} />
       <StudentInvoices studentId={student.id} />
       <StudentRecordings studentId={student.id} role="admin" />
+      {can('student_channels.monitor') && <MonitorChannel studentId={student.id} audience="admin" />}
       <StudentProfileForm key={student.id} student={student} />
       <AssistantsManager studentId={student.id} />
       <BroughtByField studentId={student.id} />

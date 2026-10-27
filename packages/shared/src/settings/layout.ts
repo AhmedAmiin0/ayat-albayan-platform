@@ -57,10 +57,13 @@ export const SETTINGS_LAYOUT = {
     'feedback_rate_window_min',
     'academy_contact',
     'recording_consent_notice',
+    'family_login_enabled',
+    'login_code_ttl_minutes',
+    'login_code_max_attempts',
     'recording_retention_days',
     'activity_retention_days',
   ],
-  sales: ['sales_auto_assign'],
+  sales: ['sales_auto_assign', 'renewal_commission_percent'],
   appearance: [],
 } as const satisfies Record<SettingsSectionId, readonly SettingKey[]>;
 

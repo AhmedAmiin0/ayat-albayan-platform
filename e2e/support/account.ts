@@ -21,7 +21,7 @@ const A = ar.account;
 
 export const AVATAR_PNG = resolve(import.meta.dirname, '../fixtures/avatar.png');
 
-export interface AccountUser {
+interface AccountUser {
   email: string;
   password: string;
   fullName: string;

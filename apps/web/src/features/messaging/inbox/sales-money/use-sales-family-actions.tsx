@@ -1,9 +1,7 @@
-import { canPickTrialDate, isPackageEnded, type SalesStudentRef, type ThreadView } from '@ab/shared';
+import { canPickTrialDate, type SalesStudentRef, type ThreadView } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { useState, type ReactNode } from 'react';
 import { Button } from '@/components/ui/form/button';
-import { Icon } from '@/components/ui/display/icon';
-import { IconButton } from '@/components/ui/form/icon-button';
 import { usePermissions } from '@/features/people/auth/use-permissions';
 import { RegistrationCheckTrigger } from '@/features/sales/sales/registration/RegistrationCheckButton';
 import { RegistrationCheckDialog } from '@/features/sales/sales/registration/RegistrationCheckDialog';
@@ -15,13 +13,14 @@ import { canRegisterFrom } from '../sales/sales-register';
 import { salesFamilyQuery } from './api';
 import { SalesCourseDialog } from './course/SalesCourseDialog';
 import { SalesMoneyFlow, type FlowStart } from './SalesMoneyFlow';
+import { SalesPrimaryAction } from './SalesPrimaryAction';
 import { hasCourse } from './SalesSubscribeAction';
 
-type Opened = { start: FlowStart; studentId?: string };
+type Opened = { start: FlowStart; studentId?: string; renew?: boolean };
 type LeadThread = ThreadView & { lead_id: string };
 
 export interface SalesFamilyActions {
-  /** The one visible action: «تسجيل طالب جديد» on a lead, «اشتراك جديد» on a family of hers. */
+  /** The one visible action: «تسجيل طالب جديد» on a lead, «جدّد الاشتراك» / «اشتراك جديد» on a family of hers. */
   primary: ReactNode;
   /** The «المزيد» entries, in order; empty = no menu. */
   items: ReactNode[];
@@ -31,8 +30,9 @@ export interface SalesFamilyActions {
 
 /**
  * The sales chat's header actions (R-ASST-01/04, W3), split into one visible action and the rest.
- * Family (GET /sales/money/family, her students only): «جدّد الاشتراك» per student whose package
- * ended, «سجّل تحويلًا بنكيًا» while a package is owed, «أيام الحلقات» per student with a course
+ * Family (GET /sales/money/family, her students only): «جدّد الاشتراك» is the visible action while one
+ * of them is `renew_due` (owner 2026-10-26: one tap, prefilled from `renewal`; several due → the step
+ * picks among them), «اشتراك جديد» then moves to the menu; «سجّل تحويلًا بنكيًا» while a package is owed, «أيام الحلقات» per student with a course
  * (hasCourse), «موعد تجريبي جديد» per student with no running subscription (canPickTrialDate, with
  * the trial dates' history in its dialog); several children are named on each (the visible text is the accessible name).
  * «تحقق من التسجيل» (students.check_registration) always goes in the menu. `compact` (phones):
@@ -77,11 +77,12 @@ export function useSalesFamilyActions({ thread, compact = false }: { thread: Thr
     </Button>
   );
   const subscribe = () => setOpened({ start: 'subscribe' });
+  const due = students.filter((s) => s.renew_due);
+  const single = due.length === 1 ? due[0] : undefined;
+  const renew = () => setOpened({ start: 'subscribe', renew: true, ...(single ? { studentId: single.id } : {}) });
   const items = [
     ...checkItem,
-    ...students
-      .filter((s) => isPackageEnded(s.status))
-      .map((s) => item(`renew-${s.id}`, named(t.students.renew, s.name), () => setOpened({ start: 'subscribe', studentId: s.id }))),
+    ...(due.length > 0 ? [item('subscribe', t.salesMoney.newSubscription, subscribe)] : []),
     ...(students.some((s) => s.open.length > 0) ? [item('transfer', t.salesMoney.recordTransfer, () => setOpened({ start: 'transfer' }))] : []),
     ...students.filter(hasCourse).map((s) => item(`course-${s.id}`, named(t.booking.courseDays, s.name), () => setCourse(s.id))),
     // «موعد تجريبي جديد» (owner 2026-10-25): her students without a running subscription only.
@@ -89,15 +90,11 @@ export function useSalesFamilyActions({ thread, compact = false }: { thread: Thr
       .filter((s) => canPickTrialDate(s.status))
       .map((s) => item(`trial-${s.id}`, named(t.trialDate.action, s.name), () => setTrialFor({ id: s.id, name: s.name, code: s.code }))),
   ];
-  const primary = compact ? (
-    <IconButton label={t.salesMoney.newSubscription} onClick={subscribe} className="text-lapis">
-      <Icon name="plus" />
-    </IconButton>
-  ) : (
-    <Button type="button" size="sm" variant="secondary" onClick={subscribe}>
-      <Icon name="plus" />
-      {t.salesMoney.newSubscription}
-    </Button>
-  );
+  const primary =
+    due.length > 0 ? (
+      <SalesPrimaryAction compact={compact} icon="box" label={single ? named(t.students.renew, single.name) : t.students.renew} onClick={renew} />
+    ) : (
+      <SalesPrimaryAction compact={compact} icon="plus" label={t.salesMoney.newSubscription} onClick={subscribe} />
+    );
   return { primary, items, dialogs };
 }

@@ -35,7 +35,7 @@ export function eventTitle(l: EventLesson): string {
 }
 
 /** Never a meet.jit.si link (§2.3). */
-export const safeLink = (link: string | null): string | null => (link && !isJitsi(link) ? link : null);
+const safeLink = (link: string | null): string | null => (link && !isJitsi(link) ? link : null);
 
 const repeatOf = (byday: readonly number[]): string =>
   byday.map((d) => ar.enums.weekday[String(d) as keyof typeof ar.enums.weekday]).join('/');

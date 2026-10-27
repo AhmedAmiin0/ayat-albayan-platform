@@ -27,7 +27,7 @@ export const CANDIDATES: LinkCandidate[] = [
   { kind: 'student', id: '0b0c53a6-6f0e-4f56-9d5d-0d6a3a0e6a12', name: 'مريم', code: 'AB-0008' },
 ];
 
-export interface FakeUsers {
+interface FakeUsers {
   items?: UserView[];
   total?: number;
   detail?: UserDetail;

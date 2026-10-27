@@ -8,7 +8,7 @@ import type { TrialDateBody } from './trial-date-body';
 // «موعد تجريبي جديد» (R-SCH-06/07, R-STU-05, R-ASST-01): the history, the clash check and the
 // booking, under /booking (admin) or /sales/booking (a salesperson, her own students only).
 
-export const historyKey = (mode: BookingMode, studentId: string) => [...pathKey(bookingPath(mode, '/trial-dates')), studentId];
+const historyKey = (mode: BookingMode, studentId: string) => [...pathKey(bookingPath(mode, '/trial-dates')), studentId];
 
 /** GET {base}/trial-dates?studentId: every trial time picked for the student, newest pick first. */
 export function useTrialHistory(studentId: string, enabled = true) {
@@ -41,7 +41,7 @@ export function useTrialDateCheck(body: TrialDateBody | null) {
 }
 
 /** What a new trial date changes: its history, the lessons and calendars, the student and the chats. */
-export function refreshAfterTrialDate(client: QueryClient, o: { mode: BookingMode; studentId: string }): void {
+function refreshAfterTrialDate(client: QueryClient, o: { mode: BookingMode; studentId: string }): void {
   void client.invalidateQueries({ queryKey: historyKey(o.mode, o.studentId) });
   void client.invalidateQueries({ queryKey: pathKey('/lessons') });
   void client.invalidateQueries({ queryKey: pathKey(`/students/${o.studentId}`) });

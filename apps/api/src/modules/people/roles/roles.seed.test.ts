@@ -20,6 +20,8 @@ const LATER = [
   '20261023000620_wa_numbers.sql',
   '20261024000632_notification_rules.sql',
   '20261025000671_saved_replies_permission.sql',
+  '20261026000760_sales_pricing_read.sql',
+  '20261028000800_student_channels.sql',
 ]
   .map((file) => readFileSync(join(MIGRATIONS, file), 'utf8'))
   .join('\n');
@@ -34,7 +36,7 @@ function addedLater(key: string): string[] {
   return [...inserts].filter((m) => [...(m[2] ?? '').matchAll(/'([a-z_]+)'/g)].some((k) => k[1] === key)).map((m) => m[1] ?? '');
 }
 
-describe('migration 20261005000220 seed (+ 240, 274, 281, 300, 360, 380, 430, 521, 620, 631, 671)', () => {
+describe('migration 20261005000220 seed (+ 240, 274, 281, 300, 360, 380, 430, 521, 620, 631, 671, 760, 800)', () => {
   it.each(['admin', 'teacher', 'assistant', 'sales'] as const)('%s gets exactly its catalog grants', (key) => {
     expect([...seeded(key), ...addedLater(key)].sort()).toEqual([...defaultGrantsOf(key)].sort());
   });
@@ -63,6 +65,12 @@ describe('migration 20261005000220 seed (+ 240, 274, 281, 300, 360, 380, 430, 52
 
   it('seeds inbox.lists «القوائم» (2026-10-20) for admin and sales only, never a teacher', () => {
     expect(['admin', 'teacher', 'assistant', 'sales'].filter((k) => addedLater(k).includes('inbox.lists'))).toEqual(['admin', 'sales']);
+  });
+
+  it('seeds pricing.read «عرض سعر» (2026-10-26) for the system sales role only, never a teacher, idempotently', () => {
+    expect(['admin', 'teacher', 'assistant', 'sales'].filter((k) => addedLater(k).includes('pricing.read'))).toEqual(['sales']);
+    const sql = readFileSync(join(MIGRATIONS, '20261026000760_sales_pricing_read.sql'), 'utf8');
+    expect(sql).toMatch(/where r\.is_system and r\.key in \('sales'\)\s+on conflict do nothing;/);
   });
 
   it('seeds students.check_registration and subscriptions.set_start_date (2026-10-12) for admin and sales only', () => {

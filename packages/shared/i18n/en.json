@@ -6,16 +6,16 @@
   },
   "auth": {
     "loginTitle": "Sign in",
-    "email": "Email",
+    "email": "Email or username",
     "password": "Password",
     "submit": "Sign in",
     "submitting": "Signing in…",
-    "invalidCredentials": "Wrong email or password. Try again.",
+    "invalidCredentials": "Those sign-in details are not right. Please try again.",
     "noRole": "Your account isn't activated yet. Contact the admin team.",
     "logout": "Sign out",
-    "intro": "For admins and teachers. Sign in with the email and password the academy sent you.",
+    "intro": "For admins, teachers and sales: sign in with your email or username and password.",
     "showPassword": "Show",
-    "guardiansNote": "Guardians don't need an account: they open the student's progress page from the link we send them on WhatsApp."
+    "guardiansNote": "Parents and students sign in from the «Families and students» tab."
   },
   "admin": {
     "dashboardTitle": "Dashboard",
@@ -27,7 +27,50 @@
     "dashboardTitle": "Today"
   },
   "portal": {
-    "dashboardTitle": "Student progress"
+    "dashboardTitle": "Student progress",
+    "myChildren": "My children",
+    "myAccount": "My account",
+    "sections": "Portal sections",
+    "lessonsTab": "Upcoming lessons",
+    "reportsTab": "Lesson reports",
+    "packageTab": "Package",
+    "withTeacher": "with {teacher}",
+    "join": "Join the lesson",
+    "joining": "Opening the lesson…",
+    "opensAt": "You can join from {time}",
+    "closed": "The time to join this lesson is over",
+    "noWayIn": "The lesson link will reach you before it starts",
+    "lessonsEmpty": "No lessons in the next 14 days",
+    "lessonsEmptyHint": "Lessons appear here as soon as they are booked.",
+    "reportsEmpty": "No reports sent yet",
+    "reportsEmptyHint": "Every lesson report sent to you appears here.",
+    "reportOf": "Report of the {date} lesson",
+    "sentOn": "Sent on {date}",
+    "openReport": "Open the report",
+    "openRecording": "Watch the recording",
+    "fileFailed": "Couldn't open the file. Try again.",
+    "packageEmpty": "No current package",
+    "packageEmptyHint": "Contact us to choose a package that suits you.",
+    "remaining": "Lessons left",
+    "lessonsTotal": "Lessons in the package",
+    "lessonLength": "Lesson length",
+    "minutes": "{n} minutes",
+    "startsOn": "Package start",
+    "renewsOn": "Renewal date",
+    "renew": "Contact us to renew",
+    "loadFailed": "Couldn't load the data.",
+    "retry": "Try again",
+    "noStudents": "No student is linked to this account yet",
+    "noStudentsHint": "Contact the academy to link your account to the student.",
+    "packageStatus": {
+      "trial": "Trial",
+      "active": "Active",
+      "paused": "Paused",
+      "expired": "Ended",
+      "unpaid": "Awaiting activation"
+    },
+    "cancelled": "This lesson was cancelled",
+    "remainingHint": "across all of the student’s packages"
   },
   "mobile": {
     "pushTitle": "Turn on notifications",
@@ -1173,7 +1216,7 @@
       "valueFixed": "Commission amount",
       "commissionCurrency": "Commission currency",
       "commissionStartsOn": "Counts subscriptions paid from",
-      "hint": "A commission is earned once per student, when their first subscription is paid in full, and never retroactively. Leave the salary empty to clear it.",
+      "hint": "The full commission is earned once per student, when their first subscription is paid in full; each renewal paid in full then earns {n}% of it. Nothing is retroactive. Leave the salary empty to clear it.",
       "save": "Save terms",
       "saving": "Saving",
       "saved": "Terms saved"
@@ -1224,7 +1267,12 @@
       "voidTitle": "Void the commission of {student}",
       "voidBody": "The commission of {amount} is voided and will not be earned again. If it is in an approved or paid statement, a deduction goes into the next one.",
       "total": "Total earned commissions",
-      "empty": "No commissions match"
+      "empty": "No commissions match",
+      "kindLabel": "Kind",
+      "kind": {
+        "first": "First subscription",
+        "renewal": "Renewal ({n}%)"
+      }
     },
     "statements": {
       "filters": "Filter statements",
@@ -1247,7 +1295,8 @@
       "unpayTitle": "Undo payment of {assistant}’s statement",
       "unpayBody": "The statement goes back to approved and its receipt is removed.",
       "reopenTitle": "Reopen {assistant}’s statement",
-      "reopenBody": "The statement goes back to draft and can be recalculated."
+      "reopenBody": "The statement goes back to draft and can be recalculated.",
+      "lineCommissionRenewal": "Renewal commission: {student}"
     },
     "brought": {
       "title": "Brought by",
@@ -1482,7 +1531,7 @@
       "commission": "Commission",
       "commissionPercent": "{value}% of the subscription price",
       "commissionFixed": "{amount} per student",
-      "commissionNote": "The commission is earned once per student, when their first subscription is paid in full, from {date}.",
+      "commissionNote": "The full commission is earned once per student, when their first subscription is paid in full, and {n}% of it on each renewal paid in full, from {date}.",
       "noCommission": "Your terms include no commission.",
       "thisMonth": "This month so far",
       "commissionsTotal": "Total commissions earned",
@@ -1499,7 +1548,8 @@
       "line": {
         "salary": "Salary",
         "commission": "Commission for {student}",
-        "adjustment": "Adjustment: {reason}"
+        "adjustment": "Adjustment: {reason}",
+        "commissionRenewal": "Renewal commission: {student}"
       },
       "approvedAt": "Approved {date}",
       "paidAt": "Paid {date}"
@@ -2349,7 +2399,17 @@
       "other": "A message that can’t be shown here"
     },
     "unsupported": "The content of this message did not reach us from WhatsApp — ask the sender to send it again",
-    "unavailable": "This message is unavailable — ask the sender to send it again",
+    "unavailable": "The content of this message did not reach us from WhatsApp. This sometimes happens with the first message from a new number; the message shows in the WhatsApp Business app on the academy phone.",
+    "previewUnsupported": "Message whose content did not arrive",
+    "resend": {
+      "action": "Ask to resend",
+      "title": "Ask them to resend the message",
+      "hint": "This message will be sent to the chat as is (families always get it in Arabic):",
+      "text": "Welcome to Ayat Al-Bayan Academy. Your first message did not reach us because of a WhatsApp fault. Please send it again, thank you.",
+      "send": "Send",
+      "sending": "Sending…",
+      "sent": "Resend request sent"
+    },
     "openThread": "Open conversation with {name}",
     "loadOlder": "Older messages",
     "jumpLatest": "Jump to the latest message",
@@ -2365,6 +2425,7 @@
       "template": "Template message",
       "jump": "Go to the original message",
       "notLoaded": "The original message is older than the loaded ones. Load older messages and try again",
+      "notFound": "The original message could not be found in this chat",
       "swipeHint": "Swipe to reply, or long-press for message options"
     },
     "forward": {
@@ -2492,6 +2553,7 @@
     "viewMedia": "View {kind}",
     "mediaExpired": "This file has expired",
     "mediaInCrm": "This file reached a number that runs through the CRM: open it there",
+    "photoFailed": "Couldn't load the photo. Tap to try again",
     "sendFailed": "The message wasn't sent. Try again",
     "leadPanel": "Lead",
     "leadSheet": "Lead details & registration",
@@ -2597,6 +2659,17 @@
         "subscribed": "Every guardian with a running subscription is added automatically; nobody is removed automatically",
         "teachers": "Every active teacher is added automatically; nobody is removed automatically"
       }
+    },
+    "quote": {
+      "open": "Price quote",
+      "title": "Price quote for the client",
+      "preview": "Offer text",
+      "send": "Send the offer",
+      "edit": "Edit before sending",
+      "copy": "Copy",
+      "copied": "Offer copied",
+      "copyFailed": "Could not copy the offer",
+      "close": "Close the price quote"
     }
   },
   "mobileFinance": {
@@ -3125,6 +3198,10 @@
     "google_sync_alert": {
       "title": "Google sync needs attention",
       "body": "{reason}"
+    },
+    "channel_message": {
+      "title": "New message from a student's family",
+      "body": "{student}: {text}"
     }
   },
   "bell": {
@@ -3333,7 +3410,8 @@
     },
     "templateCategory": {
       "utility": "Utility",
-      "marketing": "Marketing"
+      "marketing": "Marketing",
+      "authentication": "Authentication"
     },
     "pushKind": {
       "new_lead": "New number sent a message",
@@ -3344,7 +3422,8 @@
       "payment_due": "Package needs payment or renewal",
       "new_student": "New student",
       "meeting_invite": "Meeting invitation",
-      "google_sync_alert": "Google sync alert"
+      "google_sync_alert": "Google sync alert",
+      "channel_message": "Student channel message"
     },
     "paymentKind": {
       "payment": "Payment",
@@ -3559,7 +3638,8 @@
     "feedback": "Feedback",
     "chats": "Chats",
     "students": "Students",
-    "statements": "Monthly statements"
+    "statements": "Monthly statements",
+    "messages": "Student messages"
   },
   "teacherStudents": {
     "levelCol": "Level",
@@ -4038,6 +4118,10 @@
     "views": {
       "students": "Students view",
       "money": "Earnings and payments view"
+    },
+    "renewalCommission": {
+      "label": "Renewal commission share",
+      "hint": "The share of the assistant's normal commission earned on each renewal paid in full (50 means half the commission). A change applies to later renewals only and never changes a commission already earned."
     }
   },
   "salesMoney": {
@@ -4653,11 +4737,13 @@
       "self.sales_academy": "Teachers, all students and running lessons (salesperson)",
       "self.sales_money": "Subscribe own students and record their bank transfers (salesperson)",
       "self.assistant": "Classroom assistant's own pages",
+      "self.portal": "Family portal pages",
       "students.check_registration": "Check a student's registration",
       "subscriptions.set_start_date": "Set the subscription start date",
       "numbers.manage": "Manage WhatsApp numbers",
       "notifications.manage": "Manage notifications",
-      "saved_replies.manage": "Manage shared quick replies"
+      "saved_replies.manage": "Manage shared quick replies",
+      "student_channels.monitor": "Read student–teacher channels"
     },
     "hints": {
       "students.check_registration": "Search by the guardian's phone or the student's name or code; shows only the name, code, status and teacher.",
@@ -5390,6 +5476,10 @@
       "google_sync_alert": {
         "name": "Google sync alert",
         "trigger": "When the Google account link expires or a teacher has no mapped calendar"
+      },
+      "channel_message": {
+        "name": "Family message in the student channel",
+        "trigger": "When the student or guardian writes in the student channel"
       }
     }
   },
@@ -6354,5 +6444,108 @@
       "media_failed": "The audio dropped. End the call and call again."
     },
     "backgrounded": "The app was in the background during the call, so your voice may not have been heard meanwhile."
+  },
+  "familyAuth": {
+    "tabs": {
+      "label": "How to sign in",
+      "family": "Families and students",
+      "staff": "Academy team"
+    },
+    "familyIntro": "Parent or adult student: sign in with the WhatsApp number the academy has on file, and we will send you a code on WhatsApp.",
+    "phone": "WhatsApp number",
+    "phoneHint": "The number on file at the academy, with the country code.",
+    "sendCode": "Send the code",
+    "sending": "Sending…",
+    "codeSent": "If the account exists, we have sent a code to the WhatsApp number on file",
+    "code": "Verification code",
+    "codeDigit": "Digit {n} of the verification code",
+    "verify": "Verify and sign in",
+    "verifying": "Verifying…",
+    "resend": "Send the code again",
+    "resendIn": "Send again in {seconds} s",
+    "changePhone": "Change the number",
+    "withUsername": "Sign in with a username",
+    "withPhone": "Sign in with a WhatsApp number",
+    "username": "Username",
+    "studentUsernameHint": "The username is the student code, e.g. AB-1234.",
+    "firstTime": "First sign-in?",
+    "firstTimeIntro": "Type the student code; we will send a code to the guardian's WhatsApp, then you choose your password.",
+    "forgot": "Forgot your password?",
+    "forgotTitle": "Reset your password",
+    "forgotIntro": "Type your email, username or student code, and we will send a code to the WhatsApp number on file.",
+    "identifier": "Email, username or student code",
+    "newPassword": "New password",
+    "confirmPassword": "Type the password again",
+    "passwordsDiffer": "The two passwords do not match",
+    "savePassword": "Save the password",
+    "saving": "Saving…",
+    "passwordSaved": "Password saved. Sign in with your new password now.",
+    "back": "Back",
+    "backToLogin": "Back to sign-in",
+    "familyUnavailable": "Family sign-in is not available yet",
+    "staffResetByAdmin": "Contact the administration to reset your password",
+    "errors": {
+      "invalid_code": "The code is wrong or has expired. Ask for a new code.",
+      "invalid_credentials": "Those sign-in details are not right. Please try again.",
+      "phone_belongs_to_staff": "This number belongs to a member of the academy team; sign in from the «Academy team» tab.",
+      "too_many_requests": "Too many attempts. Wait a little, then try again.",
+      "codes_unavailable": "Family sign-in is not available yet",
+      "invalid_phone": "Type a valid WhatsApp number with the country code.",
+      "code_incomplete": "Type all six digits."
+    },
+    "settings": {
+      "enabled": "Family sign-in by WhatsApp code",
+      "enabledHint": "When on, guardians sign in with their WhatsApp number and a code, and everyone resets their password with a WhatsApp code. Works only once Meta approves the account_code template.",
+      "ttl": "Code lifetime (minutes)",
+      "ttlHint": "After that a new code is needed.",
+      "attempts": "Attempts per code",
+      "attemptsHint": "Once used up, a new code is needed."
+    },
+    "teacherUsername": {
+      "label": "Username",
+      "hint": "Signs in instead of the email: lower-case English letters, digits and . _ -, 3 to 30 characters, starting with a letter.",
+      "needsLogin": "Create the teacher's login on «Users» first, then pick the username.",
+      "invalid": "Invalid username: lower-case English letters, digits and . _ -, starting with a letter.",
+      "taken": "This username belongs to another account."
+    },
+    "contactIsSelf": {
+      "label": "The WhatsApp number belongs to",
+      "guardian": "The guardian",
+      "self": "The student",
+      "hint": "«The student» for an adult student who follows their own account."
+    },
+    "usersColumn": "Username"
+  },
+  "studentChannel": {
+    "title": "Student messages",
+    "portalTab": "Chat with the teacher",
+    "monitorTitle": "Teacher–family chat",
+    "readOnly": "Read only: you cannot write in this chat.",
+    "placeholder": "Write your message…",
+    "messageLabel": "Message",
+    "send": "Send",
+    "sending": "Sending…",
+    "empty": "No messages yet",
+    "emptyHint": "Start the chat with a message.",
+    "older": "Older messages",
+    "loadFailed": "Couldn't load the chat.",
+    "retry": "Try again",
+    "sendFailed": "Couldn't send the message. Try again.",
+    "tooLong": "The message is longer than {n} characters.",
+    "you": "You",
+    "roles": {
+      "teacher": "Teacher",
+      "guardian": "Guardian",
+      "student": "Student"
+    },
+    "listEmpty": "No current students yet",
+    "listEmptyHint": "The chat of every student you teach now appears here.",
+    "pick": "Choose a student to see the chat.",
+    "unread": "{n} unread",
+    "open": "Chat",
+    "back": "All students",
+    "students": "Students",
+    "noMessageYet": "No messages yet",
+    "hide": "Hide the chat"
   }
 }

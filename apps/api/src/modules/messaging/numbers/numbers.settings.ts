@@ -5,7 +5,7 @@ import { SettingsService } from '../../../common/settings/settings.service';
 
 /** Where the line config comes from (docs/23 §2e). An unknown or malformed row reads as legacy. */
 const KEYS = ['comms_source'] as const satisfies readonly SettingKey[];
-export type NumbersSettingsValues = SettingsSlice<(typeof KEYS)[number]>;
+type NumbersSettingsValues = SettingsSlice<(typeof KEYS)[number]>;
 
 /**
  * The numbers module's academy settings (docs/25 §4). Also the ONE writer of comms_source (PATCH

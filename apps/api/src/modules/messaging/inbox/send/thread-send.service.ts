@@ -1,4 +1,4 @@
-import { restrictedMay, type ThreadTemplate, type ThreadText, type WaLine } from '@ab/shared';
+import { ACCOUNT_CODE_TEMPLATE, restrictedMay, type ThreadTemplate, type ThreadText, type WaLine } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { TemplateRegistry } from '../../whatsapp/templates/catalog/template.registry';
 import { waHttpError } from '../../whatsapp/templates/catalog/template.mapper';
@@ -122,6 +122,8 @@ export class ThreadSendService {
     if (s.input.key === 'lesson_join_link') throw waHttpError('use_join_link', 400);
     // «إرسال تقييم الحلقة» picks the lesson and its date itself (rule 6) and sets the button payloads.
     if (s.input.key === 'lesson_rating') throw waHttpError('use_rating_button', 400);
+    // The sign-in code (docs/30) is only ever sent by the API itself, never typed by hand.
+    if (s.input.key === ACCOUNT_CODE_TEMPLATE) throw waHttpError('template_not_allowed', 403);
     const template = await this.templates.approved(s.input.key);
     if (!template) throw waHttpError('template_not_approved', 409);
     if (s.restricted && !restrictedMay(template)) throw waHttpError('template_not_allowed', 403);

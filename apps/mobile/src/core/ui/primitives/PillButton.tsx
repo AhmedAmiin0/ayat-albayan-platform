@@ -3,7 +3,7 @@ import { shape, type, useTheme } from '@/theme';
 import { AppText } from './AppText';
 import { pressScale } from './Button';
 
-export interface PillButtonProps {
+interface PillButtonProps {
   label: string;
   onPress: () => void;
   accessibilityLabel?: string;

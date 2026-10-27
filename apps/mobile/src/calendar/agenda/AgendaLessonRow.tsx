@@ -12,7 +12,7 @@ import { teacherClock } from './agenda';
 import { RowDefaultActions } from './RowDefaultActions';
 import { Tag } from './Tag';
 
-export interface AgendaLessonRowProps {
+interface AgendaLessonRowProps {
   lesson: LessonView;
   /** «غيّر الميعاد» on the row; opens the reschedule sheet. */
   onReschedule: (lesson: LessonView) => void;

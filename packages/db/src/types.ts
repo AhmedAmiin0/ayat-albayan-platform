@@ -198,7 +198,9 @@ export type Database = {
           currency: string;
           earned_at: string;
           id: string;
+          kind: string;
           rate: number;
+          share_percent: number;
           statement_id: string | null;
           status: Database['public']['Enums']['assistant_commission_status'];
           student_id: string;
@@ -218,7 +220,9 @@ export type Database = {
           currency: string;
           earned_at: string;
           id?: string;
+          kind?: string;
           rate: number;
+          share_percent?: number;
           statement_id?: string | null;
           status?: Database['public']['Enums']['assistant_commission_status'];
           student_id: string;
@@ -238,7 +242,9 @@ export type Database = {
           currency?: string;
           earned_at?: string;
           id?: string;
+          kind?: string;
           rate?: number;
+          share_percent?: number;
           statement_id?: string | null;
           status?: Database['public']['Enums']['assistant_commission_status'];
           student_id?: string;
@@ -266,21 +272,21 @@ export type Database = {
           {
             foreignKeyName: 'assistant_commissions_student_id_fkey';
             columns: ['student_id'];
-            isOneToOne: true;
+            isOneToOne: false;
             referencedRelation: 'students';
             referencedColumns: ['id'];
           },
           {
             foreignKeyName: 'assistant_commissions_student_id_fkey';
             columns: ['student_id'];
-            isOneToOne: true;
+            isOneToOne: false;
             referencedRelation: 'v_assistant_students';
             referencedColumns: ['student_id'];
           },
           {
             foreignKeyName: 'assistant_commissions_student_id_fkey';
             columns: ['student_id'];
-            isOneToOne: true;
+            isOneToOne: false;
             referencedRelation: 'v_student_list';
             referencedColumns: ['id'];
           },
@@ -506,6 +512,81 @@ export type Database = {
           id?: string;
         };
         Relationships: [];
+      };
+      channel_messages: {
+        Row: {
+          body: string;
+          channel_id: string;
+          created_at: string;
+          id: string;
+          sender_profile_id: string | null;
+          sender_role: string;
+        };
+        Insert: {
+          body: string;
+          channel_id: string;
+          created_at?: string;
+          id?: string;
+          sender_profile_id?: string | null;
+          sender_role: string;
+        };
+        Update: {
+          body?: string;
+          channel_id?: string;
+          created_at?: string;
+          id?: string;
+          sender_profile_id?: string | null;
+          sender_role?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'channel_messages_channel_id_fkey';
+            columns: ['channel_id'];
+            isOneToOne: false;
+            referencedRelation: 'student_channels';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'channel_messages_sender_profile_id_fkey';
+            columns: ['sender_profile_id'];
+            isOneToOne: false;
+            referencedRelation: 'profiles';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      channel_reads: {
+        Row: {
+          channel_id: string;
+          last_read_at: string;
+          profile_id: string;
+        };
+        Insert: {
+          channel_id: string;
+          last_read_at?: string;
+          profile_id: string;
+        };
+        Update: {
+          channel_id?: string;
+          last_read_at?: string;
+          profile_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'channel_reads_channel_id_fkey';
+            columns: ['channel_id'];
+            isOneToOne: false;
+            referencedRelation: 'student_channels';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'channel_reads_profile_id_fkey';
+            columns: ['profile_id'];
+            isOneToOne: false;
+            referencedRelation: 'profiles';
+            referencedColumns: ['id'];
+          },
+        ];
       };
       chat_list_threads: {
         Row: {
@@ -1323,6 +1404,54 @@ export type Database = {
             referencedColumns: ['lead_id'];
           },
         ];
+      };
+      login_codes: {
+        Row: {
+          attempts: number;
+          code_hash: string;
+          created_at: string;
+          expires_at: string;
+          id: string;
+          max_attempts: number;
+          phone_e164: string;
+          purpose: string;
+          send_error: string | null;
+          sent_at: string | null;
+          subject_id: string;
+          subject_kind: string;
+          used_at: string | null;
+        };
+        Insert: {
+          attempts?: number;
+          code_hash: string;
+          created_at?: string;
+          expires_at: string;
+          id?: string;
+          max_attempts: number;
+          phone_e164: string;
+          purpose: string;
+          send_error?: string | null;
+          sent_at?: string | null;
+          subject_id: string;
+          subject_kind: string;
+          used_at?: string | null;
+        };
+        Update: {
+          attempts?: number;
+          code_hash?: string;
+          created_at?: string;
+          expires_at?: string;
+          id?: string;
+          max_attempts?: number;
+          phone_e164?: string;
+          purpose?: string;
+          send_error?: string | null;
+          sent_at?: string | null;
+          subject_id?: string;
+          subject_kind?: string;
+          used_at?: string | null;
+        };
+        Relationships: [];
       };
       leads: {
         Row: {
@@ -2685,6 +2814,7 @@ export type Database = {
           role_id: string | null;
           tz: string;
           updated_at: string;
+          username: string | null;
         };
         Insert: {
           avatar_path?: string | null;
@@ -2701,6 +2831,7 @@ export type Database = {
           role_id?: string | null;
           tz?: string;
           updated_at?: string;
+          username?: string | null;
         };
         Update: {
           avatar_path?: string | null;
@@ -2717,6 +2848,7 @@ export type Database = {
           role_id?: string | null;
           tz?: string;
           updated_at?: string;
+          username?: string | null;
         };
         Relationships: [
           {
@@ -3228,6 +3360,32 @@ export type Database = {
           },
         ];
       };
+      student_channels: {
+        Row: {
+          created_at: string;
+          id: string;
+          student_id: string;
+        };
+        Insert: {
+          created_at?: string;
+          id?: string;
+          student_id: string;
+        };
+        Update: {
+          created_at?: string;
+          id?: string;
+          student_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'student_channels_student_id_fkey';
+            columns: ['student_id'];
+            isOneToOne: true;
+            referencedRelation: 'students';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       student_join_links: {
         Row: {
           created_at: string;
@@ -3312,6 +3470,7 @@ export type Database = {
           brought_by: string | null;
           code: string | null;
           code_seq: number;
+          contact_is_self: boolean;
           created_at: string;
           created_by: string | null;
           gender: Database['public']['Enums']['gender'] | null;
@@ -3339,6 +3498,7 @@ export type Database = {
           brought_by?: string | null;
           code?: never;
           code_seq?: never;
+          contact_is_self?: boolean;
           created_at?: string;
           created_by?: string | null;
           gender?: Database['public']['Enums']['gender'] | null;
@@ -3366,6 +3526,7 @@ export type Database = {
           brought_by?: string | null;
           code?: never;
           code_seq?: never;
+          contact_is_self?: boolean;
           created_at?: string;
           created_by?: string | null;
           gender?: Database['public']['Enums']['gender'] | null;
@@ -4247,6 +4408,7 @@ export type Database = {
           first_paid_at: string | null;
           first_subscription_paid: boolean | null;
           name: string | null;
+          renewal_commission_count: number | null;
           student_id: string | null;
         };
         Relationships: [
@@ -4577,6 +4739,7 @@ export type Database = {
           role_id: string | null;
           role_key: string | null;
           total: number;
+          username: string | null;
         }[];
       };
       auth_user_id_by_email: { Args: { p_email: string }; Returns: string };
@@ -4750,6 +4913,16 @@ export type Database = {
         Returns: Json;
       };
       prune_activity_log: { Args: Record<PropertyKey, never>; Returns: number };
+      portal_students_of: {
+        Args: { p_profile: string };
+        Returns: {
+          code: string;
+          contact_is_self: boolean;
+          id: string;
+          name: string;
+          tz: string;
+        }[];
+      };
       push_live_sessions: { Args: { p_ids: string[] }; Returns: string[] };
       record_teacher_payment: { Args: { p: Json }; Returns: Json };
       reopen_assistant_statement: { Args: { p_actor: string; p_statement: string }; Returns: Json };
@@ -4762,6 +4935,8 @@ export type Database = {
       };
       revoke_other_user_sessions: { Args: { p_keep: string | null; p_user: string }; Returns: number };
       revoke_user_sessions: { Args: { p_user: string }; Returns: number };
+      login_code_spend: { Args: { p_id: string }; Returns: boolean };
+      login_code_take: { Args: { p_id: string }; Returns: string | null };
       saved_replies_manager: { Args: never; Returns: boolean };
       saved_replies_reader: { Args: never; Returns: boolean };
       set_role_permissions: { Args: { perms: string[]; role_id: string }; Returns: undefined };
@@ -4817,6 +4992,19 @@ export type Database = {
         Args: { p_student_id: string; p_teacher_id: string };
         Returns: boolean;
       };
+      channel_summaries: {
+        Args: { p_count_roles: string[]; p_profile: string; p_student_ids: string[] };
+        Returns: {
+          channel_id: string;
+          last_at: string | null;
+          last_body: string | null;
+          last_role: string | null;
+          student_id: string;
+          unread: number;
+        }[];
+      };
+      channel_teacher_ids: { Args: { p_student_id: string }; Returns: string[] };
+      teacher_channel_student_ids: { Args: { p_teacher_id: string }; Returns: string[] };
       teacher_student_ids: { Args: { p_teacher_id: string }; Returns: string[] };
       teacher_thread_phones: {
         Args: { p_teacher_id: string };
@@ -4891,7 +5079,8 @@ export type Database = {
         | 'payment_due'
         | 'new_student'
         | 'meeting_invite'
-        | 'google_sync_alert';
+        | 'google_sync_alert'
+        | 'channel_message';
       report_status: 'draft' | 'submitted';
       schedule_rule_status: 'active' | 'paused' | 'ended';
       student_status:
@@ -4906,7 +5095,7 @@ export type Database = {
       subscription_status: 'trial' | 'active' | 'paused' | 'expired' | 'unpaid';
       teacher_earning_status: 'earned' | 'partially_paid' | 'paid';
       teacher_status: 'active' | 'inactive';
-      template_category: 'utility' | 'marketing';
+      template_category: 'utility' | 'marketing' | 'authentication';
       template_status:
         'not_submitted' | 'pending' | 'approved' | 'rejected' | 'paused' | 'disabled' | 'missing';
       user_role: 'admin' | 'teacher' | 'guardian' | 'assistant' | 'sales' | 'student';
@@ -5087,6 +5276,7 @@ export const Constants = {
         'new_student',
         'meeting_invite',
         'google_sync_alert',
+        'channel_message',
       ],
       report_status: ['draft', 'submitted'],
       schedule_rule_status: ['active', 'paused', 'ended'],
@@ -5103,7 +5293,7 @@ export const Constants = {
       subscription_status: ['trial', 'active', 'paused', 'expired', 'unpaid'],
       teacher_earning_status: ['earned', 'partially_paid', 'paid'],
       teacher_status: ['active', 'inactive'],
-      template_category: ['utility', 'marketing'],
+      template_category: ['utility', 'marketing', 'authentication'],
       template_status: [
         'not_submitted',
         'pending',

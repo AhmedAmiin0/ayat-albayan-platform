@@ -43,6 +43,8 @@ export interface TrialDraft {
   tz: string;
   /** «عرفت عننا منين؟»: the guardian's source, prefilled from the lead's. */
   source: LeadSource | null;
+  /** «رقم الواتساب لـ: الطالب نفسه» (docs/30 §1); absent / false = «ولي الأمر». */
+  contactIsSelf?: boolean;
   program: Program;
   /** Teacher-gender preference (R-SCH-06); null = «مش فارقة». */
   gender: Gender | null;
@@ -108,7 +110,7 @@ export function draftFromLead(lead: BookingLead, pkg: PackageSize = 'trial'): Tr
   };
 }
 
-export type PhoneProblem = 'empty' | 'not_a_number' | 'invalid_length' | 'missing_country_code';
+type PhoneProblem = 'empty' | 'not_a_number' | 'invalid_length' | 'missing_country_code';
 
 /** Why the typed phone is not a WhatsApp number we can store (rule 7), or null when it is. */
 export function phoneProblem(phone: string): PhoneProblem | null {

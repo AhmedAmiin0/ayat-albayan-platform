@@ -67,7 +67,7 @@ export function queries() {
   };
 }
 
-export type Claims = {
+type Claims = {
   iss: string; sub: string; name: string; nbf: number; exp: number; metadata?: string;
   video: { roomJoin: boolean; room: string; canPublish: boolean; canSubscribe: boolean; canPublishData: boolean; canPublishSources?: string[] };
 };

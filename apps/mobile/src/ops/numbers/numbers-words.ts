@@ -7,7 +7,7 @@ import { formatAt } from '../activity/activity-format';
 
 const n = () => t.numbers;
 
-export interface ChipWords {
+interface ChipWords {
   tone: Tone;
   glyph: Glyph;
   label: string;

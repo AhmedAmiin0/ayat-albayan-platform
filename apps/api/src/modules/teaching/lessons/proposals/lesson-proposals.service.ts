@@ -8,9 +8,9 @@ import { LessonStore } from '../store/lesson-store';
 import { RescheduleOneService } from '../reschedule/reschedule-one.service';
 import { invalidTransition } from '../status/transition';
 
-export type ProposeInput = { lessonId: string; body: LessonProposalRequest; actor: AuthUser };
-export type DecideInput = { proposalId: string; actor: AuthUser };
-export type ApproveInput = DecideInput & { body: ProposalApprove };
+type ProposeInput = { lessonId: string; body: LessonProposalRequest; actor: AuthUser };
+type DecideInput = { proposalId: string; actor: AuthUser };
+type ApproveInput = DecideInput & { body: ProposalApprove };
 
 /** A teacher's «اقترح ميعاد تاني» for their own open lesson (R-SCH-08). Returns the lesson id. */
 @Injectable()

@@ -4,7 +4,7 @@ import { ThreadListsButton } from '../../lists/ThreadListsButton';
 import { CopyPhoneButton } from '../../messages/copy-download/CopyPhoneButton';
 import type { ThreadCache } from '../hooks/thread-cache';
 
-export interface ThreadHeaderActionsProps {
+interface ThreadHeaderActionsProps {
   phone: string;
   /** The cached thread: its newest page carries the chat's `lists`. */
   data: ThreadCache | undefined;

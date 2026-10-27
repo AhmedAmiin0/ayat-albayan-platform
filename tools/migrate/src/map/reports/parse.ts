@@ -16,7 +16,7 @@ import { reportWho } from './parse.who.ts';
 import { type Slot, UNKNOWN_TIME } from './times.ts';
 
 /** A6: reports before the academy's start or in the future are typos/tests (2066, 1996). */
-export const REPORTS_FROM = '2026-08-01';
+const REPORTS_FROM = '2026-08-01';
 
 export interface ParsedReport {
   ref: SourceRow['ref'];
@@ -40,7 +40,7 @@ export interface ParsedReport {
   issues: RowIssue[];
 }
 
-export interface ReportCtx {
+interface ReportCtx {
   ix: StudentIndex;
   slots: ReadonlyMap<string, Slot>;
   today: string;

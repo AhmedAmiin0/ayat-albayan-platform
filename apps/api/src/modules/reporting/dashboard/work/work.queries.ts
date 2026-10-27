@@ -4,7 +4,7 @@ import { DB, type Db } from '../../../../common/db/db.module';
 import { readAll, readChunked } from '../../../teaching/scheduling/read-all';
 
 /** Open or with an outcome; never cancelled or moved (docs/11 R11). */
-export const REPORTABLE: readonly LessonStatus[] = [...OPEN_LESSON_STATUSES, 'completed', 'late', 'excused', 'no_show'];
+const REPORTABLE: readonly LessonStatus[] = [...OPEN_LESSON_STATUSES, 'completed', 'late', 'excused', 'no_show'];
 
 const PENDING =
   'lesson_id, student_id, student:students(id, code, name), lesson:lessons!inner(id, starts_at, status, teacher:teachers(id, display_name_ar, display_name_en)), lesson_reports(id)';
@@ -79,6 +79,3 @@ export class WorkQueries {
 }
 
 export type PendingRow = Awaited<ReturnType<WorkQueries['pendingReports']>>[number];
-export type UnpaidDbRow = Awaited<ReturnType<WorkQueries['unpaid']>>[number];
-export type TaskDbRow = Awaited<ReturnType<WorkQueries['openTasks']>>[number];
-export type TaskSubject = Awaited<ReturnType<WorkQueries['taskSubjects']>>[number];

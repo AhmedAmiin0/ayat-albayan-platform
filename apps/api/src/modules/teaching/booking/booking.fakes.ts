@@ -43,7 +43,7 @@ export const STUDENTS = [
   student(IDS.s3, 'يوسف', cairo),
 ];
 /** Sun + Tue 16:00–22:00 Cairo: Sun 17:00 Riyadh (14:00Z) fits both before and after DST. */
-export const GRID = [0, 2].map((weekday) => ({
+const GRID = [0, 2].map((weekday) => ({
   id: `a${weekday}`,
   weekday,
   start_time: '16:00',
@@ -64,7 +64,7 @@ export function fakeQueries() {
 }
 
 /** bookableSlots answers the real GRID (24/7 off): the outside_availability cases need a grid. */
-export function fakeAvailability() {
+function fakeAvailability() {
   return {
     bookableSlots: vi.fn().mockResolvedValue(GRID),
     listTimeOff: vi.fn().mockResolvedValue([]),
@@ -73,7 +73,7 @@ export function fakeAvailability() {
 }
 
 /** Occupying lessons (BusyQueries) and not-yet-generated rule occurrences (RuleProjectionQueries). */
-export function fakeBusy() {
+function fakeBusy() {
   return {
     busy: { teacherLessons: vi.fn().mockResolvedValue([]), studentLessons: vi.fn().mockResolvedValue([]), courseLessonIds: vi.fn().mockResolvedValue([]) },
     projection: { busy: vi.fn().mockResolvedValue({ teacher: [], students: [] }) },

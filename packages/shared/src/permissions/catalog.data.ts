@@ -21,7 +21,7 @@ export const PERMISSION_AREAS = [
 ] as const;
 export type PermissionArea = (typeof PERMISSION_AREAS)[number];
 
-type Grant = 'teacher' | 'assistant' | 'sales';
+type Grant = 'teacher' | 'assistant' | 'sales' | 'guardian' | 'student';
 const T: Grant[] = ['teacher'];
 const TS: Grant[] = ['teacher', 'sales'];
 const TA: Grant[] = ['teacher', 'assistant'];
@@ -52,7 +52,9 @@ export const PERMISSION_ROWS = [
   { key: 'lessons.status', area: 'schedule', grants: T },
   { key: 'lessons.write', area: 'schedule', grants: [] },
   { key: 'booking.write', area: 'schedule', grants: [] },
-  { key: 'pricing.read', area: 'schedule', grants: [] },
+  // «حاسبة الأسعار» GET /pricing/quote and /pricing/catalog. Sales by default (owner 2026-10-26: «عرض سعر» in the
+  // chat, migration 20261026000760); teachers never.
+  { key: 'pricing.read', area: 'schedule', grants: ['sales'] },
   { key: 'tasks.manage', area: 'schedule', grants: [] },
   { key: 'classroom.join', area: 'classroom', grants: TAS },
   { key: 'classroom.kick', area: 'classroom', grants: TAS },
@@ -83,6 +85,9 @@ export const PERMISSION_ROWS = [
   // Every template from the inbox (owner 2026-10-12); without it (or templates.manage) only the
   // restricted allow-list: free_trial_invite and welcome_greeting by default (restricted-templates.ts).
   { key: 'templates.send_all', area: 'messaging', grants: [] },
+  // docs/31 §2: read every student channel (teacher ↔ family), read-only. The admin by default; the owning
+  // assistant reads her own students' channels without it (sales ownership).
+  { key: 'student_channels.monitor', area: 'messaging', grants: [] },
   { key: 'payments.read', area: 'finance', grants: [] },
   { key: 'payments.write', area: 'finance', grants: [] },
   { key: 'subscriptions.read', area: 'finance', grants: [] },
@@ -135,4 +140,7 @@ export const PERMISSION_ROWS = [
   // record the family's bank transfer with its receipt (/sales/subscriptions, /sales/payments, /sales/money).
   { key: 'self.sales_money', area: 'self', grants: ['sales'] },
   { key: 'self.assistant', area: 'self', grants: ['assistant'] },
+  // The family portal (/portal/*, docs/31): a guardian login (their students) or a student login (itself).
+  // A scope, never a grant: the portal roles hold no matrix permission (migration 433).
+  { key: 'self.portal', area: 'self', grants: ['guardian', 'student'] },
 ] as const satisfies readonly { key: string; area: PermissionArea; grants: readonly Grant[] }[];

@@ -38,7 +38,7 @@ export async function switchNotifications(admin: Page, provider: WaProvider): Pr
     .toEqual(expect.objectContaining({ provider, configured: true, gaps: [] }));
 }
 
-export interface StubRequest {
+interface StubRequest {
   via: 'graph' | 'kapso';
   method: string;
   path: string;

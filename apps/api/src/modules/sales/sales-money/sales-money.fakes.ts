@@ -8,7 +8,7 @@ export const REQ = '9a000000-0000-4000-8000-000000000001';
 export const MSG = '9b000000-0000-4000-8000-000000000001';
 export const FAMILY_PHONE = '+966551110000';
 export const RECEIPT = `${SUB_ID}/0f0e0d0c-0000-4000-8000-000000000001.jpg`;
-export const OWN_A = { leadIds: [], guardianIds: ['g1'], studentIds: [STUDENT_ID], phones: [FAMILY_PHONE] };
+const OWN_A = { leadIds: [], guardianIds: ['g1'], studentIds: [STUDENT_ID], phones: [FAMILY_PHONE] };
 export const NONE = { leadIds: [], guardianIds: [], studentIds: [], phones: [] };
 export const PAY = { subscriptionId: SUB_ID, amount: 145, currency: 'SAR', paidAt: '2026-10-11T09:00:00Z', receiptPath: RECEIPT, clientRequestId: REQ };
 /** No startsOn: the default day (today, Riyadh); explicit days are in sales-money.http.start*.test.ts. */

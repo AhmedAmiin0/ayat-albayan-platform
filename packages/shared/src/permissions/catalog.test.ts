@@ -51,9 +51,11 @@ describe('system roles', () => {
     expect(t).not.toContain('payments.read');
   });
 
-  it('guardian holds nothing', () => {
-    expect(systemPermissionsOf('guardian')).toEqual([]);
+  it('the portal roles hold only the portal scope key (docs/31), never a grant', () => {
+    expect(systemPermissionsOf('guardian')).toEqual(['self.portal']);
+    expect(systemPermissionsOf('student')).toEqual(['self.portal']);
     expect(defaultGrantsOf('guardian')).toEqual([]);
+    expect(defaultGrantsOf('student')).toEqual([]);
   });
 
   it('sales and assistant carry only their scope keys and the shared rooms/inbox', () => {
@@ -113,10 +115,10 @@ describe('effectivePermissions', () => {
 });
 
 describe('student and guardian base roles', () => {
-  it('hold no permission at all until the portal task grants self.* keys', () => {
-    expect(systemPermissionsOf('student')).toEqual([]);
-    expect(systemPermissionsOf('guardian')).toEqual([]);
-    expect(defaultGrantsOf('student')).toEqual([]);
+  it('hold only the portal scope key (docs/31): self.portal follows the base role, nothing is granted', () => {
+    expect(selfPermissionsOf('student')).toEqual(['self.portal']);
+    expect(selfPermissionsOf('guardian')).toEqual(['self.portal']);
+    expect(GRANTABLE_PERMISSIONS).not.toContain('self.portal');
   });
   it('only the system admin holds the users permissions by default', () => {
     expect(systemPermissionsOf('admin')).toEqual(expect.arrayContaining(['users.read', 'users.write']));

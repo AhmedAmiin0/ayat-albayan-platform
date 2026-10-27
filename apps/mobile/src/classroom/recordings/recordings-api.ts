@@ -8,7 +8,7 @@ import { recordingsPath, type RecordingSource } from './recording-format';
 // The list carries 1-hour signed URLs, so `noPersist` keeps it off the disk cache (lib/query-client).
 const meta = { noPersist: true };
 
-export const recordingsQuery = (source: RecordingSource) =>
+const recordingsQuery = (source: RecordingSource) =>
   queryOptions({
     queryKey: pathKey(recordingsPath(source)),
     queryFn: () => apiFetch<LessonRecordingView[]>(recordingsPath(source)),
@@ -26,7 +26,7 @@ export function useRecordingStatus() {
 }
 
 /** The recording has no (valid) link any more: finished files only, links last an hour. */
-export class RecordingUnavailable extends Error {}
+class RecordingUnavailable extends Error {}
 
 /**
  * Play = ask for a fresh list at the moment of the tap (a link seen minutes ago may have expired),

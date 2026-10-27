@@ -8,7 +8,7 @@ import { StartupScreen } from './StartupScreen';
 
 const HAND_OFF_MS = 280;
 
-export interface StartupOverlayProps {
+interface StartupOverlayProps {
   /** Fonts, language and the session gate are settled: the real screen is mounted underneath. */
   ready: boolean;
   onRetry: () => void;

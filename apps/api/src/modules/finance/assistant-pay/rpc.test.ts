@@ -4,6 +4,8 @@ import { describe, expect, it } from 'vitest';
 import { fakeDb } from '../../people/guardians/fake-db';
 import { assistantError } from './assistant-pay.errors';
 import { AssistantRpc } from './assistant-pay.rpc';
+import { fakeSettings } from '../../../common/settings/settings.fakes';
+import { AssistantPaySettings } from './assistant-pay.settings';
 import { TermsQueries } from './terms/terms.queries';
 
 const pg = (code: string, message: string) => new PostgrestError({ message, details: '', hint: '', code });
@@ -60,15 +62,17 @@ describe('AssistantRpc: arguments as migration 273 names them', () => {
 });
 
 describe('TermsQueries.uncommissioned', () => {
-  it('one subscription (the oldest) per brought student that has no commission; none brought, none read', async () => {
-    const { db } = fakeDb({
+  it('every priced subscription of a brought student without a commission row, oldest first; none brought, none read', async () => {
+    const t = fakeDb({
       students: [{ data: [{ id: 's1' }, { id: 's2' }, { id: 's3' }] }],
-      assistant_commissions: [{ data: [{ student_id: 's2' }] }],
-      subscriptions: [{ data: [{ id: 'x1', student_id: 's1' }, { id: 'x2', student_id: 's1' }, { id: 'y1', student_id: 's2' }, { id: 'z1', student_id: 's3' }] }],
+      assistant_commissions: [{ data: [{ subscription_id: 'y1' }, { subscription_id: null }] }],
+      subscriptions: [{ data: [{ id: 'x1' }, { id: 'x2' }, { id: 'y1' }, { id: 'y2' }, { id: 'z1' }] }],
     });
-    expect(await new TermsQueries(db).uncommissioned('a')).toEqual(['x1', 'z1']);
+    const settings = new AssistantPaySettings(fakeSettings());
+    expect(await new TermsQueries(t.db, settings).uncommissioned('a')).toEqual(['x1', 'x2', 'y2', 'z1']);
+    expect(t.argsOf('subscriptions', 'gt')).toEqual(['price', 0]); // a trial (price 0) never counts
     const none = fakeDb({ students: [{ data: [] }] });
-    expect(await new TermsQueries(none.db).uncommissioned('a')).toEqual([]);
+    expect(await new TermsQueries(none.db, settings).uncommissioned('a')).toEqual([]);
     expect(none.calls.map((c) => c.table)).not.toContain('subscriptions');
   });
 });

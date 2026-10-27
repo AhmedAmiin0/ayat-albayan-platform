@@ -3,9 +3,9 @@ import type { OverlayNumber } from '../../../../common/integrations/numbers-over
 import type { WhatsappEnv } from '../../../../config/env/env';
 
 /** A fake line env: only "is it null" matters to routing. Never a real token. */
-export const FAKE_ENV: WhatsappEnv = { base: 'http://wa-stub.test', version: 'v21.0', phoneNumberId: 'p', wabaId: 'w', accessToken: 'token-fake' };
+const FAKE_ENV: WhatsappEnv = { base: 'http://wa-stub.test', version: 'v21.0', phoneNumberId: 'p', wabaId: 'w', accessToken: 'token-fake' };
 
-export const overlayNumber = (over: Partial<OverlayNumber>): OverlayNumber => ({
+const overlayNumber = (over: Partial<OverlayNumber>): OverlayNumber => ({
   id: 'n',
   label: 'x',
   purpose: 'chat',

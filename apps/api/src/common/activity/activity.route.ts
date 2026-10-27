@@ -7,7 +7,7 @@ const LOGGED_METHODS = new Set(['POST', 'PUT', 'PATCH', 'DELETE']);
  * Never logged, whatever the method: liveness probes and the provider webhooks (high volume,
  * machine traffic, not user actions; each keeps its own store of what it received).
  */
-export const SKIPPED_ROUTES = ['/health', '/webhooks/whatsapp', '/webhooks/kapso', '/webhooks/wacrm', '/livekit/webhook'] as const;
+const SKIPPED_ROUTES = ['/health', '/webhooks/whatsapp', '/webhooks/kapso', '/webhooks/wacrm', '/livekit/webhook'] as const;
 
 /** Mutations only (GET/HEAD/OPTIONS are reads), minus SKIPPED_ROUTES and anything under them. */
 export function shouldLog(req: { method: string; route: string }): boolean {
@@ -37,7 +37,7 @@ function entityOfParam(name: string): string {
   return `${base}s`;
 }
 
-export interface EntityRef {
+interface EntityRef {
   entity: string | null;
   entityId: string | null;
 }
@@ -81,6 +81,3 @@ export function fieldNames(body: unknown): string[] {
 export function responseId(body: unknown): string | null {
   return paramValue(body, 'id');
 }
-
-/** HTTP status class of the activity filter. */
-export const isErrorStatus = (status: number): boolean => status >= 400;

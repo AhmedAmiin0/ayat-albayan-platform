@@ -98,7 +98,7 @@ export function pushPreview(m: InboundEvent): string {
   return fill(ar.notifications.media, { kind: MEDIA_LABELS[m.type] ?? ar.inbox.media.other });
 }
 
-export interface PushInput {
+interface PushInput {
   m: InboundEvent;
   phone: string;
   who: Contact;
@@ -108,7 +108,7 @@ export interface PushInput {
 }
 
 /** How the admin knows this phone: guardian, lead, teacher, WhatsApp profile name, else the number. */
-export function senderName({ m, phone, who }: Pick<PushInput, 'm' | 'phone' | 'who'>): string {
+function senderName({ m, phone, who }: Pick<PushInput, 'm' | 'phone' | 'who'>): string {
   return who.guardian?.name ?? who.lead?.name ?? who.teacher?.name ?? m.name ?? phone;
 }
 

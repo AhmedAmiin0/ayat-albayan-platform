@@ -10,7 +10,7 @@ import { useTrialHistory } from '../lib/queries';
 import { TrialDateWizard } from './TrialDateWizard';
 import { TrialHistoryList } from '../components/TrialHistoryList';
 
-export interface TrialDateFlowProps {
+interface TrialDateFlowProps {
   studentId: string;
   name: string;
   program: Program;

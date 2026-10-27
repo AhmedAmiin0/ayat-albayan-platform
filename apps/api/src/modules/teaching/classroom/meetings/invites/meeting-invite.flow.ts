@@ -22,7 +22,7 @@ const DAY_MS = 86_400_000;
 export const chatCount = (list: readonly ResolvedInvitee[], policy: InvitePolicy): number =>
   list.filter((i) => i.kind !== 'staff' && policy.mayChat(i.phone ?? '')).length;
 
-export interface InviteRun {
+interface InviteRun {
   meeting: MeetingRow;
   actorId: string;
   invitees: readonly ResolvedInvitee[];
@@ -35,7 +35,7 @@ export interface InviteRun {
 const LINK_ONLY: DeliveryOutcome = { status: 'window_closed', channel: 'link', error_code: CHAT_NOT_ALLOWED };
 
 /** One non-staff delivery: a fresh personal link, its chat text, its dedup key. */
-export interface PersonalSend {
+interface PersonalSend {
   run: Omit<InviteRun, 'invitees'>;
   invitee: StoredInvitee;
   dedupKey?: string;
