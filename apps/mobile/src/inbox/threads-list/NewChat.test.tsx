@@ -1,8 +1,10 @@
 import { fireEvent, screen } from '@testing-library/react-native';
 import { router } from 'expo-router';
 import { t } from '@/core/lib/i18n/i18n';
+import { TreeBaseProvider } from '@/core/nav/tree-base';
 import { renderWithQuery } from '@/test/query';
 import { NewChatSheet } from './NewChatSheet';
+import { InboxHeaderActions } from './InboxHeaderActions';
 import { plainReminder } from '../shared/thread-fixtures';
 import { ThreadScreen } from '../screens/ThreadScreen';
 
@@ -25,6 +27,21 @@ const EMPTY = { thread: null, messages: [], has_more: false, lessons: [], people
 beforeEach(() => {
   mockApiFetch.mockReset();
   mockApiSend.mockReset();
+});
+
+// Owner 2026-10-27 («This topbar takes alot of space»): a 44pt compose icon, no text button.
+test('«محادثة جديدة» is a named 44pt icon button beside the sales bell; it opens the same sheet', async () => {
+  await renderWithQuery(
+    <TreeBaseProvider value="/sales">
+      <InboxHeaderActions base="/sales" />
+    </TreeBaseProvider>,
+  );
+  const trigger = screen.getByRole('button', { name: t.inbox.newChat.title });
+  expect(trigger).toHaveStyle({ width: 44, height: 44 });
+  expect(screen.queryByText(t.inbox.newChat.title)).toBeNull();
+  await fireEvent.press(trigger);
+  expect(screen.getByLabelText(t.inbox.newChat.phone)).toBeTruthy();
+  expect(screen.getByRole('header', { name: t.inbox.newChat.title })).toBeTruthy();
 });
 
 // Owner report 2026-10-12 («it is not able to start the conversation»): the same path as the web.

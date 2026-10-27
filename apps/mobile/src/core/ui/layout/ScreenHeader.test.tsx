@@ -23,3 +23,11 @@ test('Ltr isolates a phone so RTL cannot reorder its groups', async () => {
   expect(text).toHaveStyle({ writingDirection: 'ltr', fontVariant: ['tabular-nums'] });
   expect(ltr('AB-0183')).toBe('⁦AB-0183⁩');
 });
+
+test('the title never wraps: one line that shrinks to fit (owner 2026-10-27)', async () => {
+  await render(<ScreenHeader title="Conversations" trailing={<Text>x</Text>} />);
+  const title = screen.getByRole('header', { name: 'Conversations' });
+  expect(title.props.numberOfLines).toBe(1);
+  expect(title.props.adjustsFontSizeToFit).toBe(true);
+  expect(title.props.minimumFontScale).toBe(0.7);
+});

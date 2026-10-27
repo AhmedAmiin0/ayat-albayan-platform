@@ -1,4 +1,4 @@
-import { screen } from '@testing-library/react-native';
+import { screen, within } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { TreeBaseProvider } from '@/core/nav/tree-base';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
@@ -19,12 +19,20 @@ const listCalls = () => mockApiFetch.mock.calls.filter(([p]: [string]) => p === 
 
 beforeEach(() => mockApiFetch.mockReset());
 
-test('without inbox.lists: no chip row and the lists are never fetched', async () => {
+/** The row holds exactly «الكل» and «غير مقروءة». */
+function expectAllAndUnreadOnly() {
+  const row = within(screen.getByLabelText(t.inbox.filterRow));
+  expect(row.getAllByRole('tab')).toHaveLength(2);
+  expect(row.getByRole('tab', { name: t.inbox.filterAll, selected: true })).toBeTruthy();
+  expect(row.getByRole('tab', { name: t.inbox.filterUnread })).toBeTruthy();
+}
+
+test('without inbox.lists: the row is «الكل» · «غير مقروءة» only, no «＋», the lists never fetched', async () => {
   mockApiFetch.mockImplementation(answer({ me: withoutLists }));
   await renderWithQuery(<ThreadsList />, createTestQueryClient({ meFromApi: true }));
   expect(await screen.findByText(NAME)).toBeTruthy();
-  expect(screen.queryByLabelText(t.inbox.lists.rowLabel)).toBeNull();
-  expect(screen.queryByText(`＋ ${t.inbox.lists.new}`)).toBeNull();
+  expectAllAndUnreadOnly();
+  expect(screen.queryByRole('button', { name: t.inbox.lists.new })).toBeNull();
   expect(listCalls()).toHaveLength(0);
 });
 
@@ -36,7 +44,8 @@ test('teacher mode is unchanged: no lists even for a role that holds inbox.lists
     </ThreadModeProvider>,
   );
   expect(await screen.findByText(NAME)).toBeTruthy();
-  expect(screen.queryByLabelText(t.inbox.lists.rowLabel)).toBeNull();
+  expectAllAndUnreadOnly();
+  expect(screen.queryByRole('button', { name: t.inbox.lists.new })).toBeNull();
   expect(listCalls()).toHaveLength(0);
   expect(mockApiFetch).toHaveBeenCalledWith('/threads?page=1&pageSize=25');
 });
@@ -49,5 +58,5 @@ test('the assistant tree (/sales/inbox) gets the same row', async () => {
     </TreeBaseProvider>,
   );
   expect(await screen.findByRole('tab', { name: PAID.name })).toBeTruthy();
-  expect(screen.getByLabelText(t.inbox.lists.rowLabel)).toBeTruthy();
+  expect(screen.getByLabelText(t.inbox.filterRow)).toBeTruthy();
 });

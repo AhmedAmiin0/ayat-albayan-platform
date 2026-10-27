@@ -22,6 +22,8 @@ interface ScreenHeaderProps {
   size?: 'h1' | 'h2';
   /** The title's node, e.g. to move screen-reader focus to it when a sheet changes mode. */
   titleRef?: Ref<AppTextNode>;
+  /** The reconnecting bar under the title; on for h1. A screen with a compact h2 title passes true. */
+  connecting?: boolean;
 }
 
 export function ScreenHeader({
@@ -30,6 +32,7 @@ export function ScreenHeader({
   trailing = <Mark size={28} />,
   size = 'h1',
   titleRef,
+  connecting = size === 'h1',
 }: ScreenHeaderProps) {
   const { color } = useTheme();
   return (
@@ -45,6 +48,10 @@ export function ScreenHeader({
         <AppText
           ref={titleRef}
           accessibilityRole="header"
+          // One line always (owner 2026-10-27: «Conversations» wrapped in English): it shrinks to fit.
+          numberOfLines={1}
+          adjustsFontSizeToFit
+          minimumFontScale={0.7}
           style={{
             flexShrink: 1,
             fontFamily: type.display,
@@ -70,7 +77,7 @@ export function ScreenHeader({
           {subtitle}
         </AppText>
       ) : null}
-      {size === 'h1' ? <HeaderConnectingBar /> : null}
+      {connecting ? <HeaderConnectingBar /> : null}
     </View>
   );
 }

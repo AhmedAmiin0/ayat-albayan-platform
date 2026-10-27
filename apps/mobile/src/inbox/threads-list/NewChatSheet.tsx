@@ -6,17 +6,22 @@ import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/more/Note';
 import { inTree, useTreeBase } from '@/core/nav/tree-base';
 import { Button } from '@/core/ui/primitives/Button';
+import { IconButton } from '@/core/ui/primitives/IconButton';
+import { useTheme } from '@/theme';
 import { Field } from '@/core/ui/form/Field';
 import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { ErrorLine } from '../ErrorLine';
+import { ComposeIcon } from '../shared/chat-icons';
 import { threadHref } from '../thread/hooks/thread-cache';
 
 /**
  * «محادثة جديدة» (admin and sales, the web inbox's form): type a family's WhatsApp number and open its
  * thread. A number without messages opens with the template sheet (the first message is a template).
+ * The trigger is a 44pt compose icon in the chats header (owner 2026-10-27: the text button took room).
  */
 export function NewChatSheet() {
+  const { color } = useTheme();
   const [open, setOpen] = useState(false);
   const base = useTreeBase();
   const [value, setValue] = useState('');
@@ -37,7 +42,9 @@ export function NewChatSheet() {
   };
   return (
     <>
-      <Button variant="ghost" label={t.inbox.newChat.title} onPress={() => setOpen(true)} />
+      <IconButton label={t.inbox.newChat.title} onPress={() => setOpen(true)}>
+        <ComposeIcon color={color.lapis} size={24} />
+      </IconButton>
       <Modal visible={open} animationType="slide" presentationStyle="pageSheet" onRequestClose={close}>
         <Screen sheet>
           <ScreenHeader title={t.inbox.newChat.title} trailing={<Button variant="ghost" label={t.common.close} onPress={close} />} />
