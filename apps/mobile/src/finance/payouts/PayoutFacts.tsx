@@ -6,6 +6,7 @@ import { breakdownLines, monthLabel, payoutWhen } from '@/teacher/lib/payout-tex
 import { shape, type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { StatusChip } from '@/core/ui/feedback/StatusChip';
+import { isolate } from '@/core/ui/primitives/Ltr';
 import { amountText } from '../shared/format';
 import { dueOf } from './payout-actions';
 
@@ -31,7 +32,7 @@ export function PayoutFacts({ payout }: { payout: PayoutView }) {
       {payout.ledger_paid ? <Note>{t.earnings.ledgerPaid.replace('{amount}', amountText(payout.ledger_paid))}</Note> : null}
       {payout.status === 'approved' ? <Note>{m.due.replace('{amount}', amountText(dueOf(payout)))}</Note> : null}
       {payout.method ? <Note>{m.method.replace('{method}', t.enums.paymentMethod[payout.method])}</Note> : null}
-      {payout.note ? <Note>{m.note.replace('{note}', payout.note)}</Note> : null}
+      {payout.note ? <Note>{m.note.replace('{note}', isolate(payout.note))}</Note> : null}
       {when ? <Note>{when}</Note> : null}
     </View>
   );

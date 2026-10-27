@@ -1,5 +1,6 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
+import { isolate } from '@/core/ui/primitives/Ltr';
 import { renderWithQuery } from '@/test/query';
 import { ActivityScreen } from './ActivityScreen';
 import { activityRow } from '../shared/fixtures';
@@ -43,7 +44,7 @@ test('rows: action, actor with role, item, Riyadh time and the result', async ()
   expect(await screen.findByText(t.activity.actions.expenses.create)).toBeTruthy();
   expect(
     screen.getByText(
-      new RegExp(`منى · ${t.activity.roles.admin} · ${t.activity.entities.expenses} · .*16:30`),
+      new RegExp(`${isolate('منى')} · ${t.activity.roles.admin} · ${t.activity.entities.expenses} · .*16:30`),
     ),
   ).toBeTruthy();
   expect(screen.getByText(t.activity.ok)).toBeTruthy();
