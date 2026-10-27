@@ -34,3 +34,12 @@ test('an opening day other than today stays; one equal to today follows', async 
   await same.rerender({ today: '2026-10-27' });
   expect(same.result.current[0]).toBe('2026-10-27');
 });
+
+test('a day picked ahead becomes today, then follows the clock (two midnights)', async () => {
+  const { result, rerender } = await setup();
+  await act(async () => result.current[1]('2026-10-27'));
+  await rerender({ today: '2026-10-27' });
+  expect(result.current[0]).toBe('2026-10-27');
+  await rerender({ today: '2026-10-28' });
+  expect(result.current[0]).toBe('2026-10-28');
+});

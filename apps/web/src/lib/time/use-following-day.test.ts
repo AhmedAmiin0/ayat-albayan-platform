@@ -19,3 +19,11 @@ test('a week the user stepped to stays; stepping back to the current one follows
   rerender({ current: '2026-11-07' });
   expect(result.current[0]).toBe('2026-11-07');
 });
+
+test('a week stepped to ahead becomes the current one, then moves on with the clock', () => {
+  const { result, rerender } = setup();
+  act(() => result.current[1]('2026-10-31'));
+  rerender({ current: '2026-10-31' });
+  rerender({ current: '2026-11-07' });
+  expect(result.current[0]).toBe('2026-11-07');
+});
