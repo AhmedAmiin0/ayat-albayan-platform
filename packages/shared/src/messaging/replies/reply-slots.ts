@@ -32,6 +32,9 @@ const SLOT = new RegExp(`${BLANK.source}|\\{(name|student|assistant)\\}`, 'g');
 const HOLD = '\u0001';
 const HELD = new RegExp(`${HOLD}(\\d+)${HOLD}`, 'g');
 
+/** The text without the hold mark (a WhatsApp display name could carry one). */
+const unheld = (text: string | null | undefined): string => (text ?? '').split(HOLD).join('');
+
 const blankKey = (label: string, n: number | null): string =>
   n === null ? `[${label}]` : `[]${n}`;
 
@@ -75,12 +78,16 @@ export function replyNeedsInput(body: string, known: SavedReplyValues): boolean 
 export function fillReply(body: string, values: ReplySlotValues): string {
   const blanks: string[] = [];
   const next = blankCounter();
-  const held = body.replace(BLANK, (all: string, raw: string) => {
-    const value = values[next(raw).key]?.split(HOLD).join('').trim();
+  const held = unheld(body).replace(BLANK, (all: string, raw: string) => {
+    const value = unheld(values[next(raw).key]).trim();
     blanks.push(value || all);
     return `${HOLD}${blanks.length - 1}${HOLD}`;
   });
-  const auto = { name: values.name, student: values.student, assistant: values.assistant };
+  const auto = {
+    name: unheld(values.name),
+    student: unheld(values.student),
+    assistant: unheld(values.assistant),
+  };
   return resolveSavedReply(held, auto).replace(
     HELD,
     (_all: string, i: string) => blanks[Number(i)] ?? '',

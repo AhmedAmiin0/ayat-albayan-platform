@@ -109,3 +109,14 @@ test('from the «/» list: the form opens, the box losing focus keeps the «/sea
   expect(box().props.value).toBe('سطر\nأهلًا هدى سالم، العربون [المبلغ] ريال قبل الخميس. المبلغ: [المبلغ]');
   expect(screen.getByTestId('saved-reply-chip')).toBeTruthy();
 });
+
+test('«إلغاء» from the «/» list keeps the «/search» in the box and docks its list again', async () => {
+  await open();
+  for (const step of ['/', '/عر']) await fireEvent.changeText(box(), step);
+  await fireEvent.press(await within(screen.getByTestId('slash-suggestions')).findByRole('button', { name: /^العربون/ }));
+  await fireEvent(box(), 'blur');
+  await fireEvent.press(within(form()).getByRole('button', { name: t.common.cancel }));
+  expect(box().props.value).toBe('/عر');
+  expect(screen.getByTestId('slash-suggestions')).toBeTruthy();
+  expect(screen.queryByTestId('saved-reply-chip')).toBeNull();
+});

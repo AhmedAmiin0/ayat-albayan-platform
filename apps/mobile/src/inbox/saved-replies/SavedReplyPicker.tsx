@@ -1,5 +1,5 @@
 import { SavedRepliesSheet } from './SavedRepliesSheet';
-import { FillReplySheet } from './quick-list/FillReplySheet';
+import { FillReplyForm } from './quick-list/FillReplyForm';
 import { type ReplyContact, useFillReply } from './quick-list/use-fill-reply';
 import type { ReplyFill } from './use-saved-reply';
 
@@ -17,6 +17,6 @@ interface SavedReplyPickerProps {
 export function SavedReplyPicker({ contact, onClose, onFill }: SavedReplyPickerProps) {
   const { pick, known } = useFillReply(contact, onFill);
   const asking = onFill.asking;
-  if (asking) return <FillReplySheet reply={asking} known={known} onInsert={(text) => onFill(text, asking)} onCancel={onClose} />;
-  return <SavedRepliesSheet onClose={onClose} onPick={pick} />;
+  const form = asking ? <FillReplyForm key={asking.id} reply={asking} known={known} onInsert={(text) => onFill(text, asking)} onCancel={onClose} /> : null;
+  return <SavedRepliesSheet onClose={onClose} onPick={pick} form={form} />;
 }

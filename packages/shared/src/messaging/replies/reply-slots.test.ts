@@ -92,3 +92,10 @@ describe('fillReply', () => {
     expect(fillReply('Hello [الاسم]', { '[الاسم]': 'هدى' })).toBe('Hello هدى');
   });
 });
+
+describe('fillReply: the internal hold mark', () => {
+  it('a hold mark in the text or a value is dropped, never read as a blank', () => {
+    expect(fillReply('a\u00010\u0001 [x]', { '[x]': 'Y' })).toBe('a0 Y');
+    expect(fillReply('{name} [x]', { name: '\u00010\u0001', '[x]': 'Y' })).toBe('0 Y');
+  });
+});

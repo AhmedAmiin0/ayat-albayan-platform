@@ -41,9 +41,10 @@ export function useSavedReplyDraft(input: { text: string; setText: (text: string
     sheet,
     staged,
     open: () => setSheet(true),
+    /** Closing the «أكمل الرد» form keeps a «/search» in the box: its list docks again. */
     close: () => {
       setSheet(false);
-      setSlash(null);
+      if (!asking) setSlash(null);
       setAsking(null);
     },
     /**
