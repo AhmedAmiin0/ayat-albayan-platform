@@ -1,8 +1,9 @@
+import type { CallsUi } from '@ab/client-core';
 import type { CallView } from '@ab/shared';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n/i18n';
-import { CallsContext, type CallsUi } from '../state/call-context';
+import { CallsContext } from '../state/call-context';
 import { CallEntry } from './CallEntry';
 import { callEntryText } from './call-text';
 

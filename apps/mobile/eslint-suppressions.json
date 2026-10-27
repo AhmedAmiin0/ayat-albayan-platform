@@ -834,11 +834,6 @@
       "count": 2
     }
   },
-  "src/inbox/screens/ThreadScreen.tsx": {
-    "ab/module-boundaries": {
-      "count": 1
-    }
-  },
   "src/inbox/subscription/subscription-words.ts": {
     "ab/module-boundaries": {
       "count": 1

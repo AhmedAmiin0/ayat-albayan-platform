@@ -1,6 +1,7 @@
+import { ringWhile, type CallTarget, type CallsUi } from '@ab/client-core';
 import type { CallPermissionState } from '@ab/shared';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { useMemo, useRef, useState, type ReactNode } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 import { Toast } from '@/components/ui/overlay/toast';
 import { t } from '@/lib/i18n/i18n';
@@ -9,10 +10,9 @@ import { callConfigQuery, callPermissionQuery } from '../api/calls-api';
 import { useCallsRealtime } from '../api/use-calls-realtime';
 import { browserRtc, type RtcDeps } from '../rtc/media';
 import { CallOverlay } from '../screen/CallOverlay';
-import { CallsContext, type CallsUi } from './call-context';
-import type { CallTarget } from './call-phase';
+import { CallsContext } from './call-context';
 import { useCallSession } from './use-call-session';
-import { useIncomingRing } from './use-incoming-ring';
+import { startRingtone } from '../rtc/ringtone';
 
 /** Plays the family's voice on the provider's <audio> (the device's output). */
 function playOn(el: HTMLAudioElement | null, stream: MediaStream): void {
@@ -39,13 +39,15 @@ export function CallProvider({ children, showsPhone = true, rtc }: CallProviderP
   const config = useQuery(callConfigQuery).data;
   const audio = useRef<HTMLAudioElement>(null);
   const deps = useMemo(() => (rtc === undefined ? browserRtc() : rtc), [rtc]);
-  const s = useCallSession({ config, rtc: deps, play: (stream) => playOn(audio.current, stream) });
+  const play = useCallback((stream: MediaStream) => playOn(audio.current, stream), []);
+  const s = useCallSession({ config, rtc: deps, play });
   const [ask, setAsk] = useState<Ask | null>(null);
   const [sent, setSent] = useState(false);
   const [silenced, setSilenced] = useState<string | null>(null);
   const on = config?.enabled === true && config.canCall;
   useCallsRealtime(config?.enabled === true);
-  useIncomingRing(on && !!s.incoming && s.incoming.id !== silenced);
+  const ringing = on && !!s.incoming && s.incoming.id !== silenced;
+  useEffect(() => ringWhile(ringing, startRingtone), [ringing]);
 
   const call = async (target: CallTarget) => {
     try {

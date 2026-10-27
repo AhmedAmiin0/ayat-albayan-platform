@@ -69,6 +69,24 @@ test('the reopen template not approved yet: reopened, template not available yet
   expect((await screen.findByTestId('reopen-note')).props.children).toBe(t.inbox.reopen.unavailable);
 });
 
+test('not sent, or the request failed: says so, send it by hand (owner 2026-10-27: never silent)', async () => {
+  mockApiSend.mockResolvedValue({ kapso_reopened: false, template: 'not_sent' });
+  await open(CLOSED);
+  expect((await screen.findByTestId('reopen-note')).props.children).toBe(t.inbox.reopen.failed);
+  await cleanup();
+  forgetReopens();
+  mockApiSend.mockRejectedValue(new Error('HTTP 500'));
+  await open(CLOSED);
+  expect((await screen.findByTestId('reopen-note')).props.children).toBe(t.inbox.reopen.failed);
+});
+
+test('the window open on the server (a reply just came): no note', async () => {
+  mockApiSend.mockResolvedValue({ kapso_reopened: false, template: 'window_open' });
+  await open(CLOSED);
+  await waitFor(() => expect(reopens()).toBe(1));
+  expect(screen.queryByTestId('reopen-note')).toBeNull();
+});
+
 test('an open window asks nothing', async () => {
   await open(OPEN);
   expect(reopens()).toBe(0);

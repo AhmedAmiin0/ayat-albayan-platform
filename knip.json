@@ -22,7 +22,13 @@
     "apps/mobile": {
       "entry": ["app/**/*.{ts,tsx}", "app.config.ts", "jest.setup.cjs"],
       "project": ["{app,src}/**/*.{ts,tsx}"],
-      "ignoreDependencies": ["react-test-renderer", "expo-system-ui"]
+      "ignoreDependencies": [
+        "react-test-renderer",
+        "expo-system-ui",
+        "expo-blur",
+        "expo-clipboard",
+        "expo-sharing"
+      ]
     },
     "packages/db": {
       "ignore": ["src/types.ts", "supabase/**"]

@@ -1,9 +1,9 @@
 import type { ActiveCallView } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
-import { callPhase, deriveCall, endedOnServer, ringingFor, talkedSeconds, UNANSWERED_MS, type CallSession } from './call-phase';
+import { callPhase, deriveCall, endedOnServer, ringingFor, talkedSeconds, UNANSWERED_MS, type CallSession } from './call-phase.js';
 
 const session = (patch: Partial<CallSession> = {}): CallSession => ({
-  id: 'c1', phone: '+966501234567', name: 'أم سهيلة', direction: 'outbound', startedAt: 1_000, muted: false, minimised: false, ended: false, ...patch,
+  id: 'c1', phone: '+966501234567', name: 'أم سهيلة', direction: 'outbound', startedAt: 1_000, muted: false, speaker: false, minimised: false, ended: false, ...patch,
 });
 const row = (patch: Partial<ActiveCallView> = {}): ActiveCallView => ({
   id: 'c1', phone_e164: '+966501234567', direction: 'outbound', status: 'ringing', end_reason: null, display_name: 'أم سهيلة',
@@ -51,5 +51,16 @@ describe('ending', () => {
   it('talk time counts from the server answer', () => {
     expect(talkedSeconds(row({ answered_at: '2026-10-26T10:00:00Z' }), Date.parse('2026-10-26T10:02:14Z'))).toBe(134);
     expect(talkedSeconds(row(), 0)).toBe(0);
+  });
+});
+
+describe('deriveCall: what CallStore.follow acts on', () => {
+  const state = { session: session(), dismissed: new Set<string>(), idAt: 0 };
+  it("WhatsApp's answer for our outbound call; off only while a call is live and calls are off", () => {
+    const rows = [row({ answer_sdp: 'v=0 theirs' })];
+    expect(deriveCall(state, { rows, startedAt: 0 }).answer).toBe('v=0 theirs');
+    expect(deriveCall(state, { rows, startedAt: 0, enabled: false }).off).toBe(true);
+    expect(deriveCall(state, { rows, startedAt: 0, enabled: true }).off).toBe(false);
+    expect(deriveCall({ ...state, session: session({ ended: true }) }, { rows, startedAt: 0, enabled: false }).off).toBe(false);
   });
 });

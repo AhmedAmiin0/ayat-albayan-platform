@@ -21,7 +21,8 @@ jest.mock('./src/core/lib/http/supabase', () => ({
       signInWithPassword: jest.fn(async () => ({ data: {}, error: null })),
       signOut: jest.fn(async () => ({ error: null })),
     },
-    // Realtime (the inbox's live channel): it never connects here, so the inbox keeps its polls.
+    // Realtime (the calls' nudge, docs/28, and the inbox's live channel): a channel that never fires,
+    // so the inbox keeps its polls.
     realtime: { setAuth: jest.fn(async () => undefined) },
     channel: jest.fn(() => {
       const channel = { on: jest.fn(() => channel), subscribe: jest.fn(() => channel) };
@@ -29,6 +30,12 @@ jest.mock('./src/core/lib/http/supabase', () => ({
     }),
     removeChannel: jest.fn(async () => 'ok'),
   },
+}));
+
+// WhatsApp calls (docs/28 PR 2): react-native-webrtc is a native module; the call tests inject fakes.
+jest.mock('react-native-webrtc', () => ({
+  RTCPeerConnection: jest.fn(),
+  mediaDevices: { getUserMedia: jest.fn(async () => { throw new Error('no webrtc in tests'); }) },
 }));
 
 // The connection probe loop would call fetch (stealing a test's mocked responses) and flip TanStack's

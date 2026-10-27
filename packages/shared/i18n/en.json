@@ -2601,7 +2601,8 @@
     "reopen": {
       "requested": "A request to reopen the chat was sent — waiting for the other side to reply",
       "requestedToday": "Today’s request was already sent",
-      "unavailable": "Chat reopened — the reopen template is not available yet"
+      "unavailable": "Chat reopened — the reopen template is not available yet",
+      "failed": "The reopen request could not be sent — send the template yourself from «Send template»"
     },
     "rating": {
       "send": "Send lesson rating",
@@ -6232,6 +6233,10 @@
     "publicNumber": "Number shown to families",
     "publicNumberEdit": "Edited in «Values» → Academy",
     "publicNumberNone": "Not set",
+    "ownTrafficTitle": "Messages between the academy's numbers",
+    "ownTrafficCount": "In the last 7 days: {n}",
+    "ownTrafficHint": "Messages that reached one academy number from another, such as the old system's reminders. They are kept for review, never shown in chats or the leads list, and never raise an alert.",
+    "ownTrafficError": "Could not read the count.",
     "webOnly": "Numbers, templates and safety are managed on the website.",
     "safetyIntro": "Settings that keep messages from reaching the wrong people while testing.",
     "crmTitle": "Moving the number off the CRM",
@@ -6432,7 +6437,9 @@
     },
     "mic": {
       "denied": "The call needs microphone access. Allow the microphone, then try again.",
-      "unsupported": "This device or browser does not support voice calls."
+      "unsupported": "This device or browser does not support voice calls.",
+      "rationale": "We need the microphone for in-app WhatsApp voice calls with families.",
+      "openSettings": "Open settings"
     },
     "errors": {
       "calls_disabled": "Calls are turned off in settings.",
@@ -6444,7 +6451,8 @@
       "no_permission": "There is no permission to call this number.",
       "call_failed": "The call could not be placed. It was not retried automatically, so it is never billed twice.",
       "media_failed": "The audio dropped. End the call and call again."
-    }
+    },
+    "backgrounded": "The app was in the background during the call, so your voice may not have been heard meanwhile."
   },
   "familyAuth": {
     "tabs": {
