@@ -2408,6 +2408,26 @@
     "previewUnsupported": "Message whose content did not arrive",
     "reacted": "Reaction: {emoji}",
     "reactionRemoved": "Reaction removed",
+    "reactions": {
+      "react": "React",
+      "bar": "React to the message",
+      "withEmoji": "React with {name}",
+      "more": "More emoji",
+      "like": "Like",
+      "love": "Love",
+      "laugh": "Laugh",
+      "wow": "Wow",
+      "sad": "Sad",
+      "thanks": "Thanks",
+      "pill": "Reactions: {list}. Tap to see who reacted",
+      "sheet": "Reactions",
+      "contact": "Contact",
+      "academy": "The academy",
+      "remove": "Remove",
+      "removeLabel": "Remove your reaction {emoji}",
+      "failed": "The reaction could not be sent. Try again",
+      "unsupported": "Reactions cannot be sent from this chat's number"
+    },
     "resend": {
       "action": "Ask to resend",
       "title": "Ask them to resend the message",
@@ -4117,7 +4137,12 @@
       "program": "Program",
       "status": "Status",
       "guardian": "Guardian",
-      "noTeacher": "No teacher"
+      "noTeacher": "No teacher",
+      "guardianPhone": "Guardian's phone",
+      "noPhone": "This student has no saved phone number, so there is no chat to open",
+      "detailsHint": "Opens the student details",
+      "chatHint": "Opens the guardian's chat",
+      "noPhoneHint": "No guardian phone"
     },
     "live": {
       "title": "Lessons running now",
@@ -4147,6 +4172,7 @@
       "title": "Student details",
       "open": "Open {name}'s details",
       "teacher": "Teacher: {name}",
+      "chat": "Guardian's chat",
       "notFound": "This student is not one of yours or does not exist",
       "subscription": "Subscription",
       "current": "Current subscription",

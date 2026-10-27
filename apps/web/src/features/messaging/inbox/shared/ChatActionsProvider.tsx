@@ -1,4 +1,4 @@
-import type { MessageQuote, MessageView, ThreadView } from '@ab/shared';
+import { canReact, type MessageQuote, type MessageView, type ThreadView } from '@ab/shared';
 import { useCallback, useMemo, useState, type ReactNode } from 'react';
 import { Toast } from '@/components/ui/overlay/toast';
 import { t } from '@/lib/i18n/i18n';
@@ -6,6 +6,7 @@ import { ChatActionsContext, type ChatActions } from './chat-actions';
 import { ForwardDialog } from '../messages/forward/ForwardDialog';
 import { forwardSummary, type ForwardSummary } from '../messages/forward/forward-summary';
 import { quoteOf } from '../messages/lib/quote';
+import { useReact } from '../messages/reactions/use-react';
 
 export interface ChatActionsProviderProps {
   thread: ThreadView;
@@ -27,6 +28,8 @@ export function ChatActionsProvider({ thread, enabled, children }: ChatActionsPr
   const dismiss = useCallback(() => setNotice(null), []);
   const replyBlocked = thread.session_open ? null : t.inbox.sessionClosed;
   const { display_name: name, phone_e164: phone } = thread;
+  // «تفاعل» (owner 2026-10-27): a refused or failed reaction says so in the same toast.
+  const { mutate: reactNow } = useReact(phone, (text) => setNotice({ text, tone: 'error' }));
   const value = useMemo<ChatActions>(
     () => ({
       enabled,
@@ -37,8 +40,10 @@ export function ChatActionsProvider({ thread, enabled, children }: ChatActionsPr
       cancelReply: (id) => setTarget((now) => (id === undefined || now?.id === id ? null : now)),
       forward: (m) => setForwarding(m),
       notLoaded: () => setNotice({ text: t.inbox.reply.notLoaded, tone: 'info' }),
+      reactable: (m) => enabled && canReact(m, thread, new Date()),
+      react: (m, emoji) => reactNow({ message: m, emoji }),
     }),
-    [enabled, name, phone, replyBlocked, target],
+    [enabled, name, phone, replyBlocked, target, thread, reactNow],
   );
 
   return (

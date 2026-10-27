@@ -10,6 +10,7 @@ import { KapsoWebhookController } from './providers/webhook.kapso.controller';
 import { WacrmWebhookController } from './providers/webhook.wacrm.controller';
 import { InboundService } from './inbound/webhook.inbound.service';
 import { InboundStore } from './inbound/webhook.inbound.store';
+import { InboundReactions } from './inbound/webhook.reaction';
 import { WebhookQueries } from './webhook.queries';
 import { QuickReplies } from './inbound/webhook.quick-reply';
 import { WEBHOOK_CONFIG, WebhookService, type WebhookConfig } from './webhook.service';
@@ -36,6 +37,7 @@ import { KapsoHistory } from './external/kapso-history';
     WebhookService,
     InboundService,
     InboundStore,
+    InboundReactions,
     StatusService,
     QuickReplies,
     WebhookSettings,

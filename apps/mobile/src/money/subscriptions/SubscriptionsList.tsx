@@ -7,7 +7,7 @@ import { useRenewalThreshold } from '@/payments/hooks/queries';
 import { useTheme } from '@/theme';
 import { EmptyState } from '@/core/ui/feedback/EmptyState';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';
-import { LazyList } from '@/core/ui/layout/LazyList';
+import { LazyList } from '@/core/ui/lists/LazyList';
 import { FilterPills, type FilterPill } from '@/core/ui/form/FilterPills';
 import { SearchField } from '@/core/ui/form/SearchField';
 import { subscriptionParams, type SubscriptionFilter } from '../payments/filters';

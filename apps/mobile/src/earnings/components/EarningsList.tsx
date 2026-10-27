@@ -5,7 +5,7 @@ import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/more/Note';
 import { EmptyState } from '@/core/ui/feedback/EmptyState';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';
-import { LazyList } from '@/core/ui/layout/LazyList';
+import { LazyList } from '@/core/ui/lists/LazyList';
 import { PaymentItem } from './PaymentItem';
 import { useEarningsPayments, useEarningsSessions, type SessionFilter } from '../hooks/queries';
 import type { EarningsScope } from '../lib/scope';

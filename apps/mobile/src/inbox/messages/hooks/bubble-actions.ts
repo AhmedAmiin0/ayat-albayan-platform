@@ -1,6 +1,6 @@
 import type { MessageView } from '@ab/shared';
 import { useCallback } from 'react';
-import type { AccessibilityActionEvent, AccessibilityActionInfo } from 'react-native';
+import type { AccessibilityActionEvent, AccessibilityActionInfo, GestureResponderEvent } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { useBubbleChatActions } from '../../thread/hooks/chat-actions';
 import { useThreadMode } from '../../thread/hooks/thread-mode';
@@ -16,22 +16,31 @@ interface BubbleA11y {
 export interface BubbleActions {
   /** «رد», «نسخ النص», «إعادة توجيه» or «تنزيل» applies: the bubble opens the menu on a long press. */
   has: boolean;
-  openMenu: () => void;
+  /** `at` = the bubble's window y (the reaction row floats above it). */
+  openMenu: (at?: number) => void;
   /** Swipe to answer: only while free text can go out. */
   swipe: (() => void) | undefined;
   /** For the bubble's text: a screen reader gets the same actions without the gesture. */
   a11y: BubbleA11y;
 }
 
+/** The held element's top in the window (the touch's pageY less its offset in it); none without a real touch. */
+export function holdTop(e?: GestureResponderEvent): number | undefined {
+  const n = e?.nativeEvent;
+  return typeof n?.pageY === 'number' && typeof n.locationY === 'number' ? n.pageY - n.locationY : undefined;
+}
+
 /** What one bubble offers (owner 2026-10-25). Off outside a chat screen (no ChatActionsProvider). */
 export function useBubbleActions(m: MessageView): BubbleActions {
-  const { enabled, canSend, setReply, openMenu, openForward } = useBubbleChatActions();
-  const offers = bubbleOffers(m, { enabled, teacher: useThreadMode().kind === 'teacher' });
+  const { enabled, canSend, setReply, openMenu, openForward, reactable } = useBubbleChatActions();
+  const offers = bubbleOffers(m, { enabled, teacher: useThreadMode().kind === 'teacher', react: reactable(m) });
   const { reply, forward } = offers;
   const answer = useCallback(() => setReply(m), [setReply, m]);
   const actions: AccessibilityActionInfo[] = [
     ...(reply && canSend ? [{ name: 'reply', label: t.inbox.reply.action }] : []),
     ...(forward ? [{ name: 'forward', label: t.inbox.forward.action }] : []),
+    // «تفاعل» without the long press: the menu, with the reaction row on top.
+    ...(offers.react ? [{ name: 'react', label: t.inbox.reactions.react }] : []),
     { name: 'longpress', label: t.inbox.reply.menu },
   ];
   const onAction = (e: AccessibilityActionEvent) => {
@@ -42,7 +51,7 @@ export function useBubbleActions(m: MessageView): BubbleActions {
   const has = offersAny(offers);
   return {
     has,
-    openMenu: () => openMenu(m),
+    openMenu: (at?: number) => openMenu(m, at),
     swipe: reply && canSend ? answer : undefined,
     a11y: has
       ? {

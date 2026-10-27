@@ -18,7 +18,7 @@ import { RecordingFiltersBar } from '../recordings/RecordingFiltersBar';
 import { useRecordingRow } from '../recordings/RecordingRow';
 import { useRecordings } from '../recordings/recordings-queries';
 import { useTeacherChoices } from '../recordings/teacher-choices';
-import { LazyList } from '@/core/ui/layout/LazyList';
+import { LazyList } from '@/core/ui/lists/LazyList';
 
 const R = t.mobileStudentFile.recordings;
 const keyOf = (r: StudentRecordingView) => r.id;

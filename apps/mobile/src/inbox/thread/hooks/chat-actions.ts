@@ -21,12 +21,19 @@ export interface ChatActions {
   canSend: boolean;
   /** Who an inbound quote is from: the chat's name, else its number. */
   threadName: string | null;
-  openMenu: (m: MessageView) => void;
+  /** The long-press menu; `at` = the held bubble's window y (the reaction row floats above it). */
+  openMenu: (m: MessageView, at?: number) => void;
   openForward: (m: MessageView) => void;
   /** «نسخ النص» / «نسخ الرقم»: the selectable copy sheet (chat-tools). */
   showCopy: (req: CopyRequest) => void;
   notice: ChatNoticeValue | null;
   say: (notice: ChatNoticeValue | null) => void;
+  /** «تفاعل» (owner 2026-10-27): this bubble offers the reaction row (canReact, staff chats only). */
+  reactable: (m: MessageView) => boolean;
+  /** Ours on `m` (null removes it): optimistic, one send. */
+  react: (m: MessageView, emoji: string | null) => void;
+  /** A tap on the pill: who reacted. */
+  openReactors: (m: MessageView) => void;
 }
 
 const noop = () => undefined;
@@ -41,6 +48,9 @@ export const ChatActionsContext = createContext<ChatActions>({
   showCopy: noop,
   notice: null,
   say: noop,
+  reactable: () => false,
+  react: noop,
+  openReactors: noop,
 });
 
 export const useChatActions = (): ChatActions => useContext(ChatActionsContext);
@@ -48,7 +58,7 @@ export const useChatActions = (): ChatActions => useContext(ChatActionsContext);
 /** The part a bubble reads: none of it changes when a reply is picked or a notice shows. */
 export type BubbleChatActions = Pick<
   ChatActions,
-  'enabled' | 'canSend' | 'setReply' | 'threadName' | 'openMenu' | 'openForward' | 'showCopy'
+  'enabled' | 'canSend' | 'setReply' | 'threadName' | 'openMenu' | 'openForward' | 'showCopy' | 'reactable' | 'react' | 'openReactors'
 >;
 
 /**
@@ -63,6 +73,9 @@ export const BubbleActionsContext = createContext<BubbleChatActions>({
   openMenu: noop,
   openForward: noop,
   showCopy: noop,
+  reactable: () => false,
+  react: noop,
+  openReactors: noop,
 });
 
 export const useBubbleChatActions = (): BubbleChatActions => useContext(BubbleActionsContext);

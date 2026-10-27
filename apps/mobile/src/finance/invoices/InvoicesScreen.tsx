@@ -9,7 +9,7 @@ import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { InvoiceRow } from './InvoiceRow';
 import { useInvoices } from '../shared/queries';
 import { StaleNote, StateNote } from '../shared/StateNote';
-import { LazyList } from '@/core/ui/layout/LazyList';
+import { LazyList } from '@/core/ui/lists/LazyList';
 
 const keyOf = (i: InvoiceView) => i.id;
 const renderRow = ({ item }: { item: InvoiceView }) => <InvoiceRow invoice={item} />;

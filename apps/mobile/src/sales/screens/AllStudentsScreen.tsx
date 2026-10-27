@@ -10,7 +10,7 @@ import { useTheme } from '@/theme';
 import { Button } from '@/core/ui/primitives/Button';
 import { EmptyState } from '@/core/ui/feedback/EmptyState';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';
-import { LazyList } from '@/core/ui/layout/LazyList';
+import { LazyList } from '@/core/ui/lists/LazyList';
 import { FilterPills } from '@/core/ui/form/FilterPills';
 import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
@@ -25,7 +25,8 @@ const VIEWS = (): { value: StudentsView; label: string }[] => [
 ];
 
 const keyOf = (s: SalesStudentView) => s.id;
-const renderRow = ({ item }: { item: SalesStudentView }) => <AllStudentRow student={item} />;
+// Keyed by the student: «no phone» under a tapped row is its own state, never a recycled row's.
+const renderRow = ({ item }: { item: SalesStudentView }) => <AllStudentRow key={item.id} student={item} />;
 
 /**
  * «كل الطلاب» of the salesperson (web /sales/students, SalesStudents): every student of the academy,

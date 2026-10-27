@@ -51,6 +51,7 @@ export function toSalesStudent(row: SalesStudentRow): SalesStudentView {
     program: row.program,
     teacher_name: row.teacher?.display_name_ar ?? null,
     guardian_name: row.guardian?.name ?? '',
+    guardian_phone: row.guardian?.phone_e164 || null,
   };
 }
 

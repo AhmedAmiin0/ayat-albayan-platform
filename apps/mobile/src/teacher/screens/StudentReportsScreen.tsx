@@ -8,7 +8,7 @@ import { usePagedList } from '@/core/lib/query/use-paged-list';
 import { Button } from '@/core/ui/primitives/Button';
 import { EmptyState } from '@/core/ui/feedback/EmptyState';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';
-import { LazyList } from '@/core/ui/layout/LazyList';
+import { LazyList } from '@/core/ui/lists/LazyList';
 import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { useStudentName } from '@/ops/reports/use-student-name';
