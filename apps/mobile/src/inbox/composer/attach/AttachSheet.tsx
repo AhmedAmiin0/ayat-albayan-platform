@@ -21,7 +21,8 @@ interface AttachSheetProps {
 /**
  * The paperclip's sheet as WhatsApp Business (owner 2026-10-27): round tiles in reading order (a
  * wrapping row, so it mirrors with the phone), «المعرض» «الكاميرا» «مستند PDF» «قالب» «الردود
- * السريعة» «الرموز التعبيرية», most used first («عرض سعر» sits in the bar). A tap outside or «إلغاء» closes it; each tile closes it before it acts.
+ * السريعة» «الرموز التعبيرية», most used first («عرض سعر» sits in the bar). A tap outside or
+ * «إلغاء» closes it; each tile closes it before it acts.
  */
 export function AttachSheet(p: AttachSheetProps) {
   const { color } = useTheme();

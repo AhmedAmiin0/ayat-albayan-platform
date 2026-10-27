@@ -8,7 +8,7 @@ import { cachedThread, detail, PHONE, thread } from '../../shared/thread-fixture
 // The paperclip's sheet (owner 2026-10-27): everything that left the bar, most used first.
 jest.mock('@/core/lib/http/api', () => ({
   ...jest.requireActual('@/core/lib/http/api'),
-  apiFetch: jest.fn(async () => ({ open: true, reason: null, queued: 0 })),
+  apiFetch: jest.fn(async (mockPath: string) => (mockPath === '/messages/gate' ? { open: true, reason: null, queued: 0 } : [])),
   apiSend: jest.fn(),
 }));
 jest.mock('expo-image-picker', () => ({ launchCameraAsync: jest.fn(), launchImageLibraryAsync: jest.fn() }));
