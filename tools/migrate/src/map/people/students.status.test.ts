@@ -40,6 +40,11 @@ describe('students: imported status', () => {
 
   it('a running «مشترك» weekly booking → active; one already ended → not', () => {
     expect(statusOf({ book_bookings: [booking('مشترك')] })).toBe('active');
+    const noTeacher = {
+      ...booking('مشترك'),
+      fields: { ...booking('مشترك').fields, teacher: 'مصر' },
+    };
+    expect(statusOf({ book_bookings: [noTeacher] })).toBe('new'); // the schedule import rejects it
     const ended = booking('مشترك', 'أسبوعي: السبت حتى 2026-09-20');
     expect(run({ book_bookings: [ended] })).toEqual({
       status: 'new',

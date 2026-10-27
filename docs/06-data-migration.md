@@ -56,7 +56,10 @@ counts only for the child it names (a sibling's payment is not this child's); «
 lesson counts and absent/excused reports are no evidence. Every student the old rule (HUB «طالب
 حالي», a «مشترك» booking, any HEART row on the phone, any non-trial report, SUBS «عدد الحلقات» > 1)
 would have made `active` and the new one does not is a `status_downgrade` warning; the dry-run prints
-and `out/report.md` lists them per old reason and new status, counts only.
+and `out/report.md` lists them per old reason and new status, counts only. Because status is
+create-only, the counts describe what new students get: students already in the target keep their
+status on a re-run (fix those in the app). An imported `pending_renewal` starts the app's expiry
+clock on import, so it can last up to twice `subscription_expiry_days` after the period ended.
 
 ### schedule_rules + lessons ← BOOK.تقويم الحجوزات (status مؤكد/مشترك/يحتاج تأكيد, from the import date on) + HEART timetables
 | Source | Target |

@@ -41,7 +41,7 @@ export function statusFacts(
   const ix = studentIndex(students);
   const expiryDays = bundle.expiryDays ?? DEFAULT_EXPIRY_DAYS;
   const paid = paymentFacts({ bundle, ix, today: importFrom(bundle), expiryDays });
-  const booked = bookingFacts(bundle, ix);
+  const booked = bookingFacts(bundle, { ix, students });
   const phones = heartPhones(bundle);
   return (p) => {
     const id = keyId(p.key);

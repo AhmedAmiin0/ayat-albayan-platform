@@ -1,40 +1,54 @@
-// Booking evidence per student (pure), from «تقويم الحجوزات» (HUB, then BOOK): a «مشترك» weekly row
-// still running on the import date (the series the schedule import creates, lessons ahead), and
-// rows marked «تمت» (a lesson that took place). Students are found like the schedule import does.
+// Booking evidence per student (pure), from «تقويم الحجوزات» (HUB, then BOOK): the «مشترك» weekly
+// rules the schedule import itself builds (bookingRules: teacher known, the newer row winning per
+// rule key) that still run on the import date, and rows marked «تمت» (a lesson that took place).
 import type { SourceBundle } from '../../../entities/contract.ts';
 import { keyId } from '../../../keys.ts';
+import type { Desired } from '../../../plan/resolve.ts';
 import { text } from '../../../sources/sheets/cells.ts';
 import { bookingStatus } from '../../../sources/values.schedule.ts';
-import type { SourceRow } from '../../../types.ts';
+import type { NaturalKey } from '../../../types.ts';
 import { bookingStudents } from '../../schedule/booking-row.ts';
-import { bookingRows, bookingSlot } from '../../schedule/booking-slot.ts';
-import { importFrom } from '../../schedule/bookings.ts';
+import { bookingRows } from '../../schedule/booking-slot.ts';
+import { bookingRules, importFrom } from '../../schedule/bookings.ts';
 import type { StudentIndex } from '../match.ts';
 
 interface BookingFacts {
-  /** student keyIds with a «مشترك» weekly booking that has lessons on or after the import date. */
+  /** student keyIds of a «مشترك» weekly rule with lessons on or after the import date. */
   series: Set<string>;
   /** student keyIds named by a booking marked «تمت». */
   done: Set<string>;
 }
 
-/** Which set a booking row adds its students to: a running «مشترك» series, «تمت», or none. */
-function kindOf(r: SourceRow, o: { from: string; today: string }): keyof BookingFacts | null {
-  const status = bookingStatus(text(r.fields['status']));
-  if (status === 'done') return 'done';
-  if (status !== 'subscribed') return null;
-  const slot = bookingSlot(r.fields, o.from);
-  if (slot.kind !== 'rule') return null;
-  return slot.rec.until === null || slot.rec.until >= o.today ? 'series' : null;
+/** Last rule per key (prefer 'last', like resolve): a newer BOOK row beats the HUB copy. */
+function runningSeries(bundle: SourceBundle, students: readonly Desired[]): Set<string> {
+  const from = importFrom(bundle);
+  const subscribed = new Set(
+    bookingRows(bundle.sheets)
+      .filter((r) => bookingStatus(text(r.fields['status'])) === 'subscribed')
+      .map((r) => r.ref),
+  );
+  const earlier = new Map(bundle.earlier).set('students', students);
+  const last = new Map<string, { running: boolean; students: NaturalKey[] }>();
+  for (const r of bookingRules({ ...bundle, earlier })) {
+    if (!('key' in r)) continue;
+    const until = r.record.columns['ends_on'];
+    const running = subscribed.has(r.ref) && (typeof until !== 'string' || until >= from);
+    last.set(keyId(r.key), { running, students: r.students });
+  }
+  const out = new Set<string>();
+  for (const s of last.values()) if (s.running) for (const k of s.students) out.add(keyId(k));
+  return out;
 }
 
-export function bookingFacts(bundle: SourceBundle, ix: StudentIndex): BookingFacts {
-  const out: BookingFacts = { series: new Set(), done: new Set() };
-  const o = { from: importFrom(bundle), today: bundle.today };
+export function bookingFacts(
+  bundle: SourceBundle,
+  o: { ix: StudentIndex; students: readonly Desired[] },
+): BookingFacts {
+  const done = new Set<string>();
   for (const r of bookingRows(bundle.sheets)) {
-    const kind = kindOf(r, o);
-    const students = kind ? bookingStudents(r, ix) : [];
-    if (kind && Array.isArray(students)) for (const k of students) out[kind].add(keyId(k));
+    if (bookingStatus(text(r.fields['status'])) !== 'done') continue;
+    const found = bookingStudents(r, o.ix);
+    if (Array.isArray(found)) for (const k of found) done.add(keyId(k));
   }
-  return out;
+  return { series: runningSeries(bundle, o.students), done };
 }
