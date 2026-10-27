@@ -4757,6 +4757,16 @@ export type Database = {
         Returns: Json;
       };
       prune_activity_log: { Args: Record<PropertyKey, never>; Returns: number };
+      portal_students_of: {
+        Args: { p_profile: string };
+        Returns: {
+          code: string;
+          contact_is_self: boolean;
+          id: string;
+          name: string;
+          tz: string;
+        }[];
+      };
       push_live_sessions: { Args: { p_ids: string[] }; Returns: string[] };
       record_teacher_payment: { Args: { p: Json }; Returns: Json };
       reopen_assistant_statement: { Args: { p_actor: string; p_statement: string }; Returns: Json };

@@ -5,6 +5,7 @@ import { AdminNav } from '@/components/AdminNav';
 import { AppShell } from '@/components/AppShell';
 import { CallProvider } from '@/features/messaging/inbox';
 import { usePermissions } from '@/features/people/auth/use-permissions';
+import { PortalHome } from '@/features/people/portal';
 import { SALES_NAV_ITEMS, SalesNav } from '@/features/sales/sales/SalesNav';
 import { useSalesUnread } from '@/features/sales/sales/use-sales-unread';
 import { TEACHER_NAV_ITEMS, TeacherNav } from '@/features/teaching/teacher/TeacherNav';
@@ -70,9 +71,9 @@ export function AssistantShell() {
   return <AppShell title={t.classroom.assistants.homeTitle} home="/assistant" titles={[ACCOUNT_TITLE]} />;
 }
 
-/** Guardian and student portal. */
+/** Guardian and student portal (docs/31): the home is the portal page; «حسابي» is its only other page. */
 export function PortalShell() {
-  return <AppShell title={t.portal.dashboardTitle} home="/portal" titles={[ACCOUNT_TITLE]} />;
+  return <AppShell title={t.portal.dashboardTitle} home="/portal" titles={[ACCOUNT_TITLE]} homePage={<PortalHome />} />;
 }
 
 /** The shell a base role gets (the role decides the app; pages inside are gated by permission). */

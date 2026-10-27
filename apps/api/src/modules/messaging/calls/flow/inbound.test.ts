@@ -54,7 +54,7 @@ describe('InboundCalls: the first accept wins, the others stop ringing', () => {
 describe('CallReads', () => {
   it('the log lists newest first, narrowed to a teacher\'s families; SDPs never in it', async () => {
     const { reads, queries } = await ringing();
-    await queries.insert({ direction: 'outbound', status: 'ended', end_reason: 'completed', phone_e164: '+201005555555', started_at: '2026-10-27T00:00:00Z' });
+    await queries.insert({ direction: 'outbound', status: 'ended', end_reason: 'completed', phone_e164: '+201005555555', started_at: new Date(Date.now() + 3_600_000).toISOString() });
     const all = await reads.list(ADMIN_ACTOR, { limit: 10 });
     expect(all.map((c) => c.phone_e164)).toEqual(['+201005555555', FAMILY]);
     expect(all[0]).not.toHaveProperty('offer_sdp');

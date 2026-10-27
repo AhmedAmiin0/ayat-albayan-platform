@@ -58,9 +58,44 @@ export class StudentLinkService {
     const { student, lesson, win } = await this.resolve(call, now, false);
     if (!lesson) throw notFound('no_lesson');
     assertWindowOpen(lesson, now, win);
+    return this.admitTo({ lesson, student, win, now, ...(name && { name }) });
+  }
+
+  /**
+   * The family portal's «ادخل الحلقة» (docs/31): the caller (the portal) has checked the student is the
+   * login's own. The same guest admission as join() for ONE lesson of that student, through the one
+   * (lesson, student) link row, so a room removal holds and no token is handed out (the WhatsApp link on
+   * that row keeps working). 404 no_lesson (not theirs or over), 403 join_not_open_yet, 410, 429, 503.
+   */
+  async portalJoin(input: { lessonId: string; studentId: string; profileId: string }, now = new Date()): Promise<RoomJoinResult> {
+    this.limit.assert({ ip: `portal:${input.profileId}`, token: input.lessonId }, now.getTime());
+    this.admission.livekit();
+    const [student, win, ahead] = await Promise.all([
+      this.queries.student(input.studentId),
+      this.queries.joinWindow(),
+      this.queries.lessonsAhead(input.studentId, now),
+    ]);
+    const lesson = ahead.find((l) => l.id === input.lessonId);
+    if (!student || !lesson) throw notFound('no_lesson');
+    assertWindowOpen(lesson, now, win);
+    return this.admitTo({ lesson, student, win, now });
+  }
+
+  /** LIVEKIT_* configured: the portal offers our classroom only then (as the reminders do). */
+  classroomReady(): boolean {
+    try {
+      this.admission.livekit();
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
+  private async admitTo(input: { lesson: StudentLesson; student: { id: string; name: string }; win: JoinWindowConfig; now: Date; name?: string }): Promise<RoomJoinResult> {
+    const { lesson, student, win, now } = input;
     const joinLinkId = await this.queries.lessonLinkId({ lesson, studentId: student.id });
     const closesS = Math.floor(Date.parse(joinWindow(lesson, now, win).closes_at) / MS) - Math.floor(now.getTime() / MS);
-    const shown = (name ?? (firstName(student.name) || student.name)).slice(0, 30);
+    const shown = (input.name ?? (firstName(student.name) || student.name)).slice(0, 30);
     return this.admission.admit(
       { lessonId: lesson.id, role: 'guest', name: shown, principal: { joinLinkId }, ttlSeconds: Math.min(closesS, ONE_DAY_S) },
       now,

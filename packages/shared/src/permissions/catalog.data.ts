@@ -21,7 +21,7 @@ export const PERMISSION_AREAS = [
 ] as const;
 export type PermissionArea = (typeof PERMISSION_AREAS)[number];
 
-type Grant = 'teacher' | 'assistant' | 'sales';
+type Grant = 'teacher' | 'assistant' | 'sales' | 'guardian' | 'student';
 const T: Grant[] = ['teacher'];
 const TS: Grant[] = ['teacher', 'sales'];
 const TA: Grant[] = ['teacher', 'assistant'];
@@ -137,4 +137,7 @@ export const PERMISSION_ROWS = [
   // record the family's bank transfer with its receipt (/sales/subscriptions, /sales/payments, /sales/money).
   { key: 'self.sales_money', area: 'self', grants: ['sales'] },
   { key: 'self.assistant', area: 'self', grants: ['assistant'] },
+  // The family portal (/portal/*, docs/31): a guardian login (their students) or a student login (itself).
+  // A scope, never a grant: the portal roles hold no matrix permission (migration 433).
+  { key: 'self.portal', area: 'self', grants: ['guardian', 'student'] },
 ] as const satisfies readonly { key: string; area: PermissionArea; grants: readonly Grant[] }[];
