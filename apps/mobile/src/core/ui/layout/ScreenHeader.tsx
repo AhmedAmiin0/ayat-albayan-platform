@@ -5,6 +5,12 @@ import { HeaderConnectingBar } from '../connecting/HeaderConnectingBar';
 import { Mark } from '../primitives/Mark';
 import { AppText, type AppTextNode } from '../primitives/AppText';
 
+/**
+ * The title's size (owner 2026-10-27: «Header is oversized in all sections»): a screen's title at h3
+ * (23pt), a sheet's at h4 (20pt), so the content starts higher, as WhatsApp's tabs.
+ */
+const TITLE = { h1: type.size.h3, h2: type.size.h4 } as const;
+
 interface ScreenHeaderProps {
   /** Amiri title, e.g. t.mobile.today. Mobile has no cartouche: this is the screen's one title. */
   title: string;
@@ -42,8 +48,8 @@ export function ScreenHeader({
           style={{
             flexShrink: 1,
             fontFamily: type.display,
-            fontSize: type.size[size],
-            lineHeight: type.lineHeight(type.size[size], true),
+            fontSize: TITLE[size],
+            lineHeight: type.lineHeight(TITLE[size], true),
             color: color.ink,
           }}
         >
