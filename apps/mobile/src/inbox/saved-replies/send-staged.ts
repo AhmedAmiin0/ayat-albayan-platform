@@ -1,6 +1,7 @@
 import type { MessageView, SavedReplyStaged } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiSend } from '@/core/lib/http/api';
+import { refreshInbox, touchInbox } from '../thread/hooks/inbox-sync';
 import { appendMessage, removeMessage, type ThreadCache, threadKey, threadPath } from '../thread/hooks/thread-cache';
 import type { StagedFile } from './use-saved-reply';
 
@@ -25,8 +26,10 @@ export function useSendStagedFile(phone: string) {
   const queryKey = threadKey(phone);
   return useMutation({
     mutationFn: (staged: StagedFile) => sendStagedFile({ phone, replyId: staged.replyId, id: staged.requestId }),
-    onSuccess: (row) =>
-      client.setQueryData<ThreadCache>(queryKey, (old) => appendMessage(removeMessage(old, row.id), row)),
-    onSettled: () => client.invalidateQueries({ queryKey }),
+    onSuccess: async (row) => {
+      client.setQueryData<ThreadCache>(queryKey, (old) => appendMessage(removeMessage(old, row.id), row));
+      await touchInbox(client, row);
+    },
+    onSettled: () => refreshInbox(client, phone),
   });
 }

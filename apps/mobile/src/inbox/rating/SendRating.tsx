@@ -12,6 +12,7 @@ import { AppText } from '@/core/ui/primitives/AppText';
 import { Button } from '@/core/ui/primitives/Button';
 import { InlineConfirm } from '@/core/ui/feedback/InlineConfirm';
 import { ErrorLine } from '../ErrorLine';
+import { refreshInbox } from '../thread/hooks/inbox-sync';
 import { threadPath } from '../thread/hooks/thread-cache';
 import { ratingApproved, ratingDone, ratingError } from './rating-words';
 
@@ -40,7 +41,7 @@ export function SendRating({ thread }: { thread: Pick<ThreadView, 'phone_e164' |
     onSuccess: (row) => {
       // A row Meta refused is a finished attempt: asking again is a new one.
       if (row.status === 'failed') id.current = requestId();
-      void client.invalidateQueries({ queryKey: pathKey('/threads') });
+      void refreshInbox(client, thread.phone_e164);
     },
     onSettled: () => setAsking(false),
   });
