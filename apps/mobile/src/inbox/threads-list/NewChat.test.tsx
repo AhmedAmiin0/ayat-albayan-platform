@@ -29,19 +29,28 @@ beforeEach(() => {
   mockApiSend.mockReset();
 });
 
-// Owner 2026-10-27 («This topbar takes alot of space»): a 44pt compose icon, no text button.
-test('«محادثة جديدة» is a named 44pt icon button beside the sales bell; it opens the same sheet', async () => {
+// Owner 2026-10-27: «Remove new chat from the top and make it a floating circle icon in the bottom corner».
+test('«محادثة جديدة» is a named 56pt round button in the bottom inline-end corner; it opens the same sheet', async () => {
+  await renderWithQuery(
+    <TreeBaseProvider value="/sales">
+      <NewChatSheet />
+    </TreeBaseProvider>,
+  );
+  const trigger = screen.getByRole('button', { name: t.inbox.newChat.title });
+  expect(trigger).toHaveStyle({ position: 'absolute', end: 0, bottom: 16, width: 56, height: 56, borderRadius: 28 });
+  expect(screen.queryByText(t.inbox.newChat.title)).toBeNull();
+  await fireEvent.press(trigger);
+  expect(screen.getByLabelText(t.inbox.newChat.phone)).toBeTruthy();
+  expect(screen.getByRole('header', { name: t.inbox.newChat.title })).toBeTruthy();
+});
+
+test('the header keeps only the sales bell: no «محادثة جديدة» up there', async () => {
   await renderWithQuery(
     <TreeBaseProvider value="/sales">
       <InboxHeaderActions base="/sales" />
     </TreeBaseProvider>,
   );
-  const trigger = screen.getByRole('button', { name: t.inbox.newChat.title });
-  expect(trigger).toHaveStyle({ width: 44, height: 44 });
-  expect(screen.queryByText(t.inbox.newChat.title)).toBeNull();
-  await fireEvent.press(trigger);
-  expect(screen.getByLabelText(t.inbox.newChat.phone)).toBeTruthy();
-  expect(screen.getByRole('header', { name: t.inbox.newChat.title })).toBeTruthy();
+  expect(screen.queryByRole('button', { name: t.inbox.newChat.title })).toBeNull();
 });
 
 // Owner report 2026-10-12 («it is not able to start the conversation»): the same path as the web.

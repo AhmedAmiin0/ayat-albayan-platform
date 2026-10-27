@@ -16,6 +16,7 @@ import { StatusChip } from '@/core/ui/feedback/StatusChip';
 import { clockAt, initialOf, kindLabel } from '../shared/format';
 import { DeliveryTicks } from '../messages/components/DeliveryTicks';
 import { InboxHeaderActions } from './InboxHeaderActions';
+import { FAB, NewChatSheet } from './NewChatSheet';
 import { type ChatChoice, ChatListChips, listOf } from '../lists/ChatListChips';
 import { threadPreview } from '../messages/hooks/message-text';
 import { threadLink, useThreadMode } from '../thread/hooks/thread-mode';
@@ -82,7 +83,7 @@ export function ThreadsList({ switcher }: { switcher?: ReactNode }) {
       <ChatListChips value={choice} onChange={setChoice} lists={mode.kind === 'admin'} />
       <FlatList
         style={{ flex: 1, marginHorizontal: -16 }}
-        contentContainerStyle={{ paddingBottom: 24 + inset }}
+        contentContainerStyle={{ paddingBottom: 24 + inset + (mode.kind === 'admin' ? FAB + 16 : 0) }}
         data={list.items}
         keyExtractor={(th) => th.phone_e164}
         renderItem={({ item: th }) => {
@@ -114,6 +115,7 @@ export function ThreadsList({ switcher }: { switcher?: ReactNode }) {
           )
         }
       />
+      {mode.kind === 'admin' ? <NewChatSheet /> : null}
     </View>
   );
 }
