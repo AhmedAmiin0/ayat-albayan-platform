@@ -19,8 +19,11 @@ export interface MyStudentSource {
 export const MY_STUDENT_COLUMNS =
   'student_id, code, name, brought_at, first_subscription_paid, commission_id, commission_status, commission_amount, commission_currency, commission_earned_at, renewal_commission_count';
 
-/** A whitelist: no price, no subscription, no guardian. Only whether the first subscription is paid, and the commission. */
-export function toMyStudent(r: MyStudentSource): MyStudentRow | null {
+/**
+ * A whitelist: no price, no subscription; of the guardian the phone only (owner 2026-10-27, from
+ * `phones` by student id). Only whether the first subscription is paid, and the commission.
+ */
+export function toMyStudent(r: MyStudentSource, phones: ReadonlyMap<string, string> = new Map()): MyStudentRow | null {
   if (!r.student_id || !r.brought_at) return null;
   const { commission_status: status, commission_currency: currency, commission_earned_at: earnedAt } = r;
   return {
@@ -28,6 +31,7 @@ export function toMyStudent(r: MyStudentSource): MyStudentRow | null {
     code: r.code ?? '',
     name: r.name ?? '',
     brought_at: r.brought_at,
+    guardian_phone: phones.get(r.student_id) || null,
     first_subscription_paid: r.first_subscription_paid === true,
     commission:
       r.commission_id && status && currency && earnedAt

@@ -15,7 +15,8 @@ import { ltr } from '@/core/ui/primitives/Ltr';
 import type { SalesSubscription } from './sales-api';
 
 // Row lines of the salesperson's pages (docs/16), same words as the web. Western digits; dates and
-// codes are LTR islands. Never a price, phone or link: the API does not send them.
+// codes are LTR islands. Never a price or link: the API does not send them (the guardian's phone, owner
+// 2026-10-27, is its own LTR element, PhoneText).
 
 const STATUS: Record<string, string | undefined> = t.enums.subscriptionStatus;
 const PACKAGE: Record<string, string | undefined> = t.enums.packageSize;

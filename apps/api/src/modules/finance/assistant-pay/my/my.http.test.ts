@@ -24,6 +24,7 @@ describe('GET /sales/me/* (the assistant portal): who may call, and only ever my
     vi.resetAllMocks();
     t.terms.renewalShare.mockResolvedValue(50);
     t.my.students.mockImplementation(async (id: string) => (id === A ? [dirtyStudent] : []));
+    t.my.guardianPhones.mockImplementation(async (id: string) => new Map(id === A ? [['s1', '+966551110000']] : []));
     t.my.payments.mockImplementation(async (id: string) => (id === A ? [dirtyPayment] : []));
     t.my.tz.mockResolvedValue('Asia/Riyadh');
     t.my.commissions.mockResolvedValue([]);
@@ -46,14 +47,16 @@ describe('GET /sales/me/* (the assistant portal): who may call, and only ever my
     expect(res.statusCode).toBe(401);
   });
 
-  it('students: rows are exactly id, code, name, brought_at, first_subscription_paid, commission; no price, guardian or notes', async () => {
+  it('students: rows are exactly id, code, name, brought_at, the guardian phone, first_subscription_paid, commission; no price or notes', async () => {
     const res = await t.call({ method: 'GET', url: '/sales/me/students', token: 'salesA' });
     expect(res.statusCode).toBe(200);
     expect(t.my.students).toHaveBeenCalledWith(A);
     const [row] = res.json();
-    expect(Object.keys(row)).toEqual(['id', 'code', 'name', 'brought_at', 'first_subscription_paid', 'commission', 'renewal_commissions']);
+    expect(t.my.guardianPhones).toHaveBeenCalledWith(A);
+    expect(Object.keys(row)).toEqual(['id', 'code', 'name', 'brought_at', 'guardian_phone', 'first_subscription_paid', 'commission', 'renewal_commissions']);
+    expect(row.guardian_phone).toBe('+966551110000');
     expect(Object.keys(row.commission)).toEqual(['amount', 'currency', 'status', 'earned_at']);
-    expect(keys(res.json()).filter((k) => /price|fx_|notes|guardian|assistant|paid_amount|due/i.test(k))).toEqual([]);
+    expect(keys(res.json()).filter((k) => /price|fx_|notes|guardian|assistant|paid_amount|due/i.test(k))).toEqual(['guardian_phone']);
     expect(res.body).not.toContain('290');
   });
 
@@ -62,6 +65,8 @@ describe('GET /sales/me/* (the assistant portal): who may call, and only ever my
     expect(res.json()).toEqual([]);
     expect(t.my.students).toHaveBeenCalledWith(B);
     expect(t.my.students).not.toHaveBeenCalledWith(A);
+    expect(t.my.guardianPhones).toHaveBeenCalledWith(B);
+    expect(t.my.guardianPhones).not.toHaveBeenCalledWith(A);
   });
 
   it('payments: only the ones I recorded, rows are exactly id, student, kind, amount, currency, method, paid_at, note', async () => {

@@ -18,9 +18,10 @@ export class MyService {
     private readonly statements: StatementsQueries,
   ) {}
 
-  /** The students I brought, newest first: when, whether the first subscription is paid, my commission. No price. */
+  /** The students I brought, newest first: when, the guardian's phone, whether the first subscription is paid, my commission. No price. */
   async students(user: AuthUser): Promise<MyStudentRow[]> {
-    return (await this.queries.students(user.id)).flatMap((r) => toMyStudent(r) ?? []);
+    const [rows, phones] = await Promise.all([this.queries.students(user.id), this.queries.guardianPhones(user.id)]);
+    return rows.flatMap((r) => toMyStudent(r, phones) ?? []);
   }
 
   /** Only the payments I recorded. */

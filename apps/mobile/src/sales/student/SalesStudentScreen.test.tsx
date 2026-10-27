@@ -1,4 +1,6 @@
+import { formatPhone } from '@ab/shared';
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
+import { router } from 'expo-router';
 import { Linking } from 'react-native';
 import { ApiError } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
@@ -22,7 +24,7 @@ test('her student: the current subscription with its dates and lessons, the past
   await renderWithQuery(<SalesStudentScreen />);
   expect(await screen.findByRole('header', { name: 'يوسف أحمد' })).toBeTruthy();
   expect(mockApiFetch).toHaveBeenCalledWith('/sales/students/st1');
-  expect(screen.getByText(ltr('AB-0183'))).toBeTruthy();
+  expect(screen.getByText(`${ltr('AB-0183')} · ${ltr(formatPhone('+201001112223'))}`)).toBeTruthy();
   expect(screen.getByText(s.current)).toBeTruthy();
   expect(screen.getByText(t.sales.history.starts.replace('{date}', ltr('2026-10-01')))).toBeTruthy();
   expect(screen.getByText(t.sales.history.renews.replace('{date}', ltr('2026-11-01')))).toBeTruthy();
@@ -75,4 +77,19 @@ test('loading, then another family\'s student (404) reads «not yours»; another
   await renderWithQuery(<SalesStudentScreen />);
   expect(await screen.findByText(t.sales.loadFailed)).toBeTruthy();
   expect(screen.getByRole('button', { name: t.mobile.retry })).toBeTruthy();
+});
+
+test('the guardian phone is under the name and «محادثة ولي الأمر» opens that family’s chat in the sales inbox', async () => {
+  mockApiFetch.mockResolvedValue(details());
+  await renderWithQuery(<SalesStudentScreen />);
+  await fireEvent.press(await screen.findByRole('button', { name: `${s.chat} ${ltr(formatPhone('+201001112223'))}` }));
+  expect(router.push).toHaveBeenCalledWith('/sales/inbox/thread/%2B201001112223');
+});
+
+test('no guardian phone: the code alone under the name, no chat button', async () => {
+  const d = details();
+  mockApiFetch.mockResolvedValue({ ...d, student: { ...d.student, guardian_phone: null } });
+  await renderWithQuery(<SalesStudentScreen />);
+  expect(await screen.findByText(ltr('AB-0183'))).toBeTruthy();
+  expect(screen.queryByText(s.chat, { exact: false })).toBeNull();
 });

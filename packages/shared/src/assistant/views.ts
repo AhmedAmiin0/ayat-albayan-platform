@@ -88,6 +88,8 @@ export interface MyStudentRow {
   code: string;
   name: string;
   brought_at: string;
+  /** The guardian's E.164 phone (owner 2026-10-27), null without one; never another contact. */
+  guardian_phone: string | null;
   /** Has any of their subscriptions been paid in full? (No price, no amounts.) */
   first_subscription_paid: boolean;
   commission: { amount: number; currency: string; status: AssistantCommissionStatus; earned_at: string } | null;
