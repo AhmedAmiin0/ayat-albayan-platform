@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { connectInboxLive, type LiveChannel, type LiveClient } from './live-connect.js';
 import { createInboxLive } from './live-store.js';
 
-function fakeClient(auth: Promise<void> = Promise.resolve()) {
+function fakeClient(auth: Promise<void> = Promise.resolve(), others: unknown[] = []) {
   const hooks: { status?: (s: string) => void; event?: (m: { payload?: unknown }) => void } = {};
   const channel: LiveChannel = {
     on: vi.fn((_type, _filter, cb) => ((hooks.event = cb), channel)),
@@ -11,7 +11,8 @@ function fakeClient(auth: Promise<void> = Promise.resolve()) {
   const client = {
     channel: vi.fn(() => channel),
     removeChannel: vi.fn(() => Promise.resolve('ok')),
-    realtime: { setAuth: vi.fn(() => auth) },
+    getChannels: vi.fn(() => others),
+    realtime: { setAuth: vi.fn(() => auth), disconnect: vi.fn(() => Promise.resolve('ok')) },
   } satisfies LiveClient;
   return { client, channel, hooks };
 }
@@ -85,5 +86,49 @@ describe('connectInboxLive', () => {
     left('ok');
     await flush();
     expect(second.client.channel).toHaveBeenCalledTimes(1);
+  });
+
+  it('closes the socket after the leave only when no other feature holds a channel (web calls)', async () => {
+    const alone = fakeClient();
+    connectInboxLive(alone.client, createInboxLive(), targets());
+    await flush();
+    connectInboxLive(alone.client, createInboxLive(), targets())(); // never joined: nothing to leave
+    expect(alone.client.realtime.disconnect).not.toHaveBeenCalled();
+    const calls = fakeClient(undefined, [{ topic: 'realtime:wa_calls:x' }]);
+    const stop = connectInboxLive(calls.client, createInboxLive(), targets());
+    await flush();
+    stop();
+    await flush();
+    expect(calls.client.removeChannel).toHaveBeenCalledTimes(1);
+    expect(calls.client.realtime.disconnect).not.toHaveBeenCalled();
+    const stopAlone = connectInboxLive(alone.client, createInboxLive(), targets());
+    await flush();
+    stopAlone();
+    await flush();
+    expect(alone.client.realtime.disconnect).toHaveBeenCalledTimes(1);
+  });
+
+  it('a rejoin waits for the socket close too; a failed leave still lets the next join through', async () => {
+    const { client } = fakeClient();
+    let closed: (v: string) => void = () => undefined;
+    client.realtime.disconnect.mockImplementation(() => new Promise<string>((r) => (closed = r)));
+    const stop = connectInboxLive(client, createInboxLive(), targets());
+    await flush();
+    stop();
+    connectInboxLive(client, createInboxLive(), targets());
+    await flush();
+    expect(client.channel).toHaveBeenCalledTimes(1);
+    closed('ok');
+    await flush();
+    expect(client.channel).toHaveBeenCalledTimes(2);
+    const failing = fakeClient();
+    failing.client.removeChannel.mockImplementation(() => Promise.reject(new Error('down')));
+    connectInboxLive(failing.client, createInboxLive(), targets())();
+    const again = connectInboxLive(failing.client, createInboxLive(), targets());
+    await flush();
+    again();
+    connectInboxLive(failing.client, createInboxLive(), targets());
+    await flush();
+    expect(failing.client.channel).toHaveBeenCalledTimes(2);
   });
 });
