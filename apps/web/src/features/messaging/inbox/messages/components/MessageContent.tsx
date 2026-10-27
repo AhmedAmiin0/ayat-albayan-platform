@@ -4,7 +4,7 @@ import { t } from '@/lib/i18n/i18n';
 import { locale } from '@/lib/i18n/locale';
 import { templateLine } from '../../format';
 import { MessageMedia } from './MessageMedia';
-import { LinkedBody } from './LinkedBody';
+import { LinkedBody } from '@/components/ui/display/linked-body';
 import { QuoteBlock } from './QuoteBlock';
 import { ResendAsk } from '../resend/ResendAsk';
 import { RatingChip } from '../../sales/RatingChip';

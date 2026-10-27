@@ -1,11 +1,11 @@
 import { channelPageQuerySchema, channelPostSchema, type ChannelMessageView, type ChannelPage, type ChannelUnread } from '@ab/shared';
 import { Body, Controller, Get, HttpCode, Param, ParseUUIDPipe, Post, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Permissions } from '../../../common/auth/decorators';
-import type { AuthUser } from '../../../common/auth/verify-token';
-import { parseOrThrow } from '../../../common/http/http';
-import { ChannelAccess } from './channel-access';
-import { ChannelService } from './channel.service';
+import { CurrentUser, Permissions } from '../../../../common/auth/decorators';
+import type { AuthUser } from '../../../../common/auth/verify-token';
+import { parseOrThrow } from '../../../../common/http/http';
+import { ChannelAccess } from '../channel-access';
+import { ChannelService } from '../channel.service';
 
 const UUID = new ParseUUIDPipe();
 

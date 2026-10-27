@@ -1,5 +1,5 @@
 import { clockTime, type ChannelMessageView } from '@ab/shared';
-import { LinkedBody } from '@/features/messaging/inbox';
+import { LinkedBody } from '@/components/ui/display/linked-body';
 import { t } from '@/lib/i18n/i18n';
 import { cn } from '@/lib/utils';
 

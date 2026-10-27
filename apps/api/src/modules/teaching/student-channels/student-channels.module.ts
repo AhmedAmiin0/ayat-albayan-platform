@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { PortalModule } from '../../people/portal';
 import { TeachersModule } from '../../people/teachers';
 import { AccessDeps, ChannelAccess } from './channel-access';
-import { CHANNEL_CONTROLLERS } from './channel.controllers';
+import { CHANNEL_CONTROLLERS } from './controllers/channel.controllers';
 import { ChannelNotify } from './channel-notify';
 import { ChannelPeopleQueries } from './channel-people.queries';
 import { ChannelQueries } from './channel.queries';
