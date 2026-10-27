@@ -31,8 +31,13 @@ export interface BandInput {
   label: string | null;
 }
 
-/** DayChip's marginVertical, and the floating chip's top (FloatingDay): its pill starts 4 + 6 down. */
+/** DayChip's box (it reads these): margin, padding and border, vertical; its pill starts 4 + 6 down. */
 export const CHIP_MARGIN = 6;
+export const CHIP_PAD = 3;
+export const CHIP_BORDER = 1;
+/** The pill's height beyond its line: padding and border, both sides. */
+export const CHIP_BOX = 2 * (CHIP_PAD + CHIP_BORDER);
+/** The floating chip's top (FloatingDay). */
 export const FLOAT_TOP = 4;
 /** A little air under the floating chip that already counts as its band. */
 const AIR = 4;

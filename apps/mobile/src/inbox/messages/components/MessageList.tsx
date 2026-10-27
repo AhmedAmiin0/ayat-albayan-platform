@@ -1,5 +1,5 @@
 import { type MessageView, senderLine } from '@ab/shared';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { ActivityIndicator, FlatList, View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { useTheme } from '@/theme';
@@ -50,7 +50,8 @@ export function MessageList({ phone, query }: { phone: string; query: ThreadQuer
   const list = useRef<FlatList<MessageView>>(null);
   // Her own pull only: a background refetch (open, send, push) must not spin over the newest bubble.
   const [pulling, setPulling] = useState(false);
-  const rows = threadMessages(query.data).reverse();
+  // One array per page change: a new one each render would reset the list's viewability (the floating day).
+  const rows = useMemo(() => threadMessages(query.data).reverse(), [query.data]);
   const newest = rows[0];
   const ours = newest?.direction === 'outbound' && !senderLine(newest) ? newest.id : undefined;
   useEffect(() => {

@@ -7,43 +7,29 @@ import {
   useWindowDimensions,
   type ViewToken,
 } from 'react-native';
+import { dayLabel } from './day-label';
+import { CHIP_BOX, CHIP_MARGIN, chipCovered, type Frame, type Viewport } from './top-band';
+import { type Loaded, separatorsOf, topmost } from './day-separators';
 import { type } from '@/theme';
-import { messageGap } from '../hooks/list-gap';
-import { dayLabel, hasDayChip } from './day-label';
-import { CHIP_MARGIN, chipCovered, type Frame, type Separator, type Viewport } from './top-band';
 
 type Scroll = NativeSyntheticEvent<NativeScrollEvent>;
 
-interface Live {
-  rows: readonly MessageView[];
-  more: boolean;
+interface Live extends Loaded {
   fontScale: number;
   frames: Map<string, Frame>;
-  seps: Separator[];
+  tokens: readonly ViewToken<MessageView>[];
   view: Viewport | null;
   /** The floating chip's measured pill height (0 until it has shown once). */
   chip: number;
-  label: string | null;
 }
 
 /** The pill's height before the floating one was measured: DayChip's line, padding and border. */
-const chipGuess = (fontScale: number) => type.lineHeight(type.size['2xs']) * fontScale + 8;
-
-/** The separator a row on screen carries, if any: its chip's top is its gap and margin down. */
-function separatorOf(
-  { rows, more }: Pick<Live, 'rows' | 'more'>,
-  v: ViewToken<MessageView>,
-): Separator[] {
-  const index = v.index ?? -1;
-  if (index < 0 || rows[index]?.id !== v.item.id || !hasDayChip(rows, index, more)) return [];
-  const inset = messageGap(rows[index + 1], v.item) + CHIP_MARGIN;
-  return [{ key: v.item.id, label: dayLabel(v.item.created_at), inset }];
-}
+const chipGuess = (fontScale: number) => type.lineHeight(type.size['2xs']) * fontScale + CHIP_BOX;
 
 /**
  * Whether an inline separator covers the floating day's place (chipCovered, owner 2026-10-27): the
- * cells' frames (DayCell), the rows on screen that carry a separator and the scroll offset live in
- * a ref, checked on each scroll, layout and viewability change; a re-render only when it flips.
+ * cells' frames (DayCell), the rows on screen and the list's offset and length live in a ref,
+ * checked on each scroll, layout, viewability and rows change; a re-render only when it flips.
  * `viewable` also gives the topmost row's day (the floating label).
  */
 export function useDayBand(rows: readonly MessageView[], more: boolean) {
@@ -53,45 +39,68 @@ export function useDayBand(rows: readonly MessageView[], more: boolean) {
     more,
     fontScale,
     frames: new Map(),
-    seps: [],
+    tokens: [],
     view: null,
     chip: 0,
-    label: null,
-  });
-  useLayoutEffect(() => {
-    Object.assign(live.current, { rows, more, fontScale });
   });
   const [covered, setCovered] = useState(false);
   // The list keeps its first handlers (onViewableItemsChanged above all): stable functions.
   const [band] = useState(() => {
     const check = () => {
-      const { frames, seps, view, chip, label, fontScale: scale } = live.current;
+      const l = live.current;
+      const top = topmost(l.tokens);
+      const label = top ? dayLabel(top.created_at) : null;
+      const seps = separatorsOf(l, l.tokens);
       setCovered(
-        view !== null && chipCovered({ frames, seps, view, chip: chip || chipGuess(scale), label }),
+        l.view !== null &&
+          chipCovered({
+            frames: l.frames,
+            seps,
+            view: l.view,
+            chip: l.chip || chipGuess(l.fontScale),
+            label,
+          }),
       );
     };
     return {
-      viewable(items: readonly ViewToken<MessageView>[]): string | null {
-        const l = live.current;
-        let top: ViewToken<MessageView> | null = null;
-        for (const v of items) if ((v.index ?? -1) > (top?.index ?? -1)) top = v;
-        l.seps = items.flatMap((v) => separatorOf(l, v));
-        if (top) l.label = dayLabel(top.item.created_at);
+      check,
+      viewable(tokens: readonly ViewToken<MessageView>[]): string | null {
+        live.current.tokens = tokens;
         check();
-        return l.label;
+        const top = topmost(tokens);
+        return top ? dayLabel(top.created_at) : null;
       },
       scroll({ nativeEvent: { contentOffset, layoutMeasurement } }: Scroll) {
         live.current.view = { offset: contentOffset.y, length: layoutMeasurement.height };
         check();
       },
-      frame(key: string, { y, height }: LayoutRectangle) {
-        live.current.frames.set(key, { y, height });
+      /** The list's own size (before any scroll, or the keyboard shrinking it at rest). */
+      layout({ height }: LayoutRectangle) {
+        live.current.view = { offset: live.current.view?.offset ?? 0, length: height };
+        check();
+      },
+      frame(key: string, frame: LayoutRectangle | null) {
+        if (frame) live.current.frames.set(key, { y: frame.y, height: frame.height });
+        else live.current.frames.delete(key);
         check();
       },
       chip({ height }: LayoutRectangle) {
         live.current.chip = Math.max(0, height - 2 * CHIP_MARGIN);
+        check();
       },
     };
   });
-  return { covered, ...band };
+  // The rows as they are now, before the next check (the list may report viewability first).
+  useLayoutEffect(() => {
+    Object.assign(live.current, { rows, more, fontScale });
+    band.check();
+  }, [band, rows, more, fontScale]);
+  return {
+    covered,
+    viewable: band.viewable,
+    scroll: band.scroll,
+    layout: band.layout,
+    frame: band.frame,
+    chip: band.chip,
+  };
 }

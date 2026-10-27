@@ -57,6 +57,14 @@ test('the inline separator in the top band hides the floating chip; once it scro
   expect(floating()).toBeNull();
 });
 
+test('scrolling to newer: its separator in the band hides it; once above the top, the chip is back with that day', async () => {
+  await open();
+  await scrollTo(220, [C, B, A]); // A's separator 8pt above the top, still half on screen
+  expect(floating()).toBeNull();
+  await scrollTo(150, [C, B, A]); // A's separator wholly above the top; C's 176pt down
+  expect(floating()).toHaveTextContent(dayLabel(A.created_at));
+});
+
 test('never two chips with the same label: the inline chip of its own day on screen hides it', async () => {
   await open();
   await scrollTo(300, [A]); // A's separator 72pt down, under the band; the floating label is A's day too

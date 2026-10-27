@@ -1,6 +1,6 @@
 import type { MessageView } from '@ab/shared';
 import { useEffect, useRef, useState } from 'react';
-import { Animated, type ViewToken } from 'react-native';
+import { Animated, type LayoutChangeEvent, type ViewToken } from 'react-native';
 import { useA11yPref } from '@/core/ui/primitives/use-a11y-pref';
 import { DayCell } from './DayCell';
 import { useDayBand } from './use-day-band';
@@ -56,6 +56,7 @@ export function useTopDay(rows: readonly MessageView[], more: boolean) {
     list: {
       CellRendererComponent: DayCell,
       onScroll: band.scroll,
+      onLayout: (e: LayoutChangeEvent) => band.layout(e.nativeEvent.layout),
       scrollEventThrottle: 16,
       onViewableItemsChanged,
       onScrollBeginDrag: show,
