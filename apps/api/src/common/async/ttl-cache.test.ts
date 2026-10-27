@@ -40,4 +40,14 @@ describe('TtlCache — one load per TTL, never a cached failure', () => {
     await cache.get(0);
     expect(load).toHaveBeenCalledTimes(2);
   });
+
+  it('a ttl function is read on every call (a property-injected period)', async () => {
+    let ttl = 30_000;
+    const load = vi.fn(async () => 'v');
+    const cache = new TtlCache(() => ttl, load);
+    await cache.get(0);
+    ttl = 0;
+    await cache.get(1);
+    expect(load).toHaveBeenCalledTimes(2);
+  });
 });

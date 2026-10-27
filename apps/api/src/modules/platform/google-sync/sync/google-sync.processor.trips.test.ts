@@ -56,4 +56,21 @@ describe('GoogleSyncProcessor — round trips per idle tick (owner 2026-10-27: s
     await expect(connection.client()).resolves.toBeNull();
     expect(trips).toEqual(['google_account', 'rpc:google_token_read', 'google_account']);
   });
+
+  it('SETTINGS_CACHE_MS 0 (e2e, whose reset clears the token in SQL): the account and Vault are read on every call', async () => {
+    const { connection, trips } = setup({ google_account: [{ data: { status: 'connected' } }, { data: { status: 'connected' } }], 'rpc:google_token_read': [{ data: 'a' }, { data: 'b' }] });
+    Object.assign(connection, { settingsTtlMs: 0 });
+    await connection.client();
+    await connection.client();
+    expect(trips).toEqual(['google_account', 'rpc:google_token_read', 'google_account', 'rpc:google_token_read']);
+  });
+
+  it('a refused token: the cache is dropped again after the clear + status writes, so a client() in between keeps nothing', async () => {
+    const { connection, trips } = setup({ google_account: [{ data: { status: 'connected' } }, {}, { data: { status: 'disconnected' } }], 'rpc:google_token_read': [{ data: 'old' }] });
+    const failing = connection.authFailed();
+    await connection.client(); // lands between forget() and the writes
+    await failing;
+    await expect(connection.client()).resolves.toBeNull();
+    expect(trips.filter((t) => t === 'google_account')).toHaveLength(3);
+  });
 });

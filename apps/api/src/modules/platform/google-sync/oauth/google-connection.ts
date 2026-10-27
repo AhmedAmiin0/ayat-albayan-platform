@@ -1,5 +1,6 @@
-import { Inject, Injectable, Logger } from '@nestjs/common';
+import { Inject, Injectable, Logger, Optional } from '@nestjs/common';
 import { TtlCache } from '../../../../common/async/ttl-cache';
+import { SETTINGS_CACHE_MS } from '../../../../common/config-store/config-store.types';
 import { GoogleAccountQueries } from './google-account.queries';
 import { GoogleAlerts } from '../google-alerts';
 import { GOOGLE_CLIENT_FACTORY, type GoogleClient, type GoogleClientFactory } from '../google-client.port';
@@ -10,8 +11,9 @@ const CONNECTION_TTL_MS = 10 * 60_000;
 /**
  * The connected account's client: the refresh token is read from Vault when needed and kept only
  * in memory (one client per token, so google-auth-library reuses its access token until it expires).
- * The status + token read is reused for CONNECTION_TTL_MS (two round trips a job tick before); every
- * connect, disconnect and refused token calls forget(), so this API never uses a stale one. An
+ * The status + token read is reused for CONNECTION_TTL_MS (two round trips a job tick before; never
+ * when SETTINGS_CACHE_MS is 0, as in e2e, whose reset writes SQL); every connect, disconnect and
+ * refused token calls forget() after its writes, so this API never keeps a stale one. An
  * invalid_grant (revoked or expired consent) disconnects: token cleared, status `disconnected`,
  * one bell alert to the admins — never a crash loop.
  */
@@ -19,7 +21,9 @@ const CONNECTION_TTL_MS = 10 * 60_000;
 export class GoogleConnection {
   private readonly log = new Logger(GoogleConnection.name);
   private cached: { token: string; client: GoogleClient } | null = null;
-  private readonly token = new TtlCache(CONNECTION_TTL_MS, () => this.connectedToken());
+  /** Property-injected (the constructor is at the 3-parameter limit); 0 = no reuse. */
+  @Optional() @Inject(SETTINGS_CACHE_MS) private readonly settingsTtlMs?: number;
+  private readonly token = new TtlCache(() => (this.settingsTtlMs === 0 ? 0 : CONNECTION_TTL_MS), () => this.connectedToken());
 
   constructor(
     private readonly account: GoogleAccountQueries,
@@ -58,6 +62,8 @@ export class GoogleConnection {
     this.log.warn('google refresh token refused (invalid_grant): disconnected');
     await this.account.clearToken();
     await this.account.update({ status: 'disconnected', last_error: 'invalid_grant' });
+    // Again after the writes: a client() call in between must not keep the refused token.
+    this.forget();
     await this.alerts.disconnected();
   }
 }
