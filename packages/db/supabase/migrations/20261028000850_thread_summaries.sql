@@ -114,7 +114,10 @@ begin
 end $$;
 
 -- Only changes the summary can show: who / when / direction of any row; read_at or line of an inbound
--- row; status, text, template or file of the row that is the phone's newest (a tick on the list).
+-- row; status, text, template or file of any row (a tick on the list). Every such change passes its
+-- phone on, with no "is it the newest?" pre-filter: that check would read thread_summaries unlocked,
+-- so a concurrent delete of the newest row could leave a stale last_status / last_body. The recompute
+-- is one indexed per-phone read (one per status webhook), serialised by the per-phone advisory lock.
 create or replace function public.thread_summaries_on_update() returns trigger
   language plpgsql security definer set search_path = '' as $$
 begin
@@ -123,9 +126,7 @@ begin
     from old_rows o join new_rows n on n.id = o.id
     where (o.phone_e164, o.direction, o.created_at) is distinct from (n.phone_e164, n.direction, n.created_at)
       or (n.direction = 'inbound' and (o.read_at, o.line) is distinct from (n.read_at, n.line))
-      or ((o.status, o.body, o.template_key, o.media_mime) is distinct from (n.status, n.body, n.template_key, n.media_mime)
-        and not exists (select 1 from public.thread_summaries s
-          where s.phone_e164 = n.phone_e164 and s.last_message_id is distinct from n.id))
+      or (o.status, o.body, o.template_key, o.media_mime) is distinct from (n.status, n.body, n.template_key, n.media_mime)
   ));
   return null;
 end $$;

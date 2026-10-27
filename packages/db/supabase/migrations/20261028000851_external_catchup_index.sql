@@ -2,7 +2,9 @@
 -- newest message sent outside the app on a number, or on a line for legacy rows: outbound, created_by
 -- null, attempts 0, with a wamid. No index matched, so it scanned messages (445 ms mean, 3.1 s max on
 -- staging, growing with the table). Two small partial indexes, one per lookup, make it one index probe.
--- Plain create index (inside the migration transaction: no CONCURRENTLY); the rows they cover are few.
+-- Plain create index (inside the migration transaction: no CONCURRENTLY). The partial predicate keeps
+-- each index small, but the build still scans the whole messages heap under a SHARE lock (writes to
+-- messages wait; about 1-6 s, once, at deploy).
 -- Idempotent.
 
 set local lock_timeout = '5s';
