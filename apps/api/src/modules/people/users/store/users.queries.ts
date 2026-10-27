@@ -1,4 +1,4 @@
-import type { LinkKind, UsersListQuery } from '@ab/shared';
+import { isFamilyEmail, type LinkKind, type UsersListQuery } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../../../common/db/db.module';
 import { dbError } from '../../../../common/http/http';
@@ -7,8 +7,11 @@ import * as links from './users.links.queries';
 import { mapListRow } from './users.rows';
 import type { NewProfile, NewTeacher, ProfilePatch, RefRow, StaffProfile, UserRow, UserStore } from './users.store';
 
-const PROFILE = 'id, full_name, role, role_id, disabled_at, disabled_reason, phone_e164, locale, tz, created_at';
+const PROFILE = 'id, full_name, role, role_id, disabled_at, disabled_reason, phone_e164, locale, tz, created_at, username';
 const STAFF_ROLES = ['admin', 'teacher', 'assistant', 'sales'] as const;
+
+/** A family login's synthetic email (docs/30 §2) is never shown. */
+const visibleEmail = (email: string | undefined): string | null => (email && !isFamilyEmail(email) ? email : null);
 
 /** The admin_list_users arguments of one page (unset filters are left out). */
 const listArgs = (q: UsersListQuery, lim: number, off: number) => ({
@@ -45,7 +48,8 @@ export class UsersQueries implements UserStore {
     const [auth, linked, roleKey] = await Promise.all([this.db.auth.admin.getUserById(id), links.linkedOf(this.db, id), this.roleKey(p.role, p.role_id)]);
     return {
       id: p.id,
-      email: auth.data.user?.email ?? null,
+      email: visibleEmail(auth.data.user?.email),
+      username: p.username,
       full_name: p.full_name,
       phone_e164: p.phone_e164,
       role: p.role,

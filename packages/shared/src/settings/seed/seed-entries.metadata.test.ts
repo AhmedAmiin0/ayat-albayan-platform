@@ -7,7 +7,7 @@ const byKey = new Map(SEED_ENTRIES.map((e) => [e.key, e]));
 const keysWhere = (pick: (e: (typeof SEED_ENTRIES)[number]) => boolean): string[] =>
   SEED_ENTRIES.filter(pick).map((e) => e.key).sort();
 
-/** docs/26b §2: the «القيم» groups of the 30 CONFIG keys of docs/26 §1 (counts 4·4·1·5·3·1·5·2·1·2). */
+/** docs/26b §2: the «القيم» groups of the 33 CONFIG keys of docs/26 §1 + docs/30 (counts 4·4·1·5·3·1·8·4·1·2). */
 const CONFIG_GROUPS: Record<string, string[]> = {
   schedule: ['booking_horizon_weeks', 'late_cancel_hours', 'makeup_window_days', 'teachers_always_available'],
   classroom: ['join_opens_before_min', 'join_closes_after_min', 'default_meeting_title', 'meeting_link_auto'],
@@ -15,7 +15,8 @@ const CONFIG_GROUPS: Record<string, string[]> = {
   accounts: ['reporting_currency', 'renewal_alert_remaining', 'subscription_expiry_days', 'flag_future_lessons_when_unpaid', 'fx_fresh_hours'],
   payouts: ['payout_count_late', 'payout_count_no_show', 'payout_count_trials'],
   uploads: ['upload_max_mb'],
-  academy: ['academy_whatsapp_e164', 'academy_timezone', 'academy_contact', 'recording_consent_notice', 'feedback_rate_window_min'],
+  academy: ['academy_whatsapp_e164', 'academy_timezone', 'academy_contact', 'recording_consent_notice', 'feedback_rate_window_min',
+    'family_login_enabled', 'login_code_ttl_minutes', 'login_code_max_attempts'],
   messaging: ['quick_reply_window_hours', 'reminder_lookahead_hours', 'chat_reopen_template', 'whatsapp_calls_enabled'],
   sales: ['sales_auto_assign', 'renewal_commission_percent'],
   retention: ['recording_retention_days', 'activity_retention_days'],
@@ -36,9 +37,9 @@ describe('registry metadata (docs/26 §1, §2b; owner defaults 2026-10-23)', () 
     expect(missing).toEqual([]);
   });
 
-  it('the 31 CONFIG keys (28 + chat_reopen_template + whatsapp_calls_enabled + renewal_commission_percent, docs/28) sit in their «القيم» group, scope config', () => {
+  it('the 34 CONFIG keys (28 + chat_reopen_template + whatsapp_calls_enabled + renewal_commission_percent, docs/28, + the 3 family login keys, docs/30) sit in their «القيم» group, scope config', () => {
     const config = Object.values(CONFIG_GROUPS).flat();
-    expect(config).toHaveLength(31);
+    expect(config).toHaveLength(34);
     for (const [group, keys] of Object.entries(CONFIG_GROUPS)) expect([group, keysWhere((e) => e.group === group)]).toEqual([group, [...keys].sort()]);
     expect(keysWhere((e) => e.scope === 'config')).toEqual([...config].sort());
   });
@@ -61,7 +62,7 @@ describe('registry metadata (docs/26 §1, §2b; owner defaults 2026-10-23)', () 
 
   it('confirmations are exactly the owner defaults', () => {
     expect(keysWhere((e) => e.confirm === 'typed')).toEqual(['activity_retention_days', 'recording_retention_days']);
-    expect(keysWhere((e) => e.confirm === 'simple')).toEqual(['meeting_link_auto', 'sales_auto_assign', 'teachers_always_available', 'whatsapp_calls_enabled']);
+    expect(keysWhere((e) => e.confirm === 'simple')).toEqual(['family_login_enabled', 'meeting_link_auto', 'sales_auto_assign', 'teachers_always_available', 'whatsapp_calls_enabled']);
   });
 
   it('reachesFamilies marks what families see or receive, and only that', () => {

@@ -25,6 +25,8 @@ export type StudentProfile = StudentRef & {
   goal: string | null;
   riwaya: string | null;
   tz: string;
+  /** «رقم الواتساب لـ: الطالب نفسه» (docs/30 §1); absent from an older API / cache = «ولي الأمر». */
+  contact_is_self?: boolean;
   guardian: { id: string; name: string; phone_e164: string };
   teacher: { id: string; display_name_ar: string; meeting_link: string | null } | null;
   /** Override, else the teacher's fixed link (R-STU-05). */

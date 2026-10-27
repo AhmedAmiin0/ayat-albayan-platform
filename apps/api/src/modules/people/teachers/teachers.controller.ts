@@ -20,9 +20,10 @@ import { orNotFound, pageQuerySchema, parseOrThrow, sentOnly, type Page } from '
 import { withMeeting, type MeetingFields } from './meeting-view';
 import { TeachersQueries, type Teacher, type TeacherListRow } from './teachers.queries';
 import { TeachersSettings } from './teachers.settings';
+import { TeacherUsernames } from './teacher-username';
 
 /** A teacher as the API returns it: meeting_mode raw and platform_classroom effective (migration 490). */
-type TeacherView = Omit<Teacher, 'meeting_mode'> & MeetingFields;
+type TeacherView = Omit<Teacher, 'meeting_mode'> & MeetingFields & { username: string | null };
 type TeacherListView = Omit<TeacherListRow, 'meeting_mode'> & MeetingFields;
 
 /** `?search=` name or phone in any format (teacherSearchFilter); column filters + `sort`/`dir` (R-NFR-08). */
@@ -37,6 +38,7 @@ export class TeachersController {
   constructor(
     private readonly teachers: TeachersQueries,
     private readonly settings: TeachersSettings,
+    private readonly usernames: TeacherUsernames,
   ) {}
 
   @Get()
@@ -61,7 +63,8 @@ export class TeachersController {
 
   @Patch(':id')
   async update(@Param('id', ParseUUIDPipe) id: string, @Body() body: unknown): Promise<TeacherView> {
-    const patch = sentOnly(parseOrThrow(teacherUpdateSchema, body), body);
+    const { username, ...patch } = sentOnly(parseOrThrow(teacherUpdateSchema, body), body);
+    if (username !== undefined) await this.usernames.set(orNotFound(await this.teachers.get(id)).profile_id, username ?? null);
     const row = Object.keys(patch).length
       ? await this.teachers.update(id, patch)
       : await this.teachers.get(id);
@@ -79,7 +82,8 @@ export class TeachersController {
     return (await this.settings.read()).meeting_link_auto;
   }
 
+  /** One teacher: its meeting fields and its login's username (docs/30). */
   private async view(row: Teacher): Promise<TeacherView> {
-    return withMeeting(row, await this.academyAuto());
+    return { ...withMeeting(row, await this.academyAuto()), username: await this.usernames.of(row.profile_id) };
   }
 }

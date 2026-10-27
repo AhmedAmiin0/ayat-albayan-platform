@@ -24,6 +24,8 @@ export interface UserView {
   last_sign_in_at: string | null;
   created_at: string;
   linked: LinkedRecord | null;
+  /** A teacher's sign-in username (docs/30); null / absent = none. */
+  username?: string | null;
 }
 
 /** GET /users/:id: the list row plus what the edit panel needs. */

@@ -75,5 +75,7 @@ function newStudent(d: TrialDraft) {
     tz: d.tz,
     status: registrationStatus(d.pkg === 'trial'),
     teacher_gender_pref: d.gender,
+    // Only «الطالب نفسه» is sent: absent = the column default «ولي الأمر» (false).
+    ...(d.contactIsSelf ? { contact_is_self: true } : {}),
   };
 }

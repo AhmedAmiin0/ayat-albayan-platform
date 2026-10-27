@@ -83,6 +83,13 @@ describe('H3/H4 sends (docs/12 §4, R-LEAD-02, R-MSG-01)', () => {
     expect(t.queries.enqueue).not.toHaveBeenCalled();
   });
 
+  it('H4 refuses account_code: the sign-in code is only ever sent by the API (docs/30)', async () => {
+    t.templates.get.mockResolvedValue({ ...templateRow(), key: 'account_code', category: 'authentication', status: 'approved' });
+    const res = await t.call({ method: 'POST', url: `${URL}/template`, body: { key: 'account_code', params: { '1': '123456' }, clientRequestId: REQ } });
+    expect([res.statusCode, res.json().code]).toEqual([403, 'template_not_allowed']);
+    expect(t.queries.enqueue).not.toHaveBeenCalled();
+  });
+
   it('H4 refuses lesson_join_link: its one-lesson token only comes from «أرسل رابط الحلقة»', async () => {
     t.templates.get.mockResolvedValue({ ...templateRow(), key: 'lesson_join_link', status: 'approved' });
     const res = await t.call({ method: 'POST', url: `${URL}/template`, body: { key: 'lesson_join_link', params: { ...PARAMS, button: 'forged' }, clientRequestId: REQ } });

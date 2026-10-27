@@ -1,83 +1,43 @@
-import { useForm } from '@tanstack/react-form';
-import { useQueryClient } from '@tanstack/react-query';
-import { useNavigate } from '@tanstack/react-router';
 import { useState } from 'react';
 import { LanguageSwitch } from '@/components/shell/account/LanguageSwitch';
-import { Button } from '@/components/ui/form/button';
 import { Cartouche } from '@/components/ui/display/cartouche';
-import { Field } from '@/components/ui/form/field';
-import { FormAlert } from '@/components/ui/form/form-alert';
-import { Input } from '@/components/ui/form/input';
+import { Tabs, tabIds } from '@/components/ui/layout/tabs';
 import { t } from '@/lib/i18n/i18n';
 import { BindingCover } from './BindingCover';
-import { PasswordInput } from './PasswordInput';
-import { signIn } from './sign-in';
+import { FamilyPanel } from './family/FamilyPanel';
+import { StaffPanel } from './login/StaffPanel';
 
-const required = ({ value }: { value: string }) => (value.trim() ? undefined : t.common.required);
+type Tab = 'staff' | 'family';
+const TABS: { value: Tab; label: string }[] = [
+  { value: 'staff', label: t.familyAuth.tabs.staff },
+  { value: 'family', label: t.familyAuth.tabs.family },
+];
 
 /**
- * Login (docs/07 login section): the form beside the leather binding; cover on top on phones.
- * `noValidate`: blank fields get the Arabic field error (docs/07 §10), never the browser bubble.
+ * Login (docs/07 login section, docs/30 §7): the forms beside the leather binding; cover on top on
+ * phones. Two tabs, «فريق الأكاديمية» first; only the active panel is rendered.
  */
 export function LoginPage() {
-  const queryClient = useQueryClient();
-  const navigate = useNavigate();
-  const [error, setError] = useState<string | null>(null);
-
-  const form = useForm({
-    defaultValues: { email: '', password: '' },
-    onSubmit: async ({ value }) => {
-      setError(null);
-      const result = await signIn(value, queryClient);
-      if (result.ok) await navigate({ to: result.home });
-      else setError(result.error);
-    },
-  });
+  const [tab, setTab] = useState<Tab>('staff');
+  const ids = tabIds('login', tab);
 
   return (
     <main className="grid min-h-screen bg-page shell:grid-cols-2">
       <div className="grid items-start justify-items-center px-4 py-8 sm:px-8 sm:py-12 shell:place-items-center">
-        <form
-          noValidate
-          className="grid w-full max-w-[380px] gap-[22px]"
-          onSubmit={(e) => {
-            e.preventDefault();
-            void form.handleSubmit();
-          }}
-        >
+        <div className="grid w-full max-w-[380px] gap-[22px]">
           {/* One row with the title, so the switch costs no height above «دخول» on phones. */}
           <div className="flex items-center justify-between gap-3">
             <Cartouche>{t.auth.loginTitle}</Cartouche>
             <LanguageSwitch />
           </div>
-          <p className="text-body text-pretty text-ink-2">{t.auth.intro}</p>
-          <form.Field name="email" validators={{ onSubmit: required }}>
-            {(field) => (
-              <Field id="email" label={t.auth.email} error={field.state.meta.errors[0]}>
-                {(p) => (
-                  <Input {...p} type="email" dir="ltr" autoComplete="email" required
-                    value={field.state.value} onChange={(e) => field.handleChange(e.target.value)} />
-                )}
-              </Field>
-            )}
-          </form.Field>
-          <form.Field name="password" validators={{ onSubmit: required }}>
-            {(field) => (
-              <Field id="password" label={t.auth.password} error={field.state.meta.errors[0]}>
-                {(p) => <PasswordInput {...p} value={field.state.value} onValue={field.handleChange} />}
-              </Field>
-            )}
-          </form.Field>
-          {error && <FormAlert>{error}</FormAlert>}
-          <form.Subscribe selector={(s) => s.isSubmitting}>
-            {(submitting) => (
-              <Button type="submit" disabled={submitting} className="min-h-11 w-full">
-                {submitting ? t.auth.submitting : t.auth.submit}
-              </Button>
-            )}
-          </form.Subscribe>
-          <p className="border-t border-rule pt-4 text-xs text-pretty text-ink-3">{t.auth.guardiansNote}</p>
-        </form>
+          <Tabs label={t.familyAuth.tabs.label} tabs={TABS} value={tab} onChange={setTab} idPrefix="login" className="mb-0" />
+          <div role="tabpanel" id={ids.panel} aria-labelledby={ids.tab} className="grid gap-[22px]">
+            {tab === 'staff' ? <StaffPanel /> : <FamilyPanel />}
+          </div>
+          {tab === 'staff' && (
+            <p className="border-t border-rule pt-4 text-xs text-pretty text-ink-3">{t.auth.guardiansNote}</p>
+          )}
+        </div>
       </div>
       <BindingCover />
     </main>

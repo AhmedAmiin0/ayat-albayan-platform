@@ -11,6 +11,7 @@ import { FilterPills } from '@/core/ui/form/FilterPills';
 import { GENDER_PILLS, sourcePills, TZ_PILLS } from '../lib/contact-pills';
 import { ageValid, contactReady, phoneProblem, type TrialDraft } from '../lib/draft';
 import { DurationPills } from './DurationPills';
+import { ContactIsSelfPills } from '@/student-file';
 
 type Contact = Pick<
   TrialDraft,
@@ -21,6 +22,7 @@ type Contact = Pick<
   | 'phone'
   | 'tz'
   | 'source'
+  | 'contactIsSelf'
   | 'durationMin'
 >;
 
@@ -78,6 +80,11 @@ export function ContactStep({ value, withDuration, onChange, onNext }: ContactSt
       {(tried || value.phone.trim()) && phone ? (
         <ErrorLine message={t.common.phoneErrors[phone]} />
       ) : null}
+      {group(
+        t.familyAuth.contactIsSelf.label,
+        <ContactIsSelfPills value={value.contactIsSelf === true} onChange={(contactIsSelf) => onChange({ contactIsSelf })} />,
+      )}
+      <Note>{t.familyAuth.contactIsSelf.hint}</Note>
       <Field
         label={t.guardians.name}
         required

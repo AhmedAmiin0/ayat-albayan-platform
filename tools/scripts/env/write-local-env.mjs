@@ -26,6 +26,8 @@ const files = {
     WA_VERIFY_TOKEN: 'local-verify',
     // Signs the public feedback links (>= 32 chars); local only.
     FEEDBACK_TOKEN_SECRET: 'local-feedback-secret-0123456789-abcdef',
+    // HMAC pepper of the WhatsApp sign-in codes (>= 32 chars, docs/30); local only.
+    LOGIN_CODE_PEPPER: 'local-login-code-pepper-0123456789-abcdef',
   },
   'apps/web/.env.local': {
     VITE_SUPABASE_URL: s.API_URL,
