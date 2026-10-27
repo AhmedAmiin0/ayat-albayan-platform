@@ -1,13 +1,7 @@
-import type {
-  LeadSource,
-  LeadStatus,
-  LessonStatus,
-  MessageDirection,
-  MessageStatus,
-} from '../../enums/index.js';
-import type { WaLine } from '../../enums/messaging.js';
+import type { LeadSource, LeadStatus, LessonStatus, MessageDirection, MessageStatus, WaLine } from '../../enums/index.js';
 import type { ChatListRef } from './chat-lists.js';
 import type { MessageQuote } from '../replies/reply-forward.js';
+import type { MessageReactions } from '../reactions/reactions.js';
 import type { TemplateParams } from '../templates/templates.js';
 import type { SubscriptionBadge, ThreadPeople } from './thread-people.js';
 
@@ -55,6 +49,8 @@ export interface ThreadView {
   last_notifications_inbound_at?: string | null;
   /** replyLine(): the line a session text leaves from; null when closed or on a single line. */
   reply_line?: WaLine | null;
+  /** Thread page only: its send line can react (false on the CRM line or a closed window). Absent = no. */
+  reactable?: boolean;
 }
 
 /** One messages row in a thread (R-MSG-05). */
@@ -84,6 +80,8 @@ export interface MessageView {
   forwardable?: boolean;
   /** Staff forwarded it from another message (our inbox only: WhatsApp shows no flag). */
   forwarded?: boolean;
+  /** Theirs and ours (WhatsApp: one each). Absent in an old cache. */
+  reactions?: MessageReactions;
   interactive_payload: unknown;
   error_code: string | null;
   error_text: string | null;

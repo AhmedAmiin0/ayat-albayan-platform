@@ -3,7 +3,6 @@ import { useState } from 'react';
 import { View } from 'react-native';
 import { usePermissions } from '@/auth';
 import { ClosedRow } from '../threads-list/ClosedRow';
-import { ComposerNotes } from './ComposerNotes';
 import { useComposerText } from './draft-store';
 import { QuoteSheet } from './quote/QuoteSheet';
 import { ReopenNote } from './ReopenNote';
@@ -70,7 +69,6 @@ export function Composer({
         <ErrorLine key={line} message={line} />
       ))}
       <GateNote />
-      <ComposerNotes thread={thread} open={open} />
       <ReopenNote phone={phone} closed={thread !== null && !open} />
       {open ? <QuoteStrip /> : null}
       {open && replies.staged ? <SavedReplyChip file={replies.staged.file} onRemove={replies.clearStaged} /> : null}

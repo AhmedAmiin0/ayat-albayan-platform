@@ -19,7 +19,7 @@ jest.mock('expo-router', () => ({
   useLocalSearchParams: () => ({ phone: '+966552147730' }),
 }));
 
-// docs/12 §13.10: a plain word for the line on each bubble, and «سيصل ردّك عبر …» in an open window.
+// docs/12 §13.10: a plain word for the line on each bubble; no «سيصل ردّك عبر …» note any more (owner 2026-10-27).
 const CHAT = t.enums.waLine.chat;
 const NOTIFICATIONS = t.enums.waLine.notifications;
 const replyFrom = (word: string) => t.inbox.line.replyFrom.replace('{line}', word);
@@ -63,20 +63,9 @@ test('each bubble names its own line', async () => {
   expect(screen.getAllByText(NOTIFICATIONS)).toHaveLength(1);
 });
 
-test('open window, reply_line chat: the composer says the reply goes via the chat line', async () => {
-  await render({ messages: [{ ...inbound, line: 'chat' }], thread: { ...openWindow, last_inbound_line: 'chat', reply_line: 'chat' } });
-  expect(screen.getByText(replyFrom(CHAT))).toBeTruthy();
-});
-
-test('open window on the notifications line names that line', async () => {
-  await render({ messages: [inbound], thread: { ...openWindow, last_inbound_line: 'notifications', reply_line: 'notifications' } });
-  expect(screen.getByText(replyFrom(NOTIFICATIONS))).toBeTruthy();
-});
-
-test('a reminder tap after a chat message: the note follows reply_line (chat), not the newest line', async () => {
-  await render({ messages: [inbound], thread: { ...openWindow, last_inbound_line: 'notifications', reply_line: 'chat' } });
-  expect(screen.getByText(replyFrom(CHAT))).toBeTruthy();
-  expect(screen.queryByText(replyFrom(NOTIFICATIONS))).toBeNull();
+test.each(['chat', 'notifications'] as const)('open window, reply line %s: no «your reply goes via …» note (owner 2026-10-27: «Remove this»)', async (line) => {
+  await render({ messages: [{ ...inbound, line: 'chat' }], thread: { ...openWindow, last_inbound_line: line, reply_line: line } });
+  expect(anyReplyFrom()).toHaveLength(0);
 });
 
 test('no note when there is no reply line (a single line)', async () => {
@@ -102,6 +91,6 @@ test('teacher: the line is named, never a digit of the number', async () => {
   const named = { ...family, display_name: 'أم يوسف', last_inbound_line: 'chat' as const, reply_line: 'chat' as const };
   await render({ messages: [{ ...inbound, line: 'chat' }], thread: named, teacher: true });
   expect(screen.getByText(CHAT)).toBeTruthy();
-  expect(screen.getByText(replyFrom(CHAT))).toBeTruthy();
+  expect(anyReplyFrom()).toHaveLength(0);
   for (const s of SHOWN) expect(readable()).not.toContain(s);
 });

@@ -5,6 +5,7 @@ import {
   isChatViewMime,
   renderTemplateBody,
   type MessageLesson,
+  type MessageReactions,
   type MessageView,
   type RenderableTemplate,
 } from '@ab/shared';
@@ -19,12 +20,16 @@ export type MessageRow = Tables<'messages'>;
  * the staff profile behind created_by (D4, migration 510 points the FK at profiles).
  */
 export const MESSAGE_SELECT =
-  '*, sent_by_teacher:teachers!messages_sent_by_teacher_id_fkey(display_name_ar), sender:profiles!messages_created_by_fkey(full_name)' as const;
+  '*, sent_by_teacher:teachers!messages_sent_by_teacher_id_fkey(display_name_ar), sender:profiles!messages_created_by_fkey(full_name), reactor:profiles!messages_our_reaction_by_fkey(full_name)' as const;
+/** PostgREST filter: not a reaction row (migration 900: stored inbound reactions and our reaction sends are never bubbles). */
+export const NOT_A_REACTION = 'interactive_payload->>type.is.null,interactive_payload->>type.neq.reaction' as const;
 /** A thread row: the message with its lesson, sending teacher and staff sender embedded (ThreadsQueries.messages). */
 export type ThreadMessageRow = MessageRow & {
   lesson?: MessageLesson | null;
   sent_by_teacher?: { display_name_ar: string } | null;
   sender?: { full_name: string } | null;
+  /** The staff profile behind our_reaction (migration 900). */
+  reactor?: { full_name: string } | null;
 };
 
 export interface MessageViewInput {
@@ -78,6 +83,13 @@ const isForwardable = (row: ThreadMessageRow): boolean => {
   return isCrmHistoryRow(row) ? isChatViewMime(row.media_mime) : !!row.body?.trim();
 };
 
+/** Theirs and ours (migration 900), with the staff member behind ours. */
+const reactionsOf = (row: ThreadMessageRow): MessageReactions => ({
+  theirs: row.their_reaction ?? null,
+  ours: row.our_reaction ?? null,
+  ours_by: row.our_reaction ? (row.reactor?.full_name ?? null) : null,
+});
+
 /** An old-CRM file's body is only its storage link: never shown, the row is a file with no caption. */
 const shownBody = (row: ThreadMessageRow): string | null => (isCrmHistoryRow(row) ? null : row.body);
 
@@ -111,6 +123,7 @@ export function toMessageView(input: MessageViewInput): MessageView {
     replyable: row.wa_message_id !== null,
     forwardable: isForwardable(row),
     forwarded: row.forwarded_from_id !== null,
+    reactions: reactionsOf(row),
     interactive_payload: row.interactive_payload,
     error_code: row.error_code,
     error_text: row.error_text,

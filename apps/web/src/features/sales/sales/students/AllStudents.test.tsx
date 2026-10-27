@@ -1,3 +1,4 @@
+import { formatPhone } from '@ab/shared';
 import { fireEvent, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n/i18n';
@@ -11,14 +12,16 @@ vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch
 afterEach(() => apiFetch.mockReset());
 
 describe('AllStudents «كل الطلاب»', () => {
-  it('lists code, name, teacher, program, status and guardian; no money column', async () => {
-    apiFetch.mockResolvedValue({ items: [student(), student({ id: 's2', name: 'يوسف', code: 'AB-0190', teacher_name: null })], total: 2, page: 1, pageSize: 25 });
+  it('lists code, name, teacher, program, status, guardian and phone; no money column', async () => {
+    apiFetch.mockResolvedValue({ items: [student(), student({ id: 's2', name: 'يوسف', code: 'AB-0190', teacher_name: null, guardian_phone: null })], total: 2, page: 1, pageSize: 25 });
     renderWithQuery(<AllStudents />);
     expect(await screen.findByText('سهيلة')).toBeTruthy();
     expect(apiFetch).toHaveBeenCalledWith('/sales/students/all?page=1&pageSize=25');
     for (const text of ['AB-0183', 'أبرار', 'أم سهيلة', t.enums.program.quran, t.enums.studentStatus.active, t.sales.allStudents.noTeacher]) {
       expect(screen.getAllByText(text).length).toBeGreaterThan(0);
     }
+    expect(screen.getAllByText(formatPhone('+201001112223'))).toHaveLength(1);
+    expect(screen.getAllByText(t.sales.allStudents.guardianPhone).length).toBeGreaterThan(0);
     expect(document.body.textContent).not.toMatch(/ر\.س|SAR|\$/);
   });
 

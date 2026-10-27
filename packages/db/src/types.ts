@@ -2504,6 +2504,9 @@ export type Database = {
           number_id: string | null;
           media_path: string | null;
           next_attempt_at: string | null;
+          our_reaction: string | null;
+          our_reaction_at: string | null;
+          our_reaction_by: string | null;
           phone_e164: string;
           read_at: string | null;
           reply_to_message_id: string | null;
@@ -2515,6 +2518,7 @@ export type Database = {
           status: Database['public']['Enums']['message_status'];
           template_key: string | null;
           template_params: Json | null;
+          their_reaction: string | null;
           wa_conversation_id: string | null;
           wa_message_id: string | null;
           wa_pricing_category: string | null;
@@ -2544,6 +2548,9 @@ export type Database = {
           number_id?: string | null;
           media_path?: string | null;
           next_attempt_at?: string | null;
+          our_reaction?: string | null;
+          our_reaction_at?: string | null;
+          our_reaction_by?: string | null;
           phone_e164: string;
           read_at?: string | null;
           reply_to_message_id?: string | null;
@@ -2555,6 +2562,7 @@ export type Database = {
           status?: Database['public']['Enums']['message_status'];
           template_key?: string | null;
           template_params?: Json | null;
+          their_reaction?: string | null;
           wa_conversation_id?: string | null;
           wa_message_id?: string | null;
           wa_pricing_category?: string | null;
@@ -2584,6 +2592,9 @@ export type Database = {
           number_id?: string | null;
           media_path?: string | null;
           next_attempt_at?: string | null;
+          our_reaction?: string | null;
+          our_reaction_at?: string | null;
+          our_reaction_by?: string | null;
           phone_e164?: string;
           read_at?: string | null;
           reply_to_message_id?: string | null;
@@ -2595,11 +2606,19 @@ export type Database = {
           status?: Database['public']['Enums']['message_status'];
           template_key?: string | null;
           template_params?: Json | null;
+          their_reaction?: string | null;
           wa_conversation_id?: string | null;
           wa_message_id?: string | null;
           wa_pricing_category?: string | null;
         };
         Relationships: [
+          {
+            foreignKeyName: 'messages_our_reaction_by_fkey';
+            columns: ['our_reaction_by'];
+            isOneToOne: false;
+            referencedRelation: 'profiles';
+            referencedColumns: ['id'];
+          },
           {
             foreignKeyName: 'messages_created_by_fkey';
             columns: ['created_by'];
@@ -5101,6 +5120,8 @@ export type Database = {
           phone_e164: string;
         }[];
       };
+      message_is_reaction: { Args: { p: Json }; Returns: boolean };
+      messages_reaction_backfill: { Args: never; Returns: number };
       teacher_unread: {
         Args: { p_phones: string[]; p_teacher_id: string };
         Returns: {
