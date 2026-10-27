@@ -1,6 +1,8 @@
 export {
   CHANNEL_REFRESH_MS,
   CHANNEL_WRITES,
+  INBOX_LIST_REFRESH_MS,
+  INBOX_REFRESH_MS,
   type ChannelAudience,
   channelKey,
   channelMessagesPath,

@@ -6,24 +6,29 @@ import {
   provisionalMessage,
   removeMessage,
   replaceMessage,
+  sendKey,
   threadKey,
   threadPath,
   type ThreadCache,
 } from './thread-cache';
+import { useThreadPoll } from './thread-poll';
 
 /**
  * GET /threads/:phone (docs/12 H2): the newest page first, `before` the oldest loaded row pages
  * back. The API stamps the inbound rows read when it answers. The persisted client keeps the last
- * answer on disk, so an opened thread reads offline (R-MOB-03).
+ * answer on disk, so an opened thread reads offline (R-MOB-03). While on screen, useThreadPoll keeps
+ * its newest page live.
  */
 export function useThread(phone: string) {
-  return useInfiniteQuery({
+  const query = useInfiniteQuery({
     queryKey: threadKey(phone),
     queryFn: ({ pageParam }) =>
       apiFetch<ThreadDetail>(`${threadPath(phone)}${toQueryString({ before: pageParam })}`),
     initialPageParam: undefined as string | undefined,
     getNextPageParam: (last) => (last.has_more ? last.messages[0]?.created_at : undefined),
   });
+  useThreadPoll(phone, query.data !== undefined);
+  return query;
 }
 
 /**
@@ -53,8 +58,7 @@ function body({ out, id }: SendInput) {
  * Optimistic send: the row shows at once as queued; the API's row replaces it, or a refusal takes
  * it out again (the caller shows `sendError`). Either way the thread refetches.
  */
-/** The mutation key of a chat's text / template send. */
-export const sendKey = (phone: string) => ['inbox-send', phone];
+export { sendKey } from './thread-cache';
 
 export function useSendMessage(phone: string) {
   const client = useQueryClient();

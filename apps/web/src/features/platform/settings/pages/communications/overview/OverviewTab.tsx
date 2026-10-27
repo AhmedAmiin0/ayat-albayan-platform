@@ -4,6 +4,7 @@ import { AutoMessagesSwitch } from '@/features/messaging/messaging/AutoMessagesS
 import { MessagingSwitch } from '@/features/messaging/messaging/MessagingSwitch';
 import { t } from '@/lib/i18n/i18n';
 import { OverviewNumbers } from './OverviewNumbers';
+import { OwnTraffic } from './OwnTraffic';
 import { OverviewWhat } from './OverviewWhat';
 import { PublicNumber } from './PublicNumber';
 
@@ -31,6 +32,7 @@ export function OverviewTab({ settings }: { settings: AcademySettings }) {
         <OverviewNumbers />
         <OverviewWhat messagingOn={settings.messaging_enabled === true} />
         <PublicNumber e164={settings.academy_whatsapp_e164} />
+        <OwnTraffic />
       </div>
     </div>
   );

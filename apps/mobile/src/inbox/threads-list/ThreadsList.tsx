@@ -65,7 +65,7 @@ export function ThreadsList({ switcher }: { switcher?: ReactNode }) {
   const [filter, setFilter] = useState<Filter>('all');
   const [listId, setListId] = useState<string | null>(null);
   const inset = useTabBarInset();
-  const list = useThreadList({ search, unread: filter === 'unread', list: listId ?? undefined });
+  const list = useThreadList({ search, unread: filter === 'unread', list: listId ?? undefined, live: true });
   const loaded = list.data !== undefined;
   const stale = list.isError && loaded;
   const subtitle = stale ? t.mobile.lastUpdated.replace('{time}', clockAt(list.dataUpdatedAt)) : undefined;
