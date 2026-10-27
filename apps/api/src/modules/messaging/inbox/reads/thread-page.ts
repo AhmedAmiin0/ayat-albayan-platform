@@ -1,5 +1,5 @@
 import type { MessageView, ThreadView } from '@ab/shared';
-import type { ThreadMessageRow } from '../../whatsapp/messages/message.mapper';
+import type { ThreadMessageRow } from '../../whatsapp';
 import type { ReadReceipts } from './read-receipts';
 import type { KnownNumber } from '../threads/known-number';
 import type { ThreadRow } from '../threads/threads.mapper';

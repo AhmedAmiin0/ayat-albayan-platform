@@ -18,8 +18,8 @@ describe('migration 20261028000850: thread_summaries', () => {
 
   it('is re-runnable: if not exists, or replace, drop … if exists before every create trigger / policy', () => {
     expect(SUMMARY).toContain('create table if not exists public.thread_summaries');
-    expect(SUMMARY.match(/create trigger/g)).toHaveLength(3);
-    expect(SUMMARY.match(/drop trigger if exists thread_summaries_/g)).toHaveLength(3);
+    expect(SUMMARY.match(/create trigger/g)).toHaveLength(4);
+    expect(SUMMARY.match(/drop trigger if exists thread_summaries_/g)).toHaveLength(4);
     expect(SUMMARY).not.toMatch(/create (function|view)\b/);
     expect(SUMMARY).not.toMatch(/concurrently/i);
     expect(SUMMARY).toMatch(/on conflict \(phone_e164\) do update set/);

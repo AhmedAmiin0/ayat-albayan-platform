@@ -1,7 +1,6 @@
 import { DELTA_OVERLAP_MS, PENDING_WINDOW_MS, type MessageView, type ThreadDelta, type ThreadDeltaWindow, type ThreadView } from '@ab/shared';
 import { ForbiddenException, Inject, Injectable } from '@nestjs/common';
-import type { ThreadMessageRow } from '../../whatsapp/messages/message.mapper';
-import { MessageViews } from '../../whatsapp/messages/message.views';
+import { MessageViews, type ThreadMessageRow } from '../../whatsapp';
 import { ReadReceipts } from '../reads/read-receipts';
 import { visibleToSales, withoutLinks } from '../sales-threads/sales-threads';
 import { assertPhone, type TeacherScope } from '../teacher-threads/teacher-scope';
@@ -72,7 +71,9 @@ export class ThreadDeltaService {
       this.render(moving.filter((r) => !shown.has(r.id)), caller),
       this.arrived(fresh, { q, caller, now }),
     ]);
-    const out: ThreadDelta = { messages, has_more: rows.length > q.limit, pending };
+    // A gap only when the rows past the limit are newer than `after` (the overlap alone never forces a full read).
+    const gap = rows.length > q.limit && Date.parse(rows[q.limit]?.created_at ?? '') > Date.parse(q.after);
+    const out: ThreadDelta = { messages, has_more: gap, pending };
     if (!arrived) return out;
     return { ...out, thread: arrived.window, messages: arrived.stamped ? readNow(messages, now) : messages };
   }

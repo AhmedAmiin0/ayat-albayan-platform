@@ -22,8 +22,11 @@ export function useLiveThread(phone: string) {
     queryFn: async () => {
       const search = document.hasFocus() ? deltaSearch(client.getQueryData(queryKey), Date.now()) : null;
       if (!search) return Date.now();
+      const asked = client.getQueryState(queryKey)?.dataUpdatedAt;
       const delta = await apiFetch<ThreadDelta>(`${threadPath(phone)}${search}`);
-      if (client.isFetching({ queryKey }) + client.isMutating({ mutationKey: ['inbox-send', phone] }) > 0) return Date.now();
+      const busy = client.isFetching({ queryKey }) + client.isMutating({ mutationKey: ['inbox-send', phone] }) > 0;
+      // A full read that landed meanwhile is newer than this answer: keep it.
+      if (busy || client.getQueryState(queryKey)?.dataUpdatedAt !== asked) return Date.now();
       if (needsFullRead(delta)) void client.invalidateQueries({ queryKey });
       else client.setQueryData(queryKey, (old) => mergeDelta(old, delta));
       return Date.now();

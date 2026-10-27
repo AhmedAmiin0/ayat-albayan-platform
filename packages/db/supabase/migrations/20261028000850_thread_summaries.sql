@@ -11,7 +11,8 @@
 --     lock-key order (hashtext), so two multi-phone statements cannot deadlock on them.
 --     ponytail: a transaction that writes phone A's messages, then (another statement) phone B's
 --     while another does B then A can deadlock (Postgres aborts one); the API writes messages one
---     statement per request and the RPCs one family at a time.
+--     statement per request and the RPCs one family at a time. Likewise a transaction holding a message
+--     row lock that then waits on a phone's lock another holds while it updates that row.
 --   * The newest message is picked by (created_at desc, id desc): the old view's distinct on had no
 --     tiebreak (an arbitrary row of two with the same second); now it is deterministic.
 -- Idempotent: create if not exists / create or replace / drop trigger if exists + create trigger;
@@ -129,6 +130,15 @@ begin
   return null;
 end $$;
 
+-- truncate messages (a test reset, never the app) leaves no thread behind.
+create or replace function public.thread_summaries_on_truncate() returns trigger
+  language plpgsql security definer set search_path = '' as $$
+begin
+  delete from public.thread_summaries;
+  return null;
+end $$;
+
+revoke all on function public.thread_summaries_on_truncate() from public, anon, authenticated;
 revoke all on function public.thread_summary_refresh(text) from public, anon, authenticated;
 revoke all on function public.thread_summary_refresh_all(text[]) from public, anon, authenticated;
 revoke all on function public.thread_summaries_on_insert() from public, anon, authenticated;
@@ -145,6 +155,9 @@ create trigger thread_summaries_update after update on public.messages
 drop trigger if exists thread_summaries_delete on public.messages;
 create trigger thread_summaries_delete after delete on public.messages
   referencing old table as old_rows for each statement execute function public.thread_summaries_on_delete();
+drop trigger if exists thread_summaries_truncate on public.messages;
+create trigger thread_summaries_truncate after truncate on public.messages
+  for each statement execute function public.thread_summaries_on_truncate();
 
 -- Backfill once (and re-runnable): every phone with a message, from the same rules as the refresh.
 insert into public.thread_summaries as s (phone_e164, last_message_id, last_direction, last_body,
@@ -208,7 +221,8 @@ grant select on public.v_list_threads to service_role;
 --   drop trigger if exists thread_summaries_insert on public.messages;
 --   drop trigger if exists thread_summaries_update on public.messages;
 --   drop trigger if exists thread_summaries_delete on public.messages;
---   drop function if exists public.thread_summaries_on_insert(), public.thread_summaries_on_update(),
+--   drop trigger if exists thread_summaries_truncate on public.messages;
+--   drop function if exists public.thread_summaries_on_truncate(), public.thread_summaries_on_insert(), public.thread_summaries_on_update(),
 --     public.thread_summaries_on_delete(), public.thread_summary_refresh_all(text[]),
 --     public.thread_summary_refresh(text);
 --   drop table if exists public.thread_summaries;

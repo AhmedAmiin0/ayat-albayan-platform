@@ -1,10 +1,10 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../../../common/db/db.module';
-import { MESSAGE_SELECT, type ThreadMessageRow } from '../../whatsapp/messages/message.mapper';
+import { MESSAGE_SELECT, type ThreadMessageRow } from '../../whatsapp';
 
 /** The page's own select: the message with its lesson, sending teacher and staff sender (ThreadsQueries.messages). */
 const SELECT = `${MESSAGE_SELECT}, lesson:lessons(starts_at, status)` as const;
-/** A chat never has more rows in flight than this; more would be a bulk send, shown by the next full read. */
+/** A chat never has more rows in flight than this; past it the NEWEST are kept (the ticks that still move). */
 const PENDING_LIMIT = 50;
 
 function check(error: { message: string } | null, what: string): asserts error is null {
@@ -42,7 +42,7 @@ export class DeltaQueries {
       .select(SELECT)
       .eq('phone_e164', q.phone)
       .or(filter)
-      .order('created_at', { ascending: true })
+      .order('created_at', { ascending: false })
       .limit(PENDING_LIMIT);
     check(error, 'thread pending read');
     return data ?? [];
