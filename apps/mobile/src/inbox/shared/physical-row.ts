@@ -3,7 +3,7 @@
 // bubbles do (bubble-side). RN flips row, flex-start/end and start/end under RTL, so the physical
 // order is turned back into logical styles here.
 
-export interface PhysicalRow {
+interface PhysicalRow {
   /** The flexDirection that lays the children out left → right, as written. */
   direction: 'row' | 'row-reverse';
   /** The alignItems (in a column) / alignSelf that puts a child on the physical left. */
