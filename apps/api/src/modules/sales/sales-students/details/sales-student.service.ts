@@ -1,5 +1,6 @@
 import type { SalesStudentDetails, SignedDownload } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
+import { chatPhone } from '../../../../common/auth/chat-phone';
 import type { AuthUser } from '../../../../common/auth/verify-token';
 import { notFound } from '../../../../common/http/errors';
 import { SalesStudentScope } from '../sales-student-scope';
@@ -28,7 +29,8 @@ export class SalesStudentService {
       this.reads.sentReports(studentId),
     ]);
     if (!student) throw notFound('student_not_found');
-    return toStudentDetails({ student, history, lessons, reports });
+    const view = toStudentDetails({ student, history, lessons, reports });
+    return { ...view, student: { ...view.student, guardian_phone: chatPhone(user, view.student.guardian_phone) } };
   }
 
   /** «تنزيل PDF» of one of her student's sent reports: 404 for another student's report, 409 pdf_not_ready. */

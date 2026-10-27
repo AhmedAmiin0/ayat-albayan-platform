@@ -2,6 +2,7 @@ import { formatPhone } from '@ab/shared';
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { router } from 'expo-router';
 import { t } from '@/core/lib/i18n/i18n';
+import { TreeBaseProvider } from '@/core/nav/tree-base';
 import { renderWithQuery } from '@/test/query';
 import { ltr } from '@/core/ui/primitives/Ltr';
 import { AllStudentsScreen } from './AllStudentsScreen';
@@ -52,7 +53,7 @@ test('a failed read with nothing cached shows the error', async () => {
 test('one of hers (`mine`) opens «تفاصيل الطالب»; a pending one of another family opens its chat', async () => {
   const other = student({ id: 'st2', name: 'جنى علي', code: 'AB-0190', status: 'pending_subscription', guardian_phone: '+966551110000' });
   mockApiFetch.mockResolvedValue(page([student({ mine: true }), other]));
-  await renderWithQuery(<AllStudentsScreen />);
+  await renderWithQuery(<TreeBaseProvider value="/sales"><AllStudentsScreen /></TreeBaseProvider>);
   await screen.findByText('يوسف أحمد');
   await fireEvent.press(screen.getByText('جنى علي'));
   expect(router.push).toHaveBeenCalledWith('/sales/inbox/thread/%2B966551110000');

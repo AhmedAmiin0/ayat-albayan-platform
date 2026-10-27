@@ -1,5 +1,6 @@
 import type { MyEarnings, MyPaymentRow, MyStudentRow } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
+import { can } from '../../../../common/auth/permissions';
 import type { AuthUser } from '../../../../common/auth/verify-token';
 import { buildEarnings } from './my.earnings';
 import { toMyPayment, toMyStudent } from './my.mapper';
@@ -20,8 +21,10 @@ export class MyService {
 
   /** The students I brought, newest first: when, the guardian's phone, whether the first subscription is paid, my commission. No price. */
   async students(user: AuthUser): Promise<MyStudentRow[]> {
-    const [rows, phones] = await Promise.all([this.queries.students(user.id), this.queries.guardianPhones(user.id)]);
-    return rows.flatMap((r) => toMyStudent(r, phones) ?? []);
+    // The phone only for a holder of inbox.read (chatPhone): she sees it in the chats anyway.
+    const phones = can(user, 'inbox.read') ? this.queries.guardianPhones(user.id) : Promise.resolve(new Map<string, string>());
+    const [rows, byStudent] = await Promise.all([this.queries.students(user.id), phones]);
+    return rows.flatMap((r) => toMyStudent(r, byStudent) ?? []);
   }
 
   /** Only the payments I recorded. */

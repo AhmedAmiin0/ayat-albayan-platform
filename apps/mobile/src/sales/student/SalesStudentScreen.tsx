@@ -41,7 +41,7 @@ export function SalesStudentScreen() {
         <View style={{ gap: 20 }}>
           <Note>{about.join(' · ')}</Note>
           {phone ? (
-            <Button variant="secondary" label={`${t.sales.student.chat} ${ltr(formatPhone(phone))}`} onPress={() => router.push(familyChatHref(phone))} />
+            <Button variant="secondary" label={`${t.sales.student.chat} ${ltr(formatPhone(phone))}`} onPress={() => router.push(familyChatHref('/sales', phone))} />
           ) : null}
           <SubscriptionSection data={data} />
           <AttendanceSection attendance={data.attendance} />

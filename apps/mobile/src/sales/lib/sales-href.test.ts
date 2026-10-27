@@ -14,6 +14,7 @@ test('sales tree: «المزيد» pages under /sales/more, the schedule is its 
   expect(href.schedule('t1')).toEqual({ pathname: '/sales/schedule', params: { teacherId: 't1' } });
 });
 
-test('a family chat opens in the sales inbox, the + encoded', () => {
-  expect(familyChatHref('+201001112223')).toBe('/sales/inbox/thread/%2B201001112223');
+test('a family chat opens in the inbox of the tree it runs in, the + encoded', () => {
+  expect(familyChatHref('/sales', '+201001112223')).toBe('/sales/inbox/thread/%2B201001112223');
+  expect(familyChatHref('', '+201001112223')).toBe('/inbox/thread/%2B201001112223');
 });
