@@ -1,7 +1,7 @@
 import type { Permission } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { useEffect } from 'react';
-import { INBOX_REFRESH_MS } from '@/features/messaging/inbox/api/api';
+import { inboxPollMs, useInboxLive } from '@/features/messaging/inbox';
 import { ApiError, apiFetch } from '@/lib/http/api';
 import { t } from '@/lib/i18n/i18n';
 
@@ -12,14 +12,15 @@ export const unreadRetry = (count: number, error: unknown): boolean => !(error i
 
 /**
  * The academy's unread chats (the same number the admin sees), at pageSize=1. Under ['threads'], so
- * ThreadPane's invalidation after opening a chat refreshes it; it keeps polling in a background tab.
+ * ThreadPane's invalidation after opening a chat refreshes it; it keeps polling in a background tab
+ * (every 60 s while realtime is connected: its events refresh it sooner, docs/12 §15).
  */
 export const salesUnreadQuery = (enabled: boolean) => ({
   enabled,
   queryKey: ['threads', 'nav-count', 'unread'],
   queryFn: () => apiFetch<Total>('/threads?unread=true&page=1&pageSize=1'),
   select: (p: Total) => p.total,
-  refetchInterval: INBOX_REFRESH_MS,
+  refetchInterval: inboxPollMs,
   refetchIntervalInBackground: true,
   retry: unreadRetry,
 });
@@ -35,6 +36,7 @@ export function unreadTitle(n: number): string {
  */
 export function useSalesUnread(can: (permission: Permission) => boolean): number {
   const enabled = can('inbox.read');
+  useInboxLive();
   const q = useQuery(salesUnreadQuery(enabled));
   // inbox.read lost mid-session: the disabled query keeps its cached count, which must leave the title.
   const n = enabled ? (q.data ?? 0) : 0;
