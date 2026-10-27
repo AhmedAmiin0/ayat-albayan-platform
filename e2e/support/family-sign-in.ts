@@ -17,9 +17,14 @@ export async function openCodes(): Promise<void> {
       name: TEMPLATE,
       language: 'ar',
       category: 'AUTHENTICATION',
+      // Meta lists an approved authentication template with its fixed text ({{1}} = the code) and the
+      // copy-code button as a URL button: the stub checks a send's body values against this text.
       components: [
-        { type: 'BODY', add_security_recommendation: true },
-        { type: 'BUTTONS', buttons: [{ type: 'OTP', otp_type: 'COPY_CODE', text: 'نسخ الرمز' }] },
+        { type: 'BODY', text: 'رمز التحقق الخاص بك هو *{{1}}*. لا تشاركه مع أحد.', example: { body_text: [['123456']] } },
+        {
+          type: 'BUTTONS',
+          buttons: [{ type: 'URL', text: 'نسخ الرمز', url: 'https://www.whatsapp.com/otp/code/?otp_type=COPY_CODE&code=otp{{1}}', example: ['https://www.whatsapp.com/otp/code/?otp_type=COPY_CODE&code=otp123456'] }],
+        },
       ],
     }),
   });
