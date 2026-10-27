@@ -51,6 +51,8 @@ export interface SalesStudentView {
   program: Program;
   teacher_name: string | null;
   guardian_name: string;
+  /** One of hers (the ownership of «الاشتراكات»): the row opens «تفاصيل الطالب». Absent in an old cache. */
+  mine?: boolean;
 }
 
 /** `?page&pageSize&search`: search is a name (Arabic-normalised) or a code. */

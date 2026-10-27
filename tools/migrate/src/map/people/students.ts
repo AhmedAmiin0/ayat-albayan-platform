@@ -3,24 +3,15 @@
 import { normalizeArabic } from '@ab/shared';
 import type { EntityModule, SourceBundle } from '../../entities/contract.ts';
 import { keyId, keys } from '../../keys.ts';
-import { personTz, phoneCell } from '../../sources/sheets/cells.ts';
+import { personTz } from '../../sources/sheets/cells.ts';
 import { accepted, issueOnly, issuesFor } from '../../sources/sheets/issues.ts';
 import { gender, teacherFromText } from '../../sources/values.ts';
 import type { ColumnValue, Mapped, RowIssue, TargetRecord } from '../../types.ts';
 import { type Person, collectPeople } from './collect.ts';
 import { writeStudent } from './students.write.ts';
 import { subsFacts } from './subs.ts';
+import { statusFacts } from './status/facts.ts';
 import { reportFacts } from './taught.ts';
-
-/** Phones of HEART «subscription» rows: those families pay, so their children are active. */
-function payingPhones(bundle: SourceBundle): Set<string> {
-  const out = new Set<string>();
-  for (const r of bundle.sheets['heart_subscriptions'] ?? []) {
-    const p = phoneCell(r.fields['phone']);
-    if (p.ok) out.add(p.e164);
-  }
-  return out;
-}
 
 interface Built {
   columns: Record<string, ColumnValue>;
@@ -28,7 +19,7 @@ interface Built {
   issues: RowIssue[];
 }
 
-function studentRecord(p: Person, paying: ReadonlySet<string>): Built {
+function studentRecord(p: Person): Built {
   const issue = issuesFor('students', p.ref);
   const issues: RowIssue[] = [];
   const f = p.fields;
@@ -50,7 +41,6 @@ function studentRecord(p: Person, paying: ReadonlySet<string>): Built {
     goal: f.goal,
     riwaya: f.riwaya,
     tz: personTz({ declared: f.tzCountry ?? f.country, phone: p.phone }),
-    status: p.active || paying.has(p.phone) ? 'active' : 'new',
     notes: f.notes,
   };
   // Legacy AB-nnnn kept (docs/06 step 5): written with OVERRIDING SYSTEM VALUE (students.write.ts).
@@ -80,8 +70,7 @@ function reportTeacher(o: { p: Person; refs: TargetRecord['refs']; slug: string 
 
 function mapStudents(bundle: SourceBundle): Mapped[] {
   const { people, issues } = collectPeople(bundle);
-  const paying = payingPhones(bundle);
-  const built = people.map((p) => ({ p, ...studentRecord(p, paying) }));
+  const built = people.map((p) => ({ p, ...studentRecord(p) }));
   const prelim = built.map((b) => ({
     key: b.p.key,
     record: { columns: b.columns, refs: b.refs, aliases: b.p.aliases },
@@ -90,6 +79,7 @@ function mapStudents(bundle: SourceBundle): Mapped[] {
   }));
   const taught = reportFacts(bundle, prelim);
   const subs = subsFacts(bundle, prelim);
+  const statusOf = statusFacts(bundle, prelim, { ...taught, subsActive: subs.active });
   // Legacy codes first: apply keeps this order, so every AB code is inserted (and the sequence
   // moved past it) before a new student draws one from the sequence.
   const legacyFirst = [...built].sort(
@@ -98,18 +88,14 @@ function mapStudents(bundle: SourceBundle): Mapped[] {
   const out = legacyFirst.map(({ p, columns, refs, issues: own }) => {
     const id = keyId(p.key);
     const t = reportTeacher({ p, refs, slug: taught.teacher.get(id) });
-    // Subscribed: «طالب حالي», a مشترك booking, a paying HEART phone, a chargeable reported
-    // lesson, or more than one lesson in SUBS. Otherwise not subscribed (R-STU-05, docs/18): an
-    // attended trial report → pending_subscription, else new — never trial (bookings not imported).
-    const active =
-      columns['status'] === 'active' || taught.chargeable.has(id) || subs.active.has(id);
-    const waiting = taught.trialAttended.has(id) ? 'pending_subscription' : 'new';
+    // «مشترك» only with a current subscription (docs/06 «Student status», status/rules.ts).
+    const { status, issue } = statusOf(p);
     return accepted({
       key: p.key,
       ref: p.ref,
-      columns: { ...columns, status: active ? 'active' : waiting },
+      columns: { ...columns, status },
       refs: t.refs,
-      issues: [...own, ...t.issues],
+      issues: [...own, ...t.issues, ...(issue ? [issue] : [])],
       aliases: p.aliases,
     });
   });

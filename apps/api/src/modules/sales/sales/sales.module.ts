@@ -18,7 +18,7 @@ import { SalesSettings } from './sales.settings';
  * The sales role: a salesperson's own leads, subscriptions (no money, with their history) and meetings,
  * the academy's teachers, students, running lessons and read-only day schedule (docs/16: she is the
  * assistant too), plus the lead assignment (auto on a new lead, or by the admin). Imports no feature module: Leads, Inbox and
- * Classroom import this one (SalesAssignService, SalesScopes, SalesQueries).
+ * Classroom import this one (SalesAssignService, SalesScopes, SalesQueries), SalesStudents the history reads.
  */
 @Module({
   controllers: [SalesController, SalesAcademyController, SalesAdminController],
@@ -26,6 +26,6 @@ import { SalesSettings } from './sales.settings';
     ...[SalesSettings, SalesQueries, SalesService, SalesScopes, SalesAssignQueries, SalesAssignService],
     ...[SalesAcademyQueries, SalesHistoryQueries, SalesAcademyService, SalesScheduleQueries, SalesScheduleService],
   ],
-  exports: [SalesQueries, SalesScopes, SalesAssignService],
+  exports: [SalesQueries, SalesScopes, SalesAssignService, SalesHistoryQueries],
 })
 export class SalesModule {}

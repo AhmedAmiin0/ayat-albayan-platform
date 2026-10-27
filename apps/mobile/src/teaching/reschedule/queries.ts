@@ -16,6 +16,8 @@ interface RescheduleSlotsParams {
   stepMin?: number;
   /** The lesson being edited in place: not a clash with itself («عدّل الوقت»). */
   excludeLessonId?: string;
+  /** The slots route: the admin's GET /booking/slots, or sales' scoped GET /sales/booking/slots (her students only). */
+  path?: string;
 }
 
 /**
@@ -45,9 +47,10 @@ export function useRescheduleSlots(p: RescheduleSlotsParams) {
     stepMin: p.stepMin,
     excludeLessonId: p.excludeLessonId,
   };
+  const path = p.path ?? '/booking/slots';
   return useQuery({
-    queryKey: [...pathKey('/booking/slots'), params],
-    queryFn: () => apiFetch<SlotsResponse>(`/booking/slots${toQueryString(params)}`),
+    queryKey: [...pathKey(path), params],
+    queryFn: () => apiFetch<SlotsResponse>(`${path}${toQueryString(params)}`),
   });
 }
 

@@ -14,7 +14,7 @@ import { deltaPlan } from './plan/stale-refs.ts';
 import { buildPlan, loadBundle } from './plan/run.ts';
 import { clampRuleStarts, logScope, runScope } from './delta/scope.ts';
 import { onlyEntities } from './delta/only.ts';
-import { reportMarkdown } from './report/report.ts';
+import { downgradeCounts, reportMarkdown } from './report/report.ts';
 import { writeReview } from './report/review.ts';
 import type { SheetManifest } from './sources/extract-sheets.ts';
 import { openZip, resolveZipPath } from './sources/zip.ts';
@@ -55,6 +55,9 @@ async function writeOutputs(plan: PlanWithChanges): Promise<void> {
   console.log(
     `plan ${plan.target}: create ${by('create')}, update ${by('update')} (${plan.changes.length} field changes), ` +
       `adopt ${by('adopt')}, unchanged ${by('skip')}; ${plan.issues.length} issues → ${outPath.report()}, ${outPath.review()}`,
+  );
+  console.log(
+    `students no longer active (old reason→status): ${JSON.stringify(downgradeCounts(plan.issues))}`,
   );
 }
 

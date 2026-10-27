@@ -23,6 +23,8 @@ interface LessonDetailsSheetProps<L extends DetailsLesson> {
    * is open, so iOS presents them over it, and beside it (for the row's own buttons) while it is closed.
    */
   sheets?: ReactNode;
+  /** «للاطلاع فقط» under the actions; sales' default, false on a lesson she may move or cancel (docs/16 row 37). */
+  readOnly?: boolean;
 }
 
 /**
@@ -33,7 +35,7 @@ interface LessonDetailsSheetProps<L extends DetailsLesson> {
  * فقط» and only «ادخل الحلقة». A tap that navigates closes the sheet first.
  */
 export function LessonDetailsSheet<L extends DetailsLesson>(props: LessonDetailsSheetProps<L>) {
-  const { lesson, role, onClose, actions, sheets } = props;
+  const { lesson, role, onClose, actions, sheets, readOnly = role === 'sales' } = props;
   const title = lesson ? lesson.students.map((s) => s.name).join(t.common.listSeparator) : '';
   return (
     <>
@@ -57,7 +59,7 @@ export function LessonDetailsSheet<L extends DetailsLesson>(props: LessonDetails
                 <DetailsHead lesson={lesson} />
                 {/* The row's actions right under the status: in view without scrolling a group lesson. */}
                 {actions ? <View style={{ gap: 8 }}>{actions(lesson)}</View> : null}
-                {role === 'sales' ? <Note>{t.lessons.sheet.readOnly}</Note> : null}
+                {readOnly ? <Note>{t.lessons.sheet.readOnly}</Note> : null}
                 <DetailsWhen lesson={lesson} />
                 <DetailsStudents lesson={lesson} role={role} onLeave={onClose} />
                 <DetailsAbout lesson={lesson} role={role} />

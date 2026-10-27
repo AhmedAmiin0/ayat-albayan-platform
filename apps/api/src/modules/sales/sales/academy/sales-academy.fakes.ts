@@ -17,7 +17,7 @@ import { fakeSettings } from '../../../../common/settings/settings.fakes';
 import { SettingsService } from '../../../../common/settings/settings.service';
 
 export const SUB = 'c1000000-0000-4000-8000-0000000000c1';
-const USERS: Record<string, AuthUser> = {
+export const USERS: Record<string, AuthUser> = {
   salesA: { id: A, email: null, role: 'sales' },
   salesB: { id: B, email: null, role: 'sales' },
   admin: { id: 'ad000000-0000-4000-8000-0000000000ad', email: null, role: 'admin' },
@@ -25,7 +25,7 @@ const USERS: Record<string, AuthUser> = {
   assistant: { id: 'as000000-0000-4000-8000-0000000000a5', email: null, role: 'assistant' },
   guardian: { id: 'g1', email: null, role: 'guardian' },
 };
-const verify: TokenVerifier = async (token) => {
+export const verify: TokenVerifier = async (token) => {
   const user = USERS[token];
   if (!user) throw new Error('bad token');
   return user;
