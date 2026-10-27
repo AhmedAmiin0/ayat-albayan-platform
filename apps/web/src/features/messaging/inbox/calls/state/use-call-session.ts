@@ -6,7 +6,7 @@ import { activeCallsQuery, CALLS_KEY } from '../api/calls-api';
 import type { RtcDeps } from '../rtc/media';
 import { peerMaker, webCalls } from './call-platform';
 
-export interface CallSessionApi extends Omit<CallDerived, 'gone' | 'deadline'> {
+export interface CallSessionApi extends Pick<CallDerived, 'row' | 'phase' | 'incoming'> {
   store: CallStore;
   session: CallSession | null;
   notice: string | null;
@@ -23,23 +23,16 @@ export function useCallSession(input: { config: CallConfigView | undefined; rtc:
   const enabled = input.config?.enabled === true && input.config.canCall;
   const active = useQuery(activeCallsQuery({ enabled, live: state.session !== null }));
   const rows: readonly ActiveCallView[] = useMemo(() => active.data?.rows ?? [], [active.data]);
-  const d = deriveCall(state, { rows, startedAt: active.data?.startedAt ?? 0 });
-  const live = state.session !== null && !state.session.ended;
+  const d = deriveCall(state, { rows, startedAt: active.data?.startedAt ?? 0, enabled });
 
   const iceServers = input.config?.iceServers ?? NO_ICE;
   const makePeer = useMemo(() => peerMaker(rtc, play), [rtc, play]);
   useEffect(() => store.configure(makePeer, iceServers), [store, makePeer, iceServers]);
   useEffect(() => () => store.dispose(), [store]);
 
-  // Calls switched off (or this user lost inbox.send) during a call: end it (the mic is released).
-  useEffect(() => {
-    if (!enabled && live) store.hangup();
-  }, [store, enabled, live]);
-
-  // WhatsApp's answer, the call gone from the server, the 45 s unanswered timer (CallStore.follow).
-  const answer = d.row?.direction === 'outbound' ? d.row.answer_sdp : null;
-  const { gone, deadline } = d;
-  useEffect(() => store.follow({ answer, gone, deadline }), [store, answer, gone, deadline]);
+  // WhatsApp's answer, the call gone from the server, the 45 s timer, calls switched off (CallStore.follow).
+  const { answer, gone, deadline, off } = d;
+  useEffect(() => store.follow({ answer, gone, deadline, off }), [store, answer, gone, deadline, off]);
 
   return { store, session: state.session, row: d.row, phase: d.phase, incoming: d.incoming, notice: state.notice };
 }

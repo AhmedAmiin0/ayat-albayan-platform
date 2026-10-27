@@ -95,14 +95,14 @@ export class CallStore implements CallRuntime {
   /**
    * Follows one poll's verdict (call it when `answer`, `gone` or `deadline` change): WhatsApp's answer to
    * our offer (the connect webhook) is applied once; a call the server stopped listing ended (hung up,
-   * rejected, missed, swept); unanswered for 45 s from the server id, it is ended here too.
+   * rejected, missed, swept); unanswered for 45 s from the server id, it is ended here too; calls switched
+   * off (or this user lost inbox.send) during a live call (`off`): it is ended, the mic released.
    */
-  follow(d: Pick<CallDerived, 'gone' | 'deadline'> & { answer: string | null }): void {
+  follow(d: Pick<CallDerived, 'answer' | 'gone' | 'deadline' | 'off'>): void {
+    if (d.off) return this.hangup();
     if (d.answer && d.answer !== this.answered) this.applyAnswer((this.answered = d.answer));
     if (d.gone && this.state.session?.ended === false) this.serverEnded();
-    if (this.deadline?.at === d.deadline) return;
-    if (this.deadline) clearTimeout(this.deadline.timer);
-    this.deadline = d.deadline === null ? null : { at: d.deadline, timer: setTimeout(() => this.hangup(), Math.max(0, d.deadline - Date.now())) };
+    this.schedule(d.deadline);
   }
 
   /** The server stopped listing the call: close the media, end it there too, say «انتهت المكالمة», then close. */
@@ -125,6 +125,13 @@ export class CallStore implements CallRuntime {
     this.attempt.current += 1;
     teardown(this);
     if (id) void this.platform.sends.endCall(id).catch(() => undefined);
+  }
+
+  /** The unanswered call's end (Date.now() ms), replaced when it moves; null = no timer. */
+  private schedule(at: number | null): void {
+    if (this.deadline?.at === at) return;
+    if (this.deadline) clearTimeout(this.deadline.timer);
+    this.deadline = at === null ? null : { at, timer: setTimeout(() => this.hangup(), Math.max(0, at - Date.now())) };
   }
 
   private set(patch: Partial<CallStoreState>): void {

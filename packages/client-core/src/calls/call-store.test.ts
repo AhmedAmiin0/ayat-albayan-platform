@@ -75,10 +75,21 @@ describe('CallStore (the shared call steps, behind fakes)', () => {
     const { store, sends, peer } = setup();
     store.begin(target);
     await vi.advanceTimersByTimeAsync(0);
-    store.follow({ answer: 'v=0 a', gone: false, deadline: Date.now() + 1_000 });
-    store.follow({ answer: 'v=0 a', gone: false, deadline: Date.now() + 1_000 });
+    store.follow({ answer: 'v=0 a', gone: false, deadline: Date.now() + 1_000, off: false });
+    store.follow({ answer: 'v=0 a', gone: false, deadline: Date.now() + 1_000, off: false });
     expect(peer.applyAnswer).toHaveBeenCalledTimes(1);
     await vi.advanceTimersByTimeAsync(1_000);
+    expect(sends.endCall).toHaveBeenCalledWith('c1');
+    expect(store.get().session).toBeNull();
+  });
+
+  it('calls switched off during a call: ended, the mic released', async () => {
+    const { store, sends, peer } = setup();
+    store.begin(target);
+    await flush();
+    store.follow({ answer: null, gone: false, deadline: null, off: true });
+    await flush();
+    expect(peer.close).toHaveBeenCalled();
     expect(sends.endCall).toHaveBeenCalledWith('c1');
     expect(store.get().session).toBeNull();
   });
@@ -88,7 +99,7 @@ describe('CallStore (the shared call steps, behind fakes)', () => {
     const { store, peer } = setup();
     store.begin(target);
     await vi.advanceTimersByTimeAsync(0);
-    store.follow({ answer: null, gone: true, deadline: null });
+    store.follow({ answer: null, gone: true, deadline: null, off: false });
     expect(peer.close).toHaveBeenCalled();
     expect(store.get().session?.ended).toBe(true);
     await vi.advanceTimersByTimeAsync(1_500);

@@ -7,7 +7,7 @@ import { activeCallsQuery, CALLS_KEY } from '../api/calls-api';
 import type { RtcDeps } from '../rtc/media';
 import { mobileCalls, peerMaker } from './call-platform';
 
-export interface CallSessionApi extends Omit<CallDerived, 'gone' | 'deadline'> {
+export interface CallSessionApi extends Pick<CallDerived, 'row' | 'phase' | 'incoming'> {
   store: CallStore;
   session: CallSession | null;
   notice: string | null;
@@ -34,7 +34,7 @@ export function useCallSession(input: { config: CallConfigView | undefined; rtc:
   const enabled = input.config?.enabled === true && input.config.canCall;
   const active = useQuery(activeCallsQuery({ enabled, live: state.session !== null, polling: input.foreground }));
   const rows: readonly ActiveCallView[] = useMemo(() => active.data?.rows ?? [], [active.data]);
-  const d = deriveCall(state, { rows, startedAt: active.data?.startedAt ?? 0 });
+  const d = deriveCall(state, { rows, startedAt: active.data?.startedAt ?? 0, enabled });
   const live = state.session !== null && !state.session.ended;
 
   const iceServers = input.config?.iceServers ?? NO_ICE;
@@ -43,15 +43,9 @@ export function useCallSession(input: { config: CallConfigView | undefined; rtc:
   useEffect(() => () => store.dispose(), [store]);
   useBackgroundNote({ store, foreground: input.foreground, live });
 
-  // Calls switched off (or this user lost inbox.send) during a call: end it.
-  useEffect(() => {
-    if (!enabled && live) store.hangup();
-  }, [store, enabled, live]);
-
-  // WhatsApp's answer, the call gone from the server, the 45 s unanswered timer (CallStore.follow).
-  const answer = d.row?.direction === 'outbound' ? d.row.answer_sdp : null;
-  const { gone, deadline } = d;
-  useEffect(() => store.follow({ answer, gone, deadline }), [store, answer, gone, deadline]);
+  // WhatsApp's answer, the call gone from the server, the 45 s timer, calls switched off (CallStore.follow).
+  const { answer, gone, deadline, off } = d;
+  useEffect(() => store.follow({ answer, gone, deadline, off }), [store, answer, gone, deadline, off]);
 
   const { session, notice, noticeAction } = state;
   return { store, session, row: d.row, phase: d.phase, incoming: d.incoming, notice, noticeAction };

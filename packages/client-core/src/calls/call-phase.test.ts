@@ -53,3 +53,14 @@ describe('ending', () => {
     expect(talkedSeconds(row(), 0)).toBe(0);
   });
 });
+
+describe('deriveCall: what CallStore.follow acts on', () => {
+  const state = { session: session(), dismissed: new Set<string>(), idAt: 0 };
+  it("WhatsApp's answer for our outbound call; off only while a call is live and calls are off", () => {
+    const rows = [row({ answer_sdp: 'v=0 theirs' })];
+    expect(deriveCall(state, { rows, startedAt: 0 }).answer).toBe('v=0 theirs');
+    expect(deriveCall(state, { rows, startedAt: 0, enabled: false }).off).toBe(true);
+    expect(deriveCall(state, { rows, startedAt: 0, enabled: true }).off).toBe(false);
+    expect(deriveCall({ ...state, session: session({ ended: true }) }, { rows, startedAt: 0, enabled: false }).off).toBe(false);
+  });
+});

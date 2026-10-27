@@ -70,15 +70,22 @@ export interface CallDerived {
   /** When an unanswered outbound call is ended from here (Date.now() ms); null = no timer. */
   deadline: number | null;
   incoming: ActiveCallView | undefined;
+  /** WhatsApp's answer to our offer (the connect webhook), once it arrived. */
+  answer: string | null;
+  /** Calls are off for this user (`enabled` false) while a call is live: it must end. */
+  off: boolean;
 }
 
 /** Our outbound call that nobody answered yet (the 45 s timer runs). */
 const outboundWaiting = (session: CallSession | null, phase: CallPhase | null): boolean =>
   session?.direction === 'outbound' && phase !== null && isUnanswered(phase);
 
+/** Calls are off for this user while a call of theirs is live (not the short «انتهت»). */
+const liveWhileOff = (session: CallSession | null, enabled: boolean | undefined): boolean => enabled === false && session !== null && !session.ended;
+
 export function deriveCall(
   state: { session: CallSession | null; dismissed: ReadonlySet<string>; idAt: number },
-  poll: { rows: readonly ActiveCallView[]; startedAt: number },
+  poll: { rows: readonly ActiveCallView[]; startedAt: number; enabled?: boolean },
 ): CallDerived {
   const { session } = state;
   const row = session?.id ? poll.rows.find((r) => r.id === session.id) : undefined;
@@ -91,5 +98,7 @@ export function deriveCall(
     // Counted from when the server knows the call (its id), not from the tap: the mic prompt may take a while.
     deadline: unanswered && session?.id ? state.idAt + UNANSWERED_MS : null,
     incoming: session ? undefined : ringingFor(poll.rows, state.dismissed)[0],
+    answer: row?.direction === 'outbound' ? row.answer_sdp : null,
+    off: liveWhileOff(session, poll.enabled),
   };
 }
