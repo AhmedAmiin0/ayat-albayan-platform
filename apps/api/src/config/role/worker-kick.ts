@@ -47,8 +47,9 @@ export async function kickWorker(name: string): Promise<void> {
 
 /**
  * After an admin save in an `api` process (which reloaded its own config already): the worker reloads
- * its copy too (ConfigReloadJob). Elsewhere a no-op: `all` is one process, a `worker` serves no saves.
+ * its copy too (ConfigReloadJob). Not awaited: the save never waits on a busy worker (a PDF render), and
+ * kickWorker never throws. Elsewhere a no-op: `all` is one process, a `worker` serves no saves.
  */
-export function kickConfigReload(): Promise<void> {
-  return appRole() === 'api' ? kickWorker('config-reload') : Promise.resolve();
+export function kickConfigReload(): void {
+  if (appRole() === 'api') void kickWorker('config-reload');
 }

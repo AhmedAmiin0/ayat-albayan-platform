@@ -76,7 +76,7 @@ export class IntegrationConfigService implements OnModuleInit, OnModuleDestroy {
   /** After an admin write: here, then the worker's copy (kickConfigReload). */
   private async reload(): Promise<void> {
     await this.reloadHere();
-    await kickConfigReload();
+    kickConfigReload();
   }
 
   async writeValues(values: Partial<Record<IntegrationPlainKey, string | null>>, actorId: string): Promise<void> {

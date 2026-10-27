@@ -56,7 +56,7 @@ export class GoogleSettings {
       }
     } finally {
       this.cache.clear();
-      await kickConfigReload();
+      kickConfigReload();
     }
   }
 

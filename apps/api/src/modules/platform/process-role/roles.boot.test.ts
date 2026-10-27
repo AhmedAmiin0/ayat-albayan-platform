@@ -12,6 +12,7 @@ import { FollowUpsJob } from '../../messaging/follow-ups/follow-ups.job';
 import { PushReceiptsJob } from '../../messaging/push/push-receipts.job';
 import { RemindersJob } from '../../messaging/reminders/reminders.job';
 import { ExternalCatchUpJob } from '../../messaging/webhook/external/external-catchup.job';
+import { CrmMediaCopyJob } from '../../messaging/whatsapp/messages/crm-copy/crm-media-copy.job';
 import { WaMediaRetentionJob } from '../../messaging/whatsapp/messages/wa-media.retention.job';
 import { MessageSender } from '../../messaging/whatsapp/sender/message.sender';
 import { GoogleSyncJob } from '../google-sync/sync/google-sync.job';
@@ -33,6 +34,7 @@ const PASSES = [
   [RemindersJob, 'runOnce'],
   [ExternalCatchUpJob, 'runOnce'],
   [WaMediaRetentionJob, 'runOnce'],
+  [CrmMediaCopyJob, 'runOnce'],
   [MessageSender, 'runOnce'],
   [GoogleSyncJob, 'kick'],
   [ReportPdfJob, 'runOnce'],

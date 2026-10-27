@@ -49,6 +49,14 @@ describe('CallsSweeper.tick — idle costs', () => {
     expect(await sweeper.tick(at(50_000))).toBe(1);
   });
 
+  it('a wake that lands while a sweep reads (the insert after its read) still sweeps on the next tick', async () => {
+    const { sweeper, live } = setup();
+    live.mockImplementationOnce(async () => (await sweeper.wake(), []));
+    await sweeper.tick(at(0));
+    await sweeper.tick(at(10_000));
+    expect(live).toHaveBeenCalledTimes(2);
+  });
+
   it('a failed sweep sweeps again on the next tick', async () => {
     const { sweeper, live } = setup();
     live.mockRejectedValueOnce(new Error('db down'));

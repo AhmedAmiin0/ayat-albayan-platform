@@ -5,7 +5,7 @@ import { asQueries, fakeQueries } from '../../../common/integrations/integration
 import { IntegrationConfigService } from '../../../common/integrations/integration-config.service';
 import { setIntegrationOverlay } from '../../../common/integrations/integration-overlay';
 import { DbRulesReader } from '../../messaging/notification-rules';
-import { NumbersConfig } from '../../messaging/numbers';
+import { NumbersConfig, OwnNumbers } from '../../messaging/numbers';
 import { GoogleConnection, GoogleSettings } from '../google-sync';
 import { ConfigReloadJob } from './config-reload.job';
 
@@ -15,6 +15,7 @@ function worker(missing: readonly unknown[] = []) {
     [IntegrationConfigService, { reloadHere: vi.fn(async () => undefined) }],
     [DbRulesReader, { fresh: vi.fn(async () => ({})) }],
     [NumbersConfig, { reload: vi.fn(async () => true) }],
+    [OwnNumbers, { forget: vi.fn() }],
     [GoogleSettings, { forget: vi.fn() }],
     [GoogleConnection, { forget: vi.fn() }],
   ]);
@@ -43,11 +44,11 @@ afterEach(() => {
 });
 
 describe('ConfigReloadJob (the worker side of an admin save)', () => {
-  it('reload() refreshes the integration overlay, the rules (and settings) snapshot, the numbers overlay and both Google caches', async () => {
+  it('reload() refreshes the integration overlay, the rules (and settings) snapshot, the numbers overlay and own numbers, both Google caches', async () => {
     const { fakes, job } = worker();
     await job.reload();
     const called = [...fakes.values()].map((f) => Object.values(f).every((fn) => fn.mock.calls.length === 1));
-    expect(called).toEqual([true, true, true, true, true]);
+    expect(called).toEqual([true, true, true, true, true, true]);
   });
 
   it('a step that is missing or fails never stops the next', async () => {
