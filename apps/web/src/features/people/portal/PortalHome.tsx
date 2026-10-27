@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { EmptyState } from '@/components/ui/display/empty-state';
 import { Tabs, tabIds } from '@/components/ui/layout/tabs';
 import { t } from '@/lib/i18n/i18n';
+import { ChannelThread, portalUnreadQuery } from '@/features/teaching/student-channel';
 import { portalHomeQuery } from './api';
 import { LessonsPanel } from './lessons/LessonsPanel';
 import { LoadState } from './LoadState';
@@ -11,17 +12,19 @@ import { PackagePanel } from './PackagePanel';
 import { ReportsPanel } from './ReportsPanel';
 import { StudentSwitcher } from './StudentSwitcher';
 
-type Section = 'lessons' | 'reports' | 'package';
-const SECTIONS = (): { value: Section; label: string }[] => [
+type Section = 'lessons' | 'reports' | 'package' | 'chat';
+/** «المحادثة مع المعلم/ة» carries the family's unread count. */
+const SECTIONS = (unread: number): { value: Section; label: string }[] => [
   { value: 'lessons', label: t.portal.lessonsTab },
   { value: 'reports', label: t.portal.reportsTab },
   { value: 'package', label: t.portal.packageTab },
+  { value: 'chat', label: unread > 0 ? `${t.studentChannel.portalTab} (${unread})` : t.studentChannel.portalTab },
 ];
 const PREFIX = 'portal';
 
 /**
  * /portal (docs/31), phone first: the student switcher, then «الحلقات القادمة» / «تقارير الحلقات» /
- * «الباقة» as tabs. Every read is the API's whitelist for the login's own students.
+ * «الباقة» / «المحادثة مع المعلم/ة» (docs/31 §2) as tabs. Every read is the API's whitelist for the login's own students.
  */
 export function PortalHome() {
   const query = useQuery(portalHomeQuery);
@@ -37,11 +40,12 @@ export function PortalHome() {
           return (
             <>
               <StudentSwitcher home={home} value={student.id} onChange={setPicked} />
-              <Tabs label={t.portal.sections} tabs={SECTIONS()} value={section} onChange={setSection} idPrefix={PREFIX} />
+              <PortalTabs studentId={student.id} value={section} onChange={setSection} />
               <div role="tabpanel" id={ids.panel} aria-labelledby={ids.tab}>
                 {section === 'lessons' && <LessonsPanel key={student.id} student={student} />}
                 {section === 'reports' && <ReportsPanel key={student.id} student={student} />}
                 {section === 'package' && <PackagePanel key={student.id} student={student} renewUrl={home.renew_url} />}
+                {section === 'chat' && <ChannelThread key={student.id} refs={{ audience: 'portal', studentId: student.id }} tz={student.tz} />}
               </div>
             </>
           );
@@ -49,4 +53,9 @@ export function PortalHome() {
       </LoadState>
     </div>
   );
+}
+
+function PortalTabs({ studentId, value, onChange }: { studentId: string; value: Section; onChange: (s: Section) => void }) {
+  const unread = useQuery(portalUnreadQuery(studentId)).data?.unread ?? 0;
+  return <Tabs label={t.portal.sections} tabs={SECTIONS(unread)} value={value} onChange={onChange} idPrefix={PREFIX} />;
 }

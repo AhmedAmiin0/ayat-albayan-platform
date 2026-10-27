@@ -30,6 +30,7 @@ export function TeacherMoreScreen() {
       <View style={{ marginHorizontal: -16 }}>
         <AccountRow href="/teacher/more/account" />
         <ListRow title={t.teacherNav.students} onPress={() => router.push('/teacher/more/students')} />
+        <ListRow title={t.teacherNav.messages} onPress={() => router.push('/teacher/more/messages')} />
         <ListRow title={t.teacherNav.payouts} onPress={() => router.push('/teacher/more/earnings')} />
         <ListRow title={t.mobile.feedback.title} onPress={() => router.push('/teacher/more/feedback')} />
         <ListRow title={t.mobileClassroom.meetingsRow} onPress={() => router.push('/teacher/more/meetings')} />

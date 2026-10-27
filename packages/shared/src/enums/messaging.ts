@@ -31,7 +31,8 @@ export const TEMPLATE_CATEGORIES = [
 /**
  * R-MOB-01's five events plus new_message (mobile.pushRationale promises «رسالة جديدة»), and the bell's
  * new_student (a teacher's new booking, R-NOT-03) and meeting_invite (an internal meeting, R-NOT-01),
- * and google_sync_alert (docs/24: the Google link expired or a teacher has no calendar; bell only, admins).
+ * and google_sync_alert (docs/24: the Google link expired or a teacher has no calendar; bell only, admins),
+ * and channel_message (docs/31 §2: a family's message in a student channel, to the current teacher).
  */
 export const PUSH_KINDS = [
   'new_lead',
@@ -43,6 +44,7 @@ export const PUSH_KINDS = [
   'new_student',
   'meeting_invite',
   'google_sync_alert',
+  'channel_message',
 ] as const satisfies readonly Enums<'push_kind'>[];
 /** The two business WhatsApp numbers (docs/12 §13): a template leaves from its registry line (§13.18). */
 export const WA_LINES = ['notifications', 'chat'] as const satisfies readonly Enums<'wa_line'>[];

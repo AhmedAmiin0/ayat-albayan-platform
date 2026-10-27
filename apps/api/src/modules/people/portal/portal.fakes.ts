@@ -1,10 +1,9 @@
 // Test fixtures and HTTP harness for the family portal (test-only, excluded from the build by *.fakes.ts).
 import type { PortalStudent } from '@ab/shared';
-import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
 import { vi } from 'vitest';
 import { AppModule } from '../../../app.module';
-import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '../../../common/auth/auth.guard';
+import { bootWith } from '../../../common/auth/auth.fakes';
 import type { AuthUser } from '../../../common/auth/verify-token';
 import { fakeSettings } from '../../../common/settings/settings.fakes';
 import { SettingsService } from '../../../common/settings/settings.service';
@@ -43,11 +42,6 @@ const USERS: Record<string, AuthUser> = {
   assistant: { id: 'as', email: null, role: 'assistant' },
 };
 export type Who = keyof typeof USERS;
-const verify: TokenVerifier = async (token) => {
-  const user = USERS[token];
-  if (!user) throw new Error('bad token');
-  return user;
-};
 
 /** A lesson row with the secret columns a careless select would carry. */
 export const lessonRow = (over: Partial<PortalLessonRow> = {}): PortalLessonRow =>
@@ -83,8 +77,7 @@ export async function portalApp() {
   };
   const storage = { signedDownload: vi.fn(async (ref: { seconds?: number }) => ({ url: 'https://files.example.org/signed', expires_at: `+${ref.seconds}` })) };
   const chat = { e164: vi.fn(async (): Promise<string | null> => '+966500000000') };
-  const mod = await Test.createTestingModule({ imports: [AppModule] })
-    .overrideProvider(PERMISSION_RESOLVER).useValue(systemResolver).overrideProvider(TOKEN_VERIFIER).useValue(verify)
+  const builder = Test.createTestingModule({ imports: [AppModule] })
     .overrideProvider(PortalScopeQueries).useValue(scope)
     .overrideProvider(PortalLessonsQueries).useValue(lessons)
     .overrideProvider(PortalReportsQueries).useValue(reports)
@@ -94,11 +87,8 @@ export async function portalApp() {
     .overrideProvider(RoomAdmission).useValue(admission)
     .overrideProvider(StorageService).useValue(storage)
     .overrideProvider(ChatNumber).useValue(chat)
-    .overrideProvider(SettingsService).useValue(fakeSettings({ meeting_link_auto: false }))
-    .compile();
-  const app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter());
-  await app.init();
-  await app.getHttpAdapter().getInstance().ready();
+    .overrideProvider(SettingsService).useValue(fakeSettings({ meeting_link_auto: false }));
+  const app = await bootWith(builder, USERS);
   const call = (method: 'GET' | 'POST', url: string, who?: Who) =>
     app.inject({ method, url, headers: who ? { authorization: `Bearer ${who}` } : {} });
   return { app, call, scope, lessons, reports, packages, balances, classroom, admission, storage, chat };

@@ -11,7 +11,8 @@ import { RecordingsButton } from '../recordings/RecordingsButton';
 
 /**
  * What the web student file has beyond the quick view: «تسجيلات الحلقات», «المدفوعات والفواتير»
- * (each opens its own screen), «رابط دخول الطالب», «رقم الواتساب لـ» (docs/30) and «إنشاء حساب». Each is hidden without its permission.
+ * (each opens its own screen), «رابط دخول الطالب», «رقم الواتساب لـ» (docs/30), the read-only teacher–family
+ * channel (docs/31 §2) and «إنشاء حساب». Each is hidden without its permission.
  */
 export function StudentFileSections({ student }: { student: StudentProfile }) {
   const can = usePermissions();
@@ -23,6 +24,9 @@ export function StudentFileSections({ student }: { student: StudentProfile }) {
       ) : null}
       {can('classroom.links') ? <JoinLinkCard studentId={student.id} studentName={student.name} /> : null}
       {can('students.write') ? <ContactIsSelfCard studentId={student.id} value={student.contact_is_self} /> : null}
+      {can('student_channels.monitor') ? (
+        <Button variant="secondary" label={t.studentChannel.monitorTitle} onPress={() => router.push(`/students/channel/${student.id}`)} />
+      ) : null}
       <CreateAccountButton student={student} />
     </View>
   );

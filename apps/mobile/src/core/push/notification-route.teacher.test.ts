@@ -35,3 +35,9 @@ test('routeIn picks the tree; the bell screen lives in each tree', () => {
   expect(notificationsHref('admin')).toBe('/more/notifications');
   expect(notificationsHref('teacher')).toBe('/teacher/today/notifications');
 });
+
+test('a family message in a student channel opens «رسائل الطلاب» on that student (docs/31 §2)', () => {
+  expect(teacherRouteFor({ kind: 'channel_message', studentId: 's-1' })).toBe('/teacher/more/messages/s-1');
+  expect(teacherRouteFor({ kind: 'channel_message' })).toBe('/teacher/more/messages');
+  expect(teacherRouteFor({ kind: 'channel_message', studentId: '../x' })).toBe('/teacher/more/messages');
+});

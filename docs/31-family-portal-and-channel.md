@@ -84,6 +84,80 @@ unknown id. The POSTs are logged by the activity log like every mutation.
   (docs/30) reads the guardian row through the API (service role), so the drop does not touch it.
 - `portal_students_of(profile)`: the API's scope read, service role only. Expand-only otherwise; writes no row.
 
-## 2. Student channel
+## 2. Student channel (PR «student channel: a teacher–student chat watched by the assistant»)
 
-Added by the second PR (`cloud/student-channel`), see below once it lands.
+Owner, 2026-10-27: «When the assistant registers a student it opens a chat channel between teacher and
+student that is monitored by assistant and all authorized users.»
+
+### Decisions
+
+1. **In-platform messaging, not WhatsApp.** The WhatsApp Cloud API has no usable groups, and teachers already
+   see the family's WhatsApp thread in teacher mode. The channel lives in our database and our apps; nothing
+   is sent on WhatsApp.
+2. **One channel per student, opened at registration.** A trigger on `students` INSERT opens it, whatever the
+   path (sales registration, admin form, booking, import); one idempotent insert…select opened it for every
+   existing student (new rows only). `merge_students` moves the merged student's messages into the kept
+   channel.
+3. **Participants** (read and write): the student's own login (`students.profile_id`, if any), the guardian's
+   login (`guardians.profile_id`, if any; a child's guardian takes part, an adult who is their own contact is
+   both), and the student's CURRENT teacher(s): `channel_teacher_ids(student)` = the assigned teacher
+   (`students.teacher_id`) or the teacher of an open lesson of the student running now or starting within a
+   day (a substitute on the day; a lesson booked weeks ahead with another teacher grants nothing yet). It is the
+   current part of the teacher scope (`teacher_student_ids`, migration 165), whose 90-day look-back keeps
+   reports readable but must not keep a chat: a teacher change moves access at once — the new teacher reads
+   the whole history, the old one nothing.
+4. **Monitors are read-only in v1**: the owning assistant (sales ownership, `ownershipOf`: her leads' families
+   and the students she brought) and anyone holding the new permission `student_channels.monitor` (catalog,
+   area messaging; the system admin by default, grantable to custom roles). A monitor has no send route: a
+   post from a monitor is 403. Every monitor screen says «للاطلاع فقط».
+5. **Text only**, 1–2000 characters (trimmed), links clickable with the shared `splitLinks`.
+6. **Refresh** like the inbox: polling (web `INBOX_REFRESH_MS` while the window has focus, mobile every 15 s
+   while the screen is shown). Threads open on the newest message (web scrolls to it, mobile is an inverted
+   list); a time shows its day when it is not today. Unread counts per participant
+   (`channel_reads.last_read_at`), counting the other side only: a teacher counts the family's messages (never
+   a co-teacher's), the family the teacher's. Opening a thread marks it read up to the newest message shown
+   (`POST …/read { at }`, never later than now), so a message that arrives after the screen read stays
+   unread; a monitor never marks anything read.
+7. **Notifications**: a message from the family pushes to the current teacher(s) only, through the existing
+   push service, new kind `channel_message` (its catalogue row `channel_message` follows the notification
+   settings like every staff kind: off → nothing, bell only → no device push). The bell row quotes up to 80
+   characters, and it stays in that teacher's bell after a teacher change. A teacher's message notifies
+   nobody (the family reads it in the portal). No WhatsApp; nothing to monitors.
+8. **Trial students**: the channel is open from registration (the owner's request), so a teacher assigned to
+   a trial student can write to the family in the platform; the WhatsApp rule (no teacher ↔ family chat
+   before the subscription, owner 2026-10-11) is unchanged. Owner to confirm.
+
+### API (`apps/api/src/modules/teaching/student-channels`)
+
+| Who | Routes | Key |
+|-----|--------|-----|
+| Teacher | `GET /teachers/me/channels` (my current students, last message, unread), `GET/POST /teachers/me/channels/:studentId/messages`, `POST …/read` | `self.teacher` |
+| Family | `GET/POST /portal/students/:id/channel/messages`, `POST /portal/students/:id/channel/read`, `GET /portal/students/:id/channel/unread` | `self.portal` |
+| Admin monitor | `GET /students/:id/channel/messages` | `student_channels.monitor` |
+| Sales monitor | `GET /sales/students/:id/channel/messages` (owned students only) | `self.sales` |
+
+`GET …/messages?before=<iso>` pages back 50 at a time, newest page first. A message view is
+`{ id, body, sender_role, sender_name, mine, created_at }`: names only (the teacher's display name, the
+student's or guardian's name), never a phone, email or profile id; a page also carries `student_name` (the
+header). RLS lets a direct PostgREST reader see `sender_profile_id` (a uuid, no personal data); the apps
+read through the API only.
+
+### Database (`20261028000800_student_channels.sql`, `20261028000801_push_kind_channel.sql`)
+
+Numbered 800–801 on the `20261028` prefix: family sign-in (docs/30) landed its 770–775 on that prefix first, and the
+migration check refuses a new file that sorts before the base branch's latest.
+
+
+`student_channels (id, student_id unique, created_at)`, `channel_messages (id, channel_id, sender_profile_id,
+sender_role, body check 1..2000, created_at)`, `channel_reads (channel_id, profile_id, last_read_at, primary
+key both)`. RLS on all three: a participant, the owning assistant and the admin read
+(`can_read_channel`); a profile reads its own read marks; no client writes (the API is the writer). Checked
+against a local stack when written: the trigger, the backfill, a teacher change, another family refused, a
+merge.
+
+### Apps
+
+- Web: teacher «رسائل الطلاب» (`/teacher/messages`); the portal tab «المحادثة مع المعلم/ة»; the admin's student
+  page and the assistant's «طلابي» list open the read-only thread.
+- Mobile (JS only, OTA): teacher «المزيد» → «رسائل الطلاب» (list + thread); the admin's student file and the
+  assistant's «طلابي» rows open the read-only thread.

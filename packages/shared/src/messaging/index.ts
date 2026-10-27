@@ -37,3 +37,4 @@ export * from './calls/call-types.js';
 export * from './calls/call-machine.js';
 export * from './calls/call-entry.js';
 export * from './calls/call-schemas.js';
+export * from './channel/channel.js';

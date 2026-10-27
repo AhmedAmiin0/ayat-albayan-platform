@@ -49,6 +49,7 @@ import { Route as TeacherCalendarRouteImport } from './routes/teacher/calendar'
 import { Route as TeacherEarningsRouteImport } from './routes/teacher/earnings'
 import { Route as TeacherFeedbackRouteImport } from './routes/teacher/feedback'
 import { Route as TeacherInboxRouteImport } from './routes/teacher/inbox'
+import { Route as TeacherMessagesRouteImport } from './routes/teacher/messages'
 import { Route as TeacherPayoutsRouteImport } from './routes/teacher/payouts'
 import { Route as TeacherStudentsRouteImport } from './routes/teacher/students'
 import { Route as AdminfinanceExpensesRouteImport } from './routes/admin/(finance)/expenses'
@@ -285,6 +286,11 @@ const TeacherInboxRoute = TeacherInboxRouteImport.update({
   path: '/inbox',
   getParentRoute: () => TeacherRoute,
 } as any)
+const TeacherMessagesRoute = TeacherMessagesRouteImport.update({
+  id: '/messages',
+  path: '/messages',
+  getParentRoute: () => TeacherRoute,
+} as any)
 const TeacherPayoutsRoute = TeacherPayoutsRouteImport.update({
   id: '/payouts',
   path: '/payouts',
@@ -505,6 +511,7 @@ export interface FileRoutesByFullPath {
   '/teacher/earnings': typeof TeacherEarningsRoute
   '/teacher/feedback': typeof TeacherFeedbackRoute
   '/teacher/inbox': typeof TeacherInboxRoute
+  '/teacher/messages': typeof TeacherMessagesRoute
   '/teacher/payouts': typeof TeacherPayoutsRoute
   '/teacher/students': typeof TeacherStudentsRoute
   '/account/': typeof AccountIndexRoute
@@ -577,6 +584,7 @@ export interface FileRoutesByTo {
   '/teacher/earnings': typeof TeacherEarningsRoute
   '/teacher/feedback': typeof TeacherFeedbackRoute
   '/teacher/inbox': typeof TeacherInboxRoute
+  '/teacher/messages': typeof TeacherMessagesRoute
   '/teacher/payouts': typeof TeacherPayoutsRoute
   '/teacher/students': typeof TeacherStudentsRoute
   '/account': typeof AccountIndexRoute
@@ -655,6 +663,7 @@ export interface FileRoutesById {
   '/teacher/earnings': typeof TeacherEarningsRoute
   '/teacher/feedback': typeof TeacherFeedbackRoute
   '/teacher/inbox': typeof TeacherInboxRoute
+  '/teacher/messages': typeof TeacherMessagesRoute
   '/teacher/payouts': typeof TeacherPayoutsRoute
   '/teacher/students': typeof TeacherStudentsRoute
   '/account/': typeof AccountIndexRoute
@@ -734,6 +743,7 @@ export interface FileRouteTypes {
     | '/teacher/earnings'
     | '/teacher/feedback'
     | '/teacher/inbox'
+    | '/teacher/messages'
     | '/teacher/payouts'
     | '/teacher/students'
     | '/account/'
@@ -806,6 +816,7 @@ export interface FileRouteTypes {
     | '/teacher/earnings'
     | '/teacher/feedback'
     | '/teacher/inbox'
+    | '/teacher/messages'
     | '/teacher/payouts'
     | '/teacher/students'
     | '/account'
@@ -883,6 +894,7 @@ export interface FileRouteTypes {
     | '/teacher/earnings'
     | '/teacher/feedback'
     | '/teacher/inbox'
+    | '/teacher/messages'
     | '/teacher/payouts'
     | '/teacher/students'
     | '/account/'
@@ -1223,6 +1235,13 @@ declare module '@tanstack/react-router' {
       path: '/inbox'
       fullPath: '/teacher/inbox'
       preLoaderRoute: typeof TeacherInboxRouteImport
+      parentRoute: typeof TeacherRoute
+    }
+    '/teacher/messages': {
+      id: '/teacher/messages'
+      path: '/messages'
+      fullPath: '/teacher/messages'
+      preLoaderRoute: typeof TeacherMessagesRouteImport
       parentRoute: typeof TeacherRoute
     }
     '/teacher/payouts': {
@@ -1664,6 +1683,7 @@ interface TeacherRouteChildren {
   TeacherEarningsRoute: typeof TeacherEarningsRoute
   TeacherFeedbackRoute: typeof TeacherFeedbackRoute
   TeacherInboxRoute: typeof TeacherInboxRoute
+  TeacherMessagesRoute: typeof TeacherMessagesRoute
   TeacherPayoutsRoute: typeof TeacherPayoutsRoute
   TeacherStudentsRoute: typeof TeacherStudentsRoute
   TeacherIndexRoute: typeof TeacherIndexRoute
@@ -1677,6 +1697,7 @@ const TeacherRouteChildren: TeacherRouteChildren = {
   TeacherEarningsRoute: TeacherEarningsRoute,
   TeacherFeedbackRoute: TeacherFeedbackRoute,
   TeacherInboxRoute: TeacherInboxRoute,
+  TeacherMessagesRoute: TeacherMessagesRoute,
   TeacherPayoutsRoute: TeacherPayoutsRoute,
   TeacherStudentsRoute: TeacherStudentsRoute,
   TeacherIndexRoute: TeacherIndexRoute,
