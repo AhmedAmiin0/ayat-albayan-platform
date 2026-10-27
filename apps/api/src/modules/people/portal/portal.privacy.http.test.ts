@@ -1,4 +1,4 @@
-import { afterAll, beforeAll, describe, expect, it } from 'vitest';
+import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 import { keysOf, L1, portalApp, R1, REC, S1 } from './portal.fakes';
 
 type App = Awaited<ReturnType<typeof portalApp>>;
@@ -8,9 +8,16 @@ const SECRET = /price|amount|currency|fx|paid|payment|invoice|note|reason|phone|
 describe('/portal responses are whitelists (no money, notes or contacts)', () => {
   let t: App;
   beforeAll(async () => {
+    // A fixed morning before the fixture lesson's join window (16:00 UTC, opens 15:50): under the real
+    // clock that window is open on 2026-10-27 and the join link is shown by design (portal.join).
+    vi.useFakeTimers({ toFake: ['Date'] });
+    vi.setSystemTime(new Date('2026-10-27T08:00:00.000Z'));
     t = await portalApp();
   });
-  afterAll(() => t.app.close());
+  afterAll(async () => {
+    vi.useRealTimers();
+    await t.app.close();
+  });
 
   it('every read route', async () => {
     const urls = ['/portal/me', `/portal/students/${S1}/lessons`, `/portal/students/${S1}/reports`, `/portal/students/${S1}/package`];

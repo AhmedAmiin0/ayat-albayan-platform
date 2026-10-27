@@ -4,9 +4,16 @@ import { threadFileSendSchema, threadFileUploadSchema } from './schemas.js';
 const id = '7b0f5b8e-3c1a-4a52-9d0e-2b7c1f0a9e11';
 
 describe('threadFileUploadSchema', () => {
-  it('takes a JPEG, PNG or PDF', () => {
-    for (const mime of ['image/jpeg', 'image/png', 'application/pdf']) {
+  it('takes a JPEG, PNG, PDF or a recorded voice note (audio/mp4)', () => {
+    for (const mime of ['image/jpeg', 'image/png', 'application/pdf', 'audio/mp4']) {
       expect(threadFileUploadSchema.safeParse({ clientRequestId: id, mime, size: 10 }).success).toBe(true);
+    }
+  });
+
+  it('refuses other audio (ogg, mpeg) with file_type', () => {
+    for (const mime of ['audio/ogg', 'audio/mpeg']) {
+      const r = threadFileUploadSchema.safeParse({ clientRequestId: id, mime, size: 10 });
+      expect(r.success ? '' : r.error.issues[0]?.message).toBe('file_type');
     }
   });
 

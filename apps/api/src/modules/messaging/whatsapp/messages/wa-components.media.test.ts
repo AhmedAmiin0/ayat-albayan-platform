@@ -20,4 +20,16 @@ describe('mediaMessage — a file sent from the chat (owner 2026-10-19 #2)', () 
     expect(body['document']).not.toHaveProperty('caption');
     expect(body).not.toHaveProperty('image');
   });
+
+  it('an ogg voice note: voice:true inside audio, no caption (owner 2026-10-27)', () => {
+    const body = mediaMessage({ to: TO, kind: 'audio', url: 'https://s/voice.ogg', caption: 'x', voice: true });
+    expect(body).toMatchObject({ type: 'audio', audio: { link: 'https://s/voice.ogg', voice: true } });
+    expect(body['audio']).not.toHaveProperty('caption');
+  });
+
+  it('voice only for audio: plain audio has none, an image or document never carries it', () => {
+    expect(mediaMessage({ to: TO, kind: 'audio', url: 'https://s/a.m4a' })['audio']).not.toHaveProperty('voice');
+    expect(mediaMessage({ to: TO, kind: 'image', url: 'https://s/a.jpg', voice: true })['image']).not.toHaveProperty('voice');
+    expect(mediaMessage({ to: TO, kind: 'document', url: 'https://s/a.pdf', voice: true })['document']).not.toHaveProperty('voice');
+  });
 });

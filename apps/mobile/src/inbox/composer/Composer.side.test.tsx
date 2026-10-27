@@ -5,8 +5,8 @@ import { leftToRight } from '../shared/physical-row.helpers';
 import { detail, inbound, thread } from '../shared/thread-fixtures';
 import { ThreadScreen } from '../screens/ThreadScreen';
 
-// The typing bar as WhatsApp (owner 2026-10-27), in Arabic (jest.setup: RTL): icons on the physical
-// left, «أرسل» / «أرسل قالبًا» on the right.
+// The typing bar as WhatsApp (owner 2026-10-27) on an Arabic phone (jest.setup: RTL): the row is
+// mirrored, the round button on the physical left, the emoji on the right.
 const mockApiFetch = jest.fn();
 jest.mock('@/core/lib/http/api', () => ({
   ...jest.requireActual('@/core/lib/http/api'),
@@ -31,23 +31,19 @@ async function show(lastInbound: string) {
 
 const shown = (names: string[]) => names.filter((n) => n !== '?');
 
-test('open window: [template] … [file] [text] then «أرسل» last on the physical right', async () => {
+test('open window: [round] [camera] [paperclip] [text] [emoji], left → right', async () => {
   await show(ago(5));
-  const order = shown(leftToRight(screen.getByTestId('open-row'), true));
-  expect(order).toEqual([
-    t.inbox.composer.sendTemplate,
-    t.savedReplies.open,
-    'quote-button',
+  expect(leftToRight(screen.getByTestId('open-row'), true)).toEqual(['round-action', 'composer-pill']);
+  expect(shown(leftToRight(screen.getByTestId('composer-pill'), true))).toEqual([
+    t.inbox.composer.camera,
     t.inbox.composer.attach,
     t.inbox.composer.placeholder,
-    t.inbox.composer.send,
+    t.inbox.composer.emoji,
   ]);
 });
 
-test('closed window: the icons on the left, the note between, «أرسل قالبًا» on the physical right', async () => {
+test('closed window: «أرسل قالبًا» on the physical left, the note, then the icons on the right', async () => {
   await show(ago(3 * 24 * 60));
   const order = shown(leftToRight(screen.getByTestId('closed-row'), true));
-  expect(order.at(-1)).toBe(t.inbox.composer.sendTemplate);
-  expect(order.at(-2)).toBe('closed-note');
-  expect(order.slice(0, 2)).toEqual([t.savedReplies.open, 'quote-button']);
+  expect(order).toEqual([t.inbox.composer.sendTemplate, 'closed-note', 'quote-button', t.savedReplies.open]);
 });
