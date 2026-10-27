@@ -1,19 +1,19 @@
-import type { LessonView } from '@ab/shared';
 import { Pressable, View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { type, useTheme } from '@/theme';
+import type { TodayLesson } from '../lib/today-lesson';
 import { RowsCard } from './RowsCard';
 
-interface RestSectionProps {
-  lessons: readonly LessonView[];
-  onOpen: (lesson: LessonView) => void;
+interface RestSectionProps<L extends TodayLesson> {
+  lessons: readonly L[];
+  onOpen: (lesson: L) => void;
   /** «الكل»: back to every lesson of the day. */
   onShowAll: () => void;
 }
 
 /** «بقية اليوم · N» with «الكل» at the end, then the rows (docs/29 §4). Nothing when none is left. */
-export function RestSection({ lessons, onOpen, onShowAll }: RestSectionProps) {
+export function RestSection<L extends TodayLesson>({ lessons, onOpen, onShowAll }: RestSectionProps<L>) {
   const { color } = useTheme();
   if (lessons.length === 0) return null;
   return (
