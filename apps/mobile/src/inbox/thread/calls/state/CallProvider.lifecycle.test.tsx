@@ -33,9 +33,11 @@ describe('the app and the setting around a live call', () => {
   });
 
   it('back from the background during a call: a calm notice that the call may have been silent', async () => {
-    let change: (s: AppStateStatus) => void = () => undefined;
+    // Every AppState listener (the query focus manager registers one too), not only the last.
+    const handlers: ((s: AppStateStatus) => void)[] = [];
+    const change = (s: AppStateStatus) => handlers.forEach((h) => h(s));
     jest.spyOn(AppState, 'addEventListener').mockImplementation((_type, handler) => {
-      change = handler as (s: AppStateStatus) => void;
+      handlers.push(handler as (s: AppStateStatus) => void);
       return { remove: () => undefined };
     });
     mockFetch.mockImplementation(routes({ config: ON, active: [placed] }));

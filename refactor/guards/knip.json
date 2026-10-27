@@ -133,7 +133,6 @@
   "apps/mobile/src/auth/index.ts exports noticeText",
   "apps/mobile/src/auth/index.ts exports permissionsOf",
   "apps/mobile/src/auth/index.ts exports resolveGate",
-  "apps/mobile/src/auth/index.ts exports useHolds",
   "apps/mobile/src/auth/index.ts exports useIsAdmin",
   "apps/mobile/src/auth/index.ts exports useSendsAllTemplates",
   "apps/mobile/src/auth/index.ts types Credentials",
