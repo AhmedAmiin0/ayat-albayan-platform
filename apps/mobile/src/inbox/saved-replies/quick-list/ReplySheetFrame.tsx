@@ -9,9 +9,11 @@ import { dragClaims, dragCloses, dragOffset } from './sheet-drag';
  * A short sheet over the composer (owner 2026-10-26, as WhatsApp): about half the screen, the chat
  * dimmed behind it. A tap on the dim, the system back or a drag down on the handle closes it. With
  * Reduce Motion it appears and goes without sliding. RN core only (no native module: OTA). `tall`
- * (the «عرض سعر» sheet, a form): most of the screen.
+ * (the «عرض سعر» sheet, a form): most of the screen. `name` (the «أكمل الرد» form) overrides the
+ * sheet's test id and the dim's spoken label.
  */
-export function ReplySheetFrame({ onClose, children, tall = false }: { onClose: () => void; children: ReactNode; tall?: boolean }) {
+export function ReplySheetFrame(props: { onClose: () => void; children: ReactNode; tall?: boolean; name?: { testID: string; close: string } }) {
+  const { onClose, children, tall = false, name } = props;
   const { color } = useTheme();
   const { height } = useWindowDimensions();
   const still = useA11yPref('reduceMotion');
@@ -30,12 +32,12 @@ export function ReplySheetFrame({ onClose, children, tall = false }: { onClose: 
       <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} style={{ flex: 1, justifyContent: 'flex-end' }}>
         <Pressable
           accessibilityRole="button"
-          accessibilityLabel={tall ? t.inbox.quote.close : t.savedReplies.sheetClose}
+          accessibilityLabel={name?.close ?? (tall ? t.inbox.quote.close : t.savedReplies.sheetClose)}
           onPress={onClose}
           style={{ position: 'absolute', top: 0, bottom: 0, start: 0, end: 0, backgroundColor: color.scrim }}
         />
         <Animated.View
-          testID={tall ? 'quote-sheet' : 'saved-replies-sheet'}
+          testID={name?.testID ?? (tall ? 'quote-sheet' : 'saved-replies-sheet')}
           style={{
             height: Math.round(height * (tall ? 0.85 : 0.5)),
             borderTopLeftRadius: shape.radius.lg + 4,

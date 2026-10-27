@@ -6,7 +6,7 @@ import { allowedRecipients, lineEnvs, loadEnv } from '../../../../config/env/env
 import { stampDelivered } from '../messages/delivered';
 import { CLAIM_LEASE_MS, SENDING, type FailurePlan } from './send-plan';
 import { AUTO_OFF, AUTOMATIC_KEYS } from './send-stale';
-import { DUE_COLUMNS, type DueMessage } from './sender.due';
+import { anyDue, DUE_COLUMNS, type DueMessage } from './sender.due';
 import { staffAtSend } from './staff-at-send';
 import type { TemplateRow } from '../whatsapp.types';
 
@@ -35,6 +35,11 @@ export class SenderQueries {
     const { data, error } = await this.db.from('message_templates').select('*').eq('status', 'approved');
     if (error) throw new Error(`templates read failed: ${error.message}`);
     return data;
+  }
+
+  /** One cheap read: is anything due now (sender.due.ts)? false = the pass reads nothing more. */
+  anyDue(now: Date): Promise<boolean> {
+    return anyDue(this.db, { now, allowed: this.allowed });
   }
 
   /**
