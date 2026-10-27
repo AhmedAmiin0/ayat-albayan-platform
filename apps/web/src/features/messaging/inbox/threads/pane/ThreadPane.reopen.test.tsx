@@ -68,6 +68,17 @@ describe('reopen on open', () => {
     expect(screen.queryByTestId('reopen-note')).toBeNull();
   });
 
+  it('not sent, or the request failed: says so, send it by hand (owner 2026-10-27: never silent)', async () => {
+    apiSend.mockResolvedValue({ kapso_reopened: false, template: 'not_sent' });
+    openThread(false);
+    expect((await screen.findByTestId('reopen-note')).textContent).toBe(t.inbox.reopen.failed);
+    cleanup();
+    forgetReopens();
+    apiSend.mockRejectedValue(new Error('HTTP 500'));
+    openThread(false);
+    expect((await screen.findByTestId('reopen-note')).textContent).toBe(t.inbox.reopen.failed);
+  });
+
   it('an open window: nothing asked', async () => {
     openThread(true);
     expect(await screen.findByRole('textbox', { name: t.inbox.composer.messageLabel })).toBeTruthy();

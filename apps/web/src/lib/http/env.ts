@@ -1,3 +1,5 @@
+import { INBOX_REFRESH_MS } from '@ab/client-core';
+
 function required(name: string, value: string | undefined): string {
   if (!value) throw new Error(`Missing ${name}; run \`pnpm env:local\``);
   return value;
@@ -14,5 +16,5 @@ export const env = {
   supabaseAnonKey: required('VITE_SUPABASE_ANON_KEY', import.meta.env['VITE_SUPABASE_ANON_KEY']),
   apiUrl: required('VITE_API_URL', import.meta.env['VITE_API_URL']),
   /** The open inbox's refresh (default 10 s); e2e sets 1 s so a status chip shows without a 10 s wait. */
-  inboxRefreshMs: intervalMs(import.meta.env['VITE_INBOX_REFRESH_MS'], 10_000),
+  inboxRefreshMs: intervalMs(import.meta.env['VITE_INBOX_REFRESH_MS'], INBOX_REFRESH_MS),
 };
