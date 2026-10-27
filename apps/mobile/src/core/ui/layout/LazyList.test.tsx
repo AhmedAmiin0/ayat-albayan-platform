@@ -47,3 +47,8 @@ test('paged: a usePagedList result gives the rows, the next page and the pull to
   await act(async () => list.props.onScroll({ nativeEvent }));
   expect(paged.loadMore).toHaveBeenCalled();
 });
+
+test('a new top row is not scrolled away (FlashList v2 keeps position by default; FlatList did not)', async () => {
+  await render(<LazyList testID="lazy" data={rows(2)} keyExtractor={keyOf} renderItem={renderRow} />);
+  expect(screen.getByTestId('lazy').props.maintainVisibleContentPosition).toBeUndefined();
+});

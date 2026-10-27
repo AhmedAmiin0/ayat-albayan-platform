@@ -96,6 +96,7 @@ jest.mock('expo-document-picker', () => ({
 
 // FlashList measures nothing in jest (zero layout = no rows): a 400×900 window and 100pt rows, as the
 // library's own jestSetup (whose first mock, FlashList → RecyclerView, breaks on 2.0.2: not exported).
+// A private dist path: re-check it when FlashList is upgraded.
 jest.mock('@shopify/flash-list/dist/recyclerview/utils/measureLayout', () => {
   const actual = jest.requireActual('@shopify/flash-list/dist/recyclerview/utils/measureLayout');
   const window = () => ({ x: 0, y: 0, width: 400, height: 900 });
