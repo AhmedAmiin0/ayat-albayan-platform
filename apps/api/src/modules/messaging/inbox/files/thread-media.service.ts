@@ -1,9 +1,9 @@
-import { isChatViewMime, type SignedDownload, type ThreadMediaItem } from '@ab/shared';
+import type { SignedDownload, ThreadMediaItem } from '@ab/shared';
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { BUCKETS } from '../../../../common/storage/storage.paths';
 import { StorageService } from '../../../../common/storage/storage.service';
 import { InboundMediaQueries } from '../../whatsapp/messages/inbound-media.queries';
-import { baseMime, InboundMedia, isInvoiceMime, mediaExpired, servable } from '../../whatsapp/messages/inbound-media.service';
+import { baseMime, chatServable, InboundMedia, isInvoiceMime, mediaExpired } from '../../whatsapp/messages/inbound-media.service';
 import { waHttpError } from '../../whatsapp/templates/catalog/template.mapper';
 import { downloadName } from './download-name';
 
@@ -57,21 +57,21 @@ export class ThreadMediaService {
 
   /**
    * W6 only (a chat bubble): any file of this phone's chat. The ownership check runs first (404
-   * message_not_found). Outbound = a file staff sent (D2): signed from wa-media as stored, 410
-   * media_expired when there is none (imported history). Inbound = images / PDFs, voice notes and
-   * videos (isChatViewMime), cached from WhatsApp on first use. `download` («تنزيل»): the URL saves
+   * message_not_found). A stored outbound file (D2: staff sent it, out/…; or a cached echo) is signed
+   * as stored. Else chatServable: inbound images / PDFs, voice notes and videos (isChatViewMime), and
+   * echoes of the WhatsApp Business app (outbound with Meta's media id), cached from WhatsApp on first
+   * use; an outbound row with neither (imported history) is 410 media_expired. `download` («تنزيل»): the URL saves
    * the file under downloadName (Content-Disposition) instead of opening it.
    */
   async bubbleFile(input: { phone: string; messageId: string; download?: boolean }): Promise<ThreadFile> {
     const msg = await this.queries.message(input.messageId);
     if (!msg || msg.phone_e164 !== input.phone) throw waHttpError('message_not_found', HttpStatus.NOT_FOUND);
     const named = input.download ? { download: downloadName(msg) } : {};
-    if (msg.direction === 'outbound') {
-      if (!msg.media_path) throw waHttpError('media_expired', HttpStatus.GONE);
+    if (msg.direction === 'outbound' && msg.media_path) {
       const signed = await this.storage.signedDownload({ bucket: BUCKETS.waMedia, path: msg.media_path, ...named });
       return { ...signed, mime: baseMime(msg.media_mime) };
     }
-    const file = await this.media.cache(servable(msg, isChatViewMime));
+    const file = await this.media.cache(chatServable(msg));
     const signed = await this.storage.signedDownload({ bucket: file.bucket, path: file.path, ...named });
     return { ...signed, mime: file.mime };
   }

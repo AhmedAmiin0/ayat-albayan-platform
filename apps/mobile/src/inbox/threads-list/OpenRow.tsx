@@ -1,4 +1,5 @@
-import { View } from 'react-native';
+import { I18nManager, View } from 'react-native';
+import { physicalRow } from '../shared/physical-row';
 import { t } from '@/core/lib/i18n/i18n';
 import { useTheme } from '@/theme';
 import { IconButton } from '@/core/ui/primitives/IconButton';
@@ -26,11 +27,14 @@ interface OpenRowProps {
   sending: boolean;
 }
 
-/** The open window's one row: [template] [replies] [quote] [file] [text] [send], each icon 44pt. */
+/**
+ * The open window's one row, physical left → right as WhatsApp in Arabic and English alike (owner
+ * 2026-10-27): [template] [replies] [quote] [file] [text] [send], each icon 44pt.
+ */
 export function OpenRow(p: OpenRowProps) {
   const { color } = useTheme();
   return (
-    <View style={{ flexDirection: 'row', alignItems: 'flex-end', gap: 6 }}>
+    <View testID="open-row" style={{ flexDirection: physicalRow(I18nManager.isRTL).direction, alignItems: 'flex-end', gap: 6 }}>
       <IconButton label={t.inbox.composer.sendTemplate} onPress={p.onTemplate}>
         <TemplateIcon color={color.lapis} />
       </IconButton>

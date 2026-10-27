@@ -34,8 +34,8 @@ export function TemplateIcon({ color, size = 22 }: IconProps) {
 }
 
 /**
- * «أرسل»: a paper plane pointing the way the line is read, to the inline-end (left in Arabic, as
- * WhatsApp draws it). The path points right; it is flipped in RTL.
+ * «أرسل»: a paper plane pointing right, away from the box: the button sits on the physical right in
+ * Arabic and English alike (owner 2026-10-27, OpenRow), as the owner's WhatsApp draws it.
  */
 export function SendIcon({ color, size = 20 }: IconProps) {
   return (
@@ -50,7 +50,6 @@ export function SendIcon({ color, size = 20 }: IconProps) {
       strokeWidth={1.9}
       strokeLinecap="round"
       strokeLinejoin="round"
-      style={{ transform: [{ scaleX: I18nManager.isRTL ? -1 : 1 }] }}
     >
       <Path d="M4 12 3 4l18 8-18 8 1-8Zm0 0h8" />
     </Svg>

@@ -1,2 +1,2 @@
-export { CHATS_LIST_MS, THREAD_DELTA_MS, THREAD_FULL_MS } from './refresh.js';
+export { type ReopenState, reopenNoteKey } from './reopen-note.js';
 export { deltaSearch, mergeDelta, needsFullRead, type ThreadPages } from './thread-delta.js';

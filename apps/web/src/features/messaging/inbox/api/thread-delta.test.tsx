@@ -7,7 +7,7 @@ import { useLiveThread } from './thread-delta';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
-// A fast delta tick for the test; the real one is 10 s (THREAD_DELTA_MS).
+// A fast delta tick for the test; the real one is 10 s (INBOX_REFRESH_MS).
 vi.mock('./api', async (orig) => ({ ...(await orig<object>()), INBOX_REFRESH_MS: 40 }));
 
 const PATH = '/threads/%2B966501234567';
