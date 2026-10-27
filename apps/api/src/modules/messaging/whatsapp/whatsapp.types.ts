@@ -62,6 +62,13 @@ export interface MediaSend {
   replyTo?: string | null;
 }
 
+/** A reaction to `messageId` (a wamid of this number); emoji null = remove ours. */
+export interface ReactionSend {
+  to: string;
+  messageId: string;
+  emoji: string | null;
+}
+
 /**
  * Every call throws WaError on a Meta error or a network failure, and WaError with code null and
  * status 0 when WhatsApp is not configured (whatsappEnv(env) === null).
@@ -75,6 +82,8 @@ export interface WhatsappClient {
   sendDocument(input: MediaSend): Promise<WaSent>;
   /** Interactive call_permission_request (docs/28); Graph drivers only (absent = this driver cannot). */
   sendCallPermissionRequest?(input: { to: string; text: string }): Promise<WaSent>;
+  /** A message reaction (Meta and Kapso); absent = this driver cannot (the CRM). */
+  sendReaction?(input: ReactionSend): Promise<WaSent>;
   /** Blue ticks for an inbound wamid (POST /messages {status:'read'}). */
   markRead(waMessageId: string): Promise<void>;
   /** All pages of the WABA's templates. Read-only: safe for the health check. */

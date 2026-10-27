@@ -370,6 +370,7 @@
   "ThreadForwardController.forward": ["admin","sales","teacher"],
   "ThreadMediaController.file": ["admin"],
   "ThreadMediaController.list": ["admin"],
+  "ThreadReactionController.react": ["admin","sales","teacher"],
   "ThreadReopenController.reopen": ["admin","sales","teacher"],
   "ThreadsController.detail": ["admin","sales","teacher"],
   "ThreadsController.list": ["admin","sales","teacher"],

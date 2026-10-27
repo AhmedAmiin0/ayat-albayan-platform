@@ -12,15 +12,8 @@ import {
 } from './drivers/meta/meta-shapes';
 import { callPermissionMessage } from './messages/wa-call-permission';
 import { mediaMessage, readReceipt, submitPayload, templateMessage, textMessage, type GraphBody } from './messages/wa-components';
-import {
-  WaError,
-  type MetaTemplate,
-  type SampleFile,
-  type TemplateRow,
-  type TemplateSend,
-  type WaSent,
-  type WhatsappClient,
-} from './whatsapp.types';
+import { reactionMessage } from './drivers/meta/meta-reaction';
+import { WaError, type MetaTemplate, type ReactionSend, type SampleFile, type TemplateRow, type TemplateSend, type WaSent, type WhatsappClient } from './whatsapp.types';
 
 export const DEFAULT_TIMEOUT_MS = 15_000;
 
@@ -67,6 +60,10 @@ export class HttpWhatsappClient implements WhatsappClient {
 
   sendCallPermissionRequest(input: { to: string; text: string }): Promise<WaSent> {
     return this.send(input.to, () => callPermissionMessage(input));
+  }
+
+  sendReaction(input: ReactionSend): Promise<WaSent> {
+    return this.send(input.to, () => reactionMessage(input));
   }
 
   async markRead(waMessageId: string): Promise<void> {

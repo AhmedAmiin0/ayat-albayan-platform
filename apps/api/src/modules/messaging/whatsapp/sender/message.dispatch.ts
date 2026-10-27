@@ -1,4 +1,4 @@
-import { waSendKind, type TemplateDocument, type WaLine } from '@ab/shared';
+import { reactionRef, waSendKind, type TemplateDocument, type WaLine } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { BUCKETS, SIGNED_URL_SECONDS } from '../../../../common/storage/storage.paths';
 import { StorageService } from '../../../../common/storage/storage.service';
@@ -93,6 +93,9 @@ export class MessageDispatch {
   private sendSession(row: DueMessage, via: SendVia): Promise<WaSent> {
     // Before the text branch: «اطلب إذن الاتصال» carries its text in body (docs/28).
     if (row.body && isCallPermissionRequest(row.interactive_payload)) return this.sendCallPermission(row, via);
+    // Before the text branch: a reaction's body is its emoji, never a text (migration 900).
+    const reaction = reactionRef(row.interactive_payload);
+    if (reaction) return this.sendReaction(row, { via, ...reaction });
     // Before the text branch: a captioned file must not go out as plain text.
     if (row.media_path) return this.sendFile(row, { via, path: row.media_path });
     if (row.body) return this.client(via).sendText({ to: row.phone_e164, text: row.body, replyTo: row.reply_to_wa_id });
@@ -111,6 +114,13 @@ export class MessageDispatch {
     const client = this.client(via);
     if (!client.sendCallPermissionRequest) throw new WaError('this line cannot send a call permission request', { code: 100, status: 0 });
     return client.sendCallPermissionRequest({ to: row.phone_e164, text: row.body ?? '' });
+  }
+
+  /** A reaction through the line's driver; the CRM has none (the API refuses it before the queue, this is the backstop). */
+  private sendReaction(row: DueMessage, r: { via: SendVia; messageId: string; emoji: string | null }): Promise<WaSent> {
+    const client = this.client(r.via);
+    if (!client.sendReaction) throw new WaError('this line cannot send a reaction', { code: 100, status: 0 });
+    return client.sendReaction({ to: row.phone_e164, messageId: r.messageId, emoji: r.emoji });
   }
 
   /** A line's client, or the number's own; a number that cannot send now gets a client that refuses every call. */

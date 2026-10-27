@@ -13,3 +13,13 @@ export {
 } from './inbox-live.js';
 export { connectInboxLive, type LiveChannel, type LiveClient } from './live-connect.js';
 export { createInboxLive, type InboxLive, type LiveTargets } from './live-store.js';
+export {
+  patchMessage,
+  type PillItem,
+  reactionPath,
+  reactionPill,
+  type ReactorLine,
+  reactorLines,
+  tappedReaction,
+  withOurs,
+} from './reactions.js';
