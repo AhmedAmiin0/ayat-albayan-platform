@@ -64,5 +64,7 @@ export function externalRow({ msg, phone, who, from, at, event }: ExternalRowInp
     media_name: msg.mediaName,
     created_at: at.toISOString(),
     created_by: null,
+    // A reaction sent from the WhatsApp Business app is never a bubble (migration 900 hides reaction rows).
+    ...(msg.type === 'reaction' ? { interactive_payload: { type: 'reaction' } } : {}),
   };
 }

@@ -30,6 +30,9 @@ import { ReopenTemplate } from './reopen/reopen-template';
 import { ReopenSettings } from './reopen/reopen.settings';
 import { ThreadReopenController } from './reopen/thread-reopen.controller';
 import { ThreadReopenService } from './reopen/thread-reopen.service';
+import { ReactionQueries } from './reactions/reaction.queries';
+import { ThreadReactionController } from './reactions/thread-reaction.controller';
+import { ThreadReactionService } from './reactions/thread-reaction.service';
 import { DeltaQueries } from './delta/delta.queries';
 import { ThreadDeltaService } from './delta/thread-delta.service';
 
@@ -45,11 +48,12 @@ import { ThreadDeltaService } from './delta/thread-delta.service';
  * ChatListsModule: GET /threads?list= and the open chat's «القوائم» (docs/22).
  * «رد» / «إعادة توجيه» (owner 2026-10-25): ThreadQuotes, ThreadForwardController.
  * «إعادة فتح المحادثة» (owner 2026-10-26): ThreadReopenController (Kapso's record + the reopen template).
+ * «تفاعل» (owner 2026-10-27): ThreadReactionController (WhatsApp message reactions, migration 930).
  * Delta refresh (owner 2026-10-27): ThreadDeltaService answers GET /threads/:phone?after=.
  */
 @Module({
   imports: [SubscriptionsModule, LessonsModule, SalesModule, ChatListsModule],
-  controllers: [ThreadsController, ThreadMediaController, ThreadFileController, ThreadFileSendController, ThreadForwardController, ThreadReopenController],
+  controllers: [ThreadsController, ThreadMediaController, ThreadFileController, ThreadFileSendController, ThreadForwardController, ThreadReopenController, ThreadReactionController],
   providers: [
     ThreadsQueries,
     ThreadsService,
@@ -72,6 +76,8 @@ import { ThreadDeltaService } from './delta/thread-delta.service';
     ReopenTemplate,
     ReopenSettings,
     ThreadReopenService,
+    ReactionQueries,
+    ThreadReactionService,
     DeltaQueries,
     ThreadDeltaService,
   ],

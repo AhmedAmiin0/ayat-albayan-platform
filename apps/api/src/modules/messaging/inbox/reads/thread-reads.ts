@@ -11,7 +11,8 @@ import { ThreadDeltaService, type DeltaCaller, type ThreadDeltaQuery } from '../
 import { TeacherScopes, type TeacherScope } from '../teacher-threads/teacher-scope';
 import { TeacherThreadsService } from '../teacher-threads/teacher-threads.service';
 import { ThreadQuotes } from '../threads/thread-quotes';
-import type { ThreadListFilter } from '../threads/threads.queries';
+import { ThreadsQueries, type ThreadListFilter } from '../threads/threads.queries';
+import { threadReactable } from '../reactions/reaction-line';
 import { ThreadsService, type ThreadPageQuery } from '../threads/threads.service';
 
 /**
@@ -32,6 +33,8 @@ export class ThreadReads {
   @Inject(ThreadDeltaService) private readonly deltas?: ThreadDeltaService;
   /** The academy's own numbers: never listed, for any role (owner 2026-10-27). */
   @Optional() @Inject(OwnNumbers) private readonly own?: OwnNumbers;
+  /** «تفاعل»: the first page's `reactable` (the chat's send line, migration 900). */
+  @Optional() @Inject(ThreadsQueries) private readonly rows?: ThreadsQueries;
 
   constructor(
     private readonly admin: ThreadsService,
@@ -66,14 +69,21 @@ export class ThreadReads {
   async detail(q: ThreadPageQuery, user: AuthUser): Promise<ThreadDetail> {
     const mine = await this.salesScope(user);
     const scope = mine ? null : await this.scopes.of(user);
-    if (scope) return this.quoted(await this.teacher.detail(q, scope), q.phone);
+    if (scope) return this.reactable(await this.quoted(await this.teacher.detail(q, scope), q.phone), q.phone !== scope.ownPhone);
     const detail = mine ? await this.salesService().detail(q) : await this.admin.detail(q);
     // The quoted bubbles and the chat's lists are independent reads: in parallel.
     const [quoted, listed] = await Promise.all([
       this.quoted(detail, q.phone),
       withLists(detail, { user, lists: this.chatLists, phone: q.phone, first: !q.before }),
     ]);
-    return { ...listed, messages: quoted.messages };
+    return this.reactable({ ...listed, messages: quoted.messages }, true);
+  }
+
+  /** thread.reactable: may this caller's bubbles offer «تفاعل» (a teacher never on their own chat). */
+  private async reactable(detail: ThreadDetail, may: boolean): Promise<ThreadDetail> {
+    if (!detail.thread || !this.rows) return detail;
+    const reactable = may && (await threadReactable(this.rows, detail.thread.phone_e164, new Date()));
+    return { ...detail, thread: { ...detail.thread, reactable } };
   }
 
   /** GET /threads/:phone?after=: the same three scopes as detail, resolved per request (rule 9). */
