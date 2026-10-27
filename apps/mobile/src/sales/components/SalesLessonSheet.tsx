@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { LessonDetailsSheet } from '@/calendar';
 import { JoinClassroomButton } from '@/classroom';
 import { usePermissions } from '@/auth';
-import { useNow } from '@/today';
+import { useNow } from '@/core/lib/time/use-now';
 import { canChangeLesson } from '../lesson-actions/lesson-actions-api';
 import { SalesLessonActions } from '../lesson-actions/SalesLessonActions';
 import { SalesRescheduleSheet } from '../lesson-actions/SalesRescheduleSheet';

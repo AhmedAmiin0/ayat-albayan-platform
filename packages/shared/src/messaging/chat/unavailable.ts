@@ -23,3 +23,15 @@ export function isUnavailableMessage(payload: unknown): boolean {
   const first: unknown = Array.isArray(errors) ? errors[0] : undefined;
   return isRecord(first) && Number(first['code']) === META_UNAVAILABLE;
 }
+
+/**
+ * An inbound WhatsApp reaction kept as its own row (`{ type: 'reaction', reaction: { emoji, message_id } }`):
+ * «تفاعل: 👍» instead of «رسالة لا يمكن عرضها هنا» (owner 2026-10-27), «أُزيل التفاعل» when the emoji is
+ * empty (WhatsApp's removal); null for anything else. Until the reactions work shows it on the bubble itself.
+ */
+export function reactionText(payload: unknown, words: { reacted: string; removed: string }): string | null {
+  if (!isRecord(payload) || payload['type'] !== 'reaction') return null;
+  const r = payload['reaction'];
+  const emoji = isRecord(r) && typeof r['emoji'] === 'string' ? r['emoji'] : '';
+  return emoji ? words.reacted.replace('{emoji}', emoji) : words.removed;
+}

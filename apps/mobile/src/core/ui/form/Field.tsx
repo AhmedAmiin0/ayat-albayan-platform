@@ -7,7 +7,7 @@ import { PasswordToggle } from './PasswordToggle';
 
 export interface FieldProps extends Omit<TextInputProps, 'style'> {
   label: string;
-  /** LTR value (email, code, URL) inside the RTL form. */
+  /** LTR value (email, code, URL): the input is an LTR island in either UI language. */
   ltr?: boolean;
   /** A required question of the Google Form: «*» after the label, announced as required. */
   required?: boolean;
@@ -16,7 +16,8 @@ export interface FieldProps extends Omit<TextInputProps, 'style'> {
 /**
  * Label + 16pt input, 44pt tall (docs/07 §4: the iOS zoom floor and mobile touch size).
  * Edge is the 3:1 ruleInput; focus turns it a 2px lapis ring (border + outline, so nothing shifts).
- * Label and value start at the inline-start (AppText / textAlign 'left' = start in both directions).
+ * The label starts at the inline-start (AppText). Free text aligns by what is typed (no textAlign, no
+ * writingDirection: the platform's first-strong rule); an `ltr` field is wrapped in direction 'ltr'.
  * A `secureTextEntry` field gets the eye toggle at the inline-end (PasswordToggle).
  */
 export function Field({ label, ltr = false, required = false, onFocus, onBlur, ...input }: FieldProps) {
@@ -36,7 +37,7 @@ export function Field({ label, ltr = false, required = false, onFocus, onBlur, .
       >
         {required ? `${label} *` : label}
       </AppText>
-      <View>
+      <View style={ltr ? { direction: 'ltr' } : undefined}>
         <TextInput
           accessibilityLabel={label}
           accessibilityHint={required ? t.common.required : undefined}
@@ -63,8 +64,6 @@ export function Field({ label, ltr = false, required = false, onFocus, onBlur, .
             color: color.ink,
             fontFamily: type.ui[400],
             fontSize: type.size.base,
-            writingDirection: ltr ? 'ltr' : 'auto',
-            textAlign: 'left', // = start (RN swaps it in RTL): an LTR email sits under its label
           }}
           {...input}
           secureTextEntry={secure && !shown}

@@ -34,7 +34,8 @@ export class TeacherThreadsService {
     const phones = f.unread ? all.filter((p) => (unread.get(p) ?? 0) > 0) : all;
     if (phones.length === 0) return empty;
     // ponytail: the scope goes in the URL (.in); a teacher has tens of families, fine until hundreds.
-    const { items, total } = await this.queries.list(teacherListFilter(f, phones));
+    const { items: rows, total } = await this.queries.list(teacherListFilter(f, phones));
+    const items = await this.queries.unsupported(rows);
     return { items: items.map((r) => forTeacher(toThreadView(r, now), unread)), total, page: f.page, pageSize: f.pageSize };
   }
 
@@ -44,17 +45,14 @@ export class TeacherThreadsService {
     assertPhone(scope, q.phone);
     const first = !q.before;
     if (first) await this.teacher.stampRead({ teacherId: scope.teacherId, phone: q.phone, at: now });
-    const row = await this.queries.thread(q.phone);
-    const [rows, people] = await Promise.all([this.queries.messages(q), first ? this.people(row, scope) : NO_ONE]);
-    const page = rows.slice(0, q.limit).reverse();
+    const [row, rows] = await Promise.all([this.queries.thread(q.phone), this.queries.messages(q)]);
     const thread = row ? forTeacher(toThreadView(row, now), NO_READS) : null;
-    return {
-      thread,
-      messages: await Promise.all(page.map((m) => this.views.view(m))),
-      has_more: rows.length > q.limit,
-      lessons: thread && first ? await this.queries.lessons(thread, now, scope.teacherId) : [],
-      people,
-    };
+    const [people, messages, lessons] = await Promise.all([
+      first ? this.people(row, scope) : NO_ONE,
+      Promise.all(rows.slice(0, q.limit).reverse().map((m) => this.views.view(m))),
+      thread && first ? this.queries.lessons(thread, now, scope.teacherId) : [],
+    ]);
+    return { thread, messages, has_more: rows.length > q.limit, lessons, people };
   }
 
   private async people(row: ThreadRow | null, scope: TeacherScope): Promise<ThreadPeople> {

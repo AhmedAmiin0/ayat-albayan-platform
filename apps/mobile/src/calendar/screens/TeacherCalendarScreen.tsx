@@ -5,10 +5,11 @@ import { FlatList } from 'react-native';
 import { JoinClassroomButton } from '@/classroom/links/JoinClassroomButton';
 import { EditTimeSheet } from '@/edit-time/components/EditTimeSheet';
 import { t } from '@/core/lib/i18n/i18n';
+import { useFollowingDay } from '@/core/lib/time/use-following-day';
 import { locale } from '@/core/lib/i18n/locale';
 import { Note } from '@/more/Note';
 import { RescheduleSheet } from '@/teaching/reschedule/RescheduleSheet';
-import { useNow } from '@/today/lib/use-day-lessons';
+import { useNow } from '@/core/lib/time/use-now';
 import { Button } from '@/core/ui/primitives/Button';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { Screen } from '@/core/ui/layout/Screen';
@@ -31,7 +32,7 @@ import { addDays, riyadhToday, weekLabel, weekStart, weekWindow } from '../lib/w
 export function TeacherCalendarScreen() {
   const { id = '' } = useLocalSearchParams<{ id: string }>();
   const today = riyadhToday(useNow());
-  const [start, setStart] = useState(() => weekStart(today));
+  const [start, setStart] = useFollowingDay(weekStart(today));
   const lessons = useWeekLessons({ ...weekWindow(start), teacherId: id });
   const teacher = useTeacher(id);
   const grid = useAvailability(id);

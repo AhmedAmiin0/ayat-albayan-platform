@@ -5,7 +5,7 @@ import { FormAlert } from '@/components/ui/form/form-alert';
 import { t } from '@/lib/i18n/i18n';
 import { assistantLessonsQuery, localDay } from '../api/api';
 import { AssistantLessonRow } from './AssistantLessonRow';
-import { useNow } from './use-now';
+import { useNow } from '@/lib/time/use-now';
 
 const isOpen = (l: AssistantLessonView): boolean => (OPEN_LESSON_STATUSES as readonly string[]).includes(l.status);
 

@@ -33,6 +33,7 @@ export type * from './chat/line-views.js';
 export type * from './templates/template-sync-views.js';
 export * from './replies/saved-replies.js';
 export * from './replies/saved-reply-text.js';
+export * from './replies/reply-slots.js';
 export * from './calls/call-types.js';
 export * from './calls/call-machine.js';
 export * from './calls/call-entry.js';

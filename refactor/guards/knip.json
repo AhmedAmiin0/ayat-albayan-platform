@@ -125,7 +125,6 @@
   "apps/mobile/src/auth/index.ts exports ROUTE_PERMISSION",
   "apps/mobile/src/auth/index.ts exports SILENCE_WAIT_MS",
   "apps/mobile/src/auth/index.ts exports allowedRows",
-  "apps/mobile/src/auth/index.ts exports canOpen",
   "apps/mobile/src/auth/index.ts exports isAccountDisabled",
   "apps/mobile/src/auth/index.ts exports isOtherAppRole",
   "apps/mobile/src/auth/index.ts exports movesGate",

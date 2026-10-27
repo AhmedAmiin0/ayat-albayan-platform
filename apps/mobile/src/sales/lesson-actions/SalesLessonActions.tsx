@@ -2,7 +2,7 @@ import type { SalesScheduleLesson } from '@ab/shared';
 import { useState } from 'react';
 import { View } from 'react-native';
 import { usePermissions } from '@/auth';
-import { useNow } from '@/today';
+import { useNow } from '@/core/lib/time/use-now';
 import { t } from '@/core/lib/i18n/i18n';
 import { Button } from '@/core/ui/primitives/Button';
 import { canChangeLesson } from './lesson-actions-api';

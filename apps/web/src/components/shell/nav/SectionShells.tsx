@@ -3,7 +3,7 @@ import type { ComponentType } from 'react';
 import { ADMIN_NAV_ITEMS } from '@/components/admin-nav-items';
 import { AdminNav } from '@/components/AdminNav';
 import { AppShell } from '@/components/AppShell';
-import { CallProvider } from '@/features/messaging/inbox';
+import { CallProvider, useInboxRealtime } from '@/features/messaging/inbox';
 import { usePermissions } from '@/features/people/auth/use-permissions';
 import { PortalHome } from '@/features/people/portal';
 import { SALES_NAV_ITEMS, SalesNav } from '@/features/sales/sales/SalesNav';
@@ -14,7 +14,8 @@ import { NavSkeleton } from './NavSkeleton';
 import { useNavCounts } from './use-nav-counts';
 
 // Each role's own shell (docs/07 §7), shared by its section route (/admin, /teacher, …) and by
-// «حسابي» (/account, R-ACC-01), which every signed-in role opens inside the shell it knows.
+// «حسابي» (/account, R-ACC-01), which every signed-in role opens inside the shell it knows. The admin
+// and sales shells keep the inbox live over realtime (docs/12 §15); the teacher's keeps its polls.
 
 /** «حسابي» in the compact bar's titles of every shell. */
 const ACCOUNT_TITLE = { to: '/account', label: t.account.title };
@@ -32,6 +33,7 @@ const SALES_TITLES = [...SALES_NAV_ITEMS, ACCOUNT_TITLE];
 export function AdminShell() {
   const { can, loaded } = usePermissions();
   const counts = useNavCounts(can);
+  useInboxRealtime(can('inbox.read'));
   const nav = loaded ? <AdminNav counts={counts} can={can} /> : <NavSkeleton />;
   return (
     <CallProvider>
@@ -58,6 +60,7 @@ export function TeacherShell() {
 export function SalesShell() {
   const { can, loaded } = usePermissions();
   const unread = useSalesUnread(can);
+  useInboxRealtime(can('inbox.read'));
   const nav = loaded ? <SalesNav can={can} unread={unread} /> : <NavSkeleton layout="row" />;
   return (
     <CallProvider>

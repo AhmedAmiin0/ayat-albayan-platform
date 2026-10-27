@@ -2,6 +2,7 @@ export {
   changeLeadStatus,
   handOffMessage,
   INBOX_REFRESH_MS,
+  inboxPollMs,
   type InboxLead,
   leadByPhoneQuery,
   markSentManually,
@@ -34,6 +35,7 @@ export {
   timesInText,
   unreadLabel,
 } from './format';
+export { inboxLive, useInboxLive, useInboxRealtime } from './api/live';
 export { CallProvider, type CallProviderProps } from './calls/state/CallProvider';
 export { DeliveryTicks, type DeliveryTicksProps } from './messages/components/DeliveryTicks';
 export {

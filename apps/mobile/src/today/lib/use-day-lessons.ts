@@ -1,21 +1,8 @@
 import { RIYADH_TZ, type LessonView } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
-import { useEffect, useState } from 'react';
 import { apiFetch, toQueryString } from '@/core/lib/http/api';
 import { pathKey } from '@/core/lib/query/query-keys';
 import { localDate } from './timeline';
-
-const MINUTE = 60_000;
-
-/** The clock the now-line and the past/upcoming split follow; ticks once a minute. */
-export function useNow(): Date {
-  const [now, setNow] = useState(() => new Date());
-  useEffect(() => {
-    const id = setInterval(() => setNow(new Date()), MINUTE);
-    return () => clearInterval(id);
-  }, []);
-  return now;
-}
 
 /**
  * GET /lessons/day for today in Riyadh (docs/10 route 2), every teacher. Key

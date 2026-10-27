@@ -1,5 +1,5 @@
 import type { SavedReply, SavedReplyScope } from '@ab/shared';
-import { useState } from 'react';
+import { type ReactNode, useState } from 'react';
 import { FlatList, View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/more/Note';
@@ -12,6 +12,7 @@ import { useSavedReplies } from './api';
 import { ManageReplies } from './quick-list/ManageReplies';
 import { QuickReplyRow } from './quick-list/QuickReplyRow';
 import { filterReplies } from './reply-text';
+import { FILL_FRAME } from './quick-list/FillReplyForm';
 import { ReplySheetFrame } from './quick-list/ReplySheetFrame';
 import { ScopeTabs } from './quick-list/ScopeTabs';
 
@@ -19,6 +20,8 @@ interface SavedRepliesSheetProps {
   onClose: () => void;
   /** Fills the composer; nothing is sent. */
   onPick: (reply: SavedReply) => void;
+  /** A picked reply's «أكمل الرد» form, shown in the list's place in the same Modal (iOS presents one at a time). */
+  form?: ReactNode;
 }
 
 /**
@@ -27,7 +30,7 @@ interface SavedRepliesSheetProps {
  * fills the composer. Adding, editing and deleting her own replies sits behind «إدارة». Mounted only
  * while open, so the list is fetched on demand.
  */
-export function SavedRepliesSheet({ onClose, onPick }: SavedRepliesSheetProps) {
+export function SavedRepliesSheet({ onClose, onPick, form }: SavedRepliesSheetProps) {
   const { color } = useTheme();
   const replies = useSavedReplies();
   const [tab, setTab] = useState<SavedReplyScope>('shared');
@@ -35,6 +38,13 @@ export function SavedRepliesSheet({ onClose, onPick }: SavedRepliesSheetProps) {
   const [manage, setManage] = useState(false);
   const shown = filterReplies(replies.data ?? [], { scope: tab, query });
   const empty = query ? t.savedReplies.noMatch : tab === 'shared' ? t.savedReplies.emptyShared : t.savedReplies.emptyMine;
+  if (form) {
+    return (
+      <ReplySheetFrame onClose={onClose} tall name={FILL_FRAME}>
+        {form}
+      </ReplySheetFrame>
+    );
+  }
   return (
     <ReplySheetFrame onClose={onClose}>
       <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 16 }}>
