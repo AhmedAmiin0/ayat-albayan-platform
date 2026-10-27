@@ -12,4 +12,3 @@ export * from './errors/index.js';
 export * from './channels/index.js';
 export * from './calls/index.js';
 export * from './inbox/index.js';
-export * from './inbox-live/index.js';
