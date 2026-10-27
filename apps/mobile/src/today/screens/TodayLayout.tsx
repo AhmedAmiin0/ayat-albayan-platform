@@ -16,7 +16,7 @@ import { filterCounts, visibleLessons, type TodayFilter } from '../lib/timeline'
 import type { TodayLesson } from '../lib/today-lesson';
 import { todayPlan, type Hero } from '../lib/today-plan';
 import type { TodaySource } from '../lib/today-source';
-import { useNow } from '../lib/use-day-lessons';
+import { useNow } from '@/core/lib/time/use-now';
 
 /** The lesson whose «تفاصيل الحلقة» is open (null: closed), and how to close it. */
 interface OpenDetails<L extends TodayLesson> {

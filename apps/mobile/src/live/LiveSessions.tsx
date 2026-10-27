@@ -2,7 +2,7 @@ import { teacherName } from '@ab/shared';
 import type { LessonView } from '@ab/shared';
 import { View } from 'react-native';
 import { JoinClassroomButton } from '@/classroom/links/JoinClassroomButton';
-import { useMinuteClock } from '@/classroom/sessions/use-minute-clock';
+import { useNow } from '@/core/lib/time/use-now';
 import { t } from '@/core/lib/i18n/i18n';
 import { useJoinWindow } from '@/core/lib/query/public-config';
 import { shape, type, useTheme } from '@/theme';
@@ -48,7 +48,7 @@ function LiveRow({ item, showTeacher }: { item: LiveLesson; showTeacher: boolean
  */
 export function LiveSessions({ lessons, showTeacher = false }: { lessons: readonly LessonView[]; showTeacher?: boolean }) {
   const { color } = useTheme();
-  const now = useMinuteClock();
+  const now = useNow();
   const items = liveLessons(lessons, now, useJoinWindow());
   if (items.length === 0) return null;
   return (
