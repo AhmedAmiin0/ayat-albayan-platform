@@ -23,7 +23,14 @@ function flat(row: Joined): CallRow {
 /** wa_calls and wa_call_sdp (service role; RLS keeps clients read-only, and away from the SDPs). UTC ISO times. */
 @Injectable()
 export class CallsQueries {
+  private inserted = 0;
+
   constructor(@Inject(DB) private readonly db: Db) {}
+
+  /** Rows this process inserted so far: the sweeper leaves its idle pace when it moves. */
+  get inserts(): number {
+    return this.inserted;
+  }
 
   /** The new row, or null when its unique key (request id / wacid) already exists. */
   async insert(input: NewCall): Promise<CallRow | null> {
@@ -31,6 +38,7 @@ export class CallsQueries {
     const { data, error } = await this.db.from('wa_calls').insert(row).select('id').single();
     if (isDuplicate(error)) return null;
     check(error, 'call insert');
+    this.inserted += 1;
     const sdp = await this.db.from('wa_call_sdp').insert({ call_id: data.id, offer_sdp: offer_sdp ?? null });
     check(sdp.error, 'call sdp insert');
     return this.get(data.id);

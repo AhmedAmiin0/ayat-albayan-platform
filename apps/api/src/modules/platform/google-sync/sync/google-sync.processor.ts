@@ -40,7 +40,7 @@ export class GoogleSyncProcessor {
     const claimed = await this.data.items.claim(BATCH);
     out.claimed = claimed.length;
     for (const [i, item] of claimed.entries()) {
-      // An OFF or a switch back to dry_run applies at once, not after the rest of a 25-item live batch.
+      // An OFF or a switch to dry_run applies at once (uncached, raw SQL too), not after the rest of a 25-item batch.
       const result = (await this.sameMode(ctx.live)) ? await this.one(item, ctx) : 'switched';
       if (typeof result === 'string') {
         out.stopped = true;
@@ -59,7 +59,7 @@ export class GoogleSyncProcessor {
   }
 
   private async sameMode(live: boolean): Promise<boolean> {
-    const now = await this.data.settings.read();
+    const now = await this.data.settings.fresh();
     return now.enabled && (now.mode === 'live') === live;
   }
 
