@@ -26,4 +26,11 @@ describe('toMessageView — reply and forward', () => {
     expect(view({ direction: 'inbound', body: null, media_id: 'mid', media_mime: 'application/zip' }).forwardable).toBe(false);
     expect(view({ template_key: 'trial_reminder' }).forwardable).toBe(false);
   });
+
+  it('forwardable: an echo of the WhatsApp Business app (outbound, Meta media id) while it can be fetched', () => {
+    const echo = { direction: 'outbound', body: '[audio]', media_id: 'mid', media_path: null, media_mime: 'audio/ogg' } as const;
+    expect(view({ ...echo, created_at: new Date().toISOString() }).forwardable).toBe(true);
+    expect(view({ ...echo, created_at: '2020-01-01T00:00:00Z' }).forwardable).toBe(false);
+    expect(view({ ...echo, created_at: '2020-01-01T00:00:00Z', media_path: 'mid.ogg' }).forwardable).toBe(true);
+  });
 });

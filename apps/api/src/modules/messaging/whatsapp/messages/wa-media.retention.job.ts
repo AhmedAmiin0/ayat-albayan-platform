@@ -15,9 +15,9 @@ export const BATCH = 100;
 export const MAX_BATCHES = 50;
 
 /**
- * Inbound voice notes and videos (PLAYABLE_MIMES) we cached in wa-media are deleted 30 days after
- * the family sent them (owner 2026-10-19 #2); photos and PDFs are never purged, and sent files
- * (out/…) are never touched. Each batch removes the objects, then clears media_path, so a purged
+ * Inbound voice notes and videos (PLAYABLE_MIMES) we cached in wa-media, and cached echoes of the
+ * academy phone's own, are deleted 30 days after they were sent (owner 2026-10-19 #2); photos and
+ * PDFs are never purged, and sent files (out/…) are never touched. Each batch removes the objects, then clears media_path, so a purged
  * row reads as mediaExpired (410). Idempotent: a cleared row is not selected again, and a removal
  * that fails leaves the path for the next day. ponytail: in-process timer like ActivityRetentionJob.
  */
@@ -44,21 +44,30 @@ export class WaMediaRetentionJob implements OnApplicationBootstrap, OnModuleDest
   /** Never throws; the number of files purged. Any error is logged and ends this run. */
   async runOnce(now: Date = new Date()): Promise<number> {
     const before = new Date(now.getTime() - RETENTION_DAYS * DAY_MS).toISOString();
-    let purged = 0;
+    const done = { files: 0 };
     try {
-      for (let i = 0; i < MAX_BATCHES; i++) {
-        const rows = await this.queries.cachedBefore({ before, limit: BATCH });
-        // The query already filters by mime; this guard keeps a photo or PDF safe whatever it returns.
-        const playable = rows.filter((r) => isPlayableMime(r.media_mime));
-        if (!playable.length) break;
-        await this.storage.removeMany({ bucket: BUCKETS.waMedia, paths: playable.map((r) => r.media_path) });
-        await this.queries.clearPaths(playable.map((r) => r.id));
-        purged += playable.length;
-        if (rows.length < BATCH) break;
-      }
+      // Inbound files, then cached echoes (a voice note sent from the WhatsApp Business app, cached as an inbound one).
+      for (const echoes of [false, true]) await this.purge({ before, echoes, done });
     } catch (e) {
-      this.log.error(`wa-media retention failed after ${purged} files: ${String(e)}`);
+      this.log.error(`wa-media retention failed after ${done.files} files: ${String(e)}`);
     }
-    return purged;
+    return done.files;
+  }
+
+  /** One kind's batches; `done.files` counts as it goes, so a failure still reports what was purged. */
+  private async purge(input: { before: string; echoes: boolean; done: { files: number } }): Promise<void> {
+    for (let i = 0; i < MAX_BATCHES; i++) {
+      const rows = await this.queries.cachedBefore({ before: input.before, limit: BATCH, echoes: input.echoes });
+      // The query already filters by mime; this guard keeps a photo or PDF safe whatever it returns.
+      const playable = rows.filter((r) => isPlayableMime(r.media_mime));
+      if (!playable.length) return;
+      await this.storage.removeMany({ bucket: BUCKETS.waMedia, paths: playable.map((r) => r.media_path) });
+      await this.queries.clearPaths(
+        playable.map((r) => r.id),
+        input.echoes,
+      );
+      input.done.files += playable.length;
+      if (rows.length < BATCH) return;
+    }
   }
 }
