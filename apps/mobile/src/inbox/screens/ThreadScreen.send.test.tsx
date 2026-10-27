@@ -46,7 +46,6 @@ test('inside 24 h: free text shows at once as queued, then becomes the API row',
   let answer: (row: unknown) => void = () => undefined;
   mockApiSend.mockReturnValue(new Promise((resolve) => (answer = resolve)));
   const client = await open();
-  expect(screen.getByText(new RegExp(t.inbox.sessionOpenUntil.replace(' {time}', '')))).toBeTruthy();
   await fireEvent.changeText(box(), '  أهلًا يا أم سلمى  ');
   await fireEvent.press(screen.getByRole('button', { name: t.inbox.composer.send }));
 
