@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 
 /**
  * The picked day of a schedule (YYYY-MM-DD) that follows the clock: while the user is on `today`
@@ -9,9 +9,8 @@ import { useCallback, useEffect, useState } from 'react';
 export function useFollowingDay(today: string, initial?: string): [string, (date: string) => void] {
   const [picked, setPicked] = useState<string | null>(initial && initial !== today ? initial : null);
   const setDate = useCallback((date: string) => setPicked(date === today ? null : date), [today]);
-  // Once the clock reaches a day picked ahead, that day is today: follow the clock from there on.
-  useEffect(() => {
-    if (picked === today) setPicked(null);
-  }, [picked, today]);
+  // Once the clock reaches a day picked ahead, that day is today: follow the clock from there on
+  // (React's adjust-state-while-rendering pattern: no effect, no extra frame).
+  if (picked !== null && picked === today) setPicked(null);
   return [picked ?? today, setDate];
 }
