@@ -44,11 +44,20 @@ export async function kapsoReopen(input: KapsoReopenInput, log: Logger): Promise
 }
 
 async function attempt(input: KapsoReopenInput, signal: AbortSignal): Promise<boolean> {
-  const env = input.readEnv();
+  const env = envOf(input);
   if (env?.provider !== 'kapso') return false;
   const base = input.fetch ?? globalThis.fetch;
   const fetch: FetchLike = (url, init) => base(url, { ...init, signal: init.signal ? AbortSignal.any([init.signal, signal]) : signal });
   return reopenKapsoConversation({ env, phone: input.phone, fetch });
+}
+
+/** Its error never reaches the log (a schema dump of the env): the line read failed, that is all. */
+function envOf(input: KapsoReopenInput): WhatsappEnv | null {
+  try {
+    return input.readEnv();
+  } catch {
+    throw new Error('the chat line env could not be read');
+  }
 }
 
 @Injectable()

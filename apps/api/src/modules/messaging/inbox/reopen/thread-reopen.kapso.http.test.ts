@@ -60,10 +60,18 @@ describe('POST /threads/:phone/reopen — Kapso never holds the template', () =>
     expect((await res).json()).toEqual({ kapso_reopened: true, template: 'template_queued' });
   });
 
-  it('an admin (system permissions): never restricted, and no warn line for a queued template', async () => {
+  it('an admin (system permissions): the template, not not_allowed, and no warn line once queued', async () => {
     t.kapso.reopen.mockResolvedValue(false);
     expect((await reopen()).json().template).toBe('template_queued');
+    expect(t.queries.enqueue).toHaveBeenCalledTimes(1);
     expect(Logger.prototype.warn).not.toHaveBeenCalledWith(expect.stringContaining('reopen for'));
+  });
+
+  it('a failed audit after the row is queued: still 200 template_queued (no «send it by hand», no second copy)', async () => {
+    t.kapso.reopen.mockResolvedValue(false);
+    t.audit.record.mockRejectedValue(new Error('audit down'));
+    expect((await reopen()).json()).toEqual({ kapso_reopened: false, template: 'template_queued' });
+    expect(t.queries.enqueue).toHaveBeenCalledTimes(1);
   });
 
   it('every other outcome: one warn line with the last 4 digits only', async () => {

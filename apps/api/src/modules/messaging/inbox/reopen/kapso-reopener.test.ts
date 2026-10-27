@@ -51,6 +51,7 @@ describe('kapsoReopen', () => {
     };
     expect(await kapsoReopen({ phone: PHONE, readEnv, fetch: vi.fn() }, log)).toBe(false);
     expect(warn).toHaveBeenCalledTimes(1);
+    expect(String(warn.mock.calls[0]?.[0])).not.toContain('bad env');
   });
 
   it('last4', () => {
