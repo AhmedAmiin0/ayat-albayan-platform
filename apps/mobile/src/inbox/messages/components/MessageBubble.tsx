@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import { isChatViewMime, type MessageView, replyNote } from '@ab/shared';
 import { Linking, Pressable, View, type ViewStyle } from 'react-native';
 import { useHolds } from '@/auth/use-permissions';
@@ -53,7 +54,7 @@ export interface MessageBubbleProps {
  * («أرسلها: سارة», «رسالة تلقائية»); a photo previews, a PDF, voice note or video opens from MessageFile. Why a send failed is for everyone (as the web's
  * outboundNotes); retry / sent-by-hand stay the admin's (R-MSG-05).
  */
-export function MessageBubble({ message: m, phone, onJump, highlight = false }: MessageBubbleProps) {
+export const MessageBubble = memo(function MessageBubble({ message: m, phone, onJump, highlight = false }: MessageBubbleProps) {
   const { color } = useTheme();
   // «رد» / «إعادة توجيه» (owner 2026-10-25): a long press opens the menu, a swipe answers.
   const touch = useBubbleActions(m);
@@ -116,4 +117,4 @@ export function MessageBubble({ message: m, phone, onJump, highlight = false }: 
       </Pressable>
     </SwipeReply>
   );
-}
+});

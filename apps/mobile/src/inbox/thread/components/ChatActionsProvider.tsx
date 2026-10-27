@@ -1,7 +1,13 @@
 import { formatPhone, sessionWindowOpen, type MessageView, type ThreadView } from '@ab/shared';
 import { type ReactNode, useMemo, useState } from 'react';
 import { ltr } from '@/core/ui/primitives/Ltr';
-import { type ChatActions, ChatActionsContext, type ChatNoticeValue } from '../hooks/chat-actions';
+import {
+  BubbleActionsContext,
+  type BubbleChatActions,
+  type ChatActions,
+  ChatActionsContext,
+  type ChatNoticeValue,
+} from '../hooks/chat-actions';
 import { CopySheet } from '../../messages/copy-download/CopySheet';
 import { ForwardSheet } from './ForwardSheet';
 import type { CopyRequest } from '../../messages/copy-download/chat-tools';
@@ -29,24 +35,16 @@ export function ChatActionsProvider({ phone, thread, children }: ChatActionsProv
   const canSend =
     !isOwnThread(mode, thread) && sessionWindowOpen(thread?.last_inbound_at ?? null, new Date());
   const threadName = thread?.display_name ?? (phone ? ltr(formatPhone(phone)) : null);
-  const value = useMemo<ChatActions>(
-    () => ({
-      enabled: mode.kind === 'admin',
-      reply,
-      setReply,
-      canSend,
-      threadName,
-      openMenu: setMenu,
-      openForward: setForward,
-      showCopy: setCopy,
-      notice,
-      say,
-    }),
-    [mode.kind, reply, canSend, threadName, notice],
+  const enabled = mode.kind === 'admin';
+  // Setters are stable: the bubbles' value changes only with the mode, the 24 h window or the name.
+  const bubble = useMemo<BubbleChatActions>(
+    () => ({ enabled, canSend, setReply, threadName, openMenu: setMenu, openForward: setForward, showCopy: setCopy }),
+    [enabled, canSend, threadName],
   );
+  const value = useMemo<ChatActions>(() => ({ ...bubble, reply, notice, say }), [bubble, reply, notice]);
   return (
     <ChatActionsContext.Provider value={value}>
-      {children}
+      <BubbleActionsContext.Provider value={bubble}>{children}</BubbleActionsContext.Provider>
       <MessageMenu message={menu} phone={phone} onClose={() => setMenu(null)} />
       <ForwardSheet phone={phone} message={forward} onClose={() => setForward(null)} />
       <CopySheet request={copy} onClose={() => setCopy(null)} />

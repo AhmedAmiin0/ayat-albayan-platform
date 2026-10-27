@@ -2,7 +2,7 @@ import type { MessageView } from '@ab/shared';
 import { useCallback } from 'react';
 import type { AccessibilityActionEvent, AccessibilityActionInfo } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
-import { useChatActions } from '../../thread/hooks/chat-actions';
+import { useBubbleChatActions } from '../../thread/hooks/chat-actions';
 import { useThreadMode } from '../../thread/hooks/thread-mode';
 import { bubbleOffers, offersAny } from './bubble-offers';
 
@@ -25,7 +25,7 @@ export interface BubbleActions {
 
 /** What one bubble offers (owner 2026-10-25). Off outside a chat screen (no ChatActionsProvider). */
 export function useBubbleActions(m: MessageView): BubbleActions {
-  const { enabled, canSend, setReply, openMenu, openForward } = useChatActions();
+  const { enabled, canSend, setReply, openMenu, openForward } = useBubbleChatActions();
   const offers = bubbleOffers(m, { enabled, teacher: useThreadMode().kind === 'teacher' });
   const { reply, forward } = offers;
   const answer = useCallback(() => setReply(m), [setReply, m]);
