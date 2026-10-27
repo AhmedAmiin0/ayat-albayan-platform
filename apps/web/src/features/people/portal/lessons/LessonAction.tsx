@@ -1,10 +1,11 @@
-import { clockTime, isOpenLesson, type PortalLesson, type RoomJoinResult } from '@ab/shared';
+import { clockOf, isOpenLesson, type PortalLesson, type RoomJoinResult } from '@ab/shared';
 import { useMutation } from '@tanstack/react-query';
 import { buttonVariants, Button } from '@/components/ui/form/button';
 import { FormAlert } from '@/components/ui/form/form-alert';
 import { classroomErrorText, windowStateAt } from '@/features/teaching/classroom';
 import { t } from '@/lib/i18n/i18n';
 import { portalJoin } from '../api';
+import { type Clock, useClock } from '@/lib/clock';
 
 interface Props {
   lesson: PortalLesson;
@@ -18,12 +19,12 @@ interface Props {
 const Hint = ({ text }: { text: string }) => <p className="text-sm text-ink-2">{text}</p>;
 
 /** Why there is no button: cancelled, over, not open yet, or no way in known. */
-function waitText(lesson: PortalLesson, now: Date, tz: string): string | null {
+function waitText(lesson: PortalLesson, now: Date, clock: Clock & { tz: string }): string | null {
   if (lesson.status.startsWith('cancelled')) return t.portal.cancelled;
   const state = windowStateAt(lesson.window, now);
   if (state === 'closed' || !isOpenLesson(lesson.status)) return t.portal.closed;
   if (lesson.way_in === 'none') return t.portal.noWayIn;
-  if (state === 'early') return t.portal.opensAt.replace('{time}', clockTime(new Date(lesson.window.opens_at), tz));
+  if (state === 'early') return t.portal.opensAt.replace('{time}', clockOf(new Date(lesson.window.opens_at), clock));
   // The API sends the external link only while the room is open; until the next refresh it may be missing.
   return lesson.way_in === 'external' && !lesson.meeting_url ? t.portal.noWayIn : null;
 }
@@ -34,7 +35,7 @@ function waitText(lesson: PortalLesson, now: Date, tz: string): string | null {
  */
 export function LessonAction({ lesson, studentId, tz, now, onJoined }: Props) {
   const join = useMutation({ mutationFn: () => portalJoin({ studentId, lessonId: lesson.id }), onSuccess: (room) => onJoined(room) });
-  const wait = waitText(lesson, now, tz);
+  const wait = waitText(lesson, now, { ...useClock(), tz });
   if (wait) return <Hint text={wait} />;
   if (lesson.way_in === 'external' && lesson.meeting_url) {
     return (

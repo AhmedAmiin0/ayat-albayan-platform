@@ -11,6 +11,9 @@ import { zonedParts, zonedToUtc } from '@/features/teaching/schedule/tz';
 import { timeOptions } from '@/features/people/teachers/availability/grid';
 import { t } from '@/lib/i18n/i18n';
 import { proposeLesson } from '../api';
+import { ClockOptions } from '@/lib/clock-options';
+import { clockDir } from '@/lib/clock-text';
+import { useClock } from '@/lib/clock';
 
 export interface ProposeFormProps {
   lesson: LessonView;
@@ -28,6 +31,7 @@ export interface ProposeFormProps {
  */
 export function ProposeForm({ lesson, tz, onBack, onDone, bare }: ProposeFormProps) {
   const queryClient = useQueryClient();
+  const clock = useClock();
   const start = zonedParts(new Date(lesson.starts_at), tz);
   const [date, setDate] = useState(start.date);
   const [time, setTime] = useState(start.time);
@@ -64,10 +68,8 @@ export function ProposeForm({ lesson, tz, onBack, onDone, bare }: ProposeFormPro
         </Field>
         <Field label={t.teacherDash.propose.time}>
           {(p) => (
-            <Select {...p} dir="ltr" value={time} onChange={(e) => setTime(e.target.value)}>
-              {timeOptions(time).map((x) => (
-                <option key={x} value={x}>{x}</option>
-              ))}
+            <Select {...p} dir={clockDir(clock)} value={time} onChange={(e) => setTime(e.target.value)}>
+              <ClockOptions times={timeOptions(time)} />
             </Select>
           )}
         </Field>

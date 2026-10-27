@@ -1,6 +1,7 @@
 // Running head (docs/07 §1.7, §7): Gregorian + Hijri date and the Riyadh / Cairo clocks.
 // Western digits everywhere (one numeral system), Hijri via Umm al-Qura. DB stays UTC.
-import { clockOf, type ClockCycle } from '../clock/index.js';
+import { clockOf } from './clock.js';
+import type { ClockCycle } from './clock-pref.js';
 import { intlLocale, type Locale } from '../i18n/locale.js';
 
 export const RIYADH_TZ = 'Asia/Riyadh';

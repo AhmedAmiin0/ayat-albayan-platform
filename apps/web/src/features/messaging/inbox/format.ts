@@ -1,15 +1,17 @@
-import { counted, formatPhone, intlLocale, SESSION_WINDOW_MS, type MessageView, type ThreadView } from '@ab/shared';
+import { clockOf, counted, formatPhone, intlLocale, SESSION_WINDOW_MS, type MessageView, type ThreadView } from '@ab/shared';
+import type { Clock } from '@/lib/clock';
+import { dateAndClock, viewerZone } from '@/lib/clock-text';
 import { t } from '@/lib/i18n/i18n';
 import { showsPhone, type InboxMode } from './shared/mode';
 import { locale } from '@/lib/i18n/locale';
 
 // Display text for the inbox (docs/07 §9, docs/12 §8). DB instants are UTC; times render in the
-// viewer's zone, 24h, Western digits (`nu-latn`), like every other time in the product.
+// viewer's zone, 12 or 24 h as the viewer chose (useClock), Western digits (`nu-latn`).
 
 const LOCALE = intlLocale(locale);
-const clock = new Intl.DateTimeFormat(LOCALE, { hour: '2-digit', minute: '2-digit', hourCycle: 'h23' });
 const dayMonth = new Intl.DateTimeFormat(LOCALE, { day: 'numeric', month: 'short' });
-const full = new Intl.DateTimeFormat(LOCALE, { dateStyle: 'medium', timeStyle: 'short', hourCycle: 'h23' });
+const day = new Intl.DateTimeFormat(LOCALE, { dateStyle: 'medium' });
+const clockAt = (at: Date, clock: Clock): string => clockOf(at, { ...clock, tz: viewerZone() });
 
 export type MediaKind = keyof typeof t.inbox.media;
 
@@ -65,18 +67,18 @@ export function previewText(th: ThreadView): string {
 /** «رسالتين جداد», «3 رسايل جديدة». */
 export const unreadLabel = (n: number): string => counted(t.inbox.unread, n);
 
-/** Today → «14:05», another day → «3 أكتوبر». */
-export function listTime(iso: string, now: Date = new Date()): string {
+/** Today → «14:05» / «2:05 م», another day → «3 أكتوبر». */
+export function listTime(iso: string, clock: Clock, now: Date = new Date()): string {
   const at = new Date(iso);
-  return at.toDateString() === now.toDateString() ? clock.format(at) : dayMonth.format(at);
+  return at.toDateString() === now.toDateString() ? clockAt(at, clock) : dayMonth.format(at);
 }
 
-export const clockText = (iso: string): string => clock.format(new Date(iso));
+export const clockText = (iso: string, clock: Clock): string => clockAt(new Date(iso), clock);
 
 /** A bubble's time: «05:53» today, «1 أكتوبر 05:53» another day (the 24 h window needs the day). */
-export function stampText(iso: string, now: Date = new Date()): string {
+export function stampText(iso: string, clock: Clock, now: Date = new Date()): string {
   const at = new Date(iso);
-  return at.toDateString() === now.toDateString() ? clock.format(at) : `${dayMonth.format(at)} ${clock.format(at)}`;
+  return at.toDateString() === now.toDateString() ? clockAt(at, clock) : `${dayMonth.format(at)} ${clockAt(at, clock)}`;
 }
 
 const CITIES: Record<string, string | undefined> = t.tz;
@@ -85,11 +87,12 @@ const CITIES: Record<string, string | undefined> = t.tz;
 export function timesInText(tz: string = Intl.DateTimeFormat().resolvedOptions().timeZone): string {
   return t.inbox.timesIn.replace('{city}', CITIES[tz] ?? tz);
 }
-export const fullTime = (iso: string): string => full.format(new Date(iso));
+/** «03/10/2026، 14:05»: the whole stamp (tooltips, notes). */
+export const fullTime = (iso: string, clock: Clock): string => dateAndClock(day, new Date(iso), { ...clock, tz: viewerZone() });
 
 /** «تقدر ترد برسالة عادية لحد …»: 24 h after their last message. */
-export function sessionUntil(lastInboundAt: string): string {
-  return t.inbox.sessionOpenUntil.replace('{time}', full.format(new Date(Date.parse(lastInboundAt) + SESSION_WINDOW_MS)));
+export function sessionUntil(lastInboundAt: string, clock: Clock): string {
+  return t.inbox.sessionOpenUntil.replace('{time}', fullTime(new Date(Date.parse(lastInboundAt) + SESSION_WINDOW_MS).toISOString(), clock));
 }
 
 /** Meta / sender error in words: messages.errors.<code>, else «حصلت مشكلة في الإرسال (code)». */

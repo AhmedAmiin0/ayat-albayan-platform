@@ -4,6 +4,7 @@ import { errorCode } from '@/features/teaching/schedule/api';
 import { ApiError } from '@/lib/http/api';
 import { t } from '@/lib/i18n/i18n';
 import { whenText } from '../scheduled/meeting-when';
+import type { Clock } from '@/lib/clock';
 
 const R = t.meetings.internal.refusal;
 
@@ -13,11 +14,11 @@ const R = t.meetings.internal.refusal;
  * clock; closed and forbidden (also a bare 403: the guard or the join role check) have their own
  * lines; anything else the classroom's line.
  */
-export function meetingJoinProblem(error: unknown, tz: string = viewerTz()): string {
+export function meetingJoinProblem(error: unknown, clock: Clock, tz: string = viewerTz()): string {
   const code = errorCode(error);
   if (code === 'join_not_open_yet') {
     const opens = opensAtOf(error);
-    return opens ? R.notOpenAt.replace('{when}', whenText(opens, tz)) : R.notOpen;
+    return opens ? R.notOpenAt.replace('{when}', whenText(opens, tz, clock)) : R.notOpen;
   }
   if (code === 'join_closed') return R.closed;
   if (code === 'forbidden' || (code === null && error instanceof ApiError && error.status === 403)) return R.forbidden;

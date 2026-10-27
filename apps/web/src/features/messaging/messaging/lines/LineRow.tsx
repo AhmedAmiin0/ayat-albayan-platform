@@ -8,6 +8,7 @@ import { cn } from '@/lib/utils';
 import { LineDriver } from './LineDriver';
 import { LineFacts } from './LineFacts';
 import { webhookState, type WebhookState } from './line-status';
+import { useClock } from '@/lib/clock';
 
 type Shown = Exclude<WebhookState, 'unknown'>;
 type Label = keyof typeof t.templates.settings.lines;
@@ -91,6 +92,7 @@ function CallErrors({ errors }: { errors: LineCheckView['errors'] }) {
  */
 export function LineRow({ line, view }: { line: WaLine; view: LineCheckView | null }) {
   const s = t.templates.settings.lines;
+  const clock = useClock();
   return (
     <div data-testid="line-row" data-line={line} className="grid gap-2 border-t border-rule py-3">
       <div className="flex flex-wrap items-center gap-2">
@@ -103,7 +105,7 @@ export function LineRow({ line, view }: { line: WaLine; view: LineCheckView | nu
           ) : (
             <StatusChip size="sm" tone="neutral" glyph="hollow" label={s.notConfigured} />
           ))}
-        {view && <span className="ms-auto text-2xs text-ink-3">{s.checkedAt.replace('{time}', fullTime(view.checked_at))}</span>}
+        {view && <span className="ms-auto text-2xs text-ink-3">{s.checkedAt.replace('{time}', fullTime(view.checked_at, clock))}</span>}
       </div>
       <LineDriver view={view} />
       {view && !view.configured && line === 'chat' && <p className="text-xs text-ink-3">{s.chatOptional}</p>}

@@ -3,12 +3,16 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n/i18n';
 import { ConflictNotice, conflictText } from './ConflictNotice';
+import { locale } from '@/lib/i18n/locale';
+
+/** The cycle the suite reads times in (test-setup saves 24 h). */
+const C24 = { cycle: '24', locale } as const;
 
 const busy = (startsAt: string): Conflict => ({ kind: 'teacher_busy', startsAt, endsAt: startsAt });
 
 describe('ConflictNotice (R-SCH-04, issue B3)', () => {
   it('words each conflict kind in Arabic with the Riyadh time', () => {
-    const text = conflictText({ kind: 'student_busy', startsAt: '2026-10-04T14:00:00Z', endsAt: '2026-10-04T14:45:00Z' });
+    const text = conflictText({ kind: 'student_busy', startsAt: '2026-10-04T14:00:00Z', endsAt: '2026-10-04T14:45:00Z' }, C24);
     expect(text.startsWith(t.booking.conflict.student_busy.split('(')[0] ?? '')).toBe(true);
     expect(text).toContain('17:00');
     expect(text).not.toContain('{when}');
@@ -16,11 +20,11 @@ describe('ConflictNotice (R-SCH-04, issue B3)', () => {
 
   it("adds the teacher's own clock to availability / time-off lines, e.g. after a DST change", () => {
     const outside: Conflict = { kind: 'outside_availability', startsAt: '2026-11-01T14:00:00Z', endsAt: '2026-11-01T14:45:00Z' };
-    const text = conflictText(outside, 'Africa/Cairo');
+    const text = conflictText(outside, C24, 'Africa/Cairo');
     expect(text).toContain('17:00');
     expect(text).toContain(t.booking.teacherClock.replace('{time}', '16:00').split(' بتوقيت')[0] ?? '');
-    expect(conflictText(busy('2026-11-01T14:00:00Z'), 'Africa/Cairo')).not.toContain('16:00');
-    expect(conflictText(outside, 'Asia/Riyadh')).not.toContain('،');
+    expect(conflictText(busy('2026-11-01T14:00:00Z'), C24, 'Africa/Cairo')).not.toContain('16:00');
+    expect(conflictText(outside, C24, 'Asia/Riyadh')).not.toContain('،');
   });
 
   it('keeps the heading a heading inside the live region; the reason hint fits booking', () => {

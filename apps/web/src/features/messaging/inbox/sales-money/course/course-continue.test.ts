@@ -5,6 +5,10 @@ import { t } from '@/lib/i18n/i18n';
 import { adjustText, continuePlan, continueText } from './course-continue';
 import { courseDraft } from './course-draft';
 import { COURSE_SUB, COURSE_VIEW, NEXT_SUN, NEXT_WED, PREVIOUS, RENEWAL_VIEW } from './course-fixture';
+import { locale } from '@/lib/i18n/locale';
+
+/** The cycle the suite reads times in (test-setup saves 24 h). */
+const C24 = { cycle: '24', locale } as const;
 
 const NOW = '2026-10-03T09:00:00.000Z';
 /** The previous course's days as the choice names them: Sunday 17:00, Wednesday 19:30. */
@@ -36,7 +40,7 @@ describe('«تابِع بنفس الأيام»: a renewal’s plan (owner 2026-1
     expect(plan?.draft.course?.startsOn).toBe('2026-10-03');
     // Saturday 3 October, 12:00 Riyadh: Sunday 4 at 17:00 and Wednesday 7 at 19:30.
     expect(plan?.hint.picks).toEqual(['2026-10-04T14:00:00.000Z', '2026-10-07T16:30:00.000Z']);
-    expect(continueText(old, NOW)).toContain(dateLabel('2026-10-03'));
+    expect(continueText(old, C24, NOW)).toContain(dateLabel('2026-10-03'));
   });
 
   it('the course draft opens on courseOpensOn, with or without a previous course', () => {
@@ -60,22 +64,22 @@ describe('«تابِع بنفس الأيام»: a renewal’s plan (owner 2026-1
   });
 
   it('names the previous days and the new start', () => {
-    expect(continueText(RENEWAL_VIEW)).toBe(
+    expect(continueText(RENEWAL_VIEW, C24)).toBe(
       t.booking.courseChange.continueHint.replace('{days}', previousDays).replace('{date}', dateLabel('2026-10-11')),
     );
   });
 
   it('another day count than before: the previous days and the new count, with Arabic number agreement', () => {
     const forms = t.booking.courseChange.continueAdjust;
-    expect(adjustText({ ...RENEWAL_VIEW, perWeek: 3 })).toBe(forms.few.replaceAll('{n}', '3').replace('{days}', previousDays));
-    expect(adjustText({ ...RENEWAL_VIEW, perWeek: 1 })).toBe(forms.one.replace('{days}', previousDays));
+    expect(adjustText({ ...RENEWAL_VIEW, perWeek: 3 }, C24)).toBe(forms.few.replaceAll('{n}', '3').replace('{days}', previousDays));
+    expect(adjustText({ ...RENEWAL_VIEW, perWeek: 1 }, C24)).toBe(forms.one.replace('{days}', previousDays));
   });
 
   it('1 → 3 and 3 → 1 days a week: the target count, never «add or remove one day»', () => {
     const sunday = PREVIOUS.days.slice(0, 1);
     const three = [...PREVIOUS.days, { weekday: 5, startTimeLocal: '17:00' }];
-    const up = adjustText({ ...RENEWAL_VIEW, previous: { ...PREVIOUS, days: sunday }, perWeek: 3 });
-    const down = adjustText({ ...RENEWAL_VIEW, previous: { ...PREVIOUS, days: three }, perWeek: 1 });
+    const up = adjustText({ ...RENEWAL_VIEW, previous: { ...PREVIOUS, days: sunday }, perWeek: 3 }, C24);
+    const down = adjustText({ ...RENEWAL_VIEW, previous: { ...PREVIOUS, days: three }, perWeek: 1 }, C24);
     expect(up).toMatch(/الباقة الجديدة 3 أيام في الأسبوع، فعدّل الأيام السابقة لتصبح 3 أيام$/);
     expect(down).toMatch(/الباقة الجديدة يوم واحد في الأسبوع، فعدّل الأيام السابقة لتصبح يومًا واحدًا$/);
     for (const text of [up, down]) expect(text).not.toContain('أضف');

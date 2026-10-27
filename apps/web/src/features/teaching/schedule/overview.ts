@@ -3,6 +3,8 @@ import type { Range } from '@/features/people/teachers/availability/grid';
 import { t } from '@/lib/i18n/i18n';
 import { teacherRows } from './lesson/lessons';
 import { addDays, RIYADH_TZ, zonedToUtc } from './tz';
+import type { Clock } from '@/lib/clock';
+import { hhmmText } from '@/lib/clock-text';
 
 // All-teachers calendar view logic (R-SCH-01): filters on the one cached overview, and a teacher's
 // spans cut to a Riyadh day as "HH:MM" ranges for the 08–24 track. Pure, unit-tested.
@@ -57,7 +59,7 @@ export function clipSpans(spans: readonly Span[], day: string, after?: number): 
   });
 }
 
-/** A span of `day` as Riyadh "HH:MM"; one that runs to midnight ends at "24:00", not "00:00". */
+/** A span of `day` as Riyadh "HH:MM" keys (freeText shows them in the viewer's cycle); one that runs to midnight ends at "24:00", not "00:00". */
 export function spanRange(span: Span, day: string): Range {
   const end = Date.parse(span.ends_at) >= dayBounds(day).to ? '24:00' : clockTime(new Date(span.ends_at), RIYADH_TZ);
   return { start: clockTime(new Date(span.starts_at), RIYADH_TZ), end };
@@ -69,8 +71,8 @@ export function hoursText(minutes: number): string {
 }
 
 /** «فاضي 17:00 – 19:00». */
-export function freeText(range: Range): string {
-  return t.schedule.free.replace('{from}', range.start).replace('{to}', range.end);
+export function freeText(range: Range, clock: Clock): string {
+  return t.schedule.free.replace('{from}', hhmmText(range.start, clock)).replace('{to}', hhmmText(range.end, clock));
 }
 
 export interface TeacherDay {

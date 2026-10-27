@@ -131,7 +131,7 @@
   },
   "src/messaging/lesson/booking-confirmation.ts": {
     "ab/module-boundaries": {
-      "count": 2
+      "count": 1
     }
   },
   "src/messaging/lesson/rating.ts": {

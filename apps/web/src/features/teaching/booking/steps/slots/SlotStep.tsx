@@ -1,13 +1,13 @@
-import { lessonWhenText } from '@ab/shared';
+import { lessonWhenAt } from '@ab/shared';
 import { RequiredMark } from '@/components/ui/form/label';
 import { tzCity } from '@/components/ui/form/time-zone-select';
 import { SlotPicker } from '@/features/teaching/schedule/reschedule/SlotPicker';
 import { RIYADH_TZ } from '@/features/teaching/schedule/tz';
 import { t } from '@/lib/i18n/i18n';
-import { locale } from '@/lib/i18n/locale';
 import { pickPatch, type BookingDraft } from '../../draft/draft';
 import { SeriesCheck } from '../review/SeriesCheck';
 import { pickHint, SlotDays } from './SlotDays';
+import { type Clock, useClock } from '@/lib/clock';
 
 export interface SlotStepProps {
   draft: BookingDraft;
@@ -15,11 +15,11 @@ export interface SlotStepProps {
 }
 
 /** «الأحد 4 أكتوبر 17:00 بتوقيت الرياض» (+ the family's wall clock when it differs). */
-export function pickedText(startsAt: string, tz: string): string {
+export function pickedText(startsAt: string, tz: string, clock: Clock): string {
   const at = new Date(startsAt);
-  const riyadh = `${lessonWhenText(at, RIYADH_TZ, locale)} ${t.schedule.riyadhTime}`;
+  const riyadh = `${lessonWhenAt(at, { tz: RIYADH_TZ, ...clock })} ${t.schedule.riyadhTime}`;
   if (tz === RIYADH_TZ) return riyadh;
-  const local = t.schedule.inCity.replace('{time}', lessonWhenText(at, tz, locale)).replace('{city}', tzCity(tz) ?? tz);
+  const local = t.schedule.inCity.replace('{time}', lessonWhenAt(at, { tz, ...clock })).replace('{city}', tzCity(tz) ?? tz);
   return `${riyadh}${t.common.listSeparator}${t.booking.studentLocal.replace('{time}', local)}`;
 }
 
@@ -35,6 +35,7 @@ export function courseNear(startsOn: string, now: Date = new Date()): string {
  * first lesson. A trial or a makeup is one lesson: one slot, no repeat.
  */
 export function SlotStep({ draft, onChange }: SlotStepProps) {
+  const clock = useClock();
   const teacher = draft.teacher;
   if (!teacher) return null;
   const pkg = draft.kind === 'package';
@@ -64,7 +65,7 @@ export function SlotStep({ draft, onChange }: SlotStepProps) {
           <section aria-label={t.booking.startsOn} className="grid gap-2">
             <h3 className="text-sm font-semibold">{t.booking.startsOn}</h3>
             <p role="status" className="rounded-md bg-sunk px-3.5 py-2.5 text-sm">
-              {t.booking.picked.replace('{when}', pickedText(draft.startsAt, draft.tz))}
+              {t.booking.picked.replace('{when}', pickedText(draft.startsAt, draft.tz, clock))}
             </p>
           </section>
           {pkg && <SlotDays draft={draft} onChange={onChange} />}

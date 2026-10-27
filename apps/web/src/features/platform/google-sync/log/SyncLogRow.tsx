@@ -7,6 +7,7 @@ import { StatusChip } from '@/components/ui/display/status-chip';
 import { t } from '@/lib/i18n/i18n';
 import { retryGoogleItem } from '../google-api';
 import { errorText, fill, formatAt, RETRYABLE, skipLabel, stateStyle } from '../google-format';
+import { useClock } from '@/lib/clock';
 
 const s = t.googleSync.log;
 /** «مخطط: » before the LTR «POST calendar/…» island (the template ends with «{method} {target}»). */
@@ -37,6 +38,7 @@ function Detail({ item }: { item: GoogleSyncItemView }) {
 
 /** One sync item as a card that reads on a 390px phone; «إعادة المحاولة» on failed / gone / skipped. */
 export function SyncLogRow({ item, onRetried, onChanged }: Props) {
+  const clock = useClock();
   const retry = useMutation({
     mutationFn: retryGoogleItem,
     onSuccess: async () => {
@@ -56,7 +58,7 @@ export function SyncLogRow({ item, onRetried, onChanged }: Props) {
         <p className="text-2xs text-ink-3">
           <span>{fill(s.attempts, { n: item.attempts })}</span>
           <span aria-hidden="true"> · </span>
-          <span>{fill(t.googleSync.web.updated, { at: formatAt(item.updated_at) })}</span>
+          <span>{fill(t.googleSync.web.updated, { at: formatAt(item.updated_at, clock) })}</span>
         </p>
       </div>
       {RETRYABLE.has(item.state) && (

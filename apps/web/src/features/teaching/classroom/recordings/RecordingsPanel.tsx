@@ -8,11 +8,12 @@ import { Drawer } from '@/features/teaching/schedule/Drawer';
 import { t } from '@/lib/i18n/i18n';
 import { recordingsQuery, recordingStatusQuery, type RecordingSource } from '../api/moderation-api';
 import { RECORDING_TONE, recordingTime } from './recording-format';
+import { useClock } from '@/lib/clock';
 
 const R = t.classroom.recordings;
 
 function Row({ rec }: { rec: LessonRecordingView }) {
-  const time = recordingTime(rec.started_at);
+  const time = recordingTime(rec.started_at, useClock());
   return (
     <li className="flex min-h-11 flex-wrap items-center gap-x-3 gap-y-1 border-b border-rule py-2 last:border-b-0">
       <span className="min-w-0 flex-1 font-semibold">{time}</span>

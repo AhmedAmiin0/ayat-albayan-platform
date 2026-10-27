@@ -1,4 +1,4 @@
-import type { LessonView } from '@ab/shared';
+import { clockOf, type LessonView } from '@ab/shared';
 import { useState } from 'react';
 import { Button } from '@/components/ui/form/button';
 import { Icon } from '@/components/ui/display/icon';
@@ -10,9 +10,8 @@ import { SendLinkButton } from '../join/SendLinkButton';
 import { sessionChip, type SessionGroup } from './sessions';
 import { StaffJoinButton } from '../join/StaffJoinButton';
 import { teacherLabel } from '@/lib/i18n/teacher-label';
-
-/** Times in the viewer's own zone (the browser's), 24-hour, Western digits. */
-const CLOCK = new Intl.DateTimeFormat('en-GB', { hour: '2-digit', minute: '2-digit', hour12: false });
+import { useClock } from '@/lib/clock';
+import { clockDir, viewerZone } from '@/lib/clock-text';
 
 /**
  * One session on /admin/classrooms: time range, students, teacher, a status chip and a live dot
@@ -22,14 +21,16 @@ const CLOCK = new Intl.DateTimeFormat('en-GB', { hour: '2-digit', minute: '2-dig
 export function SessionCard({ lesson, group }: { lesson: LessonView; group: SessionGroup }) {
   const [more, setMore] = useState(false);
   const chip = sessionChip(lesson, group);
+  // Times in the viewer's own zone (the browser's), 12 or 24 h as chosen, Western digits.
+  const clock = { ...useClock(), tz: viewerZone() };
   const time = t.classroom.admin.time
-    .replace('{from}', CLOCK.format(new Date(lesson.starts_at)))
-    .replace('{to}', CLOCK.format(new Date(lesson.ends_at)));
+    .replace('{from}', clockOf(new Date(lesson.starts_at), clock))
+    .replace('{to}', clockOf(new Date(lesson.ends_at), clock));
   return (
     <li className="ab-lift grid gap-3 rounded-md border border-rule bg-page p-4 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-start">
       <div className="grid min-w-0 gap-1.5">
         <p className="flex flex-wrap items-center gap-x-3 gap-y-1">
-          <span dir="ltr" className="text-lg font-semibold tabular-nums">
+          <span dir={clockDir(clock)} className="text-lg font-semibold tabular-nums">
             {time}
           </span>
           {group === 'now' && <span aria-hidden="true" className="size-2 rounded-full bg-ok motion-safe:animate-pulse" />}

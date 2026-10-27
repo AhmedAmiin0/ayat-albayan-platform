@@ -14,6 +14,7 @@ import {
 } from '@/lib/list/server-list-search';
 import { myReportsQuery } from '../api';
 import { submittedReportColumns } from './submitted-report-columns';
+import { useClock } from '@/lib/clock';
 
 /** /teacher/reports URL keys (the API's params). */
 export const MY_REPORTS_LIST_KEYS: ServerListKeys = { sort: TEACHER_REPORT_SORT_KEYS, filters: TEACHER_REPORT_FILTER_KEYS };
@@ -31,10 +32,11 @@ export interface SubmittedReportsProps {
  * PDF once it is ready. The table stays while a filter matches nothing, so it can be cleared.
  */
 export function SubmittedReports({ tz, search, onSearch }: SubmittedReportsProps) {
+  const clock = useClock();
   const state = serverListState(search, MY_REPORTS_LIST_KEYS);
   const table = serverListProps(state, onSearch);
   const list = useQuery(myReportsQuery(state));
-  const columns = useMemo(() => submittedReportColumns(tz), [tz]);
+  const columns = useMemo(() => submittedReportColumns(tz, clock), [tz, clock]);
   return (
     <section aria-labelledby="submitted-reports" className="grid gap-2">
       <h2 id="submitted-reports" className="font-display text-h3 font-bold">

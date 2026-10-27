@@ -6,6 +6,7 @@ import { StatusChip } from '@/components/ui/display/status-chip';
 import { formatDateTime } from '@/features/sales/leads/format';
 import { Amount } from '@/features/finance/subscriptions/balance/Amount';
 import { t } from '@/lib/i18n/i18n';
+import { useClock } from '@/lib/clock';
 
 const col = createColumnHelper<DataTableFeatures, TeacherEarningView>();
 
@@ -45,9 +46,15 @@ function TickAll() {
 
 function TickRow({ row }: { row: TeacherEarningView }) {
   const pick = useContext(PickContext);
+  const clock = useClock();
   if (!pick) return null;
-  const label = t.earnings.selectRow.replace('{date}', formatDateTime(row.starts_at));
+  const label = t.earnings.selectRow.replace('{date}', formatDateTime(row.starts_at, clock));
   return <Box label={label} checked={pick.selected.has(row.id)} disabled={row.outstanding <= 0} onChange={() => pick.onToggle(row)} />;
+}
+
+/** The session's date and time in the viewer's cycle (12 or 24 h). */
+function SessionDate({ iso }: { iso: string }) {
+  return <span className="font-semibold tabular-nums text-ink">{formatDateTime(iso, useClock())}</span>;
 }
 
 const pickColumn = col.display({
@@ -67,7 +74,7 @@ export function sessionColumns(selectable: boolean) {
   const body = col.columns([
     col.accessor('starts_at', {
       header: () => t.earnings.date,
-      cell: (c) => <span className="font-semibold tabular-nums text-ink">{formatDateTime(c.getValue())}</span>,
+      cell: (c) => <SessionDate iso={c.getValue()} />,
       meta: { className: 'max-sm:order-1 max-sm:flex-[1_1_60%]', sortKey: 'starts_at' },
     }),
     col.accessor('students', {

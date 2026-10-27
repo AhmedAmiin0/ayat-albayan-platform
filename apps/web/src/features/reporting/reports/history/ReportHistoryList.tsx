@@ -1,10 +1,10 @@
-import { gradeStyle, lessonWhenText, type ReportSummaryView, type UserRole } from '@ab/shared';
+import { gradeStyle, lessonWhenAt, type ReportSummaryView, type UserRole } from '@ab/shared';
 import { StatusChip } from '@/components/ui/display/status-chip';
 import { t } from '@/lib/i18n/i18n';
-import { locale } from '@/lib/i18n/locale';
 import { PdfAction } from './PdfAction';
 import { RecordingLink } from './RecordingLink';
 import { teacherLabel } from '@/lib/i18n/teacher-label';
+import { useClock } from '@/lib/clock';
 
 export interface ReportHistoryListProps {
   items: ReportSummaryView[];
@@ -20,13 +20,14 @@ export interface ReportHistoryListProps {
  * per-student sheets): when, which lesson, who taught, attendance, overall grade, the PDF.
  */
 export function ReportHistoryList({ items, role, tz, studentId, recorded }: ReportHistoryListProps) {
+  const clock = useClock();
   return (
     <ol className="grid">
       {items.map((r) => (
         <li key={r.id} className="grid gap-2 border-b border-rule py-3 last:border-b-0 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center">
           <div className="grid gap-1">
             <p className="flex flex-wrap items-baseline gap-x-3 gap-y-0.5">
-              <span className="font-semibold">{lessonWhenText(new Date(r.starts_at), tz, locale)}</span>
+              <span className="font-semibold">{lessonWhenAt(new Date(r.starts_at), { tz, ...clock })}</span>
               {r.lesson_no !== null && (
                 <span className="text-xs text-ink-3">{t.reports.lessonNoShort.replace('{n}', String(r.lesson_no))}</span>
               )}
@@ -42,7 +43,7 @@ export function ReportHistoryList({ items, role, tz, studentId, recorded }: Repo
           </div>
           <div className="flex flex-wrap items-center gap-2">
             {recorded.has(r.lesson_id) && (
-              <RecordingLink studentId={studentId} lessonId={r.lesson_id} role={role} when={lessonWhenText(new Date(r.starts_at), tz, locale)} />
+              <RecordingLink studentId={studentId} lessonId={r.lesson_id} role={role} when={lessonWhenAt(new Date(r.starts_at), { tz, ...clock })} />
             )}
             <PdfAction report={r} role={role} />
           </div>

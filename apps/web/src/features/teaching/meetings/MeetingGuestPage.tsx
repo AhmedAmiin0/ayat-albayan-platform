@@ -11,6 +11,7 @@ import { t } from '@/lib/i18n/i18n';
 import { joinMeetingAsGuest, publicMeetingQuery } from './internal/internal-api';
 import { meetingJoinProblem } from './rows/meeting-join-errors';
 import { guestScheduleText } from './scheduled/meeting-when';
+import { useClock } from '@/lib/clock';
 
 const L = t.meetings.internal.guest;
 
@@ -36,6 +37,7 @@ function Notice({ text, alert }: { text: string; alert?: boolean }) {
  * joining too early answers 403 join_not_open_yet with opens_at, which the join page reads out.
  */
 export function MeetingGuestPage({ token, make }: { token: string; make?: () => RoomClient }) {
+  const clock = useClock();
   const view = useQuery(publicMeetingQuery(token));
   // A failed poll keeps the last answer (react-query keeps data): someone in the room stays in it.
   if (!view.data) {
@@ -44,7 +46,7 @@ export function MeetingGuestPage({ token, make }: { token: string; make?: () => 
     return <Notice text={gone ? L.invalid : t.common.error} alert />;
   }
   if (view.data.state === 'ended') return <Notice text={L.ended} />;
-  const early = guestScheduleText(view.data, { now: new Date(), tz: viewerTz() });
+  const early = guestScheduleText(view.data, { now: new Date(), tz: viewerTz() }, clock);
   const intro = early ? `${early}. ${L.intro}` : L.intro;
   return (
     <GuestJoinPage
@@ -52,7 +54,7 @@ export function MeetingGuestPage({ token, make }: { token: string; make?: () => 
       joinWith={joinMeetingAsGuest}
       title={view.data.title}
       intro={intro}
-      problem={(e) => meetingJoinProblem(e)}
+      problem={(e) => meetingJoinProblem(e, clock)}
       {...(make && { make })}
     />
   );

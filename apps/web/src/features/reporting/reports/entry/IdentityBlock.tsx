@@ -1,10 +1,10 @@
-import { lessonWhenText, packageProgress, type ReportFormEntry, type ReportFormLesson } from '@ab/shared';
+import { lessonWhenAt, packageProgress, type ReportFormEntry, type ReportFormLesson } from '@ab/shared';
 import type { ReactNode } from 'react';
 import { Ltr } from '@/components/ui/display/ltr';
 import { tzCity } from '@/components/ui/form/time-zone-select';
 import { t } from '@/lib/i18n/i18n';
-import { locale } from '@/lib/i18n/locale';
 import { teacherLabel } from '@/lib/i18n/teacher-label';
+import { useClock } from '@/lib/clock';
 
 function Row({ label, children }: { label: string; children: ReactNode }) {
   return (
@@ -29,8 +29,9 @@ function lessonNo(entry: ReportFormEntry): string {
  * lesson, never typed. «البرنامج» and «الحضور» (editable) follow, then the link (MeetingLinkRow).
  */
 export function IdentityBlock({ lesson, entry }: { lesson: ReportFormLesson; entry: ReportFormEntry }) {
+  const clock = useClock();
   const { student } = entry;
-  const when = `${lessonWhenText(new Date(lesson.starts_at), student.tz, locale)} (${tzCity(student.tz) ?? student.tz})`;
+  const when = `${lessonWhenAt(new Date(lesson.starts_at), { tz: student.tz, ...clock })} (${tzCity(student.tz) ?? student.tz})`;
   return (
     <div className="grid gap-2 border-y border-rule bg-sunk/60 px-3 py-3">
       <p className="text-xs text-ink-3">{t.reports.readOnlyHint}</p>

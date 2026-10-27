@@ -62,8 +62,14 @@ export function useClockPref(): ClockPref {
   return useSyncExternalStore(subscribe, clockPref);
 }
 
+/** What a screen formats times with: the cycle in effect and the UI language. */
+export interface Clock {
+  cycle: ClockCycle;
+  locale: Locale;
+}
+
 /** `{ cycle, locale }` for the shared clock formatters (clockOf, clockOfHhmm, clockRange). */
-export function useClock(): { cycle: ClockCycle; locale: Locale } {
+export function useClock(): Clock {
   const cycle = useSyncExternalStore(subscribe, clockCycle);
   return useMemo(() => ({ cycle, locale }), [cycle]);
 }

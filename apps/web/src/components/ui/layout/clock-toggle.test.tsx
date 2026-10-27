@@ -6,7 +6,7 @@ import { t } from '@/lib/i18n/i18n';
 import { ClockToggle } from './clock-toggle';
 
 afterEach(() => {
-  setClockPref('auto');
+  setClockPref('24');
   localStorage.clear();
 });
 
@@ -14,6 +14,7 @@ const pressed = (name: string) => screen.getByRole('button', { name }).getAttrib
 
 describe('ClockToggle', () => {
   it('switches the clock at once and saves the choice; «تلقائي» clears it', () => {
+    setClockPref('auto');
     render(<ClockToggle />);
     expect(pressed(t.clock.autoShort)).toBe('true');
     fireEvent.click(screen.getByRole('button', { name: t.clock.h12 }));

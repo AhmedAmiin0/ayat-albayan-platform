@@ -32,9 +32,14 @@ describe('student channel paths and pages (docs/31 §2)', () => {
 describe('channelTimeText', () => {
   const now = new Date('2026-10-27T12:00:00.000Z');
   it('the clock alone today on the viewer’s clock, the day before it otherwise', () => {
-    expect(channelTimeText({ iso: '2026-10-27T09:05:00.000Z', tz: 'Asia/Riyadh', now, locale: 'en' })).toBe('12:05');
-    expect(channelTimeText({ iso: '2026-10-25T09:05:00.000Z', tz: 'Asia/Riyadh', now, locale: 'en' })).toMatch(/25.*Oct.* 12:05$/);
+    expect(channelTimeText({ iso: '2026-10-27T09:05:00.000Z', tz: 'Asia/Riyadh', now, locale: 'en', cycle: '24' })).toBe('12:05');
+    expect(channelTimeText({ iso: '2026-10-25T09:05:00.000Z', tz: 'Asia/Riyadh', now, locale: 'en', cycle: '24' })).toMatch(/25.*Oct.* 12:05$/);
     // 22:30 Cairo on the 26th is the 27th in Riyadh: the viewer's own zone decides the day.
-    expect(channelTimeText({ iso: '2026-10-26T21:30:00.000Z', tz: 'Asia/Riyadh', now, locale: 'en' })).toBe('00:30');
+    expect(channelTimeText({ iso: '2026-10-26T21:30:00.000Z', tz: 'Asia/Riyadh', now, locale: 'en', cycle: '24' })).toBe('00:30');
+  });
+
+  it('in 12 h with ص / م (AM / PM)', () => {
+    expect(channelTimeText({ iso: '2026-10-27T09:05:00.000Z', tz: 'Asia/Riyadh', now, locale: 'ar', cycle: '12' })).toBe('12:05 م');
+    expect(channelTimeText({ iso: '2026-10-26T21:30:00.000Z', tz: 'Asia/Riyadh', now, locale: 'en', cycle: '12' })).toBe('12:30 AM');
   });
 });

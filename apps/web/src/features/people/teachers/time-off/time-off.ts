@@ -1,4 +1,6 @@
 import { intlLocale, timeOffCreateSchema, type TimeOffCreate } from '@ab/shared';
+import type { Clock } from '@/lib/clock';
+import { dateAndClock, viewerZone } from '@/lib/clock-text';
 import { t } from '@/lib/i18n/i18n';
 import { locale } from '@/lib/i18n/locale';
 
@@ -33,23 +35,16 @@ export function toTimeOffBody(
 
 // Western digits (docs/07 §2): intlLocale carries `nu-latn` in both languages.
 const days = new Intl.DateTimeFormat(intlLocale(locale), { weekday: 'long', day: 'numeric', month: 'long' });
-const daysAndTimes = new Intl.DateTimeFormat(intlLocale(locale), {
-  weekday: 'long',
-  day: 'numeric',
-  month: 'long',
-  hour: '2-digit',
-  minute: '2-digit',
-  hourCycle: 'h23',
-});
 const atMidnight = (d: Date) => d.getHours() === 0 && d.getMinutes() === 0;
 
 /**
  * UTC instants → the span in the viewer's zone. Whole days read as days and the end is exclusive
  * (10th 00:00 → 13th 00:00 = «السبت، 10 – الاثنين، 12 أكتوبر»); anything else keeps its times.
  */
-export function formatTimeOff(startIso: string, endIso: string): string {
+export function formatTimeOff(startIso: string, endIso: string, clock: Clock): string {
   const start = new Date(startIso);
   const end = new Date(endIso);
   if (atMidnight(start) && atMidnight(end)) return days.formatRange(start, new Date(end.getTime() - 60_000));
-  return daysAndTimes.formatRange(start, end);
+  const zoned = { ...clock, tz: viewerZone() };
+  return `${dateAndClock(days, start, zoned)} – ${dateAndClock(days, end, zoned)}`;
 }

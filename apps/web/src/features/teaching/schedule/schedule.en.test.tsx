@@ -7,6 +7,10 @@ import { JOUD, lesson, SUHAILA } from './lesson/lesson-fixture';
 import { LessonDetails } from './lesson/LessonDetails';
 import { studentNames } from './lesson/lessons';
 import { ProposalsPanel } from './reschedule/ProposalsPanel';
+import { locale } from '@/lib/i18n/locale';
+
+/** The cycle the suite reads times in (test-setup saves 24 h). */
+const C24 = { cycle: '24', locale } as const;
 
 // The UI in English (LTR): dates, joiners and the proposal arrow follow it, not the Arabic default.
 vi.mock('@/lib/i18n/i18n', async (orig) => ({ ...(await orig<object>()), t: en }));
@@ -36,7 +40,7 @@ describe('schedule screens in English', () => {
 
   it('a clash on the teacher’s clock joins with «, »', () => {
     const clash = { kind: 'outside_availability' as const, startsAt: '2026-10-04T14:00:00.000Z', endsAt: '2026-10-04T14:45:00.000Z' };
-    const text = conflictText(clash, 'Africa/Cairo');
+    const text = conflictText(clash, C24, 'Africa/Cairo');
     expect(text).toContain('Sunday 4 October 17:00, Teacher: 17:00');
     expect(text).not.toMatch(ARABIC);
   });

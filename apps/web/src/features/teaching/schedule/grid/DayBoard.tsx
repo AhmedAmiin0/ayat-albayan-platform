@@ -9,6 +9,7 @@ import { LessonChip } from '../lesson/LessonChip';
 import { freeText, spanRange, teacherDay, type BoardRow } from '../overview';
 import { ScheduleTrack } from './ScheduleTrack';
 import { TeacherCell } from './TeacherCell';
+import { useClock } from '@/lib/clock';
 
 export interface DayBoardProps {
   /** Riyadh day, "YYYY-MM-DD". */
@@ -84,6 +85,7 @@ interface FreeGapsProps {
 
 /** «فاضي 17:00 – 19:00»: dashed outline links (never filled, docs/07 rule 1), ≥ 44px on phones. */
 function FreeGaps({ teacherId, gaps, day }: FreeGapsProps) {
+  const clock = useClock();
   if (gaps.length === 0) return null;
   return (
     <ul aria-label={t.booking.freeSlots} className="flex flex-wrap gap-1.5">
@@ -95,7 +97,7 @@ function FreeGaps({ teacherId, gaps, day }: FreeGapsProps) {
             className={cn(buttonVariants({ variant: 'secondary', size: 'sm' }), 'border-dashed border-lapis/60 text-lapis tabular-nums')}
           >
             <span className="sr-only">{`${t.schedule.book}: `}</span>
-            {freeText(spanRange(gap, day))}
+            {freeText(spanRange(gap, day), clock)}
           </Link>
         </li>
       ))}

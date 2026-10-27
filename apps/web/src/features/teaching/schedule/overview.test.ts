@@ -11,6 +11,10 @@ import {
   teacherDay,
 } from './overview';
 import { T_ABRAR, T_FATMA, T_NOUR } from './overview-fixture';
+import { locale } from '@/lib/i18n/locale';
+
+/** The cycle the suite reads times in (test-setup saves 24 h). */
+const C24 = { cycle: '24', locale } as const;
 
 const SUNDAY = '2026-10-04';
 const BEFORE = new Date('2026-10-03T09:00:00.000Z'); // Saturday, the whole week ahead
@@ -57,7 +61,7 @@ describe('Riyadh-day spans', () => {
   it('words the free total and a gap', () => {
     expect(hoursText(210)).toBe('3:30');
     expect(hoursText(45)).toBe('0:45');
-    expect(freeText({ start: '17:00', end: '19:00' })).toBe('متاح 17:00 – 19:00');
+    expect(freeText({ start: '17:00', end: '19:00' }, C24)).toBe('متاح 17:00 – 19:00');
   });
 });
 
