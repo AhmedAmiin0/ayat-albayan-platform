@@ -42,7 +42,7 @@ export function QuoteStrip() {
         style={{ flex: 1, flexDirection: 'row', alignItems: 'center', gap: 4 }}
       >
         {sender ? (
-          <AppText numberOfLines={1} style={{ ...line, flexShrink: 0, fontFamily: type.ui[600], color: color.lapis }}>
+          <AppText numberOfLines={1} style={{ ...line, flexShrink: 0, maxWidth: '45%', fontFamily: type.ui[600], color: color.lapis }}>
             {`${sender} ·`}
           </AppText>
         ) : null}
