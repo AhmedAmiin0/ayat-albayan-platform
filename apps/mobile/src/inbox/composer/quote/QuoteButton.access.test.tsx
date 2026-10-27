@@ -33,11 +33,18 @@ async function open(opts: { teacher?: boolean; permissions?: string[]; last?: st
   await screen.findByText(inbound.body ?? '');
 }
 const quote = () => screen.queryByRole('button', { name: t.inbox.quote.open });
+/** Open window (owner 2026-10-27): «عرض سعر» is a tile of the paperclip's sheet. */
+const paperclip = async () => {
+  const clip = screen.queryByRole('button', { name: t.inbox.composer.attach });
+  if (clip) await fireEvent.press(clip);
+  return clip;
+};
 
 beforeEach(() => mockApiFetch.mockReset());
 
-test('sales with pricing.read get «عرض سعر» in the row; it opens the sheet', async () => {
+test('sales with pricing.read get «عرض سعر» in the paperclip’s sheet; it opens the quote sheet', async () => {
   await open({ permissions: fullAccessMe('sales').permissions });
+  await paperclip();
   const button = quote();
   expect(button).toBeTruthy();
   if (button) await fireEvent.press(button);
@@ -51,7 +58,10 @@ test('the closed window keeps the button (the sheet still copies)', async () => 
 
 test('no «عرض سعر» for a teacher, nor for a role without pricing.read', async () => {
   await open({ teacher: true });
+  expect(await paperclip()).toBeNull();
   expect(quote()).toBeNull();
   await open({ permissions: ['inbox.read', 'inbox.send'] });
+  expect(await paperclip()).toBeTruthy();
+  expect(screen.getByTestId('attach-sheet')).toBeTruthy();
   expect(quote()).toBeNull();
 });

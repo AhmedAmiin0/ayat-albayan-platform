@@ -5,6 +5,14 @@ import { baseMime } from '../../schemas/chat-media.js';
 /** Meta's `image` message takes JPEG/PNG only (no WebP/HEIC); PDFs go as a `document`. */
 export const CHAT_SEND_MIMES = ['image/jpeg', 'image/png', 'application/pdf'] as const;
 export type ChatSendMime = (typeof CHAT_SEND_MIMES)[number];
+/**
+ * A voice note recorded in the app (owner 2026-10-27): AAC in MP4, as Android records it; the API
+ * turns it into a WhatsApp voice note (ogg/opus). The chat's own send only: saved replies and the
+ * web's attach keep CHAT_SEND_MIMES.
+ */
+export const CHAT_VOICE_MIME = 'audio/mp4';
+/** What the chat's file send accepts: an image, a PDF or a recorded voice note. */
+export const CHAT_FILE_MIMES = [...CHAT_SEND_MIMES, CHAT_VOICE_MIME] as const;
 /** Meta's image limit. */
 export const WA_IMAGE_MAX_BYTES = 5 * 1024 * 1024;
 /** Meta's media caption limit. */
@@ -37,11 +45,15 @@ export type ChatFileProblem = 'file_type' | 'file_too_large';
 
 /**
  * Why a file cannot be sent, or null. `maxBytes` is the academy's upload limit
- * (uploadMaxBytes(settings), 10 MB by default); an image also stays within Meta's 5 MB.
+ * (uploadMaxBytes(settings), 10 MB by default); an image also stays within Meta's 5 MB. `mimes` is
+ * the accepted list: CHAT_SEND_MIMES unless the caller is the chat's file send (CHAT_FILE_MIMES).
  */
-export function chatFileProblem(f: { mime: string; size: number; maxBytes: number }): ChatFileProblem | null {
+export function chatFileProblem(
+  f: { mime: string; size: number; maxBytes: number },
+  mimes: readonly string[] = CHAT_SEND_MIMES,
+): ChatFileProblem | null {
   const mime = baseMime(f.mime);
-  if (!(CHAT_SEND_MIMES as readonly string[]).includes(mime)) return 'file_type';
+  if (!mimes.includes(mime)) return 'file_type';
   const cap = waMediaKind(mime) === 'image' ? Math.min(WA_IMAGE_MAX_BYTES, f.maxBytes) : f.maxBytes;
   return f.size < 1 || f.size > cap ? 'file_too_large' : null;
 }

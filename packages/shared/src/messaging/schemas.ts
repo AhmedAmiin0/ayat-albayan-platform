@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { WA_LINES } from '../enums/messaging.js';
 import { leadQualificationSchema } from '../schemas/people/leads.js';
-import { CHAT_SEND_MIMES, WA_CAPTION_MAX } from './chat/chat-files.js';
+import { CHAT_FILE_MIMES, WA_CAPTION_MAX } from './chat/chat-files.js';
 import { BODY_SLOTS, type BodySlot } from './templates/templates.js';
 
 // Phase 4 request bodies (docs/12 §4). Commands are camelCase, like every other request.
@@ -18,10 +18,10 @@ export const threadTextSchema = z.object({
   replyToMessageId: z.uuid().optional(),
 });
 
-/** POST /threads/:phone/file-upload-url: a signed upload for one image or PDF (owner 2026-10-19 #2). */
+/** POST /threads/:phone/file-upload-url: a signed upload for one image, PDF (owner 2026-10-19 #2) or voice note (2026-10-27). */
 export const threadFileUploadSchema = z.object({
   clientRequestId: z.uuid(),
-  mime: z.enum(CHAT_SEND_MIMES, { message: 'file_type' }),
+  mime: z.enum(CHAT_FILE_MIMES, { message: 'file_type' }),
   size: z.int().min(1),
 });
 
