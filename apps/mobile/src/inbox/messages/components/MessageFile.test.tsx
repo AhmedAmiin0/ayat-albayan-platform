@@ -16,15 +16,20 @@ jest.mock('@/core/lib/http/api', () => ({
   apiFetch: (mockPath: string) => mockApiFetch(mockPath),
 }));
 jest.mock('expo-audio', () => {
-  const player = { play: jest.fn(), pause: jest.fn(), seekTo: jest.fn() };
-  const status = { playing: false, currentTime: 0, duration: 12, didJustFinish: false, isLoaded: true };
-  return { useAudioPlayer: jest.fn(() => player), useAudioPlayerStatus: jest.fn(() => status) };
+  const player = { play: jest.fn(), pause: jest.fn(), seekTo: jest.fn(), setPlaybackRate: jest.fn() };
+  const status = { playing: false, currentTime: 0, duration: 12, didJustFinish: false, isLoaded: true, isBuffering: false };
+  return {
+    useAudioPlayer: jest.fn(() => player),
+    useAudioPlayerStatus: jest.fn(() => status),
+    setAudioModeAsync: jest.fn(async () => undefined),
+  };
 });
 jest.mock('expo-video', () => {
   const { createElement } = jest.requireActual('react');
   const { View } = jest.requireActual('react-native');
+  const player = { play: jest.fn(), pause: jest.fn(), status: 'loading', addListener: jest.fn(() => ({ remove: jest.fn() })) };
   return {
-    useVideoPlayer: jest.fn(() => ({ play: jest.fn() })),
+    useVideoPlayer: jest.fn(() => player),
     VideoView: (props: { testID?: string }) => createElement(View, { testID: props.testID }),
   };
 });
@@ -56,8 +61,8 @@ test('a HEIC photo keeps «عرض صورة»: nothing is signed on render; the t
 });
 
 test('the opener is a full touch target (docs/07: 44 pt)', async () => {
-  await show(row({ media_mime: 'audio/ogg' }));
-  const opener = screen.getByRole('button', { name: t.inbox.playMedia.replace('{kind}', kind.audio) });
+  await show(row({ media_mime: 'application/pdf' }));
+  const opener = screen.getByRole('button', { name: t.inbox.viewMedia.replace('{kind}', kind.document) });
   expect(opener.props.style).toMatchObject({ minHeight: shape.control.touch });
 });
 
@@ -72,18 +77,20 @@ test('our sent PDF opens too and shows its name', async () => {
 test('a voice note plays inside the bubble, never in another app', async () => {
   serve(async () => ({ url: SIGNED, mime: 'audio/ogg', expires_at: '2026-10-19T10:00:00Z' }));
   await show(row({ media_mime: 'audio/ogg; codecs=opus' }));
+  expect(screen.getByTestId('audio-player')).toBeTruthy();
   await press(t.inbox.playMedia.replace('{kind}', kind.audio));
-  expect(await screen.findByTestId('audio-player')).toBeTruthy();
-  expect(useAudioPlayer).toHaveBeenCalledWith(SIGNED);
+  await waitFor(() => expect(useAudioPlayer).toHaveBeenCalledWith(SIGNED));
   expect(screen.getByText('0:12')).toBeTruthy();
   expect(openURL).not.toHaveBeenCalled();
 });
 
-test('a video plays inside the bubble', async () => {
+test('a video is a tile in the bubble and plays full screen, never inline', async () => {
   serve(async () => ({ url: SIGNED, mime: 'video/mp4', expires_at: '2026-10-19T10:00:00Z' }));
   await show(row({ media_mime: 'video/mp4' }));
+  expect(screen.getByTestId('video-tile')).toBeTruthy();
+  expect(screen.queryByTestId('video-player')).toBeNull();
   await press(t.inbox.playMedia.replace('{kind}', kind.video));
-  expect(await screen.findByTestId('video-player')).toBeTruthy();
+  expect(await screen.findByTestId('video-viewer')).toBeTruthy();
 });
 
 test('410: the file expired', async () => {
