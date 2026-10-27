@@ -1,6 +1,6 @@
 import { useVideoPlayer, type VideoPlayerStatus, VideoView } from 'expo-video';
 import { useEffect, useState } from 'react';
-import { Modal, View } from 'react-native';
+import { Modal, StatusBar, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { t } from '@/core/lib/i18n/i18n';
 import { palette } from '@/theme';
@@ -41,6 +41,7 @@ export function VideoModal({ id, url, kind, onClose, onFail }: VideoModalProps) 
   }, [status, onFail]);
   return (
     <Modal testID="video-viewer" visible animationType={still ? 'none' : 'fade'} statusBarTranslucent onRequestClose={onClose}>
+      <StatusBar barStyle="light-content" />
       <SafeAreaView edges={['top', 'bottom']} style={{ flex: 1, backgroundColor: 'black' }}>
         <ViewerClose onClose={onClose} label={t.inbox.closeVideo} />
         <View style={{ flex: 1, justifyContent: 'center' }}>

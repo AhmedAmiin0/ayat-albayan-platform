@@ -4,7 +4,8 @@ import { KIND, PLAY, players, resetPlayers, signed, statusIs } from './voice-tes
 import { VoicePlayback } from './VoicePlayback';
 
 const ALL = { includeHiddenElements: true };
-const show = (id = 'v1') => render(<VoicePlayback id={id} url={signed(id)} kind={KIND} />);
+const onFail = jest.fn();
+const show = (id = 'v1') => render(<VoicePlayback id={id} url={signed(id)} kind={KIND} onFail={onFail} />);
 const player = (id = 'v1') => {
   const p = players.get(signed(id));
   if (!p) throw new Error(`no player for ${id}`);
@@ -22,7 +23,7 @@ test('loaded: plays once; the length shows until it plays, then the position (me
   expect(player().play).toHaveBeenCalledTimes(1);
   expect(screen.getByText('1:05')).toBeTruthy();
   statusIs({ playing: true, currentTime: 13 });
-  await screen.rerender(<VoicePlayback id="v1" url={signed('v1')} kind={KIND} />);
+  await screen.rerender(<VoicePlayback id="v1" url={signed('v1')} kind={KIND} onFail={onFail} />);
   expect(screen.getByText('0:13')).toBeTruthy();
   expect(player().play).toHaveBeenCalledTimes(1);
 });
@@ -33,7 +34,7 @@ test('playing: the button pauses; at the end it starts over from 0', async () =>
   await fireEvent.press(screen.getByRole('button', { name: t.inbox.pauseMedia }));
   expect(player().pause).toHaveBeenCalled();
   statusIs({ currentTime: 65, didJustFinish: true });
-  await screen.rerender(<VoicePlayback id="v1" url={signed('v1')} kind={KIND} />);
+  await screen.rerender(<VoicePlayback id="v1" url={signed('v1')} kind={KIND} onFail={onFail} />);
   await fireEvent.press(screen.getByRole('button', { name: PLAY }));
   expect(player().seekTo).toHaveBeenCalledWith(0);
 });
@@ -65,7 +66,7 @@ test('the speed chip shows once it plays and cycles 1× → 1.5× → 2× → 1�
   await show();
   expect(screen.queryByTestId('voice-speed')).toBeNull();
   statusIs({ playing: true, currentTime: 1 });
-  await screen.rerender(<VoicePlayback id="v1" url={signed('v1')} kind={KIND} />);
+  await screen.rerender(<VoicePlayback id="v1" url={signed('v1')} kind={KIND} onFail={onFail} />);
   for (const label of ['1×', '1.5×', '2×']) {
     await fireEvent.press(screen.getByRole('button', { name: t.inbox.playbackSpeed.replace('{rate}', label) }));
   }
@@ -89,6 +90,6 @@ test('only one voice note plays at a time: the second pauses the first', async (
 
 test('a new signed URL on rerender never swaps the source mid-play', async () => {
   await show();
-  await screen.rerender(<VoicePlayback id="v1" url="https://storage.test/other.ogg" kind={KIND} />);
+  await screen.rerender(<VoicePlayback id="v1" url="https://storage.test/other.ogg" kind={KIND} onFail={onFail} />);
   expect(players.has('https://storage.test/other.ogg')).toBe(false);
 });

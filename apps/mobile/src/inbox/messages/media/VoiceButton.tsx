@@ -10,10 +10,11 @@ interface VoiceButtonProps {
   busy: boolean;
   label: string;
   onPress: () => void;
+  onLongPress?: () => void;
 }
 
 /** WhatsApp's round play / pause (a 44 pt circle in the brand colour). */
-export function VoiceButton({ playing, busy, label, onPress }: VoiceButtonProps) {
+export function VoiceButton({ playing, busy, label, onPress, onLongPress }: VoiceButtonProps) {
   const { color } = useTheme();
   return (
     <Pressable
@@ -22,6 +23,7 @@ export function VoiceButton({ playing, busy, label, onPress }: VoiceButtonProps)
       accessibilityLabel={label}
       accessibilityState={{ busy }}
       onPress={onPress}
+      onLongPress={onLongPress}
       style={({ pressed }) => ({
         width: shape.control.touch,
         height: shape.control.touch,

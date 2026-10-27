@@ -90,7 +90,7 @@ export function MessageFile({ message: m, phone, onLongPress }: MessageFileProps
   const box = photoBox(m.media_mime);
   if (box) return <PhotoPreview message={m} phone={phone} box={box} kind={kind} onLongPress={onLongPress} />;
   const playable = isPlayableMime(m.media_mime);
-  if (playable && baseMime(m.media_mime).startsWith('audio/')) return <VoiceNote message={m} phone={phone} kind={kind} />;
-  if (playable) return <VideoTile message={m} phone={phone} kind={kind} />;
+  if (playable && baseMime(m.media_mime).startsWith('audio/')) return <VoiceNote message={m} phone={phone} kind={kind} onLongPress={onLongPress} />;
+  if (playable) return <VideoTile message={m} phone={phone} kind={kind} onLongPress={onLongPress} />;
   return <FileOpener message={m} phone={phone} kind={kind} />;
 }

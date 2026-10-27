@@ -1,6 +1,6 @@
 import type { MessageView } from '@ab/shared';
 import { useState } from 'react';
-import { Animated, Image, Modal, useWindowDimensions, View } from 'react-native';
+import { Animated, Image, Modal, StatusBar, useWindowDimensions, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { shape, useTheme } from '@/theme';
 import { useA11yPref } from '@/core/ui/primitives/use-a11y-pref';
@@ -52,6 +52,7 @@ export function PhotoViewer({ uri, label, message, phone, onClose }: PhotoViewer
   const { color } = useTheme();
   return (
     <Modal testID="photo-viewer" visible animationType="fade" statusBarTranslucent onRequestClose={onClose}>
+      <StatusBar barStyle="light-content" />
       <SafeAreaView edges={['top', 'bottom']} style={{ flex: 1, backgroundColor: 'black' }}>
         <ViewerClose onClose={onClose} />
         <ZoomPhoto uri={uri} label={label} />

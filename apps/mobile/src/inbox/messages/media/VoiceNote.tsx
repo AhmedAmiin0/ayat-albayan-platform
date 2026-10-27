@@ -1,10 +1,7 @@
 import type { MessageView } from '@ab/shared';
 import { View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
-import { AppText } from '@/core/ui/primitives/AppText';
-import { useSmall } from '../components/MessageMeta';
 import { DownloadLink } from '../copy-download/DownloadLink';
-import { MediaNote, problemText } from '../photo/MediaNote';
+import { MediaNote, problemText, RetryLine } from '../photo/MediaNote';
 import { ensureAudioMode } from './playback';
 import { useFileOnTap } from './use-file-on-tap';
 import { VoicePlayback } from './VoicePlayback';
@@ -14,6 +11,8 @@ interface VoiceNoteProps {
   message: MessageView;
   phone: string;
   kind: string;
+  /** The bubble's menu, as a long press on the play button. */
+  onLongPress?: () => void;
 }
 
 /**
@@ -21,9 +20,8 @@ interface VoiceNoteProps {
  * length; ONE tap fetches it (W6: never before) and plays it once loaded. Expired, the old number's or
  * a teacher's stay a note; a failed fetch keeps the row, «اضغط لإعادة المحاولة». «تنزيل» under it.
  */
-export function VoiceNote({ message: m, phone, kind }: VoiceNoteProps) {
-  const small = useSmall();
-  const { state, open } = useFileOnTap(phone, m.id);
+export function VoiceNote({ message: m, phone, kind, onLongPress }: VoiceNoteProps) {
+  const { state, open, fail } = useFileOnTap(phone, m.id);
   const ended = state.step === 'problem' ? problemText(state.problem, kind) : null;
   if (ended) return <MediaNote text={ended} />;
   const tap = () => {
@@ -33,15 +31,11 @@ export function VoiceNote({ message: m, phone, kind }: VoiceNoteProps) {
   return (
     <View style={{ gap: 2 }}>
       {state.step === 'ready' ? (
-        <VoicePlayback id={m.id} url={state.file.url} kind={kind} />
+        <VoicePlayback id={m.id} url={state.file.url} kind={kind} onFail={fail} onLongPress={onLongPress} />
       ) : (
-        <VoiceRow id={m.id} kind={kind} playing={false} busy={state.step === 'fetching'} progress={0} clock="" onToggle={tap} onSeek={tap} />
+        <VoiceRow id={m.id} kind={kind} playing={false} busy={state.step === 'fetching'} progress={0} clock="" onToggle={tap} onSeek={tap} onLongPress={onLongPress} />
       )}
-      {state.step === 'problem' ? (
-        <AppText accessibilityRole="alert" style={small}>
-          {t.inbox.mediaFailed}
-        </AppText>
-      ) : null}
+      {state.step === 'problem' ? <RetryLine onPress={tap} /> : null}
       <DownloadLink message={m} phone={phone} />
     </View>
   );

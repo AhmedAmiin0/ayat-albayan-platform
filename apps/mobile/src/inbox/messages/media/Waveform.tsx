@@ -32,7 +32,9 @@ const ACTIONS = [{ name: 'increment' }, { name: 'decrement' }] as const;
  * from the reading start (the right in Arabic). A drag moves the dot and seeks once, on release.
  */
 export function Waveform({ seed, progress, label, onSeek, seek }: WaveformProps) {
-  const { color } = useTheme();
+  const { color, name } = useTheme();
+  // Light: the paler rule keeps played vs not readable (lapis vs ruleInput is only 1.4:1); dark: ruleInput.
+  const rest = name === 'light' ? color.ruleStrong : color.ruleInput;
   const bars = useMemo(() => waveBars(seed), [seed]);
   const width = useRef(0);
   const [held, setHeld] = useState<number | null>(null);
@@ -72,7 +74,7 @@ export function Waveform({ seed, progress, label, onSeek, seek }: WaveformProps)
               flex: 1,
               height: Math.max(3, h * HEIGHT),
               borderRadius: shape.radius.pill,
-              backgroundColor: (i + 0.5) / bars.length <= shown ? color.lapis : color.ruleInput,
+              backgroundColor: (i + 0.5) / bars.length <= shown ? color.lapis : rest,
             }}
           />
         ))}

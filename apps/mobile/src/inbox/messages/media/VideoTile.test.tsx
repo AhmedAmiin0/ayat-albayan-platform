@@ -50,7 +50,7 @@ beforeEach(() => {
   mockApiFetch.mockReset();
   listeners.length = 0;
   jest.clearAllMocks();
-  serve(async () => ({ url: SIGNED, mime: 'video/mp4', expires_at: '2026-10-27T10:00:00Z' }));
+  serve(async () => ({ url: SIGNED, mime: 'video/mp4', expires_at: '2099-01-01T00:00:00Z' }));
 });
 
 test('a dark tile of a fixed size with the big play button and «فيديو»; nothing fetched, no inline video', async () => {
@@ -111,4 +111,15 @@ test('410 says the file expired, in place of the tile', async () => {
   await tap();
   expect(await screen.findByText(t.inbox.mediaExpired)).toBeTruthy();
   expect(screen.queryByTestId('video-tile')).toBeNull();
+});
+
+test('reopened after its signed URL expired: asked again, never the dead URL', async () => {
+  serve(async () => ({ url: SIGNED, mime: 'video/mp4', expires_at: '2020-01-01T00:00:00Z' }));
+  await show();
+  await tap();
+  await screen.findByTestId('video-viewer');
+  await fireEvent.press(screen.getByRole('button', { name: t.inbox.closeVideo }));
+  await tap();
+  await screen.findByTestId('video-viewer');
+  expect(mockApiFetch.mock.calls.filter(([p]) => p === PATH)).toHaveLength(2);
 });

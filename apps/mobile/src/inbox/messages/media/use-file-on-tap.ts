@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { type ThreadFile, useThreadFile } from '../hooks/thread-file';
+import { signedStaleTime, type ThreadFile, useThreadFile } from '../hooks/thread-file';
 import { mediaProblem, type MediaProblem } from '../photo/media-problem';
 
 type TapFile =
@@ -10,7 +10,8 @@ type TapFile =
 
 /**
  * A voice note's or video's signed URL, asked ONLY on the tap (W6): rendering or refetching the thread
- * never signs one. A second tap while fetching or once ready asks nothing; after a failure it asks again.
+ * never signs one. A second tap while fetching, or once ready while the URL is fresh, asks nothing; after
+ * a failure, or once the signed URL is (nearly) expired, it asks again.
  */
 export function useFileOnTap(phone: string, messageId: string) {
   const fetchFile = useThreadFile(phone, messageId);
@@ -22,7 +23,7 @@ export function useFileOnTap(phone: string, messageId: string) {
     },
     [],
   );
-  const busy = state.step === 'fetching' || state.step === 'ready';
+  const busy = state.step === 'fetching' || (state.step === 'ready' && signedStaleTime(state.file) > 0);
 
   const open = useCallback(() => {
     if (busy) return;

@@ -1,6 +1,7 @@
-import { screen, waitFor } from '@testing-library/react-native';
+import { act, screen, waitFor } from '@testing-library/react-native';
 import { ApiError } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
+import { LOAD_MS } from './VoicePlayback';
 import { pathOf, players, resetPlayers, showVoice, signed, statusIs, tapPlay, voiceNote } from './voice-test-kit';
 
 // The ring and the unloaded waveform are hidden from screen readers (their button speaks): still queried.
@@ -13,7 +14,7 @@ jest.mock('@/core/lib/http/api', () => ({
 
 const serve = (answer: () => Promise<unknown>) =>
   mockApiFetch.mockImplementation((path: string) => (path === pathOf('v1') ? answer() : Promise.resolve(null)));
-const file = async () => ({ url: signed('v1'), mime: 'audio/ogg', expires_at: '2026-10-27T10:00:00Z' });
+const file = async () => ({ url: signed('v1'), mime: 'audio/ogg', expires_at: '2099-01-01T00:00:00Z' });
 const fetches = () => mockApiFetch.mock.calls.filter(([p]) => p === pathOf('v1')).length;
 
 beforeEach(() => {
@@ -80,4 +81,22 @@ test('another failure keeps the row with «اضغط لإعادة المحاول�
   await tapPlay();
   await waitFor(() => expect(fetches()).toBe(2));
   await waitFor(() => expect(screen.queryByText(t.inbox.mediaFailed)).toBeNull());
+});
+
+test('fetched but never loaded (network, a codec): after 15 s the ring gives way to the retry line', async () => {
+  serve(file);
+  statusIs({ isLoaded: false });
+  await showVoice();
+  jest.useFakeTimers();
+  try {
+    await tapPlay();
+    await act(async () => {
+      await Promise.resolve();
+    });
+    expect(screen.queryByText(t.inbox.mediaFailed)).toBeNull();
+    await act(() => jest.advanceTimersByTime(LOAD_MS));
+    expect(screen.getByText(t.inbox.mediaFailed)).toBeTruthy();
+  } finally {
+    jest.useRealTimers();
+  }
 });

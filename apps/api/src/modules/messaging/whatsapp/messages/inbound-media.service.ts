@@ -60,7 +60,7 @@ export function mediaExpired(msg: Pick<MediaMessage, 'created_at' | 'media_path'
  * (older than 29 days, or Meta refuses the id), 413 invoice_too_large (chatFileMaxBytes). The file is fetched with the
  * client of the NUMBER it came in on (mediaSource; docs/12 §13.4, docs/23c): 409 crm_no_media for the old
  * CRM number's history (no call), 503 line_not_configured for a chat message while the chat
- * line is not configured, 502 meta_error when Meta refuses the line's token (190 / 10 / 200),
+ * line is not configured (module mode: while its number has no client), 502 meta_error when Meta refuses the line's token (190 / 10 / 200),
  * 502 kapso_auth when Kapso refuses the project key (docs/19).
  */
 @Injectable()
@@ -111,6 +111,7 @@ export class InboundMedia {
   private async download(msg: MediaMessage, mediaId: string): Promise<{ bytes: Uint8Array }> {
     const from = mediaSource(msg, { lines: this.lines, numbers: this.numbers });
     if (from.kind === 'crm') throw waHttpError(CRM_NO_MEDIA, HttpStatus.CONFLICT);
+    if (from.kind === 'none') throw waHttpError('line_not_configured', HttpStatus.SERVICE_UNAVAILABLE);
     if (from.line === 'chat' && !from.client.configured()) throw waHttpError('line_not_configured', HttpStatus.SERVICE_UNAVAILABLE);
     try {
       return await from.client.getMedia(mediaId);

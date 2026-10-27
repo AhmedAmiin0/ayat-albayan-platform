@@ -4,7 +4,7 @@ import { useA11yPref } from '@/core/ui/primitives/use-a11y-pref';
 /** A loading ring; with Reduce Motion a still one. Decorative: its button or screen says it is busy. */
 export function Spinner({ color, size = 22 }: { color: string; size?: number }) {
   const still = useA11yPref('reduceMotion');
-  if (!still) return <ActivityIndicator testID="media-spinner" color={color} accessibilityElementsHidden importantForAccessibility="no" />;
+  if (!still) return <ActivityIndicator testID="media-spinner" size={size >= 32 ? 'large' : 'small'} color={color} accessibilityElementsHidden importantForAccessibility="no" />;
   return (
     <View
       testID="media-spinner"

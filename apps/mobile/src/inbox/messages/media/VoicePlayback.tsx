@@ -9,14 +9,20 @@ interface VoicePlaybackProps {
   id: string;
   url: string;
   kind: string;
+  /** Never loaded (network, a storage error, a codec the phone lacks): the bubble offers another try. */
+  onFail: () => void;
+  onLongPress?: () => void;
 }
+
+/** How long a fetched note may take to load before the bubble says it failed. */
+export const LOAD_MS = 15_000;
 
 /**
  * A fetched voice note (expo-audio 57): it plays as soon as it is LOADED (the tap that fetched it was
  * the «تشغيل»), pausing any other note (playback.ts). The URL is pinned on mount, so a refetched signed
  * URL never restarts it; the player is released on unmount (useAudioPlayer).
  */
-export function VoicePlayback({ id, url, kind }: VoicePlaybackProps) {
+export function VoicePlayback({ id, url, kind, onFail, onLongPress }: VoicePlaybackProps) {
   const [source] = useState(url);
   const player = useAudioPlayer(source);
   const status = useAudioPlayerStatus(player);
@@ -32,6 +38,11 @@ export function VoicePlayback({ id, url, kind }: VoicePlaybackProps) {
     autoplayed.current = true;
     start();
   }, [status.isLoaded, start]);
+  useEffect(() => {
+    if (status.isLoaded) return;
+    const timer = setTimeout(onFail, LOAD_MS);
+    return () => clearTimeout(timer);
+  }, [status.isLoaded, onFail]);
   useEffect(() => () => releasePlayback(id), [id]);
 
   const loaded = status.isLoaded && status.duration > 0;
@@ -58,6 +69,7 @@ export function VoicePlayback({ id, url, kind }: VoicePlaybackProps) {
       progress={mediaProgress(status.currentTime, status.duration)}
       clock={voiceClock(status)}
       onToggle={toggle}
+      onLongPress={onLongPress}
       onSeek={(f) => seekTo(f * status.duration)}
       seek={
         loaded
