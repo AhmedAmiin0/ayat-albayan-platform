@@ -7,6 +7,10 @@ import { renderWithClient } from '../../testing/test-utils';
 import { continueText } from './course-continue';
 import { COURSE_STUDENT_ID, NEXT_SUN, RENEWAL_VIEW, routeCourseSend, routeRenewal } from './course-fixture';
 import { SalesCourseDialog } from './SalesCourseDialog';
+import { locale } from '@/lib/i18n/locale';
+
+/** The cycle the suite reads times in (test-setup saves 24 h). */
+const C24 = { cycle: '24', locale } as const;
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
@@ -20,7 +24,7 @@ const taken = (n: 0 | 3) => t.booking.courseChange.continueTaken.replace('{day}'
 /** Open the dialog, «تابِع بنفس الأيام», wait for the previous teacher, then on to the slot step. */
 async function continueToSlots(): Promise<void> {
   renderWithClient(<SalesCourseDialog studentId={COURSE_STUDENT_ID} onClose={vi.fn()} />);
-  expect(await screen.findByText(continueText(RENEWAL_VIEW))).toBeTruthy();
+  expect(await screen.findByText(continueText(RENEWAL_VIEW, C24))).toBeTruthy();
   const same = screen.getByRole('button', { name: t.booking.courseChange.continueSameDays });
   // Enabled once the previous teacher is found among the teachers she can book.
   await waitFor(() => expect(same.hasAttribute('disabled')).toBe(false));

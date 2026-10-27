@@ -10,6 +10,7 @@ import type { BookingBody } from '../../draft/contract';
 import { days, toBookingRequest, type BookingDraft } from '../../draft/draft';
 import { useBookingMode } from '../../mode';
 import { trialDateCheckQuery } from '../../trial-date/api';
+import { useClock } from '@/lib/clock';
 
 /** How many clashes are listed under the count. */
 const SHOWN = 4;
@@ -49,6 +50,7 @@ export function useCourseClean(draft: BookingDraft): boolean {
  * A renewal's prefilled day that clashes is named («موعد الأحد لم يعد متاحًا…», takenTexts).
  */
 export function SeriesCheck({ draft }: { draft: BookingDraft }) {
+  const clock = useClock();
   const { body, check } = useSeriesCheck(draft);
   if (!body) return null;
   if (check.isError) return draft.course ? <FormAlert>{lessonErrorText(check.error)}</FormAlert> : null;
@@ -73,7 +75,7 @@ export function SeriesCheck({ draft }: { draft: BookingDraft }) {
       ))}
       <ul className="grid gap-1 text-xs text-ink-2">
         {conflicts.slice(0, SHOWN).map((c, i) => (
-          <li key={`${c.kind}-${c.startsAt}-${i}`}>{conflictText(c, draft.teacher?.tz)}</li>
+          <li key={`${c.kind}-${c.startsAt}-${i}`}>{conflictText(c, clock, draft.teacher?.tz)}</li>
         ))}
       </ul>
     </div>

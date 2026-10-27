@@ -6,6 +6,7 @@ import { bookingTeachersQuery } from '@/features/teaching/booking/api';
 import type { BookingDraft } from '@/features/teaching/booking/draft/draft';
 import { t } from '@/lib/i18n/i18n';
 import { adjustText, continueText } from './course-continue';
+import { useClock } from '@/lib/clock';
 
 export interface ContinueChoiceProps {
   view: SalesCourseView;
@@ -28,6 +29,7 @@ export interface ContinueChoiceProps {
  * status line says so; a failed read (or refetch) is the error alert with a retry, never «unavailable».
  */
 export function ContinueChoice({ view, draft, now, onContinue, onOther }: ContinueChoiceProps) {
+  const clock = useClock();
   const teachers = useQuery(bookingTeachersQuery({ program: draft.program, gender: draft.genderPref }, 'sales'));
   const fits = continueFits(view);
   // isSuccess, not data: a failed refetch keeps the last list, never an enabled «تابِع» beside the error.
@@ -35,7 +37,7 @@ export function ContinueChoice({ view, draft, now, onContinue, onOther }: Contin
   const unavailable = teachers.isSuccess && !bookable;
   return (
     <div className="grid gap-4">
-      <p className="rounded-md bg-sunk px-3.5 py-2.5 text-sm tabular-nums">{fits ? continueText(view, now) : adjustText(view)}</p>
+      <p className="rounded-md bg-sunk px-3.5 py-2.5 text-sm tabular-nums">{fits ? continueText(view, clock, now) : adjustText(view, clock)}</p>
       {teachers.isPending && (
         <p role="status" className="text-sm text-ink-2">
           {t.common.loading}

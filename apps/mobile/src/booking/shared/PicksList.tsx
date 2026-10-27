@@ -6,6 +6,7 @@ import { AppText } from '@/core/ui/primitives/AppText';
 import { Button } from '@/core/ui/primitives/Button';
 import { type, useTheme } from '@/theme';
 import { dayLine } from './picks';
+import { useClockCycle } from '@/core/lib/clock';
 
 interface PicksListProps {
   picks: readonly string[];
@@ -19,6 +20,7 @@ const weekdays: Record<string, string | undefined> = t.enums.weekday;
 
 /** «أيام الحلقات»: one row per picked day with its time («الأحد الساعة 18:00»), earliest first. */
 export function PicksList({ picks, tz, onRemove }: PicksListProps) {
+  const cycle = useClockCycle();
   const { color } = useTheme();
   const text = {
     fontFamily: type.ui[500],
@@ -34,7 +36,7 @@ export function PicksList({ picks, tz, onRemove }: PicksListProps) {
       ) : null}
       {picks.map((pick) => (
         <View key={pick} style={{ flexDirection: 'row', alignItems: 'center', gap: 8, minHeight: 44 }}>
-          <AppText style={{ ...text, flex: 1 }}>{dayLine(pick, tz)}</AppText>
+          <AppText style={{ ...text, flex: 1 }}>{dayLine(pick, tz, cycle)}</AppText>
           {onRemove ? (
             <Button
               variant="ghost"

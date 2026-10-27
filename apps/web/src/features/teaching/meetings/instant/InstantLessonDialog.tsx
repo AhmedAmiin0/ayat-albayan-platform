@@ -15,6 +15,7 @@ import { t } from '@/lib/i18n/i18n';
 import { teacherLabel } from '@/lib/i18n/teacher-label';
 import { DEFAULT_DURATION, draftProblem, instantBody, type InstantDraft } from './instant-form';
 import { MeetingStudentPicker } from '../MeetingStudentPicker';
+import { useClock } from '@/lib/clock';
 
 interface Props {
   onClose: () => void;
@@ -29,6 +30,7 @@ const durations: Record<string, string> = t.enums.duration;
  * with its room open. A clash comes back 409 with the list; the admin may start anyway with a reason.
  */
 export function InstantLessonDialog({ onClose, onStarted }: Props) {
+  const clock = useClock();
   const [draft, setDraft] = useState<InstantDraft>({ students: [], teacherId: '', durationMin: DEFAULT_DURATION, reason: '' });
   const [requestId] = useState(() => crypto.randomUUID());
   const [tried, setTried] = useState(false);
@@ -81,7 +83,7 @@ export function InstantLessonDialog({ onClose, onStarted }: Props) {
             <FormAlert>{t.meetings.conflict}</FormAlert>
             <ul className="grid gap-1 text-sm text-ink-2">
               {conflicts.map((c) => (
-                <li key={`${c.kind}-${c.startsAt}-${c.lessonId ?? ''}`}>{conflictText(c)}</li>
+                <li key={`${c.kind}-${c.startsAt}-${c.lessonId ?? ''}`}>{conflictText(c, clock)}</li>
               ))}
             </ul>
             <Field label={t.meetings.overrideReason} required {...(tried && problem === 'reason' && { error: t.common.required })}>

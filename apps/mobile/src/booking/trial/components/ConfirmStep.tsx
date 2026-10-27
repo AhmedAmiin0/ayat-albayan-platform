@@ -12,6 +12,7 @@ import type { StudentChoice, TrialDraft } from '../lib/draft';
 import { effectiveByday } from '../lib/package-choice';
 import { picksOf } from '../../shared/picks';
 import { PicksList } from '../../shared/PicksList';
+import { useClockCycle } from '@/core/lib/clock';
 
 interface ConfirmStepProps {
   draft: TrialDraft;
@@ -46,6 +47,7 @@ export function SummaryList({ rows }: { rows: SummaryRow[] }) {
  * parent will get (queued by the API). A clash or a similar-named child shows its way out here.
  */
 export function ConfirmStep({ draft, onSubmit, busy, failure, ...props }: ConfirmStepProps) {
+  const cycle = useClockCycle();
   const { color } = useTheme();
   const days = effectiveByday(draft);
   const note = {
@@ -56,7 +58,7 @@ export function ConfirmStep({ draft, onSubmit, busy, failure, ...props }: Confir
   };
   return (
     <View style={{ gap: 14 }}>
-      <SummaryList rows={summary(draft)} />
+      <SummaryList rows={summary(draft, cycle)} />
       {draft.pkg === 'trial' ? (
         <AppText style={note}>{t.booking.trialFree}</AppText>
       ) : (

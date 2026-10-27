@@ -3560,6 +3560,14 @@
     "restart": "The app will restart in the other language.",
     "restartManually": "Close the app and open it again to switch the language."
   },
+  "clock": {
+    "label": "Time format",
+    "auto": "Automatic (device)",
+    "autoShort": "Auto",
+    "h12": "12-hour",
+    "h24": "24-hour",
+    "hint": "Saved on this device only."
+  },
   "mobileStudentFile": {
     "recordings": {
       "title": "Lesson recordings",

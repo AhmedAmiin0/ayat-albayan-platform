@@ -4,6 +4,8 @@ import { tzCity } from '@/components/ui/form/time-zone-select';
 import { RIYADH_TZ } from '@/features/teaching/schedule/tz';
 import { t } from '@/lib/i18n/i18n';
 import type { DayPick } from '../../draft/draft.days';
+import { type Clock, useClock } from '@/lib/clock';
+import { clockOfHhmm } from '@ab/shared';
 
 export interface DayTimesListProps {
   /** Each picked day with its time in the family zone (dayPicks), Saturday first. */
@@ -17,8 +19,9 @@ export interface DayTimesListProps {
 const weekday: Record<string, string> = t.enums.weekday;
 
 /** «الأحد الساعة 17:00» for one picked day; «… 17:00 بتوقيت القاهرة» when the family is not in Riyadh. */
-export function dayAtText(p: Pick<DayPick, 'weekday' | 'time'>, tz: string = RIYADH_TZ): string {
-  const time = tz === RIYADH_TZ ? p.time : t.schedule.inCity.replace('{time}', p.time).replace('{city}', tzCity(tz) ?? tz);
+export function dayAtText(p: Pick<DayPick, 'weekday' | 'time'>, clock: Clock, tz: string = RIYADH_TZ): string {
+  const at = clockOfHhmm(p.time, clock.cycle, clock.locale);
+  const time = tz === RIYADH_TZ ? at : t.schedule.inCity.replace('{time}', at).replace('{city}', tzCity(tz) ?? tz);
   return t.booking.dayAt.replace('{day}', weekday[String(p.weekday)] ?? '').replace('{time}', time);
 }
 
@@ -27,6 +30,7 @@ export function dayAtText(p: Pick<DayPick, 'weekday' | 'time'>, tz: string = RIY
  * picked on the slot grid above; each removable with its own button (44px touch target).
  */
 export function DayTimesList({ picks, tz, onRemove }: DayTimesListProps) {
+  const clock = useClock();
   if (picks.length === 0) return <p className="text-xs text-ink-3">{t.booking.noDayPicked}</p>;
   return (
     <ul className="flex flex-wrap gap-2">
@@ -34,7 +38,7 @@ export function DayTimesList({ picks, tz, onRemove }: DayTimesListProps) {
         const day = weekday[String(p.weekday)] ?? '';
         return (
           <li key={p.at} className="flex items-center gap-1 rounded-md border border-rule bg-raised ps-3 text-sm">
-            <span className="tabular-nums">{dayAtText(p, tz)}</span>
+            <span className="tabular-nums">{dayAtText(p, clock, tz)}</span>
             <IconButton label={t.booking.removeDay.replace('{day}', day)} className="sm:size-11" onClick={() => onRemove(p.at)}>
               <Icon name="x" />
             </IconButton>

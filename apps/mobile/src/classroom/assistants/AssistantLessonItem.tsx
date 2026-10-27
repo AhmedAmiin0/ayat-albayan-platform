@@ -1,5 +1,6 @@
 import type { AssistantLessonView } from '@ab/shared';
 import { View } from 'react-native';
+import { useClockCycle } from '@/core/lib/clock';
 import { t } from '@/core/lib/i18n/i18n';
 import { riyadhTime } from '@/today/lib/lesson-text';
 import { AppText } from '@/core/ui/primitives/AppText';
@@ -15,7 +16,7 @@ export function AssistantLessonItem({ view, lesson }: { view: AssistantLessonVie
   return (
     <View style={{ gap: 4 }}>
       <AppText style={{ fontFamily: type.ui[700], fontSize: type.size.base, color: color.ink, fontVariant: ['tabular-nums'] }}>
-        {riyadhTime(view.starts_at)}
+        {riyadhTime(view.starts_at, useClockCycle())}
       </AppText>
       <AppText style={{ fontFamily: type.ui[600], fontSize: type.size.body, color: color.ink }}>
         {`${A.student} ${view.student_names.join(t.common.listSeparator)}`}

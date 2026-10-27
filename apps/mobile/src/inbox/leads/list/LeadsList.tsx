@@ -20,6 +20,7 @@ import { LeadsFilterBar } from './LeadsFilterBar';
 import { leadRowSubtitle } from './lead-row';
 import { leadStatusChip } from '../detail/lead-words';
 import type { Lead } from '../../shared/types';
+import { useClockCycle } from '@/core/lib/clock';
 
 type Filter = 'all' | LeadStatus;
 
@@ -33,6 +34,7 @@ const filterPills = (): FilterPill<Filter>[] => [
  * source, owner and order (default newest inbound first). The API returns only the selected filter's total, so only that pill counts.
  */
 export function LeadsList({ switcher }: { switcher: ReactNode }) {
+  const cycle = useClockCycle();
   const [q, setQ] = useState('');
   const [status, setStatus] = useState<Filter>('all');
   const [filters, setFilters] = useState<LeadFilters>(NO_FILTERS);
@@ -47,7 +49,7 @@ export function LeadsList({ switcher }: { switcher: ReactNode }) {
   // Offline (no NetInfo): the refetch failed but the saved list is on screen; say how old it is.
   const stale = list.isError && loaded;
   const subtitle = stale
-    ? `${showing} · ${t.mobile.lastUpdated.replace('{time}', clockAt(list.dataUpdatedAt))}`
+    ? `${showing} · ${t.mobile.lastUpdated.replace('{time}', clockAt(list.dataUpdatedAt, cycle))}`
     : loaded
       ? showing
       : undefined;

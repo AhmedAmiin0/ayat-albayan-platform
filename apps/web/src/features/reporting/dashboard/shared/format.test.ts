@@ -1,6 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import { t } from '@/lib/i18n/i18n';
 import { amount, currencyLabel, monthLabel, percent, rateDate, whenRiyadh } from './format';
+import { locale } from '@/lib/i18n/locale';
+
+/** The cycle the suite reads times in (test-setup saves 24 h). */
+const C24 = { cycle: '24', locale } as const;
 
 describe('dashboard format (Western digits)', () => {
   it('amounts are whole, comma-grouped, signed', () => {
@@ -21,8 +25,8 @@ describe('dashboard format (Western digits)', () => {
 
   it('month and Riyadh time labels carry no Eastern digits', () => {
     expect(monthLabel('2026-09')).toMatch(/2026/);
-    expect(whenRiyadh('2026-10-01T13:00:00Z')).toMatch(/1 .* 16:00$/);
+    expect(whenRiyadh('2026-10-01T13:00:00Z', C24)).toMatch(/1 .* 16:00$/);
     expect(rateDate('2026-10-01T22:00:00Z')).toMatch(/2/);
-    for (const s of [monthLabel('2026-09'), whenRiyadh('2026-10-01T13:00:00Z')]) expect(s).not.toMatch(/[٠-٩]/);
+    for (const s of [monthLabel('2026-09'), whenRiyadh('2026-10-01T13:00:00Z', C24)]) expect(s).not.toMatch(/[٠-٩]/);
   });
 });

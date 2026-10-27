@@ -1,7 +1,7 @@
-import { CONFLICT_KINDS, lessonWhenText, RIYADH_TZ, type Conflict } from '@ab/shared';
+import { CONFLICT_KINDS, RIYADH_TZ, type ClockCycle, type Conflict } from '@ab/shared';
+import { clockCycle, whenIn } from '@/core/lib/clock';
 import { ApiError } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
-import { locale } from '@/core/lib/i18n/locale';
 import { isOffline } from '@/payments/lib/payment-errors';
 
 // What a failed POST /booking means for the trial wizard (docs/10 §3: clients switch on `code`).
@@ -42,10 +42,10 @@ function toCandidate(v: unknown): Candidate | null {
 }
 
 /** «المعلم/ة مشغول/ة بحلقة تانية في الميعاد ده (الأحد 4 أكتوبر 17:00)», Riyadh wall clock. */
-export function conflictLine(c: Conflict): string {
+export function conflictLine(c: Conflict, cycle: ClockCycle): string {
   return t.booking.conflict[c.kind].replace(
     '{when}',
-    lessonWhenText(new Date(c.startsAt), RIYADH_TZ, locale),
+    whenIn(new Date(c.startsAt), RIYADH_TZ, cycle),
   );
 }
 
@@ -63,7 +63,7 @@ function conflictFailure(body: Record<string, unknown>): BookFailure | null {
     return Array.isArray(v) ? v : [];
   };
   if (body['code'] === 'conflict') {
-    return { kind: 'conflict', lines: list('conflicts').filter(isConflict).map(conflictLine) };
+    return { kind: 'conflict', lines: list('conflicts').filter(isConflict).map((c) => conflictLine(c, clockCycle())) };
   }
   const candidates = list('candidates')
     .map(toCandidate)

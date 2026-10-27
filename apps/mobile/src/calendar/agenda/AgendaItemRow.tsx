@@ -1,6 +1,7 @@
 import type { LessonView } from '@ab/shared';
 import type { ReactNode } from 'react';
 import { View } from 'react-native';
+import { useClockCycle } from '@/core/lib/clock';
 import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { NuqtaGlyph } from '@/core/ui/primitives/NuqtaGlyph';
@@ -21,6 +22,7 @@ interface AgendaItemRowProps {
  */
 export function AgendaItemRow({ item, lessonRow }: AgendaItemRowProps) {
   const { color } = useTheme();
+  const cycle = useClockCycle();
   const small = {
     fontSize: type.size.xs,
     lineHeight: type.lineHeight(type.size.xs),
@@ -37,7 +39,7 @@ export function AgendaItemRow({ item, lessonRow }: AgendaItemRowProps) {
   return (
     <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, paddingVertical: 4 }}>
       <NuqtaGlyph shape="hollow" color={color.ink3} />
-      <AppText style={{ ...small, fontFamily: type.ui[500], color: color.ink3 }}>{freeLabel(item.span)}</AppText>
+      <AppText style={{ ...small, fontFamily: type.ui[500], color: color.ink3 }}>{freeLabel(item.span, cycle)}</AppText>
     </View>
   );
 }

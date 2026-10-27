@@ -1,14 +1,14 @@
-import { lessonWhenText, type PortalReport, type PortalStudent } from '@ab/shared';
+import { lessonWhenAt, type PortalReport, type PortalStudent } from '@ab/shared';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { EmptyState } from '@/components/ui/display/empty-state';
 import { Button } from '@/components/ui/form/button';
 import { FormAlert } from '@/components/ui/form/form-alert';
 import { t } from '@/lib/i18n/i18n';
-import { locale } from '@/lib/i18n/locale';
 import { teacherLabel } from '@/lib/i18n/teacher-label';
 import { portalFileUrl, portalReportsQuery } from './api';
 import { LoadState } from './LoadState';
 import { openAfter } from './open-file';
+import { useClock } from '@/lib/clock';
 
 type Open = { kind: 'reports' | 'recordings'; id: string };
 
@@ -39,7 +39,8 @@ export function ReportsPanel({ student }: { student: PortalStudent }) {
 }
 
 function ReportRow({ report, tz, busy, onOpen }: { report: PortalReport; tz: string; busy: boolean; onOpen: (file: Open) => void }) {
-  const when = (iso: string) => lessonWhenText(new Date(iso), tz, locale);
+  const clock = useClock();
+  const when = (iso: string) => lessonWhenAt(new Date(iso), { tz, ...clock });
   const recording = report.recording_id;
   return (
     <li className="grid gap-2 rounded-lg border border-rule bg-raised p-4">

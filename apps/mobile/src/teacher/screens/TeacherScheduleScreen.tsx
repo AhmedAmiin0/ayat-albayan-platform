@@ -16,6 +16,7 @@ import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { useTabBarInset } from '@/core/ui/layout/tab-bar-inset';
 import { useMyAvailability, useMyLessons, useTeacherMe } from '../lib/queries';
+import { useClockCycle } from '@/core/lib/clock';
 
 /** A teacher has no «غيّر الميعاد» (the API never offers her `reschedule`), so the row's action is idle. */
 const noMove = () => undefined;
@@ -27,6 +28,7 @@ const noMove = () => undefined;
  * on a lesson opens «تفاصيل الحلقة» (its students, report state and «ادخل الحلقة»).
  */
 export function TeacherScheduleScreen() {
+  const cycle = useClockCycle();
   const today = riyadhToday(useNow());
   const [start, setStart] = useFollowingDay(weekStart(today));
   const me = useTeacherMe();
@@ -37,7 +39,7 @@ export function TeacherScheduleScreen() {
   const loaded = lessons.data !== undefined;
   const days = agendaDays(lessons.data ?? [], start);
   const empty = days.every((d) => d.lessons.length === 0);
-  const subtitle = headerLine([t.availability.tzHint.replace('{tz}', t.runningHead.riyadh)], lessons);
+  const subtitle = headerLine([t.availability.tzHint.replace('{tz}', t.runningHead.riyadh)], lessons, cycle);
   return (
     <Screen list>
       <ScreenHeader title={t.teacherNav.calendar} subtitle={subtitle} />
@@ -55,12 +57,13 @@ export function TeacherScheduleScreen() {
         contentContainerStyle={{ paddingBottom: 24 + inset }}
         data={loaded ? days : []}
         keyExtractor={(day) => day.date}
+        extraData={cycle}
         ListHeaderComponent={loaded && empty ? <Note>{t.teacherDash.noLessonsWeek}</Note> : null}
         renderItem={({ item }) => (
           <AgendaDayView
             day={item}
             today={item.date === today}
-            available={availabilityLine(grid.data ?? [], item.date, me.data?.tz ?? RIYADH_TZ)}
+            available={availabilityLine(grid.data ?? [], { date: item.date, teacherTz: me.data?.tz ?? RIYADH_TZ, cycle })}
             onReschedule={noMove}
             onOpen={details.open}
           />

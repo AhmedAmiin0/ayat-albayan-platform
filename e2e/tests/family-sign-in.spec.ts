@@ -1,6 +1,7 @@
 import { ar, expect, test } from '../support/fixtures';
 import { closeCodes, codeSentTo, family, openCodes } from '../support/family-sign-in';
 import { stubReset } from '../support/wa-stub';
+import { AR_LOCALE } from '../support/locale';
 
 // /login «الأسرة والطلاب» (docs/30 §7) in a real browser: phone → the WhatsApp code from the stub →
 // the six boxes → the guardian lands on their home (/portal, the placeholder another task builds).
@@ -14,7 +15,7 @@ test.describe('family tab on /login', () => {
 
   test('a guardian signs in with the phone on file and a WhatsApp code', async ({ browser }) => {
     const f = await family();
-    const page = await (await browser.newContext({ locale: 'ar' })).newPage();
+    const page = await (await browser.newContext({ locale: AR_LOCALE })).newPage();
     await page.goto('/login');
     await page.getByRole('tab', { name: ar.familyAuth.tabs.family }).click();
     await page.getByLabel(ar.familyAuth.phone).fill(f.phone);
@@ -29,7 +30,7 @@ test.describe('family tab on /login', () => {
 
   test('while codes are off, the family tab says «not yet» and sends nothing', async ({ browser }) => {
     await closeCodes();
-    const page = await (await browser.newContext({ locale: 'ar' })).newPage();
+    const page = await (await browser.newContext({ locale: AR_LOCALE })).newPage();
     await page.goto('/login');
     await page.getByRole('tab', { name: ar.familyAuth.tabs.family }).click();
     await expect(page.getByText(ar.familyAuth.familyUnavailable)).toBeVisible();

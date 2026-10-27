@@ -1,10 +1,11 @@
-import type { SlotView } from '@ab/shared';
-import { clockTime } from '@ab/shared';
+import { clockOf, type SlotView } from '@ab/shared';
 import { NuqtaGlyph } from '@/components/ui/display/nuqta-glyph';
 import { t } from '@/lib/i18n/i18n';
 import { cn } from '@/lib/utils';
 import { byLocalDay, zoneLabel } from '../reschedule/slots';
 import { dayMonthLabel, RIYADH_TZ, weekDays, weekdayOf } from '../tz';
+import { useClock } from '@/lib/clock';
+import { clockDir } from '@/lib/clock-text';
 
 export interface SlotGridProps {
   /** Saturday of the Riyadh week shown. */
@@ -73,7 +74,8 @@ interface SlotButtonProps {
 
 function SlotButton({ slot, studentTz, picked, onPick }: SlotButtonProps) {
   const busy = slot.conflicts.length > 0;
-  const small = zoneLabel(slot.starts_at, { tz: studentTz, base: RIYADH_TZ });
+  const clock = useClock();
+  const small = zoneLabel(slot.starts_at, { tz: studentTz, base: RIYADH_TZ }, clock);
   return (
     <button
       type="button"
@@ -90,7 +92,7 @@ function SlotButton({ slot, studentTz, picked, onPick }: SlotButtonProps) {
     >
       <span className="flex items-center gap-1">
         {busy && <NuqtaGlyph shape="struck" />}
-        <span dir="ltr">{clockTime(new Date(slot.starts_at), RIYADH_TZ)}</span>
+        <span dir={clockDir(clock)}>{clockOf(new Date(slot.starts_at), { ...clock, tz: RIYADH_TZ })}</span>
       </span>
       {small && <span className="text-2xs text-ink-3">{small}</span>}
       {busy && <span className="text-2xs text-ink-3">{t.booking.slotBusy}</span>}

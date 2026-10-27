@@ -6,6 +6,10 @@ import { ApiError } from '@/lib/http/api';
 import { t } from '@/lib/i18n/i18n';
 import { meetingJoinProblem } from './rows/meeting-join-errors';
 import { MeetingGuestPage } from './MeetingGuestPage';
+import { locale } from '@/lib/i18n/locale';
+
+/** The cycle the suite reads times in (test-setup saves 24 h). */
+const C24 = { cycle: '24', locale } as const;
 
 const fetchMock = vi.fn();
 vi.stubGlobal('fetch', fetchMock);
@@ -40,7 +44,7 @@ describe('MeetingGuestPage — a scheduled meeting', () => {
     expect(intro.textContent).toContain(M.opensAt.replace(' {when}', ''));
     fireEvent.change(screen.getByLabelText(new RegExp(t.classroom.guest.name)), { target: { value: 'ضيف' } });
     fireEvent.click(screen.getByRole('button', { name: t.classroom.guest.join }));
-    const refusal = meetingJoinProblem(new ApiError(403, { code: 'join_not_open_yet', opens_at: VIEW.opens_at }));
+    const refusal = meetingJoinProblem(new ApiError(403, { code: 'join_not_open_yet', opens_at: VIEW.opens_at }), C24);
     await waitFor(() => expect(screen.getByText(refusal)).toBeTruthy());
     expect(refusal).not.toContain('الحلقة');
   });

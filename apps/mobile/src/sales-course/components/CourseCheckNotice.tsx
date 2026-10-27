@@ -8,6 +8,7 @@ import { AppText } from '@/core/ui/primitives/AppText';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { NuqtaGlyph } from '@/core/ui/primitives/NuqtaGlyph';
 import { type, useTheme } from '@/theme';
+import { useClockCycle } from '@/core/lib/clock';
 
 export interface CourseCheckNoticeProps {
   /** The check's state (useCourseCheck): pending, its clashes, or its refusal. */
@@ -27,6 +28,7 @@ export interface CourseCheckNoticeProps {
  * a server error) offers to run it again, or «احجز» would stay disabled for good.
  */
 export function CourseCheckNotice({ check, onChangeSlot }: CourseCheckNoticeProps) {
+  const cycle = useClockCycle();
   const { color } = useTheme();
   const note = { fontFamily: type.ui[500], fontSize: type.size.sm, color: color.ink2 };
   if (check.error) {
@@ -38,7 +40,7 @@ export function CourseCheckNotice({ check, onChangeSlot }: CourseCheckNoticeProp
   }
   if (check.isPending || !check.data) return <AppText style={note}>{t.booking.seriesChecking}</AppText>;
   const conflicts = Array.isArray(check.data.conflicts) ? check.data.conflicts : [];
-  if (conflicts.length > 0) return <ConflictNotice lines={conflicts.map(conflictLine)} onChangeSlot={onChangeSlot} />;
+  if (conflicts.length > 0) return <ConflictNotice lines={conflicts.map((c) => conflictLine(c, cycle))} onChangeSlot={onChangeSlot} />;
   return (
     <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
       <NuqtaGlyph shape="fill" color={color.ok} size={10} />

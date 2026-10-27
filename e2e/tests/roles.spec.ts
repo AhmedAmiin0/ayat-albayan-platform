@@ -3,6 +3,7 @@ import { ar, expect, test } from '../support/fixtures';
 import { apiStatus } from '../support/messages';
 import { openNav } from '../support/nav';
 import { withSql } from '../support/schedule';
+import { AR_LOCALE } from '../support/locale';
 
 // «الأدوار والصلاحيات» (owner, 2026-10-05): the admin creates «محاسب» with payments.read only and
 // gives it to a staff user. That user lands in the admin app on «المدفوعات», sees no «الطلاب» in
@@ -48,7 +49,7 @@ test.describe('roles and permissions («الأدوار والصلاحيات»)',
       return rows[0]?.role;
     }).toBe('admin');
 
-    const ctx = await browser.newContext({ locale: 'ar' });
+    const ctx = await browser.newContext({ locale: AR_LOCALE });
     const page = await ctx.newPage();
     await page.goto('/login');
     await page.getByLabel(ar.auth.email).fill(STAFF.email);

@@ -1,6 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import { t } from '@/lib/i18n/i18n';
 import { actionLabel, entityLink, formatAt, resultLabel, resultStyle, roleLabel } from './activity-format';
+import { locale } from '@/lib/i18n/locale';
+
+/** The cycle the suite reads times in (test-setup saves 24 h). */
+const C24 = { cycle: '24', locale } as const;
 
 describe('activity labels', () => {
   it('uses the exact label of a known action', () => {
@@ -26,7 +30,7 @@ describe('activity labels', () => {
 
 describe('formatAt / entityLink', () => {
   it('shows the time in the academy zone (Riyadh, UTC+3), 24h', () => {
-    expect(formatAt('2026-10-05T21:30:00Z')).toMatch(/00:30/);
+    expect(formatAt('2026-10-05T21:30:00Z', C24)).toMatch(/00:30/);
   });
 
   it('links students and teachers to their profiles only', () => {

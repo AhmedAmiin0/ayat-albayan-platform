@@ -13,6 +13,7 @@ import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { ActivityFilterBar } from './ActivityFilterBar';
 import { ActivityRow } from './ActivityRow';
 import { filterParams, isFiltered, NO_FILTERS, type ActivityFilters } from './activity-filters';
+import { useClockCycle } from '@/core/lib/clock';
 
 const back = () => (router.canGoBack() ? router.back() : router.replace('/more'));
 
@@ -21,13 +22,14 @@ const back = () => (router.canGoBack() ? router.back() : router.replace('/more')
  * own (role, item, from / to day); the phone has no column sort. Offline the loaded rows stay.
  */
 export function ActivityScreen() {
+  const cycle = useClockCycle();
   const [filters, setFilters] = useState<ActivityFilters>(NO_FILTERS);
   const list = usePagedList<ActivityView>({ path: '/activity', params: filterParams(filters) });
   const stale = list.isError && list.data !== undefined;
   const count = list.data ? t.activity.count.replace('{n}', String(list.total)) : undefined;
   const subtitle =
     stale && count
-      ? `${count} · ${t.mobile.lastUpdated.replace('{time}', clockAt(list.dataUpdatedAt))}`
+      ? `${count} · ${t.mobile.lastUpdated.replace('{time}', clockAt(list.dataUpdatedAt, cycle))}`
       : count;
   return (
     <Screen>

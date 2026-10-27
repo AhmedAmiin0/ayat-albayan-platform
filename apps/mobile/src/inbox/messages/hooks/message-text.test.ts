@@ -13,7 +13,7 @@ import {
 } from './message-text';
 import { delivered, inbound, message } from '../../shared/thread-fixtures';
 
-const RIYADH = { now: new Date('2026-10-02T09:00:00Z'), tz: 'Asia/Riyadh' };
+const RIYADH = { now: new Date('2026-10-02T09:00:00Z'), tz: 'Asia/Riyadh', cycle: '24' as const };
 
 test.each([
   ['image/jpeg', 'image'],

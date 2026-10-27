@@ -23,6 +23,7 @@ import { threadLink, useThreadMode } from '../thread/hooks/thread-mode';
 import { threadsEmptyTitle } from './threads-empty';
 import { ThreadTags } from './ThreadTags';
 import { useThreadList } from './use-thread-list';
+import { useClockCycle } from '@/core/lib/clock';
 
 type Filter = 'all' | 'unread';
 const filterPills = (): FilterPill<Filter>[] => [
@@ -59,6 +60,7 @@ function ticksWord(th: ThreadView): string | undefined {
  * lists «القوائم» (docs/22); a teacher gets no lists.
  */
 export function ThreadsList({ switcher }: { switcher?: ReactNode }) {
+  const cycle = useClockCycle();
   const mode = useThreadMode();
   const base = useTreeBase();
   const [search, setSearch] = useState('');
@@ -68,7 +70,7 @@ export function ThreadsList({ switcher }: { switcher?: ReactNode }) {
   const list = useThreadList({ search, unread: filter === 'unread', list: listId ?? undefined, live: true });
   const loaded = list.data !== undefined;
   const stale = list.isError && loaded;
-  const subtitle = stale ? t.mobile.lastUpdated.replace('{time}', clockAt(list.dataUpdatedAt)) : undefined;
+  const subtitle = stale ? t.mobile.lastUpdated.replace('{time}', clockAt(list.dataUpdatedAt, cycle)) : undefined;
 
   return (
     <>

@@ -44,10 +44,10 @@ test('results: ok below 400, an error with its status from 400', () => {
 
 test('time reads in Riyadh (UTC+3), 24 h, Western digits', () => {
   // 13:30Z is 16:30 in Riyadh.
-  expect(formatAt('2026-10-04T13:30:00Z')).toMatch(/16:30/);
-  expect(formatAt('2026-10-04T13:30:00Z')).not.toMatch(/[٠-٩]/);
-  expect(metaLine({ entity: 'students', at: '2026-10-04T13:30:00Z' })).toContain(
+  expect(formatAt('2026-10-04T13:30:00Z', '24')).toMatch(/16:30/);
+  expect(formatAt('2026-10-04T13:30:00Z', '24')).not.toMatch(/[٠-٩]/);
+  expect(metaLine({ entity: 'students', at: '2026-10-04T13:30:00Z' }, '24')).toContain(
     t.activity.entities.students,
   );
-  expect(metaLine({ entity: null, at: '2026-10-04T13:30:00Z' })).not.toContain('·');
+  expect(metaLine({ entity: null, at: '2026-10-04T13:30:00Z' }, '24')).not.toContain('·');
 });

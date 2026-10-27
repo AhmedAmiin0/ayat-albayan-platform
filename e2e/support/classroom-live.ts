@@ -1,13 +1,14 @@
 import type { Browser, BrowserContextOptions, Locator, Page } from '@playwright/test';
 import { ar, expect } from './fixtures';
 import { authFile, USERS } from './users';
+import { AR_LOCALE } from './locale';
 
 // The live classroom against a real LiveKit (`livekit-server --dev`), see tests/classroom-live.spec.ts.
 
 export const LIVE = Boolean(process.env['LIVEKIT_URL']);
 const SHOTS = process.env['CLASSROOM_SHOTS'] ?? 'test-results/classroom-shots';
 export const BOARD = ar.classroom.board;
-const MEDIA: BrowserContextOptions = { locale: 'ar', permissions: ['camera', 'microphone'] };
+const MEDIA: BrowserContextOptions = { locale: AR_LOCALE, permissions: ['camera', 'microphone'] };
 
 /** Chromium's fake camera / mic and an auto-picked screen for getDisplayMedia (headless capture). */
 export const MEDIA_FLAGS = ['--use-fake-ui-for-media-stream', '--use-fake-device-for-media-stream', '--auto-select-desktop-capture-source=Entire screen'];

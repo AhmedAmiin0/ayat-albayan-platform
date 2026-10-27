@@ -42,7 +42,7 @@ test('lead → teacher → free slot → «احجز»: one trial on POST /bookin
   expect(slotsPath).toContain('durationMin=45');
   expect(screen.getByText('يوسف')).toBeTruthy();
   expect(screen.getByText(maryam.display_name_ar)).toBeTruthy();
-  expect(screen.getByText(whenText(SUN_17, 'Asia/Riyadh'))).toBeTruthy();
+  expect(screen.getByText(whenText(SUN_17, 'Asia/Riyadh', '24'))).toBeTruthy();
   expect(screen.getByText(t.booking.trialFree)).toBeTruthy();
 
   mockApiSend.mockResolvedValue(booked(SUN_17));
@@ -78,7 +78,7 @@ test('lead → teacher → free slot → «احجز»: one trial on POST /bookin
     },
   });
   expect(
-    screen.getByText(t.booking.firstLesson.replace('{when}', whenText(SUN_17, 'Asia/Riyadh'))),
+    screen.getByText(t.booking.firstLesson.replace('{when}', whenText(SUN_17, 'Asia/Riyadh', '24'))),
   ).toBeTruthy();
   expect(screen.getByText(t.booking.confirmationNote)).toBeTruthy();
   // The lead shows trial_booked at once (even if it leaves a filtered list), and the lists refetch.

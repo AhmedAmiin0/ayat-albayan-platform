@@ -6,6 +6,7 @@ import { Ltr } from '@/components/ui/display/ltr';
 import { StatusChip } from '@/components/ui/display/status-chip';
 import { t } from '@/lib/i18n/i18n';
 import { nextLessonText } from './next-lesson';
+import { useClock } from '@/lib/clock';
 
 const col = createColumnHelper<DataTableFeatures, TeacherStudentView>();
 const ts = t.teacherStudents;
@@ -13,6 +14,11 @@ const text: ColumnFilterDef = { kind: 'text' };
 // The column's value is the program's name (it sorts by what the row shows), so is the option's.
 const programs: ColumnFilterDef = { kind: 'select', options: PROGRAMS.map((p) => ({ value: t.enums.program[p], label: t.enums.program[p] })) };
 const fact = 'text-sm text-ink-2';
+
+/** «الحلقة القادمة: …» in the viewer's cycle (12 or 24 h). */
+function NextLesson({ iso }: { iso: string | null }) {
+  return <>{nextLessonText(iso, useClock())}</>;
+}
 
 /**
  * My students (R-TCH-03): name (opens the report history; a «بانتظار التجديد» / «انتهى الاشتراك»
@@ -66,7 +72,7 @@ export const teacherStudentColumns = col.columns([
   }),
   col.accessor('next_lesson_at', {
     header: () => ts.nextLessonCol,
-    cell: (c) => nextLessonText(c.getValue()),
+    cell: (c) => <NextLesson iso={c.getValue()} />,
     meta: { className: 'text-xs text-ink-3 max-sm:order-6 max-sm:basis-full' },
   }),
 ]);

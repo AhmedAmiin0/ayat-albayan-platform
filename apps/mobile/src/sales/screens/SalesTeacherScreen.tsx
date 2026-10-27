@@ -16,6 +16,7 @@ import { StatusChip } from '@/core/ui/feedback/StatusChip';
 import { useSalesTeachers } from '../lib/sales-api';
 import { SalesTeacherHeader } from '../components/SalesTeacherHeader';
 import { nextLessonLine, teacherLabel, teacherSubtitle } from '../lib/sales-text';
+import { useClockCycle } from '@/core/lib/clock';
 
 /**
  * One teacher's students (the detail of «المعلمون», web drawer parity): name, code, program, status
@@ -23,6 +24,7 @@ import { nextLessonLine, teacherLabel, teacherSubtitle } from '../lib/sales-text
  * day in the read-only schedule and the teacher's fixed meeting link.
  */
 export function SalesTeacherScreen() {
+  const cycle = useClockCycle();
   const { color } = useTheme();
   const { id = '' } = useLocalSearchParams<{ id: string }>();
   const list = useSalesTeachers();
@@ -53,12 +55,13 @@ export function SalesTeacherScreen() {
         data={splitByStatus(teacher.students, kind)}
         ListHeaderComponent={<SalesTeacherHeader teacher={teacher} kind={kind} onKind={setKind} />}
         keyExtractor={(s) => s.id}
+        extraData={cycle}
         renderItem={({ item }) => (
           <ListRow
             title={item.name}
             meta={item.code}
             subtitle={t.enums.program[item.program]}
-            tags={<Note>{nextLessonLine(item)}</Note>}
+            tags={<Note>{nextLessonLine(item, cycle)}</Note>}
             trailing={<StatusChip {...studentStatusStyle[item.status]} size="sm" label={t.enums.studentStatus[item.status]} />}
           />
         )}

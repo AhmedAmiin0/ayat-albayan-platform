@@ -12,6 +12,7 @@ import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { AdminOpsSection } from '../sections/AdminOpsSection';
 import { AppearancePicker } from '../appearance/AppearancePicker';
+import { ClockFormatPicker } from '../appearance/ClockFormatPicker';
 import { ClassroomSection } from '../sections/ClassroomSection';
 import { FinanceSection } from '../sections/FinanceSection';
 import { LanguageRow } from '../appearance/LanguageRow';
@@ -48,6 +49,7 @@ export function MoreScreen({ can = () => true }: { can?: (permission: Permission
       <FinanceSection can={can} />
       <ClassroomSection can={can} />
       <AppearancePicker />
+      <ClockFormatPicker />
       <LanguageRow />
       <View style={{ alignItems: 'flex-start' }}>
         <Button variant="ghost" label={t.auth.logout} onPress={logout} busy={leaving} />

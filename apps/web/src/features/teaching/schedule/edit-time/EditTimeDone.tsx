@@ -9,6 +9,7 @@ import { whenWithLength } from './edit-time-text';
 import type { TimeEditResult } from './edit-time.contract';
 import { durationMin } from '../lesson/lessons';
 import { zonedParts } from '../tz';
+import { useClock } from '@/lib/clock';
 
 /** Toast line after a save: «اتعدّل» and, when a guardian message was queued, that it was. */
 export const savedMessage = (r: Pick<TimeEditResult, 'notified'>): string =>
@@ -29,6 +30,7 @@ export interface EditTimeDoneProps {
  * another week would drop out of the list (and the drawer with it) before the admin had read this.
  */
 export function EditTimeDone({ result, onClose }: EditTimeDoneProps) {
+  const clock = useClock();
   const queryClient = useQueryClient();
   const title = useRef<HTMLParagraphElement>(null);
   useEffect(() => title.current?.focus(), []);
@@ -49,7 +51,7 @@ export function EditTimeDone({ result, onClose }: EditTimeDoneProps) {
           <p ref={title} role="status" tabIndex={-1} className="text-sm font-semibold outline-none">
             {message}
           </p>
-          <p className="text-sm">{t.lessons.timeEdit.newWhen.replace('{when}', whenWithLength(lesson.starts_at, durationMin(lesson)))}</p>
+          <p className="text-sm">{t.lessons.timeEdit.newWhen.replace('{when}', whenWithLength(lesson.starts_at, durationMin(lesson), clock))}</p>
         </div>
       </div>
       {result.payout === 'draft_stale' && (

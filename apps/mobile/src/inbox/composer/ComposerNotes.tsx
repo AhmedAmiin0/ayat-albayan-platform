@@ -4,6 +4,7 @@ import { AppText } from '@/core/ui/primitives/AppText';
 import { LineNote } from '../thread/components/LineNote';
 import { sessionUntil } from '../messages/hooks/message-text';
 import { useNoteStyle } from '../shared/note-style';
+import { useClockCycle } from '@/core/lib/clock';
 
 /**
  * Over an open reply box, in 2xs: which line the reply leaves from (LineNote) and until when free
@@ -11,10 +12,11 @@ import { useNoteStyle } from '../shared/note-style';
  * window's end moves under the line's name, and a long name wraps. Nothing when neither applies.
  */
 export function ComposerNotes({ thread, open }: { thread: ThreadView | null; open: boolean }) {
+  const cycle = useClockCycle();
   const note = useNoteStyle();
   const lastInbound = thread?.last_inbound_at ?? null;
   if (!open || (!lastInbound && !thread?.reply_line)) return null;
-  const until = lastInbound ? sessionUntil(lastInbound) : null;
+  const until = lastInbound ? sessionUntil(lastInbound, { cycle }) : null;
   return (
     <View testID="composer-notes" style={{ flexDirection: 'row', flexWrap: 'wrap', columnGap: 12, rowGap: 2, paddingHorizontal: 4 }}>
       <LineNote thread={thread} open={open} />

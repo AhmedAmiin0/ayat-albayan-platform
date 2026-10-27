@@ -1,11 +1,11 @@
-import { clockTime, RIYADH_TZ, type LessonView } from '@ab/shared';
+import { clockTime, RIYADH_TZ, type ClockCycle, type LessonView } from '@ab/shared';
+import { clockIn } from '@/core/lib/clock';
 import { cityOf } from '@/booking/shared/slots';
 import { clockAt } from '@/inbox/shared/format';
 import { t } from '@/core/lib/i18n/i18n';
 import { gridTz, slotRange } from '@/more/schedule';
 import type { AvailabilityRow } from '@/more/types';
 import { localDate, visibleLessons } from '@/today/lib/timeline';
-import { ltr } from '@/core/ui/primitives/Ltr';
 import { addDays, weekdayOf } from '../lib/week';
 
 // What the agenda lays out (R-SCH-01, R-TCH-02): lessons by Riyadh day or by teacher, the
@@ -33,11 +33,11 @@ export function agendaDays(lessons: readonly LessonView[], start: string, count 
  * Riyadh's (Cairo in winter); null when it reads the same (Riyadh, or Cairo on summer time). Past
  * midnight it names the teacher's day: «عند المعلم/ة الجمعة 23:30 بتوقيت القاهرة».
  */
-export function teacherClock(lesson: LessonView): string | null {
+export function teacherClock(lesson: LessonView, cycle: ClockCycle): string | null {
   const at = new Date(lesson.starts_at);
   const { tz } = lesson.teacher;
-  const time = clockTime(at, tz);
-  if (time === clockTime(at, RIYADH_TZ)) return null;
+  if (clockTime(at, tz) === clockTime(at, RIYADH_TZ)) return null;
+  const time = clockIn(at, tz, cycle);
   const date = localDate(at, tz);
   const day = date === localDate(at, RIYADH_TZ) ? '' : `${weekday[String(weekdayOf(date))]} `;
   return t.booking.teacherClock.replace('{time}', `${day}${time}`).replace('{city}', cityOf(tz));
@@ -52,15 +52,15 @@ const weekday: Record<string, string> = t.enums.weekday;
  */
 export function availabilityLine(
   rows: readonly AvailabilityRow[],
-  date: string,
-  teacherTz: string,
+  on: { date: string; teacherTz: string; cycle: ClockCycle },
 ): string | null {
+  const { date, teacherTz, cycle } = on;
   const day = rows
     .filter((r) => r.weekday === weekdayOf(date))
     .sort((a, b) => a.start_time.localeCompare(b.start_time));
   if (day.length === 0) return null;
   return t.calendar.available
-    .replace('{ranges}', day.map((r) => ltr(slotRange(r))).join(t.common.listSeparator))
+    .replace('{ranges}', day.map((r) => slotRange(r, cycle)).join(t.common.listSeparator))
     .replace('{city}', cityOf(gridTz(rows, teacherTz)));
 }
 
@@ -71,7 +71,8 @@ export function availabilityLine(
 export function headerLine(
   parts: readonly string[],
   query: { isError: boolean; data: unknown; dataUpdatedAt: number },
+  cycle: ClockCycle,
 ): string {
   const stale = query.isError && query.data !== undefined;
-  return [...parts, ...(stale ? [t.mobile.lastUpdated.replace('{time}', clockAt(query.dataUpdatedAt))] : [])].join(' · ');
+  return [...parts, ...(stale ? [t.mobile.lastUpdated.replace('{time}', clockAt(query.dataUpdatedAt, cycle))] : [])].join(' · ');
 }

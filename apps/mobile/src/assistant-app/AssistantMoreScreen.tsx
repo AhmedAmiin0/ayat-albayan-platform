@@ -3,6 +3,7 @@ import { AccountHeaderAvatar } from '@/account/components/AccountHeaderAvatar';
 import { AccountRow } from '@/account/components/AccountRow';
 import { t } from '@/core/lib/i18n/i18n';
 import { AppearancePicker } from '@/more/appearance/AppearancePicker';
+import { ClockFormatPicker } from '@/more';
 import { LanguageRow } from '@/more/appearance/LanguageRow';
 import { SignOutButton } from '@/teacher/components/SignOutButton';
 import { Screen } from '@/core/ui/layout/Screen';
@@ -21,6 +22,7 @@ export function AssistantMoreScreen() {
         <AccountRow href="/assistant/more/account" />
       </View>
       <AppearancePicker />
+      <ClockFormatPicker />
       <LanguageRow />
       <SignOutButton />
     </Screen>

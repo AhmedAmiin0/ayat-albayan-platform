@@ -1,4 +1,4 @@
-import { lessonStatusStyle, lessonWhenText, type SalesScheduleLesson } from '@ab/shared';
+import { lessonStatusStyle, lessonWhenAt, type SalesScheduleLesson } from '@ab/shared';
 import { Ltr } from '@/components/ui/display/ltr';
 import { StatusChip } from '@/components/ui/display/status-chip';
 import { DetailRow } from '@/features/teaching/schedule/lesson/DetailRow';
@@ -8,15 +8,15 @@ import { lengthText } from '@/features/teaching/schedule/edit-time/edit-time-tex
 import { RIYADH_TZ } from '@/features/teaching/schedule/tz';
 import { t } from '@/lib/i18n/i18n';
 import { teacherLabel } from '@/lib/i18n/teacher-label';
-import { locale } from '@/lib/i18n/locale';
 import { LessonMeetingLink } from './LessonMeetingLink';
+import { type Clock, useClock } from '@/lib/clock';
 
 /** «عند الطالب 16:00 بتوقيت القاهرة» per student zone, then the teacher's, each only when not Riyadh. */
-export function salesClockLines(lesson: SalesScheduleLesson): string[] {
+export function salesClockLines(lesson: SalesScheduleLesson, clock: Clock): string[] {
   const zones = [...new Set(lesson.students.map((s) => s.tz ?? RIYADH_TZ))].filter((tz) => tz !== RIYADH_TZ);
-  const lines = zones.map((tz) => t.schedule.studentTime.replace('{time}', timeInCity(lesson.starts_at, tz)));
+  const lines = zones.map((tz) => t.schedule.studentTime.replace('{time}', timeInCity(lesson.starts_at, tz, clock)));
   const teacherTz = lesson.teacher.tz;
-  if (teacherTz && teacherTz !== RIYADH_TZ) lines.push(t.schedule.teacherTime.replace('{time}', timeInCity(lesson.starts_at, teacherTz)));
+  if (teacherTz && teacherTz !== RIYADH_TZ) lines.push(t.schedule.teacherTime.replace('{time}', timeInCity(lesson.starts_at, teacherTz, clock)));
   return lines;
 }
 
@@ -27,6 +27,7 @@ export function salesClockLines(lesson: SalesScheduleLesson): string[] {
  * money, so none of them is shown.
  */
 export function SalesLessonDetails({ lesson }: { lesson: SalesScheduleLesson }) {
+  const clock = useClock();
   return (
     <>
       <div className="flex flex-wrap items-center gap-2">
@@ -35,8 +36,8 @@ export function SalesLessonDetails({ lesson }: { lesson: SalesScheduleLesson }) 
       </div>
       <dl className="grid gap-3">
         <DetailRow label={t.schedule.time}>
-          <span className="block">{`${lessonWhenText(new Date(lesson.starts_at), RIYADH_TZ, locale)} ${t.schedule.riyadhTime}`}</span>
-          {salesClockLines(lesson).map((line) => (
+          <span className="block">{`${lessonWhenAt(new Date(lesson.starts_at), { tz: RIYADH_TZ, ...clock })} ${t.schedule.riyadhTime}`}</span>
+          {salesClockLines(lesson, clock).map((line) => (
             <span key={line} className="block text-xs text-ink-2">{line}</span>
           ))}
         </DetailRow>

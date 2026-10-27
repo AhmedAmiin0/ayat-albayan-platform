@@ -3,6 +3,10 @@ import { IconButton } from '@/components/ui/form/icon-button';
 import { Select } from '@/components/ui/form/select';
 import { t } from '@/lib/i18n/i18n';
 import { timeOptions, type Range } from './grid';
+import { useClock } from '@/lib/clock';
+import { ClockOptions } from '@/lib/clock-options';
+import { clockDir } from '@/lib/clock-text';
+import { cn } from '@/lib/utils';
 
 type Props = {
   dayName: string;
@@ -14,26 +18,24 @@ type Props = {
   onRemove: () => void;
 };
 
-// h-8 / 13px tabular on desktop; 16px / 40px on phones (iOS zoom floor). docs/07 §8.
-const timeClass =
-  'w-[92px] min-h-10 ps-2.5 pe-7 text-base tabular-nums sm:w-[84px] sm:min-h-8 sm:text-xs';
+// h-8 / 13px tabular on desktop; 16px / 40px on phones (iOS zoom floor). docs/07 §8. 12 h («11:30 م») is wider.
+const timeClass = 'min-h-10 ps-2.5 pe-7 text-base tabular-nums sm:min-h-8 sm:text-xs';
+const width = { '24': 'w-[92px] sm:w-[84px]', '12': 'w-[116px] sm:w-[104px]' } as const;
 
 /** [من ▾] إلى [إلى ▾] [×]: one range of a day. Times are selects, never typed (rule 6). R-TCH-02. */
 export function RangeRow({ dayName, range, invalid, errorId, onChange, onRemove }: Props) {
+  const clock = useClock();
   const select = (key: keyof Range, label: string) => (
     <Select
       aria-label={`${dayName} ${label}`}
       aria-invalid={invalid === key || undefined}
       aria-describedby={invalid === key ? errorId : undefined}
-      className={timeClass}
+      className={cn(timeClass, width[clock.cycle])}
+      dir={clockDir(clock)}
       value={range[key]}
       onChange={(e) => onChange({ [key]: e.target.value })}
     >
-      {timeOptions(range[key]).map((time) => (
-        <option key={time} value={time}>
-          {time}
-        </option>
-      ))}
+      <ClockOptions times={timeOptions(range[key])} />
     </Select>
   );
 

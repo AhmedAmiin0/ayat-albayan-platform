@@ -16,30 +16,30 @@ const due: LeadProfile = {
 };
 
 test('due: when, in the given zone, then how many of the settings’ follow-ups went out', () => {
-  expect(followUpLines(due, 3, 'Asia/Riyadh')).toEqual([
+  expect(followUpLines(due, 3, { tz: 'Asia/Riyadh', cycle: '24' })).toEqual([
     f.next.replace('{time}', 'الأحد 4 أكتوبر 17:00'),
     f.stage.replace('{n}', '1').replace('{total}', '3'),
   ]);
 });
 
 test('no stage line before the first one went out, or before /settings loads', () => {
-  expect(followUpLines({ ...due, follow_up_stage: 0 }, 3, 'Asia/Riyadh')).toHaveLength(1);
-  expect(followUpLines(due, undefined, 'Asia/Riyadh')).toHaveLength(1);
+  expect(followUpLines({ ...due, follow_up_stage: 0 }, 3, { tz: 'Asia/Riyadh', cycle: '24' })).toHaveLength(1);
+  expect(followUpLines(due, undefined, { tz: 'Asia/Riyadh', cycle: '24' })).toHaveLength(1);
 });
 
 test('who paused it: the admin, or the lead who sent «وقف»', () => {
-  expect(followUpLines({ ...due, follow_up_paused: true, follow_up_paused_by: 'admin' }, 3, 'UTC')).toEqual([f.paused]);
-  expect(followUpLines({ ...due, follow_up_paused: true, follow_up_paused_by: 'lead' }, 3, 'UTC')).toEqual([f.pausedByLead]);
+  expect(followUpLines({ ...due, follow_up_paused: true, follow_up_paused_by: 'admin' }, 3, { tz: 'UTC', cycle: '24' })).toEqual([f.paused]);
+  expect(followUpLines({ ...due, follow_up_paused: true, follow_up_paused_by: 'lead' }, 3, { tz: 'UTC', cycle: '24' })).toEqual([f.pausedByLead]);
 });
 
 test('why a due follow-up has not gone out replaces the time', () => {
-  expect(followUpLines({ ...due, follow_up_note: 'waiting_template' }, 3, 'UTC')[0]).toBe(f.waitingTemplate);
-  expect(followUpLines({ ...due, follow_up_note: 'no_slots' }, 3, 'UTC')[0]).toBe(f.noSlots);
-  expect(followUpLines({ ...due, follow_up_note: 'queued' }, 3, 'UTC')[0]).toBe(f.queued);
+  expect(followUpLines({ ...due, follow_up_note: 'waiting_template' }, 3, { tz: 'UTC', cycle: '24' })[0]).toBe(f.waitingTemplate);
+  expect(followUpLines({ ...due, follow_up_note: 'no_slots' }, 3, { tz: 'UTC', cycle: '24' })[0]).toBe(f.noSlots);
+  expect(followUpLines({ ...due, follow_up_note: 'queued' }, 3, { tz: 'UTC', cycle: '24' })[0]).toBe(f.queued);
 });
 
 test('nothing scheduled: a status the automation skips, or no due time; old cached rows too', () => {
-  expect(followUpLines({ ...due, status: 'trial_booked' }, 3, 'UTC')).toEqual([f.none]);
-  expect(followUpLines({ ...due, next_follow_up_at: null, follow_up_stage: 0 }, 3, 'UTC')).toEqual([f.none]);
-  expect(followUpLines(huda, 3, 'UTC')).toEqual([f.none]);
+  expect(followUpLines({ ...due, status: 'trial_booked' }, 3, { tz: 'UTC', cycle: '24' })).toEqual([f.none]);
+  expect(followUpLines({ ...due, next_follow_up_at: null, follow_up_stage: 0 }, 3, { tz: 'UTC', cycle: '24' })).toEqual([f.none]);
+  expect(followUpLines(huda, 3, { tz: 'UTC', cycle: '24' })).toEqual([f.none]);
 });

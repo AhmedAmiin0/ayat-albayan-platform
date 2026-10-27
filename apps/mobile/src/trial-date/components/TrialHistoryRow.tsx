@@ -5,6 +5,7 @@ import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { StatusChip } from '@/core/ui/feedback/StatusChip';
 import { pickedLine, trialOutcomeStyle, whenLines } from '../lib/trial-date-text';
+import { useClockCycle } from '@/core/lib/clock';
 
 interface TrialHistoryRowProps {
   row: TrialDateRow;
@@ -17,8 +18,9 @@ interface TrialHistoryRowProps {
  * the teacher, who picked it and when, and the outcome chip at the inline-end.
  */
 export function TrialHistoryRow({ row, familyTz }: TrialHistoryRowProps) {
+  const cycle = useClockCycle();
   const { color } = useTheme();
-  const { when, family } = whenLines(row.starts_at, familyTz);
+  const { when, family } = whenLines(row.starts_at, familyTz, cycle);
   const small = { fontFamily: type.ui[500], fontSize: type.size.xs, lineHeight: type.lineHeight(type.size.xs), color: color.ink2 };
   return (
     <View
@@ -31,7 +33,7 @@ export function TrialHistoryRow({ row, familyTz }: TrialHistoryRowProps) {
         </AppText>
         {family ? <AppText style={small}>{family}</AppText> : null}
         {row.teacher ? <AppText style={small}>{row.teacher.name}</AppText> : null}
-        <AppText style={small}>{pickedLine(row)}</AppText>
+        <AppText style={small}>{pickedLine(row, cycle)}</AppText>
       </View>
       <StatusChip {...trialOutcomeStyle[row.outcome]} label={t.trialDate.outcome[row.outcome]} size="sm" />
     </View>

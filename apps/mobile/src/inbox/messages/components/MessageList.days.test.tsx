@@ -42,8 +42,8 @@ test('a day chip over the first message of each day only', async () => {
 
 test('a bubble shows its time only («16:39»), the day is in the chip', async () => {
   await show();
-  expect(screen.getByText(clock(B.created_at))).toBeTruthy();
-  expect(clock(B.created_at, 'UTC')).toBe('16:39');
+  expect(screen.getByText(clock(B.created_at, '24'))).toBeTruthy();
+  expect(clock(B.created_at, '24', 'UTC')).toBe('16:39');
   expect(screen.queryByText(/\d+\/\d+ \d\d:\d\d/)).toBeNull();
 });
 

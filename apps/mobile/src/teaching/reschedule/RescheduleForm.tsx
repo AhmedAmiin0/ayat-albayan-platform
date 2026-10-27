@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { View } from 'react-native';
 import { whenText } from '@/booking/shared/slots';
 import { ErrorLine } from '@/inbox/ErrorLine';
+import { useClockCycle } from '@/core/lib/clock';
 import { t } from '@/core/lib/i18n/i18n';
 import { type, useTheme } from '@/theme';
 import { studentNames } from '@/today/lib/lesson-text';
@@ -50,11 +51,12 @@ export function RescheduleForm({ lesson, onClose }: RescheduleFormProps) {
 /** Who and when now, over the move: «يوسف أحمد» then «الموعد الحالي: …» in the family's zone. */
 export function RescheduleHeading({ names, startsAt, tz }: { names: string; startsAt: string; tz: string }) {
   const { color } = useTheme();
+  const cycle = useClockCycle();
   const text = { fontFamily: type.ui[500], fontSize: type.size.sm, lineHeight: type.lineHeight(type.size.sm), color: color.ink2 };
   return (
     <View style={{ gap: 2 }}>
       <AppText style={{ ...text, fontFamily: type.ui[700], fontSize: type.size.body, color: color.ink }}>{names}</AppText>
-      <AppText style={text}>{t.reschedule.current.replace('{when}', whenText(startsAt, tz))}</AppText>
+      <AppText style={text}>{t.reschedule.current.replace('{when}', whenText(startsAt, tz, cycle))}</AppText>
     </View>
   );
 }

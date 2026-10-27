@@ -15,10 +15,10 @@ jest.mock('react-native/Libraries/ReactNative/I18nManager', () => {
 
 test('«الجدول» sections in English: who, load and city; windows and free gaps on the Riyadh clock', () => {
   expect(teacherMeta(abrar)).toBe('Female teacher · The Holy Quran · Students: 3 of 10 · Cairo');
-  expect(windowsLine(omar.windows)).toBe(`Available ${ltr('20:00 – 02:00')} Riyadh time`);
+  expect(windowsLine(omar.windows, '24')).toBe(`Available ${ltr('20:00 – 02:00')} Riyadh time`);
   const [gap] = abrar.free;
   if (!gap) throw new Error('fixture');
-  expect(freeLabel(gap)).toBe(`Free ${ltr('10:45 – 16:00')}`);
+  expect(freeLabel(gap, '24')).toBe(`Free ${ltr('10:45 – 16:00')}`);
 });
 
 test('days and the week range read in English with Western digits', () => {
@@ -28,12 +28,12 @@ test('days and the week range read in English with Western digits', () => {
 
 test('the Cairo teacher’s clock and the availability line in English', () => {
   const winter = lesson({ id: 'w', starts_at: '2026-11-04T14:00:00.000Z', ends_at: '2026-11-04T14:45:00.000Z' });
-  expect(teacherClock(winter)).toBe('Teacher: 16:00 Cairo time');
+  expect(teacherClock(winter, '24')).toBe('Teacher: 16:00 Cairo time');
   const grid: AvailabilityRow[] = [
     { id: 'a', weekday: 3, start_time: '16:00', end_time: '18:00', tz: 'Africa/Cairo' },
     { id: 'b', weekday: 3, start_time: '20:00', end_time: '22:00', tz: 'Africa/Cairo' },
   ];
-  expect(availabilityLine(grid, '2026-11-04', 'Africa/Cairo')).toBe(
+  expect(availabilityLine(grid, { date: '2026-11-04', teacherTz: 'Africa/Cairo', cycle: '24' })).toBe(
     `Available ${ltr('16:00 – 18:00')}, ${ltr('20:00 – 22:00')} Cairo time`,
   );
 });

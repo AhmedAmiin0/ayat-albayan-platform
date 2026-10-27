@@ -6,6 +6,7 @@ import { DayTimesList } from '../steps/slots/DayTimesList';
 import { dayPicks, withPicks } from '../draft/draft.days';
 import { picksReady } from './change-body';
 import { currentDaysText } from './change-text';
+import { useClock } from '@/lib/clock';
 
 export interface ChangePickerProps {
   view: CourseChangeView;
@@ -27,6 +28,7 @@ export interface ChangePickerProps {
  * before its startsOn stay reachable.
  */
 export function ChangePicker({ view, picks, onPicks, onNext, onBack }: ChangePickerProps) {
+  const clock = useClock();
   const { course, student } = view;
   const zoned = { ...withPicks(picks), kind: 'package' as const, tz: course.tz };
   const listed = dayPicks(zoned);
@@ -34,7 +36,7 @@ export function ChangePicker({ view, picks, onPicks, onNext, onBack }: ChangePic
   return (
     <div className="grid gap-4">
       <p className="rounded-md bg-sunk px-3.5 py-2.5 text-sm tabular-nums">
-        {currentDaysText(course.days, course.tz)}
+        {currentDaysText(course.days, course.tz, clock)}
       </p>
       <p className="text-xs text-ink-2">{t.booking.courseChange.changeHint}</p>
       <section className="grid gap-2">

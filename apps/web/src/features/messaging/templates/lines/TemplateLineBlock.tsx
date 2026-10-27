@@ -2,6 +2,7 @@ import type { TemplateLineSync, TemplateLineView, WaLine } from '@ab/shared';
 import { Button } from '@/components/ui/form/button';
 import { Ltr } from '@/components/ui/display/ltr';
 import { fullTime } from '@/features/messaging/inbox/format';
+import { useClock } from '@/lib/clock';
 import { t } from '@/lib/i18n/i18n';
 import { optionText } from '../../../platform/integrations/integrations-form';
 import { LineSyncResult } from './LineSyncResult';
@@ -52,9 +53,10 @@ function LineBody({ facts, phone, shown, crm }: Pick<TemplateLineBlockProps, 'fa
 /** «آخر مزامنة: …» or «لم تتم المزامنة بعد». */
 function LastSync({ at }: { at: string | undefined }) {
   const p = t.templates.perNumber;
+  const clock = useClock();
   return (
     <p className="text-xs text-ink-3">
-      {at ? <time dateTime={at}>{p.lastSync.replace('{time}', fullTime(at))}</time> : p.neverSynced}
+      {at ? <time dateTime={at}>{p.lastSync.replace('{time}', fullTime(at, clock))}</time> : p.neverSynced}
     </p>
   );
 }

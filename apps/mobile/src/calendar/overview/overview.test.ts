@@ -73,18 +73,19 @@ test('the section words: who, load, the city when not Riyadh; windows, gaps, tim
     `${t.teachers.genderLabel.male} · ${t.enums.program.quran}${t.common.listSeparator}${t.enums.program.islamic_studies} · ${t.booking.teacherStudents.replace('{n}', '0')}`,
   );
   const evening = { starts_at: '2026-10-01T17:00:00.000Z', ends_at: '2026-10-01T21:00:00.000Z' };
-  expect(spanClock(evening)).toEqual({ from: '20:00', to: '24:00' });
-  expect(windowsLine([evening])).toBe(`متاح ${ltr('20:00 – 24:00')} بتوقيت الرياض`);
-  expect(windowsLine([])).toBeNull();
-  expect(freeLabel(abrar.free[0] ?? evening)).toBe(`متاح ${ltr('10:45 – 16:00')}`);
+  expect(spanClock(evening, '24')).toEqual({ from: '20:00', to: '24:00' });
+  expect(spanClock(evening, '12')).toEqual({ from: '8:00 م', to: '12:00 ص' });
+  expect(windowsLine([evening], '24')).toBe(`متاح ${ltr('20:00 – 24:00')} بتوقيت الرياض`);
+  expect(windowsLine([], '24')).toBeNull();
+  expect(freeLabel(abrar.free[0] ?? evening, '24')).toBe(`متاح ${ltr('10:45 – 16:00')}`);
   const [off] = sara.time_off;
   if (!off) throw new Error('fixture');
-  expect(timeOffLine(off)).toBe(`إجازة · ${formatTimeOff(off)} · سفر`);
-  expect(timeOffLine({ ...off, reason: ' ' })).toBe(`إجازة · ${formatTimeOff(off)}`);
+  expect(timeOffLine(off, '24')).toBe(`إجازة · ${formatTimeOff(off, '24')} · سفر`);
+  expect(timeOffLine({ ...off, reason: ' ' }, '24')).toBe(`إجازة · ${formatTimeOff(off, '24')}`);
 });
 
 test('a translation that splits the range keeps each time its own island', () => {
   jest.replaceProperty(t.schedule, 'free', 'متاح من {from} إلى {to}');
   const gap = { starts_at: '2026-10-01T17:00:00.000Z', ends_at: '2026-10-01T19:00:00.000Z' };
-  expect(freeLabel(gap)).toBe(`متاح من ${ltr('20:00')} إلى ${ltr('22:00')}`);
+  expect(freeLabel(gap, '24')).toBe(`متاح من ${ltr('20:00')} إلى ${ltr('22:00')}`);
 });

@@ -1,4 +1,5 @@
 import { useId } from 'react';
+import { useClock } from '@/lib/clock';
 import { t } from '@/lib/i18n/i18n';
 import type { InboxLead } from '../api/api';
 import { leadSummary } from './lead-summary';
@@ -6,7 +7,7 @@ import { leadSummary } from './lead-summary';
 /** «بيانات الطالب» at a glance in the aside: only what is filled (R-LEAD-03). Read-only. */
 export function LeadSummary({ lead }: { lead: InboxLead }) {
   const headingId = useId();
-  const rows = leadSummary(lead);
+  const rows = leadSummary(lead, useClock());
   return (
     <section aria-labelledby={headingId} className="grid gap-2 border-y border-rule py-3">
       <h3 id={headingId} className="text-sm font-semibold">

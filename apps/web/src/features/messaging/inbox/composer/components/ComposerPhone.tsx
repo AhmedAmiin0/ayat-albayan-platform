@@ -18,6 +18,7 @@ import { TemplateComposer } from './TemplateComposer';
 import { TextComposer } from './TextComposer';
 import type { PrefillContext } from '../lib/template-params';
 import { useChatAccess } from '../../shared/use-chat-access';
+import { useClock, type Clock } from '@/lib/clock';
 
 export type ComposerMode = 'text' | 'template';
 
@@ -59,10 +60,10 @@ function Notices({ notes }: { notes: string[] }) {
  * reply_line: no reply line in template mode. With no template allowed the help line replaces
  * «فأرسل قالبًا».
  */
-function noticeLines(input: Pick<ComposerPhoneProps, 'thread' | 'gateNote' | 'mode'> & { noneAllowed: NoneReason | null }): string[] {
-  const { thread, gateNote, mode, noneAllowed } = input;
+function noticeLines(input: Pick<ComposerPhoneProps, 'thread' | 'gateNote' | 'mode'> & { noneAllowed: NoneReason | null; clock: Clock }): string[] {
+  const { thread, gateNote, mode, noneAllowed, clock } = input;
   const open = thread.session_open;
-  const until = open && thread.last_inbound_at ? sessionUntil(thread.last_inbound_at) : null;
+  const until = open && thread.last_inbound_at ? sessionUntil(thread.last_inbound_at, clock) : null;
   const closedNote = open || noneAllowed ? null : t.inbox.sessionClosed;
   const replyFrom = mode === 'text' ? replyFromText(thread) : null;
   return [closedNote, gateNote, replyFrom, until].filter((n): n is string => !!n);
@@ -81,7 +82,7 @@ function noticeLines(input: Pick<ComposerPhoneProps, 'thread' | 'gateNote' | 'mo
 export function ComposerPhone({ thread, context, gateNote, mode, onMode, teacher }: ComposerPhoneProps) {
   const open = thread.session_open;
   const noneAllowed = useNoneAllowed(teacher);
-  const notes = noticeLines({ thread, gateNote, mode, noneAllowed });
+  const notes = noticeLines({ thread, gateNote, mode, noneAllowed, clock: useClock() });
   const access = useChatAccess(useInboxMode());
   const { files, replies } = access;
   const [picked, setPicked] = useState<{ phone: string; file: File } | null>(null);

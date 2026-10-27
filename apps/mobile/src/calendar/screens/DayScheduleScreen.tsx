@@ -35,6 +35,7 @@ import { SchedulePeriod } from '../overview/SchedulePeriod';
 import { TeacherHeader } from '../overview/TeacherHeader';
 import { useOverview } from '../overview/use-overview';
 import { riyadhToday, weekStart, weekWindow } from '../lib/week';
+import { useClockCycle } from '@/core/lib/clock';
 
 const DATE = /^\d{4}-\d{2}-\d{2}$/;
 const ALL: TeacherFilter = { program: 'all', gender: 'all' };
@@ -47,6 +48,7 @@ const ALL: TeacherFilter = { program: 'all', gender: 'all' };
  * «المزيد» rather than opened as its tab; `initialDate` (YYYY-MM-DD) opens it on that day.
  */
 export function DayScheduleScreen({ back = false, initialDate }: { back?: boolean; initialDate?: string }) {
+  const cycle = useClockCycle();
   const now = useNow();
   const today = riyadhToday(now);
   const [date, setDate] = useFollowingDay(today, initialDate && DATE.test(initialDate) ? initialDate : undefined);
@@ -65,6 +67,7 @@ export function DayScheduleScreen({ back = false, initialDate }: { back?: boolea
   const subtitle = headerLine(
     [t.availability.tzHint.replace('{tz}', t.runningHead.riyadh)],
     overview,
+    cycle,
   );
   const actionsOf = (lesson: LessonView, onLeave?: () => void) => (
     <LessonRowActions lesson={lesson} action={action} onReschedule={setMoving} onEditTime={setEditing} onLeave={onLeave} />

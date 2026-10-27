@@ -8,7 +8,7 @@ jest.mock('react-native/Libraries/ReactNative/I18nManager', () => {
 });
 
 test('the picked slot reads in English and joins with «, », not the Arabic «، »', () => {
-  expect(whenText('2026-10-04T14:00:00.000Z', 'America/New_York')).toBe(
+  expect(whenText('2026-10-04T14:00:00.000Z', 'America/New_York', '24')).toBe(
     'Sunday 4 October 17:00 Riyadh time, Student: Sunday 4 October 10:00 New York time',
   );
 });

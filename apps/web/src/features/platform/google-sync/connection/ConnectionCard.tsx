@@ -6,11 +6,13 @@ import { ConnectionActions } from './ConnectionActions';
 import { GoogleBlock } from '../GoogleBlock';
 import { accountStyle, errorText, fill, formatAt } from '../google-format';
 import { RedirectUri } from './RedirectUri';
+import { useClock } from '@/lib/clock';
 
 const s = t.googleSync.connection;
 
 /** «الحساب المربوط»: status, email, since, last error, the redirect URI and connect / disconnect. */
 export function ConnectionCard({ status, onNote }: { status: GoogleStatusView; onNote: (message: string) => void }) {
+  const clock = useClock();
   const c = status.connection;
   const [before, after] = s.email.split('{email}');
   return (
@@ -25,7 +27,7 @@ export function ConnectionCard({ status, onNote }: { status: GoogleStatusView; o
           </p>
         )}
       </div>
-      {c.connected_at && <p className="text-xs text-ink-3">{fill(s.since, { at: formatAt(c.connected_at) })}</p>}
+      {c.connected_at && <p className="text-xs text-ink-3">{fill(s.since, { at: formatAt(c.connected_at, clock) })}</p>}
       {c.last_error && <p className="text-xs text-danger break-words">{fill(s.lastError, { error: errorText(c.last_error) })}</p>}
       {!status.configured && <p className="border-s-2 border-s-act ps-3 text-xs font-semibold text-act">{s.notConfigured}</p>}
       <RedirectUri uri={status.redirect_uri} />

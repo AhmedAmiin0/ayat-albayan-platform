@@ -1,6 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import { t } from '@/lib/i18n/i18n';
 import { formatTimeOff, toTimeOffBody } from './time-off';
+import { locale } from '@/lib/i18n/locale';
+
+/** The cycle the suite reads times in (test-setup saves 24 h). */
+const C24 = { cycle: '24', locale } as const;
 
 const draft = { from: '2026-10-05', to: '2026-10-07', reason: '' };
 
@@ -43,7 +47,7 @@ describe('time-off span display (docs/07 §2, §8)', () => {
   const EASTERN = /[٠-٩]/;
 
   it('shows whole days with an exclusive end, in Western digits', () => {
-    const text = formatTimeOff(iso(2026, 9, 10), iso(2026, 9, 13));
+    const text = formatTimeOff(iso(2026, 9, 10), iso(2026, 9, 13), C24);
     expect(text).toContain('10');
     expect(text).toContain('12 أكتوبر');
     expect(text).not.toContain('13');
@@ -51,11 +55,11 @@ describe('time-off span display (docs/07 §2, §8)', () => {
   });
 
   it('a single whole day reads as one date', () => {
-    expect(formatTimeOff(iso(2026, 10, 5), iso(2026, 10, 6))).not.toMatch(/–|-/);
+    expect(formatTimeOff(iso(2026, 10, 5), iso(2026, 10, 6), C24)).not.toMatch(/–|-/);
   });
 
   it('keeps the times of a partial-day span', () => {
-    const text = formatTimeOff(iso(2026, 9, 5, 10), iso(2026, 9, 7, 18));
+    const text = formatTimeOff(iso(2026, 9, 5, 10), iso(2026, 9, 7, 18), C24);
     expect(text).toContain('10:00');
     expect(text).toContain('18:00');
     expect(text).not.toMatch(EASTERN);

@@ -8,6 +8,7 @@ import { openNav } from '../support/nav';
 import { resetAbrar, setAvailability, withSql } from '../support/schedule';
 import { USERS } from '../support/users';
 import { stubInbound } from '../support/wa-stub';
+import { AR_LOCALE } from '../support/locale';
 
 // The assistant's portal (R-ASST-01, 04, 05, 06; base role sales, shown «المبيعات»): «تسجيل طالب جديد»
 // in a chat, and the pages «طلابي», «مدفوعاتي» and «أرباحي». The assistant sees the students they brought, only
@@ -64,7 +65,7 @@ test.describe('assistant portal', () => {
     const { email, id } = await seedAssistant(1);
     const names = { paid: `مسددة${stamp}`, unpaid: `منتظرة${stamp}`, other: `بعيدة${stamp}` };
     await seedFamilies(id, names);
-    const page = await (await browser.newContext({ locale: 'ar' })).newPage();
+    const page = await (await browser.newContext({ locale: AR_LOCALE })).newPage();
     await signIn(page, email);
 
     // Below 900px the section nav sits behind «القائمة»: salesNav opens it (the mobile project is a Pixel 7).
@@ -101,7 +102,7 @@ test.describe('assistant portal', () => {
     const number = phone(2, 1);
     await leadOf(id, number);
     expect((await stubInbound({ from: number.slice(1), name: `أم ${name}`, text: 'السلام عليكم' })).status).toBe(200);
-    const page = await (await browser.newContext({ locale: 'ar' })).newPage();
+    const page = await (await browser.newContext({ locale: AR_LOCALE })).newPage();
     await signIn(page, email);
 
     // The standalone page is gone: its old link lands on the sales inbox, on that chat.

@@ -1,6 +1,6 @@
-import { FOLLOW_UP_STATUSES, lessonWhenText } from '@ab/shared';
+import { FOLLOW_UP_STATUSES, type ClockCycle } from '@ab/shared';
+import { whenIn } from '@/core/lib/clock';
 import { t } from '@/core/lib/i18n/i18n';
-import { locale } from '@/core/lib/i18n/locale';
 import type { LeadProfile } from './queries';
 
 const statuses: readonly string[] = FOLLOW_UP_STATUSES;
@@ -12,7 +12,7 @@ const NOTES = { queued: f.queued, waiting_template: f.waitingTemplate, no_slots:
  * it, or why the due one has not gone out (queue, Meta's approval, no free slots), else when it is
  * due («المتابعة الجاية الأحد 4 أكتوبر 17:00», in `tz`: the device's), then «اتبعت 1 من 3».
  */
-export function followUpLines(lead: LeadProfile, total: number | undefined, tz: string): string[] {
+export function followUpLines(lead: LeadProfile, total: number | undefined, at: { tz: string; cycle: ClockCycle }): string[] {
   if (lead.follow_up_paused) return [lead.follow_up_paused_by === 'lead' ? f.pausedByLead : f.paused];
   if (!statuses.includes(lead.status)) return [f.none];
   const next = lead.next_follow_up_at;
@@ -20,7 +20,7 @@ export function followUpLines(lead: LeadProfile, total: number | undefined, tz: 
     lead.follow_up_note
       ? NOTES[lead.follow_up_note]
       : next
-        ? f.next.replace('{time}', lessonWhenText(new Date(next), tz, locale))
+        ? f.next.replace('{time}', whenIn(new Date(next), at.tz, at.cycle))
         : f.none,
   ];
   const stage = lead.follow_up_stage ?? 0;

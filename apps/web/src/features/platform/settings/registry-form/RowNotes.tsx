@@ -1,11 +1,13 @@
 import type { SettingMeta } from '@ab/shared';
 import { t } from '@/lib/i18n/i18n';
 import { formatDateTime } from '@/features/sales/leads/format';
+import { useClock } from '@/lib/clock';
 
 /** Under a setting's hint: «معدَّل» while unsaved, and who changed it last when the server knows. */
 export function RowNotes({ dirty, meta }: { dirty: boolean; meta?: SettingMeta | undefined }) {
+  const clock = useClock();
   if (!dirty && !meta) return null;
-  const at = meta ? formatDateTime(meta.updatedAt) : '';
+  const at = meta ? formatDateTime(meta.updatedAt, clock) : '';
   const changed = meta?.updatedByName
     ? t.config.changedBy.replace('{at}', at).replace('{name}', meta.updatedByName)
     : t.config.changed.replace('{at}', at);

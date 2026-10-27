@@ -6,17 +6,17 @@ import { roleOf } from './use-may-invite-phones';
 const I = t.meetingInvites;
 
 test('a scheduled meeting reads its time in the viewer zone; an instant one says so', () => {
-  expect(scheduleLine({ starts_at: '2026-10-20T14:00:00.000Z' }, 'Asia/Riyadh')).toBe(I.list.scheduledFor.replace('{when}', 'الثلاثاء 20 أكتوبر 17:00'));
-  expect(scheduleLine({ starts_at: '2026-10-20T14:00:00.000Z' }, 'UTC')).toMatch(/14:00/);
-  expect(scheduleLine({ starts_at: null }, 'UTC')).toBe(I.list.instant);
+  expect(scheduleLine({ starts_at: '2026-10-20T14:00:00.000Z' }, 'Asia/Riyadh', '24')).toBe(I.list.scheduledFor.replace('{when}', 'الثلاثاء 20 أكتوبر 17:00'));
+  expect(scheduleLine({ starts_at: '2026-10-20T14:00:00.000Z' }, 'UTC', '24')).toMatch(/14:00/);
+  expect(scheduleLine({ starts_at: null }, 'UTC', '24')).toBe(I.list.instant);
 });
 
 test('«يُفتح الدخول» only before the window opens, never on a cancelled one', () => {
   const window = { state: 'early', opens_at: '2026-10-20T13:45:00.000Z', closes_at: '2026-10-20T17:00:00.000Z' } as const;
-  expect(opensLine({ window, cancelled_at: null, state: 'open' }, 'Asia/Riyadh')).toMatch(/16:45/);
-  expect(opensLine({ window, cancelled_at: '2026-10-19T00:00:00Z', state: 'ended' }, 'Asia/Riyadh')).toBeNull();
-  expect(opensLine({ window: { ...window, state: 'open' }, cancelled_at: null, state: 'open' }, 'UTC')).toBeNull();
-  expect(opensLine({ window: null, cancelled_at: null, state: 'open' }, 'UTC')).toBeNull();
+  expect(opensLine({ window, cancelled_at: null, state: 'open' }, 'Asia/Riyadh', '24')).toMatch(/16:45/);
+  expect(opensLine({ window, cancelled_at: '2026-10-19T00:00:00Z', state: 'ended' }, 'Asia/Riyadh', '24')).toBeNull();
+  expect(opensLine({ window: { ...window, state: 'open' }, cancelled_at: null, state: 'open' }, 'UTC', '24')).toBeNull();
+  expect(opensLine({ window: null, cancelled_at: null, state: 'open' }, 'UTC', '24')).toBeNull();
 });
 
 test('each recipient outcome has its words', () => {

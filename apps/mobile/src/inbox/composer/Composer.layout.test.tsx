@@ -55,7 +55,7 @@ test('open window: the notes are never cut (owner 2026-10-27): they wrap or stac
   const until = screen.getByTestId('session-until');
   expect(until.props.numberOfLines).toBeUndefined();
   expect(StyleSheet.flatten(until.props.style).flexShrink).toBe(0);
-  expect(until.props.children).toBe(sessionUntil(OPEN.last_inbound_at));
+  expect(until.props.children).toBe(sessionUntil(OPEN.last_inbound_at, { cycle: '24' }));
   expect(until.props.children).toMatch(new RegExp(t.inbox.sessionOpenUntil.replace(' {time}', '')));
 });
 

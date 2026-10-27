@@ -2,6 +2,10 @@ import { describe, expect, it } from 'vitest';
 import { t } from '@/lib/i18n/i18n';
 import { bookableWindow, byLocalDay, currentWeekStart, zoneLabel } from './slots';
 import { RIYADH_TZ } from '../tz';
+import { locale } from '@/lib/i18n/locale';
+
+/** The cycle the suite reads times in (test-setup saves 24 h). */
+const C24 = { cycle: '24', locale } as const;
 
 const slot = (starts_at: string) => ({ starts_at, ends_at: starts_at, conflicts: [] });
 
@@ -29,13 +33,13 @@ describe('slot grid helpers (R-SCH-06, R-SCH-01)', () => {
   });
 
   it('zoneLabel shows the student wall clock, with the weekday when the day differs', () => {
-    expect(zoneLabel('2026-10-04T14:00:00Z', { tz: RIYADH_TZ, base: RIYADH_TZ })).toBeNull();
-    expect(zoneLabel('2026-12-06T14:00:00Z', { tz: 'Africa/Cairo', base: RIYADH_TZ })).toBe('16:00');
+    expect(zoneLabel('2026-10-04T14:00:00Z', { tz: RIYADH_TZ, base: RIYADH_TZ }, C24)).toBeNull();
+    expect(zoneLabel('2026-12-06T14:00:00Z', { tz: 'Africa/Cairo', base: RIYADH_TZ }, C24)).toBe('16:00');
     // Kuwait, and Cairo in summer, read the same clock as Riyadh: nothing to add.
-    expect(zoneLabel('2026-12-06T14:00:00Z', { tz: 'Asia/Kuwait', base: RIYADH_TZ })).toBeNull();
-    expect(zoneLabel('2026-10-04T14:00:00Z', { tz: 'Africa/Cairo', base: RIYADH_TZ })).toBeNull();
+    expect(zoneLabel('2026-12-06T14:00:00Z', { tz: 'Asia/Kuwait', base: RIYADH_TZ }, C24)).toBeNull();
+    expect(zoneLabel('2026-10-04T14:00:00Z', { tz: 'Africa/Cairo', base: RIYADH_TZ }, C24)).toBeNull();
     // 01:00 Sunday in Riyadh is 18:00 Saturday in New York.
-    expect(zoneLabel('2026-10-03T22:00:00Z', { tz: 'America/New_York', base: RIYADH_TZ })).toBe(
+    expect(zoneLabel('2026-10-03T22:00:00Z', { tz: 'America/New_York', base: RIYADH_TZ }, C24)).toBe(
       `18:00 ${t.enums.weekday[6]}`,
     );
   });

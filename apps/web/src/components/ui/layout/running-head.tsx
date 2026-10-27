@@ -3,6 +3,7 @@ import { useEffect, useState, type ReactNode } from 'react';
 import { t } from '@/lib/i18n/i18n';
 import { locale } from '@/lib/i18n/locale';
 import { cn } from '@/lib/utils';
+import { useClock } from '@/lib/clock';
 
 /** Current time, re-rendered on every minute boundary. */
 export function useMinuteClock(): Date {
@@ -29,7 +30,7 @@ export function useMinuteClock(): Date {
  * `className`: the inline copy inside the wide header (the top-bar inbox) drops the 54px row height.
  */
 export function RunningHead({ crumbs, end, className }: { crumbs?: ReactNode; end?: ReactNode; className?: string }) {
-  const head = formatRunningHead(useMinuteClock(), locale);
+  const head = formatRunningHead(useMinuteClock(), locale, useClock().cycle);
   return (
     <div
       className={cn(

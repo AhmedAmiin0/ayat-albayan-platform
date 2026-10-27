@@ -53,7 +53,7 @@ test('409 conflict: the Arabic clash lines, «اختر موعدًا آخر» →
   await fireEvent.press(await screen.findByRole('button', { name: '19:00' }));
   expect(slotCalls()).toBeGreaterThan(before);
   expect(screen.queryByText(t.booking.conflictTitle)).toBeNull();
-  expect(screen.getByText(whenText(MON_19, 'Asia/Riyadh'))).toBeTruthy();
+  expect(screen.getByText(whenText(MON_19, 'Asia/Riyadh', '24'))).toBeTruthy();
 
   await fireEvent.press(screen.getByRole('button', { name: t.booking.submit }));
   expect(await screen.findByText(t.booking.booked)).toBeTruthy();

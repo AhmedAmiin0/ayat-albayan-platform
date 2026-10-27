@@ -2,6 +2,7 @@ import { formatPhone, WA_LINES, type LineHealthView } from '@ab/shared';
 import { Ltr } from '@/components/ui/display/ltr';
 import { t } from '@/lib/i18n/i18n';
 import { formatDateTime } from '../../sales/leads/format';
+import { useClock } from '@/lib/clock';
 
 const c = t.notificationCatalogue;
 
@@ -10,6 +11,7 @@ const c = t.notificationCatalogue;
  * new Meta call; «لم يُفحص الرقم بعد» until a check succeeds once.
  */
 export function NumbersLine({ lines }: { lines: readonly LineHealthView[] }) {
+  const clock = useClock();
   return (
     <div className="grid gap-1 text-xs">
       <p className="font-semibold text-ink-2">{c.numbersTitle}</p>
@@ -20,7 +22,7 @@ export function NumbersLine({ lines }: { lines: readonly LineHealthView[] }) {
             <li key={line} className="text-ink-2">
               <span>{c.lines[line]}: </span>
               {kept?.display_phone_e164 ? <Ltr>{formatPhone(kept.display_phone_e164)}</Ltr> : <span className="text-ink-3">{c.notChecked}</span>}
-              {kept && <span className="text-ink-3"> · {c.checkedAt.replace('{time}', formatDateTime(kept.checked_at))}</span>}
+              {kept && <span className="text-ink-3"> · {c.checkedAt.replace('{time}', formatDateTime(kept.checked_at, clock))}</span>}
             </li>
           );
         })}

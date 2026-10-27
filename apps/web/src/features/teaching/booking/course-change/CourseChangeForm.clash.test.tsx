@@ -7,6 +7,10 @@ import { t } from '@/lib/i18n/i18n';
 import { BookingModeContext, type BookingMode } from '../mode';
 import { CHANGE_VIEW, changeBodies, CHECK, CLASH, NOW, routeChange, routeChangeSend, swapSundayForMonday } from './change-fixture';
 import { CourseChangeForm } from './CourseChangeForm';
+import { locale } from '@/lib/i18n/locale';
+
+/** The cycle the suite reads times in (test-setup saves 24 h). */
+const C24 = { cycle: '24', locale } as const;
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
@@ -60,7 +64,7 @@ describe('«تغيير أيام الحلقات» over a clash (owner 2026-10-18,
     const off = { ...CLASH, kind: 'outside_availability' as const };
     routeChangeSend(apiSend, { ...CHECK, conflicts: [off] });
     await toReview('sales');
-    expect(await screen.findByText(conflictText(off, CHANGE_VIEW.course.teacherTz))).toBeTruthy();
+    expect(await screen.findByText(conflictText(off, C24, CHANGE_VIEW.course.teacherTz))).toBeTruthy();
   });
 
   it('the admin: a reason field, then the change saved with override.reason on /booking/course/change', async () => {

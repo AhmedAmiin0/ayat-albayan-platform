@@ -1,18 +1,15 @@
 import { googleErrorKey, intlLocale, type GoogleAccountStatus, type GoogleSkipReason, type GoogleSyncState, type Glyph, type Tone } from '@ab/shared';
+import type { Clock } from '@/lib/clock';
+import { dateAndClock } from '@/lib/clock-text';
 import { t } from '@/lib/i18n/i18n';
 import { locale } from '@/lib/i18n/locale';
 
 // Display helpers of the Google section. DB times are UTC; the academy reads them in Asia/Riyadh,
-// 24h, Western digits like every other time in the product.
+// 12 or 24 h as the viewer chose, Western digits.
 
-const AT = new Intl.DateTimeFormat(intlLocale(locale), {
-  dateStyle: 'medium',
-  timeStyle: 'short',
-  hourCycle: 'h23',
-  timeZone: 'Asia/Riyadh',
-});
+const DAY = new Intl.DateTimeFormat(intlLocale(locale), { dateStyle: 'medium', timeZone: 'Asia/Riyadh' });
 
-export const formatAt = (iso: string): string => AT.format(new Date(iso));
+export const formatAt = (iso: string, clock: Clock): string => dateAndClock(DAY, new Date(iso), { ...clock, tz: 'Asia/Riyadh' });
 
 const LIST = new Intl.ListFormat(intlLocale(locale), { style: 'long', type: 'conjunction' });
 

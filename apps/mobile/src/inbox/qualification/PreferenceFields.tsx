@@ -10,6 +10,7 @@ import { DayChips } from './DayChips';
 import { timeOptions } from './qualification-form';
 import type { QualFieldsProps } from './QualificationFields';
 import { QualText } from './QualText';
+import { hhmm, useClockCycle } from '@/core/lib/clock';
 
 /** «—» first in every single choice: picking it clears the field (sent as null). */
 export const CLEAR: FilterPill<''> = { value: '', label: t.common.unset };
@@ -27,6 +28,7 @@ const GROUP_PILLS = (): FilterPill<GroupKind | ''>[] => [
  * type, then «ملاحظات أو طلبات خاصة».
  */
 export function PreferenceFields(props: QualFieldsProps) {
+  const cycle = useClockCycle();
   const { form, errors, onChange } = props;
   const group = (label: string, error: string | undefined, pills: ReactNode) => (
     <View style={{ gap: 6 }}>
@@ -38,12 +40,12 @@ export function PreferenceFields(props: QualFieldsProps) {
   // A long row scrolls: the label carries the pick, so it shows even when its pill is off screen.
   const time = (key: TimeKey, label: string) =>
     group(
-      form[key] ? `${label} ${form[key]}` : label,
+      form[key] ? `${label} ${hhmm(form[key], cycle)}` : label,
       errors[key],
       <FilterPills
         role="radiogroup"
         accessibilityLabel={label}
-        items={[CLEAR, ...timeOptions(form[key]).map((v) => ({ value: v, label: v }))]}
+        items={[CLEAR, ...timeOptions(form[key]).map((v) => ({ value: v, label: hhmm(v, cycle) }))]}
         value={form[key]}
         onChange={(v) => onChange({ [key]: v })}
       />,

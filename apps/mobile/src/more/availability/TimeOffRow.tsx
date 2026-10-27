@@ -1,4 +1,5 @@
 import { View } from 'react-native';
+import { useClockCycle } from '@/core/lib/clock';
 import { t } from '@/core/lib/i18n/i18n';
 import { type, useTheme } from '@/theme';
 import { formatTimeOff } from '../schedule';
@@ -8,6 +9,7 @@ import { AppText } from '@/core/ui/primitives/AppText';
 /** One time-off: the span (device zone), and the reason when there is one. */
 export function TimeOffRow({ off }: { off: TimeOff }) {
   const { color } = useTheme();
+  const cycle = useClockCycle();
   return (
     <View style={{ gap: 2, paddingVertical: 10, borderBottomWidth: 1, borderBottomColor: color.rule }}>
       <AppText
@@ -19,7 +21,7 @@ export function TimeOffRow({ off }: { off: TimeOff }) {
           fontVariant: ['tabular-nums'],
         }}
       >
-        {formatTimeOff(off)}
+        {formatTimeOff(off, cycle)}
       </AppText>
       {off.reason ? (
         <AppText

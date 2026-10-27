@@ -15,6 +15,7 @@ import { changeRequest } from './change-body';
 import { useChangeCourse } from './change-queries';
 import { CourseChangeDone } from './CourseChangeDone';
 import { CourseChangeReview } from './CourseChangeReview';
+import { useClockCycle } from '@/core/lib/clock';
 
 interface CourseChangeFlowProps {
   student: SalesCourseView['student'];
@@ -37,6 +38,7 @@ interface CourseChangeFlowProps {
  * teacher, the length and the zone stay the course's. One clientRequestId per flow (rule 8).
  */
 export function CourseChangeFlow({ student, course, onLeave, onDone }: CourseChangeFlowProps) {
+  const cycle = useClockCycle();
   const { color } = useTheme();
   const [step, setStep] = useState<'slot' | 'review'>('slot');
   const [now] = useState(() => new Date());
@@ -61,7 +63,7 @@ export function CourseChangeFlow({ student, course, onLeave, onDone }: CourseCha
       return (
         <>
           <AppText style={{ ...note, color: color.ink }}>
-            {t.booking.courseChange.currentDays.replace('{days}', daysText(course.days, course.tz))}
+            {t.booking.courseChange.currentDays.replace('{days}', daysText(course.days, course.tz, cycle))}
           </AppText>
           <AppText style={note}>{t.booking.courseChange.changeHint}</AppText>
           <SlotStep

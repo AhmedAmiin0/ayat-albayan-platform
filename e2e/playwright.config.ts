@@ -1,12 +1,12 @@
 import { defineConfig, devices } from '@playwright/test';
 import { existsSync } from 'node:fs';
+import { AR_LOCALE } from './support/locale';
 
 // Written by `pnpm env:local` (local) or the CI step after `supabase start`.
 if (existsSync('.env')) process.loadEnvFile('.env');
 
 // Dedicated ports so e2e never talks to a dev server (or anything else) on 3000/5173.
-const API_PORT = 3100;
-const WEB_PORT = 5180;
+const [API_PORT, WEB_PORT] = [3100, 5180];
 const WEB_URL = `http://localhost:${WEB_PORT}`;
 /** tools/wa-stub for e2e (docs/12 §5): the API never reaches graph.facebook.com from here. */
 const STUB_PORT = 4110; // = support/wa-stub.ts STUB_URL
@@ -61,7 +61,7 @@ export default defineConfig({
   globalSetup: './support/global-setup.ts',
   use: {
     baseURL: WEB_URL,
-    locale: 'ar',
+    locale: AR_LOCALE,
     timezoneId: 'Asia/Riyadh',
     trace: 'retain-on-failure',
     screenshot: 'only-on-failure',
@@ -70,12 +70,12 @@ export default defineConfig({
     { name: 'setup', testMatch: /.*\.setup\.ts/ },
     {
       name: 'desktop',
-      use: { ...devices['Desktop Chrome'], locale: 'ar' },
+      use: { ...devices['Desktop Chrome'], locale: AR_LOCALE },
       dependencies: ['setup'],
     },
     {
       name: 'mobile',
-      use: { ...devices['Pixel 7'], locale: 'ar' },
+      use: { ...devices['Pixel 7'], locale: AR_LOCALE },
       dependencies: ['setup'],
     },
   ],

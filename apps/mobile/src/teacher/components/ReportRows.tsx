@@ -1,10 +1,10 @@
-import { gradeStyle, lessonWhenText, type PendingReportView, type ReportSummaryView, type TeacherReportView } from '@ab/shared';
+import { gradeStyle, type PendingReportView, type ReportSummaryView, type TeacherReportView } from '@ab/shared';
 import { router } from 'expo-router';
 import { t } from '@/core/lib/i18n/i18n';
-import { locale } from '@/core/lib/i18n/locale';
 import { Button } from '@/core/ui/primitives/Button';
 import { ListRow } from '@/core/ui/layout/ListRow';
 import { StatusChip } from '@/core/ui/feedback/StatusChip';
+import { useClockCycle, whenIn } from '@/core/lib/clock';
 
 // The rows of «التقارير». A row opens the lesson's report form (to write, edit or read it) or a
 // student's history; the API decides what may still change (can_edit).
@@ -13,11 +13,12 @@ export const reportFormHref = (lessonId: string) => `/teacher/reports/${lessonId
 
 /** A started lesson still missing its sent report: «اكتب التقرير», or «تعديل التقرير» for a draft. */
 export function PendingReportRow({ row, tz }: { row: PendingReportView; tz: string }) {
+  const cycle = useClockCycle();
   return (
     <ListRow
       title={row.student.name}
       meta={row.student.code}
-      subtitle={lessonWhenText(new Date(row.starts_at), tz, locale)}
+      subtitle={whenIn(new Date(row.starts_at), tz, cycle)}
       trailing={<StatusChip tone="act" glyph="hollow" label={row.report_id ? t.reports.resume : t.reports.open} size="sm" />}
       onPress={() => router.push(reportFormHref(row.lesson_id))}
     />
@@ -26,7 +27,8 @@ export function PendingReportRow({ row, tz }: { row: PendingReportView; tz: stri
 
 /** A sent report: when, the overall grade (or the attendance), and edit while its window is open. */
 export function SubmittedReportRow({ row, tz }: { row: TeacherReportView; tz: string }) {
-  const when = lessonWhenText(new Date(row.starts_at), tz, locale);
+  const cycle = useClockCycle();
+  const when = whenIn(new Date(row.starts_at), tz, cycle);
   const grade = row.grade_overall ? t.enums.grade[row.grade_overall] : row.attendance ? t.enums.attendance[row.attendance] : null;
   const tone = row.grade_overall ? gradeStyle[row.grade_overall].tone : 'neutral';
   return (
@@ -77,9 +79,10 @@ interface ReportHistoryRowProps {
 
 /** One sent report of a student's «سجل التقارير» (teacher, admin, and sales' «تفاصيل الطالب» read-only). */
 export function ReportHistoryRow({ row, tz, onPdf, onPress }: ReportHistoryRowProps) {
+  const cycle = useClockCycle();
   return (
     <ListRow
-      title={lessonWhenText(new Date(row.starts_at), tz, locale)}
+      title={whenIn(new Date(row.starts_at), tz, cycle)}
       subtitle={summaryLine(row)}
       trailing={row.pdf_status === 'ready' ? <Button variant="ghost" label={t.reports.downloadPdf} onPress={onPdf} /> : undefined}
       onPress={onPress}
