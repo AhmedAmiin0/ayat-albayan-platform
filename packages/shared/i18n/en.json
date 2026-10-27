@@ -2597,7 +2597,8 @@
     "reopen": {
       "requested": "A request to reopen the chat was sent — waiting for the other side to reply",
       "requestedToday": "Today’s request was already sent",
-      "unavailable": "Chat reopened — the reopen template is not available yet"
+      "unavailable": "Chat reopened — the reopen template is not available yet",
+      "failed": "The reopen request could not be sent — send the template yourself from «Send template»"
     },
     "rating": {
       "send": "Send lesson rating",
