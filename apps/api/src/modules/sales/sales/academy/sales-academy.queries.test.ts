@@ -14,11 +14,13 @@ describe('SalesAcademyQueries (whitelisted selects)', () => {
     expect(f.argsOf('teachers', 'eq')).toEqual(['status', 'active']);
   });
 
-  it('students: one page by name, searched by normalised name or code, with the total', async () => {
+  it('students: one page by name, searched by normalised name or code, with the total; of the guardian the name and phone only', async () => {
     const f = fakeDb({ students: [{ data: [{ id: 's1' }], count: 41 }] });
     const out = await new SalesAcademyQueries(f.db).students({ page: 3, pageSize: 20, search: 'سهيلة' });
     expect(out.total).toBe(41);
-    expect(String(f.argsOf('students', 'select')?.[0])).not.toMatch(/notes|meeting|phone|balance|package/);
+    const select = String(f.argsOf('students', 'select')?.[0]);
+    expect(select).toBe('id, code, name, status, program, guardian:guardians(name, phone_e164), teacher:teachers(display_name_ar)');
+    expect(select.replace('guardians(name, phone_e164)', '')).not.toMatch(/notes|meeting|phone|balance|package/);
     expect(f.argsOf('students', 'range')).toEqual([40, 59]);
     expect(String(f.argsOf('students', 'or')?.[0])).toContain('name_normalized.ilike.*سهيله*');
   });

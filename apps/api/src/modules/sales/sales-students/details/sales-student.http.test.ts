@@ -18,7 +18,7 @@ describe('GET /sales/students/:id «تفاصيل الطالب» (docs/16 row 36)
     const res = await t.call('GET', `/sales/students/${MINE}`, { token: 'salesA' });
     expect(res.statusCode).toBe(200);
     const body = res.json();
-    expect(body.student).toEqual({ id: MINE, code: 'AB-0101', name: 'ياسمين', status: 'active', program: 'quran', teacher_name: 'أبرار' });
+    expect(body.student).toEqual({ id: MINE, code: 'AB-0101', name: 'ياسمين', status: 'active', program: 'quran', teacher_name: 'أبرار', guardian_phone: '+966551110000' });
     expect(body.subscriptions.map((s: { id: string }) => s.id)).toEqual(['c1000000-0000-4000-8000-0000000000c1', 'old']);
     expect(body.subscriptions[0]).toEqual({
       id: 'c1000000-0000-4000-8000-0000000000c1', package: '8', status: 'active', starts_on: '2026-09-01', renews_on: '2026-10-01',
@@ -50,9 +50,9 @@ describe('GET /sales/students/:id «تفاصيل الطالب» (docs/16 row 36)
     });
   });
 
-  it('no money, note, phone or link anywhere in the payload', async () => {
+  it('no money, note, link or teacher phone in the payload; the guardian phone is the one contact (owner 2026-10-27)', async () => {
     const res = await t.call('GET', `/sales/students/${MINE}`, { token: 'salesA' });
-    expect(keys(res.json()).filter((k) => SECRET.test(k))).toEqual([]);
+    expect(keys(res.json()).filter((k) => SECRET.test(k))).toEqual(['guardian_phone']);
     expect(res.body).not.toMatch(/سر|secret|\+20|290|SAR|bank/);
   });
 

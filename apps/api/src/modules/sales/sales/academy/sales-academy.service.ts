@@ -1,5 +1,6 @@
 import type { AssistantLessonView, SalesStudentsQuery, SalesStudentView, SalesSubscriptionHistory } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
+import { chatPhone } from '../../../../common/auth/chat-phone';
 import type { AuthUser } from '../../../../common/auth/verify-token';
 import { notFound } from '../../../../common/http/errors';
 import type { Page } from '../../../../common/http/http';
@@ -25,7 +26,11 @@ export class SalesAcademyService {
   /** Every student; `mine` on hers (the ownership of «الاشتراكات»): those rows open «تفاصيل الطالب» (docs/16 row 36). */
   async students(q: SalesStudentsQuery, user: AuthUser): Promise<Page<SalesStudentView>> {
     const [{ rows, total }, own] = await Promise.all([this.academy.students(q), this.ownStudents(user)]);
-    const items = rows.map((row) => ({ ...toSalesStudent(row), ...(own.has(row.id) ? { mine: true } : {}) }));
+    const items = rows.map((row) => ({
+      ...toSalesStudent(row),
+      guardian_phone: chatPhone(user, row.guardian?.phone_e164),
+      ...(own.has(row.id) ? { mine: true } : {}),
+    }));
     return { items, total, page: q.page, pageSize: q.pageSize };
   }
 

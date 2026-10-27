@@ -53,7 +53,8 @@ describe('toStatementView / readTotals', () => {
 describe('toMyStudent / toMyPayment / toCommissionView', () => {
   it('a student row without a commission; one with a half-filled commission is no commission', () => {
     const r = { student_id: 's1', code: 'AB-1', name: 'ن', brought_at: '2026-10-01T00:00:00Z', first_subscription_paid: null, commission_id: null, commission_status: null, commission_amount: null, commission_currency: null, commission_earned_at: null, renewal_commission_count: null };
-    expect(toMyStudent(r)).toEqual({ id: 's1', code: 'AB-1', name: 'ن', brought_at: '2026-10-01T00:00:00Z', first_subscription_paid: false, commission: null, renewal_commissions: 0 });
+    expect(toMyStudent(r)).toEqual({ id: 's1', code: 'AB-1', name: 'ن', brought_at: '2026-10-01T00:00:00Z', guardian_phone: null, first_subscription_paid: false, commission: null, renewal_commissions: 0 });
+    expect(toMyStudent(r, new Map([['s1', '+201001112223'], ['s2', '+966551110000']]))?.guardian_phone).toBe('+201001112223');
     expect(toMyStudent({ ...r, renewal_commission_count: 2 })?.renewal_commissions).toBe(2);
     expect(toMyStudent({ ...r, commission_id: 'c', commission_status: 'earned' })?.commission).toBeNull();
     expect(toMyStudent({ ...r, student_id: null })).toBeNull();

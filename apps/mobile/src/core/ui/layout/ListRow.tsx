@@ -17,17 +17,21 @@ interface ListRowProps {
   subtitleLabel?: string;
   /** LTR value beside the title: «AB-0183» or formatPhone(phone). */
   meta?: string;
+  /** The meta at the subtitle's size in ink-2 (a code the reader must read), not the quiet 2xs ink-3. */
+  metaStrong?: boolean;
   /** Third line: chips and short words that wrap (a thread's lead status + source). */
   tags?: ReactNode;
   /** At the inline-end, usually a <StatusChip>. At most 45 % of the row: a long word ellipsizes. */
   trailing?: ReactNode;
   /** Makes the row a button (opens the detail). Without it the row is plain text. */
   onPress?: () => void;
+  /** What a tap opens, for the screen reader (only with onPress). */
+  accessibilityHint?: string;
 }
 
 /** One list row, 56pt minimum, hairline below. Feed it to FlatList renderItem. */
 export function ListRow(props: ListRowProps) {
-  const { leading, title, subtitle, subtitleLeading, subtitleLabel, meta, tags, trailing, onPress } = props;
+  const { leading, title, subtitle, subtitleLeading, subtitleLabel, meta, metaStrong, tags, trailing, onPress } = props;
   const { color } = useTheme();
   const row: ViewStyle = {
     minHeight: 56,
@@ -59,7 +63,7 @@ export function ListRow(props: ListRowProps) {
           </AppText>
           {meta ? (
             <Ltr
-              style={{ fontFamily: type.ui[500], fontSize: type.size['2xs'], color: color.ink3 }}
+              style={{ fontFamily: type.ui[500], fontSize: type.size[metaStrong ? 'xs' : '2xs'], color: metaStrong ? color.ink2 : color.ink3 }}
             >
               {meta}
             </Ltr>
@@ -105,6 +109,7 @@ export function ListRow(props: ListRowProps) {
   return (
     <Pressable
       accessibilityRole="button"
+      accessibilityHint={props.accessibilityHint}
       onPress={onPress}
       style={({ pressed }) => [row, pressed ? { backgroundColor: color.sunk, opacity: 0.85 } : null]}
     >

@@ -44,14 +44,16 @@ describe('the sales assistant side over HTTP (docs/16)', () => {
     expect(res.body).not.toMatch(/rate_|phone|notes|max_students|calendar/);
   });
 
-  it('GET /sales/students/all: paged and searchable, whitelisted columns only', async () => {
+  it('GET /sales/students/all: paged and searchable, whitelisted columns only (the guardian phone is the one contact)', async () => {
     const res = await t.get('/sales/students/all?page=2&pageSize=20&search=%D9%8A%D8%A7%D8%B3', 'salesA');
     expect(t.academy.students).toHaveBeenCalledWith({ page: 2, pageSize: 20, search: 'ياس' });
     expect(res.json()).toEqual({
-      items: [{ id: 's1', code: 'AB-0101', name: 'ياسمين', status: 'active', program: 'quran', teacher_name: 'أبرار', guardian_name: 'أم ياسمين', mine: true }],
+      items: [{ id: 's1', code: 'AB-0101', name: 'ياسمين', status: 'active', program: 'quran', teacher_name: 'أبرار', guardian_name: 'أم ياسمين', guardian_phone: '+966551110000', mine: true }],
       total: 41, page: 2, pageSize: 20,
     });
-    expect(res.body).not.toMatch(SECRET);
+    // Owner 2026-10-27: sales already see every chat with its phone, so the row opens that family's chat.
+    expect(keys(res.json()).filter((k) => SECRET.test(k))).toEqual(['guardian_phone']);
+    expect(res.body.replace('guardian_phone', '')).not.toMatch(/price|note|meeting|link|balance|package_remaining|secret|سر/i);
     expect((await t.get('/sales/students/all?pageSize=500', 'salesA')).statusCode).toBe(400);
   });
 

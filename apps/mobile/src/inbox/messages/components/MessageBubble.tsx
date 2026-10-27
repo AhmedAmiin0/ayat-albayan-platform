@@ -1,12 +1,14 @@
 import { isChatViewMime, type MessageView, replyNote } from '@ab/shared';
-import { Linking, Pressable, View, type ViewStyle } from 'react-native';
+import { type GestureResponderEvent, Linking, Pressable, View, type ViewStyle } from 'react-native';
 import { useHolds } from '@/auth/use-permissions';
 import { useClockCycle } from '@/core/lib/clock';
 import { t } from '@/core/lib/i18n/i18n';
 import { locale } from '@/core/lib/i18n/locale';
 import { shape, type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
-import { useBubbleActions } from '../hooks/bubble-actions';
+import { holdTop, useBubbleActions } from '../hooks/bubble-actions';
+import { ReactionPill } from '../reactions/ReactionPill';
+import { useChatActions } from '../../thread/hooks/chat-actions';
 import { bubbleSide } from '../hooks/bubble-side';
 import { MessageActions } from './MessageActions';
 import { MessageFile } from './MessageFile';
@@ -57,6 +59,9 @@ export function MessageBubble({ message: m, phone, onJump, highlight = false }: 
   const { color } = useTheme();
   // «رد» / «إعادة توجيه» (owner 2026-10-25): a long press opens the menu, a swipe answers.
   const touch = useBubbleActions(m);
+  // «تفاعل» (owner 2026-10-27): the row floats over the held bubble; the pill names who reacted.
+  const hold = (e?: GestureResponderEvent) => touch.openMenu(holdTop(e));
+  const { openReactors } = useChatActions();
   const admin = useThreadMode().kind === 'admin';
   // The sales tree has no thread mode either: the actions' endpoints need messages.manage (admin-only).
   const manages = useHolds('messages.manage');
@@ -94,7 +99,7 @@ export function MessageBubble({ message: m, phone, onJump, highlight = false }: 
           {templateLine(m.template_key)}
         </AppText>
       ) : null}
-      {file ? <MessageFile message={m} phone={phone} onLongPress={touch.has ? touch.openMenu : undefined} /> : null}
+      {file ? <MessageFile message={m} phone={phone} onLongPress={touch.has ? hold : undefined} /> : null}
       {media && !file ? <MediaLine label={media} url={m.media_url} file={m.media_mime !== null} /> : null}
       <ResendAsk message={m} phone={phone} />
       {m.body ? <LinkedText text={m.body} touch={touch} a11y={a11yOn === 'body'} /> : null}
@@ -108,12 +113,21 @@ export function MessageBubble({ message: m, phone, onJump, highlight = false }: 
       {stuck ? <MessageActions message={m} phone={phone} /> : null}
     </>
   );
-  if (!touch.has) return <View testID={`bubble-${m.id}`} style={box}>{content}</View>;
+  const pill = <ReactionPill message={m} side={side.outer === 'start' ? 'start' : 'end'} onPress={() => openReactors(m)} />;
+  if (!touch.has) {
+    return (
+      <>
+        <View testID={`bubble-${m.id}`} style={box}>{content}</View>
+        {pill}
+      </>
+    );
+  }
   return (
     <SwipeReply onReply={touch.swipe}>
-      <Pressable testID={`bubble-${m.id}`} accessible={false} onLongPress={touch.openMenu} delayLongPress={350} style={box}>
+      <Pressable testID={`bubble-${m.id}`} accessible={false} onLongPress={hold} delayLongPress={350} style={box}>
         {content}
       </Pressable>
+      {pill}
     </SwipeReply>
   );
 }

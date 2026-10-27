@@ -1,5 +1,6 @@
 import type { Href } from 'expo-router';
-import { type TreeBase, useTreeBase } from '@/core/nav/tree-base';
+import { inTree, type TreeBase, useTreeBase } from '@/core/nav/tree-base';
+import { threadHref } from '@/inbox';
 
 /**
  * Where the salesperson's pages live in each tree. Admins and teachers holding the sales double role
@@ -17,5 +18,8 @@ export function salesHrefs(base: TreeBase) {
     }),
   };
 }
+
+/** A family's chat in the tree the page runs in (its inbox: /sales/inbox/… or the admin's /inbox/…). */
+export const familyChatHref = (base: TreeBase, phone: string): Href => inTree(base, threadHref(phone));
 
 export const useSalesHrefs = () => salesHrefs(useTreeBase());
