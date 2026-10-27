@@ -1,18 +1,18 @@
-import type { LessonView } from '@ab/shared';
 import { Fragment } from 'react';
 import { View } from 'react-native';
 import { useTheme } from '@/theme';
 import { raisedCard } from '../lib/surface';
+import type { TodayLesson } from '../lib/today-lesson';
 import { LessonRow } from './LessonRow';
 
-interface RowsCardProps {
-  lessons: readonly LessonView[];
-  onOpen: (lesson: LessonView) => void;
+interface RowsCardProps<L extends TodayLesson> {
+  lessons: readonly L[];
+  onOpen: (lesson: L) => void;
   compact?: boolean;
 }
 
 /** Lesson rows in ONE raised card (docs/29 §4): radius 20, 16pt sides, a 1pt rule between rows. */
-export function RowsCard({ lessons, onOpen, compact = false }: RowsCardProps) {
+export function RowsCard<L extends TodayLesson>({ lessons, onOpen, compact = false }: RowsCardProps<L>) {
   const { color } = useTheme();
   if (lessons.length === 0) return null;
   return (
