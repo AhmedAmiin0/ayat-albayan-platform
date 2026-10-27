@@ -17,3 +17,16 @@ export {
 export { connectInboxLive, type LiveChannel, type LiveClient } from './live-connect.js';
 export { createLiveSession, type LiveSession } from './live-session.js';
 export { createInboxLive, type InboxLive, type LiveTargets } from './live-store.js';
+export {
+  patchMessage,
+  type PillItem,
+  type ReactionName,
+  reactionName,
+  reactionPath,
+  reactionPill,
+  type ReactorLine,
+  reactorLines,
+  tappedReaction,
+  withOurs,
+} from './reactions.js';
+export { type ReactInput, reactionMutation, type ReactionPorts, withReactions } from './reaction-mutation.js';
