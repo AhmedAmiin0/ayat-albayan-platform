@@ -32,7 +32,7 @@ test.describe('the compact shell bar', () => {
     await page.goto('/teacher');
     await expect(page.getByRole('navigation', { name: ar.teacherNav.label })).toHaveCount(0);
     const sheet = await openNav(page);
-    await sheet.getByRole('link', { name: ar.teacherNav.students }).click();
+    await sheet.getByRole('link', { name: ar.teacherNav.students, exact: true }).click();
     await expect(page).toHaveURL(/\/teacher\/students$/);
     await expect(sheet).toBeHidden();
   });
