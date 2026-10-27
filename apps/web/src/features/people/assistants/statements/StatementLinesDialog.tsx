@@ -29,7 +29,8 @@ export function StatementLinesDialog({ statement, onClose }: { statement: Assist
               {line.kind === 'salary' && S.lineSalary}
               {line.kind === 'commission' && line.student && (
                 <>
-                  {S.lineCommission.replace('{student}', line.student.name)} <Ltr className="text-2xs text-ink-3">{line.student.code}</Ltr>
+                  {(line.commission_kind === 'renewal' ? S.lineCommissionRenewal : S.lineCommission).replace('{student}', line.student.name)}{' '}
+                  <Ltr className="text-2xs text-ink-3">{line.student.code}</Ltr>
                 </>
               )}
               {line.kind === 'adjustment' && S.lineAdjustment.replace('{reason}', line.reason ?? '')}

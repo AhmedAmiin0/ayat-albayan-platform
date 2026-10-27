@@ -13,12 +13,12 @@ const terms = (over: Partial<TermsRow> = {}): TermsRow =>
 
 describe('toTermsView / termsColumns', () => {
   it('a row becomes both parts, numbers as numbers; no row or cleared columns are null', () => {
-    expect(toTermsView('a1', terms())).toEqual({
-      assistant_id: 'a1', commission: { type: 'fixed', value: 50, currency: 'EGP', starts_on: '2026-10-01' }, salary: { amount: 1000, currency: 'SAR', starts_on: '2026-10-01' },
+    expect(toTermsView('a1', terms(), 50)).toEqual({
+      assistant_id: 'a1', commission: { type: 'fixed', value: 50, currency: 'EGP', starts_on: '2026-10-01' }, salary: { amount: 1000, currency: 'SAR', starts_on: '2026-10-01' }, renewal_share_percent: 50,
     });
-    expect(toTermsView('a1', null)).toEqual({ assistant_id: 'a1', commission: null, salary: null });
+    expect(toTermsView('a1', null, 50)).toEqual({ assistant_id: 'a1', commission: null, salary: null, renewal_share_percent: 50 });
     const cleared = terms({ commission_type: null, commission_value: null, commission_currency: null, commission_starts_on: null, salary_amount: null, salary_currency: null, salary_starts_on: null });
-    expect(toTermsView('a1', cleared)).toEqual({ assistant_id: 'a1', commission: null, salary: null });
+    expect(toTermsView('a1', cleared, 40)).toEqual({ assistant_id: 'a1', commission: null, salary: null, renewal_share_percent: 40 });
   });
 
   it('a percent drops any currency; a null part clears all three of its columns', () => {
@@ -41,7 +41,7 @@ describe('toStatementView / readTotals', () => {
       { kind: 'bonus', amount: 1, currency: 'SAR', commission: null, adjustment: null },
       { kind: 'adjustment', amount: -20, currency: 'SAR', commission: null, adjustment: { reason: 'استرداد' } },
     ] }));
-    expect(view.lines).toEqual([{ kind: 'adjustment', amount: -20, currency: 'SAR', student: null, reason: 'استرداد' }]);
+    expect(view.lines).toEqual([{ kind: 'adjustment', amount: -20, currency: 'SAR', student: null, reason: 'استرداد', commission_kind: null }]);
   });
 
   it('has_receipt is a flag, the path never leaves', () => {
@@ -52,15 +52,16 @@ describe('toStatementView / readTotals', () => {
 
 describe('toMyStudent / toMyPayment / toCommissionView', () => {
   it('a student row without a commission; one with a half-filled commission is no commission', () => {
-    const r = { student_id: 's1', code: 'AB-1', name: 'ن', brought_at: '2026-10-01T00:00:00Z', first_subscription_paid: null, commission_id: null, commission_status: null, commission_amount: null, commission_currency: null, commission_earned_at: null };
-    expect(toMyStudent(r)).toEqual({ id: 's1', code: 'AB-1', name: 'ن', brought_at: '2026-10-01T00:00:00Z', first_subscription_paid: false, commission: null });
+    const r = { student_id: 's1', code: 'AB-1', name: 'ن', brought_at: '2026-10-01T00:00:00Z', first_subscription_paid: null, commission_id: null, commission_status: null, commission_amount: null, commission_currency: null, commission_earned_at: null, renewal_commission_count: null };
+    expect(toMyStudent(r)).toEqual({ id: 's1', code: 'AB-1', name: 'ن', brought_at: '2026-10-01T00:00:00Z', first_subscription_paid: false, commission: null, renewal_commissions: 0 });
+    expect(toMyStudent({ ...r, renewal_commission_count: 2 })?.renewal_commissions).toBe(2);
     expect(toMyStudent({ ...r, commission_id: 'c', commission_status: 'earned' })?.commission).toBeNull();
     expect(toMyStudent({ ...r, student_id: null })).toBeNull();
     expect(toMyStudent({ ...r, brought_at: null })).toBeNull();
   });
 
   it('a voided commission keeps its status; a payment without a student reads empty names', () => {
-    const r = { student_id: 's1', code: 'AB-1', name: 'ن', brought_at: 'x', first_subscription_paid: true, commission_id: 'c', commission_status: 'voided' as const, commission_amount: 29, commission_currency: 'SAR', commission_earned_at: 'y' };
+    const r = { student_id: 's1', code: 'AB-1', name: 'ن', brought_at: 'x', first_subscription_paid: true, commission_id: 'c', commission_status: 'voided' as const, commission_amount: 29, commission_currency: 'SAR', commission_earned_at: 'y', renewal_commission_count: 0 };
     expect(toMyStudent(r)?.commission).toEqual({ amount: 29, currency: 'SAR', status: 'voided', earned_at: 'y' });
     const p = toMyPayment({ id: 'p', kind: 'refund', amount: 5, currency: 'SAR', method: 'cash', paid_at: 'z', note: null, subscription: null });
     expect(p.student).toEqual({ id: '', code: '', name: '' });
@@ -73,5 +74,12 @@ describe('toMyStudent / toMyPayment / toCommissionView', () => {
       assistant: { id: 'a1', full_name: 'الزهراء' }, student: { id: 's1', code: 'AB-1', name: 'ن' },
     } as unknown as CommissionRow;
     expect(toCommissionView(row)).toMatchObject({ assistant: { id: 'a1', name: 'الزهراء' }, student: { id: 's1', code: 'AB-1', name: 'ن' }, rate: 10, amount: 29, status: 'voided', void_reason: 'خطأ' });
+  });
+
+  it('a ledger row carries its kind and share (owner 2026-10-26); a commission line says which kind it is', () => {
+    const base = { id: 'c2', assistant_id: 'a1', student_id: 's1', subscription_id: 'sub2', commission_type: 'percent', rate: 10, base_amount: 300, base_currency: 'SAR', amount: 15, currency: 'SAR', earned_at: 'e', status: 'earned', voided_at: null, void_reason: null, void_auto: null, statement_id: null, assistant: null, student: null };
+    expect(toCommissionView({ ...base, kind: 'renewal', share_percent: 50 } as unknown as CommissionRow)).toMatchObject({ kind: 'renewal', share_percent: 50 });
+    expect(toCommissionView({ ...base, kind: 'odd', share_percent: 100 } as unknown as CommissionRow).kind).toBe('first');
+    expect(toStatementView(statementRow()).lines.find((l) => l.kind === 'commission')?.commission_kind).toBe('renewal');
   });
 });

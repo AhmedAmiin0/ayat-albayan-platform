@@ -15,8 +15,8 @@ const statement = (over: Partial<AssistantStatementView>): AssistantStatementVie
   status: 'paid',
   totals: { SAR: { salary: 2000, commissions: 300, adjustments: 0, total: 2300 } },
   lines: [
-    { kind: 'salary', amount: 2000, currency: 'SAR', student: null, reason: null },
-    { kind: 'commission', amount: 300, currency: 'SAR', student: { code: 'AB-1001', name: 'يوسف' }, reason: null },
+    { kind: 'salary', amount: 2000, currency: 'SAR', student: null, reason: null, commission_kind: null },
+    { kind: 'commission', amount: 300, currency: 'SAR', student: { code: 'AB-1001', name: 'يوسف' }, reason: null, commission_kind: 'first' },
   ],
   approved_at: '2026-10-01T09:00:00.000Z',
   paid_at: '2026-10-02T09:00:00.000Z',
@@ -31,6 +31,7 @@ const EARNINGS: Earnings = {
     assistant_id: 'a1',
     commission: { type: 'percent', value: 10, currency: null, starts_on: '2026-09-01' },
     salary: { amount: 2000, currency: 'SAR', starts_on: '2026-09-01' },
+    renewal_share_percent: 50,
   },
   this_month: {
     SAR: { salary: 2000, commissions: 120, adjustments: 0, total: 2120 },
@@ -68,6 +69,7 @@ describe('MyEarnings «أرباحي»', () => {
         assistant_id: 'a1',
         commission: { type: 'fixed', value: 75, currency: 'USD', starts_on: '2026-09-01' },
         salary: { amount: 2000, currency: 'SAR', starts_on: '2026-09-01' },
+        renewal_share_percent: 50,
       },
     });
     const fixed = t.assistantPortal.earnings.commissionFixed.replace('{amount}', `75 ${t.pricing.currencies.USD}`);
@@ -103,7 +105,7 @@ describe('MyEarnings «أرباحي»', () => {
           status: 'draft',
           paid_at: null,
           approved_at: null,
-          lines: [{ kind: 'adjustment', amount: -300, currency: 'SAR', student: null, reason: 'إلغاء دفعة' }],
+          lines: [{ kind: 'adjustment', amount: -300, currency: 'SAR', student: null, reason: 'إلغاء دفعة', commission_kind: null }],
           totals: { SAR: { salary: 0, commissions: 0, adjustments: -300, total: -300 } },
         }),
       ],

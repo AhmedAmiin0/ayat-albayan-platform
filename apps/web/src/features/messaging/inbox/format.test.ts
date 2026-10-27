@@ -38,6 +38,10 @@ describe('inbox display text (docs/07 §9)', () => {
     expect(previewText(thread({ last_body: null }))).toBe(t.inbox.media.other);
   });
 
+  it('preview: a last message whose content never arrived (Meta’s 131060) is «رسالة لم يصل محتواها»', () => {
+    expect(previewText(thread({ last_body: null, last_unsupported: true }))).toBe(t.inbox.previewUnsupported);
+  });
+
   it('unread counts use the Arabic forms', () => {
     expect(unreadLabel(1)).toBe(t.inbox.unread.one);
     expect(unreadLabel(2)).toBe(t.inbox.unread.two);

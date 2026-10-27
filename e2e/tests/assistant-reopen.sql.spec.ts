@@ -31,7 +31,7 @@ test.describe('assistant statements: reopen (20261006000273)', () => {
     });
   });
 
-  test('a reversal still waiting is dropped on reopen: the commission earned again on another package is paid once, not twice taken', async () => {
+  test('a reversal still waiting is dropped on reopen: the voided first stays out, the second package earns its renewal share once', async () => {
     await rolledBack(async (tx) => {
       const a = await assistant(tx, 'clean', TERMS);
       const { student: s, sub } = await brought(tx, { by: a, phone: '+966500000332', price: 200, broughtAt: iso(-40) });
@@ -40,11 +40,12 @@ test.describe('assistant statements: reopen (20261006000273)', () => {
       const { statement_id: s1 } = await generate(tx, a, last);
       await approve(tx, s1);
       await pay(tx, sub, { amount: 100, kind: 'refund' }); // voided: the reversal (-20) waits for a statement
-      await pay(tx, await subscription(tx, s, { price: 300 }), 300); // the first package now paid in full is the second one: 30
+      // The second package is a renewal by order (owner 2026-10-26): 10 % x 50 % of 300 = 15, never the first's 30.
+      await pay(tx, await subscription(tx, s, { price: 300 }), 300);
       await tx`select public.reopen_assistant_statement(${s1}, null)`; // takes its own line and the waiting reversal away
       expect((await tx`select 1 from public.assistant_adjustments where assistant_id = ${a}`).length).toBe(0);
       expect((await generate(tx, a, last)).totals).toEqual({}); // last month holds nothing now: it was earned this month
-      expect((await generate(tx, a, await openMonth(tx, a))).totals).toEqual({ SAR: { salary: 0, commissions: 30, adjustments: 0, total: 30 } });
+      expect((await generate(tx, a, await openMonth(tx, a))).totals).toEqual({ SAR: { salary: 0, commissions: 15, adjustments: 0, total: 15 } });
     });
   });
 });

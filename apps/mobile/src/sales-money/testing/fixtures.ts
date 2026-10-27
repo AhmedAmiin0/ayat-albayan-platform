@@ -7,6 +7,7 @@ export const earnings = (over: Partial<MyEarnings> = {}): MyEarnings => ({
     assistant_id: 'a1',
     commission: { type: 'percent', value: 10, currency: null, starts_on: '2026-10-01' },
     salary: { amount: 3000, currency: 'EGP', starts_on: '2026-10-01' },
+    renewal_share_percent: 50,
   },
   this_month: {
     EGP: { salary: 3000, commissions: 0, adjustments: 0, total: 3000 },
@@ -21,9 +22,9 @@ export const earnings = (over: Partial<MyEarnings> = {}): MyEarnings => ({
       status: 'paid',
       totals: { EGP: { salary: 3000, commissions: 40, adjustments: -10, total: 3030 } },
       lines: [
-        { kind: 'salary', amount: 3000, currency: 'EGP', student: null, reason: null },
-        { kind: 'commission', amount: 40, currency: 'EGP', student: { code: 'AB-1001', name: 'سهيلة' }, reason: null },
-        { kind: 'adjustment', amount: -10, currency: 'EGP', student: null, reason: 'تصحيح' },
+        { kind: 'salary', amount: 3000, currency: 'EGP', student: null, reason: null, commission_kind: null },
+        { kind: 'commission', amount: 40, currency: 'EGP', student: { code: 'AB-1001', name: 'سهيلة' }, reason: null, commission_kind: 'first' },
+        { kind: 'adjustment', amount: -10, currency: 'EGP', student: null, reason: 'تصحيح', commission_kind: null },
       ],
       approved_at: '2026-10-01T09:00:00Z',
       paid_at: '2026-10-03T09:00:00Z',
@@ -42,6 +43,7 @@ export const myStudent = (over: Partial<MyStudentRow> = {}): MyStudentRow => ({
   brought_at: '2026-10-02T10:00:00Z',
   first_subscription_paid: true,
   commission: { amount: 50, currency: 'SAR', status: 'earned', earned_at: '2026-10-03T10:00:00Z' },
+  renewal_commissions: 0,
   ...over,
 });
 

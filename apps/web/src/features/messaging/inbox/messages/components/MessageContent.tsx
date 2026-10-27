@@ -6,6 +6,7 @@ import { templateLine } from '../../format';
 import { MessageMedia } from './MessageMedia';
 import { LinkedBody } from './LinkedBody';
 import { QuoteBlock } from './QuoteBlock';
+import { ResendAsk } from '../resend/ResendAsk';
 import { RatingChip } from '../../sales/RatingChip';
 
 // The inside of a MessageBubble: what was said, and who sent ours.
@@ -36,12 +37,23 @@ export function SenderLine({ message: m }: { message: MessageView }) {
 }
 
 /**
- * No text, file or template: Meta's `unsupported` asks the sender again («غير متاحة» for 131060);
+ * No text, file or template: Meta's `unsupported` asks the sender again (131060, often a new number's
+ * first message, says why and that it shows in the WhatsApp Business app; ResendAsk offers to ask);
  * anything else (a location, a contact card…) did arrive and only cannot be shown here.
  */
 export function emptyText(m: Pick<MessageView, 'interactive_payload'>): string {
   if (isUnavailableMessage(m.interactive_payload)) return t.inbox.unavailable;
   return isUnsupportedMessage(m.interactive_payload) ? t.inbox.unsupported : t.inbox.media.other;
+}
+
+/** Why there is nothing to show, and for Meta's 131060 «اطلب إعادة الإرسال» where she may write. */
+function EmptyLine({ message: m }: { message: MessageView }) {
+  return (
+    <>
+      <p className="text-xs text-ink-3">{emptyText(m)}</p>
+      <ResendAsk message={m} />
+    </>
+  );
 }
 
 /** What was said: «مُعاد توجيهها», the quote it answers, the template's name, the media, the text, what a quick reply did. */
@@ -54,7 +66,7 @@ export function Content({ message: m }: { message: MessageView }) {
       {m.template_key && <p className="mb-1 text-2xs font-semibold text-ink-3">{templateLine(m.template_key)}</p>}
       {(m.media_mime || m.media_url) && <MessageMedia message={m} />}
       {m.body && <LinkedBody text={m.body} />}
-      {empty && <p className="text-xs text-ink-3">{emptyText(m)}</p>}
+      {empty && <EmptyLine message={m} />}
       <ReplyLine message={m} />
       <RatingChip message={m} />
     </>

@@ -1,12 +1,12 @@
 import type { Json, Tables } from '@ab/db';
-import type { AssistantStatementLineView, AssistantStatementView, CurrencyTotals, StatementLineKind } from '@ab/shared';
+import { isCommissionKind, type AssistantStatementLineView, type AssistantStatementView, type CurrencyTotals, type StatementLineKind } from '@ab/shared';
 import { reasonText } from '../reasons';
 
 type LineRow = {
   kind: string;
   amount: number;
   currency: string;
-  commission: { student: { code: string | null; name: string } | null } | null;
+  commission: { kind: string; student: { code: string | null; name: string } | null } | null;
   adjustment: { reason: string } | null;
 };
 export type StatementRow = Tables<'assistant_statements'> & {
@@ -16,7 +16,7 @@ export type StatementRow = Tables<'assistant_statements'> & {
 
 /** assistant_statements.lines + the names a statement shows, in one read. */
 export const STATEMENT_SELECT =
-  '*, assistant:profiles!assistant_id(id, full_name), lines:assistant_statement_lines(kind, amount, currency, commission:assistant_commissions(student:students(code, name)), adjustment:assistant_adjustments(reason))';
+  '*, assistant:profiles!assistant_id(id, full_name), lines:assistant_statement_lines(kind, amount, currency, commission:assistant_commissions(kind, student:students(code, name)), adjustment:assistant_adjustments(reason))';
 
 const RANK: Record<StatementLineKind, number> = { salary: 0, commission: 1, adjustment: 2 };
 const isKind = (k: string): k is StatementLineKind => k === 'salary' || k === 'commission' || k === 'adjustment';
@@ -42,6 +42,7 @@ function toLine(l: LineRow & { kind: StatementLineKind }): AssistantStatementLin
     currency: l.currency,
     student: student ? { code: student.code ?? '', name: student.name } : null,
     reason: reasonText(l.adjustment?.reason ?? null),
+    commission_kind: l.commission && isCommissionKind(l.commission.kind) ? l.commission.kind : null,
   };
 }
 

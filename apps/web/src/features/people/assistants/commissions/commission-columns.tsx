@@ -16,7 +16,10 @@ const L = t.assistants.ledger;
 
 type Handlers = { canWrite: boolean; onVoid: (c: AssistantCommissionView) => void };
 
-/** Commission ledger: who earned what on which student's first paid subscription; void with a reason. */
+/** «أول اشتراك» (the full commission) or «تجديد (n%)» (its share, owner 2026-10-26). */
+const kindText = (c: AssistantCommissionView): string => (c.kind === 'renewal' ? L.kind.renewal.replace('{n}', String(c.share_percent)) : L.kind.first);
+
+/** Commission ledger: who earned what on which student's subscription (first or renewal); void with a reason. */
 export function commissionColumns({ canWrite, onVoid }: Handlers) {
   return col.columns([
     col.accessor((c) => c.student.name, {
@@ -35,6 +38,7 @@ export function commissionColumns({ canWrite, onVoid }: Handlers) {
       },
       meta: { className: 'max-sm:order-1 max-sm:flex-[1_1_60%]', filter: { kind: 'text' } },
     }),
+    col.accessor(kindText, { id: 'kind', header: () => L.kindLabel, cell: (c) => c.getValue(), meta: { className: 'max-sm:order-3' } }),
     col.accessor((c) => c.assistant.name, { id: 'assistant', header: () => L.assistant, cell: (c) => c.getValue(), meta: { className: 'max-sm:order-3' } }),
     col.accessor('base_amount', {
       header: () => L.base,

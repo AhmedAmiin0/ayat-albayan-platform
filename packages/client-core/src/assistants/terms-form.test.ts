@@ -7,6 +7,7 @@ const SAVED: AssistantTermsView = {
   assistant_id: 'a1',
   commission: { type: 'percent', value: 10, currency: null, starts_on: '2026-10-01' },
   salary: { amount: 3000, currency: 'EGP', starts_on: '2026-10-01' },
+  renewal_share_percent: 50,
 };
 const blank = (patch: Partial<TermsForm> = {}): TermsForm => ({ ...termsFormOf(null, TODAY), ...patch });
 
