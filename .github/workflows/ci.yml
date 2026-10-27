@@ -28,6 +28,9 @@ jobs:
   # PRs diff against the base branch. Pushes diff against the previous commit, but only when ci passed on
   # that commit (so a run cancelled by this push never lets its changes through untested).
   # FAIL SAFE: a manual run, a new branch, an unknown previous commit, an API or git error = everything runs.
+  # On a PR, step «e2e specs» also picks the e2e specs the change can reach (e2e/areas.json, through the
+  # import graph: tools/scripts/ci-checks/e2e-areas/select.mjs) and how many shards they need; anything it
+  # does not understand, and every push, = the full suite on 4 shards, as before.
   changes:
     runs-on: ubuntu-latest
     timeout-minutes: 5
@@ -37,6 +40,8 @@ jobs:
     outputs:
       e2e: ${{ steps.diff.outputs.e2e }}
       code: ${{ steps.diff.outputs.code }}
+      e2e_matrix: ${{ steps.e2e.outputs.e2e_matrix }}
+      e2e_specs: ${{ steps.e2e.outputs.e2e_specs }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -69,6 +74,23 @@ jobs:
             || grep -qE '^tools/scripts/(ci-checks/e2e-shards|env/write-local-env)\.mjs$' <<< "$files"; then e2e=true; fi
           if grep -qvE '^docs/|\.md$' <<< "$files" || grep -qx 'docs/09-deployment.md' <<< "$files"; then code=true; fi
           printf 'e2e=%s\ncode=%s\n' "$e2e" "$code" | tee -a "$GITHUB_OUTPUT"
+      - if: github.event_name == 'pull_request' && steps.diff.outputs.e2e == 'true'
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+      # PRs only. Any failure leaves the selection out: plan.mjs (or the e2e job's fallback) = full suite.
+      - name: e2e specs
+        id: e2e
+        if: github.event_name == 'pull_request' && steps.diff.outputs.e2e == 'true'
+        env:
+          BASE_REF: ${{ github.base_ref }}
+        run: |
+          sel="$RUNNER_TEMP/e2e-selection.json"
+          { base=$(git merge-base "origin/$BASE_REF" HEAD) \
+            && git diff --name-only "$base" HEAD | node tools/scripts/ci-checks/e2e-areas/select.mjs "$base"; } > "$sel" \
+            || echo '{"full":true,"reason":"selection step failed"}' > "$sel"
+          jq -r '"::notice::e2e: " + (if .full then "full suite (" + .reason + ")" else .reason end)' "$sel" || true
+          node tools/scripts/ci-checks/e2e-areas/plan.mjs "$sel" | tee -a "$GITHUB_OUTPUT" || true
 
   # Lint, typecheck and the unit tests on parallel machines. The tests used to be one 13-minute job where
   # web (13 min), api (9.5 min) and mobile (5 min) fought over 4 CPUs; each now has its own machine(s),
@@ -136,7 +158,8 @@ jobs:
 
   # Code-health gates (docs/27 Wave F), against baselines in refactor/guards/ that only shrink: jscpd (no
   # more clones, duplicated lines or cross-app clones) and knip (no new unused file, export, type or
-  # dependency). Module boundaries are an eslint error, checked by the lint job. No secrets.
+  # dependency). Module boundaries are an eslint error, checked by the lint job. The e2e area guard: every
+  # e2e spec is in e2e/areas.json or its developOnly list (none can silently never run on a PR). No secrets.
   guards:
     needs: changes
     if: needs.changes.outputs.code == 'true'
@@ -152,6 +175,7 @@ jobs:
       - run: pnpm i --frozen-lockfile
       - run: pnpm guard:dup
       - run: pnpm guard:knip
+      - run: node tools/scripts/ci-checks/e2e-areas/guard.mjs
 
   # The required aggregate for branch protection: every verify job and the guards passed, or a docs-only change
   # skipped them all (changes said code=false); on a PR the refactor job (folder cap, pure moves) passed too.
@@ -178,6 +202,8 @@ jobs:
   # The e2e suite shares one database per run and runs with one worker, so it is split across machines
   # instead: each shard has its own local Supabase, API and web server (docs/04 §9). A failing shard does
   # not stop the others (fail-fast off), so one run shows every red spec.
+  # A PR runs only the specs its change can reach (job «changes», e2e/areas.json) on 1-4 shards; pushes to
+  # develop/main run every spec on both projects, the safety net for anything a PR selection missed.
   # Shards 1-4 are Playwright's own --shard, sized on measured durations (step «Shard sizes»; refresh
   # e2e/shard-durations.json from the «e2e-durations-*» artifacts of a push run). «single line» is the production
   # configuration (docs/12 §13.12): ONE WhatsApp line, no WA_CHAT_* keys (playwright.config.ts reads E2E_LINES);
@@ -190,19 +216,20 @@ jobs:
     if: needs.changes.outputs.e2e == 'true' && vars.RUN_E2E != 'false'
     runs-on: ubuntu-latest
     timeout-minutes: 45
+    # The matrix comes from «changes» (plan.mjs): on a PR only the shards its selected specs need, plus
+    # «single line» (the smoke set) always; the fallback below is the full matrix (pushes, any failure).
     strategy:
       fail-fast: false
-      matrix:
-        include:
-          - { name: e2e (1), shard: '1' }
-          - { name: e2e (2), shard: '2' }
-          - { name: e2e (3), shard: '3' }
-          - { name: e2e (4), shard: '4' }
-          - { name: e2e (single line), shard: single }
+      matrix: ${{ fromJSON(needs.changes.outputs.e2e_matrix || '{"include":[{"name":"e2e (1)","shard":"1","total":4},{"name":"e2e (2)","shard":"2","total":4},{"name":"e2e (3)","shard":"3","total":4},{"name":"e2e (4)","shard":"4","total":4},{"name":"e2e (single line)","shard":"single","total":4}]}') }}
     env:
-      SHARDS: 4
+      SHARDS: ${{ matrix.total }}
+      # The PR's selected spec files (empty = all of them).
+      SPECS: ${{ needs.changes.outputs.e2e_specs }}
       # Only what the e2e suite uses: Postgres, auth, PostgREST, storage and the gateway.
       SUPABASE_EXCLUDE: studio,imgproxy,mailpit,edge-runtime,logflare,vector,realtime,postgres-meta,supavisor
+      # The CLI pulls from public.ecr.aws by default, which answered every pull with «toomanyrequests: Data
+      # limit exceeded» and two retries (4 s + 8 s) before the image came (2026-10-27): same images, Docker Hub.
+      SUPABASE_INTERNAL_IMAGE_REGISTRY: docker.io
     steps:
       # Supabase's host ports (54321 API, 54322 db, … 54329) sit inside Linux's ephemeral range: an outgoing
       # socket took 54322 first ("address already in use"), twice on 2026-10-25 even with the ports reserved
@@ -294,7 +321,7 @@ jobs:
           PROJECT: ${{ github.event_name == 'pull_request' && '--project=desktop' || '' }}
           E2E_GROUPS_FILE: ${{ runner.temp }}/groups.json
         run: |
-          if pnpm --filter e2e exec playwright test --list --reporter=./support/durations-reporter.ts $PROJECT >/dev/null \
+          if pnpm --filter e2e exec playwright test --list --reporter=./support/durations-reporter.ts $PROJECT $SPECS >/dev/null \
             && w=$(node tools/scripts/ci-checks/e2e-shards.mjs weights "$SHARDS" "$RUNNER_TEMP/groups.json") \
             && [[ "$w" =~ ^[0-9]+(:[0-9]+)*$ ]]; then
             echo "weights=$w" >> "$GITHUB_OUTPUT"
@@ -319,7 +346,7 @@ jobs:
               tests/journey-5-availability-wizard.spec.ts tests/journey-6-duplicate-student.spec.ts \
               tests/inbox-template-status.spec.ts tests/settings-switches.spec.ts
           else
-            pnpm turbo e2e --filter=e2e --cache-dir=.turbo/cache -- --shard="$SHARD/$SHARDS" $PROJECT
+            pnpm turbo e2e --filter=e2e --cache-dir=.turbo/cache -- --shard="$SHARD/$SHARDS" $PROJECT $SPECS
           fi
       - uses: actions/upload-artifact@v4
         if: failure()

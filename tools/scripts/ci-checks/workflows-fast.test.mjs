@@ -7,7 +7,10 @@ import { parse } from 'yaml';
 
 const load = (f) =>
   parse(
-    readFileSync(fileURLToPath(new URL(`../../../.github/workflows/${f}`, import.meta.url)), 'utf8'),
+    readFileSync(
+      fileURLToPath(new URL(`../../../.github/workflows/${f}`, import.meta.url)),
+      'utf8',
+    ),
   );
 const deploy = load('deploy-staging.yml');
 const ci = load('ci.yml');
@@ -43,13 +46,23 @@ test('ci: check covers changes, every verify job, the guards and the refactor jo
   assert.deepEqual(ci.jobs.check.needs, ['changes', 'verify', 'guards', 'refactor']);
   const run = ci.jobs.check.steps.map((s) => s.run).join('\n');
   assert.match(run, /test "\$CHANGES" = success/);
-  assert.match(run, /\[ "\$CODE" = false \] && \[ "\$VERIFY" = skipped \] && \[ "\$GUARDS" = skipped \]/);
+  assert.match(
+    run,
+    /\[ "\$CODE" = false \] && \[ "\$VERIFY" = skipped \] && \[ "\$GUARDS" = skipped \]/,
+  );
   assert.match(run, /test "\$GUARDS" = success/);
-  assert.match(run, /test "\$REFACTOR" = success \|\| \{ \[ "\$GITHUB_EVENT_NAME" != pull_request \]/);
+  assert.match(
+    run,
+    /test "\$REFACTOR" = success \|\| \{ \[ "\$GITHUB_EVENT_NAME" != pull_request \]/,
+  );
 });
 
 test('ci: Wave F guards fail the build (folder cap strict, jscpd and knip gates)', () => {
-  assert.ok(ci.jobs.refactor.steps.some((s) => s.run === 'node tools/scripts/ci-checks/folder-cap.mjs --strict'));
+  assert.ok(
+    ci.jobs.refactor.steps.some(
+      (s) => s.run === 'node tools/scripts/ci-checks/folder-cap.mjs --strict',
+    ),
+  );
   const runs = ci.jobs.guards.steps.map((s) => s.run);
   assert.ok(runs.includes('pnpm guard:dup') && runs.includes('pnpm guard:knip'));
   assert.equal(ci.jobs.guards.if, "needs.changes.outputs.code == 'true'");
@@ -57,8 +70,12 @@ test('ci: Wave F guards fail the build (folder cap strict, jscpd and knip gates)
 
 test('ci: e2e keeps the RUN_E2E switch and one database per shard', () => {
   assert.match(ci.jobs.e2e.if, /vars\.RUN_E2E != 'false'/);
-  const shards = ci.jobs.e2e.strategy.matrix.include.map((m) => m.shard);
-  assert.deepEqual(shards, ['1', '2', '3', '4', 'single']);
-  assert.equal(String(ci.jobs.e2e.env.SHARDS), String(shards.length - 1));
+  // The matrix comes from «changes»; its fallback (pushes, any failure) is the full one (e2e-areas/workflow.test.mjs).
+  const fallback = JSON.parse(ci.jobs.e2e.strategy.matrix.match(/\|\| '(\{.*\})'\) \}\}$/)[1]);
+  assert.deepEqual(
+    fallback.include.map((m) => m.shard),
+    ['1', '2', '3', '4', 'single'],
+  );
+  assert.equal(ci.jobs.e2e.env.SHARDS, '${{ matrix.total }}');
   assert.ok(!('pull_request_target' in ci.on));
 });
