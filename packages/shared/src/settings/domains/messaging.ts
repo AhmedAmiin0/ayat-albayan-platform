@@ -63,4 +63,13 @@ export const MESSAGING_SETTINGS = {
     type: 'string', default: '', minLength: 0, maxLength: 100,
     labelKey: 'settings.crmMediaHost', hintKey: 'settings.hints.crmMediaHost',
   },
+  /**
+   * Owner 2026-10-27: while true (and crm_media_host is set), the API copies EVERY imported old-CRM
+   * file into wa-media in small batches (CrmMediaCopyJob), not only those an admin opens; it turns
+   * itself back off when none is left. Then the old CRM's chat-media bucket may be made private.
+   */
+  crm_media_copy_all: {
+    module: 'messaging', group: 'messaging', confirm: 'simple',
+    type: 'bool', default: false, labelKey: 'settings.crmMediaCopyAll', hintKey: 'settings.hints.crmMediaCopyAll',
+  },
 } as const satisfies Record<string, SettingDef>;
