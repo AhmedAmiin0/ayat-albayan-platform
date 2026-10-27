@@ -2516,7 +2516,7 @@
       "captionPlaceholder": "Add a caption (optional)",
       "sendFile": "Send"
     },
-    "sessionClosed": "More than 24 hours have passed since their last message — you need to send a template",
+    "sessionClosed": "24 hours have passed since their last message, so send a template.",
     "sessionOpenUntil": "You can reply with a regular message until {time}",
     "timesIn": "Times in {city} time",
     "messagingOff": "Sending is paused right now — messages wait in the queue until it's turned on",
