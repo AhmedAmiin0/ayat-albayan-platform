@@ -8,6 +8,7 @@ describe('textDir', () => {
     expect(textDir('ܫܠܡܐ')).toBe('rtl');
     expect(textDir('ދިވެހި')).toBe('rtl');
     expect(textDir('ﻻ')).toBe('rtl'); // a presentation form
+    expect(textDir('𞤀𞤣𞤤𞤢𞤥')).toBe('rtl'); // Adlam, above U+FFFF
   });
 
   it('Latin and other letters are ltr', () => {
@@ -18,6 +19,11 @@ describe('textDir', () => {
   it('the first strong letter decides, after digits, spaces and punctuation', () => {
     expect(textDir('123 - مرحبا Hello')).toBe('rtl');
     expect(textDir('  (12) Hello مرحبا')).toBe('ltr');
+  });
+
+  it('RLM and LRM are strong marks', () => {
+    expect(textDir('\u200F123 Hello')).toBe('rtl');
+    expect(textDir('\u200E123 مرحبا')).toBe('ltr');
   });
 
   it('digits only, punctuation only or empty: no direction', () => {
