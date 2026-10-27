@@ -28,7 +28,7 @@ describe('joinHint', () => {
 
   it('follows the window from the settings (join_opens_before_min / join_closes_after_min)', () => {
     const win = { opensBeforeMin: 30, closesAfterMin: 10 };
-    expect(joinHint(LESSON, at('2026-10-03T15:30:00.000Z'), win).canJoin).toBe(true);
-    expect(joinHint(LESSON, at('2026-10-03T19:00:00.000Z'), win).canJoin).toBe(false);
+    expect(joinHint(LESSON, at('2026-10-03T15:30:00.000Z'), { win }).canJoin).toBe(true);
+    expect(joinHint(LESSON, at('2026-10-03T19:00:00.000Z'), { win }).canJoin).toBe(false);
   });
 });

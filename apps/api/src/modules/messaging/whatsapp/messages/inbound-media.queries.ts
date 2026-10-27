@@ -28,8 +28,8 @@ const COLUMNS = 'id, phone_e164, direction, media_id, media_mime, media_path, bo
 /** The filters `cached` adds (a select or an update on messages). */
 type Filterable<Q> = { eq(column: 'direction', value: string): Q; not(column: string, op: string, value: unknown): Q };
 
-/** A cached inbound voice note or video, for the 30-day purge (WaMediaRetentionJob). */
-export type CachedMedia = { id: string; media_path: string; media_mime: string | null };
+/** A cached inbound voice note or video, for the 30-day purge (WaMediaRetentionJob); always a Meta media id. */
+export type CachedMedia = { id: string; media_path: string; media_mime: string | null; media_id: string | null };
 /**
  * PostgREST `or`: exactly a PLAYABLE_MIMES base type, bare or with parameters («; codecs=opus»). Not a
  * bare prefix: `audio/mp4*` also matched audio/mp4a-latm, which the job skips and never clears, so a
@@ -73,17 +73,19 @@ export class InboundMediaQueries {
    * Cached inbound audio / video older than `before`, oldest first (owner 2026-10-19 #2: photos
    * and PDFs are never purged). Uses messages_media_cached_idx (migration 500). `echoes`: the same
    * for cached echoes (outbound with Meta's media id, sent from the WhatsApp Business app), never a
-   * file staff sent (out/…); few rows, so no index of their own.
+   * file staff sent (out/…); few rows, so no index of their own. Only rows with Meta's media id: an
+   * imported old-CRM file (no media id, cached from the CRM link) is our ONLY copy once the CRM's
+   * storage is private, so it is never purged (owner 2026-10-27, CrmMediaCopyJob).
    */
   async cachedBefore(input: { before: string; limit: number; echoes?: boolean }): Promise<CachedMedia[]> {
-    const { data, error } = await this.cached(this.db.from('messages').select('id, media_path, media_mime'), input.echoes)
+    const { data, error } = await this.cached(this.db.from('messages').select('id, media_path, media_mime, media_id'), input.echoes)
       .not('media_path', 'is', null)
       .or(PLAYABLE_FILTER)
       .lt('created_at', input.before)
       .order('created_at', { ascending: true })
       .limit(input.limit);
     if (error) throw new Error(`cached media read failed: ${error.message}`);
-    return data.flatMap((r) => (r.media_path ? [{ id: r.id, media_path: r.media_path, media_mime: r.media_mime }] : []));
+    return data.flatMap((r) => (r.media_path ? [{ id: r.id, media_path: r.media_path, media_mime: r.media_mime, media_id: r.media_id }] : []));
   }
 
   /** Forget the purged copies (inbound, or cached echoes: a file staff sent keeps its path, messages_content_check). */
@@ -93,9 +95,9 @@ export class InboundMediaQueries {
     if (error) throw new Error(`message media_path clear failed: ${error.message}`);
   }
 
-  /** Inbound rows, or echoes: outbound with a media id and a cached copy that is not a sent file. */
+  /** Inbound rows with Meta's media id (never an old-CRM copy), or echoes: outbound with a media id and a cached copy that is not a sent file. */
   private cached<Q extends Filterable<Q>>(q: Q, echoes = false): Q {
-    if (!echoes) return q.eq('direction', 'inbound');
+    if (!echoes) return q.eq('direction', 'inbound').not('media_id', 'is', null);
     return q.eq('direction', 'outbound').not('media_id', 'is', null).not('media_path', 'like', 'out/%');
   }
 }

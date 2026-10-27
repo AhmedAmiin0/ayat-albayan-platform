@@ -11,6 +11,7 @@ import { formatAge, formatDateTime, initialOf } from '../format';
 import { LeadAssignSelect } from './LeadAssignSelect';
 import { ReclassifyConfirm } from './ReclassifyConfirm';
 import type { LeadRow } from '../types';
+import { useClock } from '@/lib/clock';
 
 /** Shared with the list head so chips line up across rows (docs/07 §9). */
 export const leadGridClass = 'sm:grid-cols-[38px_minmax(0,1fr)_156px_168px_120px]';
@@ -32,6 +33,7 @@ export interface LeadListItemProps {
  * اقترح ميعاد / فتح الحلقة) arrive with Phase 4 messaging; تحويل لطالب with R-LEAD-06.
  */
 export function LeadListItem({ lead, confirming, busy, onAsk, onKeep, onMove }: LeadListItemProps) {
+  const clock = useClock();
   const ask = useRef<HTMLButtonElement>(null);
   const who = lead.name ?? lead.phone_e164;
 
@@ -55,7 +57,7 @@ export function LeadListItem({ lead, confirming, busy, onAsk, onKeep, onMove }: 
         <span className="text-2xs text-ink-3">{t.enums.leadSource[lead.source]}</span>
         <time
           dateTime={lead.created_at}
-          title={formatDateTime(lead.created_at)}
+          title={formatDateTime(lead.created_at, clock)}
           className="ms-auto whitespace-nowrap text-2xs text-ink-3 tabular-nums"
         >
           {formatAge(lead.created_at)}

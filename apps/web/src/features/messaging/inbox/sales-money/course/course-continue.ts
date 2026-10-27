@@ -5,6 +5,7 @@ import type { BookHint } from '@/features/teaching/booking/hint';
 import { dateLabel } from '@/features/teaching/schedule/tz';
 import { t } from '@/lib/i18n/i18n';
 import { courseDraft } from './course-draft';
+import type { Clock } from '@/lib/clock';
 
 // «تابِع بنفس الأيام» (owner 2026-10-18): a renewal's course continues on the previous course's days
 // and times, with its teacher, from the first day the new one may start (courseOpensOn, never before
@@ -35,17 +36,17 @@ export function continuePlan(view: SalesCourseView, now: string): ContinuePlan |
 }
 
 /** «السبت الساعة 17:00، الثلاثاء الساعة 19:30»: the previous course's days. */
-const previousDays = (view: SalesCourseView): string =>
+const previousDays = (view: SalesCourseView, clock: Clock): string =>
   inWeekOrder(view.previous?.days ?? [])
-    .map((d) => dayAtText({ weekday: d.weekday, time: d.startTimeLocal }, view.student.tz))
+    .map((d) => dayAtText({ weekday: d.weekday, time: d.startTimeLocal }, clock, view.student.tz))
     .join(t.common.listSeparator);
 
 /** «حلقات الباقة السابقة: السبت الساعة 17:00، الثلاثاء الساعة 19:30. تبدأ … من 3 نوفمبر 2026.» */
-export function continueText(view: SalesCourseView, now?: string): string {
+export function continueText(view: SalesCourseView, clock: Clock, now?: string): string {
   const from = courseOpensOn(view, now);
-  return t.booking.courseChange.continueHint.replace('{days}', previousDays(view)).replace('{date}', from ? dateLabel(from) : '');
+  return t.booking.courseChange.continueHint.replace('{days}', previousDays(view, clock)).replace('{date}', from ? dateLabel(from) : '');
 }
 
 /** Another day count than before (!continueFits): «حلقات الباقة السابقة: …. الباقة الجديدة 3 أيام في الأسبوع، فعدّل الأيام السابقة لتصبح 3 أيام». */
-export const adjustText = (view: SalesCourseView): string =>
-  counted(t.booking.courseChange.continueAdjust, view.perWeek ?? 0).replace('{days}', previousDays(view));
+export const adjustText = (view: SalesCourseView, clock: Clock): string =>
+  counted(t.booking.courseChange.continueAdjust, view.perWeek ?? 0).replace('{days}', previousDays(view, clock));

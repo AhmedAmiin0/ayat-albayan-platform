@@ -1,5 +1,6 @@
 import { ar, expect, test } from '../support/fixtures';
 import { dropLogins, expectSignedIn, fillIdentity, openCreateDialog, profileOf, signInAs, stamp, takeIssued } from '../support/users-control';
+import { AR_LOCALE } from '../support/locale';
 
 // «المستخدمون»: an invite link (credential mode «link») opens /set-password with a recovery
 // session, the new user types a password there and signs in with it. The link is the one the API
@@ -27,7 +28,7 @@ test.describe('users control: invite link', () => {
     expect(link).toContain('/auth/v1/verify');
     expect((await profileOf(INVITED.email))[0]).toMatchObject({ role: 'assistant', full_name: INVITED.name });
 
-    const ctx = await browser.newContext({ locale: 'ar' });
+    const ctx = await browser.newContext({ locale: AR_LOCALE });
     const invited = await ctx.newPage();
     await invited.goto(link);
     await expect(invited).toHaveURL(/\/set-password/);

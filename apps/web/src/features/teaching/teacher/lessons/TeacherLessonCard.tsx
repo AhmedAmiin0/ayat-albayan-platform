@@ -1,4 +1,4 @@
-import { clockTime, isOpenLesson, lessonStatusStyle, subscriptionStatusStyle, type LessonView } from '@ab/shared';
+import { clockOf, isOpenLesson, lessonStatusStyle, type LessonView, subscriptionStatusStyle } from '@ab/shared';
 import { buttonVariants } from '@/components/ui/form/button';
 import { StatusChip } from '@/components/ui/display/status-chip';
 import { tzCity } from '@/components/ui/form/time-zone-select';
@@ -11,6 +11,8 @@ import { t } from '@/lib/i18n/i18n';
 import { usePlatformClassroom } from '@/lib/settings/public-config';
 import { cn } from '@/lib/utils';
 import { TeacherProposal } from '../proposals/TeacherProposal';
+import { useClock } from '@/lib/clock';
+import { clockDir } from '@/lib/clock-text';
 
 export interface TeacherLessonCardProps {
   lesson: LessonView;
@@ -30,12 +32,13 @@ export interface TeacherLessonCardProps {
  * no fixed link: the classroom is the way in.
  */
 export function TeacherLessonCard({ lesson, tz, fallbackLink, onDone }: TeacherLessonCardProps) {
+  const clock = useClock();
   const style = lessonStatusStyle[lesson.status];
   const platform = usePlatformClassroom(lesson.platform_classroom);
   const link = lesson.meeting_link ?? fallbackLink;
   return (
     <article
-      aria-label={`${clockTime(new Date(lesson.starts_at), tz)} ${studentNames(lesson)}`}
+      aria-label={`${clockOf(new Date(lesson.starts_at), { tz, ...clock })} ${studentNames(lesson)}`}
       className={cn(
         'grid gap-3 border-b border-rule py-4',
         style.tone === 'act' && 'border-s-4 border-s-act ps-3',
@@ -44,13 +47,13 @@ export function TeacherLessonCard({ lesson, tz, fallbackLink, onDone }: TeacherL
       <div className="flex flex-wrap items-start gap-x-4 gap-y-2">
         <div className="grid gap-0.5">
           <p className="flex items-baseline gap-2">
-            <span dir="ltr" className="text-lg font-semibold tabular-nums">
-              {clockTime(new Date(lesson.starts_at), tz)}
+            <span dir={clockDir(clock)} className="text-lg font-semibold tabular-nums">
+              {clockOf(new Date(lesson.starts_at), { tz, ...clock })}
             </span>
             <span className="text-xs text-ink-3">{`${t.teacherDash.yourTime} (${tzCity(tz) ?? tz})`}</span>
           </p>
           <p className="text-body font-semibold">{studentNames(lesson)}</p>
-          {studentTimes(lesson, tz).map((line) => (
+          {studentTimes(lesson, tz, clock).map((line) => (
             <p key={line} className="text-xs text-ink-2">{line}</p>
           ))}
           {lesson.students.filter((s) => s.unpaid).map((s) => (

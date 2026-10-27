@@ -34,18 +34,23 @@ async function open(last = minutesAgo(5), teacher = false) {
 }
 const box = () => screen.getByLabelText(t.inbox.composer.placeholder);
 const button = () => screen.getByRole('button', { name: t.savedReplies.open });
+/** Open window (owner 2026-10-27, WhatsApp Business): «الردود السريعة» is a tile of the paperclip's sheet. */
+const openReplies = async () => {
+  await fireEvent.press(screen.getByRole('button', { name: t.inbox.composer.attach }));
+  await fireEvent.press(within(screen.getByTestId('attach-sheet')).getByRole('button', { name: t.savedReplies.open }));
+};
 
 beforeEach(() => {
   mockApiFetch.mockReset();
   mockApiSend.mockReset();
 });
 
-test('the button opens the sheet; a tap fills the box with the placeholders filled and sends nothing', async () => {
+test('the paperclip’s tile opens the sheet; a tap fills the box with the placeholders filled and sends nothing', async () => {
   await open();
-  await fireEvent.press(button());
+  await openReplies();
   await fireEvent.press(await screen.findByRole('button', { name: `${'ترحيب'}` }));
   expect(box().props.value).toBe('السلام عليكم، كيف نخدمك؟');
-  await fireEvent.press(button());
+  await openReplies();
   await fireEvent.press(await screen.findByRole('button', { name: new RegExp('^الأسعار') }));
   expect(box().props.value).toBe('السلام عليكم، كيف نخدمك؟\nأهلًا هدى سالم، معك سارة. تجد الأسعار مرفقة لـسلمى.');
   expect(mockApiSend).not.toHaveBeenCalled();
@@ -65,7 +70,7 @@ test('«/» at the start of the box opens the sheet and is replaced by the pick;
 
 test('tabs and search: «ردودي» shows her own; the search matches the text too', async () => {
   await open();
-  await fireEvent.press(button());
+  await openReplies();
   await screen.findByRole('button', { name: 'ترحيب' });
   expect(screen.queryByRole('button', { name: 'متابعة' })).toBeNull();
   await fireEvent.press(screen.getByRole('tab', { name: t.savedReplies.tabMine }));
@@ -81,12 +86,12 @@ test('the staged file: removable; «أرسل» sends the text, then stages and s
     path.endsWith('/stage') ? { path: 'out/s1/r/x.pdf', filename: 'الأسعار.pdf' } : message({ id: path.endsWith('/file') ? 'f1' : 't1', status: 'queued' }),
   );
   await open();
-  await fireEvent.press(button());
+  await openReplies();
   await fireEvent.press(await screen.findByRole('button', { name: /^الأسعار/ }));
   const chip = screen.getByTestId('saved-reply-chip');
   await fireEvent.press(within(chip).getByRole('button', { name: t.savedReplies.stagedRemove.replace('{name}', 'الأسعار.pdf') }));
   expect(screen.queryByTestId('saved-reply-chip')).toBeNull();
-  await fireEvent.press(button());
+  await openReplies();
   await fireEvent.press(await screen.findByRole('button', { name: /^الأسعار/ }));
   await fireEvent.press(screen.getByRole('button', { name: t.inbox.composer.send }));
   await waitFor(() => expect(mockApiSend).toHaveBeenCalledTimes(3));
@@ -106,7 +111,8 @@ test('outside the 24 h window the button is disabled and explains why', async ()
   expect(screen.queryByText(t.savedReplies.tabShared)).toBeNull();
 });
 
-test('a teacher never gets quick replies', async () => {
+test('a teacher never gets quick replies (no paperclip, no button)', async () => {
   await open(minutesAgo(5), true);
+  expect(screen.queryByRole('button', { name: t.inbox.composer.attach })).toBeNull();
   expect(screen.queryByRole('button', { name: t.savedReplies.open })).toBeNull();
 });

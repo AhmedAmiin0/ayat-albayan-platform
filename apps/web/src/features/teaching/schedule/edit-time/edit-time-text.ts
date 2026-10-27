@@ -1,9 +1,9 @@
-import { durationText, lessonWhenText, payoutLockOf } from '@ab/shared';
+import { durationText, lessonWhenAt, payoutLockOf } from '@ab/shared';
 import { monthLabel } from '@/features/finance/payouts/MonthSelect';
 import { ApiError } from '@/lib/http/api';
 import { t } from '@/lib/i18n/i18n';
-import { locale } from '@/lib/i18n/locale';
 import { RIYADH_TZ } from '../tz';
+import type { Clock } from '@/lib/clock';
 
 // «عدّل الوقت» wording (R-SCH-11): lengths with their unit, «قبل ← بعد» sides, the locked month. Pure.
 
@@ -14,8 +14,8 @@ const statuses: Record<string, string | undefined> = t.enums.payoutStatus;
 export const lengthText = (min: number): string => durationText(min, named, t.lessons.timeEdit.durationOther);
 
 /** «الثلاثاء 6 أكتوبر 16:00 (60 دقيقة)», Riyadh time. */
-export const whenWithLength = (iso: string, mins: number): string =>
-  `${lessonWhenText(new Date(iso), RIYADH_TZ, locale)} (${lengthText(mins)})`;
+export const whenWithLength = (iso: string, mins: number, clock: Clock): string =>
+  `${lessonWhenAt(new Date(iso), { tz: RIYADH_TZ, ...clock })} (${lengthText(mins)})`;
 
 /** The month and status a 409 `payout_locked` names, else null. */
 export const payoutLock = (error: unknown) => (error instanceof ApiError ? payoutLockOf(error.body) : null);
@@ -28,5 +28,5 @@ export function lockedText(lock: { month: string; status: string }): string {
 }
 
 /** «كان: الثلاثاء 6 أكتوبر 16:00», Riyadh time, from the last edit's old start. */
-export const wasText = (info: { was: { starts_at: string } }): string =>
-  t.lessons.timeEdit.was.replace('{when}', lessonWhenText(new Date(info.was.starts_at), RIYADH_TZ, locale));
+export const wasText = (info: { was: { starts_at: string } }, clock: Clock): string =>
+  t.lessons.timeEdit.was.replace('{when}', lessonWhenAt(new Date(info.was.starts_at), { tz: RIYADH_TZ, ...clock }));

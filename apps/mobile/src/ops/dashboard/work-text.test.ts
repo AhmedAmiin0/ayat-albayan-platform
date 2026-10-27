@@ -1,4 +1,5 @@
 import { t } from '@/core/lib/i18n/i18n';
+import { isolate } from '@/core/ui/primitives/Ltr';
 import { work } from '../shared/fixtures';
 import { currencyLabel, packageText, pendingSubtitle, taskText, unpaidSubtitle } from './work-text';
 
@@ -6,7 +7,7 @@ test('a renewal task names the student and what is left', () => {
   const task = work.tasks.items[0];
   if (!task) throw new Error('fixture');
   const text = taskText(task);
-  expect(text).toContain('سارة أحمد');
+  expect(text).toContain(isolate('سارة أحمد'));
   expect(text).not.toContain('{');
 });
 
@@ -19,8 +20,8 @@ test('a task without a student or balance keeps no placeholder', () => {
 test('a pending report line says the teacher and the Riyadh day', () => {
   const row = work.pending_reports.items[0];
   if (!row) throw new Error('fixture');
-  expect(pendingSubtitle(row)).toContain('أبرار');
-  expect(pendingSubtitle(row)).toContain('·');
+  expect(pendingSubtitle(row, '24')).toContain('أبرار');
+  expect(pendingSubtitle(row, '24')).toContain('·');
 });
 
 test('an unpaid line: the package, then what is owed rounded to whole units', () => {

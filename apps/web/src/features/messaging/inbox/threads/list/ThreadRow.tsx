@@ -14,6 +14,7 @@ import { inboxBase, showsPhone, useInboxMode } from '../../shared/mode';
 import type { InboxSearch } from '../../shared/search';
 import { leadChip } from '../../sales/subscription';
 import { SubscriptionChip } from '../../sales/SubscriptionChip';
+import { useClock } from '@/lib/clock';
 
 export interface ThreadRowProps {
   thread: ThreadView;
@@ -57,6 +58,7 @@ function PhoneTag({ phone }: { phone: string }) {
 export function ThreadRow({ thread: th, search, active }: ThreadRowProps) {
   const mode = useInboxMode();
   const name = threadTitle(th, mode);
+  const clock = useClock();
   const unread = th.unread_count > 0;
   const failed = lastFailed(th);
   const kind = threadKind(th);
@@ -91,8 +93,8 @@ export function ThreadRow({ thread: th, search, active }: ThreadRowProps) {
           <span className={cn('min-w-0 truncate', unread ? 'font-bold' : 'font-semibold')}>{name}</span>
           {th.display_name && showsPhone(mode) && <PhoneTag phone={th.phone_e164} />}
         </span>
-        <time dateTime={th.last_message_at} title={fullTime(th.last_message_at)} className="text-2xs text-ink-3 tabular-nums">
-          {listTime(th.last_message_at)}
+        <time dateTime={th.last_message_at} title={fullTime(th.last_message_at, clock)} className="text-2xs text-ink-3 tabular-nums">
+          {listTime(th.last_message_at, clock)}
         </time>
         <span className={cn('col-start-2 flex min-w-0 items-center gap-1 text-xs', unread ? 'text-ink' : 'text-ink-2')}>
           {th.last_direction === 'outbound' && <DeliveryTicks status={th.last_status} inList />}

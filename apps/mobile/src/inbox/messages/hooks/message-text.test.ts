@@ -13,7 +13,7 @@ import {
 } from './message-text';
 import { delivered, inbound, message } from '../../shared/thread-fixtures';
 
-const RIYADH = { now: new Date('2026-10-02T09:00:00Z'), tz: 'Asia/Riyadh' };
+const RIYADH = { now: new Date('2026-10-02T09:00:00Z'), tz: 'Asia/Riyadh', cycle: '24' as const };
 
 test.each([
   ['image/jpeg', 'image'],
@@ -43,6 +43,12 @@ test('media line: Meta’s unsupported says «غير متاحة» for 131060, el
   // A location / contact card did arrive: never «ask for it again».
   const location = { type: 'location', location: { latitude: 1, longitude: 2 } };
   expect(mediaLine({ body: null, media_mime: null, interactive_payload: location })).toBe(t.inbox.media.other);
+});
+
+test('media line: a WhatsApp reaction row names its emoji, never «رسالة لا يمكن عرضها هنا»', () => {
+  const reaction = (emoji: string) => ({ type: 'reaction', reaction: { emoji, message_id: 'wamid.x' } });
+  expect(mediaLine({ body: null, media_mime: null, interactive_payload: reaction('👍🏻') })).toBe(t.inbox.reacted.replace('{emoji}', '👍🏻'));
+  expect(mediaLine({ body: null, media_mime: null, interactive_payload: reaction('') })).toBe(t.inbox.reactionRemoved);
 });
 
 test('template line uses the registry name; an unknown key shows as itself', () => {

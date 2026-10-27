@@ -1,7 +1,6 @@
 import { fireEvent, screen, waitFor, within } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { renderApp, resetApp } from '@/test/app-router';
-import { pullToRefresh } from '@/test/pull-refresh';
 import { GUARDIAN_PHONE, inboxBackend } from '../shared/flow-backend';
 import { inbound, PHONE } from '../shared/thread-fixtures';
 import { ticksLabel } from '../shared/ticks.helpers';
@@ -39,10 +38,7 @@ test('list → lead thread → reply → back: tags show, the reply is sent once
 
   await fireEvent.press(screen.getByRole('button', { name: t.common.back }));
   expect(app.pathname()).toBe('/inbox');
-  // Finding (not fixed here): a send only invalidates ['threads', phone], never the list
-  // ['threads','list',…], so the row keeps the old preview until a pull to refresh.
-  expect(within(screen.getByRole('button', { name: /هدى سالم/ })).queryByText(/أهلًا يا هدى/)).toBeNull();
-  await pullToRefresh();
+  // The list follows the send with no pull to refresh (owner 2026-10-27).
   expect(await within(screen.getByRole('button', { name: /هدى سالم/ })).findByText(/أهلًا يا هدى/)).toBeTruthy();
 });
 

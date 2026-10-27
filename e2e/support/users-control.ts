@@ -1,6 +1,7 @@
 import type { Browser, Locator, Page } from '@playwright/test';
 import { ar, expect } from './fixtures';
 import { withSql } from './schedule';
+import { AR_LOCALE } from './locale';
 
 // Helpers of the «المستخدمون» specs (users-control*.spec.ts). Every run uses its own stamp, so the
 // desktop and mobile projects never share an email or a name.
@@ -52,7 +53,7 @@ export async function takeIssued(page: Page, title: string): Promise<string> {
 
 /** Submits the login form in a fresh browser context; the page is returned open. */
 export async function signInAs(browser: Browser, creds: { email: string; password: string }): Promise<Page> {
-  const ctx = await browser.newContext({ locale: 'ar' });
+  const ctx = await browser.newContext({ locale: AR_LOCALE });
   const page = await ctx.newPage();
   await page.goto('/login');
   await page.getByLabel(ar.auth.email).fill(creds.email);

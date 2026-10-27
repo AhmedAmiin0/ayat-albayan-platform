@@ -6,6 +6,7 @@ import { StatusChip } from '@/components/ui/display/status-chip';
 import { t } from '@/lib/i18n/i18n';
 import { rowTexts } from './history-text';
 import { trialOutcomeStyle } from './outcome-style';
+import { useClock } from '@/lib/clock';
 
 /** Rows shown before «عرض كل المواعيد»: the history stays a compact block. */
 export const TRIAL_ROWS_SHOWN = 5;
@@ -22,6 +23,7 @@ export interface TrialHistoryTableProps {
 
 /** «مواعيد الحلقة التجريبية» (R-STU-05, R-SCH-07): newest pick first, the first 5 then «عرض كل المواعيد». */
 export function TrialHistoryTable({ history, viewerTz }: TrialHistoryTableProps) {
+  const clock = useClock();
   const [all, setAll] = useState(false);
   const rows = all ? history.items : history.items.slice(0, TRIAL_ROWS_SHOWN);
   const more = history.items.length > TRIAL_ROWS_SHOWN;
@@ -41,7 +43,7 @@ export function TrialHistoryTable({ history, viewerTz }: TrialHistoryTableProps)
           </thead>
           <tbody>
             {rows.map((row) => {
-              const text = rowTexts({ row, familyTz: history.family_tz, viewerTz });
+              const text = rowTexts({ row, familyTz: history.family_tz, viewerTz }, clock);
               return (
                 <tr key={row.lesson_id} data-outcome={row.outcome}>
                   <th scope="row" className={`${cell} font-semibold text-ink tabular-nums`}>

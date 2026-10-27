@@ -2,7 +2,8 @@ import { isRunningLesson, lessonStatusStyle, localizedName, type SalesScheduleLe
 import { Pressable, View } from 'react-native';
 import { Tag } from '@/calendar/agenda/Tag';
 import { JoinClassroomButton } from '@/classroom/links/JoinClassroomButton';
-import { useMinuteClock } from '@/classroom/sessions/use-minute-clock';
+import { useNow } from '@/core/lib/time/use-now';
+import { useClockCycle } from '@/core/lib/clock';
 import { t } from '@/core/lib/i18n/i18n';
 import { locale } from '@/core/lib/i18n/locale';
 import { type, useTheme } from '@/theme';
@@ -18,7 +19,8 @@ import { StatusChip } from '@/core/ui/feedback/StatusChip';
  */
 export function SalesLessonRow({ lesson, onOpen }: { lesson: SalesScheduleLesson; onOpen?: (lesson: SalesScheduleLesson) => void }) {
   const { color } = useTheme();
-  const now = useMinuteClock();
+  const cycle = useClockCycle();
+  const now = useNow();
   const running = isRunningLesson(lesson, now);
   const body = { fontFamily: type.ui[600], fontSize: type.size.body, lineHeight: type.lineHeight(type.size.body), color: color.ink };
   const small = { fontFamily: type.ui[400], fontSize: type.size.xs, lineHeight: type.lineHeight(type.size.xs), color: color.ink2 };
@@ -27,7 +29,7 @@ export function SalesLessonRow({ lesson, onOpen }: { lesson: SalesScheduleLesson
   const lineStyle = { flexDirection: 'row' as const, alignItems: 'flex-start' as const, gap: 10, minHeight: 44 };
   const line = (
     <>
-      <AppText style={{ ...body, width: 48, fontVariant: ['tabular-nums'] }}>{riyadhTime(lesson.starts_at)}</AppText>
+      <AppText style={{ ...body, width: cycle === '12' ? 72 : 48, fontVariant: ['tabular-nums'] }}>{riyadhTime(lesson.starts_at, cycle)}</AppText>
       <View style={{ flex: 1, gap: 2 }}>
         <AppText numberOfLines={2} style={body}>
           {who}
@@ -48,7 +50,7 @@ export function SalesLessonRow({ lesson, onOpen }: { lesson: SalesScheduleLesson
         <Pressable
           accessibilityRole="button"
           accessibilityLabel={t.lessons.sheet.openRow.replace('{names}', who)}
-          accessibilityHint={`${riyadhTime(lesson.starts_at)} · ${t.enums.lessonStatus[lesson.status]}`}
+          accessibilityHint={`${riyadhTime(lesson.starts_at, cycle)} · ${t.enums.lessonStatus[lesson.status]}`}
           onPress={() => onOpen(lesson)}
           style={({ pressed }) => [lineStyle, pressed ? { backgroundColor: color.sunk } : null]}
         >

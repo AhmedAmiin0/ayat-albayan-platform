@@ -7,6 +7,7 @@ import { durationText, sizeText } from './recording-format';
 import { RecordingDelete } from './RecordingDelete';
 import { RecordingPlayer } from './RecordingPlayer';
 import { RecordingVisibility } from './RecordingVisibility';
+import { useClock } from '@/lib/clock';
 
 const R = t.studentRecordings;
 const TONE = { ...RECORDING_TONE, deleted: 'neutral' } as const;
@@ -22,7 +23,7 @@ function Fact({ label, value }: { label: string; value: string }) {
 
 /** One recording: when, who taught, length, size, status, the player, and the staff controls. */
 export function StudentRecordingRow({ rec, role }: { rec: StudentRecordingView; role: UserRole }) {
-  const when = recordingTime(rec.lesson_starts_at);
+  const when = recordingTime(rec.lesson_starts_at, useClock());
   return (
     <li id={`recording-${rec.lesson_id}`} className="grid gap-3 border-b border-rule py-3 last:border-b-0">
       <div className="flex flex-wrap items-center gap-x-3 gap-y-1">

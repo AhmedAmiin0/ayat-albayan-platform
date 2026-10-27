@@ -37,6 +37,30 @@ Teacher alias table (for matching free text in REP/SUBS): `Abrar` ← أبرار
 5. Fields: age, gender, country, level, memorized, goal, riwaya, tz from ردود التسجيل where present; package from الباقة المطلوبة; source from عرفت عننا منين؟; `code` keeps existing `AB-nnnn` when known (store in `legacy_code`), new codes continue the sequence from AB-0183.
 6. Reject rows: name contains TEST/تجربة/اختبار/test/نمنم/Lorem patterns; phone `+966500000000`, `+966501234567`.
 
+#### Student status (owner 2026-10-27)
+`students.status` is set on **create only** (`students.write.ts`); an update never touches it, the
+app's own rules move it afterwards. «مشترك» (`active`) needs evidence of a **current** subscription;
+the old HUB «طالب حالي» and attended lessons alone are not that evidence. First match wins:
+
+| Evidence | Status |
+|----------|--------|
+| A paid HEART «subscription» row (Status «Paid», or priced by a FIN income-statement revenue row of its month) for this child, whose period — one month from «Date» — covers the import date (`--from`, default today) or starts later | `active` |
+| A «مشترك» weekly booking still running on the import date (the series the schedule import creates, lessons ahead) | `active` |
+| Only paid periods that ended less than `subscription_expiry_days` ago (the app setting, default 7; `--expiry-days N` when the app uses another value) | `pending_renewal` |
+| Only paid periods that ended earlier | `expired` («انتهى الاشتراك», renewable) |
+| Never paid, but an attended lesson report (حضرت في الموعد / حضرت متأخرة, trial or not) or a booking marked «تمت» | `pending_subscription` |
+| Nothing of the above (even when HUB says «طالب حالي») | `new` |
+
+Never `trial` (bookings do not make trial students on import). A HEART row on the guardian phone
+counts only for the child it names (a sibling's payment is not this child's); «Not paid» rows, SUBS
+lesson counts and absent/excused reports are no evidence. Every student the old rule (HUB «طالب
+حالي», a «مشترك» booking, any HEART row on the phone, any non-trial report, SUBS «عدد الحلقات» > 1)
+would have made `active` and the new one does not is a `status_downgrade` warning; the dry-run prints
+and `out/report.md` lists them per old reason and new status, counts only. Because status is
+create-only, the counts describe what new students get: students already in the target keep their
+status on a re-run (fix those in the app). An imported `pending_renewal` starts the app's expiry
+clock on import, so it can last up to twice `subscription_expiry_days` after the period ended.
+
 ### schedule_rules + lessons ← BOOK.تقويم الحجوزات (status مؤكد/مشترك/يحتاج تأكيد, from the import date on) + HEART timetables
 | Source | Target |
 |--------|--------|

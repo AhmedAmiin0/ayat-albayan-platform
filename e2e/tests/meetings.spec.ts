@@ -1,5 +1,6 @@
 import { ar, expect, test } from '../support/fixtures';
 import { resetAbrar, seedFamily, seedLesson, withSql } from '../support/schedule';
+import { AR_LOCALE } from '../support/locale';
 
 // Meetings (owner, 2026-10-04): «حلقة فورية» from «اجتماع جديد», «افتح الحلقة الآن» before the
 // usual 15 minutes, and the student's own long-lived link /s/<token>. A meeting with students is always
@@ -81,7 +82,7 @@ test.describe('meetings', () => {
     const url = await admin.getByLabel(ar.studentLink.shown).inputValue();
     expect(url).toMatch(/\/s\/[A-Za-z0-9_-]{32}$/);
 
-    const guest = await (await browser.newContext({ locale: 'ar' })).newPage();
+    const guest = await (await browser.newContext({ locale: AR_LOCALE })).newPage();
     await guest.goto(new URL(url).pathname);
     await expect(guest.getByText(ar.studentLink.page.greeting.replace('{name}', name.split(' ')[0] ?? ''))).toBeVisible();
     await expect(guest.getByRole('heading', { name: ar.studentLink.page.next })).toBeVisible();

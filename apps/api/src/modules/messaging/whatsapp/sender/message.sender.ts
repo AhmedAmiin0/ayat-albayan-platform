@@ -81,17 +81,19 @@ export class MessageSender implements OnApplicationBootstrap, OnModuleDestroy {
   async runOnce(now = new Date()): Promise<SendSummary> {
     const summary: SendSummary = { sent: 0, retry: 0, failed: 0, expired: 0, stale: 0, held: 0, paused: 0, skipped: 0 };
     try {
-      if (!(await this.gate.open())) return summary;
+      const gate = await this.gate.switches();
+      if (!gate.open) return summary;
       // Automatic messages OFF: hold every job-made row first, read by due() or not (unapproved template).
-      if (!(await this.gate.automaticOn())) summary.held += await this.queries.holdAutomatic();
+      if (!gate.automaticOn) summary.held += await this.queries.holdAutomatic();
+      // Idle (the usual tick): one cheap read instead of the templates + the queue (+ the routes).
+      if (!(await this.queries.anyDue(now))) return this.report(summary);
       const numbers = overlayNumbers();
       if (numbers === null) await this.linesPass(summary, now);
       else await this.numbersPass({ summary, now, numbers });
     } catch (e) {
       this.log.error(`send pass aborted: ${e instanceof Error ? e.message : String(e)}`);
     }
-    this.report(summary);
-    return summary;
+    return this.report(summary);
   }
 
   /** Legacy (comms_source = legacy): today's pass, line by line. */
@@ -107,10 +109,10 @@ export class MessageSender implements OnApplicationBootstrap, OnModuleDestroy {
       const template = templates.get(row.template_key ?? '') ?? null;
       const line = lineOf(row, template, chatOn);
       if (paused.has(line)) continue;
-      // Both switches are read before every row, so OFF stops a long pass at once (docs/09).
-      if (!(await this.gate.open())) break;
-      const autoOn = await this.gate.automaticOn();
-      const outcome = await this.worker.process({ row, template, now, autoOn });
+      // Both switches are read (one uncached read) before every row, so OFF stops a long pass at once (docs/09).
+      const gate = await this.gate.switches();
+      if (!gate.open) break;
+      const outcome = await this.worker.process({ row, template, now, autoOn: gate.automaticOn });
       summary[outcome] += 1;
       if (outcome === 'paused') paused.add(line);
     }
@@ -130,17 +132,19 @@ export class MessageSender implements OnApplicationBootstrap, OnModuleDestroy {
       const template = templates.get(row.template_key ?? '') ?? null;
       const route = routeOf(pass, { row, template });
       if (route && paused.has(route.numberId)) continue;
-      if (!(await this.gate.open())) break;
-      const outcome = await this.worker.process({ row, template, now, autoOn: await this.gate.automaticOn(), route });
+      const gate = await this.gate.switches();
+      if (!gate.open) break;
+      const outcome = await this.worker.process({ row, template, now, autoOn: gate.automaticOn, route });
       summary[outcome] += 1;
       if (route && outcome === 'paused') paused.add(route.numberId);
     }
   }
 
   /** Logged only when a pass did something (skipped rows alone stay quiet). */
-  private report(summary: SendSummary): void {
+  private report(summary: SendSummary): SendSummary {
     if (Object.entries(summary).some(([outcome, n]) => outcome !== 'skipped' && n > 0)) {
       this.log.log(`outbound messages: ${JSON.stringify(summary)}`);
     }
+    return summary;
   }
 }

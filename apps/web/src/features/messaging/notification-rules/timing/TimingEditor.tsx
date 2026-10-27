@@ -2,6 +2,7 @@ import { DAY_BEFORE_HOURS } from '@ab/shared';
 import { useId } from 'react';
 import { NuqtaGlyph } from '@/components/ui/display/nuqta-glyph';
 import { Select } from '@/components/ui/form/select';
+import { ClockOptions } from '@/lib/clock-options';
 import { t } from '@/lib/i18n/i18n';
 import { RuleCheck } from '../table/RuleCheck';
 import type { TimingDraft } from '../rule-timing';
@@ -43,11 +44,7 @@ function Fields({ draft, onChange, disabled, describedBy, invalid }: Omit<Timing
         </label>
         <Select id={selectId} value={draft.at} disabled={disabled} aria-describedby={describedBy} onChange={(e) => onChange({ ...draft, at: e.target.value })} className="w-auto">
           <option value="">{tm.dayBeforeSame}</option>
-          {DAY_BEFORE_HOURS.map((h) => (
-            <option key={h} value={h}>
-              {h}
-            </option>
-          ))}
+          <ClockOptions times={DAY_BEFORE_HOURS} />
         </Select>
         <span className="text-xs text-ink-3">{tm.dayBeforeZone}</span>
       </span>

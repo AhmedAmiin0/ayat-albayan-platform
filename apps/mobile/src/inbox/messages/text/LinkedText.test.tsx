@@ -1,5 +1,5 @@
 import { act, fireEvent, screen, within } from '@testing-library/react-native';
-import { Linking } from 'react-native';
+import { Linking, StyleSheet } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
 import { ChatActionsProvider } from '../../thread/components/ChatActionsProvider';
@@ -29,10 +29,13 @@ beforeEach(() => {
 });
 afterEach(() => jest.useRealTimers());
 
-test('a link is a pressable lapis, underlined, left-to-right span that opens in the browser', async () => {
+test('a link is a pressable lapis, underlined span (an LRM keeps its end in place) that opens in the browser', async () => {
   await show();
   const link = screen.getByRole('link', { name: 'https://meet.test/ab' });
-  expect(link.props.style).toEqual(expect.arrayContaining([expect.objectContaining({ textDecorationLine: 'underline', writingDirection: 'ltr' })]));
+  const style = StyleSheet.flatten(link.props.style);
+  expect(style).toMatchObject({ textDecorationLine: 'underline' });
+  expect(style.writingDirection).toBeUndefined();
+  expect(link.props.children).toBe('https://meet.test/ab\u200E');
   await fireEvent.press(link);
   expect(openURL).toHaveBeenCalledWith('https://meet.test/ab');
 });
@@ -69,4 +72,14 @@ test('a plain message renders as before: one selectable-off text, no link', asyn
   expect(text.props.children).toBe('السلام عليكم');
   expect(text.props.selectable).toBe(false);
   expect(screen.queryByRole('link')).toBeNull();
+});
+
+// Arabic UI (jest.setup: RTL), as WhatsApp: a body sits on the side of its own language.
+test('an Arabic body aligns to the start (the right); an English one to the left; no writingDirection', async () => {
+  await show('السلام عليكم');
+  const arabic = StyleSheet.flatten(screen.getByText('السلام عليكم').props.style);
+  expect(arabic.textAlign).toBe('left'); // RN swaps left/right in RTL: the start
+  expect(arabic.writingDirection).toBeUndefined();
+  await show('Hello, see you at 5');
+  expect(StyleSheet.flatten(screen.getByText('Hello, see you at 5').props.style).textAlign).toBe('right');
 });

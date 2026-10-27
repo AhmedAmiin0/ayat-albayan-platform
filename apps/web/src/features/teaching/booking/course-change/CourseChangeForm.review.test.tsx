@@ -9,6 +9,10 @@ import { ApiError } from '@/lib/http/api';
 import { CHANGE_VIEW, changeBodies, CHECK, COURSE, MON, NOW, routeChange, routeChangeSend, swapSundayForMonday } from './change-fixture';
 import { currentDaysText, newDaysText } from './change-text';
 import { CourseChangeForm } from './CourseChangeForm';
+import { locale } from '@/lib/i18n/locale';
+
+/** The cycle the suite reads times in (test-setup saves 24 h). */
+const C24 = { cycle: '24', locale } as const;
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
@@ -84,9 +88,9 @@ describe('«تغيير أيام الحلقات»: pick, review, save (owner 2026
     const status = await screen.findByRole('status');
     expect(within(status).getByText(counted(t.booking.courseChange.remaining, 5))).toBeTruthy();
     const lines = within(status).getAllByRole('listitem').map((li) => li.textContent);
-    const newDays = newDaysText({ byday: [1, 3], startTimeLocal: '18:00', dayTimes: [{ weekday: 3, startTimeLocal: '19:30' }] }, COURSE.tz);
+    const newDays = newDaysText({ byday: [1, 3], startTimeLocal: '18:00', dayTimes: [{ weekday: 3, startTimeLocal: '19:30' }] }, COURSE.tz, C24);
     // The current and the new days together, above what is left and the new end.
-    expect(lines.slice(0, 3)).toEqual([currentDaysText(COURSE.days, COURSE.tz), newDays, counted(t.booking.courseChange.remaining, 5)]);
+    expect(lines.slice(0, 3)).toEqual([currentDaysText(COURSE.days, COURSE.tz, C24), newDays, counted(t.booking.courseChange.remaining, 5)]);
     expect(screen.getByText(t.booking.courseChange.newEnd.replace('{date}', dateLabel('2026-10-21')))).toBeTruthy();
     const checked = apiSend.mock.calls.find(([, path]) => path === '/sales/booking/course/change/check');
     expect(checked?.[2]).toMatchObject({ subscriptionId: COURSE.subscriptionId, byday: [1, 3], startsAt: MON });

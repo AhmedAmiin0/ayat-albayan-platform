@@ -11,6 +11,7 @@ import { MessageActions } from './MessageActions';
 import { Content, SenderLine } from './MessageContent';
 import { useInboxMode } from '../../shared/mode';
 import { canRetry, canSendByHand, deliveryTitle, isHandedOff, outboundNotes } from '../lib/message-notes';
+import { useClock } from '@/lib/clock';
 
 /** Some of the bubble's text is selected with the mouse. */
 function selectedIn(el: HTMLElement): boolean {
@@ -35,7 +36,8 @@ export interface MessageBubbleProps {
  */
 export function MessageBubble({ message: m, waitingTemplate, now }: MessageBubbleProps) {
   const outbound = m.direction === 'outbound';
-  const notes = outboundNotes(m, { waitingTemplate, now });
+  const clock = useClock();
+  const notes = outboundNotes(m, { waitingTemplate, now, clock });
   const admin = useInboxMode() === 'admin';
   const [menu, setMenu] = useState(false);
   const acts = useHasBubbleActions(m);
@@ -77,12 +79,12 @@ export function MessageBubble({ message: m, waitingTemplate, now }: MessageBubbl
         <SenderLine message={m} />
         <footer className="mt-1.5 flex flex-wrap items-center justify-end gap-2 text-2xs text-ink-3">
           <LineBadge line={m.line} />
-          <time dateTime={m.created_at} title={fullTime(m.created_at)} className="tabular-nums">
+          <time dateTime={m.created_at} title={fullTime(m.created_at, clock)} className="tabular-nums">
             {/* The day separators are hidden from screen readers: they hear the full date here. */}
-            <span aria-hidden="true">{clockText(m.created_at)}</span>
-            <span className="sr-only">{fullTime(m.created_at)}</span>
+            <span aria-hidden="true">{clockText(m.created_at, clock)}</span>
+            <span className="sr-only">{fullTime(m.created_at, clock)}</span>
           </time>
-          {outbound && <DeliveryTicks status={m.status} times={deliveryTitle(m)} />}
+          {outbound && <DeliveryTicks status={m.status} times={deliveryTitle(m, clock)} />}
         </footer>
         {notes.map((note) => (
           <p key={note} className="mt-1 text-2xs text-ink-2">

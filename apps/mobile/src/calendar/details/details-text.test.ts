@@ -8,25 +8,25 @@ const AFTER = new Date('2026-10-01T14:00:00Z');
 const BEFORE = new Date('2026-10-01T12:00:00Z');
 
 test('whenLine: the Riyadh day and time, named as Riyadh', () => {
-  expect(whenLine(pending)).toContain('16:00');
-  expect(whenLine(pending)).toContain(t.schedule.riyadhTime);
+  expect(whenLine(pending, '24')).toContain('16:00');
+  expect(whenLine(pending, '24')).toContain(t.schedule.riyadhTime);
 });
 
 test('clockLines: each student zone and the teacher’s, only when not Riyadh, in the web wording', () => {
-  const cairo = inCity(pending.starts_at, 'Africa/Cairo');
-  expect(clockLines(pending)).toEqual([t.schedule.teacherTime.replace('{time}', cairo)]);
+  const cairo = inCity(pending.starts_at, 'Africa/Cairo', '24');
+  expect(clockLines(pending, '24')).toEqual([t.schedule.teacherTime.replace('{time}', cairo)]);
   const group = lesson({ id: 'g', students: [yusuf, jana, { ...jana, id: 's9' }] });
-  expect(clockLines(group)).toEqual([
-    t.schedule.studentTime.replace('{time}', inCity(group.starts_at, 'Asia/Muscat')),
+  expect(clockLines(group, '24')).toEqual([
+    t.schedule.studentTime.replace('{time}', inCity(group.starts_at, 'Asia/Muscat', '24')),
     t.schedule.teacherTime.replace('{time}', cairo),
   ]);
-  expect(clockLines({ ...pending, teacher: { display_name_ar: 'ب', tz: 'Asia/Riyadh' } })).toEqual([]);
+  expect(clockLines({ ...pending, teacher: { display_name_ar: 'ب', tz: 'Asia/Riyadh' } }, '24')).toEqual([]);
   // Sales’ old cache: no zones at all reads as Riyadh.
-  expect(clockLines({ starts_at: pending.starts_at, teacher: { display_name_ar: 'ب' }, students: [{ id: 's', code: 'AB-1', name: 'ن' }] })).toEqual([]);
+  expect(clockLines({ starts_at: pending.starts_at, teacher: { display_name_ar: 'ب' }, students: [{ id: 's', code: 'AB-1', name: 'ن' }] }, '24')).toEqual([]);
 });
 
 test('inCity keeps an unknown zone’s id, isolated', () => {
-  expect(inCity(pending.starts_at, 'Pacific/Tahiti')).toContain(ltr('Pacific/Tahiti'));
+  expect(inCity(pending.starts_at, 'Pacific/Tahiti', '24')).toContain(ltr('Pacific/Tahiti'));
 });
 
 test('lengthLine: the duration word, null off the enum', () => {
@@ -36,14 +36,14 @@ test('lengthLine: the duration word, null off the enum', () => {
 });
 
 test('seriesLine: the rule’s days in order and the time in the family zone; null for a one-off', () => {
-  const line = seriesLine({ ...muscat, rule_byday: [4, 0] });
+  const line = seriesLine({ ...muscat, rule_byday: [4, 0] }, '24');
   expect(line).toBe(
     t.lessons.sheet.series
       .replace('{days}', [t.enums.weekday['0'], t.enums.weekday['4']].join(t.common.listSeparator))
-      .replace('{time}', inCity(muscat.starts_at, 'Asia/Muscat')),
+      .replace('{time}', inCity(muscat.starts_at, 'Asia/Muscat', '24')),
   );
-  expect(seriesLine({ ...pending, rule_byday: [] })).toBeNull();
-  expect(seriesLine({ ...pending, rule_id: null, rule_byday: [1] })).toBeNull();
+  expect(seriesLine({ ...pending, rule_byday: [] }, '24')).toBeNull();
+  expect(seriesLine({ ...pending, rule_id: null, rule_byday: [1] }, '24')).toBeNull();
 });
 
 test('reportState: nothing before the start or on a cancelled lesson; then sent / draft / none', () => {
@@ -56,9 +56,11 @@ test('reportState: nothing before the start or on a cancelled lesson; then sent 
 
 test('where a tap goes per role: admin file and sent report, teacher reports, nothing for sales', () => {
   const sent = { ...yusuf, report: { id: 'r1', status: 'submitted' as const } };
-  expect(studentHref('admin', 's1')).toBe('/students/s1');
-  expect(studentHref('teacher', 's1')).toBe('/teacher/reports/student/s1');
-  expect(studentHref('sales', 's1')).toBeNull();
+  expect(studentHref('admin', { id: 's1' })).toBe('/students/s1');
+  expect(studentHref('teacher', { id: 's1' })).toBe('/teacher/reports/student/s1');
+  expect(studentHref('sales', { id: 's1' })).toBeNull();
+  // Sales opens «تفاصيل الطالب» of her own students only (docs/16 row 36).
+  expect(studentHref('sales', { id: 's1', mine: true })).toBe('/sales/students/s1');
   expect(reportHref('admin', pending, sent)).toBe('/students/reports/view/r1');
   expect(reportHref('admin', pending, yusuf)).toBeNull();
   expect(reportHref('teacher', pending, yusuf)).toBe('/teacher/reports/l-pending');

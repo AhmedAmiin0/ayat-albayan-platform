@@ -1,6 +1,7 @@
 import type { Locale } from '../../i18n/locale.js';
 import { RIYADH_TZ } from '../../format/running-head.js';
-import { lessonWhenText } from '../lesson/booking-confirmation.js';
+import { lessonWhenAt } from '../lesson/booking-confirmation.js';
+import type { ClockCycle } from '../../format/index.js';
 import { quickReplyIntent } from './quick-reply.js';
 import type { MessageView } from '../chat/views.js';
 
@@ -20,12 +21,12 @@ type NoteInput = Pick<MessageView, 'direction' | 'body' | 'guardian_id' | 'lead_
 /**
  * A guardian's «تمام» / button: «اتأكدت حلقة …» only when its lesson is confirmed now, else
  * «مفيش حلقة اتأكدت»; a reschedule names the lesson when one was found; «وقف» from a guardian or a
- * lead. Anything else (a lead's «تمام», plain text) → null. `when` is in the UI language.
+ * lead. Anything else (a lead's «تمام», plain text) → null. `when` is in the UI language and the viewer's clock.
  */
-export function replyNote(m: NoteInput, locale: Locale = 'ar'): ReplyNote | null {
+export function replyNote(m: NoteInput, clock: { locale: Locale; cycle: ClockCycle } = { locale: 'ar', cycle: '24' }): ReplyNote | null {
   if (m.direction !== 'inbound' || !m.body) return null;
   const intent = quickReplyIntent(m.body);
-  const when = m.lesson ? lessonWhenText(new Date(m.lesson.starts_at), RIYADH_TZ, locale) : null;
+  const when = m.lesson ? lessonWhenAt(new Date(m.lesson.starts_at), { tz: RIYADH_TZ, ...clock }) : null;
   if (intent === 'stop') return m.guardian_id || m.lead_id ? { key: 'stop', when: null } : null;
   if (!intent || !m.guardian_id) return null;
   if (intent === 'reschedule') return when ? { key: 'reschedule', when } : { key: 'rescheduleNoLesson', when: null };

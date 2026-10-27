@@ -2,7 +2,6 @@ import {
   BODY_SLOTS,
   lessonParams,
   LESSON_TIME_PARAMS,
-  lessonWhenText,
   needsLesson,
   prefillParams,
   renderTemplateBody,
@@ -15,13 +14,13 @@ import {
 import { useState } from 'react';
 import { ScrollView } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
-import { locale } from '@/core/lib/i18n/locale';
 import { Button } from '@/core/ui/primitives/Button';
 import { Field } from '@/core/ui/form/Field';
 import { FilterPills } from '@/core/ui/form/FilterPills';
 import { ErrorLine } from '../ErrorLine';
 import { TemplatePreview } from './TemplatePreview';
 import type { Outgoing } from '../thread/hooks/use-thread';
+import { useClockCycle, whenIn } from '@/core/lib/clock';
 
 type Position = BodySlot;
 const POSITIONS: readonly Position[] = BODY_SLOTS;
@@ -42,6 +41,7 @@ interface TemplateFormProps {
  * the meeting code. The meeting code when it has a link button, and the live preview.
  */
 export function TemplateForm({ template, lessons, contactName, onBack, onSend }: TemplateFormProps) {
+  const cycle = useClockCycle();
   const [params, setParams] = useState<TemplateParamsInput>(() => prefillParams(template, { contactName }));
   const [lessonId, setLessonId] = useState('');
   const [missing, setMissing] = useState(false);
@@ -72,7 +72,7 @@ export function TemplateForm({ template, lessons, contactName, onBack, onSend }:
         <FilterPills
           role="radiogroup"
           accessibilityLabel={t.inbox.composer.pickLesson}
-          items={lessons.map((l) => ({ value: l.id, label: lessonWhenText(new Date(l.starts_at), l.tz, locale) }))}
+          items={lessons.map((l) => ({ value: l.id, label: whenIn(new Date(l.starts_at), l.tz, cycle) }))}
           value={lessonId}
           onChange={pick}
         />

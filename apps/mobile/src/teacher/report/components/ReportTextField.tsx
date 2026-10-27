@@ -56,9 +56,8 @@ export function ReportTextField({ label, value, onChange, disabled, required, in
           fontFamily: type.ui[400],
           fontSize: type.size.base,
           lineHeight: type.lineHeight(type.size.base),
+          // No textAlign or writingDirection: the field follows what is typed (Arabic or English).
           textAlignVertical: 'top',
-          writingDirection: 'auto',
-          textAlign: 'left', // = start (RN swaps it in RTL)
         }}
       />
     </View>

@@ -773,6 +773,38 @@ export type Database = {
           },
         ];
       };
+      crm_media_copy_failures: {
+        Row: {
+          attempts: number;
+          last_error: string | null;
+          message_id: string;
+          skipped: boolean;
+          updated_at: string;
+        };
+        Insert: {
+          attempts?: number;
+          last_error?: string | null;
+          message_id: string;
+          skipped?: boolean;
+          updated_at?: string;
+        };
+        Update: {
+          attempts?: number;
+          last_error?: string | null;
+          message_id?: string;
+          skipped?: boolean;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'crm_media_copy_failures_message_id_fkey';
+            columns: ['message_id'];
+            isOneToOne: true;
+            referencedRelation: 'messages';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       custom_config: {
         Row: {
           description: string | null;
@@ -4155,6 +4187,57 @@ export type Database = {
           },
         ];
       };
+      thread_summaries: {
+        Row: {
+          last_body: string | null;
+          last_chat_inbound_at: string | null;
+          last_direction: Database['public']['Enums']['message_direction'];
+          last_inbound_at: string | null;
+          last_inbound_line: Database['public']['Enums']['wa_line'] | null;
+          last_media_mime: string | null;
+          last_message_at: string;
+          last_message_id: string;
+          last_notifications_inbound_at: string | null;
+          last_status: Database['public']['Enums']['message_status'];
+          last_template_key: string | null;
+          phone_e164: string;
+          unread_count: number;
+          updated_at: string;
+        };
+        Insert: {
+          last_body?: string | null;
+          last_chat_inbound_at?: string | null;
+          last_direction: Database['public']['Enums']['message_direction'];
+          last_inbound_at?: string | null;
+          last_inbound_line?: Database['public']['Enums']['wa_line'] | null;
+          last_media_mime?: string | null;
+          last_message_at: string;
+          last_message_id: string;
+          last_notifications_inbound_at?: string | null;
+          last_status: Database['public']['Enums']['message_status'];
+          last_template_key?: string | null;
+          phone_e164: string;
+          unread_count?: number;
+          updated_at?: string;
+        };
+        Update: {
+          last_body?: string | null;
+          last_chat_inbound_at?: string | null;
+          last_direction?: Database['public']['Enums']['message_direction'];
+          last_inbound_at?: string | null;
+          last_inbound_line?: Database['public']['Enums']['wa_line'] | null;
+          last_media_mime?: string | null;
+          last_message_at?: string;
+          last_message_id?: string;
+          last_notifications_inbound_at?: string | null;
+          last_status?: Database['public']['Enums']['message_status'];
+          last_template_key?: string | null;
+          phone_e164?: string;
+          unread_count?: number;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
       translation_overrides: {
         Row: {
           key: string;
@@ -4784,6 +4867,12 @@ export type Database = {
       course_change_result: { Args: { p_first: string }; Returns: Json };
       create_booking: { Args: { p_actor: string; p_booking: Json }; Returns: Json };
       create_instant_lesson: { Args: { p_actor: string; p_booking: Json }; Returns: Json };
+      crm_media_copy_batch: {
+        Args: { p_host: string; p_limit: number; p_max_attempts: number };
+        Returns: { id: string }[];
+      };
+      crm_media_copy_counts: { Args: { p_host: string }; Returns: Json };
+      crm_media_copy_mark: { Args: { p_error: string; p_message: string; p_skip: boolean }; Returns: number };
       custom_access_token_hook: { Args: { event: Json }; Returns: Json };
       earning_status: {
         Args: { p_amount: number; p_paid: number };
@@ -5035,6 +5124,8 @@ export type Database = {
           unread: number;
         }[];
       };
+      thread_summary_refresh: { Args: { p_phone: string }; Returns: undefined };
+      thread_summary_refresh_all: { Args: { p_phones: string[] }; Returns: undefined };
       unpay_assistant_statement: {
         Args: { p_actor: string; p_reason: string; p_statement: string };
         Returns: Json;

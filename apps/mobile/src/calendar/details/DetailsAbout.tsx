@@ -6,6 +6,7 @@ import { usePlatformClassroom } from '@/core/lib/query/public-config';
 import { DetailsFact, DetailsGroup, DetailsLine } from './DetailsGroup';
 import { DetailsLink } from './DetailsLink';
 import type { DetailsLesson, DetailsRole } from './details-text';
+import { useClockCycle } from '@/core/lib/clock';
 
 /**
  * «بيانات الحلقة»: the teacher, the way in (DetailsLink, every role: sales too since owner
@@ -13,6 +14,7 @@ import type { DetailsLesson, DetailsRole } from './details-text';
  * the bad tone.
  */
 export function DetailsAbout({ lesson, role }: { lesson: DetailsLesson; role: DetailsRole }) {
+  const cycle = useClockCycle();
   const platform = usePlatformClassroom(lesson.platform_classroom);
   const teacher = localizedName(
     { ar: lesson.teacher.display_name_ar, en: lesson.teacher.display_name_en ?? null },
@@ -35,7 +37,7 @@ export function DetailsAbout({ lesson, role }: { lesson: DetailsLesson; role: De
         <DetailsFact label={t.schedule.needsReview}>
           <DetailsLine tone="bad">{t.schedule.generatedConflict}</DetailsLine>
           {conflicts.map((c, i) => (
-            <DetailsLine key={`${c.kind}-${i}`}>{conflictLine(c)}</DetailsLine>
+            <DetailsLine key={`${c.kind}-${i}`}>{conflictLine(c, cycle)}</DetailsLine>
           ))}
         </DetailsFact>
       ) : null}

@@ -7,7 +7,7 @@ import { sessionUntil } from '../messages/hooks/message-text';
 import { detail, inbound, thread } from '../shared/thread-fixtures';
 import { ThreadScreen } from '../screens/ThreadScreen';
 
-// The one-row composer (owner 2026-10-18): [template] [text] [send], one-line notes, a compact closed state.
+// The one-row composer (owner 2026-10-18; 2026-10-27 as WhatsApp): [pill] [round], notes never cut, a compact closed state.
 const mockApiFetch = jest.fn();
 jest.mock('@/core/lib/http/api', () => ({
   ...jest.requireActual('@/core/lib/http/api'),
@@ -33,37 +33,44 @@ async function open(th: typeof thread, gate: Gate = { open: true, reason: null, 
 
 beforeEach(() => mockApiFetch.mockReset());
 
-test('open window: template and send are icon buttons beside the box; the template icon opens the sheet', async () => {
+test('open window: one pill with the box, «أرسل» once there is text; the template sits in the paperclip’s sheet', async () => {
   await open(OPEN);
   const box = screen.getByLabelText(t.inbox.composer.placeholder);
   expect(box.props.style.maxHeight).toBe(120);
-  expect(screen.getByRole('button', { name: t.inbox.composer.send })).toBeTruthy();
-  expect(screen.queryByText(t.inbox.composer.sendTemplate)).toBeNull(); // no full-width ghost button
-  expect(screen.queryByText(t.inbox.composer.send)).toBeNull();
-  await fireEvent.press(screen.getByRole('button', { name: t.inbox.composer.sendTemplate }));
+  expect(screen.queryByText(t.inbox.composer.send)).toBeNull(); // an icon, not a label
+  expect(screen.getByRole('button', { name: t.inbox.composer.send }).props.accessibilityState).toMatchObject({ disabled: true });
+  await fireEvent.changeText(box, 'السلام عليكم');
+  expect(screen.getByRole('button', { name: t.inbox.composer.send }).props.accessibilityState).toMatchObject({ disabled: false });
+  await fireEvent.press(screen.getByRole('button', { name: t.inbox.composer.attach }));
+  await fireEvent.press(within(screen.getByTestId('attach-sheet')).getByRole('button', { name: t.inbox.composer.modeTemplate }));
   expect(await screen.findByText(t.inbox.composer.chooseTemplate)).toBeTruthy();
 });
 
-test('open window: the line gives way; the window’s end time is shown whole, never cut', async () => {
+test('open window: the notes are never cut (owner 2026-10-27): they wrap or stack', async () => {
   await open(OPEN);
+  expect(StyleSheet.flatten(screen.getByTestId('composer-notes').props.style)).toMatchObject({ flexDirection: 'row', flexWrap: 'wrap' });
   const line = screen.getByTestId('line-note');
-  expect(line.props.numberOfLines).toBe(1);
-  expect(StyleSheet.flatten(line.props.style)).toMatchObject({ flexShrink: 1, minWidth: 0 });
+  expect(line.props.numberOfLines).toBeUndefined();
+  expect(StyleSheet.flatten(line.props.style).flexShrink).toBe(1);
   const until = screen.getByTestId('session-until');
   expect(until.props.numberOfLines).toBeUndefined();
   expect(StyleSheet.flatten(until.props.style).flexShrink).toBe(0);
-  expect(until.props.children).toBe(sessionUntil(OPEN.last_inbound_at));
+  expect(until.props.children).toBe(sessionUntil(OPEN.last_inbound_at, { cycle: '24' }));
   expect(until.props.children).toMatch(new RegExp(t.inbox.sessionOpenUntil.replace(' {time}', '')));
 });
 
-test('open window: one line of text makes the box exactly 44pt (26 line + 8 + 8 + border)', async () => {
+test('open window: one line of text makes the pill exactly 44pt (26 line + 8 + 8 + the pill’s border)', async () => {
   await open(OPEN);
   const { style } = screen.getByLabelText(t.inbox.composer.placeholder).props;
+  const pill = StyleSheet.flatten(screen.getByTestId('composer-pill').props.style);
+  expect(style.borderWidth).toBeUndefined();
   expect(style.lineHeight).toBe(type.lineHeight(type.size.base));
-  expect(style.lineHeight + 2 * style.paddingVertical + 2 * style.borderWidth).toBe(shape.control.touch);
+  expect(style.lineHeight + 2 * style.paddingVertical + 2 * pill.borderWidth).toBe(shape.control.touch);
+  expect(style.minHeight + 2 * pill.borderWidth).toBe(shape.control.touch);
+  expect(pill.borderRadius).toBe(shape.radius.pill);
 });
 
-test('closed window: one compact note beside a labelled «أرسل قالبًا», no free-text box', async () => {
+test('closed window: one compact note over a labelled «أرسل قالبًا», no free-text box', async () => {
   await open(CLOSED);
   expect(screen.queryByLabelText(t.inbox.composer.placeholder)).toBeNull();
   const note = screen.getByText(t.inbox.sessionClosed);

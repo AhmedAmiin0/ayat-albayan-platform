@@ -54,7 +54,7 @@ test('open window: the paperclip sends a photo, and its row joins the thread', a
   mockApiSend.mockResolvedValueOnce(signed).mockResolvedValueOnce(row);
   const client = await show(OPEN);
   await fireEvent.press(paperclip());
-  await fireEvent.press(screen.getByRole('button', { name: t.inbox.composer.attachImage }));
+  await fireEvent.press(screen.getByRole('button', { name: t.inbox.composer.gallery }));
   await waitFor(() => expect(mockApiSend).toHaveBeenCalledTimes(2));
   expect(mockApiSend.mock.calls[0]?.[1]).toBe('/threads/%2B966552147730/file-upload-url');
   expect(mockApiSend.mock.calls[1]?.[1]).toBe('/threads/%2B966552147730/file');
@@ -69,7 +69,7 @@ test('a refusal shows inbox.error.<code> under the row', async () => {
   mockApiSend.mockRejectedValueOnce(new ApiError(403, { code: 'files_forbidden' }));
   await show(OPEN);
   await fireEvent.press(paperclip());
-  await fireEvent.press(screen.getByRole('button', { name: t.inbox.composer.attachImage }));
+  await fireEvent.press(screen.getByRole('button', { name: t.inbox.composer.gallery }));
   expect(await screen.findByText(t.inbox.error.files_forbidden)).toBeTruthy();
 });
 
@@ -77,7 +77,7 @@ test('cancel closes the choice and sends nothing', async () => {
   await show(OPEN);
   await fireEvent.press(paperclip());
   await fireEvent.press(screen.getByText(t.common.cancel));
-  expect(screen.queryByRole('button', { name: t.inbox.composer.attachPdf })).toBeNull();
+  expect(screen.queryByRole('button', { name: t.inbox.composer.document })).toBeNull();
   expect(mockApiSend).not.toHaveBeenCalled();
 });
 

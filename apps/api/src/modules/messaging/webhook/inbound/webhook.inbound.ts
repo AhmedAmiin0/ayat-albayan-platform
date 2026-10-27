@@ -49,6 +49,8 @@ export interface RowInput {
   who: Contact;
   leadId: string | null;
   lessonId: string | null;
+  /** One of the academy's own numbers (OwnNumbers): stored already read, so it never counts as unread. */
+  read?: boolean;
 }
 
 /**
@@ -57,7 +59,7 @@ export interface RowInput {
  * created_at is when the person sent it (Meta's timestamp), not when the webhook arrived: a late
  * or re-sent webhook must not stretch the 24 h window or reorder the thread.
  */
-export function inboundRow({ m, phone, who, leadId, lessonId }: RowInput): TablesInsert<'messages'> {
+export function inboundRow({ m, phone, who, leadId, lessonId, read }: RowInput): TablesInsert<'messages'> {
   return {
     direction: 'inbound',
     status: 'delivered',
@@ -72,6 +74,7 @@ export function inboundRow({ m, phone, who, leadId, lessonId }: RowInput): Table
     media_mime: m.mediaMime,
     interactive_payload: m.payload,
     created_at: m.at.toISOString(),
+    ...(read ? { read_at: m.at.toISOString() } : {}),
     // Only when stamped (docs/12 §13.2): a single-line insert carries no `line` key at all.
     ...(m.line ? { line: m.line } : {}),
     // The receiving number (docs/23c decision 7; legacy: looked up by phone_number_id, InboundStore); none = no key.

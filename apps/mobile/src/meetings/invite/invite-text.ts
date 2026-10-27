@@ -1,4 +1,5 @@
-import { intlLocale, lessonWhenText, type MeetingInviteResult, type MeetingView } from '@ab/shared';
+import { intlLocale, type ClockCycle, type MeetingInviteResult, type MeetingView } from '@ab/shared';
+import { whenIn } from '@/core/lib/clock';
 import { cityOf } from '@/booking/shared/slots';
 import { ApiError } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
@@ -9,18 +10,16 @@ const errors: Record<string, string | undefined> = L.errors;
 /** Codes the meetings API shares with the room (a 410 on a cancel after the meeting ended), like web EXTRA. */
 const extra: Record<string, string | undefined> = { meeting_ended: t.classroom.error.meeting_ended };
 
-/** «الأحد 4 أكتوبر 17:00» in the viewer's zone (Western digits). */
-const whenText = (iso: string, tz: string): string => lessonWhenText(new Date(iso), tz, locale);
 
 /** «الموعد: …» for a scheduled meeting, «اجتماع فوري» for an instant one. */
-export function scheduleLine(meeting: Pick<MeetingView, 'starts_at'>, tz: string): string {
-  return meeting.starts_at ? L.list.scheduledFor.replace('{when}', whenText(meeting.starts_at, tz)) : L.list.instant;
+export function scheduleLine(meeting: Pick<MeetingView, 'starts_at'>, tz: string, cycle: ClockCycle): string {
+  return meeting.starts_at ? L.list.scheduledFor.replace('{when}', whenIn(new Date(meeting.starts_at), tz, cycle)) : L.list.instant;
 }
 
 /** «يُفتح الدخول …» while a scheduled meeting's room is not open yet; null otherwise. */
-export function opensLine(meeting: Pick<MeetingView, 'window' | 'cancelled_at' | 'state'>, tz: string): string | null {
+export function opensLine(meeting: Pick<MeetingView, 'window' | 'cancelled_at' | 'state'>, tz: string, cycle: ClockCycle): string | null {
   if (meeting.cancelled_at || meeting.state !== 'open' || meeting.window?.state !== 'early') return null;
-  return L.list.opensAt.replace('{when}', whenText(meeting.window.opens_at, tz));
+  return L.list.opensAt.replace('{when}', whenIn(new Date(meeting.window.opens_at), tz, cycle));
 }
 
 /** «الأوقات بتوقيت الرياض». */

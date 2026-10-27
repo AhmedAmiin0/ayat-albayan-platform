@@ -46,6 +46,7 @@ import { ReportsModule } from './modules/reporting/reports/reports.module';
 import { RolesModule } from './modules/people/roles/roles.module';
 import { SalesModule } from './modules/sales/sales/sales.module';
 import { SalesRegistrationModule } from './modules/sales/sales-registration/sales-registration.module';
+import { SalesStudentsModule } from './modules/sales/sales-students';
 import { SignInModule } from './modules/people/sign-in';
 import { SchedulingModule } from './modules/teaching/scheduling/scheduling.module';
 import { StudentChannelsModule } from './modules/teaching/student-channels';
@@ -57,6 +58,7 @@ import { TeachersModule } from './modules/people/teachers/teachers.module';
 import { UsersModule } from './modules/people/users/users.module';
 import { TranslationsModule } from './modules/platform/translations/translations.module';
 import { WebhookModule } from './modules/messaging/webhook/webhook.module';
+import { OwnNumbersModule } from './modules/messaging/numbers';
 import { WhatsappModule } from './modules/messaging/whatsapp/whatsapp.module';
 
 @Module({
@@ -102,6 +104,7 @@ import { WhatsappModule } from './modules/messaging/whatsapp/whatsapp.module';
     SubscriptionsModule,
     PaymentsModule,
     SalesMoneyModule,
+    SalesStudentsModule,
     PayoutsModule,
     AssistantPayModule,
     TeacherEarningsModule,
@@ -109,6 +112,7 @@ import { WhatsappModule } from './modules/messaging/whatsapp/whatsapp.module';
     DashboardModule,
     ExportsModule,
     WhatsappModule,
+    OwnNumbersModule,
     NotificationRulesModule,
     InboxModule,
     SavedRepliesModule,

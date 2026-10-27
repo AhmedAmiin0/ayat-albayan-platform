@@ -14,6 +14,7 @@ import { durationMin } from '../lesson/lessons';
 import { familyTz, rescheduleBody, seriesDays } from './reschedule';
 import { ScopeRadios, type Scope } from './ScopeRadios';
 import { SlotPicker } from './SlotPicker';
+import { useClock } from '@/lib/clock';
 
 export interface RescheduleFormProps {
   lesson: LessonView;
@@ -26,6 +27,7 @@ export interface RescheduleFormProps {
  * comes back as a 409 and is shown in Arabic with «اختار ميعاد تاني» or book-anyway + reason.
  */
 export function RescheduleForm({ lesson, onBack, onDone }: RescheduleFormProps) {
+  const clock = useClock();
   const queryClient = useQueryClient();
   const [scope, setScope] = useState<Scope>('one');
   const [startsAt, setStartsAt] = useState<string | null>(null);
@@ -68,7 +70,7 @@ export function RescheduleForm({ lesson, onBack, onDone }: RescheduleFormProps) 
       </div>
       {startsAt ? (
         <p role="status" className="rounded-md bg-sunk px-3.5 py-2.5 text-sm">
-          {t.booking.picked.replace('{when}', pickedText(startsAt, tz))}
+          {t.booking.picked.replace('{when}', pickedText(startsAt, tz, clock))}
         </p>
       ) : (
         <p className="text-xs text-ink-3">{t.lessons.newTimeHint}</p>

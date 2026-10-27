@@ -1,5 +1,7 @@
 import {
   baseMime,
+  CHAT_FILE_MIMES,
+  CHAT_VOICE_MIME,
   chatFileProblem,
   SETTING_DEFAULTS,
   uploadMaxBytes,
@@ -17,10 +19,12 @@ import { Outbox, type Sent } from '../send/outbox';
 import { ThreadQuotes } from '../threads/thread-quotes';
 import { dedupKey, outboundBase, replyOf, sendLine, type ThreadSend } from '../send/thread-send.service';
 import { ThreadsQueries } from '../threads/threads.queries';
+import { toVoiceOgg } from './voice-ogg';
+import { voiceMedia } from './voice-send';
 
-/** 400 file_type / 413 file_too_large, or nothing. */
+/** 400 file_type / 413 file_too_large, or nothing. The chat's own list: an image, a PDF or a recorded voice note. */
 function assertSendable(f: { mime: string; size: number; maxBytes: number }): void {
-  const problem = chatFileProblem(f);
+  const problem = chatFileProblem(f, CHAT_FILE_MIMES);
   if (problem === 'file_type') throw waHttpError('file_type', HttpStatus.BAD_REQUEST);
   if (problem) throw waHttpError(problem, HttpStatus.PAYLOAD_TOO_LARGE);
 }
@@ -32,7 +36,8 @@ export const sentFileName = (name: string, mime: string): string =>
 const filePath = () => waHttpError('file_path', HttpStatus.BAD_REQUEST);
 
 /**
- * Owner 2026-10-19 #2: staff send a JPEG/PNG image or a PDF from the chat, inside the 24 h window,
+ * Owner 2026-10-19 #2: staff send a JPEG/PNG image or a PDF from the chat, inside the 24 h window
+ * (2026-10-27: also a voice note recorded in the app, sent as WhatsApp's ogg/opus voice note),
  * stored in wa-media at out/{actor}/{client_request_id}/{uuid}.{ext} and logged under their name
  * (created_by). The browser uploads to a signed URL; the send trusts only what Storage holds.
  */
@@ -42,6 +47,8 @@ export class ThreadFileSender {
   @Inject(InboxSettings) private readonly settings?: InboxSettings;
   /** «رد» on a file (owner 2026-10-25), property-injected like settings. */
   @Inject(ThreadQuotes) private readonly quotes?: ThreadQuotes;
+  /** m4a → ogg/opus for a voice note (owner 2026-10-27); tests swap in a fake, never the real ffmpeg. */
+  private readonly toOgg = toVoiceOgg;
 
   constructor(
     private readonly queries: ThreadsQueries,
@@ -81,13 +88,14 @@ export class ThreadFileSender {
     if (!head) throw filePath();
     if (sniffMime(head) !== mime) throw waHttpError('file_type', HttpStatus.BAD_REQUEST);
     const reply = await replyOf(this.quotes, s, line);
-    return this.outbox.send({
+    const media = mime === CHAT_VOICE_MIME
+      ? await voiceMedia(this.storage, ref, this.toOgg)
+      : { media_path: path, media_mime: mime, media_name: sentFileName(filename, mime) };
+    return this.outbox.queue({
       ...outboundBase(s, thread),
       dedup_key: key,
       body: caption || null,
-      media_path: path,
-      media_mime: mime,
-      media_name: sentFileName(filename, mime),
+      ...media,
       ...line,
       ...reply,
     });

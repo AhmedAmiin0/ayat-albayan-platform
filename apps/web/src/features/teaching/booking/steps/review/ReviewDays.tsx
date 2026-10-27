@@ -5,6 +5,7 @@ import { courseEnd, dayPicks } from '../../draft/draft.days';
 import type { BookingDraft } from '../../draft/draft';
 import { dayAtText } from '../slots/DayTimesList';
 import { PACKAGE_NOTE_CLASS, packageDaysNote } from '../package/package-days';
+import { useClock } from '@/lib/clock';
 
 /** «تنتهي الدورة في 27 أكتوبر 2026 بعد 8 حلقات»; null without a course or picks. */
 export function courseEndText(d: BookingDraft): string | null {
@@ -18,6 +19,7 @@ export function courseEndText(d: BookingDraft): string | null {
  * الساعة 19:30 (مرتان في الأسبوع)». The admin sees the package note; the assistant's course its end.
  */
 export function ReviewDays({ draft }: { draft: BookingDraft }) {
+  const clock = useClock();
   const picks = dayPicks(draft);
   const note = draft.course ? null : packageDaysNote(draft.pkg, picks.length);
   const ends = courseEndText(draft);
@@ -26,7 +28,7 @@ export function ReviewDays({ draft }: { draft: BookingDraft }) {
       <ul className="flex flex-wrap gap-x-1.5 tabular-nums">
         {picks.map((p, i) => (
           <li key={p.at}>
-            {dayAtText(p, draft.tz)}
+            {dayAtText(p, clock, draft.tz)}
             {i < picks.length - 1 && <span aria-hidden="true"> ·</span>}
           </li>
         ))}

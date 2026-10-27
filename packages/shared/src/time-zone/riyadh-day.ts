@@ -1,4 +1,5 @@
-import { clockTime, RIYADH_TZ } from '../format/running-head.js';
+import { RIYADH_TZ } from '../format/running-head.js';
+import { clockOf, type ClockCycle } from '../format/index.js';
 import { intlLocale, type Locale } from '../i18n/locale.js';
 
 // The academy's own calendar (docs/11 §3): Riyadh days and times of UTC instants, Western digits.
@@ -18,6 +19,8 @@ export interface RiyadhWhenWords {
   weekday: Readonly<Record<string, string | undefined>>;
   /** The UI language: the month's name. */
   locale: Locale;
+  /** The viewer's clock (12 or 24 h); 24 h when not given. */
+  cycle?: ClockCycle;
 }
 
 const dayMonths = new Map<Locale, Intl.DateTimeFormat>();
@@ -35,5 +38,5 @@ function dayMonth(locale: Locale): Intl.DateTimeFormat {
 export function riyadhWhenText(instant: string, words: RiyadhWhenWords): string {
   const at = new Date(instant);
   const weekday = new Date(`${riyadhToday(at)}T00:00:00Z`).getUTCDay();
-  return `${words.weekday[String(weekday)] ?? ''} ${dayMonth(words.locale).format(at)} ${clockTime(at, RIYADH_TZ)}`;
+  return `${words.weekday[String(weekday)] ?? ''} ${dayMonth(words.locale).format(at)} ${clockOf(at, { tz: RIYADH_TZ, locale: words.locale, cycle: words.cycle ?? '24' })}`;
 }

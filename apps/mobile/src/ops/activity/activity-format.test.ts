@@ -1,4 +1,5 @@
 import { t } from '@/core/lib/i18n/i18n';
+import { isolate } from '@/core/ui/primitives/Ltr';
 import {
   actionLabel,
   actorLine,
@@ -27,7 +28,7 @@ test('roles and entities fall back to the raw word', () => {
 
 test('the actor: name and role; a missing name is «غير معروف»', () => {
   expect(actorLine({ actor_name: 'منى', actor_role: 'admin' })).toBe(
-    `منى · ${t.activity.roles.admin}`,
+    `${isolate('منى')} · ${t.activity.roles.admin}`,
   );
   expect(actorLine({ actor_name: null, actor_role: 'public' })).toBe(
     `${t.activity.unknownUser} · ${t.activity.roles.public}`,
@@ -43,10 +44,10 @@ test('results: ok below 400, an error with its status from 400', () => {
 
 test('time reads in Riyadh (UTC+3), 24 h, Western digits', () => {
   // 13:30Z is 16:30 in Riyadh.
-  expect(formatAt('2026-10-04T13:30:00Z')).toMatch(/16:30/);
-  expect(formatAt('2026-10-04T13:30:00Z')).not.toMatch(/[٠-٩]/);
-  expect(metaLine({ entity: 'students', at: '2026-10-04T13:30:00Z' })).toContain(
+  expect(formatAt('2026-10-04T13:30:00Z', '24')).toMatch(/16:30/);
+  expect(formatAt('2026-10-04T13:30:00Z', '24')).not.toMatch(/[٠-٩]/);
+  expect(metaLine({ entity: 'students', at: '2026-10-04T13:30:00Z' }, '24')).toContain(
     t.activity.entities.students,
   );
-  expect(metaLine({ entity: null, at: '2026-10-04T13:30:00Z' })).not.toContain('·');
+  expect(metaLine({ entity: null, at: '2026-10-04T13:30:00Z' }, '24')).not.toContain('·');
 });

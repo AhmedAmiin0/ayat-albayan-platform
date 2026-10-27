@@ -4,6 +4,8 @@ import { Button } from '@/components/ui/form/button';
 import { Icon } from '@/components/ui/display/icon';
 import { IconButton } from '@/components/ui/form/icon-button';
 import { NuqtaGlyph } from '@/components/ui/display/nuqta-glyph';
+import { useClock, type Clock } from '@/lib/clock';
+import { hhmmText } from '@/lib/clock-text';
 import { t } from '@/lib/i18n/i18n';
 import { cn } from '@/lib/utils';
 import { DayTrack } from './DayTrack';
@@ -26,11 +28,11 @@ type Props = {
 };
 
 /** The error line, in ONE inline run (docs/07 §14.3): «… من 17:30 لحد 18:00» for an overlap. */
-function problemText(problem: 'endBeforeStart' | 'overlap', ranges: readonly Range[]): string {
+function problemText(problem: 'endBeforeStart' | 'overlap', ranges: readonly Range[], clock: Clock): string {
   if (problem === 'endBeforeStart') return t.common.endBeforeStart;
   const clash = overlaps(ranges)[0];
   if (!clash) return t.availability.overlap;
-  const span = t.availability.overlapSpan.replace('{from}', clash.start).replace('{to}', clash.end);
+  const span = t.availability.overlapSpan.replace('{from}', hhmmText(clash.start, clock)).replace('{to}', hhmmText(clash.end, clock));
   return `${t.availability.overlap}${t.common.listSeparator}${span}`;
 }
 
@@ -38,6 +40,7 @@ function problemText(problem: 'endBeforeStart' | 'overlap', ranges: readonly Ran
 export function AvailabilityDay({ day, ranges, now, onChange }: Props) {
   const dayName = t.enums.weekday[day];
   const errorId = useId();
+  const clock = useClock();
   const problem = dayProblem(ranges);
   const bad = problemIndex(ranges);
   const invalid = problem === 'endBeforeStart' ? 'end' : 'start';
@@ -100,7 +103,7 @@ export function AvailabilityDay({ day, ranges, now, onChange }: Props) {
         {problem && (
           <p id={errorId} role="alert" className="flex basis-full items-center gap-1.5 text-xs text-danger">
             <NuqtaGlyph shape="struck" />
-            <span>{problemText(problem, ranges)}</span>
+            <span>{problemText(problem, ranges, clock)}</span>
           </p>
         )}
       </div>

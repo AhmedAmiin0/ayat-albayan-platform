@@ -10,8 +10,8 @@ jest.mock('react-native/Libraries/ReactNative/I18nManager', () => {
   return { __esModule: true, default: { ...actual, isRTL: false, getConstants } };
 });
 
-// English (LTR), where flex-end is the right: still ours on the right, theirs on the left.
-test('English: ours on the right (inline-end), theirs on the left', async () => {
+// English (LTR): the same logical sides, so ours lands on the right and theirs on the left, as WhatsApp.
+test('English: ours at flex-end (the right), theirs at flex-start (the left)', async () => {
   await renderWithQuery(<MessageBubble message={delivered} phone={PHONE} />);
   const ours = StyleSheet.flatten(screen.getByTestId(`bubble-${delivered.id}`).props.style);
   expect(ours.alignSelf).toBe('flex-end');

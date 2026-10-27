@@ -9,7 +9,7 @@ import { Note } from '@/more/Note';
 import { BellButton } from '@/notifications/BellButton';
 import { Notice } from '@/today/components/Notice';
 import { localDate } from '@/today/lib/timeline';
-import { useNow } from '@/today/lib/use-day-lessons';
+import { useNow } from '@/core/lib/time/use-now';
 import { useLessonAction } from '@/today/lib/use-lesson-action';
 import { Button } from '@/core/ui/primitives/Button';
 import { EmptyState } from '@/core/ui/feedback/EmptyState';
@@ -21,6 +21,7 @@ import { useTabBarInset } from '@/core/ui/layout/tab-bar-inset';
 import { dayWindow, lessonsOn, reportAction } from '../lib/day';
 import { useMyLessons, usePendingReports, useTeacherMe } from '../lib/queries';
 import { TeacherLessonCard } from '../components/TeacherLessonCard';
+import { useClockCycle } from '@/core/lib/clock';
 
 const cities: Record<string, string | undefined> = t.tz;
 
@@ -41,6 +42,7 @@ function PendingBanner({ count }: { count: number }) {
  * the saved day stays with its «آخر تحديث» (R-MOB-03).
  */
 export function TeacherTodayScreen() {
+  const cycle = useClockCycle();
   const now = useNow();
   const tz = useTeacherMe().data?.tz ?? RIYADH_TZ;
   const today = localDate(now, tz);
@@ -57,7 +59,7 @@ export function TeacherTodayScreen() {
       <ScreenHeader
         title={t.teacherNav.today}
         trailing={<BellButton tree="teacher" />}
-        subtitle={stale ? `${dateLine} · ${t.mobile.lastUpdated.replace('{time}', clockAt(day.dataUpdatedAt))}` : dateLine}
+        subtitle={stale ? `${dateLine} · ${t.mobile.lastUpdated.replace('{time}', clockAt(day.dataUpdatedAt, cycle))}` : dateLine}
       />
       <LiveSessions lessons={lessons} />
       <PendingBanner count={pending.data?.length ?? 0} />

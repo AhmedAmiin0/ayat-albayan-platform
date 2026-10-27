@@ -1,5 +1,6 @@
 import { lessonStatusStyle, teacherName, type LessonView } from '@ab/shared';
 import { View } from 'react-native';
+import { useClockCycle } from '@/core/lib/clock';
 import { t } from '@/core/lib/i18n/i18n';
 import { locale } from '@/core/lib/i18n/locale';
 import { shape, type, useTheme } from '@/theme';
@@ -19,9 +20,10 @@ function Chip({ lesson, group }: { lesson: LessonView; group: SessionGroup }) {
 /** One session of the admin board: time range, status, students, teacher, then its actions. */
 export function SessionCard({ lesson, group }: { lesson: LessonView; group: SessionGroup }) {
   const { color } = useTheme();
+  const cycle = useClockCycle();
   const time = t.classroom.admin.time
-    .replace('{from}', riyadhTime(lesson.starts_at))
-    .replace('{to}', riyadhTime(lesson.ends_at));
+    .replace('{from}', riyadhTime(lesson.starts_at, cycle))
+    .replace('{to}', riyadhTime(lesson.ends_at, cycle));
   const small = { fontFamily: type.ui[400], fontSize: type.size.xs, color: color.ink2 };
   return (
     <View

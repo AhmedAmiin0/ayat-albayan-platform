@@ -3,6 +3,7 @@ import { NuqtaGlyph } from '@/components/ui/display/nuqta-glyph';
 import { t } from '@/lib/i18n/i18n';
 import type { TrialDateDraft } from '../../draft/draft';
 import { pickedText } from '../../steps/slots/SlotStep';
+import { useClock } from '@/lib/clock';
 
 export interface TrialDateNotesProps {
   trial: TrialDateDraft;
@@ -15,8 +16,9 @@ export interface TrialDateNotesProps {
  * history as «نُقلت»), or books a new trial lesson; from the 3rd date on, a warning (never a block).
  */
 export function TrialDateNotes({ trial, tz }: TrialDateNotesProps) {
+  const clock = useClock();
   const moves = trial.upcomingId !== null;
-  const when = trial.upcomingAt ? pickedText(trial.upcomingAt, tz) : '—';
+  const when = trial.upcomingAt ? pickedText(trial.upcomingAt, tz, clock) : '—';
   return (
     <div className="grid gap-2">
       <p className="rounded-md bg-sunk px-3.5 py-2.5 text-sm">

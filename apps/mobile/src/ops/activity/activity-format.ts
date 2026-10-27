@@ -1,18 +1,17 @@
-import { intlLocale } from '@ab/shared';
-import type { ActivityView, StatusStyle } from '@ab/shared';
+import { intlLocale, RIYADH_TZ } from '@ab/shared';
+import type { ActivityView, ClockCycle, StatusStyle } from '@ab/shared';
+import { clockIn, dateWithClock } from '@/core/lib/clock';
 import { t } from '@/core/lib/i18n/i18n';
 import { locale } from '@/core/lib/i18n/locale';
+import { isolate } from '@/core/ui/primitives/Ltr';
 
-// The log is the academy's: times read in Asia/Riyadh, 24 h, Western digits (same as the web).
+// The log is the academy's: times read in Asia/Riyadh, 12 or 24 h as the viewer chose, Western digits.
 
-const AT = new Intl.DateTimeFormat(intlLocale(locale), {
-  dateStyle: 'medium',
-  timeStyle: 'short',
-  hourCycle: 'h23',
-  timeZone: 'Asia/Riyadh',
-});
+const DAY = new Intl.DateTimeFormat(intlLocale(locale), { dateStyle: 'medium', timeZone: RIYADH_TZ });
 
-export const formatAt = (iso: string): string => AT.format(new Date(iso));
+/** «03/10/2026، 16:30» / «… 4:30 م» on the Riyadh clock. */
+export const formatAt = (iso: string, cycle: ClockCycle): string =>
+  dateWithClock(DAY.format(new Date(iso)), clockIn(new Date(iso), RIYADH_TZ, cycle));
 
 const lookup = (dict: object, key: string): string | undefined =>
   (dict as Record<string, string | undefined>)[key];
@@ -41,12 +40,12 @@ export const resultLabel = (status: number): string =>
 
 /** «سارة · الإدارة»: who did it, with their role. */
 export function actorLine(row: Pick<ActivityView, 'actor_name' | 'actor_role'>): string {
-  return `${row.actor_name ?? t.activity.unknownUser} · ${roleLabel(row.actor_role)}`;
+  return `${row.actor_name ? isolate(row.actor_name) : t.activity.unknownUser} · ${roleLabel(row.actor_role)}`;
 }
 
 /** «الإدارة · طالب · 3 أكتوبر 2026 16:30»: the second line of a row. */
-export function metaLine(row: Pick<ActivityView, 'entity' | 'at'>): string {
-  return [row.entity ? entityLabel(row.entity) : null, formatAt(row.at)]
+export function metaLine(row: Pick<ActivityView, 'entity' | 'at'>, cycle: ClockCycle): string {
+  return [row.entity ? entityLabel(row.entity) : null, formatAt(row.at, cycle)]
     .filter((p): p is string => p !== null)
     .join(' · ');
 }

@@ -5,6 +5,7 @@ import { ListSkeleton } from '@/components/ui/display/skeleton';
 import { threadsQuery } from '@/features/messaging/inbox/api/api';
 import { DeliveryTicks } from '@/features/messaging/inbox/messages/components/DeliveryTicks';
 import { listTime, previewText, threadName } from '@/features/messaging/inbox/format';
+import { useClock } from '@/lib/clock';
 import { t } from '@/lib/i18n/i18n';
 import { cn } from '@/lib/utils';
 import { sectionTitle } from '../shared/Bar';
@@ -19,6 +20,7 @@ const ticksWord = (th: ThreadView): string =>
 function ThreadItem({ thread: th }: { thread: ThreadView }) {
   const unread = th.unread_count > 0;
   const name = threadName(th);
+  const clock = useClock();
   return (
     <li>
       <Link
@@ -32,7 +34,7 @@ function ThreadItem({ thread: th }: { thread: ThreadView }) {
           <span className={cn('truncate', unread ? 'font-bold' : 'font-semibold')}>{name}</span>
         </span>
         <time dateTime={th.last_message_at} className="text-2xs text-ink-3 tabular-nums">
-          {listTime(th.last_message_at)}
+          {listTime(th.last_message_at, clock)}
         </time>
         <span className="col-span-2 flex min-w-0 items-center gap-1 text-sm text-ink-2">
           {th.last_direction === 'outbound' && <DeliveryTicks status={th.last_status} />}

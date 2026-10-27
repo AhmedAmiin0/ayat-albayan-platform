@@ -17,7 +17,8 @@ export const MAX_BATCHES = 50;
 /**
  * Inbound voice notes and videos (PLAYABLE_MIMES) we cached in wa-media, and cached echoes of the
  * academy phone's own, are deleted 30 days after they were sent (owner 2026-10-19 #2); photos and
- * PDFs are never purged, and sent files (out/…) are never touched. Each batch removes the objects, then clears media_path, so a purged
+ * PDFs are never purged, and sent files (out/…) are never touched. Only rows with Meta's media id: a file
+ * imported from the old CRM (no media id; CrmMediaCopyJob) is never purged (owner 2026-10-27). Each batch removes the objects, then clears media_path, so a purged
  * row reads as mediaExpired (410). Idempotent: a cleared row is not selected again, and a removal
  * that fails leaves the path for the next day. ponytail: in-process timer like ActivityRetentionJob.
  */
@@ -58,8 +59,9 @@ export class WaMediaRetentionJob implements OnApplicationBootstrap, OnModuleDest
   private async purge(input: { before: string; echoes: boolean; done: { files: number } }): Promise<void> {
     for (let i = 0; i < MAX_BATCHES; i++) {
       const rows = await this.queries.cachedBefore({ before: input.before, limit: BATCH, echoes: input.echoes });
-      // The query already filters by mime; this guard keeps a photo or PDF safe whatever it returns.
-      const playable = rows.filter((r) => isPlayableMime(r.media_mime));
+      // The query already filters by mime and media id; this guard keeps a photo, a PDF or an old-CRM
+      // copy (no media id: our only copy, owner 2026-10-27) safe whatever it returns.
+      const playable = rows.filter((r) => isPlayableMime(r.media_mime) && !!r.media_id);
       if (!playable.length) return;
       await this.storage.removeMany({ bucket: BUCKETS.waMedia, paths: playable.map((r) => r.media_path) });
       await this.queries.clearPaths(

@@ -1,5 +1,6 @@
 import { lessonStatusStyle } from '@ab/shared';
 import { Pressable, View } from 'react-native';
+import { useClockCycle } from '@/core/lib/clock';
 import { t } from '@/core/lib/i18n/i18n';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { toneColors } from '@/core/ui/feedback/StatusChip';
@@ -23,7 +24,8 @@ interface LessonRowProps<L extends TodayLesson> {
 export function LessonRow<L extends TodayLesson>({ lesson, onOpen, compact = false }: LessonRowProps<L>) {
   const { color } = useTheme();
   const tone = toneColors(color, lessonStatusStyle[lesson.status].tone).fg;
-  const time = riyadhTime(lesson.starts_at);
+  const cycle = useClockCycle();
+  const time = riyadhTime(lesson.starts_at, cycle);
   const names = studentNames(lesson);
   const status = t.enums.lessonStatus[lesson.status];
   return (
@@ -42,7 +44,7 @@ export function LessonRow<L extends TodayLesson>({ lesson, onOpen, compact = fal
     >
       <AppText
         style={{
-          width: 46,
+          width: cycle === '12' ? 70 : 46,
           fontFamily: type.ui[600],
           fontSize: 15,
           lineHeight: 22,

@@ -5,6 +5,7 @@ import { Pager } from '@/components/ui/layout/pager';
 import { t } from '@/lib/i18n/i18n';
 import { activityQuery, type ActivityScope } from './activity.api';
 import { actionLabel, formatAt, resultLabel, resultStyle, roleLabel } from './activity-format';
+import { useClock } from '@/lib/clock';
 
 export interface EntityActivityProps extends ActivityScope {
   /** Hide the section while nothing is logged (the student profile); a tab shows the empty text. */
@@ -16,6 +17,7 @@ export interface EntityActivityProps extends ActivityScope {
  * The page lives in local state (the profile's URL stays the profile's).
  */
 export function EntityActivity({ entity, entityId, hideEmpty = false }: EntityActivityProps) {
+  const clock = useClock();
   const [page, setPage] = useState(1);
   const headingId = useId();
   const list = useQuery(activityQuery({ page, sort: {}, filters: {} }, { entity, entityId }));
@@ -28,7 +30,7 @@ export function EntityActivity({ entity, entityId, hideEmpty = false }: EntityAc
       <ul className="grid gap-1">
         {data.items.map((r) => (
           <li key={r.id} className="flex flex-wrap items-center gap-x-3 gap-y-1 border-b border-rule py-2 text-sm">
-            <span className="tabular-nums text-ink-2">{formatAt(r.at)}</span>
+            <span className="tabular-nums text-ink-2">{formatAt(r.at, clock)}</span>
             <span className="font-semibold">{actionLabel(r.action, r.entity)}</span>
             <span className="text-ink-2">{r.actor_name ?? roleLabel(r.actor_role)}</span>
             <StatusChip {...resultStyle(r.status)} size="sm" label={resultLabel(r.status)} />

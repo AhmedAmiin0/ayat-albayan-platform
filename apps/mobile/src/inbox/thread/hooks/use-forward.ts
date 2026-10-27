@@ -3,6 +3,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRef } from 'react';
 import { apiSend } from '@/core/lib/http/api';
 import { requestId } from '@/core/lib/http/request-id';
+import { refreshInbox } from './inbox-sync';
 
 /**
  * POST /threads/forward: one message to 1–5 chats, each answered on its own (sent, or skipped and why).
@@ -12,7 +13,7 @@ export function useForward() {
   const client = useQueryClient();
   return useMutation({
     mutationFn: (body: ThreadForward) => apiSend<ForwardResponse>('POST', '/threads/forward', body),
-    onSettled: () => client.invalidateQueries({ queryKey: ['threads'] }),
+    onSettled: () => refreshInbox(client),
   });
 }
 

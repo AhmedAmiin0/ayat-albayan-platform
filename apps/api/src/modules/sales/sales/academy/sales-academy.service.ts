@@ -22,9 +22,16 @@ export class SalesAcademyService {
     private readonly sales: SalesQueries,
   ) {}
 
-  async students(q: SalesStudentsQuery): Promise<Page<SalesStudentView>> {
-    const { rows, total } = await this.academy.students(q);
-    return { items: rows.map(toSalesStudent), total, page: q.page, pageSize: q.pageSize };
+  /** Every student; `mine` on hers (the ownership of «الاشتراكات»): those rows open «تفاصيل الطالب» (docs/16 row 36). */
+  async students(q: SalesStudentsQuery, user: AuthUser): Promise<Page<SalesStudentView>> {
+    const [{ rows, total }, own] = await Promise.all([this.academy.students(q), this.ownStudents(user)]);
+    const items = rows.map((row) => ({ ...toSalesStudent(row), ...(own.has(row.id) ? { mine: true } : {}) }));
+    return { items, total, page: q.page, pageSize: q.pageSize };
+  }
+
+  /** The ids of her own students (SalesQueries.ownership). */
+  async ownStudents(user: AuthUser): Promise<ReadonlySet<string>> {
+    return new Set((await this.sales.ownership(user.id)).studentIds);
   }
 
   async live(now = new Date()): Promise<AssistantLessonView[]> {

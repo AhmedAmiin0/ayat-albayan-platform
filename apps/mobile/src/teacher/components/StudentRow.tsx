@@ -1,15 +1,14 @@
-import { clockTime, isPackageEnded, lessonWhenText, studentStatusStyle, type TeacherStudentView } from '@ab/shared';
+import { isPackageEnded, studentStatusStyle, type ClockCycle, type TeacherStudentView } from '@ab/shared';
+import { useClockCycle, whenIn } from '@/core/lib/clock';
 import { router } from 'expo-router';
 import { t } from '@/core/lib/i18n/i18n';
-import { locale } from '@/core/lib/i18n/locale';
 import { ListRow } from '@/core/ui/layout/ListRow';
 import { StatusChip } from '@/core/ui/feedback/StatusChip';
 
 /** «الحلقة الجاية: الأحد 5 أكتوبر 17:00» in the teacher's own time zone, or «مفيش حلقة جاية». */
-function nextLessonLine(startsAt: string | null, tz: string): string {
+function nextLessonLine(startsAt: string | null, tz: string, cycle: ClockCycle): string {
   if (!startsAt) return t.teacherStudents.noNextLesson;
-  const at = new Date(startsAt);
-  return t.teacherStudents.nextLesson.replace('{when}', `${lessonWhenText(at, tz, locale)} ${clockTime(at, tz)}`);
+  return t.teacherStudents.nextLesson.replace('{when}', whenIn(new Date(startsAt), tz, cycle));
 }
 
 /**
@@ -18,6 +17,7 @@ function nextLessonLine(startsAt: string | null, tz: string): string {
  * (owner 2026-10-12, 2026-10-15).
  */
 export function StudentRow({ student: s, tz }: { student: TeacherStudentView; tz: string }) {
+  const cycle = useClockCycle();
   const facts = [
     t.enums.program[s.program],
     s.level,
@@ -27,7 +27,7 @@ export function StudentRow({ student: s, tz }: { student: TeacherStudentView; tz
     <ListRow
       title={s.name}
       meta={s.code}
-      subtitle={`${facts.join(' · ')}\n${nextLessonLine(s.next_lesson_at, tz)}`}
+      subtitle={`${facts.join(' · ')}\n${nextLessonLine(s.next_lesson_at, tz, cycle)}`}
       onPress={() => router.push(`/teacher/reports/student/${s.id}`)}
       trailing={
         isPackageEnded(s.status) ? (

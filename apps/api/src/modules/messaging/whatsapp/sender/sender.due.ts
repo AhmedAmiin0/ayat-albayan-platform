@@ -1,5 +1,6 @@
 import type { Json } from '@ab/db';
 import type { LessonStatus, WaLine } from '@ab/shared';
+import type { Db } from '../../../../common/db/db.module';
 import type { StaleLead } from './send-stale';
 
 /** A queued outbound row with what expiry, staleness and the failure push need. */
@@ -36,3 +37,22 @@ export interface DueMessage {
 
 export const DUE_COLUMNS =
   'id, phone_e164, lead_id, lesson_id, template_key, template_params, body, reply_to_wa_id, dedup_key, created_by, attempts, expires_at, error_code, line, number_id, media_path, media_mime, media_name, interactive_payload, lesson:lessons(starts_at, status), guardian:guardians(name), lead:leads(name, status, follow_up_paused, last_inbound_at, created_at)';
+
+/**
+ * The idle tick's one read (messages_queue_idx): is any queued outbound row due now (in the allow-list
+ * when one is set)? A superset of SenderQueries.due() (any template, any line), so false never skips
+ * a row due() would have read; true runs the pass exactly as before.
+ */
+export async function anyDue(db: Db, input: { now: Date; allowed: readonly string[] | null }): Promise<boolean> {
+  const now = input.now.toISOString();
+  const queued = db
+    .from('messages')
+    .select('id')
+    .eq('direction', 'outbound')
+    .eq('status', 'queued')
+    .or(`scheduled_for.is.null,scheduled_for.lte.${now}`)
+    .or(`next_attempt_at.is.null,next_attempt_at.lte.${now}`);
+  const { data, error } = await (input.allowed ? queued.in('phone_e164', [...input.allowed]) : queued).limit(1);
+  if (error) throw new Error(`outbound queue probe failed: ${error.message}`);
+  return data.length > 0;
+}

@@ -8,6 +8,8 @@ import { formatAt } from '../../activity/activity-format';
 import { DevKey } from './DevKey';
 import { sameValue } from '../lib/value-draft';
 import { boundsOf, valueText } from '../lib/value-text';
+import { useClockCycle } from '@/core/lib/clock';
+import type { ClockCycle } from '@ab/shared';
 
 interface SheetNotesProps {
   valueKey: SettingKey;
@@ -21,8 +23,8 @@ interface SheetNotesProps {
 }
 
 /** «آخر تعديل: …» (with who, when GET /config/meta names them). */
-function changedLine(meta: SettingMeta): string {
-  const at = formatAt(meta.updatedAt);
+function changedLine(meta: SettingMeta, cycle: ClockCycle): string {
+  const at = formatAt(meta.updatedAt, cycle);
   const c = t.config;
   return meta.updatedByName ? c.changedBy.replace('{at}', at).replace('{name}', meta.updatedByName) : c.changed.replace('{at}', at);
 }
@@ -42,6 +44,7 @@ function tagOf(key: SettingKey): string | undefined {
 
 /** The small lines under the editor: why read-only, bounds, default (+ reset), last change, tag, key. */
 export function SheetNotes({ valueKey, saved, editable, canWrite, meta, onReset }: SheetNotesProps) {
+  const cycle = useClockCycle();
   const why = editable ? undefined : readOnlyWhy(valueKey, canWrite);
   const bounds = editable ? boundsOf(valueKey) : undefined;
   const fallback = SETTING_DEFAULTS[valueKey];
@@ -56,7 +59,7 @@ export function SheetNotes({ valueKey, saved, editable, canWrite, meta, onReset 
           <Button variant="ghost" label={t.settingsValues.resetDefault} onPress={onReset} />
         ) : null}
       </View>
-      {meta ? <Note>{changedLine(meta)}</Note> : null}
+      {meta ? <Note>{changedLine(meta, cycle)}</Note> : null}
       {tag ? <Note>{tag}</Note> : null}
       <DevKey settingKey={valueKey} />
     </>

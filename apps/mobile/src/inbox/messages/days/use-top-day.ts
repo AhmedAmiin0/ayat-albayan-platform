@@ -1,15 +1,15 @@
-import type { MessageView } from '@ab/shared';
 import { useEffect, useRef, useState } from 'react';
 import { Animated, type LayoutChangeEvent, type ViewToken } from 'react-native';
 import { useA11yPref } from '@/core/ui/primitives/use-a11y-pref';
 import { DayCell } from './DayCell';
 import { useDayBand } from './use-day-band';
+import type { DayRow } from './day-separators';
 
 /** How long the floating day stays after the scroll stops, and its fade (ms). */
 export const TOP_DAY_HIDE_MS = 1200;
 const FADE_MS = 200;
 
-type Viewable = { viewableItems: ViewToken<MessageView>[] };
+type Viewable = { viewableItems: ViewToken<DayRow>[] };
 
 /**
  * The floating day chip (owner 2026-10-27, as WhatsApp): while she scrolls, the day of the topmost
@@ -18,7 +18,7 @@ type Viewable = { viewableItems: ViewToken<MessageView>[] };
  * hides while one is in its band, and comes back with the new day once it has scrolled past; never
  * beside the inline chip of its own day. `label` is null while hidden. `more`: an older page exists.
  */
-export function useTopDay(rows: readonly MessageView[], more: boolean) {
+export function useTopDay(rows: readonly DayRow[], more: boolean) {
   const still = useA11yPref('reduceMotion');
   const band = useDayBand(rows, more);
   const [label, setLabel] = useState<string | null>(null);

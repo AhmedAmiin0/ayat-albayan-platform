@@ -1,7 +1,9 @@
 import { INVOICE_MIMES, baseMime, chatFileMaxBytes, isChatViewMime, isWaAuthError } from '@ab/shared';
-import { HttpStatus, Inject, Injectable } from '@nestjs/common';
+import { HttpStatus, Inject, Injectable, Optional } from '@nestjs/common';
 import { BUCKETS, waMediaPath } from '../../../../common/storage/storage.paths';
 import { StorageService } from '../../../../common/storage/storage.service';
+import { CrmHistoryMedia } from './crm-history/crm-history-media';
+import { isCrmHistoryRow } from './crm-history/crm-history-url';
 import { InboundMediaQueries, type MediaMessage } from './inbound-media.queries';
 import { mediaSource } from '../numbers/media-client';
 import { NumberClients } from '../numbers/number-clients';
@@ -23,12 +25,13 @@ export { baseMime };
 export const isInvoiceMime = (mime: string | null): boolean => (INVOICE_MIMES as readonly string[]).includes(baseMime(mime));
 
 /**
- * The gate of a file we may serve: inbound, with a media id, and a mime `allow` accepts. The default
+ * The gate of a file we may serve: inbound, with a media id (or an old-CRM file link, isCrmHistoryRow),
+ * and a mime `allow` accepts. The default
  * (images / PDFs) keeps the booking's «من الشات» and the sales receipt copy narrow; the chat bubble
  * (W6) passes isChatViewMime for voice notes and videos too (owner 2026-10-19 #1).
  */
 export function servable(msg: MediaMessage, allow: (mime: string | null) => boolean = isInvoiceMime): MediaMessage {
-  if (msg.direction !== 'inbound' || !msg.media_id || !allow(msg.media_mime)) {
+  if (msg.direction !== 'inbound' || !(msg.media_id || isCrmHistoryRow(msg)) || !allow(msg.media_mime)) {
     throw waHttpError('invoice_message', HttpStatus.BAD_REQUEST);
   }
   return msg;
@@ -61,12 +64,15 @@ export function mediaExpired(msg: Pick<MediaMessage, 'created_at' | 'media_path'
  * client of the NUMBER it came in on (mediaSource; docs/12 §13.4, docs/23c): 409 crm_no_media for the old
  * CRM number's history (no call), 503 line_not_configured for a chat message while the chat
  * line is not configured (module mode: while its number has no client), 502 meta_error when Meta refuses the line's token (190 / 10 / 200),
- * 502 kapso_auth when Kapso refuses the project key (docs/19).
+ * 502 kapso_auth when Kapso refuses the project key (docs/19), 502 crm_unreachable when the old CRM's storage
+ * does not answer for an imported file (CrmHistoryMedia; a retry may work).
  */
 @Injectable()
 export class InboundMedia {
   /** Module mode's per-number clients (in memory; legacy finds none and uses the lines). */
   private readonly numbers = new NumberClients();
+  /** Property injection keeps the constructor at three parameters; absent (unit tests) = old-CRM files are 410. */
+  @Optional() @Inject(CrmHistoryMedia) private readonly crm?: CrmHistoryMedia;
 
   constructor(
     private readonly queries: InboundMediaQueries,
@@ -92,12 +98,14 @@ export class InboundMedia {
     return this.cache(await this.load(messageId));
   }
 
-  /** The cached object of a loaded message, downloading it first (cap: 16 MB audio/video, else 10 MB). */
+  /**
+   * The cached object of a loaded message, downloading it first (cap: 16 MB audio/video, else 10 MB):
+   * from WhatsApp, or an old-CRM file from the CRM's storage (CrmHistoryMedia; no 29-day limit).
+   */
   async cache(msg: MediaMessage): Promise<InboundFile> {
     const mime = baseMime(msg.media_mime);
     if (msg.media_path) return { bucket: BUCKETS.waMedia, path: msg.media_path, mime };
-    if (mediaExpired(msg, new Date()) || !msg.media_id) throw waHttpError('media_expired', HttpStatus.GONE);
-    const file = await this.download(msg, msg.media_id);
+    const file = await this.fetch(msg);
     if (file.bytes.byteLength > chatFileMaxBytes(mime)) {
       throw waHttpError('invoice_too_large', HttpStatus.PAYLOAD_TOO_LARGE);
     }
@@ -105,6 +113,12 @@ export class InboundMedia {
     await this.storage.upload({ bucket: BUCKETS.waMedia, path, body: file.bytes, contentType: mime });
     await this.queries.setPath(msg.id, path);
     return { bucket: BUCKETS.waMedia, path, mime };
+  }
+
+  private fetch(msg: MediaMessage): Promise<{ bytes: Uint8Array }> {
+    if (isCrmHistoryRow(msg) && msg.number?.provider === 'crm' && this.crm) return this.crm.download(msg);
+    if (mediaExpired(msg, new Date()) || !msg.media_id) throw waHttpError('media_expired', HttpStatus.GONE);
+    return this.download(msg, msg.media_id);
   }
 
   /** A Meta 4xx means the id is gone (expired, deleted): 410, not a server error; a dead token is 502. */

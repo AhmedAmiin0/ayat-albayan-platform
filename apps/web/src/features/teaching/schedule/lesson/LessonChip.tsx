@@ -1,4 +1,4 @@
-import { clockTime, lessonStatusStyle, subscriptionStatusStyle, type LessonView, type Tone } from '@ab/shared';
+import { clockOf, lessonStatusStyle, type LessonView, subscriptionStatusStyle, type Tone } from '@ab/shared';
 import { NuqtaGlyph } from '@/components/ui/display/nuqta-glyph';
 import { tzCity } from '@/components/ui/form/time-zone-select';
 import { t } from '@/lib/i18n/i18n';
@@ -8,6 +8,8 @@ import { studentNames } from './lessons';
 import { LessonTags } from './LessonTags';
 import { zoneLabel } from '../reschedule/slots';
 import { RIYADH_TZ } from '../tz';
+import { useClock } from '@/lib/clock';
+import { clockDir } from '@/lib/clock-text';
 
 // Literal class strings so Tailwind's scanner sees them (docs/07 §6 status chip tones).
 const EDGE: Record<Tone, string> = {
@@ -48,7 +50,8 @@ export interface LessonChipProps<L extends ChipLesson> {
 export function LessonChip<L extends ChipLesson>({ lesson, onOpen, hideTeacher = true }: LessonChipProps<L>) {
   const style = lessonStatusStyle[lesson.status];
   const tz = lesson.students[0]?.tz ?? RIYADH_TZ;
-  const local = zoneLabel(lesson.starts_at, { tz, base: RIYADH_TZ });
+  const clock = useClock();
+  const local = zoneLabel(lesson.starts_at, { tz, base: RIYADH_TZ }, clock);
   const Tag = onOpen ? 'button' : 'div';
   return (
     <Tag
@@ -60,8 +63,8 @@ export function LessonChip<L extends ChipLesson>({ lesson, onOpen, hideTeacher =
       )}
     >
       <span className="flex min-w-0 items-baseline gap-1.5">
-        <span dir="ltr" className="font-semibold tabular-nums">
-          {clockTime(new Date(lesson.starts_at), RIYADH_TZ)}
+        <span dir={clockDir(clock)} className="font-semibold tabular-nums">
+          {clockOf(new Date(lesson.starts_at), { ...clock, tz: RIYADH_TZ })}
         </span>
         <span className="truncate font-medium">{studentNames(lesson)}</span>
       </span>

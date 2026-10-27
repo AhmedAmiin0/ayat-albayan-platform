@@ -1,29 +1,36 @@
 import type { MessageQuote, TemplateParamsInput, ThreadDetail, ThreadTemplate, MessageView } from '@ab/shared';
 import { useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiFetch, apiSend, toQueryString } from '@/core/lib/http/api';
+import { refreshInbox, touchInbox } from './inbox-sync';
 import {
   appendMessage,
   provisionalMessage,
   removeMessage,
   replaceMessage,
+  sendKey,
   threadKey,
   threadPath,
   type ThreadCache,
 } from './thread-cache';
+import { useThreadPoll } from './thread-poll';
 
 /**
  * GET /threads/:phone (docs/12 H2): the newest page first, `before` the oldest loaded row pages
  * back. The API stamps the inbound rows read when it answers. The persisted client keeps the last
- * answer on disk, so an opened thread reads offline (R-MOB-03).
+ * answer on disk, so an opened thread reads offline (R-MOB-03). While on screen, useThreadPoll keeps
+ * it live: a delta every INBOX_REFRESH_MS, the newest page every THREAD_FULL_MS (pull-to-refresh and
+ * opening read the whole thread).
  */
 export function useThread(phone: string) {
-  return useInfiniteQuery({
+  const query = useInfiniteQuery({
     queryKey: threadKey(phone),
     queryFn: ({ pageParam }) =>
       apiFetch<ThreadDetail>(`${threadPath(phone)}${toQueryString({ before: pageParam })}`),
     initialPageParam: undefined as string | undefined,
     getNextPageParam: (last) => (last.has_more ? last.messages[0]?.created_at : undefined),
   });
+  useThreadPoll(phone, query.data !== undefined);
+  return query;
 }
 
 /**
@@ -53,8 +60,7 @@ function body({ out, id }: SendInput) {
  * Optimistic send: the row shows at once as queued; the API's row replaces it, or a refusal takes
  * it out again (the caller shows `sendError`). Either way the thread refetches.
  */
-/** The mutation key of a chat's text / template send. */
-export const sendKey = (phone: string) => ['inbox-send', phone];
+export { sendKey } from './thread-cache';
 
 export function useSendMessage(phone: string) {
   const client = useQueryClient();
@@ -74,10 +80,11 @@ export function useSendMessage(phone: string) {
       const quote = out.kind === 'text' && out.replyTo ? { reply_to_message_id: out.replyTo.id, reply_to: out.replyTo } : {};
       const row = { ...provisionalMessage({ id, phone, body: text, templateKey: key }), ...quote };
       edit((old) => appendMessage(old, row));
+      await touchInbox(client, row);
     },
     onSuccess: (row, { id }) => edit((old) => replaceMessage(old, id, row)),
     onError: (_error, { id }) => edit((old) => removeMessage(old, id)),
-    onSettled: () => client.invalidateQueries({ queryKey }),
+    onSettled: () => refreshInbox(client, phone),
   });
 }
 
@@ -95,6 +102,6 @@ export function useMessageAction(phone: string, action: MessageAction) {
     mutationFn: (id: string) => apiSend<MessageView>('POST', `/messages/${id}/${action}`),
     onSuccess: (row) =>
       client.setQueryData<ThreadCache>(queryKey, (old) => replaceMessage(old, row.id, row)),
-    onSettled: () => client.invalidateQueries({ queryKey }),
+    onSettled: () => refreshInbox(client, phone),
   });
 }

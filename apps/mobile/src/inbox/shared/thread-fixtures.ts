@@ -1,5 +1,6 @@
 import type { MessageView, TemplateView, ThreadDetail, ThreadPeople, ThreadView } from '@ab/shared';
 import { provisionalMessage, type ThreadCache } from '../thread/hooks/thread-cache';
+import type { ThreadListCache } from '../thread/hooks/thread-list-cache';
 
 // Test rows in the GET /threads/:phone and GET /messaging/templates shapes (huda's test phone).
 
@@ -74,6 +75,12 @@ export function detail(messages: MessageView[], fields: Partial<ThreadDetail> = 
 /** A cached thread, as useThread stores it. */
 export function cachedThread(...pages: ThreadDetail[]): ThreadCache {
   return { pages, pageParams: pages.map((p, i) => (i === 0 ? undefined : p.messages[0]?.created_at)) };
+}
+
+/** A cached chats list, as useThreadList stores it: one array per page, newest page first. */
+export function listCache(...pages: ThreadView[][]): ThreadListCache {
+  const total = pages.flat().length;
+  return { pages: pages.map((items, i) => ({ items, total, page: i + 1, pageSize: 2 })), pageParams: pages.map((_p, i) => i + 1) };
 }
 
 export const plainReminder: TemplateView = {

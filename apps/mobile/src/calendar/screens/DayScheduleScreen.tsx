@@ -5,10 +5,11 @@ import { SectionList } from 'react-native';
 import { JoinClassroomButton } from '@/classroom/links/JoinClassroomButton';
 import { EditTimeSheet } from '@/edit-time/components/EditTimeSheet';
 import { t } from '@/core/lib/i18n/i18n';
+import { useFollowingDay } from '@/core/lib/time/use-following-day';
 import { Note } from '@/more/Note';
 import { RescheduleSheet } from '@/teaching/reschedule/RescheduleSheet';
 import { Notice } from '@/today/components/Notice';
-import { useNow } from '@/today/lib/use-day-lessons';
+import { useNow } from '@/core/lib/time/use-now';
 import { useLessonAction } from '@/today/lib/use-lesson-action';
 import { Button } from '@/core/ui/primitives/Button';
 import { EmptyState } from '@/core/ui/feedback/EmptyState';
@@ -34,6 +35,7 @@ import { SchedulePeriod } from '../overview/SchedulePeriod';
 import { TeacherHeader } from '../overview/TeacherHeader';
 import { useOverview } from '../overview/use-overview';
 import { riyadhToday, weekStart, weekWindow } from '../lib/week';
+import { useClockCycle } from '@/core/lib/clock';
 
 const DATE = /^\d{4}-\d{2}-\d{2}$/;
 const ALL: TeacherFilter = { program: 'all', gender: 'all' };
@@ -46,9 +48,10 @@ const ALL: TeacherFilter = { program: 'all', gender: 'all' };
  * «المزيد» rather than opened as its tab; `initialDate` (YYYY-MM-DD) opens it on that day.
  */
 export function DayScheduleScreen({ back = false, initialDate }: { back?: boolean; initialDate?: string }) {
+  const cycle = useClockCycle();
   const now = useNow();
   const today = riyadhToday(now);
-  const [date, setDate] = useState(initialDate && DATE.test(initialDate) ? initialDate : today);
+  const [date, setDate] = useFollowingDay(today, initialDate && DATE.test(initialDate) ? initialDate : undefined);
   const [view, setView] = useState<ScheduleView>('day');
   const [filter, setFilter] = useState<TeacherFilter>(ALL);
   const [moving, setMoving] = useState<LessonView | null>(null);
@@ -64,6 +67,7 @@ export function DayScheduleScreen({ back = false, initialDate }: { back?: boolea
   const subtitle = headerLine(
     [t.availability.tzHint.replace('{tz}', t.runningHead.riyadh)],
     overview,
+    cycle,
   );
   const actionsOf = (lesson: LessonView, onLeave?: () => void) => (
     <LessonRowActions lesson={lesson} action={action} onReschedule={setMoving} onEditTime={setEditing} onLeave={onLeave} />

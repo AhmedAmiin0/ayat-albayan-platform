@@ -1,16 +1,16 @@
-import { lessonStatusStyle, type LessonView } from '@ab/shared';
+import { clockOf, lessonStatusStyle, type LessonView } from '@ab/shared';
 import { ListSkeleton } from '@/components/ui/display/skeleton';
 import { StatusChip } from '@/components/ui/display/status-chip';
 import { StaffJoinButton } from '@/features/teaching/classroom/join/StaffJoinButton';
-import { useNow } from '@/features/teaching/classroom/sessions/use-now';
+import { useNow } from '@/lib/time/use-now';
 import { t } from '@/lib/i18n/i18n';
 import { useJoinWindow } from '@/lib/settings/public-config';
 import { cn } from '@/lib/utils';
 import { sectionTitle } from '../shared/Bar';
 import { isLiveNow, todaysLessons } from './today';
 import { teacherLabel } from '@/lib/i18n/teacher-label';
-
-const CLOCK = new Intl.DateTimeFormat('en-GB', { hour: '2-digit', minute: '2-digit', hour12: false });
+import { useClock } from '@/lib/clock';
+import { clockDir, viewerZone } from '@/lib/clock-text';
 
 /**
  * Folds by the card's own width (container query), not the screen's (owner 2026-10-18): the card is a
@@ -18,11 +18,18 @@ const CLOCK = new Intl.DateTimeFormat('en-GB', { hour: '2-digit', minute: '2-dig
  */
 function LessonItem({ lesson, live }: { lesson: LessonView; live: boolean }) {
   const style = lessonStatusStyle[lesson.status];
+  const clock = { ...useClock(), tz: viewerZone() };
   return (
-    <li className="grid grid-cols-[4.5rem_minmax(0,1fr)] items-start gap-x-3 gap-y-2 border-b border-rule py-3.5 last:border-b-0 @xl:grid-cols-[4.5rem_minmax(0,1fr)_auto]">
+    <li
+      className={cn(
+        'grid items-start gap-x-3 gap-y-2 border-b border-rule py-3.5 last:border-b-0',
+        // «12:30 م» is wider than «12:30»: the time column grows in 12 h.
+        clock.cycle === '12' ? 'grid-cols-[6.5rem_minmax(0,1fr)] @xl:grid-cols-[6.5rem_minmax(0,1fr)_auto]' : 'grid-cols-[4.5rem_minmax(0,1fr)] @xl:grid-cols-[4.5rem_minmax(0,1fr)_auto]',
+      )}
+    >
       <span className="flex items-center gap-2">
-        <span dir="ltr" className="text-lg font-semibold tabular-nums">
-          {CLOCK.format(new Date(lesson.starts_at))}
+        <span dir={clockDir(clock)} className="text-lg font-semibold tabular-nums">
+          {clockOf(new Date(lesson.starts_at), clock)}
         </span>
         {live && <span title={t.dashboard.home.live} className="size-2 rounded-full bg-ok motion-safe:animate-pulse" />}
       </span>

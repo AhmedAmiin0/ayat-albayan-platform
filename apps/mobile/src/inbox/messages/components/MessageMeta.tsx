@@ -7,6 +7,7 @@ import { DeliveryTicks } from './DeliveryTicks';
 import { lineWord } from '../../shared/line-words';
 import { clock, deliveryTimes, queuedLine } from '../hooks/message-text';
 import { senderText } from '../../thread/hooks/thread-mode';
+import { useClockCycle } from '@/core/lib/clock';
 
 export function useSmall() {
   const { color } = useTheme();
@@ -25,11 +26,12 @@ export function useSmall() {
  * times on a line of their own under this row, so an older message's long times wrap in the bubble.
  */
 export function MessageMeta({ message: m }: { message: MessageView }) {
+  const cycle = useClockCycle();
   const small = useSmall();
   const [open, setOpen] = useState(false);
-  const later = queuedLine(m);
+  const later = queuedLine(m, { cycle });
   const sender = senderText(m);
-  const times = m.direction === 'outbound' ? deliveryTimes(m) : '';
+  const times = m.direction === 'outbound' ? deliveryTimes(m, { cycle }) : '';
   return (
     <>
       {sender ? <AppText style={small}>{sender}</AppText> : null}
@@ -37,7 +39,7 @@ export function MessageMeta({ message: m }: { message: MessageView }) {
       <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end', flexWrap: 'wrap', gap: 8 }}>
         {m.line ? <AppText style={small}>{lineWord(m.line)}</AppText> : null}
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
-          <AppText style={small}>{clock(m.created_at)}</AppText>
+          <AppText style={small}>{clock(m.created_at, cycle)}</AppText>
           {m.direction === 'outbound' ? (
             <DeliveryTicks status={m.status} times={times} onLongPress={() => setOpen((v) => !v)} />
           ) : null}

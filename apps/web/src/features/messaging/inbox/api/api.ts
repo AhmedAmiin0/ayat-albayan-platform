@@ -11,17 +11,21 @@ import type {
   ThreadText,
   ThreadView,
 } from '@ab/shared';
+import { liveInterval } from '@ab/client-core';
 import { infiniteQueryOptions, keepPreviousData, queryOptions } from '@tanstack/react-query';
 import type { LeadRow, Page } from '@/features/sales/leads/types';
 import { apiFetch, apiSend } from '@/lib/http/api';
 import { env } from '@/lib/http/env';
 import type { InboxSearch } from '../shared/search';
+import { inboxLive } from './live';
 
 // Inbox routes (docs/12 §4: H1–H4, M1–M2, L1–L2) plus the existing lead routes.
 
 export const THREADS_PAGE_SIZE = 30;
-/** New WhatsApp messages arrive by webhook; the open inbox polls for them (10 s; e2e 1 s). */
+/** New WhatsApp messages arrive by webhook; the open chat polls for them with a delta (10 s; e2e 1 s). */
 export const INBOX_REFRESH_MS = env.inboxRefreshMs;
+/** The inbox's poll: INBOX_FALLBACK_MS while realtime is connected (its events re-read sooner), else the above. */
+export const inboxPollMs = () => liveInterval(inboxLive.isLive(), INBOX_REFRESH_MS);
 
 export const threadsQuery = (s: InboxSearch) => {
   const params = new URLSearchParams({ page: String(s.page), pageSize: String(THREADS_PAGE_SIZE) });
@@ -36,12 +40,12 @@ export const threadsQuery = (s: InboxSearch) => {
     queryKey: ['threads', 'list', params.toString()],
     queryFn: () => apiFetch<Page<ThreadView>>(`/threads?${params}`),
     placeholderData: keepPreviousData,
-    refetchInterval: INBOX_REFRESH_MS,
+    refetchInterval: () => liveInterval(inboxLive.isLive(), env.inboxListRefreshMs),
   });
 };
 
 /** `+` must not reach the path raw (docs/12 H2: url-encoded E.164). */
-const threadPath = (phone: string) => `/threads/${encodeURIComponent(phone)}`;
+export const threadPath = (phone: string) => `/threads/${encodeURIComponent(phone)}`;
 
 /**
  * One page per `before` (the oldest loaded message), newest page first. Opening stamps read_at, so the
@@ -49,6 +53,8 @@ const threadPath = (phone: string) => `/threads/${encodeURIComponent(phone)}`;
  * mark new messages read for everyone. TanStack's refetchOnWindowFocus follows visibilitychange only,
  * so a click into another (still visible) window stops the poll with no event to restart it:
  * ThreadPane refetches on the window's 'focus' event (useWindowFocus), which re-arms the interval.
+ * This full read runs on open, on focus and every threadFullRefreshMs; between them the chat's delta
+ * poll (thread-delta.ts, ~2 reads) brings new rows and ticks.
  */
 export const threadQuery = (phone: string) =>
   infiniteQueryOptions({
@@ -57,7 +63,7 @@ export const threadQuery = (phone: string) =>
       apiFetch<ThreadDetail>(pageParam ? `${threadPath(phone)}?before=${encodeURIComponent(pageParam)}` : threadPath(phone)),
     initialPageParam: '',
     getNextPageParam: (last) => (last.has_more ? last.messages[0]?.created_at : undefined),
-    refetchInterval: () => (document.hasFocus() ? INBOX_REFRESH_MS : false),
+    refetchInterval: () => (document.hasFocus() ? env.threadFullRefreshMs : false),
   });
 
 /** A file in a chat bubble as a signed URL of our own copy (ThreadMediaService.file). */

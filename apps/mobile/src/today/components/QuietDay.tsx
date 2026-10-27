@@ -2,6 +2,7 @@ import { counted, RIYADH_TZ } from '@ab/shared';
 import { router } from 'expo-router';
 import { Pressable, View } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
+import { useClockCycle } from '@/core/lib/clock';
 import { t } from '@/core/lib/i18n/i18n';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { type, useTheme } from '@/theme';
@@ -20,6 +21,7 @@ const DAY = 24 * 60 * 60_000; // Riyadh keeps no daylight saving: tomorrow is 24
  */
 export function QuietDay<L extends TodayLesson>({ now, source }: { now: Date; source: TodaySource<L> }) {
   const { color } = useTheme();
+  const cycle = useClockCycle();
   const tomorrow = new Date(now.getTime() + DAY);
   const next = visibleLessons(source.useDay(tomorrow).data ?? []);
   const first = next[0];
@@ -36,7 +38,7 @@ export function QuietDay<L extends TodayLesson>({ now, source }: { now: Date; so
       </AppText>
       {first ? (
         <AppText style={{ fontFamily: type.ui[400], fontSize: type.size.sm, lineHeight: 24, color: color.ink3, textAlign: 'center', fontVariant: ['tabular-nums'] }}>
-          {t.today.tomorrowLine.replace('{count}', counted(t.today.count, next.length)).replace('{time}', riyadhTime(first.starts_at))}
+          {t.today.tomorrowLine.replace('{count}', counted(t.today.count, next.length)).replace('{time}', riyadhTime(first.starts_at, cycle))}
         </AppText>
       ) : null}
       <Pressable

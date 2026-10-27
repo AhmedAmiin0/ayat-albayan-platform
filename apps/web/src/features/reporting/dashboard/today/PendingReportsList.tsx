@@ -7,12 +7,14 @@ import { t } from '@/lib/i18n/i18n';
 import { whenRiyadh } from '../shared/format';
 import type { PendingReportRow } from '../types';
 import { teacherLabel } from '@/lib/i18n/teacher-label';
+import { useClock } from '@/lib/clock';
 
 export const workItem = 'flex flex-wrap items-center gap-x-3 gap-y-1 border-b border-rule py-2.5 last:border-b-0';
 export const workLink = 'ms-auto text-xs font-semibold text-lapis underline-offset-4 hover:underline';
 
 /** Lessons that started without a submitted report («تقرير ما اتكتبش»), oldest first. */
 export function PendingReportsList({ items }: { items: readonly PendingReportRow[] }) {
+  const clock = useClock();
   if (items.length === 0) return <p className="py-3 text-sm text-ink-2">{t.dashboard.noPendingReports}</p>;
   return (
     <ul>
@@ -22,7 +24,7 @@ export function PendingReportsList({ items }: { items: readonly PendingReportRow
           <span className="font-semibold">{r.student.name}</span>
           {r.student.code && <Ltr className="text-2xs text-ink-3">{r.student.code}</Ltr>}
           <span className="text-xs text-ink-2">
-            {t.students.withTeacher.replace('{teacher}', teacherLabel(r.teacher))} · {whenRiyadh(r.starts_at)}
+            {t.students.withTeacher.replace('{teacher}', teacherLabel(r.teacher))} · {whenRiyadh(r.starts_at, clock)}
           </span>
           <StatusChip {...lessonStatusStyle[r.status]} label={t.enums.lessonStatus[r.status]} size="sm" />
           <Link

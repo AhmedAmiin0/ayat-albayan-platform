@@ -41,7 +41,8 @@ test('today in Riyadh, read-only: time, students, teacher, status, trial / makeu
   expect(screen.getByText(t.booking.makeup.tag)).toBeTruthy();
   expect(screen.getByText(t.sales.academySchedule.liveNow)).toBeTruthy();
   expect(screen.getAllByRole('button', { name: t.classroom.enter })).toHaveLength(1);
-  expect(screen.getByText(t.sales.academySchedule.readOnly)).toBeTruthy();
+  // She holds lessons.reschedule / lessons.cancel by default (docs/16 row 37): the note says what she may change.
+  expect(screen.getByText(t.sales.lessonActions.ownNote)).toBeTruthy();
   expect(screen.queryByRole('button', { name: t.lessons.rescheduleSubmit })).toBeNull();
 });
 

@@ -195,6 +195,7 @@
     "teachers": "Teachers",
     "leads": "New leads",
     "conversations": "Conversations",
+    "chats": "Chats",
     "jobApplicants": "Job applications",
     "label": "Menu",
     "menu": "Menu",
@@ -873,7 +874,10 @@
       "time_edit_not_allowed": "The time of a cancelled or rescheduled lesson can't be edited",
       "date_in_future": "That time hasn't come yet, a correction must be for a time that has passed",
       "correction_cross_day": "The correction has to stay on the same day",
-      "reason_required": "Write the reason for the correction"
+      "reason_required": "Write the reason for the correction",
+      "lesson_ended": "This lesson has ended, so it cannot be rescheduled or cancelled",
+      "not_your_student": "This lesson is not one of your students'",
+      "lesson_not_found": "This lesson was not found; open the schedule again"
     },
     "cancelTitle": "Cancel lesson",
     "cancelBy": "Who cancelled?",
@@ -2372,6 +2376,7 @@
     "searchPlaceholder": "Search by name or number",
     "filterAll": "All",
     "filterUnread": "Unread",
+    "filterRow": "Filter chats",
     "empty": "No messages yet",
     "emptyUnread": "No new messages",
     "unknownNumber": "Unknown number",
@@ -2401,6 +2406,8 @@
     "unsupported": "The content of this message did not reach us from WhatsApp — ask the sender to send it again",
     "unavailable": "The content of this message did not reach us from WhatsApp. This sometimes happens with the first message from a new number; the message shows in the WhatsApp Business app on the academy phone.",
     "previewUnsupported": "Message whose content did not arrive",
+    "reacted": "Reaction: {emoji}",
+    "reactionRemoved": "Reaction removed",
     "resend": {
       "action": "Ask to resend",
       "title": "Ask them to resend the message",
@@ -2514,7 +2521,26 @@
       "attachPdf": "Attach a PDF",
       "removeFile": "Remove file",
       "captionPlaceholder": "Add a caption (optional)",
-      "sendFile": "Send"
+      "sendFile": "Send",
+      "emoji": "Emoji",
+      "camera": "Camera",
+      "cameraRationale": "We need the camera to take a photo and send it in the chat.",
+      "takePhoto": "Take photo",
+      "gallery": "Gallery",
+      "document": "Document",
+      "emojiDone": "Done",
+      "voice": {
+        "record": "Record a voice message",
+        "hint": "Hold to record, release to send",
+        "slideCancel": "Slide to cancel",
+        "started": "Recording started",
+        "cancelled": "Recording cancelled",
+        "sent": "Voice message sent",
+        "delete": "Delete recording",
+        "micBlocked": "Allow microphone access in Settings to record a voice message",
+        "failed": "The voice message was not sent. Try again.",
+        "locked": "Still recording. Tap Send when you are done."
+      }
     },
     "sessionClosed": "24 hours have passed since their last message, so send a template.",
     "sessionOpenUntil": "You can reply with a regular message until {time}",
@@ -2601,7 +2627,8 @@
     "reopen": {
       "requested": "A request to reopen the chat was sent — waiting for the other side to reply",
       "requestedToday": "Today’s request was already sent",
-      "unavailable": "Chat reopened — the reopen template is not available yet"
+      "unavailable": "Chat reopened — the reopen template is not available yet",
+      "failed": "The reopen request could not be sent — send the template yourself from «Send template»"
     },
     "rating": {
       "send": "Send lesson rating",
@@ -3488,6 +3515,8 @@
       "followUpSlotsToDays": "Free slots are offered up to this many days ahead.",
       "quickReplyWindowHours": "A guardian’s typed reply confirms only a lesson we messaged them about within this many hours.",
       "chatReopenTemplate": "The WhatsApp template sent when a closed chat is opened, to reopen it. Until it is approved on the line, only the Kapso conversation is reopened and nothing is sent.",
+      "crmMediaHost": "The old CRM storage host only (no https:// and no path). Photos and voice notes imported from the old CRM chats are fetched from it once and kept here. Left empty, these files do not open.",
+      "crmMediaCopyAll": "When on, every photo and voice note imported from the old CRM is copied in the background, in small batches, into our private storage, not only the ones that are opened. Needs the old CRM files host to be set, and turns itself off when the copy is done. These copies are not deleted after 30 days.",
       "makeupWindowDays": "After this, the makeup button no longer shows for the lesson.",
       "joinOpensBeforeMin": "Students and teachers can join from this time.",
       "joinClosesAfterMin": "After this nobody can join; guest links created from now on expire then.",
@@ -3509,6 +3538,8 @@
     "followUpSlotsToDays": "Latest follow-up slot offered (days ahead)",
     "quickReplyWindowHours": "A typed “yes” counts within (hours)",
     "chatReopenTemplate": "Chat reopen template",
+    "crmMediaHost": "Old CRM files host",
+    "crmMediaCopyAll": "Copy every old CRM file now",
     "makeupWindowDays": "A missed lesson can be made up within (days)",
     "joinOpensBeforeMin": "Room opens before the lesson (minutes)",
     "joinClosesAfterMin": "Room closes after the lesson (minutes)",
@@ -3530,6 +3561,14 @@
     "en": "English",
     "restart": "The app will restart in the other language.",
     "restartManually": "Close the app and open it again to switch the language."
+  },
+  "clock": {
+    "label": "Time format",
+    "auto": "Automatic (device)",
+    "autoShort": "Auto",
+    "h12": "12-hour",
+    "h24": "24-hour",
+    "hint": "Saved on this device only."
   },
   "mobileStudentFile": {
     "recordings": {
@@ -4103,6 +4142,41 @@
       "noChanges": "No recorded changes",
       "payments": "Linked payments",
       "noPayments": "No linked payments"
+    },
+    "student": {
+      "title": "Student details",
+      "open": "Open {name}'s details",
+      "teacher": "Teacher: {name}",
+      "notFound": "This student is not one of yours or does not exist",
+      "subscription": "Subscription",
+      "current": "Current subscription",
+      "noSubscription": "No subscription yet",
+      "showPast": "Past subscriptions ({n})",
+      "hidePast": "Hide past subscriptions",
+      "attendance": "Attendance",
+      "attendanceHint": "The latest lessons whose time has passed, newest first",
+      "noAttendance": "No past lessons yet",
+      "totals": "Attended {present} · Absent {absent} · Excused {excused} · Cancelled {cancelled}",
+      "unmarkedCount": "Attendance not recorded: {n}",
+      "kind": {
+        "present": "Attended",
+        "absent": "Absent",
+        "excused": "Excused",
+        "cancelled": "Cancelled",
+        "unmarked": "Not recorded"
+      },
+      "reports": "Reports",
+      "reportsCount": "Reports: {n}"
+    },
+    "lessonActions": {
+      "reschedule": "Reschedule",
+      "cancel": "Cancel lesson",
+      "cancelTitle": "Cancel this lesson only? No message is sent to the family.",
+      "reason": "Reason (optional)",
+      "reasonHint": "e.g. the family is travelling",
+      "confirmCancel": "Confirm cancellation",
+      "cancelled": "Lesson cancelled",
+      "ownNote": "You can reschedule or cancel your students' lessons; anything else is done by the admin."
     },
     "mobile": {
       "section": "Sales",
@@ -4684,6 +4758,8 @@
       "lessons.status": "Confirm lessons and record their status",
       "lessons.write": "Cancel, reschedule and approve lesson changes",
       "booking.write": "Book lessons",
+      "lessons.reschedule": "Reschedule one lesson of their own students (sales)",
+      "lessons.cancel": "Cancel one lesson of their own students (sales)",
       "pricing.read": "View pricing",
       "tasks.manage": "Admin tasks",
       "classroom.join": "Join the online classroom",
@@ -6232,6 +6308,10 @@
     "publicNumber": "Number shown to families",
     "publicNumberEdit": "Edited in «Values» → Academy",
     "publicNumberNone": "Not set",
+    "ownTrafficTitle": "Messages between the academy's numbers",
+    "ownTrafficCount": "In the last 7 days: {n}",
+    "ownTrafficHint": "Messages that reached one academy number from another, such as the old system's reminders. They are kept for review, never shown in chats or the leads list, and never raise an alert.",
+    "ownTrafficError": "Could not read the count.",
     "webOnly": "Numbers, templates and safety are managed on the website.",
     "safetyIntro": "Settings that keep messages from reaching the wrong people while testing.",
     "crmTitle": "Moving the number off the CRM",
@@ -6325,7 +6405,15 @@
     "slashHint": "Type / in the message box to pick a quick reply",
     "manage": "Manage",
     "manageDone": "Done",
-    "sheetClose": "Close quick replies"
+    "sheetClose": "Close quick replies",
+    "blanksHint": "Put text in square brackets, like «[amount]», to make a blank the sender fills when using the reply.",
+    "fill": {
+      "title": "Complete the reply",
+      "insert": "Insert",
+      "close": "Close without inserting the reply",
+      "blank": "Value {n}",
+      "preview": "Reply preview"
+    }
   },
   "trialDate": {
     "action": "New trial date",
@@ -6432,7 +6520,9 @@
     },
     "mic": {
       "denied": "The call needs microphone access. Allow the microphone, then try again.",
-      "unsupported": "This device or browser does not support voice calls."
+      "unsupported": "This device or browser does not support voice calls.",
+      "rationale": "We need the microphone for in-app WhatsApp voice calls with families.",
+      "openSettings": "Open settings"
     },
     "errors": {
       "calls_disabled": "Calls are turned off in settings.",
@@ -6444,7 +6534,8 @@
       "no_permission": "There is no permission to call this number.",
       "call_failed": "The call could not be placed. It was not retried automatically, so it is never billed twice.",
       "media_failed": "The audio dropped. End the call and call again."
-    }
+    },
+    "backgrounded": "The app was in the background during the call, so your voice may not have been heard meanwhile."
   },
   "familyAuth": {
     "tabs": {

@@ -1,6 +1,6 @@
-import { formatPhone, sessionWindowOpen } from '@ab/shared';
+import { formatPhone, sessionWindowOpen, type ThreadView } from '@ab/shared';
 import { router, useLocalSearchParams } from 'expo-router';
-import { useHolds } from '@/auth/use-permissions';
+import { useHolds } from '@/auth';
 import { t } from '@/core/lib/i18n/i18n';
 import { inTree, useTreeBase } from '@/core/nav/tree-base';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';
@@ -10,6 +10,7 @@ import { Screen } from '@/core/ui/layout/Screen';
 import { ChatActionsProvider } from '../thread/components/ChatActionsProvider';
 import { ChatHeader } from '../thread/components/ChatHeader';
 import { ChatNotice } from '../thread/components/ChatNotice';
+import { CallButton } from '../thread/calls/entries/CallButton';
 import { Composer } from '../composer/Composer';
 import { clockAt, kindLabel } from '../shared/format';
 import { MessageList } from '../messages/components/MessageList';
@@ -18,15 +19,23 @@ import { SalesChatActions } from '../leads/sales/SalesChatActions';
 import { SendRating } from '../rating/SendRating';
 import { SubscriptionPanel } from '../subscription/SubscriptionPanel';
 import { ThreadHeaderActions } from '../thread/components/ThreadHeaderActions';
-import { isOwnThread, threadBase, useThreadMode } from '../thread/hooks/thread-mode';
+import { isOwnThread, threadBase, useThreadMode, type ThreadMode } from '../thread/hooks/thread-mode';
+import { useInboxRead } from '../thread/hooks/inbox-sync';
 import { useThread } from '../thread/hooks/use-thread';
+import { useClockCycle } from '@/core/lib/clock';
+import type { ClockCycle } from '@ab/shared';
 
 type ThreadQuery = ReturnType<typeof useThread>;
 
+/** The phone icon: only once the chat is loaded (no flash), never in a teacher's own chat (docs/28). */
+const callable = (mode: ThreadMode, thread: ThreadView | null): boolean =>
+  thread !== null && !isOwnThread(mode, thread);
+
 /** Offline: when the saved thread was fetched. Else who the number is, then the number if named. */
-function subtitleOf(phone: string, query: ThreadQuery, teacher: boolean): string {
+function subtitleOf(phone: string, query: ThreadQuery, who: { teacher: boolean; cycle: ClockCycle }): string {
+  const { teacher, cycle } = who;
   if (query.isError && query.data) {
-    return t.mobile.lastUpdated.replace('{time}', clockAt(query.dataUpdatedAt));
+    return t.mobile.lastUpdated.replace('{time}', clockAt(query.dataUpdatedAt, cycle));
   }
   const thread = query.data?.pages[0]?.thread;
   return thread?.display_name && !teacher
@@ -49,14 +58,19 @@ function subtitleOf(phone: string, query: ThreadQuery, teacher: boolean): string
  * a one-line header, the sales actions in one row of pills, and a one-row composer.
  */
 export function ThreadScreen() {
+  const cycle = useClockCycle();
   const { phone = '' } = useLocalSearchParams<{ phone: string }>();
   const mode = useThreadMode();
   const base = useTreeBase();
   const teacher = mode.kind === 'teacher';
   const sales = useHolds('self.sales');
   const query = useThread(phone);
+  // Opening the chat reads it on the server: its unread badge leaves the list at once.
+  useInboxRead(phone, query);
   const thread = query.data?.pages[0]?.thread ?? null;
   // Pushed from the tabs, back pops the whole chat group; a cold start on the chat opens its list.
+  const title = thread?.display_name ?? (teacher ? kindLabel(thread) : ltr(formatPhone(phone)));
+  const call = <CallButton phone={phone} name={title} canSend={callable(mode, thread)} />;
   const back = () =>
     router.canGoBack() ? router.back() : router.replace(inTree(base, threadBase(mode)));
   return (
@@ -64,13 +78,18 @@ export function ThreadScreen() {
     <ChatActionsProvider key={phone} phone={phone} thread={thread}>
       <Screen chat>
         <ChatHeader
-          title={thread?.display_name ?? (teacher ? kindLabel(thread) : ltr(formatPhone(phone)))}
-          subtitle={subtitleOf(phone, query, teacher)}
+          title={title}
+          subtitle={subtitleOf(phone, query, { teacher, cycle })}
           onBack={back}
           trailing={
             mode.kind === 'admin' ? (
-              <ThreadHeaderActions phone={phone} data={query.data} sales={sales} />
-            ) : null
+              <>
+                {call}
+                <ThreadHeaderActions phone={phone} data={query.data} sales={sales} />
+              </>
+            ) : (
+              call
+            )
           }
         />
         {mode.kind !== 'admin' ? null : sales ? (

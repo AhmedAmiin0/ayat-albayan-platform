@@ -11,6 +11,6 @@ test('the lead: minutes to go under an hour, just «التالية» later, «ج
 });
 
 test('the line under the names: the titled teacher, the length, the student’s own clock', () => {
-  expect(heroSubtitle(pending)).toBe(`مع أ. أبرار · ${t.enums.duration['45']}`);
-  expect(heroSubtitle(muscat)).toBe(`مع أ. أبرار · ${t.enums.duration['60']} · 18:00 بتوقيت مسقط`);
+  expect(heroSubtitle(pending, '24')).toBe(`مع أ. أبرار · ${t.enums.duration['45']}`);
+  expect(heroSubtitle(muscat, '24')).toBe(`مع أ. أبرار · ${t.enums.duration['60']} · 18:00 بتوقيت مسقط`);
 });

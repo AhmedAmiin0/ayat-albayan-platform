@@ -1,7 +1,8 @@
 import { CURRENT_STUDENT_STATUSES } from '@ab/shared';
 import type { PostgrestError } from '@supabase/supabase-js';
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, Optional } from '@nestjs/common';
 import { DB, type Db } from '../../../common/db/db.module';
+import { OwnNumbers } from '../../messaging/numbers';
 import { readAll } from '../../teaching/scheduling/read-all';
 import { dbError } from '../../../common/http/http';
 import type { Window } from './finance/finance.queries';
@@ -19,20 +20,20 @@ async function counted(q: PromiseLike<CountResult>): Promise<number> {
 /** Status counts behind the dashboard (R-RPT-01, issue F3): every number is a status, read here. */
 @Injectable()
 export class DashboardQueries {
-  constructor(@Inject(DB) private readonly db: Db) {}
+  constructor(
+    @Inject(DB) private readonly db: Db,
+    /** The academy's own numbers: their lead is never counted (owner 2026-10-27). */
+    @Optional() private readonly own?: OwnNumbers,
+  ) {}
 
-  /** Leads created in the window: current status and source. */
-  leads(w: Window) {
-    return readAll((from, to) =>
-      this.db
-        .from('leads')
-        .select('id, status, source')
-        .gte('created_at', w.from.toISOString())
-        .lt('created_at', w.to.toISOString())
-        .order('created_at')
-        .order('id')
-        .range(from, to),
-    );
+  /** Leads created in the window: current status and source; never our own numbers' lead. */
+  async leads(w: Window) {
+    const own = this.own ? await this.own.notIn() : null;
+    return readAll((from, to) => {
+      let query = this.db.from('leads').select('id, status, source').gte('created_at', w.from.toISOString()).lt('created_at', w.to.toISOString());
+      if (own) query = query.not('phone_e164', 'in', own);
+      return query.order('created_at').order('id').range(from, to);
+    });
   }
 
   /** Lessons starting in the window, every status. */

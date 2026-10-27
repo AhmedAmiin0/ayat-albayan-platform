@@ -2,7 +2,8 @@ import { teacherName } from '@ab/shared';
 import type { LessonView } from '@ab/shared';
 import { View } from 'react-native';
 import { JoinClassroomButton } from '@/classroom/links/JoinClassroomButton';
-import { useMinuteClock } from '@/classroom/sessions/use-minute-clock';
+import { useNow } from '@/core/lib/time/use-now';
+import { useClockCycle } from '@/core/lib/clock';
 import { t } from '@/core/lib/i18n/i18n';
 import { useJoinWindow } from '@/core/lib/query/public-config';
 import { shape, type, useTheme } from '@/theme';
@@ -15,18 +16,19 @@ import { locale } from '@/core/lib/i18n/locale';
 function LiveRow({ item, showTeacher }: { item: LiveLesson; showTeacher: boolean }) {
   const { color } = useTheme();
   const { lesson, phase } = item;
+  const cycle = useClockCycle();
   const small = { fontFamily: type.ui[400], fontSize: type.size.xs, color: color.ink2 };
   return (
     <View style={{ gap: 4, paddingVertical: 8 }}>
       <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
         <AppText style={{ fontFamily: type.ui[700], fontSize: type.size.base, color: color.ink, fontVariant: ['tabular-nums'] }}>
-          {riyadhTime(lesson.starts_at)}
+          {riyadhTime(lesson.starts_at, cycle)}
         </AppText>
         {phase === 'live' ? (
           <StatusChip tone="ok" glyph="fill" label={t.live.now} size="sm" />
         ) : (
           <AppText style={{ ...small, fontVariant: ['tabular-nums'] }}>
-            {t.live.startsAt.replace('{time}', riyadhTime(lesson.starts_at))}
+            {t.live.startsAt.replace('{time}', riyadhTime(lesson.starts_at, cycle))}
           </AppText>
         )}
       </View>
@@ -48,7 +50,7 @@ function LiveRow({ item, showTeacher }: { item: LiveLesson; showTeacher: boolean
  */
 export function LiveSessions({ lessons, showTeacher = false }: { lessons: readonly LessonView[]; showTeacher?: boolean }) {
   const { color } = useTheme();
-  const now = useMinuteClock();
+  const now = useNow();
   const items = liveLessons(lessons, now, useJoinWindow());
   if (items.length === 0) return null;
   return (

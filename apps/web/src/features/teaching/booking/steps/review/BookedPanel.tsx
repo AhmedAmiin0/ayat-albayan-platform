@@ -14,6 +14,7 @@ import type { PickedStudent } from '../../draft/draft';
 import { InvoiceButton } from '../../invoice/InvoiceDialog';
 import { useBookingMode, useChatReturn } from '../../mode';
 import { pickedText } from '../slots/SlotStep';
+import { useClock } from '@/lib/clock';
 
 export interface BookedPanelProps {
   result: BookingResult;
@@ -39,6 +40,7 @@ function firstLesson(result: BookingResult) {
  * regular package, and the way to the week (or back to the chat).
  */
 export function BookedPanel({ result, teacherId, tz, kind, subscribeFor, chatPhone }: BookedPanelProps) {
+  const clock = useClock();
   const sales = useBookingMode() === 'sales';
   const backToChat = useChatReturn();
   const [dialog, setDialog] = useState(false);
@@ -59,7 +61,7 @@ export function BookedPanel({ result, teacherId, tz, kind, subscribeFor, chatPho
         </h2>
         {subscribed && <p className="mt-1 font-semibold text-ok">{t.subscriptions.saved}</p>}
       </div>
-      {first && <p>{t.booking.firstLesson.replace('{when}', pickedText(first.starts_at, tz))}</p>}
+      {first && <p>{t.booking.firstLesson.replace('{when}', pickedText(first.starts_at, tz, clock))}</p>}
       <p className="text-sm text-ink-2 tabular-nums">{counted(t.schedule.lessonCount, result.lessons.length)}</p>
       {result.message_ids.length > 0 && <p className="text-sm text-ink-2">{t.booking.confirmationNote}</p>}
       <div className="flex flex-wrap gap-2">

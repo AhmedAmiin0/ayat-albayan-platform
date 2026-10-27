@@ -1,6 +1,6 @@
-import type { MessageView } from '@ab/shared';
 import { createContext, useContext, useEffect } from 'react';
 import { type CellRendererProps, type LayoutRectangle, View } from 'react-native';
+import type { DayRow } from './day-separators';
 
 /** Where a cell reports its frame (useDayBand's `frame`); the list provides it. */
 export const CellFrames = createContext<(key: string, frame: LayoutRectangle | null) => void>(
@@ -18,7 +18,7 @@ export function DayCell({
   onLayout,
   onFocusCapture,
   children,
-}: CellRendererProps<MessageView>) {
+}: CellRendererProps<DayRow>) {
   const report = useContext(CellFrames);
   // Unmounted by windowing: its frame is stale once newer rows shift the content.
   useEffect(() => () => report(item.id, null), [report, item.id]);

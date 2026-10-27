@@ -15,6 +15,7 @@ import { takenTexts, type TakenInput } from '../lib/course-days';
 import { courseRows } from '../lib/course-summary';
 import { useCourseCheck } from '../hooks/course-queries';
 import { CourseCheckNotice } from './CourseCheckNotice';
+import { useClockCycle } from '@/core/lib/clock';
 
 interface CourseConfirmProps {
   view: SalesCourseView;
@@ -35,6 +36,7 @@ interface CourseConfirmProps {
  * day(s) («موعد الخميس لم يعد متاحًا»); «اختر موعدًا آخر» keeps the other picks.
  */
 export function CourseConfirm(props: CourseConfirmProps) {
+  const cycle = useClockCycle();
   const { view, teacherName, picks, body, booking, onChangeSlot, prefilled } = props;
   const { color } = useTheme();
   const check = useCourseCheck(body);
@@ -45,7 +47,7 @@ export function CourseConfirm(props: CourseConfirmProps) {
   const note = { fontFamily: type.ui[500], fontSize: type.size.sm, lineHeight: type.lineHeight(type.size.sm), color: color.ink2 };
   return (
     <View style={{ gap: 14 }}>
-      <SummaryList rows={courseRows({ view, teacherName, body })} />
+      <SummaryList rows={courseRows({ view, teacherName, body, cycle })} />
       <PicksList picks={picks} tz={view.student.tz} />
       {ends ? <AppText style={{ ...note, color: color.ink }}>{counted(t.booking.courseEnds, total).replace('{date}', localDay(ends))}</AppText> : null}
       <TakenLines taken={{ picks, prefilled: prefilled ?? [], tz: view.student.tz }} data={check.data} />

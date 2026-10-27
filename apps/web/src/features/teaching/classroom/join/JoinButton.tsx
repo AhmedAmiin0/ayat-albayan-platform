@@ -3,8 +3,9 @@ import { Button, buttonVariants } from '@/components/ui/form/button';
 import { t } from '@/lib/i18n/i18n';
 import { useJoinWindow } from '@/lib/settings/public-config';
 import { cn } from '@/lib/utils';
-import { useNow } from '../sessions/use-now';
+import { useNow } from '@/lib/time/use-now';
 import { joinHint } from '../room/livekit/window-hint';
+import { useClock } from '@/lib/clock';
 
 export interface JoinableLesson {
   id: string;
@@ -28,7 +29,7 @@ interface Props {
 export function EnterButton({ lesson, size = 'md', className, now: given }: Props) {
   const tick = useNow();
   const now = given ?? tick;
-  const { canJoin, hint } = joinHint(lesson, now, useJoinWindow());
+  const { canJoin, hint } = joinHint(lesson, now, { win: useJoinWindow(), cycle: useClock().cycle });
   return (
     <div className={cn('grid justify-items-start gap-1', className)}>
       {canJoin ? (

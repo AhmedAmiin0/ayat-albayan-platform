@@ -11,10 +11,11 @@ import { upcomingLessons, type LessonsOf } from './thread-lessons';
 import { familyTagsOf, threadPeople, type PeopleOf } from '../people/thread-people';
 import type { FamilyTag } from '../people/thread-people.mapper';
 import { applySort } from '../../../../common/list-sort';
-import { THREAD_SORT, type ThreadListFilter } from './threads.list';
+import { THREAD_SORT, threadsSource, type ThreadListFilter } from './threads.list';
 import { threadSearchFilter, type ThreadRow } from './threads.mapper';
 import { newestPerLine, type ReadMark } from '../reads/read-marks';
 import { markUnsupported, type ListedThreadRow } from './last-unsupported';
+import { isUnreadBadge, unreadThreadCount } from './threads-unread.queries';
 
 export type { ThreadListFilter } from './threads.list';
 
@@ -33,12 +34,13 @@ export class ThreadsQueries {
 
   /**
    * H1: one page of v_threads (of v_list_threads for a chat list «القوائم», docs/22); filters, then the
-   * requested order (default newest message first).
+   * requested order (default newest message first). The caller marks the rows (unsupported()), in
+   * parallel with its other per-page reads.
    */
-  async list(f: ThreadListFilter): Promise<{ items: ListedThreadRow[]; total: number }> {
-    let query = f.list
-      ? this.db.from('v_list_threads').select('*', { count: 'exact' }).eq('list_id', f.list)
-      : this.db.from('v_threads').select('*', { count: 'exact' });
+  async list(f: ThreadListFilter): Promise<{ items: ThreadRow[]; total: number }> {
+    // The badge asks for `total` only: an indexed count, no page (threads-unread.queries.ts).
+    if (isUnreadBadge(f)) return { items: [], total: await unreadThreadCount(this.db, f) };
+    let query = threadsSource(this.db, f);
     if (f.unread) query = query.gt('unread_count', 0);
     if (f.phones) query = query.in('phone_e164', [...f.phones]);
     if (f.status) query = query.eq('lead_status', f.status);
@@ -47,7 +49,12 @@ export class ThreadsQueries {
     const from = (f.page - 1) * f.pageSize;
     const { data, error, count } = await applySort(query, f, THREAD_SORT).range(from, from + f.pageSize - 1);
     check(error, 'threads read');
-    return { items: await markUnsupported(this.db, data ?? []), total: count ?? 0 };
+    return { items: data ?? [], total: count ?? 0 };
+  }
+
+  /** The page's rows whose last message is Meta's `unsupported` (last-unsupported.ts): one read at most. */
+  unsupported(rows: readonly ThreadRow[]): Promise<ListedThreadRow[]> {
+    return markUnsupported(this.db, rows);
   }
 
   async thread(phone: string): Promise<ThreadRow | null> {
@@ -98,15 +105,13 @@ export class ThreadsQueries {
     return familyTagsOf({ db: this.db, packages: this.packages, balances: this.balances }, guardianIds);
   }
 
-  /** Opening the thread reads its inbound messages; returns the newest stamped wamid per line. */
-  async markInboundRead(phone: string, at: Date): Promise<ReadMark[]> {
-    const { data, error } = await this.db
-      .from('messages')
-      .update({ read_at: at.toISOString() })
-      .eq('phone_e164', phone)
-      .eq('direction', 'inbound')
-      .is('read_at', null)
-      .select('wa_message_id, created_at, line');
+  /** Opening the thread reads its inbound rows up to `upTo` (a created_at) or only `upTo`'s ids (a delta's rows); the newest stamped wamid per line. */
+  async markInboundRead(phone: string, at: Date, upTo?: string | readonly string[]): Promise<ReadMark[]> {
+    let query = this.db.from('messages').update({ read_at: at.toISOString() }).eq('phone_e164', phone);
+    query = query.eq('direction', 'inbound').is('read_at', null);
+    if (typeof upTo === 'string') query = query.lte('created_at', upTo);
+    else if (upTo) query = query.in('id', [...upTo]);
+    const { data, error } = await query.select('wa_message_id, created_at, line');
     check(error, 'inbound read stamp');
     return newestPerLine(data);
   }

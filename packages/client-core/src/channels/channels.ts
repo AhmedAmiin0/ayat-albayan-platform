@@ -1,4 +1,4 @@
-import { clockTime, intlLocale, type ChannelPage, type Locale } from '@ab/shared';
+import { clockOf, intlLocale, type ChannelPage, type ClockCycle, type Locale } from '@ab/shared';
 
 // The student channel (docs/31 §2) for web and mobile: who reads it through which API path.
 // teacher = «رسائل الطلاب»; portal = the family; admin = student_channels.monitor; sales = the owning assistant.
@@ -10,6 +10,18 @@ export const CHANNEL_WRITES: Readonly<Record<ChannelAudience, boolean>> = { teac
 
 /** The thread re-reads this often while it is on screen (the inbox polls the same way). */
 export const CHANNEL_REFRESH_MS = 15_000;
+
+/** An open WhatsApp chat asks for a delta this often while on screen (GET /threads/:phone?after=, ~2 reads). */
+export const INBOX_REFRESH_MS = 10_000;
+
+/** An open WhatsApp chat re-reads its whole newest page this often (people, lessons, older ticks). */
+export const THREAD_FULL_MS = 60_000;
+
+/**
+ * The chats list re-reads this often while on screen: 30 s while GET /threads re-aggregated every
+ * message (server audit 2026-10-27), 15 s once it reads thread_summaries (migration 20261028000921).
+ */
+export const INBOX_LIST_REFRESH_MS = 15_000;
 
 const BASE: Readonly<Record<ChannelAudience, (studentId: string) => string>> = {
   teacher: (id) => `/teachers/me/channels/${id}`,
@@ -43,10 +55,10 @@ export function threadMessages(pages: readonly ChannelPage[] | undefined): Chann
 
 const dayKey = (at: Date, tz: string): string => new Intl.DateTimeFormat('en-CA', { timeZone: tz }).format(at);
 
-/** A message's time on the viewer's clock: «14:05» today, «25 أكتوبر 14:05» on another day. */
-export function channelTimeText(input: { iso: string; tz: string; now: Date; locale: Locale }): string {
+/** A message's time on the viewer's clock (12 or 24 h): «14:05» today, «25 أكتوبر 14:05» on another day. */
+export function channelTimeText(input: { iso: string; tz: string; now: Date; locale: Locale; cycle: ClockCycle }): string {
   const at = new Date(input.iso);
-  const clock = clockTime(at, input.tz);
+  const clock = clockOf(at, input);
   if (dayKey(at, input.tz) === dayKey(input.now, input.tz)) return clock;
   const day = new Intl.DateTimeFormat(intlLocale(input.locale), { day: 'numeric', month: 'short', timeZone: input.tz }).format(at);
   return `${day} ${clock}`;

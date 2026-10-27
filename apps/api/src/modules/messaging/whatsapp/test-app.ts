@@ -56,9 +56,11 @@ function mocks() {
 
 export async function whatsappApp(resolver: PermissionResolver = systemResolver) {
   const m = mocks();
+  // MessageViews reads TemplatesQueries.cached: the test's `get` mock, never a copy kept between tests.
+  const templates = { ...m.templates, cached: (key: string) => m.templates.get(key) };
   const mod = await Test.createTestingModule({ imports: [AppModule] })
     .overrideProvider(PERMISSION_RESOLVER).useValue(resolver).overrideProvider(TOKEN_VERIFIER).useValue(verify)
-    .overrideProvider(TemplatesQueries).useValue(m.templates)
+    .overrideProvider(TemplatesQueries).useValue(templates)
     .overrideProvider(MessagesQueries).useValue(m.messages)
     .overrideProvider(WHATSAPP_CLIENT).useValue(m.client)
     .overrideProvider(WHATSAPP_LINES).useValue({ notifications: m.client, chat: m.chatClient })

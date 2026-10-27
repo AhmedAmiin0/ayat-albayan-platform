@@ -4,6 +4,9 @@ import { locale } from '@/lib/i18n/locale';
 import { formatAge, formatDate, formatDateTime, initialOf } from './format';
 import { parseLeadSearch, parsePageSearch } from './types';
 
+/** The cycle the suite reads times in (test-setup saves 24 h). */
+const C24 = { cycle: '24', locale } as const;
+
 const rel = new Intl.RelativeTimeFormat(intlLocale(locale), { numeric: 'auto' });
 const NOW = new Date('2026-10-01T12:00:00Z');
 const EASTERN = /[٠-٩]/;
@@ -20,18 +23,18 @@ describe('lead inbox formatting (R-LEAD-02 list columns)', () => {
   it('prints Western digits (docs/07 one numeral system)', () => {
     expect(formatAge('2026-09-28T12:00:00Z', NOW)).toContain('3');
     expect(formatAge('2026-09-28T12:00:00Z', NOW)).not.toMatch(EASTERN);
-    expect(formatDateTime('2026-10-01T12:00:00Z')).not.toMatch(EASTERN);
+    expect(formatDateTime('2026-10-01T12:00:00Z', C24)).not.toMatch(EASTERN);
   });
 
   it('formatDateTime shows a dash for an empty value', () => {
-    expect(formatDateTime(null)).toBe('—');
-    expect(formatDateTime('2026-10-01T12:00:00Z')).not.toBe('—');
+    expect(formatDateTime(null, C24)).toBe('—');
+    expect(formatDateTime('2026-10-01T12:00:00Z', C24)).not.toBe('—');
   });
 
   it('formatDateTime is 24h (no «م/ص»); formatDate drops the time', () => {
     const evening = new Date(2026, 9, 1, 23, 15).toISOString();
-    expect(formatDateTime(evening)).toContain('23:15');
-    expect(formatDateTime(evening)).not.toMatch(/[صم]$/);
+    expect(formatDateTime(evening, C24)).toContain('23:15');
+    expect(formatDateTime(evening, C24)).not.toMatch(/[صم]$/);
     expect(formatDate(evening)).not.toContain(':');
     expect(formatDate(evening)).toContain('2026');
     expect(formatDate(null)).toBe('—');

@@ -1,4 +1,4 @@
-import { clockTime, lessonWhenText, type Conflict } from '@ab/shared';
+import { clockOf, type Conflict, lessonWhenAt } from '@ab/shared';
 import { useEffect, useId, useRef, useState } from 'react';
 import { Button } from '@/components/ui/form/button';
 import { Field } from '@/components/ui/form/field';
@@ -6,8 +6,8 @@ import { Input } from '@/components/ui/form/input';
 import { NuqtaGlyph } from '@/components/ui/display/nuqta-glyph';
 import { tzCity } from '@/components/ui/form/time-zone-select';
 import { t } from '@/lib/i18n/i18n';
-import { locale } from '@/lib/i18n/locale';
 import { RIYADH_TZ } from '../tz';
+import { type Clock, useClock } from '@/lib/clock';
 
 /** How many clashes are listed before «وفيه {n} تعارض كمان». */
 const SHOWN = 5;
@@ -19,12 +19,12 @@ const TEACHER_SIDE = new Set<Conflict['kind']>(['outside_availability', 'time_of
  * «الميعاد ده مش من المواعيد المتاحة للمعلم/ة (السبت 31 أكتوبر 15:00، عند المعلم/ة 14:00 بتوقيت
  * القاهرة)»: Riyadh wall clock, plus the teacher's own for their availability / time off.
  */
-export function conflictText(c: Conflict, teacherTz?: string): string {
+export function conflictText(c: Conflict, clock: Clock, teacherTz?: string): string {
   const at = new Date(c.startsAt);
-  let when = lessonWhenText(at, RIYADH_TZ, locale);
+  let when = lessonWhenAt(at, { tz: RIYADH_TZ, ...clock });
   if (teacherTz && teacherTz !== RIYADH_TZ && TEACHER_SIDE.has(c.kind)) {
     const city = tzCity(teacherTz) ?? teacherTz;
-    when += `${t.common.listSeparator}${t.booking.teacherClock.replace('{time}', clockTime(at, teacherTz)).replace('{city}', city)}`;
+    when += `${t.common.listSeparator}${t.booking.teacherClock.replace('{time}', clockOf(at, { tz: teacherTz, ...clock })).replace('{city}', city)}`;
   }
   return t.booking.conflict[c.kind].replace('{when}', when);
 }
@@ -52,6 +52,7 @@ export interface ConflictNoticeProps {
  * API rejects a blank one). Always stacked: it sits in a 460px drawer as well as a wide page.
  */
 export function ConflictNotice(p: ConflictNoticeProps) {
+  const clock = useClock();
   const { conflicts, teacherTz, onChangeSlot, onOverride, busy = false, studentNames = {} } = p;
   const labels = p.labels ?? { override: t.booking.override, reason: t.booking.overrideReason };
   const titleId = useId();
@@ -85,7 +86,7 @@ export function ConflictNotice(p: ConflictNoticeProps) {
         {conflicts.slice(0, SHOWN).map((c, i) => (
           <li key={`${c.kind}-${c.startsAt}-${i}`} className="flex items-start gap-2">
             <NuqtaGlyph shape="hollow" className="mt-1.5 text-danger" />
-            <span>{(c.studentId && studentNames[c.studentId] ? `${studentNames[c.studentId]}: ` : '') + conflictText(c, teacherTz)}</span>
+            <span>{(c.studentId && studentNames[c.studentId] ? `${studentNames[c.studentId]}: ` : '') + conflictText(c, clock, teacherTz)}</span>
           </li>
         ))}
       </ul>

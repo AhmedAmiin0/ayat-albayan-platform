@@ -1,6 +1,7 @@
 import { isChatViewMime, type MessageView, replyNote } from '@ab/shared';
-import { I18nManager, Linking, Pressable, View, type ViewStyle } from 'react-native';
+import { Linking, Pressable, View, type ViewStyle } from 'react-native';
 import { useHolds } from '@/auth/use-permissions';
+import { useClockCycle } from '@/core/lib/clock';
 import { t } from '@/core/lib/i18n/i18n';
 import { locale } from '@/core/lib/i18n/locale';
 import { shape, type, useTheme } from '@/theme';
@@ -45,8 +46,8 @@ export interface MessageBubbleProps {
 }
 
 /**
- * One message (R-MSG-05). As WhatsApp (owner 2026-10-26): ours on the right, theirs on the left, in
- * Arabic and English alike (bubbleSide), the sharp tail corner at the top of the screen-edge side.
+ * One message (R-MSG-05). As WhatsApp (owner 2026-10-27): ours at the inline-end, theirs at the start
+ * (bubbleSide: the left/right in Arabic, the right/left in English), the sharp tail corner at the top of the screen-edge side.
  * Ours carry WhatsApp-style delivery ticks (DeliveryTicks, named by the status word); a template
  * row says which template, its body already rendered by the API; links in the text open (LinkedText). Ours say who sent them
  * («أرسلها: سارة», «رسالة تلقائية»); a photo previews, a PDF, voice note or video opens from MessageFile. Why a send failed is for everyone (as the web's
@@ -65,13 +66,13 @@ export function MessageBubble({ message: m, phone, onJump, highlight = false }: 
   // A photo, PDF, voice note or video we can serve (W6): opened or played from the bubble.
   const file = m.media_url === null && isChatViewMime(m.media_mime);
   // What a quick reply did (R-SCH-03): «اتأكدت حلقة …» only when its lesson is confirmed now.
-  const note = replyNote(m, locale);
+  const note = replyNote(m, { locale, cycle: useClockCycle() });
   const stuck = admin && manages && ours && (m.status === 'failed' || m.click_to_chat !== null);
   // A hand-off asks «بعتّها؟» in MessageActions instead of a reason.
   const why = ours && m.status === 'failed' && m.error_code !== 'handed_off';
   // The screen reader's way to the menu sits on the text; a file-only bubble keeps its own buttons.
   const a11yOn = m.body ? 'body' : m.template_key ? 'template' : null;
-  const side = bubbleSide(ours, I18nManager.isRTL);
+  const side = bubbleSide(ours);
   const box: ViewStyle = {
     alignSelf: side.align,
     maxWidth: '88%',
@@ -109,7 +110,7 @@ export function MessageBubble({ message: m, phone, onJump, highlight = false }: 
   );
   if (!touch.has) return <View testID={`bubble-${m.id}`} style={box}>{content}</View>;
   return (
-    <SwipeReply onReply={touch.swipe} side={side}>
+    <SwipeReply onReply={touch.swipe}>
       <Pressable testID={`bubble-${m.id}`} accessible={false} onLongPress={touch.openMenu} delayLongPress={350} style={box}>
         {content}
       </Pressable>

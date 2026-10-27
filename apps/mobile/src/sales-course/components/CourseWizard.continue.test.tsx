@@ -43,7 +43,7 @@ afterEach(() => jest.useRealTimers());
 test('a renewal offers the previous days from the day after its last lesson', async () => {
   await renderWithQuery(<CourseScreen />);
   const hint = t.booking.courseChange.continueHint
-    .replace('{days}', daysText(previous.days, TZ))
+    .replace('{days}', daysText(previous.days, TZ, '24'))
     .replace('{date}', localDay('2026-10-11'));
   expect(await screen.findByText(hint)).toBeTruthy();
   expect(screen.getByRole('button', { name: t.booking.courseChange.pickOtherDays })).toBeTruthy();
@@ -53,8 +53,8 @@ test('a renewal offers the previous days from the day after its last lesson', as
 test('«تابِع بنفس الأيام»: the same teacher and days, prefilled, checked and booked on the new subscription', async () => {
   await renderWithQuery(<CourseScreen />);
   await pressEnabled(t.booking.courseChange.continueSameDays);
-  expect(await screen.findByText(dayLine(SUN_11, TZ))).toBeTruthy();
-  expect(screen.getByText(dayLine(THU_15, TZ))).toBeTruthy();
+  expect(await screen.findByText(dayLine(SUN_11, TZ, '24'))).toBeTruthy();
+  expect(screen.getByText(dayLine(THU_15, TZ, '24'))).toBeTruthy();
   expect(await screen.findByText(maryam.display_name_ar)).toBeTruthy(); // the summary's teacher, once loaded
   expect(await screen.findByText(t.booking.seriesFree)).toBeTruthy();
   const body = {
@@ -90,8 +90,8 @@ test('a prefilled day taken since: its day is named, «اختر موعدًا آ�
   expect(isDisabled(t.booking.submit)).toBe(true);
   await press('button', t.booking.changeSlot);
   await screen.findAllByRole('checkbox', { name: '17:00' });
-  expect(screen.getByText(dayLine(SUN_11, TZ))).toBeTruthy(); // the picks stay
-  expect(screen.getByText(dayLine(THU_15, TZ))).toBeTruthy();
+  expect(screen.getByText(dayLine(SUN_11, TZ, '24'))).toBeTruthy(); // the picks stay
+  expect(screen.getByText(dayLine(THU_15, TZ, '24'))).toBeTruthy();
   const [slots] = reads('/sales/booking/slots');
   expect(slots).toContain(`teacherId=${maryam.id}`);
   expect(slots).toContain(`from=${encodeURIComponent('2026-10-10T21:00:00.000Z')}`); // midnight 11 Oct, Riyadh

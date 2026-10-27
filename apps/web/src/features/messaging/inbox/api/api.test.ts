@@ -1,5 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { INBOX_REFRESH_MS, threadFileQuery, threadQuery, threadsQuery } from './api';
+import { INBOX_REFRESH_MS, inboxPollMs, threadFileQuery, threadQuery, threadsQuery } from './api';
+import { inboxLive } from './live';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
@@ -20,15 +21,25 @@ describe('threadQuery polls only while the window has focus (W13)', () => {
     expect(interval(threadQuery('+966501234567').refetchInterval)).toBe(false);
   });
 
-  it('a focused document: the inbox interval', () => {
+  it('a focused document: the full re-read every 60 s (the delta poll brings rows between, thread-delta.ts)', () => {
     vi.spyOn(document, 'hasFocus').mockReturnValue(true);
-    expect(typeof INBOX_REFRESH_MS).toBe('number');
-    expect(interval(threadQuery('+966501234567').refetchInterval)).toBe(INBOX_REFRESH_MS);
+    expect(INBOX_REFRESH_MS).toBe(10_000);
+    expect(interval(threadQuery('+966501234567').refetchInterval)).toBe(60_000);
   });
 
-  it('the list keeps a numeric interval, focused or not (unread rows still rise)', () => {
+  it('the list keeps a numeric 15 s interval, focused or not (unread rows still rise)', () => {
     vi.spyOn(document, 'hasFocus').mockReturnValue(false);
-    expect(threadsQuery({ page: 1 }).refetchInterval).toBe(INBOX_REFRESH_MS);
+    expect(interval(threadsQuery({ page: 1 }).refetchInterval)).toBe(15_000);
+    expect(inboxPollMs()).toBe(INBOX_REFRESH_MS);
+  });
+
+  it('realtime connected: the list, the badge and the full re-read at the 60 s fallback; dropped: their own intervals again', () => {
+    vi.spyOn(document, 'hasFocus').mockReturnValue(true);
+    inboxLive.setLive(true);
+    const polls = () => [interval(threadsQuery({ page: 1 }).refetchInterval), inboxPollMs(), interval(threadQuery('+966501234567').refetchInterval)];
+    expect(polls()).toEqual([60_000, 60_000, 60_000]);
+    inboxLive.setLive(false);
+    expect(polls()).toEqual([15_000, INBOX_REFRESH_MS, 60_000]);
   });
 });
 

@@ -1,6 +1,7 @@
 import { LOCALE_STORAGE_KEY, parseLocale, type Locale } from '@ab/shared';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { reloadAppAsync } from 'expo';
+import { getLocales } from 'expo-localization';
 import { useEffect, useState } from 'react';
 import { I18nManager } from 'react-native';
 import { locale } from './locale';
@@ -32,8 +33,21 @@ async function reloadInto(next: Locale): Promise<boolean> {
 }
 
 /**
- * Boot gate: true while reloading into the saved language (render nothing), false when this run
- * already shows it. Nothing saved = Arabic, so a first start on an LTR phone reloads once.
+ * The phone's language, as WhatsApp reads it (owner 2026-10-27): an RTL phone opens in Arabic,
+ * an LTR one in English. Never throws: no native module or no answer falls back to Arabic.
+ */
+export function phoneLocale(): Locale {
+  try {
+    return getLocales()[0]?.textDirection === 'ltr' ? 'en' : 'ar';
+  } catch {
+    return 'ar';
+  }
+}
+
+/**
+ * Boot gate: true while reloading into the wanted language (render nothing), false when this run
+ * already shows it. A saved «اللغة» choice wins; nothing saved follows the phone, so a run whose
+ * native flag disagrees with the phone (a forceRTL persisted by older builds) reloads once.
  */
 export async function syncLocale(current: Locale = locale): Promise<boolean> {
   let saved: string | null;
@@ -44,7 +58,7 @@ export async function syncLocale(current: Locale = locale): Promise<boolean> {
   } catch {
     return false; // Unreadable storage: keep this run's language rather than guess.
   }
-  const wanted = parseLocale(saved);
+  const wanted = saved !== null ? parseLocale(saved) : phoneLocale();
   if (wanted === current) {
     if (pending !== null) await AsyncStorage.removeItem(RELOAD_KEY).catch(() => undefined);
     return false;
@@ -67,7 +81,7 @@ export async function setLocale(next: Locale): Promise<SwitchResult> {
   return (await reloadInto(next)) ? 'reloading' : 'restart';
 }
 
-/** app/_layout: false until the UI language matches the saved one (or a reload is under way). */
+/** app/_layout: false until the UI language matches the wanted one (or a reload is under way). */
 export function useLocaleReady(): boolean {
   const [ready, setReady] = useState(false);
   useEffect(() => {

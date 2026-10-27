@@ -5,6 +5,7 @@ import { shape, type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { StatusChip } from '@/core/ui/feedback/StatusChip';
 import { egp, sessionDetail, sessionWhen } from '../lib/format';
+import { useClockCycle } from '@/core/lib/clock';
 
 interface SessionItemProps {
   row: TeacherEarningView;
@@ -36,6 +37,7 @@ function Tick({ checked, disabled }: { checked: boolean; disabled: boolean }) {
 
 /** One session: when, length and students, what it earned and still owes, its status. */
 export function SessionItem({ row, checked = false, onToggle }: SessionItemProps) {
+  const cycle = useClockCycle();
   const { color } = useTheme();
   const payable = row.outstanding > 0;
   const body = (
@@ -43,7 +45,7 @@ export function SessionItem({ row, checked = false, onToggle }: SessionItemProps
       {onToggle ? <Tick checked={checked} disabled={!payable} /> : null}
       <View style={{ flex: 1, gap: 2 }}>
         <AppText style={{ fontFamily: type.ui[600], fontSize: type.size.sm, color: color.ink, fontVariant: ['tabular-nums'] }}>
-          {sessionWhen(row.starts_at)}
+          {sessionWhen(row.starts_at, cycle)}
         </AppText>
         <AppText style={{ fontFamily: type.ui[400], fontSize: type.size.xs, color: color.ink2 }}>{sessionDetail(row)}</AppText>
       </View>
@@ -59,7 +61,7 @@ export function SessionItem({ row, checked = false, onToggle }: SessionItemProps
   return (
     <Pressable
       accessibilityRole="checkbox"
-      accessibilityLabel={t.earnings.selectRow.replace('{date}', sessionWhen(row.starts_at))}
+      accessibilityLabel={t.earnings.selectRow.replace('{date}', sessionWhen(row.starts_at, cycle))}
       accessibilityState={{ checked, disabled: !payable }}
       disabled={!payable}
       onPress={onToggle}

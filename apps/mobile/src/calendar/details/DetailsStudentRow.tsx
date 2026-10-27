@@ -1,7 +1,7 @@
 import { subscriptionStatusStyle, type Glyph, type Tone } from '@ab/shared';
 import { router } from 'expo-router';
 import { Pressable, View } from 'react-native';
-import { useMinuteClock } from '@/classroom/sessions/use-minute-clock';
+import { useNow } from '@/core/lib/time/use-now';
 import { t } from '@/core/lib/i18n/i18n';
 import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
@@ -52,8 +52,8 @@ interface DetailsStudentRowProps {
  */
 export function DetailsStudentRow({ lesson, student, role, onLeave }: DetailsStudentRowProps) {
   const { color } = useTheme();
-  const now = useMinuteClock();
-  const href = studentHref(role, student.id);
+  const now = useNow();
+  const href = studentHref(role, student);
   const go = (to: string) => {
     onLeave();
     router.push(to);

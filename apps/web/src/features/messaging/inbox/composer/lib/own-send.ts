@@ -1,6 +1,6 @@
 // The id of the last message she sent herself in each chat (docs/20 W4): the log snaps to the bottom
-// when that row arrives, whatever its status by then (the send waits for a sender pass, so it comes
-// back 'sent' or 'failed'). A colleague's or an automatic row never moves her. Module memory, this tab only.
+// when that row arrives, whatever its status by then (the send answers once queued; the chat's next
+// refresh shows 'sent' or 'failed'). A colleague's or an automatic row never moves her. Module memory, this tab only.
 // A sign-out bumps the generation: a send that settles after it, started before, records nothing.
 
 const sends = new Map<string, string>();

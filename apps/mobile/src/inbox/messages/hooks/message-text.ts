@@ -1,4 +1,5 @@
-import { clockTime, dayParts, isUnavailableMessage, isUnsupportedMessage, type MessageView, SESSION_WINDOW_MS, type ThreadView } from '@ab/shared';
+import { type ClockCycle, dayParts, isUnavailableMessage, isUnsupportedMessage, type MessageView, reactionText, SESSION_WINDOW_MS, type ThreadView } from '@ab/shared';
+import { clockIn } from '@/core/lib/clock';
 import { ApiError } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
 
@@ -26,6 +27,8 @@ export function mediaKind(mime: string | null): MediaKind {
 export function mediaLine(m: Pick<MessageView, 'body' | 'media_mime' | 'interactive_payload'>): string | null {
   if (m.media_mime) return t.inbox.media[mediaKind(m.media_mime)];
   if (m.body) return null;
+  const reacted = reactionText(m.interactive_payload, { reacted: t.inbox.reacted, removed: t.inbox.reactionRemoved });
+  if (reacted) return reacted;
   if (isUnavailableMessage(m.interactive_payload)) return t.inbox.unavailable;
   return isUnsupportedMessage(m.interactive_payload) ? t.inbox.unsupported : t.inbox.media.other;
 }
@@ -56,32 +59,34 @@ export function deviceTimeZone(): string {
 interface StampOptions {
   now?: Date;
   tz?: string;
+  /** «تنسيق الوقت»: 12 or 24 h. */
+  cycle: ClockCycle;
 }
 
-/** «08:05» today, «30/9 08:05» another day, in the device's zone (or `tz`). */
-export function stamp(iso: string, { now = new Date(), tz = deviceTimeZone() }: StampOptions = {}): string {
+/** «08:05» today, «30/9 08:05» another day (or «8:05 ص»), in the device's zone (or `tz`). */
+export function stamp(iso: string, { now = new Date(), tz = deviceTimeZone(), cycle }: StampOptions): string {
   const at = new Date(iso);
-  const time = clockTime(at, tz);
+  const time = clockIn(at, tz, cycle);
   const { day, month, year } = dayParts(at, tz);
   const today = dayParts(now, tz);
   if (day === today.day && month === today.month && year === today.year) return time;
   return `${day}/${month} ${time}`;
 }
 
-/** «16:39» in the device's zone (or `tz`): a bubble's time, its day is in the separator above it. */
-export function clock(iso: string, tz = deviceTimeZone()): string {
-  return clockTime(new Date(iso), tz);
+/** «16:39» / «4:39 م» in the device's zone (or `tz`): a bubble's time, its day is in the separator above it. */
+export function clock(iso: string, cycle: ClockCycle, tz = deviceTimeZone()): string {
+  return clockIn(new Date(iso), tz, cycle);
 }
 
 /** «تقدر ترد برسالة عادية لحد …»: 24 h after their last message (R-MSG-03). */
-export function sessionUntil(lastInboundAt: string, options?: StampOptions): string {
+export function sessionUntil(lastInboundAt: string, options: StampOptions): string {
   const end = new Date(Date.parse(lastInboundAt) + SESSION_WINDOW_MS).toISOString();
   return t.inbox.sessionOpenUntil.replace('{time}', stamp(end, options));
 }
 
 /** «هتتبعت …» for a row scheduled later (a booking confirmation, a reminder), else null. */
-export function queuedLine(m: Pick<MessageView, 'status' | 'scheduled_for'>, options?: StampOptions) {
-  const now = options?.now ?? new Date();
+export function queuedLine(m: Pick<MessageView, 'status' | 'scheduled_for'>, options: StampOptions) {
+  const now = options.now ?? new Date();
   if (m.status !== 'queued' || !m.scheduled_for || Date.parse(m.scheduled_for) <= now.getTime()) {
     return null;
   }
@@ -89,7 +94,7 @@ export function queuedLine(m: Pick<MessageView, 'status' | 'scheduled_for'>, opt
 }
 
 /** «أُرسلت … · وصلت … · قُرئت …»: every delivery time Meta reported on ours (the web's deliveryTitle). */
-export function deliveryTimes(m: MessageView, options?: StampOptions): string {
+export function deliveryTimes(m: MessageView, options: StampOptions): string {
   if (m.direction !== 'outbound') return '';
   const steps: [string, string | null][] = [
     [t.messages.sentAt, m.sent_at],

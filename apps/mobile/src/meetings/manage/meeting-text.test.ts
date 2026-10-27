@@ -7,8 +7,8 @@ test('the room url is the web origin plus /meeting/<id>', () => {
 });
 
 test('the time is on the Riyadh clock with Western digits', () => {
-  expect(meetingWhen('2026-10-05T11:30:00.000Z')).toMatch(/14:30/);
-  expect(meetingWhen('2026-10-05T11:30:00.000Z', 'UTC')).toMatch(/11:30/);
+  expect(meetingWhen('2026-10-05T11:30:00.000Z', 'Asia/Riyadh', '24')).toMatch(/14:30/);
+  expect(meetingWhen('2026-10-05T11:30:00.000Z', 'UTC', '24')).toMatch(/11:30/);
 });
 
 test('a coded refusal reads in words; the rest is the generic line', () => {
@@ -37,7 +37,7 @@ test('only an open, not cancelled meeting of mine is managed; a scheduled one ma
 test('a refused join reads in a meeting\u2019s words, before the classroom lines', () => {
   const R = t.meetings.internal.refusal;
   const early = meetingError(new ApiError(403, { code: 'join_not_open_yet', opens_at: '2026-10-05T11:30:00.000Z' }), 'Asia/Riyadh');
-  expect(early).toBe(R.notOpenAt.replace('{when}', meetingWhen('2026-10-05T11:30:00.000Z', 'Asia/Riyadh')));
+  expect(early).toBe(R.notOpenAt.replace('{when}', meetingWhen('2026-10-05T11:30:00.000Z', 'Asia/Riyadh', '24')));
   expect(early).toMatch(/14:30/);
   expect(meetingError(new ApiError(403, { code: 'join_not_open_yet', opens_at: '2026-10-05T11:30:00.000Z' }), 'UTC')).toMatch(/11:30/);
   expect(meetingError(new ApiError(403, { code: 'join_not_open_yet' }))).toBe(R.notOpen);

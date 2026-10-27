@@ -1,13 +1,13 @@
-import { RIYADH_TZ, lessonWhenText, makeupOffer, type LessonView } from '@ab/shared';
+import { RIYADH_TZ, makeupOffer, type LessonView } from '@ab/shared';
 import { router } from 'expo-router';
 import { View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
-import { locale } from '@/core/lib/i18n/locale';
 import { usePublicConfig } from '@/core/lib/query/public-config';
 import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { Button } from '@/core/ui/primitives/Button';
 import { makeupParams } from './makeup-draft';
+import { useClockCycle, whenIn } from '@/core/lib/clock';
 
 /**
  * «حجز تعويضي» under a missed lesson's row (R-SCH-10): for each student still charged for a
@@ -17,6 +17,7 @@ import { makeupParams } from './makeup-draft';
  * instead. Admin schedule only.
  */
 export function MakeupAction({ lesson, onLeave }: { lesson: LessonView; onLeave?: (() => void) | undefined }) {
+  const cycle = useClockCycle();
   const { color } = useTheme();
   const { makeup_window_days: days } = usePublicConfig();
   const { open, booked } = makeupOffer(lesson, new Date(), days);
@@ -48,7 +49,7 @@ export function MakeupAction({ lesson, onLeave }: { lesson: LessonView; onLeave?
           style={{ fontFamily: type.ui[500], fontSize: type.size.xs, lineHeight: type.lineHeight(type.size.xs), color: color.ink2 }}
         >
           {group ? `${s.name}: ` : ''}
-          {t.booking.makeup.bookedChip.replace('{when}', lessonWhenText(new Date(s.makeup.starts_at), RIYADH_TZ, locale))}
+          {t.booking.makeup.bookedChip.replace('{when}', whenIn(new Date(s.makeup.starts_at), RIYADH_TZ, cycle))}
         </AppText>
       ))}
     </View>

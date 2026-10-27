@@ -7,6 +7,7 @@ import { keyItem } from '../cells/key-item';
 import { NameCell } from '../cells/NameCell';
 import { RowMenu } from '../sheet/RowMenu';
 import { cellClass, headClass, rowClass } from './row-classes';
+import { useClock } from '@/lib/clock';
 
 const c = t.config.custom;
 const v = t.settingsValues;
@@ -32,6 +33,7 @@ export function customPreview(entry: CustomConfigView): string {
  * and the «⋯» menu (edit, delete with its dialog, the key). Read-only: no menu.
  */
 export function CustomValueRow({ entry, canWrite, onEdit, onDelete, announce, groupName, phone }: CustomValueRowProps) {
+  const clock = useClock();
   const labelId = useId();
   const label = entry.description ?? entry.key;
   const value = (
@@ -71,7 +73,7 @@ export function CustomValueRow({ entry, canWrite, onEdit, onDelete, announce, gr
             <DefaultCell text="—" />
           </td>
           <td className={cellClass}>
-            <small className="text-xs text-ink-2">{formatDateTime(entry.updatedAt)}</small>
+            <small className="text-xs text-ink-2">{formatDateTime(entry.updatedAt, clock)}</small>
           </td>
           <td className={cellClass}>{menu}</td>
         </>

@@ -1,6 +1,7 @@
 import { ar, expect, test } from '../support/fixtures';
 import { API } from '../support/messages';
 import { withSql } from '../support/schedule';
+import { AR_LOCALE } from '../support/locale';
 
 // «اجتماع داخلي» (owner, 2026-10-05): a standalone room with no lesson, no students, no teacher and
 // no WhatsApp; just a link /m/<token>. LiveKit does not run in e2e: every join answers 503
@@ -33,7 +34,7 @@ test.describe('internal meeting', () => {
     });
     expect(hashed).toBe(true);
 
-    const guest = await (await browser.newContext({ locale: 'ar' })).newPage();
+    const guest = await (await browser.newContext({ locale: AR_LOCALE })).newPage();
     await guest.goto(new URL(url).pathname);
     await expect(guest.getByText(title)).toBeVisible();
     await guest.getByLabel(new RegExp(ar.classroom.guest.name)).fill('ضيف');

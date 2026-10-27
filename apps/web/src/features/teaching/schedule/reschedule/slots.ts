@@ -1,7 +1,8 @@
-import { clockTime } from '@ab/shared';
+import { clockOf } from '@ab/shared';
 import { t } from '@/lib/i18n/i18n';
 import type { Window } from '../api';
 import { RIYADH_TZ, weekStart, weekWindow, zonedParts } from '../tz';
+import type { Clock } from '@/lib/clock';
 
 // Slot grid helpers (R-SCH-06): weeks are Riyadh weeks (السبت → الجمعة), the grid's big times are
 // Riyadh and the small ones the student's zone (R-SCH-01). Pure, unit-tested.
@@ -33,12 +34,13 @@ export function bookableWindow(start: string, now: Date): Window | null {
  * weekday when that zone is already on another day («18:00 السبت»). Null when the clock reads
  * the same as the base zone (Riyadh, or Kuwait / Cairo-in-summer at UTC+3): nothing to add.
  */
-export function zoneLabel(instant: string, zones: { tz: string; base: string }): string | null {
+export function zoneLabel(instant: string, zones: { tz: string; base: string }, clock: Clock): string | null {
   if (zones.tz === zones.base) return null;
   const at = new Date(instant);
   const local = zonedParts(at, zones.tz);
   const base = zonedParts(at, zones.base);
-  const time = clockTime(at, zones.tz);
+  const time = clockOf(at, { ...clock, tz: zones.tz });
+  // Compared as 24 h keys; shown in the viewer's cycle.
   if (local.date === base.date) return local.time === base.time ? null : time;
   const day: Record<string, string> = t.enums.weekday;
   return `${time} ${day[String(local.weekday)] ?? ''}`.trim();

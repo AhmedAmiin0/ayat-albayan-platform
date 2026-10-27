@@ -11,6 +11,7 @@ import { pickedText } from '../steps/slots/SlotStep';
 import { changeCourse, courseChangeCheckQuery, type CourseChangeBody } from './api';
 import { currentDaysText, newDaysText } from './change-text';
 import { refreshAfterCourseChange } from './refresh';
+import { useClock } from '@/lib/clock';
 
 export interface ChangeReviewProps {
   body: CourseChangeBody;
@@ -25,15 +26,16 @@ type SummaryProps = Pick<ChangeReviewProps, 'body' | 'course'> & { check: Course
 
 /** The current and the new days, then what is left, the new last lesson and the first new one. */
 function ChangeSummary({ body, course, check }: SummaryProps) {
+  const clock = useClock();
   const { tz } = course;
   return (
     <div role="status" className="rounded-md bg-sunk px-3.5 py-2.5 text-sm tabular-nums">
       <ul className="grid gap-1">
-        <li>{currentDaysText(course.days, tz)}</li>
-        <li className="font-semibold">{newDaysText(body, tz)}</li>
+        <li>{currentDaysText(course.days, tz, clock)}</li>
+        <li className="font-semibold">{newDaysText(body, tz, clock)}</li>
         <li className="font-semibold">{counted(t.booking.courseChange.remaining, check.remaining)}</li>
         <li>{t.booking.courseChange.newEnd.replace('{date}', dateLabel(check.endsOn))}</li>
-        <li>{t.booking.courseChange.firstNew.replace('{when}', pickedText(body.startsAt, tz))}</li>
+        <li>{t.booking.courseChange.firstNew.replace('{when}', pickedText(body.startsAt, tz, clock))}</li>
       </ul>
     </div>
   );

@@ -1,4 +1,4 @@
-import { waIdToE164, type WaLine } from '@ab/shared';
+import { ACCOUNT_CODE_TEMPLATE, waIdToE164, type WaLine } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
 import { orderedAt } from '../inbound/webhook.inbound';
 import type { StatusEvent } from '../webhook.events';
@@ -30,8 +30,9 @@ function outboundOf(message: unknown): { msg: ExternalMessage; phone: string } |
  * Stores one message sent outside the app as an outbound row (external-row.ts), linked to the
  * guardian or lead of the phone (never creating a lead). Idempotent on wa_message_id: re-checked
  * before the insert, and the insert does nothing on conflict; never while our own send to the phone
- * is unrecorded (ExternalQueries.inFlight). No side effect beyond the row: no
- * send, no push, no automation (only the inbound path runs those).
+ * is unrecorded (ExternalQueries.inFlight). A new row answers the chat: the phone's earlier unread
+ * inbound rows are stamped read (as WhatsApp does on the phone). No other side effect: no send, no
+ * read receipt, no push, no automation (only the inbound path runs those).
  */
 @Injectable()
 export class ExternalStore {
@@ -50,6 +51,20 @@ export class ExternalStore {
     const who = await this.webhook.identify(phone);
     const at = orderedAt(msg.at, await this.webhook.latestInSecond(phone, msg.at));
     const row = externalRow({ msg, phone, who, from: { line: from.line, numberId }, at, ...(event ? { event } : {}) });
-    return (await this.queries.insert(row)) ? 'stored' : 'known';
+    if (!(await this.queries.insert(row))) return 'known';
+    if (row.template_key !== ACCOUNT_CODE_TEMPLATE) await this.answered(phone, at);
+    return 'stored';
+  }
+
+  /**
+   * Stamps the inbound rows before the reply's second read at the reply's time (now when that is
+   * ahead). WhatsApp times are whole seconds and orderedAt orders within one by arrival, so a family
+   * message of the same second may be newer than the reply: it stays unread. Our sign-in code
+   * (CodeSend: no row, so Kapso's status adopts it here) is never a reply.
+   */
+  private async answered(phone: string, at: Date): Promise<void> {
+    const now = new Date();
+    const second = new Date(Math.floor(at.getTime() / 1000) * 1000);
+    await this.queries.markAnsweredRead(phone, second, at > now ? now : at);
   }
 }

@@ -4,7 +4,7 @@
     "slug": "ayat-albayan-admin",
     "owner": "holdmycup",
     "scheme": "ayatalbayan",
-    "version": "0.2.0",
+    "version": "0.3.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "automatic",
@@ -20,7 +20,7 @@
     },
     "android": {
       "package": "com.ayatalbayan.admin",
-      "blockedPermissions": ["android.permission.RECORD_AUDIO"],
+      "blockedPermissions": ["android.permission.SYSTEM_ALERT_WINDOW"],
       "adaptiveIcon": {
         "backgroundColor": "#FDF8F0",
         "foregroundImage": "./assets/android-icon-foreground.png",
@@ -43,18 +43,25 @@
         {
           "cameraPermission": "نحتاج إلى الكاميرا لتصوير إيصال التحويل وتسجيله مع الدفعة.",
           "photosPermission": "نحتاج إلى الصور لاختيار صورة إيصال التحويل وتسجيلها مع الدفعة.",
-          "microphonePermission": false
+          "microphonePermission": "نحتاج إلى الميكروفون لإجراء المكالمات الصوتية عبر واتساب مع الأسر من داخل التطبيق."
         }
       ],
       [
         "expo-audio",
         {
-          "microphonePermission": false,
+          "microphonePermission": "نحتاج إلى الميكروفون لإجراء المكالمات الصوتية عبر واتساب مع الأسر من داخل التطبيق.",
           "recordAudioAndroid": false,
           "enableBackgroundPlayback": false
         }
       ],
-      "expo-video"
+      "expo-video",
+      [
+        "@config-plugins/react-native-webrtc",
+        {
+          "microphonePermission": "نحتاج إلى الميكروفون لإجراء المكالمات الصوتية عبر واتساب مع الأسر من داخل التطبيق.",
+          "cameraPermission": "نحتاج إلى الكاميرا لتصوير إيصال التحويل وتسجيله مع الدفعة."
+        }
+      ]
     ],
     "runtimeVersion": {
       "policy": "appVersion"

@@ -12,7 +12,7 @@ const show = (m: MessageView) => renderWithQuery(<MessageBubble message={m} phon
 
 test('ours: the ticks named by the status word and its times, no status chip', async () => {
   await show(delivered);
-  const label = `${word.delivered} · ${t.messages.sentAt.replace('{time}', stamp(delivered.sent_at ?? ''))}`;
+  const label = `${word.delivered} · ${t.messages.sentAt.replace('{time}', stamp(delivered.sent_at ?? '', { cycle: '24' }))}`;
   expect(screen.getByLabelText(new RegExp(`^${label}`)).props.testID).toBe('ticks-delivered');
   expect(screen.queryByText(word.delivered)).toBeNull();
 });
@@ -43,7 +43,7 @@ test('a long press shows the times on their own line under the meta row, and hid
   expect(screen.queryByTestId('ticks-times')).toBeNull();
   await fireEvent(ticks, 'longPress');
   const line = screen.getByTestId('ticks-times');
-  expect(line.props.children).toContain(t.messages.deliveredAt.replace('{time}', stamp(delivered.delivered_at ?? '')));
+  expect(line.props.children).toContain(t.messages.deliveredAt.replace('{time}', stamp(delivered.delivered_at ?? '', { cycle: '24' })));
   // Its own line, not inside the ticks (the stamp + ticks row): it wraps in the bubble on its own.
   expect(within(ticks).queryByTestId('ticks-times')).toBeNull();
   await fireEvent(ticks, 'longPress');

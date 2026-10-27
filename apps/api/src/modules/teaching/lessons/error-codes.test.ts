@@ -19,6 +19,10 @@ const CODES = [
   'proposal_pending',
   'proposal_decided',
   'student_not_in_lesson',
+  // Sales' one-lesson move / cancel (POST /sales/lessons/:id/…, docs/16 row 37).
+  'lesson_ended',
+  'not_your_student',
+  'lesson_not_found',
   ...TIME_EDIT_ERRORS,
 ];
 

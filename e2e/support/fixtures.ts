@@ -1,6 +1,7 @@
 import { test as base, expect, type Page } from '@playwright/test';
 import ar from '@ab/shared/i18n/ar.json' with { type: 'json' };
 import { authFile, USERS } from './users';
+import { AR_LOCALE } from './locale';
 
 type Role = keyof typeof USERS;
 
@@ -21,7 +22,7 @@ export const test = base.extend<{ asRole: (role: Role) => Promise<Page> }>({
   asRole: async ({ browser }, use) => {
     const contexts: Awaited<ReturnType<typeof browser.newContext>>[] = [];
     await use(async (role) => {
-      const ctx = await browser.newContext({ storageState: authFile(role), locale: 'ar' });
+      const ctx = await browser.newContext({ storageState: authFile(role), locale: AR_LOCALE });
       contexts.push(ctx);
       return ctx.newPage();
     });

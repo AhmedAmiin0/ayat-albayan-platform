@@ -7,6 +7,7 @@ import { t } from '@/lib/i18n/i18n';
 import { settingsQuery } from '@/lib/settings/settings-api';
 import { setFollowUpPaused, type InboxLead } from '../api/api';
 import { fullTime } from '../format';
+import { useClock, type Clock } from '@/lib/clock';
 
 export interface FollowUpLineProps {
   lead: InboxLead;
@@ -21,12 +22,12 @@ const NOTES = { queued: f.queued, waiting_template: f.waitingTemplate, no_slots:
  * What the follow-up automation will do next (R-LEAD-05): who paused it, or why the due one has
  * not gone out (in the queue, waiting for Meta's approval, no free slots), else when it is due.
  */
-export function followUpText(lead: InboxLead, total: number | undefined): string[] {
+export function followUpText(lead: InboxLead, total: number | undefined, clock: Clock): string[] {
   if (lead.follow_up_paused) return [lead.follow_up_paused_by === 'lead' ? f.pausedByLead : f.paused];
   if (!statuses.includes(lead.status)) return [f.none];
   const lines: string[] = [];
   if (lead.follow_up_note) lines.push(NOTES[lead.follow_up_note]);
-  else lines.push(lead.next_follow_up_at ? f.next.replace('{time}', fullTime(lead.next_follow_up_at)) : f.none);
+  else lines.push(lead.next_follow_up_at ? f.next.replace('{time}', fullTime(lead.next_follow_up_at, clock)) : f.none);
   if (lead.follow_up_stage > 0 && total) {
     lines.push(f.stage.replace('{n}', String(lead.follow_up_stage)).replace('{total}', String(total)));
   }
@@ -52,12 +53,13 @@ export function FollowUpLine({ lead, onDone }: FollowUpLineProps) {
   });
   const resume = () => pause.mutate({ id: lead.id, paused: false });
   const byLead = lead.follow_up_paused && lead.follow_up_paused_by === 'lead';
+  const clock = useClock();
 
   return (
     <div className="grid gap-2">
       <h3 className="text-sm font-semibold">{f.title}</h3>
       <div className="border-s border-s-rule ps-3 text-xs text-ink-2">
-        {followUpText(lead, settings.data?.follow_up_hours.length).map((line) => (
+        {followUpText(lead, settings.data?.follow_up_hours.length, clock).map((line) => (
           <p key={line}>{line}</p>
         ))}
       </div>

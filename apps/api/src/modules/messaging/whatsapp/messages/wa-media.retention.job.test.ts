@@ -4,7 +4,9 @@ import type { CachedMedia, InboundMediaQueries } from './inbound-media.queries';
 import { BATCH, MAX_BATCHES, WaMediaRetentionJob } from './wa-media.retention.job';
 
 const NOW = new Date('2026-10-19T03:00:00Z');
-const cached = (n: number, mime = 'audio/ogg; codecs=opus'): CachedMedia => ({ id: `m${n}`, media_path: `m${n}.ogg`, media_mime: mime });
+const cached = (n: number, mime = 'audio/ogg; codecs=opus'): CachedMedia => ({ id: `m${n}`, media_path: `m${n}.ogg`, media_mime: mime, media_id: `wamid-${n}` });
+/** A voice note / video imported from the old CRM and copied by us (no Meta media id): our only copy. */
+const crmCopy = (n: number, mime = 'audio/ogg'): CachedMedia => ({ ...cached(n, mime), media_id: null });
 const batch = (size: number, from = 0) => Array.from({ length: size }, (_, i) => cached(from + i));
 
 /** Inbound pages; `echoPages` answer the second pass (cached echoes). */
@@ -36,6 +38,13 @@ describe('WaMediaRetentionJob (inbound audio / video, 30 days)', () => {
     expect(await job.runOnce(NOW)).toBe(1);
     expect(storage.removeMany).toHaveBeenCalledWith({ bucket: 'wa-media', paths: ['m3.ogg'] });
     expect(queries.clearPaths).toHaveBeenCalledWith(['m3'], false);
+  });
+
+  it('never purges an old-CRM copy (no media id), even if the query returned one; Meta-cached audio / video still go', async () => {
+    const { job, queries, storage } = setup([crmCopy(1), crmCopy(2, 'video/mp4'), cached(3), cached(4, 'video/mp4')]);
+    expect(await job.runOnce(NOW)).toBe(2);
+    expect(storage.removeMany).toHaveBeenCalledWith({ bucket: 'wa-media', paths: ['m3.ogg', 'm4.ogg'] });
+    expect(queries.clearPaths).toHaveBeenCalledWith(['m3', 'm4'], false);
   });
 
   it('only photos / PDFs → nothing removed or cleared', async () => {

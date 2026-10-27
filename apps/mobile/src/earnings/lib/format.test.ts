@@ -7,7 +7,7 @@ test('teacher money is EGP with the isolated amount', () => {
 });
 
 test('a session line: the Riyadh day and time, then length and students', () => {
-  expect(sessionWhen('2026-09-03T14:00:00Z')).toBe('3 سبتمبر 2026 · 17:00');
+  expect(sessionWhen('2026-09-03T14:00:00Z', '24')).toBe('3 سبتمبر 2026 · 17:00');
   expect(sessionDetail(SESSIONS[0] as never)).toBe('30 دقيقة · سهيلة');
   expect(sessionDetail({ minutes: 45, students: [] })).toBe('45 دقيقة');
 });

@@ -5,6 +5,9 @@ import { tzCity } from '@/components/ui/form/time-zone-select';
 import { dateLabel, zonedParts } from '@/features/teaching/schedule/tz';
 import { t } from '@/lib/i18n/i18n';
 import { DURATION_OPTIONS, quarterTimes, type ScheduleValue } from './schedule-form';
+import { ClockOptions } from '@/lib/clock-options';
+import { clockDir } from '@/lib/clock-text';
+import { useClock } from '@/lib/clock';
 
 const L = t.meetingInvites;
 
@@ -17,6 +20,7 @@ interface Props {
 
 /** Date, a 15-minute time select (never free text, rule 6) and the duration (15–240 min). */
 export function ScheduleFields({ value, onChange, tz }: Props) {
+  const clock = useClock();
   const today = zonedParts(new Date(), tz).date;
   const set = (patch: Partial<ScheduleValue>) => onChange({ ...value, ...patch });
   return (
@@ -27,10 +31,8 @@ export function ScheduleFields({ value, onChange, tz }: Props) {
         </Field>
         <Field label={L.time}>
           {(p) => (
-            <Select {...p} dir="ltr" value={value.time} onChange={(e) => set({ time: e.target.value })}>
-              {quarterTimes(value.time).map((x) => (
-                <option key={x} value={x}>{x}</option>
-              ))}
+            <Select {...p} dir={clockDir(clock)} value={value.time} onChange={(e) => set({ time: e.target.value })}>
+              <ClockOptions times={quarterTimes(value.time)} />
             </Select>
           )}
         </Field>

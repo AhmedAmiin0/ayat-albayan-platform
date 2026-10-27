@@ -194,3 +194,41 @@ line's key only (settings.write, audited like the web); one save at a time. With
 not offered; the keys themselves are still entered on the web (CRM and Kapso keys on «الحماية», the line ids
 and tokens on «الأرقام» → «إعداد الخطوط السابق»). In module mode (`comms_source` = module) each number's own
 provider sends and `WA_PROVIDER` is not read, so the section shows only a note pointing to «الأرقام». JS-only.
+
+### Files imported from the old CRM: our own copy of all of them (owner 2026-10-27 «Fix it»)
+
+A family's photo or voice note imported from the old CRM is an inbound row with no Meta media id whose body is
+only a public link to the CRM's own storage (`…/storage/v1/object/public/chat-media/…`). Anyone with that link can
+open the file. The chat fetches one of these files once, when an admin first opens it, from the host in
+`crm_media_host` («القيم» → «مضيف ملفات CRM القديم»; empty = such files are not fetched; the value is never in the
+repo), and keeps it in the private `wa-media` bucket (`messages/crm-history/`).
+
+**Copy all of them now** (`messages/crm-copy/`, `CrmMediaCopyJob`): while the switch `crm_media_copy_all`
+(«القيم» → «نسخ كل ملفات CRM القديم الآن», default off) is on **and** `crm_media_host` is a host name, the API
+copies, once a minute, a batch of 20 such rows (two at a time) through the same path an admin's open uses (same
+host check, no redirect, 10 s timeout, size cap, one object per message, `media_path` set only where empty). A file
+that fails three times is left as is and counted as failed; a row that cannot be ours (a body that is more than the
+link, a file over the cap) is skipped. Only a real storage answer about the file (400, 404, …) counts as a failure:
+when the CRM's storage does not answer (no connection, the timeout, 5xx, 429: `crm_unreachable`) no attempt is
+counted, the tick stops with a warning in the API log and the next minute tries again. Turning the switch on again
+re-arms every failed row (migration `20261028000920_crm_media_copy_retry.sql` deletes its non-skipped failure
+rows); skipped rows stay skipped. When no row is left the switch turns itself off and one audit row
+(`crm_media_copy_done`, `{copied, failed, skipped, remaining}`) is written. `remaining` counts the rows the batch would pick on
+**any** host (a crm number, the body only one chat-media link) still without a copy and never tried: a link on
+another host than `crm_media_host` is never picked by the batch. Only a whole round the storage did not answer is
+an outage; a file that never answers while others do counts its attempts like any failure, and a row still
+unanswered after 30 outage rounds (about half an hour) counts one attempt, so the last file that never answers
+cannot keep the run from ending. Message bodies are never changed and nothing is
+deleted. Failed or skipped rows are listed in `crm_media_copy_failures` (migration
+`20261028000891_crm_media_copy.sql`). The 30-day purge of cached voice notes and videos (`WaMediaRetentionJob`)
+skips these copies: only rows with Meta's media id are purged, because once the CRM's storage is private our copy
+is the only one.
+
+**Owner steps.** 1) Set `crm_media_host` (only the host, no `https://`, no path). 2) Turn on «نسخ كل ملفات CRM القديم
+الآن». 3) Wait for it to turn itself off (a few hundred files take well under an hour), then read the
+`crm_media_copy_done` audit row. Go on only when `remaining` = 0 **and** `copied` > 0, with `failed` and `skipped`
+0 or explained: `remaining` > 0 means links on another host (fix `crm_media_host` and turn the switch on again);
+`copied` = 0 means nothing was copied (a wrong host). `failed` > 0 after an outage: turn the switch on again to
+retry those rows. 4) **Only once the old CRM no
+longer needs to show its chat history**, in the old CRM's Supabase dashboard: Storage → `chat-media` → make the
+bucket private. We never change the old CRM or its storage settings: it is live and uses those links.

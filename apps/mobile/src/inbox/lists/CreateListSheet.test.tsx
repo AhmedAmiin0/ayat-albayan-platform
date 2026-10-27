@@ -21,7 +21,7 @@ const createButton = () => screen.getByRole('button', { name: t.inbox.lists.crea
 async function openSheet() {
   await renderWithQuery(<ThreadsList />);
   await screen.findByRole('tab', { name: PAID.name });
-  await fireEvent.press(screen.getByRole('button', { name: `＋ ${t.inbox.lists.new}` }));
+  await fireEvent.press(screen.getByRole('button', { name: t.inbox.lists.new }));
 }
 
 beforeEach(() => {
@@ -60,7 +60,7 @@ test('created: the sheet closes and the new list is the active chip, filtering t
   mockLists = [PAID, NEW];
   await fireEvent.changeText(screen.getByLabelText(t.inbox.lists.name), NEW.name);
   await fireEvent.press(createButton());
-  const chips = within(screen.getByLabelText(t.inbox.lists.rowLabel));
+  const chips = within(screen.getByLabelText(t.inbox.filterRow));
   expect(await chips.findByRole('tab', { name: NEW.name, selected: true })).toBeTruthy();
   expect(screen.queryByLabelText(t.inbox.lists.name)).toBeNull();
   expect(await screen.findByText(t.inbox.lists.empty)).toBeTruthy();
