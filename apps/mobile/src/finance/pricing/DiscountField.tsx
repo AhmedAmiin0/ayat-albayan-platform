@@ -36,7 +36,8 @@ export function DiscountField({ value, onChange }: DiscountFieldProps) {
           fontFamily: type.ui[600],
           fontSize: type.size.base,
           fontVariant: ['tabular-nums'],
-          writingDirection: 'ltr',
+          // Digits read LTR in both languages: Yoga direction, so the caret and textAlign follow it.
+          direction: 'ltr',
           textAlign: 'center',
         }}
       />

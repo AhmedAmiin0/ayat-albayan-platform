@@ -1,5 +1,4 @@
 import { RIYADH_TZ } from '@ab/shared';
-import { useState } from 'react';
 import { FlatList } from 'react-native';
 import { agendaDays, availabilityLine, headerLine } from '@/calendar/agenda/agenda';
 import { AgendaDayView } from '@/calendar/agenda/AgendaDayView';
@@ -9,8 +8,9 @@ import { JoinClassroomButton } from '@/classroom/links/JoinClassroomButton';
 import { PeriodSwitcher } from '@/calendar/overview/PeriodSwitcher';
 import { addDays, riyadhToday, weekLabel, weekStart, weekWindow } from '@/calendar/lib/week';
 import { t } from '@/core/lib/i18n/i18n';
+import { useFollowingDay } from '@/core/lib/time/use-following-day';
 import { Note } from '@/more/Note';
-import { useNow } from '@/today/lib/use-day-lessons';
+import { useNow } from '@/core/lib/time/use-now';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
@@ -28,7 +28,7 @@ const noMove = () => undefined;
  */
 export function TeacherScheduleScreen() {
   const today = riyadhToday(useNow());
-  const [start, setStart] = useState(() => weekStart(today));
+  const [start, setStart] = useFollowingDay(weekStart(today));
   const me = useTeacherMe();
   const lessons = useMyLessons(weekWindow(start));
   const grid = useMyAvailability(me.data?.id);

@@ -15,6 +15,7 @@ export * from './reports/index.js';
 export * from './permissions/roles.js';
 export * from './permissions/index.js';
 export * from './format/running-head.js';
+export * from './format/text-dir.js';
 export * from './schemas/index.js';
 export * from './settings/index.js';
 export * from './custom-config/index.js';

@@ -1,6 +1,6 @@
 import { isRunningLesson, lessonStatusStyle } from '@ab/shared';
 import { View } from 'react-native';
-import { useMinuteClock } from '@/classroom/sessions/use-minute-clock';
+import { useNow } from '@/core/lib/time/use-now';
 import { t } from '@/core/lib/i18n/i18n';
 import { StatusChip } from '@/core/ui/feedback/StatusChip';
 import { Tag } from '../agenda/Tag';
@@ -11,7 +11,7 @@ import type { DetailsLesson } from './details-text';
  * kind tags «تجريبية» / «تعويضية» and «عُدّل الوقت» after an in-place edit (R-SCH-09/10/11).
  */
 export function DetailsHead({ lesson }: { lesson: DetailsLesson }) {
-  const now = useMinuteClock();
+  const now = useNow();
   return (
     <View style={{ flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', gap: 6 }}>
       <StatusChip

@@ -1,4 +1,4 @@
-import { clockTime, dayParts, isUnavailableMessage, isUnsupportedMessage, type MessageView, SESSION_WINDOW_MS, type ThreadView } from '@ab/shared';
+import { clockTime, dayParts, isUnavailableMessage, isUnsupportedMessage, type MessageView, reactionText, SESSION_WINDOW_MS, type ThreadView } from '@ab/shared';
 import { ApiError } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
 
@@ -26,6 +26,8 @@ export function mediaKind(mime: string | null): MediaKind {
 export function mediaLine(m: Pick<MessageView, 'body' | 'media_mime' | 'interactive_payload'>): string | null {
   if (m.media_mime) return t.inbox.media[mediaKind(m.media_mime)];
   if (m.body) return null;
+  const reacted = reactionText(m.interactive_payload, { reacted: t.inbox.reacted, removed: t.inbox.reactionRemoved });
+  if (reacted) return reacted;
   if (isUnavailableMessage(m.interactive_payload)) return t.inbox.unavailable;
   return isUnsupportedMessage(m.interactive_payload) ? t.inbox.unsupported : t.inbox.media.other;
 }

@@ -41,4 +41,10 @@ describe('MessageBubble: a message whose content never reached us', () => {
     // A contact card did arrive: it cannot be shown here, but nobody is asked to send it again.
     expect(emptyText({ interactive_payload: { type: 'contacts', contacts: [] } })).toBe(t.inbox.media.other);
   });
+
+  it('a WhatsApp reaction row names its emoji (owner 2026-10-27), never «رسالة لا يمكن عرضها هنا»', () => {
+    const bubble = renderBubble({ interactive_payload: { type: 'reaction', reaction: { emoji: '👍🏻', message_id: 'wamid.x' } } });
+    expect(bubble.textContent).toContain(t.inbox.reacted.replace('{emoji}', '👍🏻'));
+    expect(emptyText({ interactive_payload: { type: 'reaction', reaction: { emoji: '', message_id: 'wamid.x' } } })).toBe(t.inbox.reactionRemoved);
+  });
 });

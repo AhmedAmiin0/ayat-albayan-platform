@@ -1,4 +1,5 @@
 import { t } from '@/core/lib/i18n/i18n';
+import { isolate } from '@/core/ui/primitives/Ltr';
 import { work } from '../shared/fixtures';
 import { currencyLabel, packageText, pendingSubtitle, taskText, unpaidSubtitle } from './work-text';
 
@@ -6,7 +7,7 @@ test('a renewal task names the student and what is left', () => {
   const task = work.tasks.items[0];
   if (!task) throw new Error('fixture');
   const text = taskText(task);
-  expect(text).toContain('سارة أحمد');
+  expect(text).toContain(isolate('سارة أحمد'));
   expect(text).not.toContain('{');
 });
 

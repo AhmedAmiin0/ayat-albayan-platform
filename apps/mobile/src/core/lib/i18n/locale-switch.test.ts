@@ -18,7 +18,7 @@ beforeEach(async () => {
 });
 afterEach(() => jest.restoreAllMocks());
 
-test('first start on an LTR phone, nothing saved: Arabic RTL, one reload', async () => {
+test('first start on an Arabic phone (jest.setup), nothing saved, LTR run: Arabic RTL, one reload', async () => {
   expect(await syncLocale('en')).toBe(true);
   expect(allow).toHaveBeenCalledWith(true);
   expect(force).toHaveBeenCalledWith(true);
@@ -35,7 +35,7 @@ test('English saved on an RTL run: allow and force off (an Arabic phone stays RT
 });
 
 test('the run already shows the saved language: no flag change, no reload', async () => {
-  expect(await syncLocale('ar')).toBe(false); // existing installs: RTL, nothing saved
+  expect(await syncLocale('ar')).toBe(false); // an Arabic phone, nothing saved
   await AsyncStorage.setItem(LOCALE_STORAGE_KEY, 'en');
   expect(await syncLocale('en')).toBe(false);
   expect(force).not.toHaveBeenCalled();

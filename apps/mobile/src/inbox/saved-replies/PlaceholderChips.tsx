@@ -15,7 +15,7 @@ export function insertToken(input: { text: string; key: SavedReplyPlaceholder; s
 
 /**
  * «أدرج متغيرًا»: a pill per placeholder (اسم العميل · اسم الطالب · اسمك) and what happens to it; each
- * pill is 36pt with a 44pt hit area.
+ * pill is 36pt with a 44pt hit area. Under them, how «[نص]» makes a blank the sender fills (owner 2026-10-27).
  */
 export function PlaceholderChips({ onInsert }: { onInsert: (key: SavedReplyPlaceholder) => void }) {
   const { color } = useTheme();
@@ -30,6 +30,9 @@ export function PlaceholderChips({ onInsert }: { onInsert: (key: SavedReplyPlace
       </View>
       <AppText style={{ fontFamily: type.ui[400], fontSize: type.size['2xs'], lineHeight: type.lineHeight(type.size['2xs']), color: color.ink2 }}>
         {t.savedReplies.placeholdersHint}
+      </AppText>
+      <AppText style={{ fontFamily: type.ui[400], fontSize: type.size['2xs'], lineHeight: type.lineHeight(type.size['2xs']), color: color.ink2 }}>
+        {t.savedReplies.blanksHint}
       </AppText>
     </View>
   );

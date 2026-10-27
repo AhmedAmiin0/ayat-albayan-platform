@@ -1,4 +1,5 @@
 import { render, screen } from '@testing-library/react-native';
+import { StyleSheet } from 'react-native';
 import { answered, pending } from './fixtures';
 import { AverageCard } from './AverageCard';
 import { FeedbackRow } from './FeedbackRow';
@@ -24,4 +25,9 @@ test('a pending request and an average in English', async () => {
   );
   expect(screen.getByText('4.5 out of 5 · 12 responses')).toBeTruthy();
   expect(screen.getByText('83% would recommend us')).toBeTruthy();
+});
+
+test('English: an Arabic note aligns to the right, by its own words', async () => {
+  await render(<FeedbackRow row={answered} />);
+  expect(StyleSheet.flatten(screen.getByText('الحلقة كانت ممتازة').props.style).textAlign).toBe('right');
 });
