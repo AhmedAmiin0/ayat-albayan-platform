@@ -4117,7 +4117,12 @@
       "program": "Program",
       "status": "Status",
       "guardian": "Guardian",
-      "noTeacher": "No teacher"
+      "noTeacher": "No teacher",
+      "guardianPhone": "Guardian's phone",
+      "noPhone": "This student has no saved phone number, so there is no chat to open",
+      "detailsHint": "Opens the student details",
+      "chatHint": "Opens the guardian's chat",
+      "noPhoneHint": "No guardian phone"
     },
     "live": {
       "title": "Lessons running now",
@@ -4147,6 +4152,7 @@
       "title": "Student details",
       "open": "Open {name}'s details",
       "teacher": "Teacher: {name}",
+      "chat": "Guardian's chat",
       "notFound": "This student is not one of yours or does not exist",
       "subscription": "Subscription",
       "current": "Current subscription",

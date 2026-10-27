@@ -17,7 +17,7 @@ export type SalesTeacherRow = Pick<Tables<'teachers'>, 'id' | 'display_name_ar' 
 };
 
 export type SalesStudentRow = Pick<Tables<'students'>, 'id' | 'code' | 'name' | 'status' | 'program'> & {
-  guardian: { name: string } | null;
+  guardian: { name: string; phone_e164: string } | null;
   teacher: { display_name_ar: string } | null;
 };
 
@@ -48,11 +48,11 @@ export class SalesAcademyQueries {
     return data;
   }
 
-  /** One page by name; `search` is a name (Arabic-normalised) or a code, like the admin's list. */
+  /** One page by name, with the guardian's name and phone (owner 2026-10-27: the row opens that family's chat); `search` is a name (Arabic-normalised) or a code, like the admin's list. */
   async students(q: SalesStudentsQuery): Promise<{ rows: SalesStudentRow[]; total: number }> {
     let query = this.db
       .from('students')
-      .select('id, code, name, status, program, guardian:guardians(name), teacher:teachers(display_name_ar)', { count: 'exact' })
+      .select('id, code, name, status, program, guardian:guardians(name, phone_e164), teacher:teachers(display_name_ar)', { count: 'exact' })
       .order('name');
     const filter = q.search ? studentNameOrCodeFilter(q.search) : null;
     if (filter) query = query.or(filter);

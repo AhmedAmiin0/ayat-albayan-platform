@@ -13,6 +13,7 @@ const row = (over: Partial<MyStudentRow>): MyStudentRow => ({
   code: 'AB-1000',
   name: 'سهيلة',
   brought_at: '2026-09-20T09:00:00.000Z',
+  guardian_phone: null,
   first_subscription_paid: false,
   commission: null,
   renewal_commissions: 0,

@@ -48,11 +48,11 @@ describe('sales academy mappers (whitelists)', () => {
     expect(toSalesTeacher(teacherRow())).not.toHaveProperty('meeting_mode');
   });
 
-  it('toSalesStudent keeps code, name, status, program, teacher and guardian names only', () => {
+  it('toSalesStudent keeps code, name, status, program, teacher and guardian names and the guardian phone only', () => {
     expect(toSalesStudent(studentRow())).toEqual({
-      id: 's1', code: 'AB-0101', name: 'ياسمين', status: 'active', program: 'quran', teacher_name: 'أبرار', guardian_name: 'أم ياسمين',
+      id: 's1', code: 'AB-0101', name: 'ياسمين', status: 'active', program: 'quran', teacher_name: 'أبرار', guardian_name: 'أم ياسمين', guardian_phone: '+966551110000',
     });
-    expect(toSalesStudent({ ...studentRow(), code: null, teacher: null, guardian: null })).toMatchObject({ code: '', teacher_name: null, guardian_name: '' });
+    expect(toSalesStudent({ ...studentRow(), code: null, teacher: null, guardian: null })).toMatchObject({ code: '', teacher_name: null, guardian_name: '', guardian_phone: null });
   });
 
   it('toSalesLive is the assistant row: names only, a missing student skipped', () => {
