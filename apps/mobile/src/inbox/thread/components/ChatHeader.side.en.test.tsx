@@ -11,7 +11,7 @@ jest.mock('react-native/Libraries/ReactNative/I18nManager', () => {
   return { __esModule: true, default: { ...actual, isRTL: false, getConstants } };
 });
 
-test('English: the same physical order as Arabic, back on the left, the icons on the right', async () => {
+test('English: the mirror of Arabic, back on the left, the name beside it, the icons on the right', async () => {
   await render(<ChatHeader title="Huda Salem" subtitle="Lead" onBack={jest.fn()} trailing={<View testID="icons" />} />);
   expect(leftToRight(screen.getByTestId('chat-header'), false)).toEqual([t.common.back, 'chat-names', 'icons']);
   const back = screen.getByRole('button', { name: t.common.back });

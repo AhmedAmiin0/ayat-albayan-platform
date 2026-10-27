@@ -2,9 +2,12 @@ import { View } from 'react-native';
 import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 
-/** One letter, the name's first (two joined Arabic letters read as a word): «أحمد علي» → «أ»; «?» for a blank name. */
+/**
+ * One letter, the name's first (two joined Arabic letters read as a word): «أحمد علي» → «أ»; «?» for a
+ * blank name or a bare number (no letter: an isolated «+966 …» would show its invisible mark or a «+»).
+ */
 export function initialOf(name: string): string {
-  return Array.from(name.trim())[0] ?? '?';
+  return name.match(/\p{L}/u)?.[0] ?? '?';
 }
 
 /** The call screen's big avatar (WhatsApp's): the initial on the gold wash; decorative, the name is read. */

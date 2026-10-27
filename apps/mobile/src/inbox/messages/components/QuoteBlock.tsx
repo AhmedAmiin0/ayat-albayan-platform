@@ -3,6 +3,7 @@ import { Pressable } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { shape, type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
+import { ContentText } from '@/core/ui/primitives/ContentText';
 import { useChatActions } from '../../thread/hooks/chat-actions';
 import { quoteSender, quoteText } from '../hooks/quote-text';
 
@@ -49,12 +50,9 @@ export function QuoteBlock({ quote, onJump }: QuoteBlockProps) {
           {sender}
         </AppText>
       ) : null}
-      <AppText
-        numberOfLines={1}
-        style={{ ...line, fontFamily: type.ui[400], color: color.ink2, writingDirection: 'auto' }}
-      >
+      <ContentText source={text} numberOfLines={1} style={{ ...line, fontFamily: type.ui[400], color: color.ink2 }}>
         {text}
-      </AppText>
+      </ContentText>
     </Pressable>
   );
 }
