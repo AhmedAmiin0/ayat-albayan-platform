@@ -1,3 +1,4 @@
+import { Logger } from '@nestjs/common';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import type { SendGate } from '../../whatsapp/gate/send-gate';
 import type { WhatsappLines } from '../../whatsapp/whatsapp.types';
@@ -28,15 +29,15 @@ describe('ReadReceipts.open (docs/12 §13.7, R-MSG-05)', () => {
 
   it('stamps read, then one receipt per line on that line’s client', async () => {
     const t = setup(BOTH);
-    await t.receipts.open(PHONE, NOW);
-    expect(t.queries.markInboundRead).toHaveBeenCalledWith(PHONE, NOW);
+    await (await t.receipts.open(PHONE, { now: NOW })).receipts;
+    expect(t.queries.markInboundRead).toHaveBeenCalledWith(PHONE, NOW, undefined);
     expect(t.notifications.markRead.mock.calls).toEqual([['wamid.n']]);
     expect(t.chat.markRead.mock.calls).toEqual([['wamid.c']]);
   });
 
   it('gate closed: read_at is stamped, Meta is never called', async () => {
     const t = setup(BOTH, false);
-    await t.receipts.open(PHONE, NOW);
+    await (await t.receipts.open(PHONE, { now: NOW })).receipts;
     expect(t.queries.markInboundRead).toHaveBeenCalled();
     expect(t.notifications.markRead).not.toHaveBeenCalled();
     expect(t.chat.markRead).not.toHaveBeenCalled();
@@ -45,8 +46,8 @@ describe('ReadReceipts.open (docs/12 §13.7, R-MSG-05)', () => {
   it('a phone off the allow-list: read_at is stamped, no receipt on either line', async () => {
     vi.stubEnv('WA_ALLOWED_RECIPIENTS', '+201001234567');
     const t = setup(BOTH);
-    await t.receipts.open(PHONE, NOW);
-    expect(t.queries.markInboundRead).toHaveBeenCalledWith(PHONE, NOW);
+    await (await t.receipts.open(PHONE, { now: NOW })).receipts;
+    expect(t.queries.markInboundRead).toHaveBeenCalledWith(PHONE, NOW, undefined);
     expect(t.notifications.markRead).not.toHaveBeenCalled();
     expect(t.chat.markRead).not.toHaveBeenCalled();
   });
@@ -54,7 +55,7 @@ describe('ReadReceipts.open (docs/12 §13.7, R-MSG-05)', () => {
   it('a phone on the allow-list gets its receipts', async () => {
     vi.stubEnv('WA_ALLOWED_RECIPIENTS', `+201001234567, ${PHONE}`);
     const t = setup(BOTH);
-    await t.receipts.open(PHONE, NOW);
+    await (await t.receipts.open(PHONE, { now: NOW })).receipts;
     expect(t.notifications.markRead).toHaveBeenCalledWith('wamid.n');
     expect(t.chat.markRead).toHaveBeenCalledWith('wamid.c');
   });
@@ -62,7 +63,7 @@ describe('ReadReceipts.open (docs/12 §13.7, R-MSG-05)', () => {
   it('an unconfigured line client is skipped silently; the other line still gets its receipt', async () => {
     const t = setup(BOTH);
     t.chat.configured.mockReturnValue(false);
-    await expect(t.receipts.open(PHONE, NOW)).resolves.toBeUndefined();
+    await expect((await t.receipts.open(PHONE, { now: NOW })).receipts).resolves.toBeUndefined();
     expect(t.chat.markRead).not.toHaveBeenCalled();
     expect(t.notifications.markRead).toHaveBeenCalledWith('wamid.n');
   });
@@ -70,13 +71,31 @@ describe('ReadReceipts.open (docs/12 §13.7, R-MSG-05)', () => {
   it('one failing line never stops the other (warn only)', async () => {
     const t = setup(BOTH);
     t.notifications.markRead.mockRejectedValue(new Error('190 token expired'));
-    await expect(t.receipts.open(PHONE, NOW)).resolves.toBeUndefined();
+    await expect((await t.receipts.open(PHONE, { now: NOW })).receipts).resolves.toBeUndefined();
     expect(t.chat.markRead).toHaveBeenCalledWith('wamid.c');
+  });
+
+  it('the stamp answers without waiting for Meta (fire and forget): a receipt that never returns blocks nothing', async () => {
+    const t = setup(BOTH);
+    t.notifications.markRead.mockReturnValue(new Promise(() => undefined));
+    const out = await t.receipts.open(PHONE, { now: NOW, upTo: '2026-10-10T07:59:00Z' });
+    expect(out.stamped).toBe(true);
+    expect(t.queries.markInboundRead).toHaveBeenCalledWith(PHONE, NOW, '2026-10-10T07:59:00Z');
+  });
+
+  it('a failing gate read is logged with the phone’s last 4 digits only, never thrown', async () => {
+    const t = setup(BOTH);
+    const warn = vi.spyOn(Logger.prototype, 'warn').mockImplementation(() => undefined);
+    t.gate.open.mockRejectedValue(new Error('settings read failed'));
+    await expect((await t.receipts.open(PHONE, { now: NOW })).receipts).resolves.toBeUndefined();
+    expect(warn.mock.calls.flat().join(' ')).toContain('…4567');
+    expect(warn.mock.calls.flat().join(' ')).not.toContain(PHONE);
+    warn.mockRestore();
   });
 
   it('nothing unread: no gate read and no receipt', async () => {
     const t = setup([]);
-    await t.receipts.open(PHONE, NOW);
+    await (await t.receipts.open(PHONE, { now: NOW })).receipts;
     expect(t.gate.open).not.toHaveBeenCalled();
     expect(t.notifications.markRead).not.toHaveBeenCalled();
     expect(t.chat.markRead).not.toHaveBeenCalled();

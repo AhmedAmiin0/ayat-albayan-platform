@@ -18,7 +18,8 @@ import { useThreadPoll } from './thread-poll';
  * GET /threads/:phone (docs/12 H2): the newest page first, `before` the oldest loaded row pages
  * back. The API stamps the inbound rows read when it answers. The persisted client keeps the last
  * answer on disk, so an opened thread reads offline (R-MOB-03). While on screen, useThreadPoll keeps
- * its newest page live.
+ * it live: a delta every INBOX_REFRESH_MS, the newest page every THREAD_FULL_MS (pull-to-refresh and
+ * opening read the whole thread).
  */
 export function useThread(phone: string) {
   const query = useInfiniteQuery({
