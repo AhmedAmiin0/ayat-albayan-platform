@@ -88,6 +88,18 @@ test('reschedule: her scoped slots, one lesson only, then the admin\'s success p
   expect(await screen.findByText(t.lessons.rescheduled)).toBeTruthy();
 });
 
+test('«تم» after a move closes «تفاصيل الحلقة» too: no old time with live actions left behind', async () => {
+  mockApiSend.mockResolvedValue({ id: 'new', starts_at: SAT_17, status: 'scheduled' });
+  await open('سلمى');
+  await fireEvent.press(screen.getByRole('button', { name: a.reschedule }));
+  await fireEvent.press(await screen.findByRole('radio', { name: '17:00' }));
+  await fireEvent.press(screen.getByRole('button', { name: t.lessons.rescheduleSubmit }));
+  await fireEvent.press(await screen.findByRole('button', { name: t.reschedule.done }));
+  await waitFor(() => expect(screen.queryByRole('header', { name: 'سلمى' })).toBeNull());
+  expect(screen.queryByRole('button', { name: a.reschedule })).toBeNull();
+  expect(screen.queryByRole('button', { name: a.cancel })).toBeNull();
+});
+
 test('a refusal from the API says why (403 not_your_student)', async () => {
   mockApiSend.mockRejectedValue(new ApiError(403, { code: 'not_your_student' }));
   await open('سلمى');

@@ -12,7 +12,7 @@ const FIRST_RUN_MS = 15 * 60_000;
 
 type CopyTick =
   | { state: 'off' | 'busy' | 'done' | 'error' }
-  | { state: 'copied'; outcomes: CopyOutcome[] };
+  | { state: 'copied' | 'unreachable'; outcomes: CopyOutcome[] };
 
 /** The setting as a host we may fetch from (allowedCrmUrl's own check), or null (empty or not a DNS name). */
 export function copyHost(setting: string): string | null {
@@ -24,9 +24,10 @@ export function copyHost(setting: string): string | null {
  * Owner 2026-10-27 «Fix it»: a private copy of EVERY family file imported from the old CRM, so its
  * public storage can later be made private. Only while crm_media_copy_all is on and crm_media_host is
  * a host: each minute one batch (BATCH rows, CONCURRENCY at a time) through CrmMediaCopier; when no
- * row is left, CrmMediaCopyDone turns the switch off and writes one audit row. Ticks never overlap
- * (a slow one makes the next return 'busy'); idempotent (a copied row leaves the batch query, a
- * failing one is capped). Never edits a body, never deletes. ponytail: in-process timer like
+ * row is left, CrmMediaCopyDone turns the switch off and writes one audit row. The CRM's storage not
+ * answering any row of a round (CRM_UNREACHABLE) ends the tick with a warning and counts no
+ * attempt. Ticks never overlap (a slow one makes the next return 'busy'); idempotent (a copied row
+ * leaves the batch query, a failing one is capped). Never edits a body, never deletes. ponytail: in-process timer like
  * WaMediaRetentionJob; the API runs as one process.
  */
 @Injectable()
@@ -80,8 +81,12 @@ export class CrmMediaCopyJob implements OnApplicationBootstrap, OnModuleDestroy 
     }
     const outcomes: CopyOutcome[] = [];
     for (let i = 0; i < ids.length; i += CONCURRENCY) {
-      const round = ids.slice(i, i + CONCURRENCY).map((id) => this.copier.copy(id, host));
-      outcomes.push(...(await Promise.all(round)));
+      const round = await this.copier.round(ids.slice(i, i + CONCURRENCY), host);
+      outcomes.push(...round);
+      if (round.every((o) => o === 'unreachable')) {
+        this.log.warn('crm media copy paused: the old CRM storage did not answer; the next tick tries again');
+        return { state: 'unreachable', outcomes };
+      }
     }
     return { state: 'copied', outcomes };
   }

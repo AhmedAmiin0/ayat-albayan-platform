@@ -20,10 +20,10 @@ import { useThreadMode } from '../thread/hooks/thread-mode';
 import { errorLines, useComposerSend } from './use-composer-send';
 
 /**
- * Reply box (R-MOB-02, R-MSG-03) as WhatsApp Business (owner 2026-10-27): [pill: emoji · text ·
- * paperclip · camera] and the round microphone / «أرسل» (OpenRow). Within 24 h of their last message:
- * free text, a photo or PDF, a voice note, plus a template (in the paperclip's sheet). After that WhatsApp allows only an
- * approved template, so the row says why (ClosedNote) beside «أرسل قالبًا». The window is checked
+ * Reply box (R-MOB-02, R-MSG-03) as WhatsApp Business (owner 2026-10-27): [pill: text · «عرض سعر» ·
+ * paperclip] and the round microphone / «أرسل» (OpenRow); everything else is in the paperclip's sheet.
+ * Within 24 h of their last message: free text, a photo or PDF, a voice note, plus a template (in the
+ * paperclip's sheet). After that WhatsApp allows only an approved template, so the row says why (ClosedNote) beside «أرسل قالبًا». The window is checked
  * against the device clock on every render (a refetch, a keystroke), not only when the thread loaded.
  * «الردود السريعة» (owner 2026-10-25/26, staff only, as WhatsApp Business): «/» at a line's start docks
  * the list over the row, its tile in the paperclip's sheet opens the sheet; a pick fills the box and stages its file (the

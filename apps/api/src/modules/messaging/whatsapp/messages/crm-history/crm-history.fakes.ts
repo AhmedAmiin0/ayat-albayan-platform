@@ -29,8 +29,8 @@ export const crmResponse = (size: number, headers: Record<string, string> = { 'c
   new Response(status === 200 ? new Uint8Array(size) : null, { status, headers });
 
 /** Tests only: the global fetch replaced (no test reaches any real host); restore with vi.unstubAllGlobals. */
-export function stubFetch(answer: () => Promise<Response>) {
-  const fetch = vi.fn<(url: string, init?: RequestInit) => Promise<Response>>(() => answer());
+export function stubFetch(answer: (url: string) => Promise<Response>) {
+  const fetch = vi.fn<(url: string, init?: RequestInit) => Promise<Response>>((url) => answer(url));
   vi.stubGlobal('fetch', fetch);
   return fetch;
 }

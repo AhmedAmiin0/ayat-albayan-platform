@@ -51,7 +51,7 @@ describe('CrmMediaCopyJob: a run', () => {
     expect(w.settings.writeSwitch).toHaveBeenCalledWith('crm_media_copy_all', false, null);
     expect(w.audit.record).toHaveBeenCalledTimes(1);
     expect(w.audit.record).toHaveBeenCalledWith(
-      expect.objectContaining({ actorId: null, entity: 'settings', action: 'crm_media_copy_done', after: { copied: BATCH + 5, failed: 0, skipped: 0 } }),
+      expect.objectContaining({ actorId: null, entity: 'settings', action: 'crm_media_copy_done', after: { copied: BATCH + 5, failed: 0, skipped: 0, remaining: 0 } }),
     );
     // Off again: later ticks read nothing.
     expect(await w.job.runOnce()).toEqual({ state: 'off' });

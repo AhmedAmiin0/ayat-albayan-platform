@@ -11,9 +11,16 @@ import { useSalesReschedule } from './lesson-actions-api';
 /**
  * Sales' «تغيير الموعد» of ONE lesson (docs/16 row 37): who and when now, a free slot of the same
  * teacher (her scoped GET /sales/booking/slots), then the move. This lesson only (no series, no
- * substitute, no booking over a clash: a 409 asks for another slot). The admin's success panel follows.
+ * substitute, no booking over a clash: a 409 asks for another slot). The admin's success panel follows;
+ * its «تم» closes the lesson's details too (they would show the old time with its actions still live).
  */
-export function SalesRescheduleForm({ lesson, onClose }: { lesson: SalesScheduleLesson; onClose: () => void }) {
+interface SalesRescheduleFormProps {
+  lesson: SalesScheduleLesson;
+  /** «تم» on the success panel: closes this sheet and «تفاصيل الحلقة» under it. */
+  onDone: () => void;
+}
+
+export function SalesRescheduleForm({ lesson, onDone }: SalesRescheduleFormProps) {
   const tz = lesson.students[0]?.tz ?? RIYADH_TZ;
   const durationMin = lessonDuration(lesson);
   const move = useSalesReschedule(lesson.id);
@@ -23,7 +30,7 @@ export function SalesRescheduleForm({ lesson, onClose }: { lesson: SalesSchedule
     move.reset();
     setStartsAt(slot);
   };
-  if (move.data) return <RescheduleDone moved={move.data} scope="one" tz={tz} onClose={onClose} />;
+  if (move.data) return <RescheduleDone moved={move.data} scope="one" tz={tz} onClose={onDone} />;
   return (
     <View style={{ gap: 16 }}>
       <RescheduleHeading names={lesson.students.map((s) => s.name).join(t.common.listSeparator)} startsAt={lesson.starts_at} tz={tz} />

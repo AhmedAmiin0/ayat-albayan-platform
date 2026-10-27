@@ -15,11 +15,11 @@ describe('CrmMediaCopyQueries (migration 880)', () => {
     expect(argsOf('rpc:crm_media_copy_mark', 'rpc')).toEqual([{ p_message: 'a', p_error: 'media_expired', p_skip: false }]);
   });
 
-  it('counts: the three totals, 0 for a missing or malformed one', async () => {
-    const { db } = fakeDb({ 'rpc:crm_media_copy_counts': [{ data: { copied: 480, failed: 3 } }, { data: null }] });
+  it('counts: the four totals, 0 for a missing or malformed one', async () => {
+    const { db } = fakeDb({ 'rpc:crm_media_copy_counts': [{ data: { copied: 480, failed: 3, remaining: 7 } }, { data: null }] });
     const q = new CrmMediaCopyQueries(db);
-    expect(await q.counts('h.example')).toEqual({ copied: 480, failed: 3, skipped: 0 });
-    expect(await q.counts('h.example')).toEqual({ copied: 0, failed: 0, skipped: 0 });
+    expect(await q.counts('h.example')).toEqual({ copied: 480, failed: 3, skipped: 0, remaining: 7 });
+    expect(await q.counts('h.example')).toEqual({ copied: 0, failed: 0, skipped: 0, remaining: 0 });
   });
 
   it('an RPC error throws', async () => {
