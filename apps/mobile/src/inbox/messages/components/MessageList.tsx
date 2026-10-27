@@ -7,7 +7,8 @@ import { EmptyState } from '@/core/ui/feedback/EmptyState';
 import { messageGap } from '../hooks/list-gap';
 import { MessageBubble } from './MessageBubble';
 import { DayChip } from '../days/DayChip';
-import { dayLabel, opensDay } from '../days/day-label';
+import { dayLabel, hasDayChip } from '../days/day-label';
+import { CellFrames } from '../days/DayCell';
 import { FloatingDay } from '../days/FloatingDay';
 import { useTopDay } from '../days/use-top-day';
 import { threadMessages } from '../../thread/hooks/thread-cache';
@@ -58,49 +59,51 @@ export function MessageList({ phone, query }: { phone: string; query: ThreadQuer
   // A tap on a quote scrolls to the original (owner 2026-10-25 «رد»), loading older pages if needed.
   const { lit, jump, onScrollToIndexFailed } = useJump(list, rows, query);
   const onEndReached = useOlder(query);
-  const top = useTopDay();
+  const top = useTopDay(rows, query.hasNextPage);
   return (
-    <View style={{ flex: 1 }}>
-      <FlatList
-        ref={list}
-        testID="message-list"
-        inverted
-        style={{ flex: 1 }}
-        contentContainerStyle={{ paddingVertical: 4 }}
-        data={rows}
-        keyExtractor={(m) => m.id}
-        extraData={lit}
-        onScrollToIndexFailed={onScrollToIndexFailed}
-        renderItem={({ item, index }) => (
-          // Each cell is flipped back upright, so its top is still the visual top: the older neighbour.
-          // The oldest loaded row gets its chip only once no older page can continue its day.
-          <View testID={`message-row-${item.id}`} style={{ paddingTop: messageGap(rows[index + 1], item) }}>
-            {opensDay(rows, index) && (index < rows.length - 1 || !query.hasNextPage) ? <DayChip testID={`day-${item.id}`} label={dayLabel(item.created_at)} /> : null}
-            <MessageBubble message={item} phone={phone} onJump={jump} highlight={lit === item.id} />
-          </View>
-        )}
-        maintainVisibleContentPosition={{ minIndexForVisible: 0, autoscrollToTopThreshold: AT_NEWEST }}
-        onEndReached={onEndReached}
-        onEndReachedThreshold={OLDER_THRESHOLD}
-        {...top.list}
-        refreshing={pulling}
-        onRefresh={() => {
-          setPulling(true);
-          void query.refetch().finally(() => setPulling(false));
-        }}
-        ListFooterComponent={
-          query.isFetchingNextPage ? (
-            <ActivityIndicator testID="older-loading" accessibilityLabel={t.common.loading} color={color.ink2} style={{ padding: 12 }} />
-          ) : null
-        }
-        // The list clones its empty cell to flip it upright; EmptyState drops that style, a View keeps it.
-        ListEmptyComponent={
-          <View testID="message-empty">
-            <EmptyState title={t.inbox.empty} />
-          </View>
-        }
-      />
-      <FloatingDay label={top.label} opacity={top.opacity} />
-    </View>
+    <CellFrames.Provider value={top.frame}>
+      <View style={{ flex: 1 }}>
+        <FlatList
+          ref={list}
+          testID="message-list"
+          inverted
+          style={{ flex: 1 }}
+          contentContainerStyle={{ paddingVertical: 4 }}
+          data={rows}
+          keyExtractor={(m) => m.id}
+          extraData={lit}
+          onScrollToIndexFailed={onScrollToIndexFailed}
+          renderItem={({ item, index }) => (
+            // Each cell is flipped back upright, so its top is still the visual top: the older neighbour.
+            // The oldest loaded row gets its chip only once no older page can continue its day.
+            <View testID={`message-row-${item.id}`} style={{ paddingTop: messageGap(rows[index + 1], item) }}>
+              {hasDayChip(rows, index, query.hasNextPage) ? <DayChip testID={`day-${item.id}`} label={dayLabel(item.created_at)} /> : null}
+              <MessageBubble message={item} phone={phone} onJump={jump} highlight={lit === item.id} />
+            </View>
+          )}
+          maintainVisibleContentPosition={{ minIndexForVisible: 0, autoscrollToTopThreshold: AT_NEWEST }}
+          onEndReached={onEndReached}
+          onEndReachedThreshold={OLDER_THRESHOLD}
+          {...top.list}
+          refreshing={pulling}
+          onRefresh={() => {
+            setPulling(true);
+            void query.refetch().finally(() => setPulling(false));
+          }}
+          ListFooterComponent={
+            query.isFetchingNextPage ? (
+              <ActivityIndicator testID="older-loading" accessibilityLabel={t.common.loading} color={color.ink2} style={{ padding: 12 }} />
+            ) : null
+          }
+          // The list clones its empty cell to flip it upright; EmptyState drops that style, a View keeps it.
+          ListEmptyComponent={
+            <View testID="message-empty">
+              <EmptyState title={t.inbox.empty} />
+            </View>
+          }
+        />
+        <FloatingDay label={top.label} opacity={top.opacity} onChip={top.onChip} />
+      </View>
+    </CellFrames.Provider>
   );
 }

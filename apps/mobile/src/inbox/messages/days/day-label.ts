@@ -37,3 +37,8 @@ export function opensDay(rows: readonly { created_at: string }[], index: number,
   const older = rows[index + 1];
   return !older || chatDayKey(new Date(older.created_at), tz) !== chatDayKey(new Date(row.created_at), tz);
 }
+
+/** Whether rows[index] shows its day chip: the oldest loaded row only once no older page (`more`) can continue its day. */
+export function hasDayChip(rows: readonly { created_at: string }[], index: number, more: boolean): boolean {
+  return opensDay(rows, index) && (index < rows.length - 1 || !more);
+}

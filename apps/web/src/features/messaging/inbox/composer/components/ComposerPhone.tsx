@@ -57,7 +57,7 @@ function Notices({ notes }: { notes: string[] }) {
  * The notices, the closed window's first. The reply line before the open window's note (collapsed,
  * only the first shows); a template leaves from its own registry line (docs/12 §13.18), not
  * reply_line: no reply line in template mode. With no template allowed the help line replaces
- * «يجب أن ترسل قالبًا».
+ * «فأرسل قالبًا».
  */
 function noticeLines(input: Pick<ComposerPhoneProps, 'thread' | 'gateNote' | 'mode'> & { noneAllowed: NoneReason | null }): string[] {
   const { thread, gateNote, mode, noneAllowed } = input;

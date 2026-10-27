@@ -68,7 +68,7 @@ test('closed window: one compact note beside a labelled «أرسل قالبًا�
   expect(screen.queryByLabelText(t.inbox.composer.placeholder)).toBeNull();
   const note = screen.getByText(t.inbox.sessionClosed);
   expect(note.props.testID).toBe('closed-note');
-  expect(note.props.numberOfLines).toBe(2);
+  expect(note.props.numberOfLines).toBeUndefined(); // never cut: it wraps
   await fireEvent.press(screen.getByRole('button', { name: t.inbox.composer.sendTemplate }));
   expect(await screen.findByText(t.inbox.composer.chooseTemplate)).toBeTruthy();
 });
