@@ -4,7 +4,7 @@ import { Linking } from 'react-native';
 import { apiSend } from '@/core/lib/http/api';
 import { useJoinWindow } from '@/core/lib/query/public-config';
 import { joinError } from './join-text';
-import { useMinuteClock } from '../sessions/use-minute-clock';
+import { useNow } from '@/core/lib/time/use-now';
 import { classroomUrl } from './web-origin';
 
 /** What joining needs of a lesson (an assistant's session has no more than this). */
@@ -17,7 +17,7 @@ export type JoinableLesson = Pick<LessonView, 'id' | 'status' | 'starts_at' | 'e
  * `win` is null for a lesson that is no longer open.
  */
 export function useJoinClassroom(lesson: JoinableLesson) {
-  const now = useMinuteClock();
+  const now = useNow();
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const inFlight = useRef(false);

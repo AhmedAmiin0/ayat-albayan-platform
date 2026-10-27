@@ -9,7 +9,7 @@ import { Button } from '@/core/ui/primitives/Button';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
-import { useNow } from '@/today/lib/use-day-lessons';
+import { useNow } from '@/core/lib/time/use-now';
 import { useSummary, useWork, weekRange } from './dashboard-queries';
 import type { WorkTab } from './dashboard-types';
 import { kpisOf } from './kpis';

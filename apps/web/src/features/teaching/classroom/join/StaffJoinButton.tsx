@@ -9,7 +9,7 @@ import { useJoinWindow } from '@/lib/settings/public-config';
 import { classroomErrorText } from '../room/livekit/errors';
 import { EnterButton, type JoinableLesson } from './JoinButton';
 import { openRoom } from '../api/meetings-api';
-import { useNow } from '../sessions/use-now';
+import { useNow } from '@/lib/time/use-now';
 
 interface Props {
   lesson: JoinableLesson & { status: LessonStatus };
