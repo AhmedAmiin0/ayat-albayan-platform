@@ -43,7 +43,7 @@ export async function touchInbox(client: QueryClient, row: MessageView): Promise
 }
 
 /** The API stamped the chat read: its badge goes at once, the counts refetch (not the thread). */
-export function markInboxRead(client: QueryClient, phone: string): void {
+function markInboxRead(client: QueryClient, phone: string): void {
   client.setQueriesData<ThreadListCache>({ queryKey: threadListKey }, (old) => clearUnread(old, phone));
   refreshLists(client);
 }
