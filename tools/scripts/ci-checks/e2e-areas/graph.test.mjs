@@ -2,7 +2,8 @@ import assert from 'node:assert/strict';
 import { rmSync } from 'node:fs';
 import { after, test } from 'node:test';
 import { makeRepo } from './fixture.mjs';
-import { buildGraph, reverseClosure } from './graph.mjs';
+import { reverseClosure } from './closure.mjs';
+import { buildGraph } from './graph.mjs';
 import { ownExports, parseImports } from './parse.mjs';
 
 const root = makeRepo();

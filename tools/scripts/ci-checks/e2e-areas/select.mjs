@@ -8,7 +8,8 @@ import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { areasOf, childRoutes, loadAreas, SPEC_DIR } from './areas.mjs';
-import { barrelConsumers, buildGraph, reverseClosure } from './graph.mjs';
+import { barrelConsumers, reverseClosure } from './closure.mjs';
+import { buildGraph } from './graph.mjs';
 import { BUNDLES, changedKeys, keyUsers } from './i18n.mjs';
 
 /** Files e2e never sees (the existing «e2e» gate in ci.yml skips the job when only these change). */
