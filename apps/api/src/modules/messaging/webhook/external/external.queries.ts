@@ -58,17 +58,17 @@ export class ExternalQueries {
 
   /**
    * A reply sent outside the app answers the chat (WhatsApp counts it as read on the phone): stamps
-   * this phone's unread inbound rows up to the reply (created_at <= upTo) read at `readAt`. Never a
-   * newer row; idempotent (read_at null only); no Meta read receipt. Fires migration 860's ping.
+   * this phone's unread inbound rows created before `before` read at `readAt`. Never a newer row;
+   * idempotent (read_at null only); no Meta read receipt. Fires migration 860's ping.
    */
-  async markAnsweredRead(phone: string, upTo: Date, readAt: Date): Promise<number> {
+  async markAnsweredRead(phone: string, before: Date, readAt: Date): Promise<number> {
     const { data, error } = await this.db
       .from('messages')
       .update({ read_at: readAt.toISOString() })
       .eq('phone_e164', phone)
       .eq('direction', 'inbound')
       .is('read_at', null)
-      .lte('created_at', upTo.toISOString())
+      .lt('created_at', before.toISOString())
       .select('id');
     check(error);
     return (data ?? []).length;

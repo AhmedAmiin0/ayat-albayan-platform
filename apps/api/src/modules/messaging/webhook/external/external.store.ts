@@ -1,4 +1,4 @@
-import { waIdToE164, type WaLine } from '@ab/shared';
+import { ACCOUNT_CODE_TEMPLATE, waIdToE164, type WaLine } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
 import { orderedAt } from '../inbound/webhook.inbound';
 import type { StatusEvent } from '../webhook.events';
@@ -52,13 +52,19 @@ export class ExternalStore {
     const at = orderedAt(msg.at, await this.webhook.latestInSecond(phone, msg.at));
     const row = externalRow({ msg, phone, who, from: { line: from.line, numberId }, at, ...(event ? { event } : {}) });
     if (!(await this.queries.insert(row))) return 'known';
-    await this.answered(phone, at);
+    if (row.template_key !== ACCOUNT_CODE_TEMPLATE) await this.answered(phone, at);
     return 'stored';
   }
 
-  /** Stamps the inbound rows up to the reply read at the reply's time (now when that is ahead). */
+  /**
+   * Stamps the inbound rows before the reply's second read at the reply's time (now when that is
+   * ahead). WhatsApp times are whole seconds and orderedAt orders within one by arrival, so a family
+   * message of the same second may be newer than the reply: it stays unread. Our sign-in code
+   * (CodeSend: no row, so Kapso's status adopts it here) is never a reply.
+   */
   private async answered(phone: string, at: Date): Promise<void> {
     const now = new Date();
-    await this.queries.markAnsweredRead(phone, at, at > now ? now : at);
+    const second = new Date(Math.floor(at.getTime() / 1000) * 1000);
+    await this.queries.markAnsweredRead(phone, second, at > now ? now : at);
   }
 }

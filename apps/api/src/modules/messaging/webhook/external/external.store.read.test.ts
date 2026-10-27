@@ -57,6 +57,22 @@ describe('ExternalStore: a reply from the app or the CRM marks the chat read', (
     expect(readOf(s, 'wamid.IN1')).toBeNull();
   });
 
+  it('our sign-in code (no row, adopted from Kapso\'s status) is not a reply: stored, nothing stamped', async () => {
+    const s = seeded();
+    const code = kapsoText({ id: 'wamid.CODE1', type: 'template', text: undefined, template: { name: 'account_code' } });
+    expect(await s.external.store.store({ message: code, from })).toBe('stored');
+    expect(s.external.ext.markAnsweredRead).not.toHaveBeenCalled();
+    expect(readOf(s, 'wamid.IN1')).toBeNull();
+  });
+
+  it('a family message of the reply\'s own second may be newer: it stays unread', async () => {
+    const s = seeded();
+    s.queries.stored.push(inbound('wamid.SAME', at(0)));
+    await s.external.store.store({ message: kapsoText({ id: 'wamid.ECHO3', kapso: undefined }), from });
+    expect(readOf(s, 'wamid.SAME')).toBeNull();
+    expect(readOf(s, 'wamid.IN2')).toBe(at(1)); // the reply, ordered after SAME within its second
+  });
+
   it('an inbound history item is never a reply', async () => {
     const s = seeded();
     const item = kapsoText({ id: 'wamid.IN9', kapso: { direction: 'inbound' } });

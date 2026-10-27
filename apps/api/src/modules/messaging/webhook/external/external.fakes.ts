@@ -58,9 +58,9 @@ export function fakeExternalQueries(stored: TablesInsert<'messages'>[]) {
       stored.push(row);
       return true;
     }),
-    markAnsweredRead: vi.fn(async (phone: string, upTo: Date, readAt: Date) => {
+    markAnsweredRead: vi.fn(async (phone: string, before: Date, readAt: Date) => {
       const rows = stored.filter((r) => r.phone_e164 === phone && r.direction === 'inbound' && !r.read_at);
-      const due = rows.filter((r) => Date.parse(r.created_at ?? '') <= upTo.getTime());
+      const due = rows.filter((r) => Date.parse(r.created_at ?? '') < before.getTime());
       due.forEach((r) => (r.read_at = readAt.toISOString()));
       return due.length;
     }),

@@ -3,8 +3,10 @@
 -- treats it; since this PR the API stamps that on new replies (ExternalStore). This marks the
 -- existing ones: an inbound row with read_at null that has a LATER external reply on the same phone
 -- is stamped read at that reply's created_at (the earliest such reply; never in the future).
--- External reply = outbound, created_by null, attempts 0, with a wamid (as ExternalQueries.newestExternal):
--- the platform's own automatic sends always carry attempts >= 1 once sent, so they never count.
+-- External reply = outbound, created_by null, attempts 0, with a wamid (as ExternalQueries.newestExternal),
+-- went out (sent/delivered/read: a requeued send of ours held at attempts 0 is queued or failed), no
+-- dedup_key (our producers' key; external rows have none) and not our sign-in code template.
+-- Only inbound rows of an EARLIER second count: within one second the order is by arrival, not by time.
 --
 -- HOW TO RUN: psql (or any client that shows NOTICEs) as a privileged role. ONE transaction ending
 -- with ROLLBACK (dry run): read the counts, then change the LAST line to COMMIT and run it once more.
@@ -21,7 +23,10 @@ join messages o
  and o.created_by is null
  and o.attempts = 0
  and o.wa_message_id is not null
- and o.created_at >= i.created_at
+ and o.status in ('sent', 'delivered', 'read')
+ and o.dedup_key is null
+ and o.template_key is distinct from 'account_code'
+ and i.created_at < date_trunc('second', o.created_at)
 where i.direction = 'inbound'
   and i.read_at is null
 group by i.id;
@@ -53,7 +58,9 @@ begin
     and exists (
       select 1 from messages o
       where o.phone_e164 = i.phone_e164 and o.direction = 'outbound' and o.created_by is null
-        and o.attempts = 0 and o.wa_message_id is not null and o.created_at >= i.created_at
+        and o.attempts = 0 and o.wa_message_id is not null and o.status in ('sent', 'delivered', 'read')
+        and o.dedup_key is null and o.template_key is distinct from 'account_code'
+        and i.created_at < date_trunc('second', o.created_at)
     );
   raise notice 'answered inbound rows still unread after the update (expect 0): %', n_left;
 end $$;

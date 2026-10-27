@@ -28,6 +28,9 @@ test('only unread inbound rows answered by a later external reply on the same ph
   assert.match(code, /o\.created_by is null/);
   assert.match(code, /o\.attempts = 0/);
   assert.match(code, /o\.wa_message_id is not null/);
-  assert.match(code, /o\.created_at >= i\.created_at/);
+  assert.match(code, /o\.status in \('sent', 'delivered', 'read'\)/);
+  assert.match(code, /o\.dedup_key is null/);
+  assert.match(code, /o\.template_key is distinct from 'account_code'/);
+  assert.match(code, /i\.created_at < date_trunc\('second', o\.created_at\)/);
   assert.match(code, /and m\.read_at is null;/);
 });
