@@ -1,4 +1,7 @@
 import { EMPTY_STUDENT, type CreateStudentValues } from '@/features/people/students/create/create-student';
+import type { Clock } from '@/lib/clock';
+import { clockRange } from '@ab/shared';
+import { hhmmText } from '@/lib/clock-text';
 import { t } from '@/lib/i18n/i18n';
 import type { InboxLead } from '../api/api';
 import { qualForm } from './qualification/qualification-form';
@@ -11,12 +14,13 @@ export type SummaryRow = { label: string; value: string };
 const CITY: Record<string, string | undefined> = t.tz;
 const WEEKDAY: Record<string, string | undefined> = t.enums.weekday;
 
-/** The lead's key facts, only the filled ones, in the registration form's order. */
-export function leadSummary(lead: InboxLead): SummaryRow[] {
+/** The lead's key facts (the hours in the viewer's clock), only the filled ones, in the registration form's order. */
+export function leadSummary(lead: InboxLead, clock: Clock): SummaryRow[] {
   const q = qualForm(lead.qualification);
   const tz = q.tz || lead.tz || '';
   const days = q.available_days.map((d) => WEEKDAY[String(d)] ?? String(d)).join(t.common.listSeparator);
-  const hours = [q.preferred_from, q.preferred_to].filter(Boolean).join(' – ');
+  const [from, to] = [q.preferred_from, q.preferred_to].map((v) => (v ? hhmmText(v, clock) : ''));
+  const hours = from && to ? clockRange(from, to, clock) : from || to || '';
   const rows: SummaryRow[] = [
     { label: t.leads.studentName, value: q.student_name },
     { label: t.leads.studentAge, value: q.age },

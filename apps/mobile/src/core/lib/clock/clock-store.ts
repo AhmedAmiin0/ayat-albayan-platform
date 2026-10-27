@@ -9,6 +9,8 @@ import { deviceUses24 } from './device-clock';
 let pref: ClockPref = 'auto';
 let device: boolean | null | undefined;
 let restored = false;
+/** Bumped by every choice: a slow first read must not undo one made meanwhile. */
+let version = 0;
 const listeners = new Set<() => void>();
 
 const notify = () => listeners.forEach((listener) => listener());
@@ -16,9 +18,10 @@ const notify = () => listeners.forEach((listener) => listener());
 /** The saved choice, read once; unreadable storage keeps «auto». */
 async function restore(): Promise<void> {
   restored = true;
+  const at = version;
   try {
     const saved = parseClockPref(await AsyncStorage.getItem(CLOCK_STORAGE_KEY));
-    if (saved !== pref) {
+    if (at === version && saved !== pref) {
       pref = saved;
       notify();
     }
@@ -46,7 +49,7 @@ function clockPref(): ClockPref {
 /** Applies at once, then saves; a failed save only loses the choice on the next start. */
 export function setClockPref(next: ClockPref): void {
   pref = next;
-  restored = true;
+  version += 1;
   notify();
   void AsyncStorage.setItem(CLOCK_STORAGE_KEY, next).catch(() => undefined);
 }

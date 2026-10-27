@@ -10,10 +10,11 @@ export interface ClockOptions {
   locale: Locale;
 }
 
-const SUFFIX: Record<Locale, { am: string; pm: string }> = {
-  ar: { am: 'ص', pm: 'م' },
-  en: { am: 'AM', pm: 'PM' },
-};
+/** «ص» / «م» or «AM» / «PM»: the 12 h suffix (also the meridiem toggle of a 12 h picker). */
+export function meridiemLabel(meridiem: 'am' | 'pm', locale: Locale): string {
+  if (locale === 'ar') return meridiem === 'am' ? 'ص' : 'م';
+  return meridiem === 'am' ? 'AM' : 'PM';
+}
 
 const pad = (n: number): string => String(n).padStart(2, '0');
 
@@ -21,8 +22,7 @@ const pad = (n: number): string => String(n).padStart(2, '0');
 export function clockOfParts(hour: number, minute: number, opts: Omit<ClockOptions, 'tz'>): string {
   const h = ((hour % 24) + 24) % 24;
   if (opts.cycle === '24') return `${pad(h)}:${pad(minute)}`;
-  const suffix = opts.locale === 'en' ? SUFFIX.en : SUFFIX.ar;
-  return `${h % 12 || 12}:${pad(minute)} ${h < 12 ? suffix.am : suffix.pm}`;
+  return `${h % 12 || 12}:${pad(minute)} ${meridiemLabel(h < 12 ? 'am' : 'pm', opts.locale)}`;
 }
 
 const zoned = new Map<string, Intl.DateTimeFormat>();
@@ -61,9 +61,4 @@ export function isolateClock(text: string, cycle: ClockCycle, locale: Locale): s
 /** «16:00 – 18:00» / «4:00 م – 6:00 م», isolated (isolateClock). Takes two formatted clocks. */
 export function clockRange(from: string, to: string, opts: Omit<ClockOptions, 'tz'>): string {
   return isolateClock(`${from} – ${to}`, opts.cycle, opts.locale);
-}
-
-/** clockRange of two stored «HH:MM» values. */
-export function clockRangeHhmm(from: string, to: string, opts: Omit<ClockOptions, 'tz'>): string {
-  return clockRange(clockOfHhmm(from, opts.cycle, opts.locale), clockOfHhmm(to, opts.cycle, opts.locale), opts);
 }

@@ -1,4 +1,4 @@
-import { riyadhWhenText, type SalesTeacherFilter, type SalesTeacherView } from '@ab/shared';
+import { riyadhWhenText, type ClockCycle, type SalesTeacherFilter, type SalesTeacherView } from '@ab/shared';
 import { t } from '@/lib/i18n/i18n';
 import { locale } from '@/lib/i18n/locale';
 
@@ -13,8 +13,9 @@ export {
 } from '@ab/shared';
 export type TeacherFilter = SalesTeacherFilter;
 
-/** «الأحد 12 أكتوبر 18:00» in Riyadh time (the sales pages' one zone, said once on the page); the mobile's words too. */
-export const riyadhWhen = (instant: string): string => riyadhWhenText(instant, { weekday: t.enums.weekday, locale });
+/** «الأحد 12 أكتوبر 18:00» (or «6:00 م») in Riyadh time (the sales pages' one zone, said once on the page); the mobile's words too. */
+export const riyadhWhen = (instant: string, cycle: ClockCycle): string =>
+  riyadhWhenText(instant, { weekday: t.enums.weekday, locale, cycle });
 
 /** «القرآن الكريم، اللغة العربية». */
 export const programList = (tc: Pick<SalesTeacherView, 'programs'>): string =>

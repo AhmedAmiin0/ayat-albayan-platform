@@ -5,17 +5,20 @@ import { t } from '@/lib/i18n/i18n';
 import { canManageNotifications, ruleFailure } from './rules-api';
 import { approvalWord, failureText, isFamilyFacing, reachText, reasonText, timingText } from './rule-text';
 
+const H24 = { cycle: '24', locale: 'ar' } as const;
+
 const r = t.notificationRules;
 const REACH = { guardian: 12, teacher: 3, lead: 25 };
 
 describe('«الإشعارات» words', () => {
   it('timings in words; null where the row has none', () => {
-    expect(timingText('lesson_reminder', { minutes_before: 45 })).toBe(r.timing.minutesText.replace('{n}', '45'));
-    expect(timingText('teacher_lesson_reminder', { minutes_before: null })).toBe(r.timing.sameAsFamily);
-    expect(timingText('lesson_reminder_24h', { send_at_local: null })).toBe(r.timing.dayBeforeSame);
-    expect(timingText('lesson_reminder_24h', { send_at_local: '20:00' })).toBe(r.timing.dayBeforeText.replace('{time}', '20:00'));
-    expect(timingText('follow_up_slots', { hours: [24, 72], slots_from_hours: 12, slots_to_days: 7 })).toContain('24، 72');
-    expect(timingText('report_ready', null)).toBeNull();
+    expect(timingText('lesson_reminder', { minutes_before: 45 }, H24)).toBe(r.timing.minutesText.replace('{n}', '45'));
+    expect(timingText('teacher_lesson_reminder', { minutes_before: null }, H24)).toBe(r.timing.sameAsFamily);
+    expect(timingText('lesson_reminder_24h', { send_at_local: null }, H24)).toBe(r.timing.dayBeforeSame);
+    expect(timingText('lesson_reminder_24h', { send_at_local: '20:00' }, H24)).toBe(r.timing.dayBeforeText.replace('{time}', '20:00'));
+    expect(timingText('lesson_reminder_24h', { send_at_local: '20:00' }, { cycle: '12', locale: 'ar' })).toBe(r.timing.dayBeforeText.replace('{time}', '8:00 م'));
+    expect(timingText('follow_up_slots', { hours: [24, 72], slots_from_hours: 12, slots_to_days: 7 }, H24)).toContain('24، 72');
+    expect(timingText('report_ready', null, H24)).toBeNull();
   });
 
   it('reach: guardians and leads counted; zero says nobody; no counts says «كل …»', () => {

@@ -3,9 +3,16 @@ import { t } from '@/lib/i18n/i18n';
 import { lead, PHONE } from '../testing/inbox-fixture';
 import { leadSummary, registerInitial } from './lead-summary';
 
+const H24 = { cycle: '24', locale: 'ar' } as const;
+
 describe('leadSummary: the aside’s key facts (R-LEAD-03)', () => {
+  it('the hours in 12 h read «4:00 م – 6:00 م» (RTL island)', () => {
+    const rows = leadSummary(lead({ qualification: { preferred_from: '16:00', preferred_to: '18:00' } }), { cycle: '12', locale: 'ar' });
+    expect(rows).toEqual([{ label: t.leads.preferredTime, value: '\u20674:00 م – 6:00 م\u2069' }]);
+  });
+
   it('nothing filled → no rows', () => {
-    expect(leadSummary(lead())).toEqual([]);
+    expect(leadSummary(lead(), H24)).toEqual([]);
   });
 
   it('only the filled facts, in order, in words', () => {
@@ -22,6 +29,7 @@ describe('leadSummary: the aside’s key facts (R-LEAD-03)', () => {
           preferred_to: '18:00',
         },
       }),
+      H24,
     );
     expect(rows).toEqual([
       { label: t.leads.studentName, value: 'سهيلة' },
@@ -30,13 +38,13 @@ describe('leadSummary: the aside’s key facts (R-LEAD-03)', () => {
       { label: t.guardians.name, value: 'أم سهيلة' },
       { label: t.students.tz, value: t.tz['Africa/Cairo'] },
       { label: t.leads.availableDays, value: `${t.enums.weekday['0']}، ${t.enums.weekday['2']}` },
-      { label: t.leads.preferredTime, value: '16:00 – 18:00' },
+      { label: t.leads.preferredTime, value: '\u206616:00 – 18:00\u2069' },
     ]);
   });
 
   it('the lead’s own zone when the qualification has none; an unlisted zone shows its id', () => {
-    expect(leadSummary(lead({ tz: 'Asia/Riyadh' }))).toEqual([{ label: t.students.tz, value: t.tz['Asia/Riyadh'] }]);
-    expect(leadSummary(lead({ qualification: { tz: 'Pacific/Fiji', country: 'فيجي' } }))).toEqual([
+    expect(leadSummary(lead({ tz: 'Asia/Riyadh' }), H24)).toEqual([{ label: t.students.tz, value: t.tz['Asia/Riyadh'] }]);
+    expect(leadSummary(lead({ qualification: { tz: 'Pacific/Fiji', country: 'فيجي' } }), H24)).toEqual([
       { label: t.leads.country, value: 'فيجي' },
       { label: t.students.tz, value: 'Pacific/Fiji' },
     ]);

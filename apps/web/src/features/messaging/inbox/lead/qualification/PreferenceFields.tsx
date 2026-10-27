@@ -3,6 +3,9 @@ import { Field } from '@/components/ui/form/field';
 import { Select } from '@/components/ui/form/select';
 import { tzCity } from '@/components/ui/form/time-zone-select';
 import { timeOptions, WEEK_ORDER } from '@/features/people/teachers/availability/grid';
+import { useClock } from '@/lib/clock';
+import { clockDir } from '@/lib/clock-text';
+import { ClockOptions } from '@/lib/clock-options';
 import { t } from '@/lib/i18n/i18n';
 import type { QualFieldsProps } from './QualificationFields';
 
@@ -14,6 +17,7 @@ const weekday: Record<string, string> = t.enums.weekday;
  * registration form's order (research-forms 8).
  */
 export function PreferenceFields({ form, errors, onChange }: QualFieldsProps) {
+  const clock = useClock();
   const toggle = (day: number) =>
     onChange({
       available_days: form.available_days.includes(day)
@@ -23,13 +27,9 @@ export function PreferenceFields({ form, errors, onChange }: QualFieldsProps) {
   const time = (key: 'preferred_from' | 'preferred_to', label: string) => (
     <Field label={label} error={errors[key]}>
       {(p) => (
-        <Select {...p} className="tabular-nums" value={form[key]} onChange={(e) => onChange({ [key]: e.target.value })}>
+        <Select {...p} dir={clockDir(clock)} className="tabular-nums" value={form[key]} onChange={(e) => onChange({ [key]: e.target.value })}>
           <option value="">—</option>
-          {timeOptions(form[key]).map((v) => (
-            <option key={v} value={v}>
-              {v}
-            </option>
-          ))}
+          <ClockOptions times={timeOptions(form[key])} />
         </Select>
       )}
     </Field>
