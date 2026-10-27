@@ -38,7 +38,7 @@ async function answerWithPhoto() {
   await fireEvent(await screen.findByTestId('bubble-m1'), 'longPress');
   await fireEvent.press(within(screen.getByTestId('message-menu')).getByRole('button', { name: t.inbox.reply.action }));
   await fireEvent.press(screen.getByRole('button', { name: t.inbox.composer.attach }));
-  await fireEvent.press(screen.getByRole('button', { name: t.inbox.composer.attachImage }));
+  await fireEvent.press(screen.getByRole('button', { name: t.inbox.composer.gallery }));
 }
 
 beforeEach(() => {
