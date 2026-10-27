@@ -18,7 +18,7 @@ test('«الجدول» sections in English: who, load and city; windows and free
   expect(windowsLine(omar.windows)).toBe(`Available ${ltr('20:00 – 02:00')} Riyadh time`);
   const [gap] = abrar.free;
   if (!gap) throw new Error('fixture');
-  expect(freeLabel(gap)).toBe(`Free ${ltr('10:45')} – ${ltr('16:00')}`);
+  expect(freeLabel(gap)).toBe(`Free ${ltr('10:45 – 16:00')}`);
 });
 
 test('days and the week range read in English with Western digits', () => {

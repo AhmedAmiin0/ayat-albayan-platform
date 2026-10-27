@@ -2,6 +2,7 @@ import { formatAmount, type AssistantStatementLineView, type AssistantStatementV
 import { t } from '@/core/lib/i18n/i18n';
 import { localDay, instantDay, money } from '@/payments/format';
 import { monthLabel } from '@/teacher/lib/payout-text';
+import { isolate } from '@/core/ui/primitives/Ltr';
 
 // The words of the salesperson's money (web EarningsTerms, StatementCard, terms-summary). Pure.
 
@@ -46,7 +47,7 @@ export function lineText(l: AssistantStatementLineView): string {
     const text = l.commission_kind === 'renewal' ? p.line.commissionRenewal : p.line.commission;
     return text.replace('{student}', l.student?.name ?? '');
   }
-  return p.line.adjustment.replace('{reason}', l.reason ?? '');
+  return p.line.adjustment.replace('{reason}', l.reason ? isolate(l.reason) : '');
 }
 
 /** «دُفع 3 نوفمبر 2026» / «اعتُمد …», or null for a draft. */

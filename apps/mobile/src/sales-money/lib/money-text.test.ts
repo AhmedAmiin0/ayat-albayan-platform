@@ -1,4 +1,5 @@
 import { t } from '@/core/lib/i18n/i18n';
+import { isolate } from '@/core/ui/primitives/Ltr';
 import { byCurrency, commissionNote, commissionText, lineText, myCommissionText, salaryText, sinceText, statementWhen } from './money-text';
 
 const p = t.assistantPortal.earnings;
@@ -17,7 +18,7 @@ test('statement lines: salary, a commission with its student, an adjustment with
   expect(lineText({ kind: 'commission', amount: 1, currency: 'EGP', student: { code: 'AB-1', name: 'سهيلة' }, reason: null, commission_kind: 'renewal' })).toBe(
     p.line.commissionRenewal.replace('{student}', 'سهيلة'),
   );
-  expect(lineText({ kind: 'adjustment', amount: -1, currency: 'EGP', student: null, reason: 'تصحيح', commission_kind: null })).toBe(p.line.adjustment.replace('{reason}', 'تصحيح'));
+  expect(lineText({ kind: 'adjustment', amount: -1, currency: 'EGP', student: null, reason: 'تصحيح', commission_kind: null })).toBe(p.line.adjustment.replace('{reason}', isolate('تصحيح')));
 });
 
 test('terms in words: percent, fixed in its own currency, or not set', () => {

@@ -5,6 +5,7 @@ import { Note } from '@/more/Note';
 import { localDate } from '@/today/lib/timeline';
 import { shape, type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
+import { ContentText } from '@/core/ui/primitives/ContentText';
 import { ltr } from '@/core/ui/primitives/Ltr';
 import { NuqtaGlyph } from '@/core/ui/primitives/NuqtaGlyph';
 import { StatusChip } from '@/core/ui/feedback/StatusChip';
@@ -17,7 +18,7 @@ const text = t.mobile.feedback;
 /**
  * One «رأيك يهمّنا» answer (or a request still waiting): student and teacher, then the answer as a
  * bold line of its own («5 من 5 · نعم», a filled nuqta) or the hollow «لسه ما ردّش» chip, then the
- * lesson type and day, the note, and the contact number when the API sent it (admins only).
+ * lesson type and day, the note (aligned by its own words), and the contact number when the API sent it (admins only).
  */
 export function FeedbackRow({ row }: { row: FeedbackListRow }) {
   const { color } = useTheme();
@@ -40,7 +41,9 @@ export function FeedbackRow({ row }: { row: FeedbackListRow }) {
       )}
       <Note>{`${text.kind[row.kind]} · ${ltr(when)}`}</Note>
       {row.note ? (
-        <AppText style={{ fontFamily: type.ui[500], fontSize: type.size.sm, color: color.ink }}>{row.note}</AppText>
+        <ContentText source={row.note} style={{ fontFamily: type.ui[500], fontSize: type.size.sm, color: color.ink }}>
+          {row.note}
+        </ContentText>
       ) : null}
       {row.contact_phone ? <Note>{`${text.contact}: ${ltr(formatPhone(row.contact_phone))}`}</Note> : null}
     </View>
