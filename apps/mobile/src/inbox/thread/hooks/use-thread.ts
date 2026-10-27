@@ -6,6 +6,7 @@ import {
   provisionalMessage,
   removeMessage,
   replaceMessage,
+  sendKey,
   threadKey,
   threadPath,
   type ThreadCache,
@@ -57,8 +58,7 @@ function body({ out, id }: SendInput) {
  * Optimistic send: the row shows at once as queued; the API's row replaces it, or a refusal takes
  * it out again (the caller shows `sendError`). Either way the thread refetches.
  */
-/** The mutation key of a chat's text / template send. */
-export const sendKey = (phone: string) => ['inbox-send', phone];
+export { sendKey } from './thread-cache';
 
 export function useSendMessage(phone: string) {
   const client = useQueryClient();

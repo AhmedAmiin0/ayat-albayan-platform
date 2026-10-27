@@ -1,4 +1,4 @@
-import { mergeNewest, provisionalMessage, threadMessages } from './thread-cache';
+import { leavesGap, mergeNewest, provisionalMessage, threadMessages } from './thread-cache';
 import { cachedThread, delivered, detail, failed, inbound, message, NOW, PHONE } from '../../shared/thread-fixtures';
 
 // mergeNewest: what a poll of the newest page does to the cached thread.
@@ -32,4 +32,12 @@ test('a provisional row still sending survives the poll, after the fresh rows', 
 test('nothing cached: nothing to merge into', () => {
   expect(mergeNewest(undefined, detail([inbound]))).toBeUndefined();
   expect(mergeNewest({ pages: [], pageParams: [] }, detail([inbound]))).toEqual({ pages: [], pageParams: [] });
+});
+
+test('a gap: the fresh full page shares no row with the cached newest page', () => {
+  const data = cachedThread(detail([inbound]));
+  expect(leavesGap(data, detail([delivered, failed], { has_more: true }))).toBe(true);
+  expect(leavesGap(data, detail([delivered, failed], { has_more: false }))).toBe(false);
+  expect(leavesGap(data, detail([inbound, delivered], { has_more: true }))).toBe(false);
+  expect(leavesGap(undefined, detail([delivered], { has_more: true }))).toBe(false);
 });

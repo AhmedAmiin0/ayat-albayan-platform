@@ -14,6 +14,9 @@ export const threadPath = (phone: string) => `/threads/${encodeURIComponent(phon
 /** ['threads', phone]: a push for this phone refreshes exactly this thread. */
 export const threadKey = (phone: string) => pathKey(`/threads/${phone}`);
 
+/** The mutation key of a chat's text / template send. */
+export const sendKey = (phone: string) => ['inbox-send', phone];
+
 /** Oldest → newest across the loaded pages; a row a refetch already brought in shows once. */
 export function threadMessages(data: ThreadCache | undefined): MessageView[] {
   const seen = new Set<string>();
@@ -65,6 +68,12 @@ export function mergeNewest(data: ThreadCache | undefined, fresh: ThreadDetail):
   const messages = [...before, ...fresh.messages, ...after];
   const page = { ...fresh, messages, has_more: before.length > 0 ? head.has_more : fresh.has_more };
   return { ...data, pages: [page, ...data.pages.slice(1)] };
+}
+
+/** More new rows than one page since the last read: merging would hide the ones in between. */
+export function leavesGap(data: ThreadCache | undefined, fresh: ThreadDetail): boolean {
+  const cached = new Set(data?.pages[0]?.messages.map((m) => m.id));
+  return fresh.has_more && cached.size > 0 && !fresh.messages.some((m) => cached.has(m.id));
 }
 
 interface Provisional {

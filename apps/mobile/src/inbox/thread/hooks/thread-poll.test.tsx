@@ -2,8 +2,8 @@ import { INBOX_REFRESH_MS } from '@ab/client-core';
 import { focusManager } from '@tanstack/react-query';
 import { act, renderHook, waitFor } from '@testing-library/react-native';
 import { createTestQueryClient, queryWrapper } from '@/test/query';
-import { cachedThread, delivered, detail, inbound, PHONE } from '../../shared/thread-fixtures';
-import { provisionalMessage, threadKey, threadMessages, threadPath } from './thread-cache';
+import { cachedThread, delivered, detail, failed, inbound, PHONE } from '../../shared/thread-fixtures';
+import { provisionalMessage, sendKey, threadKey, threadMessages, threadPath } from './thread-cache';
 import { useThread } from './use-thread';
 
 // An open chat polls its newest page while focused and the app is active (owner 2026-10-27).
@@ -74,4 +74,21 @@ test('a provisional row still sending survives a poll', async () => {
   mockApiFetch.mockResolvedValue(detail([inbound, delivered]));
   await tick();
   await waitFor(() => expect(threadMessages(hook.result.current.data).map((m) => m.id)).toEqual(['m1', 'm2', 'tmp']));
+});
+
+test('a send in flight: the poll leaves the cache to the send', async () => {
+  const { client, hook } = await open();
+  mockApiFetch.mockResolvedValue(detail([inbound, delivered]));
+  const isMutating = jest.spyOn(client, 'isMutating').mockImplementation((f) => (f?.mutationKey ? 1 : 0));
+  await tick();
+  expect(isMutating).toHaveBeenCalledWith({ mutationKey: sendKey(PHONE) });
+  expect(threadMessages(hook.result.current.data).map((m) => m.id)).toEqual(['m1']);
+});
+
+test('more new rows than a page: the whole thread is read again, not merged with a gap', async () => {
+  const { client } = await open();
+  const invalidate = jest.spyOn(client, 'invalidateQueries');
+  mockApiFetch.mockResolvedValue(detail([delivered, failed], { has_more: true }));
+  await tick();
+  await waitFor(() => expect(invalidate).toHaveBeenCalledWith({ queryKey: threadKey(PHONE) }));
 });
