@@ -33,7 +33,7 @@ export class ChannelService {
     if (actor.mode !== 'participant') throw new ForbiddenException();
     const channelId = await this.queries.channelOf(actor.studentId);
     const row = await this.queries.insert({ channel_id: channelId, sender_profile_id: actor.profileId, sender_role: actor.role, body });
-    await this.queries.markRead({ channelId, profileId: actor.profileId, at: row.created_at });
+    await this.queries.setReadMark({ channelId, profileId: actor.profileId, at: row.created_at });
     await this.notify.sent(actor, row).catch((e: unknown) => this.log.warn(`channel push failed: ${String(e)}`));
     const names = await this.people.names([actor.profileId]);
     return toMessageView(row, { me: actor.profileId, names });
@@ -46,7 +46,7 @@ export class ChannelService {
   async read(actor: ChannelActor, at?: string, now = new Date()): Promise<void> {
     if (actor.mode !== 'participant') throw new ForbiddenException();
     const upTo = at && Date.parse(at) < now.getTime() ? new Date(at).toISOString() : now.toISOString();
-    await this.queries.markRead({ channelId: await this.queries.channelOf(actor.studentId), profileId: actor.profileId, at: upTo });
+    await this.queries.setReadMark({ channelId: await this.queries.channelOf(actor.studentId), profileId: actor.profileId, at: upTo });
   }
 
   async unread(actor: ChannelActor): Promise<ChannelUnread> {

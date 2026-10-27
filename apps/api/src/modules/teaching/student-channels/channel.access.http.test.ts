@@ -34,7 +34,7 @@ describe('student channel access over HTTP', () => {
     }
     expect((await t.post(ADMIN, 'admin', { body: 'x' })).statusCode).toBe(404);
     expect(t.queries.insert).not.toHaveBeenCalled();
-    expect(t.queries.markRead).not.toHaveBeenCalled();
+    expect(t.queries.setReadMark).not.toHaveBeenCalled();
   });
 
   it('a teacher change moves access: the old teacher is refused, never reads the history', async () => {

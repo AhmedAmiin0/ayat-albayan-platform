@@ -17,7 +17,7 @@ describe('student channel messages over HTTP', () => {
     const res = await t.post(`${PORTAL}/messages`, 'guardian', { body: '  متى الحلقة القادمة؟  ' });
     expect(res.statusCode).toBe(201);
     expect(t.queries.insert).toHaveBeenCalledWith({ channel_id: CH, sender_profile_id: 'p-g', sender_role: 'guardian', body: 'متى الحلقة القادمة؟' });
-    expect(t.queries.markRead).toHaveBeenCalledWith(expect.objectContaining({ channelId: CH, profileId: 'p-g' }));
+    expect(t.queries.setReadMark).toHaveBeenCalledWith(expect.objectContaining({ channelId: CH, profileId: 'p-g' }));
     expect(t.push.notifyProfiles).toHaveBeenCalledWith({
       kind: 'channel_message', profileIds: ['p-t1'], subject: 'm2', vars: { student: 'سلمى', text: 'متى الحلقة القادمة؟' }, data: { studentId: ST },
     });
@@ -52,9 +52,9 @@ describe('student channel messages over HTTP', () => {
 
   it('read marks: up to the newest message shown (never later than now), a participant only; unread is the other side', async () => {
     expect((await t.post(`${PORTAL}/read`, 'guardian', { at: '2026-10-20T10:05:00.000Z' })).statusCode).toBe(204);
-    expect(t.queries.markRead).toHaveBeenCalledWith({ channelId: CH, profileId: 'p-g', at: '2026-10-20T10:05:00.000Z' });
+    expect(t.queries.setReadMark).toHaveBeenCalledWith({ channelId: CH, profileId: 'p-g', at: '2026-10-20T10:05:00.000Z' });
     expect((await t.post(`${TEACHER}/read`, 'teacher', { at: '2999-01-01T00:00:00.000Z' })).statusCode).toBe(204);
-    expect(Date.parse(t.queries.markRead.mock.calls.at(-1)?.[0].at ?? '')).toBeLessThan(Date.parse('2999-01-01T00:00:00.000Z'));
+    expect(Date.parse(t.queries.setReadMark.mock.calls.at(-1)?.[0].at ?? '')).toBeLessThan(Date.parse('2999-01-01T00:00:00.000Z'));
     expect((await t.post(`${PORTAL}/read`, 'guardian', { at: 'later' })).statusCode).toBe(400);
     expect((await t.call('GET', `${PORTAL}/unread`, 'guardian')).json()).toEqual({ unread: 2 });
     expect(t.queries.summaries).toHaveBeenLastCalledWith({ profileId: 'p-g', studentIds: [ST], countRoles: ['teacher'] });

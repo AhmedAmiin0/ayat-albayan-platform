@@ -101,7 +101,8 @@ student that is monitored by assistant and all authorized users.»
 3. **Participants** (read and write): the student's own login (`students.profile_id`, if any), the guardian's
    login (`guardians.profile_id`, if any; a child's guardian takes part, an adult who is their own contact is
    both), and the student's CURRENT teacher(s): `channel_teacher_ids(student)` = the assigned teacher
-   (`students.teacher_id`) or the teacher of an open lesson of the student that has not ended. It is the
+   (`students.teacher_id`) or the teacher of an open lesson of the student running now or starting within a
+   day (a substitute on the day; a lesson booked weeks ahead with another teacher grants nothing yet). It is the
    current part of the teacher scope (`teacher_student_ids`, migration 165), whose 90-day look-back keeps
    reports readable but must not keep a chat: a teacher change moves access at once — the new teacher reads
    the whole history, the old one nothing.
@@ -111,12 +112,16 @@ student that is monitored by assistant and all authorized users.»
    post from a monitor is 403. Every monitor screen says «للاطلاع فقط».
 5. **Text only**, 1–2000 characters (trimmed), links clickable with the shared `splitLinks`.
 6. **Refresh** like the inbox: polling (web `INBOX_REFRESH_MS` while the window has focus, mobile every 15 s
-   while the screen is shown). Unread counts per participant (`channel_reads.last_read_at`; a participant's
-   own messages never count). Opening a thread marks it read for that participant only; a monitor never
-   marks anything read.
+   while the screen is shown). Threads open on the newest message (web scrolls to it, mobile is an inverted
+   list); a time shows its day when it is not today. Unread counts per participant
+   (`channel_reads.last_read_at`), counting the other side only: a teacher counts the family's messages (never
+   a co-teacher's), the family the teacher's. Opening a thread marks it read up to the newest message shown
+   (`POST …/read { at }`, never later than now), so a message that arrives after the screen read stays
+   unread; a monitor never marks anything read.
 7. **Notifications**: a message from the family pushes to the current teacher(s) only, through the existing
    push service, new kind `channel_message` (its catalogue row `channel_message` follows the notification
-   settings like every staff kind: off → nothing, bell only → no device push). A teacher's message notifies
+   settings like every staff kind: off → nothing, bell only → no device push). The bell row quotes up to 80
+   characters, and it stays in that teacher's bell after a teacher change. A teacher's message notifies
    nobody (the family reads it in the portal). No WhatsApp; nothing to monitors.
 8. **Trial students**: the channel is open from registration (the owner's request), so a teacher assigned to
    a trial student can write to the family in the platform; the WhatsApp rule (no teacher ↔ family chat
@@ -133,7 +138,9 @@ student that is monitored by assistant and all authorized users.»
 
 `GET …/messages?before=<iso>` pages back 50 at a time, newest page first. A message view is
 `{ id, body, sender_role, sender_name, mine, created_at }`: names only (the teacher's display name, the
-student's or guardian's name), never a phone, email or profile id.
+student's or guardian's name), never a phone, email or profile id; a page also carries `student_name` (the
+header). RLS lets a direct PostgREST reader see `sender_profile_id` (a uuid, no personal data); the apps
+read through the API only.
 
 ### Database (`20261027000800_student_channels.sql`, `20261027000801_push_kind_channel.sql`)
 

@@ -55,7 +55,7 @@ export class ChannelQueries {
   }
 
   /** A participant read the thread up to now (never called for a monitor). */
-  async markRead(input: { channelId: string; profileId: string; at: string }): Promise<void> {
+  async setReadMark(input: { channelId: string; profileId: string; at: string }): Promise<void> {
     const row = { channel_id: input.channelId, profile_id: input.profileId, last_read_at: input.at };
     const { error } = await this.db.from('channel_reads').upsert(row, { onConflict: 'channel_id,profile_id' });
     if (error) throw dbError(error);
