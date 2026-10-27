@@ -62,7 +62,7 @@ describe('registry metadata (docs/26 §1, §2b; owner defaults 2026-10-23)', () 
 
   it('confirmations are exactly the owner defaults', () => {
     expect(keysWhere((e) => e.confirm === 'typed')).toEqual(['activity_retention_days', 'recording_retention_days']);
-    expect(keysWhere((e) => e.confirm === 'simple')).toEqual(['family_login_enabled', 'meeting_link_auto', 'sales_auto_assign', 'teachers_always_available', 'whatsapp_calls_enabled']);
+    expect(keysWhere((e) => e.confirm === 'simple')).toEqual(['crm_media_copy_all', 'family_login_enabled', 'meeting_link_auto', 'sales_auto_assign', 'teachers_always_available', 'whatsapp_calls_enabled']);
   });
 
   it('reachesFamilies marks what families see or receive, and only that', () => {

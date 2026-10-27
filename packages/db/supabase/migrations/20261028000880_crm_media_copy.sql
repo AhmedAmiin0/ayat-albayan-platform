@@ -62,8 +62,9 @@ create or replace function public.crm_media_copy_mark(p_message uuid, p_error te
   returning attempts;
 $$;
 
--- The run's totals for its one audit row: imported CRM files we hold a copy of (lazily opened ones
--- too), and those left without a copy after the retry cap (failed) or skipped. Read once per run.
+-- The totals for a run's one audit row (all time, on this host): imported CRM files we hold a copy of
+-- (lazily opened ones too), and those left without a copy after the retry cap (failed) or skipped.
+-- Read once per run.
 create or replace function public.crm_media_copy_counts(p_host text)
   returns jsonb
   language sql stable security invoker set search_path = '' as $$
@@ -72,9 +73,11 @@ create or replace function public.crm_media_copy_counts(p_host text)
                 where m.direction = 'inbound' and m.media_path is not null and m.media_id is null
                   and starts_with(m.body, 'https://' || lower(p_host) || '/storage/v1/object/public/chat-media/')),
     'failed', (select count(*) from public.crm_media_copy_failures f join public.messages m on m.id = f.message_id
-                where not f.skipped and m.media_path is null),
+                where not f.skipped and m.media_path is null
+                  and starts_with(m.body, 'https://' || lower(p_host) || '/storage/v1/object/public/chat-media/')),
     'skipped', (select count(*) from public.crm_media_copy_failures f join public.messages m on m.id = f.message_id
-                 where f.skipped and m.media_path is null));
+                 where f.skipped and m.media_path is null
+                   and starts_with(m.body, 'https://' || lower(p_host) || '/storage/v1/object/public/chat-media/')));
 $$;
 
 revoke all on function public.crm_media_copy_batch(text, int, int) from public, anon, authenticated;

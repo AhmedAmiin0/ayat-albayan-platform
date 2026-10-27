@@ -44,7 +44,11 @@ function fakeCopyQueries(rows: Map<string, MediaMessage>, failures: Map<string, 
       return next.attempts;
     }),
     counts: vi.fn(async (host: string) => {
-      const left = (skipped: boolean) => [...failures].filter(([id, f]) => f.skipped === skipped && !rows.get(id)?.media_path).length;
+      const left = (skipped: boolean) =>
+        [...failures].filter(([id, f]) => {
+          const m = rows.get(id);
+          return f.skipped === skipped && !!m && !m.media_path && linkOn(m, host);
+        }).length;
       const copied = [...rows.values()].filter((m) => m.direction === 'inbound' && !m.media_id && !!m.media_path && linkOn(m, host)).length;
       return { copied, failed: left(false), skipped: left(true) };
     }),

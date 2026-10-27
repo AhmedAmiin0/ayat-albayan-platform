@@ -73,13 +73,13 @@ describe('CrmMediaCopyJob: a run', () => {
   });
 
   it('never overlaps: a tick while one runs is busy and copies nothing', async () => {
-    let release: (() => void) | null = null;
-    stubFetch(() => new Promise<Response>((r) => (release = () => r(ogg()))));
+    const gate: { release?: () => void } = {};
+    stubFetch(() => new Promise<Response>((r) => (gate.release = () => r(ogg()))));
     const w = copyWorld(crmRows(1));
     const first = w.job.runOnce();
-    await vi.waitFor(() => expect(release).not.toBeNull());
+    await vi.waitFor(() => expect(gate.release).toBeDefined());
     expect(await w.job.runOnce()).toEqual({ state: 'busy' });
-    release?.();
+    gate.release?.();
     expect(await first).toMatchObject({ state: 'copied' });
   });
 
@@ -90,13 +90,25 @@ describe('CrmMediaCopyJob: a run', () => {
     expect(w.settings.state.crm_media_copy_all).toBe(true);
   });
 
-  it('a failed switch-off writes no audit row; the next tick finishes', async () => {
+  it('audit first: a failed switch-off is retried alone on the next tick, still ONE audit row', async () => {
     const w = copyWorld([]);
     w.settings.writeSwitch.mockRejectedValueOnce(new Error('denied'));
     expect(await w.job.runOnce()).toEqual({ state: 'error' });
-    expect(w.audit.record).not.toHaveBeenCalled();
+    expect(w.audit.record).toHaveBeenCalledTimes(1);
+    expect(w.settings.state.crm_media_copy_all).toBe(true);
     expect(await w.job.runOnce()).toEqual({ state: 'done' });
     expect(w.audit.record).toHaveBeenCalledTimes(1);
+    expect(w.settings.state.crm_media_copy_all).toBe(false);
+  });
+
+  it('a failed audit write leaves the switch on: the next tick writes the row, then switches off', async () => {
+    const w = copyWorld([]);
+    w.audit.record.mockRejectedValueOnce(new Error('denied'));
+    expect(await w.job.runOnce()).toEqual({ state: 'error' });
+    expect([w.settings.writeSwitch.mock.calls.length, w.settings.state.crm_media_copy_all]).toEqual([0, true]);
+    expect(await w.job.runOnce()).toEqual({ state: 'done' });
+    expect(w.audit.record).toHaveBeenCalledTimes(2);
+    expect(w.settings.state.crm_media_copy_all).toBe(false);
   });
 
   it('does not run on boot, ticks after 15 minutes then every minute, and clears its timers on shutdown', async () => {

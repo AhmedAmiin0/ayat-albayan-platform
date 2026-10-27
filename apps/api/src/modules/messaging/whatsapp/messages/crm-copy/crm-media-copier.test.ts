@@ -45,14 +45,23 @@ describe('CrmMediaCopier: failures, retries and rows it never touches', () => {
     expect([...w.rows.values()].map((m) => m.body)).toEqual([crmLink('a.ogg'), crmLink('b.ogg', 'other.example'), crmLink('c.ogg'), `${crmLink('d.ogg')} hi`]);
   });
 
-  it('a row gone meanwhile (404) is skipped; a storage failure is a retry, never thrown', async () => {
+  it('a row gone meanwhile (404) is skipped with no failure row (the foreign key); a storage failure is a retry', async () => {
     stubFetch(async () => ogg());
     const w = copyWorld(crmRows(2));
     expect(await w.copier.copy('missing', CRM_HOST)).toBe('skipped');
+    expect(w.queries.mark).not.toHaveBeenCalled();
     w.storage.upload.mockRejectedValueOnce(new Error('storage down'));
     expect(await w.copier.copy('c0', CRM_HOST)).toBe('retry');
     expect(w.failures.get('c0')).toEqual({ attempts: 1, skipped: false });
     expect(await w.copier.copy('c0', CRM_HOST)).toBe('copied');
     expect(w.rows.get('c0')?.media_path).toBe('c0.ogg');
+  });
+
+  it('a failing failure write is logged and read as a retry, recorded once, never thrown', async () => {
+    stubFetch(async () => crmResponse(0, {}, 503));
+    const w = copyWorld(crmRows(1));
+    w.queries.mark.mockRejectedValueOnce(new Error('db down'));
+    expect(await w.copier.copy('c0', CRM_HOST)).toBe('retry');
+    expect(w.queries.mark).toHaveBeenCalledTimes(1);
   });
 });

@@ -1,4 +1,4 @@
-import { HttpException, Injectable } from '@nestjs/common';
+import { HttpException, Injectable, Logger } from '@nestjs/common';
 import { allowedCrmUrl, isCrmHistoryRow } from '../crm-history/crm-history-url';
 import type { MediaMessage } from '../inbound-media.queries';
 import { InboundMedia } from '../inbound-media.service';
@@ -35,6 +35,8 @@ function reason(e: unknown): string {
  */
 @Injectable()
 export class CrmMediaCopier {
+  private readonly log = new Logger(CrmMediaCopier.name);
+
   constructor(
     private readonly media: InboundMedia,
     private readonly queries: CrmMediaCopyQueries,
@@ -45,20 +47,35 @@ export class CrmMediaCopier {
   }
 
   async copy(id: string, host: string): Promise<CopyOutcome> {
+    const failure = await this.attempt(id, host);
+    if (!failure) return 'copied';
+    // A row deleted meanwhile has no failure to record (the foreign key) and never comes back.
+    if (failure.status === 404) return 'skipped';
+    return this.mark({ id, error: failure.error, skip: failure.skip });
+  }
+
+  /** null = copied (or already cached); else why not. */
+  private async attempt(id: string, host: string): Promise<{ error: string; skip: boolean; status: number } | null> {
     try {
       const msg = await this.media.loadChat(id);
-      if (!copyable(msg, host)) return await this.mark({ id, error: 'not_copyable', skip: true });
+      if (!copyable(msg, host)) return { error: 'not_copyable', skip: true, status: 0 };
       await this.media.cache(msg);
-      return 'copied';
+      return null;
     } catch (e) {
-      const skip = e instanceof HttpException && PERMANENT.has(e.getStatus());
-      return this.mark({ id, error: reason(e), skip });
+      const status = e instanceof HttpException ? e.getStatus() : 0;
+      return { error: reason(e), skip: PERMANENT.has(status), status };
     }
   }
 
+  /** Recorded once; a failing write is logged and read as a retry (the row is selected again). */
   private async mark(input: { id: string; error: string; skip: boolean }): Promise<CopyOutcome> {
-    const attempts = await this.queries.mark(input);
-    if (input.skip) return 'skipped';
-    return attempts >= MAX_ATTEMPTS ? 'failed' : 'retry';
+    try {
+      const attempts = await this.queries.mark(input);
+      if (input.skip) return 'skipped';
+      return attempts >= MAX_ATTEMPTS ? 'failed' : 'retry';
+    } catch (e) {
+      this.log.error(`crm media copy mark failed: ${String(e)}`);
+      return 'retry';
+    }
   }
 }
