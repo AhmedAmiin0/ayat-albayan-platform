@@ -1279,11 +1279,6 @@
       "count": 7
     }
   },
-  "src/sales-app/screens/SalesTabs.tsx": {
-    "ab/module-boundaries": {
-      "count": 1
-    }
-  },
   "src/sales-course/change/CourseChangeDone.tsx": {
     "ab/module-boundaries": {
       "count": 1

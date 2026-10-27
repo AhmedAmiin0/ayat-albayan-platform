@@ -21,6 +21,13 @@ jest.mock('./src/core/lib/http/supabase', () => ({
       signInWithPassword: jest.fn(async () => ({ data: {}, error: null })),
       signOut: jest.fn(async () => ({ error: null })),
     },
+    // Realtime (the inbox's live channel): it never connects here, so the inbox keeps its polls.
+    realtime: { setAuth: jest.fn(async () => undefined) },
+    channel: jest.fn(() => {
+      const channel = { on: jest.fn(() => channel), subscribe: jest.fn(() => channel) };
+      return channel;
+    }),
+    removeChannel: jest.fn(async () => 'ok'),
   },
 }));
 
