@@ -6,6 +6,8 @@ import { bootGaps, lineProvider, loadEnv } from '../../../config/env/env';
 import { CodeSend } from './direct/code-send';
 import { GateController } from './gate/gate.controller';
 import { GateSettings } from './gate/gate.settings';
+import { CrmHistoryMedia } from './messages/crm-history/crm-history-media';
+import { CrmMediaSettings } from './messages/crm-history/crm-media.settings';
 import { InboundMedia } from './messages/inbound-media.service';
 import { InboundMediaQueries } from './messages/inbound-media.queries';
 import { LiveWhatsappClient } from './live-client';
@@ -78,6 +80,8 @@ function lines(): WhatsappLines {
     MessageViews,
     MessagesService,
     InboundMediaQueries,
+    CrmMediaSettings,
+    CrmHistoryMedia,
     InboundMedia,
     WaMediaRetentionJob,
   ],

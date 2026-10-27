@@ -18,6 +18,8 @@ export interface DetailsStudent {
   tz?: string;
   unpaid?: boolean;
   report?: LessonStudentView['report'];
+  /** Sales: one of hers (docs/16 rows 36–37), absent in an old cache. */
+  mine?: boolean;
 }
 
 /** What the sheet reads: the admin's / teacher's LessonView, or sales' narrower schedule lesson. */
@@ -91,11 +93,11 @@ export function reportState(lesson: Pick<DetailsLesson, 'status' | 'starts_at'>,
   return student.report?.status ?? 'none';
 }
 
-/** The student file the role may open: the admin's quick view, a teacher's student reports; none for sales. */
-export function studentHref(role: DetailsRole, studentId: string): string | null {
-  if (role === 'admin') return `/students/${studentId}`;
-  if (role === 'teacher') return `/teacher/reports/student/${studentId}`;
-  return null;
+/** The student file the role may open: the admin's quick view, a teacher's student reports, sales' «تفاصيل الطالب» of hers only. */
+export function studentHref(role: DetailsRole, student: Pick<DetailsStudent, 'id' | 'mine'>): string | null {
+  if (role === 'admin') return `/students/${student.id}`;
+  if (role === 'teacher') return `/teacher/reports/student/${student.id}`;
+  return student.mine ? `/sales/students/${student.id}` : null;
 }
 
 /** Where «عرض التقرير» goes: the teacher's report form of the lesson, the admin's sent report; none for sales. */

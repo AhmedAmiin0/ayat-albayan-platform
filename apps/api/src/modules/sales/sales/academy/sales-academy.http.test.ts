@@ -48,11 +48,16 @@ describe('the sales assistant side over HTTP (docs/16)', () => {
     const res = await t.get('/sales/students/all?page=2&pageSize=20&search=%D9%8A%D8%A7%D8%B3', 'salesA');
     expect(t.academy.students).toHaveBeenCalledWith({ page: 2, pageSize: 20, search: 'ياس' });
     expect(res.json()).toEqual({
-      items: [{ id: 's1', code: 'AB-0101', name: 'ياسمين', status: 'active', program: 'quran', teacher_name: 'أبرار', guardian_name: 'أم ياسمين' }],
+      items: [{ id: 's1', code: 'AB-0101', name: 'ياسمين', status: 'active', program: 'quran', teacher_name: 'أبرار', guardian_name: 'أم ياسمين', mine: true }],
       total: 41, page: 2, pageSize: 20,
     });
     expect(res.body).not.toMatch(SECRET);
     expect((await t.get('/sales/students/all?pageSize=500', 'salesA')).statusCode).toBe(400);
+  });
+
+  it('GET /sales/students/all: `mine` only on her own students (they open «تفاصيل الطالب»)', async () => {
+    const res = await t.get('/sales/students/all', 'salesB');
+    expect(res.json().items[0]).not.toHaveProperty('mine');
   });
 
   it('GET /sales/live: the assistant row shape, no meeting link', async () => {

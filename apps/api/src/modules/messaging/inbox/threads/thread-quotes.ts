@@ -1,6 +1,7 @@
 import { QUOTE_BODY_MAX, type MessageQuote, type MessageView } from '@ab/shared';
 import { HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../../../common/db/db.module';
+import { looksCrmHistory } from '../../whatsapp';
 import { waHttpError } from '../../whatsapp/templates/catalog/template.mapper';
 
 /** A quoted row as read here: what the bubble shows, and who of staff sent it. */
@@ -31,12 +32,16 @@ export function sameNumber(quoted: SendFrom, from: SendFrom): boolean {
 
 const QUOTE_SELECT = 'id, direction, body, media_mime, template_key, sender:profiles!messages_created_by_fkey(full_name)' as const;
 
-/** A template's text is never quoted (a signed link could be in it): the bubble names it a template. */
+/**
+ * A template's text is never quoted (a signed link could be in it): the bubble names it a template.
+ * Nor an old-CRM file's body (only its storage link): the quote names the media.
+ */
 export function quoteOf(row: QuotedRow): MessageQuote {
+  const hidden = row.template_key || looksCrmHistory(row);
   return {
     id: row.id,
     direction: row.direction,
-    body: row.template_key ? null : (row.body?.slice(0, QUOTE_BODY_MAX) ?? null),
+    body: hidden ? null : (row.body?.slice(0, QUOTE_BODY_MAX) ?? null),
     media_mime: row.media_mime,
     template_key: row.template_key,
     sender_name: row.direction === 'outbound' ? (row.sender?.full_name ?? null) : null,

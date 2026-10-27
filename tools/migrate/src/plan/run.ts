@@ -31,7 +31,10 @@ import { samePhoneTeachers, similarStudents } from './match/similar.ts';
  * Everything extract-sheets / extract-crm left in cache/ (missing files read as empty), plus the
  * owner's teacher directory (required) and approved PDF matches.
  */
-export function loadBundle(today: string, from?: string): SourceBundle {
+export function loadBundle(
+  today: string,
+  opts: Pick<SourceBundle, 'from' | 'expiryDays'> = {},
+): SourceBundle {
   loadTeacherDirectory();
   const sheets = Object.fromEntries(
     SHEETS.map((s) => [s.id, readJson<SourceRow[]>(cachePath.sheet(s.id), [])]),
@@ -41,7 +44,7 @@ export function loadBundle(today: string, from?: string): SourceBundle {
     CRM_TABLES.map((t) => [t.table, readJson<CrmRow[]>(cachePath.crm(t.table), [])]),
   );
   const approvedPdfs = new Set(readJson<string[]>(cachePath.pdfApproved(), []));
-  return { sheets, crm, earlier: new Map(), today, from, approvedPdfs };
+  return { sheets, crm, earlier: new Map(), today, ...opts, approvedPdfs };
 }
 
 interface MapResult {
@@ -99,6 +102,8 @@ interface BuildPlanInput {
   today: string;
   /** --from ('YYYY-MM-DD'); default today. */
   from?: string;
+  /** --expiry-days: the app's subscription_expiry_days (imported student status). */
+  expiryDays?: number;
   /** --creates-only with --only: recreate orphaned import items (orphans.ts). */
   recreate?: Omit<RecreateScope, 'tableOf'>;
 }
@@ -108,7 +113,8 @@ export async function buildPlan(
   input: BuildPlanInput,
 ): Promise<{ plan: PlanWithChanges; existing: Map<string, Existing>; recreated: Set<string> }> {
   const { db, modules } = input;
-  const mapped = mapAll(loadBundle(input.today, input.from), modules);
+  const bundle = loadBundle(input.today, { from: input.from, expiryDays: input.expiryDays });
+  const mapped = mapAll(bundle, modules);
   let recreated = new Set<string>();
   const scope = input.recreate && {
     ...input.recreate,

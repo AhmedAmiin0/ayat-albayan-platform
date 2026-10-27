@@ -1,4 +1,5 @@
 export { CodeSend } from './direct/code-send';
+export { isCrmHistoryRow, looksCrmHistory } from './messages/crm-history/crm-history-url';
 export { SendGate } from './gate/send-gate';
 export { currentRows, displayE164, healthRows, LineHealthStore } from './lines/line-health.store';
 export {

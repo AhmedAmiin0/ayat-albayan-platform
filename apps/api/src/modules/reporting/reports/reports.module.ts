@@ -45,6 +45,6 @@ import { TeacherReportsService } from './teacher/teacher-reports.service';
     TeacherReportsService,
     { provide: ReportPdfQueue, useClass: PendingPdfQueue },
   ],
-  exports: [ReportPdfQueue, ReportsQueries],
+  exports: [ReportFilesService, ReportHistoryQueries, ReportPdfQueue, ReportsQueries],
 })
 export class ReportsModule {}

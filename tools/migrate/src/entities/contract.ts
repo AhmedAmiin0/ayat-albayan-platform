@@ -16,6 +16,8 @@ export interface SourceBundle {
   today: string;
   /** First local date ('YYYY-MM-DD', Asia/Riyadh) bookings may create lessons on (`--from`); default today. */
   from?: string;
+  /** The app's subscription_expiry_days (`--expiry-days`); default the setting's default (7). */
+  expiryDays?: number;
   /** Zip paths of PDFs the owner accepted despite a weak match (cache/pdf-approved.json). */
   approvedPdfs?: ReadonlySet<string>;
 }

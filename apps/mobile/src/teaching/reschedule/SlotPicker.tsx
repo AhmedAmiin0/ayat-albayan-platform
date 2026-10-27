@@ -15,8 +15,11 @@ import { slotWindow, useRescheduleSlots } from './queries';
 import { SlotButton } from './SlotButton';
 import { useClockCycle } from '@/core/lib/clock';
 
+/** What the picker reads of a lesson: the admin's LessonView or sales' schedule lesson. */
+type SlotLesson = Pick<LessonView, 'starts_at'> & { teacher: { id: string }; students: readonly { id: string }[] };
+
 export interface SlotPickerProps {
-  lesson: LessonView;
+  lesson: SlotLesson;
   durationMin: number;
   /** The family's zone: the small clocks. */
   tz: string;
@@ -27,6 +30,8 @@ export interface SlotPickerProps {
   fromLessonDay?: boolean;
   /** «عدّل الوقت»: 15-minute starts, the lesson itself not counted as busy (useRescheduleSlots). */
   edit?: { stepMin: number; excludeLessonId: string };
+  /** Sales: GET /sales/booking/slots (useRescheduleSlots `path`). */
+  slotsPath?: string;
 }
 
 /**
@@ -43,6 +48,7 @@ export function SlotPicker({
   onPick,
   fromLessonDay,
   edit,
+  slotsPath,
 }: SlotPickerProps) {
   const cycle = useClockCycle();
   const { color } = useTheme();
@@ -58,6 +64,7 @@ export function SlotPicker({
     studentIds: lesson.students.map((s) => s.id),
     ...slotWindow(week, now),
     ...edit,
+    path: slotsPath,
   });
   const notBefore = fromLessonDay ? localDate(new Date(lesson.starts_at), tz) : '';
   const note = {
@@ -105,12 +112,7 @@ function WeekSlots({ slots, tz, value, onPick }: WeekSlotsProps) {
   const days = freeSlotDays(slots);
   const [chosen, setChosen] = useState<string | null>(null);
   const day = days.find((d) => d.date === chosen) ?? days[0];
-  const note = {
-    fontFamily: type.ui[500],
-    fontSize: type.size.sm,
-    lineHeight: type.lineHeight(type.size.sm),
-    color: color.ink2,
-  };
+  const note = { fontFamily: type.ui[500], fontSize: type.size.sm, lineHeight: type.lineHeight(type.size.sm), color: color.ink2 };
   if (!day) return <AppText style={note}>{t.reschedule.noSlots}</AppText>;
   return (
     <>

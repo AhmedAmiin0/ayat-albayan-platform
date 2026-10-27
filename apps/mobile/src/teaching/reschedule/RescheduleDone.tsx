@@ -11,8 +11,8 @@ import type { Scope } from './reschedule-body';
 import { useClockCycle } from '@/core/lib/clock';
 
 interface RescheduleDoneProps {
-  /** The API's answer: the new lesson (for a series, its first lesson). */
-  moved: LessonView;
+  /** The API's answer: the new lesson (for a series, its first lesson); sales get its time and status only. */
+  moved: Pick<LessonView, 'starts_at' | 'status'>;
   scope: Scope;
   /** The family's zone, for the student's clock. */
   tz: string;

@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { View } from 'react-native';
 import { whenText } from '@/booking/shared/slots';
 import { ErrorLine } from '@/inbox/ErrorLine';
+import { useClockCycle } from '@/core/lib/clock';
 import { t } from '@/core/lib/i18n/i18n';
 import { type, useTheme } from '@/theme';
 import { studentNames } from '@/today/lib/lesson-text';
@@ -11,7 +12,6 @@ import { MoveFields } from './MoveFields';
 import { useReschedule } from './queries';
 import { familyTz, lessonDuration, type Scope } from './reschedule-body';
 import { RescheduleDone } from './RescheduleDone';
-import { useClockCycle } from '@/core/lib/clock';
 
 export interface RescheduleFormProps {
   lesson: LessonView;
@@ -23,23 +23,15 @@ export interface RescheduleFormProps {
  * the API answers, the new time and the guardian's confirmation (RescheduleDone).
  */
 export function RescheduleForm({ lesson, onClose }: RescheduleFormProps) {
-  const cycle = useClockCycle();
-  const { color } = useTheme();
   const tz = familyTz(lesson);
   const durationMin = lessonDuration(lesson);
   const move = useReschedule(lesson.id);
   const [scope, setScope] = useState<Scope>('one');
-  const text = { fontFamily: type.ui[500], fontSize: type.size.sm, lineHeight: type.lineHeight(type.size.sm), color: color.ink2 };
 
   if (move.data) return <RescheduleDone moved={move.data} scope={scope} tz={tz} onClose={onClose} />;
   return (
     <View style={{ gap: 16 }}>
-      <View style={{ gap: 2 }}>
-        <AppText style={{ ...text, fontFamily: type.ui[700], fontSize: type.size.body, color: color.ink }}>
-          {studentNames(lesson)}
-        </AppText>
-        <AppText style={text}>{t.reschedule.current.replace('{when}', whenText(lesson.starts_at, tz, cycle))}</AppText>
-      </View>
+      <RescheduleHeading names={studentNames(lesson)} startsAt={lesson.starts_at} tz={tz} />
       {durationMin === null ? (
         <ErrorLine message={t.reschedule.badDuration} />
       ) : (
@@ -52,6 +44,19 @@ export function RescheduleForm({ lesson, onClose }: RescheduleFormProps) {
           onScope={setScope}
         />
       )}
+    </View>
+  );
+}
+
+/** Who and when now, over the move: «يوسف أحمد» then «الموعد الحالي: …» in the family's zone. */
+export function RescheduleHeading({ names, startsAt, tz }: { names: string; startsAt: string; tz: string }) {
+  const { color } = useTheme();
+  const cycle = useClockCycle();
+  const text = { fontFamily: type.ui[500], fontSize: type.size.sm, lineHeight: type.lineHeight(type.size.sm), color: color.ink2 };
+  return (
+    <View style={{ gap: 2 }}>
+      <AppText style={{ ...text, fontFamily: type.ui[700], fontSize: type.size.body, color: color.ink }}>{names}</AppText>
+      <AppText style={text}>{t.reschedule.current.replace('{when}', whenText(startsAt, tz, cycle))}</AppText>
     </View>
   );
 }
