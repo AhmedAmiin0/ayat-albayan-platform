@@ -46,6 +46,8 @@ Explicitly unchanged: app.json and app.config.ts (no supportsRTL/forcesRTL; the 
 
 ## Package rtl-foundation (F) — branch `cloud/rtl-foundation`
 
+Status: built 2026-10-27 (items 1-9) on `cloud/rtl-foundation`. Additions from review: phoneLocale also falls back to 'ar' when the phone gives no direction; textDir treats RLM/LRM as strong and covers the RTL blocks above U+FFFF.
+
 Owns (only these paths): `apps/mobile/src/core/`, `apps/mobile/jest.setup.cjs`, `packages/shared/src/format/`, `packages/shared/src/index.ts`, `packages/shared/src/i18n/locale.ts`, `docs/07-design-system.md`
 
 Sends to families: false
