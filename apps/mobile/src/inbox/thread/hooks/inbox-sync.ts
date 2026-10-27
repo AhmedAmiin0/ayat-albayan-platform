@@ -15,7 +15,8 @@ import { clearUnread, newestInbound, type ThreadListCache, touchList } from './t
 export const threadListKey = ['threads', 'list'];
 const navCountKey = ['threads', 'nav-count'];
 
-function refreshLists(client: QueryClient): void {
+/** Every chats list, the tab badge and «القوائم»: a push that names no chat refetches no thread. */
+export function refreshLists(client: QueryClient): void {
   for (const queryKey of [threadListKey, navCountKey, listsKey]) void client.invalidateQueries({ queryKey });
 }
 

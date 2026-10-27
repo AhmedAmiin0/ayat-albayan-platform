@@ -3,7 +3,7 @@ import * as Notifications from 'expo-notifications';
 import { router, useNavigationContainerRef } from 'expo-router';
 import { useEffect, useRef } from 'react';
 import { usePermissions } from '@/auth/use-permissions';
-import { refreshInbox } from '@/inbox/thread/hooks/inbox-sync';
+import { refreshInbox, refreshLists } from '@/inbox/thread/hooks/inbox-sync';
 import { isThreadHref, overChat } from '@/core/nav/chat-groups';
 import { pushKind, pushPhone, routeIn, type PushTree } from './notification-route';
 
@@ -53,7 +53,8 @@ export function useNotificationHandling(tree: PushTree = 'admin'): void {
       const message = kind === 'new_lead' || kind === 'new_message';
       if (message) void client.invalidateQueries({ queryKey: ['leads'] });
       // The thread, the chats list, the tab badge and «القوائم» (owner 2026-10-27: the list followed no push).
-      if (phone || message) void refreshInbox(client, phone);
+      if (phone) void refreshInbox(client, phone);
+      else if (message) refreshLists(client);
     });
     return () => {
       sub.remove();

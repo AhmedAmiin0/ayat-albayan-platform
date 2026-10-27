@@ -131,3 +131,11 @@ test('the teacher tree opens her own screens', async () => {
   await act(async () => mockListeners.response?.(tap({ kind: 'new_student', studentId: 's1', lessonId: 'l1' })));
   expect(mockPush).toHaveBeenCalledWith('/teacher/schedule');
 });
+
+test('a message push without a phone refreshes the lists, never every open thread', async () => {
+  const { client } = await mount();
+  const spy = jest.spyOn(client, 'invalidateQueries');
+  await act(async () => mockListeners.received?.(notification({ kind: 'new_lead' })));
+  expect(spy).toHaveBeenCalledWith({ queryKey: ['threads', 'list'] });
+  expect(spy).not.toHaveBeenCalledWith({ queryKey: ['threads'] });
+});
