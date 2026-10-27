@@ -14,7 +14,7 @@ import { ActivityFilterBar } from './ActivityFilterBar';
 import { ActivityRow } from './ActivityRow';
 import { filterParams, isFiltered, NO_FILTERS, type ActivityFilters } from './activity-filters';
 import { useClockCycle } from '@/core/lib/clock';
-import { LazyList } from '@/core/ui/layout/LazyList';
+import { LazyList } from '@/core/ui/lists/LazyList';
 
 const keyOf = (r: ActivityView) => r.id;
 const renderRow = ({ item }: { item: ActivityView }) => <ActivityRow row={item} />;

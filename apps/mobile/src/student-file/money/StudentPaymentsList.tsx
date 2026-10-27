@@ -8,7 +8,7 @@ import { periodTotals } from '@/money/shared/queries';
 import { useTheme } from '@/theme';
 import { EmptyState } from '@/core/ui/feedback/EmptyState';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';
-import { LazyList } from '@/core/ui/layout/LazyList';
+import { LazyList } from '@/core/ui/lists/LazyList';
 
 const keyOf = (p: PaymentView) => p.id;
 // Keyed by the payment: its receipt viewers hold state that a recycled row must not carry over.

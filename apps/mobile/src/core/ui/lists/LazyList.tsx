@@ -1,7 +1,7 @@
 import { FlashList, type FlashListProps } from '@shopify/flash-list';
 import { type ComponentType, useMemo } from 'react';
 import { View, type ViewStyle } from 'react-native';
-import { useTabBarInset } from './tab-bar-inset';
+import { useTabBarInset } from '../layout/tab-bar-inset';
 
 /** Rows run edge to edge: the list bleeds into Screen's 16pt gutter. Margin only: FlashList takes no padding on `style`. */
 const BLEED: ViewStyle = { flex: 1, marginHorizontal: -16 };

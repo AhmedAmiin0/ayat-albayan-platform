@@ -5,7 +5,7 @@ import { usePagedList } from '@/core/lib/query/use-paged-list';
 import { useTheme } from '@/theme';
 import { EmptyState } from '@/core/ui/feedback/EmptyState';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';
-import { LazyList } from '@/core/ui/layout/LazyList';
+import { LazyList } from '@/core/ui/lists/LazyList';
 import { TaskItem } from './TaskItem';
 
 const keyOf = (task: AdminTaskView) => task.id;

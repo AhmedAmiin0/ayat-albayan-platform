@@ -11,7 +11,7 @@ import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { ApplicantRow } from '../applicants/ApplicantRow';
 import { applicantParams, applicantSortChoices, type ApplicantStatusFilter } from '../applicants/applicant-params';
 import type { JobApplicant } from '../types';
-import { LazyList } from '@/core/ui/layout/LazyList';
+import { LazyList } from '@/core/ui/lists/LazyList';
 
 const statusPills = (): FilterPill<ApplicantStatusFilter>[] => [
   { value: 'all', label: t.leads.filterAll },
