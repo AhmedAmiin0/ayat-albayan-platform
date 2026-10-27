@@ -1,4 +1,10 @@
-import type { AssistantLessonView, SalesScheduleDay, SalesSubscriptionHistory, SalesTeacherView } from '@ab/shared';
+import {
+  type AssistantLessonView,
+  riyadhToday,
+  type SalesScheduleDay,
+  type SalesSubscriptionHistory,
+  type SalesTeacherView,
+} from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { apiFetch } from '@/core/lib/http/api';
 import { pathKey } from '@/core/lib/query/query-keys';
@@ -57,9 +63,18 @@ export const useSalesLive = () =>
   });
 
 /** GET /sales/schedule?date&teacherId — one Riyadh day of the academy, read-only, re-read every minute. */
-export const useSalesSchedule = (date: string, teacherId: string) =>
-  useQuery({
-    queryKey: [...pathKey('/sales/schedule'), date, teacherId],
-    queryFn: () => apiFetch<SalesScheduleDay>(`/sales/schedule?date=${date}${teacherId ? `&teacherId=${teacherId}` : ''}`),
-    refetchInterval: LIVE_REFRESH_MS,
-  });
+const salesScheduleQuery = (date: string, teacherId: string) => ({
+  queryKey: [...pathKey('/sales/schedule'), date, teacherId],
+  queryFn: () => apiFetch<SalesScheduleDay>(`/sales/schedule?date=${date}${teacherId ? `&teacherId=${teacherId}` : ''}`),
+  refetchInterval: LIVE_REFRESH_MS,
+});
+
+export const useSalesSchedule = (date: string, teacherId: string) => useQuery(salesScheduleQuery(date, teacherId));
+
+const lessonsOf = (day: SalesScheduleDay) => day.lessons;
+
+/**
+ * The salesperson's «اليوم»: «جدول الحلقات» on the Riyadh day of `now` for every teacher, the very
+ * same query (one cache, the same whitelist), as its lessons.
+ */
+export const useSalesDay = (now: Date) => useQuery({ ...salesScheduleQuery(riyadhToday(now), ''), select: lessonsOf });
