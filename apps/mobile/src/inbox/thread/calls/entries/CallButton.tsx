@@ -1,11 +1,11 @@
-import { useHolds } from '@/auth/use-permissions';
+import { useHolds } from '@/auth';
 import { t } from '@/core/lib/i18n/i18n';
 import { useTheme } from '@/theme';
 import { IconButton } from '@/core/ui/primitives/IconButton';
 import { PhoneIcon } from '../screen/call-icons';
 import { useCalls } from '../state/call-context';
 
-export interface CallButtonProps {
+interface CallButtonProps {
   phone: string;
   /** The name the call screen shows (the chat's title). */
   name: string;

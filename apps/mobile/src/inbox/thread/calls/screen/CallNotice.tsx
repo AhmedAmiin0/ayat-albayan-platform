@@ -1,3 +1,4 @@
+import type { NoticeAction } from '@ab/client-core';
 import { useEffect } from 'react';
 import { Linking, Pressable, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -6,12 +7,11 @@ import { shape, type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { IconButton } from '@/core/ui/primitives/IconButton';
 import { CloseIcon } from '../../../shared/chat-icons';
-import type { NoticeAction } from '../state/call-actions';
 
 /** A notice goes by itself after this long (ms), like the chat's; one with an action stays until closed. */
-export const CALL_NOTICE_MS = 6000;
+const CALL_NOTICE_MS = 6000;
 
-export interface CallNoticeProps {
+interface CallNoticeProps {
   text: string;
   /** «افتح الإعدادات»: the microphone was refused for good, only the app's settings can allow it. */
   action: NoticeAction | null;

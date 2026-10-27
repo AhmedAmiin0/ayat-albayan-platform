@@ -8,7 +8,7 @@ import { clockAt } from '../../../shared/format';
 import { CallArrowIcon, PhoneIcon } from '../screen/call-icons';
 import { callEntryText, callInk } from './call-text';
 
-export interface CallEntryProps {
+interface CallEntryProps {
   call: CallView;
   /** Tap to call back (the header icon's flow); absent while calling is not possible. */
   onCallBack?: ((call: CallView) => void) | undefined;

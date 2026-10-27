@@ -3,9 +3,9 @@ import { Pressable, View } from 'react-native';
 import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 
-export type RoundTone = 'plain' | 'accept' | 'end';
+type RoundTone = 'plain' | 'accept' | 'end';
 
-export interface RoundButtonProps {
+interface RoundButtonProps {
   label: string;
   tone: RoundTone;
   onPress: () => void;

@@ -9,7 +9,7 @@ import { CallArrowIcon } from '../screen/call-icons';
 import { initialOf } from '../screen/Initials';
 import { callEntryText, callerName, callInk } from '../entries/call-text';
 
-export interface CallsLogRowProps {
+interface CallsLogRowProps {
   call: CallView;
   showsPhone: boolean;
   onOpen: () => void;

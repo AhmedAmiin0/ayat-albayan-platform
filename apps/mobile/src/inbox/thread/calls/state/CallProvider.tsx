@@ -1,5 +1,6 @@
+import { ringWhile, type CallTarget, type CallsUi } from '@ab/client-core';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { useMemo, useRef, useState, type ReactNode } from 'react';
+import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { callErrorText } from '../api/call-error';
@@ -10,10 +11,9 @@ import type { RtcDeps } from '../rtc/media';
 import { nativeRtc } from '../rtc/native-rtc';
 import { CallNotice } from '../screen/CallNotice';
 import { CallOverlay, type PermissionAsk } from '../screen/CallOverlay';
-import { CallsContext, type CallsUi } from './call-context';
-import type { CallTarget } from './call-phase';
+import { CallsContext } from './call-context';
 import { useCallSession, type CallSessionApi } from './use-call-session';
-import { useIncomingRing } from './use-incoming-ring';
+import { startRingtone } from '../rtc/ringtone';
 
 /** Calls are on for this user: the setting, and allowed to call (inbox.send). */
 const callsOn = (config: CallsUi['config'] | undefined): boolean => config?.enabled === true && config.canCall;
@@ -26,7 +26,7 @@ function SessionNotice({ s }: { s: CallSessionApi }) {
   return s.notice ? <CallNotice text={s.notice} action={s.noticeAction} onDismiss={() => s.store.notify(null)} /> : null;
 }
 
-export interface CallProviderProps {
+interface CallProviderProps {
   children: ReactNode;
   /** A staff tree that may call; false (assistant, signed out) = a plain wrapper, no query at all. */
   enabled?: boolean;
@@ -54,7 +54,8 @@ export function CallProvider({ children, enabled = true, showsPhone = true, rtc 
   const starting = useRef(false);
   const on = callsOn(live);
   useCallsRealtime({ enabled: Boolean(live?.enabled), active: foreground });
-  useIncomingRing(on && foreground && ringsHere(s.incoming?.id, silenced));
+  const ringing = on && foreground && ringsHere(s.incoming?.id, silenced);
+  useEffect(() => ringWhile(ringing, startRingtone), [ringing]);
 
   const call = async (target: CallTarget) => {
     if (starting.current || s.store.currentSession()) return;

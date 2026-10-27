@@ -10,7 +10,7 @@ import { PermissionDialog } from './PermissionDialog';
 
 export type PermissionAsk = { phone: string; state: Exclude<CallPermissionState, 'granted'> };
 
-export interface CallOverlayProps {
+interface CallOverlayProps {
   s: CallSessionApi;
   /** Teachers never see a family's number: an unnamed caller is «رقم غير معروف» for them. */
   showsPhone: boolean;

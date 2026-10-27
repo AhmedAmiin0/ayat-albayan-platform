@@ -1,3 +1,4 @@
+import { isCallsData, subscribeCalls } from '@ab/client-core';
 import { useQueryClient } from '@tanstack/react-query';
 import { useEffect } from 'react';
 import { supabase } from '@/lib/http/supabase';
@@ -11,19 +12,6 @@ export function useCallsRealtime(enabled: boolean): void {
   const client = useQueryClient();
   useEffect(() => {
     if (!enabled) return;
-    let channel: ReturnType<typeof supabase.channel> | null = null;
-    try {
-      channel = supabase
-        .channel('wa_calls')
-        .on('postgres_changes', { event: '*', schema: 'public', table: 'wa_calls' }, () => {
-          void client.invalidateQueries({ queryKey: CALLS_KEY, predicate: (q) => q.queryKey[1] !== 'config' });
-        })
-        .subscribe();
-    } catch {
-      channel = null;
-    }
-    return () => {
-      if (channel) void supabase.removeChannel(channel).catch(() => undefined);
-    };
+    return subscribeCalls(supabase, () => void client.invalidateQueries({ queryKey: CALLS_KEY, predicate: isCallsData }));
   }, [enabled, client]);
 }

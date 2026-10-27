@@ -1,7 +1,7 @@
 // Test-only fakes for the calls provider (docs/28 PR 2): a fake WebRTC (no native module), the API
 // routes answered from a table, and the rows /calls/active lists. No network, no hosted call.
 import type { ActiveCallView, CallConfigView } from '@ab/shared';
-import type { MicAnswer, PeerLike, RtcDeps } from '../rtc/media';
+import type { MicAnswer, NativePeer, RtcDeps } from '../rtc/media';
 
 export const ON: CallConfigView = { enabled: true, available: true, canCall: true, iceServers: [{ urls: ['stun:stun.example.org'] }] };
 export const OFF: CallConfigView = { enabled: false, available: true, canCall: true, iceServers: [] };
@@ -15,7 +15,7 @@ export function ringing(over: Partial<ActiveCallView> = {}): ActiveCallView {
   };
 }
 
-export interface FakePeer extends PeerLike {
+interface FakePeer extends NativePeer {
   setRemoteDescription: jest.Mock;
   close: jest.Mock;
 }

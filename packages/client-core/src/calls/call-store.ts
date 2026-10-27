@@ -1,11 +1,8 @@
 import type { ActiveCallView, CallIceServer } from '@ab/shared';
-import { endCall, rejectCall } from '../api/calls-api';
-import { routeCallAudio } from '../rtc/audio-route';
-import type { CallPeer } from '../rtc/call-peer';
-import type { RtcDeps } from '../rtc/media';
-import { t } from '@/core/lib/i18n/i18n';
-import { acceptRinging, beginCall, hangUp, teardown, type CallRuntime, type NoticeAction } from './call-actions';
-import type { CallSession, CallTarget } from './call-phase';
+import { acceptRinging, beginCall, hangUp, teardown, type CallRuntime } from './call-actions.js';
+import type { CallPeer } from './call-peer.js';
+import type { CallDerived, CallSession, CallTarget } from './call-phase.js';
+import type { CallPlatform, NoticeAction, PeerMaker } from './call-platform.js';
 
 export interface CallStoreState {
   session: CallSession | null;
@@ -20,19 +17,26 @@ export interface CallStoreState {
 
 /**
  * The one call of this device (docs/28 §3), outside React: WebRTC is imperative, so the steps run
- * here and the components read the state with useSyncExternalStore.
+ * here and the components read the state with useSyncExternalStore. `refresh` re-reads the calls queries.
  */
 export class CallStore implements CallRuntime {
-  rtc: RtcDeps | null = null;
+  makePeer: PeerMaker | null = null;
   iceServers: readonly CallIceServer[] = [];
   readonly peer: { current: CallPeer | null } = { current: null };
   readonly attempt = { current: 0 };
   private state: CallStoreState = { session: null, notice: null, noticeAction: null, dismissed: new Set(), idAt: 0 };
   private readonly listeners = new Set<() => void>();
   private clearTimer: ReturnType<typeof setTimeout> | null = null;
+  private deadline: { at: number; timer: ReturnType<typeof setTimeout> } | null = null;
+  private answered: string | null = null;
 
-  /** `refresh` re-reads the calls queries now. */
-  constructor(readonly refresh: () => void) {}
+  readonly platform: CallPlatform;
+  readonly refresh: () => void;
+
+  constructor(platform: CallPlatform, refresh: () => void) {
+    this.platform = platform;
+    this.refresh = refresh;
+  }
 
   readonly subscribe = (listener: () => void): (() => void) => {
     this.listeners.add(listener);
@@ -45,9 +49,9 @@ export class CallStore implements CallRuntime {
   currentSession = () => this.state.session;
   setSession = (update: (s: CallSession | null) => CallSession | null) => this.set({ session: update(this.state.session) });
 
-  /** The device's WebRTC and the academy's ICE servers (from /calls/config). */
-  configure(rtc: RtcDeps | null, iceServers: readonly CallIceServer[]): void {
-    this.rtc = rtc;
+  /** The device's WebRTC (null = none here) and the academy's ICE servers (from /calls/config). */
+  configure(makePeer: PeerMaker | null, iceServers: readonly CallIceServer[]): void {
+    this.makePeer = makePeer;
     this.iceServers = iceServers;
   }
 
@@ -59,7 +63,7 @@ export class CallStore implements CallRuntime {
   }
   reject(row: ActiveCallView): void {
     this.set({ dismissed: new Set([...this.state.dismissed, row.id]) });
-    void rejectCall(row.id).catch(() => undefined).finally(this.refresh);
+    void this.platform.sends.rejectCall(row.id).catch(() => undefined).finally(this.refresh);
   }
   hangup(): void {
     void hangUp(this, this.state.session);
@@ -67,7 +71,7 @@ export class CallStore implements CallRuntime {
   /** WhatsApp's answer could not be applied: never a silent «active» call, end it and say so. */
   applyAnswer(sdp: string): void {
     void this.peer.current?.applyAnswer(sdp).catch(() => {
-      this.notify(t.calls.errors.media_failed);
+      this.notify(this.platform.text().errors.media_failed);
       this.hangup();
     });
   }
@@ -77,15 +81,28 @@ export class CallStore implements CallRuntime {
     this.peer.current?.setMuted(!s.muted);
     this.set({ session: { ...s, muted: !s.muted } });
   }
-  /** «مكبر الصوت»: the loudspeaker or back to the earpiece. */
+  /** «مكبر الصوت» (mobile): the loudspeaker or back to the earpiece. */
   toggleSpeaker(): void {
     const s = this.state.session;
     if (!s) return;
-    void routeCallAudio(!s.speaker);
+    void this.platform.audio?.route(!s.speaker);
     this.set({ session: { ...s, speaker: !s.speaker } });
   }
   setMinimised(minimised: boolean): void {
     this.setSession((s) => (s ? { ...s, minimised } : s));
+  }
+
+  /**
+   * Follows one poll's verdict (call it when `answer`, `gone` or `deadline` change): WhatsApp's answer to
+   * our offer (the connect webhook) is applied once; a call the server stopped listing ended (hung up,
+   * rejected, missed, swept); unanswered for 45 s from the server id, it is ended here too.
+   */
+  follow(d: Pick<CallDerived, 'gone' | 'deadline'> & { answer: string | null }): void {
+    if (d.answer && d.answer !== this.answered) this.applyAnswer((this.answered = d.answer));
+    if (d.gone && this.state.session?.ended === false) this.serverEnded();
+    if (this.deadline?.at === d.deadline) return;
+    if (this.deadline) clearTimeout(this.deadline.timer);
+    this.deadline = d.deadline === null ? null : { at: d.deadline, timer: setTimeout(() => this.hangup(), Math.max(0, d.deadline - Date.now())) };
   }
 
   /** The server stopped listing the call: close the media, end it there too, say «انتهت المكالمة», then close. */
@@ -93,7 +110,7 @@ export class CallStore implements CallRuntime {
     const id = this.state.session?.id;
     this.attempt.current += 1;
     teardown(this);
-    if (id) void endCall(id).catch(() => undefined);
+    if (id) void this.platform.sends.endCall(id).catch(() => undefined);
     this.setSession((s) => (s ? { ...s, ended: true } : s));
     if (this.clearTimer) clearTimeout(this.clearTimer);
     this.clearTimer = setTimeout(() => this.setSession(() => null), 1_500);
@@ -102,10 +119,12 @@ export class CallStore implements CallRuntime {
   /** The provider goes away (sign-out, calls off): cancel a start in flight and end a live call on WhatsApp too. */
   dispose(): void {
     if (this.clearTimer) clearTimeout(this.clearTimer);
+    if (this.deadline) clearTimeout(this.deadline.timer);
+    this.deadline = null;
     const id = this.state.session?.ended ? null : this.state.session?.id;
     this.attempt.current += 1;
     teardown(this);
-    if (id) void endCall(id).catch(() => undefined);
+    if (id) void this.platform.sends.endCall(id).catch(() => undefined);
   }
 
   private set(patch: Partial<CallStoreState>): void {

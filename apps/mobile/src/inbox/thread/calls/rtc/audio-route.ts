@@ -37,6 +37,3 @@ export async function restorePlayback(): Promise<void> {
   routed = false;
   await applyPlaybackMode();
 }
-
-/** Tests only: whether a call routed the audio and has not restored it yet. */
-export const isRouted = (): boolean => routed;

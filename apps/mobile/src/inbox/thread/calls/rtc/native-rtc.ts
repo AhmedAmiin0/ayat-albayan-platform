@@ -1,5 +1,6 @@
 import { PermissionsAndroid, Platform } from 'react-native';
-import type { MicAnswer, PeerLike, RtcDeps, StreamLike } from './media';
+import type { StreamLike } from '@ab/client-core';
+import type { MicAnswer, NativePeer, RtcDeps } from './media';
 
 type WebRtc = typeof import('react-native-webrtc');
 
@@ -30,7 +31,7 @@ export function nativeRtc(): RtcDeps | null {
   const rtc = load();
   if (!rtc) return null;
   return {
-    createPeer: (config) => new rtc.RTCPeerConnection(config) as unknown as PeerLike,
+    createPeer: (config) => new rtc.RTCPeerConnection(config) as unknown as NativePeer,
     askMic,
     getMic: async () => (await rtc.mediaDevices.getUserMedia({ audio: true, video: false })) as unknown as StreamLike,
   };

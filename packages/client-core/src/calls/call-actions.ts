@@ -1,19 +1,14 @@
 import type { ActiveCallView, CallIceServer } from '@ab/shared';
-import { requestId } from '@/core/lib/http/request-id';
-import { t } from '@/core/lib/i18n/i18n';
-import { acceptCall, endCall, startCall } from '../api/calls-api';
-import { callErrorText } from '../api/call-error';
-import { restorePlayback, routeCallAudio } from '../rtc/audio-route';
-import { createCallPeer, type CallPeer } from '../rtc/call-peer';
-import { MicError, type RtcDeps } from '../rtc/media';
-import type { CallSession, CallTarget } from './call-phase';
-
-/** A notice's own action: «افتح الإعدادات» when the microphone was refused for good. */
-export type NoticeAction = 'settings';
+import { MicError, type CallPeer } from './call-peer.js';
+import type { CallSession, CallTarget } from './call-phase.js';
+import type { CallPlatform, NoticeAction, PeerMaker } from './call-platform.js';
+import { callErrorText } from './call-words.js';
 
 /** What the async call steps read and write (CallStore). */
 export interface CallRuntime {
-  rtc: RtcDeps | null;
+  platform: CallPlatform;
+  /** The device's WebRTC; null = none here (the call says «لا يدعم المكالمات»). */
+  makePeer: PeerMaker | null;
   iceServers: readonly CallIceServer[];
   peer: { current: CallPeer | null };
   /** Bumped by every attempt and hang-up: a step that awaited across one is cancelled. */
@@ -28,9 +23,10 @@ export interface CallRuntime {
 }
 
 /** The sentence for a failed step: the microphone's own words, else the API's code. */
-export function failureText(e: unknown): string {
-  if (e instanceof MicError) return e.problem === 'unsupported' ? t.calls.mic.unsupported : t.calls.mic.denied;
-  return callErrorText(e);
+function failureText(e: unknown, platform: CallPlatform): string {
+  const text = platform.text();
+  if (e instanceof MicError) return e.problem === 'unsupported' ? text.mic.unsupported : text.mic.denied;
+  return callErrorText(e, text);
 }
 
 const fresh = (target: CallTarget, direction: CallSession['direction'], id: string | null): CallSession => ({
@@ -43,7 +39,7 @@ const fresh = (target: CallTarget, direction: CallSession['direction'], id: stri
 export function teardown(rt: CallRuntime): void {
   rt.peer.current?.close();
   rt.peer.current = null;
-  void restorePlayback();
+  void rt.platform.audio?.restore();
 }
 
 /** A new attempt: whatever an earlier one left is closed; its token stays current until the next hang-up or attempt. */
@@ -56,7 +52,8 @@ function nextAttempt(rt: CallRuntime): () => boolean {
 
 /** The microphone and the peer, with the mute and speaker chosen meanwhile; closed at once if cancelled. */
 async function peerFor(rt: CallRuntime, live: () => boolean): Promise<CallPeer | null> {
-  const peer = await createCallPeer({ deps: rt.rtc, iceServers: rt.iceServers });
+  if (!rt.makePeer) throw new MicError('unsupported');
+  const peer = await rt.makePeer(rt.iceServers);
   if (!live()) {
     peer.close();
     return null;
@@ -64,10 +61,10 @@ async function peerFor(rt: CallRuntime, live: () => boolean): Promise<CallPeer |
   rt.peer.current = peer;
   const session = rt.currentSession();
   peer.setMuted(session?.muted ?? false);
-  void routeCallAudio(session?.speaker ?? false);
+  void rt.platform.audio?.route(session?.speaker ?? false);
   // The media dropped for good: say so and end the call (WhatsApp terminate through the API).
   peer.onFailed(() => {
-    rt.notify(t.calls.errors.media_failed);
+    rt.notify(rt.platform.text().errors.media_failed);
     if (live()) void hangUp(rt, rt.currentSession());
   });
   return peer;
@@ -83,21 +80,22 @@ function failed(rt: CallRuntime, input: { live: () => boolean; error: unknown })
   teardown(rt);
   rt.setSession(() => null);
   const blocked = input.error instanceof MicError && input.error.problem === 'blocked';
-  rt.notify(failureText(input.error), blocked ? 'settings' : undefined);
+  rt.notify(failureText(input.error, rt.platform), blocked ? 'settings' : undefined);
   rt.refresh();
 }
 
 /** Outbound: microphone, our offer, then POST /calls (once: a failed connect is never retried). */
 export async function beginCall(rt: CallRuntime, target: CallTarget): Promise<void> {
   const live = nextAttempt(rt);
+  const { sends } = rt.platform;
   rt.setSession(() => fresh(target, 'outbound', null));
   try {
     const peer = await peerFor(rt, live);
     const sdp = peer ? await peer.offer() : null;
     if (!sdp || !live()) return dropLocal(rt, peer);
-    const view = await startCall({ phone: target.phone, sdp, clientRequestId: requestId() });
+    const view = await sends.startCall({ phone: target.phone, sdp, clientRequestId: rt.platform.requestId() });
     // Hung up while the request was in flight: the call exists now, so end it.
-    if (!live()) return void (dropLocal(rt, peer), await endCall(view.id).catch(() => undefined));
+    if (!live()) return void (dropLocal(rt, peer), await sends.endCall(view.id).catch(() => undefined));
     rt.markId();
     rt.setSession((s) => (s ? { ...s, id: view.id } : s));
     rt.refresh();
@@ -109,14 +107,15 @@ export async function beginCall(rt: CallRuntime, target: CallTarget): Promise<vo
 /** Inbound «قبول»: our answer to the family's offer, then POST accept (the first one to accept wins). */
 export async function acceptRinging(rt: CallRuntime, input: { row: ActiveCallView; name: string }): Promise<void> {
   const { row } = input;
+  const { sends } = rt.platform;
   const live = nextAttempt(rt);
   rt.setSession(() => fresh({ phone: row.phone_e164, name: input.name }, 'inbound', row.id));
   try {
     const peer = await peerFor(rt, live);
     const sdp = peer ? await peer.answer(row.offer_sdp ?? '') : null;
     if (!sdp || !live()) return dropLocal(rt, peer);
-    await acceptCall(row.id, sdp);
-    if (!live()) return void (dropLocal(rt, peer), await endCall(row.id).catch(() => undefined));
+    await sends.acceptCall(row.id, sdp);
+    if (!live()) return void (dropLocal(rt, peer), await sends.endCall(row.id).catch(() => undefined));
     rt.markId();
     rt.refresh();
   } catch (error) {
@@ -129,6 +128,6 @@ export async function hangUp(rt: CallRuntime, session: CallSession | null): Prom
   rt.attempt.current += 1;
   teardown(rt);
   rt.setSession(() => null);
-  if (session?.id) await endCall(session.id).catch(() => undefined);
+  if (session?.id) await rt.platform.sends.endCall(session.id).catch(() => undefined);
   rt.refresh();
 }

@@ -1,6 +1,6 @@
 import { formatPhone, sessionWindowOpen, type ThreadView } from '@ab/shared';
 import { router, useLocalSearchParams } from 'expo-router';
-import { useHolds } from '@/auth/use-permissions';
+import { useHolds } from '@/auth';
 import { t } from '@/core/lib/i18n/i18n';
 import { inTree, useTreeBase } from '@/core/nav/tree-base';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';

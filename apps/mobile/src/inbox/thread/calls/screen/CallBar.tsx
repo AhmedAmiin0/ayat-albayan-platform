@@ -1,18 +1,17 @@
+import { callClock, callStatusText, type CallPhase, type CallSession } from '@ab/client-core';
 import type { ActiveCallView } from '@ab/shared';
 import { Pressable, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useSyncExternalStore } from 'react';
 import { t } from '@/core/lib/i18n/i18n';
 import { shape, type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
-import type { CallPhase, CallSession } from '../state/call-phase';
-import { callStatusText } from './call-status';
 import { PhoneIcon } from './call-icons';
-import { useNow } from './use-now';
 
 /** Below a screen's header (ChatHeader / ScreenHeader are ~52pt). */
 const HEADER = 56;
 
-export interface CallBarProps {
+interface CallBarProps {
   session: CallSession;
   row: ActiveCallView | undefined;
   phase: CallPhase;
@@ -26,7 +25,7 @@ export interface CallBarProps {
 export function CallBar({ session, row, phase, onExpand }: CallBarProps) {
   const { color } = useTheme();
   const insets = useSafeAreaInsets();
-  const now = useNow(phase === 'active');
+  const now = useSyncExternalStore(phase === 'active' ? callClock.subscribe : callClock.still, callClock.read);
   return (
     <View pointerEvents="box-none" style={{ position: 'absolute', start: 16, end: 16, top: insets.top + HEADER, alignItems: 'center' }}>
       <Pressable
@@ -40,7 +39,7 @@ export function CallBar({ session, row, phase, onExpand }: CallBarProps) {
         <AppText numberOfLines={1} style={{ maxWidth: 180, fontFamily: type.ui[600], fontSize: type.size.sm, color: color.onLapis }}>
           {session.name}
         </AppText>
-        <AppText style={{ fontSize: type.size.sm, color: color.onLapis, fontVariant: ['tabular-nums'] }}>{callStatusText(phase, { row, now })}</AppText>
+        <AppText style={{ fontSize: type.size.sm, color: color.onLapis, fontVariant: ['tabular-nums'] }}>{callStatusText(phase, { row, now, text: t.calls })}</AppText>
       </Pressable>
     </View>
   );

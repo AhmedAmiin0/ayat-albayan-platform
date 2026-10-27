@@ -1,5 +1,6 @@
-import { createCallPeer, gathered } from './call-peer';
-import { MicError, type PeerLike, type RtcDeps, type StreamLike } from './media';
+import { MicError, type StreamLike } from '@ab/client-core';
+import { createCallPeer } from './call-peer';
+import type { NativePeer, RtcDeps } from './media';
 
 function fakeMic() {
   const track = { enabled: true, stop: jest.fn() };
@@ -8,7 +9,7 @@ function fakeMic() {
   return { track, mic, release };
 }
 
-function fakePeer(): PeerLike & { remote: unknown[]; listeners: Map<string, () => void> } {
+function fakePeer(): NativePeer & { remote: unknown[]; listeners: Map<string, () => void> } {
   const listeners = new Map<string, () => void>();
   const remote: unknown[] = [];
   const pc = {
@@ -30,7 +31,7 @@ function fakePeer(): PeerLike & { remote: unknown[]; listeners: Map<string, () =
   return pc;
 }
 
-const deps = (pc: PeerLike, mic: StreamLike, answer: 'granted' | 'denied' | 'blocked' = 'granted'): RtcDeps => ({
+const deps = (pc: NativePeer, mic: StreamLike, answer: 'granted' | 'denied' | 'blocked' = 'granted'): RtcDeps => ({
   createPeer: () => pc,
   askMic: async () => answer,
   getMic: async () => mic,
@@ -80,19 +81,5 @@ describe('createCallPeer (react-native-webrtc behind fakes)', () => {
     Object.assign(pc, { connectionState: 'failed' });
     pc.listeners.get('connectionstatechange')?.();
     expect(failed).toHaveBeenCalled();
-  });
-});
-
-describe('gathered', () => {
-  it('waits for complete, or gives up after the cap', async () => {
-    jest.useFakeTimers();
-    const pc = { ...fakePeer(), iceGatheringState: 'gathering' };
-    const done = jest.fn();
-    void gathered(pc, 3000).then(done);
-    await jest.advanceTimersByTimeAsync(2999);
-    expect(done).not.toHaveBeenCalled();
-    await jest.advanceTimersByTimeAsync(1);
-    expect(done).toHaveBeenCalled();
-    jest.useRealTimers();
   });
 });

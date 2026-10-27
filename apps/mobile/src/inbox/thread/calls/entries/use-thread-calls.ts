@@ -1,7 +1,7 @@
 import type { CallView } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import type { ThreadView } from '@ab/shared';
-import { useHolds } from '@/auth/use-permissions';
+import { useHolds } from '@/auth';
 import { isOwnThread, useThreadMode } from '../../hooks/thread-mode';
 import { callerName } from './call-text';
 import { callListQuery } from '../api/calls-api';
