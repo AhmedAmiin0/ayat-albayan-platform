@@ -8,6 +8,11 @@ import { GateController } from './gate/gate.controller';
 import { GateSettings } from './gate/gate.settings';
 import { CrmHistoryMedia } from './messages/crm-history/crm-history-media';
 import { CrmMediaSettings } from './messages/crm-history/crm-media.settings';
+import { CrmMediaCopier } from './messages/crm-copy/crm-media-copier';
+import { CrmMediaCopyDone } from './messages/crm-copy/crm-media-copy.done';
+import { CrmMediaCopyJob } from './messages/crm-copy/crm-media-copy.job';
+import { CrmMediaCopyQueries } from './messages/crm-copy/crm-media-copy.queries';
+import { CrmMediaCopySettings } from './messages/crm-copy/crm-media-copy.settings';
 import { InboundMedia } from './messages/inbound-media.service';
 import { InboundMediaQueries } from './messages/inbound-media.queries';
 import { LiveWhatsappClient } from './live-client';
@@ -82,6 +87,11 @@ function lines(): WhatsappLines {
     InboundMediaQueries,
     CrmMediaSettings,
     CrmHistoryMedia,
+    CrmMediaCopySettings,
+    CrmMediaCopyQueries,
+    CrmMediaCopier,
+    CrmMediaCopyDone,
+    CrmMediaCopyJob,
     InboundMedia,
     WaMediaRetentionJob,
   ],
