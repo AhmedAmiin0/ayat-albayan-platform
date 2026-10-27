@@ -26,13 +26,14 @@ test('parseImports: named, aliased, type-only, default, namespace, side-effect, 
         { from: 'b', as: 'c' },
       ],
       reexport: false,
+      bare: false,
     },
-    { spec: './d', names: null, reexport: false },
-    { spec: './ns', names: null, reexport: false },
-    { spec: './side.css', names: null, reexport: false },
-    { spec: './f', names: [{ from: 'f', as: 'g' }], reexport: true },
-    { spec: './star.js', names: null, reexport: true },
-    { spec: './lazy', names: null, reexport: false },
+    { spec: './d', names: null, reexport: false, bare: false },
+    { spec: './ns', names: null, reexport: false, bare: false },
+    { spec: './side.css', names: null, reexport: false, bare: true },
+    { spec: './f', names: [{ from: 'f', as: 'g' }], reexport: true, bare: false },
+    { spec: './star.js', names: null, reexport: true, bare: false },
+    { spec: './lazy', names: null, reexport: false, bare: false },
   ]);
 });
 
@@ -48,7 +49,7 @@ test('edges point at the file that declares a name, through barrels and export *
   const inbox = 'apps/web/src/features/messaging/inbox/';
   assert.deepEqual(
     [...g.edges.get('apps/web/src/routes/admin/(people)/inbox.tsx')],
-    [`${inbox}InboxPage.tsx`],
+    [`${inbox}InboxPage.tsx`, `${inbox}register.ts`],
   );
   assert.ok(g.edges.get(`${inbox}Bubble.tsx`).has('packages/shared/src/phone.ts'));
   assert.ok(!g.edges.get(`${inbox}Bubble.tsx`).has('packages/shared/src/money.ts'));

@@ -33,3 +33,17 @@ export const areasOf = (map, file) =>
   Object.entries(map.areas)
     .filter(([, a]) => a.paths.some((p) => pathMatches(p, file)))
     .map(([name]) => name);
+
+/**
+ * The page routes a layout route renders through its <Outlet/>: `x/route.tsx` and `x.tsx` hold every
+ * route under `x/`, and `x.tsx` also the flat children `x.y.tsx` beside it.
+ */
+export function childRoutes(route, files) {
+  const dir = route.endsWith('/route.tsx')
+    ? route.slice(0, -'/route.tsx'.length)
+    : route.replace(/\.tsx$/, '');
+  return files.filter(
+    (f) =>
+      f !== route && f.endsWith('.tsx') && (f.startsWith(`${dir}/`) || f.startsWith(`${dir}.`)),
+  );
+}

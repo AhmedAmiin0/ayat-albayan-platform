@@ -59,7 +59,7 @@ export function resolveSpec(files, from, spec) {
   return null;
 }
 
-/** { files, edges } — forward edges file -> files, name-precise through re-exports. */
+/** { files, edges, … } — forward edges file -> files, name-precise through re-exports. */
 export function buildGraph(root, fileList = listFiles(root)) {
   const files = new Set(fileList);
   const parsed = new Map();
@@ -98,19 +98,47 @@ export function buildGraph(root, fileList = listFiles(root)) {
     return seen;
   };
   const edges = new Map();
+  /** File-level importers (any import or re-export) and the files each one re-exports from. */
+  const importers = new Map();
+  const reexportsFrom = new Map();
+  const add = (map, key, value) => (map.get(key) ?? map.set(key, new Set()).get(key)).add(value);
+  const bareOf = (file) =>
+    (parsed.get(file) ?? []).filter((i) => i.bare).map((i) => resolveSpec(files, file, i.spec));
   for (const f of fileList) {
     const out = new Set();
     for (const { spec, names, reexport } of parsed.get(f) ?? []) {
       const target = resolveSpec(files, f, spec);
       if (!target) continue;
+      add(importers, target, f);
+      if (reexport) add(reexportsFrom, f, target);
       if (names === null) out.add(target);
       else
         for (const n of names)
           for (const d of definers(target, n.from) ?? wholeBarrel(target)) out.add(d);
+      // A barrel's own side-effect imports (`import './register'`) run for whoever imports from it.
+      if (names !== null) for (const b of bareOf(target)) if (b) out.add(b);
     }
     edges.set(f, out);
   }
-  return { files, edges };
+  return { files, edges, importers, reexportsFrom };
+}
+
+/**
+ * Everyone who imports from `file` or from a barrel that re-exports it (transitively): for a changed
+ * barrel, whose re-exports (renamed, re-pointed) change what its consumers get.
+ */
+export function barrelConsumers(graph, file) {
+  const out = new Set();
+  const q = [file];
+  while (q.length) {
+    const x = q.pop();
+    for (const y of graph.importers.get(x) ?? []) {
+      if (out.has(y)) continue;
+      out.add(y);
+      if (graph.reexportsFrom.get(y)?.has(x)) q.push(y);
+    }
+  }
+  return out;
 }
 
 /** Every file that imports `start` directly or transitively (start included); stops at `stop(file)`. */

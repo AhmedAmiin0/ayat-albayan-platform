@@ -13,6 +13,8 @@ export const AREAS = {
       specs: ['chat.spec.ts'],
     },
     finance: { paths: [`${W}/routes/admin/(finance)/payments.tsx`], specs: ['payments.spec.ts'] },
+    paymentsLayout: { paths: [`${W}/routes/admin/payments/route.tsx`], specs: ['layout.spec.ts'] },
+    paymentDetail: { paths: [`${W}/routes/admin/payments/$id.tsx`], specs: ['detail.spec.ts'] },
     translations: {
       paths: [`${W}/routes/admin/translations.tsx`],
       specs: ['translations.spec.ts'],
@@ -29,11 +31,16 @@ export const FILES = {
   [`${W}/routes/admin/(finance)/payments.tsx`]:
     "import { PaymentsPage } from '@/features/finance/payments';\nexport const R = PaymentsPage;\n",
   [`${W}/routes/admin/translations.tsx`]: 'export const R = 1;\n',
+  [`${W}/routes/admin/payments/route.tsx`]:
+    "import { layout } from '@/features/finance/payments/layout';\nexport const R = layout;\n",
+  [`${W}/routes/admin/payments/$id.tsx`]: 'export const R = 1;\n',
+  [`${W}/features/finance/payments/layout.ts`]: 'export const layout = 1;\n',
   [`${W}/routeTree.gen.ts`]: "import './routes/admin';\nimport './routes/admin/(people)/inbox';\n",
   [`${W}/components/shell/Nav.tsx`]:
     "import { Badge } from '@/features/messaging/inbox';\nexport const Nav = Badge;\n",
   [`${W}/features/messaging/inbox/index.ts`]:
-    "export { InboxPage } from './InboxPage';\nexport { Bubble } from './Bubble';\nexport { Badge } from './Badge';\n",
+    "import './register';\nexport { InboxPage } from './InboxPage';\nexport { Bubble } from './Bubble';\nexport { Badge } from './Badge';\n",
+  [`${W}/features/messaging/inbox/register.ts`]: 'export const registered = 1;\n',
   [`${W}/features/messaging/inbox/InboxPage.tsx`]:
     "import { Bubble } from './Bubble';\nimport { t } from '@/lib/i18n';\nexport const InboxPage = () => [Bubble, t.inbox.title];\n",
   [`${W}/features/messaging/inbox/Bubble.tsx`]:
@@ -59,6 +66,8 @@ export const FILES = {
   'e2e/tests/chat.spec.ts': "import { open } from '../support/open';\n",
   'e2e/tests/payments.spec.ts': "import { open } from '../support/open';\n",
   'e2e/tests/translations.spec.ts': '\n',
+  'e2e/tests/layout.spec.ts': '\n',
+  'e2e/tests/detail.spec.ts': '\n',
   'e2e/tests/db.sql.spec.ts': '\n',
   'e2e/support/open.ts': 'export const open = 1;\n',
   'pnpm-lock.yaml': 'lockfileVersion: 9\n',

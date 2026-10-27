@@ -7,11 +7,20 @@ import { AREAS } from './fixture.mjs';
 import { listFiles } from './graph.mjs';
 import { checkMap } from './guard.mjs';
 
-const specs = ['chat.spec.ts', 'payments.spec.ts', 'translations.spec.ts', 'db.sql.spec.ts'];
+const specs = [
+  'chat.spec.ts',
+  'payments.spec.ts',
+  'translations.spec.ts',
+  'layout.spec.ts',
+  'detail.spec.ts',
+  'db.sql.spec.ts',
+];
 const files = [
   'apps/web/src/routes/admin/(people)/inbox.tsx',
   'apps/web/src/routes/admin/(finance)/payments.tsx',
   'apps/web/src/routes/admin/translations.tsx',
+  'apps/web/src/routes/admin/payments/route.tsx',
+  'apps/web/src/routes/admin/payments/$id.tsx',
   'apps/api/src/modules/messaging/inbox/a.ts',
 ];
 

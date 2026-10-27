@@ -2,8 +2,9 @@
 // to the whole module whenever a form is not understood).
 
 /**
- * Every import/re-export of a source: { spec, names, reexport }. names: [{ from, as }] (`a as b`), or
- * null for the whole module (default, namespace, side-effect, dynamic import, export *).
+ * Every import/re-export of a source: { spec, names, reexport, bare }. names: [{ from, as }] (`a as b`),
+ * or null for the whole module (default, namespace, side-effect, dynamic import, export *); bare = a
+ * side-effect import (`import './x'`).
  */
 export function parseImports(src) {
   const out = [];
@@ -23,10 +24,11 @@ export function parseImports(src) {
   for (const m of src.matchAll(re)) {
     const [whole, kind, braces, spec] = m;
     const named = braces !== undefined && !/(import|export)\s+(type\s+)?[\w$]+\s*,/.test(whole);
-    out.push({ spec, names: named ? list(braces) : null, reexport: kind === 'export' });
+    const bare = /^[;\n}]?\s*import\s*['"]/.test(whole);
+    out.push({ spec, names: named ? list(braces) : null, reexport: kind === 'export', bare });
   }
   for (const m of src.matchAll(/\bimport\(\s*['"`]([^'"`]+)['"`]\s*\)/g))
-    out.push({ spec: m[1], names: null, reexport: false });
+    out.push({ spec: m[1], names: null, reexport: false, bare: false });
   return out;
 }
 

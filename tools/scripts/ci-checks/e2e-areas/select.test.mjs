@@ -103,3 +103,23 @@ test('a broken or missing areas map throws (the CLI turns any throw into the ful
     rmSync(broken, { recursive: true, force: true });
   }
 });
+
+test('an edited barrel runs everyone importing from it (re-pointed or renamed re-exports)', () => {
+  const r = pick(`${W}/messaging/inbox/index.ts`);
+  assert.equal(r.full, true, 'the shell imports from this barrel');
+  assert.deepEqual(pick('packages/shared/src/index.ts').specs, [
+    'chat.spec.ts',
+    'payments.spec.ts',
+  ]);
+});
+
+test("a barrel's side-effect import reaches whoever imports from the barrel", () => {
+  assert.equal(pick(`${W}/messaging/inbox/register.ts`).full, true, 'the shell imports from it');
+});
+
+test('a layout route also runs the specs of the pages it renders', () => {
+  assert.deepEqual(pick(`${W}/finance/payments/layout.ts`).specs, [
+    'detail.spec.ts',
+    'layout.spec.ts',
+  ]);
+});

@@ -7,8 +7,8 @@ import { execFileSync } from 'node:child_process';
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { areasOf, loadAreas, SPEC_DIR } from './areas.mjs';
-import { buildGraph, reverseClosure } from './graph.mjs';
+import { areasOf, childRoutes, loadAreas, SPEC_DIR } from './areas.mjs';
+import { barrelConsumers, buildGraph, reverseClosure } from './graph.mjs';
 import { BUNDLES, changedKeys, keyUsers } from './i18n.mjs';
 
 /** Files e2e never sees (the existing «e2e» gate in ci.yml skips the job when only these change). */
@@ -24,6 +24,7 @@ const UNIT =
 /** Code followed through the import graph. */
 const GRAPHED =
   /^(apps\/web\/src\/(features|components|routes)\/|apps\/api\/src\/modules\/|packages\/(shared|client-core)\/src\/)/;
+const ROUTES = 'apps/web/src/routes/';
 const SPEC = /^e2e\/tests\/[^/]+\.spec\.ts$/;
 /** Registries that import every route / module: not a use (the route or module itself is). */
 const REGISTRY = /^apps\/web\/src\/routeTree\.gen\.ts$|^apps\/api\/src\/app\.module\.ts$/;
@@ -51,17 +52,21 @@ export function selectSpecs({ root, files, base, graph, map: given }) {
       starts.push(...r.users);
       if (r.keys) for (const s of map.areas[EVERY_KEY_AREA].specs) specs.add(s);
     } else if (GRAPHED.test(f) && /\.(ts|tsx)$/.test(f)) {
-      if (g.files.has(f)) starts.push(f);
+      if (g.files.has(f)) starts.push(f, ...(g.reexportsFrom.has(f) ? barrelConsumers(g, f) : []));
       else if (existsSync(join(root, f))) return full(`${f} is outside the import graph`);
       // Deleted: whatever imported it changed in this diff too, and is followed instead.
     } else return full(`${f} is not mapped to e2e areas`);
   }
+  const routes = [...g.files].filter((f) => f.startsWith(ROUTES));
   for (const c of reverseClosure(g, starts, (x) => REGISTRY.test(x))) {
     if (SPEC.test(c)) specs.add(c.slice(SPEC_DIR.length));
-    else if (/^(apps\/web\/src\/routes\/|apps\/api\/src\/modules\/)/.test(c)) {
-      const names = areasOf(map, c);
-      if (!names.length) return full(`${c} (uses the change) is in no area`);
-      for (const n of names) for (const s of map.areas[n].specs) specs.add(s);
+    else if (c.startsWith(ROUTES) || c.startsWith('apps/api/src/modules/')) {
+      // A layout route also changes every page it renders.
+      for (const r of c.startsWith(ROUTES) ? [c, ...childRoutes(c, routes)] : [c]) {
+        const names = areasOf(map, r);
+        if (!names.length) return full(`${r} (uses the change) is in no area`);
+        for (const n of names) for (const s of map.areas[n].specs) specs.add(s);
+      }
     } else if (!PASS.test(c)) return full(`${c} (uses the change) runs everything`);
   }
   return {
