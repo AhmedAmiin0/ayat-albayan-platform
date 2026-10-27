@@ -2,7 +2,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { act, renderHook, waitFor } from '@testing-library/react';
 import type { ReactNode } from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { INBOX_REFRESH_MS } from '@/features/messaging/inbox/api/api';
+import { INBOX_REFRESH_MS, inboxLive, inboxPollMs } from '@/features/messaging/inbox';
 import { t } from '@/lib/i18n/i18n';
 import { ApiError } from '@/lib/http/api';
 import { salesUnreadQuery, unreadRetry, unreadTitle, useSalesUnread } from './use-sales-unread';
@@ -67,7 +67,11 @@ describe('salesUnreadQuery', () => {
   it('lives under ["threads"] and keeps polling in a background tab', () => {
     const q = salesUnreadQuery(true);
     expect(q.queryKey).toEqual(['threads', 'nav-count', 'unread']);
-    expect(q.refetchInterval).toBe(INBOX_REFRESH_MS);
+    expect(q.refetchInterval).toBe(inboxPollMs);
+    expect(inboxPollMs()).toBe(INBOX_REFRESH_MS);
+    inboxLive.setLive(true);
+    expect(inboxPollMs()).toBe(60_000); // realtime connected: its events refresh the count sooner
+    inboxLive.setLive(false);
     expect(q.refetchIntervalInBackground).toBe(true);
     expect(salesUnreadQuery(false).enabled).toBe(false);
   });

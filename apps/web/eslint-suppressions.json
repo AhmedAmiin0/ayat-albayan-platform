@@ -1339,11 +1339,6 @@
       "count": 1
     }
   },
-  "src/features/sales/sales/use-sales-unread.ts": {
-    "ab/module-boundaries": {
-      "count": 1
-    }
-  },
   "src/features/teaching/booking/BookingWizard.tsx": {
     "ab/module-boundaries": {
       "count": 1
