@@ -35,8 +35,15 @@ export interface ChannelMessageView {
   created_at: string;
 }
 
+/** POST …/read: read up to the newest message shown (never later than now); now when absent. */
+export const channelReadSchema = z.object({
+  at: z.iso.datetime({ offset: true }).optional(),
+});
+
 /** A thread page: oldest first within the page. */
 export interface ChannelPage {
+  /** Whose channel it is (the header names the student). */
+  student_name: string;
   messages: ChannelMessageView[];
   has_more: boolean;
   /** A monitor's view: no composer, «للاطلاع فقط». */
@@ -49,7 +56,7 @@ export interface TeacherChannelRow {
   student_name: string;
   student_code: string;
   last_message: Pick<ChannelMessageView, 'body' | 'sender_role' | 'created_at'> | null;
-  /** Messages from the family after my last read. */
+  /** Messages from the family (guardian, student) after my last read. */
   unread: number;
 }
 

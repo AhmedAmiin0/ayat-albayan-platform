@@ -45,7 +45,7 @@ export async function channelApp() {
     channelOf: vi.fn(async () => CH),
     page: vi.fn(async (): Promise<ChannelMessageRow[]> => [messageRow()]),
     insert: vi.fn(async (row: { body: string; sender_profile_id: string; sender_role: string }) => messageRow({ id: 'm2', ...row })),
-    markRead: vi.fn(async () => undefined),
+    markRead: vi.fn(async (_row: { channelId: string; profileId: string; at: string }) => undefined),
     teacherIds: vi.fn(async (): Promise<string[]> => ['t1']),
     teacherStudentIds: vi.fn(async () => [ST]),
     summaries: vi.fn(async () => [{ student_id: ST, unread: 2, last_body: 'السلام عليكم', last_role: 'guardian', last_at: '2026-10-27T10:00:00.000Z' }]),

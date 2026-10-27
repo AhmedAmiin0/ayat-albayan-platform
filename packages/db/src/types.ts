@@ -4936,7 +4936,7 @@ export type Database = {
         Returns: boolean;
       };
       channel_summaries: {
-        Args: { p_profile: string; p_student_ids: string[] };
+        Args: { p_count_roles: string[]; p_profile: string; p_student_ids: string[] };
         Returns: {
           channel_id: string;
           last_at: string | null;

@@ -36,21 +36,22 @@ export function useSendChannel(ref: ChannelRef) {
   const client = useQueryClient();
   return useMutation({
     mutationFn: (body: string) => apiSend<ChannelMessageView>('POST', channelMessagesPath(ref), { body }),
-    onSettled: () => client.invalidateQueries({ queryKey: ['channel'] }),
+    onSettled: () =>
+      Promise.all([client.invalidateQueries({ queryKey: channelKey(ref.audience, ref.studentId) }), client.invalidateQueries({ queryKey: ['channel', 'teacher', 'list'] })]),
   });
 }
 
-/** A participant has seen the newest message (a monitor never marks anything read). */
-export function useMarkRead(ref: ChannelRef, newestId: string | undefined) {
+/** A participant has seen the thread up to its newest message (a monitor never marks anything read). */
+export function useMarkRead(ref: ChannelRef, newestAt: string | undefined) {
   const client = useQueryClient();
   const writes = CHANNEL_WRITES[ref.audience];
   useEffect(() => {
-    if (!writes || !newestId) return;
-    apiSend<unknown>('POST', channelReadPath(ref.audience, ref.studentId)).then(
+    if (!writes || !newestAt) return;
+    apiSend<unknown>('POST', channelReadPath(ref.audience, ref.studentId), { at: newestAt }).then(
       () => client.invalidateQueries({ queryKey: ['channel', 'teacher', 'list'] }),
       () => undefined,
     );
-  }, [writes, newestId, ref.audience, ref.studentId, client]);
+  }, [writes, newestAt, ref.audience, ref.studentId, client]);
 }
 
 export function useTeacherChannels() {

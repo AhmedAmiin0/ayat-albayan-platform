@@ -40,6 +40,7 @@ describe('TeacherMessagesPage «رسائل الطلاب»', () => {
     apiFetch.mockImplementation(async (path: string) => (path.endsWith('/messages') ? channelPage() : ROWS));
     const onPick = show('s1');
     expect(await screen.findByLabelText(c.messageLabel)).toBeTruthy();
+    expect(screen.getByRole('heading', { name: 'سلمى' })).toBeTruthy();
     expect(apiFetch).toHaveBeenCalledWith('/teachers/me/channels/s1/messages');
     fireEvent.click(screen.getByRole('button', { name: c.back }));
     expect(onPick).toHaveBeenCalledWith(null);

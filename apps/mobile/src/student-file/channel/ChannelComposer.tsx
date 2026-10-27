@@ -45,7 +45,6 @@ export function ChannelComposer({ pending, failed, onSend }: Props) {
           color: color.ink,
           fontFamily: type.ui[400],
           fontSize: type.size.body,
-          textAlign: 'right',
         }}
       />
       <Button label={pending ? t.studentChannel.sending : t.studentChannel.send} busy={pending} disabled={!body || tooLong} onPress={send} />

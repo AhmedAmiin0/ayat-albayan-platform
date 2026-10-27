@@ -16,7 +16,7 @@ export function MonitorChannel({ studentId, audience }: { studentId: string; aud
       <div className="flex flex-wrap items-center justify-between gap-2">
         <h2 className="font-display text-h3 font-bold">{t.studentChannel.monitorTitle}</h2>
         <Button type="button" variant="secondary" size="sm" aria-expanded={open} onClick={() => setOpen((v) => !v)}>
-          {t.studentChannel.open}
+          {open ? t.studentChannel.hide : t.studentChannel.open}
         </Button>
       </div>
       {open && <ChannelThread refs={{ audience, studentId }} tz={viewerTz()} />}

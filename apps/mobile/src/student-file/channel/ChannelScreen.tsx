@@ -1,11 +1,11 @@
 import type { ChannelAudience } from '@ab/client-core';
 import { router, useLocalSearchParams } from 'expo-router';
 import { t } from '@/core/lib/i18n/i18n';
-import { useStudentName } from '@/ops';
 import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { Button } from '@/core/ui/primitives/Button';
 import { ChannelThread } from './ChannelThread';
+import { useChannel } from './channel-queries';
 
 /**
  * A student channel screen: the teacher's thread (/teacher/more/messages/:studentId), the admin's
@@ -14,7 +14,8 @@ import { ChannelThread } from './ChannelThread';
 export function ChannelScreen({ audience }: { audience: ChannelAudience }) {
   const params = useLocalSearchParams<{ id?: string; studentId?: string }>();
   const studentId = params.studentId ?? params.id ?? '';
-  const name = useStudentName(studentId, audience === 'admin');
+  // The same query the thread reads (one request): it names the student.
+  const name = useChannel({ audience, studentId }).data?.pages[0]?.student_name || undefined;
   const title = audience === 'teacher' ? t.studentChannel.title : t.studentChannel.monitorTitle;
   return (
     <Screen chat>

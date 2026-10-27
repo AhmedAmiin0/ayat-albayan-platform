@@ -32,10 +32,11 @@ describe('migration 800: student channels', () => {
     expect(code).toContain('before update of student_id on public.student_channels');
   });
 
-  it('current teachers only: the assigned teacher or an open lesson not ended (no 90-day look-back)', () => {
+  it('current teachers only: the assigned teacher or an open lesson running or within a day (no 90-day look-back)', () => {
     const fn = /function public\.channel_teacher_ids[\s\S]*?\$\$([\s\S]*?)\$\$/.exec(code)?.[1] ?? '';
     expect(fn).toContain('s.teacher_id');
     expect(fn).toContain("l.status in ('scheduled', 'confirmed') and l.ends_at >= now()");
+    expect(fn).toContain("l.starts_at < now() + interval '1 day'");
     expect(fn).not.toMatch(/90 days/);
   });
 
@@ -43,7 +44,7 @@ describe('migration 800: student channels', () => {
     for (const t of ['student_channels', 'channel_messages', 'channel_reads']) expect(code).toContain(`alter table public.${t} enable row level security;`);
     expect(code).not.toMatch(/create policy \w+ on public\.\w+ for (insert|update|delete|all)/);
     expect(code).toMatch(/revoke insert, update, delete, truncate, references, trigger\s+on public\.student_channels, public\.channel_messages, public\.channel_reads from authenticated;/);
-    for (const fn of ['channel_teacher_ids(uuid)', 'teacher_channel_student_ids(uuid)', 'channel_summaries(uuid, uuid[])']) {
+    for (const fn of ['channel_teacher_ids(uuid)', 'teacher_channel_student_ids(uuid)', 'channel_summaries(uuid, uuid[], text[])']) {
       expect(code).toContain(`revoke execute on function public.${fn} from public, anon, authenticated;`);
     }
     expect([...code.matchAll(/security definer set search_path = ''/g)].length).toBe([...code.matchAll(/create or replace function/g)].length);

@@ -26,15 +26,17 @@ const COLUMNS = 'id, body, sender_profile_id, sender_role, created_at' as const;
 export class ChannelQueries {
   constructor(@Inject(DB) private readonly db: Db) {}
 
-  /** The student's channel id; opened here too if the trigger never ran for it (idempotent). */
+  /** The student's channel id; opened here only if the trigger never ran for it (a read first, then an idempotent insert). */
   async channelOf(studentId: string): Promise<string> {
-    const { data, error } = await this.db
+    const found = await this.db.from('student_channels').select('id').eq('student_id', studentId).maybeSingle();
+    if (found.error) throw dbError(found.error);
+    if (found.data) return found.data.id;
+    const opened = await this.db
       .from('student_channels')
-      .upsert({ student_id: studentId }, { onConflict: 'student_id' })
-      .select('id')
-      .single();
-    if (error) throw dbError(error);
-    return data.id;
+      .upsert({ student_id: studentId }, { onConflict: 'student_id', ignoreDuplicates: true })
+      .select('id');
+    if (opened.error) throw dbError(opened.error);
+    return opened.data[0]?.id ?? this.channelOf(studentId);
   }
 
   /** CHANNEL_PAGE_SIZE + 1 messages older than `before` (all when absent), newest first. */
@@ -73,10 +75,11 @@ export class ChannelQueries {
     return data;
   }
 
-  /** Unread and last message per channel of these students, for one participant. */
-  async summaries(input: { profileId: string; studentIds: readonly string[] }): Promise<ChannelSummaryRow[]> {
+  /** Unread (messages of `countRoles`, the other side) and last message per channel of these students. */
+  async summaries(input: { profileId: string; studentIds: readonly string[]; countRoles: readonly ChannelSenderRole[] }): Promise<ChannelSummaryRow[]> {
     if (input.studentIds.length === 0) return [];
-    const { data, error } = await this.db.rpc('channel_summaries', { p_profile: input.profileId, p_student_ids: [...input.studentIds] });
+    const args = { p_profile: input.profileId, p_student_ids: [...input.studentIds], p_count_roles: [...input.countRoles] };
+    const { data, error } = await this.db.rpc('channel_summaries', args);
     if (error) throw dbError(error);
     return data;
   }

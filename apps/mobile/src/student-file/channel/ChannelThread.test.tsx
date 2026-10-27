@@ -14,6 +14,7 @@ jest.mock('@/core/lib/http/api', () => ({
 
 const c = t.studentChannel;
 const page = (over: Partial<ChannelPage> = {}): ChannelPage => ({
+  student_name: 'سلمى',
   messages: [
     { id: 'm1', body: 'متى الحلقة؟ https://example.org/plan', sender_role: 'guardian', sender_name: 'أم سلمى', mine: false, created_at: '2026-10-27T10:00:00.000Z' },
     { id: 'm2', body: 'غدًا إن شاء الله', sender_role: 'teacher', sender_name: 'أبرار', mine: true, created_at: '2026-10-27T10:05:00.000Z' },
@@ -34,7 +35,7 @@ test('a participant reads oldest first with links clickable, writes, and marks t
   expect(screen.getByRole('link', { name: 'https://example.org/plan' })).toBeTruthy();
   expect(screen.getByText(c.you)).toBeTruthy();
   expect(mockApiFetch).toHaveBeenCalledWith('/teachers/me/channels/s1/messages');
-  await waitFor(() => expect(mockApiSend).toHaveBeenCalledWith('POST', '/teachers/me/channels/s1/read'));
+  await waitFor(() => expect(mockApiSend).toHaveBeenCalledWith('POST', '/teachers/me/channels/s1/read', { at: '2026-10-27T10:05:00.000Z' }));
   await fireEvent.changeText(screen.getByLabelText(c.messageLabel), '  شكرًا  ');
   await fireEvent.press(screen.getByRole('button', { name: c.send }));
   await waitFor(() => expect(mockApiSend).toHaveBeenCalledWith('POST', '/teachers/me/channels/s1/messages', { body: 'شكرًا' }));

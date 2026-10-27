@@ -25,10 +25,21 @@ export function toMessageView(row: ChannelMessageRow, ctx: { me: string; names: 
 }
 
 /** A page read newest first (one extra row = more to load), shown oldest first. */
-export function toPage(rows: readonly ChannelMessageRow[], ctx: { me: string; names: ReadonlyMap<string, string>; readOnly: boolean }): ChannelPage {
-  const shown = rows.slice(0, CHANNEL_PAGE_SIZE).reverse();
-  return { messages: shown.map((r) => toMessageView(r, ctx)), has_more: rows.length > CHANNEL_PAGE_SIZE, read_only: ctx.readOnly };
+interface PageContext {
+  me: string;
+  names: ReadonlyMap<string, string>;
+  readOnly: boolean;
+  studentName: string;
 }
+
+export function toPage(rows: readonly ChannelMessageRow[], ctx: PageContext): ChannelPage {
+  const shown = rows.slice(0, CHANNEL_PAGE_SIZE).reverse();
+  const messages = shown.map((r) => toMessageView(r, ctx));
+  return { student_name: ctx.studentName, messages, has_more: rows.length > CHANNEL_PAGE_SIZE, read_only: ctx.readOnly };
+}
+
+/** What counts as unread for a participant: the other side's messages (a co-teacher's never). */
+export const unreadRolesFor = (role: ChannelSenderRole | null): ChannelSenderRole[] => (role === 'teacher' ? ['guardian', 'student'] : ['teacher']);
 
 /** The teacher's list: newest activity first, then by name (Arabic collation). */
 export function toTeacherRows(students: readonly ChannelStudent[], summaries: readonly ChannelSummaryRow[]): TeacherChannelRow[] {

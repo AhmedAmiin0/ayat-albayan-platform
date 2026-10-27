@@ -15,15 +15,16 @@ import { useChannel, useMarkRead, useSendChannel, type ChannelRef } from './chan
 const phoneTz = (): string => Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC';
 
 /**
- * One student's channel (docs/31 §2): oldest first, «الرسائل الأقدم» pages back, polled while shown. A
- * participant writes and marks the thread read; a monitor gets «للاطلاع فقط» and no composer.
+ * One student's channel (docs/31 §2): an inverted list, so it opens on the newest message and a new one
+ * lands in view; «الرسائل الأقدم» at the top pages back; polled while shown. A participant writes and
+ * marks read up to the newest message; a monitor gets «للاطلاع فقط» and no composer.
  */
 export function ChannelThread({ refs }: { refs: ChannelRef }) {
   const { color } = useTheme();
   const query = useChannel(refs);
   const send = useSendChannel(refs);
   const writes = CHANNEL_WRITES[refs.audience] && query.data?.pages[0]?.read_only !== true;
-  useMarkRead(refs, writes ? query.data?.pages[0]?.messages.at(-1)?.id : undefined);
+  useMarkRead(refs, writes ? query.data?.pages[0]?.messages.at(-1)?.created_at : undefined);
   if (!query.data) {
     return query.isError ? (
       <ErrorState message={t.studentChannel.loadFailed} onRetry={() => void query.refetch()} />
@@ -32,22 +33,29 @@ export function ChannelThread({ refs }: { refs: ChannelRef }) {
     );
   }
   const tz = phoneTz();
+  const newestFirst = threadMessages(query.data.pages).reverse();
   return (
     <KeyboardFrame style={{ flex: 1 }}>
       {!writes ? <Note>{t.studentChannel.readOnly}</Note> : null}
-      <FlatList
-        style={{ flex: 1 }}
-        contentContainerStyle={{ gap: 8, paddingVertical: 8 }}
-        data={threadMessages(query.data.pages)}
-        keyExtractor={(m) => m.id}
-        renderItem={({ item }) => <ChannelBubble message={item} tz={tz} />}
-        ListHeaderComponent={
-          query.hasNextPage ? (
-            <Button variant="ghost" label={t.studentChannel.older} busy={query.isFetchingNextPage} onPress={() => void query.fetchNextPage()} />
-          ) : null
-        }
-        ListEmptyComponent={<EmptyState title={t.studentChannel.empty} />}
-      />
+      {newestFirst.length === 0 ? (
+        <View style={{ flex: 1 }}>
+          <EmptyState title={t.studentChannel.empty} />
+        </View>
+      ) : (
+        <FlatList
+          inverted
+          style={{ flex: 1 }}
+          contentContainerStyle={{ gap: 8, paddingVertical: 8 }}
+          data={newestFirst}
+          keyExtractor={(m) => m.id}
+          renderItem={({ item }) => <ChannelBubble message={item} tz={tz} />}
+          ListFooterComponent={
+            query.hasNextPage ? (
+              <Button variant="ghost" label={t.studentChannel.older} busy={query.isFetchingNextPage} onPress={() => void query.fetchNextPage()} />
+            ) : null
+          }
+        />
+      )}
       {writes ? (
         <View style={{ paddingBottom: 8 }}>
           <ChannelComposer pending={send.isPending} failed={send.isError} onSend={(body) => send.mutateAsync(body)} />

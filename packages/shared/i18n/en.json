@@ -6470,6 +6470,7 @@
     "open": "Chat",
     "back": "All students",
     "students": "Students",
-    "noMessageYet": "No messages yet"
+    "noMessageYet": "No messages yet",
+    "hide": "Hide the chat"
   }
 }

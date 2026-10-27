@@ -31,7 +31,7 @@ describe('ChannelThread (docs/31 §2)', () => {
     expect(screen.getByText(c.you)).toBeTruthy();
     expect(screen.getByText(`أم سلمى · ${c.roles.guardian}`)).toBeTruthy();
     expect(apiFetch).toHaveBeenCalledWith('/portal/students/s1/channel/messages');
-    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', '/portal/students/s1/channel/read'));
+    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', '/portal/students/s1/channel/read', { at: '2026-10-27T10:05:00.000Z' }));
     fireEvent.change(screen.getByLabelText(c.messageLabel), { target: { value: '  شكرًا  ' } });
     fireEvent.click(screen.getByRole('button', { name: c.send }));
     await waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', '/portal/students/s1/channel/messages', { body: 'شكرًا' }));

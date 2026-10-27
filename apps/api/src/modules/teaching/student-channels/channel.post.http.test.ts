@@ -45,21 +45,25 @@ describe('student channel messages over HTTP', () => {
     const res = await t.call('GET', `${TEACHER}/messages?before=2026-10-28T00:00:00.000Z`, 'teacher');
     expect(res.json().messages.map((m: { id: string; mine: boolean; sender_name: string }) => [m.id, m.mine, m.sender_name])).toEqual([['m1', false, 'أم سلمى'], ['b', true, 'أبرار']]);
     expect(res.body).not.toMatch(/p-t1|p-g|phone|email/);
+    expect(res.json().student_name).toBe('سلمى');
     expect(t.queries.page).toHaveBeenCalledWith({ channelId: CH, before: '2026-10-28T00:00:00.000Z' });
     expect((await t.call('GET', `${TEACHER}/messages?before=soon`, 'teacher')).statusCode).toBe(400);
   });
 
-  it('read marks: a participant only; unread counts are per participant', async () => {
-    expect((await t.call('POST', `${PORTAL}/read`, 'guardian')).statusCode).toBe(204);
-    expect(t.queries.markRead).toHaveBeenCalledWith(expect.objectContaining({ profileId: 'p-g' }));
+  it('read marks: up to the newest message shown (never later than now), a participant only; unread is the other side', async () => {
+    expect((await t.post(`${PORTAL}/read`, 'guardian', { at: '2026-10-20T10:05:00.000Z' })).statusCode).toBe(204);
+    expect(t.queries.markRead).toHaveBeenCalledWith({ channelId: CH, profileId: 'p-g', at: '2026-10-20T10:05:00.000Z' });
+    expect((await t.post(`${TEACHER}/read`, 'teacher', { at: '2999-01-01T00:00:00.000Z' })).statusCode).toBe(204);
+    expect(Date.parse(t.queries.markRead.mock.calls.at(-1)?.[0].at ?? '')).toBeLessThan(Date.parse('2999-01-01T00:00:00.000Z'));
+    expect((await t.post(`${PORTAL}/read`, 'guardian', { at: 'later' })).statusCode).toBe(400);
     expect((await t.call('GET', `${PORTAL}/unread`, 'guardian')).json()).toEqual({ unread: 2 });
-    expect(t.queries.summaries).toHaveBeenLastCalledWith({ profileId: 'p-g', studentIds: [ST] });
+    expect(t.queries.summaries).toHaveBeenLastCalledWith({ profileId: 'p-g', studentIds: [ST], countRoles: ['teacher'] });
   });
 
   it('the teacher list: current students with the last message and their own unread count', async () => {
     const res = await t.call('GET', '/teachers/me/channels', 'teacher');
     expect(res.json()).toEqual([{ student_id: ST, student_name: 'سلمى', student_code: 'AB-0201', unread: 2, last_message: { body: 'السلام عليكم', sender_role: 'guardian', created_at: '2026-10-27T10:00:00.000Z' } }]);
     expect(t.queries.teacherStudentIds).toHaveBeenCalledWith('t1');
-    expect(t.queries.summaries).toHaveBeenCalledWith({ profileId: 'p-t1', studentIds: [ST] });
+    expect(t.queries.summaries).toHaveBeenCalledWith({ profileId: 'p-t1', studentIds: [ST], countRoles: ['guardian', 'student'] });
   });
 });

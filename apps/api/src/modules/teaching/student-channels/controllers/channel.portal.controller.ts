@@ -1,4 +1,4 @@
-import { channelPageQuerySchema, channelPostSchema, type ChannelMessageView, type ChannelPage, type ChannelUnread } from '@ab/shared';
+import { channelPageQuerySchema, channelPostSchema, channelReadSchema, type ChannelMessageView, type ChannelPage, type ChannelUnread } from '@ab/shared';
 import { Body, Controller, Get, HttpCode, Param, ParseUUIDPipe, Post, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser, Permissions } from '../../../../common/auth/decorators';
@@ -34,8 +34,9 @@ export class PortalChannelController {
 
   @Post('read')
   @HttpCode(204)
-  async read(@Param('id', UUID) studentId: string, @CurrentUser() user: AuthUser): Promise<void> {
-    await this.channels.read(await this.access.family(user, studentId));
+  async read(@Param('id', UUID) studentId: string, @Body() body: unknown, @CurrentUser() user: AuthUser): Promise<void> {
+    const { at } = parseOrThrow(channelReadSchema, body ?? {});
+    await this.channels.read(await this.access.family(user, studentId), at);
   }
 
   @Get('unread')

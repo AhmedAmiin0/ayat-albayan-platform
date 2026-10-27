@@ -5,6 +5,7 @@ export {
   channelKey,
   channelMessagesPath,
   channelReadPath,
+  channelTimeText,
   olderCursor,
   portalUnreadPath,
   TEACHER_CHANNELS_PATH,

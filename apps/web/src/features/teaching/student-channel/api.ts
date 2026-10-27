@@ -32,7 +32,12 @@ export const channelQuery = ({ audience, studentId }: ChannelRef) =>
 export const sendChannelMessage = (ref: ChannelRef & { body: string }) =>
   apiSend<ChannelMessageView>('POST', channelMessagesPath(ref), { body: ref.body });
 
-export const markChannelRead = ({ audience, studentId }: ChannelRef) => apiSend<unknown>('POST', channelReadPath(audience, studentId));
+/** Read up to the newest message shown (the API never moves the mark past now). */
+export const markChannelRead = ({ audience, studentId, at }: ChannelRef & { at: string }) =>
+  apiSend<unknown>('POST', channelReadPath(audience, studentId), { at });
+
+/** The list and badge keys a read or a send changes (never the open thread itself). */
+export const CHANNEL_COUNT_KEYS = [['channel', 'teacher', 'list'], ['channel', 'portal']] as const;
 
 export const teacherChannelsQuery = queryOptions({
   queryKey: ['channel', 'teacher', 'list'],

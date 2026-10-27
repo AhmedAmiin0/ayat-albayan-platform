@@ -14,7 +14,7 @@ function answer(me: unknown) {
     if (path.endsWith('/lessons')) return { lessons: path.includes('/s2/') ? [] : [lesson()] };
     if (path.endsWith('/reports')) return { reports: [] };
     if (path.endsWith('/channel/unread')) return { unread: 3 };
-    if (path.endsWith('/channel/messages')) return { messages: [], has_more: false, read_only: false };
+    if (path.endsWith('/channel/messages')) return { student_name: 'سلمى', messages: [], has_more: false, read_only: false };
     return { package: null };
   });
 }

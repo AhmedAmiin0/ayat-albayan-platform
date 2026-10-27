@@ -11,8 +11,9 @@
 -- 3. merge_students re-points every FK to the kept student (migration 020): the merged student's messages
 --    move to the kept channel and its own channel row goes with it.
 -- 4. channel_teacher_ids(student): the current part of the teacher scope (teacher_student_ids, migration
---    165): the assigned teacher, or a teacher of an open lesson that has not ended. A teacher change moves
---    the channel at once: the new teacher reads the whole history, the old one nothing.
+--    165): the assigned teacher, or the teacher of an open lesson running now or starting within a day (a
+--    substitute on the day; a lesson booked weeks ahead with another teacher grants nothing yet). A teacher
+--    change moves the channel at once: the new teacher reads the whole history, the old one nothing.
 -- 5. RLS (the second wall): participants and the owning assistant read; the admin reads; no client writes.
 -- 6. student_channels.monitor: seeded for the system admin (the API grants it to admins anyway).
 -- Idempotent.
@@ -82,7 +83,7 @@ create or replace function public.channel_teacher_ids(p_student_id uuid) returns
   select l.teacher_id from public.lessons l
     join public.lesson_students ls on ls.lesson_id = l.id
    where ls.student_id = p_student_id and l.status in ('scheduled', 'confirmed') and l.ends_at >= now()
-     and l.teacher_id is not null
+     and l.starts_at < now() + interval '1 day' and l.teacher_id is not null
 $$;
 revoke execute on function public.channel_teacher_ids(uuid) from public, anon, authenticated;
 grant execute on function public.channel_teacher_ids(uuid) to service_role;
@@ -95,18 +96,20 @@ create or replace function public.teacher_channel_student_ids(p_teacher_id uuid)
   select ls.student_id from public.lessons l
     join public.lesson_students ls on ls.lesson_id = l.id
    where l.teacher_id = p_teacher_id and l.status in ('scheduled', 'confirmed') and l.ends_at >= now()
+     and l.starts_at < now() + interval '1 day'
 $$;
 revoke execute on function public.teacher_channel_student_ids(uuid) from public, anon, authenticated;
 grant execute on function public.teacher_channel_student_ids(uuid) to service_role;
 
--- Per channel of these students, for one participant: unread (others' messages after their last read) and
--- the last message. Service role (the API decided who may ask).
-create or replace function public.channel_summaries(p_profile uuid, p_student_ids uuid[])
+-- Per channel of these students, for one participant: unread (messages of the other side, p_count_roles,
+-- after their last read) and the last message. Service role (the API decided who may ask).
+create or replace function public.channel_summaries(p_profile uuid, p_student_ids uuid[], p_count_roles text[])
   returns table (student_id uuid, channel_id uuid, unread int, last_body text, last_role text, last_at timestamptz)
   language sql stable security definer set search_path = '' as $$
   select c.student_id, c.id,
     (select count(*)::int from public.channel_messages m
       where m.channel_id = c.id and m.sender_profile_id is distinct from p_profile
+        and m.sender_role = any(p_count_roles)
         and m.created_at > coalesce((select r.last_read_at from public.channel_reads r
                                       where r.channel_id = c.id and r.profile_id = p_profile), '-infinity')),
     l.body, l.sender_role, l.created_at
@@ -115,8 +118,8 @@ create or replace function public.channel_summaries(p_profile uuid, p_student_id
                       where m.channel_id = c.id order by m.created_at desc limit 1) l on true
   where c.student_id = any(p_student_ids)
 $$;
-revoke execute on function public.channel_summaries(uuid, uuid[]) from public, anon, authenticated;
-grant execute on function public.channel_summaries(uuid, uuid[]) to service_role;
+revoke execute on function public.channel_summaries(uuid, uuid[], text[]) from public, anon, authenticated;
+grant execute on function public.channel_summaries(uuid, uuid[], text[]) to service_role;
 
 -- RLS helper: may the caller read this channel? (participant, owning assistant, admin)
 create or replace function public.can_read_channel(p_channel uuid) returns boolean

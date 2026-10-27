@@ -31,6 +31,13 @@ describe('webNotificationPath (R-NOT-01)', () => {
     expect(webNotificationPath({ kind: 'meeting_invite' }, 'assistant')).toBe('/assistant');
   });
 
+  it('channel_message: the teacher’s «رسائل الطلاب» on that student (docs/31 §2), home for anyone else', () => {
+    const id = 'a1b2c3d4-0000-4000-8000-000000000001';
+    expect(webNotificationPath({ kind: 'channel_message', studentId: id }, 'teacher')).toBe(`/teacher/messages?student=${id}`);
+    expect(webNotificationPath({ kind: 'channel_message' }, 'teacher')).toBe('/teacher/messages');
+    expect(webNotificationPath({ kind: 'channel_message', studentId: id }, 'admin')).toBe('/admin');
+  });
+
   it('google_sync_alert: «مزامنة Google» for admins (docs/26b §1), home for anyone else', () => {
     expect(webNotificationPath({ kind: 'google_sync_alert' }, 'admin')).toBe('/admin/settings/google');
     expect(webNotificationPath({ kind: 'google_sync_alert' }, 'teacher')).toBe('/teacher');

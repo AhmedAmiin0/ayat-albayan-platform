@@ -1,6 +1,8 @@
-import { clockTime, splitLinks, type ChannelMessageView } from '@ab/shared';
+import { channelTimeText } from '@ab/client-core';
+import { splitLinks, type ChannelMessageView } from '@ab/shared';
 import { Linking, View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
+import { locale } from '@/core/lib/i18n/locale';
 import { shape, type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 
@@ -36,7 +38,7 @@ export function ChannelBubble({ message: m, tz }: { message: ChannelMessageView;
           ),
         )}
       </AppText>
-      <AppText style={{ ...small, color: color.ink3, textAlign: 'right' }}>{clockTime(new Date(m.created_at), tz)}</AppText>
+      <AppText style={{ ...small, color: color.ink3, textAlign: 'right' }}>{channelTimeText({ iso: m.created_at, tz, now: new Date(), locale })}</AppText>
     </View>
   );
 }
