@@ -74,7 +74,7 @@ Sends to families: false
 6. apps/mobile/src/inbox/messages/text/LinkedText.tsx:59-76: render the body through ContentText source={text}, keeping selectable and a11y, and delete writingDirection at :68. LinkSpan at :33: drop writingDirection and render the link text as part.text + '‎' (display only, href unchanged), skipped when the body is selectable. Do not use ltr() there. Update LinkedText.test.tsx and add an Arabic-body case.
 7. QuoteBlock.tsx:52-57, MessageMenu.tsx:65-75 (source quoteText(quoteOf(m))), copy-download/CopySheet.tsx:53-66 (source request?.text ?? '', no marks added, still selectable) and resend/ResendSheet.tsx:48 (source RESEND_TEXT): use ContentText and delete writingDirection. Add ResendSheet.en.test.tsx asserting textAlign 'right'. The resend text that is sent stays unchanged.
 8. apps/mobile/src/inbox/messages/components/QuoteStrip.tsx:37-44: split into a row of [sender AppText `${sender} ·`, flexShrink 0, numberOfLines 1][ContentText source={text}, flex 1, numberOfLines 1]. Move the accessibilityLabel to the row and delete writingDirection. CloseIcon is not mirrored.
-9. apps/mobile/src/inbox/thread/calls/screen/Initials.tsx:7: `name.match(/\p{L}/u)?.[0] ?? '?'`. Unit tests: initialOf(ltr('+966 55 214 7730')) is '?', 'أحمد علي' gives 'أ', blank gives '?'.
+9. apps/mobile/src/inbox/thread/calls/screen/Initials.tsx:7: `name.match(/\p{L}/u)?.[0] ?? '?'`. Unit tests: initialOf(ltr('+966 50 000 0001')) is '?', 'أحمد علي' gives 'أ', blank gives '?'.
 
 ## Package rtl-screens (S) — branch `cloud/rtl-screens`
 
