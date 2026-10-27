@@ -23,7 +23,7 @@ interface HeroCardProps {
 /**
  * «الحلقة التالية» (docs/29 §3): the lesson under way, else the next one, on the lapis wash: the lead
  * and the status chip, the Riyadh time large beside the students, then «تأكيد الحلقة» / «ادخل الحلقة»
- * and «التفاصيل». The live classroom of the old «جلسات مباشرة» lives here and in the sheet.
+ * and «التفاصيل» (no confirm when read-only). The live classroom of the old «جلسات مباشرة» lives here and in the sheet.
  */
 export function HeroCard({ hero, busy = false, error, onConfirm, onDetails }: HeroCardProps) {
   const { color } = useTheme();

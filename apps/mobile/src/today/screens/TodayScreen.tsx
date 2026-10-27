@@ -1,8 +1,8 @@
 import type { LessonView } from '@ab/shared';
 import { useState } from 'react';
-import { LessonDetailsSheet } from '@/calendar/details/LessonDetailsSheet';
+import { LessonDetailsSheet } from '@/calendar';
 import { LessonRowActions } from '@/calendar/agenda/LessonRowActions';
-import { JoinClassroomButton } from '@/classroom/links/JoinClassroomButton';
+import { JoinClassroomButton } from '@/classroom';
 import { EditTimeSheet } from '@/edit-time/components/EditTimeSheet';
 import { RescheduleSheet } from '@/teaching/reschedule/RescheduleSheet';
 import { HeroCard } from '../hero/HeroCard';

@@ -20,7 +20,7 @@ interface TodayHeaderProps {
 
 /**
  * The calm header (docs/29 §1): the greeting by the Riyadh clock, «اليوم» 30/40, the date line without
- * the year, and the bell as a 44pt raised circle at the end side.
+ * the year, and the bell as a 44pt raised circle at the end side when the tree shows one.
  */
 export function TodayHeader({ now, tree, stale }: TodayHeaderProps) {
   const { color } = useTheme();

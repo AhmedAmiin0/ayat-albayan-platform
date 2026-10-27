@@ -17,7 +17,7 @@ interface EndedFoldProps<L extends TodayLesson> {
 
 /**
  * The day's ended lessons as one quiet row «انتهت 3 حلقات اليوم» (docs/29 §5); a tap unfolds them as
- * compact rows, each still opening the sheet («عدّل الوقت», R-SCH-11).
+ * compact rows, each still opening the tree's sheet («عدّل الوقت» for the admin, R-SCH-11).
  */
 export function EndedFold<L extends TodayLesson>({ lessons, onOpen, open = false }: EndedFoldProps<L>) {
   const { color } = useTheme();
