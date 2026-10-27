@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
 import { withSql } from '../support/schedule';
 
-// The update trigger of migration 20261028000892 (thread_summaries) must refresh a phone on every status / text tick,
+// The update trigger of migration 20261028000921 (thread_summaries) must refresh a phone on every status / text tick,
 // with no unlocked "is it the newest?" pre-filter: here one session deletes the phone's newest row
 // while another ticks the next row; once both commit the summary shows the tick. Two real sessions
 // (committed rows, deleted at the end); database only, no message is ever sent.

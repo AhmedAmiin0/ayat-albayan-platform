@@ -2,18 +2,18 @@ import { readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 
-// Migrations 20261028000892 (thread_summaries behind v_threads) and 863 (the catch-up's partial indexes)
+// Migrations 20261028000921 (thread_summaries behind v_threads) and 863 (the catch-up's partial indexes)
 // read as text: idempotent, RLS on the new table, triggers before the backfill, the same v_threads columns.
 // The rows themselves are proven equal in e2e/tests/thread-summaries.sql.spec.ts (a real database).
 const dir = join(__dirname, '../../../../../../../packages/db/supabase/migrations');
 const read = (f: string) => readFileSync(join(dir, f), 'utf8').replace(/--.*$/gm, '');
-const SUMMARY = read('20261028000892_thread_summaries.sql');
-const CATCHUP = read('20261028000893_external_catchup_index.sql');
+const SUMMARY = read('20261028000921_thread_summaries.sql');
+const CATCHUP = read('20261028000922_external_catchup_index.sql');
 
-describe('migration 20261028000892: thread_summaries', () => {
+describe('migration 20261028000921: thread_summaries', () => {
   it('sorts after every migration of develop at the time (through 861)', () => {
     const all = readdirSync(dir).filter((f) => f.endsWith('.sql')).sort();
-    expect(all.indexOf('20261028000892_thread_summaries.sql')).toBeGreaterThan(all.indexOf('20261028000861_report_pdf_queue_idx.sql'));
+    expect(all.indexOf('20261028000921_thread_summaries.sql')).toBeGreaterThan(all.indexOf('20261028000861_report_pdf_queue_idx.sql'));
   });
 
   it('is re-runnable: if not exists, or replace, drop … if exists before every create trigger / policy', () => {
@@ -56,11 +56,11 @@ describe('migration 20261028000892: thread_summaries', () => {
   });
 
   it('carries its rollback note', () => {
-    expect(readFileSync(join(dir, '20261028000892_thread_summaries.sql'), 'utf8')).toContain('MANUAL ROLLBACK');
+    expect(readFileSync(join(dir, '20261028000921_thread_summaries.sql'), 'utf8')).toContain('MANUAL ROLLBACK');
   });
 });
 
-describe('migration 20261028000893: the external catch-up indexes', () => {
+describe('migration 20261028000922: the external catch-up indexes', () => {
   it('two plain partial indexes matching newestExternal’s filter, by number and by line', () => {
     const where = "where direction = 'outbound' and created_by is null and attempts = 0 and wa_message_id is not null";
     expect(CATCHUP).toContain(`create index if not exists messages_external_number_idx on public.messages (number_id, created_at desc)\n  ${where}`);

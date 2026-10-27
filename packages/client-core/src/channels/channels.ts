@@ -19,7 +19,7 @@ export const THREAD_FULL_MS = 60_000;
 
 /**
  * The chats list re-reads this often while on screen: 30 s while GET /threads re-aggregated every
- * message (server audit 2026-10-27), 15 s once it reads thread_summaries (migration 20261028000892).
+ * message (server audit 2026-10-27), 15 s once it reads thread_summaries (migration 20261028000921).
  */
 export const INBOX_LIST_REFRESH_MS = 15_000;
 
