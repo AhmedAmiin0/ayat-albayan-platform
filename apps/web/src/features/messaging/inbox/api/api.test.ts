@@ -1,5 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { INBOX_REFRESH_MS, threadFileQuery, threadQuery, threadsQuery } from './api';
+import { INBOX_REFRESH_MS, inboxPollMs, threadFileQuery, threadQuery, threadsQuery } from './api';
+import { inboxLive } from './live';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
@@ -28,7 +29,16 @@ describe('threadQuery polls only while the window has focus (W13)', () => {
 
   it('the list keeps a numeric interval, focused or not (unread rows still rise)', () => {
     vi.spyOn(document, 'hasFocus').mockReturnValue(false);
-    expect(threadsQuery({ page: 1 }).refetchInterval).toBe(INBOX_REFRESH_MS);
+    expect(threadsQuery({ page: 1 }).refetchInterval).toBe(inboxPollMs);
+    expect(inboxPollMs()).toBe(INBOX_REFRESH_MS);
+  });
+
+  it('realtime connected: every poll slows to the 60 s fallback; dropped: the inbox interval again', () => {
+    vi.spyOn(document, 'hasFocus').mockReturnValue(true);
+    inboxLive.setLive(true);
+    expect([inboxPollMs(), interval(threadQuery('+966501234567').refetchInterval)]).toEqual([60_000, 60_000]);
+    inboxLive.setLive(false);
+    expect(interval(threadQuery('+966501234567').refetchInterval)).toBe(INBOX_REFRESH_MS);
   });
 });
 

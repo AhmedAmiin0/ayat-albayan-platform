@@ -11,17 +11,21 @@ import type {
   ThreadText,
   ThreadView,
 } from '@ab/shared';
+import { liveInterval } from '@ab/client-core';
 import { infiniteQueryOptions, keepPreviousData, queryOptions } from '@tanstack/react-query';
 import type { LeadRow, Page } from '@/features/sales/leads/types';
 import { apiFetch, apiSend } from '@/lib/http/api';
 import { env } from '@/lib/http/env';
 import type { InboxSearch } from '../shared/search';
+import { inboxLive } from './live';
 
 // Inbox routes (docs/12 §4: H1–H4, M1–M2, L1–L2) plus the existing lead routes.
 
 export const THREADS_PAGE_SIZE = 30;
 /** New WhatsApp messages arrive by webhook; the open inbox polls for them (10 s; e2e 1 s). */
 export const INBOX_REFRESH_MS = env.inboxRefreshMs;
+/** The inbox's poll: INBOX_FALLBACK_MS while realtime is connected (its events re-read sooner), else the above. */
+export const inboxPollMs = () => liveInterval(inboxLive.isLive(), INBOX_REFRESH_MS);
 
 export const threadsQuery = (s: InboxSearch) => {
   const params = new URLSearchParams({ page: String(s.page), pageSize: String(THREADS_PAGE_SIZE) });
@@ -36,7 +40,7 @@ export const threadsQuery = (s: InboxSearch) => {
     queryKey: ['threads', 'list', params.toString()],
     queryFn: () => apiFetch<Page<ThreadView>>(`/threads?${params}`),
     placeholderData: keepPreviousData,
-    refetchInterval: INBOX_REFRESH_MS,
+    refetchInterval: inboxPollMs,
   });
 };
 
@@ -57,7 +61,7 @@ export const threadQuery = (phone: string) =>
       apiFetch<ThreadDetail>(pageParam ? `${threadPath(phone)}?before=${encodeURIComponent(pageParam)}` : threadPath(phone)),
     initialPageParam: '',
     getNextPageParam: (last) => (last.has_more ? last.messages[0]?.created_at : undefined),
-    refetchInterval: () => (document.hasFocus() ? INBOX_REFRESH_MS : false),
+    refetchInterval: () => (document.hasFocus() ? inboxPollMs() : false),
   });
 
 /** A file in a chat bubble as a signed URL of our own copy (ThreadMediaService.file). */

@@ -13,6 +13,7 @@ jest.mock('@/auth/use-permissions', () => ({
 }));
 jest.mock('@/core/push/usePushRegistration', () => ({ usePushRegistration: () => undefined }));
 jest.mock('@/core/nav/use-inbox-badge', () => ({ useInboxBadge: () => undefined }));
+jest.mock('@/inbox', () => ({ useInboxRealtime: () => undefined }));
 
 const tree = {
   'sales/_layout': SalesTabs,
