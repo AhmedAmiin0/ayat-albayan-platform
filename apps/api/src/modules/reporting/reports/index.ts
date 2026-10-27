@@ -1,3 +1,5 @@
+export { ReportFilesService } from './files/report-files.service';
+export { historyResponse } from './history/report-history.mapper';
 export {
   type HistoryLesson,
   type HistoryRow,

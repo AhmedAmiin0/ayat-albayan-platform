@@ -12,6 +12,7 @@ import { StorageService } from '../../../../common/storage/storage.service';
 import { reportFileName } from '../../report-pdf/report-ready';
 import { badRequest, conflict } from '../../../../common/http/errors';
 import { ReportAttachmentsQueries } from './report-attachments.queries';
+import type { ReportRow } from '../report-row';
 import { ReportGate } from '../submit/report-gate';
 
 type FileRef = { id: string; user: AuthUser };
@@ -31,7 +32,17 @@ export class ReportFilesService {
    * guardian gets on WhatsApp («AB-0183_2026-09-29_تقرير-الحلقة.pdf»); 409 pdf_not_ready before.
    */
   async pdfUrl({ id, user }: FileRef): Promise<SignedDownload> {
-    const row = await this.gate.load(id, user);
+    return this.signPdf(await this.gate.load(id, user));
+  }
+
+  /** Sales' «تفاصيل الطالب» (docs/16 row 36): the caller checked the student is hers; another student's report is 404. */
+  async studentPdfUrl({ id, studentId }: { id: string; studentId: string }): Promise<SignedDownload> {
+    const row = await this.gate.row(id);
+    if (!row || row.student_id !== studentId || row.status !== 'submitted') throw new NotFoundException();
+    return this.signPdf(row);
+  }
+
+  private async signPdf(row: ReportRow): Promise<SignedDownload> {
     if (row.pdf_status !== 'ready' || !row.pdf_path) throw conflict('pdf_not_ready');
     const name = await this.files.pdfName({ studentId: row.student_id, lessonId: row.lesson_id });
     const download = name ? reportFileName(name) : undefined;

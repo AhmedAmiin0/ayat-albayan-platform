@@ -873,7 +873,10 @@
       "time_edit_not_allowed": "The time of a cancelled or rescheduled lesson can't be edited",
       "date_in_future": "That time hasn't come yet, a correction must be for a time that has passed",
       "correction_cross_day": "The correction has to stay on the same day",
-      "reason_required": "Write the reason for the correction"
+      "reason_required": "Write the reason for the correction",
+      "lesson_ended": "This lesson has ended, so it cannot be rescheduled or cancelled",
+      "not_your_student": "This lesson is not one of your students'",
+      "lesson_not_found": "This lesson was not found; open the schedule again"
     },
     "cancelTitle": "Cancel lesson",
     "cancelBy": "Who cancelled?",
@@ -4109,6 +4112,41 @@
       "payments": "Linked payments",
       "noPayments": "No linked payments"
     },
+    "student": {
+      "title": "Student details",
+      "open": "Open {name}'s details",
+      "teacher": "Teacher: {name}",
+      "notFound": "This student is not one of yours or does not exist",
+      "subscription": "Subscription",
+      "current": "Current subscription",
+      "noSubscription": "No subscription yet",
+      "showPast": "Past subscriptions ({n})",
+      "hidePast": "Hide past subscriptions",
+      "attendance": "Attendance",
+      "attendanceHint": "The latest lessons whose time has passed, newest first",
+      "noAttendance": "No past lessons yet",
+      "totals": "Attended {present} · Absent {absent} · Excused {excused} · Cancelled {cancelled}",
+      "unmarkedCount": "Attendance not recorded: {n}",
+      "kind": {
+        "present": "Attended",
+        "absent": "Absent",
+        "excused": "Excused",
+        "cancelled": "Cancelled",
+        "unmarked": "Not recorded"
+      },
+      "reports": "Reports",
+      "reportsCount": "Reports: {n}"
+    },
+    "lessonActions": {
+      "reschedule": "Reschedule",
+      "cancel": "Cancel lesson",
+      "cancelTitle": "Cancel this lesson only? No message is sent to the family.",
+      "reason": "Reason (optional)",
+      "reasonHint": "e.g. the family is travelling",
+      "confirmCancel": "Confirm cancellation",
+      "cancelled": "Lesson cancelled",
+      "ownNote": "You can reschedule or cancel your students' lessons; anything else is done by the admin."
+    },
     "mobile": {
       "section": "Sales",
       "guardianLine": "Guardian: {name}",
@@ -4689,6 +4727,8 @@
       "lessons.status": "Confirm lessons and record their status",
       "lessons.write": "Cancel, reschedule and approve lesson changes",
       "booking.write": "Book lessons",
+      "lessons.reschedule": "Reschedule one lesson of their own students (sales)",
+      "lessons.cancel": "Cancel one lesson of their own students (sales)",
       "pricing.read": "View pricing",
       "tasks.manage": "Admin tasks",
       "classroom.join": "Join the online classroom",

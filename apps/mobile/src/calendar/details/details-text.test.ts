@@ -56,9 +56,11 @@ test('reportState: nothing before the start or on a cancelled lesson; then sent 
 
 test('where a tap goes per role: admin file and sent report, teacher reports, nothing for sales', () => {
   const sent = { ...yusuf, report: { id: 'r1', status: 'submitted' as const } };
-  expect(studentHref('admin', 's1')).toBe('/students/s1');
-  expect(studentHref('teacher', 's1')).toBe('/teacher/reports/student/s1');
-  expect(studentHref('sales', 's1')).toBeNull();
+  expect(studentHref('admin', { id: 's1' })).toBe('/students/s1');
+  expect(studentHref('teacher', { id: 's1' })).toBe('/teacher/reports/student/s1');
+  expect(studentHref('sales', { id: 's1' })).toBeNull();
+  // Sales opens «تفاصيل الطالب» of her own students only (docs/16 row 36).
+  expect(studentHref('sales', { id: 's1', mine: true })).toBe('/sales/students/s1');
   expect(reportHref('admin', pending, sent)).toBe('/students/reports/view/r1');
   expect(reportHref('admin', pending, yusuf)).toBeNull();
   expect(reportHref('teacher', pending, yusuf)).toBe('/teacher/reports/l-pending');

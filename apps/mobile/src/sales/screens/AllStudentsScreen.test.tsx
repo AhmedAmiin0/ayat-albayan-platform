@@ -1,4 +1,5 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
+import { router } from 'expo-router';
 import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
 import { ltr } from '@/core/ui/primitives/Ltr';
@@ -43,4 +44,16 @@ test('a failed read with nothing cached shows the error', async () => {
   mockApiFetch.mockRejectedValue(new Error('offline'));
   await renderWithQuery(<AllStudentsScreen />);
   expect(await screen.findByText(t.sales.loadFailed)).toBeTruthy();
+});
+
+test('one of hers (`mine`) is a button to «تفاصيل الطالب»; any other student stays a plain line', async () => {
+  mockApiFetch.mockResolvedValue(page([student({ mine: true }), student({ id: 'st2', name: 'جنى علي', code: 'AB-0190' })]));
+  await renderWithQuery(<AllStudentsScreen />);
+  await screen.findByText('يوسف أحمد');
+  // The header's «تحقق من التسجيل» / «رجوع» plus her one row.
+  expect(screen.getAllByRole('button')).toHaveLength(2);
+  await fireEvent.press(screen.getByText('جنى علي'));
+  expect(router.push).not.toHaveBeenCalled();
+  await fireEvent.press(screen.getByText('يوسف أحمد'));
+  expect(router.push).toHaveBeenCalledWith('/sales/students/st1');
 });
