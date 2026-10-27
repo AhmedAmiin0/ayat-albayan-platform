@@ -6,6 +6,7 @@ import { t } from '@/core/lib/i18n/i18n';
 import { supabase } from '@/core/lib/http/supabase';
 import { pickReceipt } from '@/payments/receipt';
 import { sendError } from '../messages/hooks/message-text';
+import { refreshInbox, touchInbox } from '../thread/hooks/inbox-sync';
 import { appendMessage, removeMessage, type ThreadCache, threadKey, threadPath } from '../thread/hooks/thread-cache';
 
 // The assistant sends a photo or a PDF from the chat (owner 2026-10-19 #1/#2), inside the 24 h
@@ -98,9 +99,11 @@ export function useSendFile(phone: string) {
   const queryKey = threadKey(phone);
   return useMutation({
     mutationFn: sendChatFile,
-    onSuccess: (row) =>
-      client.setQueryData<ThreadCache>(queryKey, (old) => appendMessage(removeMessage(old, row.id), row)),
-    onSettled: () => client.invalidateQueries({ queryKey }),
+    onSuccess: async (row) => {
+      client.setQueryData<ThreadCache>(queryKey, (old) => appendMessage(removeMessage(old, row.id), row));
+      await touchInbox(client, row);
+    },
+    onSettled: () => refreshInbox(client, phone),
   });
 }
 
