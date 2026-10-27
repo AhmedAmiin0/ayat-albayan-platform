@@ -6,6 +6,9 @@ import { useTabBarInset } from './tab-bar-inset';
 /** Rows run edge to edge: the list bleeds into Screen's 16pt gutter. Margin only: FlashList takes no padding on `style`. */
 const BLEED: ViewStyle = { flex: 1, marginHorizontal: -16 };
 const FILL: ViewStyle = { flex: 1 };
+// FlashList v2 keeps the first visible row in place on a data change unless told not to: a chat that
+// moves to the top of a newest-first list would land above the screen. FlatList never did (opt-in).
+const KEEP_OFF = { disabled: true } as const;
 
 /** FlashList lays rows out itself (no `gap`): a spacer between rows, one component per size so it stays stable. */
 const gaps = new Map<number, ComponentType>();
@@ -46,7 +49,7 @@ interface LazyListProps<T> extends Omit<FlashListProps<T>, 'style' | 'contentCon
  * The app's long list (owner 2026-10-27, «for long lazy loaded lists use flash list»): FlashList v2,
  * JS-only on the New Architecture, recycling rows instead of mounting one per item. Defaults: fills the
  * Screen and bleeds into its gutter, the last row clears the floating tab bar, the next page is asked for
- * half a screen before the end. `paged={usePagedList(…)}` wires its rows, next page and pull to refresh;
+ * two screens before the end (FlatList's default); a new top row is not scrolled away. `paged={usePagedList(…)}` wires its rows, next page and pull to refresh;
  * give it an EmptyState / ErrorState as ListEmptyComponent.
  * Rows should be React.memo with stable props, and renderItem a useCallback, or every row redraws.
  */
@@ -58,7 +61,8 @@ export function LazyList<T>({ endSpace = 0, bleed = true, tabBar = true, gap, pa
     <FlashList
       style={bleed ? BLEED : FILL}
       contentContainerStyle={content}
-      onEndReachedThreshold={0.5}
+      onEndReachedThreshold={2}
+      maintainVisibleContentPosition={KEEP_OFF}
       {...useGap(gap, props.ListHeaderComponent != null)}
       {...pagedProps(paged)}
       {...props}
