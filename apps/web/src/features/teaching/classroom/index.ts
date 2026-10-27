@@ -48,6 +48,5 @@ export {
 } from './room/livekit/errors';
 export { AssistantLessonRow } from './sessions/AssistantLessonRow';
 export { AssistantsManager } from './sessions/AssistantsManager';
-export { useNow } from './sessions/use-now';
 export { StudentJoinLink } from './student-link/StudentJoinLink';
 export { isLessonNow, viewerTz, windowStateAt } from './student-link/student-link';
