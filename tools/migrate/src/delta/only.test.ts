@@ -116,5 +116,8 @@ describe('skipUnresolvable / parseOnly / runScope', () => {
     ).toBeUndefined();
     const s = runScope({ only: 'students', createsOnly: true, from: '2026-10-27' }, '2026-10-26');
     expect(s.build.recreate?.fromUtc).toBe('2026-10-26T21:00:00.000Z');
+    expect(runScope({ createsOnly: false, expiryDays: 10 }, '2026-10-26').build.expiryDays).toBe(
+      10,
+    );
   });
 });

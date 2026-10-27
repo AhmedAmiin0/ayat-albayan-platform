@@ -54,7 +54,7 @@ export function mergeInto(into: Person, row: PersonRow): RowIssue[] {
   const spelling = personName(row.name);
   if (spelling !== personName(into.name) && !into.aliases.some((a) => personName(a) === spelling))
     into.aliases.push(row.name);
-  into.active ||= row.active;
+  into.claims = [...new Set([...into.claims, ...row.claims])];
   into.legacy ??= row.legacy;
   into.merged++;
   return issues;

@@ -62,7 +62,8 @@ export type IssueCode =
   | 'free_text_number' // A5 lesson number typed as text: ignored, derived
   | 'unmapped_value' // enum text with no mapping (status, package, grade …)
   | 'missing_field' // required value empty
-  | 'missing_ref'; // refers to a record that is neither planned nor in the target
+  | 'missing_ref' // refers to a record that is neither planned nor in the target
+  | 'status_downgrade'; // a student the old status rule made active, without a current subscription
 
 export type IssueSeverity = 'reject' | 'review' | 'warn';
 
