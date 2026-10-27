@@ -514,6 +514,7 @@
     "config-seed.sql.spec.ts",
     "edit-time.sql.spec.ts",
     "google-sync.sql.spec.ts",
+    "inbox-realtime.sql.spec.ts",
     "integration-config.sql.spec.ts",
     "login.spec.ts",
     "meeting-recordings-rls.sql.spec.ts",
