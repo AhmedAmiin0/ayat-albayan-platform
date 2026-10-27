@@ -37,6 +37,8 @@ export interface ThreadListFilter extends ListSort<ThreadSortKey> {
   list?: string | undefined;
   /** Teacher mode: only these phones (never empty — the caller answers an empty page itself). */
   phones?: readonly string[];
+  /** Never these phones: the academy's own numbers (OwnNumbers, set by ThreadReads for every role). */
+  hide?: readonly string[];
 }
 
 /**
@@ -45,6 +47,7 @@ export interface ThreadListFilter extends ListSort<ThreadSortKey> {
  */
 export function teacherListFilter(f: ThreadListFilter, phones: readonly string[]): ThreadListFilter {
   const out: ThreadListFilter = { page: f.page, pageSize: f.pageSize, unread: false, phones };
+  if (f.hide) out.hide = f.hide;
   if (f.search) out.search = f.search;
   if (f.sort === 'name') out.sort = 'name';
   if (f.sort === 'name' && f.dir) out.dir = f.dir;

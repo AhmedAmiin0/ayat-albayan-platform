@@ -1,4 +1,5 @@
 import type { Db } from '../../../../common/db/db.module';
+import { phoneList } from '../../numbers';
 import type { ThreadListFilter } from './threads.list';
 
 /**
@@ -11,12 +12,14 @@ export function isUnreadBadge(f: ThreadListFilter): boolean {
 
 /**
  * Threads with an inbound row no admin opened (thread_summaries.unread_count > 0, the partial index of
- * migration 20261028000850), within `phones` when given (teacher mode's scope). One row per phone, as
- * v_threads, whose leads / guardians / teachers joins are one-to-one (unique phones): the same count.
+ * migration 20261028000850), within `phones` when given (teacher mode's scope) and never the academy's
+ * own numbers (`hide`), as the list. One row per phone, as v_threads, whose leads / guardians / teachers
+ * joins are one-to-one (unique phones): the same count.
  */
-export async function unreadThreadCount(db: Db, phones?: readonly string[]): Promise<number> {
+export async function unreadThreadCount(db: Db, f: Pick<ThreadListFilter, 'phones' | 'hide'> = {}): Promise<number> {
   let query = db.from('thread_summaries').select('phone_e164', { count: 'exact', head: true }).gt('unread_count', 0);
-  if (phones) query = query.in('phone_e164', [...phones]);
+  if (f.phones) query = query.in('phone_e164', [...f.phones]);
+  if (f.hide?.length) query = query.not('phone_e164', 'in', phoneList(f.hide));
   const { count, error } = await query;
   if (error) throw new Error(`unread threads count failed: ${error.message}`);
   return count ?? 0;

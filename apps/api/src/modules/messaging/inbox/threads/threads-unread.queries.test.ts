@@ -28,10 +28,11 @@ describe('the unread badge fast path (GET /threads?unread=true&pageSize=1)', () 
     expect(f.calls.some((c) => c.table === 'v_threads')).toBe(false);
   });
 
-  it('a scope (teacher mode phones) narrows the count the same way the list would', async () => {
+  it('a scope (teacher mode phones) and the academy’s own numbers narrow the count as they narrow the list', async () => {
     const f = fakeDb({ thread_summaries: [{ count: 1 }] });
-    expect(await unreadThreadCount(f.db, ['+966500000001', '+966500000002'])).toBe(1);
+    expect(await unreadThreadCount(f.db, { phones: ['+966500000001', '+966500000002'], hide: ['+966500000009'] })).toBe(1);
     expect(f.argsOf('thread_summaries', 'in')).toEqual(['phone_e164', ['+966500000001', '+966500000002']]);
+    expect(f.argsOf('thread_summaries', 'not')).toEqual(['phone_e164', 'in', '("+966500000009")']);
   });
 
   it('any other list request still pages v_threads', async () => {

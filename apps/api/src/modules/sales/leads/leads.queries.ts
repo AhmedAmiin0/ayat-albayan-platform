@@ -1,9 +1,10 @@
 import type { Tables, TablesInsert, TablesUpdate } from '@ab/db';
 import { NO_ASSIGNEE, type LeadSortKey, type LeadSource, type LeadStatus, type ListSort } from '@ab/shared';
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, Optional } from '@nestjs/common';
 import { DB, type Db } from '../../../common/db/db.module';
 import { applySort, type SortSpec } from '../../../common/list-sort';
 import { guardianSearchFilter } from '../../people/guardians/guardians.mapper';
+import { OwnNumbers } from '../../messaging/numbers';
 import { pageRange, throwIfDbError, type PageQuery } from './http';
 
 export type LeadRow = Tables<'leads'>;
@@ -37,7 +38,11 @@ interface StatusMove {
 /** Thin supabase-js access for `leads`; business rules live in LeadsService. */
 @Injectable()
 export class LeadsQueries {
-  constructor(@Inject(DB) private readonly db: Db) {}
+  constructor(
+    @Inject(DB) private readonly db: Db,
+    /** The academy's own numbers: their lead (made before 2026-10-27) is kept but never listed or counted. */
+    @Optional() private readonly own?: OwnNumbers,
+  ) {}
 
   async findById(id: string): Promise<LeadRow | null> {
     const { data, error } = await this.db.from('leads').select('*').eq('id', id).maybeSingle();
@@ -92,7 +97,7 @@ export class LeadsQueries {
 
   /** Inbox order: latest inbound first (matches leads_status_idx), unless a sort is requested. */
   async list(f: LeadListFilter): Promise<{ items: LeadRow[]; total: number }> {
-    let query = this.db.from('leads').select('*', { count: 'exact' });
+    let query = this.listable(await this.ownNotIn());
     if (f.status) query = query.eq('status', f.status);
     if (f.source) query = query.eq('source', f.source);
     if (f.assignee === NO_ASSIGNEE) query = query.is('assigned_to', null);
@@ -106,5 +111,15 @@ export class LeadsQueries {
     const { data, error, count } = await ordered.range(...pageRange(f));
     throwIfDbError(error);
     return { items: data ?? [], total: count ?? 0 };
+  }
+
+  private async ownNotIn(): Promise<string | null> {
+    return this.own ? this.own.notIn() : null;
+  }
+
+  /** Every lead but our own numbers' (`own`: OwnNumbers.notIn; kept, never listed or counted). */
+  private listable(own: string | null) {
+    const query = this.db.from('leads').select('*', { count: 'exact' });
+    return own ? query.not('phone_e164', 'in', own) : query;
   }
 }
