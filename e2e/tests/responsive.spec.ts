@@ -3,6 +3,7 @@ import { ar, expect, test } from '../support/fixtures';
 import { resetAbrar, seedFamily, seedLesson } from '../support/schedule';
 import { restingBox } from '../support/settle';
 import { stubInbound, stubReset } from '../support/wa-stub';
+import { AR_LOCALE } from '../support/locale';
 
 // Responsive guard (owner, 2026-10-05: "fix the responsive issues"): the main screens never scroll
 // sideways on a phone (390px) or a tablet (768px), in RTL. Tables and tab strips scroll inside
@@ -35,7 +36,7 @@ test.describe('no horizontal overflow on the main screens', () => {
     await admin.getByRole('button', { name: ar.studentLink.create }).click();
     const studentLink = new URL(await admin.getByLabel(ar.studentLink.shown).inputValue()).pathname;
     const teacher = await asRole('teacher');
-    const guest = await (await browser.newContext({ locale: 'ar' })).newPage();
+    const guest = await (await browser.newContext({ locale: AR_LOCALE })).newPage();
 
     const adminPaths = [
       '/admin',
