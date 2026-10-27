@@ -1,7 +1,8 @@
+import type { CallsUi } from '@ab/client-core';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n/i18n';
-import { CallsContext, type CallsUi } from '../state/call-context';
+import { CallsContext } from '../state/call-context';
 import { CallButton } from './CallButton';
 
 const ui = (config: Partial<CallsUi['config']> = {}, busy = false): CallsUi => ({

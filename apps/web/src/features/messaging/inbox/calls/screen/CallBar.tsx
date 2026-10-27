@@ -1,9 +1,8 @@
+import { callClock, callStatusText, type CallPhase, type CallSession } from '@ab/client-core';
 import type { ActiveCallView } from '@ab/shared';
+import { useSyncExternalStore } from 'react';
 import { Icon } from '@/components/ui/display/icon';
 import { t } from '@/lib/i18n/i18n';
-import type { CallPhase, CallSession } from '../state/call-phase';
-import { callStatusText } from './call-status';
-import { useNow } from './use-now';
 
 export interface CallBarProps {
   session: CallSession;
@@ -17,7 +16,7 @@ export interface CallBarProps {
  * so the app header and its navigation stay reachable; tap to go back to the call.
  */
 export function CallBar({ session, row, phase, onExpand }: CallBarProps) {
-  const now = useNow(phase === 'active');
+  const now = useSyncExternalStore(phase === 'active' ? callClock.subscribe : callClock.still, callClock.read);
   return (
     <button
       type="button"
@@ -29,7 +28,7 @@ export function CallBar({ session, row, phase, onExpand }: CallBarProps) {
       <span className="truncate">{session.name}</span>
       <span aria-hidden="true">·</span>
       <span aria-hidden="true" className="tabular-nums" dir={phase === 'active' ? 'ltr' : undefined}>
-        {callStatusText(phase, { row, now })}
+        {callStatusText(phase, { row, now, text: t.calls })}
       </span>
     </button>
   );

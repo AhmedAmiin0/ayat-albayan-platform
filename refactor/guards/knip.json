@@ -233,7 +233,6 @@
   "apps/mobile/src/test/native-mocks.ts exports notificationsMock",
   "apps/mobile/src/test/warm-rn.ts exports warmedComponents",
   "apps/mobile/src/theme.ts exports elevation",
-  "apps/mobile/src/theme.ts exports space",
   "apps/mobile/src/theme.ts types Elevation",
   "apps/mobile/src/theme.ts types Glass",
   "apps/mobile/src/theme.ts types Theme",

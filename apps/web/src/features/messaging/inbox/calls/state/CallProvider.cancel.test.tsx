@@ -15,7 +15,8 @@ vi.mock('@/lib/http/supabase', () => {
 
 afterEach(() => {
   apiFetch.mockReset();
-  apiSend.mockReset();
+  // The provider unmounts after this and ends a live call (POST /end): always a promise.
+  apiSend.mockReset().mockResolvedValue(undefined);
 });
 
 const placed = activeRow({ id: 'c9', direction: 'outbound', status: 'ringing', offer_sdp: null });
