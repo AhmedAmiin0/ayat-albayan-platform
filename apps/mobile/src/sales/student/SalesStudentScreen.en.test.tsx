@@ -37,12 +37,15 @@ test('an English (LTR) «Schedule»: the weekly line, the student\'s time, the u
   mockApiFetch.mockResolvedValue(details());
   const first = await renderWithQuery(<SalesStudentScreen />);
   expect(await screen.findByText(s.title)).toBeTruthy();
-  expect(screen.getByText(/^Sunday · Tuesday · Thursday at /)).toBeTruthy();
+  expect(screen.getByText(/^Sunday · Tuesday · Thursday at .+ Riyadh time$/)).toBeTruthy();
+  // The teacher's name in English, like the rows under it.
+  expect(screen.getByText(/Abrar Mohamed · /)).toBeTruthy();
+  expect(screen.getAllByText(/Abrar Mohamed$/).length).toBeGreaterThan(0);
   expect(screen.getByText(/^Student's time: Sunday · Tuesday · Thursday at .+ Cairo time$/)).toBeTruthy();
   expect(screen.getByText(s.upcoming)).toBeTruthy();
-  expect(screen.getAllByRole('button', { name: en.lessons.sheet.openRow.replace('{names}', 'يوسف أحمد') })).toHaveLength(2);
+  expect(screen.getAllByRole('button', { name: new RegExp(`^${en.lessons.sheet.openRow.replace('{names}', 'يوسف أحمد')} · `) })).toHaveLength(2);
   await first.unmount();
-  mockApiFetch.mockResolvedValue(details({ schedule: { weekly: [], upcoming: [] } }));
+  mockApiFetch.mockResolvedValue(details({ schedule: { student_tz: 'Africa/Cairo', weekly: [], upcoming: [] } }));
   await renderWithQuery(<SalesStudentScreen />);
   expect(await screen.findByText(s.noWeekly)).toBeTruthy();
   expect(screen.getByText(s.noUpcoming)).toBeTruthy();

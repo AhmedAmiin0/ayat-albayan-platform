@@ -15,9 +15,10 @@ const UPCOMING_SHOWN = 5;
 
 /**
  * «الحلقات القادمة»: the sales schedule's rows under their Riyadh day; a tap opens the same «تفاصيل الحلقة»
- * (with «تغيير الموعد» / «إلغاء الحلقة» when that sheet allows them for her students).
+ * (with «تغيير الموعد» / «إلغاء الحلقة» when that sheet allows them for her students; no link, and this
+ * student's name stays plain there).
  */
-export function UpcomingLessons({ lessons }: { lessons: readonly SalesStudentLesson[] }) {
+export function UpcomingLessons({ lessons, studentId }: { lessons: readonly SalesStudentLesson[]; studentId: string }) {
   const [all, setAll] = useState(false);
   const details = useLessonDetails(lessons);
   const s = t.sales.student.schedule;
@@ -25,7 +26,7 @@ export function UpcomingLessons({ lessons }: { lessons: readonly SalesStudentLes
   const dayOf = (l: SalesStudentLesson) => wallParts(l.starts_at, RIYADH_TZ).date;
   return (
     <View style={{ gap: 4 }}>
-      <SmallHeading>{s.upcoming}</SmallHeading>
+      <SmallHeading header>{s.upcoming}</SmallHeading>
       {lessons.length === 0 ? <Note>{s.noUpcoming}</Note> : null}
       {shown.map((lesson, i) => {
         const day = dayOf(lesson);
@@ -33,7 +34,7 @@ export function UpcomingLessons({ lessons }: { lessons: readonly SalesStudentLes
         return (
           <Fragment key={lesson.id}>
             {!prev || dayOf(prev) !== day ? <Note>{dayLabel(day)}</Note> : null}
-            <SalesLessonRow lesson={lesson} onOpen={details.open} />
+            <SalesLessonRow lesson={lesson} onOpen={details.open} dated />
           </Fragment>
         );
       })}
@@ -42,7 +43,7 @@ export function UpcomingLessons({ lessons }: { lessons: readonly SalesStudentLes
           <Button variant="ghost" label={all ? s.showLess : fill(s.showAll, { n: String(lessons.length) })} onPress={() => setAll(!all)} />
         </View>
       ) : null}
-      <SalesLessonSheet lesson={details.lesson} onClose={details.close} />
+      <SalesLessonSheet lesson={details.lesson} onClose={details.close} studentId={studentId} />
     </View>
   );
 }

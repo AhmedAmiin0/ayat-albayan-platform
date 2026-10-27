@@ -6,15 +6,15 @@ import { Note } from '@/more';
 import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { SmallHeading as SectionLabel } from '../components/SmallHeading';
-import { slotMeta, studentLine, weeklyLine } from './schedule-text';
+import { slotLines, slotMeta } from './schedule-text';
 import { UpcomingLessons } from './UpcomingLessons';
 
 /**
  * «الجدول» (owner 2026-10-27: «As an assistant i want to see the student schedule»): each weekly slot
- * in one short line (Riyadh, the phone's 12 / 24 h) with the student's own clock when it differs, then
+ * in one short line (Riyadh, the phone's 12 / 24 h) with the student's own clock (students.tz) when it differs, then
  * the next lessons. No link: the API never sends one here. An old cache without it shows nothing.
  */
-export function ScheduleSection({ schedule }: { schedule: SalesStudentSchedule | undefined }) {
+export function ScheduleSection({ schedule, studentId }: { schedule: SalesStudentSchedule | undefined; studentId: string }) {
   const { color } = useTheme();
   const cycle = useClockCycle();
   if (!schedule) return null;
@@ -22,19 +22,19 @@ export function ScheduleSection({ schedule }: { schedule: SalesStudentSchedule |
   const line = { fontFamily: type.ui[600], fontSize: type.size.sm, lineHeight: type.lineHeight(type.size.sm), color: color.ink };
   return (
     <View style={{ gap: 8 }}>
-      <SectionLabel>{s.title}</SectionLabel>
+      <SectionLabel header>{s.title}</SectionLabel>
       {schedule.weekly.length === 0 ? <Note>{s.noWeekly}</Note> : null}
       {schedule.weekly.map((slot) => {
-        const local = studentLine(slot, cycle);
+        const lines = slotLines(slot, schedule.student_tz, cycle);
         return (
           <View key={slot.rule_id} style={{ gap: 2 }}>
-            <AppText style={line}>{weeklyLine(slot, cycle)}</AppText>
+            <AppText style={line}>{lines.riyadh}</AppText>
             <Note>{slotMeta(slot)}</Note>
-            {local ? <Note>{local}</Note> : null}
+            {lines.student ? <Note>{lines.student}</Note> : null}
           </View>
         );
       })}
-      <UpcomingLessons lessons={schedule.upcoming} />
+      <UpcomingLessons lessons={schedule.upcoming} studentId={studentId} />
     </View>
   );
 }

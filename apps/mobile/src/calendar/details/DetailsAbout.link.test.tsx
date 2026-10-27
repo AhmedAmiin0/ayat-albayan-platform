@@ -71,3 +71,10 @@ test.each([null, '', 'javascript:alert(1)', 'meet now'])('no usable link (%p): �
   expect(screen.queryByText(/javascript/)).toBeNull();
   expect(screen.queryByRole('button', { name: t.lessons.copyLink })).toBeNull();
 });
+
+test('neither field sent (sales\' «الجدول»): unknown, so no «رابط الحلقة» line at all', async () => {
+  await show('sales', { meeting_link: undefined, platform_classroom: undefined });
+  expect(screen.queryByText(t.lessons.joinLink)).toBeNull();
+  expect(screen.queryByText(t.lessons.noLink)).toBeNull();
+  expect(screen.getByText(t.schedule.teacher)).toBeTruthy();
+});

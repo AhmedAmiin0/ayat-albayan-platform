@@ -2,10 +2,10 @@
 import type { SalesScheduleRow } from '../sales';
 import type { WeeklyRuleRow } from './details/sales-student.queries';
 
-/** A weekly rule (Sun, Tue, Thu 19:00 Cairo) carrying a link the payload must never show. */
+/** An imported-style weekly rule (Sun, Tue, Thu 19:00 Riyadh) carrying a link the payload must never show. */
 export const ruleRow = (): WeeklyRuleRow & { meeting_link: string } => ({
-  id: 'r1', byday: [4, 0, 2], start_time_local: '19:00:00', tz: 'Africa/Cairo', duration_min: 45, package: '12',
-  starts_on: '2026-01-01', ends_on: null, status: 'active', teacher: { display_name_ar: 'أبرار' }, meeting_link: 'https://meet/secret',
+  id: 'r1', byday: [4, 0, 2], start_time_local: '19:00:00', tz: 'Asia/Riyadh', duration_min: 45, package: '12',
+  starts_on: '2026-01-01', ends_on: null, status: 'active', teacher: { display_name_ar: 'أبرار', display_name_en: 'Abrar' }, meeting_link: 'https://meet/secret',
 });
 
 /** A lesson of `student` a year ahead (always «قادمة»), with its link. */

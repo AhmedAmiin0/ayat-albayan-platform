@@ -1,12 +1,12 @@
 import type { Tables } from '@ab/db';
-import type { Attendance, LessonStatus } from '@ab/shared';
+import { OPEN_LESSON_STATUSES, type Attendance, type LessonStatus } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../../../common/db/db.module';
 import { dbError } from '../../../../common/http/http';
 import type { SalesScheduleRow } from '../../sales';
 
 /** Whitelisted: never notes, a balance or a meeting link; of the guardian the phone only (owner 2026-10-27). */
-export type DetailsStudentRow = Pick<Tables<'students'>, 'id' | 'code' | 'name' | 'status' | 'program'> & {
+export type DetailsStudentRow = Pick<Tables<'students'>, 'id' | 'code' | 'name' | 'status' | 'program' | 'tz'> & {
   teacher: { display_name_ar: string } | null;
   guardian: { phone_e164: string } | null;
 };
@@ -32,7 +32,7 @@ export interface LessonFacts {
 export type WeeklyRuleRow = Pick<
   Tables<'schedule_rules'>,
   'id' | 'byday' | 'start_time_local' | 'tz' | 'duration_min' | 'package' | 'starts_on' | 'ends_on' | 'status'
-> & { teacher: { display_name_ar: string } | null };
+> & { teacher: { display_name_ar: string; display_name_en: string | null } | null };
 
 /**
  * The sales schedule's whitelist (SalesScheduleRow) without the way in: no meeting_link, no meeting_mode.
@@ -42,7 +42,7 @@ const UPCOMING_SELECT =
   'id, starts_at, ends_at, status, makeup_of_id, rule:schedule_rules!lessons_rule_id_fkey(package), teacher:teachers(id, display_name_ar, display_name_en, tz), own:lesson_students!inner(student_id), lesson_students(student:students(id, code, name, tz))' as const;
 
 const RULE_SELECT =
-  'rule:schedule_rules!inner(id, byday, start_time_local, tz, duration_min, package, starts_on, ends_on, status, teacher:teachers(display_name_ar))' as const;
+  'rule:schedule_rules!inner(id, byday, start_time_local, tz, duration_min, package, starts_on, ends_on, status, teacher:teachers(display_name_ar, display_name_en))' as const;
 
 interface Window {
   from: Date;
@@ -61,7 +61,7 @@ export class SalesStudentQueries {
   async student(id: string): Promise<DetailsStudentRow | null> {
     const { data, error } = await this.db
       .from('students')
-      .select('id, code, name, status, program, teacher:teachers(display_name_ar), guardian:guardians(phone_e164)')
+      .select('id, code, name, status, program, tz, teacher:teachers(display_name_ar), guardian:guardians(phone_e164)')
       .eq('id', id)
       .maybeSingle();
     if (error) throw dbError(error);
@@ -103,7 +103,7 @@ export class SalesStudentQueries {
     return data.map((r) => r.rule);
   }
 
-  /** The student's lessons starting inside [from, to), by start, at most `limit`; a moved-away one left out. */
+  /** The student's open lessons (scheduled / confirmed) starting inside [from, to), by start, at most `limit`. */
   async upcoming(studentId: string, w: Window): Promise<SalesScheduleRow[]> {
     const { data, error } = await this.db
       .from('lessons')
@@ -111,7 +111,7 @@ export class SalesStudentQueries {
       .eq('own.student_id', studentId)
       .gte('starts_at', w.from.toISOString())
       .lt('starts_at', w.to.toISOString())
-      .neq('status', 'rescheduled')
+      .in('status', [...OPEN_LESSON_STATUSES])
       .order('starts_at')
       .limit(w.limit)
       .overrideTypes<SalesScheduleRow[], { merge: false }>();

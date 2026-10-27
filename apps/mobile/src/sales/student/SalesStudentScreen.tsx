@@ -45,7 +45,7 @@ export function SalesStudentScreen() {
             <Button variant="secondary" label={`${t.sales.student.chat} ${ltr(formatPhone(phone))}`} onPress={() => router.push(familyChatHref('/sales', phone))} />
           ) : null}
           <SubscriptionSection data={data} />
-          <ScheduleSection schedule={data.schedule} />
+          <ScheduleSection schedule={data.schedule} studentId={data.student.id} />
           <AttendanceSection attendance={data.attendance} />
           <ReportsSection studentId={data.student.id} reports={data.reports} />
         </View>

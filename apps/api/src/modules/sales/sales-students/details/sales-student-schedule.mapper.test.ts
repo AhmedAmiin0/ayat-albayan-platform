@@ -7,7 +7,7 @@ import type { WeeklyRuleRow } from './sales-student.queries';
 const NOW = new Date('2026-10-27T10:00:00Z');
 const rule = (over: Partial<WeeklyRuleRow> = {}): WeeklyRuleRow => ({
   id: 'r1', byday: [4, 0, 2], start_time_local: '19:00:00', tz: 'Asia/Riyadh', duration_min: 45, package: '12',
-  starts_on: '2026-10-01', ends_on: null, status: 'active', teacher: { display_name_ar: 'أبرار' }, ...over,
+  starts_on: '2026-10-01', ends_on: null, status: 'active', teacher: { display_name_ar: 'أبرار', display_name_en: 'Abrar' }, ...over,
 });
 const lesson = (id: string, starts_at: string, students = ['s1']): SalesScheduleRow => ({
   id, starts_at, ends_at: starts_at.replace('T16:00', 'T16:45'), status: 'scheduled', makeup_of_id: null, meeting_link: 'https://meet/secret',
@@ -37,19 +37,20 @@ describe('nextStarts', () => {
 });
 
 describe('toStudentSchedule', () => {
-  it('weekly: HH:MM, sorted days, the teacher\'s name; a trial rule and a finished course are left out', () => {
+  it('weekly: HH:MM, sorted days, both teacher names, the student\'s zone; a trial rule and a finished course are left out', () => {
     const rules = [rule({ id: 'late', byday: [6] }), rule(), rule({ id: 'trial', package: 'trial' }), rule({ id: 'done', ends_on: '2026-10-01' })];
-    const { weekly } = toStudentSchedule({ rules, lessons: [], own: ['s1'] }, NOW);
+    const { weekly, student_tz } = toStudentSchedule({ rules, lessons: [], own: ['s1'], studentTz: 'Africa/Cairo' }, NOW);
+    expect(student_tz).toBe('Africa/Cairo');
     expect(weekly.map((w) => w.rule_id)).toEqual(['r1', 'late']);
     expect(weekly[0]).toEqual({
-      rule_id: 'r1', byday: [0, 2, 4], start_time_local: '19:00', tz: 'Asia/Riyadh', duration_min: 45, teacher_name: 'أبرار',
+      rule_id: 'r1', byday: [0, 2, 4], start_time_local: '19:00', tz: 'Asia/Riyadh', duration_min: 45, teacher: { display_name_ar: 'أبرار', display_name_en: 'Abrar' },
       next: ['2026-10-27T16:00:00.000Z', '2026-10-29T16:00:00.000Z', '2026-11-01T16:00:00.000Z'],
     });
   });
 
   it('upcoming: by start, at most 20, no meeting link or classroom mode, `mine` only on her students', () => {
     const rows = Array.from({ length: 22 }, (_, i) => lesson(`l${21 - i}`, `2026-11-${String(10 - Math.floor(i / 3)).padStart(2, '0')}T16:00:0${i % 3}Z`));
-    const { upcoming } = toStudentSchedule({ rules: [], lessons: [lesson('g', '2026-10-28T16:00:00Z', ['s1', 'x']), ...rows], own: ['s1'] }, NOW);
+    const { upcoming } = toStudentSchedule({ rules: [], lessons: [lesson('g', '2026-10-28T16:00:00Z', ['s1', 'x']), ...rows], own: ['s1'], studentTz: 'Africa/Cairo' }, NOW);
     expect(upcoming).toHaveLength(20);
     expect(upcoming.map((l) => l.starts_at)).toEqual([...upcoming.map((l) => l.starts_at)].sort());
     expect(upcoming[0]).toEqual({

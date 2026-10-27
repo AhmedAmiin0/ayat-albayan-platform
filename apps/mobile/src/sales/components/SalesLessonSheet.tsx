@@ -11,6 +11,8 @@ import { SalesRescheduleSheet } from '../lesson-actions/SalesRescheduleSheet';
 interface SalesLessonSheetProps {
   lesson: SalesScheduleLesson | null;
   onClose: () => void;
+  /** Opened from «تفاصيل الطالب» of this student: their name does not open that screen again. */
+  studentId?: string;
 }
 
 /**
@@ -19,7 +21,7 @@ interface SalesLessonSheetProps {
  * «إلغاء الحلقة» too, and her student's name opens «تفاصيل الطالب»; any other lesson stays «للاطلاع فقط».
  * Never a series, an outcome, a confirmation or a report.
  */
-export function SalesLessonSheet({ lesson, onClose }: SalesLessonSheetProps) {
+export function SalesLessonSheet({ lesson, onClose, studentId }: SalesLessonSheetProps) {
   const now = useNow();
   const can = usePermissions();
   const [moving, setMoving] = useState<SalesScheduleLesson | null>(null);
@@ -30,6 +32,7 @@ export function SalesLessonSheet({ lesson, onClose }: SalesLessonSheetProps) {
       role="sales"
       onClose={onClose}
       readOnly={!changeable?.reschedule && !changeable?.cancel}
+      hereStudentId={studentId}
       actions={(l) => (
         <>
           {isRunningLesson(l, now) ? <JoinClassroomButton lesson={l} /> : null}

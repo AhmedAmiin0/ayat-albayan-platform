@@ -13,7 +13,7 @@ jest.mock('expo-router', () => ({ router: { push: jest.fn(), back: jest.fn() }, 
 jest.mock('@/core/lib/clock/device-clock', () => ({ deviceUses24: () => true }));
 
 const s = t.sales.student.schedule;
-const openRow = t.lessons.sheet.openRow.replace('{names}', 'يوسف أحمد');
+const openRow = new RegExp(`^${t.lessons.sheet.openRow.replace('{names}', 'يوسف أحمد')} · `);
 beforeEach(() => {
   mockApiFetch.mockReset();
   fakeNow(new Date('2026-10-27T10:00:00Z'));
@@ -23,21 +23,22 @@ afterEach(() => {
   setClockPref('auto');
 });
 
-test('«الجدول» (RTL): the weekly line in Riyadh with the student\'s Cairo clock, 24 h then 12 h on the setting', async () => {
+test('«الجدول» (RTL): an imported (Riyadh) rule in Riyadh with the Cairo student\'s clock, 24 h then 12 h on the setting', async () => {
   expect(I18nManager.isRTL).toBe(true);
   mockApiFetch.mockResolvedValue(details());
   await renderWithQuery(<SalesStudentScreen />);
-  expect(await screen.findByText(s.title)).toBeTruthy();
-  expect(screen.getByText('الأحد · الثلاثاء · الخميس الساعة 20:00')).toBeTruthy();
+  expect(await screen.findByRole('header', { name: s.title })).toBeTruthy();
+  expect(screen.getByRole('header', { name: s.upcoming })).toBeTruthy();
+  expect(screen.getByText(`الأحد · الثلاثاء · الخميس الساعة 20:00 ${t.schedule.riyadhTime}`)).toBeTruthy();
   expect(screen.getByText('عند الطالب: الأحد · الثلاثاء · الخميس الساعة 19:00 بتوقيت القاهرة')).toBeTruthy();
   expect(screen.getByText('مع أبرار محمد · 45 دقيقة')).toBeTruthy();
   await act(async () => setClockPref('12'));
-  expect(screen.getByText('الأحد · الثلاثاء · الخميس الساعة 8:00 م')).toBeTruthy();
+  expect(screen.getByText(`الأحد · الثلاثاء · الخميس الساعة 8:00 م ${t.schedule.riyadhTime}`)).toBeTruthy();
   expect(screen.getByText('عند الطالب: الأحد · الثلاثاء · الخميس الساعة 7:00 م بتوقيت القاهرة')).toBeTruthy();
 });
 
-test('a Riyadh family: no «عند الطالب» line', async () => {
-  mockApiFetch.mockResolvedValue(details({ schedule: { weekly: [{ ...weeklySlot, tz: 'Asia/Riyadh' }], upcoming: [] } }));
+test.each(['Asia/Riyadh', 'Asia/Kuwait'])('a student on Riyadh\'s clock (%s): no «عند الطالب» line, no zone label', async (tz) => {
+  mockApiFetch.mockResolvedValue(details({ schedule: { student_tz: tz, weekly: [weeklySlot], upcoming: [] } }));
   await renderWithQuery(<SalesStudentScreen />);
   expect(await screen.findByText('الأحد · الثلاثاء · الخميس الساعة 20:00')).toBeTruthy();
   expect(screen.queryByText(/^عند الطالب/)).toBeNull();
@@ -45,7 +46,7 @@ test('a Riyadh family: no «عند الطالب» line', async () => {
 
 test('upcoming: one row per lesson under its day with the status chip; the next 5, then «عرض الكل»', async () => {
   const lessons = ['01', '03', '05', '08', '10', '12', '15'].map((d, i) => upcoming(`u${i}`, `2026-11-${d}T17:00:00.000Z`));
-  mockApiFetch.mockResolvedValue(details({ schedule: { weekly: [weeklySlot], upcoming: lessons } }));
+  mockApiFetch.mockResolvedValue(details({ schedule: { student_tz: 'Africa/Cairo', weekly: [weeklySlot], upcoming: lessons } }));
   await renderWithQuery(<SalesStudentScreen />);
   expect(await screen.findByText(s.upcoming)).toBeTruthy();
   expect(screen.getAllByRole('button', { name: openRow })).toHaveLength(5);
@@ -70,7 +71,7 @@ test('a tap opens the sales lesson sheet with «تغيير الموعد» and «
 });
 
 test('empty states: «لا جدول ثابت» and «لا حلقات قادمة»; an old cache without «الجدول» shows no section', async () => {
-  mockApiFetch.mockResolvedValue(details({ schedule: { weekly: [], upcoming: [] } }));
+  mockApiFetch.mockResolvedValue(details({ schedule: { student_tz: 'Africa/Cairo', weekly: [], upcoming: [] } }));
   const first = await renderWithQuery(<SalesStudentScreen />);
   expect(await screen.findByText(s.noWeekly)).toBeTruthy();
   expect(screen.getByText(s.noUpcoming)).toBeTruthy();

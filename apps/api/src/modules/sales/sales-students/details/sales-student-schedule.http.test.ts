@@ -16,7 +16,9 @@ describe('GET /sales/students/:id «الجدول» (owner 2026-10-27)', () => {
     const res = await t.call('GET', `/sales/students/${MINE}`, { token: 'salesA' });
     expect(res.statusCode).toBe(200);
     const { schedule } = res.json();
-    expect(schedule.weekly).toEqual([expect.objectContaining({ rule_id: 'r1', byday: [0, 2, 4], start_time_local: '19:00', tz: 'Africa/Cairo', duration_min: 45, teacher_name: 'أبرار' })]);
+    expect(schedule.weekly).toEqual([expect.objectContaining({ rule_id: 'r1', byday: [0, 2, 4], start_time_local: '19:00', tz: 'Asia/Riyadh', duration_min: 45, teacher: { display_name_ar: 'أبرار', display_name_en: 'Abrar' } })]);
+    // An imported rule is in Riyadh; «عند الطالب» reads the student's own zone.
+    expect(schedule.student_tz).toBe('Africa/Cairo');
     expect(schedule.weekly[0].next).toHaveLength(3);
     expect(schedule.upcoming).toEqual([{
       id: 'u1', starts_at: '2099-01-04T16:00:00+00:00', ends_at: '2099-01-04T16:45:00+00:00', status: 'scheduled', trial: true, makeup: false,

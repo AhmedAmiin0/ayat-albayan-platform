@@ -44,7 +44,7 @@ function toWeeklySlot(rule: WeeklyRuleRow, now: Date): SalesWeeklySlot | null {
     start_time_local: rule.start_time_local.slice(0, 5),
     tz: rule.tz,
     duration_min: rule.duration_min,
-    teacher_name: rule.teacher?.display_name_ar ?? null,
+    teacher: rule.teacher ? { display_name_ar: rule.teacher.display_name_ar, display_name_en: rule.teacher.display_name_en } : null,
     next,
   };
 }
@@ -61,6 +61,8 @@ interface ScheduleParts {
   lessons: readonly SalesScheduleRow[];
   /** Her students (SalesOwnership.studentIds). */
   own: readonly string[];
+  /** The student's own zone (students.tz). */
+  studentTz: string;
 }
 
 /** «الجدول»: weekly slots by their next start, then the upcoming lessons by start. */
@@ -69,5 +71,5 @@ export function toStudentSchedule(p: ScheduleParts, now: Date): SalesStudentSche
   weekly.sort((a, b) => (a.next[0] ?? '').localeCompare(b.next[0] ?? ''));
   const own = new Set(p.own);
   const upcoming = [...p.lessons].sort((a, b) => Date.parse(a.starts_at) - Date.parse(b.starts_at)).slice(0, SCHEDULE_LIMIT);
-  return { weekly, upcoming: upcoming.map((row) => toStudentLesson(row, own)) };
+  return { student_tz: p.studentTz, weekly, upcoming: upcoming.map((row) => toStudentLesson(row, own)) };
 }

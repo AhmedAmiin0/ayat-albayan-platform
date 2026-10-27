@@ -33,7 +33,7 @@ export class SalesStudentService {
       this.queries.upcoming(studentId, scheduleWindow(now)),
     ]);
     if (!student) throw notFound('student_not_found');
-    const schedule = toStudentSchedule({ rules, lessons: upcoming, own: own.studentIds }, now);
+    const schedule = toStudentSchedule({ rules, lessons: upcoming, own: own.studentIds, studentTz: student.tz }, now);
     const view = toStudentDetails({ student, history, lessons, reports, schedule });
     return { ...view, student: { ...view.student, guardian_phone: chatPhone(user, view.student.guardian_phone) } };
   }
