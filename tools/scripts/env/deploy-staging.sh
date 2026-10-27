@@ -25,10 +25,16 @@ step "2/5 ship API source (HEAD $(git -C "$ROOT" rev-parse --short HEAD)) and re
 ssh "$SSH_HOST" "test -f $DEST/.env || { echo 'missing $DEST/.env, see docs/09-deployment.md'; exit 1; }"
 ssh "$SSH_HOST" "rm -rf $DEST/src.new && mkdir -p $DEST/src.new"
 git -C "$ROOT" archive --format=tar HEAD | ssh "$SSH_HOST" "tar --no-same-owner -x -C $DEST/src.new"
-scp -q "$ROOT/deploy/staging/docker-compose.yml" "$SSH_HOST:$DEST/docker-compose.yml"
-ssh "$SSH_HOST" "cd $DEST && rm -rf src.old && { [ ! -d src ] || mv src src.old; } && mv src.new src \
-  && docker compose up -d --build \
-  && docker image prune -f --filter 'label=com.docker.compose.project=ayat-albayan-staging' >/dev/null"
+# Two API copies + one worker behind ayat-lb (docs/09): the compose files go up as *.new and are swapped in with
+# the code in one command (never a new layout on old code); roll.sh builds once and rolls one container at a time.
+ssh "$SSH_HOST" "mkdir -p $DEST/lb"
+scp -q "$ROOT/deploy/staging/docker-compose.yml" "$SSH_HOST:$DEST/docker-compose.yml.new"
+scp -q "$ROOT/deploy/staging/roll.sh" "$SSH_HOST:$DEST/roll.sh.new"
+scp -q "$ROOT/deploy/staging/lb/Caddyfile" "$SSH_HOST:$DEST/lb/Caddyfile.new"
+ssh "$SSH_HOST" "cd $DEST && for f in docker-compose.yml roll.sh lb/Caddyfile; do [ ! -f \$f ] || cp \$f \$f.old; done \
+  && rm -rf src.old && { [ ! -d src ] || mv src src.old; } && mv src.new src \
+  && mv docker-compose.yml.new docker-compose.yml && mv roll.sh.new roll.sh \
+  && cat lb/Caddyfile.new > lb/Caddyfile && rm lb/Caddyfile.new && sh roll.sh"
 
 step "3/5 web build against staging"
 set -a; . "$ART/web.env"; set +a

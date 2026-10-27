@@ -254,21 +254,41 @@ jobs:
             echo "server .env updated (backup kept next to it)"; fi
           rm -f current.env new.env
 
-      - name: Ship the API and rebuild its container
+      # docs/09 «Two API copies + one worker»: the compose file, roll.sh and the load balancer config go up as
+      # *.new and are swapped in by the SAME command as the code (src.new → src), so the server never pairs a
+      # new layout with old code; the previous ones stay as *.old for the rollback. Then roll.sh builds the image ONCE and rolls
+      # ayat-worker → ayat-api-a → ayat-api-b (each healthy first; ayat-lb serves from the other copy), reloads
+      # ayat-lb only when its config changed and prunes this project's old images only (no global prune; the
+      # build cache is shared with the CRM and cannot be scoped to one project, so it is left alone).
+      - name: Ship the API code and the compose files
+        id: ship
         if: ${{ !inputs.env_only }}
         run: |
-          ssh target "rm -rf $DEST/src.new && mkdir -p $DEST/src.new"
+          ssh target "rm -rf $DEST/src.new && mkdir -p $DEST/src.new $DEST/lb"
           git archive --format=tar HEAD | ssh target "tar --no-same-owner -x -C $DEST/src.new"
-          scp -q deploy/staging/docker-compose.yml "target:$DEST/docker-compose.yml"
-          ssh target "cd $DEST && rm -rf src.old && { [ ! -d src ] || mv src src.old; } && mv src.new src \
-            && docker compose up -d --build --remove-orphans \
-            && docker image prune -f --filter 'label=com.docker.compose.project=ayat-albayan-staging' >/dev/null"
+          scp -q deploy/staging/docker-compose.yml "target:$DEST/docker-compose.yml.new"
+          scp -q deploy/staging/roll.sh "target:$DEST/roll.sh.new"
+          scp -q deploy/staging/lb/Caddyfile "target:$DEST/lb/Caddyfile.new"
+          # lb/Caddyfile in place (cat >, same inode): ayat-lb mounts the lb/ directory and reloads the file.
+          ssh target "cd $DEST && for f in docker-compose.yml roll.sh lb/Caddyfile; do [ ! -f \$f ] || cp \$f \$f.old; done \
+            && rm -rf src.old && { [ ! -d src ] || mv src src.old; } && mv src.new src \
+            && mv docker-compose.yml.new docker-compose.yml && mv roll.sh.new roll.sh \
+            && cat lb/Caddyfile.new > lb/Caddyfile && rm lb/Caddyfile.new"
 
+      - name: Roll the API (one build, one container at a time)
+        id: roll
+        if: ${{ !inputs.env_only }}
+        run: ssh target "cd $DEST && sh roll.sh"
+
+      # One container at a time too (roll.sh --env-only, no build); a server still on the single-container layout restarts it.
       - name: Restart the API with the new .env
         if: ${{ inputs.env_only }}
-        run: ssh target "cd $DEST && docker compose up -d --force-recreate --remove-orphans"
+        run: |
+          ssh target "cd $DEST && if [ -f roll.sh ] && grep -q '^  ayat-lb:' docker-compose.yml; then sh roll.sh --env-only; \
+            else docker compose up -d --force-recreate --remove-orphans; fi"
 
       - name: Upload the web app (atomic swap)
+        id: web
         if: ${{ !inputs.env_only }}
         run: |
           ssh target "rm -rf $DEST/web.new && mkdir -p $DEST/web.new"
@@ -285,15 +305,28 @@ jobs:
           else curl -fsS --retry 30 --retry-delay 5 --retry-all-errors "$url/health"; fi
           echo; echo "staging is up"
 
-      # The API or web swap broke staging: put the previous code and web build back. Database
-      # migrations are not undone (they only add); the next good deploy picks up from here.
+      # The API or web swap broke staging (a container never got healthy, or the health check failed): put the
+      # previous code, compose files and web build back and roll again. A server whose previous layout was the
+      # single ayat-api container goes back to it (built first; a short gap while 3110 changes hands). The web build
+      # is swapped back only when this run swapped it. Database migrations are not undone (they only add).
       - name: Roll back to the previous version
-        if: ${{ failure() && steps.health.conclusion == 'failure' && !inputs.env_only }}
+        if: ${{ failure() && (steps.roll.outcome == 'failure' || steps.health.outcome == 'failure') && !inputs.env_only }}
+        env:
+          WEB_SWAPPED: ${{ steps.web.outcome == 'success' || steps.web.outcome == 'failure' }}
         run: |
           ssh target "cd $DEST && { [ ! -d src.old ] || { rm -rf src.bad && mv src src.bad && mv src.old src; }; } \
-            && { [ ! -d web.old ] || { rm -rf web.bad && mv web web.bad && mv web.old web; }; } \
-            && docker compose up -d --build --remove-orphans"
-          echo "::error::health check failed: staging rolled back to the previous version (bad build kept in src.bad / web.bad)"
+            && for f in docker-compose.yml roll.sh lb/Caddyfile; do [ ! -f \$f.old ] || cat \$f.old > \$f; done"
+          if [ "$WEB_SWAPPED" = "true" ]; then
+            ssh target "cd $DEST && { [ ! -d web.old ] || { rm -rf web.bad && mv web web.bad && mv web.old web; }; }"
+          fi
+          # Old layout: build first (the old container may still be serving), then drop the new layout's
+          # containers of THIS project and bring the single container back on 3110.
+          ssh target "cd $DEST && if grep -q '^  ayat-lb:' docker-compose.yml; then sh roll.sh; else docker compose build \
+            && for s in ayat-lb ayat-api-a ayat-api-b ayat-worker; do \
+              ids=\$(docker ps -aq --filter label=com.docker.compose.project=ayat-albayan-staging --filter label=com.docker.compose.service=\$s); \
+              [ -z \"\$ids\" ] || docker rm -f \$ids; done \
+            && docker compose up -d --remove-orphans; fi"
+          echo "::error::staging failed to roll or its health check failed: rolled back to the previous version (bad build kept in src.bad / web.bad)"
 
       - name: Summary
         if: always()
