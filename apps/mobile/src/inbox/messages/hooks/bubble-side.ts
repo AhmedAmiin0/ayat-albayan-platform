@@ -3,7 +3,7 @@
 // direction, so an Arabic phone shows ours on the left and an English phone on the right; RN mirrors
 // flex-start/end and start/end itself, so nothing here reads the direction.
 
-export interface BubbleSide {
+interface BubbleSide {
   /** The alignSelf that puts the bubble on its side. */
   align: 'flex-start' | 'flex-end';
   /** Its outer edge (the screen's edge) as a logical edge: the tail corner. */

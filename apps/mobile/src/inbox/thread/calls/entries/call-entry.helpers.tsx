@@ -5,7 +5,7 @@ import { StyleSheet } from 'react-native';
 import { CallEntry } from './CallEntry';
 
 export const call = (over: Partial<CallView> = {}): CallView => ({
-  ...{ id: 'c1', phone_e164: '+966501234567', direction: 'outbound', status: 'ended', end_reason: 'completed', display_name: 'أم سهيلة' },
+  ...{ id: 'c1', phone_e164: '+966501234567', direction: 'outbound', status: 'ended', end_reason: 'completed', display_name: 'Huda Salem' },
   ...{ staff_id: 's1', started_at: '2026-10-26T10:00:00Z', answered_at: '2026-10-26T10:00:05Z', ended_at: '2026-10-26T10:02:19Z', duration_seconds: 134 },
   ...over,
 });
