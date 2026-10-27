@@ -11,7 +11,7 @@ import { useChannel } from './channel-queries';
  * A student channel screen: the teacher's thread (/teacher/more/messages/:studentId), the admin's
  * read-only view (/students/channel/:id) and the owning assistant's (/sales/students/channel/:id).
  */
-export function ChannelScreen({ audience }: { audience: ChannelAudience }) {
+function ChannelScreen({ audience }: { audience: ChannelAudience }) {
   const params = useLocalSearchParams<{ id?: string; studentId?: string }>();
   const studentId = params.studentId ?? params.id ?? '';
   // The same query the thread reads (one request): it names the student.

@@ -53,6 +53,10 @@ export const DELETE_ORDER = [
   'student_assistants',
   // The demo students' own classroom links (migration 191).
   'student_join_links',
+  // The demo students' teacher–family channels, their messages and read marks (migration 800, docs/31).
+  'channel_reads',
+  'channel_messages',
+  'student_channels',
   'students',
   'guardians',
   'teacher_time_off',

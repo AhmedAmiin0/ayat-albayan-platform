@@ -1,4 +1,4 @@
-import { channelPageQuerySchema, channelPostSchema, channelReadSchema, type ChannelMessageView, type ChannelPage, type TeacherChannelRow } from '@ab/shared';
+import { channelPostSchema, channelReadSchema, type ChannelMessageView, type ChannelPage, type TeacherChannelRow } from '@ab/shared';
 import { Body, Controller, Get, HttpCode, Param, ParseUUIDPipe, Post, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser, Permissions } from '../../../../common/auth/decorators';
@@ -6,6 +6,7 @@ import type { AuthUser } from '../../../../common/auth/verify-token';
 import { parseOrThrow } from '../../../../common/http/http';
 import { ChannelAccess } from '../channel-access';
 import { ChannelService, TeacherChannelList } from '../channel.service';
+import { pageFor } from './channel-page';
 
 const UUID = new ParseUUIDPipe();
 
@@ -29,8 +30,7 @@ export class TeacherChannelsController {
   /** 404 student_not_found when the student is not (or no longer) one of mine. */
   @Get(':studentId/messages')
   async messages(@Param('studentId', UUID) studentId: string, @Query() query: unknown, @CurrentUser() user: AuthUser): Promise<ChannelPage> {
-    const { before } = parseOrThrow(channelPageQuerySchema, query ?? {});
-    return this.channels.page(await this.access.teacher(user, studentId), before);
+    return pageFor(this.channels, await this.access.teacher(user, studentId), query);
   }
 
   @Post(':studentId/messages')

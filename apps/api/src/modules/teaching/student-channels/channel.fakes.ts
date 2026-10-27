@@ -1,9 +1,8 @@
 // Test fixtures and HTTP harness for the student channel (test-only, excluded from the build by *.fakes.ts).
-import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
 import { vi } from 'vitest';
 import { AppModule } from '../../../app.module';
-import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '../../../common/auth/auth.guard';
+import { bootWith } from '../../../common/auth/auth.fakes';
 import type { AuthUser } from '../../../common/auth/verify-token';
 import { PushService } from '../../../common/push/push.service';
 import { PortalScopeQueries } from '../../people/portal/scope/portal-scope.queries';
@@ -29,11 +28,6 @@ const USERS: Record<string, AuthUser> = {
   assistant: { id: 'p-as', email: null, role: 'assistant' },
 };
 export type Who = keyof typeof USERS;
-const verify: TokenVerifier = async (token) => {
-  const user = USERS[token];
-  if (!user) throw new Error('bad token');
-  return user;
-};
 
 export const messageRow = (over: Partial<ChannelMessageRow> = {}): ChannelMessageRow => ({
   id: 'm1', body: 'السلام عليكم', sender_profile_id: 'p-g', sender_role: 'guardian', created_at: '2026-10-27T10:00:00.000Z', ...over,
@@ -45,7 +39,7 @@ export async function channelApp() {
     channelOf: vi.fn(async () => CH),
     page: vi.fn(async (): Promise<ChannelMessageRow[]> => [messageRow()]),
     insert: vi.fn(async (row: { body: string; sender_profile_id: string; sender_role: string }) => messageRow({ id: 'm2', ...row })),
-    setReadMark: vi.fn(async (_row: { channelId: string; profileId: string; at: string }) => undefined),
+    setReadMark: vi.fn(async (row: { channelId: string; profileId: string; at: string }) => void row),
     teacherIds: vi.fn(async (): Promise<string[]> => ['t1']),
     teacherStudentIds: vi.fn(async () => [ST]),
     summaries: vi.fn(async () => [{ student_id: ST, unread: 2, last_body: 'السلام عليكم', last_role: 'guardian', last_at: '2026-10-27T10:00:00.000Z' }]),
@@ -59,17 +53,13 @@ export async function channelApp() {
   const scope = { studentsOf: vi.fn(async (id: string) => (id === 'p-g' || id === 'p-s' ? [{ id: ST, code: 'AB-0201', name: 'سلمى', tz: 'Asia/Riyadh', contact_is_self: false }] : [])) };
   const teachers = { idByProfile: vi.fn(async (id: string) => ({ 'p-t1': 't1', 'p-t2': 't2' })[id] ?? null) };
   const push = { notifyProfiles: vi.fn(async () => undefined), notifyAdmins: vi.fn(), notifySales: vi.fn() };
-  const mod = await Test.createTestingModule({ imports: [AppModule] })
-    .overrideProvider(PERMISSION_RESOLVER).useValue(systemResolver).overrideProvider(TOKEN_VERIFIER).useValue(verify)
+  const builder = Test.createTestingModule({ imports: [AppModule] })
     .overrideProvider(ChannelQueries).useValue(queries)
     .overrideProvider(ChannelPeopleQueries).useValue(people)
     .overrideProvider(PortalScopeQueries).useValue(scope)
     .overrideProvider(TeachersQueries).useValue(teachers)
-    .overrideProvider(PushService).useValue(push)
-    .compile();
-  const app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter());
-  await app.init();
-  await app.getHttpAdapter().getInstance().ready();
+    .overrideProvider(PushService).useValue(push);
+  const app = await bootWith(builder, USERS);
   const call = (method: 'GET' | 'POST', url: string, who: Who) => app.inject({ method, url, headers: { authorization: `Bearer ${who}` } });
   const post = (url: string, who: Who, payload: object) => app.inject({ method: 'POST', url, headers: { authorization: `Bearer ${who}` }, payload });
   return { app, call, post, queries, people, scope, teachers, push };

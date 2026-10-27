@@ -30,6 +30,12 @@ const DEMO_IDS = {
     where phone_e164 = any(${tx.array(s.teacherPhones)}) and display_name_en like ${`%${s.teacherNameSuffix}`}`,
 };
 
+/** The demo students' channels (migration 800): matched like every demo student row. */
+const demoChannels = (tx, s) => tx`
+  select c.id from public.student_channels c join public.students st on st.id = c.student_id
+  join public.guardians g on g.id = st.guardian_id
+  where st.notes = ${s.note} and g.phone_e164 || '|' || st.name = any(${tx.array(s.studentKeys)})`;
+
 const DELETES = {
   job_applicants: (tx, s) => tx`
     delete from public.job_applicants
@@ -44,6 +50,12 @@ const DELETES = {
     delete from public.student_join_links sl using public.students st, public.guardians g
     where st.id = sl.student_id and g.id = st.guardian_id and st.notes = ${s.note}
       and g.phone_e164 || '|' || st.name = any(${tx.array(s.studentKeys)}) returning sl.student_id`,
+  channel_reads: (tx, s) => tx`
+    delete from public.channel_reads where channel_id in (${demoChannels(tx, s)}) returning channel_id`,
+  channel_messages: (tx, s) => tx`
+    delete from public.channel_messages where channel_id in (${demoChannels(tx, s)}) returning id`,
+  student_channels: (tx, s) => tx`
+    delete from public.student_channels where id in (${demoChannels(tx, s)}) returning id`,
   students: (tx, s) => tx`
     delete from public.students st using public.guardians g
     where g.id = st.guardian_id and st.notes = ${s.note}

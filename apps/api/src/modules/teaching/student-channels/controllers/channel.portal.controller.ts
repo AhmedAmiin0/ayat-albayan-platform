@@ -1,4 +1,4 @@
-import { channelPageQuerySchema, channelPostSchema, channelReadSchema, type ChannelMessageView, type ChannelPage, type ChannelUnread } from '@ab/shared';
+import { channelPostSchema, channelReadSchema, type ChannelMessageView, type ChannelPage, type ChannelUnread } from '@ab/shared';
 import { Body, Controller, Get, HttpCode, Param, ParseUUIDPipe, Post, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser, Permissions } from '../../../../common/auth/decorators';
@@ -6,6 +6,7 @@ import type { AuthUser } from '../../../../common/auth/verify-token';
 import { parseOrThrow } from '../../../../common/http/http';
 import { ChannelAccess } from '../channel-access';
 import { ChannelService } from '../channel.service';
+import { pageFor } from './channel-page';
 
 const UUID = new ParseUUIDPipe();
 
@@ -22,8 +23,7 @@ export class PortalChannelController {
 
   @Get('messages')
   async messages(@Param('id', UUID) studentId: string, @Query() query: unknown, @CurrentUser() user: AuthUser): Promise<ChannelPage> {
-    const { before } = parseOrThrow(channelPageQuerySchema, query ?? {});
-    return this.channels.page(await this.access.family(user, studentId), before);
+    return pageFor(this.channels, await this.access.family(user, studentId), query);
   }
 
   @Post('messages')
