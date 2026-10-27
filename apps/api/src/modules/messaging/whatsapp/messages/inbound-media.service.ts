@@ -64,7 +64,8 @@ export function mediaExpired(msg: Pick<MediaMessage, 'created_at' | 'media_path'
  * client of the NUMBER it came in on (mediaSource; docs/12 §13.4, docs/23c): 409 crm_no_media for the old
  * CRM number's history (no call), 503 line_not_configured for a chat message while the chat
  * line is not configured (module mode: while its number has no client), 502 meta_error when Meta refuses the line's token (190 / 10 / 200),
- * 502 kapso_auth when Kapso refuses the project key (docs/19).
+ * 502 kapso_auth when Kapso refuses the project key (docs/19), 502 crm_unreachable when the old CRM's storage
+ * does not answer for an imported file (CrmHistoryMedia; a retry may work).
  */
 @Injectable()
 export class InboundMedia {

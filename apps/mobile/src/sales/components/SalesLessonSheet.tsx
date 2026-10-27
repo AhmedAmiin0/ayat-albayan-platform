@@ -36,7 +36,16 @@ export function SalesLessonSheet({ lesson, onClose }: SalesLessonSheetProps) {
           <SalesLessonActions lesson={l} onReschedule={setMoving} />
         </>
       )}
-      sheets={<SalesRescheduleSheet lesson={moving} onClose={() => setMoving(null)} />}
+      sheets={
+        <SalesRescheduleSheet
+          lesson={moving}
+          onClose={() => setMoving(null)}
+          onDone={() => {
+            setMoving(null);
+            onClose();
+          }}
+        />
+      }
     />
   );
 }
