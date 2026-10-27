@@ -105,11 +105,13 @@ export class ThreadsQueries {
     return familyTagsOf({ db: this.db, packages: this.packages, balances: this.balances }, guardianIds);
   }
 
-  /** Opening the thread reads its inbound messages (up to `upTo` when given); the newest stamped wamid per line. */
-  async markInboundRead(phone: string, at: Date, upTo?: string): Promise<ReadMark[]> {
+  /** Opening the thread reads its inbound rows up to `upTo` (a created_at) or only `upTo`'s ids (a delta's rows); the newest stamped wamid per line. */
+  async markInboundRead(phone: string, at: Date, upTo?: string | readonly string[]): Promise<ReadMark[]> {
     let query = this.db.from('messages').update({ read_at: at.toISOString() }).eq('phone_e164', phone);
     query = query.eq('direction', 'inbound').is('read_at', null);
-    const { data, error } = await (upTo ? query.lte('created_at', upTo) : query).select('wa_message_id, created_at, line');
+    if (typeof upTo === 'string') query = query.lte('created_at', upTo);
+    else if (upTo) query = query.in('id', [...upTo]);
+    const { data, error } = await query.select('wa_message_id, created_at, line');
     check(error, 'inbound read stamp');
     return newestPerLine(data);
   }

@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
 import { rolledBack, type Tx } from '../support/rls';
 
-// Fast chats list (migration 20261028000850): v_threads now reads thread_summaries, kept by triggers on
+// Fast chats list (migration 20261028000862): v_threads now reads thread_summaries, kept by triggers on
 // messages. It must return exactly what the old aggregate over all messages returned (migration 290's
 // select, the newest message picked by created_at then id: the old distinct on had no tiebreak), on the
 // seeded data and after inserts, read stamps, status ticks and deletes; and the unread badge's count must
@@ -52,7 +52,7 @@ async function differ(tx: Tx): Promise<{ missing: number; extra: number; rows: n
   return r;
 }
 
-test.describe('thread_summaries behind v_threads (migration 20261028000850)', () => {
+test.describe('thread_summaries behind v_threads (migration 20261028000862)', () => {
   test.beforeEach(() => test.skip(test.info().project.name !== 'desktop', 'database only: one run'));
 
   test('the new v_threads returns the old definition’s rows on the seeded data', async () => {

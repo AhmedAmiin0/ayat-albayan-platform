@@ -12,7 +12,7 @@ export function isUnreadBadge(f: ThreadListFilter): boolean {
 
 /**
  * Threads with an inbound row no admin opened (thread_summaries.unread_count > 0, the partial index of
- * migration 20261028000850), within `phones` when given (teacher mode's scope) and never the academy's
+ * migration 20261028000862), within `phones` when given (teacher mode's scope) and never the academy's
  * own numbers (`hide`), as the list. One row per phone, as v_threads, whose leads / guardians / teachers
  * joins are one-to-one (unique phones): the same count.
  */

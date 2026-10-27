@@ -32,8 +32,11 @@ export class ReadReceipts {
     @Inject(WHATSAPP_LINES) private readonly lines: WhatsappLines,
   ) {}
 
-  /** `upTo`: the newest row the caller shows; a row that arrives after it stays unread. */
-  async open(phone: string, at: { now: Date; upTo?: string | undefined }): Promise<ReadOpen> {
+  /**
+   * `upTo`: the newest row the caller shows (a created_at), or the ids of the rows it shows; a row it
+   * does not show stays unread.
+   */
+  async open(phone: string, at: { now: Date; upTo?: string | readonly string[] | undefined }): Promise<ReadOpen> {
     const marks = await this.queries.markInboundRead(phone, at.now, at.upTo);
     if (marks.length === 0) return { stamped: false, receipts: Promise.resolve() };
     return { stamped: true, receipts: this.notify(phone, marks) };

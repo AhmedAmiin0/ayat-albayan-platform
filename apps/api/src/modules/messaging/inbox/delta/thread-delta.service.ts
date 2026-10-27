@@ -105,7 +105,9 @@ export class ThreadDeltaService {
       return false;
     }
     if (!seen.unread) return false;
-    return (await this.need(this.receipts).open(q.phone, { now, upTo: seen.inbound.at(-1)?.created_at })).stamped;
+    // Only the rows this answer shows: a late row with an older created_at (catch-up) is not among them.
+    const upTo = seen.inbound.filter((r) => !r.read_at).map((r) => r.id);
+    return (await this.need(this.receipts).open(q.phone, { now, upTo })).stamped;
   }
 
   private need<T>(dep: T | undefined): T {

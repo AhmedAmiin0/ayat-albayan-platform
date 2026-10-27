@@ -60,10 +60,21 @@ describe('GET /threads/:phone?after= — the delta refresh', () => {
   it('a new unread inbound: the read stamp and the window (unread 0 once stamped); receipt in the background', async () => {
     t.delta.newer.mockResolvedValue([inbound('in1')]);
     const body = (await t.call({ method: 'GET', url: URL })).json();
-    expect(t.queries.markInboundRead).toHaveBeenCalledWith(PHONE, expect.any(Date), '2026-10-27T10:00:30Z');
+    expect(t.queries.markInboundRead).toHaveBeenCalledWith(PHONE, expect.any(Date), ['in1']);
     expect(body.thread).toMatchObject({ unread_count: 0, last_inbound_at: '2026-10-27T10:00:30Z' });
     expect(body.messages[0].read_at).not.toBeNull();
     await vi.waitFor(() => expect(t.client.markRead).toHaveBeenCalledWith('wamid.x'));
+  });
+
+  it('stamps only the unread inbound rows it returns, by id (a late catch-up row with an older created_at stays unread)', async () => {
+    t.delta.newer.mockResolvedValue([
+      inbound('in2', { created_at: '2026-10-27T10:00:40Z' }),
+      row('out1', { created_at: '2026-10-27T10:00:35Z' }),
+      inbound('seen', { created_at: '2026-10-27T10:00:20Z', read_at: '2026-10-27T10:00:25Z' }),
+      inbound('in1', { created_at: '2026-10-27T09:59:10Z' }),
+    ]);
+    await t.call({ method: 'GET', url: URL });
+    expect(t.queries.markInboundRead).toHaveBeenCalledWith(PHONE, expect.any(Date), ['in1', 'in2']);
   });
 
   it('an inbound in the overlap the admin already read: no write, no thread', async () => {

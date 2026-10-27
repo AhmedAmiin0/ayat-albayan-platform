@@ -2,18 +2,18 @@ import { readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 
-// Migrations 20261028000850 (thread_summaries behind v_threads) and 851 (the catch-up's partial indexes)
+// Migrations 20261028000862 (thread_summaries behind v_threads) and 863 (the catch-up's partial indexes)
 // read as text: idempotent, RLS on the new table, triggers before the backfill, the same v_threads columns.
 // The rows themselves are proven equal in e2e/tests/thread-summaries.sql.spec.ts (a real database).
 const dir = join(__dirname, '../../../../../../../packages/db/supabase/migrations');
 const read = (f: string) => readFileSync(join(dir, f), 'utf8').replace(/--.*$/gm, '');
-const SUMMARY = read('20261028000850_thread_summaries.sql');
-const CATCHUP = read('20261028000851_external_catchup_index.sql');
+const SUMMARY = read('20261028000862_thread_summaries.sql');
+const CATCHUP = read('20261028000863_external_catchup_index.sql');
 
-describe('migration 20261028000850: thread_summaries', () => {
-  it('sorts after every migration of develop at the time (the 850–859 range)', () => {
+describe('migration 20261028000862: thread_summaries', () => {
+  it('sorts after every migration of develop at the time (through 861)', () => {
     const all = readdirSync(dir).filter((f) => f.endsWith('.sql')).sort();
-    expect(all.indexOf('20261028000850_thread_summaries.sql')).toBeGreaterThan(all.indexOf('20261028000801_push_kind_channel.sql'));
+    expect(all.indexOf('20261028000862_thread_summaries.sql')).toBeGreaterThan(all.indexOf('20261028000861_report_pdf_queue_idx.sql'));
   });
 
   it('is re-runnable: if not exists, or replace, drop … if exists before every create trigger / policy', () => {
@@ -41,6 +41,12 @@ describe('migration 20261028000850: thread_summaries', () => {
     expect(SUMMARY).toContain('order by hashtext(d.x), d.x');
   });
 
+  it('the update trigger passes every status / text tick on: no unlocked read of thread_summaries to skip it', () => {
+    const update = SUMMARY.slice(SUMMARY.indexOf('function public.thread_summaries_on_update'), SUMMARY.indexOf('function public.thread_summaries_on_truncate'));
+    expect(update).toContain('or (o.status, o.body, o.template_key, o.media_mime) is distinct from (n.status, n.body, n.template_key, n.media_mime)');
+    expect(update).not.toContain('thread_summaries s');
+  });
+
   it('v_threads keeps its 23 columns in order (create or replace refuses anything else) and its grants', () => {
     const view = SUMMARY.slice(SUMMARY.indexOf('create or replace view public.v_threads'));
     expect(view).toMatch(/select s\.phone_e164, s\.last_message_id, s\.last_direction, s\.last_body, s\.last_template_key,\s+s\.last_status/);
@@ -50,11 +56,11 @@ describe('migration 20261028000850: thread_summaries', () => {
   });
 
   it('carries its rollback note', () => {
-    expect(readFileSync(join(dir, '20261028000850_thread_summaries.sql'), 'utf8')).toContain('MANUAL ROLLBACK');
+    expect(readFileSync(join(dir, '20261028000862_thread_summaries.sql'), 'utf8')).toContain('MANUAL ROLLBACK');
   });
 });
 
-describe('migration 20261028000851: the external catch-up indexes', () => {
+describe('migration 20261028000863: the external catch-up indexes', () => {
   it('two plain partial indexes matching newestExternal’s filter, by number and by line', () => {
     const where = "where direction = 'outbound' and created_by is null and attempts = 0 and wa_message_id is not null";
     expect(CATCHUP).toContain(`create index if not exists messages_external_number_idx on public.messages (number_id, created_at desc)\n  ${where}`);
