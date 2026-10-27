@@ -1,24 +1,26 @@
-import { formatPhone, JOB_APPLICANT_STATUSES, jobApplicantStatusStyle } from '@ab/shared';
+import { JOB_APPLICANT_STATUSES, jobApplicantStatusStyle } from '@ab/shared';
 import { useState } from 'react';
-import { FlatList } from 'react-native';
+
 import { t } from '@/core/lib/i18n/i18n';
 import { usePagedList } from '@/core/lib/query/use-paged-list';
 import { EmptyState } from '@/core/ui/feedback/EmptyState';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { FilterPills, type FilterPill } from '@/core/ui/form/FilterPills';
-import { ListRow } from '@/core/ui/layout/ListRow';
-import { ltr } from '@/core/ui/primitives/Ltr';
 import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
-import { StatusChip } from '@/core/ui/feedback/StatusChip';
-import { ApplicantLinks } from '../applicants/ApplicantLinks';
+import { ApplicantRow } from '../applicants/ApplicantRow';
 import { applicantParams, applicantSortChoices, type ApplicantStatusFilter } from '../applicants/applicant-params';
 import type { JobApplicant } from '../types';
+import { LazyList } from '@/core/ui/layout/LazyList';
 
 const statusPills = (): FilterPill<ApplicantStatusFilter>[] => [
   { value: 'all', label: t.leads.filterAll },
   ...JOB_APPLICANT_STATUSES.map((s) => ({ value: s, label: t.enums.jobApplicantStatus[s], ...jobApplicantStatusStyle[s] })),
 ];
+
+const keyOf = (applicant: JobApplicant) => applicant.id;
+// Keyed by the applicant: its links hold a «failed» line that a recycled row must not carry over.
+const renderRow = ({ item }: { item: JobApplicant }) => <ApplicantRow key={item.id} applicant={item} />;
 
 /**
  * «طلبات التوظيف», read-only (R-LEAD-04, as the web list): status filter, order, name + LTR phone +
@@ -37,24 +39,11 @@ export function JobApplicantsScreen() {
       <ScreenHeader title={t.nav.jobApplicants} />
       <FilterPills items={pills} value={status} onChange={setStatus} accessibilityLabel={t.mobileLeads.applicantsFilter} />
       <FilterPills items={applicantSortChoices()} value={sort} onChange={setSort} accessibilityLabel={t.mobileLeads.applicantsSort} role="radiogroup" />
-      <FlatList
-        style={{ flex: 1, marginHorizontal: -16 }}
-        data={list.items}
-        keyExtractor={(applicant) => applicant.id}
-        renderItem={({ item }) => {
-          const phone = formatPhone(item.phone_e164);
-          return (
-            <ListRow
-              title={item.name ?? ltr(phone)}
-              meta={item.name ? phone : undefined}
-              tags={<ApplicantLinks cv={item.cv_url} recitation={item.recitation_url} />}
-              trailing={<StatusChip {...jobApplicantStatusStyle[item.status]} label={t.enums.jobApplicantStatus[item.status]} />}
-            />
-          );
-        }}
-        onEndReached={list.loadMore}
-        refreshing={list.isRefetching}
-        onRefresh={list.refresh}
+      <LazyList
+        paged={list}
+        tabBar={false}
+        keyExtractor={keyOf}
+        renderItem={renderRow}
         ListEmptyComponent={
           list.isPending ? null : list.isError ? (
             <ErrorState onRetry={list.refresh} />

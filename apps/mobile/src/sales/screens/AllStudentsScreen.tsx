@@ -1,7 +1,7 @@
 import type { SalesStudentView } from '@ab/shared';
 import { router } from 'expo-router';
 import { useState } from 'react';
-import { ActivityIndicator, FlatList } from 'react-native';
+import { ActivityIndicator } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { usePagedList } from '@/core/lib/query/use-paged-list';
 import { CheckRegistrationButton } from '@/registration-check/components/CheckRegistrationButton';
@@ -10,11 +10,11 @@ import { useTheme } from '@/theme';
 import { Button } from '@/core/ui/primitives/Button';
 import { EmptyState } from '@/core/ui/feedback/EmptyState';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';
+import { LazyList } from '@/core/ui/layout/LazyList';
 import { FilterPills } from '@/core/ui/form/FilterPills';
 import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { SearchField } from '@/core/ui/form/SearchField';
-import { useTabBarInset } from '@/core/ui/layout/tab-bar-inset';
 import { AllStudentRow } from '../components/AllStudentRow';
 
 export type StudentsView = 'all' | 'mine';
@@ -23,6 +23,9 @@ const VIEWS = (): { value: StudentsView; label: string }[] => [
   { value: 'all', label: t.sales.allStudents.title },
   { value: 'mine', label: t.assistantPortal.nav.students },
 ];
+
+const keyOf = (s: SalesStudentView) => s.id;
+const renderRow = ({ item }: { item: SalesStudentView }) => <AllStudentRow student={item} />;
 
 /**
  * «كل الطلاب» of the salesperson (web /sales/students, SalesStudents): every student of the academy,
@@ -34,7 +37,6 @@ export function AllStudentsScreen({ asTab = false }: { asTab?: boolean }) {
   const { color } = useTheme();
   const [view, setView] = useState<StudentsView>('all');
   const [search, setSearch] = useState('');
-  const inset = useTabBarInset();
   const list = usePagedList<SalesStudentView>({ path: '/sales/students/all', params: { search } });
   const all = view === 'all';
   return (
@@ -56,15 +58,10 @@ export function AllStudentsScreen({ asTab = false }: { asTab?: boolean }) {
         }} accessibilityLabel={t.sales.views.students} />
       {all ? <SearchField onSearch={setSearch} label={t.sales.allStudents.search} /> : null}
       {all ? (
-        <FlatList
-          style={{ flex: 1, marginHorizontal: -16 }}
-          contentContainerStyle={{ paddingBottom: 24 + inset }}
-          data={list.items}
-          keyExtractor={(s) => s.id}
-          renderItem={({ item }) => <AllStudentRow student={item} />}
-          onEndReached={list.loadMore}
-          refreshing={list.isRefetching}
-          onRefresh={list.refresh}
+        <LazyList
+          paged={list}
+          keyExtractor={keyOf}
+          renderItem={renderRow}
           ListEmptyComponent={
             list.data ? (
               <EmptyState title={t.sales.allStudents.empty} />

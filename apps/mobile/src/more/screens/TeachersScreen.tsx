@@ -1,12 +1,15 @@
-import { FlatList } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { usePagedList } from '@/core/lib/query/use-paged-list';
 import { EmptyState } from '@/core/ui/feedback/EmptyState';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';
+import { LazyList } from '@/core/ui/layout/LazyList';
 import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { TeacherRow } from '../teachers/TeacherRow';
 import type { TeacherListItem } from '../types';
+
+const keyOf = (teacher: TeacherListItem) => teacher.id;
+const renderRow = ({ item }: { item: TeacherListItem }) => <TeacherRow teacher={item} />;
 
 /**
  * «المعلمين», read-only (R-TCH-01). GET /teachers pages by name and has no search or status filter
@@ -19,14 +22,11 @@ export function TeachersScreen() {
   return (
     <Screen>
       <ScreenHeader title={t.nav.teachers} subtitle={count} />
-      <FlatList
-        style={{ flex: 1, marginHorizontal: -16 }}
-        data={list.items}
-        keyExtractor={(teacher) => teacher.id}
-        renderItem={({ item }) => <TeacherRow teacher={item} />}
-        onEndReached={list.loadMore}
-        refreshing={list.isRefetching}
-        onRefresh={list.refresh}
+      <LazyList
+        tabBar={false}
+        paged={list}
+        keyExtractor={keyOf}
+        renderItem={renderRow}
         ListEmptyComponent={
           list.isPending ? null : list.isError ? (
             <ErrorState onRetry={list.refresh} />

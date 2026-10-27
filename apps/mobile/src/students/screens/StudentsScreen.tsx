@@ -1,17 +1,20 @@
 import { useState } from 'react';
-import { FlatList } from 'react-native';
+
 import { t } from '@/core/lib/i18n/i18n';
 import { usePagedList } from '@/core/lib/query/use-paged-list';
 import { EmptyState } from '@/core/ui/feedback/EmptyState';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';
+import { LazyList } from '@/core/ui/layout/LazyList';
 import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { SearchField } from '@/core/ui/form/SearchField';
-import { useTabBarInset } from '@/core/ui/layout/tab-bar-inset';
 import { StudentFilterBar } from '../list/StudentFilterBar';
 import { activeCount, listParams, NO_FILTERS, type StudentFilters } from '../list/student-filters';
 import { StudentRow } from '../list/StudentRow';
 import type { StudentListItem } from '../shared/types';
+
+const keyOf = (s: StudentListItem) => s.id;
+const renderRow = ({ item }: { item: StudentListItem }) => <StudentRow student={item} />;
 
 /**
  * «الطلاب» tab (R-MOB-02): GET /students, searched server-side by name, phone in any format or code.
@@ -21,7 +24,6 @@ import type { StudentListItem } from '../shared/types';
 export function StudentsScreen() {
   const [search, setSearch] = useState('');
   const [filters, setFilters] = useState<StudentFilters>(NO_FILTERS);
-  const inset = useTabBarInset();
   const list = usePagedList<StudentListItem>({ path: '/students', params: { search, ...listParams(filters) } });
   const filtered = search !== '' || activeCount(filters) > 0;
   const empty = filtered ? t.common.notFound : t.students.empty;
@@ -33,15 +35,10 @@ export function StudentsScreen() {
       />
       <SearchField onSearch={setSearch} label={t.students.searchPlaceholder} />
       <StudentFilterBar value={filters} onChange={setFilters} searching={search !== ''} />
-      <FlatList
-        style={{ flex: 1, marginHorizontal: -16 }}
-        contentContainerStyle={{ paddingBottom: 24 + inset }}
-        data={list.items}
-        keyExtractor={(s) => s.id}
-        renderItem={({ item }) => <StudentRow student={item} />}
-        onEndReached={list.loadMore}
-        refreshing={list.isRefetching}
-        onRefresh={list.refresh}
+      <LazyList
+        paged={list}
+        keyExtractor={keyOf}
+        renderItem={renderRow}
         ListEmptyComponent={
           list.data ? (
             <EmptyState title={empty} />

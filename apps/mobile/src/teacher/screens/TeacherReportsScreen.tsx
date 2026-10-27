@@ -1,15 +1,15 @@
 import { RIYADH_TZ, type TeacherReportView } from '@ab/shared';
 import { useState, type ReactElement } from 'react';
-import { FlatList } from 'react-native';
+
 import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/more/Note';
 import { usePagedList } from '@/core/lib/query/use-paged-list';
 import { EmptyState } from '@/core/ui/feedback/EmptyState';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';
+import { LazyList } from '@/core/ui/layout/LazyList';
 import { FilterPills, type FilterPill } from '@/core/ui/form/FilterPills';
 import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
-import { useTabBarInset } from '@/core/ui/layout/tab-bar-inset';
 import { usePendingReports, useTeacherMe } from '../lib/queries';
 import { PendingReportRow, StudentHistoryRow, SubmittedReportRow } from '../components/ReportRows';
 
@@ -21,8 +21,17 @@ const views = (): FilterPill<View>[] => [
   { value: 'students', label: t.teacherDash.myStudents },
 ];
 
+interface Row {
+  key: string;
+  row: ReactElement;
+}
+
+// The rows are memo: a re-render hands them the same report and tz, so none redraws.
+const keyOf = (item: Row) => item.key;
+const renderRow = ({ item }: { item: Row }) => item.row;
+
 interface Rows {
-  data: readonly { key: string; row: ReactElement }[];
+  data: readonly Row[];
   loaded: boolean;
   failed: boolean;
   empty: string;
@@ -42,7 +51,6 @@ export function TeacherReportsScreen() {
   const tz = me.data?.tz ?? RIYADH_TZ;
   const pending = usePendingReports();
   const sent = usePagedList<TeacherReportView>({ path: '/teachers/me/reports' });
-  const inset = useTabBarInset();
   const rows: Record<View, Rows> = {
     pending: {
       data: (pending.data ?? []).map((r) => ({ key: `${r.lesson_id}:${r.student.id}`, row: <PendingReportRow row={r} tz={tz} /> })),
@@ -75,12 +83,10 @@ export function TeacherReportsScreen() {
     <Screen list>
       <ScreenHeader title={t.teacherNav.reports} />
       <FilterPills items={views()} value={view} onChange={setView} accessibilityLabel={t.teacherNav.reports} />
-      <FlatList
-        style={{ flex: 1, marginHorizontal: -16 }}
-        contentContainerStyle={{ paddingBottom: 24 + inset }}
+      <LazyList
         data={shown.data}
-        keyExtractor={(item) => item.key}
-        renderItem={({ item }) => item.row}
+        keyExtractor={keyOf}
+        renderItem={renderRow}
         onEndReached={shown.more}
         refreshing={shown.refreshing}
         onRefresh={shown.refresh}

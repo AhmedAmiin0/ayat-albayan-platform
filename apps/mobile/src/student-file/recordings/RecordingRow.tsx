@@ -1,3 +1,4 @@
+import { memo, useCallback } from 'react';
 import { RIYADH_TZ, type StudentRecordingView } from '@ab/shared';
 import { View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
@@ -9,6 +10,7 @@ import { RecordingDelete } from './RecordingDelete';
 import { RecordingPlay } from './RecordingPlay';
 import { RecordingVisibility } from './RecordingVisibility';
 import { useClockCycle, whenIn } from '@/core/lib/clock';
+import { useStableHandler } from '@/core/lib/stable-handler';
 
 const R = t.mobileStudentFile.recordings;
 const CHIP = {
@@ -26,12 +28,14 @@ interface RecordingRowProps {
   canManage: boolean;
   /** Admin (and recordings.manage): the delete button. */
   canDelete: boolean;
-  getUrl: () => Promise<string | null>;
+  /** Stable: a fresh signed link for this recording's id. */
+  getUrl: (id: string) => Promise<string | null>;
 }
 
 /** One recording: when, who taught, length, size, status, play, the visibility switch and delete. */
-export function RecordingRow({ rec, studentId, tz = RIYADH_TZ, canManage, canDelete, getUrl }: RecordingRowProps) {
+const RecordingRow = memo(function RecordingRow({ rec, studentId, tz = RIYADH_TZ, canManage, canDelete, getUrl }: RecordingRowProps) {
   const cycle = useClockCycle();
+  const url = useCallback(() => getUrl(rec.id), [getUrl, rec.id]);
   const { color } = useTheme();
   const when = whenIn(new Date(rec.lesson_starts_at), tz, cycle);
   const fact = (label: string, value: string) => (
@@ -50,7 +54,7 @@ export function RecordingRow({ rec, studentId, tz = RIYADH_TZ, canManage, canDel
       {fact(R.teacher, rec.teacher ? teacherLabel(rec.teacher) : R.unknown)}
       {fact(R.duration, durationText(rec.duration_seconds))}
       {fact(R.size, sizeText(rec.size_bytes))}
-      {rec.status === 'done' ? <RecordingPlay when={when} getUrl={getUrl} /> : null}
+      {rec.status === 'done' ? <RecordingPlay when={when} getUrl={url} /> : null}
       {rec.status !== 'deleted' ? (
         <RecordingVisibility rec={rec} studentId={studentId} editable={canManage && rec.can_manage} />
       ) : null}
@@ -58,5 +62,36 @@ export function RecordingRow({ rec, studentId, tz = RIYADH_TZ, canManage, canDel
         <RecordingDelete id={rec.id} studentId={studentId} />
       ) : null}
     </View>
+  );
+});
+
+interface RecordingRowsOptions {
+  studentId: string;
+  /** The teacher's own profile (their tz); none for the admin: Riyadh. */
+  me: { tz: string } | undefined;
+  manage: boolean;
+  /** The admin's list: delete too. */
+  admin: boolean;
+  freshUrl: (id: string) => Promise<string | null>;
+}
+
+/** The list's renderItem, stable while its options are: a refetch redraws only the changed recordings. */
+export function useRecordingRow({ studentId, me, manage, admin, freshUrl }: RecordingRowsOptions) {
+  const tz = me?.tz ?? RIYADH_TZ;
+  const getUrl = useStableHandler(freshUrl);
+  // Keyed by the recording: play and delete hold state that a recycled row must not carry over.
+  return useCallback(
+    ({ item }: { item: StudentRecordingView }) => (
+      <RecordingRow
+        key={item.id}
+        rec={item}
+        studentId={studentId}
+        tz={tz}
+        canManage={manage}
+        canDelete={admin && manage && item.can_manage}
+        getUrl={getUrl}
+      />
+    ),
+    [studentId, tz, manage, admin, getUrl],
   );
 }

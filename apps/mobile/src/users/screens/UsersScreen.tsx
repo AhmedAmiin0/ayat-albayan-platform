@@ -1,7 +1,7 @@
 import type { UserView } from '@ab/shared';
 import { router } from 'expo-router';
 import { useState } from 'react';
-import { ActivityIndicator, FlatList, View } from 'react-native';
+import { ActivityIndicator, View } from 'react-native';
 import type { Can } from '@/auth/use-permissions';
 import { t } from '@/core/lib/i18n/i18n';
 import { usePagedList } from '@/core/lib/query/use-paged-list';
@@ -9,6 +9,7 @@ import { useTheme } from '@/theme';
 import { Button } from '@/core/ui/primitives/Button';
 import { EmptyState } from '@/core/ui/feedback/EmptyState';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';
+import { LazyList } from '@/core/ui/layout/LazyList';
 import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { SearchField } from '@/core/ui/form/SearchField';
@@ -16,6 +17,10 @@ import { FIRST_VIEW, USERS_PAGE_SIZE, type UsersView } from '../shared/api';
 import { backToMore } from '../shared/nav';
 import { UserItem } from '../list/UserItem';
 import { UsersFilters } from '../list/UsersFilters';
+
+const keyOf = (u: UserView) => u.id;
+const openUser = (id: string) => router.push(`/more/users/${id}`);
+const renderRow = ({ item }: { item: UserView }) => <UserItem user={item} onOpen={openUser} />;
 
 /**
  * «المستخدمون» (users.read), the web's /admin/users: every login with its role, linked record and
@@ -41,15 +46,12 @@ export function UsersScreen({ can }: { can: Can }) {
       ) : null}
       <SearchField label={t.users.searchPlaceholder} onSearch={(q) => setView((v) => ({ ...v, q }))} />
       <UsersFilters view={view} onChange={setView} />
-      <FlatList
-        style={{ flex: 1, marginHorizontal: -16 }}
-        data={list.items}
+      <LazyList
+        paged={list}
         testID="users-list"
-        keyExtractor={(u) => u.id}
-        renderItem={({ item }) => <UserItem user={item} onPress={() => router.push(`/more/users/${item.id}`)} />}
-        onEndReached={list.loadMore}
-        refreshing={list.isRefetching}
-        onRefresh={list.refresh}
+        tabBar={false}
+        keyExtractor={keyOf}
+        renderItem={renderRow}
         keyboardShouldPersistTaps="handled"
         ListEmptyComponent={
           list.data ? (

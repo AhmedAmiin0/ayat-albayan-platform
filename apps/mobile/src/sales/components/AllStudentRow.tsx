@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import { studentStatusStyle, type SalesStudentView } from '@ab/shared';
 import { router } from 'expo-router';
 import { t } from '@/core/lib/i18n/i18n';
@@ -11,7 +12,7 @@ import { guardianLine, studentSubtitle } from '../lib/sales-text';
  * status chip. Never a balance, package, note, phone or meeting link. One of hers (`mine`) is a button
  * to «تفاصيل الطالب» (docs/16 row 36); any other student is a plain line.
  */
-export function AllStudentRow({ student }: { student: SalesStudentView }) {
+export const AllStudentRow = memo(function AllStudentRow({ student }: { student: SalesStudentView }) {
   return (
     <ListRow
       {...(student.mine && { onPress: () => router.push(`/sales/students/${student.id}`) })}
@@ -22,4 +23,4 @@ export function AllStudentRow({ student }: { student: SalesStudentView }) {
       trailing={<StatusChip {...studentStatusStyle[student.status]} label={t.enums.studentStatus[student.status]} size="sm" />}
     />
   );
-}
+});

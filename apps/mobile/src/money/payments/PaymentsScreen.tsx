@@ -1,7 +1,7 @@
 import type { PaymentKind, PaymentView } from '@ab/shared';
 import { router } from 'expo-router';
 import { useState } from 'react';
-import { ActivityIndicator, FlatList } from 'react-native';
+import { ActivityIndicator } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { usePagedList } from '@/core/lib/query/use-paged-list';
 import { type, useTheme } from '@/theme';
@@ -9,6 +9,7 @@ import { AppText } from '@/core/ui/primitives/AppText';
 import { Button } from '@/core/ui/primitives/Button';
 import { EmptyState } from '@/core/ui/feedback/EmptyState';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';
+import { LazyList } from '@/core/ui/layout/LazyList';
 import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { paymentParams } from './filters';
@@ -16,6 +17,10 @@ import { PaymentFilters } from './PaymentFilters';
 import { PaymentItem } from './PaymentItem';
 import { PaymentTotals } from './PaymentTotals';
 import { periodTotals } from '../shared/queries';
+
+const keyOf = (p: PaymentView) => p.id;
+// Keyed by the payment: its receipt viewers hold state (open, loading) that a recycled row must not carry over.
+const renderPayment = ({ item }: { item: PaymentView }) => <PaymentItem key={item.id} payment={item} />;
 
 /**
  * «كل المدفوعات» (web /admin/payments): newest first, filtered by type and month, with the period's
@@ -35,14 +40,11 @@ export function PaymentsScreen() {
         trailing={<Button variant="ghost" label={t.common.back} onPress={() => router.back()} />}
       />
       <PaymentFilters kind={kind} month={month} onKind={setKind} onMonth={setMonth} />
-      <FlatList
-        style={{ flex: 1, marginHorizontal: -16 }}
-        data={list.items}
-        keyExtractor={(p) => p.id}
-        renderItem={({ item }) => <PaymentItem payment={item} />}
-        onEndReached={list.loadMore}
-        refreshing={list.isRefetching}
-        onRefresh={list.refresh}
+      <LazyList
+        paged={list}
+        tabBar={false}
+        keyExtractor={keyOf}
+        renderItem={renderPayment}
         ListHeaderComponent={<PaymentTotals totals={totals} />}
         ListFooterComponent={
           list.data ? (

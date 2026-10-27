@@ -16,7 +16,9 @@ const NATIVE_PATHS = [`${MOBILE}/assets`, `${MOBILE}/eas.json`];
 const isNativePath = (f) => f === `${MOBILE}/eas.json` || /^apps\/mobile\/assets\/[^/]+$/.test(f);
 // Pure-JS packages (no native code, no config plugin): a version change ships by OTA.
 // Google fonts are .ttf files loaded at runtime by expo-font's useFonts, not embedded by its plugin.
-const JS_ONLY_DEPS = [/^@expo-google-fonts\//, /^@tanstack\//, /^@supabase\/supabase-js$/];
+// @shopify/flash-list v2 is a JS-only recycler on the New Architecture: its package ships dist/*.js and
+// src/*.ts, no android/, ios/, podspec or config plugin (checked on 2.0.2, the SDK 57 version).
+const JS_ONLY_DEPS = [/^@expo-google-fonts\//, /^@tanstack\//, /^@supabase\/supabase-js$/, /^@shopify\/flash-list$/];
 const jsOnly = (name, version) => String(version).startsWith('workspace:') || JS_ONLY_DEPS.some((r) => r.test(name));
 
 const same = (a, b) => JSON.stringify(a ?? null) === JSON.stringify(b ?? null);

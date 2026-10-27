@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import type { PaymentView } from '@ab/shared';
 import { View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
@@ -13,7 +14,7 @@ import { ReceiptViewer } from '../attachments/ReceiptViewer';
  * One payment or refund: the amount (refunds struck in saffron-free ink with the «استرداد» word),
  * student + code, method and day, who recorded it, then its «المرفقات» (bank, or a stored receipt), the booking invoice, or «بلا إيصال».
  */
-export function PaymentItem({ payment }: { payment: PaymentView }) {
+export const PaymentItem = memo(function PaymentItem({ payment }: { payment: PaymentView }) {
   const { color } = useTheme();
   const refund = payment.kind === 'refund';
   // The booking invoice standing in for a receipt has its own viewer; any stored file is in «المرفقات».
@@ -45,4 +46,4 @@ export function PaymentItem({ payment }: { payment: PaymentView }) {
       {!files && !invoiceOnly ? <AppText style={{ ...small, color: color.ink3 }}>{t.mobileMoney.noReceipt}</AppText> : null}
     </View>
   );
-}
+});

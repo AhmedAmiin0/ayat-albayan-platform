@@ -1,7 +1,7 @@
 import type { ActivityView } from '@ab/shared';
 import { router } from 'expo-router';
 import { useState } from 'react';
-import { FlatList, View } from 'react-native';
+import { View } from 'react-native';
 import { clockAt } from '@/inbox/shared/format';
 import { t } from '@/core/lib/i18n/i18n';
 import { usePagedList } from '@/core/lib/query/use-paged-list';
@@ -14,7 +14,10 @@ import { ActivityFilterBar } from './ActivityFilterBar';
 import { ActivityRow } from './ActivityRow';
 import { filterParams, isFiltered, NO_FILTERS, type ActivityFilters } from './activity-filters';
 import { useClockCycle } from '@/core/lib/clock';
+import { LazyList } from '@/core/ui/layout/LazyList';
 
+const keyOf = (r: ActivityView) => r.id;
+const renderRow = ({ item }: { item: ActivityView }) => <ActivityRow row={item} />;
 const back = () => (router.canGoBack() ? router.back() : router.replace('/more'));
 
 /**
@@ -38,20 +41,17 @@ export function ActivityScreen() {
         subtitle={subtitle}
         trailing={<Button variant="ghost" label={t.common.back} onPress={back} />}
       />
-      <FlatList
-        style={{ flex: 1, marginHorizontal: -16 }}
-        data={list.items}
-        keyExtractor={(r) => r.id}
-        renderItem={({ item }) => <ActivityRow row={item} />}
+      <LazyList
+        paged={list}
+        tabBar={false}
+        keyExtractor={keyOf}
+        renderItem={renderRow}
         ListHeaderComponent={
           <View style={{ paddingHorizontal: 16, paddingBottom: 12 }}>
             <ActivityFilterBar value={filters} onChange={setFilters} />
           </View>
         }
         keyboardShouldPersistTaps="handled"
-        onEndReached={list.loadMore}
-        refreshing={list.isRefetching}
-        onRefresh={list.refresh}
         ListEmptyComponent={
           list.data ? (
             <EmptyState

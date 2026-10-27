@@ -1,13 +1,14 @@
 import { RIYADH_TZ, type ReportSummaryView, type TeacherMe } from '@ab/shared';
 import { router, useLocalSearchParams } from 'expo-router';
-import { useState } from 'react';
-import { FlatList } from 'react-native';
+import { memo, useCallback, useMemo, useState } from 'react';
+
 import { ErrorLine } from '@/inbox/ErrorLine';
 import { t } from '@/core/lib/i18n/i18n';
 import { usePagedList } from '@/core/lib/query/use-paged-list';
 import { Button } from '@/core/ui/primitives/Button';
 import { EmptyState } from '@/core/ui/feedback/EmptyState';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';
+import { LazyList } from '@/core/ui/layout/LazyList';
 import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { useStudentName } from '@/ops/reports/use-student-name';
@@ -27,6 +28,23 @@ function rowPress(r: ReportSummaryView, who: 'admin' | string | undefined): (() 
   return r.teacher.id === who ? () => router.push(reportFormHref(r.lesson_id)) : undefined;
 }
 
+const keyOf = (r: ReportSummaryView) => r.id;
+const whoOf = (admin: boolean, me: TeacherMe | undefined) => (admin ? 'admin' : me?.id);
+
+interface ReportItemProps {
+  row: ReportSummaryView;
+  tz: string;
+  who: 'admin' | string | undefined;
+  onPdfFailed: () => void;
+}
+
+/** A history row with its own stable handlers, so a re-render of the screen redraws none. */
+const ReportItem = memo(function ReportItem({ row, tz, who, onPdfFailed }: ReportItemProps) {
+  const onPdf = useCallback(() => void openSigned(`/reports/${row.id}/pdf`).catch(onPdfFailed), [row.id, onPdfFailed]);
+  const onPress = useMemo(() => rowPress(row, who), [row, who]);
+  return <ReportHistoryRow row={row} tz={tz} onPdf={onPdf} onPress={onPress} />;
+});
+
 /**
  * «سجل التقارير» of one of my students (R-REP-05, R-TCH-03): every sent report, newest first, with
  * its PDF once it is ready. The API allows only a student I teach. ponytail: no grade chart here
@@ -40,6 +58,14 @@ export function StudentReportsScreen({ admin = false }: { admin?: boolean }) {
   const name = adminName ?? teacherStudentName(me.data, id);
   const list = usePagedList<ReportSummaryView>({ path: `/students/${id}/reports`, pageSize: 10 });
   const [error, setError] = useState(false);
+  const pdfFailed = useCallback(() => setError(true), []);
+  // Only my own lessons' reports open as a form; another teacher's stays a history line.
+  // The admin reads any report (read-only, ops/AdminReportScreen).
+  const who = whoOf(admin, me.data);
+  const renderItem = useCallback(
+    ({ item }: { item: ReportSummaryView }) => <ReportItem row={item} tz={tz} who={who} onPdfFailed={pdfFailed} />,
+    [tz, who, pdfFailed],
+  );
   const back = () => (router.canGoBack() ? router.back() : router.replace(admin ? `/students/${id}` : '/teacher/reports'));
   return (
     <Screen>
@@ -48,23 +74,11 @@ export function StudentReportsScreen({ admin = false }: { admin?: boolean }) {
       <TrialChatNote status={teacherStudentStatus(me.data, id)} />
       {admin ? null : <RecordingsButton href={`/teacher/reports/student/recordings/${id}`} />}
       {error ? <ErrorLine message={t.reports.error.pdf_not_ready} /> : null}
-      <FlatList
-        style={{ flex: 1, marginHorizontal: -16 }}
-        data={list.items}
-        keyExtractor={(r) => r.id}
-        renderItem={({ item: r }) => (
-          <ReportHistoryRow
-            row={r}
-            tz={tz}
-            onPdf={() => void openSigned(`/reports/${r.id}/pdf`).catch(() => setError(true))}
-            // Only my own lessons' reports open as a form; another teacher's stays a history line.
-            // The admin reads any report (read-only, ops/AdminReportScreen).
-            onPress={rowPress(r, admin ? 'admin' : me.data?.id)}
-          />
-        )}
-        onEndReached={list.loadMore}
-        refreshing={list.isRefetching}
-        onRefresh={list.refresh}
+      <LazyList
+        paged={list}
+        tabBar={false}
+        keyExtractor={keyOf}
+        renderItem={renderItem}
         ListEmptyComponent={
           list.data ? <EmptyState title={t.reports.noReports} /> : list.isError ? <ErrorState onRetry={list.refresh} /> : null
         }

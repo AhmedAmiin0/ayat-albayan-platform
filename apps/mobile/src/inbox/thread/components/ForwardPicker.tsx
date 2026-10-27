@@ -1,11 +1,12 @@
 import { FORWARD_MAX_TARGETS, type MessageView, type ThreadView } from '@ab/shared';
-import { useState } from 'react';
-import { FlatList, View } from 'react-native';
+import { useCallback, useMemo, useState } from 'react';
+import { View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/more/Note';
 import { Button } from '@/core/ui/primitives/Button';
 import { EmptyState } from '@/core/ui/feedback/EmptyState';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';
+import { LazyList } from '@/core/ui/layout/LazyList';
 import { SearchField } from '@/core/ui/form/SearchField';
 import { useChatActions } from '../hooks/chat-actions';
 import { ErrorLine } from '../../ErrorLine';
@@ -15,6 +16,7 @@ import { useForward, useForwardId } from '../hooks/use-forward';
 import { useThreadList } from '../../threads-list/use-thread-list';
 
 const MAX = FORWARD_MAX_TARGETS;
+const keyOf = (th: ThreadView) => th.phone_e164;
 
 interface ForwardPickerProps {
   message: MessageView;
@@ -37,15 +39,28 @@ export function ForwardPicker({ message, from, onDone }: ForwardPickerProps) {
   const forward = useForward();
   const idFor = useForwardId();
   const full = picked.length >= MAX;
-  const isPicked = (th: ThreadView) => picked.some((p) => p.phone_e164 === th.phone_e164);
-  const toggle = (th: ThreadView) =>
-    setPicked((now) =>
-      now.some((p) => p.phone_e164 === th.phone_e164)
-        ? now.filter((p) => p.phone_e164 !== th.phone_e164)
-        : now.length < MAX
-          ? [...now, th]
-          : now,
-    );
+  const pickedPhones = useMemo(() => new Set(picked.map((p) => p.phone_e164)), [picked]);
+  // Stable (functional update): the rows are memo, a tick redraws only the row it changes (and the
+  // others' disabled state when the fifth pick fills the list).
+  const toggle = useCallback(
+    (th: ThreadView) =>
+      setPicked((now) =>
+        now.some((p) => p.phone_e164 === th.phone_e164)
+          ? now.filter((p) => p.phone_e164 !== th.phone_e164)
+          : now.length < MAX
+            ? [...now, th]
+            : now,
+      ),
+    [],
+  );
+  const chats = useMemo(() => list.items.filter((th) => th.phone_e164 !== from), [list.items, from]);
+  const renderItem = useCallback(
+    ({ item }: { item: ThreadView }) => {
+      const on = pickedPhones.has(item.phone_e164);
+      return <ForwardRow thread={item} checked={on} disabled={full && !on} onToggle={toggle} />;
+    },
+    [pickedPhones, full, toggle],
+  );
 
   const send = () => {
     const targets = picked.map((p) => p.phone_e164);
@@ -68,16 +83,14 @@ export function ForwardPicker({ message, from, onDone }: ForwardPickerProps) {
           ? t.inbox.forward.max.replace('{max}', String(MAX))
           : selectedLine(picked.length, MAX)}
       </Note>
-      <FlatList
+      <LazyList
         testID="forward-list"
-        style={{ flex: 1, marginHorizontal: -16 }}
         keyboardShouldPersistTaps="handled"
-        data={list.items.filter((th) => th.phone_e164 !== from)}
-        keyExtractor={(th) => th.phone_e164}
-        renderItem={({ item }) => {
-          const on = isPicked(item);
-          return <ForwardRow thread={item} checked={on} disabled={full && !on} onToggle={toggle} />;
-        }}
+        tabBar={false}
+        data={chats}
+        keyExtractor={keyOf}
+        renderItem={renderItem}
+        extraData={pickedPhones}
         onEndReached={list.loadMore}
         ListEmptyComponent={
           list.isError ? (
