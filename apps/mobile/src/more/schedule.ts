@@ -1,4 +1,5 @@
-import { CAIRO_TZ, intlLocale, RIYADH_TZ } from '@ab/shared';
+import { CAIRO_TZ, intlLocale, RIYADH_TZ, type ClockCycle } from '@ab/shared';
+import { clockIn, hhmm, rangeOf } from '@/core/lib/clock';
 import { t } from '@/core/lib/i18n/i18n';
 import { locale } from '@/core/lib/i18n/locale';
 import { ltr } from '@/core/ui/primitives/Ltr';
@@ -40,9 +41,9 @@ export function tzLabel(tz: string): string {
   return ltr(tz);
 }
 
-/** «16:00 – 18:00»; render it inside <Ltr>. */
-export function slotRange(slot: Pick<AvailabilityRow, 'start_time' | 'end_time'>): string {
-  return `${slot.start_time} – ${slot.end_time}`;
+/** «16:00 – 18:00» / «4:00 م – 6:00 م», already isolated (render it as plain text). */
+export function slotRange(slot: Pick<AvailabilityRow, 'start_time' | 'end_time'>, cycle: ClockCycle): string {
+  return rangeOf(hhmm(slot.start_time, cycle), hhmm(slot.end_time, cycle), cycle);
 }
 
 /** Time-off not over yet (ends after `now`), soonest first. */
@@ -58,21 +59,13 @@ const day = new Intl.DateTimeFormat(intlLocale(locale), {
   day: 'numeric',
   month: 'long',
 });
-const dayTime = new Intl.DateTimeFormat(intlLocale(locale), {
-  weekday: 'long',
-  day: 'numeric',
-  month: 'long',
-  hour: '2-digit',
-  minute: '2-digit',
-  hourCycle: 'h23',
-});
 const atMidnight = (d: Date) => d.getHours() === 0 && d.getMinutes() === 0;
 
 /**
  * UTC instants → the span in the device's zone (like the web). Whole days read as days with the
  * end exclusive (10th 00:00 → 13th 00:00 = 10 – 12); one whole day is just that day.
  */
-export function formatTimeOff(off: Pick<TimeOff, 'starts_at' | 'ends_at'>): string {
+export function formatTimeOff(off: Pick<TimeOff, 'starts_at' | 'ends_at'>, cycle: ClockCycle): string {
   const start = new Date(off.starts_at);
   const end = new Date(off.ends_at);
   if (atMidnight(start) && atMidnight(end)) {
@@ -80,5 +73,7 @@ export function formatTimeOff(off: Pick<TimeOff, 'starts_at' | 'ends_at'>): stri
     const last = day.format(new Date(end.getTime() - 60_000));
     return first === last ? first : `${first} – ${last}`;
   }
-  return `${dayTime.format(start)} – ${dayTime.format(end)}`;
+  const deviceTz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  const dayTime = (d: Date) => `${day.format(d)} ${clockIn(d, deviceTz, cycle)}`;
+  return `${dayTime(start)} – ${dayTime(end)}`;
 }

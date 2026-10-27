@@ -22,6 +22,7 @@ import { useLessonDetails } from '../details/use-lesson-details';
 import { PeriodSwitcher } from '../overview/PeriodSwitcher';
 import { useAvailability, useTeacher, useWeekLessons } from '../lib/queries';
 import { addDays, riyadhToday, weekLabel, weekStart, weekWindow } from '../lib/week';
+import { useClockCycle } from '@/core/lib/clock';
 
 /**
  * «جدول المعلم/ة» (R-TCH-02, R-SCH-01): one teacher's week, السبت → الجمعة, as a day-by-day agenda
@@ -30,6 +31,7 @@ import { addDays, riyadhToday, weekLabel, weekStart, weekWindow } from '../lib/w
  * sheet and «عدّل الوقت» the in-place edit sheet; a tap on the row opens «تفاصيل الحلقة». Pull to refresh; offline the saved week stays with its «آخر تحديث».
  */
 export function TeacherCalendarScreen() {
+  const cycle = useClockCycle();
   const { id = '' } = useLocalSearchParams<{ id: string }>();
   const today = riyadhToday(useNow());
   const [start, setStart] = useFollowingDay(weekStart(today));
@@ -43,7 +45,7 @@ export function TeacherCalendarScreen() {
   const days = agendaDays(lessons.data ?? [], start);
   const empty = days.every((d) => d.lessons.length === 0);
   const tzLine = t.availability.tzHint.replace('{tz}', t.runningHead.riyadh);
-  const subtitle = headerLine([t.calendar.teacherCalendar, tzLine], lessons);
+  const subtitle = headerLine([t.calendar.teacherCalendar, tzLine], lessons, cycle);
 
   return (
     <Screen>
@@ -66,12 +68,13 @@ export function TeacherCalendarScreen() {
         contentContainerStyle={{ paddingBottom: 24 }}
         data={loaded ? days : []}
         keyExtractor={(day) => day.date}
+        extraData={cycle}
         ListHeaderComponent={loaded && empty ? <Note>{t.schedule.emptyTeacher}</Note> : null}
         renderItem={({ item }) => (
           <AgendaDayView
             day={item}
             today={item.date === today}
-            available={availabilityLine(grid.data ?? [], item.date, teacher.data?.tz ?? RIYADH_TZ)}
+            available={availabilityLine(grid.data ?? [], { date: item.date, teacherTz: teacher.data?.tz ?? RIYADH_TZ, cycle })}
             onReschedule={setMoving}
             onEditTime={setEditing}
             onOpen={details.open}

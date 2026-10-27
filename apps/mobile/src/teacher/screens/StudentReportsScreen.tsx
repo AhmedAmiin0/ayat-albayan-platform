@@ -1,10 +1,9 @@
-import { lessonWhenText, RIYADH_TZ, type ReportSummaryView, type TeacherMe } from '@ab/shared';
+import { RIYADH_TZ, type ReportSummaryView, type TeacherMe } from '@ab/shared';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import { FlatList } from 'react-native';
 import { ErrorLine } from '@/inbox/ErrorLine';
 import { t } from '@/core/lib/i18n/i18n';
-import { locale } from '@/core/lib/i18n/locale';
 import { usePagedList } from '@/core/lib/query/use-paged-list';
 import { Button } from '@/core/ui/primitives/Button';
 import { EmptyState } from '@/core/ui/feedback/EmptyState';
@@ -18,6 +17,7 @@ import { useTeacherMe } from '../lib/queries';
 import { openSigned } from '../report/hooks/api';
 import { reportFormHref } from '../components/ReportRows';
 import { TrialChatNote } from '../components/TrialChatNote';
+import { useClockCycle, whenIn } from '@/core/lib/clock';
 
 /** «الحلقة 12 · ممتاز»: the lesson number, then the overall grade or, without grades, the attendance. */
 function summaryLine(r: ReportSummaryView): string {
@@ -42,6 +42,7 @@ function rowPress(r: ReportSummaryView, who: 'admin' | string | undefined): (() 
  * (the web has it); add it when teachers ask.
  */
 export function StudentReportsScreen({ admin = false }: { admin?: boolean }) {
+  const cycle = useClockCycle();
   const { id = '' } = useLocalSearchParams<{ id: string }>();
   const me = useTeacherMe(!admin);
   const adminName = useStudentName(id, admin);
@@ -61,9 +62,10 @@ export function StudentReportsScreen({ admin = false }: { admin?: boolean }) {
         style={{ flex: 1, marginHorizontal: -16 }}
         data={list.items}
         keyExtractor={(r) => r.id}
+        extraData={cycle}
         renderItem={({ item: r }) => (
           <ListRow
-            title={lessonWhenText(new Date(r.starts_at), tz, locale)}
+            title={whenIn(new Date(r.starts_at), tz, cycle)}
             subtitle={summaryLine(r)}
             trailing={
               r.pdf_status === 'ready' ? (

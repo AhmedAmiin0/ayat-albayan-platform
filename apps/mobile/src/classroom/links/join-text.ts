@@ -1,4 +1,5 @@
 import { ApiError } from '@/core/lib/http/api';
+import type { ClockCycle } from '@ab/shared';
 import { t } from '@/core/lib/i18n/i18n';
 import { riyadhTime } from '@/today/lib/lesson-text';
 
@@ -13,5 +14,5 @@ export function joinError(error: unknown): string {
 }
 
 /** «بتفتح الساعة 15:45», on the Riyadh clock like the row's own time. */
-export const opensAtLine = (opensAt: string): string =>
-  t.classroom.opensAt.replace('{time}', riyadhTime(opensAt));
+export const opensAtLine = (opensAt: string, cycle: ClockCycle): string =>
+  t.classroom.opensAt.replace('{time}', riyadhTime(opensAt, cycle));

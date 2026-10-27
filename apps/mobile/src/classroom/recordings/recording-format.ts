@@ -1,4 +1,5 @@
-import { intlLocale, type Glyph, type LessonRecordingView, type Tone } from '@ab/shared';
+import { intlLocale, type ClockCycle, type Glyph, type LessonRecordingView, type Tone } from '@ab/shared';
+import { clockIn, dateWithClock } from '@/core/lib/clock';
 import { locale } from '@/core/lib/i18n/locale';
 
 /** Where a recording list comes from: a lesson (admin, its teacher) or an internal meeting (admin, creator). */
@@ -14,16 +15,11 @@ export const RECORDING_CHIP: Record<LessonRecordingView['status'], { tone: Tone;
   failed: { tone: 'bad', glyph: 'struck' },
 };
 
-/** The start of a recording: date + 24 h time in the app language, Western digits (`timeZone` is a test seam). */
-export function recordingTime(iso: string, timeZone = 'Asia/Riyadh'): string {
-  return new Intl.DateTimeFormat(intlLocale(locale), {
-    day: 'numeric',
-    month: 'short',
-    hour: '2-digit',
-    minute: '2-digit',
-    hourCycle: 'h23',
-    timeZone,
-  }).format(new Date(iso));
+/** The start of a recording: date + time (12 or 24 h) in the app language, Western digits (`timeZone` is a test seam). */
+export function recordingTime(iso: string, cycle: ClockCycle, timeZone = 'Asia/Riyadh'): string {
+  const at = new Date(iso);
+  const day = new Intl.DateTimeFormat(intlLocale(locale), { day: 'numeric', month: 'short', timeZone }).format(at);
+  return dateWithClock(day, clockIn(at, timeZone, cycle));
 }
 
 /** GET /lessons/:id/recordings or /meetings/:id/recordings. */

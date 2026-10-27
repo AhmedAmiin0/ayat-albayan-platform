@@ -1,4 +1,5 @@
-import { applyLessonEvent, clockTime, isOpenLesson, lessonStatusStyle, type LessonView } from '@ab/shared';
+import { applyLessonEvent, clockTime, isOpenLesson, lessonStatusStyle, type ClockCycle, type LessonView } from '@ab/shared';
+import { clockIn, useClockCycle } from '@/core/lib/clock';
 import { Linking, View } from 'react-native';
 import { JoinClassroomButton } from '@/classroom/links/JoinClassroomButton';
 import { ErrorLine } from '@/inbox/ErrorLine';
@@ -26,12 +27,12 @@ export interface TeacherLessonCardProps {
 }
 
 /** «16:00 · 45 دقيقة · عند الطالب 15:00» on the teacher's clock, the student's when it differs. */
-function timeLine(lesson: LessonView, tz: string): string {
+function timeLine(lesson: LessonView, tz: string, cycle: ClockCycle): string {
   const start = new Date(lesson.starts_at);
   const theirs = [...new Set(lesson.students.map((s) => s.tz))]
     .filter((z) => z && clockTime(start, z) !== clockTime(start, tz))
-    .map((z) => t.teacherDash.studentTime.replace('{time}', clockTime(start, z)));
-  return [clockTime(start, tz), durationLabel(lesson), ...theirs].filter(Boolean).join(' · ');
+    .map((z) => t.teacherDash.studentTime.replace('{time}', clockIn(start, z, cycle)));
+  return [clockIn(start, tz, cycle), durationLabel(lesson), ...theirs].filter(Boolean).join(' · ');
 }
 
 /**
@@ -73,7 +74,7 @@ export function TeacherLessonCard(p: TeacherLessonCardProps) {
         </View>
       </View>
       <AppText style={{ fontFamily: type.ui[500], fontSize: type.size.xs, color: color.ink2, fontVariant: ['tabular-nums'] }}>
-        {timeLine(lesson, p.tz)}
+        {timeLine(lesson, p.tz, useClockCycle())}
       </AppText>
       {p.error ? <ErrorLine message={p.error} /> : null}
       {auto ? <JoinClassroomButton lesson={lesson} /> : null}

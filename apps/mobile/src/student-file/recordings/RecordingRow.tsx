@@ -1,7 +1,6 @@
-import { lessonWhenText, RIYADH_TZ, type StudentRecordingView } from '@ab/shared';
+import { RIYADH_TZ, type StudentRecordingView } from '@ab/shared';
 import { View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
-import { locale } from '@/core/lib/i18n/locale';
 import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { StatusChip } from '@/core/ui/feedback/StatusChip';
@@ -9,6 +8,7 @@ import { durationText, sizeText, teacherLabel } from './recording-format';
 import { RecordingDelete } from './RecordingDelete';
 import { RecordingPlay } from './RecordingPlay';
 import { RecordingVisibility } from './RecordingVisibility';
+import { useClockCycle, whenIn } from '@/core/lib/clock';
 
 const R = t.mobileStudentFile.recordings;
 const CHIP = {
@@ -31,8 +31,9 @@ interface RecordingRowProps {
 
 /** One recording: when, who taught, length, size, status, play, the visibility switch and delete. */
 export function RecordingRow({ rec, studentId, tz = RIYADH_TZ, canManage, canDelete, getUrl }: RecordingRowProps) {
+  const cycle = useClockCycle();
   const { color } = useTheme();
-  const when = lessonWhenText(new Date(rec.lesson_starts_at), tz, locale);
+  const when = whenIn(new Date(rec.lesson_starts_at), tz, cycle);
   const fact = (label: string, value: string) => (
     <AppText style={{ fontFamily: type.ui[400], fontSize: type.size.xs, color: color.ink2, fontVariant: ['tabular-nums'] }}>
       {`${label}: ${value}`}

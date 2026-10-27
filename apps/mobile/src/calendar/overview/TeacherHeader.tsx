@@ -1,6 +1,7 @@
 import { teacherName } from '@ab/shared';
 import { router } from 'expo-router';
 import { Pressable, View } from 'react-native';
+import { useClockCycle } from '@/core/lib/clock';
 import { t } from '@/core/lib/i18n/i18n';
 import { locale } from '@/core/lib/i18n/locale';
 import { shape, type, useTheme } from '@/theme';
@@ -23,12 +24,13 @@ interface TeacherHeaderProps {
 export function TeacherHeader({ agenda, showWindows }: TeacherHeaderProps) {
   const { color } = useTheme();
   const { teacher } = agenda;
+  const cycle = useClockCycle();
   const faint = {
     fontFamily: type.ui[400],
     fontSize: type.size.xs,
     lineHeight: type.lineHeight(type.size.xs),
   };
-  const available = showWindows ? windowsLine(agenda.windows) : null;
+  const available = showWindows ? windowsLine(agenda.windows, cycle) : null;
   return (
     // Sticky over the rows (SectionList): the page's own ground, so nothing shows through.
     <View style={{ gap: 2, paddingTop: 10, paddingBottom: 2, backgroundColor: color.margin }}>
@@ -63,7 +65,7 @@ export function TeacherHeader({ agenda, showWindows }: TeacherHeaderProps) {
       {available ? <AppText style={{ ...faint, color: color.ink3 }}>{available}</AppText> : null}
       {agenda.timeOff.map((off) => (
         <AppText key={off.id} style={{ ...faint, color: color.ink2 }}>
-          {timeOffLine(off)}
+          {timeOffLine(off, cycle)}
         </AppText>
       ))}
       {agenda.items.some((i) => i.kind === 'lesson') ? null : (

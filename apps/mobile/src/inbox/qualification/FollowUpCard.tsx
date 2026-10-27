@@ -12,6 +12,7 @@ import { deviceTimeZone } from '../messages/hooks/message-text';
 import { followUpLines } from './follow-up-text';
 import { Heading } from './Heading';
 import { saveErrorText, useFollowUpTotal, useLeadPatch, type LeadProfile } from './queries';
+import { useClockCycle } from '@/core/lib/clock';
 
 const f = t.followUps;
 
@@ -26,6 +27,7 @@ interface FollowUpCardProps {
  * per-lead pause. A lead who sent «وقف» opted out of marketing: resuming asks first.
  */
 export function FollowUpCard({ lead, offline }: FollowUpCardProps) {
+  const cycle = useClockCycle();
   const { color } = useTheme();
   const total = useFollowUpTotal();
   const pause = useLeadPatch<LeadFollowUp>('follow-up');
@@ -58,7 +60,7 @@ export function FollowUpCard({ lead, offline }: FollowUpCardProps) {
     <View style={{ gap: 6 }}>
       <Heading>{f.title}</Heading>
       <View style={{ borderStartWidth: 3, borderStartColor: color.goldSoft, paddingStart: 12, gap: 2 }}>
-        {followUpLines(lead, total, deviceTimeZone()).map((line) => (
+        {followUpLines(lead, total, { tz: deviceTimeZone(), cycle }).map((line) => (
           <AppText
             key={line}
             style={{

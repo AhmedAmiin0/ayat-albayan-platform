@@ -52,7 +52,7 @@ test('open window: the line gives way; the window’s end time is shown whole, n
   const until = screen.getByTestId('session-until');
   expect(until.props.numberOfLines).toBeUndefined();
   expect(StyleSheet.flatten(until.props.style).flexShrink).toBe(0);
-  expect(until.props.children).toBe(sessionUntil(OPEN.last_inbound_at));
+  expect(until.props.children).toBe(sessionUntil(OPEN.last_inbound_at, { cycle: '24' }));
   expect(until.props.children).toMatch(new RegExp(t.inbox.sessionOpenUntil.replace(' {time}', '')));
 });
 

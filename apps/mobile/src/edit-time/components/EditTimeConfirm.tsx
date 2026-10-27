@@ -5,6 +5,7 @@ import { AppText } from '@/core/ui/primitives/AppText';
 import { chosenStart, isBookable, isChanged, lengthOf, willNotify, type EditState } from '../lib/edit-time-body';
 import { changeLine, teacherLine } from '../lib/edit-time-text';
 import type { EditableLesson, TimeEditMode } from '../lib/types';
+import { useClockCycle } from '@/core/lib/clock';
 
 export interface EditTimeConfirmProps {
   lesson: EditableLesson;
@@ -24,6 +25,7 @@ export interface EditTimeConfirmProps {
  * when a WhatsApp confirmation would go out (a move to a later start).
  */
 export function EditTimeConfirm({ lesson, mode, state, now, payoutLocked, onNotify }: EditTimeConfirmProps) {
+  const cycle = useClockCycle();
   const { color } = useTheme();
   const text = { fontFamily: type.ui[500], fontSize: type.size.sm, lineHeight: type.lineHeight(type.size.sm), color: color.ink2 };
   if (!isBookable(state.durationMin)) return null; // «اختار مدة الحلقة الأول» already says it
@@ -32,10 +34,10 @@ export function EditTimeConfirm({ lesson, mode, state, now, payoutLocked, onNoti
   return (
     <View style={{ gap: 6 }}>
       <AppText accessibilityLiveRegion="polite" style={{ ...text, fontFamily: type.ui[700], color: color.ink }}>
-        {changeLine(lesson, state)}
+        {changeLine(lesson, state, cycle)}
       </AppText>
       <AppText style={text}>{t.availability.tzHint.replace('{tz}', t.runningHead.riyadh)}</AppText>
-      <AppText style={text}>{teacherLine(lesson, chosenStart(lesson, state.picked))}</AppText>
+      <AppText style={text}>{teacherLine(lesson, chosenStart(lesson, state.picked), cycle)}</AppText>
       {willNotify(lesson, state, now) ? (
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10, minHeight: shape.control.touch }}>
           <Switch

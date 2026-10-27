@@ -21,7 +21,7 @@ jest.mock('expo-router', () => ({
   useLocalSearchParams: () => ({ studentId: 'cccccccc-cccc-4ccc-8ccc-cccccccccccc' }),
 }));
 
-const current = t.booking.courseChange.currentDays.replace('{days}', daysText(runningCourse.days, TZ));
+const current = t.booking.courseChange.currentDays.replace('{days}', daysText(runningCourse.days, TZ, '24'));
 /** The filled (primary) buttons on screen: no input edge. */
 const primaries = () =>
   screen.getAllByRole('button').filter((b) => StyleSheet.flatten(b.props.style).borderColor === 'transparent');
@@ -40,7 +40,7 @@ test('a renewal with the course still running: «تغيير أيام الحلق�
   // The block says which package it is about; its days are named once (in the renewal's line).
   expect(screen.getByText(t.booking.courseChange.running)).toBeTruthy();
   expect(screen.queryByText(current)).toBeNull();
-  expect(screen.getByText(new RegExp(daysText(runningCourse.days, TZ)))).toBeTruthy();
+  expect(screen.getByText(new RegExp(daysText(runningCourse.days, TZ, '24')))).toBeTruthy();
   await waitFor(() => expect(primaries().map((b) => b.props.accessibilityState?.disabled)).toEqual([false]));
   expect(primaries()).toHaveLength(1);
   await press('button', t.booking.courseChange.changeDays);

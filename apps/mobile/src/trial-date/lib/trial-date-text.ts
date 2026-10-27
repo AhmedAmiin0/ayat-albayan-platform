@@ -9,8 +9,10 @@ import {
   type StatusStyle,
   type TrialDateRow,
   type TrialHistory,
+  type ClockCycle,
   type TrialOutcome,
 } from '@ab/shared';
+import { whenIn } from '@/core/lib/clock';
 import { t } from '@/core/lib/i18n/i18n';
 import { locale } from '@/core/lib/i18n/locale';
 import { isolate } from '@/core/ui/primitives/Ltr';
@@ -36,21 +38,21 @@ interface WhenLines {
 }
 
 /** An instant in the viewer's zone, and in the family's when it differs (rule 6). */
-export function whenLines(startsAt: string, familyTz: string): WhenLines {
+export function whenLines(startsAt: string, familyTz: string, cycle: ClockCycle): WhenLines {
   const at = new Date(startsAt);
   // Every time says its zone (docs/07 principle 7): the viewer reads the academy's clock.
-  const when = `${lessonWhenText(at, VIEWER_TZ, locale)} ${t.schedule.riyadhTime}`;
-  const familyAt = lessonWhenText(at, familyTz, locale);
+  const when = `${whenIn(at, VIEWER_TZ, cycle)} ${t.schedule.riyadhTime}`;
+  const familyAt = whenIn(at, familyTz, cycle);
   // Another zone name on the same clock (Asia/Kuwait vs Riyadh) adds nothing.
-  if (familyAt === lessonWhenText(at, VIEWER_TZ, locale)) return { when, family: null };
+  if (lessonWhenText(at, familyTz, locale) === lessonWhenText(at, VIEWER_TZ, locale)) return { when, family: null };
   return { when, family: t.trialDate.familyTime.replace('{time}', familyAt) };
 }
 
 /** «فاطمة، الأحد 4 أكتوبر 17:00»: who picked it and when; «غير معروف» for an imported row. */
-export function pickedLine(row: TrialDateRow): string {
+export function pickedLine(row: TrialDateRow, cycle: ClockCycle): string {
   return t.trialDate.pickedAt
     .replace('{name}', row.picked_by ? isolate(row.picked_by) : t.trialDate.unknownPicker)
-    .replace('{when}', lessonWhenText(new Date(row.picked_at), VIEWER_TZ, locale));
+    .replace('{when}', whenIn(new Date(row.picked_at), VIEWER_TZ, cycle));
 }
 
 /** «موعدان» … the history header's count. */
@@ -62,9 +64,9 @@ export function warnLine(count: number): string | null {
 }
 
 /** What the new date does: moves the upcoming trial (its time), or books a new trial lesson. */
-export function effectLine(history: TrialHistory): string {
+export function effectLine(history: TrialHistory, cycle: ClockCycle): string {
   const upcoming = history.upcoming_id ? history.items.find((r) => r.lesson_id === history.upcoming_id) : undefined;
   if (!history.upcoming_id) return t.trialDate.newLesson;
-  const when = upcoming ? whenLines(upcoming.starts_at, history.family_tz).when : '';
+  const when = upcoming ? whenLines(upcoming.starts_at, history.family_tz, cycle).when : '';
   return t.trialDate.moves.replace('{when}', when);
 }

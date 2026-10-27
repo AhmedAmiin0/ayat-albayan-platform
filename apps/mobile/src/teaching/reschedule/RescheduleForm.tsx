@@ -11,6 +11,7 @@ import { MoveFields } from './MoveFields';
 import { useReschedule } from './queries';
 import { familyTz, lessonDuration, type Scope } from './reschedule-body';
 import { RescheduleDone } from './RescheduleDone';
+import { useClockCycle } from '@/core/lib/clock';
 
 export interface RescheduleFormProps {
   lesson: LessonView;
@@ -22,6 +23,7 @@ export interface RescheduleFormProps {
  * the API answers, the new time and the guardian's confirmation (RescheduleDone).
  */
 export function RescheduleForm({ lesson, onClose }: RescheduleFormProps) {
+  const cycle = useClockCycle();
   const { color } = useTheme();
   const tz = familyTz(lesson);
   const durationMin = lessonDuration(lesson);
@@ -36,7 +38,7 @@ export function RescheduleForm({ lesson, onClose }: RescheduleFormProps) {
         <AppText style={{ ...text, fontFamily: type.ui[700], fontSize: type.size.body, color: color.ink }}>
           {studentNames(lesson)}
         </AppText>
-        <AppText style={text}>{t.reschedule.current.replace('{when}', whenText(lesson.starts_at, tz))}</AppText>
+        <AppText style={text}>{t.reschedule.current.replace('{when}', whenText(lesson.starts_at, tz, cycle))}</AppText>
       </View>
       {durationMin === null ? (
         <ErrorLine message={t.reschedule.badDuration} />

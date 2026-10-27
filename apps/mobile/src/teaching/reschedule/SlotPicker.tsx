@@ -13,6 +13,7 @@ import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { FilterPills } from '@/core/ui/form/FilterPills';
 import { slotWindow, useRescheduleSlots } from './queries';
 import { SlotButton } from './SlotButton';
+import { useClockCycle } from '@/core/lib/clock';
 
 export interface SlotPickerProps {
   lesson: LessonView;
@@ -43,6 +44,7 @@ export function SlotPicker({
   fromLessonDay,
   edit,
 }: SlotPickerProps) {
+  const cycle = useClockCycle();
   const { color } = useTheme();
   const [now] = useState(() => new Date());
   const thisWeek = weekStart(riyadhToday(now));
@@ -89,7 +91,7 @@ export function SlotPicker({
         <AppText style={note}>{t.common.loading}</AppText>
       )}
       <AppText accessibilityLiveRegion="polite" style={note}>
-        {value ? t.booking.picked.replace('{when}', whenText(value, tz)) : t.lessons.newTimeHint}
+        {value ? t.booking.picked.replace('{when}', whenText(value, tz, cycle)) : t.lessons.newTimeHint}
       </AppText>
     </View>
   );

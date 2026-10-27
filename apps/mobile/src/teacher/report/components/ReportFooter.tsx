@@ -1,8 +1,8 @@
-import { clockTime, lessonWhenText, pdfStatusStyle, reportStatusStyle, type ReportFormResponse, type ReportView } from '@ab/shared';
+import { pdfStatusStyle, reportStatusStyle, type ClockCycle, type ReportFormResponse, type ReportView } from '@ab/shared';
+import { clockIn, useClockCycle, whenIn } from '@/core/lib/clock';
 import { View } from 'react-native';
 import { ErrorLine } from '@/inbox/ErrorLine';
 import { t } from '@/core/lib/i18n/i18n';
-import { locale } from '@/core/lib/i18n/locale';
 import { Note } from '@/more/Note';
 import { Button } from '@/core/ui/primitives/Button';
 import { StatusChip } from '@/core/ui/feedback/StatusChip';
@@ -10,24 +10,25 @@ import { reportErrorText } from '../hooks/api';
 import type { SaveState } from '../hooks/use-autosave';
 import type { ReportEntryState } from '../hooks/use-report-entry';
 
+
 const ERRORS: Record<string, string> = t.reports.error;
 
 /** «بيتحفظ…» / «المسودة اتحفظت 17:42» / a failed save, while the report is a draft. */
-function saveLine(state: SaveState, tz: string): string | null {
+function saveLine(state: SaveState, tz: string, cycle: ClockCycle): string | null {
   if (state.kind === 'saving') return t.reports.autosaving;
-  if (state.kind === 'saved') return t.reports.draftSaved.replace('{time}', clockTime(state.at, tz));
+  if (state.kind === 'saved') return t.reports.draftSaved.replace('{time}', clockIn(state.at, tz, cycle));
   return state.kind === 'failed' ? t.reports.saveFailed : null;
 }
 
 /** After a submit: how long the teacher may still edit, or that the window closed. */
-function windowLine(report: ReportView, tz: string): string | null {
+function windowLine(report: ReportView, tz: string, cycle: ClockCycle): string | null {
   if (!report.can_edit) return t.reports.editClosed;
-  return report.edit_until ? t.reports.editUntil.replace('{when}', lessonWhenText(new Date(report.edit_until), tz, locale)) : null;
+  return report.edit_until ? t.reports.editUntil.replace('{when}', whenIn(new Date(report.edit_until), tz, cycle)) : null;
 }
 
 /** «التقرير اتبعت», its version, the PDF state, and the edit window. */
 function SentNote({ report, tz }: { report: ReportView; tz: string }) {
-  const editWindow = windowLine(report, tz);
+  const editWindow = windowLine(report, tz, useClockCycle());
   return (
     <>
       <View style={{ flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', gap: 8 }}>
@@ -52,9 +53,10 @@ function SentNote({ report, tz }: { report: ReportView; tz: string }) {
  * «حفظ التعديل» and the autosave line.
  */
 export function ReportFooter({ s, block, tz }: { s: ReportEntryState; block: ReportFormResponse['submit_block']; tz: string }) {
+  const cycle = useClockCycle();
   const { report } = s;
   const sent = report.status === 'submitted';
-  const saved = report.status === 'draft' ? saveLine(s.saveState, tz) : null;
+  const saved = report.status === 'draft' ? saveLine(s.saveState, tz, cycle) : null;
   const label = s.submit.isPending ? t.reports.submitting : sent ? t.reports.resubmit : t.reports.submit;
   return (
     <View style={{ gap: 8 }}>

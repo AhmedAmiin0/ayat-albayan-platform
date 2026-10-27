@@ -53,7 +53,7 @@ test('admin: history → the last teacher kept → a free slot → review «سي
   const slots = mockApiFetch.mock.calls.map((c: unknown[]) => String(c[0])).find((p) => p.startsWith('/booking/slots'));
   expect(slots).toContain(`teacherId=${maryam.id}`);
   expect(slots).toContain(`excludeLessonId=${UPCOMING}`);
-  expect(screen.getByText(effectLine(history))).toBeTruthy();
+  expect(screen.getByText(effectLine(history, '24'))).toBeTruthy();
   expect(screen.queryByTestId('trial-date-warn')).toBeNull();
   await waitFor(() => expect(mockApiSend).toHaveBeenCalledWith('POST', '/booking/trial-date/check', BODY));
 

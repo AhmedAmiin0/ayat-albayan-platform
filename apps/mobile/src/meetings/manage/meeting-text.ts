@@ -1,4 +1,5 @@
-import { intlLocale, type MeetingView } from '@ab/shared';
+import { intlLocale, type ClockCycle, type MeetingView } from '@ab/shared';
+import { clockCycle, clockIn, dateWithClock } from '@/core/lib/clock';
 import { ApiError } from '@/core/lib/http/api';
 import { webOrigin } from '@/classroom/links/web-origin';
 import { t } from '@/core/lib/i18n/i18n';
@@ -9,23 +10,18 @@ const errors: Record<string, string | undefined> = t.classroom.error;
 /** The web room of an internal meeting (`/meeting/<id>`), where the WebRTC page lives. */
 export const meetingUrl = (id: string): string => `${webOrigin()}/meeting/${id}`;
 
-/** «5 أكتوبر 14:30» in the viewer's zone (default Riyadh), Western digits. */
-export function meetingWhen(iso: string, timeZone = 'Asia/Riyadh'): string {
-  return new Intl.DateTimeFormat(intlLocale(locale), {
-    day: 'numeric',
-    month: 'short',
-    hour: '2-digit',
-    minute: '2-digit',
-    hourCycle: 'h23',
-    timeZone,
-  }).format(new Date(iso));
+/** «5 أكتوبر، 14:30» / «5 أكتوبر، 2:30 م» in the viewer's zone, Western digits. */
+export function meetingWhen(iso: string, timeZone: string, cycle: ClockCycle): string {
+  const at = new Date(iso);
+  const day = new Intl.DateTimeFormat(intlLocale(locale), { day: 'numeric', month: 'short', timeZone }).format(at);
+  return dateWithClock(day, clockIn(at, timeZone, cycle));
 }
 
 const R = t.meetings.internal.refusal;
 
 /** A refused join in a meeting's words (never a lesson's): not open yet names when it opens on the viewer's clock. */
 function refusal(code: unknown, opensAt: unknown, tz: string): string | null {
-  if (code === 'join_not_open_yet') return typeof opensAt === 'string' ? R.notOpenAt.replace('{when}', meetingWhen(opensAt, tz)) : R.notOpen;
+  if (code === 'join_not_open_yet') return typeof opensAt === 'string' ? R.notOpenAt.replace('{when}', meetingWhen(opensAt, tz, clockCycle())) : R.notOpen;
   return code === 'join_closed' ? R.closed : null;
 }
 

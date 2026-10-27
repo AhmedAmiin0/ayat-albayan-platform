@@ -2,6 +2,7 @@ import { lessonStatusStyle, type LessonView } from '@ab/shared';
 import type { ReactNode } from 'react';
 import { Pressable, View } from 'react-native';
 import { JoinClassroomButton } from '@/classroom/links/JoinClassroomButton';
+import { useClockCycle } from '@/core/lib/clock';
 import { t } from '@/core/lib/i18n/i18n';
 import { LiveBadge } from '@/live/LiveBadge';
 import { type, useTheme } from '@/theme';
@@ -33,14 +34,15 @@ interface AgendaLessonRowProps {
  */
 export function AgendaLessonRow({ lesson, onReschedule, actions, onEditTime, onOpen }: AgendaLessonRowProps) {
   const { color } = useTheme();
-  const subtitle = [durationLabel(lesson), teacherClock(lesson)].filter(Boolean).join(' · ');
+  const cycle = useClockCycle();
+  const subtitle = [durationLabel(lesson), teacherClock(lesson, cycle)].filter(Boolean).join(' · ');
   const body = { fontFamily: type.ui[600], fontSize: type.size.body, lineHeight: type.lineHeight(type.size.body), color: color.ink };
   const small = { fontFamily: type.ui[400], fontSize: type.size.xs, lineHeight: type.lineHeight(type.size.xs) };
   const who = studentNames(lesson);
   const lineStyle = { flexDirection: 'row' as const, alignItems: 'flex-start' as const, gap: 10, minHeight: 44 };
   const line = (
     <>
-      <AppText style={{ ...body, width: 48, fontVariant: ['tabular-nums'] }}>{riyadhTime(lesson.starts_at)}</AppText>
+      <AppText style={{ ...body, width: cycle === '12' ? 72 : 48, fontVariant: ['tabular-nums'] }}>{riyadhTime(lesson.starts_at, cycle)}</AppText>
       <View style={{ flex: 1, gap: 2 }}>
         <AppText numberOfLines={2} style={body}>
           {who}
@@ -61,7 +63,7 @@ export function AgendaLessonRow({ lesson, onReschedule, actions, onEditTime, onO
         <Pressable
           accessibilityRole="button"
           accessibilityLabel={t.lessons.sheet.openRow.replace('{names}', who)}
-          accessibilityHint={`${riyadhTime(lesson.starts_at)} · ${t.enums.lessonStatus[lesson.status]}`}
+          accessibilityHint={`${riyadhTime(lesson.starts_at, cycle)} · ${t.enums.lessonStatus[lesson.status]}`}
           onPress={() => onOpen(lesson)}
           style={({ pressed }) => [lineStyle, pressed ? { backgroundColor: color.sunk } : null]}
         >

@@ -39,7 +39,7 @@ export function clockCycle(): ClockCycle {
   return resolveHourCycle(pref, device);
 }
 
-export function clockPref(): ClockPref {
+function clockPref(): ClockPref {
   return pref;
 }
 

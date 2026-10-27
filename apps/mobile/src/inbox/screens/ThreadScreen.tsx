@@ -22,6 +22,8 @@ import { ThreadHeaderActions } from '../thread/components/ThreadHeaderActions';
 import { isOwnThread, threadBase, useThreadMode, type ThreadMode } from '../thread/hooks/thread-mode';
 import { useInboxRead } from '../thread/hooks/inbox-sync';
 import { useThread } from '../thread/hooks/use-thread';
+import { useClockCycle } from '@/core/lib/clock';
+import type { ClockCycle } from '@ab/shared';
 
 type ThreadQuery = ReturnType<typeof useThread>;
 
@@ -30,9 +32,10 @@ const callable = (mode: ThreadMode, thread: ThreadView | null): boolean =>
   thread !== null && !isOwnThread(mode, thread);
 
 /** Offline: when the saved thread was fetched. Else who the number is, then the number if named. */
-function subtitleOf(phone: string, query: ThreadQuery, teacher: boolean): string {
+function subtitleOf(phone: string, query: ThreadQuery, who: { teacher: boolean; cycle: ClockCycle }): string {
+  const { teacher, cycle } = who;
   if (query.isError && query.data) {
-    return t.mobile.lastUpdated.replace('{time}', clockAt(query.dataUpdatedAt));
+    return t.mobile.lastUpdated.replace('{time}', clockAt(query.dataUpdatedAt, cycle));
   }
   const thread = query.data?.pages[0]?.thread;
   return thread?.display_name && !teacher
@@ -55,6 +58,7 @@ function subtitleOf(phone: string, query: ThreadQuery, teacher: boolean): string
  * a one-line header, the sales actions in one row of pills, and a one-row composer.
  */
 export function ThreadScreen() {
+  const cycle = useClockCycle();
   const { phone = '' } = useLocalSearchParams<{ phone: string }>();
   const mode = useThreadMode();
   const base = useTreeBase();
@@ -75,7 +79,7 @@ export function ThreadScreen() {
       <Screen chat>
         <ChatHeader
           title={title}
-          subtitle={subtitleOf(phone, query, teacher)}
+          subtitle={subtitleOf(phone, query, { teacher, cycle })}
           onBack={back}
           trailing={
             mode.kind === 'admin' ? (

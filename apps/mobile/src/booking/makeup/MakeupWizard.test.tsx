@@ -58,7 +58,7 @@ test('missed lesson → teacher → slot of its length → invoice → «احج�
   expect(screen.getByRole('header', { name: t.booking.makeup.title })).toBeTruthy();
   expect(screen.getByText('خطوة 1 من 4')).toBeTruthy();
   expect(screen.getByText(t.booking.mobile.makeupFor.replace('{name}', 'سهيلة'))).toBeTruthy();
-  expect(screen.getByText(`${t.booking.mobile.missedLesson}: ${whenText(source.missedAt, 'Asia/Riyadh')}`)).toBeTruthy();
+  expect(screen.getByText(`${t.booking.mobile.missedLesson}: ${whenText(source.missedAt, 'Asia/Riyadh', '24')}`)).toBeTruthy();
 
   await press(t.booking.mobile.keepTeacher.replace('{teacher}', maryam.display_name_ar));
   await press('17:00');
@@ -75,7 +75,7 @@ test('missed lesson → teacher → slot of its length → invoice → «احج�
   await press(t.booking.next);
 
   expect(screen.getByText(t.booking.kind.makeup)).toBeTruthy();
-  expect(screen.getByText(whenText(SUN_17, 'Asia/Riyadh'))).toBeTruthy();
+  expect(screen.getByText(whenText(SUN_17, 'Asia/Riyadh', '24'))).toBeTruthy();
   expect(screen.queryByText(t.booking.pickDays, { exact: false })).toBeNull();
   mockApiSend.mockResolvedValue(booked(SUN_17));
   await press(t.booking.submit);

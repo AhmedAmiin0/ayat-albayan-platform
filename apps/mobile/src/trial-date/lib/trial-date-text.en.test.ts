@@ -14,6 +14,6 @@ jest.mock('react-native/Libraries/ReactNative/I18nManager', () => {
 test('English: the Arabic name of who picked the date is isolated', () => {
   const when = lessonWhenText(new Date('2026-09-28T09:00:00.000Z'), 'Asia/Riyadh', 'en');
   expect(t.trialDate.pickedAt).toMatch(/[A-Za-z]/);
-  expect(pickedLine(trialRow())).toBe(t.trialDate.pickedAt.replace('{name}', isolate('فاطمة')).replace('{when}', when));
-  expect(pickedLine(trialRow({ picked_by: null }))).toContain(t.trialDate.unknownPicker);
+  expect(pickedLine(trialRow(), '24')).toBe(t.trialDate.pickedAt.replace('{name}', isolate('فاطمة')).replace('{when}', when));
+  expect(pickedLine(trialRow({ picked_by: null }), '24')).toContain(t.trialDate.unknownPicker);
 });

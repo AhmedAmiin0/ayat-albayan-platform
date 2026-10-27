@@ -1,4 +1,5 @@
-import { clockTime, lessonWhenText, RIYADH_TZ, utcOffsetMinutes, type SlotView } from '@ab/shared';
+import { clockTime, lessonWhenText, RIYADH_TZ, utcOffsetMinutes, type ClockCycle, type SlotView } from '@ab/shared';
+import { clockIn, whenIn } from '@/core/lib/clock';
 import { t } from '@/core/lib/i18n/i18n';
 import { locale } from '@/core/lib/i18n/locale';
 import { ltr } from '@/core/ui/primitives/Ltr';
@@ -53,7 +54,7 @@ interface SlotDay {
   slots: SlotView[];
 }
 
-/** «الأحد 4 أكتوبر» of an instant on the Riyadh calendar (lessonWhenText without its clock). */
+/** «الأحد 4 أكتوبر» of an instant on the Riyadh calendar (lessonWhenText without its 24 h clock). */
 export function dayLabel(at: Date): string {
   return lessonWhenText(at, RIYADH_TZ, locale).replace(/\s\d{2}:\d{2}$/, '');
 }
@@ -75,22 +76,22 @@ export function freeSlotDays(slots: readonly SlotView[]): SlotDay[] {
 }
 
 /** A slot's big Riyadh clock, and the student's clock under it when their zone differs. */
-export function slotTimes(startsAt: string, tz: string): { riyadh: string; local: string | null } {
+export function slotTimes(startsAt: string, tz: string, cycle: ClockCycle): { riyadh: string; local: string | null } {
   const at = new Date(startsAt);
   const local =
     tz === RIYADH_TZ
       ? null
-      : t.today.studentTime.replace('{time}', clockTime(at, tz)).replace('{city}', cityOf(tz));
-  return { riyadh: clockTime(at, RIYADH_TZ), local };
+      : t.today.studentTime.replace('{time}', clockIn(at, tz, cycle)).replace('{city}', cityOf(tz));
+  return { riyadh: clockIn(at, RIYADH_TZ, cycle), local };
 }
 
 /** «الأحد 4 أكتوبر 17:00 بتوقيت الرياض، عند الطالب الأحد 4 أكتوبر 16:00 بتوقيت القاهرة». */
-export function whenText(startsAt: string, tz: string): string {
+export function whenText(startsAt: string, tz: string, cycle: ClockCycle): string {
   const at = new Date(startsAt);
-  const riyadh = `${lessonWhenText(at, RIYADH_TZ, locale)} ${t.schedule.riyadhTime}`;
+  const riyadh = `${whenIn(at, RIYADH_TZ, cycle)} ${t.schedule.riyadhTime}`;
   if (tz === RIYADH_TZ) return riyadh;
   const local = t.schedule.inCity
-    .replace('{time}', lessonWhenText(at, tz, locale))
+    .replace('{time}', whenIn(at, tz, cycle))
     .replace('{city}', cityOf(tz));
   return `${riyadh}${t.common.listSeparator}${t.booking.studentLocal.replace('{time}', local)}`;
 }
