@@ -729,11 +729,6 @@
       "count": 2
     }
   },
-  "src/inbox/composer/send-file.ts": {
-    "ab/module-boundaries": {
-      "count": 1
-    }
-  },
   "src/inbox/leads/detail/LeadAssign.tsx": {
     "ab/module-boundaries": {
       "count": 1

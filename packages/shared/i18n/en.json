@@ -2514,7 +2514,26 @@
       "attachPdf": "Attach a PDF",
       "removeFile": "Remove file",
       "captionPlaceholder": "Add a caption (optional)",
-      "sendFile": "Send"
+      "sendFile": "Send",
+      "emoji": "Emoji",
+      "camera": "Camera",
+      "cameraRationale": "We need the camera to take a photo and send it in the chat.",
+      "takePhoto": "Take photo",
+      "gallery": "Gallery",
+      "document": "Document",
+      "emojiDone": "Done",
+      "voice": {
+        "record": "Record a voice message",
+        "hint": "Hold to record, release to send",
+        "slideCancel": "Slide to cancel",
+        "started": "Recording started",
+        "cancelled": "Recording cancelled",
+        "sent": "Voice message sent",
+        "delete": "Delete recording",
+        "micBlocked": "Allow microphone access in Settings to record a voice message",
+        "failed": "The voice message was not sent. Try again.",
+        "locked": "Still recording. Tap Send when you are done."
+      }
     },
     "sessionClosed": "24 hours have passed since their last message, so send a template.",
     "sessionOpenUntil": "You can reply with a regular message until {time}",
