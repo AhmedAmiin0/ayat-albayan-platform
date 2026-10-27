@@ -55,6 +55,7 @@ export function renderCommunications(input: RenderCommunications): QueryClient {
     ['/messages/gate', gate],
     ['/messaging/templates/lines', LINES],
     ['/messaging/templates', []],
+    ['/admin/numbers/own-traffic', { inbound_7d: 3 }],
     ['/admin/numbers', NUMBERS],
     ['/admin/communications/parity', PARITY_SAME],
   ]);
