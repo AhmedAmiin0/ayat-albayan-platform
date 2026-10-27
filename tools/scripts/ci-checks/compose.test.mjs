@@ -105,7 +105,7 @@ test('roll.sh and the deploy touch only this project (no global prune, no CRM, n
     );
     assert.doesNotMatch(
       text,
-      /\/opt\/wacrm|\/etc\/caddy|systemctl|docker compose down(?! --remove-orphans && docker compose up -d --build)/,
+      /\/opt\/wacrm|\/etc\/caddy|systemctl|docker compose down/,
     );
   }
   assert.match(

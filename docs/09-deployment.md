@@ -44,6 +44,8 @@ mv src src.bad && mv src.old src && sh roll.sh     # previous code, same layout
 docker compose ps; docker compose logs --tail 100 ayat-worker
 ```
 
+**Known windows (accepted):** an admin save refreshes the in-memory caches (translations, integration and numbers config) only in the copy that took it; the other copy and the worker catch up on their own refresh (translations within 5 minutes, the others within `INTEGRATION_REFRESH_MS` / `SETTINGS_CACHE_MS`). The in-memory feedback, sales-registration, classroom and activity limiters count per copy (see the top of this file). During a roll a POST that `ayat-lb` sends on a keep-alive connection just as a copy closes it can answer 502 (rare; the copy finishes every request it already received).
+
 **Scale:** add `ayat-api-c` (copy `ayat-api-b`), add it to the `reverse_proxy` line in `lb/Caddyfile`, add `roll ayat-api-c` to `roll.sh` and the compose test; keep the memory sum in budget. Never a second `APP_ROLE=worker` (or `all`) container: one job runner only. CPU-heavy PDF rendering already runs only in the worker; give `ayat-worker` more memory before adding anything there.
 
 ## Redeploy

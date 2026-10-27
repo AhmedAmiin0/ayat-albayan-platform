@@ -16,7 +16,7 @@ dc() { docker compose -p "$PROJECT" "$@"; }
 healthy() {
   i=0
   while [ "$i" -lt 90 ]; do
-    id=$(dc ps -q "$1")
+    id=$(dc ps -q "$1" || true)
     state=""
     [ -z "$id" ] || state=$(docker inspect -f '{{if .State.Health}}{{.State.Health.Status}}{{else}}{{.State.Status}}{{end}}' "$id" || true)
     if [ "$state" = healthy ]; then echo "$1 healthy"; return 0; fi

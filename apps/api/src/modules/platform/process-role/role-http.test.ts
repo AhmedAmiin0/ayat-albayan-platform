@@ -23,6 +23,8 @@ describe('closedPath: what each role serves', () => {
       expect(closedPath(role, '/health')).toBe(false);
       expect(closedPath(role, '/webhooks/whatsapp')).toBe(false);
       expect(closedPath(role, '/internal/jobs/message-sender/kick')).toBe(true);
+      expect(closedPath(role, '/%69nternal/jobs/report-pdf/kick')).toBe(true);
+      expect(closedPath(role, '/auth/%E0%A4%A')).toBe(false);
     }
   });
 });

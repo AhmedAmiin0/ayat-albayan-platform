@@ -3,9 +3,18 @@ import type { AppRole } from '../../../config/role/app-role';
 
 const WORKER_PATHS = ['/health', '/internal/jobs/'];
 
+/** The path as the router matches it (percent-decoded, so `/%69nternal` is `/internal`); undecodable = as is. */
+function decoded(path: string): string {
+  try {
+    return decodeURIComponent(path);
+  } catch {
+    return path;
+  }
+}
+
 /** Is this path closed in this role? The worker serves /health and its kick route only; the others never /internal. */
 export function closedPath(role: AppRole, url: string): boolean {
-  const path = url.split('?')[0] ?? url;
+  const path = decoded(url.split('?')[0] ?? url);
   if (role !== 'worker') return path.startsWith('/internal/');
   return !WORKER_PATHS.some((p) =>
     p.endsWith('/') ? path.startsWith(p) : path === p || path === `${p}/`,

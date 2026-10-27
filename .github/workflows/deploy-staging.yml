@@ -304,7 +304,7 @@ jobs:
 
       # The API or web swap broke staging (a container never got healthy, or the health check failed): put the
       # previous code, compose files and web build back and roll again. A server whose previous layout was the
-      # single ayat-api container goes back to it (down + up: a short gap, only on that rollback). The web build
+      # single ayat-api container goes back to it (built first; a short gap while 3110 changes hands). The web build
       # is swapped back only when this run swapped it. Database migrations are not undone (they only add).
       - name: Roll back to the previous version
         if: ${{ failure() && (steps.roll.outcome == 'failure' || steps.health.outcome == 'failure') && !inputs.env_only }}
@@ -316,8 +316,13 @@ jobs:
           if [ "$WEB_SWAPPED" = "true" ]; then
             ssh target "cd $DEST && { [ ! -d web.old ] || { rm -rf web.bad && mv web web.bad && mv web.old web; }; }"
           fi
-          ssh target "cd $DEST && if grep -q '^  ayat-lb:' docker-compose.yml; then sh roll.sh; \
-            else docker compose down --remove-orphans && docker compose up -d --build; fi"
+          # Old layout: build first (the old container may still be serving), then drop the new layout's
+          # containers of THIS project and bring the single container back on 3110.
+          ssh target "cd $DEST && if grep -q '^  ayat-lb:' docker-compose.yml; then sh roll.sh; else docker compose build \
+            && for s in ayat-lb ayat-api-a ayat-api-b ayat-worker; do \
+              ids=\$(docker ps -aq --filter label=com.docker.compose.project=ayat-albayan-staging --filter label=com.docker.compose.service=\$s); \
+              [ -z \"\$ids\" ] || docker rm -f \$ids; done \
+            && docker compose up -d --remove-orphans; fi"
           echo "::error::staging failed to roll or its health check failed: rolled back to the previous version (bad build kept in src.bad / web.bad)"
 
       - name: Summary
