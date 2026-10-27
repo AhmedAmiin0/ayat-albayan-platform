@@ -20,7 +20,7 @@ interface MessageMenuProps {
   message: MessageView | null;
   /** The chat's number: «تنزيل» asks this chat's file endpoint. */
   phone: string;
-  /** The held bubble's window y: the reaction row floats above it; null = on top of the sheet. */
+  /** The held bubble's window y. Unused for now: the reaction row sits at the top of the sheet (review of #332). */
   at: number | null;
   onClose: () => void;
   /** «+» on the reaction row: the emoji sheet for this message. */
@@ -32,7 +32,7 @@ interface MessageMenuProps {
  * «نسخ النص» (the copy sheet), «إعادة توجيه», «تنزيل» (owner 2026-10-26). «رد» stays visible but off
  * after the 24 h window (only a template can go then), with the reason under it.
  */
-export function MessageMenu({ message: m, phone, at, onClose, onMoreEmoji }: MessageMenuProps) {
+export function MessageMenu({ message: m, phone, onClose, onMoreEmoji }: MessageMenuProps) {
   const { color } = useTheme();
   const { enabled, canSend, setReply, openForward, showCopy, say, reactable, react } = useChatActions();
   const teacher = useThreadMode().kind === 'teacher';
@@ -44,9 +44,10 @@ export function MessageMenu({ message: m, phone, at, onClose, onMoreEmoji }: Mes
     onClose();
     setTimeout(run, AFTER_MENU_MS);
   };
-  // «تفاعل» (owner 2026-10-27): WhatsApp's row of emoji over the held bubble; one tap reacts and closes.
+  // «تفاعل» (owner 2026-10-27): WhatsApp's row of emoji; one tap reacts and closes. At the top of the sheet,
+  // never floating over the bubble: a low bubble (the newest) put the floating row under the sheet.
   const bar = m && offers?.react ? (
-    <ReactionBar message={m} top={at} onReact={(e) => {
+    <ReactionBar message={m} top={null} onReact={(e) => {
         onClose();
         react(m, e);
       }} onMore={() => later(() => onMoreEmoji(m))} />
@@ -59,7 +60,6 @@ export function MessageMenu({ message: m, phone, at, onClose, onMoreEmoji }: Mes
         onPress={onClose}
         style={{ flex: 1, justifyContent: 'flex-end', backgroundColor: color.scrim }}
       >
-        {at !== null ? bar : null}
         {/* A tap on the sheet itself does not close it. */}
         <View
           testID="message-menu"
@@ -74,7 +74,7 @@ export function MessageMenu({ message: m, phone, at, onClose, onMoreEmoji }: Mes
             backgroundColor: color.raised,
           }}
         >
-          {at === null ? bar : null}
+          {bar}
           {m ? (
             <ContentText
               source={quoteText(quoteOf(m))}

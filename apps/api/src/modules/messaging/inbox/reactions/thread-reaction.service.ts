@@ -2,6 +2,7 @@ import type { ReactionResult, ThreadReaction } from '@ab/shared';
 import { HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { MessageViews, waHttpError } from '../../whatsapp';
 import { Outbox, type Sent } from '../send/outbox';
+import { visibleToSales, withoutLinks } from '../sales-threads/sales-threads';
 import { dedupKey, outboundBase, sendLine, type ThreadSend } from '../send/thread-send.service';
 import { assertCanSend } from '../teacher-threads/teacher-scope';
 import { sameNumber } from '../threads/thread-quotes';
@@ -39,6 +40,8 @@ export class ThreadReactionService {
     const key = reactionKey(r);
     const target = await this.reactions.target(r.phone, r.messageId);
     assertReactable(target, now);
+    // Sales never see a feedback request or a join link (migration 187, as forward): not found, nothing sent.
+    if (r.sales && !visibleToSales(target)) throw waHttpError('message_not_found', HttpStatus.NOT_FOUND);
     const thread = await this.threads.thread(r.phone);
     const from = await sendLine(thread, { now, windows: () => this.threads.numberWindows(r.phone) });
     if (sendsOnCrm(from)) throw waHttpError('reaction_unsupported', HttpStatus.CONFLICT);
@@ -52,17 +55,21 @@ export class ThreadReactionService {
     }
     const row = { ...outboundBase(r, thread), dedup_key: key, body: emoji ?? '', interactive_payload: reactionPayload(target, emoji), ...from };
     const sent = await this.outbox.send(row).catch(async (e: unknown) => {
-      // Nothing queued: ours goes back at once (no failed row would ever revert it).
-      await this.reactions.setOurs({ ...where, ours: { emoji: target.our_reaction, by: target.our_reaction_by, at: target.our_reaction_at } });
+      // Nothing queued: ours goes back at once. Queued but the read-back failed: the sender (and the
+      // failed-send trigger) decides, so the inbox never disagrees with what WhatsApp got.
+      if (!(await this.reactions.queued(key))) {
+        await this.reactions.setOurs({ ...where, ours: { emoji: target.our_reaction, by: target.our_reaction_by, at: target.our_reaction_at } });
+      }
       throw e;
     });
-    return { result: await this.result(target.id, sent), sent };
+    return { result: await this.result(target.id, sent, !!r.sales), sent };
   }
 
-  private async result(targetId: string, sent: Sent): Promise<ReactionResult> {
+  private async result(targetId: string, sent: Sent, sales: boolean): Promise<ReactionResult> {
     const row = await this.threads.get(targetId);
     if (!row || !this.views) throw new Error('reacted message read failed');
     const { status, error_code, error_text } = sent.view;
-    return { message: await this.views.view(row), status, error_code, error_text };
+    const view = await this.views.view(row);
+    return { message: sales ? withoutLinks(view) : view, status, error_code, error_text };
   }
 }

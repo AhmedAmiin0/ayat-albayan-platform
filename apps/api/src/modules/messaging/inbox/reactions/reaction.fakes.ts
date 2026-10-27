@@ -21,6 +21,7 @@ export const target = (over: Partial<ReactionTarget> = {}): ReactionTarget => ({
   line: null,
   number_id: null,
   interactive_payload: null,
+  template_key: null,
   our_reaction: null,
   our_reaction_by: null,
   our_reaction_at: null,

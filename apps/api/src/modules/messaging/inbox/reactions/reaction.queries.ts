@@ -13,6 +13,8 @@ export interface ReactionTarget {
   line: string | null;
   number_id: string | null;
   interactive_payload: Json | null;
+  /** A link template (lesson_feedback_request, lesson_join_link) stays hidden from sales (visibleToSales). */
+  template_key: string | null;
   our_reaction: string | null;
   our_reaction_by: string | null;
   our_reaction_at: string | null;
@@ -43,7 +45,7 @@ export const reactionPayload = (target: ReactionTarget, emoji: string | null): J
   previous: { emoji: target.our_reaction, by: target.our_reaction_by, at: target.our_reaction_at },
 });
 
-const TARGET_SELECT = 'id, wa_message_id, created_at, line, number_id, interactive_payload, our_reaction, our_reaction_by, our_reaction_at' as const;
+const TARGET_SELECT = 'id, wa_message_id, created_at, line, number_id, interactive_payload, template_key, our_reaction, our_reaction_by, our_reaction_at' as const;
 
 /** The reaction endpoint's reads and its one optimistic write (service role; the guards run first). */
 @Injectable()
