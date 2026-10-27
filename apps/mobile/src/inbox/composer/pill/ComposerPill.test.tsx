@@ -7,7 +7,7 @@ import { threadKey } from '../../thread/hooks/thread-cache';
 import { cachedThread, detail, PHONE, thread } from '../../shared/thread-fixtures';
 import { type ThreadMode, ThreadModeProvider } from '../../thread/hooks/thread-mode';
 
-// The pill (owner 2026-10-27): emoji at the caret, the camera, and the teacher's own pill.
+// The pill (owner 2026-10-27): the emoji and camera tiles of the paperclip's sheet, and the teacher's own pill.
 const mockApiSend = jest.fn();
 jest.mock('@/core/lib/http/api', () => ({
   ...jest.requireActual('@/core/lib/http/api'),
@@ -26,6 +26,10 @@ jest.mock('expo-document-picker', () => ({ getDocumentAsync: jest.fn() }));
 
 const OPEN = { ...thread, last_inbound_at: new Date(Date.now() - 5 * 60_000).toISOString() };
 const box = () => screen.getByLabelText(t.inbox.composer.placeholder);
+const tile = async (name: string) => {
+  await fireEvent.press(screen.getByRole('button', { name: t.inbox.composer.attach }));
+  await fireEvent.press(within(screen.getByTestId('attach-sheet')).getByRole('button', { name }));
+};
 
 async function show(mode: ThreadMode = { kind: 'admin' }) {
   const client = createTestQueryClient();
@@ -40,11 +44,13 @@ async function show(mode: ThreadMode = { kind: 'admin' }) {
 
 beforeEach(() => jest.clearAllMocks());
 
-test('an emoji goes in at the caret; the sheet stays open for more, «تم» closes it', async () => {
+test('the emoji tile: an emoji goes in at the caret; the sheet stays open for more, «تم» closes it', async () => {
   await show();
   await fireEvent.changeText(box(), 'السلام عليكم');
   await fireEvent(box(), 'selectionChange', { nativeEvent: { selection: { start: 6, end: 6 } } });
-  await fireEvent.press(screen.getByRole('button', { name: t.inbox.composer.emoji }));
+  expect(screen.queryByRole('button', { name: t.inbox.composer.emoji })).toBeNull(); // not in the bar
+  await tile(t.inbox.composer.emoji);
+  expect(screen.queryByTestId('attach-sheet')).toBeNull();
   const sheet = screen.getByTestId('emoji-sheet');
   await fireEvent.press(within(sheet).getByRole('button', { name: '🌹' }));
   expect(box().props.value).toBe('السلام🌹 عليكم');
@@ -54,18 +60,17 @@ test('an emoji goes in at the caret; the sheet stays open for more, «تم» clo
   expect(screen.queryByTestId('emoji-sheet')).toBeNull();
 });
 
-test('the camera sends a photo taken now; it hides while typing', async () => {
+test('the camera tile sends a photo taken now; no camera in the bar', async () => {
   mockApiSend.mockResolvedValueOnce({ bucket: 'wa-media', path: 'out/u/r/x.jpg', token: 't', signed_url: 'u' }).mockResolvedValueOnce({ id: 'p1' });
   jest.mocked(ImagePicker.launchCameraAsync).mockResolvedValue({
     canceled: false,
     assets: [{ uri: 'file:///c.jpg', width: 1, height: 1, base64: 'aGVsbG8=', mimeType: 'image/jpeg' }],
   } as never);
   await show();
-  await fireEvent.press(screen.getByRole('button', { name: t.inbox.composer.camera }));
+  expect(screen.queryByRole('button', { name: t.inbox.composer.camera })).toBeNull();
+  await tile(t.inbox.composer.camera);
   await waitFor(() => expect(mockApiSend).toHaveBeenCalledTimes(2));
   expect(mockApiSend.mock.calls[0]?.[2]).toMatchObject({ mime: 'image/jpeg' });
-  await fireEvent.changeText(box(), 'x');
-  expect(screen.queryByRole('button', { name: t.inbox.composer.camera })).toBeNull();
 });
 
 test('teacher: [emoji][text][قالب]; no paperclip, camera or microphone; «أرسل» waits for text', async () => {
