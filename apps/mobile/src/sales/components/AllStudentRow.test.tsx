@@ -1,6 +1,7 @@
 import { formatPhone } from '@ab/shared';
 import { fireEvent, render, screen } from '@testing-library/react-native';
 import { router } from 'expo-router';
+import { AccessibilityInfo } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { ltr } from '@/core/ui/primitives/Ltr';
 import { student } from '../testing/fixtures';
@@ -35,9 +36,11 @@ test('one of mine opens «تفاصيل الطالب», as before', async () => {
 
 test('no saved phone: still a button, and a tap says so under the row (nothing opens)', async () => {
   await render(<AllStudentRow student={student({ guardian_phone: null })} />);
+  const announce = jest.spyOn(AccessibilityInfo, 'announceForAccessibility');
   expect(screen.queryByText(S.noPhone)).toBeNull();
   expect(screen.getByRole('button').props.accessibilityHint).toBe(S.noPhoneHint);
   await fireEvent.press(screen.getByRole('button'));
   expect(screen.getByText(S.noPhone)).toBeTruthy();
   expect(router.push).not.toHaveBeenCalled();
+  expect(announce).toHaveBeenCalledWith(S.noPhone);
 });

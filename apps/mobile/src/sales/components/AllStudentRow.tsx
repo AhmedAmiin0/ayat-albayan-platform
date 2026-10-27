@@ -42,7 +42,7 @@ export function AllStudentRow({ student }: { student: SalesStudentView }) {
           {phone ? <PhoneText phone={phone} /> : null}
           <Note>{guardianLine(student)}</Note>
           {noPhone ? (
-            <View accessibilityLiveRegion="polite" style={{ flexBasis: '100%' }}>
+            <View style={{ flexBasis: '100%' }}>
               <Note>{S.noPhone}</Note>
             </View>
           ) : null}
