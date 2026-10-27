@@ -2,6 +2,7 @@ import { baseMime, isChatViewMime } from '@ab/shared';
 import { HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { BUCKETS, forwardOutPath } from '../../../../common/storage/storage.paths';
 import { StorageService } from '../../../../common/storage/storage.service';
+import { isCrmHistoryRow } from '../../whatsapp';
 import { InboundMedia } from '../../whatsapp/messages/inbound-media.service';
 import type { ThreadMessageRow } from '../../whatsapp/messages/message.mapper';
 import { waHttpError } from '../../whatsapp/templates/catalog/template.mapper';
@@ -22,9 +23,12 @@ const notForwardable = () => waHttpError('not_forwardable', HttpStatus.BAD_REQUE
 /** The name a forwarded file reaches the family with: ours as sent, else the copy's own (fwd-….ext). */
 const fileName = (row: ThreadMessageRow, path: string): string => row.media_name ?? path.split('/').at(-1) ?? 'file';
 
-/** The caption it goes with; an echo's type marker («[video]», webhook external-row) is no caption. */
+/**
+ * The caption it goes with; an echo's type marker («[video]», webhook external-row) is no caption, nor
+ * an old-CRM file's body (only its storage link, owner 2026-10-27).
+ */
 const caption = (row: ThreadMessageRow): string | null => {
-  const text = row.body?.trim() || null;
+  const text = isCrmHistoryRow(row) ? null : row.body?.trim() || null;
   return row.direction === 'outbound' && row.media_id && text && /^\[[a-z_]+\]$/.test(text) ? null : text;
 };
 

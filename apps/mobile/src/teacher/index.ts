@@ -1,3 +1,5 @@
+export { ReportHistoryRow } from './components/ReportRows';
+export { openSigned } from './report/hooks/api';
 export { TeacherScope } from './components/TeacherScope';
 export { TeacherTabs } from './components/TeacherTabs';
 export { ReportFormScreen } from './report/screens/ReportFormScreen';

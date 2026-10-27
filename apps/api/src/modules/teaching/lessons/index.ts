@@ -1,4 +1,5 @@
 export { LessonsModule } from './lessons.module';
+export { RescheduleOneService } from './reschedule/reschedule-one.service';
 export {
   type LessonsPlanInput,
   planLessons,
@@ -12,6 +13,7 @@ export {
   type Contact,
   forMessages,
 } from './status/confirmation-messages';
+export { LessonCancelService } from './status/lesson-cancel.service';
 export {
   type ConfirmInput,
   LessonStatusService,

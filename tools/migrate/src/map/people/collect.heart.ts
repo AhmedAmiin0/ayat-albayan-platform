@@ -18,7 +18,7 @@ function personOf(row: SourceRow, o: { name: string; phone: string }): Person {
     phone: o.phone,
     name: o.name,
     legacy: null,
-    active: true,
+    claims: ['heart_row'],
     fields: fieldsOf(row.fields, 'heart'),
     merged: 0,
     aliases: [],

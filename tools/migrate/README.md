@@ -45,7 +45,8 @@ pnpm migrate extract-sheets [--zip <path>]
 pnpm migrate extract-crm [--since <ISO>|last]        # 'last' = per-table cursor in cache/crm/cursor.json
 pnpm migrate:dry --target local|staging              # never writes to the target
 pnpm migrate:apply --target local|staging            # production: --target production --confirm-production
-  # dry-run / apply options: --creates-only, --from YYYY-MM-DD, --only <entity,…> (RUNBOOK §7c)
+  # dry-run / apply options: --creates-only, --from YYYY-MM-DD, --only <entity,…> (RUNBOOK §7c),
+  #   --expiry-days N (the app's subscription_expiry_days for imported statuses, default 7; docs/06)
 pnpm migrate validate --target local|staging
 pnpm migrate review                                  # rebuild out/review.xlsx from out/plan.json
 ```
