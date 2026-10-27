@@ -7,7 +7,7 @@ const student = { id: 's1', code: null, name: 'ياسمين', status: 'trial', p
 const sub = (id: string, status: string, starts_on: string) => ({ id, package: '8', status, starts_on, renews_on: null, lessons_total: 8, created_at: `${starts_on}T00:00:00Z` });
 const history = (subs: ReturnType<typeof sub>[]) =>
   ({ student: { id: 's1', code: null, name: 'ياسمين' }, subscriptions: subs, balances: [], payments: [], audit: [] }) as unknown as HistoryBundle;
-const parts = (h: HistoryBundle | null) => ({ student, history: h, lessons: [], reports: { items: [], total: 0 } });
+const parts = (h: HistoryBundle | null) => ({ student, history: h, lessons: [], reports: { items: [], total: 0 }, schedule: { weekly: [], upcoming: [] } });
 
 describe('toStudentDetails', () => {
   it('current = the newest active subscription, else the newest one', () => {

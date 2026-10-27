@@ -4164,7 +4164,17 @@
         "unmarked": "لم يُسجَّل"
       },
       "reports": "التقارير",
-      "reportsCount": "عدد التقارير: {n}"
+      "reportsCount": "عدد التقارير: {n}",
+      "schedule": {
+        "title": "الجدول",
+        "weekly": "{days} الساعة {time}",
+        "studentTime": "عند الطالب: {days}",
+        "noWeekly": "لا جدول ثابت",
+        "upcoming": "الحلقات القادمة",
+        "noUpcoming": "لا حلقات قادمة",
+        "showAll": "عرض الكل ({n})",
+        "showLess": "عرض أقل"
+      }
     },
     "lessonActions": {
       "reschedule": "تغيير الموعد",

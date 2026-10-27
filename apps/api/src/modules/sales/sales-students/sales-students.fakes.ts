@@ -11,6 +11,7 @@ import { SalesHistoryQueries, SalesQueries } from '../sales';
 import { A, NONE, OWN_A } from '../sales/sales.fakes';
 import { bundle, verify } from '../sales/academy/sales-academy.fakes';
 import { type AttendanceRow, type LessonFacts, SalesStudentQueries } from './details/sales-student.queries';
+import { ruleRow, upcomingRow } from './sales-students.schedule.fakes';
 import { LessonServices } from './lessons/sales-lesson-actions.service';
 
 export { A };
@@ -47,7 +48,8 @@ const reportRow = { id: REPORT, lesson_id: 'l1', teacher_id: 'tc1', attendance: 
 
 export async function studentsApp() {
   const sales = { ownership: vi.fn(async (id: string) => (id === A ? OWN : NONE)), subscriptions: vi.fn(), meetings: vi.fn() };
-  const queries = { student: vi.fn(), pastLessons: vi.fn(), lesson: vi.fn() };
+  const schedule = { rules: vi.fn(), upcoming: vi.fn() };
+  const queries = { student: vi.fn(), pastLessons: vi.fn(), lesson: vi.fn(), rules: schedule.rules, upcoming: schedule.upcoming };
   const history = { history: vi.fn(), studentOf: vi.fn() };
   const reports = { submitted: vi.fn(), lessons: vi.fn(), sequence: vi.fn() };
   const files = { studentPdfUrl: vi.fn() };
@@ -79,6 +81,8 @@ export async function studentsApp() {
     files.studentPdfUrl.mockResolvedValue({ url: 'https://storage/signed', expires_at: '2026-10-27T16:00:00.000Z' });
     lessons.one.reschedule.mockResolvedValue('1e000000-0000-4000-8000-0000000000c2');
     lessons.cancels.cancel.mockResolvedValue([LESSON]);
+    schedule.rules.mockResolvedValue([ruleRow()]);
+    schedule.upcoming.mockResolvedValue([upcomingRow(MINE)]);
   };
-  return { app, call, reset, sales, queries, history, reports, files, lessons };
+  return { app, call, reset, sales, queries, history, reports, files, lessons, schedule };
 }

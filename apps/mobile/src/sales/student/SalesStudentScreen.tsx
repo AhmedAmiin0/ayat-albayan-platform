@@ -10,6 +10,7 @@ import { SalesLoadScreen } from '../components/SalesLoadScreen';
 import { fill } from '../lib/sales-text';
 import { AttendanceSection } from './AttendanceSection';
 import { ReportsSection } from './ReportsSection';
+import { ScheduleSection } from './ScheduleSection';
 import { SubscriptionSection } from './SubscriptionSection';
 import { useSalesStudent } from './student-api';
 
@@ -37,6 +38,7 @@ export function SalesStudentScreen() {
         <View style={{ gap: 20 }}>
           <Note>{about.join(' · ')}</Note>
           <SubscriptionSection data={data} />
+          <ScheduleSection schedule={data.schedule} />
           <AttendanceSection attendance={data.attendance} />
           <ReportsSection studentId={data.student.id} reports={data.reports} />
         </View>

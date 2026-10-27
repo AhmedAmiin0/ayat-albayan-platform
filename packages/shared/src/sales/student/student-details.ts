@@ -3,6 +3,7 @@ import type { Attendance, LessonStatus, Program, StudentStatus } from '../../enu
 import type { ReportSummaryView } from '../../reports/index.js';
 import { instant } from '../../schemas/index.js';
 import type { SalesHistoryEntry } from '../academy.js';
+import type { SalesStudentSchedule } from './student-schedule.js';
 
 // «تفاصيل الطالب» of the salesperson (owner 2026-10-27, docs/16 row 36): one of HER students (the
 // ownership of «الاشتراكات»), its subscriptions, attendance and sent reports. Never a price or payment.
@@ -29,6 +30,8 @@ export interface SalesStudentDetails {
   attendance: { items: SalesAttendanceDay[]; totals: Record<AttendanceKind, number> };
   /** The sent reports newest first, the teacher's rows (ReportSummaryView), and how many there are. */
   reports: { items: ReportSummaryView[]; total: number };
+  /** «الجدول»: weekly slots and the next lessons, no link. Absent in an old cache. */
+  schedule?: SalesStudentSchedule;
 }
 
 /** POST /sales/lessons/:id/reschedule: one lesson only, no substitute teacher, no clash override. */
