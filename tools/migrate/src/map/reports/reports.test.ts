@@ -77,6 +77,7 @@ describe('report modules', () => {
       teacher_id: keys.teacher('abrar'),
     });
     expect(run.issues.map((i) => [i.entity, i.code])).toEqual([
+      ['students', 'status_downgrade'], // reported lessons, no payment: pending_subscription
       ['lesson_reports', 'missing_field'], // start time unknown (warn), first report
       ['lesson_reports', 'bad_date'],
       ['lesson_reports', 'duplicate'],

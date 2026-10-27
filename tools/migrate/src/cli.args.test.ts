@@ -40,6 +40,13 @@ describe('parseCli', () => {
     expect(() => parseCli(['apply', '--target', 'staging', '--only', 'people'])).toThrow(/--only/);
   });
 
+  it('parses --expiry-days (the setting, 1..90) and rejects anything else', () => {
+    const at = (v: string) => parseCli(['dry-run', '--target', 'staging', '--expiry-days', v]);
+    expect(at('14').expiryDays).toBe(14);
+    expect(parseCli(['dry-run', '--target', 'staging']).expiryDays).toBeUndefined();
+    for (const bad of ['0', '91', '7.5', 'week']) expect(() => at(bad)).toThrow(/--expiry-days/);
+  });
+
   it('rejects unknown commands, missing targets, bad --since and unknown flags', () => {
     expect(() => parseCli([])).toThrow(/usage/);
     expect(() => parseCli(['drop'])).toThrow(/usage/);

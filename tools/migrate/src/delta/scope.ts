@@ -10,7 +10,12 @@ import { type OnlyScope, parseOnly } from './only.ts';
 import type { RecreateScope } from './orphans.ts';
 
 interface RunScope {
-  build: { today: string; from: string; recreate?: Omit<RecreateScope, 'tableOf'> };
+  build: {
+    today: string;
+    from: string;
+    expiryDays?: number;
+    recreate?: Omit<RecreateScope, 'tableOf'>;
+  };
   only?: OnlyScope;
 }
 
@@ -20,13 +25,14 @@ const fromUtcOf = (day: string): string =>
 
 /** Orphaned import items come back only under --creates-only with an explicit --only list. */
 export function runScope(
-  args: Pick<CliArgs, 'from' | 'only' | 'createsOnly'>,
+  args: Pick<CliArgs, 'from' | 'only' | 'createsOnly' | 'expiryDays'>,
   today: string,
 ): RunScope {
   const from = args.from ?? today;
-  if (!args.only) return { build: { today, from } };
+  const base = { today, from, ...(args.expiryDays ? { expiryDays: args.expiryDays } : {}) };
+  if (!args.only) return { build: base };
   const only = { only: parseOnly(args.only), fromUtc: fromUtcOf(from) };
-  return { build: { today, from, ...(args.createsOnly ? { recreate: only } : {}) }, only };
+  return { build: { ...base, ...(args.createsOnly ? { recreate: only } : {}) }, only };
 }
 
 /**
