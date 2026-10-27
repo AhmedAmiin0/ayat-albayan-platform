@@ -1,11 +1,9 @@
-import { isRunningLesson, localizedName } from '@ab/shared';
+import { localizedName } from '@ab/shared';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import { ActivityIndicator, FlatList, View } from 'react-native';
-import { LessonDetailsSheet } from '@/calendar/details/LessonDetailsSheet';
-import { useLessonDetails } from '@/calendar/details/use-lesson-details';
+import { useLessonDetails } from '@/calendar';
 import { SchedulePeriod } from '@/calendar/overview/SchedulePeriod';
-import { JoinClassroomButton } from '@/classroom/links/JoinClassroomButton';
 import { riyadhToday } from '@/calendar/lib/week';
 import { useMinuteClock } from '@/classroom/sessions/use-minute-clock';
 import { t } from '@/core/lib/i18n/i18n';
@@ -21,6 +19,7 @@ import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { useTabBarInset } from '@/core/ui/layout/tab-bar-inset';
 import { useSalesSchedule, useSalesTeachers } from '../lib/sales-api';
 import { SalesLessonRow } from '../components/SalesLessonRow';
+import { SalesLessonSheet } from '../components/SalesLessonSheet';
 
 const DATE = /^\d{4}-\d{2}-\d{2}$/;
 
@@ -77,12 +76,7 @@ export function SalesScheduleScreen({ asTab = false }: { asTab?: boolean }) {
           )
         }
       />
-      <LessonDetailsSheet
-        lesson={details.lesson}
-        role="sales"
-        onClose={details.close}
-        actions={(l) => (isRunningLesson(l, now) ? <JoinClassroomButton lesson={l} /> : null)}
-      />
+      <SalesLessonSheet lesson={details.lesson} onClose={details.close} />
     </Screen>
   );
 }
