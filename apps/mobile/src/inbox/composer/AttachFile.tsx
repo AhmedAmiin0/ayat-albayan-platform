@@ -13,12 +13,14 @@ interface AttachFileProps {
   onError: (message: string | null) => void;
   onTemplate: () => void;
   onReplies?: (() => void) | undefined;
-  onQuote?: (() => void) | undefined;
+  /** «الرموز التعبيرية»: the pill opens its emoji sheet (insert at the caret). */
+  onEmoji: () => void;
 }
 
 /**
  * The pill's paperclip (owner 2026-10-19 #1/#2; 2026-10-27 as WhatsApp Business): its sheet sends a
- * photo or a PDF at once, and holds «قالب», «الردود السريعة» and «عرض سعر». Never in teacher mode
+ * photo (gallery or camera) or a PDF at once, and holds «قالب», «الردود السريعة» and the emoji
+ * (owner 2026-10-27: only the price tag and the paperclip stay in the bar). Never in teacher mode
  * (teachers do not send files: the API answers 403 files_forbidden); the composer shows it only
  * while the 24 h window is open.
  */

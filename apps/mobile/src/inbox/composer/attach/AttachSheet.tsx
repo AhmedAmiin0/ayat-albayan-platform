@@ -2,8 +2,8 @@ import { Modal, Pressable, View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { shape, useTheme } from '@/theme';
 import { Button } from '@/core/ui/primitives/Button';
-import { PriceIcon, SavedReplyIcon, TemplateIcon } from '../../shared/chat-icons';
-import { CameraIcon, DocumentIcon, GalleryIcon } from '../../shared/composer-icons';
+import { SavedReplyIcon, TemplateIcon } from '../../shared/chat-icons';
+import { CameraIcon, DocumentIcon, EmojiIcon, GalleryIcon } from '../../shared/composer-icons';
 import type { ChatFileSource } from '../send-file';
 import { AttachTile } from './AttachTile';
 
@@ -13,15 +13,15 @@ interface AttachSheetProps {
   onTemplate: () => void;
   /** «الردود السريعة» (staff); absent → no tile. */
   onReplies?: (() => void) | undefined;
-  /** «عرض سعر» (staff with pricing.read); absent → no tile. */
-  onQuote?: (() => void) | undefined;
+  /** «الرموز التعبيرية»: the pill's emoji sheet. */
+  onEmoji: () => void;
   onClose: () => void;
 }
 
 /**
  * The paperclip's sheet as WhatsApp Business (owner 2026-10-27): round tiles in reading order (a
  * wrapping row, so it mirrors with the phone), «المعرض» «الكاميرا» «مستند PDF» «قالب» «الردود
- * السريعة» «عرض سعر». A tap outside or «إلغاء» closes it; each tile closes it before it acts.
+ * السريعة» «الرموز التعبيرية», most used first («عرض سعر» sits in the bar). A tap outside or «إلغاء» closes it; each tile closes it before it acts.
  */
 export function AttachSheet(p: AttachSheetProps) {
   const { color } = useTheme();
@@ -69,11 +69,9 @@ export function AttachSheet(p: AttachSheetProps) {
                 <SavedReplyIcon color={tint} />
               </AttachTile>
             ) : null}
-            {p.onQuote ? (
-              <AttachTile label={t.inbox.quote.open} onPress={then(p.onQuote)}>
-                <PriceIcon color={tint} />
-              </AttachTile>
-            ) : null}
+            <AttachTile label={t.inbox.composer.emoji} onPress={then(p.onEmoji)}>
+              <EmojiIcon color={tint} />
+            </AttachTile>
           </View>
           <Button variant="ghost" label={t.common.cancel} onPress={p.onClose} />
         </View>

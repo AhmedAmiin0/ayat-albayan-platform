@@ -33,7 +33,7 @@ async function open(opts: { teacher?: boolean; permissions?: string[]; last?: st
   await screen.findByText(inbound.body ?? '');
 }
 const quote = () => screen.queryByRole('button', { name: t.inbox.quote.open });
-/** Open window (owner 2026-10-27): «عرض سعر» is a tile of the paperclip's sheet. */
+/** Open window (owner 2026-10-27): «عرض سعر» is in the bar; the paperclip's sheet has no such tile. */
 const paperclip = async () => {
   const clip = screen.queryByRole('button', { name: t.inbox.composer.attach });
   if (clip) await fireEvent.press(clip);
@@ -42,9 +42,8 @@ const paperclip = async () => {
 
 beforeEach(() => mockApiFetch.mockReset());
 
-test('sales with pricing.read get «عرض سعر» in the paperclip’s sheet; it opens the quote sheet', async () => {
+test('sales with pricing.read get «عرض سعر» in the bar; it opens the quote sheet', async () => {
   await open({ permissions: fullAccessMe('sales').permissions });
-  await paperclip();
   const button = quote();
   expect(button).toBeTruthy();
   if (button) await fireEvent.press(button);

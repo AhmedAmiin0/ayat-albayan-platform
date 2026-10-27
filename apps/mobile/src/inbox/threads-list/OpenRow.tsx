@@ -69,10 +69,10 @@ function Row({ p, voice }: { p: OpenRowProps; voice: Voice }) {
 }
 
 /**
- * The open window's row as WhatsApp (owner 2026-10-27): [pill: emoji · text · paperclip · camera]
- * then the round microphone / «أرسل», in reading order, so it mirrors with the phone (the round
- * button on the right in English, on the left in Arabic). Voice notes: staff only, where the APK
- * records; a teacher's row has no microphone, paperclip or camera.
+ * The open window's row (owner 2026-10-27: «remove every thing in the chat bar except for the tag and
+ * the clips icons»): [pill: text · «عرض سعر» · paperclip] then the round microphone / «أرسل», in
+ * reading order, so it mirrors with the phone (the round button on the right in English, on the left
+ * in Arabic). Voice notes: staff only, where the APK records; a teacher's pill is [emoji · text · قالب].
  */
 export function OpenRow(p: OpenRowProps) {
   const [records] = useState(voiceSupported);
