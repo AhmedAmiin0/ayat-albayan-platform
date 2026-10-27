@@ -15,6 +15,8 @@ import { currentWeekStart } from '@/features/teaching/schedule/reschedule/slots'
 import { addDays, dayMonthLabel, RIYADH_TZ, weekWindow, zonedParts } from '@/features/teaching/schedule/tz';
 import { WeekGrid } from '@/features/teaching/schedule/grid/WeekGrid';
 import { t } from '@/lib/i18n/i18n';
+import { useFollowingDay } from '@/lib/time/use-following-day';
+import { useNow } from '@/lib/time/use-now';
 import { cn } from '@/lib/utils';
 import { myLessonsQuery, teacherMeQuery } from '../api';
 import { TeacherLessonCard } from './TeacherLessonCard';
@@ -25,9 +27,9 @@ import { TeacherLessonCard } from './TeacherLessonCard';
  * my lesson card: join, confirm / attendance, «اقترح ميعاد تاني», the report.
  */
 export function MyWeek() {
-  const [now] = useState(() => new Date());
+  const now = useNow();
   const thisWeek = currentWeekStart(now);
-  const [week, setWeek] = useState(thisWeek);
+  const [week, setWeek] = useFollowingDay(thisWeek);
   const me = useQuery(teacherMeQuery);
   const lessons = useQuery(myLessonsQuery(weekWindow(week, RIYADH_TZ)));
   const [openId, setOpenId] = useState<string | null>(null);

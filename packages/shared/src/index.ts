@@ -18,6 +18,7 @@ export * from './format/running-head.js';
 export * from './clock/clock-pref.js';
 export * from './clock/clock.js';
 export * from './clock/clock-picker.js';
+export * from './format/text-dir.js';
 export * from './schemas/index.js';
 export * from './settings/index.js';
 export * from './custom-config/index.js';

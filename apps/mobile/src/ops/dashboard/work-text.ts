@@ -1,6 +1,7 @@
 import { counted, formatAmount, lessonWhenText, packageProgress, RIYADH_TZ } from '@ab/shared';
 import { t } from '@/core/lib/i18n/i18n';
 import { locale } from '@/core/lib/i18n/locale';
+import { isolate } from '@/core/ui/primitives/Ltr';
 import type { PendingReportRow, TaskRow, UnpaidRow } from './dashboard-types';
 
 /** «باقة سهيلة قاربت على الانتهاء: …» (dashboard.task.<kind>, same wording as the web). */
@@ -10,7 +11,7 @@ export function taskText(task: Pick<TaskRow, 'kind' | 'student' | 'balance'>): s
         .remainingLabel
     : '';
   return t.dashboard.task[task.kind]
-    .replace('{student}', task.student?.name ?? '')
+    .replace('{student}', task.student ? isolate(task.student.name) : '')
     .replace('{left}', left);
 }
 

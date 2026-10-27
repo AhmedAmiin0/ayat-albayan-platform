@@ -1,13 +1,7 @@
-import type { CallView } from '@ab/shared';
 import { fireEvent, render, screen } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { CallEntry } from './CallEntry';
-
-const call = (over: Partial<CallView> = {}): CallView => ({
-  ...{ id: 'c1', phone_e164: '+966501234567', direction: 'outbound', status: 'ended', end_reason: 'completed', display_name: 'أم سهيلة' },
-  ...{ staff_id: 's1', started_at: '2026-10-26T10:00:00Z', answered_at: '2026-10-26T10:00:05Z', ended_at: '2026-10-26T10:02:19Z', duration_seconds: 134 },
-  ...over,
-});
+import { call, callSides } from './call-entry.helpers';
 
 describe('CallEntry (a call in the chat)', () => {
   it('names each kind WhatsApp-like, with the talk time when answered', async () => {
@@ -26,5 +20,10 @@ describe('CallEntry (a call in the chat)', () => {
     expect(back).toHaveBeenCalledWith(expect.objectContaining({ id: 'c1' }));
     await render(<CallEntry call={call()} />);
     expect(screen.getByTestId('call-entry-c1')).toBeDisabled();
+  });
+
+  // Arabic (jest.setup: RTL): flex-end is the left, so ours sits on the left and the family's on the right.
+  it("sits on the caller's side as the bubbles: ours at the inline-end, theirs at the start", async () => {
+    expect(await callSides()).toEqual({ ours: 'flex-end', theirs: 'flex-start' });
   });
 });

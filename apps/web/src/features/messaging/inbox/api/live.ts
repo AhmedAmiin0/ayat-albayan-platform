@@ -1,4 +1,4 @@
-import { chatLiveKey, connectInboxLive, createInboxLive } from '@ab/client-core';
+import { chatLiveKey, connectInboxLive, createInboxLive, createLiveSession, INBOX_HIDDEN_LEAVE_MS } from '@ab/client-core';
 import { useQueryClient } from '@tanstack/react-query';
 import { useEffect, useSyncExternalStore } from 'react';
 import { supabase } from '@/lib/http/supabase';
@@ -30,28 +30,37 @@ export function useLiveChat(phone: string): void {
 /**
  * Mounted once by a staff shell. A web page shows only mounted queries, so the list and the badge
  * always count as on screen: an event re-reads the mounted ['threads', 'list'] and nav counts.
+ * A tab hidden for INBOX_HIDDEN_LEAVE_MS leaves the channel (the polls take over); shown again it
+ * rejoins (or, still joined, resyncs once). Sign-out / unmount leaves at once.
  */
 export function useInboxRealtime(enabled: boolean): void {
   const client = useQueryClient();
   useEffect(() => {
     if (!enabled) return undefined;
     const list = inboxLive.watch('list');
-    const stop = connectInboxLive(supabase, inboxLive, {
-      chat: (phone) => {
-        // cancelRefetch false: an older page being loaded is joined, not cancelled.
-        const filters = { queryKey: ['threads', 'detail', phone], type: 'active' } as const;
-        if (document.hasFocus()) void client.refetchQueries(filters, { cancelRefetch: false });
-      },
-      // A hidden tab waits: TanStack re-reads the stale list when it is shown again.
-      list: () => {
-        const filters = { queryKey: ['threads', 'list'], type: 'active' } as const;
-        if (document.visibilityState === 'visible') void client.refetchQueries(filters, { cancelRefetch: false });
-      },
-      badge: () => void client.invalidateQueries({ queryKey: ['threads', 'nav-count'] }, { cancelRefetch: false }),
-    });
+    const open = () =>
+      connectInboxLive(supabase, inboxLive, {
+        chat: (phone) => {
+          // cancelRefetch false: an older page being loaded is joined, not cancelled.
+          const filters = { queryKey: ['threads', 'detail', phone], type: 'active' } as const;
+          if (document.hasFocus()) void client.refetchQueries(filters, { cancelRefetch: false });
+        },
+        // A hidden tab waits: TanStack re-reads the stale list when it is shown again.
+        list: () => {
+          const filters = { queryKey: ['threads', 'list'], type: 'active' } as const;
+          if (document.visibilityState === 'visible') void client.refetchQueries(filters, { cancelRefetch: false });
+        },
+        badge: () => void client.invalidateQueries({ queryKey: ['threads', 'nav-count'] }, { cancelRefetch: false }),
+      });
+    const session = createLiveSession(open, inboxLive.resync);
+    const shown = () => (document.visibilityState === 'hidden' ? session.pause(INBOX_HIDDEN_LEAVE_MS) : session.resume());
+    if (document.visibilityState !== 'hidden') session.resume(); // a tab opened in the background joins when shown
+    document.addEventListener('visibilitychange', shown);
     return () => {
-      stop();
+      document.removeEventListener('visibilitychange', shown);
+      session.end();
       list();
+      inboxLive.forget('list');
     };
   }, [enabled, client]);
 }

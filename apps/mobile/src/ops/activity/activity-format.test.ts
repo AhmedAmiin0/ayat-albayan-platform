@@ -1,4 +1,5 @@
 import { t } from '@/core/lib/i18n/i18n';
+import { isolate } from '@/core/ui/primitives/Ltr';
 import {
   actionLabel,
   actorLine,
@@ -27,7 +28,7 @@ test('roles and entities fall back to the raw word', () => {
 
 test('the actor: name and role; a missing name is «غير معروف»', () => {
   expect(actorLine({ actor_name: 'منى', actor_role: 'admin' })).toBe(
-    `منى · ${t.activity.roles.admin}`,
+    `${isolate('منى')} · ${t.activity.roles.admin}`,
   );
   expect(actorLine({ actor_name: null, actor_role: 'public' })).toBe(
     `${t.activity.unknownUser} · ${t.activity.roles.public}`,

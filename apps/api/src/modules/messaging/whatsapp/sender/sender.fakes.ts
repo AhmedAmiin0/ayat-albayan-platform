@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import type { MessageRow } from '../messages/message.mapper';
 import type { DueMessage } from './sender.queries';
 
@@ -40,4 +41,12 @@ export function messageRow(over: Partial<MessageRow> = {}): MessageRow {
     wa_pricing_category: null, sent_by_teacher_id: null, line: null, number_id: null, reply_to_message_id: null, forwarded_from_id: null,
     ...over,
   };
+}
+
+/** A SendGate stand-in: mock open() / automaticOn(); switches() answers both from them, as the real one does from one read. */
+export function fakeSwitches() {
+  const open = vi.fn<() => Promise<boolean>>();
+  const automaticOn = vi.fn<() => Promise<boolean>>();
+  const switches = async () => ({ open: await open(), automaticOn: await automaticOn() });
+  return { open, automaticOn, switches };
 }

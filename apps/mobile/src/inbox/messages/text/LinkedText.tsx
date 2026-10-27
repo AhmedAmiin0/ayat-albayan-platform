@@ -4,6 +4,7 @@ import { Linking } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
+import { ContentText } from '@/core/ui/primitives/ContentText';
 import type { BubbleActions } from '../hooks/bubble-actions';
 import { useSmall } from '../components/MessageMeta';
 import { useHoldPress } from './use-hold-press';
@@ -14,10 +15,15 @@ interface LinkSpanProps {
   /** The bubble's menu: a nested span takes the touch, so a hold on the link opens it too. */
   onHold: (() => void) | undefined;
   onFail: () => void;
+  /** A selectable body copies what it shows: no mark is added then. */
+  plain: boolean;
 }
 
-/** One link, lapis and underlined, left to right inside the Arabic sentence. */
-function LinkSpan({ text, href, onHold, onFail }: LinkSpanProps) {
+/**
+ * One link, lapis and underlined. Shown with a trailing LRM so its closing «/» or «.» stays at its
+ * end inside an Arabic sentence (display only: the href and the screen reader's name are the text).
+ */
+function LinkSpan({ text, href, onHold, onFail, plain }: LinkSpanProps) {
   const { color } = useTheme();
   const open = () => {
     // Never crash on a link the phone cannot open: the generic error under the text instead.
@@ -29,10 +35,11 @@ function LinkSpan({ text, href, onHold, onFail }: LinkSpanProps) {
   return (
     <AppText
       accessibilityRole="link"
+      accessibilityLabel={text}
       {...press}
-      style={{ color: color.lapis, textDecorationLine: 'underline', writingDirection: 'ltr' }}
+      style={{ color: color.lapis, textDecorationLine: 'underline' }}
     >
-      {text}
+      {plain ? text : `${text}\u200E`}
     </AppText>
   );
 }
@@ -46,7 +53,8 @@ interface LinkedTextProps {
 
 /**
  * A bubble's text with its http(s) and www. links clickable (owner 2026-10-26, splitLinks as the web's
- * W11). A link opens in the phone's browser; one that fails says so instead of crashing.
+ * W11). A link opens in the phone's browser; one that fails says so instead of crashing. The text sits
+ * on the side of its own language (ContentText), as WhatsApp, in an Arabic or an English UI.
  */
 export function LinkedText({ text, touch, a11y }: LinkedTextProps) {
   const { color } = useTheme();
@@ -56,7 +64,8 @@ export function LinkedText({ text, touch, a11y }: LinkedTextProps) {
   const parts = splitLinks(text);
   return (
     <>
-      <AppText
+      <ContentText
+        source={text}
         // Selecting text would swallow the long press that opens «رد» / «إعادة توجيه».
         selectable={!touch.has}
         {...(a11y ? touch.a11y : {})}
@@ -65,15 +74,14 @@ export function LinkedText({ text, touch, a11y }: LinkedTextProps) {
           fontSize: type.size.body,
           lineHeight: type.lineHeight(type.size.body),
           color: color.ink,
-          writingDirection: 'auto',
         }}
       >
         {parts.some((part) => part.href)
           ? parts.map((part, i) =>
-              part.href ? <LinkSpan key={i} text={part.text} href={part.href} onHold={onHold} onFail={() => setFailed(true)} /> : part.text,
+              part.href ? <LinkSpan key={i} text={part.text} href={part.href} onHold={onHold} onFail={() => setFailed(true)} plain={!touch.has} /> : part.text,
             )
           : text}
-      </AppText>
+      </ContentText>
       {failed ? <AppText accessibilityRole="alert" style={small}>{t.common.error}</AppText> : null}
     </>
   );

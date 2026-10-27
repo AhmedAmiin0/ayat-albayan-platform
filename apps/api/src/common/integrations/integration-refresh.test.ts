@@ -5,8 +5,9 @@ import { integrationRefreshMs } from './integration-refresh';
 const base = { INTEGRATION_CONFIG_FROM_DB: true, INTEGRATION_REFRESH_MS: undefined, SETTINGS_CACHE_MS: 30_000 };
 
 describe('integrationRefreshMs: the integration config reload period', () => {
-  it('unset INTEGRATION_REFRESH_MS: SETTINGS_CACHE_MS, as before the key existed', () => {
-    expect(integrationRefreshMs(base)).toBe(30_000);
+  it('unset INTEGRATION_REFRESH_MS: SETTINGS_CACHE_MS but at least a minute (30 s → 60 s: half the reads); e2e 0 stays 0', () => {
+    expect(integrationRefreshMs(base)).toBe(60_000);
+    expect(integrationRefreshMs({ ...base, SETTINGS_CACHE_MS: 120_000 })).toBe(120_000);
     expect(integrationRefreshMs({ ...base, SETTINGS_CACHE_MS: 0 })).toBe(0);
   });
 

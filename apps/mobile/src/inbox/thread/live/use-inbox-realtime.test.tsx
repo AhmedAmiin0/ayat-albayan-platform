@@ -18,7 +18,8 @@ const mockChannel: { on: jest.Mock; subscribe: jest.Mock } = {
 const mockSupabase = {
   channel: jest.fn(() => mockChannel),
   removeChannel: jest.fn(async () => 'ok'),
-  realtime: { setAuth: jest.fn(async () => undefined) },
+  getChannels: jest.fn(() => []),
+  realtime: { setAuth: jest.fn(async () => undefined), disconnect: jest.fn(async () => 'ok') },
 };
 jest.mock('@/core/lib/http/supabase', () => ({
   get supabase() {
