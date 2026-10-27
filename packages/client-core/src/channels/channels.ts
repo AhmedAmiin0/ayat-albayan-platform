@@ -11,8 +11,11 @@ export const CHANNEL_WRITES: Readonly<Record<ChannelAudience, boolean>> = { teac
 /** The thread re-reads this often while it is on screen (the inbox polls the same way). */
 export const CHANNEL_REFRESH_MS = 15_000;
 
-/** The WhatsApp inbox (chats list and an open chat) re-reads this often while it is on screen. */
+/** An open WhatsApp chat (and the web inbox) re-reads this often while it is on screen. */
 export const INBOX_REFRESH_MS = 10_000;
+
+/** The mobile chats list re-reads this often while on screen: GET /threads is the costliest inbox read (server audit 2026-10-27). */
+export const INBOX_LIST_REFRESH_MS = 30_000;
 
 const BASE: Readonly<Record<ChannelAudience, (studentId: string) => string>> = {
   teacher: (id) => `/teachers/me/channels/${id}`,

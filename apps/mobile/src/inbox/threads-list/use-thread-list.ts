@@ -1,4 +1,4 @@
-import { INBOX_REFRESH_MS } from '@ab/client-core';
+import { INBOX_LIST_REFRESH_MS } from '@ab/client-core';
 import type { ThreadView } from '@ab/shared';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { useMemo } from 'react';
@@ -13,7 +13,7 @@ interface ThreadListParams {
   unread: boolean;
   /** A chat list's id «القوائم» (docs/22): only its chats. Unknown id → an empty page. */
   list?: string;
-  /** The chats tab: re-read every INBOX_REFRESH_MS while focused (unread counts, order). A picker never polls. */
+  /** The chats tab: re-read every INBOX_LIST_REFRESH_MS while focused (unread counts, order). A picker never polls. */
   live?: boolean;
 }
 
@@ -32,7 +32,7 @@ export function useThreadList({ search, unread, list, live = false }: ThreadList
       ),
     initialPageParam: 1,
     getNextPageParam: nextPageParam,
-    refetchInterval: live && focused ? INBOX_REFRESH_MS : false,
+    refetchInterval: live && focused ? INBOX_LIST_REFRESH_MS : false,
   });
   const pages = query.data?.pages;
   const items = useMemo(() => {

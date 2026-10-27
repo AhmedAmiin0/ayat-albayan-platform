@@ -1,4 +1,4 @@
-import { INBOX_REFRESH_MS } from '@ab/client-core';
+import { INBOX_LIST_REFRESH_MS } from '@ab/client-core';
 import { act, renderHook, waitFor } from '@testing-library/react-native';
 import { createTestQueryClient, queryWrapper } from '@/test/query';
 import { useThreadList } from './use-thread-list';
@@ -13,7 +13,7 @@ jest.mock('@/core/lib/http/api', () => ({
 let mockFocused = true;
 jest.mock('@/core/ui/connecting/use-screen-focus', () => ({ useScreenFocused: () => mockFocused }));
 
-const tick = () => act(() => jest.advanceTimersByTimeAsync(INBOX_REFRESH_MS));
+const tick = () => act(() => jest.advanceTimersByTimeAsync(INBOX_LIST_REFRESH_MS));
 
 async function mount(live: boolean) {
   const client = createTestQueryClient();
