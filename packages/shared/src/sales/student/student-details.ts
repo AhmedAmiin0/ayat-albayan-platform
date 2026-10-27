@@ -21,7 +21,7 @@ export interface SalesAttendanceDay {
 
 /** GET /sales/students/:id: 404 student_not_found for an unknown id AND for a student who is not hers. */
 export interface SalesStudentDetails {
-  student: { id: string; code: string; name: string; status: StudentStatus; program: Program; teacher_name: string | null };
+  student: { id: string; code: string; name: string; status: StudentStatus; program: Program; teacher_name: string | null; guardian_phone: string | null };
   /** Newest first; `current_id` is the newest active one, else the newest (null without any). */
   subscriptions: SalesStudentSubscription[];
   current_id: string | null;

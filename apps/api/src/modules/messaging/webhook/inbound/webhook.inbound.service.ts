@@ -7,6 +7,7 @@ import { inboundPush, intentOf, ratingOf } from './webhook.inbound';
 import { InboundStore, type Sender } from './webhook.inbound.store';
 import type { Contact } from '../webhook.queries';
 import { QuickReplies } from './webhook.quick-reply';
+import { InboundReactions } from './webhook.reaction';
 
 /** Time an undo (one DELETE) gets before the controller's 200 goes out. */
 const UNDO_MARGIN_MS = 500;
@@ -26,6 +27,7 @@ interface InboundOptions {
  * deadline Meta already has its 200 and will not re-send, so the row stays (the message is in the
  * inbox; only the confirm / pause and the push are lost) and the error is only logged.
  * ponytail: a pending flag on the row + a sweeper would retry those too; add it if logs show any.
+ * A reaction stops first: it only sets their_reaction (InboundReactions), no row, lead, reply or push.
  * The ONE gate for the academy's own numbers (owner 2026-10-27): a message from one of them is stored
  * (audit, already read) and nothing else runs: no lead, quick reply, rating or push.
  */
@@ -34,6 +36,8 @@ export class InboundService {
   private readonly log = new Logger(InboundService.name);
   /** The academy's own numbers (property-injected: the constructor is at the 3-parameter limit). */
   @Optional() @Inject(OwnNumbers) private readonly own?: OwnNumbers;
+  /** A reaction is a column of the message it names, never a row (migration 900). */
+  @Optional() @Inject(InboundReactions) private readonly reactions?: InboundReactions;
 
   constructor(
     private readonly store: InboundStore,
@@ -44,6 +48,7 @@ export class InboundService {
   async handle(m: InboundEvent, opts: InboundOptions = {}): Promise<void> {
     const phone = waIdToE164(m.from);
     if (!phone) return void this.log.warn(`inbound ${m.waMessageId}: wa_id ${m.from} is not a phone`);
+    if (m.type === 'reaction') return void (await this.reactions?.apply(m, phone));
     if (await this.own?.has(phone)) return void (await this.store.saveOwn(m, phone));
     const { who, lead } = await this.store.sender({ m, phone });
     const intent = intentOf(m);

@@ -27,6 +27,7 @@ type Token = 'salesA' | 'salesB' | 'admin' | 'teacher' | 'assistant';
 const studentRow = () => ({
   id: MINE, code: 'AB-0101', name: 'ياسمين', status: 'active', program: 'quran', notes: 'سر', meeting_link_override: 'https://x/secret',
   teacher: { display_name_ar: 'أبرار', phone_e164: '+201001234567' },
+  guardian: { phone_e164: '+966551110000', name: 'سر', email: 'secret@example.org' },
 });
 
 const pastLessons = (): AttendanceRow[] => [

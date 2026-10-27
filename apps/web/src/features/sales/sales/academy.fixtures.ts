@@ -32,7 +32,7 @@ export const scheduleLesson = (over: Partial<SalesScheduleLesson> = {}): SalesSc
 });
 
 export const student = (over: Partial<SalesStudentView> = {}): SalesStudentView => ({
-  id: 's1', code: 'AB-0183', name: 'سهيلة', status: 'active', program: 'quran', teacher_name: 'أبرار', guardian_name: 'أم سهيلة', ...over,
+  id: 's1', code: 'AB-0183', name: 'سهيلة', status: 'active', program: 'quran', teacher_name: 'أبرار', guardian_name: 'أم سهيلة', guardian_phone: '+201001112223', ...over,
 });
 
 export const history = (): SalesSubscriptionHistory => ({

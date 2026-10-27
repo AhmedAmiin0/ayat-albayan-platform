@@ -22,6 +22,8 @@ interface ComposerInputProps {
  * The free-text box inside the pill (the pill draws the border): grows with the text up to ~5 lines
  * (120pt), then scrolls inside itself. One line is the 44pt touch height with the pill's border: an
  * Arabic line height (26) + 8 + 8 padding + 2 × 1pt. No textAlign: the text runs the way it is typed.
+ * Owner 2026-10-27: the text and the placeholder sit in the middle of the box (Android puts a multiline
+ * input's text at the top) and keep 12pt from the pill's rounded inline-start edge.
  */
 export function ComposerInput({ value, onChange, onBlur, onSelection, inputRef }: ComposerInputProps) {
   const { color } = useTheme();
@@ -41,8 +43,11 @@ export function ComposerInput({ value, onChange, onBlur, onSelection, inputRef }
         flex: 1,
         minHeight: shape.control.touch - 2,
         maxHeight: 120,
-        paddingHorizontal: 4,
+        paddingStart: 12,
+        paddingEnd: 4,
         paddingVertical: 8,
+        textAlignVertical: 'center',
+        includeFontPadding: false,
         color: color.ink,
         fontFamily: type.ui[400],
         fontSize: type.size.base,

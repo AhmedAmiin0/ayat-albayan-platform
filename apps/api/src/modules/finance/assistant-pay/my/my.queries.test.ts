@@ -24,6 +24,15 @@ describe('MyQueries: every read is filtered on the signed-in profile, and only o
     expect(String(calls.find((c) => c.method === 'select')?.args[0])).not.toMatch(/price|guardian|notes|assistant_id/);
   });
 
+  it('guardianPhones: the students I brought (brought_by = me) with the guardian phone only, by student id', async () => {
+    const rows = [{ id: 's1', guardian: { phone_e164: '+201001112223' } }, { id: 's2', guardian: null }];
+    const { db, calls } = fakeDb({ students: [{ data: rows }] });
+    const out = await new MyQueries(db).guardianPhones('a1');
+    expect([...out]).toEqual([['s1', '+201001112223']]);
+    expect(eqs(calls)).toEqual([['brought_by', 'a1']]);
+    expect(calls.find((c) => c.method === 'select')?.args[0]).toBe('id, guardian:guardians(phone_e164)');
+  });
+
   it('commissions and adjustments: mine only; commissions only the earned ones', async () => {
     const { db, calls } = fakeDb({ assistant_commissions: [{ data: [] }], assistant_adjustments: [{ data: [] }] });
     const q = new MyQueries(db);

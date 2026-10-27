@@ -8,7 +8,7 @@ export const bucketDigest = (key: string): string =>
   createHash('sha256').update(key).digest('base64url');
 
 /**
- * The sign-in buckets in Postgres (migration 923, rate_limit_take), so every API copy shares one budget.
+ * The sign-in buckets in Postgres (migration 931, rate_limit_take), so every API copy shares one budget.
  * An unreadable database falls back to this process's own buckets (logged): a limit still holds per copy,
  * and the sign-in itself needs the database anyway.
  */

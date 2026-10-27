@@ -1,7 +1,7 @@
 import type { WaLine } from '@ab/shared';
 import { allowedRecipients, lineEnvs, loadEnv } from '../../../config/env/env';
 import { whatsappClient } from './client-factory';
-import { WaError, type WaSent, type WhatsappClient } from './whatsapp.types';
+import { WaError, type ReactionSend, type WaSent, type WhatsappClient } from './whatsapp.types';
 
 /**
  * One line's client that reads its config per call (integration config in the database, owner
@@ -32,6 +32,11 @@ export class LiveWhatsappClient implements WhatsappClient {
     const client = this.current();
     if (!client.sendCallPermissionRequest) throw new WaError('this driver cannot send a call permission request', { code: 100, status: 0 });
     return client.sendCallPermissionRequest(input);
+  }
+  sendReaction(input: ReactionSend): Promise<WaSent> {
+    const client = this.current();
+    if (!client.sendReaction) throw new WaError('this driver cannot send a reaction', { code: 100, status: 0, unsupported: 'crm' });
+    return client.sendReaction(input);
   }
   markRead(waMessageId: string): Promise<void> {
     return this.current().markRead(waMessageId);
