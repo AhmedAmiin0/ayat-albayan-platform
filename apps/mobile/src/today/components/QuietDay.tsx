@@ -8,19 +8,20 @@ import { type, useTheme } from '@/theme';
 import { riyadhTime } from '../lib/lesson-text';
 import { raisedCard } from '../lib/surface';
 import { localDate, visibleLessons } from '../lib/timeline';
-import { useDayLessons } from '../lib/use-day-lessons';
+import type { TodayLesson } from '../lib/today-lesson';
+import type { TodaySource } from '../lib/today-source';
 
 const DAY = 24 * 60 * 60_000; // Riyadh keeps no daylight saving: tomorrow is 24 h away.
 
 /**
  * Nothing left today (docs/29 §6): a check in a lapis-wash circle, «انتهت حلقات اليوم», tomorrow's
- * count and first time once GET /lessons/day for tomorrow answers (no line while it loads or fails),
- * and «جدول الغد» to the schedule tab on that day.
+ * count and first time once the tree's day query for tomorrow answers (no line while it loads or
+ * fails), and «جدول الغد» to the tree's schedule tab on that day.
  */
-export function QuietDay({ now }: { now: Date }) {
+export function QuietDay<L extends TodayLesson>({ now, source }: { now: Date; source: TodaySource<L> }) {
   const { color } = useTheme();
   const tomorrow = new Date(now.getTime() + DAY);
-  const next = visibleLessons(useDayLessons(tomorrow).data ?? []);
+  const next = visibleLessons(source.useDay(tomorrow).data ?? []);
   const first = next[0];
   const date = localDate(tomorrow, RIYADH_TZ);
   return (
@@ -40,7 +41,7 @@ export function QuietDay({ now }: { now: Date }) {
       ) : null}
       <Pressable
         accessibilityRole="button"
-        onPress={() => router.navigate({ pathname: '/schedule', params: { date } })}
+        onPress={() => router.navigate({ pathname: source.schedule, params: { date } })}
         style={({ pressed }) => ({
           ...raisedCard(color, 14),
           minHeight: 46,
