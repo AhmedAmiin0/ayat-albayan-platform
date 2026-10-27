@@ -8,7 +8,7 @@ import { fakeSettings } from '../../../common/settings/settings.fakes';
 import { SettingsService } from '../../../common/settings/settings.service';
 import { ReportFilesService, ReportHistoryQueries } from '../../reporting/reports';
 import { SalesHistoryQueries, SalesQueries } from '../sales';
-import { A, B, NONE, OWN_A } from '../sales/sales.fakes';
+import { A, NONE, OWN_A } from '../sales/sales.fakes';
 import { bundle, verify } from '../sales/academy/sales-academy.fakes';
 import { type AttendanceRow, type LessonFacts, SalesStudentQueries } from './details/sales-student.queries';
 import { LessonServices } from './lessons/sales-lesson-actions.service';
