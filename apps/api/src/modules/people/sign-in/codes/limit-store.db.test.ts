@@ -21,7 +21,7 @@ const take = {
   now: 0,
 };
 
-describe('DbLimitStore (migration 923, shared by every API copy)', () => {
+describe('DbLimitStore (migration 931, shared by every API copy)', () => {
   it('one rate_limit_take call: digests in order, their maxes, the window', async () => {
     const { db, calls } = fakeDb({ data: true, error: null });
     await expect(new DbLimitStore(db).take(take)).resolves.toBe(true);
