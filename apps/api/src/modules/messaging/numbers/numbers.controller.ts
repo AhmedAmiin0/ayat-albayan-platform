@@ -1,6 +1,6 @@
 import {
   numberCreateSchema, numberSecretNameSchema, numberSecretSchema, numbersImportSchema, numberUpdateSchema,
-  type ImportResult, type NumberView,
+  type ImportResult, type NumberView, type OwnTrafficView,
 } from '@ab/shared';
 import { Body, Controller, Delete, Get, HttpCode, Param, ParseUUIDPipe, Patch, Post, Put } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
@@ -10,6 +10,7 @@ import type { AuthUser } from '../../../common/auth/verify-token';
 import { parseOrThrow } from '../../../common/http/http';
 import { NumbersImport } from './import/numbers.import';
 import { NumbersService } from './numbers.service';
+import { OwnNumbers } from './own/own-numbers';
 
 /** :id is a uuid, :name one of the two secret names (anything else is 400). */
 const SECRET_PARAMS = z.object({ id: z.uuid(), name: numberSecretNameSchema });
@@ -26,12 +27,20 @@ export class NumbersController {
   constructor(
     private readonly numbers: NumbersService,
     private readonly importer: NumbersImport,
+    private readonly own: OwnNumbers,
   ) {}
 
   @Get()
   @Permissions('settings.read')
   list(): Promise<NumberView[]> {
     return this.numbers.list();
+  }
+
+  /** «رسائل بين أرقام الأكاديمية»: how many inbound rows came from our own numbers in the last 7 days. */
+  @Get('own-traffic')
+  @Permissions('settings.read')
+  async ownTraffic(): Promise<OwnTrafficView> {
+    return { inbound_7d: await this.own.weekInbound() };
   }
 
   @Post()

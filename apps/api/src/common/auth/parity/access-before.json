@@ -199,6 +199,7 @@
   "NumbersController.create": ["admin"],
   "NumbersController.import": ["admin"],
   "NumbersController.list": ["admin"],
+  "NumbersController.ownTraffic": ["admin"],
   "NumbersController.remove": ["admin"],
   "NumbersController.setSecret": ["admin"],
   "NumbersController.update": ["admin"],

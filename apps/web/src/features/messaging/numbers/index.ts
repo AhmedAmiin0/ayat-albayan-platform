@@ -5,6 +5,7 @@ export {
   deleteNumber,
   importNumbers,
   numbersQuery,
+  ownTrafficQuery,
   parityQuery,
   putNumberSecret,
   setCommsSource,

@@ -1,4 +1,4 @@
-import type { CommsSource, CommsSourceView, ImportResult, NumberCreate, NumberSecretName, NumberUpdate, NumberView, ParityView, TemplateNumberSyncView } from '@ab/shared';
+import type { CommsSource, CommsSourceView, ImportResult, NumberCreate, NumberSecretName, NumberUpdate, NumberView, OwnTrafficView, ParityView, TemplateNumberSyncView } from '@ab/shared';
 import { queryOptions } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@/lib/http/api';
 import { NUMBERS_QUERY_KEYS } from '@/lib/settings/query-keys';
@@ -7,6 +7,12 @@ import { NUMBERS_QUERY_KEYS } from '@/lib/settings/query-keys';
 export const numbersQuery = queryOptions({
   queryKey: NUMBERS_QUERY_KEYS.numbers,
   queryFn: () => apiFetch<NumberView[]>('/admin/numbers'),
+});
+
+/** GET /admin/numbers/own-traffic (settings.read): inbound rows from our own numbers, last 7 days. */
+export const ownTrafficQuery = queryOptions({
+  queryKey: NUMBERS_QUERY_KEYS.ownTraffic,
+  queryFn: () => apiFetch<OwnTrafficView>('/admin/numbers/own-traffic'),
 });
 
 /** GET /admin/communications/parity (settings.read): legacy vs module, role by role. */
