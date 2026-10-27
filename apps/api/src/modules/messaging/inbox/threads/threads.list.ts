@@ -1,7 +1,9 @@
 import { LEAD_STATUSES, listSortShape, type LeadStatus, type ListSort } from '@ab/shared';
 import { z } from 'zod';
 import type { SortSpec } from '../../../../common/list-sort';
+import type { Db } from '../../../../common/db/db.module';
 import { pageQuerySchema } from '../../../../common/http/http';
+import { phoneList } from '../../numbers';
 
 // H1 list order and filters (R-LEAD-02, R-NFR-08). No `sort` = newest message first (the old order).
 
@@ -52,4 +54,12 @@ export function teacherListFilter(f: ThreadListFilter, phones: readonly string[]
   if (f.sort === 'name') out.sort = 'name';
   if (f.sort === 'name' && f.dir) out.dir = f.dir;
   return out;
+}
+
+/** The chats of a list «القوائم» or all of them, never the academy's own numbers (`hide`). */
+export function threadsSource(db: Db, f: ThreadListFilter) {
+  const query = f.list
+    ? db.from('v_list_threads').select('*', { count: 'exact' }).eq('list_id', f.list)
+    : db.from('v_threads').select('*', { count: 'exact' });
+  return f.hide?.length ? query.not('phone_e164', 'in', phoneList(f.hide)) : query;
 }

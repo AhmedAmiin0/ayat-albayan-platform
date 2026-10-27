@@ -5,6 +5,7 @@ import type { ReportPdfPublisher } from './report-pdf.publisher';
 import type { ReportPdfQueries } from './report-pdf.queries';
 
 const queries = {
+  hasWork: vi.fn(),
   recoverStale: vi.fn(),
   pendingIds: vi.fn(),
   claim: vi.fn(),
@@ -24,6 +25,7 @@ function job(policy = fakePolicy()) {
 describe('ReportPdfJob — the R-REP-03 queue worker', () => {
   beforeEach(() => {
     vi.resetAllMocks();
+    queries.hasWork.mockResolvedValue(true);
     queries.recoverStale.mockResolvedValue(0);
     queries.pendingIds.mockResolvedValue(['r1', 'r2']);
     queries.claim.mockResolvedValue(3);
