@@ -60,7 +60,7 @@ describe('ComposerPhone with no template allowed', () => {
   it('sales, closed window: the help line only', async () => {
     show({ mode: 'sales', open: false, rows: [] });
     expect(await screen.findByText(t.inbox.composer.noAllowedHelp)).toBeTruthy();
-    expect(screen.queryByText(t.inbox.sessionClosed)).toBeNull(); // «يجب أن ترسل قالبًا» would mislead
+    expect(screen.queryByText(t.inbox.sessionClosed)).toBeNull(); // «فأرسل قالبًا» would mislead
     expect(screen.queryByRole('combobox')).toBeNull();
     expect(screen.queryByRole('textbox')).toBeNull();
     expect(screen.queryByRole('button', { name: t.inbox.composer.sendTemplate })).toBeNull();

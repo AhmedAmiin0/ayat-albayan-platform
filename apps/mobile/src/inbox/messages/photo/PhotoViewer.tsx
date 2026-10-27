@@ -1,13 +1,12 @@
 import type { MessageView } from '@ab/shared';
 import { useState } from 'react';
-import { Animated, Image, Modal, Pressable, useWindowDimensions, View } from 'react-native';
+import { Animated, Image, Modal, StatusBar, useWindowDimensions, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { t } from '@/core/lib/i18n/i18n';
-import { palette, shape, type, useTheme } from '@/theme';
-import { AppText } from '@/core/ui/primitives/AppText';
+import { shape, useTheme } from '@/theme';
 import { useA11yPref } from '@/core/ui/primitives/use-a11y-pref';
 import { DownloadLink } from '../copy-download/DownloadLink';
 import { useZoom } from './use-zoom';
+import { ViewerClose } from './ViewerClose';
 
 interface PhotoViewerProps {
   uri: string;
@@ -51,22 +50,11 @@ function ZoomPhoto({ uri, label }: { uri: string; label: string }) {
  */
 export function PhotoViewer({ uri, label, message, phone, onClose }: PhotoViewerProps) {
   const { color } = useTheme();
-  // The text stays light on the black in either scheme.
-  const light = palette.dark.ink;
   return (
     <Modal testID="photo-viewer" visible animationType="fade" statusBarTranslucent onRequestClose={onClose}>
+      <StatusBar barStyle="light-content" />
       <SafeAreaView edges={['top', 'bottom']} style={{ flex: 1, backgroundColor: 'black' }}>
-        <View style={{ flexDirection: 'row', paddingHorizontal: 8 }}>
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel={t.common.close}
-            onPress={onClose}
-            hitSlop={8}
-            style={{ minHeight: shape.control.touch, minWidth: shape.control.touch, justifyContent: 'center', paddingHorizontal: 8 }}
-          >
-            <AppText style={{ fontFamily: type.ui[600], fontSize: type.size.body, color: light }}>{t.common.close}</AppText>
-          </Pressable>
-        </View>
+        <ViewerClose onClose={onClose} />
         <ZoomPhoto uri={uri} label={label} />
         <View style={{ alignItems: 'center', paddingVertical: 8 }}>
           <View style={{ paddingHorizontal: 16, borderRadius: shape.radius.lg, backgroundColor: color.raised }}>
