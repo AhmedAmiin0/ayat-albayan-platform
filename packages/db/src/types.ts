@@ -773,6 +773,38 @@ export type Database = {
           },
         ];
       };
+      crm_media_copy_failures: {
+        Row: {
+          attempts: number;
+          last_error: string | null;
+          message_id: string;
+          skipped: boolean;
+          updated_at: string;
+        };
+        Insert: {
+          attempts?: number;
+          last_error?: string | null;
+          message_id: string;
+          skipped?: boolean;
+          updated_at?: string;
+        };
+        Update: {
+          attempts?: number;
+          last_error?: string | null;
+          message_id?: string;
+          skipped?: boolean;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'crm_media_copy_failures_message_id_fkey';
+            columns: ['message_id'];
+            isOneToOne: true;
+            referencedRelation: 'messages';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       custom_config: {
         Row: {
           description: string | null;
@@ -4769,6 +4801,12 @@ export type Database = {
       course_change_result: { Args: { p_first: string }; Returns: Json };
       create_booking: { Args: { p_actor: string; p_booking: Json }; Returns: Json };
       create_instant_lesson: { Args: { p_actor: string; p_booking: Json }; Returns: Json };
+      crm_media_copy_batch: {
+        Args: { p_host: string; p_limit: number; p_max_attempts: number };
+        Returns: { id: string }[];
+      };
+      crm_media_copy_counts: { Args: { p_host: string }; Returns: Json };
+      crm_media_copy_mark: { Args: { p_error: string; p_message: string; p_skip: boolean }; Returns: number };
       custom_access_token_hook: { Args: { event: Json }; Returns: Json };
       earning_status: {
         Args: { p_amount: number; p_paid: number };
