@@ -8,6 +8,7 @@ import {
   type MessageView,
   type RenderableTemplate,
 } from '@ab/shared';
+import { isCrmHistoryRow } from './crm-history/crm-history-url';
 import { mediaExpired } from './inbound-media.service';
 import { SENDING } from '../sender/send-plan';
 import { templateParams } from './wa-json';
@@ -73,8 +74,12 @@ const outboundForwardable = (row: ThreadMessageRow): boolean => {
 const isForwardable = (row: ThreadMessageRow): boolean => {
   if (row.template_key) return false;
   if (row.direction === 'outbound') return outboundForwardable(row);
-  return row.media_id || row.media_path ? fetchable(row) : !!row.body?.trim();
+  if (row.media_id || row.media_path) return fetchable(row);
+  return isCrmHistoryRow(row) ? isChatViewMime(row.media_mime) : !!row.body?.trim();
 };
+
+/** An old-CRM file's body is only its storage link: never shown, the row is a file with no caption. */
+const shownBody = (row: ThreadMessageRow): string | null => (isCrmHistoryRow(row) ? null : row.body);
 
 /**
  * messages row → MessageView (R-MSG-05): a template row shows its rendered text; a queued or
@@ -85,7 +90,7 @@ export function toMessageView(input: MessageViewInput): MessageView {
   const params = templateParams(row.template_params);
   const text = template
     ? fallbackText({ template, params, documentUrl: input.documentUrl ?? null })
-    : (row.body ?? undefined);
+    : (shownBody(row) ?? undefined);
   return {
     id: row.id,
     direction: row.direction,
@@ -96,7 +101,7 @@ export function toMessageView(input: MessageViewInput): MessageView {
     lesson_id: row.lesson_id,
     template_key: row.template_key,
     template_params: row.template_params === null ? null : params,
-    body: row.body ?? (template ? renderTemplateBody(template.body_ar, params) : null),
+    body: shownBody(row) ?? (template ? renderTemplateBody(template.body_ar, params) : null),
     media_mime: row.media_mime,
     media_url: input.mediaUrl ?? null,
     media_name: row.media_name,
