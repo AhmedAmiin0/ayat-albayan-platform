@@ -51,7 +51,7 @@ test('open window: no line or «until» note over the box (owner 2026-10-27: «R
   expect(screen.queryByText(new RegExp(t.inbox.sessionOpenUntil.replace(' {time}', '')))).toBeNull();
 });
 
-test('the box: text and placeholder centred vertically, 12pt from the pill's inline-start edge', async () => {
+test('the box: text and placeholder centred vertically, 12pt from the pill’s inline-start edge', async () => {
   await open(OPEN);
   expect(screen.getByLabelText(t.inbox.composer.placeholder)).toHaveStyle({ textAlignVertical: 'center', paddingStart: 12 });
 });
