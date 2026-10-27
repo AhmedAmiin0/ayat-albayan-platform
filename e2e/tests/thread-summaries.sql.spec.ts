@@ -45,8 +45,8 @@ left join public.teachers t on t.phone_e164 = m.phone_e164`;
 /** Rows in one and not the other, both ways (0 and 0 = the same rows, duplicates included). */
 async function differ(tx: Tx): Promise<{ missing: number; extra: number; rows: number }> {
   const [r] = await tx.unsafe<{ missing: number; extra: number; rows: number }[]>(`select
-    (select count(*)::int from (${OLD} except all select * from public.v_threads) x) as missing,
-    (select count(*)::int from (select * from public.v_threads except all ${OLD}) y) as extra,
+    (select count(*)::int from ((${OLD}) except all (select * from public.v_threads)) x) as missing,
+    (select count(*)::int from ((select * from public.v_threads) except all (${OLD})) y) as extra,
     (select count(*)::int from public.v_threads) as rows`);
   if (!r) throw new Error('no comparison row');
   return r;
