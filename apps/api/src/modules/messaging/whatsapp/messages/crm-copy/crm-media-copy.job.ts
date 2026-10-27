@@ -25,9 +25,9 @@ export function copyHost(setting: string): string | null {
  * public storage can later be made private. Only while crm_media_copy_all is on and crm_media_host is
  * a host: each minute one batch (BATCH rows, CONCURRENCY at a time) through CrmMediaCopier; when no
  * row is left, CrmMediaCopyDone turns the switch off and writes one audit row. The CRM's storage not
- * answering (CRM_UNREACHABLE) ends the tick with a warning and counts no attempt. Ticks never overlap
- * (a slow one makes the next return 'busy'); idempotent (a copied row leaves the batch query, a
- * failing one is capped). Never edits a body, never deletes. ponytail: in-process timer like
+ * answering any row of a round (CRM_UNREACHABLE) ends the tick with a warning and counts no
+ * attempt. Ticks never overlap (a slow one makes the next return 'busy'); idempotent (a copied row
+ * leaves the batch query, a failing one is capped). Never edits a body, never deletes. ponytail: in-process timer like
  * WaMediaRetentionJob; the API runs as one process.
  */
 @Injectable()
@@ -81,9 +81,9 @@ export class CrmMediaCopyJob implements OnApplicationBootstrap, OnModuleDestroy 
     }
     const outcomes: CopyOutcome[] = [];
     for (let i = 0; i < ids.length; i += CONCURRENCY) {
-      const round = ids.slice(i, i + CONCURRENCY).map((id) => this.copier.copy(id, host));
-      outcomes.push(...(await Promise.all(round)));
-      if (outcomes.includes('unreachable')) {
+      const round = await this.copier.round(ids.slice(i, i + CONCURRENCY), host);
+      outcomes.push(...round);
+      if (round.every((o) => o === 'unreachable')) {
         this.log.warn('crm media copy paused: the old CRM storage did not answer; the next tick tries again');
         return { state: 'unreachable', outcomes };
       }

@@ -1,7 +1,7 @@
 import { Logger } from '@nestjs/common';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { CRM_HOST, crmLink, crmResponse, crmRow, stubFetch } from '../crm-history/crm-history.fakes';
-import { BATCH, MAX_ATTEMPTS } from './crm-media-copier';
+import { BATCH, MAX_ATTEMPTS, UNREACHABLE_PATIENCE } from './crm-media-copier';
 import { copyWorld, crmRows } from './crm-copy.fakes';
 
 // Review of #327: an outage of the old CRM's storage is not an answer about a file.
@@ -27,15 +27,29 @@ describe('CrmMediaCopyJob: the old CRM storage not answering', () => {
     }
   });
 
-  it('an hour of outage burns nothing: when the storage is back every row is copied', async () => {
+  it('half an hour of outage burns nothing: when the storage is back every row is copied', async () => {
     const down = { now: true };
     stubFetch(async () => (down.now ? crmResponse(0, {}, 502) : ogg()));
     const w = copyWorld(crmRows(3));
-    for (let i = 0; i < 60; i++) expect(await w.job.runOnce()).toMatchObject({ state: 'unreachable' });
+    for (let i = 1; i < UNREACHABLE_PATIENCE; i++) expect(await w.job.runOnce()).toMatchObject({ state: 'unreachable' });
+    expect(w.failures.size).toBe(0);
     down.now = false;
     expect(await w.job.runOnce()).toMatchObject({ state: 'copied', outcomes: ['copied', 'copied', 'copied'] });
     expect(await w.job.runOnce()).toEqual({ state: 'done' });
     expect(w.audit.record).toHaveBeenCalledWith(expect.objectContaining({ after: { copied: 3, failed: 0, skipped: 0, remaining: 0 } }));
+  });
+
+  it('one file that never answers while the others do counts its attempts and cannot block the batch', async () => {
+    stubFetch(async (url) => (url.endsWith('v0.ogg') ? crmResponse(0, {}, 503) : ogg()));
+    const w = copyWorld(crmRows(3));
+    expect(await w.job.runOnce()).toEqual({ state: 'copied', outcomes: ['retry', 'copied', 'copied'] });
+    // c0 alone now: its rounds read as an outage, each attempt only after the patience.
+    for (let i = 1; i < UNREACHABLE_PATIENCE; i++) expect(await w.job.runOnce()).toMatchObject({ state: 'unreachable' });
+    expect(await w.job.runOnce()).toEqual({ state: 'copied', outcomes: ['retry'] });
+    for (let i = 0; i < UNREACHABLE_PATIENCE; i++) await w.job.runOnce();
+    expect(w.failures.get('c0')).toEqual({ attempts: MAX_ATTEMPTS, skipped: false });
+    expect(await w.job.runOnce()).toEqual({ state: 'done' });
+    expect(w.audit.record).toHaveBeenCalledWith(expect.objectContaining({ after: { copied: 2, failed: 1, skipped: 0, remaining: 0 } }));
   });
 
   it('a real storage answer (404) still counts, up to the cap', async () => {

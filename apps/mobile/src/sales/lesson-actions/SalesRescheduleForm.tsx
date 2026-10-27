@@ -16,12 +16,11 @@ import { useSalesReschedule } from './lesson-actions-api';
  */
 interface SalesRescheduleFormProps {
   lesson: SalesScheduleLesson;
-  onClose: () => void;
   /** «تم» on the success panel: closes this sheet and «تفاصيل الحلقة» under it. */
   onDone: () => void;
 }
 
-export function SalesRescheduleForm({ lesson, onClose, onDone }: SalesRescheduleFormProps) {
+export function SalesRescheduleForm({ lesson, onDone }: SalesRescheduleFormProps) {
   const tz = lesson.students[0]?.tz ?? RIYADH_TZ;
   const durationMin = lessonDuration(lesson);
   const move = useSalesReschedule(lesson.id);

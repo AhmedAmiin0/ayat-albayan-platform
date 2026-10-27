@@ -45,9 +45,12 @@ describe('migration 20261028000920: re-arm on switch-on, remaining on any host',
     expect(retry).not.toMatch(/update\s+public\.messages|delete\s+from\s+public\.messages/i);
   });
 
-  it('remaining: a CRM link on any host, no media id, no copy, no failure row; counts stay service role only', () => {
+  it('remaining: the batch\'s rows on any host (crm number, mime, one link), no failure row; service role only', () => {
     expect(retry).toContain(`'remaining', (select count(*) from public.messages m`);
+    expect(retry).toContain('m.media_id is null and m.media_path is null and m.media_mime is not null');
     expect(retry).toContain(`and m.body like 'https://%${CRM_MEDIA_PREFIX}%'`);
+    expect(retry).toContain(`m.body ~ '^https://[^/[:space:]]+${CRM_MEDIA_PREFIX}[^[:space:]]+$'`);
+    expect(retry).toContain("n.provider = 'crm'");
     expect(retry).toContain('not exists (select 1 from public.crm_media_copy_failures f where f.message_id = m.id)');
     expect(retry).toContain('revoke all on function public.crm_media_copy_counts(text) from public, anon, authenticated');
     expect(retry).toContain('grant execute on function public.crm_media_copy_counts(text) to service_role');

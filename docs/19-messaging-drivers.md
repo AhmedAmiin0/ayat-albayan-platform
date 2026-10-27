@@ -213,9 +213,12 @@ when the CRM's storage does not answer (no connection, the timeout, 5xx, 429: `c
 counted, the tick stops with a warning in the API log and the next minute tries again. Turning the switch on again
 re-arms every failed row (migration `20261028000920_crm_media_copy_retry.sql` deletes its non-skipped failure
 rows); skipped rows stay skipped. When no row is left the switch turns itself off and one audit row
-(`crm_media_copy_done`, `{copied, failed, skipped, remaining}`) is written. `remaining` counts imported CRM file
-links on **any** host still without a copy and never tried (a link on another host than `crm_media_host` is never
-picked by the batch). Message bodies are never changed and nothing is
+(`crm_media_copy_done`, `{copied, failed, skipped, remaining}`) is written. `remaining` counts the rows the batch would pick on
+**any** host (a crm number, the body only one chat-media link) still without a copy and never tried: a link on
+another host than `crm_media_host` is never picked by the batch. Only a whole round the storage did not answer is
+an outage; a file that never answers while others do counts its attempts like any failure, and a row still
+unanswered after 30 outage rounds (about half an hour) counts one attempt, so the last file that never answers
+cannot keep the run from ending. Message bodies are never changed and nothing is
 deleted. Failed or skipped rows are listed in `crm_media_copy_failures` (migration
 `20261028000891_crm_media_copy.sql`). The 30-day purge of cached voice notes and videos (`WaMediaRetentionJob`)
 skips these copies: only rows with Meta's media id are purged, because once the CRM's storage is private our copy

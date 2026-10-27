@@ -13,7 +13,7 @@ interface SalesRescheduleSheetProps {
 export function SalesRescheduleSheet({ lesson, onClose, onDone }: SalesRescheduleSheetProps) {
   return (
     <RescheduleFrame open={lesson !== null} onClose={onClose}>
-      {lesson ? <SalesRescheduleForm key={lesson.id} lesson={lesson} onClose={onClose} onDone={onDone} /> : null}
+      {lesson ? <SalesRescheduleForm key={lesson.id} lesson={lesson} onDone={onDone} /> : null}
     </RescheduleFrame>
   );
 }

@@ -3,10 +3,11 @@
 -- 1. Switching crm_media_copy_all from off to on re-arms every failed row: its non-skipped
 --    crm_media_copy_failures rows are deleted, so a row capped during an earlier run (an outage, a
 --    file the CRM did not serve then) is tried again. Skipped rows (never ours to fetch) stay.
--- 2. crm_media_copy_counts adds `remaining`: imported CRM file links still without a copy on ANY host
---    and not in crm_media_copy_failures (the batch only picks rows on crm_media_host, so the «done»
---    audit row could not see files on another host). The old bucket goes private only at remaining = 0
---    (docs/19).
+-- 2. crm_media_copy_counts adds `remaining`: the rows the batch would pick on ANY host (its filters
+--    without the host: a crm number, a mime, no copy, the body only one chat-media link) that are not in
+--    crm_media_copy_failures. The batch only picks crm_media_host's, so the «done» audit row could not
+--    see files on another host. The old bucket goes private only at remaining = 0 (docs/19).
+--    The LIKE repeats messages_crm_link_uncopied_idx's predicate, so the count reads that index.
 --
 -- Expand-only: no message is read for writing or changed; only failure rows of this job are deleted.
 
@@ -44,8 +45,10 @@ create or replace function public.crm_media_copy_counts(p_host text)
                  where f.skipped and m.media_path is null
                    and starts_with(m.body, 'https://' || lower(p_host) || '/storage/v1/object/public/chat-media/')),
     'remaining', (select count(*) from public.messages m
-                   where m.direction = 'inbound' and m.media_id is null and m.media_path is null
+                   where m.direction = 'inbound' and m.media_id is null and m.media_path is null and m.media_mime is not null
                      and m.body like 'https://%/storage/v1/object/public/chat-media/%'
+                     and m.body ~ '^https://[^/[:space:]]+/storage/v1/object/public/chat-media/[^[:space:]]+$'
+                     and exists (select 1 from public.wa_numbers n where n.id = m.number_id and n.provider = 'crm')
                      and not exists (select 1 from public.crm_media_copy_failures f where f.message_id = m.id)));
 $$;
 

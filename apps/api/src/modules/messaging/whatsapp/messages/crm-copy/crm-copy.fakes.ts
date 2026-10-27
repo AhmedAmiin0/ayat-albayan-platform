@@ -50,8 +50,9 @@ function fakeCopyQueries(rows: Map<string, MediaMessage>, failures: Map<string, 
           return f.skipped === skipped && !!m && !m.media_path && linkOn(m, host);
         }).length;
       const copied = [...rows.values()].filter((m) => m.direction === 'inbound' && !m.media_id && !!m.media_path && linkOn(m, host)).length;
-      const anyHost = (m: MediaMessage) => /^https:\/\/.*\/storage\/v1\/object\/public\/chat-media\//.test(m.body ?? '');
-      const remaining = [...rows.values()].filter((m) => m.direction === 'inbound' && !m.media_id && !m.media_path && anyHost(m) && !failures.has(m.id)).length;
+      const anyHost = (m: MediaMessage) => /^https:\/\/[^/\s]+\/storage\/v1\/object\/public\/chat-media\/\S+$/.test(m.body ?? '');
+      const waiting = (m: MediaMessage) => m.direction === 'inbound' && !m.media_id && !m.media_path && !!m.media_mime && m.number?.provider === 'crm';
+      const remaining = [...rows.values()].filter((m) => waiting(m) && anyHost(m) && !failures.has(m.id)).length;
       return { copied, failed: left(false), skipped: left(true), remaining };
     }),
   };
