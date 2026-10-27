@@ -44,7 +44,7 @@ test('an LTR run: the compact top reads «Chats» on one line, a pill search, on
   await renderWithQuery(<InboxScreen />);
   await screen.findByText('Fatma');
   const title = screen.getByRole('header', { name: en.nav.chats });
-  expect(title).toHaveStyle({ fontSize: 28 });
+  expect(title).toHaveStyle({ fontSize: 20 });
   expect(title.props.numberOfLines).toBe(1);
   expect(screen.getByLabelText(en.inbox.searchPlaceholder)).toHaveStyle({ minHeight: 40 });
   const row = within(screen.getByLabelText(en.inbox.filterRow));

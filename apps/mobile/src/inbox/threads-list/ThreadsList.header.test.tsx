@@ -21,7 +21,7 @@ test('RTL: «المحادثات» as a one-line h2 header, a compact pill search
   await renderWithQuery(<ThreadsList />);
   await screen.findByText(thread.display_name ?? '');
   const title = screen.getByRole('header', { name: t.nav.chats });
-  expect(title).toHaveStyle({ fontSize: 28 });
+  expect(title).toHaveStyle({ fontSize: 20 });
   expect(title.props.numberOfLines).toBe(1);
   expect(screen.getByLabelText(t.inbox.searchPlaceholder)).toHaveStyle({ minHeight: 40, fontSize: 16 });
   expect(screen.getByTestId('chats-list')).toHaveStyle({ gap: 8 });
