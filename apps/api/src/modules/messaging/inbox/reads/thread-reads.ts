@@ -1,5 +1,5 @@
 import type { ThreadDetail, ThreadView } from '@ab/shared';
-import { ForbiddenException, Inject, Injectable } from '@nestjs/common';
+import { ForbiddenException, Inject, Injectable, Optional } from '@nestjs/common';
 import type { AuthUser } from '../../../../common/auth/verify-token';
 import { ChatListsQueries } from '../../chat-lists/chat-lists.queries';
 import { OwnNumbers } from '../../numbers';
@@ -28,7 +28,7 @@ export class ThreadReads {
   /** «رد»: the messages a page's bubbles answer (owner 2026-10-25). */
   @Inject(ThreadQuotes) private readonly quotes?: ThreadQuotes;
   /** The academy's own numbers: never listed, for any role (owner 2026-10-27). */
-  @Inject(OwnNumbers) private readonly own?: OwnNumbers;
+  @Optional() @Inject(OwnNumbers) private readonly own?: OwnNumbers;
 
   constructor(
     private readonly admin: ThreadsService,

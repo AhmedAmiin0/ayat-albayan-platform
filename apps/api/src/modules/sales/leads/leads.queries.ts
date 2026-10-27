@@ -97,9 +97,7 @@ export class LeadsQueries {
 
   /** Inbox order: latest inbound first (matches leads_status_idx), unless a sort is requested. */
   async list(f: LeadListFilter): Promise<{ items: LeadRow[]; total: number }> {
-    let query = this.db.from('leads').select('*', { count: 'exact' });
-    const own = this.own ? await this.own.notIn() : null;
-    if (own) query = query.not('phone_e164', 'in', own);
+    let query = this.listable(await this.ownNotIn());
     if (f.status) query = query.eq('status', f.status);
     if (f.source) query = query.eq('source', f.source);
     if (f.assignee === NO_ASSIGNEE) query = query.is('assigned_to', null);
@@ -113,5 +111,15 @@ export class LeadsQueries {
     const { data, error, count } = await ordered.range(...pageRange(f));
     throwIfDbError(error);
     return { items: data ?? [], total: count ?? 0 };
+  }
+
+  private async ownNotIn(): Promise<string | null> {
+    return this.own ? this.own.notIn() : null;
+  }
+
+  /** Every lead but our own numbers' (`own`: OwnNumbers.notIn; kept, never listed or counted). */
+  private listable(own: string | null) {
+    const query = this.db.from('leads').select('*', { count: 'exact' });
+    return own ? query.not('phone_e164', 'in', own) : query;
   }
 }
