@@ -15,7 +15,7 @@ export function ReactionPill({ message: m, outbound }: { message: MessageView; o
   const text = items.map((i) => (i.count > 1 ? `${i.emoji} ${i.count}` : i.emoji)).join(' ');
   const who = reactorLines(m.reactions, chat.name ?? chat.phone)
     .map((l) => `${l.emoji} ${l.name ?? (l.mine ? t.inbox.reactions.academy : t.inbox.reactions.contact)}`)
-    .join('، ');
+    .join(' · ');
   return (
     <p
       data-testid={`reaction-pill-${m.id}`}
