@@ -11,6 +11,7 @@ import {
 } from '@ab/shared';
 import { lineEnvs, loadEnv } from '../../../../config/env/env';
 import { orSafe } from '../../../people/guardians/http';
+import { looksCrmHistory } from '../../whatsapp';
 import type { FamilyTag } from '../people/thread-people.mapper';
 
 export type ThreadRow = Tables<'v_threads'>;
@@ -27,7 +28,7 @@ export function toThreadView(row: ThreadRow & { last_unsupported?: boolean }, no
     display_name: row.display_name,
     last_message_id: row.last_message_id ?? '',
     last_direction: row.last_direction ?? 'inbound',
-    last_body: row.last_body,
+    last_body: lastBody(row),
     last_template_key: row.last_template_key,
     last_status: row.last_status ?? 'delivered',
     last_media_mime: row.last_media_mime,
@@ -51,6 +52,12 @@ export function toThreadView(row: ThreadRow & { last_unsupported?: boolean }, no
     session_open: sessionWindowOpen(row.last_inbound_at, now),
     ...familyFields(row.guardian_id ? (tag ?? { badge: 'none', unpaid: false }) : null),
   };
+}
+
+/** An old-CRM file's last body is only its storage link: the list shows the media label instead. */
+function lastBody(row: ThreadRow): string | null {
+  const shape = { direction: row.last_direction, media_mime: row.last_media_mime, body: row.last_body };
+  return looksCrmHistory(shape) ? null : row.last_body;
 }
 
 /** replyLine() over the view's two per-line windows (docs/12 §13.3 rule 2). */

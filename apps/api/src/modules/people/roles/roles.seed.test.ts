@@ -22,6 +22,7 @@ const LATER = [
   '20261025000671_saved_replies_permission.sql',
   '20261026000760_sales_pricing_read.sql',
   '20261028000800_student_channels.sql',
+  '20261028000890_sales_lesson_moves.sql',
 ]
   .map((file) => readFileSync(join(MIGRATIONS, file), 'utf8'))
   .join('\n');
@@ -36,7 +37,7 @@ function addedLater(key: string): string[] {
   return [...inserts].filter((m) => [...(m[2] ?? '').matchAll(/'([a-z_]+)'/g)].some((k) => k[1] === key)).map((m) => m[1] ?? '');
 }
 
-describe('migration 20261005000220 seed (+ 240, 274, 281, 300, 360, 380, 430, 521, 620, 631, 671, 760, 800)', () => {
+describe('migration 20261005000220 seed (+ 240, 274, 281, 300, 360, 380, 430, 521, 620, 631, 671, 760, 800, 890)', () => {
   it.each(['admin', 'teacher', 'assistant', 'sales'] as const)('%s gets exactly its catalog grants', (key) => {
     expect([...seeded(key), ...addedLater(key)].sort()).toEqual([...defaultGrantsOf(key)].sort());
   });
@@ -71,6 +72,14 @@ describe('migration 20261005000220 seed (+ 240, 274, 281, 300, 360, 380, 430, 52
     expect(['admin', 'teacher', 'assistant', 'sales'].filter((k) => addedLater(k).includes('pricing.read'))).toEqual(['sales']);
     const sql = readFileSync(join(MIGRATIONS, '20261026000760_sales_pricing_read.sql'), 'utf8');
     expect(sql).toMatch(/where r\.is_system and r\.key in \('sales'\)\s+on conflict do nothing;/);
+  });
+
+  it('seeds lessons.reschedule and lessons.cancel (sales, 2026-10-27) for admin and sales only, idempotently', () => {
+    for (const perm of ['lessons.reschedule', 'lessons.cancel']) {
+      expect(['admin', 'teacher', 'assistant', 'sales'].filter((k) => addedLater(k).includes(perm))).toEqual(['admin', 'sales']);
+    }
+    const sql = readFileSync(join(MIGRATIONS, '20261028000890_sales_lesson_moves.sql'), 'utf8');
+    expect(sql.match(/on conflict do nothing;/g)).toHaveLength(2);
   });
 
   it('seeds students.check_registration and subscriptions.set_start_date (2026-10-12) for admin and sales only', () => {

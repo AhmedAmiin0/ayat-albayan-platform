@@ -53,7 +53,7 @@ interface DetailsStudentRowProps {
 export function DetailsStudentRow({ lesson, student, role, onLeave }: DetailsStudentRowProps) {
   const { color } = useTheme();
   const now = useNow();
-  const href = studentHref(role, student.id);
+  const href = studentHref(role, student);
   const go = (to: string) => {
     onLeave();
     router.push(to);

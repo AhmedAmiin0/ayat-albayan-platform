@@ -53,4 +53,14 @@ export const MESSAGING_SETTINGS = {
     type: 'string', default: 'inquiry_followup_ar_v2', minLength: 1, maxLength: 512,
     labelKey: 'settings.chatReopenTemplate', hintKey: 'settings.hints.chatReopenTemplate',
   },
+  /**
+   * The old CRM's storage host (owner 2026-10-27): a photo or voice note imported from it is fetched
+   * from this host once and cached (InboundMedia). Empty (the seed) = off: such a file is 410. The
+   * value is the academy's own and never lives in the repo; the API checks the host exactly.
+   */
+  crm_media_host: {
+    module: 'messaging', group: 'messaging',
+    type: 'string', default: '', minLength: 0, maxLength: 100,
+    labelKey: 'settings.crmMediaHost', hintKey: 'settings.hints.crmMediaHost',
+  },
 } as const satisfies Record<string, SettingDef>;

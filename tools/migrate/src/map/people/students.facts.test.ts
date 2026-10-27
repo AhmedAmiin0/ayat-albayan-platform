@@ -15,7 +15,7 @@ function att(folder: string) {
 }
 
 describe('students: SUBS register', () => {
-  it('a known child with more than one SUBS lesson is active, not trial', () => {
+  it('SUBS lessons alone are no subscription: new, the downgrade reported', () => {
     const run = pipeline(
       bundleOf({
         hub_students: [studentRow({ teacher: 'hend' })],
@@ -23,7 +23,10 @@ describe('students: SUBS register', () => {
       }),
       MODULES,
     );
-    expect(run.by('students')[0]?.record.columns['status']).toBe('active');
+    expect(run.by('students')[0]?.record.columns['status']).toBe('new');
+    expect(run.issues.find((i) => i.code === 'status_downgrade')?.detail).toBe(
+      'subs_register_only→new',
+    );
   });
 
   it('a subscribed child missing from the registry is a review row, with the ATT row count', () => {
@@ -56,12 +59,12 @@ describe('students: SUBS register', () => {
 });
 
 describe('students: what the lesson reports say', () => {
-  it('a chargeable reported lesson makes the student active', () => {
+  it('an attended chargeable lesson without a payment → pending_subscription, not active', () => {
     const run = pipeline(
       bundleOf({ hub_students: [studentRow({})], hub_reports: [reportRow({})] }),
       MODULES,
     );
-    expect(run.by('students')[0]?.record.columns['status']).toBe('active');
+    expect(run.by('students')[0]?.record.columns['status']).toBe('pending_subscription');
   });
 
   it('an attended free trial lesson does not: pending_subscription', () => {
@@ -82,6 +85,8 @@ describe('students: what the lesson reports say', () => {
       MODULES,
     );
     expect(run.by('students')[0]?.record.refs['teacher_id']).toEqual(keys.teacher('hend'));
-    expect(run.issues).toMatchObject([{ code: 'conflict', severity: 'review', field: 'teacher' }]);
+    expect(run.issues.filter((i) => i.code !== 'status_downgrade')).toMatchObject([
+      { code: 'conflict', severity: 'review', field: 'teacher' },
+    ]);
   });
 });

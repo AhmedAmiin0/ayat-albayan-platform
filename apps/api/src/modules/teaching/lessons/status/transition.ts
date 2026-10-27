@@ -21,7 +21,8 @@ export const CANCEL_EVENT: Record<CancelBy, LessonEvent> = {
 
 export type CancelContext = {
   by: CancelBy;
-  reason: string;
+  /** Null: a salesperson's cancellation without a reason (POST /sales/lessons/:id/cancel); the column stays as it was. */
+  reason: string | null;
   now: Date;
   /** settings.late_cancel_hours; null = OFF (a student's cancellation never consumes). */
   lateCancelHours: number | null;
@@ -46,7 +47,7 @@ export function cancelChange(
     id: lesson.id,
     from_status: lesson.status,
     to_status: to,
-    cancel_reason: ctx.reason,
+    ...(ctx.reason === null ? {} : { cancel_reason: ctx.reason }),
     ...(to === 'excused' ? { attendance: 'excused' as const } : {}),
     chargeable,
   };

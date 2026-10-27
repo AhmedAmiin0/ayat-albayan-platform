@@ -44,12 +44,17 @@ describe('GET /sales/schedule over HTTP', () => {
       {
         id: 'les-2', starts_at: '2026-10-11T16:00:00.000Z', ends_at: '2026-10-11T16:30:00.000Z', status: 'confirmed', trial: true, makeup: false,
         meeting_link: 'https://meet.example.org/les-2', platform_classroom: false,
-        teacher: { id: 'tc1', display_name_ar: 'أبرار', display_name_en: 'Abrar' }, students: [{ id: 's1', code: 'AB-0101', name: 'ياسمين' }],
+        teacher: { id: 'tc1', display_name_ar: 'أبرار', display_name_en: 'Abrar' }, students: [{ id: 's1', code: 'AB-0101', name: 'ياسمين', mine: true }],
       },
       expect.objectContaining({ id: 'les-3', status: 'completed', trial: false, makeup: true }),
     ]);
     expect(keys(res.json()).filter((k) => SECRET.test(k) && !ALLOWED.has(k))).toEqual([]);
     expect(res.body).not.toMatch(/secret|سر|\+20/);
+  });
+
+  it('marks only her own students `mine` (docs/16 row 37): another salesperson reads the same lessons without it', async () => {
+    const res = await t.get('/sales/schedule?date=2026-10-11', 'salesB');
+    expect(res.json().lessons[0].students).toEqual([{ id: 's1', code: 'AB-0101', name: 'ياسمين' }]);
   });
 
   it('without a date it reads today; a bad date or teacher id is 400', async () => {

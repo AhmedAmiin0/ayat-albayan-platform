@@ -32,6 +32,12 @@ describe('quoteOf', () => {
     expect(quoteOf(row({ direction: 'outbound', sender: { full_name: 'سارة' } })).sender_name).toBe('سارة');
     expect(quoteOf(row({ sender: { full_name: 'سارة' } })).sender_name).toBeNull();
   });
+
+  it('never quotes an old-CRM file\'s body (only its storage link, owner 2026-10-27): the media is named', () => {
+    const link = 'https://files.crm.example/storage/v1/object/public/chat-media/account-test/inbound/1-image-1.webp';
+    expect(quoteOf(row({ body: link, media_mime: 'image/webp' }))).toMatchObject({ body: null, media_mime: 'image/webp' });
+    expect(quoteOf(row({ body: link })).body).toBe(link);
+  });
 });
 
 describe('withQuotes', () => {

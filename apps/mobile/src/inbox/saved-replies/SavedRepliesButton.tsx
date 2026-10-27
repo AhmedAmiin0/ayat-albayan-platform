@@ -25,7 +25,7 @@ export function SavedRepliesButton({ open, onPress }: SavedRepliesButtonProps) {
         <AppText
           accessibilityLiveRegion="polite"
           style={{
-            position: 'absolute', bottom: shape.control.touch + 4, end: 0, width: 240, padding: 8,
+            position: 'absolute', bottom: shape.control.touch + 4, start: 0, width: 240, padding: 8,
             borderRadius: shape.radius.md, borderWidth: 1, borderColor: color.rule, backgroundColor: color.raised,
             fontFamily: type.ui[500], fontSize: type.size['2xs'], lineHeight: type.lineHeight(type.size['2xs']), color: color.ink,
           }}

@@ -96,14 +96,14 @@ describe('collectPeople: no value is dropped silently', () => {
 });
 
 describe('collectPeople: HEART «subscription» is a student source', () => {
-  it('marks the matching child active, by skeleton among siblings', () => {
+  it('marks the matching child as a HEART row, by skeleton among siblings', () => {
     const p = collectPeople(
       bundleOf({
         hub_students: [studentRow({ student_name: 'هالة' }), studentRow({ student_name: 'تالا' })],
         heart_subscriptions: [heart({ name: 'Tala' })],
       }),
     );
-    expect(p.people.map((x) => [x.name, x.active])).toEqual([
+    expect(p.people.map((x) => [x.name, x.claims.includes('heart_row')])).toEqual([
       ['هالة', false],
       ['تالا', true],
     ]);

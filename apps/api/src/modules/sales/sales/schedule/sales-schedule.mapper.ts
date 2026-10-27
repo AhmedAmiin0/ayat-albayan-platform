@@ -60,6 +60,11 @@ export function toScheduleLesson(row: SalesScheduleRow, academyAuto: boolean): S
   };
 }
 
+/** `mine` on each student she owns (docs/16 rows 36–37): her details sheet opens it and she may move or cancel the lesson. */
+export function withMine<L extends { students: { id: string }[] }>(lesson: L, own: ReadonlySet<string>): L {
+  return { ...lesson, students: lesson.students.map((s) => (own.has(s.id) ? { ...s, mine: true } : s)) };
+}
+
 export interface TeacherDayFacts {
   lessons_today: number;
   live_now: boolean;

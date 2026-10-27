@@ -32,9 +32,13 @@ export interface PersonRow {
   phone: string;
   name: string;
   legacy: number | null;
-  active: boolean;
+  /** Why the old rule called this child active: reported as downgrades only, never a status. */
+  claims: OldClaim[];
   fields: PersonFields;
 }
+
+/** HUB «طالب حالي», a «مشترك» booking, a HEART «subscription» row (docs/06 status mapping). */
+export type OldClaim = 'hub_current' | 'subscribed_booking' | 'heart_row';
 
 /** A row with a valid phone but no child name: the family (guardian) is kept, the child is not. */
 export interface PhoneOnly {
@@ -69,6 +73,14 @@ export function fieldsOf(f: Record<string, Cell>, kind: Kind): PersonFields {
 }
 
 const ACTIVE = /طالب حالي/;
+
+/** What the old rule read in «الحالة»: HUB «طالب حالي», a «مشترك» booking. */
+function claimsOf(status: string | null): OldClaim[] {
+  const out: OldClaim[] = [];
+  if (ACTIVE.test(status ?? '')) out.push('hub_current');
+  if (bookingStatus(status) === 'subscribed') out.push('subscribed_booking');
+  return out;
+}
 
 /** One source row → its children, or the reasons it is not imported. */
 export function personRows(row: SourceRow, kind: Kind): PeopleRowsResult {
@@ -111,8 +123,7 @@ export function personRows(row: SourceRow, kind: Kind): PeopleRowsResult {
     const detail = teacherKnown === null ? 'not_a_teacher' : 'unknown_text'; // A3: cities → null
     issues.push(issue({ code: 'unknown_teacher', severity: 'warn', field: 'teacher', detail }));
   }
-  const active =
-    ACTIVE.test(text(f['status']) ?? '') || bookingStatus(text(f['status'])) === 'subscribed';
+  const claims = claimsOf(text(f['status']));
   const legacy =
     legacyCode(f['legacy_code']) ?? (kind === 'booking' ? legacyCode(f['notes']) : null);
   const rows = names.map((name, i) => ({
@@ -122,7 +133,7 @@ export function personRows(row: SourceRow, kind: Kind): PeopleRowsResult {
     phone: phone.e164,
     name,
     legacy: i === 0 ? legacy : null, // the code stays with the first child of a split row
-    active,
+    claims,
     fields,
   }));
   return { rows, issues };

@@ -56,6 +56,6 @@ test('an English run of a teacher’s students and the read-only schedule', asyn
   expect(screen.getByRole('button', { name: "Show the teacher's schedule today" })).toBeTruthy();
   await first.unmount();
   await renderWithQuery(<SalesScheduleScreen />);
-  expect(await screen.findByText(en.sales.academySchedule.readOnly)).toBeTruthy();
+  expect(await screen.findByText(en.sales.lessonActions.ownNote)).toBeTruthy();
   expect(await screen.findByText(en.schedule.trialTag)).toBeTruthy();
 });

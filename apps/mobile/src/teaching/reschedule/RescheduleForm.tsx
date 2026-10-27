@@ -22,22 +22,15 @@ export interface RescheduleFormProps {
  * the API answers, the new time and the guardian's confirmation (RescheduleDone).
  */
 export function RescheduleForm({ lesson, onClose }: RescheduleFormProps) {
-  const { color } = useTheme();
   const tz = familyTz(lesson);
   const durationMin = lessonDuration(lesson);
   const move = useReschedule(lesson.id);
   const [scope, setScope] = useState<Scope>('one');
-  const text = { fontFamily: type.ui[500], fontSize: type.size.sm, lineHeight: type.lineHeight(type.size.sm), color: color.ink2 };
 
   if (move.data) return <RescheduleDone moved={move.data} scope={scope} tz={tz} onClose={onClose} />;
   return (
     <View style={{ gap: 16 }}>
-      <View style={{ gap: 2 }}>
-        <AppText style={{ ...text, fontFamily: type.ui[700], fontSize: type.size.body, color: color.ink }}>
-          {studentNames(lesson)}
-        </AppText>
-        <AppText style={text}>{t.reschedule.current.replace('{when}', whenText(lesson.starts_at, tz))}</AppText>
-      </View>
+      <RescheduleHeading names={studentNames(lesson)} startsAt={lesson.starts_at} tz={tz} />
       {durationMin === null ? (
         <ErrorLine message={t.reschedule.badDuration} />
       ) : (
@@ -50,6 +43,18 @@ export function RescheduleForm({ lesson, onClose }: RescheduleFormProps) {
           onScope={setScope}
         />
       )}
+    </View>
+  );
+}
+
+/** Who and when now, over the move: «يوسف أحمد» then «الموعد الحالي: …» in the family's zone. */
+export function RescheduleHeading({ names, startsAt, tz }: { names: string; startsAt: string; tz: string }) {
+  const { color } = useTheme();
+  const text = { fontFamily: type.ui[500], fontSize: type.size.sm, lineHeight: type.lineHeight(type.size.sm), color: color.ink2 };
+  return (
+    <View style={{ gap: 2 }}>
+      <AppText style={{ ...text, fontFamily: type.ui[700], fontSize: type.size.body, color: color.ink }}>{names}</AppText>
+      <AppText style={text}>{t.reschedule.current.replace('{when}', whenText(startsAt, tz))}</AppText>
     </View>
   );
 }

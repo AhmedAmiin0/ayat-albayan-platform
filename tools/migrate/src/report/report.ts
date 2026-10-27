@@ -19,6 +19,23 @@ function issueTable(issues: readonly RowIssue[]): string[] {
   ];
 }
 
+/** Students the old status rule made active without a current subscription: reason→status → count. */
+export function downgradeCounts(issues: readonly RowIssue[]): Record<string, number> {
+  const out: Record<string, number> = {};
+  for (const i of issues)
+    if (i.code === 'status_downgrade' && i.detail) out[i.detail] = (out[i.detail] ?? 0) + 1;
+  return out;
+}
+
+function downgradeTable(issues: readonly RowIssue[]): string[] {
+  const rows = Object.entries(downgradeCounts(issues))
+    .sort()
+    .map(([d, n]) => `| ${d.replace('→', ' | ')} | ${n} |`);
+  if (!rows.length) return [];
+  const head = ['| old reason (was active) | imported status | students |', '|---|---|---|'];
+  return ['', '## Student status: no longer «مشترك»', '', ...head, ...rows];
+}
+
 export function reportMarkdown(o: {
   plan: Plan;
   manifest?: SheetManifest;
@@ -39,7 +56,7 @@ export function reportMarkdown(o: {
     const c = plan.counts[e];
     if (c) lines.push(`| ${e} | ${ACTIONS.map((a) => c[a]).join(' | ')} |`);
   }
-  lines.push('', '## Issues', '', ...issueTable(plan.issues));
+  lines.push('', '## Issues', '', ...issueTable(plan.issues), ...downgradeTable(plan.issues));
   if (o.manifest) {
     lines.push(
       '',

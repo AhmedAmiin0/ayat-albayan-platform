@@ -1,10 +1,10 @@
-import { chatFileProblem, type MessageView, type SignedUpload } from '@ab/shared';
+import { CHAT_FILE_MIMES, chatFileProblem, type MessageView, type SignedUpload } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import * as DocumentPicker from 'expo-document-picker';
 import { apiSend } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
 import { supabase } from '@/core/lib/http/supabase';
-import { pickReceipt } from '@/payments/receipt';
+import { ensureCameraPermission, pickReceipt } from '@/payments';
 import { sendError } from '../messages/hooks/message-text';
 import { refreshInbox, touchInbox } from '../thread/hooks/inbox-sync';
 import { appendMessage, removeMessage, type ThreadCache, threadKey, threadPath } from '../thread/hooks/thread-cache';
@@ -22,7 +22,8 @@ export interface ChatFilePick {
   filename: string;
 }
 
-export type ChatFileSource = 'image' | 'pdf';
+/** The gallery, the camera (owner 2026-10-27, the pill's camera) or a PDF. */
+export type ChatFileSource = 'image' | 'camera' | 'pdf';
 
 /** A refusal before or during the upload, as inbox.error.<code>. */
 export class ChatFileError extends Error {
@@ -49,10 +50,16 @@ async function pickPdf(maxBytes: number): Promise<ChatFilePick | null> {
   return { mime: asset.mimeType ?? 'application/pdf', bytes, size: bytes.byteLength, filename: pdfName(asset.name) };
 }
 
-/** A photo from the gallery (compressed JPEG, no EXIF, as a receipt) or a PDF; null when cancelled. A PDF over maxBytes throws before it is read. */
+/**
+ * A photo from the gallery or the camera (compressed JPEG, no EXIF, as a receipt; the camera asks
+ * its permission first) or a PDF; null when cancelled. A PDF over maxBytes throws before it is read.
+ */
 export async function pickChatFile(source: ChatFileSource, maxBytes: number): Promise<ChatFilePick | null> {
   if (source === 'pdf') return pickPdf(maxBytes);
-  const photo = await pickReceipt('library');
+  // The chat's own reason first (not the receipt's); pickReceipt then finds the camera allowed.
+  const copy = { rationale: t.inbox.composer.cameraRationale, confirm: t.inbox.composer.takePhoto };
+  if (source === 'camera' && !(await ensureCameraPermission(copy))) return null;
+  const photo = await pickReceipt(source === 'camera' ? 'camera' : 'library');
   if (!photo) return null;
   const ext = photo.mime === 'image/png' ? 'png' : 'jpg';
   return { mime: photo.mime, bytes: photo.bytes, size: photo.size, filename: `photo.${ext}` };
@@ -74,7 +81,7 @@ interface SendFileInput {
  * upload (as assistants/upload-receipt.ts) and POST …/file with no caption. Resolves the API's row.
  */
 export async function sendChatFile({ phone, file, id, maxBytes, replyToMessageId }: SendFileInput): Promise<MessageView> {
-  const problem = chatFileProblem({ mime: file.mime, size: file.size, maxBytes });
+  const problem = chatFileProblem({ mime: file.mime, size: file.size, maxBytes }, CHAT_FILE_MIMES);
   if (problem) throw new ChatFileError(problem);
   const signed = await apiSend<SignedUpload>('POST', `${threadPath(phone)}/file-upload-url`, {
     clientRequestId: id,

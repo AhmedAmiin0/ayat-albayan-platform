@@ -51,7 +51,8 @@ export interface SampleFile {
 
 /**
  * A session file by link; `kind` defaults to document, `filename` is a document's only, an audio
- * takes no caption. `replyTo` = the quoted wamid (Meta's context; the crm driver drops it).
+ * takes no caption. `replyTo` = the quoted wamid (Meta's context; the crm driver drops it, and
+ * `voice` too: a CRM line sends files as documents only).
  */
 export interface MediaSend {
   to: string;
@@ -60,6 +61,8 @@ export interface MediaSend {
   filename?: string;
   caption?: string | null;
   replyTo?: string | null;
+  /** An ogg/opus audio as WhatsApp's voice note (mic icon, auto-download); Meta ignores it on other audio. */
+  voice?: boolean;
 }
 
 /** A reaction to `messageId` (a wamid of this number); emoji null = remove ours. */
