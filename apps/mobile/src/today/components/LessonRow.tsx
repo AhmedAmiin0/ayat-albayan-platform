@@ -1,15 +1,16 @@
-import { lessonStatusStyle, type LessonView } from '@ab/shared';
+import { lessonStatusStyle } from '@ab/shared';
 import { Pressable, View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { toneColors } from '@/core/ui/feedback/StatusChip';
 import { type, useTheme } from '@/theme';
 import { riyadhTime, rowSubtitle, studentNames } from '../lib/lesson-text';
+import type { TodayLesson } from '../lib/today-lesson';
 
-interface LessonRowProps {
-  lesson: LessonView;
+interface LessonRowProps<L extends TodayLesson> {
+  lesson: L;
   /** Opens the lesson details sheet, where the lesson's actions live. */
-  onOpen: (lesson: LessonView) => void;
+  onOpen: (lesson: L) => void;
   /** An ended lesson under the fold: a tighter, quieter row. */
   compact?: boolean;
 }
@@ -19,7 +20,7 @@ interface LessonRowProps {
  * and at the end a 7pt dot with the status word in its tone. The whole row is one button: no
  * buttons on it, every action is in the sheet.
  */
-export function LessonRow({ lesson, onOpen, compact = false }: LessonRowProps) {
+export function LessonRow<L extends TodayLesson>({ lesson, onOpen, compact = false }: LessonRowProps<L>) {
   const { color } = useTheme();
   const tone = toneColors(color, lessonStatusStyle[lesson.status].tone).fg;
   const time = riyadhTime(lesson.starts_at);

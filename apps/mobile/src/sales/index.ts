@@ -5,3 +5,4 @@ export { SalesSubscriptionsScreen } from './screens/SalesSubscriptionsScreen';
 export { SalesTeacherScreen } from './screens/SalesTeacherScreen';
 export { SalesTeachersScreen } from './screens/SalesTeachersScreen';
 export { SubscriptionHistoryScreen } from './screens/SubscriptionHistoryScreen';
+export { SalesTodayScreen } from './screens/SalesTodayScreen';
