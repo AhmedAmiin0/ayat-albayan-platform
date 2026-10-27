@@ -120,16 +120,15 @@ export class LessonsQueries {
   }
 
   /**
-   * Lesson numbers (R-LES-03) for completed lessons, in chunks so the URL stays short.
+   * Lesson numbers (R-LES-03) for completed lessons, in chunks so the URL stays short; the chunks are
+   * read in parallel (one round trip, not one per 100 lessons).
    * TODO(R-LES-03): v_lesson_sequence counts `completed` only; owner to confirm whether `late` counts.
    */
   async seq(lessonIds: readonly string[]): Promise<SeqMap> {
     const out = new Map<string, number>();
-    for (let i = 0; i < lessonIds.length; i += SEQ_CHUNK) {
-      const { data, error } = await this.db
-        .from('v_lesson_sequence')
-        .select('lesson_id, student_id, seq')
-        .in('lesson_id', lessonIds.slice(i, i + SEQ_CHUNK));
+    const chunks = Array.from({ length: Math.ceil(lessonIds.length / SEQ_CHUNK) }, (_, i) => lessonIds.slice(i * SEQ_CHUNK, (i + 1) * SEQ_CHUNK));
+    const reads = await Promise.all(chunks.map((ids) => this.db.from('v_lesson_sequence').select('lesson_id, student_id, seq').in('lesson_id', ids)));
+    for (const { data, error } of reads) {
       if (error) throw dbError(error);
       for (const r of data) {
         if (r.lesson_id && r.student_id && r.seq !== null) out.set(`${r.lesson_id}:${r.student_id}`, r.seq);

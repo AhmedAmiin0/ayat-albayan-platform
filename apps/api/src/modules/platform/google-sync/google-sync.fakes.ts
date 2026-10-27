@@ -39,7 +39,9 @@ export function fakeData() {
     get: vi.fn().mockResolvedValue({ status: 'connected', root_folder_id: 'Root_ABCDEFGHIJ', summary_sheet_id: 'Summary_ABCDEFGHIJ', drive_confirmed_at: '2026-10-22T00:00:00Z', discovery: null }),
     update: vi.fn(), token: vi.fn(), setToken: vi.fn(), clearToken: vi.fn(), setNonce: vi.fn(), consumeNonce: vi.fn(),
   };
-  const settings = { read: vi.fn().mockResolvedValue({ enabled: true, mode: 'live', window_days: 60 }), write: vi.fn() };
+  // One mock for read() and fresh(): tests queue values in call order either way.
+  const read = vi.fn().mockResolvedValue({ enabled: true, mode: 'live', window_days: 60 });
+  const settings = { read, fresh: read, write: vi.fn() };
   const items = { claim: vi.fn(), finish: vi.fn(), release: vi.fn(), sibling: vi.fn(), requeue: vi.fn(), requeueReportRows: vi.fn(), touch: vi.fn(), reconcile: vi.fn(), retry: vi.fn(), counts: vi.fn() };
   return { account, settings, items };
 }
