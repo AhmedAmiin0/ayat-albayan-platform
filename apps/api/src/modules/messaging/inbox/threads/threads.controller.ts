@@ -1,4 +1,4 @@
-import { sendsAllTemplates, threadTemplateSchema, threadTextSchema, type MessageView } from '@ab/shared';
+import { PENDING_IDS_MAX, sendsAllTemplates, threadTemplateSchema, threadTextSchema, type MessageView } from '@ab/shared';
 import { Body, Controller, Get, HttpCode, Param, Post, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
@@ -17,6 +17,16 @@ import { ThreadSendService } from '../send/thread-send.service';
 const detailQuery = z.object({
   before: z.iso.datetime({ offset: true }).optional(),
   limit: z.coerce.number().int().min(1).max(100).default(50),
+});
+
+/** ?after= (the delta refresh) with the client's outgoing rows still moving: `pending=<uuid>,<uuid>`. */
+const deltaQuery = detailQuery.omit({ before: true }).extend({
+  after: z.iso.datetime({ offset: true }),
+  pending: z
+    .string()
+    .optional()
+    .transform((v) => (v ? v.split(',').filter(Boolean) : []))
+    .pipe(z.array(z.uuid()).max(PENDING_IDS_MAX)),
 });
 
 /**
@@ -40,9 +50,12 @@ export class ThreadsController {
     return this.reads.list(parseOrThrow(threadListQuery, query), user);
   }
 
+  /** A page (`before`), or with `after` only what changed since (ThreadDelta, ~2 reads). */
   @Get(':phone')
-  detail(@Param('phone') raw: string, @Query() query: unknown, @CurrentUser() user: AuthUser) {
-    return this.reads.detail({ phone: phoneParam(raw), ...parseOrThrow(detailQuery, query) }, user);
+  detail(@Param('phone') raw: string, @Query() query: Record<string, unknown> | undefined, @CurrentUser() user: AuthUser) {
+    const phone = phoneParam(raw);
+    if (query?.['after'] !== undefined) return this.reads.delta({ phone, ...parseOrThrow(deltaQuery, query) }, user);
+    return this.reads.detail({ phone, ...parseOrThrow(detailQuery, query) }, user);
   }
 
   @Post(':phone/text')

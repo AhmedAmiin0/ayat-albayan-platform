@@ -105,10 +105,10 @@ export class MessageSender implements OnApplicationBootstrap, OnModuleDestroy {
       const template = templates.get(row.template_key ?? '') ?? null;
       const line = lineOf(row, template, chatOn);
       if (paused.has(line)) continue;
-      // Both switches are read before every row, so OFF stops a long pass at once (docs/09).
-      if (!(await this.gate.open())) break;
-      const autoOn = await this.gate.automaticOn();
-      const outcome = await this.worker.process({ row, template, now, autoOn });
+      // Both switches are read before every row (one settings read), so OFF stops a long pass at once (docs/09).
+      const gate = await this.gate.switches();
+      if (!gate.open) break;
+      const outcome = await this.worker.process({ row, template, now, autoOn: gate.autoOn });
       summary[outcome] += 1;
       if (outcome === 'paused') paused.add(line);
     }
@@ -128,8 +128,9 @@ export class MessageSender implements OnApplicationBootstrap, OnModuleDestroy {
       const template = templates.get(row.template_key ?? '') ?? null;
       const route = routeOf(pass, { row, template });
       if (route && paused.has(route.numberId)) continue;
-      if (!(await this.gate.open())) break;
-      const outcome = await this.worker.process({ row, template, now, autoOn: await this.gate.automaticOn(), route });
+      const gate = await this.gate.switches();
+      if (!gate.open) break;
+      const outcome = await this.worker.process({ row, template, now, autoOn: gate.autoOn, route });
       summary[outcome] += 1;
       if (route && outcome === 'paused') paused.add(route.numberId);
     }

@@ -19,7 +19,7 @@ export class MessageViews {
   ) {}
 
   async view(row: ThreadMessageRow, mediaUrl: string | null = null): Promise<MessageView> {
-    const template = row.template_key ? await this.templates.get(row.template_key) : null;
+    const template = row.template_key ? await this.templates.cached(row.template_key) : null;
     const doc = templateParams(row.template_params).document;
     const documentUrl = template && needsManualSend(row) ? await documentLink(this.storage, doc) : null;
     return toMessageView({ row, template: template ? renderable(template) : null, documentUrl, mediaUrl });

@@ -1,29 +1,39 @@
 import type { MessageQuote, TemplateParamsInput, ThreadDetail, ThreadTemplate, MessageView } from '@ab/shared';
+import { THREAD_FULL_MS } from '@ab/client-core';
 import { useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiFetch, apiSend, toQueryString } from '@/core/lib/http/api';
+import { useScreenFocused } from '@/core/ui/connecting/use-screen-focus';
 import {
   appendMessage,
   provisionalMessage,
   removeMessage,
   replaceMessage,
+  sendKey,
   threadKey,
   threadPath,
   type ThreadCache,
 } from './thread-cache';
+import { useThreadDeltaPoll } from './thread-delta-poll';
 
 /**
  * GET /threads/:phone (docs/12 H2): the newest page first, `before` the oldest loaded row pages
  * back. The API stamps the inbound rows read when it answers. The persisted client keeps the last
- * answer on disk, so an opened thread reads offline (R-MOB-03).
+ * answer on disk, so an opened thread reads offline (R-MOB-03). While on screen it stays live
+ * (owner 2026-10-27): a delta every THREAD_DELTA_MS (useThreadDeltaPoll), a full read on open, on
+ * pull-to-refresh and every THREAD_FULL_MS.
  */
 export function useThread(phone: string) {
-  return useInfiniteQuery({
+  const focused = useScreenFocused();
+  const query = useInfiniteQuery({
     queryKey: threadKey(phone),
     queryFn: ({ pageParam }) =>
       apiFetch<ThreadDetail>(`${threadPath(phone)}${toQueryString({ before: pageParam })}`),
     initialPageParam: undefined as string | undefined,
     getNextPageParam: (last) => (last.has_more ? last.messages[0]?.created_at : undefined),
+    refetchInterval: focused ? THREAD_FULL_MS : false,
   });
+  useThreadDeltaPoll(phone, focused && query.data !== undefined);
+  return query;
 }
 
 /**
@@ -53,8 +63,7 @@ function body({ out, id }: SendInput) {
  * Optimistic send: the row shows at once as queued; the API's row replaces it, or a refusal takes
  * it out again (the caller shows `sendError`). Either way the thread refetches.
  */
-/** The mutation key of a chat's text / template send. */
-export const sendKey = (phone: string) => ['inbox-send', phone];
+export { sendKey } from './thread-cache';
 
 export function useSendMessage(phone: string) {
   const client = useQueryClient();

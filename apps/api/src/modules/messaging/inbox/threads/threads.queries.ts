@@ -15,6 +15,7 @@ import { THREAD_SORT, type ThreadListFilter } from './threads.list';
 import { threadSearchFilter, type ThreadRow } from './threads.mapper';
 import { newestPerLine, type ReadMark } from '../reads/read-marks';
 import { markUnsupported, type ListedThreadRow } from './last-unsupported';
+import { isUnreadBadge, unreadThreadCount } from './threads-unread.queries';
 
 export type { ThreadListFilter } from './threads.list';
 
@@ -36,6 +37,8 @@ export class ThreadsQueries {
    * requested order (default newest message first).
    */
   async list(f: ThreadListFilter): Promise<{ items: ListedThreadRow[]; total: number }> {
+    // The badge asks for `total` only: an indexed count, no page (threads-unread.queries.ts).
+    if (isUnreadBadge(f)) return { items: [], total: await unreadThreadCount(this.db, f.phones) };
     let query = f.list
       ? this.db.from('v_list_threads').select('*', { count: 'exact' }).eq('list_id', f.list)
       : this.db.from('v_threads').select('*', { count: 'exact' });
@@ -98,15 +101,11 @@ export class ThreadsQueries {
     return familyTagsOf({ db: this.db, packages: this.packages, balances: this.balances }, guardianIds);
   }
 
-  /** Opening the thread reads its inbound messages; returns the newest stamped wamid per line. */
-  async markInboundRead(phone: string, at: Date): Promise<ReadMark[]> {
-    const { data, error } = await this.db
-      .from('messages')
-      .update({ read_at: at.toISOString() })
-      .eq('phone_e164', phone)
-      .eq('direction', 'inbound')
-      .is('read_at', null)
-      .select('wa_message_id, created_at, line');
+  /** Opening the thread reads its inbound messages (up to `upTo` when given); the newest stamped wamid per line. */
+  async markInboundRead(phone: string, at: Date, upTo?: string): Promise<ReadMark[]> {
+    let query = this.db.from('messages').update({ read_at: at.toISOString() }).eq('phone_e164', phone);
+    query = query.eq('direction', 'inbound').is('read_at', null);
+    const { data, error } = await (upTo ? query.lte('created_at', upTo) : query).select('wa_message_id, created_at, line');
     check(error, 'inbound read stamp');
     return newestPerLine(data);
   }

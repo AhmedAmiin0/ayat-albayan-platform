@@ -12,7 +12,8 @@ export const unreadRetry = (count: number, error: unknown): boolean => !(error i
 
 /**
  * The academy's unread chats (the same number the admin sees), at pageSize=1. Under ['threads'], so
- * ThreadPane's invalidation after opening a chat refreshes it; it keeps polling in a background tab.
+ * ThreadPane's invalidation after opening a chat refreshes it. A hidden tab does not poll (owner
+ * 2026-10-27, «the API gets slowed»): the count catches up the moment the tab is shown again.
  */
 export const salesUnreadQuery = (enabled: boolean) => ({
   enabled,
@@ -20,7 +21,6 @@ export const salesUnreadQuery = (enabled: boolean) => ({
   queryFn: () => apiFetch<Total>('/threads?unread=true&page=1&pageSize=1'),
   select: (p: Total) => p.total,
   refetchInterval: INBOX_REFRESH_MS,
-  refetchIntervalInBackground: true,
   retry: unreadRetry,
 });
 

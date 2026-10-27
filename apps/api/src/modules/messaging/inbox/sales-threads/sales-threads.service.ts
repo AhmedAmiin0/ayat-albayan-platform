@@ -7,7 +7,7 @@ import { forSales, salesLessons, salesPeople, visibleToSales, withoutLinks } fro
 import { toThreadView, type ThreadRow } from '../threads/threads.mapper';
 import type { PeopleOf } from '../people/thread-people';
 import { ThreadsQueries, type ThreadListFilter } from '../threads/threads.queries';
-import type { ThreadPageQuery } from '../threads/threads.service';
+import { asRead, pageRows, stampRead, type ThreadPageQuery } from '../reads/thread-page';
 
 const NO_ONE: ThreadPeople = { guardian: null, lead: null, students: [] };
 
@@ -32,23 +32,20 @@ export class SalesThreadsService {
     return { items: items.map(view), total, page: f.page, pageSize: f.pageSize };
   }
 
-  /** One page, oldest → newest, of any chat. */
+  /** One page, oldest → newest, of any chat; the admin's two parallel stages (reads/thread-page.ts). */
   async detail(q: ThreadPageQuery, now = new Date()): Promise<ThreadDetail> {
     const first = !q.before;
-    if (first) await this.receipts.open(q.phone, now);
-    const row = await this.queries.thread(q.phone);
-    // A number with no message yet: who it is, so the first template can name the family's lesson.
-    const who = row ?? (first ? await this.queries.known(q.phone) : null);
-    const [rows, people] = await Promise.all([this.queries.messages(q), first ? this.people(who) : NO_ONE]);
-    const page = rows.slice(0, q.limit).reverse().filter(visibleToSales);
-    const thread = row ? forSales(toThreadView(row, now, null)) : null;
-    return {
-      thread,
-      messages: await Promise.all(page.map(async (m) => withoutLinks(await this.views.view(m)))),
-      has_more: rows.length > q.limit,
-      lessons: first && who ? salesLessons(await this.queries.lessons(thread ?? who, now)) : [],
-      people,
-    };
+    const at = await pageRows(this.queries, q);
+    const page = at.rows.slice(0, q.limit).reverse().filter(visibleToSales);
+    const [people, lessons, messages, read] = await Promise.all([
+      first ? this.people(at.who) : NO_ONE,
+      first && at.who ? this.queries.lessons(at.who, now).then(salesLessons) : [],
+      Promise.all(page.map(async (m) => withoutLinks(await this.views.view(m)))),
+      stampRead(this.receipts, { q, page: at, now }),
+    ]);
+    const thread = at.found ? forSales(toThreadView(at.found, now, null)) : null;
+    const detail: ThreadDetail = { thread, messages, has_more: at.rows.length > q.limit, lessons, people };
+    return read ? asRead(detail, now) : detail;
   }
 
   private async people(row: PeopleOf | null): Promise<ThreadPeople> {

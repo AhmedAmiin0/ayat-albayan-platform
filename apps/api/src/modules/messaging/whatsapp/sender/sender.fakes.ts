@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import type { MessageRow } from '../messages/message.mapper';
 import type { DueMessage } from './sender.queries';
 
@@ -40,4 +41,14 @@ export function messageRow(over: Partial<MessageRow> = {}): MessageRow {
     wa_pricing_category: null, sent_by_teacher_id: null, line: null, number_id: null, reply_to_message_id: null, forwarded_from_id: null,
     ...over,
   };
+}
+
+/** The send gate as the pass reads it: switches() is the two mocks together, as SendGate does with one read. */
+export function senderGate() {
+  const gate = {
+    open: vi.fn<() => Promise<boolean>>(),
+    automaticOn: vi.fn<() => Promise<boolean>>(),
+    switches: async () => ({ open: await gate.open(), autoOn: await gate.automaticOn() }),
+  };
+  return gate;
 }

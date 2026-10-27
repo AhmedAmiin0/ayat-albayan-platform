@@ -27,6 +27,15 @@ export class SendGate {
     return sendingAllowed(this.env, (await this.settings.read()).messaging_enabled);
   }
 
+  /**
+   * Both switches from ONE settings read (the sender asks before every row, so OFF still stops a long
+   * pass at once, docs/09): open() and automaticOn() together, half the reads per row.
+   */
+  async switches(): Promise<{ open: boolean; autoOn: boolean }> {
+    if (!sendingAllowed(this.env, true)) return { open: false, autoOn: false }; // not configured: no DB read
+    const s = await this.settings.read();
+    return { open: sendingAllowed(this.env, s.messaging_enabled), autoOn: s.auto_messages_enabled };
+  }
   /** settings.auto_messages_enabled: job-made reminders, follow-ups and renewals go out only when ON. */
   async automaticOn(): Promise<boolean> {
     return (await this.settings.read()).auto_messages_enabled;

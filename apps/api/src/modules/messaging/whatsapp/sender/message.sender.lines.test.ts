@@ -2,13 +2,13 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { MessageSender } from './message.sender';
 import type { MessageWorker } from './message.worker';
 import type { SendGate } from '../gate/send-gate';
-import { dueMessage } from './sender.fakes';
+import { dueMessage, senderGate } from './sender.fakes';
 import type { SenderQueries } from './sender.queries';
 import { templateRow } from '../whatsapp.fakes';
 
 // The auth pause is per line (docs/12 §13.3 step 4): a dead chat token never delays notifications.
 
-const gate = { open: vi.fn(), automaticOn: vi.fn() };
+const gate = senderGate();
 const queries = { approvedTemplates: vi.fn(), due: vi.fn(), holdAutomatic: vi.fn(), chatConfigured: false };
 const worker = { process: vi.fn() };
 const NOW = new Date('2026-10-02T08:00:00Z');

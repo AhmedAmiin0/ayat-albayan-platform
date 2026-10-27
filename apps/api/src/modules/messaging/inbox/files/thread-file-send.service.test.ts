@@ -15,7 +15,7 @@ const PDF = new TextEncoder().encode('%PDF-1.7\n   ');
 const MB = 1024 * 1024;
 
 const queries = { thread: vi.fn() };
-const outbox = { send: vi.fn() };
+const outbox = { queue: vi.fn() };
 const storage = { info: vi.fn(), head: vi.fn(), signedUpload: vi.fn() };
 const sender = (maxMb?: number) => {
   const s = new ThreadFileSender(queries as unknown as ThreadsQueries, outbox as unknown as Outbox, storage as unknown as StorageService);
@@ -35,7 +35,7 @@ describe('ThreadFileSender.send (owner 2026-10-19 #2)', () => {
     queries.thread.mockResolvedValue(threadRow());
     storage.info.mockResolvedValue({ size: 2048, contentType: 'image/png' });
     storage.head.mockResolvedValue(PNG);
-    outbox.send.mockImplementation(async (row: object) => ({ view: { id: 'm1', ...row }, replayed: false }));
+    outbox.queue.mockImplementation(async (row: object) => ({ view: { id: 'm1', ...row }, replayed: false }));
   });
   afterEach(() => vi.unstubAllEnvs());
 
@@ -46,7 +46,7 @@ describe('ThreadFileSender.send (owner 2026-10-19 #2)', () => {
     vi.stubEnv('WA_ACCESS_TOKEN', 'token');
     queries.thread.mockResolvedValue(threadRow({ last_chat_inbound_at: '2026-10-02T08:00:00Z' }));
     await send({ caption: 'راجعي الصفحة' });
-    expect(outbox.send).toHaveBeenCalledWith({
+    expect(outbox.queue).toHaveBeenCalledWith({
       phone_e164: PHONE,
       lead_id: threadRow().lead_id,
       guardian_id: null,
@@ -76,7 +76,7 @@ describe('ThreadFileSender.send (owner 2026-10-19 #2)', () => {
       expect([status(e), code(e)]).toEqual([400, 'file_path']);
     }
     expect(storage.info).not.toHaveBeenCalled();
-    expect(outbox.send).not.toHaveBeenCalled();
+    expect(outbox.queue).not.toHaveBeenCalled();
   });
 
   it('nothing uploaded at the path: 400 file_path', async () => {
@@ -88,7 +88,7 @@ describe('ThreadFileSender.send (owner 2026-10-19 #2)', () => {
     storage.head.mockResolvedValue(PDF);
     const e = await send().catch((x: unknown) => x);
     expect([status(e), code(e)]).toEqual([400, 'file_type']);
-    expect(outbox.send).not.toHaveBeenCalled();
+    expect(outbox.queue).not.toHaveBeenCalled();
   });
 
   it('a type Meta will not take as an image (WebP): 400 file_type', async () => {
@@ -107,7 +107,7 @@ describe('ThreadFileSender.send (owner 2026-10-19 #2)', () => {
   });
 
   it('a replayed request id returns the first row', async () => {
-    outbox.send.mockResolvedValue({ view: { id: 'first' }, replayed: true });
+    outbox.queue.mockResolvedValue({ view: { id: 'first' }, replayed: true });
     await expect(send()).resolves.toEqual({ view: { id: 'first' }, replayed: true });
   });
 });

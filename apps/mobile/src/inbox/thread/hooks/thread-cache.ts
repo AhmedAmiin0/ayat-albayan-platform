@@ -14,6 +14,9 @@ export const threadPath = (phone: string) => `/threads/${encodeURIComponent(phon
 /** ['threads', phone]: a push for this phone refreshes exactly this thread. */
 export const threadKey = (phone: string) => pathKey(`/threads/${phone}`);
 
+/** The mutation key of a chat's text / template send. */
+export const sendKey = (phone: string) => ['inbox-send', phone];
+
 /** Oldest → newest across the loaded pages; a row a refetch already brought in shows once. */
 export function threadMessages(data: ThreadCache | undefined): MessageView[] {
   const seen = new Set<string>();

@@ -11,10 +11,30 @@ export type ApprovalWrite = TablesInsert<'message_template_numbers'>;
 /** What the per-number routes need of a wa_numbers row (ids only, never a secret). */
 export type NumberRef = Pick<Tables<'wa_numbers'>, 'id' | 'purpose' | 'is_default' | 'waba_id'>;
 
+/** How long cached() trusts its copy of a template (another API copy may have written since). */
+export const TEMPLATE_COPY_MS = 60_000;
+
 /** message_templates (R-MSG-01): the API is its only writer (health sync and import, submit, starter flag). */
 @Injectable()
 export class TemplatesQueries {
+  /** cached(): one read per key a minute, shared by concurrent callers; cleared by every write here. */
+  private readonly copies = new Map<string, { row: Promise<TemplateRow | null>; at: number }>();
+
   constructor(@Inject(DB) private readonly db: Db) {}
+
+  /**
+   * A thread's bubbles render each templated row (≤ 50 a page, mostly the same few keys): an in-memory
+   * copy instead of a read per row. Dropped on update / insert here (template sync, submit, edits);
+   * another API copy's write shows here within TEMPLATE_COPY_MS. Display only: sends read get().
+   */
+  cached(key: string, now = Date.now()): Promise<TemplateRow | null> {
+    const hit = this.copies.get(key);
+    if (hit && now - hit.at < TEMPLATE_COPY_MS) return hit.row;
+    const row = this.get(key);
+    this.copies.set(key, { row, at: now });
+    row.catch(() => this.copies.delete(key));
+    return row;
+  }
 
   async all(): Promise<TemplateRow[]> {
     const { data, error } = await this.db.from('message_templates').select('*').order('key');
@@ -35,6 +55,7 @@ export class TemplatesQueries {
       .eq('key', key)
       .select('*')
       .maybeSingle();
+    this.copies.clear();
     if (error) throw new Error(`template update failed: ${error.message}`);
     return data;
   }
@@ -49,6 +70,7 @@ export class TemplatesQueries {
       .upsert(row, { onConflict: 'meta_name,language', ignoreDuplicates: true })
       .select('*')
       .maybeSingle();
+    this.copies.clear();
     if (error) throw new Error(`template insert failed: ${error.message}`);
     return data;
   }

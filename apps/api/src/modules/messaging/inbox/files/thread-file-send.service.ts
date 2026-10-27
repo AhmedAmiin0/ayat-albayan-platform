@@ -81,7 +81,7 @@ export class ThreadFileSender {
     if (!head) throw filePath();
     if (sniffMime(head) !== mime) throw waHttpError('file_type', HttpStatus.BAD_REQUEST);
     const reply = await replyOf(this.quotes, s, line);
-    return this.outbox.send({
+    return this.outbox.queue({
       ...outboundBase(s, thread),
       dedup_key: key,
       body: caption || null,

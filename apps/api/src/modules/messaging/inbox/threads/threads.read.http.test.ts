@@ -89,8 +89,9 @@ describe('H1/H2 threads (docs/12 §4, R-LEAD-02)', () => {
     const body = res.json();
     expect(body.messages.map((m: { id: string }) => m.id)).toEqual(['m2', 'm3']);
     expect([body.has_more, body.thread.phone_e164]).toEqual([true, PHONE]);
-    expect(t.queries.markInboundRead).toHaveBeenCalledWith(PHONE, expect.any(Date));
-    expect(t.client.markRead).toHaveBeenCalledWith('wamid.newest');
+    // Stamped up to the newest row shown; Meta's receipt goes out in the background.
+    expect(t.queries.markInboundRead).toHaveBeenCalledWith(PHONE, expect.any(Date), '2026-10-02T08:03:00Z');
+    await vi.waitFor(() => expect(t.client.markRead).toHaveBeenCalledWith('wamid.newest'));
     expect(t.chatClient.markRead).not.toHaveBeenCalled();
   });
 
@@ -102,6 +103,7 @@ describe('H1/H2 threads (docs/12 §4, R-LEAD-02)', () => {
       { waMessageId: 'wamid.c', line: 'chat' },
     ]);
     expect((await t.call({ method: 'GET', url: URL })).statusCode).toBe(200);
+    await vi.waitFor(() => expect(t.chatClient.markRead).toHaveBeenCalled());
     expect(t.client.markRead.mock.calls).toEqual([['wamid.n']]);
     expect(t.chatClient.markRead.mock.calls).toEqual([['wamid.c']]);
   });

@@ -27,6 +27,7 @@ export * from './lesson/timing.js';
 export * from './lesson/trial-chat.js';
 export * from './chat/unavailable.js';
 export * from './wa.js';
+export * from './thread-delta.js';
 export type * from './chat/views.js';
 export type * from './templates/template-views.js';
 export type * from './chat/line-views.js';
