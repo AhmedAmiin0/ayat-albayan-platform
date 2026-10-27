@@ -44,6 +44,14 @@ describe('MessageDispatch — reactions', () => {
   });
 });
 
+describe('MessageDispatch — a reaction row without a target', () => {
+  it('fails, never goes out as text', async () => {
+    const row = dueMessage({ template_key: null, template_params: null, body: '[reaction]', interactive_payload: { type: 'reaction' } });
+    await expect(dispatch().send(row, null, 'chat')).rejects.toThrow('without a target');
+    expect(client.sendText).not.toHaveBeenCalled();
+  });
+});
+
 describe('the reaction body on meta and kapso', () => {
   const input = { to: '+966551234567', messageId: 'wamid.T', emoji: '❤️' };
 

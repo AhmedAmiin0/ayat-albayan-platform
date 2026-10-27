@@ -46,6 +46,7 @@ export function reactionHarness(t: ReactionTarget | null = target(), status: 'se
     target: vi.fn(async () => t),
     queued: vi.fn(async (key: string) => jobs.has(key)),
     setOurs: vi.fn(async (input: { ours: { emoji: string | null } }) => void (row.our_reaction = input.ours.emoji)),
+    supersede: vi.fn(async () => undefined),
   };
   const threads = {
     thread: vi.fn(async () => threadRow({ last_inbound_at: '2026-10-27T11:00:00Z', last_notifications_inbound_at: '2026-10-27T11:00:00Z' })),

@@ -1,4 +1,4 @@
-import { reactionRef, waSendKind, type TemplateDocument, type WaLine } from '@ab/shared';
+import { isReactionPayload, reactionRef, waSendKind, type TemplateDocument, type WaLine } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { BUCKETS, SIGNED_URL_SECONDS } from '../../../../common/storage/storage.paths';
 import { StorageService } from '../../../../common/storage/storage.service';
@@ -96,6 +96,7 @@ export class MessageDispatch {
     // Before the text branch: a reaction's body is its emoji, never a text (migration 900).
     const reaction = reactionRef(row.interactive_payload);
     if (reaction) return this.sendReaction(row, { via, ...reaction });
+    if (isReactionPayload(row.interactive_payload)) throw new WaError('a reaction without a target message', { code: 100, status: 0 });
     // Before the text branch: a captioned file must not go out as plain text.
     if (row.media_path) return this.sendFile(row, { via, path: row.media_path });
     if (row.body) return this.client(via).sendText({ to: row.phone_e164, text: row.body, replyTo: row.reply_to_wa_id });

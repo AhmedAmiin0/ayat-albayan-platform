@@ -45,11 +45,17 @@ export class ThreadReactionService {
     // Meta only knows a wamid on the number that sent or received it.
     if (!sameNumber(target, from)) throw waHttpError('reaction_other_number', HttpStatus.CONFLICT);
     const { emoji } = r.input;
+    const where = { targetId: target.id, phone: r.phone };
     if (!(await this.reactions.queued(key))) {
-      await this.reactions.setOurs({ targetId: target.id, phone: r.phone, ours: { emoji, by: r.actorId, at: now.toISOString() } });
+      await this.reactions.setOurs({ ...where, ours: { emoji, by: r.actorId, at: now.toISOString() } });
+      await this.reactions.supersede(where);
     }
-    const payload = reactionPayload(target, emoji);
-    const sent = await this.outbox.send({ ...outboundBase(r, thread), dedup_key: key, body: emoji ?? '', interactive_payload: payload, ...from });
+    const row = { ...outboundBase(r, thread), dedup_key: key, body: emoji ?? '', interactive_payload: reactionPayload(target, emoji), ...from };
+    const sent = await this.outbox.send(row).catch(async (e: unknown) => {
+      // Nothing queued: ours goes back at once (no failed row would ever revert it).
+      await this.reactions.setOurs({ ...where, ours: { emoji: target.our_reaction, by: target.our_reaction_by, at: target.our_reaction_at } });
+      throw e;
+    });
     return { result: await this.result(target.id, sent), sent };
   }
 

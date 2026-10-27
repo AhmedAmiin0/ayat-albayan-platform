@@ -3,7 +3,7 @@ import { isReactionPayload, reactionTooOld } from '@ab/shared';
 import { HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../../../common/db/db.module';
 import { notFound } from '../../../../common/http/errors';
-import { waHttpError } from '../../whatsapp';
+import { SENDING, waHttpError } from '../../whatsapp';
 
 /** The message a reaction targets, as the guard and the payload read it. */
 export interface ReactionTarget {
@@ -62,6 +62,23 @@ export class ReactionQueries {
     const { data, error } = await this.db.from('messages').select('id').eq('dedup_key', dedupKey).limit(1);
     if (error) throw new Error(`reaction replay read failed: ${error.message}`);
     return (data ?? []).length > 0;
+  }
+
+  /**
+   * Older reaction sends to this message still waiting (a retry, a closed gate) never go out after a newer
+   * tap: failed «superseded» (not claimed by the sender; the revert trigger leaves the newer ours alone).
+   */
+  async supersede(input: { targetId: string; phone: string }): Promise<void> {
+    const { error } = await this.db
+      .from('messages')
+      .update({ status: 'failed', error_code: 'superseded', error_text: 'a newer reaction replaced it', next_attempt_at: null })
+      .eq('phone_e164', input.phone)
+      .eq('direction', 'outbound')
+      .eq('status', 'queued')
+      .eq('interactive_payload->>type', 'reaction')
+      .eq('interactive_payload->>target_id', input.targetId)
+      .or(`error_code.is.null,error_code.neq.${SENDING}`);
+    if (error) throw new Error(`reaction supersede failed: ${error.message}`);
   }
 
   /** Ours at once (optimistic); a failed send puts back `previous` (trigger messages_reaction_failed). */

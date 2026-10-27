@@ -32,6 +32,7 @@ describe('PUT …/reaction', () => {
     vi.spyOn(rq, 'target').mockResolvedValue({ ...target(), created_at: FRESH });
     vi.spyOn(rq, 'queued').mockResolvedValue(false);
     vi.spyOn(rq, 'setOurs').mockResolvedValue();
+    vi.spyOn(rq, 'supersede').mockResolvedValue();
     t.client.configured.mockReturnValue(true);
     t.queries.thread.mockResolvedValue(threadRow({ last_inbound_at: FRESH, last_notifications_inbound_at: FRESH }));
     t.queries.enqueue.mockImplementation(async (row: object) => messageRow({ ...row, id: 'r1', status: 'queued' }));

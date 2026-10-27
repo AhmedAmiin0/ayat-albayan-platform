@@ -63,6 +63,20 @@ describe('ThreadReactionService — a reaction', () => {
     expect(reactionKey(request({ input: { emoji: '❤️', clientRequestId: REQ } }))).not.toBe(reactionKey(request()));
   });
 
+  it('a newer tap supersedes older waiting sends to the same message', async () => {
+    const h = reactionHarness();
+    await h.service.react(request(), NOW);
+    expect(h.reactions.supersede).toHaveBeenCalledWith({ targetId: TARGET_ID, phone: PHONE });
+  });
+
+  it('nothing queued (the enqueue failed): ours goes back at once and the error goes up', async () => {
+    const h = reactionHarness(target({ our_reaction: '❤️', our_reaction_by: 'a2', our_reaction_at: '2026-10-27T11:30:00Z' }));
+    h.outbox.send.mockRejectedValueOnce(new Error('db down'));
+    await expect(h.service.react(request(), NOW)).rejects.toThrow('db down');
+    expect(h.reactions.setOurs).toHaveBeenLastCalledWith({ targetId: TARGET_ID, phone: PHONE, ours: { emoji: '❤️', by: 'a2', at: '2026-10-27T11:30:00Z' } });
+    expect(h.row.our_reaction).toBe('❤️');
+  });
+
   it('a failed send comes back failed with its code, and ours is back to what it was', async () => {
     const h = reactionHarness(target(), 'failed');
     const { result } = await h.service.react(request(), NOW);
