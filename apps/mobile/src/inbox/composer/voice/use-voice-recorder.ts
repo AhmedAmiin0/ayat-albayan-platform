@@ -47,10 +47,11 @@ export function useVoiceRecorder(onInterrupt: () => void) {
       // Pauses a voice note that is playing; a note started later stops this recording.
       claimPlayback(OWNER, () => interrupt.current());
       await recorder.prepareToRecordAsync();
-      if (!recorder.getStatus().canRecord) return 'failed';
+      if (!recorder.getStatus().canRecord) throw new Error('cannot record');
       recorder.record();
       return 'recording';
     } catch {
+      releasePlayback(OWNER);
       return 'failed';
     }
   };

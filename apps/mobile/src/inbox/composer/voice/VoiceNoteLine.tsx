@@ -2,7 +2,9 @@ import { Linking, Pressable, View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
-import type { VoiceNote } from './use-voice';
+
+/** The line under the bar: the tap hint, or the microphone blocked in Settings. */
+export type VoiceNote = 'hint' | 'blocked' | null;
 
 /**
  * Under a tap on the microphone: how to record (a hold, not a tap), or, when the microphone is

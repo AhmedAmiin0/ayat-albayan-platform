@@ -122,3 +122,20 @@ test('a failed send keeps the recording; the retry reuses the same request id', 
   expect(bodies()[1]?.clientRequestId).toBe(first);
   expect(bodies()[2]?.clientRequestId).toBe(first);
 });
+
+test('cancel, then a lift while the recorder is still stopping: never sent', async () => {
+  let stopped = () => undefined as unknown;
+  await openChat(mockApiFetch);
+  await hold(100);
+  tick(3000);
+  rec.stop.mockImplementationOnce(() => new Promise<void>((done) => (stopped = done)));
+  await moveTo(100 + 400);
+  await moveTo(100 + 420);
+  await lift();
+  await act(async () => {
+    stopped();
+  });
+  expect(rec.stop).toHaveBeenCalledTimes(1);
+  expect(globalThis.fetch).not.toHaveBeenCalled();
+  expect(mockApiSend).not.toHaveBeenCalled();
+});
