@@ -1,15 +1,16 @@
-import { counted, type LessonView } from '@ab/shared';
+import { counted } from '@ab/shared';
 import { useState } from 'react';
 import { Pressable, View } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
 import { t } from '@/core/lib/i18n/i18n';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { type, useTheme } from '@/theme';
+import type { TodayLesson } from '../lib/today-lesson';
 import { RowsCard } from './RowsCard';
 
-interface EndedFoldProps {
-  lessons: readonly LessonView[];
-  onOpen: (lesson: LessonView) => void;
+interface EndedFoldProps<L extends TodayLesson> {
+  lessons: readonly L[];
+  onOpen: (lesson: L) => void;
   /** Open from the start under a column filter (the filtered ended lessons are in view). Read on mount. */
   open?: boolean;
 }
@@ -18,7 +19,7 @@ interface EndedFoldProps {
  * The day's ended lessons as one quiet row «انتهت 3 حلقات اليوم» (docs/29 §5); a tap unfolds them as
  * compact rows, each still opening the sheet («عدّل الوقت», R-SCH-11).
  */
-export function EndedFold({ lessons, onOpen, open = false }: EndedFoldProps) {
+export function EndedFold<L extends TodayLesson>({ lessons, onOpen, open = false }: EndedFoldProps<L>) {
   const { color } = useTheme();
   const [expanded, setExpanded] = useState(open);
   if (lessons.length === 0) return null;

@@ -12,10 +12,11 @@ import { heroLead, heroSubtitle } from './hero-text';
 
 interface HeroCardProps {
   hero: Hero;
-  busy: boolean;
+  busy?: boolean;
   /** Why the last confirm was refused (the status already rolled back). */
   error?: string;
-  onConfirm: () => void;
+  /** None: read-only (the salesperson's «اليوم»), see HeroActions. */
+  onConfirm?: () => void;
   onDetails: () => void;
 }
 
@@ -24,7 +25,7 @@ interface HeroCardProps {
  * and the status chip, the Riyadh time large beside the students, then «تأكيد الحلقة» / «ادخل الحلقة»
  * and «التفاصيل». The live classroom of the old «جلسات مباشرة» lives here and in the sheet.
  */
-export function HeroCard({ hero, busy, error, onConfirm, onDetails }: HeroCardProps) {
+export function HeroCard({ hero, busy = false, error, onConfirm, onDetails }: HeroCardProps) {
   const { color } = useTheme();
   const { lesson } = hero;
   return (
@@ -57,7 +58,7 @@ export function HeroCard({ hero, busy, error, onConfirm, onDetails }: HeroCardPr
         </View>
       </View>
       {error ? <ErrorLine message={error} /> : null}
-      <HeroActions lesson={lesson} busy={busy} onConfirm={onConfirm} onDetails={onDetails} />
+      <HeroActions lesson={lesson} running={hero.kind === 'running'} busy={busy} onConfirm={onConfirm} onDetails={onDetails} />
     </View>
   );
 }

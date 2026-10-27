@@ -1,4 +1,5 @@
-import type { LessonStatus, LessonView } from '@ab/shared';
+import type { LessonStatus } from '@ab/shared';
+import type { TodayLesson } from './today-lesson';
 
 // «اليوم» (R-MOB-02, docs/29): which lessons show and the summary card's counts, each column also
 // its filter. Pure, so the screen only lays it out.
@@ -18,18 +19,18 @@ const CLOSED: readonly LessonStatus[] = [
 ];
 
 /** The day's open and held lessons, earliest first (ISO UTC strings sort as instants). */
-export function visibleLessons(lessons: readonly LessonView[]): LessonView[] {
+export function visibleLessons<L extends TodayLesson>(lessons: readonly L[]): L[] {
   return lessons
     .filter((l) => !CLOSED.includes(l.status))
     .sort((a, b) => a.starts_at.localeCompare(b.starts_at));
 }
 
-export function applyFilter(lessons: readonly LessonView[], filter: TodayFilter): LessonView[] {
+export function applyFilter<L extends TodayLesson>(lessons: readonly L[], filter: TodayFilter): L[] {
   return filter === 'all' ? [...lessons] : lessons.filter((l) => l.status === filter);
 }
 
 /** The summary counts, from the day the API returned (it is the whole day, not a page). */
-export function filterCounts(lessons: readonly LessonView[]): Record<TodayFilter, number> {
+export function filterCounts(lessons: readonly TodayLesson[]): Record<TodayFilter, number> {
   const counts: Record<TodayFilter, number> = { all: lessons.length, scheduled: 0, completed: 0 };
   for (const l of lessons) {
     if (l.status === 'scheduled' || l.status === 'completed') counts[l.status] += 1;
