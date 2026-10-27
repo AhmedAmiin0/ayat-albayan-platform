@@ -9,14 +9,14 @@ describe('CrmMediaCopier: failures, retries and rows it never touches', () => {
   afterEach(() => vi.unstubAllGlobals());
 
   it('a failing file is retried at most MAX_ATTEMPTS times, then skipped by the batch and counted as failed', async () => {
-    const fetch = stubFetch(async () => crmResponse(0, {}, 503));
+    const fetch = stubFetch(async () => crmResponse(0, {}, 404));
     const w = copyWorld(crmRows(1));
     const outcomes = [];
     for (let i = 0; i < MAX_ATTEMPTS; i++) outcomes.push(await w.job.runOnce());
     expect(outcomes.map((o) => ('outcomes' in o ? o.outcomes : o.state))).toEqual([['retry'], ['retry'], ['failed']]);
     expect(await w.job.runOnce()).toEqual({ state: 'done' });
     expect(fetch).toHaveBeenCalledTimes(MAX_ATTEMPTS);
-    expect(w.audit.record).toHaveBeenCalledWith(expect.objectContaining({ after: { copied: 0, failed: 1, skipped: 0 } }));
+    expect(w.audit.record).toHaveBeenCalledWith(expect.objectContaining({ after: { copied: 0, failed: 1, skipped: 0, remaining: 0 } }));
     expect(w.storage.upload).not.toHaveBeenCalled();
   });
 
@@ -25,7 +25,7 @@ describe('CrmMediaCopier: failures, retries and rows it never touches', () => {
     const w = copyWorld(crmRows(1));
     expect(await w.job.runOnce()).toMatchObject({ outcomes: ['skipped'] });
     expect(await w.job.runOnce()).toEqual({ state: 'done' });
-    expect(w.audit.record).toHaveBeenCalledWith(expect.objectContaining({ after: { copied: 0, failed: 0, skipped: 1 } }));
+    expect(w.audit.record).toHaveBeenCalledWith(expect.objectContaining({ after: { copied: 0, failed: 0, skipped: 1, remaining: 0 } }));
   });
 
   it('never touches a row with a Meta media id, another host, another number or a body that is more than the link', async () => {
@@ -58,7 +58,7 @@ describe('CrmMediaCopier: failures, retries and rows it never touches', () => {
   });
 
   it('a failing failure write is logged and read as a retry, recorded once, never thrown', async () => {
-    stubFetch(async () => crmResponse(0, {}, 503));
+    stubFetch(async () => crmResponse(0, {}, 404));
     const w = copyWorld(crmRows(1));
     w.queries.mark.mockRejectedValueOnce(new Error('db down'));
     expect(await w.copier.copy('c0', CRM_HOST)).toBe('retry');

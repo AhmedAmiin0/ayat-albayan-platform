@@ -24,7 +24,7 @@ export const crmRows = (n: number, from = 0): MediaMessage[] =>
 
 type Failure = { attempts: number; skipped: boolean };
 
-/** Tests only: migration 880's three functions over in-memory rows (the same WHERE, in TypeScript). */
+/** Tests only: migrations 891 / 920's three functions over in-memory rows (the same WHERE, in TypeScript). */
 function fakeCopyQueries(rows: Map<string, MediaMessage>, failures: Map<string, Failure>) {
   const linkOn = (m: MediaMessage, host: string) => !!m.body?.startsWith(`https://${host.toLowerCase()}${CRM_MEDIA_PREFIX}`);
   return {
@@ -50,7 +50,10 @@ function fakeCopyQueries(rows: Map<string, MediaMessage>, failures: Map<string, 
           return f.skipped === skipped && !!m && !m.media_path && linkOn(m, host);
         }).length;
       const copied = [...rows.values()].filter((m) => m.direction === 'inbound' && !m.media_id && !!m.media_path && linkOn(m, host)).length;
-      return { copied, failed: left(false), skipped: left(true) };
+      const anyHost = (m: MediaMessage) => /^https:\/\/[^/\s]+\/storage\/v1\/object\/public\/chat-media\/\S+$/.test(m.body ?? '');
+      const waiting = (m: MediaMessage) => m.direction === 'inbound' && !m.media_id && !m.media_path && !!m.media_mime && m.number?.provider === 'crm';
+      const remaining = [...rows.values()].filter((m) => waiting(m) && anyHost(m) && !failures.has(m.id)).length;
+      return { copied, failed: left(false), skipped: left(true), remaining };
     }),
   };
 }
