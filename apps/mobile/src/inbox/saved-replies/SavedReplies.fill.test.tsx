@@ -41,7 +41,9 @@ const box = () => screen.getByLabelText(t.inbox.composer.placeholder);
 const form = () => screen.getByTestId('fill-reply-sheet');
 const preview = () => screen.getByTestId('fill-reply-preview').props.children;
 async function pickFromSheet(title: string | RegExp) {
-  await fireEvent.press(screen.getByRole('button', { name: t.savedReplies.open }));
+  // «الردود السريعة» is a tile of the paperclip's sheet (owner 2026-10-27, WhatsApp Business).
+  await fireEvent.press(screen.getByRole('button', { name: t.inbox.composer.attach }));
+  await fireEvent.press(within(screen.getByTestId('attach-sheet')).getByRole('button', { name: t.savedReplies.open }));
   await fireEvent.press(await screen.findByRole('button', { name: title }));
 }
 

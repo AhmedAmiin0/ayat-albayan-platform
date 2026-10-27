@@ -3,6 +3,7 @@ import { View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { shape, type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
+import { ContentText } from '@/core/ui/primitives/ContentText';
 
 /** The text the guardian will read: body with the params filled in, then the footer. */
 function templatePreview(template: TemplateView, params: TemplateParamsInput): string {
@@ -10,9 +11,10 @@ function templatePreview(template: TemplateView, params: TemplateParamsInput): s
   return template.footer_ar ? `${body}\n\n${template.footer_ar}` : body;
 }
 
-/** «شكل الرسالة»: the live preview under the template's fields. */
+/** «شكل الرسالة»: the live preview under the template's fields, aligned by its own language (ContentText). */
 export function TemplatePreview({ template, params }: { template: TemplateView; params: TemplateParamsInput }) {
   const { color } = useTheme();
+  const text = templatePreview(template, params);
   return (
     <View
       style={{
@@ -27,17 +29,12 @@ export function TemplatePreview({ template, params }: { template: TemplateView; 
       <AppText style={{ fontFamily: type.ui[600], fontSize: type.size.xs, lineHeight: 20, color: color.ink2 }}>
         {t.inbox.composer.preview}
       </AppText>
-      <AppText
-        style={{
-          fontFamily: type.ui[400],
-          fontSize: type.size.body,
-          lineHeight: type.lineHeight(type.size.body),
-          color: color.ink,
-          writingDirection: 'auto',
-        }}
+      <ContentText
+        source={text}
+        style={{ fontFamily: type.ui[400], fontSize: type.size.body, lineHeight: type.lineHeight(type.size.body), color: color.ink }}
       >
-        {templatePreview(template, params)}
-      </AppText>
+        {text}
+      </ContentText>
     </View>
   );
 }

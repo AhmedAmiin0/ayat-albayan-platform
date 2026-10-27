@@ -12,6 +12,9 @@ describe('sniffMime (what the file really is, not what Storage was told)', () =>
     ['WebP', bytes('RIFF\0\0\0\0WEBP'), 'image/webp'],
     ['HEIC', bytes('\0\0\0\x18ftypheic'), 'image/heic'],
     ['HEIF burst brand', bytes('\0\0\0\x18ftypmif1'), 'image/heic'],
+    ['an Ogg (a voice note)', bytes('OggS\0\x02'), 'audio/ogg'],
+    ['an MP4 recorded on Android (isom)', bytes('\0\0\0\x18ftypisom'), 'audio/mp4'],
+    ['an M4A', bytes('\0\0\0\x1cftypM4A '), 'audio/mp4'],
   ])('%s', (_name, head, mime) => expect(sniffMime(pad(head))).toBe(mime));
 
   it.each([
@@ -19,7 +22,7 @@ describe('sniffMime (what the file really is, not what Storage was told)', () =>
     ['HTML', bytes('<html><script>')],
     ['an SVG', bytes('<svg xmlns=')],
     ['a RIFF that is not WebP (WAV)', bytes('RIFF\0\0\0\0WAVE')],
-    ['an MP4', bytes('\0\0\0\x18ftypisom')],
+    ['ftyp at the wrong offset', bytes('ftypisom\0\0\0\0')],
     ['empty', new Uint8Array()],
   ])('refuses %s', (_name, head) => expect(sniffMime(pad(head))).toBeNull());
 });

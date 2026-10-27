@@ -34,29 +34,31 @@ export function TemplateIcon({ color, size = 22 }: IconProps) {
 }
 
 /**
- * «أرسل»: a paper plane pointing right, away from the box: the button sits on the physical right in
- * Arabic and English alike (owner 2026-10-27, OpenRow), as the owner's WhatsApp draws it.
+ * «أرسل»: a paper plane pointing away from the box, toward the inline-end where the round button
+ * sits; mirrored in Arabic (owner 2026-10-27: the bar follows the phone's direction, as WhatsApp).
  */
 export function SendIcon({ color, size = 20 }: IconProps) {
   return (
-    <Svg
-      {...hidden}
-      testID="send-icon"
-      viewBox="0 0 24 24"
-      width={size}
-      height={size}
-      fill="none"
-      stroke={color}
-      strokeWidth={1.9}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <Path d="M4 12 3 4l18 8-18 8 1-8Zm0 0h8" />
-    </Svg>
+    <View testID="send-icon" style={{ transform: [{ scaleX: I18nManager.isRTL ? -1 : 1 }] }}>
+      <Svg
+        {...hidden}
+        viewBox="0 0 24 24"
+        width={size}
+        height={size}
+        fill="none"
+        stroke={color}
+        strokeWidth={1.9}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <Path d="M4 12 3 4l18 8-18 8 1-8Zm0 0h8" />
+      </Svg>
+    </View>
   );
 }
 
-function Line({ color, size = 22, d }: IconProps & { d: string }) {
+/** One stroked path on the 24 grid; composer-icons draws its own with it. */
+export function Line({ color, size = 22, d }: IconProps & { d: string }) {
   return (
     <Svg {...hidden} viewBox="0 0 24 24" width={size} height={size} fill="none" stroke={color}
       strokeWidth={1.75} strokeLinecap="round" strokeLinejoin="round">

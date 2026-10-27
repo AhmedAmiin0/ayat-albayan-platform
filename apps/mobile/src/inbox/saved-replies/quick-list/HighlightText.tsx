@@ -1,5 +1,6 @@
 import type { TextStyle } from 'react-native';
 import { AppText } from '@/core/ui/primitives/AppText';
+import { ContentText } from '@/core/ui/primitives/ContentText';
 import { highlightParts } from '@ab/shared';
 
 interface HighlightTextProps {
@@ -11,10 +12,13 @@ interface HighlightTextProps {
   numberOfLines?: number;
 }
 
-/** A line with the searched letters in bold, as WhatsApp's quick-reply list (nested runs, one text). */
+/**
+ * A line with the searched letters in bold, as WhatsApp's quick-reply list (nested runs, one text),
+ * aligned by its own language (ContentText).
+ */
 export function HighlightText({ text, query, style, strong, numberOfLines }: HighlightTextProps) {
   return (
-    <AppText numberOfLines={numberOfLines} style={style}>
+    <ContentText source={text} numberOfLines={numberOfLines} style={style}>
       {highlightParts(text, query).map((part, i) =>
         part.match ? (
           <AppText key={i} style={strong}>
@@ -24,6 +28,6 @@ export function HighlightText({ text, query, style, strong, numberOfLines }: Hig
           part.text
         ),
       )}
-    </AppText>
+    </ContentText>
   );
 }
