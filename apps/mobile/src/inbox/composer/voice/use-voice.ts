@@ -30,7 +30,7 @@ export function useVoice({ phone, onError, busy }: VoiceInput) {
     now.current = voiceReducer(now.current, e);
     setState(now.current);
   };
-  const [down, startedAt, keeping] = [useRef(false), useRef(0), useRef(false)];
+  const [down, startedAt, keeping, aborted] = [useRef(false), useRef(0), useRef(false), useRef(false)];
   const [drag] = useState(() => new Animated.Value(0));
   const [hint] = useState(() => new Animated.Value(1));
   const sender = useSendVoice(phone);
@@ -41,6 +41,7 @@ export function useVoice({ phone, onError, busy }: VoiceInput) {
 
   /** Stop and keep (the touch was taken, the app left, 10 minutes, a call, a note played). */
   const keep = async () => {
+    if (now.current.kind === 'arming') aborted.current = true; // press() never goes live then (below)
     if (!isRecording(now.current) || keeping.current) return;
     keeping.current = true; // a lift during the stop must not send it
     const done = await rec.stop();
@@ -50,7 +51,6 @@ export function useVoice({ phone, onError, busy }: VoiceInput) {
   useEffect(() => {
     interrupted.current = () => void keep();
   });
-
   const send = async (take: Take) => {
     if (now.current.kind === 'sending') return;
     // Another send of this chat is on its way: the recording waits in the bar (never lost, never twice).
@@ -68,14 +68,12 @@ export function useVoice({ phone, onError, busy }: VoiceInput) {
       say(t.inbox.composer.voice.failed);
     }
   };
-
   /** Stop, then send it as a new take (its own request id). */
   const stopAndSend = async () => {
     const done = await rec.stop();
     if (done) await send({ ...done, id: requestId() });
     else go({ type: 'reset' });
   };
-
   /** Stop and discard; `spoken` says it aloud (a slide to cancel, the bin). */
   const discard = async (spoken: boolean) => {
     if (now.current.kind === 'sending') return;
@@ -88,6 +86,7 @@ export function useVoice({ phone, onError, busy }: VoiceInput) {
   const press = async (locked: boolean) => {
     if (now.current.kind !== 'idle' || busy) return;
     down.current = !locked;
+    aborted.current = false;
     setNote(null);
     go({ type: 'arm' });
     const result = await rec.start();
@@ -96,16 +95,17 @@ export function useVoice({ phone, onError, busy }: VoiceInput) {
       if (result === 'blocked') setNote('blocked');
       return;
     }
-    // Lifted while the recorder was getting ready: a tap, not a recording.
-    if (!locked && !down.current) {
+    // Lifted while the recorder was getting ready (a tap), or the touch was taken, the app left or a call
+    // started then (keep): never a live recording that a later tap on the mic would send (review of #328).
+    if (aborted.current || (!locked && !down.current)) {
       await rec.stop();
       go({ type: 'reset' });
-      setNote('hint');
+      if (!aborted.current) setNote('hint');
       return;
     }
     startedAt.current = Date.now();
     go({ type: 'recording', locked });
-    say(t.inbox.composer.voice.started);
+    say(locked ? t.inbox.composer.voice.locked : t.inbox.composer.voice.started);
   };
 
   /** The round button back under the finger's start, the hint whole. */

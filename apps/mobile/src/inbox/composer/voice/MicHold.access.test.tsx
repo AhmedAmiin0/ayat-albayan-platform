@@ -1,7 +1,7 @@
 import { act, fireEvent, screen } from '@testing-library/react-native';
 import { AccessibilityInfo, AppState, type AppStateStatus } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
-import { hold, openChat, rec, resetVoice, tick } from './voice-test-kit';
+import { hold, lift, openChat, rec, resetVoice, tick } from './voice-test-kit';
 
 // A screen reader's tap, the bin, leaving the app and a call (owner 2026-10-27; RTL).
 const mockApiFetch = jest.fn();
@@ -39,7 +39,7 @@ test('a screen reader’s «activate» records locked (no hold), announced; the 
     fireEvent(mic(), 'accessibilityAction', { nativeEvent: { actionName: 'activate' } });
   });
   expect(rec.record).toHaveBeenCalled();
-  expect(say).toHaveBeenCalledWith(t.inbox.composer.voice.started);
+  expect(say).toHaveBeenCalledWith(t.inbox.composer.voice.locked); // «اضغط «أرسل» عند الانتهاء», not the hold hint
   expect(screen.getByRole('button', { name: t.inbox.composer.voice.delete })).toBeTruthy();
   await act(async () => {
     fireEvent.press(screen.getByRole('button', { name: t.inbox.composer.voice.delete }));
@@ -62,6 +62,25 @@ test('the app leaving the foreground stops and keeps the recording (delete or se
   expect(rec.stop).toHaveBeenCalled();
   expect(screen.getByRole('button', { name: t.inbox.composer.voice.delete })).toBeTruthy();
   expect(screen.queryByTestId('rec-dot')).toBeNull(); // kept, no longer recording
+  expect(mockApiSend).not.toHaveBeenCalled();
+});
+
+test('the app leaving while the recorder gets ready: no recording goes live, a later tap sends nothing', async () => {
+  const listeners: ((s: AppStateStatus) => void)[] = [];
+  jest.spyOn(AppState, 'addEventListener').mockImplementation((_e, fn) => {
+    listeners.push(fn as (s: AppStateStatus) => void);
+    return { remove: jest.fn() } as unknown as ReturnType<typeof AppState.addEventListener>;
+  });
+  let ready: () => void = () => undefined;
+  rec.prepareToRecordAsync.mockImplementationOnce(() => new Promise<undefined>((resolve) => (ready = () => resolve(undefined))));
+  await openChat(mockApiFetch);
+  await hold(); // the recorder is still getting ready
+  await act(async () => listeners.forEach((fn) => fn('background')));
+  await act(async () => ready());
+  expect(rec.stop).toHaveBeenCalled();
+  expect(screen.queryByTestId('rec-dot')).toBeNull();
+  expect(screen.queryByTestId('recording-bar')).toBeNull();
+  await lift();
   expect(mockApiSend).not.toHaveBeenCalled();
 });
 
