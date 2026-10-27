@@ -22,8 +22,8 @@ export interface SalesWeeklySlot {
 export type SalesStudentLesson = Omit<SalesScheduleLesson, 'meeting_link' | 'platform_classroom'>;
 
 export interface SalesStudentSchedule {
-  /** The student's own zone (students.tz): «عند الطالب» reads `next` in it, not in the rule's zone. */
-  student_tz: string;
+  /** The student's own zone (students.tz): «عند الطالب» reads `next` in it, not in the rule's zone. Absent in an old cache. */
+  student_tz?: string;
   weekly: SalesWeeklySlot[];
   /** Open lessons (scheduled / confirmed) from now, the next SCHEDULE_DAYS days, at most SCHEDULE_LIMIT, by start. */
   upcoming: SalesStudentLesson[];
