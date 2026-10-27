@@ -34,7 +34,8 @@ import { TeacherMeQueries } from './teacher-me/teacher-me.queries';
  * routes (/teachers/me, /teachers/me/lessons, «اقترح ميعاد تاني» proposals). R-SCH-03, R-SCH-07,
  * R-SCH-08, R-TCH-03, R-LES-01..03.
  * LessonStatusService.confirm is exported for the Phase 4 WhatsApp webhook («نعم» → confirm);
- * TeacherMeQueries for the teacher-mode inbox (which children of a guardian the teacher sees).
+ * TeacherMeQueries for the teacher-mode inbox (which children of a guardian the teacher sees);
+ * RescheduleOneService and LessonCancelService for sales' one-lesson move / cancel (docs/16 row 37).
  * GET /lessons/overview is the all-teachers calendar (R-SCH-09). PATCH /lessons/:id/time is
  * «عدّل الوقت» (R-SCH-11): one lesson edited in place.
  */
@@ -71,6 +72,6 @@ import { TeacherMeQueries } from './teacher-me/teacher-me.queries';
     TimeEditPayout,
     TimeEditQueries,
   ],
-  exports: [LessonStatusService, LessonViews, TeacherMeQueries],
+  exports: [LessonCancelService, LessonStatusService, LessonViews, RescheduleOneService, TeacherMeQueries],
 })
 export class LessonsModule {}

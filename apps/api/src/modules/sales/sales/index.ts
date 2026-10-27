@@ -1,4 +1,6 @@
 export { SalesAssignService } from './assign/sales-assign.service';
+export { toSalesHistory } from './history/sales-history.mapper';
+export { type HistoryBundle, SalesHistoryQueries } from './history/sales-history.queries';
 export {
   guardianOwnerIds,
   NO_OWNERSHIP,

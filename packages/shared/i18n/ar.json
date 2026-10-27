@@ -873,7 +873,10 @@
       "time_edit_not_allowed": "لا يمكن تعديل وقت حلقة ملغاة أو تغيّر موعدها",
       "date_in_future": "هذا الوقت لم يأتِ بعد، يجب أن يكون التصحيح لوقت مضى",
       "correction_cross_day": "يجب أن يبقى التصحيح في اليوم نفسه",
-      "reason_required": "اكتب سبب التصحيح"
+      "reason_required": "اكتب سبب التصحيح",
+      "lesson_ended": "انتهت هذه الحلقة، فلا يمكن تغيير موعدها أو إلغاؤها",
+      "not_your_student": "هذه الحلقة ليست لأحد طلابك",
+      "lesson_not_found": "لم نجد هذه الحلقة، افتح الجدول مرة أخرى"
     },
     "cancelTitle": "إلغاء الحلقة",
     "cancelBy": "من الذي ألغى؟",
@@ -4105,6 +4108,41 @@
       "payments": "الدفعات المرتبطة",
       "noPayments": "لا دفعات مرتبطة"
     },
+    "student": {
+      "title": "تفاصيل الطالب",
+      "open": "افتح تفاصيل {name}",
+      "teacher": "المعلم/ة: {name}",
+      "notFound": "هذا الطالب ليس من طلابك أو غير موجود",
+      "subscription": "الاشتراك",
+      "current": "الاشتراك الحالي",
+      "noSubscription": "لا يوجد اشتراك بعد",
+      "showPast": "الاشتراكات السابقة ({n})",
+      "hidePast": "إخفاء الاشتراكات السابقة",
+      "attendance": "الحضور",
+      "attendanceHint": "آخر الحلقات التي مضى موعدها، الأحدث أولًا",
+      "noAttendance": "لا توجد حلقات مضى موعدها بعد",
+      "totals": "حضر {present} · غاب {absent} · اعتذر {excused} · أُلغيت {cancelled}",
+      "unmarkedCount": "لم يُسجَّل الحضور: {n}",
+      "kind": {
+        "present": "حضر",
+        "absent": "غاب",
+        "excused": "اعتذر",
+        "cancelled": "أُلغيت",
+        "unmarked": "لم يُسجَّل"
+      },
+      "reports": "التقارير",
+      "reportsCount": "عدد التقارير: {n}"
+    },
+    "lessonActions": {
+      "reschedule": "تغيير الموعد",
+      "cancel": "إلغاء الحلقة",
+      "cancelTitle": "إلغاء هذه الحلقة وحدها؟ لا تُرسل رسالة للأسرة.",
+      "reason": "السبب (اختياري)",
+      "reasonHint": "مثال: سفر الأسرة",
+      "confirmCancel": "تأكيد الإلغاء",
+      "cancelled": "أُلغيت الحلقة",
+      "ownNote": "يمكنك تغيير موعد حلقات طلابك أو إلغاؤها، وما سوى ذلك من الإدارة."
+    },
     "mobile": {
       "section": "المبيعات",
       "guardianLine": "ولي الأمر: {name}",
@@ -4685,6 +4723,8 @@
       "lessons.status": "تأكيد الحلقة وتسجيل حالتها",
       "lessons.write": "إلغاء الحلقات وإعادة جدولتها واعتماد المقترحات",
       "booking.write": "حجز الحلقات",
+      "lessons.reschedule": "تغيير موعد حلقة واحدة لطلاب المبيعات",
+      "lessons.cancel": "إلغاء حلقة واحدة لطلاب المبيعات",
       "pricing.read": "عرض الأسعار",
       "tasks.manage": "مهام الإدارة",
       "classroom.join": "دخول الفصل الافتراضي",

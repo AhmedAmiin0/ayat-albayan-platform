@@ -28,6 +28,11 @@ export class ReportGate {
     return row;
   }
 
+  /** The report without the teacher check, for a caller that checked its own scope (sales' student PDF); null when unknown. */
+  row(id: string): Promise<ReportRow | null> {
+    return this.queries.get(id);
+  }
+
   async context(user: AuthUser): Promise<ReportContext> {
     const s = await this.settings.read();
     return {

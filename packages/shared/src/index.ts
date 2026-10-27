@@ -39,6 +39,7 @@ export * from './sales/registration.js';
 export * from './sales/start-date.js';
 export * from './sales/renewal-due.js';
 export * from './sales/qualification-form.js';
+export * from './sales/student/student-details.js';
 export * from './sales/course/course.js';
 export * from './sales/course/course-follow.js';
 export * from './sales/course/course-change.js';
