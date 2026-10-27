@@ -1,4 +1,3 @@
-import type { MessageView } from '@ab/shared';
 import { useLayoutEffect, useRef, useState } from 'react';
 import {
   type LayoutRectangle,
@@ -9,7 +8,7 @@ import {
 } from 'react-native';
 import { dayLabel } from './day-label';
 import { CHIP_BOX, CHIP_MARGIN, chipCovered, type Frame, type Viewport } from './top-band';
-import { type Loaded, separatorsOf, topmost } from './day-separators';
+import { type DayRow, type Loaded, separatorsOf, topmost } from './day-separators';
 import { type } from '@/theme';
 
 type Scroll = NativeSyntheticEvent<NativeScrollEvent>;
@@ -17,7 +16,7 @@ type Scroll = NativeSyntheticEvent<NativeScrollEvent>;
 interface Live extends Loaded {
   fontScale: number;
   frames: Map<string, Frame>;
-  tokens: readonly ViewToken<MessageView>[];
+  tokens: readonly ViewToken<DayRow>[];
   view: Viewport | null;
   /** The floating chip's measured pill height (0 until it has shown once). */
   chip: number;
@@ -32,7 +31,7 @@ const chipGuess = (fontScale: number) => type.lineHeight(type.size['2xs']) * fon
  * checked on each scroll, layout, viewability and rows change; a re-render only when it flips.
  * `viewable` also gives the topmost row's day (the floating label).
  */
-export function useDayBand(rows: readonly MessageView[], more: boolean) {
+export function useDayBand(rows: readonly DayRow[], more: boolean) {
   const { fontScale } = useWindowDimensions();
   const live = useRef<Live>({
     rows,
@@ -64,7 +63,7 @@ export function useDayBand(rows: readonly MessageView[], more: boolean) {
     };
     return {
       check,
-      viewable(tokens: readonly ViewToken<MessageView>[]): string | null {
+      viewable(tokens: readonly ViewToken<DayRow>[]): string | null {
         live.current.tokens = tokens;
         check();
         const top = topmost(tokens);

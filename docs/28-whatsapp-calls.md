@@ -157,3 +157,30 @@ accept, reject); webhook events and the `calls` parser (no double ingest); the p
 request through the outbox; the sweeper; the HTTP routes (404 while off, role guards, validation); the
 migration text. `tools/wa-stub` serves `…/calls` and `…/call_permissions` under `/kapso` and
 `POST /__stub/kapso/call` forwards a Kapso-signed calling webhook.
+
+## 9. Mobile (PR 2, `cloud/whatsapp-calls-mobile`: **a new APK is required**)
+
+- **Native change (intentional):**
+  - Adds `react-native-webrtc` `124.0.8` and `@config-plugins/react-native-webrtc` `15.0.2`, both pinned exactly. The plugin's 15.x line targets Expo ≥ 56; this app is on SDK 57 / RN 0.86. The newer react-native-webrtc 155.x is under two weeks old.
+  - `android.permission.RECORD_AUDIO` is no longer blocked.
+  - Every plugin that names the microphone (webrtc, expo-image-picker, expo-audio) carries the MSA rationale `calls.mic.rationale`. A `false` there would block RECORD_AUDIO again (image-picker) or delete the iOS text (expo-audio).
+  - `android.permission.SYSTEM_ALERT_WINDOW`, which the webrtc plugin adds, is blocked: voice calls don't draw over other apps.
+  - expo-audio still plays only: no recording service, no background playback.
+  - **`expo.version` 0.2.0 → 0.3.0**: `runtimeVersion` follows the app version, so an OTA built from this code (it imports the native module) never reaches the 0.2.0 APK.
+  - `native-changes.mjs` reports this PR as a native change. Do not publish an OTA from it; build and install the new APK (owner step 5).
+- **Where:** `apps/mobile/src/inbox/thread/calls/{api,rtc,state,screen,entries,log}`, the same API routes and state rules as the web.
+  - `CallProvider` is mounted once in the root layout for the admin, sales and teacher trees (`StaffCalls`), so an incoming call shows on any screen.
+  - The phone icon sits in the chat header. Call entries are merged into the message list; tap one to call back.
+  - The inbox has a «المكالمات» pill (admin and sales trees).
+- **WebRTC:** the phone is the peer. Android asks for RECORD_AUDIO at call time (`PermissionsAndroid`); iOS asks inside `getUserMedia`. The family's audio plays by itself once its track arrives.
+- **Speaker and playback:**
+  - «مكبر الصوت» switches expo-audio's mode between earpiece and loudspeaker during a call; react-native-webrtc has no routing API of its own. Mute and speaker chosen before the microphone opens are applied as soon as it does.
+  - Outside a call the app runs one deliberate playback mode, set at start and put back after every call (or after a start that failed once it had routed): Android takes audio focus (`doNotMix`, other apps pause, as before), iOS respects the silent switch, loudspeaker, no recording.
+  - **Check this on a real device** after installing the APK.
+- **Microphone:** asked at call time. A refusal says so. «Don't ask again» offers «افتح الإعدادات» (`Linking.openSettings()`). The native stream is released after every call (`track.stop()` alone keeps it held). react-native-webrtc is loaded lazily, so a binary without it never crashes at boot (calls then say the device does not support them).
+- **One full-screen host:** a single Modal switches between the ring and the call (two Modals swapped at once break iOS's presentation). The call notice shows inside it. The minimised bar sits at the top, under the header, so it never covers the newest bubble or the composer.
+- **Ring:** foreground only (no push notification in this PR), using a calm repeating vibration. A ringtone file would be a native asset.
+- **Known limitation, backgrounding:** the app has no foreground service. Locking the screen or leaving the app mid-call mutes the microphone on Android and suspends the audio on iOS. Back in the foreground, a calm notice says the call may have been silent. Follow-up: an Android foreground service (`FOREGROUND_SERVICE_MICROPHONE` / `_PHONE_CALL`) and iOS VoIP / CallKit.
+- **Known follow-ups for a Play Store build** (no native config change in this PR beyond the above): react-native-webrtc's plugin and library also declare `BLUETOOTH`, `WAKE_LOCK` and a `MediaProjectionService` (screen sharing, unused). Review, block or justify them in the Play Console declaration before a store release.
+- **Lifecycle:** signing out (the provider goes away) cancels a start in flight and ends a live call on WhatsApp. Calls turned off, or the user losing `inbox.send`, during a call hang it up. A double tap on the phone icon starts one call only.
+- **Polling and realtime:** `/calls/active` is polled and the realtime nudge subscribed only while the app is in the foreground.

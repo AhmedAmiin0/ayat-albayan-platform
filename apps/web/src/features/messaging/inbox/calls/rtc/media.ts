@@ -1,3 +1,4 @@
+import { MicError } from '@ab/client-core';
 import type { CallIceServer } from '@ab/shared';
 
 // The browser side of a WhatsApp call (docs/28 §2): this device IS the WebRTC peer, its audio flows
@@ -6,15 +7,6 @@ import type { CallIceServer } from '@ab/shared';
 export interface RtcDeps {
   createPeer: (config: RTCConfiguration) => RTCPeerConnection;
   getMic: () => Promise<MediaStream>;
-}
-
-/** Why the microphone could not be opened: the user (or policy) refused, or no WebRTC here. */
-export type MicProblem = 'denied' | 'unsupported';
-
-export class MicError extends Error {
-  constructor(readonly problem: MicProblem) {
-    super(`microphone ${problem}`);
-  }
 }
 
 /** The real browser, or null when it has no WebRTC (an old browser, an insecure origin). */
