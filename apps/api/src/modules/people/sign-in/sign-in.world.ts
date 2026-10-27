@@ -2,6 +2,7 @@ import type { AcademySettings } from '@ab/shared';
 import { Provisioner } from './accounts/provision';
 import { CodeIssuer } from './codes/code-issuer';
 import { SignInLimits } from './codes/code-limits';
+import { MemoryLimitStore } from './codes/limit-store';
 import { FamilyCodeService } from './flows/family-code.service';
 import { PasswordService } from './flows/password.service';
 import { AccountKit, SignInKit } from './flows/sign-in.kit';
@@ -18,7 +19,7 @@ export function signInWorld(opts: { settings?: Partial<AcademySettings>; pepper?
   const auth = new FakeAuth();
   const settings = fakeSettings(opts.settings, opts.pepper === undefined ? undefined : opts.pepper);
   const issuer = new CodeIssuer(codes, send.asPort(), settings);
-  const kit = new SignInKit(issuer, new SignInLimits(), audit.asPort());
+  const kit = new SignInKit(issuer, new SignInLimits(new MemoryLimitStore()), audit.asPort());
   const accounts = new AccountKit(subjects, auth, new Provisioner(subjects, auth, audit.asPort()));
   const family = new FamilyCodeService(kit, accounts);
   const passwords = new PasswordService(kit, accounts, new PasswordTargets(subjects, auth));

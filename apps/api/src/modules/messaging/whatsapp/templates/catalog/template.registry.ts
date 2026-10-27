@@ -10,6 +10,7 @@ import { submitTemplate } from '../sync/template-submit';
 import { CRM_MANAGED, toTemplateView, withNumbers } from './template.mapper';
 import { TemplatesQueries } from './templates.queries';
 import { WHATSAPP_LINES, type TemplateRow, type WhatsappLines } from '../../whatsapp.types';
+import { BackgroundJob } from '../../../../../config/role/background-job';
 
 /** Soon after boot, not at once: the e2e stub may still be starting. */
 const BOOT_CHECK_MS = 5_000;
@@ -26,6 +27,7 @@ const newest = (rows: readonly TemplateRow[], line: WaLine): string | null =>
  * explicit action (POST /messaging/templates/:key/submit), never at boot or from a job; the admin can
  * move a template to the other number (PATCH /messaging/templates/:key/line).
  */
+@BackgroundJob({ name: 'template-boot-check' })
 @Injectable()
 export class TemplateRegistry implements OnApplicationBootstrap, OnModuleDestroy {
   private readonly log = new Logger(TemplateRegistry.name);

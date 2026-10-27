@@ -1,14 +1,76 @@
-# Staging API on the Hostinger VPS (docs/09-deployment.md). Lives in /opt/ayat-albayan-staging.
-# Bound to localhost only; Caddy terminates TLS for api-staging.148-230-116-195.sslip.io.
-# Never touches the CRM stack in /opt/wacrm.
+# Staging API on the Hostinger VPS (docs/09-deployment.md «Two API copies + one worker»). Lives in
+# /opt/ayat-albayan-staging. Only ayat-lb is published, on localhost: the host Caddy (not in this repo,
+# shared with the CRM) keeps proxying the API domain to 127.0.0.1:3110 unchanged.
+# Never touches the CRM stack in /opt/wacrm. Roll it with roll.sh (one build, one container at a time).
+# Memory (8 GB VPS shared with the CRM): 2 × 512 MB API + 768 MB worker (Chromium PDFs) + 64 MB LB ≈ 1.9 GB.
 name: ayat-albayan-staging
+
+x-app: &app
+  # One image per deploy (built by ayat-worker's build:), reused by every app service. Never pulled:
+  # a registry image of this name is not ours.
+  image: ayat-api:staging
+  pull_policy: never
+  env_file: .env
+  restart: unless-stopped
+  # SIGTERM: Fastify stops taking connections and finishes the requests in flight (main.ts).
+  stop_grace_period: 30s
+  healthcheck:
+    test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+    interval: 5s
+    timeout: 3s
+    retries: 3
+    start_period: 60s
+
+x-api-env: &api-env
+  # HTTP and webhooks only: no job runs here; «run now» kicks go to the worker (APP_ROLE, docs/09).
+  APP_ROLE: api
+  # The host Caddy + ayat-lb: req.ip stays the visitor (the rate limits key on it).
+  TRUST_PROXY_HOPS: "2"
+  WORKER_URL: http://ayat-worker:3000
+  NODE_OPTIONS: --max-old-space-size=384
+
 services:
-  ayat-api:
+  ayat-worker:
+    <<: *app
     build:
       context: ./src
       dockerfile: apps/api/Dockerfile
-    image: ayat-api:staging
-    env_file: .env
+    environment:
+      # Every background job (outbox sender, reminders, PDFs, Google sync, …); HTTP for /health and the
+      # internal kick route only, on the project network (no host port).
+      APP_ROLE: worker
+      NODE_OPTIONS: --max-old-space-size=512
+    deploy:
+      resources:
+        limits:
+          memory: 768M
+
+  ayat-api-a:
+    <<: *app
+    environment: *api-env
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+
+  ayat-api-b:
+    <<: *app
+    environment: *api-env
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+
+  # Round robin over the two copies with active health checks; a refused connection is retried on the other.
+  ayat-lb:
+    image: caddy:2.10.2-alpine
     ports:
-      - "127.0.0.1:3110:3000"
+      - "127.0.0.1:3110:8080"
+    volumes:
+      # The directory, not the file: roll.sh rewrites lb/Caddyfile in place and reloads.
+      - ./lb:/etc/caddy:ro
     restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 64M

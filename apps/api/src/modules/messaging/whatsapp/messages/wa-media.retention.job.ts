@@ -3,6 +3,7 @@ import { Injectable, Logger, type OnApplicationBootstrap, type OnModuleDestroy }
 import { BUCKETS } from '../../../../common/storage/storage.paths';
 import { StorageService } from '../../../../common/storage/storage.service';
 import { InboundMediaQueries } from './inbound-media.queries';
+import { BackgroundJob } from '../../../../config/role/background-job';
 
 const DAY_MS = 86_400_000;
 const EVERY_MS = 24 * 3_600_000;
@@ -20,6 +21,7 @@ export const MAX_BATCHES = 50;
  * row reads as mediaExpired (410). Idempotent: a cleared row is not selected again, and a removal
  * that fails leaves the path for the next day. ponytail: in-process timer like ActivityRetentionJob.
  */
+@BackgroundJob({ name: 'wa-media-retention' })
 @Injectable()
 export class WaMediaRetentionJob implements OnApplicationBootstrap, OnModuleDestroy {
   private readonly log = new Logger(WaMediaRetentionJob.name);

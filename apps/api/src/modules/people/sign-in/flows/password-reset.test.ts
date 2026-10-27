@@ -6,7 +6,7 @@ const IP = '203.0.113.4';
 type World = ReturnType<typeof signInWorld>;
 
 async function forgot(w: World, identifier: string): Promise<void> {
-  w.passwords.forgot({ identifier }, IP);
+  await w.passwords.forgot({ identifier }, IP);
   await w.kit.idle();
 }
 
@@ -28,7 +28,7 @@ describe('forgot password: a code to the phone ON FILE (docs/30 §3)', () => {
     const teacher = w.subjects.profiles.find((p) => p.id === 'p-teacher');
     if (teacher) teacher.disabled = true;
     for (const identifier of ['ghost', 'nobody@example.com', PHONES.guardian, PHONES.other, 'AB-9999', 'omar']) {
-      expect(w.passwords.forgot({ identifier }, IP)).toBeUndefined();
+      await expect(w.passwords.forgot({ identifier }, IP)).resolves.toBeUndefined();
     }
     await w.kit.idle();
     expect(w.send.sent).toEqual([]);
@@ -80,7 +80,7 @@ describe('reset password', () => {
 
   it('a sign-in code never resets a password (purposes are separate)', async () => {
     const w = signInWorld();
-    w.family.request({ phone: PHONES.guardian }, IP);
+    await w.family.request({ phone: PHONES.guardian }, IP);
     await w.kit.idle();
     const signInCode = w.send.lastTo(PHONES.guardian);
     await expect(w.passwords.reset({ identifier: 'AB-1234', code: signInCode, password: 'Child-pass-1' }, IP, 8)).rejects.toThrow('invalid_code');

@@ -128,6 +128,7 @@
   "IntegrationConfigController.list": ["admin"],
   "IntegrationConfigController.put": ["admin"],
   "IntegrationConfigController.putSecret": ["admin"],
+  "InternalJobsController.kick": "public",
   "InternalMeetingsController.byLink": ["admin","assistant","sales","teacher"],
   "InternalMeetingsController.create": ["admin","assistant","sales","teacher"],
   "InternalMeetingsController.end": ["admin","assistant","sales","teacher"],

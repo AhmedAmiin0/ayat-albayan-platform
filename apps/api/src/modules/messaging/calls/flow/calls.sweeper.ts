@@ -4,6 +4,7 @@ import { callingLine } from '../kapso/calling-line';
 import type { CallRow } from '../store/call-row';
 import { logCallError } from './call-errors';
 import { CallsKit } from './call-kit';
+import { BackgroundJob } from '../../../../config/role/background-job';
 
 /** An outbound call nobody answered within this is ended (and terminated on WhatsApp). */
 export const UNANSWERED_MS = 45_000;
@@ -41,6 +42,7 @@ export function overdue(row: CallRow, now: Date): Overdue | null {
  * setting says, so a call left live when calls were switched off still ends. Idempotent: every end is
  * compare-and-set, so two API instances sweeping together end a row once (a second terminate is a no-op).
  */
+@BackgroundJob({ name: 'calls-sweeper' })
 @Injectable()
 export class CallsSweeper implements OnApplicationBootstrap, OnModuleDestroy {
   private readonly log = new Logger(CallsSweeper.name);
