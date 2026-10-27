@@ -45,4 +45,20 @@ describe('InboundMediaQueries retention reads (owner 2026-10-19 #2)', () => {
     await q.clearPaths([]);
     expect(calls).toHaveLength(before);
   });
+
+  it('echoes: outbound with a media id and a cached copy, never a file staff sent (out/…)', async () => {
+    const { db, calls } = fakeDb({ [M]: [{ data: [] }, { data: null }] });
+    const q = new InboundMediaQueries(db);
+    await q.cachedBefore({ before: '2026-09-19T00:00:00.000Z', limit: 100, echoes: true });
+    await q.clearPaths(['m1'], true);
+    const of = (method: string) => calls.filter((c) => c.method === method).map((c) => c.args);
+    expect(of('eq')).toEqual([['direction', 'outbound'], ['direction', 'outbound']]);
+    expect(of('not')).toEqual([
+      ['media_id', 'is', null],
+      ['media_path', 'like', 'out/%'],
+      ['media_path', 'is', null],
+      ['media_id', 'is', null],
+      ['media_path', 'like', 'out/%'],
+    ]);
+  });
 });

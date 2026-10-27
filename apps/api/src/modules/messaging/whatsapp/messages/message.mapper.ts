@@ -60,14 +60,21 @@ const isAutomatic = (row: ThreadMessageRow): boolean =>
 const fallbackLink = (row: ThreadMessageRow, text: string | undefined): string | null =>
   needsManualSend(row) && !row.media_path ? clickToChatLink(row.phone_e164, text) : null;
 
-/** «إعادة توجيه»: a text, or a file we hold (ours) or can still fetch (theirs, not expired); never a template. */
-const isForwardable = (row: ThreadMessageRow): boolean =>
-  !row.template_key &&
-  (row.direction === 'outbound'
-    ? !!row.media_path?.startsWith('out/') || (!row.media_mime && !!row.body?.trim())
-    : row.media_id || row.media_path
-      ? isChatViewMime(row.media_mime) && !mediaExpired(row, new Date())
-      : !!row.body?.trim());
+/** A file we can still fetch from WhatsApp (theirs, or an echo of the WhatsApp Business app): a bubble type, not expired. */
+const fetchable = (row: ThreadMessageRow): boolean => isChatViewMime(row.media_mime) && !mediaExpired(row, new Date());
+
+/** A sent row's: our stored file (out/…), an echo still fetchable, or a plain text. */
+const outboundForwardable = (row: ThreadMessageRow): boolean => {
+  if (row.media_path?.startsWith('out/')) return true;
+  return row.media_id ? fetchable(row) : !row.media_mime && !!row.body?.trim();
+};
+
+/** «إعادة توجيه»: a text, or a file we hold (ours) or can still fetch (theirs or an echo, not expired); never a template. */
+const isForwardable = (row: ThreadMessageRow): boolean => {
+  if (row.template_key) return false;
+  if (row.direction === 'outbound') return outboundForwardable(row);
+  return row.media_id || row.media_path ? fetchable(row) : !!row.body?.trim();
+};
 
 /**
  * messages row → MessageView (R-MSG-05): a template row shows its rendered text; a queued or
