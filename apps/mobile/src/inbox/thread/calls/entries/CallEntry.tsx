@@ -1,5 +1,5 @@
 import { callEntryKind, type CallView } from '@ab/shared';
-import { I18nManager, Pressable, View } from 'react-native';
+import { Pressable, View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { shape, type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
@@ -16,7 +16,7 @@ interface CallEntryProps {
 
 /**
  * A call in the chat, merged by time with the messages (docs/28 §5), WhatsApp's: on the caller's side
- * (ours right, the family's left), the handset, «مكالمة صوتية صادرة · 2:14» with its arrow, a missed
+ * as the bubbles (ours at the inline-end, the family's at the start), the handset, «مكالمة صوتية صادرة · 2:14» with its arrow, a missed
  * one in red, the time. A tap calls back.
  */
 export function CallEntry({ call, onCallBack }: CallEntryProps) {
@@ -24,7 +24,6 @@ export function CallEntry({ call, onCallBack }: CallEntryProps) {
   const kind = callEntryKind(call);
   const ink = callInk(kind, color);
   const ours = call.direction === 'outbound';
-  const side = bubbleSide(ours, I18nManager.isRTL);
   const text = callEntryText(call);
   return (
     <Pressable
@@ -34,7 +33,7 @@ export function CallEntry({ call, onCallBack }: CallEntryProps) {
       disabled={!onCallBack}
       onPress={onCallBack ? () => onCallBack(call) : undefined}
       style={({ pressed }) => ({
-        alignSelf: side.align,
+        alignSelf: bubbleSide(ours).align,
         maxWidth: '80%',
         flexDirection: 'row',
         alignItems: 'center',
