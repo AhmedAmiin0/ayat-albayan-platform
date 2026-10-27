@@ -4,7 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTheme } from '@/theme';
 import { useTabBarInset } from './tab-bar-inset';
 
-const BODY = { paddingHorizontal: 16, paddingTop: 16, gap: 16 } as const;
+const BODY = { paddingHorizontal: 16, paddingTop: 8, gap: 16 } as const;
 const CHAT_BODY = { paddingHorizontal: 16, paddingTop: 8, gap: 8 } as const;
 
 const FullScreenContext = createContext(false);
@@ -25,7 +25,8 @@ interface ScreenProps {
 
 /**
  * Screen frame: margin background, top safe area (in the tabs the tab bar owns the bottom; above them,
- * under FullScreenProvider, the frame takes it too), 16pt gutter, 16pt between blocks. Put a
+ * under FullScreenProvider, the frame takes it too), 8pt under it (owner 2026-10-27: the header sat
+ * too low), 16pt gutter, 16pt between blocks. Put a
  * FlatList last and give it `style={{ flex: 1 }}`; it does the scrolling.
  * `scroll` for a screen of plain rows with no FlatList («المزيد»): the frame scrolls, so its last row
  * («تسجيل الخروج») is never cut off below the screen.
