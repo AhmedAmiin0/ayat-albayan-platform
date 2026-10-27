@@ -13,8 +13,8 @@ export const pathOf = (id: string) => `/threads/%2B966552147730/messages/${id}/f
 export const signed = (id: string) => `https://storage.test/wa-media/${id}.ogg?token=x`;
 
 type Status = ReturnType<typeof useAudioPlayerStatus>;
-export const fakePlayer = () => ({ play: jest.fn(), pause: jest.fn(), seekTo: jest.fn(async () => undefined), setPlaybackRate: jest.fn() });
-export type FakePlayer = ReturnType<typeof fakePlayer>;
+const fakePlayer = () => ({ play: jest.fn(), pause: jest.fn(), seekTo: jest.fn(async () => undefined), setPlaybackRate: jest.fn() });
+type FakePlayer = ReturnType<typeof fakePlayer>;
 export const players = new Map<string, FakePlayer>();
 
 /** Every player reports `fields` (a loaded 65 s note by default). */
@@ -34,7 +34,7 @@ export function resetPlayers() {
   });
 }
 
-export const voiceRow = (id = 'v1', over: Partial<MessageView> = {}) =>
+const voiceRow = (id = 'v1', over: Partial<MessageView> = {}) =>
   message({ id, direction: 'inbound', status: 'delivered', body: null, media_mime: 'audio/ogg; codecs=opus', ...over });
 
 export const voiceNote = (m: MessageView = voiceRow()) => <VoiceNote message={m} phone={PHONE} kind={KIND} />;

@@ -4,7 +4,7 @@ import type { WhatsappClient, WhatsappLines } from '../whatsapp.types';
 import type { NumberClients } from './number-clients';
 
 /** Who can fetch a message's media id: a client (and the line it stands for), or the CRM (no client). */
-export type MediaSource = { kind: 'client'; client: WhatsappClient; line: WaLine | null } | { kind: 'crm' };
+type MediaSource = { kind: 'client'; client: WhatsappClient; line: WaLine | null } | { kind: 'crm' };
 
 /**
  * The client of the NUMBER a file came in on (or was sent from), never another number's (docs/23c):

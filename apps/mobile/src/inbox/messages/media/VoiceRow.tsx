@@ -7,7 +7,7 @@ import { VoiceButton } from './VoiceButton';
 import { type WaveSeek, Waveform } from './Waveform';
 import { type Rate, rateLabel } from './voice-math';
 
-export interface VoiceRowProps {
+interface VoiceRowProps {
   id: string;
   kind: string;
   playing: boolean;

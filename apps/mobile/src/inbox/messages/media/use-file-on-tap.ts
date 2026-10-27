@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { type ThreadFile, useThreadFile } from '../hooks/thread-file';
 import { mediaProblem, type MediaProblem } from '../photo/media-problem';
 
-export type TapFile =
+type TapFile =
   | { step: 'idle' }
   | { step: 'fetching' }
   | { step: 'ready'; file: ThreadFile }

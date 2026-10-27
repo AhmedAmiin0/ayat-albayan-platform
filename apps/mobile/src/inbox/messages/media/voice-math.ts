@@ -44,7 +44,7 @@ export function stepTo(current: number, duration: number, delta: number): number
 }
 
 /** What the player knows, as expo-audio's status reports it. */
-export interface VoiceTime {
+interface VoiceTime {
   playing: boolean;
   currentTime: number;
   duration: number;
