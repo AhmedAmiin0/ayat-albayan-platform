@@ -5,14 +5,14 @@ import type { MessageWorker } from './message.worker';
 import { C1, N1, N2, routePass, THREE } from '../numbers/number-route.fakes';
 import type { NumberRoutes } from '../numbers/number-routes';
 import type { SendGate } from '../gate/send-gate';
-import { dueMessage } from './sender.fakes';
+import { dueMessage, fakeSwitches } from './sender.fakes';
 import type { SenderQueries } from './sender.queries';
 import { templateRow } from '../whatsapp.fakes';
 
 // docs/23c: legacy keeps today's pass (no new read); module mode routes each row to a number and pauses per number.
 
-const gate = { open: vi.fn(), automaticOn: vi.fn() };
-const queries = { approvedTemplates: vi.fn(), due: vi.fn(), holdAutomatic: vi.fn(), chatConfigured: false };
+const gate = fakeSwitches();
+const queries = { approvedTemplates: vi.fn(), due: vi.fn(), holdAutomatic: vi.fn(), anyDue: vi.fn(), chatConfigured: false };
 const worker = { process: vi.fn() };
 const routes = { pass: vi.fn() };
 const NOW = new Date('2026-10-02T08:00:00Z');
@@ -32,6 +32,7 @@ describe('MessageSender — routing per number', () => {
     gate.automaticOn.mockResolvedValue(true);
     queries.approvedTemplates.mockResolvedValue([templateRow()]);
     queries.holdAutomatic.mockResolvedValue(0);
+    queries.anyDue.mockResolvedValue(true);
     routes.pass.mockResolvedValue({ pass: routePass(), templates: [templateRow(), templateRow({ key: 'renewal_due', status: 'pending' })] });
     worker.process.mockResolvedValue('sent');
   });

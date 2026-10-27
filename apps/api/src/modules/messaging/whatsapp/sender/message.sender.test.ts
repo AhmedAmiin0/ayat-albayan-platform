@@ -2,12 +2,12 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { MessageSender } from './message.sender';
 import type { MessageWorker } from './message.worker';
 import type { SendGate } from '../gate/send-gate';
-import { dueMessage } from './sender.fakes';
+import { dueMessage, fakeSwitches } from './sender.fakes';
 import type { SenderQueries } from './sender.queries';
 import { templateRow } from '../whatsapp.fakes';
 
-const gate = { open: vi.fn(), automaticOn: vi.fn() };
-const queries = { approvedTemplates: vi.fn(), due: vi.fn(), holdAutomatic: vi.fn() };
+const gate = fakeSwitches();
+const queries = { approvedTemplates: vi.fn(), due: vi.fn(), holdAutomatic: vi.fn(), anyDue: vi.fn() };
 const worker = { process: vi.fn() };
 const NOW = new Date('2026-10-02T08:00:00Z');
 const booking = templateRow();
@@ -23,6 +23,7 @@ describe('MessageSender — the outbound pass (R-MSG-01/02, docs/12 §3.3)', () 
     gate.automaticOn.mockResolvedValue(true);
     queries.approvedTemplates.mockResolvedValue([booking, reminder]);
     queries.holdAutomatic.mockResolvedValue(0);
+    queries.anyDue.mockResolvedValue(true);
     queries.due.mockResolvedValue([dueMessage(), dueMessage({ id: 'm2', template_key: null, body: 'وعليكم السلام' })]);
     worker.process.mockResolvedValueOnce('sent').mockResolvedValueOnce('retry');
   });

@@ -58,7 +58,12 @@ export class ThreadReads {
     const scope = mine ? null : await this.scopes.of(user);
     if (scope) return this.quoted(await this.teacher.detail(q, scope), q.phone);
     const detail = mine ? await this.salesService().detail(q) : await this.admin.detail(q);
-    return withLists(await this.quoted(detail, q.phone), { user, lists: this.chatLists, phone: q.phone, first: !q.before });
+    // The quoted bubbles and the chat's lists are independent reads: in parallel.
+    const [quoted, listed] = await Promise.all([
+      this.quoted(detail, q.phone),
+      withLists(detail, { user, lists: this.chatLists, phone: q.phone, first: !q.before }),
+    ]);
+    return { ...listed, messages: quoted.messages };
   }
 
   private async quoted(detail: ThreadDetail, phone: string): Promise<ThreadDetail> {

@@ -23,10 +23,10 @@ export class ThreadsService {
     private readonly receipts: ReadReceipts,
   ) {}
 
-  /** Each row's family tags come from its guardian's students (one read for the whole page). */
+  /** Each row's family tags come from its guardian's students (one read for the whole page, beside the unsupported marks). */
   async list(f: ThreadListFilter, now = new Date()): Promise<Page<ThreadView>> {
-    const { items, total } = await this.queries.list(f);
-    const tags = await this.queries.familyTags(guardiansOf(items));
+    const { items: rows, total } = await this.queries.list(f);
+    const [items, tags] = await Promise.all([this.queries.unsupported(rows), this.queries.familyTags(guardiansOf(rows))]);
     const view = (r: ThreadRow) => toThreadView(r, now, r.guardian_id ? (tags.get(r.guardian_id) ?? null) : null);
     return { items: items.map(view), total, page: f.page, pageSize: f.pageSize };
   }
@@ -35,24 +35,24 @@ export class ThreadsService {
    * One page, oldest → newest. The first page (no `before`) marks the inbound rows read and
    * carries the people; an older page gets the list's cheap tags instead (one read, not 1 + 3 a child).
    * ponytail: one registry read per templated row (≤ 50, by pk); batch if threads get slow.
+   * Two parallel rounds after the read stamp: the thread + its messages, then people, tag, views, lessons.
    */
   async detail(q: ThreadPageQuery, now = new Date()): Promise<ThreadDetail> {
     const first = !q.before;
     if (first) await this.receipts.open(q.phone, now);
-    const row = await this.queries.thread(q.phone);
+    const [row, rows] = await Promise.all([this.queries.thread(q.phone), this.queries.messages(q)]);
     // A number with no message yet (a booked family, «محادثة جديدة»): its people and lessons, for the first template.
     const who = row ?? (first ? await this.queries.known(q.phone) : null);
-    const [rows, people] = await Promise.all([this.queries.messages(q), first ? this.queries.people(who) : NO_PEOPLE]);
-    const page = rows.slice(0, q.limit).reverse();
-    const tag = first ? familyTag(people.students) : await this.tagOf(row);
-    const thread = row ? toThreadView(row, now, tag) : null;
-    return {
-      thread,
-      messages: await Promise.all(page.map((m) => this.views.view(m))),
-      has_more: rows.length > q.limit,
-      lessons: first && who ? await this.queries.lessons(thread ?? who, now) : [],
-      people,
-    };
+    // The lessons need the guardian / teacher only, never the tag.
+    const lessonsOf = row ? toThreadView(row, now) : who;
+    const [people, olderTag, messages, lessons] = await Promise.all([
+      first ? this.queries.people(who) : NO_PEOPLE,
+      first ? null : this.tagOf(row),
+      Promise.all(rows.slice(0, q.limit).reverse().map((m) => this.views.view(m))),
+      first && lessonsOf ? this.queries.lessons(lessonsOf, now) : [],
+    ]);
+    const thread = row ? toThreadView(row, now, first ? familyTag(people.students) : olderTag) : null;
+    return { thread, messages, has_more: rows.length > q.limit, lessons, people };
   }
 
   private async tagOf(row: ThreadRow | null): Promise<FamilyTag | null> {

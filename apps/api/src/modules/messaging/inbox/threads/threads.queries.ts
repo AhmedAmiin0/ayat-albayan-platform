@@ -33,9 +33,10 @@ export class ThreadsQueries {
 
   /**
    * H1: one page of v_threads (of v_list_threads for a chat list «القوائم», docs/22); filters, then the
-   * requested order (default newest message first).
+   * requested order (default newest message first). The caller marks the rows (unsupported()), in
+   * parallel with its other per-page reads.
    */
-  async list(f: ThreadListFilter): Promise<{ items: ListedThreadRow[]; total: number }> {
+  async list(f: ThreadListFilter): Promise<{ items: ThreadRow[]; total: number }> {
     let query = f.list
       ? this.db.from('v_list_threads').select('*', { count: 'exact' }).eq('list_id', f.list)
       : this.db.from('v_threads').select('*', { count: 'exact' });
@@ -47,7 +48,12 @@ export class ThreadsQueries {
     const from = (f.page - 1) * f.pageSize;
     const { data, error, count } = await applySort(query, f, THREAD_SORT).range(from, from + f.pageSize - 1);
     check(error, 'threads read');
-    return { items: await markUnsupported(this.db, data ?? []), total: count ?? 0 };
+    return { items: data ?? [], total: count ?? 0 };
+  }
+
+  /** The page's rows whose last message is Meta's `unsupported` (last-unsupported.ts): one read at most. */
+  unsupported(rows: readonly ThreadRow[]): Promise<ListedThreadRow[]> {
+    return markUnsupported(this.db, rows);
   }
 
   async thread(phone: string): Promise<ThreadRow | null> {
