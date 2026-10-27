@@ -25,9 +25,11 @@ const alignOf = (text: string) => StyleSheet.flatten(screen.getByText(text).prop
 test('English: mine at the inline end (the right), theirs at the start', async () => {
   await render(<ChannelBubble message={msg({})} tz="Asia/Riyadh" />);
   expect(styleOf('m1').alignSelf).toBe('flex-end');
+  expect(styleOf('m1').borderTopEndRadius).toBeDefined();
   expect(screen.getByText('You')).toBeTruthy();
   await render(<ChannelBubble message={msg({ id: 'm2', mine: false })} tz="Asia/Riyadh" />);
   expect(styleOf('m2').alignSelf).toBe('flex-start');
+  expect(styleOf('m2').borderTopStartRadius).toBeDefined();
 });
 
 test('English: an Arabic body aligns to the right, an English one to the start', async () => {
