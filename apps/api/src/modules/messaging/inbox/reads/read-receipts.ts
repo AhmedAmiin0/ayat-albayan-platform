@@ -6,7 +6,7 @@ import type { ReadMark } from './read-marks';
 import { ThreadsQueries } from '../threads/threads.queries';
 
 /** The stamp's outcome: whether a row was stamped, and the receipts going out in the background. */
-export interface ReadOpen {
+interface ReadOpen {
   stamped: boolean;
   /** Never awaited by a request (tests await it); never rejects. */
   receipts: Promise<void>;

@@ -12,7 +12,7 @@ export type ApprovalWrite = TablesInsert<'message_template_numbers'>;
 export type NumberRef = Pick<Tables<'wa_numbers'>, 'id' | 'purpose' | 'is_default' | 'waba_id'>;
 
 /** How long cached() trusts its copy of a template (another API copy may have written since). */
-export const TEMPLATE_COPY_MS = 60_000;
+const TEMPLATE_COPY_MS = 60_000;
 
 /** message_templates (R-MSG-01): the API is its only writer (health sync and import, submit, starter flag). */
 @Injectable()

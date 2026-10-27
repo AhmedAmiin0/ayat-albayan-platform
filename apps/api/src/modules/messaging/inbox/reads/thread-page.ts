@@ -12,7 +12,7 @@ export interface ThreadPageQuery {
   limit: number;
 }
 
-export interface PageRows {
+interface PageRows {
   found: ThreadRow | null;
   /** The thread row, else (first page of a number with no message yet) who the number is. */
   who: ThreadRow | KnownNumber | null;
