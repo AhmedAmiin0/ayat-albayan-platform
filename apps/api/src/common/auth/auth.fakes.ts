@@ -5,7 +5,7 @@ import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier
 import type { AuthUser } from './verify-token';
 
 /** A verifier that knows these tokens (the token is the user's key) and refuses any other. */
-export const verifierOf =
+const verifierOf =
   (users: Readonly<Record<string, AuthUser>>): TokenVerifier =>
   async (token) => {
     const user = users[token];

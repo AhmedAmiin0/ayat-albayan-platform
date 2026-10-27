@@ -6,7 +6,7 @@ import { UsersQueries } from './users.queries';
 const listRow = {
   id: 'u1', email: 'a@example.com', full_name: 'سارة', phone_e164: null, role: 'student', role_id: null, role_key: 'student',
   disabled_at: null, last_sign_in_at: null, banned_until: null, created_at: '2026-10-06T00:00:00Z',
-  linked_kind: 'student', linked_id: 's1', linked_name: 'سارة', linked_code: 'AB-0183', total: 7,
+  linked_kind: 'student', linked_id: 's1', linked_name: 'سارة', linked_code: 'AB-0183', total: 7, username: null,
 } as const;
 
 describe('UsersQueries', () => {

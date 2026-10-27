@@ -11,6 +11,7 @@ import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { StatusChip } from '@/core/ui/feedback/StatusChip';
 import { TeacherContact } from '../teachers/TeacherContact';
+import { TeacherUsername } from '../teachers/TeacherUsername';
 import { TeacherStudentsSection } from '../sections/TeacherStudentsSection';
 import type { Teacher } from '../types';
 import { UpcomingTimeOff } from '../availability/UpcomingTimeOff';
@@ -20,7 +21,8 @@ import { locale } from '@/core/lib/i18n/locale';
 /**
  * A teacher, read-only (R-TCH-01, R-TCH-02): status, «جدول المعلم/ة» (the week's lessons), their
  * students («مشترك · تجريبي · الكل», preset by `?status=`), phone +
- * WhatsApp, the weekly availability and upcoming time-off. Editing stays on the web.
+ * WhatsApp, the weekly availability and upcoming time-off. Editing stays on the web, except the login's
+ * «اسم المستخدم» (teachers.write, docs/30 §7).
  */
 export function TeacherDetailScreen() {
   const { id = '', status } = useLocalSearchParams<{ id: string; status?: string }>();
@@ -63,6 +65,7 @@ export function TeacherDetailScreen() {
         />
         <TeacherStudentsSection teacherId={data.id} status={status} />
         <TeacherContact teacher={data} />
+        <TeacherUsername key={data.username ?? ''} teacher={data} />
         <WeeklyAvailability teacher={data} />
         <UpcomingTimeOff teacherId={data.id} />
       </ScrollView>

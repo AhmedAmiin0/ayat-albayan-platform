@@ -21,7 +21,7 @@ const LATER = [
   '20261024000632_notification_rules.sql',
   '20261025000671_saved_replies_permission.sql',
   '20261026000760_sales_pricing_read.sql',
-  '20261027000800_student_channels.sql',
+  '20261028000800_student_channels.sql',
 ]
   .map((file) => readFileSync(join(MIGRATIONS, file), 'utf8'))
   .join('\n');

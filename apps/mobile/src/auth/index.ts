@@ -1,3 +1,4 @@
+export { AuthAlert, ForgotPassword } from './forgot';
 export {
   isAccountDisabled,
   isOtherAppRole,

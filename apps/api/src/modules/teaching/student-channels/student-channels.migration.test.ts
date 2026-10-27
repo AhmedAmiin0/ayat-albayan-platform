@@ -6,9 +6,9 @@ import { describe, expect, it } from 'vitest';
 // Migrations 800–801 (docs/31 §2), read as text: no database in unit tests (checked on a local stack when written).
 const dir = join(__dirname, '../../../../../../packages/db/supabase/migrations');
 const strip = (sql: string) => sql.split('\n').filter((l) => !l.trim().startsWith('--')).join('\n');
-const sql = readFileSync(join(dir, '20261027000800_student_channels.sql'), 'utf8');
+const sql = readFileSync(join(dir, '20261028000800_student_channels.sql'), 'utf8');
 const code = strip(sql);
-const kind = strip(readFileSync(join(dir, '20261027000801_push_kind_channel.sql'), 'utf8'));
+const kind = strip(readFileSync(join(dir, '20261028000801_push_kind_channel.sql'), 'utf8'));
 
 describe('migration 800: student channels', () => {
   it('three tables, the body and role checks match the shared contract', () => {

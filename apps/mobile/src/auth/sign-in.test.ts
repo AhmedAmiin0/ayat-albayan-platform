@@ -16,13 +16,20 @@ jest.mock('@/core/lib/http/supabase', () => ({
 }));
 jest.mock('@/core/lib/http/api', () => ({ ...jest.requireActual('@/core/lib/http/api'), apiFetch: (p: string) => mockApiFetch(p) }));
 
-const creds = { email: 'a@b.c', password: 'x' };
+const creds = { identifier: 'a@b.c', password: 'x' };
 
 beforeEach(() => jest.clearAllMocks());
 
 test('wrong password shows Arabic error', async () => {
   mockSignInWithPassword.mockResolvedValue({ error: new Error('bad') });
   expect(await signIn(creds)).toEqual({ ok: false, error: t.auth.invalidCredentials });
+  expect(mockSignInWithPassword).toHaveBeenCalledWith({ email: 'a@b.c', password: 'x' });
+  expect(mockApiFetch).not.toHaveBeenCalled();
+});
+
+test('GoTrue rate limit (429) says to wait', async () => {
+  mockSignInWithPassword.mockResolvedValue({ error: { status: 429 } });
+  expect(await signIn(creds)).toEqual({ ok: false, error: t.familyAuth.errors.too_many_requests });
 });
 
 test.each([['guardian'], ['student']])('role %s is told this app is not theirs', async (role) => {

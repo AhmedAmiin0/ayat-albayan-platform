@@ -19,7 +19,8 @@ const LEGACY_PAGE_ORDER = [
   'payout_count_late', 'payout_count_no_show', 'payout_count_trials', 'fx_fresh_hours',
   'upload_max_mb',
   'academy_whatsapp_e164', 'academy_timezone', 'feedback_rate_window_min', 'academy_contact',
-  'recording_consent_notice', 'recording_retention_days', 'activity_retention_days',
+  'recording_consent_notice', 'family_login_enabled', 'login_code_ttl_minutes', 'login_code_max_attempts',
+  'recording_retention_days', 'activity_retention_days',
   'sales_auto_assign',
   'renewal_commission_percent',
 ];

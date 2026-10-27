@@ -6,6 +6,7 @@ import { TimeZoneSelect } from '@/components/ui/form/time-zone-select';
 import { SourceField } from '@/features/people/guardians/SourceField';
 import { ageError, phoneError } from '@/features/people/students/create/create-student';
 import { AgeField, GenderField } from '@/features/people/students/profile/FactFields';
+import { ContactIsSelfField } from '@/features/people/students';
 import { t } from '@/lib/i18n/i18n';
 import type { NewStudentDraft } from '../../draft/draft';
 
@@ -52,6 +53,8 @@ export function LeadStudentStep({ value, tz, onChange, title }: LeadStudentStepP
           </>
         )}
       </Field>
+      <ContactIsSelfField name="lead-contact-is-self" value={value.contactIsSelf === true}
+        onChange={(contactIsSelf) => set({ contactIsSelf })} />
       <AgeField value={age} error={age.trim() ? ageError(age) : undefined} onChange={(next) => set({ age: next })} />
       <GenderField value={value.gender ?? ''} onChange={(gender) => set({ gender })} />
       <SourceField value={value.source ?? ''} onChange={(source) => set({ source })} />

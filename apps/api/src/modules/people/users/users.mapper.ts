@@ -15,6 +15,7 @@ export function toUserView(r: UserRow): UserView {
     last_sign_in_at: r.last_sign_in_at,
     created_at: r.created_at,
     linked: r.linked,
+    username: r.username ?? null,
   };
 }
 

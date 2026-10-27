@@ -9,6 +9,9 @@ describe('userCreateSchema', () => {
     const r = userCreateSchema.parse({ ...base, phone_e164: '0501234567' });
     expect(r).toMatchObject({ email: 'ali@example.com', phone_e164: '+966501234567', credential: 'generate' });
   });
+  it('refuses the family logins\' synthetic domain (docs/30 §2)', () => {
+    expect(userCreateSchema.safeParse({ ...base, email: 'g-1@Family.Invalid' }).success).toBe(false);
+  });
   it('needs the typed password only in set mode', () => {
     expect(userCreateSchema.safeParse({ ...base, credential: 'set' }).success).toBe(false);
     expect(userCreateSchema.safeParse({ ...base, credential: 'set', password: 'pass-12345' }).success).toBe(true);

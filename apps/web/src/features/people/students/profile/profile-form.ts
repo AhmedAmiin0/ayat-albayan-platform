@@ -18,6 +18,8 @@ export type ProfileValues = {
   riwaya: string;
   meeting_link_override: string;
   notes: string;
+  /** «رقم الواتساب لـ: الطالب نفسه» (docs/30 §1); false = «ولي الأمر». */
+  contact_is_self: boolean;
 };
 
 export const PROFILE_LABELS: Record<keyof ProfileValues, string> = {
@@ -34,6 +36,7 @@ export const PROFILE_LABELS: Record<keyof ProfileValues, string> = {
   riwaya: t.students.riwaya,
   meeting_link_override: t.students.meetingLink,
   notes: t.students.notes,
+  contact_is_self: t.familyAuth.contactIsSelf.label,
 };
 
 export function toProfileValues(p: StudentProfile): ProfileValues {
@@ -51,6 +54,7 @@ export function toProfileValues(p: StudentProfile): ProfileValues {
     riwaya: p.riwaya ?? '',
     meeting_link_override: p.meeting_link_override ?? '',
     notes: p.notes ?? '',
+    contact_is_self: p.contact_is_self ?? false,
   };
 }
 
@@ -64,10 +68,12 @@ export type PatchResult = { ok: true; patch: StudentUpdate } | { ok: false; erro
 export function toStudentPatch(values: ProfileValues, loaded: StudentStatus): PatchResult {
   const age = parseAge(values.age);
   if (age === undefined) return { ok: false, error: t.students.ageInvalid };
+  const { contact_is_self: contactIsSelf, ...text } = values;
   const raw: Record<string, unknown> = Object.fromEntries(
-    Object.entries({ ...values, age: '' }).map(([k, v]) => [k, v.trim() === '' ? null : v.trim()]),
+    Object.entries({ ...text, age: '' }).map(([k, v]) => [k, v.trim() === '' ? null : v.trim()]),
   );
   raw['age'] = age;
+  raw['contact_is_self'] = contactIsSelf;
   const r = studentUpdateSchema.safeParse(raw);
   if (r.success) return { ok: true, patch: withStatus(r.data, { status: values.status, loaded }) };
   const key = String(r.error.issues[0]?.path[0] ?? '') as keyof ProfileValues;

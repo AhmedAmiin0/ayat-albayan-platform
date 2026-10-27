@@ -142,7 +142,11 @@ student's or guardian's name), never a phone, email or profile id; a page also c
 header). RLS lets a direct PostgREST reader see `sender_profile_id` (a uuid, no personal data); the apps
 read through the API only.
 
-### Database (`20261027000800_student_channels.sql`, `20261027000801_push_kind_channel.sql`)
+### Database (`20261028000800_student_channels.sql`, `20261028000801_push_kind_channel.sql`)
+
+Numbered 800–801 on the `20261028` prefix: family sign-in (docs/30) landed its 770–775 on that prefix first, and the
+migration check refuses a new file that sorts before the base branch's latest.
+
 
 `student_channels (id, student_id unique, created_at)`, `channel_messages (id, channel_id, sender_profile_id,
 sender_role, body check 1..2000, created_at)`, `channel_reads (channel_id, profile_id, last_read_at, primary

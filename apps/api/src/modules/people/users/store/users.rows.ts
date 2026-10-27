@@ -19,6 +19,7 @@ export function mapListRow(r: ListRow): UserRow {
     disabled_at: r.disabled_at,
     last_sign_in_at: r.last_sign_in_at,
     created_at: r.created_at,
+    username: r.username,
     linked: kind && r.linked_id ? { kind, id: r.linked_id, name: r.linked_name ?? '', code: r.linked_code } : null,
   };
 }

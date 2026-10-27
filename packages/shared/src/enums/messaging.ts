@@ -26,6 +26,7 @@ export const TEMPLATE_STATUSES = [
 export const TEMPLATE_CATEGORIES = [
   'utility',
   'marketing',
+  'authentication',
 ] as const satisfies readonly Enums<'template_category'>[];
 /**
  * R-MOB-01's five events plus new_message (mobile.pushRationale promises «رسالة جديدة»), and the bell's

@@ -6,16 +6,16 @@
   },
   "auth": {
     "loginTitle": "Sign in",
-    "email": "Email",
+    "email": "Email or username",
     "password": "Password",
     "submit": "Sign in",
     "submitting": "Signing in…",
-    "invalidCredentials": "Wrong email or password. Try again.",
+    "invalidCredentials": "Those sign-in details are not right. Please try again.",
     "noRole": "Your account isn't activated yet. Contact the admin team.",
     "logout": "Sign out",
-    "intro": "For admins and teachers. Sign in with the email and password the academy sent you.",
+    "intro": "For admins, teachers and sales: sign in with your email or username and password.",
     "showPassword": "Show",
-    "guardiansNote": "Guardians don't need an account: they open the student's progress page from the link we send them on WhatsApp."
+    "guardiansNote": "Parents and students sign in from the «Families and students» tab."
   },
   "admin": {
     "dashboardTitle": "Dashboard",
@@ -3410,7 +3410,8 @@
     },
     "templateCategory": {
       "utility": "Utility",
-      "marketing": "Marketing"
+      "marketing": "Marketing",
+      "authentication": "Authentication"
     },
     "pushKind": {
       "new_lead": "New number sent a message",
@@ -6440,6 +6441,77 @@
       "call_failed": "The call could not be placed. It was not retried automatically, so it is never billed twice.",
       "media_failed": "The audio dropped. End the call and call again."
     }
+  },
+  "familyAuth": {
+    "tabs": {
+      "label": "How to sign in",
+      "family": "Families and students",
+      "staff": "Academy team"
+    },
+    "familyIntro": "Parent or adult student: sign in with the WhatsApp number the academy has on file, and we will send you a code on WhatsApp.",
+    "phone": "WhatsApp number",
+    "phoneHint": "The number on file at the academy, with the country code.",
+    "sendCode": "Send the code",
+    "sending": "Sending…",
+    "codeSent": "If the account exists, we have sent a code to the WhatsApp number on file",
+    "code": "Verification code",
+    "codeDigit": "Digit {n} of the verification code",
+    "verify": "Verify and sign in",
+    "verifying": "Verifying…",
+    "resend": "Send the code again",
+    "resendIn": "Send again in {seconds} s",
+    "changePhone": "Change the number",
+    "withUsername": "Sign in with a username",
+    "withPhone": "Sign in with a WhatsApp number",
+    "username": "Username",
+    "studentUsernameHint": "The username is the student code, e.g. AB-1234.",
+    "firstTime": "First sign-in?",
+    "firstTimeIntro": "Type the student code; we will send a code to the guardian's WhatsApp, then you choose your password.",
+    "forgot": "Forgot your password?",
+    "forgotTitle": "Reset your password",
+    "forgotIntro": "Type your email, username or student code, and we will send a code to the WhatsApp number on file.",
+    "identifier": "Email, username or student code",
+    "newPassword": "New password",
+    "confirmPassword": "Type the password again",
+    "passwordsDiffer": "The two passwords do not match",
+    "savePassword": "Save the password",
+    "saving": "Saving…",
+    "passwordSaved": "Password saved. Sign in with your new password now.",
+    "back": "Back",
+    "backToLogin": "Back to sign-in",
+    "familyUnavailable": "Family sign-in is not available yet",
+    "staffResetByAdmin": "Contact the administration to reset your password",
+    "errors": {
+      "invalid_code": "The code is wrong or has expired. Ask for a new code.",
+      "invalid_credentials": "Those sign-in details are not right. Please try again.",
+      "phone_belongs_to_staff": "This number belongs to a member of the academy team; sign in from the «Academy team» tab.",
+      "too_many_requests": "Too many attempts. Wait a little, then try again.",
+      "codes_unavailable": "Family sign-in is not available yet",
+      "invalid_phone": "Type a valid WhatsApp number with the country code.",
+      "code_incomplete": "Type all six digits."
+    },
+    "settings": {
+      "enabled": "Family sign-in by WhatsApp code",
+      "enabledHint": "When on, guardians sign in with their WhatsApp number and a code, and everyone resets their password with a WhatsApp code. Works only once Meta approves the account_code template.",
+      "ttl": "Code lifetime (minutes)",
+      "ttlHint": "After that a new code is needed.",
+      "attempts": "Attempts per code",
+      "attemptsHint": "Once used up, a new code is needed."
+    },
+    "teacherUsername": {
+      "label": "Username",
+      "hint": "Signs in instead of the email: lower-case English letters, digits and . _ -, 3 to 30 characters, starting with a letter.",
+      "needsLogin": "Create the teacher's login on «Users» first, then pick the username.",
+      "invalid": "Invalid username: lower-case English letters, digits and . _ -, starting with a letter.",
+      "taken": "This username belongs to another account."
+    },
+    "contactIsSelf": {
+      "label": "The WhatsApp number belongs to",
+      "guardian": "The guardian",
+      "self": "The student",
+      "hint": "«The student» for an adult student who follows their own account."
+    },
+    "usersColumn": "Username"
   },
   "studentChannel": {
     "title": "Student messages",
