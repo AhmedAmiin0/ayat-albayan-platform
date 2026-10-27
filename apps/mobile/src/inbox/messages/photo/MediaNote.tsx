@@ -1,5 +1,6 @@
+import { Pressable } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
-import { type } from '@/theme';
+import { shape, type } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { useSmall } from '../components/MessageMeta';
 import type { MediaProblem } from './media-problem';
@@ -11,6 +12,21 @@ export function MediaNote({ text }: { text: string }) {
     <AppText accessibilityRole="text" style={{ ...small, fontFamily: type.ui[600] }}>
       {text}
     </AppText>
+  );
+}
+
+/** «تعذّر تشغيل الملف. اضغط لإعادة المحاولة»: the line itself asks again, announced when it appears. */
+export function RetryLine({ onPress }: { onPress: () => void }) {
+  const small = useSmall();
+  return (
+    <Pressable
+      accessibilityRole="button"
+      accessibilityLiveRegion="polite"
+      onPress={onPress}
+      style={{ minHeight: shape.control.touch, justifyContent: 'center' }}
+    >
+      <AppText style={{ ...small, fontFamily: type.ui[600] }}>{t.inbox.mediaFailed}</AppText>
+    </Pressable>
   );
 }
 

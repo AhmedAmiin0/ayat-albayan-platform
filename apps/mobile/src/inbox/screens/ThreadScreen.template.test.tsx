@@ -58,7 +58,7 @@ beforeEach(() => {
 
 test('after 24 h (by the clock, whatever the cached flag): no free text, the reason verbatim', async () => {
   await openClosedThread();
-  expect(screen.getByText('مضى أكثر من 24 ساعة على آخر رسالة منه — يجب أن ترسل قالبًا')).toBeTruthy();
+  expect(screen.getByText('مرّت 24 ساعة على آخر رسالة منه، فأرسل قالبًا.')).toBeTruthy();
   expect(screen.queryByLabelText(t.inbox.composer.placeholder)).toBeNull();
 });
 

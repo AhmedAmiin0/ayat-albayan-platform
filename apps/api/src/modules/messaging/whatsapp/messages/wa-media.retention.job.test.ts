@@ -7,14 +7,16 @@ const NOW = new Date('2026-10-19T03:00:00Z');
 const cached = (n: number, mime = 'audio/ogg; codecs=opus'): CachedMedia => ({ id: `m${n}`, media_path: `m${n}.ogg`, media_mime: mime });
 const batch = (size: number, from = 0) => Array.from({ length: size }, (_, i) => cached(from + i));
 
+/** Inbound pages; `echoPages` answer the second pass (cached echoes). */
 function setup(...pages: CachedMedia[][]) {
+  const echoPages: CachedMedia[][] = [];
   const queries = {
-    cachedBefore: vi.fn(async () => pages.shift() ?? []),
+    cachedBefore: vi.fn(async (q: { echoes?: boolean }) => (q.echoes ? echoPages : pages).shift() ?? []),
     clearPaths: vi.fn().mockResolvedValue(undefined),
   };
   const storage = { removeMany: vi.fn().mockResolvedValue(undefined) };
   const job = new WaMediaRetentionJob(queries as unknown as InboundMediaQueries, storage as unknown as StorageService);
-  return { job, queries, storage };
+  return { job, queries, storage, echoPages };
 }
 
 describe('WaMediaRetentionJob (inbound audio / video, 30 days)', () => {
@@ -23,9 +25,9 @@ describe('WaMediaRetentionJob (inbound audio / video, 30 days)', () => {
   it('removes an old cached voice note from wa-media, then clears its path', async () => {
     const { job, queries, storage } = setup([cached(1), cached(2, 'video/mp4')]);
     expect(await job.runOnce(NOW)).toBe(2);
-    expect(queries.cachedBefore).toHaveBeenCalledWith({ before: '2026-09-19T03:00:00.000Z', limit: 100 });
+    expect(queries.cachedBefore).toHaveBeenCalledWith({ before: '2026-09-19T03:00:00.000Z', limit: 100, echoes: false });
     expect(storage.removeMany).toHaveBeenCalledWith({ bucket: 'wa-media', paths: ['m1.ogg', 'm2.ogg'] });
-    expect(queries.clearPaths).toHaveBeenCalledWith(['m1', 'm2']);
+    expect(queries.clearPaths).toHaveBeenCalledWith(['m1', 'm2'], false);
     expect(storage.removeMany.mock.invocationCallOrder[0]).toBeLessThan(queries.clearPaths.mock.invocationCallOrder[0] ?? 0);
   });
 
@@ -33,7 +35,7 @@ describe('WaMediaRetentionJob (inbound audio / video, 30 days)', () => {
     const { job, queries, storage } = setup([cached(1, 'image/jpeg'), cached(2, 'application/pdf'), cached(3)]);
     expect(await job.runOnce(NOW)).toBe(1);
     expect(storage.removeMany).toHaveBeenCalledWith({ bucket: 'wa-media', paths: ['m3.ogg'] });
-    expect(queries.clearPaths).toHaveBeenCalledWith(['m3']);
+    expect(queries.clearPaths).toHaveBeenCalledWith(['m3'], false);
   });
 
   it('only photos / PDFs → nothing removed or cleared', async () => {
@@ -58,14 +60,24 @@ describe('WaMediaRetentionJob (inbound audio / video, 30 days)', () => {
   it('loops full batches until a short or empty one', async () => {
     const { job, queries } = setup(batch(BATCH), batch(BATCH, BATCH), batch(3, 2 * BATCH));
     expect(await job.runOnce(NOW)).toBe(2 * BATCH + 3);
-    expect(queries.cachedBefore).toHaveBeenCalledTimes(3);
+    // Three inbound reads, then one (empty) for the echoes.
+    expect(queries.cachedBefore).toHaveBeenCalledTimes(4);
   });
 
   it('stops at the cap of batches per run', async () => {
     const { job, queries } = setup();
-    queries.cachedBefore.mockImplementation(async () => batch(BATCH));
+    queries.cachedBefore.mockImplementation(async (q) => (q.echoes ? [] : batch(BATCH)));
     expect(await job.runOnce(NOW)).toBe(MAX_BATCHES * BATCH);
-    expect(queries.cachedBefore).toHaveBeenCalledTimes(50);
+    expect(queries.cachedBefore).toHaveBeenCalledTimes(MAX_BATCHES + 1);
+  });
+
+  it('then purges cached echoes (a voice note sent from the WhatsApp Business app) the same way', async () => {
+    const { job, queries, storage, echoPages } = setup([cached(1)]);
+    echoPages.push([cached(7)]);
+    expect(await job.runOnce(NOW)).toBe(2);
+    expect(queries.cachedBefore).toHaveBeenLastCalledWith({ before: '2026-09-19T03:00:00.000Z', limit: 100, echoes: true });
+    expect(storage.removeMany).toHaveBeenLastCalledWith({ bucket: 'wa-media', paths: ['m7.ogg'] });
+    expect(queries.clearPaths).toHaveBeenLastCalledWith(['m7'], true);
   });
 
   it('never throws: a failing read or clear is logged and the count so far returned', async () => {
@@ -83,9 +95,10 @@ describe('WaMediaRetentionJob (inbound audio / video, 30 days)', () => {
     job.onApplicationBootstrap();
     expect(queries.cachedBefore).not.toHaveBeenCalled();
     await vi.advanceTimersByTimeAsync(15 * 60_000);
-    expect(queries.cachedBefore).toHaveBeenCalledTimes(1);
+    // One run: an inbound read and an echo read.
+    expect(queries.cachedBefore).toHaveBeenCalledTimes(2);
     job.onModuleDestroy();
     await vi.advanceTimersByTimeAsync(48 * 3_600_000);
-    expect(queries.cachedBefore).toHaveBeenCalledTimes(1);
+    expect(queries.cachedBefore).toHaveBeenCalledTimes(2);
   });
 });
