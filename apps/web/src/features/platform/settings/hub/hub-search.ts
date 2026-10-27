@@ -5,7 +5,7 @@ import { groupsMatch, INTEGRATIONS_PAGE_GROUPS, LEGACY_LINE_GROUPS, SAFETY_GROUP
 import { linesMatch } from '@/features/messaging/messaging/lines/lines-match';
 import { catalogueMatch } from '@/features/messaging/notification-catalogue/catalogue-match';
 import { numbersMatch } from '@/features/messaging/numbers/numbers-section';
-import { themeMatch } from '@/features/platform/settings/sections/AppearanceSection';
+import { appearanceMatch } from '@/features/platform/settings/sections/AppearanceSection';
 import { templatesMatch } from '@/features/messaging/templates/templates-match';
 import { t } from '@/lib/i18n/i18n';
 import { HUB_PATHS } from './hub-paths';
@@ -73,7 +73,7 @@ const MODULES: readonly ModuleEntry[] = [
   { id: 'safety', label: t.settingsPages.communicationsTabs.safety, where: COMMS, href: `${HUB_PATHS.communications}?tab=safety`, matches: groupsMatch(SAFETY_GROUPS) },
   { id: 'integrations', label: t.integrations.title, where: t.integrations.title, href: HUB_PATHS.integrations, matches: groupsMatch(INTEGRATIONS_PAGE_GROUPS) },
   { id: 'google', label: t.googleSync.title, where: H.googleName, href: HUB_PATHS.google, matches: googleMatch },
-  { id: 'appearance', label: t.settings.theme, where: t.settings.sections.appearance, href: HUB_PATHS.appearance, matches: themeMatch },
+  { id: 'appearance', label: t.settings.theme, where: t.settings.sections.appearance, href: HUB_PATHS.appearance, matches: appearanceMatch },
 ];
 
 /** Every hit for the search, settings first (registry order), then module pages; none for an empty search. */

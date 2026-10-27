@@ -6,6 +6,7 @@ import { AccountHeaderAvatar } from '@/account/components/AccountHeaderAvatar';
 import { AccountRow } from '@/account/components/AccountRow';
 import { t } from '@/core/lib/i18n/i18n';
 import { AppearancePicker } from '@/more/appearance/AppearancePicker';
+import { ClockFormatPicker } from '@/more';
 import { LanguageRow } from '@/more/appearance/LanguageRow';
 import { SignOutButton } from '@/teacher/components/SignOutButton';
 import { ListRow } from '@/core/ui/layout/ListRow';
@@ -41,6 +42,7 @@ export function SalesMoreScreen({ can }: { can: Can }) {
         ))}
       </View>
       <AppearancePicker />
+      <ClockFormatPicker />
       <LanguageRow />
       <SignOutButton />
     </Screen>
