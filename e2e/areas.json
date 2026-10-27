@@ -518,6 +518,7 @@
     "integration-config.sql.spec.ts",
     "login.spec.ts",
     "meeting-recordings-rls.sql.spec.ts",
+    "message-reactions.sql.spec.ts",
     "numbers-routing.sql.spec.ts",
     "pay-rule.sql.spec.ts",
     "pick-trial-date.guards.sql.spec.ts",
