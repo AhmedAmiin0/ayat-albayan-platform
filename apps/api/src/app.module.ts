@@ -56,6 +56,7 @@ import { TeachersModule } from './modules/people/teachers/teachers.module';
 import { UsersModule } from './modules/people/users/users.module';
 import { TranslationsModule } from './modules/platform/translations/translations.module';
 import { WebhookModule } from './modules/messaging/webhook/webhook.module';
+import { OwnNumbersModule } from './modules/messaging/numbers';
 import { WhatsappModule } from './modules/messaging/whatsapp/whatsapp.module';
 
 @Module({
@@ -107,6 +108,7 @@ import { WhatsappModule } from './modules/messaging/whatsapp/whatsapp.module';
     DashboardModule,
     ExportsModule,
     WhatsappModule,
+    OwnNumbersModule,
     NotificationRulesModule,
     InboxModule,
     SavedRepliesModule,

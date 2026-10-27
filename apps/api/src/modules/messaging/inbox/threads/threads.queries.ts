@@ -11,7 +11,7 @@ import { upcomingLessons, type LessonsOf } from './thread-lessons';
 import { familyTagsOf, threadPeople, type PeopleOf } from '../people/thread-people';
 import type { FamilyTag } from '../people/thread-people.mapper';
 import { applySort } from '../../../../common/list-sort';
-import { THREAD_SORT, type ThreadListFilter } from './threads.list';
+import { THREAD_SORT, threadsSource, type ThreadListFilter } from './threads.list';
 import { threadSearchFilter, type ThreadRow } from './threads.mapper';
 import { newestPerLine, type ReadMark } from '../reads/read-marks';
 import { markUnsupported, type ListedThreadRow } from './last-unsupported';
@@ -37,9 +37,7 @@ export class ThreadsQueries {
    * parallel with its other per-page reads.
    */
   async list(f: ThreadListFilter): Promise<{ items: ThreadRow[]; total: number }> {
-    let query = f.list
-      ? this.db.from('v_list_threads').select('*', { count: 'exact' }).eq('list_id', f.list)
-      : this.db.from('v_threads').select('*', { count: 'exact' });
+    let query = threadsSource(this.db, f);
     if (f.unread) query = query.gt('unread_count', 0);
     if (f.phones) query = query.in('phone_e164', [...f.phones]);
     if (f.status) query = query.eq('lead_status', f.status);

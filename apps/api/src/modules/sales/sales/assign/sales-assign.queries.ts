@@ -1,13 +1,18 @@
 import type { Tables } from '@ab/db';
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, Optional } from '@nestjs/common';
 import { DB, type Db } from '../../../../common/db/db.module';
 import { dbError } from '../../../../common/http/http';
+import { OwnNumbers } from '../../../messaging/numbers';
 import type { AssignedLead } from './sales-assign.mapper';
 
 /** Reads and writes behind the lead assignment (service role; SalesAssignService decides). */
 @Injectable()
 export class SalesAssignQueries {
-  constructor(@Inject(DB) private readonly db: Db) {}
+  constructor(
+    @Inject(DB) private readonly db: Db,
+    /** The academy's own numbers: their old lead is never handed to a salesperson (owner 2026-10-27). */
+    @Optional() private readonly own?: OwnNumbers,
+  ) {}
 
   /** Every active salesperson (profiles.role = 'sales', not disabled: a disabled login must not receive or keep assignments). */
   async salespeople(): Promise<{ id: string; full_name: string }[]> {
@@ -24,7 +29,9 @@ export class SalesAssignQueries {
   }
 
   async unassignedLeadIds(): Promise<string[]> {
-    const { data, error } = await this.db.from('leads').select('id').is('assigned_to', null).order('created_at');
+    const own = this.own ? await this.own.notIn() : null;
+    const query = this.db.from('leads').select('id').is('assigned_to', null);
+    const { data, error } = await (own ? query.not('phone_e164', 'in', own) : query).order('created_at');
     if (error) throw dbError(error);
     return data.map((l) => l.id);
   }

@@ -1,7 +1,8 @@
 import type { ThreadDetail, ThreadView } from '@ab/shared';
-import { ForbiddenException, Inject, Injectable } from '@nestjs/common';
+import { ForbiddenException, Inject, Injectable, Optional } from '@nestjs/common';
 import type { AuthUser } from '../../../../common/auth/verify-token';
 import { ChatListsQueries } from '../../chat-lists/chat-lists.queries';
+import { OwnNumbers } from '../../numbers';
 import type { Page } from '../../../../common/http/http';
 import { SalesScopes, type SalesScope } from '../../../sales/sales/sales-scope';
 import { listFilter, withLists } from '../threads/chat-list-filter';
@@ -26,6 +27,8 @@ export class ThreadReads {
   @Inject(ChatListsQueries) private readonly chatLists?: ChatListsQueries;
   /** «رد»: the messages a page's bubbles answer (owner 2026-10-25). */
   @Inject(ThreadQuotes) private readonly quotes?: ThreadQuotes;
+  /** The academy's own numbers: never listed, for any role (owner 2026-10-27). */
+  @Optional() @Inject(OwnNumbers) private readonly own?: OwnNumbers;
 
   constructor(
     private readonly admin: ThreadsService,
@@ -43,8 +46,12 @@ export class ThreadReads {
     return this.salesScopes ? this.salesScopes.of(user) : Promise.resolve(null);
   }
 
-  /** A chat list (`list`) narrows the admin's and sales' lists; teacher mode never has one. */
-  async list(f: ThreadListFilter, user: AuthUser): Promise<Page<ThreadView>> {
+  /**
+   * A chat list (`list`) narrows the admin's and sales' lists; teacher mode never has one. The academy's
+   * own numbers are hidden from every list, search and unread count (the nav counts read this total).
+   */
+  async list(input: ThreadListFilter, user: AuthUser): Promise<Page<ThreadView>> {
+    const f = await this.withoutOwn(input);
     const mine = await this.salesScope(user);
     const scope = mine ? null : await this.scopes.of(user);
     if (scope) return this.teacher.list(f, scope);
@@ -64,6 +71,11 @@ export class ThreadReads {
       withLists(detail, { user, lists: this.chatLists, phone: q.phone, first: !q.before }),
     ]);
     return { ...listed, messages: quoted.messages };
+  }
+
+  private async withoutOwn(f: ThreadListFilter): Promise<ThreadListFilter> {
+    const own = this.own ? await this.own.phones() : new Set<string>();
+    return own.size > 0 ? { ...f, hide: [...own] } : f;
   }
 
   private async quoted(detail: ThreadDetail, phone: string): Promise<ThreadDetail> {
