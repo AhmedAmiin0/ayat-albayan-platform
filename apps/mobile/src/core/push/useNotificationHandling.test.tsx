@@ -106,11 +106,12 @@ test('unmount removes both listeners and the foreground handler', async () => {
   expect(Notifications.setNotificationHandler).toHaveBeenLastCalledWith(null);
 });
 
-test('a message push also refreshes the tab badge count (its own query key)', async () => {
+test('a message push also refreshes the chats list and the tab badge count (their own keys)', async () => {
   const { client } = await mount();
   const spy = jest.spyOn(client, 'invalidateQueries');
   await act(async () => mockListeners.received?.(notification({ kind: 'new_message', phone: PHONE })));
   expect(spy).toHaveBeenCalledWith({ queryKey: ['threads', 'nav-count'] });
+  expect(spy).toHaveBeenCalledWith({ queryKey: ['threads', 'list'] });
 });
 
 test('a tap into a hidden tab falls back to «المزيد» (a hidden tab goes nowhere)', async () => {

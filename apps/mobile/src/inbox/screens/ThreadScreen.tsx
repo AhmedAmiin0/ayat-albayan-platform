@@ -19,6 +19,7 @@ import { SendRating } from '../rating/SendRating';
 import { SubscriptionPanel } from '../subscription/SubscriptionPanel';
 import { ThreadHeaderActions } from '../thread/components/ThreadHeaderActions';
 import { isOwnThread, threadBase, useThreadMode } from '../thread/hooks/thread-mode';
+import { useInboxRead } from '../thread/hooks/inbox-sync';
 import { useThread } from '../thread/hooks/use-thread';
 
 type ThreadQuery = ReturnType<typeof useThread>;
@@ -55,6 +56,8 @@ export function ThreadScreen() {
   const teacher = mode.kind === 'teacher';
   const sales = useHolds('self.sales');
   const query = useThread(phone);
+  // Opening the chat reads it on the server: its unread badge leaves the list at once.
+  useInboxRead(phone, query);
   const thread = query.data?.pages[0]?.thread ?? null;
   // Pushed from the tabs, back pops the whole chat group; a cold start on the chat opens its list.
   const back = () =>

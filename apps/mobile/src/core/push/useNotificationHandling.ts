@@ -3,7 +3,7 @@ import * as Notifications from 'expo-notifications';
 import { router, useNavigationContainerRef } from 'expo-router';
 import { useEffect, useRef } from 'react';
 import { usePermissions } from '@/auth/use-permissions';
-import { threadKey } from '@/inbox/thread/hooks/thread-cache';
+import { refreshInbox } from '@/inbox/thread/hooks/inbox-sync';
 import { isThreadHref, overChat } from '@/core/nav/chat-groups';
 import { pushKind, pushPhone, routeIn, type PushTree } from './notification-route';
 
@@ -48,13 +48,12 @@ export function useNotificationHandling(tree: PushTree = 'admin'): void {
     const sub = Notifications.addNotificationReceivedListener((notification) => {
       const data = notification.request.content.data;
       void client.invalidateQueries({ queryKey: ['notifications'] }); // the bell's list and badge
-      const phone = pushPhone(data);
-      if (phone) void client.invalidateQueries({ queryKey: threadKey(phone) });
+      const phone = pushPhone(data) ?? undefined;
       const kind = pushKind(data);
-      if (kind === 'new_lead' || kind === 'new_message') {
-        void client.invalidateQueries({ queryKey: ['leads'] });
-        void client.invalidateQueries({ queryKey: ['threads', 'nav-count'] }); // the tab badge
-      }
+      const message = kind === 'new_lead' || kind === 'new_message';
+      if (message) void client.invalidateQueries({ queryKey: ['leads'] });
+      // The thread, the chats list, the tab badge and «القوائم» (owner 2026-10-27: the list followed no push).
+      if (phone || message) void refreshInbox(client, phone);
     });
     return () => {
       sub.remove();
