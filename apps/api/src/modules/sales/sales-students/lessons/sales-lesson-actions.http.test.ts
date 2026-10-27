@@ -53,6 +53,22 @@ describe('POST /sales/lessons/:id/reschedule and /cancel (docs/16 row 37)', () =
     expect(t.lessons.cancels.cancel).not.toHaveBeenCalled();
   });
 
+  it('a group lesson with another family\'s child stays the admin\'s: 403, nothing moved or messaged', async () => {
+    t.queries.lesson.mockResolvedValue(lessonFacts({ lesson_students: [{ student_id: MINE }, { student_id: OTHER }] }));
+    for (const [action, body] of [['reschedule', { startsAt: AT }], ['cancel', {}]] as const) {
+      const res = await t.call('POST', `/sales/lessons/${LESSON}/${action}`, { token: 'salesA', body });
+      expect([action, res.statusCode, res.json().code]).toEqual([action, 403, 'not_your_student']);
+    }
+    expect(t.lessons.one.reschedule).not.toHaveBeenCalled();
+    expect(t.lessons.cancels.cancel).not.toHaveBeenCalled();
+  });
+
+  it('a new time that has passed is 400 date_in_past (her booking refuses it too)', async () => {
+    const res = await t.call('POST', `/sales/lessons/${LESSON}/reschedule`, { token: 'salesA', body: { startsAt: '2026-10-26T15:00:00.000Z' } });
+    expect([res.statusCode, res.json().code]).toEqual([400, 'date_in_past']);
+    expect(t.lessons.one.reschedule).not.toHaveBeenCalled();
+  });
+
   it('never a series, a substitute, an override or a «by»: 400 before any read', async () => {
     const bad = [
       ['reschedule', { startsAt: AT, scope: 'rule' }],

@@ -1,7 +1,7 @@
 import type { LessonStatus, SalesCancel, SalesLessonMoved, SalesReschedule } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
 import type { AuthUser } from '../../../../common/auth/verify-token';
-import { notFound } from '../../../../common/http/errors';
+import { badRequest, notFound } from '../../../../common/http/errors';
 import { LessonCancelService, RescheduleOneService } from '../../../teaching/lessons';
 import { SalesStudentQueries } from '../details/sales-student.queries';
 import { SalesStudentScope } from '../sales-student-scope';
@@ -34,6 +34,8 @@ export class SalesLessonActions {
 
   async reschedule({ lessonId, body, actor }: Move, now = new Date()): Promise<SalesLessonMoved> {
     await this.scope.assertLesson(actor, { lessonId, now });
+    // Her own booking refuses a past time too (SalesBookingService): never a lesson that is already over.
+    if (Date.parse(body.startsAt) <= now.getTime()) throw badRequest('date_in_past');
     const id = await this.lessons.one.reschedule({ lessonId, body: { scope: 'one', startsAt: body.startsAt }, actor });
     const moved = await this.queries.lesson(id);
     if (!moved) throw notFound('lesson_not_found');

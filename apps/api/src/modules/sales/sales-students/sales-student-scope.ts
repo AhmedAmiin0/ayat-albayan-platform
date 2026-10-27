@@ -24,14 +24,16 @@ export class SalesStudentScope {
 
   /**
    * One lesson she may move or cancel (docs/16 row 37): 404 lesson_not_found, 403 not_your_student
-   * unless one of its students is hers, 409 lesson_ended once it is over (its outcome is the teacher's
+   * unless EVERY student of it is hers (a group lesson with another family's child moves and messages
+   * that family too, so it stays the admin's), 409 lesson_ended once it is over (its outcome is the teacher's
    * and the admin's, never hers). A closed status is the admin service's 409 invalid_transition.
    */
   async assertLesson(user: AuthUser, input: { lessonId: string; now: Date }): Promise<LessonFacts> {
     const lesson = await this.queries.lesson(input.lessonId);
     if (!lesson) throw notFound('lesson_not_found');
     const own = await this.sales.ownership(user.id);
-    if (!lesson.lesson_students.some((s) => own.studentIds.includes(s.student_id))) throw forbidden('not_your_student');
+    const hers = lesson.lesson_students.length > 0 && lesson.lesson_students.every((s) => own.studentIds.includes(s.student_id));
+    if (!hers) throw forbidden('not_your_student');
     if (Date.parse(lesson.ends_at) <= input.now.getTime()) throw conflict('lesson_ended');
     return lesson;
   }

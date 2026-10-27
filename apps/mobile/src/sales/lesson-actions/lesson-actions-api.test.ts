@@ -10,9 +10,12 @@ test('an open lesson of one of hers, not over yet, with the keys: both actions',
   expect(canChangeLesson(mine, { now: NOW, can: all })).toEqual({ reschedule: true, cancel: true });
 });
 
-test('another family\'s, an ended, a closed lesson: nothing', () => {
+test('another family\'s, a mixed group, an ended, a closed lesson: nothing', () => {
   const none = { reschedule: false, cancel: false };
   expect(canChangeLesson(scheduleLesson(), { now: NOW, can: all })).toEqual(none);
+  // A group with another family's child: moving it would move and message that family too.
+  const mixed = { ...mine, students: [...mine.students, { id: 'st9', code: 'AB-0199', name: 'جنى' }] };
+  expect(canChangeLesson(mixed, { now: NOW, can: all })).toEqual(none);
   expect(canChangeLesson(mine, { now: new Date('2026-10-12T15:30:00.000Z'), can: all })).toEqual(none);
   for (const status of ['completed', 'cancelled_by_admin', 'rescheduled', 'no_show'] as const) {
     expect(canChangeLesson({ ...mine, status }, { now: NOW, can: all })).toEqual(none);
