@@ -10,20 +10,24 @@ import {
   threadPath,
   type ThreadCache,
 } from './thread-cache';
+import { useThreadPoll } from './thread-poll';
 
 /**
  * GET /threads/:phone (docs/12 H2): the newest page first, `before` the oldest loaded row pages
  * back. The API stamps the inbound rows read when it answers. The persisted client keeps the last
- * answer on disk, so an opened thread reads offline (R-MOB-03).
+ * answer on disk, so an opened thread reads offline (R-MOB-03). While on screen, useThreadPoll keeps
+ * its newest page live.
  */
 export function useThread(phone: string) {
-  return useInfiniteQuery({
+  const query = useInfiniteQuery({
     queryKey: threadKey(phone),
     queryFn: ({ pageParam }) =>
       apiFetch<ThreadDetail>(`${threadPath(phone)}${toQueryString({ before: pageParam })}`),
     initialPageParam: undefined as string | undefined,
     getNextPageParam: (last) => (last.has_more ? last.messages[0]?.created_at : undefined),
   });
+  useThreadPoll(phone, query.data !== undefined);
+  return query;
 }
 
 /**
