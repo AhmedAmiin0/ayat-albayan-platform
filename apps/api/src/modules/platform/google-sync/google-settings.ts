@@ -21,7 +21,8 @@ export function readGoogleSettings(rows: readonly { key: string; value: unknown 
 /**
  * settings.google_* rows. Cached for SETTINGS_CACHE_MS (0 in e2e): read once per job tick and per synced
  * item before, now at most once per TTL. Only write() stores google_sync_enabled / google_sync_mode
- * («القيم» refuses them: owned_by_module) and it drops the cache, so an OFF still applies at once.
+ * («القيم» refuses them: owned_by_module) and it drops the cache, so an OFF from this API applies at once.
+ * An OFF written by raw SQL reaches read() within the TTL; fresh() (the per-item stop) sees it at once.
  */
 @Injectable()
 export class GoogleSettings {
@@ -36,6 +37,11 @@ export class GoogleSettings {
 
   read(): Promise<GoogleSyncSettings> {
     return this.cache.get();
+  }
+
+  /** Uncached: the processor's check before each Google write (only when items were claimed). */
+  fresh(): Promise<GoogleSyncSettings> {
+    return this.load();
   }
 
   async write(input: { values: GoogleSettingsInput; actorId: string }): Promise<void> {

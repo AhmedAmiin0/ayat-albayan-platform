@@ -48,6 +48,14 @@ describe('GoogleSyncProcessor — round trips per idle tick (owner 2026-10-27: s
     expect(trips).toEqual(['settings']);
   });
 
+  it('a raw SQL OFF: read() keeps the cached value for the TTL, fresh() (the per-item stop) sees it at once', async () => {
+    const { settings, trips } = setup({ settings: [LIVE, OFF] });
+    await expect(settings.read()).resolves.toMatchObject({ enabled: true });
+    await expect(settings.read()).resolves.toMatchObject({ enabled: true });
+    await expect(settings.fresh()).resolves.toMatchObject({ enabled: false });
+    expect(trips).toEqual(['settings', 'settings']);
+  });
+
   it('connect / disconnect / a refused token (forget) re-read the account and Vault on the next tick', async () => {
     const { connection, trips } = setup({ google_account: [{ data: { status: 'connected' } }, { data: { status: 'disconnected' } }], 'rpc:google_token_read': [{ data: 'refresh' }] });
     await expect(connection.client()).resolves.not.toBeNull();
