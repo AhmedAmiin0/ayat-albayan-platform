@@ -54,8 +54,7 @@ export function useInboxRealtime(enabled: boolean): void {
       });
     const session = createLiveSession(open, inboxLive.resync);
     const shown = () => (document.visibilityState === 'hidden' ? session.pause(INBOX_HIDDEN_LEAVE_MS) : session.resume());
-    session.resume();
-    if (document.visibilityState === 'hidden') session.pause(INBOX_HIDDEN_LEAVE_MS);
+    if (document.visibilityState !== 'hidden') session.resume(); // a tab opened in the background joins when shown
     document.addEventListener('visibilitychange', shown);
     return () => {
       document.removeEventListener('visibilitychange', shown);

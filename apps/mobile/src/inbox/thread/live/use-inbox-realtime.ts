@@ -35,7 +35,9 @@ export function useInboxRealtime(enabled: boolean): void {
   useEffect(() => {
     if (!enabled) return undefined;
     const session = createLiveSession(() => connectInboxLive(supabase, inboxLive, targets), inboxLive.resync);
-    if (AppState.currentState !== 'background') session.resume();
+    const at = AppState.currentState; // 'unknown' at an iOS cold start counts as open
+    if (at !== 'background') session.resume();
+    if (at === 'inactive') session.pause(INBOX_INACTIVE_LEAVE_MS);
     const change = AppState.addEventListener('change', (state) => {
       if (state === 'active') session.resume();
       else session.pause(state === 'inactive' ? INBOX_INACTIVE_LEAVE_MS : 0);

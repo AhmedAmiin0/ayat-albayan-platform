@@ -109,3 +109,14 @@ it('hidden briefly keeps the channel; flips never hold two; another feature keep
   await settle();
   expect([open(), rt.supabase.realtime.disconnect.mock.calls.length, vi.getTimerCount()]).toEqual([0, 0, 0]);
 });
+
+it('a tab opened hidden does not join until it is shown', async () => {
+  visibility = 'hidden';
+  const { hook } = mount();
+  await settle();
+  expect([rt.state.joins.length, vi.getTimerCount()]).toEqual([0, 0]);
+  await show('visible');
+  await settle();
+  expect(open()).toBe(1);
+  hook.unmount();
+});

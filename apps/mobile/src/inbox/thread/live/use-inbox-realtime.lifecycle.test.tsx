@@ -122,3 +122,17 @@ test('rapid background / foreground flips never hold two channels or a dangling 
   await settle();
   expect([open(), listeners.size, await timers()]).toEqual([0, 0, 0]);
 });
+
+test('mounted in the background it never joins; mounted inactive it leaves after the grace', async () => {
+  Object.defineProperty(AppState, 'currentState', { value: 'background', configurable: true });
+  const hidden = await renderHook(() => useInboxRealtime(true));
+  await settle();
+  expect(mockRt.joins.length).toBe(0);
+  await hidden.unmount();
+  Object.defineProperty(AppState, 'currentState', { value: 'inactive', configurable: true });
+  const hook = await renderHook(() => useInboxRealtime(true));
+  await settle();
+  await act(() => jest.advanceTimersByTimeAsync(INBOX_INACTIVE_LEAVE_MS));
+  expect([mockRt.joins.length, open()]).toEqual([1, 0]);
+  await hook.unmount();
+});
