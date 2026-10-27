@@ -6330,7 +6330,15 @@
     "slashHint": "Type / in the message box to pick a quick reply",
     "manage": "Manage",
     "manageDone": "Done",
-    "sheetClose": "Close quick replies"
+    "sheetClose": "Close quick replies",
+    "blanksHint": "Put text in square brackets, like «[amount]», to make a blank the sender fills when using the reply.",
+    "fill": {
+      "title": "Complete the reply",
+      "insert": "Insert",
+      "close": "Close without inserting the reply",
+      "blank": "Value {n}",
+      "preview": "Reply preview"
+    }
   },
   "trialDate": {
     "action": "New trial date",
