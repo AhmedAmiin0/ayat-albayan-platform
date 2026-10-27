@@ -22,9 +22,15 @@ const notForwardable = () => waHttpError('not_forwardable', HttpStatus.BAD_REQUE
 /** The name a forwarded file reaches the family with: ours as sent, else the copy's own (fwd-….ext). */
 const fileName = (row: ThreadMessageRow, path: string): string => row.media_name ?? path.split('/').at(-1) ?? 'file';
 
+/** The caption it goes with; an echo's type marker («[video]», webhook external-row) is no caption. */
+const caption = (row: ThreadMessageRow): string | null => {
+  const text = row.body?.trim() || null;
+  return row.direction === 'outbound' && row.media_id && text && /^\[[a-z_]+\]$/.test(text) ? null : text;
+};
+
 /**
- * «إعادة توجيه» of a file (owner 2026-10-25): the staff member never uploads it again. Ours (out/…) or
- * theirs (cached from WhatsApp first, as the bubble does) is copied once per forward to
+ * «إعادة توجيه» of a file (owner 2026-10-25): the staff member never uploads it again. Ours (out/…),
+ * theirs or an echo of the WhatsApp Business app (cached from WhatsApp first, as the bubble does) is copied once per forward to
  * out/{actor}/{request}/fwd-{message}.{ext}; each target then queues that path through the same
  * window and line checks as a file sent from the chat (thread-file-send.service.ts).
  */
@@ -45,7 +51,7 @@ export class ForwardFiles {
     const mime = baseMime(from.mime);
     const path = forwardOutPath({ ...at, messageId: row.id, mime });
     await this.storage.copy({ from: { bucket: BUCKETS.waMedia, path: from.path }, to: { bucket: BUCKETS.waMedia, path } });
-    return { path, mime, name: fileName(row, path), caption: row.body?.trim() || null };
+    return { path, mime, name: fileName(row, path), caption: caption(row) };
   }
 
   /** One target: 409 session_closed / 503 line_not_configured as a file sent from the chat. */
@@ -64,13 +70,12 @@ export class ForwardFiles {
     });
   }
 
+  /** Ours as sent (out/…); else theirs or an echo of the WhatsApp Business app (Meta's media id), cached first. */
   private async source(row: ThreadMessageRow): Promise<{ path: string; mime: string | null }> {
-    if (row.direction === 'outbound') {
-      if (!row.media_path?.startsWith('out/')) throw notForwardable();
-      return { path: row.media_path, mime: row.media_mime };
-    }
+    if (row.direction === 'outbound' && row.media_path?.startsWith('out/')) return { path: row.media_path, mime: row.media_mime };
+    if (row.direction === 'outbound' && (!row.media_id || !isChatViewMime(row.media_mime))) throw notForwardable();
     if (!this.inbound) throw new Error('InboundMedia is not provided');
-    const file = await this.inbound.cache(await this.inbound.load(row.id, isChatViewMime));
+    const file = await this.inbound.cache(await this.inbound.loadChat(row.id));
     return { path: file.path, mime: file.mime };
   }
 }

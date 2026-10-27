@@ -6,8 +6,9 @@ import { AppText } from '@/core/ui/primitives/AppText';
 /**
  * In the reply box's place once the 24 h window closed: why only a template can go now
  * (inbox.sessionClosed, verbatim; a number with no message yet: the first message is a template).
- * One gold-washed line as tall as the box, beside «أرسل قالبًا»: two lines at most, three for a new
- * number (its longer note must fit a 360dp phone whole).
+ * A gold-washed note at least as tall as the box, beside «أرسل قالبًا». Never cut (owner 2026-10-27):
+ * no line limit, it wraps and the row grows; the short copy fits a 360dp phone at a large font in
+ * two lines.
  */
 export function ClosedNote({ known }: { known: boolean }) {
   const { color } = useTheme();
@@ -26,7 +27,6 @@ export function ClosedNote({ known }: { known: boolean }) {
     >
       <AppText
         testID="closed-note"
-        numberOfLines={known ? 2 : 3}
         accessibilityLabel={text}
         style={{
           fontFamily: type.ui[500],
