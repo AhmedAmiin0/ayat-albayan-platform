@@ -1,6 +1,7 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { ApiError } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
+import { isolate } from '@/core/ui/primitives/Ltr';
 import { renderWithQuery } from '@/test/query';
 import { ALL, ASSISTANT, routes, statement } from '../../api/fixtures';
 import { StatementsPanel } from './StatementsPanel';
@@ -91,7 +92,7 @@ test('«التفاصيل» opens the lines: salary, each commission with its stu
   await screen.findByText(t.assistants.statements.details);
   await press(t.assistants.statements.details);
   expect(screen.getByText(t.assistantPortal.earnings.line.commission.replace('{student}', 'سهيلة'))).toBeTruthy();
-  expect(screen.getByText(t.assistantPortal.earnings.line.adjustment.replace('{reason}', 'خصم تجريبي'))).toBeTruthy();
+  expect(screen.getByText(t.assistantPortal.earnings.line.adjustment.replace('{reason}', isolate('خصم تجريبي')))).toBeTruthy();
 });
 
 test('«احسب كشوف الشهر» asks, then POSTs {assistantId, month} for each non-frozen salesperson', async () => {

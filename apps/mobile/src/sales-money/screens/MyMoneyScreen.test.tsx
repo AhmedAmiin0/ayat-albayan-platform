@@ -1,5 +1,6 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
+import { isolate } from '@/core/ui/primitives/Ltr';
 import { renderWithQuery } from '@/test/query';
 import { earnings, myPayment } from '../testing/fixtures';
 import { MyMoneyScreen } from './MyMoneyScreen';
@@ -27,7 +28,7 @@ test('«أرباحي»: terms, this month per currency, commissions per currency
   expect(screen.getByText(t.enums.payoutStatus.paid)).toBeTruthy();
   await fireEvent.press(screen.getByRole('button', { name: `${p.lines} · ${t.mobileSalesMoney.showLines}` }));
   expect(screen.getByText(p.line.commission.replace('{student}', 'سهيلة'))).toBeTruthy();
-  expect(screen.getByText(p.line.adjustment.replace('{reason}', 'تصحيح'))).toBeTruthy();
+  expect(screen.getByText(p.line.adjustment.replace('{reason}', isolate('تصحيح')))).toBeTruthy();
 });
 
 test('no terms and no statement yet: the web’s words', async () => {

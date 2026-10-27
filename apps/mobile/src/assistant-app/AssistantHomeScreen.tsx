@@ -1,13 +1,13 @@
 import { router } from 'expo-router';
-import { useState } from 'react';
 import { ScrollView, View } from 'react-native';
 import { canOpen } from '@/auth/route-permissions';
 import type { Can } from '@/auth/use-permissions';
 import { addDays, riyadhToday } from '@/calendar/lib/week';
 import { AssistantLessonsList } from '@/classroom/assistants/AssistantLessonsList';
 import { DaySwitcher } from '@/classroom/sessions/DaySwitcher';
-import { useMinuteClock } from '@/classroom/sessions/use-minute-clock';
+import { useNow } from '@/core/lib/time/use-now';
 import { t } from '@/core/lib/i18n/i18n';
+import { useFollowingDay } from '@/core/lib/time/use-following-day';
 import { Note } from '@/more/Note';
 import { HeldBell } from '@/notifications/HeldBell';
 import { ListRow } from '@/core/ui/layout/ListRow';
@@ -23,8 +23,8 @@ import { assistantDay } from './assistant-day';
  * The bell at the header's end (notifications.push).
  */
 export function AssistantHomeScreen({ can }: { can: Can }) {
-  const today = riyadhToday(useMinuteClock());
-  const [date, setDate] = useState(today);
+  const today = riyadhToday(useNow());
+  const [date, setDate] = useFollowingDay(today);
   const isToday = date === today;
   const inset = useTabBarInset();
   return (

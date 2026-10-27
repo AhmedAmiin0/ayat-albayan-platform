@@ -9,7 +9,7 @@ import { classroomErrorText } from '../room/livekit/errors';
 import { joinByStudentLink, studentLinkView } from '../api/meetings-api';
 import type { RoomClient } from '../room/components/room-types';
 import { StudentLessonPanel } from './StudentLessonPanel';
-import { useNow } from '../sessions/use-now';
+import { useNow } from '@/lib/time/use-now';
 
 const REFRESH_MS = 30_000;
 

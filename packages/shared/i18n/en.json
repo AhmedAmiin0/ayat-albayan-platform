@@ -2401,6 +2401,8 @@
     "unsupported": "The content of this message did not reach us from WhatsApp — ask the sender to send it again",
     "unavailable": "The content of this message did not reach us from WhatsApp. This sometimes happens with the first message from a new number; the message shows in the WhatsApp Business app on the academy phone.",
     "previewUnsupported": "Message whose content did not arrive",
+    "reacted": "Reaction: {emoji}",
+    "reactionRemoved": "Reaction removed",
     "resend": {
       "action": "Ask to resend",
       "title": "Ask them to resend the message",

@@ -1,6 +1,7 @@
 import { Linking } from 'react-native';
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
+import { isolate } from '@/core/ui/primitives/Ltr';
 import { renderWithQuery } from '@/test/query';
 import { APPROVED, PAID } from '../shared/fixtures';
 import { PayoutsScreen } from './PayoutsScreen';
@@ -69,7 +70,7 @@ test('a paid month shows how it was paid and opens its receipt through a signed 
   await renderWithQuery(<PayoutsScreen />);
   await fireEvent.press(await screen.findByText('هدى'));
   expect(screen.getByText(t.mobileFinance.payouts.method.replace('{method}', t.enums.paymentMethod.bank))).toBeTruthy();
-  expect(screen.getByText(t.mobileFinance.payouts.note.replace('{note}', 'دفعة أكتوبر'))).toBeTruthy();
+  expect(screen.getByText(t.mobileFinance.payouts.note.replace('{note}', isolate('دفعة أكتوبر')))).toBeTruthy();
   await fireEvent.press(screen.getByRole('button', { name: t.earnings.viewReceipt }));
   await waitFor(() => expect(mockOpen).toHaveBeenCalledWith('https://files/r.jpg'));
 });

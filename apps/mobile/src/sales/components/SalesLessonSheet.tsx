@@ -1,7 +1,7 @@
 import { isRunningLesson, type SalesScheduleLesson } from '@ab/shared';
 import { LessonDetailsSheet } from '@/calendar';
 import { JoinClassroomButton } from '@/classroom';
-import { useNow } from '@/today';
+import { useNow } from '@/core/lib/time/use-now';
 
 interface SalesLessonSheetProps {
   lesson: SalesScheduleLesson | null;

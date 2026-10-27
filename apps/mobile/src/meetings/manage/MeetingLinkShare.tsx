@@ -3,7 +3,7 @@ import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/more/Note';
 import { type, useTheme } from '@/theme';
 import { Button } from '@/core/ui/primitives/Button';
-import { Ltr } from '@/core/ui/primitives/Ltr';
+import { AppText } from '@/core/ui/primitives/AppText';
 
 /** The meeting's link (shown once) with «شارك الرابط»: the share sheet has Copy, WhatsApp and the rest. */
 export function MeetingLinkShare({ url, note }: { url: string; note: string }) {
@@ -11,9 +11,10 @@ export function MeetingLinkShare({ url, note }: { url: string; note: string }) {
   return (
     <View accessibilityLiveRegion="polite" style={{ gap: 8 }}>
       <Note>{note}</Note>
-      <Ltr selectable style={{ fontFamily: type.ui[500], fontSize: type.size.xs, color: color.ink2 }}>
+      {/* Plain text, no isolates: a copied URL must open as it is. */}
+      <AppText selectable numberOfLines={2} style={{ fontFamily: type.ui[500], fontSize: type.size.xs, color: color.ink2 }}>
         {url}
-      </Ltr>
+      </AppText>
       <Button variant="secondary" label={t.mobileClassroom.shareLink} onPress={() => void Share.share({ message: url }).catch(() => undefined)} />
     </View>
   );
