@@ -1,4 +1,4 @@
-import { NO_REACTIONS, nextReaction, type MessageReactions, type MessageView } from '@ab/shared';
+import { NO_REACTIONS, nextReaction, REACTION_EMOJIS, type MessageReactions, type MessageView } from '@ab/shared';
 
 // «تفاعل» (owner 2026-10-27) for web and mobile: the endpoint, the optimistic change, the pill and the
 // «who reacted» lines. Pure: the apps own the request, the cache and the UI.
@@ -50,4 +50,14 @@ export function reactorLines(r: MessageReactions | undefined, contact: string | 
   const theirs = r?.theirs ? [{ emoji: r.theirs, name: contact, mine: false }] : [];
   const ours = r?.ours ? [{ emoji: r.ours, name: r.ours_by, mine: true }] : [];
   return [...theirs, ...ours];
+}
+
+/** The spoken name's key under `inbox.reactions` for a quick-row emoji (REACTION_EMOJIS' order). */
+export type ReactionName = 'like' | 'love' | 'laugh' | 'wow' | 'sad' | 'thanks';
+const NAMES: readonly ReactionName[] = ['like', 'love', 'laugh', 'wow', 'sad', 'thanks'];
+
+/** null for any other emoji (from «+» or the contact): say the emoji itself. */
+export function reactionName(emoji: string): ReactionName | null {
+  const i = (REACTION_EMOJIS as readonly string[]).indexOf(emoji);
+  return i >= 0 ? (NAMES[i] ?? null) : null;
 }

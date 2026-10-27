@@ -19,6 +19,8 @@ export { createInboxLive, type InboxLive, type LiveTargets } from './live-store.
 export {
   patchMessage,
   type PillItem,
+  type ReactionName,
+  reactionName,
   reactionPath,
   reactionPill,
   type ReactorLine,
@@ -26,3 +28,4 @@ export {
   tappedReaction,
   withOurs,
 } from './reactions.js';
+export { type ReactInput, reactionMutation, type ReactionPorts, withReactions } from './reaction-mutation.js';

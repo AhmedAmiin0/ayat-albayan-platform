@@ -7,6 +7,7 @@ import { mediaKind } from '../../format';
 import { useChatActions } from '../../shared/chat-actions';
 import type { BubbleOffers } from '../lib/bubble-offers';
 import type { BubbleTools } from '../lib/use-bubble-tools';
+import { ReactionRow } from '../reactions/ReactionRow';
 
 export interface BubbleMenuProps {
   message: MessageView;
@@ -49,6 +50,7 @@ export function BubbleMenu({ message: m, outbound, onClose, offers, tools }: Bub
         outbound ? 'right-0' : 'left-0',
       )}
     >
+      {offers.react && <ReactionRow message={m} onReact={(e) => pick(() => actions.react(m, e))()} />}
       {offers.reply && (
         <button
           type="button"

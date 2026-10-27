@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { cn } from '@/lib/utils';
 import { BubbleActions, useHasBubbleActions } from './BubbleActions';
 import { DeliveryTicks } from './DeliveryTicks';
+import { ReactionPill } from '../reactions/ReactionPill';
 import { clockText, fullTime } from '../../format';
 import { BUBBLE_ROW } from '../lib/bubble-side';
 import { bubbleId } from '../lib/jump-to-message';
@@ -90,6 +91,7 @@ export function MessageBubble({ message: m, waitingTemplate, now }: MessageBubbl
           </p>
         ))}
         {admin && (canRetry(m) || canSendByHand(m) || isHandedOff(m)) && <MessageActions message={m} />}
+        <ReactionPill message={m} outbound={outbound} />
       </article>
       {!outbound && actions}
     </li>

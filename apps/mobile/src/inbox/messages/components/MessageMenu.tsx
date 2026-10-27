@@ -10,6 +10,7 @@ import { quoteOf, quoteText } from '../hooks/quote-text';
 import { bubbleOffers, downloadLabel } from '../hooks/bubble-offers';
 import { copyText, downloadFile, downloadProblem } from '../copy-download/chat-tools';
 import { useThreadMode } from '../../thread/hooks/thread-mode';
+import { ReactionBar } from '../reactions/ReactionBar';
 
 /** iOS presents one modal at a time: the forward sheet waits for this menu to finish closing. */
 const AFTER_MENU_MS = Platform.OS === 'ios' ? 350 : 0;
@@ -19,7 +20,11 @@ interface MessageMenuProps {
   message: MessageView | null;
   /** The chat's number: «تنزيل» asks this chat's file endpoint. */
   phone: string;
+  /** The held bubble's window y: the reaction row floats above it; null = on top of the sheet. */
+  at: number | null;
   onClose: () => void;
+  /** «+» on the reaction row: the emoji sheet for this message. */
+  onMoreEmoji: (m: MessageView) => void;
 }
 
 /**
@@ -27,11 +32,11 @@ interface MessageMenuProps {
  * «نسخ النص» (the copy sheet), «إعادة توجيه», «تنزيل» (owner 2026-10-26). «رد» stays visible but off
  * after the 24 h window (only a template can go then), with the reason under it.
  */
-export function MessageMenu({ message: m, phone, onClose }: MessageMenuProps) {
+export function MessageMenu({ message: m, phone, at, onClose, onMoreEmoji }: MessageMenuProps) {
   const { color } = useTheme();
-  const { enabled, canSend, setReply, openForward, showCopy, say } = useChatActions();
+  const { enabled, canSend, setReply, openForward, showCopy, say, reactable, react } = useChatActions();
   const teacher = useThreadMode().kind === 'teacher';
-  const offers = m ? bubbleOffers(m, { enabled, teacher }) : null;
+  const offers = m ? bubbleOffers(m, { enabled, teacher, react: reactable(m) }) : null;
   const reply = offers?.reply === true;
   const forward = offers?.forward === true;
   // After the menu has closed (iOS shows one modal at a time).
@@ -39,6 +44,13 @@ export function MessageMenu({ message: m, phone, onClose }: MessageMenuProps) {
     onClose();
     setTimeout(run, AFTER_MENU_MS);
   };
+  // «تفاعل» (owner 2026-10-27): WhatsApp's row of emoji over the held bubble; one tap reacts and closes.
+  const bar = m && offers?.react ? (
+    <ReactionBar message={m} top={at} onReact={(e) => {
+        onClose();
+        react(m, e);
+      }} onMore={() => later(() => onMoreEmoji(m))} />
+  ) : null;
   return (
     <Modal visible={m !== null} transparent animationType="fade" onRequestClose={onClose}>
       <Pressable
@@ -47,6 +59,7 @@ export function MessageMenu({ message: m, phone, onClose }: MessageMenuProps) {
         onPress={onClose}
         style={{ flex: 1, justifyContent: 'flex-end', backgroundColor: color.scrim }}
       >
+        {at !== null ? bar : null}
         {/* A tap on the sheet itself does not close it. */}
         <View
           testID="message-menu"
@@ -61,6 +74,7 @@ export function MessageMenu({ message: m, phone, onClose }: MessageMenuProps) {
             backgroundColor: color.raised,
           }}
         >
+          {at === null ? bar : null}
           {m ? (
             <ContentText
               source={quoteText(quoteOf(m))}

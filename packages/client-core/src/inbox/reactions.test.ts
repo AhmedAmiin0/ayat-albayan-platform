@@ -1,6 +1,6 @@
 import type { MessageView } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
-import { patchMessage, reactionPath, reactionPill, reactorLines, tappedReaction, withOurs } from './reactions.js';
+import { patchMessage, reactionName, reactionPath, reactionPill, reactorLines, tappedReaction, withOurs } from './reactions.js';
 
 const R = { theirs: '❤️', ours: '👍', ours_by: 'هبة' };
 const msg = (id: string) => ({ id, body: id }) as unknown as MessageView;
@@ -42,5 +42,10 @@ describe('reactions (client-core)', () => {
     const out = patchMessage(pages, 'b', { reactions: R });
     expect(out[0]?.messages[1]).toMatchObject({ id: 'b', reactions: R });
     expect(out[1]).toBe(pages[1]);
+  });
+
+  it('names the quick-row emoji, nothing else', () => {
+    expect(['👍', '❤️', '😂', '😮', '😢', '🙏'].map(reactionName)).toEqual(['like', 'love', 'laugh', 'wow', 'sad', 'thanks']);
+    expect(reactionName('🎉')).toBeNull();
   });
 });

@@ -19,6 +19,10 @@ export interface ChatActions {
   forward: (m: MessageView) => void;
   /** The quoted original is older than the loaded pages: say so. */
   notLoaded: () => void;
+  /** «تفاعل» (owner 2026-10-27): this bubble's menu offers the emoji row (canReact). */
+  reactable: (m: MessageView) => boolean;
+  /** Ours on `m` (null removes it): optimistic, one send. */
+  react: (m: MessageView, emoji: string | null) => void;
 }
 
 const noop = () => undefined;
@@ -32,6 +36,8 @@ export const ChatActionsContext = createContext<ChatActions>({
   cancelReply: noop,
   forward: noop,
   notLoaded: noop,
+  reactable: () => false,
+  react: noop,
 });
 
 export const useChatActions = (): ChatActions => useContext(ChatActionsContext);
