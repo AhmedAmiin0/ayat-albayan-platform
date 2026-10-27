@@ -15,6 +15,7 @@ import { THREAD_SORT, type ThreadListFilter } from './threads.list';
 import { threadSearchFilter, type ThreadRow } from './threads.mapper';
 import { newestPerLine, type ReadMark } from '../reads/read-marks';
 import { markUnsupported, type ListedThreadRow } from './last-unsupported';
+import { phoneList } from '../../numbers';
 
 export type { ThreadListFilter } from './threads.list';
 
@@ -36,9 +37,7 @@ export class ThreadsQueries {
    * requested order (default newest message first).
    */
   async list(f: ThreadListFilter): Promise<{ items: ListedThreadRow[]; total: number }> {
-    let query = f.list
-      ? this.db.from('v_list_threads').select('*', { count: 'exact' }).eq('list_id', f.list)
-      : this.db.from('v_threads').select('*', { count: 'exact' });
+    let query = this.source(f);
     if (f.unread) query = query.gt('unread_count', 0);
     if (f.phones) query = query.in('phone_e164', [...f.phones]);
     if (f.status) query = query.eq('lead_status', f.status);
@@ -48,6 +47,14 @@ export class ThreadsQueries {
     const { data, error, count } = await applySort(query, f, THREAD_SORT).range(from, from + f.pageSize - 1);
     check(error, 'threads read');
     return { items: await markUnsupported(this.db, data ?? []), total: count ?? 0 };
+  }
+
+  /** The chats of a list «القوائم» or all of them, never the academy's own numbers (`hide`). */
+  private source(f: ThreadListFilter) {
+    const query = f.list
+      ? this.db.from('v_list_threads').select('*', { count: 'exact' }).eq('list_id', f.list)
+      : this.db.from('v_threads').select('*', { count: 'exact' });
+    return f.hide?.length ? query.not('phone_e164', 'in', phoneList(f.hide)) : query;
   }
 
   async thread(phone: string): Promise<ThreadRow | null> {

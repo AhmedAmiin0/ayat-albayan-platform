@@ -19,4 +19,5 @@ export const CONFIG_QUERY_KEYS = {
 export const NUMBERS_QUERY_KEYS = {
   numbers: ['admin', 'numbers'],
   parity: ['admin', 'communications', 'parity'],
+  ownTraffic: ['admin', 'numbers', 'own-traffic'],
 } as const;

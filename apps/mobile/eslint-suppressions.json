@@ -1541,7 +1541,7 @@
   },
   "src/sales/screens/SalesScheduleScreen.tsx": {
     "ab/module-boundaries": {
-      "count": 7
+      "count": 4
     }
   },
   "src/sales/screens/SalesTeacherScreen.tsx": {
@@ -1826,7 +1826,7 @@
   },
   "src/today/screens/TodayScreen.tsx": {
     "ab/module-boundaries": {
-      "count": 7
+      "count": 3
     }
   },
   "src/trial-date/components/PickedLines.tsx": {

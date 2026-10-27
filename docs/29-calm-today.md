@@ -100,6 +100,19 @@ Every tab layout on AppNativeTabs (admin, teacher, sales, assistant):
 Reduced motion respected (the pill jumps); RTL (`start`/`end` only); every button has a spoken name; 44 px
 targets; MSA strings in `packages/shared/i18n/ar.json` with `en.json` parity (domain vocabulary kept).
 
+## 9. The salesperson's «اليوم» (owner 2026-10-27)
+
+The sales tree (`app/sales/`) opens on the same screen as its first tab, gated like «جدول الحلقات»
+(`self.sales_academy`); without it she lands on «المحادثات» as before. One body (`TodayLayout`) serves
+both trees; only the day hook, the hero's actions and the sheet differ:
+
+- Data: the lessons her «جدول الحلقات» shows today (`GET /sales/schedule`, every teacher, the same query
+  and cache), never more; tomorrow on a quiet day from the same endpoint; «جدول الغد» opens her schedule tab.
+- Read-only: no «تأكيد الحلقة», إلغاء, «غيّر الميعاد», «عدّل الوقت» or «حجز تعويضي». The hero shows
+  «ادخل الحلقة» only on the running lesson, and «التفاصيل»; rows and the hero open the sales read-only
+  «تفاصيل الحلقة». «تحتاج تأكيد» stays a filter. The bell shows only with `notifications.push`.
+- A «حلقة تحتاج تأكيد» push opens «اليوم» (with the gate); a chat push still opens the chat.
+
 ## Next APK (TODO)
 
 Add `expo-blur`: fill alpha 0.45 + `BlurView` intensity ~60 behind the capsule for a real iOS-like blur

@@ -55,12 +55,24 @@ describe('POST /threads/forward with a file: re-sent from our storage, never upl
   it('theirs: a voice note is fetched into our cache first (as the bubble does), then copied', async () => {
     src = messageRow({ id: SRC, direction: 'inbound', phone_e164: PHONE, template_key: null, body: null, media_id: 'mid', media_mime: 'audio/ogg; codecs=opus' });
     const msg = { id: SRC, direction: 'inbound', media_mime: 'audio/ogg; codecs=opus' } as MediaMessage;
-    vi.spyOn(inbound, 'load').mockResolvedValue(msg);
+    vi.spyOn(inbound, 'loadChat').mockResolvedValue(msg);
     const cache = vi.spyOn(inbound, 'cache').mockResolvedValue({ bucket: 'wa-media', path: `${SRC}.ogg`, mime: 'audio/ogg' });
     await t.call(forward());
     expect(cache).toHaveBeenCalledWith(msg);
     expect(storage.copy).toHaveBeenCalledWith({ from: { bucket: 'wa-media', path: `${SRC}.ogg` }, to: { bucket: 'wa-media', path: `${COPY}.ogg` } });
     expect(t.queries.enqueue).toHaveBeenCalledWith(expect.objectContaining({ media_path: `${COPY}.ogg`, media_mime: 'audio/ogg', body: null }));
+  });
+
+  it('an echo of the WhatsApp Business app (outbound, Meta media id) is cached first too, then copied', async () => {
+    src = messageRow({ id: SRC, phone_e164: PHONE, template_key: null, body: '[audio]', media_id: 'mid', media_path: null, media_mime: 'audio/ogg' });
+    const msg = { id: SRC, direction: 'outbound', media_id: 'mid', media_mime: 'audio/ogg' } as MediaMessage;
+    const load = vi.spyOn(inbound, 'loadChat').mockResolvedValue(msg);
+    vi.spyOn(inbound, 'cache').mockResolvedValue({ bucket: 'wa-media', path: `${SRC}.ogg`, mime: 'audio/ogg' });
+    await t.call(forward());
+    expect(load).toHaveBeenCalledWith(SRC);
+    expect(storage.copy).toHaveBeenCalledWith({ from: { bucket: 'wa-media', path: `${SRC}.ogg` }, to: { bucket: 'wa-media', path: `${COPY}.ogg` } });
+    // Its «[audio]» marker is no caption.
+    expect(t.queries.enqueue).toHaveBeenCalledWith(expect.objectContaining({ media_path: `${COPY}.ogg`, body: null }));
   });
 
   it('a teacher never sends files: every target skipped as files_forbidden, nothing copied or queued', async () => {

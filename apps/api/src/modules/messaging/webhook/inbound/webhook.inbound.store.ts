@@ -16,6 +16,8 @@ export interface LeadLink {
   owner: string | null;
 }
 
+const NOBODY: Contact = { guardian: null, teacher: null, lead: null };
+
 export interface Sender {
   who: Contact;
   lead: LeadLink;
@@ -64,6 +66,14 @@ export class InboundStore {
       await this.queries.updateLead(input.leadId, { follow_up_stage: 0 });
     }
     return stored;
+  }
+
+  /**
+   * A message from one of the academy's own numbers (OwnNumbers): the row only, already read, with no
+   * lead, guardian or lesson; false = a replay. Never touches a lead (no follow-up reset).
+   */
+  saveOwn(m: InboundEvent, phone: string): Promise<boolean> {
+    return this.save({ m, phone, who: NOBODY, leadId: null, lessonId: null, stage: 0, read: true });
   }
 
   /** Legacy mode: the wa_numbers row of the receiving phone_number_id, as the chat import stamps it. Never blocks the row. */

@@ -1,6 +1,7 @@
 import { FOLLOW_UP_STATUSES, type FollowUpNote } from '@ab/shared';
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, Optional } from '@nestjs/common';
 import { DB, type Db } from '../../../common/db/db.module';
+import { OwnNumbers } from '../numbers';
 import type { QueuedMessage } from '../reminders/queued-row';
 import { approvedTemplates, queueMessages } from '../reminders/reminders.queries';
 import { readAll } from '../../teaching/scheduling/read-all';
@@ -26,20 +27,25 @@ export interface AdvanceInput {
 /** Reads and idempotent writes of the follow-up job (R-LEAD-05, docs/12 §7). */
 @Injectable()
 export class FollowUpsQueries {
-  constructor(@Inject(DB) private readonly db: Db) {}
+  constructor(
+    @Inject(DB) private readonly db: Db,
+    /** The academy's own numbers: their old lead never gets a follow-up (owner 2026-10-27). */
+    @Optional() private readonly own?: OwnNumbers,
+  ) {}
 
-  /** Leads in a follow-up status, not paused, with a follow-up left (stage < stages). */
-  candidates(stages: number): Promise<FollowUpLeadRow[]> {
-    return readAll((from, to) =>
-      this.db
+  /** Leads in a follow-up status, not paused, with a follow-up left (stage < stages); never our own numbers. */
+  async candidates(stages: number): Promise<FollowUpLeadRow[]> {
+    const own = this.own ? await this.own.notIn() : null;
+    return readAll((from, to) => {
+      let query = this.db
         .from('leads')
         .select(LEAD_SELECT)
         .in('status', [...FOLLOW_UP_STATUSES])
         .eq('follow_up_paused', false)
-        .lt('follow_up_stage', stages)
-        .order('id')
-        .range(from, to),
-    );
+        .lt('follow_up_stage', stages);
+      if (own) query = query.not('phone_e164', 'in', own);
+      return query.order('id').range(from, to);
+    });
   }
 
   async approved(): Promise<boolean> {

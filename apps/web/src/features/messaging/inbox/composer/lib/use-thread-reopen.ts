@@ -1,4 +1,5 @@
-import type { ReopenTemplateOutcome, ThreadView } from '@ab/shared';
+import { reopenNoteKey, type ReopenState } from '@ab/client-core';
+import type { ThreadView } from '@ab/shared';
 import { useQueryClient } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import { t } from '@/lib/i18n/i18n';
@@ -8,8 +9,8 @@ import { reopenThread } from '../../api/api';
 // server once per thread per app session (it dedupes per day anyway). Lives in the composer, which
 // mounts only for the thread a staff member opened: never on list scroll or a prefetch.
 
-/** Phones asked this app session → the answer (null while it is on its way or when it failed). */
-const asked = new Map<string, ReopenTemplateOutcome | null>();
+/** Phones asked this app session → the answer (null while it is on its way). */
+const asked = new Map<string, ReopenState | null>();
 
 /** Tests only: a fresh app session. */
 export function forgetReopens(): void {
@@ -17,14 +18,12 @@ export function forgetReopens(): void {
 }
 
 /** The note above the composer, or null (nothing was asked, or nothing for this user to see). */
-export function reopenNote(outcome: ReopenTemplateOutcome | null): string | null {
-  if (outcome === 'template_queued') return t.inbox.reopen.requested;
-  if (outcome === 'already_requested_today') return t.inbox.reopen.requestedToday;
-  if (outcome === 'template_unavailable') return t.inbox.reopen.unavailable;
-  return null;
+export function reopenNote(outcome: ReopenState | null): string | null {
+  const key = reopenNoteKey(outcome);
+  return key ? t.inbox.reopen[key] : null;
 }
 
-export function useThreadReopen(thread: Pick<ThreadView, 'phone_e164' | 'session_open'>): ReopenTemplateOutcome | null {
+export function useThreadReopen(thread: Pick<ThreadView, 'phone_e164' | 'session_open'>): ReopenState | null {
   const phone = thread.phone_e164;
   const queryClient = useQueryClient();
   const [outcome, setOutcome] = useState(() => asked.get(phone) ?? null);
@@ -41,7 +40,9 @@ export function useThreadReopen(thread: Pick<ThreadView, 'phone_e164' | 'session
         // The queued template shows in the log like any sent one.
         if (template === 'template_queued') await queryClient.invalidateQueries({ queryKey: ['threads', 'detail', phone] });
       } catch {
-        // Failed: no note, and not asked again this session (the server logs its side).
+        // Failed: say so (send it by hand), and not asked again this session (the server logs its side).
+        asked.set(phone, 'failed');
+        setOutcome('failed');
       }
     })();
   }, [closed, phone, queryClient]);

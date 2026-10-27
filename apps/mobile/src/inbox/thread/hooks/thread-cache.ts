@@ -14,6 +14,9 @@ export const threadPath = (phone: string) => `/threads/${encodeURIComponent(phon
 /** ['threads', phone]: a push for this phone refreshes exactly this thread. */
 export const threadKey = (phone: string) => pathKey(`/threads/${phone}`);
 
+/** The mutation key of a chat's text / template send. */
+export const sendKey = (phone: string) => ['inbox-send', phone];
+
 /** Oldest → newest across the loaded pages; a row a refetch already brought in shows once. */
 export function threadMessages(data: ThreadCache | undefined): MessageView[] {
   const seen = new Set<string>();
@@ -47,6 +50,30 @@ export function replaceMessage(data: ThreadCache | undefined, id: string, row: M
 /** Rollback of a send the API refused. */
 export function removeMessage(data: ThreadCache | undefined, id: string) {
   return mapMessages(data, (messages) => messages.filter((m) => m.id !== id));
+}
+
+/**
+ * A poll's fresh newest page folded into pages[0] (older pages untouched, so nothing shifts): its rows
+ * win; older rows it no longer covers stay before them, rows it does not know yet (a send still in
+ * flight, an answer that came back first) stay after them, so a refetch never drops a provisional row.
+ */
+export function mergeNewest(data: ThreadCache | undefined, fresh: ThreadDetail): ThreadCache | undefined {
+  const head = data?.pages[0];
+  if (!data || !head) return data;
+  const ids = new Set(fresh.messages.map((m) => m.id));
+  const from = Date.parse(fresh.messages[0]?.created_at ?? '') || -Infinity;
+  const rest = head.messages.filter((m) => !ids.has(m.id));
+  const before = rest.filter((m) => Date.parse(m.created_at) < from);
+  const after = rest.filter((m) => Date.parse(m.created_at) >= from);
+  const messages = [...before, ...fresh.messages, ...after];
+  const page = { ...fresh, messages, has_more: before.length > 0 ? head.has_more : fresh.has_more };
+  return { ...data, pages: [page, ...data.pages.slice(1)] };
+}
+
+/** More new rows than one page since the last read: merging would hide the ones in between. */
+export function leavesGap(data: ThreadCache | undefined, fresh: ThreadDetail): boolean {
+  const cached = new Set(data?.pages[0]?.messages.map((m) => m.id));
+  return fresh.has_more && cached.size > 0 && !fresh.messages.some((m) => cached.has(m.id));
 }
 
 interface Provisional {

@@ -16,19 +16,22 @@ const toSalesThread = (data: unknown, can: Can) => {
 
 const toSalesStudents = (_data: unknown, can: Can) => (canOpen(can, 'salesStudents') ? '/sales/students' : SALES_MORE);
 
+/** A lesson → «اليوم», her landing, when she sees the academy schedule. */
+const toSalesToday = (_data: unknown, can: Can) => (canOpen(can, 'salesSchedule') ? '/sales/today' : SALES_MORE);
+
 /** R-MEET-03: «الاجتماعات» is back for sales (docs/16 row 12b, reversed 2026-10-12). */
 const toSalesMeetings = (_data: unknown, can: Can) => (canOpen(can, 'salesMeetings') ? '/sales/more/meetings' : SALES_MORE);
 
 /**
  * A message → that number's chat in «المحادثات» (the list without a phone); a new student, a
- * report or a payment due → «الطلاب»; a meeting invite → «الاجتماعات» (with meetings.read); anything
- * else (a lesson to confirm) → «المزيد».
+ * report or a payment due → «الطلاب»; a meeting invite → «الاجتماعات» (with meetings.read); a
+ * lesson to confirm → «اليوم» (with self.sales_academy); anything else → «المزيد».
  */
 const SALES_ROUTES: Record<PushKind, (data: unknown, can: Can) => string> = {
   new_lead: toSalesThread,
   new_message: toSalesThread,
   reminder_failed: toSalesThread,
-  lesson_needs_confirmation: () => SALES_MORE,
+  lesson_needs_confirmation: toSalesToday,
   report_submitted: toSalesStudents,
   payment_due: toSalesStudents,
   new_student: toSalesStudents,

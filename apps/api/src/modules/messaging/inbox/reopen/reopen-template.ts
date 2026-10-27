@@ -71,8 +71,9 @@ export class ReopenTemplate {
     }
   }
 
+  /** Why, as an info line: ThreadReopenService logs the outcome's one warn line. */
   private skipped(phone: string, code: string): Queued {
-    this.log.warn(`reopen template not queued for ${last4(phone)}: ${code}`);
+    this.log.log(`reopen template not queued for ${last4(phone)}: ${code}`);
     return { outcome: 'not_sent' };
   }
 }

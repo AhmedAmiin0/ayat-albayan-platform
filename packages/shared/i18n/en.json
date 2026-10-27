@@ -2516,7 +2516,7 @@
       "captionPlaceholder": "Add a caption (optional)",
       "sendFile": "Send"
     },
-    "sessionClosed": "More than 24 hours have passed since their last message — you need to send a template",
+    "sessionClosed": "24 hours have passed since their last message, so send a template.",
     "sessionOpenUntil": "You can reply with a regular message until {time}",
     "timesIn": "Times in {city} time",
     "messagingOff": "Sending is paused right now — messages wait in the queue until it's turned on",
@@ -2552,8 +2552,12 @@
     "mediaNotAllowed": "Viewing files isn't available to you",
     "viewMedia": "View {kind}",
     "mediaExpired": "This file has expired",
-    "mediaInCrm": "This file reached a number that runs through the CRM: open it there",
+    "mediaInCrm": "This file is from the academy’s old number and can’t be played here.",
     "photoFailed": "Couldn't load the photo. Tap to try again",
+    "mediaFailed": "Couldn’t play the file. Tap to try again",
+    "playbackSpeed": "Playback speed {rate}",
+    "voicePosition": "Playback position",
+    "closeVideo": "Close video",
     "sendFailed": "The message wasn't sent. Try again",
     "leadPanel": "Lead",
     "leadSheet": "Lead details & registration",
@@ -2597,7 +2601,8 @@
     "reopen": {
       "requested": "A request to reopen the chat was sent — waiting for the other side to reply",
       "requestedToday": "Today’s request was already sent",
-      "unavailable": "Chat reopened — the reopen template is not available yet"
+      "unavailable": "Chat reopened — the reopen template is not available yet",
+      "failed": "The reopen request could not be sent — send the template yourself from «Send template»"
     },
     "rating": {
       "send": "Send lesson rating",
@@ -6228,6 +6233,10 @@
     "publicNumber": "Number shown to families",
     "publicNumberEdit": "Edited in «Values» → Academy",
     "publicNumberNone": "Not set",
+    "ownTrafficTitle": "Messages between the academy's numbers",
+    "ownTrafficCount": "In the last 7 days: {n}",
+    "ownTrafficHint": "Messages that reached one academy number from another, such as the old system's reminders. They are kept for review, never shown in chats or the leads list, and never raise an alert.",
+    "ownTrafficError": "Could not read the count.",
     "webOnly": "Numbers, templates and safety are managed on the website.",
     "safetyIntro": "Settings that keep messages from reaching the wrong people while testing.",
     "crmTitle": "Moving the number off the CRM",
