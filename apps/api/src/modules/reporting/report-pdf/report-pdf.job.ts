@@ -86,6 +86,8 @@ export class ReportPdfJob implements OnApplicationBootstrap, OnModuleDestroy {
   async runOnce(now = new Date()): Promise<RunSummary> {
     const summary: RunSummary = { recovered: 0, rendered: 0, failed: 0, skipped: 0, held: 0 };
     try {
+      // Idle (the usual tick): one cheap read, no stale-recovery update and no pending read.
+      if (!(await this.queries.hasWork())) return summary;
       summary.recovered = await this.queries.recoverStale(new Date(now.getTime() - STALE_MS));
       for (const id of await this.queries.pendingIds(BATCH)) {
         summary[await this.process(id)] += 1;
