@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
 import { rolledBack, type Tx } from '../support/edit-time';
 
-// Message reactions (migration 20261028000900, owner 2026-10-27): their_reaction / our_reaction are columns
+// Message reactions (migration 20261028000930, owner 2026-10-27): their_reaction / our_reaction are columns
 // of the reacted message; reaction ROWS (stored before, and our reaction sends) are never a preview or
 // unread; the backfill fills their_reaction from the stored rows (same phone, latest wins) and deletes
 // nothing; a failed reaction send puts ours back. Example numbers only. Rolled back.
