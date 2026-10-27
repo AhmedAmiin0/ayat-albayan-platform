@@ -4,6 +4,7 @@ import { one } from './assistant';
 import { ar } from './fixtures';
 import { openNav } from './nav';
 import { withSql } from './schedule';
+import { AR_LOCALE } from './locale';
 
 // The sales portal e2e (docs/16, owner report 2026-10-12): sign-in, nav and the seeds it reads.
 
@@ -14,7 +15,7 @@ export const salesNav = async (page: Page) => (await openNav(page)).getByRole('n
 /** A salesperson's page, signed in through the login form (Arabic UI). `videoDir` records the page (saved on context close). */
 export async function signInSales(browser: Browser, email: string, videoDir?: string): Promise<Page> {
   const recordVideo = videoDir ? { recordVideo: { dir: videoDir, size: { width: 1280, height: 720 } } } : {};
-  const page = await (await browser.newContext({ locale: 'ar', ...recordVideo })).newPage();
+  const page = await (await browser.newContext({ locale: AR_LOCALE, ...recordVideo })).newPage();
   await page.goto('/login');
   await page.getByLabel(ar.auth.email).fill(email);
   await page.getByLabel(ar.auth.password).fill(PASSWORD);
