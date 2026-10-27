@@ -208,8 +208,14 @@ repo), and keeps it in the private `wa-media` bucket (`messages/crm-history/`).
 copies, once a minute, a batch of 20 such rows (two at a time) through the same path an admin's open uses (same
 host check, no redirect, 10 s timeout, size cap, one object per message, `media_path` set only where empty). A file
 that fails three times is left as is and counted as failed; a row that cannot be ours (a body that is more than the
-link, a file over the cap) is skipped. When no row is left the switch turns itself off and one audit row
-(`crm_media_copy_done`, `{copied, failed, skipped}`) is written. Message bodies are never changed and nothing is
+link, a file over the cap) is skipped. Only a real storage answer about the file (400, 404, …) counts as a failure:
+when the CRM's storage does not answer (no connection, the timeout, 5xx, 429: `crm_unreachable`) no attempt is
+counted, the tick stops with a warning in the API log and the next minute tries again. Turning the switch on again
+re-arms every failed row (migration `20261028000920_crm_media_copy_retry.sql` deletes its non-skipped failure
+rows); skipped rows stay skipped. When no row is left the switch turns itself off and one audit row
+(`crm_media_copy_done`, `{copied, failed, skipped, remaining}`) is written. `remaining` counts imported CRM file
+links on **any** host still without a copy and never tried (a link on another host than `crm_media_host` is never
+picked by the batch). Message bodies are never changed and nothing is
 deleted. Failed or skipped rows are listed in `crm_media_copy_failures` (migration
 `20261028000891_crm_media_copy.sql`). The 30-day purge of cached voice notes and videos (`WaMediaRetentionJob`)
 skips these copies: only rows with Meta's media id are purged, because once the CRM's storage is private our copy
@@ -217,6 +223,9 @@ is the only one.
 
 **Owner steps.** 1) Set `crm_media_host` (only the host, no `https://`, no path). 2) Turn on «نسخ كل ملفات CRM القديم
 الآن». 3) Wait for it to turn itself off (a few hundred files take well under an hour), then read the
-`crm_media_copy_done` audit row: `failed` and `skipped` should be 0 or explained. 4) **Only once the old CRM no
+`crm_media_copy_done` audit row. Go on only when `remaining` = 0 **and** `copied` > 0, with `failed` and `skipped`
+0 or explained: `remaining` > 0 means links on another host (fix `crm_media_host` and turn the switch on again);
+`copied` = 0 means nothing was copied (a wrong host). `failed` > 0 after an outage: turn the switch on again to
+retry those rows. 4) **Only once the old CRM no
 longer needs to show its chat history**, in the old CRM's Supabase dashboard: Storage → `chat-media` → make the
 bucket private. We never change the old CRM or its storage settings: it is live and uses those links.

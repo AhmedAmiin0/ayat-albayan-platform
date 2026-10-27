@@ -1,5 +1,6 @@
 import { HttpException, Injectable, Logger } from '@nestjs/common';
 import { allowedCrmUrl, isCrmHistoryRow } from '../crm-history/crm-history-url';
+import { CRM_UNREACHABLE } from '../crm-history/crm-media.fetch';
 import type { MediaMessage } from '../inbound-media.queries';
 import { InboundMedia } from '../inbound-media.service';
 import { CrmMediaCopyQueries } from './crm-media-copy.queries';
@@ -9,8 +10,11 @@ export const BATCH = 20;
 /** A row that failed this many times is left without a copy and counted as failed. */
 export const MAX_ATTEMPTS = 3;
 
-/** copied; retry (a failure below the cap); failed (at the cap); skipped (never ours to fetch). */
-export type CopyOutcome = 'copied' | 'retry' | 'failed' | 'skipped';
+/**
+ * copied; retry (a failure below the cap); failed (at the cap); skipped (never ours to fetch);
+ * unreachable (the CRM's storage did not answer: no attempt counted, the job stops its tick).
+ */
+export type CopyOutcome = 'copied' | 'retry' | 'failed' | 'skipped' | 'unreachable';
 
 /** Answers that will not change on a retry: not a chat file, gone row, not a CRM file, too large. */
 const PERMANENT = new Set([400, 404, 409, 413]);
@@ -49,6 +53,8 @@ export class CrmMediaCopier {
   async copy(id: string, host: string): Promise<CopyOutcome> {
     const failure = await this.attempt(id, host);
     if (!failure) return 'copied';
+    // An outage says nothing about the file: counting it would burn every row's attempts in minutes.
+    if (failure.error === CRM_UNREACHABLE) return 'unreachable';
     // A row deleted meanwhile has no failure to record (the foreign key) and never comes back.
     if (failure.status === 404) return 'skipped';
     return this.mark({ id, error: failure.error, skip: failure.skip });

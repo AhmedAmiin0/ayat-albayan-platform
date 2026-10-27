@@ -1,6 +1,6 @@
 import { HttpException } from '@nestjs/common';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { CRM_FETCH_TIMEOUT_MS, fetchCrmMedia, sameFamily } from './crm-media.fetch';
+import { CRM_FETCH_TIMEOUT_MS, CRM_UNREACHABLE, fetchCrmMedia, sameFamily } from './crm-media.fetch';
 import { crmLink, crmResponse, stubFetch } from './crm-history.fakes';
 
 const url = new URL(crmLink());
@@ -29,13 +29,25 @@ describe('fetchCrmMedia (the SSRF-guarded GET of one old-CRM file)', () => {
     expect(fetch).toHaveBeenCalledTimes(1);
   });
 
-  it('404, 500 or an unreachable host → 410 media_expired', async () => {
-    stubFetch(async () => crmResponse(0, {}, 404));
-    expect(await status(fetchCrmMedia(input))).toEqual([410, 'media_expired']);
-    stubFetch(async () => crmResponse(0, {}, 500));
-    expect(await status(fetchCrmMedia(input))).toEqual([410, 'media_expired']);
+  it('a storage answer about the file (400, 404) → 410 media_expired', async () => {
+    for (const code of [400, 404]) {
+      stubFetch(async () => crmResponse(0, {}, code));
+      expect(await status(fetchCrmMedia(input))).toEqual([410, 'media_expired']);
+    }
+  });
+
+  it('no answer (unreachable, timeout, broken stream), 5xx or 429 → 502 crm_unreachable: not gone, retry later', async () => {
+    for (const code of [500, 502, 503, 429]) {
+      stubFetch(async () => crmResponse(0, {}, code));
+      expect(await status(fetchCrmMedia(input))).toEqual([502, CRM_UNREACHABLE]);
+    }
     stubFetch(async () => Promise.reject(new TypeError('fetch failed')));
-    expect(await status(fetchCrmMedia(input))).toEqual([410, 'media_expired']);
+    expect(await status(fetchCrmMedia(input))).toEqual([502, CRM_UNREACHABLE]);
+    stubFetch(async () => Promise.reject(new DOMException('timed out', 'TimeoutError')));
+    expect(await status(fetchCrmMedia(input))).toEqual([502, CRM_UNREACHABLE]);
+    const broken = new ReadableStream<Uint8Array>({ pull: (c) => c.error(new Error('reset')) });
+    stubFetch(async () => new Response(broken, { headers: { 'content-type': 'image/webp' } }));
+    expect(await status(fetchCrmMedia(input))).toEqual([502, CRM_UNREACHABLE]);
   });
 
   it('a content type outside the row\'s family is refused (410)', async () => {

@@ -32,3 +32,24 @@ describe('migration 20261028000891: copy every old-CRM file', () => {
     }
   });
 });
+
+const retry = readFileSync(join(dir, '20261028000920_crm_media_copy_retry.sql'), 'utf8').replace(/--[^\n]*/g, '');
+
+describe('migration 20261028000920: re-arm on switch-on, remaining on any host', () => {
+  it('switching crm_media_copy_all on (insert, or a change to true) deletes only non-skipped failure rows', () => {
+    expect(retry).toContain("new.key = 'crm_media_copy_all' and new.value = 'true'::jsonb");
+    expect(retry).toContain("tg_op = 'INSERT' or old.value is distinct from new.value");
+    expect(retry).toContain('delete from public.crm_media_copy_failures where not skipped;');
+    expect(retry).toMatch(/after insert or update of value on public\.settings\s+for each row execute function public\.crm_media_copy_rearm\(\)/);
+    expect(retry).toContain('security definer set search_path = \'\'');
+    expect(retry).not.toMatch(/update\s+public\.messages|delete\s+from\s+public\.messages/i);
+  });
+
+  it('remaining: a CRM link on any host, no media id, no copy, no failure row; counts stay service role only', () => {
+    expect(retry).toContain(`'remaining', (select count(*) from public.messages m`);
+    expect(retry).toContain(`and m.body like 'https://%${CRM_MEDIA_PREFIX}%'`);
+    expect(retry).toContain('not exists (select 1 from public.crm_media_copy_failures f where f.message_id = m.id)');
+    expect(retry).toContain('revoke all on function public.crm_media_copy_counts(text) from public, anon, authenticated');
+    expect(retry).toContain('grant execute on function public.crm_media_copy_counts(text) to service_role');
+  });
+});
