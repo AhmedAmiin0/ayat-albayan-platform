@@ -124,11 +124,6 @@
       "count": 1
     }
   },
-  "src/messaging/chat/views.ts": {
-    "ab/module-boundaries": {
-      "count": 1
-    }
-  },
   "src/messaging/lesson/booking-confirmation.ts": {
     "ab/module-boundaries": {
       "count": 2
