@@ -22,7 +22,6 @@ interface DetailsParts {
   mine: boolean;
 }
 
-const NO_REPORTS = { items: [], total: 0 };
 
 const iso = (at: string): string => new Date(at).toISOString();
 
@@ -58,8 +57,12 @@ function attendanceDays(studentId: string, lessons: readonly AttendanceRow[]): S
  * Whitelist of «تفاصيل الطالب» (docs/16 row 36): no price, payment, note, phone or meeting link («الجدول»
  * included). Not hers: no subscription and no report, whatever was read.
  */
+/** Hers: the subscriptions and the sent reports; not hers: neither, whatever was read. */
+const owned = (p: DetailsParts) =>
+  p.mine ? { subscriptions: subscriptionsOf(p.history), reports: p.reports } : { subscriptions: [], reports: { items: [], total: 0 } };
+
 export function toStudentDetails(p: DetailsParts): SalesStudentDetails {
-  const subscriptions = p.mine ? subscriptionsOf(p.history) : [];
+  const { subscriptions, reports } = owned(p);
   const current = subscriptions.find((s) => s.status === 'active') ?? subscriptions[0];
   const items = attendanceDays(p.student.id, p.lessons);
   return {
@@ -76,7 +79,7 @@ export function toStudentDetails(p: DetailsParts): SalesStudentDetails {
     subscriptions,
     current_id: current?.id ?? null,
     attendance: { items, totals: attendanceTotals(items) },
-    reports: p.mine ? p.reports : NO_REPORTS,
+    reports,
     schedule: p.schedule,
     trial: p.trial,
   };

@@ -10,8 +10,6 @@ import { toStudentDetails } from './sales-student.mapper';
 import { SalesStudentQueries } from './sales-student.queries';
 import { SalesStudentReads } from './sales-student.reads';
 
-const NO_REPORTS = Promise.resolve({ items: [], total: 0 });
-
 /**
  * «تفاصيل الطالب» of the salesperson (docs/16 row 36): ANY student (owner 2026-10-28) with its trial,
  * attendance and «الجدول» (weekly slots, the next lessons; no link); of HER students (`mine`) also the
@@ -32,7 +30,7 @@ export class SalesStudentService {
     const [history, lessons, reports, rules, upcoming, trials] = await Promise.all([
       mine ? this.reads.histories.history(studentId) : null,
       this.queries.pastLessons(studentId, now),
-      mine ? this.reads.sentReports(studentId) : NO_REPORTS,
+      mine ? this.reads.sentReports(studentId) : { items: [], total: 0 },
       this.queries.rules(studentId),
       this.queries.upcoming(studentId, scheduleWindow(now)),
       this.queries.trialDates.trialLessons(studentId),

@@ -2,7 +2,7 @@ import { lessonStatusStyle, RIYADH_TZ, type SalesTeacherOverview } from '@ab/sha
 import { View } from 'react-native';
 import { useClockCycle, whenIn } from '@/core/lib/clock';
 import { t } from '@/core/lib/i18n/i18n';
-import { Note } from '@/more/Note';
+import { Note } from '@/more';
 import { EmptyState } from '@/core/ui/feedback/EmptyState';
 import { StatusChip } from '@/core/ui/feedback/StatusChip';
 import { ListRow } from '@/core/ui/layout/ListRow';

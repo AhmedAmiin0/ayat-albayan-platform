@@ -23,11 +23,10 @@ afterEach(() => jest.useRealTimers());
 
 /** Another salesperson's student as the API answers it: no subscription, no report, nobody `mine`. */
 const notMine = () => {
-  const d = details();
   const lesson = upcoming('u1', '2026-10-27T10:30:00.000Z');
   return details({
     mine: false, subscriptions: [], current_id: null, reports: { items: [], total: 0 },
-    schedule: { student_tz: d.schedule?.student_tz, weekly: [], upcoming: [{ ...lesson, students: lesson.students.map(({ mine: _, ...st }) => st) }] },
+    schedule: { student_tz: 'Africa/Cairo', weekly: [], upcoming: [{ ...lesson, students: lesson.students.map((st) => ({ id: st.id, code: st.code, name: st.name, tz: st.tz })) }] },
   });
 };
 
@@ -47,7 +46,9 @@ test('no trial: «لا توجد حلقة تجريبية»; an old cache without 
   const view = await renderWithQuery(<SalesStudentScreen />);
   expect(await screen.findByText(s.trial.none)).toBeTruthy();
   await view.unmount();
-  const { trial: _, mine: __, ...old } = details();
+  const old: Record<string, unknown> = { ...details() };
+  delete old.trial;
+  delete old.mine;
   mockApiFetch.mockResolvedValue(old);
   await renderWithQuery(<SalesStudentScreen />);
   expect(await screen.findByText(s.current)).toBeTruthy();
@@ -71,7 +72,7 @@ test('not hers: the note, trial, schedule and attendance; no subscription, no re
 });
 
 test('hers, the same lesson: «تغيير الموعد» and «إلغاء الحلقة» stay', async () => {
-  mockApiFetch.mockResolvedValue(details({ schedule: { ...notMine().schedule, upcoming: [upcoming('u1', '2026-10-27T10:30:00.000Z')] } }));
+  mockApiFetch.mockResolvedValue(details({ schedule: { student_tz: 'Africa/Cairo', weekly: [], upcoming: [upcoming('u1', '2026-10-27T10:30:00.000Z')] } }));
   await renderWithQuery(<SalesStudentScreen />);
   await fireEvent.press(await screen.findByRole('button', { name: new RegExp(`^${t.lessons.sheet.openRow.replace('{names}', 'يوسف أحمد')}`) }));
   expect(await screen.findByRole('button', { name: t.sales.lessonActions.reschedule })).toBeTruthy();

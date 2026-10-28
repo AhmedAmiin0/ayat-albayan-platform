@@ -1,8 +1,16 @@
 import { describe, expect, it } from 'vitest';
+import type { TrialLessonRead } from '../../../teaching/booking';
 import { trialRows } from '../sales-students.fakes';
 import { toTrialLessons } from './sales-student-trial.mapper';
 
 const NOW = new Date('2026-10-28T12:00:00Z');
+
+/** The fixture's two rows (the moved date, then the held one), checked present. */
+function pair(): [TrialLessonRead, TrialLessonRead & { lesson: NonNullable<TrialLessonRead['lesson']> }] {
+  const [moved, held] = trialRows();
+  if (!moved || !held?.lesson) throw new Error('fixture');
+  return [moved, { ...held, lesson: held.lesson }];
+}
 
 describe('toTrialLessons', () => {
   it('newest date first, a moved one kept as «نُقلت», the teacher\'s name only (no link)', () => {
@@ -15,15 +23,15 @@ describe('toTrialLessons', () => {
   });
 
   it('a date still ahead is «قادمة»; the same lesson read twice counts once; no trial: []', () => {
-    const [moved, held] = trialRows();
-    const ahead = { ...held, lesson: held.lesson && { ...held.lesson, starts_at: '2026-11-01T15:00:00+00:00', status: 'scheduled' as const, teacher: null } };
+    const [moved, held] = pair();
+    const ahead = { ...held, lesson: { ...held.lesson, starts_at: '2026-11-01T15:00:00+00:00', status: 'scheduled' as const, teacher: null } };
     expect(toTrialLessons([moved, ahead, ahead], NOW).map((l) => [l.lesson_id, l.outcome, l.teacher_name])).toEqual([['t1', 'upcoming', null], ['t0', 'moved', 'أبرار']]);
     expect(toTrialLessons([], NOW)).toEqual([]);
   });
 
   it('a lesson that is no trial (a paid package lesson) is left out', () => {
-    const [, held] = trialRows();
-    const paid = { ...held, chargeable: true, lesson: held.lesson && { ...held.lesson, rule: { package: '8' as const } } };
+    const [, held] = pair();
+    const paid = { ...held, chargeable: true, lesson: { ...held.lesson, rule: { package: '8' as const } } };
     expect(toTrialLessons([paid], NOW)).toEqual([]);
   });
 });

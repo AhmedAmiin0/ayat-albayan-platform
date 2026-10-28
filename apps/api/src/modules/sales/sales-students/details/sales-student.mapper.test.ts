@@ -31,7 +31,7 @@ describe('toStudentDetails', () => {
 
   it('not hers: no subscription, no current, no report, whatever was read; the trial and attendance stay', () => {
     const report = { id: 'r1' } as never;
-    const trial = [{ lesson_id: 't1', starts_at: '2026-10-20T15:00:00.000Z', status: 'completed' as const, attendance: null, teacher_name: null }];
+    const trial = [{ lesson_id: 't1', starts_at: '2026-10-20T15:00:00.000Z', status: 'completed' as const, outcome: 'attended' as const, teacher_name: null }];
     const d = toStudentDetails({ ...parts(history([sub('a', 'active', '2026-08-01')])), reports: { items: [report], total: 1 }, trial, mine: false });
     expect(d).toMatchObject({ mine: false, subscriptions: [], current_id: null, reports: { items: [], total: 0 }, trial });
     expect(toStudentDetails(parts(null)).mine).toBe(true);
