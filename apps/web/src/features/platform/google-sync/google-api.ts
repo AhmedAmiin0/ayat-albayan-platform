@@ -6,6 +6,8 @@ import type {
   GoogleStudentMapRow,
   GoogleSyncItemView,
   GoogleTeacherMapRow,
+  TeacherCalendarOwner,
+  TeacherCalendarView,
 } from '@ab/shared';
 import { queryOptions } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@/lib/http/api';
@@ -61,3 +63,13 @@ export const deleteStudentFolder = (studentId: string) => apiSend<GoogleStudentM
 export const retryGoogleItem = (id: string) => apiSend<GoogleSyncItemView>('POST', `${BASE}/items/${id}/retry`);
 
 export const reconcileGoogle = () => apiSend<{ queued: number }>('POST', `${BASE}/reconcile`);
+
+/** GET /admin/google/teachers/:id/calendar-owner: «تقويم المعلم» (script / platform) and its counts. */
+export const teacherCalendarQuery = (teacherId: string) =>
+  queryOptions({
+    queryKey: ['google', 'teacher-calendar', teacherId],
+    queryFn: () => apiFetch<TeacherCalendarView>(`${BASE}/teachers/${teacherId}/calendar-owner`),
+  });
+
+export const putTeacherCalendarOwner = (input: { teacherId: string; owner: TeacherCalendarOwner }) =>
+  apiSend<TeacherCalendarView>('PUT', `${BASE}/teachers/${input.teacherId}/calendar-owner`, { owner: input.owner });

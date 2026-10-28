@@ -22,4 +22,10 @@ export class GoogleAlerts {
     const reason = ar.googleSync.alerts.teacherUnmapped.replace('{name}', input.name);
     return this.push.notifyAdmins('google_sync_alert', { subject: `teacher:${input.teacherId}`, vars: { reason }, bellOnly: true });
   }
+
+  /** A teacher switched to «من المنصة» whose calendar still holds the script's events: stop the script first. */
+  scriptStillRunning(input: { teacherId: string; name: string }): Promise<void> {
+    const reason = ar.googleSync.alerts.scriptEventPresent.replace('{name}', input.name);
+    return this.push.notifyAdmins('google_sync_alert', { subject: `script_calendar:${input.teacherId}`, vars: { reason }, bellOnly: true });
+  }
 }

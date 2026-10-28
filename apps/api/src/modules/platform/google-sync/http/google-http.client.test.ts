@@ -51,6 +51,15 @@ describe('GoogleHttpClient', () => {
     expect(api()[0]).toMatchObject({ method: 'POST', url: '/calendar/v3/calendars/cal%40group.calendar.google.com/events?sendUpdates=none', auth: 'Bearer fake-access' });
   });
 
+  it('lists one calendar\'s single events in a time range', async () => {
+    reply = () => [200, { items: [{ id: 'ev9', status: 'confirmed', summary: 'حلقة — x' }] }];
+    const c = new GoogleHttpClient(env, 'fake-refresh');
+    expect(await c.listEvents({ calendarId: 'primary', timeMin: '2026-11-01T10:00:00.000Z', timeMax: '2026-11-01T10:01:00.000Z' })).toHaveLength(1);
+    const url = new URL(`http://x${api()[0]?.url ?? ''}`);
+    expect(url.pathname).toBe('/calendar/v3/calendars/primary/events');
+    expect(Object.fromEntries(url.searchParams)).toMatchObject({ timeMin: '2026-11-01T10:00:00.000Z', timeMax: '2026-11-01T10:01:00.000Z', singleEvents: 'true' });
+  });
+
   it('404/410 read as null; 429 is a retryable GoogleApiError', async () => {
     const c = new GoogleHttpClient(env, 'fake-refresh');
     reply = () => [404, { error: { code: 404, errors: [{ reason: 'notFound' }] } }];

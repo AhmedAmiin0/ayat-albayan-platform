@@ -188,3 +188,130 @@ to live (stub) ⇒ events created on the stub; cancel ⇒ deleted; submit a repo
 - **Students**: nothing is written for a student until an admin confirms an existing folder (from the summary
   sheet's suggestion or a pasted link) or «مجلد جديد»; the Drive root must be confirmed too.
 - **e2e**: `tools/google-stub` (port 4120) answers OAuth (auto-consent), Calendar v3, Drive v3 and Sheets v4.
+
+## 7. نقل تقويم معلم إلى المنصة (per-teacher calendar handover, owner GO 2026-10-28)
+
+**Why.** The sync writes events only for platform-origin lessons (§2.2), but most upcoming lessons are imported
+(their rule is an imported `schedule_rules` target). When an assistant or an admin moves or cancels one in the
+platform, the teacher's Google Calendar keeps the old time, because the old Apps Script rebuilds teacher
+calendars from the bookings sheet. Answer 1 still holds: **the platform never edits or deletes an event the
+script made; the script removes its own events itself.**
+
+**How it works (as built).**
+- `teachers.calendar_owner` = `'script'` (default: nothing changes) or `'platform'`, with
+  `calendar_owner_changed_at/by`; admin-only (RLS `teachers_admin` + the `teachers_calendar_owner_guard`
+  trigger + `requireAdmin` on the API), every change audited (`audit_log`, entity `teachers`, action
+  `calendar_owner`). Migration `20261028000942_teacher_calendar_owner.sql`.
+- A lesson is **calendar-managed** when it is platform-origin (unchanged) OR its teacher's `calendar_owner` is
+  `'platform'` (view `v_calendar_managed_lessons`), inside `google_calendar_window_days`. The teacher-calendar
+  event and the main-calendar copy follow that rule; the report PDF / attendance / summary writers keep their
+  own origin rules untouched.
+- Switching a teacher to «من المنصة» queues all of their open lessons ahead; switching back to «من الشيت»
+  queues every lesson of theirs that has one of **our** events, and the writer deletes only those (tagged with
+  our `ab_source` / `ab_lesson_id`). A lesson moved to another teacher follows the new teacher's owner (our old
+  event goes; a new one is made only if the new teacher is platform-owned).
+- **Duplicate guard.** Before INSERTING an event for an imported lesson, the writer lists that calendar's events
+  overlapping the lesson start (`events.list`, `singleEvents`). If an event WITHOUT our tag, starting at the same
+  instant, is titled `حلقة —…` or carries `مربوط تلقائيًا بتاب تقويم الحجوزات`, nothing is written: the item is
+  `skipped` / `script_event_present` and the admins get one bell alert per teacher «تقويم <المعلم> ما زال يُبنى
+  من الشيت: أوقف السكربت لهذا المعلم أولًا». The daily reconcile (and «زامن الآن») tries again, so it heals
+  once the script stopped. The script's event is never edited or deleted.
+- Admin teacher page (web «البيانات» tab, mobile teacher screen): «تقويم المعلم» with «من الشيت (السكربت
+  القديم)» / «من المنصة», the warning, and the counts (events the platform wrote, lessons held back by the guard).
+
+### The Apps Script change — code the OWNER pastes himself
+
+> **This is code for the owner to paste into the «Ayat AlBayan - Sheet & Calendar Sync» project himself. The
+> platform never runs, deploys or edits the Apps Script.** It uses teacher NAMES only (no calendar, sheet or
+> folder ids). The platform tags every event it makes with
+> `extendedProperties.private.ab_source = "platform"` (plus `ab_lesson_id`); in Apps Script `CalendarApp`
+> reads that private property as `event.getTag('ab_source')`.
+
+1. In the bookings spreadsheet add a tab **«المعلمون المنقولون»**: column A, one teacher per row, the name
+   written EXACTLY as in column M of «تقويم الحجوزات».
+2. Paste these helpers at the end of the script:
+
+```javascript
+// ===== نقل تقويم معلم إلى المنصة — يلصقه المالك بنفسه (docs/24 §7) =====
+var MOVED_TAB = 'المعلمون المنقولون';
+var PLATFORM_TAG_KEY = 'ab_source';     // extendedProperties.private of every platform event
+var PLATFORM_TAG_VALUE = 'platform';
+
+/** The moved teachers' names (column A of «المعلمون المنقولون»), as a set. ss = the bookings spreadsheet. */
+function movedTeachers_(ss) {
+  var names = {};
+  var sh = ss.getSheetByName(MOVED_TAB);
+  if (!sh || sh.getLastRow() < 1) return names;
+  sh.getRange(1, 1, sh.getLastRow(), 1).getValues().forEach(function (r) {
+    var n = String(r[0] || '').trim();
+    if (n) names[n] = true;
+  });
+  return names;
+}
+
+/** True for an event the platform made: never delete or edit it. Three checks, any one is enough. */
+function isPlatformEvent_(ev) {
+  try { if (ev.getTag(PLATFORM_TAG_KEY) === PLATFORM_TAG_VALUE) return true; } catch (e) {}
+  var title = String(ev.getTitle() || '');
+  var desc = String(ev.getDescription() || '');
+  return title.indexOf(' · المنصة') !== -1 || desc.indexOf('مربوط تلقائيًا بمنصة آيات البيان') !== -1;
+}
+
+/** Deletes the script's OWN event (or series) by the id stored in its row; never a platform event. */
+function deleteOwnEvent_(cal, id) {
+  if (!cal || !id) return;
+  try {
+    var series = cal.getEventSeriesById(id);
+    if (series && !isPlatformEvent_(series)) { series.deleteEventSeries(); return; }
+  } catch (e) {}
+  try {
+    var ev = cal.getEventById(id);
+    if (ev && !isPlatformEvent_(ev)) ev.deleteEvent();
+  } catch (e) { Logger.log('handover: could not delete ' + id + ': ' + e); }
+}
+
+/**
+ * A row of a moved teacher: delete the script's own events (J on the teacher calendar in N, O on the
+ * default calendar) once, clear J and O, note it in K. Returns true = the caller skips this row.
+ * sheet = «تقويم الحجوزات», rowIndex = the row number (1-based), row = that row's values.
+ */
+function handOverRow_(sheet, rowIndex, row, moved) {
+  var teacher = String(row[12] || '').trim();            // M
+  if (!moved[teacher]) return false;
+  var teacherCalId = String(row[13] || '').trim();       // N
+  var ownId = String(row[9] || '').trim();               // J
+  var mirrorId = String(row[14] || '').trim();           // O
+  if (ownId && teacherCalId) deleteOwnEvent_(CalendarApp.getCalendarById(teacherCalId), ownId);
+  if (mirrorId) deleteOwnEvent_(CalendarApp.getDefaultCalendar(), mirrorId);
+  if (ownId || mirrorId) {
+    sheet.getRange(rowIndex, 10).clearContent();          // J
+    sheet.getRange(rowIndex, 15).clearContent();          // O
+    sheet.getRange(rowIndex, 11).setValue('نُقل تقويم المعلم إلى المنصة');  // K
+  }
+  return true;
+}
+```
+
+3. Three one-line edits in the existing functions (names as in §1):
+   - **`syncToCalendar`** and **`updateCalendarLinks`**: once before the row loop add
+     `var moved = movedTeachers_(ss);` (`ss` = the bookings spreadsheet the function already opens), and as the
+     FIRST line inside the loop add `if (handOverRow_(sheet, i + 1, data[i], moved)) continue;` (`sheet`,
+     `data`, `i` = the names the loop already uses for the tab, its values and the index; `i + 1` is the sheet
+     row number when `data` starts at row 1). If `onSheetEdit` syncs one row itself, add the same two lines there.
+   - **`dedupeCalendars`**: where it collects the events into `title|start` groups, skip platform events so
+     they are never grouped, kept or deleted: `if (isPlatformEvent_(ev)) continue;` (inside a `forEach`, use
+     `return;`).
+
+**الخطوات (لكل معلم):**
+1. الصق المقتطف أعلاه في مشروع السكربت وعدّل الدوال الثلاث كما هو موضح (مرة واحدة فقط لكل المعلمين).
+2. أضف اسم المعلم في تبويب «المعلمون المنقولون» (العمود A، مطابقًا تمامًا للعمود M).
+3. شغّل `syncToCalendar` مرة واحدة يدويًا: يحذف السكربت أحداثه هو لهذا المعلم ويمسح J وO.
+4. في المنصة: صفحة المعلم ← «تقويم المعلم» ← «من المنصة».
+5. افتح تقويم المعلم وتأكد أن حلقاته ظاهرة مرة واحدة وبعلامة « · المنصة»، وأن عدّاد «حلقات لم تُكتب لوجود حدث
+   السكربت» صفر (إن لم يكن صفرًا فالسكربت لم يحذف أحداثه بعد: كرر الخطوة 3 ثم «زامن الآن»).
+
+**التراجع:**
+1. في المنصة: «تقويم المعلم» ← «من الشيت (السكربت القديم)»؛ تحذف المنصة أحداثها هي فقط لحلقات هذا المعلم المستوردة.
+2. احذف اسم المعلم من تبويب «المعلمون المنقولون».
+3. شغّل `syncToCalendar` مرة واحدة: يعيد السكربت إنشاء أحداث صفوف المعلم (لأن J وO فارغان).
+4. افتح تقويم المعلم وتأكد أن كل حلقة ظاهرة مرة واحدة. حلقات المنصة الأصلية تبقى كما كانت دائمًا.

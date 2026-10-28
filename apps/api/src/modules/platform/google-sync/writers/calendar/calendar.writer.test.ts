@@ -1,24 +1,9 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { CalendarWriter } from './calendar.writer';
+import { beforeEach, describe, expect, it } from 'vitest';
+import { CAL, lessonSource, setup } from './calendar.writer.fixture';
 import { eventBody } from './event-format';
-import type { GoogleAlerts } from '../../google-alerts';
-import { FakeGoogle } from '../../http/google-client.fake';
-import type { GoogleMapQueries } from '../../map/google-map.queries';
-import type { GoogleSyncSource, LessonSource } from '../../sync/google-sync.source';
 import { eventLesson, item, LESSON_ID, TEACHER_ID } from '../../google-sync.fakes';
 
-const CAL = 'teacher-cal@group.calendar.google.com';
-
-function setup(src: LessonSource | null) {
-  const google = new FakeGoogle();
-  google.calendars.set(CAL, 'آيات البيان — Teacher A');
-  const source = { lesson: vi.fn().mockResolvedValue(src) };
-  const map = { teacherCalendar: vi.fn().mockResolvedValue(CAL) };
-  const alerts = { teacherUnmapped: vi.fn() };
-  const writer = new CalendarWriter(source as unknown as GoogleSyncSource, map as unknown as GoogleMapQueries, alerts as unknown as GoogleAlerts);
-  return { google, writer, map, alerts, live: { live: true as const, google } };
-}
-const origin = (over = {}): LessonSource => ({ origin: true, teacherId: TEACHER_ID, lesson: eventLesson(over) });
+const origin = (over = {}) => lessonSource({}, over);
 
 describe('CalendarWriter', () => {
   let s: ReturnType<typeof setup>;
@@ -72,8 +57,8 @@ describe('CalendarWriter', () => {
     expect(c.google.events.get(CAL)?.size).toBe(0);
   });
 
-  it('an imported lesson is never written', async () => {
-    const imp = setup({ ...origin(), origin: false });
+  it('an imported lesson of a script-owned teacher is never written', async () => {
+    const imp = setup({ ...origin(), origin: false, managed: false });
     expect(await imp.writer.write(item(), imp.live)).toEqual({ state: 'skipped', reason: 'not_platform_origin' });
     expect(imp.google.log).toEqual([]);
   });

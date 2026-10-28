@@ -23,6 +23,7 @@ export class GoogleHttpClient implements GoogleClient {
 
   listCalendars = () => this.cal.listCalendars();
   getEvent = (ref: EventRef) => this.cal.getEvent(ref);
+  listEvents = (input: { calendarId: string; timeMin: string; timeMax: string }) => this.cal.listEvents(input);
   insertEvent = (input: { calendarId: string; event: GoogleEventBody }) => this.cal.insertEvent(input);
   updateEvent = (input: EventRef & { event: GoogleEventBody }) => this.cal.updateEvent(input);
   deleteEvent = (ref: EventRef) => this.cal.deleteEvent(ref);

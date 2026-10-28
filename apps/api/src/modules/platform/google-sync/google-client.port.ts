@@ -20,6 +20,13 @@ export interface GoogleEvent {
   extendedProperties?: { private?: Record<string, string> };
 }
 
+/** What an events.list item carries that the duplicate guard looks at. */
+export interface GoogleListedEvent extends GoogleEvent {
+  summary?: string;
+  description?: string;
+  start?: { dateTime?: string; date?: string };
+}
+
 export interface GoogleFileMeta {
   id: string;
   name: string;
@@ -42,6 +49,8 @@ export interface GoogleClient {
   listCalendars(): Promise<{ id: string; summary: string }[]>;
   /** null when the event does not exist (404 / 410). A deleted event may come back with status 'cancelled'. */
   getEvent(ref: EventRef): Promise<GoogleEvent | null>;
+  /** events.list, singleEvents: the events overlapping [timeMin, timeMax) (ISO instants). */
+  listEvents(input: { calendarId: string; timeMin: string; timeMax: string }): Promise<GoogleListedEvent[]>;
   insertEvent(input: { calendarId: string; event: GoogleEventBody }): Promise<{ id: string }>;
   updateEvent(input: EventRef & { event: GoogleEventBody }): Promise<void>;
   deleteEvent(ref: EventRef): Promise<void>;
