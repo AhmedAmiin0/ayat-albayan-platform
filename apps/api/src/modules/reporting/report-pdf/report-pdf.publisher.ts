@@ -11,6 +11,8 @@ import { ReportPdfSource } from './report-pdf.source';
 import type { ReportReadyMessage } from './report-ready';
 import { ReportPdfSettings } from './report-pdf.settings';
 import { reportHtml } from './template/template';
+import { toFamilyModel } from './v2/family-model';
+import { familyHtml } from './v2/family-template';
 
 export interface Published {
   path: string;
@@ -31,12 +33,15 @@ export class ReportPdfPublisher {
   /** Property injection keeps the constructor at three parameters; required (a missing provider fails at boot). */
   @Inject(ReportPdfSettings) private readonly settings!: ReportPdfSettings;
 
-  /** Overwrites the object: a re-rendered (edited) report keeps its path (R-REP-04). */
+  /** Overwrites the object: a re-rendered (edited) report keeps its path (R-REP-04). Same path and message for v1 and v2. */
   async publish(reportId: string, now: Date): Promise<Published> {
     const source = await this.source.load(reportId);
     if (!source) throw new Error('report not found');
-    const model = { ...toModel(source, now), contact: await this.contact() };
-    const body = await this.renderer.render(reportHtml(model, pdfAssets()), footerLabel({ code: model.student.code, startsAt: model.startsAt, tz: model.tz }));
+    const contact = await this.contact();
+    const model = { ...toModel(source, now), contact };
+    // A v2 report gets the v2 family page; every v1 report keeps the v1 page forever.
+    const html = source.report.form_version === 2 ? familyHtml({ ...toFamilyModel(source, now), contact }, pdfAssets()) : reportHtml(model, pdfAssets());
+    const body = await this.renderer.render(html, footerLabel({ code: model.student.code, startsAt: model.startsAt, tz: model.tz }));
     const { student_id: studentId, lesson_id: lessonId } = source.report;
     const path = reportPdfPath({ studentId, lessonId });
     await this.storage.upload({ bucket: BUCKETS.reports, path, body, contentType: 'application/pdf' });

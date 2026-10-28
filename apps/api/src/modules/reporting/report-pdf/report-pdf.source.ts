@@ -2,11 +2,12 @@ import type { Attendance, Grade, Program } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../../common/db/db.module';
 import type { SlotPackage } from './render/pdf-model';
+import { loadFamilyExtras, type FamilyExtras } from './v2/family-source';
 
 const REPORT_COLUMNS =
   'id, lesson_id, student_id, teacher_id, attendance, program, recited, new_memorization, revision, theory, ' +
   'grade_recitation, grade_memorization, grade_revision, grade_tajweed, grade_engagement, ' +
-  'grade_commitment, grade_overall, notes, homework, next_plan, version';
+  'grade_commitment, grade_overall, notes, homework, next_plan, version, form_version, content, submitted_at';
 
 export interface ReportRow {
   id: string;
@@ -30,6 +31,10 @@ export interface ReportRow {
   homework: string | null;
   next_plan: string | null;
   version: number;
+  /** 2 = the new form: the family report uses the v2 layout (v2/family-template.ts). */
+  form_version: number;
+  content: unknown;
+  submitted_at: string | null;
 }
 
 /** Everything one report PDF and its message need, read with the service role. */
@@ -47,6 +52,8 @@ export interface ReportSource {
   /** v_package_lessons.n: this lesson's place among the student's consuming lessons. */
   packageN: number | null;
   packages: SlotPackage[];
+  /** v2 reports only: their content, the student's v2 history and the next lesson. */
+  family?: FamilyExtras;
 }
 
 function must<T>(res: { data: T | null; error: { message: string } | null }, what: string): T {
@@ -100,6 +107,7 @@ export class ReportPdfSource {
         startsOn: p.starts_on,
         createdAt: p.created_at,
       })),
+      ...(report.form_version === 2 ? { family: await loadFamilyExtras(this.db, report, l.starts_at) } : {}),
     };
   }
 

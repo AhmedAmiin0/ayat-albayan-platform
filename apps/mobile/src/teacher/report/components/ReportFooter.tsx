@@ -10,11 +10,10 @@ import { reportErrorText } from '../hooks/api';
 import type { SaveState } from '../hooks/use-autosave';
 import type { ReportEntryState } from '../hooks/use-report-entry';
 
-
 const ERRORS: Record<string, string> = t.reports.error;
 
 /** «بيتحفظ…» / «المسودة اتحفظت 17:42» / a failed save, while the report is a draft. */
-function saveLine(state: SaveState, tz: string, cycle: ClockCycle): string | null {
+export function saveLine(state: SaveState, tz: string, cycle: ClockCycle): string | null {
   if (state.kind === 'saving') return t.reports.autosaving;
   if (state.kind === 'saved') return t.reports.draftSaved.replace('{time}', clockIn(state.at, tz, cycle));
   return state.kind === 'failed' ? t.reports.saveFailed : null;
@@ -27,7 +26,7 @@ function windowLine(report: ReportView, tz: string, cycle: ClockCycle): string |
 }
 
 /** «التقرير اتبعت», its version, the PDF state, and the edit window. */
-function SentNote({ report, tz }: { report: ReportView; tz: string }) {
+export function SentNote({ report, tz }: { report: ReportView; tz: string }) {
   const editWindow = windowLine(report, tz, useClockCycle());
   return (
     <>
