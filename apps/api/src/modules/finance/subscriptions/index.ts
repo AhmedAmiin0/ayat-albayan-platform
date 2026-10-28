@@ -3,6 +3,8 @@ export { UnpaidFlags } from './alerts/unpaid-flags.service';
 export { BalanceQueries, type BalanceRow, emptyBalance, toBalance } from './money/balance.queries';
 export { causeOf, MoneyWrites } from './money/money-writes';
 export { PackagesService, type StudentState } from './money/packages.service';
+export { SubscriptionCancelQueries } from './cancel/subscription-cancel.queries';
+export { SubscriptionCancel } from './cancel/subscription-cancel.service';
 export { SubscriptionCreator } from './subscription-creator';
 export {
   studentRef,

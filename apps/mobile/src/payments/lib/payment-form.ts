@@ -31,7 +31,8 @@ export function withMethod(draft: PaymentDraft, method: PaymentMethod): PaymentD
   return { ...draft, method, receipt: null, attachments };
 }
 
-const owed = (p: SubscriptionView) => p.paid < p.price;
+// A cancelled package (owner 2026-10-28) is never owed and never takes a payment.
+const owed = (p: SubscriptionView) => p.status !== 'cancelled' && p.paid < p.price;
 
 /** Packages a payment can go to: the current one and any older one still owed money, oldest first. */
 export function payablePackages(balance: StudentBalanceView): SubscriptionView[] {

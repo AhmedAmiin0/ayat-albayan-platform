@@ -9,7 +9,7 @@ export type BalanceAlert = 'renewal' | 'unpaid';
 /**
  * Which alert a student's balance calls for. `remaining` is the student's units left across all
  * packages (sum of their v_subscription_balance.remaining), so an early renewal silences the
- * alert. `status` is the newest package's: a paused or trial package raises nothing.
+ * alert. `status` is the newest package's: a paused, trial or cancelled package raises nothing.
  * Fires on ≤ threshold, not = threshold, so two lessons closed at once still alert; the dedup key
  * makes the second evaluation a no-op.
  */
@@ -18,7 +18,7 @@ export function alertFor(input: {
   threshold: number;
   status?: SubscriptionStatus;
 }): BalanceAlert | null {
-  if (input.status === 'paused' || input.status === 'trial') return null;
+  if (input.status === 'paused' || input.status === 'trial' || input.status === 'cancelled') return null;
   if (input.remaining <= 0) return 'unpaid';
   if (input.remaining <= input.threshold) return 'renewal';
   return null;
@@ -54,11 +54,13 @@ export interface StatusInput {
 
 /**
  * The derived status after a payment, an outcome or a renewal (R-SUB-01/02, journey 3):
- * paused and trial are set by hand and stay; money still owed → unpaid; used up → expired when a
+ * paused, trial and cancelled are set by hand and stay (a cancelled package never comes back); money still owed → unpaid; used up → expired when a
  * newer package took over, else unpaid (renewal needed); otherwise active.
  */
+const KEPT: ReadonlySet<SubscriptionStatus> = new Set(['paused', 'trial', 'cancelled']);
+
 export function subscriptionStatusFor(input: StatusInput): SubscriptionStatus {
-  if (input.current === 'paused' || input.current === 'trial') return input.current;
+  if (KEPT.has(input.current)) return input.current;
   if (input.paid < input.price) return 'unpaid';
   if (input.remaining <= 0) return input.superseded ? 'expired' : 'unpaid';
   return 'active';

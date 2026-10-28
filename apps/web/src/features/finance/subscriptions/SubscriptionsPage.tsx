@@ -14,9 +14,11 @@ import { ListSkeleton } from '@/components/ui/display/skeleton';
 import { RecordPaymentDialog } from '@/features/finance/payments/record/RecordPaymentDialog';
 import { t } from '@/lib/i18n/i18n';
 import { toFilterSearch, toSortSearch } from '@/lib/list/list-search';
-import { MONEY_KEY, setPaused, subscriptionsQuery, type SubscriptionView } from './api';
+import { cancelSubscription, MONEY_KEY, setPaused, subscriptionsQuery, type SubscriptionView } from './api';
+import { CancelPackageDialog } from './cancel/CancelPackageDialog';
 import { CreateSubscriptionDialog } from './create/CreateSubscriptionDialog';
 import { OpenTasks } from './balance/OpenTasks';
+import { packageName, studentLabel } from './format';
 import { subscriptionsTable, type SubscriptionsUrlSearch } from './search';
 import { subscriptionColumns } from './subscription-columns';
 import { useSubscriptionFilters } from './use-subscription-filters';
@@ -41,6 +43,7 @@ export function SubscriptionsPage({ search, onSearch, onOpenStudent }: Props) {
   const bare = list.data?.total === 0 && !status && Object.keys(table.filters).length === 0;
   const [creating, setCreating] = useState(false);
   const [paying, setPaying] = useState<{ sub: SubscriptionView; kind: 'payment' | 'refund' } | null>(null);
+  const [cancelling, setCancelling] = useState<SubscriptionView | null>(null);
   const [toast, setToast] = useState<string | null>(null);
   const pause = useMutation({
     mutationFn: setPaused,
@@ -52,6 +55,7 @@ export function SubscriptionsPage({ search, onSearch, onOpenStudent }: Props) {
       subscriptionColumns({
         onPay: (sub, kind) => setPaying({ sub, kind }),
         onPause: (s, paused) => pauseMutate({ id: s.id, paused }),
+        onCancel: setCancelling,
         onOpen: onOpenStudent,
       }),
     [pauseMutate, onOpenStudent],
@@ -59,6 +63,7 @@ export function SubscriptionsPage({ search, onSearch, onOpenStudent }: Props) {
   const saved = (message: string) => () => {
     setCreating(false);
     setPaying(null);
+    setCancelling(null);
     setToast(message);
   };
 
@@ -96,6 +101,14 @@ export function SubscriptionsPage({ search, onSearch, onOpenStudent }: Props) {
       {creating && <CreateSubscriptionDialog onClose={() => setCreating(false)} onSaved={saved(t.subscriptions.saved)} />}
       {paying && (
         <RecordPaymentDialog subscription={paying.sub} kind={paying.kind} onClose={() => setPaying(null)} onSaved={saved(t.payments.saved)} />
+      )}
+      {cancelling && (
+        <CancelPackageDialog
+          label={`${packageName(cancelling)} · ${studentLabel(cancelling.student)}`}
+          cancel={(body) => cancelSubscription(cancelling.id, body)}
+          onClose={() => setCancelling(null)}
+          onDone={saved(t.subscriptions.cancel.done)}
+        />
       )}
       {toast && <Toast message={toast} onDismiss={() => setToast(null)} />}
     </>

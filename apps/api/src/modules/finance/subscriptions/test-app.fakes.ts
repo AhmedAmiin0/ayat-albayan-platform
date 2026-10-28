@@ -9,6 +9,7 @@ export function mocks() {
       update: vi.fn(), remove: vi.fn(), hasPayments: vi.fn(), paid: vi.fn(), studentForQuote: vi.fn(),
       byRequest: vi.fn(),
     },
+    cancels: { linkedLessons: vi.fn(), cancel: vi.fn() }, // «إلغاء الباقة»
     leads: { afterPackage: vi.fn() },
     activation: { afterPayment: vi.fn() },
     statuses: { student: vi.fn(), lastStatusChange: vi.fn(), hasPositivePayment: vi.fn(), move: vi.fn() },
@@ -72,6 +73,7 @@ export function resetMocks(m: Mocks): void {
   m.earnings.settlePayout.mockResolvedValue(null);
   m.earnings.paidOnLessons.mockResolvedValue(0);
   m.subs.byRequest.mockResolvedValue(null);
+  m.cancels.linkedLessons.mockResolvedValue(0);
   m.settings.all.mockResolvedValue(SETTING_DEFAULTS);
   m.storage.remove.mockResolvedValue(undefined);
   m.attachments.forPayment.mockResolvedValue([]);

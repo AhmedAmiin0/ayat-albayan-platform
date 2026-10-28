@@ -23,7 +23,8 @@ function entry(sub: HistorySubscriptionRow, b: HistoryBundle): SalesHistoryEntry
     created_at: sub.created_at,
     lessons_total: sub.lessons_total,
     lessons_used: used,
-    lessons_remaining: balance?.remaining ?? Math.max(sub.lessons_total - used, 0),
+    // A cancelled package has no balance row and nothing left (owner 2026-10-28).
+    lessons_remaining: sub.status === 'cancelled' ? 0 : (balance?.remaining ?? Math.max(sub.lessons_total - used, 0)),
     status_changes: statusChanges(b.audit.filter((a) => a.entity_id === sub.id)),
     payments: b.payments
       .filter((p) => p.subscription_id === sub.id)

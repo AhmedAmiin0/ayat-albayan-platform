@@ -1,11 +1,13 @@
-import { parseAmount, type SalesMoneySubscriptionView, type SalesPaymentView } from '@ab/shared';
+import { cancelOffered, parseAmount, type SalesMoneySubscriptionView, type SalesPaymentView } from '@ab/shared';
 import { useId, useState, type FormEvent } from 'react';
 import { Button } from '@/components/ui/form/button';
 import { Dialog } from '@/components/ui/overlay/dialog';
 import { FormAlert } from '@/components/ui/form/form-alert';
+import { CancelPackageDialog } from '@/features/finance/subscriptions';
 import { moneyText, packageName, studentLabel } from '@/features/finance/subscriptions/format';
 import { t } from '@/lib/i18n/i18n';
 import { useUploadMaxBytes } from '@/lib/settings/public-config';
+import { cancelSalesSubscription, SALES_MONEY_KEY } from '../api';
 import { salesErrorText } from '../errors';
 import { PackagePicker } from './PackagePicker';
 import { ReceiptChooser } from './ReceiptChooser';
@@ -30,7 +32,10 @@ const formFor = (s: SalesMoneySubscriptionView | undefined): TransferForm => ({
   note: '',
 });
 
-/** Step 2 «سجّل التحويل البنكي» (R-ASST-04): «المرفقات» optional (up to five), the amount starts at what is due. */
+/**
+ * Step 2 «سجّل التحويل البنكي» (R-ASST-04): «المرفقات» optional (up to five), the amount starts at what is due.
+ * A package she made by mistake (nothing paid) is cancelled from here instead («إلغاء الباقة», owner 2026-10-28).
+ */
 export function SalesTransferStep({ fixed, packages, onClose, onSaved, onBookCourse }: Props) {
   const formId = useId();
   const maxBytes = useUploadMaxBytes();
@@ -39,6 +44,7 @@ export function SalesTransferStep({ fixed, packages, onClose, onSaved, onBookCou
   const [form, setForm] = useState<TransferForm>(() => formFor(sub));
   const [chosen, setChosen] = useState<ReceiptChoice[]>([]);
   const [amountError, setAmountError] = useState<string | null>(null);
+  const [cancelling, setCancelling] = useState(false);
   const save = useSalesPayment(onSaved);
   const attachments = sub ? attachmentsFor(chosen, sub.id) : [];
 
@@ -55,39 +61,55 @@ export function SalesTransferStep({ fixed, packages, onClose, onSaved, onBookCou
   };
 
   return (
-    <Dialog
-      title={t.salesMoney.stepTransfer}
-      onClose={onClose}
-      actions={
-        <>
-          <Button type="button" variant="ghost" onClick={onClose}>
-            {t.common.cancel}
-          </Button>
-          <Button type="submit" form={formId} disabled={!sub || save.isPending}>
-            {save.isPending ? t.salesMoney.saving : t.salesMoney.saveTransfer}
-          </Button>
-        </>
-      }
-    >
-      <form id={formId} className="grid gap-5" onSubmit={submit} noValidate>
-        {!fixed && <PackagePicker packages={packages} value={pickedId} onChange={pick} />}
-        {sub && (
+    <>
+      <Dialog
+        title={t.salesMoney.stepTransfer}
+        onClose={onClose}
+        actions={
           <>
-            <p className="text-sm text-ink-2">
-              {t.salesMoney.packageFor.replace('{student}', studentLabel(sub.student))} · {packageName(sub)} ·{' '}
-              {t.salesMoney.due.replace('{amount}', moneyText(sub.due, sub.currency))}
-            </p>
-            {onBookCourse && (
-              <Button type="button" variant="secondary" className="justify-self-start" onClick={onBookCourse}>
-                {t.booking.bookCourseDays}
-              </Button>
-            )}
-            <ReceiptChooser sub={sub} value={attachments} onChange={setChosen} maxBytes={maxBytes} />
-            <TransferFields form={form} set={(patch) => setForm((f) => ({ ...f, ...patch }))} packageCurrency={sub.currency} today={today()} amountError={amountError} />
+            <Button type="button" variant="ghost" onClick={onClose}>
+              {t.common.cancel}
+            </Button>
+            <Button type="submit" form={formId} disabled={!sub || save.isPending}>
+              {save.isPending ? t.salesMoney.saving : t.salesMoney.saveTransfer}
+            </Button>
           </>
-        )}
-        {save.isError && <FormAlert>{salesErrorText(save.error)}</FormAlert>}
-      </form>
-    </Dialog>
+        }
+      >
+        <form id={formId} className="grid gap-5" onSubmit={submit} noValidate>
+          {!fixed && <PackagePicker packages={packages} value={pickedId} onChange={pick} />}
+          {sub && (
+            <>
+              <p className="text-sm text-ink-2">
+                {t.salesMoney.packageFor.replace('{student}', studentLabel(sub.student))} · {packageName(sub)} ·{' '}
+                {t.salesMoney.due.replace('{amount}', moneyText(sub.due, sub.currency))}
+              </p>
+              {cancelOffered(sub) && (
+                <Button type="button" variant="ghost" size="sm" className="justify-self-start" onClick={() => setCancelling(true)}>
+                  {t.subscriptions.cancel.action}
+                </Button>
+              )}
+              {onBookCourse && (
+                <Button type="button" variant="secondary" className="justify-self-start" onClick={onBookCourse}>
+                  {t.booking.bookCourseDays}
+                </Button>
+              )}
+              <ReceiptChooser sub={sub} value={attachments} onChange={setChosen} maxBytes={maxBytes} />
+              <TransferFields form={form} set={(patch) => setForm((f) => ({ ...f, ...patch }))} packageCurrency={sub.currency} today={today()} amountError={amountError} />
+            </>
+          )}
+          {save.isError && <FormAlert>{salesErrorText(save.error)}</FormAlert>}
+        </form>
+      </Dialog>
+      {cancelling && sub && (
+        <CancelPackageDialog
+          label={`${packageName(sub)} · ${studentLabel(sub.student)}`}
+          cancel={(body) => cancelSalesSubscription(sub.id, body)}
+          staleKey={SALES_MONEY_KEY}
+          onClose={() => setCancelling(false)}
+          onDone={onClose}
+        />
+      )}
+    </>
   );
 }

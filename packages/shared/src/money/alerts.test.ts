@@ -24,6 +24,7 @@ describe('alertFor (R-SUB-02: 2 left → renewal, 0 → unpaid)', () => {
     [0, 0, 'active', 'unpaid'],
     [0, 2, 'paused', null],
     [1, 2, 'trial', null],
+    [0, 2, 'cancelled', null],
   ];
   const cases = rows.map(([remaining, threshold, status, expected]) => ({ remaining, threshold, status, expected }));
   it.each(cases)('remaining $remaining, threshold $threshold, $status → $expected', (c) => {
@@ -61,6 +62,8 @@ describe('subscriptionStatusFor (R-SUB-01/02, journey 3: payment → active)', (
     ['used up and still owed → unpaid', { remaining: 0, superseded: true, paid: 0 }, 'unpaid'],
     ['paused stays paused', { current: 'paused', paid: 0 }, 'paused'],
     ['trial stays trial', { current: 'trial' }, 'trial'],
+    ['cancelled stays cancelled (never resurrected)', { current: 'cancelled', paid: 0, price: 0, remaining: 8 }, 'cancelled'],
+    ['cancelled stays cancelled even with nothing left', { current: 'cancelled', remaining: 0, superseded: true }, 'cancelled'],
     ['active → expired when superseded', { current: 'active', remaining: -1, superseded: true }, 'expired'],
   ])('%s', (_name, patch, expected) => {
     expect(subscriptionStatusFor({ ...base, ...patch })).toBe(expected);

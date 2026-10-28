@@ -1,6 +1,7 @@
 import {
   attendanceKind,
   attendanceTotals,
+  currentPackage,
   type ReportSummaryView,
   type SalesAttendanceDay,
   type SalesStudentDetails,
@@ -51,7 +52,7 @@ function attendanceDays(studentId: string, lessons: readonly AttendanceRow[]): S
 /** Whitelist of «تفاصيل الطالب» (docs/16 row 36): no price, payment, note, phone or meeting link («الجدول» included). */
 export function toStudentDetails(p: DetailsParts): SalesStudentDetails {
   const subscriptions = subscriptionsOf(p.history);
-  const current = subscriptions.find((s) => s.status === 'active') ?? subscriptions[0];
+  const current = currentPackage(subscriptions); // never a cancelled one (owner 2026-10-28)
   const items = attendanceDays(p.student.id, p.lessons);
   return {
     student: {
