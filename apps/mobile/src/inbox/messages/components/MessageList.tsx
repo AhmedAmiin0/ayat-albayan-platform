@@ -1,4 +1,4 @@
-import { type CallView, senderLine } from '@ab/shared';
+import { type CallView, chatDayKey, senderLine } from '@ab/shared';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ActivityIndicator, FlatList, View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
@@ -8,6 +8,7 @@ import { EmptyState } from '@/core/ui/feedback/EmptyState';
 import { logRows, type LogRow } from '../../thread/calls/entries/log-rows';
 import { useCallBack, useThreadCalls } from '../../thread/calls/entries/use-thread-calls';
 import { messageGap } from '../hooks/list-gap';
+import { deviceTimeZone } from '../hooks/message-text';
 import { MessageRow } from '../list/MessageRow';
 import { dayLabel, hasDayChip } from '../days/day-label';
 import { CellFrames } from '../days/DayCell';
@@ -87,6 +88,8 @@ export function MessageList({ phone, query }: { phone: string; query: ThreadQuer
     [rows, more, phone, onJump, lit, onCallBack],
   );
   const onEndReached = useOlder(query);
+  // «اليوم» / «أمس» move at midnight with no new message: today's key redraws the rows' day chips.
+  const today = chatDayKey(new Date(), deviceTimeZone());
   const top = useTopDay(rows, query.hasNextPage);
   return (
     <CellFrames.Provider value={top.frame}>
@@ -99,7 +102,7 @@ export function MessageList({ phone, query }: { phone: string; query: ThreadQuer
           contentContainerStyle={{ paddingVertical: 4 }}
           data={rows}
           keyExtractor={(m) => m.id}
-          extraData={lit}
+          extraData={`${lit ?? ''}|${today}`}
           onScrollToIndexFailed={onScrollToIndexFailed}
           renderItem={renderItem}
           maintainVisibleContentPosition={{ minIndexForVisible: 0, autoscrollToTopThreshold: AT_NEWEST }}
