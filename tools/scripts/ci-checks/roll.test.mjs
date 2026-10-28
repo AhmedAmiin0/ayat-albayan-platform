@@ -60,7 +60,9 @@ test('a reload Caddy refuses fails the roll the same way; first switch: an inval
   assert.ok(!reload.has('.lb.sha256'), 'the stored sum is dropped before the reload: a rollback reloads its file');
   const first = run('roll.sh', { up: ['ayat-api'], fail: ['caddy validate'] });
   assert.notEqual(first.code, 0);
-  assert.ok(at(first.log, 'stop') < 0 && at(first.log, 'up -d --no-deps') < 0, first.log.join('\n'));
+  // Only the shared cache (ayat-redis, started before every roll) may come up: no copy, worker or LB, no stop.
+  const started = ['ayat-api-a', 'ayat-api-b', 'ayat-worker', 'ayat-lb'].map((svc) => at(first.log, `up -d --no-deps ${svc}`));
+  assert.ok(at(first.log, 'stop') < 0 && started.every((i) => i < 0), first.log.join('\n'));
 });
 
 test('the workflow swaps and rolls under the deploy lock, and a failed roll runs rollback.sh in the same command', () => {
