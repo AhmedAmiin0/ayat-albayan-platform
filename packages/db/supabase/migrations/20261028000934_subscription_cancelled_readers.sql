@@ -9,7 +9,8 @@
 --     'renewal' (the owner's case: a mistaken package two minutes before the right one).
 --   * portal_packages: the family never sees a cancelled package.
 --   * Backstops (23514): no payment row and no schedule rule may point at a cancelled package, a package
---     with money or lessons cannot become cancelled, a cancelled one never leaves it, its payments are frozen.
+--     with money, lessons (linked to its course or used FIFO) or a later package's commission cannot
+--     become cancelled, a cancelled one never leaves it, its payments are frozen.
 -- SQL test plan (local DB, begin … rollback):
 --   1. student with packages A (cancelled, 8) then B (8), 3 held lessons → B used 3, A absent from
 --      v_subscription_balance; v_student_list.package_unpaid follows B.
@@ -18,8 +19,11 @@
 --   4. portal_packages shows B only.
 --   5. update B set status = 'cancelled' with a payment on B → 23514 has_payments; with a held lesson on a
 --      rule of B, or an active rule of B → 23514 has_lessons.
+--      Admin-booked lessons (rule without subscription_id) held on B → 23514 has_lessons; a mistaken
+--      duplicate with only future projected lessons → cancelled, the lessons move to the other package.
+--   5b. pay B in full (assistant_commissions row on B, kind 'renewal'), then cancel A → 23514 has_commission.
 --   6. update A set status = 'paused' → 23514 already_cancelled; update / delete a payment of A → 23514.
--- Rollback: re-run the view bodies of 190 / 790 and the functions of 272 / 751; drop the five triggers and their functions.
+-- Rollback: re-run the view bodies of 190 (v_package_lessons) / 932 (v_subscription_balance) / 790 and the functions of 272 / 751; drop the five triggers and their functions.
 set local lock_timeout = '5s';
 
 -- Same columns as 190 (create or replace); cancelled packages are left out.
@@ -39,12 +43,15 @@ create or replace view public.v_package_lessons with (security_invoker = true) a
         (select min(s.starts_on) from public.subscriptions s
          where s.student_id = ls.student_id and s.status <> 'cancelled');
 
+-- Same columns as 932 (its newest definition: capacity lessons_total − lessons_used_before, lessons_used
+-- adds lessons_used_before, last column lessons_used_before); cancelled packages are left out.
 create or replace view public.v_subscription_balance with (security_invoker = true) as
   with subs as (
-    select s.id, s.student_id, s.lessons_total,
-           coalesce(sum(s.lessons_total) over (w rows between unbounded preceding and 1 preceding), 0)::int
-             as cap_from,
-           (sum(s.lessons_total) over (w rows between unbounded preceding and current row))::int as cap_to,
+    select s.id, s.student_id, s.lessons_total, s.lessons_used_before::int as before,
+           coalesce(sum(s.lessons_total - s.lessons_used_before)
+             over (w rows between unbounded preceding and 1 preceding), 0)::int as cap_from,
+           (sum(s.lessons_total - s.lessons_used_before)
+             over (w rows between unbounded preceding and current row))::int as cap_to,
            lead(s.id) over w is null as is_last
     from public.subscriptions s
     where s.status <> 'cancelled'
@@ -64,9 +71,10 @@ create or replace view public.v_subscription_balance with (security_invoker = tr
       and not l.instant
       and (l.starts_at at time zone st.tz)::date >=
           (select min(s.starts_on) from public.subscriptions s
-         where s.student_id = ls.student_id and s.status <> 'cancelled')
+           where s.student_id = ls.student_id and s.status <> 'cancelled')
   ), b as (
     select subs.*, coalesce(u.used, 0) as used_all,
+           subs.before +
            case when subs.is_last then greatest(0, coalesce(u.used, 0) - subs.cap_from)
                 else greatest(0, least(coalesce(u.used, 0), subs.cap_to) - subs.cap_from) end as used
     from subs left join usage u on u.student_id = subs.student_id
@@ -79,8 +87,12 @@ create or replace view public.v_subscription_balance with (security_invoker = tr
           where p.student_id = b.student_id and p.n = b.cap_to) as ended_at,
          case when b.cap_to > b.used_all then
            (select o.starts_at from open_lessons o
-            where o.student_id = b.student_id and o.m = b.cap_to - b.used_all) end as projected_end_at
+            where o.student_id = b.student_id and o.m = b.cap_to - b.used_all) end as projected_end_at,
+         b.before as lessons_used_before
   from b;
+
+revoke all on public.v_subscription_balance from anon, authenticated;
+grant select on public.v_subscription_balance to service_role;
 
 -- Same as 272, plus: a cancelled package is never fully paid.
 create or replace function public.subscription_full_at(p_subscription uuid) returns timestamptz
@@ -161,8 +173,22 @@ begin
   if exists (select 1 from public.schedule_rules r where r.subscription_id = new.id and r.status = 'active')
      or exists (select 1 from public.lessons l join public.schedule_rules r on r.id = l.rule_id
                  where r.subscription_id = new.id
-                   and l.status not in ('cancelled_by_teacher', 'cancelled_by_admin')) then
+                   and l.status not in ('cancelled_by_teacher', 'cancelled_by_admin'))
+     -- Lessons the package used FIFO (v_subscription_balance), on any rule: admin bookings, makeups and
+     -- imported rules carry no subscription_id. The row is not cancelled yet, so the view still has it.
+     -- Future lessons merely projected into it do not block: they move to the next package.
+     or exists (select 1 from public.v_subscription_balance b
+                 where b.subscription_id = new.id and b.lessons_used > 0) then
     raise exception 'has_lessons: subscription %', new.id using errcode = '23514';
+  end if;
+  -- A later priced package already earned its commission as a 'renewal' because of this one: cancelling
+  -- would leave it a renewal and 'first' never earned (re-kinding is out of scope).
+  if new.price > 0 and exists (
+       select 1 from public.subscriptions o
+       join public.assistant_commissions c on c.subscription_id = o.id
+       where o.student_id = new.student_id and o.id <> new.id and o.price > 0 and o.status <> 'cancelled'
+         and (o.created_at, o.id) > (new.created_at, new.id)) then
+    raise exception 'has_commission: subscription %', new.id using errcode = '23514';
   end if;
   return new;
 end $$;

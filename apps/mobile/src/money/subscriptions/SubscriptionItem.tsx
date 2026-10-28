@@ -23,6 +23,9 @@ function subscriptionProgress(sub: SubscriptionView, threshold?: number) {
   });
 }
 
+/** The status word; a status newer than this bundle (an old OTA) shows its code instead of nothing. */
+const statusLabel = (status: SubscriptionView['status']): string => t.enums.subscriptionStatus[status] ?? status;
+
 /**
  * One package: student + code, package and price, the lessons left (saffron when a renewal is due),
  * the status chip; a part-paid one says how much is left (owner 2026-10-28). A row opens the student; «سجّل دفعة» opens the existing payment form while it
@@ -71,7 +74,7 @@ export const SubscriptionItem = memo(function SubscriptionItem({ sub, threshold 
       }
       trailing={
         <View>
-          <StatusChip {...subscriptionStatusStyle[sub.status]} label={t.enums.subscriptionStatus[sub.status]} size="sm" />
+          <StatusChip {...subscriptionStatusStyle[sub.status]} label={statusLabel(sub.status)} size="sm" />
         </View>
       }
     />

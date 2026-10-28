@@ -8,6 +8,8 @@ import type { SubRow } from '../subscriptions.queries';
 const CANCELLED_LESSONS = '(cancelled_by_teacher,cancelled_by_admin)';
 
 type CancelWrite = { id: string; actorId: string; reason: string | null; now: Date };
+/** The package being cancelled, as ordered by subscription_commission_kind: (created_at, id). */
+type LaterOf = { id: string; studentId: string; createdAt: string };
 /** The cancelled row; null when it was already cancelled (a race); a block the DB guard raised (934). */
 type CancelResult = { row: SubRow } | { row: null; block: CancelBlock };
 
@@ -36,7 +38,28 @@ export class SubscriptionCancelQueries {
     return (rules.count ?? 0) + (count ?? 0);
   }
 
-  /** Compare-and-set: only a package not cancelled yet; the DB guard re-checks money and lessons. */
+  /**
+   * A later live priced package of the student, by (created_at, id), already has an assistant commission:
+   * it was kinded 'renewal' because of this one, so cancelling would never earn the 'first' (409 has_commission).
+   */
+  async laterCommission(sub: LaterOf): Promise<boolean> {
+    const ts = `"${sub.createdAt}"`;
+    const later = await this.db
+      .from('subscriptions')
+      .select('id')
+      .eq('student_id', sub.studentId)
+      .gt('price', 0)
+      .neq('status', 'cancelled')
+      .or(`created_at.gt.${ts},and(created_at.eq.${ts},id.gt.${sub.id})`);
+    if (later.error) throw dbError(later.error);
+    const ids = later.data.map((r) => r.id);
+    if (ids.length === 0) return false;
+    const { count, error } = await this.db.from('assistant_commissions').select('id', { count: 'exact', head: true }).in('subscription_id', ids);
+    if (error) throw dbError(error);
+    return (count ?? 0) > 0;
+  }
+
+  /** Compare-and-set: only a package not cancelled yet; the DB guard re-checks money, lessons and commission. */
   async cancel(w: CancelWrite): Promise<CancelResult> {
     const patch = { status: 'cancelled' as const, cancelled_at: w.now.toISOString(), cancelled_by: w.actorId, cancel_reason: w.reason };
     const { data, error } = await this.db
@@ -48,6 +71,7 @@ export class SubscriptionCancelQueries {
       .maybeSingle();
     if (error?.code === '23514' && error.message.startsWith('has_payments')) return { row: null, block: 'has_payments' };
     if (error?.code === '23514' && error.message.startsWith('has_lessons')) return { row: null, block: 'has_lessons' };
+    if (error?.code === '23514' && error.message.startsWith('has_commission')) return { row: null, block: 'has_commission' };
     if (error) throw dbError(error);
     return data ? { row: data } : { row: null, block: 'already_cancelled' };
   }

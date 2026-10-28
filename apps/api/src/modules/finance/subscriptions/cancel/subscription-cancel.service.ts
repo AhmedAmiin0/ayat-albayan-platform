@@ -9,8 +9,10 @@ type CancelInput = CancelBody & { actorId: string; now?: Date };
 
 /**
  * «إلغاء الباقة» (owner 2026-10-28: «close it or cancel it»; never delete data). Only a package nothing
- * hangs on: 409 already_cancelled, has_payments (net paid ≠ 0) or has_lessons (a lesson not cancelled on
- * a rule of its course). The row stays («ملغاة») with who / when / why; audited through MoneyWrites, which
+ * hangs on: 409 already_cancelled, has_payments (net paid ≠ 0), has_lessons (a lesson not cancelled on
+ * a rule of its course, or a lesson it used FIFO: admin bookings, makeups and imported rules carry no
+ * subscription_id) or has_commission (a later package earned its commission as a renewal because of it).
+ * Future lessons merely projected into it do not block: they move to the next package. The row stays («ملغاة») with who / when / why; audited through MoneyWrites, which
  * closes its open tasks and recomputes the student (a cancelled package is skipped there: never resurrected).
  */
 @Injectable()
@@ -27,8 +29,10 @@ export class SubscriptionCancel {
   }
 
   async cancel(before: SubscriptionView, input: CancelInput): Promise<SubscriptionView> {
-    const lessons = await this.queries.linkedLessons(before.id);
-    const block = cancelBlock({ status: before.status, paid: before.paid, lessons });
+    const lessons = (await this.queries.linkedLessons(before.id)) + before.balance.lessons_used;
+    const later = { id: before.id, studentId: before.student.id, createdAt: before.created_at };
+    const laterCommission = before.price > 0 && (await this.queries.laterCommission(later));
+    const block = cancelBlock({ status: before.status, paid: before.paid, lessons, laterCommission });
     if (block) throw conflict(block);
     const write = { id: before.id, actorId: input.actorId, reason: input.reason ?? null, now: input.now ?? new Date() };
     const result = await this.queries.cancel(write);

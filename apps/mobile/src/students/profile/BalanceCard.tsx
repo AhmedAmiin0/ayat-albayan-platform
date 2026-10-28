@@ -52,7 +52,7 @@ export function BalanceCard({ studentId }: { studentId: string }) {
           {current ? (
             <StatusChip
               {...subscriptionStatusStyle[current.status]}
-              label={t.enums.subscriptionStatus[current.status]}
+              label={t.enums.subscriptionStatus[current.status] ?? current.status}
               size="sm"
             />
           ) : null}

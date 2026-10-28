@@ -54,6 +54,23 @@ describe('migration 934: every reader skips a cancelled package', () => {
       expect(m934).toContain(`revoke all on function public.${fn}() from public, anon, authenticated;`);
   });
 
+  it('v_subscription_balance keeps 932: capacity and lessons_used add lessons_used_before (applied after 932)', () => {
+    const view = m934.slice(m934.indexOf('create or replace view public.v_subscription_balance'), m934.indexOf('subscription_full_at'));
+    expect(view).toMatch(/s\.lessons_used_before::int as before/);
+    expect(view.match(/sum\(s\.lessons_total - s\.lessons_used_before\)/g)).toHaveLength(2);
+    expect(view).toMatch(/subs\.before \+\s+case when subs\.is_last/);
+    expect(view).toMatch(/b\.lessons_total - b\.used as remaining/);
+    expect(view).toMatch(/b\.before as lessons_used_before\s+from b;/);
+    expect(view).toMatch(/grant select on public\.v_subscription_balance to service_role;/);
+  });
+
+  it('the cancel guard: lessons used FIFO (has_lessons) and a later package\'s commission (has_commission)', () => {
+    expect(m934).toMatch(/from public\.v_subscription_balance b\s+where b\.subscription_id = new\.id and b\.lessons_used > 0/);
+    expect(m934).toMatch(/join public\.assistant_commissions c on c\.subscription_id = o\.id/);
+    expect(m934).toMatch(/o\.price > 0 and o\.status <> 'cancelled'\s+and \(o\.created_at, o\.id\) > \(new\.created_at, new\.id\)/);
+    expect(m934).toMatch(/raise exception 'has_commission: subscription %'[^;]+'23514'/);
+  });
+
   it('a cancelled package stays cancelled and its payments are frozen', () => {
     expect(m934).toMatch(/when \(old\.status = 'cancelled' and new\.status is distinct from 'cancelled'\)/);
     expect(m934).toMatch(/before update or delete on public\.payments/);

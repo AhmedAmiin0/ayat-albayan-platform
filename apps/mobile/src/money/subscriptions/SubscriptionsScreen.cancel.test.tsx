@@ -15,7 +15,9 @@ jest.mock('@/core/lib/http/api', () => ({
 }));
 jest.mock('expo-router', () => ({ router: { push: jest.fn(), back: jest.fn() } }));
 
-const mistake = subscription({ id: 'a', status: 'unpaid', paid: 0 });
+// A package made by mistake: nothing paid and no lesson used (the fixture has used 2).
+const unused = subscription({ id: 'a', status: 'unpaid', paid: 0 });
+const mistake = { ...unused, balance: { ...unused.balance, lessons_used: 0, remaining: unused.lessons_total } };
 const gone = subscription({ id: 'x', status: 'cancelled', paid: 0, student: { ...STUDENT, id: 's2', name: 'يوسف', code: 'AB-0201' } });
 
 beforeEach(() => {

@@ -11,11 +11,12 @@ const apiFetch = vi.hoisted(() => vi.fn());
 vi.mock('@/lib/http/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch, apiSend: vi.fn() }));
 
 const page = <T,>(items: T[]) => ({ items, total: items.length, page: 1, pageSize: 20 });
+const FRESH = { ...WEEKLY, balance: { ...WEEKLY.balance, lessons_used: 0, remaining: WEEKLY.lessons_total } };
 const CANCELLED = { ...WEEKLY, id: 'sub-x', status: 'cancelled' as const, student: { ...WEEKLY.student, name: 'ياسمين' } };
 
 describe('subscription rows: cancel offered, cancelled shown', () => {
   it('an unpaid row offers «إلغاء الباقة»; a cancelled row shows «ملغاة» and no action at all', async () => {
-    apiFetch.mockImplementation(async (path: string) => (path.startsWith('/admin-tasks') ? page([]) : page([WEEKLY, CANCELLED])));
+    apiFetch.mockImplementation(async (path: string) => (path.startsWith('/admin-tasks') ? page([]) : page([FRESH, CANCELLED])));
     render(
       <QueryClientProvider client={new QueryClient()}>
         <SubscriptionsPage search={{}} onSearch={vi.fn()} onOpenStudent={vi.fn()} />

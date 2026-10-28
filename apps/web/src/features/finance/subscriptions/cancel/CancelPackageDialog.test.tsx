@@ -13,8 +13,10 @@ const apiSend = vi.hoisted(() => vi.fn());
 vi.mock('@/lib/http/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch, apiSend }));
 
 const STUDENT = { id: 'stu-1', name: 'سهيلة', code: 'AB-0183' };
+// A package made by mistake: nothing paid and no lesson used (WEEKLY has used 2).
+const FRESH = { ...WEEKLY, balance: { ...WEEKLY.balance, lessons_used: 0, remaining: WEEKLY.lessons_total } };
 
-function renderCard(view = balanceOf([WEEKLY])) {
+function renderCard(view = balanceOf([FRESH])) {
   apiFetch.mockResolvedValue(view);
   render(
     <QueryClientProvider client={new QueryClient()}>
@@ -55,7 +57,13 @@ describe('CancelPackageDialog from the BalanceCard', () => {
   });
 
   it('a package with money paid offers no cancel', async () => {
-    renderCard(balanceOf([{ ...WEEKLY, paid: 50 }]));
+    renderCard(balanceOf([{ ...FRESH, paid: 50 }]));
+    expect(await screen.findByRole('button', { name: t.payments.record })).toBeTruthy();
+    expect(screen.queryByRole('button', { name: t.subscriptions.cancel.action })).toBeNull();
+  });
+
+  it('a package that already used lessons (FIFO, any rule) offers no cancel', async () => {
+    renderCard(balanceOf([WEEKLY]));
     expect(await screen.findByRole('button', { name: t.payments.record })).toBeTruthy();
     expect(screen.queryByRole('button', { name: t.subscriptions.cancel.action })).toBeNull();
   });

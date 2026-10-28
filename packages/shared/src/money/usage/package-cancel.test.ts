@@ -11,6 +11,11 @@ describe('cancelBlock («إلغاء الباقة», owner 2026-10-28)', () => {
     expect(cancelBlock({ status: 'unpaid', paid: 50, lessons: 3 })).toBe('has_payments');
     expect(cancelBlock({ status: 'unpaid', paid: 0, lessons: 1 })).toBe('has_lessons');
   });
+  it('has_commission after money and lessons', () => {
+    expect(cancelBlock({ status: 'unpaid', paid: 0, lessons: 0, laterCommission: true })).toBe('has_commission');
+    expect(cancelBlock({ status: 'unpaid', paid: 0, lessons: 2, laterCommission: true })).toBe('has_lessons');
+    expect(cancelBlock({ status: 'unpaid', paid: 0, lessons: 0, laterCommission: false })).toBeNull();
+  });
   it('a net negative (refund over payment) still counts as money moved', () => {
     expect(cancelBlock({ status: 'unpaid', paid: -10, lessons: 0 })).toBe('has_payments');
   });
@@ -47,5 +52,9 @@ describe('cancelOffered (the row action)', () => {
     expect(cancelOffered({ status: 'unpaid', paid: 0 })).toBe(true);
     expect(cancelOffered({ status: 'unpaid', paid: 10 })).toBe(false);
     expect(cancelOffered({ status: 'cancelled', paid: 0 })).toBe(false);
+  });
+  it('a row with its balance: only while no lesson is used (FIFO, any rule)', () => {
+    expect(cancelOffered({ status: 'unpaid', paid: 0, balance: { lessons_used: 0 } })).toBe(true);
+    expect(cancelOffered({ status: 'unpaid', paid: 0, balance: { lessons_used: 2 } })).toBe(false);
   });
 });

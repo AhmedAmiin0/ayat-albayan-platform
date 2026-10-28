@@ -1748,7 +1748,8 @@
       "done": "Package cancelled",
       "errors": {
         "has_payments": "A package with payments cannot be cancelled. Refund it first.",
-        "has_lessons": "A package with booked lessons cannot be cancelled.",
+        "has_lessons": "A package with booked or used lessons cannot be cancelled.",
+        "has_commission": "This package cannot be cancelled: a later package of the same student already earned a commission.",
         "already_cancelled": "This package is already cancelled.",
         "subscription_not_found": "This package no longer exists.",
         "not_your_student": "This student is not one of yours."
