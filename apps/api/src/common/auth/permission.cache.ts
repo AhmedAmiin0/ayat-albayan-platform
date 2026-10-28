@@ -21,9 +21,9 @@ interface Entry {
  * Per-user cache of resolved permission sets: a short TTL bounds staleness, and clear() (called by
  * every role / assignment change) makes changes immediate here and, with Redis, in every other API
  * copy and the worker (the `permissions` topic). On a miss the shared copy (permission names only,
- * 15 s) is asked before the DB, except just after a change (SharedCache reads the DB then). Provided
- * as a plain value by AuthModule (the clock is injectable for tests). Concurrent requests of one user share a single load; a failed load (a
- * disabled account included) is never cached.
+ * 15 s) is asked before the DB, except just after a change (SharedCache reads the DB then).
+ * Provided as a plain value by AuthModule (the clock is injectable for tests). Concurrent requests of
+ * one user share a single load; a failed load (a disabled account included) is never cached.
  */
 export class PermissionCache {
   private readonly entries = new Map<string, Entry>();
