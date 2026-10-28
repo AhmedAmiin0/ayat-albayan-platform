@@ -496,6 +496,7 @@
   "developOnly": [
     "apply-lesson-changes-v3.sql.spec.ts",
     "assistant-commission-retro.sql.spec.ts",
+    "assistant-commission-started.sql.spec.ts",
     "assistant-commission.sql.spec.ts",
     "assistant-course-subscription.sql.spec.ts",
     "assistant-renewal-commission.sql.spec.ts",
@@ -513,6 +514,7 @@
     "config-expand.sql.spec.ts",
     "config-seed.sql.spec.ts",
     "edit-time.sql.spec.ts",
+    "google-calendar-handover.sql.spec.ts",
     "google-sync.sql.spec.ts",
     "inbox-realtime.sql.spec.ts",
     "integration-config.sql.spec.ts",

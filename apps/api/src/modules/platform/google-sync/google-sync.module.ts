@@ -28,6 +28,7 @@ import { GoogleSyncSource } from './sync/google-sync.source';
 import { GoogleWriters } from './sync/google-writers';
 import { ReportPdfWriter } from './writers/drive/report-pdf.writer';
 import { SheetRowsWriter } from './writers/sheets/sheet-rows.writer';
+import { TeacherCalendarService } from './map/teacher-calendar.service';
 
 /**
  * Google Calendar + Drive + Sheets sync alongside the old Apps Script (docs/24). One way only,
@@ -40,7 +41,7 @@ import { SheetRowsWriter } from './writers/sheets/sheet-rows.writer';
     { provide: GOOGLE_CLIENT_FACTORY, useFactory: () => httpFactory(() => googleEnv(loadEnv())) },
     GoogleAccountQueries, GoogleItemsQueries, GoogleLogQueries, GoogleMapQueries, GoogleSettings, GoogleSyncAcademySettings, GoogleSyncSource,
     GoogleData, GoogleRuntime, GoogleAlerts, GoogleConnection, DriveFiles, CalendarWriter, ReportPdfWriter, SheetRowsWriter, GoogleWriters,
-    GoogleSyncProcessor, GoogleSyncJob, GoogleOAuthService, GoogleStatusService, GoogleAdminService, GoogleMapService,
+    GoogleSyncProcessor, GoogleSyncJob, GoogleOAuthService, GoogleStatusService, GoogleAdminService, GoogleMapService, TeacherCalendarService,
   ],
 })
 export class GoogleSyncModule {}

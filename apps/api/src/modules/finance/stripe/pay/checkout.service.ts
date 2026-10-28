@@ -23,7 +23,7 @@ export class CheckoutService {
   ) {}
 
   async target(token: string, now = new Date()): Promise<string> {
-    const page = paymentLinkUrl(this.views.webOrigin(), token);
+    const page = paymentLinkUrl(this.views.payOrigin(), token);
     const link = await this.links.byToken(token);
     if (!link || !link.subscription_id || link.processing) return page;
     if (effectiveLinkStatus({ status: statusOf(link), expires_at: link.expires_at }, now) !== 'open') return page;
@@ -38,7 +38,7 @@ export class CheckoutService {
   }
 
   private async fresh(c: { stripe: StripeApi; link: LinkRow; now: Date; page: string }): Promise<string> {
-    const created = await c.stripe.checkout.sessions.create(checkoutParams(c.link, { webOrigin: this.views.webOrigin(), now: c.now }));
+    const created = await c.stripe.checkout.sessions.create(checkoutParams(c.link, { payOrigin: this.views.payOrigin(), now: c.now }));
     if (await this.links.setSession({ id: c.link.id, prev: c.link.stripe_session_id, session: created.id })) return created.url ?? c.page;
     await this.expire(c.stripe, created.id); // lost the race: the winner's session is the link's
     const winner = (await this.links.get(c.link.id))?.stripe_session_id;

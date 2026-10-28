@@ -20,6 +20,7 @@ export { Amount } from './balance/Amount';
 export { BalanceCard } from './balance/BalanceCard';
 export { type CancelBody, CancelPackageDialog } from './cancel/CancelPackageDialog';
 export { CreateSubscriptionDialog } from './create/CreateSubscriptionDialog';
+export { NoCommissionNote } from './create/NoCommissionNote';
 export { PricingFields } from './create/PricingFields';
 export {
   RenewSubscriptionButton,

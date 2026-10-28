@@ -20,7 +20,7 @@ export interface AvatarFiles {
 
 export const AVATAR_FILES = Symbol('AVATAR_FILES');
 
-/** AvatarFiles on the private `avatars` bucket (migrations 20261012000370, 20261028000942). */
+/** AvatarFiles on the private `avatars` bucket (migrations 20261012000370, 20261028000944). */
 @Injectable()
 export class StorageAvatarFiles implements AvatarFiles {
   constructor(private readonly storage: StorageService) {}

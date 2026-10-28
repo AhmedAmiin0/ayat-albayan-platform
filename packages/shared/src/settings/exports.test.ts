@@ -44,9 +44,9 @@ const INTEGRATIONS_NAMES = [
 ];
 const GOOGLE_NAMES = [
   'GOOGLE_ACCOUNT_STATUSES', 'GOOGLE_ERROR_KEYS', 'GOOGLE_REDIRECT_URI_PRODUCTION', 'GOOGLE_SCOPES',
-  'GOOGLE_SKIP_REASONS', 'GOOGLE_SYNC_KINDS', 'GOOGLE_SYNC_MODES', 'GOOGLE_SYNC_STATES', 'GOOGLE_WINDOW_DAYS',
+  'GOOGLE_SKIP_REASONS', 'GOOGLE_SYNC_KINDS', 'GOOGLE_SYNC_MODES', 'GOOGLE_SYNC_STATES', 'GOOGLE_WINDOW_DAYS', 'TEACHER_CALENDAR_OWNERS',
   'driveFileLink', 'driveFolderLink', 'fileIdIn', 'folderIdIn', 'googleDriveSchema', 'googleErrorKey',
-  'googleSettingsSchema', 'googleStudentMapSchema', 'googleTeacherMapSchema', 'sheetLink',
+  'googleSettingsSchema', 'googleStudentMapSchema', 'googleTeacherMapSchema', 'sheetLink', 'teacherCalendarOwnerSchema',
 ];
 /** Added by the segregation (additions only). */
 const NEW_NAMES = [

@@ -15,10 +15,10 @@ export function sessionExpiry(linkExpiresAt: string, now: Date): number {
  * One Checkout Session for a link (Stripe best practices): mode payment, the amount inline in minor units in
  * the package currency, NO payment_method_types (dynamic payment methods from the Dashboard), the link and
  * the assistant in metadata (also on the PaymentIntent, so a charge / refund can be traced), the link id as
- * client_reference_id, back to the platform's public page.
+ * client_reference_id, back to the API's done / cancelled pages (text only: the webhook alone fulfils).
  */
-export function checkoutParams(link: LinkRow, ctx: { webOrigin: string; now: Date }): Stripe.Checkout.SessionCreateParams {
-  const page = paymentLinkUrl(ctx.webOrigin, link.token);
+export function checkoutParams(link: LinkRow, ctx: { payOrigin: string; now: Date }): Stripe.Checkout.SessionCreateParams {
+  const page = paymentLinkUrl(ctx.payOrigin, link.token);
   const metadata = {
     payment_link_id: link.id,
     subscription_id: link.subscription_id ?? '',
@@ -32,8 +32,8 @@ export function checkoutParams(link: LinkRow, ctx: { webOrigin: string; now: Dat
     client_reference_id: link.id,
     metadata,
     payment_intent_data: { metadata },
-    success_url: `${page}?done=1`,
-    cancel_url: `${page}?cancelled=1`,
+    success_url: `${page}/done`,
+    cancel_url: `${page}/cancelled`,
     expires_at: sessionExpiry(link.expires_at, ctx.now),
     integration_identifier: integrationIdentifier(),
   };

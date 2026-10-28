@@ -10,6 +10,7 @@ import { StatusChip } from '@/components/ui/display/status-chip';
 import { Tabs } from '@/components/ui/layout/tabs';
 import { StaffPhotoControl } from '@/features/people/staff-photo';
 import { EntityActivity } from '@/features/reporting/activity/EntityActivity';
+import { TeacherCalendarOwner } from '@/features/platform/google-sync';
 import { t } from '@/lib/i18n/i18n';
 import { availabilityQuery, teacherQuery, type Teacher } from '../api';
 import { AvailabilityGrid } from '../availability/AvailabilityGrid';
@@ -99,7 +100,10 @@ export function TeacherDetailPage({ teacherId }: { teacherId: string }) {
         ) : tab === 'activity' ? (
           <EntityActivity entity="teachers" entityId={data.id} />
         ) : (
-          <TeacherFacts teacher={data} />
+          <>
+            <TeacherFacts teacher={data} />
+            <TeacherCalendarOwner teacherId={data.id} />
+          </>
         )}
       </div>
       {editing && <TeacherDialog teacher={data} onClose={() => setEditing(false)} />}

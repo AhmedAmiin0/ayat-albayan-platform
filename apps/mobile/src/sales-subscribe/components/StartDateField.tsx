@@ -6,7 +6,7 @@ import { ErrorLine } from '@/inbox/ErrorLine';
 import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/more/Note';
 import { Section } from '@/more/Section';
-import { UsedBeforeField } from '@/subscribe';
+import { NoCommissionNote, UsedBeforeField } from '@/subscribe';
 import { StartDayPills } from '@/subscribe/SubscribeParts';
 import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
@@ -66,6 +66,7 @@ export function StartDateField({ canSet, days, academyToday, draft, onChange, er
             max={academyToday}
             onChange={(past) => onChange({ past })}
           />
+          <NoCommissionNote startsOn={draft.past} usedBefore={usedBeforeOf(draft, lessonsTotal)} now={new Date()} />
           <UsedBeforeField
             value={usedBeforeOf(draft, lessonsTotal)}
             lessonsTotal={lessonsTotal}

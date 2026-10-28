@@ -24,7 +24,7 @@ export function profileSlot(db: Db, profileId: string): AvatarSlot {
   };
 }
 
-/** teachers.avatar_path (migration 20261028000942): objects avatars/teachers/{teacher_id}/avatar-*. */
+/** teachers.avatar_path (migration 20261028000944): objects avatars/teachers/{teacher_id}/avatar-*. */
 export function teacherSlot(db: Db, teacherId: string): AvatarSlot {
   return {
     owns: (path) => isTeacherAvatarPathOf(path, teacherId),

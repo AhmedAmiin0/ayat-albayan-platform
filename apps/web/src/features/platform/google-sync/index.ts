@@ -1,4 +1,5 @@
 export { GoogleSection } from './GoogleSection';
+export { TeacherCalendarOwner } from './teacher-calendar/TeacherCalendarOwner';
 export {
   deleteStudentFolder,
   disconnectGoogle,

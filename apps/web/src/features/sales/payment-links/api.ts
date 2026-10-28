@@ -39,11 +39,11 @@ export const createPaymentLink = (body: PaymentLinkCreate) => apiSend<PaymentLin
 
 export const cancelPaymentLink = (id: string) => apiSend<PaymentLinkView>('POST', `/sales/payment-links/${id}/cancel`);
 
-/** GET /pay/:token (public, no login): what the payer sees. */
+/** GET /pay/:token (public, no login) as JSON: without the Accept header the API answers its own HTML page. */
 export const publicLinkQuery = (token: string) =>
   queryOptions({
     queryKey: ['pay', token],
-    queryFn: () => apiFetch<PublicPaymentLink>(`/pay/${encodeURIComponent(token)}`),
+    queryFn: () => apiFetch<PublicPaymentLink>(`/pay/${encodeURIComponent(token)}`, { headers: { Accept: 'application/json' } }),
     retry: false,
   });
 

@@ -71,7 +71,7 @@ export function avatarPath(input: { userId: string; mime: string; now?: number }
   return `${input.userId}/avatar-${input.now ?? Date.now()}.${extFor(input.mime)}`;
 }
 
-/** avatars/teachers/{teacher_id}/avatar-{ms}.{ext}: an admin's photo of a teacher who may have no login (migration 20261028000942). */
+/** avatars/teachers/{teacher_id}/avatar-{ms}.{ext}: an admin's photo of a teacher who may have no login (migration 20261028000944). */
 export function teacherAvatarPath(input: { teacherId: string; mime: string; now?: number }): string {
   return `teachers/${input.teacherId}/avatar-${input.now ?? Date.now()}.${extFor(input.mime)}`;
 }
