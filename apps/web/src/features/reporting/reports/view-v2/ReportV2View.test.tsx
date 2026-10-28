@@ -1,4 +1,4 @@
-import { screen } from '@testing-library/react';
+import { fireEvent, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n/i18n';
 import { openV2, v2Content } from '../entry-v2/v2-test-kit';
@@ -47,6 +47,14 @@ describe('the admin reads a new-form report (read-only)', () => {
   it('a v1 report still opens the old form for the admin', async () => {
     await openV2({ apiFetch, role: 'admin', report: { form_version: 1, content: null } });
     expect(screen.getByRole('region', { name: t.reports.identity })).toBeTruthy();
+    expect(screen.queryByText(v2.admin.v2Badge)).toBeNull();
+  });
+
+  it('«تعديل التقرير» opens the new form for the admin (admins correct any report); a draft opens in the form', async () => {
+    await openV2({ apiFetch, role: 'admin', report: { ...sent, can_edit: true, content: v2Content({}) } });
+    expect(screen.queryByRole('button', { name: v2.saveEdit })).toBeNull();
+    fireEvent.click(screen.getByRole('button', { name: t.reports.edit }));
+    expect(await screen.findByRole('button', { name: v2.saveEdit })).toBeTruthy();
     expect(screen.queryByText(v2.admin.v2Badge)).toBeNull();
   });
 });

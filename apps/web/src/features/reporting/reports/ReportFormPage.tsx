@@ -12,7 +12,7 @@ import { reportHistoryHref } from './paths';
 import { ReportEntry } from './entry/ReportEntry';
 import { ReportEntryV2 } from './entry-v2/ReportEntryV2';
 import { ReportLink } from './history/ReportLink';
-import { ReportV2View } from './view-v2/ReportV2View';
+import { AdminReportV2 } from './view-v2/AdminReportV2';
 
 export interface ReportFormPageProps {
   lessonId: string;
@@ -29,7 +29,7 @@ function loadError(error: unknown): string {
 
 /**
  * «تقرير الحلقة» for one lesson (R-REP-01/02/04): opened from the lesson, identity prefilled. A
- * new-form report (form_version 2) is the new form for the teacher and its read view for the admin.
+ * new-form report (form_version 2) is the new form for the teacher; the admin reads it and may edit it.
  */
 export function ReportFormPage({ lessonId, role, studentId }: ReportFormPageProps) {
   const form = useQuery(reportFormQuery(lessonId));
@@ -54,7 +54,7 @@ export function ReportFormPage({ lessonId, role, studentId }: ReportFormPageProp
             {entry.report.form_version !== 2 ? (
               <ReportEntry form={data} entry={entry} titled={entries.length > 1} tz={tz} />
             ) : role === 'admin' ? (
-              <ReportV2View lesson={data.lesson} entry={entry} tz={tz} />
+              <AdminReportV2 form={data} entry={entry} titled={entries.length > 1} tz={tz} />
             ) : (
               <ReportEntryV2 form={data} entry={entry} titled={entries.length > 1} tz={tz} />
             )}
