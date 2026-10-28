@@ -496,6 +496,7 @@
   "developOnly": [
     "apply-lesson-changes-v3.sql.spec.ts",
     "assistant-commission-retro.sql.spec.ts",
+    "assistant-commission-started.sql.spec.ts",
     "assistant-commission.sql.spec.ts",
     "assistant-course-subscription.sql.spec.ts",
     "assistant-renewal-commission.sql.spec.ts",
