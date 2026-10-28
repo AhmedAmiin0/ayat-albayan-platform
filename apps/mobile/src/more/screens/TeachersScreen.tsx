@@ -14,16 +14,14 @@ const renderRow = ({ item }: { item: TeacherListItem }) => <TeacherRow teacher={
 /**
  * «المعلمين», read-only (R-TCH-01). GET /teachers pages by name and has no search or status filter
  * yet, so neither is offered here. Tap → the teacher's view; a «مشترك n» / «تجريبي n» count opens it on
- * that list.
+ * that list. The list screens' compact top (owner 2026-10-28): «المعلمين · 12» on the title's line.
  */
 export function TeachersScreen() {
   const list = usePagedList<TeacherListItem>({ path: '/teachers' });
-  const count = list.data ? t.teachers.count.replace('{n}', String(list.total)) : undefined;
   return (
-    <Screen>
-      <ScreenHeader title={t.nav.teachers} subtitle={count} />
+    <Screen list>
+      <ScreenHeader title={t.nav.teachers} size="h2" connecting count={list.data ? list.total : undefined} />
       <LazyList
-        tabBar={false}
         paged={list}
         keyExtractor={keyOf}
         renderItem={renderRow}

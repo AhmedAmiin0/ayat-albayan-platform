@@ -22,8 +22,9 @@ test('an English run reads en.json: title, count, days late, English currency', 
   expect(t).toEqual(en);
   mockApiFetch.mockResolvedValue(receivablesView([receivable()]));
   await renderWithQuery(<ReceivablesScreen />);
-  expect(await screen.findByRole('header', { name: en.mobileMoney.receivablesTitle })).toBeTruthy();
-  expect(await screen.findByText('1 unpaid packages')).toBeTruthy();
+  // Owner 2026-10-28: the total on the title's line, no separate count line.
+  expect(await screen.findByRole('header', { name: `${en.mobileMoney.receivablesTitle} · 1` })).toBeTruthy();
+  expect(screen.queryByText('1 unpaid packages')).toBeNull();
   expect(screen.getByText('34 days ago')).toBeTruthy();
   expect(screen.getAllByText(money(100, 'SAR')).length).toBeGreaterThan(0);
 });

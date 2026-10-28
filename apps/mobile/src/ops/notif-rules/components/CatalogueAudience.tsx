@@ -1,12 +1,12 @@
 import type { NotificationsOverview } from '@ab/shared';
 import { useState } from 'react';
-import { View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/more/Note';
 import { FilterPills } from '@/core/ui/form/FilterPills';
 import { audienceTabs, rowsOf, type AudienceTab } from '../lib/audience-tabs';
 import { CatalogueRow } from './CatalogueRow';
 import type { CatalogueToggles } from '../hooks/use-catalogue-toggles';
+import { InsetGroup } from '@/core/ui/surface/inset';
 
 interface CatalogueAudienceProps {
   data: NotificationsOverview;
@@ -34,11 +34,11 @@ export function CatalogueAudience({ data, canManage, toggles, initialAudience }:
       {rows.length === 0 ? (
         <Note>{t.mobileNotificationRules.audienceEmpty}</Note>
       ) : (
-        <View style={{ marginHorizontal: -16 }}>
+        <InsetGroup>
           {rows.map((e) => (
             <CatalogueRow key={e.key} entry={e} canManage={canManage} reach={data.reach} toggles={toggles} />
           ))}
-        </View>
+        </InsetGroup>
       )}
     </>
   );

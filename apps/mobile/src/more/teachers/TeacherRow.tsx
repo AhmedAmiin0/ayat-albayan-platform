@@ -12,7 +12,8 @@ import type { TeacherListItem } from '../types';
 
 /**
  * One teacher in «المعلمين»: the name and status open the teacher's file (on «مشترك»); the two counts
- * beside them open it on that list. Two sibling buttons, never one inside the other.
+ * beside them open it on that list. Two sibling buttons, never one inside the other. The list's inset
+ * card draws the fill and the rule between rows (owner 2026-10-28: one container rule).
  */
 export const TeacherRow = memo(function TeacherRow({ teacher }: { teacher: TeacherListItem }) {
   const { color } = useTheme();
@@ -25,9 +26,6 @@ export const TeacherRow = memo(function TeacherRow({ teacher }: { teacher: Teach
         alignItems: 'center',
         gap: 8,
         paddingHorizontal: 16,
-        borderBottomWidth: 1,
-        borderBottomColor: color.rule,
-        backgroundColor: color.raised,
       }}
     >
       <Pressable

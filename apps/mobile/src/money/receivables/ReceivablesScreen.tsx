@@ -1,43 +1,54 @@
+import type { ReceivableRow } from '@ab/shared';
 import { router } from 'expo-router';
 import { useMemo, useState } from 'react';
-import { ActivityIndicator, FlatList } from 'react-native';
+import { ActivityIndicator, FlatList, type ListRenderItemInfo } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { useTheme } from '@/theme';
 import { Button } from '@/core/ui/primitives/Button';
 import { EmptyState } from '@/core/ui/feedback/EmptyState';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { Screen } from '@/core/ui/layout/Screen';
+import { useTabBarInset } from '@/core/ui/layout/tab-bar-inset';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { SearchField } from '@/core/ui/form/SearchField';
+import { useInsetRows } from '@/core/ui/surface/use-inset-rows';
 import { useReceivables } from '../shared/queries';
 import { ReceivableItem } from './ReceivableItem';
 import { filterReceivables } from './receivables';
 import { ReceivablesSummary } from './ReceivablesSummary';
 
+const renderRow = ({ item }: ListRenderItemInfo<ReceivableRow>) => <ReceivableItem row={item} />;
+
 /**
  * «المستحقات» (web /admin/receivables): who still owes on a package, the biggest debt first as the
  * API sorts it. The list is one answer, so the search narrows it here. A row opens the payment form.
+ * The list screens' compact top and one inset card of rows (owner 2026-10-28): «المستحقات · 12».
  */
 export function ReceivablesScreen() {
   const { color } = useTheme();
+  const bar = useTabBarInset();
   const [search, setSearch] = useState('');
   const q = useReceivables();
   const all = q.data?.rows;
   const rows = useMemo(() => filterReceivables(all ?? [], search), [all, search]);
   const empty = search ? t.common.notFound : t.mobileMoney.receivablesEmpty;
+  const cells = useInsetRows(renderRow, rows.length);
   return (
-    <Screen>
+    <Screen list>
       <ScreenHeader
         title={t.mobileMoney.receivablesTitle}
-        subtitle={all ? t.mobileMoney.receivablesCount.replace('{n}', String(all.length)) : undefined}
+        size="h2"
+        connecting
+        count={all?.length}
         trailing={<Button variant="ghost" label={t.common.back} onPress={() => router.back()} />}
       />
-      <SearchField onSearch={setSearch} label={t.mobileMoney.receivablesSearch} />
+      <SearchField compact onSearch={setSearch} label={t.mobileMoney.receivablesSearch} />
       <FlatList
-        style={{ flex: 1, marginHorizontal: -16 }}
+        style={{ flex: 1 }}
+        contentContainerStyle={{ paddingBottom: 24 + bar }}
         data={rows}
         keyExtractor={(r) => r.id}
-        renderItem={({ item }) => <ReceivableItem row={item} />}
+        {...cells}
         refreshing={q.isRefetching}
         onRefresh={() => void q.refetch()}
         ListHeaderComponent={q.data ? <ReceivablesSummary view={q.data} /> : null}
