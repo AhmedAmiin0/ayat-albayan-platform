@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 import { Pressable, View, type ViewStyle } from 'react-native';
 import { type, useTheme } from '@/theme';
+import { useInset } from '../surface/inset';
 import { Ltr } from '../primitives/Ltr';
 import { AppText } from '../primitives/AppText';
 
@@ -29,10 +30,14 @@ interface ListRowProps {
   accessibilityHint?: string;
 }
 
-/** One list row, 56pt minimum, hairline below. Feed it to FlatList renderItem. */
+/**
+ * One list row, 56pt minimum. Inside an inset group (LazyList, InsetGroup: the app's container rule)
+ * the group draws the fill and the rules between rows; alone it keeps its own fill and hairline below.
+ */
 export function ListRow(props: ListRowProps) {
   const { leading, title, subtitle, subtitleLeading, subtitleLabel, meta, metaStrong, tags, trailing, onPress } = props;
   const { color } = useTheme();
+  const inset = useInset();
   const row: ViewStyle = {
     minHeight: 56,
     flexDirection: 'row',
@@ -40,9 +45,7 @@ export function ListRow(props: ListRowProps) {
     gap: 12,
     paddingHorizontal: 16,
     paddingVertical: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: color.rule,
-    backgroundColor: color.raised,
+    ...(inset ? null : { borderBottomWidth: 1, borderBottomColor: color.rule, backgroundColor: color.raised }),
   };
   const body = (
     <>

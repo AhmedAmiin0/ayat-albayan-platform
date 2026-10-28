@@ -1,6 +1,5 @@
 import { statusParamOfKind, type StudentListKind } from '@ab/shared';
 import { useState } from 'react';
-import { View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { usePagedList } from '@/core/lib/query/use-paged-list';
 import { NO_FILTERS } from '@/students/list/student-filters';
@@ -13,6 +12,7 @@ import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { FilterPills } from '@/core/ui/form/FilterPills';
 import { Note } from '../Note';
 import { Section } from '../Section';
+import { InsetGroup } from '@/core/ui/surface/inset';
 
 const L = t.studentLists;
 
@@ -44,11 +44,11 @@ export function TeacherStudentsSection({ teacherId, status }: TeacherStudentsSec
         list.items.length === 0 ? (
           <Note>{KIND_EMPTY[kind]}</Note>
         ) : (
-          <View style={{ marginHorizontal: -16 }}>
+          <InsetGroup>
             {list.items.map((s) => (
               <StudentRow key={s.id} student={s} />
             ))}
-          </View>
+          </InsetGroup>
         )
       ) : list.isError ? (
         <ErrorState onRetry={list.refresh} />

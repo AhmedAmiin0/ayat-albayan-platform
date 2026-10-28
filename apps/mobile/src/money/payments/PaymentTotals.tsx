@@ -5,7 +5,10 @@ import { shape, type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import type { PeriodTotal } from '../shared/types';
 
-/** The filter's net per currency (payments minus refunds), and the refunds when there are any. */
+/**
+ * The filter's net per currency (payments minus refunds), and the refunds when there are any: a list's
+ * header inside the gutter (owner 2026-10-28: one container rule; the list puts 12pt under it).
+ */
 export function PaymentTotals({ totals }: { totals: readonly PeriodTotal[] }) {
   const { color } = useTheme();
   if (totals.length === 0) return null;
@@ -13,7 +16,7 @@ export function PaymentTotals({ totals }: { totals: readonly PeriodTotal[] }) {
   return (
     <View
       accessibilityLabel={t.mobileMoney.periodTotal}
-      style={{ gap: 2, padding: 12, marginHorizontal: 16, marginBottom: 12, borderRadius: shape.radius.lg, borderWidth: 1, borderColor: color.rule, backgroundColor: color.raised }}
+      style={{ gap: 2, padding: 12, borderRadius: shape.radius.lg, borderWidth: 1, borderColor: color.rule, backgroundColor: color.raised }}
     >
       <AppText style={small}>{t.mobileMoney.periodTotal}</AppText>
       {totals.map((x) => (

@@ -1,7 +1,7 @@
-import { localizedName } from '@ab/shared';
+import { localizedName, type SalesScheduleLesson } from '@ab/shared';
 import { router, useLocalSearchParams } from 'expo-router';
-import { useState } from 'react';
-import { ActivityIndicator, FlatList, View } from 'react-native';
+import { useCallback, useState } from 'react';
+import { ActivityIndicator, FlatList, type ListRenderItemInfo, View } from 'react-native';
 import { usePermissions } from '@/auth';
 import { useLessonDetails } from '@/calendar';
 import { SchedulePeriod } from '@/calendar/overview/SchedulePeriod';
@@ -19,6 +19,7 @@ import { FilterPills } from '@/core/ui/form/FilterPills';
 import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { useTabBarInset } from '@/core/ui/layout/tab-bar-inset';
+import { useInsetRows } from '@/core/ui/surface/use-inset-rows';
 import { useSalesSchedule, useSalesTeachers } from '../lib/sales-api';
 import { SalesLessonRow } from '../components/SalesLessonRow';
 import { SalesLessonSheet } from '../components/SalesLessonSheet';
@@ -30,7 +31,8 @@ const DATE = /^\d{4}-\d{2}-\d{2}$/;
  * or cancel any lesson not over yet, one at a time (docs/16 row 37, any lesson: owner 2026-10-28),
  * a day at a time (the admin schedule's switcher) and one teacher or all; «ادخل الحلقة» on a running
  * lesson; a tap on a lesson opens its «تفاصيل الحلقة». `?teacherId=` opens it on a teacher (from «المعلمون»), `?date=` on a day. `asTab`: the sales
- * tree's «جدول الحلقات» tab (no «رجوع»).
+ * tree's «جدول الحلقات» tab (no «رجوع»). The compact top (owner 2026-10-28): an h2 title, the note, the day
+ * switcher and the teacher pills 8pt apart; the day's lessons in one inset card.
  */
 export function SalesScheduleScreen({ asTab = false }: { asTab?: boolean }) {
   const { color } = useTheme();
@@ -50,15 +52,21 @@ export function SalesScheduleScreen({ asTab = false }: { asTab?: boolean }) {
     { value: '', label: t.schedule.allTeachers },
     ...(teachers.data ?? []).map((tc) => ({ value: tc.id, label: localizedName({ ar: tc.name, en: tc.name_en }, locale) })),
   ];
+  const open = details.open;
+  const row = useCallback(({ item }: ListRenderItemInfo<SalesScheduleLesson>) => <SalesLessonRow lesson={item} onOpen={open} />, [open]);
+  const lessons = day.data?.lessons ?? [];
+  const cells = useInsetRows(row, lessons.length);
   const emptyTitle = teacherId ? t.sales.academySchedule.emptyTeacher : t.sales.academySchedule.empty;
   return (
     <Screen list>
       <ScreenHeader
         title={t.sales.academySchedule.title}
+        size="h2"
+        connecting
         subtitle={t.schedule.riyadhTime}
         trailing={asTab ? undefined : <Button variant="ghost" label={t.common.back} onPress={() => router.back()} />}
       />
-      <View style={{ gap: 8, paddingBottom: 8 }}>
+      <View style={{ gap: 8 }}>
         <Note>{changes ? t.sales.lessonActions.ownNote : t.sales.academySchedule.readOnly}</Note>
         <SchedulePeriod view="day" date={date} today={today} onDate={setDate} />
         <FilterPills accessibilityLabel={t.schedule.teacherFilter} items={pills} value={teacherId} onChange={setTeacherId} />
@@ -67,9 +75,9 @@ export function SalesScheduleScreen({ asTab = false }: { asTab?: boolean }) {
         style={{ flex: 1 }}
         contentContainerStyle={{ paddingBottom: 24 + inset }}
         accessibilityLabel={t.schedule.dayBoard}
-        data={day.data?.lessons ?? []}
+        data={lessons}
         keyExtractor={(l) => l.id}
-        renderItem={({ item }) => <SalesLessonRow lesson={item} onOpen={details.open} />}
+        {...cells}
         refreshing={day.isRefetching}
         onRefresh={() => void day.refetch()}
         ListEmptyComponent={

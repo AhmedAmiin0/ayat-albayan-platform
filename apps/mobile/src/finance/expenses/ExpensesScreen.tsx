@@ -1,11 +1,13 @@
 import { router } from 'expo-router';
-import { useState } from 'react';
-import { FlatList, ScrollView, View } from 'react-native';
+import type { ExpenseView } from '@ab/shared';
+import { useCallback, useState } from 'react';
+import { FlatList, type ListRenderItemInfo, ScrollView, View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/more/Note';
 import { Button } from '@/core/ui/primitives/Button';
 import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
+import { useInsetRows } from '@/core/ui/surface/use-inset-rows';
 import { ExpenseForm } from './ExpenseForm';
 import { ExpenseRow } from './ExpenseRow';
 import { ExpenseTotals } from './ExpenseTotals';
@@ -16,7 +18,8 @@ import { StaleNote, StateNote } from '../shared/StateNote';
 
 /**
  * «المصروفات» (admin; web /admin/expenses): the month's expenses with totals per category, and
- * «إضافة مصروف» with a receipt photo from the camera or the gallery.
+ * «إضافة مصروف» with a receipt photo from the camera or the gallery. The rows sit in one inset card
+ * under the totals (owner 2026-10-28: one container rule).
  */
 export function ExpensesScreen() {
   const [month, setMonth] = useState(currentMonth());
@@ -25,6 +28,12 @@ export function ExpensesScreen() {
   const expenses = useExpenses(month);
   const categories = useExpenseCategories();
   const rows = expenses.data ?? [];
+  const cats = categories.data;
+  const renderRow = useCallback(
+    ({ item }: ListRenderItemInfo<ExpenseView>) => <ExpenseRow expense={item} categories={cats} />,
+    [cats],
+  );
+  const cells = useInsetRows(renderRow, rows.length);
   const back = <Button variant="ghost" label={t.common.back} onPress={() => (adding ? setAdding(false) : router.back())} />;
   if (adding) {
     return (
@@ -49,15 +58,15 @@ export function ExpensesScreen() {
       <MonthPicker month={month} onChange={setMonth} />
       <StaleNote isError={expenses.isError} hasData={!!expenses.data} />
       <FlatList
-        style={{ flex: 1, marginHorizontal: -16 }}
+        style={{ flex: 1 }}
         data={rows}
         keyExtractor={(e) => e.id}
         ListHeaderComponent={
-          <View style={{ paddingHorizontal: 16, paddingBottom: 12 }}>
-            <ExpenseTotals rows={rows} categories={categories.data} />
+          <View style={{ paddingBottom: 12 }}>
+            <ExpenseTotals rows={rows} categories={cats} />
           </View>
         }
-        renderItem={({ item }) => <ExpenseRow expense={item} categories={categories.data} />}
+        {...cells}
         refreshing={expenses.isRefetching}
         onRefresh={() => void expenses.refetch()}
         ListEmptyComponent={<StateNote status={expenses} empty emptyTitle={t.expenses.empty} />}

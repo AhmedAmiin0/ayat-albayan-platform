@@ -21,7 +21,7 @@ function rowName({ label, value, editable, saving }: Omit<ValueRowProps, 'onPres
   return saving ? `${name}${t.common.listSeparator}${t.settingsValues.saving}` : name;
 }
 
-/** One row of the two-column table (الاسم | القيمة): the whole row is the 44pt+ button. */
+/** One row of the two-column table (الاسم | القيمة): the whole row is the 44pt+ button; the table's card draws the fill and rules. */
 export function ValueRow(props: ValueRowProps) {
   const { label, value, saving, onPress } = props;
   const { color } = useTheme();
@@ -33,9 +33,7 @@ export function ValueRow(props: ValueRowProps) {
     gap: 12,
     paddingHorizontal: 16,
     paddingVertical: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: color.rule,
-    backgroundColor: pressed ? color.sunk : color.raised,
+    backgroundColor: pressed ? color.sunk : undefined,
   });
   const body = (
     <>

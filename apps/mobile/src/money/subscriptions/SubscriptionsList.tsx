@@ -46,11 +46,10 @@ export function SubscriptionsList() {
   const empty = search ? t.common.notFound : t.mobileMoney.subscriptionsEmpty;
   return (
     <>
-      <SearchField onSearch={setSearch} label={t.mobileMoney.searchStudent} />
+      <SearchField compact onSearch={setSearch} label={t.mobileMoney.searchStudent} />
       <FilterPills items={PILLS} value={filter} onChange={setFilter} accessibilityLabel={t.mobileMoney.statusFilter} />
       <LazyList
         paged={list}
-        tabBar={false}
         keyExtractor={keyOf}
         renderItem={renderItem}
         ListEmptyComponent={

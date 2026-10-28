@@ -26,8 +26,8 @@ test('rows in Arabic: name, role, linked record, status, LTR email and phone; 20
   await renderWithQuery(<UsersScreen can={all} />);
   expect(await screen.findByText('سارة أحمد')).toBeTruthy();
   expect(mockApiFetch).toHaveBeenCalledWith('/users?page=1&pageSize=20');
-  expect(screen.getByRole('header', { name: t.users.title })).toBeTruthy();
-  expect(screen.getByText(t.users.count.replace('{n}', '2'))).toBeTruthy();
+  // Owner 2026-10-28: the total on the title's line, «المستخدمون · 2», no separate count line.
+  expect(screen.getByRole('header', { name: `${t.users.title} · 2` })).toBeTruthy();
   expect(screen.getByText(ltr('sara@ab.co'))).toBeTruthy();
   expect(screen.getByText(ltr('+966 55 123 4567'))).toBeTruthy();
   expect(screen.getByText(`${t.activity.roles.student}${t.common.listSeparator}يوسف علي ${ltr('AB-0007')}`)).toBeTruthy();

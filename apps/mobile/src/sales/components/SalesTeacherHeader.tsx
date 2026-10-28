@@ -27,7 +27,7 @@ export function SalesTeacherHeader({ teacher, kind, onKind }: SalesTeacherHeader
   const platform = usePlatformClassroom(teacher.platform_classroom);
   const counts = { active: teacher.active_count, trial: teacher.trial_count, all: teacher.students.length };
   return (
-    <View style={{ gap: 8, paddingHorizontal: 16, paddingBottom: 8, alignItems: 'flex-start' }}>
+    <View style={{ gap: 8, paddingBottom: 12, alignItems: 'flex-start' }}>
       <Note>{teacherCounts(teacher)}</Note>
       {teacher.live_now ? <StatusChip tone="ok" glyph="fill" size="sm" label={t.sales.teachers.liveNow} /> : null}
       <Button

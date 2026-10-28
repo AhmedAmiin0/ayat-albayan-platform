@@ -4,6 +4,7 @@ import { Pressable, View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
+import { useInset } from '@/core/ui/surface/inset';
 import { AttachIcon } from '../shared/chat-icons';
 
 interface ReplyRowProps {
@@ -18,8 +19,10 @@ interface ReplyRowProps {
 export function ReplyRow({ reply, onPress, trailing }: ReplyRowProps) {
   const { color } = useTheme();
   const file = reply.attachment !== null;
+  // In an inset card the card draws the rules between rows.
+  const rule = useInset() ? null : { borderBottomWidth: 1, borderBottomColor: color.rule };
   return (
-    <View style={{ minHeight: 56, flexDirection: 'row', alignItems: 'center', gap: 4, paddingStart: 16, paddingEnd: 8, borderBottomWidth: 1, borderBottomColor: color.rule }}>
+    <View style={{ minHeight: 56, flexDirection: 'row', alignItems: 'center', gap: 4, paddingStart: 16, paddingEnd: 8, ...rule }}>
       <Pressable
         accessibilityRole={onPress ? 'button' : undefined}
         accessibilityLabel={file ? `${reply.title}${t.common.listSeparator}${t.savedReplies.hasAttachment}` : reply.title}

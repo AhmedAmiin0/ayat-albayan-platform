@@ -11,7 +11,10 @@ import { RECORDING_CHIP, recordingTime, type RecordingSource } from './recording
 import { playRecording } from './recordings-api';
 import { useClockCycle } from '@/core/lib/clock';
 
-/** One recording: start time, status chip, and «شغّل» once the file exists (a fresh link on every tap). */
+/**
+ * One recording: start time, status chip, and «شغّل» once the file exists (a fresh link on every tap).
+ * A row of the list's inset card, which draws the fill and the rules (owner 2026-10-28).
+ */
 export function RecordingRow({ source, rec }: { source: RecordingSource; rec: LessonRecordingView }) {
   const cycle = useClockCycle();
   const { color } = useTheme();
@@ -19,7 +22,7 @@ export function RecordingRow({ source, rec }: { source: RecordingSource; rec: Le
   const play = useMutation({ mutationFn: () => playRecording(client, source, rec.id) });
   const time = recordingTime(rec.started_at, cycle);
   return (
-    <View style={{ gap: 8, paddingVertical: 10, borderBottomWidth: 1, borderBottomColor: color.rule }}>
+    <View style={{ gap: 8, paddingHorizontal: 16, paddingVertical: 10 }}>
       <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
         <AppText style={{ flex: 1, fontFamily: type.ui[600], fontSize: type.size.body, color: color.ink, fontVariant: ['tabular-nums'] }}>
           {time}

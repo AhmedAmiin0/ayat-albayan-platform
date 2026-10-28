@@ -30,15 +30,14 @@ test('rows: name, isolated phone, source, status chip; an unnamed lead is titled
   await renderWithQuery(<InboxScreen />);
   await openLeads();
   expect(await screen.findByText('هدى سالم')).toBeTruthy();
-  expect(screen.getByRole('header', { name: t.leads.title })).toBeTruthy();
+  // Owner 2026-10-28: the total on the title's line, «كل المحادثات · 2».
+  expect(screen.getByRole('header', { name: `${t.leads.title} · 2` })).toBeTruthy();
   expect(screen.getByText(ltr('+966 55 214 7730'))).toBeTruthy();
   expect(screen.getByText(ltr('+20 10 1234 5678'))).toBeTruthy();
   expect(screen.getByText('ه', { includeHiddenElements: true })).toBeTruthy();
   expect(screen.getByText(new RegExp(t.enums.leadSource.facebook_ad))).toBeTruthy();
   expect(screen.getAllByText(t.enums.leadStatus.contacted).length).toBeGreaterThan(0);
-  expect(
-    screen.getByText(t.common.showing.replace('{shown}', '2').replace('{total}', '2')),
-  ).toBeTruthy();
+  expect(screen.queryByText(t.common.showing.replace('{shown}', '2').replace('{total}', '2'))).toBeNull();
   expect(mockApiFetch).toHaveBeenCalledWith('/leads?page=1&pageSize=25');
 });
 

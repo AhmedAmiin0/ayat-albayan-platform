@@ -40,10 +40,9 @@ export const ForwardRow = memo(function ForwardRow({ thread: th, checked, disabl
         gap: 12,
         paddingHorizontal: 16,
         paddingVertical: 8,
-        borderBottomWidth: 1,
-        borderBottomColor: color.rule,
         opacity: disabled ? 0.45 : 1,
-        backgroundColor: pressed || checked ? color.lapisWash : color.raised,
+        // The list's inset card draws the fill and the rules (owner 2026-10-28: one container rule).
+        backgroundColor: pressed || checked ? color.lapisWash : 'transparent',
       })}
     >
       <Avatar letter={initialOf(th.display_name)} />

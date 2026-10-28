@@ -13,7 +13,7 @@ export const PaymentItem = memo(function PaymentItem({ payment }: { payment: Tea
   const covers = payment.payout_id ? t.earnings.fromPayout : t.earnings.paymentSessions.replace('{count}', String(payment.sessions));
   const detail = [t.enums.paymentMethod[payment.method], instantDay(payment.paid_at), covers, payment.note].filter(Boolean).join(' · ');
   return (
-    <View style={{ gap: 2, paddingVertical: 12 }}>
+    <View style={{ gap: 2, paddingHorizontal: 16, paddingVertical: 12 }}>
       <AppText style={{ fontFamily: type.ui[700], fontSize: type.size.body, color: color.ink, fontVariant: ['tabular-nums'] }}>
         {egp(payment.amount)}
       </AppText>

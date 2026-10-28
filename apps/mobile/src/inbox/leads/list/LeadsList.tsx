@@ -1,5 +1,6 @@
 import { LEAD_STATUSES, type LeadStatus, leadStatusStyle } from '@ab/shared';
 import { type ReactNode, useCallback, useState } from 'react';
+import { View } from 'react-native';
 
 import { t } from '@/core/lib/i18n/i18n';
 import { usePagedList } from '@/core/lib/query/use-paged-list';
@@ -28,6 +29,8 @@ const filterPills = (): FilterPill<Filter>[] => [
 /**
  * The leads pipeline (R-MOB-02 inbox, R-MOB-03 offline): GET /leads by status, name/phone search,
  * source, owner and order (default newest inbound first). The API returns only the selected filter's total, so only that pill counts.
+ * The list screens' one compact top (owner 2026-10-28), as the chats: «… · 107» on the title's line, the
+ * pill search, ONE row («تصفية» then the status pills), 8pt apart; the rows in the inset card.
  */
 export function LeadsList({ switcher }: { switcher: ReactNode }) {
   const cycle = useClockCycle();
@@ -43,24 +46,21 @@ export function LeadsList({ switcher }: { switcher: ReactNode }) {
   const filtersOn = q !== '' || status !== 'all' || activeFilterCount(filters) > 0;
   const loaded = list.data !== undefined;
   const pills = filterPills().map((p) => (loaded && p.value === status ? { ...p, count: list.total } : p));
-  const showing = t.common.showing
-    .replace('{shown}', String(list.items.length))
-    .replace('{total}', String(list.total));
   // Offline (no NetInfo): the refetch failed but the saved list is on screen; say how old it is.
   const stale = list.isError && loaded;
-  const subtitle = stale
-    ? `${showing} · ${t.mobile.lastUpdated.replace('{time}', clockAt(list.dataUpdatedAt, cycle))}`
-    : loaded
-      ? showing
-      : undefined;
+  const subtitle = stale ? t.mobile.lastUpdated.replace('{time}', clockAt(list.dataUpdatedAt, cycle)) : undefined;
 
   return (
-    <>
-      <ScreenHeader title={t.leads.title} subtitle={subtitle} />
+    <View style={{ flex: 1, gap: 8 }}>
+      <ScreenHeader title={t.leads.title} size="h2" connecting count={loaded ? list.total : undefined} subtitle={subtitle} />
       {switcher}
-      <SearchField onSearch={setQ} label={t.leads.searchPlaceholder} />
-      <LeadsFilterBar filters={filters} onChange={setFilters} total={loaded ? list.total : undefined} />
-      <FilterPills items={pills} value={status} onChange={setStatus} accessibilityLabel={t.leads.status} />
+      <SearchField compact onSearch={setQ} label={t.leads.searchPlaceholder} />
+      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+        <LeadsFilterBar filters={filters} onChange={setFilters} total={loaded ? list.total : undefined} />
+        <View style={{ flex: 1 }}>
+          <FilterPills items={pills} value={status} onChange={setStatus} accessibilityLabel={t.leads.status} />
+        </View>
+      </View>
       <LazyList
         paged={list}
         keyExtractor={keyOf}
@@ -70,6 +70,6 @@ export function LeadsList({ switcher }: { switcher: ReactNode }) {
           list.isPending ? null : loaded ? <EmptyState title={filtersOn ? t.mobileLeads.noMatch : t.leads.empty} /> : <ErrorState onRetry={list.refresh} />
         }
       />
-    </>
+    </View>
   );
 }

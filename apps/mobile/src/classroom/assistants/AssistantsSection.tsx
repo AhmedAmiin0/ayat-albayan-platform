@@ -1,6 +1,5 @@
 import type { AssistantView } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { View } from 'react-native';
 import { usePermissions } from '@/auth/use-permissions';
 import { ErrorLine } from '@/inbox/ErrorLine';
 import { pathKey } from '@/core/lib/query/query-keys';
@@ -11,6 +10,7 @@ import { Button } from '@/core/ui/primitives/Button';
 import { ListRow } from '@/core/ui/layout/ListRow';
 import { assignAssistant, removeAssistant, useAllAssistants, useStudentAssistants } from './assistants-api';
 import { AssistantPicker } from './AssistantPicker';
+import { InsetGroup } from '@/core/ui/surface/inset';
 
 const A = t.classroom.assistants;
 
@@ -37,7 +37,7 @@ export function AssistantsSection({ studentId }: { studentId: string }) {
     <Section title={A.title}>
       {mine.isPending ? <Note>{t.common.loading}</Note> : null}
       {mine.isSuccess && list.length === 0 ? <Note>{A.none}</Note> : null}
-      <View style={{ marginHorizontal: -16 }}>
+      <InsetGroup>
         {list.map((a) => (
           <ListRow
             key={a.profile_id}
@@ -45,7 +45,7 @@ export function AssistantsSection({ studentId }: { studentId: string }) {
             trailing={write ? <Button variant="ghost" label={A.remove} accessibilityLabel={`${A.remove} ${a.full_name}`} disabled={remove.isPending} onPress={() => remove.mutate({ studentId, profileId: a.profile_id })} /> : undefined}
           />
         ))}
-      </View>
+      </InsetGroup>
       {write && all.isSuccess ? (
         <AssistantPicker free={freeAssistants(all.data, list)} onPick={(profileId) => add.mutate({ studentId, profileId })} />
       ) : null}

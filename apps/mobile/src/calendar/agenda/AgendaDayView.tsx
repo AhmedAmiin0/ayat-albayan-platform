@@ -3,6 +3,7 @@ import { View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
+import { InsetGroup } from '@/core/ui/surface/inset';
 import type { AgendaDay } from './agenda';
 import { AgendaLessonRow } from './AgendaLessonRow';
 import { dayLabel } from '../lib/week';
@@ -22,7 +23,8 @@ interface AgendaDayViewProps {
 
 /**
  * One day of the week agenda: «السبت 3 أكتوبر», the teacher's availability as a faint line, then
- * the lessons in time order. A day without lessons stays, light, so the week reads whole.
+ * the lessons in time order, in one inset card (owner 2026-10-28: one container rule). A day without
+ * lessons stays, light, so the week reads whole.
  */
 export function AgendaDayView({ day, today, available, onReschedule, onEditTime, onOpen }: AgendaDayViewProps) {
   const { color } = useTheme();
@@ -59,9 +61,11 @@ export function AgendaDayView({ day, today, available, onReschedule, onEditTime,
       </View>
       {available ? <AppText style={faint}>{available}</AppText> : null}
       {empty ? <AppText style={faint}>{t.schedule.noLessons}</AppText> : null}
-      {day.lessons.map((lesson) => (
-        <AgendaLessonRow key={lesson.id} lesson={lesson} onReschedule={onReschedule} onEditTime={onEditTime} onOpen={onOpen} />
-      ))}
+      <InsetGroup>
+        {day.lessons.map((lesson) => (
+          <AgendaLessonRow key={lesson.id} lesson={lesson} onReschedule={onReschedule} onEditTime={onEditTime} onOpen={onOpen} />
+        ))}
+      </InsetGroup>
     </View>
   );
 }

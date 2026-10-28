@@ -1,5 +1,4 @@
 import { counted } from '@ab/shared';
-import { View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/more/Note';
 import { Section } from '@/more/Section';
@@ -7,6 +6,7 @@ import { Button } from '@/core/ui/primitives/Button';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { NumberRow } from '../numbers/NumberRow';
 import { useNumbers } from '../numbers/use-numbers';
+import { InsetGroup } from '@/core/ui/surface/inset';
 
 /** How many numbers the overview shows in full; the rest are counted (the screen stays one phone high). */
 const SHOWN_NUMBERS = 1;
@@ -27,11 +27,11 @@ export function NumbersSummary({ onOpen }: { onOpen: () => void }) {
         numbers.length === 0 ? (
           <Note>{h().numbersEmpty}</Note>
         ) : (
-          <View style={{ marginHorizontal: -16 }}>
+          <InsetGroup>
             {numbers.slice(0, SHOWN_NUMBERS).map((n) => (
               <NumberRow key={n.id} number={n} />
             ))}
-          </View>
+          </InsetGroup>
         )
       ) : query.isError ? (
         <ErrorState message={t.numbers.loadError} onRetry={() => void query.refetch()} />

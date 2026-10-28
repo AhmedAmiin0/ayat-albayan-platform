@@ -9,12 +9,13 @@ import { AppText } from '@/core/ui/primitives/AppText';
 import { StatusChip } from '@/core/ui/feedback/StatusChip';
 import { SessionActions } from './SessionActions';
 import type { SessionGroup } from './sessions';
+import { statusWord } from '@/core/ui/feedback/lesson-status';
 
 /** The card's chip: «بدأت» / «انتهت» by the room, otherwise the lesson's own status. */
 function Chip({ lesson, group }: { lesson: LessonView; group: SessionGroup }) {
   if (group === 'now') return <StatusChip tone="ok" glyph="fill" label={t.classroom.admin.live} size="sm" />;
   if (group === 'ended') return <StatusChip tone="neutral" glyph="struck" label={t.classroom.admin.ended} size="sm" />;
-  return <StatusChip {...lessonStatusStyle[lesson.status]} label={t.enums.lessonStatus[lesson.status]} size="sm" />;
+  return <StatusChip {...lessonStatusStyle[lesson.status]} label={statusWord(lesson.status)} size="sm" />;
 }
 
 /** One session of the admin board: time range, status, students, teacher, then its actions. */

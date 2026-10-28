@@ -12,6 +12,7 @@ import { AppText } from '@/core/ui/primitives/AppText';
 import { Button } from '@/core/ui/primitives/Button';
 import { StatusChip } from '@/core/ui/feedback/StatusChip';
 import type { ReportAction } from '../lib/day';
+import { statusWord } from '@/core/ui/feedback/lesson-status';
 
 const reportLabel: Record<ReportAction, string> = { open: t.reports.open, edit: t.reports.resume, view: t.reports.view };
 
@@ -70,7 +71,7 @@ export function TeacherLessonCard(p: TeacherLessonCardProps) {
         </AppText>
         <View style={{ alignItems: 'flex-end', gap: 4 }}>
           <LiveBadge lesson={lesson} />
-          <StatusChip {...lessonStatusStyle[lesson.status]} label={t.enums.lessonStatus[lesson.status]} size="sm" />
+          <StatusChip {...lessonStatusStyle[lesson.status]} label={statusWord(lesson.status)} size="sm" />
         </View>
       </View>
       <AppText style={{ fontFamily: type.ui[500], fontSize: type.size.xs, color: color.ink2, fontVariant: ['tabular-nums'] }}>

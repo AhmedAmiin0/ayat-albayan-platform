@@ -44,7 +44,7 @@ export const SessionItem = memo(function SessionItem({ row, checked = false, onT
   const payable = row.outstanding > 0;
   const toggle = useCallback(() => onToggle?.(row), [onToggle, row]);
   const body = (
-    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12, paddingVertical: 12 }}>
+    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12, paddingHorizontal: 16, paddingVertical: 12 }}>
       {onToggle ? <Tick checked={checked} disabled={!payable} /> : null}
       <View style={{ flex: 1, gap: 2 }}>
         <AppText style={{ fontFamily: type.ui[600], fontSize: type.size.sm, color: color.ink, fontVariant: ['tabular-nums'] }}>

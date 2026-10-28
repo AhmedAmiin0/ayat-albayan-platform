@@ -18,7 +18,6 @@ export function TasksList() {
   return (
     <LazyList
       paged={list}
-      tabBar={false}
       keyExtractor={keyOf}
       renderItem={renderRow}
       ListEmptyComponent={

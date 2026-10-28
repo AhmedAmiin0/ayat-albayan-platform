@@ -26,7 +26,8 @@ const back = () => (router.canGoBack() ? router.back() : router.replace('/studen
  * Student quick view (R-MOB-02) on GET /students/:id. The status changes here, and a payment is
  * recorded from the balance card, «جدّد الاشتراك» once the package ended; editing, adding and merging stay on the web.
  * «موعد تجريبي جديد» and the trial dates' history in TrialDateSection (R-STU-05); «عرض سجل الحضور» opens the
- * month-by-month attendance table (owner 2026-10-28, the same screen as sales' «تفاصيل الطالب»).
+ * month-by-month attendance table (owner 2026-10-28, the same screen as sales' «تفاصيل الطالب»). The compact
+ * h2 title (owner 2026-10-28: «the student screen still has a big header»): the file starts higher.
  */
 export function StudentScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -42,7 +43,7 @@ export function StudentScreen() {
     const notFound = query.error instanceof ApiError && query.error.status === 404;
     return (
       <Screen>
-        <ScreenHeader title={t.students.profile} trailing={backButton} />
+        <ScreenHeader title={t.students.profile} size="h2" connecting trailing={backButton} />
         {query.isError ? (
           <ErrorState
             onRetry={() => void query.refetch()}
@@ -57,6 +58,8 @@ export function StudentScreen() {
     <Screen>
       <ScreenHeader
         title={student.name}
+        size="h2"
+        connecting
         subtitle={student.code ? ltr(student.code) : undefined}
         trailing={backButton}
       />

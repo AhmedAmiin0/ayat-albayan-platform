@@ -4,6 +4,7 @@ import { View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
+import { InsetGroup } from '@/core/ui/surface/inset';
 import { useSavingKeys } from '../hooks/use-save-value';
 import { editorOf } from '../lib/value-draft';
 import { labelOf, valueText } from '../lib/value-text';
@@ -16,7 +17,10 @@ export interface ValuesTableProps {
   onOpen: (key: SettingKey) => void;
 }
 
-/** The two-column frame (الاسم | القيمة): a header hidden from screen readers (each row says both). */
+/**
+ * The two-column frame (الاسم | القيمة): a header hidden from screen readers (each row says both) over
+ * the rows' one inset card (owner 2026-10-28: one container rule), the heads aligned with the cells.
+ */
 export function TableFrame({ children }: { children: ReactNode }) {
   const { color } = useTheme();
   const head = {
@@ -26,16 +30,16 @@ export function TableFrame({ children }: { children: ReactNode }) {
     color: color.ink2,
   };
   return (
-    <View style={{ marginHorizontal: -16 }}>
+    <View style={{ gap: 4 }}>
       <View
         accessibilityElementsHidden
         importantForAccessibility="no-hide-descendants"
-        style={{ flexDirection: 'row', paddingHorizontal: 16, paddingVertical: 8, borderBottomWidth: 1, borderBottomColor: color.rule }}
+        style={{ flexDirection: 'row', paddingHorizontal: 16 }}
       >
         <AppText style={{ ...head, flex: 1 }}>{t.mobileValues.name}</AppText>
         <AppText style={head}>{t.mobileValues.value}</AppText>
       </View>
-      {children}
+      <InsetGroup>{children}</InsetGroup>
     </View>
   );
 }
