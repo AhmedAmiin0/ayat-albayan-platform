@@ -1,0 +1,32 @@
+/* The initials circle's six tones (owner 2026-10-28). Values are packages/shared/src/theme/avatar-tones.ts
+   (avatar-tones.test.ts diffs them; the AA check of `ink` on each runs there). The Avatar picks
+   --avatar-N from a hash of the person's id, so a person keeps one tone on every screen. */
+:root,
+[data-theme='light'] {
+  --avatar-1: #d9efe3;
+  --avatar-2: #f3e6c4;
+  --avatar-3: #dbe9f6;
+  --avatar-4: #f4dfe3;
+  --avatar-5: #e6e0f3;
+  --avatar-6: #d6eeee;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --avatar-1: #2d4a3b;
+    --avatar-2: #4a4026;
+    --avatar-3: #2b4157;
+    --avatar-4: #523239;
+    --avatar-5: #3f3858;
+    --avatar-6: #234a4a;
+  }
+}
+
+[data-theme='dark'] {
+  --avatar-1: #2d4a3b;
+  --avatar-2: #4a4026;
+  --avatar-3: #2b4157;
+  --avatar-4: #523239;
+  --avatar-5: #3f3858;
+  --avatar-6: #234a4a;
+}

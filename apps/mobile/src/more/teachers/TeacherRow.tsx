@@ -7,6 +7,7 @@ import { locale } from '@/core/lib/i18n/locale';
 import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { StatusChip } from '@/core/ui/feedback/StatusChip';
+import { Avatar } from '@/core/ui/primitives/Avatar';
 import { TeacherCountLinks } from './TeacherCountLinks';
 import type { TeacherListItem } from '../types';
 
@@ -28,6 +29,7 @@ export const TeacherRow = memo(function TeacherRow({ teacher }: { teacher: Teach
         paddingHorizontal: 16,
       }}
     >
+      <Avatar name={name} id={teacher.id} src={teacher.avatar_url} decorative />
       <Pressable
         accessibilityRole="button"
         onPress={() => router.push(`/more/teachers/${teacher.id}`)}

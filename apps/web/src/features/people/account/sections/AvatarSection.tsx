@@ -40,9 +40,10 @@ export function AvatarSection({ profile, onDone }: SectionProps) {
       <div className="flex flex-wrap items-center gap-x-6 gap-y-4">
         <Avatar
           name={profile.full_name}
+          id={profile.id}
           src={picked?.url ?? profile.avatar_url}
           alt={picked ? A.preview : A.alt.replace('{name}', profile.full_name)}
-          size="lg"
+          size="xl"
           className={picked ? 'outline-2 outline-offset-2 outline-rule-strong outline-dashed' : undefined}
         />
         <div className="grid min-w-0 flex-1 basis-60 gap-3">

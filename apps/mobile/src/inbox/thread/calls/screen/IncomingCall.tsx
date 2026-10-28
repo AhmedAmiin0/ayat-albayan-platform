@@ -4,7 +4,8 @@ import { t } from '@/core/lib/i18n/i18n';
 import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { HangUpIcon, PhoneIcon } from './call-icons';
-import { CallerName, Initials } from './Initials';
+import { Avatar } from '@/core/ui/primitives/Avatar';
+import { CallerName } from './CallerName';
 import { RoundButton } from './RoundButton';
 
 interface IncomingCallProps {
@@ -42,7 +43,7 @@ export function IncomingCall({ name, onAccept, onDecline }: IncomingCallProps) {
         </AppText>
       </View>
       <View style={{ alignItems: 'center', gap: 16, marginTop: '18%' }}>
-        <Initials name={name} />
+        <Avatar name={name} size="xl" decorative />
         <CallerName name={name} />
       </View>
       <View

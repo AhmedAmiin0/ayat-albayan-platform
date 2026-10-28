@@ -44,6 +44,11 @@ describe('boardRows', () => {
     expect(rows[0]?.days.get(SUNDAY)?.map((l) => l.id)).toEqual(['a']);
     expect(rows[1]?.days.size).toBe(0);
   });
+
+  it("takes the teacher's photo from the window's lessons (none without lessons)", () => {
+    const shot = lesson({ id: 'p', teacher: { ...LESSON.teacher, id: 't-abrar', avatar_url: 'https://x.test/a.png' } });
+    expect(boardRows([T_ABRAR, T_NOUR], [shot]).map((r) => r.photo)).toEqual(['https://x.test/a.png', null]);
+  });
 });
 
 describe('Riyadh-day spans', () => {

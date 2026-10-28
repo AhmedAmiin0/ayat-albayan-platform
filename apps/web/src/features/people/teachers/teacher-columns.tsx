@@ -2,6 +2,8 @@ import { formatPhone, PROGRAMS, TEACHER_STATUSES, teacherStatusStyle } from '@ab
 import { createColumnHelper } from '@tanstack/react-table';
 import type { DataTableFeatures } from '@/components/DataTable';
 import { Link } from '@tanstack/react-router';
+import { memo } from 'react';
+import { Avatar } from '@/components/ui/display/avatar';
 import { Button, buttonVariants } from '@/components/ui/form/button';
 import { Ltr } from '@/components/ui/display/ltr';
 import { StatusChip } from '@/components/ui/display/status-chip';
@@ -18,6 +20,28 @@ const text = { kind: 'text' } as const;
 const programOptions = () => PROGRAMS.map((p) => ({ value: p, label: t.enums.program[p] }));
 const statusOptions = () => TEACHER_STATUSES.map((st) => ({ value: st, label: t.enums.teacherStatus[st] }));
 
+/** The name cell: photo (or initials), the name as a button to the profile, «معلم / معلمة». Memoised per row. */
+const NameCell = memo(function NameCell({ teacher, onOpen }: { teacher: TeacherListRow; onOpen: Handlers['onOpen'] }) {
+  return (
+    <div className="flex items-center gap-2.5">
+      <Avatar name={teacher.display_name_ar} id={teacher.id} src={teacher.avatar_url} size="sm" decorative />
+      <div className="grid min-w-0">
+        <button
+          type="button"
+          className="cursor-pointer text-start font-semibold text-ink hover:underline max-sm:inline-flex max-sm:min-h-11 max-sm:items-center max-sm:text-base"
+          onClick={(e) => {
+            e.stopPropagation();
+            onOpen(teacher.id);
+          }}
+        >
+          {teacher.display_name_ar}
+        </button>
+        <span className="text-2xs text-ink-3">{t.teachers.genderLabel[teacher.gender]}</span>
+      </div>
+    </div>
+  );
+});
+
 /**
  * Teacher list columns (R-TCH-01, docs/07 §6). The name is a button (keyboard path to the
  * profile); «تعديل» opens the dialog without following the row link. Under 640px the rows stack:
@@ -29,21 +53,7 @@ export function teacherColumns({ onEdit, onOpen }: Handlers) {
   return col.columns([
     col.accessor('display_name_ar', {
       header: () => t.teachers.displayNameAr,
-      cell: (c) => (
-        <div className="grid">
-          <button
-            type="button"
-            className="cursor-pointer text-start font-semibold text-ink hover:underline max-sm:inline-flex max-sm:min-h-11 max-sm:items-center max-sm:text-base"
-            onClick={(e) => {
-              e.stopPropagation();
-              onOpen(c.row.original.id);
-            }}
-          >
-            {c.getValue()}
-          </button>
-          <span className="text-2xs text-ink-3">{t.teachers.genderLabel[c.row.original.gender]}</span>
-        </div>
-      ),
+      cell: (c) => <NameCell teacher={c.row.original} onOpen={onOpen} />,
       meta: { className: 'max-sm:order-1 max-sm:flex-[1_1_60%]', sortKey: 'name', filter: text, filterKey: 'name' },
     }),
     col.accessor('programs', {

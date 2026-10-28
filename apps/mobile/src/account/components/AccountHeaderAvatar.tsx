@@ -4,7 +4,7 @@ import { t } from '@/core/lib/i18n/i18n';
 import { shape, useTheme } from '@/theme';
 import { Mark } from '@/core/ui/primitives/Mark';
 import type { AccountHref } from './AccountRow';
-import { ProfileAvatar } from '../sections/ProfileAvatar';
+import { Avatar } from '@/core/ui/primitives/Avatar';
 import { useMyProfile } from '../hooks/queries';
 
 /**
@@ -30,7 +30,7 @@ export function AccountHeaderAvatar({ href }: { href: AccountHref }) {
         backgroundColor: pressed ? color.sunk : 'transparent',
       })}
     >
-      <ProfileAvatar name={profile.full_name} uri={profile.avatar_url} size={40} />
+      <Avatar name={profile.full_name} id={profile.id} src={profile.avatar_url} decorative />
     </Pressable>
   );
 }

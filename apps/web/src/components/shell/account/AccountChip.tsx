@@ -32,7 +32,7 @@ export function AccountChip({ email, variant = 'block', className }: AccountChip
         className,
       )}
     >
-      <Avatar name={name} src={profile?.avatar_url} size="sm" />
+      <Avatar name={name} id={profile?.id} src={profile?.avatar_url} size="sm" decorative />
       <span className="grid min-w-0 leading-tight">
         <span className="text-xs font-semibold text-ink group-aria-[current=page]:text-lapis">{t.account.nav}</span>
         {!inline && email && (

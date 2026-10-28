@@ -35,7 +35,7 @@ function renderWeek(search: ScheduleSearch = {}) {
 }
 
 const rowNames = (grid: HTMLElement) =>
-  within(grid).getAllByRole('rowheader').map((r) => within(r).getByRole('link').textContent);
+  within(grid).getAllByRole('rowheader').map((r) => within(r).getByRole('link').lastElementChild?.textContent);
 
 describe('WeekSchedule (R-SCH-01, R-SCH-03)', () => {
   beforeEach(() => {

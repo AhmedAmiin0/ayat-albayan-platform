@@ -26,9 +26,9 @@ test('R-ACC-01: «حسابي» is there for any role (no permission) and opens /
 
 test('R-ACC-05: the header shows the initials, then the photo, and opens «حسابي»', async () => {
   const { client } = await renderWithQuery(<MoreScreen />, seeded());
-  expect(screen.getByTestId('profile-avatar-initials', { includeHiddenElements: true })).toBeTruthy();
+  expect(screen.getByTestId('avatar-initials', { includeHiddenElements: true })).toBeTruthy();
   await fireEvent.press(screen.getByRole('button', { name: t.account.mobile.open }));
   expect(router.push).toHaveBeenCalledWith('/more/account');
   client.setQueryData(PROFILE_KEY, savedProfile({ avatar_url: 'https://cdn/a.jpg' }));
-  expect((await screen.findByTestId('profile-avatar-photo')).props.source).toEqual({ uri: 'https://cdn/a.jpg' });
+  expect((await screen.findByTestId('avatar-photo', { includeHiddenElements: true })).props.source).toEqual({ uri: 'https://cdn/a.jpg' });
 });

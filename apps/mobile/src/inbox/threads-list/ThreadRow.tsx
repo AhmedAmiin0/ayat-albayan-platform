@@ -7,7 +7,7 @@ import { Avatar } from '@/core/ui/primitives/Avatar';
 import { ListRow } from '@/core/ui/layout/ListRow';
 import { ltr } from '@/core/ui/primitives/Ltr';
 import { StatusChip } from '@/core/ui/feedback/StatusChip';
-import { initialOf, kindLabel } from '../shared/format';
+import { kindLabel } from '../shared/format';
 import { DeliveryTicks } from '../messages/components/DeliveryTicks';
 import { threadPreview } from '../messages/hooks/message-text';
 import { ThreadTags } from './ThreadTags';
@@ -52,7 +52,7 @@ const ThreadRow = memo(function ThreadRow({ thread: th, teacher, tags, onOpen }:
   const open = useCallback(() => onOpen(th.phone_e164), [onOpen, th.phone_e164]);
   return (
     <ListRow
-      leading={<Avatar letter={initialOf(th.display_name)} />}
+      leading={<Avatar name={th.display_name ?? ''} id={th.phone_e164} decorative />}
       title={th.display_name ?? (teacher ? kindLabel(th) : ltr(phone))}
       meta={th.display_name && !teacher ? phone : undefined}
       subtitle={threadPreview(th)}

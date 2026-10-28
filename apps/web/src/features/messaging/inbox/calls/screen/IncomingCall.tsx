@@ -39,7 +39,7 @@ export function IncomingCall({ name, onAccept, onDecline, onSilence }: IncomingC
       </p>
       <div className="mt-[12vh] flex flex-col items-center gap-4 text-center">
         <span className="rounded-full motion-safe:animate-pulse">
-          <Avatar name={name} size="lg" />
+          <Avatar name={name} size="xl" decorative />
         </span>
         <h2 id={nameId} tabIndex={-1} data-autofocus className="max-w-[18ch] truncate font-display text-2xl font-bold outline-none">
           {name}
