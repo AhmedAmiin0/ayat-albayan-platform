@@ -25,7 +25,7 @@ interface EarningsHeaderProps {
 /** The list header: the three cards, «الحلقات | الدفعات», and (on sessions) the status filter. */
 export function EarningsHeader({ balance, tab, onTab, filter, onFilter }: EarningsHeaderProps) {
   return (
-    <View style={{ gap: 12, paddingBottom: 8 }}>
+    <View style={{ gap: 12 }}>
       {balance ? <EarningsSummary balance={balance} /> : null}
       <FilterPills items={tabs()} value={tab} onChange={onTab} accessibilityLabel={t.earnings.title} />
       {tab === 'sessions' ? (

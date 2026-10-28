@@ -32,7 +32,10 @@ interface RecordingRowProps {
   getUrl: (id: string) => Promise<string | null>;
 }
 
-/** One recording: when, who taught, length, size, status, play, the visibility switch and delete. */
+/**
+ * One recording: when, who taught, length, size, status, play, the visibility switch and delete. No fill
+ * or rule of its own: the list's inset card draws them (owner 2026-10-28: one container rule).
+ */
 const RecordingRow = memo(function RecordingRow({ rec, studentId, tz = RIYADH_TZ, canManage, canDelete, getUrl }: RecordingRowProps) {
   const cycle = useClockCycle();
   const url = useCallback(() => getUrl(rec.id), [getUrl, rec.id]);
@@ -44,7 +47,7 @@ const RecordingRow = memo(function RecordingRow({ rec, studentId, tz = RIYADH_TZ
     </AppText>
   );
   return (
-    <View style={{ gap: 8, paddingHorizontal: 16, paddingVertical: 12, borderBottomWidth: 1, borderBottomColor: color.rule, backgroundColor: color.raised }}>
+    <View style={{ gap: 8, paddingHorizontal: 16, paddingVertical: 12 }}>
       <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 8 }}>
         <AppText style={{ flexShrink: 1, fontFamily: type.ui[600], fontSize: type.size.body, color: color.ink }}>
           {R.lessonAt.replace('{when}', when)}
