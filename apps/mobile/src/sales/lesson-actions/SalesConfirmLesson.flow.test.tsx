@@ -36,11 +36,12 @@ const open = async (client = createTestQueryClient()) => {
   await screen.findByRole('header', { name: 'يوسف أحمد' });
 };
 
-test('any scheduled lesson (not hers): «تأكيد الحلقة», then it reads «مؤكدة»; no move or cancel', async () => {
+test('any scheduled lesson (not hers): «تأكيد الحلقة» beside her move / cancel, then it reads «مؤكدة»', async () => {
   mockApiSend.mockResolvedValue({ id: 'l3', starts_at: OTHERS.starts_at, status: 'confirmed' });
   await open();
   expect(screen.queryByText(t.lessons.sheet.readOnly)).toBeNull();
-  expect(screen.queryByRole('button', { name: a.reschedule })).toBeNull();
+  // Owner 2026-10-28: move / cancel are any lesson too (docs/16 row 37).
+  expect(screen.getByRole('button', { name: a.reschedule })).toBeTruthy();
   await fireEvent.press(screen.getByRole('button', { name: a.confirm }));
   await waitFor(() => expect(mockApiSend).toHaveBeenCalledWith('POST', '/sales/lessons/l3/confirm'));
   expect(await screen.findByText(a.confirmed)).toBeTruthy();
@@ -48,13 +49,17 @@ test('any scheduled lesson (not hers): «تأكيد الحلقة», then it read
   expect(screen.queryByRole('button', { name: a.confirm })).toBeNull();
 });
 
-test.each([
-  ['confirmed', { ...OTHERS, status: 'confirmed' }],
-  ['ended', { ...OTHERS, starts_at: '2026-10-01T12:00:00.000Z', ends_at: '2026-10-01T12:45:00.000Z' }],
-])('a %s lesson offers no confirm and stays «للاطلاع فقط»', async (_kind, lesson) => {
-  mockApiFetch.mockImplementation(day([lesson]));
+test('a confirmed lesson offers no confirm, only her move / cancel (any lesson)', async () => {
+  mockApiFetch.mockImplementation(day([{ ...OTHERS, status: 'confirmed' }]));
   await open();
   expect(screen.queryByRole('button', { name: a.confirm })).toBeNull();
+  expect(screen.getByRole('button', { name: a.cancel })).toBeTruthy();
+});
+
+test('an ended lesson offers no action and stays «للاطلاع فقط»', async () => {
+  mockApiFetch.mockImplementation(day([{ ...OTHERS, starts_at: '2026-10-01T12:00:00.000Z', ends_at: '2026-10-01T12:45:00.000Z' }]));
+  await open();
+  for (const name of [a.confirm, a.reschedule, a.cancel]) expect(screen.queryByRole('button', { name })).toBeNull();
   expect(screen.getByText(t.lessons.sheet.readOnly)).toBeTruthy();
 });
 

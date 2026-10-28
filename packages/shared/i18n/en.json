@@ -4420,7 +4420,7 @@
       "reasonHint": "e.g. the family is travelling",
       "confirmCancel": "Confirm cancellation",
       "cancelled": "Lesson cancelled",
-      "ownNote": "You can reschedule or cancel your students' lessons; anything else is done by the admin.",
+      "ownNote": "You can confirm, reschedule or cancel any lesson; anything else is done by the admin.",
       "confirm": "Confirm lesson",
       "confirmed": "Lesson confirmed",
       "confirmEnded": "This lesson has ended, so it cannot be confirmed",

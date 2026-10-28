@@ -21,9 +21,9 @@ export class LessonServices {
 }
 
 /**
- * Sales move or cancel ONE lesson of her own students (owner 2026-10-27, docs/16 row 37) through the
- * admin's very services, with her as the actor: the same transaction, confirmation messages, package
- * counts, calendar sync and audit as the admin's «تغيير الموعد» (scope one, no substitute, no clash
+ * Sales move or cancel ONE lesson (owner 2026-10-27, docs/16 row 37; ANY student's, not only hers:
+ * owner 2026-10-28) through the admin's very services, with her as the actor: the same transaction,
+ * confirmation messages, package counts, calendar sync and audit as the admin's «تغيير الموعد» (scope one, no substitute, no clash
  * override) and «إلغاء» (scope one, by the academy, the reason optional: null when absent).
  */
 @Injectable()
@@ -35,7 +35,7 @@ export class SalesLessonActions {
   ) {}
 
   async reschedule({ lessonId, body, actor }: Move, now = new Date()): Promise<SalesLessonMoved> {
-    await this.scope.assertLesson(actor, { lessonId, now });
+    await this.scope.assertLesson({ lessonId, now });
     // Her own booking refuses a past time too (SalesBookingService): never a lesson that is already over.
     if (Date.parse(body.startsAt) <= now.getTime()) throw badRequest('date_in_past');
     const id = await this.lessons.one.reschedule({ lessonId, body: { scope: 'one', startsAt: body.startsAt }, actor });
@@ -45,7 +45,7 @@ export class SalesLessonActions {
   }
 
   async cancel({ lessonId, body, actor }: Cancel, now = new Date()): Promise<{ id: string; status: LessonStatus }> {
-    await this.scope.assertLesson(actor, { lessonId, now });
+    await this.scope.assertLesson({ lessonId, now });
     const reason = body.reason ? body.reason : null;
     await this.lessons.cancels.cancel({ lessonId, body: { scope: 'one', by: 'admin', reason }, actor });
     const lesson = await this.queries.lesson(lessonId);

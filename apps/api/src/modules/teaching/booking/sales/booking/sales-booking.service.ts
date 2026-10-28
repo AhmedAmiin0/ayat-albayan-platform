@@ -91,14 +91,21 @@ export class SalesBookingOptions {
 
   /**
    * `excludeLessonId` is kept only for a lesson of the grid's own students (her student's trial that
-   * «موعد تجريبي جديد» moves); any other is dropped (moving a lesson is the admin's). `excludeCourse`
-   * («تغيير أيام الحلقات») frees only her own students' course lessons: those students must be hers whatever the switch.
+   * «موعد تجريبي جديد» moves); any other is dropped. `excludeCourse` («تغيير أيام الحلقات») frees only
+   * her own students' course lessons: those students must be hers whatever the switch. `lessonId` (her
+   * «تغيير الموعد», lessons.reschedule): a grid of exactly that lesson's students reads whoever's they are,
+   * since she may move ANY lesson (owner 2026-10-28, docs/16 row 37); a read of free slots, nothing booked.
    */
   async slots(q: SlotsQuery, user: AuthUser): Promise<SlotsResponse> {
     const ids = q.studentIds ?? [];
-    if (ids.length) assertOwnStudents(ids, await this.scope.of(user));
+    if (ids.length && !(await this.moving(q, user))) assertOwnStudents(ids, await this.scope.of(user));
     if (q.excludeCourse) assertOwnStudents(ids, await this.scope.owned(user));
     const keep = !!q.excludeLessonId && ids.length > 0 && (await this.scope.ownLesson(q.excludeLessonId, ids));
     return this.slotsService.slots({ ...q, excludeLessonId: keep ? q.excludeLessonId : undefined });
+  }
+
+  private async moving(q: SlotsQuery, user: AuthUser): Promise<boolean> {
+    if (!q.lessonId || !can(user, 'lessons.reschedule')) return false;
+    return this.scope.isLessonOf(q.lessonId, q.studentIds ?? []);
   }
 }
