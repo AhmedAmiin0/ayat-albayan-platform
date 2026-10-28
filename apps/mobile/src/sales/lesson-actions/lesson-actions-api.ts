@@ -36,7 +36,8 @@ export function useSalesConfirm(lessonId: string) {
   const refresh = useRefreshSchedule();
   return useMutation({
     mutationFn: () => apiSend<SalesLessonMoved>('POST', `/sales/lessons/${lessonId}/confirm`),
-    onSuccess: refresh,
+    // A 409 (cancelled or confirmed elsewhere) refetches too, so the stale button and status go.
+    onSettled: refresh,
   });
 }
 

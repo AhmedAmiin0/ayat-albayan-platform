@@ -4,7 +4,6 @@ import { ApiError } from '@/lib/http/api';
 import { t } from '@/lib/i18n/i18n';
 import { scheduleLesson } from '../academy.fixtures';
 import { renderWithQuery } from '../academy.test-utils';
-import { canConfirmLesson } from './SalesConfirmLesson';
 import { SalesLessonDrawer } from './SalesLessonDrawer';
 
 const apiSend = vi.hoisted(() => vi.fn());
@@ -64,11 +63,5 @@ describe('sales «تأكيد الحلقة» in the lesson drawer', () => {
     fireEvent.click(within(drawer).getByRole('button', { name: a.confirm }));
     expect(await within(drawer).findByText(text)).toBeTruthy();
     expect(within(drawer).queryByText(a.confirmed)).toBeNull();
-  });
-
-  it('canConfirmLesson: any scheduled lesson before its end, only with the key', () => {
-    expect(canConfirmLesson(LESSON, { now: NOW, holds: true })).toBe(true);
-    expect(canConfirmLesson(LESSON, { now: NOW, holds: false })).toBe(false);
-    expect(canConfirmLesson(LESSON, { now: new Date(LESSON.ends_at), holds: true })).toBe(false);
   });
 });

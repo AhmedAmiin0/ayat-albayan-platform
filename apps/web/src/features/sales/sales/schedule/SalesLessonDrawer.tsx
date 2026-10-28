@@ -1,4 +1,4 @@
-import { isRunningLesson, type SalesScheduleLesson } from '@ab/shared';
+import { canSalesConfirm, isRunningLesson, type SalesScheduleLesson } from '@ab/shared';
 import { useState } from 'react';
 import { StatusChip } from '@/components/ui/display/status-chip';
 import { usePermissions } from '@/features/people/auth';
@@ -6,7 +6,7 @@ import { EnterButton } from '@/features/teaching/classroom/join/JoinButton';
 import { Drawer } from '@/features/teaching/schedule/Drawer';
 import { studentNames } from '@/features/teaching/schedule/lesson/lessons';
 import { t } from '@/lib/i18n/i18n';
-import { canConfirmLesson, SalesConfirmLesson } from './SalesConfirmLesson';
+import { SalesConfirmLesson } from './SalesConfirmLesson';
 import { SalesLessonDetails } from './SalesLessonDetails';
 
 export interface SalesLessonDrawerProps {
@@ -26,7 +26,7 @@ export function SalesLessonDrawer({ lesson, now, onClose }: SalesLessonDrawerPro
   const [confirmedId, setConfirmedId] = useState<string | null>(null);
   const justConfirmed = confirmedId === lesson.id;
   const shown = justConfirmed ? { ...lesson, status: 'confirmed' as const } : lesson;
-  const confirmable = canConfirmLesson(shown, { now, holds });
+  const confirmable = canSalesConfirm(shown, { now, holds });
   return (
     <Drawer title={studentNames(lesson) || t.lessons.details} onClose={onClose}>
       <div role="group" aria-label={t.lessons.details} className="grid gap-5">

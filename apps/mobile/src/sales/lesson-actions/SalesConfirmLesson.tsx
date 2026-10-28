@@ -13,7 +13,7 @@ interface SalesConfirmLessonProps {
 
 /**
  * «تأكيد الحلقة» in sales' «تفاصيل الحلقة» (owner 2026-10-28): one tap, scheduled → confirmed, no message
- * to the family or the teacher. The sheet decides when it shows (canConfirmLesson).
+ * to the family or the teacher. The sheet decides when it shows (canSalesConfirm (@ab/shared)).
  */
 export function SalesConfirmLesson({ lessonId, onConfirmed }: SalesConfirmLessonProps) {
   const confirm = useSalesConfirm(lessonId);
