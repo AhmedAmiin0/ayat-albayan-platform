@@ -20,8 +20,14 @@ ids() { docker ps -aq --filter "label=com.docker.compose.project=$PROJECT" --fil
 stop() {
   for s in "$@"; do
     c=$(ids "$s")
+    [ -n "$c" ] || continue
+    # Explicit exit: set -e does not stop on a failure inside a list. A worker that will not stop must never
+    # see the single container (which runs every job) start beside it.
     # shellcheck disable=SC2086
-    [ -z "$c" ] || { docker stop -t 30 $c >/dev/null && docker rm $c >/dev/null; }
+    docker stop -t 30 $c >/dev/null && docker rm $c >/dev/null || {
+      echo "::error::could not stop $s: the previous container is NOT started (fix by hand, docs/09 «Roll back»)"
+      exit 1
+    }
   done
 }
 

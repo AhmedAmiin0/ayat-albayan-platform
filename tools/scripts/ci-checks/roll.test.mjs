@@ -23,7 +23,7 @@ test('a normal roll: one build, worker → api-a → api-b (each healthy), then 
   assert.equal(r.code, 0, r.out);
   assert.match(r.log[0], new RegExp(`^docker ${P} build ayat-worker$`));
   const order = ['up -d --no-deps ayat-worker', 'up -d --no-deps ayat-api-a', 'up -d --no-deps ayat-api-b',
-    'exec -T ayat-lb caddy validate', 'exec -T ayat-lb caddy reload', 'up -d --no-deps ayat-lb', 'curl'];
+    'run --rm --network none', 'exec -T ayat-lb caddy reload', 'up -d --no-deps ayat-lb', 'curl'];
   const idx = order.map((o) => at(r.log, o));
   assert.ok(idx.every((i, n) => i >= 0 && (n === 0 || i > idx[n - 1])), `order: ${r.log.join('\n')}`);
   assert.ok(at(r.log, 'stop') < 0, 'nothing is stopped');
@@ -49,14 +49,15 @@ test('an invalid Caddyfile fails the roll: no reload, no forced LB recreate, the
   assert.notEqual(r.code, 0);
   assert.match(r.out, /lb\/Caddyfile is invalid/);
   assert.ok(at(r.log, 'caddy reload') < 0 && at(r.log, 'force-recreate') < 0 && at(r.log, 'up -d --no-deps ayat-lb') < 0);
+  assert.ok(at(r.log, 'exec -T ayat-lb caddy validate') < 0, 'never a second Caddy inside the running LB');
   assert.equal(r.text('.lb.sha256'), 'old\n');
 });
 
 test('a reload Caddy refuses fails the roll the same way; first switch: an invalid file never stops the old container', () => {
-  const reload = run('roll.sh', { up: ['ayat-worker', 'ayat-api-a', 'ayat-api-b', 'ayat-lb'], fail: ['caddy reload'] });
+  const reload = run('roll.sh', { up: ['ayat-worker', 'ayat-api-a', 'ayat-api-b', 'ayat-lb'], files: { '.lb.sha256': 'old\n' }, fail: ['caddy reload'] });
   assert.notEqual(reload.code, 0);
   assert.ok(at(reload.log, 'force-recreate') < 0 && at(reload.log, 'up -d --no-deps ayat-lb') < 0);
-  assert.ok(!reload.has('.lb.sha256'));
+  assert.ok(!reload.has('.lb.sha256'), 'the stored sum is dropped before the reload: a rollback reloads its file');
   const first = run('roll.sh', { up: ['ayat-api'], fail: ['caddy validate'] });
   assert.notEqual(first.code, 0);
   assert.ok(at(first.log, 'stop') < 0 && at(first.log, 'up -d --no-deps') < 0, first.log.join('\n'));
@@ -67,11 +68,13 @@ test('the workflow swaps and rolls under the deploy lock, and a failed roll runs
     const name = f.replace('.', '\\.');
     assert.match(workflow, new RegExp(`deploy/staging/${name}"? "[^"]*/${name}\\.new"`), `${f} goes up as ${f}.new`);
   }
-  const block = workflow.slice(workflow.indexOf('flock -n -E 75 .deploy.lock sh -c'), workflow.indexOf('rc=$?'));
+  const block = workflow.slice(workflow.indexOf('setsid -w flock -n -E 75 .deploy.lock sh -c'), workflow.indexOf('case "$rc" in'));
   assert.match(block, /mv src\.new src &&/);
   assert.match(block, /mv docker-compose\.yml\.new docker-compose\.yml && mv roll\.sh\.new roll\.sh && mv rollback\.sh\.new rollback\.sh/);
   assert.match(block, /cat lb\/Caddyfile\.new > lb\/Caddyfile/, 'same inode: ayat-lb mounts the directory');
-  assert.match(block, /\{ sh roll\.sh \|\| \{ sh rollback\.sh; exit 1; \}; \}/);
+  assert.match(block, /rm lb\/Caddyfile\.new \|\| exit 4\n\s*\{ sh roll\.sh \|\| \{ sh rollback\.sh \|\| exit 3; exit 1; \}; \}' > \.deploy\.log 2>&1 < \/dev\/null/);
+  assert.match(block, /setsid -w flock/, 'an ssh drop never stops the roll or its rollback halfway');
+  for (const rc of ['75', '1', '3', '4', '255']) assert.match(workflow, new RegExp(`\\n\\s*${rc}\\) echo "::error::`), `exit ${rc} has its own message`);
   assert.match(workflow, /flock -n -E 75 \.deploy\.lock sh rollback\.sh/, 'the health-check rollback too');
   assert.match(workflow, /flock -n -E 75 \.deploy\.lock sh -c 'if \[ -f roll\.sh \]/, 'env_only too');
   assert.doesNotMatch(workflow, /steps\.ship\.outcome == 'failure'/);

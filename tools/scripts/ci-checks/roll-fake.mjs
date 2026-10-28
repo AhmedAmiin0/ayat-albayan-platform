@@ -12,7 +12,7 @@ const P = 'ayat-albayan-staging';
 
 const DOCKER = `#!/bin/sh
 echo "docker $*" >> "$FAKE/log"
-for bad in $FAKE_FAIL; do case "$*" in *"$bad"*) exit 1 ;; esac; done
+printf '%s\\n' "$FAKE_FAIL" | while IFS= read -r bad; do [ -z "$bad" ] || case "$*" in *"$bad"*) exit 1 ;; esac; done || exit 1
 last=""; for a in "$@"; do last=$a; done
 case "$*" in
   "ps -aq --filter label=com.docker.compose.project=${P} --filter label=com.docker.compose.service="*)
@@ -50,7 +50,7 @@ export function run(script, { args = [], up = [], files = {}, fail = [], roles =
     writeFileSync(join(fake, 'bin/docker'), DOCKER);
     writeFileSync(join(fake, 'bin/curl'), '#!/bin/sh\necho "curl $*" >> "$FAKE/log"\n');
     for (const b of ['docker', 'curl']) chmodSync(join(fake, 'bin', b), 0o755);
-    const env = { ...process.env, FAKE: fake, FAKE_FAIL: fail.join(' '), PATH: `${join(fake, 'bin')}:${process.env.PATH}` };
+    const env = { ...process.env, FAKE: fake, FAKE_FAIL: fail.join('\n'), PATH: `${join(fake, 'bin')}:${process.env.PATH}` };
     let out = '';
     let code = 0;
     try {

@@ -275,20 +275,29 @@ jobs:
 
       # Swap and roll under the deploy lock (flock -n: a second deploy refuses at once, before any change), and a failed
       # roll rolls back in the SAME command (rollback.sh, docs/09 «Roll back»), so 127.0.0.1:3110 keeps serving.
-      # lb/Caddyfile in place (cat >, same inode): ayat-lb mounts the lb/ directory and reloads the file.
+      # setsid -w, output to $DEST/.deploy.log: an ssh drop never kills the roll or its rollback halfway (they run to
+      # the end on the server; the log is printed here once done). lb/Caddyfile in place (cat >, same inode): ayat-lb
+      # mounts the lb/ directory and reloads the file. Exit codes: 75 lock held (nothing changed), 1 rolled back,
+      # 3 the rollback failed too, 255 ssh lost.
       - name: Swap in and roll the API (one build, one container at a time)
         id: roll
         if: ${{ !inputs.env_only }}
         run: |
-          ssh target "cd $DEST && flock -n -E 75 .deploy.lock sh -c '
+          ssh target "cd $DEST && setsid -w flock -n -E 75 .deploy.lock sh -c '
             for f in docker-compose.yml roll.sh lb/Caddyfile; do [ ! -f \$f ] || cp \$f \$f.old; done &&
             rm -rf src.old && { [ ! -d src ] || mv src src.old; } && mv src.new src &&
             mv docker-compose.yml.new docker-compose.yml && mv roll.sh.new roll.sh && mv rollback.sh.new rollback.sh &&
-            cat lb/Caddyfile.new > lb/Caddyfile && rm lb/Caddyfile.new &&
-            { sh roll.sh || { sh rollback.sh; exit 1; }; }'" || {
+            cat lb/Caddyfile.new > lb/Caddyfile && rm lb/Caddyfile.new || exit 4
+            { sh roll.sh || { sh rollback.sh || exit 3; exit 1; }; }' > .deploy.log 2>&1 < /dev/null; rc=\$?; cat .deploy.log; exit \$rc" || {
             rc=$?
-            [ "$rc" != 75 ] || echo "::error::another deploy holds $DEST/.deploy.lock: nothing was changed"
-            [ "$rc" = 75 ] || echo "::error::the roll failed: rollback.sh put the previous version back (bad code kept in src.bad)"
+            case "$rc" in
+              75) echo "::error::another deploy holds $DEST/.deploy.lock: nothing was changed" ;;
+              1) echo "::error::the roll failed: rollback.sh put the previous version back (bad code kept in src.bad)" ;;
+              3) echo "::error::the roll failed AND rollback.sh failed: 127.0.0.1:3110 may be down, fix by hand (docs/09 «Roll back»)" ;;
+              4) echo "::error::the swap failed partway: nothing was rolled; check $DEST by hand (src, src.old, *.new)" ;;
+              255) echo "::error::ssh lost: the roll (and any rollback) goes on on the server, see $DEST/.deploy.log" ;;
+              *) echo "::error::the roll step failed ($rc), see $DEST/.deploy.log" ;;
+            esac
             exit "$rc"
           }
 

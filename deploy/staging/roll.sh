@@ -43,13 +43,10 @@ roll() {
   healthy "$1"
 }
 
-# Is lb/Caddyfile valid? In the running LB, or (not running yet) in a throwaway container of the same image.
+# Is lb/Caddyfile valid? Always in a throwaway container of the same image, never inside the running LB: a second
+# Caddy in its 64 MB limit could get the LB itself OOM-killed (and restarted on the unchecked file).
 lb_valid() {
-  if [ -n "$(dc ps -q ayat-lb)" ]; then
-    dc exec -T ayat-lb caddy validate --config /etc/caddy/Caddyfile
-  else
-    docker run --rm --network none -v "$PWD/lb:/etc/caddy:ro" "$LB_IMAGE" caddy validate --config /etc/caddy/Caddyfile
-  fi
+  docker run --rm --network none -v "$PWD/lb:/etc/caddy:ro" "$LB_IMAGE" caddy validate --config /etc/caddy/Caddyfile
 }
 
 # A changed Caddyfile is validated first, then reloaded in place (no restart). Invalid, or refused by the
@@ -60,6 +57,9 @@ lb() {
   if [ "$sum" != "$(cat .lb.sha256 2>/dev/null || true)" ]; then
     lb_valid || { echo '::error::lb/Caddyfile is invalid: ayat-lb keeps its config'; return 1; }
     if [ -n "$(dc ps -q ayat-lb)" ]; then
+      # From here the running config may be the new one: no stored sum until the roll is done, so a rollback's
+      # roll.sh always reloads the file it restores.
+      rm -f .lb.sha256
       dc exec -T ayat-lb caddy reload --config /etc/caddy/Caddyfile || {
         echo '::error::caddy reload refused lb/Caddyfile: ayat-lb keeps its config'
         return 1

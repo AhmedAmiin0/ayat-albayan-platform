@@ -2,7 +2,8 @@
 // the worker never beside the single container, and only this project's containers and images touched.
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { at, run } from './roll-fake.mjs';
+import { readFileSync } from 'node:fs';
+import { at, root, run } from './roll-fake.mjs';
 
 const SINGLE = 'services:\n  ayat-api:\n    build: ./src\n';
 const LAYOUT = 'services:\n  ayat-lb:\n    image: caddy\n';
@@ -11,6 +12,7 @@ const old = (compose) => ({
   'docker-compose.yml': LAYOUT,
   'docker-compose.yml.old': compose,
   'roll.sh.old': '#!/bin/sh\necho "old roll.sh" >> "$FAKE/log"\n',
+  'rollback.sh.old': 'BAD',
 });
 
 test('to the single container: build, stop+rm the worker and the LB, THEN compose up, then the copies, then /health', () => {
@@ -29,7 +31,7 @@ test('to the single container: build, stop+rm the worker and the LB, THEN compos
   assert.ok(i('rm -f') < 0, 'never a SIGKILL');
   assert.ok(r.has('src.bad') && r.has('src/marker') && !r.has('src.old'));
   assert.equal(r.text('docker-compose.yml'), SINGLE);
-  assert.equal(r.text('rollback.sh').includes('rollback.sh'), true, 'never rewrites itself');
+  assert.equal(r.text('rollback.sh'), readFileSync(root('deploy/staging/rollback.sh'), 'utf8'), 'never rewrites itself');
 });
 
 test('to this layout: the previous roll.sh rolls it again', () => {
@@ -45,4 +47,20 @@ test('no src.old: refuses and changes nothing', () => {
   assert.match(r.out, /nothing to roll back to/);
   assert.deepEqual(r.log, []);
   assert.ok(r.has('src') && !r.has('src.bad'));
+});
+
+test('a worker that does not stop: the single container never starts (jobs never run in two processes)', () => {
+  const r = run('rollback.sh', { up: ['ayat-worker', 'ayat-lb', 'ayat-api-a'], files: old(SINGLE), fail: ['stop -t 30 id-ayat-worker'] });
+  assert.notEqual(r.code, 0);
+  assert.ok(at(r.log, 'compose -p ayat-albayan-staging up -d') < 0, r.log.join('\n'));
+});
+
+test('after a first switch that failed once the old container stopped (the worker did not start): back to it on 3110', () => {
+  const failed = run('roll.sh', { up: ['ayat-api'], fail: ['up -d --no-deps ayat-worker'] });
+  assert.notEqual(failed.code, 0);
+  assert.ok(at(failed.log, 'stop -t 30 id-ayat-api') >= 0, 'the roll got past the legacy stop');
+  const r = run('rollback.sh', { up: ['ayat-worker', 'ayat-lb', 'ayat-api-a', 'ayat-api-b'], files: old(SINGLE) });
+  assert.equal(r.code, 0, r.out);
+  assert.ok(at(r.log, 'rm id-ayat-worker') < at(r.log, 'compose -p ayat-albayan-staging up -d'));
+  assert.ok(at(r.log, 'curl -fsS --retry 60') > at(r.log, 'compose -p ayat-albayan-staging up -d'));
 });
