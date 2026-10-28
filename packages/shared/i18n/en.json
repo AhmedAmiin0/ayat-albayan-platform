@@ -4280,7 +4280,11 @@
       "reasonHint": "e.g. the family is travelling",
       "confirmCancel": "Confirm cancellation",
       "cancelled": "Lesson cancelled",
-      "ownNote": "You can reschedule or cancel your students' lessons; anything else is done by the admin."
+      "ownNote": "You can reschedule or cancel your students' lessons; anything else is done by the admin.",
+      "confirm": "Confirm lesson",
+      "confirmed": "Lesson confirmed",
+      "confirmEnded": "This lesson has ended, so it cannot be confirmed",
+      "confirmInvalid": "This lesson cannot be confirmed from its current status"
     },
     "mobile": {
       "section": "Sales",
@@ -4872,6 +4876,7 @@
       "booking.write": "Book lessons",
       "lessons.reschedule": "Reschedule one lesson of their own students (sales)",
       "lessons.cancel": "Cancel one lesson of their own students (sales)",
+      "lessons.confirm": "Confirm any scheduled lesson (sales)",
       "pricing.read": "View pricing",
       "tasks.manage": "Admin tasks",
       "classroom.join": "Join the online classroom",
@@ -4943,7 +4948,8 @@
       "inbox.lists": "Create, rename and delete the shared chat lists and add chats to them. Nothing is ever sent because of a list.",
       "numbers.manage": "Add and edit WhatsApp numbers, save their credentials, import the current setup and change the setup source. Does not open sending.",
       "notifications.manage": "Turn notifications on or off and set their timing, channels and sending number. Does not open sending.",
-      "saved_replies.manage": "Add, edit, delete and reorder the shared quick replies. Everyone manages their own replies without this permission."
+      "saved_replies.manage": "Add, edit, delete and reorder the shared quick replies. Everyone manages their own replies without this permission.",
+      "lessons.confirm": "Confirm a lesson after the family's «yes» in the chat, for any scheduled lesson that has not ended. No message is sent."
     },
     "page": {
       "title": "Roles and permissions",

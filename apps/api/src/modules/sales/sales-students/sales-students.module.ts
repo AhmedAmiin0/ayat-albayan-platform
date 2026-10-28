@@ -18,9 +18,10 @@ import { SalesTeacherOverviewQueries } from './teachers/sales-teacher-overview.q
 
 /**
  * Sales as the academy's assistant (docs/16 rows 36–37): «تفاصيل الطالب» of any student (subscriptions and
- * reports of hers only) and its «سجل الحضور» (also on the admin's file), a teacher's «الجدول» / «الحضور», and moving or cancelling a lesson of her students.
- * Thin: the scope is SalesQueries.ownership, the reads and the writes are the admin's and the teacher's
- * (SalesHistoryQueries, ReportHistoryQueries, ReportFilesService, TrialDateQueries, RescheduleOneService, LessonCancelService).
+ * reports of hers only) and its «سجل الحضور» (also on the admin's file), a teacher's «الجدول» / «الحضور», moving or
+ * cancelling a lesson of her students and confirming any lesson. Thin: the scope is SalesQueries.ownership, the reads
+ * and the writes are the admin's and the teacher's (SalesHistoryQueries, ReportHistoryQueries, ReportFilesService,
+ * TrialDateQueries, RescheduleOneService, LessonCancelService, LessonStatusService).
  */
 @Module({
   imports: [SalesModule, LessonsModule, ReportsModule],

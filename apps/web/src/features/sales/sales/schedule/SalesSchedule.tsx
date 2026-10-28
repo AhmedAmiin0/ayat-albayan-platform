@@ -22,7 +22,8 @@ export interface SalesScheduleProps {
 /**
  * /sales/schedule «جدول الحلقات» (owner report 2026-10-12: «it is not seeing the schedule»): the
  * academy's day, read-only. Date navigation, a teacher filter, the lessons by teacher, and «ادخل
- * الحلقة» on the one running now. Nothing here edits, cancels, moves, books or reports.
+ * الحلقة» on the one running now. Nothing here edits, cancels, moves, books or reports; the lesson drawer
+ * offers only «تأكيد الحلقة» (lessons.confirm, owner 2026-10-28).
  */
 export function SalesSchedule({ search, onSearch }: SalesScheduleProps) {
   const now = useNow();
