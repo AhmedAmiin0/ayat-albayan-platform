@@ -6,8 +6,8 @@ import type { AuthUser } from '../../../../common/auth/verify-token';
 import { SalesStudentService } from './sales-student.service';
 
 /**
- * «تفاصيل الطالب» (owner 2026-10-27, docs/16 row 36): a tap on one of her students in «الطلاب» or in a
- * lesson's details. self.sales_academy (the gate of «الطلاب»); the student must be hers, else 404.
+ * «تفاصيل الطالب» (owner 2026-10-27, docs/16 row 36): a tap on a student in «الطلاب» or in a
+ * lesson's details (any student since 2026-10-28). self.sales_academy (the gate of «الطلاب»); any student (owner 2026-10-28), `mine` on hers.
  */
 @ApiTags('sales')
 @ApiBearerAuth()
@@ -16,7 +16,7 @@ import { SalesStudentService } from './sales-student.service';
 export class SalesStudentController {
   constructor(private readonly students: SalesStudentService) {}
 
-  /** Subscriptions (dates, lessons used / left), attendance and sent reports; 404 student_not_found. */
+  /** Any student: trial, «الجدول», attendance; hers also subscriptions and sent reports (`mine`); 404 student_not_found. */
   @Get(':id')
   details(@Param('id', ParseUUIDPipe) id: string, @CurrentUser() user: AuthUser): Promise<SalesStudentDetails> {
     return this.students.details(user, id);

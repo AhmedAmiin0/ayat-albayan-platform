@@ -14,20 +14,23 @@ import { AttendanceSection } from './AttendanceSection';
 import { ReportsSection } from './ReportsSection';
 import { ScheduleSection } from './ScheduleSection';
 import { SubscriptionSection } from './SubscriptionSection';
+import { TrialSection } from './TrialSection';
 import { useSalesStudent } from './student-api';
 
 /**
- * «تفاصيل الطالب» of the salesperson (owner 2026-10-27, docs/16 row 36): one of HER students — the
- * subscription (start, renewal / end, lessons used / left, past ones folded), the attendance of the
- * past lessons and the sent reports as the teacher sees them. Read-only, no money. Under the name: the
- * code · the guardian's phone, and «محادثة ولي الأمر» opens that family's chat (owner 2026-10-27). Another student
- * answers 404: «هذا الطالب ليس من طلابك أو غير موجود».
+ * «تفاصيل الطالب» of the salesperson (docs/16 row 36): ANY student (owner 2026-10-28) — the trial first,
+ * «الجدول» and the attendance of the past lessons; of HER students (`mine`, absent in an old cache = hers)
+ * also the subscription (start, renewal / end, lessons used / left, past ones folded) and the sent reports
+ * as the teacher sees them; move / cancel only on her students' lessons (the sheet checks `mine`).
+ * Read-only, no money. Under the name: the code · the guardian's phone, and «فتح المحادثة» opens that
+ * family's chat. An unknown id answers 404: «هذا الطالب غير موجود».
  */
 export function SalesStudentScreen() {
   const { id = '' } = useLocalSearchParams<{ id: string }>();
   const student = useSalesStudent(id);
   const data = student.data;
   if (!data) return <SalesLoadScreen title={t.sales.student.title} query={student} notFound={t.sales.student.notFound} />;
+  const mine = data.mine !== false;
   const teacher = data.student.teacher_name;
   const phone = data.student.guardian_phone;
   const about = [t.enums.program[data.student.program], ...(teacher ? [fill(t.sales.student.teacher, { name: teacher })] : [])];
@@ -44,10 +47,12 @@ export function SalesStudentScreen() {
           {phone ? (
             <Button variant="secondary" label={`${t.sales.student.chat} ${ltr(formatPhone(phone))}`} onPress={() => router.push(familyChatHref('/sales', phone))} />
           ) : null}
-          <SubscriptionSection data={data} />
+          {mine ? null : <Note>{t.sales.student.notMine}</Note>}
+          <TrialSection trial={data.trial} />
+          {mine ? <SubscriptionSection data={data} /> : null}
           <ScheduleSection schedule={data.schedule} studentId={data.student.id} />
           <AttendanceSection attendance={data.attendance} />
-          <ReportsSection studentId={data.student.id} reports={data.reports} />
+          {mine ? <ReportsSection studentId={data.student.id} reports={data.reports} /> : null}
         </View>
       </ScrollView>
     </Screen>

@@ -9,6 +9,7 @@ import {
   type SalesStudentDetails,
   type SalesStudentSchedule,
   type SalesStudentSubscription,
+  type SalesTrialLesson,
 } from '@ab/shared';
 import { type HistoryBundle, toSalesHistory } from '../../sales';
 import type { AttendanceRow, DetailsStudentRow, PriceRow } from './sales-student.queries';
@@ -21,7 +22,11 @@ interface DetailsParts {
   schedule: SalesStudentSchedule;
   /** Empty unless the viewer holds self.sales_money (part_paid). */
   prices?: readonly PriceRow[];
+  trial: SalesTrialLesson[];
+  /** Hers: only then the subscriptions and the sent reports (owner 2026-10-28). */
+  mine: boolean;
 }
+
 
 const iso = (at: string): string => new Date(at).toISOString();
 
@@ -71,12 +76,20 @@ function attendanceDays(studentId: string, lessons: readonly AttendanceRow[]): S
   });
 }
 
-/** Whitelist of «تفاصيل الطالب» (docs/16 row 36): no price, payment, note, phone or meeting link («الجدول» included). */
+/**
+ * Whitelist of «تفاصيل الطالب» (docs/16 row 36): no price, payment, note, phone or meeting link («الجدول»
+ * included). Not hers: no subscription and no report, whatever was read.
+ */
+/** Hers: the subscriptions and the sent reports; not hers: neither, whatever was read. */
+const owned = (p: DetailsParts) =>
+  p.mine ? { subscriptions: subscriptionsOf(p.history, p.prices ?? []), reports: p.reports } : { subscriptions: [], reports: { items: [], total: 0 } };
+
 export function toStudentDetails(p: DetailsParts): SalesStudentDetails {
-  const subscriptions = subscriptionsOf(p.history, p.prices ?? []);
+  const { subscriptions, reports } = owned(p);
   const current = subscriptions.find((s) => s.status === 'active') ?? subscriptions[0];
   const items = attendanceDays(p.student.id, p.lessons);
   return {
+    mine: p.mine,
     student: {
       id: p.student.id,
       code: p.student.code ?? '',
@@ -89,7 +102,8 @@ export function toStudentDetails(p: DetailsParts): SalesStudentDetails {
     subscriptions,
     current_id: current?.id ?? null,
     attendance: { items, totals: attendanceTotals(items) },
-    reports: p.reports,
+    reports,
     schedule: p.schedule,
+    trial: p.trial,
   };
 }
