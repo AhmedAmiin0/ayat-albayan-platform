@@ -1,40 +1,15 @@
-import { fireEvent, render, screen, within } from '@testing-library/react';
-import { afterEach, describe, expect, it, vi } from 'vitest';
-import { t } from '@/lib/i18n/i18n';
-import { FATMA, lesson } from '../lesson/lesson-fixture';
-import { WeekGrid } from './WeekGrid';
+import { render, screen } from '@testing-library/react';
+import { describe, expect, it } from 'vitest';
+import { ABRAR, FATMA, lesson } from '../lesson/lesson-fixture';
+import { WeekAgenda } from './WeekAgenda';
 
-// Sat 3 Oct 2026 starts the Riyadh week; the lessons are Sun 4 (Abrar) and Mon 5 (Fatma).
-const SUNDAY = lesson({ id: 'a' });
-const MONDAY = lesson({ id: 'b', teacher: FATMA, starts_at: '2026-10-05T10:00:00.000Z' });
-const phone = () => vi.stubGlobal('matchMedia', vi.fn(() => ({ matches: true, addEventListener: vi.fn(), removeEventListener: vi.fn() })));
+const DAY = '2026-10-04';
+const row = (teacher: typeof ABRAR) => ({ id: teacher.id, teacher, name: teacher.display_name_ar, days: new Map([[DAY, [lesson()]]]) });
 
-describe('WeekGrid on a phone (under md): a list per day instead of seven squeezed columns', () => {
-  afterEach(() => vi.unstubAllGlobals());
-
-  it('wide: the table; narrow: a heading per day with the lessons, teacher names above them', () => {
-    const { unmount } = render(<WeekGrid week="2026-10-03" today="2026-10-04" lessons={[SUNDAY, MONDAY]} onOpen={vi.fn()} />);
-    expect(screen.getByRole('table', { name: t.schedule.grid })).toBeTruthy();
-    unmount();
-
-    phone();
-    const onOpen = vi.fn();
-    render(<WeekGrid week="2026-10-03" today="2026-10-04" lessons={[SUNDAY, MONDAY]} onOpen={onOpen} />);
-    expect(screen.queryByRole('table')).toBeNull();
-    const days = screen.getAllByRole('region');
-    expect(days).toHaveLength(7);
-    const today = days.find((d) => d.getAttribute('aria-current') === 'date');
-    expect(today?.textContent).toContain(t.schedule.today);
-    // Two teachers in the list: each lesson sits under its teacher's name.
-    expect(within(today as HTMLElement).getByText('أبرار')).toBeTruthy();
-    expect(screen.getAllByText(t.schedule.noLessons)).toHaveLength(5);
-    fireEvent.click(within(today as HTMLElement).getByRole('button'));
-    expect(onOpen).toHaveBeenCalledWith(SUNDAY);
-  });
-
-  it('one teacher (my week): no name line', () => {
-    phone();
-    render(<WeekGrid week="2026-10-03" today="2026-10-04" lessons={[SUNDAY]} onOpen={vi.fn()} />);
-    expect(screen.queryByText('أبرار')).toBeNull();
+describe('WeekAgenda (the week on a phone)', () => {
+  it('names each teacher in their own text beside the initials circle, so the name reads alone', () => {
+    render(<WeekAgenda days={[DAY]} today={DAY} rows={[row(ABRAR), row(FATMA)]} onOpen={() => undefined} />);
+    expect(screen.getByText(ABRAR.display_name_ar, { exact: true }).tagName).toBe('SPAN');
+    expect(screen.getByText(FATMA.display_name_ar, { exact: true })).toBeTruthy();
   });
 });

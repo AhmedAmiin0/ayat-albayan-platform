@@ -28,7 +28,7 @@ function RowName({ row }: { row: AgendaRow }) {
   return (
     <p className="flex items-center gap-2 text-xs font-semibold text-ink-2">
       <Avatar name={row.name} id={row.id} src={row.photo} size="sm" decorative />
-      {row.teacher ? teacherLabel(row.teacher) : row.name}
+      <span>{row.teacher ? teacherLabel(row.teacher) : row.name}</span>
     </p>
   );
 }
