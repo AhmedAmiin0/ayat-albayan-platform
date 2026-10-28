@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import type { AdminTaskView } from '@ab/shared';
 import { router } from 'expo-router';
 import { useTabOpen } from '@/auth/use-tab-open';
@@ -8,7 +9,7 @@ import { StatusChip } from '@/core/ui/feedback/StatusChip';
 import { taskText } from './tasks';
 
 /** One open admin task: the student, what is due and since when; saffron «بانتظار إجراء»; opens the student. */
-export function TaskItem({ task }: { task: AdminTaskView }) {
+export const TaskItem = memo(function TaskItem({ task }: { task: AdminTaskView }) {
   const student = task.student;
   const toStudents = useTabOpen('students');
   return (
@@ -20,4 +21,4 @@ export function TaskItem({ task }: { task: AdminTaskView }) {
       trailing={<StatusChip tone="act" glyph="hollow" label={t.mobileMoney.taskNeedsAction} size="sm" />}
     />
   );
-}
+});

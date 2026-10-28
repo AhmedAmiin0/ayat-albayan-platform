@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import { isChatViewMime, type MessageView, replyNote } from '@ab/shared';
 import { type GestureResponderEvent, Linking, Pressable, View, type ViewStyle } from 'react-native';
 import { useHolds } from '@/auth/use-permissions';
@@ -8,7 +9,7 @@ import { shape, type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { holdTop, useBubbleActions } from '../hooks/bubble-actions';
 import { ReactionPill } from '../reactions/ReactionPill';
-import { useChatActions } from '../../thread/hooks/chat-actions';
+import { useBubbleChatActions } from '../../thread/hooks/chat-actions';
 import { bubbleSide } from '../hooks/bubble-side';
 import { MessageActions } from './MessageActions';
 import { MessageFile } from './MessageFile';
@@ -55,13 +56,13 @@ export interface MessageBubbleProps {
  * («أرسلها: سارة», «رسالة تلقائية»); a photo previews, a PDF, voice note or video opens from MessageFile. Why a send failed is for everyone (as the web's
  * outboundNotes); retry / sent-by-hand stay the admin's (R-MSG-05).
  */
-export function MessageBubble({ message: m, phone, onJump, highlight = false }: MessageBubbleProps) {
+export const MessageBubble = memo(function MessageBubble({ message: m, phone, onJump, highlight = false }: MessageBubbleProps) {
   const { color } = useTheme();
   // «رد» / «إعادة توجيه» (owner 2026-10-25): a long press opens the menu, a swipe answers.
   const touch = useBubbleActions(m);
   // «تفاعل» (owner 2026-10-27): the row floats over the held bubble; the pill names who reacted.
   const hold = (e?: GestureResponderEvent) => touch.openMenu(holdTop(e));
-  const { openReactors } = useChatActions();
+  const { openReactors } = useBubbleChatActions();
   const admin = useThreadMode().kind === 'admin';
   // The sales tree has no thread mode either: the actions' endpoints need messages.manage (admin-only).
   const manages = useHolds('messages.manage');
@@ -130,4 +131,4 @@ export function MessageBubble({ message: m, phone, onJump, highlight = false }: 
       {pill}
     </SwipeReply>
   );
-}
+});

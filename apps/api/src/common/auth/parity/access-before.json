@@ -253,6 +253,8 @@
   "ReportsController.pdf": ["admin","teacher"],
   "ReportsController.retry": ["admin"],
   "ReportsController.submit": ["admin","teacher"],
+  "ReportV2Controller.draft": ["admin","teacher"],
+  "ReportV2Controller.submit": ["admin","teacher"],
   "RoomOpenController.open": ["admin","teacher"],
   "RuleCancelController.cancel": ["admin"],
   "SalesAcademyController.day": ["sales"],

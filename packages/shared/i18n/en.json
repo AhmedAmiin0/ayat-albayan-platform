@@ -1046,8 +1046,11 @@
     "studentTime": "{time} {city} time",
     "greeting": {
       "morning": "Good morning",
-      "evening": "Good evening"
+      "afternoon": "Good afternoon",
+      "evening": "Good evening",
+      "night": "Good night"
     },
+    "greetingNamed": "{greeting}, {name}",
     "summaryLabel": "Today at a glance",
     "summary": {
       "all": "lessons today",

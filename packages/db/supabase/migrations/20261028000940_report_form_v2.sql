@@ -24,17 +24,27 @@ create index lesson_reports_v2_student_idx on public.lesson_reports (student_id,
 
 -- submit_report for a v2 report: the structured content and the submit (version, snapshot,
 -- audit, lesson outcome) in one transaction. submit_report itself is unchanged; a failure
--- there (version_conflict, lesson_cancelled …) rolls the content back with it.
+-- there (version_conflict, lesson_cancelled …) rolls the content back with it. The content is
+-- written first so the version snapshot holds it; the audit row's «before» is then set back to
+-- the row as it was before this call (submit_report read it after the content write).
 create function public.submit_report_content(p jsonb) returns jsonb
   language plpgsql set search_path = '' as $$
+declare
+  v_id uuid := (p ->> 'report_id')::uuid;
+  v_before jsonb;
+  v_result jsonb;
 begin
-  update public.lesson_reports
-     set content = p -> 'content'
-   where id = (p ->> 'report_id')::uuid and form_version = 2;
+  select to_jsonb(r) into v_before from public.lesson_reports r
+   where r.id = v_id and r.form_version = 2 for update;
   if not found then
     raise exception 'form_version_mismatch' using errcode = 'P0001';
   end if;
-  return public.submit_report(p - 'content');
+  update public.lesson_reports set content = p -> 'content' where id = v_id;
+  v_result := public.submit_report(p - 'content');
+  update public.audit_log a set before = v_before
+   where a.entity = 'lesson_reports' and a.entity_id = v_id
+     and a.action in ('submit', 'edit') and a.at = now();
+  return v_result;
 end $$;
 
 revoke execute on function public.submit_report_content(jsonb) from public, anon, authenticated;

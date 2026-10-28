@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import { studentStatusStyle } from '@ab/shared';
 import { router } from 'expo-router';
 import { View } from 'react-native';
@@ -9,7 +10,7 @@ import { StudentNote } from '../profile/StudentNote';
 import type { StudentListItem } from '../shared/types';
 
 /** Name + AB-code, guardian under it; status chip and the «دورك» note at the inline-end. */
-export function StudentRow({ student }: { student: StudentListItem }) {
+export const StudentRow = memo(function StudentRow({ student }: { student: StudentListItem }) {
   const note = studentNote(student);
   return (
     <ListRow
@@ -29,4 +30,4 @@ export function StudentRow({ student }: { student: StudentListItem }) {
       }
     />
   );
-}
+});

@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import { packageProgress, paymentState, subscriptionStatusStyle, type SubscriptionView } from '@ab/shared';
 import { router } from 'expo-router';
 import { View } from 'react-native';
@@ -24,7 +25,7 @@ function subscriptionProgress(sub: SubscriptionView, threshold?: number) {
  * the status chip. A row opens the student; «سجّل دفعة» opens the existing payment form while it
  * is not fully paid.
  */
-export function SubscriptionItem({ sub, threshold }: { sub: SubscriptionView; threshold?: number }) {
+export const SubscriptionItem = memo(function SubscriptionItem({ sub, threshold }: { sub: SubscriptionView; threshold?: number }) {
   const { color } = useTheme();
   const toStudents = useTabOpen('students');
   const progress = subscriptionProgress(sub, threshold);
@@ -65,4 +66,4 @@ export function SubscriptionItem({ sub, threshold }: { sub: SubscriptionView; th
       }
     />
   );
-}
+});
