@@ -36,10 +36,9 @@ describe('GET /sales/students/:id «الجدول» (owner 2026-10-27)', () => {
     expect(JSON.stringify(res.json().schedule)).not.toMatch(/meet|link|classroom|price|amount/i);
   });
 
-  it('another family\'s student or another salesperson: 404, the schedule never read', async () => {
-    for (const [id, token] of [[OTHER, 'salesA'], [MINE, 'salesB']] as const) {
-      expect((await t.call('GET', `/sales/students/${id}`, { token })).statusCode).toBe(404);
-    }
+  it('an unknown student: 404, the schedule never read (another salesperson\'s student shows it, owner 2026-10-28)', async () => {
+    t.queries.student.mockResolvedValue(null);
+    expect((await t.call('GET', `/sales/students/${OTHER}`, { token: 'salesA' })).statusCode).toBe(404);
     expect(t.schedule.rules).not.toHaveBeenCalled();
     expect(t.schedule.upcoming).not.toHaveBeenCalled();
   });

@@ -1,7 +1,7 @@
 import { teacherName } from '@ab/shared';
 import type { TeacherEarningView } from '@ab/shared';
 import { router, useLocalSearchParams } from 'expo-router';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { ScrollView } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { Button } from '@/core/ui/primitives/Button';
@@ -28,12 +28,16 @@ export function TeacherEarningsScreen() {
   const [selected, setSelected] = useState<Map<string, TeacherEarningView>>(new Map());
   const [paying, setPaying] = useState(false);
   const [done, setDone] = useState<string | null>(null);
-  const toggle = (row: TeacherEarningView) =>
-    setSelected((m) => {
-      const next = new Map(m);
-      if (!next.delete(row.id)) next.set(row.id, row);
-      return next;
-    });
+  // Stable: the session rows are memo, a tick redraws only the ticked row.
+  const toggle = useCallback(
+    (row: TeacherEarningView) =>
+      setSelected((m) => {
+        const next = new Map(m);
+        if (!next.delete(row.id)) next.set(row.id, row);
+        return next;
+      }),
+    [],
+  );
   const back = <Button variant="ghost" label={t.common.back} onPress={() => (paying ? setPaying(false) : router.back())} />;
   const title = balance.data ? `${t.earnings.title} · ${teacherName(balance.data.teacher, locale)}` : t.earnings.title;
 

@@ -4,9 +4,10 @@ import type { ReportSummaryView } from '../../reports/index.js';
 import { instant } from '../../schemas/index.js';
 import type { SalesHistoryEntry } from '../academy.js';
 import type { SalesStudentSchedule } from './student-schedule.js';
+import type { TrialOutcome } from '../../students/index.js';
 
-// «تفاصيل الطالب» of the salesperson (owner 2026-10-27, docs/16 row 36): one of HER students (the
-// ownership of «الاشتراكات»), its subscriptions, attendance and sent reports. Never a price or payment.
+// «تفاصيل الطالب» of the salesperson (docs/16 row 36): ANY student (owner 2026-10-28), its trial,
+// «الجدول» and attendance; subscriptions and sent reports only for HER students (`mine`). Never a price or payment.
 
 /** A subscription without its payments or audit trail: package, status, dates, lessons used / left. */
 export type SalesStudentSubscription = Omit<SalesHistoryEntry, 'payments' | 'status_changes'>;
@@ -20,8 +21,20 @@ export interface SalesAttendanceDay {
   kind: AttendanceKind;
 }
 
-/** GET /sales/students/:id: 404 student_not_found for an unknown id AND for a student who is not hers. */
+/** One trial lesson of «الحلقة التجريبية»: a date «موعد تجريبي جديد» replaced stays, outcome `moved`. */
+export interface SalesTrialLesson {
+  lesson_id: string;
+  starts_at: string;
+  status: LessonStatus;
+  /** trialOutcome of «مواعيد الحلقة التجريبية»: قادمة / بانتظار التقرير / حضر / غاب / أُلغيت / نُقلت. */
+  outcome: TrialOutcome;
+  teacher_name: string | null;
+}
+
+/** GET /sales/students/:id: 404 student_not_found for an unknown id only. */
 export interface SalesStudentDetails {
+  /** Hers (SalesQueries.ownership). Not hers: no subscriptions, no reports, no lesson actions. Absent in an old cache (= hers). */
+  mine?: boolean;
   student: { id: string; code: string; name: string; status: StudentStatus; program: Program; teacher_name: string | null; guardian_phone: string | null };
   /** Newest first; `current_id` is the newest active one, else the newest (null without any). */
   subscriptions: SalesStudentSubscription[];
@@ -32,6 +45,8 @@ export interface SalesStudentDetails {
   reports: { items: ReportSummaryView[]; total: number };
   /** «الجدول»: weekly slots and the next lessons, no link. Absent in an old cache. */
   schedule?: SalesStudentSchedule;
+  /** «الحلقة التجريبية»: the trial lessons newest first ([] without one). Absent in an old cache. */
+  trial?: SalesTrialLesson[];
 }
 
 /** POST /sales/lessons/:id/reschedule: one lesson only, no substitute teacher, no clash override. */

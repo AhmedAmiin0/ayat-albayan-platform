@@ -23,23 +23,20 @@ test('the code and the guardian phone are on the row, each an LTR island', async
   expect(screen.getByText(t.sales.mobile.guardianLine.replace('{name}', 'أحمد سالم'))).toBeTruthy();
 });
 
-test('another family’s student (not mine) opens that family’s chat with the right phone', async () => {
-  await inSales(<AllStudentRow student={student({ status: 'pending_subscription' })} />);
-  const row = screen.getByRole('button');
-  expect(row.props.accessibilityHint).toBe(S.chatHint);
-  await fireEvent.press(row);
-  expect(router.push).toHaveBeenCalledWith('/sales/inbox/thread/%2B201001112223');
-});
-
-test('one of mine opens «تفاصيل الطالب», as before', async () => {
-  await inSales(<AllStudentRow student={student({ mine: true })} />);
+test.each([
+  ['another family’s student (not mine)', student({ status: 'pending_subscription' })],
+  ['one of mine', student({ mine: true })],
+  ['a student with no saved phone', student({ guardian_phone: null })],
+])('the sales tree (owner 2026-10-28): %s opens «تفاصيل الطالب»', async (_, row) => {
+  await inSales(<AllStudentRow student={row} />);
   expect(screen.getByRole('button').props.accessibilityHint).toBe(S.detailsHint);
   await fireEvent.press(screen.getByRole('button'));
   expect(router.push).toHaveBeenCalledWith('/sales/students/st1');
+  expect(screen.queryByText(S.noPhone)).toBeNull();
 });
 
-test('no saved phone: still a button, and a tap says so under the row (nothing opens)', async () => {
-  await inSales(<AllStudentRow student={student({ guardian_phone: null })} />);
+test('the admin tree, no saved phone: still a button, and a tap says so under the row (nothing opens)', async () => {
+  await render(<AllStudentRow student={student({ guardian_phone: null })} />);
   const announce = jest.spyOn(AccessibilityInfo, 'announceForAccessibility');
   expect(screen.queryByText(S.noPhone)).toBeNull();
   expect(screen.getByRole('button').props.accessibilityHint).toBe(S.noPhoneHint);
@@ -56,10 +53,10 @@ test('the admin tree (double role, «المزيد» › «المبيعات»): e
   expect(router.push).toHaveBeenCalledWith('/inbox/thread/%2B201001112223');
 });
 
-test('the no-phone note leaves once the row has a phone (a refetch)', async () => {
-  const view = await inSales(<AllStudentRow student={student({ guardian_phone: null })} />);
+test('the admin tree: the no-phone note leaves once the row has a phone (a refetch)', async () => {
+  const view = await render(<AllStudentRow student={student({ guardian_phone: null })} />);
   await fireEvent.press(screen.getByRole('button'));
   expect(screen.getByText(S.noPhone)).toBeTruthy();
-  await view.rerender(<TreeBaseProvider value="/sales"><AllStudentRow student={student()} /></TreeBaseProvider>);
+  await view.rerender(<AllStudentRow student={student()} />);
   expect(screen.queryByText(S.noPhone)).toBeNull();
 });

@@ -7,7 +7,7 @@ const student = { id: 's1', code: null, name: 'ياسمين', status: 'trial', p
 const sub = (id: string, status: string, starts_on: string) => ({ id, package: '8', status, starts_on, renews_on: null, lessons_total: 8, created_at: `${starts_on}T00:00:00Z` });
 const history = (subs: ReturnType<typeof sub>[]) =>
   ({ student: { id: 's1', code: null, name: 'ياسمين' }, subscriptions: subs, balances: [], payments: [], audit: [] }) as unknown as HistoryBundle;
-const parts = (h: HistoryBundle | null) => ({ student, history: h, lessons: [], reports: { items: [], total: 0 }, schedule: { student_tz: 'Africa/Cairo', weekly: [], upcoming: [] } });
+const parts = (h: HistoryBundle | null) => ({ student, history: h, lessons: [], reports: { items: [], total: 0 }, schedule: { student_tz: 'Africa/Cairo', weekly: [], upcoming: [] }, trial: [], mine: true });
 
 describe('toStudentDetails', () => {
   it('current = the newest active subscription, else the newest one', () => {
@@ -35,5 +35,13 @@ describe('toStudentDetails', () => {
 
   it('lessons used / left fall back to the total when the balance view has no row', () => {
     expect(toStudentDetails(parts(history([sub('a', 'active', '2026-08-01')]))).subscriptions[0]).toMatchObject({ lessons_used: 0, lessons_remaining: 8 });
+  });
+
+  it('not hers: no subscription, no current, no report, whatever was read; the trial and attendance stay', () => {
+    const report = { id: 'r1' } as never;
+    const trial = [{ lesson_id: 't1', starts_at: '2026-10-20T15:00:00.000Z', status: 'completed' as const, outcome: 'attended' as const, teacher_name: null }];
+    const d = toStudentDetails({ ...parts(history([sub('a', 'active', '2026-08-01')])), reports: { items: [report], total: 1 }, trial, mine: false });
+    expect(d).toMatchObject({ mine: false, subscriptions: [], current_id: null, reports: { items: [], total: 0 }, trial });
+    expect(toStudentDetails(parts(null)).mine).toBe(true);
   });
 });

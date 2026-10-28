@@ -263,6 +263,7 @@
   "SalesLessonActionsController.reschedule": ["admin","sales"],
   "SalesStudentController.details": ["sales"],
   "SalesStudentController.reportPdf": ["sales"],
+  "SalesTeacherOverviewController.overview": ["sales"],
   "SalesAcademyController.teachers": ["sales"],
   "SalesAdminController.assign": ["admin"],
   "SalesAdminController.assignUnassigned": ["admin"],

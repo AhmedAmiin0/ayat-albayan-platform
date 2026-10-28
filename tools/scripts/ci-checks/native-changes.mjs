@@ -16,8 +16,14 @@ const NATIVE_PATHS = [`${MOBILE}/assets`, `${MOBILE}/eas.json`];
 const isNativePath = (f) => f === `${MOBILE}/eas.json` || /^apps\/mobile\/assets\/[^/]+$/.test(f);
 // Pure-JS packages (no native code, no config plugin): a version change ships by OTA.
 // Google fonts are .ttf files loaded at runtime by expo-font's useFonts, not embedded by its plugin.
+// @shopify/flash-list v2 is a JS-only recycler on the New Architecture: its package ships dist/*.js and
+// src/*.ts, no android/, ios/, podspec or config plugin (checked on 2.0.2, the SDK 57 version). Only
+// major 2 counts: 1.x shipped a native AutoLayoutView, and a later major may add native code again.
 const JS_ONLY_DEPS = [/^@expo-google-fonts\//, /^@tanstack\//, /^@supabase\/supabase-js$/];
-const jsOnly = (name, version) => String(version).startsWith('workspace:') || JS_ONLY_DEPS.some((r) => r.test(name));
+const JS_ONLY_AT = { '@shopify/flash-list': /^\D*2\./ };
+const jsOnly = (name, version) =>
+  String(version).startsWith('workspace:') ||
+  (name in JS_ONLY_AT ? JS_ONLY_AT[name].test(String(version)) : JS_ONLY_DEPS.some((r) => r.test(name)));
 
 const same = (a, b) => JSON.stringify(a ?? null) === JSON.stringify(b ?? null);
 

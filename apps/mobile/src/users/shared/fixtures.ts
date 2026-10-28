@@ -35,6 +35,8 @@ interface FakeUsers {
   failList?: boolean;
 }
 
+const pageOf = (path: string) => Number(/[?&]page=(\d+)/.exec(path)?.[1] ?? 1);
+
 /** The users GETs by path, for a mocked apiFetch. */
 export function usersGet({ items = [SARA, YOUSEF], total, detail = DETAIL, failList = false }: FakeUsers = {}) {
   return async (path: string): Promise<unknown> => {
@@ -45,7 +47,9 @@ export function usersGet({ items = [SARA, YOUSEF], total, detail = DETAIL, failL
     }
     if (path.startsWith('/users?')) {
       if (failList) throw new ApiError(500, null);
-      return { items, total: total ?? items.length, page: 1, pageSize: 20 };
+      // The rows are on page 1; a later page (the list asks for it at its end) is empty.
+      const page = pageOf(path);
+      return { items: page === 1 ? items : [], total: total ?? items.length, page, pageSize: 20 };
     }
     if (path.startsWith('/users/')) return detail;
     return {};
