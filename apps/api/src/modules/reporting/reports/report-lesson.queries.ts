@@ -67,21 +67,22 @@ export class ReportLessonQueries {
    * reports on this form (an edit must not suggest after its own range).
    */
   async memory(studentIds: readonly string[], exclude: readonly string[]): Promise<Map<string, MemoryView>> {
-    const out = new Map<string, MemoryView>();
-    if (studentIds.length === 0) return out;
-    const { data, error } = await this.db
-      .from('lesson_reports')
-      .select('id, student_id, form_version, content')
-      .in('student_id', [...studentIds])
-      .eq('form_version', 2)
-      .eq('status', 'submitted')
-      .order('submitted_at', { ascending: false })
-      .limit(MEMORY_DEPTH * studentIds.length);
-    if (error) throw dbError(error);
-    for (const id of studentIds) {
-      const rows = data.filter((r) => r.student_id === id && !exclude.includes(r.id));
-      out.set(id, memoryOf(rows.flatMap((r) => storedContent(r) ?? [])));
-    }
-    return out;
+    // One read per student (a lesson has one or a few), so one student's history never crowds out another's.
+    const views = await Promise.all(
+      studentIds.map(async (id) => {
+        const { data, error } = await this.db
+          .from('lesson_reports')
+          .select('id, student_id, form_version, content')
+          .eq('student_id', id)
+          .eq('form_version', 2)
+          .eq('status', 'submitted')
+          .order('submitted_at', { ascending: false })
+          .limit(MEMORY_DEPTH + exclude.length);
+        if (error) throw dbError(error);
+        const rows = data.filter((r) => !exclude.includes(r.id));
+        return [id, memoryOf(rows.flatMap((r) => storedContent(r) ?? []))] as const;
+      }),
+    );
+    return new Map(views);
   }
 }
