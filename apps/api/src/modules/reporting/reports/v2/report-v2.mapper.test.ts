@@ -24,4 +24,13 @@ describe('report-v2.mapper', () => {
     expect(columns).toMatchObject({ attendance: 'excused', notes: 'n', homework: null, grade_overall: null, grade_memorization: null });
     expect(v2SubmitColumns({ ...form, attendance: 'on_time' }).columns).toMatchObject({ grade_memorization: 'excellent', grade_overall: 'good', homework: 'h' });
   });
+
+  it('submit fills the sheet text columns from the content; absent clears them', () => {
+    const two = [...segments, { kind: 'new' as const, surah: 68, from: 1, to: 5, grade: null }, { kind: 'revision' as const, surah: 78, from: 1, to: 40, grade: null }];
+    const form = { expectedVersion: 0, attendance: 'on_time' as const, program: 'quran' as const, content: { ...content, segments: two, tajweed: 'madd' as const } };
+    expect(v2SubmitColumns(form).columns).toMatchObject({ recited: null, new_memorization: 'الملك 16–22، القلم 1–5', revision: 'النبإ 1–40', theory: 'المدود' });
+    expect(v2SubmitColumns({ ...form, attendance: 'absent' }).columns).toMatchObject({ new_memorization: null, revision: null, theory: null });
+    const arabic = { ...content, arabic: { topic: 'الفاعل', skills: { reading: 'good' as const, writing: null, listening: null, grammar: null } } };
+    expect(v2SubmitColumns({ ...form, program: 'arabic', content: arabic }).columns).toMatchObject({ theory: 'الفاعل', new_memorization: null });
+  });
 });

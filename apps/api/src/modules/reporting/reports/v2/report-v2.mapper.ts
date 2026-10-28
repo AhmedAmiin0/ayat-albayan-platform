@@ -3,12 +3,14 @@ import {
   attended,
   keptContent,
   legacyGrades,
+  legacyTexts,
   reportContentSchema,
   type ReportContent,
   type ReportV2Draft,
   type ReportV2Submit,
   type ReportView,
 } from '@ab/shared';
+import { ar } from '../../../../common/i18n/server-text';
 import { formColumns, submitColumns, type FormColumns } from '../report.mapper';
 
 type StoredForm = { form_version: number; content: Json | null };
@@ -42,18 +44,21 @@ export function v2DraftColumns(form: Partial<ReportV2Draft>): FormColumns {
 /**
  * v2 submit → the whole row and the content to store. Absent / excused: no content, no grades,
  * no homework or plan (the form hides them); only the note stays. Attended: the taught program's
- * content, and the v1 grade columns it fills (legacyGrades) so history and the chart read it.
+ * content, and the v1 grade and text columns it fills (legacyGrades / legacyTexts) so history,
+ * the chart and the Google sheet (التسميع / الحفظ الجديد / المراجعة) read it.
  */
 export function v2SubmitColumns(form: ReportV2Submit): { columns: FormColumns; content: ReportContent } {
   const present = form.attendance ? attended(form.attendance) : false;
   const content = form.attendance ? keptContent(form.attendance, form.program, form.content) : form.content;
   const legacy = legacyGrades(content);
+  const texts = legacyTexts(content, (topic) => ar.reports.v2.tajweed[topic]);
   const columns = submitColumns({
     attendance: form.attendance,
     program: form.program,
     notes: form.notes,
     ...(present
       ? {
+          ...texts,
           overall: form.overall,
           homework: form.homework,
           nextPlan: form.nextPlan,
