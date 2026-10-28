@@ -37,7 +37,7 @@ export function ReactorsSheet({ message: m, contact, onRemove, onClose }: Reacto
               <AppText style={{ flex: 1, fontFamily: type.ui[400], fontSize: type.size.body, writingDirection: 'auto' }}>{name(l)}</AppText>
               {l.mine && m && onRemove ? (
                 <Button
-                  variant="ghost"
+                  variant="danger"
                   label={t.inbox.reactions.remove}
                   accessibilityLabel={t.inbox.reactions.removeLabel.replace('{emoji}', l.emoji)}
                   onPress={() => {

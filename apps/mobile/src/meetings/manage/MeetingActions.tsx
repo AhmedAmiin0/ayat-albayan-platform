@@ -29,13 +29,20 @@ export function MeetingActions({ meeting, tz }: { meeting: MeetingView; tz: stri
     <View style={{ gap: 8 }}>
       {meeting.can_join ? <Button label={t.meetings.internal.enter} busy={enter.pending} onPress={() => enter.run(meeting.id)} /> : null}
       {c ? (
-        <InlineConfirm message={c.message} confirmLabel={c.label} busy={c.busy} onConfirm={c.run} onCancel={() => !c.busy && m.close()} />
+        <InlineConfirm
+          tone={c.danger ? 'danger' : meeting.can_join ? 'secondary' : undefined}
+          message={c.message}
+          confirmLabel={c.label}
+          busy={c.busy}
+          onConfirm={c.run}
+          onCancel={() => !c.busy && m.close()}
+        />
       ) : manage ? (
         <MeetingManageButtons scheduled={startsAt !== null} onAsk={m.ask} onMove={() => setMoving(true)} />
       ) : null}
       {m.newUrl ? <MeetingLinkShare url={m.newUrl} note={t.mobileClassroom.newLinkReady} /> : null}
       {meeting.can_manage ? (
-        <Button variant="ghost" label={t.classroom.recordings.title} onPress={() => router.push(`${base}/meetings/${meeting.id}`)} />
+        <Button variant="secondary" label={t.classroom.recordings.title} onPress={() => router.push(`${base}/meetings/${meeting.id}`)} />
       ) : null}
       {[enter.error, m.error].filter((e) => e !== null).map((e) => (
         <ErrorLine key={e} message={e} />

@@ -29,7 +29,6 @@ function OneButton({ lessonId, student, named, approved }: OneProps) {
         type="button"
         variant="secondary"
         disabled={!approved || send.isPending || sent}
-        className="justify-self-start"
         onClick={() => send.mutate({ lessonId, studentId: student.id })}
       >
         {send.isPending ? t.feedback.requestSending : sent ? t.feedback.requestSent : label}

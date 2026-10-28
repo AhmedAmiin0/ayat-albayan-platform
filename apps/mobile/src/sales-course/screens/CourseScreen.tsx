@@ -57,7 +57,7 @@ export function CourseScreen() {
           trailing={<Button variant="ghost" label={t.common.back} onPress={leave} />}
         />
         <CourseStatus course={course} block={refusal} missing={!params.studentId} />
-        {change ? <CurrentCourse course={change.course} onChange={change.open} /> : null}
+        {change ? <CurrentCourse course={change.course} onChange={change.open} secondary={!!transfer} /> : null}
         {transfer ? <Button label={t.salesMoney.stepTransfer} onPress={transfer} /> : null}
       </ScrollView>
     );

@@ -18,7 +18,8 @@ export interface SalesLessonDrawerProps {
 /**
  * The admin lesson drawer for sales (owner 2026-10-26): the same panel and details, and on a running
  * lesson «جارية الآن» with «ادخل الحلقة» (she joins as the classroom assistant, docs/16). «تأكيد الحلقة»
- * on any scheduled lesson not ended yet (owner 2026-10-28, lessons.confirm; then it reads «مؤكدة»). No
+ * on any scheduled lesson not ended yet (owner 2026-10-28, lessons.confirm; then it reads «مؤكدة»), outlined
+ * under a running lesson's «ادخل الحلقة» (docs/07 «الأزرار»: one filled button). No
  * edit, cancel, move, invoice or report action. Render it conditionally.
  */
 export function SalesLessonDrawer({ lesson, now, onClose }: SalesLessonDrawerProps) {
@@ -32,12 +33,14 @@ export function SalesLessonDrawer({ lesson, now, onClose }: SalesLessonDrawerPro
       <div role="group" aria-label={t.lessons.details} className="grid gap-5">
         <SalesLessonDetails lesson={shown} />
         {isRunningLesson(lesson, now) && (
-          <div className="grid justify-items-start gap-1.5">
-            <StatusChip tone="ok" glyph="fill" size="sm" label={t.sales.academySchedule.liveNow} />
-            <EnterButton lesson={lesson} />
+          <div className="grid gap-1.5">
+            <StatusChip tone="ok" glyph="fill" size="sm" label={t.sales.academySchedule.liveNow} className="justify-self-start" />
+            <EnterButton lesson={lesson} className="justify-items-stretch" />
           </div>
         )}
-        {confirmable && <SalesConfirmLesson lessonId={lesson.id} onConfirmed={() => setConfirmedId(lesson.id)} />}
+        {confirmable && (
+          <SalesConfirmLesson lessonId={lesson.id} secondary={isRunningLesson(lesson, now)} onConfirmed={() => setConfirmedId(lesson.id)} />
+        )}
         {justConfirmed && <p role="status" className="text-sm text-ink-2">{t.sales.lessonActions.confirmed}</p>}
         {!confirmable && !justConfirmed && <p className="text-xs text-ink-3">{t.lessons.sheet.readOnly}</p>}
       </div>

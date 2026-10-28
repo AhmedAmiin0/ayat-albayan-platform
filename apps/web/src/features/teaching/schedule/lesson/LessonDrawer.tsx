@@ -59,6 +59,7 @@ export function LessonDrawer({ lesson, onClose, onDone }: LessonDrawerProps) {
             <LessonReportLinks lesson={lesson} role="admin" />
             <LessonActions
               lesson={lesson}
+              proposalLeads={Boolean(lesson.pending_proposal)}
               onDone={done}
               onCancel={() => setMode('cancel')}
               onReschedule={() => setMode('reschedule')}

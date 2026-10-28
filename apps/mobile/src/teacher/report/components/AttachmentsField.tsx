@@ -7,6 +7,7 @@ import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/more/Note';
 import { FormLabel } from '@/payments/FormLabel';
 import { pickReceipt, type Receipt } from '@/payments/receipt';
+import { openIcon } from '@/core/ui/actions';
 import { Button } from '@/core/ui/primitives/Button';
 import { openSigned, reportErrorText, uploadAttachment } from '../hooks/api';
 
@@ -55,7 +56,8 @@ export function AttachmentsField({ reportId, files, onChange, editable, addLabel
       {files.map((f) => (
         <Button
           key={f.id}
-          variant="ghost"
+          variant="secondary"
+          icon={openIcon}
           label={`${fileLabel(f)} · ${t.reports.openFile}`}
           onPress={() => void openSigned(`/reports/${reportId}/attachments/${f.id}/url`).catch(() => setLocal(t.common.error))}
         />

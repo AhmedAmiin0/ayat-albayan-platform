@@ -11,9 +11,7 @@ export function AttachmentItem({ row }: { row: AttachmentRow }) {
   const { url } = row.view;
   if (row.pdf) {
     return (
-      <View style={{ alignItems: 'flex-start' }}>
-        <Button variant="secondary" label={`${row.label} · ${t.mobileMoney.openPdf}`} onPress={() => void Linking.openURL(url)} />
-      </View>
+      <Button variant="secondary" label={`${row.label} · ${t.mobileMoney.openPdf}`} onPress={() => void Linking.openURL(url)} />
     );
   }
   return (

@@ -1,7 +1,6 @@
-import { applyLessonEvent, clockTime, isOpenLesson, lessonStatusStyle, type ClockCycle, type LessonView } from '@ab/shared';
+import { clockTime, lessonStatusStyle, type ClockCycle, type LessonView } from '@ab/shared';
 import { clockIn, useClockCycle } from '@/core/lib/clock';
-import { Linking, View } from 'react-native';
-import { JoinClassroomButton } from '@/classroom/links/JoinClassroomButton';
+import { View } from 'react-native';
 import { ErrorLine } from '@/inbox/ErrorLine';
 import { t } from '@/core/lib/i18n/i18n';
 import { usePlatformClassroom } from '@/core/lib/query/public-config';
@@ -9,12 +8,10 @@ import { LiveBadge } from '@/live/LiveBadge';
 import { shape, type, useTheme } from '@/theme';
 import { durationLabel, studentNames } from '@/today/lib/lesson-text';
 import { AppText } from '@/core/ui/primitives/AppText';
-import { Button } from '@/core/ui/primitives/Button';
 import { StatusChip } from '@/core/ui/feedback/StatusChip';
 import type { ReportAction } from '../lib/day';
 import { statusWord } from '@/core/ui/feedback/lesson-status';
-
-const reportLabel: Record<ReportAction, string> = { open: t.reports.open, edit: t.reports.resume, view: t.reports.view };
+import { TeacherLessonActions } from './TeacherLessonActions';
 
 export interface TeacherLessonCardProps {
   lesson: LessonView;
@@ -39,7 +36,7 @@ function timeLine(lesson: LessonView, tz: string, cycle: ClockCycle): string {
 /**
  * One of my lessons today (R-TCH-03): students, status, my time, «ادخل الحلقة» while it is open,
  * «تأكيد» when the API offers it, and the report once it has started. No cancel or move here:
- * the API gives a teacher neither (the web has «اقترح ميعاد تاني»). When the lesson's teacher holds it
+ * the API gives a teacher neither (the web has «اقترح ميعاد تاني»). The buttons: TeacherLessonActions. When the lesson's teacher holds it
  * in our classroom (lesson.platform_classroom, per-teacher meeting mode) the way in is the platform
  * classroom, not the lesson's fixed link.
  */
@@ -47,8 +44,6 @@ export function TeacherLessonCard(p: TeacherLessonCardProps) {
   const { color } = useTheme();
   const { lesson } = p;
   const auto = usePlatformClassroom(lesson.platform_classroom);
-  const canConfirm = lesson.allowed_events.includes('confirm') && applyLessonEvent(lesson.status, 'confirm') !== null;
-  const link = !auto && isOpenLesson(lesson.status) ? lesson.meeting_link : null;
   const needsConfirm = lesson.status === 'scheduled';
   return (
     <View
@@ -78,12 +73,14 @@ export function TeacherLessonCard(p: TeacherLessonCardProps) {
         {timeLine(lesson, p.tz, useClockCycle())}
       </AppText>
       {p.error ? <ErrorLine message={p.error} /> : null}
-      {auto ? <JoinClassroomButton lesson={lesson} /> : null}
-      {link ? <Button variant="secondary" label={t.teacherDash.join} onPress={() => void Linking.openURL(link)} /> : null}
-      {canConfirm ? <Button label={t.today.confirm} onPress={p.onConfirm} busy={p.busy} /> : null}
-      {p.report ? (
-        <Button variant={p.report === 'view' ? 'ghost' : 'primary'} label={reportLabel[p.report]} onPress={p.onReport} />
-      ) : null}
+      <TeacherLessonActions
+        lesson={lesson}
+        auto={auto}
+        report={p.report}
+        busy={p.busy}
+        onConfirm={p.onConfirm}
+        onReport={p.onReport}
+      />
     </View>
   );
 }

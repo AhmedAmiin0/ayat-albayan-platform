@@ -55,16 +55,16 @@ export function JoinLinkCard({ studentId, studentName }: { studentId: string; st
           onCancel={() => setAsking(false)}
         />
       ) : (
-        <View style={{ alignItems: 'flex-start' }}>
-          <Button variant="secondary" label={J.create} onPress={() => setAsking(true)} />
-        </View>
+        <Button variant="secondary" label={J.create} onPress={() => setAsking(true)} />
       )}
       {make.isError ? <ErrorLine message={J.error} /> : null}
       {url ? (
         <View style={{ gap: 6, alignItems: 'flex-start' }}>
           <Note>{J.newLink}</Note>
           <AppText selectable style={{ writingDirection: 'ltr' }}>{url}</AppText>
-          <Button variant="secondary" label={J.shareAgain} onPress={() => void share(url)} />
+          <View style={{ alignSelf: 'stretch' }}>
+            <Button variant="secondary" label={J.shareAgain} onPress={() => void share(url)} />
+          </View>
         </View>
       ) : null}
       {shareFailed ? <ErrorLine message={J.shareFailed} /> : null}

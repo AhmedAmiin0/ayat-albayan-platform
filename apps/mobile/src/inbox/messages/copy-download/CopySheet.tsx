@@ -66,7 +66,7 @@ export function CopySheet({ request, onClose }: CopySheetProps) {
               {request?.text}
             </ContentText>
           </ScrollView>
-          <Button variant="ghost" label={t.common.close} onPress={onClose} />
+          <Button variant="secondary" label={t.common.close} onPress={onClose} />
         </View>
       </View>
     </Modal>

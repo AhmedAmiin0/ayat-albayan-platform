@@ -3,6 +3,7 @@ import { View } from 'react-native';
 import { ErrorLine } from '@/inbox/ErrorLine';
 import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/more/Note';
+import { ButtonRow } from '@/core/ui/actions';
 import { Button } from '@/core/ui/primitives/Button';
 import { Field } from '@/core/ui/form/Field';
 import { useDescriptionEditor } from '../hooks/use-description-editor';
@@ -21,7 +22,7 @@ export interface DescriptionEditorProps {
 
 /**
  * «تعديل الوصف» inside the value sheet (docs/26b §2 phone, §4): a multiline box (16pt, ≥ 44pt),
- * a live «{n} / 500» counter, «إلغاء» then «احفظ» (primary), and «أعد الوصف الأصلي» for an edited text.
+ * a live «{n} / 500» counter, ONE ButtonRow «احفظ» (primary) | «إلغاء» (secondary), and «أعد الوصف الأصلي» for an edited text.
  * Errors stay inside the sheet.
  */
 export function DescriptionEditor({ valueKey, initial, edited, onDone, onCancel }: DescriptionEditorProps) {
@@ -41,14 +42,10 @@ export function DescriptionEditor({ valueKey, initial, edited, onDone, onCancel 
       />
       <Note>{ed.counter}</Note>
       {ed.error ? <ErrorLine message={ed.error} /> : null}
-      <View style={{ flexDirection: 'row', gap: 8 }}>
-        <View style={{ flex: 1 }}>
-          <Button variant="ghost" label={d.cancel} disabled={ed.saving} onPress={onCancel} />
-        </View>
-        <View style={{ flex: 1 }}>
-          <Button label={d.save} busy={ed.saving} onPress={ed.submit} />
-        </View>
-      </View>
+      <ButtonRow>
+        <Button label={d.save} busy={ed.saving} onPress={ed.submit} />
+        <Button variant="secondary" label={d.cancel} disabled={ed.saving} onPress={onCancel} />
+      </ButtonRow>
       {edited ? <Button variant="secondary" label={d.restore} disabled={ed.saving} onPress={ed.restore} /> : null}
     </View>
   );

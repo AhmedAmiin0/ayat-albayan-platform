@@ -77,7 +77,7 @@ export function BookedPanel({ result, teacherName, tz, onDone, next, makeup }: B
               onPress={() => router.replace({ pathname: '/schedule', params: { date: riyadhToday(new Date(first.starts_at)) } })}
             />
           ) : null}
-          <Button variant="ghost" label={t.common.close} onPress={onDone} />
+          <Button variant="secondary" label={t.common.close} onPress={onDone} />
         </View>
       ) : (
         <Button label={t.inbox.subscription.backToChat} onPress={onDone} />

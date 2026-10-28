@@ -82,3 +82,9 @@ test('the teacher on her fixed link: no platform line, even with the setting on'
   expect(screen.getByText(URL)).toBeTruthy();
   expect(screen.queryByText(L.meetingLinkAuto)).toBeNull();
 });
+
+test('docs/07 «الأزرار»: copy | share | open as one ButtonRow, copy and open with their icons', async () => {
+  await renderWithQuery(<TeacherMeetingLink link={URL} platform={false} />);
+  expect(screen.getAllByTestId('button-row-cell')).toHaveLength(3);
+  expect(screen.getAllByTestId('button-icon')).toHaveLength(2);
+});

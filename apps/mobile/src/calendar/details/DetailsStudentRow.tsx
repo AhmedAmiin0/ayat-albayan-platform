@@ -109,9 +109,9 @@ export function DetailsStudentRow({ lesson, student, role, onLeave, here = false
       <StudentChips unpaid={unpaid} report={report} />
       {role === 'admin' ? <StudentPackageLine studentId={student.id} /> : null}
       {toReport ? (
-        <View style={{ alignSelf: 'flex-start' }}>
+        <View>
           <Button
-            variant="ghost"
+            variant="secondary"
             label={t.reports.view}
             accessibilityLabel={`${t.reports.view} — ${student.name}`}
             onPress={() => go(toReport)}
