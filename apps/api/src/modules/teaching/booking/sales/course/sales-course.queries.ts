@@ -17,7 +17,7 @@ function toSubscription(row: SubscriptionRow): CourseSubscription {
 
 /** A course rule with its plan; the inner join keeps only the student's own rules. */
 const COURSE_RULE_SELECT =
-  'id, subscription_id, teacher_id, duration_min, start_time_local, tz, byday, starts_on, ends_on, status, first_rule_id, sub:subscriptions(package, lessons_total), teacher:teachers(tz), schedule_rule_students!inner(student_id)' as const;
+  'id, subscription_id, teacher_id, duration_min, start_time_local, tz, byday, starts_on, ends_on, status, first_rule_id, sub:subscriptions(package, lessons_total, lessons_used_before), teacher:teachers(tz), schedule_rule_students!inner(student_id)' as const;
 
 const pickRule = (r: Omit<CourseRuleRow, 'subscription_id' | 'sub'>): Omit<CourseRuleRow, 'subscription_id' | 'sub'> => ({
   id: r.id,
@@ -54,7 +54,7 @@ export class SalesCourseQueries {
   async subscription(studentId: string): Promise<CourseSubscription | null> {
     const { data, error } = await this.db
       .from('subscriptions')
-      .select('id, package, duration, lessons_total, starts_on')
+      .select('id, package, duration, lessons_total, lessons_used_before, starts_on')
       .eq('student_id', studentId)
       .in('status', ['unpaid', 'active'])
       .order('created_at', { ascending: false })

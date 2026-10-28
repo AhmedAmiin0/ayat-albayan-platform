@@ -14,7 +14,7 @@ import type { SalesBookingScope } from '../sales/booking/sales-booking.ownership
 export const S1 = 'c0000000-0000-4000-8000-000000000001';
 export const SUB_ID = '00000000-0000-4000-8000-000000000001';
 export const REQUEST_ID = '00000000-0000-4000-8000-0000000000aa';
-export const SUB: CourseSub = { id: SUB_ID, student_id: S1, package: '8', duration: 45, lessons_total: 8, starts_on: '2026-10-01' };
+export const SUB: CourseSub = { id: SUB_ID, student_id: S1, package: '8', duration: 45, lessons_total: 8, lessons_used_before: 0, starts_on: '2026-10-01' };
 const student = { student_id: S1, student: { meeting_link_override: null } };
 export const RULE_A: ChangeRule = {
   id: 'ra',

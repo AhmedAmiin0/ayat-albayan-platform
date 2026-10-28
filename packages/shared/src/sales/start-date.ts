@@ -37,3 +37,30 @@ export function salesStartDate(input: SalesStartInput): SalesStartResult {
   if (startsOn < daysBefore(today, SALES_START_BACK_DAYS)) return { ok: false, code: 'start_date_too_old' };
   return { ok: true, startsOn };
 }
+
+// «حلقات مستخدمة من الباقة» (owner 2026-10-28, migration 932): lessons the student took before the
+// platform, counted as used; the course books only the rest. Only with a past start (the «بدأ الاشتراك
+// سابقًا» path, subscriptions.set_start_date), never the whole package (subscriptions check).
+
+export type UsedBeforeProblem = 'used_before_not_allowed' | 'used_before_needs_past_start' | 'used_before_too_many';
+
+export interface UsedBeforeInput {
+  lessonsUsedBefore: number;
+  /** The start day the package is stored with, YYYY-MM-DD. */
+  startsOn: string;
+  /** Today in the academy's zone, YYYY-MM-DD. */
+  today: string;
+  canSet: boolean;
+  lessonsTotal: number;
+}
+
+/** Why lessonsUsedBefore is refused (403 for not_allowed, 400 otherwise); null = accepted. 0 is always fine. */
+export function usedBeforeProblem(input: UsedBeforeInput): UsedBeforeProblem | null {
+  if (input.lessonsUsedBefore === 0) return null;
+  if (!input.canSet) return 'used_before_not_allowed';
+  if (input.startsOn >= input.today) return 'used_before_needs_past_start';
+  return input.lessonsUsedBefore < input.lessonsTotal ? null : 'used_before_too_many';
+}
+
+/** The stepper's last value: every lesson but one (0 for an empty package). */
+export const usedBeforeMax = (lessonsTotal: number): number => Math.max(0, lessonsTotal - 1);

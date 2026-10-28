@@ -48,6 +48,7 @@ export const subscriptionPricingSchema = z.xor([
   z.object({ ...pricingBase, count: z.int().min(CUSTOM_COUNT_MIN).max(CUSTOM_COUNT_MAX) }),
 ]);
 
+export const LESSONS_USED_BEFORE_MAX = 99; // schema bound; the real one is lessons_total − 1 (usedBeforeProblem)
 /** POST /subscriptions (R-SUB-01). */
 export const subscriptionCreateSchema = z.object({
   studentId: z.uuid(),
@@ -55,6 +56,8 @@ export const subscriptionCreateSchema = z.object({
   startsOn: localDate,
   renewsOn: localDate.nullish(),
   notes: optionalText,
+  /** Lessons taken before the platform (owner 2026-10-28): only with a past startsOn (usedBeforeProblem). */
+  lessonsUsedBefore: z.int().min(0).max(LESSONS_USED_BEFORE_MAX).optional(),
   clientRequestId: z.uuid().optional(), // rule 8: a retry of the same form returns its package
 });
 

@@ -4301,8 +4301,15 @@
       "attachment_in_use": "هذا الملف مرفق بدفعة أخرى؛ اختر ملفًا آخر.",
       "attachment_path": "تعذّر استخدام أحد المرفقات؛ أرفقه مرة أخرى.",
       "attachment_type": "يجب أن يكون المرفق صورة أو ملف PDF.",
-      "too_many_attachments": "الحد الأقصى 5 مرفقات."
-    }
+      "too_many_attachments": "الحد الأقصى 5 مرفقات.",
+      "used_before_not_allowed": "لا تملك صلاحية تسجيل حلقات مستخدمة من الباقة.",
+      "used_before_needs_past_start": "تُسجَّل الحلقات المستخدمة فقط مع «بدأ الاشتراك سابقًا» وتاريخ بداية سابق.",
+      "used_before_too_many": "يجب أن يبقى في الباقة حلقة واحدة على الأقل."
+    },
+    "usedBefore": "حلقات مستخدمة من الباقة",
+    "usedBeforeHint": "تُحسب من الباقة ويُحجز الباقي فقط",
+    "usedBeforeLess": "أنقص حلقة",
+    "usedBeforeMore": "زد حلقة"
   },
   "registrationCheck": {
     "title": "التحقق من التسجيل",
@@ -6675,5 +6682,14 @@
     "students": "الطلاب",
     "noMessageYet": "لا رسائل بعد",
     "hide": "إخفاء المحادثة"
+  },
+  "packagePayment": {
+    "partPaid": "مدفوعة جزئيًا: {paid} من {price} {currency} · الباقي {due}",
+    "shortfall": "المبلغ أقل من المستحق بـ {amount} {currency}، ستبقى الباقة غير مدفوعة حتى يكتمل المبلغ",
+    "error": {
+      "used_before_not_allowed": "لا تملك صلاحية تسجيل حلقات مستخدمة من الباقة.",
+      "used_before_needs_past_start": "تُسجَّل الحلقات المستخدمة فقط مع «بدأ الاشتراك سابقًا» وتاريخ بداية سابق.",
+      "used_before_too_many": "يجب أن يبقى في الباقة حلقة واحدة على الأقل."
+    }
   }
 }

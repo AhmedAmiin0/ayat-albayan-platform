@@ -43,6 +43,10 @@ describe('bookedCourse — a course from its rules (owner 2026-10-18)', () => {
       perWeek: 2,
     });
   });
+  it('lessons used before the platform (owner 2026-10-28): the course carries the rest; days a week stay the plan\'s', () => {
+    const course = bookedCourse([rule({ sub: { ...plan8, lessons_used_before: 1 } })], NOW);
+    expect(course).toMatchObject({ lessonsTotal: 7, perWeek: 2 });
+  });
   it('a rescheduled rule (ended earlier) is not one of its days: only the latest set', () => {
     const rows = [
       rule({ id: 'old', byday: [1], ends_on: '2026-10-25', status: 'ended' }),

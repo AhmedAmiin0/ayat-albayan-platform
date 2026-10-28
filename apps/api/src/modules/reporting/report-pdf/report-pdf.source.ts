@@ -79,7 +79,7 @@ export class ReportPdfSource {
       this.db.from('teachers').select('display_name_ar').eq('id', report.teacher_id).maybeSingle(),
       this.db.from('v_lesson_sequence').select('seq').match(pair).maybeSingle(),
       this.db.from('v_package_lessons').select('n').match(pair).maybeSingle(),
-      this.db.from('subscriptions').select('id, lessons_total, starts_on, created_at').eq('student_id', report.student_id),
+      this.db.from('subscriptions').select('id, lessons_total, lessons_used_before, starts_on, created_at').eq('student_id', report.student_id),
     ]);
     const l = must(lesson, 'lesson');
     const s = must(student, 'student');
@@ -97,6 +97,7 @@ export class ReportPdfSource {
       packages: must(subs, 'subscriptions').map((p) => ({
         id: p.id,
         lessonsTotal: p.lessons_total,
+        lessonsUsedBefore: p.lessons_used_before,
         startsOn: p.starts_on,
         createdAt: p.created_at,
       })),

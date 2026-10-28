@@ -27,6 +27,14 @@ describe('GET /sales/students/:id «تفاصيل الطالب» (docs/16 row 36)
     expect(body.current_id).toBe('c1000000-0000-4000-8000-0000000000c1');
   });
 
+  it('«مدفوعة جزئيًا» (owner 2026-10-28): with self.sales_money, a part-paid package carries part_paid', async () => {
+    const SUB = 'c1000000-0000-4000-8000-0000000000c1';
+    t.queries.prices.mockResolvedValue([{ id: SUB, price: 300, currency: 'SAR' }]);
+    const body = (await t.call('GET', `/sales/students/${MINE}`, { token: 'salesA' })).json();
+    expect(body.subscriptions[0].part_paid).toEqual({ paid: 290, price: 300, due: 10, currency: 'SAR' });
+    expect(t.queries.prices).toHaveBeenCalledWith(MINE);
+  });
+
   it('attendance: her own mark per lesson (حضر / غاب / ملغاة / لم تُسجَّل), a moved lesson left out, with totals', async () => {
     const { attendance } = (await t.call('GET', `/sales/students/${MINE}`, { token: 'salesA' })).json();
     expect(attendance.items).toEqual([

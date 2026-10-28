@@ -9,7 +9,19 @@ import type { SalesStudentSchedule } from './student-schedule.js';
 // ownership of «الاشتراكات»), its subscriptions, attendance and sent reports. Never a price or payment.
 
 /** A subscription without its payments or audit trail: package, status, dates, lessons used / left. */
-export type SalesStudentSubscription = Omit<SalesHistoryEntry, 'payments' | 'status_changes'>;
+/**
+ * «مدفوعة جزئيًا: 80 من 81 ر.س · الباقي 1» (owner 2026-10-28): net paid, price and what is left, in the
+ * package currency. Sent ONLY to a viewer holding self.sales_money (she sees these in her money views
+ * already) and only when 0 < paid < price; otherwise absent (docs/16 row 36 stays: no price for the rest).
+ */
+export interface SalesPartPaid {
+  paid: number;
+  price: number;
+  due: number;
+  currency: string;
+}
+
+export type SalesStudentSubscription = Omit<SalesHistoryEntry, 'payments' | 'status_changes'> & { part_paid?: SalesPartPaid };
 
 /** One past lesson for this student, as the attendance list says it. */
 export type AttendanceKind = 'present' | 'absent' | 'excused' | 'cancelled' | 'unmarked';

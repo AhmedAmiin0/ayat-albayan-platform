@@ -18,6 +18,7 @@ import { StudentAccess } from './student-lifecycle/student-access';
 import { subscriptionListQuery, subscriptionQuoteSchema } from './subscriptions.dto';
 import { SubscriptionCreator } from './subscription-creator';
 import { SubscriptionsService } from './subscriptions.service';
+import { assertUsedBefore } from './used-before';
 
 /** Packages (S1–S5, R-SUB-01). Admin only; the price comes from the catalog, never the body. */
 @ApiTags('subscriptions')
@@ -38,7 +39,9 @@ export class SubscriptionsController {
   @Post()
   @Permissions('subscriptions.write')
   create(@Body() body: unknown, @CurrentUser() user: AuthUser): Promise<SubscriptionView> {
-    return this.creator.create(parseOrThrow(subscriptionCreateSchema, body), user.id);
+    const input = parseOrThrow(subscriptionCreateSchema, body);
+    assertUsedBefore(input, user);
+    return this.creator.create(input, user.id);
   }
 
   /** The price the create would store, shown in the dialog before saving. */

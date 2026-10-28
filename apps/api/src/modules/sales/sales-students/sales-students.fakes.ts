@@ -50,7 +50,7 @@ const reportRow = { id: REPORT, lesson_id: 'l1', teacher_id: 'tc1', attendance: 
 export async function studentsApp() {
   const sales = { ownership: vi.fn(async (id: string) => (id === A ? OWN : NONE)), subscriptions: vi.fn(), meetings: vi.fn() };
   const schedule = { rules: vi.fn(), upcoming: vi.fn() };
-  const queries = { student: vi.fn(), pastLessons: vi.fn(), lesson: vi.fn(), rules: schedule.rules, upcoming: schedule.upcoming };
+  const queries = { student: vi.fn(), pastLessons: vi.fn(), lesson: vi.fn(), prices: vi.fn(), rules: schedule.rules, upcoming: schedule.upcoming };
   const history = { history: vi.fn(), studentOf: vi.fn() };
   const reports = { submitted: vi.fn(), lessons: vi.fn(), sequence: vi.fn() };
   const files = { studentPdfUrl: vi.fn() };
@@ -74,6 +74,7 @@ export async function studentsApp() {
     vi.clearAllMocks();
     queries.student.mockResolvedValue(studentRow());
     queries.pastLessons.mockResolvedValue(pastLessons());
+    queries.prices.mockResolvedValue([]);
     queries.lesson.mockImplementation(async (id: string) => (id === LESSON ? lessonFacts() : lessonFacts({ id, status: 'scheduled' })));
     history.history.mockResolvedValue({ ...bundle(), student: { id: MINE, code: 'AB-0101', name: 'ياسمين' } });
     reports.submitted.mockResolvedValue([reportRow]);

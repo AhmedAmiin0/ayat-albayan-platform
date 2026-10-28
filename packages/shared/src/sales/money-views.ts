@@ -23,6 +23,8 @@ export interface SalesMoneySubscriptionView {
   package: PackageSize | null;
   duration: Duration;
   lessons_total: number;
+  /** Taken before the platform (owner 2026-10-28); absent from older APIs. */
+  lessons_used_before?: number;
   price: number;
   currency: string;
   starts_on: string;

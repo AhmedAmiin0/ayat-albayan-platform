@@ -4,6 +4,7 @@ export { BalanceQueries, type BalanceRow, emptyBalance, toBalance } from './mone
 export { causeOf, MoneyWrites } from './money/money-writes';
 export { PackagesService, type StudentState } from './money/packages.service';
 export { SubscriptionCreator } from './subscription-creator';
+export { assertUsedBefore } from './used-before';
 export {
   studentRef,
   type SubContext,
