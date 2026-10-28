@@ -2,6 +2,7 @@ import { renderTemplateBody, templateBlock, type TemplateView } from '@ab/shared
 import { Field } from '@/components/ui/form/field';
 import { Input } from '@/components/ui/form/input';
 import { Ltr } from '@/components/ui/display/ltr';
+import { cn } from '@/lib/utils';
 import { t } from '@/lib/i18n/i18n';
 import { paramFields, toParamsInput, urlButton, type ParamValues } from '../lib/template-params';
 import { TemplateButtons } from '../../messages/template/TemplateButtons';
@@ -60,7 +61,13 @@ export function TemplateParamFields({ template: tpl, values, missing, onChange }
       </div>
       <figure className="grid gap-1.5">
         <figcaption className="text-xs font-semibold text-ink-3">{c.preview}</figcaption>
-        <div className="max-w-[min(100%,560px)] min-w-[min(100%,260px)] justify-self-start overflow-hidden rounded-lg bg-sunk px-3.5 py-2.5 text-sm">
+        <div
+          className={cn(
+            'max-w-[min(100%,560px)] min-w-[min(100%,260px)] justify-self-start overflow-hidden rounded-lg bg-sunk px-3.5 pt-2.5 text-sm',
+            // The button rows reach the bubble's bottom edge, as in the chat.
+            block.buttons.length === 0 && 'pb-2.5',
+          )}
+        >
           <TemplateFrame block={block} hasMedia={false}>
             <p dir="auto" className="whitespace-pre-wrap [overflow-wrap:anywhere]">
               {preview}

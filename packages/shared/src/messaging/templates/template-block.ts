@@ -62,7 +62,8 @@ function registryButtons(buttons: readonly TemplateButton[]): TemplateDisplayBut
 function filledUrl(url: string, key: string, params: TemplateParams): string | undefined {
   if (!url.includes('{{1}}')) return url;
   if (TOKEN_URL_KEYS.has(key) || !params.button) return undefined;
-  return url.replace('{{1}}', encodeURIComponent(params.button));
+  // Raw, as the sender passes it to Meta (wa-components): the bubble opens the link the family got.
+  return url.replace('{{1}}', params.button);
 }
 
 function filled(b: TemplateDisplayButton, key: string, params: TemplateParams): TemplateDisplayButton {

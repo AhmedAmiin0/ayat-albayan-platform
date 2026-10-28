@@ -81,11 +81,11 @@ describe('templateBlock: after a sync (message_templates.display)', () => {
     expect(templateBlock(src({ header_format: 'document', display: { header: null, buttons: [] } }), {}).header).toBeNull();
   });
 
-  it('the value is encoded: it can never leave the link’s path', () => {
+  it('the value goes in raw, exactly as the sender gave it to Meta', () => {
     const block = templateBlock(src({ display: { header: null, buttons: [{ type: 'url', text: 'x', url: 'https://x.test/{{1}}' }] } }), {
-      button: 'a b?c',
+      button: 'room/a?x=1',
     });
-    expect(block.buttons[0]?.url).toBe('https://x.test/a%20b%3Fc');
+    expect(block.buttons[0]?.url).toBe('https://x.test/room/a?x=1');
   });
 });
 
