@@ -1,9 +1,10 @@
-import type { CommsSource } from '@ab/shared';
+import { isWaLine, type CommsSource } from '@ab/shared';
 import { Injectable, Logger, type OnModuleDestroy, type OnModuleInit } from '@nestjs/common';
 import { integrationRefreshMs } from '../../../../common/integrations/integration-refresh';
+import { setCallsNumber, type CallsNumber } from '../../../../common/integrations/calls-number';
 import { setNumbersOverlay, type NumbersOverlay, type OverlayNumber } from '../../../../common/integrations/numbers-overlay';
 import { loadEnv } from '../../../../config/env/env';
-import { overlayNumber } from './numbers.env';
+import { callsNumberOf, overlayNumber } from './numbers.env';
 import { moduleOverlay, type DefaultNumber } from '../lines/numbers.lines';
 import { NumbersQueries } from '../numbers.queries';
 import { NumbersSecrets } from './numbers.secrets';
@@ -66,7 +67,8 @@ export class NumbersConfig implements OnModuleInit, OnModuleDestroy {
     try {
       source = await this.source();
       const next = source === 'module' ? await this.build() : null;
-      if (generation === this.generation) this.install(next);
+      const calls = await this.callsNumber();
+      if (generation === this.generation) this.install(next, calls);
       return true;
     } catch (e) {
       if (source === 'module' && !this.loaded && generation === this.generation) setNumbersOverlay(this.overlayOf([]));
@@ -75,9 +77,16 @@ export class NumbersConfig implements OnModuleInit, OnModuleDestroy {
     }
   }
 
-  private install(next: NumbersOverlay | null): void {
+  private install(next: NumbersOverlay | null, calls: CallsNumber | null): void {
     setNumbersOverlay(next);
+    setCallsNumber(calls);
     this.loaded = true;
+  }
+
+  /** The enabled default `calls` number (docs/28 §10), under either source; null = none (calls use the chat line). */
+  async callsNumber(): Promise<CallsNumber | null> {
+    const row = await this.queries.callsDefault();
+    return row ? callsNumberOf(row, loadEnv()) : null;
   }
 
   /** The module side as it would be now (parity reads it in legacy mode too). */
@@ -97,8 +106,9 @@ export class NumbersConfig implements OnModuleInit, OnModuleDestroy {
     return moduleOverlay(defaults, (key) => this.log.warn(`number value for ${key} is invalid and ignored`));
   }
 
+  /** Each messaging role's default (a `calls` number is never a line: it supplies no WA_* key). */
   async defaults(): Promise<(DefaultNumber & { label: string })[]> {
-    const rows = await this.queries.defaults();
+    const rows = (await this.queries.defaults()).flatMap((r) => (isWaLine(r.purpose) ? [{ ...r, purpose: r.purpose }] : []));
     return Promise.all(rows.map(async (r) => ({ ...r, secrets: await this.secrets.read(r.id) })));
   }
 }

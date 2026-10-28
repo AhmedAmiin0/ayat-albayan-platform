@@ -3482,7 +3482,8 @@
     },
     "waLine": {
       "notifications": "Notifications line",
-      "chat": "Chat line"
+      "chat": "Chat line",
+      "calls": "Calls line"
     }
   },
   "settings": {
@@ -5760,7 +5761,8 @@
     "technical": "Technical details",
     "purpose": {
       "notifications": "Notifications role",
-      "chat": "Chat role"
+      "chat": "Chat role",
+      "calls": "Calls role"
     },
     "provider": {
       "meta": "Meta directly",
@@ -5824,7 +5826,8 @@
       "addTitle": "Add number",
       "editTitle": "Edit number",
       "invalid": "Check the marked fields.",
-      "invalidId": "Latin letters and digits only, up to 64 characters."
+      "invalidId": "Latin letters and digits only, up to 64 characters.",
+      "callsHint": "A calls number is for WhatsApp calls only; no regular message is ever sent from it. Kapso provider only."
     },
     "errors": {
       "parity_not_empty": "Cannot switch: the current setup and the numbers differ.",
@@ -5832,6 +5835,7 @@
       "default_taken": "This role already has another default number that is on.",
       "number_enabled": "Turn the number off first, then delete it.",
       "not_enabled": "Turn the number on first to make it the default.",
+      "calls_need_kapso": "A calls number works through Kapso only: choose the Kapso provider.",
       "generic": "Something went wrong. Try again."
     },
     "import": {
@@ -6508,7 +6512,9 @@
   "calls": {
     "settings": {
       "enabled": "WhatsApp voice calls",
-      "enabledHint": "Shows the call button in chats and allows in-app voice calls from the chat number through Kapso. Keep it off until the Kapso and Meta activation steps are done."
+      "enabledHint": "Shows the call button in chats and allows in-app voice calls from the chat number through Kapso. Keep it off until the Kapso and Meta activation steps are done.",
+      "permissionTemplate": "Call permission request template",
+      "permissionTemplateHint": "The name of the call permission request template approved on the calls number (a language may follow a colon, e.g. name:ar). Sent only when a staff member taps «Ask for call permission» after the 24-hour window. Empty keeps that button disabled."
     },
     "call": "Voice call",
     "callBack": "Call back",
@@ -6552,7 +6558,12 @@
       "requestSent": "Permission request sent. You can call once they accept.",
       "needsTemplate": "The 24-hour chat window has closed, so permission can only be requested with an approved permission-request template. You can wait until the number's owner messages the academy.",
       "limited": "WhatsApp does not allow a call or a new permission request right now. Try again later.",
-      "checking": "Checking call permission…"
+      "checking": "Checking call permission…",
+      "viaTemplate": "The calls number’s 24-hour window has closed, so the approved permission request template will be sent from the calls number.",
+      "noTemplate": "The calls number’s 24-hour window has closed and no call permission request template is set in settings (Values → Messages), so permission cannot be requested now.",
+      "grantedUntil": "Call permission is valid until {{at}}.",
+      "replyRejected": "The number’s owner declined the last call request ({{at}}).",
+      "replyAccepted": "The number’s owner allowed calls ({{at}})."
     },
     "mic": {
       "denied": "The call needs microphone access. Allow the microphone, then try again.",
@@ -6569,7 +6580,9 @@
       "recipient_not_allowed": "This number is not on the test allow-list.",
       "no_permission": "There is no permission to call this number.",
       "call_failed": "The call could not be placed. It was not retried automatically, so it is never billed twice.",
-      "media_failed": "The audio dropped. End the call and call again."
+      "media_failed": "The audio dropped. End the call and call again.",
+      "messaging_off": "Sending messages is turned off in settings, so the permission request is not sent now.",
+      "request_failed": "The permission request could not be sent. It was not retried automatically."
     },
     "backgrounded": "The app was in the background during the call, so your voice may not have been heard meanwhile."
   },

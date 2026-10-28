@@ -4,11 +4,13 @@ import { parsed } from '../../whatsapp/drivers/meta/meta-shapes';
 import { waTo } from '../../whatsapp/messages/wa-components';
 import { DEFAULT_TIMEOUT_MS } from '../../whatsapp/whatsapp.client';
 import type { CallingLine } from './calling-line';
-import type { CallPermissionFacts, CallsApi } from './calls-api';
+import type { CallPermissionFacts, CallsApi, PermissionRequest } from './calls-api';
+import { permissionRequestBody } from './permission-body';
 
 // Kapso's Meta proxy mirrors Meta's Cloud API Calling (docs/28 §2): same paths and snake_case bodies,
 // the project key as X-API-Key (graph.ts authHeaders). One request per method, never a retry.
 
+const sentSchema = z.object({ messages: z.array(z.object({ id: z.string().min(1) })).min(1) });
 const connectSchema = z.object({ calls: z.array(z.object({ id: z.string().min(1) })).min(1) });
 const permissionSchema = z.object({
   permission: z.object({ status: z.string().optional(), expiration_time: z.number().optional() }).optional(),
@@ -50,6 +52,12 @@ export class KapsoCallsApi implements CallsApi {
 
   async terminate(line: CallingLine, waCallId: string): Promise<void> {
     await this.post(line, { ...base(), call_id: waCallId, action: 'terminate' });
+  }
+
+  async requestPermission(line: CallingLine, input: PermissionRequest): Promise<{ waMessageId: string }> {
+    const body = permissionRequestBody(input);
+    const res = parsed(sentSchema, await graphJson(this.conn(line), { path: `${line.env.phoneNumberId}/messages`, method: 'POST', body }));
+    return { waMessageId: res.messages[0]?.id ?? '' };
   }
 
   private post(line: CallingLine, body: Record<string, unknown>): Promise<unknown> {

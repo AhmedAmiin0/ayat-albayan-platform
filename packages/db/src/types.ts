@@ -4266,6 +4266,33 @@ export type Database = {
         };
         Relationships: [];
       };
+      wa_call_permissions: {
+        Row: {
+          expires_at: string | null;
+          phone_e164: string;
+          phone_number_id: string;
+          replied_at: string;
+          response: string;
+          updated_at: string;
+        };
+        Insert: {
+          expires_at?: string | null;
+          phone_e164: string;
+          phone_number_id: string;
+          replied_at: string;
+          response: string;
+          updated_at?: string;
+        };
+        Update: {
+          expires_at?: string | null;
+          phone_e164?: string;
+          phone_number_id?: string;
+          replied_at?: string;
+          response?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
       wa_call_sdp: {
         Row: {
           answer_sdp: string | null;
@@ -5211,7 +5238,7 @@ export type Database = {
       template_status:
         'not_submitted' | 'pending' | 'approved' | 'rejected' | 'paused' | 'disabled' | 'missing';
       user_role: 'admin' | 'teacher' | 'guardian' | 'assistant' | 'sales' | 'student';
-      wa_line: 'notifications' | 'chat';
+      wa_line: 'notifications' | 'chat' | 'calls';
     };
     CompositeTypes: {
       [_ in never]: never;
@@ -5416,7 +5443,7 @@ export const Constants = {
         'missing',
       ],
       user_role: ['admin', 'teacher', 'guardian', 'assistant', 'sales', 'student'],
-      wa_line: ['notifications', 'chat'],
+      wa_line: ['notifications', 'chat', 'calls'],
     },
   },
 } as const;

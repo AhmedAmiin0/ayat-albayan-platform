@@ -1,3 +1,4 @@
+import { isWaLine } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../../../common/db/db.module';
 import { activeNumberId, overlayNumbers } from '../../../../common/integrations/numbers-overlay';
@@ -34,7 +35,7 @@ export class ChatNumber {
       .select('line, display_phone_e164, verified_name, checked_at, phone_number_id')
       .in('line', ['chat', 'notifications']);
     if (error) throw dbError(error);
-    const rows = currentRows(data, lineNumbers(loadEnv()));
+    const rows = currentRows(data.flatMap((r) => (isWaLine(r.line) ? [{ ...r, line: r.line }] : [])), lineNumbers(loadEnv()));
     return (rows.find((r) => r.line === 'chat') ?? rows.find((r) => r.line === 'notifications'))?.display_phone_e164 ?? null;
   }
 }

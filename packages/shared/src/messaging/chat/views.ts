@@ -1,4 +1,4 @@
-import type { LeadSource, LeadStatus, LessonStatus, MessageDirection, MessageStatus, WaLine } from '../../enums/index.js';
+import type { LeadSource, LeadStatus, LessonStatus, MessageDirection, MessageStatus, NumberPurpose, WaLine } from '../../enums/index.js';
 import type { ChatListRef } from './chat-lists.js';
 import type { MessageQuote } from '../replies/reply-forward.js';
 import type { MessageReactions } from '../reactions/reactions.js';
@@ -41,8 +41,8 @@ export interface ThreadView {
   badge?: SubscriptionBadge | null;
   /** familyUnpaid: a running package still owes money, the «مش مدفوع» tag. Absent like `badge`. */
   unpaid?: boolean;
-  /** Line of the newest inbound (docs/12 §13); null = history or a single line. Absent in an old cache. */
-  last_inbound_line?: WaLine | null;
+  /** Line of the newest inbound (docs/12 §13; `calls` = the calls number, docs/28 §10); null = history or a single line. Absent in an old cache. */
+  last_inbound_line?: NumberPurpose | null;
   /** Newest inbound on the chat line (docs/12 §13.7). Absent in an old cache. */
   last_chat_inbound_at?: string | null;
   /** Newest inbound on the notifications line or without a line (history). Absent in an old cache. */
@@ -100,8 +100,8 @@ export interface MessageView {
   sender_name?: string | null;
   /** Outbound queued by the platform with no staff behind it (created_by null, dedup_key set). Not send-stale's isAutomatic. */
   automatic?: boolean;
-  /** Line received on / sent from (docs/12 §13); null = history or a single line. Absent in an old cache. */
-  line?: WaLine | null;
+  /** Line received on / sent from (docs/12 §13; `calls` = the calls number, docs/28 §10); null = history or a single line. Absent in an old cache. */
+  line?: NumberPurpose | null;
   created_at: string;
   /** R-MSG-03 wa.me link with the fallback text; only on outbound queued / failed rows. */
   click_to_chat: string | null;

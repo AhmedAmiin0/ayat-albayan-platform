@@ -1,5 +1,5 @@
 import type { TablesInsert } from '@ab/db';
-import type { ThreadLesson, ThreadPeople } from '@ab/shared';
+import { isWaLine, onMessagingLine, type ThreadLesson, type ThreadPeople } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../../../common/db/db.module';
 import { BalanceQueries } from '../../../finance/subscriptions/money/balance.queries';
@@ -65,12 +65,13 @@ export class ThreadsQueries {
 
   /**
    * Module mode only (docs/23c decision 6): the phone's newest inbound per number (v_thread_numbers);
-   * number_id null = unstamped history of that line, credited to the role's default by pickSend.
+   * number_id null = unstamped history of that line, credited to the role's default by pickSend. The calls
+   * number's inbound never opens a reply window (docs/28 §10: it never sends a message).
    */
   async numberWindows(phone: string): Promise<ThreadWindow[]> {
     const { data, error } = await this.db.from('v_thread_numbers').select('number_id, line, last_inbound_at').eq('phone_e164', phone);
     check(error, 'thread number windows read');
-    return (data ?? []).map((r) => ({ numberId: r.number_id, line: r.line ?? 'notifications', lastInboundAt: r.last_inbound_at }));
+    return (data ?? []).flatMap((r) => (isWaLine(r.line) || r.line === null ? [{ numberId: r.number_id, line: r.line ?? 'notifications', lastInboundAt: r.last_inbound_at }] : []));
   }
 
   /**
@@ -113,7 +114,7 @@ export class ThreadsQueries {
     else if (upTo) query = query.in('id', [...upTo]);
     const { data, error } = await query.select('wa_message_id, created_at, line');
     check(error, 'inbound read stamp');
-    return newestPerLine(data);
+    return newestPerLine(data.filter(onMessagingLine)); // never a read receipt from the calls number
   }
 
   /** Rule 8: a replayed dedup_key returns the first row, flagged `replayed` (nothing was written). */

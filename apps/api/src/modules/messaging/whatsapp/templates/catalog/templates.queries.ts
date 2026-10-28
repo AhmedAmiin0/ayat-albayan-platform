@@ -3,7 +3,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../../../../common/db/db.module';
 import type { ImportRow } from '../sync/template-import';
 import type { TemplatePatch } from '../sync/template-sync';
-import type { TemplateRow } from '../../whatsapp.types';
+import { templateRow, templateRows, type TemplateRow } from '../../whatsapp.types';
 
 /** One (template, number) approval (docs/23c decision 4). */
 export type ApprovalRow = Tables<'message_template_numbers'>;
@@ -39,13 +39,13 @@ export class TemplatesQueries {
   async all(): Promise<TemplateRow[]> {
     const { data, error } = await this.db.from('message_templates').select('*').order('key');
     if (error) throw new Error(`templates read failed: ${error.message}`);
-    return data;
+    return templateRows(data);
   }
 
   async get(key: string): Promise<TemplateRow | null> {
     const { data, error } = await this.db.from('message_templates').select('*').eq('key', key).maybeSingle();
     if (error) throw new Error(`template read failed: ${error.message}`);
-    return data;
+    return templateRow(data);
   }
 
   async update(key: string, patch: TemplatePatch): Promise<TemplateRow | null> {
@@ -57,7 +57,7 @@ export class TemplatesQueries {
       .maybeSingle();
     this.copies.clear();
     if (error) throw new Error(`template update failed: ${error.message}`);
-    return data;
+    return templateRow(data);
   }
 
   /**
@@ -72,7 +72,7 @@ export class TemplatesQueries {
       .maybeSingle();
     this.copies.clear();
     if (error) throw new Error(`template insert failed: ${error.message}`);
-    return data;
+    return templateRow(data);
   }
 
   /** message_template_numbers (docs/23 phase 5): every row, or one template's. */

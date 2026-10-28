@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../../../common/db/db.module';
 import type { Approvals } from './number-route';
-import type { TemplateRow } from '../whatsapp.types';
+import { templateRows, type TemplateRow } from '../whatsapp.types';
 
 /** Template keys are snake_case registry keys; anything else is never put into a filter. */
 const KEY = /^[a-z0-9_]{1,64}$/;
@@ -29,6 +29,6 @@ export class RouteQueries {
     const onNumber = keys.length ? `,key.in.(${keys.join(',')})` : '';
     const { data, error } = await this.db.from('message_templates').select('*').or(`status.eq.approved${onNumber}`);
     if (error) throw new Error(`templates read failed: ${error.message}`);
-    return data;
+    return templateRows(data);
   }
 }

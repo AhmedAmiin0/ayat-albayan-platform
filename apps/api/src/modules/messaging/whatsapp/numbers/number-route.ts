@@ -1,4 +1,4 @@
-import { NOTIFICATION_CATALOGUE, routeSession, routeTemplate, type RoutableNumber, type WaLine } from '@ab/shared';
+import { isWaLine, NOTIFICATION_CATALOGUE, routeSession, routeTemplate, type RoutableNumber, type WaLine } from '@ab/shared';
 import type { OverlayNumber } from '../../../../common/integrations/numbers-overlay';
 import type { DueMessage } from '../sender/sender.due';
 import type { TemplateRow } from '../whatsapp.types';
@@ -25,8 +25,13 @@ export interface RoutePass {
   crm?: ReadonlySet<string>;
 }
 
+/** The numbers routing may ever pick: never a `calls` number (docs/28 §10: it never sends a message). */
+export function messagingNumbers(numbers: readonly OverlayNumber[]): (OverlayNumber & { purpose: WaLine })[] {
+  return numbers.filter((n): n is OverlayNumber & { purpose: WaLine } => isWaLine(n.purpose));
+}
+
 /** An overlay number as routing sees it: sendable = enabled with a working config of its own. */
-export function routable(n: OverlayNumber): RoutableNumber {
+export function routable(n: OverlayNumber & { purpose: WaLine }): RoutableNumber {
   const { id, purpose, enabled, is_default, fallback_rank, created_at } = n;
   return { id, purpose, enabled, is_default, fallback_rank, created_at, sendable: enabled && n.env !== null };
 }

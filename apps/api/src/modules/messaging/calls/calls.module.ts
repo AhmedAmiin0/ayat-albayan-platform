@@ -8,6 +8,7 @@ import { CallEvents, CALL_EVENTS } from './flow/call-events.service';
 import { CallFlows } from './flow/call-flows';
 import { CallsKit } from './flow/call-kit';
 import { CallPermissions } from './flow/call-permission.service';
+import { CallsNumberPermission } from './flow/calls-number-permission';
 import { CallReads } from './flow/call-reads.service';
 import { CallsSweeper } from './flow/calls.sweeper';
 import { InboundCalls } from './flow/inbound.service';
@@ -16,12 +17,14 @@ import { CallPermissionController } from './http/call-permission.controller';
 import { CallsController } from './http/calls.controller';
 import { CALLS_API } from './kapso/calls-api';
 import { KapsoCallsApi } from './kapso/kapso-calls';
+import { CallsNumberStore } from './store/calls-number.store';
 import { CallsQueries } from './store/calls.queries';
 
 /**
  * WhatsApp voice calls from the chat number (docs/28), dark behind whatsapp_calls_enabled. InboxModule
  * brings the outbox (the permission request), the chats and the teacher scopes; SalesModule the sales
- * scopes. CALL_EVENTS is the port WebhookModule feeds the parsed `calls` items into.
+ * scopes; the global WhatsappModule the send gate and message views (a calls number's permission request,
+ * docs/28 §10). CALL_EVENTS is the port WebhookModule feeds the parsed `calls` items into.
  */
 @Module({
   imports: [InboxModule, SalesModule],
@@ -30,7 +33,7 @@ import { CallsQueries } from './store/calls.queries';
     { provide: CALLS_API, useFactory: () => new KapsoCallsApi() },
     { provide: CALL_EVENTS, useExisting: CallEvents },
     ...[CallsQueries, CallsKit, CallsSettings, CallsGate, CallAccess, CallEvents, CallFlows],
-    ...[OutboundCalls, InboundCalls, CallPermissions, CallReads, CallsSweeper],
+    ...[OutboundCalls, InboundCalls, CallPermissions, CallReads, CallsSweeper, CallsNumberPermission, CallsNumberStore],
   ],
   exports: [CALL_EVENTS],
 })

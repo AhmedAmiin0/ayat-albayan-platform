@@ -96,11 +96,21 @@ export function fakeApi(): { [K in keyof CallsApi]: ReturnType<typeof vi.fn> } &
     accept: vi.fn(async () => undefined),
     reject: vi.fn(async () => undefined),
     terminate: vi.fn(async () => undefined),
+    requestPermission: vi.fn(async () => ({ waMessageId: 'wamid.PERM' })),
   };
 }
 
 export function fakeThreads(thread: { guardian_id: string | null; lead_id: string | null } | null = { guardian_id: 'g1', lead_id: null }) {
-  return { thread: vi.fn(async () => thread), numberWindows: vi.fn(async () => []) };
+  const rows = new Map<string, Record<string, unknown>>();
+  // A replayed dedup_key returns the first row, flagged (ThreadsQueries.enqueue, rule 8).
+  const enqueue = vi.fn(async (row: Record<string, unknown>) => {
+    const key = String(row['dedup_key']);
+    const first = rows.get(key);
+    if (first) return { ...first, replayed: true };
+    rows.set(key, { id: `m${rows.size + 1}`, ...row });
+    return { ...(rows.get(key) ?? {}) };
+  });
+  return { thread: vi.fn(async () => thread), numberWindows: vi.fn(async () => []), enqueue };
 }
 
 /** A gate with the setting `on`, the Kapso line and the allow-list check (pass `refuse` to block a phone). */

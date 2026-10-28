@@ -13,6 +13,10 @@ function callErrorCode(e: unknown): string {
 export const callFailed = (code: string) =>
   new HttpException({ code: 'call_failed', message: 'call_failed', reason: code }, HttpStatus.BAD_GATEWAY);
 
+/** 502 request_failed: a calls number's permission request WhatsApp refused (never retried, docs/28 §10). */
+export const requestFailed = (code: string) =>
+  new HttpException({ code: 'request_failed', message: 'request_failed', reason: code }, HttpStatus.BAD_GATEWAY);
+
 /** Logs a failed Kapso step by the call's own id and the code only (no phone, no SDP). */
 export function logCallError(log: Logger, input: { what: string; callId: string; error: unknown }): string {
   const code = callErrorCode(input.error);

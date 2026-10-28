@@ -1,4 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
+import { setCallsNumber } from '../../../../common/integrations/calls-number';
 import { setNumbersOverlay } from '../../../../common/integrations/numbers-overlay';
 import type { MediaNumber } from '../messages/inbound-media.queries';
 import type { WhatsappClient, WhatsappLines } from '../whatsapp.types';
@@ -40,5 +41,21 @@ describe('mediaSource (docs/23c, docs/19)', () => {
   it('module mode, a number without a client (disabled): none, never the role\'s other number', () => {
     setNumbersOverlay({ values: {}, numberIds: {}, numbers: [] });
     expect(mediaSource({ line: 'chat', number: KAPSO }, { lines, numbers: none })).toEqual({ kind: 'none' });
+  });
+});
+
+describe('mediaSource and the calls number (docs/28 §10)', () => {
+  afterEach(() => setCallsNumber(null));
+  const env = { provider: 'kapso' as const, base: 'http://stub.test/kapso', version: 'v24.0', phoneNumberId: 'calls-pn', wabaId: 'w', apiKey: 'k' };
+
+  it('a file sent to the calls number is fetched with its own Kapso connection only, never a line\'s', () => {
+    setCallsNumber({ id: 'n-calls', phoneNumberId: 'calls-pn', env });
+    const got = mediaSource({ line: 'calls', number: { id: 'n-calls', provider: 'kapso', purpose: 'calls' } }, { lines, numbers: none });
+    expect(got).toMatchObject({ kind: 'client', line: null });
+    expect(got).not.toEqual(expect.objectContaining({ client: lines.chat }));
+  });
+
+  it('no usable calls number: none (503), never the notifications line', () => {
+    expect(mediaSource({ line: 'calls' }, { lines, numbers: none })).toEqual({ kind: 'none' });
   });
 });

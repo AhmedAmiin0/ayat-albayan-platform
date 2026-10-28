@@ -38,6 +38,7 @@ export const SETTINGS_LAYOUT = {
     'crm_media_host',
     'crm_media_copy_all',
     'whatsapp_calls_enabled',
+    'calls_permission_template',
   ],
   schedule: ['booking_horizon_weeks', 'late_cancel_hours', 'makeup_window_days', 'teachers_always_available'],
   classroom: ['join_opens_before_min', 'join_closes_after_min', 'default_meeting_title', 'meeting_link_auto'],

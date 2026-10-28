@@ -1,5 +1,5 @@
 import type { Tables } from '@ab/db';
-import type { TemplateParams, WaLine, WaSendKind } from '@ab/shared';
+import { isWaLine, type NumberPurpose, type TemplateParams, type WaLine, type WaSendKind } from '@ab/shared';
 
 // WhatsappClient contract (docs/12 §3). B1 implements it over WA_API_BASE (tools/wa-stub locally
 // and in e2e); B2/B3 inject it with `@Inject(WHATSAPP_CLIENT)` and fake it in unit tests.
@@ -9,8 +9,17 @@ export const WHATSAPP_CLIENT = Symbol('WHATSAPP_CLIENT');
 /** One client per line (docs/12 §13.4); WHATSAPP_CLIENT = its notifications client. */
 export const WHATSAPP_LINES = Symbol('WHATSAPP_LINES');
 
-/** One message_templates row. */
-export type TemplateRow = Tables<'message_templates'>;
+/** One message_templates row; its line is a messaging line, never `calls` (migration 941's check, docs/28 §10). */
+export type TemplateRow = Omit<Tables<'message_templates'>, 'line'> & { line: WaLine };
+
+/** Rows as read, narrowed to a messaging line (a `calls` row cannot exist; it would be dropped, never sent). */
+export function templateRows<T extends { line: NumberPurpose }>(rows: readonly T[]): (T & { line: WaLine })[] {
+  return rows.filter((r): r is T & { line: WaLine } => isWaLine(r.line));
+}
+
+/** One row (null when absent or, impossibly, on the calls line). */
+export const templateRow = <T extends { line: NumberPurpose }>(row: T | null): (T & { line: WaLine }) | null =>
+  row ? (templateRows([row])[0] ?? null) : null;
 
 export interface WaSent {
   /** Meta's wamid; stored in messages.wa_message_id. */

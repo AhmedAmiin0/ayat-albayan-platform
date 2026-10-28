@@ -1,6 +1,7 @@
-import type { NumberSecretName } from '@ab/shared';
+import { isWaLine, type NumberSecretName, type WaLine } from '@ab/shared';
+import type { CallsNumber } from '../../../../common/integrations/calls-number';
 import type { OverlayNumber } from '../../../../common/integrations/numbers-overlay';
-import { validOverlay, type Env, type WhatsappEnv } from '../../../../config/env/env';
+import { validOverlay, type Env, type KapsoLineEnv, type WhatsappEnv } from '../../../../config/env/env';
 import { ROLE_KEYS } from '../lines/numbers.lines';
 import type { NumberRow } from '../numbers.queries';
 
@@ -16,8 +17,8 @@ interface NumberSource {
 }
 
 /** The row's sending values checked against their env schema keys; null = one of them is invalid. */
-function checked({ row, secrets }: NumberSource): Record<string, string> | null {
-  const k = ROLE_KEYS[row.purpose];
+function checked({ row, secrets }: NumberSource, line: WaLine): Record<string, string> | null {
+  const k = ROLE_KEYS[line];
   let bad = false;
   const raw = {
     [k.provider]: row.provider,
@@ -34,12 +35,15 @@ function checked({ row, secrets }: NumberSource): Record<string, string> | null 
 
 /**
  * What this number sends with; null = it cannot send: disabled, an id / token / base / key missing,
- * or a value that fails the env schema (the row stays queued, like an unconfigured line).
+ * or a value that fails the env schema (the row stays queued, like an unconfigured line). A `calls`
+ * number never sends a message (docs/28 §10): always null here, so no route or fallback can pick it.
  */
 export function numberEnv(source: NumberSource, env: Env): WhatsappEnv | null {
-  const v = source.row.enabled ? checked(source) : null;
+  const line = source.row.purpose;
+  if (!isWaLine(line)) return null;
+  const v = source.row.enabled ? checked(source, line) : null;
   if (!v) return null;
-  const k = ROLE_KEYS[source.row.purpose];
+  const k = ROLE_KEYS[line];
   // crm: the CRM's base + key (env.crm.ts crmLine); the row's ids only name it, they are never sent.
   if (v[k.provider] === 'crm') return crmEnv(env);
   const phoneNumberId = v[k.phone_number_id];
@@ -52,7 +56,7 @@ export function numberEnv(source: NumberSource, env: Env): WhatsappEnv | null {
 type Ids = { phoneNumberId: string; wabaId: string };
 
 /** Kapso: its base and version, the project key; never a Meta token or app id. */
-function kapsoEnv(ids: Ids, env: Env): WhatsappEnv | null {
+function kapsoEnv(ids: Ids, env: Env): KapsoLineEnv | null {
   const base = env.KAPSO_API_BASE?.replace(/\/+$/, '');
   const apiKey = env.KAPSO_API_KEY;
   if (!base || !apiKey) return null;
@@ -74,8 +78,9 @@ function metaEnv(own: { ids: Ids; token?: string; appId?: string }, env: Env): W
   return own.appId ? { ...conn, appId: own.appId } : conn;
 }
 
-/** Its own app secret (webhook signatures), when set and valid; never another number's. */
+/** Its own app secret (webhook signatures), when set and valid; never another number's (a calls number: Kapso's). */
 function appSecretOf({ row, secrets }: NumberSource): string | null {
+  if (!isWaLine(row.purpose)) return null;
   const key = ROLE_KEYS[row.purpose].app_secret;
   return validOverlay({ [key]: secrets.app_secret ?? '' }, () => undefined)[key] ?? null;
 }
@@ -96,4 +101,13 @@ export function overlayNumber(source: NumberSource, env: Env): OverlayNumber {
     env: numberEnv(source, env),
     appSecret: appSecretOf(source),
   };
+}
+
+/**
+ * The calls number as callingLine() rings it (docs/28 §10): Kapso only, its ids and the project key;
+ * env null = it cannot carry a call now (not kapso, no WABA id, no Kapso base / key).
+ */
+export function callsNumberOf(row: NumberRow, env: Env): CallsNumber {
+  const ids = row.provider === 'kapso' && row.waba_id ? { phoneNumberId: row.phone_number_id, wabaId: row.waba_id } : null;
+  return { id: row.id, phoneNumberId: row.phone_number_id, env: ids ? kapsoEnv(ids, env) : null };
 }

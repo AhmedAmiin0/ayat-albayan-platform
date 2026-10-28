@@ -1,5 +1,5 @@
 import type { Json } from '@ab/db';
-import type { WaLine } from '@ab/shared';
+import type { NumberPurpose } from '@ab/shared';
 
 // What the webhook reads out of Meta's envelope (webhook.parse.ts), one item per message / status.
 
@@ -24,8 +24,8 @@ export interface InboundEvent {
   mediaMime: string | null;
   /** messages.interactive_payload: everything but plain text, as Meta sent it. */
   payload: Json | null;
-  /** The receiving line; null unless the chat line is configured (docs/12 §13.2). */
-  line: WaLine | null;
+  /** The receiving line; null unless the chat line is configured (docs/12 §13.2); `calls` = the calls number (docs/28 §10). */
+  line: NumberPurpose | null;
   /** Module mode only: the receiving wa_numbers row (messages.number_id, docs/23c decision 7). */
   numberId?: string;
   /** Meta's metadata.phone_number_id of the change (stamps number_id under legacy too). */
@@ -44,7 +44,7 @@ export interface StatusEvent {
   conversationId: string | null;
   pricingCategory: string | null;
   /** Where the status came in (an unknown wamid on a Kapso number is fetched and stored, external/). */
-  line?: WaLine | null;
+  line?: NumberPurpose | null;
   numberId?: string;
   phoneNumberId?: string;
 }
@@ -56,7 +56,7 @@ export interface StatusEvent {
 export interface EchoEvent {
   /** The Meta message object (id, to, timestamp, type, text / template / media). */
   message: unknown;
-  line: WaLine | null;
+  line: NumberPurpose | null;
   numberId?: string;
   phoneNumberId?: string;
 }
@@ -87,10 +87,24 @@ export interface CallWebhookEvent {
   at: Date;
 }
 
+/** A family's answer to a call permission request (a `messages` item, interactive call_permission_reply; docs/28 §10). */
+export interface CallPermissionReplyEvent {
+  /** The number the request went from (metadata.phone_number_id). */
+  phoneNumberId: string;
+  /** The family's wa_id (digits). */
+  from: string;
+  response: 'accepted' | 'rejected';
+  /** accepted: when the grant lapses; null = permanent or not given. */
+  expiresAt: Date | null;
+  at: Date;
+}
+
 export interface WebhookBatch {
   messages: InboundEvent[];
   statuses: StatusEvent[];
   echoes: EchoEvent[];
   /** Present only when the body carried a `calls` change. */
   calls?: CallWebhookEvent[];
+  /** Present only when a `messages` change carried a call_permission_reply. */
+  permissions?: CallPermissionReplyEvent[];
 }
