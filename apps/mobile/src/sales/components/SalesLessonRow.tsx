@@ -1,6 +1,7 @@
-import { isRunningLesson, lessonStatusStyle, localizedName, type SalesScheduleLesson } from '@ab/shared';
+import { isRunningLesson, lessonStatusStyle, localizedName, RIYADH_TZ, wallParts, type SalesScheduleLesson } from '@ab/shared';
 import { Pressable, View } from 'react-native';
 import { Tag } from '@/calendar/agenda/Tag';
+import { dayLabel } from '@/calendar';
 import { JoinClassroomButton } from '@/classroom/links/JoinClassroomButton';
 import { useNow } from '@/core/lib/time/use-now';
 import { useClockCycle } from '@/core/lib/clock';
@@ -16,8 +17,10 @@ import { StatusChip } from '@/core/ui/feedback/StatusChip';
  * students, teacher, the status chip and «تجريبية» / «تعويضية»; a running lesson adds «جارية الآن»
  * and «ادخل الحلقة» (she joins as the classroom assistant, docs/16). No edit, cancel, move or report.
  * The line is a 44pt button to the read-only «تفاصيل الحلقة» (`onOpen`); «ادخل الحلقة» sits outside it.
+ * Its hint reads the Riyadh day and time; `dated` (a list over several days) puts them in its name too.
  */
-export function SalesLessonRow({ lesson, onOpen }: { lesson: SalesScheduleLesson; onOpen?: (lesson: SalesScheduleLesson) => void }) {
+export function SalesLessonRow(props: { lesson: SalesScheduleLesson; onOpen?: (lesson: SalesScheduleLesson) => void; dated?: boolean }) {
+  const { lesson, onOpen, dated = false } = props;
   const { color } = useTheme();
   const cycle = useClockCycle();
   const now = useNow();
@@ -26,6 +29,8 @@ export function SalesLessonRow({ lesson, onOpen }: { lesson: SalesScheduleLesson
   const small = { fontFamily: type.ui[400], fontSize: type.size.xs, lineHeight: type.lineHeight(type.size.xs), color: color.ink2 };
   const teacher = localizedName({ ar: lesson.teacher.display_name_ar, en: lesson.teacher.display_name_en }, locale);
   const who = lesson.students.map((s) => s.name).join(t.common.listSeparator);
+  const when = `${dayLabel(wallParts(lesson.starts_at, RIYADH_TZ).date)} ${riyadhTime(lesson.starts_at, cycle)}`;
+  const label = t.lessons.sheet.openRow.replace('{names}', who);
   const lineStyle = { flexDirection: 'row' as const, alignItems: 'flex-start' as const, gap: 10, minHeight: 44 };
   const line = (
     <>
@@ -49,8 +54,8 @@ export function SalesLessonRow({ lesson, onOpen }: { lesson: SalesScheduleLesson
       {onOpen ? (
         <Pressable
           accessibilityRole="button"
-          accessibilityLabel={t.lessons.sheet.openRow.replace('{names}', who)}
-          accessibilityHint={`${riyadhTime(lesson.starts_at, cycle)} · ${t.enums.lessonStatus[lesson.status]}`}
+          accessibilityLabel={dated ? `${label} · ${when}` : label}
+          accessibilityHint={`${when} · ${t.enums.lessonStatus[lesson.status]}`}
           onPress={() => onOpen(lesson)}
           style={({ pressed }) => [lineStyle, pressed ? { backgroundColor: color.sunk } : null]}
         >

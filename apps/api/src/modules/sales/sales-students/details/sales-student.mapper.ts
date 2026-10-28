@@ -4,6 +4,7 @@ import {
   type ReportSummaryView,
   type SalesAttendanceDay,
   type SalesStudentDetails,
+  type SalesStudentSchedule,
   type SalesStudentSubscription,
 } from '@ab/shared';
 import { type HistoryBundle, toSalesHistory } from '../../sales';
@@ -14,6 +15,7 @@ interface DetailsParts {
   history: HistoryBundle | null;
   lessons: readonly AttendanceRow[];
   reports: { items: ReportSummaryView[]; total: number };
+  schedule: SalesStudentSchedule;
 }
 
 const iso = (at: string): string => new Date(at).toISOString();
@@ -46,7 +48,7 @@ function attendanceDays(studentId: string, lessons: readonly AttendanceRow[]): S
   });
 }
 
-/** Whitelist of «تفاصيل الطالب» (docs/16 row 36): no price, payment, note, phone or meeting link. */
+/** Whitelist of «تفاصيل الطالب» (docs/16 row 36): no price, payment, note, phone or meeting link («الجدول» included). */
 export function toStudentDetails(p: DetailsParts): SalesStudentDetails {
   const subscriptions = subscriptionsOf(p.history);
   const current = subscriptions.find((s) => s.status === 'active') ?? subscriptions[0];
@@ -65,5 +67,6 @@ export function toStudentDetails(p: DetailsParts): SalesStudentDetails {
     current_id: current?.id ?? null,
     attendance: { items, totals: attendanceTotals(items) },
     reports: p.reports,
+    schedule: p.schedule,
   };
 }
