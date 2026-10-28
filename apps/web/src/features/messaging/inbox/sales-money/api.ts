@@ -57,6 +57,10 @@ export type SalesSubscriptionBody = SalesQuoteBody & { startsOn?: string; alread
 export const createSalesSubscription = (body: SalesSubscriptionBody) =>
   apiSend<SalesMoneySubscriptionView>('POST', '/sales/subscriptions', body);
 
+/** «إلغاء الباقة» of her student's package made by mistake (owner 2026-10-28): nothing paid, no lessons. */
+export const cancelSalesSubscription = (id: string, body: { reason?: string }) =>
+  apiSend<SalesMoneySubscriptionView>('POST', `/sales/subscriptions/${id}/cancel`, body);
+
 /** Strict body: never kind / method / invoiceId (always a bank payment); «المرفقات» optional (0..5 paths). */
 export type SalesPaymentBody = {
   subscriptionId: string;

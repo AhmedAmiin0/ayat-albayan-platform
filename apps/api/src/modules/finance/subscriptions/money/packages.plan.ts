@@ -1,6 +1,7 @@
 import {
   alertDedupKey,
   alertFor,
+  livePackages,
   studentRemaining,
   subscriptionStatusFor,
   type BalanceAlert,
@@ -8,7 +9,8 @@ import {
 } from '@ab/shared';
 
 // Pure decisions over one student's packages (R-SUB-01/02). Packages arrive in FIFO order
-// (starts_on, created_at, id), the same order as v_subscription_balance.
+// (starts_on, created_at, id), the same order as v_subscription_balance. A cancelled package is skipped by
+// every decision here: never rewritten, never superseding, never the newest (migration 934).
 
 export interface PlanPackage {
   id: string;
@@ -32,8 +34,9 @@ const balanceOf = (p: StudentPackages, s: PlanPackage): PlanBalance =>
 
 /** Every package whose derived status differs from the stored one (subscriptionStatusFor). */
 export function statusChanges(p: StudentPackages & { paid: ReadonlyMap<string, number> }): StatusChange[] {
-  const last = p.subs.length - 1;
-  return p.subs.flatMap((s, i) => {
+  const subs = livePackages(p.subs);
+  const last = subs.length - 1;
+  return subs.flatMap((s, i) => {
     const to = subscriptionStatusFor({
       current: s.status,
       paid: p.paid.get(s.id) ?? 0,
@@ -62,14 +65,15 @@ export interface AlertPlan {
 
 /** R-SUB-02: the alert the student's balance calls for, on the newest package; null for none. */
 export function alertPlan(p: StudentPackages & { threshold: number }): AlertPlan | null {
-  const newest = p.subs.at(-1);
+  const subs = livePackages(p.subs);
+  const newest = subs.at(-1);
   if (!newest) return null;
-  const balances = p.subs.map((s) => balanceOf(p, s));
+  const balances = subs.map((s) => balanceOf(p, s));
   const remaining = studentRemaining(balances);
   const alert = alertFor({ remaining, threshold: p.threshold, status: newest.status });
   if (!alert) return null;
   const used = balances.reduce((n, b) => n + b.lessons_used, 0);
-  const total = p.subs.reduce((n, s) => n + s.lessons_total, 0);
+  const total = subs.reduce((n, s) => n + s.lessons_total, 0);
   return { alert, subscriptionId: newest.id, used, total };
 }
 
@@ -78,9 +82,9 @@ export function alertPlan(p: StudentPackages & { threshold: number }): AlertPlan
  * only (setting flag_future_lessons_when_unpaid); a lesson is never cancelled for it.
  */
 export function unpaidFlagged(p: StudentPackages): boolean {
-  const newest = p.subs.at(-1);
-  if (newest?.status !== 'unpaid') return false;
-  return studentRemaining(p.subs.map((s) => balanceOf(p, s))) <= 0;
+  const subs = livePackages(p.subs);
+  if (subs.at(-1)?.status !== 'unpaid') return false;
+  return studentRemaining(subs.map((s) => balanceOf(p, s))) <= 0;
 }
 
 /**

@@ -67,7 +67,8 @@
       "active": "Active",
       "paused": "Paused",
       "expired": "Ended",
-      "unpaid": "Awaiting activation"
+      "unpaid": "Awaiting activation",
+      "cancelled": "Cancelled"
     },
     "cancelled": "This lesson was cancelled",
     "remainingHint": "across all of the student’s packages"
@@ -1738,6 +1739,22 @@
     "unpaidFlag": "Package not paid",
     "pause": "Pause",
     "resume": "Resume package",
+    "cancel": {
+      "action": "Cancel package",
+      "title": "Cancel this package?",
+      "body": "The package stays in the history as «Cancelled»: it is never owed and no lessons can be booked on it. A cancel cannot be undone.",
+      "reason": "Reason (optional)",
+      "confirm": "Cancel package",
+      "done": "Package cancelled",
+      "errors": {
+        "has_payments": "A package with payments cannot be cancelled. Refund it first.",
+        "has_lessons": "A package with booked or used lessons cannot be cancelled.",
+        "has_commission": "This package cannot be cancelled: a later package of the same student already earned a commission.",
+        "already_cancelled": "This package is already cancelled.",
+        "subscription_not_found": "This package no longer exists.",
+        "not_your_student": "This student is not one of yours."
+      }
+    },
     "saved": "Subscription saved",
     "empty": "No subscriptions for this student yet",
     "error": {
@@ -1774,6 +1791,7 @@
     "saved": "Payment recorded",
     "empty": "No payments yet",
     "error": {
+      "subscription_cancelled": "A cancelled package takes no payment",
       "currency_mismatch": "The payment currency must match the subscription currency ({currency})",
       "paid_at_future": "The payment date is in the future",
       "receipt_type": "Upload an image or PDF only",
@@ -3335,7 +3353,8 @@
       "active": "Active",
       "paused": "Paused",
       "expired": "Package finished",
-      "unpaid": "Unpaid"
+      "unpaid": "Unpaid",
+      "cancelled": "Cancelled"
     },
     "program": {
       "quran": "The Holy Quran",
@@ -4558,6 +4577,7 @@
       "invoice_mismatch": "This invoice does not belong to this package's student",
       "invoice_used": "A payment was already recorded from this invoice",
       "refund_exceeds_paid": "The refund is more than what was paid on this package",
+      "subscription_cancelled": "A cancelled package takes no payment",
       "category_exists": "A category with this key already exists",
       "invalid_category": "Use lower-case latin letters and digits for the key",
       "month_required": "Choose the month or the paid date",

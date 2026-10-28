@@ -3646,6 +3646,9 @@ export type Database = {
       };
       subscriptions: {
         Row: {
+          cancel_reason: string | null;
+          cancelled_at: string | null;
+          cancelled_by: string | null;
           client_request_id: string | null;
           created_at: string;
           created_by: string | null;
@@ -3667,6 +3670,9 @@ export type Database = {
           updated_at: string;
         };
         Insert: {
+          cancel_reason?: string | null;
+          cancelled_at?: string | null;
+          cancelled_by?: string | null;
           client_request_id?: string | null;
           created_at?: string;
           created_by?: string | null;
@@ -3688,6 +3694,9 @@ export type Database = {
           updated_at?: string;
         };
         Update: {
+          cancel_reason?: string | null;
+          cancelled_at?: string | null;
+          cancelled_by?: string | null;
           client_request_id?: string | null;
           created_at?: string;
           created_by?: string | null;
@@ -5208,7 +5217,7 @@ export type Database = {
         | 'expired'
         | 'paused'
         | 'churned';
-      subscription_status: 'trial' | 'active' | 'paused' | 'expired' | 'unpaid';
+      subscription_status: 'trial' | 'active' | 'paused' | 'expired' | 'unpaid' | 'cancelled';
       teacher_earning_status: 'earned' | 'partially_paid' | 'paid';
       teacher_status: 'active' | 'inactive';
       template_category: 'utility' | 'marketing' | 'authentication';
@@ -5406,7 +5415,7 @@ export const Constants = {
         'paused',
         'churned',
       ],
-      subscription_status: ['trial', 'active', 'paused', 'expired', 'unpaid'],
+      subscription_status: ['trial', 'active', 'paused', 'expired', 'unpaid', 'cancelled'],
       teacher_earning_status: ['earned', 'partially_paid', 'paid'],
       teacher_status: ['active', 'inactive'],
       template_category: ['utility', 'marketing', 'authentication'],

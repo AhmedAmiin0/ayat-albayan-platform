@@ -1,3 +1,5 @@
+import type { SubscriptionStatus } from '../enums/index.js';
+
 // Renewal commission (owner 2026-10-26, migrations 20261027000750-751): which kind a subscription's commission
 // is. Pure twin of subscription_commission_kind: decided by subscription ORDER, never by payment order.
 
@@ -14,7 +16,11 @@ export interface OrderFact {
   id: string;
   price: number;
   created_at: string;
+  /** Absent = a live package. A cancelled one (migration 934) is no kind and never counts as earlier. */
+  status?: SubscriptionStatus;
 }
+
+const counts = (s: OrderFact): boolean => s.price > 0 && s.status !== 'cancelled';
 
 /** created_at, then id (uuid order = lowercase hex order). */
 const before = (a: OrderFact, b: OrderFact): boolean =>
@@ -22,12 +28,12 @@ const before = (a: OrderFact, b: OrderFact): boolean =>
 
 /**
  * 'first' when no other priced subscription of the student was created earlier, else 'renewal'; null for a
- * free one (a trial never counts) or an unknown id. A row already earned keeps its kind: this decides new rows.
+ * free one (a trial never counts), a cancelled one or an unknown id. A row already earned keeps its kind: this decides new rows.
  */
 export function commissionKindOf(subs: readonly OrderFact[], id: string): AssistantCommissionKind | null {
   const sub = subs.find((s) => s.id === id);
-  if (!sub || !(sub.price > 0)) return null;
-  return subs.some((o) => o.id !== id && o.price > 0 && before(o, sub)) ? 'renewal' : 'first';
+  if (!sub || !counts(sub)) return null;
+  return subs.some((o) => o.id !== id && counts(o) && before(o, sub)) ? 'renewal' : 'first';
 }
 
 export const isCommissionKind = (v: string): v is AssistantCommissionKind => v === 'first' || v === 'renewal';

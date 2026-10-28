@@ -40,6 +40,9 @@ export function subRow(patch: Partial<SubRow> = {}): SubRow {
     updated_at: '2026-09-25T09:00:00Z',
     created_by: null,
     client_request_id: null,
+    cancelled_at: null,
+    cancelled_by: null,
+    cancel_reason: null,
     ...patch,
   };
 }
@@ -48,7 +51,7 @@ export function paymentRow(patch: Partial<PaymentRow> = {}): PaymentRow {
   return {
     id: PAYMENT_ID,
     subscription_id: SUB_ID,
-    subscription: { student_id: STUDENT_ID, currency: 'SAR', student: { id: STUDENT_ID, code: 'AB-0183', name: 'سهيلة' } },
+    subscription: { student_id: STUDENT_ID, currency: 'SAR', status: 'unpaid', student: { id: STUDENT_ID, code: 'AB-0183', name: 'سهيلة' } },
     amount: 145,
     currency: 'SAR',
     method: 'bank',

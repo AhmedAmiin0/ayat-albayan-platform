@@ -1,4 +1,4 @@
-import type { StudentBalanceView, SubscriptionView } from '@ab/shared';
+import { livePackages, type StudentBalanceView, type SubscriptionView } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
 import { AuditService } from '../../../../common/audit/audit.service';
 import { BalanceQueries } from './balance.queries';
@@ -37,9 +37,12 @@ export class PackagesService {
     return rows.map((r) => toSubscriptionView(r, ctx));
   }
 
-  /** Writes subscriptionStatusFor for each of the student's packages; audited as the actor. */
+  /**
+   * Writes subscriptionStatusFor for each of the student's packages; audited as the actor. A cancelled
+   * package is left out of everything here (statuses, alerts, renewal): never rewritten, never the newest.
+   */
   async recompute(studentId: string, actorId: string | null): Promise<StudentState> {
-    const rows = await this.subs.forStudent(studentId);
+    const rows = livePackages(await this.subs.forStudent(studentId));
     const ctx = await this.context(rows);
     const changes = statusChanges({ subs: rows, balances: ctx.balances, paid: ctx.paid });
     for (const c of changes) {

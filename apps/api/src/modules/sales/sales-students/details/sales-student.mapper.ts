@@ -1,6 +1,7 @@
 import {
   attendanceKind,
   attendanceTotals,
+  currentPackage,
   netPaid,
   partPaid,
   type SalesPartPaid,
@@ -86,7 +87,7 @@ const owned = (p: DetailsParts) =>
 
 export function toStudentDetails(p: DetailsParts): SalesStudentDetails {
   const { subscriptions, reports } = owned(p);
-  const current = subscriptions.find((s) => s.status === 'active') ?? subscriptions[0];
+  const current = currentPackage(subscriptions); // never a cancelled one (owner 2026-10-28)
   const items = attendanceDays(p.student.id, p.lessons);
   return {
     mine: p.mine,

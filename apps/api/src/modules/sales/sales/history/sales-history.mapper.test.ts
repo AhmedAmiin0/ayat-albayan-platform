@@ -26,4 +26,10 @@ describe('sales subscription history mapper', () => {
     const b = { ...bundle(), balances: [] };
     expect(toSalesHistory(SUB, b).subscriptions[1]).toMatchObject({ lessons_used: 0, lessons_remaining: 8, ended_at: null });
   });
+
+  it('a cancelled subscription (no balance row) has nothing left', () => {
+    const b = bundle();
+    const out = toSalesHistory(SUB, { ...b, balances: [], subscriptions: b.subscriptions.map((s) => ({ ...s, status: 'cancelled' as const })) });
+    expect(out.subscriptions[1]).toMatchObject({ status: 'cancelled', lessons_remaining: 0 });
+  });
 });

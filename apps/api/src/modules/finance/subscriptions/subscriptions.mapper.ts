@@ -1,5 +1,5 @@
 import type { BalanceView, Duration, QuoteResponse, StudentBalanceView, SubscriptionView } from '@ab/shared';
-import { studentRemaining } from '@ab/shared';
+import { livePackages, studentRemaining } from '@ab/shared';
 import { emptyBalance, type BalanceRow } from './money/balance.queries';
 import type { StudentRef, SubRow } from './subscriptions.queries';
 
@@ -7,7 +7,9 @@ export function studentRef(s: StudentRef | null, fallbackId: string): Subscripti
   return { id: s?.id ?? fallbackId, code: s?.code ?? '', name: s?.name ?? '' };
 }
 
+/** A cancelled package has no balance row (v_subscription_balance, migration 934) and nothing left. */
 function balanceView(sub: SubRow, row: BalanceRow | undefined): BalanceView {
+  if (sub.status === 'cancelled') return { ...emptyBalance(sub), remaining: 0 };
   if (!row) return emptyBalance(sub);
   return {
     subscription_id: row.subscription_id,
@@ -49,12 +51,13 @@ export function toSubscriptionView(sub: SubRow, ctx: SubContext): SubscriptionVi
   };
 }
 
-/** GET /students/:id/balance: packages oldest first (FIFO), the newest is `current`. */
+/** GET /students/:id/balance: packages oldest first (FIFO), the newest non-cancelled one is `current`. */
 export function toStudentBalance(studentId: string, packages: SubscriptionView[]): StudentBalanceView {
+  const live = livePackages(packages);
   return {
     student_id: studentId,
-    remaining: studentRemaining(packages.map((p) => p.balance)),
-    current: packages.at(-1) ?? null,
+    remaining: studentRemaining(live.map((p) => p.balance)),
+    current: live.at(-1) ?? null,
     packages,
   };
 }

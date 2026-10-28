@@ -1,4 +1,4 @@
-import { localDay, type StudentStatus } from '@ab/shared';
+import { livePackages, localDay, type StudentStatus } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
 import { PackagesService, type StudentState } from '../money/packages.service';
 import { manualWins, packageEnded, renewalTarget, subscriptionEnded, type EndPackage } from './student-renewal.plan';
@@ -51,7 +51,7 @@ export class StudentRenewal {
 
   /** The student's subscription has ended today in its tz (StudentDeactivation's target). */
   async ended(studentId: string, tz: string, now = new Date()): Promise<boolean> {
-    const rows = await this.subs.forStudent(studentId);
+    const rows = livePackages(await this.subs.forStudent(studentId));
     const pkgs = endPackages({ rows, ctx: await this.packages.context(rows) });
     return subscriptionEnded(pkgs, localDay(now.toISOString(), tz));
   }

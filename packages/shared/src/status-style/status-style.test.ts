@@ -31,9 +31,9 @@ describe('status-style (docs/07 §6)', () => {
     expect(E.GRADES.map((g) => S.gradeStyle[g].pips)).toEqual([5, 4, 3, 2, 1]);
   });
 
-  it('covers 58 values across the 12 state enums', () => {
+  it('covers 59 values across the 12 state enums', () => {
     const n = STATE_ENUMS.reduce((sum, [, values]) => sum + values.length, 0) + E.GRADES.length;
-    expect(n).toBe(58);
+    expect(n).toBe(59);
   });
 
   it('saffron (act) only where an admin must act now', () => {

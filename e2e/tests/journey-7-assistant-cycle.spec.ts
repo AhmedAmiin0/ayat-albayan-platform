@@ -98,7 +98,7 @@ test.describe('journey 7 — the assistant’s full student cycle (docs/16, docs
       const step = await saveSubscription(page, WEEKLY);
       await bookCourseDays(page, step);
       await shot(page, info, '05a-course-days');
-      await step.getByRole('button', { name: ar.common.cancel }).click();
+      await step.getByRole('button', { name: ar.common.cancel, exact: true }).click();
       const pkg = await newestPackage(ids.studentId);
       expect(pkg.lessons_total).toBe(4);
       const course = await courseOf(ids.studentId);
