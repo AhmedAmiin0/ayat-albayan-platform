@@ -1,7 +1,13 @@
 import { canReact, formatPhone, sessionWindowOpen, type MessageView, type ThreadView } from '@ab/shared';
 import { type ReactNode, useMemo, useState } from 'react';
 import { ltr } from '@/core/ui/primitives/Ltr';
-import { type ChatActions, ChatActionsContext, type ChatNoticeValue } from '../hooks/chat-actions';
+import {
+  BubbleActionsContext,
+  type BubbleChatActions,
+  type ChatActions,
+  ChatActionsContext,
+  type ChatNoticeValue,
+} from '../hooks/chat-actions';
 import { CopySheet } from '../../messages/copy-download/CopySheet';
 import { ForwardSheet } from './ForwardSheet';
 import type { CopyRequest } from '../../messages/copy-download/chat-tools';
@@ -35,29 +41,31 @@ export function ChatActionsProvider({ phone, thread, children }: ChatActionsProv
   const own = isOwnThread(mode, thread);
   const canSend = !own && sessionWindowOpen(thread?.last_inbound_at ?? null, new Date());
   const threadName = thread?.display_name ?? (phone ? ltr(formatPhone(phone)) : null);
-  const value = useMemo<ChatActions>(
+  const enabled = mode.kind === 'admin';
+  const reactableNow = thread?.reactable;
+  // Setters and the react mutation are stable: the bubbles' value changes only with the mode, the 24 h
+  // window, the name or whether the chat takes reactions; picking «رد» or a notice leaves it alone.
+  const bubble = useMemo<BubbleChatActions>(
     () => ({
-      enabled: mode.kind === 'admin',
-      reply,
-      setReply,
+      enabled,
       canSend,
+      setReply,
       threadName,
       openMenu: (m, at) => setMenu({ m, at: at ?? null }),
       openForward: setForward,
       showCopy: setCopy,
-      notice,
-      say,
       // The window as of now (canSend), not as of the last fetch.
-      reactable: (m) => mode.kind === 'admin' && canSend && canReact(m, { reactable: thread?.reactable, session_open: true }, new Date()),
+      reactable: (m) => enabled && canSend && canReact(m, { reactable: reactableNow, session_open: true }, new Date()),
       react: (m, emoji) => reactNow({ message: m, emoji }),
       openReactors: setReactors,
     }),
-    [mode.kind, reply, canSend, threadName, notice, thread?.reactable, reactNow],
+    [enabled, canSend, threadName, reactableNow, reactNow],
   );
+  const value = useMemo<ChatActions>(() => ({ ...bubble, reply, notice, say }), [bubble, reply, notice]);
   const removable = reactors !== null && value.reactable(reactors);
   return (
     <ChatActionsContext.Provider value={value}>
-      {children}
+      <BubbleActionsContext.Provider value={bubble}>{children}</BubbleActionsContext.Provider>
       <MessageMenu message={menu?.m ?? null} at={menu?.at ?? null} phone={phone} onClose={() => setMenu(null)} onMoreEmoji={setEmojiFor} />
       <ForwardSheet phone={phone} message={forward} onClose={() => setForward(null)} />
       <CopySheet request={copy} onClose={() => setCopy(null)} />

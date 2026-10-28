@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import { type ReactNode, useMemo } from 'react';
 import { ThreadModeProvider } from '@/inbox/thread/hooks/thread-mode';
 import { NotLinkedScreen } from '../screens/NotLinkedScreen';
 import { isNotLinked, useTeacherMe } from '../lib/queries';
@@ -10,9 +10,12 @@ import { isNotLinked, useTeacherMe } from '../lib/queries';
  */
 export function TeacherScope({ children }: { children: ReactNode }) {
   const me = useTeacherMe();
+  const teacherId = me.data?.id ?? '';
+  // One object per teacher: a new one each render would redraw every row of her chat list.
+  const mode = useMemo(() => ({ kind: 'teacher', teacherId }) as const, [teacherId]);
   if (!me.data && isNotLinked(me.error)) return <NotLinkedScreen />;
   return (
-    <ThreadModeProvider value={{ kind: 'teacher', teacherId: me.data?.id ?? '' }}>
+    <ThreadModeProvider value={mode}>
       {children}
     </ThreadModeProvider>
   );

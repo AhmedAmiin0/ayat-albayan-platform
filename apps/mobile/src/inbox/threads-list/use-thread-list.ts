@@ -4,6 +4,7 @@ import { useInfiniteQuery } from '@tanstack/react-query';
 import { useMemo } from 'react';
 import { apiFetch, toQueryString } from '@/core/lib/http/api';
 import { nextPageParam, type Page } from '@/core/lib/query/paging';
+import { usePagedActions, withTracked } from '@/core/lib/query/paged-result';
 import { useScreenFocused } from '@/core/ui/connecting/use-screen-focus';
 import { useInboxLive, useLiveWatch } from '../thread/live';
 
@@ -45,8 +46,6 @@ export function useThreadList({ search, unread, list, live: liveTab = false }: T
     const seen = new Set<string>();
     return (pages ?? []).flatMap((p) => p.items).filter((th) => !seen.has(th.phone_e164) && seen.add(th.phone_e164));
   }, [pages]);
-  const loadMore = () => {
-    if (query.hasNextPage && !query.isFetchingNextPage) void query.fetchNextPage();
-  };
-  return { ...query, items, total: pages?.[0]?.total ?? 0, loadMore, refresh: () => void query.refetch() };
+  const { loadMore, refresh } = usePagedActions(query);
+  return withTracked(query, { items, total: pages?.[0]?.total ?? 0, loadMore, refresh });
 }

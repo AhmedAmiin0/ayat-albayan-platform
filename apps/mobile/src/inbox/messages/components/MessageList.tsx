@@ -1,15 +1,15 @@
-import { senderLine } from '@ab/shared';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { type CallView, chatDayKey, senderLine } from '@ab/shared';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ActivityIndicator, FlatList, View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
+import { useStableHandler } from '@/core/lib/stable-handler';
 import { useTheme } from '@/theme';
 import { EmptyState } from '@/core/ui/feedback/EmptyState';
-import { CallEntry } from '../../thread/calls/entries/CallEntry';
 import { logRows, type LogRow } from '../../thread/calls/entries/log-rows';
 import { useCallBack, useThreadCalls } from '../../thread/calls/entries/use-thread-calls';
 import { messageGap } from '../hooks/list-gap';
-import { MessageBubble } from './MessageBubble';
-import { DayChip } from '../days/DayChip';
+import { deviceTimeZone } from '../hooks/message-text';
+import { MessageRow } from '../list/MessageRow';
 import { dayLabel, hasDayChip } from '../days/day-label';
 import { CellFrames } from '../days/DayCell';
 import { FloatingDay } from '../days/FloatingDay';
@@ -66,7 +66,30 @@ export function MessageList({ phone, query }: { phone: string; query: ThreadQuer
   }, [ours]);
   // A tap on a quote scrolls to the original (owner 2026-10-25 «رد»), loading older pages if needed.
   const { lit, jump, onScrollToIndexFailed } = useJump(list, rows, query);
+  const onJump = useStableHandler(jump);
+  const callBackNow = useStableHandler((call: CallView) => callBack?.(call));
+  const onCallBack = callBack ? callBackNow : undefined;
+  // Rows get primitives and the cached message objects: memo MessageRow redraws only what changed.
+  // The oldest loaded row gets its chip only once no older page can continue its day.
+  const renderItem = useCallback(
+    ({ item, index }: { item: LogRow; index: number }) => (
+      <MessageRow
+        id={item.id}
+        message={item.message}
+        call={item.call}
+        gap={messageGap(rows[index + 1], item)}
+        day={hasDayChip(rows, index, more) ? dayLabel(item.created_at) : null}
+        phone={phone}
+        onJump={onJump}
+        highlight={lit === item.id}
+        onCallBack={onCallBack}
+      />
+    ),
+    [rows, more, phone, onJump, lit, onCallBack],
+  );
   const onEndReached = useOlder(query);
+  // «اليوم» / «أمس» move at midnight with no new message: today's key redraws the rows' day chips.
+  const today = chatDayKey(new Date(), deviceTimeZone());
   const top = useTopDay(rows, query.hasNextPage);
   return (
     <CellFrames.Provider value={top.frame}>
@@ -79,20 +102,9 @@ export function MessageList({ phone, query }: { phone: string; query: ThreadQuer
           contentContainerStyle={{ paddingVertical: 4 }}
           data={rows}
           keyExtractor={(m) => m.id}
-          extraData={lit}
+          extraData={`${lit ?? ''}|${today}`}
           onScrollToIndexFailed={onScrollToIndexFailed}
-          renderItem={({ item, index }) => (
-            // Each cell is flipped back upright, so its top is still the visual top: the older neighbour.
-            // The oldest loaded row gets its chip only once no older page can continue its day.
-            <View testID={`message-row-${item.id}`} style={{ paddingTop: messageGap(rows[index + 1], item) }}>
-              {hasDayChip(rows, index, query.hasNextPage) ? <DayChip testID={`day-${item.id}`} label={dayLabel(item.created_at)} /> : null}
-              {item.message ? (
-                <MessageBubble message={item.message} phone={phone} onJump={jump} highlight={lit === item.id} />
-              ) : item.call ? (
-                <CallEntry call={item.call} onCallBack={callBack} />
-              ) : null}
-            </View>
-          )}
+          renderItem={renderItem}
           maintainVisibleContentPosition={{ minIndexForVisible: 0, autoscrollToTopThreshold: AT_NEWEST }}
           onEndReached={onEndReached}
           onEndReachedThreshold={OLDER_THRESHOLD}

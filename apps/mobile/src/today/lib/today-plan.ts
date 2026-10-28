@@ -7,12 +7,24 @@ import type { TodayLesson } from './today-lesson';
 
 const MINUTE = 60_000;
 
-/** «صباح الخير» before noon in Riyadh, «مساء الخير» from 12:00. */
-export function greetingPart(now: Date): 'morning' | 'evening' {
+type GreetingPart = 'morning' | 'afternoon' | 'evening' | 'night';
+
+/**
+ * The part of the day by the Riyadh clock (owner 2026-10-28: «Good morning» at 3:36 read wrong): morning
+ * 04:00–11:59 (about dawn), afternoon 12:00–16:59, evening 17:00–21:59, night 22:00–03:59.
+ */
+export function greetingPart(now: Date): GreetingPart {
   const hour = Number(
     new Intl.DateTimeFormat('en-US', { timeZone: RIYADH_TZ, hour: '2-digit', hourCycle: 'h23' }).format(now),
   );
-  return hour < 12 ? 'morning' : 'evening';
+  if (hour >= 4 && hour < 12) return 'morning';
+  if (hour >= 12 && hour < 17) return 'afternoon';
+  return hour >= 17 && hour < 22 ? 'evening' : 'night';
+}
+
+/** The first word of a full name, for «صباح الخير يا أحمد»; null when the name is missing or blank. */
+export function firstName(fullName: unknown): string | null {
+  return typeof fullName === 'string' ? (fullName.trim().split(/\s+/)[0] || null) : null;
 }
 
 export type Hero<L extends TodayLesson = TodayLesson> =

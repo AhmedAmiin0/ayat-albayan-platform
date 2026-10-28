@@ -1,5 +1,5 @@
 import type { InvoiceView } from '@ab/shared';
-import { useState } from 'react';
+import { memo, useState } from 'react';
 import { Linking, View } from 'react-native';
 import { ErrorLine } from '@/inbox/ErrorLine';
 import { invoiceSubtitle } from '@/finance/invoices/invoice-text';
@@ -12,7 +12,7 @@ import { invoiceDownloadUrl } from './money-queries';
 const M = t.mobileStudentFile.money;
 
 /** One invoice (day · kind · source) with «فتح الفاتورة»: a fresh signed link in the system viewer. */
-export function StudentInvoiceRow({ invoice }: { invoice: InvoiceView }) {
+export const StudentInvoiceRow = memo(function StudentInvoiceRow({ invoice }: { invoice: InvoiceView }) {
   const { color } = useTheme();
   const [busy, setBusy] = useState(false);
   const [failed, setFailed] = useState(false);
@@ -38,4 +38,4 @@ export function StudentInvoiceRow({ invoice }: { invoice: InvoiceView }) {
       {failed ? <ErrorLine message={M.invoiceFailed} /> : null}
     </View>
   );
-}
+});
