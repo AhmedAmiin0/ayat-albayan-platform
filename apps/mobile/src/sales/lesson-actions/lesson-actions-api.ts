@@ -31,6 +31,16 @@ export function useSalesReschedule(lessonId: string) {
   });
 }
 
+/** POST /sales/lessons/:id/confirm: scheduled → confirmed, ANY lesson (owner 2026-10-28), no message to anyone. */
+export function useSalesConfirm(lessonId: string) {
+  const refresh = useRefreshSchedule();
+  return useMutation({
+    mutationFn: () => apiSend<SalesLessonMoved>('POST', `/sales/lessons/${lessonId}/confirm`),
+    // A 409 (cancelled or confirmed elsewhere) refetches too, so the stale button and status go.
+    onSettled: refresh,
+  });
+}
+
 /** POST /sales/lessons/:id/cancel { reason? }: this lesson only, «ألغتها الإدارة», no message to the family. */
 export function useSalesCancel(lessonId: string) {
   const refresh = useRefreshSchedule();

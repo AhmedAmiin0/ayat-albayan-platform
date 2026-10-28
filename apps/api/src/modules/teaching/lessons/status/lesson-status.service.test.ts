@@ -75,6 +75,15 @@ describe('LessonStatusService.confirm (R-SCH-03, issue B2)', () => {
     const { service } = setup(null);
     await expect(service.confirm({ lessonId: LESSON_ID, actor: ADMIN })).rejects.toMatchObject({ status: 404 });
   });
+
+  it('anyLesson (sales\' lessons.confirm route): no teacher-only check, the salesperson is confirmed_by', async () => {
+    const sales = { id: 'a1000000-0000-4000-8000-00000000000a', email: null, role: 'sales' as const };
+    const { service, writer } = setup();
+    await service.confirm({ lessonId: LESSON_ID, actor: sales, anyLesson: true });
+    expect(access.assertCanTouch).not.toHaveBeenCalled();
+    expect(appliedChange(writer)?.changes[0]).toMatchObject({ to_status: 'confirmed', confirmed_by: sales.id });
+    expect(appliedChange(writer)?.messages ?? []).toEqual([]);
+  });
 });
 
 describe('LessonStatusService.changeStatus (R-SCH-08 attendance, R-SCH-07 chargeable)', () => {

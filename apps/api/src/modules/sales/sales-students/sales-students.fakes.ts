@@ -69,7 +69,7 @@ export async function studentsApp() {
   const reports = { submitted: vi.fn(), lessons: vi.fn(), sequence: vi.fn() };
   const files = { studentPdfUrl: vi.fn() };
   const overview = { exists: vi.fn(), rules: vi.fn(), lessons: vi.fn() };
-  const lessons = { one: { reschedule: vi.fn() }, cancels: { cancel: vi.fn() } };
+  const lessons = { one: { reschedule: vi.fn() }, cancels: { cancel: vi.fn() }, status: { confirm: vi.fn() } };
   const mod = await Test.createTestingModule({ imports: [AppModule] })
     .overrideProvider(PERMISSION_RESOLVER).useValue(systemResolver).overrideProvider(TOKEN_VERIFIER).useValue(verify)
     .overrideProvider(SalesQueries).useValue(sales)
@@ -100,6 +100,7 @@ export async function studentsApp() {
     files.studentPdfUrl.mockResolvedValue({ url: 'https://storage/signed', expires_at: '2026-10-27T16:00:00.000Z' });
     lessons.one.reschedule.mockResolvedValue('1e000000-0000-4000-8000-0000000000c2');
     lessons.cancels.cancel.mockResolvedValue([LESSON]);
+    lessons.status.confirm.mockResolvedValue(LESSON);
     schedule.rules.mockResolvedValue([ruleRow()]);
     schedule.upcoming.mockResolvedValue([upcomingRow(MINE)]);
     resetOverview(overview);
