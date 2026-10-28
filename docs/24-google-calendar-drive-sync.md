@@ -257,37 +257,41 @@ function isPlatformEvent_(ev) {
   return title.indexOf(' · المنصة') !== -1 || desc.indexOf('مربوط تلقائيًا بمنصة آيات البيان') !== -1;
 }
 
-/** Deletes the script's OWN event (or series) by the id stored in its row; never a platform event. */
+/**
+ * Deletes the script's OWN event (or series) by the id stored in its row; never a platform event.
+ * Returns true when it is gone (deleted now, or already missing); false on any error = keep the id, retry next run.
+ */
 function deleteOwnEvent_(cal, id) {
-  if (!cal || !id) return;
+  if (!id) return true;
+  if (!cal) return false;
   try {
     var series = cal.getEventSeriesById(id);
-    if (series && !isPlatformEvent_(series)) { series.deleteEventSeries(); return; }
-  } catch (e) {}
-  try {
-    var ev = cal.getEventById(id);
-    if (ev && !isPlatformEvent_(ev)) ev.deleteEvent();
-  } catch (e) { Logger.log('handover: could not delete ' + id + ': ' + e); }
+    if (!series) return true;
+    if (isPlatformEvent_(series)) return true;   // not the script's: leave it, forget the id
+    series.deleteEventSeries();
+    return true;
+  } catch (e) {
+    Logger.log('handover: could not delete ' + id + ': ' + e);
+    return false;
+  }
 }
 
 /**
  * A row of a moved teacher: delete the script's own events (J on the teacher calendar in N, O on the
- * default calendar) once, clear J and O, note it in K. Returns true = the caller skips this row.
- * sheet = «تقويم الحجوزات», rowIndex = the row number (1-based), row = that row's values.
+ * default calendar), clear J / O only once each is really gone, note it in K. Returns true = the caller
+ * skips this row. r = { sheet: «تقويم الحجوزات», rowIndex: the row number (1-based), row: its values, moved }.
  */
-function handOverRow_(sheet, rowIndex, row, moved) {
-  var teacher = String(row[12] || '').trim();            // M
-  if (!moved[teacher]) return false;
-  var teacherCalId = String(row[13] || '').trim();       // N
-  var ownId = String(row[9] || '').trim();               // J
-  var mirrorId = String(row[14] || '').trim();           // O
-  if (ownId && teacherCalId) deleteOwnEvent_(CalendarApp.getCalendarById(teacherCalId), ownId);
-  if (mirrorId) deleteOwnEvent_(CalendarApp.getDefaultCalendar(), mirrorId);
-  if (ownId || mirrorId) {
-    sheet.getRange(rowIndex, 10).clearContent();          // J
-    sheet.getRange(rowIndex, 15).clearContent();          // O
-    sheet.getRange(rowIndex, 11).setValue('نُقل تقويم المعلم إلى المنصة');  // K
-  }
+function handOverRow_(r) {
+  var teacher = String(r.row[12] || '').trim();          // M
+  if (!r.moved[teacher]) return false;
+  var teacherCalId = String(r.row[13] || '').trim();     // N
+  var ownId = String(r.row[9] || '').trim();             // J
+  var mirrorId = String(r.row[14] || '').trim();         // O
+  var ownGone = deleteOwnEvent_(teacherCalId ? CalendarApp.getCalendarById(teacherCalId) : null, ownId);
+  var mirrorGone = deleteOwnEvent_(CalendarApp.getDefaultCalendar(), mirrorId);
+  if (ownId && ownGone) r.sheet.getRange(r.rowIndex, 10).clearContent();      // J
+  if (mirrorId && mirrorGone) r.sheet.getRange(r.rowIndex, 15).clearContent(); // O
+  if ((ownId || mirrorId) && ownGone && mirrorGone) r.sheet.getRange(r.rowIndex, 11).setValue('نُقل تقويم المعلم إلى المنصة');  // K
   return true;
 }
 ```
@@ -295,7 +299,8 @@ function handOverRow_(sheet, rowIndex, row, moved) {
 3. Three one-line edits in the existing functions (names as in §1):
    - **`syncToCalendar`** and **`updateCalendarLinks`**: once before the row loop add
      `var moved = movedTeachers_(ss);` (`ss` = the bookings spreadsheet the function already opens), and as the
-     FIRST line inside the loop add `if (handOverRow_(sheet, i + 1, data[i], moved)) continue;` (`sheet`,
+     FIRST line inside the loop add
+     `if (handOverRow_({ sheet: sheet, rowIndex: i + 1, row: data[i], moved: moved })) continue;` (`sheet`,
      `data`, `i` = the names the loop already uses for the tab, its values and the index; `i + 1` is the sheet
      row number when `data` starts at row 1). If `onSheetEdit` syncs one row itself, add the same two lines there.
    - **`dedupeCalendars`**: where it collects the events into `title|start` groups, skip platform events so

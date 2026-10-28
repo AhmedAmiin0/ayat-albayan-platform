@@ -73,7 +73,8 @@ create or replace function public.google_sync_enqueue_lesson(p_lesson_id uuid, p
   where l.id = p_lesson_id
     and ((exists (select 1 from public.v_calendar_managed_lessons m where m.id = l.id)
           and l.starts_at >= now() - interval '7 days' and l.starts_at < now() + make_interval(days => public.google_sync_window_days()))
-      or exists (select 1 from public.google_sync_items i where i.lesson_id = l.id and i.google_id is not null));
+      or exists (select 1 from public.google_sync_items i
+                 where i.lesson_id = l.id and i.kind in ('teacher_event', 'main_event') and i.google_id is not null));
 $$;
 
 -- The daily reconcile and «زامن الآن»: every calendar-managed lesson in the window (a lesson skipped
@@ -108,11 +109,13 @@ begin
   if not public.google_sync_on() then return 0; end if;
   update public.google_sync_items g set dirty = true
   from public.lessons x
-  where g.lesson_id = x.id and x.teacher_id = p_teacher_id and g.state = 'pending' and g.claim_token is not null;
+  where g.lesson_id = x.id and x.teacher_id = p_teacher_id and g.kind in ('teacher_event', 'main_event')
+    and g.state = 'pending' and g.claim_token is not null;
   for l in select x.id from public.lessons x
            where x.teacher_id = p_teacher_id
              and ((x.starts_at >= now() and x.status not in ('cancelled_by_teacher', 'cancelled_by_admin', 'rescheduled'))
-               or exists (select 1 from public.google_sync_items i where i.lesson_id = x.id and i.google_id is not null)) loop
+               or exists (select 1 from public.google_sync_items i
+                          where i.lesson_id = x.id and i.kind in ('teacher_event', 'main_event') and i.google_id is not null)) loop
     n := n + public.google_sync_enqueue_lesson(l.id, false);
   end loop;
   return n;
@@ -137,10 +140,13 @@ create trigger teachers_google_sync_owner after update of calendar_owner on publ
 create or replace function public.google_teacher_calendar_counts(p_teacher_id uuid)
   returns table (managed int, script_event_present int)
   language sql stable security definer set search_path = '' as $$
+  -- Held back: only lessons still ahead (the reconcile's window) of a teacher still handed over.
   select (count(*) filter (where g.state = 'synced' and g.google_id is not null))::int,
-         (count(*) filter (where g.state = 'skipped' and g.skip_reason = 'script_event_present'))::int
+         (count(*) filter (where g.state = 'skipped' and g.skip_reason = 'script_event_present'
+                             and l.starts_at >= now() - interval '1 day' and t.calendar_owner = 'platform'))::int
   from public.google_sync_items g
   join public.lessons l on l.id = g.lesson_id
+  join public.teachers t on t.id = l.teacher_id
   where g.kind = 'teacher_event' and l.teacher_id = p_teacher_id;
 $$;
 

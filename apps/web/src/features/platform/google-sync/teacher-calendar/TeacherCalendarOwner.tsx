@@ -3,7 +3,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useId, useState } from 'react';
 import { FormAlert } from '@/components/ui/form/form-alert';
 import { RadioChips } from '@/components/ui/form/radio-chips';
-import { meQuery } from '@/features/people/auth/me';
+import { meQuery } from '@/features/people/auth';
 import { useClock } from '@/lib/clock';
 import { t } from '@/lib/i18n/i18n';
 import { putTeacherCalendarOwner, teacherCalendarQuery } from '../google-api';

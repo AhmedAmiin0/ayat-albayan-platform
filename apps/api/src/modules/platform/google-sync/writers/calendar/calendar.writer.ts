@@ -91,7 +91,7 @@ export class CalendarWriter implements ItemWriter {
       if (old === 'foreign') return { state: 'failed', error: 'not_platform_event', attempts: item.attempts };
     }
     if (src.origin || !(await scriptEventAt(google, { calendarId, startsAt: src.lesson.startsAt }))) return null;
-    await this.alerts.scriptStillRunning({ teacherId: src.teacherId, name: src.lesson.teacherName });
+    await this.alerts.scriptStillRunning({ teacherId: src.teacherId, name: src.lesson.teacherName, since: src.ownerChangedAt });
     return { state: 'skipped', reason: 'script_event_present', googleId: null, parentId: null };
   }
 

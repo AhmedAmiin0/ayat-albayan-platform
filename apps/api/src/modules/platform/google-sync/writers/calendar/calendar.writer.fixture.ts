@@ -23,5 +23,5 @@ export function setup(src: LessonSource | null) {
 
 /** A platform-origin lesson by default; `{ origin: false }` = imported (managed = its teacher's owner). */
 export const lessonSource = (over: Partial<Omit<LessonSource, 'lesson'>> = {}, lesson: Partial<EventLesson> = {}): LessonSource => ({
-  origin: true, managed: true, teacherId: TEACHER_ID, lesson: eventLesson(lesson), ...over,
+  origin: true, managed: true, teacherId: TEACHER_ID, ownerChangedAt: null, lesson: eventLesson(lesson), ...over,
 });

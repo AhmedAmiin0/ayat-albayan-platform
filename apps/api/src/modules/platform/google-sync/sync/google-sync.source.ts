@@ -11,7 +11,7 @@ import { GoogleSyncAcademySettings } from './google-sync.settings';
  * A lesson as the calendar writer needs it. origin: platform-origin (§2.2); managed: its events are
  * the platform's to write — platform-origin, or its teacher's calendar_owner is 'platform'.
  */
-export type LessonSource = { origin: boolean; managed: boolean; teacherId: string; lesson: EventLesson };
+export type LessonSource = { origin: boolean; managed: boolean; teacherId: string; ownerChangedAt: string | null; lesson: EventLesson };
 
 /** A platform report as the Drive and Sheets writers need it. */
 export interface ReportSource {
@@ -32,7 +32,7 @@ export interface ReportSource {
 }
 
 const LESSON =
-  'id, teacher_id, starts_at, ends_at, status, meeting_link, makeup_of_id, teacher:teachers(display_name_ar, meeting_mode), rule:schedule_rules!lessons_rule_id_fkey(byday, package), lesson_students(student:students(name, guardians(phone_e164)))';
+  'id, teacher_id, starts_at, ends_at, status, meeting_link, makeup_of_id, teacher:teachers(display_name_ar, meeting_mode, calendar_owner_changed_at), rule:schedule_rules!lessons_rule_id_fkey(byday, package), lesson_students(student:students(name, guardians(phone_e164)))';
 const REPORT = 'id, lesson_id, student_id, teacher_id, status, version, pdf_path, pdf_status, attendance, program, recited, new_memorization, revision, grade_overall, notes, homework';
 
 const fail = (what: string, error: { message: string }) => new Error(`google ${what} read failed: ${error.message}`);
@@ -68,7 +68,7 @@ export class GoogleSyncSource {
       kind,
       byday: row.rule?.byday ?? null,
     };
-    return { origin: managed.data?.platform_origin === true, managed: managed.data !== null, teacherId: row.teacher_id, lesson };
+    return { origin: managed.data?.platform_origin === true, managed: managed.data !== null, teacherId: row.teacher_id, ownerChangedAt: row.teacher?.calendar_owner_changed_at ?? null, lesson };
   }
 
   async report(reportId: string): Promise<ReportSource | null> {

@@ -31,7 +31,7 @@ describe('CalendarWriter: imported lessons of a teacher handed over to the platf
     const r = await s.writer.write(item(), s.live);
     expect(r).toEqual({ state: 'skipped', reason: 'script_event_present', googleId: null, parentId: null });
     expect(s.alerts.scriptStillRunning).toHaveBeenCalledOnce();
-    expect(s.alerts.scriptStillRunning).toHaveBeenCalledWith({ teacherId: TEACHER_ID, name: 'Teacher A' });
+    expect(s.alerts.scriptStillRunning).toHaveBeenCalledWith({ teacherId: TEACHER_ID, name: 'Teacher A', since: null });
     expect(writes(s.google.log)).toEqual([]);
     expect(s.google.events.get(CAL)?.get('ev-script')).toEqual(foreign);
   });
