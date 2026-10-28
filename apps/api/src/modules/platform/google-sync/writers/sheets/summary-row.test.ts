@@ -25,6 +25,11 @@ describe('summary row (docs/24 §2.6)', () => {
       `https://drive.google.com/drive/folders/${FOLDER}`, `https://docs.google.com/spreadsheets/d/${SHEET}/edit`]);
   });
 
+  it('a name or teacher that Sheets would read as a formula goes in as text', () => {
+    const row = newSummaryRow({ ...STUDENT, name: '+966 55 000 0000', teacherName: '=HYPERLINK("x")' }, { first: null, last: null, count: 0 });
+    expect(row.slice(0, 2)).toEqual(["'+966 55 000 0000", ''=HYPERLINK("x")']);
+  });
+
   it('an existing row: D..F recomputed, G/H filled only when blank, A..C untouched', () => {
     const stats = { first: '2026-09-01', last: '2026-10-21', count: 9 };
     expect(summaryUpdates(['أحمد', 'T', 'P', 'x', 'y', 1, 'link', 'sheet'], STUDENT, stats)).toEqual([{ range: 'D', values: ['2026-09-01', '2026-10-21', 9] }]);
