@@ -1,5 +1,5 @@
 import { router } from 'expo-router';
-import { ScrollView, View } from 'react-native';
+import { ScrollView } from 'react-native';
 import { canOpen } from '@/auth/route-permissions';
 import type { Can } from '@/auth/use-permissions';
 import { addDays, riyadhToday } from '@/calendar/lib/week';
@@ -15,6 +15,7 @@ import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { useTabBarInset } from '@/core/ui/layout/tab-bar-inset';
 import { assistantDay } from './assistant-day';
+import { InsetGroup } from '@/core/ui/surface/inset';
 
 /**
  * «حلقاتي» (web /assistant/ AssistantHome): the open lessons of the students they assist, today
@@ -35,9 +36,9 @@ export function AssistantHomeScreen({ can }: { can: Can }) {
         <Note>{t.mobileRoles.joinNote}</Note>
         <AssistantLessonsList day={assistantDay(date)} emptyTitle={isToday ? undefined : t.mobileRoles.dayEmpty} />
         {canOpen(can, 'meetings') ? (
-          <View style={{ marginHorizontal: -16 }}>
+          <InsetGroup>
             <ListRow title={t.mobileClassroom.meetingsRow} onPress={() => router.push('/assistant/lessons/meetings')} />
-          </View>
+          </InsetGroup>
         ) : null}
       </ScrollView>
     </Screen>

@@ -1,7 +1,7 @@
-import { splitByStatus, studentStatusStyle, type StudentListKind } from '@ab/shared';
+import { type SalesTeacherView, splitByStatus, studentStatusStyle, type StudentListKind } from '@ab/shared';
 import { router, useLocalSearchParams } from 'expo-router';
-import { useState } from 'react';
-import { ActivityIndicator, FlatList, View } from 'react-native';
+import { useCallback, useState } from 'react';
+import { ActivityIndicator, FlatList, type ListRenderItemInfo } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/more/Note';
 import { KIND_EMPTY } from '@/students/list/student-kinds';
@@ -12,6 +12,7 @@ import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { ListRow } from '@/core/ui/layout/ListRow';
 import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
+import { useInsetRows } from '@/core/ui/surface/use-inset-rows';
 import { StatusChip } from '@/core/ui/feedback/StatusChip';
 import { useSalesTeachers } from '../lib/sales-api';
 import { SalesTeacherHeader } from '../components/SalesTeacherHeader';
@@ -40,6 +41,23 @@ export function SalesTeacherScreen() {
   const details = useTreeBase() === '/sales';
   const teacher = list.data?.find((tc) => tc.id === id);
   const back = <Button variant="ghost" label={t.common.back} onPress={() => router.back()} />;
+  const rows = teacher ? splitByStatus(teacher.students, kind) : [];
+  const row = useCallback(
+    ({ item }: ListRenderItemInfo<SalesTeacherView['students'][number]>) => (
+      <ListRow
+        onPress={details ? () => router.push(`/sales/students/${item.id}`) : undefined}
+        accessibilityHint={details ? t.sales.allStudents.detailsHint : undefined}
+        title={item.name}
+        meta={item.code}
+        subtitle={t.enums.program[item.program]}
+        tags={<Note>{nextLessonLine(item, cycle)}</Note>}
+        trailing={<StatusChip {...studentStatusStyle[item.status]} size="sm" label={t.enums.studentStatus[item.status]} />}
+      />
+    ),
+    [details, cycle],
+  );
+  // The students sit in one inset card inside the gutter (owner 2026-10-28: one container rule).
+  const cells = useInsetRows(row, rows.length);
   if (!teacher) {
     return (
       <Screen>
@@ -68,28 +86,15 @@ export function SalesTeacherScreen() {
         <TeacherOverviewTab teacherId={teacher.id} view={tab} />
       ) : (
         <FlatList
-          style={{ flex: 1, marginHorizontal: -16 }}
+          style={{ flex: 1 }}
+          contentContainerStyle={{ paddingBottom: 24 }}
           accessibilityLabel={t.sales.mobile.studentsOf.replace('{name}', name)}
-          data={splitByStatus(teacher.students, kind)}
+          data={rows}
           ListHeaderComponent={<SalesTeacherHeader teacher={teacher} kind={kind} onKind={setKind} />}
           keyExtractor={(s) => s.id}
           extraData={cycle}
-          renderItem={({ item }) => (
-            <ListRow
-              onPress={details ? () => router.push(`/sales/students/${item.id}`) : undefined}
-              accessibilityHint={details ? t.sales.allStudents.detailsHint : undefined}
-              title={item.name}
-              meta={item.code}
-              subtitle={t.enums.program[item.program]}
-              tags={<Note>{nextLessonLine(item, cycle)}</Note>}
-              trailing={<StatusChip {...studentStatusStyle[item.status]} size="sm" label={t.enums.studentStatus[item.status]} />}
-            />
-          )}
-          ListEmptyComponent={
-            <View style={{ paddingHorizontal: 16 }}>
-              <EmptyState title={teacher.students.length === 0 ? t.sales.teachers.noStudents : KIND_EMPTY[kind]} />
-            </View>
-          }
+          {...cells}
+          ListEmptyComponent={<EmptyState title={teacher.students.length === 0 ? t.sales.teachers.noStudents : KIND_EMPTY[kind]} />}
         />
       )}
     </Screen>

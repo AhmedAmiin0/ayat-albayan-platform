@@ -11,6 +11,7 @@ import { type, useTheme } from '@/theme';
 import { riyadhTime } from '@/today/lib/lesson-text';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { StatusChip } from '@/core/ui/feedback/StatusChip';
+import { useInset } from '@/core/ui/surface/inset';
 
 /**
  * One lesson in sales' read-only day (the admin agenda row without its actions): the Riyadh start,
@@ -18,10 +19,13 @@ import { StatusChip } from '@/core/ui/feedback/StatusChip';
  * and «ادخل الحلقة» (she joins as the classroom assistant, docs/16). No edit, cancel, move or report.
  * The line is a 44pt button to the read-only «تفاصيل الحلقة» (`onOpen`); «ادخل الحلقة» sits outside it.
  * Its hint reads the Riyadh day and time; `dated` (a list over several days) puts them in its name too.
+ * In the day's inset card (owner 2026-10-28: one container rule) it takes the card's 16pt padding and
+ * leaves the rule between rows to the card; alone (a student's «الحلقات القادمة») it keeps its own rule.
  */
 export function SalesLessonRow(props: { lesson: SalesScheduleLesson; onOpen?: (lesson: SalesScheduleLesson) => void; dated?: boolean }) {
   const { lesson, onOpen, dated = false } = props;
   const { color } = useTheme();
+  const inset = useInset();
   const cycle = useClockCycle();
   const now = useNow();
   const running = isRunningLesson(lesson, now);
@@ -50,7 +54,7 @@ export function SalesLessonRow(props: { lesson: SalesScheduleLesson; onOpen?: (l
     </>
   );
   return (
-    <View style={{ gap: 6, paddingVertical: 10, borderBottomWidth: 1, borderBottomColor: color.rule }}>
+    <View style={{ gap: 6, paddingVertical: 10, ...(inset ? { paddingHorizontal: 16 } : { borderBottomWidth: 1, borderBottomColor: color.rule }) }}>
       {onOpen ? (
         <Pressable
           accessibilityRole="button"
