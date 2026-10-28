@@ -14,6 +14,7 @@ import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { ltr } from '@/core/ui/primitives/Ltr';
 import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
+import { NoCommissionNote } from './NoCommissionNote';
 import { PricingInputs } from './PricingInputs';
 import { formFrom, type FormPrefill } from './form-prefill';
 import { pricingOf, startDays, subscribeErrorText } from './subscribe-form';
@@ -90,6 +91,7 @@ export function SubscribeScreen() {
           value={startsOn}
           onChange={setPicked}
         />
+        <NoCommissionNote startsOn={startsOn} usedBefore={used.body.lessonsUsedBefore ?? 0} now={now} />
         {used.field}
         {save.isError ? <ErrorLine message={subscribeErrorText(save.error, 'save')} /> : null}
         {save.isSuccess ? (

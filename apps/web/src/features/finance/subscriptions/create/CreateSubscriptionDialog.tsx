@@ -9,6 +9,7 @@ import { Ltr } from '@/components/ui/display/ltr';
 import { t } from '@/lib/i18n/i18n';
 import { createSubscription, MONEY_KEY } from '../api';
 import { apiErrorText } from '../format';
+import { NoCommissionNote } from './NoCommissionNote';
 import { INITIAL_PRICING, pricingBody, pricingLessons, type PricingForm } from './pricing-form';
 import { PricingFields } from './PricingFields';
 import { QuotePreview } from './QuotePreview';
@@ -97,6 +98,7 @@ export function CreateSubscriptionDialog({ student: preset, initial, onClose, on
             {(p) => <Input {...p} value={notes} onChange={(e) => setNotes(e.target.value)} />}
           </Field>
         </div>
+        <NoCommissionNote startsOn={startsOn} usedBefore={usedBefore.value} />
         <UsedBeforeField shown={usedBefore.shown} value={usedBefore.value} max={usedBefore.max} onChange={usedBefore.set} />
         {save.isError && <FormAlert>{apiErrorText(save.error, { ...t.subscriptions.error, ...t.packagePayment.error })}</FormAlert>}
       </form>

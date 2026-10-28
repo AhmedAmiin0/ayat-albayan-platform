@@ -4525,7 +4525,8 @@
     "usedBefore": "Lessons already used from the package",
     "usedBeforeHint": "Counted from the package; only the rest is booked",
     "usedBeforeLess": "One lesson fewer",
-    "usedBeforeMore": "One lesson more"
+    "usedBeforeMore": "One lesson more",
+    "noCommissionStarted": "No commission: the course started before it was recorded"
   },
   "registrationCheck": {
     "title": "Registration check",
