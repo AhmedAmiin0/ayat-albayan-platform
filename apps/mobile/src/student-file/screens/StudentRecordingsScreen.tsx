@@ -1,7 +1,7 @@
-import { RIYADH_TZ } from '@ab/shared';
+import type { StudentRecordingView } from '@ab/shared';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
-import { ActivityIndicator, FlatList, View } from 'react-native';
+import { ActivityIndicator, View } from 'react-native';
 import { usePermissions } from '@/auth/use-permissions';
 import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/more/Note';
@@ -15,11 +15,13 @@ import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { isFiltered, NO_FILTERS, recordingParams, utcToday, type RecordingFilters } from '../recordings/recording-filters';
 import { RecordingFiltersBar } from '../recordings/RecordingFiltersBar';
-import { RecordingRow } from '../recordings/RecordingRow';
+import { useRecordingRow } from '../recordings/RecordingRow';
 import { useRecordings } from '../recordings/recordings-queries';
 import { useTeacherChoices } from '../recordings/teacher-choices';
+import { LazyList } from '@/core/ui/lists/LazyList';
 
 const R = t.mobileStudentFile.recordings;
+const keyOf = (r: StudentRecordingView) => r.id;
 
 /**
  * «تسجيلات الحلقات» of one student (web: StudentRecordings), newest first, filtered on the server by
@@ -38,6 +40,7 @@ export function StudentRecordingsScreen({ admin = true }: { admin?: boolean }) {
   const list = useRecordings(id, params);
   const teachers = useTeacherChoices(list.items, admin);
   const manage = can('recordings.manage');
+  const renderItem = useRecordingRow({ studentId: id, me: me.data, manage, admin, freshUrl: list.freshUrl });
   const back = () => (router.canGoBack() ? router.back() : router.replace(admin ? `/students/${id}` : '/teacher/reports'));
   return (
     <Screen>
@@ -50,23 +53,12 @@ export function StudentRecordingsScreen({ admin = true }: { admin?: boolean }) {
         <>
           <RecordingFiltersBar value={filters} onChange={setFilters} teachers={teachers} />
           {list.isError && list.data ? <Note>{R.error}</Note> : null}
-          <FlatList
-            style={{ flex: 1, marginHorizontal: -16 }}
-            data={list.items}
-            keyExtractor={(r) => r.id}
-            renderItem={({ item }) => (
-              <RecordingRow
-                rec={item}
-                studentId={id}
-                tz={me.data?.tz ?? RIYADH_TZ}
-                canManage={manage}
-                canDelete={admin && manage && item.can_manage}
-                getUrl={() => list.freshUrl(item.id)}
-              />
-            )}
-            onEndReached={list.loadMore}
+          <LazyList
+            paged={list}
+            tabBar={false}
+            keyExtractor={keyOf}
+            renderItem={renderItem}
             refreshing={list.isRefetching && !list.isFetchingNextPage}
-            onRefresh={list.refresh}
             ListHeaderComponent={<Note>{R.hint}</Note>}
             ListFooterComponent={list.isFetchingNextPage ? <Note>{R.loadingMore}</Note> : <View style={{ height: 24 }} />}
             ListEmptyComponent={

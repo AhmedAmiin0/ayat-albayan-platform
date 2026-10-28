@@ -38,6 +38,19 @@ test('pure-JS packages (google fonts, tanstack, supabase-js, workspace) are not 
   assert.deepEqual(nativeChanges(snap(base, {}), snap(base, { 'expo-camera': '1' })), ['dependency expo-camera: (none) -> 1']);
 });
 
+test('@shopify/flash-list v2 is JS-only; its native 1.x, a new major and other @shopify packages need an APK', () => {
+  assert.deepEqual(nativeChanges(snap(base, {}), snap(base, { '@shopify/flash-list': '2.0.2' })), []);
+  assert.deepEqual(nativeChanges(snap(base, {}), snap(base, { '@shopify/flash-list': '^2.3.2' })), []);
+  assert.deepEqual(nativeChanges(snap(base, {}), snap(base, { '@shopify/flash-list': '1.7.6' })), [
+    'dependency @shopify/flash-list: (none) -> 1.7.6',
+  ]);
+  assert.deepEqual(nativeChanges(snap(base, { '@shopify/flash-list': '2.0.2' }), snap(base, { '@shopify/flash-list': '3.0.0' })), [
+    'dependency @shopify/flash-list: 2.0.2 -> 3.0.0',
+  ]);
+  const found = nativeChanges(snap(base, {}), snap(base, { '@shopify/react-native-skia': '2' }));
+  assert.deepEqual(found, ['dependency @shopify/react-native-skia: (none) -> 2']);
+});
+
 test('plugins, android fields and version are native', () => {
   const after = snap({ ...base, version: '0.2.0', plugins: ['expo-router', 'expo-camera'], android: { package: 'a.c' } });
   assert.deepEqual(nativeChanges(snap(base), after), ['app.json: expo.version', 'app.json: expo.plugins', 'app.json: expo.android']);
