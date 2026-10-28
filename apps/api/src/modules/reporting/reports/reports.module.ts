@@ -19,15 +19,17 @@ import { ReportsService } from './reports.service';
 import { ReportsSettings } from './reports.settings';
 import { TeacherReportsQueries } from './teacher/teacher-reports.queries';
 import { TeacherReportsService } from './teacher/teacher-reports.service';
+import { ReportV2Controller } from './v2/report-v2.controller';
+import { ReportV2Service } from './v2/report-v2.service';
 
 /**
  * Lesson reports: form prefill, drafts, submit (versions + lesson outcome), attachments, history
  * + grade series, teacher pending and submitted reports. R-REP-01/02/04/05, R-TCH-03 (docs/11 §4).
- * ReportPdfQueue marks a report pending and kicks ReportPdfJob (R-REP-03).
+ * ReportPdfQueue marks a report pending and kicks ReportPdfJob (R-REP-03). v2/: the new form (report_form_v2).
  */
 @Module({
   imports: [TeachersModule, ReportPdfModule],
-  controllers: [ReportsController, ReportAttachmentsController, ReportEntryController],
+  controllers: [ReportsController, ReportAttachmentsController, ReportEntryController, ReportV2Controller],
   providers: [
     ReportAccess,
     ReportAttachmentsQueries,
@@ -38,6 +40,7 @@ import { TeacherReportsService } from './teacher/teacher-reports.service';
     ReportHistoryService,
     ReportLessonQueries,
     ReportSubmitService,
+    ReportV2Service,
     ReportsQueries,
     ReportsService,
     ReportsSettings,

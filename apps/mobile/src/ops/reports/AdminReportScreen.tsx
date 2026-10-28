@@ -13,8 +13,9 @@ import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { openSigned } from '@/teacher/report/hooks/api';
+import { StatusChip } from '@/core/ui/feedback/StatusChip';
 import { ReportFieldRow } from './ReportFieldRow';
-import { reportFields } from './report-fields';
+import { adminReportFields } from './report-v2-fields';
 
 const back = () => (router.canGoBack() ? router.back() : router.replace('/students'));
 
@@ -35,7 +36,12 @@ export function AdminReportScreen() {
       {!report && query.isError ? <ErrorState onRetry={() => void query.refetch()} /> : null}
       {report ? (
         <ScrollView style={{ flex: 1 }} contentContainerStyle={{ gap: 14, paddingBottom: 32 }}>
-          {reportFields(report).map((f) => (
+          {report.form_version === 2 ? (
+            <View style={{ alignItems: 'flex-start' }}>
+              <StatusChip tone="neutral" glyph="hollow" label={t.reports.v2.admin.v2Badge} />
+            </View>
+          ) : null}
+          {adminReportFields(report).map((f) => (
             <ReportFieldRow key={f.key} field={f} />
           ))}
           {report.pdf_status === 'ready' ? (
