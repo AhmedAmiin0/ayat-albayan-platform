@@ -1,20 +1,21 @@
 import { formatPhone, leadStatusStyle } from '@ab/shared';
 import { Link } from '@tanstack/react-router';
 import { useRef } from 'react';
+import { Avatar } from '@/components/ui/display/avatar';
 import { Icon } from '@/components/ui/display/icon';
 import { IconButton, iconButtonClass } from '@/components/ui/form/icon-button';
 import { Ltr } from '@/components/ui/display/ltr';
 import { StatusChip } from '@/components/ui/display/status-chip';
 import { t } from '@/lib/i18n/i18n';
 import { cn } from '@/lib/utils';
-import { formatAge, formatDateTime, initialOf } from '../format';
+import { formatAge, formatDateTime } from '../format';
 import { LeadAssignSelect } from './LeadAssignSelect';
 import { ReclassifyConfirm } from './ReclassifyConfirm';
 import type { LeadRow } from '../types';
 import { useClock } from '@/lib/clock';
 
 /** Shared with the list head so chips line up across rows (docs/07 §9). */
-export const leadGridClass = 'sm:grid-cols-[38px_minmax(0,1fr)_156px_168px_120px]';
+export const leadGridClass = 'sm:grid-cols-[36px_minmax(0,1fr)_156px_168px_120px]';
 
 export interface LeadListItemProps {
   lead: LeadRow;
@@ -27,7 +28,7 @@ export interface LeadListItemProps {
 }
 
 /**
- * One inbox row: avatar initial · name, E.164 phone, source, lead age · status chip · actions
+ * One inbox row: avatar (initials) · name, E.164 phone, source, lead age · status chip · actions
  * (open the WhatsApp thread, book a trial, reclassify).
  * TODO(R-LEAD-02): unread dot, last-message line and the per-status next-action button (رد /
  * اقترح ميعاد / فتح الحلقة) arrive with Phase 4 messaging; تحويل لطالب with R-LEAD-06.
@@ -40,17 +41,12 @@ export function LeadListItem({ lead, confirming, busy, onAsk, onKeep, onMove }: 
   return (
     <li
       className={cn(
-        'grid grid-cols-[38px_minmax(0,1fr)_auto] items-center gap-x-3 gap-y-1.5 border-b border-rule px-2.5 py-3 transition-colors duration-[120ms]',
+        'grid grid-cols-[36px_minmax(0,1fr)_auto] items-center gap-x-3 gap-y-1.5 border-b border-rule px-2.5 py-3 transition-colors duration-[120ms]',
         leadGridClass,
         confirming ? 'bg-gold-wash/50' : 'hover:bg-sunk/75',
       )}
     >
-      <span
-        aria-hidden="true"
-        className="row-span-2 grid size-[38px] place-items-center rounded-full bg-gold-wash font-display text-lg font-bold text-ink shadow-[inset_0_0_0_1px_var(--gold)] sm:row-span-1"
-      >
-        {initialOf(lead.name)}
-      </span>
+      <Avatar name={lead.name ?? ''} id={lead.phone_e164} size="md" decorative className="row-span-2 sm:row-span-1" />
       <div className="flex min-w-0 flex-wrap items-baseline gap-x-2.5 gap-y-0.5">
         <span className="font-semibold">{lead.name ?? <Ltr>{formatPhone(lead.phone_e164)}</Ltr>}</span>
         {lead.name && <Ltr className="text-2xs text-ink-3">{formatPhone(lead.phone_e164)}</Ltr>}

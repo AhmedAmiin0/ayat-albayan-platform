@@ -39,6 +39,8 @@ export interface SalesTeacherView extends TeacherStudentCounts {
    * Absent in a payload cached before migration 490: clients use the academy default.
    */
   platform_classroom?: boolean;
+  /** The teacher's photo, a short-lived signed URL; null/absent = initials. */
+  avatar_url?: string | null;
   students: SalesTeacherStudent[];
 }
 

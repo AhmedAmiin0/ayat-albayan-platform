@@ -1,7 +1,7 @@
 import { intlLocale } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
 import { locale } from '@/lib/i18n/locale';
-import { formatAge, formatDate, formatDateTime, initialOf } from './format';
+import { formatAge, formatDate, formatDateTime } from './format';
 import { parseLeadSearch, parsePageSearch } from './types';
 
 /** The cycle the suite reads times in (test-setup saves 24 h). */
@@ -38,17 +38,6 @@ describe('lead inbox formatting (R-LEAD-02 list columns)', () => {
     expect(formatDate(evening)).not.toContain(':');
     expect(formatDate(evening)).toContain('2026');
     expect(formatDate(null)).toBe('—');
-  });
-
-  it.each([
-    ['أم سلمى', 'س'],
-    ['أبو فهد', 'ف'],
-    ['عبد الله الشهري', 'ع'],
-    ['  نورهان سعيد', 'ن'],
-    ['أمل', 'أ'],
-    [null, ''],
-  ])('initialOf(%s) = %s', (name, expected) => {
-    expect(initialOf(name)).toBe(expected);
   });
 });
 

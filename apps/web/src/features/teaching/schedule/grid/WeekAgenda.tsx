@@ -1,8 +1,9 @@
 import type { LessonView } from '@ab/shared';
+import { Avatar } from '@/components/ui/display/avatar';
 import { t } from '@/lib/i18n/i18n';
 import { teacherLabel } from '@/lib/i18n/teacher-label';
 import { cn } from '@/lib/utils';
-import { LessonChip } from '../lesson/LessonChip';
+import { LessonChipList } from '../lesson/LessonChip';
 import { dayMonthLabel, weekdayOf } from '../tz';
 
 interface AgendaRow {
@@ -10,6 +11,7 @@ interface AgendaRow {
   teacher: { display_name_ar: string; display_name_en?: string | null } | null;
   name: string;
   days: ReadonlyMap<string, readonly LessonView[]>;
+  photo?: string | null | undefined;
 }
 
 export interface WeekAgendaProps {
@@ -20,6 +22,16 @@ export interface WeekAgendaProps {
 }
 
 const weekday: Record<string, string> = t.enums.weekday;
+
+/** The teacher above their chips: photo (or initials) and name. */
+function RowName({ row }: { row: AgendaRow }) {
+  return (
+    <p className="flex items-center gap-2 text-xs font-semibold text-ink-2">
+      <Avatar name={row.name} id={row.id} src={row.photo} size="sm" decorative />
+      {row.teacher ? teacherLabel(row.teacher) : row.name}
+    </p>
+  );
+}
 
 /**
  * The week on a phone (under md): a heading per day, then each teacher's lessons of that day as
@@ -40,14 +52,8 @@ export function WeekAgenda({ days, today, rows, onOpen }: WeekAgendaProps) {
             {active.length === 0 && <p className="py-2 text-sm text-ink-3">{t.schedule.noLessons}</p>}
             {active.map((row) => (
               <div key={row.id} className="grid gap-1 border-b border-rule py-2">
-                {named && <p className="text-xs font-semibold text-ink-2">{row.teacher ? teacherLabel(row.teacher) : row.name}</p>}
-                <ul className="grid gap-1">
-                  {(row.days.get(day) ?? []).map((lesson) => (
-                    <li key={lesson.id}>
-                      <LessonChip lesson={lesson} onOpen={onOpen} />
-                    </li>
-                  ))}
-                </ul>
+                {named && <RowName row={row} />}
+                <LessonChipList lessons={row.days.get(day) ?? []} onOpen={onOpen} />
               </div>
             ))}
           </section>

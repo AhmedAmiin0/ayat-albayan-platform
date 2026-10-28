@@ -9,11 +9,13 @@ import { ltr } from '@/core/ui/primitives/Ltr';
 import { Screen } from '@/core/ui/layout/Screen';
 import { ChatActionsProvider } from '../thread/components/ChatActionsProvider';
 import { ChatHeader } from '../thread/components/ChatHeader';
+import { Avatar } from '@/core/ui/primitives/Avatar';
 import { ChatNotice } from '../thread/components/ChatNotice';
 import { CallButton } from '../thread/calls/entries/CallButton';
 import { Composer } from '../composer/Composer';
 import { clockAt, kindLabel } from '../shared/format';
 import { MessageList } from '../messages/components/MessageList';
+import { ReplyActionsProvider } from '../messages/reply-actions';
 import { OwnThreadNote } from '../thread/components/OwnThreadNote';
 import { SalesChatActions } from '../leads/sales/SalesChatActions';
 import { SendRating } from '../rating/SendRating';
@@ -23,13 +25,20 @@ import { isOwnThread, threadBase, useThreadMode, type ThreadMode } from '../thre
 import { useInboxRead } from '../thread/hooks/inbox-sync';
 import { useThread } from '../thread/hooks/use-thread';
 import { useClockCycle } from '@/core/lib/clock';
-import type { ClockCycle } from '@ab/shared';
+import type { ClockCycle, ThreadLesson } from '@ab/shared';
 
 type ThreadQuery = ReturnType<typeof useThread>;
+
+const NO_LESSONS: ThreadLesson[] = [];
 
 /** The phone icon: only once the chat is loaded (no flash), never in a teacher's own chat (docs/28). */
 const callable = (mode: ThreadMode, thread: ThreadView | null): boolean =>
   thread !== null && !isOwnThread(mode, thread);
+
+/** The contact's initials (contacts never carry a photo), toned by the number as in the list. */
+const contactAvatar = (thread: ThreadView | null, phone: string) => (
+  <Avatar name={thread?.display_name ?? ''} id={phone} decorative />
+);
 
 /** Offline: when the saved thread was fetched. Else who the number is, then the number if named. */
 function subtitleOf(phone: string, query: ThreadQuery, who: { teacher: boolean; cycle: ClockCycle }): string {
@@ -81,6 +90,7 @@ export function ThreadScreen() {
           title={title}
           subtitle={subtitleOf(phone, query, { teacher, cycle })}
           onBack={back}
+          avatar={contactAvatar(thread, phone)}
           trailing={
             mode.kind === 'admin' ? (
               <>
@@ -100,7 +110,9 @@ export function ThreadScreen() {
         {query.data ? (
           // Composer, quote strip and staged file stay on the keyboard (owner 2026-10-25, Android).
           <KeyboardFrame style={{ flex: 1, gap: 4 }}>
-            <MessageList phone={phone} query={query} />
+            <ReplyActionsProvider phone={phone} lessons={query.data.pages[0]?.lessons ?? NO_LESSONS}>
+              <MessageList phone={phone} query={query} />
+            </ReplyActionsProvider>
             <ChatNotice />
             {mode.kind === 'admin' &&
             thread?.guardian_id &&

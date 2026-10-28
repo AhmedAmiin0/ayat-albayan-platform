@@ -1,4 +1,5 @@
 import { lessonStatusStyle, type LessonView, lessonWhenAt, subscriptionStatusStyle } from '@ab/shared';
+import { Avatar } from '@/components/ui/display/avatar';
 import { buttonVariants } from '@/components/ui/form/button';
 import { Ltr } from '@/components/ui/display/ltr';
 import { StatusChip } from '@/components/ui/display/status-chip';
@@ -53,7 +54,12 @@ export function LessonDetails({ lesson, onEditTime }: { lesson: LessonView; onEd
           </DetailRow>
         )}
         <DetailRow label={t.schedule.duration}>{lengthText(mins)}</DetailRow>
-        <DetailRow label={t.schedule.teacher}>{teacherLabel(lesson.teacher)}</DetailRow>
+        <DetailRow label={t.schedule.teacher}>
+          <span className="flex items-center gap-2.5">
+            <Avatar name={teacherLabel(lesson.teacher)} id={lesson.teacher.id} src={lesson.teacher.avatar_url} size="md" decorative />
+            {teacherLabel(lesson.teacher)}
+          </span>
+        </DetailRow>
         <DetailRow label={t.schedule.students}>
           {lesson.students.map((s) => (
             <span key={s.id} className="me-3 inline-flex items-baseline gap-1.5">

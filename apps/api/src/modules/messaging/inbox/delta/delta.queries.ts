@@ -3,7 +3,7 @@ import { DB, type Db } from '../../../../common/db/db.module';
 import { MESSAGE_SELECT, type ThreadMessageRow } from '../../whatsapp';
 
 /** The page's own select: the message with its lesson, sending teacher and staff sender (ThreadsQueries.messages). */
-const SELECT = `${MESSAGE_SELECT}, lesson:lessons(starts_at, status)` as const;
+const SELECT = `${MESSAGE_SELECT}, lesson:lessons(starts_at, ends_at, status)` as const;
 /** A chat never has more rows in flight than this; past it the NEWEST are kept (the ticks that still move). */
 const PENDING_LIMIT = 50;
 

@@ -12,6 +12,8 @@ export interface Teacher {
   /** The teacher's login (null = none yet, created on «المستخدمون») and its sign-in username (docs/30). */
   profile_id?: string | null;
   username?: string | null;
+  /** The teacher's photo, a short-lived signed URL; null/absent = initials (owner 2026-10-28). */
+  avatar_url?: string | null;
 }
 
 /** GET /teachers row: the teacher and their current students by kind («مشترك n · تجريبي n»). */

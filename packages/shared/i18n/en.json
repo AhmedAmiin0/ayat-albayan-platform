@@ -2657,10 +2657,17 @@
     },
     "quickReply": {
       "confirmed": "Confirmed the {when} lesson (Riyadh time)",
-      "notConfirmed": "No lesson was confirmed by this reply",
-      "reschedule": "Asked to reschedule the {when} lesson (Riyadh time)",
+      "reschedule": "Asked to reschedule the lesson",
       "rescheduleNoLesson": "Asked to reschedule",
+      "rescheduled": "The lesson was rescheduled",
       "stop": "Asked to stop messages"
+    },
+    "replyAction": {
+      "confirm": "Confirm lesson",
+      "confirmLabel": "Confirm the {when} lesson (Riyadh time)",
+      "reschedule": "Reschedule",
+      "rescheduleLabel": "Reschedule the {when} lesson (Riyadh time)",
+      "notFound": "Could not open the lesson: it may have moved or been cancelled. Refresh the chat and try again."
     },
     "composer": {
       "placeholder": "Type a message…",
@@ -7074,6 +7081,22 @@
       "pause_not_open": "This pause has already ended",
       "student_not_found": "Student not found",
       "generic": "Could not save the pause. Try again."
+    }
+  },
+  "staffPhoto": {
+    "title": "Photo",
+    "change": "Change photo",
+    "remove": "Remove photo",
+    "uploading": "Uploading the photo…",
+    "removing": "Removing the photo…",
+    "saved": "Photo saved.",
+    "removed": "Photo removed.",
+    "confirmRemove": "Remove {name}'s photo? Their initials will show instead.",
+    "hint": "A square JPG, PNG or WebP image, up to 2 MB.",
+    "photoOf": "Photo of {name}",
+    "errors": {
+      "avatar_not_staff": "Student and guardian accounts have no photo.",
+      "generic": "Could not save the photo. Try again."
     }
   }
 }

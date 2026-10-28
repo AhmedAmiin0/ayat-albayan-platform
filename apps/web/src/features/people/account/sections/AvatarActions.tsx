@@ -1,8 +1,7 @@
-import { useId, type ChangeEvent } from 'react';
-import { Button, buttonVariants } from '@/components/ui/form/button';
+import type { ChangeEvent } from 'react';
+import { Button } from '@/components/ui/form/button';
 import { t } from '@/lib/i18n/i18n';
-import { cn } from '@/lib/utils';
-import { AVATAR_ACCEPT } from '../avatar-file';
+import { PhotoPick } from './PhotoPick';
 
 const A = t.account.avatar;
 
@@ -19,25 +18,14 @@ export interface AvatarActionsProps {
 }
 
 /**
- * The photo's buttons (R-ACC-05). «اختيار صورة» is the label of the visually hidden file input,
- * drawn as a secondary button; it shows the input's focus ring (peer-focus-visible). With a
- * preview: «رفع الصورة» (the screen's one filled button) and «إلغاء»; with a saved photo: remove.
+ * The photo's buttons (R-ACC-05): «اختيار صورة» (PhotoPick); with a preview «رفع الصورة» (the
+ * screen's one filled button) and «إلغاء»; with a saved photo: remove.
  */
 export function AvatarActions(p: AvatarActionsProps) {
-  const inputId = useId();
   const busy = p.pending !== null;
   return (
     <div className="flex flex-wrap items-center gap-2">
-      <input id={inputId} type="file" accept={AVATAR_ACCEPT} className="peer sr-only" disabled={busy} onChange={p.onPick} />
-      <label
-        htmlFor={inputId}
-        className={cn(
-          buttonVariants({ variant: 'secondary' }),
-          'peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-ring peer-disabled:cursor-not-allowed peer-disabled:opacity-45',
-        )}
-      >
-        {A.choose}
-      </label>
+      <PhotoPick label={A.choose} disabled={busy} onPick={p.onPick} />
       {p.previewing && (
         <>
           <Button type="button" disabled={busy} onClick={p.onUpload}>

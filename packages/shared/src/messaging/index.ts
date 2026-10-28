@@ -9,6 +9,7 @@ export * from './templates/render.js';
 export * from './replies/reply-line.js';
 export * from './replies/reply-number.js';
 export * from './replies/reply-note.js';
+export * from './replies/reply-lesson.js';
 export * from './replies/reply-forward.js';
 export * from './reactions/reactions.js';
 export * from './templates/restricted-templates.js';
