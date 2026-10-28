@@ -35,9 +35,11 @@ interface DetailsStudentsProps {
   role: DetailsRole;
   /** Closes the sheet before a tap navigates (the next screen would open under the modal). */
   onLeave: () => void;
+  /** The student whose file opened the sheet: no link back to it. */
+  hereStudentId?: string | undefined;
 }
 
-export function DetailsStudents({ lesson, role, onLeave }: DetailsStudentsProps) {
+export function DetailsStudents({ lesson, role, onLeave, hereStudentId }: DetailsStudentsProps) {
   const { color } = useTheme();
   const now = useNow();
   const mine = role === 'teacher' ? teacherReport(lesson, now) : null;
@@ -48,7 +50,7 @@ export function DetailsStudents({ lesson, role, onLeave }: DetailsStudentsProps)
       {lesson.students.map((student, i) => (
         <Fragment key={student.id}>
           {i > 0 ? <View style={{ height: 1, backgroundColor: color.rule }} /> : null}
-          <DetailsStudentRow lesson={lesson} student={student} role={role} onLeave={onLeave} />
+          <DetailsStudentRow lesson={lesson} student={student} role={role} onLeave={onLeave} here={student.id === hereStudentId} />
         </Fragment>
       ))}
       {mine && href ? (

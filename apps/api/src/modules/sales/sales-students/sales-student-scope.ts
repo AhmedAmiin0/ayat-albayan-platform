@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import type { AuthUser } from '../../../common/auth/verify-token';
 import { conflict, forbidden, notFound } from '../../../common/http/errors';
-import { SalesQueries } from '../sales';
+import { SalesQueries, type SalesOwnership } from '../sales';
 import { type LessonFacts, SalesStudentQueries } from './details/sales-student.queries';
 
 /**
@@ -16,10 +16,11 @@ export class SalesStudentScope {
     private readonly queries: SalesStudentQueries,
   ) {}
 
-  /** 404 student_not_found unless the student is hers. */
-  async assertStudent(user: AuthUser, studentId: string): Promise<void> {
+  /** 404 student_not_found unless the student is hers; her ownership otherwise («الجدول» marks `mine`). */
+  async assertStudent(user: AuthUser, studentId: string): Promise<SalesOwnership> {
     const own = await this.sales.ownership(user.id);
     if (!own.studentIds.includes(studentId)) throw notFound('student_not_found');
+    return own;
   }
 
   /**
