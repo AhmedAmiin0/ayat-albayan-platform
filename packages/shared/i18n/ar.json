@@ -4227,7 +4227,8 @@
       "teachers": "المعلمون",
       "allStudents": "الطلاب",
       "live": "الحلقات الجارية",
-      "academySchedule": "جدول الحلقات"
+      "academySchedule": "جدول الحلقات",
+      "scheduleTab": "الجدول"
     },
     "subscriptions": {
       "pending": "في الانتظار",
