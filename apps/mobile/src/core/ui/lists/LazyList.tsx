@@ -64,14 +64,13 @@ export function LazyList<T>({ endSpace = 0, inset = true, tabBar = true, gap, pa
   const content = useMemo(() => ({ paddingBottom: end }), [end]);
   const rows = data ?? paged?.items;
   const cells = useInsetRows(props.renderItem, rows?.length ?? 0);
-  const header = props.ListHeaderComponent != null;
   return (
     <FlashList
       style={FILL}
       contentContainerStyle={content}
       onEndReachedThreshold={2}
       maintainVisibleContentPosition={KEEP_OFF}
-      {...(inset ? { ListHeaderComponentStyle: header ? HEADER_GAP : undefined } : gapProps(gap, header))}
+      {...spacing(inset, gap, props.ListHeaderComponent != null)}
       {...pagedProps(paged)}
       {...props}
       {...(inset ? cells : null)}
@@ -80,8 +79,9 @@ export function LazyList<T>({ endSpace = 0, inset = true, tabBar = true, gap, pa
   );
 }
 
-/** `gap` between rows, and under the header when there is one. */
-function gapProps(gap: number | undefined, header: boolean) {
+/** Under the header (when there is one) and, for card rows, `gap` between rows; inset rows bring their own rules. */
+function spacing(inset: boolean, gap: number | undefined, header: boolean) {
+  if (inset) return { ListHeaderComponentStyle: header ? HEADER_GAP : undefined };
   const style = gap ? { marginBottom: gap } : undefined;
   return { ItemSeparatorComponent: gap ? gapOf(gap) : undefined, ListHeaderComponentStyle: header ? style : undefined };
 }

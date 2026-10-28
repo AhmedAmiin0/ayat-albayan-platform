@@ -41,6 +41,7 @@ export function Screen({ children, scroll = false, chat = false, list = false, s
   const inset = sheet ? 0 : bar;
   const { color } = useTheme();
   const fullScreen = useContext(FullScreenContext);
+  const tight = chat || list;
   return (
     <SafeAreaView
       style={{ flex: 1, backgroundColor: color.margin }}
@@ -51,7 +52,7 @@ export function Screen({ children, scroll = false, chat = false, list = false, s
           {children}
         </ScrollView>
       ) : (
-        <View testID="screen-body" style={{ flex: 1, ...(chat || list ? TIGHT_BODY : BODY), paddingBottom: chat || list ? 0 : inset }}>
+        <View testID="screen-body" style={{ flex: 1, ...(tight ? TIGHT_BODY : BODY), paddingBottom: tight ? 0 : inset }}>
           {children}
         </View>
       )}
