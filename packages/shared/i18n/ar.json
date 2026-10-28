@@ -4126,7 +4126,21 @@
       "openSchedule": "اعرض جدول المعلم/ة اليوم",
       "pick": "اختر معلمًا لعرض طلابه",
       "allGenders": "الجميع",
-      "back": "رجوع إلى المعلمين"
+      "back": "رجوع إلى المعلمين",
+      "tabs": {
+        "students": "الطلاب",
+        "schedule": "الجدول",
+        "attendance": "الحضور"
+      },
+      "tabsLabel": "عرض المعلم/ة",
+      "overview": {
+        "noWeekly": "لا توجد مواعيد أسبوعية",
+        "slot": "{day} الساعة {time} · {minutes} دقيقة",
+        "window": "آخر {days} يومًا",
+        "totals": "عُقدت {held} · غياب الطالب {student_absent} · ألغاها المعلم/ة {cancelled_by_teacher} · ألغتها الإدارة {cancelled_by_admin} · أخرى {other}",
+        "latest": "آخر الحلقات",
+        "noLessons": "لا توجد حلقات في هذه المدة"
+      }
     },
     "allStudents": {
       "title": "كل الطلاب",
@@ -4172,8 +4186,8 @@
       "title": "تفاصيل الطالب",
       "open": "افتح تفاصيل {name}",
       "teacher": "المعلم/ة: {name}",
-      "chat": "محادثة ولي الأمر",
-      "notFound": "هذا الطالب ليس من طلابك أو غير موجود",
+      "chat": "فتح المحادثة",
+      "notFound": "هذا الطالب غير موجود",
       "subscription": "الاشتراك",
       "current": "الاشتراك الحالي",
       "noSubscription": "لا يوجد اشتراك بعد",
@@ -4202,6 +4216,12 @@
         "noUpcoming": "لا حلقات قادمة",
         "showAll": "عرض الكل ({n})",
         "showLess": "عرض أقل"
+      },
+      "notMine": "ليس من طلابك: لا تظهر هنا الاشتراكات ولا التقارير",
+      "trial": {
+        "title": "الحلقة التجريبية",
+        "none": "لا توجد حلقة تجريبية",
+        "teacher": "مع {name}"
       }
     },
     "lessonActions": {

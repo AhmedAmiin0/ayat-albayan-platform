@@ -25,6 +25,7 @@ describe('GET /sales/students/:id «تفاصيل الطالب» (docs/16 row 36)
       ended_at: null, created_at: '2026-09-01T10:00:00Z', lessons_total: 8, lessons_used: 3, lessons_remaining: 5,
     });
     expect(body.current_id).toBe('c1000000-0000-4000-8000-0000000000c1');
+    expect(body.mine).toBe(true);
   });
 
   it('attendance: her own mark per lesson (حضر / غاب / ملغاة / لم تُسجَّل), a moved lesson left out, with totals', async () => {
@@ -56,12 +57,11 @@ describe('GET /sales/students/:id «تفاصيل الطالب» (docs/16 row 36)
     expect(res.body).not.toMatch(/سر|secret|\+20|290|SAR|bank/);
   });
 
-  it('another family\'s student, another salesperson or an unknown id: 404 student_not_found, nothing read', async () => {
-    for (const [id, token] of [[OTHER, 'salesA'], [MINE, 'salesB']] as const) {
-      const res = await t.call('GET', `/sales/students/${id}`, { token });
-      expect([res.statusCode, res.json().code]).toEqual([404, 'student_not_found']);
-    }
-    expect(t.queries.student).not.toHaveBeenCalled();
+  it('an unknown id: 404 student_not_found, nothing else read; a malformed one 400', async () => {
+    t.queries.student.mockResolvedValue(null);
+    const res = await t.call('GET', `/sales/students/${OTHER}`, { token: 'salesA' });
+    expect([res.statusCode, res.json().code]).toEqual([404, 'student_not_found']);
+    expect(t.queries.pastLessons).not.toHaveBeenCalled();
     expect(t.history.history).not.toHaveBeenCalled();
     expect(t.reports.submitted).not.toHaveBeenCalled();
     expect((await t.call('GET', '/sales/students/nope', { token: 'salesA' })).statusCode).toBe(400);

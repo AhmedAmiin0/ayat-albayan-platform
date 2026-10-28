@@ -18,16 +18,16 @@ const S = t.sales.allStudents;
 /**
  * One student of the academy: name with its readable code, teacher · program, the guardian's phone
  * and name, the status chip. Never a balance, package, note or meeting link. Every row is a button
- * (owner 2026-10-27): in the sales tree one of hers (`mine`) opens «تفاصيل الطالب» (docs/16 row 36);
- * any other opens the family's chat in the tree the list runs in (sales see every chat with its
- * phone; the admin tree has no «تفاصيل الطالب»); one with no phone says so under the row.
+ * (owner 2026-10-27): in the sales tree EVERY row opens «تفاصيل الطالب» (owner 2026-10-28, docs/16 row 36;
+ * the family's chat is a button there); the admin tree has no «تفاصيل الطالب», so there a row opens the
+ * family's chat, and one with no phone says so under the row.
  */
 export function AllStudentRow({ student }: { student: SalesStudentView }) {
   const { color } = useTheme();
   const base = useTreeBase();
   const [tapped, setTapped] = useState(false);
   const phone = student.guardian_phone;
-  const details = student.mine === true && base === '/sales';
+  const details = base === '/sales';
   const open = () => {
     if (details) router.push(`/sales/students/${student.id}`);
     else if (phone) router.push(familyChatHref(base, phone));

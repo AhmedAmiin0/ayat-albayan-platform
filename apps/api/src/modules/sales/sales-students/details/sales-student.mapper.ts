@@ -6,6 +6,7 @@ import {
   type SalesStudentDetails,
   type SalesStudentSchedule,
   type SalesStudentSubscription,
+  type SalesTrialLesson,
 } from '@ab/shared';
 import { type HistoryBundle, toSalesHistory } from '../../sales';
 import type { AttendanceRow, DetailsStudentRow } from './sales-student.queries';
@@ -16,7 +17,12 @@ interface DetailsParts {
   lessons: readonly AttendanceRow[];
   reports: { items: ReportSummaryView[]; total: number };
   schedule: SalesStudentSchedule;
+  trial: SalesTrialLesson[];
+  /** Hers: only then the subscriptions and the sent reports (owner 2026-10-28). */
+  mine: boolean;
 }
+
+const NO_REPORTS = { items: [], total: 0 };
 
 const iso = (at: string): string => new Date(at).toISOString();
 
@@ -48,12 +54,16 @@ function attendanceDays(studentId: string, lessons: readonly AttendanceRow[]): S
   });
 }
 
-/** Whitelist of «تفاصيل الطالب» (docs/16 row 36): no price, payment, note, phone or meeting link («الجدول» included). */
+/**
+ * Whitelist of «تفاصيل الطالب» (docs/16 row 36): no price, payment, note, phone or meeting link («الجدول»
+ * included). Not hers: no subscription and no report, whatever was read.
+ */
 export function toStudentDetails(p: DetailsParts): SalesStudentDetails {
-  const subscriptions = subscriptionsOf(p.history);
+  const subscriptions = p.mine ? subscriptionsOf(p.history) : [];
   const current = subscriptions.find((s) => s.status === 'active') ?? subscriptions[0];
   const items = attendanceDays(p.student.id, p.lessons);
   return {
+    mine: p.mine,
     student: {
       id: p.student.id,
       code: p.student.code ?? '',
@@ -66,7 +76,8 @@ export function toStudentDetails(p: DetailsParts): SalesStudentDetails {
     subscriptions,
     current_id: current?.id ?? null,
     attendance: { items, totals: attendanceTotals(items) },
-    reports: p.reports,
+    reports: p.mine ? p.reports : NO_REPORTS,
     schedule: p.schedule,
+    trial: p.trial,
   };
 }
