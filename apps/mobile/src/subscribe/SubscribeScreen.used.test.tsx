@@ -2,7 +2,7 @@ import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { ApiError } from '@/core/lib/http/api';
 import { money } from '@/payments/format';
-import { renderWithQuery } from '@/test/query';
+import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { balance, profile, quote, saved } from './fixtures';
 import { SubscribeScreen } from './SubscribeScreen';
 
@@ -65,4 +65,15 @@ test('the API’s used-lessons refusal in words', async () => {
   await fireEvent.press(screen.getByRole('button', { name: m.usedBeforeMore }));
   await save();
   expect(await screen.findByText(t.packagePayment.error.used_before_not_allowed)).toBeTruthy();
+});
+
+test('without subscriptions.set_start_date: no stepper, even for a past day', async () => {
+  mockParams.mockReturnValue({ studentId: profile.id, startsOn: '2026-09-28' });
+  // A custom admin role without the key (the default test client holds every permission).
+  mockApiFetch.mockImplementation(async (path: string) =>
+    path === '/auth/me' ? { role: 'admin', permissions: [] } : path.endsWith('/balance') ? balance(null) : profile,
+  );
+  await renderWithQuery(<SubscribeScreen />, createTestQueryClient({ meFromApi: true }));
+  await screen.findByText(money(180, 'SAR'));
+  expect(screen.queryByText(m.usedBefore)).toBeNull();
 });

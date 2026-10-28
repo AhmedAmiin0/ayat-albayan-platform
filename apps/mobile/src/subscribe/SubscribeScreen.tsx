@@ -66,7 +66,7 @@ export function SubscribeScreen() {
   const quote = useSubscriptionQuote(studentId, pricing);
   const save = useCreateSubscription();
   const priced = quote.isSuccess && !quote.isPlaceholderData;
-  const used = usePastUsedBefore({ startsOn, quote: quote.data, now });
+  const used = usePastUsedBefore({ startsOn, quote: quote.data, now, today });
 
   return (
     <Screen>

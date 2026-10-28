@@ -6,14 +6,14 @@ import { Field } from '@/components/ui/form/field';
 import { FormAlert } from '@/components/ui/form/form-alert';
 import { Select } from '@/components/ui/form/select';
 import type { SubscriptionView } from '@/features/finance/subscriptions/api';
-import { apiErrorText, moneyText, packageName, studentLabel } from '@/features/finance/subscriptions/format';
+import { apiErrorText, currencySymbol, moneyText, packageName, studentLabel } from '@/features/finance/subscriptions/format';
 import type { PickedStudent } from '@/features/finance/subscriptions/create/StudentPicker';
-import { ShortfallNote } from '@/features/finance/subscriptions';
 import { t } from '@/lib/i18n/i18n';
 import { useUploadMaxBytes } from '@/lib/settings/public-config';
 import { AttachmentsField } from '../attachments/AttachmentsField';
 import { PaymentFields, type PaymentForm } from './PaymentFields';
 import { ReceiptField, receiptProblem } from '../attachments/ReceiptField';
+import { ShortfallNote } from './ShortfallNote';
 import { SubscriptionPicker } from './SubscriptionPicker';
 import { useRecordPayment } from './use-record-payment';
 
@@ -92,7 +92,7 @@ export function RecordPaymentDialog({ subscription, invoiceId, kind = 'payment',
           </p>
         )}
         <PaymentFields form={form} set={setFields} currency={currency} today={today()} amountError={amountError} />
-        <ShortfallNote amount={form.amount} due={dueIn(picked, { kind, currency })} currency={currency} />
+        <ShortfallNote amount={form.amount} due={dueIn(picked, { kind, currency })} currencyLabel={currencySymbol(currency)} />
         {picked && (
           <Field label={t.payments.currency} hint={currency !== picked.currency ? t.finance.convertedHint.replace('{currency}', picked.currency) : undefined}>
             {(p) => (

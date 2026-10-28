@@ -3,8 +3,8 @@ import { useId, useState, type FormEvent } from 'react';
 import { Button } from '@/components/ui/form/button';
 import { Dialog } from '@/components/ui/overlay/dialog';
 import { FormAlert } from '@/components/ui/form/form-alert';
-import { packageName, studentLabel } from '@/features/finance/subscriptions/format';
-import { ShortfallNote } from '@/features/finance/subscriptions';
+import { currencySymbol, packageName, studentLabel } from '@/features/finance/subscriptions/format';
+import { ShortfallNote } from '@/features/finance/payments';
 import { t } from '@/lib/i18n/i18n';
 import { useUploadMaxBytes } from '@/lib/settings/public-config';
 import { salesErrorText } from '../errors';
@@ -88,7 +88,7 @@ export function SalesTransferStep({ fixed, packages, onClose, onSaved, onBookCou
             )}
             <ReceiptChooser sub={sub} value={attachments} onChange={setChosen} maxBytes={maxBytes} />
             <TransferFields form={form} set={(patch) => setForm((f) => ({ ...f, ...patch }))} packageCurrency={sub.currency} today={today()} amountError={amountError} />
-            <ShortfallNote amount={form.amount} due={sub.due} currency={sub.currency} />
+            <ShortfallNote amount={form.amount} due={sub.due} currencyLabel={currencySymbol(sub.currency)} />
           </>
         )}
         {save.isError && <FormAlert>{salesErrorText(save.error)}</FormAlert>}

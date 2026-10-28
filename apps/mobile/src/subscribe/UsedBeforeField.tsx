@@ -1,5 +1,6 @@
 import { riyadhToday, usedBeforeMax } from '@ab/shared';
 import { useState } from 'react';
+import { useHolds } from '@/auth';
 import { View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { Stepper } from '@/finance';
@@ -49,16 +50,20 @@ interface PastStartInput {
   /** The quote of the picked package (its lessons), while known. */
   quote: { lessons: number } | undefined;
   now: Date;
+  /** The form's default first day (the family's today): never «past» by itself, even west of Riyadh. */
+  today: string;
 }
 
 /**
  * The admin's subscribe (owner 2026-10-28): no «بدأ الاشتراك سابقًا» switch there, so the stepper is
- * asked only for a first day before the academy's (Riyadh) today, the day POST /subscriptions checks.
+ * asked only for a first day before the academy's (Riyadh) today, the day POST /subscriptions checks,
+ * and before the form's own default day, and only with subscriptions.set_start_date (else 403).
  */
-export function usePastUsedBefore({ startsOn, quote, now }: PastStartInput) {
+export function usePastUsedBefore({ startsOn, quote, now, today }: PastStartInput) {
   const [picked, setPicked] = useState(0);
+  const canSet = useHolds('subscriptions.set_start_date');
   const lessonsTotal = quoteLessons(quote);
-  const past = startsOn < riyadhToday(now);
+  const past = canSet && startsOn < riyadhToday(now) && startsOn < today;
   const value = past ? usedBefore(picked, lessonsTotal) : 0;
   const field = past ? <UsedBeforeField value={value} lessonsTotal={lessonsTotal} onChange={setPicked} /> : null;
   return { field, body: value > 0 ? { lessonsUsedBefore: value } : {} };
