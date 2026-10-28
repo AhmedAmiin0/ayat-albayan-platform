@@ -89,7 +89,10 @@ export class CallsSweeper implements OnApplicationBootstrap, OnModuleDestroy {
     if (this.left !== 0) return true;
     if (now.getTime() - this.sweptAt < IDLE_MS) return false;
     // An unreadable setting sweeps: the safety net never stops on an error.
-    return this.gate ? this.gate.enabled().catch(() => true) : true;
+    const on = this.gate ? await this.gate.enabled().catch(() => true) : true;
+    // OFF: the next look at the setting waits a whole IDLE_MS too (a wake still sweeps at once).
+    if (!on) this.sweptAt = now.getTime();
+    return on;
   }
 
   /** One sweep now. Never throws; the number of calls ended. */

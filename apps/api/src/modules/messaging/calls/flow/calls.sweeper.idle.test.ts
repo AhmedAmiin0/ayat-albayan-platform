@@ -32,7 +32,7 @@ describe('CallsSweeper.tick — idle costs', () => {
     const off = setup(false);
     for (let i = 0; i <= 12; i += 1) await off.sweeper.tick(at(i * 10_000));
     expect(off.live).toHaveBeenCalledTimes(1);
-    expect(off.enabled).toHaveBeenCalled();
+    expect(off.enabled).toHaveBeenCalledTimes(2);
     const unreadable = setup('unreadable');
     for (let i = 0; i <= 12; i += 1) await unreadable.sweeper.tick(at(i * 10_000));
     expect(unreadable.live).toHaveBeenCalledTimes(1 + 120_000 / IDLE_MS);
