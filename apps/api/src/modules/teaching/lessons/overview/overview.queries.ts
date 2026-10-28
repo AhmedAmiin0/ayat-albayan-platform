@@ -1,6 +1,7 @@
 import { RIYADH_TZ, type Gender, type LessonStatus, type Program, type TeacherStatus } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../../../common/db/db.module';
+import { StaffPhotos } from '../../../../common/storage/avatars/staff-photos';
 import { allDayRows } from '../../../people/teachers/availability/free-slots';
 import { dbError } from '../../../../common/http/http';
 import type { LessonWindow } from '../lessons.queries';
@@ -16,6 +17,8 @@ export type OverviewTeacherRow = {
   meeting_link: string | null;
   max_students: number | null;
   status: TeacherStatus;
+  /** The teacher's photo, signed with the rest in one call (owner 2026-10-28); absent in fakes. */
+  avatar_url?: string | null;
 };
 export type OverviewSlotRow = { teacher_id: string; weekday: number; start_time: string; end_time: string; tz: string };
 export type OverviewCarryRow = { teacher_id: string; status: LessonStatus; starts_at: string; ends_at: string };
@@ -31,6 +34,7 @@ export class OverviewQueries {
   constructor(
     @Inject(DB) private readonly db: Db,
     private readonly settings: LessonsSettings,
+    private readonly photos: StaffPhotos,
   ) {}
 
   async teachers(w: LessonWindow): Promise<OverviewTeacherRow[]> {
@@ -38,7 +42,8 @@ export class OverviewQueries {
     if (w.teacherId) q = q.eq('id', w.teacherId);
     const { data, error } = await q.order('display_name_ar').order('id');
     if (error) throw dbError(error);
-    return data;
+    const photos = await this.photos.ofTeachers(data.map((t) => t.id));
+    return data.map((t) => ({ ...t, avatar_url: photos.get(t.id) ?? null }));
   }
 
   /** Weekly rows; while teachers_always_available is on, every teacher all day (what booking accepts). */

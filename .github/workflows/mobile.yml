@@ -5,8 +5,12 @@ name: mobile
 # Never production, never iOS/Apple. The repo is public: no pull_request trigger; EXPO_TOKEN lives
 # in the environment `mobile` (restrict it to develop). An OTA replaces JavaScript only, so it is
 # refused when a native dependency, plugin or app.json native field changed since the last build.
-# deploy-staging.yml «plan» finds the last preview OTA by this title (tools/scripts/env/deploy-baseline.mjs).
-run-name: mobile ${{ inputs.action }} ${{ inputs.branch }}
+# profile stripe-test (owner 2026-10-28, docs/30): the separate Stripe TEST app (eas.json `stripe-test`,
+# APP_VARIANT=stripetest, no FCM push): its APK, or an OTA to its own channel compared with its own last build.
+# Every automatic run (deploy-staging) sends no profile, so it stays preview.
+# deploy-staging.yml «plan» finds the last preview OTA by this title (tools/scripts/env/deploy-baseline.mjs):
+# a stripe-test run is titled «... stripe-test», so it is never taken for a preview OTA.
+run-name: mobile ${{ inputs.action }} ${{ inputs.profile == 'stripe-test' && 'stripe-test' || inputs.branch }}
 on:
   workflow_dispatch:
     inputs:
@@ -19,6 +23,11 @@ on:
         description: EAS update branch and environment (the preview APK listens to preview)
         type: choice
         options: [preview, development]
+        default: preview
+      profile:
+        description: "Which app: preview (the normal one) or stripe-test (the separate Stripe test APK, channel stripe-test; branch is then ignored)"
+        type: choice
+        options: [preview, stripe-test]
         default: preview
       force_ota:
         description: "I confirm: ship the OTA although a native change was found (the installed app may crash until a new APK is installed)"
@@ -57,13 +66,14 @@ jobs:
       # `eas build` loads the app config, which resolves the config plugins (expo-router ...) from
       # node_modules: without the install it fails «Failed to resolve plugin for module "expo-router"» (run 39154529791).
       - run: pnpm i --frozen-lockfile
-      - name: EAS build (Android preview APK, built on Expo's servers)
+      - name: EAS build (Android APK of the chosen profile, built on Expo's servers)
         working-directory: apps/mobile
         env:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+          PROFILE: ${{ inputs.profile || 'preview' }}
         run: |
           test -n "$EXPO_TOKEN" || { echo "::error::add the secret EXPO_TOKEN to the environment mobile"; exit 1; }
-          npx --yes "$EAS_CLI" build --platform android --profile preview --non-interactive
+          npx --yes "$EAS_CLI" build --platform android --profile "$PROFILE" --non-interactive
 
   ota:
     needs: build
@@ -98,23 +108,26 @@ jobs:
         env:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
           FORCE: ${{ inputs.force_ota }}
+          PROFILE: ${{ inputs.profile || 'preview' }}
         run: |
           test -n "$EXPO_TOKEN" || { echo "::error::add the secret EXPO_TOKEN to the environment mobile"; exit 1; }
-          last=$(npx --yes "$EAS_CLI" build:list --platform android --build-profile preview --status finished --limit 1 --json --non-interactive \
+          last=$(npx --yes "$EAS_CLI" build:list --platform android --build-profile "$PROFILE" --status finished --limit 1 --json --non-interactive \
             | node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{const b=JSON.parse(s)[0];console.log(b&&b.gitCommitHash||"")})')
           cd ../..
           if [ -z "$last" ]; then
-            echo "::warning::no finished preview build found, so a native change cannot be ruled out"
+            echo "::warning::no finished $PROFILE build found, so a native change cannot be ruled out"
             rc=1
           else
-            rc=0; node tools/scripts/ci-checks/native-changes.mjs "$last" || rc=$?
+            rc=0; node tools/scripts/ci-checks/native-changes.mjs "$last" "$PROFILE" || rc=$?
           fi
           if [ "$rc" != 0 ] && [ "$FORCE" != true ]; then
             echo "::error::native change (or unknown last build): an OTA would not reach it. Build a new APK (action build-android-apk), or tick force_ota to ship anyway."
             exit 1
           fi
           if [ "$rc" != 0 ]; then echo "::warning::force_ota ticked: shipping the OTA despite the native change"; fi
+      # The stripe-test app has no FCM (app.config.ts drops googleServicesFile), so it never needs the file.
       - name: Write the Firebase file (only if the secret exists)
+        if: ${{ inputs.profile != 'stripe-test' }}
         env:
           GOOGLE_SERVICES_JSON_SECRET: ${{ secrets.GOOGLE_SERVICES_JSON }}
         run: |
@@ -127,8 +140,16 @@ jobs:
         env:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
           EAS_BRANCH: ${{ inputs.branch }}
+          PROFILE: ${{ inputs.profile || 'preview' }}
           COMMIT: ${{ github.sha }}
         run: |
+          if [ "$PROFILE" = stripe-test ]; then
+            # The eas.json stripe-test env (Stripe UI on, the test app's config) and its own channel / environment.
+            export EXPO_PUBLIC_FEATURE_STRIPE=1 APP_VARIANT=stripetest
+            npx --yes "$EAS_CLI" update --channel stripe-test --environment preview \
+              --message "Stripe test OTA from GitHub ${COMMIT:0:7}" --non-interactive
+            exit 0
+          fi
           npx --yes "$EAS_CLI" update --branch "$EAS_BRANCH" --environment "$EAS_BRANCH" \
             --message "OTA from GitHub ${COMMIT:0:7}" --non-interactive
       - name: Remove the Firebase file

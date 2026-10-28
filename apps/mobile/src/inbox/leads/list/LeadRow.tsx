@@ -5,7 +5,6 @@ import { Avatar } from '@/core/ui/primitives/Avatar';
 import { ListRow } from '@/core/ui/layout/ListRow';
 import { ltr } from '@/core/ui/primitives/Ltr';
 import { StatusChip } from '@/core/ui/feedback/StatusChip';
-import { initialOf } from '../../shared/format';
 import { leadStatusChip } from '../detail/lead-words';
 import type { Lead } from '../../shared/types';
 import { leadRowSubtitle } from './lead-row';
@@ -15,7 +14,7 @@ export const LeadRow = memo(function LeadRow({ lead, now }: { lead: Lead; now: n
   const phone = formatPhone(lead.phone_e164);
   return (
     <ListRow
-      leading={<Avatar letter={initialOf(lead.name)} />}
+      leading={<Avatar name={lead.name ?? ''} id={lead.phone_e164} decorative />}
       title={lead.name ?? ltr(phone)}
       meta={lead.name ? phone : undefined}
       subtitle={leadRowSubtitle(lead, now)}

@@ -6,7 +6,6 @@ import { shape, type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { Avatar } from '@/core/ui/primitives/Avatar';
 import { CheckIcon } from '../../shared/chat-icons';
-import { initialOf } from '../../shared/format';
 import { chatName } from '../hooks/forward-text';
 
 interface ForwardRowProps {
@@ -45,7 +44,7 @@ export const ForwardRow = memo(function ForwardRow({ thread: th, checked, disabl
         backgroundColor: pressed || checked ? color.lapisWash : 'transparent',
       })}
     >
-      <Avatar letter={initialOf(th.display_name)} />
+      <Avatar name={th.display_name ?? ''} id={th.phone_e164} decorative />
       <View style={{ flex: 1, gap: 2 }}>
         <AppText
           numberOfLines={1}

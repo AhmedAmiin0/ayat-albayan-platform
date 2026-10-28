@@ -9,6 +9,7 @@ import { ltr } from '@/core/ui/primitives/Ltr';
 import { Screen } from '@/core/ui/layout/Screen';
 import { ChatActionsProvider } from '../thread/components/ChatActionsProvider';
 import { ChatHeader } from '../thread/components/ChatHeader';
+import { Avatar } from '@/core/ui/primitives/Avatar';
 import { ChatNotice } from '../thread/components/ChatNotice';
 import { CallButton } from '../thread/calls/entries/CallButton';
 import { Composer } from '../composer/Composer';
@@ -33,6 +34,11 @@ const NO_LESSONS: ThreadLesson[] = [];
 /** The phone icon: only once the chat is loaded (no flash), never in a teacher's own chat (docs/28). */
 const callable = (mode: ThreadMode, thread: ThreadView | null): boolean =>
   thread !== null && !isOwnThread(mode, thread);
+
+/** The contact's initials (contacts never carry a photo), toned by the number as in the list. */
+const contactAvatar = (thread: ThreadView | null, phone: string) => (
+  <Avatar name={thread?.display_name ?? ''} id={phone} decorative />
+);
 
 /** Offline: when the saved thread was fetched. Else who the number is, then the number if named. */
 function subtitleOf(phone: string, query: ThreadQuery, who: { teacher: boolean; cycle: ClockCycle }): string {
@@ -84,6 +90,7 @@ export function ThreadScreen() {
           title={title}
           subtitle={subtitleOf(phone, query, { teacher, cycle })}
           onBack={back}
+          avatar={contactAvatar(thread, phone)}
           trailing={
             mode.kind === 'admin' ? (
               <>

@@ -3,10 +3,12 @@ import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { Link } from '@tanstack/react-router';
 import { Button, buttonVariants } from '@/components/ui/form/button';
+import { Avatar } from '@/components/ui/display/avatar';
 import { Cartouche } from '@/components/ui/display/cartouche';
 import { PageHead } from '@/components/ui/layout/page';
 import { StatusChip } from '@/components/ui/display/status-chip';
 import { Tabs } from '@/components/ui/layout/tabs';
+import { StaffPhotoControl } from '@/features/people/staff-photo';
 import { EntityActivity } from '@/features/reporting/activity/EntityActivity';
 import { TeacherCalendarOwner } from '@/features/platform/google-sync';
 import { t } from '@/lib/i18n/i18n';
@@ -58,7 +60,7 @@ function AvailabilityPanel({ teacher }: { teacher: Teacher }) {
   );
 }
 
-/** Teacher profile (R-TCH-01, R-TCH-02): cartouche name + status, meta line, tabs. */
+/** Teacher profile (R-TCH-01, R-TCH-02): photo, cartouche name + status, meta line, the admin's photo control, tabs. */
 export function TeacherDetailPage({ teacherId }: { teacherId: string }) {
   const teacher = useQuery(teacherQuery(teacherId));
   const [tab, setTab] = useState<Tab>('availability');
@@ -71,6 +73,7 @@ export function TeacherDetailPage({ teacherId }: { teacherId: string }) {
   return (
     <>
       <PageHead className="mb-3.5">
+        <Avatar name={teacherLabel(data)} id={data.id} src={data.avatar_url} size="lg" decorative />
         <Cartouche>{teacherLabel(data)}</Cartouche>
         <StatusChip {...teacherStatusStyle[data.status]} label={t.enums.teacherStatus[data.status]} />
         <HeadActions
@@ -87,6 +90,7 @@ export function TeacherDetailPage({ teacherId }: { teacherId: string }) {
         />
       </PageHead>
       <TeacherMeta teacher={data} />
+      <StaffPhotoControl kind="teachers" id={data.id} name={teacherLabel(data)} hasPhoto={!!data.avatar_url} className="mb-4 max-w-xl" />
       <Tabs label={t.teachers.profile} tabs={TABS} value={tab} onChange={setTab} />
       <div role="tabpanel" aria-label={TABS.find((x) => x.value === tab)?.label}>
         {tab === 'availability' ? (

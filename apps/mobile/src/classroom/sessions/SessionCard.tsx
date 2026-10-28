@@ -7,6 +7,7 @@ import { shape, type, useTheme } from '@/theme';
 import { riyadhTime, studentNames } from '@/today/lib/lesson-text';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { StatusChip } from '@/core/ui/feedback/StatusChip';
+import { Avatar } from '@/core/ui/primitives/Avatar';
 import { SessionActions } from './SessionActions';
 import type { SessionGroup } from './sessions';
 import { statusWord } from '@/core/ui/feedback/lesson-status';
@@ -22,6 +23,7 @@ function Chip({ lesson, group }: { lesson: LessonView; group: SessionGroup }) {
 export function SessionCard({ lesson, group }: { lesson: LessonView; group: SessionGroup }) {
   const { color } = useTheme();
   const cycle = useClockCycle();
+  const teacher = teacherName(lesson.teacher, locale);
   const time = t.classroom.admin.time
     .replace('{from}', riyadhTime(lesson.starts_at, cycle))
     .replace('{to}', riyadhTime(lesson.ends_at, cycle));
@@ -29,8 +31,8 @@ export function SessionCard({ lesson, group }: { lesson: LessonView; group: Sess
   return (
     <View
       style={{
-        gap: 6,
         padding: 12,
+        gap: 6,
         borderRadius: shape.radius.lg,
         borderWidth: 1,
         borderColor: color.rule,
@@ -44,7 +46,10 @@ export function SessionCard({ lesson, group }: { lesson: LessonView; group: Sess
         <Chip lesson={lesson} group={group} />
       </View>
       <AppText style={{ fontFamily: type.ui[600], fontSize: type.size.body, color: color.ink }}>{studentNames(lesson)}</AppText>
-      <AppText style={small}>{`${t.classroom.admin.teacher} ${teacherName(lesson.teacher, locale)}`}</AppText>
+      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+        <Avatar name={teacher} id={lesson.teacher.id} src={lesson.teacher.avatar_url} size="sm" decorative />
+        <AppText style={small}>{`${t.classroom.admin.teacher} ${teacher}`}</AppText>
+      </View>
       <SessionActions lesson={lesson} group={group} />
     </View>
   );

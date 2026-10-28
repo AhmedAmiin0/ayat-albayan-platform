@@ -599,11 +599,6 @@
       "count": 1
     }
   },
-  "src/modules/people/me/account/account.avatar.service.ts": {
-    "ab/module-boundaries": {
-      "count": 2
-    }
-  },
   "src/modules/people/me/account/account.queries.ts": {
     "ab/module-boundaries": {
       "count": 2

@@ -1,3 +1,4 @@
+import type { Ref } from 'react';
 import { View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { shape, type, useTheme } from '@/theme';
@@ -15,11 +16,13 @@ interface InlineConfirmProps {
   onCancel: () => void;
   /** While the confirm request runs; pass the confirm label that says so. */
   busy?: boolean;
+  /** The confirm button, e.g. to move screen-reader focus to it on open. */
+  confirmRef?: Ref<View>;
 }
 
 /** docs/07 §9 inline confirm strip: the question, then [cancel ghost][confirm primary] at 44pt. */
 export function InlineConfirm(props: InlineConfirmProps) {
-  const { message, onConfirm, onCancel, busy = false } = props;
+  const { message, onConfirm, onCancel, busy = false, confirmRef } = props;
   const { color } = useTheme();
   return (
     <View
@@ -48,7 +51,7 @@ export function InlineConfirm(props: InlineConfirmProps) {
           <Button variant="ghost" label={props.cancelLabel ?? t.common.cancel} onPress={onCancel} />
         </View>
         <View style={{ flex: 1 }}>
-          <Button label={props.confirmLabel ?? t.common.confirm} onPress={onConfirm} busy={busy} />
+          <Button ref={confirmRef} label={props.confirmLabel ?? t.common.confirm} onPress={onConfirm} busy={busy} />
         </View>
       </View>
     </View>

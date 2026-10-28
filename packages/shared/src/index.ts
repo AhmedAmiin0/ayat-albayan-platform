@@ -28,6 +28,7 @@ export * from './status-style/commission-status-style.js';
 export * from './students/student-lists.js';
 export * from './students/index.js';
 export * from './theme/theme.js';
+export * from './theme/avatar-tones.js';
 export * from './i18n/locale.js';
 export * from './time-zone/time-zone.js';
 export * from './time-zone/week.js';

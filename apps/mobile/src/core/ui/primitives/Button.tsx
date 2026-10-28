@@ -1,4 +1,5 @@
-import { Pressable } from 'react-native';
+import type { Ref } from 'react';
+import { Pressable, type View } from 'react-native';
 import { shape, type, useTheme } from '@/theme';
 import { AppText } from './AppText';
 
@@ -18,6 +19,8 @@ export interface ButtonProps {
   disabled?: boolean;
   /** The spoken name when the label repeats down a list («غيّر الميعاد — يوسف»). */
   accessibilityLabel?: string;
+  /** The pressable, e.g. to move screen-reader focus to it (focusNode). */
+  ref?: Ref<View>;
 }
 
 type Palette = ReturnType<typeof useTheme>['color'];
@@ -34,11 +37,12 @@ function look(variant: ButtonVariant, color: Palette, pressed: boolean) {
 export const pressScale = (pressed: boolean, off: boolean) => (pressed && !off ? 0.98 : 1);
 
 /** docs/07 §6 Button, at the 44pt mobile touch size. White text on the green fill; never saffron. */
-export function Button({ label, onPress, variant = 'primary', busy = false, ...p }: ButtonProps) {
+export function Button({ label, onPress, variant = 'primary', busy = false, ref, ...p }: ButtonProps) {
   const { color } = useTheme();
   const off = busy || p.disabled === true;
   return (
     <Pressable
+      ref={ref}
       accessibilityRole="button"
       accessibilityLabel={p.accessibilityLabel}
       accessibilityState={{ disabled: off, busy }}

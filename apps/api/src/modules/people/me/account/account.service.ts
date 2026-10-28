@@ -27,7 +27,8 @@ export class AccountService {
     if (!row) throw notFound('profile_not_found');
     const email = (await this.ports.auth.emailOf(user.id)) ?? user.email;
     const avatar_url = row.avatar_path ? await this.ports.files.url(row.avatar_path) : null;
-    return { id: row.id, full_name: row.full_name, email, phone_e164: row.phone_e164, avatar_url, role: row.role };
+    const avatar_seed = row.teacher_id ?? row.id;
+    return { id: row.id, full_name: row.full_name, email, phone_e164: row.phone_e164, avatar_url, avatar_seed, role: row.role };
   }
 
   /** R-ACC-02: name and/or phone; 409 phone_taken. */

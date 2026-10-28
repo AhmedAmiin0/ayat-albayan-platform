@@ -5,10 +5,10 @@ import type { LinkRow } from './payment-links.queries';
 // Whitelists (docs/30): explicit keys, never a spread of the row (the token appears only inside the url,
 // the Stripe ids and the client request id never).
 
-export function toLinkView(row: LinkRow, ctx: { webOrigin: string; now: Date }): PaymentLinkView {
+export function toLinkView(row: LinkRow, ctx: { payOrigin: string; now: Date }): PaymentLinkView {
   return {
     id: row.id,
-    url: paymentLinkUrl(ctx.webOrigin, row.token),
+    url: paymentLinkUrl(ctx.payOrigin, row.token),
     kind: row.kind as PaymentLinkKind,
     status: effectiveLinkStatus({ status: statusOf(row), expires_at: row.expires_at }, ctx.now),
     amount: row.amount,

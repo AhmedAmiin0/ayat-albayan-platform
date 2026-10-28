@@ -6,7 +6,6 @@ import { Avatar } from '@/core/ui/primitives/Avatar';
 import { ListRow } from '@/core/ui/layout/ListRow';
 import { clockAt } from '../../../shared/format';
 import { CallArrowIcon } from '../screen/call-icons';
-import { initialOf } from '../screen/Initials';
 import { callEntryText, callerName, callInk } from '../entries/call-text';
 import { useClockCycle } from '@/core/lib/clock';
 
@@ -25,7 +24,7 @@ export function CallsLogRow({ call, showsPhone, onOpen }: CallsLogRowProps) {
   const name = callerName(call, showsPhone);
   return (
     <ListRow
-      leading={<Avatar letter={initialOf(name)} />}
+      leading={<Avatar name={call.display_name ?? ''} id={call.phone_e164} decorative />}
       title={name}
       subtitle={callEntryText(call)}
       subtitleLeading={<CallArrowIcon out={call.direction === 'outbound'} color={ink} size={14} />}

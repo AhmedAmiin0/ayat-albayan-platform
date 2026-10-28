@@ -79,3 +79,27 @@ test('ci: e2e keeps the RUN_E2E switch and one database per shard', () => {
   assert.equal(ci.jobs.e2e.env.SHARDS, '${{ matrix.total }}');
   assert.ok(!('pull_request_target' in ci.on));
 });
+
+test('mobile.yml profile: preview by default (every automatic run), stripe-test only by hand, on its own channel', () => {
+  const mobile = load('mobile.yml');
+  const input = mobile.on.workflow_dispatch.inputs.profile;
+  assert.deepEqual([input.type, input.options, input.default], ['choice', ['preview', 'stripe-test'], 'preview']);
+  const dispatch = deploy.jobs.ota.steps.map((s) => s.run ?? '').join('\n');
+  assert.doesNotMatch(dispatch, /profile|stripe/i, 'deploy-staging must leave the profile at preview');
+  const step = (job, name) => mobile.jobs[job].steps.find((s) => s.name?.startsWith(name));
+  assert.match(step('build', 'EAS build').run, /--profile "\$PROFILE"/);
+  const guard = step('ota', 'Native-change guard');
+  assert.match(guard.run, /--build-profile "\$PROFILE" --status finished/);
+  assert.match(guard.run, /native-changes\.mjs "\$last" "\$PROFILE"/);
+  for (const s of [step('build', 'EAS build'), guard, step('ota', 'EAS update')]) {
+    assert.equal(s.env.PROFILE, "${{ inputs.profile || 'preview' }}");
+  }
+  const update = step('ota', 'EAS update').run;
+  const [side, normal] = update.split('exit 0');
+  assert.match(side, /if \[ "\$PROFILE" = stripe-test \]/);
+  assert.match(side, /EXPO_PUBLIC_FEATURE_STRIPE=1 APP_VARIANT=stripetest/);
+  assert.match(side, /--channel stripe-test --environment preview/);
+  assert.doesNotMatch(normal, /STRIPE|APP_VARIANT|channel/);
+  assert.match(normal, /update --branch "\$EAS_BRANCH" --environment "\$EAS_BRANCH"/);
+  assert.match(mobile['run-name'], /inputs\.profile == 'stripe-test' && 'stripe-test' \|\| inputs\.branch/);
+});

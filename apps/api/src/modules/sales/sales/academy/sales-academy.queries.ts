@@ -2,6 +2,7 @@ import type { Tables } from '@ab/db';
 import { OPEN_LESSON_STATUSES, type SalesStudentsQuery } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../../../common/db/db.module';
+import { StaffPhotos } from '../../../../common/storage/avatars/staff-photos';
 import { studentNameOrCodeFilter } from '../../../people/students/students.mapper';
 import { dbError } from '../../../../common/http/http';
 
@@ -14,6 +15,8 @@ type Student = Pick<Tables<'students'>, 'id' | 'code' | 'name' | 'status' | 'pro
  */
 export type SalesTeacherRow = Pick<Tables<'teachers'>, 'id' | 'display_name_ar' | 'display_name_en' | 'gender' | 'programs' | 'meeting_link' | 'meeting_mode'> & {
   students: Student[];
+  /** The teacher's photo, signed with the rest of the list in one call (owner 2026-10-28); absent in fakes. */
+  avatar_url?: string | null;
 };
 
 export type SalesStudentRow = Pick<Tables<'students'>, 'id' | 'code' | 'name' | 'status' | 'program'> & {
@@ -36,7 +39,10 @@ export interface SalesLiveRow {
  */
 @Injectable()
 export class SalesAcademyQueries {
-  constructor(@Inject(DB) private readonly db: Db) {}
+  constructor(
+    @Inject(DB) private readonly db: Db,
+    private readonly photos: StaffPhotos,
+  ) {}
 
   async teachers(): Promise<SalesTeacherRow[]> {
     const { data, error } = await this.db
@@ -45,7 +51,8 @@ export class SalesAcademyQueries {
       .eq('status', 'active')
       .order('display_name_ar');
     if (error) throw dbError(error);
-    return data;
+    const photos = await this.photos.ofTeachers(data.map((t) => t.id));
+    return data.map((t) => ({ ...t, avatar_url: photos.get(t.id) ?? null }));
   }
 
   /** One page by name, with the guardian's name and phone (owner 2026-10-27: the row opens that family's chat); `search` is a name (Arabic-normalised) or a code, like the admin's list. */

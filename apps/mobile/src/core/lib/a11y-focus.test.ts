@@ -1,6 +1,6 @@
 import { AccessibilityInfo } from 'react-native';
 import type { AppTextNode } from '@/core/ui/primitives/AppText';
-import { focusNode } from './use-focus-on-open';
+import { focusNode } from './a11y-focus';
 
 const mockFindNodeHandle = jest.fn();
 jest.mock('react-native/Libraries/ReactNative/RendererProxy', () => ({

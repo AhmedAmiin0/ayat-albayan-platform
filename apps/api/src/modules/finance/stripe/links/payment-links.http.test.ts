@@ -7,6 +7,7 @@ import { linkRow, REQ, stripeDefaults, type StripeMocks } from '../testing/strip
 
 vi.hoisted(() => {
   process.env.FEATURE_STRIPE = 'test';
+  process.env.API_PUBLIC_URL = 'https://api.test.example';
 });
 
 const BODY = { studentId: STUDENT_ID, kind: 'new', pricing: { tier: 'weekly' }, amount: 120, currency: 'SAR', clientRequestId: REQ };
@@ -35,7 +36,7 @@ describe('POST /sales/payment-links: the package as «اشتراك جديد» ma
     expect(s.links.insert).toHaveBeenCalledWith(expect.objectContaining({ subscription_id: SUB_ID, amount: 120, reference_price: 145, currency: 'SAR', created_by: SALES_A.id, kind: 'new' }));
     expect(s.links.insert.mock.calls[0]?.[0].token).toMatch(/^[A-Za-z0-9_-]{43}$/);
     expect(m.audit.record).toHaveBeenCalledWith(expect.objectContaining({ entity: 'payment_links', action: 'create' }));
-    expect(res.json()).toMatchObject({ url: `http://localhost:5173/pay/${linkRow().token}`, amount: 120, reference_price: 145, status: 'open' });
+    expect(res.json()).toMatchObject({ url: `https://api.test.example/pay/${linkRow().token}`, amount: 120, reference_price: 145, status: 'open' });
     expect(JSON.stringify(res.json())).not.toContain('client_request_id');
   });
 
