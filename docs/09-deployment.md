@@ -48,7 +48,7 @@ Each process keeps its own in-memory copy as before; Redis is asked on a miss, b
 - *Unannounced change* (Redis down during the write, a lost message, raw SQL): one TTL end to end, as without Redis. Each shared value carries the time its database read began, and a local copy taken from it lives only what is left of the TTL: permissions 30 s (`perm:*` stored 15 s), settings `SETTINGS_CACHE_MS` (rows stored for half of it; ConfigStore also sees raw SQL by its 2 s revision check), public custom config 60 s.
 - `REDIS_URL` unset: no change at all (`cache.inert.test.ts`: every read is the loader, the TTLs are the per-process ones, `/health` and the boot as before).
 
-Switch on: add the `ayat-redis` service (`redis:7-alpine`, no published port, no persistence, `maxmemory 64mb`, `allkeys-lru`) and `REDIS_URL=redis://ayat-redis:6379` for every API copy and the worker, then roll. Switch off: remove `REDIS_URL` and roll (Redis can then be removed); nothing is stored that the database does not have.
+**On since PR #351 (owner 2026-10-28: «You can set redis url»):** `deploy/staging/docker-compose.yml` runs `ayat-redis` (`redis:7-alpine`, no published port, no persistence, `maxmemory 64mb`, `allkeys-lru`, healthcheck, 96 MB limit) and sets `REDIS_URL=redis://ayat-redis:6379` on the API; `/health` should show `cache.mode: "redis"`, `connected: true`. The two-copy layout must keep both (the service, and `REDIS_URL` on every API copy and the worker). Switch off: remove `REDIS_URL` from the compose file and deploy (every cache is per process again); Redis can then be removed, nothing exists only in it.
 
 ## Redeploy
 
