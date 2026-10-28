@@ -34,10 +34,10 @@ export type InjectArgs = { method: 'GET' | 'POST' | 'PUT' | 'DELETE'; url: strin
 function mocks() {
   return {
     reports: {
-      get: vi.fn(), byLesson: vi.fn(), lesson: vi.fn(), ensureDrafts: vi.fn(), updateDraft: vi.fn(),
+      get: vi.fn(), byLesson: vi.fn(), lesson: vi.fn(), ensureDrafts: vi.fn(), alignUntouched: vi.fn(), updateDraft: vi.fn(),
       submit: vi.fn(), retryPdf: vi.fn(), requestPdf: vi.fn(),
     },
-    lessons: { lessonNumbers: vi.fn(), packages: vi.fn() },
+    lessons: { lessonNumbers: vi.fn(), packages: vi.fn(), memory: vi.fn() },
     history: { submitted: vi.fn(), lessons: vi.fn(), sequence: vi.fn(), student: vi.fn(), taught: vi.fn(), pending: vi.fn() },
     files: { add: vi.fn(), get: vi.fn(), remove: vi.fn(), pdfName: vi.fn() },
     storage: { signedUpload: vi.fn(), signedDownload: vi.fn(), exists: vi.fn(), remove: vi.fn(), upload: vi.fn() },
@@ -80,6 +80,7 @@ export async function reportsApp() {
     m.reports.updateDraft.mockImplementation(async () => reportRow());
     m.lessons.lessonNumbers.mockResolvedValue(new Map());
     m.lessons.packages.mockResolvedValue(new Map());
+    m.lessons.memory.mockResolvedValue(new Map());
     m.teachers.idByProfile.mockImplementation(async (id: string) => (id === TEACHER.id ? TEACHER_ID : id === OTHER_TEACHER.id ? 'other' : null));
     vi.mocked(m.settings.all).mockResolvedValue({ ...SETTING_DEFAULTS });
     m.history.submitted.mockResolvedValue([]);

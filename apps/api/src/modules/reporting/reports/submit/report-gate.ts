@@ -8,8 +8,8 @@ import type { ReportRow } from '../report-row';
 import { ReportsQueries } from '../reports.queries';
 import { ReportsSettings } from '../reports.settings';
 
-/** The caller, now, the teacher's edit window and the late-cancel policy. */
-type ReportContext = ViewContext & { lateCancelHours: number | null };
+/** The caller, now, the teacher's edit window, the late-cancel policy and report_form_v2. */
+type ReportContext = ViewContext & { lateCancelHours: number | null; formV2: boolean };
 
 /** Every report route goes through here: load + ownership (rule 9) and the edit window (R-REP-02). */
 @Injectable()
@@ -40,6 +40,7 @@ export class ReportGate {
       now: new Date(),
       hours: s.report_teacher_edit_hours,
       lateCancelHours: s.late_cancel_hours,
+      formV2: s.report_form_v2,
     };
   }
 

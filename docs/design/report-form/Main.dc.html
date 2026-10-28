@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<title>تقرير الحلقة</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#047857}a:hover{color:#065f46}
+button{font-family:inherit;cursor:pointer}
+textarea,input{font-family:inherit}
+</style>
+</helmet>
+<div dir="rtl" style="width: 390px; min-height: {{frameH}}px; box-sizing: border-box; background: {{c.margin}}; color: {{c.ink}}; font-family: 'Noto Sans Arabic', system-ui, sans-serif; display: flex; flex-direction: column;">
+
+  <header style="background: {{c.page}}; border-bottom: 1px solid {{c.rule}}; padding: 18px 16px 14px; display: flex; flex-direction: column; gap: 10px;">
+    <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px;">
+      <div style="display: flex; flex-direction: column; gap: 2px;">
+        <h1 style="margin: 0; font-size: 22px; line-height: 1.35; font-weight: 700;">تقرير الحلقة</h1>
+        <p style="margin: 0; font-size: 14px; line-height: 1.6; color: {{c.ink2}};">يوسف محمد · <span dir="ltr">AB-2041</span></p>
+      </div>
+      <button type="button" style="min-height: 44px; padding: 0 14px; border-radius: 8px; border: 0; background: transparent; color: {{c.lapis}}; font-size: 15px; font-weight: 600;">رجوع</button>
+    </div>
+    <div style="display: flex; flex-wrap: wrap; gap: 6px;">
+      <span style="padding: 4px 10px; border-radius: 999px; background: {{c.sunk}}; color: {{c.ink2}}; font-size: 13px; line-height: 1.6;">الحلقة 9 من 12</span>
+      <span style="padding: 4px 10px; border-radius: 999px; background: {{c.sunk}}; color: {{c.ink2}}; font-size: 13px; line-height: 1.6;">الأحد 27 أكتوبر · 4:00 م</span>
+      <span style="padding: 4px 10px; border-radius: 999px; background: {{c.sunk}}; color: {{c.ink2}}; font-size: 13px; line-height: 1.6;">المعلمة: سارة</span>
+    </div>
+    <p style="margin: 0; font-size: 12px; line-height: 1.6; color: {{c.ink3}};">تُملأ بيانات الحلقة تلقائيًا من الجدول.</p>
+  </header>
+
+  <main style="padding: 14px 16px 24px; display: flex; flex-direction: column; gap: 14px;">
+
+    <section aria-label="الحضور" style="display: flex; flex-direction: column; gap: 8px;">
+      <h2 style="margin: 0; font-size: 15px; line-height: 1.6; font-weight: 700;">الحضور</h2>
+      <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px;">
+        <sc-for list="{{att}}" as="a" hint-placeholder-count="4">
+          <button type="button" onClick="{{a.pick}}" aria-pressed="{{a.on}}" style="min-height: 44px; padding: 8px 10px; border-radius: 8px; font-size: 14px; font-weight: 600; {{a.st}}">{{a.label}}</button>
+        </sc-for>
+      </div>
+    </section>
+
+    <section aria-label="البرنامج" style="display: flex; flex-direction: column; gap: 8px;">
+      <h2 style="margin: 0; font-size: 15px; line-height: 1.6; font-weight: 700;">البرنامج</h2>
+      <div style="display: flex; gap: 8px;">
+        <sc-for list="{{progs}}" as="p" hint-placeholder-count="3">
+          <button type="button" onClick="{{p.pick}}" aria-pressed="{{p.on}}" style="flex: 1 1 0; min-height: 44px; padding: 6px 8px; border-radius: 8px; font-size: 13px; font-weight: 600; line-height: 1.4; {{p.st}}">{{p.label}}</button>
+        </sc-for>
+      </div>
+    </section>
+
+    <sc-if value="{{absentish}}" hint-placeholder-val="{{false}}">
+      <section style="background: {{c.raised}}; border: 1px solid {{c.rule}}; border-radius: 12px; padding: 16px; display: flex; flex-direction: column; gap: 10px;">
+        <h2 style="margin: 0; font-size: 16px; line-height: 1.6; font-weight: 700;">{{absentTitle}}</h2>
+        <p style="margin: 0; font-size: 14px; line-height: 1.7; color: {{c.ink2}};">لا يُطلب محتوى ولا تقييم لهذه الحلقة. يصل الأسرة سطر واحد بحالة الحضور.</p>
+        <span style="align-self: flex-start; padding: 4px 10px; border-radius: 999px; font-size: 13px; font-weight: 600; {{chargeSt}}">{{chargeLine}}</span>
+        <label for="absNote" style="font-size: 14px; font-weight: 600; margin-top: 4px;">ملاحظة للأسرة (اختياري)</label>
+        <textarea id="absNote" rows="3" placeholder="مثال: نرجو إبلاغنا مسبقًا عند الاعتذار" style="border-radius: 8px; border: 1px solid {{c.ruleInput}}; background: {{c.page}}; color: {{c.ink}}; padding: 10px 12px; font-size: 15px; line-height: 1.7; resize: none;"></textarea>
+      </section>
+    </sc-if>
+
+    <sc-if value="{{showQuran}}" hint-placeholder-val="{{true}}">
+      <div style="display: flex; flex-direction: column; gap: 14px;">
+        <sc-for list="{{segs}}" as="s" hint-placeholder-count="3">
+          <section aria-label="{{s.title}}" style="background: {{c.raised}}; border: 1px solid {{c.rule}}; border-radius: 12px; padding: 14px; display: flex; flex-direction: column; gap: 10px;">
+            <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px;">
+              <h2 style="margin: 0; font-size: 16px; line-height: 1.6; font-weight: 700;">{{s.title}}</h2>
+              <span style="font-size: 12px; color: {{c.ink3}};">{{s.meta}}</span>
+            </div>
+            <button type="button" style="min-height: 48px; padding: 8px 12px; border-radius: 8px; border: 1px solid {{c.ruleInput}}; background: {{c.page}}; color: {{c.ink}}; display: flex; align-items: center; justify-content: space-between; gap: 8px; font-size: 15px; font-weight: 600; text-align: start;">
+              <span>{{s.range}}</span>
+              <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"></path></svg>
+            </button>
+            <div role="radiogroup" aria-label="تقييم {{s.title}}" style="display: flex; flex-wrap: wrap; gap: 6px;">
+              <sc-for list="{{s.rates}}" as="r" hint-placeholder-count="5">
+                <button type="button" role="radio" aria-checked="{{r.on}}" onClick="{{r.pick}}" style="min-height: 36px; padding: 4px 10px; border-radius: 999px; font-size: 13px; font-weight: 600; {{r.st}}">{{r.label}}</button>
+              </sc-for>
+            </div>
+          </section>
+        </sc-for>
+        <button type="button" style="align-self: flex-start; min-height: 44px; padding: 0 12px; border-radius: 8px; border: 1px dashed {{c.ruleStrong}}; background: transparent; color: {{c.lapis}}; font-size: 14px; font-weight: 600;">+ أضف مقطعًا آخر</button>
+
+        <section aria-label="الدرس النظري" style="background: {{c.raised}}; border: 1px solid {{c.rule}}; border-radius: 12px; padding: 14px; display: flex; flex-direction: column; gap: 10px;">
+          <h2 style="margin: 0; font-size: 16px; line-height: 1.6; font-weight: 700;">الدرس النظري / التجويد <span style="font-size: 13px; font-weight: 500; color: {{c.ink3}};">(اختياري)</span></h2>
+          <div style="display: flex; flex-wrap: wrap; gap: 6px;">
+            <sc-for list="{{tajweed}}" as="t" hint-placeholder-count="5">
+              <button type="button" onClick="{{t.pick}}" aria-pressed="{{t.on}}" style="min-height: 36px; padding: 4px 10px; border-radius: 999px; font-size: 13px; font-weight: 600; {{t.st}}">{{t.label}}</button>
+            </sc-for>
+          </div>
+        </section>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{showArabic}}" hint-placeholder-val="{{false}}">
+      <div style="display: flex; flex-direction: column; gap: 14px;">
+        <section style="background: {{c.raised}}; border: 1px solid {{c.rule}}; border-radius: 12px; padding: 14px; display: flex; flex-direction: column; gap: 8px;">
+          <label for="arTopic" style="font-size: 16px; font-weight: 700; line-height: 1.6;">موضوع الدرس</label>
+          <input id="arTopic" value="الجملة الاسمية: المبتدأ والخبر" readonly style="min-height: 48px; border-radius: 8px; border: 1px solid {{c.ruleInput}}; background: {{c.page}}; color: {{c.ink}}; padding: 0 12px; font-size: 15px;">
+        </section>
+        <sc-for list="{{skills}}" as="s" hint-placeholder-count="4">
+          <section aria-label="{{s.title}}" style="background: {{c.raised}}; border: 1px solid {{c.rule}}; border-radius: 12px; padding: 14px; display: flex; flex-direction: column; gap: 8px;">
+            <h2 style="margin: 0; font-size: 15px; line-height: 1.6; font-weight: 700;">{{s.title}}</h2>
+            <div role="radiogroup" aria-label="تقييم {{s.title}}" style="display: flex; flex-wrap: wrap; gap: 6px;">
+              <sc-for list="{{s.rates}}" as="r" hint-placeholder-count="5">
+                <button type="button" role="radio" aria-checked="{{r.on}}" onClick="{{r.pick}}" style="min-height: 36px; padding: 4px 10px; border-radius: 999px; font-size: 13px; font-weight: 600; {{r.st}}">{{r.label}}</button>
+              </sc-for>
+            </div>
+          </section>
+        </sc-for>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{showIslamic}}" hint-placeholder-val="{{false}}">
+      <div style="display: flex; flex-direction: column; gap: 14px;">
+        <section style="background: {{c.raised}}; border: 1px solid {{c.rule}}; border-radius: 12px; padding: 14px; display: flex; flex-direction: column; gap: 10px;">
+          <h2 style="margin: 0; font-size: 16px; line-height: 1.6; font-weight: 700;">المجال</h2>
+          <div style="display: flex; flex-wrap: wrap; gap: 6px;">
+            <sc-for list="{{domains}}" as="d" hint-placeholder-count="5">
+              <button type="button" onClick="{{d.pick}}" aria-pressed="{{d.on}}" style="min-height: 36px; padding: 4px 12px; border-radius: 999px; font-size: 13px; font-weight: 600; {{d.st}}">{{d.label}}</button>
+            </sc-for>
+          </div>
+          <label for="isTopic" style="font-size: 14px; font-weight: 600;">موضوع الدرس</label>
+          <input id="isTopic" value="أركان الوضوء وسننه" readonly style="min-height: 48px; border-radius: 8px; border: 1px solid {{c.ruleInput}}; background: {{c.page}}; color: {{c.ink}}; padding: 0 12px; font-size: 15px;">
+          <label for="isMemo" style="font-size: 14px; font-weight: 600;">المحفوظ <span style="font-weight: 500; color: {{c.ink3}};">(اختياري)</span></label>
+          <input id="isMemo" value="حديث: إنما الأعمال بالنيات" readonly style="min-height: 48px; border-radius: 8px; border: 1px solid {{c.ruleInput}}; background: {{c.page}}; color: {{c.ink}}; padding: 0 12px; font-size: 15px;">
+        </section>
+        <sc-for list="{{isRates}}" as="s" hint-placeholder-count="2">
+          <section aria-label="{{s.title}}" style="background: {{c.raised}}; border: 1px solid {{c.rule}}; border-radius: 12px; padding: 14px; display: flex; flex-direction: column; gap: 8px;">
+            <h2 style="margin: 0; font-size: 15px; line-height: 1.6; font-weight: 700;">{{s.title}}</h2>
+            <div role="radiogroup" aria-label="تقييم {{s.title}}" style="display: flex; flex-wrap: wrap; gap: 6px;">
+              <sc-for list="{{s.rates}}" as="r" hint-placeholder-count="5">
+                <button type="button" role="radio" aria-checked="{{r.on}}" onClick="{{r.pick}}" style="min-height: 36px; padding: 4px 10px; border-radius: 999px; font-size: 13px; font-weight: 600; {{r.st}}">{{r.label}}</button>
+              </sc-for>
+            </div>
+          </section>
+        </sc-for>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{present}}" hint-placeholder-val="{{true}}">
+      <div style="display: flex; flex-direction: column; gap: 14px;">
+        <section aria-label="التقدير العام" style="background: {{c.raised}}; border: 1px solid {{c.rule}}; border-radius: 12px; padding: 14px; display: flex; flex-direction: column; gap: 8px;">
+          <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 8px;">
+            <h2 style="margin: 0; font-size: 16px; line-height: 1.6; font-weight: 700;">التقدير العام</h2>
+            <span style="font-size: 12px; color: {{c.ink3}};">مقترح من التقييمات: {{suggested}}</span>
+          </div>
+          <div role="radiogroup" aria-label="التقدير العام" style="display: flex; flex-wrap: wrap; gap: 6px;">
+            <sc-for list="{{overall}}" as="r" hint-placeholder-count="5">
+              <button type="button" role="radio" aria-checked="{{r.on}}" onClick="{{r.pick}}" style="min-height: 36px; padding: 4px 10px; border-radius: 999px; font-size: 13px; font-weight: 600; {{r.st}}">{{r.label}}</button>
+            </sc-for>
+          </div>
+        </section>
+
+        <section style="background: {{c.raised}}; border: 1px solid {{c.rule}}; border-radius: 12px; padding: 14px; display: flex; flex-direction: column; gap: 8px;">
+          <label for="hw" style="font-size: 16px; font-weight: 700; line-height: 1.6;">الواجب قبل الحلقة القادمة</label>
+          <textarea id="hw" rows="3" style="border-radius: 8px; border: 1px solid {{c.ruleInput}}; background: {{c.page}}; color: {{c.ink}}; padding: 10px 12px; font-size: 15px; line-height: 1.7; resize: none;">{{homework}}</textarea>
+          <p style="margin: 0; font-size: 12px; color: {{c.ink3}};">مقترح من محتوى الحلقة، ويمكن تعديله.</p>
+        </section>
+
+        <section style="background: {{c.lapisWash}}; border-radius: 12px; padding: 14px; display: flex; flex-direction: column; gap: 4px;">
+          <h2 style="margin: 0; font-size: 15px; line-height: 1.6; font-weight: 700;">الحلقة القادمة</h2>
+          <p style="margin: 0; font-size: 14px; line-height: 1.7; color: {{c.ink2}};">{{nextPlan}}</p>
+          <button type="button" style="align-self: flex-start; min-height: 40px; padding: 0; border: 0; background: transparent; color: {{c.lapis}}; font-size: 14px; font-weight: 600;">تعديل الخطة</button>
+        </section>
+
+        <section style="background: {{c.raised}}; border: 1px solid {{c.rule}}; border-radius: 12px; padding: 14px; display: flex; flex-direction: column; gap: 8px;">
+          <label for="note" style="font-size: 16px; font-weight: 700; line-height: 1.6;">ملاحظة للأسرة <span style="font-size: 13px; font-weight: 500; color: {{c.ink3}};">(اختياري)</span></label>
+          <div style="display: flex; flex-wrap: wrap; gap: 6px;">
+            <sc-for list="{{quick}}" as="q" hint-placeholder-count="3">
+              <button type="button" onClick="{{q.pick}}" aria-pressed="{{q.on}}" style="min-height: 36px; padding: 4px 10px; border-radius: 999px; font-size: 13px; font-weight: 600; {{q.st}}">{{q.label}}</button>
+            </sc-for>
+          </div>
+          <textarea id="note" rows="2" placeholder="اكتب ملاحظة قصيرة للأسرة" style="border-radius: 8px; border: 1px solid {{c.ruleInput}}; background: {{c.page}}; color: {{c.ink}}; padding: 10px 12px; font-size: 15px; line-height: 1.7; resize: none;"></textarea>
+          <button type="button" style="align-self: flex-start; min-height: 40px; padding: 0; border: 0; background: transparent; color: {{c.lapis}}; font-size: 14px; font-weight: 600;">+ أرفق ملفًا</button>
+        </section>
+      </div>
+    </sc-if>
+
+    <footer style="display: flex; flex-direction: column; gap: 8px; padding-top: 4px;">
+      <button type="button" style="min-height: 52px; border-radius: 10px; border: 0; background: {{c.lapisFill}}; color: {{c.onLapis}}; font-size: 16px; font-weight: 700;">أرسل التقرير إلى الأسرة</button>
+      <button type="button" style="min-height: 44px; border-radius: 10px; border: 1px solid {{c.ruleStrong}}; background: {{c.page}}; color: {{c.ink}}; font-size: 15px; font-weight: 600;">احفظ مسودة</button>
+      <p style="margin: 0; text-align: center; font-size: 12px; line-height: 1.6; color: {{c.ink3}};">يصل ولي الأمر على واتساب ملف PDF بالتقرير.</p>
+    </footer>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"dark":{"editor":"boolean","default":false},"program":{"editor":"enum","options":["quran","arabic","islamic"],"default":"quran"},"attendance":{"editor":"enum","options":["on_time","late","excused","absent"],"default":"on_time"},"frameH":{"editor":"int","default":1880},"$preview":{"width":390,"height":1880}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = {
+      att: props.attendance || 'on_time',
+      prog: props.program || 'quran',
+      seg: [0, 1, 2],
+      overall: null,
+      skill: [1, 2, 1, 2],
+      isr: [0, 1],
+      dom: 1,
+      taj: 0,
+      quick: [0]
+    };
+  }
+  renderVals() {
+    const LIGHT = { margin: '#f3f7f5', page: '#ffffff', raised: '#ffffff', sunk: '#f1f5f3', ink: '#17201c', ink2: '#2f3a35', ink3: '#4f5b55', rule: '#e2e8e5', ruleStrong: '#c8d2cd', ruleInput: '#77857d', lapis: '#047857', lapisFill: '#047857', lapisWash: '#ecfdf5', onLapis: '#ffffff', ok: '#15803d', okSoft: '#eaf7ee', act: '#a14b06', actSoft: '#fdf1e1' };
+    const DARK = { margin: '#1a211e', page: '#1e2623', raised: '#27312d', sunk: '#222b27', ink: '#e9efec', ink2: '#cfd8d3', ink3: '#adbab3', rule: '#35413c', ruleStrong: '#45524c', ruleInput: '#74837c', lapis: '#5eead4', lapisFill: '#047857', lapisWash: '#213a2c', onLapis: '#ffffff', ok: '#7ee2a6', okSoft: '#20372b', act: '#fd9f68', actSoft: '#3d2b1c' };
+    const c = this.props.dark ? DARK : LIGHT;
+    const s = this.state;
+    const on = 'background:' + c.lapisFill + ';color:' + c.onLapis + ';border:1px solid ' + c.lapisFill + ';';
+    const off = 'background:' + c.sunk + ';color:' + c.ink2 + ';border:1px solid ' + c.rule + ';';
+    const RATES = ['ممتاز', 'جيد جدًا', 'جيد', 'مقبول', 'يحتاج إلى مراجعة'];
+    const rateRow = (sel, pick) => RATES.map((label, i) => ({ label, on: sel === i, st: sel === i ? on : off, pick: () => pick(i) }));
+    const setAt = (key, idx) => (i) => { const next = s[key].slice(); next[idx] = i; this.setState({ [key]: next }); };
+
+    const ATT = [['on_time', 'حضر في الموعد'], ['late', 'حضر متأخرًا'], ['excused', 'اعتذر مسبقًا'], ['absent', 'غياب بدون إشعار']];
+    const att = ATT.map(([k, label]) => ({ label, on: s.att === k, st: s.att === k ? on : off, pick: () => this.setState({ att: k }) }));
+    const PROG = [['quran', 'القرآن الكريم'], ['arabic', 'اللغة العربية'], ['islamic', 'الدراسات الإسلامية']];
+    const progs = PROG.map(([k, label]) => ({ label, on: s.prog === k, st: s.prog === k ? on : off, pick: () => this.setState({ prog: k }) }));
+
+    const present = s.att === 'on_time' || s.att === 'late';
+    const SEGS = [
+      { title: 'التسميع', range: 'سورة الملك · الآيات 1–15', meta: '15 آية · ص 562–563' },
+      { title: 'الحفظ الجديد', range: 'سورة الملك · الآيات 16–22', meta: '7 آيات · ص 563' },
+      { title: 'المراجعة', range: 'سورة القلم · الآيات 1–20', meta: '20 آية · ص 564–565' }
+    ];
+    const segs = SEGS.map((x, i) => ({ ...x, rates: rateRow(s.seg[i], setAt('seg', i)) }));
+    const SKILLS = ['القراءة', 'الكتابة', 'الاستماع والمحادثة', 'القواعد'];
+    const skills = SKILLS.map((title, i) => ({ title, rates: rateRow(s.skill[i], setAt('skill', i)) }));
+    const ISR = ['الاستيعاب', 'المشاركة والتفاعل'];
+    const isRates = ISR.map((title, i) => ({ title, rates: rateRow(s.isr[i], setAt('isr', i)) }));
+    const DOMS = ['العقيدة', 'الفقه', 'السيرة النبوية', 'الحديث', 'الآداب'];
+    const domains = DOMS.map((label, i) => ({ label, on: s.dom === i, st: s.dom === i ? on : off, pick: () => this.setState({ dom: i }) }));
+    const TAJ = ['أحكام النون الساكنة والتنوين', 'أحكام الميم الساكنة', 'المدود', 'القلقلة', 'مخارج الحروف'];
+    const tajweed = TAJ.map((label, i) => ({ label, on: s.taj === i, st: s.taj === i ? on : off, pick: () => this.setState({ taj: s.taj === i ? -1 : i }) }));
+    const QUICK = ['أحسنت، استمر', 'يحتاج مراجعة يومية', 'يحتاج تركيزًا في التجويد'];
+    const quick = QUICK.map((label, i) => {
+      const sel = s.quick.indexOf(i) >= 0;
+      return { label, on: sel, st: sel ? on : off, pick: () => this.setState({ quick: sel ? s.quick.filter((q) => q !== i) : s.quick.concat([i]) }) };
+    });
+
+    const used = s.prog === 'quran' ? s.seg : s.prog === 'arabic' ? s.skill : s.isr;
+    const avg = Math.round(used.reduce((a, b) => a + b, 0) / used.length);
+    const overallSel = s.overall === null ? avg : s.overall;
+    const overall = rateRow(overallSel, (i) => this.setState({ overall: i }));
+
+    const HW = {
+      quran: 'مراجعة سورة الملك من الآية 1 إلى 22 يوميًا، وتحضير الآيات 23–30 استماعًا.',
+      arabic: 'حل تمرين الصفحة 14: تحديد المبتدأ والخبر في خمس جمل.',
+      islamic: 'حفظ أركان الوضوء الأربعة وتطبيقها أمام الأسرة.'
+    };
+    const NEXT = {
+      quran: 'الحفظ الجديد: سورة الملك 23–30 · المراجعة: سورة القلم 21–52',
+      arabic: 'الجملة الفعلية: الفعل والفاعل',
+      islamic: 'نواقض الوضوء'
+    };
+    const absent = s.att === 'absent';
+    return {
+      c, frameH: this.props.frameH ?? 1880, att, progs, segs, skills, isRates, domains, tajweed, quick, overall,
+      suggested: RATES[avg], present, absentish: !present,
+      showQuran: present && s.prog === 'quran', showArabic: present && s.prog === 'arabic', showIslamic: present && s.prog === 'islamic',
+      absentTitle: absent ? 'غياب بدون إشعار' : 'اعتذر الطالب مسبقًا',
+      chargeLine: absent ? 'ستُحسب من الباقة' : 'لن تُحسب من الباقة',
+      chargeSt: absent ? 'background:' + c.actSoft + ';color:' + c.act + ';' : 'background:' + c.okSoft + ';color:' + c.ok + ';',
+      homework: HW[s.prog], nextPlan: NEXT[s.prog]
+    };
+  }
+}
+</script>
+</body>
+</html>

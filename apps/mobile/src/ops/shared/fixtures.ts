@@ -123,5 +123,7 @@ export const report = (over: Partial<ReportView> = {}): ReportView => ({
   attachments: [],
   can_edit: false,
   edit_until: null,
+  form_version: 1,
+  content: null,
   ...over,
 });

@@ -1,4 +1,4 @@
-import type { ReportFormResponse, ReportView } from '@ab/shared';
+import { emptyContent, type MemoryView, type Program, type ReportFormResponse, type ReportView } from '@ab/shared';
 import { reportView } from '@ab/shared/testing';
 
 // «تقرير الحلقة» test rows in the GET /lessons/:id/report-form shape (abrar's lesson, test-only).
@@ -25,5 +25,29 @@ export function formResponse(report: Partial<ReportView> = {}): ReportFormRespon
       },
     ],
     submit_block: null,
+  };
+}
+
+/** Al-Mulk 1–15 recited and memorised last time, Al-Qalam revised; Al-Mulk and Al-Qalam recent. */
+const MEMORY: MemoryView = {
+  last: { recited: { surah: 67, from: 1, to: 15 }, new: { surah: 67, from: 1, to: 15 }, revision: { surah: 68, from: 1, to: 20 } },
+  recent_surahs: [67, 68],
+};
+
+/** The same lesson on the new form (form_version 2): a 12-lesson package and the student's history. */
+export function formResponseV2(
+  opts: { report?: Partial<ReportView>; memory?: MemoryView | null; program?: Program } = {},
+): ReportFormResponse {
+  const form = formResponse({ form_version: 2, content: emptyContent(), program: opts.program ?? 'quran', ...opts.report });
+  const pkg = { subscription_id: 'sub-1', lessons_total: 12, lessons_used: 8, remaining: 4, ended_at: null, projected_end_at: null };
+  return {
+    ...form,
+    entries: form.entries.map((e) => ({
+      ...e,
+      student: { ...e.student, program: opts.program ?? 'quran' },
+      lesson_no: 9,
+      package: pkg,
+      memory: opts.memory === undefined ? MEMORY : opts.memory,
+    })),
   };
 }

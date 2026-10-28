@@ -16,6 +16,8 @@ export interface AttachmentsFieldProps {
   onChange: (next: (files: ReportAttachmentView[]) => ReportAttachmentView[]) => void;
   /** canEditReport: adding closes with the edit window. */
   editable: boolean;
+  /** The add button's word (default «اختر صورة»). */
+  addLabel?: string;
 }
 
 /** صورة / ملف PDF / تسجيل صوتي and its size in MB (one decimal, Western digits), as on the web. */
@@ -32,7 +34,7 @@ const ERRORS: Record<string, string> = t.reports.error;
  * (the system picker, no permission) goes up as its bytes, then is registered on the report.
  * ponytail: photos only on the phone; PDF / audio need expo-document-picker in the next APK.
  */
-export function AttachmentsField({ reportId, files, onChange, editable }: AttachmentsFieldProps) {
+export function AttachmentsField({ reportId, files, onChange, editable, addLabel }: AttachmentsFieldProps) {
   const [local, setLocal] = useState<string | null>(null);
   const upload = useMutation({
     mutationFn: (file: Receipt) => uploadAttachment(reportId, file),
@@ -62,7 +64,7 @@ export function AttachmentsField({ reportId, files, onChange, editable }: Attach
         <>
           <Button
             variant="secondary"
-            label={upload.isPending ? t.reports.uploading : t.payments.mobile.pickPhoto}
+            label={upload.isPending ? t.reports.uploading : (addLabel ?? t.payments.mobile.pickPhoto)}
             busy={upload.isPending}
             onPress={() => void add()}
           />

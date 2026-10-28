@@ -10,7 +10,9 @@ import { t } from '@/lib/i18n/i18n';
 import { reportErrorText, reportFormQuery } from './api';
 import { reportHistoryHref } from './paths';
 import { ReportEntry } from './entry/ReportEntry';
+import { ReportEntryV2 } from './entry-v2/ReportEntryV2';
 import { ReportLink } from './history/ReportLink';
+import { AdminReportV2 } from './view-v2/AdminReportV2';
 
 export interface ReportFormPageProps {
   lessonId: string;
@@ -25,7 +27,10 @@ function loadError(error: unknown): string {
   return reportErrorText(error);
 }
 
-/** «تقرير الحلقة» for one lesson (R-REP-01/02/04): opened from the lesson, identity prefilled. */
+/**
+ * «تقرير الحلقة» for one lesson (R-REP-01/02/04): opened from the lesson, identity prefilled. A
+ * new-form report (form_version 2) is the new form for the teacher; the admin reads it and may edit it.
+ */
 export function ReportFormPage({ lessonId, role, studentId }: ReportFormPageProps) {
   const form = useQuery(reportFormQuery(lessonId));
   const head = (
@@ -46,7 +51,13 @@ export function ReportFormPage({ lessonId, role, studentId }: ReportFormPageProp
       <div className="grid gap-10">
         {entries.map((entry) => (
           <div key={entry.report.id} className="grid gap-3">
-            <ReportEntry form={data} entry={entry} titled={entries.length > 1} tz={tz} />
+            {entry.report.form_version !== 2 ? (
+              <ReportEntry form={data} entry={entry} titled={entries.length > 1} tz={tz} />
+            ) : role === 'admin' ? (
+              <AdminReportV2 form={data} entry={entry} titled={entries.length > 1} tz={tz} />
+            ) : (
+              <ReportEntryV2 form={data} entry={entry} titled={entries.length > 1} tz={tz} />
+            )}
             <ReportLink href={reportHistoryHref(role, entry.student.id)} className="justify-self-start">
               {t.reports.history}
             </ReportLink>

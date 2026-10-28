@@ -4,6 +4,7 @@ import type { AuthUser } from '../../../common/auth/verify-token';
 import { conflict, notFound } from '../../../common/http/errors';
 import { formResponse } from './submit/report-form.mapper';
 import { ReportGate } from './submit/report-gate';
+import { assertForm } from './submit/report-submit.service';
 import { ReportLessonQueries } from './report-lesson.queries';
 import { formColumns, reportView } from './report.mapper';
 import { ReportsQueries } from './reports.queries';
@@ -21,7 +22,7 @@ export class ReportsService {
 
   /**
    * R1: the lesson's identity (read-only) and one report per student, creating the drafts on first
-   * open. A cancelled or moved lesson has no report → 409 lesson_cancelled, nothing created.
+   * open; v2 entries carry the student's memorization history. A cancelled or moved lesson has no report → 409 lesson_cancelled, nothing created.
    */
   async form(lessonId: string, user: AuthUser): Promise<ReportFormResponse> {
     const lesson = await this.queries.lesson(lessonId);
@@ -30,14 +31,19 @@ export class ReportsService {
     const ctx = await this.gate.context(user);
     const block = reportBlock({ lessonStatus: lesson.status, lessonStartsAt: new Date(lesson.starts_at), now: ctx.now });
     if (block === 'lesson_cancelled') throw conflict(block);
-    await this.queries.ensureDrafts(lesson, user.id);
+    // report_form_v2: new drafts (and drafts nobody has touched) use the current form.
+    const formVersion = ctx.formV2 ? 2 : 1;
+    await this.queries.ensureDrafts(lesson, { actorId: user.id, formVersion });
+    await this.queries.alignUntouched(lesson.id, formVersion);
     const ids = lesson.lesson_students.map((s) => s.student_id);
     const [reports, numbers, packages] = await Promise.all([
       this.queries.byLesson(lesson.id),
       this.lessons.lessonNumbers(lesson, ids),
       this.lessons.packages(ids),
     ]);
-    return formResponse({ lesson, reports, numbers, packages, ctx, block });
+    const v2 = reports.filter((r) => r.form_version === 2);
+    const memory = v2.length === 0 ? new Map() : await this.lessons.memory(v2.map((r) => r.student_id), reports.map((r) => r.id));
+    return formResponse({ lesson, reports, numbers, packages, memory, ctx, block });
   }
 
   /** R4. */
@@ -52,6 +58,7 @@ export class ReportsService {
    */
   async draft({ id, form, user }: DraftInput): Promise<ReportView> {
     const row = await this.gate.load(id, user);
+    assertForm(row, 1);
     if (row.status !== 'draft') throw conflict('already_submitted');
     const saved = await this.queries.updateDraft(id, formColumns(form));
     if (!saved) throw conflict('already_submitted');
