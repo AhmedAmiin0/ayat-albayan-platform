@@ -2889,6 +2889,25 @@
       "copied": "Offer copied",
       "copyFailed": "Could not copy the offer",
       "close": "Close the price quote"
+    },
+    "templateBubble": {
+      "buttons": "Template buttons",
+      "button": {
+        "quick_reply": "Quick reply",
+        "url": "Open link",
+        "phone_number": "Call",
+        "copy_code": "Copy code"
+      },
+      "displayOnly": "{label}: shown only, the family taps it in WhatsApp",
+      "opensLink": "{label}: opens the link",
+      "callNumber": "{label}: ⁦{phone}⁩",
+      "tapped": "Tapped a button",
+      "header": {
+        "image": "Image",
+        "video": "Video",
+        "document": "Document",
+        "location": "Location"
+      }
     }
   },
   "mobileFinance": {

@@ -2,6 +2,7 @@ import type { LeadSource, LeadStatus, LessonStatus, MessageDirection, MessageSta
 import type { ChatListRef } from './chat-lists.js';
 import type { MessageQuote } from '../replies/reply-forward.js';
 import type { MessageReactions } from '../reactions/reactions.js';
+import type { TemplatedMessage } from '../templates/template-block.js';
 import type { TemplateParams } from '../templates/templates.js';
 import type { SubscriptionBadge, ThreadPeople } from './thread-people.js';
 
@@ -54,7 +55,7 @@ export interface ThreadView {
 }
 
 /** One messages row in a thread (R-MSG-05). */
-export interface MessageView {
+export interface MessageView extends TemplatedMessage {
   id: string;
   direction: MessageDirection;
   status: MessageStatus;

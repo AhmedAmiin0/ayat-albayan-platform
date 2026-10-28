@@ -19,6 +19,9 @@ import { LinkedText } from '../text/LinkedText';
 import { ResendAsk } from '../resend/ResendAsk';
 import { useThreadMode } from '../../thread/hooks/thread-mode';
 import { ReplyNoteLine } from '../reply-actions';
+import { TappedLabel } from '../template/TappedLabel';
+import { TemplateButtons } from '../template/TemplateButtons';
+import { TemplateFrame } from '../template/TemplateFrame';
 
 /** A file line: a link to the signed URL once the API has the file, else its kind and why not. */
 function MediaLine({ label, url, file }: { label: string; url: string | null; file: boolean }) {
@@ -37,6 +40,9 @@ function MediaLine({ label, url, file }: { label: string; url: string | null; fi
     </Pressable>
   );
 }
+
+/** The bubble's padding: a template's button rows reach past it to the edges. */
+const PAD = { x: 10, bottom: 6 };
 
 export interface MessageBubbleProps {
   message: MessageView;
@@ -80,9 +86,11 @@ export const MessageBubble = memo(function MessageBubble({ message: m, phone, on
     alignSelf: side.align,
     maxWidth: '88%',
     gap: 4,
-    paddingHorizontal: 10,
-    paddingVertical: 6,
+    paddingHorizontal: PAD.x,
+    paddingVertical: PAD.bottom,
     borderRadius: shape.radius.lg,
+    // A template's buttons span the bubble (WhatsApp): never a sliver, rows clipped to its corners.
+    ...(m.template?.buttons.length ? { minWidth: 240, overflow: 'hidden' as const } : {}),
     ...(side.outer === 'start' ? { borderTopStartRadius: shape.radius.xs } : { borderTopEndRadius: shape.radius.xs }),
     borderWidth: 1,
     borderColor: highlight ? color.lapis : ours ? color.lapisWash : color.rule,
@@ -97,13 +105,20 @@ export const MessageBubble = memo(function MessageBubble({ message: m, phone, on
           {templateLine(m.template_key)}
         </AppText>
       ) : null}
-      {file ? <MessageFile message={m} phone={phone} onLongPress={touch.has ? hold : undefined} /> : null}
-      {media && !file ? <MediaLine label={media} url={m.media_url} file={m.media_mime !== null} /> : null}
-      <ResendAsk message={m} phone={phone} />
-      {m.body ? <LinkedText text={m.body} touch={touch} a11y={a11yOn === 'body'} /> : null}
+      <TappedLabel message={m} />
+      <TemplateFrame block={m.template} hasMedia={m.media_mime !== null || m.media_url !== null}>
+        {file ? <MessageFile message={m} phone={phone} onLongPress={touch.has ? hold : undefined} /> : null}
+        {media && !file ? <MediaLine label={media} url={m.media_url} file={m.media_mime !== null} /> : null}
+        <ResendAsk message={m} phone={phone} />
+        {m.body ? <LinkedText text={m.body} touch={touch} a11y={a11yOn === 'body'} /> : null}
+      </TemplateFrame>
       {/* What a quick reply did, or «تأكيد الحلقة» / «تغيير الموعد» for its lesson (owner 2026-10-28). */}
       <ReplyNoteLine message={m} />
       <MessageMeta message={m} />
+      {/* Right under the time, as WhatsApp; a failed send's reason and actions come below them. */}
+      {m.template ? (
+        <TemplateButtons buttons={m.template.buttons} inset={{ x: PAD.x, bottom: why || stuck ? 0 : PAD.bottom }} onLongPress={touch.has ? hold : undefined} />
+      ) : null}
       {why ? <AppText style={{ ...small, fontSize: type.size.xs, lineHeight: type.lineHeight(type.size.xs) }}>{errorLine(m)}</AppText> : null}
       {stuck ? <MessageActions message={m} phone={phone} /> : null}
     </>

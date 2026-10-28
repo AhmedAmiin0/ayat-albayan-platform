@@ -2889,6 +2889,25 @@
       "copied": "نُسخ العرض",
       "copyFailed": "تعذّر نسخ العرض",
       "close": "أغلق عرض السعر"
+    },
+    "templateBubble": {
+      "buttons": "أزرار القالب",
+      "button": {
+        "quick_reply": "ردّ سريع",
+        "url": "فتح الرابط",
+        "phone_number": "اتصال",
+        "copy_code": "نسخ الرمز"
+      },
+      "displayOnly": "{label}: زرّ للعرض فقط، تضغطه العائلة في واتساب",
+      "opensLink": "{label}: يفتح الرابط",
+      "callNumber": "{label}: ⁦{phone}⁩",
+      "tapped": "ضغطة زرّ",
+      "header": {
+        "image": "صورة",
+        "video": "فيديو",
+        "document": "مستند",
+        "location": "موقع"
+      }
     }
   },
   "mobileFinance": {
