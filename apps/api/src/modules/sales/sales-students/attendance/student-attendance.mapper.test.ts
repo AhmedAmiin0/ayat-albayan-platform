@@ -28,7 +28,7 @@ describe('toAttendanceTable', () => {
     expect(t.items.map((r) => r.lesson_id)).toEqual(['held', 'late', 'absent', 'excused', 'byTeacher', 'byAdmin', 'moved', 'trial']);
     expect(t.items[0]).toEqual({
       lesson_id: 'held', starts_at: '2026-10-27T15:00:00.000Z', duration_min: 30, teacher_name: 'أبرار', status: 'completed', attendance: 'on_time',
-      kind: 'present', report_id: 'rep-held', cancel_reason: null, is_trial: false, is_makeup: false, is_rescheduled: false,
+      kind: 'present', report_sent: true, report_id: 'rep-held', cancel_reason: null, is_trial: false, is_makeup: false, is_rescheduled: false,
     });
   });
 
@@ -54,6 +54,11 @@ describe('toAttendanceTable', () => {
     const row = lessonRow('imp', '2026-10-02T10:00:00Z', { rule_id: null, rule: null, own: [{ student_id: 's', attendance: null, chargeable: false }] });
     const t = toAttendanceTable({ month: '2026-10', lessons: [row], reports: [], starts: [], mine: false }, NOW);
     expect([t.items[0]?.is_trial, t.mine]).toEqual([true, false]);
+  });
+
+  it('not hers: the report reads as sent, its id never leaves', () => {
+    const t = toAttendanceTable({ month: '2026-10', lessons: octoberLessons(), reports: [{ id: 'rep-held', lesson_id: 'held' }], starts: [], mine: false }, NOW);
+    expect([t.items[0]?.report_sent, t.items[0]?.report_id]).toEqual([true, null]);
   });
 
   it('never a price, a link or notes', () => {

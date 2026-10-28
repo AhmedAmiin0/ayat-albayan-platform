@@ -41,6 +41,7 @@ export function AttendanceLogScreen() {
   const open = useCallback(
     (row: AttendanceTableRow) => {
       if (!row.report_id) return;
+      setError(null);
       void openAttendanceReport(base, { studentId: id, reportId: row.report_id }).catch((e: unknown) => setError(pdfError(e)));
     },
     [base, id],
@@ -51,6 +52,10 @@ export function AttendanceLogScreen() {
     ),
     [cycle, data?.mine, open],
   );
+  const pick = useCallback((m: string) => {
+    setError(null);
+    setMonth(m);
+  }, []);
   const title = t.sales.student.log.title;
   if (!data) return <SalesLoadScreen title={title} query={log} notFound={t.sales.student.notFound} />;
   return (
@@ -60,7 +65,7 @@ export function AttendanceLogScreen() {
         subtitle={monthOf(data.month)}
         trailing={<Button variant="ghost" label={t.common.back} onPress={() => router.back()} />}
       />
-      <AttendanceLogHead data={data} onMonth={setMonth} />
+      <AttendanceLogHead data={data} month={month ?? data.month} onMonth={pick} />
       {error ? <ErrorLine message={error} /> : null}
       <LazyList
         accessibilityLabel={title}

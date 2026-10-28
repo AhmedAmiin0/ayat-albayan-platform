@@ -10,6 +10,8 @@ import { monthOf, totalsItems } from './attendance-log-text';
 
 interface AttendanceLogHeadProps {
   data: StudentAttendanceTable;
+  /** The chosen month (highlighted at once, while its rows still load). */
+  month: string;
   onMonth: (month: string) => void;
 }
 
@@ -17,7 +19,7 @@ interface AttendanceLogHeadProps {
  * Above the rows, fixed while they scroll: the month pills (newest first), the month's totals
  * «حضر · غاب · بعذر · متأخر · ألغيت · أُجّلت», then the table's column header.
  */
-export function AttendanceLogHead({ data, onMonth }: AttendanceLogHeadProps) {
+export function AttendanceLogHead({ data, month, onMonth }: AttendanceLogHeadProps) {
   const { color } = useTheme();
   const w = t.sales.student.log;
   const head = { fontFamily: type.ui[600], fontSize: type.size['2xs'], lineHeight: type.lineHeight(type.size['2xs']), color: color.ink2 };
@@ -25,7 +27,7 @@ export function AttendanceLogHead({ data, onMonth }: AttendanceLogHeadProps) {
     <View style={{ gap: 8 }}>
       <FilterPills
         items={data.months.map((m) => ({ value: m, label: monthOf(m) }))}
-        value={data.month}
+        value={month}
         onChange={onMonth}
         accessibilityLabel={w.months}
       />

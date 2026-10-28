@@ -23,7 +23,9 @@ export interface AttendanceTableRow {
   /** The student's own lesson_students.attendance (on_time / late / absent / excused), null when unmarked. */
   attendance: Attendance | null;
   kind: AttendanceKind | null;
-  /** The submitted report of this student for this lesson, else null. */
+  /** A report of this student for this lesson was submitted (sent). */
+  report_sent: boolean;
+  /** That report's id, only when it may open (`mine`); else null. */
   report_id: string | null;
   /** Only for a cancelled lesson. */
   cancel_reason: string | null;

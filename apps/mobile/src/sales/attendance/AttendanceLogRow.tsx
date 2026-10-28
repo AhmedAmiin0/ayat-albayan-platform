@@ -38,7 +38,7 @@ export const AttendanceLogRow = memo(function AttendanceLogRow({ row, striped, c
   const tags = rowTags(row);
   const reason = cancelLine(row);
   const date = dayDateOf(row.starts_at);
-  const sent = row.report_id !== null;
+  const sent = row.report_sent;
   const body = (
     <>
       <View style={ROW_LINE}>

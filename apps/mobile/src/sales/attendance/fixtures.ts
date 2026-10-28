@@ -10,6 +10,7 @@ export const logRow = (over: Partial<AttendanceTableRow> = {}): AttendanceTableR
   status: 'completed',
   attendance: 'on_time',
   kind: 'present',
+  report_sent: true,
   report_id: 'rep1',
   cancel_reason: null,
   is_trial: false,
@@ -24,8 +25,8 @@ export const logTable = (over: Partial<StudentAttendanceTable> = {}): StudentAtt
   months: ['2026-10', '2026-09'],
   items: [
     logRow(),
-    logRow({ lesson_id: 'l2', starts_at: '2026-10-25T15:00:00.000Z', attendance: 'late', report_id: null, is_makeup: true }),
-    logRow({ lesson_id: 'l3', starts_at: '2026-10-20T15:00:00.000Z', status: 'cancelled_by_teacher', attendance: null, kind: 'cancelled', report_id: null, cancel_reason: 'سفر المعلمة' }),
+    logRow({ lesson_id: 'l2', starts_at: '2026-10-25T15:00:00.000Z', attendance: 'late', report_sent: false, report_id: null, is_makeup: true }),
+    logRow({ lesson_id: 'l3', starts_at: '2026-10-20T15:00:00.000Z', status: 'cancelled_by_teacher', attendance: null, kind: 'cancelled', report_sent: false, report_id: null, cancel_reason: 'سفر المعلمة' }),
   ],
   totals: { held: 2, late: 1, absent: 0, excused: 0, cancelled_by_teacher: 1, cancelled_by_admin: 0, rescheduled: 0, unmarked: 0 },
   mine: true,

@@ -17,7 +17,8 @@ export function attendanceWindow(month: string, now: Date): { from: Date; to: Da
   return { from, to: to.getTime() < now.getTime() ? to : now };
 }
 
-function rowOf(l: AttendanceLessonRow, reportId: string | null): AttendanceTableRow {
+/** `reportId`: the student's submitted report of the lesson; `mine` decides whether its id leaves. */
+function rowOf(l: AttendanceLessonRow, report: { reportId: string | null; mine: boolean }): AttendanceTableRow {
   const own = l.own[0];
   const attendance = own?.attendance ?? null;
   return {
@@ -28,7 +29,8 @@ function rowOf(l: AttendanceLessonRow, reportId: string | null): AttendanceTable
     status: l.status,
     attendance,
     kind: attendanceKind(l.status, attendance),
-    report_id: reportId,
+    report_sent: report.reportId !== null,
+    report_id: report.mine ? report.reportId : null,
     cancel_reason: CANCELLED.has(l.status) ? l.cancel_reason : null,
     is_trial: isTrialLesson(l, own?.chargeable ?? true),
     is_makeup: l.makeup_of_id !== null,
@@ -54,7 +56,7 @@ interface TableInput {
 export function toAttendanceTable(input: TableInput, now: Date): StudentAttendanceTable {
   const reportOf = new Map(input.reports.map((r) => [r.lesson_id, r.id]));
   const past = input.lessons.filter((l) => Date.parse(l.starts_at) < now.getTime());
-  const items = past.map((l) => rowOf(l, reportOf.get(l.id) ?? null));
+  const items = past.map((l) => rowOf(l, { reportId: reportOf.get(l.id) ?? null, mine: input.mine }));
   items.sort((a, b) => Date.parse(b.starts_at) - Date.parse(a.starts_at));
   return { month: input.month, months: monthsOf(input.starts, now), items, totals: attendanceTableTotals(items), mine: input.mine };
 }
