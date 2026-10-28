@@ -54,9 +54,9 @@ export function DetailsStudents({ lesson, role, onLeave, hereStudentId }: Detail
         </Fragment>
       ))}
       {mine && href ? (
-        <View style={{ alignSelf: 'flex-start', paddingTop: 4 }}>
+        <View style={{ paddingTop: 4 }}>
           <Button
-            variant={mine === 'submitted' ? 'ghost' : 'secondary'}
+            variant="secondary"
             label={TEACHER_LABEL[mine]}
             onPress={() => {
               onLeave();

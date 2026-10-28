@@ -40,3 +40,13 @@ export function useJoinClassroom(lesson: JoinableLesson) {
   };
   return { win, busy, error, join };
 }
+
+/**
+ * Whether «ادخل الحلقة» is live now: then it is the sheet's ONE filled button and «تأكيد» steps down to
+ * a secondary in the row (docs/07 §6 «الأزرار»); early or closed, the confirm stays the primary.
+ */
+export function useJoinOpen(lesson: JoinableLesson): boolean {
+  const now = useNow();
+  const config = useJoinWindow();
+  return isOpenLesson(lesson.status) && joinWindow(lesson, now, config).state === 'open';
+}

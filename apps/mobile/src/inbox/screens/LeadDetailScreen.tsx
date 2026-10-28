@@ -4,6 +4,7 @@ import { Linking, ScrollView, View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { whatsappLink } from '@/core/lib/phone';
 import { Button } from '@/core/ui/primitives/Button';
+import { ButtonRow } from '@/core/ui/actions';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { ltr } from '@/core/ui/primitives/Ltr';
 import { Screen } from '@/core/ui/layout/Screen';
@@ -56,17 +57,19 @@ export function LeadDetailScreen() {
           label={t.inbox.openThread.replace('{name}', name ?? ltr(formatPhone(phone)))}
           onPress={() => router.push(threadHref(phone))}
         />
-        <Button
-          variant="secondary"
-          // Named: «… لهدى», apart from the «حجز حلقة تجريبية» status chip above (a move only).
-          label={name ? t.booking.trialFor.replace('{name}', name) : t.booking.trialTitle}
-          onPress={() => router.push({ pathname: '/inbox/book', params: { leadId: id } })}
-        />
-        <Button
-          variant="secondary"
-          label={t.mobile.openWhatsapp}
-          onPress={() => void Linking.openURL(whatsappLink(phone))}
-        />
+        <ButtonRow>
+          <Button
+            variant="secondary"
+            // Named: «… لهدى», apart from the «حجز حلقة تجريبية» status chip above (a move only).
+            label={name ? t.booking.trialFor.replace('{name}', name) : t.booking.trialTitle}
+            onPress={() => router.push({ pathname: '/inbox/book', params: { leadId: id } })}
+          />
+          <Button
+            variant="secondary"
+            label={t.mobile.openWhatsapp}
+            onPress={() => void Linking.openURL(whatsappLink(phone))}
+          />
+        </ButtonRow>
         <LeadProfileSection lead={lead.data} />
         <LeadReclassify id={lead.data.id} />
       </ScrollView>

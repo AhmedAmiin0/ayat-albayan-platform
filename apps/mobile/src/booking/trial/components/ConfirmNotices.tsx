@@ -28,9 +28,7 @@ export function FailureNotice({ failure, busy, onSubmit, ...go }: FailureNoticeP
     return (
       <View style={{ gap: 6 }}>
         <ErrorLine message={failure.text} />
-        <View style={{ alignSelf: 'flex-start' }}>
-          <Button variant="secondary" label={t.booking.invoice.replace} onPress={go.onChangeInvoice} />
-        </View>
+        <Button variant="secondary" label={t.booking.invoice.replace} onPress={go.onChangeInvoice} />
       </View>
     );
   }

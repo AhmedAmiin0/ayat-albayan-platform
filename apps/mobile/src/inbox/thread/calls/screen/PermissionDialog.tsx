@@ -1,11 +1,12 @@
 import { permissionHint } from '@ab/client-core';
 import type { CallPermissionState } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { Modal, Pressable, View } from 'react-native';
+import { Modal, Pressable } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { shape, space, type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { Button } from '@/core/ui/primitives/Button';
+import { ButtonRow } from '@/core/ui/actions';
 import { callErrorText } from '../api/call-error';
 import { callApi } from '../api/calls-api';
 import { threadKey } from '../../hooks/thread-cache';
@@ -41,10 +42,10 @@ export function PermissionDialog({ phone, state, onClose, onSent }: PermissionDi
           {ask.isError ? (
             <AppText accessibilityRole="alert" style={{ fontSize: type.size.sm, color: color.bad }}>{callErrorText(ask.error)}</AppText>
           ) : null}
-          <View style={{ flexDirection: 'row', gap: space[2], justifyContent: 'flex-end' }}>
-            <Button variant="ghost" label={t.common.close} onPress={onClose} />
+          <ButtonRow testID="call-permission-actions">
             {state === 'request' ? <Button label={t.calls.permission.request} busy={ask.isPending} onPress={() => ask.mutate()} /> : null}
-          </View>
+            <Button variant="secondary" label={t.common.close} onPress={onClose} />
+          </ButtonRow>
         </Pressable>
       </Pressable>
     </Modal>

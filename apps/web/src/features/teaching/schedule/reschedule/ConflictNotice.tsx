@@ -3,6 +3,7 @@ import { useEffect, useId, useRef, useState } from 'react';
 import { Button } from '@/components/ui/form/button';
 import { Field } from '@/components/ui/form/field';
 import { Input } from '@/components/ui/form/input';
+import { ButtonRow } from '@/components/ui/layout/button-row';
 import { NuqtaGlyph } from '@/components/ui/display/nuqta-glyph';
 import { tzCity } from '@/components/ui/form/time-zone-select';
 import { t } from '@/lib/i18n/i18n';
@@ -107,16 +108,16 @@ export function ConflictNotice(p: ConflictNoticeProps) {
             )}
           </Field>
         )}
-        <div className="flex flex-wrap gap-2.5">
+        <ButtonRow>
           <Button type="button" onClick={onChangeSlot}>
             {t.booking.changeSlot}
           </Button>
           {onOverride && (
-            <Button type="button" variant="ghost" disabled={busy} onClick={submit}>
+            <Button type="button" variant="secondary" disabled={busy} onClick={submit}>
               {labels.override}
             </Button>
           )}
-        </div>
+        </ButtonRow>
       </div>
     </section>
   );

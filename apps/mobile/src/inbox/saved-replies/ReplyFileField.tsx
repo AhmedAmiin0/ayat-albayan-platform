@@ -5,6 +5,7 @@ import { useUploadMaxBytes } from '@/core/lib/query/public-config';
 import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { Button } from '@/core/ui/primitives/Button';
+import { ButtonRow } from '@/core/ui/actions';
 import { ErrorLine } from '../ErrorLine';
 import { type ChatFileSource, pickChatFile } from '../composer/send-file';
 import { uploadReplyFile } from './api';
@@ -56,10 +57,10 @@ export function ReplyFileField({ file, onChange, onBusy }: ReplyFileFieldProps) 
       ) : busy ? (
         <AppText style={{ fontSize: type.size.sm, color: color.ink2 }}>{t.savedReplies.attachUploading}</AppText>
       ) : (
-        <View style={{ flexDirection: 'row', gap: 8 }}>
+        <ButtonRow>
           <Button variant="secondary" label={t.inbox.composer.attachImage} onPress={() => void pick('image')} />
           <Button variant="secondary" label={t.inbox.composer.attachPdf} onPress={() => void pick('pdf')} />
-        </View>
+        </ButtonRow>
       )}
       <AppText style={{ fontSize: type.size['2xs'], color: color.ink2 }}>{t.savedReplies.attachHint}</AppText>
       {error ? <ErrorLine message={error} /> : null}

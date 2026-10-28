@@ -32,8 +32,7 @@ const PATHS = {
     'M16.5 10a6.5 6.5 0 1 1-13 0 6.5 6.5 0 0 1 13 0ZM3.5 10h13M10 3.5c1.8 2 2.6 4.1 2.6 6.5S11.8 14.5 10 16.5c-1.8-2-2.6-4.1-2.6-6.5S8.2 5.5 10 3.5Z',
   trash: 'M4.5 6h11M8 6V4.5h4V6M6 6l.7 9.5h6.6L14 6',
   download: 'M10 4v9M6 9.5l4 4 4-4M4.5 16h11',
-  /** A template's URL button (WhatsApp's open-link mark); not directional. */
-  external: 'M11 3.5h5.5V9M16.5 3.5l-7 7M14 11.5V15a1.5 1.5 0 0 1-1.5 1.5H5A1.5 1.5 0 0 1 3.5 15V7.5A1.5 1.5 0 0 1 5 6h3.5',
+  external: 'M11.5 3.5h5v5M16.5 3.5 9 11M14.5 11.5v4a1 1 0 0 1-1 1h-9a1 1 0 0 1-1-1v-9a1 1 0 0 1 1-1h4',
   copy: 'M8 7.5h7.5a1 1 0 0 1 1 1v7a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1v-7a1 1 0 0 1 1-1ZM13 7.5v-3a1 1 0 0 0-1-1H4.5a1 1 0 0 0-1 1V12a1 1 0 0 0 1 1H7',
   reply: 'M8 5.5 3.5 10 8 14.5M3.5 10H11a5.5 5.5 0 0 1 5.5 5.5',
   forward: 'M12 5.5 16.5 10 12 14.5M16.5 10H9a5.5 5.5 0 0 0-5.5 5.5',
@@ -76,6 +75,7 @@ const MIRROR: Partial<Record<IconName, string>> = {
   reply: 'rtl:-scale-x-100',
   forward: 'rtl:-scale-x-100',
   send: 'rtl:-scale-x-100',
+  external: 'rtl:-scale-x-100',
 };
 
 export interface IconProps extends Omit<SVGProps<SVGSVGElement>, 'name'> {

@@ -73,9 +73,7 @@ export function ActivityFilterBar({ value, onChange }: ActivityFilterBarProps) {
       </View>
       {err ? <ErrorLine message={a[err]} /> : null}
       {isFiltered(value) || value.from || value.to ? (
-        <View style={{ alignItems: 'flex-start' }}>
-          <Button variant="ghost" label={a.clear} onPress={() => onChange(NO_FILTERS)} />
-        </View>
+        <Button variant="secondary" label={a.clear} onPress={() => onChange(NO_FILTERS)} />
       ) : null}
     </View>
   );

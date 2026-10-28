@@ -23,7 +23,7 @@ function RequestFor({ lessonId, studentId, name, many, approved }: RequestForPro
   return (
     <View style={{ gap: 2 }}>
       <Button
-        variant="ghost"
+        variant="secondary"
         label={send.isSuccess ? text.sent : send.isPending ? text.sending : many ? text.sendFor.replace('{name}', name) : text.send}
         accessibilityLabel={text.sendFor.replace('{name}', name)}
         busy={send.isPending}
@@ -36,7 +36,8 @@ function RequestFor({ lessonId, studentId, name, many, approved }: RequestForPro
 }
 
 /**
- * «ابعت طلب الرأي» on a finished (مكتملة / متأخرة) lesson: one button per student, an explicit
+ * «ابعت طلب الرأي» on a finished (مكتملة / متأخرة) lesson: one outlined full-width button per student
+ * (docs/07 §6: never a shrink-wrapped row), an explicit
  * admin send of the WhatsApp «رأيك يهمّنا» link to that student's guardian (not to one who missed
  * the lesson). Off, with the reason, until WhatsApp approved the template; «اتبعت» once queued; the
  * API's refusals (already answered) show in words.
@@ -52,12 +53,10 @@ function Requests({ lesson, students }: { lesson: LessonView; students: LessonVi
   const approved = templates.data?.some((row) => row.key === 'lesson_feedback_request') ?? false;
   const many = lesson.students.length > 1;
   return (
-    <View style={{ gap: 4, alignSelf: 'flex-start' }}>
-      <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
-        {students.map((s) => (
-          <RequestFor key={s.id} lessonId={lesson.id} studentId={s.id} name={s.name} many={many} approved={approved} />
-        ))}
-      </View>
+    <View style={{ gap: 8 }}>
+      {students.map((s) => (
+        <RequestFor key={s.id} lessonId={lesson.id} studentId={s.id} name={s.name} many={many} approved={approved} />
+      ))}
       {!approved && templates.isSuccess ? <Note>{t.feedback.templateNotApproved}</Note> : null}
     </View>
   );

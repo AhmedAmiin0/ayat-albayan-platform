@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { View } from 'react-native';
 import { ErrorLine } from '@/inbox/ErrorLine';
 import { t } from '@/core/lib/i18n/i18n';
+import { ButtonRow } from '@/core/ui/actions';
 import { Button } from '@/core/ui/primitives/Button';
 import { openStatementReceipt } from '../hooks/receipt-link';
 import { statementActions, type StatementAction, type StatementCan } from '../hooks/statement-can';
@@ -15,7 +16,10 @@ interface StatementButtonsProps {
   onAction: (action: Exclude<StatementAction, 'receipt'>) => void;
 }
 
-/** One button per allowed action, in the web's order (statementActions); «الإيصال» opens a signed link. */
+/**
+ * One button per allowed action (at most three), in the web's order (statementActions), as ONE ButtonRow
+ * of outlined buttons (docs/07 §6); «إلغاء الدفع» is the danger one. «الإيصال» opens a signed link.
+ */
 export function StatementButtons({ statement, can, linesOpen, onAction }: StatementButtonsProps) {
   const [receiptError, setReceiptError] = useState(false);
   const label: Record<StatementAction, string> = {
@@ -31,14 +35,13 @@ export function StatementButtons({ statement, can, linesOpen, onAction }: Statem
     setReceiptError(false);
     openStatementReceipt(statement.id).catch(() => setReceiptError(true));
   };
-  const ghost = (a: StatementAction) => a === 'details' || a === 'reopen' || a === 'unpay';
   return (
     <View style={{ gap: 8 }}>
-      <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
+      <ButtonRow>
         {statementActions(statement, can).map((a) => (
-          <Button key={a} variant={ghost(a) ? 'ghost' : 'secondary'} label={label[a]} onPress={() => press(a)} />
+          <Button key={a} variant={a === 'unpay' ? 'danger' : 'secondary'} label={label[a]} onPress={() => press(a)} />
         ))}
-      </View>
+      </ButtonRow>
       {receiptError ? <ErrorLine message={t.mobileFinance.payouts.receiptFailed} /> : null}
     </View>
   );

@@ -3,13 +3,17 @@ import { Linking, View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { whatsappLink } from '@/core/lib/phone';
 import { shape, type, useTheme } from '@/theme';
+import { ButtonRow } from '@/core/ui/actions';
 import { Button } from '@/core/ui/primitives/Button';
 import { Ltr } from '@/core/ui/primitives/Ltr';
 import { SectionLabel } from '../list/SectionLabel';
 import type { StudentProfile } from '../shared/types';
 import { AppText } from '@/core/ui/primitives/AppText';
 
-/** ولي الأمر: name, LTR phone, «اتصال» (tel:) and «واتساب» (wa.me, the academy's channel). */
+/**
+ * ولي الأمر: name, LTR phone, then ONE ButtonRow (docs/07 §6 «الأزرار»): «اتصال» (tel:, outlined) |
+ * «واتساب» (wa.me, the academy's channel: the screen's one filled button).
+ */
 export function GuardianCard({ guardian }: { guardian: StudentProfile['guardian'] }) {
   const { color } = useTheme();
   const phone = guardian.phone_e164;
@@ -45,18 +49,10 @@ export function GuardianCard({ guardian }: { guardian: StudentProfile['guardian'
       >
         {formatPhone(phone)}
       </Ltr>
-      <View style={{ flexDirection: 'row', gap: 8 }}>
-        <View style={{ flex: 1 }}>
-          <Button
-            variant="ghost"
-            label={t.mobile.call}
-            onPress={() => void Linking.openURL(`tel:${phone}`)}
-          />
-        </View>
-        <View style={{ flex: 1 }}>
-          <Button label={t.mobile.whatsapp} onPress={() => void Linking.openURL(whatsappLink(phone))} />
-        </View>
-      </View>
+      <ButtonRow>
+        <Button variant="secondary" label={t.mobile.call} onPress={() => void Linking.openURL(`tel:${phone}`)} />
+        <Button label={t.mobile.whatsapp} onPress={() => void Linking.openURL(whatsappLink(phone))} />
+      </ButtonRow>
     </View>
   );
 }

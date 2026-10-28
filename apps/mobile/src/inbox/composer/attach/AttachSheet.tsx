@@ -74,7 +74,7 @@ export function AttachSheet(p: AttachSheetProps) {
               <EmojiIcon color={tint} />
             </AttachTile>
           </View>
-          <Button variant="ghost" label={t.common.cancel} onPress={p.onClose} />
+          <Button variant="secondary" label={t.common.cancel} onPress={p.onClose} />
         </View>
       </Pressable>
     </Modal>

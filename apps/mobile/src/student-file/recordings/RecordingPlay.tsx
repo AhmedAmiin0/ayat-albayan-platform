@@ -27,7 +27,7 @@ export function RecordingPlay({ when, getUrl }: { when: string; getUrl: () => Pr
     }
   };
   return (
-    <View style={{ gap: 4, alignItems: 'flex-start' }}>
+    <View style={{ gap: 4 }}>
       <Button
         variant="secondary"
         label={R.play}

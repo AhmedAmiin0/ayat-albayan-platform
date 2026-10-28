@@ -42,7 +42,7 @@ export function AssistantsSection({ studentId }: { studentId: string }) {
           <ListRow
             key={a.profile_id}
             title={a.full_name}
-            trailing={write ? <Button variant="ghost" label={A.remove} accessibilityLabel={`${A.remove} ${a.full_name}`} disabled={remove.isPending} onPress={() => remove.mutate({ studentId, profileId: a.profile_id })} /> : undefined}
+            trailing={write ? <Button variant="danger" label={A.remove} accessibilityLabel={`${A.remove} ${a.full_name}`} disabled={remove.isPending} onPress={() => remove.mutate({ studentId, profileId: a.profile_id })} /> : undefined}
           />
         ))}
       </InsetGroup>

@@ -5,6 +5,7 @@ import { ErrorLine } from '@/inbox/ErrorLine';
 import { t } from '@/core/lib/i18n/i18n';
 import { requestId } from '@/core/lib/http/request-id';
 import { Note } from '@/more/Note';
+import { ButtonRow } from '@/core/ui/actions';
 import { Button } from '@/core/ui/primitives/Button';
 import { Field } from '@/core/ui/form/Field';
 import { createBody } from './create-body';
@@ -44,8 +45,10 @@ export function CreateMeetingForm({ scheduled, tz, busy, error, onSubmit, onCanc
       ) : (
         <Button variant="secondary" label={I.addInvitees} onPress={() => setPicking(true)} />
       )}
-      <Button label={busy ? L.creating : L.create} busy={busy} onPress={submit} />
-      <Button variant="ghost" label={t.common.cancel} onPress={onCancel} />
+      <ButtonRow>
+        <Button label={busy ? L.creating : L.create} busy={busy} onPress={submit} />
+        <Button variant="secondary" label={t.common.cancel} onPress={onCancel} />
+      </ButtonRow>
       {error ? <ErrorLine message={error} /> : null}
     </View>
   );

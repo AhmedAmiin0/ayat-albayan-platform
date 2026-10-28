@@ -2,7 +2,7 @@ import type { LessonView } from '@ab/shared';
 import { router } from 'expo-router';
 import { useState } from 'react';
 import { SectionList } from 'react-native';
-import { JoinClassroomButton } from '@/classroom/links/JoinClassroomButton';
+import { JoinAround } from '@/classroom';
 import { EditTimeSheet } from '@/edit-time/components/EditTimeSheet';
 import { t } from '@/core/lib/i18n/i18n';
 import { useFollowingDay } from '@/core/lib/time/use-following-day';
@@ -130,7 +130,7 @@ export function DayScheduleScreen({ back = false, initialDate }: { back?: boolea
         lesson={details.lesson}
         role="admin"
         onClose={details.close}
-        actions={(l) => <>{actionsOf(l, details.close)}<JoinClassroomButton lesson={l} /></>}
+        actions={(l) => <JoinAround lesson={l}>{actionsOf(l, details.close)}</JoinAround>}
         sheets={
           <>
             <RescheduleSheet lesson={moving} onClose={() => setMoving(null)} />

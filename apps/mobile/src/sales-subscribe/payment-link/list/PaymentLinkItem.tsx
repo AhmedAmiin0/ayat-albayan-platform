@@ -34,6 +34,7 @@ export function PaymentLinkItem({ link, now }: { link: PaymentLinkView; now: Dat
         <View style={{ paddingHorizontal: 16, paddingVertical: 8, gap: 6 }}>
           {asking ? (
             <InlineConfirm
+              tone="danger"
               message={pl.cancelConfirm}
               confirmLabel={cancel.isPending ? t.paymentLinks.mobile.cancelling : pl.cancel}
               busy={cancel.isPending}
@@ -41,7 +42,7 @@ export function PaymentLinkItem({ link, now }: { link: PaymentLinkView; now: Dat
               onCancel={() => setAsking(false)}
             />
           ) : (
-            <Button variant="secondary" label={pl.cancel} accessibilityLabel={`${pl.cancel} — ${link.student.name}`} onPress={() => setAsking(true)} />
+            <Button variant="danger" label={pl.cancel} accessibilityLabel={`${pl.cancel} — ${link.student.name}`} onPress={() => setAsking(true)} />
           )}
           {cancel.isError ? <ErrorLine message={linkErrorText(cancel.error, pl.mobile.cancelFailed)} /> : null}
         </View>
