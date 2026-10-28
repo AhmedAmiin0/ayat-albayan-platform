@@ -63,6 +63,8 @@ export class StripeWebhookService {
         return this.handlers.fulfil.failed(event.data.object);
       case 'charge.refunded':
         return this.handlers.refunds.refunded(event.data.object);
+      case 'refund.updated':
+        return this.handlers.refunds.updated(event.data.object);
       case 'charge.dispute.created':
         return this.handlers.refunds.disputed(event.data.object);
       default:

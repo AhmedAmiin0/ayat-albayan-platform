@@ -19,7 +19,7 @@ export function stripeMocks() {
     settings: { read: vi.fn(), write: vi.fn(), secret: vi.fn(), setSecret: vi.fn(), clearSecret: vi.fn(), secretDates: vi.fn() },
     links: {
       insert: vi.fn(), byRequest: vi.fn(), get: vi.fn(), byToken: vi.fn(), byPaymentIntent: vi.fn(), list: vi.fn(),
-      cancel: vi.fn(), setSession: vi.fn(), setProcessing: vi.fn(), markPaid: vi.fn(), student: vi.fn(), attribute: vi.fn(),
+      forStudent: vi.fn(), cancel: vi.fn(), setSession: vi.fn(), setProcessing: vi.fn(), markPaid: vi.fn(), student: vi.fn(), attribute: vi.fn(),
     },
     events: { begin: vi.fn(), done: vi.fn() },
     limit: { check: vi.fn() },
@@ -64,6 +64,7 @@ export function stripeDefaults(s: StripeMocks): void {
   s.links.insert.mockResolvedValue(linkRow());
   s.links.cancel.mockResolvedValue(linkRow({ status: 'cancelled' }));
   s.links.setSession.mockResolvedValue(true);
-  s.links.student.mockResolvedValue({ broughtBy: null, priced: false });
+  s.links.student.mockResolvedValue({ broughtBy: null, priced: [] });
+  s.links.forStudent.mockResolvedValue([]);
   s.events.begin.mockResolvedValue(false);
 }

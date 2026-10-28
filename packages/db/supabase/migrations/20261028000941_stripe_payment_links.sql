@@ -5,8 +5,8 @@
 --
 --   * payment_links: one row per link; token = the random, url-safe part of https://<web>/pay/<token>.
 --     The subscription is created with the link (sales subscribe flow), so subscription_id is set at once;
---     nullable for a package cancelled / deleted later. RLS: admins all; a salesperson reads and inserts
---     her own (created_by); anon nothing. The API writes with the service role.
+--     nullable for a package cancelled / deleted later. RLS: admins all; a salesperson reads her own and may
+--     insert only an unpayable draft of her own (no package, no Stripe ids); anon nothing. The API writes with the service role.
 --   * stripe_events: the webhook's idempotency (event_id primary key). API only: RLS on, no policy.
 --   * stripe_settings: the gate's DB half (stripe_enabled, default false) and max_discount_pct (null = no
 --     cap). One row. Admins read; the API writes. Kept out of public.settings so the normal build's
@@ -65,11 +65,15 @@ drop policy if exists payment_links_own_read on public.payment_links;
 create policy payment_links_own_read on public.payment_links for select to authenticated
   using (created_by = (select auth.uid()) and public.auth_role() = 'sales');
 drop policy if exists payment_links_own_insert on public.payment_links;
+-- Her own draft row only: never tied to a package, open, no Stripe or payment ids. A payable link (with its
+-- package, priced and checked) is made by the API alone (service role), so a direct insert cannot be paid.
 create policy payment_links_own_insert on public.payment_links for insert to authenticated
-  with check (created_by = (select auth.uid()) and public.auth_role() = 'sales');
+  with check (created_by = (select auth.uid()) and public.auth_role() = 'sales' and subscription_id is null
+              and status = 'open' and stripe_session_id is null and stripe_payment_intent is null
+              and paid_payment_id is null and paid_at is null);
 
 create table if not exists public.stripe_events (
-  event_id text primary key check (event_id ~ '^evt_[A-Za-z0-9]+$'),
+  event_id text primary key check (event_id ~ '^evt_[A-Za-z0-9_]+$'),
   type text not null,
   received_at timestamptz not null default now(),
   processed_at timestamptz,

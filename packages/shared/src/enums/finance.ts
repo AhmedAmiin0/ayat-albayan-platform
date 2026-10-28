@@ -16,7 +16,7 @@ export const PAYMENT_METHODS = [
   'other',
 ] as const satisfies readonly Enums<'payment_method'>[];
 /**
- * A method only the platform records (migration 20261028000936): 'card' = a Stripe Checkout payment of the
+ * A method only the platform records (migration 20261028000941): 'card' = a Stripe Checkout payment of the
  * test build (docs/30). Never offered in a form, so PAYMENT_METHODS stays the manual ones.
  */
 export const ONLINE_PAYMENT_METHODS = ['card'] as const satisfies readonly Enums<'payment_method'>[];

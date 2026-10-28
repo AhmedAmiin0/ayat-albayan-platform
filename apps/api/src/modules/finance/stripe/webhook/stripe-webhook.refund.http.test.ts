@@ -55,10 +55,23 @@ describe('POST /webhooks/stripe: refunds reverse through a refund payment, dispu
     s.links.byPaymentIntent.mockResolvedValue(null);
     s.stripe.checkout.sessions.list.mockResolvedValue({ data: [{ client_reference_id: LINK_ID }] });
     s.links.get.mockResolvedValue(linkRow());
-    const res = await post(chargeEvent('charge.refunded', CHARGE));
+    const fresh = { ...CHARGE, created: Math.floor(Date.now() / 1000) };
+    const res = await post(chargeEvent('charge.refunded', fresh));
     expect(s.stripe.checkout.sessions.list).toHaveBeenCalledWith({ payment_intent: 'pi_1', limit: 1 });
     expect(res.statusCode).toBe(500);
     expect(s.events.done).not.toHaveBeenCalled();
+    // An hour later the payment was evidently refused: the admins settle it, Stripe stops retrying.
+    expect((await post(chargeEvent('charge.refunded', { ...CHARGE, created: 1_000_000 }))).statusCode).toBe(200);
+    expect(s.events.done).toHaveBeenCalledWith('evt_9', 'refund_alerted');
+  });
+
+  it('refund.updated: a refund that was pending at charge.refunded is recorded once it succeeds', async () => {
+    s.stripe.refunds.list.mockResolvedValue({ data: [refund('re_2', 5000)] });
+    await post(chargeEvent('refund.updated', { ...refund('re_2', 5000), payment_intent: 'pi_1' }));
+    expect(m.payments.insert).toHaveBeenCalledWith(expect.objectContaining({ kind: 'refund', client_request_id: uuidFor('re_2') }));
+    m.payments.insert.mockClear();
+    await post(chargeEvent('refund.updated', { ...refund('re_3', 100, 'pending'), payment_intent: 'pi_1' }, 'evt_11'));
+    expect(m.payments.insert).not.toHaveBeenCalled();
   });
 
   it('a refund above the net paid is not recorded: the admins get a bell row', async () => {

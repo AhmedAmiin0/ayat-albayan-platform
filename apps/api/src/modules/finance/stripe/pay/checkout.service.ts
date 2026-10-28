@@ -27,7 +27,8 @@ export class CheckoutService {
     const link = await this.links.byToken(token);
     if (!link || !link.subscription_id || link.processing) return page;
     if (effectiveLinkStatus({ status: statusOf(link), expires_at: link.expires_at }, now) !== 'open') return page;
-    const stripe = await this.clients.client();
+    const stripe = await this.clients.client().catch(() => null);
+    if (!stripe) return page; // keys missing or refused: the family sees the platform page, never a JSON error
     if (link.stripe_session_id) {
       const current = await stripe.checkout.sessions.retrieve(link.stripe_session_id);
       if (current.status === 'open' && current.url) return current.url;

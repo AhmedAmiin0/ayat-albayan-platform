@@ -14,9 +14,10 @@ export const pastIso = (unixSeconds: number, now = new Date()): string => new Da
 /**
  * A paid Checkout Session → ONE payment on the link's package through the normal PaymentsService (method
  * card, the session's amount_total, client_request_id = a uuid of the session id, recorded_by = the link's
- * assistant), so the recompute makes the package active and the commission triggers credit her. A student
- * nobody brought yet is first attributed to her (brought_at = the link's creation), so the first-package
- * commission applies; a renewal follows the renewal commission rules. A payment the platform refuses (e.g. a
+ * assistant), so the recompute makes the package active and the commission triggers credit her. On a NEW
+ * subscription of a student nobody brought and without a priced package, the student is first attributed to
+ * her (brought_at = the link's creation) so the first-package commission applies; otherwise attribution is
+ * never changed (a renewal follows the renewal commission rules of whoever brought the student). A payment the platform refuses (e.g. a
  * cancelled package) is not retried: the admins get a bell row to settle it by hand.
  */
 @Injectable()
@@ -32,7 +33,7 @@ export class LinkFulfilment {
 
   async paid(session: Stripe.Checkout.Session, eventAt: number): Promise<string> {
     const link = await this.linkOf(session);
-    if (!link?.subscription_id) return 'unknown_link';
+    if (!link?.subscription_id) return this.orphan(session, link);
     await this.attribute(link);
     const amount = fromMinorUnits(session.amount_total ?? 0);
     const currency = (session.currency ?? link.currency).toUpperCase();
@@ -69,10 +70,20 @@ export class LinkFulfilment {
     return link ? 'pending' : 'unknown_link';
   }
 
+  /** Our session (client_reference_id) but no link or no package any more: Stripe has the money, so the admins are told. */
+  private async orphan(session: Stripe.Checkout.Session, link: LinkRow | null): Promise<string> {
+    if (!link && !session.client_reference_id && !session.metadata?.payment_link_id) return 'not_ours';
+    const text = `${fromMinorUnits(session.amount_total ?? 0)} ${(session.currency ?? '').toUpperCase()} (${session.id})`;
+    await this.deps.alerts.admins({ subject: `payment_link_orphan:${session.id}`, title: ar.paymentLinks.bell.refusedTitle, text, link });
+    return 'orphan_alerted';
+  }
+
+  /** Only a NEW subscription of a student nobody brought and who never had a priced package (never a takeover). */
   private async attribute(link: LinkRow): Promise<void> {
+    if (link.kind !== 'new') return;
     try {
       const student = await this.deps.links.student(link.student_id);
-      if (student && student.broughtBy === null) {
+      if (student && student.broughtBy === null && student.priced.every((id) => id === link.subscription_id)) {
         await this.deps.links.attribute({ studentId: link.student_id, assistantId: link.created_by, broughtAt: link.created_at });
       }
     } catch (e) {

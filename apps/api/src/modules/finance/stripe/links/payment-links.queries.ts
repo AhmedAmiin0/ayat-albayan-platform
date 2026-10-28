@@ -43,6 +43,13 @@ export class PaymentLinksQueries {
     return data;
   }
 
+  /** The student's links (a handful). */
+  async forStudent(studentId: string): Promise<LinkRow[]> {
+    const { data, error } = await this.db.from('payment_links').select(SELECT).eq('student_id', studentId);
+    if (error) throw fail('student links', error.message);
+    return data;
+  }
+
   /** open → cancelled, only while still open; null when it was not. */
   async cancel(id: string): Promise<LinkRow | null> {
     return this.change(id, { status: 'cancelled' }, (q) => q.eq('status', 'open'));
@@ -67,12 +74,12 @@ export class PaymentLinksQueries {
     await this.change(id, paid.paymentIntent ? { ...patch, stripe_payment_intent: paid.paymentIntent } : patch);
   }
 
-  /** The student's brought_by, and whether they already have a priced package (a renewal needs one). */
-  async student(id: string): Promise<{ broughtBy: string | null; priced: boolean } | null> {
-    const { data, error } = await this.db.from('students').select('brought_by, subscriptions(price)').eq('id', id).maybeSingle();
+  /** The student's brought_by and their priced, not cancelled packages (a renewal needs one). */
+  async student(id: string): Promise<{ broughtBy: string | null; priced: string[] } | null> {
+    const { data, error } = await this.db.from('students').select('brought_by, subscriptions(id, price, status)').eq('id', id).maybeSingle();
     if (error) throw fail('student', error.message);
     if (!data) return null;
-    return { broughtBy: data.brought_by, priced: data.subscriptions.some((s) => s.price > 0) };
+    return { broughtBy: data.brought_by, priced: data.subscriptions.filter((s) => s.price > 0 && s.status !== 'cancelled').map((s) => s.id) };
   }
 
   /** set_student_brought_by (migration 751): the attribution the first-package commission needs. */

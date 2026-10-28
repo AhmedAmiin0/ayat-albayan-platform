@@ -14,6 +14,7 @@ import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { StatusChip } from '@/core/ui/feedback/StatusChip';
 import { useSalesTeachers } from '../lib/sales-api';
+import { studentDetailsHref } from '../lib/sales-href';
 import { SalesTeacherHeader } from '../components/SalesTeacherHeader';
 import { nextLessonLine, teacherLabel, teacherSubtitle } from '../lib/sales-text';
 import { useClockCycle } from '@/core/lib/clock';
@@ -28,7 +29,7 @@ const TABS: readonly TeacherTab[] = ['students', 'schedule', 'attendance'];
  * One teacher's page, switched «الطلاب · الجدول · الحضور» (owner 2026-10-28; default «الطلاب»). «الطلاب»
  * (the detail of «المعلمون», web drawer parity): name, code, program, status and the next lesson in Riyadh
  * time, switched «مشترك · تجريبي · الكل» (default «مشترك»), plus their day in the read-only schedule and the
- * teacher's fixed meeting link; in the sales tree a row opens «تفاصيل الطالب». «الجدول» / «الحضور»: TeacherOverviewTab.
+ * teacher's fixed meeting link; a row opens the student's details in either tree (studentDetailsHref). «الجدول» / «الحضور»: TeacherOverviewTab.
  */
 export function SalesTeacherScreen() {
   const cycle = useClockCycle();
@@ -37,7 +38,7 @@ export function SalesTeacherScreen() {
   const list = useSalesTeachers();
   const [kind, setKind] = useState<StudentListKind>('active');
   const [tab, setTab] = useState<TeacherTab>('students');
-  const details = useTreeBase() === '/sales';
+  const base = useTreeBase();
   const teacher = list.data?.find((tc) => tc.id === id);
   const back = <Button variant="ghost" label={t.common.back} onPress={() => router.back()} />;
   if (!teacher) {
@@ -76,8 +77,8 @@ export function SalesTeacherScreen() {
           extraData={cycle}
           renderItem={({ item }) => (
             <ListRow
-              onPress={details ? () => router.push(`/sales/students/${item.id}`) : undefined}
-              accessibilityHint={details ? t.sales.allStudents.detailsHint : undefined}
+              onPress={() => router.push(studentDetailsHref(base, item.id))}
+              accessibilityHint={t.sales.allStudents.detailsHint}
               title={item.name}
               meta={item.code}
               subtitle={t.enums.program[item.program]}

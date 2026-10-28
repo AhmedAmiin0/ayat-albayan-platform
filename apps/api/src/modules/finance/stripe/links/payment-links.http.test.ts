@@ -82,4 +82,12 @@ describe('POST /sales/payment-links: the package as «اشتراك جديد» ma
     expect((await call({ method: 'POST', url: `/sales/payment-links/${linkRow().id}/cancel`, token: 'salesA' })).json().code).toBe('link_not_open');
     expect((await call({ method: 'POST', url: `/sales/payment-links/${linkRow().id}/cancel`, token: 'salesB' })).statusCode).toBe(404);
   });
+
+  it('a new link first cancels the unpaid packages of her earlier expired or cancelled links (never a paid one)', async () => {
+    const stale = linkRow({ id: '7a000000-0000-4000-8000-000000000003', status: 'cancelled', subscription_id: 'old-sub' });
+    s.links.forStudent.mockResolvedValue([stale, linkRow({ status: 'paid', paid_payment_id: 'p1' }), linkRow()]);
+    m.subs.get.mockResolvedValue(subRow({ id: 'old-sub', price: 120 }));
+    await call({ method: 'POST', url: '/sales/payment-links', token: 'salesA', body: BODY });
+    expect(m.cancels.cancel).toHaveBeenCalledTimes(1);
+  });
 });

@@ -9,7 +9,7 @@ interface StripeSettingsRow {
 const OFF: StripeSettingsRow = { stripe_enabled: false, max_discount_pct: null };
 
 /**
- * stripe_settings (one row) and the Vault functions of migration 20261028000936, with the service role.
+ * stripe_settings (one row) and the Vault functions of migration 20261028000941, with the service role.
  * Error messages carry Postgres' text only, never a secret value.
  */
 @Injectable()

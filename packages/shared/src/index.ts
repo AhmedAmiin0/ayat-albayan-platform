@@ -44,6 +44,7 @@ export * from './sales/registration.js';
 export * from './sales/start-date.js';
 export * from './sales/renewal-due.js';
 export * from './sales/qualification-form.js';
+export * from './sales/student/student-attendance.js';
 export * from './sales/student/student-details.js';
 export * from './sales/student/student-schedule.js';
 export * from './sales/teacher/teacher-overview.js';

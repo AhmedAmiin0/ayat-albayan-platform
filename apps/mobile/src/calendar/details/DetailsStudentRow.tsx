@@ -2,6 +2,7 @@ import { subscriptionStatusStyle, type Glyph, type Tone } from '@ab/shared';
 import { router } from 'expo-router';
 import { Pressable, View } from 'react-native';
 import { useNow } from '@/core/lib/time/use-now';
+import { useTreeBase } from '@/core/nav/tree-base';
 import { t } from '@/core/lib/i18n/i18n';
 import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
@@ -55,7 +56,8 @@ interface DetailsStudentRowProps {
 export function DetailsStudentRow({ lesson, student, role, onLeave, here = false }: DetailsStudentRowProps) {
   const { color } = useTheme();
   const now = useNow();
-  const href = here ? null : studentHref(role, student);
+  const base = useTreeBase();
+  const href = here ? null : studentHref(role, student, base);
   const go = (to: string) => {
     onLeave();
     router.push(to);

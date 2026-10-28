@@ -5,8 +5,7 @@ import { badRequest, conflict, notFound } from '../../../../common/http/errors';
 import { assertSalesDiscount, salesStartsOn, toSalesQuote } from '../../../sales/sales-money';
 import { SubscriptionCreator } from '../../subscriptions';
 import { newLinkToken } from './link-ids';
-import { StripeSettingsQueries } from '../gate/stripe-settings.queries';
-import { LinkDeps } from './link-deps';
+import { LinkCreateDeps, LinkDeps } from './link-deps';
 
 /**
  * «رابط دفع» (owner 2026-10-28, docs/30): ANY student (the 2026-10-28 any-student decision). The package is
@@ -20,12 +19,12 @@ export class LinkCreate {
   constructor(
     private readonly deps: LinkDeps,
     private readonly creator: SubscriptionCreator,
-    private readonly settings: StripeSettingsQueries,
+    private readonly extra: LinkCreateDeps,
   ) {}
 
   async quote(input: PaymentLinkQuote): Promise<PaymentLinkQuoteView> {
     assertSalesDiscount(input.pricing);
-    const [quote, { max_discount_pct }] = await Promise.all([this.creator.quote(input), this.settings.read()]);
+    const [quote, { max_discount_pct }] = await Promise.all([this.creator.quote(input), this.extra.settings.read()]);
     return { quote: toSalesQuote(quote), max_discount_pct, min_amount: minLinkAmount(quote.afterDiscount, max_discount_pct) };
   }
 
@@ -34,12 +33,13 @@ export class LinkCreate {
     if (replay) return this.replayed(replay.created_by, replay.id, user);
     const student = await this.deps.links.student(input.studentId);
     if (!student) throw notFound('student_not_found');
-    if (input.kind === 'renewal' && !student.priced) throw badRequest('not_a_renewal');
+    if (input.kind === 'renewal' && student.priced.length === 0) throw badRequest('not_a_renewal');
     const startsOn = salesStartsOn(input, user, now);
+    await this.extra.packages.releaseStale(input.studentId, user.id, now);
     const { quote, min_amount } = await this.quote(input);
     if (input.currency !== quote.currency) throw badRequest('currency_mismatch', { currency: quote.currency });
     const reference = quote.afterDiscount;
-    const problem = linkAmountProblem({ amount: input.amount, reference, maxDiscountPct: (await this.settings.read()).max_discount_pct });
+    const problem = linkAmountProblem({ amount: input.amount, reference, maxDiscountPct: (await this.extra.settings.read()).max_discount_pct });
     if (problem) throw badRequest(problem, { min: min_amount, currency: quote.currency });
     const create = { studentId: input.studentId, pricing: input.pricing, clientRequestId: input.clientRequestId, startsOn };
     const sub = await this.creator.create(create, user.id, { price: input.amount });

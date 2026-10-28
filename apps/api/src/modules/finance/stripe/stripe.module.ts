@@ -9,7 +9,8 @@ import { stripeFeatureOn, StripeEnabledGuard } from './gate/stripe-gate';
 import { StripeSettingsQueries } from './gate/stripe-settings.queries';
 import { LinkCancel } from './links/link-cancel';
 import { LinkCreate } from './links/link-create';
-import { LinkDeps } from './links/link-deps';
+import { LinkCreateDeps, LinkDeps } from './links/link-deps';
+import { LinkPackages } from './links/link-packages';
 import { LinkViews } from './links/link-views';
 import { PaymentLinksController } from './links/payment-links.controller';
 import { PaymentLinksQueries } from './links/payment-links.queries';
@@ -42,7 +43,7 @@ export class StripeTestModule {
       controllers: [StripeFeatureController, StripeAdminController, PaymentLinksController, PayController, StripeWebhookController],
       providers: [
         { provide: STRIPE_FACTORY, useValue: stripeFactory },
-        ...[StripeSettingsQueries, StripeClients, StripeEnabledGuard, StripeAdmin, LinkViews, PaymentLinksQueries, LinkDeps, LinkCreate, LinkCancel],
+        ...[StripeSettingsQueries, StripeClients, StripeEnabledGuard, StripeAdmin, LinkViews, PaymentLinksQueries, LinkDeps, LinkCreateDeps, LinkPackages, LinkCreate, LinkCancel],
         ...[CheckoutService, PayLimit, LinkAlerts, LinkFulfilment, LinkRefunds, StripeEventsQueries, StripeWebhookService],
         ...[WebhookDeps, WebhookHandlers],
       ],

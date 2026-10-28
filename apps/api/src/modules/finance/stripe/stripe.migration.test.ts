@@ -2,11 +2,11 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 
-// Migration 20261028000936 read as text: no database in unit tests (CI's e2e job applies it to local Supabase).
-const sql = readFileSync(join(__dirname, '../../../../../../packages/db/supabase/migrations/20261028000936_stripe_payment_links.sql'), 'utf8');
+// Migration 20261028000941 read as text: no database in unit tests (CI's e2e job applies it to local Supabase).
+const sql = readFileSync(join(__dirname, '../../../../../../packages/db/supabase/migrations/20261028000941_stripe_payment_links.sql'), 'utf8');
 const fn = (name: string) => new RegExp(`create or replace function public\\.${name}\\([\\s\\S]*?\\$\\$;`).exec(sql)?.[0] ?? '';
 
-describe('migration 936: Stripe payment links (test build)', () => {
+describe('migration 941: Stripe payment links (test build)', () => {
   it('RLS on every new table; anon gets nothing; the events table is API-only (no policy)', () => {
     for (const t of ['payment_links', 'stripe_events', 'stripe_settings']) expect(sql).toContain(`alter table public.${t} enable row level security;`);
     expect(sql).toContain('revoke all on table public.payment_links from anon;');

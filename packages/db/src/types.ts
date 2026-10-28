@@ -1913,9 +1913,11 @@ export type Database = {
       lesson_reports: {
         Row: {
           attendance: Database['public']['Enums']['attendance'] | null;
+          content: Json | null;
           created_at: string;
           created_by: string | null;
           edited_at: string | null;
+          form_version: number;
           grade_commitment: Database['public']['Enums']['grade'] | null;
           grade_engagement: Database['public']['Enums']['grade'] | null;
           grade_memorization: Database['public']['Enums']['grade'] | null;
@@ -1946,9 +1948,11 @@ export type Database = {
         };
         Insert: {
           attendance?: Database['public']['Enums']['attendance'] | null;
+          content?: Json | null;
           created_at?: string;
           created_by?: string | null;
           edited_at?: string | null;
+          form_version?: number;
           grade_commitment?: Database['public']['Enums']['grade'] | null;
           grade_engagement?: Database['public']['Enums']['grade'] | null;
           grade_memorization?: Database['public']['Enums']['grade'] | null;
@@ -1979,9 +1983,11 @@ export type Database = {
         };
         Update: {
           attendance?: Database['public']['Enums']['attendance'] | null;
+          content?: Json | null;
           created_at?: string;
           created_by?: string | null;
           edited_at?: string | null;
+          form_version?: number;
           grade_commitment?: Database['public']['Enums']['grade'] | null;
           grade_engagement?: Database['public']['Enums']['grade'] | null;
           grade_memorization?: Database['public']['Enums']['grade'] | null;
@@ -5290,6 +5296,7 @@ export type Database = {
       };
       student_first_paid_at: { Args: { p_student: string }; Returns: string };
       submit_report: { Args: { p: Json }; Returns: Json };
+      submit_report_content: { Args: { p: Json }; Returns: Json };
       subscription_full_at: { Args: { p_subscription: string }; Returns: string };
       sync_teacher_earning: { Args: { p_lesson: string }; Returns: undefined };
       teacher_has_student: {

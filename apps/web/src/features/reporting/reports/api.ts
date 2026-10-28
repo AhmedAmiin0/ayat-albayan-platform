@@ -7,6 +7,8 @@ import type {
   SignedUpload,
   StudentReportsResponse,
   DraftBody,
+  ReportV2DraftBody,
+  ReportV2SubmitBody,
   SubmitBody,
 } from '@ab/shared';
 import { reportErrorWords } from '@ab/client-core';
@@ -48,6 +50,13 @@ export const saveDraft = ({ id, body }: { id: string; body: DraftBody }) =>
 
 export const submitReport = ({ id, body }: { id: string; body: SubmitBody }) =>
   apiSend<ReportView>('POST', `/reports/${id}/submit`, body);
+
+/** The new form (form_version 2): autosave and send; both answer the report. */
+export const saveDraftV2 = ({ id, body }: { id: string; body: ReportV2DraftBody }) =>
+  apiSend<ReportView>('PUT', `/reports/${id}/v2/draft`, body);
+
+export const submitReportV2 = ({ id, body }: { id: string; body: ReportV2SubmitBody }) =>
+  apiSend<ReportView>('POST', `/reports/${id}/v2/submit`, body);
 
 export const retryPdf = (id: string) => apiSend<ReportView>('POST', `/reports/${id}/pdf/retry`);
 

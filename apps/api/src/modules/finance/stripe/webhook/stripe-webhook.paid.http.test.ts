@@ -68,7 +68,7 @@ describe('POST /webhooks/stripe: verified, idempotent, the payment recorded once
   });
 
   it('a student already brought keeps their assistant; unpaid (async pending) records nothing; async failed frees the link', async () => {
-    s.links.student.mockResolvedValue({ broughtBy: 'someone-else', priced: true });
+    s.links.student.mockResolvedValue({ broughtBy: 'someone-else', priced: [SUB_ID] });
     await post(sessionEvent('checkout.session.completed'));
     expect(s.links.attribute).not.toHaveBeenCalled();
     m.payments.insert.mockClear();
@@ -89,5 +89,18 @@ describe('POST /webhooks/stripe: verified, idempotent, the payment recorded once
     expect(res.statusCode).toBe(200);
     expect(s.events.done).toHaveBeenCalledWith('evt_5', 'refused:subscription_cancelled');
     expect(s.push.notifyAdmins).toHaveBeenCalledWith('payment_due', expect.objectContaining({ bellOnly: true }));
+  });
+
+  it('never a takeover: a renewal, or a student with an earlier package, keeps brought_by; an orphan session alerts', async () => {
+    s.links.get.mockResolvedValue(linkRow({ kind: 'renewal' }));
+    await post(sessionEvent('checkout.session.completed'));
+    s.links.get.mockResolvedValue(linkRow());
+    s.links.student.mockResolvedValue({ broughtBy: null, priced: [SUB_ID, 'older-package'] });
+    await post(sessionEvent('checkout.session.completed', {}, 'evt_6'));
+    expect(s.links.attribute).not.toHaveBeenCalled();
+    s.links.get.mockResolvedValue(linkRow({ subscription_id: null }));
+    await post(sessionEvent('checkout.session.completed', {}, 'evt_7'));
+    expect(s.events.done).toHaveBeenCalledWith('evt_7', 'orphan_alerted');
+    expect(s.push.notifyAdmins).toHaveBeenCalledWith('payment_due', expect.objectContaining({ subject: `payment_link_orphan:${SESSION}` }));
   });
 });

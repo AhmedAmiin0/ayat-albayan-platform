@@ -9,10 +9,13 @@ import type { LinkRow } from '../links/payment-links.queries';
 import { idOf, pastIso } from './link-fulfilment';
 import { WebhookDeps } from './webhook-deps';
 
+/** How long a refund waits (Stripe retries) for the payment it reverses to be recorded. */
+const RETRY_MS = 60 * 60_000;
+
 /**
  * charge.refunded → one refund payment per Stripe Refund (client_request_id = a uuid of the refund id), so a
  * replayed or out-of-order event never counts a refund twice and the paid rule and the commission re-evaluate
- * as for an admin's «استرداد». charge.dispute.created → a bell row for the admins only, nothing changed.
+ * as for an admin's «استرداد» (refund.updated catches one still pending then). charge.dispute.created → a bell row for the admins only, nothing changed.
  */
 @Injectable()
 export class LinkRefunds {
@@ -22,18 +25,38 @@ export class LinkRefunds {
   ) {}
 
   async refunded(charge: Stripe.Charge): Promise<string> {
+    return this.refundsOf({ paymentIntent: idOf(charge.payment_intent), charge: charge.id, created: charge.created });
+  }
+
+  /** refund.updated: a refund pending at charge.refunded that has now succeeded. */
+  async updated(refund: Stripe.Refund): Promise<string> {
+    const charge = idOf(refund.charge);
+    if (refund.status !== 'succeeded' || !charge) return 'ignored';
+    return this.refundsOf({ paymentIntent: idOf(refund.payment_intent), charge, created: refund.created });
+  }
+
+  private async refundsOf(c: { paymentIntent: string | null; charge: string; created: number }): Promise<string> {
     const stripe = await this.clients.client();
-    const link = await this.linkOfIntent(stripe, idOf(charge.payment_intent));
+    const link = await this.linkOfIntent(stripe, c.paymentIntent);
     if (!link?.subscription_id) return 'unknown_link';
-    // The refund of a payment not recorded yet (its event still on its way): fail, so Stripe retries later.
-    if (!link.paid_payment_id) throw new Error('stripe refund before its payment was recorded');
-    const refunds = await stripe.refunds.list({ charge: charge.id, limit: 100 });
+    if (!link.paid_payment_id) return this.unrecorded(link, c);
+    const refunds = await stripe.refunds.list({ charge: c.charge, limit: 100 });
     let recorded = 0;
     for (const r of refunds.data) {
       if (r.status !== 'succeeded') continue;
       recorded += await this.record(link, r);
     }
     return `refunds:${recorded}`;
+  }
+
+  /**
+   * A refund of a payment the platform has not recorded: its event may still be on its way (async pending, or
+   * within the hour) → fail so Stripe retries; else (the payment was refused) → the admins settle it by hand.
+   */
+  private async unrecorded(link: LinkRow, c: { charge: string; created: number }): Promise<string> {
+    if (link.processing || Date.now() - c.created * 1000 < RETRY_MS) throw new Error('stripe refund before its payment was recorded');
+    await this.deps.alerts.admins({ subject: `stripe_refund_unrecorded:${c.charge}`, title: ar.paymentLinks.bell.refusedTitle, text: c.charge, link });
+    return 'refund_alerted';
   }
 
   async disputed(dispute: Stripe.Dispute): Promise<string> {

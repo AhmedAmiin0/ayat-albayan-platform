@@ -1,6 +1,7 @@
 import en from '@ab/shared/i18n/en.json';
 import { formatPhone } from '@ab/shared';
 import { fireEvent, render, screen } from '@testing-library/react-native';
+import { router } from 'expo-router';
 import { I18nManager } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { TreeBaseProvider } from '@/core/nav/tree-base';
@@ -24,8 +25,9 @@ test('an English (LTR) row: code and phone readable, the details hint in en.json
   expect(screen.getByRole('button').props.accessibilityHint).toBe(en.sales.allStudents.detailsHint);
 });
 
-test('an English (LTR) row with no phone in the admin tree: the note in en.json', async () => {
+test('an English (LTR) row with no phone in the admin tree: the same details hint, the tap opens the student file', async () => {
   await render(<AllStudentRow student={student({ guardian_phone: null })} />);
+  expect(screen.getByRole('button').props.accessibilityHint).toBe(en.sales.allStudents.detailsHint);
   await fireEvent.press(screen.getByRole('button'));
-  expect(screen.getByText(en.sales.allStudents.noPhone)).toBeTruthy();
+  expect(router.push).toHaveBeenCalledWith('/students/st1');
 });
