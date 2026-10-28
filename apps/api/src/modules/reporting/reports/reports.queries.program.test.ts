@@ -13,7 +13,7 @@ describe('ReportsQueries.ensureDrafts — «البرنامج *» prefill', () =>
       { ...first, student_id: 'sibling', student: { ...first.student, id: 'sibling', program: 'islamic_studies' } },
     ];
     const { db, argsOf } = fakeDb({ lesson_reports: [{}] });
-    await new ReportsQueries(db).ensureDrafts(lesson, 'actor');
+    await new ReportsQueries(db).ensureDrafts(lesson, { actorId: 'actor', formVersion: 1 });
     const [rows, options] = argsOf('lesson_reports', 'upsert') ?? [];
     expect(rows).toMatchObject([
       { student_id: STUDENT_ID, program: 'arabic' },

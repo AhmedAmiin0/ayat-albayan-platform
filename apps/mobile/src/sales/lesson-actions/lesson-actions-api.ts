@@ -6,7 +6,8 @@ import { pathKey } from '@/core/lib/query/query-keys';
 /**
  * May she move or cancel this lesson (docs/16 row 37)? It must be open, not over and have a student,
  * and she must hold the key. ANY student's lesson, hers or another family's, a group for all its
- * students (owner 2026-10-28). The API checks every one of these again.
+ * students (owner 2026-10-28). The API checks every one of these again. «تأكيد الحلقة» (row 37b, also
+ * any lesson) is `canSalesConfirm` from @ab/shared.
  */
 export function canChangeLesson(lesson: SalesScheduleLesson, input: { now: Date; can: (key: 'lessons.reschedule' | 'lessons.cancel') => boolean }) {
   const ok = isOpenLesson(lesson.status) && Date.parse(lesson.ends_at) > input.now.getTime() && lesson.students.length > 0;
@@ -29,6 +30,16 @@ export function useSalesReschedule(lessonId: string) {
   return useMutation({
     mutationFn: (startsAt: string) => apiSend<SalesLessonMoved>('POST', `/sales/lessons/${lessonId}/reschedule`, { startsAt }),
     onSuccess: refresh,
+  });
+}
+
+/** POST /sales/lessons/:id/confirm: scheduled → confirmed, ANY lesson (owner 2026-10-28), no message to anyone. */
+export function useSalesConfirm(lessonId: string) {
+  const refresh = useRefreshSchedule();
+  return useMutation({
+    mutationFn: () => apiSend<SalesLessonMoved>('POST', `/sales/lessons/${lessonId}/confirm`),
+    // A 409 (cancelled or confirmed elsewhere) refetches too, so the stale button and status go.
+    onSettled: refresh,
   });
 }
 

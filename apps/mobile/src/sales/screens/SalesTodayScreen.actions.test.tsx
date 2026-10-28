@@ -11,7 +11,7 @@ jest.mock('expo-router', () => ({ router: { push: jest.fn(), navigate: jest.fn()
 jest.mock('@/notifications/BellButton', () => ({ BellButton: () => null }));
 
 // No admin action for sales (docs/16): no تأكيد / إلغاء / «غيّر الميعاد» / «عدّل الوقت» / «حجز تعويضي»
-// anywhere, only her own «تغيير الموعد» / «إلغاء الحلقة» in the sheet (any lesson, owner 2026-10-28);
+// anywhere, only her own «تغيير الموعد» / «إلغاء الحلقة» / «تأكيد الحلقة» in the sheet (any lesson, owner 2026-10-28);
 // «ادخل الحلقة» only on a running lesson. 18:10 Riyadh on Monday 12 Oct 2026.
 const ADMIN_ACTIONS = [t.today.confirmLesson, t.today.confirm, t.today.cancel, t.lessons.rescheduleSubmit, t.editTime.action, t.booking.makeup.action];
 const running = scheduleLesson({ status: 'scheduled' });
@@ -20,6 +20,14 @@ const soon = scheduleLesson({ id: 'l2', status: 'scheduled', starts_at: '2026-10
 const day = (...lessons: object[]) => mockApiFetch.mockImplementation(async () => ({ date: '2026-10-12', lessons }));
 const noAdminAction = () => {
   for (const label of ADMIN_ACTIONS) expect(screen.queryByRole('button', { name: new RegExp(`^${label}$`) })).toBeNull();
+};
+/** «تفاصيل الحلقة» of a scheduled lesson: her «تغيير الموعد» / «إلغاء الحلقة» (any lesson) and «تأكيد الحلقة» (lessons.confirm). */
+const salesActions = () => {
+  expect(screen.getAllByRole('button', { name: /^تأكيد/ })).toHaveLength(1);
+  for (const label of [t.sales.lessonActions.confirm, t.sales.lessonActions.reschedule, t.sales.lessonActions.cancel]) {
+    expect(screen.getByRole('button', { name: label })).toBeTruthy();
+  }
+  noAdminAction();
 };
 
 beforeEach(() => {
@@ -45,14 +53,13 @@ test('the next lesson, ten minutes away: no «ادخل الحلقة» yet (only 
   noAdminAction();
 });
 
-test('the hero opens «تفاصيل الحلقة»: her move / cancel, no «للاطلاع فقط», no admin action, join while it runs', async () => {
+test('the hero opens «تفاصيل الحلقة»: her move / cancel / confirm, no «للاطلاع فقط», no admin action, join while it runs', async () => {
   day(running, soon);
   await renderWithQuery(<SalesTodayScreen />);
   await fireEvent.press(await screen.findByRole('button', { name: t.today.details }));
   expect(await screen.findByRole('header', { name: 'يوسف أحمد' })).toBeTruthy();
   expect(screen.queryByText(t.lessons.sheet.readOnly)).toBeNull();
-  expect(screen.getByRole('button', { name: t.sales.lessonActions.cancel })).toBeTruthy();
-  noAdminAction();
+  salesActions();
   expect(screen.getAllByRole('button', { name: t.classroom.enter }).length).toBeGreaterThan(0);
 });
 
@@ -63,7 +70,6 @@ test('a row opens the same sheet; a lesson not yet running has no «ادخل ا�
   const enterBefore = screen.getAllByRole('button', { name: t.classroom.enter }).length;
   await fireEvent.press(screen.getByRole('button', { name: /سلمى/ }));
   expect(await screen.findByRole('header', { name: 'سلمى' })).toBeTruthy();
-  expect(screen.getByRole('button', { name: t.sales.lessonActions.reschedule })).toBeTruthy();
-  noAdminAction();
+  salesActions();
   expect(screen.getAllByRole('button', { name: t.classroom.enter })).toHaveLength(enterBefore);
 });

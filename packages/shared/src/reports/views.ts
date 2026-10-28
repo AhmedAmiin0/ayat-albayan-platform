@@ -8,6 +8,8 @@ import type {
 } from '../enums/index.js';
 import type { BalanceView } from '../money/views.js';
 import type { Rubric } from './rules.js';
+import type { ReportContent } from './v2/content.js';
+import type { MemoryView } from './v2/rules.js';
 
 // Phase 3 report responses (docs/11 §4). snake_case rows like every API response; instants are
 // ISO-8601 UTC strings.
@@ -50,6 +52,10 @@ export interface ReportView {
   can_edit: boolean;
   /** End of the teacher's edit window (editUntil); null while a draft. */
   edit_until: string | null;
+  /** 1 = the original form (every report before the new form); 2 = the new form (docs/design/report-form). */
+  form_version: 1 | 2;
+  /** The v2 form's structured content; null on a v1 report. */
+  content: ReportContent | null;
 }
 
 /** Read-only identity the form shows (R-REP-01): never typed, taken from the lesson. */
@@ -72,6 +78,8 @@ export interface ReportFormEntry {
   /** The package the lesson counts against (v_subscription_balance), null without one. */
   package: BalanceView | null;
   report: ReportView;
+  /** v2 reports only: the last saved range per track, read from the student's v2 reports. */
+  memory?: MemoryView | null;
 }
 
 /** GET /lessons/:id/report-form: one entry per student on the lesson (group lessons, R-STU-04). */

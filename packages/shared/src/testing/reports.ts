@@ -47,6 +47,8 @@ export function reportView(over: Partial<ReportView> = {}): ReportView {
     attachments: [],
     can_edit: true,
     edit_until: null,
+    form_version: 1,
+    content: null,
     ...over,
   };
 }

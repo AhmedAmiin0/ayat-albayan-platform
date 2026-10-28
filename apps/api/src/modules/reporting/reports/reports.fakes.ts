@@ -61,6 +61,8 @@ export function reportRow(over: Partial<ReportRow> = {}): ReportRow {
     pdf_status: null,
     pdf_error: null,
     sent_at: null,
+    form_version: 1,
+    content: null,
     attachments: [],
     ...over,
   };

@@ -35,17 +35,19 @@ afterEach(() => jest.useRealTimers());
 const openRow = async (who: string) =>
   fireEvent.press(await screen.findByRole('button', { name: t.lessons.sheet.openRow.replace('{names}', who) }));
 
-test('sales: a tap opens the details with every clock, the lesson link, her move / cancel and the student file; no admin action', async () => {
+test('sales: a tap opens the details with every clock, the lesson link, her move / cancel / confirm and the student file; no admin action', async () => {
   await renderWithQuery(<SalesScheduleScreen />);
   // The agenda row never paints the URL: the tap opens the sheet that has it.
   await screen.findByRole('button', { name: t.lessons.sheet.openRow.replace('{names}', 'سلمى') });
   expect(screen.queryByText('https://meet.example.org/salma')).toBeNull();
   await openRow('سلمى');
   expect(screen.getByRole('header', { name: 'سلمى' })).toBeTruthy();
-  // Owner 2026-10-28: any lesson not over yet is hers to move or cancel, so no «للاطلاع فقط».
+  // Owner 2026-10-28: any lesson not over yet is hers to move, cancel and (scheduled) confirm: no «للاطلاع فقط».
   expect(screen.queryByText(t.lessons.sheet.readOnly)).toBeNull();
   expect(screen.getByRole('button', { name: t.sales.lessonActions.reschedule })).toBeTruthy();
   expect(screen.getByRole('button', { name: t.sales.lessonActions.cancel })).toBeTruthy();
+  expect(screen.getAllByRole('button', { name: /^تأكيد/ })).toHaveLength(1);
+  expect(screen.getByRole('button', { name: t.sales.lessonActions.confirm })).toBeTruthy();
   expect(screen.getByText(ltr('AB-0200'))).toBeTruthy();
   expect(screen.getByText(new RegExp(`^${t.schedule.studentTime.replace('{time}', '')}`))).toBeTruthy();
   expect(screen.getByText(new RegExp(`^${t.schedule.teacherTime.replace('{time}', '')}`))).toBeTruthy();

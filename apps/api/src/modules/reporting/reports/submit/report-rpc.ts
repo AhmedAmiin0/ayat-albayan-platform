@@ -7,7 +7,7 @@ import { rpcError } from '../../../teaching/scheduling/rpc';
 import type { SubmitPayload } from './submit-plan';
 
 /** `raise exception '<code>'` in submit_report (migration 130) → 409 domain errors. */
-const CONFLICTS = new Set(['version_conflict', 'lesson_cancelled', 'invalid_transition']);
+const CONFLICTS = new Set(['version_conflict', 'lesson_cancelled', 'invalid_transition', 'form_version_mismatch']);
 
 /** submit_report's Postgres error → HTTP; the rest as the lesson RPCs map them. */
 export function submitError(error: PostgrestError): Error {
@@ -16,9 +16,13 @@ export function submitError(error: PostgrestError): Error {
   return rpcError(error);
 }
 
-/** Calls public.submit_report (one transaction: report + version + audit + lesson outcome). */
+/**
+ * Calls public.submit_report (one transaction: report + version + audit + lesson outcome); a v2
+ * payload (with content) goes through submit_report_content, which stores the content first.
+ */
 export async function callSubmitReport(db: Db, payload: SubmitPayload): Promise<void> {
+  const fn = payload.content === undefined ? 'submit_report' : 'submit_report_content';
   // SubmitPayload is plain JSON (strings, numbers, nulls, arrays); TS cannot see an interface as Json.
-  const { error } = await db.rpc('submit_report', { p: payload as unknown as Json });
+  const { error } = await db.rpc(fn, { p: payload as unknown as Json });
   if (error) throw submitError(error);
 }
