@@ -20,14 +20,15 @@ export class AccountQueries implements AccountStore {
   async get(id: string): Promise<AccountRow | null> {
     const { data, error } = await this.db
       .from('profiles')
-      .select('id, full_name, phone_e164, avatar_path, role, role_id')
+      .select('id, full_name, phone_e164, avatar_path, role, role_id, teacher:teachers!teachers_profile_id_fkey(id)')
       .eq('id', id)
       .maybeSingle();
     if (error) throw dbError(error);
     if (!data) return null;
     const name = await this.roleName(data.role, data.role_id);
+    const teacher_id = [data.teacher].flat()[0]?.id ?? null;
     const role = { base: data.role, key: name?.key ?? null, name_ar: name?.name_ar ?? null, name_en: name?.name_en ?? null };
-    return { id: data.id, full_name: data.full_name, phone_e164: data.phone_e164, avatar_path: data.avatar_path, role };
+    return { id: data.id, full_name: data.full_name, phone_e164: data.phone_e164, avatar_path: data.avatar_path, role, teacher_id };
   }
 
   async update(id: string, patch: SelfPatch): Promise<void> {

@@ -1,6 +1,7 @@
 import type { Tables, TablesInsert, TablesUpdate } from '@ab/db';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../../common/db/db.module';
+import { StaffPhotos } from '../../../common/storage/avatars/staff-photos';
 import { applySort } from '../../../common/list-sort';
 import { readAll } from '../../teaching/scheduling/read-all';
 import { dbError, type Page } from '../../../common/http/http';
@@ -10,16 +11,26 @@ import { teacherSearchFilter } from './teachers.mapper';
 
 export type Teacher = Tables<'teachers'>;
 /** A row of GET /teachers: the teacher and her «مشترك / تجريبي» counts (R-TCH-03, owner 2026-10-12). */
-export type TeacherListRow = Teacher & TeacherStudentCounts;
+export type TeacherListRow = Omit<Teacher, 'avatar_path'> & TeacherStudentCounts & { avatar_url: string | null };
+
+/** The stored path never leaves the API: views carry a signed avatar_url instead. */
+export function withoutPath<T extends { avatar_path?: string | null }>(row: T): Omit<T, 'avatar_path'> {
+  const rest = { ...row };
+  delete rest.avatar_path;
+  return rest;
+}
 
 /** All supabase access for `teachers` (service role — callers enforce roles). R-TCH-01. */
 @Injectable()
 export class TeachersQueries {
-  constructor(@Inject(DB) private readonly db: Db) {}
+  constructor(
+    @Inject(DB) private readonly db: Db,
+    private readonly photos: StaffPhotos,
+  ) {}
 
   /**
    * Search, column filters, allowlisted sort (default: Arabic name), `id` as the last tiebreaker; each
-   * row with its active / trial student counts.
+   * row with its active / trial student counts and its photo (signed in one call for the page).
    */
   async list(q: TeacherListQuery): Promise<Page<TeacherListRow>> {
     const { page, pageSize, search } = q;
@@ -31,9 +42,10 @@ export class TeachersQueries {
       .order('id')
       .range(from, from + pageSize - 1);
     if (error) throw dbError(error);
-    const counts = await this.studentCounts(data.map((row) => row.id));
+    const ids = data.map((row) => row.id);
+    const [counts, photos] = await Promise.all([this.studentCounts(ids), this.photos.ofTeachers(ids)]);
     const none: TeacherStudentCounts = { active_count: 0, trial_count: 0 };
-    const items = data.map((row) => ({ ...row, ...(counts.get(row.id) ?? none) }));
+    const items = data.map((row) => ({ ...withoutPath(row), ...(counts.get(row.id) ?? none), avatar_url: photos.get(row.id) ?? null }));
     return { items, total: count ?? 0, page, pageSize };
   }
 
@@ -50,6 +62,11 @@ export class TeachersQueries {
         .range(from, to),
     );
     return tallyKinds(rows);
+  }
+
+  /** One teacher's photo URL (its login's, else the record's), null when none. */
+  async photo(id: string): Promise<string | null> {
+    return (await this.photos.ofTeachers([id])).get(id) ?? null;
   }
 
   async get(id: string): Promise<Teacher | null> {

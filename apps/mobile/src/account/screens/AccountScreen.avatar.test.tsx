@@ -28,10 +28,10 @@ test('R-ACC-05: initials, pick from the gallery, preview, upload-url then PUT /m
   const saved = savedProfile({ avatar_url: 'https://cdn/avatar.jpg' });
   send.mockResolvedValueOnce(signed).mockResolvedValueOnce(saved);
   const { client } = await renderWithQuery(<AccountScreen home="/more" />);
-  expect(await screen.findByTestId('profile-avatar-initials', { includeHiddenElements: true })).toBeTruthy();
+  expect(await screen.findByTestId('avatar-initials', { includeHiddenElements: true })).toBeTruthy();
   await fireEvent.press(screen.getByRole('button', { name: a.library }));
   expect(await screen.findByText(a.preview)).toBeTruthy();
-  expect(screen.getByLabelText(a.alt.replace('{name}', profileFixture.full_name)).props.source).toEqual({ uri: photo.uri });
+  expect(screen.getByTestId('avatar-photo').props.source).toEqual({ uri: photo.uri });
   await fireEvent.press(screen.getByRole('button', { name: a.upload }));
   expect(await screen.findByText(t.account.toast.avatar)).toBeTruthy();
   expect(send.mock.calls).toEqual([
@@ -40,7 +40,7 @@ test('R-ACC-05: initials, pick from the gallery, preview, upload-url then PUT /m
   ]);
   expect(mockUpload).toHaveBeenCalledWith(signed.path, 'tok', expect.any(ArrayBuffer), { contentType: 'image/jpeg' });
   expect(client.getQueryData(PROFILE_KEY)).toEqual(saved);
-  expect(screen.getByTestId('profile-avatar-photo').props.source).toEqual({ uri: 'https://cdn/avatar.jpg' });
+  expect(screen.getByTestId('avatar-photo').props.source).toEqual({ uri: 'https://cdn/avatar.jpg' });
 });
 
 test('the API refusing the type shows at the photo; «إلغاء» drops the preview', async () => {
@@ -51,7 +51,7 @@ test('the API refusing the type shows at the photo; «إلغاء» drops the pre
   await fireEvent.press(await screen.findByRole('button', { name: a.upload }));
   expect(await screen.findByText(t.account.errors.avatar_type)).toBeTruthy();
   await fireEvent.press(screen.getByRole('button', { name: t.account.cancel }));
-  expect(screen.getByTestId('profile-avatar-initials', { includeHiddenElements: true })).toBeTruthy();
+  expect(screen.getByTestId('avatar-initials', { includeHiddenElements: true })).toBeTruthy();
 });
 
 test('«إزالة الصورة» sends DELETE /me/avatar and goes back to the initials', async () => {
@@ -61,5 +61,5 @@ test('«إزالة الصورة» sends DELETE /me/avatar and goes back to the i
   await fireEvent.press(await screen.findByRole('button', { name: a.remove }));
   expect(send).toHaveBeenCalledWith('DELETE', '/me/avatar');
   expect(await screen.findByText(t.account.toast.avatarRemoved)).toBeTruthy();
-  expect(screen.getByTestId('profile-avatar-initials', { includeHiddenElements: true })).toBeTruthy();
+  expect(screen.getByTestId('avatar-initials', { includeHiddenElements: true })).toBeTruthy();
 });

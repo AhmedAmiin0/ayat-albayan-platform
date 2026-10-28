@@ -40,6 +40,19 @@ export interface LessonChipProps<L extends ChipLesson> {
   hideTeacher?: boolean;
 }
 
+/** A day's chips under each other (the week grid's cell, the phone agenda's teacher row). */
+export function LessonChipList({ lessons, onOpen }: { lessons: readonly LessonView[]; onOpen: (lesson: LessonView) => void }) {
+  return (
+    <ul className="grid gap-1">
+      {lessons.map((lesson) => (
+        <li key={lesson.id}>
+          <LessonChip lesson={lesson} onOpen={onOpen} />
+        </li>
+      ))}
+    </ul>
+  );
+}
+
 /**
  * One lesson in the week grid (R-SCH-01, R-SCH-03): Riyadh time · student(s), the status as nuqta
  * + word (shape carries state, colour only confirms), the student's own clock when it differs, and

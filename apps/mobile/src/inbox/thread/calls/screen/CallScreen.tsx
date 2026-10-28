@@ -15,7 +15,8 @@ import {
   PhoneIcon,
   SpeakerIcon,
 } from './call-icons';
-import { CallerName, Initials } from './Initials';
+import { Avatar } from '@/core/ui/primitives/Avatar';
+import { CallerName } from './CallerName';
 import { RoundButton } from './RoundButton';
 
 interface CallActions {
@@ -66,7 +67,7 @@ export function CallScreen({ session, row, phase, actions }: CallScreenProps) {
         </IconButton>
       </View>
       <View style={{ alignItems: 'center', gap: 16, marginTop: '18%' }}>
-        <Initials name={session.name} />
+        <Avatar name={session.name} id={session.phone} size="xl" decorative />
         <CallerName name={session.name} />
         <AppText
           importantForAccessibility="no-hide-descendants"

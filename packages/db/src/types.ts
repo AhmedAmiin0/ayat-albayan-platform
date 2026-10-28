@@ -4287,6 +4287,7 @@ export type Database = {
       };
       teachers: {
         Row: {
+          avatar_path: string | null;
           calendar_owner: string;
           calendar_owner_changed_at: string | null;
           calendar_owner_changed_by: string | null;
@@ -4313,6 +4314,7 @@ export type Database = {
           updated_at: string;
         };
         Insert: {
+          avatar_path?: string | null;
           calendar_owner?: string;
           calendar_owner_changed_at?: string | null;
           calendar_owner_changed_by?: string | null;
@@ -4339,6 +4341,7 @@ export type Database = {
           updated_at?: string;
         };
         Update: {
+          avatar_path?: string | null;
           calendar_owner?: string;
           calendar_owner_changed_at?: string | null;
           calendar_owner_changed_by?: string | null;

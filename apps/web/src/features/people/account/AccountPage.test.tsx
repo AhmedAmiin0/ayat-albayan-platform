@@ -30,7 +30,7 @@ describe('AccountPage «حسابي» (R-ACC-01)', () => {
     apiFetch.mockResolvedValue(PROFILE);
     renderWithClient(<AccountPage />);
     const avatar = await screen.findByRole('img', { name: t.account.avatar.alt.replace('{name}', PROFILE.full_name) });
-    expect(avatar.textContent).toBe('سأ');
+    expect(avatar.textContent).toBe('س');
   });
 
   it('loading: a skeleton spoken as «جاري تحميل…»', () => {

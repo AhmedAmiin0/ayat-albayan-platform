@@ -12,6 +12,7 @@ import { PublicConfigModule } from './common/public-config/public-config.module'
 import { PushModule } from './common/push/push.module';
 import { SettingsModule } from './common/settings/settings.module';
 import { StorageModule } from './common/storage/storage.service';
+import { AvatarsModule } from './common/storage/avatars/avatars.module';
 import { BookingModule } from './modules/teaching/booking/booking.module';
 import { DashboardModule } from './modules/reporting/dashboard/dashboard.module';
 import { ExpensesModule } from './modules/finance/expenses/expenses.module';
@@ -77,6 +78,7 @@ import { WhatsappModule } from './modules/messaging/whatsapp/whatsapp.module';
     PublicConfigModule,
     TranslationsModule,
     StorageModule,
+    AvatarsModule,
     LessonEventsModule,
     PushModule,
     GuardiansModule,
