@@ -1,6 +1,6 @@
 import { RIYADH_TZ } from '@ab/shared';
 import { router, useLocalSearchParams } from 'expo-router';
-import { useRef } from 'react';
+import { useRef, type ComponentProps } from 'react';
 import { ScrollView, View } from 'react-native';
 import { clockAt } from '@/inbox/shared/format';
 import { ApiError } from '@/core/lib/http/api';
@@ -14,7 +14,13 @@ import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { useTeacherMe } from '../../lib/queries';
 import { reportErrorText, useReportForm } from '../hooks/api';
 import { ReportEntryCard } from '../components/ReportEntryCard';
+import { ReportEntryCardV2 } from '../v2';
 import { useClockCycle } from '@/core/lib/clock';
+
+/** The report's own form: the new one (form_version 2), else the Google Form's (v1, unchanged). */
+function EntryForm(p: ComponentProps<typeof ReportEntryCard>) {
+  return p.entry.report.form_version === 2 ? <ReportEntryCardV2 form={p.form} entry={p.entry} tz={p.tz} /> : <ReportEntryCard {...p} />;
+}
 
 const back = () => (router.canGoBack() ? router.back() : router.replace('/teacher/reports'));
 
@@ -53,7 +59,7 @@ export function ReportFormScreen() {
               // Seeded once per server version: a newer version (sent elsewhere) reseeds the card.
               <View key={`${entry.report.id}:${entry.report.version}`} style={{ gap: 12 }}>
                 {titled ? <ScreenHeader title={t.reports.entryFor.replace('{name}', entry.student.name)} trailing={null} /> : null}
-                <ReportEntryCard form={data} entry={entry} tz={tz} scroll={scroll} />
+                <EntryForm form={data} entry={entry} tz={tz} scroll={scroll} />
               </View>
             ))}
           </ScrollView>

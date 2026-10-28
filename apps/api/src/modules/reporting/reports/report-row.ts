@@ -1,9 +1,10 @@
+import type { Json } from '@ab/db';
 import type { Attendance, Grade, LessonStatus, PdfStatus, Program, ReportStatus } from '@ab/shared';
 
 // Selects + structural row types for the reports module (service role; callers guard).
 
 const REPORT_COLUMNS =
-  'id, lesson_id, student_id, teacher_id, attendance, program, recited, new_memorization, revision, theory, grade_recitation, grade_memorization, grade_revision, grade_tajweed, grade_engagement, grade_commitment, grade_overall, notes, homework, next_plan, status, version, submitted_at, edited_at, pdf_path, pdf_status, pdf_error, sent_at' as const;
+  'id, lesson_id, student_id, teacher_id, attendance, program, recited, new_memorization, revision, theory, grade_recitation, grade_memorization, grade_revision, grade_tajweed, grade_engagement, grade_commitment, grade_overall, notes, homework, next_plan, status, version, submitted_at, edited_at, pdf_path, pdf_status, pdf_error, sent_at, form_version, content' as const;
 
 /** One report with its attachments (ReportView). */
 export const REPORT_SELECT =
@@ -46,6 +47,10 @@ export type ReportRow = {
   pdf_status: PdfStatus | null;
   pdf_error: string | null;
   sent_at: string | null;
+  /** 1 = the original form; 2 = the new form (migration 20261028000940). */
+  form_version: number;
+  /** The v2 form's content (reportContentSchema); null on v1. */
+  content: Json | null;
   attachments: ReportAttachmentRow[];
 };
 

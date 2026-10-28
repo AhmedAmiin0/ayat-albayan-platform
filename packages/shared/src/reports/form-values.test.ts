@@ -28,7 +28,7 @@ function reportView(over: Partial<ReportView> = {}): ReportView {
     ...{ recited: null, new_memorization: null, revision: null, theory: null, grades: { ...NO_GRADES } },
     ...{ grade_overall: null, notes: null, homework: null, next_plan: null, status: 'draft', version: 0 },
     ...{ submitted_at: null, edited_at: null, pdf_status: null, pdf_error: null, sent_at: null },
-    ...{ attachments: [], can_edit: true, edit_until: null },
+    ...{ attachments: [], can_edit: true, edit_until: null, form_version: 1, content: null },
     ...over,
   };
 }
