@@ -19,9 +19,9 @@ export class LessonServices {
 }
 
 /**
- * Sales move or cancel ONE lesson (owner 2026-10-27, docs/16 row 37; ANY student's, not only hers: owner
- * 2026-10-28) through the admin's very services, with her as the actor: the same transaction, confirmation messages, package
- * counts, calendar sync and audit as the admin's «تغيير الموعد» (scope one, no substitute, no clash
+ * Sales move or cancel ONE lesson (owner 2026-10-27, docs/16 row 37; ANY student's, not only hers:
+ * owner 2026-10-28) through the admin's very services, with her as the actor: the same transaction,
+ * confirmation messages, package counts, calendar sync and audit as the admin's «تغيير الموعد» (scope one, no substitute, no clash
  * override) and «إلغاء» (scope one, by the academy, the reason optional: null when absent).
  */
 @Injectable()

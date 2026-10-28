@@ -101,13 +101,13 @@ test('«تم» after a move closes «تفاصيل الحلقة» too: no old tim
   expect(screen.queryByRole('button', { name: a.cancel })).toBeNull();
 });
 
-test('a refusal from the API says why (403 not_your_student)', async () => {
-  mockApiSend.mockRejectedValue(new ApiError(403, { code: 'not_your_student' }));
+test('a refusal from the API says why (409 lesson_ended)', async () => {
+  mockApiSend.mockRejectedValue(new ApiError(409, { code: 'lesson_ended' }));
   await open('سلمى');
   await fireEvent.press(screen.getByRole('button', { name: a.reschedule }));
   await fireEvent.press(await screen.findByRole('radio', { name: '17:00' }));
   await fireEvent.press(screen.getByRole('button', { name: t.lessons.rescheduleSubmit }));
-  expect(await screen.findByText(t.lessons.error.not_your_student)).toBeTruthy();
+  expect(await screen.findByText(t.lessons.error.lesson_ended)).toBeTruthy();
 });
 
 test('a lesson that has ended offers nothing: «للاطلاع فقط»', async () => {
