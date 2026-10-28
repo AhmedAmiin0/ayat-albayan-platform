@@ -1,4 +1,4 @@
-import { counted, type BookingRequest, type BookingResult, type SalesCourseView } from '@ab/shared';
+import { counted, courseLessonCount, type BookingRequest, type BookingResult, type SalesCourseView } from '@ab/shared';
 import { View } from 'react-native';
 import { whenText } from '@/booking/shared/slots';
 import { t } from '@/core/lib/i18n/i18n';
@@ -24,7 +24,7 @@ export function CourseDone({ result, body, view, onDone, transfer }: CourseDoneP
   const cycle = useClockCycle();
   const { color } = useTheme();
   const [first] = result.lessons.map((l) => l.starts_at).sort();
-  const total = view.subscription?.lessons_total ?? 0;
+  const total = view.subscription ? courseLessonCount(view.subscription) : 0;
   const ends = courseEnd(body, total);
   const line = { fontFamily: type.ui[500], fontSize: type.size.body, lineHeight: type.lineHeight(type.size.body), color: color.ink };
   return (

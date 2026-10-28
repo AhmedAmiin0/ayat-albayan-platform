@@ -52,7 +52,7 @@ export function courseRequest({ view, teacherId, picks, requestId, prefilled = [
   };
 }
 
-/** The local date of the course's last lesson (its lessons_total-th), or null. */
+/** The local date of the course's last lesson (its lessonsTotal-th: courseLessonCount), or null. */
 export function courseEnd(body: BookingRequest, lessonsTotal: number): string | null {
   return courseEndsOn({ groups: timeGroups(body), startsOn: body.startsOn, lessonsTotal });
 }
