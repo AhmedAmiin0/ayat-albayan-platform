@@ -1,5 +1,5 @@
 import { LEAD_STATUSES, type LeadStatus, leadStatusStyle } from '@ab/shared';
-import { type ReactNode, useState } from 'react';
+import { type ReactNode, useCallback, useMemo, useState } from 'react';
 
 import { t } from '@/core/lib/i18n/i18n';
 import { usePagedList } from '@/core/lib/query/use-paged-list';
@@ -19,7 +19,6 @@ import { useClockCycle } from '@/core/lib/clock';
 type Filter = 'all' | LeadStatus;
 
 const keyOf = (lead: Lead) => lead.id;
-const renderRow = ({ item }: { item: Lead }) => <LeadRow lead={item} />;
 
 const filterPills = (): FilterPill<Filter>[] => [
   { value: 'all', label: t.leads.filterAll },
@@ -36,6 +35,9 @@ export function LeadsList({ switcher }: { switcher: ReactNode }) {
   const [status, setStatus] = useState<Filter>('all');
   const [filters, setFilters] = useState<LeadFilters>(NO_FILTERS);
   const list = usePagedList<Lead>({ path: '/leads', params: leadListParams({ q, status, filters }) });
+  // The rows' clock: moves on every fetch (a refresh, a refocus), so «منذ دقيقة» does not stay forever.
+  const now = useMemo(() => Math.max(Date.now(), list.dataUpdatedAt), [list.dataUpdatedAt]);
+  const renderRow = useCallback(({ item }: { item: Lead }) => <LeadRow lead={item} now={now} />, [now]);
   const filtersOn = q !== '' || status !== 'all' || activeFilterCount(filters) > 0;
   const loaded = list.data !== undefined;
   const pills = filterPills().map((p) => (loaded && p.value === status ? { ...p, count: list.total } : p));
@@ -61,6 +63,7 @@ export function LeadsList({ switcher }: { switcher: ReactNode }) {
         paged={list}
         keyExtractor={keyOf}
         renderItem={renderRow}
+        extraData={now}
         ListEmptyComponent={
           list.isPending ? null : loaded ? <EmptyState title={filtersOn ? t.mobileLeads.noMatch : t.leads.empty} /> : <ErrorState onRetry={list.refresh} />
         }
