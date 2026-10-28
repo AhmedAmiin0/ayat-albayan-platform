@@ -10,6 +10,8 @@ services:
     image: ayat-api:staging
     env_file: .env
     environment:
+      # Shared cache (docs/09 «Shared cache»). Redis down = the API reads the database, never an error.
+      REDIS_URL: redis://ayat-redis:6379
       # Owner, 2026-10-28: «I want a new seperate build with stripe and all the features continue normally
       # on the current build». STAGING ONLY (never a production file): mounts the Stripe test module
       # (docs/30). Every Stripe route stays 404 until an admin turns on «تفعيل روابط الدفع»; the normal
@@ -20,3 +22,19 @@ services:
     ports:
       - "127.0.0.1:3110:3000"
     restart: unless-stopped
+
+  # Shared cache for the API (and, after the two-copy layout, every copy and the worker). Internal
+  # network only: no published port. No persistence: everything in it is a copy of the database.
+  ayat-redis:
+    image: redis:7-alpine
+    command: ["redis-server", "--save", "", "--appendonly", "no", "--maxmemory", "64mb", "--maxmemory-policy", "allkeys-lru"]
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 3
+    deploy:
+      resources:
+        limits:
+          memory: 96M

@@ -1,6 +1,6 @@
 import type { APIRequestContext } from '@playwright/test';
 import type { AssistantCommissionView } from '@ab/shared';
-import { call } from './assistant-api';
+import { call, dayOffset } from './assistant-api';
 
 // Admin-side money steps of the assistant API specs: a package for a student, a payment, the ledger.
 
@@ -16,9 +16,12 @@ export const cents = (n: number): number => Math.round(n * 100) / 100;
 export function money(request: APIRequestContext, admin: string) {
   const as = <T>(method: 'GET' | 'POST', path: string, body?: object) => call<T>(request, { token: admin, method, path, ...(body ? { body } : {}) });
   return {
-    /** POST /subscriptions: the starter package, priced for `country` (SA -> SAR, US -> USD). */
+    /**
+     * POST /subscriptions: the starter package, priced for `country` (SA -> SAR, US -> USD), starting today in
+     * Riyadh: a UTC day (behind Riyadh from 21:00 UTC) reads as a course already started, which earns nothing.
+     */
     async subscribe(studentId: string, country: 'SA' | 'US'): Promise<Sub> {
-      const body = { studentId, pricing: { tier: 'starter', country }, startsOn: new Date().toISOString().slice(0, 10) };
+      const body = { studentId, pricing: { tier: 'starter', country }, startsOn: dayOffset(0) };
       const res = await as<Sub>('POST', '/subscriptions', body);
       if (res.status !== 201) throw new Error(`subscription ${res.status} ${JSON.stringify(res.body)}`);
       return res.body;

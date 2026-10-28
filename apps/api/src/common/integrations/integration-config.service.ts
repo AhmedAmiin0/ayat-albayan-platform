@@ -1,5 +1,6 @@
 import type { IntegrationConfigItem, IntegrationPlainKey, IntegrationSecretKey } from '@ab/shared';
-import { Inject, Injectable, Logger, type OnModuleDestroy, type OnModuleInit } from '@nestjs/common';
+import { Inject, Injectable, Logger, Optional, type OnModuleDestroy, type OnModuleInit } from '@nestjs/common';
+import { SharedCache } from '../cache/shared-cache';
 import { setIntegrationOverlay } from './integration-overlay';
 import { validOverlay } from '../../config/env/env';
 import { kickConfigReload } from '../../config/role/worker-kick';
@@ -21,7 +22,9 @@ function timeout(ms: number): Promise<never> {
  * that loadEnv() lays over process.env: once in onModuleInit (awaited, so it is in place before
  * any onApplicationBootstrap and before the first request), every refresh period and right after
  * an admin write. A failed load never blocks the boot: it logs and keeps the last good snapshot
- * (env only until the first good load). Logs carry key names only, never a value.
+ * (env only until the first good load). Logs carry key names only, never a value. With Redis an admin
+ * write announces `integrations` and the other API copies and the worker reload at once; the values
+ * themselves (Vault secrets among them) are never put in the shared cache.
  */
 @Injectable()
 export class IntegrationConfigService implements OnModuleInit, OnModuleDestroy {
@@ -32,10 +35,12 @@ export class IntegrationConfigService implements OnModuleInit, OnModuleDestroy {
   constructor(
     private readonly queries: IntegrationConfigQueries,
     @Inject(INTEGRATION_REFRESH_MS) private readonly everyMs: number | null,
+    @Optional() private readonly shared?: SharedCache,
   ) {}
 
   async onModuleInit(): Promise<void> {
     if (this.everyMs === null) return;
+    this.shared?.on('integrations', () => void this.refresh());
     await this.refresh();
     this.timer = setInterval(() => void this.refresh(), Math.max(this.everyMs, MIN_REFRESH_MS)).unref();
   }
@@ -73,10 +78,11 @@ export class IntegrationConfigService implements OnModuleInit, OnModuleDestroy {
     if (this.everyMs !== null) await this.refresh();
   }
 
-  /** After an admin write: here, then the worker's copy (kickConfigReload). */
+  /** After an admin write: here, then the worker's copy (kickConfigReload) and, with Redis, every other process. */
   private async reload(): Promise<void> {
     await this.reloadHere();
     kickConfigReload();
+    if (this.everyMs !== null) await this.shared?.invalidate({ topic: 'integrations' });
   }
 
   async writeValues(values: Partial<Record<IntegrationPlainKey, string | null>>, actorId: string): Promise<void> {
