@@ -68,4 +68,16 @@ describe('LessonDrawer buttons (docs/07 «الأزرار»)', () => {
     expect(link.textContent).toBe(t.lessons.join);
     expect(link.previousElementSibling?.textContent).toContain('meet.jit.si');
   });
+
+  it('a pending proposal: «موافقة» is the one filled button, so «تأكيد الحلقة» is outlined', () => {
+    renderDrawer(lesson({ pending_proposal: PENDING }));
+    const confirm = button(t.lessons.event.confirm).className.split(' ');
+    expect(confirm).toContain('border-input');
+    expect(confirm).not.toContain('bg-primary');
+  });
+
+  it('no proposal: «تأكيد الحلقة» is the filled primary, full width', () => {
+    renderDrawer(lesson());
+    expect(button(t.lessons.event.confirm).className.split(' ')).toEqual(expect.arrayContaining(['bg-primary', 'w-full']));
+  });
 });

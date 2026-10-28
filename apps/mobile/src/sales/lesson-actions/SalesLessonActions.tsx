@@ -23,7 +23,8 @@ interface SalesLessonActionsProps {
  * Sales' «تفاصيل الحلقة» actions (docs/07 §6 «الأزرار», docs/16 rows 37, 37b): «تأكيد الحلقة» full width
  * and filled, unless «ادخل الحلقة» is live above it (then outlined: never two filled); then ONE
  * ButtonRow «تغيير الموعد» (secondary) | «إلغاء الحلقة» (danger), on an open lesson that has not ended,
- * each behind its own key. «إلغاء الحلقة» opens its reason form in place of all of them.
+ * each behind its own key. «إلغاء الحلقة» opens its reason form in place of the row; the confirm stays
+ * put above it (its danger «تأكيد الإلغاء» keeps the sheet at one filled button).
  */
 export function SalesLessonActions({ lesson, onReschedule, onConfirmed }: SalesLessonActionsProps) {
   const can = usePermissions();
@@ -34,15 +35,17 @@ export function SalesLessonActions({ lesson, onReschedule, onConfirmed }: SalesL
   const a = t.sales.lessonActions;
   const confirm = (secondary: boolean) =>
     onConfirmed ? <SalesConfirmLesson lessonId={lesson.id} onConfirmed={onConfirmed} secondary={secondary} /> : null;
-  if (!allowed.reschedule && !allowed.cancel) return confirm(joinLive);
-  if (cancelling) return <SalesCancelLesson lessonId={lesson.id} onClose={() => setCancelling(false)} />;
+  const changes = allowed.reschedule || allowed.cancel;
   return (
     <View style={{ gap: 8 }}>
       {confirm(joinLive)}
-      <ButtonRow>
-        {allowed.reschedule ? <Button variant="secondary" label={a.reschedule} onPress={() => onReschedule(lesson)} /> : null}
-        {allowed.cancel ? <Button variant="danger" label={a.cancel} onPress={() => setCancelling(true)} /> : null}
-      </ButtonRow>
+      {changes && cancelling ? <SalesCancelLesson lessonId={lesson.id} onClose={() => setCancelling(false)} /> : null}
+      {changes && !cancelling ? (
+        <ButtonRow>
+          {allowed.reschedule ? <Button variant="secondary" label={a.reschedule} onPress={() => onReschedule(lesson)} /> : null}
+          {allowed.cancel ? <Button variant="danger" label={a.cancel} onPress={() => setCancelling(true)} /> : null}
+        </ButtonRow>
+      ) : null}
     </View>
   );
 }

@@ -12,7 +12,7 @@ describe('ButtonRow (docs/07 «الأزرار»)', () => {
       </ButtonRow>,
     );
     const row = screen.getByRole('group', { name: 'الحلقة' });
-    expect(row.className.split(' ')).toEqual(expect.arrayContaining(['flex', 'flex-wrap', 'gap-2', '*:flex-[1_1_0]', '*:min-w-max']));
+    expect(row.className.split(' ')).toEqual(expect.arrayContaining(['flex', 'flex-wrap', 'gap-2', '*:flex-[1_1_0]', '*:min-w-[min(100%,max-content)]']));
     expect(screen.getAllByRole('button')).toHaveLength(2);
   });
 

@@ -29,7 +29,14 @@ export function MeetingActions({ meeting, tz }: { meeting: MeetingView; tz: stri
     <View style={{ gap: 8 }}>
       {meeting.can_join ? <Button label={t.meetings.internal.enter} busy={enter.pending} onPress={() => enter.run(meeting.id)} /> : null}
       {c ? (
-        <InlineConfirm message={c.message} confirmLabel={c.label} busy={c.busy} onConfirm={c.run} onCancel={() => !c.busy && m.close()} />
+        <InlineConfirm
+          tone={c.danger ? 'danger' : meeting.can_join ? 'secondary' : undefined}
+          message={c.message}
+          confirmLabel={c.label}
+          busy={c.busy}
+          onConfirm={c.run}
+          onCancel={() => !c.busy && m.close()}
+        />
       ) : manage ? (
         <MeetingManageButtons scheduled={startsAt !== null} onAsk={m.ask} onMove={() => setMoving(true)} />
       ) : null}

@@ -34,6 +34,7 @@ export function PaymentLinkItem({ link, now }: { link: PaymentLinkView; now: Dat
         <View style={{ paddingHorizontal: 16, paddingVertical: 8, gap: 6 }}>
           {asking ? (
             <InlineConfirm
+              tone="danger"
               message={pl.cancelConfirm}
               confirmLabel={cancel.isPending ? t.paymentLinks.mobile.cancelling : pl.cancel}
               busy={cancel.isPending}

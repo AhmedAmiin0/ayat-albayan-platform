@@ -46,6 +46,7 @@ export function EditListSheet({ list, onClose }: EditListSheetProps) {
       />
       {confirming ? (
         <InlineConfirm
+              tone="danger"
           message={[confirm, t.inbox.lists.deleteNote, list.auto_rule ? t.inbox.lists.autoDeleteNote : ''].filter(Boolean).join(' ')}
           confirmLabel={t.inbox.lists.deleteYes}
           onConfirm={() => remove.mutate(list.id, { onSuccess: close })}

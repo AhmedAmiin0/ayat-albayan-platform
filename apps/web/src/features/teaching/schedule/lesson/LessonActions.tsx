@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/form/button';
 import { FormAlert } from '@/components/ui/form/form-alert';
 import { ButtonRow } from '@/components/ui/layout/button-row';
 import { useJoinWindow } from '@/lib/settings/public-config';
+import { useNow } from '@/lib/time/use-now';
 import { t } from '@/lib/i18n/i18n';
 import { confirmLesson, lessonErrorText, LESSONS_KEY, setLessonStatus } from '../api';
 
@@ -17,6 +18,8 @@ export interface LessonActionsProps {
   onReschedule?: () => void;
   /** Admin: «تغيير أيام الحلقات» of the lesson's assistant course (course_subscription_id). */
   onChangeCourse?: () => void;
+  /** The drawer's pending proposal «موافقة» is the primary above: the confirm is outlined. */
+  proposalLeads?: boolean;
   /** 48px on phones either way (docs/07 «الأزرار»); teacher surfaces keep 48px on desktop too. */
   size?: 'md' | 'lg';
 }
@@ -29,10 +32,11 @@ function eventsNow(lesson: LessonView, now: number): StatusRouteEvent[] {
 
 /**
  * The lesson's next steps from `allowed_events` (R-SCH-03, R-SCH-07, R-SCH-08), docs/07 «الأزرار»: confirm
- * full width (the one primary; a secondary while «ادخل الحلقة» is live above it), the attendance outcomes
+ * full width (the one primary; a secondary while «ادخل الحلقة» is live or a proposal's «موافقة» waits above it), the attendance outcomes
  * as one ButtonRow, then the admin's ButtonRow «تغيير الميعاد» | «تغيير أيام الحلقات» | «إلغاء الحلقة» (danger).
  */
-export function LessonActions({ lesson, onDone, onCancel, onReschedule, onChangeCourse, size = 'md' }: LessonActionsProps) {
+export function LessonActions(props: LessonActionsProps) {
+  const { lesson, onDone, onCancel, onReschedule, onChangeCourse, size = 'md' } = props;
   const queryClient = useQueryClient();
   const [now] = useState(() => Date.now());
   const done = async (message: string) => {
@@ -45,7 +49,9 @@ export function LessonActions({ lesson, onDone, onCancel, onReschedule, onChange
   const error = confirm.error ?? status.error;
   const outcomes = eventsNow(lesson, now);
   const win = useJoinWindow();
-  const joinLive = isOpenLesson(lesson.status) && canJoinNow(lesson, new Date(now), win);
+  const live = useNow();
+  // One filled button: «ادخل الحلقة» (live clock, as EnterButton) or a pending proposal's «موافقة» leads.
+  const stepDown = (isOpenLesson(lesson.status) && canJoinNow(lesson, live, win)) || props.proposalLeads === true;
 
   return (
     <div className="grid gap-3">
@@ -53,7 +59,7 @@ export function LessonActions({ lesson, onDone, onCancel, onReschedule, onChange
       {lesson.allowed_events.includes('confirm') && (
         <Button
           type="button"
-          variant={joinLive ? 'secondary' : 'primary'}
+          variant={stepDown ? 'secondary' : 'primary'}
           size={size}
           disabled={busy}
           className="w-full"
