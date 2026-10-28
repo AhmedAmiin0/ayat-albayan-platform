@@ -6996,7 +6996,11 @@
       "thanks": "Thank you! We received your payment and the subscription activates automatically.",
       "back": "The payment was not completed. You can try again.",
       "notFound": "This link is not valid.",
-      "testNotice": "Test payment page (Stripe sandbox): no real card is used."
+      "testNotice": "Test payment page (Stripe sandbox): no real card is used.",
+      "doneTitle": "Payment received, thank you",
+      "cancelTitle": "The payment was not made",
+      "packageLine": "Package: {lessons}",
+      "backToPage": "Back to the payment page"
     },
     "bell": {
       "paidTitle": "Paid through a payment link",
@@ -7019,7 +7023,9 @@
       "clear": "Remove",
       "saved": "Settings saved",
       "liveRefused": "The test build accepts Stripe test keys only (rk_test_ or sk_test_).",
-      "invalidSecret": "The webhook secret starts with whsec_."
+      "invalidSecret": "The webhook secret starts with whsec_.",
+      "copyUrl": "Copy the URL",
+      "urlCopied": "URL copied"
     }
   }
 }

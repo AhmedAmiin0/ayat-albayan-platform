@@ -6996,7 +6996,11 @@
       "thanks": "شكرًا لك! وصلتنا دفعتك وسيُفعَّل الاشتراك تلقائيًا.",
       "back": "لم يكتمل الدفع. يمكنك المحاولة مرة أخرى.",
       "notFound": "هذا الرابط غير صحيح.",
-      "testNotice": "صفحة دفع تجريبية (Stripe sandbox): لا تُستخدم فيها بطاقة حقيقية."
+      "testNotice": "صفحة دفع تجريبية (Stripe sandbox): لا تُستخدم فيها بطاقة حقيقية.",
+      "doneTitle": "تم استلام الدفع، شكرًا",
+      "cancelTitle": "لم يتم الدفع",
+      "packageLine": "الباقة: {lessons}",
+      "backToPage": "العودة إلى صفحة الدفع"
     },
     "bell": {
       "paidTitle": "تم الدفع عبر رابط الدفع",
@@ -7019,7 +7023,9 @@
       "clear": "حذف",
       "saved": "حُفظت الإعدادات",
       "liveRefused": "تقبل نسخة الاختبار مفاتيح Stripe التجريبية فقط (rk_test_ أو sk_test_).",
-      "invalidSecret": "سرّ الـWebhook يبدأ بـ whsec_."
+      "invalidSecret": "سرّ الـWebhook يبدأ بـ whsec_.",
+      "copyUrl": "نسخ الرابط",
+      "urlCopied": "نُسخ الرابط"
     }
   }
 }
