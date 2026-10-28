@@ -14,11 +14,13 @@ import {
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { LESSONS_KEY } from '@/features/teaching/schedule';
-import { t } from '@/lib/i18n/i18n';
+import { BUNDLES, t } from '@/lib/i18n/i18n';
 import { REPORTS_KEY, saveDraftV2, submitReportV2 } from '../api';
 import { useDraftSave } from '../entry/use-autosave';
 
 const words = () => t.reports.v2.suggest;
+// A sent report stores untouched suggestions in Arabic (the bundle, or its overrides).
+const storedWords = () => [BUNDLES.ar.reports.v2.suggest, t.reports.v2.suggest];
 
 /**
  * One student's v2 report (docs/design/report-form): local values, debounced autosave to
@@ -27,13 +29,13 @@ const words = () => t.reports.v2.suggest;
 export function useReportEntryV2(initial: ReportView, studentProgram: Program) {
   const queryClient = useQueryClient();
   const [report, setReport] = useState(initial);
-  const [values, setValues] = useState<V2Values>(() => v2ValuesOf(initial, studentProgram));
+  const [values, setValues] = useState<V2Values>(() => v2ValuesOf(initial, studentProgram, storedWords()));
   const [problem, setProblem] = useState<string | null>(null);
   const submit = useMutation({
     mutationFn: submitReportV2,
     onSuccess: async (view) => {
       setReport(view);
-      setValues(v2ValuesOf(view, studentProgram));
+      setValues(v2ValuesOf(view, studentProgram, storedWords()));
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: LESSONS_KEY }),
         queryClient.invalidateQueries({ queryKey: REPORTS_KEY }),

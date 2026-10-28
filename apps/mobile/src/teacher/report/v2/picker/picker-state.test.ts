@@ -1,4 +1,4 @@
-import { pickSurah, rangeOf, setBound, startDraft } from './picker-state';
+import { applyTyped, pickSurah, rangeOf, setBound, startDraft } from './picker-state';
 
 test('an existing part opens on its own range, not on the history', () => {
   const current = { surah: 67, from: 1, to: 15 };
@@ -37,4 +37,19 @@ test('the ends clamp to 1…ayah count and keep from ≤ to', () => {
   expect(setBound(d, { end: 'to', value: 10 })).toEqual({ surah: 67, from: 10, to: 10 });
   expect(setBound(d, { end: 'to', value: Number.NaN })).toBe(d);
   expect(rangeOf(d)).toEqual({ surah: 67, from: 16, to: 22 });
+});
+
+describe('applyTyped: «تمّ» with digits not yet applied', () => {
+  const d = { surah: 68, from: 1, to: 52 };
+  it('applies each end like a commit, clamped, keeping from ≤ to; empty or no surah: unchanged', () => {
+    expect(applyTyped(d, { to: '20' })).toEqual({ surah: 68, from: 1, to: 20 });
+    expect(applyTyped(d, { from: '30', to: '10' })).toEqual({ surah: 68, from: 10, to: 10 });
+    expect(applyTyped(d, { to: '999' })).toEqual(d);
+    expect(applyTyped(d, { from: '', to: 'x' })).toEqual(d);
+    expect(applyTyped({ surah: null, from: 1, to: 1 }, { to: '5' })).toEqual({
+      surah: null,
+      from: 1,
+      to: 1,
+    });
+  });
 });

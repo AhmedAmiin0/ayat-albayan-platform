@@ -8,8 +8,8 @@ import { shape, type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { Button } from '@/core/ui/primitives/Button';
 import { Pills } from '../ui/Pills';
-import { AyahStepper } from './AyahStepper';
-import { pickSurah, rangeOf, setBound, type PickerStart } from './picker-state';
+import { applyTyped, pickSurah, rangeOf, type PendingText, type PickerStart } from './picker-state';
+import { RangeSteppers } from './RangeSteppers';
 import { SurahList } from './SurahList';
 
 interface SurahPickerSheetProps {
@@ -31,8 +31,13 @@ export function SurahPickerSheet(p: SurahPickerSheetProps) {
   const v2 = t.reports.v2;
   const [query, setQuery] = useState('');
   const [draft, setDraft] = useState(p.start.draft);
+  const [typed, setTyped] = useState<PendingText>({});
   const range = rangeOf(draft);
-  const pick = (surah: number) => setDraft((d) => pickSurah(d, surah));
+  // A new surah drops digits typed for the old one: «تمّ» writes the range the sheet shows.
+  const pick = (surah: number) => {
+    setTyped({});
+    setDraft((d) => pickSurah(d, surah));
+  };
   const afterLast = p.start.afterAyah !== null && draft.surah === p.start.draft.surah;
   const summary = range
     ? rangeSummary(range, { ayahs: v2.ayahs, summary: v2.picker.summary })
@@ -107,20 +112,7 @@ export function SurahPickerSheet(p: SurahPickerSheetProps) {
             </View>
           ) : null}
           <SurahList query={query} selected={draft.surah} onPick={pick} />
-          <View style={{ flexDirection: 'row', gap: 10 }}>
-            <AyahStepper
-              label={v2.picker.from}
-              value={draft.from}
-              onChange={(value) => setDraft((d) => setBound(d, { end: 'from', value }))}
-              disabled={!range}
-            />
-            <AyahStepper
-              label={v2.picker.to}
-              value={draft.to}
-              onChange={(value) => setDraft((d) => setBound(d, { end: 'to', value }))}
-              disabled={!range}
-            />
-          </View>
+          <RangeSteppers draft={draft} setDraft={setDraft} setTyped={setTyped} />
           {summary ? (
             <AppText
               style={{
@@ -137,7 +129,10 @@ export function SurahPickerSheet(p: SurahPickerSheetProps) {
           <Button
             label={v2.picker.done}
             disabled={!range}
-            onPress={() => range && p.onDone(range)}
+            onPress={() => {
+              const typedRange = rangeOf(applyTyped(draft, typed));
+              if (typedRange) p.onDone(typedRange);
+            }}
           />
         </View>
       </View>

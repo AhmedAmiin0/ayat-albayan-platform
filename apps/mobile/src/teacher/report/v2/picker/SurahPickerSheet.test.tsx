@@ -84,3 +84,33 @@ test('the steppers clamp to the surah and keep from ≤ to; a typed number too',
   await fireEvent.press(screen.getByRole('button', { name: p.done }));
   expect(onDone).toHaveBeenCalledWith({ surah: 67, from: 1, to: 29 });
 });
+
+test('«تمّ» applies a number still being typed (editing never ended), clamped and from ≤ to', async () => {
+  await open();
+  await fireEvent.press(screen.getByRole('radio', { name: 'القلم' }));
+  await fireEvent.changeText(screen.getByLabelText(p.to), '20');
+  await fireEvent.press(screen.getByRole('button', { name: p.done }));
+  expect(onDone).toHaveBeenLastCalledWith({ surah: 68, from: 1, to: 20 });
+  await fireEvent.changeText(screen.getByLabelText(p.from), '30');
+  await fireEvent.changeText(screen.getByLabelText(p.to), '999');
+  await fireEvent.press(screen.getByRole('button', { name: p.done }));
+  expect(onDone).toHaveBeenLastCalledWith({ surah: 68, from: 30, to: 52 });
+});
+
+test('a step after typing drops the typed digits: «تمّ» writes the stepped value', async () => {
+  await open(startDraft({ current: { surah: 67, from: 1, to: 10 }, last: null }));
+  await fireEvent.changeText(screen.getByLabelText(p.to), '5');
+  const [, toInc] = screen.getAllByRole('button', { name: p.inc });
+  if (!toInc) throw new Error('stepper');
+  await fireEvent.press(toInc);
+  await fireEvent.press(screen.getByRole('button', { name: p.done }));
+  expect(onDone).toHaveBeenLastCalledWith({ surah: 67, from: 1, to: 11 });
+});
+
+test('digits typed before a surah change are dropped: «تمّ» writes the range shown', async () => {
+  await open(startDraft({ current: { surah: 67, from: 1, to: 30 }, last: null }));
+  await fireEvent.changeText(screen.getByLabelText(p.to), '25');
+  await fireEvent.press(screen.getByRole('radio', { name: 'القلم' }));
+  await fireEvent.press(screen.getByRole('button', { name: p.done }));
+  expect(onDone).toHaveBeenLastCalledWith({ surah: 68, from: 1, to: 52 });
+});

@@ -6,7 +6,7 @@ export interface FamilyExtras {
   content: ReportContent;
   /** Every range of the student's other submitted v2 reports up to this one (juz progress). */
   history: SurahRange[];
-  /** The student's next open lesson after this one, if booked. */
+  /** The student's next open lesson after this one and after now (never one already past), if booked. */
   nextLessonAt: string | null;
 }
 
@@ -19,11 +19,16 @@ const contentOf = (raw: unknown): ReportContent => {
   return parsed.success ? parsed.data : reportContentSchema.parse({});
 };
 
+/** The later of this lesson's start and now: «الحلقة القادمة» must start after both. */
+const nextAfter = (at: { startsAt: string; now: Date }): string =>
+  new Date(Math.max(Date.parse(at.startsAt), at.now.getTime())).toISOString();
+
 /**
  * Two small reads (a handful of reports a day): the student's v2 history for the juz progress
- * (v1 reports are never read) and the next booked lesson for «الحلقة القادمة».
+ * (v1 reports are never read) and the next booked lesson for «الحلقة القادمة» (a late report or
+ * a re-render never names a lesson already past).
  */
-export async function loadFamilyExtras(db: Db, report: V2Report, startsAt: string): Promise<FamilyExtras> {
+export async function loadFamilyExtras(db: Db, report: V2Report, at: { startsAt: string; now: Date }): Promise<FamilyExtras> {
   let history = db
     .from('lesson_reports')
     .select('content')
@@ -38,7 +43,7 @@ export async function loadFamilyExtras(db: Db, report: V2Report, startsAt: strin
       .from('lessons')
       .select('starts_at, lesson_students!inner(student_id)')
       .eq('lesson_students.student_id', report.student_id)
-      .gt('starts_at', startsAt)
+      .gt('starts_at', nextAfter(at))
       .in('status', [...OPEN])
       .order('starts_at', { ascending: true })
       .limit(1)

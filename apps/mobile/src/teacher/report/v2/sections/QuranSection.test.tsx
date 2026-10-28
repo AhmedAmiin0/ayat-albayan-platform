@@ -1,3 +1,4 @@
+import { emptyContent } from '@ab/shared';
 import { fireEvent, screen, within } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
@@ -74,4 +75,22 @@ test('no history: the picker opens with nothing picked; «إلغاء» leaves th
   await fireEvent.press(screen.getByRole('button', { name: v2.picker.cancel }));
   expect(screen.queryByLabelText(v2.picker.search)).toBeNull();
   expect(pickButtons()).toHaveLength(3);
+});
+
+test('a full form (9 parts) offers no add on any track and says why', async () => {
+  const segments = Array.from({ length: 9 }, (_, i) => ({
+    kind: 'revision' as const,
+    surah: 78 + i,
+    from: 1,
+    to: 5,
+    grade: 'good' as const,
+  }));
+  const form = formResponseV2();
+  const [entry] = form.entries;
+  if (!entry) throw new Error('no entry');
+  const full = { ...entry, report: { ...entry.report, content: { ...emptyContent(), segments } } };
+  await renderWithQuery(<ReportEntryCardV2 form={form} entry={full} tz="Africa/Cairo" />);
+  expect(screen.queryByText(v2.pickRange)).toBeNull();
+  expect(screen.queryByText(v2.addSegment)).toBeNull();
+  expect(screen.getAllByText('الحد الأقصى 9 مقاطع')).toHaveLength(3);
 });

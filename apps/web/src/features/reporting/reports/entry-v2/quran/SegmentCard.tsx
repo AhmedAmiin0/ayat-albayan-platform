@@ -1,3 +1,4 @@
+import { fillSlots } from '@ab/client-core';
 import { MAX_SEGMENTS, segmentsOf, withSegment, type ReportContent, type SegmentKind } from '@ab/shared';
 import { Button } from '@/components/ui/form/button';
 import { t } from '@/lib/i18n/i18n';
@@ -38,16 +39,16 @@ export function SegmentCard({ s, kind, onPick }: SegmentCardProps) {
           invalid={s.problem === 'missing_grades'}
         />
       ))}
-      {parts.length === 0 ? (
+      {!room ? (
+        <p className="text-xs text-ink-3">{fillSlots(v2.segmentsFull, { max: MAX_SEGMENTS })}</p>
+      ) : parts.length === 0 ? (
         <Button type="button" variant="secondary" className="justify-self-start" aria-invalid={missing || undefined} onClick={() => onPick(-1)}>
           {v2.pickRange}
         </Button>
       ) : (
-        room && (
-          <Button type="button" variant="ghost" size="sm" className="justify-self-start" onClick={() => onPick(-1)}>
-            {v2.addSegment}
-          </Button>
-        )
+        <Button type="button" variant="ghost" size="sm" className="justify-self-start" onClick={() => onPick(-1)}>
+          {v2.addSegment}
+        </Button>
       )}
     </section>
   );

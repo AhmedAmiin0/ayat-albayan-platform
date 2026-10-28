@@ -48,3 +48,14 @@ export function setBound(
 /** The range «تمّ» writes, or null while no surah is picked. */
 export const rangeOf = (d: PickerDraft): SurahRange | null =>
   d.surah === null ? null : { surah: d.surah, from: d.from, to: d.to };
+
+/** Digits typed into a stepper whose editing has not ended yet, per end. */
+export type PendingText = Partial<Record<'from' | 'to', string>>;
+
+/** «تمّ» while a number is still being typed: each end's digits apply as a commit would. */
+export function applyTyped(d: PickerDraft, typed: PendingText): PickerDraft {
+  return (['from', 'to'] as const).reduce((acc, end) => {
+    const digits = typed[end]?.replace(/\D/g, '') ?? '';
+    return digits === '' ? acc : setBound(acc, { end, value: Number(digits) });
+  }, d);
+}

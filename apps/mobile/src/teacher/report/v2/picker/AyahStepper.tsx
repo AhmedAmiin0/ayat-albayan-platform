@@ -9,6 +9,8 @@ interface AyahStepperProps {
   label: string;
   value: number;
   onChange: (value: number) => void;
+  /** The digits typed and not yet applied (null once applied), so «تمّ» can apply them. */
+  onPending?: (text: string | null) => void;
   disabled?: boolean;
 }
 
@@ -57,14 +59,23 @@ function Step({ sign, label, field, onPress, disabled }: StepProps) {
 }
 
 /** − n +: one end of the ayah range; the number can also be typed (a long surah). */
-export function AyahStepper({ label, value, onChange, disabled }: AyahStepperProps) {
+export function AyahStepper({ label, value, onChange, onPending, disabled }: AyahStepperProps) {
   const { color } = useTheme();
   // What is typed, for the value it was typed over: a new value (a step, a clamp) shows itself.
   const [draft, setDraft] = useState({ base: value, text: String(value) });
   const text = draft.base === value ? draft.text : String(value);
   const setText = (next: string) => setDraft({ base: value, text: next });
+  const typeText = (next: string) => {
+    setText(next);
+    onPending?.(next);
+  };
+  const apply = (next: number) => {
+    onPending?.(null);
+    onChange(next);
+  };
   const commit = (typed: string) => {
     const digits = typed.replace(/\D/g, '');
+    onPending?.(null);
     if (digits !== '' && Number(digits) !== value) onChange(Number(digits));
     setText(String(value));
   };
@@ -89,16 +100,16 @@ export function AyahStepper({ label, value, onChange, disabled }: AyahStepperPro
           sign="−"
           label={t.reports.v2.picker.dec}
           field={label}
-          onPress={() => onChange(value - 1)}
+          onPress={() => apply(value - 1)}
           disabled={disabled}
         />
-        {/* Typed digits apply when editing ends, so «25» never passes through «2» (the other end stays). */}
+        {/* Typed digits apply when editing ends (or on «تمّ»), so «25» never passes through «2». */}
         <TextInput
           accessibilityLabel={label}
           keyboardType="number-pad"
           editable={!disabled}
           value={text}
-          onChangeText={setText}
+          onChangeText={typeText}
           onEndEditing={() => commit(text)}
           selectTextOnFocus
           style={{
@@ -114,7 +125,7 @@ export function AyahStepper({ label, value, onChange, disabled }: AyahStepperPro
           sign="+"
           label={t.reports.v2.picker.inc}
           field={label}
-          onPress={() => onChange(value + 1)}
+          onPress={() => apply(value + 1)}
           disabled={disabled}
         />
       </View>

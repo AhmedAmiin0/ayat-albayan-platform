@@ -11,7 +11,7 @@ import type { ReportPdfSource } from './report-pdf.source';
 const NOW = new Date('2026-09-29T15:12:00Z');
 
 function setup(found = true, store = fakeSettings()) {
-  const source = { load: vi.fn(async () => (found ? sampleSource() : null)) };
+  const source = { load: vi.fn<(id: string, now: Date) => Promise<ReturnType<typeof sampleSource> | null>>(async () => (found ? sampleSource() : null)) };
   const renderer = {
     render: vi.fn<(html: string, footer?: string) => Promise<Uint8Array>>(async () => new Uint8Array([37, 80, 68, 70])),
     close: vi.fn(async () => undefined),
@@ -24,13 +24,15 @@ function setup(found = true, store = fakeSettings()) {
   );
   // The settings arrive by property injection (the constructor stays at three parameters).
   Object.assign(publisher, { settings: new ReportPdfSettings(store) });
-  return { publisher, renderer, storage };
+  return { publisher, renderer, storage, source };
 }
 
 describe('ReportPdfPublisher — render and store one report', () => {
   it('renders the report HTML and overwrites reports/{student_id}/{lesson_id}.pdf', async () => {
-    const { publisher, renderer, storage } = setup();
+    const { publisher, renderer, storage, source } = setup();
     const out = await publisher.publish('r1', NOW);
+    // The clock reaches the source: «الحلقة القادمة» is read after now, never a lesson already past.
+    expect(source.load).toHaveBeenCalledWith('r1', NOW);
     const html = renderer.render.mock.calls[0]?.[0] ?? '';
     expect(html).toContain('سلمى عبد الرحمن');
     expect(html).toContain('@font-face');

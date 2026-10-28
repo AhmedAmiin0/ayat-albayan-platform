@@ -35,7 +35,7 @@ export class ReportPdfPublisher {
 
   /** Overwrites the object: a re-rendered (edited) report keeps its path (R-REP-04). Same path and message for v1 and v2. */
   async publish(reportId: string, now: Date): Promise<Published> {
-    const source = await this.source.load(reportId);
+    const source = await this.source.load(reportId, now);
     if (!source) throw new Error('report not found');
     const contact = await this.contact();
     const model = { ...toModel(source, now), contact };

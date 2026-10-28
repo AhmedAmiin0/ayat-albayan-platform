@@ -1664,6 +1664,7 @@
       "missing_topic": "اكتب موضوع الدرس قبل الإرسال",
       "missing_domain": "اختر المجال قبل الإرسال",
       "invalid_range": "اختر آيات موجودة في السورة، من الأصغر إلى الأكبر",
+      "too_many_segments": "بلغ التقرير الحد الأقصى للمقاطع، احذف مقطعًا قبل الإرسال",
       "form_version_mismatch": "تغيّر نموذج هذا التقرير، حدّث الصفحة وحاول مرة أخرى"
     },
     "entryFor": "تقرير {name}",
@@ -1744,6 +1745,7 @@
       "pageRange": "ص {first}–{last}",
       "rateOf": "تقييم {title}",
       "addSegment": "+ أضف مقطعًا آخر",
+      "segmentsFull": "الحد الأقصى {max} مقاطع",
       "removeSegment": "احذف هذا المقطع",
       "tajweedTitle": "الدرس النظري / التجويد",
       "optional": "(اختياري)",

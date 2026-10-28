@@ -1,11 +1,11 @@
 import { describe, expect, it } from 'vitest';
 import { reportView } from '../../testing/reports.js';
-import { emptyContent, type ReportSegment } from './content.js';
+import { emptyContent, MAX_SEGMENTS, type ReportSegment } from './content.js';
 import { effective, segmentsOf, v2DraftBody, v2Problem, v2SubmitBody, v2ValuesOf, withSegment } from './form.js';
 
 const WORDS = { homeworkQuran: 'راجع {surah} {from}-{to}', nextNew: 'جديد {surah} {from}-{to}', nextRevision: 'مراجعة {surah} {from}-{to}' };
 const seg = (kind: ReportSegment['kind'], grade: ReportSegment['grade'] = 'excellent'): ReportSegment => ({ kind, surah: 67, from: 16, to: 22, grade });
-const values = () => v2ValuesOf(reportView({ form_version: 2, program: null }), 'quran');
+const values = () => v2ValuesOf(reportView({ form_version: 2, program: null }), 'quran', [WORDS]);
 
 describe('v2 form values', () => {
   it('start from the report, the student’s program and an empty form', () => {
@@ -28,6 +28,18 @@ describe('v2 form values', () => {
     expect(v2SubmitBody({ ...v, homework: 'x' }, { version: 0, words: WORDS }).homework).toBe('x');
   });
 
+  it('a sent report’s stored suggestions read as untouched: an edited range re-sends new ones; a typed value stays', () => {
+    const first = { ...emptyContent(), segments: [seg('new')] };
+    const sent = (homework: string | null) =>
+      reportView({ form_version: 2, program: 'quran', content: first, grade_overall: 'excellent', homework, next_plan: 'جديد الملك 23-29' });
+    const v = v2ValuesOf(sent('راجع الملك 16-22'), 'quran', [WORDS]);
+    expect([v.overall, v.homework, v.nextPlan]).toEqual([null, null, null]);
+    const edited = { ...v, content: { ...first, segments: [{ ...seg('new', 'good'), to: 20 }] } };
+    expect(effective(edited, WORDS)).toEqual({ overall: 'good', homework: 'راجع الملك 16-20', nextPlan: 'جديد الملك 21-25' });
+    expect(v2ValuesOf(sent('اكتب الواجب'), 'quran', [WORDS]).homework).toBe('اكتب الواجب');
+    expect(v2ValuesOf({ ...sent('راجع الملك 16-22'), grade_overall: 'good' }, 'quran', [WORDS]).overall).toBe('good');
+  });
+
   it('check like the API', () => {
     const opts = { version: 0, words: WORDS };
     expect(v2Problem(values(), opts)).toBe('missing_attendance');
@@ -48,5 +60,13 @@ describe('segments', () => {
     expect(c.segments[1]?.to).toBe(30);
     expect(withSegment(c, { index: 0, segment: null }).segments.map((s) => s.kind)).toEqual(['new']);
     expect(withSegment(c, { index: -1, segment: null })).toBe(c);
+  });
+
+  it('refuses a part past MAX_SEGMENTS; a full form sent anyway names its own error', () => {
+    const full = { ...emptyContent(), segments: Array.from({ length: MAX_SEGMENTS }, () => seg('revision')) };
+    expect(withSegment(full, { index: -1, segment: seg('new') })).toBe(full);
+    expect(withSegment(full, { index: 0, segment: seg('new') }).segments[0]?.kind).toBe('new');
+    const over = { ...values(), attendance: 'on_time' as const, content: { ...full, segments: [...full.segments, seg('new')] } };
+    expect(v2Problem(over, { version: 0, words: WORDS })).toBe('too_many_segments');
   });
 });

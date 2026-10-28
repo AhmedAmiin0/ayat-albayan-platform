@@ -49,6 +49,14 @@ describe('the new report form (form_version 2): sections', () => {
     expect(screen.getByRole('button', { name: v2.addSegment })).toBeTruthy();
   });
 
+  it('a full form (9 parts) offers no add on any track and says why', async () => {
+    const segments = Array.from({ length: 9 }, (_, i) => ({ kind: 'revision' as const, surah: 78 + i, from: 1, to: 5, grade: 'good' as const }));
+    await openV2({ apiFetch, report: { content: v2Content({ segments }) } });
+    expect(screen.queryByRole('button', { name: v2.pickRange })).toBeNull();
+    expect(screen.queryByRole('button', { name: v2.addSegment })).toBeNull();
+    expect(screen.getAllByText('الحد الأقصى 9 مقاطع')).toHaveLength(3);
+  });
+
   it('«تعديل الخطة» makes the next lesson editable', async () => {
     await openV2({ apiFetch });
     screen.getByRole('button', { name: v2.editPlan }).click();

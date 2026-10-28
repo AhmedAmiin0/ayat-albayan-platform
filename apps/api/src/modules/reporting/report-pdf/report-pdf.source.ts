@@ -70,7 +70,7 @@ function must<T>(res: { data: T | null; error: { message: string } | null }, wha
 export class ReportPdfSource {
   constructor(@Inject(DB) private readonly db: Db) {}
 
-  async load(reportId: string): Promise<ReportSource | null> {
+  async load(reportId: string, now: Date): Promise<ReportSource | null> {
     const res = await this.db.from('lesson_reports').select(REPORT_COLUMNS).eq('id', reportId).maybeSingle();
     if (res.error) throw new Error(`report read failed: ${res.error.message}`);
     if (!res.data) return null;
@@ -109,7 +109,7 @@ export class ReportPdfSource {
         startsOn: p.starts_on,
         createdAt: p.created_at,
       })),
-      ...(report.form_version === 2 ? { family: await loadFamilyExtras(this.db, report, l.starts_at) } : {}),
+      ...(report.form_version === 2 ? { family: await loadFamilyExtras(this.db, report, { startsAt: l.starts_at, now }) } : {}),
     };
   }
 

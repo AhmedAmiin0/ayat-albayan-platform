@@ -11,6 +11,7 @@ import {
 } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
+import arBundle from '@ab/shared/i18n/ar.json';
 import { t } from '@/core/lib/i18n/i18n';
 import { refreshAfterSubmit } from '../../hooks/api';
 import { useDraftAutosave } from '../../hooks/use-autosave';
@@ -18,6 +19,8 @@ import { saveDraftV2, submitReportV2 } from './api';
 
 /** The suggestion templates, read per call (t can be overridden after boot). */
 const words = () => t.reports.v2.suggest;
+// A sent report stores untouched suggestions in Arabic (the bundle, or its overrides).
+const storedWords = () => [arBundle.reports.v2.suggest, t.reports.v2.suggest];
 
 /**
  * One student's v2 «تقرير الحلقة» (form_version 2): local values, the debounced v2 draft save while
@@ -28,14 +31,16 @@ export function useV2Entry(entry: ReportFormEntry) {
   const client = useQueryClient();
   const studentProgram = entry.student.program;
   const [report, setReport] = useState(entry.report);
-  const [values, setValues] = useState<V2Values>(() => v2ValuesOf(entry.report, studentProgram));
+  const [values, setValues] = useState<V2Values>(() =>
+    v2ValuesOf(entry.report, studentProgram, storedWords()),
+  );
   const [problem, setProblem] = useState<string | null>(null);
   const submit = useMutation({
     mutationFn: (version: number) =>
       submitReportV2(report.id, v2SubmitBody(values, { version, words: words() })),
     onSuccess: async (view) => {
       setReport(view);
-      setValues(v2ValuesOf(view, studentProgram));
+      setValues(v2ValuesOf(view, studentProgram, storedWords()));
       await refreshAfterSubmit(client);
     },
   });

@@ -9,6 +9,9 @@ import { ReportPdfSettings } from '../report-pdf.settings';
 import { ReportPdfSource, type ReportSource } from '../report-pdf.source';
 import { familySource } from './family.fakes';
 
+/** A clock before every fixture lesson: «الحلقة القادمة» is read after the lesson itself. */
+const EPOCH = new Date(0);
+
 const NOW = new Date('2026-10-27T14:10:00Z');
 
 function publisher(source: ReportSource) {
@@ -45,9 +48,9 @@ describe('the family report keeps the same sending path; only the page changes f
   it('ReportPdfSource reads the v2 parts only for a v2 report', async () => {
     const report = { id: 'r1', lesson_id: 'l1', student_id: 's1', teacher_id: 't1', attendance: 'on_time', version: 1 };
     const v1 = fakeDb(tables({ ...report, form_version: 1 }));
-    expect((await new ReportPdfSource(v1.db).load('r1'))?.family).toBeUndefined();
+    expect((await new ReportPdfSource(v1.db).load('r1', EPOCH))?.family).toBeUndefined();
     expect(v1.trips.filter((t) => t === 'lesson_reports')).toHaveLength(1);
     const v2 = fakeDb(tables({ ...report, form_version: 2, content: { segments: [] }, submitted_at: null }));
-    expect((await new ReportPdfSource(v2.db).load('r1'))?.family).toEqual({ content: expect.objectContaining({ segments: [] }), history: [], nextLessonAt: null });
+    expect((await new ReportPdfSource(v2.db).load('r1', EPOCH))?.family).toEqual({ content: expect.objectContaining({ segments: [] }), history: [], nextLessonAt: null });
   });
 });

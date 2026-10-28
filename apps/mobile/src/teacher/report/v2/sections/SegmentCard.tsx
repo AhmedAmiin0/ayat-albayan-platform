@@ -1,5 +1,5 @@
 import { MAX_SEGMENTS, segmentsOf, type ReportSegment, type SegmentKind } from '@ab/shared';
-import { rangeLabel, rangeMeta } from '@ab/client-core';
+import { fillSlots, rangeLabel, rangeMeta } from '@ab/client-core';
 import { View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { locale } from '@/core/lib/i18n/locale';
@@ -62,18 +62,22 @@ export function SegmentCard(p: SegmentCardProps) {
   const { content } = p.s.values;
   const parts = segmentsOf(content, p.kind);
   const first = parts[0];
-  const canAdd = parts.length > 0 && content.segments.length < MAX_SEGMENTS && !p.s.locked;
+  const full = content.segments.length >= MAX_SEGMENTS;
+  const canAdd = parts.length > 0 && !full && !p.s.locked;
   return (
     <Card title={v2.segment[p.kind]} aside={first ? rangeMeta(first.segment, v2) : null}>
       {first ? (
         parts.map(({ segment, index }, i) => (
           <Part key={index} {...p} segment={segment} index={index} later={i > 0} />
         ))
-      ) : (
+      ) : full ? null : (
         <Part {...p} segment={null} index={-1} later={false} />
       )}
       {canAdd ? (
         <Button variant="secondary" label={v2.addSegment} onPress={() => p.onOpen(-1)} />
+      ) : null}
+      {full && !p.s.locked ? (
+        <Note>{fillSlots(v2.segmentsFull, { max: MAX_SEGMENTS })}</Note>
       ) : null}
     </Card>
   );
