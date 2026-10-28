@@ -38,8 +38,8 @@ export class SignInController {
 
   @Post('code/request')
   @HttpCode(202)
-  request(@Body() body: unknown, @Ip() ip: string): void {
-    this.family.request(parseOrThrow(codeRequestSchema, body), ip);
+  request(@Body() body: unknown, @Ip() ip: string): Promise<void> {
+    return this.family.request(parseOrThrow(codeRequestSchema, body), ip);
   }
 
   @Post('code/verify')
@@ -56,8 +56,8 @@ export class SignInController {
 
   @Post('password/forgot')
   @HttpCode(202)
-  forgot(@Body() body: unknown, @Ip() ip: string): void {
-    this.passwords.forgot(parseOrThrow(forgotSchema, body), ip);
+  forgot(@Body() body: unknown, @Ip() ip: string): Promise<void> {
+    return this.passwords.forgot(parseOrThrow(forgotSchema, body), ip);
   }
 
   @Post('password/reset')

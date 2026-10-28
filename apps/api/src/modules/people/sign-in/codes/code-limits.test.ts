@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { phoneMayCheck, phoneMaySend, SignInLimits } from './code-limits';
+import { MemoryLimitStore, type LimitTake } from './limit-store';
 
 const stats = (over: Partial<{ sentLast15Min: number; sentLastDay: number; failedLastDay: number }> = {}) => ({
   sentLast15Min: 0,
@@ -20,31 +21,71 @@ describe('per-phone limits (database counts)', () => {
 });
 
 describe('SignInLimits (per IP and per identifier, 15 minutes)', () => {
+  const make = () => new SignInLimits(new MemoryLimitStore());
 
-  it('5 code requests per identifier, whatever its spelling', () => {
-    const limits = new SignInLimits();
+  it('5 code requests per identifier, whatever its spelling', async () => {
+    const limits = make();
     const spellings = ['AB-1234', 'ab-1234', 'ab 1234', 'AB1234', ' ab-1234 '];
-    spellings.forEach((identifier, i) => limits.assert('request', { ip: `10.0.0.${i}`, identifier }, 1000));
-    expect(() => limits.assert('request', { ip: '10.0.0.99', identifier: 'Ab-1234' }, 1000)).toThrow('too_many_requests');
+    for (const [i, identifier] of spellings.entries()) await limits.assert('request', { ip: `10.0.0.${i}`, identifier }, 1000);
+    await expect(limits.assert('request', { ip: '10.0.0.99', identifier: 'Ab-1234' }, 1000)).rejects.toThrow('too_many_requests');
   });
 
-  it('phones in any format share a bucket', () => {
-    const limits = new SignInLimits();
-    for (let i = 0; i < 5; i += 1) limits.assert('request', { ip: `1.1.1.${i}`, identifier: i % 2 ? '+966500000001' : '00966 50 000 0001' }, 0);
-    expect(() => limits.assert('request', { ip: '1.1.1.9', identifier: '+966 500000001' }, 0)).toThrow('too_many_requests');
+  it('phones in any format share a bucket', async () => {
+    const limits = make();
+    for (let i = 0; i < 5; i += 1) await limits.assert('request', { ip: `1.1.1.${i}`, identifier: i % 2 ? '+966500000001' : '00966 50 000 0001' }, 0);
+    await expect(limits.assert('request', { ip: '1.1.1.9', identifier: '+966 500000001' }, 0)).rejects.toThrow('too_many_requests');
   });
 
-  it('20 requests per IP across identifiers; buckets free up after 15 minutes', () => {
-    const limits = new SignInLimits();
-    for (let i = 0; i < 20; i += 1) limits.assert('request', { ip: '9.9.9.9', identifier: `user${i}x` }, 0);
-    expect(() => limits.assert('request', { ip: '9.9.9.9', identifier: 'fresh' }, 0)).toThrow('too_many_requests');
-    expect(() => limits.assert('request', { ip: '9.9.9.9', identifier: 'fresh' }, 15 * 60_000)).not.toThrow();
+  it('20 requests per IP across identifiers; buckets free up after 15 minutes', async () => {
+    const limits = make();
+    for (let i = 0; i < 20; i += 1) await limits.assert('request', { ip: '9.9.9.9', identifier: `user${i}x` }, 0);
+    await expect(limits.assert('request', { ip: '9.9.9.9', identifier: 'fresh' }, 0)).rejects.toThrow('too_many_requests');
+    await expect(limits.assert('request', { ip: '9.9.9.9', identifier: 'fresh' }, 15 * 60_000)).resolves.toBeUndefined();
   });
 
-  it('kinds have their own buckets (10 checks / logins per identifier)', () => {
-    const limits = new SignInLimits();
-    for (let i = 0; i < 10; i += 1) limits.assert('check', { ip: `2.2.2.${i}`, identifier: 'omar' }, 0);
-    expect(() => limits.assert('check', { ip: '2.2.2.99', identifier: 'OMAR' }, 0)).toThrow('too_many_requests');
-    expect(() => limits.assert('login', { ip: '2.2.2.99', identifier: 'omar' }, 0)).not.toThrow();
+  it('kinds have their own buckets (10 checks / logins per identifier)', async () => {
+    const limits = make();
+    for (let i = 0; i < 10; i += 1) await limits.assert('check', { ip: `2.2.2.${i}`, identifier: 'omar' }, 0);
+    await expect(limits.assert('check', { ip: '2.2.2.99', identifier: 'OMAR' }, 0)).rejects.toThrow('too_many_requests');
+    await expect(limits.assert('login', { ip: '2.2.2.99', identifier: 'omar' }, 0)).resolves.toBeUndefined();
+  });
+
+  it('asks the store for the IP bucket first, then the folded identifier, over 15 minutes', async () => {
+    const seen: LimitTake[] = [];
+    const limits = new SignInLimits({ take: (input) => (seen.push(input), Promise.resolve(false)) });
+    await expect(limits.assert('login', { ip: '203.0.113.7', identifier: 'Ab-1234' }, 5)).rejects.toThrow('too_many_requests');
+    expect(seen).toEqual([
+      { buckets: [{ key: 'login:ip:203.0.113.7', max: 30 }, { key: 'login:id:student:AB-1234', max: 10 }], windowMs: 15 * 60_000, now: 5 },
+    ]);
+  });
+});
+
+describe('SignInLimits.maySend (send:phone buckets shared by every API copy)', () => {
+  const PHONE = '+966500000001';
+
+  it('3 sends per 15 minutes and 10 a day per phone; another phone has its own', async () => {
+    const limits = new SignInLimits(new MemoryLimitStore());
+    const sends = async (count: number, now: number) => {
+      const out: boolean[] = [];
+      for (let i = 0; i < count; i += 1) out.push(await limits.maySend(PHONE, now));
+      return out;
+    };
+    expect(await sends(4, 0)).toEqual([true, true, true, false]);
+    expect(await limits.maySend('+966500000002', 0)).toBe(true);
+    for (const quarter of [1, 2]) expect(await sends(3, quarter * 15 * 60_000 + 1)).toEqual([true, true, true]);
+    expect(await sends(2, 3 * 15 * 60_000 + 2)).toEqual([true, false]);
+    expect(await limits.maySend(PHONE, 24 * 3_600_000 + 1)).toBe(true);
+  });
+
+  it('takes the 15-minute bucket, then the day bucket (never the day one when the first is full)', async () => {
+    const seen: LimitTake[] = [];
+    const limits = new SignInLimits({ take: (input) => (seen.push(input), Promise.resolve(seen.length > 1)) });
+    expect(await limits.maySend(PHONE, 7)).toBe(false);
+    expect(await limits.maySend(PHONE, 8)).toBe(true);
+    expect(seen.map((t) => [t.buckets, t.windowMs])).toEqual([
+      [[{ key: `send:phone:${PHONE}`, max: 3 }], 15 * 60_000],
+      [[{ key: `send:phone:${PHONE}`, max: 3 }], 15 * 60_000],
+      [[{ key: `send:phone:${PHONE}:day`, max: 10 }], 24 * 3_600_000],
+    ]);
   });
 });

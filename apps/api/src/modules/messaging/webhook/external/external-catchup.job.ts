@@ -7,6 +7,7 @@ import { ExternalStore, type ExternalOutcome } from './external.store';
 import { messageTime } from './external-message';
 import { KapsoHistory } from './kapso-history';
 import { kapsoChatNumbers, type KapsoNumber } from './kapso-numbers';
+import { BackgroundJob } from '../../../../config/role/background-job';
 
 const EVERY_MS = 10 * 60_000;
 /** Not on boot: every API test boots AppModule (the AlertsJob rule). */
@@ -39,6 +40,7 @@ const tail = (id: string): string => `…${id.slice(-4)}`;
  * webhook (ExternalStore). Idempotent: the wamid is the dedup key (unique wa_message_id). The
  * first run after deploy back-fills the gap since the chat import of 2026-10-25. Logs counts only.
  */
+@BackgroundJob({ name: 'external-catch-up' })
 @Injectable()
 export class ExternalCatchUpJob implements OnApplicationBootstrap, OnModuleDestroy {
   private readonly log = new Logger(ExternalCatchUpJob.name);

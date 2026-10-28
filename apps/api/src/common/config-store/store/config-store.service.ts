@@ -1,4 +1,5 @@
 import { Inject, Injectable, Logger, Optional } from '@nestjs/common';
+import { kickConfigReload } from '../../../config/role/worker-kick';
 import { configDef, seedEntryOf } from './config-defs';
 import { decodeAll, decodeValue } from './config-decode';
 import { ConfigStoreQueries } from './config-store.queries';
@@ -89,6 +90,8 @@ export class ConfigStore {
       this.invalidate();
       // The overrides reload never fails the save (TranslationsService also reloads every 5 min).
       if (hintKey && this.refreshOverrides) await this.refreshOverrides().catch(() => undefined);
+      // The other copies' translations (and the worker's) reload too: the hint is an ar override.
+      if (hintKey) kickConfigReload();
     }
   }
 

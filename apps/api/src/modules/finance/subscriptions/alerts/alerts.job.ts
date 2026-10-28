@@ -8,6 +8,7 @@ import {
 import { LessonEvents } from '../../../../common/events/lesson-events';
 import { AlertsQueries } from './alerts.queries';
 import { SubscriptionAlertsService } from './alerts.service';
+import { BackgroundJob } from '../../../../config/role/background-job';
 
 const EVERY_MS = 15 * 60_000;
 /** Not on boot: every API test boots AppModule, and a restart loop must not hammer the DB. */
@@ -22,6 +23,7 @@ const FIRST_RUN_MS = 5 * 60_000;
  * status the admin set by hand. Idempotent through the dedup keys and the compare-and-set.
  * ponytail: in-process timer on the single API instance, like HorizonJob; pg_cron when it scales.
  */
+@BackgroundJob({ name: 'subscription-alerts' })
 @Injectable()
 export class AlertsJob implements OnModuleInit, OnApplicationBootstrap, OnModuleDestroy {
   private readonly log = new Logger(AlertsJob.name);

@@ -10,8 +10,8 @@ describe('the codes gate (docs/30 §4): flag, pepper, approved template', () => 
     ['no pepper', signInWorld({ pepper: null })],
   ])('%s: unavailable, requests answer the same and send nothing, checks are 503', async (_name, w) => {
     await expect(w.family.available()).resolves.toBe(false);
-    w.family.request({ phone: PHONES.guardian }, IP);
-    w.passwords.forgot({ identifier: 'omar' }, IP);
+    await w.family.request({ phone: PHONES.guardian }, IP);
+    await w.passwords.forgot({ identifier: 'omar' }, IP);
     await w.kit.idle();
     expect(w.send.sent).toEqual([]);
     await expect(w.family.verify({ phone: PHONES.guardian, code: '123456' }, IP)).rejects.toThrow('codes_unavailable');
@@ -22,7 +22,7 @@ describe('the codes gate (docs/30 §4): flag, pepper, approved template', () => 
     const w = signInWorld();
     w.send.open = false;
     await expect(w.family.available()).resolves.toBe(false);
-    w.family.request({ phone: PHONES.guardian }, IP);
+    await w.family.request({ phone: PHONES.guardian }, IP);
     await w.kit.idle();
     expect(w.send.sent).toEqual([]);
   });
@@ -31,34 +31,34 @@ describe('the codes gate (docs/30 §4): flag, pepper, approved template', () => 
 describe('rate limits', () => {
   it('3 codes per phone per 15 minutes, then silence (still the same answer)', async () => {
     const w = signInWorld();
-    for (let i = 0; i < 4; i += 1) w.family.request({ phone: PHONES.guardian }, `198.51.100.${i}`);
+    for (let i = 0; i < 4; i += 1) await w.family.request({ phone: PHONES.guardian }, `198.51.100.${i}`);
     await w.kit.idle();
     expect(w.send.sent).toHaveLength(3);
   });
 
-  it('429 after 5 requests for one identifier, however it is spelled', () => {
+  it('429 after 5 requests for one identifier, however it is spelled', async () => {
     const w = signInWorld();
-    for (let i = 0; i < 5; i += 1) w.family.request({ phone: i % 2 ? '+966500000001' : '00966500000001' }, `198.51.100.${i}`);
-    expect(() => w.family.request({ phone: '+966 50 000 0001' }, '198.51.100.99')).toThrow('too_many_requests');
+    for (let i = 0; i < 5; i += 1) await w.family.request({ phone: i % 2 ? '+966500000001' : '00966500000001' }, `198.51.100.${i}`);
+    await expect(w.family.request({ phone: '+966 50 000 0001' }, '198.51.100.99')).rejects.toThrow('too_many_requests');
   });
 
   it('10 wrong codes a day per phone stop the checks, across codes', async () => {
     const w = signInWorld();
     const wrongFor = (code: string) => (code === '000000' ? '111111' : '000000');
     for (let round = 0; round < 2; round += 1) {
-      w.family.request({ phone: PHONES.guardian }, `192.0.2.${round}`);
+      await w.family.request({ phone: PHONES.guardian }, `192.0.2.${round}`);
       await w.kit.idle();
       const code = w.send.lastTo(PHONES.guardian);
       for (let i = 0; i < 5; i += 1) await w.family.verify({ phone: PHONES.guardian, code: wrongFor(code) }, `192.0.2.${10 + round * 5 + i}`).catch(() => undefined);
     }
-    w.family.request({ phone: PHONES.guardian }, '192.0.2.99');
+    await w.family.request({ phone: PHONES.guardian }, '192.0.2.99');
     await w.kit.idle();
     expect(w.send.sent).toHaveLength(2);
   });
 
   it('the site-wide breaker: 200 wrong codes in an hour across phones pause every send and check', async () => {
     const w = signInWorld();
-    w.family.request({ phone: PHONES.guardian }, '192.0.2.200');
+    await w.family.request({ phone: PHONES.guardian }, '192.0.2.200');
     await w.kit.idle();
     const code = w.send.lastTo(PHONES.guardian);
     const other = { purpose: 'sign_in' as const, subject: { kind: 'guardian' as const, id: 'gx' }, phone: PHONES.other, hash: 'x', maxAttempts: 5, expiresAt: new Date(Date.now() + 60_000) };
@@ -68,7 +68,7 @@ describe('rate limits', () => {
       if (row) row.attempts = 5;
     }
     await expect(w.family.verify({ phone: PHONES.guardian, code }, '192.0.2.201')).rejects.toThrow('invalid_code');
-    w.family.request({ phone: PHONES.teacher }, '192.0.2.202');
+    await w.family.request({ phone: PHONES.teacher }, '192.0.2.202');
     await w.kit.idle();
     expect(w.send.sent).toHaveLength(1);
   });

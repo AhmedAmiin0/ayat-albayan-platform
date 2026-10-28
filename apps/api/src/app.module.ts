@@ -21,6 +21,7 @@ import { FeedbackModule } from './modules/teaching/feedback/feedback.module';
 import { FxModule } from './modules/finance/fx/fx.module';
 import { GuardiansModule } from './modules/people/guardians/guardians.module';
 import { HealthController } from './modules/platform/health/health.controller';
+import { ProcessRoleModule } from './modules/platform/process-role';
 import { InboxModule } from './modules/messaging/inbox/inbox.module';
 import { SavedRepliesModule } from './modules/messaging/saved-replies/saved-replies.module';
 import { InvoicesModule } from './modules/finance/invoices/invoices.module';
@@ -63,6 +64,7 @@ import { WhatsappModule } from './modules/messaging/whatsapp/whatsapp.module';
 @Module({
   imports: [
     DbModule,
+    ProcessRoleModule,
     IntegrationConfigModule,
     AuditModule,
     AuthModule,

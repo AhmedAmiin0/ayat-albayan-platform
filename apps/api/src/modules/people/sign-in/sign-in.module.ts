@@ -6,6 +6,8 @@ import { SubjectsQueries } from './accounts/subjects.queries';
 import { CodeIssuer } from './codes/code-issuer';
 import { SignInLimits } from './codes/code-limits';
 import { CodesQueries } from './codes/codes.queries';
+import { LIMIT_STORE } from './codes/limit-store';
+import { DbLimitStore } from './codes/limit-store.db';
 import { FamilyCodeService } from './flows/family-code.service';
 import { PasswordService } from './flows/password.service';
 import { AccountKit, SignInKit } from './flows/sign-in.kit';
@@ -32,6 +34,7 @@ import { SignInSettings } from './sign-in.settings';
     Provisioner,
     SignInSettings,
     { provide: CODE_STORE, useClass: CodesQueries },
+    { provide: LIMIT_STORE, useClass: DbLimitStore },
     { provide: SUBJECT_STORE, useClass: SubjectsQueries },
     { provide: AUTH_GATE, useClass: SupabaseAuthGate },
     {

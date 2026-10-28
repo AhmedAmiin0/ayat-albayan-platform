@@ -2999,6 +2999,21 @@ export type Database = {
           },
         ];
       };
+      rate_limit_hits: {
+        Row: {
+          at: string;
+          bucket: string;
+        };
+        Insert: {
+          at?: string;
+          bucket: string;
+        };
+        Update: {
+          at?: string;
+          bucket?: string;
+        };
+        Relationships: [];
+      };
       report_attachments: {
         Row: {
           created_at: string;
@@ -4451,6 +4466,24 @@ export type Database = {
         };
         Relationships: [];
       };
+      wa_template_line_syncs: {
+        Row: {
+          line: Database['public']['Enums']['wa_line'];
+          result: Json;
+          synced_at: string;
+        };
+        Insert: {
+          line: Database['public']['Enums']['wa_line'];
+          result: Json;
+          synced_at?: string;
+        };
+        Update: {
+          line?: Database['public']['Enums']['wa_line'];
+          result?: Json;
+          synced_at?: string;
+        };
+        Relationships: [];
+      };
       web_push_subscriptions: {
         Row: {
           auth: string;
@@ -5045,6 +5078,7 @@ export type Database = {
         }[];
       };
       push_live_sessions: { Args: { p_ids: string[] }; Returns: string[] };
+      rate_limit_take: { Args: { p_buckets: string[]; p_maxes: number[]; p_window_ms: number }; Returns: boolean };
       record_teacher_payment: { Args: { p: Json }; Returns: Json };
       reopen_assistant_statement: { Args: { p_actor: string; p_statement: string }; Returns: Json };
       report_of_path: { Args: { p_name: string }; Returns: string };

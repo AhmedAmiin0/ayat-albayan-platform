@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Inject, Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import { AuditService } from '../../../../common/audit/audit.service';
 import { Provisioner } from '../accounts/provision';
-import { CodeIssuer } from '../codes/code-issuer';
+import { CodeIssuer, type CodeTarget } from '../codes/code-issuer';
 import { SignInLimits } from '../codes/code-limits';
 import { AUTH_GATE, SUBJECT_STORE, type AuthGate, type SubjectStore } from '../sign-in.ports';
 
@@ -32,6 +32,11 @@ export class SignInKit {
     readonly limits: SignInLimits,
     private readonly audit: AuditService,
   ) {}
+
+  /** Issue a code (CodeIssuer takes the phone's shared send buckets once it would send). */
+  issue(target: CodeTarget): Promise<boolean> {
+    return this.codes.issue(target);
+  }
 
   later(task: () => Promise<unknown>): void {
     const run: Promise<void> = task()

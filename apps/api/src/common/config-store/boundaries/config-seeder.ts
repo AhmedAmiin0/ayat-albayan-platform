@@ -4,6 +4,7 @@ import arBundle from '@ab/shared/i18n/ar.json';
 import { Inject, Injectable, Logger, type OnApplicationBootstrap, type OnModuleDestroy } from '@nestjs/common';
 import { DB, type Db } from '../../db/db.module';
 import { ConfigStore } from '../store/config-store.service';
+import { BackgroundJob } from '../../../config/role/background-job';
 
 /** Just after boot, not during it: booting touches no network (jobs.wiring test). */
 export const SEED_DELAY_MS = 1_000;
@@ -53,6 +54,7 @@ export async function runConfigSeed(db: Db, log: SeedLog = new Logger('ConfigSee
 }
 
 /** Seeds the settings metadata once per boot (shortly after it), then drops the store's cache. */
+@BackgroundJob({ name: 'config-seed' })
 @Injectable()
 export class ConfigSeeder implements OnApplicationBootstrap, OnModuleDestroy {
   private readonly log = new Logger(ConfigSeeder.name);
