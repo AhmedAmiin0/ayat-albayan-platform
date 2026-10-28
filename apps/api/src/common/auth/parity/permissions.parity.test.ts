@@ -99,6 +99,13 @@ describe('system-role parity with the old @Roles table', () => {
     expect(WHO.filter((who) => who !== null && systemPermissionsOf(who).includes('pricing.read'))).toEqual(['admin', 'sales']);
   });
 
+  // Owner 2026-10-28 «تأكيد الحلقة»: sales' own confirm route only; the teacher/admin route keeps lessons.status.
+  it('lessons.confirm gates the sales confirm route only, for admin and sales (never a teacher)', () => {
+    expect(routes.filter((r) => r.permission === 'lessons.confirm').map((r) => r.key)).toEqual(['SalesLessonActionsController.confirm']);
+    expect(routes.find((r) => r.key === 'LessonActionsController.confirm')?.permission).toBe('lessons.status');
+    expect(WHO.filter((who) => who !== null && systemPermissionsOf(who).includes('lessons.confirm'))).toEqual(['admin', 'sales']);
+  });
+
   // Owner 2026-10-25 «الردود السريعة»: writing the shared list is an inline check (SavedRepliesService),
   // never a route gate; by default only the system admin holds it (grantable to assistants).
   it('saved_replies.manage gates no route and is held by the system admin only', () => {

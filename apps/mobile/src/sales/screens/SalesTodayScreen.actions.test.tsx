@@ -20,6 +20,12 @@ const day = (...lessons: object[]) => mockApiFetch.mockImplementation(async () =
 const noAdminAction = () => {
   for (const label of ADMIN_ACTIONS) expect(screen.queryByRole('button', { name: new RegExp(`^${label}`) })).toBeNull();
 };
+/** «تفاصيل الحلقة» of a scheduled lesson: sales' own «تأكيد الحلقة» (lessons.confirm, owner 2026-10-28), no admin action. */
+const onlySalesConfirm = () => {
+  expect(screen.getAllByRole('button', { name: /^تأكيد/ })).toHaveLength(1);
+  expect(screen.getByRole('button', { name: t.sales.lessonActions.confirm })).toBeTruthy();
+  for (const label of ADMIN_ACTIONS.slice(2)) expect(screen.queryByRole('button', { name: new RegExp(`^${label}`) })).toBeNull();
+};
 
 beforeEach(() => {
   mockApiFetch.mockReset();
@@ -44,24 +50,23 @@ test('the next lesson, ten minutes away: no «ادخل الحلقة» yet (only 
   noAdminAction();
 });
 
-test('the hero opens the read-only «تفاصيل الحلقة»: «للاطلاع فقط», no admin action, join while it runs', async () => {
+test('the hero opens «تفاصيل الحلقة»: sales\' «تأكيد الحلقة» on a scheduled lesson, no admin action, join while it runs', async () => {
   day(running, soon);
   await renderWithQuery(<SalesTodayScreen />);
   await fireEvent.press(await screen.findByRole('button', { name: t.today.details }));
   expect(await screen.findByRole('header', { name: 'يوسف أحمد' })).toBeTruthy();
-  expect(screen.getByText(t.lessons.sheet.readOnly)).toBeTruthy();
-  noAdminAction();
+  expect(screen.queryByText(t.lessons.sheet.readOnly)).toBeNull();
+  onlySalesConfirm();
   expect(screen.getAllByRole('button', { name: t.classroom.enter }).length).toBeGreaterThan(0);
 });
 
-test('a row opens the same read-only sheet; a lesson not yet running has no «ادخل الحلقة» there', async () => {
+test('a row opens the same sheet; a lesson not yet running has no «ادخل الحلقة» there', async () => {
   day(running, soon);
   await renderWithQuery(<SalesTodayScreen />);
   await screen.findByText(t.today.running);
   const enterBefore = screen.getAllByRole('button', { name: t.classroom.enter }).length;
   await fireEvent.press(screen.getByRole('button', { name: /سلمى/ }));
   expect(await screen.findByRole('header', { name: 'سلمى' })).toBeTruthy();
-  expect(screen.getByText(t.lessons.sheet.readOnly)).toBeTruthy();
-  noAdminAction();
+  onlySalesConfirm();
   expect(screen.getAllByRole('button', { name: t.classroom.enter })).toHaveLength(enterBefore);
 });

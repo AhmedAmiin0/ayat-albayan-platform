@@ -7,8 +7,8 @@ import { type LessonFacts, SalesStudentQueries } from './details/sales-student.q
 /**
  * Which students are a salesperson's (docs/16 row 36): her OWN, by the same ownership as «الاشتراكات»
  * and its history (SalesQueries.ownership: her leads' families and the students she brought). «تفاصيل
- * الطالب» opens any student (owner 2026-10-28) but marks `mine`; a report PDF and every lesson action
- * stay hers: there any other id reads exactly like an unknown one.
+ * الطالب» opens any student (owner 2026-10-28) but marks `mine`; a report PDF and a lesson move or cancel
+ * stay hers: there any other id reads exactly like an unknown one. «تأكيد الحلقة» is any lesson (no scope).
  */
 @Injectable()
 export class SalesStudentScope {

@@ -1,10 +1,8 @@
-// The permission catalog (owner, 2026-10-05: "add dynamic roles and permissions"). One stable
-// `resource.action` key per group of API endpoints that had the same @Roles set before roles became
-// dynamic, so the five system roles keep exactly today's access (the API's parity test checks it).
+// The permission catalog (owner, 2026-10-05: "add dynamic roles and permissions"). One stable `resource.action`
+// key per group of API endpoints that had the same @Roles set before roles became dynamic (the API's parity test).
 // `grants` = the non-admin system roles that hold the permission by default (seeded in migration
-// 20261005000220); the system admin always holds every grantable permission.
-// Adding a permission: add a row here, its labels in i18n (permissions.items), a seed row in a new
-// migration for the system roles that should get it, then use it in @Permissions('…').
+// 20261005000220 and later ones); the system admin holds every grantable permission. Adding a permission:
+// a row here, its labels in i18n (permissions.items), a seed migration for its system roles, then @Permissions('…').
 
 /** Matrix sections, in display order. `self` is never shown: it follows the base role. */
 export const PERMISSION_AREAS = [
@@ -54,8 +52,10 @@ export const PERMISSION_ROWS = [
   { key: 'booking.write', area: 'schedule', grants: [] },
   // Sales' «تغيير الموعد» / «إلغاء الحلقة» on ONE lesson of her own students from «جدول الحلقات» (owner 2026-10-27,
   // docs/16 row 37): POST /sales/lessons/:id/reschedule and /cancel only. Never a series, an outcome or teacher pay.
+  // «تأكيد الحلقة» POST /sales/lessons/:id/confirm: ANY lesson, the family's «نعم» is in a shared chat (owner 2026-10-28).
   { key: 'lessons.reschedule', area: 'schedule', grants: ['sales'] },
   { key: 'lessons.cancel', area: 'schedule', grants: ['sales'] },
+  { key: 'lessons.confirm', area: 'schedule', grants: ['sales'] },
   // «حاسبة الأسعار» GET /pricing/quote and /pricing/catalog. Sales by default (owner 2026-10-26: «عرض سعر» in the
   // chat, migration 20261026000760); teachers never.
   { key: 'pricing.read', area: 'schedule', grants: ['sales'] },
