@@ -1,6 +1,7 @@
 import type { SalesPersonView } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { apiFetch } from '@/core/lib/http/api';
+import { withTracked } from '@/core/lib/query/paged-result';
 import { pathKey } from '@/core/lib/query/query-keys';
 
 const PATH = '/sales/people';
@@ -12,5 +13,5 @@ export function useSalesPeople(enabled: boolean) {
     queryFn: () => apiFetch<SalesPersonView[]>(PATH),
     enabled,
   });
-  return { ...query, people: Array.isArray(query.data) ? query.data : [] };
+  return withTracked(query, { people: Array.isArray(query.data) ? query.data : [] });
 }
