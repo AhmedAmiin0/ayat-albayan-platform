@@ -11,6 +11,8 @@ MODE="${1:-}"
 RECREATE=""
 [ "$MODE" = "--env-only" ] && RECREATE="--force-recreate"
 dc() { docker compose -p "$PROJECT" "$@"; }
+# The load balancer's image, as pinned in docker-compose.yml (compose.test.mjs keeps them equal).
+LB_IMAGE=caddy:2.10.2-alpine
 
 # This layout runs the jobs in ayat-worker only because the code reads APP_ROLE. Code from before the roles
 # (a rollback to an older src) would run every job in every container: refuse it, build or --env-only alike.
@@ -41,10 +43,28 @@ roll() {
   healthy "$1"
 }
 
+# Is lb/Caddyfile valid? In the running LB, or (not running yet) in a throwaway container of the same image.
+lb_valid() {
+  if [ -n "$(dc ps -q ayat-lb)" ]; then
+    dc exec -T ayat-lb caddy validate --config /etc/caddy/Caddyfile
+  else
+    docker run --rm --network none -v "$PWD/lb:/etc/caddy:ro" "$LB_IMAGE" caddy validate --config /etc/caddy/Caddyfile
+  fi
+}
+
+# A changed Caddyfile is validated first, then reloaded in place (no restart). Invalid, or refused by the
+# reload: the roll fails (the rollback follows) and the running LB keeps its config and .lb.sha256 its sum.
+# Never forced in by recreating the LB (3110 would go down on a config Caddy refused).
 lb() {
   sum=$(sha256sum lb/Caddyfile | cut -d' ' -f1)
-  if [ -n "$(dc ps -q ayat-lb)" ] && [ "$sum" != "$(cat .lb.sha256 2>/dev/null || true)" ]; then
-    dc exec -T ayat-lb caddy reload --config /etc/caddy/Caddyfile || dc up -d --no-deps --force-recreate ayat-lb
+  if [ "$sum" != "$(cat .lb.sha256 2>/dev/null || true)" ]; then
+    lb_valid || { echo '::error::lb/Caddyfile is invalid: ayat-lb keeps its config'; return 1; }
+    if [ -n "$(dc ps -q ayat-lb)" ]; then
+      dc exec -T ayat-lb caddy reload --config /etc/caddy/Caddyfile || {
+        echo '::error::caddy reload refused lb/Caddyfile: ayat-lb keeps its config'
+        return 1
+      }
+    fi
   fi
   # Creates it when missing; recreates it only when its compose definition changed (image tag, port).
   dc up -d --no-deps ayat-lb
@@ -62,6 +82,8 @@ if [ -n "$legacy" ]; then
   # only the port changes hands after the stop), then the worker, so the old process and the worker never
   # run jobs side by side.
   dc pull ayat-lb
+  # Before anything stops: a Caddyfile Caddy refuses must never cost the old container its port.
+  lb_valid || { echo '::error::lb/Caddyfile is invalid: the single container keeps 3110'; exit 1; }
   roll ayat-api-a
   roll ayat-api-b
   # shellcheck disable=SC2086

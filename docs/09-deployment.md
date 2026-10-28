@@ -20,7 +20,7 @@ The rate limits key on `req.ip`, which is only the visitor while Fastify trusts 
 
 ## Two API copies + one worker (code since 2026-10-28, staging layout after it)
 
-The owner asked for «threads and instances» because the API got slow. The API can run as separate processes: API copies behind a load balancer that serve HTTP, and one worker that runs every background job. The code ships first and is **inert on a single container** (`APP_ROLE` unset = `all`, `TRUST_PROXY_HOPS` unset = 1, `WORKER_URL` unset = no forwarding); the staging layout below switches it on, and shipped only after this code was deployed, so the server's `src.old` already knows the roles.
+The owner asked for «threads and instances» because the API got slow. The API can run as separate processes: API copies behind a load balancer that serve HTTP, and one worker that runs every background job. The code ships first and is **inert on a single container** (`APP_ROLE` unset = `all`, `TRUST_PROXY_HOPS` unset = 1, `WORKER_URL` unset = no forwarding); the staging layout below switches it on. **Merge order:** the layout PR (#341) merges only after the code PR (#314) is merged **and** its staging deploy is green, so the server's `src.old` already knows the roles (`roll.sh` refuses code from before `APP_ROLE`).
 
 Staging runs **four containers** in the compose project `ayat-albayan-staging` (`deploy/staging/docker-compose.yml`), all from **one image** (`ayat-api:staging`, built once per deploy by `ayat-worker`'s `build:`, never pulled):
 
@@ -36,26 +36,13 @@ The host Caddy and `/opt/wacrm` are **unchanged**: Caddy still proxies the API d
 
 **Real client IP:** the host Caddy sets `X-Forwarded-For` to the visitor; a load balancer behind it keeps that header and appends the host Caddy's address, and the copies then trust 2 hops (`TRUST_PROXY_HOPS=2`), so `req.ip` is the visitor and a forged header cannot choose it (`trust-proxy.test.ts`).
 
-**Deploy roll** (`deploy/staging/roll.sh`, run by `deploy-staging` and `tools/scripts/env/deploy-staging.sh`): build the image once → recreate `ayat-worker`, wait healthy → `ayat-api-a`, wait healthy (`ayat-lb` serves from `b`; SIGTERM makes Fastify finish the requests in flight) → `ayat-api-b`, wait healthy → `ayat-lb` reloaded (`caddy reload`, no restart) only when its Caddyfile changed → `/health` on `127.0.0.1:3110` → remove orphans and prune **this project's** images only. The compose file, `roll.sh` and `lb/Caddyfile` go up as `*.new` and are swapped in by the same command as `mv src.new src` (the previous ones kept as `*.old`), so the server never pairs the new layout with old code; `roll.sh` itself refuses to run when `src` predates `APP_ROLE` (`src/apps/api/src/config/role/app-role.ts` missing), build and `--env-only` alike. The first run after the switch moves the old single `ayat-api` container off port 3110 in one step (the `caddy` image pulled and the copies up first, then the LB takes 3110 within a second or two, then the worker), so the old process and the worker never run jobs side by side. `docker builder prune` is **not** run: the build cache is shared with the CRM and cannot be limited to one project. `env_only` runs `roll.sh --env-only` (no build, every container recreated one at a time).
+**Deploy roll** (`deploy/staging/roll.sh`, run by the `deploy-staging` workflow only; `tools/scripts/env/deploy-staging.sh` now refuses and points to it): build the image once → recreate `ayat-worker`, wait healthy → `ayat-api-a`, wait healthy (`ayat-lb` serves from `b`; SIGTERM makes Fastify finish the requests in flight) → `ayat-api-b`, wait healthy → `ayat-lb` reloaded (`caddy validate` first, then `caddy reload`, no restart) only when its Caddyfile changed; a Caddyfile Caddy refuses fails the roll (the running LB keeps its config, `.lb.sha256` its sum, and the rollback follows), it is never forced in by recreating the LB → `/health` on `127.0.0.1:3110` → remove orphans and prune **this project's** images only. The compose file, `roll.sh`, `rollback.sh` and `lb/Caddyfile` go up as `*.new` and are swapped in by the same command as `mv src.new src` (the previous ones kept as `*.old`), under the deploy lock (`flock -n $DEST/.deploy.lock`: a second deploy refuses before any change), and that command ends `sh roll.sh || { sh rollback.sh; exit 1; }`, so the server never pairs the new layout with old code; `roll.sh` itself refuses to run when `src` predates `APP_ROLE` (`src/apps/api/src/config/role/app-role.ts` missing), build and `--env-only` alike. The first run after the switch moves the old single `ayat-api` container off port 3110 in one step (the `caddy` image pulled and the Caddyfile validated while the old container still serves, the copies up first, then the old container stops, up to ~30 s while it finishes its requests and jobs, and the LB takes 3110, then the worker), so the old process and the worker never run jobs side by side. `docker builder prune` is **not** run: the build cache is shared with the CRM and cannot be limited to one project. `env_only` runs `roll.sh --env-only` under the same lock (no build, every container recreated one at a time). The LB answers 404 for `/internal/*`; the copies reach each other and the worker by name on the project network (`PEER_URLS`, `WORKER_URL`).
 
-**Roll back:** automatic when a container never gets healthy or the health check fails: the workflow puts back `src.old`, `docker-compose.yml.old`, `roll.sh.old`, `lb/Caddyfile.old` (and `web.old` only when that run swapped the web) and rolls again; if the previous layout was the single container it builds it and runs `docker compose up -d --remove-orphans` after removing this project's four containers (a short gap, only then). If the restored compose file is the new layout but `src.old` predates `APP_ROLE`, `roll.sh` refuses and the run fails loudly: roll back by hand. By hand on the VPS:
+**Roll back:** automatic, one script for both triggers (`deploy/staging/rollback.sh`, under the deploy lock): a roll that fails (a container never healthy, an invalid Caddyfile) rolls back in the same command, and a public health check that fails after a good roll runs it from its own step (with `web.old`, only when that run swapped the web). It puts back `src.old`, `docker-compose.yml.old`, `roll.sh.old`, `lb/Caddyfile.old` (the bad code stays in `src.bad`) and rolls the previous layout: this one again (`sh roll.sh`), or the single container: build first while the copies still serve, then `ayat-worker` and `ayat-lb` stop (`docker stop -t 30`, then removed) **before** the single container starts, so jobs never run in two processes, then the API copies stop the same way, then `/health` on `127.0.0.1:3110` with retries (about 2 minutes) and this project's old images pruned (3110 is down only between the LB's stop and the single container's start). If the restored compose file is the new layout but `src.old` predates `APP_ROLE`, `roll.sh` refuses and the run fails loudly: roll back by hand. By hand on the VPS:
 
 ```bash
 cd /opt/ayat-albayan-staging
-# The previous code and, with it, the previous compose files (as the workflow does); stop on any error.
-set -e
-rm -rf src.bad && mv src src.bad && mv src.old src
-for f in docker-compose.yml roll.sh lb/Caddyfile; do [ ! -f $f.old ] || cat $f.old > $f; done
-if grep -q '^  ayat-lb:' docker-compose.yml; then
-  sh roll.sh                                          # previous layout was this one (roll.sh refuses code without APP_ROLE)
-else                                                  # previous layout was the single container
-  docker compose build
-  for s in ayat-lb ayat-api-a ayat-api-b ayat-worker; do
-    ids=$(docker ps -aq --filter label=com.docker.compose.project=ayat-albayan-staging --filter label=com.docker.compose.service=$s)
-    [ -z "$ids" ] || docker rm -f $ids
-  done
-  docker compose up -d --remove-orphans
-fi
+flock -n .deploy.lock sh rollback.sh    # the same script as the workflow; refuses while a deploy holds the lock
 docker compose ps
 ```
 
@@ -67,10 +54,7 @@ On the first switch the API copies serve before `ayat-worker` exists (it starts 
 
 ## Redeploy
 
-```bash
-bash tools/scripts/env/deploy-staging.sh
-```
-Pushes migrations, ships the committed `HEAD` with `git archive` (never `node_modules` or `.env`), rolls the API containers (`roll.sh`), builds the web app against staging, swaps it in atomically and waits for `/health`. Secrets come from the git-ignored `.claude/artifacts/staging/` of the main checkout (`supabase.md`, `api.env`, `web.env`, `mobile.env`, `credentials.md`).
+From GitHub only (below). `tools/scripts/env/deploy-staging.sh` (the laptop deploy) now refuses and points there: it had no deploy lock and no rollback for the two-copies layout, so it could race the workflow or leave `127.0.0.1:3110` down.
 
 ### From GitHub (no laptop secrets)
 
@@ -111,7 +95,7 @@ Lesson report PDFs (R-REP-03) are rendered by the job runner (`ayat-worker` on s
 
 ## Roll back
 
-- API: on the VPS `cd /opt/ayat-albayan-staging && mv src src.bad && mv src.old src`, then as in «Two API copies + one worker» → «Roll back» (`sh roll.sh`, or the single container when the old code predates `APP_ROLE`).
+- API: on the VPS `cd /opt/ayat-albayan-staging && flock -n .deploy.lock sh rollback.sh` (see «Two API copies + one worker» → «Roll back»).
 - Web: `mv web web.bad && mv web.old web` (Caddy serves the folder directly; no reload needed).
 - Caddy: restore the newest `/etc/caddy/Caddyfile.bak-*`, `caddy validate`, `systemctl reload caddy`.
 - Database: migrations are forward-only; restore from the Supabase dashboard backup if needed.
@@ -124,7 +108,7 @@ Lesson report PDFs (R-REP-03) are rendered by the job runner (`ayat-worker` on s
 3. Share buttons appear only where they can work: no «شارك الشاشة» on phones (no `getDisplayMedia`); a guest gets «اطلب مشاركة الشاشة» and the teacher / admin / assistant answers «سماح» / «رفض» (`POST …/participants/:identity/share`, LiveKit `RoomService/UpdateParticipant`, nothing stored).
 
 **If the room still says it cannot connect, check the server (owner, on the VPS):**
-1. `/opt/ayat-albayan-staging/.env` has all three of `LIVEKIT_URL`, `LIVEKIT_API_KEY`, `LIVEKIT_API_SECRET` (else every join is 503 and the page says «الحلقات عبر الإنترنت غير مفعّلة على الخادم بعد»). `LIVEKIT_URL` **must start with `wss://`** (`wss://livekit-staging.148-230-116-195.sslip.io`): the app is served over https, and browsers block a `ws://` socket from an https page; the room then says «عنوان خادم الحلقات يبدأ بـ ws://…». After editing: `docker compose up -d` in `/opt/ayat-albayan-staging` (or the GitHub deploy with **env_only**).
+1. `/opt/ayat-albayan-staging/.env` has all three of `LIVEKIT_URL`, `LIVEKIT_API_KEY`, `LIVEKIT_API_SECRET` (else every join is 503 and the page says «الحلقات عبر الإنترنت غير مفعّلة على الخادم بعد»). `LIVEKIT_URL` **must start with `wss://`** (`wss://livekit-staging.148-230-116-195.sslip.io`): the app is served over https, and browsers block a `ws://` socket from an https page; the room then says «عنوان خادم الحلقات يبدأ بـ ws://…». After editing: the GitHub deploy with **env_only**, or on the VPS `cd /opt/ayat-albayan-staging && flock -n .deploy.lock sh roll.sh --env-only` (one container at a time; never a bare `docker compose up -d`, which recreates every container at once).
 2. Open `https://livekit-staging.148-230-116-195.sslip.io` in a browser: it must answer `OK` (Caddy → `livekit-server` on 127.0.0.1:7880). If not, the room says «تعذّر الوصول إلى خادم الحلقات…»; check `docker ps` / `docker logs <livekit container>` and the Caddy block.
 3. The media ports must be open in the VPS firewall: **UDP 7882**, **TCP 7881**, TURN **UDP 3478** (`ufw status`; Hostinger panel firewall too). With them closed the call connects but no video, audio or shared screen arrives.
 4. While someone joins, `docker logs -f <livekit container>` shows `participant joined` and, for a shared board or screen, `mediaTrack published`. A track that stays `pending track` means no media reaches the server (ports in 3).
@@ -220,12 +204,12 @@ Today the academy number (+966 56 610 1447) is served by the owner's CRM on the 
 - A quiet time window, and who watches `/admin/inbox` during it.
 
 ### 2. Prepare (no traffic moves)
-1. **Deploy the build with the automatic-messages switch first** (develop at or after the cut-over prep commits, migration `20261001000162_auto_messages`), before any `WA_*` change or switching sending on. `deploy-staging.sh` ships the committed `HEAD` of the checkout that runs it, so run it from an up-to-date develop checkout (or fast-forward the `deploy/staging` worktree to develop first). Then confirm all three on the target, and stop if any is missing (without the switch, the old build's reminder and follow-up jobs would message the imported families):
+1. **Deploy the build with the automatic-messages switch first** (develop at or after the cut-over prep commits, migration `20261001000162_auto_messages`), before any `WA_*` change or switching sending on. The `deploy-staging` workflow ships the develop commit `ci` passed on (the laptop `deploy-staging.sh` now refuses). Then confirm all three on the target, and stop if any is missing (without the switch, the old build's reminder and follow-up jobs would message the imported families):
    - `select max(version) from supabase_migrations.schema_migrations;` → `20261001000162` (or later);
    - `select value from settings where key = 'auto_messages_enabled';` → `false`;
    - `/admin/settings` shows «الرسايل التلقائية» (OFF).
    The same holds for production.
-   Then on the server (`/opt/ayat-albayan-staging/.env`, or the production host's): set the `WA_*` values above with `WA_API_BASE=https://graph.facebook.com`, and keep «إرسال الرسائل» OFF in `/admin/settings`. Redeploy (`bash tools/scripts/env/deploy-staging.sh`). `/health` must answer.
+   Then on the server (`/opt/ayat-albayan-staging/.env`, or the production host's): set the `WA_*` values above with `WA_API_BASE=https://graph.facebook.com`, and keep «إرسال الرسائل» OFF in `/admin/settings`. Redeploy (GitHub: deploy-staging with **env_only**). `/health` must answer.
 2. `/admin/settings` → «راجع حالة القوالب»: a read-only sync from Meta. The 8 approved templates must show «متوافق عليه» with Meta's real text.
 3. Look at what would go out the moment sending opens:
    `select template_key, count(*), min(created_at) from messages where direction = 'outbound' and status = 'queued' group by 1;`

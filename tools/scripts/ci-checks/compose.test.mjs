@@ -14,6 +14,7 @@ const composePath = root('deploy/staging/docker-compose.yml');
 const compose = parse(readFileSync(composePath, 'utf8'), { merge: true });
 const caddy = readFileSync(root('deploy/staging/lb/Caddyfile'), 'utf8');
 const roll = readFileSync(root('deploy/staging/roll.sh'), 'utf8');
+const rollback = readFileSync(root('deploy/staging/rollback.sh'), 'utf8');
 const deploy = readFileSync(root('.github/workflows/deploy-staging.yml'), 'utf8');
 const services = compose.services;
 const APPS = ['ayat-worker', 'ayat-api-a', 'ayat-api-b'];
@@ -55,6 +56,10 @@ test('roles: two API copies (no jobs, 2 trusted hops, the worker for kicks) and 
     assert.equal(env.TRUST_PROXY_HOPS, '2', name);
     assert.equal(env.WORKER_URL, 'http://ayat-worker:3000', name);
   }
+  // Each copy reloads the other's config after an admin save (kickConfigReload), never itself or the worker.
+  assert.equal(services['ayat-api-a'].environment.PEER_URLS, 'http://ayat-api-b:3000');
+  assert.equal(services['ayat-api-b'].environment.PEER_URLS, 'http://ayat-api-a:3000');
+  assert.equal(services['ayat-worker'].environment.PEER_URLS, undefined);
   assert.equal(
     APPS.filter((n) => services[n].environment.APP_ROLE !== 'api').length,
     1,
@@ -89,6 +94,9 @@ test('the load balancer: a pinned image, its own config only, both copies with a
     assert.ok(caddy.includes(d), d);
   }
   assert.match(caddy, /admin localhost:2019/, 'the admin API stays inside the container');
+  assert.match(caddy, /@internal path \/internal \/internal\/\*\n\s*respond @internal 404/, '/internal never reaches a copy from outside');
+  assert.ok(caddy.indexOf('respond @internal 404') < caddy.indexOf('reverse_proxy'));
+  assert.equal(/^LB_IMAGE=(.+)$/m.exec(roll)?.[1], services['ayat-lb'].image, 'roll.sh validates with the same image');
 });
 
 test('roll.sh and the deploy touch only this project (no global prune, no CRM, no host Caddy)', () => {
@@ -98,8 +106,9 @@ test('roll.sh and the deploy touch only this project (no global prune, no CRM, n
       .split('\n')
       .filter((l) => !/^\s*#/.test(l))
       .join('\n')
-      .replaceAll('--config /etc/caddy/Caddyfile', '');
-  for (const text of [roll, deploy].map(code)) {
+      .replaceAll('--config /etc/caddy/Caddyfile', '')
+      .replaceAll('/lb:/etc/caddy:ro', '');
+  for (const text of [roll, rollback, deploy].map(code)) {
     assert.doesNotMatch(
       text,
       /system prune|builder prune|volume prune|network prune|container prune/,
@@ -109,11 +118,14 @@ test('roll.sh and the deploy touch only this project (no global prune, no CRM, n
       /\/opt\/wacrm|\/etc\/caddy|systemctl|docker compose down/,
     );
   }
-  assert.match(
-    roll,
-    /docker image prune -f --filter "label=com\.docker\.compose\.project=\$PROJECT"/,
-  );
-  assert.match(roll, /PROJECT=ayat-albayan-staging/);
+  for (const text of [roll, rollback]) {
+    assert.match(
+      text,
+      /docker image prune -f --filter "label=com\.docker\.compose\.project=\$PROJECT"/,
+    );
+    assert.match(text, /PROJECT=ayat-albayan-staging/);
+  }
+  assert.doesNotMatch(roll, /force-recreate ayat-lb/, 'a refused Caddyfile is never forced in');
   const order = ['roll ayat-worker\n  roll ayat-api-a\n  roll ayat-api-b\n  lb'];
   assert.ok(
     order.every((o) => roll.includes(o)),
@@ -121,8 +133,8 @@ test('roll.sh and the deploy touch only this project (no global prune, no CRM, n
   );
   assert.match(
     deploy,
-    /steps\.roll\.outcome == 'failure' \|\| steps\.health\.outcome == 'failure'/,
-    'a failed roll rolls back',
+    /steps\.roll\.outcome == 'success' && steps\.health\.outcome == 'failure'/,
+    'a failed health check rolls back (a failed roll already did, in its own command)',
   );
 });
 

@@ -1,118 +1,84 @@
-// roll.sh and the deploys that ship it (docs/09 «Two API copies + one worker»): never the new layout on code
-// from before APP_ROLE (every container would run every job), and the first switch only hands over the port.
+// roll.sh and the deploy that ships it (docs/09 «Two API copies + one worker»): never the new layout on code from
+// before APP_ROLE (every container would run every job), the first switch only hands over the port, and a
+// Caddyfile Caddy refuses never takes 3110 down. Runs the real script against a fake docker (roll-fake.mjs).
 import assert from 'node:assert/strict';
-import { execFileSync } from 'node:child_process';
-import {
-  chmodSync,
-  copyFileSync,
-  mkdirSync,
-  mkdtempSync,
-  readFileSync,
-  rmSync,
-  writeFileSync,
-} from 'node:fs';
-import { tmpdir } from 'node:os';
-import { join } from 'node:path';
+import { readFileSync } from 'node:fs';
 import { test } from 'node:test';
-import { fileURLToPath } from 'node:url';
+import { at, root, run } from './roll-fake.mjs';
 
-const root = (p) => fileURLToPath(new URL(`../../../${p}`, import.meta.url));
-const rollPath = root('deploy/staging/roll.sh');
-const roll = readFileSync(rollPath, 'utf8');
 const workflow = readFileSync(root('.github/workflows/deploy-staging.yml'), 'utf8');
-const local = readFileSync(root('tools/scripts/env/deploy-staging.sh'), 'utf8');
-const ROLE_FILE = 'src/apps/api/src/config/role/app-role.ts';
-
-/** Runs roll.sh in a scratch folder with a fake `docker` that logs its calls (and fails them). */
-function run(args, withRoles) {
-  const dir = mkdtempSync(join(tmpdir(), 'roll-'));
-  try {
-    copyFileSync(rollPath, join(dir, 'roll.sh'));
-    if (withRoles) {
-      mkdirSync(join(dir, 'src/apps/api/src/config/role'), { recursive: true });
-      writeFileSync(join(dir, ROLE_FILE), '');
-    }
-    mkdirSync(join(dir, 'bin'));
-    writeFileSync(
-      join(dir, 'bin/docker'),
-      `#!/bin/sh\necho "docker $*" >> "${join(dir, 'docker.log')}"\nexit 1\n`,
-    );
-    chmodSync(join(dir, 'bin/docker'), 0o755);
-    const env = { ...process.env, PATH: `${join(dir, 'bin')}:${process.env.PATH}` };
-    let out = '';
-    let code = 0;
-    try {
-      out = execFileSync('sh', [join(dir, 'roll.sh'), ...args], { env, stdio: 'pipe' }).toString();
-    } catch (e) {
-      code = e.status;
-      out = `${e.stdout}${e.stderr}`;
-    }
-    let docker = '';
-    try {
-      docker = readFileSync(join(dir, 'docker.log'), 'utf8');
-    } catch {
-      docker = '';
-    }
-    return { code, out, docker };
-  } finally {
-    rmSync(dir, { recursive: true, force: true });
-  }
-}
+const P = 'compose -p ayat-albayan-staging';
 
 test('src from before APP_ROLE: refused before any docker call, build and --env-only alike', () => {
   for (const args of [[], ['--env-only']]) {
-    const r = run(args, false);
+    const r = run('roll.sh', { args, roles: false });
     assert.equal(r.code, 1);
-    assert.match(
-      r.out,
-      /src predates APP_ROLE: restore docker-compose\.yml\.old \(single container\)/,
-    );
-    assert.equal(r.docker, '', 'no docker command ran');
+    assert.match(r.out, /src predates APP_ROLE: restore docker-compose\.yml\.old \(single container\)/);
+    assert.deepEqual(r.log, [], 'no docker command ran');
   }
 });
 
-test('src with the roles: the guard lets it through to the build', () => {
-  const r = run([], true);
-  assert.doesNotMatch(r.out, /predates APP_ROLE/);
-  assert.match(r.docker, /^docker compose -p ayat-albayan-staging build ayat-worker/);
+test('a normal roll: one build, worker → api-a → api-b (each healthy), then the changed LB validated and reloaded', () => {
+  const r = run('roll.sh', { up: ['ayat-worker', 'ayat-api-a', 'ayat-api-b', 'ayat-lb'] });
+  assert.equal(r.code, 0, r.out);
+  assert.match(r.log[0], new RegExp(`^docker ${P} build ayat-worker$`));
+  const order = ['up -d --no-deps ayat-worker', 'up -d --no-deps ayat-api-a', 'up -d --no-deps ayat-api-b',
+    'exec -T ayat-lb caddy validate', 'exec -T ayat-lb caddy reload', 'up -d --no-deps ayat-lb', 'curl'];
+  const idx = order.map((o) => at(r.log, o));
+  assert.ok(idx.every((i, n) => i >= 0 && (n === 0 || i > idx[n - 1])), `order: ${r.log.join('\n')}`);
+  assert.ok(at(r.log, 'stop') < 0, 'nothing is stopped');
+  assert.match(r.log.at(-2), /image prune -f --filter label=com\.docker\.compose\.project=ayat-albayan-staging/);
+  assert.ok(r.text('.lb.sha256'));
 });
 
-test('first switch: the LB image is pulled before the old container stops (only the port changes hands)', () => {
-  const pull = roll.indexOf('dc pull ayat-lb');
-  const stop = roll.indexOf('docker stop -t 30 $legacy');
-  assert.ok(pull > 0 && pull < stop);
-  // The worker (the one job runner) starts only once the old container (which ran every job) is gone.
-  const legacyBranch = roll.slice(roll.indexOf('if [ -n "$legacy" ]'), roll.indexOf('\nelse\n'));
-  assert.ok(
-    legacyBranch.indexOf('roll ayat-worker') > legacyBranch.indexOf('docker stop -t 30 $legacy'),
-  );
-  assert.ok(roll.indexOf(ROLE_FILE) < roll.indexOf('dc build ayat-worker'));
+test('first switch: LB pulled and Caddyfile validated, copies up, then `stop <legacy>` BEFORE the worker starts', () => {
+  const r = run('roll.sh', { up: ['ayat-api'] });
+  assert.equal(r.code, 0, r.out);
+  const pull = at(r.log, `${P} pull ayat-lb`);
+  const valid = at(r.log, 'run --rm --network none');
+  const b = at(r.log, 'up -d --no-deps ayat-api-b');
+  const stop = at(r.log, 'stop -t 30 id-ayat-api');
+  const rm = at(r.log, 'rm id-ayat-api');
+  const lbUp = at(r.log, 'up -d --no-deps ayat-lb');
+  const worker = at(r.log, 'up -d --no-deps ayat-worker');
+  assert.ok(pull >= 0 && pull < valid && valid < b && b < stop && stop < rm && rm < lbUp && lbUp < worker, r.log.join('\n'));
 });
 
-test('both deploys swap the compose files in the same command as the code; the rollback stays on roll/health', () => {
-  for (const text of [workflow, local]) {
-    for (const f of ['docker-compose.yml', 'roll.sh', 'lb/Caddyfile']) {
-      const name = f.replace('.', '\\.');
-      assert.match(
-        text,
-        new RegExp(`deploy/staging/${name}"? "[^"]*/${name}\\.new"`),
-        `${f} goes up as ${f}.new`,
-      );
-    }
-    const swap = text.split('\n').findIndex((l) => l.includes('mv src.new src'));
-    const block = text
-      .split('\n')
-      .slice(swap, swap + 3)
-      .join('\n');
-    assert.match(
-      block,
-      /mv docker-compose\.yml\.new docker-compose\.yml && mv roll\.sh\.new roll\.sh/,
-    );
-    assert.match(
-      block,
-      /cat lb\/Caddyfile\.new > lb\/Caddyfile/,
-      'same inode: ayat-lb mounts the directory',
-    );
+test('an invalid Caddyfile fails the roll: no reload, no forced LB recreate, the old sum kept', () => {
+  const r = run('roll.sh', { up: ['ayat-worker', 'ayat-api-a', 'ayat-api-b', 'ayat-lb'], files: { '.lb.sha256': 'old\n' }, fail: ['caddy validate'] });
+  assert.notEqual(r.code, 0);
+  assert.match(r.out, /lb\/Caddyfile is invalid/);
+  assert.ok(at(r.log, 'caddy reload') < 0 && at(r.log, 'force-recreate') < 0 && at(r.log, 'up -d --no-deps ayat-lb') < 0);
+  assert.equal(r.text('.lb.sha256'), 'old\n');
+});
+
+test('a reload Caddy refuses fails the roll the same way; first switch: an invalid file never stops the old container', () => {
+  const reload = run('roll.sh', { up: ['ayat-worker', 'ayat-api-a', 'ayat-api-b', 'ayat-lb'], fail: ['caddy reload'] });
+  assert.notEqual(reload.code, 0);
+  assert.ok(at(reload.log, 'force-recreate') < 0 && at(reload.log, 'up -d --no-deps ayat-lb') < 0);
+  assert.ok(!reload.has('.lb.sha256'));
+  const first = run('roll.sh', { up: ['ayat-api'], fail: ['caddy validate'] });
+  assert.notEqual(first.code, 0);
+  assert.ok(at(first.log, 'stop') < 0 && at(first.log, 'up -d --no-deps') < 0, first.log.join('\n'));
+});
+
+test('the workflow swaps and rolls under the deploy lock, and a failed roll runs rollback.sh in the same command', () => {
+  for (const f of ['docker-compose.yml', 'roll.sh', 'rollback.sh', 'lb/Caddyfile']) {
+    const name = f.replace('.', '\\.');
+    assert.match(workflow, new RegExp(`deploy/staging/${name}"? "[^"]*/${name}\\.new"`), `${f} goes up as ${f}.new`);
   }
+  const block = workflow.slice(workflow.indexOf('flock -n -E 75 .deploy.lock sh -c'), workflow.indexOf('rc=$?'));
+  assert.match(block, /mv src\.new src &&/);
+  assert.match(block, /mv docker-compose\.yml\.new docker-compose\.yml && mv roll\.sh\.new roll\.sh && mv rollback\.sh\.new rollback\.sh/);
+  assert.match(block, /cat lb\/Caddyfile\.new > lb\/Caddyfile/, 'same inode: ayat-lb mounts the directory');
+  assert.match(block, /\{ sh roll\.sh \|\| \{ sh rollback\.sh; exit 1; \}; \}/);
+  assert.match(workflow, /flock -n -E 75 \.deploy\.lock sh rollback\.sh/, 'the health-check rollback too');
+  assert.match(workflow, /flock -n -E 75 \.deploy\.lock sh -c 'if \[ -f roll\.sh \]/, 'env_only too');
   assert.doesNotMatch(workflow, /steps\.ship\.outcome == 'failure'/);
+});
+
+test('the laptop deploy refuses and points to the workflow (no lock, no rollback there)', () => {
+  const local = readFileSync(root('tools/scripts/env/deploy-staging.sh'), 'utf8');
+  assert.match(local, /\nexit 1\n$/);
+  assert.doesNotMatch(local.split('\n').filter((l) => !/^\s*#/.test(l)).join('\n'), /\bssh |\bscp |supabase |docker /);
 });

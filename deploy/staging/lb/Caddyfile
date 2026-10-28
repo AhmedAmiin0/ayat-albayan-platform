@@ -13,6 +13,11 @@
 }
 
 :8080 {
+	# The internal routes (the worker's kicks, the peer config reload) are for the project network only:
+	# the copies call each other by name (PEER_URLS), never through here.
+	@internal path /internal /internal/*
+	respond @internal 404
+
 	reverse_proxy ayat-api-a:3000 ayat-api-b:3000 {
 		lb_policy round_robin
 		# A copy that is down or restarting refuses the connection: try the other one (never re-sent
