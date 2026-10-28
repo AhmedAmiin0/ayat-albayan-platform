@@ -48,6 +48,13 @@ describe('toThreadStudent (R-SUB-01): the chat’s student card', () => {
     });
   });
 
+  it('a cancelled newest package: the card is the running one, its lessons never counted (owner 2026-10-28)', () => {
+    const old = subRow({ id: 'old', status: 'active' });
+    const x = subRow({ id: 'x', status: 'cancelled', lessons_total: 8, starts_on: '2026-10-28' });
+    const v = toThreadStudent(STUDENT, s6([old, x], { balances: [unit({ id: 'old', used: 1, total: 4, last: true })], paid: { old: 145 } }));
+    expect(v.subscription).toMatchObject({ id: 'old', lessons_total: 4, lessons_used: 1, lessons_remaining: 3, due_amount: 0 });
+  });
+
   it('paid in full or over → nothing due', () => {
     const v = toThreadStudent(STUDENT, s6([subRow({ status: 'active' })], { balances: [], paid: { [subRow().id]: 150 } }));
     expect([v.subscription?.due_amount, v.subscription?.lessons_remaining]).toEqual([0, 4]);

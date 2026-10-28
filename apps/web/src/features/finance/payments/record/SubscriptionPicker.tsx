@@ -22,12 +22,12 @@ const optionText = (s: SubscriptionView) =>
 
 /**
  * Any package of any student, not only the first 100 unpaid ones: search the student (name, phone
- * or code), then choose among their packages that have not ended (unpaid, active, paused). The one
+ * or code), then choose among their packages that have not ended (unpaid, active, paused; never a cancelled one). The one
  * that still owes is chosen first.
  */
 export function SubscriptionPicker({ student, onStudent, picked, onPick }: Props) {
   const list = useQuery({ ...studentSubscriptionsQuery(student?.id ?? ''), enabled: student !== null });
-  const open = (list.data?.items ?? []).filter((s) => s.status !== 'expired');
+  const open = (list.data?.items ?? []).filter((s) => s.status !== 'expired' && s.status !== 'cancelled');
   useEffect(() => {
     if (picked || open.length === 0) return;
     onPick(open.find((s) => owed(s) > 0) ?? open[0] ?? null);

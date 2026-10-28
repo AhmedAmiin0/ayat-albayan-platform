@@ -1,5 +1,6 @@
 import {
   familyUnpaid,
+  livePackages,
   studentRemaining,
   subscriptionBadge,
   type BadgeStudent,
@@ -22,10 +23,10 @@ export interface PeopleStudentRow {
   teacher: { display_name_ar: string } | null;
 }
 
-/** The newest package with the BalanceCard numbers: lessons across every package, money of this one. */
+/** The newest package with the BalanceCard numbers: lessons across every live package (never a cancelled one), money of this one. */
 function subscriptionOf({ current, packages, remaining }: StudentBalanceView): ThreadSubscriptionView | null {
   if (!current) return null;
-  const sum = (pick: (b: BalanceView) => number) => packages.reduce((n, p) => n + pick(p.balance), 0);
+  const sum = (pick: (b: BalanceView) => number) => livePackages(packages).reduce((n, p) => n + pick(p.balance), 0);
   return {
     id: current.id,
     status: current.status,

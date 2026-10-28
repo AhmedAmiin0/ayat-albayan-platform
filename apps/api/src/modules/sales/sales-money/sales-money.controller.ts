@@ -4,6 +4,7 @@ import {
   salesQuoteSchema,
   salesReceiptUploadSchema,
   salesSubscriptionCreateSchema,
+  subscriptionCancelSchema,
   uploadMaxBytes,
   type SalesMoneySubscriptionView,
   type SalesPaymentView,
@@ -11,13 +12,14 @@ import {
   type SalesReceiptCopied,
   type SignedUpload,
 } from '@ab/shared';
-import { Body, Controller, HttpCode, Post } from '@nestjs/common';
+import { Body, Controller, HttpCode, Param, ParseUUIDPipe, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser, Permissions } from '../../../common/auth/decorators';
 import type { AuthUser } from '../../../common/auth/verify-token';
 import { parseOrThrow } from '../../../common/http/http';
 import { SalesChatReceipts } from './chat/sales-chat-receipts.service';
 import { SalesMoney } from './sales-money.service';
+import { SalesPackageCancel } from './sales-package-cancel';
 import { SalesMoneySettings } from './sales-money.settings';
 
 /**
@@ -30,7 +32,10 @@ import { SalesMoneySettings } from './sales-money.settings';
 @Permissions('self.sales_money')
 @Controller('sales/subscriptions')
 export class SalesSubscribeController {
-  constructor(private readonly money: SalesMoney) {}
+  constructor(
+    private readonly money: SalesMoney,
+    private readonly cancels: SalesPackageCancel,
+  ) {}
 
   @Post('quote')
   @HttpCode(200)
@@ -41,6 +46,13 @@ export class SalesSubscribeController {
   @Post()
   create(@Body() body: unknown, @CurrentUser() user: AuthUser): Promise<SalesMoneySubscriptionView> {
     return this.money.subscribe(parseOrThrow(salesSubscriptionCreateSchema, body), user);
+  }
+
+  /** «إلغاء الباقة» of her student's package (owner 2026-10-28): the admin's rules, her whitelisted view. */
+  @Post(':id/cancel')
+  @HttpCode(200)
+  cancel(@Param('id', ParseUUIDPipe) id: string, @Body() body: unknown, @CurrentUser() user: AuthUser): Promise<SalesMoneySubscriptionView> {
+    return this.cancels.cancel(id, parseOrThrow(subscriptionCancelSchema, body ?? {}), user);
   }
 }
 

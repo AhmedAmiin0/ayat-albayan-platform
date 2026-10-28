@@ -1,8 +1,9 @@
 import type { SalesMoneySubscriptionView } from '@ab/shared';
 import { Field } from '@/components/ui/form/field';
 import { Select } from '@/components/ui/form/select';
-import { moneyText, packageName, studentLabel } from '@/features/finance/subscriptions/format';
+import { packageName, studentLabel } from '@/features/finance/subscriptions/format';
 import { t } from '@/lib/i18n/i18n';
+import { dueLine } from './due-line';
 
 type Props = {
   packages: SalesMoneySubscriptionView[];
@@ -19,7 +20,7 @@ export function PackagePicker({ packages, value, onChange }: Props) {
           {packages.length > 1 && <option value="">{t.subscriptions.package}</option>}
           {packages.map((s) => (
             <option key={s.id} value={s.id}>
-              {studentLabel(s.student)} · {packageName(s)} · {t.salesMoney.due.replace('{amount}', moneyText(s.due, s.currency))}
+              {studentLabel(s.student)} · {packageName(s)} · {dueLine(s)}
             </option>
           ))}
         </Select>

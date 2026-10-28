@@ -3,6 +3,7 @@ import {
   CUSTOM_COUNT_MAX,
   CUSTOM_COUNT_MIN,
   DEFAULT_DURATION,
+  lessonsOf,
   type PackageId,
   type PricingDuration,
   type SiteCountry,
@@ -40,6 +41,11 @@ export function pricingBody(f: PricingForm): SubscriptionPricing {
   return f.pkg === 'custom'
     ? { ...common, count: clamp(f.count, CUSTOM_COUNT_MIN, CUSTOM_COUNT_MAX) }
     : { ...common, tier: f.pkg };
+}
+
+/** The package's lessons from the calculator inputs (no quote needed): the tier's, or the custom count. */
+export function pricingLessons(p: SubscriptionPricing): number {
+  return 'count' in p ? p.count : lessonsOf(p.tier);
 }
 
 /** Today as a local YYYY-MM-DD in `tz` (the package's first day, in the student's tz). */

@@ -4,7 +4,7 @@ import { t } from '@/core/lib/i18n/i18n';
 import { shape, type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { ContentText } from '@/core/ui/primitives/ContentText';
-import { useChatActions } from '../../thread/hooks/chat-actions';
+import { useBubbleChatActions } from '../../thread/hooks/chat-actions';
 import { quoteSender, quoteText } from '../hooks/quote-text';
 
 export interface QuoteBlockProps {
@@ -19,7 +19,7 @@ export interface QuoteBlockProps {
  */
 export function QuoteBlock({ quote, onJump }: QuoteBlockProps) {
   const { color } = useTheme();
-  const { threadName } = useChatActions();
+  const { threadName } = useBubbleChatActions();
   const sender = quoteSender(quote, threadName);
   const text = quoteText(quote);
   const line = { fontSize: type.size.xs, lineHeight: type.lineHeight(type.size.xs) };

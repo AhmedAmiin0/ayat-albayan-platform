@@ -4,12 +4,16 @@ import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../../../common/db/db.module';
 import { dbError } from '../../../../common/http/http';
 import type { SalesScheduleRow } from '../../sales';
+import { TrialDateQueries } from '../../../teaching/booking';
 
 /** Whitelisted: never notes, a balance or a meeting link; of the guardian the phone only (owner 2026-10-27). */
 export type DetailsStudentRow = Pick<Tables<'students'>, 'id' | 'code' | 'name' | 'status' | 'program' | 'tz'> & {
   teacher: { display_name_ar: string } | null;
   guardian: { phone_e164: string } | null;
 };
+
+/** «مدفوعة جزئيًا» (owner 2026-10-28): only for self.sales_money. */
+export type PriceRow = Pick<Tables<'subscriptions'>, 'id' | 'price' | 'currency'>;
 
 /** A past lesson of the student with every student's attendance (the mapper keeps the student's own). */
 export interface AttendanceRow {
@@ -53,10 +57,10 @@ interface Window {
 /** The latest past lessons shown in «الحضور». */
 const ATTENDANCE_LIMIT = 60;
 
-/** Sales' «تفاصيل الطالب» (with «الجدول») and lesson actions reads (service role; SalesStudentScope checks the ownership first). */
+/** Sales' «تفاصيل الطالب» reads (service role; any student, owner 2026-10-28); `trialDates`: «مواعيد الحلقة التجريبية»'s. */
 @Injectable()
 export class SalesStudentQueries {
-  constructor(@Inject(DB) private readonly db: Db) {}
+  constructor(@Inject(DB) private readonly db: Db, readonly trialDates: TrialDateQueries) {}
 
   async student(id: string): Promise<DetailsStudentRow | null> {
     const { data, error } = await this.db
@@ -64,6 +68,13 @@ export class SalesStudentQueries {
       .select('id, code, name, status, program, tz, teacher:teachers(display_name_ar), guardian:guardians(phone_e164)')
       .eq('id', id)
       .maybeSingle();
+    if (error) throw dbError(error);
+    return data;
+  }
+
+  /** The price and currency of her student's packages: read ONLY for a viewer with self.sales_money (part_paid). */
+  async prices(studentId: string): Promise<PriceRow[]> {
+    const { data, error } = await this.db.from('subscriptions').select('id, price, currency').eq('student_id', studentId);
     if (error) throw dbError(error);
     return data;
   }

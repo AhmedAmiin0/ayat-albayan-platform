@@ -1,4 +1,4 @@
-import { PACKAGE_SIZES, paymentState, subscriptionStatusStyle } from '@ab/shared';
+import { cancelOffered, isCancelled, PACKAGE_SIZES, subscriptionStatusStyle } from '@ab/shared';
 import { createColumnHelper } from '@tanstack/react-table';
 import type { DataTableFeatures } from '@/components/DataTable';
 import { Button } from '@/components/ui/form/button';
@@ -9,12 +9,14 @@ import { cn } from '@/lib/utils';
 import { Amount } from './balance/Amount';
 import type { SubscriptionView } from './api';
 import { moneyText, packageName, progressOf } from './format';
+import { partPaidText } from './payment-lines';
 
 const col = createColumnHelper<DataTableFeatures, SubscriptionView>();
 
 type Handlers = {
   onPay: (s: SubscriptionView, kind: 'payment' | 'refund') => void;
   onPause: (s: SubscriptionView, paused: boolean) => void;
+  onCancel: (s: SubscriptionView) => void;
   onOpen: (studentId: string) => void;
 };
 
@@ -27,7 +29,7 @@ const packageOptions = PACKAGE_SIZES.filter((p) => p !== 'trial').map((p) => ({ 
  * package here, the status in the page head. The student (an embedded name) and the package line
  * (derived from the lessons) do not sort server-side.
  */
-export function subscriptionColumns({ onPay, onPause, onOpen }: Handlers) {
+export function subscriptionColumns({ onPay, onPause, onCancel, onOpen }: Handlers) {
   return col.columns([
     col.accessor('student', {
       header: () => t.subscriptions.student,
@@ -53,7 +55,7 @@ export function subscriptionColumns({ onPay, onPause, onOpen }: Handlers) {
         return (
           <div className="grid">
             <Amount amount={s.price} currency={s.currency} className="font-semibold" />
-            {s.paid < s.price && (
+            {s.paid < s.price && !isCancelled(s) && (
               <span className="text-2xs text-ink-3">
                 {t.payments.paidOf
                   .replace('{paid}', moneyText(s.paid, s.currency))
@@ -68,6 +70,7 @@ export function subscriptionColumns({ onPay, onPause, onOpen }: Handlers) {
     col.accessor('balance', {
       header: () => t.subscriptions.balance,
       cell: (c) => {
+        if (isCancelled(c.row.original)) return <span className="text-sm text-ink-3">—</span>;
         const p = progressOf(c.getValue());
         return <span className={cn('text-sm', p.tone === 'act' ? 'font-semibold text-act' : 'text-ink-2')}>{p.remainingLabel}</span>;
       },
@@ -75,12 +78,16 @@ export function subscriptionColumns({ onPay, onPause, onOpen }: Handlers) {
     }),
     col.accessor('status', {
       header: () => t.subscriptions.status,
-      cell: (c) => (
-        <div className="grid justify-items-start gap-0.5">
-          <StatusChip size="sm" {...subscriptionStatusStyle[c.getValue()]} label={t.enums.subscriptionStatus[c.getValue()]} />
-          {paymentState(c.row.original) === 'partial' && <span className="text-2xs font-semibold text-act">{t.finance.partiallyPaid}</span>}
-        </div>
-      ),
+      cell: (c) => {
+        // «Why is this unpaid» (owner 2026-10-28): 80 of 81 stays unpaid; the line says what is left.
+        const part = partPaidText(c.row.original);
+        return (
+          <div className="grid justify-items-start gap-0.5">
+            <StatusChip size="sm" {...subscriptionStatusStyle[c.getValue()]} label={t.enums.subscriptionStatus[c.getValue()]} />
+            {part && <span className="text-2xs font-semibold text-act">{part}</span>}
+          </div>
+        );
+      },
       meta: { className: 'max-sm:order-2', sortKey: 'status' },
     }),
     col.display({
@@ -88,6 +95,8 @@ export function subscriptionColumns({ onPay, onPause, onOpen }: Handlers) {
       header: () => t.common.actions,
       cell: (c) => {
         const s = c.row.original;
+        // A cancelled package (owner 2026-10-28) takes no payment, refund or pause: it is history only.
+        if (isCancelled(s)) return null;
         return (
           <div className="flex gap-2">
             {s.paid < s.price && (
@@ -103,6 +112,11 @@ export function subscriptionColumns({ onPay, onPause, onOpen }: Handlers) {
             <Button type="button" variant="ghost" size="sm" onClick={() => onPause(s, s.status !== 'paused')}>
               {s.status === 'paused' ? t.subscriptions.resume : t.subscriptions.pause}
             </Button>
+            {cancelOffered(s) && (
+              <Button type="button" variant="ghost" size="sm" onClick={() => onCancel(s)}>
+                {t.subscriptions.cancel.action}
+              </Button>
+            )}
           </div>
         );
       },

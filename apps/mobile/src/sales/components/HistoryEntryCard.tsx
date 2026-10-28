@@ -2,6 +2,7 @@ import type { SalesHistoryEntry, SalesStudentSubscription } from '@ab/shared';
 import { View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/more/Note';
+import { partPaidLine } from '@/payments';
 import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { historyLines } from '../lib/sales-text';
@@ -23,6 +24,8 @@ export function HistoryEntryCard({ entry, current, brief = false }: HistoryEntry
   const h = t.sales.history;
   const lines = historyLines({ status_changes: [], payments: [], ...entry });
   const body = { fontFamily: type.ui[400], fontSize: type.size.body, color: color.ink } as const;
+  // Only a self.sales_money viewer gets part_paid, and only while 0 < paid < price (owner 2026-10-28).
+  const part = 'part_paid' in entry && entry.part_paid ? partPaidLine(entry.part_paid) : null;
   return (
     <View
       style={{
@@ -42,6 +45,7 @@ export function HistoryEntryCard({ entry, current, brief = false }: HistoryEntry
         <Note key={line}>{line}</Note>
       ))}
       <AppText style={{ ...body, fontVariant: ['tabular-nums'] }}>{lines.lessons}</AppText>
+      {part ? <AppText style={{ ...body, fontVariant: ['tabular-nums'] }}>{part}</AppText> : null}
       {brief ? null : <HistoryEvents lines={lines} />}
     </View>
   );

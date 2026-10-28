@@ -57,10 +57,10 @@ export type BadgeStudent = {
 /**
  * The family's «مشترك» state: subscribed while any child's newest package is running (active,
  * unpaid or paused, with lessons left); expired when the newest packages are expired or used up;
- * none without packages (or with a trial package only).
+ * none without packages (or with a trial or cancelled package only).
  */
 export function subscriptionBadge(students: readonly BadgeStudent[]): SubscriptionBadge {
-  const packages = students.flatMap((s) => (s.subscription && s.subscription.status !== 'trial' ? [s.subscription] : []));
+  const packages = students.flatMap((s) => (s.subscription && s.subscription.status !== 'trial' && s.subscription.status !== 'cancelled' ? [s.subscription] : []));
   if (packages.some((p) => p.status !== 'expired' && p.lessons_remaining > 0)) return 'subscribed';
   return packages.length > 0 ? 'expired' : 'none';
 }
@@ -84,12 +84,12 @@ export function familyUnpaid(students: readonly BadgeStudent[]): boolean {
 }
 
 /**
- * A child's package chip in the chat, from its numbers: paused / trial as set; ended (expired or
+ * A child's package chip in the chat, from its numbers: paused / trial / cancelled as set; ended (expired or
  * used up) → expired; money owed → unpaid; else active. A paid package that only ran out stays
  * `unpaid` in the DB until renewed (subscriptionStatusFor), and must not read «مش مدفوع».
  */
 export function packageChip(sub: Pick<ThreadSubscriptionView, 'status' | 'lessons_remaining' | 'due_amount'>): SubscriptionStatus {
-  if (sub.status === 'paused' || sub.status === 'trial') return sub.status;
+  if (sub.status === 'paused' || sub.status === 'trial' || sub.status === 'cancelled') return sub.status;
   if (sub.status === 'expired' || sub.lessons_remaining <= 0) return 'expired';
   return sub.due_amount > 0 ? 'unpaid' : 'active';
 }

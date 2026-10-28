@@ -6,11 +6,13 @@ import { subscriptionRow } from './list/subscription-row';
 import { quoteQueryFor, type SubscriptionQuote } from './subscriptions.dto';
 import { SubscriptionsQueries } from './subscriptions.queries';
 import { SubscriptionsService } from './subscriptions.service';
+import { assertUsedBeforeFits } from './used-before';
 
 /**
  * S2: priced from the catalog with the same quote as /pricing; never a typed price. A retry of the
  * same form (clientRequestId, rule 8) returns the package it already created; only a new one is
- * audited and converts the family's lead (MoneyWrites).
+ * audited and converts the family's lead (MoneyWrites). The callers gate lessonsUsedBefore
+ * (assertUsedBefore); its bound needs the quote's size.
  */
 @Injectable()
 export class SubscriptionCreator {
@@ -23,7 +25,9 @@ export class SubscriptionCreator {
   async create(input: SubscriptionCreate, actorId: string): Promise<SubscriptionView> {
     const replay = await this.replayOf(input.clientRequestId);
     if (replay) return replay;
-    const created = await this.service.add(subscriptionRow(input, await this.quote(input), actorId), actorId);
+    const quote = await this.quote(input);
+    assertUsedBeforeFits(input.lessonsUsedBefore, quote.lessons);
+    const created = await this.service.add(subscriptionRow(input, quote, actorId), actorId);
     // Lost the race to a retry of the same form: that one created it.
     const view = created ?? (await this.replayOf(input.clientRequestId));
     if (!view) throw notFound('subscription_not_found');

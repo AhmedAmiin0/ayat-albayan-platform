@@ -28,4 +28,5 @@ export {
 export { ConfirmDialog } from './record/ConfirmDialog';
 export { PaymentFields, type PaymentForm } from './record/PaymentFields';
 export { RecordPaymentDialog } from './record/RecordPaymentDialog';
+export { ShortfallNote } from './record/ShortfallNote';
 export { paidAtDay } from './record/pay-day';

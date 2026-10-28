@@ -1,3 +1,4 @@
+import { memo, useCallback } from 'react';
 import { earningStatusStyle, type TeacherEarningView } from '@ab/shared';
 import { Pressable, View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
@@ -11,7 +12,8 @@ interface SessionItemProps {
   row: TeacherEarningView;
   /** Admin only: tick the session for the next payment. A teacher's list has no ticks. */
   checked?: boolean;
-  onToggle?: () => void;
+  /** Stable (useCallback): the row hands itself back. */
+  onToggle?: (row: TeacherEarningView) => void;
 }
 
 function Tick({ checked, disabled }: { checked: boolean; disabled: boolean }) {
@@ -36,10 +38,11 @@ function Tick({ checked, disabled }: { checked: boolean; disabled: boolean }) {
 }
 
 /** One session: when, length and students, what it earned and still owes, its status. */
-export function SessionItem({ row, checked = false, onToggle }: SessionItemProps) {
+export const SessionItem = memo(function SessionItem({ row, checked = false, onToggle }: SessionItemProps) {
   const cycle = useClockCycle();
   const { color } = useTheme();
   const payable = row.outstanding > 0;
+  const toggle = useCallback(() => onToggle?.(row), [onToggle, row]);
   const body = (
     <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12, paddingVertical: 12 }}>
       {onToggle ? <Tick checked={checked} disabled={!payable} /> : null}
@@ -64,9 +67,9 @@ export function SessionItem({ row, checked = false, onToggle }: SessionItemProps
       accessibilityLabel={t.earnings.selectRow.replace('{date}', sessionWhen(row.starts_at, cycle))}
       accessibilityState={{ checked, disabled: !payable }}
       disabled={!payable}
-      onPress={onToggle}
+      onPress={toggle}
     >
       {body}
     </Pressable>
   );
-}
+});

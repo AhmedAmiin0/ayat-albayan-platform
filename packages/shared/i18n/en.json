@@ -67,7 +67,8 @@
       "active": "Active",
       "paused": "Paused",
       "expired": "Ended",
-      "unpaid": "Awaiting activation"
+      "unpaid": "Awaiting activation",
+      "cancelled": "Cancelled"
     },
     "cancelled": "This lesson was cancelled",
     "remainingHint": "across all of the student’s packages"
@@ -1046,8 +1047,11 @@
     "studentTime": "{time} {city} time",
     "greeting": {
       "morning": "Good morning",
-      "evening": "Good evening"
+      "afternoon": "Good afternoon",
+      "evening": "Good evening",
+      "night": "Good night"
     },
+    "greetingNamed": "{greeting}, {name}",
     "summaryLabel": "Today at a glance",
     "summary": {
       "all": "lessons today",
@@ -1735,6 +1739,22 @@
     "unpaidFlag": "Package not paid",
     "pause": "Pause",
     "resume": "Resume package",
+    "cancel": {
+      "action": "Cancel package",
+      "title": "Cancel this package?",
+      "body": "The package stays in the history as «Cancelled»: it is never owed and no lessons can be booked on it. A cancel cannot be undone.",
+      "reason": "Reason (optional)",
+      "confirm": "Cancel package",
+      "done": "Package cancelled",
+      "errors": {
+        "has_payments": "A package with payments cannot be cancelled. Refund it first.",
+        "has_lessons": "A package with booked or used lessons cannot be cancelled.",
+        "has_commission": "This package cannot be cancelled: a later package of the same student already earned a commission.",
+        "already_cancelled": "This package is already cancelled.",
+        "subscription_not_found": "This package no longer exists.",
+        "not_your_student": "This student is not one of yours."
+      }
+    },
     "saved": "Subscription saved",
     "empty": "No subscriptions for this student yet",
     "error": {
@@ -1771,6 +1791,7 @@
     "saved": "Payment recorded",
     "empty": "No payments yet",
     "error": {
+      "subscription_cancelled": "A cancelled package takes no payment",
       "currency_mismatch": "The payment currency must match the subscription currency ({currency})",
       "paid_at_future": "The payment date is in the future",
       "receipt_type": "Upload an image or PDF only",
@@ -3332,7 +3353,8 @@
       "active": "Active",
       "paused": "Paused",
       "expired": "Package finished",
-      "unpaid": "Unpaid"
+      "unpaid": "Unpaid",
+      "cancelled": "Cancelled"
     },
     "program": {
       "quran": "The Holy Quran",
@@ -4126,7 +4148,21 @@
       "openSchedule": "Show the teacher's schedule today",
       "pick": "Pick a teacher to see their students",
       "allGenders": "Everyone",
-      "back": "Back to teachers"
+      "back": "Back to teachers",
+      "tabs": {
+        "students": "Students",
+        "schedule": "Schedule",
+        "attendance": "Attendance"
+      },
+      "tabsLabel": "Teacher view",
+      "overview": {
+        "noWeekly": "No weekly slots",
+        "slot": "{day} at {time} · {minutes} min",
+        "window": "Last {days} days",
+        "totals": "Held {held} · Student absent {student_absent} · Cancelled by teacher {cancelled_by_teacher} · Cancelled by admin {cancelled_by_admin} · Other {other}",
+        "latest": "Latest lessons",
+        "noLessons": "No lessons in this period"
+      }
     },
     "allStudents": {
       "title": "All students",
@@ -4172,8 +4208,8 @@
       "title": "Student details",
       "open": "Open {name}'s details",
       "teacher": "Teacher: {name}",
-      "chat": "Guardian's chat",
-      "notFound": "This student is not one of yours or does not exist",
+      "chat": "Open chat",
+      "notFound": "This student does not exist",
       "subscription": "Subscription",
       "current": "Current subscription",
       "noSubscription": "No subscription yet",
@@ -4202,6 +4238,12 @@
         "noUpcoming": "No upcoming lessons",
         "showAll": "Show all ({n})",
         "showLess": "Show less"
+      },
+      "notMine": "Not one of your students: subscriptions and reports are not shown here",
+      "trial": {
+        "title": "Trial lesson",
+        "none": "No trial lesson",
+        "teacher": "with {name}"
       }
     },
     "lessonActions": {
@@ -4301,8 +4343,15 @@
       "attachment_in_use": "This file is already attached to another payment; choose another file.",
       "attachment_path": "One attachment could not be used; attach it again.",
       "attachment_type": "An attachment must be an image or a PDF.",
-      "too_many_attachments": "At most 5 attachments."
-    }
+      "too_many_attachments": "At most 5 attachments.",
+      "used_before_not_allowed": "You are not allowed to record lessons already used from the package.",
+      "used_before_needs_past_start": "Used lessons are recorded only with «Subscription already started» and a past start date.",
+      "used_before_too_many": "At least one lesson per weekly day must stay in the package."
+    },
+    "usedBefore": "Lessons already used from the package",
+    "usedBeforeHint": "Counted from the package; only the rest is booked",
+    "usedBeforeLess": "One lesson fewer",
+    "usedBeforeMore": "One lesson more"
   },
   "registrationCheck": {
     "title": "Registration check",
@@ -4528,6 +4577,7 @@
       "invoice_mismatch": "This invoice does not belong to this package's student",
       "invoice_used": "A payment was already recorded from this invoice",
       "refund_exceeds_paid": "The refund is more than what was paid on this package",
+      "subscription_cancelled": "A cancelled package takes no payment",
       "category_exists": "A category with this key already exists",
       "invalid_category": "Use lower-case latin letters and digits for the key",
       "month_required": "Choose the month or the paid date",
@@ -6675,5 +6725,14 @@
     "students": "Students",
     "noMessageYet": "No messages yet",
     "hide": "Hide the chat"
+  },
+  "packagePayment": {
+    "partPaid": "Partly paid: {paid} of {price} {currency} · {due} left",
+    "shortfall": "The amount is {amount} {currency} less than what is due; the package stays unpaid until the full amount is paid",
+    "error": {
+      "used_before_not_allowed": "You are not allowed to record lessons already used from the package.",
+      "used_before_needs_past_start": "Used lessons are recorded only with «Subscription already started» and a past start date.",
+      "used_before_too_many": "At least one lesson per weekly day must stay in the package."
+    }
   }
 }
