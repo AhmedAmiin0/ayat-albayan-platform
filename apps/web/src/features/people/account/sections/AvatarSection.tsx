@@ -5,7 +5,7 @@ import { t } from '@/lib/i18n/i18n';
 import { AccountSection } from './AccountSection';
 import { removeAvatar, uploadAvatar } from '../api';
 import { AvatarActions } from './AvatarActions';
-import { avatarFileProblem } from '../avatar-file';
+import { avatarFileProblem, avatarSeed } from '../avatar-file';
 import { accountMessage } from '../errors';
 import type { SectionProps } from './section-props';
 import { useAccountSave } from '../use-account-save';
@@ -40,7 +40,7 @@ export function AvatarSection({ profile, onDone }: SectionProps) {
       <div className="flex flex-wrap items-center gap-x-6 gap-y-4">
         <Avatar
           name={profile.full_name}
-          id={profile.id}
+          id={avatarSeed(profile)}
           src={picked?.url ?? profile.avatar_url}
           alt={picked ? A.preview : A.alt.replace('{name}', profile.full_name)}
           size="xl"

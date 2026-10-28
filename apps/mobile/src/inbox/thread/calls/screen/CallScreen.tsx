@@ -67,7 +67,7 @@ export function CallScreen({ session, row, phase, actions }: CallScreenProps) {
         </IconButton>
       </View>
       <View style={{ alignItems: 'center', gap: 16, marginTop: '18%' }}>
-        <Avatar name={session.name} size="xl" decorative />
+        <Avatar name={session.name} id={session.phone} size="xl" decorative />
         <CallerName name={session.name} />
         <AppText
           importantForAccessibility="no-hide-descendants"

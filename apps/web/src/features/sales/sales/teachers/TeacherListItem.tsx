@@ -31,7 +31,7 @@ export function TeacherListItem({ teacher, selected, onSelect }: TeacherListItem
           selected && 'bg-sunk',
         )}
       >
-        <Avatar name={name} id={teacher.id} src={teacher.avatar_url} size="sm" decorative />
+        <Avatar name={name} id={teacher.id} src={teacher.avatar_url} size="md" decorative />
         <span className="grid min-w-0 flex-1 gap-1">
           <span className="flex flex-wrap items-center gap-x-3 gap-y-1">
             <span className="font-semibold text-ink">{name}</span>

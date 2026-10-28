@@ -35,7 +35,7 @@ const stacked = {
 const NameCell = memo(function NameCell({ user, onOpen }: { user: UserView; onOpen: (userId: string) => void }) {
   return (
     <span className="flex items-center gap-2.5">
-      <Avatar name={user.full_name} id={user.id} src={user.avatar_url} size="sm" decorative />
+      <Avatar name={user.full_name} id={user.avatar_seed ?? user.id} src={user.avatar_url} size="sm" decorative />
       <button
         type="button"
         className="block min-w-0 cursor-pointer text-start font-semibold text-ink hover:underline max-sm:min-h-11"

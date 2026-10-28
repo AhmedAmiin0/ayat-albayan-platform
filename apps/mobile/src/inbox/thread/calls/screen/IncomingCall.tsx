@@ -10,6 +10,8 @@ import { RoundButton } from './RoundButton';
 
 interface IncomingCallProps {
   name: string;
+  /** The caller's number (E.164): seeds the tone, as on the chat rows. */
+  phone: string;
   onAccept: () => void;
   onDecline: () => void;
 }
@@ -20,7 +22,7 @@ interface IncomingCallProps {
  * for the others. Read out as an alert with the caller's name; no button is focused for them. Shown in
  * CallOverlay's one Modal (its back silences the ring).
  */
-export function IncomingCall({ name, onAccept, onDecline }: IncomingCallProps) {
+export function IncomingCall({ name, phone, onAccept, onDecline }: IncomingCallProps) {
   const { color } = useTheme();
   const insets = useSafeAreaInsets();
   return (
@@ -43,7 +45,7 @@ export function IncomingCall({ name, onAccept, onDecline }: IncomingCallProps) {
         </AppText>
       </View>
       <View style={{ alignItems: 'center', gap: 16, marginTop: '18%' }}>
-        <Avatar name={name} size="xl" decorative />
+        <Avatar name={name} id={phone} size="xl" decorative />
         <CallerName name={name} />
       </View>
       <View

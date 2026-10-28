@@ -48,7 +48,7 @@ export function CallScreen({ session, row, phase, actions }: CallScreenProps) {
         </button>
       </div>
       <div className="mt-[12vh] flex flex-col items-center gap-4 text-center">
-        <Avatar name={session.name} size="xl" decorative />
+        <Avatar name={session.name} id={session.phone} size="xl" decorative />
         <h2 id={nameId} tabIndex={-1} data-autofocus className="max-w-[18ch] truncate font-display text-2xl font-bold outline-none">
           {session.name}
         </h2>

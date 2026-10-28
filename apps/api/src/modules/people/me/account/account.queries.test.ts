@@ -27,9 +27,9 @@ describe('AccountQueries', () => {
   });
 
   it('reads the linked teacher’s id (the initials tone follows the teacher record)', async () => {
-    const profile = { id: 'user-1', full_name: 'Huda', phone_e164: null, avatar_path: null, role: 'teacher', role_id: null };
-    const { db, argsOf } = fakeDb({ profiles: [{ data: profile }], roles: [{ data: [] }], teachers: [{ data: { id: 't-1' } }] });
+    const profile = { id: 'user-1', full_name: 'Huda', phone_e164: null, avatar_path: null, role: 'teacher', role_id: null, teacher: { id: 't-1' } };
+    const { db, argsOf } = fakeDb({ profiles: [{ data: profile }], roles: [{ data: [] }] });
     expect((await new AccountQueries(db).get('user-1'))?.teacher_id).toBe('t-1');
-    expect(argsOf('teachers', 'eq')).toEqual(['profile_id', 'user-1']);
+    expect(String(argsOf('profiles', 'select'))).toMatch(/teacher:teachers!teachers_profile_id_fkey\(id\)/);
   });
 });

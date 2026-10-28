@@ -45,9 +45,10 @@ describe('boardRows', () => {
     expect(rows[1]?.days.size).toBe(0);
   });
 
-  it("takes the teacher's photo from the window's lessons (none without lessons)", () => {
-    const shot = lesson({ id: 'p', teacher: { ...LESSON.teacher, id: 't-abrar', avatar_url: 'https://x.test/a.png' } });
-    expect(boardRows([T_ABRAR, T_NOUR], [shot]).map((r) => r.photo)).toEqual(['https://x.test/a.png', null]);
+  it("takes the teacher's photo from the overview, lessons or not", () => {
+    const shot = lesson({ id: 'p', teacher: { ...LESSON.teacher, id: 't-nour', avatar_url: 'https://x.test/old.png' } });
+    const abrar = { ...T_ABRAR, avatar_url: 'https://x.test/a.png' };
+    expect(boardRows([abrar, T_NOUR], [shot]).map((r) => r.photo)).toEqual(['https://x.test/a.png', null]);
   });
 });
 

@@ -87,6 +87,19 @@ describe('StaffPhotoControl (owner 2026-10-28)', () => {
     expect(calls).toEqual(['DELETE /users/u9/avatar']);
   });
 
+  it('the confirm takes focus on its danger button; cancel and remove give it back to «تغيير الصورة»', async () => {
+    renderControl({ hasPhoto: true });
+    fireEvent.click(screen.getByRole('button', { name: P.remove }));
+    const danger = () => screen.getByRole('group', { name: P.remove }).querySelector('button');
+    expect(document.activeElement).toBe(danger());
+    fireEvent.click(screen.getByRole('button', { name: t.common.cancel }));
+    expect(document.activeElement).toBe(screen.getByLabelText(P.change));
+    fireEvent.click(screen.getByRole('button', { name: P.remove }));
+    fireEvent.click(danger() ?? document.body);
+    expect(await screen.findByText(P.removed)).toBeTruthy();
+    expect(document.activeElement).toBe(screen.getByLabelText(P.change));
+  });
+
   it('400 avatar_not_staff reads as its own message', async () => {
     apiSend.mockRejectedValueOnce(new ApiError(400, { code: 'avatar_not_staff' }));
     renderControl();

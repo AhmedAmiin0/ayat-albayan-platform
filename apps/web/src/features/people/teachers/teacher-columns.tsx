@@ -24,7 +24,7 @@ const statusOptions = () => TEACHER_STATUSES.map((st) => ({ value: st, label: t.
 const NameCell = memo(function NameCell({ teacher, onOpen }: { teacher: TeacherListRow; onOpen: Handlers['onOpen'] }) {
   return (
     <div className="flex items-center gap-2.5">
-      <Avatar name={teacher.display_name_ar} id={teacher.id} src={teacher.avatar_url} size="sm" decorative />
+      <Avatar name={teacherLabel(teacher)} id={teacher.id} src={teacher.avatar_url} size="sm" decorative />
       <div className="grid min-w-0">
         <button
           type="button"

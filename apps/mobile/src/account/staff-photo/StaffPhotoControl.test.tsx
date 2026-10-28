@@ -38,7 +38,7 @@ test('«تغيير الصورة»: the square-crop gallery, then upload-url → 
   ]);
   expect(mockUpload).toHaveBeenCalledWith(signed.path, 'tok', expect.any(ArrayBuffer), { contentType: 'image/jpeg' });
   expect(invalidate).toHaveBeenCalledWith({ queryKey: KEY });
-  expect(screen.getByRole('image', { name: 'هدى سالم' }).props.source).toEqual({ uri: 'https://cdn/t1.jpg' });
+  expect(screen.getByTestId('avatar-photo', { includeHiddenElements: true }).props.source).toEqual({ uri: 'https://cdn/t1.jpg' });
 });
 
 test('«حذف الصورة» asks first; cancel sends nothing, confirm DELETEs and shows the initials', async () => {
@@ -52,7 +52,7 @@ test('«حذف الصورة» asks first; cancel sends nothing, confirm DELETEs 
   await fireEvent.press(screen.getByRole('button', { name: s.remove }));
   expect(await screen.findByText(s.removed)).toBeTruthy();
   expect(send).toHaveBeenCalledWith('DELETE', base);
-  expect(screen.getByTestId('avatar-initials')).toBeTruthy();
+  expect(screen.getByTestId('avatar-initials', { includeHiddenElements: true })).toBeTruthy();
   expect(screen.queryByRole('button', { name: s.remove })).toBeNull();
 });
 

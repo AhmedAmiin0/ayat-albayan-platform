@@ -7,6 +7,8 @@ import { RoundButton } from './RoundButton';
 
 export interface IncomingCallProps {
   name: string;
+  /** The caller's number (E.164): seeds the tone, as on the chat rows. */
+  phone: string;
   onAccept: () => void;
   onDecline: () => void;
   /** Esc: silence the ring (the call keeps ringing on screen until answered, declined or ended). */
@@ -19,7 +21,7 @@ export interface IncomingCallProps {
  * for the others. An alertdialog with a focus trap: focus starts on the caller's name (never on a
  * button a stray key could press), Esc silences the ring, focus returns where it was.
  */
-export function IncomingCall({ name, onAccept, onDecline, onSilence }: IncomingCallProps) {
+export function IncomingCall({ name, phone, onAccept, onDecline, onSilence }: IncomingCallProps) {
   const ref = useRef<HTMLDivElement>(null);
   const nameId = useId();
   const whatId = useId();
@@ -39,7 +41,7 @@ export function IncomingCall({ name, onAccept, onDecline, onSilence }: IncomingC
       </p>
       <div className="mt-[12vh] flex flex-col items-center gap-4 text-center">
         <span className="rounded-full motion-safe:animate-pulse">
-          <Avatar name={name} size="xl" decorative />
+          <Avatar name={name} id={phone} size="xl" decorative />
         </span>
         <h2 id={nameId} tabIndex={-1} data-autofocus className="max-w-[18ch] truncate font-display text-2xl font-bold outline-none">
           {name}

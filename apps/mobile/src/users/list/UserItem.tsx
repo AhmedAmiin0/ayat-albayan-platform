@@ -26,7 +26,7 @@ export const UserItem = memo(function UserItem({ user, onOpen }: UserItemProps) 
   const parts = [roleText(user.role), user.linked ? recordText(user.linked) : null];
   return (
     <ListRow
-      leading={<Avatar name={user.full_name} id={user.id} src={user.avatar_url} decorative />}
+      leading={<Avatar name={user.full_name} id={user.avatar_seed ?? user.id} src={user.avatar_url} decorative />}
       title={user.full_name}
       subtitle={parts.filter((p): p is string => p !== null).join(t.common.listSeparator)}
       trailing={<StatusChip {...statusStyle(user.status)} label={t.users.status[user.status]} size="sm" />}

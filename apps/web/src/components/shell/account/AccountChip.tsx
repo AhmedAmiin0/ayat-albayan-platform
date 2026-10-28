@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { Link } from '@tanstack/react-router';
 import { Avatar } from '@/components/ui/display/avatar';
+import { avatarSeed } from '@/features/people/account';
 import { profileQuery } from '@/features/people/account/api';
 import { t } from '@/lib/i18n/i18n';
 import { cn } from '@/lib/utils';
@@ -32,7 +33,7 @@ export function AccountChip({ email, variant = 'block', className }: AccountChip
         className,
       )}
     >
-      <Avatar name={name} id={profile?.id} src={profile?.avatar_url} size="sm" decorative />
+      <Avatar name={name} id={avatarSeed(profile)} src={profile?.avatar_url} size="sm" decorative />
       <span className="grid min-w-0 leading-tight">
         <span className="text-xs font-semibold text-ink group-aria-[current=page]:text-lapis">{t.account.nav}</span>
         {!inline && email && (

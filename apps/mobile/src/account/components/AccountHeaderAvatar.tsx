@@ -30,7 +30,7 @@ export function AccountHeaderAvatar({ href }: { href: AccountHref }) {
         backgroundColor: pressed ? color.sunk : 'transparent',
       })}
     >
-      <Avatar name={profile.full_name} id={profile.id} src={profile.avatar_url} decorative />
+      <Avatar name={profile.full_name} id={profile.avatar_seed ?? profile.id} src={profile.avatar_url} decorative />
     </Pressable>
   );
 }

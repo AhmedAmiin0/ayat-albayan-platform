@@ -1,6 +1,7 @@
 /* The initials circle's six tones (owner 2026-10-28). Values are packages/shared/src/theme/avatar-tones.ts
    (avatar-tones.test.ts diffs them; the AA check of `ink` on each runs there). The Avatar picks
-   --avatar-N from a hash of the person's id, so a person keeps one tone on every screen. */
+   --avatar-N from a hash of the person's id, so a person keeps one tone on every screen. --avatar-rule is
+   the circle's hairline: rule-strong in light, the more visible rule-input in dark (dark tones hide rule-strong). */
 :root,
 [data-theme='light'] {
   --avatar-1: #d9efe3;
@@ -9,6 +10,7 @@
   --avatar-4: #f4dfe3;
   --avatar-5: #e6e0f3;
   --avatar-6: #d6eeee;
+  --avatar-rule: var(--rule-strong);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -19,6 +21,7 @@
     --avatar-4: #523239;
     --avatar-5: #3f3858;
     --avatar-6: #234a4a;
+    --avatar-rule: var(--rule-input);
   }
 }
 
@@ -29,4 +32,5 @@
   --avatar-4: #523239;
   --avatar-5: #3f3858;
   --avatar-6: #234a4a;
+  --avatar-rule: var(--rule-input);
 }

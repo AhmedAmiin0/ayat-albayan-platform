@@ -30,7 +30,7 @@ const SIZES: Record<AvatarSize, string> = {
   xl: 'size-24 text-[34px] font-display',
 };
 
-const FRAME = 'relative grid shrink-0 place-items-center overflow-hidden rounded-full shadow-[inset_0_0_0_1px_var(--rule-strong)]';
+const FRAME = 'relative grid shrink-0 place-items-center overflow-hidden rounded-full shadow-[inset_0_0_0_1px_var(--avatar-rule)]';
 
 /** The circle's accessible name: none when decorative, else `alt`, else the name ('' = none). */
 const labelOf = ({ name, alt, decorative }: AvatarProps): string => (decorative ? '' : (alt ?? name));

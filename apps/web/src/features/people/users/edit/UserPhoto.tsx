@@ -10,7 +10,7 @@ export function UserPhoto({ user, canWrite }: { user: UserDetail; canWrite: bool
   const staff = !NO_PHOTO.has(user.role);
   return (
     <div className="flex flex-wrap items-center gap-x-4 gap-y-3">
-      <Avatar name={user.full_name} id={user.id} src={staff ? user.avatar_url : null} size="lg" />
+      <Avatar name={user.full_name} id={user.avatar_seed ?? user.id} src={staff ? user.avatar_url : null} size="lg" />
       {canWrite && staff && (
         <StaffPhotoControl
           kind="users"

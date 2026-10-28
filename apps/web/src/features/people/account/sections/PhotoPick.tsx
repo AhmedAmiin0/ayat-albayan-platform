@@ -1,4 +1,4 @@
-import { useId, type ChangeEvent } from 'react';
+import { useId, type ChangeEvent, type Ref } from 'react';
 import { buttonVariants } from '@/components/ui/form/button';
 import { cn } from '@/lib/utils';
 import { AVATAR_ACCEPT } from '../avatar-file';
@@ -8,17 +8,20 @@ export interface PhotoPickProps {
   label: string;
   disabled: boolean;
   onPick: (e: ChangeEvent<HTMLInputElement>) => void;
+  /** The file input (the focusable part), e.g. to return focus to it. */
+  inputRef?: Ref<HTMLInputElement>;
 }
 
 /**
  * A photo picker drawn as a secondary button: the label of a visually hidden JPG/PNG/WebP file
  * input, showing the input's focus ring (peer-focus-visible). «حسابي» and the admin's staff photo.
  */
-export function PhotoPick({ label, disabled, onPick }: PhotoPickProps) {
+export function PhotoPick({ label, disabled, onPick, inputRef }: PhotoPickProps) {
   const inputId = useId();
   return (
     <>
       <input
+        ref={inputRef}
         id={inputId}
         type="file"
         accept={AVATAR_ACCEPT}

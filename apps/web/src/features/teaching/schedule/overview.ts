@@ -35,17 +35,14 @@ export interface BoardRow {
   teacher: OverviewTeacher;
   /** Riyadh day → that day's lessons by start time. */
   days: Map<string, LessonView[]>;
-  /** The teacher's photo as the window's lessons carry it (the overview has none); null = initials. */
+  /** The teacher's photo (OverviewTeacher.avatar_url, so a teacher without lessons in the window still has it); null = initials. */
   photo: string | null;
 }
 
 /** One row per teacher, lessons or not (a teacher with an empty week still shows). */
 export function boardRows(teachers: readonly OverviewTeacher[], lessons: readonly LessonView[]): BoardRow[] {
-  const byTeacher = new Map(teacherRows(lessons).map((r) => [r.teacher.id, r]));
-  return teachers.map((teacher) => {
-    const row = byTeacher.get(teacher.id);
-    return { teacher, days: row?.days ?? new Map(), photo: row?.teacher.avatar_url ?? null };
-  });
+  const byTeacher = new Map(teacherRows(lessons).map((r) => [r.teacher.id, r.days]));
+  return teachers.map((teacher) => ({ teacher, days: byTeacher.get(teacher.id) ?? new Map(), photo: teacher.avatar_url ?? null }));
 }
 
 /** [from, to) of a Riyadh day, epoch ms. */

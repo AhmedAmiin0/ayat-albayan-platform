@@ -69,7 +69,7 @@ export function TeacherDetailScreen() {
             invalidate={TEACHER_KEYS}
           />
         ) : (
-          <Avatar name={teacherName(data, locale)} id={data.id} src={data.avatar_url} size="lg" />
+          <Avatar name={teacherName(data, locale)} id={data.id} src={data.avatar_url} size="lg" decorative />
         )}
         <Button
           variant="secondary"

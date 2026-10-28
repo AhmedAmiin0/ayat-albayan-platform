@@ -1,4 +1,4 @@
-import { avatarTone, avatarTones } from '@ab/shared';
+import { avatarTone, avatarTones, palette, type } from '@ab/shared';
 import { fireEvent, render, screen } from '@testing-library/react-native';
 import { StyleSheet, useColorScheme } from 'react-native';
 import { Avatar } from './Avatar';
@@ -58,4 +58,33 @@ test('decorative (a row that reads the name): hidden from the screen reader', as
   await render(<Avatar name="هدى" id="t1" decorative />);
   expect(screen.queryByRole('image')).toBeNull();
   expect(screen.getByTestId('avatar-initials', { includeHiddenElements: true })).toBeTruthy();
+});
+
+test('a hairline around the circle: rule-strong in light (web: the inset 1px rule)', async () => {
+  await render(<Avatar name="هدى" id="t1" />);
+  const frame = StyleSheet.flatten(screen.getByTestId('avatar-initials').props.style);
+  expect(frame).toMatchObject({ borderWidth: StyleSheet.hairlineWidth, borderColor: palette.light.ruleStrong });
+});
+
+test('dark mode: the more visible rule-input hairline, photo or not', async () => {
+  scheme.mockReturnValue('dark');
+  await render(<Avatar name="هدى" id="t1" src="https://cdn/t1.jpg" />);
+  expect(StyleSheet.flatten(screen.getByTestId('avatar-photo').props.style)).toMatchObject({ borderColor: palette.dark.ruleInput });
+});
+
+test('xl is 96 like the web, its initials in the display face; sm stays in the UI face', async () => {
+  await render(
+    <>
+      <Avatar name="هدى" id="t1" size="xl" />
+      <Avatar name="سارة" id="t2" size="sm" />
+    </>,
+  );
+  expect(StyleSheet.flatten(screen.getAllByTestId('avatar-initials')[0]?.props.style)).toMatchObject({ width: 96, height: 96 });
+  expect(StyleSheet.flatten(screen.getByText('ه').props.style).fontFamily).toBe(type.display);
+  expect(StyleSheet.flatten(screen.getByText('س').props.style).fontFamily).toBe(type.ui[700]);
+});
+
+test('a name with no letter: the person glyph, as on the web', async () => {
+  await render(<Avatar name="" id="t1" />);
+  expect(screen.getByTestId('avatar-glyph')).toBeTruthy();
 });

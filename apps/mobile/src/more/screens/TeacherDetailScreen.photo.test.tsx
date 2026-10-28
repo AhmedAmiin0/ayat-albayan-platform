@@ -22,6 +22,8 @@ const TEACHER: Teacher = {
   avatar_url: 'https://cdn/t1.jpg',
 };
 
+const photo = () => screen.getByTestId('avatar-photo', { includeHiddenElements: true });
+
 beforeEach(() => {
   mockApiFetch.mockImplementation(async (path: string) => {
     if (path === '/teachers/t1') return TEACHER;
@@ -34,14 +36,16 @@ test('an admin: the teacher’s photo with «تغيير الصورة» and «ح�
   await renderWithQuery(<TeacherDetailScreen />);
   expect(await screen.findByRole('button', { name: t.staffPhoto.change })).toBeTruthy();
   expect(screen.getByRole('button', { name: t.staffPhoto.remove })).toBeTruthy();
-  expect(screen.getByRole('image', { name: TEACHER.display_name_ar }).props.source).toEqual({ uri: TEACHER.avatar_url });
+  expect(photo().props.source).toEqual({ uri: TEACHER.avatar_url });
+  expect(screen.queryByRole('image', { name: TEACHER.display_name_ar })).toBeNull(); // the header reads the name
 });
 
 test('not an admin (teachers.read on another role): the photo, no photo control', async () => {
   const client = createTestQueryClient();
   seedFullAccess(client, 'assistant');
   await renderWithQuery(<TeacherDetailScreen />, client);
-  expect(await screen.findByRole('image', { name: TEACHER.display_name_ar })).toBeTruthy();
+  expect(await screen.findByTestId('avatar-photo', { includeHiddenElements: true })).toBeTruthy();
+  expect(screen.queryByRole('image', { name: TEACHER.display_name_ar })).toBeNull();
   expect(screen.queryByRole('button', { name: t.staffPhoto.change })).toBeNull();
   expect(screen.queryByRole('button', { name: t.staffPhoto.remove })).toBeNull();
 });

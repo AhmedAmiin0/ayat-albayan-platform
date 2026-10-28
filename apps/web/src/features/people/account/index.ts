@@ -8,6 +8,6 @@ export {
   uploadAvatar,
   uploadPhoto,
 } from './api';
-export { avatarFileProblem } from './avatar-file';
+export { avatarFileProblem, avatarSeed } from './avatar-file';
 export { accountMessage } from './errors';
 export { PhotoPick } from './sections/PhotoPick';

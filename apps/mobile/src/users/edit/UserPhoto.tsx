@@ -27,5 +27,5 @@ export function UserPhoto({ user, canWrite }: { user: UserDetail; canWrite: bool
       />
     );
   }
-  return <Avatar name={user.full_name} id={user.id} src={photo} size="lg" />;
+  return <Avatar name={user.full_name} id={user.avatar_seed ?? user.id} src={photo} size="lg" />;
 }
