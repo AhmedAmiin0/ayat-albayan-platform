@@ -31,13 +31,14 @@ describe('CallsNumberStore (docs/28 §10)', () => {
     await expect(store.reply('calls-pn', '+201001234567')).resolves.toBeNull();
   });
 
-  it('the window reads the family\'s newest inbound on line calls only', async () => {
+  it('the window reads the family\'s newest inbound to THIS calls number only; no number = none', async () => {
     const { db, calls } = fakeDb({ messages: [{ data: [{ created_at: '2026-10-27T08:00:00Z' }] }] });
-    await expect(new CallsNumberStore(db, views).lastInbound('+201001234567')).resolves.toBe('2026-10-27T08:00:00Z');
-    expect(calls.filter((c) => c.method === 'eq').map((c) => c.args)).toEqual([['phone_e164', '+201001234567'], ['direction', 'inbound'], ['line', 'calls']]);
+    await expect(new CallsNumberStore(db, views).lastInbound('+201001234567', 'n-calls')).resolves.toBe('2026-10-27T08:00:00Z');
+    expect(calls.filter((c) => c.method === 'eq').map((c) => c.args)).toEqual([['phone_e164', '+201001234567'], ['direction', 'inbound'], ['line', 'calls'], ['number_id', 'n-calls']]);
+    await expect(new CallsNumberStore(db, views).lastInbound('+201001234567', null)).resolves.toBeNull();
   });
 
-  it('sent / failed move only the row this request queued (still queued)', async () => {
+  it('sent / failed move only the row this request holds in flight (never a queued row)', async () => {
     const { db, calls } = fakeDb({ messages: [{ data: { id: 'm1' } }, { data: { id: 'm2' } }] });
     const store = new CallsNumberStore(db, views);
     await store.sent('m1', 'wamid.P');
@@ -45,6 +46,6 @@ describe('CallsNumberStore (docs/28 §10)', () => {
     const updates = calls.filter((c) => c.method === 'update').map((c) => c.args[0]);
     expect(updates[0]).toMatchObject({ status: 'sent', wa_message_id: 'wamid.P' });
     expect(updates[1]).toMatchObject({ status: 'failed', error_code: 'meta_131047' });
-    expect(calls.filter((c) => c.method === 'eq' && c.args[0] === 'status').map((c) => c.args[1])).toEqual(['queued', 'queued']);
+    expect(calls.filter((c) => c.method === 'eq' && c.args[0] === 'error_code').map((c) => c.args[1])).toEqual(['sending', 'sending']);
   });
 });

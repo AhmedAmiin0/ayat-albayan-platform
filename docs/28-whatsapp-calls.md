@@ -201,7 +201,7 @@ below is exactly §1–§9 (calls ring on the chat line).
   `calls_need_kapso` on a create or a PATCH that would break it).
 - **callingLine()** (`calls/kapso/calling-line.ts`): the enabled default `calls` number when there is one
   (`common/integrations/calls-number.ts`, loaded by `NumbersConfig` under **both** `comms_source` values, by
-  `NumbersQueries.callsDefault()`), with Kapso's project key; a calls number that cannot carry a call (no WABA
+  `NumbersQueries.callsDefault()`; a failed read keeps the current one and never fails the numbers refresh), with Kapso's project key; a calls number that cannot carry a call (no WABA
   id, no Kapso key) is `calls_unavailable`, never a silent fall back to the chat line. Else the chat line as
   before. `wa_calls.number_id` stamps the calls number.
 - **Inbound.** The Kapso meta webhook routes a change by `metadata.phone_number_id`: under legacy the calls
@@ -213,23 +213,28 @@ below is exactly §1–§9 (calls ring on the chat line).
   - module routing never sees a `calls` number (`messagingNumbers` in `NumberRoutes.pass`: no template, session,
     rule or fallback_rank can pick it), and its `numberEnv` is always null;
   - a template can never be on the calls line (check in migration 941) nor point at it
-    (`PUT /messaging/templates/:key/number` → 404 `unknown_number`);
+    (`PUT /messaging/templates/:key/number` → 404 `unknown_number`), nor can a notification rule
+    (`PATCH /admin/notifications/:key` → `unknown_number`);
   - a calls inbound never opens a reply window: `v_threads` / `thread_summary_refresh` exclude it from the
     notifications window (migration `20261028000941_calls_number.sql`), `numberWindows` drops it (module
-    mode), so the reply line never becomes the calls number; no read receipt is sent for it;
+    mode), so the reply line never becomes the calls number; the composer's «window open» and «إعادة فتح»
+    follow the messaging windows only (`messagingWindowOpen`); no read receipt is sent for it;
   - the admin's «إعادة المحاولة» refuses a calls-number row (staff tap the button again);
   - a file a family sends to it is fetched with its own Kapso connection only (download, never a send).
 - **The one thing it sends: «اطلب إذن الاتصال»**, FROM the calls number, only when a staff member taps it on
   the call sheet (`calls/flow/calls-number-permission.ts`):
   - Kapso `call_permissions` decides `granted` / `limited`; inside the **calls number's own** 24 h window the
-    interactive `call_permission_request`; outside it the approved template named in the setting
+    interactive `call_permission_request` (its window: the family's newest message to THAT calls number);
+    outside it the approved template named in the setting
     **`calls_permission_template`** («القيم» → الرسائل; `name` or `name:language`, Arabic by default);
     empty = `needs_template` with `via: template`: no button, the sheet says why;
   - the send gate (`messaging_enabled`, WhatsApp configured: `SendGate.open`, 409 `messaging_off`) and
     `WA_ALLOWED_RECIPIENTS` (403) are checked first; a `messages` row (`line = 'calls'`, `number_id`, dedup key
     `call_permission:<who>:<phone>:<request id>`, audited `call_permission_request`) shows it in the thread;
     **one** `POST /{calls phone_number_id}/messages` through Kapso, never retried (a refusal: the row is
-    `failed` with the code, 502 `request_failed`).
+    `failed` with the code, 502 `request_failed`). While the request is out the row is `failed` + `sending`,
+    never `queued`, so no sender, catch-up or queue count sees it; once WhatsApp took it, a failed write is
+    only logged (never a 502 that would invite a second request).
   - The family's answer arrives as an interactive `call_permission_reply`: stored in `wa_call_permissions`
     (API only: RLS on, no policy, no grant) by (phone_number_id, phone) with its expiry; an older answer never
     replaces a newer one. The sheet shows the last answer; `granted` shows the stored expiry when Kapso gives none.

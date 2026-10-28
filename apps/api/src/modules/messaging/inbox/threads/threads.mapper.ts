@@ -49,7 +49,7 @@ export function toThreadView(row: ThreadRow & { last_unsupported?: boolean }, no
     guardian_tz: row.guardian_tz,
     teacher_id: row.teacher_id,
     teacher_name: row.teacher_name,
-    session_open: sessionWindowOpen(row.last_inbound_at, now),
+    session_open: messagingWindowOpen(row, now),
     ...familyFields(row.guardian_id ? (tag ?? { badge: 'none', unpaid: false }) : null),
   };
 }
@@ -58,6 +58,15 @@ export function toThreadView(row: ThreadRow & { last_unsupported?: boolean }, no
 function lastBody(row: ThreadRow): string | null {
   const shape = { direction: row.last_direction, media_mime: row.last_media_mime, body: row.last_body };
   return looksCrmHistory(shape) ? null : row.last_body;
+}
+
+/**
+ * Is a messaging line's 24 h window open? A message to the calls number (docs/28 §10) opens none: when it is
+ * the newest inbound, only the two line windows count (they leave it out).
+ */
+export function messagingWindowOpen(row: Pick<ThreadRow, 'last_inbound_at' | 'last_inbound_line' | 'last_chat_inbound_at' | 'last_notifications_inbound_at'>, now: Date): boolean {
+  if (row.last_inbound_line !== 'calls') return sessionWindowOpen(row.last_inbound_at, now);
+  return sessionWindowOpen(row.last_chat_inbound_at, now) || sessionWindowOpen(row.last_notifications_inbound_at, now);
 }
 
 /** replyLine() over the view's two per-line windows (docs/12 §13.3 rule 2). */

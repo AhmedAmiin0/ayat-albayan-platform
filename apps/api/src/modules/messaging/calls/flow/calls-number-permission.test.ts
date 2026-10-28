@@ -59,7 +59,7 @@ describe('«اطلب إذن الاتصال» from the calls number: only on a ta
     expect(s.api.requestPermission).toHaveBeenCalledTimes(1);
     expect(s.api.requestPermission).toHaveBeenCalledWith(CALLS, { to: FAMILY, text: expect.stringContaining('واتساب') });
     expect(s.threads.enqueue).toHaveBeenCalledWith(expect.objectContaining({
-      line: 'calls', number_id: 'n-calls', direction: 'outbound', created_by: ADMIN_ACTOR.user.id, dedup_key: `call_permission:admin:${FAMILY}:${REQ}`,
+      line: 'calls', number_id: 'n-calls', direction: 'outbound', status: 'failed', error_code: 'sending', created_by: ADMIN_ACTOR.user.id, dedup_key: `call_permission:admin:${FAMILY}:${REQ}`,
     }));
     expect(s.store.sent).toHaveBeenCalledWith('m1', 'wamid.PERM');
     expect(sent).toMatchObject({ replayed: false, view: { status: 'sent' } });
@@ -97,6 +97,13 @@ describe('«اطلب إذن الاتصال» from the calls number: only on a ta
   it('no template set outside the window: 409 permission_needs_template; granted: 409 permission_granted', async () => {
     await expect(tap(setup())).rejects.toMatchObject({ response: { code: 'permission_needs_template' } });
     await expect(tap(setup({ canCall: true }))).rejects.toMatchObject({ response: { code: 'permission_granted' } });
+  });
+
+  it('WhatsApp took it but the write failed: no 502 (a second tap would ask twice), the row as it is', async () => {
+    const s = setup({ lastInbound: '2026-10-27T08:00:00Z' });
+    s.store.sent.mockRejectedValueOnce(new Error('db down'));
+    await expect(tap(s)).resolves.toMatchObject({ replayed: false });
+    expect(s.store.failed).not.toHaveBeenCalled();
   });
 
   it('WhatsApp refuses: the row ends failed with the code, 502, never retried', async () => {

@@ -1,7 +1,7 @@
 import { isWaLine, type CommsSource } from '@ab/shared';
 import { Injectable, Logger, type OnModuleDestroy, type OnModuleInit } from '@nestjs/common';
 import { integrationRefreshMs } from '../../../../common/integrations/integration-refresh';
-import { setCallsNumber, type CallsNumber } from '../../../../common/integrations/calls-number';
+import { callsNumber, setCallsNumber, type CallsNumber } from '../../../../common/integrations/calls-number';
 import { setNumbersOverlay, type NumbersOverlay, type OverlayNumber } from '../../../../common/integrations/numbers-overlay';
 import { loadEnv } from '../../../../config/env/env';
 import { callsNumberOf, overlayNumber } from './numbers.env';
@@ -83,10 +83,18 @@ export class NumbersConfig implements OnModuleInit, OnModuleDestroy {
     this.loaded = true;
   }
 
-  /** The enabled default `calls` number (docs/28 §10), under either source; null = none (calls use the chat line). */
+  /**
+   * The enabled default `calls` number (docs/28 §10), under either source; null = none (calls use the chat
+   * line). A failed read keeps the current one and never fails the numbers refresh (e.g. before migration 940).
+   */
   async callsNumber(): Promise<CallsNumber | null> {
-    const row = await this.queries.callsDefault();
-    return row ? callsNumberOf(row, loadEnv()) : null;
+    try {
+      const row = await this.queries.callsDefault();
+      return row ? callsNumberOf(row, loadEnv()) : null;
+    } catch (e) {
+      this.log.warn(`calls number not loaded, keeping the current one: ${e instanceof Error ? e.message : String(e)}`);
+      return callsNumber();
+    }
   }
 
   /** The module side as it would be now (parity reads it in legacy mode too). */

@@ -53,4 +53,15 @@ describe('NumbersConfig: the dedicated calls number (docs/28 §10)', () => {
     await withCalls('legacy', { ...CALLS, provider: 'meta' }).refresh();
     expect(callsNumber()?.env).toBeNull();
   });
+
+  it('a failed calls read keeps the current calls number and never fails the numbers refresh', async () => {
+    const kept = { id: 'kept', phoneNumberId: 'x', env: null };
+    setCallsNumber(kept);
+    const c = withCalls('module', null);
+    const queries = (c as unknown as { queries: NumbersQueries }).queries;
+    vi.mocked(queries.callsDefault).mockRejectedValueOnce(new Error('invalid input value for enum wa_line'));
+    expect(await c.refresh()).toBe(true);
+    expect(callsNumber()).toEqual(kept);
+    expect(numbersOverlay()?.numberIds).toEqual({ notifications: numberRow().id });
+  });
 });

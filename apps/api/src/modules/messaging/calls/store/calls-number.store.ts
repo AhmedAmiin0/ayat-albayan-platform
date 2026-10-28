@@ -8,6 +8,12 @@ function check(error: { message: string } | null, what: string): asserts error i
   if (error) throw new Error(`${what} failed: ${error.message}`);
 }
 
+/**
+ * A request row while its one request is out: status failed + this code, never queued, so no sender,
+ * catch-up (inFlight) or queue count ever sees it; a crash leaves an honest failed row, not a stuck one.
+ */
+export const IN_FLIGHT = 'sending';
+
 /** A stored answer to a request (wa_call_permissions, migration 941): the family's phone and its number. */
 export type PermissionReplyInput = Omit<CallPermissionReplyEvent, 'from'> & { phone: string };
 
@@ -46,21 +52,23 @@ export class CallsNumberStore {
     check(error, 'call permission write');
   }
 
-  /** The family's newest message to the calls number (its 24 h window); null = none. */
-  async lastInbound(phone: string): Promise<string | null> {
+  /** The family's newest message to THIS calls number (its 24 h window); null = none. */
+  async lastInbound(phone: string, numberId: string | null): Promise<string | null> {
+    if (!numberId) return null;
     const { data, error } = await this.db
       .from('messages')
       .select('created_at')
       .eq('phone_e164', phone)
       .eq('direction', 'inbound')
       .eq('line', 'calls')
+      .eq('number_id', numberId)
       .order('created_at', { ascending: false })
       .limit(1);
     check(error, 'calls number window read');
     return data[0]?.created_at ?? null;
   }
 
-  /** The request went out: sent with its wamid (only from the row this request queued). */
+  /** The request went out: sent with its wamid (only from the row this request holds in flight). */
   async sent(id: string, waMessageId: string): Promise<MessageRow | null> {
     const at = new Date().toISOString();
     const patch = { status: 'sent' as const, sent_at: at, wa_message_id: waMessageId, error_code: null, error_text: null };
@@ -77,7 +85,7 @@ export class CallsNumberStore {
   }
 
   private async finish(id: string, patch: Partial<MessageRow>): Promise<MessageRow | null> {
-    const { data, error } = await this.db.from('messages').update(patch).eq('id', id).eq('status', 'queued').select('*').maybeSingle();
+    const { data, error } = await this.db.from('messages').update(patch).eq('id', id).eq('error_code', IN_FLIGHT).select('*').maybeSingle();
     check(error, 'call permission request write');
     return data;
   }

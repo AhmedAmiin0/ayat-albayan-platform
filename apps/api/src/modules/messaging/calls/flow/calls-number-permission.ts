@@ -8,12 +8,9 @@ import type { CallActor } from '../access/call-access';
 import { CallsGate } from '../access/calls-gate';
 import type { CallingLine } from '../kapso/calling-line';
 import type { CallPermissionFacts } from '../kapso/calls-api';
-import { CallsNumberStore } from '../store/calls-number.store';
+import { CallsNumberStore, IN_FLIGHT } from '../store/calls-number.store';
 import { logCallError, requestFailed } from './call-errors';
 import { CallsKit } from './call-kit';
-
-/** Marks the row while its one request is in flight (the sender never reads a calls-number row anyway). */
-const IN_FLIGHT = 'sending';
 
 /** What a request from the calls number needs: who taps, for whom, and how it asks. */
 interface CallsNumberRequest {
@@ -47,7 +44,7 @@ export class CallsNumberPermission {
     const reply = await this.store.reply(line.env.phoneNumberId, phone);
     if (facts.canCall) return { state: 'granted', expires_at: facts.expiresAt ?? grantExpiry(reply), reply };
     if (!facts.canRequest) return { state: 'limited', expires_at: null, reply };
-    if (sessionWindowOpen(await this.store.lastInbound(phone), input.now)) return { state: 'request', via: 'interactive', expires_at: null, reply };
+    if (sessionWindowOpen(await this.store.lastInbound(phone, line.numberId), input.now)) return { state: 'request', via: 'interactive', expires_at: null, reply };
     if (await this.gate.permissionTemplate()) return { state: 'request', via: 'template', expires_at: null, reply };
     return { state: 'needs_template', via: 'template', expires_at: null, reply };
   }
@@ -61,19 +58,22 @@ export class CallsNumberPermission {
     const body = ar.calls.permission.requestBody;
     const row = await this.kit.threads.enqueue({
       ...outboundBase(send, await this.kit.threads.thread(input.phone)),
-      ...{ direction: 'outbound', status: 'queued', line: 'calls', number_id: line.numberId, error_code: IN_FLIGHT },
+      ...{ direction: 'outbound', status: 'failed', line: 'calls', number_id: line.numberId, error_code: IN_FLIGHT },
       ...{ dedup_key: `call_permission:${dedupKey(send)}`, body, interactive_payload: { ...CALL_PERMISSION_PAYLOAD, via: req.via } },
     });
     if (row.replayed) return { view: await this.store.view(row), replayed: true };
     const to = input.phone;
+    let waMessageId: string;
     try {
-      const { waMessageId } = await this.kit.api.requestPermission(line, template ? { to, template } : { to, text: body });
-      return { view: await this.store.view((await this.store.sent(row.id, waMessageId)) ?? row), replayed: false };
+      ({ waMessageId } = await this.kit.api.requestPermission(line, template ? { to, template } : { to, text: body }));
     } catch (e) {
       const code = logCallError(this.log, { what: 'permission request', callId: row.id, error: e });
       await this.store.failed(row.id, code);
       throw requestFailed(code);
     }
+    // WhatsApp took it: a failed write afterwards is logged, never a 502 inviting a second request.
+    const done = await this.store.sent(row.id, waMessageId).catch((e: unknown) => void logCallError(this.log, { what: 'permission request record', callId: row.id, error: e }));
+    return { view: await this.store.view(done ?? row), replayed: false };
   }
 }
 
