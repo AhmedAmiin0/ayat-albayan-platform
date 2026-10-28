@@ -1,12 +1,11 @@
 import { lessonStatusStyle } from '@ab/shared';
 import { View } from 'react-native';
 import { useClockCycle } from '@/core/lib/clock';
-import { t } from '@/core/lib/i18n/i18n';
 import { ErrorLine } from '@/inbox/ErrorLine';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { StatusChip } from '@/core/ui/feedback/StatusChip';
 import { type, useTheme } from '@/theme';
-import { riyadhTime, studentNames } from '../lib/lesson-text';
+import { riyadhTime, statusWord, studentNames } from '../lib/lesson-text';
 import type { Hero } from '../lib/today-plan';
 import { HeroActions } from './HeroActions';
 import { heroLead, heroSubtitle } from './hero-text';
@@ -32,11 +31,14 @@ export function HeroCard({ hero, busy = false, error, onConfirm, onDetails }: He
   const { lesson } = hero;
   return (
     <View style={{ gap: 12, paddingTop: 18, paddingHorizontal: 18, paddingBottom: 16, borderRadius: 24, backgroundColor: color.lapisWash }}>
+      {/* The chip keeps its whole word (owner 2026-10-28: «Needs confirm…»): the lead wraps first. */}
       <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 8 }}>
         <AppText style={{ flexShrink: 1, fontFamily: type.ui[600], fontSize: type.size.xs, lineHeight: 20, color: color.lapis }}>
           {heroLead(hero)}
         </AppText>
-        <StatusChip {...lessonStatusStyle[lesson.status]} label={t.enums.lessonStatus[lesson.status]} size="sm" />
+        <View style={{ flexShrink: 0, maxWidth: '60%' }}>
+          <StatusChip {...lessonStatusStyle[lesson.status]} label={statusWord(lesson.status)} size="sm" />
+        </View>
       </View>
       <View style={{ flexDirection: 'row', alignItems: 'center', gap: 14 }}>
         <AppText

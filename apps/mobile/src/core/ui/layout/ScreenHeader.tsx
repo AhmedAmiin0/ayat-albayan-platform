@@ -16,6 +16,11 @@ interface ScreenHeaderProps {
   title: string;
   /** One line under it (date line, «عرض 25 من 107»…), 13pt ink-2, tabular digits. */
   subtitle?: string;
+  /**
+   * A list's total ON the title's line, «كل الطلاب · 233» (owner 2026-10-28: no separate count line):
+   * only a number the API returned; undefined while it loads.
+   */
+  count?: number;
   /** At the inline-end; defaults to the small gold mark. */
   trailing?: ReactNode;
   /** h1 for a screen (the reconnecting bar shows under it); a sheet or dialog takes h2 so the title fits beside «إغلاق» (docs/07 §6). */
@@ -29,6 +34,7 @@ interface ScreenHeaderProps {
 export function ScreenHeader({
   title,
   subtitle,
+  count,
   trailing = <Mark size={28} />,
   size = 'h1',
   titleRef,
@@ -61,6 +67,11 @@ export function ScreenHeader({
           }}
         >
           {title}
+          {count === undefined ? null : (
+            <AppText style={{ fontFamily: type.ui[500], fontSize: type.size.sm, color: color.ink3, fontVariant: ['tabular-nums'] }}>
+              {` · ${count}`}
+            </AppText>
+          )}
         </AppText>
         {trailing}
       </View>

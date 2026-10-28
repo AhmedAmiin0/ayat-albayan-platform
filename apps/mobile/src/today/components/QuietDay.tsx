@@ -7,7 +7,7 @@ import { t } from '@/core/lib/i18n/i18n';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { type, useTheme } from '@/theme';
 import { riyadhTime } from '../lib/lesson-text';
-import { raisedCard } from '../lib/surface';
+import { raisedCard } from '@/core/ui/surface/surface';
 import { localDate, visibleLessons } from '../lib/timeline';
 import type { TodayLesson } from '../lib/today-lesson';
 import type { TodaySource } from '../lib/today-source';

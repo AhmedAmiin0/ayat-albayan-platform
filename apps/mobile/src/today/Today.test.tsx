@@ -37,11 +37,11 @@ beforeEach(() => {
 });
 afterEach(() => jest.useRealTimers());
 
-test('the greeting by the Riyadh clock, «اليوم», the date line, and today in Riyadh is what it asks for', async () => {
+test('the greeting by the Riyadh clock is the header (no «اليوم» title), the date line, and today in Riyadh is what it asks for', async () => {
   mockApiFetch.mockResolvedValue([]);
   await renderWithQuery(<TodayRoute />);
-  expect(screen.getByText(t.today.greeting.afternoon)).toBeTruthy(); // 16:20 Riyadh
-  expect(screen.getByRole('header', { name: t.today.title })).toBeTruthy();
+  expect(screen.getByRole('header', { name: t.today.greeting.afternoon })).toBeTruthy(); // 16:20 Riyadh
+  expect(screen.queryByText(t.today.title)).toBeNull();
   expect(screen.getByText('الخميس 1 أكتوبر · بتوقيت الرياض')).toBeTruthy();
   await waitFor(() =>
     expect(mockApiFetch).toHaveBeenCalledWith('/lessons/day?date=2026-10-01&tz=Asia%2FRiyadh'),

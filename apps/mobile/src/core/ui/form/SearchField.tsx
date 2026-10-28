@@ -11,8 +11,8 @@ interface SearchFieldProps {
   label?: string;
   delayMs?: number;
   /**
-   * A compact pill (the chats list, as WhatsApp): 40pt drawn with the touch area stretched to 44pt
-   * (iOS; Android keeps the 40pt box), a grey fill and a hairline edge in place of the heavy border. Text stays 16pt (no iOS zoom).
+   * The list screens' pill (the chats list as WhatsApp, every list header since owner 2026-10-28): 44pt,
+   * a grey fill and a hairline edge in place of the heavy border. Text stays 16pt (no iOS zoom).
    */
   compact?: boolean;
 }
@@ -23,7 +23,7 @@ type Theme = ReturnType<typeof useTheme>;
 const boxStyle = ({ color, glass }: Theme, compact: boolean) =>
   compact
     ? {
-        minHeight: 40,
+        minHeight: shape.control.touch,
         paddingHorizontal: 16,
         borderRadius: shape.radius.pill,
         borderWidth: StyleSheet.hairlineWidth,
@@ -76,7 +76,6 @@ export function SearchField({
       clearButtonMode="while-editing"
       autoCorrect={false}
       autoCapitalize="none"
-      hitSlop={compact ? { top: 2, bottom: 2 } : undefined}
       style={{
         ...boxStyle(theme, compact),
         color: color.ink,

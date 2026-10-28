@@ -1,7 +1,7 @@
 import { Fragment } from 'react';
 import { View } from 'react-native';
 import { useTheme } from '@/theme';
-import { raisedCard } from '../lib/surface';
+import { raisedCard } from '@/core/ui/surface/surface';
 import type { TodayLesson } from '../lib/today-lesson';
 import { LessonRow } from './LessonRow';
 

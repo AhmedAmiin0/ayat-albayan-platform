@@ -1055,8 +1055,11 @@
     "summaryLabel": "ملخص اليوم",
     "summary": {
       "all": "حلقة اليوم",
-      "scheduled": "تحتاج تأكيد",
+      "scheduled": "للتأكيد",
       "completed": "انتهت"
+    },
+    "statusShort": {
+      "scheduled": "يحتاج تأكيد"
     },
     "summaryFilter": "{n} {label}، اعرض هذه الحلقات فقط",
     "summaryFilterActive": "{n} {label}، اعرض كل الحلقات",

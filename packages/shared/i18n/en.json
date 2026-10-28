@@ -1055,8 +1055,11 @@
     "summaryLabel": "Today at a glance",
     "summary": {
       "all": "lessons today",
-      "scheduled": "need confirmation",
+      "scheduled": "to confirm",
       "completed": "ended"
+    },
+    "statusShort": {
+      "scheduled": "To confirm"
     },
     "summaryFilter": "{n} {label}, show only these lessons",
     "summaryFilterActive": "{n} {label}, show all lessons",

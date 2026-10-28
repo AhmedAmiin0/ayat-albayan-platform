@@ -53,3 +53,10 @@ export function rowSubtitle(lesson: TodayLesson): string {
   const kind = lesson.makeup ? t.booking.makeup.tag : lesson.trial ? t.schedule.trialTag : undefined;
   return [teacher, durationLabel(lesson), kind].filter((part): part is string => part !== undefined).join(' · ');
 }
+
+const shortStatus: Partial<Record<TodayLesson['status'], string>> = t.today.statusShort;
+
+/** A status in a Today chip or row: «To confirm» for the long «Needs confirmation» (owner 2026-10-28: it truncated). */
+export function statusWord(status: TodayLesson['status']): string {
+  return shortStatus[status] ?? t.enums.lessonStatus[status];
+}

@@ -40,7 +40,7 @@ export function SessionsList({ scope, header, filter, selected, onToggle }: Sess
   );
   return (
     <LazyList
-      bleed={false}
+      inset={false}
       tabBar={false}
       endSpace={24}
       gap={4}
@@ -58,7 +58,7 @@ export function PaymentsList({ scope, header }: Common) {
   const list = useEarningsPayments(scope);
   return (
     <LazyList
-      bleed={false}
+      inset={false}
       tabBar={false}
       endSpace={24}
       gap={4}
