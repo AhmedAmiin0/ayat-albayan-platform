@@ -54,3 +54,28 @@ export const ChatActionsContext = createContext<ChatActions>({
 });
 
 export const useChatActions = (): ChatActions => useContext(ChatActionsContext);
+
+/** The part a bubble reads: none of it changes when a reply is picked or a notice shows. */
+export type BubbleChatActions = Pick<
+  ChatActions,
+  'enabled' | 'canSend' | 'setReply' | 'threadName' | 'openMenu' | 'openForward' | 'showCopy' | 'reactable' | 'react' | 'openReactors'
+>;
+
+/**
+ * The bubbles' own slice (owner 2026-10-27, «Avoid rerenders»): picking «رد» or a notice changes
+ * ChatActionsContext, which only the composer and the notice read; every bubble reads this one.
+ */
+export const BubbleActionsContext = createContext<BubbleChatActions>({
+  enabled: false,
+  canSend: false,
+  setReply: noop,
+  threadName: null,
+  openMenu: noop,
+  openForward: noop,
+  showCopy: noop,
+  reactable: () => false,
+  react: noop,
+  openReactors: noop,
+});
+
+export const useBubbleChatActions = (): BubbleChatActions => useContext(BubbleActionsContext);
