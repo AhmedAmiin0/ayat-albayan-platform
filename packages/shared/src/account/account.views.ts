@@ -16,6 +16,8 @@ export interface AccountProfile {
   phone_e164: string | null;
   /** A short-lived signed URL of the photo, or null (initials are shown). */
   avatar_url: string | null;
+  /** What the initials tone hashes (avatarTone): the linked teacher's id, else the profile's, so a person keeps one tone. */
+  avatar_seed?: string;
   role: AccountRole;
 }
 

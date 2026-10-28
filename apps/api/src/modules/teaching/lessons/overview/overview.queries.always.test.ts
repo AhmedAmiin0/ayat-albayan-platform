@@ -1,3 +1,4 @@
+import { fakePhotos } from '../../../../common/storage/avatars/avatars.fakes';
 import { describe, expect, it } from 'vitest';
 import { readerOf } from '../../../../common/settings/settings.fakes';
 import { allDayRows } from '../../../people/teachers/availability/free-slots';
@@ -10,7 +11,7 @@ const WINDOW = { from: new Date('2026-10-03T21:00:00Z'), to: new Date('2026-10-1
 const SAVED = { teacher_id: 'A', weekday: 0, start_time: '16:00:00', end_time: '18:00:00', tz: 'Asia/Riyadh' };
 const setup = (on: boolean) => {
   const f = fakeDb({ teachers: [{ data: [{ id: 'A' }, { id: 'B' }] }], teacher_availability: [{ data: [SAVED] }] });
-  return { ...f, q: new OverviewQueries(f.db, readerOf(LessonsSettings, { teachers_always_available: on })) };
+  return { ...f, q: new OverviewQueries(f.db, readerOf(LessonsSettings, { teachers_always_available: on }), fakePhotos().photos) };
 };
 
 describe('OverviewQueries.slots — the calendar matches what booking accepts', () => {

@@ -28,6 +28,8 @@ export interface UserView {
   username?: string | null;
   /** A staff member's photo, a short-lived signed URL; null = initials (students and guardians always null). */
   avatar_url?: string | null;
+  /** What the initials tone hashes: the linked teacher's id, else the profile's (one tone per person). */
+  avatar_seed?: string;
 }
 
 /** GET /users/:id: the list row plus what the edit panel needs. */

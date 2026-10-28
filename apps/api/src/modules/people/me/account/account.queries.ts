@@ -25,9 +25,15 @@ export class AccountQueries implements AccountStore {
       .maybeSingle();
     if (error) throw dbError(error);
     if (!data) return null;
-    const name = await this.roleName(data.role, data.role_id);
+    const [name, teacher_id] = await Promise.all([this.roleName(data.role, data.role_id), this.teacherId(id)]);
     const role = { base: data.role, key: name?.key ?? null, name_ar: name?.name_ar ?? null, name_en: name?.name_en ?? null };
-    return { id: data.id, full_name: data.full_name, phone_e164: data.phone_e164, avatar_path: data.avatar_path, role };
+    return { id: data.id, full_name: data.full_name, phone_e164: data.phone_e164, avatar_path: data.avatar_path, role, teacher_id };
+  }
+
+  private async teacherId(profileId: string): Promise<string | null> {
+    const { data, error } = await this.db.from('teachers').select('id').eq('profile_id', profileId).maybeSingle();
+    if (error) throw dbError(error);
+    return data?.id ?? null;
   }
 
   async update(id: string, patch: SelfPatch): Promise<void> {

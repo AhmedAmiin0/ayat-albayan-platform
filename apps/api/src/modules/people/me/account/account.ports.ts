@@ -11,6 +11,8 @@ export interface AccountRow {
   phone_e164: string | null;
   avatar_path: string | null;
   role: AccountRole;
+  /** The teacher record linked to this login, if any (the initials tone follows it). */
+  teacher_id?: string | null;
 }
 
 /**
