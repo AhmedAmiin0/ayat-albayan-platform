@@ -1,63 +1,27 @@
-import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
-import { Test } from '@nestjs/testing';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { AppModule } from '../../../app.module';
-import { ActivityRetentionJob } from '../../../common/activity/activity.retention.job';
-import { ConfigSeeder } from '../../../common/config-store/boundaries/config-seeder';
-import { ExpensesJob } from '../../finance/expenses/expenses.job';
-import { AlertsJob } from '../../finance/subscriptions/alerts/alerts.job';
-import { StudentExpiryJob } from '../../finance/subscriptions/student-lifecycle/student-expiry.job';
-import { CallsSweeper } from '../../messaging/calls/flow/calls.sweeper';
-import { FollowUpsJob } from '../../messaging/follow-ups/follow-ups.job';
-import { PushReceiptsJob } from '../../messaging/push/push-receipts.job';
-import { RemindersJob } from '../../messaging/reminders/reminders.job';
-import { ExternalCatchUpJob } from '../../messaging/webhook/external/external-catchup.job';
-import { CrmMediaCopyJob } from '../../messaging/whatsapp/messages/crm-copy/crm-media-copy.job';
-import { WaMediaRetentionJob } from '../../messaging/whatsapp/messages/wa-media.retention.job';
-import { MessageSender } from '../../messaging/whatsapp/sender/message.sender';
-import { GoogleSyncJob } from '../google-sync/sync/google-sync.job';
-import { ReportPdfJob } from '../../reporting/report-pdf/report-pdf.job';
-import { RatingJob } from '../../teaching/lesson-rating/queue/rating.job';
-import { HorizonJob } from '../../teaching/scheduling/occurrences/horizon.job';
-import { RecordingMaintenanceJob } from '../../teaching/student-recordings/retention/recording-maintenance.job';
+import { backgroundJobs } from '../../../config/role/background-job';
+import { bootIn } from './roles.boot.probe';
 
-/** Every job's pass, as its timers call it (the template boot check needs a configured line: its own tests). */
-const PASSES = [
-  [ActivityRetentionJob, 'runOnce'],
-  [ConfigSeeder, 'run'],
-  [ExpensesJob, 'runOnce'],
-  [AlertsJob, 'runOnce'],
-  [StudentExpiryJob, 'runOnce'],
-  [CallsSweeper, 'runOnce'],
-  [FollowUpsJob, 'runOnce'],
-  [PushReceiptsJob, 'runOnce'],
-  [RemindersJob, 'runOnce'],
-  [ExternalCatchUpJob, 'runOnce'],
-  [WaMediaRetentionJob, 'runOnce'],
-  [CrmMediaCopyJob, 'runOnce'],
-  [MessageSender, 'runOnce'],
-  [GoogleSyncJob, 'kick'],
-  [ReportPdfJob, 'runOnce'],
-  [RatingJob, 'runOnce'],
-  [HorizonJob, 'runOnce'],
-  [RecordingMaintenanceJob, 'runOnce'],
-] as const;
+/**
+ * The only timers an `api` copy may start (docs/09 «Two API copies + one worker»): per-process caches
+ * and buffers, never a pass over shared rows. Anything else that starts a timer must be a @BackgroundJob.
+ */
+const PER_COPY: Record<string, string> = {
+  'common/integrations/integration-config.service.ts':
+    'refreshes its own copy of the saved integration keys',
+  'modules/messaging/numbers/config/numbers.config.ts':
+    'refreshes its own copy of the numbers overlay',
+  'modules/platform/translations/translations.service.ts':
+    'refreshes its own copy of the UI strings',
+  'common/client-usage/client-usage.service.ts': 'logs this copy’s own client-version counters',
+  'common/activity/activity.writer.ts': 'flushes this copy’s own buffered activity rows',
+};
 
-/** Boots AppModule in `role`, lets 25 hours pass (daily jobs included), and names the jobs whose pass ran. */
-async function jobsThatRan(role: string): Promise<string[]> {
-  vi.stubEnv('APP_ROLE', role);
-  const spies = PASSES.map(([job, method]) => {
-    const proto = job.prototype as unknown as Record<string, () => Promise<unknown>>;
-    return { name: job.name, spy: vi.spyOn(proto, method).mockResolvedValue(undefined) };
-  });
-  vi.useFakeTimers({ toFake: ['setTimeout', 'setInterval', 'clearTimeout', 'clearInterval'] });
-  const mod = await Test.createTestingModule({ imports: [AppModule] }).compile();
-  const app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter());
-  await app.init();
-  await vi.advanceTimersByTimeAsync(25 * 3_600_000);
-  await app.close();
-  return spies.filter((s) => s.spy.mock.calls.length > 0).map((s) => s.name);
-}
+/** Jobs that start no timer in a test boot, and why (every other registered job must). */
+const NO_TIMERS = new Map([
+  ['config-reload', 'its kick is all it does'],
+  ['template-boot-check', 'only with a configured line (template.registry tests)'],
+]);
 
 afterEach(() => {
   vi.useRealTimers();
@@ -66,17 +30,29 @@ afterEach(() => {
 });
 
 describe('process roles on the real AppModule (docs/09)', () => {
-  const every = PASSES.map(([job]) => job.name);
+  const jobs = [...backgroundJobs().keys()];
+  const timed = jobs.filter((name) => !NO_TIMERS.has(name));
 
-  it('api: not one background job runs (two copies never both send, remind or sync)', async () => {
-    expect(await jobsThatRan('api')).toEqual([]);
+  it('registers every job (the list below is not hand-kept: @BackgroundJob fills it)', () => {
+    expect(jobs.length).toBeGreaterThan(15);
+    for (const name of NO_TIMERS.keys()) expect(jobs).toContain(name);
+  });
+
+  it('api: no job starts a timer and only the per-copy caches do (two copies never both send, remind or sync)', async () => {
+    const probe = await bootIn('api', 25);
+    expect([...probe.jobTimers.keys()]).toEqual([]);
+    expect(probe.tickers).toEqual([]);
+    expect([...probe.otherTimers].filter((file) => !(file in PER_COPY))).toEqual([]);
   }, 60_000);
 
-  it('worker: every job runs', async () => {
-    expect(await jobsThatRan('worker')).toEqual(every);
+  it('worker: every registered job starts its timers', async () => {
+    const probe = await bootIn('worker');
+    expect(timed.filter((name) => !probe.jobTimers.has(name))).toEqual([]);
+    expect(probe.tickers).not.toContain('outside a job');
   }, 60_000);
 
-  it('all (unset, local dev and tests): every job runs, as one process did before', async () => {
-    expect(await jobsThatRan('')).toEqual(every);
+  it('all (unset, local dev and tests): every registered job starts, as one process did before', async () => {
+    const probe = await bootIn('');
+    expect(timed.filter((name) => !probe.jobTimers.has(name))).toEqual([]);
   }, 60_000);
 });

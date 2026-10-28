@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { appRole, runsJobs, servesPublicHttp, trustProxyHops, workerUrl } from './app-role';
+import { appRole, peerUrls, runsJobs, servesPublicHttp, trustProxyHops, workerUrl } from './app-role';
 
 describe('appRole (APP_ROLE)', () => {
   it('unset or blank is `all`: local dev and tests behave as before', () => {
@@ -52,5 +52,15 @@ describe('workerUrl (WORKER_URL)', () => {
     expect(workerUrl({ WORKER_URL: 'http://ayat-worker:3000/' })).toBe('http://ayat-worker:3000');
     expect(workerUrl({ WORKER_URL: ' ' })).toBeNull();
     expect(workerUrl({})).toBeNull();
+  });
+});
+
+describe('peerUrls (PEER_URLS)', () => {
+  it('splits on commas, trims each and drops blanks; unset is none', () => {
+    expect(peerUrls({ PEER_URLS: ' http://ayat-api-b:3000/ , ,http://ayat-api-c:3000' })).toEqual([
+      'http://ayat-api-b:3000',
+      'http://ayat-api-c:3000',
+    ]);
+    expect(peerUrls({})).toEqual([]);
   });
 });

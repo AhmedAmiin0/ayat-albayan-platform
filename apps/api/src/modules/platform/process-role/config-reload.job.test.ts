@@ -7,6 +7,7 @@ import { setIntegrationOverlay } from '../../../common/integrations/integration-
 import { DbRulesReader } from '../../messaging/notification-rules';
 import { NumbersConfig, OwnNumbers } from '../../messaging/numbers';
 import { GoogleConnection, GoogleSettings } from '../google-sync';
+import { TranslationsService } from '../translations';
 import { ConfigReloadJob } from './config-reload.job';
 
 /** The worker's services, each one fake method; `missing` ones are not in the app (ModuleRef throws). */
@@ -18,6 +19,7 @@ function worker(missing: readonly unknown[] = []) {
     [OwnNumbers, { forget: vi.fn() }],
     [GoogleSettings, { forget: vi.fn() }],
     [GoogleConnection, { forget: vi.fn() }],
+    [TranslationsService, { refresh: vi.fn(async () => true) }],
   ]);
   const get = (token: unknown) => {
     const found = fakes.get(token);
@@ -44,11 +46,22 @@ afterEach(() => {
 });
 
 describe('ConfigReloadJob (the worker side of an admin save)', () => {
-  it('reload() refreshes the integration overlay, the rules (and settings) snapshot, the numbers overlay and own numbers, both Google caches', async () => {
+  it('reload() refreshes the integration overlay, the rules (and settings) snapshot, the numbers overlay and own numbers, both Google caches, the translations', async () => {
     const { fakes, job } = worker();
     await job.reload();
     const called = [...fakes.values()].map((f) => Object.values(f).every((fn) => fn.mock.calls.length === 1));
-    expect(called).toEqual([true, true, true, true, true, true]);
+    expect(called).toEqual([true, true, true, true, true, true, true]);
+  });
+
+  it('api copy: reloadHere() (the peer route) reloads here, never forwards', async () => {
+    vi.stubEnv('APP_ROLE', 'api');
+    vi.stubEnv('WORKER_URL', 'http://ayat-worker:3000');
+    const urls = stubFetch();
+    const { fakes, job } = worker();
+    await job.reloadHere();
+    expect(fakes.get(NumbersConfig)?.reload).toHaveBeenCalledTimes(1);
+    expect(fakes.get(TranslationsService)?.refresh).toHaveBeenCalledTimes(1);
+    expect(urls).toEqual([]);
   });
 
   it('a step that is missing or fails never stops the next', async () => {
@@ -83,12 +96,34 @@ describe('an admin save on an API copy kicks the worker (kickConfigReload)', () 
     expect(urls).toEqual(['http://ayat-worker:3000/internal/jobs/config-reload/kick']);
   });
 
+  it('api with PEER_URLS: the worker and every other API copy reload', async () => {
+    vi.stubEnv('APP_ROLE', 'api');
+    vi.stubEnv('WORKER_URL', 'http://ayat-worker:3000');
+    vi.stubEnv('PEER_URLS', 'http://ayat-api-b:3000');
+    const urls = stubFetch();
+    await integration().clearSecret('WA_ACCESS_TOKEN');
+    expect(urls).toEqual([
+      'http://ayat-worker:3000/internal/jobs/config-reload/kick',
+      'http://ayat-api-b:3000/internal/jobs/config-reload/here',
+    ]);
+  });
+
   it('all (one process, today) and no WORKER_URL: nothing is sent', async () => {
     const urls = stubFetch();
     await integration().clearSecret('WA_ACCESS_TOKEN');
     vi.stubEnv('APP_ROLE', 'api');
     await integration().clearSecret('WA_ACCESS_TOKEN');
     expect(urls).toEqual([]);
+  });
+
+  it('a translation save or restore reloads here and kicks the worker', async () => {
+    vi.stubEnv('APP_ROLE', 'api');
+    vi.stubEnv('WORKER_URL', 'http://ayat-worker:3000');
+    const urls = stubFetch();
+    const q = { all: vi.fn(async () => []), upsert: vi.fn(async () => undefined), remove: vi.fn(async () => undefined) };
+    await new TranslationsService(q as never).restore('en', 'nav.leads');
+    expect(q.all).toHaveBeenCalledTimes(1);
+    expect(urls).toEqual(['http://ayat-worker:3000/internal/jobs/config-reload/kick']);
   });
 
   it('a Google OFF drops the cache here and kicks the worker', async () => {

@@ -2,7 +2,10 @@
  * Which part of the API this process runs (docs/09 «Two API copies + one worker»), from env APP_ROLE:
  * - `api`: HTTP and webhooks only; no background job runs here, a «run now» goes to the worker.
  * - `worker`: every background job; HTTP only for /health and the internal kick route.
- * - `all` (default: local dev, tests, e2e): both, exactly as one process did before.
+ * - `all` (default: local dev, tests, e2e, today's single container): both in one process, the same jobs and
+ *   routes as before. Not byte-for-byte the old process: SIGTERM now runs the shutdown hooks (requests
+ *   in flight finish, timers stop), and the sign-in code limits count in the database (rate_limit_hits)
+ *   instead of in memory, so they survive a restart.
  * Read here only; jobs are gated by @BackgroundJob (modules/platform/process-role), never by their own `if`.
  */
 export type AppRole = 'api' | 'worker' | 'all';
@@ -38,8 +41,18 @@ export function trustProxyHops(source: NodeJS.ProcessEnv = process.env): number 
   return hops;
 }
 
+const baseUrl = (raw: string): string => raw.trim().replace(/\/+$/, '');
+
 /** The worker's internal base URL (http://ayat-worker:3000 in deploy/staging); unset = no forwarding. */
 export function workerUrl(source: NodeJS.ProcessEnv = process.env): string | null {
-  const raw = (source.WORKER_URL ?? '').trim().replace(/\/+$/, '');
+  const raw = baseUrl(source.WORKER_URL ?? '');
   return raw === '' ? null : raw;
+}
+
+/**
+ * The other API copies' internal base URLs (PEER_URLS, comma-separated: http://ayat-api-b:3000 on
+ * ayat-api-a), which an admin save on this copy also asks to reload their config; unset = none.
+ */
+export function peerUrls(source: NodeJS.ProcessEnv = process.env): string[] {
+  return (source.PEER_URLS ?? '').split(',').map(baseUrl).filter((u) => u !== '');
 }

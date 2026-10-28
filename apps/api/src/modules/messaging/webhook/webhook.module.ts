@@ -5,6 +5,7 @@ import { LeadsModule } from '../../sales/leads/leads.module';
 import { LessonRatingModule } from '../../teaching/lesson-rating/lesson-rating.module';
 import { LessonsModule } from '../../teaching/lessons/lessons.module';
 import { liveWebhookConfig } from './webhook.config';
+import { WebhookConfigReload } from './lines/webhook.reload';
 import { WebhookController } from './webhook.controller';
 import { KapsoWebhookController } from './providers/webhook.kapso.controller';
 import { WacrmWebhookController } from './providers/webhook.wacrm.controller';
@@ -35,6 +36,7 @@ import { KapsoHistory } from './external/kapso-history';
       useFactory: (): WebhookConfig => liveWebhookConfig(() => loadEnv()),
     },
     WebhookService,
+    WebhookConfigReload,
     InboundService,
     InboundStore,
     InboundReactions,

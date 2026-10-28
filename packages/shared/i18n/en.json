@@ -4192,7 +4192,17 @@
         "unmarked": "Not recorded"
       },
       "reports": "Reports",
-      "reportsCount": "Reports: {n}"
+      "reportsCount": "Reports: {n}",
+      "schedule": {
+        "title": "Schedule",
+        "weekly": "{days} at {time}",
+        "studentTime": "Student's time: {days}",
+        "noWeekly": "No fixed schedule",
+        "upcoming": "Upcoming lessons",
+        "noUpcoming": "No upcoming lessons",
+        "showAll": "Show all ({n})",
+        "showLess": "Show less"
+      }
     },
     "lessonActions": {
       "reschedule": "Reschedule",

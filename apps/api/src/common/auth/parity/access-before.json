@@ -129,6 +129,7 @@
   "IntegrationConfigController.put": ["admin"],
   "IntegrationConfigController.putSecret": ["admin"],
   "InternalJobsController.kick": "public",
+  "InternalJobsController.peerReload": "public",
   "InternalMeetingsController.byLink": ["admin","assistant","sales","teacher"],
   "InternalMeetingsController.create": ["admin","assistant","sales","teacher"],
   "InternalMeetingsController.end": ["admin","assistant","sales","teacher"],

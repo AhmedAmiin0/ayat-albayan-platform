@@ -31,6 +31,8 @@ export class GoogleAdminService {
   }
 
   async discover(): Promise<void> {
+    // Uncached: a connect or disconnect taken by the other API copy must count here (docs/09 «Known windows»).
+    this.run.connection.forget();
     const google = await this.run.connection.client();
     if (!google) throw new ConflictException({ message: 'not_connected' });
     try {

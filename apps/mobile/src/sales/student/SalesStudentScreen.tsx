@@ -12,6 +12,7 @@ import { familyChatHref } from '../lib/sales-href';
 import { fill } from '../lib/sales-text';
 import { AttendanceSection } from './AttendanceSection';
 import { ReportsSection } from './ReportsSection';
+import { ScheduleSection } from './ScheduleSection';
 import { SubscriptionSection } from './SubscriptionSection';
 import { useSalesStudent } from './student-api';
 
@@ -44,6 +45,7 @@ export function SalesStudentScreen() {
             <Button variant="secondary" label={`${t.sales.student.chat} ${ltr(formatPhone(phone))}`} onPress={() => router.push(familyChatHref('/sales', phone))} />
           ) : null}
           <SubscriptionSection data={data} />
+          <ScheduleSection schedule={data.schedule} studentId={data.student.id} />
           <AttendanceSection attendance={data.attendance} />
           <ReportsSection studentId={data.student.id} reports={data.reports} />
         </View>

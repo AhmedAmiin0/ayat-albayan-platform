@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { BackgroundJob, kickable } from './background-job';
+import { BackgroundJob, backgroundJobs, kickable } from './background-job';
 import { INTERNAL_HEADER, internalToken } from './worker-kick';
 
 @BackgroundJob({ name: 'test-sender', kick: 'kick' })
@@ -77,6 +77,7 @@ describe('@BackgroundJob: the one role switch', () => {
   it('registers the kickable jobs by name, once', () => {
     expect(kickable('test-sender')).toEqual({ job: FakeJob, method: 'kick' });
     expect(kickable('nope')).toBeUndefined();
+    expect([...backgroundJobs()]).toEqual([['test-sender', FakeJob]]);
     expect(() => BackgroundJob({ name: 'test-sender', kick: 'kick' })(FakeJob)).toThrow(
       'declared twice',
     );
@@ -86,5 +87,6 @@ describe('@BackgroundJob: the one role switch', () => {
     expect(() => BackgroundJob({ name: 'x' })(NoKick)).toThrow(
       'onApplicationBootstrap() is missing',
     );
+    expect(backgroundJobs().has('x')).toBe(false);
   });
 });

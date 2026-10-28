@@ -1,5 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { FAMILY, LINE, fakeKit } from '../calls.fakes';
+import type { CallsGate } from '../access/calls-gate';
 import { CallsSweeper, IDLE_MS } from './calls.sweeper';
 
 vi.mock('../kapso/calling-line', () => ({ callingLine: vi.fn(() => LINE) }));
@@ -8,10 +9,11 @@ const T0 = Date.parse('2026-10-26T10:00:00.000Z');
 const at = (ms: number) => new Date(T0 + ms);
 
 /** A sweeper whose wa_calls reads are counted (each live() = one PostgREST round trip). */
-function setup() {
+function setup(on: boolean | 'unreadable' = true) {
   const { kit, queries } = fakeKit();
   const live = vi.spyOn(queries, 'live');
-  return { sweeper: new CallsSweeper(kit), queries, live };
+  const enabled = vi.fn(() => (on === 'unreadable' ? Promise.reject(new Error('db down')) : Promise.resolve(on)));
+  return { sweeper: new CallsSweeper(kit, { enabled } as unknown as CallsGate), queries, live, enabled };
 }
 
 afterEach(() => {
@@ -20,10 +22,28 @@ afterEach(() => {
 });
 
 describe('CallsSweeper.tick — idle costs', () => {
-  it('nothing live: one sweep per IDLE_MS, calls ON or OFF (the backstop for a lost wake)', async () => {
+  it('calls ON, nothing live: one sweep per IDLE_MS (the backstop for a lost wake)', async () => {
     const { sweeper, live } = setup();
     for (let i = 0; i <= 12; i += 1) await sweeper.tick(at(i * 10_000));
     expect(live).toHaveBeenCalledTimes(1 + 120_000 / IDLE_MS);
+  });
+
+  it('calls OFF, nothing live: no wa_calls read after the boot sweep (as one process did before); an unreadable setting sweeps', async () => {
+    const off = setup(false);
+    for (let i = 0; i <= 12; i += 1) await off.sweeper.tick(at(i * 10_000));
+    expect(off.live).toHaveBeenCalledTimes(1);
+    expect(off.enabled).toHaveBeenCalled();
+    const unreadable = setup('unreadable');
+    for (let i = 0; i <= 12; i += 1) await unreadable.sweeper.tick(at(i * 10_000));
+    expect(unreadable.live).toHaveBeenCalledTimes(1 + 120_000 / IDLE_MS);
+  });
+
+  it('calls OFF: a wake still sweeps (a call left live when calls were switched off still ends)', async () => {
+    const { sweeper, live } = setup(false);
+    await sweeper.tick(at(0));
+    await sweeper.wake();
+    await sweeper.tick(at(10_000));
+    expect(live).toHaveBeenCalledTimes(2);
   });
 
   it('a call left live: keeps sweeping every tick until it ends', async () => {

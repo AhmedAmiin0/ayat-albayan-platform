@@ -12,10 +12,14 @@ export function canChangeLesson(lesson: SalesScheduleLesson, input: { now: Date;
   return { reschedule: ok && input.can('lessons.reschedule'), cancel: ok && input.can('lessons.cancel') };
 }
 
-/** «جدول الحلقات» and «اليوم» read the same day query: refetch it after a change. */
+/** «جدول الحلقات» and «اليوم» read the same day query, «تفاصيل الطالب» its «الجدول»: refetch both after a change. */
 const useRefreshSchedule = () => {
   const client = useQueryClient();
-  return () => client.invalidateQueries({ queryKey: pathKey('/sales/schedule') });
+  return () =>
+    Promise.all([
+      client.invalidateQueries({ queryKey: pathKey('/sales/schedule') }),
+      client.invalidateQueries({ queryKey: pathKey('/sales/students') }),
+    ]);
 };
 
 /** POST /sales/lessons/:id/reschedule { startsAt }: the admin's one-lesson move (confirmation to the family queued). */

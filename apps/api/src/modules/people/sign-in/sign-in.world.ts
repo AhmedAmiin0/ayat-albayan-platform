@@ -18,10 +18,14 @@ export function signInWorld(opts: { settings?: Partial<AcademySettings>; pepper?
   const subjects = new FakeSubjects();
   const auth = new FakeAuth();
   const settings = fakeSettings(opts.settings, opts.pepper === undefined ? undefined : opts.pepper);
+  const limitStore = new MemoryLimitStore();
+  const limits = new SignInLimits(limitStore);
   const issuer = new CodeIssuer(codes, send.asPort(), settings);
-  const kit = new SignInKit(issuer, new SignInLimits(new MemoryLimitStore()), audit.asPort());
+  // Property-injected in the app (CodeIssuer.limits).
+  Object.assign(issuer, { limits });
+  const kit = new SignInKit(issuer, limits, audit.asPort());
   const accounts = new AccountKit(subjects, auth, new Provisioner(subjects, auth, audit.asPort()));
   const family = new FamilyCodeService(kit, accounts);
   const passwords = new PasswordService(kit, accounts, new PasswordTargets(subjects, auth));
-  return { codes, send, audit, subjects, auth, kit, family, passwords };
+  return { codes, send, audit, subjects, auth, kit, family, passwords, limitStore };
 }
