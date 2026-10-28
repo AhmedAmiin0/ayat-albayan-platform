@@ -14,7 +14,7 @@ type SubmitInput = { id: string; form: ReportSubmit; user: AuthUser };
 type RetryInput = { id: string; user: AuthUser };
 type Editable = Awaited<ReturnType<ReportGate['editable']>> & { user: AuthUser };
 /** What a v1 or v2 form sends, as the submit writes it. content: v2 only. */
-export type SubmitWrite = {
+type SubmitWrite = {
   expectedVersion: number;
   attendance: Attendance | null | undefined;
   program: Program | undefined;
