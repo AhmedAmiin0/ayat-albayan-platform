@@ -1,4 +1,4 @@
-import { RIYADH_TZ } from '@ab/shared';
+import { COURSE_PAUSE_REASON, RIYADH_TZ } from '@ab/shared';
 import { fireEvent, screen } from '@testing-library/react-native';
 import type { ReactElement } from 'react';
 import { clockIn } from '@/core/lib/clock';
@@ -7,7 +7,7 @@ import { TreeBaseProvider } from '@/core/nav/tree-base';
 import { renderWithQuery } from '@/test/query';
 import { AttendanceLogScreen } from './AttendanceLogScreen';
 import { dayDateOf, monthOf } from './attendance-log-text';
-import { logTable } from './fixtures';
+import { logRow, logTable } from './fixtures';
 
 const mockApiFetch = jest.fn();
 jest.mock('@/core/lib/http/api', () => ({ ...jest.requireActual('@/core/lib/http/api'), apiFetch: (mockPath: string) => mockApiFetch(mockPath) }));
@@ -60,4 +60,12 @@ test('a month without lessons: the empty state under the header', async () => {
   await inSales(<AttendanceLogScreen />);
   expect(await screen.findByText(w.empty)).toBeTruthy();
   expect(screen.getByText(w.columns.date)).toBeTruthy();
+});
+
+test('a lesson the course pause cancelled: «ألغتها الإدارة» with the reason «إيقاف مؤقت»', async () => {
+  const paused = logRow({ lesson_id: 'l4', status: 'cancelled_by_admin', attendance: null, kind: 'cancelled', report_sent: false, report_id: null, cancel_reason: COURSE_PAUSE_REASON });
+  mockApiFetch.mockResolvedValue(logTable({ items: [paused] }));
+  await inSales(<AttendanceLogScreen />);
+  expect(await screen.findByText(w.cancelReason.replace('{reason}', COURSE_PAUSE_REASON))).toBeTruthy();
+  expect(screen.getByText(t.enums.lessonStatus.cancelled_by_admin)).toBeTruthy();
 });

@@ -41,8 +41,8 @@ describe('subscriptionCreateSchema (R-SUB-01: priced from the catalog, never typ
     expect(r).not.toHaveProperty('price');
   });
 
-  it('update: pause flag and dates only', () => {
-    expect(subscriptionUpdateSchema.parse({ paused: true })).toEqual({ paused: true });
+  it('update: dates and notes only; no pause flag (the course pause, docs/11 §7b)', () => {
+    expect(subscriptionUpdateSchema.parse({ paused: true })).toEqual({});
     expect(subscriptionUpdateSchema.parse({ renewsOn: null })).toEqual({ renewsOn: null });
   });
 });

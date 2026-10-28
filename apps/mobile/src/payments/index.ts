@@ -9,4 +9,4 @@ export { partPaidLine } from './format';
 export { ShortfallNote } from './components/ShortfallNote';
 // «رابط دفع» (sales-subscribe/payment-link, test build only): the agreed amount and its money lines.
 export { AmountField } from './components/AmountField';
-export { currencyName, instantDay, money } from './format';
+export { currencyName, instantDay, localDay, money } from './format';

@@ -71,9 +71,6 @@ export const quoteSubscription = (body: Pick<CreateSubscriptionBody, 'studentId'
 export const createSubscription = (body: CreateSubscriptionBody) =>
   apiSend<SubscriptionView>('POST', '/subscriptions', body);
 
-export const setPaused = ({ id, paused }: { id: string; paused: boolean }) =>
-  apiSend<SubscriptionView>('PATCH', `/subscriptions/${id}`, { paused });
-
 /** «إلغاء الباقة» (owner 2026-10-28): 409 has_payments / has_lessons / already_cancelled. */
 export const cancelSubscription = (id: string, body: { reason?: string }) =>
   apiSend<SubscriptionView>('POST', `/subscriptions/${id}/cancel`, body);
