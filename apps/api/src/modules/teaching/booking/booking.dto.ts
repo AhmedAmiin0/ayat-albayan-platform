@@ -33,6 +33,8 @@ export const slotsQuerySchema = z
     excludeLessonId: z.uuid().optional(),
     /** «تغيير أيام الحلقات»: this course's lessons (of `studentIds` only) are not busy: they move. */
     excludeCourse: z.uuid().optional(),
+    /** Sales' «تغيير الموعد»: the lesson she moves; its students may be any family's (read by /sales/booking/slots, ignored elsewhere). */
+    lessonId: z.uuid().optional(),
   })
   .refine((q) => Date.parse(q.from) < Date.parse(q.to), { message: 'from_before_to', path: ['to'] });
 

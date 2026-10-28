@@ -71,7 +71,7 @@ test('empty overview: «لا توجد مواعيد أسبوعية» and «لا �
   expect(await screen.findByText(t.sales.loadFailed)).toBeTruthy();
 });
 
-test('a student row opens «تفاصيل الطالب» in the sales tree; in the admin tree it stays a plain row', async () => {
+test('a student row opens «تفاصيل الطالب» in the sales tree and the admin\'s student file in the admin tree', async () => {
   mockApiFetch.mockImplementation(api());
   const view = await inSales(<SalesTeacherScreen />);
   await fireEvent.press(await screen.findByText('يوسف أحمد'));
@@ -80,5 +80,5 @@ test('a student row opens «تفاصيل الطالب» in the sales tree; in th
   jest.mocked(router.push).mockClear();
   await renderWithQuery(<SalesTeacherScreen />);
   await fireEvent.press(await screen.findByText('يوسف أحمد'));
-  expect(router.push).not.toHaveBeenCalled();
+  expect(router.push).toHaveBeenCalledWith('/students/st1');
 });

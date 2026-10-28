@@ -27,10 +27,10 @@ import { SalesLessonSheet } from '../components/SalesLessonSheet';
 const DATE = /^\d{4}-\d{2}-\d{2}$/;
 
 /**
- * «جدول الحلقات» of the salesperson (web /sales/schedule): one Riyadh day of the academy, read-only
- * except her own students' lessons, which she may move or cancel one at a time (docs/16 row 37),
+ * «جدول الحلقات» of the salesperson (web /sales/schedule): one Riyadh day of the academy; she may move
+ * or cancel any lesson not over yet, one at a time (docs/16 row 37, any lesson: owner 2026-10-28),
  * a day at a time (the admin schedule's switcher) and one teacher or all; «ادخل الحلقة» on a running
- * lesson; a tap on a lesson opens its read-only «تفاصيل الحلقة». `?teacherId=` opens it on a teacher (from «المعلمون»), `?date=` on a day. `asTab`: the sales
+ * lesson; a tap on a lesson opens its «تفاصيل الحلقة». `?teacherId=` opens it on a teacher (from «المعلمون»), `?date=` on a day. `asTab`: the sales
  * tree's «جدول الحلقات» tab (no «رجوع»). The compact top (owner 2026-10-28): an h2 title, the note, the day
  * switcher and the teacher pills 8pt apart; the day's lessons in one inset card.
  */
@@ -46,8 +46,8 @@ export function SalesScheduleScreen({ asTab = false }: { asTab?: boolean }) {
   const details = useLessonDetails(day.data?.lessons);
   const inset = useTabBarInset();
   const can = usePermissions();
-  // docs/16 row 37: she may move or cancel her own students' lessons.
-  const changes = can('lessons.reschedule') || can('lessons.cancel');
+  // docs/16 rows 37, 37b: she may move, cancel or confirm any lesson (owner 2026-10-28).
+  const changes = can('lessons.reschedule') || can('lessons.cancel') || can('lessons.confirm');
   const pills = [
     { value: '', label: t.schedule.allTeachers },
     ...(teachers.data ?? []).map((tc) => ({ value: tc.id, label: localizedName({ ar: tc.name, en: tc.name_en }, locale) })),
