@@ -27,7 +27,7 @@ describe('summary row (docs/24 §2.6)', () => {
 
   it('a name or teacher that Sheets would read as a formula goes in as text', () => {
     const row = newSummaryRow({ ...STUDENT, name: '+966 55 000 0000', teacherName: '=HYPERLINK("x")' }, { first: null, last: null, count: 0 });
-    expect(row.slice(0, 2)).toEqual(["'+966 55 000 0000", ''=HYPERLINK("x")']);
+    expect(row.slice(0, 2)).toEqual(["'+966 55 000 0000", `'=HYPERLINK("x")`]);
   });
 
   it('an existing row: D..F recomputed, G/H filled only when blank, A..C untouched', () => {
