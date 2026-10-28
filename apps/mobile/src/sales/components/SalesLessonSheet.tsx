@@ -7,7 +7,6 @@ import { Note } from '@/more';
 import { t } from '@/core/lib/i18n/i18n';
 import { useNow } from '@/core/lib/time/use-now';
 import { canChangeLesson } from '../lesson-actions/lesson-actions-api';
-import { SalesConfirmLesson } from '../lesson-actions/SalesConfirmLesson';
 import { SalesLessonActions } from '../lesson-actions/SalesLessonActions';
 import { SalesRescheduleSheet } from '../lesson-actions/SalesRescheduleSheet';
 
@@ -20,10 +19,10 @@ interface SalesLessonSheetProps {
 
 /**
  * The salesperson's «تفاصيل الحلقة» (PR #261): «ادخل الحلقة» while the lesson runs (she joins as the
- * classroom assistant, docs/16). «تأكيد الحلقة» on ANY scheduled lesson not ended yet (owner 2026-10-28, lessons.confirm;
- * then it reads «مؤكدة»). On a lesson of one of HER students (docs/16 row 37) «تغيير الموعد» and «إلغاء الحلقة» too,
- * and her student's name opens «تفاصيل الطالب» (not from that student's own file, `studentId`); a lesson with no
- * action stays «للاطلاع فقط». Never a series, an outcome or a report.
+ * classroom assistant, docs/16). On ANY open lesson not over yet (owner 2026-10-28, docs/16 rows 37, 37b)
+ * «تغيير الموعد» and «إلغاء الحلقة» too, each with its key, and «تأكيد الحلقة» while it is scheduled (lessons.confirm;
+ * then it reads «مؤكدة»), laid out by SalesLessonActions (docs/07 §6: one filled button); «للاطلاع فقط» only when none is allowed. Any student's name opens «تفاصيل الطالب» (the
+ * admin's student file in the admin tree; not from that student's own file, `studentId`). Never a series, an outcome or a report.
  */
 export function SalesLessonSheet({ lesson, onClose, studentId }: SalesLessonSheetProps) {
   const now = useNow();
@@ -45,9 +44,12 @@ export function SalesLessonSheet({ lesson, onClose, studentId }: SalesLessonShee
       actions={(l) => (
         <>
           {isRunningLesson(l, now) ? <JoinClassroomButton lesson={l} /> : null}
-          {confirmable ? <SalesConfirmLesson lessonId={l.id} onConfirmed={() => setConfirmedId(l.id)} /> : null}
           {justConfirmed ? <Note>{t.sales.lessonActions.confirmed}</Note> : null}
-          <SalesLessonActions lesson={l} onReschedule={setMoving} />
+          <SalesLessonActions
+            lesson={l}
+            onReschedule={setMoving}
+            onConfirmed={confirmable ? () => setConfirmedId(l.id) : undefined}
+          />
         </>
       )}
       sheets={

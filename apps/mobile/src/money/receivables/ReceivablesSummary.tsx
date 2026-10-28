@@ -22,7 +22,6 @@ export function ReceivablesSummary({ view }: { view: ReceivablesView }) {
       style={{
         gap: 4,
         padding: 12,
-        marginHorizontal: 16,
         marginBottom: 12,
         borderRadius: shape.radius.lg,
         borderWidth: 1,

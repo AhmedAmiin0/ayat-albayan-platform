@@ -2,6 +2,7 @@ import { GRANTABLE_PERMISSIONS } from '@ab/shared';
 import { vi } from 'vitest';
 import { AuditService } from '../../../common/audit/audit.service';
 import { PermissionCache } from '../../../common/auth/permission.cache';
+import { fakePhotos } from '../../../common/storage/avatars/avatars.fakes';
 import { FakeRoleStore } from '../roles/roles.fakes';
 import { UserAccess } from './users.access';
 import { UsersCreateService } from './lifecycle/users.create.service';
@@ -26,13 +27,15 @@ export function setupUsers(rows: UserRow[] = [row('admin1', 'admin')], links: Li
   const config = { passwordMinLength: 8, setPasswordUrl: 'https://app.example.test/set-password' };
   const ports = new UserPorts(store, auth, new UserAccess(roles, store));
   const effects = new UserEffects(cache, audit as unknown as AuditService, config);
+  const photos = fakePhotos({ admin1: 'https://storage.test/admin1' });
   return {
+    photoCalls: photos.calls,
     store,
     auth,
     roles,
     cache,
     audit,
-    users: new UsersService(ports, effects),
+    users: new UsersService(ports, effects, photos.photos),
     creator: new UsersCreateService(ports, effects),
     lifecycle: new UsersLifecycleService(ports, effects),
   };

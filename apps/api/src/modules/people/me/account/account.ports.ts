@@ -1,7 +1,8 @@
-import type { AccountRole, SignedUpload } from '@ab/shared';
+import type { AccountRole } from '@ab/shared';
+import type { AvatarFiles } from '../../../../common/storage/avatars/avatar-files';
 
 // What «حسابي» (R-ACC-01..05) needs from the DB, the Auth API and Storage. account.queries.ts,
-// account.auth.ts and account.files.ts implement them; the unit tests use account.fakes.ts.
+// account.auth.ts and common/storage/avatars implement them; the unit tests use account.fakes.ts.
 
 /** The caller's own profile as the account page reads it. */
 export interface AccountRow {
@@ -10,6 +11,8 @@ export interface AccountRow {
   phone_e164: string | null;
   avatar_path: string | null;
   role: AccountRole;
+  /** The teacher record linked to this login, if any (the initials tone follows it). */
+  teacher_id?: string | null;
 }
 
 /**
@@ -47,18 +50,11 @@ export interface AccountAuth {
   revokeOtherSessions(input: { userId: string; keep: string | null }): Promise<void>;
 }
 
-export interface AccountFiles {
-  uploadUrl(path: string): Promise<SignedUpload>;
-  info(path: string): Promise<{ size: number; contentType: string } | null>;
-  head(path: string, bytes: number): Promise<Uint8Array | null>;
-  /** A short-lived signed GET URL, or null when it cannot be signed (missing object). */
-  url(path: string): Promise<string | null>;
-  remove(path: string): Promise<void>;
-}
+/** The photo's Storage port, shared with the admin's staff photos (common/storage/avatars). */
+export type AccountFiles = AvatarFiles;
 
 export const ACCOUNT_STORE = Symbol('ACCOUNT_STORE');
 export const ACCOUNT_AUTH = Symbol('ACCOUNT_AUTH');
-export const ACCOUNT_FILES = Symbol('ACCOUNT_FILES');
 export const ACCOUNT_CONFIG = Symbol('ACCOUNT_CONFIG');
 
 export interface AccountConfig {

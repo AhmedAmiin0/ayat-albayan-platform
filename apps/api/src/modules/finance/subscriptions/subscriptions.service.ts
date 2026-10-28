@@ -39,14 +39,14 @@ export class SubscriptionsService {
     return this.get(created.id);
   }
 
-  /** `paused: false` resumes to the derived status (subscriptionStatusFor). A cancelled package never changes: 409. */
+  /**
+   * renews_on and notes. A pause is never set here: it is the course pause (docs/11 §7b, CoursePauseService), so
+   * 'paused' has one meaning. A cancelled package never changes: 409.
+   */
   async update(id: string, patch: Partial<SubscriptionUpdate>, actorId: string): Promise<SubscriptionView> {
     const before = await this.row(id);
     if (before.status === 'cancelled') throw conflict('already_cancelled');
     const write: TablesUpdate<'subscriptions'> = {};
-    if (patch.paused === true) write.status = 'paused';
-    // 'unpaid' is the neutral start: the recompute right after derives the real status.
-    if (patch.paused === false && before.status === 'paused') write.status = 'unpaid';
     if (patch.renewsOn !== undefined) write.renews_on = patch.renewsOn;
     if (patch.notes !== undefined) write.notes = patch.notes;
     const after = Object.keys(write).length > 0 ? await this.subs.update(id, write) : before;

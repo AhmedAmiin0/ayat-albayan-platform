@@ -42,7 +42,8 @@ export interface LessonView {
   makeup?: boolean;
   /** For a makeup: the missed lesson it replaces. */
   makeup_of?: { id: string; starts_at: string } | null;
-  teacher: { id: string; display_name_ar: string; display_name_en?: string | null; tz: string };
+  /** avatar_url: the teacher's photo (a short-lived signed URL), on staff views only; null/absent = initials. */
+  teacher: { id: string; display_name_ar: string; display_name_en?: string | null; tz: string; avatar_url?: string | null };
   starts_at: string;
   ends_at: string;
   status: LessonStatus;

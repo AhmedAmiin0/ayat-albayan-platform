@@ -29,8 +29,7 @@ test('an English run reads en.json: title, count, English teacher name, status, 
     return { name: 'Huda' };
   });
   await renderWithQuery(<StudentRecordingsScreen />, createTestQueryClient({ meFromApi: true }));
-  expect(await screen.findByRole('header', { name: 'Lesson recordings' })).toBeTruthy();
-  expect(await screen.findByText('Recordings: 1')).toBeTruthy();
+  expect(await screen.findByRole('header', { name: 'Lesson recordings · 1' })).toBeTruthy();
   expect(screen.getByText('Teacher: Abrar')).toBeTruthy();
   expect(screen.getByText('Size: 48 MB')).toBeTruthy();
   expect(screen.getByText('Ready')).toBeTruthy();

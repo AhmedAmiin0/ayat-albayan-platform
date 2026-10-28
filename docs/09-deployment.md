@@ -94,6 +94,15 @@ Lesson report PDFs (R-REP-03) are rendered by the job runner (the API process to
 - **Bumping playwright-core**: bump `apps/api` and `e2e` together, rebuild the image. A browser mismatch shows as `pdf_status = 'failed'` with "Executable doesn't exist" in `lesson_reports.pdf_error`; the admin retry (R12) re-queues it once fixed.
 - The logo is read at runtime from `apps/web/public/brand/mark.png`, so the image keeps the whole repo (`COPY . .`); don't move that file without updating `report-pdf/pdf-assets.ts`.
 
+## Stripe payment links — TEST BUILD ONLY (docs/30)
+
+Owner rule (2026-10-28): «dont make stripe available for the normal production build», then «I want a new seperate build with stripe and all the features continue normally on the current build». The API mounts the Stripe module **only** when the server env has `FEATURE_STRIPE=test`. **It is ON for staging since 2026-10-28**: `deploy/staging/docker-compose.yml` sets `FEATURE_STRIPE: test` and `API_PUBLIC_URL` (the API host of the family's pages) for the `ayat-api` service. No production file, `.env.example` or workflow sets it; never on a production host (the worker ignores it, it serves `/health` only). Even with it every Stripe route stays 404 until an admin turns on «تفعيل روابط الدفع» in «الدفع الإلكتروني (اختبار)» (`stripe_settings.stripe_enabled`, default false).
+
+- The family's pages are served by the API itself (`https://<API_PUBLIC_URL>/pay/<token>`, its `/checkout`, `/done`, `/cancelled`): no web build flag is needed, and the staging web build stays the normal one (no `VITE_FEATURE_STRIPE`, no Stripe UI, no Stripe request).
+- The admin settings live in the **Stripe test app** (EAS profile `stripe-test`, «Ayat – Stripe test», installs beside the normal app): «الإعدادات» → «الدفع الإلكتروني (اختبار)». Build it from GitHub: **Actions → mobile → Run workflow** on `develop` with `action` = `build-android-apk` and `profile` = `stripe-test`. Its OTA updates: same workflow, `action` = `ota-update`, `profile` = `stripe-test` (channel `stripe-test`, bundled with `EXPO_PUBLIC_FEATURE_STRIPE=1`; the native guard compares with the last finished stripe-test build). deploy-staging's automatic OTA stays `preview` only. The test app has **no FCM push** (no `google-services.json` for its `.stripetest` package): push registration fails soft, the bell list still works.
+- Keys are entered in the test app (Vault, sandbox keys only), never in an env file.
+- **To switch it all off:** delete the `FEATURE_STRIPE` and `API_PUBLIC_URL` lines from `deploy/staging/docker-compose.yml` and redeploy (every Stripe URL is 404 again; the test app's Stripe screens then show nothing).
+
 ## Roll back
 
 - API: on the VPS `cd /opt/ayat-albayan-staging && mv src src.bad && mv src.old src && docker compose up -d --build`.

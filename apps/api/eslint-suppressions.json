@@ -599,11 +599,6 @@
       "count": 1
     }
   },
-  "src/modules/people/me/account/account.avatar.service.ts": {
-    "ab/module-boundaries": {
-      "count": 2
-    }
-  },
   "src/modules/people/me/account/account.queries.ts": {
     "ab/module-boundaries": {
       "count": 2
@@ -872,11 +867,6 @@
   "src/modules/sales/sales-money/sales-money.scope.ts": {
     "ab/module-boundaries": {
       "count": 2
-    }
-  },
-  "src/modules/sales/sales-money/sales-money.service.ts": {
-    "ab/module-boundaries": {
-      "count": 1
     }
   },
   "src/modules/sales/sales-money/sales-money.services.ts": {

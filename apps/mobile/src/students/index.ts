@@ -1,2 +1,4 @@
 export { StudentScreen } from './screens/StudentScreen';
 export { StudentsScreen } from './screens/StudentsScreen';
+// «إيقاف مؤقت» (owner 2026-10-28): the action and the banner, also in sales' «تفاصيل الطالب».
+export { CoursePauseSection } from './course-pause/CoursePauseSection';

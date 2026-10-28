@@ -59,3 +59,20 @@ describe('lessons.confirm', () => {
     for (const dict of [ar, en]) expect((dict.permissions.hints as Record<string, string>)['lessons.confirm']?.trim()).toBeTruthy();
   });
 });
+
+// Owner 2026-10-28 (docs/16 row 37c): «إيقاف الدورة مؤقتًا», its own narrow key, any student.
+describe('courses.pause', () => {
+  it('is grantable, a default of sales (and the admin), never of a teacher, an assistant or the portal', () => {
+    expect(isGrantable('courses.pause')).toBe(true);
+    expect(defaultGrantsOf('sales')).toContain('courses.pause');
+    expect(systemPermissionsOf('admin')).toContain('courses.pause');
+    for (const role of ['teacher', 'assistant', 'guardian', 'student'] as const) expect(systemPermissionsOf(role)).not.toContain('courses.pause');
+  });
+
+  it('has a label and a hint in Arabic and English', () => {
+    for (const dict of [ar, en]) {
+      expect((dict.permissions.items as Record<string, string>)['courses.pause']?.trim()).toBeTruthy();
+      expect((dict.permissions.hints as Record<string, string>)['courses.pause']?.trim()).toBeTruthy();
+    }
+  });
+});

@@ -26,7 +26,7 @@ export function OfferActions({ quote, stale }: OfferActionsProps) {
         onPress={() => void Linking.openURL(`https://wa.me/?text=${encodeURIComponent(text)}`)}
       />
       <Button
-        variant="ghost"
+        variant="secondary"
         label={t.pricing.cta}
         busy={stale}
         onPress={() => void Share.share({ message: text })}

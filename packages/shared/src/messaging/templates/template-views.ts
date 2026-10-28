@@ -1,4 +1,5 @@
 import type { TemplateCategory, TemplateStatus, WaLine } from '../../enums/index.js';
+import type { TemplateDisplay } from './template-block.js';
 import type { TemplateButton } from './templates.js';
 
 // Moved out of views.ts (150-line cap, docs/12 §13.8).
@@ -15,6 +16,8 @@ export interface TemplateView {
   /** Names of {{1}}, {{2}}, … in order. */
   params: string[];
   buttons: TemplateButton[];
+  /** What WhatsApp shows (header, every button) as Meta's sync reported it; null = not synced yet. Absent from older APIs. */
+  display?: TemplateDisplay | null;
   status: TemplateStatus;
   quality: string | null;
   meta_id: string | null;

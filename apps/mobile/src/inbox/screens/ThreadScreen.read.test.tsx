@@ -65,19 +65,20 @@ test('media: the kind as a link once the file is there; unsupported says so', as
   expect(screen.getByText(t.inbox.unavailable)).toBeTruthy();
 });
 
-test('a guardian’s «تمام» says what it did: the lesson it confirmed, or that none was', async () => {
+test('a guardian’s «تمام» says what it did: the lesson it confirmed; nothing when none was (owner 2026-10-28)', async () => {
   const yes = message({
     id: 'c',
     direction: 'inbound',
     body: 'تمام',
     guardian_id: 'g-1',
+    lesson_id: 'l-1',
     lesson: { starts_at: '2026-10-04T14:00:00Z', status: 'confirmed' },
   });
   const nothing = message({ id: 'n', direction: 'inbound', body: 'نعم', guardian_id: 'g-1' });
   mockApiFetch.mockResolvedValue(detail([yes, nothing]));
   await renderWithQuery(<ThreadScreen />);
   expect(await screen.findByText(t.inbox.quickReply.confirmed.replace('{when}', 'الأحد 4 أكتوبر 17:00'))).toBeTruthy();
-  expect(screen.getByText(t.inbox.quickReply.notConfirmed)).toBeTruthy();
+  expect(screen.queryByText('لم تتأكد أي حلقة بهذا الرد')).toBeNull();
 });
 
 test('offline: the saved thread stays, with when it was fetched', async () => {

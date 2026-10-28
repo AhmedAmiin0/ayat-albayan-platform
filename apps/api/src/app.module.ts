@@ -13,7 +13,9 @@ import { PublicConfigModule } from './common/public-config/public-config.module'
 import { PushModule } from './common/push/push.module';
 import { SettingsModule } from './common/settings/settings.module';
 import { StorageModule } from './common/storage/storage.service';
+import { AvatarsModule } from './common/storage/avatars/avatars.module';
 import { BookingModule } from './modules/teaching/booking/booking.module';
+import { CoursePauseModule } from './modules/teaching/course-pause';
 import { DashboardModule } from './modules/reporting/dashboard/dashboard.module';
 import { ExpensesModule } from './modules/finance/expenses/expenses.module';
 import { ExportsModule } from './modules/reporting/exports/exports.module';
@@ -38,6 +40,7 @@ import { PaymentsModule } from './modules/finance/payments/payments.module';
 import { SalesMoneyModule } from './modules/sales/sales-money/sales-money.module';
 import { AssistantPayModule } from './modules/finance/assistant-pay/assistant-pay.module';
 import { PayoutsModule } from './modules/finance/payouts/payouts.module';
+import { StripeTestModule } from './modules/finance/stripe';
 import { TeacherEarningsModule } from './modules/finance/teacher-earnings/earnings.module';
 import { PricingModule } from './modules/finance/pricing/pricing.module';
 import { ReceivablesModule } from './modules/finance/receivables/receivables.module';
@@ -78,6 +81,7 @@ import { WhatsappModule } from './modules/messaging/whatsapp/whatsapp.module';
     PublicConfigModule,
     TranslationsModule,
     StorageModule,
+    AvatarsModule,
     LessonEventsModule,
     PushModule,
     GuardiansModule,
@@ -97,6 +101,7 @@ import { WhatsappModule } from './modules/messaging/whatsapp/whatsapp.module';
     InvoicesModule,
     ReceivablesModule,
     LessonsModule,
+    CoursePauseModule,
     ReportsModule,
     RolesModule,
     UsersModule,
@@ -109,6 +114,8 @@ import { WhatsappModule } from './modules/messaging/whatsapp/whatsapp.module';
     SalesStudentsModule,
     PayoutsModule,
     AssistantPayModule,
+    // Test build only (docs/30): an empty module unless FEATURE_STRIPE=test.
+    StripeTestModule.register(),
     TeacherEarningsModule,
     ExpensesModule,
     DashboardModule,

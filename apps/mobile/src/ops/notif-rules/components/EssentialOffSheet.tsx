@@ -6,6 +6,7 @@ import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/more/Note';
 import { shape, useTheme } from '@/theme';
 import type { AppTextNode } from '@/core/ui/primitives/AppText';
+import { ButtonRow } from '@/core/ui/actions';
 import { Button } from '@/core/ui/primitives/Button';
 import { Field } from '@/core/ui/form/Field';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
@@ -23,7 +24,7 @@ interface EssentialOffSheetProps {
 /**
  * «اكتب: إيقاف» for an essential row (states.html#mobile): the button stays off until the word is
  * typed exactly (ESSENTIAL_OFF_TEXT), then sends it as confirmText; the API logs the OFF. Not green:
- * the act removes something. Mount it only while the question is open. On open the screen reader
+ * the act removes something, so «إيقاف» is the danger button, «إلغاء» (secondary) beside it in one ButtonRow. Mount it only while the question is open. On open the screen reader
  * lands on the title (accessibilityViewIsModal alone is iOS-only).
  */
 export function EssentialOffSheet({ name, busy, error, onConfirm, onClose }: EssentialOffSheetProps) {
@@ -76,20 +77,10 @@ export function EssentialOffSheet({ name, busy, error, onConfirm, onClose }: Ess
             <Note>{r.typedHint}</Note>
             <Note>{r.logLine}</Note>
             {error ? <ErrorLine message={error} /> : null}
-            <View style={{ flexDirection: 'row', gap: 8 }}>
-              <View style={{ flex: 1 }}>
-                <Button variant="ghost" label={r.cancel} onPress={onClose} />
-              </View>
-              <View style={{ flex: 1 }}>
-                <Button
-                  variant="secondary"
-                  label={r.turnOff}
-                  busy={busy}
-                  disabled={!matches}
-                  onPress={() => onConfirm(typed.trim())}
-                />
-              </View>
-            </View>
+            <ButtonRow>
+              <Button variant="danger" label={r.turnOff} busy={busy} disabled={!matches} onPress={() => onConfirm(typed.trim())} />
+              <Button variant="secondary" label={r.cancel} onPress={onClose} />
+            </ButtonRow>
           </ScrollView>
         </View>
       </View>

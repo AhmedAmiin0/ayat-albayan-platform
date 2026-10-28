@@ -46,7 +46,7 @@ test('an LTR run: the compact top reads «Chats» on one line, a pill search, on
   const title = screen.getByRole('header', { name: en.nav.chats });
   expect(title).toHaveStyle({ fontSize: 20 });
   expect(title.props.numberOfLines).toBe(1);
-  expect(screen.getByLabelText(en.inbox.searchPlaceholder)).toHaveStyle({ minHeight: 40 });
+  expect(screen.getByLabelText(en.inbox.searchPlaceholder)).toHaveStyle({ minHeight: 44 });
   const row = within(screen.getByLabelText(en.inbox.filterRow));
   expect(row.getByRole('tab', { name: en.inbox.filterAll, selected: true })).toBeTruthy();
   expect(row.getByRole('tab', { name: en.inbox.filterUnread })).toBeTruthy();

@@ -8,6 +8,7 @@ import { Button } from '@/core/ui/primitives/Button';
 import { FilterPills, type FilterPill } from '@/core/ui/form/FilterPills';
 import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
+import { AssignUnassigned } from '../detail/AssignUnassigned';
 import { activeFilterCount, NO_FILTERS, type LeadFilters } from './lead-filters';
 import { leadSortChoices, leadSortFromValue, leadSortValue } from './lead-sort';
 
@@ -16,6 +17,8 @@ interface LeadFilterSheetProps {
   filters: LeadFilters;
   /** The salespeople (empty when the role cannot list them): only «الكل» and «بدون مسؤول» then. */
   people: readonly { id: string; name: string }[];
+  /** leads.assign: the bulk «عيّن العملاء الذين بلا مسؤول» under the owner filter. */
+  assign: boolean;
   /** The leads the filters leave: «عرض النتائج (14)». */
   total: number | undefined;
   onChange: (next: LeadFilters) => void;
@@ -32,8 +35,11 @@ function Group({ label, children }: { label: string; children: ReactNode }) {
   );
 }
 
-/** «تصفية»: the source, «مسؤول المبيعات» and the order of the leads, like the web LeadFilterFields. */
-export function LeadFilterSheet({ visible, filters, people, total, onChange, onClose }: LeadFilterSheetProps) {
+/**
+ * «تصفية»: the source, «مسؤول المبيعات» and the order of the leads, like the web LeadFilterFields; with
+ * leads.assign, the bulk assignment under the owners (moved off the list's top, owner 2026-10-28).
+ */
+export function LeadFilterSheet({ visible, filters, people, assign, total, onChange, onClose }: LeadFilterSheetProps) {
   const sources: FilterPill<string>[] = [
     { value: '', label: t.leads.sourceAll },
     ...LEAD_SOURCES.map((s) => ({ value: s, label: t.enums.leadSource[s] })),
@@ -72,6 +78,7 @@ export function LeadFilterSheet({ visible, filters, people, total, onChange, onC
               value={filters.assignee ?? ''}
               onChange={(v) => onChange({ ...filters, assignee: v || undefined })}
             />
+            {assign ? <AssignUnassigned owners={people.length} /> : null}
           </Group>
           <Group label={t.leads.sortBy}>
             <FilterPills

@@ -1,4 +1,4 @@
-import { PAYMENT_METHODS, type ExpenseCategoryView, type PaymentMethod } from '@ab/shared';
+import { PAYMENT_METHODS, type ExpenseCategoryView } from '@ab/shared';
 import { useState } from 'react';
 import { View } from 'react-native';
 import { ErrorLine } from '@/inbox/ErrorLine';
@@ -57,7 +57,7 @@ export function ExpenseForm({ categories, onDone }: ExpenseFormProps) {
           wrap
           accessibilityLabel={t.payments.method}
           items={methods}
-          value={draft.method ?? ('' as PaymentMethod)}
+          value={draft.method ?? ('' as ExpenseDraft['method'] & string)}
           onChange={(method) => set({ method: method === draft.method ? null : method })}
         />
       </View>

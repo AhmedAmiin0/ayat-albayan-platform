@@ -50,9 +50,7 @@ export function AttachmentsViewer({ path, name }: AttachmentsViewerProps) {
   const label = open ? t.mobileMoney.hideAttachments : t.payments.viewAttachments;
   return (
     <View style={{ gap: 8 }}>
-      <View style={{ alignItems: 'flex-start' }}>
-        <Button variant="ghost" label={label} accessibilityLabel={`${label} · ${name}`} onPress={() => setOpen((v) => !v)} />
-      </View>
+      <Button variant="secondary" label={label} accessibilityLabel={`${label} · ${name}`} onPress={() => setOpen((v) => !v)} />
       <AttachmentsBody path={path} open={open} />
     </View>
   );

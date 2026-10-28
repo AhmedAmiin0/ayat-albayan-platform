@@ -773,6 +773,128 @@ export type Database = {
           },
         ];
       };
+      course_pause_lessons: {
+        Row: {
+          chargeable_before: boolean;
+          kind: string;
+          lesson_id: string;
+          pause_id: string;
+        };
+        Insert: {
+          chargeable_before: boolean;
+          kind: string;
+          lesson_id: string;
+          pause_id: string;
+        };
+        Update: {
+          chargeable_before?: boolean;
+          kind?: string;
+          lesson_id?: string;
+          pause_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'course_pause_lessons_lesson_id_fkey';
+            columns: ['lesson_id'];
+            isOneToOne: false;
+            referencedRelation: 'lessons';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'course_pause_lessons_pause_id_fkey';
+            columns: ['pause_id'];
+            isOneToOne: false;
+            referencedRelation: 'course_pauses';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      course_pauses: {
+        Row: {
+          created_at: string;
+          created_by: string | null;
+          extended_days: number | null;
+          from_date: string;
+          id: string;
+          reason: string | null;
+          resumed_at: string | null;
+          resumed_by: string | null;
+          rule_ids: string[];
+          shared_rule_ids: string[];
+          started_at: string | null;
+          student_id: string;
+          student_status_before: Database['public']['Enums']['student_status'];
+          subscription_id: string | null;
+          subscription_status_before: Database['public']['Enums']['subscription_status'] | null;
+          until_date: string | null;
+        };
+        Insert: {
+          created_at?: string;
+          created_by?: string | null;
+          extended_days?: number | null;
+          from_date: string;
+          id?: string;
+          reason?: string | null;
+          resumed_at?: string | null;
+          resumed_by?: string | null;
+          rule_ids?: string[];
+          shared_rule_ids?: string[];
+          started_at?: string | null;
+          student_id: string;
+          student_status_before: Database['public']['Enums']['student_status'];
+          subscription_id?: string | null;
+          subscription_status_before?: Database['public']['Enums']['subscription_status'] | null;
+          until_date?: string | null;
+        };
+        Update: {
+          created_at?: string;
+          created_by?: string | null;
+          extended_days?: number | null;
+          from_date?: string;
+          id?: string;
+          reason?: string | null;
+          resumed_at?: string | null;
+          resumed_by?: string | null;
+          rule_ids?: string[];
+          shared_rule_ids?: string[];
+          started_at?: string | null;
+          student_id?: string;
+          student_status_before?: Database['public']['Enums']['student_status'];
+          subscription_id?: string | null;
+          subscription_status_before?: Database['public']['Enums']['subscription_status'] | null;
+          until_date?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'course_pauses_created_by_fkey';
+            columns: ['created_by'];
+            isOneToOne: false;
+            referencedRelation: 'profiles';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'course_pauses_resumed_by_fkey';
+            columns: ['resumed_by'];
+            isOneToOne: false;
+            referencedRelation: 'profiles';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'course_pauses_student_id_fkey';
+            columns: ['student_id'];
+            isOneToOne: false;
+            referencedRelation: 'students';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'course_pauses_subscription_id_fkey';
+            columns: ['subscription_id'];
+            isOneToOne: false;
+            referencedRelation: 'subscriptions';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       crm_media_copy_failures: {
         Row: {
           attempts: number;
@@ -2363,6 +2485,7 @@ export type Database = {
           category: Database['public']['Enums']['template_category'];
           crm_language: string | null;
           crm_name: string | null;
+          display: Json | null;
           footer_ar: string | null;
           header_format: string | null;
           key: string;
@@ -2386,6 +2509,7 @@ export type Database = {
           category?: Database['public']['Enums']['template_category'];
           crm_language?: string | null;
           crm_name?: string | null;
+          display?: Json | null;
           footer_ar?: string | null;
           header_format?: string | null;
           key: string;
@@ -2409,6 +2533,7 @@ export type Database = {
           category?: Database['public']['Enums']['template_category'];
           crm_language?: string | null;
           crm_name?: string | null;
+          display?: Json | null;
           footer_ar?: string | null;
           header_format?: string | null;
           key?: string;
@@ -2776,6 +2901,96 @@ export type Database = {
             columns: ['payment_id'];
             isOneToOne: false;
             referencedRelation: 'payments';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      payment_links: {
+        Row: {
+          amount: number;
+          client_request_id: string;
+          created_at: string;
+          created_by: string;
+          currency: string;
+          duration: number;
+          expires_at: string;
+          id: string;
+          kind: string;
+          lessons: number;
+          package: Database['public']['Enums']['package_size'] | null;
+          paid_at: string | null;
+          paid_payment_id: string | null;
+          processing: boolean;
+          reference_price: number;
+          status: string;
+          stripe_payment_intent: string | null;
+          stripe_session_id: string | null;
+          student_id: string;
+          subscription_id: string | null;
+          token: string;
+          updated_at: string;
+        };
+        Insert: {
+          amount: number;
+          client_request_id: string;
+          created_at?: string;
+          created_by: string;
+          currency: string;
+          duration: number;
+          expires_at?: string;
+          id?: string;
+          kind: string;
+          lessons: number;
+          package?: Database['public']['Enums']['package_size'] | null;
+          paid_at?: string | null;
+          paid_payment_id?: string | null;
+          processing?: boolean;
+          reference_price: number;
+          status?: string;
+          stripe_payment_intent?: string | null;
+          stripe_session_id?: string | null;
+          student_id: string;
+          subscription_id?: string | null;
+          token: string;
+          updated_at?: string;
+        };
+        Update: {
+          amount?: number;
+          client_request_id?: string;
+          created_at?: string;
+          created_by?: string;
+          currency?: string;
+          duration?: number;
+          expires_at?: string;
+          id?: string;
+          kind?: string;
+          lessons?: number;
+          package?: Database['public']['Enums']['package_size'] | null;
+          paid_at?: string | null;
+          paid_payment_id?: string | null;
+          processing?: boolean;
+          reference_price?: number;
+          status?: string;
+          stripe_payment_intent?: string | null;
+          stripe_session_id?: string | null;
+          student_id?: string;
+          subscription_id?: string | null;
+          token?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'payment_links_student_id_fkey';
+            columns: ['student_id'];
+            isOneToOne: false;
+            referencedRelation: 'students';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'payment_links_subscription_id_fkey';
+            columns: ['subscription_id'];
+            isOneToOne: false;
+            referencedRelation: 'subscriptions';
             referencedColumns: ['id'];
           },
         ];
@@ -3535,6 +3750,54 @@ export type Database = {
           },
         ];
       };
+      stripe_events: {
+        Row: {
+          event_id: string;
+          processed_at: string | null;
+          received_at: string;
+          result: string | null;
+          type: string;
+        };
+        Insert: {
+          event_id: string;
+          processed_at?: string | null;
+          received_at?: string;
+          result?: string | null;
+          type: string;
+        };
+        Update: {
+          event_id?: string;
+          processed_at?: string | null;
+          received_at?: string;
+          result?: string | null;
+          type?: string;
+        };
+        Relationships: [];
+      };
+      stripe_settings: {
+        Row: {
+          id: boolean;
+          max_discount_pct: number | null;
+          stripe_enabled: boolean;
+          updated_at: string;
+          updated_by: string | null;
+        };
+        Insert: {
+          id?: boolean;
+          max_discount_pct?: number | null;
+          stripe_enabled?: boolean;
+          updated_at?: string;
+          updated_by?: string | null;
+        };
+        Update: {
+          id?: boolean;
+          max_discount_pct?: number | null;
+          stripe_enabled?: boolean;
+          updated_at?: string;
+          updated_by?: string | null;
+        };
+        Relationships: [];
+      };
       students: {
         Row: {
           age: number | null;
@@ -4146,6 +4409,10 @@ export type Database = {
       };
       teachers: {
         Row: {
+          avatar_path: string | null;
+          calendar_owner: string;
+          calendar_owner_changed_at: string | null;
+          calendar_owner_changed_by: string | null;
           created_at: string;
           created_by: string | null;
           display_name_ar: string;
@@ -4169,6 +4436,10 @@ export type Database = {
           updated_at: string;
         };
         Insert: {
+          avatar_path?: string | null;
+          calendar_owner?: string;
+          calendar_owner_changed_at?: string | null;
+          calendar_owner_changed_by?: string | null;
           created_at?: string;
           created_by?: string | null;
           display_name_ar: string;
@@ -4192,6 +4463,10 @@ export type Database = {
           updated_at?: string;
         };
         Update: {
+          avatar_path?: string | null;
+          calendar_owner?: string;
+          calendar_owner_changed_at?: string | null;
+          calendar_owner_changed_by?: string | null;
           created_at?: string;
           created_by?: string | null;
           display_name_ar?: string;
@@ -4574,6 +4849,18 @@ export type Database = {
           },
         ];
       };
+      v_calendar_managed_lessons: {
+        Row: {
+          ends_at: string | null;
+          id: string | null;
+          platform_origin: boolean | null;
+          rule_id: string | null;
+          starts_at: string | null;
+          status: Database['public']['Enums']['lesson_status'] | null;
+          teacher_id: string | null;
+        };
+        Relationships: [];
+      };
       v_lesson_sequence: {
         Row: {
           lesson_id: string | null;
@@ -4920,6 +5207,10 @@ export type Database = {
       };
       config_seed: { Args: { entries: Json; registry_version: number }; Returns: Json };
       config_set: { Args: { actor: string; changes: Json }; Returns: Json };
+      course_pause_begin: { Args: { p: Json }; Returns: Json };
+      course_pause_resume: { Args: { p: Json }; Returns: Json };
+      course_pause_set_until: { Args: { p: Json }; Returns: Json };
+      course_pause_start: { Args: { p: Json }; Returns: Json };
       course_change_result: { Args: { p_first: string }; Returns: Json };
       create_booking: { Args: { p_actor: string; p_booking: Json }; Returns: Json };
       create_instant_lesson: { Args: { p_actor: string; p_booking: Json }; Returns: Json };
@@ -4978,6 +5269,17 @@ export type Database = {
       };
       integration_secret_clear: { Args: { p_key: string }; Returns: boolean };
       pick_trial_date: { Args: { p: Json }; Returns: Json };
+      stripe_secret_clear: { Args: { p_name: string }; Returns: boolean };
+      stripe_secret_name_ok: { Args: { p_name: string }; Returns: boolean };
+      stripe_secret_read: { Args: { p_name: string }; Returns: string };
+      stripe_secret_set: { Args: { p_name: string; p_value: string }; Returns: undefined };
+      stripe_secrets_status: {
+        Args: Record<PropertyKey, never>;
+        Returns: {
+          name: string;
+          updated_at: string;
+        }[];
+      };
       trial_ahead: { Args: { p_students: string[] }; Returns: boolean };
       trial_date_replay: { Args: { p_request: string; p_student: string }; Returns: Json };
       trial_date_result: { Args: { p_lesson: string }; Returns: Json };
@@ -5003,6 +5305,13 @@ export type Database = {
       google_sync_requeue: {
         Args: { p_reason: string };
         Returns: number;
+      };
+      google_teacher_calendar_counts: {
+        Args: { p_teacher_id: string };
+        Returns: {
+          managed: number;
+          script_event_present: number;
+        }[];
       };
       google_token_clear: {
         Args: never;
@@ -5231,7 +5540,7 @@ export type Database = {
       message_direction: 'inbound' | 'outbound';
       message_status: 'queued' | 'sent' | 'delivered' | 'read' | 'failed' | 'sent_manually';
       package_size: 'trial' | '4' | '8' | '12' | '16' | '20' | '28';
-      payment_method: 'bank' | 'wallet' | 'cash' | 'other';
+      payment_method: 'bank' | 'wallet' | 'cash' | 'other' | 'card';
       payout_status: 'draft' | 'approved' | 'paid';
       pdf_status: 'pending' | 'rendering' | 'ready' | 'failed';
       program: 'quran' | 'arabic' | 'islamic_studies';
@@ -5427,7 +5736,7 @@ export const Constants = {
       message_direction: ['inbound', 'outbound'],
       message_status: ['queued', 'sent', 'delivered', 'read', 'failed', 'sent_manually'],
       package_size: ['trial', '4', '8', '12', '16', '20', '28'],
-      payment_method: ['bank', 'wallet', 'cash', 'other'],
+      payment_method: ['bank', 'wallet', 'cash', 'other', 'card'],
       payout_status: ['draft', 'approved', 'paid'],
       pdf_status: ['pending', 'rendering', 'ready', 'failed'],
       program: ['quran', 'arabic', 'islamic_studies'],

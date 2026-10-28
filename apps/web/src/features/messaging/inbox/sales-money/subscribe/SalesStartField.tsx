@@ -1,7 +1,7 @@
 import { daysBefore, SALES_START_BACK_DAYS } from '@ab/shared';
 import { Field } from '@/components/ui/form/field';
 import { Input } from '@/components/ui/form/input';
-import { UsedBeforeField } from '@/features/finance/subscriptions';
+import { NoCommissionNote, UsedBeforeField } from '@/features/finance/subscriptions';
 import { dateLabel } from '@/features/teaching/schedule/tz';
 import { t } from '@/lib/i18n/i18n';
 
@@ -44,6 +44,7 @@ export function SalesStartField({ canSet, today, value, usedMax, onChange, error
           />
         )}
       </Field>
+      <NoCommissionNote startsOn={value.startsOn} usedBefore={value.usedBefore} />
       <label className="flex min-h-11 items-start gap-2.5">
         <input
           type="checkbox"

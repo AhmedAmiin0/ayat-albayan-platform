@@ -21,6 +21,8 @@ export const EVENT = {
   kind: 'نوع الحلقة: ',
   status: 'الحالة: ',
   footer: 'مربوط تلقائيًا بمنصة آيات البيان — عدّل في المنصة مش هنا.',
+  /** The start of the script's own sheet line: how the duplicate guard knows the script's event. */
+  scriptFooter: 'مربوط تلقائيًا بتاب تقويم الحجوزات',
   onlineFallback: 'أونلاين — Zoom',
   kinds: { trial: 'حلقة تجريبية', makeup: 'حلقة تعويضية', package: 'اشتراك' },
 } as const;

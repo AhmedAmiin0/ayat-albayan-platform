@@ -4,6 +4,7 @@ import { Note } from '@/more/Note';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { EmptyState } from '@/core/ui/feedback/EmptyState';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';
+import { InsetGroup } from '@/core/ui/surface/inset';
 import type { RecordingSource } from './recording-format';
 import { RecordingRow } from './RecordingRow';
 import { useRecordings, useRecordingStatus } from './recordings-api';
@@ -21,9 +22,11 @@ export function RecordingsList({ source }: { source: RecordingSource }) {
     <View style={{ gap: 8 }}>
       {status.data?.configured === false ? <Note>{`${R.notConfigured}. ${R.notConfiguredHint}`}</Note> : null}
       {items.length === 0 ? <EmptyState title={source.kind === 'meeting' ? R.emptyMeeting : R.empty} /> : null}
-      {items.map((rec) => (
-        <RecordingRow key={rec.id} source={source} rec={rec} />
-      ))}
+      <InsetGroup>
+        {items.map((rec) => (
+          <RecordingRow key={rec.id} source={source} rec={rec} />
+        ))}
+      </InsetGroup>
     </View>
   );
 }

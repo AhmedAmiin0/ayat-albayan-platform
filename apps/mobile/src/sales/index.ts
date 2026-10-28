@@ -1,5 +1,6 @@
 export { AllStudentsScreen, type StudentsView } from './screens/AllStudentsScreen';
 export { SalesLiveScreen } from './screens/SalesLiveScreen';
+export { AttendanceLogScreen } from './attendance/AttendanceLogScreen';
 export { SalesStudentScreen } from './student/SalesStudentScreen';
 export { SalesScheduleScreen } from './screens/SalesScheduleScreen';
 export { SalesSubscriptionsScreen } from './screens/SalesSubscriptionsScreen';
@@ -7,3 +8,6 @@ export { SalesTeacherScreen } from './screens/SalesTeacherScreen';
 export { SalesTeachersScreen } from './screens/SalesTeachersScreen';
 export { SubscriptionHistoryScreen } from './screens/SubscriptionHistoryScreen';
 export { SalesTodayScreen } from './screens/SalesTodayScreen';
+export { fill } from './lib/sales-text';
+export { SalesRescheduleSheet } from './lesson-actions/SalesRescheduleSheet';
+export { confirmFailureText } from './lesson-actions/confirm-lesson';

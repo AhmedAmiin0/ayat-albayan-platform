@@ -70,7 +70,7 @@ test('sales: its own tabs in the web SalesNav order, «المحادثات» firs
   expect(await screen.findByText('sales-inbox')).toBeTruthy();
   expect(router.pathname()).toBe('/sales/inbox');
   await waitFor(() =>
-    expect(tabLabels()).toEqual([t.sales.nav.chats, t.sales.nav.allStudents, t.sales.nav.academySchedule, t.mobile.more]),
+    expect(tabLabels()).toEqual([t.sales.nav.chats, t.sales.nav.allStudents, t.sales.nav.scheduleTab, t.mobile.more]),
   );
 });
 

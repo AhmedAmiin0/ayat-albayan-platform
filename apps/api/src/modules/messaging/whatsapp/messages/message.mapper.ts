@@ -6,6 +6,7 @@ import {
   renderTemplateBody,
   type MessageLesson,
   type MessageReactions,
+  type MessageTemplateBlock,
   type MessageView,
   type RenderableTemplate,
 } from '@ab/shared';
@@ -40,6 +41,8 @@ export interface MessageViewInput {
   documentUrl?: string | null;
   /** Signed link of row.media_path (inbound media, B2). */
   mediaUrl?: string | null;
+  /** The template's header, footer and buttons (blockOf); absent / null = none. */
+  block?: MessageTemplateBlock | null;
 }
 
 /**
@@ -113,6 +116,7 @@ export function toMessageView(input: MessageViewInput): MessageView {
     lesson_id: row.lesson_id,
     template_key: row.template_key,
     template_params: row.template_params === null ? null : params,
+    template: input.block ?? null,
     body: shownBody(row) ?? (template ? renderTemplateBody(template.body_ar, params) : null),
     media_mime: row.media_mime,
     media_url: input.mediaUrl ?? null,

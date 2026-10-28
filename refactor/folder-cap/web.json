@@ -6,9 +6,5 @@
   "apps/web/src/features/messaging/inbox/saved-replies": {
     "files": 20,
     "dirs": 1
-  },
-  "apps/web/src/routes": {
-    "files": 16,
-    "dirs": 5
   }
 }

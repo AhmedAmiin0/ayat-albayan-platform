@@ -8,7 +8,7 @@ describe('sales academy mappers (whitelists)', () => {
     row.students = [{ id: 'b', code: null, name: 'يوسف', status: 'trial', program: 'arabic' }, { id: 'a', code: 'AB-1', name: 'أحمد', status: 'paused', program: 'quran' }, ...row.students];
     const out = toSalesTeacher(row);
     expect(Object.keys(out).sort()).toEqual([
-      'active_count', 'gender', 'id', 'lessons_today', 'live_now', 'meeting_link', 'name', 'name_en', 'platform_classroom', 'programs', 'students', 'trial_count',
+      'active_count', 'avatar_url', 'gender', 'id', 'lessons_today', 'live_now', 'meeting_link', 'name', 'name_en', 'platform_classroom', 'programs', 'students', 'trial_count',
     ]);
     expect(Object.keys(out.students[0] ?? {}).sort()).toEqual(['code', 'id', 'name', 'next_lesson_at', 'program', 'status']);
     expect([out.active_count, out.trial_count, out.meeting_link]).toEqual([1, 1, 'https://meet.example.org/abrar']);

@@ -26,6 +26,30 @@ function subscriptionProgress(sub: SubscriptionView, threshold?: number) {
 /** The status word; a status newer than this bundle (an old OTA) shows its code instead of nothing. */
 const statusLabel = (status: SubscriptionView['status']): string => t.enums.subscriptionStatus[status] ?? status;
 
+/** «سجّل دفعة» / «إلغاء الباقة», full width under the tags (docs/07 §6): never shrink-wrapped in the tag line. */
+function SubscriptionActions({ sub, pay }: { sub: SubscriptionView; pay: boolean }) {
+  const cancel = cancelOffered(sub);
+  if (!pay && !cancel) return null;
+  return (
+    <View testID="subscription-actions" style={{ width: '100%', gap: 8 }}>
+      {pay ? (
+        <Button
+          variant="secondary"
+          label={t.mobileMoney.recordPayment}
+          accessibilityLabel={`${t.mobileMoney.recordPayment} · ${sub.student.name}`}
+          onPress={() => router.push(`/students/payment/${sub.student.id}`)}
+        />
+      ) : null}
+      {cancel ? (
+        <CancelPackage
+          cancel={(body) => apiSend('POST', `/subscriptions/${sub.id}/cancel`, body)}
+          stale={[pathKey('/subscriptions'), ['students', sub.student.id]]}
+        />
+      ) : null}
+    </View>
+  );
+}
+
 /**
  * One package: student + code, package and price, the lessons left (saffron when a renewal is due),
  * the status chip; a part-paid one says how much is left (owner 2026-10-28). A row opens the student; «سجّل دفعة» opens the existing payment form while it
@@ -56,20 +80,7 @@ export const SubscriptionItem = memo(function SubscriptionItem({ sub, threshold 
             {gone ? '—' : due ? `${progress.remainingLabel} · ${t.mobileMoney.renewalDue}` : progress.remainingLabel}
           </AppText>
           {partial ? <AppText style={{ fontSize: type.size.xs, color: color.ink2 }}>{paidLine(sub)}</AppText> : null}
-          {partial && toStudents ? (
-            <Button
-              variant="secondary"
-              label={t.mobileMoney.recordPayment}
-              accessibilityLabel={`${t.mobileMoney.recordPayment} · ${sub.student.name}`}
-              onPress={() => router.push(`/students/payment/${sub.student.id}`)}
-            />
-          ) : null}
-          {cancelOffered(sub) ? (
-            <CancelPackage
-              cancel={(body) => apiSend('POST', `/subscriptions/${sub.id}/cancel`, body)}
-              stale={[pathKey('/subscriptions'), ['students', sub.student.id]]}
-            />
-          ) : null}
+          <SubscriptionActions sub={sub} pay={partial && toStudents} />
         </>
       }
       trailing={

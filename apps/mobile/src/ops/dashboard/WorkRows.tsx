@@ -1,12 +1,12 @@
 import { lessonStatusStyle } from '@ab/shared';
 import { router } from 'expo-router';
 import { useTabOpen } from '@/auth/use-tab-open';
-import { t } from '@/core/lib/i18n/i18n';
 import { ListRow } from '@/core/ui/layout/ListRow';
 import { StatusChip } from '@/core/ui/feedback/StatusChip';
 import type { PendingReportRow, TaskRow, UnpaidRow } from './dashboard-types';
 import { pendingSubtitle, taskText, unpaidSubtitle } from './work-text';
 import { useClockCycle } from '@/core/lib/clock';
+import { statusWord } from '@/core/ui/feedback/lesson-status';
 
 // Taps go into the Students tab: a role without it gets plain rows (a hidden tab goes nowhere).
 const openStudent = (id: string, open: boolean) => (open ? () => router.push(`/students/${id}`) : undefined);
@@ -23,7 +23,7 @@ export function PendingRow({ row }: { row: PendingReportRow }) {
       trailing={
         <StatusChip
           {...lessonStatusStyle[row.status]}
-          label={t.enums.lessonStatus[row.status]}
+          label={statusWord(row.status)}
           size="sm"
         />
       }

@@ -16,7 +16,7 @@ import { SlotButton } from './SlotButton';
 import { useClockCycle } from '@/core/lib/clock';
 
 /** What the picker reads of a lesson: the admin's LessonView or sales' schedule lesson. */
-type SlotLesson = Pick<LessonView, 'starts_at'> & { teacher: { id: string }; students: readonly { id: string }[] };
+type SlotLesson = Pick<LessonView, 'id' | 'starts_at'> & { teacher: { id: string }; students: readonly { id: string }[] };
 
 export interface SlotPickerProps {
   lesson: SlotLesson;
@@ -30,7 +30,7 @@ export interface SlotPickerProps {
   fromLessonDay?: boolean;
   /** «عدّل الوقت»: 15-minute starts, the lesson itself not counted as busy (useRescheduleSlots). */
   edit?: { stepMin: number; excludeLessonId: string };
-  /** Sales: GET /sales/booking/slots (useRescheduleSlots `path`). */
+  /** Sales: GET /sales/booking/slots (useRescheduleSlots `path`), naming the lesson it moves (`lessonId`). */
   slotsPath?: string;
 }
 
@@ -64,7 +64,7 @@ export function SlotPicker({
     studentIds: lesson.students.map((s) => s.id),
     ...slotWindow(week, now),
     ...edit,
-    path: slotsPath,
+    ...(slotsPath ? { path: slotsPath, lessonId: lesson.id } : {}),
   });
   const notBefore = fromLessonDay ? localDate(new Date(lesson.starts_at), tz) : '';
   const note = {

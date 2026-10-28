@@ -15,6 +15,17 @@ test('aligns to the start (textAlign left, swapped in RTL); a caller style still
   expect(StyleSheet.flatten(screen.getByText(t.mobile.today).props.style).textAlign).toBe('center');
 });
 
+test('Android lays text out with the «simple» break strategy (no clipped last word); a caller may still pick one', async () => {
+  await render(
+    <>
+      <AppText>{t.classroom.enter}</AppText>
+      <AppText textBreakStrategy="balanced">{t.mobile.today}</AppText>
+    </>,
+  );
+  expect(screen.getByText(t.classroom.enter).props.textBreakStrategy).toBe('simple');
+  expect(screen.getByText(t.mobile.today).props.textBreakStrategy).toBe('balanced');
+});
+
 test('Field: the label starts at the inline-start; the input leaves alignment to the typed text', async () => {
   await render(<Field label={t.auth.email} ltr value="" onChangeText={() => undefined} />);
   expect(StyleSheet.flatten(screen.getByText(t.auth.email).props.style).textAlign).toBe('left');

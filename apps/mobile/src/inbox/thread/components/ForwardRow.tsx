@@ -6,7 +6,6 @@ import { shape, type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { Avatar } from '@/core/ui/primitives/Avatar';
 import { CheckIcon } from '../../shared/chat-icons';
-import { initialOf } from '../../shared/format';
 import { chatName } from '../hooks/forward-text';
 
 interface ForwardRowProps {
@@ -40,13 +39,12 @@ export const ForwardRow = memo(function ForwardRow({ thread: th, checked, disabl
         gap: 12,
         paddingHorizontal: 16,
         paddingVertical: 8,
-        borderBottomWidth: 1,
-        borderBottomColor: color.rule,
         opacity: disabled ? 0.45 : 1,
-        backgroundColor: pressed || checked ? color.lapisWash : color.raised,
+        // The list's inset card draws the fill and the rules (owner 2026-10-28: one container rule).
+        backgroundColor: pressed || checked ? color.lapisWash : 'transparent',
       })}
     >
-      <Avatar letter={initialOf(th.display_name)} />
+      <Avatar name={th.display_name ?? ''} id={th.phone_e164} decorative />
       <View style={{ flex: 1, gap: 2 }}>
         <AppText
           numberOfLines={1}

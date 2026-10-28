@@ -22,9 +22,9 @@ export function useMeetingManage(id: string) {
   const cancel = useMutation({ mutationFn: cancelMeeting, onSuccess: refresh, onError: refresh, ...settle });
   const link = useMutation({ mutationFn: newMeetingLink, ...settle });
   const confirms = {
-    end: { message: t.mobileClassroom.endConfirm, label: t.mobileClassroom.endAction, run: () => end.mutate(id), busy: end.isPending },
-    link: { message: t.mobileClassroom.newLinkConfirm, label: t.mobileClassroom.newLinkAction, run: () => link.mutate(id), busy: link.isPending },
-    cancel: { message: t.meetingInvites.list.cancelConfirm, label: t.meetingInvites.list.cancel, run: () => cancel.mutate(id), busy: cancel.isPending },
+    end: { message: t.mobileClassroom.endConfirm, label: t.mobileClassroom.endAction, run: () => end.mutate(id), busy: end.isPending, danger: true },
+    link: { message: t.mobileClassroom.newLinkConfirm, label: t.mobileClassroom.newLinkAction, run: () => link.mutate(id), busy: link.isPending, danger: false },
+    cancel: { message: t.meetingInvites.list.cancelConfirm, label: t.meetingInvites.list.cancel, run: () => cancel.mutate(id), busy: cancel.isPending, danger: true },
   };
   const ask = (next: Asking | null) => {
     end.reset();

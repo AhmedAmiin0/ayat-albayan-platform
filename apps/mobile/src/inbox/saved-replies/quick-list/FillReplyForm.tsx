@@ -5,6 +5,7 @@ import { t } from '@/core/lib/i18n/i18n';
 import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { Button } from '@/core/ui/primitives/Button';
+import { ButtonRow } from '@/core/ui/actions';
 import { Field } from '@/core/ui/form/Field';
 import { FillPreview } from './FillPreview';
 import { slotKeyboard, slotLabel } from './slot-field';
@@ -61,10 +62,10 @@ export function FillReplyForm({ reply, known, onInsert, onCancel }: FillReplyFor
         />
       ))}
       <FillPreview text={text} />
-      <View style={{ flexDirection: 'row', gap: 8 }}>
+      <ButtonRow>
         <Button label={t.savedReplies.fill.insert} onPress={() => onInsert(text)} />
-        <Button variant="ghost" label={t.common.cancel} onPress={onCancel} />
-      </View>
+        <Button variant="secondary" label={t.common.cancel} onPress={onCancel} />
+      </ButtonRow>
     </ScrollView>
   );
 }

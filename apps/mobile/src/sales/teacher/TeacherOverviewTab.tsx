@@ -1,4 +1,4 @@
-import { ActivityIndicator, ScrollView, View } from 'react-native';
+import { ActivityIndicator, ScrollView } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/more';
 import { useTheme } from '@/theme';
@@ -7,7 +7,10 @@ import { TeacherAttendanceTab } from './TeacherAttendanceTab';
 import { TeacherScheduleTab } from './TeacherScheduleTab';
 import { useTeacherOverview } from './teacher-overview-api';
 
-/** «الجدول» or «الحضور» of a sales teacher's page (owner 2026-10-28): loading, error with retry, then the tab. */
+/**
+ * «الجدول» or «الحضور» of a sales teacher's page (owner 2026-10-28): loading, error with retry, then the tab,
+ * inside the screen's gutter, its rows in an inset card (owner 2026-10-28: one container rule).
+ */
 export function TeacherOverviewTab({ teacherId, view }: { teacherId: string; view: 'schedule' | 'attendance' }) {
   const { color } = useTheme();
   const overview = useTeacherOverview(teacherId);
@@ -20,10 +23,8 @@ export function TeacherOverviewTab({ teacherId, view }: { teacherId: string; vie
     );
   }
   return (
-    <ScrollView style={{ flex: 1, marginHorizontal: -16 }} contentContainerStyle={{ paddingBottom: 24 }}>
-      <View style={{ gap: 4, paddingHorizontal: 16 }}>
-        <Note>{t.schedule.riyadhTime}</Note>
-      </View>
+    <ScrollView style={{ flex: 1 }} contentContainerStyle={{ gap: 8, paddingBottom: 24 }}>
+      <Note>{t.schedule.riyadhTime}</Note>
       {view === 'schedule' ? <TeacherScheduleTab weekly={data.weekly} /> : <TeacherAttendanceTab attendance={data.attendance} />}
     </ScrollView>
   );

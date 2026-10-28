@@ -78,7 +78,7 @@ export class ThreadsQueries {
    * app), id breaking a tie, `limit + 1` rows so the caller knows whether older ones exist; each with its lesson.
    */
   async messages(input: { phone: string; before?: string; limit: number }): Promise<ThreadMessageRow[]> {
-    let query = this.db.from('messages').select(`${MESSAGE_SELECT}, lesson:lessons(starts_at, status)` as const).eq('phone_e164', input.phone).or(NOT_A_REACTION);
+    let query = this.db.from('messages').select(`${MESSAGE_SELECT}, lesson:lessons(starts_at, ends_at, status)` as const).eq('phone_e164', input.phone).or(NOT_A_REACTION);
     if (input.before) query = query.lt('created_at', input.before);
     const { data, error } = await query.order('created_at', { ascending: false }).order('id', { ascending: false }).limit(input.limit + 1);
     check(error, 'thread messages read');

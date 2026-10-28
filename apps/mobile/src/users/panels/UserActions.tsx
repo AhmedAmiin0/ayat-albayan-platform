@@ -48,7 +48,7 @@ export function UserActions({ user, onMode, onDone }: UserActionsProps) {
       )}
       <Button variant="secondary" label={A.resetPassword} onPress={() => onMode('reset')} />
       <Button variant="secondary" label={A.signOut} onPress={() => setAsking('signOut')} />
-      <Button variant="ghost" label={A.delete} onPress={() => onMode('delete')} />
+      <Button variant="danger" label={A.delete} onPress={() => onMode('delete')} />
       {asking ? (
         <InlineConfirm
           message={question.replace('{name}', user.full_name)}

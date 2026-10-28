@@ -3,6 +3,7 @@ import { router, useLocalSearchParams } from 'expo-router';
 import { ScrollView, View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/more';
+import { CoursePauseSection } from '@/students';
 import { Button } from '@/core/ui/primitives/Button';
 import { ltr } from '@/core/ui/primitives/Ltr';
 import { Screen } from '@/core/ui/layout/Screen';
@@ -23,7 +24,8 @@ import { useSalesStudent } from './student-api';
  * also the subscription (start, renewal / end, lessons used / left, past ones folded) and the sent reports
  * as the teacher sees them; move / cancel only on her students' lessons (the sheet checks `mine`).
  * Read-only, no money. Under the name: the code · the guardian's phone, and «فتح المحادثة» opens that
- * family's chat. An unknown id answers 404: «هذا الطالب غير موجود».
+ * family's chat. An unknown id answers 404: «هذا الطالب غير موجود». «إيقاف مؤقت» (courses.pause) and its banner
+ * for ANY student, as in the admin's file.
  */
 export function SalesStudentScreen() {
   const { id = '' } = useLocalSearchParams<{ id: string }>();
@@ -48,10 +50,11 @@ export function SalesStudentScreen() {
             <Button variant="secondary" label={`${t.sales.student.chat} ${ltr(formatPhone(phone))}`} onPress={() => router.push(familyChatHref('/sales', phone))} />
           ) : null}
           {mine ? null : <Note>{t.sales.student.notMine}</Note>}
+          <CoursePauseSection studentId={data.student.id} />
           <TrialSection trial={data.trial} />
           {mine ? <SubscriptionSection data={data} /> : null}
           <ScheduleSection schedule={data.schedule} studentId={data.student.id} />
-          <AttendanceSection attendance={data.attendance} />
+          <AttendanceSection studentId={data.student.id} attendance={data.attendance} />
           {mine ? <ReportsSection studentId={data.student.id} reports={data.reports} /> : null}
         </View>
       </ScrollView>

@@ -1,6 +1,5 @@
 import { router } from 'expo-router';
 import type { ReactNode } from 'react';
-import { View } from 'react-native';
 import { useHolds, useIsAdmin } from '@/auth/use-permissions';
 import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/more/Note';
@@ -12,7 +11,9 @@ import { NuqtaGlyph } from '@/core/ui/primitives/NuqtaGlyph';
 import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { toneColors } from '@/core/ui/feedback/StatusChip';
+import { StripeSettingsRow } from './stripe/StripeSettingsRow';
 import { useSettings } from './use-settings';
+import { InsetGroup } from '@/core/ui/surface/inset';
 
 const back = () => (router.canGoBack() ? router.back() : router.replace('/more'));
 
@@ -61,7 +62,7 @@ export function SettingsScreen() {
         title={t.settingsHub.title}
         trailing={<Button variant="ghost" label={t.common.back} onPress={back} />}
       />
-      <View style={{ marginHorizontal: -16 }}>
+      <InsetGroup>
         <ListRow
           title={t.mobileValues.title}
           trailing={next}
@@ -88,11 +89,12 @@ export function SettingsScreen() {
             onPress={() => router.push(SETTINGS_HREF.google)}
           />
         ) : null}
+        <StripeSettingsRow />
         <ListRow
           title={t.mobileValues.integrations}
           trailing={<Note>{t.mobileValues.integrationsNote}</Note>}
         />
-      </View>
+      </InsetGroup>
       <Note>{t.mobileValues.integrationsHint}</Note>
     </Screen>
   );

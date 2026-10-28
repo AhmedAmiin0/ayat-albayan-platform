@@ -23,13 +23,20 @@ describe('Button (docs/07 §6)', () => {
     expect(cls).not.toContain('border-transparent');
   });
 
-  it.each(['sm', 'md'] as const)('size %s is 44px tall on phones (touch floor)', (size) => {
-    expect(buttonVariants({ size }).split(' ')).toContain('min-h-11');
+  it('md and lg are 48px on phones like the app (docs/07 «الأزرار»); the dense sm keeps the 44px floor', () => {
+    expect(buttonVariants({ size: 'md' }).split(' ')).toContain('min-h-12');
+    expect(buttonVariants({ size: 'lg' }).split(' ')).toContain('min-h-12');
+    expect(buttonVariants({ size: 'sm' }).split(' ')).toContain('min-h-11');
   });
 
-  it('danger fills with the solid cinnabar, danger-quiet only outlines', () => {
+  it('keeps every label on one line', () => {
+    expect(buttonVariants().split(' ')).toContain('whitespace-nowrap');
+  });
+
+  it('danger fills with the solid cinnabar (confirm only), danger-quiet outlines label and edge in the bad tone', () => {
     expect(buttonVariants({ variant: 'danger' })).toContain('bg-destructive-solid');
-    expect(buttonVariants({ variant: 'danger-quiet' })).toContain('border-destructive/45');
+    const quiet = buttonVariants({ variant: 'danger-quiet' }).split(' ');
+    expect(quiet).toEqual(expect.arrayContaining(['text-destructive', 'border-destructive', 'hover:not-disabled:bg-danger-soft']));
   });
 
   it('is green and white: no gold edge or saffron on any variant (Fresh Green)', () => {

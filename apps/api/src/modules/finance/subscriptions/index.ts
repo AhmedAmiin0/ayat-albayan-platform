@@ -1,3 +1,4 @@
+export { SubscriptionAlertsService } from './alerts/alerts.service';
 export { AlertsQueries, type Recipient, type RenewalMessage } from './alerts/alerts.queries';
 export { UnpaidFlags } from './alerts/unpaid-flags.service';
 export { BalanceQueries, type BalanceRow, emptyBalance, toBalance } from './money/balance.queries';

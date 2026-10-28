@@ -45,7 +45,7 @@ export function AdminReportScreen() {
             <ReportFieldRow key={f.key} field={f} />
           ))}
           {report.pdf_status === 'ready' ? (
-            <View style={{ alignItems: 'flex-start', gap: 8 }}>
+            <View style={{ gap: 8 }}>
               <Button
                 variant="secondary"
                 label={t.reports.downloadPdf}
