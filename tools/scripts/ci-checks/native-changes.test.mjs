@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { nativeChanges } from './native-changes.mjs';
+import { configOut, nativeChanges } from './native-changes.mjs';
 
 const app = (expo) => JSON.stringify({ expo });
 const snap = (expo, deps = {}, appConfig = 'x') => ({ appJson: app(expo), appConfig, pkg: JSON.stringify({ dependencies: deps }) });
@@ -68,4 +68,43 @@ test('added, removed and bumped dependencies are reported; devDependencies are n
 test('a changed app.config.ts counts, and a missing old file is a change from nothing', () => {
   assert.deepEqual(nativeChanges(snap(base, {}, 'a'), snap(base, {}, 'b')), ['app.config.ts changed (dynamic config)']);
   assert.ok(nativeChanges({ appJson: '', appConfig: '', pkg: '' }, snap(base)).length > 0);
+});
+
+const eas = (build) => JSON.stringify({ cli: { version: '>= 16' }, build });
+const PROFILES = { preview: { channel: 'preview' }, production: { channel: 'production' } };
+
+test('eas.json: a side profile (the Stripe test app, docs/30) is not native; a normal profile is', () => {
+  const before = { ...snap(base), eas: eas(PROFILES) };
+  const side = { ...snap(base), eas: eas({ ...PROFILES, 'stripe-test': { channel: 'stripe-test', env: { APP_VARIANT: 'stripetest' } } }) };
+  assert.deepEqual(nativeChanges(before, side, ['apps/mobile/eas.json']), []);
+  const preview = { ...snap(base), eas: eas({ ...PROFILES, preview: { channel: 'preview', env: { X: '1' } } }) };
+  assert.deepEqual(nativeChanges(before, preview, ['apps/mobile/eas.json']), ['apps/mobile/eas.json changed']);
+});
+
+const CONFIG = `import type { ConfigContext, ExpoConfig } from 'expo/config';
+export default ({ config }: ConfigContext): ExpoConfig => ({ ...(config as ExpoConfig), android: { ...config.android, googleServicesFile: './g.json' } });
+`;
+const VARIANT = `import type { ConfigContext, ExpoConfig } from 'expo/config';
+const SIDE = 'stripetest';
+export default ({ config }: ConfigContext): ExpoConfig => {
+  const base: ExpoConfig = { ...(config as ExpoConfig), android: { ...config.android, googleServicesFile: './g.json' } };
+  return process.env.APP_VARIANT === SIDE ? { ...base, name: 'side' } : base;
+};
+`;
+
+test('app.config.ts is compared as the normal app EAS builds: a side variant only is not native', async () => {
+  const appJson = app(base);
+  const [before, after] = [await configOut(CONFIG, appJson), await configOut(VARIANT, appJson)];
+  assert.equal(typeof before, 'string');
+  assert.equal(before, after);
+  assert.deepEqual(nativeChanges({ ...snap(base, {}, CONFIG), configOut: before }, { ...snap(base, {}, VARIANT), configOut: after }), []);
+});
+
+test('app.config.ts: a change to the normal app counts; one that cannot be evaluated falls back to the text', async () => {
+  const appJson = app(base);
+  const moved = await configOut(CONFIG.replace('./g.json', './other.json'), appJson);
+  const found = nativeChanges({ ...snap(base, {}, CONFIG), configOut: await configOut(CONFIG, appJson) }, { ...snap(base, {}, 'y'), configOut: moved });
+  assert.deepEqual(found, ['app.config.ts changed (dynamic config)']);
+  assert.equal(await configOut('export default (', appJson), null);
+  assert.deepEqual(nativeChanges(snap(base, {}, 'a'), { ...snap(base, {}, 'b'), configOut: null }), ['app.config.ts changed (dynamic config)']);
 });
