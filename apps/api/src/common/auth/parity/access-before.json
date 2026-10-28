@@ -112,6 +112,8 @@
   "GoogleItemsController.list": ["admin"],
   "GoogleItemsController.reconcile": ["admin"],
   "GoogleItemsController.retry": ["admin"],
+  "GoogleMapController.calendarOwner": ["admin"],
+  "GoogleMapController.setCalendarOwner": ["admin"],
   "GoogleMapController.setStudent": ["admin"],
   "GoogleMapController.setTeacher": ["admin"],
   "GoogleMapController.students": ["admin"],

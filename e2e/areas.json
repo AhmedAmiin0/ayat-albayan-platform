@@ -514,6 +514,7 @@
     "config-expand.sql.spec.ts",
     "config-seed.sql.spec.ts",
     "edit-time.sql.spec.ts",
+    "google-calendar-handover.sql.spec.ts",
     "google-sync.sql.spec.ts",
     "inbox-realtime.sql.spec.ts",
     "integration-config.sql.spec.ts",

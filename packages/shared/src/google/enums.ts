@@ -23,8 +23,17 @@ export const GOOGLE_SKIP_REASONS = [
   'already_in_sheet',
   /** Queued, then found to be an imported lesson (an import ran while sync was on): never written. */
   'not_platform_origin',
+  /** An imported lesson's slot already holds the old script's event: not written, tried again on the next sweep. */
+  'script_event_present',
 ] as const;
 export type GoogleSkipReason = (typeof GOOGLE_SKIP_REASONS)[number];
+
+/**
+ * teachers.calendar_owner (docs/24 «نقل تقويم معلم إلى المنصة»): who builds the teacher's Google Calendar.
+ * 'script' (default) = the old Apps Script from the bookings sheet; 'platform' = every lesson of the teacher.
+ */
+export const TEACHER_CALENDAR_OWNERS = ['script', 'platform'] as const;
+export type TeacherCalendarOwner = (typeof TEACHER_CALENDAR_OWNERS)[number];
 
 /** google_account.status. */
 export const GOOGLE_ACCOUNT_STATUSES = ['disconnected', 'connected', 'error'] as const;

@@ -22,4 +22,14 @@ export class GoogleAlerts {
     const reason = ar.googleSync.alerts.teacherUnmapped.replace('{name}', input.name);
     return this.push.notifyAdmins('google_sync_alert', { subject: `teacher:${input.teacherId}`, vars: { reason }, bellOnly: true });
   }
+
+  /**
+   * A teacher switched to «من المنصة» whose calendar still holds the script's events: stop the script first.
+   * Once per handover: `since` (teachers.calendar_owner_changed_at) is in the subject, so a later handover is told again.
+   */
+  scriptStillRunning(input: { teacherId: string; name: string; since: string | null }): Promise<void> {
+    const reason = ar.googleSync.alerts.scriptEventPresent.replace('{name}', input.name);
+    const subject = `script_calendar:${input.teacherId}:${input.since ?? 'initial'}`;
+    return this.push.notifyAdmins('google_sync_alert', { subject, vars: { reason }, bellOnly: true });
+  }
 }

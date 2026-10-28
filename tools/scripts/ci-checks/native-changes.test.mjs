@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { configOut, nativeChanges } from './native-changes.mjs';
+import { configOut, nativeChanges, variantOf } from './native-changes.mjs';
 
 const app = (expo) => JSON.stringify({ expo });
 const snap = (expo, deps = {}, appConfig = 'x') => ({ appJson: app(expo), appConfig, pkg: JSON.stringify({ dependencies: deps }) });
@@ -22,13 +22,13 @@ test('app name, icon, splash, orientation, theme, notification, status bar and u
 });
 
 test('changed asset or eas.json files are reported', () => {
-  const found = nativeChanges(snap(base), snap(base), ['apps/mobile/assets/icon.png', 'apps/mobile/eas.json']);
+  const found = nativeChanges(snap(base), snap(base), { files: ['apps/mobile/assets/icon.png', 'apps/mobile/eas.json'] });
   assert.deepEqual(found, ['apps/mobile/assets/icon.png changed', 'apps/mobile/eas.json changed']);
 });
 
 test('images in an assets sub-folder are imported from JS and ship by OTA', () => {
   const files = ['apps/mobile/assets/tabs/inbox.png', 'apps/mobile/assets/brand/mark.png', 'apps/mobile/assets/splash-icon.png'];
-  assert.deepEqual(nativeChanges(snap(base), snap(base), files), ['apps/mobile/assets/splash-icon.png changed']);
+  assert.deepEqual(nativeChanges(snap(base), snap(base), { files }), ['apps/mobile/assets/splash-icon.png changed']);
 });
 
 test('pure-JS packages (google fonts, tanstack, supabase-js, workspace) are not native', () => {
@@ -76,9 +76,9 @@ const PROFILES = { preview: { channel: 'preview' }, production: { channel: 'prod
 test('eas.json: a side profile (the Stripe test app, docs/30) is not native; a normal profile is', () => {
   const before = { ...snap(base), eas: eas(PROFILES) };
   const side = { ...snap(base), eas: eas({ ...PROFILES, 'stripe-test': { channel: 'stripe-test', env: { APP_VARIANT: 'stripetest' } } }) };
-  assert.deepEqual(nativeChanges(before, side, ['apps/mobile/eas.json']), []);
+  assert.deepEqual(nativeChanges(before, side, { files: ['apps/mobile/eas.json'] }), []);
   const preview = { ...snap(base), eas: eas({ ...PROFILES, preview: { channel: 'preview', env: { X: '1' } } }) };
-  assert.deepEqual(nativeChanges(before, preview, ['apps/mobile/eas.json']), ['apps/mobile/eas.json changed']);
+  assert.deepEqual(nativeChanges(before, preview, { files: ['apps/mobile/eas.json'] }), ['apps/mobile/eas.json changed']);
 });
 
 const CONFIG = `import type { ConfigContext, ExpoConfig } from 'expo/config';
@@ -107,4 +107,30 @@ test('app.config.ts: a change to the normal app counts; one that cannot be evalu
   assert.deepEqual(found, ['app.config.ts changed (dynamic config)']);
   assert.equal(await configOut('export default (', appJson), null);
   assert.deepEqual(nativeChanges(snap(base, {}, 'a'), { ...snap(base, {}, 'b'), configOut: null }), ['app.config.ts changed (dynamic config)']);
+});
+
+test('a stripe-test OTA: only its own eas.json profile counts; the normal profiles do not', () => {
+  const side = (env) => ({ ...snap(base), eas: eas({ ...PROFILES, 'stripe-test': { channel: 'stripe-test', env } }) });
+  const before = side({ APP_VARIANT: 'stripetest' });
+  const files = { files: ['apps/mobile/eas.json'], profile: 'stripe-test' };
+  const preview = { ...before, eas: eas({ ...PROFILES, preview: { channel: 'preview', env: { X: '1' } }, 'stripe-test': JSON.parse(before.eas).build['stripe-test'] }) };
+  assert.deepEqual(nativeChanges(before, preview, files), []);
+  assert.deepEqual(nativeChanges(before, side({ APP_VARIANT: 'stripetest', Y: '1' }), files), ['apps/mobile/eas.json changed']);
+  assert.equal(variantOf(before.eas, 'stripe-test'), 'stripetest');
+  assert.equal(variantOf(before.eas, 'preview'), undefined);
+  assert.equal(variantOf('{', 'preview'), undefined);
+});
+
+const NO_FCM = VARIANT.replace("{ ...base, name: 'side' }", "{ ...base, name: 'side', android: { package: 'side' } }");
+
+test('app.config.ts per app: a side-variant-only change is native for the side app, not for the normal one', async () => {
+  const appJson = app(base);
+  const normal = [await configOut(VARIANT, appJson), await configOut(NO_FCM, appJson)];
+  assert.equal(normal[0], normal[1]);
+  const side = [await configOut(VARIANT, appJson, 'stripetest'), await configOut(NO_FCM, appJson, 'stripetest')];
+  assert.notEqual(side[0], side[1]);
+  assert.match(side[1], /"name":"side"/);
+  const snaps = [{ ...snap(base, {}, VARIANT), configOut: side[0] }, { ...snap(base, {}, NO_FCM), configOut: side[1] }];
+  assert.deepEqual(nativeChanges(...snaps, { profile: 'stripe-test' }), ['app.config.ts changed (dynamic config)']);
+  assert.equal(process.env.APP_VARIANT, undefined);
 });
