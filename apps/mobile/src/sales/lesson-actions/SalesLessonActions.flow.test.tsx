@@ -2,6 +2,7 @@ import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { router } from 'expo-router';
 import { ApiError } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
+import { TreeBaseProvider } from '@/core/nav/tree-base';
 import { fakeNow } from '@/test/fake-now';
 import { renderWithQuery } from '@/test/query';
 import { SAT_17, SLOTS } from '@/teaching/reschedule/fixtures';
@@ -34,7 +35,8 @@ beforeEach(() => {
 afterEach(() => jest.useRealTimers());
 
 const open = async (who: string) => {
-  await renderWithQuery(<SalesScheduleScreen />);
+  // The sales tree (SalesTabs wraps its screens in TreeBaseProvider '/sales').
+  await renderWithQuery(<TreeBaseProvider value="/sales"><SalesScheduleScreen /></TreeBaseProvider>);
   await fireEvent.press(await screen.findByRole('button', { name: t.lessons.sheet.openRow.replace('{names}', who) }));
   await screen.findByRole('header', { name: who });
 };
@@ -49,12 +51,13 @@ test('her student\'s lesson: «تغيير الموعد» and «إلغاء الح
   expect(router.push).toHaveBeenCalledWith('/sales/students/st3');
 });
 
-test('another family\'s lesson stays read-only: no action, no student link', async () => {
+test('another family\'s lesson stays read-only: no action; the name still opens «تفاصيل الطالب» (owner 2026-10-28)', async () => {
   await open('يوسف أحمد');
   expect(screen.queryByRole('button', { name: a.reschedule })).toBeNull();
   expect(screen.queryByRole('button', { name: a.cancel })).toBeNull();
   expect(screen.getByText(t.lessons.sheet.readOnly)).toBeTruthy();
-  expect(screen.queryByRole('button', { name: t.lessons.sheet.openStudent.replace('{name}', 'يوسف أحمد') })).toBeNull();
+  await fireEvent.press(screen.getByRole('button', { name: t.lessons.sheet.openStudent.replace('{name}', 'يوسف أحمد') }));
+  expect(router.push).toHaveBeenCalledWith(expect.stringMatching(/^\/sales\/students\//));
 });
 
 test('cancel without a reason posts {} to her route; the lesson reads cancelled', async () => {

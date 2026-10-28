@@ -13,6 +13,8 @@ import { bundle, verify } from '../sales/academy/sales-academy.fakes';
 import type { TrialLessonRead } from '../../teaching/booking';
 import { type AttendanceRow, type LessonFacts, SalesStudentQueries } from './details/sales-student.queries';
 import { ruleRow, upcomingRow } from './sales-students.schedule.fakes';
+import { resetAttendance } from './attendance/student-attendance.fakes';
+import { StudentAttendanceQueries } from './attendance/student-attendance.queries';
 import { LessonServices } from './lessons/sales-lesson-actions.service';
 import { resetOverview } from './teachers/sales-teacher-overview.fakes';
 import { SalesTeacherOverviewQueries } from './teachers/sales-teacher-overview.queries';
@@ -69,6 +71,7 @@ export async function studentsApp() {
   const reports = { submitted: vi.fn(), lessons: vi.fn(), sequence: vi.fn() };
   const files = { studentPdfUrl: vi.fn() };
   const overview = { exists: vi.fn(), rules: vi.fn(), lessons: vi.fn() };
+  const attendance = { exists: vi.fn(), lessons: vi.fn(), starts: vi.fn(), reports: vi.fn() };
   const lessons = { one: { reschedule: vi.fn() }, cancels: { cancel: vi.fn() } };
   const mod = await Test.createTestingModule({ imports: [AppModule] })
     .overrideProvider(PERMISSION_RESOLVER).useValue(systemResolver).overrideProvider(TOKEN_VERIFIER).useValue(verify)
@@ -79,6 +82,7 @@ export async function studentsApp() {
     .overrideProvider(ReportFilesService).useValue(files)
     .overrideProvider(LessonServices).useValue(lessons)
     .overrideProvider(SalesTeacherOverviewQueries).useValue(overview)
+    .overrideProvider(StudentAttendanceQueries).useValue(attendance)
     .overrideProvider(SettingsService).useValue(fakeSettings())
     .compile();
   const app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter());
@@ -103,6 +107,7 @@ export async function studentsApp() {
     schedule.rules.mockResolvedValue([ruleRow()]);
     schedule.upcoming.mockResolvedValue([upcomingRow(MINE)]);
     resetOverview(overview);
+    resetAttendance(attendance);
   };
-  return { app, call, reset, sales, queries, history, reports, files, lessons, schedule, overview };
+  return { app, call, reset, sales, queries, history, reports, files, lessons, schedule, overview, attendance };
 }

@@ -25,7 +25,8 @@ const back = () => (router.canGoBack() ? router.back() : router.replace('/studen
 /**
  * Student quick view (R-MOB-02) on GET /students/:id. The status changes here, and a payment is
  * recorded from the balance card, «جدّد الاشتراك» once the package ended; editing, adding and merging stay on the web.
- * «موعد تجريبي جديد» and the trial dates' history in TrialDateSection (R-STU-05).
+ * «موعد تجريبي جديد» and the trial dates' history in TrialDateSection (R-STU-05); «عرض سجل الحضور» opens the
+ * month-by-month attendance table (owner 2026-10-28, the same screen as sales' «تفاصيل الطالب»).
  */
 export function StudentScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -66,6 +67,11 @@ export function StudentScreen() {
           variant="secondary"
           label={t.mobileAdmin.reports.button}
           onPress={() => router.push(`/students/reports/${student.id}`)}
+        />
+        <Button
+          variant="secondary"
+          label={t.sales.student.log.open}
+          onPress={() => router.push(`/students/${student.id}/attendance`)}
         />
         <BalanceCard studentId={student.id} />
         <StudentFileSections student={student} />
