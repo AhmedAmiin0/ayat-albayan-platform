@@ -1,5 +1,5 @@
 import { LEAD_STATUSES, type LeadStatus, leadStatusStyle } from '@ab/shared';
-import { type ReactNode, useCallback, useMemo, useState } from 'react';
+import { type ReactNode, useCallback, useState } from 'react';
 
 import { t } from '@/core/lib/i18n/i18n';
 import { usePagedList } from '@/core/lib/query/use-paged-list';
@@ -36,7 +36,9 @@ export function LeadsList({ switcher }: { switcher: ReactNode }) {
   const [filters, setFilters] = useState<LeadFilters>(NO_FILTERS);
   const list = usePagedList<Lead>({ path: '/leads', params: leadListParams({ q, status, filters }) });
   // The rows' clock: moves on every fetch (a refresh, a refocus), so «منذ دقيقة» does not stay forever.
-  const now = useMemo(() => Math.max(Date.now(), list.dataUpdatedAt), [list.dataUpdatedAt]);
+  // Never before the list opened (a saved page's fetch time can be old); read once, render stays pure.
+  const [opened] = useState(() => Date.now());
+  const now = Math.max(opened, list.dataUpdatedAt);
   const renderRow = useCallback(({ item }: { item: Lead }) => <LeadRow lead={item} now={now} />, [now]);
   const filtersOn = q !== '' || status !== 'all' || activeFilterCount(filters) > 0;
   const loaded = list.data !== undefined;
