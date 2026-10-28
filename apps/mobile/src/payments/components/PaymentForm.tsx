@@ -11,6 +11,7 @@ import { AttachmentsField } from '../receipts/AttachmentsField';
 import { FormLabel } from '../FormLabel';
 import { PackagePicker } from './PackagePicker';
 import { PaidDayPicker } from './PaidDayPicker';
+import { ShortfallNote } from './ShortfallNote';
 import { paymentErrorText } from '../lib/payment-errors';
 import { checkDraft, chosenPackage, emptyDraft, payablePackages, type PaymentDraft, withMethod } from '../lib/payment-form';
 import { ReceiptPicker } from '../ReceiptPicker';
@@ -77,6 +78,7 @@ export function PaymentForm({ studentId, balance, offline, onRetry, onDone }: Pa
         currency={sub.currency}
         error={errors.amount}
       />
+      <ShortfallNote amountText={draft.amountText} due={sub.price - sub.paid} currency={sub.currency} />
       <View style={{ gap: 6 }}>
         <FormLabel>{t.payments.method}</FormLabel>
         <FilterPills

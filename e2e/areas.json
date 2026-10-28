@@ -526,6 +526,7 @@
     "profiles-disabled.sql.spec.ts",
     "push-device-claim.sql.spec.ts",
     "push-notifications-rls.sql.spec.ts",
+    "rate-limit-take.sql.spec.ts",
     "reply-forward.sql.spec.ts",
     "report-outcome.sql.spec.ts",
     "roles-permissions.sql.spec.ts",

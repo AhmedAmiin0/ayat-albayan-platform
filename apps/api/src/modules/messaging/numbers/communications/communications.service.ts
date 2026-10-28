@@ -2,6 +2,7 @@ import type { CommsSource, CommsSourceView, ParityView, WaLine } from '@ab/share
 import { ConflictException, Injectable } from '@nestjs/common';
 import { SINGLETON_ENTITY_ID } from '../../../../common/audit/singleton-entity';
 import { envFrom } from '../../../../config/env/env';
+import { kickConfigReload } from '../../../../config/role/worker-kick';
 import { CommunicationsDeps } from './communications.deps';
 import { NumbersConfig } from '../config/numbers.config';
 import { differences, parityRoles } from '../lines/numbers.parity';
@@ -44,6 +45,7 @@ export class CommunicationsService {
     } finally {
       this.deps.rules.invalidate();
       await this.config.reload();
+      kickConfigReload();
     }
     try {
       // Again, now that legacy reads: a rule PATCH that landed between the first copy and the flip

@@ -11,7 +11,7 @@ import { scriptedFetch, templateRow } from '../../whatsapp.fakes';
 // docs/19 «crm driver»: a crm line's templates live in the CRM. No sync call, no row touched, no submit;
 // the admin sets the status by hand (audited), only while the line is on crm.
 
-const queries = { all: vi.fn(), get: vi.fn(), update: vi.fn(), insert: vi.fn(), approvals: vi.fn(async () => []), upsertApprovals: vi.fn() };
+const queries = { all: vi.fn(), get: vi.fn(), update: vi.fn(), insert: vi.fn(), approvals: vi.fn(async () => []), upsertApprovals: vi.fn(), saveLineSync: vi.fn(async () => undefined), lineSyncs: vi.fn(async () => new Map()) };
 const audit = { record: vi.fn() };
 const NOW = new Date('2026-10-25T08:00:00Z');
 const f = scriptedFetch(CRM_SENT);

@@ -3,7 +3,7 @@ import { CodeSend } from '../../../messaging/whatsapp';
 import { CODE_STORE, type CodePurpose, type CodeStore, type Subject } from '../sign-in.ports';
 import { SignInSettings } from '../sign-in.settings';
 import { expiryOf, hashCode, newCode, sameHash } from './code-crypto';
-import { GLOBAL_FAILED_PER_HOUR, phoneMayCheck, phoneMaySend } from './code-limits';
+import { GLOBAL_FAILED_PER_HOUR, phoneMayCheck, phoneMaySend, SignInLimits } from './code-limits';
 
 /** A code to issue: the phone is always one ON FILE for the subject, never a number the caller typed. */
 export interface CodeTarget {
@@ -21,6 +21,12 @@ export class CodeIssuer {
   private readonly log = new Logger(CodeIssuer.name);
   /** One issue at a time per phone on this instance, so parallel requests cannot pass the count together. */
   private readonly queues = new Map<string, Promise<boolean>>();
+  /**
+   * The per-phone send buckets shared by every API copy (docs/09), taken only once this issuer would send
+   * (a refused issue spends none). Property-injected (the constructor is at the 3-parameter limit) and
+   * required in the app: Nest fails the boot without it; unit tests without it count login_codes only.
+   */
+  @Inject(SignInLimits) private readonly limits?: SignInLimits;
 
   constructor(
     @Inject(CODE_STORE) private readonly store: CodeStore,
@@ -46,6 +52,7 @@ export class CodeIssuer {
   private async issueNow(target: CodeTarget, now: Date): Promise<boolean> {
     const pepper = this.settings.config.pepper;
     if (!pepper || !(await this.calm(now)) || !phoneMaySend(await this.store.phoneStats(target.phone, now))) return false;
+    if (this.limits && !(await this.limits.maySend(target.phone, now.getTime()))) return false;
     const values = await this.settings.read();
     const code = newCode();
     const id = await this.store.insert({

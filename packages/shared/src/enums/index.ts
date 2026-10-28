@@ -35,6 +35,7 @@ export const SUBSCRIPTION_STATUSES = [
   'paused',
   'expired',
   'unpaid',
+  'cancelled',
 ] as const satisfies readonly Enums<'subscription_status'>[];
 export const PROGRAMS = [
   'quran',

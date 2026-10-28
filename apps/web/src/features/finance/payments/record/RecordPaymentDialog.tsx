@@ -6,13 +6,14 @@ import { Field } from '@/components/ui/form/field';
 import { FormAlert } from '@/components/ui/form/form-alert';
 import { Select } from '@/components/ui/form/select';
 import type { SubscriptionView } from '@/features/finance/subscriptions/api';
-import { apiErrorText, moneyText, packageName, studentLabel } from '@/features/finance/subscriptions/format';
+import { apiErrorText, currencySymbol, moneyText, packageName, studentLabel } from '@/features/finance/subscriptions/format';
 import type { PickedStudent } from '@/features/finance/subscriptions/create/StudentPicker';
 import { t } from '@/lib/i18n/i18n';
 import { useUploadMaxBytes } from '@/lib/settings/public-config';
 import { AttachmentsField } from '../attachments/AttachmentsField';
 import { PaymentFields, type PaymentForm } from './PaymentFields';
 import { ReceiptField, receiptProblem } from '../attachments/ReceiptField';
+import { ShortfallNote } from './ShortfallNote';
 import { SubscriptionPicker } from './SubscriptionPicker';
 import { useRecordPayment } from './use-record-payment';
 
@@ -29,6 +30,9 @@ type Props = {
 };
 
 const defaultAmount = (s: SubscriptionView, kind: PaymentKind) => String(kind === 'refund' ? s.paid : Math.max(0, s.price - s.paid) || s.price);
+/** What a payment in `currency` still owes (owner 2026-10-28: less stays unpaid); null for a refund or another currency. */
+const dueIn = (s: SubscriptionView | null, opts: { kind: PaymentKind; currency: string }): number | null =>
+  s && opts.kind === 'payment' && opts.currency === s.currency ? Math.max(0, s.price - s.paid) : null;
 const today = () => new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Riyadh' });
 
 /** «تسجيل دفعة» / «استرداد» (R-PAY-01): package, amount (any currency with a rate), method, date, receipt, and «المرفقات» for a bank payment. */
@@ -88,6 +92,7 @@ export function RecordPaymentDialog({ subscription, invoiceId, kind = 'payment',
           </p>
         )}
         <PaymentFields form={form} set={setFields} currency={currency} today={today()} amountError={amountError} />
+        <ShortfallNote amount={form.amount} due={dueIn(picked, { kind, currency })} currencyLabel={currencySymbol(currency)} />
         {picked && (
           <Field label={t.payments.currency} hint={currency !== picked.currency ? t.finance.convertedHint.replace('{currency}', picked.currency) : undefined}>
             {(p) => (

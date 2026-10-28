@@ -4,6 +4,7 @@ import { Ticker } from '../../../messaging/reminders/ticker';
 import { RATING_LOOKBACK_MS } from '../rating.plan';
 import { RatingQueries } from '../rating.queries';
 import { RatingQueue, type QueueResult } from './rating.queue';
+import { BackgroundJob } from '../../../../config/role/background-job';
 
 const MINUTE = 60_000;
 
@@ -13,6 +14,7 @@ const MINUTE = 60_000;
  * the last 36 h (a missed event, the switch turned on later, the template approved later). Both
  * paths are idempotent through the dedup key lesson_rating:{lesson}:{guardian} (rule 8).
  */
+@BackgroundJob({ name: 'lesson-rating' })
 @Injectable()
 export class RatingJob implements OnModuleInit, OnApplicationBootstrap, OnModuleDestroy {
   private readonly log = new Logger(RatingJob.name);

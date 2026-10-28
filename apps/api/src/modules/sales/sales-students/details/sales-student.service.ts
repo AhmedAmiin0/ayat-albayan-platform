@@ -1,6 +1,7 @@
 import type { SalesStudentDetails, SignedDownload } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
 import { chatPhone } from '../../../../common/auth/chat-phone';
+import { can } from '../../../../common/auth/permissions';
 import type { AuthUser } from '../../../../common/auth/verify-token';
 import { notFound } from '../../../../common/http/errors';
 import { SalesStudentScope } from '../sales-student-scope';
@@ -36,8 +37,10 @@ export class SalesStudentService {
       this.queries.trialDates.trialLessons(studentId),
     ]);
     const schedule = toStudentSchedule({ rules, lessons: upcoming, own: own.studentIds, studentTz: student.tz }, now);
+    // «مدفوعة جزئيًا» (owner 2026-10-28): the price only for her own student and a viewer who sees it in her money views already.
+    const prices = mine && can(user, 'self.sales_money') ? await this.queries.prices(studentId) : [];
     const trial = toTrialLessons(trials, now);
-    const view = toStudentDetails({ student, history, lessons, reports, schedule, trial, mine });
+    const view = toStudentDetails({ student, history, lessons, reports, schedule, trial, mine, prices });
     return { ...view, student: { ...view.student, guardian_phone: chatPhone(user, view.student.guardian_phone) } };
   }
 

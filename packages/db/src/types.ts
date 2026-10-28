@@ -3005,6 +3005,21 @@ export type Database = {
           },
         ];
       };
+      rate_limit_hits: {
+        Row: {
+          at: string;
+          bucket: string;
+        };
+        Insert: {
+          at?: string;
+          bucket: string;
+        };
+        Update: {
+          at?: string;
+          bucket?: string;
+        };
+        Relationships: [];
+      };
       report_attachments: {
         Row: {
           created_at: string;
@@ -3652,6 +3667,9 @@ export type Database = {
       };
       subscriptions: {
         Row: {
+          cancel_reason: string | null;
+          cancelled_at: string | null;
+          cancelled_by: string | null;
           client_request_id: string | null;
           created_at: string;
           created_by: string | null;
@@ -3661,6 +3679,7 @@ export type Database = {
           fx_rate: number | null;
           id: string;
           lessons_total: number;
+          lessons_used_before: number;
           notes: string | null;
           package: Database['public']['Enums']['package_size'] | null;
           price: number;
@@ -3672,6 +3691,9 @@ export type Database = {
           updated_at: string;
         };
         Insert: {
+          cancel_reason?: string | null;
+          cancelled_at?: string | null;
+          cancelled_by?: string | null;
           client_request_id?: string | null;
           created_at?: string;
           created_by?: string | null;
@@ -3681,6 +3703,7 @@ export type Database = {
           fx_rate?: number | null;
           id?: string;
           lessons_total: number;
+          lessons_used_before?: number;
           notes?: string | null;
           package?: Database['public']['Enums']['package_size'] | null;
           price: number;
@@ -3692,6 +3715,9 @@ export type Database = {
           updated_at?: string;
         };
         Update: {
+          cancel_reason?: string | null;
+          cancelled_at?: string | null;
+          cancelled_by?: string | null;
           client_request_id?: string | null;
           created_at?: string;
           created_by?: string | null;
@@ -3701,6 +3727,7 @@ export type Database = {
           fx_rate?: number | null;
           id?: string;
           lessons_total?: number;
+          lessons_used_before?: number;
           notes?: string | null;
           package?: Database['public']['Enums']['package_size'] | null;
           price?: number;
@@ -4445,6 +4472,24 @@ export type Database = {
         };
         Relationships: [];
       };
+      wa_template_line_syncs: {
+        Row: {
+          line: Database['public']['Enums']['wa_line'];
+          result: Json;
+          synced_at: string;
+        };
+        Insert: {
+          line: Database['public']['Enums']['wa_line'];
+          result: Json;
+          synced_at?: string;
+        };
+        Update: {
+          line?: Database['public']['Enums']['wa_line'];
+          result?: Json;
+          synced_at?: string;
+        };
+        Relationships: [];
+      };
       web_push_subscriptions: {
         Row: {
           auth: string;
@@ -4629,6 +4674,7 @@ export type Database = {
           is_last: boolean | null;
           lessons_total: number | null;
           lessons_used: number | null;
+          lessons_used_before: number | null;
           projected_end_at: string | null;
           remaining: number | null;
           student_id: string | null;
@@ -5038,6 +5084,7 @@ export type Database = {
         }[];
       };
       push_live_sessions: { Args: { p_ids: string[] }; Returns: string[] };
+      rate_limit_take: { Args: { p_buckets: string[]; p_maxes: number[]; p_window_ms: number }; Returns: boolean };
       record_teacher_payment: { Args: { p: Json }; Returns: Json };
       reopen_assistant_statement: { Args: { p_actor: string; p_statement: string }; Returns: Json };
       report_of_path: { Args: { p_name: string }; Returns: string };
@@ -5211,7 +5258,7 @@ export type Database = {
         | 'expired'
         | 'paused'
         | 'churned';
-      subscription_status: 'trial' | 'active' | 'paused' | 'expired' | 'unpaid';
+      subscription_status: 'trial' | 'active' | 'paused' | 'expired' | 'unpaid' | 'cancelled';
       teacher_earning_status: 'earned' | 'partially_paid' | 'paid';
       teacher_status: 'active' | 'inactive';
       template_category: 'utility' | 'marketing' | 'authentication';
@@ -5409,7 +5456,7 @@ export const Constants = {
         'paused',
         'churned',
       ],
-      subscription_status: ['trial', 'active', 'paused', 'expired', 'unpaid'],
+      subscription_status: ['trial', 'active', 'paused', 'expired', 'unpaid', 'cancelled'],
       teacher_earning_status: ['earned', 'partially_paid', 'paid'],
       teacher_status: ['active', 'inactive'],
       template_category: ['utility', 'marketing', 'authentication'],

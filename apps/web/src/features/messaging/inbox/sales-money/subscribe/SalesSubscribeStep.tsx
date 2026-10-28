@@ -1,4 +1,4 @@
-import { DISCOUNTS, type SalesFamilyStudent, type SalesMoneySubscriptionView } from '@ab/shared';
+import { DISCOUNTS, usedBeforeMax, type SalesFamilyStudent, type SalesMoneySubscriptionView } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useId, useRef, useState, type FormEvent } from 'react';
 import { Button } from '@/components/ui/form/button';
@@ -6,6 +6,7 @@ import { Dialog } from '@/components/ui/overlay/dialog';
 import { FormAlert } from '@/components/ui/form/form-alert';
 import { usePermissions } from '@/features/people/auth/use-permissions';
 import { INITIAL_PRICING, pricingBody, todayIn, type PricingForm } from '@/features/finance/subscriptions/create/pricing-form';
+import { pricingLessons } from '@/features/finance/subscriptions';
 import { PricingFields } from '@/features/finance/subscriptions/create/PricingFields';
 import { t } from '@/lib/i18n/i18n';
 import { createSalesSubscription, refreshAfterSalesWrite } from '../api';
@@ -45,9 +46,13 @@ export function SalesSubscribeStep({ students, picked, renew = false, onClose, o
   };
   const canSet = usePermissions().can('subscriptions.set_start_date');
   const [today] = useState(() => todayIn('Asia/Riyadh'));
-  const [start, setStart] = useState<StartValue>({ startsOn: today, alreadyStarted: false });
+  const [start, setStart] = useState<StartValue>({ startsOn: today, alreadyStarted: false, usedBefore: 0 });
   const [startError, setStartError] = useState<string | null>(null);
   const pricing = pricingBody(form);
+  // A smaller package clamps «حلقات مستخدمة من الباقة» to one lesson left per course day.
+  const lessonsTotal = pricingLessons(pricing);
+  const usedMax = usedBeforeMax(lessonsTotal);
+  const startShown = { ...start, usedBefore: Math.min(start.usedBefore, usedMax) };
   const request = useRef<{ body: string; id: string } | null>(null);
 
   const save = useMutation({
@@ -60,7 +65,7 @@ export function SalesSubscribeStep({ students, picked, renew = false, onClose, o
   const submit = (e: FormEvent) => {
     e.preventDefault();
     if (!studentId || save.isPending) return;
-    const checked = startBody(start, { canSet, today });
+    const checked = startBody(startShown, { canSet, today, lessonsTotal });
     setStartError(checked.ok ? null : t.salesMoney.error[checked.code]);
     if (!checked.ok) return;
     const body = { studentId, pricing, ...checked.body };
@@ -88,7 +93,7 @@ export function SalesSubscribeStep({ students, picked, renew = false, onClose, o
         <ChildPicker students={choices} value={studentId} onChange={pick} />
         <PricingFields form={form} discounts={DISCOUNTS} set={(patch) => setForm((f) => ({ ...f, ...patch }))} />
         {studentId && <SalesQuotePreview studentId={studentId} pricing={pricing} />}
-        <SalesStartField canSet={canSet} today={today} value={start} onChange={(patch) => setStart((v) => ({ ...v, ...patch }))} error={startError} />
+        <SalesStartField canSet={canSet} today={today} value={startShown} usedMax={usedMax} onChange={(patch) => setStart((v) => ({ ...v, ...patch }))} error={startError} />
         {save.isError && <FormAlert>{salesErrorText(save.error)}</FormAlert>}
       </form>
     </Dialog>

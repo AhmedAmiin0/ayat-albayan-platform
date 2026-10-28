@@ -3,6 +3,7 @@ import { Ticker } from '../reminders/ticker';
 import { readReceipts, type ExpoReceipt } from './push-receipts';
 import { PushReceiptsQueries, type TicketRow } from './push-receipts.queries';
 import { RECEIPTS_TRANSPORT, type ReceiptsTransport } from './receipts.transport';
+import { BackgroundJob } from '../../../config/role/background-job';
 
 const MINUTE = 60_000;
 const EVERY_MS = 15 * MINUTE;
@@ -20,6 +21,7 @@ type ReceiptsSummary = { rows: number; settled: number; pruned: number };
  * receipt drops that token from the admin's profile, the first receipt error is recorded, and
  * checked tickets leave ticket_ids so the next run skips them (no extra column).
  */
+@BackgroundJob({ name: 'push-receipts' })
 @Injectable()
 export class PushReceiptsJob implements OnApplicationBootstrap, OnModuleDestroy {
   private readonly log = new Logger(PushReceiptsJob.name);

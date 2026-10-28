@@ -19,14 +19,14 @@ export class FamilyCodeService {
   }
 
   /** Always 202, whatever exists: the lookup and the send run after the answer. 429 past a limit. */
-  request(body: CodeRequest, ip: string): void {
-    this.kit.limits.assert('request', { ip, identifier: body.phone });
+  async request(body: CodeRequest, ip: string): Promise<void> {
+    await this.kit.limits.assert('request', { ip, identifier: body.phone });
     this.kit.later(() => this.send(body.phone));
   }
 
   /** 401 invalid_code (one message for every failure), 409 phone_belongs_to_staff, 403 account_disabled, 503 codes_unavailable. */
   async verify(body: CodeVerify, ip: string): Promise<CodeSession> {
-    this.kit.limits.assert('check', { ip, identifier: body.phone });
+    await this.kit.limits.assert('check', { ip, identifier: body.phone });
     if (!(await this.available())) throw codesUnavailable();
     const phone = normalizePhone(body.phone);
     const guardian = phone.ok ? await this.accounts.subjects.guardianByPhone(phone.e164) : null;
@@ -47,6 +47,6 @@ export class FamilyCodeService {
     if (!phone.ok || !(await this.available())) return;
     const guardian = await this.accounts.subjects.guardianByPhone(phone.e164);
     if (!guardian) return;
-    await this.kit.codes.issue({ purpose: 'sign_in', subject: { kind: 'guardian', id: guardian.id }, phone: guardian.phone });
+    await this.kit.issue({ purpose: 'sign_in', subject: { kind: 'guardian', id: guardian.id }, phone: guardian.phone });
   }
 }

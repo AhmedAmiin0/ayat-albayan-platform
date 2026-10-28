@@ -35,9 +35,12 @@ export function SubscriptionsList() {
     path: '/subscriptions',
     params: subscriptionParams(filter, search),
   });
-  // A new threshold redraws the rows (it is in their chip); a refetch of one page does not.
+  // A new threshold redraws the rows (it is in their chip); a refetch of one page does not. Keyed by the
+  // package: FlashList recycles a row, which would carry an open «إلغاء الباقة» confirm onto another one.
   const renderItem = useCallback(
-    ({ item }: { item: SubscriptionView }) => <SubscriptionItem sub={item} {...(threshold === undefined ? {} : { threshold })} />,
+    ({ item }: { item: SubscriptionView }) => (
+      <SubscriptionItem key={item.id} sub={item} {...(threshold === undefined ? {} : { threshold })} />
+    ),
     [threshold],
   );
   const empty = search ? t.common.notFound : t.mobileMoney.subscriptionsEmpty;
