@@ -27,7 +27,8 @@ const salesActions = () => {
   for (const label of [t.sales.lessonActions.confirm, t.sales.lessonActions.reschedule, t.sales.lessonActions.cancel]) {
     expect(screen.getByRole('button', { name: label })).toBeTruthy();
   }
-  noAdminAction();
+  // The admin's «تأكيد الحلقة» reads like hers (counted once above): the rest only.
+  for (const label of ADMIN_ACTIONS.slice(1)) expect(screen.queryByRole('button', { name: new RegExp(`^${label}$`) })).toBeNull();
 };
 
 beforeEach(() => {
