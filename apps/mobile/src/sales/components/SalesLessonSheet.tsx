@@ -21,9 +21,9 @@ interface SalesLessonSheetProps {
 /**
  * The salesperson's «تفاصيل الحلقة» (PR #261): «ادخل الحلقة» while the lesson runs (she joins as the
  * classroom assistant, docs/16). «تأكيد الحلقة» on ANY scheduled lesson not ended yet (owner 2026-10-28, lessons.confirm;
- * then it reads «مؤكدة»). On a lesson of one of HER students (docs/16 row 37) «تغيير الموعد» and «إلغاء الحلقة» too,
- * and her student's name opens «تفاصيل الطالب» (not from that student's own file, `studentId`); a lesson with no
- * action stays «للاطلاع فقط». Never a series, an outcome or a report.
+ * then it reads «مؤكدة»). On a lesson of one of HER students (docs/16 row 37) «تغيير الموعد» and «إلغاء الحلقة» too.
+ * Any student's name opens «تفاصيل الطالب» (owner 2026-10-28; the admin's student file in the admin tree; not from that
+ * student's own file, `studentId`); a lesson with no action stays «للاطلاع فقط». Never a series, an outcome or a report.
  */
 export function SalesLessonSheet({ lesson, onClose, studentId }: SalesLessonSheetProps) {
   const now = useNow();

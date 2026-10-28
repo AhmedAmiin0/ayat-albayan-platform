@@ -35,7 +35,7 @@ afterEach(() => jest.useRealTimers());
 const openRow = async (who: string) =>
   fireEvent.press(await screen.findByRole('button', { name: t.lessons.sheet.openRow.replace('{names}', who) }));
 
-test('sales: a tap opens the details with every clock and the lesson link; no admin action, no file', async () => {
+test('sales: a tap opens the details with every clock and the lesson link; no admin action; the name opens the student', async () => {
   await renderWithQuery(<SalesScheduleScreen />);
   // The agenda row never paints the URL: the tap opens the sheet that has it.
   await screen.findByRole('button', { name: t.lessons.sheet.openRow.replace('{names}', 'سلمى') });
@@ -54,7 +54,8 @@ test('sales: a tap opens the details with every clock and the lesson link; no ad
   // Owner 2026-10-26: sales see the lesson's link, full, with «انسخ الرابط».
   expect(screen.getByText('https://meet.example.org/salma')).toBeTruthy();
   expect(screen.getByRole('button', { name: t.lessons.copyLink })).toBeTruthy();
-  expect(screen.queryByRole('button', { name: t.lessons.sheet.openStudent.replace('{name}', 'سلمى') })).toBeNull();
+  // Any student's name opens their details (owner 2026-10-28).
+  expect(screen.getByRole('button', { name: t.lessons.sheet.openStudent.replace('{name}', 'سلمى') })).toBeTruthy();
   // Not running: no «ادخل الحلقة» in the sheet (the running row keeps its own).
   expect(screen.getAllByRole('button', { name: t.classroom.enter })).toHaveLength(1);
 });

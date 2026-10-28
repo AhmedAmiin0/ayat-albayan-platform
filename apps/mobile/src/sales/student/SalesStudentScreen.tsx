@@ -51,7 +51,7 @@ export function SalesStudentScreen() {
           <TrialSection trial={data.trial} />
           {mine ? <SubscriptionSection data={data} /> : null}
           <ScheduleSection schedule={data.schedule} studentId={data.student.id} />
-          <AttendanceSection attendance={data.attendance} />
+          <AttendanceSection studentId={data.student.id} attendance={data.attendance} />
           {mine ? <ReportsSection studentId={data.student.id} reports={data.reports} /> : null}
         </View>
       </ScrollView>
