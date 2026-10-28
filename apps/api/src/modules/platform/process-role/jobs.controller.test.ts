@@ -1,6 +1,7 @@
 import type { ModuleRef } from '@nestjs/core';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { BackgroundJob } from '../../../config/role/background-job';
+import { ConfigReloadJob } from './config-reload.job';
 import { InternalJobsController } from './jobs.controller';
 import { internalToken } from '../../../config/role/worker-kick';
 
@@ -16,8 +17,9 @@ class KickedJob {
 
 function route() {
   const job = new KickedJob();
-  const refs = { get: () => job } as unknown as ModuleRef;
-  return { job, controller: new InternalJobsController(refs) };
+  const reload = { reloadHere: vi.fn(async () => undefined) };
+  const refs = { get: (token: unknown) => (token === ConfigReloadJob ? reload : job) } as unknown as ModuleRef;
+  return { job, reload, controller: new InternalJobsController(refs) };
 }
 
 describe('POST /internal/jobs/:name/kick (the worker)', () => {
@@ -33,5 +35,15 @@ describe('POST /internal/jobs/:name/kick (the worker)', () => {
     await expect(controller.kick('test-kick-route', 'x'.repeat(43))).rejects.toThrow('forbidden');
     await expect(controller.kick('horizon', internalToken())).rejects.toThrow('not_found');
     expect(job.kicked).toBe(0);
+  });
+});
+
+describe('POST /internal/jobs/config-reload/here (a peer API copy)', () => {
+  it("reloads this process's config with the internal token; 403 without it", async () => {
+    const { reload, controller } = route();
+    await expect(controller.peerReload(undefined)).rejects.toThrow('forbidden');
+    expect(reload.reloadHere).not.toHaveBeenCalled();
+    await controller.peerReload(internalToken());
+    expect(reload.reloadHere).toHaveBeenCalledTimes(1);
   });
 });

@@ -18,13 +18,15 @@ describe('closedPath: what each role serves', () => {
     }
   });
 
-  it('api and all: every public route, never /internal', () => {
+  it('api and all: every public route, never /internal but the peer config reload', () => {
     for (const role of ['api', 'all'] as const) {
       expect(closedPath(role, '/health')).toBe(false);
       expect(closedPath(role, '/webhooks/whatsapp')).toBe(false);
       expect(closedPath(role, '/internal/jobs/message-sender/kick')).toBe(true);
       expect(closedPath(role, '/%69nternal/jobs/report-pdf/kick')).toBe(true);
       expect(closedPath(role, '/auth/%E0%A4%A')).toBe(false);
+      expect(closedPath(role, '/internal/jobs/config-reload/here')).toBe(false);
+      expect(closedPath(role, '/internal/jobs/config-reload/kick')).toBe(true);
     }
   });
 });

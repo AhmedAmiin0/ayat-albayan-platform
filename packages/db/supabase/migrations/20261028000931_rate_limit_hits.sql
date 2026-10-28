@@ -7,7 +7,7 @@
 -- raw IP or phone number). API-only (service role): RLS on with no policy, no grant to anon / authenticated.
 -- rate_limit_take: the sliding window of the old in-memory WindowCounter, race-free: each bucket is locked
 -- (transaction advisory lock), counted and, when under its max, hit, in order; the first full bucket answers
--- false and the later ones are not touched (the old `a && b`). Rows older than a day are dropped, 100 per call.
+-- false and the later ones are not touched (the old `a && b`). Rows older than a day are dropped, 100 per call (skip locked).
 --
 -- wa_template_line_syncs: each WhatsApp line's last template sync result (GET /messaging/templates/lines
 -- «last sync»), which was kept in the memory of the copy that ran it. API-only, as above.
@@ -40,8 +40,11 @@ begin
     raise exception 'rate_limit_take: bad arguments';
   end if;
   v_since := v_now - make_interval(secs => p_window_ms / 1000.0);
+  -- skip locked: two callers clean different expired rows instead of waiting on each other.
   delete from public.rate_limit_hits
-  where ctid = any (array(select ctid from public.rate_limit_hits where at < v_now - interval '1 day' limit 100));
+  where ctid = any (array(
+    select ctid from public.rate_limit_hits where at < v_now - interval '1 day' limit 100 for update skip locked
+  ));
   for i in 1 .. v_n loop
     perform pg_advisory_xact_lock(hashtextextended('rate_limit:' || p_buckets[i], 0));
     if (select count(*) from public.rate_limit_hits where bucket = p_buckets[i] and at > v_since) >= p_maxes[i] then

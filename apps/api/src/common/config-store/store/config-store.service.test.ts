@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { configRow } from '../config-store.fakes';
 import type { ConfigStoreQueries } from './config-store.queries';
 import { ConfigStore } from './config-store.service';
@@ -112,5 +112,21 @@ describe('ConfigStore values and descriptions', () => {
   it('a failed overrides reload never fails the description save', async () => {
     const { s } = store({ refresh: vi.fn(async () => Promise.reject(new Error('x'))) });
     await expect(s.describe({ key: 'upload_max_mb', text: null, actorId: 'u1' })).resolves.toBeUndefined();
+  });
+});
+
+describe('ConfigStore.describe on an API copy (docs/09)', () => {
+  afterEach(() => {
+    vi.unstubAllEnvs();
+    vi.unstubAllGlobals();
+  });
+
+  it('a hint key also reloads the worker and the other copies (their translations hold the ar hint)', async () => {
+    vi.stubEnv('APP_ROLE', 'api');
+    vi.stubEnv('WORKER_URL', 'http://ayat-worker:3000');
+    const urls: string[] = [];
+    vi.stubGlobal('fetch', (url: string) => (urls.push(url), Promise.resolve(new Response(null, { status: 204 }))));
+    await store({ refresh: vi.fn(async () => true) }).s.describe({ key: 'upload_max_mb', text: 'وصف', actorId: 'u1' });
+    expect(urls).toEqual(['http://ayat-worker:3000/internal/jobs/config-reload/kick']);
   });
 });

@@ -17,6 +17,11 @@ const KICKABLE = new Map<string, { job: JobClass; method: string }>();
 export const kickable = (name: string): { job: JobClass; method: string } | undefined =>
   KICKABLE.get(name);
 
+/** Every @BackgroundJob class, by name: the boot test checks each one is off in `api` and on in `worker`. */
+const JOBS = new Map<string, JobClass>();
+
+export const backgroundJobs = (): ReadonlyMap<string, JobClass> => JOBS;
+
 function wrap(proto: Record<string, unknown>, key: string, elsewhere: () => unknown): void {
   const own = proto[key];
   if (typeof own !== 'function') throw new Error(`@BackgroundJob: ${key}() is missing`);
@@ -37,9 +42,10 @@ function wrap(proto: Record<string, unknown>, key: string, elsewhere: () => unkn
 export function BackgroundJob(opts: BackgroundJobOptions): (job: JobClass) => void {
   return (job) => {
     const proto = job.prototype as unknown as Record<string, unknown>;
+    if (JOBS.has(opts.name)) throw new Error(`@BackgroundJob: ${opts.name} is declared twice`);
     wrap(proto, 'onApplicationBootstrap', () => undefined);
+    JOBS.set(opts.name, job);
     if (!opts.kick) return;
-    if (KICKABLE.has(opts.name)) throw new Error(`@BackgroundJob: ${opts.name} is declared twice`);
     wrap(proto, opts.kick, () => kickWorker(opts.name));
     KICKABLE.set(opts.name, { job, method: opts.kick });
   };

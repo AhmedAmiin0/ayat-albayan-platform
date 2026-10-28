@@ -33,12 +33,9 @@ export class SignInKit {
     private readonly audit: AuditService,
   ) {}
 
-  /**
-   * Issue a code when the phone's shared send buckets allow it (SignInLimits.maySend): the login_codes
-   * count alone lets two API copies each send one past the limit at the same moment.
-   */
-  async issue(target: CodeTarget): Promise<boolean> {
-    return (await this.limits.maySend(target.phone)) && this.codes.issue(target);
+  /** Issue a code (CodeIssuer takes the phone's shared send buckets once it would send). */
+  issue(target: CodeTarget): Promise<boolean> {
+    return this.codes.issue(target);
   }
 
   later(task: () => Promise<unknown>): void {
