@@ -1,4 +1,4 @@
-import type { BalanceView, ReportFormEntry, ReportFormResponse } from '@ab/shared';
+import type { BalanceView, MemoryView, ReportFormEntry, ReportFormResponse } from '@ab/shared';
 import { reportView, type ViewContext } from '../report.mapper';
 import type { ReportLessonRow, ReportLessonStudent, ReportRow } from '../report-row';
 
@@ -15,6 +15,8 @@ type FormParts = {
   reports: readonly ReportRow[];
   numbers: ReadonlyMap<string, number>;
   packages: ReadonlyMap<string, BalanceView>;
+  /** v2 entries only (ReportLessonQueries.memory). */
+  memory: ReadonlyMap<string, MemoryView>;
   ctx: ViewContext;
   block: ReportFormResponse['submit_block'];
 };
@@ -35,6 +37,7 @@ export function formResponse(p: FormParts): ReportFormResponse {
         lesson_no: p.numbers.get(s.student_id) ?? 1,
         package: p.packages.get(s.student_id) ?? null,
         report: reportView(report, p.ctx),
+        ...(report.form_version === 2 ? { memory: p.memory.get(s.student_id) ?? null } : {}),
       },
     ];
   });

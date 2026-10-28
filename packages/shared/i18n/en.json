@@ -1655,7 +1655,12 @@
       "attachment_path": "The file didn't upload correctly. Upload it again",
       "pdf_not_failed": "The PDF hasn't failed, so there's no need to regenerate it",
       "missing_text": "Write the recitation, new memorization, revision, notes and homework before sending",
-      "missing_program": "Pick the program before sending"
+      "missing_program": "Pick the program before sending",
+      "missing_segments": "Add at least one recitation, new memorization or revision part",
+      "missing_topic": "Write the lesson topic before sending",
+      "missing_domain": "Pick the area before sending",
+      "invalid_range": "Pick ayahs that exist in the surah, from the lower to the higher",
+      "form_version_mismatch": "This report's form changed; refresh and try again"
     },
     "entryFor": "Report for {name}",
     "submitting": "Sending…",
@@ -1696,7 +1701,136 @@
     "studentCol": "Student",
     "submittedAtCol": "Sent on",
     "gradeCol": "Grade",
-    "actionsCol": "Action"
+    "actionsCol": "Action",
+    "v2": {
+      "formTitle": "Lesson report",
+      "autoFilled": "Lesson details are filled in automatically from the schedule.",
+      "lessonOf": "Lesson {n} of {total}",
+      "lessonNo": "Lesson {n}",
+      "teacherChip": "Teacher: {name}",
+      "attendanceTitle": "Attendance",
+      "attendance": {
+        "on_time": "Attended on time",
+        "late": "Attended late",
+        "excused": "Excused in advance",
+        "absent": "Absent without notice"
+      },
+      "programTitle": "Program",
+      "absentHint": "No content or grades are needed for this lesson. The family receives one line with the attendance.",
+      "excusedTitle": "The student excused in advance",
+      "charged": "Counts against the package",
+      "notCharged": "Does not count against the package",
+      "absentNote": "Note to the family (optional)",
+      "absentNotePlaceholder": "e.g. Please let us know in advance when excusing",
+      "segment": {
+        "recited": "Recitation",
+        "new": "New memorization",
+        "revision": "Revision"
+      },
+      "pickRange": "Pick the surah and ayahs",
+      "rangeValue": "Surah {surah} · ayahs {from}–{to}",
+      "rangeShort": "Surah {surah} {from}–{to}",
+      "ayahs": {
+        "one": "1 ayah",
+        "two": "2 ayahs",
+        "few": "{n} ayahs",
+        "other": "{n} ayahs"
+      },
+      "pageOne": "p. {page}",
+      "pageRange": "pp. {first}–{last}",
+      "rateOf": "Grade for {title}",
+      "addSegment": "+ Add another part",
+      "removeSegment": "Remove this part",
+      "tajweedTitle": "Theory / tajweed",
+      "optional": "(optional)",
+      "tajweed": {
+        "noon_sakin": "Noon sakinah and tanween",
+        "meem_sakin": "Meem sakinah",
+        "madd": "Prolongation (madd)",
+        "qalqala": "Qalqalah",
+        "makharij": "Articulation points"
+      },
+      "topic": "Lesson topic",
+      "skills": {
+        "reading": "Reading",
+        "writing": "Writing",
+        "listening": "Listening and speaking",
+        "grammar": "Grammar"
+      },
+      "domainTitle": "Area",
+      "domains": {
+        "aqeedah": "Creed",
+        "fiqh": "Fiqh",
+        "seerah": "Seerah",
+        "hadith": "Hadith",
+        "adab": "Manners"
+      },
+      "memorized": "Memorized",
+      "islamicRates": {
+        "comprehension": "Understanding",
+        "participation": "Participation"
+      },
+      "overall": "Overall grade",
+      "suggested": "Suggested from the grades: {grade}",
+      "homework": "Homework before the next lesson",
+      "homeworkHint": "Suggested from the lesson content; you can edit it.",
+      "nextTitle": "Next lesson",
+      "editPlan": "Edit the plan",
+      "note": "Note to the family",
+      "notePlaceholder": "Write a short note to the family",
+      "quick": {
+        "keep_going": "Well done, keep going",
+        "daily_revision": "Needs daily revision",
+        "tajweed_focus": "Needs to focus on tajweed"
+      },
+      "attach": "+ Attach a file",
+      "send": "Send the report to the family",
+      "saveEdit": "Save the edit",
+      "saveDraft": "Save draft",
+      "sendHint": "The guardian receives the report as a PDF on WhatsApp.",
+      "picker": {
+        "cancel": "Cancel",
+        "search": "Search for a surah",
+        "searchPlaceholder": "Search by surah name or number",
+        "recent": "Recent:",
+        "surahItem": "Surah {name}",
+        "surahMeta": "{n} ayahs · juz {juz}",
+        "from": "From ayah",
+        "to": "To ayah",
+        "dec": "Decrease",
+        "inc": "Increase",
+        "summary": "{ayahs} · page {page} · juz {juz}.",
+        "afterLast": "Starts right after the last memorized ayah ({ayah}).",
+        "done": "Done",
+        "noMatch": "No surah matches that name or number"
+      },
+      "suggest": {
+        "homeworkQuran": "Revise Surah {surah} from ayah {from} to {to} every day.",
+        "nextNew": "New memorization: Surah {surah} {from}–{to}",
+        "nextRevision": "Revision: Surah {surah} {from}–{to}"
+      },
+      "family": {
+        "title": "{name}'s lesson report",
+        "doneToday": "Done today",
+        "theoryLine": "Theory: {topic}",
+        "domainLine": "{domain}: {topic}",
+        "memorizedLine": "Memorized: {text}",
+        "progress": "Memorization progress",
+        "juzLabel": "Juz {juz} ({name})",
+        "pagesOf": "{done} of {total} pages",
+        "progressAria": "Juz {juz}: {done} of {total} pages",
+        "completedJuz": "Completed: {list}",
+        "juzName": "Juz {name}",
+        "teacherNote": "Teacher's note",
+        "lessonsLeft": "Left in the package: {left}",
+        "ask": "Questions? Message us on WhatsApp",
+        "absentLine": "The lesson did not take place: {attendance}."
+      },
+      "admin": {
+        "v2Badge": "New form",
+        "noContent": "No content for this lesson"
+      }
+    }
   },
   "subscriptions": {
     "title": "Subscriptions",
@@ -3548,7 +3682,8 @@
       "academyTimezone": "Days in payment and invoice ranges, the day view and recurring expenses follow this zone.",
       "feedbackRateWindowMin": "Each link may send 10 requests and each IP 60 within this window.",
       "teachersAlwaysAvailable": "When on, any teacher can be booked at any hour of any day, whatever their saved availability. Saved availability is kept and applies again when this is off; clashes with booked lessons and time off still block. Automatic follow-up messages only offer saved availability.",
-      "commsSource": "«Current setup» or «Numbers». Changed only in the «Numbers» section, after parity is confirmed."
+      "commsSource": "«Current setup» or «Numbers». Changed only in the «Numbers» section, after parity is confirmed.",
+      "reportFormV2": "When on, teachers use the new form for new reports (surah and ayahs, content per program) and families receive the new report layout. Earlier reports stay as they are."
     },
     "theme": "Interface theme",
     "themeHint": "Light, dark or the device setting; saved for this browser.",
@@ -3573,7 +3708,8 @@
     "invalidPhone": "Enter the number in international format, e.g. +966500000000",
     "invalidText": "Check this field",
     "teachersAlwaysAvailable": "All teachers can be booked around the clock, every day",
-    "commsSource": "Where the number setup comes from"
+    "commsSource": "Where the number setup comes from",
+    "reportFormV2": "New lesson report form"
   },
   "language": {
     "label": "Language",

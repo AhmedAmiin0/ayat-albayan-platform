@@ -11,6 +11,13 @@ import {
 import { callSubmitReport } from './submit/report-rpc';
 import type { SubmitPayload } from './submit/submit-plan';
 
+/** Empty on a draft nobody has filled in (attendance and program are prefilled, so not listed). */
+const UNTOUCHED = [
+  'content', 'recited', 'new_memorization', 'revision', 'theory', 'notes', 'homework', 'next_plan',
+  'grade_recitation', 'grade_memorization', 'grade_revision', 'grade_tajweed', 'grade_engagement',
+  'grade_commitment', 'grade_overall',
+] as const;
+
 /** lesson_reports reads and writes (service role — the services guard every call). R-REP-01..04. */
 @Injectable()
 export class ReportsQueries {
@@ -43,7 +50,8 @@ export class ReportsQueries {
    * One draft per student on the lesson, created on first open (R-REP-04: unique (lesson_id,
    * student_id), `do nothing` → idempotent). Attendance already marked on the lesson is prefilled.
    */
-  async ensureDrafts(lesson: ReportLessonRow, actorId: string): Promise<void> {
+  async ensureDrafts(lesson: ReportLessonRow, opts: { actorId: string; formVersion: 1 | 2 }): Promise<void> {
+    const { actorId, formVersion } = opts;
     const rows = lesson.lesson_students.map((s) => ({
       lesson_id: lesson.id,
       student_id: s.student_id,
@@ -51,11 +59,29 @@ export class ReportsQueries {
       attendance: s.attendance,
       program: s.student?.program ?? null,
       created_by: actorId,
+      form_version: formVersion,
     }));
     if (rows.length === 0) return;
     const { error } = await this.db
       .from('lesson_reports')
       .upsert(rows, { onConflict: 'lesson_id,student_id', ignoreDuplicates: true });
+    if (error) throw dbError(error);
+  }
+
+  /**
+   * report_form_v2 switched since these drafts were made: a draft nobody has touched yet (never
+   * sent, nothing typed or graded) takes the current form. A started draft keeps its own.
+   */
+  async alignUntouched(lessonId: string, formVersion: 1 | 2): Promise<void> {
+    let q = this.db
+      .from('lesson_reports')
+      .update({ form_version: formVersion })
+      .eq('lesson_id', lessonId)
+      .eq('status', 'draft')
+      .eq('version', 0)
+      .neq('form_version', formVersion);
+    for (const column of UNTOUCHED) q = q.is(column, null);
+    const { error } = await q;
     if (error) throw dbError(error);
   }
 
