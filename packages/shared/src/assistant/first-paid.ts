@@ -1,6 +1,7 @@
 import { toCents } from '../money/earnings/earnings.js';
 import { computeCommission, type AssistantCommissionType, type CommissionAmount } from './commission.js';
 import { commissionKindOf } from './kind.js';
+import { subscriptionAlreadyStarted, type StartFact } from './started.js';
 
 // "Fully paid" and "first" (migration 20261006000272: subscription_full_at, evaluate_assistant_commission).
 // Derived from the payments, never stored: net paid (payments - refunds, in the package currency) has
@@ -14,7 +15,8 @@ export interface PaymentFact {
   id?: string;
 }
 
-export interface SubscriptionFact {
+/** starts_on / lessons_used_before (StartFact): a course that already started earns nothing. */
+export interface SubscriptionFact extends StartFact {
   id: string;
   price: number;
   currency: string;
@@ -97,11 +99,12 @@ export interface CommissionContext {
 /**
  * What one subscription earns at `share` % of the normal commission: null unless somebody brought the
  * student, the assistant has terms, it is fully paid on or after BOTH startsOn and the day the student was
- * brought (in the assistant's tz: nothing is retroactive) and the amount is above zero.
+ * brought (in the assistant's tz: nothing is retroactive), the course did not start before it was recorded
+ * (subscriptionAlreadyStarted, owner 2026-10-28) and the amount is above zero.
  */
 export function planOn(ctx: CommissionContext, sub: SubscriptionFact, share: number): PlannedCommission | null {
   const fullAt = subscriptionFullAt(sub);
-  if (!ctx.broughtBy || !ctx.broughtAt || !ctx.terms || !fullAt) return null;
+  if (!ctx.broughtBy || !ctx.broughtAt || !ctx.terms || !fullAt || subscriptionAlreadyStarted(sub)) return null;
   const day = localDay(fullAt, ctx.tz);
   if (day < ctx.terms.startsOn || day < localDay(ctx.broughtAt, ctx.tz)) return null;
   const { price, currency, id } = sub;

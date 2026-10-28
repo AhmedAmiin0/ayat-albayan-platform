@@ -38,7 +38,7 @@ async function seedPaidStudent(assistantId: string): Promise<void> {
       values (${g?.id ?? ''}, 'سهيلة الاختبار', 'سهيلة الاختبار', 'Asia/Riyadh', ${assistantId}, now()) returning id`;
     const [sub] = await sql<{ id: string }[]>`insert into public.subscriptions
       (student_id, package, duration, lessons_total, price, currency, price_source, starts_on)
-      values (${s?.id ?? ''}, '8', 30, 8, 500, 'SAR', '{}'::jsonb, current_date) returning id`;
+      values (${s?.id ?? ''}, '8', 30, 8, 500, 'SAR', '{}'::jsonb, (now() at time zone 'Asia/Riyadh')::date) returning id`;
     await sql`insert into public.payments (subscription_id, amount, currency, method, paid_at, kind)
       values (${sub?.id ?? ''}, 500, 'SAR', 'bank', now(), 'payment')`;
   });
