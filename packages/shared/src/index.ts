@@ -39,6 +39,7 @@ export * from './sales/schedule.js';
 export * from './sales/teacher-filter.js';
 export * from './sales/money.js';
 export * from './sales/money-views.js';
+export * from './sales/payment-link/index.js';
 export * from './sales/registration.js';
 export * from './sales/start-date.js';
 export * from './sales/renewal-due.js';

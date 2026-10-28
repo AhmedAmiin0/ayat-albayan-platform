@@ -2,7 +2,10 @@
 // An OTA update only swaps JavaScript; a native dependency, plugin or app.json native field needs an APK.
 // Usage: node tools/scripts/native-changes.mjs <lastBuildCommit>   exit 1 = native change found.
 import { execFileSync } from 'node:child_process';
-import { fileURLToPath } from 'node:url';
+import { mkdtempSync, rmSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 
 const MOBILE = 'apps/mobile';
 // runtimeVersion.policy is appVersion, so `version` decides which builds an update reaches.
@@ -13,7 +16,19 @@ const NATIVE_KEYS = ['version', 'sdkVersion', 'plugins', 'android', 'ios', 'sche
 // built: a change needs an APK. Images in assets/<folder>/ (tabs, brand) are imported from JS and travel
 // inside the OTA bundle, so they are not native.
 const NATIVE_PATHS = [`${MOBILE}/assets`, `${MOBILE}/eas.json`];
-const isNativePath = (f) => f === `${MOBILE}/eas.json` || /^apps\/mobile\/assets\/[^/]+$/.test(f);
+const isNativeAsset = (f) => /^apps\/mobile\/assets\/[^/]+$/.test(f);
+// eas.json profiles that never build the normal app (docs/30: the separate Stripe test app): editing one is no
+// reason for a new preview / production APK. Every other part of eas.json still is.
+const SIDE_PROFILES = ['stripe-test'];
+const easCore = (text) => {
+  try {
+    const eas = JSON.parse(text);
+    for (const p of SIDE_PROFILES) delete eas.build?.[p];
+    return JSON.stringify(eas);
+  } catch {
+    return `unparsed:${text}`;
+  }
+};
 // Pure-JS packages (no native code, no config plugin): a version change ships by OTA.
 // Google fonts are .ttf files loaded at runtime by expo-font's useFonts, not embedded by its plugin.
 // @shopify/flash-list v2 is a JS-only recycler on the New Architecture: its package ships dist/*.js and
@@ -32,15 +47,44 @@ export function nativeChanges(before, after, changedFiles = []) {
   const a = JSON.parse(before.appJson || '{}').expo ?? {};
   const b = JSON.parse(after.appJson || '{}').expo ?? {};
   for (const k of NATIVE_KEYS) if (!same(a[k], b[k])) found.push(`app.json: expo.${k}`);
-  if (before.appConfig !== after.appConfig) found.push('app.config.ts changed (dynamic config)');
+  // configOut: the normal app's evaluated config (configOut below); unknown on either side → the text decides.
+  const evaluated = typeof before.configOut === 'string' && typeof after.configOut === 'string';
+  const configSame = before.appConfig === after.appConfig || (evaluated && before.configOut === after.configOut);
+  if (!configSame) found.push('app.config.ts changed (dynamic config)');
   const da = JSON.parse(before.pkg || '{}').dependencies ?? {};
   const db = JSON.parse(after.pkg || '{}').dependencies ?? {};
   for (const name of new Set([...Object.keys(da), ...Object.keys(db)])) {
     if (da[name] === db[name] || jsOnly(name, db[name] ?? da[name])) continue;
     found.push(`dependency ${name}: ${da[name] ?? '(none)'} -> ${db[name] ?? '(removed)'}`);
   }
-  for (const f of changedFiles) if (isNativePath(f)) found.push(`${f} changed`);
+  for (const f of changedFiles) if (isNativeAsset(f)) found.push(`${f} changed`);
+  const easKnown = typeof before.eas === 'string' && typeof after.eas === 'string';
+  const easChanged = easKnown ? easCore(before.eas) !== easCore(after.eas) : changedFiles.includes(`${MOBILE}/eas.json`);
+  if (easChanged) found.push(`${MOBILE}/eas.json changed`);
   return found;
+}
+
+/**
+ * app.config.ts evaluated as EAS evaluates it for the normal app (APP_VARIANT unset), from the same app.json
+ * on both sides, so only its own logic is compared: a change that only adds a side variant (APP_VARIANT,
+ * docs/30) leaves it equal. null when it cannot be evaluated (the text comparison decides then).
+ */
+export async function configOut(source, appJson) {
+  if (!source) return null;
+  const dir = mkdtempSync(join(tmpdir(), 'app-config-'));
+  const variant = process.env.APP_VARIANT;
+  try {
+    const file = join(dir, 'app.config.mts');
+    writeFileSync(file, source);
+    delete process.env.APP_VARIANT;
+    const mod = await import(pathToFileURL(file).href);
+    return JSON.stringify(mod.default({ config: JSON.parse(appJson || '{}').expo ?? {} }));
+  } catch {
+    return null;
+  } finally {
+    if (variant !== undefined) process.env.APP_VARIANT = variant;
+    rmSync(dir, { recursive: true, force: true });
+  }
 }
 
 const show = (ref, file) => {
@@ -58,15 +102,20 @@ const changedSince = (ref) => {
     return [`${NATIVE_PATHS.join(', ')} (git diff failed)`];
   }
 };
-const snapshot = (ref) => ({ appJson: show(ref, 'app.json'), appConfig: show(ref, 'app.config.ts'), pkg: show(ref, 'package.json') });
+const snapshot = (ref) => ({ appJson: show(ref, 'app.json'), appConfig: show(ref, 'app.config.ts'), pkg: show(ref, 'package.json'), eas: show(ref, 'eas.json') });
 
-function main() {
+async function main() {
   const last = process.argv[2];
   if (!last || !/^[0-9a-f]{7,40}$/.test(last)) { console.error('::error::need the last build commit'); process.exit(2); }
-  const found = nativeChanges(snapshot(last), snapshot('HEAD'), changedSince(last));
+  const [before, after] = [snapshot(last), snapshot('HEAD')];
+  if (before.appConfig !== after.appConfig) {
+    before.configOut = await configOut(before.appConfig, after.appJson);
+    after.configOut = await configOut(after.appConfig, after.appJson);
+  }
+  const found = nativeChanges(before, after, changedSince(last));
   for (const f of found) console.log(`native change since ${last.slice(0, 7)}: ${f}`);
   if (!found.length) console.log('no native change: an OTA update is enough');
   process.exit(found.length ? 1 : 0);
 }
 
-if (process.argv[1] === fileURLToPath(import.meta.url)) main();
+if (process.argv[1] === fileURLToPath(import.meta.url)) await main();

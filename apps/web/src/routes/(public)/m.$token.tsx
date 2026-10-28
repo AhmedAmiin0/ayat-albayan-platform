@@ -7,7 +7,7 @@ import { MeetingGuestPage } from '@/features/teaching/meetings/MeetingGuestPage'
  * /m/:token: an internal meeting's link («اجتماع داخلي»). Outside every guard: no login, no app
  * shell. A signed-in staff member is sent to /meeting/<id> to join with their own role.
  */
-export const Route = createFileRoute('/m/$token')({ component: MeetingLinkRoute });
+export const Route = createFileRoute('/(public)/m/$token')({ component: MeetingLinkRoute });
 
 function MeetingLinkRoute() {
   const { token } = Route.useParams();

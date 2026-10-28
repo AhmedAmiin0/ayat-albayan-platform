@@ -210,9 +210,9 @@
         "apps/web/src/routes/admin/(ops)/classrooms.tsx",
         "apps/web/src/routes/classroom.$lessonId.tsx",
         "apps/web/src/routes/meeting.$id.tsx",
-        "apps/web/src/routes/join.$linkToken.tsx",
-        "apps/web/src/routes/s.$token.tsx",
-        "apps/web/src/routes/m.$token.tsx",
+        "apps/web/src/routes/(public)/join.$linkToken.tsx",
+        "apps/web/src/routes/(public)/s.$token.tsx",
+        "apps/web/src/routes/(public)/m.$token.tsx",
         "apps/web/src/routes/sales/live.tsx",
         "apps/web/src/routes/sales/meetings.tsx",
         "apps/api/src/modules/teaching/classroom/",
@@ -274,7 +274,7 @@
     "feedback": {
       "about": "student feedback («رأيك يهمّنا»)",
       "paths": [
-        "apps/web/src/routes/feedback.$token.tsx",
+        "apps/web/src/routes/(public)/feedback.$token.tsx",
         "apps/web/src/routes/admin/(ops)/feedback.tsx",
         "apps/web/src/routes/teacher/feedback.tsx",
         "apps/api/src/modules/teaching/feedback/"

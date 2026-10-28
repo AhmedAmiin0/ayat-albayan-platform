@@ -2780,6 +2780,96 @@ export type Database = {
           },
         ];
       };
+      payment_links: {
+        Row: {
+          amount: number;
+          client_request_id: string;
+          created_at: string;
+          created_by: string;
+          currency: string;
+          duration: number;
+          expires_at: string;
+          id: string;
+          kind: string;
+          lessons: number;
+          package: Database['public']['Enums']['package_size'] | null;
+          paid_at: string | null;
+          paid_payment_id: string | null;
+          processing: boolean;
+          reference_price: number;
+          status: string;
+          stripe_payment_intent: string | null;
+          stripe_session_id: string | null;
+          student_id: string;
+          subscription_id: string | null;
+          token: string;
+          updated_at: string;
+        };
+        Insert: {
+          amount: number;
+          client_request_id: string;
+          created_at?: string;
+          created_by: string;
+          currency: string;
+          duration: number;
+          expires_at?: string;
+          id?: string;
+          kind: string;
+          lessons: number;
+          package?: Database['public']['Enums']['package_size'] | null;
+          paid_at?: string | null;
+          paid_payment_id?: string | null;
+          processing?: boolean;
+          reference_price: number;
+          status?: string;
+          stripe_payment_intent?: string | null;
+          stripe_session_id?: string | null;
+          student_id: string;
+          subscription_id?: string | null;
+          token: string;
+          updated_at?: string;
+        };
+        Update: {
+          amount?: number;
+          client_request_id?: string;
+          created_at?: string;
+          created_by?: string;
+          currency?: string;
+          duration?: number;
+          expires_at?: string;
+          id?: string;
+          kind?: string;
+          lessons?: number;
+          package?: Database['public']['Enums']['package_size'] | null;
+          paid_at?: string | null;
+          paid_payment_id?: string | null;
+          processing?: boolean;
+          reference_price?: number;
+          status?: string;
+          stripe_payment_intent?: string | null;
+          stripe_session_id?: string | null;
+          student_id?: string;
+          subscription_id?: string | null;
+          token?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'payment_links_student_id_fkey';
+            columns: ['student_id'];
+            isOneToOne: false;
+            referencedRelation: 'students';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'payment_links_subscription_id_fkey';
+            columns: ['subscription_id'];
+            isOneToOne: false;
+            referencedRelation: 'subscriptions';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       payments: {
         Row: {
           fx_rate: number | null;
@@ -3534,6 +3624,54 @@ export type Database = {
             referencedColumns: ['id'];
           },
         ];
+      };
+      stripe_events: {
+        Row: {
+          event_id: string;
+          processed_at: string | null;
+          received_at: string;
+          result: string | null;
+          type: string;
+        };
+        Insert: {
+          event_id: string;
+          processed_at?: string | null;
+          received_at?: string;
+          result?: string | null;
+          type: string;
+        };
+        Update: {
+          event_id?: string;
+          processed_at?: string | null;
+          received_at?: string;
+          result?: string | null;
+          type?: string;
+        };
+        Relationships: [];
+      };
+      stripe_settings: {
+        Row: {
+          id: boolean;
+          max_discount_pct: number | null;
+          stripe_enabled: boolean;
+          updated_at: string;
+          updated_by: string | null;
+        };
+        Insert: {
+          id?: boolean;
+          max_discount_pct?: number | null;
+          stripe_enabled?: boolean;
+          updated_at?: string;
+          updated_by?: string | null;
+        };
+        Update: {
+          id?: boolean;
+          max_discount_pct?: number | null;
+          stripe_enabled?: boolean;
+          updated_at?: string;
+          updated_by?: string | null;
+        };
+        Relationships: [];
       };
       students: {
         Row: {
@@ -4978,6 +5116,17 @@ export type Database = {
       };
       integration_secret_clear: { Args: { p_key: string }; Returns: boolean };
       pick_trial_date: { Args: { p: Json }; Returns: Json };
+      stripe_secret_clear: { Args: { p_name: string }; Returns: boolean };
+      stripe_secret_name_ok: { Args: { p_name: string }; Returns: boolean };
+      stripe_secret_read: { Args: { p_name: string }; Returns: string };
+      stripe_secret_set: { Args: { p_name: string; p_value: string }; Returns: undefined };
+      stripe_secrets_status: {
+        Args: Record<PropertyKey, never>;
+        Returns: {
+          name: string;
+          updated_at: string;
+        }[];
+      };
       trial_ahead: { Args: { p_students: string[] }; Returns: boolean };
       trial_date_replay: { Args: { p_request: string; p_student: string }; Returns: Json };
       trial_date_result: { Args: { p_lesson: string }; Returns: Json };
@@ -5231,7 +5380,7 @@ export type Database = {
       message_direction: 'inbound' | 'outbound';
       message_status: 'queued' | 'sent' | 'delivered' | 'read' | 'failed' | 'sent_manually';
       package_size: 'trial' | '4' | '8' | '12' | '16' | '20' | '28';
-      payment_method: 'bank' | 'wallet' | 'cash' | 'other';
+      payment_method: 'bank' | 'wallet' | 'cash' | 'other' | 'card';
       payout_status: 'draft' | 'approved' | 'paid';
       pdf_status: 'pending' | 'rendering' | 'ready' | 'failed';
       program: 'quran' | 'arabic' | 'islamic_studies';
@@ -5427,7 +5576,7 @@ export const Constants = {
       message_direction: ['inbound', 'outbound'],
       message_status: ['queued', 'sent', 'delivered', 'read', 'failed', 'sent_manually'],
       package_size: ['trial', '4', '8', '12', '16', '20', '28'],
-      payment_method: ['bank', 'wallet', 'cash', 'other'],
+      payment_method: ['bank', 'wallet', 'cash', 'other', 'card'],
       payout_status: ['draft', 'approved', 'paid'],
       pdf_status: ['pending', 'rendering', 'ready', 'failed'],
       program: ['quran', 'arabic', 'islamic_studies'],

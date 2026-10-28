@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { PAYMENT_KINDS, PAYMENT_METHODS } from '../enums/index.js';
+import { ALL_PAYMENT_METHODS, PAYMENT_KINDS, PAYMENT_METHODS } from '../enums/index.js';
 import {
   CUSTOM_COUNT_MAX,
   CUSTOM_COUNT_MIN,
@@ -109,7 +109,7 @@ export const paymentCreateSchema = z.object({
 /** PATCH /payments/:id: explicit optionals (a .partial() would re-apply defaults). */
 export const paymentUpdateSchema = z.object({
   amount: moneyAmount.optional(),
-  method: z.enum(PAYMENT_METHODS).optional(),
+  method: z.enum(ALL_PAYMENT_METHODS).optional(), // a card (Stripe) payment keeps its method on an edit
   paidAt: pastInstant.optional(),
   receiptPath: z.string().min(1).nullable().optional(),
   note: optionalText,

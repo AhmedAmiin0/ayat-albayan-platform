@@ -7,7 +7,7 @@ import { StaffLinkGate } from '@/features/teaching/classroom/join/StaffLinkGate'
  * /join/:linkToken: the family's lesson link. Outside every guard: no login, no app shell. The
  * lesson's own staff, signed in, are sent to /classroom/<lesson> to join with their own role.
  */
-export const Route = createFileRoute('/join/$linkToken')({ component: JoinRoute });
+export const Route = createFileRoute('/(public)/join/$linkToken')({ component: JoinRoute });
 
 function JoinRoute() {
   const { linkToken } = Route.useParams();

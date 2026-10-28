@@ -874,11 +874,6 @@
       "count": 2
     }
   },
-  "src/modules/sales/sales-money/sales-money.service.ts": {
-    "ab/module-boundaries": {
-      "count": 1
-    }
-  },
   "src/modules/sales/sales-money/sales-money.services.ts": {
     "ab/module-boundaries": {
       "count": 3

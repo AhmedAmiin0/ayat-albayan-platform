@@ -8,3 +8,4 @@ export { SalesTeacherScreen } from './screens/SalesTeacherScreen';
 export { SalesTeachersScreen } from './screens/SalesTeachersScreen';
 export { SubscriptionHistoryScreen } from './screens/SubscriptionHistoryScreen';
 export { SalesTodayScreen } from './screens/SalesTodayScreen';
+export { fill } from './lib/sales-text';

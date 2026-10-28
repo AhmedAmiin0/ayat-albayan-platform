@@ -37,6 +37,7 @@ import { PaymentsModule } from './modules/finance/payments/payments.module';
 import { SalesMoneyModule } from './modules/sales/sales-money/sales-money.module';
 import { AssistantPayModule } from './modules/finance/assistant-pay/assistant-pay.module';
 import { PayoutsModule } from './modules/finance/payouts/payouts.module';
+import { StripeTestModule } from './modules/finance/stripe';
 import { TeacherEarningsModule } from './modules/finance/teacher-earnings/earnings.module';
 import { PricingModule } from './modules/finance/pricing/pricing.module';
 import { ReceivablesModule } from './modules/finance/receivables/receivables.module';
@@ -107,6 +108,8 @@ import { WhatsappModule } from './modules/messaging/whatsapp/whatsapp.module';
     SalesStudentsModule,
     PayoutsModule,
     AssistantPayModule,
+    // Test build only (docs/30): an empty module unless FEATURE_STRIPE=test.
+    StripeTestModule.register(),
     TeacherEarningsModule,
     ExpensesModule,
     DashboardModule,

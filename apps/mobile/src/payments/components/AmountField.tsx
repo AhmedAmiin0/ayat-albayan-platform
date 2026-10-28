@@ -14,18 +14,20 @@ interface AmountFieldProps {
   /** The package's currency: payments are in it (docs/11 §7), so it is shown, not asked. */
   currency: string;
   error?: string;
+  /** Defaults to «المبلغ». */
+  label?: string;
 }
 
 /** «المبلغ»: 16pt (docs/07 §12, no iOS zoom), the numeric pad, LTR digits, the currency beside it. */
-export function AmountField({ value, onChange, currency, error }: AmountFieldProps) {
+export function AmountField({ value, onChange, currency, error, label = t.payments.amount }: AmountFieldProps) {
   const { color } = useTheme();
   const [focused, setFocused] = useState(false);
   return (
     <View style={{ gap: 6 }}>
-      <FormLabel>{t.payments.amount}</FormLabel>
+      <FormLabel>{label}</FormLabel>
       <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
         <TextInput
-          accessibilityLabel={t.payments.amount}
+          accessibilityLabel={label}
           keyboardType="decimal-pad"
           value={value}
           onChangeText={onChange}

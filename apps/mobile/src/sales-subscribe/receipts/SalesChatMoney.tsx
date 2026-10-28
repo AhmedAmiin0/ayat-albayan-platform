@@ -5,12 +5,13 @@ import { t } from '@/core/lib/i18n/i18n';
 import { inTree, useTreeBase } from '@/core/nav/tree-base';
 import { PillButton } from '@/core/ui/primitives/PillButton';
 import { openPackages, renewTargets, useSalesFamily } from '../lib/family';
+import { PaymentLinkPill } from '../payment-link/PaymentLinkPill';
 
 /**
  * Over a salesperson's chat with a family (R-ASST-01/04, owner 2026-10-12): «جدّد الاشتراك» FIRST for
  * each of hers due for a renewal (the same screen, that child picked and the form prefilled from her last
  * package; owner 2026-10-15/26), «اشتراك جديد» when one of the family's students is hers, and
- * «سجّل تحويلًا بنكيًا» while one of their packages is owed.
+ * «سجّل تحويلًا بنكيًا» while one of their packages is owed; «رابط دفع» in the Stripe test build only.
  * Needs self.sales_money; nothing on a lead's chat (RegisterFromChat is there) or another's family.
  * Pills in the chat's action strip (SalesChatActions).
  */
@@ -43,6 +44,7 @@ export function SalesChatMoney({ thread }: { thread: ThreadView | null }) {
           }
         />
       ) : null}
+      <PaymentLinkPill phone={phone} />
     </>
   );
 }
