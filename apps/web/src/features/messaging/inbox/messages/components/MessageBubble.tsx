@@ -13,6 +13,7 @@ import { Content, SenderLine } from './MessageContent';
 import { useInboxMode } from '../../shared/mode';
 import { canRetry, canSendByHand, deliveryTitle, isHandedOff, outboundNotes } from '../lib/message-notes';
 import { useClock } from '@/lib/clock';
+import { TemplateButtons } from '../template/TemplateButtons';
 
 /** Some of the bubble's text is selected with the mouse. */
 function selectedIn(el: HTMLElement): boolean {
@@ -43,6 +44,8 @@ export function MessageBubble({ message: m, waitingTemplate, now }: MessageBubbl
   const [menu, setMenu] = useState(false);
   const acts = useHasBubbleActions(m);
   const actions = <BubbleActions message={m} menu={menu} onMenu={setMenu} />;
+  // A template's buttons (WhatsApp): attached right under the time, the rest below them.
+  const rows = Boolean(m.template?.buttons.length);
 
   return (
     <li
@@ -68,6 +71,8 @@ export function MessageBubble({ message: m, waitingTemplate, now }: MessageBubbl
         }
         className={cn(
           'min-w-0 max-w-[min(85%,560px)] rounded-lg px-3.5 py-2.5 text-sm',
+          // WhatsApp's buttons span the bubble: a template with buttons is never a sliver.
+          rows && 'min-w-[min(85%,260px)] overflow-hidden pb-0',
           // Below 900px (the full-screen chat on a sunk ground): ours mint, theirs white, each with its
           // sharp tail corner at the top of its screen edge.
           outbound
@@ -87,13 +92,16 @@ export function MessageBubble({ message: m, waitingTemplate, now }: MessageBubbl
           </time>
           {outbound && <DeliveryTicks status={m.status} times={deliveryTitle(m, clock)} />}
         </footer>
-        {notes.map((note) => (
-          <p key={note} className="mt-1 text-2xs text-ink-2">
-            {note}
-          </p>
-        ))}
-        {admin && (canRetry(m) || canSendByHand(m) || isHandedOff(m)) && <MessageActions message={m} />}
-        <ReactionPill message={m} outbound={outbound} />
+        {m.template && <TemplateButtons buttons={m.template.buttons} />}
+        <div className={cn(rows && 'pb-2.5 empty:hidden')}>
+          {notes.map((note) => (
+            <p key={note} className="mt-1 text-2xs text-ink-2">
+              {note}
+            </p>
+          ))}
+          {admin && (canRetry(m) || canSendByHand(m) || isHandedOff(m)) && <MessageActions message={m} />}
+          <ReactionPill message={m} outbound={outbound} />
+        </div>
       </article>
       {!outbound && actions}
     </li>

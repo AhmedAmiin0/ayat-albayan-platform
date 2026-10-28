@@ -33,6 +33,7 @@ describe('starterRow — one chat-WABA template as a registry row', () => {
       footer_ar: 'أكاديمية آيات البيان',
       params: ['var_1'],
       buttons: [],
+      display: { header: null, buttons: [] },
       status: 'approved',
       quality: 'GREEN',
       meta_id: 'meta-w1',

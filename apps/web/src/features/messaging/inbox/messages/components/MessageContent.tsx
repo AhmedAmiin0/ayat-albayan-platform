@@ -8,6 +8,8 @@ import { LinkedBody } from '@/components/ui/display/linked-body';
 import { QuoteBlock } from './QuoteBlock';
 import { ResendAsk } from '../resend/ResendAsk';
 import { RatingChip } from '../../sales/RatingChip';
+import { TappedLabel } from '../template/TappedLabel';
+import { TemplateFrame } from '../template/TemplateFrame';
 
 // The inside of a MessageBubble: what was said, and who sent ours.
 
@@ -58,16 +60,23 @@ function EmptyLine({ message: m }: { message: MessageView }) {
   );
 }
 
-/** What was said: «مُعاد توجيهها», the quote it answers, the template's name, the media, the text, what a quick reply did. */
+/**
+ * What was said: «مُعاد توجيهها», the quote it answers, the template's name, «ضغطة زرّ» on a tapped button,
+ * a template's header, the media, the text, its footer, what a quick reply did.
+ */
 export function Content({ message: m }: { message: MessageView }) {
   const empty = !m.body && !m.media_mime && !m.template_key;
+  const media = Boolean(m.media_mime || m.media_url);
   return (
     <>
       {m.forwarded && <ForwardedLabel />}
       {m.reply_to && <QuoteBlock quote={m.reply_to} outbound={m.direction === 'outbound'} />}
       {m.template_key && <p className="mb-1 text-2xs font-semibold text-ink-3">{templateLine(m.template_key)}</p>}
-      {(m.media_mime || m.media_url) && <MessageMedia message={m} />}
-      {m.body && <LinkedBody text={m.body} />}
+      <TappedLabel message={m} />
+      <TemplateFrame block={m.template} hasMedia={media}>
+        {media && <MessageMedia message={m} />}
+        {m.body && <LinkedBody text={m.body} />}
+      </TemplateFrame>
       {empty && <EmptyLine message={m} />}
       <ReplyLine message={m} />
       <RatingChip message={m} />

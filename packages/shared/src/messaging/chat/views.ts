@@ -2,6 +2,7 @@ import type { LeadSource, LeadStatus, LessonStatus, MessageDirection, MessageSta
 import type { ChatListRef } from './chat-lists.js';
 import type { MessageQuote } from '../replies/reply-forward.js';
 import type { MessageReactions } from '../reactions/reactions.js';
+import type { MessageTemplateBlock } from '../templates/template-block.js';
 import type { TemplateParams } from '../templates/templates.js';
 import type { SubscriptionBadge, ThreadPeople } from './thread-people.js';
 
@@ -64,6 +65,8 @@ export interface MessageView {
   lesson_id: string | null;
   template_key: string | null;
   template_params: TemplateParams | null;
+  /** A template row's header, footer and buttons as WhatsApp draws them (templateBlock); absent = as before. */
+  template?: MessageTemplateBlock | null;
   /** Inbound or session text as stored; for a template row, the rendered template text. */
   body: string | null;
   media_mime: string | null;

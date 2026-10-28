@@ -1,9 +1,11 @@
-import { renderTemplateBody, type TemplateView } from '@ab/shared';
+import { renderTemplateBody, templateBlock, type TemplateView } from '@ab/shared';
 import { Field } from '@/components/ui/form/field';
 import { Input } from '@/components/ui/form/input';
 import { Ltr } from '@/components/ui/display/ltr';
 import { t } from '@/lib/i18n/i18n';
 import { paramFields, toParamsInput, urlButton, type ParamValues } from '../lib/template-params';
+import { TemplateButtons } from '../../messages/template/TemplateButtons';
+import { TemplateFrame } from '../../messages/template/TemplateFrame';
 
 export interface TemplateParamFieldsProps {
   template: TemplateView;
@@ -22,7 +24,10 @@ const required = (label: string) => c.required.replace('{field}', label);
  */
 export function TemplateParamFields({ template: tpl, values, missing, onChange }: TemplateParamFieldsProps) {
   const url = urlButton(tpl);
-  const preview = renderTemplateBody(tpl.body_ar, toParamsInput(tpl, values));
+  const params = toParamsInput(tpl, values);
+  const preview = renderTemplateBody(tpl.body_ar, params);
+  // As the family will see it in WhatsApp: header, body, grey footer, the buttons under it.
+  const block = templateBlock(tpl, params);
 
   return (
     <>
@@ -55,9 +60,13 @@ export function TemplateParamFields({ template: tpl, values, missing, onChange }
       </div>
       <figure className="grid gap-1.5">
         <figcaption className="text-xs font-semibold text-ink-3">{c.preview}</figcaption>
-        <div dir="auto" className="max-w-[560px] rounded-lg bg-sunk px-3.5 py-2.5 text-sm whitespace-pre-wrap">
-          <p>{preview}</p>
-          {tpl.footer_ar && <p className="mt-1.5 text-2xs text-ink-3">{tpl.footer_ar}</p>}
+        <div className="max-w-[min(100%,560px)] min-w-[min(100%,260px)] justify-self-start overflow-hidden rounded-lg bg-sunk px-3.5 py-2.5 text-sm">
+          <TemplateFrame block={block} hasMedia={false}>
+            <p dir="auto" className="whitespace-pre-wrap [overflow-wrap:anywhere]">
+              {preview}
+            </p>
+          </TemplateFrame>
+          <TemplateButtons buttons={block.buttons} />
         </div>
       </figure>
     </>

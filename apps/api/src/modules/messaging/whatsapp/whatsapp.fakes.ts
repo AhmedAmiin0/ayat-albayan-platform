@@ -102,6 +102,7 @@ const BASE_ROW: TemplateRow = {
   footer_ar: 'أكاديمية آيات البيان',
   params: ['student_names', 'lesson_when'],
   buttons: [{ type: 'url', url: 'https://meet.jit.si/{{1}}' }],
+  display: null,
   status: 'approved',
   quality: null,
   meta_id: null,

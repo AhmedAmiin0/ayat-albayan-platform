@@ -1,5 +1,15 @@
 import type { Json } from '@ab/db';
-import { BODY_SLOTS, crmValuesSchema, QUICK_REPLY_INTENTS, type BodySlot, type TemplateButton, type TemplateParams } from '@ab/shared';
+import {
+  BODY_SLOTS,
+  crmValuesSchema,
+  QUICK_REPLY_INTENTS,
+  TEMPLATE_BUTTON_KINDS,
+  TEMPLATE_HEADER_KINDS,
+  type BodySlot,
+  type TemplateButton,
+  type TemplateDisplay,
+  type TemplateParams,
+} from '@ab/shared';
 import { z } from 'zod';
 
 // The jsonb columns the sender and the registry read (message_templates.params / buttons,
@@ -9,6 +19,13 @@ const buttonSchema = z.discriminatedUnion('type', [
   z.object({ type: z.literal('url'), url: z.string(), text: z.string().optional() }),
   z.object({ type: z.literal('quick_reply'), text: z.string(), intent: z.enum(QUICK_REPLY_INTENTS) }),
 ]);
+
+const displaySchema = z.object({
+  header: z.object({ type: z.enum(TEMPLATE_HEADER_KINDS), text: z.string().optional() }).nullable(),
+  buttons: z.array(
+    z.object({ type: z.enum(TEMPLATE_BUTTON_KINDS), text: z.string(), url: z.string().optional(), phone: z.string().optional() }),
+  ),
+});
 
 const slot = z.string().optional();
 const slots = Object.fromEntries(BODY_SLOTS.map((s) => [s, slot])) as Record<BodySlot, typeof slot>;
@@ -25,6 +42,12 @@ const paramsSchema = z.object({
 export function templateButtons(json: Json | null): TemplateButton[] {
   const r = z.array(buttonSchema).safeParse(json);
   return r.success ? r.data : [];
+}
+
+/** message_templates.display (what WhatsApp shows); null when never synced or malformed (the columns' fallback). */
+export function templateDisplay(json: Json | null): TemplateDisplay | null {
+  const r = displaySchema.safeParse(json);
+  return r.success ? r.data : null;
 }
 
 /** message_templates.params: names of {{1}}, {{2}}, … in order. */
