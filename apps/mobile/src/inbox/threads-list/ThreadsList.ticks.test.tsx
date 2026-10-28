@@ -58,7 +58,7 @@ test('their last message shows no ticks; the unread chip stays', async () => {
   await renderWithQuery(<InboxScreen />);
   await screen.findByText('أم إيمان');
   expect(screen.queryByTestId(/^ticks-/)).toBeNull();
-  expect(screen.getByText(t.inbox.unread.one)).toBeTruthy();
+  expect(screen.getByLabelText(t.inbox.unread.one)).toBeTruthy();
 });
 
 test('a failed last send: the saffron «!» before the preview, «لم تُرسل» said once (the chip)', async () => {
