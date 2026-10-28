@@ -3,6 +3,9 @@ import { DB, type Db } from '../../db/db.module';
 import { dbError } from '../../http/http';
 import { AVATAR_FILES, type AvatarFiles } from './avatar-files';
 
+/** Roles whose photo is never shown (owner 2026-10-28: students and families are initials only). */
+export const NOT_STAFF: ReadonlySet<string> = new Set(['student', 'guardian']);
+
 /** A staff member's photo: their login's own when set, else the one an admin put on the teacher record. */
 export function staffPhotoPath(input: { own: string | null | undefined; teacher: string | null | undefined }): string | null {
   return input.own || input.teacher || null;
@@ -69,12 +72,14 @@ export class StaffPhotos {
     const unique = [...new Set(ids)];
     if (!unique.length) return new Map();
     const [profiles, teachers] = await Promise.all([
-      this.db.from('profiles').select('id, avatar_path').in('id', unique),
+      this.db.from('profiles').select('id, avatar_path, role').in('id', unique),
       this.db.from('teachers').select('profile_id, avatar_path').in('profile_id', unique).not('avatar_path', 'is', null),
     ]);
     if (profiles.error) throw dbError(profiles.error);
     if (teachers.error) throw dbError(teachers.error);
     const ofTeacher = new Map(teachers.data.map((t) => [t.profile_id, t.avatar_path]));
-    return this.sign(profiles.data.map((p) => ({ id: p.id, path: staffPhotoPath({ own: p.avatar_path, teacher: ofTeacher.get(p.id) }) })));
+    // Students and families are initials only, even with a photo of their own on «حسابي».
+    const staff = profiles.data.filter((p) => !NOT_STAFF.has(p.role));
+    return this.sign(staff.map((p) => ({ id: p.id, path: staffPhotoPath({ own: p.avatar_path, teacher: ofTeacher.get(p.id) }) })));
   }
 }

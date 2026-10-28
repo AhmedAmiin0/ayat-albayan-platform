@@ -33,14 +33,20 @@ describe('StaffPhotos', () => {
     });
   });
 
-  it('ofProfiles: falls back to the linked teacher record’s photo', async () => {
+  it('ofProfiles: falls back to the linked teacher record’s photo; a student or guardian photo is never signed', async () => {
     const f = fakeDb({
-      profiles: [{ data: [{ id: 'p1', avatar_path: null }, { id: 'p2', avatar_path: 'p2/avatar-1.png' }, { id: 'p3', avatar_path: null }] }],
+      profiles: [{ data: [
+        { id: 'p1', avatar_path: null, role: 'teacher' },
+        { id: 'p2', avatar_path: 'p2/avatar-1.png', role: 'admin' },
+        { id: 'p3', avatar_path: null, role: 'sales' },
+        { id: 'p4', avatar_path: 'p4/avatar-1.png', role: 'student' },
+        { id: 'p5', avatar_path: 'p5/avatar-1.png', role: 'guardian' },
+      ] }],
       teachers: [{ data: [{ profile_id: 'p1', avatar_path: 'teachers/t1/avatar-1.png' }] }],
     });
     const files = new FakeAvatarFiles();
-    const urls = await new StaffPhotos(f.db, files).ofProfiles(['p1', 'p2', 'p3']);
-    expect(files.batches).toHaveLength(1);
+    const urls = await new StaffPhotos(f.db, files).ofProfiles(['p1', 'p2', 'p3', 'p4', 'p5']);
+    expect(files.batches).toEqual([['teachers/t1/avatar-1.png', 'p2/avatar-1.png']]);
     expect([...urls.keys()]).toEqual(['p1', 'p2']);
   });
 

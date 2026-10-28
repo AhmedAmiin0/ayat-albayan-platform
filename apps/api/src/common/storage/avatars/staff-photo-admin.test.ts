@@ -52,6 +52,18 @@ describe('StaffPhotoAdmin', () => {
     expect(files.removed).toEqual(['p1/avatar-1.png', `teachers/${T}/avatar-1.png`]);
   });
 
+  it('a linked teacher: setting the login’s photo also clears an older record photo, audited with both', async () => {
+    const path = 'p1/avatar-2.png';
+    const { files, audit, admin } = kit({
+      teachers: [{ data: { profile_id: 'p1' } }, { data: { avatar_path: `teachers/${T}/avatar-1.png` } }, {}],
+      profiles: [{ data: { avatar_path: null } }, {}],
+    });
+    files.objects.set(path, { size: 900, contentType: 'image/png', bytes: PNG });
+    await admin.set({ kind: 'teacher', id: T }, { path, actorId: 'admin1' });
+    expect(files.removed).toEqual([`teachers/${T}/avatar-1.png`]);
+    expect(audit.record).toHaveBeenCalledWith(expect.objectContaining({ before: { avatar_path: null, teacher_avatar_path: `teachers/${T}/avatar-1.png` }, after: { avatar_path: path } }));
+  });
+
   it('a student or guardian login has no photo (400), an unknown id 404', async () => {
     const { admin } = kit({ profiles: [{ data: { role: 'student' } }, { data: null }], teachers: [{ data: null }] });
     expect(await codeOf(admin.uploadUrl({ kind: 'user', id: 's1' }, { mime: 'image/png', size: 9 }))).toBe('avatar_not_staff');

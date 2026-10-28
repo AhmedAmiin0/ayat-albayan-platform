@@ -7,10 +7,9 @@ import { dbError } from '../../http/http';
 import { avatarPath, teacherAvatarPath } from '../storage.paths';
 import { AvatarWriter, type AvatarSlot } from './avatar-writer';
 import { profileSlot, teacherSlot } from './photo-slots';
+import { NOT_STAFF } from './staff-photos';
 
 type Who = { kind: 'teacher' | 'user'; id: string };
-/** Roles whose photo is never shown (owner 2026-10-28: students and families are initials only). */
-const NOT_STAFF: ReadonlySet<string> = new Set(['student', 'guardian']);
 
 /**
  * An admin's photo of a staff member (owner 2026-10-28), through the same AvatarWriter as «حسابي»:
@@ -38,7 +37,9 @@ export class StaffPhotoAdmin {
   async set(who: Who, input: { path: string; actorId: string }): Promise<StaffPhotoView> {
     const owner = await this.owner(who);
     const { before, after } = await this.writer.set(this.slot(owner), input.path);
-    await this.record(who, { actorId: input.actorId, action: 'avatar_set', before, after });
+    // A record photo from before the login was linked would come back if the login's were cleared.
+    const stale = await this.clearRecord(who, owner);
+    await this.record(who, { actorId: input.actorId, action: 'avatar_set', before: { avatar_path: before, teacher_avatar_path: stale }, after });
     return { avatar_url: await this.writer.files.url(after) };
   }
 
@@ -46,9 +47,14 @@ export class StaffPhotoAdmin {
   async remove(who: Who, actorId: string): Promise<StaffPhotoView> {
     const owner = await this.owner(who);
     const before = await this.writer.clear(this.slot(owner));
-    const record = who.kind === 'teacher' && owner.kind === 'user' ? await this.writer.clear(teacherSlot(this.db, who.id)) : null;
-    if (before || record) await this.record(who, { actorId, action: 'avatar_remove', before: before ?? record, after: null });
+    const record = await this.clearRecord(who, owner);
+    if (before || record) await this.record(who, { actorId, action: 'avatar_remove', before: { avatar_path: before, teacher_avatar_path: record }, after: null });
     return { avatar_url: null };
+  }
+
+  /** A linked teacher's own record photo (null when none, or not a linked teacher). */
+  private clearRecord(who: Who, owner: Who): Promise<string | null> {
+    return who.kind === 'teacher' && owner.kind === 'user' ? this.writer.clear(teacherSlot(this.db, who.id)) : Promise.resolve(null);
   }
 
   private slot(owner: Who): AvatarSlot {
@@ -70,13 +76,13 @@ export class StaffPhotoAdmin {
     return who;
   }
 
-  private record(who: Who, entry: { actorId: string; action: string; before: string | null; after: string | null }) {
+  private record(who: Who, entry: { actorId: string; action: string; before: Record<string, string | null>; after: string | null }) {
     return this.audit.record({
       actorId: entry.actorId,
       entity: who.kind === 'teacher' ? 'teachers' : 'profiles',
       entityId: who.id,
       action: entry.action,
-      before: { avatar_path: entry.before },
+      before: entry.before,
       after: { avatar_path: entry.after },
     });
   }
