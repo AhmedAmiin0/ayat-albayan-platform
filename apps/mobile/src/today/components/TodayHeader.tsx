@@ -1,6 +1,6 @@
 import { formatRunningHead } from '@ab/shared';
 import { View } from 'react-native';
-import { useMyProfile } from '@/account/hooks/queries';
+import { useMyProfile } from '@/account';
 import { useHolds } from '@/auth';
 import { t } from '@/core/lib/i18n/i18n';
 import { locale } from '@/core/lib/i18n/locale';

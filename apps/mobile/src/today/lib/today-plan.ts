@@ -7,7 +7,7 @@ import type { TodayLesson } from './today-lesson';
 
 const MINUTE = 60_000;
 
-export type GreetingPart = 'morning' | 'afternoon' | 'evening' | 'night';
+type GreetingPart = 'morning' | 'afternoon' | 'evening' | 'night';
 
 /**
  * The part of the day by the Riyadh clock (owner 2026-10-28: «Good morning» at 3:36 read wrong): morning

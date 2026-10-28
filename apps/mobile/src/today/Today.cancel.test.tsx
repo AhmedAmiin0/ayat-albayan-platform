@@ -13,6 +13,11 @@ jest.mock('@/core/lib/http/api', () => ({
 }));
 // The bell reads its own API (notifications/BellButton.test); here it would take the day's mocked answers.
 jest.mock('@/notifications/BellButton', () => ({ BellButton: () => null }));
+// The greeting's first name reads /me/profile (TodayHeader.test); here it would take the day's mocked answers.
+jest.mock('@/account/hooks/queries', () => ({
+  ...jest.requireActual('@/account/hooks/queries'),
+  useMyProfile: () => ({ data: undefined }),
+}));
 
 beforeEach(() => {
   mockApiFetch.mockReset();
