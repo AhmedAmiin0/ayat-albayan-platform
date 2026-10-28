@@ -2,6 +2,9 @@ import { describe, expect, it } from 'vitest';
 import { fakeDb, type FakeResult } from '../../people/guardians/fake-db';
 import { ReportPdfSource } from './report-pdf.source';
 
+/** A clock before every fixture lesson: «الحلقة القادمة» is read after the lesson itself. */
+const EPOCH = new Date(0);
+
 const report = {
   id: 'r1',
   lesson_id: 'l1',
@@ -37,7 +40,7 @@ function tables(over: Record<string, FakeResult[]> = {}): Record<string, FakeRes
 describe('ReportPdfSource — one report and everything around it', () => {
   it('reads the lesson, student + guardian, teacher, sequence and packages', async () => {
     const { db, calls } = fakeDb(tables());
-    const src = await new ReportPdfSource(db).load('r1');
+    const src = await new ReportPdfSource(db).load('r1', EPOCH);
     expect(src).toMatchObject({
       lesson: { starts_at: '2026-09-29T14:00:00+00:00' },
       student: { name: 'سلمى', code: 'AB-0183', program: 'quran' },
@@ -57,14 +60,14 @@ describe('ReportPdfSource — one report and everything around it', () => {
 
   it('skips the completed-before count when the lesson already has its sequence number', async () => {
     const { db, calls } = fakeDb(tables({ v_lesson_sequence: [{ data: { seq: 9 } }] }));
-    const src = await new ReportPdfSource(db).load('r1');
+    const src = await new ReportPdfSource(db).load('r1', EPOCH);
     expect(src?.seq).toBe(9);
     expect(calls.some((c) => c.table === 'lesson_students')).toBe(false);
   });
 
   it('no package unit for this lesson → packageN null', async () => {
     const { db } = fakeDb(tables({ v_package_lessons: [{ data: null }], subscriptions: [{ data: [] }] }));
-    const src = await new ReportPdfSource(db).load('r1');
+    const src = await new ReportPdfSource(db).load('r1', EPOCH);
     expect(src?.packageN).toBeNull();
     expect(src?.packages).toEqual([]);
   });
@@ -72,19 +75,19 @@ describe('ReportPdfSource — one report and everything around it', () => {
   it('the lesson\'s rule package picks the CRM report kind: trial only for a trial rule (docs/19)', async () => {
     const lesson = (rule: { package: string } | null) => ({ lessons: [{ data: { starts_at: '2026-09-29T14:00:00+00:00', ends_at: '2026-09-29T15:00:00+00:00', rule } }] });
     const { db, calls } = fakeDb(tables(lesson({ package: 'trial' })));
-    expect((await new ReportPdfSource(db).load('r1'))?.lesson.trial).toBe(true);
+    expect((await new ReportPdfSource(db).load('r1', EPOCH))?.lesson.trial).toBe(true);
     expect(calls.find((c) => c.table === 'lessons' && c.method === 'select')?.args[0]).toContain('rule:schedule_rules(package)');
-    expect((await new ReportPdfSource(fakeDb(tables(lesson({ package: 'monthly' }))).db).load('r1'))?.lesson.trial).toBe(false);
-    expect((await new ReportPdfSource(fakeDb(tables(lesson(null))).db).load('r1'))?.lesson.trial).toBe(false);
+    expect((await new ReportPdfSource(fakeDb(tables(lesson({ package: 'monthly' }))).db).load('r1', EPOCH))?.lesson.trial).toBe(false);
+    expect((await new ReportPdfSource(fakeDb(tables(lesson(null))).db).load('r1', EPOCH))?.lesson.trial).toBe(false);
   });
 
   it('a deleted report → null; a missing student or a read error → throws', async () => {
-    await expect(new ReportPdfSource(fakeDb(tables({ lesson_reports: [{ data: null }] })).db).load('r1')).resolves.toBeNull();
-    await expect(new ReportPdfSource(fakeDb(tables({ students: [{ data: null }] })).db).load('r1')).rejects.toThrow(
+    await expect(new ReportPdfSource(fakeDb(tables({ lesson_reports: [{ data: null }] })).db).load('r1', EPOCH)).resolves.toBeNull();
+    await expect(new ReportPdfSource(fakeDb(tables({ students: [{ data: null }] })).db).load('r1', EPOCH)).rejects.toThrow(
       'student not found',
     );
     await expect(
-      new ReportPdfSource(fakeDb(tables({ teachers: [{ error: { message: 'down' } }] })).db).load('r1'),
+      new ReportPdfSource(fakeDb(tables({ teachers: [{ error: { message: 'down' } }] })).db).load('r1', EPOCH),
     ).rejects.toThrow('teacher read failed: down');
   });
 });

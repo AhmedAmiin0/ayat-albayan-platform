@@ -1664,6 +1664,7 @@
       "missing_topic": "Write the lesson topic before sending",
       "missing_domain": "Pick the area before sending",
       "invalid_range": "Pick ayahs that exist in the surah, from the lower to the higher",
+      "too_many_segments": "The report has the most parts it can hold; remove one before sending",
       "form_version_mismatch": "This report's form changed; refresh and try again"
     },
     "entryFor": "Report for {name}",
@@ -1744,6 +1745,7 @@
       "pageRange": "pp. {first}–{last}",
       "rateOf": "Grade for {title}",
       "addSegment": "+ Add another part",
+      "segmentsFull": "Up to {max} parts",
       "removeSegment": "Remove this part",
       "tajweedTitle": "Theory / tajweed",
       "optional": "(optional)",
@@ -1811,7 +1813,8 @@
       "suggest": {
         "homeworkQuran": "Revise Surah {surah} from ayah {from} to {to} every day.",
         "nextNew": "New memorization: Surah {surah} {from}–{to}",
-        "nextRevision": "Revision: Surah {surah} {from}–{to}"
+        "nextRevision": "Revision: Surah {surah} {from}–{to}",
+        "lang": "en"
       },
       "family": {
         "title": "{name}'s lesson report",
@@ -4224,7 +4227,8 @@
       "teachers": "Teachers",
       "allStudents": "Students",
       "live": "Running lessons",
-      "academySchedule": "Lesson schedule"
+      "academySchedule": "Lesson schedule",
+      "scheduleTab": "Schedule"
     },
     "subscriptions": {
       "pending": "Pending",
@@ -4311,10 +4315,7 @@
       "guardian": "Guardian",
       "noTeacher": "No teacher",
       "guardianPhone": "Guardian's phone",
-      "noPhone": "This student has no saved phone number, so there is no chat to open",
-      "detailsHint": "Opens the student details",
-      "chatHint": "Opens the guardian's chat",
-      "noPhoneHint": "No guardian phone"
+      "detailsHint": "Opens the student details"
     },
     "live": {
       "title": "Lessons running now",
@@ -4380,6 +4381,35 @@
         "title": "Trial lesson",
         "none": "No trial lesson",
         "teacher": "with {name}"
+      },
+      "log": {
+        "title": "Attendance log",
+        "open": "View attendance log",
+        "months": "Choose the month",
+        "columns": {
+          "date": "Date",
+          "time": "Time",
+          "teacher": "Teacher",
+          "status": "Status",
+          "report": "Report"
+        },
+        "totals": {
+          "held": "Attended",
+          "absent": "Absent",
+          "excused": "Excused",
+          "late": "Late",
+          "cancelled": "Cancelled",
+          "rescheduled": "Rescheduled"
+        },
+        "empty": "No past lessons in this month",
+        "sent": "Sent",
+        "notSent": "Not sent",
+        "trial": "Trial",
+        "makeup": "Makeup",
+        "moved": "Rescheduled",
+        "late": "Late",
+        "cancelReason": "Cancel reason: {reason}",
+        "openReport": "Open the report of the {date} lesson"
       }
     },
     "lessonActions": {
@@ -4390,7 +4420,7 @@
       "reasonHint": "e.g. the family is travelling",
       "confirmCancel": "Confirm cancellation",
       "cancelled": "Lesson cancelled",
-      "ownNote": "You can reschedule or cancel your students' lessons; anything else is done by the admin.",
+      "ownNote": "You can confirm, reschedule or cancel any lesson; anything else is done by the admin.",
       "confirm": "Confirm lesson",
       "confirmed": "Lesson confirmed",
       "confirmEnded": "This lesson has ended, so it cannot be confirmed",

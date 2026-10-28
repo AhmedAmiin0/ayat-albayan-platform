@@ -8,7 +8,7 @@ import type {
   SubmitBody,
 } from '@ab/shared';
 import { reportErrorWords } from '@ab/client-core';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, type QueryClient } from '@tanstack/react-query';
 import { Linking } from 'react-native';
 import { ApiError, apiFetch, apiSend } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
@@ -38,6 +38,15 @@ export function useReportForm(lessonId: string) {
 export function withReport(form: ReportFormResponse | undefined, view: ReportView): ReportFormResponse | undefined {
   if (!form) return form;
   return { ...form, entries: form.entries.map((e) => (e.report.id === view.id ? { ...e, report: view } : e)) };
+}
+
+/** After a send: the lesson moved (completed …), the pending list shrank, history has a new row. */
+export async function refreshAfterSubmit(client: QueryClient): Promise<void> {
+  await Promise.all([
+    client.invalidateQueries({ queryKey: pathKey('/lessons') }),
+    client.invalidateQueries({ queryKey: pathKey('/reports') }),
+    client.invalidateQueries({ queryKey: pathKey('/teachers/me/reports') }),
+  ]);
 }
 
 export const saveDraft = (id: string, body: DraftBody) => apiSend<ReportView>('PUT', `/reports/${id}/draft`, body);

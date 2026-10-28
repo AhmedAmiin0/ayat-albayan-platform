@@ -1664,6 +1664,7 @@
       "missing_topic": "اكتب موضوع الدرس قبل الإرسال",
       "missing_domain": "اختر المجال قبل الإرسال",
       "invalid_range": "اختر آيات موجودة في السورة، من الأصغر إلى الأكبر",
+      "too_many_segments": "بلغ التقرير الحد الأقصى للمقاطع، احذف مقطعًا قبل الإرسال",
       "form_version_mismatch": "تغيّر نموذج هذا التقرير، حدّث الصفحة وحاول مرة أخرى"
     },
     "entryFor": "تقرير {name}",
@@ -1744,6 +1745,7 @@
       "pageRange": "ص {first}–{last}",
       "rateOf": "تقييم {title}",
       "addSegment": "+ أضف مقطعًا آخر",
+      "segmentsFull": "الحد الأقصى {max} مقاطع",
       "removeSegment": "احذف هذا المقطع",
       "tajweedTitle": "الدرس النظري / التجويد",
       "optional": "(اختياري)",
@@ -1811,7 +1813,8 @@
       "suggest": {
         "homeworkQuran": "مراجعة سورة {surah} من الآية {from} إلى {to} يوميًا.",
         "nextNew": "الحفظ الجديد: سورة {surah} {from}–{to}",
-        "nextRevision": "المراجعة: سورة {surah} {from}–{to}"
+        "nextRevision": "المراجعة: سورة {surah} {from}–{to}",
+        "lang": "ar"
       },
       "family": {
         "title": "تقرير حلقة {name}",
@@ -4224,7 +4227,8 @@
       "teachers": "المعلمون",
       "allStudents": "الطلاب",
       "live": "الحلقات الجارية",
-      "academySchedule": "جدول الحلقات"
+      "academySchedule": "جدول الحلقات",
+      "scheduleTab": "الجدول"
     },
     "subscriptions": {
       "pending": "في الانتظار",
@@ -4311,10 +4315,7 @@
       "guardian": "ولي الأمر",
       "noTeacher": "بلا معلم",
       "guardianPhone": "هاتف ولي الأمر",
-      "noPhone": "ليس لهذا الطالب رقم محفوظ، فلا توجد محادثة لفتحها",
-      "detailsHint": "يفتح تفاصيل الطالب",
-      "chatHint": "يفتح محادثة ولي الأمر",
-      "noPhoneHint": "لا يوجد رقم لولي الأمر"
+      "detailsHint": "يفتح تفاصيل الطالب"
     },
     "live": {
       "title": "الحلقات الجارية الآن",
@@ -4380,6 +4381,35 @@
         "title": "الحلقة التجريبية",
         "none": "لا توجد حلقة تجريبية",
         "teacher": "مع {name}"
+      },
+      "log": {
+        "title": "سجل الحضور",
+        "open": "عرض سجل الحضور",
+        "months": "اختر الشهر",
+        "columns": {
+          "date": "التاريخ",
+          "time": "الوقت",
+          "teacher": "المعلم/ة",
+          "status": "الحالة",
+          "report": "التقرير"
+        },
+        "totals": {
+          "held": "حضر",
+          "absent": "غاب",
+          "excused": "بعذر",
+          "late": "متأخر",
+          "cancelled": "ألغيت",
+          "rescheduled": "أُجّلت"
+        },
+        "empty": "لا توجد حلقات مضى موعدها في هذا الشهر",
+        "sent": "أُرسل",
+        "notSent": "لم يُرسل",
+        "trial": "تجريبية",
+        "makeup": "تعويضية",
+        "moved": "موعد بديل",
+        "late": "متأخر",
+        "cancelReason": "سبب الإلغاء: {reason}",
+        "openReport": "افتح تقرير حلقة {date}"
       }
     },
     "lessonActions": {
@@ -4390,7 +4420,7 @@
       "reasonHint": "مثال: سفر الأسرة",
       "confirmCancel": "تأكيد الإلغاء",
       "cancelled": "أُلغيت الحلقة",
-      "ownNote": "يمكنك تغيير موعد حلقات طلابك أو إلغاؤها، وما سوى ذلك من الإدارة.",
+      "ownNote": "يمكنك تأكيد أي حلقة أو تغيير موعدها أو إلغاؤها، وما سوى ذلك من الإدارة.",
       "confirm": "تأكيد الحلقة",
       "confirmed": "أُكِّدت الحلقة",
       "confirmEnded": "انتهت هذه الحلقة، فلا يمكن تأكيدها",

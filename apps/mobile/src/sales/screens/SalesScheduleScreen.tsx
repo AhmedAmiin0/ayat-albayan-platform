@@ -44,8 +44,8 @@ export function SalesScheduleScreen({ asTab = false }: { asTab?: boolean }) {
   const details = useLessonDetails(day.data?.lessons);
   const inset = useTabBarInset();
   const can = usePermissions();
-  // docs/16 row 37: she may move or cancel her own students' lessons.
-  const changes = can('lessons.reschedule') || can('lessons.cancel');
+  // docs/16 rows 37, 37b: she may move, cancel or confirm any lesson (owner 2026-10-28).
+  const changes = can('lessons.reschedule') || can('lessons.cancel') || can('lessons.confirm');
   const pills = [
     { value: '', label: t.schedule.allTeachers },
     ...(teachers.data ?? []).map((tc) => ({ value: tc.id, label: localizedName({ ar: tc.name, en: tc.name_en }, locale) })),

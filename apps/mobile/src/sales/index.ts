@@ -1,5 +1,6 @@
 export { AllStudentsScreen, type StudentsView } from './screens/AllStudentsScreen';
 export { SalesLiveScreen } from './screens/SalesLiveScreen';
+export { AttendanceLogScreen } from './attendance/AttendanceLogScreen';
 export { SalesStudentScreen } from './student/SalesStudentScreen';
 export { SalesScheduleScreen } from './screens/SalesScheduleScreen';
 export { SalesSubscriptionsScreen } from './screens/SalesSubscriptionsScreen';

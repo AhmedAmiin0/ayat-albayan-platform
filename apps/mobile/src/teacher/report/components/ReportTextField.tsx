@@ -15,10 +15,15 @@ export interface ReportTextFieldProps {
   invalid?: boolean;
   /** Where useScrollToInvalid finds this question. */
   register?: (node: View | null) => void;
+  /** Greyed example text while empty. */
+  placeholder?: string;
+  /** The column's limit (4000 for the long texts). */
+  maxLength?: number;
 }
 
 /** A free-text question of the report (التسميع، الواجب، …): grows with the text, 4000 chars max. */
-export function ReportTextField({ label, value, onChange, disabled, required, invalid, register }: ReportTextFieldProps) {
+export function ReportTextField(p: ReportTextFieldProps) {
+  const { label, value, onChange, disabled, required, invalid, register } = p;
   const { color } = useTheme();
   const [focused, setFocused] = useState(false);
   const shown = required ? `${label} *` : label;
@@ -36,7 +41,9 @@ export function ReportTextField({ label, value, onChange, disabled, required, in
       </AppText>
       <TextInput
         multiline
-        maxLength={4000}
+        maxLength={p.maxLength ?? 4000}
+        placeholder={p.placeholder}
+        placeholderTextColor={color.ink3}
         value={value}
         editable={!disabled}
         onChangeText={onChange}
