@@ -16,6 +16,7 @@ import { lineOf } from './send-line';
 import { SendGate } from '../gate/send-gate';
 import { SenderQueries } from './sender.queries';
 import { senderTiming } from './sender-timing';
+import { BackgroundJob } from '../../../../config/role/background-job';
 
 /** ponytail: 50 per pass, one at a time; batch the Graph calls if volume ever needs it. */
 const BATCH = 50;
@@ -29,6 +30,7 @@ export type SendSummary = Record<SendOutcome, number>;
  * instances because each row is claimed by compare-and-set. Module mode (the numbers overlay installed,
  * docs/23c) routes each row to a number instead; legacy (overlayNumbers() null) is today's pass exactly.
  */
+@BackgroundJob({ name: 'message-sender', kick: 'kick' })
 @Injectable()
 export class MessageSender implements OnApplicationBootstrap, OnModuleDestroy {
   private readonly log = new Logger(MessageSender.name);

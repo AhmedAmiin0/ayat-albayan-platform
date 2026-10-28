@@ -2,11 +2,12 @@ import { applyStrings, type FlatStrings, type Locale, type TranslationKeysPage, 
 import { BadRequestException, Injectable, Logger, NotFoundException, type OnApplicationBootstrap, type OnModuleDestroy } from '@nestjs/common';
 import { createHash } from 'node:crypto';
 import { ar } from '../../../common/i18n/server-text';
+import { kickConfigReload } from '../../../config/role/worker-kick';
 import { DEFAULTS, listKeys, overrideProblem, type OverrideMaps } from './translations.catalog';
 import { TranslationsQueries, type OverrideRow, type OverrideWrite } from './translations.queries';
 import { assertNotValuesOwned } from './values-owned';
 
-/** Overrides saved on another API instance reach this one within this interval. */
+/** Overrides saved on another API copy reach this one within this interval (or at once: kickConfigReload). */
 export const REFRESH_MS = 5 * 60_000;
 /** First load just after boot, not during it: booting touches no network (jobs.wiring test). */
 export const BOOT_LOAD_MS = 1_000;
@@ -31,7 +32,7 @@ const etagOf = (values: FlatStrings): string =>
 
 /**
  * The admins' translation overrides, held in memory: loaded right after boot (never blocking it), after
- * every save / restore, and every REFRESH_MS. Each load re-merges the Arabic overrides into the
+ * every save / restore (here, on the worker and on the other API copies), and every REFRESH_MS. Each load re-merges the Arabic overrides into the
  * server's live copy (common/i18n/server-text `ar`), starting from the bundled defaults, so a
  * restored key goes back to its original text.
  */
@@ -82,7 +83,7 @@ export class TranslationsService implements OnApplicationBootstrap, OnModuleDest
     assertNotValuesOwned(w.locale, w.key);
     if (problem) throw new BadRequestException({ message: problem.kind, missing: problem.missing });
     await this.queries.upsert(w);
-    await this.refresh();
+    await this.reload();
   }
 
   /** Back to the bundled text (deleting a key that has no override is a no-op). 409 as save(). */
@@ -90,7 +91,13 @@ export class TranslationsService implements OnApplicationBootstrap, OnModuleDest
     if (!Object.hasOwn(DEFAULTS[locale], key)) throw new NotFoundException({ message: 'unknown_key' });
     assertNotValuesOwned(locale, key);
     await this.queries.remove(locale, key);
+    await this.reload();
+  }
+
+  /** After a save or restore: here, then the worker and the other API copies (kickConfigReload). */
+  private async reload(): Promise<void> {
     await this.refresh();
+    kickConfigReload();
   }
 
   private apply(maps: Record<Locale, FlatStrings>): void {

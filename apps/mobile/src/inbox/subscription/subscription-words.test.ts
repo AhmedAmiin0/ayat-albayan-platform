@@ -1,6 +1,6 @@
 import { subscriptionStatusStyle } from '@ab/shared';
 import { t } from '@/core/lib/i18n/i18n';
-import { money } from '@/payments/format';
+import { money, partPaidLine } from '@/payments/format';
 import { child, CHILD_ID, family, leadOnly, sub, usedUp } from './people-fixtures';
 import { badgeChip, childChip, dueLine, packageText, subscribeAction } from './subscription-words';
 
@@ -23,6 +23,8 @@ test('a child: the package and what is left, the due on its own, a chip only whe
   expect(packageText(null)).toBe(t.subscriptions.empty);
   expect(dueLine(sub())).toBe(s.due.replace('{amount}', money(120, 'SAR')));
   expect(dueLine(sub({ due_amount: 0 }))).toBeNull();
+  // Part of it came (owner 2026-10-28): what was paid of what, not just «عليه».
+  expect(dueLine(sub({ price: 81, paid_amount: 80, due_amount: 1 }))).toBe(partPaidLine({ paid: 80, price: 81, currency: 'SAR' }));
   expect(childChip(sub())).toEqual({ ...subscriptionStatusStyle.unpaid, label: t.enums.subscriptionStatus.unpaid });
   expect(childChip(sub({ status: 'paused', due_amount: 0 }))?.label).toBe(t.enums.subscriptionStatus.paused);
   // Paid in full and used up: the DB says unpaid until renewed, the chat must not say «غير مدفوع».

@@ -2,6 +2,7 @@ import type { IntegrationConfigItem, IntegrationPlainKey, IntegrationSecretKey }
 import { Inject, Injectable, Logger, type OnModuleDestroy, type OnModuleInit } from '@nestjs/common';
 import { setIntegrationOverlay } from './integration-overlay';
 import { validOverlay } from '../../config/env/env';
+import { kickConfigReload } from '../../config/role/worker-kick';
 import { IntegrationConfigQueries } from './integration-config.queries';
 import { integrationItems } from './integration-config.view';
 
@@ -67,9 +68,15 @@ export class IntegrationConfigService implements OnModuleInit, OnModuleDestroy {
     return integrationItems({ plain, secrets, env: process.env });
   }
 
-  /** After an admin write: reload unless the database's config is switched off. */
-  private async reload(): Promise<void> {
+  /** Reload unless the database's config is switched off (also the worker's config-reload kick). */
+  async reloadHere(): Promise<void> {
     if (this.everyMs !== null) await this.refresh();
+  }
+
+  /** After an admin write: here, then the worker's copy (kickConfigReload). */
+  private async reload(): Promise<void> {
+    await this.reloadHere();
+    kickConfigReload();
   }
 
   async writeValues(values: Partial<Record<IntegrationPlainKey, string | null>>, actorId: string): Promise<void> {

@@ -1,6 +1,7 @@
 import type { SalesMoneySubscriptionView } from '@ab/shared';
 import { View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
+import { partPaidLine } from '@/payments';
 import { FormLabel } from '@/payments/FormLabel';
 import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
@@ -14,7 +15,7 @@ interface OpenPackagePickerProps {
   onChange: (subscriptionId: string) => void;
 }
 
-/** «الاشتراك»: which of her owed packages the transfer pays, and what is still due on it. */
+/** «الاشتراك»: which of her owed packages the transfer pays, and what is still due on it (part-paid: what was paid of what, owner 2026-10-28). */
 export function OpenPackagePicker({ packages, value, onChange }: OpenPackagePickerProps) {
   const { color } = useTheme();
   const line = (weight: 500 | 600, ink: string) => ({
@@ -40,7 +41,7 @@ export function OpenPackagePicker({ packages, value, onChange }: OpenPackagePick
           onChange={onChange}
         />
       )}
-      {value ? <AppText style={line(500, color.ink2)}>{dueText(value)}</AppText> : null}
+      {value ? <AppText style={line(500, color.ink2)}>{partPaidLine(value) ?? dueText(value)}</AppText> : null}
     </View>
   );
 }

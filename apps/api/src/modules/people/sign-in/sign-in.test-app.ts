@@ -9,12 +9,14 @@ import { SettingsService } from '../../../common/settings/settings.service';
 import { CodeSend } from '../../messaging/whatsapp';
 import { FakeAudit, FakeCodes, FakeCodeSend, PEPPER } from './sign-in.fakes';
 import { FakeAuth, FakeSubjects } from './sign-in.fakes.accounts';
+import { LIMIT_STORE, MemoryLimitStore } from './codes/limit-store';
 import { AUTH_GATE, CODE_STORE, SIGN_IN_CONFIG, SUBJECT_STORE } from './sign-in.ports';
 
 export async function signInApp() {
   const fakes = { codes: new FakeCodes(), send: new FakeCodeSend(), subjects: new FakeSubjects(), auth: new FakeAuth(), audit: new FakeAudit() };
   const mod = await Test.createTestingModule({ imports: [AppModule] })
     .overrideProvider(CODE_STORE).useValue(fakes.codes)
+    .overrideProvider(LIMIT_STORE).useValue(new MemoryLimitStore())
     .overrideProvider(SUBJECT_STORE).useValue(fakes.subjects)
     .overrideProvider(AUTH_GATE).useValue(fakes.auth)
     .overrideProvider(CodeSend).useValue(fakes.send)

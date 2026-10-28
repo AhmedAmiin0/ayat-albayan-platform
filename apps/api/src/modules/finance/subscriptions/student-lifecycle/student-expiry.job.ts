@@ -4,6 +4,7 @@ import { pendingSince } from './student-renewal.plan';
 import { StudentExpiryQueries } from './student-expiry.queries';
 import { StudentStatusQueries } from './student-status.queries';
 import { SubscriptionsSettings } from '../subscriptions.settings';
+import { BackgroundJob } from '../../../../config/role/background-job';
 
 const DAY_MS = 86_400_000;
 /** Not on boot: every API test boots AppModule, and a restart loop must not hammer the DB. */
@@ -22,6 +23,7 @@ type ExpirySummary = { students: number; expired: number; failed: number };
  * Sends nothing. A renewal payment later moves expired → active (StudentActivation / StudentRenewal).
  * ponytail: in-process daily timer on the single API instance, like HorizonJob; pg_cron when it scales.
  */
+@BackgroundJob({ name: 'student-expiry' })
 @Injectable()
 export class StudentExpiryJob implements OnApplicationBootstrap, OnModuleDestroy {
   private readonly log = new Logger(StudentExpiryJob.name);

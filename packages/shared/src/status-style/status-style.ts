@@ -72,6 +72,7 @@ export const subscriptionStatusStyle: Record<SubscriptionStatus, StatusStyle> = 
   paused: { tone: 'neutral', glyph: 'half' },
   expired: { tone: 'act', glyph: 'struck' },
   unpaid: { tone: 'act', glyph: 'hollow' },
+  cancelled: { tone: 'neutral', glyph: 'struck' },
 };
 
 export const attendanceStyle: Record<Attendance, StatusStyle> = {

@@ -19,7 +19,10 @@ const queries = {
     return db.get(key) ?? null;
   }),
   insert: vi.fn(async () => null),
+  saveLineSync: vi.fn(async (s: { line: string }) => void synced.set(s.line, s)),
+  lineSyncs: vi.fn(async () => new Map(synced)),
 };
+const synced = new Map<string, unknown>();
 const client = () => ({ configured: vi.fn(() => true), getTemplates: vi.fn(async (): Promise<MetaTemplate[]> => []) });
 let lines = { notifications: client(), chat: client() };
 const audit = { record: vi.fn() };

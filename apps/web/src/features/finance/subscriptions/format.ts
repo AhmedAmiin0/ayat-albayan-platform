@@ -1,6 +1,7 @@
 import {
   counted,
   formatAmount,
+  livePackages,
   packageProgress,
   type AdminTaskView,
   type BalanceView,
@@ -31,9 +32,9 @@ export function progressOf(b: Pick<BalanceView, 'lessons_used' | 'lessons_total'
   return packageProgress(b.lessons_used, b.lessons_total, { forms: t.subscriptions.progress, ...opts });
 }
 
-/** The student's line across every package (FIFO): remaining = StudentBalanceView.remaining. */
+/** The student's line across every live package (FIFO; a cancelled one never counts): remaining = StudentBalanceView.remaining. */
 export function studentProgress(view: Pick<StudentBalanceView, 'packages'>): PackageProgress {
-  const sum = (pick: (b: BalanceView) => number) => view.packages.reduce((n, p) => n + pick(p.balance), 0);
+  const sum = (pick: (b: BalanceView) => number) => livePackages(view.packages).reduce((n, p) => n + pick(p.balance), 0);
   return progressOf({ lessons_used: sum((b) => b.lessons_used), lessons_total: sum((b) => b.lessons_total) });
 }
 

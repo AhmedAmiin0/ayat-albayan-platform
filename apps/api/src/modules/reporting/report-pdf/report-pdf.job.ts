@@ -9,6 +9,7 @@ import { sleep } from '../../../common/async/sleep';
 import { NotificationPolicy } from '../../messaging/notification-rules/policy/policy';
 import { ReportPdfPublisher } from './report-pdf.publisher';
 import { ReportPdfQueries } from './report-pdf.queries';
+import { BackgroundJob } from '../../../config/role/background-job';
 
 const POLL_MS = 60_000;
 /** Soon after boot, not at once: every API test boots AppModule (as HorizonJob notes). */
@@ -37,6 +38,7 @@ export class RulesUnreadError extends Error {
  * id + version: every state change is a compare-and-set, the message is deduped per report.
  * In-process and single-flight; safe across instances because the claim is atomic per row.
  */
+@BackgroundJob({ name: 'report-pdf', kick: 'kick' })
 @Injectable()
 export class ReportPdfJob implements OnApplicationBootstrap, OnModuleDestroy {
   private readonly log = new Logger(ReportPdfJob.name);

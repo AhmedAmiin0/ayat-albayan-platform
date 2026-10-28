@@ -30,10 +30,12 @@ describe('POST /reports/:id/v2/submit (the new form)', () => {
     expect(payload()).toMatchObject({
       report_id: REPORT_ID,
       actor: TEACHER.id,
-      report: { attendance: 'on_time', program: 'quran', grade_overall: 'very_good', grade_recitation: 'very_good', grade_memorization: 'very_good', grade_revision: 'very_good', grade_tajweed: null, homework: 'مراجعة', next_plan: 'الملك 23–30', recited: null, version: 1 },
+      report: { attendance: 'on_time', program: 'quran', grade_overall: 'very_good', grade_recitation: 'very_good', grade_memorization: 'very_good', grade_revision: 'very_good', grade_tajweed: null, homework: 'مراجعة', next_plan: 'الملك 23–30', version: 1 },
       content: { segments: QURAN.segments, tajweed: 'madd', arabic: null, islamic: null, quick: [] },
       lesson_change: { changes: [{ id: LESSON_ID, to_status: 'completed' }] },
     });
+    // The Google sheet's text columns (التسميع / الحفظ الجديد / المراجعة) read the parts.
+    expect(payload()?.report).toMatchObject({ recited: 'الملك 1–15', new_memorization: 'الملك 16–22', revision: 'القلم 1–20', theory: 'المدود' });
     expect(h.pdf.enqueue).toHaveBeenCalledWith(REPORT_ID);
     expect(res.json()).toMatchObject({ form_version: 2, status: 'submitted' });
   });

@@ -3,6 +3,7 @@ import { CRM_MEDIA_PREFIX, allowedCrmUrl } from '../crm-history/crm-history-url'
 import { CrmMediaCopier, type CopyOutcome } from './crm-media-copier';
 import { CrmMediaCopyDone } from './crm-media-copy.done';
 import { CrmMediaCopySettings } from './crm-media-copy.settings';
+import { BackgroundJob } from '../../../../../config/role/background-job';
 
 /** Two files at a time: the batch of 20 takes ten rounds at most (10 s fetch timeout each). */
 const CONCURRENCY = 2;
@@ -28,8 +29,9 @@ export function copyHost(setting: string): string | null {
  * answering any row of a round (CRM_UNREACHABLE) ends the tick with a warning and counts no
  * attempt. Ticks never overlap (a slow one makes the next return 'busy'); idempotent (a copied row
  * leaves the batch query, a failing one is capped). Never edits a body, never deletes. ponytail: in-process timer like
- * WaMediaRetentionJob; the API runs as one process.
+ * WaMediaRetentionJob, in the one job runner only (@BackgroundJob: `running` and the done audit are per process).
  */
+@BackgroundJob({ name: 'crm-media-copy' })
 @Injectable()
 export class CrmMediaCopyJob implements OnApplicationBootstrap, OnModuleDestroy {
   private readonly log = new Logger(CrmMediaCopyJob.name);

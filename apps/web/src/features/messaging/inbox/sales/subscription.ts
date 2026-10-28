@@ -9,6 +9,7 @@ import {
   type ThreadSubscriptionView,
 } from '@ab/shared';
 import { moneyText, progressOf } from '@/features/finance/subscriptions/format';
+import { partPaidText } from '@/features/finance/subscriptions';
 import { t } from '@/lib/i18n/i18n';
 
 // The family's subscription in the chat (R-SUB-01): the chip, each student's package line and
@@ -43,9 +44,14 @@ export function packageLine(sub: ThreadSubscriptionView): string {
   return [name, left].filter(Boolean).join(' — ');
 }
 
-/** «عليه 290 ر.س» while the newest package is not fully paid, else null. */
-export function dueText(sub: Pick<ThreadSubscriptionView, 'due_amount' | 'currency'>): string | null {
+/**
+ * «عليه 290 ر.س» while the newest package is not fully paid, else null; once part of it came in
+ * «مدفوعة جزئيًا: 80 من 81 ر.س · الباقي 1» (owner 2026-10-28: it stays «غير مدفوعة» until paid in full).
+ */
+export function dueText(sub: Pick<ThreadSubscriptionView, 'due_amount' | 'paid_amount' | 'price' | 'currency'>): string | null {
   if (sub.due_amount <= 0) return null;
+  const part = partPaidText({ paid: sub.paid_amount, price: sub.price, currency: sub.currency });
+  if (part) return part;
   return t.inbox.subscription.due.replace('{amount}', moneyText(sub.due_amount, sub.currency));
 }
 

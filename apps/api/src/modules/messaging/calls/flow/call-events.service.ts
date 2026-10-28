@@ -7,6 +7,7 @@ import { callingLine, type CallingLine } from '../kapso/calling-line';
 import type { CallRow } from '../store/call-row';
 import { logCallError } from './call-errors';
 import { CallsKit } from './call-kit';
+import { CallsSweeper } from './calls.sweeper';
 
 /** The port WebhookService calls for every parsed `calls` item (docs/28 §2). */
 export interface CallEventsPort {
@@ -47,6 +48,7 @@ export class CallEvents implements CallEventsPort {
   constructor(
     private readonly kit: CallsKit,
     private readonly gate: CallsGate,
+    private readonly sweeper: CallsSweeper,
   ) {}
 
   async handle(e: CallWebhookEvent): Promise<void> {
@@ -87,5 +89,7 @@ export class CallEvents implements CallEventsPort {
       ...{ number_id: line.numberId, guardian_id: thread?.guardian_id ?? null, lead_id: thread?.lead_id ?? null },
       started_at: e.at.toISOString(),
     });
+    // The sweeper (on the worker) ends it as missed if its terminate webhook is lost.
+    void this.sweeper.wake();
   }
 }
