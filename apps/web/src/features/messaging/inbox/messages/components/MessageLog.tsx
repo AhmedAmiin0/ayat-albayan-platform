@@ -1,4 +1,4 @@
-import type { MessageView } from '@ab/shared';
+import type { MessageView, ThreadLesson } from '@ab/shared';
 import { useLayoutEffect, useRef, useState } from 'react';
 import { Button } from '@/components/ui/form/button';
 import { t } from '@/lib/i18n/i18n';
@@ -11,6 +11,7 @@ import { WithThreadCalls } from '../../calls/entries/use-thread-calls';
 import { useCallsEnabled } from '../../calls/state/call-context';
 import { lastOwnSend } from '../../composer/lib/own-send';
 import { isNearBottom } from '../lib/stick-to-bottom';
+import { ReplyActionsProvider } from '../reply-actions';
 
 export interface MessageLogProps {
   /** The chat's number: her own last send in it (own-send) snaps the log down. */
@@ -31,6 +32,8 @@ export interface MessageLogProps {
   fill?: 'shell' | 'xl' | 'phone';
   /** May this user call from this chat: its call entries (docs/28) then call back when tapped. */
   canCall?: boolean;
+  /** The family's next open lessons (ThreadDetail.lessons): the reply notes' «تأكيد الحلقة» / «تغيير الموعد»; none = no actions. */
+  lessons?: readonly ThreadLesson[];
 }
 
 const BOX = {
@@ -54,11 +57,11 @@ function Day({ label }: { label: string }) {
  * counts what came in below. Her own send (the id her composer recorded) always snaps to the bottom; «رسائل أقدم» pages back.
  * A separator before each day's first message, at every width (the bubbles show the clock only).
  */
-export function MessageLog({ phone, messages, hasMore, loadingOlder, onOlder, waitingKeys, fill = 'shell', canCall = false }: MessageLogProps) {
+export function MessageLog({ phone, messages, hasMore, loadingOlder, onOlder, waitingKeys, fill = 'shell', canCall = false, lessons }: MessageLogProps) {
   // The chat's WhatsApp calls (docs/28), at their time among the messages; nothing asked while calls are off.
   const props = { phone, messages, hasMore, loadingOlder, onOlder, waitingKeys, fill, canCall };
-  if (!useCallsEnabled()) return <LogView {...props} />;
-  return <WithThreadCalls phone={phone}>{(calls) => <LogView {...props} calls={calls} />}</WithThreadCalls>;
+  const log = useCallsEnabled() ? <WithThreadCalls phone={phone}>{(calls) => <LogView {...props} calls={calls} />}</WithThreadCalls> : <LogView {...props} />;
+  return lessons ? <ReplyActionsProvider phone={phone} lessons={lessons}>{log}</ReplyActionsProvider> : log;
 }
 
 function LogView({ phone, messages, hasMore, loadingOlder, onOlder, waitingKeys, fill = 'shell', canCall = false, calls }: MessageLogProps & { calls?: readonly CallView[] | undefined }) {

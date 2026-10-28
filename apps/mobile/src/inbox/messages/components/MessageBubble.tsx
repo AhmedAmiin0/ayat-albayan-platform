@@ -1,10 +1,8 @@
 import { memo } from 'react';
-import { isChatViewMime, type MessageView, replyNote } from '@ab/shared';
+import { isChatViewMime, type MessageView } from '@ab/shared';
 import { type GestureResponderEvent, Linking, Pressable, View, type ViewStyle } from 'react-native';
 import { useHolds } from '@/auth/use-permissions';
-import { useClockCycle } from '@/core/lib/clock';
 import { t } from '@/core/lib/i18n/i18n';
-import { locale } from '@/core/lib/i18n/locale';
 import { shape, type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { holdTop, useBubbleActions } from '../hooks/bubble-actions';
@@ -20,6 +18,7 @@ import { SwipeReply } from './SwipeReply';
 import { LinkedText } from '../text/LinkedText';
 import { ResendAsk } from '../resend/ResendAsk';
 import { useThreadMode } from '../../thread/hooks/thread-mode';
+import { ReplyNoteLine } from '../reply-actions';
 import { TappedLabel } from '../template/TappedLabel';
 import { TemplateButtons } from '../template/TemplateButtons';
 import { TemplateFrame } from '../template/TemplateFrame';
@@ -77,8 +76,6 @@ export const MessageBubble = memo(function MessageBubble({ message: m, phone, on
   const media = mediaLine(m);
   // A photo, PDF, voice note or video we can serve (W6): opened or played from the bubble.
   const file = m.media_url === null && isChatViewMime(m.media_mime);
-  // What a quick reply did (R-SCH-03): «اتأكدت حلقة …» only when its lesson is confirmed now.
-  const note = replyNote(m, { locale, cycle: useClockCycle() });
   const stuck = admin && manages && ours && (m.status === 'failed' || m.click_to_chat !== null);
   // A hand-off asks «بعتّها؟» in MessageActions instead of a reason.
   const why = ours && m.status === 'failed' && m.error_code !== 'handed_off';
@@ -115,11 +112,8 @@ export const MessageBubble = memo(function MessageBubble({ message: m, phone, on
         <ResendAsk message={m} phone={phone} />
         {m.body ? <LinkedText text={m.body} touch={touch} a11y={a11yOn === 'body'} /> : null}
       </TemplateFrame>
-      {note ? (
-        <AppText style={{ ...small, fontFamily: type.ui[600] }}>
-          {t.inbox.quickReply[note.key].replace('{when}', note.when ?? '')}
-        </AppText>
-      ) : null}
+      {/* What a quick reply did, or «تأكيد الحلقة» / «تغيير الموعد» for its lesson (owner 2026-10-28). */}
+      <ReplyNoteLine message={m} />
       <MessageMeta message={m} />
       {/* Right under the time, as WhatsApp; a failed send's reason and actions come below them. */}
       {m.template ? (

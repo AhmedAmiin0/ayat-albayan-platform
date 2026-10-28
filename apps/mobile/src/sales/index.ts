@@ -9,3 +9,5 @@ export { SalesTeachersScreen } from './screens/SalesTeachersScreen';
 export { SubscriptionHistoryScreen } from './screens/SubscriptionHistoryScreen';
 export { SalesTodayScreen } from './screens/SalesTodayScreen';
 export { fill } from './lib/sales-text';
+export { SalesRescheduleSheet } from './lesson-actions/SalesRescheduleSheet';
+export { confirmFailureText } from './lesson-actions/confirm-lesson';
