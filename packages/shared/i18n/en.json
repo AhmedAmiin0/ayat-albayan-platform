@@ -4227,7 +4227,8 @@
       "teachers": "Teachers",
       "allStudents": "Students",
       "live": "Running lessons",
-      "academySchedule": "Lesson schedule"
+      "academySchedule": "Lesson schedule",
+      "scheduleTab": "Schedule"
     },
     "subscriptions": {
       "pending": "Pending",
