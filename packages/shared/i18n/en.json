@@ -1664,6 +1664,7 @@
       "missing_topic": "Write the lesson topic before sending",
       "missing_domain": "Pick the area before sending",
       "invalid_range": "Pick ayahs that exist in the surah, from the lower to the higher",
+      "too_many_segments": "The report has the most parts it can hold; remove one before sending",
       "form_version_mismatch": "This report's form changed; refresh and try again"
     },
     "entryFor": "Report for {name}",
@@ -1744,6 +1745,7 @@
       "pageRange": "pp. {first}–{last}",
       "rateOf": "Grade for {title}",
       "addSegment": "+ Add another part",
+      "segmentsFull": "Up to {max} parts",
       "removeSegment": "Remove this part",
       "tajweedTitle": "Theory / tajweed",
       "optional": "(optional)",
@@ -1811,7 +1813,8 @@
       "suggest": {
         "homeworkQuran": "Revise Surah {surah} from ayah {from} to {to} every day.",
         "nextNew": "New memorization: Surah {surah} {from}–{to}",
-        "nextRevision": "Revision: Surah {surah} {from}–{to}"
+        "nextRevision": "Revision: Surah {surah} {from}–{to}",
+        "lang": "en"
       },
       "family": {
         "title": "{name}'s lesson report",

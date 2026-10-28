@@ -59,7 +59,7 @@ export const islamicContentSchema = z.object({
 
 /** lesson_reports.content for form_version 2. Every part has a default, so `{}` is an empty form. */
 export const reportContentSchema = z.object({
-  segments: z.array(segmentSchema).max(MAX_SEGMENTS).default([]),
+  segments: z.array(segmentSchema).max(MAX_SEGMENTS, { message: 'too_many_segments' }).default([]),
   tajweed: z.enum(TAJWEED_TOPICS).nullable().default(null),
   arabic: arabicContentSchema.nullable().default(null),
   islamic: islamicContentSchema.nullable().default(null),

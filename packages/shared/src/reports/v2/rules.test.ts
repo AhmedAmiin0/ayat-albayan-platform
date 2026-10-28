@@ -63,6 +63,7 @@ describe('suggestions', () => {
     expect(suggestHomework(content({}), WORDS)).toBeNull();
     expect(suggestNextPlan(content({ segments: [seg('recited', [1, 1, 7])] }), WORDS)).toBeNull();
     expect(suggestHomework(lesson, { ...WORDS, homeworkQuran: 'Revise {surah} {from}-{to}' }, 'en')).toBe('Revise Al-Mulk 16-22');
+    expect(suggestNextPlan(lesson, { ...WORDS, nextNew: 'New {surah}', lang: 'en' })).toBe('New Al-Mulk · المراجعة: سورة Al-Qalam 21–40');
   });
 });
 
