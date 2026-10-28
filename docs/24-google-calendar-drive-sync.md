@@ -201,7 +201,7 @@ script made; the script removes its own events itself.**
 - `teachers.calendar_owner` = `'script'` (default: nothing changes) or `'platform'`, with
   `calendar_owner_changed_at/by`; admin-only (RLS `teachers_admin` + the `teachers_calendar_owner_guard`
   trigger + `requireAdmin` on the API), every change audited (`audit_log`, entity `teachers`, action
-  `calendar_owner`). Migration `20261028000942_teacher_calendar_owner.sql`.
+  `calendar_owner`). Migration `20261028000943_teacher_calendar_owner.sql`.
 - A lesson is **calendar-managed** when it is platform-origin (unchanged) OR its teacher's `calendar_owner` is
   `'platform'` (view `v_calendar_managed_lessons`), inside `google_calendar_window_days`. The teacher-calendar
   event and the main-calendar copy follow that rule; the report PDF / attendance / summary writers keep their

@@ -3,11 +3,11 @@ import { join } from 'node:path';
 import { GOOGLE_SKIP_REASONS } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
 
-// Migration 20261028000942 (the per-teacher calendar handover, docs/24) read as text: no database in unit tests.
-const sql = readFileSync(join(__dirname, '../../../../../../packages/db/supabase/migrations/20261028000942_teacher_calendar_owner.sql'), 'utf8');
+// Migration 20261028000943 (the per-teacher calendar handover, docs/24) read as text: no database in unit tests.
+const sql = readFileSync(join(__dirname, '../../../../../../packages/db/supabase/migrations/20261028000943_teacher_calendar_owner.sql'), 'utf8');
 const fn = (name: string) => new RegExp(`function public\\.${name}\\([\\s\\S]*?\\n\\$\\$;`).exec(sql)?.[0] ?? '';
 
-describe('migration 20261028000942: teachers.calendar_owner', () => {
+describe('migration 20261028000943: teachers.calendar_owner', () => {
   it("expand-only: defaults to 'script' (nothing changes on deploy), checked to script / platform", () => {
     expect(sql).toContain("add column if not exists calendar_owner text not null default 'script'");
     expect(sql).toContain("check (calendar_owner in ('script', 'platform'))");
