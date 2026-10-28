@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import { formatPhone } from '@ab/shared';
 import { View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
@@ -20,7 +21,7 @@ const text = t.mobile.feedback;
  * bold line of its own («5 من 5 · نعم», a filled nuqta) or the hollow «لسه ما ردّش» chip, then the
  * lesson type and day, the note (aligned by its own words), and the contact number when the API sent it (admins only).
  */
-export function FeedbackRow({ row }: { row: FeedbackListRow }) {
+export const FeedbackRow = memo(function FeedbackRow({ row }: { row: FeedbackListRow }) {
   const { color } = useTheme();
   const answer = answerLine(row);
   const who = [row.student.name, row.teacher?.name].filter(Boolean).join(' · ');
@@ -48,4 +49,4 @@ export function FeedbackRow({ row }: { row: FeedbackListRow }) {
       {row.contact_phone ? <Note>{`${text.contact}: ${ltr(formatPhone(row.contact_phone))}`}</Note> : null}
     </View>
   );
-}
+});

@@ -15,17 +15,17 @@ jest.mock('react-native/Libraries/ReactNative/I18nManager', () => {
 });
 jest.mock('expo-router', () => ({ router: { push: jest.fn(), back: jest.fn() } }));
 
-test('an English (LTR) row: code and phone readable, the chat hint in en.json', async () => {
+test('an English (LTR) row: code and phone readable, the details hint in en.json', async () => {
   expect(t).toEqual(en);
   expect(I18nManager.isRTL).toBe(false);
   await render(<TreeBaseProvider value="/sales"><AllStudentRow student={student()} /></TreeBaseProvider>);
   expect(screen.getByText(ltr('AB-0183'))).toBeTruthy();
   expect(screen.getByText(ltr(formatPhone('+201001112223')))).toBeTruthy();
-  expect(screen.getByRole('button').props.accessibilityHint).toBe(en.sales.allStudents.chatHint);
+  expect(screen.getByRole('button').props.accessibilityHint).toBe(en.sales.allStudents.detailsHint);
 });
 
-test('an English (LTR) row with no phone: the note in en.json', async () => {
-  await render(<TreeBaseProvider value="/sales"><AllStudentRow student={student({ guardian_phone: null })} /></TreeBaseProvider>);
+test('an English (LTR) row with no phone in the admin tree: the note in en.json', async () => {
+  await render(<AllStudentRow student={student({ guardian_phone: null })} />);
   await fireEvent.press(screen.getByRole('button'));
   expect(screen.getByText(en.sales.allStudents.noPhone)).toBeTruthy();
 });

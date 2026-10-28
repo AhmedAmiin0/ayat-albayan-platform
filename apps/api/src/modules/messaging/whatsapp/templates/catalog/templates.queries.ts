@@ -92,7 +92,7 @@ export class TemplatesQueries {
     return rows.length;
   }
 
-  /** A line's last sync result (migration 931), so every API copy shows the same «last sync». */
+  /** A line's last sync result (migration 935), so every API copy shows the same «last sync». */
   async saveLineSync(sync: TemplateLineSync): Promise<void> {
     const row = { line: sync.line, result: sync as unknown as Json, synced_at: sync.checked_at };
     const { error } = await this.db.from('wa_template_line_syncs').upsert(row, { onConflict: 'line' });

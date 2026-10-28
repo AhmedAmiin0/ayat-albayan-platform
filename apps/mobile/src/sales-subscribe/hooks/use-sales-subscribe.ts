@@ -22,6 +22,8 @@ interface SalesSubscribeInput {
   startsOn?: string;
   /** «بدأ الاشتراك سابقًا»: sent only when on. */
   alreadyStarted?: true;
+  /** «حلقات مستخدمة من الباقة» (owner 2026-10-28): only with alreadyStarted, only above 0. */
+  lessonsUsedBefore?: number;
 }
 
 /**

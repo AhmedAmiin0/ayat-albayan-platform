@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
 import { rolledBack, type Tx } from '../support/rls';
 
-// Migration 20261028000931 (docs/09 «Two API copies + one worker»): rate_limit_take is the sign-in limits'
+// Migration 20261028000935 (docs/09 «Two API copies + one worker»): rate_limit_take is the sign-in limits'
 // sliding window shared by every API copy. Run against Postgres: max hits pass, the next one is refused,
 // the first full bucket stops the later ones untouched; only the service role may call it. Rolled back.
 
@@ -25,7 +25,7 @@ async function take(tx: Tx, buckets: string[], maxes: number[]): Promise<boolean
 const hits = async (tx: Tx, bucket: string) =>
   (await tx<{ n: number }[]>`select count(*)::int as n from public.rate_limit_hits where bucket = ${bucket}`)[0]?.n;
 
-test.describe('rate_limit_take (migration 931)', () => {
+test.describe('rate_limit_take (migration 935)', () => {
   test.beforeEach(() => test.skip(test.info().project.name !== 'desktop', 'database only: one run'));
 
   test('max calls pass and call max+1 is refused; a full first bucket leaves the next one untouched', async () => {

@@ -1,16 +1,30 @@
 import { done, lesson, muscat, pending } from '../testing/fixtures';
-import { greetingPart, pickHero, todayPlan } from './today-plan';
+import { firstName, greetingPart, pickHero, todayPlan } from './today-plan';
 
 // Thursday 1 Oct 2026; Riyadh is UTC+3. pending 16:00–16:45, muscat 17:00–18:00, done 10:00–10:45.
 const at = (iso: string) => new Date(iso);
 const ids = (ls: readonly { id: string }[]) => ls.map((l) => l.id);
 const day = [done, pending, muscat];
 
-test('the greeting follows the Riyadh clock: morning until 11:59, evening from 12:00', () => {
-  expect(greetingPart(at('2026-10-01T08:59:00Z'))).toBe('morning'); // 11:59 Riyadh
-  expect(greetingPart(at('2026-10-01T09:00:00Z'))).toBe('evening'); // 12:00 Riyadh
-  expect(greetingPart(at('2026-09-30T21:30:00Z'))).toBe('morning'); // 00:30 Riyadh, 1 Oct
-  expect(greetingPart(at('2026-10-01T20:00:00Z'))).toBe('evening'); // 23:00 Riyadh
+test.each([
+  ['2026-10-01T00:36:00Z', 'night'], // 03:36 Riyadh (owner 2026-10-28: not «Good morning»)
+  ['2026-09-30T21:30:00Z', 'night'], // 00:30 Riyadh, 1 Oct
+  ['2026-10-01T01:00:00Z', 'morning'], // 04:00
+  ['2026-10-01T08:59:00Z', 'morning'], // 11:59
+  ['2026-10-01T09:00:00Z', 'afternoon'], // 12:00
+  ['2026-10-01T13:59:00Z', 'afternoon'], // 16:59
+  ['2026-10-01T14:00:00Z', 'evening'], // 17:00
+  ['2026-10-01T18:59:00Z', 'evening'], // 21:59
+  ['2026-10-01T19:00:00Z', 'night'], // 22:00
+] as const)('the greeting at %s follows the Riyadh clock: %s', (iso, part) => {
+  expect(greetingPart(at(iso))).toBe(part);
+});
+
+test('firstName: the first word of the full name, null when missing or blank', () => {
+  expect(firstName('  أحمد   أمين ')).toBe('أحمد');
+  expect(firstName('Sara')).toBe('Sara');
+  expect(firstName('   ')).toBeNull();
+  expect(firstName(undefined)).toBeNull();
 });
 
 test('hero: the lesson under way wins over the next one', () => {

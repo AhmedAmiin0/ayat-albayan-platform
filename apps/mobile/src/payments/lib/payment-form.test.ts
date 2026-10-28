@@ -66,3 +66,10 @@ test('attachments are a bank transfer\'s only: the slip moves in, leaving the ba
   expect(input?.attachments).toEqual([{ kind: 'file', receipt: slip }]);
   expect(checkDraft({ ...bank, amountText: '10', method: 'cash' }, { sub: current, now }).input).not.toHaveProperty('attachments');
 });
+
+test('a cancelled package (owner 2026-10-28) is never payable nor the default, even with money «owed»', () => {
+  const cancelled = subscription({ id: OLD_SUB_ID, starts_on: '2026-08-27', paid: 0, status: 'cancelled' });
+  expect(payablePackages(balanceOf(cancelled, current)).map((p) => p.id)).toEqual([SUB_ID]);
+  expect(defaultPackage(balanceOf(cancelled, current))?.id).toBe(SUB_ID);
+  expect(chosenPackage(balanceOf(cancelled, current), OLD_SUB_ID)?.id).toBe(SUB_ID);
+});

@@ -24,6 +24,7 @@ import { InboundMedia } from '../../messaging/whatsapp/messages/inbound-media.se
 import { InboundMediaQueries } from '../../messaging/whatsapp/messages/inbound-media.queries';
 import { TeachersQueries } from '../../people/teachers/teachers.queries';
 import { AdminTasksQueries } from './alerts/admin-tasks.queries';
+import { SubscriptionCancelQueries } from './cancel/subscription-cancel.queries';
 import { AlertsQueries } from './alerts/alerts.queries';
 import { BalanceQueries } from './money/balance.queries';
 import { LeadConversion } from './student-lifecycle/lead-conversion';
@@ -56,6 +57,7 @@ export async function moneyApp(resolver: PermissionResolver = systemResolver) {
   const mod = await Test.createTestingModule({ imports: [AppModule] })
     .overrideProvider(PERMISSION_RESOLVER).useValue(resolver).overrideProvider(TOKEN_VERIFIER).useValue(verify)
     .overrideProvider(SubscriptionsQueries).useValue(m.subs)
+    .overrideProvider(SubscriptionCancelQueries).useValue(m.cancels)
     .overrideProvider(BalanceQueries).useValue(m.balances)
     .overrideProvider(LeadConversion).useValue(m.leads)
     .overrideProvider(StudentActivation).useValue(m.activation)

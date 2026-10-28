@@ -14,6 +14,7 @@ import {
 import { Injectable } from '@nestjs/common';
 import type { AuthUser } from '../../../common/auth/verify-token';
 import { riyadhToday } from '../sales/schedule/sales-schedule.mapper';
+import { assertUsedBefore } from '../../finance/subscriptions';
 import { badRequest, conflict, forbidden } from '../../../common/http/errors';
 import { toSalesPayment, toSalesQuote, toSalesSubscription } from './sales-money.mapper';
 import { assertSalesDiscount, SalesMoneyScope } from './sales-money.scope';
@@ -55,8 +56,11 @@ export class SalesMoney {
     const startsOn = input.alreadyStarted === undefined && input.startsOn === daysBefore(today, 1) ? today : input.startsOn;
     const start = salesStartDate({ startsOn, alreadyStarted: input.alreadyStarted, canSet, today });
     if (!start.ok) throw start.code === 'start_date_not_allowed' ? forbidden(start.code) : badRequest(start.code);
-    const { studentId, pricing, clientRequestId } = input; // alreadyStarted is not a column
-    const view = await this.services.creator.create({ studentId, pricing, clientRequestId, startsOn: start.startsOn }, user.id);
+    // «حلقات مستخدمة من الباقة» (owner 2026-10-28): only with a past start, i.e. alreadyStarted.
+    assertUsedBefore({ lessonsUsedBefore: input.lessonsUsedBefore, startsOn: start.startsOn }, user, now);
+    const { studentId, pricing, clientRequestId, lessonsUsedBefore } = input; // alreadyStarted is not a column
+    const create = { studentId, pricing, clientRequestId, startsOn: start.startsOn, lessonsUsedBefore };
+    const view = await this.services.creator.create(create, user.id);
     // A clientRequestId already used for another student replays that package: never show it here.
     if (view.student.id !== input.studentId) throw conflict('client_request_reused');
     return toSalesSubscription(view);

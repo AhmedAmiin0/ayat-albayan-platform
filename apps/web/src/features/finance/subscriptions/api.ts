@@ -59,6 +59,8 @@ export type CreateSubscriptionBody = {
   pricing: SubscriptionPricing;
   startsOn: string;
   notes?: string | null;
+  /** «حلقات مستخدمة من الباقة» (owner 2026-10-28): only with a start before today, when > 0. */
+  lessonsUsedBefore?: number;
   /** Rule 8: the same body re-sent (a retry) carries the same id, so the API replays the first package. */
   clientRequestId?: string;
 };
@@ -71,5 +73,9 @@ export const createSubscription = (body: CreateSubscriptionBody) =>
 
 export const setPaused = ({ id, paused }: { id: string; paused: boolean }) =>
   apiSend<SubscriptionView>('PATCH', `/subscriptions/${id}`, { paused });
+
+/** «إلغاء الباقة» (owner 2026-10-28): 409 has_payments / has_lessons / already_cancelled. */
+export const cancelSubscription = (id: string, body: { reason?: string }) =>
+  apiSend<SubscriptionView>('POST', `/subscriptions/${id}/cancel`, body);
 
 export const completeTask = (id: string) => apiSend<AdminTaskView>('POST', `/admin-tasks/${id}/done`);

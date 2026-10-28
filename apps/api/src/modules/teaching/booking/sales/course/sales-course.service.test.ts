@@ -51,6 +51,11 @@ describe('SalesCourse.options — the course guard (R-ASST-01, R-ASST-04)', () =
     expect(queries.rules).toHaveBeenCalledWith(S1);
   });
 
+  it('1 of 8 used before the platform (owner 2026-10-28): the course books 7, ending Sun 8 Nov', async () => {
+    const { course } = setup({ ...SUB, lessons_used_before: 1 });
+    expect((await course.options(bookingRequestSchema.parse(BODY))).endsOn).toBe('2026-11-08');
+  });
+
   it('a problem is thrown with its code and status', async () => {
     const rejected = async (sub: CourseSubscription | null, rules: CourseRule[] = [], over: object = {}) => {
       const e: unknown = await setup(sub, rules).course.options(bookingRequestSchema.parse({ ...BODY, ...over })).catch((x: unknown) => x);

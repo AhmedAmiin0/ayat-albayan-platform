@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import type { TeacherPaymentView } from '@ab/shared';
 import { View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
@@ -7,7 +8,7 @@ import { AppText } from '@/core/ui/primitives/AppText';
 import { egp } from '../lib/format';
 
 /** One payment made to the teacher: amount, method, day, and how many lessons it covered. */
-export function PaymentItem({ payment }: { payment: TeacherPaymentView }) {
+export const PaymentItem = memo(function PaymentItem({ payment }: { payment: TeacherPaymentView }) {
   const { color } = useTheme();
   const covers = payment.payout_id ? t.earnings.fromPayout : t.earnings.paymentSessions.replace('{count}', String(payment.sessions));
   const detail = [t.enums.paymentMethod[payment.method], instantDay(payment.paid_at), covers, payment.note].filter(Boolean).join(' · ');
@@ -19,4 +20,4 @@ export function PaymentItem({ payment }: { payment: TeacherPaymentView }) {
       <AppText style={{ fontFamily: type.ui[400], fontSize: type.size.xs, color: color.ink2 }}>{detail}</AppText>
     </View>
   );
-}
+});

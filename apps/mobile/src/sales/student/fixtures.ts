@@ -14,7 +14,12 @@ export const weeklySlot = { rule_id: 'r1', byday: [0, 2, 4], start_time_local: '
   teacher: { display_name_ar: 'أبرار محمد', display_name_en: 'Abrar Mohamed' },
   next: ['2026-11-01T17:00:00.000Z', '2026-11-03T17:00:00.000Z', '2026-11-05T17:00:00.000Z'] };
 
+/** A trial on Sunday 27 September 2026, 18:00 Riyadh, that the student attended. */
+export const trialLesson = { lesson_id: 'tr1', starts_at: '2026-09-27T15:00:00.000Z', status: 'completed' as const, outcome: 'attended' as const, teacher_name: 'أبرار محمد' };
+
 export const details = (over: Partial<SalesStudentDetails> = {}): SalesStudentDetails => ({
+  mine: true,
+  trial: [],
   student: { id: 'st1', code: 'AB-0183', name: 'يوسف أحمد', status: 'active', program: 'quran', teacher_name: 'أبرار محمد', guardian_phone: '+201001112223' },
   subscriptions: [
     { id: 'sub2', package: '8', status: 'active', starts_on: '2026-10-01', renews_on: '2026-11-01', ended_at: null, created_at: '2026-09-30T10:00:00.000Z', lessons_total: 8, lessons_used: 3, lessons_remaining: 5 },

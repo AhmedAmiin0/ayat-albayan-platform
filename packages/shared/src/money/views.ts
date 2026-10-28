@@ -32,6 +32,8 @@ export interface SubscriptionView {
   package: PackageSize | null;
   duration: Duration;
   lessons_total: number;
+  /** Taken before the platform, counted in balance.lessons_used (owner 2026-10-28); absent from older APIs. */
+  lessons_used_before?: number;
   /** Per student, after discount, in `currency` (quote.afterDiscount for students = 1). */
   price: number;
   currency: string;

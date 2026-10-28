@@ -17,8 +17,14 @@ export interface CourseSubscription {
   package: PackageSize | null;
   duration: Duration;
   lessons_total: number;
+  /** Taken before the platform (owner 2026-10-28): the course books the rest only; absent = 0. */
+  lessons_used_before?: number;
   starts_on: string;
 }
+
+/** How many lessons the course books (owner 2026-10-28): lessons_total − lessons_used_before. */
+export const courseLessonCount = (sub: Pick<CourseSubscription, 'lessons_total' | 'lessons_used_before'>): number =>
+  sub.lessons_total - (sub.lessons_used_before ?? 0);
 
 /**
  * Days a week the course must have: the package's (8 → 2), or for a custom count lessons_total / 4

@@ -7,7 +7,7 @@ import type { Page } from '../../../common/http/http';
 import { toPaymentView } from './payments.mapper';
 import { PaymentsQueries, type PaymentFilter, type PaymentRow, type PeriodTotal } from './payments.queries';
 import { PaymentInputs } from './payment-inputs';
-import { precheckPayment, type Prechecked } from './payment-precheck';
+import { notCancelled, precheckPayment, type Prechecked } from './payment-precheck';
 
 /**
  * Manual transfers and refunds recorded by an admin (R-PAY-01, R-MOB-02). Every write is audited, then the
@@ -67,7 +67,7 @@ export class PaymentsService {
   }
 
   async update(id: string, patch: Partial<PaymentUpdate>, actorId: string): Promise<PaymentView> {
-    const before = await this.row(id);
+    const before = notCancelled(await this.row(id));
     await this.files.checkPatch(before, patch);
     const write: TablesUpdate<'payments'> = {};
     if (patch.amount !== undefined) write.amount = patch.amount;
@@ -84,7 +84,7 @@ export class PaymentsService {
   }
 
   async remove(id: string, actorId: string): Promise<void> {
-    const before = await this.row(id);
+    const before = notCancelled(await this.row(id));
     const attached = await this.files.attachments.paths(id); // read first: the rows cascade
     await this.payments.remove(id);
     await this.writes.done({ actorId, entity: 'payments', entityId: id, action: 'delete', before }, studentOf(before));

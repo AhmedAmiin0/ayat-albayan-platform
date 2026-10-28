@@ -1,15 +1,18 @@
+import type { InvoiceView } from '@ab/shared';
 import { router } from 'expo-router';
-import { FlatList, View } from 'react-native';
+import { View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/more/Note';
 import { Button } from '@/core/ui/primitives/Button';
-import { ListRow } from '@/core/ui/layout/ListRow';
 import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
-import { StatusChip } from '@/core/ui/feedback/StatusChip';
-import { invoiceStudents, invoiceSubtitle } from './invoice-text';
+import { InvoiceRow } from './InvoiceRow';
 import { useInvoices } from '../shared/queries';
 import { StaleNote, StateNote } from '../shared/StateNote';
+import { LazyList } from '@/core/ui/lists/LazyList';
+
+const keyOf = (i: InvoiceView) => i.id;
+const renderRow = ({ item }: { item: InvoiceView }) => <InvoiceRow invoice={item} />;
 
 /**
  * «الفواتير» (admin; web /admin/invoices), read-only: each booking invoice with its students and
@@ -21,27 +24,12 @@ export function InvoicesScreen() {
     <Screen>
       <ScreenHeader title={t.mobileFinance.rows.invoices} trailing={<Button variant="ghost" label={t.common.back} onPress={() => router.back()} />} />
       <StaleNote isError={list.isError} hasData={list.items.length > 0} />
-      <FlatList
-        style={{ flex: 1, marginHorizontal: -16 }}
-        data={list.items}
-        keyExtractor={(i) => i.id}
-        renderItem={({ item }) => (
-          <ListRow
-            title={invoiceStudents(item)}
-            subtitle={invoiceSubtitle(item)}
-            trailing={
-              item.payment_id ? (
-                <StatusChip tone="ok" glyph="fill" label={t.finance.invoicePaid} size="sm" />
-              ) : (
-                <StatusChip tone="neutral" glyph="hollow" label={t.mobileFinance.invoices.notRecorded} size="sm" />
-              )
-            }
-          />
-        )}
-        onEndReached={list.loadMore}
-        onEndReachedThreshold={0.4}
+      <LazyList
+        paged={list}
+        tabBar={false}
+        keyExtractor={keyOf}
+        renderItem={renderRow}
         refreshing={list.isRefetching && !list.isFetchingNextPage}
-        onRefresh={list.refresh}
         ListEmptyComponent={<StateNote status={{ data: list.data, isError: list.isError, refetch: list.refetch }} empty emptyTitle={t.mobileFinance.invoices.empty} />}
         ListFooterComponent={list.isFetchingNextPage ? <Note>{t.common.loading}</Note> : <View style={{ height: 24 }} />}
       />
