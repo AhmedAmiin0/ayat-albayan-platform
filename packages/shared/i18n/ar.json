@@ -4525,7 +4525,8 @@
     "usedBefore": "حلقات مستخدمة من الباقة",
     "usedBeforeHint": "تُحسب من الباقة ويُحجز الباقي فقط",
     "usedBeforeLess": "أنقص حلقة",
-    "usedBeforeMore": "زد حلقة"
+    "usedBeforeMore": "زد حلقة",
+    "noCommissionStarted": "لا عمولة لأن الدورة بدأت قبل التسجيل"
   },
   "registrationCheck": {
     "title": "التحقق من التسجيل",
