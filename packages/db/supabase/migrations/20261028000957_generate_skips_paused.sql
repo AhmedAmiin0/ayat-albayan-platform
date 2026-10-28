@@ -1,4 +1,4 @@
--- generate_rule_lessons (body of migration 110) skips a student whose open course pause (migration 950) covers
+-- generate_rule_lessons (body of migration 110) skips a student whose open course pause (migration 955) covers
 -- the lesson's Riyadh day: a group rule stays active for the other students while one of them is paused (docs/11
 -- §7b). A rule whose only student is paused is itself 'paused' once the pause began (rule_not_active); before
 -- that (a pause from a later day) and whenever every student of a rule is paused that day, no lesson row is made.

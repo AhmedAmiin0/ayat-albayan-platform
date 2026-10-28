@@ -9,7 +9,7 @@ import {
   shiftedOrNull,
 } from './course-pause.js';
 
-describe('course pause day arithmetic (mirrors migration 951)', () => {
+describe('course pause day arithmetic (mirrors migration 956)', () => {
   it('moves a date across months, years and a leap day; null stays null (no renewal date, an open-ended rule)', () => {
     expect(shiftedOrNull('2026-10-28', 5)).toBe('2026-11-02');
     expect(shiftedOrNull('2026-12-30', 3)).toBe('2027-01-02');
@@ -32,6 +32,16 @@ describe('course pause day arithmetic (mirrors migration 951)', () => {
     expect(pausedDays({ from: '2026-11-01', until: null, today: '2026-11-04' })).toBe(3);
     // Resumed before it started.
     expect(pausedDays({ from: '2026-11-10', until: null, today: '2026-11-04' })).toBe(0);
+  });
+
+  it('counts from the later of from and the course start (no over-extension of a course begun inside the pause)', () => {
+    // 28 Oct … 10 Nov paused, the course starts on 8 Nov: only 8, 9, 10 Nov were paused for it.
+    expect(pausedDays({ from: '2026-10-28', until: '2026-11-10', today: '2026-11-11', courseStart: '2026-11-08' })).toBe(3);
+    // A course that started before the pause counts the whole pause.
+    expect(pausedDays({ from: '2026-10-28', until: '2026-11-10', today: '2026-11-11', courseStart: '2026-10-01' })).toBe(14);
+    // A course starting after the resume day does not move.
+    expect(pausedDays({ from: '2026-10-28', until: '2026-11-10', today: '2026-11-11', courseStart: '2026-11-20' })).toBe(0);
+    expect(pausedDays({ from: '2026-10-28', until: '2026-11-10', today: '2026-11-11', courseStart: null })).toBe(14);
   });
 
   it('refuses a past start and an until before the start', () => {

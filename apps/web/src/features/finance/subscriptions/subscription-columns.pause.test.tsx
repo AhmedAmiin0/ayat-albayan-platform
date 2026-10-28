@@ -48,14 +48,14 @@ describe('subscription rows: the course pause', () => {
     expect(apiFetch).toHaveBeenCalledWith(expect.stringMatching(new RegExp(`^/students/${WEEKLY.student.id}/course-pause/preview`)));
   });
 
-  it('a paused package reads «استئناف» and resumes the student’s course after the confirm', async () => {
+  it('a paused package reads «استئناف» and resumes that package (its pause, or its old package-only pause)', async () => {
     const row = await rowOf('ياسمين');
     fireEvent.click(row.getByRole('button', { name: t.coursePause.resume }));
     const dialog = within(await screen.findByRole('dialog', { name: t.coursePause.resumeTitle }));
     apiSend.mockResolvedValue({ pause: {}, cancelled: 0, left: 0, reopened: 2, conflicts: 0 });
     fireEvent.click(dialog.getByRole('button', { name: t.coursePause.resumeConfirm }));
     expect(await screen.findByText(t.coursePause.resumed)).toBeTruthy();
-    expect(apiSend).toHaveBeenCalledWith('POST', '/students/stu-2/course-pause/resume');
+    expect(apiSend).toHaveBeenCalledWith('POST', '/students/stu-2/course-pause/resume', { subscriptionId: 'sub-p' });
     expect(apiSend).not.toHaveBeenCalledWith('PATCH', expect.anything(), expect.anything());
   });
 

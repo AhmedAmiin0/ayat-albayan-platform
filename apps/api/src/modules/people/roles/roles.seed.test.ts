@@ -24,7 +24,7 @@ const LATER = [
   '20261028000800_student_channels.sql',
   '20261028000890_sales_lesson_moves.sql',
   '20261028000936_sales_lesson_confirm.sql',
-  '20261028000953_courses_pause_permission.sql',
+  '20261028000958_courses_pause_permission.sql',
 ]
   .map((file) => readFileSync(join(MIGRATIONS, file), 'utf8'))
   .join('\n');
@@ -92,7 +92,7 @@ describe('migration 20261005000220 seed (+ 240, 274, 281, 300, 360, 380, 430, 52
 
   it('seeds courses.pause «إيقاف الدورة مؤقتًا» (2026-10-28) for admin and sales only, idempotently', () => {
     expect(['admin', 'teacher', 'assistant', 'sales'].filter((k) => addedLater(k).includes('courses.pause'))).toEqual(['admin', 'sales']);
-    const sql = readFileSync(join(MIGRATIONS, '20261028000953_courses_pause_permission.sql'), 'utf8');
+    const sql = readFileSync(join(MIGRATIONS, '20261028000958_courses_pause_permission.sql'), 'utf8');
     expect(sql.match(/on conflict do nothing;/g)).toHaveLength(1);
   });
 

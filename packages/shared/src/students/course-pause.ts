@@ -4,10 +4,10 @@ import { localDate } from '../schemas/index.js';
 import { addDays } from '../time-zone/index.js';
 
 // «إيقاف الدورة مؤقتًا» (owner 2026-10-28, docs/11 §7b): a pause of a student's course between two Riyadh
-// days. The database (migrations 950–952) does the work; these are the contracts and the day arithmetic it
+// days. The database (migrations 955–957) does the work; these are the contracts and the day arithmetic it
 // mirrors, so the API's checks and the sheet's preview say what the RPCs will do. Dates are "YYYY-MM-DD".
 
-/** The cancel_reason the pause writes on the lessons it cancels (migration 951); data, not a UI string. */
+/** The cancel_reason the pause writes on the lessons it cancels (migration 956); data, not a UI string. */
 export const COURSE_PAUSE_REASON = 'إيقاف مؤقت';
 export const COURSE_PAUSE_REASON_MAX = 300;
 
@@ -24,6 +24,13 @@ export type CoursePauseStart = z.infer<typeof coursePauseStartSchema>;
 /** PATCH /students/:id/course-pause/until: extend or shorten the open pause (null = until «استئناف»). */
 export const coursePauseUntilSchema = z.object({ untilDate: localDate.nullable() }).strict();
 export type CoursePauseUntil = z.infer<typeof coursePauseUntilSchema>;
+
+/**
+ * POST /students/:id/course-pause/resume. subscriptionId: the package row's «استئناف» (absent from the banner): the
+ * open pause when it is that pause's package, otherwise that package row paused by the old package-only button.
+ */
+export const coursePauseResumeSchema = z.object({ subscriptionId: z.string().uuid().optional() }).strict();
+export type CoursePauseResume = z.infer<typeof coursePauseResumeSchema>;
 
 /** GET /students/:id/course-pause/preview?from=&until= (until empty = open-ended). */
 export const coursePausePreviewQuery = z.object({ from: localDate.optional(), until: localDate.optional() });
@@ -69,9 +76,14 @@ export function resumeDayOf(p: { until: string | null; today: string }): string 
   return after !== null && after < p.today ? after : p.today;
 }
 
-/** The days a resume moves the package's renews_on and the rules' ends_on forward (never negative). */
-export function pausedDays(p: { from: string; until: string | null; today: string }): number {
-  return Math.max(0, daysBetween(p.from, resumeDayOf(p)));
+/**
+ * The days a resume moves a date (the package's renews_on, a rule's ends_on) forward, never negative: counted from
+ * the later of the pause's from and that course's own start (`courseStart`), so a course that began inside the
+ * pause moves only by its paused days and one starting after it not at all (migration 956).
+ */
+export function pausedDays(p: { from: string; until: string | null; today: string; courseStart?: string | null }): number {
+  const start = p.courseStart != null && p.courseStart > p.from ? p.courseStart : p.from;
+  return Math.max(0, daysBetween(start, resumeDayOf(p)));
 }
 
 /** A date moved by a resume: null stays null (no renewal date, an open-ended rule). */

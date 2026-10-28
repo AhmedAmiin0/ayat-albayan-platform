@@ -10,6 +10,7 @@ type UntypedRpc = { rpc(fn: string, args: Record<string, unknown>): PromiseLike<
 /** The window the sheet previews: [start, end) UTC instants, end null = every future lesson. */
 type PreviewWindow = { studentId: string; start: Date; end: Date | null };
 /** A reopened lesson, for the clash check after a resume. */
+type OpenPause = { id: string; subscription_id: string | null };
 export type ReopenedLesson = { id: string; teacher_id: string; starts_at: string; ends_at: string };
 
 const PAUSE_SELECT = 'id, student_id, from_date, until_date, reason, created_at, resumed_at, extended_days, creator:profiles!course_pauses_created_by_fkey(full_name)';
@@ -17,7 +18,7 @@ const BAD_REQUEST = new Set(['date_in_past', 'invalid_range']);
 const CONFLICT = new Set(['already_paused', 'pause_not_open']);
 const NOT_FOUND = new Set(['student_not_found', 'pause_not_found']);
 
-/** The RPCs' raised codes (migration 951) → 400 / 409 / 404; a lost race on the one-open index → already_paused. */
+/** The RPCs' raised codes (migration 956) → 400 / 409 / 404; a lost race on the one-open index → already_paused. */
 export function pauseRpcError(error: PostgrestError): Error {
   if (error.code === 'P0001' && BAD_REQUEST.has(error.message)) return badRequest(error.message);
   if (error.code === 'P0001' && CONFLICT.has(error.message)) return conflict(error.message);
@@ -57,10 +58,12 @@ export class CoursePauseQueries {
     return data;
   }
 
-  async openPauseId(studentId: string): Promise<string | null> {
-    const { data, error } = await this.db.from('course_pauses').select('id').eq('student_id', studentId).is('resumed_at', null).maybeSingle();
+  /** The student's open pause (at most one) and the package it paused (null until it begins). */
+  async openPause(studentId: string): Promise<OpenPause | null> {
+    const { data, error } = await this.db.from('course_pauses').select('id, subscription_id').eq('student_id', studentId)
+      .is('resumed_at', null).maybeSingle();
     if (error) throw dbError(error);
-    return data?.id ?? null;
+    return data;
   }
 
   /** Open pauses whose until day is before `today` (Riyadh): the daily job resumes them. */
@@ -89,17 +92,16 @@ export class CoursePauseQueries {
   }
 
   /**
-   * A package paused by the old package-only button (before 2026-10-28: no course_pauses row): the student's
-   * newest live package back to the neutral 'unpaid' (the recompute derives its status). Its id, or null.
+   * Packages paused by the old package-only button (before 2026-10-28: no course_pauses row; it could pause ANY of
+   * the student's packages): every paused one back to the neutral 'unpaid' (the recompute derives its status), or
+   * only `subscriptionId` (a package row's «استئناف»). The ids lifted (empty: none was paused).
    */
-  async liftLegacyPause(studentId: string): Promise<string | null> {
-    const { data: newest, error } = await this.db.from('subscriptions').select('id, status').eq('student_id', studentId)
-      .neq('status', 'cancelled').order('starts_on', { ascending: false }).order('created_at', { ascending: false }).limit(1).maybeSingle();
+  async liftLegacyPause(p: { studentId: string; subscriptionId?: string }): Promise<string[]> {
+    let q = this.db.from('subscriptions').update({ status: 'unpaid' }).eq('student_id', p.studentId).eq('status', 'paused');
+    if (p.subscriptionId) q = q.eq('id', p.subscriptionId);
+    const { data, error } = await q.select('id');
     if (error) throw dbError(error);
-    if (newest?.status !== 'paused') return null;
-    const { data, error: e2 } = await this.db.from('subscriptions').update({ status: 'unpaid' }).eq('id', newest.id).eq('status', 'paused').select('id').maybeSingle();
-    if (e2) throw dbError(e2);
-    return data?.id ?? null;
+    return data.map((r) => r.id);
   }
 
   async lessons(ids: readonly string[]): Promise<ReopenedLesson[]> {

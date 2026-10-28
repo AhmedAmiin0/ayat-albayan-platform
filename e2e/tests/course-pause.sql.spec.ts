@@ -2,7 +2,7 @@ import { expect, test } from '@playwright/test';
 import { begin, codeOf, day, generate, groupOf, lessonsOf, pauseOf, resume, seedPause, setUntil, start, statuses } from '../support/course-pause';
 import { rolledBack } from '../support/edit-time';
 
-// «إيقاف الدورة مؤقتًا» (owner 2026-10-28, migrations 20261028000950–952, docs/11 §7b) against the real database,
+// «إيقاف الدورة مؤقتًا» (owner 2026-10-28, migrations 20261028000955–957, docs/11 §7b) against the real database,
 // rolled back. The student is alone on a daily rule (days 1–10) and shares a group rule (days 2 and 4).
 
 test.describe('course pause RPCs (docs/11 §7b)', () => {
@@ -117,10 +117,11 @@ test.describe('course pause RPCs (docs/11 §7b)', () => {
       await begin(tx, id);
       // As if the pause ran from 10 days ago to 3 days ago and the job wakes today: resume day = until + 1.
       await tx`update public.course_pauses set from_date = ${day(s.today, -10)}, until_date = ${day(s.today, -3)} where id = ${id}`;
+      await tx`update public.subscriptions set starts_on = ${day(s.today, -20)} where id = ${s.sub}`;
       const first = await resume(tx, { pause_id: id, actor: null });
       const second = await resume(tx, { pause_id: id, actor: null });
       expect([first['resumed'], first['days'], second['resumed'], second['days']]).toEqual([true, 8, false, 8]);
-      // The package moves by the 8 days; the rule starts after the resume day, so its end stays.
+      // The package (started before the pause) moves by the 8 days; the rule starts after the resume day: its end stays.
       expect(await statuses(tx, s)).toMatchObject({ renews: day(s.today, 38), ends: day(s.today, 30), rule: 'active' });
       const [row] = await tx<{ n: number }[]>`select count(*)::int as n from public.course_pauses where student_id = ${s.student} and resumed_at is null`;
       expect(row?.n).toBe(0);

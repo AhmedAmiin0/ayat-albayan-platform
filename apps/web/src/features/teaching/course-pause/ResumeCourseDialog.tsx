@@ -9,6 +9,8 @@ import { resumeCoursePause, useInvalidatePause } from './api';
 
 interface ResumeCourseDialogProps {
   studentId: string;
+  /** A package row's «استئناف»: that package (absent from the banner: the open pause). */
+  subscriptionId?: string;
   onClose: () => void;
   /** «استُؤنفت الدورة» or, when lessons booked back clash, «… حلقات فيها تعارض تحتاج مراجعة في الجدول: N». */
   onDone: (message: string) => void;
@@ -19,10 +21,10 @@ const resumedText = (result: Pick<CoursePauseResult, 'conflicts'>): string =>
   result.conflicts > 0 ? t.coursePause.resumedConflicts.replace('{n}', String(result.conflicts)) : t.coursePause.resumed;
 
 /** «استئناف الدورة الآن؟»: POST /students/:id/course-pause/resume after one confirm. */
-export function ResumeCourseDialog({ studentId, onClose, onDone }: ResumeCourseDialogProps) {
+export function ResumeCourseDialog({ studentId, subscriptionId, onClose, onDone }: ResumeCourseDialogProps) {
   const invalidate = useInvalidatePause(studentId);
   const resume = useMutation({
-    mutationFn: () => resumeCoursePause(studentId),
+    mutationFn: () => resumeCoursePause(studentId, subscriptionId),
     onSuccess: async (result) => {
       await invalidate();
       onDone(resumedText(result));

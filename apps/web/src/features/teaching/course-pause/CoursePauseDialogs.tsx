@@ -1,8 +1,8 @@
 import { CoursePauseSheet } from './CoursePauseSheet';
 import { ResumeCourseDialog } from './ResumeCourseDialog';
 
-/** Which student's course a list row pauses or resumes. */
-export type CoursePauseTarget = { studentId: string; resume: boolean } | null;
+/** Which student's course a list row pauses or resumes; subscriptionId: the package row's (sent with «استئناف»). */
+export type CoursePauseTarget = { studentId: string; resume: boolean; subscriptionId?: string } | null;
 
 interface CoursePauseDialogsProps {
   target: CoursePauseTarget;
@@ -14,5 +14,6 @@ interface CoursePauseDialogsProps {
 export function CoursePauseDialogs({ target, onClose, onDone }: CoursePauseDialogsProps) {
   if (!target) return null;
   const props = { studentId: target.studentId, onClose, onDone };
-  return target.resume ? <ResumeCourseDialog {...props} /> : <CoursePauseSheet {...props} />;
+  if (!target.resume) return <CoursePauseSheet {...props} />;
+  return <ResumeCourseDialog {...props} {...(target.subscriptionId ? { subscriptionId: target.subscriptionId } : {})} />;
 }

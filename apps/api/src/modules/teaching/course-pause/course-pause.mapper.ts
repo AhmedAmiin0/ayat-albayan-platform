@@ -27,7 +27,7 @@ export const toPauseView = (r: PauseRow): CoursePauseView => ({
 
 const ids = z.array(z.string()).default([]);
 
-/** What course_pause_start / _set_until / _resume answer (migration 951); absent lists are empty. */
+/** What course_pause_start / _set_until / _resume answer (migration 956); absent lists are empty. */
 export const rpcOutSchema = z.object({
   id: z.string(),
   student_id: z.string(),

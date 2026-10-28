@@ -32,7 +32,11 @@ export const startCoursePause = (studentId: string, body: CoursePauseStart) =>
 export const changePauseUntil = (studentId: string, untilDate: string | null) =>
   apiSend<CoursePauseResult>('PATCH', coursePauseUntilPath(studentId), { untilDate });
 
-export const resumeCoursePause = (studentId: string) => apiSend<CoursePauseResult>('POST', coursePauseResumePath(studentId));
+/** subscriptionId: a package row's «استئناف» (that package: its pause, or its old package-only pause); none from the banner. */
+export const resumeCoursePause = (studentId: string, subscriptionId?: string) =>
+  subscriptionId
+    ? apiSend<CoursePauseResult>('POST', coursePauseResumePath(studentId), { subscriptionId })
+    : apiSend<CoursePauseResult>('POST', coursePauseResumePath(studentId));
 
 /**
  * After any write: the pause state, the student (file and lists: the status chip) and the money (the

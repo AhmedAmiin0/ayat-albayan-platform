@@ -1,4 +1,4 @@
--- The course pause RPCs (migration 950, docs/11 §7b). Each call is one transaction; the API (service role only)
+-- The course pause RPCs (migration 955, docs/11 §7b). Each call is one transaction; the API (service role only)
 -- calls them, then tops the resumed rules up and recomputes the package and the student (MoneyWrites).
 -- Never a message: nothing is queued here (the assistant tells the family in the chat); the reminders already
 -- queued for the lessons a pause takes the student out of are deleted, never sent.
@@ -10,17 +10,21 @@
 --   outbound messages of those lessons to the student's guardian (reminders) are deleted.
 -- course_pause_restore(pause, cutoff): undoes that for lessons starting at or after cutoff (and in the future):
 --   a cancelled one back to scheduled with its chargeable flag; the student back into the group lessons it left
---   and the shared rules' lessons generated without it meanwhile.
+--   and the shared rules' lessons generated without it meanwhile. A lesson another open pause cancelled because
+--   its student was left alone (siblings paused on one group rule) is handed over: booked again with this student,
+--   the other pause now records it as 'left'.
 -- course_pause_start(p): 409 codes date_in_past (from before Riyadh today), invalid_range, already_paused,
 --   student_not_found. Records the rules (solo / shared), applies the window, audits, and begins it when from is
---   Riyadh today. A later from waits: its rules stay active (generation skips the student by day, migration 952)
+--   Riyadh today. A later from waits: its rules stay active (generation skips the student by day, migration 957)
 --   and the package and the student keep their statuses until course_pause_begin runs on the from day (hourly job).
 -- course_pause_begin(p): idempotent (started_at). Pauses the solo rules still active, the newest live package and
 --   the student, records the before-statuses, applies the window again (lessons generated since), audits.
 -- course_pause_set_until(p): extend or shorten an open pause (until ≥ Riyadh today and ≥ from, or null).
 -- course_pause_resume(p): idempotent (an already resumed pause answers resumed false and changes nothing).
---   Resume day = least(p.on or Riyadh today, until + 1); days = greatest(0, resume day − from) Riyadh days, moved
---   ONCE onto the package's renews_on and the solo rules' ends_on (when set, rules started by then); rules active, the package
+--   Resume day = least(p.on or Riyadh today, until + 1); days = greatest(0, resume day − from) Riyadh days (the
+--   pause, extended_days). Each date moves ONCE by the days it was paused: greatest(0, resume day − the later of
+--   from and its own starts_on) onto the package's renews_on and the solo rules' ends_on (when set; a course that
+--   began inside the pause moves only by its paused days, one starting after it not at all); rules active, the package
 --   to 'unpaid' (the neutral start the API recomputes; a trial stays trial), the student to its before-status.
 -- set_until and resume lock the pause, then its rules (generate_rule_lessons locks a rule, never a pause).
 -- Rollback: drop the seven functions.
@@ -85,6 +89,26 @@ begin
     from public.course_pause_lessons pl
    where pl.pause_id = p_pause and pl.lesson_id = ls.lesson_id and ls.student_id = cp.student_id
      and ls.lesson_id = any(v_back);
+  -- Hand-over (siblings both paused on one group rule): a lesson this student would rejoin that another pause
+  -- cancelled (its student was left alone on it) is booked again: that pause now records it as 'left' and its
+  -- student leaves it (its own resume re-adds it with chargeable_before); this student joins it below. Its own
+  -- statement: the joined insert must see the lesson scheduled (one statement's CTEs share one snapshot).
+  with handed as (
+    update public.course_pause_lessons o set kind = 'left'
+      from public.lessons l, public.course_pauses op
+     where o.lesson_id = l.id and o.pause_id <> p_pause and o.kind = 'cancelled' and op.id = o.pause_id
+       and l.status = 'cancelled_by_admin' and l.starts_at >= p_cutoff and l.starts_at > now()
+       and (exists (select 1 from public.course_pause_lessons pl
+                     where pl.pause_id = p_pause and pl.lesson_id = l.id and pl.kind = 'left')
+            or (l.rule_id = any(cp.shared_rule_ids) and exists (
+              select 1 from public.schedule_rule_students rs where rs.rule_id = l.rule_id and rs.student_id = cp.student_id)))
+    returning o.lesson_id, op.student_id
+  ), gone as (
+    delete from public.lesson_students ls using handed h where ls.lesson_id = h.lesson_id and ls.student_id = h.student_id
+    returning ls.lesson_id
+  )
+  update public.lessons l set status = 'scheduled', cancel_reason = null
+   where l.id in (select lesson_id from handed) and l.status = 'cancelled_by_admin';
   with joined as (
     insert into public.lesson_students (lesson_id, student_id, chargeable)
     select l.id, cp.student_id, coalesce(pl.chargeable_before, true)
@@ -230,12 +254,12 @@ begin
   v_restore := public.course_pause_restore(cp.id, (v_on::timestamp at time zone 'Asia/Riyadh'));
   with back as (
     update public.schedule_rules r set status = 'active',
-           ends_on = case when r.starts_on <= v_on then r.ends_on + v_days else r.ends_on end
+           ends_on = r.ends_on + greatest(0, v_on - greatest(cp.from_date, r.starts_on))
      where r.id = any(cp.rule_ids) and r.status in ('paused', 'active')
     returning r.id
   ) select coalesce(array_agg(id), '{}') into v_rules from back;
   update public.subscriptions s
-     set renews_on = s.renews_on + v_days,
+     set renews_on = s.renews_on + greatest(0, v_on - greatest(cp.from_date, s.starts_on)),
          status = case when s.status <> 'paused' then s.status
                        when cp.subscription_status_before = 'trial' then 'trial' else 'unpaid' end
    where s.id = cp.subscription_id and s.status <> 'cancelled';

@@ -1,11 +1,11 @@
 -- «إيقاف الدورة مؤقتًا» (owner 2026-10-28, «Also add option to pause the course»; docs/11 §7b, docs/16 row 37c).
 -- Before this a pause only labelled the package: lessons kept being generated and nothing moved. Now a pause
--- is a row here, written only by the RPCs of migration 951 (one transaction each), called by the API.
+-- is a row here, written only by the RPCs of migration 956 (one transaction each), called by the API.
 --
 -- course_pauses: one per pause of a student's course. from_date / until_date are Riyadh dates (the business
 --   days); until_date null = until «استئناف». rule_ids: the rules it paused (the student is their only
 --   student); shared_rule_ids: group rules kept active for the others, whose generation skips this student
---   while the pause covers the day (migration 952). started_at: when the rules, the package and the student were
+--   while the pause covers the day (migration 957). started_at: when the rules, the package and the student were
 --   paused (at once for a pause from today; on its from day, by the hourly job, for a later one). Before-statuses
 --   (read then) restore on resume. extended_days: the
 --   Riyadh days the package's and the rules' dates moved forward, written once on resume (null while open).

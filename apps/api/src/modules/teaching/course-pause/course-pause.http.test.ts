@@ -1,5 +1,5 @@
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { ADMIN, PAUSE, pauseApp, SALES, STUDENT } from './course-pause.fakes';
+import { ADMIN, OLD_SUB, PAUSE, pauseApp, SALES, STUDENT, SUB } from './course-pause.fakes';
 
 type App = Awaited<ReturnType<typeof pauseApp>>;
 // 2026-10-28 23:30 Riyadh: the business day is the 28th (UTC is still the 28th 20:30).
@@ -85,18 +85,33 @@ describe('course pause routes «إيقاف الدورة مؤقتًا» (owner 20
     const res = await t.call({ method: 'POST', url: `${URL}/resume`, token: 'sales' });
     expect([res.statusCode, res.json().reopened, res.json().conflicts]).toEqual([200, 1, 1]);
     expect(t.m.queries.call).toHaveBeenCalledWith('course_pause_resume', { pause_id: PAUSE, actor: SALES });
-    t.m.queries.openPauseId.mockResolvedValue(null);
+    t.m.queries.openPause.mockResolvedValue(null);
     const none = await t.call({ method: 'POST', url: `${URL}/resume`, token: 'sales' });
     expect([none.statusCode, none.json().code]).toEqual([409, 'pause_not_open']);
   });
 
-  it('a package paused by the old package-only button (no pause row) is lifted by the same «استئناف»', async () => {
-    t.m.queries.openPauseId.mockResolvedValue(null);
-    t.m.queries.liftLegacyPause.mockResolvedValue('sub-old');
+  it('packages paused by the old package-only button (no pause row, any of them) are all lifted by the same «استئناف»', async () => {
+    t.m.queries.openPause.mockResolvedValue(null);
+    t.m.queries.liftLegacyPause.mockResolvedValue([SUB, OLD_SUB]);
     const res = await t.call({ method: 'POST', url: `${URL}/resume`, token: 'admin' });
     expect([res.statusCode, res.json().cancelled, res.json().reopened]).toEqual([200, 0, 0]);
-    expect(t.m.follow.liftedLegacy).toHaveBeenCalledWith({ studentId: STUDENT, subscriptionId: 'sub-old', actorId: ADMIN });
+    expect(t.m.queries.liftLegacyPause).toHaveBeenCalledWith({ studentId: STUDENT });
+    expect(t.m.follow.liftedLegacy).toHaveBeenCalledWith({ studentId: STUDENT, subscriptionIds: [SUB, OLD_SUB], actorId: ADMIN });
     expect(t.m.queries.call).not.toHaveBeenCalled();
+  });
+
+  it('a package row\'s «استئناف»: its own pause resumes; another (old) paused row is lifted alone; nothing paused 409', async () => {
+    await t.call({ method: 'POST', url: `${URL}/resume`, token: 'sales', body: { subscriptionId: SUB } });
+    expect(t.m.queries.call).toHaveBeenCalledWith('course_pause_resume', { pause_id: PAUSE, actor: SALES });
+    t.m.queries.liftLegacyPause.mockResolvedValue([OLD_SUB]);
+    const old = await t.call({ method: 'POST', url: `${URL}/resume`, token: 'sales', body: { subscriptionId: OLD_SUB } });
+    expect(old.statusCode).toBe(200);
+    expect(t.m.queries.liftLegacyPause).toHaveBeenCalledWith({ studentId: STUDENT, subscriptionId: OLD_SUB });
+    expect(t.m.queries.call).toHaveBeenCalledTimes(1);
+    t.m.queries.liftLegacyPause.mockResolvedValue([]);
+    const none = await t.call({ method: 'POST', url: `${URL}/resume`, token: 'sales', body: { subscriptionId: OLD_SUB } });
+    expect([none.statusCode, none.json().code]).toEqual([409, 'pause_not_open']);
+    expect((await t.call({ method: 'POST', url: `${URL}/resume`, token: 'sales', body: { subscriptionId: 'x' } })).statusCode).toBe(400);
   });
 
   it('PATCH until extends the open pause (null = until «استئناف»)', async () => {

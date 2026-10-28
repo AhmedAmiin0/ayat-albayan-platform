@@ -53,8 +53,8 @@ export function SubscriptionsPage({ search, onSearch, onOpenStudent }: Props) {
     () =>
       subscriptionColumns({
         onPay: (sub, kind) => setPaying({ sub, kind }),
-        onPause: (s) => setCourse({ studentId: s.student.id, resume: false }),
-        onResume: (s) => setCourse({ studentId: s.student.id, resume: true }),
+        onPause: (s) => setCourse({ studentId: s.student.id, resume: false, subscriptionId: s.id }),
+        onResume: (s) => setCourse({ studentId: s.student.id, resume: true, subscriptionId: s.id }),
         canPause,
         onCancel: setCancelling,
         onOpen: onOpenStudent,

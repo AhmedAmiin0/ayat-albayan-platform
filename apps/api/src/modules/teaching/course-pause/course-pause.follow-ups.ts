@@ -26,10 +26,11 @@ export class CoursePauseFollowUps {
     return clashes;
   }
 
-  /** An old package-only pause lifted (CoursePauseService.resume): audited, then the package and student recomputed. */
-  async liftedLegacy(input: { studentId: string; subscriptionId: string; actorId: string }): Promise<void> {
+  /** Old package-only pauses lifted (CoursePauseService.resume): each audited, then the packages and student recomputed once. */
+  async liftedLegacy(input: { studentId: string; subscriptionIds: readonly string[]; actorId: string }): Promise<void> {
     const after = { status: 'unpaid', via: 'course_resume_legacy' };
-    await this.audit.record({ actorId: input.actorId, entity: 'subscriptions', entityId: input.subscriptionId, action: 'update', before: { status: 'paused' }, after });
+    for (const entityId of input.subscriptionIds)
+      await this.audit.record({ actorId: input.actorId, entity: 'subscriptions', entityId, action: 'update', before: { status: 'paused' }, after });
     await this.alerts.evaluateStudents([input.studentId], { actorId: input.actorId });
   }
 }

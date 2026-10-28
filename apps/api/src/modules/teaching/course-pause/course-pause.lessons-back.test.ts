@@ -53,7 +53,10 @@ describe('CoursePauseFollowUps', () => {
     expect(h.events.changed).toHaveBeenCalledWith(['a', 'b']);
     expect(alerts.evaluateStudents).toHaveBeenCalledWith([STUDENT], { actorId: 'u1' });
     expect(changedLessons(out)).toEqual(['a', 'b']);
-    await follow.liftedLegacy({ studentId: STUDENT, subscriptionId: 'sub', actorId: 'u1' });
-    expect(audit.record).toHaveBeenCalledWith(expect.objectContaining({ entity: 'subscriptions', entityId: 'sub', before: { status: 'paused' } }));
+    alerts.evaluateStudents.mockClear();
+    await follow.liftedLegacy({ studentId: STUDENT, subscriptionIds: ['sub', 'older'], actorId: 'u1' });
+    for (const entityId of ['sub', 'older'])
+      expect(audit.record).toHaveBeenCalledWith(expect.objectContaining({ entity: 'subscriptions', entityId, before: { status: 'paused' } }));
+    expect(alerts.evaluateStudents).toHaveBeenCalledTimes(1);
   });
 });

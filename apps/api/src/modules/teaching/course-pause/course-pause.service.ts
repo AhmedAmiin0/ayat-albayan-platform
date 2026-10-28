@@ -5,6 +5,7 @@ import {
   RIYADH_TZ,
   type CoursePausePreview,
   type CoursePauseResult,
+  type CoursePauseResume,
   type CoursePauseStart,
   type CoursePauseState,
   type CoursePauseUntil,
@@ -19,6 +20,7 @@ import { CoursePauseQueries } from './course-pause.queries';
 type Actor = { id: string };
 type StartInput = { studentId: string; body: CoursePauseStart; actor: Actor };
 type UntilInput = { studentId: string; body: CoursePauseUntil; actor: Actor };
+type ResumeInput = { studentId: string; body: CoursePauseResume; actor: Actor };
 
 /** An old package-only pause lifted: no pause row, nothing cancelled or moved. */
 const legacyResult = (subscriptionId: string): CoursePauseResult => {
@@ -33,7 +35,7 @@ const riyadhStart = (date: string): Date => startOfLocalDay(date, RIYADH_TZ);
 
 /**
  * «إيقاف الدورة مؤقتًا» (owner 2026-10-28, docs/11 §7b, docs/16 row 37c): ANY student, for whoever holds courses.pause
- * (admins and assistants by default). The work is one RPC each (migration 951); this checks the dates first (400),
+ * (admins and assistants by default). The work is one RPC each (migration 956); this checks the dates first (400),
  * then runs the follow-ups (CoursePauseFollowUps). Never a message to the family.
  */
 @Injectable()
@@ -76,17 +78,21 @@ export class CoursePauseService {
   }
 
   /**
-   * «استئناف الدورة» now (POST …/resume). A package paused by the old package-only button (no pause row) is lifted
-   * instead: back to its derived status, nothing else moved (it never cancelled a lesson); 409 pause_not_open otherwise.
+   * «استئناف الدورة» now (POST …/resume): the open pause, unless a package row's «استئناف» names another package.
+   * Packages paused by the old package-only button (no pause row) are lifted instead (that row, or every paused one
+   * of the student): back to their derived status, nothing else moved (it never cancelled a lesson); 409
+   * pause_not_open when nothing was paused.
    */
-  async resume(studentId: string, actor: Actor): Promise<CoursePauseResult> {
+  async resume({ studentId, body, actor }: ResumeInput): Promise<CoursePauseResult> {
     await this.assertStudent(studentId);
-    const id = await this.queries.openPauseId(studentId);
-    if (id) return this.resumePause(id, actor.id);
-    const lifted = await this.queries.liftLegacyPause(studentId);
-    if (!lifted) throw conflict('pause_not_open');
-    await this.follow.liftedLegacy({ studentId, subscriptionId: lifted, actorId: actor.id });
-    return legacyResult(lifted);
+    const open = await this.queries.openPause(studentId);
+    const subscriptionId = body.subscriptionId;
+    if (open && (subscriptionId === undefined || subscriptionId === open.subscription_id)) return this.resumePause(open.id, actor.id);
+    const lifted = await this.queries.liftLegacyPause({ studentId, ...(subscriptionId ? { subscriptionId } : {}) });
+    const [first] = lifted;
+    if (first === undefined) throw conflict('pause_not_open');
+    await this.follow.liftedLegacy({ studentId, subscriptionIds: lifted, actorId: actor.id });
+    return legacyResult(first);
   }
 
   /** Also the daily job's (actor null). Idempotent: an already resumed pause changes nothing (the RPC answers resumed false). */
@@ -120,9 +126,9 @@ export class CoursePauseService {
 
   private async openId(studentId: string): Promise<string> {
     await this.assertStudent(studentId);
-    const id = await this.queries.openPauseId(studentId);
-    if (!id) throw conflict('pause_not_open');
-    return id;
+    const open = await this.queries.openPause(studentId);
+    if (!open) throw conflict('pause_not_open');
+    return open.id;
   }
 
   private async assertStudent(studentId: string): Promise<void> {

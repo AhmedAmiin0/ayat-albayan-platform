@@ -32,8 +32,8 @@ describe('CoursePauseService.resumePause (manual and the daily job)', () => {
 
   it('a resume of a student without an open pause is 409 pause_not_open, before any RPC', async () => {
     const { m, svc } = service();
-    m.queries.openPauseId.mockResolvedValue(null);
-    await expect(svc.resume(STUDENT, { id: 'u1' })).rejects.toMatchObject({ response: { code: 'pause_not_open' } });
+    m.queries.openPause.mockResolvedValue(null);
+    await expect(svc.resume({ studentId: STUDENT, body: {}, actor: { id: 'u1' } })).rejects.toMatchObject({ response: { code: 'pause_not_open' } });
     expect(m.queries.call).not.toHaveBeenCalled();
   });
 });

@@ -2,18 +2,18 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 
-// Migrations 950–953 (owner 2026-10-28, «Also add option to pause the course»; docs/11 §7b).
+// Migrations 955–958 (owner 2026-10-28, «Also add option to pause the course»; docs/11 §7b).
 const dir = join(__dirname, '../../../../../../packages/db/supabase/migrations');
 const code = (name: string) => readFileSync(join(dir, name), 'utf8').replace(/--.*$/gm, '');
-const table = code('20261028000950_course_pauses.sql');
-const rpcs = code('20261028000951_course_pause_rpcs.sql');
-const generate = code('20261028000952_generate_skips_paused.sql');
+const table = code('20261028000955_course_pauses.sql');
+const rpcs = code('20261028000956_course_pause_rpcs.sql');
+const generate = code('20261028000957_generate_skips_paused.sql');
 const fn = (name: string) => {
   const start = rpcs.indexOf(`function public.${name}(`);
   return rpcs.slice(start, rpcs.indexOf('end $$;', start));
 };
 
-describe('migration 950 course_pauses', () => {
+describe('migration 955 course_pauses', () => {
   it('one open pause per student (unique partial index) and the history columns', () => {
     expect(table).toMatch(/create unique index if not exists course_pauses_one_open on public\.course_pauses \(student_id\) where resumed_at is null/);
     for (const col of ['student_id uuid not null', 'subscription_id uuid', 'rule_ids uuid[]', 'from_date date not null', 'until_date date', 'reason text',
@@ -31,7 +31,7 @@ describe('migration 950 course_pauses', () => {
   });
 });
 
-describe('migration 951 course pause RPCs', () => {
+describe('migration 956 course pause RPCs', () => {
   it('the window cancels a lone student\'s open future lessons by the academy, «إيقاف مؤقت», not chargeable', () => {
     const w = fn('course_pause_window');
     expect(w).toMatch(/l\.status in \('scheduled', 'confirmed'\) and l\.starts_at > now\(\)/);
@@ -63,9 +63,21 @@ describe('migration 951 course pause RPCs', () => {
     expect(r).toMatch(/if cp\.resumed_at is not null then\s+return jsonb_build_object\('id', cp\.id, 'student_id', cp\.student_id, 'resumed', false/);
     expect(r).toMatch(/v_on := least\(coalesce\(\(p ->> 'on'\)::date, \(now\(\) at time zone 'Asia\/Riyadh'\)::date\), cp\.until_date \+ 1\)/);
     expect(r).toMatch(/v_days := greatest\(0, v_on - cp\.from_date\)/);
-    expect(r).toMatch(/ends_on = case when r\.starts_on <= v_on then r\.ends_on \+ v_days else r\.ends_on end/);
-    expect(r).toMatch(/renews_on = s\.renews_on \+ v_days/);
+    // Each date moves by its own paused days: a course that began inside the pause is not over-extended.
+    expect(r).toMatch(/ends_on = r\.ends_on \+ greatest\(0, v_on - greatest\(cp\.from_date, r\.starts_on\)\)/);
+    expect(r).toMatch(/renews_on = s\.renews_on \+ greatest\(0, v_on - greatest\(cp\.from_date, s\.starts_on\)\)/);
+    expect(r).not.toMatch(/case when r\.starts_on/);
     expect(r).toMatch(/resumed_at = now\(\), resumed_by = v_actor, extended_days = v_days/);
+  });
+
+  it('restore hands a sibling\'s cancelled lesson over in its own statement before the student rejoins', () => {
+    const r = fn('course_pause_restore');
+    const hand = r.indexOf('with handed as');
+    expect(hand).toBeGreaterThan(-1);
+    expect(hand).toBeLessThan(r.indexOf('with joined as'));
+    expect(r).toMatch(/update public\.course_pause_lessons o set kind = 'left'[\s\S]+o\.pause_id <> p_pause and o\.kind = 'cancelled'/);
+    expect(r).toMatch(/delete from public\.lesson_students ls using handed h/);
+    expect(r).toMatch(/update public\.lessons l set status = 'scheduled', cancel_reason = null\s+where l\.id in \(select lesson_id from handed\)[^;]*;\s+with joined as/);
   });
 
   it('never queues a message (it drops the queued ones of its lessons), and only the service role may call it', () => {
@@ -78,7 +90,7 @@ describe('migration 951 course pause RPCs', () => {
   });
 });
 
-describe('migration 952 generate_rule_lessons', () => {
+describe('migration 957 generate_rule_lessons', () => {
   it('skips a student whose open pause covers the lesson, keeps the rule lock and on conflict do nothing', () => {
     expect(generate).toMatch(/for update;\s+if r\.id is null or r\.status <> 'active'/);
     expect(generate).toMatch(/on conflict do nothing/);
