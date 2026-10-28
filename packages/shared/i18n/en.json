@@ -4265,7 +4265,21 @@
       "openSchedule": "Show the teacher's schedule today",
       "pick": "Pick a teacher to see their students",
       "allGenders": "Everyone",
-      "back": "Back to teachers"
+      "back": "Back to teachers",
+      "tabs": {
+        "students": "Students",
+        "schedule": "Schedule",
+        "attendance": "Attendance"
+      },
+      "tabsLabel": "Teacher view",
+      "overview": {
+        "noWeekly": "No weekly slots",
+        "slot": "{day} at {time} · {minutes} min",
+        "window": "Last {days} days",
+        "totals": "Held {held} · Student absent {student_absent} · Cancelled by teacher {cancelled_by_teacher} · Cancelled by admin {cancelled_by_admin} · Other {other}",
+        "latest": "Latest lessons",
+        "noLessons": "No lessons in this period"
+      }
     },
     "allStudents": {
       "title": "All students",
@@ -4311,8 +4325,8 @@
       "title": "Student details",
       "open": "Open {name}'s details",
       "teacher": "Teacher: {name}",
-      "chat": "Guardian's chat",
-      "notFound": "This student is not one of yours or does not exist",
+      "chat": "Open chat",
+      "notFound": "This student does not exist",
       "subscription": "Subscription",
       "current": "Current subscription",
       "noSubscription": "No subscription yet",
@@ -4341,6 +4355,12 @@
         "noUpcoming": "No upcoming lessons",
         "showAll": "Show all ({n})",
         "showLess": "Show less"
+      },
+      "notMine": "Not one of your students: subscriptions and reports are not shown here",
+      "trial": {
+        "title": "Trial lesson",
+        "none": "No trial lesson",
+        "teacher": "with {name}"
       }
     },
     "lessonActions": {
