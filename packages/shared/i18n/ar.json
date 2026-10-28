@@ -1046,8 +1046,11 @@
     "studentTime": "{time} بتوقيت {city}",
     "greeting": {
       "morning": "صباح الخير",
-      "evening": "مساء الخير"
+      "afternoon": "طاب يومك",
+      "evening": "مساء الخير",
+      "night": "طابت ليلتك"
     },
+    "greetingNamed": "{greeting} يا {name}",
     "summaryLabel": "ملخص اليوم",
     "summary": {
       "all": "حلقة اليوم",
