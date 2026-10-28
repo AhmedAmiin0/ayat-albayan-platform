@@ -26,6 +26,7 @@ export function subRow(patch: Partial<SubRow> = {}): SubRow {
     package: '4',
     duration: 90,
     lessons_total: 4,
+    lessons_used_before: 0,
     price: 145,
     currency: 'SAR',
     fx_rate: null,

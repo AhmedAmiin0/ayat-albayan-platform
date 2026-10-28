@@ -49,9 +49,10 @@ export const quoteSalesSubscription = (body: SalesQuoteBody) =>
 
 /**
  * Strict body: no notes, no renewal day, never a price. `startsOn` only with subscriptions.set_start_date
- * (else the API's default day); `alreadyStarted` only when «بدأ الاشتراك سابقًا» is ticked.
+ * (else the API's default day); `alreadyStarted` only when «بدأ الاشتراك سابقًا» is ticked, and with it
+ * `lessonsUsedBefore` («حلقات مستخدمة من الباقة», owner 2026-10-28) when > 0.
  */
-export type SalesSubscriptionBody = SalesQuoteBody & { startsOn?: string; alreadyStarted?: true; clientRequestId: string };
+export type SalesSubscriptionBody = SalesQuoteBody & { startsOn?: string; alreadyStarted?: true; lessonsUsedBefore?: number; clientRequestId: string };
 
 export const createSalesSubscription = (body: SalesSubscriptionBody) =>
   apiSend<SalesMoneySubscriptionView>('POST', '/sales/subscriptions', body);

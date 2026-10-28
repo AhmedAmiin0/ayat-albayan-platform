@@ -5,7 +5,7 @@ import { apiSend } from '@/core/lib/http/api';
 import { pathKey } from '@/core/lib/query/query-keys';
 import { t } from '@/core/lib/i18n/i18n';
 import { CancelPackage } from '@/payments';
-import { packageName, paidOf, usedOf } from '@/payments/format';
+import { packageName, paidLine, usedOf } from '@/payments/format';
 import { packageLine } from '@/payments/lib/package-line';
 import { useRenewalThreshold, useStudentBalance } from '@/payments/hooks/queries';
 import { RecentPayments } from '@/payments/components/RecentPayments';
@@ -70,7 +70,7 @@ export function BalanceCard({ studentId }: { studentId: string }) {
               {line.label}
             </AppText>
             <AppText style={small}>{`${packageName(current)} · ${usedOf(current)}`}</AppText>
-            <AppText style={small}>{paidOf(current)}</AppText>
+            <AppText style={small}>{paidLine(current)}</AppText>
             <View style={{ marginTop: 6 }}>
               <Button
                 variant="secondary"

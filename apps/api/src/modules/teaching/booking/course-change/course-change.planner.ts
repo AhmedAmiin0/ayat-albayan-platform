@@ -1,4 +1,4 @@
-import { DURATIONS, courseDaysPerWeek, wallParts, type CourseChangeRequest, type CourseLessonFact } from '@ab/shared';
+import { DURATIONS, courseDaysPerWeek, courseLessonCount, wallParts, type CourseChangeRequest, type CourseLessonFact } from '@ab/shared';
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { startOfLocalDay } from '../../scheduling/occurrences/horizon';
 import { domainError } from '../booking.errors';
@@ -39,7 +39,7 @@ export class CourseChangePlanner {
     if (wallParts(req.startsAt, tz).date !== req.startsOn) throw domainError(HttpStatus.BAD_REQUEST, 'starts_at_mismatch');
     const durationMin = DURATIONS.find((d) => d === sub.duration);
     if (durationMin === undefined) throw new Error(`subscription ${sub.id} has duration ${sub.duration}`);
-    const facts = { role, perWeek: courseDaysPerWeek(sub), lessonsTotal: sub.lessons_total, durationMin, tz };
+    const facts = { role, perWeek: courseDaysPerWeek(sub), lessonsTotal: courseLessonCount(sub), durationMin, tz };
     assertChange(req, { ...facts, before: [] }, now);
     assertStart(req, { subStartsOn: sub.starts_on, rules: all });
     const cutoff = new Date(Math.max(startOfLocalDay(req.startsOn, tz).getTime(), now.getTime()));
@@ -50,7 +50,7 @@ export class CourseChangePlanner {
     if (courseOverlaps(await this.queries.others(sub), { from: req.startsOn, to: plan.endsOn })) {
       throw domainError(HttpStatus.CONFLICT, 'course_exists');
     }
-    return { ...loaded, plan, counted: sub.lessons_total - plan.remaining, moved };
+    return { ...loaded, plan, counted: facts.lessonsTotal - plan.remaining, moved };
   }
 
   /**

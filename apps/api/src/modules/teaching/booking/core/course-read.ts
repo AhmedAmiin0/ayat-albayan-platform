@@ -1,5 +1,6 @@
 import {
   courseDaysPerWeek,
+  courseLessonCount,
   DURATIONS,
   type BookedCourse,
   type DayTime,
@@ -25,7 +26,7 @@ export type CourseRuleRow = {
   ends_on: string | null;
   status: 'active' | 'paused' | 'ended';
   first_rule_id: string | null;
-  sub: { package: PackageSize | null; lessons_total: number };
+  sub: { package: PackageSize | null; lessons_total: number; lessons_used_before?: number };
   /** The course teacher's zone. */
   teacher: { tz: string } | null;
 };
@@ -83,7 +84,7 @@ export function bookedCourse(rows: readonly CourseRuleRow[], now: Date): BookedC
     running: covers(rows, today),
     opensOn: opensFrom(rows, today),
     days,
-    lessonsTotal: head.sub.lessons_total,
+    lessonsTotal: courseLessonCount(head.sub),
     perWeek: courseDaysPerWeek({
       package: head.sub.package,
       lessons_total: head.sub.lessons_total,

@@ -7,7 +7,7 @@ import type { PackageSize, PrefilledPick } from '@ab/shared';
 export interface CourseDraft {
   /** Days a week to pick, exactly (courseDaysPerWeek). */
   perWeek: number;
-  /** subscriptions.lessons_total: the course stops after it. */
+  /** The lessons to book (courseLessonCount: lessons_total − lessons_used_before): the course stops after it. */
   lessonsTotal: number;
   /** The subscription's package; null = a custom count (labels use lessonsTotal, never the body's package). */
   package: PackageSize | null;

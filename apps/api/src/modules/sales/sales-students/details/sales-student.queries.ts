@@ -12,6 +12,9 @@ export type DetailsStudentRow = Pick<Tables<'students'>, 'id' | 'code' | 'name' 
   guardian: { phone_e164: string } | null;
 };
 
+/** «مدفوعة جزئيًا» (owner 2026-10-28): only for self.sales_money. */
+export type PriceRow = Pick<Tables<'subscriptions'>, 'id' | 'price' | 'currency'>;
+
 /** A past lesson of the student with every student's attendance (the mapper keeps the student's own). */
 export interface AttendanceRow {
   id: string;
@@ -65,6 +68,13 @@ export class SalesStudentQueries {
       .select('id, code, name, status, program, tz, teacher:teachers(display_name_ar), guardian:guardians(phone_e164)')
       .eq('id', id)
       .maybeSingle();
+    if (error) throw dbError(error);
+    return data;
+  }
+
+  /** The price and currency of her student's packages: read ONLY for a viewer with self.sales_money (part_paid). */
+  async prices(studentId: string): Promise<PriceRow[]> {
+    const { data, error } = await this.db.from('subscriptions').select('id, price, currency').eq('student_id', studentId);
     if (error) throw dbError(error);
     return data;
   }

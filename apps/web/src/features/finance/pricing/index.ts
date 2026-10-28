@@ -13,6 +13,7 @@ export {
 } from './api';
 export { CalcSteps, type CalcStepsProps } from './calculator/CalcSteps';
 export { FxNote } from './calculator/FxNote';
+export { Stepper } from './calculator/Stepper';
 export {
   durationLabel,
   frequencyOf,

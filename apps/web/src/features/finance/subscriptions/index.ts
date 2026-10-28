@@ -26,7 +26,8 @@ export {
   type RenewSubscriptionButtonProps,
 } from './create/RenewSubscriptionButton';
 export { type PickedStudent, StudentPicker } from './create/StudentPicker';
-export { INITIAL_PRICING, pricingBody, type PricingForm, todayIn } from './create/pricing-form';
+export { UsedBeforeField } from './create/UsedBeforeField';
+export { INITIAL_PRICING, pricingBody, type PricingForm, pricingLessons, todayIn } from './create/pricing-form';
 export {
   apiErrorText,
   currencySymbol,
@@ -38,6 +39,7 @@ export {
   taskText,
   unpaidFlagged,
 } from './format';
+export { partPaidText } from './payment-lines';
 export {
   type MonthUrlSearch,
   type PagedUrlSearch,

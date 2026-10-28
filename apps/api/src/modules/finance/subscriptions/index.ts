@@ -6,6 +6,7 @@ export { PackagesService, type StudentState } from './money/packages.service';
 export { SubscriptionCancelQueries } from './cancel/subscription-cancel.queries';
 export { SubscriptionCancel } from './cancel/subscription-cancel.service';
 export { SubscriptionCreator } from './subscription-creator';
+export { assertUsedBefore } from './used-before';
 export {
   studentRef,
   type SubContext,

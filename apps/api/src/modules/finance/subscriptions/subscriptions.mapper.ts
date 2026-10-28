@@ -34,6 +34,7 @@ export function toSubscriptionView(sub: SubRow, ctx: SubContext): SubscriptionVi
     package: sub.package === 'trial' ? null : sub.package,
     duration: sub.duration as Duration,
     lessons_total: sub.lessons_total,
+    lessons_used_before: sub.lessons_used_before,
     price: Number(sub.price),
     currency: sub.currency,
     fx_rate: sub.fx_rate === null ? null : Number(sub.fx_rate),

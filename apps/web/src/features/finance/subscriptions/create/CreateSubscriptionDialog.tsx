@@ -9,10 +9,12 @@ import { Ltr } from '@/components/ui/display/ltr';
 import { t } from '@/lib/i18n/i18n';
 import { createSubscription, MONEY_KEY } from '../api';
 import { apiErrorText } from '../format';
-import { INITIAL_PRICING, pricingBody, todayIn, type PricingForm } from './pricing-form';
+import { INITIAL_PRICING, pricingBody, pricingLessons, type PricingForm } from './pricing-form';
 import { PricingFields } from './PricingFields';
 import { QuotePreview } from './QuotePreview';
 import { StudentPicker, type PickedStudent } from './StudentPicker';
+import { UsedBeforeField } from './UsedBeforeField';
+import { useStartDay } from './use-start-day';
 
 type Props = {
   /** Preset from the student profile; otherwise the admin picks one. */
@@ -23,15 +25,18 @@ type Props = {
   onSaved: () => void;
 };
 
-/** «اشتراك جديد» (R-SUB-01): calculator inputs → the API's quote → saved at that price. */
+/**
+ * «اشتراك جديد» (R-SUB-01): calculator inputs → the API's quote → saved at that price. A start before
+ * today (Riyadh) with subscriptions.set_start_date also asks «حلقات مستخدمة من الباقة» (owner 2026-10-28).
+ */
 export function CreateSubscriptionDialog({ student: preset, initial, onClose, onSaved }: Props) {
   const queryClient = useQueryClient();
   const formId = useId();
   const [student, setStudent] = useState<PickedStudent | null>(preset ?? null);
   const [form, setForm] = useState<PricingForm>(initial ?? INITIAL_PRICING);
-  const [startsOn, setStartsOn] = useState(() => todayIn('Asia/Riyadh'));
   const [notes, setNotes] = useState('');
   const pricing = pricingBody(form);
+  const { startsOn, pickDay, usedBefore, extra } = useStartDay(pricingLessons(pricing));
   // One idempotency key per body: a retry after a 5xx / lost reply re-sends it and gets the first
   // package back; changing the child, price or day makes a new one (a different package).
   const request = useRef<{ body: string; id: string } | null>(null);
@@ -46,7 +51,7 @@ export function CreateSubscriptionDialog({ student: preset, initial, onClose, on
   const submit = (e: FormEvent) => {
     e.preventDefault();
     if (!student || !startsOn) return;
-    const body = { studentId: student.id, pricing, startsOn, notes: notes.trim() || null };
+    const body = { studentId: student.id, pricing, startsOn, notes: notes.trim() || null, ...extra };
     const key = JSON.stringify(body);
     if (request.current?.body !== key) request.current = { body: key, id: crypto.randomUUID() };
     save.mutate({ ...body, clientRequestId: request.current.id });
@@ -86,13 +91,14 @@ export function CreateSubscriptionDialog({ student: preset, initial, onClose, on
         {student && <QuotePreview studentId={student.id} pricing={pricing} />}
         <div className="grid gap-4 sm:grid-cols-2">
           <Field label={t.subscriptions.startsOn}>
-            {(p) => <Input {...p} type="date" dir="ltr" value={startsOn} onChange={(e) => setStartsOn(e.target.value)} required />}
+            {(p) => <Input {...p} type="date" dir="ltr" value={startsOn} onChange={(e) => pickDay(e.target.value)} required />}
           </Field>
           <Field label={t.subscriptions.notes}>
             {(p) => <Input {...p} value={notes} onChange={(e) => setNotes(e.target.value)} />}
           </Field>
         </div>
-        {save.isError && <FormAlert>{apiErrorText(save.error, t.subscriptions.error)}</FormAlert>}
+        <UsedBeforeField shown={usedBefore.shown} value={usedBefore.value} max={usedBefore.max} onChange={usedBefore.set} />
+        {save.isError && <FormAlert>{apiErrorText(save.error, { ...t.subscriptions.error, ...t.packagePayment.error })}</FormAlert>}
       </form>
     </Dialog>
   );

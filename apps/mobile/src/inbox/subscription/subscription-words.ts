@@ -13,7 +13,7 @@ import {
 } from '@ab/shared';
 import type { Href } from 'expo-router';
 import { t } from '@/core/lib/i18n/i18n';
-import { money } from '@/payments/format';
+import { money, partPaidLine } from '@/payments/format';
 
 // A chat's «مشترك» / «الباقة خلصت» / «مش مشترك» and the subscribe button (R-SUB-01): pure, from
 // GET /threads/:phone `people`. The rules (badge, child chip, new vs renew) are @ab/shared's, so
@@ -45,8 +45,10 @@ export function packageText(sub: ThreadSubscriptionView | null): string {
   return [name, remainingLabel].filter(Boolean).join(' · ');
 }
 
-/** «عليه 145 ر.س» while the newest package owes money, else null. */
+/** «عليه 145 ر.س» while the newest package owes money («مدفوعة جزئيًا: …» once part of it came, owner 2026-10-28), else null. */
 export function dueLine(sub: ThreadSubscriptionView | null): string | null {
+  const part = sub ? partPaidLine({ paid: sub.paid_amount, price: sub.price, currency: sub.currency }) : null;
+  if (part) return part;
   return sub && sub.due_amount > 0 ? s().due.replace('{amount}', money(sub.due_amount, sub.currency)) : null;
 }
 
