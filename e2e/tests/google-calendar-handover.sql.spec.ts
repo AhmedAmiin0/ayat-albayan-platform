@@ -22,7 +22,7 @@ const items = (tx: Tx, id: string) => tx<{ kind: string; state: string }[]>`
   select kind, state from public.google_sync_items where subject_id = ${id} order by kind`;
 const owner = async (tx: Tx, id: string) => (await tx<{ calendar_owner: string }[]>`select calendar_owner from public.teachers where id = ${id}`)[0]?.calendar_owner;
 
-test.describe('Google calendar handover (migration 20261028000942)', () => {
+test.describe('Google calendar handover (migration 20261028000943)', () => {
   test.beforeEach(() => test.skip(test.info().project.name !== 'desktop', 'database only: one run'));
 
   test("'script' by default: an imported lesson is not queued; «من المنصة» queues it, stamped and audited", async () => {
