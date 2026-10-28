@@ -2,15 +2,15 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 
-// Migration 20261028000931 read as text: no database in unit tests (the SQL behaviour, max+1 calls and the
+// Migration 20261028000935 read as text: no database in unit tests (the SQL behaviour, max+1 calls and the
 // grants, is in e2e/tests/rate-limit-take.sql.spec.ts).
 const sql = readFileSync(
-  join(__dirname, '../../../../../../../packages/db/supabase/migrations/20261028000931_rate_limit_hits.sql'),
+  join(__dirname, '../../../../../../../packages/db/supabase/migrations/20261028000935_rate_limit_hits.sql'),
   'utf8',
 );
 const fn = /create or replace function public\.rate_limit_take[\s\S]*?\$\$;/.exec(sql)?.[0] ?? '';
 
-describe('migration 931: rate_limit_take and its tables', () => {
+describe('migration 935: rate_limit_take and its tables', () => {
   it('the function is security definer with an empty search_path, every name schema-qualified', () => {
     expect(fn).toContain("security definer set search_path = ''");
     expect(fn).not.toMatch(/\b(from|into|delete from)\s+rate_limit_hits/);
