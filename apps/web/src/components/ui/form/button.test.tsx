@@ -36,7 +36,7 @@ describe('Button (docs/07 §6)', () => {
   it('danger fills with the solid cinnabar (confirm only), danger-quiet outlines label and edge in the bad tone', () => {
     expect(buttonVariants({ variant: 'danger' })).toContain('bg-destructive-solid');
     const quiet = buttonVariants({ variant: 'danger-quiet' }).split(' ');
-    expect(quiet).toEqual(expect.arrayContaining(['text-destructive', 'border-destructive', 'enabled:hover:bg-danger-soft']));
+    expect(quiet).toEqual(expect.arrayContaining(['text-destructive', 'border-destructive', 'hover:not-disabled:bg-danger-soft']));
   });
 
   it('is green and white: no gold edge or saffron on any variant (Fresh Green)', () => {

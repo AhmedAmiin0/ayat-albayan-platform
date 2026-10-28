@@ -21,9 +21,9 @@ interface SalesLessonActionsProps {
 
 /**
  * Sales' «تفاصيل الحلقة» actions (docs/07 §6 «الأزرار», docs/16 rows 37, 37b): «تأكيد الحلقة» full width
- * and filled, unless «ادخل الحلقة» is live above it (then a secondary in the row: never two filled);
- * then ONE ButtonRow «تغيير الموعد» (secondary) | «إلغاء الحلقة» (danger), on an open lesson that has not
- * ended, each behind its own key. «إلغاء الحلقة» opens its reason form in place of the row.
+ * and filled, unless «ادخل الحلقة» is live above it (then outlined: never two filled); then ONE
+ * ButtonRow «تغيير الموعد» (secondary) | «إلغاء الحلقة» (danger), on an open lesson that has not ended,
+ * each behind its own key. «إلغاء الحلقة» opens its reason form in place of all of them.
  */
 export function SalesLessonActions({ lesson, onReschedule, onConfirmed }: SalesLessonActionsProps) {
   const can = usePermissions();
@@ -34,19 +34,15 @@ export function SalesLessonActions({ lesson, onReschedule, onConfirmed }: SalesL
   const a = t.sales.lessonActions;
   const confirm = (secondary: boolean) =>
     onConfirmed ? <SalesConfirmLesson lessonId={lesson.id} onConfirmed={onConfirmed} secondary={secondary} /> : null;
-  if (!allowed.reschedule && !allowed.cancel) return confirm(false);
+  if (!allowed.reschedule && !allowed.cancel) return confirm(joinLive);
+  if (cancelling) return <SalesCancelLesson lessonId={lesson.id} onClose={() => setCancelling(false)} />;
   return (
     <View style={{ gap: 8 }}>
-      {joinLive ? null : confirm(false)}
-      {cancelling ? (
-        <SalesCancelLesson lessonId={lesson.id} onClose={() => setCancelling(false)} />
-      ) : (
-        <ButtonRow>
-          {joinLive ? confirm(true) : null}
-          {allowed.reschedule ? <Button variant="secondary" label={a.reschedule} onPress={() => onReschedule(lesson)} /> : null}
-          {allowed.cancel ? <Button variant="danger" label={a.cancel} onPress={() => setCancelling(true)} /> : null}
-        </ButtonRow>
-      )}
+      {confirm(joinLive)}
+      <ButtonRow>
+        {allowed.reschedule ? <Button variant="secondary" label={a.reschedule} onPress={() => onReschedule(lesson)} /> : null}
+        {allowed.cancel ? <Button variant="danger" label={a.cancel} onPress={() => setCancelling(true)} /> : null}
+      </ButtonRow>
     </View>
   );
 }

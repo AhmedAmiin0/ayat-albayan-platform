@@ -1,5 +1,4 @@
 import type { LessonView } from '@ab/shared';
-import { EditTimeButton } from '@/edit-time/components/EditTimeButton';
 import { editMode } from '@/edit-time/lib/types';
 import { t } from '@/core/lib/i18n/i18n';
 import { studentNames } from '@/today/lib/lesson-text';
@@ -24,7 +23,14 @@ export function RowDefaultActions({ lesson, onReschedule, onEditTime }: RowDefau
   if (!move && !edit) return null;
   return (
     <ButtonRow>
-      {edit ? <EditTimeButton lesson={lesson} onPress={() => edit(lesson)} /> : null}
+      {edit ? (
+        <Button
+          variant="secondary"
+          label={t.editTime.action}
+          accessibilityLabel={`${t.editTime.action} — ${studentNames(lesson)}`}
+          onPress={() => edit(lesson)}
+        />
+      ) : null}
       {move ? (
         <Button
           variant="secondary"

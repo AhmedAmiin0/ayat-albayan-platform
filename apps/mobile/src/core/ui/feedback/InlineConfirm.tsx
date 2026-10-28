@@ -16,6 +16,8 @@ interface InlineConfirmProps {
   onCancel: () => void;
   /** While the confirm request runs; pass the confirm label that says so. */
   busy?: boolean;
+  /** «danger»: the confirm cancels or deletes something, so it is the outlined danger, not green. */
+  tone?: 'danger';
 }
 
 /**
@@ -48,7 +50,12 @@ export function InlineConfirm(props: InlineConfirmProps) {
         {message}
       </AppText>
       <ButtonRow>
-        <Button label={props.confirmLabel ?? t.common.confirm} onPress={onConfirm} busy={busy} />
+        <Button
+          variant={props.tone === 'danger' ? 'danger' : 'primary'}
+          label={props.confirmLabel ?? t.common.confirm}
+          onPress={onConfirm}
+          busy={busy}
+        />
         <Button variant="secondary" label={props.cancelLabel ?? t.common.cancel} onPress={onCancel} />
       </ButtonRow>
     </View>

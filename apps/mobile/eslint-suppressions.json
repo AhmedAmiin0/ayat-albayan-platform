@@ -301,12 +301,12 @@
   },
   "src/calendar/agenda/LessonRowActions.tsx": {
     "ab/module-boundaries": {
-      "count": 7
+      "count": 6
     }
   },
   "src/calendar/agenda/RowDefaultActions.tsx": {
     "ab/module-boundaries": {
-      "count": 3
+      "count": 2
     }
   },
   "src/calendar/agenda/agenda.ts": {
@@ -502,11 +502,6 @@
   "src/edit-time/components/CorrectTimes.tsx": {
     "ab/module-boundaries": {
       "count": 5
-    }
-  },
-  "src/edit-time/components/EditTimeButton.tsx": {
-    "ab/module-boundaries": {
-      "count": 1
     }
   },
   "src/edit-time/components/EditTimeDone.tsx": {

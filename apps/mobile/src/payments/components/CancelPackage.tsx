@@ -57,6 +57,7 @@ export function CancelPackage({ cancel, stale, onDone }: CancelPackageProps) {
         </AppText>
       ) : null}
       <InlineConfirm
+        tone="danger"
         message={c.body}
         confirmLabel={run.isPending ? t.common.saving : c.confirm}
         cancelLabel={t.common.back}

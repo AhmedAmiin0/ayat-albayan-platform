@@ -15,15 +15,15 @@ export const buttonVariants = cva(
     variants: {
       variant: {
         /** One per view: إضافة طالب, حفظ المواعيد, دمج, تأكيد, دخول. */
-        primary: 'border-transparent bg-primary text-primary-foreground enabled:hover:bg-primary-hover',
+        primary: 'border-transparent bg-primary text-primary-foreground hover:not-disabled:bg-primary-hover',
         /** Peers: تصدير, تعديل, row next-actions. The border is its only edge (3:1 rule-input). */
-        secondary: 'bg-secondary text-secondary-foreground border-input enabled:hover:bg-sunk',
+        secondary: 'bg-secondary text-secondary-foreground border-input hover:not-disabled:bg-sunk',
         /** Tertiary header actions only («إغلاق»), and inline «إضافة ميعاد». */
-        ghost: 'border-transparent bg-transparent text-lapis enabled:hover:bg-accent',
+        ghost: 'border-transparent bg-transparent text-lapis hover:not-disabled:bg-accent',
         /** حذف, inside a confirm dialog only. */
         danger: 'border-transparent bg-destructive-solid text-destructive-foreground',
         /** The outlined danger of a sheet or row: «إلغاء الحلقة». Label and edge in the bad tone. */
-        'danger-quiet': 'bg-transparent text-destructive border-destructive enabled:hover:bg-danger-soft',
+        'danger-quiet': 'bg-transparent text-destructive border-destructive hover:not-disabled:bg-danger-soft',
       },
       // Phones: 48px like the app (docs/07 «الأزرار»), the dense sm keeps the 44px floor; 32/40 from 640px.
       size: {

@@ -63,7 +63,7 @@ export function Button({ label, onPress, variant = 'primary', busy = false, ...p
       onPress={onPress}
       style={({ pressed }) => ({
         minHeight: shape.control.comfort,
-        paddingHorizontal: 16,
+        paddingHorizontal: 12,
         borderRadius: shape.radius.md,
         borderWidth: buttonLook(variant, color, pressed).edge,
         borderColor: buttonLook(variant, color, pressed).edgeColor,

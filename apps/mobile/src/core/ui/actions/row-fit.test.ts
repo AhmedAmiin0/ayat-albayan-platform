@@ -13,7 +13,8 @@ test('two lesson actions fit side by side on a 328pt sheet at the default font s
 });
 
 test('font scale 1.3 stacks what no longer fits one line in its cell', () => {
-  expect(rowFits({ ...base, width: 328, labels: ['Reschedule', 'Cancel lesson'], fontScale: 1.3 })).toBe(false);
+  expect(rowFits({ ...base, width: 300, labels: ['Reschedule', 'Cancel lesson'] })).toBe(true);
+  expect(rowFits({ ...base, width: 300, labels: ['Reschedule', 'Cancel lesson'], fontScale: 1.3 })).toBe(false);
 });
 
 test('icons take room: the link block keeps two cells only while label + icon fit', () => {
@@ -29,5 +30,10 @@ test('three cells share the width: a long third label stacks the row', () => {
 
 test('labelWidth grows with the font scale, an unknown label counts as 14 letters', () => {
   expect(labelWidth('Copy link', 1.3)).toBeGreaterThan(labelWidth('Copy link', 1));
-  expect(labelWidth(null, 1)).toBeCloseTo(14 * 0.52 * 15 + 34);
+  expect(labelWidth(null, 1)).toBeCloseTo(14 * 0.52 * 15 + 26);
+});
+
+test('Arabic marks take no width; the admin row «عدّل الوقت | غيّر الموعد | إلغاء» fits a 360pt phone', () => {
+  expect(labelWidth('عدّل', 1)).toBeCloseTo(labelWidth('عدل', 1));
+  expect(rowFits({ ...base, width: 328, labels: ['عدّل الوقت', 'غيّر الموعد', 'إلغاء'] })).toBe(true);
 });

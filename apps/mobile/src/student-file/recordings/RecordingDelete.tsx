@@ -18,6 +18,7 @@ export function RecordingDelete({ id, studentId }: { id: string; studentId: stri
   return (
     <View style={{ gap: 8 }}>
       <InlineConfirm
+        tone="danger"
         message={D.question}
         confirmLabel={remove.isPending ? D.deleting : D.confirm}
         busy={remove.isPending}

@@ -49,7 +49,7 @@ test('font scale 1.3 stacks a row that fits at 1.0', async () => {
       <Button variant="danger" label="Cancel lesson" onPress={jest.fn()} />
     </ButtonRow>,
   );
-  await fireEvent(screen.getByTestId('row'), 'layout', layout(328));
+  await fireEvent(screen.getByTestId('row'), 'layout', layout(300));
   expect(flat('row').flexDirection).toBe('column');
 });
 

@@ -3,7 +3,6 @@ import { useState } from 'react';
 import { View } from 'react-native';
 import { MakeupAction } from '@/booking/makeup/MakeupAction';
 import { useJoinOpen } from '@/classroom';
-import { EditTimeButton } from '@/edit-time/components/EditTimeButton';
 import { FeedbackRequestButton } from '@/feedback/FeedbackRequestButton';
 import { ErrorLine } from '@/inbox/ErrorLine';
 import { t } from '@/core/lib/i18n/i18n';
@@ -25,9 +24,9 @@ interface LessonRowActionsProps {
 }
 
 /**
- * A «الجدول» row's actions (docs/07 §6 «الأزرار»): «تأكيد» full width and filled while the lesson is
- * still `scheduled` and «ادخل الحلقة» is not live (never two filled buttons), else a secondary in the
- * row; then ONE ButtonRow of equal cells: «عدّل الوقت» (this lesson, in place), «غيّر الميعاد» (closes it
+ * A «الجدول» row's actions (docs/07 §6 «الأزرار»): «تأكيد» full width, filled while the lesson is
+ * still `scheduled` and «ادخل الحلقة» is not live, else outlined (never two filled buttons); then ONE
+ * ButtonRow of equal cells: «عدّل الوقت» (this lesson, in place), «غيّر الميعاد» (closes it
  * and opens a new one), «إلغاء» (danger; opens Today's cancel form in place). Each shows only when the API
  * offered it and the state machine still allows it from the status on screen (maybe the optimistic one).
  * A finished lesson also offers «ابعت طلب الرأي» (FeedbackRequestButton).
@@ -62,10 +61,9 @@ export function LessonRowActions({ lesson, action, onReschedule, onEditTime, onL
   const confirm = () => action.confirm(lesson.id);
   return (
     <View style={{ gap: 8 }}>
-      {lead ? act(t.today.confirm, 'primary', confirm) : null}
+      {can('confirm') ? act(t.today.confirm, lead ? 'primary' : 'secondary', confirm) : null}
       <ButtonRow>
-        {can('confirm') && !lead ? act(t.today.confirm, 'secondary', confirm) : null}
-        {onEditTime && lesson.time_edit_mode ? <EditTimeButton lesson={lesson} busy={busy} onPress={() => onEditTime(lesson)} /> : null}
+        {onEditTime && lesson.time_edit_mode ? act(t.editTime.action, 'secondary', () => onEditTime(lesson)) : null}
         {can('reschedule') ? act(t.lessons.rescheduleSubmit, 'secondary', () => onReschedule(lesson)) : null}
         {can('cancel_by_admin') ? act(t.today.cancel, 'danger', () => setCancelling(true)) : null}
       </ButtonRow>
