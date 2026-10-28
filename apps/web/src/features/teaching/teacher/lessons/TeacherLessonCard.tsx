@@ -68,7 +68,8 @@ export function TeacherLessonCard({ lesson, tz, fallbackLink, onDone }: TeacherL
         </div>
         <StatusChip {...style} label={t.enums.lessonStatus[lesson.status]} className="ms-auto" />
       </div>
-      <div className="flex flex-wrap items-start gap-3">
+      {/* docs/07 «الأزرار»: one column, each action fills its width (no wrapped row of mixed buttons). */}
+      <div className="grid gap-3">
         {platform || !isOpenLesson(lesson.status) ? null : link ? (
           <a href={link} target="_blank" rel="noreferrer" className={buttonVariants({ variant: 'secondary', size: 'lg' })}>
             {t.classroom.joinMeeting}
@@ -79,9 +80,7 @@ export function TeacherLessonCard({ lesson, tz, fallbackLink, onDone }: TeacherL
         <StaffJoinButton lesson={lesson} size="lg" />
         <CopyLinkButton lesson={lesson} />
         <LessonReportLinks lesson={lesson} role="teacher" size="lg" />
-        <div className="min-w-0 flex-1">
-          <LessonActions lesson={lesson} onDone={onDone} size="lg" />
-        </div>
+        <LessonActions lesson={lesson} onDone={onDone} size="lg" />
       </div>
       <TeacherProposal lesson={lesson} tz={tz} onDone={onDone} />
     </article>

@@ -39,9 +39,7 @@ export function UpcomingLessons({ lessons, studentId }: { lessons: readonly Sale
         );
       })}
       {lessons.length > UPCOMING_SHOWN ? (
-        <View style={{ alignSelf: 'flex-start' }}>
-          <Button variant="ghost" label={all ? s.showLess : fill(s.showAll, { n: String(lessons.length) })} onPress={() => setAll(!all)} />
-        </View>
+        <Button variant="secondary" label={all ? s.showLess : fill(s.showAll, { n: String(lessons.length) })} onPress={() => setAll(!all)} />
       ) : null}
       <SalesLessonSheet lesson={details.lesson} onClose={details.close} studentId={studentId} />
     </View>

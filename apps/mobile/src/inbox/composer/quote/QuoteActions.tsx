@@ -1,6 +1,7 @@
 import { View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { Button } from '@/core/ui/primitives/Button';
+import { ButtonRow } from '@/core/ui/actions';
 
 interface QuoteActionsProps {
   /** The 24 h window: outside it only «انسخ» works. */
@@ -13,7 +14,7 @@ interface QuoteActionsProps {
   onCopy: () => void;
 }
 
-/** «أرسل العرض» (the one filled button), «عدّل قبل الإرسال» and «انسخ». */
+/** «أرسل العرض» (the one filled button, alone), then ONE ButtonRow «عدّل قبل الإرسال» | «انسخ» (docs/07 «الأزرار»). */
 export function QuoteActions(p: QuoteActionsProps) {
   const off = !p.open || !p.ready;
   return (
@@ -24,8 +25,10 @@ export function QuoteActions(p: QuoteActionsProps) {
         disabled={off}
         onPress={p.onSend}
       />
-      <Button variant="secondary" label={t.inbox.quote.edit} disabled={off || p.sending} onPress={p.onEdit} />
-      <Button variant="ghost" label={t.inbox.quote.copy} disabled={!p.ready} onPress={p.onCopy} />
+      <ButtonRow>
+        <Button variant="secondary" label={t.inbox.quote.edit} disabled={off || p.sending} onPress={p.onEdit} />
+        <Button variant="secondary" label={t.inbox.quote.copy} disabled={!p.ready} onPress={p.onCopy} />
+      </ButtonRow>
     </View>
   );
 }

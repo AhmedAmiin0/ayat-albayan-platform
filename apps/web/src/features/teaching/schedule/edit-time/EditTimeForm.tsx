@@ -3,6 +3,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { Button } from '@/components/ui/form/button';
 import { FormAlert } from '@/components/ui/form/form-alert';
+import { ButtonRow } from '@/components/ui/layout/button-row';
 import { t } from '@/lib/i18n/i18n';
 import { conflictsOf, editLessonTime, errorCode, lessonErrorText, LESSONS_KEY } from '../api';
 import { ConflictNotice } from '../reschedule/ConflictNotice';
@@ -131,16 +132,16 @@ export function EditTimeForm({ lesson, onBack, onDone }: EditTimeFormProps) {
       ) : (
         save.isError && <FormAlert>{lessonErrorText(save.error)}</FormAlert>
       )}
-      <div className="sticky bottom-0 z-10 -mx-5 -mb-4 flex flex-wrap justify-end gap-2.5 border-t border-rule bg-card px-5 py-3">
-        <Button type="button" variant="ghost" onClick={onBack}>
-          {t.lessons.back}
-        </Button>
+      <ButtonRow className="sticky bottom-0 z-10 -mx-5 -mb-4 border-t border-rule bg-card px-5 py-3">
         {!conflicts && (
           <Button type="button" disabled={!changed || !validLength(value.durationMin) || stale || locked || save.isPending} onClick={submit}>
             {t.lessons.timeEdit.submit}
           </Button>
         )}
-      </div>
+        <Button type="button" variant="secondary" onClick={onBack}>
+          {t.lessons.back}
+        </Button>
+      </ButtonRow>
     </section>
   );
 }

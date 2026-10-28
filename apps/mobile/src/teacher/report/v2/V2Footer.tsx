@@ -2,6 +2,7 @@ import type { ReportFormResponse } from '@ab/shared';
 import { View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { useClockCycle } from '@/core/lib/clock';
+import { ButtonRow } from '@/core/ui/actions';
 import { Button } from '@/core/ui/primitives/Button';
 import { ErrorLine } from '@/inbox';
 import { Note } from '@/more';
@@ -23,7 +24,8 @@ function Problems({ s, block }: { s: V2EntryState; block: ReportFormResponse['su
 
 /**
  * The end of a v2 report: what stops the send, the sent state with its edit window, then
- * «أرسل التقرير إلى الأسرة» (after a send «احفظ التعديل»), «احفظ مسودة» while a draft, and the save line.
+ * «أرسل التقرير إلى الأسرة» (after a send «احفظ التعديل») and «احفظ مسودة» while a draft as ONE ButtonRow
+ * (send first; docs/07 §6, stacked full width when the labels do not fit), and the save line.
  */
 export function V2Footer({
   s,
@@ -47,15 +49,17 @@ export function V2Footer({
       {sent ? <SentNote report={report} tz={tz} /> : null}
       {report.can_edit ? (
         <>
-          <Button label={label} busy={s.submit.isPending || block !== null} onPress={s.send} />
-          {draft ? (
-            <Button
-              variant="secondary"
-              label={v2.saveDraft}
-              busy={s.saveState.kind === 'saving'}
-              onPress={s.saveDraft}
-            />
-          ) : null}
+          <ButtonRow testID="report-footer-actions">
+            <Button label={label} busy={s.submit.isPending || block !== null} onPress={s.send} />
+            {draft ? (
+              <Button
+                variant="secondary"
+                label={v2.saveDraft}
+                busy={s.saveState.kind === 'saving'}
+                onPress={s.saveDraft}
+              />
+            ) : null}
+          </ButtonRow>
           <Note>{v2.sendHint}</Note>
         </>
       ) : null}

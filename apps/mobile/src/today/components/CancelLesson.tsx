@@ -66,6 +66,7 @@ export function CancelLesson({ lesson, onSubmit, onClose }: CancelLessonProps) {
       />
       {tried && (by === '' || reason.trim() === '') ? <ErrorLine message={t.common.required} /> : null}
       <InlineConfirm
+        tone="danger"
         message={t.lessons.cancelTitle}
         confirmLabel={t.lessons.cancelSubmit}
         cancelLabel={t.common.back}

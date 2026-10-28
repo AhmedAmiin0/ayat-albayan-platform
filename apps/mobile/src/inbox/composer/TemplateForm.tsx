@@ -15,6 +15,7 @@ import { useState } from 'react';
 import { ScrollView } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { Button } from '@/core/ui/primitives/Button';
+import { ButtonRow } from '@/core/ui/actions';
 import { Field } from '@/core/ui/form/Field';
 import { FilterPills } from '@/core/ui/form/FilterPills';
 import { ErrorLine } from '../ErrorLine';
@@ -100,8 +101,10 @@ export function TemplateForm({ template, lessons, contactName, onBack, onSend }:
       ) : null}
       <TemplatePreview template={template} params={params} />
       {missing ? <ErrorLine message={withLesson && !lessonId ? t.inbox.composer.pickLesson : t.common.required} /> : null}
-      <Button label={t.inbox.composer.send} onPress={send} />
-      <Button variant="ghost" label={t.common.back} onPress={onBack} />
+      <ButtonRow>
+        <Button label={t.inbox.composer.send} onPress={send} />
+        <Button variant="secondary" label={t.common.back} onPress={onBack} />
+      </ButtonRow>
     </ScrollView>
   );
 }

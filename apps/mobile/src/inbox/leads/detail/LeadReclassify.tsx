@@ -26,7 +26,7 @@ export function LeadReclassify({ id }: { id: string }) {
   if (!asking) {
     return (
       <Button
-        variant="ghost"
+        variant="secondary"
         label={t.leads.reclassifyAsApplicant}
         onPress={() => setAsking(true)}
       />

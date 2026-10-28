@@ -5,6 +5,7 @@ import { shape, type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { ContentText } from '@/core/ui/primitives/ContentText';
 import { Button } from '@/core/ui/primitives/Button';
+import { ButtonRow } from '@/core/ui/actions';
 import { ErrorLine } from '../../ErrorLine';
 import { useChatActions } from '../../thread/hooks/chat-actions';
 import { useSendMessage } from '../../thread/hooks/use-thread';
@@ -50,8 +51,10 @@ export function ResendSheet({ phone, id, onClose }: { phone: string; id: string;
           {RESEND_TEXT}
         </ContentText>
         {send.isError ? <ErrorLine message={sendError(send.error)} /> : null}
-        <Button label={send.isPending ? t.inbox.resend.sending : t.inbox.resend.send} busy={send.isPending} onPress={confirm} />
-        <Button variant="ghost" label={t.common.cancel} onPress={close} />
+        <ButtonRow>
+          <Button label={send.isPending ? t.inbox.resend.sending : t.inbox.resend.send} busy={send.isPending} onPress={confirm} />
+          <Button variant="secondary" label={t.common.cancel} onPress={close} />
+        </ButtonRow>
       </View>
     </Modal>
   );

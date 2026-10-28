@@ -19,13 +19,11 @@ export function SubscriptionSection({ data }: { data: Pick<SalesStudentDetails, 
       <SectionLabel>{s.subscription}</SectionLabel>
       {current ? <HistoryEntryCard entry={current} current brief /> : <Note>{s.noSubscription}</Note>}
       {past.length > 0 ? (
-        <View style={{ alignSelf: 'flex-start' }}>
-          <Button
-            variant="ghost"
-            label={open ? s.hidePast : fill(s.showPast, { n: String(past.length) })}
-            onPress={() => setOpen(!open)}
-          />
-        </View>
+        <Button
+          variant="secondary"
+          label={open ? s.hidePast : fill(s.showPast, { n: String(past.length) })}
+          onPress={() => setOpen(!open)}
+        />
       ) : null}
       {open ? past.map((sub) => <HistoryEntryCard key={sub.id} entry={sub} current={false} brief />) : null}
     </View>

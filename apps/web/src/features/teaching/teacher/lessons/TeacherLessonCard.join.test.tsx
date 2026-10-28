@@ -45,3 +45,10 @@ it('academy switch ON but the lesson is on the fixed link (its teacher is static
   card({ status: 'confirmed', platform_classroom: false }, true);
   expect(screen.getByRole('link', { name: t.classroom.joinMeeting }).getAttribute('href')).toBe(LINK);
 });
+
+it('docs/07 «الأزرار»: the actions stack in one column (no wrapped row of mixed buttons)', () => {
+  card({ status: 'confirmed' });
+  const column = screen.getByRole('link', { name: t.classroom.joinMeeting }).parentElement;
+  expect(column?.className).toContain('grid');
+  expect(column?.className).not.toContain('flex-wrap');
+});

@@ -44,7 +44,7 @@ function Part({ s, kind, onOpen, segment, index, later }: PartProps) {
       />
       {segment && !s.locked ? (
         <Button
-          variant="ghost"
+          variant="danger"
           label={v2.removeSegment}
           accessibilityLabel={`${v2.removeSegment} — ${title}`}
           onPress={() =>

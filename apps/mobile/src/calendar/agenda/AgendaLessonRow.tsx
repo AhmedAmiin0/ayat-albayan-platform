@@ -1,7 +1,7 @@
 import { lessonStatusStyle, type LessonView } from '@ab/shared';
 import type { ReactNode } from 'react';
 import { Pressable, View } from 'react-native';
-import { JoinClassroomButton } from '@/classroom/links/JoinClassroomButton';
+import { JoinAround } from '@/classroom';
 import { useClockCycle } from '@/core/lib/clock';
 import { t } from '@/core/lib/i18n/i18n';
 import { LiveBadge } from '@/live/LiveBadge';
@@ -21,7 +21,7 @@ interface AgendaLessonRowProps {
   onReschedule: (lesson: LessonView) => void;
   /** The row's own actions (تأكيد / إلغاء / غيّر الميعاد) in place of «غيّر الميعاد» alone. */
   actions?: ReactNode;
-  /** «عدّل الوقت» (R-SCH-11), the secondary button before the ghost «غيّر الميعاد»: shown when the lesson allows it (time_edit_mode). */
+  /** «عدّل الوقت» (R-SCH-11), the secondary beside «غيّر الميعاد» in the row: shown when the lesson allows it (time_edit_mode). */
   onEditTime?: (lesson: LessonView) => void;
   /** A tap on the row's line (not its buttons) opens «تفاصيل الحلقة». */
   onOpen?: (lesson: LessonView) => void;
@@ -76,9 +76,10 @@ export function AgendaLessonRow({ lesson, onReschedule, actions, onEditTime, onO
       ) : (
         <View style={lineStyle}>{line}</View>
       )}
-      <View style={{ gap: 2, paddingStart: 58 }}>
-        {actions ?? <RowDefaultActions lesson={lesson} onReschedule={onReschedule} onEditTime={onEditTime} />}
-        <JoinClassroomButton lesson={lesson} />
+      <View style={{ gap: 8 }}>
+        <JoinAround lesson={lesson}>
+          {actions ?? <RowDefaultActions lesson={lesson} onReschedule={onReschedule} onEditTime={onEditTime} />}
+        </JoinAround>
       </View>
     </View>
   );

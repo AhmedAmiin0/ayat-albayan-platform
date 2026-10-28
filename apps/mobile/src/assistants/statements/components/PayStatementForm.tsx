@@ -11,6 +11,7 @@ import { PaidDayPicker } from '@/payments/components/PaidDayPicker';
 import { ReceiptPicker } from '@/payments/ReceiptPicker';
 import { statementMonth } from '@/sales-money/lib/money-text';
 import { useNow } from '@/core/lib/time/use-now';
+import { ButtonRow } from '@/core/ui/actions';
 import { Button } from '@/core/ui/primitives/Button';
 import { Field } from '@/core/ui/form/Field';
 import { FilterPills, type FilterPill } from '@/core/ui/form/FilterPills';
@@ -50,14 +51,10 @@ export function PayStatementForm({ statement, onDone, onCancel }: PayStatementFo
       <Field label={t.payments.note} value={draft.note} onChangeText={(note) => set({ note })} maxLength={500} />
       <ReceiptPicker receipt={draft.receipt} onChange={(receipt) => set({ receipt })} />
       {pay.isError ? <ErrorLine message={assistantsErrorText(pay.error)} /> : null}
-      <View style={{ flexDirection: 'row', gap: 8 }}>
-        <View style={{ flex: 1 }}>
-          <Button variant="ghost" label={t.common.cancel} onPress={onCancel} disabled={pay.isPending} />
-        </View>
-        <View style={{ flex: 1 }}>
-          <Button label={pay.isPending ? t.earnings.saving : t.finance.confirmPaid} busy={pay.isPending} onPress={() => pay.mutate(draft, { onSuccess: onDone })} />
-        </View>
-      </View>
+      <ButtonRow>
+        <Button label={pay.isPending ? t.earnings.saving : t.finance.confirmPaid} busy={pay.isPending} onPress={() => pay.mutate(draft, { onSuccess: onDone })} />
+        <Button variant="secondary" label={t.common.cancel} onPress={onCancel} disabled={pay.isPending} />
+      </ButtonRow>
     </View>
   );
 }

@@ -2485,6 +2485,7 @@ export type Database = {
           category: Database['public']['Enums']['template_category'];
           crm_language: string | null;
           crm_name: string | null;
+          display: Json | null;
           footer_ar: string | null;
           header_format: string | null;
           key: string;
@@ -2508,6 +2509,7 @@ export type Database = {
           category?: Database['public']['Enums']['template_category'];
           crm_language?: string | null;
           crm_name?: string | null;
+          display?: Json | null;
           footer_ar?: string | null;
           header_format?: string | null;
           key: string;
@@ -2531,6 +2533,7 @@ export type Database = {
           category?: Database['public']['Enums']['template_category'];
           crm_language?: string | null;
           crm_name?: string | null;
+          display?: Json | null;
           footer_ar?: string | null;
           header_format?: string | null;
           key?: string;

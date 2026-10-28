@@ -22,11 +22,14 @@ describe('ConflictNotice inside an edit (R-SCH-11)', () => {
     expect(container.innerHTML).not.toMatch(/sm:grid-cols/);
   });
 
-  it('«اختر موعدًا آخر» is the strong button, the override the quiet one', () => {
+  it('«اختر موعدًا آخر» is the strong button, the override an outlined secondary in the same ButtonRow', () => {
     render(<ConflictNotice conflicts={[clash]} labels={labels} onChangeSlot={vi.fn()} onOverride={vi.fn()} />);
-    const strong = screen.getByRole('button', { name: t.booking.changeSlot }).className;
-    const quiet = screen.getByRole('button', { name: labels.override }).className;
-    expect(strong).not.toBe(quiet);
-    expect(quiet).toMatch(/ghost|transparent|text-lapis/);
+    const strong = screen.getByRole('button', { name: t.booking.changeSlot });
+    const quiet = screen.getByRole('button', { name: labels.override });
+    expect(strong.className).toContain('bg-primary');
+    expect(quiet.className).toContain('border-input');
+    expect(quiet.className).not.toContain('text-lapis');
+    expect(strong.parentElement).toBe(quiet.parentElement);
+    expect(strong.parentElement?.firstElementChild).toBe(strong);
   });
 });

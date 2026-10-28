@@ -18,6 +18,8 @@ interface SalesConfirmLessonProps {
   lessonId: string;
   /** The drawer then shows the lesson «مؤكدة» while the day re-reads. */
   onConfirmed: () => void;
+  /** Under a live «ادخل الحلقة»: outlined, so the drawer keeps one filled button. */
+  secondary?: boolean;
 }
 
 /**
@@ -25,7 +27,7 @@ interface SalesConfirmLessonProps {
  * ANY lesson (the family's «نعم» arrives in a chat every assistant sees), scheduled → confirmed, no message
  * to anyone. The drawer shows it only when canSalesConfirm (@ab/shared).
  */
-export function SalesConfirmLesson({ lessonId, onConfirmed }: SalesConfirmLessonProps) {
+export function SalesConfirmLesson({ lessonId, onConfirmed, secondary = false }: SalesConfirmLessonProps) {
   const client = useQueryClient();
   const confirm = useMutation({
     mutationFn: () => apiSend<SalesLessonMoved>('POST', `/sales/lessons/${lessonId}/confirm`),
@@ -34,9 +36,9 @@ export function SalesConfirmLesson({ lessonId, onConfirmed }: SalesConfirmLesson
     onSettled: () => client.invalidateQueries({ queryKey: ['sales', 'schedule'] }),
   });
   return (
-    <div className="grid justify-items-start gap-2">
+    <div className="grid gap-2">
       {confirm.isError && <FormAlert>{confirmErrorText(confirm.error)}</FormAlert>}
-      <Button type="button" size="sm" disabled={confirm.isPending} onClick={() => confirm.mutate()}>
+      <Button type="button" variant={secondary ? 'secondary' : 'primary'} disabled={confirm.isPending} onClick={() => confirm.mutate()}>
         {confirm.isPending ? t.common.saving : t.sales.lessonActions.confirm}
       </Button>
     </div>

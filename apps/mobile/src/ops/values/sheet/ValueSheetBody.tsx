@@ -5,6 +5,7 @@ import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/more/Note';
 import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
+import { ButtonRow } from '@/core/ui/actions';
 import { Button } from '@/core/ui/primitives/Button';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { SheetNotes, SheetNotice } from './SheetNotes';
@@ -33,9 +34,7 @@ function Description({ description, onDescribe }: Pick<ValueSheetBodyProps, 'des
     <>
       {description.text ? <Note>{description.text}</Note> : null}
       {description.canEdit ? (
-        <View style={{ alignItems: 'flex-start' }}>
-          <Button variant="ghost" label={t.mobileValues.description.edit} onPress={onDescribe} />
-        </View>
+        <Button variant="secondary" label={t.mobileValues.description.edit} onPress={onDescribe} />
       ) : null}
     </>
   );
@@ -51,17 +50,13 @@ function SavedText({ valueKey, saved }: { valueKey: SettingKey; saved: unknown }
   );
 }
 
-/** «إلغاء» then «احفظ» (primary), as every sheet and dialog on the web (docs/26b §7b). */
+/** ONE ButtonRow (docs/07 §6 «الأزرار», forms): «احفظ» (primary) at the reading start, «إلغاء» (secondary). */
 function Actions({ sheet }: { sheet: ValueSheetState }) {
   return (
-    <View style={{ flexDirection: 'row', gap: 8 }}>
-      <View style={{ flex: 1 }}>
-        <Button variant="ghost" label={t.config.custom.cancel} onPress={sheet.requestClose} />
-      </View>
-      <View style={{ flex: 1 }}>
-        <Button label={t.config.custom.save} busy={sheet.saving} onPress={sheet.submit} />
-      </View>
-    </View>
+    <ButtonRow>
+      <Button label={t.config.custom.save} busy={sheet.saving} onPress={sheet.submit} />
+      <Button variant="secondary" label={t.config.custom.cancel} onPress={sheet.requestClose} />
+    </ButtonRow>
   );
 }
 

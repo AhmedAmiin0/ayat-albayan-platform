@@ -12,6 +12,7 @@ export function DeleteConfirm({ reply, onDone }: { reply: SavedReply; onDone: ()
   return (
     <View style={{ gap: 6, paddingHorizontal: 16, paddingVertical: 8 }}>
       <InlineConfirm
+        tone="danger"
         message={`${t.savedReplies.deleteTitle.replace('{title}', reply.title)}. ${t.savedReplies.deleteConfirm}`}
         confirmLabel={t.savedReplies.deleteYes}
         busy={remove.isPending}

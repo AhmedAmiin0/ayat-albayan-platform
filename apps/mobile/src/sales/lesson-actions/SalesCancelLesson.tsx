@@ -23,6 +23,7 @@ export function SalesCancelLesson({ lessonId, onClose }: { lessonId: string; onC
       <Field label={a.reason} placeholder={a.reasonHint} value={reason} onChangeText={setReason} />
       {failure ? <ErrorLine message={failure.kind === 'error' ? failure.text : t.common.error} /> : null}
       <InlineConfirm
+        tone="danger"
         message={a.cancelTitle}
         confirmLabel={cancel.isPending ? t.common.saving : a.confirmCancel}
         cancelLabel={t.common.back}

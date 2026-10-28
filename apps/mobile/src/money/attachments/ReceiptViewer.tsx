@@ -24,9 +24,7 @@ function ReceiptBody({ payment, open }: { payment: PaymentView; open: boolean })
   if (!url) return <ActivityIndicator accessibilityLabel={t.common.loading} color={color.lapis} />;
   if (isPdfReceipt(payment, url)) {
     return (
-      <View style={{ alignItems: 'flex-start' }}>
-        <Button variant="secondary" label={t.mobileMoney.openPdf} onPress={() => void Linking.openURL(url)} />
-      </View>
+      <Button variant="secondary" label={t.mobileMoney.openPdf} onPress={() => void Linking.openURL(url)} />
     );
   }
   return (
@@ -56,14 +54,12 @@ export function ReceiptViewer({ payment }: { payment: PaymentView }) {
   const label = open ? t.mobileMoney.hideReceipt : t.mobileMoney.viewReceipt;
   return (
     <View style={{ gap: 8 }}>
-      <View style={{ alignItems: 'flex-start' }}>
-        <Button
-          variant="ghost"
-          label={label}
-          accessibilityLabel={`${label} · ${payment.student.name}`}
-          onPress={() => setOpen((v) => !v)}
-        />
-      </View>
+      <Button
+        variant="secondary"
+        label={label}
+        accessibilityLabel={`${label} · ${payment.student.name}`}
+        onPress={() => setOpen((v) => !v)}
+      />
       <ReceiptBody payment={payment} open={open} />
     </View>
   );

@@ -59,7 +59,7 @@ export function DuplicateNotice({ candidates, onUse, onNew, busy }: DuplicateNot
           />
         </View>
       ))}
-      <Button variant="ghost" label={t.booking.newAnyway} busy={busy} onPress={onNew} />
+      <Button variant="secondary" label={t.booking.newAnyway} busy={busy} onPress={onNew} />
     </View>
   );
 }

@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { View } from 'react-native';
 import { ErrorLine } from '@/inbox/ErrorLine';
 import { t } from '@/core/lib/i18n/i18n';
+import { ButtonRow } from '@/core/ui/actions';
 import { Button } from '@/core/ui/primitives/Button';
 import { rescheduleBody } from './create-body';
 import { updateMeeting } from '../invite/invite-api';
@@ -33,12 +34,14 @@ export function RescheduleMeeting({ meeting, tz, onDone }: RescheduleMeetingProp
   return (
     <View style={{ gap: 10 }}>
       <ScheduleFields slot={slot} onChange={setSlot} tz={tz} />
-      <Button
-        label={save.isPending ? I.saving : I.save}
-        busy={save.isPending}
-        onPress={() => save.mutate({ id: meeting.id, body: rescheduleBody(slot, tz) })}
-      />
-      <Button variant="ghost" label={t.common.cancel} onPress={onDone} />
+      <ButtonRow>
+        <Button
+          label={save.isPending ? I.saving : I.save}
+          busy={save.isPending}
+          onPress={() => save.mutate({ id: meeting.id, body: rescheduleBody(slot, tz) })}
+        />
+        <Button variant="secondary" label={t.common.cancel} onPress={onDone} />
+      </ButtonRow>
       {save.isError ? <ErrorLine message={inviteError(save.error)} /> : null}
     </View>
   );
