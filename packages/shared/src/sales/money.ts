@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { localDate } from '../schemas/lessons/scheduling.js';
 import { optionalText, phoneE164 } from '../schemas/common.js';
-import { currencyIso, moneyAmount, pastInstant, paymentAttachmentPaths, receiptUploadSchema, subscriptionPricingSchema } from '../money/schemas.js';
+import { currencyIso, LESSONS_USED_BEFORE_MAX, moneyAmount, pastInstant, paymentAttachmentPaths, receiptUploadSchema, subscriptionPricingSchema } from '../money/schemas.js';
 
 // The salesperson's money writes from the chat (owner 2026-10-12, R-ASST-01/04, docs/16): she subscribes
 // a student she brought and records the family's bank transfer with its receipt. Same rules as the admin's
@@ -24,6 +24,8 @@ export const salesSubscriptionCreateSchema = z.strictObject({
   startsOn: localDate.optional(),
   /** «بدأ الاشتراك سابقًا»: allows a past startsOn (subscriptions.set_start_date only). */
   alreadyStarted: z.boolean().optional(),
+  /** «حلقات مستخدمة من الباقة» (owner 2026-10-28): only with alreadyStarted; 0..usedBeforeMax (usedBeforeProblem). */
+  lessonsUsedBefore: z.int().min(0).max(LESSONS_USED_BEFORE_MAX).optional(),
   clientRequestId: z.uuid(),
 });
 

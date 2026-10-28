@@ -18,6 +18,8 @@ export interface StepperProps {
   wrap?: boolean;
   /** The readout (default the plain number): «14», «60 دقيقة». */
   format?: (value: number) => string;
+  /** The buttons' own names (default «أقل» / «أكثر»). */
+  names?: { less: string; more: string };
 }
 
 interface StepButtonProps {
@@ -73,7 +75,7 @@ export function Stepper({ label, value, min, max, onChange, ...o }: StepperProps
     <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
       <StepButton
         glyph="−"
-        name={t.pricing.decrease}
+        name={o.names?.less ?? t.pricing.decrease}
         hint={label}
         disabled={!range.wrap && value <= min}
         onPress={() => onChange(stepValue(value, -1, range))}
@@ -93,7 +95,7 @@ export function Stepper({ label, value, min, max, onChange, ...o }: StepperProps
       </Ltr>
       <StepButton
         glyph="+"
-        name={t.pricing.increase}
+        name={o.names?.more ?? t.pricing.increase}
         hint={label}
         disabled={!range.wrap && value >= max}
         onPress={() => onChange(stepValue(value, 1, range))}

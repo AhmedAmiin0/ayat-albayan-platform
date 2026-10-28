@@ -35,6 +35,8 @@ export interface PackageLesson {
 export interface PackageSubscription {
   id: string;
   lessonsTotal: number;
+  /** Taken before the platform (migration 932, owner 2026-10-28): counted as used, never booked. */
+  lessonsUsedBefore?: number;
   /** Local date in the student's tz, YYYY-MM-DD. */
   startsOn: string;
   /** ISO instant; breaks ties between packages starting the same day. */
@@ -68,7 +70,8 @@ const byStart = (a: PackageSubscription, b: PackageSubscription) =>
 
 /**
  * One student's balances, FIFO: consuming lessons on or after the first package's start fill the
- * packages in (startsOn, createdAt) order, each up to lessonsTotal; overflow lands on the newest.
+ * packages in (startsOn, createdAt) order, each up to lessonsTotal − lessonsUsedBefore; overflow
+ * lands on the newest. lessonsUsed includes lessonsUsedBefore (migration 932).
  * Returned in the same order as the packages.
  */
 export function subscriptionBalances(input: {
@@ -83,10 +86,11 @@ export function subscriptionBalances(input: {
   const booked = counted.filter((l) => BOOKED.includes(l.status)).sort(byTime);
   let capFrom = 0;
   return subs.map((s, i) => {
-    const capTo = capFrom + s.lessonsTotal;
+    const before = s.lessonsUsedBefore ?? 0;
+    const capTo = capFrom + s.lessonsTotal - before;
     const isLast = i === subs.length - 1;
     const upTo = isLast ? used.length : Math.min(used.length, capTo);
-    const lessonsUsed = Math.max(0, upTo - capFrom);
+    const lessonsUsed = before + Math.max(0, upTo - capFrom);
     const left = capTo - used.length;
     const balance: SubscriptionBalance = {
       subscriptionId: s.id,

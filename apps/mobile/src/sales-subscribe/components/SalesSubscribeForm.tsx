@@ -5,7 +5,7 @@ import { useHolds } from '@/auth/use-permissions';
 import { ErrorLine } from '@/inbox/ErrorLine';
 import { t } from '@/core/lib/i18n/i18n';
 import { inTree, useTreeBase } from '@/core/nav/tree-base';
-import { renewalForm } from '@/subscribe';
+import { quoteLessons, renewalForm } from '@/subscribe';
 import { PricingInputs } from '@/subscribe/PricingInputs';
 import { INITIAL_FORM, pricingOf, startDays } from '@/subscribe/subscribe-form';
 import { localDate } from '@/today/lib/timeline';
@@ -53,12 +53,13 @@ export function SalesSubscribeForm({ phone, students, studentId: first, renew = 
   // The academy's (Riyadh) day everywhere: the API checks the start against it, whatever the family's zone.
   const academyToday = localDate(now, RIYADH_TZ);
   const canSet = useHolds('subscriptions.set_start_date');
-  const [start, setStart] = useState<StartDraft>({ day: academyToday, alreadyStarted: false, past: academyToday });
+  const [start, setStart] = useState<StartDraft>({ day: academyToday, alreadyStarted: false, past: academyToday, usedBefore: 0 });
   const [tried, setTried] = useState(false);
-  const starts = checkStart(start, { canSet, today: academyToday });
   const base = useTreeBase();
   const pricing = pricingOf(form);
   const quote = useSalesQuote(studentId, pricing);
+  const lessonsTotal = quoteLessons(quote.data);
+  const starts = checkStart(start, { canSet, today: academyToday, lessonsTotal });
   const save = useSalesCreateSubscription(phone);
   const priced = studentId !== '' && quote.isSuccess && !quote.isPlaceholderData;
   const submit = () => {
@@ -87,6 +88,7 @@ export function SalesSubscribeForm({ phone, students, studentId: first, renew = 
         draft={start}
         onChange={(patch) => setStart((d) => ({ ...d, ...patch }))}
         error={tried && !starts.ok ? starts.error : undefined}
+        lessonsTotal={lessonsTotal}
       />
       {save.isError ? <ErrorLine message={salesErrorText(save.error)} /> : null}
       <Button

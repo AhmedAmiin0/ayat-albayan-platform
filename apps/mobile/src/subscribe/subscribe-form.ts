@@ -72,7 +72,8 @@ function codeOf(error: unknown): string | undefined {
   return typeof body.code === 'string' ? body.code : undefined;
 }
 
-const messages: Record<string, string | undefined> = t.subscriptions.error;
+// The used-lessons codes (owner 2026-10-28) live with the package's payment words.
+const messages: Record<string, string | undefined> = { ...t.subscriptions.error, ...t.packagePayment.error };
 
 /**
  * What the screen says when the quote or the save failed. A save that got no answer is honest

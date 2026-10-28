@@ -3,13 +3,15 @@ import { useId, useState, type FormEvent } from 'react';
 import { Button } from '@/components/ui/form/button';
 import { Dialog } from '@/components/ui/overlay/dialog';
 import { FormAlert } from '@/components/ui/form/form-alert';
-import { moneyText, packageName, studentLabel } from '@/features/finance/subscriptions/format';
+import { currencySymbol, packageName, studentLabel } from '@/features/finance/subscriptions/format';
+import { ShortfallNote } from '@/features/finance/payments';
 import { t } from '@/lib/i18n/i18n';
 import { useUploadMaxBytes } from '@/lib/settings/public-config';
 import { salesErrorText } from '../errors';
 import { PackagePicker } from './PackagePicker';
 import { ReceiptChooser } from './ReceiptChooser';
 import { attachmentsFor, type ReceiptChoice } from './receipt';
+import { dueLine } from './due-line';
 import { TransferFields } from './TransferFields';
 import { useSalesPayment, type TransferForm } from './use-sales-payment';
 
@@ -30,7 +32,10 @@ const formFor = (s: SalesMoneySubscriptionView | undefined): TransferForm => ({
   note: '',
 });
 
-/** Step 2 «سجّل التحويل البنكي» (R-ASST-04): «المرفقات» optional (up to five), the amount starts at what is due. */
+/**
+ * Step 2 «سجّل التحويل البنكي» (R-ASST-04): «المرفقات» optional (up to five), the amount starts at what is
+ * due; a smaller amount says the package stays unpaid (owner 2026-10-28) but still saves.
+ */
 export function SalesTransferStep({ fixed, packages, onClose, onSaved, onBookCourse }: Props) {
   const formId = useId();
   const maxBytes = useUploadMaxBytes();
@@ -74,8 +79,7 @@ export function SalesTransferStep({ fixed, packages, onClose, onSaved, onBookCou
         {sub && (
           <>
             <p className="text-sm text-ink-2">
-              {t.salesMoney.packageFor.replace('{student}', studentLabel(sub.student))} · {packageName(sub)} ·{' '}
-              {t.salesMoney.due.replace('{amount}', moneyText(sub.due, sub.currency))}
+              {t.salesMoney.packageFor.replace('{student}', studentLabel(sub.student))} · {packageName(sub)} · {dueLine(sub)}
             </p>
             {onBookCourse && (
               <Button type="button" variant="secondary" className="justify-self-start" onClick={onBookCourse}>
@@ -84,6 +88,7 @@ export function SalesTransferStep({ fixed, packages, onClose, onSaved, onBookCou
             )}
             <ReceiptChooser sub={sub} value={attachments} onChange={setChosen} maxBytes={maxBytes} />
             <TransferFields form={form} set={(patch) => setForm((f) => ({ ...f, ...patch }))} packageCurrency={sub.currency} today={today()} amountError={amountError} />
+            <ShortfallNote amount={form.amount} due={sub.due} currencyLabel={currencySymbol(sub.currency)} />
           </>
         )}
         {save.isError && <FormAlert>{salesErrorText(save.error)}</FormAlert>}

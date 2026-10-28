@@ -44,6 +44,8 @@ export interface PackageSlot {
 export interface SlotPackage {
   id: string;
   lessonsTotal: number;
+  /** Taken before the platform (migration 932): the package holds lessonsTotal − this platform lessons. */
+  lessonsUsedBefore?: number;
   /** Local date YYYY-MM-DD. */
   startsOn: string;
   /** ISO instant. */
@@ -58,17 +60,19 @@ const byStart = (a: SlotPackage, b: SlotPackage) =>
 /**
  * Which package unit lesson `n` used (n = v_package_lessons.n, the student's nth consuming
  * lesson): packages fill FIFO in (starts_on, created_at, id) order and overflow lands on the
- * newest, exactly as migration 123 allocates them. Stable: later lessons never change it.
+ * newest, exactly as migration 123 allocates them (932: after its lessons used before the platform).
+ * Stable: later lessons never change it.
  */
 export function packageSlot(n: number | null, packages: readonly SlotPackage[]): PackageSlot | null {
   if (n === null || n < 1) return null;
   const sorted = [...packages].sort(byStart);
   let capFrom = 0;
   for (const [i, p] of sorted.entries()) {
-    if (n <= capFrom + p.lessonsTotal || i === sorted.length - 1) {
-      return { position: n - capFrom, total: p.lessonsTotal };
+    const before = p.lessonsUsedBefore ?? 0;
+    if (n <= capFrom + p.lessonsTotal - before || i === sorted.length - 1) {
+      return { position: n - capFrom + before, total: p.lessonsTotal };
     }
-    capFrom += p.lessonsTotal;
+    capFrom += p.lessonsTotal - before;
   }
   return null;
 }

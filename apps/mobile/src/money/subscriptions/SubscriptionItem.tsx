@@ -4,7 +4,7 @@ import { router } from 'expo-router';
 import { View } from 'react-native';
 import { useTabOpen } from '@/auth/use-tab-open';
 import { t } from '@/core/lib/i18n/i18n';
-import { money, packageName, paidOf } from '@/payments/format';
+import { money, packageName, paidLine } from '@/payments/format';
 import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { Button } from '@/core/ui/primitives/Button';
@@ -22,7 +22,7 @@ function subscriptionProgress(sub: SubscriptionView, threshold?: number) {
 
 /**
  * One package: student + code, package and price, the lessons left (saffron when a renewal is due),
- * the status chip. A row opens the student; «سجّل دفعة» opens the existing payment form while it
+ * the status chip; a part-paid one says how much is left (owner 2026-10-28). A row opens the student; «سجّل دفعة» opens the existing payment form while it
  * is not fully paid.
  */
 export const SubscriptionItem = memo(function SubscriptionItem({ sub, threshold }: { sub: SubscriptionView; threshold?: number }) {
@@ -48,7 +48,7 @@ export const SubscriptionItem = memo(function SubscriptionItem({ sub, threshold 
           >
             {due ? `${progress.remainingLabel} · ${t.mobileMoney.renewalDue}` : progress.remainingLabel}
           </AppText>
-          {partial ? <AppText style={{ fontSize: type.size.xs, color: color.ink2 }}>{paidOf(sub)}</AppText> : null}
+          {partial ? <AppText style={{ fontSize: type.size.xs, color: color.ink2 }}>{paidLine(sub)}</AppText> : null}
           {partial && toStudents ? (
             <Button
               variant="secondary"

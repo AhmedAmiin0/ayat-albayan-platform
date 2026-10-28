@@ -59,8 +59,12 @@ describe('the package line', () => {
   });
 
   it('the money still owed on the newest package, nothing once paid', () => {
-    expect(dueText({ due_amount: 290, currency: 'SAR' })).toBe(t.inbox.subscription.due.replace('{amount}', '290 ر.س'));
-    expect(dueText({ due_amount: 0, currency: 'SAR' })).toBeNull();
+    expect(dueText({ due_amount: 290, paid_amount: 0, price: 290, currency: 'SAR' })).toBe(t.inbox.subscription.due.replace('{amount}', '290 ر.س'));
+    expect(dueText({ due_amount: 0, paid_amount: 290, price: 290, currency: 'SAR' })).toBeNull();
+  });
+
+  it('part of it paid: «مدفوعة جزئيًا» with what is left (owner 2026-10-28)', () => {
+    expect(dueText({ due_amount: 1, paid_amount: 80, price: 81, currency: 'SAR' })).toBe('مدفوعة جزئيًا: 80 من 81 ر.س · الباقي 1');
   });
 });
 

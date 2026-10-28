@@ -6,10 +6,11 @@ import { ErrorLine } from '@/inbox/ErrorLine';
 import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/more/Note';
 import { Section } from '@/more/Section';
+import { UsedBeforeField } from '@/subscribe';
 import { StartDayPills } from '@/subscribe/SubscribeParts';
 import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
-import type { StartDraft } from '../lib/start-date';
+import { type StartDraft, usedBeforeOf } from '../lib/start-date';
 
 interface StartDateFieldProps {
   /** Holds subscriptions.set_start_date. */
@@ -20,14 +21,17 @@ interface StartDateFieldProps {
   draft: StartDraft;
   onChange: (patch: Partial<StartDraft>) => void;
   error: string | undefined;
+  /** The picked package's lessons (the quote's): «حلقات مستخدمة من الباقة» stops at usedBeforeMax (one lesson left per course day). */
+  lessonsTotal: number;
 }
 
 /**
  * «يوم البدء» of the sales subscribe (docs/16 row 24). Without the permission only «تبدأ الباقة اليوم
  * (…)». With it the day chips and «بدأ الاشتراك سابقًا»: on, a past day picked with steppers (rule 6, never
- * typed) replaces the chips, from a year back up to today.
+ * typed) replaces the chips, from a year back up to today, with «حلقات مستخدمة من الباقة» (owner 2026-10-28);
+ * off again resets it to 0.
  */
-export function StartDateField({ canSet, days, academyToday, draft, onChange, error }: StartDateFieldProps) {
+export function StartDateField({ canSet, days, academyToday, draft, onChange, error, lessonsTotal }: StartDateFieldProps) {
   const { color } = useTheme();
   const m = t.salesMoney;
   if (!canSet) {
@@ -49,18 +53,25 @@ export function StartDateField({ canSet, days, academyToday, draft, onChange, er
         <Switch
           accessibilityLabel={m.alreadyStarted}
           value={draft.alreadyStarted}
-          onValueChange={(alreadyStarted) => onChange({ alreadyStarted })}
+          onValueChange={(alreadyStarted) => onChange(alreadyStarted ? { alreadyStarted } : { alreadyStarted, usedBefore: 0 })}
         />
       </View>
       <Note>{m.alreadyStartedHint}</Note>
       {draft.alreadyStarted ? (
-        <StartDayPicker
-          label={m.startedOn}
-          day={draft.past}
-          min={daysBefore(academyToday, SALES_START_BACK_DAYS)}
-          max={academyToday}
-          onChange={(past) => onChange({ past })}
-        />
+        <>
+          <StartDayPicker
+            label={m.startedOn}
+            day={draft.past}
+            min={daysBefore(academyToday, SALES_START_BACK_DAYS)}
+            max={academyToday}
+            onChange={(past) => onChange({ past })}
+          />
+          <UsedBeforeField
+            value={usedBeforeOf(draft, lessonsTotal)}
+            lessonsTotal={lessonsTotal}
+            onChange={(usedBefore) => onChange({ usedBefore })}
+          />
+        </>
       ) : null}
       {error ? <ErrorLine message={error} /> : null}
     </View>
