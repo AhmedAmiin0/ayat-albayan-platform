@@ -6,7 +6,7 @@ import { backgroundJobs } from '../../../config/role/background-job';
 import { Ticker } from '../../messaging/reminders';
 
 /** What one boot started: timers per @BackgroundJob (by name), other timers by source file, Tickers. */
-export interface BootProbe {
+interface BootProbe {
   jobTimers: Map<string, number>;
   otherTimers: Set<string>;
   tickers: string[];
