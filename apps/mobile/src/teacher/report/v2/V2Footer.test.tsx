@@ -38,7 +38,7 @@ test('send stops on the form’s own check: attendance, then at least one part',
   expect(posts()).toHaveLength(0);
 });
 
-test('a complete report goes to /v2/submit with the suggestions it shows; then «احفظ التعديل»', async () => {
+test('a complete report goes to /v2/submit with the overall it shows; then «احفظ التعديل»', async () => {
   const sent = reportView({
     form_version: 2,
     status: 'submitted',
@@ -60,12 +60,10 @@ test('a complete report goes to /v2/submit with the suggestions it shows; then �
     program: 'quran',
     content: { segments: graded.segments },
     overall: 'excellent',
-    homework: v2.suggest.homeworkQuran
-      .replace('{surah}', 'الملك')
-      .replace('{from}', '16')
-      .replace('{to}', '22'),
-    nextPlan: expect.stringContaining('سورة الملك 23–29'),
   });
+  // Untouched homework / plan: the API stores the suggestion in Arabic (the family's report).
+  expect(posts()[0]?.[2]).not.toHaveProperty('homework');
+  expect(posts()[0]?.[2]).not.toHaveProperty('nextPlan');
   expect(await screen.findByText(t.reports.submitted)).toBeTruthy();
   expect(screen.getByText(v2.saveEdit)).toBeTruthy();
   expect(screen.queryByText(v2.saveDraft)).toBeNull();

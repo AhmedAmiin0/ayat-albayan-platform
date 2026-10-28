@@ -40,7 +40,7 @@ export function NoteCard({ s, report }: NoteCardProps) {
         onChange={(e) => s.set('notes', e.target.value)}
         className={cn(controlClass, 'field-sizing-content min-h-20 py-2 leading-relaxed')}
       />
-      <AttachmentsField reportId={report.id} files={report.attachments} onChange={s.setAttachments} editable={report.can_edit} />
+      <AttachmentsField reportId={report.id} files={report.attachments} onChange={s.setAttachments} editable={report.can_edit} addLabel={t.reports.v2.attach} />
     </section>
   );
 }

@@ -48,7 +48,7 @@ describe('the new report form: send and autosave', () => {
     expect(within(dialog).getByRole('status').textContent).toContain('يبدأ تلقائيًا بعد آخر حفظ (الآية 15).');
   });
 
-  it('sends the v2 body (parts, suggested overall and homework, version) and reads «أُرسل التقرير»', async () => {
+  it('sends the v2 body (parts, suggested overall, version; untouched homework left to the API) and reads «أُرسل التقرير»', async () => {
     apiSend.mockImplementation((method: string) =>
       Promise.resolve(method === 'POST' ? v2Report({ status: 'submitted', version: 1, attendance: 'on_time', pdf_status: 'pending' }) : v2Report()),
     );
@@ -63,11 +63,11 @@ describe('the new report form: send and autosave', () => {
         attendance: 'on_time',
         program: 'quran',
         overall: 'excellent',
-        homework: 'مراجعة سورة الفاتحة من الآية 1 إلى 7 يوميًا.',
         expectedVersion: 0,
         content: expect.objectContaining({ segments: [{ kind: 'recited', surah: 1, from: 1, to: 7, grade: 'excellent' }] }),
       }),
     );
+    expect(apiSend.mock.calls.find((c) => c[0] === 'POST')?.[2]).not.toHaveProperty('homework');
   });
 
   it('a refusal reads in the API words', async () => {

@@ -4,11 +4,14 @@ import {
   keptContent,
   legacyGrades,
   reportContentSchema,
+  suggestHomework,
+  suggestNextPlan,
   type ReportContent,
   type ReportV2Draft,
   type ReportV2Submit,
   type ReportView,
 } from '@ab/shared';
+import { ar } from '../../../../common/i18n/server-text';
 import { formColumns, submitColumns, type FormColumns } from '../report.mapper';
 
 type StoredForm = { form_version: number; content: Json | null };
@@ -48,6 +51,7 @@ export function v2SubmitColumns(form: ReportV2Submit): { columns: FormColumns; c
   const present = form.attendance ? attended(form.attendance) : false;
   const content = form.attendance ? keptContent(form.attendance, form.program, form.content) : form.content;
   const legacy = legacyGrades(content);
+  const quran = form.program === 'quran';
   const columns = submitColumns({
     attendance: form.attendance,
     program: form.program,
@@ -55,8 +59,9 @@ export function v2SubmitColumns(form: ReportV2Submit): { columns: FormColumns; c
     ...(present
       ? {
           overall: form.overall,
-          homework: form.homework,
-          nextPlan: form.nextPlan,
+          // Left untouched on the form: the suggestion it showed, in Arabic (the family's report).
+          homework: form.homework === undefined && quran ? suggestHomework(content, ar.reports.v2.suggest) : form.homework,
+          nextPlan: form.nextPlan === undefined && quran ? suggestNextPlan(content, ar.reports.v2.suggest) : form.nextPlan,
           grades: { recitation: legacy.grade_recitation, memorization: legacy.grade_memorization, revision: legacy.grade_revision },
         }
       : {}),

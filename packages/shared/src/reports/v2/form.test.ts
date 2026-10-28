@@ -19,10 +19,13 @@ describe('v2 form values', () => {
     expect(effective({ ...v, program: 'arabic' }, WORDS).homework).toBe('');
   });
 
-  it('autosave leaves untouched suggestions out; submit sends what the form shows', () => {
+  it('autosave and submit leave untouched homework / plan out (the API words them in Arabic)', () => {
     const v = { ...values(), attendance: 'on_time' as const, content: { ...emptyContent(), segments: [seg('new')] } };
     expect(v2DraftBody(v)).not.toHaveProperty('homework');
-    expect(v2SubmitBody(v, { version: 0, words: WORDS })).toMatchObject({ overall: 'excellent', homework: 'راجع الملك 16-22', expectedVersion: 0 });
+    const body = v2SubmitBody(v, { version: 0, words: WORDS });
+    expect(body).toMatchObject({ overall: 'excellent', expectedVersion: 0 });
+    expect(body).not.toHaveProperty('homework');
+    expect(v2SubmitBody({ ...v, homework: 'x' }, { version: 0, words: WORDS }).homework).toBe('x');
   });
 
   it('check like the API', () => {

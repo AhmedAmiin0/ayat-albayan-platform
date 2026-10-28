@@ -40,17 +40,22 @@ describe('«اختر السورة والآيات» picker', () => {
     expect(screen.getByRole('spinbutton', { name: p.to })).toHaveProperty('value', '30');
     step(p.from, p.dec);
     step(p.to, p.dec);
-    fireEvent.change(screen.getByRole('spinbutton', { name: p.from }), { target: { value: '40' } });
+    const type = (value: string) => {
+      const from = screen.getByRole('spinbutton', { name: p.from });
+      fireEvent.change(from, { target: { value } });
+      fireEvent.blur(from);
+    };
+    type('40');
     expect(screen.getByRole('spinbutton', { name: p.from })).toHaveProperty('value', '30');
-    fireEvent.change(screen.getByRole('spinbutton', { name: p.from }), { target: { value: '20' } });
+    type('20');
     fireEvent.click(screen.getByRole('button', { name: p.done }));
     expect(onDone).toHaveBeenCalledWith({ surah: 67, from: 20, to: 30 });
   });
 
-  it('another surah (recent chip) starts at ayah 1 and drops the history line', () => {
+  it('another surah (recent chip) is the whole surah and drops the history line', () => {
     openPicker();
     fireEvent.click(screen.getByRole('button', { name: 'القلم' }));
-    expect(screen.getByRole('status').textContent).toBe('10 آيات · الصفحة 564 · الجزء 29.');
+    expect(screen.getByRole('status').textContent).toBe('52 آية · الصفحة 564–566 · الجزء 29.');
   });
 
   it('nothing picked yet: «تمّ» waits for a surah', () => {

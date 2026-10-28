@@ -55,10 +55,14 @@ export function v2DraftBody(v: V2Values): ReportV2DraftBody {
   };
 }
 
-/** Submit: the form with the suggestions it shows. */
+/**
+ * Submit: the form with the overall grade it shows. Homework and the next plan go only when the
+ * teacher changed them; untouched, the API stores the same suggestion in Arabic (the family
+ * report is Arabic, whatever the teacher's language).
+ */
 export function v2SubmitBody(v: V2Values, opts: { version: number; words: SuggestWords }): ReportV2SubmitBody {
-  const e = effective(v, opts.words);
-  return { ...v2DraftBody(v), ...e, program: v.program, expectedVersion: opts.version };
+  const { overall } = effective(v, opts.words);
+  return { ...v2DraftBody(v), overall, program: v.program, expectedVersion: opts.version };
 }
 
 /** The API's own check before sending (null = it would pass). */

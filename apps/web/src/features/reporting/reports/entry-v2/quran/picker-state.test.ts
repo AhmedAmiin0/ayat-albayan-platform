@@ -33,9 +33,15 @@ describe('picker state (surah / ayah range)', () => {
     });
   });
 
-  it('a picked surah starts at ayah 1, ten ayahs at most', () => {
-    expect(surahStart(67)).toEqual({ surah: 67, from: 1, to: 10 });
-    expect(surahStart(112)).toEqual({ surah: 112, from: 1, to: 4 });
+  it('a picked surah is the whole surah; the one already picked keeps its range', () => {
+    expect(surahStart(null, 67)).toEqual({ surah: 67, from: 1, to: 30 });
+    expect(surahStart({ surah: 67, from: 16, to: 22 }, 67)).toEqual({ surah: 67, from: 16, to: 22 });
+    expect(surahStart({ surah: 67, from: 16, to: 22 }, 112)).toEqual({ surah: 112, from: 1, to: 4 });
+  });
+
+  it('another part of a track continues after today’s last part, not the history', () => {
+    const content = { ...emptyContent(), segments: [{ kind: 'new' as const, surah: 67, from: 16, to: 22, grade: null }] };
+    expect(pickTarget(content, { kind: 'new', index: -1, memory })).toMatchObject({ start: { surah: 67, from: 23, to: 29 }, after: 22 });
   });
 
   it('keeps the range inside the surah, from ≤ to', () => {

@@ -77,6 +77,7 @@ test('the steppers clamp to the surah and keep from ≤ to; a typed number too',
   await fireEvent.press(toDec);
   expect([stepperValue(p.from), stepperValue(p.to)]).toEqual(['29', '29']);
   await fireEvent.changeText(screen.getByLabelText(p.from), '0');
+  await fireEvent(screen.getByLabelText(p.from), 'endEditing');
   expect(stepperValue(p.from)).toBe('1');
   await fireEvent.press(fromDec);
   expect(stepperValue(p.from)).toBe('1');

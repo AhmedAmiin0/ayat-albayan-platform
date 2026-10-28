@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Pressable, TextInput, View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { shape, type, useTheme } from '@/theme';
@@ -58,6 +59,15 @@ function Step({ sign, label, field, onPress, disabled }: StepProps) {
 /** − n +: one end of the ayah range; the number can also be typed (a long surah). */
 export function AyahStepper({ label, value, onChange, disabled }: AyahStepperProps) {
   const { color } = useTheme();
+  // What is typed, for the value it was typed over: a new value (a step, a clamp) shows itself.
+  const [draft, setDraft] = useState({ base: value, text: String(value) });
+  const text = draft.base === value ? draft.text : String(value);
+  const setText = (next: string) => setDraft({ base: value, text: next });
+  const commit = (typed: string) => {
+    const digits = typed.replace(/\D/g, '');
+    if (digits !== '' && Number(digits) !== value) onChange(Number(digits));
+    setText(String(value));
+  };
   return (
     <View style={{ flex: 1, gap: 4 }}>
       <AppText style={{ fontFamily: type.ui[600], fontSize: type.size.xs, color: color.ink2 }}>
@@ -82,12 +92,14 @@ export function AyahStepper({ label, value, onChange, disabled }: AyahStepperPro
           onPress={() => onChange(value - 1)}
           disabled={disabled}
         />
+        {/* Typed digits apply when editing ends, so «25» never passes through «2» (the other end stays). */}
         <TextInput
           accessibilityLabel={label}
           keyboardType="number-pad"
           editable={!disabled}
-          value={String(value)}
-          onChangeText={(text) => onChange(Number(text.replace(/\D/g, '')))}
+          value={text}
+          onChangeText={setText}
+          onEndEditing={() => commit(text)}
           selectTextOnFocus
           style={{
             minWidth: 48,

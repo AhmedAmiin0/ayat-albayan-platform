@@ -26,8 +26,9 @@ export function SurahPicker({ title, target, recent, onDone, onClose }: SurahPic
   const [range, setRange] = useState<SurahRange | null>(target.start);
   const [after, setAfter] = useState(target.after);
   const pick = (surah: number) => {
+    if (range?.surah === surah) return;
     setAfter(null);
-    setRange(surahStart(surah));
+    setRange(surahStart(range, surah));
   };
   const summary = range ? rangeSummary(range, { ayahs: t.reports.v2.ayahs, summary: p.summary }) : null;
   const actions = (
