@@ -38,6 +38,11 @@ export interface MessageTemplateBlock {
   buttons: TemplateDisplayButton[];
 }
 
+/** MessageView's template part: a template row's block (templateBlock); absent = an older API, null = none. */
+export interface TemplatedMessage {
+  template?: MessageTemplateBlock | null;
+}
+
 /** The message_templates columns the block reads (TemplateView carries them all). */
 export interface TemplateBlockSource {
   key: string;
