@@ -23,6 +23,8 @@ export interface SubscribeInput {
   pricing: SubscriptionPricing;
   /** Local YYYY-MM-DD, picked from the day chips. */
   startsOn: string;
+  /** «حلقات مستخدمة من الباقة» (owner 2026-10-28): only with a past startsOn, only above 0. */
+  lessonsUsedBefore?: number;
 }
 
 /**

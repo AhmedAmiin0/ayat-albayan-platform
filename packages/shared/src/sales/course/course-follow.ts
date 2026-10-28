@@ -37,7 +37,7 @@ export interface BookedCourse {
   opensOn: string;
   /** Each weekday (0 = الأحد) with its "HH:MM", in weekday order. */
   days: DayTime[];
-  /** subscriptions.lessons_total of the course's subscription. */
+  /** The lessons the course books: lessons_total − lessons_used_before (courseLessonCount, owner 2026-10-28). */
   lessonsTotal: number;
   /** Days a week the plan needs (courseDaysPerWeek); null = a custom count the admin books. */
   perWeek: number | null;

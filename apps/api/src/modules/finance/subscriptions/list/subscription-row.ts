@@ -15,6 +15,7 @@ export function subscriptionRow(
     package: 'tier' in input.pricing ? TIER_PACKAGE_SIZE[input.pricing.tier] : null,
     duration: quote.duration,
     lessons_total: quote.lessons,
+    lessons_used_before: input.lessonsUsedBefore ?? 0,
     price: quote.afterDiscount,
     currency: quote.currency,
     fx_rate: quote.fx?.rate ?? null,

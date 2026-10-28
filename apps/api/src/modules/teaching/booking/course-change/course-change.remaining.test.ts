@@ -21,6 +21,13 @@ describe('CourseChange — REMAINING counts every lesson of the course that stay
     expect(lessons.ofCourse).toHaveBeenCalledWith({ ruleIds: ['ra', 'rb'], studentId: SUB.student_id });
   });
 
+  it('lessons used before the platform (owner 2026-10-28) are not booked again', async () => {
+    const { service, lessons, queries } = setup();
+    queries.subscription.mockResolvedValue({ ...SUB, lessons_used_before: 1 });
+    lessons.ofCourse.mockResolvedValue([lesson('c1', 'completed'), lesson('l9', 'scheduled'), lesson('x1', 'excused')]);
+    expect((await service.check(check(), SALES)).remaining).toBe(5);
+  });
+
   it('the old rules’ occurrences before the change point not generated yet are counted', async () => {
     const { service, lessons } = setup();
     // Nothing generated: Mon 19 + Wed 21 Oct will still be generated (both rules end Sat 24).

@@ -5,6 +5,7 @@ import { ErrorLine } from '@/inbox/ErrorLine';
 import { t } from '@/core/lib/i18n/i18n';
 import { AmountField } from '@/payments/components/AmountField';
 import { PaidDayPicker } from '@/payments/components/PaidDayPicker';
+import { ShortfallNote } from '@/payments';
 import { useNow } from '@/core/lib/time/use-now';
 import { Button } from '@/core/ui/primitives/Button';
 import { Field } from '@/core/ui/form/Field';
@@ -50,6 +51,7 @@ export function TransferForm({ sub, phone, onDone }: TransferFormProps) {
         currency={sub.currency}
         error={errors.amount}
       />
+      <ShortfallNote amountText={draft.amountText} due={sub.due} currency={sub.currency} />
       <PaidDayPicker daysAgo={draft.daysAgo} onChange={(daysAgo) => set({ daysAgo })} now={now} />
       <Field label={m.note} value={draft.note} onChangeText={(note) => set({ note })} maxLength={500} multiline />
       {pay.isError ? <ErrorLine message={salesErrorText(pay.error)} /> : null}

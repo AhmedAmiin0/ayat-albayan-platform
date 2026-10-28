@@ -96,7 +96,7 @@ describe('balances and payments sums', () => {
   it('toBalance fills nullable view columns; a null id row is dropped', () => {
     const row = {
       subscription_id: 'sub-1', student_id: 's1', lessons_total: 4, lessons_used: null, remaining: 4,
-      is_last: null, ended_at: null, projected_end_at: null,
+      is_last: null, ended_at: null, projected_end_at: null, lessons_used_before: null,
     };
     expect(toBalance(row)).toMatchObject({ lessons_used: 0, remaining: 4, is_last: false });
     expect(toBalance({ ...row, subscription_id: null })).toBeNull();

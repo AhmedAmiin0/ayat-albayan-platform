@@ -1,6 +1,8 @@
 import { Module } from '@nestjs/common';
 import { PricingModule } from '../pricing/pricing.module';
 import { TeachersModule } from '../../people/teachers/teachers.module';
+import { SubscriptionCancelQueries } from './cancel/subscription-cancel.queries';
+import { SubscriptionCancel } from './cancel/subscription-cancel.service';
 import { AdminTasksController } from './alerts/admin-tasks.controller';
 import { AdminTasksQueries } from './alerts/admin-tasks.queries';
 import { AlertsJob } from './alerts/alerts.job';
@@ -33,7 +35,7 @@ import { UnpaidFlags } from './alerts/unpaid-flags.service';
  * Exports: MoneyWrites (payments: audit + recompute after a write), SubscriptionAlertsService
  * (reports/lessons may call evaluateLessons; AlertsJob already listens to LessonEvents),
  * PackagesService, BalanceQueries, UnpaidFlags (the lesson views' «الباقة مش مدفوعة» flag) and
- * SubscriptionCreator + SubscriptionsService (the salesperson's subscribe from the chat reuses them, sales-money),
+ * SubscriptionCreator + SubscriptionsService + SubscriptionCancel (the salesperson's subscribe / cancel from the chat reuse them, sales-money),
  * StudentTrialStatus (a trial booking moves new → trial, owner 2026-10-15). StudentExpiryJob: pending_renewal → expired.
  */
 @Module({
@@ -58,6 +60,8 @@ import { UnpaidFlags } from './alerts/unpaid-flags.service';
     StudentTrialQueries,
     StudentTrialStatus,
     SubscriptionAlertsService,
+    SubscriptionCancel,
+    SubscriptionCancelQueries,
     AlertsEnv,
     SubscriptionsQueries,
     SubscriptionCreator,
@@ -71,6 +75,7 @@ import { UnpaidFlags } from './alerts/unpaid-flags.service';
     PackagesService,
     StudentTrialStatus,
     SubscriptionAlertsService,
+    SubscriptionCancel,
     SubscriptionCreator,
     SubscriptionsService,
     UnpaidFlags,

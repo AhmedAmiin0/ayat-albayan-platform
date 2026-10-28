@@ -1,4 +1,4 @@
-import { subscriptionStatusStyle } from '@ab/shared';
+import { cancelOffered, subscriptionStatusStyle } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { Button } from '@/components/ui/form/button';
@@ -7,19 +7,21 @@ import { StatusChip } from '@/components/ui/display/status-chip';
 import { Toast } from '@/components/ui/overlay/toast';
 import { RecordPaymentDialog } from '@/features/finance/payments/record/RecordPaymentDialog';
 import { t } from '@/lib/i18n/i18n';
-import { studentBalanceQuery } from '../api';
+import { cancelSubscription, studentBalanceQuery } from '../api';
+import { CancelPackageDialog } from '../cancel/CancelPackageDialog';
 import { BalanceDetails } from './BalanceDetails';
 import { CreateSubscriptionDialog } from '../create/CreateSubscriptionDialog';
-import { unpaidFlagged } from '../format';
+import { packageName, unpaidFlagged } from '../format';
 import type { PickedStudent } from '../create/StudentPicker';
 
 /**
  * The student's packages (S6, R-SUB-01/03) on the profile: the package line (packageProgress),
- * «الباقة مش مدفوعة» (R-SUB-02), record a payment on the current package, or a new package.
+ * «الباقة مش مدفوعة» (R-SUB-02), record a payment on the current package, cancel it when made by mistake
+ * (nothing paid; owner 2026-10-28), or a new package.
  */
 export function BalanceCard({ student }: { student: PickedStudent }) {
   const balance = useQuery(studentBalanceQuery(student.id));
-  const [dialog, setDialog] = useState<'pay' | 'new' | null>(null);
+  const [dialog, setDialog] = useState<'pay' | 'new' | 'cancel' | null>(null);
   const [toast, setToast] = useState<string | null>(null);
   const saved = (message: string) => () => {
     setDialog(null);
@@ -48,6 +50,11 @@ export function BalanceCard({ student }: { student: PickedStudent }) {
               {t.payments.record}
             </Button>
           )}
+          {current && cancelOffered(current) && (
+            <Button type="button" variant="ghost" size="sm" onClick={() => setDialog('cancel')}>
+              {t.subscriptions.cancel.action}
+            </Button>
+          )}
           <Button type="button" variant="secondary" size="sm" onClick={() => setDialog('new')}>
             {t.subscriptions.new}
           </Button>
@@ -57,6 +64,14 @@ export function BalanceCard({ student }: { student: PickedStudent }) {
       {view && current && <BalanceDetails view={view} current={current} />}
       {dialog === 'pay' && current && (
         <RecordPaymentDialog subscription={current} onClose={() => setDialog(null)} onSaved={saved(t.payments.saved)} />
+      )}
+      {dialog === 'cancel' && current && (
+        <CancelPackageDialog
+          label={`${packageName(current)} · ${student.name}`}
+          cancel={(body) => cancelSubscription(current.id, body)}
+          onClose={() => setDialog(null)}
+          onDone={saved(t.subscriptions.cancel.done)}
+        />
       )}
       {dialog === 'new' && (
         <CreateSubscriptionDialog student={student} onClose={() => setDialog(null)} onSaved={saved(t.subscriptions.saved)} />

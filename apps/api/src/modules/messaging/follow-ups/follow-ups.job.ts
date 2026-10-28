@@ -14,6 +14,7 @@ import {
   type FollowUpLeadRow,
 } from './follow-ups.plan';
 import { FollowUpsQueries } from './follow-ups.queries';
+import { BackgroundJob } from '../../../config/role/background-job';
 
 const EVERY_MS = 5 * 60_000;
 const FIRST_RUN_MS = 60_000;
@@ -44,6 +45,7 @@ interface Tick {
  *   the tick does nothing: no row queued, no stage advanced. Stages and slot window: the rule's timing.
  * TODO(owner/integrator): «else an admin task» needs an admin_task_kind value (migration + types).
  */
+@BackgroundJob({ name: 'follow-ups' })
 @Injectable()
 export class FollowUpsJob implements OnApplicationBootstrap, OnModuleDestroy {
   private readonly log = new Logger(FollowUpsJob.name);

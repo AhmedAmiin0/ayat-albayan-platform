@@ -44,6 +44,12 @@ describe('the course wizard’s draft from GET /sales/booking/course (owner 2026
     expect(courseFixedText({ ...COURSE_SUB, package: null, lessons_total: 24 })).not.toContain(t.enums.packageSize['8']);
   });
 
+  it('books the lessons not taken before the platform: 1 of 8 used → 7 (owner 2026-10-28)', () => {
+    const before = { ...COURSE_VIEW, subscription: { ...COURSE_SUB, lessons_used_before: 1 } };
+    expect(courseDraft(before)?.course?.lessonsTotal).toBe(7);
+    expect(courseDraft(COURSE_VIEW)?.course?.lessonsTotal).toBe(8);
+  });
+
   it('a plan package goes on the request; the day count is the view’s perWeek only', () => {
     const draft = courseDraft(COURSE_VIEW);
     if (!draft) throw new Error('no draft');

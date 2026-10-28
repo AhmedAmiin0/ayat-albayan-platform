@@ -38,4 +38,15 @@ describe('Stepper', () => {
     fireEvent.change(input, { target: { value: '' } });
     expect(onChange.mock.calls).toEqual([[20]]);
   });
+
+  it('typed={false}: the value is shown, never an input; the buttons carry the given names', () => {
+    const onChange = vi.fn();
+    const names = { less: t.salesMoney.usedBeforeLess, more: t.salesMoney.usedBeforeMore };
+    render(<Stepper label={t.salesMoney.usedBefore} value={2} min={0} max={7} onChange={onChange} stepLabels={names} typed={false} />);
+    const group = screen.getByRole('group', { name: t.salesMoney.usedBefore });
+    expect(group.querySelector('input')).toBeNull();
+    expect(screen.getByLabelText(t.salesMoney.usedBefore, { selector: 'output' }).textContent).toBe('2');
+    fireEvent.click(screen.getByRole('button', { name: names.more }));
+    expect(onChange).toHaveBeenCalledWith(3);
+  });
 });

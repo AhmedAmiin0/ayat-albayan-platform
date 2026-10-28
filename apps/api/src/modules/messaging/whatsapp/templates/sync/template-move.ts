@@ -14,7 +14,7 @@ interface MoveDeps extends LineSyncDeps {
   queries: Pick<TemplatesQueries, 'all' | 'get' | 'update' | 'insert'>;
   audit: Pick<AuditService, 'record'>;
   /** The registry keeps each line's last sync (GET /messaging/templates/lines). */
-  remember: (sync: TemplateLineSync) => void;
+  remember: (sync: TemplateLineSync) => Promise<void>;
 }
 
 const FRESH = { status: 'not_submitted', meta_id: null, quality: null, last_error: null, submitted_at: null, last_checked_at: null } as const;
@@ -36,7 +36,7 @@ export async function moveTemplate(deps: MoveDeps, input: { key: string; line: W
     after: { key, line, status: FRESH.status },
   });
   const sync = deps.lines[line].configured() ? await syncLine(deps, line, new Date()) : null;
-  if (sync) deps.remember(sync);
+  if (sync) await deps.remember(sync);
   const after = (await deps.queries.get(key)) ?? moved ?? { ...row, line, ...FRESH };
   return { template: toTemplateView(after), sync };
 }

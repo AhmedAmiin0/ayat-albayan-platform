@@ -32,12 +32,14 @@ export function toSalesSubscription(s: SubscriptionView): SalesMoneySubscription
     package: s.package,
     duration: s.duration,
     lessons_total: s.lessons_total,
+    lessons_used_before: s.lessons_used_before ?? 0,
     price: s.price,
     currency: s.currency,
     starts_on: s.starts_on,
     status: s.status,
     paid: s.paid,
-    due: Math.max(0, cents(s.price - s.paid)),
+    // A cancelled package is never owed (owner 2026-10-28).
+    due: s.status === 'cancelled' ? 0 : Math.max(0, cents(s.price - s.paid)),
   };
 }
 

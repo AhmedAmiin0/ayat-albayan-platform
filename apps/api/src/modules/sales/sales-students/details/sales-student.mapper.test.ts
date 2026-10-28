@@ -17,6 +17,14 @@ describe('toStudentDetails', () => {
     expect(toStudentDetails(parts(history([sub('a', 'expired', '2026-08-01'), sub('b', 'unpaid', '2026-10-01')]))).current_id).toBe('b');
   });
 
+  it('a cancelled package is listed («ملغاة») but never current, and has nothing left (owner 2026-10-28)', () => {
+    const d = toStudentDetails(parts(history([sub('a', 'unpaid', '2026-08-01'), sub('x', 'cancelled', '2026-10-01')])));
+    expect(d.subscriptions.map((s) => s.id)).toEqual(['x', 'a']);
+    expect(d.current_id).toBe('a');
+    expect(d.subscriptions[0]).toMatchObject({ status: 'cancelled', lessons_remaining: 0 });
+    expect(toStudentDetails(parts(history([sub('x', 'cancelled', '2026-10-01')]))).current_id).toBeNull();
+  });
+
   it('a student with no subscription (a trial): empty list, no current, zero totals, code never null', () => {
     const d = toStudentDetails(parts(null));
     expect(d).toMatchObject({ subscriptions: [], current_id: null, attendance: { items: [], totals: { present: 0, absent: 0 } } });

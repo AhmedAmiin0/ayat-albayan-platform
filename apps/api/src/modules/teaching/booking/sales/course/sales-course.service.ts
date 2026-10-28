@@ -1,4 +1,4 @@
-import { addLocalDays, courseDaysPerWeek, wallParts, type BookingRequest, type CourseSubscription, type SalesCourseView } from '@ab/shared';
+import { addLocalDays, courseDaysPerWeek, courseLessonCount, wallParts, type BookingRequest, type CourseSubscription, type SalesCourseView } from '@ab/shared';
 import { HttpStatus, Injectable } from '@nestjs/common';
 import type { AuthUser } from '../../../../../common/auth/verify-token';
 import { plannedCourseEnd } from '../../core/booking.course-end';
@@ -12,7 +12,8 @@ import { courseBlock, courseProblem } from './sales-course.rules';
 
 /**
  * The assistant books the weekly course of the subscription she sold (owner 2026-10-18, R-ASST-01,
- * R-ASST-04): exactly lessons_total lessons (every rule ends on plannedCourseEnd), the plan's days a
+ * R-ASST-04): exactly lessons_total − lessons_used_before lessons (courseLessonCount, owner 2026-10-28;
+ * every rule ends on plannedCourseEnd), the plan's days a
  * week, no invoice (the transfer is recorded on the subscription), the subscription's own package and
  * one course per subscription (every rule carries its subscription_id, migration 470). Ownership and
  * the request's shape are checked before (assertBookingScope); this guard reads the subscription and rules.
@@ -40,7 +41,7 @@ export class SalesCourse {
       this.queries.courseRules(studentId),
     ]);
     const booked = await this.booked(sub);
-    const endsOn = sub && plannedCourseEnd({ rule: { ...req, single: false }, now, lessonsTotal: sub.lessons_total });
+    const endsOn = sub && plannedCourseEnd({ rule: { ...req, single: false }, now, lessonsTotal: courseLessonCount(sub) });
     const bad = courseProblem({ req, sub, rules, endsOn, booked });
     if (bad) throw domainError(bad.status, bad.code);
     if (!sub) throw domainError(HttpStatus.CONFLICT, 'subscription_required');

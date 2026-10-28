@@ -7,6 +7,8 @@ import type { RenewalCause } from '../student-lifecycle/student-renewal';
 
 type Done = AuditEntry & { actorId: string };
 
+const GONE: ReadonlySet<string> = new Set(['delete', 'cancel']);
+
 /** A payment create carries its id to the renewal flip (pending_renewal → active, docs/11 §7). */
 export function causeOf(entry: Pick<AuditEntry, 'entity' | 'action' | 'entityId' | 'after'>): RenewalCause {
   const payment = entry.entity === 'payments' && entry.action === 'create' && activatesStudent(entry.after);
@@ -29,7 +31,8 @@ export class MoneyWrites {
 
   async done(entry: Done, studentId: string | null): Promise<void> {
     await this.audit.record(entry);
-    if (entry.entity === 'subscriptions' && entry.action === 'delete') await this.alerts.closeTasksOf(entry.entityId);
+    // A deleted or cancelled package: its open tasks have nothing left to point at.
+    if (entry.entity === 'subscriptions' && GONE.has(entry.action)) await this.alerts.closeTasksOf(entry.entityId);
     if (studentId) await this.followUp(entry, studentId);
   }
 

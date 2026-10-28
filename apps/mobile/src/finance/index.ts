@@ -6,3 +6,4 @@ export { PricingSteps } from './pricing/PricingSteps';
 export { DEFAULT_SELECTION as DEFAULT_PRICING, type Selection as PricingSelection } from './pricing/selection';
 export { useQuote } from './pricing/use-quote';
 export { SummaryScreen } from './summary/SummaryScreen';
+export { Stepper } from './pricing/Stepper';

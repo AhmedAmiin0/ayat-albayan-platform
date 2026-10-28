@@ -49,12 +49,17 @@ export const quoteSalesSubscription = (body: SalesQuoteBody) =>
 
 /**
  * Strict body: no notes, no renewal day, never a price. `startsOn` only with subscriptions.set_start_date
- * (else the API's default day); `alreadyStarted` only when «بدأ الاشتراك سابقًا» is ticked.
+ * (else the API's default day); `alreadyStarted` only when «بدأ الاشتراك سابقًا» is ticked, and with it
+ * `lessonsUsedBefore` («حلقات مستخدمة من الباقة», owner 2026-10-28) when > 0.
  */
-export type SalesSubscriptionBody = SalesQuoteBody & { startsOn?: string; alreadyStarted?: true; clientRequestId: string };
+export type SalesSubscriptionBody = SalesQuoteBody & { startsOn?: string; alreadyStarted?: true; lessonsUsedBefore?: number; clientRequestId: string };
 
 export const createSalesSubscription = (body: SalesSubscriptionBody) =>
   apiSend<SalesMoneySubscriptionView>('POST', '/sales/subscriptions', body);
+
+/** «إلغاء الباقة» of her student's package made by mistake (owner 2026-10-28): nothing paid, no lessons. */
+export const cancelSalesSubscription = (id: string, body: { reason?: string }) =>
+  apiSend<SalesMoneySubscriptionView>('POST', `/sales/subscriptions/${id}/cancel`, body);
 
 /** Strict body: never kind / method / invoiceId (always a bank payment); «المرفقات» optional (0..5 paths). */
 export type SalesPaymentBody = {

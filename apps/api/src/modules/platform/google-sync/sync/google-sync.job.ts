@@ -2,6 +2,7 @@ import { Injectable, Logger, type OnApplicationBootstrap, type OnModuleDestroy }
 import { loadEnv } from '../../../../config/env/env';
 import { GoogleItemsQueries } from './google-items.queries';
 import { GoogleSyncProcessor } from './google-sync.processor';
+import { BackgroundJob } from '../../../../config/role/background-job';
 
 const POLL_MS = 60_000;
 /** Soon after boot, not at once: every API test boots AppModule (as HorizonJob notes). */
@@ -22,6 +23,7 @@ export function msUntilReconcile(now: Date): number {
  * Riyadh. ponytail: in-process and single-flight like ReportPdfJob, not pg-boss: the claim is a
  * row-locked compare-and-set with a token, so a second API instance only shares the work.
  */
+@BackgroundJob({ name: 'google-sync', kick: 'kick' })
 @Injectable()
 export class GoogleSyncJob implements OnApplicationBootstrap, OnModuleDestroy {
   private readonly log = new Logger(GoogleSyncJob.name);

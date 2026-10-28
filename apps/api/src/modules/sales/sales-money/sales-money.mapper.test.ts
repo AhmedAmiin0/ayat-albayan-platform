@@ -20,7 +20,7 @@ const view = (patch: Partial<SubscriptionView> = {}): SubscriptionView => ({
 describe('sales money whitelists: explicit keys, never the admin view spread', () => {
   it('a subscription keeps price, paid and due, never notes, fx or the quote source', () => {
     const s = toSalesSubscription(view());
-    expect(Object.keys(s).sort()).toEqual(['currency', 'due', 'duration', 'id', 'lessons_total', 'package', 'paid', 'price', 'starts_on', 'status', 'student']);
+    expect(Object.keys(s).sort()).toEqual(['currency', 'due', 'duration', 'id', 'lessons_total', 'lessons_used_before', 'package', 'paid', 'price', 'starts_on', 'status', 'student']);
     expect(s.due).toBe(99.5);
   });
 

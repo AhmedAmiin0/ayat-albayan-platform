@@ -1,4 +1,5 @@
 import {
+  subscriptionCancelSchema,
   subscriptionCreateSchema,
   subscriptionUpdateSchema,
   type QuoteResponse,
@@ -12,12 +13,14 @@ import { CurrentUser, Permissions } from '../../../common/auth/decorators';
 import { can } from '../../../common/auth/permissions';
 import type { AuthUser } from '../../../common/auth/verify-token';
 import { parseOrThrow, sentOnly, type Page } from '../../../common/http/http';
+import { SubscriptionCancel } from './cancel/subscription-cancel.service';
 import { toTeacherBalance } from './money/balance.teacher';
 import { PackagesService } from './money/packages.service';
 import { StudentAccess } from './student-lifecycle/student-access';
 import { subscriptionListQuery, subscriptionQuoteSchema } from './subscriptions.dto';
 import { SubscriptionCreator } from './subscription-creator';
 import { SubscriptionsService } from './subscriptions.service';
+import { assertUsedBefore } from './used-before';
 
 /** Packages (S1–S5, R-SUB-01). Admin only; the price comes from the catalog, never the body. */
 @ApiTags('subscriptions')
@@ -28,6 +31,7 @@ export class SubscriptionsController {
   constructor(
     private readonly subs: SubscriptionsService,
     private readonly creator: SubscriptionCreator,
+    private readonly cancels: SubscriptionCancel,
   ) {}
 
   @Get()
@@ -38,7 +42,9 @@ export class SubscriptionsController {
   @Post()
   @Permissions('subscriptions.write')
   create(@Body() body: unknown, @CurrentUser() user: AuthUser): Promise<SubscriptionView> {
-    return this.creator.create(parseOrThrow(subscriptionCreateSchema, body), user.id);
+    const input = parseOrThrow(subscriptionCreateSchema, body);
+    assertUsedBefore(input, user);
+    return this.creator.create(input, user.id);
   }
 
   /** The price the create would store, shown in the dialog before saving. */
@@ -61,6 +67,15 @@ export class SubscriptionsController {
     @CurrentUser() user: AuthUser,
   ): Promise<SubscriptionView> {
     return this.subs.update(id, sentOnly(parseOrThrow(subscriptionUpdateSchema, body), body), user.id);
+  }
+
+  /** «إلغاء الباقة» (owner 2026-10-28): the package stays, «ملغاة»; 409 already_cancelled / has_payments / has_lessons. */
+  @Post(':id/cancel')
+  @HttpCode(200)
+  @Permissions('subscriptions.write')
+  async cancel(@Param('id', ParseUUIDPipe) id: string, @Body() body: unknown, @CurrentUser() user: AuthUser): Promise<SubscriptionView> {
+    const input = parseOrThrow(subscriptionCancelSchema, body ?? {});
+    return this.cancels.cancel(await this.cancels.view(id), { ...input, actorId: user.id });
   }
 
   @Delete(':id')
