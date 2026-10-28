@@ -1,5 +1,5 @@
 import { act, fireEvent, render, screen, waitFor } from '@testing-library/react-native';
-import { Linking } from 'react-native';
+import { Linking, StyleSheet } from 'react-native';
 import { ApiError } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
 import { lesson } from '@/today/testing/fixtures';
@@ -103,4 +103,10 @@ test('a cancelled lesson has no button', async () => {
   at('2026-10-01T13:00:00.000Z');
   await render(<JoinClassroomButton lesson={lesson({ id: 'x', status: 'cancelled_by_admin' })} />);
   expect(screen.queryByText(t.classroom.enter)).toBeNull();
+});
+
+test('the button takes the full width, so its label is never clipped to «Join the»', async () => {
+  at('2026-10-01T12:45:00.000Z');
+  await render(<JoinClassroomButton lesson={row} />);
+  expect(StyleSheet.flatten(screen.getByTestId('join-classroom').props.style).alignSelf).toBe('stretch');
 });
