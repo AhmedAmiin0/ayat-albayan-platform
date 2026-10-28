@@ -18,12 +18,12 @@ import { CurrentUser, Permissions } from '../../../common/auth/decorators';
 import type { AuthUser } from '../../../common/auth/verify-token';
 import { orNotFound, pageQuerySchema, parseOrThrow, sentOnly, type Page } from '../../../common/http/http';
 import { withMeeting, type MeetingFields } from './meeting-view';
-import { TeachersQueries, type Teacher, type TeacherListRow } from './teachers.queries';
+import { TeachersQueries, withoutPath, type Teacher, type TeacherListRow } from './teachers.queries';
 import { TeachersSettings } from './teachers.settings';
 import { TeacherUsernames } from './teacher-username';
 
 /** A teacher as the API returns it: meeting_mode raw and platform_classroom effective (migration 490). */
-type TeacherView = Omit<Teacher, 'meeting_mode'> & MeetingFields & { username: string | null };
+type TeacherView = Omit<Teacher, 'meeting_mode' | 'avatar_path'> & MeetingFields & { username: string | null; avatar_url: string | null };
 type TeacherListView = Omit<TeacherListRow, 'meeting_mode'> & MeetingFields;
 
 /** `?search=` name or phone in any format (teacherSearchFilter); column filters + `sort`/`dir` (R-NFR-08). */
@@ -82,8 +82,9 @@ export class TeachersController {
     return (await this.settings.read()).meeting_link_auto;
   }
 
-  /** One teacher: its meeting fields and its login's username (docs/30). */
+  /** One teacher: its meeting fields, its login's username (docs/30) and its photo. */
   private async view(row: Teacher): Promise<TeacherView> {
-    return { ...withMeeting(row, await this.academyAuto()), username: await this.usernames.of(row.profile_id) };
+    const [auto, username, avatar_url] = await Promise.all([this.academyAuto(), this.usernames.of(row.profile_id), this.teachers.photo(row.id)]);
+    return { ...withMeeting(withoutPath(row), auto), username, avatar_url };
   }
 }

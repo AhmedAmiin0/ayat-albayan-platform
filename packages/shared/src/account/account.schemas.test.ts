@@ -1,6 +1,5 @@
 import { describe, expect, it } from 'vitest';
 import { avatarSetSchema, avatarUploadSchema, emailChangeSchema, passwordChangeSchema, profileUpdateSchema } from './account.schemas.js';
-import { initialsOf } from './account.views.js';
 
 // «حسابي» bodies (R-ACC-02..05).
 
@@ -35,13 +34,5 @@ describe('email, password and avatar bodies (R-ACC-03..05)', () => {
     expect(avatarUploadSchema.safeParse({ mime: 'image/jpeg', size: 2 * 1024 * 1024 }).success).toBe(true);
     expect(avatarUploadSchema.safeParse({ mime: 'image/gif', size: 10 }).error?.issues[0]?.message).toBe('avatar_type');
     expect(avatarSetSchema.safeParse({ path: '' }).success).toBe(false);
-  });
-});
-
-describe('initialsOf', () => {
-  it('takes the first letter of the first two words', () => {
-    expect(initialsOf('هدى علي أحمد')).toBe('هع');
-    expect(initialsOf('  Sara ')).toBe('S');
-    expect(initialsOf('')).toBe('');
   });
 });

@@ -37,8 +37,7 @@ export const ACCOUNT_ERRORS = [
 ] as const;
 export type AccountError = (typeof ACCOUNT_ERRORS)[number];
 
-/** Initials for the avatar fallback: the first letter of the first two words (Arabic or Latin). */
-export function initialsOf(name: string): string {
-  const words = name.trim().split(/\s+/).filter((w) => w !== '');
-  return words.slice(0, 2).map((w) => Array.from(w)[0] ?? '').join('');
+/** The answer of an admin's PUT / DELETE /teachers/:id/avatar and /users/:id/avatar (owner 2026-10-28). */
+export interface StaffPhotoView {
+  avatar_url: string | null;
 }

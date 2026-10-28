@@ -3,6 +3,8 @@ import { Test } from '@nestjs/testing';
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import { AppModule } from '../../../app.module';
 import { AuditService } from '../../../common/audit/audit.service';
+import { fakePhotos } from '../../../common/storage/avatars/avatars.fakes';
+import { StaffPhotos } from '../../../common/storage/avatars/staff-photos';
 import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '../../../common/auth/auth.guard';
 import { AccountDisabledError, type PermissionResolver } from '../../../common/auth/permissions';
 import type { AuthUser } from '../../../common/auth/verify-token';
@@ -50,6 +52,7 @@ describe('users routes through the real guards', () => {
       .overrideProvider(AUTH_ADMIN).useValue(auth)
       .overrideProvider(ROLE_STORE).useValue(new FakeRoleStore())
       .overrideProvider(AuditService).useValue(audit)
+      .overrideProvider(StaffPhotos).useValue(fakePhotos().photos)
       .compile();
     app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter());
     await app.init();

@@ -71,6 +71,22 @@ export function avatarPath(input: { userId: string; mime: string; now?: number }
   return `${input.userId}/avatar-${input.now ?? Date.now()}.${extFor(input.mime)}`;
 }
 
+/** avatars/teachers/{teacher_id}/avatar-{ms}.{ext}: an admin's photo of a teacher who may have no login (migration 20261028000942). */
+export function teacherAvatarPath(input: { teacherId: string; mime: string; now?: number }): string {
+  return `teachers/${input.teacherId}/avatar-${input.now ?? Date.now()}.${extFor(input.mime)}`;
+}
+
+/** Was `path` signed for this user's photo? Exactly {user_id}/avatar-{file}. */
+export function isUserAvatarPathOf(path: string, userId: string): boolean {
+  return isPathOf(path, userId) && path.startsWith(`${userId}/avatar-`);
+}
+
+/** Was `path` signed for this teacher record's photo? Exactly teachers/{teacher_id}/avatar-{file}. */
+export function isTeacherAvatarPathOf(path: string, teacherId: string): boolean {
+  const parts = path.split('/');
+  return parts.length === 3 && parts[0] === 'teachers' && isUserAvatarPathOf(parts.slice(1).join('/'), teacherId);
+}
+
 /** invoices/{client_request_id}/{name}: the booking's own folder, so a path proves whose it is. */
 export function invoicePath(input: { requestId: string; name: string }): string {
   return `${input.requestId}/${input.name}`;

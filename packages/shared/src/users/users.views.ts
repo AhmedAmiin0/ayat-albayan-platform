@@ -26,6 +26,8 @@ export interface UserView {
   linked: LinkedRecord | null;
   /** A teacher's sign-in username (docs/30); null / absent = none. */
   username?: string | null;
+  /** A staff member's photo, a short-lived signed URL; null = initials (students and guardians always null). */
+  avatar_url?: string | null;
 }
 
 /** GET /users/:id: the list row plus what the edit panel needs. */

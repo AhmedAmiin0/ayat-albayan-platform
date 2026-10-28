@@ -4284,6 +4284,7 @@ export type Database = {
       };
       teachers: {
         Row: {
+          avatar_path: string | null;
           created_at: string;
           created_by: string | null;
           display_name_ar: string;
@@ -4307,6 +4308,7 @@ export type Database = {
           updated_at: string;
         };
         Insert: {
+          avatar_path?: string | null;
           created_at?: string;
           created_by?: string | null;
           display_name_ar: string;
@@ -4330,6 +4332,7 @@ export type Database = {
           updated_at?: string;
         };
         Update: {
+          avatar_path?: string | null;
           created_at?: string;
           created_by?: string | null;
           display_name_ar?: string;

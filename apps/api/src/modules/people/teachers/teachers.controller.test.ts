@@ -27,6 +27,7 @@ const teachers = {
   update: vi.fn(),
   remove: vi.fn(),
   idByProfile: vi.fn(),
+  photo: async () => null,
 };
 const VALID = {
   display_name_ar: 'أ. سارة',

@@ -1,7 +1,9 @@
 import type { AuthUser } from '../../../../common/auth/verify-token';
 import { conflict } from '../../../../common/http/errors';
+import { AvatarWriter } from '../../../../common/storage/avatars/avatar-writer';
+import { FakeAvatarFiles } from '../../../../common/storage/avatars/avatars.fakes';
 import { AccountAvatarService } from './account.avatar.service';
-import type { AccountAuth, AccountFiles, AccountRow, AccountStore, SelfPatch } from './account.ports';
+import type { AccountAuth, AccountRow, AccountStore, SelfPatch } from './account.ports';
 import { AccountPorts } from './account.ports.provider';
 import { AccountService } from './account.service';
 
@@ -54,38 +56,15 @@ class FakeAccountAuth implements AccountAuth {
   }
 }
 
-class FakeAccountFiles implements AccountFiles {
-  objects = new Map<string, { size: number; contentType: string; bytes: Uint8Array }>();
-  removed: string[] = [];
-
-  async uploadUrl(path: string) {
-    return { bucket: 'avatars', path, token: 'tok', signed_url: `https://storage.test/${path}` };
-  }
-  async info(path: string) {
-    const o = this.objects.get(path);
-    return o ? { size: o.size, contentType: o.contentType } : null;
-  }
-  async head(path: string, bytes: number) {
-    return this.objects.get(path)?.bytes.slice(0, bytes) ?? null;
-  }
-  async url(path: string) {
-    return `https://storage.test/signed/${path}`;
-  }
-  async remove(path: string) {
-    this.removed.push(path);
-    this.objects.delete(path);
-  }
-}
-
 export const PNG = new Uint8Array([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a, 0, 0, 0, 0x0d]);
 
 export function accountKit(min = 8) {
   const store = new FakeAccountStore();
   const auth = new FakeAccountAuth();
-  const files = new FakeAccountFiles();
+  const files = new FakeAvatarFiles();
   const ports = new AccountPorts(store, auth, files);
   const config = { passwordMinLength: min, supabaseUrl: 'http://supabase.test', signInKey: 'test-key' };
   const account = new AccountService(ports, config);
-  const avatar = new AccountAvatarService(ports, account);
+  const avatar = new AccountAvatarService(ports, account, new AvatarWriter(files));
   return { store, auth, files, account, avatar };
 }
