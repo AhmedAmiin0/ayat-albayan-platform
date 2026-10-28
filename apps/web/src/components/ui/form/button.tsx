@@ -3,7 +3,8 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import * as React from 'react';
 import { cn } from '@/lib/utils';
 
-// docs/07 §6 Button. Green is the only action colour: white text on the green fill (lapis-fill), green text (lapis) on ghosts; at most ONE filled primary per screen.
+// docs/07 §6 «الأزرار». Green is the only action colour: white text on the green fill (lapis-fill), green text (lapis) on ghosts; at most ONE filled primary per sheet or section.
+// One line, never clipped: a peer row goes in a ButtonRow (components/ui/layout/button-row.tsx).
 // Focus is the global lapis outline (index.css). Icons are 17px; directional ones mirror in RTL.
 // The edge colour lives in each variant (not a base border-transparent), so buttonVariants() on a
 // <Link> keeps secondary's 3:1 edge without twMerge.
@@ -17,17 +18,17 @@ export const buttonVariants = cva(
         primary: 'border-transparent bg-primary text-primary-foreground enabled:hover:bg-primary-hover',
         /** Peers: تصدير, تعديل, row next-actions. The border is its only edge (3:1 rule-input). */
         secondary: 'bg-secondary text-secondary-foreground border-input enabled:hover:bg-sunk',
-        /** إلغاء, سيبها هنا, inline «إضافة ميعاد». */
+        /** Tertiary header actions only («إغلاق»), and inline «إضافة ميعاد». */
         ghost: 'border-transparent bg-transparent text-lapis enabled:hover:bg-accent',
-        /** حذف, inside a confirm only. */
+        /** حذف, inside a confirm dialog only. */
         danger: 'border-transparent bg-destructive-solid text-destructive-foreground',
-        /** إلغاء الحلقة in lists. */
-        'danger-quiet': 'bg-transparent text-destructive border-destructive/45',
+        /** The outlined danger of a sheet or row: «إلغاء الحلقة». Label and edge in the bad tone. */
+        'danger-quiet': 'bg-transparent text-destructive border-destructive enabled:hover:bg-danger-soft',
       },
-      // Phones get the 44px touch floor (docs/07 §4); 32/40 from 640px.
+      // Phones: 48px like the app (docs/07 «الأزرار»), the dense sm keeps the 44px floor; 32/40 from 640px.
       size: {
         sm: 'min-h-11 px-3 text-xs sm:min-h-8',
-        md: 'min-h-11 px-4 text-sm sm:min-h-10',
+        md: 'min-h-12 px-4 text-sm sm:min-h-10',
         lg: 'min-h-12 px-5 text-body',
       },
     },
