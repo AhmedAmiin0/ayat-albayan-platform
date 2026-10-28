@@ -8,7 +8,7 @@ import { raisedCard } from './surface';
  * every group of rows sits inside Screen's 16pt gutter in ONE rounded raised card, as Today's «بقية
  * اليوم»: radius 20, the `raised` fill, a hairline edge, a rule between rows inset 16pt from both sides.
  */
-export const INSET_RADIUS = 20;
+const INSET_RADIUS = 20;
 
 const InsetContext = createContext(false);
 
@@ -44,13 +44,13 @@ export function InsetGroup({ children, testID }: { children: ReactNode; testID?:
 }
 
 /** Where a virtualised row sits in its group: the first rounds the top, the last the bottom. */
-export interface CellPlace {
+interface CellPlace {
   first: boolean;
   last: boolean;
 }
 
 /** One row's slice of the card in a virtualised list: the fill, the side edges, the rounded ends. */
-export function cellStyle(color: { raised: string; rule: string }, { first, last }: CellPlace): ViewStyle {
+function cellStyle(color: { raised: string; rule: string }, { first, last }: CellPlace): ViewStyle {
   const edge = StyleSheet.hairlineWidth;
   return {
     overflow: 'hidden',
