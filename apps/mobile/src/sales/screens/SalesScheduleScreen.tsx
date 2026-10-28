@@ -26,10 +26,10 @@ import { SalesLessonSheet } from '../components/SalesLessonSheet';
 const DATE = /^\d{4}-\d{2}-\d{2}$/;
 
 /**
- * «جدول الحلقات» of the salesperson (web /sales/schedule): one Riyadh day of the academy, read-only
- * except her own students' lessons, which she may move or cancel one at a time (docs/16 row 37),
+ * «جدول الحلقات» of the salesperson (web /sales/schedule): one Riyadh day of the academy; she may move
+ * or cancel any lesson not over yet, one at a time (docs/16 row 37, any lesson: owner 2026-10-28),
  * a day at a time (the admin schedule's switcher) and one teacher or all; «ادخل الحلقة» on a running
- * lesson; a tap on a lesson opens its read-only «تفاصيل الحلقة». `?teacherId=` opens it on a teacher (from «المعلمون»), `?date=` on a day. `asTab`: the sales
+ * lesson; a tap on a lesson opens its «تفاصيل الحلقة». `?teacherId=` opens it on a teacher (from «المعلمون»), `?date=` on a day. `asTab`: the sales
  * tree's «جدول الحلقات» tab (no «رجوع»).
  */
 export function SalesScheduleScreen({ asTab = false }: { asTab?: boolean }) {

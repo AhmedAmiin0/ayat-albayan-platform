@@ -84,14 +84,16 @@ test('teacher: her students’ reports page and one report button; no package re
   }
 });
 
-test('sales: read-only, the lesson link (owner 2026-10-26), no report, no student file, no package', async () => {
+test('sales: read-only, the lesson link (owner 2026-10-26), no report, no package; any student opens «تفاصيل الطالب»', async () => {
   await show('sales');
   expect(screen.getByText(t.lessons.sheet.readOnly)).toBeTruthy();
   expect(screen.getByText(t.lessons.joinLink)).toBeTruthy();
   expect(screen.getByText('https://meet.example/abc')).toBeTruthy();
   expect(screen.queryByText(t.lessons.sheet.report.submitted)).toBeNull();
-  expect(screen.queryByRole('button', { name: t.lessons.sheet.openStudent.replace('{name}', 'جنى وليد') })).toBeNull();
   expect(mockApiFetch).not.toHaveBeenCalledWith('/students/s2/balance');
+  // Owner 2026-10-28: any student is readable by sales, hers or not.
+  await fireEvent.press(screen.getByRole('button', { name: t.lessons.sheet.openStudent.replace('{name}', 'جنى وليد') }));
+  expect(router.push).toHaveBeenCalledWith('/sales/students/s2');
 });
 
 test('a running lesson says «جارية الآن»; the actions slot renders the role’s buttons; «إغلاق» closes', async () => {

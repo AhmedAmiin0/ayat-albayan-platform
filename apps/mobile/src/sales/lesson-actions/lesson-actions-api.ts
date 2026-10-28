@@ -4,11 +4,12 @@ import { apiSend } from '@/core/lib/http/api';
 import { pathKey } from '@/core/lib/query/query-keys';
 
 /**
- * May she move or cancel this lesson (docs/16 row 37)? It must be open, not over, have only HER
- * students (`mine`; a group with another family's child stays the admin's) and she must hold the key. The API checks every one of these again.
+ * May she move or cancel this lesson (docs/16 row 37)? It must be open, not over and have a student,
+ * and she must hold the key. ANY student's lesson, hers or another family's, a group for all its
+ * students (owner 2026-10-28). The API checks every one of these again.
  */
 export function canChangeLesson(lesson: SalesScheduleLesson, input: { now: Date; can: (key: 'lessons.reschedule' | 'lessons.cancel') => boolean }) {
-  const ok = isOpenLesson(lesson.status) && Date.parse(lesson.ends_at) > input.now.getTime() && lesson.students.length > 0 && lesson.students.every((s) => s.mine === true);
+  const ok = isOpenLesson(lesson.status) && Date.parse(lesson.ends_at) > input.now.getTime() && lesson.students.length > 0;
   return { reschedule: ok && input.can('lessons.reschedule'), cancel: ok && input.can('lessons.cancel') };
 }
 

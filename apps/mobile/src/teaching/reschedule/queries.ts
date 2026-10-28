@@ -18,6 +18,8 @@ interface RescheduleSlotsParams {
   excludeLessonId?: string;
   /** The slots route: the admin's GET /booking/slots, or sales' scoped GET /sales/booking/slots (her students only). */
   path?: string;
+  /** Sales' «تغيير الموعد»: the lesson being moved, so its students may be any family's (docs/16 row 37). */
+  lessonId?: string;
 }
 
 /**
@@ -46,6 +48,7 @@ export function useRescheduleSlots(p: RescheduleSlotsParams) {
     studentIds: p.studentIds.join(','),
     stepMin: p.stepMin,
     excludeLessonId: p.excludeLessonId,
+    lessonId: p.lessonId,
   };
   const path = p.path ?? '/booking/slots';
   return useQuery({

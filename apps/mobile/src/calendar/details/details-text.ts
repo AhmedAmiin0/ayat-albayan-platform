@@ -93,11 +93,11 @@ export function reportState(lesson: Pick<DetailsLesson, 'status' | 'starts_at'>,
   return student.report?.status ?? 'none';
 }
 
-/** The student file the role may open: the admin's quick view, a teacher's student reports, sales' «تفاصيل الطالب» of hers only. */
-export function studentHref(role: DetailsRole, student: Pick<DetailsStudent, 'id' | 'mine'>): string | null {
+/** The student file the role may open: the admin's quick view, a teacher's student reports, sales' «تفاصيل الطالب» of any student (owner 2026-10-28). */
+export function studentHref(role: DetailsRole, student: Pick<DetailsStudent, 'id'>): string {
   if (role === 'admin') return `/students/${student.id}`;
   if (role === 'teacher') return `/teacher/reports/student/${student.id}`;
-  return student.mine ? `/sales/students/${student.id}` : null;
+  return `/sales/students/${student.id}`;
 }
 
 /** Where «عرض التقرير» goes: the teacher's report form of the lesson, the admin's sent report; none for sales. */

@@ -35,24 +35,27 @@ afterEach(() => jest.useRealTimers());
 const openRow = async (who: string) =>
   fireEvent.press(await screen.findByRole('button', { name: t.lessons.sheet.openRow.replace('{names}', who) }));
 
-test('sales: a tap opens the read-only details with every clock and the lesson link; no admin action, no file', async () => {
+test('sales: a tap opens the details with every clock, the lesson link, her move / cancel and the student file; no admin action', async () => {
   await renderWithQuery(<SalesScheduleScreen />);
   // The agenda row never paints the URL: the tap opens the sheet that has it.
   await screen.findByRole('button', { name: t.lessons.sheet.openRow.replace('{names}', 'سلمى') });
   expect(screen.queryByText('https://meet.example.org/salma')).toBeNull();
   await openRow('سلمى');
   expect(screen.getByRole('header', { name: 'سلمى' })).toBeTruthy();
-  expect(screen.getByText(t.lessons.sheet.readOnly)).toBeTruthy();
+  // Owner 2026-10-28: any lesson not over yet is hers to move or cancel, so no «للاطلاع فقط».
+  expect(screen.queryByText(t.lessons.sheet.readOnly)).toBeNull();
+  expect(screen.getByRole('button', { name: t.sales.lessonActions.reschedule })).toBeTruthy();
+  expect(screen.getByRole('button', { name: t.sales.lessonActions.cancel })).toBeTruthy();
   expect(screen.getByText(ltr('AB-0200'))).toBeTruthy();
   expect(screen.getByText(new RegExp(`^${t.schedule.studentTime.replace('{time}', '')}`))).toBeTruthy();
   expect(screen.getByText(new RegExp(`^${t.schedule.teacherTime.replace('{time}', '')}`))).toBeTruthy();
   for (const label of [t.today.confirm, t.today.cancel, t.lessons.rescheduleSubmit, t.editTime.action, t.reports.view]) {
-    expect(screen.queryByRole('button', { name: new RegExp(`^${label}`) })).toBeNull();
+    expect(screen.queryByRole('button', { name: new RegExp(`^${label}$`) })).toBeNull();
   }
   // Owner 2026-10-26: sales see the lesson's link, full, with «انسخ الرابط».
   expect(screen.getByText('https://meet.example.org/salma')).toBeTruthy();
   expect(screen.getByRole('button', { name: t.lessons.copyLink })).toBeTruthy();
-  expect(screen.queryByRole('button', { name: t.lessons.sheet.openStudent.replace('{name}', 'سلمى') })).toBeNull();
+  expect(screen.getByRole('button', { name: t.lessons.sheet.openStudent.replace('{name}', 'سلمى') })).toBeTruthy();
   // Not running: no «ادخل الحلقة» in the sheet (the running row keeps its own).
   expect(screen.getAllByRole('button', { name: t.classroom.enter })).toHaveLength(1);
 });

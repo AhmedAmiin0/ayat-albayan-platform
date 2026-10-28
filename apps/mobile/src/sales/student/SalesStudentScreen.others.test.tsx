@@ -55,7 +55,7 @@ test('no trial: «لا توجد حلقة تجريبية»; an old cache without 
   expect(screen.queryByRole('header', { name: s.trial.title })).toBeNull();
 });
 
-test('not hers: the note, trial, schedule and attendance; no subscription, no report, no move / cancel', async () => {
+test('not hers: the note, trial, schedule and attendance; no subscription, no report; move / cancel stay (owner 2026-10-28)', async () => {
   mockApiFetch.mockResolvedValue(notMine());
   await renderWithQuery(<SalesStudentScreen />);
   expect(await screen.findByText(s.notMine)).toBeTruthy();
@@ -67,8 +67,8 @@ test('not hers: the note, trial, schedule and attendance; no subscription, no re
   expect(screen.queryByText(t.reports.noReports)).toBeNull();
   await fireEvent.press(screen.getByRole('button', { name: new RegExp(`^${t.lessons.sheet.openRow.replace('{names}', 'يوسف أحمد')}`) }));
   expect(await screen.findByText(t.lessons.details)).toBeTruthy();
-  expect(screen.queryByRole('button', { name: t.sales.lessonActions.reschedule })).toBeNull();
-  expect(screen.queryByRole('button', { name: t.sales.lessonActions.cancel })).toBeNull();
+  expect(screen.getByRole('button', { name: t.sales.lessonActions.reschedule })).toBeTruthy();
+  expect(screen.getByRole('button', { name: t.sales.lessonActions.cancel })).toBeTruthy();
 });
 
 test('hers, the same lesson: «تغيير الموعد» and «إلغاء الحلقة» stay', async () => {

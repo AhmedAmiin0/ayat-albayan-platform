@@ -9,8 +9,9 @@ import { SalesLessonActions } from './sales-lesson-actions.service';
 /**
  * «تغيير الموعد» / «إلغاء الحلقة» from sales' «جدول الحلقات» (docs/16 row 37). Each route has its own
  * narrow key (lessons.reschedule, lessons.cancel; the admin's routes keep lessons.write). One lesson of
- * her own students only (403 not_your_student), before it ends (409 lesson_ended); strict bodies: no
- * series, substitute teacher, clash override or «by».
+ * ANY student, hers or another family's (owner 2026-10-28; a group lesson for all its students), before
+ * it ends (409 lesson_ended), 404 lesson_not_found; strict bodies: no series, substitute teacher, clash
+ * override or «by».
  */
 @ApiTags('sales')
 @ApiBearerAuth()
