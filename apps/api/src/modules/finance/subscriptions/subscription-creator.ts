@@ -12,7 +12,8 @@ import { assertUsedBeforeFits } from './used-before';
  * S2: priced from the catalog with the same quote as /pricing; never a typed price. A retry of the
  * same form (clientRequestId, rule 8) returns the package it already created; only a new one is
  * audited and converts the family's lead (MoneyWrites). The callers gate lessonsUsedBefore
- * (assertUsedBefore); its bound needs the quote's size.
+ * (assertUsedBefore); its bound needs the quote's size. `price`: only a Stripe payment link's agreed amount
+ * (owner 2026-10-28, docs/30, test build), so paying the link in full makes the package paid.
  */
 @Injectable()
 export class SubscriptionCreator {
@@ -22,12 +23,13 @@ export class SubscriptionCreator {
     private readonly service: SubscriptionsService,
   ) {}
 
-  async create(input: SubscriptionCreate, actorId: string): Promise<SubscriptionView> {
+  async create(input: SubscriptionCreate, actorId: string, opts: { price?: number } = {}): Promise<SubscriptionView> {
     const replay = await this.replayOf(input.clientRequestId);
     if (replay) return replay;
     const quote = await this.quote(input);
     assertUsedBeforeFits(input.lessonsUsedBefore, quote.lessons);
-    const created = await this.service.add(subscriptionRow(input, quote, actorId), actorId);
+    const row = subscriptionRow(input, quote, actorId);
+    const created = await this.service.add(opts.price === undefined ? row : { ...row, price: opts.price }, actorId);
     // Lost the race to a retry of the same form: that one created it.
     const view = created ?? (await this.replayOf(input.clientRequestId));
     if (!view) throw notFound('subscription_not_found');

@@ -1,4 +1,4 @@
-import type { PaymentCreate } from '@ab/shared';
+import type { PaymentWrite } from '@ab/shared';
 import { conflict } from '../../../common/http/errors';
 import type { CheckedAttachment } from './attachments/payment-attachments.service';
 import type { Converted, PaymentInputs } from './payment-inputs';
@@ -19,7 +19,7 @@ export type Prechecked = { files: CheckedAttachment[]; converted: Converted };
  */
 export async function precheckPayment(
   deps: { payments: PaymentsQueries; inputs: PaymentInputs },
-  v: { input: PaymentCreate; sub: PaymentSubscription },
+  v: { input: PaymentWrite; sub: PaymentSubscription },
 ): Promise<Prechecked> {
   const { input, sub } = v;
   // A cancelled package (owner 2026-10-28) takes no money; migration 934 refuses the row too.

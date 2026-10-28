@@ -72,6 +72,10 @@ Lesson report PDFs (R-REP-03) are rendered by the job runner (the API process to
 - **Bumping playwright-core**: bump `apps/api` and `e2e` together, rebuild the image. A browser mismatch shows as `pdf_status = 'failed'` with "Executable doesn't exist" in `lesson_reports.pdf_error`; the admin retry (R12) re-queues it once fixed.
 - The logo is read at runtime from `apps/web/public/brand/mark.png`, so the image keeps the whole repo (`COPY . .`); don't move that file without updating `report-pdf/pdf-assets.ts`.
 
+## Stripe payment links — TEST BUILD ONLY (docs/30)
+
+Owner rule (2026-10-28): «dont make stripe available for the normal production build». The API mounts the Stripe module **only** when the server env has `FEATURE_STRIPE=test`. It is set nowhere by default: no `.env.example`, no workflow, no compose file sets it. To try it on **staging only**, add `FEATURE_STRIPE=test` to the staging API env (both API copies; the worker ignores it, it serves `/health` only) and redeploy; never on a production host. Even then every Stripe route stays 404 until an admin turns on «تفعيل روابط الدفع» in «الدفع الإلكتروني (اختبار)» (`stripe_settings.stripe_enabled`, default false). The web UI also needs the build flag `VITE_FEATURE_STRIPE=1` in the staging web build; the mobile UI exists only in the `stripe-test` EAS profile. Keys are entered in /admin/settings (Vault, sandbox keys only), never in an env file. Remove the variable (and redeploy) to switch it all off.
+
 ## Roll back
 
 - API: on the VPS `cd /opt/ayat-albayan-staging && mv src src.bad && mv src.old src && docker compose up -d --build`.

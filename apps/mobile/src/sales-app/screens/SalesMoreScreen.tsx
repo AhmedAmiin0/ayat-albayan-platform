@@ -8,6 +8,7 @@ import { t } from '@/core/lib/i18n/i18n';
 import { AppearancePicker } from '@/more/appearance/AppearancePicker';
 import { ClockFormatPicker } from '@/more';
 import { LanguageRow } from '@/more/appearance/LanguageRow';
+import { PaymentLinksRow } from '@/sales-subscribe';
 import { SignOutButton } from '@/teacher/components/SignOutButton';
 import { ListRow } from '@/core/ui/layout/ListRow';
 import { Screen } from '@/core/ui/layout/Screen';
@@ -25,7 +26,8 @@ const rows = () =>
 /**
  * The salesperson's «المزيد»: the web SalesNav pages that do not earn a tab, in its order and with
  * its gates («المعلمون», «الحلقات الجارية», «الاشتراكات» with history, «أرباحي» with «مدفوعاتي»
- * inside) and the meetings (meetings.read, owner 2026-10-12) after «حسابي», then the appearance, the language and sign-out.
+ * inside) and the meetings (meetings.read, owner 2026-10-12) after «حسابي», «روابط الدفع» in the Stripe test build only,
+ * then the appearance, the language and sign-out.
  */
 export function SalesMoreScreen({ can }: { can: Can }) {
   return (
@@ -40,6 +42,7 @@ export function SalesMoreScreen({ can }: { can: Can }) {
         {allowedRows(can, rows()).map((r) => (
           <ListRow key={r.href} title={r.title} onPress={() => router.push(r.href)} />
         ))}
+        <PaymentLinksRow />
       </View>
       <AppearancePicker />
       <ClockFormatPicker />

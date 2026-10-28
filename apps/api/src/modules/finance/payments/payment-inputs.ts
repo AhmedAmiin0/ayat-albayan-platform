@@ -1,4 +1,4 @@
-import { convertPayment, type PaymentCreate, type SignedDownload } from '@ab/shared';
+import { convertPayment, type PaymentWrite, type SignedDownload } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
 import { FxService } from '../fx/fx.service';
 import { InvoicesService } from '../invoices/invoices.service';
@@ -32,7 +32,7 @@ export class PaymentInputs {
     return this.files.receipts;
   }
 
-  async convert(input: PaymentCreate, sub: PaymentSubscription): Promise<Converted> {
+  async convert(input: PaymentWrite, sub: PaymentSubscription): Promise<Converted> {
     if (input.currency === sub.currency)
       return { amount: input.amount, currency: sub.currency, original_amount: null, original_currency: null, fx_rate: null };
     try {

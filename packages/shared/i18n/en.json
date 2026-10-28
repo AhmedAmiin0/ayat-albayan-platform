@@ -3442,7 +3442,8 @@
       "bank": "Bank transfer",
       "wallet": "E-wallet",
       "cash": "Cash",
-      "other": "Other"
+      "other": "Other",
+      "card": "Card (online)"
     },
     "payoutStatus": {
       "draft": "Draft",
@@ -6733,6 +6734,103 @@
       "used_before_not_allowed": "You are not allowed to record lessons already used from the package.",
       "used_before_needs_past_start": "Used lessons are recorded only with «Subscription already started» and a past start date.",
       "used_before_too_many": "At least one lesson per weekly day must stay in the package."
+    }
+  },
+  "paymentLinks": {
+    "action": "Payment link",
+    "title": "Online payment link",
+    "testBadge": "Test",
+    "kind": {
+      "new": "New subscription",
+      "renewal": "Renewal"
+    },
+    "referencePrice": "Calculator price: {amount} {currency}",
+    "agreedAmount": "Agreed amount ({currency})",
+    "minAmount": "Lowest allowed amount: {amount} {currency}",
+    "create": "Create link",
+    "creating": "Creating the link…",
+    "created": "Payment link created; it expires {when}.",
+    "sendInChat": "Send in the chat",
+    "copy": "Copy",
+    "copied": "Link copied",
+    "templateNeeded": "The family's last message is over 24 hours old: send an approved template first, then the link.",
+    "message": "Hello, here is the payment link for {student}'s package ({lessons} lessons): {amount} {currency}\n{url}",
+    "list": "Payment links",
+    "empty": "No payment links.",
+    "cancel": "Cancel link",
+    "cancelConfirm": "Cancel this link? The family will not be able to pay with it.",
+    "expiresAt": "Expires {when}",
+    "paidAt": "Paid {when}",
+    "lessons": "{count} lessons",
+    "status": {
+      "open": "Open",
+      "paid": "Paid",
+      "expired": "Expired",
+      "cancelled": "Cancelled"
+    },
+    "error": {
+      "discount_too_large": "The amount is below the admin's discount limit.",
+      "discount_not_allowed": "The calculator discount may only be 0, 5, 10 or 15 %.",
+      "not_a_renewal": "This student has no earlier package to renew.",
+      "currency_mismatch": "The amount must be in the package currency ({currency}).",
+      "link_not_open": "This link is no longer open.",
+      "stripe_not_configured": "The Stripe keys are not saved in the settings yet.",
+      "generic": "Could not create the link; try again."
+    },
+    "web": {
+      "kind": "Link type",
+      "agreed": "Agreed amount",
+      "reference": "Calculator price",
+      "amountPositive": "Enter an amount above zero.",
+      "copyFailed": "Could not copy; copy the link by hand.",
+      "status": "Status",
+      "when": "Date",
+      "emptyHint": "Create a payment link from the family's chat: «More», then «Payment link».",
+      "maxDiscountRange": "Enter a number from 0 to 100."
+    },
+    "mobile": {
+      "kind": "Subscription type",
+      "agreed": "Agreed amount: {amount} {currency}",
+      "cancelling": "Cancelling the link…",
+      "cancelFailed": "Could not cancel the link; try again."
+    },
+    "pay": {
+      "title": "Pay Ayat Al-Bayan Academy",
+      "greeting": "Hello {name}",
+      "amount": "Amount: {amount} {currency}",
+      "button": "Pay now",
+      "redirecting": "Taking you to the payment page…",
+      "paid": "Paid, thank you.",
+      "expired": "This link has expired. Contact the academy for a new one.",
+      "cancelled": "This link was cancelled. Contact the academy.",
+      "processing": "Your payment is processing; you will get a confirmation when it completes.",
+      "thanks": "Thank you! We received your payment and the subscription activates automatically.",
+      "back": "The payment was not completed. You can try again.",
+      "notFound": "This link is not valid.",
+      "testNotice": "Test payment page (Stripe sandbox): no real card is used."
+    },
+    "bell": {
+      "paidTitle": "Paid through a payment link",
+      "refusedTitle": "A card payment was not recorded in the platform",
+      "disputeTitle": "A card payment was disputed",
+      "disputeBody": "Needs review in the Stripe dashboard"
+    },
+    "settings": {
+      "section": "Online payment (test)",
+      "hint": "This section exists in the test build only and accepts Stripe test keys only.",
+      "enabled": "Enable payment links",
+      "apiKey": "Restricted key (rk_test_…)",
+      "webhookSecret": "Webhook signing secret (whsec_…)",
+      "maxDiscount": "Maximum discount (%)",
+      "maxDiscountHint": "Leave empty for no limit.",
+      "webhookUrl": "Webhook URL to add in Stripe",
+      "set": "Saved: {masked}",
+      "notSet": "Not saved",
+      "save": "Save",
+      "clear": "Remove",
+      "saved": "Settings saved",
+      "liveRefused": "The test build accepts Stripe test keys only (rk_test_ or sk_test_).",
+      "invalidSecret": "The webhook secret starts with whsec_."
     }
   }
 }
