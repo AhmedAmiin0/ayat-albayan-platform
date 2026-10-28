@@ -5623,7 +5623,8 @@
         "teacher_unmapped": "Teacher not mapped to a calendar",
         "student_unmapped": "Student folder not confirmed",
         "drive_unconfirmed": "Reports folder not confirmed",
-        "already_in_sheet": "Report already in the sheet from the old script"
+        "already_in_sheet": "Report already in the sheet from the old script",
+        "script_event_present": "The old script's event is already at this time"
       }
     },
     "counts": {
@@ -5631,7 +5632,8 @@
     },
     "alerts": {
       "disconnected": "The Google account link expired, so sync stopped. Reconnect it from the settings.",
-      "teacherUnmapped": "{name}'s lessons go to the main calendar only until their calendar is mapped."
+      "teacherUnmapped": "{name}'s lessons go to the main calendar only until their calendar is mapped.",
+      "scriptEventPresent": "{name}'s calendar is still built from the sheet: stop the script for this teacher first"
     },
     "web": {
       "updated": "Updated {at}",
@@ -5661,6 +5663,17 @@
       "pdf_not_synced": "The report file is not uploaded yet",
       "summary_row_other_folder": "The student's summary row points at another folder, so it was left as is",
       "other": "Google error: {code}"
+    },
+    "teacherCalendar": {
+      "title": "Teacher's calendar",
+      "script": "From the sheet (old script)",
+      "platform": "From the platform",
+      "warning": "Switch to the platform only after the script has stopped for this teacher.",
+      "managed": "Events written by the platform: {n}",
+      "scriptPresent": "Lessons not written because the script's event is there: {n}",
+      "changedAt": "Last changed: {at}",
+      "saved": "The teacher's calendar source was saved",
+      "loadError": "Couldn't load the teacher's calendar status."
     }
   },
   "notificationCatalogue": {

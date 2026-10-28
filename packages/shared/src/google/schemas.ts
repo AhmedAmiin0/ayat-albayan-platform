@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { GOOGLE_SYNC_MODES, GOOGLE_WINDOW_DAYS } from './enums.js';
+import { GOOGLE_SYNC_MODES, GOOGLE_WINDOW_DAYS, TEACHER_CALENDAR_OWNERS } from './enums.js';
 
 /** A Google id as the APIs return them (calendar ids are emails; Drive ids are [A-Za-z0-9_-]). */
 const calendarId = z.string().trim().min(1).max(300).regex(/^[A-Za-z0-9_.@#-]+$/);
@@ -32,3 +32,7 @@ export type GoogleStudentMapInput = z.infer<typeof googleStudentMapSchema>;
 /** PUT /admin/google/drive: confirm the root folder and the summary sheet found by discovery. */
 export const googleDriveSchema = z.object({ root_folder_id: fileId, summary_sheet_id: fileId.nullable() }).strict();
 export type GoogleDriveInput = z.infer<typeof googleDriveSchema>;
+
+/** PUT /admin/google/teachers/:id/calendar-owner: who builds the teacher's calendar. */
+export const teacherCalendarOwnerSchema = z.object({ owner: z.enum(TEACHER_CALENDAR_OWNERS) }).strict();
+export type TeacherCalendarOwnerInput = z.infer<typeof teacherCalendarOwnerSchema>;

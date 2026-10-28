@@ -12,6 +12,7 @@ import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { StatusChip } from '@/core/ui/feedback/StatusChip';
 import { TeacherContact } from '../teachers/TeacherContact';
 import { TeacherUsername } from '../teachers/TeacherUsername';
+import { TeacherCalendarOwner } from '../teachers/TeacherCalendarOwner';
 import { TeacherStudentsSection } from '../sections/TeacherStudentsSection';
 import type { Teacher } from '../types';
 import { UpcomingTimeOff } from '../availability/UpcomingTimeOff';
@@ -66,6 +67,7 @@ export function TeacherDetailScreen() {
         <TeacherStudentsSection teacherId={data.id} status={status} />
         <TeacherContact teacher={data} />
         <TeacherUsername key={data.username ?? ''} teacher={data} />
+        <TeacherCalendarOwner teacherId={data.id} />
         <WeeklyAvailability teacher={data} />
         <UpcomingTimeOff teacherId={data.id} />
       </ScrollView>

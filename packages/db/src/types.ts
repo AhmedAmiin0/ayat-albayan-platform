@@ -4284,6 +4284,9 @@ export type Database = {
       };
       teachers: {
         Row: {
+          calendar_owner: string;
+          calendar_owner_changed_at: string | null;
+          calendar_owner_changed_by: string | null;
           created_at: string;
           created_by: string | null;
           display_name_ar: string;
@@ -4307,6 +4310,9 @@ export type Database = {
           updated_at: string;
         };
         Insert: {
+          calendar_owner?: string;
+          calendar_owner_changed_at?: string | null;
+          calendar_owner_changed_by?: string | null;
           created_at?: string;
           created_by?: string | null;
           display_name_ar: string;
@@ -4330,6 +4336,9 @@ export type Database = {
           updated_at?: string;
         };
         Update: {
+          calendar_owner?: string;
+          calendar_owner_changed_at?: string | null;
+          calendar_owner_changed_by?: string | null;
           created_at?: string;
           created_by?: string | null;
           display_name_ar?: string;
@@ -4711,6 +4720,18 @@ export type Database = {
             referencedColumns: ['id'];
           },
         ];
+      };
+      v_calendar_managed_lessons: {
+        Row: {
+          ends_at: string | null;
+          id: string | null;
+          platform_origin: boolean | null;
+          rule_id: string | null;
+          starts_at: string | null;
+          status: Database['public']['Enums']['lesson_status'] | null;
+          teacher_id: string | null;
+        };
+        Relationships: [];
       };
       v_lesson_sequence: {
         Row: {
@@ -5152,6 +5173,13 @@ export type Database = {
       google_sync_requeue: {
         Args: { p_reason: string };
         Returns: number;
+      };
+      google_teacher_calendar_counts: {
+        Args: { p_teacher_id: string };
+        Returns: {
+          managed: number;
+          script_event_present: number;
+        }[];
       };
       google_token_clear: {
         Args: never;
