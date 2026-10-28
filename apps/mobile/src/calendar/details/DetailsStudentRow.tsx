@@ -43,6 +43,8 @@ interface DetailsStudentRowProps {
   role: DetailsRole;
   /** Closes the sheet before a tap navigates. */
   onLeave: () => void;
+  /** This student's own file is the screen under the sheet: the name stays plain. */
+  here?: boolean;
 }
 
 /**
@@ -50,10 +52,10 @@ interface DetailsStudentRowProps {
  * when the role may open it), «الباقة غير مدفوعة», the report state once one can be written, the
  * admin's package line and «عرض التقرير» on a sent report. No phone or guardian contact here.
  */
-export function DetailsStudentRow({ lesson, student, role, onLeave }: DetailsStudentRowProps) {
+export function DetailsStudentRow({ lesson, student, role, onLeave, here = false }: DetailsStudentRowProps) {
   const { color } = useTheme();
   const now = useNow();
-  const href = studentHref(role, student);
+  const href = here ? null : studentHref(role, student);
   const go = (to: string) => {
     onLeave();
     router.push(to);
