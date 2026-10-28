@@ -9,6 +9,7 @@ import { Note } from '@/more/Note';
 import { BellButton } from '@/notifications/BellButton';
 import { Notice } from '@/today/components/Notice';
 import { localDate } from '@/today/lib/timeline';
+import { useGreeting } from '@/today';
 import { useNow } from '@/core/lib/time/use-now';
 import { useLessonAction } from '@/today/lib/use-lesson-action';
 import { Button } from '@/core/ui/primitives/Button';
@@ -50,14 +51,18 @@ export function TeacherTodayScreen() {
   const pending = usePendingReports();
   const action = useLessonAction();
   const inset = useTabBarInset();
+  const greeting = useGreeting(now);
   const lessons = lessonsOn(day.data ?? [], today, tz);
   const loaded = day.data !== undefined;
   const dateLine = `${formatRunningHead(now, locale).gregorian}. ${t.availability.tzHint.replace('{tz}', cities[tz] ?? tz)}`;
   const stale = day.isError && loaded;
   return (
     <Screen list>
+      {/* The greeting is the header (owner 2026-10-28: the tab already says «اليوم»). */}
       <ScreenHeader
-        title={t.teacherNav.today}
+        title={greeting}
+        size="h2"
+        connecting
         trailing={<BellButton tree="teacher" />}
         subtitle={stale ? `${dateLine} · ${t.mobile.lastUpdated.replace('{time}', clockAt(day.dataUpdatedAt, cycle))}` : dateLine}
       />

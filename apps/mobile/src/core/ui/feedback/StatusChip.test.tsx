@@ -22,7 +22,7 @@ test('a cancelled lesson is struck and cinnabar', async () => {
     />,
   );
   expect(screen.getByTestId('nuqta-struck', hidden)).toBeTruthy();
-  expect(screen.getByTestId('chip-bad')).toHaveStyle({ height: 22 });
+  expect(screen.getByTestId('chip-bad')).toHaveStyle({ minHeight: 22 });
 });
 
 test.each<[Tone, string, string]>([

@@ -1059,7 +1059,7 @@
       "completed": "انتهت"
     },
     "statusShort": {
-      "scheduled": "يحتاج تأكيد"
+      "scheduled": "للتأكيد"
     },
     "summaryFilter": "{n} {label}، اعرض هذه الحلقات فقط",
     "summaryFilterActive": "{n} {label}، اعرض كل الحلقات",

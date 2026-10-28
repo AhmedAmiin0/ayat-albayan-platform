@@ -51,7 +51,7 @@ test('upcoming: one row per lesson under its day with the status chip; the next 
   expect(await screen.findByText(s.upcoming)).toBeTruthy();
   expect(screen.getAllByRole('button', { name: openRow })).toHaveLength(5);
   expect(screen.getByText(/1 نوفمبر/)).toBeTruthy();
-  expect(screen.getAllByText(t.enums.lessonStatus.scheduled)).toHaveLength(5);
+  expect(screen.getAllByText(t.today.statusShort.scheduled)).toHaveLength(5);
   await fireEvent.press(screen.getByRole('button', { name: s.showAll.replace('{n}', '7') }));
   expect(screen.getAllByRole('button', { name: openRow })).toHaveLength(7);
   await fireEvent.press(screen.getByRole('button', { name: s.showLess }));

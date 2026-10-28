@@ -3,9 +3,10 @@ import { Pressable, View } from 'react-native';
 import { useClockCycle } from '@/core/lib/clock';
 import { t } from '@/core/lib/i18n/i18n';
 import { AppText } from '@/core/ui/primitives/AppText';
+import { statusWord } from '@/core/ui/feedback/lesson-status';
 import { toneColors } from '@/core/ui/feedback/StatusChip';
 import { type, useTheme } from '@/theme';
-import { riyadhTime, rowSubtitle, statusWord, studentNames } from '../lib/lesson-text';
+import { riyadhTime, rowSubtitle, studentNames } from '../lib/lesson-text';
 import type { TodayLesson } from '../lib/today-lesson';
 
 interface LessonRowProps<L extends TodayLesson> {
@@ -44,6 +45,9 @@ export function LessonRow<L extends TodayLesson>({ lesson, onOpen, compact = fal
       })}
     >
       <AppText
+        numberOfLines={1}
+        adjustsFontSizeToFit
+        minimumFontScale={0.6}
         style={{
           width: cycle === '12' ? 70 : 46,
           fontFamily: type.ui[600],

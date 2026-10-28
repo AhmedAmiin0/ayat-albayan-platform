@@ -12,6 +12,7 @@ import { riyadhTime } from '@/today/lib/lesson-text';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { StatusChip } from '@/core/ui/feedback/StatusChip';
 import { useInset } from '@/core/ui/surface/inset';
+import { statusWord } from '@/core/ui/feedback/lesson-status';
 
 /**
  * One lesson in sales' read-only day (the admin agenda row without its actions): the Riyadh start,
@@ -47,7 +48,7 @@ export function SalesLessonRow(props: { lesson: SalesScheduleLesson; onOpen?: (l
       </View>
       <View style={{ alignItems: 'flex-end', gap: 4 }}>
         {running ? <StatusChip tone="ok" glyph="fill" label={t.sales.academySchedule.liveNow} size="sm" /> : null}
-        <StatusChip {...lessonStatusStyle[lesson.status]} label={t.enums.lessonStatus[lesson.status]} size="sm" />
+        <StatusChip {...lessonStatusStyle[lesson.status]} label={statusWord(lesson.status)} size="sm" />
         {lesson.trial ? <Tag>{t.schedule.trialTag}</Tag> : null}
         {lesson.makeup ? <Tag>{t.booking.makeup.tag}</Tag> : null}
       </View>

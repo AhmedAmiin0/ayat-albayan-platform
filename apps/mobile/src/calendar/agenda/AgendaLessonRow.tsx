@@ -13,6 +13,7 @@ import { useInset } from '@/core/ui/surface/inset';
 import { teacherClock } from './agenda';
 import { RowDefaultActions } from './RowDefaultActions';
 import { Tag } from './Tag';
+import { statusWord } from '@/core/ui/feedback/lesson-status';
 
 interface AgendaLessonRowProps {
   lesson: LessonView;
@@ -54,7 +55,7 @@ export function AgendaLessonRow({ lesson, onReschedule, actions, onEditTime, onO
       </View>
       <View style={{ alignItems: 'flex-end', gap: 4 }}>
         <LiveBadge lesson={lesson} />
-        <StatusChip {...lessonStatusStyle[lesson.status]} label={t.enums.lessonStatus[lesson.status]} size="sm" />
+        <StatusChip {...lessonStatusStyle[lesson.status]} label={statusWord(lesson.status)} size="sm" />
         {lesson.trial ? <Tag>{t.schedule.trialTag}</Tag> : null}
         {lesson.makeup ? <Tag>{t.booking.makeup.tag}</Tag> : null}
       </View>

@@ -31,7 +31,11 @@ export function InsetGroup({ children, testID }: { children: ReactNode; testID?:
   if (rows.length === 0) return null;
   return (
     <InsetContext.Provider value>
-      <View testID={testID} style={{ ...raisedCard(color, INSET_RADIUS), overflow: 'hidden' }}>
+      <View
+        testID={testID}
+        // A border, not raisedCard's outer ring: a scroll view without side padding would clip the ring.
+        style={{ ...raisedCard(color, INSET_RADIUS), boxShadow: undefined, borderWidth: StyleSheet.hairlineWidth, borderColor: color.rule, overflow: 'hidden' }}
+      >
         {rows.map((row, i) => (
           <Fragment key={i}>
             {i > 0 ? <Rule /> : null}

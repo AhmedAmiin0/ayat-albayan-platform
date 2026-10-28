@@ -1,6 +1,5 @@
 import { formatRunningHead } from '@ab/shared';
 import { View } from 'react-native';
-import { useMyProfile } from '@/account';
 import { useHolds } from '@/auth';
 import { t } from '@/core/lib/i18n/i18n';
 import { locale } from '@/core/lib/i18n/locale';
@@ -9,7 +8,7 @@ import { HeaderConnectingBar } from '@/core/ui/connecting/HeaderConnectingBar';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { type, useTheme } from '@/theme';
 import { hairline } from '@/core/ui/surface/surface';
-import { firstName, greetingPart } from '../lib/today-plan';
+import { useGreeting } from '../lib/use-greeting';
 
 interface TodayHeaderProps {
   now: Date;
@@ -31,8 +30,7 @@ export function TodayHeader({ now, tree, stale }: TodayHeaderProps) {
   const bell = useHolds('notifications.push') || tree === 'admin';
   const date = formatRunningHead(now, locale).gregorian.split(' ').slice(0, -1).join(' ');
   const dateLine = t.today.dateLine.replace('{date}', date);
-  const name = firstName(useMyProfile().data?.full_name);
-  const greeting = t.today.greeting[greetingPart(now)];
+  const greeting = useGreeting(now);
   const small = { fontFamily: type.ui[500], color: color.ink3, fontVariant: ['tabular-nums' as const] };
   return (
     <View>
@@ -50,7 +48,7 @@ export function TodayHeader({ now, tree, stale }: TodayHeaderProps) {
               color: color.ink,
             }}
           >
-            {name ? t.today.greetingNamed.replace('{greeting}', greeting).replace('{name}', name) : greeting}
+            {greeting}
           </AppText>
           <AppText style={{ ...small, fontSize: type.size.xs, lineHeight: 20 }}>
             {stale ? `${dateLine} · ${stale}` : dateLine}

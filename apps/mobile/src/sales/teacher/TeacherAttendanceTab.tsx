@@ -10,6 +10,7 @@ import { InsetGroup } from '@/core/ui/surface/inset';
 import { SmallHeading } from '../components/SmallHeading';
 import { fill } from '../lib/sales-text';
 import { studentsLine, totalsLine } from './overview-text';
+import { statusWord } from '@/core/ui/feedback/lesson-status';
 
 /** «الحضور»: the last 30 days' totals in one line, then the latest lessons (Riyadh time, students, status chip). */
 export function TeacherAttendanceTab({ attendance }: { attendance: SalesTeacherOverview['attendance'] }) {
@@ -29,7 +30,7 @@ export function TeacherAttendanceTab({ attendance }: { attendance: SalesTeacherO
             key={l.lesson_id}
             title={whenIn(new Date(l.starts_at), RIYADH_TZ, cycle)}
             subtitle={studentsLine(l.students)}
-            trailing={<StatusChip {...lessonStatusStyle[l.status]} size="sm" label={t.enums.lessonStatus[l.status]} />}
+            trailing={<StatusChip {...lessonStatusStyle[l.status]} size="sm" label={statusWord(l.status)} />}
           />
         ))}
       </InsetGroup>

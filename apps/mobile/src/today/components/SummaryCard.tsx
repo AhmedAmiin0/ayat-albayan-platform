@@ -68,7 +68,8 @@ export function SummaryCard({ counts, filter, onFilter }: SummaryCardProps) {
               <AppText
                 numberOfLines={1}
                 adjustsFontSizeToFit
-                minimumFontScale={0.7}
+                minimumFontScale={0.5}
+                maxFontSizeMultiplier={1.6}
                 style={{ alignSelf: 'stretch', textAlign: 'center', fontFamily: type.ui[500], fontSize: type.size['2xs'], lineHeight: 18, color: color.ink3 }}
               >
                 {label}

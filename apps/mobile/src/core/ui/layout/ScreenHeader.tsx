@@ -6,10 +6,10 @@ import { Mark } from '../primitives/Mark';
 import { AppText, type AppTextNode } from '../primitives/AppText';
 
 /**
- * The title's size (owner 2026-10-27: «Header is oversized in all sections»): a screen's title at h3
- * (23pt), a sheet's at h4 (20pt), so the content starts higher, as WhatsApp's tabs.
+ * The title's size (owner 2026-10-27: «Header is oversized in all sections»; 2026-10-28: «still a big
+ * header»): every screen and sheet at h4 (20pt), one header pattern, so the content starts higher.
  */
-const TITLE = { h1: type.size.h3, h2: type.size.h4 } as const;
+const TITLE = type.size.h4;
 
 interface ScreenHeaderProps {
   /** Amiri title, e.g. t.mobile.today. Mobile has no cartouche: this is the screen's one title. */
@@ -61,8 +61,8 @@ export function ScreenHeader({
           style={{
             flexShrink: 1,
             fontFamily: type.display,
-            fontSize: TITLE[size],
-            lineHeight: type.lineHeight(TITLE[size], true),
+            fontSize: TITLE,
+            lineHeight: type.lineHeight(TITLE, true),
             color: color.ink,
           }}
         >

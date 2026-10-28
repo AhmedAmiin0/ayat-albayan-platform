@@ -1,5 +1,5 @@
 import { Fragment } from 'react';
-import { View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { useTheme } from '@/theme';
 import { raisedCard } from '@/core/ui/surface/surface';
 import type { TodayLesson } from '../lib/today-lesson';
@@ -19,7 +19,7 @@ export function RowsCard<L extends TodayLesson>({ lessons, onOpen, compact = fal
     <View style={{ ...raisedCard(color), paddingHorizontal: 16 }}>
       {lessons.map((lesson, i) => (
         <Fragment key={lesson.id}>
-          {i > 0 ? <View style={{ height: 1, backgroundColor: color.rule }} /> : null}
+          {i > 0 ? <View style={{ height: StyleSheet.hairlineWidth, backgroundColor: color.rule }} /> : null}
           <LessonRow lesson={lesson} onOpen={onOpen} compact={compact} />
         </Fragment>
       ))}
