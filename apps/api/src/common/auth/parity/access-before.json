@@ -262,6 +262,7 @@
   "SalesAcademyController.live": ["sales"],
   "SalesAcademyController.students": ["sales"],
   "SalesLessonActionsController.cancel": ["admin","sales"],
+  "SalesLessonActionsController.confirm": ["admin","sales"],
   "SalesLessonActionsController.reschedule": ["admin","sales"],
   "SalesStudentController.details": ["sales"],
   "SalesStudentController.reportPdf": ["sales"],

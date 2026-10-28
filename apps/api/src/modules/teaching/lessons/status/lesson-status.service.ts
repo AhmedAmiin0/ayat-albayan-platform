@@ -12,8 +12,12 @@ import { invalidTransition } from './transition';
 /** Outcomes that only make sense once the lesson has started; `excuse` is allowed any time. */
 const AFTER_START: ReadonlySet<StatusRouteEvent> = new Set(['complete', 'mark_late', 'mark_no_show']);
 
-/** `actor` null = the guardian's WhatsApp «نعم» (Phase 4 webhook): confirmed_by stays null. */
-export type ConfirmInput = { lessonId: string; actor: AuthUser | null };
+/**
+ * `actor` null = the guardian's WhatsApp «نعم» (Phase 4 webhook): confirmed_by stays null. `anyLesson`:
+ * the caller's route already decided who may confirm which lesson (sales' lessons.confirm, any lesson,
+ * owner 2026-10-28), so LessonAccess's admin-or-own-teacher rule is skipped; the teacher route never sets it.
+ */
+export type ConfirmInput = { lessonId: string; actor: AuthUser | null; anyLesson?: true };
 export type StatusInput = LessonStatusRequest & { lessonId: string; actor: AuthUser };
 
 const audit = (lesson: LessonRow, opts: { action: string; after: object }) => ({
@@ -37,9 +41,9 @@ export class LessonStatusService {
   ) {}
 
   /** scheduled → confirmed. Already confirmed → unchanged (a guardian may answer «نعم» twice). */
-  async confirm({ lessonId, actor }: ConfirmInput): Promise<string> {
+  async confirm({ lessonId, actor, anyLesson }: ConfirmInput): Promise<string> {
     const lesson = await this.store.get(lessonId);
-    if (actor) await this.access.assertCanTouch(actor, lesson);
+    if (actor && !anyLesson) await this.access.assertCanTouch(actor, lesson);
     if (lesson.status === 'confirmed') return lesson.id;
     if (!applyLessonEvent(lesson.status, 'confirm')) throw invalidTransition(lesson.status, 'confirm');
     const actorId = actor?.id ?? null;
