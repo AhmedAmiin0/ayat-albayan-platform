@@ -16,7 +16,7 @@ function copy(redis: ReturnType<typeof fakeRedis>, rows: () => Rows) {
   const q = { snapshot: vi.fn(async () => ({ rev: 1, rows: [] })), revision: vi.fn(async () => 1), set: vi.fn(async () => undefined) };
   const store = new ConfigStore(q as unknown as ConfigStoreQueries, 30_000);
   const { cache } = redis.copy();
-  new ConfigCacheBridge(store, cache).onModuleInit();
+  new ConfigCacheBridge(store, cache);
   const svc = new SettingsService(db, 30_000, store);
   (svc as unknown as { shared: SharedCache }).shared = cache;
   return { svc, store, select, cache };
@@ -53,12 +53,11 @@ describe('SettingsService with Redis (two API copies)', () => {
   it('an announcement from another copy is not announced again (no ping-pong)', async () => {
     const redis = fakeRedis();
     const a = copy(redis, () => []);
-    const b = copy(redis, () => []);
+    copy(redis, () => []);
     const deletes = vi.spyOn(redis.server.data, 'delete');
     a.store.invalidate();
     await settle();
     expect(deletes).toHaveBeenCalledTimes(1);
-    expect(b.cache.stats().errors).toBe(0);
   });
 
   it('after its own invalidation a copy reads the database, not the shared rows', async () => {
@@ -70,5 +69,21 @@ describe('SettingsService with Redis (two API copies)', () => {
     stored = 2;
     a.svc.invalidate();
     expect((await a.svc.all()).late_cancel_hours).toBe(2);
+  });
+
+  it('rows are shared for half the TTL and a copy taken from them lives one TTL from the database read', async () => {
+    const redis = fakeRedis();
+    const a = copy(redis, () => [{ key: 'late_cancel_hours', value: 12 }]);
+    const b = copy(redis, () => [{ key: 'late_cancel_hours', value: 12 }]);
+    await a.svc.all(0);
+    await settle();
+    expect(redis.server.data.get('ab:cache:settings:rows')?.expires).toBe(15_000);
+    redis.server.now = 10_000;
+    await b.svc.all(10_000);
+    await b.svc.all(29_999);
+    expect(b.select).not.toHaveBeenCalled();
+    redis.server.now = 30_000;
+    await b.svc.all(30_000);
+    expect(b.select).toHaveBeenCalledTimes(1);
   });
 });

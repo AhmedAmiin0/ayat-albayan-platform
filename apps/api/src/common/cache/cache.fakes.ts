@@ -7,10 +7,17 @@ type Listener = (channel: string, message: string) => void;
 
 /**
  * Tests only: one in-memory "Redis server" that several API copies connect to (no Redis in CI).
- * `down = true` makes every command reject, as a dead Redis does; `now` drives the TTLs.
+ * `down = true` makes every command reject, as a dead Redis does; `now` drives the TTLs and every clock.
  */
 export function fakeRedis() {
-  const server = { now: 0, down: false, data: new Map<string, { value: string; expires: number }>(), sets: [] as string[] };
+  const server = {
+    now: 0,
+    down: false,
+    data: new Map<string, { value: string; expires: number }>(),
+    sets: [] as string[],
+    /** Runs inside every PUBLISH before the message goes out (a race between a delete and its announcement). */
+    beforePublish: undefined as (() => Promise<void>) | undefined,
+  };
   const listeners: { channel: string; listener: Listener }[] = [];
   const up = (): void => {
     if (server.down) throw new Error('connect ECONNREFUSED');
@@ -36,6 +43,7 @@ export function fakeRedis() {
     },
     publish: async (channel, message) => {
       up();
+      await server.beforePublish?.();
       for (const l of listeners) if (l.channel === channel) l.listener(channel, message);
     },
     ready: () => !server.down,

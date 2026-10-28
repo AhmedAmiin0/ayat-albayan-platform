@@ -52,8 +52,7 @@ describe('AuthGuard + routes (R-AUTH-01, R-NFR-07, dynamic roles)', () => {
   it('GET /health is public', async () => {
     const res = await get('/health');
     expect(res.statusCode).toBe(200);
-    // REDIS_URL is unset here: the shared cache stays in this process.
-    expect(res.json()).toMatchObject({ status: 'ok', cache: { mode: 'memory', connected: true } });
+    expect(res.json()).toEqual({ status: 'ok' });
   });
 
   it('GET /auth/me without a token is 401', async () => {

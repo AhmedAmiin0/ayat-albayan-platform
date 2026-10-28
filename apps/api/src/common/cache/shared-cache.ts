@@ -2,7 +2,7 @@ import { randomUUID } from 'node:crypto';
 import { Inject, Injectable, Logger, Optional, type OnModuleDestroy, type OnModuleInit } from '@nestjs/common';
 import { CacheGuard } from './cache-guard';
 import type { CacheTopic } from './cache-keys';
-import type { CacheMode, CacheStore } from './cache-store';
+import { parseJson, parseStored, type CacheEntry, type CacheStore, type Stored } from './cache-store';
 
 export const CACHE_STORE = Symbol('CACHE_STORE');
 const CHANNEL = 'invalidate';
@@ -10,16 +10,13 @@ const CHANNEL = 'invalidate';
 const MAX_TTL_MS = 300_000;
 /** A slower copy may store a pre-write value just after the delete: the writer deletes again after this. */
 export const SECOND_DELETE_MS = 1_000;
+/**
+ * After a change (a write here or another process's announcement) reads skip the shared copy this long:
+ * a copy whose load began before the write may store the old value after the first delete, and only the
+ * second delete (SECOND_DELETE_MS later) removes it. Without this window a reader could keep it a full TTL.
+ */
+export const FRESH_AFTER_CHANGE_MS = 2 * SECOND_DELETE_MS;
 const log = new Logger('SharedCache');
-
-/** A stored value or message that is not JSON reads as a miss (never a thrown request). */
-function parseJson<T>(raw: string): { value: T } | null {
-  try {
-    return { value: JSON.parse(raw) as T };
-  } catch {
-    return null;
-  }
-}
 
 interface CacheRead<T> {
   key: string;
@@ -35,16 +32,6 @@ interface CacheChange {
   prefix?: string;
 }
 
-export interface CacheStats {
-  mode: CacheMode;
-  connected: boolean;
-  hits: number;
-  misses: number;
-  errors: number;
-  /** hits / (hits + misses), null before the first shared read. */
-  hitRate: number | null;
-}
-
 /**
  * The cache shared by the API copies and the worker (owner 2026-10-27). Each reader keeps its own
  * in-process copy as before; on a miss it asks here before the database. With Redis (REDIS_URL) the
@@ -58,8 +45,7 @@ export class SharedCache implements OnModuleInit, OnModuleDestroy {
   private readonly handlers = new Map<CacheTopic, (() => void)[]>();
   private epoch = 0;
   private pending = 0;
-  private hits = 0;
-  private misses = 0;
+  private freshUntil = 0;
 
   constructor(
     @Inject(CACHE_STORE) private readonly store: CacheStore,
@@ -72,23 +58,26 @@ export class SharedCache implements OnModuleInit, OnModuleDestroy {
 
   /** The shared copy when there is a good one, else load() (stored for ttlMs). ttlMs 0 = never cached. */
   async read<T>(input: CacheRead<T>): Promise<T> {
-    if (!this.shared || input.ttlMs <= 0) return input.load();
-    // While this process's own invalidation is in flight the shared copy may still be the old one.
-    if (!input.fresh && this.pending === 0) {
+    return (await this.readEntry(input)).value;
+  }
+
+  /** As read(), with the value's age: a caller's local copy must expire one TTL after the database read. */
+  async readEntry<T>(input: CacheRead<T>): Promise<CacheEntry<T>> {
+    if (!this.shared || input.ttlMs <= 0) return { value: await input.load(), age: 0 };
+    // Just after a change (here or elsewhere) the shared copy may still be the old one: read the database.
+    if (!input.fresh && !this.changing()) {
       const raw = await this.guard.run(() => this.store.get(input.key), null);
-      const hit = raw === null ? null : parseJson<T>(raw);
-      if (hit) {
-        this.hits += 1;
-        return hit.value;
-      }
+      const hit = raw === null ? null : parseStored<T>(raw);
+      if (hit) return { value: hit.v, age: Math.max(0, this.guard.now() - hit.at) };
     }
-    this.misses += 1;
     const epoch = this.epoch;
+    const at = this.guard.now();
     const value = await input.load();
     // A write announced while this load ran: its value may predate the write, so it is not shared.
     const ttlMs = Math.min(input.ttlMs, MAX_TTL_MS);
-    if (epoch === this.epoch) void this.guard.run(() => this.store.set(input.key, JSON.stringify(value), ttlMs), undefined);
-    return value;
+    const stored = JSON.stringify({ at, v: value } satisfies Stored<T>);
+    if (epoch === this.epoch) void this.guard.run(() => this.store.set(input.key, stored, ttlMs), undefined);
+    return { value, age: 0 };
   }
 
   /** After a write: drop the shared keys, then tell the other processes. Never throws. */
@@ -102,6 +91,7 @@ export class SharedCache implements OnModuleInit, OnModuleDestroy {
       await this.guard.attempt(() => this.store.publish(CHANNEL, message), undefined);
     } finally {
       this.pending -= 1;
+      this.freshUntil = this.guard.now() + FRESH_AFTER_CHANGE_MS;
     }
     if (change.keys?.length || change.prefix) setTimeout(() => void this.drop(change), SECOND_DELETE_MS).unref();
   }
@@ -117,12 +107,6 @@ export class SharedCache implements OnModuleInit, OnModuleDestroy {
     this.handlers.set(topic, [...(this.handlers.get(topic) ?? []), handler]);
   }
 
-  stats(): CacheStats {
-    const reads = this.hits + this.misses;
-    const hitRate = reads === 0 ? null : Math.round((this.hits / reads) * 1000) / 1000;
-    return { mode: this.store.mode, connected: this.store.ready(), hits: this.hits, misses: this.misses, errors: this.guard.errors, hitRate };
-  }
-
   onModuleInit(): void {
     // Not awaited: with Redis down the SUBSCRIBE waits for it, and the boot never does.
     this.store.subscribe(CHANNEL, (m) => this.receive(m)).catch((e: unknown) => this.guard.fail(e));
@@ -132,10 +116,15 @@ export class SharedCache implements OnModuleInit, OnModuleDestroy {
     await this.store.close().catch(() => undefined);
   }
 
+  private changing(): boolean {
+    return this.pending > 0 || this.guard.now() < this.freshUntil;
+  }
+
   private receive(message: string): void {
     const parsed = parseJson<{ origin?: unknown; topic?: unknown }>(message)?.value;
     if (!parsed || parsed.origin === this.origin || typeof parsed.topic !== 'string') return;
     this.epoch += 1;
+    this.freshUntil = this.guard.now() + FRESH_AFTER_CHANGE_MS;
     for (const handler of this.handlers.get(parsed.topic as CacheTopic) ?? []) {
       try {
         handler();

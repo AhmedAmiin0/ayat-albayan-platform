@@ -19,3 +19,29 @@ export interface CacheStore {
   subscribe(channel: string, listener: CacheListener): Promise<void>;
   close(): Promise<void>;
 }
+
+/** A stored value or message that is not JSON reads as a miss (never a thrown request). */
+export function parseJson<T>(raw: string): { value: T } | null {
+  try {
+    return { value: JSON.parse(raw) as T };
+  } catch {
+    return null;
+  }
+}
+
+/** What Redis holds: the value and when its load began (its age caps every local copy taken from it). */
+export interface Stored<T> {
+  at: number;
+  v: T;
+}
+
+export function parseStored<T>(raw: string): Stored<T> | null {
+  const s = parseJson<Partial<Stored<T>>>(raw)?.value;
+  return s && typeof s === 'object' && typeof s.at === 'number' && 'v' in s ? (s as Stored<T>) : null;
+}
+
+export interface CacheEntry<T> {
+  value: T;
+  /** ms since the value's database read began (0 = read now): a local copy lives one TTL minus this. */
+  age: number;
+}

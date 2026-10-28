@@ -30,7 +30,8 @@ export class CacheGuard {
 
   constructor(
     private readonly log: Pick<Logger, 'warn'> = new Logger('SharedCache'),
-    private readonly now: () => number = Date.now,
+    /** The clock (also SharedCache's: change windows and the age of a shared value). */
+    readonly now: () => number = Date.now,
   ) {}
 
   async run<T>(op: () => Promise<T>, fallback: T): Promise<T> {

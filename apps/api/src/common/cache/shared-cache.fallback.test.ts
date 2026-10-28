@@ -13,8 +13,7 @@ describe('SharedCache when Redis is down or slow', () => {
     await expect(a.cache.read({ key: 'k', ttlMs: 30_000, load })).resolves.toBe('from-db');
     await settle();
     expect(load).toHaveBeenCalledTimes(2);
-    expect(a.cache.stats()).toMatchObject({ connected: false, hits: 0 });
-    expect(a.cache.stats().errors).toBeGreaterThan(0);
+    expect(a.guard.errors).toBeGreaterThan(0);
   });
 
   it('a write never throws while Redis is down', async () => {

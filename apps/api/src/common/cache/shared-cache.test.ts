@@ -18,7 +18,6 @@ describe('SharedCache without Redis (REDIS_URL unset)', () => {
     expect(load).toHaveBeenCalledTimes(2);
     expect(set).not.toHaveBeenCalled();
     expect(publish).not.toHaveBeenCalled();
-    expect(cache.stats()).toMatchObject({ mode: 'memory', connected: true, hits: 0, misses: 0, hitRate: null });
   });
 });
 
@@ -32,7 +31,6 @@ describe('SharedCache with Redis (two API copies)', () => {
     await settle();
     expect(await b.cache.read({ key: 'settings:rows', ttlMs: 30_000, load })).toEqual([{ key: 'x', value: 1 }]);
     expect(load).toHaveBeenCalledTimes(1);
-    expect(b.cache.stats()).toMatchObject({ mode: 'redis', hits: 1, misses: 0, hitRate: 1 });
   });
 
   it('the shared copy expires after its TTL', async () => {
