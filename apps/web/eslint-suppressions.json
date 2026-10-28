@@ -554,11 +554,6 @@
       "count": 1
     }
   },
-  "src/features/messaging/inbox/threads/list/ThreadRow.tsx": {
-    "ab/module-boundaries": {
-      "count": 1
-    }
-  },
   "src/features/messaging/inbox/threads/pane/ThreadPane.tsx": {
     "ab/module-boundaries": {
       "count": 2

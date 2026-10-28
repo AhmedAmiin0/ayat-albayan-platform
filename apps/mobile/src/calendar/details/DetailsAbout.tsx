@@ -1,12 +1,11 @@
-import { localizedName } from '@ab/shared';
 import { conflictLine } from '@/booking/shared/booking-errors';
 import { t } from '@/core/lib/i18n/i18n';
-import { locale } from '@/core/lib/i18n/locale';
 import { usePlatformClassroom } from '@/core/lib/query/public-config';
 import { DetailsFact, DetailsGroup, DetailsLine } from './DetailsGroup';
 import { DetailsLink } from './DetailsLink';
 import type { DetailsLesson, DetailsRole } from './details-text';
 import { useClockCycle } from '@/core/lib/clock';
+import { DetailsTeacher } from './DetailsTeacher';
 
 /** Neither field sent (sales' «الجدول» never gets the way in): unknown, not «لا يوجد رابط». */
 const linkKnown = (l: DetailsLesson): boolean => l.meeting_link !== undefined || l.platform_classroom !== undefined;
@@ -19,16 +18,12 @@ const linkKnown = (l: DetailsLesson): boolean => l.meeting_link !== undefined ||
 export function DetailsAbout({ lesson, role }: { lesson: DetailsLesson; role: DetailsRole }) {
   const cycle = useClockCycle();
   const platform = usePlatformClassroom(lesson.platform_classroom);
-  const teacher = localizedName(
-    { ar: lesson.teacher.display_name_ar, en: lesson.teacher.display_name_en ?? null },
-    locale,
-  );
   // The override reason and the generated clashes are the admin's (no teacher screen shows them).
   const admin = role === 'admin';
   const conflicts = admin ? (lesson.conflicts ?? []) : [];
   return (
     <DetailsGroup label={t.lessons.sheet.about}>
-      <DetailsFact label={t.schedule.teacher}>{teacher}</DetailsFact>
+      <DetailsFact label={t.schedule.teacher}><DetailsTeacher teacher={lesson.teacher} photo={admin} /></DetailsFact>
       {linkKnown(lesson) ? <DetailsLink link={lesson.meeting_link ?? null} platform={platform} /> : null}
       {admin && lesson.override_reason ? (
         <DetailsFact label={t.booking.overrideReason}>{lesson.override_reason}</DetailsFact>

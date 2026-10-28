@@ -25,6 +25,8 @@ export interface OverviewTeacher {
   tz: string;
   status: TeacherStatus;
   meeting_link: string | null;
+  /** The teacher's photo, a short-lived signed URL; null/absent = initials. */
+  avatar_url?: string | null;
   /** Students with this teacher whose status is trial | active. */
   students_count: number;
   max_students: number | null;

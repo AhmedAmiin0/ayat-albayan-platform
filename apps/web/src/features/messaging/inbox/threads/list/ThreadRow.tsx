@@ -1,10 +1,9 @@
 import { formatPhone, subscriptionStatusStyle, type ThreadView } from '@ab/shared';
 import { Link } from '@tanstack/react-router';
-import { Icon } from '@/components/ui/display/icon';
+import { Avatar } from '@/components/ui/display/avatar';
 import { Ltr } from '@/components/ui/display/ltr';
 import { NuqtaGlyph } from '@/components/ui/display/nuqta-glyph';
 import { StatusChip } from '@/components/ui/display/status-chip';
-import { initialOf } from '@/features/sales/leads/format';
 import { t } from '@/lib/i18n/i18n';
 import { cn } from '@/lib/utils';
 import { DeliveryTicks } from '../../messages/components/DeliveryTicks';
@@ -78,16 +77,11 @@ export function ThreadRow({ thread: th, search, active }: ThreadRowProps) {
         aria-label={label}
         aria-current={active ? 'page' : undefined}
         className={cn(
-          'grid grid-cols-[38px_minmax(0,1fr)_auto] items-center gap-x-3 gap-y-1 border-b border-rule px-2.5 py-3 text-ink no-underline',
+          'grid grid-cols-[36px_minmax(0,1fr)_auto] items-center gap-x-3 gap-y-1 border-b border-rule px-2.5 py-3 text-ink no-underline',
           'transition-colors duration-[120ms] hover:bg-sunk/75 aria-[current=page]:bg-gold-wash/60',
         )}
       >
-        <span
-          aria-hidden="true"
-          className="row-span-3 grid size-[38px] place-items-center self-start rounded-full bg-gold-wash font-display text-lg font-bold shadow-[inset_0_0_0_1px_var(--gold)]"
-        >
-          {initialOf(th.display_name) || <Icon name="phone" className="size-4 text-ink-3" />}
-        </span>
+        <Avatar name={th.display_name ?? ''} id={th.phone_e164} size="md" decorative className="row-span-3 self-start" />
         <span className="flex min-w-0 items-baseline gap-2">
           {unread && <i aria-hidden="true" className="size-[7px] shrink-0 self-center rounded-full bg-act" />}
           <span className={cn('min-w-0 truncate', unread ? 'font-bold' : 'font-semibold')}>{name}</span>

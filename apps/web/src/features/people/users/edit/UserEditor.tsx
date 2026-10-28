@@ -13,6 +13,7 @@ import { userErrorText } from '../errors';
 import { ResetPasswordDialog } from '../actions/ResetPasswordDialog';
 import { UserActions, type ActionMode } from '../actions/UserActions';
 import { UserEditFields } from './UserEditFields';
+import { UserPhoto } from './UserPhoto';
 import { UserSummary } from './UserSummary';
 import type { FormErrors } from '../validation';
 
@@ -72,6 +73,7 @@ export function UserEditor({ user, options, canWrite, onClose, onDone }: UserEdi
       }
     >
       <div className="grid gap-4">
+        <UserPhoto user={user} canWrite={canWrite} />
         <UserSummary user={user} />
         <form id={formId} className="grid gap-4" onSubmit={submit} noValidate>
           <UserEditFields form={form} onChange={setForm} errors={errors} options={options} readOnly={!canWrite} roleLocked={!!user.linked} />

@@ -1,0 +1,1 @@
+export { StaffPhotoControl } from './StaffPhotoControl';

@@ -7027,5 +7027,21 @@
       "copyUrl": "Copy the URL",
       "urlCopied": "URL copied"
     }
+  },
+  "staffPhoto": {
+    "title": "Photo",
+    "change": "Change photo",
+    "remove": "Remove photo",
+    "uploading": "Uploading the photo…",
+    "removing": "Removing the photo…",
+    "saved": "Photo saved.",
+    "removed": "Photo removed.",
+    "confirmRemove": "Remove {name}'s photo? Their initials will show instead.",
+    "hint": "A square JPG, PNG or WebP image, up to 2 MB.",
+    "photoOf": "Photo of {name}",
+    "errors": {
+      "avatar_not_staff": "Student and guardian accounts have no photo.",
+      "generic": "Could not save the photo. Try again."
+    }
   }
 }
