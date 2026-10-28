@@ -773,6 +773,128 @@ export type Database = {
           },
         ];
       };
+      course_pause_lessons: {
+        Row: {
+          chargeable_before: boolean;
+          kind: string;
+          lesson_id: string;
+          pause_id: string;
+        };
+        Insert: {
+          chargeable_before: boolean;
+          kind: string;
+          lesson_id: string;
+          pause_id: string;
+        };
+        Update: {
+          chargeable_before?: boolean;
+          kind?: string;
+          lesson_id?: string;
+          pause_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'course_pause_lessons_lesson_id_fkey';
+            columns: ['lesson_id'];
+            isOneToOne: false;
+            referencedRelation: 'lessons';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'course_pause_lessons_pause_id_fkey';
+            columns: ['pause_id'];
+            isOneToOne: false;
+            referencedRelation: 'course_pauses';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      course_pauses: {
+        Row: {
+          created_at: string;
+          created_by: string | null;
+          extended_days: number | null;
+          from_date: string;
+          id: string;
+          reason: string | null;
+          resumed_at: string | null;
+          resumed_by: string | null;
+          rule_ids: string[];
+          shared_rule_ids: string[];
+          started_at: string | null;
+          student_id: string;
+          student_status_before: Database['public']['Enums']['student_status'];
+          subscription_id: string | null;
+          subscription_status_before: Database['public']['Enums']['subscription_status'] | null;
+          until_date: string | null;
+        };
+        Insert: {
+          created_at?: string;
+          created_by?: string | null;
+          extended_days?: number | null;
+          from_date: string;
+          id?: string;
+          reason?: string | null;
+          resumed_at?: string | null;
+          resumed_by?: string | null;
+          rule_ids?: string[];
+          shared_rule_ids?: string[];
+          started_at?: string | null;
+          student_id: string;
+          student_status_before: Database['public']['Enums']['student_status'];
+          subscription_id?: string | null;
+          subscription_status_before?: Database['public']['Enums']['subscription_status'] | null;
+          until_date?: string | null;
+        };
+        Update: {
+          created_at?: string;
+          created_by?: string | null;
+          extended_days?: number | null;
+          from_date?: string;
+          id?: string;
+          reason?: string | null;
+          resumed_at?: string | null;
+          resumed_by?: string | null;
+          rule_ids?: string[];
+          shared_rule_ids?: string[];
+          started_at?: string | null;
+          student_id?: string;
+          student_status_before?: Database['public']['Enums']['student_status'];
+          subscription_id?: string | null;
+          subscription_status_before?: Database['public']['Enums']['subscription_status'] | null;
+          until_date?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'course_pauses_created_by_fkey';
+            columns: ['created_by'];
+            isOneToOne: false;
+            referencedRelation: 'profiles';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'course_pauses_resumed_by_fkey';
+            columns: ['resumed_by'];
+            isOneToOne: false;
+            referencedRelation: 'profiles';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'course_pauses_student_id_fkey';
+            columns: ['student_id'];
+            isOneToOne: false;
+            referencedRelation: 'students';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'course_pauses_subscription_id_fkey';
+            columns: ['subscription_id'];
+            isOneToOne: false;
+            referencedRelation: 'subscriptions';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       crm_media_copy_failures: {
         Row: {
           attempts: number;
@@ -5058,6 +5180,10 @@ export type Database = {
       };
       config_seed: { Args: { entries: Json; registry_version: number }; Returns: Json };
       config_set: { Args: { actor: string; changes: Json }; Returns: Json };
+      course_pause_begin: { Args: { p: Json }; Returns: Json };
+      course_pause_resume: { Args: { p: Json }; Returns: Json };
+      course_pause_set_until: { Args: { p: Json }; Returns: Json };
+      course_pause_start: { Args: { p: Json }; Returns: Json };
       course_change_result: { Args: { p_first: string }; Returns: Json };
       create_booking: { Args: { p_actor: string; p_booking: Json }; Returns: Json };
       create_instant_lesson: { Args: { p_actor: string; p_booking: Json }; Returns: Json };

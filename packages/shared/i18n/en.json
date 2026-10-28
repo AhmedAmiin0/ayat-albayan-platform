@@ -5085,7 +5085,8 @@
       "numbers.manage": "Manage WhatsApp numbers",
       "notifications.manage": "Manage notifications",
       "saved_replies.manage": "Manage shared quick replies",
-      "student_channels.monitor": "Read student–teacher channels"
+      "student_channels.monitor": "Read student–teacher channels",
+      "courses.pause": "Pause and resume any student's course"
     },
     "hints": {
       "students.check_registration": "Search by the guardian's phone or the student's name or code; shows only the name, code, status and teacher.",
@@ -5094,7 +5095,8 @@
       "numbers.manage": "Add and edit WhatsApp numbers, save their credentials, import the current setup and change the setup source. Does not open sending.",
       "notifications.manage": "Turn notifications on or off and set their timing, channels and sending number. Does not open sending.",
       "saved_replies.manage": "Add, edit, delete and reorder the shared quick replies. Everyone manages their own replies without this permission.",
-      "lessons.confirm": "Confirm a lesson after the family's «yes» in the chat, for any scheduled lesson that has not ended. No message is sent."
+      "lessons.confirm": "Confirm a lesson after the family's «yes» in the chat, for any scheduled lesson that has not ended. No message is sent.",
+      "courses.pause": "Stops the student's upcoming lessons during the pause without counting them from the package or paying the teacher, and extends the package by the paused days on resume. No message is sent."
     },
     "page": {
       "title": "Roles and permissions",
@@ -7007,6 +7009,52 @@
       "saved": "Settings saved",
       "liveRefused": "The test build accepts Stripe test keys only (rk_test_ or sk_test_).",
       "invalidSecret": "The webhook secret starts with whsec_."
+    }
+  },
+  "coursePause": {
+    "action": "Pause",
+    "title": "Pause the course",
+    "from": "From",
+    "until": "Last paused day (optional)",
+    "untilHint": "Lessons come back the day after it. Leave empty to keep the course paused until «Resume course».",
+    "reason": "Reason (optional)",
+    "reasonHint": "e.g. the family is travelling",
+    "preview": {
+      "zero": "No upcoming lessons in this period; the package is extended by the paused days",
+      "one": "1 lesson will be cancelled; the package is extended by the paused days",
+      "two": "2 lessons will be cancelled; the package is extended by the paused days",
+      "few": "{n} lessons will be cancelled; the package is extended by the paused days",
+      "other": "{n} lessons will be cancelled; the package is extended by the paused days"
+    },
+    "previewLoading": "Counting lessons…",
+    "noMessage": "No message is sent to the family; tell them in the chat.",
+    "confirm": "Pause course",
+    "done": "Course paused",
+    "bannerUntil": "The course is paused until {date}",
+    "bannerOpen": "The course is paused until resumed",
+    "bannerFrom": "The pause starts on {date}",
+    "bannerReason": "Reason: {reason}",
+    "resume": "Resume",
+    "resumeTitle": "Resume the course now?",
+    "resumeBody": "The cancelled lessons come back on the same days and times from today, and the package is extended by the days already paused (none if the pause has not started).",
+    "resumeConfirm": "Resume course",
+    "resumed": "Course resumed",
+    "resumedConflicts": "Course resumed. Lessons with a clash to review in the schedule: {n}",
+    "changeUntil": "Change the end of the pause",
+    "changeUntilTitle": "End of the pause",
+    "save": "Save",
+    "saved": "End of the pause saved",
+    "history": "Pause history",
+    "historyRange": "{from} – {until}",
+    "historyOpenEnd": "until resumed",
+    "historyDays": "Days added to the package: {n}",
+    "errors": {
+      "date_in_past": "A pause cannot start on a past day",
+      "invalid_range": "Pick a last day on or after the start day",
+      "already_paused": "The course is already paused",
+      "pause_not_open": "This pause has already ended",
+      "student_not_found": "Student not found",
+      "generic": "Could not save the pause. Try again."
     }
   }
 }

@@ -61,10 +61,8 @@ export const subscriptionCreateSchema = z.object({
   clientRequestId: z.uuid().optional(), // rule 8: a retry of the same form returns its package
 });
 
-/** PATCH /subscriptions/:id. Only what an admin may set; price and size never change. */
+/** PATCH /subscriptions/:id: no price, size or `paused` (a pause is the course pause, docs/11 §7b; the key is dropped). */
 export const subscriptionUpdateSchema = z.object({
-  /** true → paused; false → back to the derived status (subscriptionStatusFor). */
-  paused: z.boolean().optional(),
   renewsOn: localDate.nullable().optional(),
   notes: optionalText,
 });

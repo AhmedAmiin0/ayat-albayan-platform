@@ -513,6 +513,7 @@
     "chat-lists.sql.spec.ts",
     "config-expand.sql.spec.ts",
     "config-seed.sql.spec.ts",
+    "course-pause.sql.spec.ts",
     "edit-time.sql.spec.ts",
     "google-sync.sql.spec.ts",
     "inbox-realtime.sql.spec.ts",

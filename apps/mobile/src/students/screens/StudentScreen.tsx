@@ -12,6 +12,7 @@ import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { ltr } from '@/core/ui/primitives/Ltr';
 import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
+import { CoursePauseSection } from '../course-pause/CoursePauseSection';
 import { BalanceCard } from '../profile/BalanceCard';
 import { GuardianCard } from '../profile/GuardianCard';
 import { RenewButton } from '../profile/RenewButton';
@@ -27,7 +28,8 @@ const back = () => (router.canGoBack() ? router.back() : router.replace('/studen
  * recorded from the balance card, «جدّد الاشتراك» once the package ended; editing, adding and merging stay on the web.
  * «موعد تجريبي جديد» and the trial dates' history in TrialDateSection (R-STU-05); «عرض سجل الحضور» opens the
  * month-by-month attendance table (owner 2026-10-28, the same screen as sales' «تفاصيل الطالب»). The compact
- * h2 title (owner 2026-10-28: «the student screen still has a big header»): the file starts higher.
+ * h2 title (owner 2026-10-28: «the student screen still has a big header»): the file starts higher. «إيقاف مؤقت»
+ * (courses.pause) under the status, and the banner while the course is paused.
  */
 export function StudentScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -65,6 +67,7 @@ export function StudentScreen() {
       />
       <ScrollView style={{ flex: 1 }} contentContainerStyle={{ gap: 20, paddingBottom: 32 }}>
         <StatusChanger student={student} />
+        <CoursePauseSection studentId={student.id} />
         <RenewButton student={student} />
         <Button
           variant="secondary"

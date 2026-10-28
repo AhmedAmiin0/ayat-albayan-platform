@@ -9,7 +9,6 @@ export {
   PAGE_SIZE,
   type QuoteResponse,
   quoteSubscription,
-  setPaused,
   studentBalanceQuery,
   type StudentBalanceView,
   studentSubscriptionsQuery,
