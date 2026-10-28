@@ -1,4 +1,4 @@
-import { PACKAGE_SIZES, paymentState, subscriptionStatusStyle } from '@ab/shared';
+import { PACKAGE_SIZES, subscriptionStatusStyle } from '@ab/shared';
 import { createColumnHelper } from '@tanstack/react-table';
 import type { DataTableFeatures } from '@/components/DataTable';
 import { Button } from '@/components/ui/form/button';
@@ -9,6 +9,7 @@ import { cn } from '@/lib/utils';
 import { Amount } from './balance/Amount';
 import type { SubscriptionView } from './api';
 import { moneyText, packageName, progressOf } from './format';
+import { partPaidText } from './payment-lines';
 
 const col = createColumnHelper<DataTableFeatures, SubscriptionView>();
 
@@ -75,12 +76,16 @@ export function subscriptionColumns({ onPay, onPause, onOpen }: Handlers) {
     }),
     col.accessor('status', {
       header: () => t.subscriptions.status,
-      cell: (c) => (
-        <div className="grid justify-items-start gap-0.5">
-          <StatusChip size="sm" {...subscriptionStatusStyle[c.getValue()]} label={t.enums.subscriptionStatus[c.getValue()]} />
-          {paymentState(c.row.original) === 'partial' && <span className="text-2xs font-semibold text-act">{t.finance.partiallyPaid}</span>}
-        </div>
-      ),
+      cell: (c) => {
+        // «Why is this unpaid» (owner 2026-10-28): 80 of 81 stays unpaid; the line says what is left.
+        const part = partPaidText(c.row.original);
+        return (
+          <div className="grid justify-items-start gap-0.5">
+            <StatusChip size="sm" {...subscriptionStatusStyle[c.getValue()]} label={t.enums.subscriptionStatus[c.getValue()]} />
+            {part && <span className="text-2xs font-semibold text-act">{part}</span>}
+          </div>
+        );
+      },
       meta: { className: 'max-sm:order-2', sortKey: 'status' },
     }),
     col.display({
