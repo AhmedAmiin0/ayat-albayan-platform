@@ -2,6 +2,7 @@ import type { StudentRecordingsPage } from '@ab/shared';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { useMemo } from 'react';
 import { apiFetch, toQueryString } from '@/core/lib/http/api';
+import { usePagedActions, withTracked } from '@/core/lib/query/paged-result';
 import { flattenPages, nextPageParam } from '@/core/lib/query/paging';
 import { listKey } from '@/core/lib/query/query-keys';
 
@@ -27,12 +28,10 @@ export function useRecordings(studentId: string, params: Record<string, string |
   });
   const pages = query.data?.pages;
   const items = useMemo(() => flattenPages(pages ?? []), [pages]);
-  const loadMore = () => {
-    if (query.hasNextPage && !query.isFetchingNextPage) void query.fetchNextPage();
-  };
+  const { loadMore, refresh } = usePagedActions(query);
   const loadPage: LoadPage = (page) => apiFetch<StudentRecordingsPage>(`${path}${toQueryString({ ...params, page, pageSize: PAGE_SIZE })}`);
   const freshUrl = (id: string) => freshRecordingUrl(loadPage, pages ?? [], id);
-  return { ...query, items, total: pages?.[0]?.total ?? 0, loadMore, refresh: () => void query.refetch(), freshUrl };
+  return withTracked(query, { items, total: pages?.[0]?.total ?? 0, loadMore, refresh, freshUrl });
 }
 
 type LoadPage = (page: number) => Promise<StudentRecordingsPage>;

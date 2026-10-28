@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import type { ThreadView } from '@ab/shared';
 import { Pressable, View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
@@ -20,7 +21,7 @@ interface ForwardRowProps {
  * One chat in the forward picker, a 56pt checkbox row. Outside its 24 h window it says so but stays
  * selectable: the server decides, and answers «skipped» with the reason.
  */
-export function ForwardRow({ thread: th, checked, disabled, onToggle }: ForwardRowProps) {
+export const ForwardRow = memo(function ForwardRow({ thread: th, checked, disabled, onToggle }: ForwardRowProps) {
   const { color } = useTheme();
   const name = chatName(th);
   const closed = !th.session_open;
@@ -88,4 +89,4 @@ export function ForwardRow({ thread: th, checked, disabled, onToggle }: ForwardR
       </View>
     </Pressable>
   );
-}
+});

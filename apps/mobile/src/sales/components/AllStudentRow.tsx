@@ -1,6 +1,6 @@
 import { studentStatusStyle, type SalesStudentView } from '@ab/shared';
 import { router } from 'expo-router';
-import { useState } from 'react';
+import { memo, useState } from 'react';
 import { AccessibilityInfo, View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { useTreeBase } from '@/core/nav/tree-base';
@@ -22,7 +22,7 @@ const S = t.sales.allStudents;
  * the family's chat is a button there); the admin tree has no «تفاصيل الطالب», so there a row opens the
  * family's chat, and one with no phone says so under the row.
  */
-export function AllStudentRow({ student }: { student: SalesStudentView }) {
+export const AllStudentRow = memo(function AllStudentRow({ student }: { student: SalesStudentView }) {
   const { color } = useTheme();
   const base = useTreeBase();
   const [tapped, setTapped] = useState(false);
@@ -61,4 +61,4 @@ export function AllStudentRow({ student }: { student: SalesStudentView }) {
       trailing={<StatusChip {...studentStatusStyle[student.status]} label={t.enums.studentStatus[student.status]} size="sm" />}
     />
   );
-}
+});
