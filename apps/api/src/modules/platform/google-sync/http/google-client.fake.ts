@@ -8,6 +8,7 @@ import {
   type GoogleEvent,
   type GoogleEventBody,
   type GoogleFileMeta,
+  type GoogleListedEvent,
   type GoogleOAuth,
   type Rows,
 } from '../google-client.port';
@@ -53,6 +54,10 @@ export class FakeGoogle implements GoogleClient {
   async getEvent(ref: EventRef): Promise<GoogleEvent | null> {
     this.call('getEvent', `${ref.calendarId}/${ref.eventId}`);
     return this.cal(ref.calendarId).get(ref.eventId) ?? null;
+  }
+  async listEvents(input: { calendarId: string; timeMin: string; timeMax: string }): Promise<GoogleListedEvent[]> {
+    this.call('listEvents', input.calendarId);
+    return [...this.cal(input.calendarId).values()].filter((e) => e.end.dateTime > input.timeMin && e.start.dateTime < input.timeMax);
   }
   async insertEvent(input: { calendarId: string; event: GoogleEventBody }) {
     this.call('insertEvent', input.calendarId);

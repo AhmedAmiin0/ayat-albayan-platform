@@ -63,3 +63,22 @@ test('the default config is app.json’s (plus the FCM file)', () => {
   expect(normal.ios?.bundleIdentifier).toBe(app.expo.ios.bundleIdentifier);
   expect(configFor('preview').android?.package).toBe(app.expo.android.package);
 });
+
+const FCM_FILE = (): string => process.env.GOOGLE_SERVICES_JSON ?? './google-services.json';
+
+test('the normal config is exactly app.json plus the Firebase file (the stripe-test variant changed nothing)', () => {
+  const expected = { ...app.expo, android: { ...app.expo.android, googleServicesFile: FCM_FILE() } };
+  expect(configFor(undefined)).toStrictEqual(expected);
+  expect(configFor('preview')).toStrictEqual(expected);
+  expect(JSON.stringify(configFor(undefined))).toBe(JSON.stringify(expected));
+});
+
+test('the stripe-test variant has no googleServicesFile (no FCM push); the rest of android is the normal one', () => {
+  const normal = configFor(undefined);
+  const android = configFor('stripetest').android ?? {};
+  expect('googleServicesFile' in android).toBe(false);
+  expect(normal.android?.googleServicesFile).toBe(FCM_FILE());
+  const { googleServicesFile, ...rest } = normal.android ?? {};
+  expect(googleServicesFile).toBeDefined();
+  expect(android).toStrictEqual({ ...rest, package: `${app.expo.android.package}.stripetest` });
+});

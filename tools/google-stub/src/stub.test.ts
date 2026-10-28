@@ -44,6 +44,16 @@ describe('google-stub', () => {
     expect((await fetch(`${url}/${ev.id}`, { method: 'DELETE', headers: AUTH })).status).toBe(410);
   });
 
+  it('lists the events overlapping timeMin..timeMax', async () => {
+    const url = `${base}/calendar/v3/calendars/primary/events`;
+    const slot = (h: number) => ({ start: { dateTime: `2026-11-01T${h}:00:00Z` }, end: { dateTime: `2026-11-01T${h}:45:00Z` } });
+    await fetch(url, json({ summary: 'a', ...slot(10) }));
+    await fetch(url, json({ summary: 'b', ...slot(12) }));
+    const q = `timeMin=${encodeURIComponent('2026-11-01T10:00:00Z')}&timeMax=${encodeURIComponent('2026-11-01T10:01:00Z')}&singleEvents=true`;
+    const found = await (await fetch(`${url}?${q}`, { headers: AUTH })).json() as { items: { summary: string }[] };
+    expect(found.items.map((e) => e.summary)).toEqual(['a']);
+  });
+
   it('finds the seeded root folder and summary sheet by Drive query, appends and reads values', async () => {
     const q = (s: string) => `${base}/drive/v3/files?q=${encodeURIComponent(s)}`;
     const roots = await (await fetch(q("name = 'تقارير آيات البيان' and trashed = false and mimeType = 'application/vnd.google-apps.folder'"), { headers: AUTH })).json() as { files: { id: string }[] };

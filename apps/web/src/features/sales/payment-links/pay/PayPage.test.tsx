@@ -23,7 +23,7 @@ describe('/pay/:token «الدفع» (public, no login)', () => {
   it('an open link: the greeting, amount, lessons, the test notice and «ادفع الآن» to the API checkout', async () => {
     show({});
     expect(await screen.findByText(P.greeting.replace('{name}', 'أم سهيلة'))).toBeTruthy();
-    expect(apiFetch).toHaveBeenCalledWith('/pay/tok_1');
+    expect(apiFetch).toHaveBeenCalledWith('/pay/tok_1', { headers: { Accept: 'application/json' } });
     expect(screen.getByRole('heading', { level: 1, name: P.title })).toBeTruthy();
     expect(screen.getByText(P.amount.replace('{amount}', '261').replace('{currency}', 'ر.س'))).toBeTruthy();
     expect(screen.getByText(t.paymentLinks.lessons.replace('{count}', '8'))).toBeTruthy();

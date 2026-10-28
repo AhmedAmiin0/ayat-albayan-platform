@@ -1,4 +1,4 @@
-import type { EventRef, GoogleEvent, GoogleEventBody } from '../google-client.port';
+import type { EventRef, GoogleEvent, GoogleEventBody, GoogleListedEvent } from '../google-client.port';
 import type { GoogleHttp } from './google-http';
 
 const enc = encodeURIComponent;
@@ -29,6 +29,13 @@ export class CalendarApi {
 
   getEvent(ref: EventRef): Promise<GoogleEvent | null> {
     return this.http.maybe<GoogleEvent>({ method: 'GET', url: `${this.events(ref.calendarId)}/${enc(ref.eventId)}` });
+  }
+
+  /** One page is enough: the guard asks for a one-minute range of one calendar. */
+  async listEvents(input: { calendarId: string; timeMin: string; timeMax: string }): Promise<GoogleListedEvent[]> {
+    const query = { timeMin: input.timeMin, timeMax: input.timeMax, singleEvents: 'true', maxResults: '250' };
+    const page = await this.http.send<{ items?: GoogleListedEvent[] }>({ method: 'GET', url: this.events(input.calendarId), query });
+    return page.items ?? [];
   }
 
   insertEvent(input: { calendarId: string; event: GoogleEventBody }): Promise<{ id: string }> {
