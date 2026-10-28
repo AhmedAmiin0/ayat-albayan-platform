@@ -14,6 +14,7 @@ import { CallButton } from '../thread/calls/entries/CallButton';
 import { Composer } from '../composer/Composer';
 import { clockAt, kindLabel } from '../shared/format';
 import { MessageList } from '../messages/components/MessageList';
+import { ReplyActionsProvider } from '../messages/reply-actions';
 import { OwnThreadNote } from '../thread/components/OwnThreadNote';
 import { SalesChatActions } from '../leads/sales/SalesChatActions';
 import { SendRating } from '../rating/SendRating';
@@ -100,7 +101,9 @@ export function ThreadScreen() {
         {query.data ? (
           // Composer, quote strip and staged file stay on the keyboard (owner 2026-10-25, Android).
           <KeyboardFrame style={{ flex: 1, gap: 4 }}>
-            <MessageList phone={phone} query={query} />
+            <ReplyActionsProvider phone={phone} lessons={query.data.pages[0]?.lessons ?? []}>
+              <MessageList phone={phone} query={query} />
+            </ReplyActionsProvider>
             <ChatNotice />
             {mode.kind === 'admin' &&
             thread?.guardian_id &&

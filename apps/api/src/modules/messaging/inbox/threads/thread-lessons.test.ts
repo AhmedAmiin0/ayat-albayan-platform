@@ -5,16 +5,16 @@ import { upcomingLessons } from './thread-lessons';
 import { toThreadView } from './threads.mapper';
 
 const NOW = new Date('2026-10-02T08:00:00Z');
-const row = { id: 'l1', starts_at: '2026-10-04T14:00:00+00:00', meeting_link: null, teacher: { tz: 'Africa/Cairo' } };
+const row = { id: 'l1', starts_at: '2026-10-04T14:00:00+00:00', ends_at: '2026-10-04T15:00:00+00:00', status: 'scheduled', meeting_link: null, teacher: { tz: 'Africa/Cairo' } };
 const view = (over: Parameters<typeof threadRow>[0]) => toThreadView(threadRow(over), NOW);
 
-describe('upcomingLessons (template composer, rule 6)', () => {
-  it('a guardian: open lessons of their children only, named, in the guardian’s tz', async () => {
+describe('upcomingLessons (template composer, rule 6; the reply note’s actions)', () => {
+  it('a guardian: open lessons of their children only, named, in the guardian’s tz, with status and end', async () => {
     const students = [{ student: { name: 'سهيلة' } }, { student: null }];
     const { db, log } = chainDb({ lessons: [{ data: [{ ...row, lesson_students: students }] }] });
     const thread = view({ guardian_id: 'g1', guardian_tz: 'Europe/London', teacher_id: null });
     expect(await upcomingLessons(db, { thread, now: NOW })).toEqual([
-      { id: 'l1', starts_at: row.starts_at, meeting_link: null, student_names: ['سهيلة'], tz: 'Europe/London' },
+      { id: 'l1', starts_at: row.starts_at, meeting_link: null, student_names: ['سهيلة'], tz: 'Europe/London', status: 'scheduled', ends_at: row.ends_at },
     ]);
     expect(callsOf(log, 'lessons')).toEqual(
       expect.arrayContaining([

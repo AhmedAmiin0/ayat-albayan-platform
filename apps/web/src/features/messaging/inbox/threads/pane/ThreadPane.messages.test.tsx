@@ -36,6 +36,7 @@ const CONFIRM = message({
   body: 'تمام، هنحضر',
   guardian_id: 'g-1',
   interactive_payload: { payload: 'confirm:l-1' },
+  lesson_id: 'l-1',
   lesson: { starts_at: '2026-10-04T14:00:00Z', status: 'confirmed' },
 });
 const UNLINKED = message({ id: 'm-u', body: 'تمام', guardian_id: 'g-1' });
@@ -70,7 +71,8 @@ describe('message log (R-MSG-05, R-MSG-03)', () => {
     expect(open.getAttribute('href')).toBe(PHOTO.media_url);
     const confirmed = t.inbox.quickReply.confirmed.replace('{when}', 'الأحد 4 أكتوبر 17:00');
     expect(bubble('تمام، هنحضر').getByText(confirmed)).toBeTruthy();
-    expect(bubble('تمام').getByText(t.inbox.quickReply.notConfirmed)).toBeTruthy();
+    // An unlinked «تمام» with no lesson to confirm says nothing (owner 2026-10-28: no «لم تتأكد أي حلقة»).
+    expect(bubble('تمام').queryByText('لم تتأكد أي حلقة بهذا الرد')).toBeNull();
   });
 
   it('a failed send: the saffron «!» named «لم تُرسل», the reason in words, retry puts it back in the queue', async () => {

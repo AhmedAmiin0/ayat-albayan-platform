@@ -18,3 +18,4 @@ export {
   RegistrationCheckDialog,
   type RegistrationCheckDialogProps,
 } from './registration/RegistrationCheckDialog';
+export { confirmErrorText } from './schedule/SalesConfirmLesson';
