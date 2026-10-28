@@ -41,7 +41,9 @@ test('the calm header and the academy day of «جدول الحلقات»: the sa
   answer([held, running, later]);
   await renderWithQuery(<SalesTodayRoute />);
   expect(await screen.findByText(t.today.running)).toBeTruthy();
-  expect(screen.getByRole('header', { name: t.today.title })).toBeTruthy();
+  // No «اليوم» title (the tab says it): the greeting is the header line.
+  expect(screen.getByRole('header', { name: new RegExp(`^${t.today.greeting.evening}`) })).toBeTruthy();
+  expect(screen.queryByText(t.today.title)).toBeNull();
   expect(screen.getByText('الاثنين 12 أكتوبر · بتوقيت الرياض')).toBeTruthy();
   expect(paths()).toContain('/sales/schedule?date=2026-10-12');
   expect(paths().some((p) => p.startsWith('/lessons'))).toBe(false);

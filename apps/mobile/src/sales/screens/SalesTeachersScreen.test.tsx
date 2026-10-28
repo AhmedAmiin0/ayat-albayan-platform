@@ -60,3 +60,10 @@ test('no teachers shows the empty state; a failed read shows the error', async (
   await renderWithQuery(<SalesTeachersScreen />);
   expect(await screen.findByRole('alert')).toBeTruthy();
 });
+
+test('the compact top: «المعلمون · 2» on the title’s line, the rows in one inset card', async () => {
+  mockApiFetch.mockResolvedValue(TEACHERS);
+  await renderWithQuery(<SalesTeachersScreen />);
+  expect(await screen.findByRole('header', { name: `${t.sales.teachers.title} · 2` })).toBeTruthy();
+  expect(screen.getAllByTestId('inset-cell')).toHaveLength(2);
+});

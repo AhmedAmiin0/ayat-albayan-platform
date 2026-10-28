@@ -43,7 +43,7 @@ afterEach(() => openURL.mockRestore());
 test('rows: count, teacher, duration, size, status chips; a deleted row has no play', async () => {
   serve();
   await renderWithQuery(<StudentRecordingsScreen />, createTestQueryClient({ meFromApi: true }));
-  expect(await screen.findByText(R.count.replace('{n}', '2'))).toBeTruthy();
+  expect(await screen.findByRole('header', { name: `${R.title} · 2` })).toBeTruthy();
   expect(mockApiFetch).toHaveBeenCalledWith('/students/s1/recordings?page=1&pageSize=10');
   expect(screen.getByText(`${R.teacher}: أبرار`)).toBeTruthy();
   expect(screen.getByText(`${R.duration}: 30:00`)).toBeTruthy();

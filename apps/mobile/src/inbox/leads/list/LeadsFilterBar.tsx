@@ -1,9 +1,7 @@
 import { useState } from 'react';
-import { View } from 'react-native';
 import { usePermissions } from '@/auth/use-permissions';
 import { t } from '@/core/lib/i18n/i18n';
-import { Button } from '@/core/ui/primitives/Button';
-import { AssignUnassigned } from '../detail/AssignUnassigned';
+import { PillButton } from '@/core/ui/primitives/PillButton';
 import { LeadFilterSheet } from './LeadFilterSheet';
 import { activeFilterCount, type LeadFilters } from './lead-filters';
 import { useSalesPeople } from '../detail/use-sales-people';
@@ -14,7 +12,11 @@ interface LeadsFilterBarProps {
   total: number | undefined;
 }
 
-/** «تصفية (n)» opens the filter sheet; «عيّن العملاء…» is the admin's bulk action (leads.assign only). */
+/**
+ * «تصفية (n)»: a compact pill at the head of the status row (owner 2026-10-28: the list screens' one
+ * compact top) that opens the filter sheet; the admin's bulk «عيّن العملاء…» (leads.assign) lives in
+ * the sheet beside the owner filter, so the list's top is one row.
+ */
 export function LeadsFilterBar({ filters, onChange, total }: LeadsFilterBarProps) {
   const can = usePermissions();
   const canAssign = can('leads.assign');
@@ -22,21 +24,20 @@ export function LeadsFilterBar({ filters, onChange, total }: LeadsFilterBarProps
   const [open, setOpen] = useState(false);
   const count = activeFilterCount(filters);
   return (
-    <View style={{ gap: 8 }}>
-      <Button
-        variant="secondary"
+    <>
+      <PillButton
         label={count ? t.mobileLeads.filterCount.replace('{n}', String(count)) : t.mobileLeads.filter}
         onPress={() => setOpen(true)}
       />
-      {canAssign ? <AssignUnassigned owners={people.length} /> : null}
       <LeadFilterSheet
         visible={open}
         filters={filters}
         people={canAssign ? people : []}
+        assign={canAssign}
         total={total}
         onChange={onChange}
         onClose={() => setOpen(false)}
       />
-    </View>
+    </>
   );
 }

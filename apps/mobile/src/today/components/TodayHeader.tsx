@@ -1,6 +1,5 @@
 import { formatRunningHead } from '@ab/shared';
 import { View } from 'react-native';
-import { useMyProfile } from '@/account';
 import { useHolds } from '@/auth';
 import { t } from '@/core/lib/i18n/i18n';
 import { locale } from '@/core/lib/i18n/locale';
@@ -8,8 +7,8 @@ import { BellButton } from '@/notifications/BellButton';
 import { HeaderConnectingBar } from '@/core/ui/connecting/HeaderConnectingBar';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { type, useTheme } from '@/theme';
-import { hairline } from '../lib/surface';
-import { firstName, greetingPart } from '../lib/today-plan';
+import { hairline } from '@/core/ui/surface/surface';
+import { useGreeting } from '../lib/use-greeting';
 
 interface TodayHeaderProps {
   now: Date;
@@ -21,35 +20,35 @@ interface TodayHeaderProps {
 
 /**
  * The calm header (docs/29 §1): the greeting by the Riyadh clock (morning / afternoon / evening / night)
- * with the first name once the profile loads (owner 2026-10-28: «صباح الخير يا أحمد»), «اليوم» at a
- * screen title's h3 (owner 2026-10-27: «Header is oversized in all sections»), the date line without
- * the year, and the bell as a 44pt raised circle at the end side when the tree shows one.
+ * with the first name once the profile loads (owner 2026-10-28: «صباح الخير يا أحمد») is the header
+ * line itself, in the display font at h4 (no «اليوم» title: the tab already says it, owner 2026-10-28),
+ * the date line without the year under it, and the bell as a 44pt raised circle at the end side when
+ * the tree shows one.
  */
 export function TodayHeader({ now, tree, stale }: TodayHeaderProps) {
   const { color } = useTheme();
   const bell = useHolds('notifications.push') || tree === 'admin';
   const date = formatRunningHead(now, locale).gregorian.split(' ').slice(0, -1).join(' ');
   const dateLine = t.today.dateLine.replace('{date}', date);
-  const name = firstName(useMyProfile().data?.full_name);
-  const greeting = t.today.greeting[greetingPart(now)];
+  const greeting = useGreeting(now);
   const small = { fontFamily: type.ui[500], color: color.ink3, fontVariant: ['tabular-nums' as const] };
   return (
     <View>
       <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
         <View style={{ flex: 1 }}>
-          <AppText style={{ ...small, fontSize: type.size.sm, lineHeight: 22 }}>
-            {name ? t.today.greetingNamed.replace('{greeting}', greeting).replace('{name}', name) : greeting}
-          </AppText>
           <AppText
             accessibilityRole="header"
+            numberOfLines={1}
+            adjustsFontSizeToFit
+            minimumFontScale={0.75}
             style={{
               fontFamily: type.display,
-              fontSize: type.size.h3,
-              lineHeight: type.lineHeight(type.size.h3, true),
+              fontSize: type.size.h4,
+              lineHeight: type.lineHeight(type.size.h4, true),
               color: color.ink,
             }}
           >
-            {t.today.title}
+            {greeting}
           </AppText>
           <AppText style={{ ...small, fontSize: type.size.xs, lineHeight: 20 }}>
             {stale ? `${dateLine} · ${stale}` : dateLine}

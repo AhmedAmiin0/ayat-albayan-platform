@@ -43,7 +43,8 @@ interface Rows {
 /**
  * «التقارير» (R-TCH-03, R-REP-05): the reports still to write, the ones I sent (edit while the
  * window is open, else read), and each of my students' history. Pull to refresh; offline the saved
- * lists stay.
+ * lists stay. The list screens' compact top (owner 2026-10-28): h2 title, the pills 8pt under it, the rows
+ * in one inset card.
  */
 export function TeacherReportsScreen() {
   const [view, setView] = useState<View>('pending');
@@ -81,7 +82,7 @@ export function TeacherReportsScreen() {
   const shown = rows[view];
   return (
     <Screen list>
-      <ScreenHeader title={t.teacherNav.reports} />
+      <ScreenHeader title={t.teacherNav.reports} size="h2" connecting />
       <FilterPills items={views()} value={view} onChange={setView} accessibilityLabel={t.teacherNav.reports} />
       <LazyList
         data={shown.data}

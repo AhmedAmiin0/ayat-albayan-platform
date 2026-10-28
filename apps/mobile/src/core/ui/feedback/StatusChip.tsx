@@ -48,7 +48,7 @@ export function StatusChip({ tone, glyph, label, size = 'md' }: StatusChipProps)
         flexDirection: 'row',
         alignItems: 'center',
         gap: 6,
-        height: md ? 26 : 22,
+        minHeight: md ? 26 : 22, // grows with a large font scale instead of clipping
         paddingStart: md ? 9 : 7,
         paddingEnd: md ? 11 : 9,
         borderRadius: shape.radius.pill,
@@ -60,7 +60,7 @@ export function StatusChip({ tone, glyph, label, size = 'md' }: StatusChipProps)
       <NuqtaGlyph shape={glyph} color={fg} />
       <AppText
         numberOfLines={1}
-        style={{ flexShrink: 1, fontFamily: type.ui[600], fontSize: type.size.xs, lineHeight: 20, color: fg }}
+        style={{ flexShrink: 1, fontFamily: type.ui[600], fontSize: type.size.xs, color: fg }}
       >
         {label}
       </AppText>

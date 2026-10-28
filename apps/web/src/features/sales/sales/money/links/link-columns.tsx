@@ -35,6 +35,12 @@ export const linkColumns = ({ now, onCancel }: Opts) =>
       cell: (c) => <StudentCell student={c.row.original.student} />,
       meta: { className: 'max-sm:order-1 max-sm:basis-full', filter: { kind: 'text' } },
     }),
+    col.accessor((l) => effectiveLinkStatus(l, now), {
+      id: 'status',
+      header: () => P.web.status,
+      cell: (c) => <StatusChip size="sm" label={P.status[c.getValue()]} {...STYLE[c.getValue()]} />,
+      meta: { className: 'max-sm:order-4' },
+    }),
     col.accessor('amount', {
       header: () => t.assistantPortal.payments.amount,
       cell: (c) => <Amount amount={c.getValue()} currency={c.row.original.currency} className="font-semibold" />,
@@ -44,12 +50,6 @@ export const linkColumns = ({ now, onCancel }: Opts) =>
       header: () => t.assistantPortal.payments.kind,
       cell: (c) => P.kind[c.getValue()],
       meta: { className: 'text-ink-2 max-sm:order-3 max-sm:text-sm', filter: { kind: 'select', options: kindOptions } },
-    }),
-    col.accessor((l) => effectiveLinkStatus(l, now), {
-      id: 'status',
-      header: () => P.web.status,
-      cell: (c) => <StatusChip size="sm" label={P.status[c.getValue()]} {...STYLE[c.getValue()]} />,
-      meta: { className: 'max-sm:order-4' },
     }),
     col.accessor(whenText, {
       id: 'when',

@@ -18,6 +18,7 @@ import { FinanceSection } from '../sections/FinanceSection';
 import { LanguageRow } from '../appearance/LanguageRow';
 import { MoneySection } from '../sections/MoneySection';
 import { signOutDevice } from '../sign-out';
+import { InsetGroup } from '@/core/ui/surface/inset';
 
 /**
  * «المزيد» (R-MOB-02): the read-only lists that don't earn a tab («الجدول» is its own tab now),
@@ -33,7 +34,7 @@ export function MoreScreen({ can = () => true }: { can?: (permission: Permission
   return (
     <Screen scroll>
       <ScreenHeader title={t.mobile.more} trailing={<AccountHeaderAvatar href="/more/account" />} />
-      <View style={{ marginHorizontal: -16 }}>
+      <InsetGroup>
         {/* «حسابي» for every role (sales included: they share these tabs); the rest by permission. */}
         <AccountRow href="/more/account" />
         {/* Dynamic roles: each list shows only when the held role grants it. */}
@@ -42,7 +43,7 @@ export function MoreScreen({ can = () => true }: { can?: (permission: Permission
         {can('feedback.read') && <ListRow title={t.mobile.feedback.title} onPress={() => router.push('/more/feedback')} />}
         {can('pricing.read') && <ListRow title={t.pricing.title} onPress={() => router.push('/more/pricing')} />}
         {can('users.read') && <ListRow title={t.users.nav} onPress={() => router.push('/more/users')} />}
-      </View>
+      </InsetGroup>
       <SalesSection can={can} />
       <MoneySection can={can} />
       <AdminOpsSection can={can} />

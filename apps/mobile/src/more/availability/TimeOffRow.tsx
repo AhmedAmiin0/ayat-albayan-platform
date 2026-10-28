@@ -11,7 +11,7 @@ export function TimeOffRow({ off }: { off: TimeOff }) {
   const { color } = useTheme();
   const cycle = useClockCycle();
   return (
-    <View style={{ gap: 2, paddingVertical: 10, borderBottomWidth: 1, borderBottomColor: color.rule }}>
+    <View style={{ gap: 2, paddingHorizontal: 16, paddingVertical: 10 }}>
       <AppText
         style={{
           fontFamily: type.ui[600],

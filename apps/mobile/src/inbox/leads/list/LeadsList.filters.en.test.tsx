@@ -21,8 +21,9 @@ test('an LTR run shows the en.json filter, owner and bulk words', async () => {
   mockApiFetch.mockImplementation(leadsBackend(['leads.assign']));
   await renderWithQuery(<LeadsList switcher={null} />);
   expect(await screen.findByText(new RegExp('Owner: Sara|Owner: سارة'))).toBeTruthy();
-  expect(screen.getByRole('button', { name: en.sales.assign.assignAll })).toBeTruthy();
   await fireEvent.press(screen.getByRole('button', { name: en.mobileLeads.filter }));
   expect(screen.getByText(en.mobileLeads.filterTitle)).toBeTruthy();
+  // The bulk assignment sits in the sheet under the owners (owner 2026-10-28: one compact top).
+  expect(screen.getByRole('button', { name: en.sales.assign.assignAll })).toBeTruthy();
   expect(screen.getByRole('radio', { name: en.leads.sort.newest })).toBeTruthy();
 });

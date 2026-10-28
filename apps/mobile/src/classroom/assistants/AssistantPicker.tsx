@@ -5,6 +5,7 @@ import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/more/Note';
 import { Button } from '@/core/ui/primitives/Button';
 import { ListRow } from '@/core/ui/layout/ListRow';
+import { InsetGroup } from '@/core/ui/surface/inset';
 
 const A = t.classroom.assistants;
 
@@ -16,7 +17,7 @@ export function AssistantPicker({ free, onPick }: { free: readonly AssistantView
     <View style={{ gap: 8 }}>
       <Button variant="secondary" label={open ? t.common.cancel : A.add} onPress={() => setOpen(!open)} />
       {open ? (
-        <View style={{ marginHorizontal: -16 }}>
+        <InsetGroup>
           {free.map((a) => (
             <ListRow
               key={a.profile_id}
@@ -27,7 +28,7 @@ export function AssistantPicker({ free, onPick }: { free: readonly AssistantView
               }}
             />
           ))}
-        </View>
+        </InsetGroup>
       ) : null}
     </View>
   );

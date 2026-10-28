@@ -10,11 +10,11 @@ interface TeacherFiltersBarProps {
   onChange: (next: SalesTeacherFilter) => void;
 }
 
-/** «المعلمون» filters (the web's): search by name, then a row of programs and one of genders. */
+/** «المعلمون» filters (the web's): the pill search by name, then a row of programs and one of genders, 8pt apart. */
 export function TeacherFiltersBar({ value, programs, onChange }: TeacherFiltersBarProps) {
   return (
-    <View style={{ gap: 8, paddingBottom: 8 }}>
-      <SearchField label={t.sales.teachers.search} initial={value.q} onSearch={(q) => onChange({ ...value, q })} />
+    <View style={{ gap: 8 }}>
+      <SearchField compact label={t.sales.teachers.search} initial={value.q} onSearch={(q) => onChange({ ...value, q })} />
       <FilterPills<Program | ''>
         accessibilityLabel={t.sales.teachers.programs}
         items={[{ value: '', label: t.schedule.allPrograms }, ...programs.map((p) => ({ value: p, label: t.enums.program[p] }))]}

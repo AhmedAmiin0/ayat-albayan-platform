@@ -64,7 +64,7 @@ test('the teacher’s Riyadh week, السبت → الجمعة: lessons by day i
   const times = screen.getAllByText(/^\d{2}:\d{2}$/).map((n) => n.props.children);
   expect(times).toEqual(['13:00', '10:00', '16:00', '17:00']);
   expect(screen.getByText('جنى وليد')).toBeTruthy();
-  expect(screen.getAllByText(t.enums.lessonStatus.scheduled)).toHaveLength(2);
+  expect(screen.getAllByText(t.today.statusShort.scheduled)).toHaveLength(2);
   expect(screen.getByText(t.enums.lessonStatus.completed)).toBeTruthy();
   expect(screen.getByText(t.enums.duration['30'])).toBeTruthy();
   // Thursday's availability, in the zone the grid was saved in; five days have no lessons.

@@ -25,7 +25,7 @@ const renderRow = ({ item }: { item: JobApplicant }) => <ApplicantRow key={item.
 /**
  * «طلبات التوظيف», read-only (R-LEAD-04, as the web list): status filter, order, name + LTR phone +
  * status, and the CV and recitation links. Rows are not buttons: moving an applicant through the
- * pipeline stays on the web for now.
+ * pipeline stays on the web for now. The list screens' compact top (owner 2026-10-28), 8pt apart.
  */
 export function JobApplicantsScreen() {
   const [status, setStatus] = useState<ApplicantStatusFilter>('all');
@@ -35,13 +35,12 @@ export function JobApplicantsScreen() {
   const pills = statusPills().map((p) => (loaded && p.value === status ? { ...p, count: list.total } : p));
   const filtered = status !== 'all';
   return (
-    <Screen>
-      <ScreenHeader title={t.nav.jobApplicants} />
+    <Screen list>
+      <ScreenHeader title={t.nav.jobApplicants} size="h2" connecting />
       <FilterPills items={pills} value={status} onChange={setStatus} accessibilityLabel={t.mobileLeads.applicantsFilter} />
       <FilterPills items={applicantSortChoices()} value={sort} onChange={setSort} accessibilityLabel={t.mobileLeads.applicantsSort} role="radiogroup" />
       <LazyList
         paged={list}
-        tabBar={false}
         keyExtractor={keyOf}
         renderItem={renderRow}
         ListEmptyComponent={

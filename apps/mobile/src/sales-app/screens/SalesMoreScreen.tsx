@@ -1,5 +1,4 @@
 import { router } from 'expo-router';
-import { View } from 'react-native';
 import { allowedRows } from '@/auth/route-permissions';
 import type { Can } from '@/auth/use-permissions';
 import { AccountHeaderAvatar } from '@/account/components/AccountHeaderAvatar';
@@ -13,6 +12,7 @@ import { SignOutButton } from '@/teacher/components/SignOutButton';
 import { ListRow } from '@/core/ui/layout/ListRow';
 import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
+import { InsetGroup } from '@/core/ui/surface/inset';
 
 const rows = () =>
   [
@@ -37,13 +37,13 @@ export function SalesMoreScreen({ can }: { can: Can }) {
         subtitle={t.mobileRoles.salesRole}
         trailing={<AccountHeaderAvatar href="/sales/more/account" />}
       />
-      <View style={{ marginHorizontal: -16 }}>
+      <InsetGroup>
         <AccountRow href="/sales/more/account" />
         {allowedRows(can, rows()).map((r) => (
           <ListRow key={r.href} title={r.title} onPress={() => router.push(r.href)} />
         ))}
         <PaymentLinksRow />
-      </View>
+      </InsetGroup>
       <AppearancePicker />
       <ClockFormatPicker />
       <LanguageRow />

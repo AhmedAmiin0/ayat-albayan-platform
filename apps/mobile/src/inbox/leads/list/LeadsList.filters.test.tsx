@@ -73,3 +73,11 @@ test('a filter with no results says «no match»; an empty inbox without filters
   await fireEvent.press(screen.getByRole('radio', { name: t.sales.assign.none }));
   expect(await screen.findByRole('header', { name: t.mobileLeads.noMatch })).toBeTruthy();
 });
+
+test('the compact top: «تصفية» is a pill in the status row, the bulk assignment waits in the sheet', async () => {
+  await renderWithQuery(<LeadsList switcher={null} />, createTestQueryClient({ meFromApi: true }));
+  await screen.findByText('هدى سالم');
+  expect(screen.queryByRole('button', { name: t.sales.assign.assignAll })).toBeNull();
+  await fireEvent.press(screen.getByRole('button', { name: t.mobileLeads.filter }));
+  expect(screen.getByRole('button', { name: t.sales.assign.assignAll })).toBeTruthy();
+});

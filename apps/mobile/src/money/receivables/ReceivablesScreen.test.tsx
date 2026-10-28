@@ -36,7 +36,8 @@ test('total, then a row per package: name, LTR code, amount owed, days late', as
   expect(screen.getByText(money(100, 'SAR'))).toBeTruthy();
   expect(screen.getByText(ltr('AB-0183'))).toBeTruthy();
   expect(screen.getByText(t.mobileMoney.daysLate.replace('{n}', '75'))).toBeTruthy();
-  expect(screen.getByText(t.mobileMoney.receivablesCount.replace('{n}', '2'))).toBeTruthy();
+  // Owner 2026-10-28: the total on the title's line, «المستحقات · 2», no separate count line.
+  expect(screen.getByRole('header', { name: `${t.mobileMoney.receivablesTitle} · 2` })).toBeTruthy();
 });
 
 test('the search narrows the loaded rows without another request', async () => {

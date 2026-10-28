@@ -52,3 +52,20 @@ test('a new top row is not scrolled away (FlashList v2 keeps position by default
   await render(<LazyList testID="lazy" data={rows(2)} keyExtractor={keyOf} renderItem={renderRow} />);
   expect(screen.getByTestId('lazy').props.maintainVisibleContentPosition).toBeUndefined();
 });
+
+// Owner 2026-10-28: one container rule, every list's rows in ONE rounded card inside the gutter.
+test('inset (default): rows sit in one card, the first rounds the top and the last the bottom', async () => {
+  await render(<LazyList testID="lazy" data={rows(3)} keyExtractor={keyOf} renderItem={renderRow} />);
+  expect(screen.getByTestId('lazy')).not.toHaveStyle({ marginHorizontal: -16 });
+  const [first, middle, last] = screen.getAllByTestId('inset-cell');
+  expect(first).toHaveStyle({ borderTopLeftRadius: 20, borderTopRightRadius: 20, borderBottomLeftRadius: 0 });
+  expect(middle).toHaveStyle({ borderTopLeftRadius: 0, borderBottomRightRadius: 0 });
+  expect(last).toHaveStyle({ borderTopRightRadius: 0, borderBottomLeftRadius: 20, borderBottomRightRadius: 20 });
+});
+
+test('one row rounds both ends; inset={false} leaves rows as they are (cards with a gap)', async () => {
+  await render(<LazyList data={rows(1)} keyExtractor={keyOf} renderItem={renderRow} />);
+  expect(screen.getByTestId('inset-cell')).toHaveStyle({ borderTopLeftRadius: 20, borderBottomRightRadius: 20 });
+  await render(<LazyList data={rows(2)} keyExtractor={keyOf} renderItem={renderRow} inset={false} gap={8} />);
+  expect(screen.queryByTestId('inset-cell')).toBeNull();
+});

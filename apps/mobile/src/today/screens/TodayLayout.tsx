@@ -61,13 +61,14 @@ export function TodayLayout<L extends TodayLesson>({ source, hero: heroCard, she
       {/* The page is one block of cards (rows share one card), so a list with only a header: it keeps
           FlatList's refresh and keyboard behaviour, as before. */}
       <FlatList
+        // Bleeds to the screen's edge and pads back the same 16pt gutter: the cards' hairline ring is not clipped.
         style={{ flex: 1, marginHorizontal: -16 }}
-        contentContainerStyle={{ paddingHorizontal: 20, paddingBottom: 24 + inset }}
+        contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 24 + inset }}
         refreshControl={<RefreshControl refreshing={day.isRefetching} onRefresh={() => void day.refetch()} />}
         data={[]}
         renderItem={() => null}
         ListHeaderComponent={
-          <View style={{ gap: 18 }}>
+          <View style={{ gap: 16 }}>
             <TodayHeader now={now} tree={source.tree} stale={stale} />
             {loaded && lessons.length > 0 ? <SummaryCard counts={filterCounts(lessons)} filter={filter} onFilter={setFilter} /> : null}
             {notice ? <Notice message={notice} /> : null}

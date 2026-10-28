@@ -7,6 +7,7 @@ import { t } from '@/core/lib/i18n/i18n';
 import { usePagedList } from '@/core/lib/query/use-paged-list';
 import { useTheme } from '@/theme';
 import { Button } from '@/core/ui/primitives/Button';
+import { PillButton } from '@/core/ui/primitives/PillButton';
 import { EmptyState } from '@/core/ui/feedback/EmptyState';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { LazyList } from '@/core/ui/lists/LazyList';
@@ -25,31 +26,32 @@ const renderRow = ({ item }: { item: UserView }) => <UserItem user={item} onOpen
 /**
  * «المستخدمون» (users.read), the web's /admin/users: every login with its role, linked record and
  * status; search, role and status filters, 20 a page (more load on scroll). «مستخدم جديد» and
- * every action in a user need users.write.
+ * every action in a user need users.write. The list screens' compact top (owner 2026-10-28): «المستخدمون
+ * · 120» on the title's line, «مستخدم جديد» a pill beside «رجوع», the pill search, the filters, 8pt apart.
  */
 export function UsersScreen({ can }: { can: Can }) {
   const { color } = useTheme();
   const [view, setView] = useState<UsersView>(FIRST_VIEW);
   const list = usePagedList<UserView>({ path: '/users', params: { ...view }, pageSize: USERS_PAGE_SIZE });
-  const count = list.data ? t.users.count.replace('{n}', String(list.total)) : undefined;
   return (
-    <Screen>
+    <Screen list>
       <ScreenHeader
         title={t.users.title}
-        subtitle={count}
-        trailing={<Button variant="ghost" label={t.common.back} onPress={backToMore} />}
+        size="h2"
+        connecting
+        count={list.data ? list.total : undefined}
+        trailing={
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
+            {can('users.write') ? <PillButton label={t.users.new} onPress={() => router.push('/more/users/new')} /> : null}
+            <Button variant="ghost" label={t.common.back} onPress={backToMore} />
+          </View>
+        }
       />
-      {can('users.write') ? (
-        <View style={{ alignItems: 'flex-start' }}>
-          <Button label={t.users.new} onPress={() => router.push('/more/users/new')} />
-        </View>
-      ) : null}
-      <SearchField label={t.users.searchPlaceholder} onSearch={(q) => setView((v) => ({ ...v, q }))} />
+      <SearchField compact label={t.users.searchPlaceholder} onSearch={(q) => setView((v) => ({ ...v, q }))} />
       <UsersFilters view={view} onChange={setView} />
       <LazyList
         paged={list}
         testID="users-list"
-        tabBar={false}
         keyExtractor={keyOf}
         renderItem={renderRow}
         keyboardShouldPersistTaps="handled"
