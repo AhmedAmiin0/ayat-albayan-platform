@@ -14,7 +14,7 @@ describe('Checkout Session parameters', () => {
   });
 
   it('a USD link in cents, the product named in Arabic, never payment_method_types', () => {
-    const p = checkoutParams(linkRow({ currency: 'USD', amount: 49.99 }), { webOrigin: 'https://app.example.com', now: NOW });
+    const p = checkoutParams(linkRow({ currency: 'USD', amount: 49.99 }), { payOrigin: 'https://api.example.com', now: NOW });
     expect(p.line_items?.[0]?.price_data).toMatchObject({ currency: 'usd', unit_amount: 4999, product_data: { name: expect.stringContaining('4') } });
     expect(p.payment_intent_data?.metadata).toEqual(p.metadata);
     expect(Object.keys(p)).not.toContain('payment_method_types');
