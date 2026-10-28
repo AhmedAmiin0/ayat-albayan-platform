@@ -32,7 +32,7 @@ const LESSON: ThreadLesson = {
 };
 const ASK = message({ id: 'm-r', body: 'تأجيل الحلقة إلى غدا', guardian_id: 'g-1', lead_id: null });
 const YES = message({ id: 'm-y', body: 'ايوة', guardian_id: 'g-1', lead_id: null });
-const ADMIN: Permission[] = ['lessons.reschedule', 'lessons.write', 'lessons.read', 'lessons.status'];
+const ADMIN: Permission[] = ['lessons.reschedule', 'lessons.write', 'lessons.read', 'booking.write', 'lessons.status'];
 
 function renderNote(m: typeof ASK, opts: { mode: InboxMode; permissions: Permission[]; lessons?: ThreadLesson[] }) {
   const client = new QueryClient({ defaultOptions: { queries: { retry: false }, mutations: { retry: false } } });

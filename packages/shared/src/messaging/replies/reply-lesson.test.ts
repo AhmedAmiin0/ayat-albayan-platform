@@ -57,8 +57,9 @@ describe('replyRights: what the viewer may do from the chat (docs/16 rows 37, 37
     expect(replyRights(holder('lessons.reschedule'), 'sales').reschedule).toBe(false);
   });
 
-  it('admin: the admin sheet needs lessons.write and lessons.read too; confirm by either route', () => {
-    expect(replyRights(holder('lessons.reschedule', 'lessons.write', 'lessons.read', 'lessons.confirm'), 'admin')).toEqual({ reschedule: true, confirm: 'sales' });
+  it('admin: the admin sheet needs lessons.write, lessons.read and booking.write too; confirm by either route', () => {
+    expect(replyRights(holder('lessons.reschedule', 'lessons.write', 'lessons.read', 'booking.write', 'lessons.confirm'), 'admin')).toEqual({ reschedule: true, confirm: 'sales' });
+    expect(replyRights(holder('lessons.reschedule', 'lessons.write', 'lessons.read'), 'admin').reschedule).toBe(false);
     expect(replyRights(holder('lessons.reschedule', 'lessons.status'), 'admin')).toEqual({ reschedule: false, confirm: 'admin' });
   });
 

@@ -39,15 +39,19 @@ export function ReplyActionsProvider({ phone, lessons, children }: ReplyActionsP
     }),
     [phone, lessons, reschedule, confirm, moved.data, flow],
   );
-  const done = () => {
-    if (move) client.setQueryData<string[]>(replyMovedKey(phone), (ids = []) => [...ids, move.messageId]);
+  // Closed by a swipe too (even after a move): the chat re-reads, so a moved lesson's button goes.
+  const close = () => {
     setMove(null);
     void client.invalidateQueries({ queryKey: threadKey(phone) });
+  };
+  const done = () => {
+    if (move) client.setQueryData<string[]>(replyMovedKey(phone), (ids = []) => [...ids, move.messageId]);
+    close();
   };
   return (
     <ReplyActionsContext.Provider value={value}>
       {children}
-      {move ? <ReplyRescheduleSheet move={move} onClose={() => setMove(null)} onDone={done} /> : null}
+      {move ? <ReplyRescheduleSheet move={move} onClose={close} onDone={done} /> : null}
     </ReplyActionsContext.Provider>
   );
 }

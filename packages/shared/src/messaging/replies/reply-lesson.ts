@@ -54,12 +54,12 @@ export const NO_REPLY_RIGHTS: ReplyRights = { reschedule: false, confirm: null }
 /**
  * The chat viewer's lesson actions (docs/16 rows 37, 37b). `flow` = whose reschedule sheet the app
  * opens: sales' one-lesson sheet (GET /sales/schedule for the lesson, her /sales/booking/slots) or the admin's
- * (GET /lessons, POST /lessons/:id/reschedule); null = none (teacher mode). Confirm: lessons.confirm
+ * (GET /lessons, GET /booking/slots, POST /lessons/:id/reschedule); null = none (teacher mode). Confirm: lessons.confirm
  * on sales' route (ANY lesson), else the admin's lessons.status route outside sales.
  */
 export function replyRights(can: (key: Permission) => boolean, flow: 'sales' | 'admin' | null): ReplyRights {
   if (!flow) return NO_REPLY_RIGHTS;
-  const sheet = flow === 'sales' ? can('self.sales') && can('self.sales_academy') : can('lessons.write') && can('lessons.read');
+  const sheet = flow === 'sales' ? can('self.sales') && can('self.sales_academy') : can('lessons.write') && can('lessons.read') && can('booking.write');
   const confirm = can('lessons.confirm') ? 'sales' : flow === 'admin' && can('lessons.status') ? 'admin' : null;
   return { reschedule: can('lessons.reschedule') && sheet, confirm };
 }

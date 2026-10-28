@@ -24,9 +24,11 @@ import { isOwnThread, threadBase, useThreadMode, type ThreadMode } from '../thre
 import { useInboxRead } from '../thread/hooks/inbox-sync';
 import { useThread } from '../thread/hooks/use-thread';
 import { useClockCycle } from '@/core/lib/clock';
-import type { ClockCycle } from '@ab/shared';
+import type { ClockCycle, ThreadLesson } from '@ab/shared';
 
 type ThreadQuery = ReturnType<typeof useThread>;
+
+const NO_LESSONS: ThreadLesson[] = [];
 
 /** The phone icon: only once the chat is loaded (no flash), never in a teacher's own chat (docs/28). */
 const callable = (mode: ThreadMode, thread: ThreadView | null): boolean =>
@@ -101,7 +103,7 @@ export function ThreadScreen() {
         {query.data ? (
           // Composer, quote strip and staged file stay on the keyboard (owner 2026-10-25, Android).
           <KeyboardFrame style={{ flex: 1, gap: 4 }}>
-            <ReplyActionsProvider phone={phone} lessons={query.data.pages[0]?.lessons ?? []}>
+            <ReplyActionsProvider phone={phone} lessons={query.data.pages[0]?.lessons ?? NO_LESSONS}>
               <MessageList phone={phone} query={query} />
             </ReplyActionsProvider>
             <ChatNotice />

@@ -1,7 +1,7 @@
 import { replyRights, type ReplyLesson, type ThreadLesson } from '@ab/shared';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useMemo, useState, type ReactNode } from 'react';
-import { usePermissions } from '@/features/people/auth/use-permissions';
+import { usePermissions } from '@/features/people/auth';
 import { useInboxMode } from '../../shared/mode';
 import { movedKey, ReplyActionsContext, type ReplyActions } from './reply-actions-context';
 import { RescheduleLessonDrawer } from './RescheduleLessonDrawer';
