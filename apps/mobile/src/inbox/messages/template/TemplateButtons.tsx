@@ -65,7 +65,7 @@ function ButtonRow({ button: b, first, onLongPress }: RowProps) {
  * lines, a centred label after its icon. Ours are display-only (the family taps them in WhatsApp);
  * a URL button opens its link. `inset` = the bubble's padding, so the rows reach its edges.
  */
-export interface TemplateButtonsProps {
+interface TemplateButtonsProps {
   buttons: readonly TemplateDisplayButton[];
   inset: { x: number; bottom: number };
   onLongPress?: () => void;
