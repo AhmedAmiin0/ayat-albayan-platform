@@ -1,3 +1,5 @@
+import { courseDaysPerWeek } from './course/course.js';
+
 // The subscription start day of the sales subscribe (owner 2026-10-12, docs/16 row 24). Pure: the API
 // enforces it, web and mobile use it to show the same error before posting.
 // Without subscriptions.set_start_date: the default day (today, Riyadh: the admin form's default too); an
@@ -40,7 +42,8 @@ export function salesStartDate(input: SalesStartInput): SalesStartResult {
 
 // «حلقات مستخدمة من الباقة» (owner 2026-10-28, migration 932): lessons the student took before the
 // platform, counted as used; the course books only the rest. Only with a past start (the «بدأ الاشتراك
-// سابقًا» path, subscriptions.set_start_date), never the whole package (subscriptions check).
+// سابقًا» path, subscriptions.set_start_date), never the whole package (subscriptions check), and at least
+// one lesson left per course day (8 lessons, 2 days a week: at most 6), else the course cannot book its days.
 
 export type UsedBeforeProblem = 'used_before_not_allowed' | 'used_before_needs_past_start' | 'used_before_too_many';
 
@@ -59,8 +62,14 @@ export function usedBeforeProblem(input: UsedBeforeInput): UsedBeforeProblem | n
   if (input.lessonsUsedBefore === 0) return null;
   if (!input.canSet) return 'used_before_not_allowed';
   if (input.startsOn >= input.today) return 'used_before_needs_past_start';
-  return input.lessonsUsedBefore < input.lessonsTotal ? null : 'used_before_too_many';
+  return input.lessonsUsedBefore <= usedBeforeMax(input.lessonsTotal) ? null : 'used_before_too_many';
 }
 
-/** The stepper's last value: every lesson but one (0 for an empty package). */
-export const usedBeforeMax = (lessonsTotal: number): number => Math.max(0, lessonsTotal - 1);
+/**
+ * The stepper's last value: one lesson left per course day (courseDaysPerWeek; a package's lessons are
+ * its size, so lessons_total alone gives it), else every lesson but one (a custom count the admin books).
+ */
+export function usedBeforeMax(lessonsTotal: number): number {
+  const left = courseDaysPerWeek({ package: null, lessons_total: lessonsTotal }) ?? 1;
+  return Math.max(0, lessonsTotal - left);
+}

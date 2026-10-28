@@ -21,7 +21,7 @@ interface StartDateFieldProps {
   draft: StartDraft;
   onChange: (patch: Partial<StartDraft>) => void;
   error: string | undefined;
-  /** The picked package's lessons (the quote's): «حلقات مستخدمة من الباقة» stops one short of it. */
+  /** The picked package's lessons (the quote's): «حلقات مستخدمة من الباقة» stops at usedBeforeMax (one lesson left per course day). */
   lessonsTotal: number;
 }
 

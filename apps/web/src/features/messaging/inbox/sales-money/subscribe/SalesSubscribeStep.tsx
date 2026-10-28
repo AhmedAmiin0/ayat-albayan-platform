@@ -49,7 +49,7 @@ export function SalesSubscribeStep({ students, picked, renew = false, onClose, o
   const [start, setStart] = useState<StartValue>({ startsOn: today, alreadyStarted: false, usedBefore: 0 });
   const [startError, setStartError] = useState<string | null>(null);
   const pricing = pricingBody(form);
-  // A smaller package clamps «حلقات مستخدمة من الباقة» to every lesson but one.
+  // A smaller package clamps «حلقات مستخدمة من الباقة» to one lesson left per course day.
   const lessonsTotal = pricingLessons(pricing);
   const usedMax = usedBeforeMax(lessonsTotal);
   const startShown = { ...start, usedBefore: Math.min(start.usedBefore, usedMax) };

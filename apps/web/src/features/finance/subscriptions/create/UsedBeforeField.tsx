@@ -3,7 +3,7 @@ import { t } from '@/lib/i18n/i18n';
 
 type Props = {
   value: number;
-  /** usedBeforeMax(lessons of the chosen package): every lesson but one. */
+  /** usedBeforeMax(lessons of the chosen package): one lesson left per course day. */
   max: number;
   onChange: (value: number) => void;
   /** false: not asked (a start from today on); default shown. */

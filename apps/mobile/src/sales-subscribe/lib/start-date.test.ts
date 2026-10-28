@@ -47,8 +47,9 @@ describe('«حلقات مستخدمة من الباقة» (owner 2026-10-28)', (
     expect(checkStart(on, ctx)).toEqual({ ok: true, body: { startsOn: '2026-10-01', alreadyStarted: true } });
   });
 
-  test('clamped to every lesson but one of the package now picked; never sent with the switch off', () => {
+  test('clamped to one lesson left per course day of the package now picked; never sent with the switch off', () => {
     expect(usedBeforeOf({ ...on, usedBefore: 7 }, 4)).toBe(3);
+    expect(usedBeforeOf({ ...on, usedBefore: 7 }, 8)).toBe(6);
     expect(usedBeforeOf({ ...on, usedBefore: 7, alreadyStarted: false }, 8)).toBe(0);
     expect(checkStart({ ...on, usedBefore: 7, alreadyStarted: false, day: today }, ctx)).toEqual({ ok: true, body: { startsOn: today } });
   });

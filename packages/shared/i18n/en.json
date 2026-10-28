@@ -4327,7 +4327,7 @@
       "too_many_attachments": "At most 5 attachments.",
       "used_before_not_allowed": "You are not allowed to record lessons already used from the package.",
       "used_before_needs_past_start": "Used lessons are recorded only with «Subscription already started» and a past start date.",
-      "used_before_too_many": "At least one lesson must stay in the package."
+      "used_before_too_many": "At least one lesson per weekly day must stay in the package."
     },
     "usedBefore": "Lessons already used from the package",
     "usedBeforeHint": "Counted from the package; only the rest is booked",
@@ -6712,7 +6712,7 @@
     "error": {
       "used_before_not_allowed": "You are not allowed to record lessons already used from the package.",
       "used_before_needs_past_start": "Used lessons are recorded only with «Subscription already started» and a past start date.",
-      "used_before_too_many": "At least one lesson must stay in the package."
+      "used_before_too_many": "At least one lesson per weekly day must stay in the package."
     }
   }
 }

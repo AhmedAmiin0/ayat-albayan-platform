@@ -73,11 +73,11 @@ describe('lessons used before the platform, in «اشتراك جديد»', () =>
     expect(creates()[0]).not.toHaveProperty('lessonsUsedBefore');
   });
 
-  it('a smaller package clamps it to every lesson but one', async () => {
+  it('a smaller package clamps it to one lesson left per course day', async () => {
     const { dialog, box, stepper, more, save } = open();
     box();
     more(20);
-    expect(stepper()?.textContent).toContain('11');
+    expect(stepper()?.textContent).toContain('9');
     fireEvent.change(dialog.getByLabelText(t.subscriptions.package), { target: { value: 'weekly' } });
     expect(stepper()?.textContent).toContain('3');
     fireEvent.change(dialog.getByLabelText(t.salesMoney.startsOn), { target: { value: past } });

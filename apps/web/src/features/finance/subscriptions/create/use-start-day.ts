@@ -4,7 +4,7 @@ import { usePermissions } from '@/features/people/auth';
 
 /**
  * The admin's first day (default today, Riyadh) and «حلقات مستخدمة من الباقة» (owner 2026-10-28): asked
- * only for a day before today with subscriptions.set_start_date, clamped to every lesson but one of the
+ * only for a day before today with subscriptions.set_start_date, clamped to one lesson left per course day of the
  * package; moving the day to today or later puts it back to 0. `extra` is what the body adds (> 0 only).
  */
 export function useStartDay(lessonsTotal: number) {

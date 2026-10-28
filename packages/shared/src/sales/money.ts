@@ -24,7 +24,7 @@ export const salesSubscriptionCreateSchema = z.strictObject({
   startsOn: localDate.optional(),
   /** «بدأ الاشتراك سابقًا»: allows a past startsOn (subscriptions.set_start_date only). */
   alreadyStarted: z.boolean().optional(),
-  /** «حلقات مستخدمة من الباقة» (owner 2026-10-28): only with alreadyStarted; 0..lessons_total − 1 (usedBeforeProblem). */
+  /** «حلقات مستخدمة من الباقة» (owner 2026-10-28): only with alreadyStarted; 0..usedBeforeMax (usedBeforeProblem). */
   lessonsUsedBefore: z.int().min(0).max(LESSONS_USED_BEFORE_MAX).optional(),
   clientRequestId: z.uuid(),
 });

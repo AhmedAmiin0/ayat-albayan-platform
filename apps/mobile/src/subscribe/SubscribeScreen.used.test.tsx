@@ -42,16 +42,16 @@ test('a first day from today on: no used-lessons stepper, nothing extra sent', a
   expect(posted()).not.toHaveProperty('lessonsUsedBefore');
 });
 
-test('a booked first day already past: the stepper (0 … lessons − 1), sent above 0', async () => {
+test('a booked first day already past: the stepper (0 … one lesson left per course day), sent above 0', async () => {
   mockParams.mockReturnValue({ studentId: profile.id, startsOn: '2026-09-28' });
   await renderWithQuery(<SubscribeScreen />);
   await screen.findByText(money(180, 'SAR'));
   expect(screen.getByText(m.usedBeforeHint)).toBeTruthy();
   for (let i = 0; i < 12; i += 1) await fireEvent.press(screen.getByRole('button', { name: m.usedBeforeMore }));
-  expect(screen.getByLabelText(`${m.usedBefore}: 11`)).toBeTruthy();
+  expect(screen.getByLabelText(`${m.usedBefore}: 9`)).toBeTruthy();
   expect(screen.getByRole('button', { name: m.usedBeforeMore }).props.accessibilityState).toMatchObject({ disabled: true });
   await save();
-  await waitFor(() => expect(posted()).toMatchObject({ startsOn: '2026-09-28', lessonsUsedBefore: 11 }));
+  await waitFor(() => expect(posted()).toMatchObject({ startsOn: '2026-09-28', lessonsUsedBefore: 9 }));
 });
 
 test('the API’s used-lessons refusal in words', async () => {

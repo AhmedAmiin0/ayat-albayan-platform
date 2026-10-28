@@ -48,7 +48,7 @@ export const subscriptionPricingSchema = z.xor([
   z.object({ ...pricingBase, count: z.int().min(CUSTOM_COUNT_MIN).max(CUSTOM_COUNT_MAX) }),
 ]);
 
-export const LESSONS_USED_BEFORE_MAX = 99; // schema bound; the real one is lessons_total − 1 (usedBeforeProblem)
+export const LESSONS_USED_BEFORE_MAX = 99; // schema bound; the real one is usedBeforeMax (usedBeforeProblem)
 /** POST /subscriptions (R-SUB-01). */
 export const subscriptionCreateSchema = z.object({
   studentId: z.uuid(),

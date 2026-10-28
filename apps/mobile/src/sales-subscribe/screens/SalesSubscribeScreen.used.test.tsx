@@ -5,7 +5,7 @@ import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { familyOf, kid, openSub, salesQuote } from '../testing/fixtures';
 import { SalesSubscribeScreen } from './SalesSubscribeScreen';
 
-// «حلقات مستخدمة من الباقة» (owner 2026-10-28): only with «بدأ الاشتراك سابقًا», − / + from 0 to lessons − 1.
+// «حلقات مستخدمة من الباقة» (owner 2026-10-28): only with «بدأ الاشتراك سابقًا», − / + from 0 to one lesson left per course day.
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();
 jest.mock('@/core/lib/http/api', () => ({
@@ -82,11 +82,11 @@ test('0 used is never sent', async () => {
   expect(lastBody()).not.toHaveProperty('lessonsUsedBefore');
 });
 
-test('stops at lessons − 1 (+ disabled), and a smaller package clamps it', async () => {
+test('stops at one lesson left per course day (+ disabled), and a smaller package clamps it', async () => {
   await open();
   await switchTo(true);
   await press(m.usedBeforeMore, 12);
-  expect(shown(11)).toBeTruthy();
+  expect(shown(9)).toBeTruthy();
   expect(more().props.accessibilityState).toMatchObject({ disabled: true });
   await fireEvent.press(screen.getByRole('radio', { name: t.pricing.packages.weekly.sessions }));
   expect(await screen.findByText(money(60, 'SAR'))).toBeTruthy();

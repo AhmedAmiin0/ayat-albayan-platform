@@ -9,13 +9,17 @@ describe('usedBeforeProblem', () => {
     expect(usedBeforeProblem({ ...base, lessonsUsedBefore: 0, canSet: false, startsOn: base.today })).toBeNull();
   });
 
-  it('1..7 of 8 with a past start and the permission', () => {
+  it('1..6 of 8 with a past start and the permission', () => {
     expect(usedBeforeProblem({ ...base, lessonsUsedBefore: 1 })).toBeNull();
-    expect(usedBeforeProblem({ ...base, lessonsUsedBefore: 7 })).toBeNull();
+    expect(usedBeforeProblem({ ...base, lessonsUsedBefore: 6 })).toBeNull();
   });
 
-  it('never the whole package', () => {
+  it('never the whole package, nor fewer lessons left than course days', () => {
     expect(usedBeforeProblem({ ...base, lessonsUsedBefore: 8 })).toBe('used_before_too_many');
+    // 8 lessons, 2 days a week: 7 used leaves 1 lesson for 2 picked days (400 no_occurrences).
+    expect(usedBeforeProblem({ ...base, lessonsUsedBefore: 7 })).toBe('used_before_too_many');
+    expect(usedBeforeProblem({ ...base, lessonsTotal: 12, lessonsUsedBefore: 10 })).toBe('used_before_too_many');
+    expect(usedBeforeProblem({ ...base, lessonsTotal: 12, lessonsUsedBefore: 9 })).toBeNull();
   });
 
   it('needs a start before today', () => {
@@ -29,8 +33,17 @@ describe('usedBeforeProblem', () => {
 });
 
 describe('usedBeforeMax', () => {
-  it('every lesson but one', () => {
-    expect(usedBeforeMax(8)).toBe(7);
+  it('one lesson left per course day', () => {
+    expect(usedBeforeMax(8)).toBe(6);
+    expect(usedBeforeMax(12)).toBe(9);
+    expect(usedBeforeMax(16)).toBe(12);
+    expect(usedBeforeMax(28)).toBe(21);
+    expect(usedBeforeMax(4)).toBe(3);
+    expect(usedBeforeMax(20)).toBe(15);
+  });
+
+  it('every lesson but one for a custom count the admin books', () => {
+    expect(usedBeforeMax(10)).toBe(9);
     expect(usedBeforeMax(1)).toBe(0);
     expect(usedBeforeMax(0)).toBe(0);
   });
