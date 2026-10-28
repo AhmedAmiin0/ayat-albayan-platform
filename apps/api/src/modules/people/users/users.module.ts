@@ -3,7 +3,7 @@ import { loadEnv } from '../../../config/env/env';
 import { RolesModule } from '../roles/roles.module';
 import { UserAccess } from './users.access';
 import { SupabaseAuthAdmin } from './auth/users.auth.supabase';
-import { UserPhotoController } from './photo/user-photo.controller';
+import { StaffPhotoController } from './photo/staff-photo.controller';
 import { UsersController } from './users.controller';
 import { UsersCreateService } from './lifecycle/users.create.service';
 import { UsersLifecycleService } from './lifecycle/users.lifecycle.service';
@@ -15,7 +15,7 @@ import { AUTH_ADMIN, USER_STORE, USERS_CONFIG, type UsersConfig } from './store/
 /** «المستخدمون» (owner, 2026-10-06). PermissionCache comes from AuthModule, AuditService from AuditModule. */
 @Module({
   imports: [RolesModule],
-  controllers: [UsersController, UserPhotoController],
+  controllers: [UsersController, StaffPhotoController],
   providers: [
     UsersService,
     UsersCreateService,
