@@ -39,28 +39,34 @@ describe('POST /sales/lessons/:id/reschedule and /cancel (docs/16 row 37)', () =
     expect(t.lessons.cancels.cancel).toHaveBeenLastCalledWith(expect.objectContaining({ body: { scope: 'one', by: 'admin', reason: 'سفر' } }));
   });
 
-  it('a lesson of another family is 403 not_your_student; an unknown one 404; nothing is written', async () => {
-    t.queries.lesson.mockResolvedValue(lessonFacts({ lesson_students: [{ student_id: OTHER }] }));
-    for (const action of ['reschedule', 'cancel']) {
-      const res = await t.call('POST', `/sales/lessons/${LESSON}/${action}`, { token: 'salesA', body: { startsAt: AT } });
-      if (action === 'cancel') expect(res.statusCode).toBe(400); // strict body: no startsAt on a cancel
-      const ok = await t.call('POST', `/sales/lessons/${LESSON}/${action}`, { token: 'salesA', body: action === 'cancel' ? {} : { startsAt: AT } });
-      expect([action, ok.statusCode, ok.json().code]).toEqual([action, 403, 'not_your_student']);
+  it('a lesson of another family moves and cancels like hers (owner 2026-10-28); an unknown or empty one 404', async () => {
+    t.queries.lesson.mockImplementation(async (id: string) =>
+      lessonFacts(id === LESSON ? { lesson_students: [{ student_id: OTHER }] } : { id, starts_at: AT, ends_at: '2026-11-02T15:30:00.000Z' }));
+    const move = await t.call('POST', `/sales/lessons/${LESSON}/reschedule`, { token: 'salesA', body: { startsAt: AT } });
+    expect([move.statusCode, move.json()]).toEqual([200, { id: MOVED, starts_at: AT, status: 'scheduled' }]);
+    const cancel = await t.call('POST', `/sales/lessons/${LESSON}/cancel`, { token: 'salesA', body: {} });
+    expect(cancel.statusCode).toBe(200);
+    expect(t.lessons.cancels.cancel).toHaveBeenCalledWith(expect.objectContaining({ lessonId: LESSON, body: { scope: 'one', by: 'admin', reason: null } }));
+    t.lessons.one.reschedule.mockClear();
+    t.lessons.cancels.cancel.mockClear();
+    for (const facts of [null, lessonFacts({ lesson_students: [] })]) {
+      t.queries.lesson.mockResolvedValue(facts);
+      for (const [action, body] of [['reschedule', { startsAt: AT }], ['cancel', {}]] as const) {
+        const res = await t.call('POST', `/sales/lessons/${LESSON}/${action}`, { token: 'salesA', body });
+        expect([action, res.statusCode, res.json().code]).toEqual([action, 404, 'lesson_not_found']);
+      }
     }
-    t.queries.lesson.mockResolvedValue(null);
-    expect((await t.call('POST', `/sales/lessons/${LESSON}/cancel`, { token: 'salesA', body: {} })).json().code).toBe('lesson_not_found');
     expect(t.lessons.one.reschedule).not.toHaveBeenCalled();
     expect(t.lessons.cancels.cancel).not.toHaveBeenCalled();
   });
 
-  it('a group lesson with another family\'s child stays the admin\'s: 403, nothing moved or messaged', async () => {
+  it('a group lesson with another family\'s child moves / cancels as one lesson, for every student of it', async () => {
     t.queries.lesson.mockResolvedValue(lessonFacts({ lesson_students: [{ student_id: MINE }, { student_id: OTHER }] }));
-    for (const [action, body] of [['reschedule', { startsAt: AT }], ['cancel', {}]] as const) {
-      const res = await t.call('POST', `/sales/lessons/${LESSON}/${action}`, { token: 'salesA', body });
-      expect([action, res.statusCode, res.json().code]).toEqual([action, 403, 'not_your_student']);
-    }
-    expect(t.lessons.one.reschedule).not.toHaveBeenCalled();
-    expect(t.lessons.cancels.cancel).not.toHaveBeenCalled();
+    const move = await t.call('POST', `/sales/lessons/${LESSON}/reschedule`, { token: 'salesA', body: { startsAt: AT } });
+    expect(move.statusCode).toBe(200);
+    expect(t.lessons.one.reschedule).toHaveBeenCalledWith(expect.objectContaining({ lessonId: LESSON, body: { scope: 'one', startsAt: AT } }));
+    expect((await t.call('POST', `/sales/lessons/${LESSON}/cancel`, { token: 'salesA', body: {} })).statusCode).toBe(200);
+    expect(t.lessons.cancels.cancel).toHaveBeenCalledWith(expect.objectContaining({ lessonId: LESSON, body: { scope: 'one', by: 'admin', reason: null } }));
   });
 
   it('a new time that has passed is 400 date_in_past (her booking refuses it too)', async () => {
@@ -96,7 +102,9 @@ describe('POST /sales/lessons/:id/reschedule and /cancel (docs/16 row 37)', () =
       expect((await t.call('POST', `/sales/lessons/${LESSON}/cancel`, { token, body: {} })).statusCode).toBe(403);
       expect((await t.call('POST', `/sales/lessons/${LESSON}/reschedule`, { token, body: { startsAt: AT } })).statusCode).toBe(403);
     }
-    // salesB holds the keys but owns nothing: the scope refuses.
-    expect((await t.call('POST', `/sales/lessons/${LESSON}/cancel`, { token: 'salesB', body: {} })).json().code).toBe('not_your_student');
+    expect(t.lessons.cancels.cancel).not.toHaveBeenCalled();
+    expect(t.lessons.one.reschedule).not.toHaveBeenCalled();
+    // salesB holds the keys and owns nothing: still allowed (any lesson, owner 2026-10-28).
+    expect((await t.call('POST', `/sales/lessons/${LESSON}/cancel`, { token: 'salesB', body: {} })).statusCode).toBe(200);
   });
 });

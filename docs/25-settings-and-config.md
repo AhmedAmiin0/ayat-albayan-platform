@@ -127,6 +127,7 @@ drops it. Its only writer is `POST /admin/communications/source` (`numbers.manag
 - Settings: `SettingsService` caches every row for `SETTINGS_CACHE_MS` (default 30 s; e2e 0) and clears the cache on its own writes.
 - Integrations: `IntegrationConfigService` reloads at boot, after each admin save and every `integrationRefreshMs(env)`: `INTEGRATION_REFRESH_MS` when set, else `SETTINGS_CACHE_MS` but at least 60 s (0 stays 0 for e2e; at least 1 s); never when `INTEGRATION_CONFIG_FROM_DB=false`.
 - Numbers (docs/23 phase 3): `NumbersConfig` reloads `comms_source` and, in module mode only, the default numbers and their Vault secrets at boot, on the integration refresh period and after every numbers write; never when `INTEGRATION_CONFIG_FROM_DB=false`.
+- Across processes (`REDIS_URL` set, docs/09 «Shared cache»): every write above also drops the shared copy and announces it, so the other API copies and the worker drop theirs at once; unset = each process on its own, as described here.
 - Public config: the clients keep `['settings','public']` for 5 minutes; the API answers with `max-age=60`.
 
 ## 8. Where the e2e settings writers live

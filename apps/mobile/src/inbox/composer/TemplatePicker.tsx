@@ -1,7 +1,7 @@
 import { forAudience, RATING_TEMPLATE, type TemplateView, type ThreadLesson } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
-import { useState } from 'react';
-import { FlatList, Modal, View } from 'react-native';
+import { useCallback, useState } from 'react';
+import { FlatList, type ListRenderItemInfo, Modal, View } from 'react-native';
 import { useSendsAllTemplates } from '@/auth/use-permissions';
 import { apiFetch } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
@@ -13,6 +13,7 @@ import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { ListRow } from '@/core/ui/layout/ListRow';
 import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
+import { useInsetRows } from '@/core/ui/surface/use-inset-rows';
 import { TemplateForm } from './TemplateForm';
 import type { Outgoing } from '../thread/hooks/use-thread';
 
@@ -56,6 +57,14 @@ export function TemplatePicker(props: TemplatePickerProps) {
   const restricted = !useSendsAllTemplates();
   const offered = (templates.data ?? []).filter((row) => forAudience(row.key, props.teacher));
   const [chosen, setChosen] = useState<TemplateView | null>(null);
+  // The templates sit in one inset card inside the sheet's gutter (owner 2026-10-28: one container rule).
+  const row = useCallback(
+    ({ item }: ListRenderItemInfo<TemplateView>) => (
+      <ListRow title={names[item.key] ?? item.key} subtitle={item.body_ar} onPress={() => setChosen(item)} />
+    ),
+    [],
+  );
+  const cells = useInsetRows(row, offered.length);
   const close = () => {
     setChosen(null);
     props.onClose();
@@ -85,22 +94,17 @@ export function TemplatePicker(props: TemplatePickerProps) {
           />
         ) : (
           <FlatList
-            style={{ flex: 1, marginHorizontal: -16 }}
+            style={{ flex: 1 }}
+            contentContainerStyle={{ paddingBottom: 16 }}
             data={offered}
-            keyExtractor={(row) => row.key}
-            renderItem={({ item }) => (
-              <ListRow
-                title={names[item.key] ?? item.key}
-                subtitle={item.body_ar}
-                onPress={() => setChosen(item)}
-              />
-            )}
+            keyExtractor={(tpl) => tpl.key}
+            {...cells}
             // While the list loads, say so: a slow answer is not an empty white sheet.
             ListEmptyComponent={
               templates.isError ? (
                 <ErrorState onRetry={() => void templates.refetch()} />
               ) : (
-                <View style={{ padding: 16 }}>
+                <View style={{ paddingVertical: 16 }}>
                   {templates.isPending ? (
                     <Note>{t.common.loading}</Note>
                   ) : (

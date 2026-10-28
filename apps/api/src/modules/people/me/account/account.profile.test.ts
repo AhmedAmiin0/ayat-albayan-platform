@@ -11,6 +11,7 @@ describe('GET /me/profile (R-ACC-01)', () => {
       email: 'old@example.test',
       phone_e164: null,
       avatar_url: null,
+      avatar_seed: 'user-1',
       role: { base: 'teacher', key: 'teacher', name_ar: 'teacher-ar', name_en: 'Teacher' },
     });
   });

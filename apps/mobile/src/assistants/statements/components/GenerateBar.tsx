@@ -53,9 +53,7 @@ export function GenerateBar({ targets, month, hasRows, disabled, onNotice }: Gen
           onCancel={cancel}
         />
       ) : (
-        <View style={{ alignItems: 'flex-start' }}>
-          <Button variant="secondary" label={label} disabled={disabled || asking} onPress={() => setAsking(true)} />
-        </View>
+        <Button variant="secondary" label={label} disabled={disabled || asking} onPress={() => setAsking(true)} />
       )}
       {generate.isError ? <ErrorLine message={assistantsErrorText(generate.error)} /> : null}
     </View>

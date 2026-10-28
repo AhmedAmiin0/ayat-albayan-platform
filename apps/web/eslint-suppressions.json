@@ -554,11 +554,6 @@
       "count": 1
     }
   },
-  "src/features/messaging/inbox/threads/list/ThreadRow.tsx": {
-    "ab/module-boundaries": {
-      "count": 1
-    }
-  },
   "src/features/messaging/inbox/threads/pane/ThreadPane.tsx": {
     "ab/module-boundaries": {
       "count": 2
@@ -1944,12 +1939,12 @@
       "count": 2
     }
   },
-  "src/routes/feedback.$token.tsx": {
+  "src/routes/(public)/feedback.$token.tsx": {
     "ab/module-boundaries": {
       "count": 1
     }
   },
-  "src/routes/join.$linkToken.tsx": {
+  "src/routes/(public)/join.$linkToken.tsx": {
     "ab/module-boundaries": {
       "count": 3
     }
@@ -1959,7 +1954,7 @@
       "count": 1
     }
   },
-  "src/routes/m.$token.tsx": {
+  "src/routes/(public)/m.$token.tsx": {
     "ab/module-boundaries": {
       "count": 3
     }
@@ -1974,7 +1969,7 @@
       "count": 1
     }
   },
-  "src/routes/s.$token.tsx": {
+  "src/routes/(public)/s.$token.tsx": {
     "ab/module-boundaries": {
       "count": 1
     }

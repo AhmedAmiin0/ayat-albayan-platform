@@ -60,12 +60,11 @@ test('D4: the scrim is a hidden sibling; the editor and «احفظ» are reached
   expect(screen.getByText(t.mobileValues.unsavedClose)).toBeTruthy();
 });
 
-test('D18: «إلغاء» comes before «احفظ» in the sheet', async () => {
+test('docs/07 «الأزرار» (forms, supersedes D18): «احفظ» then «إلغاء» in one ButtonRow', async () => {
   const sheet = await openRow(HORIZON);
-  const cancel = within(sheet).getByRole('button', { name: t.config.custom.cancel });
-  const save = within(sheet).getByRole('button', { name: t.config.custom.save });
-  const all = within(sheet).getAllByRole('button');
-  expect(all.indexOf(cancel)).toBeLessThan(all.indexOf(save));
+  const cells = within(sheet).getAllByTestId('button-row-cell');
+  expect(cells.map((cell) => within(cell).queryByText(t.config.custom.save) !== null)).toEqual([true, false]);
+  expect(cells.map((cell) => within(cell).queryByText(t.config.custom.cancel) !== null)).toEqual([false, true]);
 });
 
 test('D20: «أعد القيمة الافتراضية» puts the default in the draft; «احفظ» saves it', async () => {

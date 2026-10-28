@@ -54,13 +54,13 @@ test('reportState: nothing before the start or on a cancelled lesson; then sent 
   expect(reportState(pending, { ...yusuf, report: { id: 'r1', status: 'submitted' } }, AFTER)).toBe('submitted');
 });
 
-test('where a tap goes per role: admin file and sent report, teacher reports, nothing for sales', () => {
+test('where a tap goes per role: admin file and sent report, teacher reports, sales «تفاصيل الطالب» of any student', () => {
   const sent = { ...yusuf, report: { id: 'r1', status: 'submitted' as const } };
   expect(studentHref('admin', { id: 's1' })).toBe('/students/s1');
   expect(studentHref('teacher', { id: 's1' })).toBe('/teacher/reports/student/s1');
-  expect(studentHref('sales', { id: 's1' })).toBeNull();
-  // Sales opens «تفاصيل الطالب» of her own students only (docs/16 row 36).
-  expect(studentHref('sales', { id: 's1', mine: true })).toBe('/sales/students/s1');
+  // Sales opens «تفاصيل الطالب» of any student (owner 2026-10-28); the admin tree's sales pages the admin's file.
+  expect(studentHref('sales', { id: 's1' })).toBe('/sales/students/s1');
+  expect(studentHref('sales', { id: 's1' }, '')).toBe('/students/s1');
   expect(reportHref('admin', pending, sent)).toBe('/students/reports/view/r1');
   expect(reportHref('admin', pending, yusuf)).toBeNull();
   expect(reportHref('teacher', pending, yusuf)).toBe('/teacher/reports/l-pending');

@@ -11,6 +11,7 @@ import { useEarningsPayments, useEarningsSessions, type SessionFilter } from '..
 import type { EarningsScope } from '../lib/scope';
 import { SessionItem } from './SessionItem';
 
+// Owner 2026-10-28 (one container rule): the sessions and the payments sit in one inset card under the header.
 type Common = { scope: EarningsScope; header: ReactElement };
 type Query = { isPending: boolean; isError: boolean; isRefetching: boolean; refetch: () => unknown };
 
@@ -40,10 +41,8 @@ export function SessionsList({ scope, header, filter, selected, onToggle }: Sess
   );
   return (
     <LazyList
-      bleed={false}
       tabBar={false}
       endSpace={24}
-      gap={4}
       paged={list}
       keyExtractor={keyOf}
       ListHeaderComponent={header}
@@ -58,10 +57,8 @@ export function PaymentsList({ scope, header }: Common) {
   const list = useEarningsPayments(scope);
   return (
     <LazyList
-      bleed={false}
       tabBar={false}
       endSpace={24}
-      gap={4}
       paged={list}
       keyExtractor={keyOf}
       ListHeaderComponent={header}

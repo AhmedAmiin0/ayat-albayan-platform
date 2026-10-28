@@ -48,7 +48,7 @@ const ReportItem = memo(function ReportItem({ row, tz, who, onPdfFailed }: Repor
 /**
  * «سجل التقارير» of one of my students (R-REP-05, R-TCH-03): every sent report, newest first, with
  * its PDF once it is ready. The API allows only a student I teach. ponytail: no grade chart here
- * (the web has it); add it when teachers ask.
+ * (the web has it); add it when teachers ask. Compact h2 title, the rows in one inset card (owner 2026-10-28).
  */
 export function StudentReportsScreen({ admin = false }: { admin?: boolean }) {
   const { id = '' } = useLocalSearchParams<{ id: string }>();
@@ -69,7 +69,13 @@ export function StudentReportsScreen({ admin = false }: { admin?: boolean }) {
   const back = () => (router.canGoBack() ? router.back() : router.replace(admin ? `/students/${id}` : '/teacher/reports'));
   return (
     <Screen>
-      <ScreenHeader title={name} subtitle={t.reports.history} trailing={<Button variant="ghost" label={t.common.back} onPress={back} />} />
+      <ScreenHeader
+        title={name}
+        size="h2"
+        connecting
+        subtitle={t.reports.history}
+        trailing={<Button variant="ghost" label={t.common.back} onPress={back} />}
+      />
       {/* A teacher's trial student (the admin's view reads no /teachers/me, so never). */}
       <TrialChatNote status={teacherStudentStatus(me.data, id)} />
       {admin ? null : <RecordingsButton href={`/teacher/reports/student/recordings/${id}`} />}

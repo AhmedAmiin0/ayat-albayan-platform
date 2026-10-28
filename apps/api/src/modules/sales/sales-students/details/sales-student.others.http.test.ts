@@ -1,4 +1,4 @@
-import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
+import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import { LESSON, MINE, REPORT, studentsApp } from '../sales-students.fakes';
 
 type App = Awaited<ReturnType<typeof studentsApp>>;
@@ -14,6 +14,7 @@ describe('GET /sales/students/:id of another salesperson\'s student (docs/16 row
   });
   afterAll(() => t.app.close());
   beforeEach(() => t.reset());
+  afterEach(() => vi.useRealTimers());
 
   it('200 with mine = false: student, trial, attendance and «الجدول»; no subscription or report, neither read', async () => {
     const res = await t.call('GET', `/sales/students/${MINE}`, { token: 'salesB' });
@@ -41,14 +42,15 @@ describe('GET /sales/students/:id of another salesperson\'s student (docs/16 row
     expect((await t.call('GET', `/sales/students/${MINE}`, { token: 'salesA' })).json().trial).toEqual([]);
   });
 
-  it('mine-only stays mine: the report PDF is 404, moving or cancelling a lesson 403 not_your_student', async () => {
+  it('the report PDF stays mine-only (404); moving or cancelling another\'s lesson is allowed (owner 2026-10-28)', async () => {
+    vi.useFakeTimers({ now: new Date('2026-10-27T10:00:00Z'), toFake: ['Date'] }); // before the lesson ends
     const pdf = await t.call('GET', `/sales/students/${MINE}/reports/${REPORT}/pdf`, { token: 'salesB' });
     expect([pdf.statusCode, pdf.json().code]).toEqual([404, 'student_not_found']);
     expect(t.files.studentPdfUrl).not.toHaveBeenCalled();
     const move = await t.call('POST', `/sales/lessons/${LESSON}/reschedule`, { token: 'salesB', body: { startsAt: '2099-01-01T10:00:00.000Z' } });
     const cancel = await t.call('POST', `/sales/lessons/${LESSON}/cancel`, { token: 'salesB', body: {} });
-    expect([move.statusCode, move.json().code, cancel.statusCode, cancel.json().code]).toEqual([403, 'not_your_student', 403, 'not_your_student']);
-    expect(t.lessons.one.reschedule).not.toHaveBeenCalled();
-    expect(t.lessons.cancels.cancel).not.toHaveBeenCalled();
+    expect([move.statusCode, cancel.statusCode]).toEqual([200, 200]);
+    expect(t.lessons.one.reschedule).toHaveBeenCalledWith(expect.objectContaining({ lessonId: LESSON, actor: expect.objectContaining({ role: 'sales' }) }));
+    expect(t.lessons.cancels.cancel).toHaveBeenCalledWith(expect.objectContaining({ lessonId: LESSON }));
   });
 });

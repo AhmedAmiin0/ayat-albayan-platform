@@ -15,6 +15,7 @@ import { userErrorText } from '../shared/errors';
 import { backToUsers } from '../shared/nav';
 import { UserActions, type ActionMode } from '../panels/UserActions';
 import { UserEditFields } from './UserEditFields';
+import { UserPhoto } from './UserPhoto';
 import { UserSummary } from '../list/UserSummary';
 import type { FormErrors } from '../shared/validation';
 
@@ -73,6 +74,7 @@ export function UserEditor({ user, options, canWrite }: UserEditorProps) {
         ) : (
           <>
             {notice ? <Note>{notice}</Note> : null}
+            <UserPhoto user={user} canWrite={canWrite} />
             <UserSummary user={user} />
             <UserEditFields
               form={form}

@@ -5,7 +5,7 @@ import {
   type OnApplicationBootstrap,
   type OnModuleDestroy,
 } from '@nestjs/common';
-import { sleep } from '../../../common/async/sleep';
+import { sleep } from '../../../common/cache/sleep';
 import { NotificationPolicy } from '../../messaging/notification-rules/policy/policy';
 import { ReportPdfPublisher } from './report-pdf.publisher';
 import { ReportPdfQueries } from './report-pdf.queries';

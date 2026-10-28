@@ -41,6 +41,7 @@ describe('template health sync (docs/12 §3.4)', () => {
       body_ar: 'تم حجز حلقة {{1}} — {{2}}',
       footer_ar: 'أكاديمية آيات البيان',
       buttons: [{ type: 'url', url: 'https://meet.jit.si/{{1}}', text: 'ادخل الحلقة' }],
+      display: { header: null, buttons: [{ type: 'url', text: 'ادخل الحلقة', url: 'https://meet.jit.si/{{1}}' }] },
     });
   });
 

@@ -3,6 +3,7 @@ import { Pressable, View } from 'react-native';
 import { useClockCycle } from '@/core/lib/clock';
 import { t } from '@/core/lib/i18n/i18n';
 import { AppText } from '@/core/ui/primitives/AppText';
+import { statusWord } from '@/core/ui/feedback/lesson-status';
 import { toneColors } from '@/core/ui/feedback/StatusChip';
 import { type, useTheme } from '@/theme';
 import { riyadhTime, rowSubtitle, studentNames } from '../lib/lesson-text';
@@ -18,7 +19,8 @@ interface LessonRowProps<L extends TodayLesson> {
 
 /**
  * One lesson in «بقية اليوم» (docs/29 §4): the Riyadh time, the students and «أ. سلمى · 30 دقيقة»,
- * and at the end a 7pt dot with the status word in its tone. The whole row is one button: no
+ * and at the end a 7pt dot with the status word in its tone (short, and wrapping between words, never
+ * cut mid-word: owner 2026-10-28). The whole row is one button: no
  * buttons on it, every action is in the sheet.
  */
 export function LessonRow<L extends TodayLesson>({ lesson, onOpen, compact = false }: LessonRowProps<L>) {
@@ -27,7 +29,7 @@ export function LessonRow<L extends TodayLesson>({ lesson, onOpen, compact = fal
   const cycle = useClockCycle();
   const time = riyadhTime(lesson.starts_at, cycle);
   const names = studentNames(lesson);
-  const status = t.enums.lessonStatus[lesson.status];
+  const status = statusWord(lesson.status);
   return (
     <Pressable
       accessibilityRole="button"
@@ -43,6 +45,9 @@ export function LessonRow<L extends TodayLesson>({ lesson, onOpen, compact = fal
       })}
     >
       <AppText
+        numberOfLines={1}
+        adjustsFontSizeToFit
+        minimumFontScale={0.6}
         style={{
           width: cycle === '12' ? 70 : 46,
           fontFamily: type.ui[600],
@@ -65,9 +70,9 @@ export function LessonRow<L extends TodayLesson>({ lesson, onOpen, compact = fal
           {rowSubtitle(lesson)}
         </AppText>
       </View>
-      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, flexShrink: 1, maxWidth: '38%' }}>
         <View style={{ width: 7, height: 7, borderRadius: 3.5, backgroundColor: tone }} />
-        <AppText style={{ fontFamily: type.ui[500], fontSize: 12, lineHeight: 18, color: tone }}>{status}</AppText>
+        <AppText style={{ flexShrink: 1, fontFamily: type.ui[500], fontSize: 12, lineHeight: 18, color: tone }}>{status}</AppText>
       </View>
     </Pressable>
   );

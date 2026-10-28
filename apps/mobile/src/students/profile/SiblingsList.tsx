@@ -4,6 +4,7 @@ import { View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { ListRow } from '@/core/ui/layout/ListRow';
 import { StatusChip } from '@/core/ui/feedback/StatusChip';
+import { InsetGroup } from '@/core/ui/surface/inset';
 import { SectionLabel } from '../list/SectionLabel';
 import type { StudentRef } from '../shared/types';
 
@@ -13,8 +14,8 @@ export function SiblingsList({ siblings }: { siblings: StudentRef[] }) {
   return (
     <View style={{ gap: 6 }}>
       <SectionLabel>{t.students.siblings}</SectionLabel>
-      {/* Rows run edge to edge; ListRow has its own 16pt padding. */}
-      <View style={{ marginHorizontal: -16 }}>
+      {/* Owner 2026-10-28 (one container rule): the rows sit in one inset card inside the gutter. */}
+      <InsetGroup>
         {siblings.map((s) => (
           <ListRow
             key={s.id}
@@ -30,7 +31,7 @@ export function SiblingsList({ siblings }: { siblings: StudentRef[] }) {
             }
           />
         ))}
-      </View>
+      </InsetGroup>
     </View>
   );
 }

@@ -1,10 +1,12 @@
 import type { SalesTeacherView } from '@ab/shared';
+import { memo } from 'react';
 import { router } from 'expo-router';
 import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/more/Note';
 import { countsLine } from '@/students/list/student-kinds';
 import { ListRow } from '@/core/ui/layout/ListRow';
 import { StatusChip } from '@/core/ui/feedback/StatusChip';
+import { Avatar } from '@/core/ui/primitives/Avatar';
 import { useSalesHrefs } from '../lib/sales-href';
 import { teacherCounts, teacherLabel, teacherSubtitle } from '../lib/sales-text';
 
@@ -14,11 +16,13 @@ import { teacherCounts, teacherLabel, teacherSubtitle } from '../lib/sales-text'
  * never saffron). The row opens the teacher's students. Never pay, rates or phone; the fixed meeting
  * link only on the teacher's page.
  */
-export function SalesTeacherRow({ teacher }: { teacher: SalesTeacherView }) {
+export const SalesTeacherRow = memo(function SalesTeacherRow({ teacher }: { teacher: SalesTeacherView }) {
   const href = useSalesHrefs();
+  const name = teacherLabel(teacher);
   return (
     <ListRow
-      title={teacherLabel(teacher)}
+      leading={<Avatar name={name} id={teacher.id} src={teacher.avatar_url} decorative />}
+      title={name}
       subtitle={teacherSubtitle(teacher)}
       tags={
         <>
@@ -30,4 +34,4 @@ export function SalesTeacherRow({ teacher }: { teacher: SalesTeacherView }) {
       onPress={() => router.push(href.teacher(teacher.id))}
     />
   );
-}
+});

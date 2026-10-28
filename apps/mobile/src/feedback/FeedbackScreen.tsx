@@ -32,7 +32,7 @@ export function FeedbackScreen() {
         trailing={<Button variant="ghost" label={t.common.back} onPress={() => router.back()} />}
       />
       <LazyList
-        bleed={false}
+        inset={false}
         tabBar={false}
         endSpace={24}
         gap={12}

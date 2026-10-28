@@ -8,6 +8,7 @@ import {
   type Attendance,
   type LessonStatus,
 } from '@ab/shared';
+import type { Json } from '@ab/db';
 import { outcomeChange } from '../../../teaching/lessons/status/outcomes';
 import type { ChangeSet } from '../../../teaching/scheduling/change-set';
 import type { FormColumns } from '../report.mapper';
@@ -22,6 +23,8 @@ export type SubmitPayload = {
   lesson_change?: ChangeSet;
   /** Lesson already has an outcome: this student's lesson_students row, when it differs. */
   student?: { attendance: Attendance; chargeable: boolean };
+  /** v2 reports: the structured content, stored by submit_report_content in the same transaction. */
+  content?: Json;
 };
 
 export type SubmitPlanInput = {

@@ -38,6 +38,19 @@ export class StorageService {
     return { url, expires_at: new Date(Date.now() + seconds * 1000).toISOString() };
   }
 
+  /**
+   * Many GET URLs of one bucket in ONE Storage call (createSignedUrls): a list signs its photos together,
+   * never one request per row. path → url; a path Storage cannot sign (missing object) is left out.
+   */
+  async signedDownloads(input: { bucket: Bucket; paths: readonly string[]; seconds: number }): Promise<Map<string, string>> {
+    const out = new Map<string, string>();
+    if (!input.paths.length) return out;
+    const { data, error } = await this.db.storage.from(input.bucket).createSignedUrls([...input.paths], input.seconds);
+    if (error) throw new Error(`storage signed urls failed: ${error.message}`);
+    for (const row of data) if (row.path && row.signedUrl && !row.error) out.set(row.path, row.signedUrl);
+    return out;
+  }
+
   /** Server-side write (the PDF job). Overwrites: a re-rendered report keeps its path. */
   async upload(ref: ObjectRef & { body: Uint8Array; contentType: string }): Promise<void> {
     const { error } = await this.db.storage

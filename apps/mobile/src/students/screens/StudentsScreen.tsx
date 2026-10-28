@@ -19,7 +19,8 @@ const renderRow = ({ item }: { item: StudentListItem }) => <StudentRow student={
 /**
  * «الطلاب» tab (R-MOB-02): GET /students, searched server-side by name, phone in any format or code.
  * Filters like the web (status with GET /students/status-counts, teacher, program, package, weekly,
- * tz) and a server-side sort go to the same endpoint as query params.
+ * tz) and a server-side sort go to the same endpoint as query params. The list screens' one compact top
+ * (owner 2026-10-28): «الطلاب · 233» on the title's line, the pill search, one filter row, 8pt apart.
  */
 export function StudentsScreen() {
   const [search, setSearch] = useState('');
@@ -29,11 +30,8 @@ export function StudentsScreen() {
   const empty = filtered ? t.common.notFound : t.students.empty;
   return (
     <Screen list>
-      <ScreenHeader
-        title={t.nav.students}
-        subtitle={list.data ? t.students.count.replace('{n}', String(list.total)) : undefined}
-      />
-      <SearchField onSearch={setSearch} label={t.students.searchPlaceholder} />
+      <ScreenHeader title={t.nav.students} size="h2" connecting count={list.data ? list.total : undefined} />
+      <SearchField compact onSearch={setSearch} label={t.students.searchPlaceholder} />
       <StudentFilterBar value={filters} onChange={setFilters} searching={search !== ''} />
       <LazyList
         paged={list}

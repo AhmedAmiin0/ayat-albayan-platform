@@ -9,6 +9,7 @@ import { Note } from '@/more/Note';
 import { BellButton } from '@/notifications/BellButton';
 import { Notice } from '@/today/components/Notice';
 import { localDate } from '@/today/lib/timeline';
+import { useGreeting } from '@/today';
 import { useNow } from '@/core/lib/time/use-now';
 import { useLessonAction } from '@/today/lib/use-lesson-action';
 import { Button } from '@/core/ui/primitives/Button';
@@ -25,13 +26,18 @@ import { useClockCycle } from '@/core/lib/clock';
 
 const cities: Record<string, string | undefined> = t.tz;
 
-/** «تقريرين مستنيين» with the way to them, while any report is still to write. */
+/**
+ * «تقريرين مستنيين» with the way to them, while any report is still to write: the chip, then a full-width
+ * secondary button under it (docs/07 §6: no shrink-wrapped multi-word button, ghost is for headers).
+ */
 function PendingBanner({ count }: { count: number }) {
   if (count === 0) return null;
   return (
-    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 8 }}>
+    <View testID="pending-banner" style={{ alignItems: 'flex-start', gap: 8 }}>
       <StatusChip tone="act" glyph="hollow" label={counted(t.reports.pendingCount, count)} />
-      <Button variant="ghost" label={t.reports.pending} onPress={() => router.push('/teacher/reports')} />
+      <View style={{ alignSelf: 'stretch' }}>
+        <Button variant="secondary" label={t.reports.pending} onPress={() => router.push('/teacher/reports')} />
+      </View>
     </View>
   );
 }
@@ -50,14 +56,18 @@ export function TeacherTodayScreen() {
   const pending = usePendingReports();
   const action = useLessonAction();
   const inset = useTabBarInset();
+  const greeting = useGreeting(now);
   const lessons = lessonsOn(day.data ?? [], today, tz);
   const loaded = day.data !== undefined;
   const dateLine = `${formatRunningHead(now, locale).gregorian}. ${t.availability.tzHint.replace('{tz}', cities[tz] ?? tz)}`;
   const stale = day.isError && loaded;
   return (
     <Screen list>
+      {/* The greeting is the header (owner 2026-10-28: the tab already says «اليوم»). */}
       <ScreenHeader
-        title={t.teacherNav.today}
+        title={greeting}
+        size="h2"
+        connecting
         trailing={<BellButton tree="teacher" />}
         subtitle={stale ? `${dateLine} · ${t.mobile.lastUpdated.replace('{time}', clockAt(day.dataUpdatedAt, cycle))}` : dateLine}
       />

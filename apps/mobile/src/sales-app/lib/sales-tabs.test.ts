@@ -11,7 +11,7 @@ test('the full sales role: «اليوم» first (her landing), then chats, stude
     t.mobile.today,
     t.sales.nav.chats,
     t.sales.nav.allStudents,
-    t.sales.nav.academySchedule,
+    t.sales.nav.scheduleTab,
     t.mobile.more,
   ]);
   expect(tabs.every((tab) => !tab.hidden)).toBe(true);

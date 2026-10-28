@@ -26,6 +26,7 @@ test('the project and its services', () => {
     'ayat-api-a',
     'ayat-api-b',
     'ayat-lb',
+    'ayat-redis',
     'ayat-worker',
   ]);
 });
@@ -76,9 +77,16 @@ test('memory limits fit the 8 GB VPS beside the CRM', () => {
     'ayat-api-a': 512,
     'ayat-api-b': 512,
     'ayat-lb': 64,
+    'ayat-redis': 96,
   });
-  // ≈ 2.1 GB of the 8 GB beside the CRM (the worker's 1 GB: Node heap + Chromium, docs/09).
-  assert.ok(Object.values(limits).reduce((a, b) => a + b, 0) <= 2176);
+  // ≈ 2.2 GB of the 8 GB beside the CRM (the worker's 1 GB: Node heap + Chromium, docs/09).
+  assert.ok(Object.values(limits).reduce((a, b) => a + b, 0) <= 2272);
+});
+
+test('the shared cache: every app process on ayat-redis, never published, started before the roll', () => {
+  for (const name of APPS) assert.equal(services[name].environment.REDIS_URL, 'redis://ayat-redis:6379', name);
+  assert.equal(services['ayat-redis'].ports, undefined);
+  assert.ok(roll.search(/^dc up -d --no-deps ayat-redis$/m) < roll.search(/^\s+roll ayat-/m), 'Redis before the first roll');
 });
 
 test('the load balancer: a pinned image, its own config only, both copies with active health checks', () => {

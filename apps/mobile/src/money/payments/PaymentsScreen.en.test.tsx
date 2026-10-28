@@ -27,8 +27,9 @@ test('an English run reads en.json: title, count, chips, method, attachments but
     totals: [{ currency: 'SAR', net: 145, payments: 145, refunds: 0 }],
   });
   await renderWithQuery(<PaymentsScreen />);
-  expect(await screen.findByRole('header', { name: 'All payments' })).toBeTruthy();
-  expect(await screen.findByText('1 entries')).toBeTruthy();
+  // Owner 2026-10-28: the total on the title's line, no separate count line.
+  expect(await screen.findByRole('header', { name: 'All payments · 1' })).toBeTruthy();
+  expect(screen.queryByText('1 entries')).toBeNull();
   expect(screen.getByRole('tab', { name: 'All months' })).toBeTruthy();
   expect(screen.getByText(/Bank transfer|bank/i)).toBeTruthy();
   expect(screen.getByRole('button', { name: /View attachments/ })).toBeTruthy();

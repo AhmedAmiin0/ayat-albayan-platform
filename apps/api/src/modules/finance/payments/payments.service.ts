@@ -1,5 +1,5 @@
 import type { TablesUpdate } from '@ab/db';
-import type { PaymentAttachmentView, PaymentCreate, PaymentUpdate, PaymentView } from '@ab/shared';
+import type { PaymentAttachmentView, PaymentWrite, PaymentUpdate, PaymentView } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
 import { notFound } from '../../../common/http/errors';
 import { MoneyWrites } from '../subscriptions/money/money-writes';
@@ -37,7 +37,7 @@ export class PaymentsService {
    * A retry of the same form (clientRequestId) returns the payment it already recorded, and re-runs its
    * follow-ups (idempotent): a trial → «مشترك» flip lost to a failure after the insert is applied then.
    */
-  async create(input: PaymentCreate, actorId: string): Promise<PaymentView> {
+  async create(input: PaymentWrite, actorId: string): Promise<PaymentView> {
     const replay = await this.replayOf(input.clientRequestId);
     if (replay) return this.replayed(replay, input, actorId);
     const sub = await this.receipts.subscription(input.subscriptionId);
@@ -103,7 +103,7 @@ export class PaymentsService {
   }
 
   /** A replay re-runs the follow-ups first, then saves (best effort) the form's files a failure lost. */
-  private async replayed(view: PaymentView, input: PaymentCreate, actorId: string): Promise<PaymentView> {
+  private async replayed(view: PaymentView, input: PaymentWrite, actorId: string): Promise<PaymentView> {
     const row = await this.row(view.id);
     await this.writes.replayed({ actorId, entity: 'payments', entityId: row.id, action: 'create', after: row }, studentOf(row));
     await this.files.saveLate(row, input, actorId);
@@ -111,7 +111,7 @@ export class PaymentsService {
   }
 
   /** Another send of the form booked it (lost the insert race, or a pre-insert check refused it just after): replay. */
-  private async raced(input: PaymentCreate, actorId: string, failure?: unknown): Promise<PaymentView> {
+  private async raced(input: PaymentWrite, actorId: string, failure?: unknown): Promise<PaymentView> {
     const raced = await this.replayOf(input.clientRequestId);
     if (raced) return this.replayed(raced, input, actorId);
     throw failure ?? notFound('payment_not_found');

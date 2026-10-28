@@ -17,6 +17,7 @@ export {
   type StudentBusyLesson,
 } from './conflicts/conflicts';
 export { type LinkSources, resolveMeetingLink } from './meeting-link';
+export { OccurrenceGenerator } from './occurrences/occurrence-generator';
 export { offsetChanges, type ProbeInput, probeOccurrences } from './occurrences/dst-probe';
 export {
   addDays,
@@ -50,3 +51,4 @@ export {
 } from './rules/rule-projection';
 export { ruleStudents, type RuleWithLinks, ScheduleQueries } from './schedule.queries';
 export { SchedulingModule } from './scheduling.module';
+export { SchedulingSettings } from './scheduling.settings';

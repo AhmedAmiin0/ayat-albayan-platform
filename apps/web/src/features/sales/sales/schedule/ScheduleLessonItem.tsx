@@ -19,9 +19,9 @@ export function ScheduleLessonItem({ lesson, now }: { lesson: SalesScheduleLesso
       <LessonChip lesson={lesson} onOpen={() => setOpen(true)} />
       {open && <SalesLessonDrawer lesson={lesson} now={now} onClose={() => setOpen(false)} />}
       {running && (
-        <div className="grid justify-items-start gap-1.5">
-          <StatusChip tone="ok" glyph="fill" size="sm" label={t.sales.academySchedule.liveNow} />
-          <EnterButton lesson={lesson} />
+        <div className="grid gap-1.5">
+          <StatusChip tone="ok" glyph="fill" size="sm" label={t.sales.academySchedule.liveNow} className="justify-self-start" />
+          <EnterButton lesson={lesson} className="justify-items-stretch" />
         </div>
       )}
     </li>

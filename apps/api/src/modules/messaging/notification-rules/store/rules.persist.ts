@@ -33,7 +33,7 @@ export class RulesPersist {
       await this.table.upsert(input.row, input.actorId);
       await this.settings.writeLegacy(input.legacy, input.actorId);
     } finally {
-      this.reader.invalidate();
+      this.reader.changed();
       kickConfigReload();
     }
   }

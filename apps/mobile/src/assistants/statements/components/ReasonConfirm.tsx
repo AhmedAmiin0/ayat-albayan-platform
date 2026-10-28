@@ -4,6 +4,7 @@ import { ErrorLine } from '@/inbox/ErrorLine';
 import { t } from '@/core/lib/i18n/i18n';
 import { shape, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
+import { ButtonRow } from '@/core/ui/actions';
 import { Button } from '@/core/ui/primitives/Button';
 import { Field } from '@/core/ui/form/Field';
 
@@ -15,7 +16,10 @@ interface ReasonConfirmProps {
   onCancel: () => void;
 }
 
-/** A confirm strip that needs a reason of three letters or more (void, un-pay; the API checks it too). */
+/**
+ * A confirm strip that needs a reason of three letters or more (void, un-pay; the API checks it too).
+ * ONE ButtonRow (docs/07 §6): the verb (primary) at the reading start, «إلغاء» (secondary) beside it.
+ */
 export function ReasonConfirm({ message, confirmLabel, busy, onConfirm, onCancel }: ReasonConfirmProps) {
   const { color } = useTheme();
   const [reason, setReason] = useState('');
@@ -26,21 +30,17 @@ export function ReasonConfirm({ message, confirmLabel, busy, onConfirm, onCancel
       <AppText style={{ color: color.ink }}>{message}</AppText>
       <Field label={t.finance.reason} value={reason} onChangeText={setReason} maxLength={500} required />
       {tried && short ? <ErrorLine message={t.assistants.error.reason_required} /> : null}
-      <View style={{ flexDirection: 'row', gap: 8 }}>
-        <View style={{ flex: 1 }}>
-          <Button variant="ghost" label={t.common.cancel} onPress={onCancel} disabled={busy} />
-        </View>
-        <View style={{ flex: 1 }}>
-          <Button
-            label={confirmLabel}
-            busy={busy}
-            onPress={() => {
-              setTried(true);
-              if (!short) onConfirm(reason.trim());
-            }}
-          />
-        </View>
-      </View>
+      <ButtonRow>
+        <Button
+          label={confirmLabel}
+          busy={busy}
+          onPress={() => {
+            setTried(true);
+            if (!short) onConfirm(reason.trim());
+          }}
+        />
+        <Button variant="secondary" label={t.common.cancel} onPress={onCancel} disabled={busy} />
+      </ButtonRow>
     </View>
   );
 }

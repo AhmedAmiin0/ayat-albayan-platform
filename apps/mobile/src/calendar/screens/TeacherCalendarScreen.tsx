@@ -2,7 +2,7 @@ import { RIYADH_TZ, teacherName, type LessonView } from '@ab/shared';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import { FlatList } from 'react-native';
-import { JoinClassroomButton } from '@/classroom/links/JoinClassroomButton';
+import { JoinAround } from '@/classroom';
 import { EditTimeSheet } from '@/edit-time/components/EditTimeSheet';
 import { t } from '@/core/lib/i18n/i18n';
 import { useFollowingDay } from '@/core/lib/time/use-following-day';
@@ -93,10 +93,9 @@ export function TeacherCalendarScreen() {
         role="admin"
         onClose={details.close}
         actions={(l) => (
-          <>
+          <JoinAround lesson={l}>
             <RowDefaultActions lesson={l} onReschedule={setMoving} onEditTime={setEditing} />
-            <JoinClassroomButton lesson={l} />
-          </>
+          </JoinAround>
         )}
         sheets={
           <>

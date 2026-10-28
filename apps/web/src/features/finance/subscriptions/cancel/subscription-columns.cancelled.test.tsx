@@ -26,7 +26,7 @@ describe('subscription rows: cancel offered, cancelled shown', () => {
     expect(within(live).getByRole('button', { name: t.subscriptions.cancel.action })).toBeTruthy();
     const gone = screen.getByText('ياسمين').closest('tr') as HTMLElement;
     expect(within(gone).getByText(t.enums.subscriptionStatus.cancelled)).toBeTruthy();
-    for (const name of [t.payments.record, t.subscriptions.pause, t.subscriptions.cancel.action])
+    for (const name of [t.payments.record, t.coursePause.action, t.coursePause.resume, t.subscriptions.cancel.action])
       expect(within(gone).queryByRole('button', { name })).toBeNull();
   });
 });

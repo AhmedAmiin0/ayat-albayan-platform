@@ -11,8 +11,7 @@ import {
 } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
-import { pathKey } from '@/core/lib/query/query-keys';
-import { submitReport } from './api';
+import { refreshAfterSubmit, submitReport } from './api';
 import { useAutosave } from './use-autosave';
 
 /** Form values; «البرنامج *» is the report's own, else the student's (the prefill; @ab/client-core). */
@@ -33,12 +32,7 @@ export function useReportEntry(initial: ReportView, studentProgram: Program) {
     onSuccess: async (view) => {
       setReport(view);
       setValues(entryValuesOf(view, studentProgram));
-      // The lesson moved (completed …), the pending list shrank, history has a new row.
-      await Promise.all([
-        client.invalidateQueries({ queryKey: pathKey('/lessons') }),
-        client.invalidateQueries({ queryKey: pathKey('/reports') }),
-        client.invalidateQueries({ queryKey: pathKey('/teachers/me/reports') }),
-      ]);
+      await refreshAfterSubmit(client);
     },
   });
   const saveState = useAutosave({ id: report.id, values, enabled: report.status === 'draft' && !submit.isPending });

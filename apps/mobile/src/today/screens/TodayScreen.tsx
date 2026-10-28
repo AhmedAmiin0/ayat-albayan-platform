@@ -2,7 +2,7 @@ import type { LessonView } from '@ab/shared';
 import { useState } from 'react';
 import { LessonDetailsSheet } from '@/calendar';
 import { LessonRowActions } from '@/calendar/agenda/LessonRowActions';
-import { JoinClassroomButton } from '@/classroom';
+import { JoinAround } from '@/classroom';
 import { EditTimeSheet } from '@/edit-time/components/EditTimeSheet';
 import { RescheduleSheet } from '@/teaching/reschedule/RescheduleSheet';
 import { HeroCard } from '../hero/HeroCard';
@@ -43,10 +43,9 @@ export function TodayScreen() {
           role="admin"
           onClose={details.close}
           actions={(lesson) => (
-            <>
+            <JoinAround lesson={lesson}>
               <LessonRowActions lesson={lesson} action={action} onReschedule={setMoving} onEditTime={setEditing} onLeave={details.close} />
-              <JoinClassroomButton lesson={lesson} />
-            </>
+            </JoinAround>
           )}
           sheets={
             <>

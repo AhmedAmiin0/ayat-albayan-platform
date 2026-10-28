@@ -9,6 +9,7 @@ import { SmallHeading as SectionLabel } from '../components/SmallHeading';
 import { ReportHistoryRow } from '@/teacher';
 import { fill } from '../lib/sales-text';
 import { openStudentReportPdf } from './student-api';
+import { InsetGroup } from '@/core/ui/surface/inset';
 
 /** 409 pdf_not_ready says so; anything else (offline, gone) the general error. */
 const pdfError = (e: unknown): string =>
@@ -27,7 +28,7 @@ export function ReportsSection({ studentId, reports }: { studentId: string; repo
       {reports.total > 0 ? <Note>{fill(s.reportsCount, { n: String(reports.total) })}</Note> : null}
       {error ? <ErrorLine message={error} /> : null}
       {reports.items.length === 0 ? <Note>{t.reports.noReports}</Note> : null}
-      <View style={{ marginHorizontal: -16 }}>
+      <InsetGroup>
         {reports.items.map((row) => (
           <ReportHistoryRow
             key={row.id}
@@ -36,7 +37,7 @@ export function ReportsSection({ studentId, reports }: { studentId: string; repo
             onPdf={() => void openStudentReportPdf(studentId, row.id).catch((e: unknown) => setError(pdfError(e)))}
           />
         ))}
-      </View>
+      </InsetGroup>
     </View>
   );
 }

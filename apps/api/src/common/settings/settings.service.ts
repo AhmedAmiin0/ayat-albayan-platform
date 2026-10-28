@@ -1,5 +1,7 @@
 import { publicSettings, readSettings, type AcademySettings, type PublicSettings } from '@ab/shared';
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, Optional } from '@nestjs/common';
+import { CACHE_KEYS } from '../cache/cache-keys';
+import { SharedCache } from '../cache/shared-cache';
 import { ConfigStore } from '../config-store/store/config-store.service';
 import { DEFAULT_TTL_MS, SETTINGS_CACHE_MS } from '../config-store/config-store.types';
 import { DB, type Db } from '../db/db.module';
@@ -18,6 +20,10 @@ export { SETTINGS_CACHE_MS };
 @Injectable()
 export class SettingsService {
   private cached: { at: number; value: Promise<AcademySettings> } | null = null;
+  /** After an invalidation the next load reads the database (not the shared copy) and shares it. */
+  private fresh = false;
+  /** The rows shared with the other API copies (REDIS_URL); absent in unit tests = this process only. */
+  @Optional() @Inject(SharedCache) private readonly shared?: SharedCache;
 
   constructor(
     @Inject(DB) private readonly db: Db,
@@ -30,12 +36,17 @@ export class SettingsService {
   /** Every setting, defaults filled in for missing or malformed rows (a copy: callers may spread it). */
   async all(now = Date.now()): Promise<AcademySettings> {
     if (!this.cached || now - this.cached.at >= this.ttlMs) {
-      const value = this.load();
-      this.cached = { at: now, value };
+      const read = this.load();
+      const entry = { at: now, value: read.then((r) => r.value) };
+      this.cached = entry;
+      // Rows taken from the shared copy keep only what is left of the TTL since their database read.
       // A failed read is not cached: the next call asks the database again.
-      value.catch(() => {
-        if (this.cached?.value === value) this.cached = null;
-      });
+      read.then(
+        ({ age }) => void (entry.at = now - age),
+        () => {
+          if (this.cached === entry) this.cached = null;
+        },
+      );
     }
     return { ...(await this.cached.value) };
   }
@@ -48,6 +59,7 @@ export class SettingsService {
   /** Forget the cached rows (after a write). */
   invalidate(): void {
     this.cached = null;
+    this.fresh = true;
   }
 
   /**
@@ -79,9 +91,17 @@ export class SettingsService {
     }
   }
 
-  private async load(): Promise<AcademySettings> {
-    const { data, error } = await this.db.from('settings').select('key, value');
-    if (error) throw new Error(`settings read failed: ${error.message}`);
-    return readSettings(data);
+  private async load(): Promise<{ value: AcademySettings; age: number }> {
+    const fresh = this.fresh;
+    this.fresh = false;
+    const load = async (): Promise<{ key: string; value: unknown }[]> => {
+      const { data, error } = await this.db.from('settings').select('key, value');
+      if (error) throw new Error(`settings read failed: ${error.message}`);
+      return data;
+    };
+    // Shared for half the TTL, like the permission sets (an entry's age is taken off the local TTL).
+    const ttlMs = Math.floor(this.ttlMs / 2);
+    const rows = this.shared ? await this.shared.readEntry({ key: CACHE_KEYS.settingsRows, ttlMs, load, fresh }) : { value: await load(), age: 0 };
+    return { value: readSettings(rows.value), age: rows.age };
   }
 }

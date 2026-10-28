@@ -27,11 +27,7 @@ import { Route as AdminStudentsRouteRouteImport } from './routes/admin/students/
 import { Route as AdminTeachersRouteRouteImport } from './routes/admin/teachers/route'
 import { Route as AssistantIndexRouteImport } from './routes/assistant/index'
 import { Route as ClassroomLessonIdRouteImport } from './routes/classroom.$lessonId'
-import { Route as FeedbackTokenRouteImport } from './routes/feedback.$token'
-import { Route as JoinLinkTokenRouteImport } from './routes/join.$linkToken'
-import { Route as MTokenRouteImport } from './routes/m.$token'
 import { Route as MeetingIdRouteImport } from './routes/meeting.$id'
-import { Route as STokenRouteImport } from './routes/s.$token'
 import { Route as SalesIndexRouteImport } from './routes/sales/index'
 import { Route as SalesAllStudentsRouteImport } from './routes/sales/all-students'
 import { Route as SalesEarningsRouteImport } from './routes/sales/earnings'
@@ -52,6 +48,11 @@ import { Route as TeacherInboxRouteImport } from './routes/teacher/inbox'
 import { Route as TeacherMessagesRouteImport } from './routes/teacher/messages'
 import { Route as TeacherPayoutsRouteImport } from './routes/teacher/payouts'
 import { Route as TeacherStudentsRouteImport } from './routes/teacher/students'
+import { Route as publicFeedbackTokenRouteImport } from './routes/(public)/feedback.$token'
+import { Route as publicJoinLinkTokenRouteImport } from './routes/(public)/join.$linkToken'
+import { Route as publicMTokenRouteImport } from './routes/(public)/m.$token'
+import { Route as publicPayTokenRouteImport } from './routes/(public)/pay.$token'
+import { Route as publicSTokenRouteImport } from './routes/(public)/s.$token'
 import { Route as AdminfinanceExpensesRouteImport } from './routes/admin/(finance)/expenses'
 import { Route as AdminfinanceFinanceRouteImport } from './routes/admin/(finance)/finance'
 import { Route as AdminfinanceInvoicesRouteImport } from './routes/admin/(finance)/invoices'
@@ -176,29 +177,9 @@ const ClassroomLessonIdRoute = ClassroomLessonIdRouteImport.update({
   path: '/classroom/$lessonId',
   getParentRoute: () => rootRouteImport,
 } as any)
-const FeedbackTokenRoute = FeedbackTokenRouteImport.update({
-  id: '/feedback/$token',
-  path: '/feedback/$token',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const JoinLinkTokenRoute = JoinLinkTokenRouteImport.update({
-  id: '/join/$linkToken',
-  path: '/join/$linkToken',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const MTokenRoute = MTokenRouteImport.update({
-  id: '/m/$token',
-  path: '/m/$token',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const MeetingIdRoute = MeetingIdRouteImport.update({
   id: '/meeting/$id',
   path: '/meeting/$id',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const STokenRoute = STokenRouteImport.update({
-  id: '/s/$token',
-  path: '/s/$token',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SalesIndexRoute = SalesIndexRouteImport.update({
@@ -300,6 +281,31 @@ const TeacherStudentsRoute = TeacherStudentsRouteImport.update({
   id: '/students',
   path: '/students',
   getParentRoute: () => TeacherRoute,
+} as any)
+const publicFeedbackTokenRoute = publicFeedbackTokenRouteImport.update({
+  id: '/(public)/feedback/$token',
+  path: '/feedback/$token',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const publicJoinLinkTokenRoute = publicJoinLinkTokenRouteImport.update({
+  id: '/(public)/join/$linkToken',
+  path: '/join/$linkToken',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const publicMTokenRoute = publicMTokenRouteImport.update({
+  id: '/(public)/m/$token',
+  path: '/m/$token',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const publicPayTokenRoute = publicPayTokenRouteImport.update({
+  id: '/(public)/pay/$token',
+  path: '/pay/$token',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const publicSTokenRoute = publicSTokenRouteImport.update({
+  id: '/(public)/s/$token',
+  path: '/s/$token',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const AdminfinanceExpensesRoute = AdminfinanceExpensesRouteImport.update({
   id: '/(finance)/expenses',
@@ -491,11 +497,7 @@ export interface FileRoutesByFullPath {
   '/admin/communications': typeof AdminCommunicationsRoute
   '/admin/settings': typeof AdminSettingsRouteWithChildren
   '/classroom/$lessonId': typeof ClassroomLessonIdRoute
-  '/feedback/$token': typeof FeedbackTokenRoute
-  '/join/$linkToken': typeof JoinLinkTokenRoute
-  '/m/$token': typeof MTokenRoute
   '/meeting/$id': typeof MeetingIdRoute
-  '/s/$token': typeof STokenRoute
   '/sales/all-students': typeof SalesAllStudentsRoute
   '/sales/earnings': typeof SalesEarningsRoute
   '/sales/inbox': typeof SalesInboxRoute
@@ -519,6 +521,11 @@ export interface FileRoutesByFullPath {
   '/assistant/': typeof AssistantIndexRoute
   '/sales/': typeof SalesIndexRoute
   '/teacher/': typeof TeacherIndexRoute
+  '/feedback/$token': typeof publicFeedbackTokenRoute
+  '/join/$linkToken': typeof publicJoinLinkTokenRoute
+  '/m/$token': typeof publicMTokenRoute
+  '/pay/$token': typeof publicPayTokenRoute
+  '/s/$token': typeof publicSTokenRoute
   '/admin/expenses': typeof AdminfinanceExpensesRoute
   '/admin/finance': typeof AdminfinanceFinanceRoute
   '/admin/invoices': typeof AdminfinanceInvoicesRoute
@@ -564,11 +571,7 @@ export interface FileRoutesByTo {
   '/admin/communications': typeof AdminCommunicationsRoute
   '/admin/settings': typeof AdminSettingsRouteWithChildren
   '/classroom/$lessonId': typeof ClassroomLessonIdRoute
-  '/feedback/$token': typeof FeedbackTokenRoute
-  '/join/$linkToken': typeof JoinLinkTokenRoute
-  '/m/$token': typeof MTokenRoute
   '/meeting/$id': typeof MeetingIdRoute
-  '/s/$token': typeof STokenRoute
   '/sales/all-students': typeof SalesAllStudentsRoute
   '/sales/earnings': typeof SalesEarningsRoute
   '/sales/inbox': typeof SalesInboxRoute
@@ -592,6 +595,11 @@ export interface FileRoutesByTo {
   '/assistant': typeof AssistantIndexRoute
   '/sales': typeof SalesIndexRoute
   '/teacher': typeof TeacherIndexRoute
+  '/feedback/$token': typeof publicFeedbackTokenRoute
+  '/join/$linkToken': typeof publicJoinLinkTokenRoute
+  '/m/$token': typeof publicMTokenRoute
+  '/pay/$token': typeof publicPayTokenRoute
+  '/s/$token': typeof publicSTokenRoute
   '/admin/expenses': typeof AdminfinanceExpensesRoute
   '/admin/finance': typeof AdminfinanceFinanceRoute
   '/admin/invoices': typeof AdminfinanceInvoicesRoute
@@ -643,11 +651,7 @@ export interface FileRoutesById {
   '/admin/communications': typeof AdminCommunicationsRoute
   '/admin/settings': typeof AdminSettingsRouteWithChildren
   '/classroom/$lessonId': typeof ClassroomLessonIdRoute
-  '/feedback/$token': typeof FeedbackTokenRoute
-  '/join/$linkToken': typeof JoinLinkTokenRoute
-  '/m/$token': typeof MTokenRoute
   '/meeting/$id': typeof MeetingIdRoute
-  '/s/$token': typeof STokenRoute
   '/sales/all-students': typeof SalesAllStudentsRoute
   '/sales/earnings': typeof SalesEarningsRoute
   '/sales/inbox': typeof SalesInboxRoute
@@ -671,6 +675,11 @@ export interface FileRoutesById {
   '/assistant/': typeof AssistantIndexRoute
   '/sales/': typeof SalesIndexRoute
   '/teacher/': typeof TeacherIndexRoute
+  '/(public)/feedback/$token': typeof publicFeedbackTokenRoute
+  '/(public)/join/$linkToken': typeof publicJoinLinkTokenRoute
+  '/(public)/m/$token': typeof publicMTokenRoute
+  '/(public)/pay/$token': typeof publicPayTokenRoute
+  '/(public)/s/$token': typeof publicSTokenRoute
   '/admin/(finance)/expenses': typeof AdminfinanceExpensesRoute
   '/admin/(finance)/finance': typeof AdminfinanceFinanceRoute
   '/admin/(finance)/invoices': typeof AdminfinanceInvoicesRoute
@@ -723,11 +732,7 @@ export interface FileRouteTypes {
     | '/admin/communications'
     | '/admin/settings'
     | '/classroom/$lessonId'
-    | '/feedback/$token'
-    | '/join/$linkToken'
-    | '/m/$token'
     | '/meeting/$id'
-    | '/s/$token'
     | '/sales/all-students'
     | '/sales/earnings'
     | '/sales/inbox'
@@ -751,6 +756,11 @@ export interface FileRouteTypes {
     | '/assistant/'
     | '/sales/'
     | '/teacher/'
+    | '/feedback/$token'
+    | '/join/$linkToken'
+    | '/m/$token'
+    | '/pay/$token'
+    | '/s/$token'
     | '/admin/expenses'
     | '/admin/finance'
     | '/admin/invoices'
@@ -796,11 +806,7 @@ export interface FileRouteTypes {
     | '/admin/communications'
     | '/admin/settings'
     | '/classroom/$lessonId'
-    | '/feedback/$token'
-    | '/join/$linkToken'
-    | '/m/$token'
     | '/meeting/$id'
-    | '/s/$token'
     | '/sales/all-students'
     | '/sales/earnings'
     | '/sales/inbox'
@@ -824,6 +830,11 @@ export interface FileRouteTypes {
     | '/assistant'
     | '/sales'
     | '/teacher'
+    | '/feedback/$token'
+    | '/join/$linkToken'
+    | '/m/$token'
+    | '/pay/$token'
+    | '/s/$token'
     | '/admin/expenses'
     | '/admin/finance'
     | '/admin/invoices'
@@ -874,11 +885,7 @@ export interface FileRouteTypes {
     | '/admin/communications'
     | '/admin/settings'
     | '/classroom/$lessonId'
-    | '/feedback/$token'
-    | '/join/$linkToken'
-    | '/m/$token'
     | '/meeting/$id'
-    | '/s/$token'
     | '/sales/all-students'
     | '/sales/earnings'
     | '/sales/inbox'
@@ -902,6 +909,11 @@ export interface FileRouteTypes {
     | '/assistant/'
     | '/sales/'
     | '/teacher/'
+    | '/(public)/feedback/$token'
+    | '/(public)/join/$linkToken'
+    | '/(public)/m/$token'
+    | '/(public)/pay/$token'
+    | '/(public)/s/$token'
     | '/admin/(finance)/expenses'
     | '/admin/(finance)/finance'
     | '/admin/(finance)/invoices'
@@ -948,11 +960,12 @@ export interface RootRouteChildren {
   SetPasswordRoute: typeof SetPasswordRoute
   TeacherRoute: typeof TeacherRouteWithChildren
   ClassroomLessonIdRoute: typeof ClassroomLessonIdRoute
-  FeedbackTokenRoute: typeof FeedbackTokenRoute
-  JoinLinkTokenRoute: typeof JoinLinkTokenRoute
-  MTokenRoute: typeof MTokenRoute
   MeetingIdRoute: typeof MeetingIdRoute
-  STokenRoute: typeof STokenRoute
+  publicFeedbackTokenRoute: typeof publicFeedbackTokenRoute
+  publicJoinLinkTokenRoute: typeof publicJoinLinkTokenRoute
+  publicMTokenRoute: typeof publicMTokenRoute
+  publicPayTokenRoute: typeof publicPayTokenRoute
+  publicSTokenRoute: typeof publicSTokenRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -1083,39 +1096,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ClassroomLessonIdRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/feedback/$token': {
-      id: '/feedback/$token'
-      path: '/feedback/$token'
-      fullPath: '/feedback/$token'
-      preLoaderRoute: typeof FeedbackTokenRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/join/$linkToken': {
-      id: '/join/$linkToken'
-      path: '/join/$linkToken'
-      fullPath: '/join/$linkToken'
-      preLoaderRoute: typeof JoinLinkTokenRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/m/$token': {
-      id: '/m/$token'
-      path: '/m/$token'
-      fullPath: '/m/$token'
-      preLoaderRoute: typeof MTokenRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/meeting/$id': {
       id: '/meeting/$id'
       path: '/meeting/$id'
       fullPath: '/meeting/$id'
       preLoaderRoute: typeof MeetingIdRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/s/$token': {
-      id: '/s/$token'
-      path: '/s/$token'
-      fullPath: '/s/$token'
-      preLoaderRoute: typeof STokenRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/sales/': {
@@ -1257,6 +1242,41 @@ declare module '@tanstack/react-router' {
       fullPath: '/teacher/students'
       preLoaderRoute: typeof TeacherStudentsRouteImport
       parentRoute: typeof TeacherRoute
+    }
+    '/(public)/feedback/$token': {
+      id: '/(public)/feedback/$token'
+      path: '/feedback/$token'
+      fullPath: '/feedback/$token'
+      preLoaderRoute: typeof publicFeedbackTokenRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/(public)/join/$linkToken': {
+      id: '/(public)/join/$linkToken'
+      path: '/join/$linkToken'
+      fullPath: '/join/$linkToken'
+      preLoaderRoute: typeof publicJoinLinkTokenRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/(public)/m/$token': {
+      id: '/(public)/m/$token'
+      path: '/m/$token'
+      fullPath: '/m/$token'
+      preLoaderRoute: typeof publicMTokenRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/(public)/pay/$token': {
+      id: '/(public)/pay/$token'
+      path: '/pay/$token'
+      fullPath: '/pay/$token'
+      preLoaderRoute: typeof publicPayTokenRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/(public)/s/$token': {
+      id: '/(public)/s/$token'
+      path: '/s/$token'
+      fullPath: '/s/$token'
+      preLoaderRoute: typeof publicSTokenRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/admin/(finance)/expenses': {
       id: '/admin/(finance)/expenses'
@@ -1720,11 +1740,12 @@ const rootRouteChildren: RootRouteChildren = {
   SetPasswordRoute: SetPasswordRoute,
   TeacherRoute: TeacherRouteWithChildren,
   ClassroomLessonIdRoute: ClassroomLessonIdRoute,
-  FeedbackTokenRoute: FeedbackTokenRoute,
-  JoinLinkTokenRoute: JoinLinkTokenRoute,
-  MTokenRoute: MTokenRoute,
   MeetingIdRoute: MeetingIdRoute,
-  STokenRoute: STokenRoute,
+  publicFeedbackTokenRoute: publicFeedbackTokenRoute,
+  publicJoinLinkTokenRoute: publicJoinLinkTokenRoute,
+  publicMTokenRoute: publicMTokenRoute,
+  publicPayTokenRoute: publicPayTokenRoute,
+  publicSTokenRoute: publicSTokenRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

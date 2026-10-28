@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/form/button';
 import { Field } from '@/components/ui/form/field';
 import { FormAlert } from '@/components/ui/form/form-alert';
 import { Input } from '@/components/ui/form/input';
+import { ButtonRow } from '@/components/ui/layout/button-row';
 import { t } from '@/lib/i18n/i18n';
 import { cancelLesson, lessonErrorText, LESSONS_KEY } from '../api';
 import { ScopeRadios, type Scope } from './ScopeRadios';
@@ -72,14 +73,15 @@ export function CancelForm({ lesson, onBack, onDone }: CancelFormProps) {
         )}
       </Field>
       {cancel.isError && <FormAlert>{lessonErrorText(cancel.error)}</FormAlert>}
-      <div className="flex flex-wrap justify-end gap-2.5">
-        <Button type="button" variant="ghost" onClick={onBack}>
-          {t.lessons.back}
-        </Button>
+      {/* docs/07 «الأزرار» Forms: submit at the reading start, «رجوع» secondary. This form IS the confirm step, so the solid danger stays. */}
+      <ButtonRow>
         <Button type="submit" variant="danger" disabled={cancel.isPending}>
           {t.lessons.cancelSubmit}
         </Button>
-      </div>
+        <Button type="button" variant="secondary" onClick={onBack}>
+          {t.lessons.back}
+        </Button>
+      </ButtonRow>
     </form>
   );
 }

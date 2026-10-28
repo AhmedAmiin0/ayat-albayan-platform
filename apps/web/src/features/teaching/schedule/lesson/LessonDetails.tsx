@@ -1,4 +1,5 @@
 import { lessonStatusStyle, type LessonView, lessonWhenAt, subscriptionStatusStyle } from '@ab/shared';
+import { Avatar } from '@/components/ui/display/avatar';
 import { buttonVariants } from '@/components/ui/form/button';
 import { Ltr } from '@/components/ui/display/ltr';
 import { StatusChip } from '@/components/ui/display/status-chip';
@@ -53,7 +54,12 @@ export function LessonDetails({ lesson, onEditTime }: { lesson: LessonView; onEd
           </DetailRow>
         )}
         <DetailRow label={t.schedule.duration}>{lengthText(mins)}</DetailRow>
-        <DetailRow label={t.schedule.teacher}>{teacherLabel(lesson.teacher)}</DetailRow>
+        <DetailRow label={t.schedule.teacher}>
+          <span className="flex items-center gap-2.5">
+            <Avatar name={teacherLabel(lesson.teacher)} id={lesson.teacher.id} src={lesson.teacher.avatar_url} size="md" decorative />
+            {teacherLabel(lesson.teacher)}
+          </span>
+        </DetailRow>
         <DetailRow label={t.schedule.students}>
           {lesson.students.map((s) => (
             <span key={s.id} className="me-3 inline-flex items-baseline gap-1.5">
@@ -67,10 +73,13 @@ export function LessonDetails({ lesson, onEditTime }: { lesson: LessonView; onEd
           {platform ? (
             <span className="text-ink-2">{t.lessons.viaClassroom}</span>
           ) : lesson.meeting_link ? (
-            <a href={lesson.meeting_link} target="_blank" rel="noreferrer" className={buttonVariants({ variant: 'secondary', size: 'sm' })}>
-              {t.lessons.join}
-              <Ltr className="text-2xs text-ink-3">{lesson.meeting_link.replace(/^https?:\/\//, '')}</Ltr>
-            </a>
+            // docs/07 «الأزرار»: the URL on its own line (one line, cut, selectable), then the full-width link button.
+            <span className="grid gap-1.5">
+              <Ltr className="block max-w-full truncate text-xs text-ink-3">{lesson.meeting_link.replace(/^https?:\/\//, '')}</Ltr>
+              <a href={lesson.meeting_link} target="_blank" rel="noreferrer" className={buttonVariants({ variant: 'secondary' })}>
+                {t.lessons.join}
+              </a>
+            </span>
           ) : (
             <span className="text-ink-3">{t.lessons.noLink}</span>
           )}

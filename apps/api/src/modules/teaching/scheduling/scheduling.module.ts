@@ -29,6 +29,6 @@ import { SchedulingSettings } from './scheduling.settings';
     ScheduleQueries,
     SchedulingSettings,
   ],
-  exports: [BusyQueries, ConflictChecker, LessonWriter, OccurrenceGenerator, ScheduleQueries],
+  exports: [BusyQueries, ConflictChecker, LessonWriter, OccurrenceGenerator, ScheduleQueries, SchedulingSettings],
 })
 export class SchedulingModule {}

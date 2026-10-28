@@ -37,5 +37,8 @@ test('the greeting carries the first name from the profile', async () => {
   client.setQueryData(PROFILE_KEY, { full_name: 'أحمد أمين' });
   await renderWithQuery(<TodayHeader now={now} tree="sales" />, client);
   const named = t.today.greetingNamed.replace('{greeting}', t.today.greeting.evening).replace('{name}', 'أحمد');
-  expect(screen.getByText(named)).toBeTruthy();
+  expect(screen.getByRole('header', { name: named })).toBeTruthy();
+  // Owner 2026-10-28: the tab is already «اليوم», so the screen has no «اليوم» title of its own.
+  expect(screen.queryByText(t.today.title)).toBeNull();
+  expect(screen.getAllByRole('header')).toHaveLength(1);
 });

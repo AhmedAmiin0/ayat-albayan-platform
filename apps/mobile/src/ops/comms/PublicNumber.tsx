@@ -5,6 +5,7 @@ import { Note } from '@/more/Note';
 import { ListRow } from '@/core/ui/layout/ListRow';
 import { ltr } from '@/core/ui/primitives/Ltr';
 import { useSettings } from '../settings/use-settings';
+import { InsetGroup } from '@/core/ui/surface/inset';
 
 /**
  * «الرقم المعلن للأسر» (docs/23 §2d): academy_whatsapp_e164 from GET /settings, LTR, read-only here
@@ -16,9 +17,9 @@ export function PublicNumber() {
   if (phone === undefined) return null;
   return (
     <View style={{ gap: 4 }}>
-      <View style={{ marginHorizontal: -16 }}>
+      <InsetGroup>
         <ListRow title={h.publicNumber} trailing={<Note>{phone ? ltr(formatPhone(phone)) : h.publicNumberNone}</Note>} />
-      </View>
+      </InsetGroup>
       <Note>{h.publicNumberEdit}</Note>
     </View>
   );

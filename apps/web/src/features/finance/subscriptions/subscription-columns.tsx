@@ -15,7 +15,11 @@ const col = createColumnHelper<DataTableFeatures, SubscriptionView>();
 
 type Handlers = {
   onPay: (s: SubscriptionView, kind: 'payment' | 'refund') => void;
-  onPause: (s: SubscriptionView, paused: boolean) => void;
+  /** «إيقاف مؤقت» / «استئناف»: the student's whole course (owner 2026-10-28), not this package alone. */
+  onPause: (s: SubscriptionView) => void;
+  onResume: (s: SubscriptionView) => void;
+  /** courses.pause */
+  canPause: boolean;
   onCancel: (s: SubscriptionView) => void;
   onOpen: (studentId: string) => void;
 };
@@ -29,7 +33,7 @@ const packageOptions = PACKAGE_SIZES.filter((p) => p !== 'trial').map((p) => ({ 
  * package here, the status in the page head. The student (an embedded name) and the package line
  * (derived from the lessons) do not sort server-side.
  */
-export function subscriptionColumns({ onPay, onPause, onCancel, onOpen }: Handlers) {
+export function subscriptionColumns({ onPay, onPause, onResume, canPause, onCancel, onOpen }: Handlers) {
   return col.columns([
     col.accessor('student', {
       header: () => t.subscriptions.student,
@@ -109,9 +113,11 @@ export function subscriptionColumns({ onPay, onPause, onCancel, onOpen }: Handle
                 {t.finance.refund}
               </Button>
             )}
-            <Button type="button" variant="ghost" size="sm" onClick={() => onPause(s, s.status !== 'paused')}>
-              {s.status === 'paused' ? t.subscriptions.resume : t.subscriptions.pause}
-            </Button>
+            {canPause && (
+              <Button type="button" variant="ghost" size="sm" onClick={() => (s.status === 'paused' ? onResume(s) : onPause(s))}>
+                {s.status === 'paused' ? t.coursePause.resume : t.coursePause.action}
+              </Button>
+            )}
             {cancelOffered(s) && (
               <Button type="button" variant="ghost" size="sm" onClick={() => onCancel(s)}>
                 {t.subscriptions.cancel.action}

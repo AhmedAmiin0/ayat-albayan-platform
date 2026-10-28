@@ -1,5 +1,4 @@
 import { router } from 'expo-router';
-import { View } from 'react-native';
 import { allowedRows } from '@/auth/route-permissions';
 import type { Can } from '@/auth/use-permissions';
 import { AccountHeaderAvatar } from '@/account/components/AccountHeaderAvatar';
@@ -8,10 +7,12 @@ import { t } from '@/core/lib/i18n/i18n';
 import { AppearancePicker } from '@/more/appearance/AppearancePicker';
 import { ClockFormatPicker } from '@/more';
 import { LanguageRow } from '@/more/appearance/LanguageRow';
+import { PaymentLinksRow } from '@/sales-subscribe';
 import { SignOutButton } from '@/teacher/components/SignOutButton';
 import { ListRow } from '@/core/ui/layout/ListRow';
 import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
+import { InsetGroup } from '@/core/ui/surface/inset';
 
 const rows = () =>
   [
@@ -25,7 +26,8 @@ const rows = () =>
 /**
  * The salesperson's «المزيد»: the web SalesNav pages that do not earn a tab, in its order and with
  * its gates («المعلمون», «الحلقات الجارية», «الاشتراكات» with history, «أرباحي» with «مدفوعاتي»
- * inside) and the meetings (meetings.read, owner 2026-10-12) after «حسابي», then the appearance, the language and sign-out.
+ * inside) and the meetings (meetings.read, owner 2026-10-12) after «حسابي», «روابط الدفع» in the Stripe test build only,
+ * then the appearance, the language and sign-out.
  */
 export function SalesMoreScreen({ can }: { can: Can }) {
   return (
@@ -35,12 +37,13 @@ export function SalesMoreScreen({ can }: { can: Can }) {
         subtitle={t.mobileRoles.salesRole}
         trailing={<AccountHeaderAvatar href="/sales/more/account" />}
       />
-      <View style={{ marginHorizontal: -16 }}>
+      <InsetGroup>
         <AccountRow href="/sales/more/account" />
         {allowedRows(can, rows()).map((r) => (
           <ListRow key={r.href} title={r.title} onPress={() => router.push(r.href)} />
         ))}
-      </View>
+        <PaymentLinksRow />
+      </InsetGroup>
       <AppearancePicker />
       <ClockFormatPicker />
       <LanguageRow />

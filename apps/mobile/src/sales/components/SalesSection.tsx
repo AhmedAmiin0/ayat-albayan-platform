@@ -1,10 +1,10 @@
 import { router } from 'expo-router';
-import { View } from 'react-native';
 import { allowedRows } from '@/auth/route-permissions';
 import type { Can } from '@/auth/use-permissions';
 import { t } from '@/core/lib/i18n/i18n';
 import { Section } from '@/more/Section';
 import { ListRow } from '@/core/ui/layout/ListRow';
+import { InsetGroup } from '@/core/ui/surface/inset';
 
 const rows = () =>
   [
@@ -26,11 +26,11 @@ export function SalesSection({ can = () => true }: { can?: Can }) {
   if (shown.length === 0) return null;
   return (
     <Section title={t.sales.mobile.section}>
-      <View style={{ marginHorizontal: -16 }}>
+      <InsetGroup>
         {shown.map((r) => (
           <ListRow key={r.href} title={r.title} onPress={() => router.push(r.href)} />
         ))}
-      </View>
+      </InsetGroup>
     </Section>
   );
 }

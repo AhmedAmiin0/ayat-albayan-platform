@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/form/button';
 import { usePermissions } from '@/features/people/auth/use-permissions';
 import { RegistrationCheckTrigger } from '@/features/sales/sales/registration/RegistrationCheckButton';
 import { RegistrationCheckDialog } from '@/features/sales/sales/registration/RegistrationCheckDialog';
+import { useStripeFeature } from '@/features/sales/payment-links';
 import { TrialDateDialog } from '@/features/teaching/booking/trial-date/dialog/TrialDateDialog';
 import { t } from '@/lib/i18n/i18n';
 import { useInboxMode } from '../shared/mode';
@@ -13,6 +14,7 @@ import { canRegisterFrom } from '../sales/sales-register';
 import { salesFamilyQuery } from './api';
 import { SalesCourseDialog } from './course/SalesCourseDialog';
 import { SalesMoneyFlow, type FlowStart } from './SalesMoneyFlow';
+import { PaymentLinkDialog } from './payment-link/PaymentLinkDialog';
 import { SalesPrimaryAction } from './SalesPrimaryAction';
 import { hasCourse } from './SalesSubscribeAction';
 
@@ -35,6 +37,7 @@ export interface SalesFamilyActions {
  * picks among them), «اشتراك جديد» then moves to the menu; «سجّل تحويلًا بنكيًا» while a package is owed, «أيام الحلقات» per student with a course
  * (hasCourse), «موعد تجريبي جديد» per student with no running subscription (canPickTrialDate, with
  * the trial dates' history in its dialog); several children are named on each (the visible text is the accessible name).
+ * «رابط دفع» (docs/30) only in the Stripe test build with the API's feature on (useStripeFeature).
  * «تحقق من التسجيل» (students.check_registration) always goes in the menu. `compact` (phones):
  * the visible action is an icon button. Outside sales mode everything is empty. Every dialog's open
  * state lives here, so SalesChatFrame keeps them open across 900px (m13; round 2 B: the lead's
@@ -50,6 +53,8 @@ export function useSalesFamilyActions({ thread, compact = false }: { thread: Thr
   const [registering, setRegistering] = useState<LeadThread | null>(null);
   const [checking, setChecking] = useState(false);
   const [trialFor, setTrialFor] = useState<SalesStudentRef | null>(null);
+  const [linking, setLinking] = useState(false);
+  const stripe = useStripeFeature();
   if (mode !== 'sales') return { primary: null, items: [], dialogs: null };
   const students = sales ? (family.data?.students ?? []) : [];
   const checkItem = check ? [<RegistrationCheckTrigger key="check" onClick={() => setChecking(true)} />] : [];
@@ -62,6 +67,7 @@ export function useSalesFamilyActions({ thread, compact = false }: { thread: Thr
       {course && <SalesCourseDialog studentId={course} onClose={() => setCourse(null)} />}
       {trialFor && <TrialDateDialog mode="sales" student={trialFor} onClose={() => setTrialFor(null)} />}
       {opened && <SalesMoneyFlow {...opened} students={students} onClose={() => setOpened(null)} />}
+      {linking && <PaymentLinkDialog thread={thread} students={students} onClose={() => setLinking(false)} />}
     </>
   );
   if (students.length === 0) {
@@ -84,6 +90,7 @@ export function useSalesFamilyActions({ thread, compact = false }: { thread: Thr
     ...checkItem,
     ...(due.length > 0 ? [item('subscribe', t.salesMoney.newSubscription, subscribe)] : []),
     ...(students.some((s) => s.open.length > 0) ? [item('transfer', t.salesMoney.recordTransfer, () => setOpened({ start: 'transfer' }))] : []),
+    ...(stripe ? [item('payment-link', t.paymentLinks.action, () => setLinking(true))] : []),
     ...students.filter(hasCourse).map((s) => item(`course-${s.id}`, named(t.booking.courseDays, s.name), () => setCourse(s.id))),
     // «موعد تجريبي جديد» (owner 2026-10-25): her students without a running subscription only.
     ...students

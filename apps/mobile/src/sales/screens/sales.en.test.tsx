@@ -28,7 +28,7 @@ test('an English run reads en.json: the teacher’s English name, gender and pro
   mockApiFetch.mockResolvedValue([teacher()]);
   await renderWithQuery(<SalesTeachersScreen />);
   expect(await screen.findByText('Abrar Mohamed')).toBeTruthy();
-  expect(screen.getByRole('header', { name: en.sales.teachers.title })).toBeTruthy();
+  expect(screen.getByRole('header', { name: `${en.sales.teachers.title} · 1` })).toBeTruthy();
   expect(screen.getByText(`Female · ${en.enums.program.quran}, ${en.enums.program.arabic}`)).toBeTruthy();
   expect(screen.getByText(en.studentLists.counts.replace('{active}', '1').replace('{trial}', '1'))).toBeTruthy();
 });

@@ -109,7 +109,7 @@ export function ThreadPane({ phone, listSearch }: ThreadPaneProps) {
         onOlder={() => void detail.fetchNextPage()}
         waitingKeys={waiting}
         fill={fill}
-        canCall={!readOnly}
+        canCall={!readOnly} lessons={context.lessons}
       />
     </>
   );

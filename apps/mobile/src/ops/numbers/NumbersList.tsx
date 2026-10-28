@@ -1,5 +1,4 @@
 import type { NumberView, ParityView } from '@ab/shared';
-import { View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/more/Note';
 import { Section } from '@/more/Section';
@@ -7,6 +6,7 @@ import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { NumberRow } from './NumberRow';
 import { parityLine, sourceLine } from './numbers-words';
 import { useNumbers, useParity } from './use-numbers';
+import { InsetGroup } from '@/core/ui/surface/inset';
 
 const n = t.numbers;
 
@@ -18,11 +18,11 @@ function Loaded({ numbers, parity }: { numbers: NumberView[]; parity: ParityView
       {numbers.length === 0 ? (
         <Note>{n.empty}</Note>
       ) : (
-        <View style={{ marginHorizontal: -16 }}>
+        <InsetGroup>
           {numbers.map((number) => (
             <NumberRow key={number.id} number={number} />
           ))}
-        </View>
+        </InsetGroup>
       )}
     </>
   );

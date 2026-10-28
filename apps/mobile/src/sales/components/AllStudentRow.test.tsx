@@ -2,7 +2,6 @@ import { formatPhone } from '@ab/shared';
 import { fireEvent, render, screen } from '@testing-library/react-native';
 import { router } from 'expo-router';
 import type { ReactElement } from 'react';
-import { AccessibilityInfo } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { TreeBaseProvider } from '@/core/nav/tree-base';
 import { ltr } from '@/core/ui/primitives/Ltr';
@@ -32,31 +31,15 @@ test.each([
   expect(screen.getByRole('button').props.accessibilityHint).toBe(S.detailsHint);
   await fireEvent.press(screen.getByRole('button'));
   expect(router.push).toHaveBeenCalledWith('/sales/students/st1');
-  expect(screen.queryByText(S.noPhone)).toBeNull();
 });
 
-test('the admin tree, no saved phone: still a button, and a tap says so under the row (nothing opens)', async () => {
-  await render(<AllStudentRow student={student({ guardian_phone: null })} />);
-  const announce = jest.spyOn(AccessibilityInfo, 'announceForAccessibility');
-  expect(screen.queryByText(S.noPhone)).toBeNull();
-  expect(screen.getByRole('button').props.accessibilityHint).toBe(S.noPhoneHint);
+test.each([
+  ['one of mine', student({ mine: true })],
+  ['a student with no saved phone', student({ guardian_phone: null })],
+])('the admin tree (double role, «المزيد» › «المبيعات»): %s opens the admin\'s student file, never the chat', async (_, row) => {
+  await render(<AllStudentRow student={row} />);
+  expect(screen.getByRole('button').props.accessibilityHint).toBe(S.detailsHint);
   await fireEvent.press(screen.getByRole('button'));
-  expect(screen.getByText(S.noPhone)).toBeTruthy();
-  expect(router.push).not.toHaveBeenCalled();
-  expect(announce).toHaveBeenCalledWith(S.noPhone);
-});
-
-test('the admin tree (double role, «المزيد» › «المبيعات»): every row opens the chat there; it has no «تفاصيل الطالب»', async () => {
-  await render(<AllStudentRow student={student({ mine: true })} />);
-  expect(screen.getByRole('button').props.accessibilityHint).toBe(S.chatHint);
-  await fireEvent.press(screen.getByRole('button'));
-  expect(router.push).toHaveBeenCalledWith('/inbox/thread/%2B201001112223');
-});
-
-test('the admin tree: the no-phone note leaves once the row has a phone (a refetch)', async () => {
-  const view = await render(<AllStudentRow student={student({ guardian_phone: null })} />);
-  await fireEvent.press(screen.getByRole('button'));
-  expect(screen.getByText(S.noPhone)).toBeTruthy();
-  await view.rerender(<AllStudentRow student={student()} />);
-  expect(screen.queryByText(S.noPhone)).toBeNull();
+  expect(router.push).toHaveBeenCalledTimes(1);
+  expect(router.push).toHaveBeenCalledWith('/students/st1');
 });

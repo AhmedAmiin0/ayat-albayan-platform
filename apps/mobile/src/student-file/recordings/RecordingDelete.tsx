@@ -8,20 +8,17 @@ import { deleteError, useDeleteRecording } from './recording-actions';
 
 const D = t.mobileStudentFile.recordings.delete;
 
-/** Admin only: «حذف التسجيل» asks once more, then removes the file (the row stays as «محذوف»). */
+/** Admin only: «حذف التسجيل» (danger, full width) asks once more, then removes the file (the row stays as «محذوف»). */
 export function RecordingDelete({ id, studentId }: { id: string; studentId: string }) {
   const [asking, setAsking] = useState(false);
   const remove = useDeleteRecording(studentId);
   if (!asking) {
-    return (
-      <View style={{ alignItems: 'flex-start' }}>
-        <Button variant="ghost" label={D.action} onPress={() => setAsking(true)} />
-      </View>
-    );
+    return <Button variant="danger" label={D.action} onPress={() => setAsking(true)} />;
   }
   return (
     <View style={{ gap: 8 }}>
       <InlineConfirm
+        tone="danger"
         message={D.question}
         confirmLabel={remove.isPending ? D.deleting : D.confirm}
         busy={remove.isPending}

@@ -28,7 +28,7 @@ test('every student: name, code, teacher · program, guardian phone and name, st
   expect(screen.getByText(`${t.sales.allStudents.noTeacher} · ${t.enums.program.quran}`)).toBeTruthy();
   expect(screen.getAllByText(t.sales.mobile.guardianLine.replace('{name}', 'أحمد سالم'))).toHaveLength(2);
   expect(screen.getByText(t.enums.studentStatus.trial)).toBeTruthy();
-  expect(screen.getByRole('header', { name: t.sales.allStudents.title })).toBeTruthy();
+  expect(screen.getByRole('header', { name: `${t.sales.allStudents.title} · 2` })).toBeTruthy();
   expect(screen.getAllByText(ltr(formatPhone('+201001112223')))).toHaveLength(2);
   // The header's «رجوع» plus both rows (owner 2026-10-27: no row is a dead line).
   expect(screen.getAllByRole('button')).toHaveLength(3);

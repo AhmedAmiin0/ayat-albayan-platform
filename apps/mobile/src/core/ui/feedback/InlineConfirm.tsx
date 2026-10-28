@@ -1,6 +1,8 @@
+import type { Ref } from 'react';
 import { View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { shape, type, useTheme } from '@/theme';
+import { ButtonRow } from '../actions/ButtonRow';
 import { Button } from '../primitives/Button';
 import { AppText } from '../primitives/AppText';
 
@@ -9,17 +11,27 @@ interface InlineConfirmProps {
   message: string;
   /** Primary action, named by its verb («نقل لطلبات التوظيف»); defaults to «تأكيد». */
   confirmLabel?: string;
-  /** Ghost way out («سيبها هنا»); defaults to «إلغاء». */
+  /** Secondary way out («سيبها هنا»); defaults to «إلغاء». */
   cancelLabel?: string;
   onConfirm: () => void;
   onCancel: () => void;
   /** While the confirm request runs; pass the confirm label that says so. */
   busy?: boolean;
+  /**
+   * «danger»: the confirm cancels or deletes something, so it is the outlined danger, not green.
+   * «secondary»: a filled button already leads the section, so the confirm is outlined.
+   */
+  tone?: 'danger' | 'secondary';
+  /** The confirm button, e.g. to move screen-reader focus to it on open. */
+  confirmRef?: Ref<View>;
 }
 
-/** docs/07 §9 inline confirm strip: the question, then [cancel ghost][confirm primary] at 44pt. */
+/**
+ * docs/07 §9 inline confirm strip: the question, then ONE ButtonRow (docs/07 §6 «الأزرار»): the confirm
+ * (primary) at the reading start, the way out (secondary) beside it; they stack when they do not fit.
+ */
 export function InlineConfirm(props: InlineConfirmProps) {
-  const { message, onConfirm, onCancel, busy = false } = props;
+  const { message, onConfirm, onCancel, busy = false, confirmRef } = props;
   const { color } = useTheme();
   return (
     <View
@@ -43,14 +55,16 @@ export function InlineConfirm(props: InlineConfirmProps) {
       >
         {message}
       </AppText>
-      <View style={{ flexDirection: 'row', gap: 8 }}>
-        <View style={{ flex: 1 }}>
-          <Button variant="ghost" label={props.cancelLabel ?? t.common.cancel} onPress={onCancel} />
-        </View>
-        <View style={{ flex: 1 }}>
-          <Button label={props.confirmLabel ?? t.common.confirm} onPress={onConfirm} busy={busy} />
-        </View>
-      </View>
+      <ButtonRow>
+        <Button
+          ref={confirmRef}
+          variant={props.tone ?? 'primary'}
+          label={props.confirmLabel ?? t.common.confirm}
+          onPress={onConfirm}
+          busy={busy}
+        />
+        <Button variant="secondary" label={props.cancelLabel ?? t.common.cancel} onPress={onCancel} />
+      </ButtonRow>
     </View>
   );
 }

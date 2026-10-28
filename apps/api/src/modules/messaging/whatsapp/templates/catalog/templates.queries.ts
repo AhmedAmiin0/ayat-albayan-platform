@@ -1,6 +1,7 @@
 import type { Json, Tables, TablesInsert } from '@ab/db';
 import type { TemplateLineSync, WaLine } from '@ab/shared';
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, Optional } from '@nestjs/common';
+import { SharedCache } from '../../../../../common/cache/shared-cache';
 import { DB, type Db } from '../../../../../common/db/db.module';
 import type { ImportRow } from '../sync/template-import';
 import type { TemplatePatch } from '../sync/template-sync';
@@ -21,12 +22,17 @@ export class TemplatesQueries {
   /** cached(): one read per key a minute, shared by concurrent callers; cleared by every write here. */
   private readonly copies = new Map<string, { row: Promise<TemplateRow | null>; at: number }>();
 
-  constructor(@Inject(DB) private readonly db: Db) {}
+  constructor(
+    @Inject(DB) private readonly db: Db,
+    @Optional() private readonly shared?: SharedCache,
+  ) {
+    shared?.on('templates', () => this.copies.clear());
+  }
 
   /**
    * A thread's bubbles render each templated row (≤ 50 a page, mostly the same few keys): an in-memory
    * copy instead of a read per row. Dropped on update / insert here (template sync, submit, edits);
-   * another API copy's write shows here within TEMPLATE_COPY_MS. Display only: sends read get().
+   * another API copy's write (Redis: `templates`) drops it at once, else within TEMPLATE_COPY_MS. Display only: sends read get().
    */
   cached(key: string, now = Date.now()): Promise<TemplateRow | null> {
     const hit = this.copies.get(key);
@@ -35,6 +41,12 @@ export class TemplatesQueries {
     this.copies.set(key, { row, at: now });
     row.catch(() => this.copies.delete(key));
     return row;
+  }
+
+  /** After a write here: every copy, in this process and (Redis) the others. */
+  private forget(): void {
+    this.copies.clear();
+    void this.shared?.invalidate({ topic: 'templates' });
   }
 
   async all(): Promise<TemplateRow[]> {
@@ -56,7 +68,7 @@ export class TemplatesQueries {
       .eq('key', key)
       .select('*')
       .maybeSingle();
-    this.copies.clear();
+    this.forget();
     if (error) throw new Error(`template update failed: ${error.message}`);
     return data;
   }
@@ -71,7 +83,7 @@ export class TemplatesQueries {
       .upsert(row, { onConflict: 'meta_name,language', ignoreDuplicates: true })
       .select('*')
       .maybeSingle();
-    this.copies.clear();
+    this.forget();
     if (error) throw new Error(`template insert failed: ${error.message}`);
     return data;
   }

@@ -13,6 +13,7 @@ import { ReceiptViewer } from '../attachments/ReceiptViewer';
 /**
  * One payment or refund: the amount (refunds struck in saffron-free ink with the «استرداد» word),
  * student + code, method and day, who recorded it, then its «المرفقات» (bank, or a stored receipt), the booking invoice, or «بلا إيصال».
+ * The list's inset card draws the fill and the rule between payments (owner 2026-10-28).
  */
 export const PaymentItem = memo(function PaymentItem({ payment }: { payment: PaymentView }) {
   const { color } = useTheme();
@@ -29,7 +30,7 @@ export const PaymentItem = memo(function PaymentItem({ payment }: { payment: Pay
     .join(' · ');
   const small = { fontFamily: type.ui[400], fontSize: type.size.xs, lineHeight: type.lineHeight(type.size.xs), color: color.ink2 };
   return (
-    <View style={{ gap: 4, paddingHorizontal: 16, paddingVertical: 12, borderBottomWidth: 1, borderBottomColor: color.rule, backgroundColor: color.raised }}>
+    <View style={{ gap: 4, paddingHorizontal: 16, paddingVertical: 12 }}>
       <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', gap: 8 }}>
         <AppText style={{ flexShrink: 1, fontFamily: type.ui[600], fontSize: type.size.body, color: color.ink }}>
           {payment.student.name}

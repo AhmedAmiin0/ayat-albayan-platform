@@ -122,7 +122,7 @@ export function MessageMenu({ message: m, phone, onClose, onMoreEmoji }: Message
               }}
             />
           ) : null}
-          <Button variant="ghost" label={t.common.cancel} onPress={onClose} />
+          <Button variant="secondary" label={t.common.cancel} onPress={onClose} />
         </View>
       </Pressable>
     </Modal>

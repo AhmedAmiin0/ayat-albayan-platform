@@ -3,7 +3,7 @@
 # shared with the CRM) keeps proxying the API domain to 127.0.0.1:3110 unchanged.
 # Never touches the CRM stack in /opt/wacrm. Roll it with roll.sh (one build, one container at a time).
 # Memory (8 GB VPS shared with the CRM): 2 × 512 MB API + 1 GB worker (512 MB Node heap + Chromium PDFs) + 64 MB LB
-# ≈ 2.1 GB. After a deploy, measure the worker's RSS during a PDF render (docker stats) and adjust.
+# + 96 MB Redis ≈ 2.2 GB. After a deploy, measure the worker's RSS during a PDF render (docker stats) and adjust.
 name: ayat-albayan-staging
 
 x-app: &app
@@ -22,7 +22,19 @@ x-app: &app
     retries: 3
     start_period: 60s
 
+x-shared-env: &shared-env
+  # Shared cache (docs/09 «Shared cache»), on every app process. Redis down = the database, never an error.
+  REDIS_URL: redis://ayat-redis:6379
+  # Owner, 2026-10-28: «I want a new seperate build with stripe and all the features continue normally
+  # on the current build». STAGING ONLY (never a production file): mounts the Stripe test module
+  # (docs/30). Every Stripe route stays 404 until an admin turns on «تفعيل روابط الدفع»; the normal
+  # web build and the normal app never show Stripe (build flags). To switch it off: delete these two
+  # lines and redeploy (docs/09). API_PUBLIC_URL is the host of the family's /pay/<token> pages.
+  FEATURE_STRIPE: test
+  API_PUBLIC_URL: https://api.ayatalbayan.com
+
 x-api-env: &api-env
+  <<: *shared-env
   # HTTP and webhooks only: no job runs here; «run now» kicks go to the worker (APP_ROLE, docs/09).
   APP_ROLE: api
   # The host Caddy + ayat-lb: req.ip stays the visitor (the rate limits key on it).
@@ -37,6 +49,7 @@ services:
       context: ./src
       dockerfile: apps/api/Dockerfile
     environment:
+      <<: *shared-env
       # Every background job (outbox sender, reminders, PDFs, Google sync, …); HTTP for /health and the
       # internal kick route only, on the project network (no host port).
       APP_ROLE: worker
@@ -81,3 +94,19 @@ services:
       resources:
         limits:
           memory: 64M
+
+  # Shared cache for every copy and the worker. Internal network only: no published port. No persistence:
+  # everything in it is a copy of the database.
+  ayat-redis:
+    image: redis:7-alpine
+    command: ["redis-server", "--save", "", "--appendonly", "no", "--maxmemory", "64mb", "--maxmemory-policy", "allkeys-lru"]
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 3
+    deploy:
+      resources:
+        limits:
+          memory: 96M

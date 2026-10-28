@@ -74,6 +74,8 @@ lb() {
 }
 
 [ "$MODE" = "--env-only" ] || dc build ayat-worker
+# The shared cache first (docs/09 «Shared cache»): every copy and the worker find it as they start.
+dc up -d --no-deps ayat-redis
 
 legacy=$(docker ps -aq --filter "label=com.docker.compose.project=$PROJECT" --filter "label=com.docker.compose.service=ayat-api")
 if [ -n "$legacy" ]; then

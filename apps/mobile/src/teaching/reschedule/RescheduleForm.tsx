@@ -16,19 +16,21 @@ import { RescheduleDone } from './RescheduleDone';
 export interface RescheduleFormProps {
   lesson: LessonView;
   onClose: () => void;
+  /** «تم» on the success panel; onClose when absent (a chat's reply note remembers the move). */
+  onDone?: (() => void) | undefined;
 }
 
 /**
  * «تغيير ميعاد الحلقة» (R-SCH-07, journey 4): who and when now, then the move (MoveFields); once
  * the API answers, the new time and the guardian's confirmation (RescheduleDone).
  */
-export function RescheduleForm({ lesson, onClose }: RescheduleFormProps) {
+export function RescheduleForm({ lesson, onClose, onDone }: RescheduleFormProps) {
   const tz = familyTz(lesson);
   const durationMin = lessonDuration(lesson);
   const move = useReschedule(lesson.id);
   const [scope, setScope] = useState<Scope>('one');
 
-  if (move.data) return <RescheduleDone moved={move.data} scope={scope} tz={tz} onClose={onClose} />;
+  if (move.data) return <RescheduleDone moved={move.data} scope={scope} tz={tz} onClose={onDone ?? onClose} />;
   return (
     <View style={{ gap: 16 }}>
       <RescheduleHeading names={studentNames(lesson)} startsAt={lesson.starts_at} tz={tz} />

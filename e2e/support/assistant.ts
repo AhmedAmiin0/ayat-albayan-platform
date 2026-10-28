@@ -24,6 +24,8 @@ export async function assistant(tx: Tx, tag: string, terms?: Record<string, stri
   return u.id;
 }
 
+type SubInput = { price: number; currency?: string; startsOn?: string; usedBefore?: number };
+
 /** A guardian with one child; broughtBy = the sales profile (null: nobody brought them), broughtAt = when (default now). */
 export async function student(tx: Tx, input: { phone: string; broughtBy?: string | null; broughtAt?: string }): Promise<string> {
   const [g] = await tx<{ id: string }[]>`insert into public.guardians (name, phone_e164, country, tz)
@@ -35,10 +37,13 @@ export async function student(tx: Tx, input: { phone: string; broughtBy?: string
   return s.id;
 }
 
-export async function subscription(tx: Tx, studentId: string, input: { price: number; currency?: string }): Promise<string> {
+/** An 8-lesson package; starts_on defaults to today in Riyadh (a day before it is a course that already started). */
+export async function subscription(tx: Tx, studentId: string, input: SubInput): Promise<string> {
   const [s] = await tx<{ id: string }[]>`insert into public.subscriptions
-    (student_id, package, duration, lessons_total, price, currency, price_source, starts_on, created_at)
-    values (${studentId}, '8', 30, 8, ${input.price}, ${input.currency ?? 'SAR'}, '{}'::jsonb, current_date, clock_timestamp())
+    (student_id, package, duration, lessons_total, price, currency, price_source, starts_on, lessons_used_before, created_at)
+    values (${studentId}, '8', 30, 8, ${input.price}, ${input.currency ?? 'SAR'}, '{}'::jsonb,
+      coalesce(${input.startsOn ?? null}::date, (clock_timestamp() at time zone 'Asia/Riyadh')::date), ${input.usedBefore ?? 0},
+      clock_timestamp())
     returning id`;
   if (!s) throw new Error('subscription not written');
   return s.id;
@@ -76,7 +81,7 @@ export const renewalOf = async (tx: Tx, subscriptionId: string): Promise<(Commis
     statement_id, share_percent from public.assistant_commissions where subscription_id = ${subscriptionId} and kind = 'renewal'`)[0];
 
 /** A one-student family: brought by `by` (at `broughtAt`, default now), one package of `price`, nothing paid yet. */
-export async function brought(tx: Tx, input: { by: string; phone: string; price: number; currency?: string; broughtAt?: string }) {
+export async function brought(tx: Tx, input: SubInput & { by: string; phone: string; broughtAt?: string }) {
   const st = await student(tx, { phone: input.phone, broughtBy: input.by, ...(input.broughtAt ? { broughtAt: input.broughtAt } : {}) });
   return { student: st, sub: await subscription(tx, st, input) };
 }

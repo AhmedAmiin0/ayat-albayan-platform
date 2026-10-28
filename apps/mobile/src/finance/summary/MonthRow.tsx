@@ -6,7 +6,10 @@ import { AppText } from '@/core/ui/primitives/AppText';
 import { wholeText } from '../shared/format';
 import type { MonthFinance } from './summary-types';
 
-/** One month: the margin on top, then revenue, teacher cost and expenses on their own lines (they wrap, never clip). */
+/**
+ * One month: the margin on top, then revenue, teacher cost and expenses on their own lines (they wrap, never clip).
+ * It sits in «حسب الشهر»'s inset card (owner 2026-10-28: one container rule), which draws the fill and rules.
+ */
 export function MonthRow({ month: m, currency }: { month: MonthFinance; currency: string }) {
   const { color } = useTheme();
   const line = (label: string, value: number, strong = false) => (
@@ -18,7 +21,7 @@ export function MonthRow({ month: m, currency }: { month: MonthFinance; currency
     </View>
   );
   return (
-    <View style={{ gap: 4, paddingHorizontal: 16, paddingVertical: 10, borderBottomWidth: 1, borderBottomColor: color.rule, backgroundColor: color.raised }}>
+    <View style={{ gap: 4, paddingHorizontal: 16, paddingVertical: 10 }}>
       <AppText accessibilityRole="header" style={{ fontFamily: type.ui[600], fontSize: type.size.body, color: color.ink }}>
         {monthLabel(m.month)}
       </AppText>

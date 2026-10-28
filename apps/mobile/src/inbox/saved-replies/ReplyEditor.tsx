@@ -1,8 +1,9 @@
 import { SAVED_REPLY_BODY_MAX, SAVED_REPLY_TITLE_MAX, type SavedReply, type SavedReplyScope } from '@ab/shared';
 import { useState } from 'react';
-import { ScrollView, View } from 'react-native';
+import { ScrollView } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { Button } from '@/core/ui/primitives/Button';
+import { ButtonRow } from '@/core/ui/actions';
 import { Field } from '@/core/ui/form/Field';
 import { ErrorLine } from '../ErrorLine';
 import { type ReplySave, useSaveReply } from './api';
@@ -69,10 +70,10 @@ export function ReplyEditor({ reply, scope, onDone }: ReplyEditorProps) {
       />
       <ReplyFileField file={file} onChange={setFile} onBusy={setUploading} />
       {save.isError ? <ErrorLine message={replyError(save.error)} /> : null}
-      <View style={{ flexDirection: 'row', gap: 8 }}>
+      <ButtonRow>
         <Button label={save.isPending ? t.common.saving : t.common.save} busy={save.isPending} disabled={!ready} onPress={submit} />
-        <Button variant="ghost" label={t.common.cancel} onPress={onDone} />
-      </View>
+        <Button variant="secondary" label={t.common.cancel} onPress={onDone} />
+      </ButtonRow>
     </ScrollView>
   );
 }

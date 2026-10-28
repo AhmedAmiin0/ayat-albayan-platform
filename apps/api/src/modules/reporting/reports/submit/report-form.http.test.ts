@@ -29,7 +29,7 @@ describe('GET /lessons/:id/report-form (R1; R-REP-01, R-REP-04, issues A7, D1)',
     h.lessons.packages.mockResolvedValue(new Map([[STUDENT_ID, BALANCE]]));
     const res = await h.call({ method: 'GET', url: URL });
     expect(res.statusCode).toBe(200);
-    expect(h.reports.ensureDrafts).toHaveBeenCalledWith(lessonRow(), TEACHER.id);
+    expect(h.reports.ensureDrafts).toHaveBeenCalledWith(lessonRow(), { actorId: TEACHER.id, formVersion: 1 });
     const body = res.json();
     expect(body.lesson).toEqual({
       id: LESSON_ID,

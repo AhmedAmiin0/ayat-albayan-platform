@@ -1,5 +1,4 @@
 import { isEditableValueKey, SETTING_DEFAULTS, VALUE_CONFIRM, type SettingKey, type SettingMeta } from '@ab/shared';
-import { View } from 'react-native';
 import { ErrorLine } from '@/inbox/ErrorLine';
 import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/more/Note';
@@ -53,12 +52,10 @@ export function SheetNotes({ valueKey, saved, editable, canWrite, meta, onReset 
     <>
       {why ? <Note>{why}</Note> : null}
       {bounds ? <Note>{bounds}</Note> : null}
-      <View style={{ flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', columnGap: 8 }}>
-        <Note>{t.mobileValues.defaultValue.replace('{value}', valueText(valueKey, fallback))}</Note>
-        {editable && !sameValue(saved, fallback) ? (
-          <Button variant="ghost" label={t.settingsValues.resetDefault} onPress={onReset} />
-        ) : null}
-      </View>
+      <Note>{t.mobileValues.defaultValue.replace('{value}', valueText(valueKey, fallback))}</Note>
+      {editable && !sameValue(saved, fallback) ? (
+        <Button variant="secondary" label={t.settingsValues.resetDefault} onPress={onReset} />
+      ) : null}
       {meta ? <Note>{changedLine(meta, cycle)}</Note> : null}
       {tag ? <Note>{tag}</Note> : null}
       <DevKey settingKey={valueKey} />

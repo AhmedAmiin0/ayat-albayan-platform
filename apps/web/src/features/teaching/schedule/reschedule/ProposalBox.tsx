@@ -2,6 +2,7 @@ import { type LessonView, lessonWhenAt } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui/form/button';
 import { FormAlert } from '@/components/ui/form/form-alert';
+import { ButtonRow } from '@/components/ui/layout/button-row';
 import { NuqtaGlyph } from '@/components/ui/display/nuqta-glyph';
 import { t } from '@/lib/i18n/i18n';
 import { approveProposal, conflictsOf, lessonErrorText, LESSONS_KEY, rejectProposal } from '../api';
@@ -58,14 +59,14 @@ export function ProposalBox({ lesson, onDone }: ProposalBoxProps) {
       ) : (
         <>
           {(approve.isError || reject.isError) && <FormAlert>{lessonErrorText(approve.error ?? reject.error)}</FormAlert>}
-          <div className="flex flex-wrap gap-2">
-            <Button type="button" size="sm" disabled={busy} onClick={() => approve.mutate(undefined)}>
+          <ButtonRow>
+            <Button type="button" disabled={busy} onClick={() => approve.mutate(undefined)}>
               {t.lessons.proposal.approve}
             </Button>
-            <Button type="button" size="sm" variant="ghost" disabled={busy} onClick={() => reject.mutate()}>
+            <Button type="button" variant="secondary" disabled={busy} onClick={() => reject.mutate()}>
               {t.lessons.proposal.reject}
             </Button>
-          </div>
+          </ButtonRow>
         </>
       )}
     </section>

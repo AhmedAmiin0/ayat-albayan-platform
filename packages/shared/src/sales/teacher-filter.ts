@@ -37,3 +37,11 @@ export function isRunningLesson(lesson: Pick<SalesScheduleLesson, 'status' | 'st
   const at = now.getTime();
   return isOpenLesson(lesson.status) && Date.parse(lesson.starts_at) <= at && at < Date.parse(lesson.ends_at);
 }
+
+/**
+ * «تأكيد الحلقة» for sales (owner 2026-10-28): ANY lesson still scheduled that has not ended, with
+ * lessons.confirm (`holds`). Web and mobile show the button by it; the API checks again.
+ */
+export function canSalesConfirm(lesson: Pick<SalesScheduleLesson, 'status' | 'ends_at'>, input: { now: Date; holds: boolean }): boolean {
+  return input.holds && lesson.status === 'scheduled' && Date.parse(lesson.ends_at) > input.now.getTime();
+}

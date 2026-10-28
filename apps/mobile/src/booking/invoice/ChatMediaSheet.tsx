@@ -34,7 +34,7 @@ export function ChatMediaSheet({ phone, onPick, onClose }: ChatMediaSheetProps) 
           <MediaCard key={item.message_id} phone={phone} item={item} onPick={onPick} />
         ))}
       </View>
-      <Button variant="ghost" label={t.common.cancel} onPress={onClose} />
+      <Button variant="secondary" label={t.common.cancel} onPress={onClose} />
     </View>
   );
 }

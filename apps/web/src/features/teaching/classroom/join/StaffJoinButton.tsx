@@ -19,7 +19,8 @@ interface Props {
 /**
  * «ادخل الحلقة» for staff who may open the room (the admin, the lesson's teacher): while the room is
  * not open yet, «افتح الحلقة الآن» under the «تُفتح الساعة …» hint opens it for everyone at once
- * (POST /lessons/:id/room/open); the join button turns on without waiting for a refetch.
+ * (POST /lessons/:id/room/open); the join button turns on without waiting for a refetch. Both fill the
+ * width they are given (docs/07 «الأزرار»: never shrink-wrapped).
  */
 export function StaffJoinButton({ lesson, size = 'md' }: Props) {
   const now = useNow();
@@ -38,8 +39,8 @@ export function StaffJoinButton({ lesson, size = 'md' }: Props) {
   if (!isOpenLesson(lesson.status)) return null;
   const early = joinWindow(shown, now, win).state === 'early';
   return (
-    <div className="grid justify-items-start gap-1.5">
-      <EnterButton lesson={shown} size={size} now={now} />
+    <div className="grid gap-1.5">
+      <EnterButton lesson={shown} size={size} now={now} className="justify-items-stretch" />
       {early && (
         <Button type="button" variant="secondary" size={size} disabled={open.isPending} onClick={() => open.mutate(lesson.id)}>
           {open.isPending ? t.classroom.opening : t.classroom.openNow}

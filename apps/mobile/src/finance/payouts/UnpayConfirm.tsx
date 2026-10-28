@@ -3,6 +3,7 @@ import { View } from 'react-native';
 import { ErrorLine } from '@/inbox/ErrorLine';
 import { t } from '@/core/lib/i18n/i18n';
 import { shape, useTheme } from '@/theme';
+import { ButtonRow } from '@/core/ui/actions';
 import { Button } from '@/core/ui/primitives/Button';
 import { Field } from '@/core/ui/form/Field';
 import { AppText } from '@/core/ui/primitives/AppText';
@@ -25,21 +26,18 @@ export function UnpayConfirm({ message, busy, onConfirm, onCancel }: UnpayConfir
       <AppText style={{ color: color.ink }}>{message}</AppText>
       <Field label={t.finance.reason} value={reason} onChangeText={setReason} maxLength={500} required />
       {tried && short ? <ErrorLine message={t.finance.reasonRequired} /> : null}
-      <View style={{ flexDirection: 'row', gap: 8 }}>
-        <View style={{ flex: 1 }}>
-          <Button variant="ghost" label={t.common.cancel} onPress={onCancel} />
-        </View>
-        <View style={{ flex: 1 }}>
-          <Button
-            label={t.finance.unpay}
-            busy={busy}
-            onPress={() => {
-              setTried(true);
-              if (!short) onConfirm(reason.trim());
-            }}
-          />
-        </View>
-      </View>
+      <ButtonRow>
+        <Button
+          variant="danger"
+          label={t.finance.unpay}
+          busy={busy}
+          onPress={() => {
+            setTried(true);
+            if (!short) onConfirm(reason.trim());
+          }}
+        />
+        <Button variant="secondary" label={t.common.cancel} onPress={onCancel} />
+      </ButtonRow>
     </View>
   );
 }
