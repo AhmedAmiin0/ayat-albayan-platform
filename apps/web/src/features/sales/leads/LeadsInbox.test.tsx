@@ -48,7 +48,7 @@ describe('LeadsInbox (R-LEAD-01, R-LEAD-02)', () => {
     const row = within(screen.getByRole('listitem'));
     expect(row.getByText('+966 50 123 4567').getAttribute('dir')).toBe('ltr'); // grouped, display only
     expect(row.getByText(t.enums.leadSource.facebook_ad)).toBeTruthy();
-    expect(row.getByText('س')).toBeTruthy(); // avatar skips the kunya «أم»
+    expect(row.getByText('أ')).toBeTruthy(); // the one initials rule (avatarInitials): the first word's letter
     const chip = row.getByText(t.enums.leadStatus.interested_no_slot).closest('[data-tone]');
     expect(chip?.getAttribute('data-tone')).toBe('neutral');
     expect(apiFetch).toHaveBeenCalledWith('/leads?page=1&pageSize=25&status=interested_no_slot');

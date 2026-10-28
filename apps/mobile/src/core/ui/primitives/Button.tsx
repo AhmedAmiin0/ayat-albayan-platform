@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import type { ReactNode, Ref } from 'react';
 import { Pressable, View } from 'react-native';
 import { shape, type, useTheme } from '@/theme';
 import { AppText } from './AppText';
@@ -22,6 +22,8 @@ export interface ButtonProps {
   accessibilityLabel?: string;
   /** A leading icon in the label's colour (decorative: hidden from screen readers by the icon set). */
   icon?: (color: string) => ReactNode;
+  /** The pressable, e.g. to move screen-reader focus to it (focusNode). */
+  ref?: Ref<View>;
 }
 
 type Palette = ReturnType<typeof useTheme>['color'];
@@ -50,12 +52,13 @@ export const pressScale = (pressed: boolean, off: boolean) => (pressed && !off ?
  * given (a column, or a ButtonRow cell); never shrink-wrap a multi-word label (Android measured
  * «Join the lesson» narrower than it drew it and clipped it, 2026-10-28).
  */
-export function Button({ label, onPress, variant = 'primary', busy = false, ...p }: ButtonProps) {
+export function Button({ label, onPress, variant = 'primary', busy = false, ref, ...p }: ButtonProps) {
   const { color } = useTheme();
   const off = busy || p.disabled === true;
   const ink = buttonLook(variant, color, false).ink;
   return (
     <Pressable
+      ref={ref}
       accessibilityRole="button"
       accessibilityLabel={p.accessibilityLabel}
       accessibilityState={{ disabled: off, busy }}

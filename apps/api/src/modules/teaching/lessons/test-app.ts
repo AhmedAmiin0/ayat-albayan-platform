@@ -9,6 +9,8 @@ import { AuditService } from '../../../common/audit/audit.service';
 import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '../../../common/auth/auth.guard';
 import type { AuthUser } from '../../../common/auth/verify-token';
 import { SettingsService } from '../../../common/settings/settings.service';
+import { fakePhotos } from '../../../common/storage/avatars/avatars.fakes';
+import { StaffPhotos } from '../../../common/storage/avatars/staff-photos';
 import { NotificationPolicy } from '../../messaging/notification-rules/policy/policy';
 import { fakePolicy } from '../../messaging/notification-rules/policy/policy.fakes';
 import { ConflictChecker } from '../scheduling/conflicts/conflict-checker';
@@ -57,6 +59,7 @@ function mocks() {
     checker: { check: vi.fn() },
     me: { me: vi.fn() },
     unpaid: { studentIds: vi.fn() },
+    photos: fakePhotos().photos,
     proposals: { create: vi.fn(), get: vi.fn(), decide: vi.fn(), pendingLessonIds: vi.fn() },
   };
 }
@@ -84,6 +87,7 @@ export async function lessonsApp() {
     // LessonEvents → StudentTrialStatus listener (tested in subscriptions/student-trial-status.test.ts).
     .overrideProvider(StudentTrialQueries).useValue({ studentsOfTrialLessons: async () => [], lessonsOf: async () => [] })
     .overrideProvider(UnpaidFlags).useValue(m.unpaid)
+    .overrideProvider(StaffPhotos).useValue(m.photos)
     .compile();
   const app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter());
   await app.init();

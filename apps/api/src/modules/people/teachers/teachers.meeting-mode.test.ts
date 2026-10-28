@@ -25,7 +25,7 @@ const verify: TokenVerifier = async (token) => {
   return user;
 };
 const ID = '6f1c2b8e-0d0a-4c8e-9a51-2a6b0f6d9e11';
-const teachers = { list: vi.fn(), get: vi.fn(), insert: vi.fn(), update: vi.fn(), remove: vi.fn(), idByProfile: vi.fn() };
+const teachers = { list: vi.fn(), get: vi.fn(), insert: vi.fn(), update: vi.fn(), remove: vi.fn(), idByProfile: vi.fn(), photo: async () => null };
 const row = (meeting_mode: string | null) => ({ id: ID, display_name_ar: 'أ. سارة', meeting_link: null, meeting_mode });
 
 describe('TeachersController — meeting_mode', () => {

@@ -1,6 +1,7 @@
 import { type LinkCandidate, type LinkKind, type UserDetail, type UserPage, type UserRoleOption, type UserUpdate, type UsersListQuery } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
 import { badRequest, conflict, notFound } from '../../../common/http/errors';
+import { StaffPhotos } from '../../../common/storage/avatars/staff-photos';
 import { recordUser } from './audit/users.audit';
 import { adminProblem, chooseRole, lockedOutOfUsers, profilePatch, replaced, roleChangeBlocked, type UserState } from './users.logic';
 import { toUserDetail, toUserView } from './users.mapper';
@@ -24,15 +25,24 @@ export class UsersService {
   constructor(
     private readonly ports: UserPorts,
     private readonly effects: UserEffects,
+    private readonly photos: StaffPhotos,
   ) {}
 
+  /** Each row with its photo (a staff login's own, else its teacher record's), signed in one call for the page. */
   async list(query: UsersListQuery): Promise<UserPage> {
     const { rows, total } = await this.ports.store.list(query);
-    return { items: rows.map(toUserView), total, page: query.page, pageSize: query.pageSize };
+    const photos = await this.photos.ofProfiles(rows.map((r) => r.id));
+    const items = rows.map((r) => ({ ...toUserView(r), avatar_url: photos.get(r.id) ?? null }));
+    return { items, total, page: query.page, pageSize: query.pageSize };
   }
 
   async get(id: string): Promise<UserDetail> {
-    return toUserDetail(await this.row(id));
+    return this.detail(await this.row(id));
+  }
+
+  private async detail(row: UserRow): Promise<UserDetail> {
+    const photos = await this.photos.ofProfiles([row.id]);
+    return { ...toUserDetail(row), avatar_url: photos.get(row.id) ?? null };
   }
 
   /** 403 permission_not_held unless the actor holds the write permission of that table (students.write, ...). */
@@ -77,7 +87,7 @@ export class UsersService {
     if (input.email !== undefined) await this.ports.auth.update(id, { email: input.email });
     const after = await this.row(id);
     await recordUser(this.effects.audit, { actorId: actor.id, userId: id, action: 'update', before, after });
-    return toUserDetail(after);
+    return this.detail(after);
   }
 
   private assertSafe(ctx: { moved: UserState; actor: Actor; self: boolean }): void {

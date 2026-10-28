@@ -36,6 +36,7 @@ export function toSalesTeacher(row: SalesTeacherRow, ctx: TeacherContext = NO_CO
     trial_count: counts.trial,
     meeting_link: row.meeting_link?.trim() || null,
     platform_classroom: usesPlatform(meetingModeOf(row.meeting_mode), ctx.academyAuto ?? false),
+    avatar_url: row.avatar_url ?? null,
     students: current
       .map((s) => ({ id: s.id, code: s.code ?? '', name: s.name, program: s.program, status: s.status, next_lesson_at: ctx.next.get(s.id) ?? null }))
       .sort((a, b) => a.name.localeCompare(b.name, 'ar')),

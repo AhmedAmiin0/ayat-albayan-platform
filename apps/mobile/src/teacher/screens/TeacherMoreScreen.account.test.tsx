@@ -13,7 +13,7 @@ jest.mock('@/more/sign-out', () => ({ signOutDevice: jest.fn(async () => undefin
 
 test('R-ACC-01/05: the teacher’s More has «حسابي» and the avatar in its header', async () => {
   await renderWithQuery(<TeacherMoreScreen />);
-  expect(await screen.findByTestId('profile-avatar-initials', { includeHiddenElements: true })).toBeTruthy();
+  expect(await screen.findByTestId('avatar-initials', { includeHiddenElements: true })).toBeTruthy();
   await fireEvent.press(screen.getByRole('button', { name: t.account.mobile.open }));
   expect(router.push).toHaveBeenCalledWith('/teacher/more/account');
   await fireEvent.press(screen.getByText(t.account.nav));

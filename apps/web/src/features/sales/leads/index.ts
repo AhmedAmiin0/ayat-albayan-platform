@@ -1,4 +1,4 @@
-export { formatAge, formatDate, formatDateTime, initialOf } from './format';
+export { formatAge, formatDate, formatDateTime } from './format';
 export { jobApplicantsQuery, leadsQuery, PAGE_SIZE, reclassifyLead } from './leads.api';
 export { ReclassifyConfirm, type ReclassifyConfirmProps } from './list/ReclassifyConfirm';
 export {

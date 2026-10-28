@@ -33,15 +33,6 @@ export function leadAge(iso: string, now: Date = new Date()): string {
   return counted(age.days, Math.floor(ms / DAY));
 }
 
-// ponytail: copy of apps/web leads/format.ts initialOf; hoist to @ab/shared with the web's next pass.
-const KUNYA = /^(أم|ام|أبو|ابو)\s+/;
-
-/** Avatar letter: first letter of the name, skipping a kunya («أم سلمى» → «س»). Empty if unnamed. */
-export function initialOf(name: string | null): string {
-  const bare = (name ?? '').trim().replace(KUNYA, '');
-  return [...bare][0] ?? '';
-}
-
 /** «16:20» / «4:20 م» in the device's zone: when the cached list on screen was last fetched (R-MOB-03). */
 export function clockAt(epochMs: number, cycle: ClockCycle): string {
   return clockIn(new Date(epochMs), Intl.DateTimeFormat().resolvedOptions().timeZone, cycle);

@@ -30,11 +30,3 @@ export function formatAge(iso: string, now: Date = new Date()): string {
   if (ms < DAY) return relative.format(-Math.floor(ms / HOUR), 'hour');
   return relative.format(-Math.floor(ms / DAY), 'day');
 }
-
-const KUNYA = /^(أم|ام|أبو|ابو)\s+/;
-
-/** Avatar letter: first letter of the name, skipping a kunya («أم سلمى» → «س»). Empty if unnamed. */
-export function initialOf(name: string | null): string {
-  const bare = (name ?? '').trim().replace(KUNYA, '');
-  return [...bare][0] ?? '';
-}

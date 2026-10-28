@@ -7,7 +7,7 @@ import { accountMessage } from '../lib/account-errors';
 import { AccountCard } from '../components/AccountCard';
 import { type AvatarSource, pickAvatar, type PickedAvatar } from '../lib/avatar';
 import { AvatarButtons } from './AvatarButtons';
-import { ProfileAvatar } from './ProfileAvatar';
+import { Avatar } from '@/core/ui/primitives/Avatar';
 import { useAccountAction } from '../hooks/use-account-action';
 
 const a = t.account.avatar;
@@ -43,7 +43,7 @@ export function AvatarSection({ profile }: { profile: AccountProfile }) {
   return (
     <AccountCard title={a.title} error={error} notice={upload.notice ?? remove.notice}>
       <View style={{ alignItems: 'center', gap: 8 }}>
-        <ProfileAvatar name={profile.full_name} uri={picked?.uri ?? profile.avatar_url} size={96} />
+        <Avatar name={profile.full_name} id={profile.avatar_seed ?? profile.id} src={picked?.uri ?? profile.avatar_url} size="lg" />
       </View>
       <AvatarButtons
         picked={picked !== null}

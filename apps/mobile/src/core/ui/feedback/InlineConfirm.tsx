@@ -1,3 +1,4 @@
+import type { Ref } from 'react';
 import { View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { shape, type, useTheme } from '@/theme';
@@ -21,6 +22,8 @@ interface InlineConfirmProps {
    * «secondary»: a filled button already leads the section, so the confirm is outlined.
    */
   tone?: 'danger' | 'secondary';
+  /** The confirm button, e.g. to move screen-reader focus to it on open. */
+  confirmRef?: Ref<View>;
 }
 
 /**
@@ -28,7 +31,7 @@ interface InlineConfirmProps {
  * (primary) at the reading start, the way out (secondary) beside it; they stack when they do not fit.
  */
 export function InlineConfirm(props: InlineConfirmProps) {
-  const { message, onConfirm, onCancel, busy = false } = props;
+  const { message, onConfirm, onCancel, busy = false, confirmRef } = props;
   const { color } = useTheme();
   return (
     <View
@@ -54,6 +57,7 @@ export function InlineConfirm(props: InlineConfirmProps) {
       </AppText>
       <ButtonRow>
         <Button
+          ref={confirmRef}
           variant={props.tone ?? 'primary'}
           label={props.confirmLabel ?? t.common.confirm}
           onPress={onConfirm}
