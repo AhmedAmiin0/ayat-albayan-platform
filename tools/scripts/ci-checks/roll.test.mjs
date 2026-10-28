@@ -77,7 +77,8 @@ test('the workflow swaps and rolls under the deploy lock, and a failed roll runs
   assert.match(block, /rm lb\/Caddyfile\.new \|\| exit 4\n\s*\{ sh roll\.sh \|\| \{ sh rollback\.sh \|\| exit 3; exit 1; \}; \}' > \.deploy\.log 2>&1 < \/dev\/null/);
   assert.match(block, /setsid -w flock/, 'an ssh drop never stops the roll or its rollback halfway');
   for (const rc of ['75', '1', '3', '4', '255']) assert.match(workflow, new RegExp(`\\n\\s*${rc}\\) echo "::error::`), `exit ${rc} has its own message`);
-  assert.match(workflow, /flock -n -E 75 \.deploy\.lock sh rollback\.sh/, 'the health-check rollback too');
+  assert.match(workflow, /setsid -w flock -n -E 75 \.deploy\.lock sh rollback\.sh > \.deploy\.log 2>&1 < \/dev\/null/, 'the health-check rollback too, detached');
+  assert.match(workflow, /ServerAliveInterval 30\\n  ServerAliveCountMax 6/, 'keepalives: a silent roll never loses its ssh');
   assert.match(workflow, /flock -n -E 75 \.deploy\.lock sh -c 'if \[ -f roll\.sh \]/, 'env_only too');
   assert.doesNotMatch(workflow, /steps\.ship\.outcome == 'failure'/);
 });

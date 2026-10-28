@@ -210,7 +210,7 @@ jobs:
             echo "::warning::SSH_KNOWN_HOSTS is not set: the host key is fetched with ssh-keyscan on every run, so a man-in-the-middle on the runner network would go unnoticed. Pin it: ssh-keyscan -t ed25519 <host> and save the line as the secret SSH_KNOWN_HOSTS."
             ssh-keyscan -H "$SSH_HOST" > ~/.ssh/known_hosts
           fi
-          printf 'Host target\n  HostName %s\n  User %s\n  IdentityFile ~/.ssh/id_deploy\n  IdentitiesOnly yes\n  StrictHostKeyChecking yes\n' \
+          printf 'Host target\n  HostName %s\n  User %s\n  IdentityFile ~/.ssh/id_deploy\n  IdentitiesOnly yes\n  StrictHostKeyChecking yes\n  ServerAliveInterval 30\n  ServerAliveCountMax 6\n' \
             "$SSH_HOST" "$SSH_USER" > ~/.ssh/config
           ssh target "test -d $DEST" || { echo "::error::$DEST missing on the server"; exit 1; }
 
@@ -336,7 +336,8 @@ jobs:
         env:
           WEB_SWAPPED: ${{ steps.web.outcome == 'success' || steps.web.outcome == 'failure' }}
         run: |
-          ssh target "cd $DEST && flock -n -E 75 .deploy.lock sh rollback.sh"
+          # Detached like the roll (setsid, output in .deploy.log): an ssh drop or a cancel never stops it halfway.
+          ssh target "cd $DEST && setsid -w flock -n -E 75 .deploy.lock sh rollback.sh > .deploy.log 2>&1 < /dev/null; rc=\$?; cat .deploy.log; exit \$rc"
           if [ "$WEB_SWAPPED" = "true" ]; then
             ssh target "cd $DEST && { [ ! -d web.old ] || { rm -rf web.bad && mv web web.bad && mv web.old web; }; }"
           fi
