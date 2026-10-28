@@ -1807,7 +1807,8 @@
       "suggest": {
         "homeworkQuran": "Revise Surah {surah} from ayah {from} to {to} every day.",
         "nextNew": "New memorization: Surah {surah} {from}–{to}",
-        "nextRevision": "Revision: Surah {surah} {from}–{to}"
+        "nextRevision": "Revision: Surah {surah} {from}–{to}",
+        "lang": "en"
       },
       "family": {
         "title": "{name}'s lesson report",

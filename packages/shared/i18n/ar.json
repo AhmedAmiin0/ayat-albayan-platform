@@ -1807,7 +1807,8 @@
       "suggest": {
         "homeworkQuran": "مراجعة سورة {surah} من الآية {from} إلى {to} يوميًا.",
         "nextNew": "الحفظ الجديد: سورة {surah} {from}–{to}",
-        "nextRevision": "المراجعة: سورة {surah} {from}–{to}"
+        "nextRevision": "المراجعة: سورة {surah} {from}–{to}",
+        "lang": "ar"
       },
       "family": {
         "title": "تقرير حلقة {name}",
