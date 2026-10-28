@@ -8,7 +8,7 @@ const ICON = 24;
 const LETTER = 0.52;
 const SPACE = 0.3;
 
-export interface RowFitInput {
+interface RowFitInput {
   /** The row's measured width; 0 = not laid out yet. */
   width: number;
   /** One per cell; a cell whose label is unknown counts as 14 letters. */

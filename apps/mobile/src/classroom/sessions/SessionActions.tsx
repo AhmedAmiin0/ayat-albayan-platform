@@ -22,7 +22,7 @@ export function SessionActions({ lesson, group }: { lesson: LessonView; group: S
       ))}
       {open && can('classroom.host') ? <CopyLinkAction lessonId={lesson.id} /> : null}
       <Button
-        variant="ghost"
+        variant="secondary"
         label={t.classroom.recordings.title}
         onPress={() => router.push(`/more/live/recordings/${lesson.id}`)}
       />

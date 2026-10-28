@@ -3,6 +3,7 @@ import { t } from '@/core/lib/i18n/i18n';
 import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { Button } from '@/core/ui/primitives/Button';
+import { ButtonRow } from '@/core/ui/actions';
 import { FormLabel } from '../FormLabel';
 import { paidDayLabel } from '../lib/paid-day';
 
@@ -35,16 +36,10 @@ export function PaidDayPicker({ daysAgo, onChange, now }: PaidDayPickerProps) {
       >
         {paidDayLabel(now, daysAgo)}
       </AppText>
-      <View style={{ flexDirection: 'row', gap: 8 }}>
-        <View style={{ flex: 1 }}>
-          <Button variant="secondary" label={m.dayBefore} onPress={() => onChange(daysAgo + 1)} />
-        </View>
-        <View style={{ flex: 1 }}>
-          {daysAgo > 0 ? (
-            <Button variant="secondary" label={m.dayAfter} onPress={() => onChange(daysAgo - 1)} />
-          ) : null}
-        </View>
-      </View>
+      <ButtonRow>
+        <Button variant="secondary" label={m.dayBefore} onPress={() => onChange(daysAgo + 1)} />
+        {daysAgo > 0 ? <Button variant="secondary" label={m.dayAfter} onPress={() => onChange(daysAgo - 1)} /> : null}
+      </ButtonRow>
     </View>
   );
 }

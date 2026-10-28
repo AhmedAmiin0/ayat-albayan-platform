@@ -31,7 +31,12 @@ export function SubscriptionPanel({ data, phone }: SubscriptionPanelProps) {
     <View style={{ gap: 6, paddingVertical: 6, borderBottomWidth: 1, borderBottomColor: color.rule }}>
       <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 8 }}>
         {badge ? <StatusChip {...badgeChip(badge)} size="sm" /> : <View />}
-        {action ? <Button variant="secondary" label={action.label} onPress={() => router.push(action.href)} /> : null}
+        {action ? (
+          // Fills the rest of the line beside the chip: never shrink-wrapped (docs/07 «الأزرار»).
+          <View testID="subscribe-action" style={{ flex: 1 }}>
+            <Button variant="secondary" label={action.label} onPress={() => router.push(action.href)} />
+          </View>
+        ) : null}
       </View>
       {people.students.map((student) => (
         <ChildLines key={student.id} student={student} />

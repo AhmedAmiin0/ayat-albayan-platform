@@ -16,13 +16,13 @@ async function copy(lessonId: string): Promise<string> {
   return url;
 }
 
-/** «انسخ لينك الطالب»: a fresh guest link, copied to the clipboard and shown, no WhatsApp needed. */
+/** «انسخ لينك الطالب»: a fresh guest link, copied to the clipboard and shown, no WhatsApp needed. Full width (docs/07 «الأزرار»). */
 export function CopyLinkButton({ lesson }: { lesson: Pick<LessonView, 'id' | 'status'> }) {
   const make = useMutation({ mutationFn: copy });
   if (!isOpenLesson(lesson.status)) return null;
   return (
     <div className="grid gap-1.5">
-      <Button type="button" variant="secondary" className="justify-self-start" disabled={make.isPending} onClick={() => make.mutate(lesson.id)}>
+      <Button type="button" variant="secondary" disabled={make.isPending} onClick={() => make.mutate(lesson.id)}>
         {make.isPending ? t.classroom.copying : t.classroom.copyLink}
       </Button>
       {make.data && (

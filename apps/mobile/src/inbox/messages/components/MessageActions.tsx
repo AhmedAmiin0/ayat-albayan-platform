@@ -3,6 +3,7 @@ import { Linking, View } from 'react-native';
 import { ApiError } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
 import { Button } from '@/core/ui/primitives/Button';
+import { ButtonRow } from '@/core/ui/actions';
 import { InlineConfirm } from '@/core/ui/feedback/InlineConfirm';
 import { ErrorLine } from '../../ErrorLine';
 import { useMessageAction } from '../../thread/hooks/use-thread';
@@ -26,24 +27,26 @@ export function MessageActions({ message: m, phone }: { message: MessageView; ph
   const sending = e instanceof ApiError && (e.body as { code?: unknown } | null)?.code === 'not_manual';
   return (
     <View style={{ gap: 6, marginTop: 4 }}>
-      {failed && canRetryCode(m.error_code) ? (
-        <Button
-          variant="secondary"
-          label={retry.isPending ? t.messages.retrying : t.messages.retry}
-          busy={retry.isPending}
-          onPress={() => retry.mutate(m.id)}
-        />
-      ) : null}
-      {link ? (
-        <Button
-          variant="ghost"
-          label={t.messages.clickToChat}
-          onPress={() => {
-            if (asking) return void Linking.openURL(link); // already held
-            handOff.mutate(m.id, { onSuccess: () => void Linking.openURL(link) });
-          }}
-        />
-      ) : null}
+      <ButtonRow>
+        {failed && canRetryCode(m.error_code) ? (
+          <Button
+            variant="secondary"
+            label={retry.isPending ? t.messages.retrying : t.messages.retry}
+            busy={retry.isPending}
+            onPress={() => retry.mutate(m.id)}
+          />
+        ) : null}
+        {link ? (
+          <Button
+            variant="secondary"
+            label={t.messages.clickToChat}
+            onPress={() => {
+              if (asking) return void Linking.openURL(link); // already held
+              handOff.mutate(m.id, { onSuccess: () => void Linking.openURL(link) });
+            }}
+          />
+        ) : null}
+      </ButtonRow>
       {asking ? (
         <InlineConfirm
           message={t.messages.handedOff}

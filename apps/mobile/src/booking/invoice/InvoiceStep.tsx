@@ -64,7 +64,7 @@ export function InvoiceStep({ requestId, chatPhone, value, onChange, onNext }: I
         onRemove={() => onChange(null)}
       />
       {retry && up.error ? (
-        <Button variant="ghost" label={m.retryUpload} onPress={() => void up.upload(retry)} />
+        <Button variant="secondary" label={m.retryUpload} onPress={() => void up.upload(retry)} />
       ) : null}
       {up.error ? <ErrorLine message={up.error} /> : null}
       <Button

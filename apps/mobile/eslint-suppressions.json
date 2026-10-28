@@ -296,7 +296,7 @@
   },
   "src/calendar/agenda/AgendaLessonRow.tsx": {
     "ab/module-boundaries": {
-      "count": 3
+      "count": 2
     }
   },
   "src/calendar/agenda/LessonRowActions.tsx": {
@@ -346,12 +346,12 @@
   },
   "src/calendar/screens/DayScheduleScreen.tsx": {
     "ab/module-boundaries": {
-      "count": 6
+      "count": 5
     }
   },
   "src/calendar/screens/TeacherCalendarScreen.tsx": {
     "ab/module-boundaries": {
-      "count": 4
+      "count": 3
     }
   },
   "src/classroom/assistants/AssistantLessonItem.tsx": {
@@ -1631,7 +1631,7 @@
   },
   "src/teacher/components/TeacherLessonCard.tsx": {
     "ab/module-boundaries": {
-      "count": 4
+      "count": 3
     }
   },
   "src/teacher/components/TeacherScope.tsx": {

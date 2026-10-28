@@ -26,13 +26,18 @@ import { useClockCycle } from '@/core/lib/clock';
 
 const cities: Record<string, string | undefined> = t.tz;
 
-/** «تقريرين مستنيين» with the way to them, while any report is still to write. */
+/**
+ * «تقريرين مستنيين» with the way to them, while any report is still to write: the chip, then a full-width
+ * secondary button under it (docs/07 §6: no shrink-wrapped multi-word button, ghost is for headers).
+ */
 function PendingBanner({ count }: { count: number }) {
   if (count === 0) return null;
   return (
-    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 8 }}>
+    <View testID="pending-banner" style={{ alignItems: 'flex-start', gap: 8 }}>
       <StatusChip tone="act" glyph="hollow" label={counted(t.reports.pendingCount, count)} />
-      <Button variant="ghost" label={t.reports.pending} onPress={() => router.push('/teacher/reports')} />
+      <View style={{ alignSelf: 'stretch' }}>
+        <Button variant="secondary" label={t.reports.pending} onPress={() => router.push('/teacher/reports')} />
+      </View>
     </View>
   );
 }

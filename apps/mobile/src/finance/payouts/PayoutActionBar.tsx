@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { View } from 'react-native';
 import { ErrorLine } from '@/inbox/ErrorLine';
 import { t } from '@/core/lib/i18n/i18n';
+import { ButtonRow } from '@/core/ui/actions';
 import { Button } from '@/core/ui/primitives/Button';
 import { InlineConfirm } from '@/core/ui/feedback/InlineConfirm';
 import { financeErrorText } from '../shared/errors';
@@ -14,6 +15,8 @@ import { UnpayConfirm } from './UnpayConfirm';
 import { usePayoutMove } from './use-payout-move';
 
 type Move = 'approve' | 'reopen' | 'unpay';
+/** docs/07 §6: the filled one («اعتماد» / «تأكيد الدفع») sits alone; the rest share ONE ButtonRow. */
+const isPrimary = (a: string) => a === 'approve' || a === 'pay';
 interface PayoutActionBarProps {
   payout: PayoutView;
   onPay: () => void;
@@ -65,8 +68,8 @@ export function PayoutActionBar({ payout, onPay, onDone }: PayoutActionBarProps)
   const button = {
     approve: <Button key="approve" label={t.payouts.approve} onPress={() => setAsking('approve')} />,
     pay: <Button key="pay" label={t.finance.confirmPaid} onPress={onPay} />,
-    reopen: <Button key="reopen" variant="ghost" label={t.finance.reopen} onPress={() => setAsking('reopen')} />,
-    unpay: <Button key="unpay" variant="ghost" label={t.finance.unpay} onPress={() => setAsking('unpay')} />,
+    reopen: <Button key="reopen" variant="secondary" label={t.finance.reopen} onPress={() => setAsking('reopen')} />,
+    unpay: <Button key="unpay" variant="danger" label={t.finance.unpay} onPress={() => setAsking('unpay')} />,
     receipt: (
       <Button
         key="receipt"
@@ -79,9 +82,11 @@ export function PayoutActionBar({ payout, onPay, onDone }: PayoutActionBarProps)
       />
     ),
   };
+  const actions = payoutActions(payout);
   return (
     <View style={{ gap: 8 }}>
-      {payoutActions(payout).map((a) => button[a])}
+      {actions.filter(isPrimary).map((a) => button[a])}
+      <ButtonRow>{actions.filter((a) => !isPrimary(a)).map((a) => button[a])}</ButtonRow>
       {receiptError ? <ErrorLine message={t.mobileFinance.payouts.receiptFailed} /> : null}
     </View>
   );

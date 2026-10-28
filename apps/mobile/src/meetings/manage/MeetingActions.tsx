@@ -35,7 +35,7 @@ export function MeetingActions({ meeting, tz }: { meeting: MeetingView; tz: stri
       ) : null}
       {m.newUrl ? <MeetingLinkShare url={m.newUrl} note={t.mobileClassroom.newLinkReady} /> : null}
       {meeting.can_manage ? (
-        <Button variant="ghost" label={t.classroom.recordings.title} onPress={() => router.push(`${base}/meetings/${meeting.id}`)} />
+        <Button variant="secondary" label={t.classroom.recordings.title} onPress={() => router.push(`${base}/meetings/${meeting.id}`)} />
       ) : null}
       {[enter.error, m.error].filter((e) => e !== null).map((e) => (
         <ErrorLine key={e} message={e} />

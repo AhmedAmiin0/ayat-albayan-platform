@@ -46,7 +46,7 @@ export function CancelPackage({ cancel, stale, onDone }: CancelPackageProps) {
       onDone?.();
     },
   });
-  if (!open) return <Button variant="ghost" label={c.action} onPress={() => setOpen(true)} />;
+  if (!open) return <Button variant="danger" label={c.action} onPress={() => setOpen(true)} />;
   const text = reason.trim();
   return (
     <View style={{ gap: 10 }}>

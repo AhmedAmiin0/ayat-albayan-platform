@@ -24,12 +24,12 @@ export function MakeupAction({ lesson, onLeave }: { lesson: LessonView; onLeave?
   if (open.length + booked.length === 0) return null;
   const group = lesson.students.length > 1;
   return (
-    <View style={{ alignSelf: 'flex-start', gap: 4 }}>
-      <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
+    <View style={{ gap: 4 }}>
+      <View style={{ gap: 8 }}>
         {open.map((student) => (
           <Button
             key={student.id}
-            variant="ghost"
+            variant="secondary"
             label={t.booking.makeup.action}
             accessibilityLabel={`${t.booking.makeup.action} — ${student.name}`}
             onPress={() => {

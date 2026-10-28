@@ -41,7 +41,7 @@ export function PaymentLinkItem({ link, now }: { link: PaymentLinkView; now: Dat
               onCancel={() => setAsking(false)}
             />
           ) : (
-            <Button variant="secondary" label={pl.cancel} accessibilityLabel={`${pl.cancel} — ${link.student.name}`} onPress={() => setAsking(true)} />
+            <Button variant="danger" label={pl.cancel} accessibilityLabel={`${pl.cancel} — ${link.student.name}`} onPress={() => setAsking(true)} />
           )}
           {cancel.isError ? <ErrorLine message={linkErrorText(cancel.error, pl.mobile.cancelFailed)} /> : null}
         </View>

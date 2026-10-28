@@ -6,6 +6,7 @@ import { localDay } from '@/payments/format';
 import { FormLabel } from '@/payments/FormLabel';
 import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
+import { ButtonRow } from '@/core/ui/actions';
 import { Button } from '@/core/ui/primitives/Button';
 import { shiftDay } from './terms-form';
 
@@ -32,9 +33,7 @@ export function StartDayPicker({ label, day, min, max, onChange, error }: StartD
   };
   const atMax = max !== undefined && day >= max;
   const btn = (text: string, s: { days?: number; months?: number }, off = false) => (
-    <View style={{ flex: 1 }}>
-      <Button variant="secondary" label={text} disabled={off} onPress={() => step(s)} />
-    </View>
+    <Button variant="secondary" label={text} disabled={off} onPress={() => step(s)} />
   );
   return (
     <View style={{ gap: 6 }}>
@@ -42,14 +41,14 @@ export function StartDayPicker({ label, day, min, max, onChange, error }: StartD
       <AppText accessibilityLiveRegion="polite" style={{ fontFamily: type.ui[600], fontSize: type.size.base, color: color.ink, fontVariant: ['tabular-nums'] }}>
         {localDay(day)}
       </AppText>
-      <View style={{ flexDirection: 'row', gap: 8 }}>
+      <ButtonRow>
         {btn(t.payments.mobile.dayBefore, { days: -1 }, day <= min)}
         {btn(t.payments.mobile.dayAfter, { days: 1 }, atMax)}
-      </View>
-      <View style={{ flexDirection: 'row', gap: 8 }}>
+      </ButtonRow>
+      <ButtonRow>
         {btn(m.monthBefore, { months: -1 }, day <= min)}
         {btn(m.monthAfter, { months: 1 }, atMax)}
-      </View>
+      </ButtonRow>
       <Note>{m.earliest.replace('{date}', localDay(min))}</Note>
       {error ? <ErrorLine message={error} /> : null}
     </View>

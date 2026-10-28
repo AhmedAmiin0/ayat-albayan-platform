@@ -44,7 +44,8 @@ export function LessonActions({ lesson, onDone, onCancel, onReschedule, onChange
   const busy = confirm.isPending || status.isPending;
   const error = confirm.error ?? status.error;
   const outcomes = eventsNow(lesson, now);
-  const joinLive = isOpenLesson(lesson.status) && canJoinNow(lesson, new Date(now), useJoinWindow());
+  const win = useJoinWindow();
+  const joinLive = isOpenLesson(lesson.status) && canJoinNow(lesson, new Date(now), win);
 
   return (
     <div className="grid gap-3">

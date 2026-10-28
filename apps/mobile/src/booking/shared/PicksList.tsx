@@ -38,11 +38,13 @@ export function PicksList({ picks, tz, onRemove }: PicksListProps) {
         <View key={pick} style={{ flexDirection: 'row', alignItems: 'center', gap: 8, minHeight: 44 }}>
           <AppText style={{ ...text, flex: 1 }}>{dayLine(pick, tz, cycle)}</AppText>
           {onRemove ? (
-            <Button
-              variant="ghost"
-              label={t.booking.removeDay.replace('{day}', weekdays[String(wallParts(pick, tz).weekday)] ?? '')}
-              onPress={() => onRemove(pick)}
-            />
+            <View testID="pick-remove" style={{ flex: 1 }}>
+              <Button
+                variant="danger"
+                label={t.booking.removeDay.replace('{day}', weekdays[String(wallParts(pick, tz).weekday)] ?? '')}
+                onPress={() => onRemove(pick)}
+              />
+            </View>
           ) : null}
         </View>
       ))}

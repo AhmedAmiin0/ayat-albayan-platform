@@ -53,7 +53,7 @@ export function EditListSheet({ list, onClose }: EditListSheetProps) {
           busy={remove.isPending}
         />
       ) : (
-        <Button variant="secondary" label={t.inbox.lists.delete} onPress={() => setConfirming(true)} />
+        <Button variant="danger" label={t.inbox.lists.delete} onPress={() => setConfirming(true)} />
       )}
       {remove.isError ? <ErrorLine message={listErrorText(remove.error)} /> : null}
     </ListSheet>

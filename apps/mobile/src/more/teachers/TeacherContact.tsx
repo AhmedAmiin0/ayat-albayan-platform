@@ -1,5 +1,5 @@
 import { formatPhone, teacherName } from '@ab/shared';
-import { Linking, View } from 'react-native';
+import { Linking } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { whatsappLink } from '@/core/lib/phone';
 import { type, useTheme } from '@/theme';
@@ -26,13 +26,11 @@ export function TeacherContact({ teacher }: { teacher: Teacher }) {
       >
         {formatPhone(phone)}
       </Ltr>
-      <View style={{ alignItems: 'flex-start' }}>
-        <Button
-          variant="ghost"
-          label={t.students.whatsappTo.replace('{name}', teacherName(teacher, locale))}
-          onPress={() => void Linking.openURL(whatsappLink(phone))}
-        />
-      </View>
+      <Button
+        variant="secondary"
+        label={t.students.whatsappTo.replace('{name}', teacherName(teacher, locale))}
+        onPress={() => void Linking.openURL(whatsappLink(phone))}
+      />
     </Section>
   );
 }

@@ -1,6 +1,7 @@
 import { View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { shape, type, useTheme } from '@/theme';
+import { ButtonRow } from '../actions/ButtonRow';
 import { Button } from '../primitives/Button';
 import { AppText } from '../primitives/AppText';
 
@@ -9,7 +10,7 @@ interface InlineConfirmProps {
   message: string;
   /** Primary action, named by its verb («نقل لطلبات التوظيف»); defaults to «تأكيد». */
   confirmLabel?: string;
-  /** Ghost way out («سيبها هنا»); defaults to «إلغاء». */
+  /** Secondary way out («سيبها هنا»); defaults to «إلغاء». */
   cancelLabel?: string;
   onConfirm: () => void;
   onCancel: () => void;
@@ -17,7 +18,10 @@ interface InlineConfirmProps {
   busy?: boolean;
 }
 
-/** docs/07 §9 inline confirm strip: the question, then [cancel ghost][confirm primary] at 44pt. */
+/**
+ * docs/07 §9 inline confirm strip: the question, then ONE ButtonRow (docs/07 §6 «الأزرار»): the confirm
+ * (primary) at the reading start, the way out (secondary) beside it; they stack when they do not fit.
+ */
 export function InlineConfirm(props: InlineConfirmProps) {
   const { message, onConfirm, onCancel, busy = false } = props;
   const { color } = useTheme();
@@ -43,14 +47,10 @@ export function InlineConfirm(props: InlineConfirmProps) {
       >
         {message}
       </AppText>
-      <View style={{ flexDirection: 'row', gap: 8 }}>
-        <View style={{ flex: 1 }}>
-          <Button variant="ghost" label={props.cancelLabel ?? t.common.cancel} onPress={onCancel} />
-        </View>
-        <View style={{ flex: 1 }}>
-          <Button label={props.confirmLabel ?? t.common.confirm} onPress={onConfirm} busy={busy} />
-        </View>
-      </View>
+      <ButtonRow>
+        <Button label={props.confirmLabel ?? t.common.confirm} onPress={onConfirm} busy={busy} />
+        <Button variant="secondary" label={props.cancelLabel ?? t.common.cancel} onPress={onCancel} />
+      </ButtonRow>
     </View>
   );
 }

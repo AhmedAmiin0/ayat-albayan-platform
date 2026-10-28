@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from '@testing-library/react-native';
+import { fireEvent, render, screen, within } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { InlineConfirm } from './InlineConfirm';
 
@@ -26,4 +26,13 @@ test('custom labels; busy disables only the confirm', async () => {
   );
   expect(screen.getByRole('button', { name: t.common.saving })).toBeDisabled();
   expect(screen.getByRole('button', { name: t.common.no })).toBeEnabled();
+});
+
+test('one ButtonRow: confirm (filled) first, the way out outlined beside it', async () => {
+  await render(<InlineConfirm message="?" onConfirm={jest.fn()} onCancel={jest.fn()} />);
+  const cells = screen.getAllByTestId('button-row-cell');
+  expect(cells).toHaveLength(2);
+  const holds = (label: string) => cells.map((cell) => within(cell).queryByText(label) !== null);
+  expect(holds(t.common.confirm)).toEqual([true, false]);
+  expect(holds(t.common.cancel)).toEqual([false, true]);
 });

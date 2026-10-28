@@ -67,10 +67,13 @@ export function LessonDetails({ lesson, onEditTime }: { lesson: LessonView; onEd
           {platform ? (
             <span className="text-ink-2">{t.lessons.viaClassroom}</span>
           ) : lesson.meeting_link ? (
-            <a href={lesson.meeting_link} target="_blank" rel="noreferrer" className={buttonVariants({ variant: 'secondary', size: 'sm' })}>
-              {t.lessons.join}
-              <Ltr className="text-2xs text-ink-3">{lesson.meeting_link.replace(/^https?:\/\//, '')}</Ltr>
-            </a>
+            // docs/07 «الأزرار»: the URL on its own line (one line, cut, selectable), then the full-width link button.
+            <span className="grid gap-1.5">
+              <Ltr className="block max-w-full truncate text-xs text-ink-3">{lesson.meeting_link.replace(/^https?:\/\//, '')}</Ltr>
+              <a href={lesson.meeting_link} target="_blank" rel="noreferrer" className={buttonVariants({ variant: 'secondary' })}>
+                {t.lessons.join}
+              </a>
+            </span>
           ) : (
             <span className="text-ink-3">{t.lessons.noLink}</span>
           )}

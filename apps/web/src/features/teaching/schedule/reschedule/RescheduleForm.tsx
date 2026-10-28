@@ -3,6 +3,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { Button } from '@/components/ui/form/button';
 import { FormAlert } from '@/components/ui/form/form-alert';
+import { ButtonRow } from '@/components/ui/layout/button-row';
 import { ByDayPicker } from '@/features/teaching/booking/steps/slots/ByDayPicker';
 import { isMakeup } from '@/features/teaching/booking/draft/contract';
 import { ruleFromSlot } from '@/features/teaching/booking/draft/draft';
@@ -92,16 +93,16 @@ export function RescheduleForm({ lesson, onBack, onDone }: RescheduleFormProps) 
       ) : (
         move.isError && <FormAlert>{lessonErrorText(move.error)}</FormAlert>
       )}
-      <div className="flex flex-wrap justify-end gap-2.5">
-        <Button type="button" variant="ghost" onClick={onBack}>
-          {t.lessons.back}
-        </Button>
+      <ButtonRow>
         {!conflicts && (
           <Button type="button" disabled={!startsAt || move.isPending} onClick={() => move.mutate(undefined)}>
             {t.lessons.rescheduleSubmit}
           </Button>
         )}
-      </div>
+        <Button type="button" variant="secondary" onClick={onBack}>
+          {t.lessons.back}
+        </Button>
+      </ButtonRow>
     </section>
   );
 }

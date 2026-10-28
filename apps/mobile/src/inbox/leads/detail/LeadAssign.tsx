@@ -47,7 +47,7 @@ export function LeadAssign({ lead }: { lead: Lead }) {
       {isError ? (
         <>
           <ErrorLine message={t.mobileLeads.peopleFailed} />
-          <Button variant="ghost" label={t.mobile.retry} onPress={() => void refetch()} />
+          <Button variant="secondary" label={t.mobile.retry} onPress={() => void refetch()} />
         </>
       ) : (
         <FilterPills
