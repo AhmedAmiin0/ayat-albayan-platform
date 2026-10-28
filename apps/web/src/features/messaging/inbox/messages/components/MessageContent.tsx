@@ -1,13 +1,13 @@
-import { isUnavailableMessage, isUnsupportedMessage, reactionText, replyNote, senderLine, type MessageView } from '@ab/shared';
+import { isUnavailableMessage, isUnsupportedMessage, reactionText, senderLine, type MessageView } from '@ab/shared';
 import { Icon } from '@/components/ui/display/icon';
 import { t } from '@/lib/i18n/i18n';
-import { useClock } from '@/lib/clock';
 import { templateLine } from '../../format';
 import { MessageMedia } from './MessageMedia';
 import { LinkedBody } from '@/components/ui/display/linked-body';
 import { QuoteBlock } from './QuoteBlock';
 import { ResendAsk } from '../resend/ResendAsk';
 import { RatingChip } from '../../sales/RatingChip';
+import { ReplyNoteLine } from '../reply-actions';
 
 // The inside of a MessageBubble: what was said, and who sent ours.
 
@@ -19,13 +19,6 @@ function ForwardedLabel() {
       {t.inbox.forward.forwarded}
     </p>
   );
-}
-
-/** What a quick reply did (R-SCH-03): «اتأكدت حلقة …» only when its lesson is confirmed now. */
-function ReplyLine({ message: m }: { message: MessageView }) {
-  const note = replyNote(m, useClock());
-  if (!note) return null;
-  return <p className="mt-1 text-xs font-semibold text-ink-2">{t.inbox.quickReply[note.key].replace('{when}', note.when ?? '')}</p>;
 }
 
 /** Who sent ours (D4): «أرسلها: سارة» for staff, «رسالة تلقائية» for a job; nothing for theirs or history. */
@@ -58,7 +51,7 @@ function EmptyLine({ message: m }: { message: MessageView }) {
   );
 }
 
-/** What was said: «مُعاد توجيهها», the quote it answers, the template's name, the media, the text, what a quick reply did. */
+/** What was said: «مُعاد توجيهها», the quote it answers, the template's name, the media, the text, what a quick reply did and what to do now. */
 export function Content({ message: m }: { message: MessageView }) {
   const empty = !m.body && !m.media_mime && !m.template_key;
   return (
@@ -69,7 +62,7 @@ export function Content({ message: m }: { message: MessageView }) {
       {(m.media_mime || m.media_url) && <MessageMedia message={m} />}
       {m.body && <LinkedBody text={m.body} />}
       {empty && <EmptyLine message={m} />}
-      <ReplyLine message={m} />
+      <ReplyNoteLine message={m} />
       <RatingChip message={m} />
     </>
   );

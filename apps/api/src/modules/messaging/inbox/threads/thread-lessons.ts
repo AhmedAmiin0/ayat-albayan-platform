@@ -1,4 +1,4 @@
-import { RIYADH_TZ, type ThreadLesson, type ThreadView } from '@ab/shared';
+import { RIYADH_TZ, type LessonStatus, type ThreadLesson, type ThreadView } from '@ab/shared';
 import type { Db } from '../../../../common/db/db.module';
 
 /** How many upcoming lessons the template composer offers. */
@@ -8,6 +8,8 @@ const OPEN = ['scheduled', 'confirmed'] as const;
 interface LessonRow {
   id: string;
   starts_at: string;
+  ends_at: string;
+  status: LessonStatus;
   meeting_link: string | null;
   teacher: { tz: string } | null;
   lesson_students: { student: { name: string } | null }[];
@@ -19,6 +21,8 @@ const toLesson = (row: LessonRow, tz: string): ThreadLesson => ({
   meeting_link: row.meeting_link,
   student_names: row.lesson_students.flatMap((ls) => (ls.student ? [ls.student.name] : [])),
   tz,
+  status: row.status,
+  ends_at: row.ends_at,
 });
 
 /** What the lessons are looked up by: a thread, or a number with no message yet (KnownNumber). */
@@ -40,11 +44,12 @@ async function read(db: Db, by: ReadBy): Promise<LessonRow[]> {
 }
 
 const GUARDIAN_SELECT =
-  'id, starts_at, meeting_link, teacher:teachers(tz), lesson_students!inner(student:students!inner(name, guardian_id))';
-const TEACHER_SELECT = 'id, starts_at, meeting_link, teacher:teachers(tz), lesson_students(student:students(name))';
+  'id, starts_at, ends_at, status, meeting_link, teacher:teachers(tz), lesson_students!inner(student:students!inner(name, guardian_id))';
+const TEACHER_SELECT = 'id, starts_at, ends_at, status, meeting_link, teacher:teachers(tz), lesson_students(student:students(name))';
 
 /**
- * The thread's next open lessons (scheduled | confirmed, not started), for the template composer:
+ * The thread's next open lessons (scheduled | confirmed, not started), for the template composer and
+ * the reply note's «تأكيد الحلقة» / «تغيير الموعد» (their status and end):
  * a guardian's (only their children named, their tz) or a teacher's (their tz). In teacher mode
  * only the signed-in teacher's own (`teacherId`). Rule 6: a template's lesson time is picked from
  * these, never typed.

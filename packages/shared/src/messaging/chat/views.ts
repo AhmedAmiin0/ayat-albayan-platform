@@ -105,15 +105,14 @@ export interface MessageView {
   created_at: string;
   /** R-MSG-03 wa.me link with the fallback text; only on outbound queued / failed rows. */
   click_to_chat: string | null;
-  /**
-   * The lesson of lesson_id as it is now (thread pages only; null elsewhere): what a guardian's
-   * «تمام» actually did — «اتأكدت حلقة …» only when it is confirmed.
-   */
+  /** The lesson of lesson_id as it is now (thread pages only; null elsewhere): the reply note's lesson. */
   lesson: MessageLesson | null;
 }
 
 export interface MessageLesson {
   starts_at: string;
+  /** Absent in an old cache: the chat's actions then go by its start. */
+  ends_at?: string;
   status: LessonStatus;
 }
 
@@ -143,4 +142,8 @@ export interface ThreadLesson {
   student_names: string[];
   /** The recipient's tz (the guardian's, or the teacher's). */
   tz: string;
+  /** scheduled | confirmed (the reply note's «تأكيد الحلقة»). Absent in an old cache. */
+  status?: LessonStatus;
+  /** Absent in an old cache. */
+  ends_at?: string;
 }

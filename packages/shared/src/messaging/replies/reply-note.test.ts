@@ -1,36 +1,79 @@
 import { describe, expect, it } from 'vitest';
-import { replyNote } from './reply-note.js';
+import type { ReplyLesson, ReplyRights } from './reply-lesson.js';
+import { replyNote, type ReplyNoteContext } from './reply-note.js';
 
-const base = { direction: 'inbound' as const, body: 'تمام', guardian_id: 'g1', lead_id: null, lesson: null };
-const lesson = (status: 'scheduled' | 'confirmed' | 'cancelled_by_admin') => ({ starts_at: '2026-10-04T14:00:00Z', status });
+const base = { direction: 'inbound' as const, body: 'ايوة', guardian_id: 'g1', lead_id: null };
+const ask = { ...base, body: 'تأجيل الحلقة إلى غدا' };
+const NOW = new Date('2026-10-04T10:00:00Z');
+const ALL: ReplyRights = { reschedule: true, confirm: 'sales' };
+const NONE: ReplyRights = { reschedule: false, confirm: null };
+const lesson = (status: ReplyLesson['status'], ends_at = '2026-10-04T15:00:00Z'): ReplyLesson => ({
+  id: 'l1',
+  starts_at: '2026-10-04T14:00:00Z',
+  ends_at,
+  status,
+});
+const ctx = (over: Partial<ReplyNoteContext>): ReplyNoteContext => ({ lesson: null, rights: ALL, now: NOW, ...over });
+const WHEN = 'الأحد 4 أكتوبر 17:00';
+const ENDED = '2026-10-04T09:00:00Z';
 
-describe('replyNote: what a quick reply did (R-SCH-03)', () => {
-  it('a guardian’s «تمام» that confirmed its lesson names it (Riyadh time)', () => {
-    expect(replyNote({ ...base, lesson: lesson('confirmed') })).toEqual({ key: 'confirmed', when: 'الأحد 4 أكتوبر 17:00' });
-    expect(replyNote({ ...base, lesson: lesson('confirmed') }, { locale: 'en', cycle: '24' })?.when).toBe('Sunday 4 October 17:00');
-    expect(replyNote({ ...base, lesson: lesson('confirmed') }, { locale: 'ar', cycle: '12' })?.when).toBe('الأحد 4 أكتوبر 5:00 م');
+describe('replyNote: a «نعم» (R-SCH-03, owner 2026-10-28)', () => {
+  it('its lesson confirmed: «تم تأكيد حلقة …» (Riyadh time), in the viewer’s language and clock', () => {
+    expect(replyNote(base, ctx({ lesson: lesson('confirmed') }))).toEqual({ key: 'confirmed', when: WHEN, action: null });
+    const en = ctx({ lesson: lesson('confirmed'), clock: { locale: 'en', cycle: '24' } });
+    expect(replyNote(base, en)?.when).toBe('Sunday 4 October 17:00');
+    expect(replyNote(base, ctx({ lesson: lesson('confirmed'), clock: { locale: 'ar', cycle: '12' } }))?.when).toBe('الأحد 4 أكتوبر 5:00 م');
   });
 
-  it('nothing confirmed: no lesson found, or it could not be confirmed', () => {
-    expect(replyNote(base)).toEqual({ key: 'notConfirmed', when: null });
-    expect(replyNote({ ...base, lesson: lesson('cancelled_by_admin') })).toEqual({ key: 'notConfirmed', when: null });
+  it('a scheduled lesson (linked or the family’s next): the «تأكيد الحلقة» button alone', () => {
+    const l = lesson('scheduled');
+    expect(replyNote(base, ctx({ lesson: l }))).toEqual({ key: null, when: WHEN, action: { kind: 'confirm', lesson: l } });
+    expect(replyNote(base, ctx({ lesson: { ...l, ends_at: null } }))?.action?.kind).toBe('confirm');
   });
 
-  it('a reschedule request names the lesson when one was linked', () => {
-    const ask = { ...base, body: 'ممكن نأجل؟' };
-    expect(replyNote({ ...ask, lesson: lesson('scheduled') })).toEqual({ key: 'reschedule', when: 'الأحد 4 أكتوبر 17:00' });
-    expect(replyNote(ask)).toEqual({ key: 'rescheduleNoLesson', when: null });
+  it('nothing at all, never «no lesson was confirmed»: no lesson, ended, closed, or no right to confirm', () => {
+    expect(replyNote(base, ctx({}))).toBeNull();
+    expect(replyNote(base, ctx({ lesson: lesson('scheduled', ENDED) }))).toBeNull();
+    expect(replyNote(base, ctx({ lesson: lesson('cancelled_by_admin') }))).toBeNull();
+    expect(replyNote(base, ctx({ lesson: lesson(null) }))).toBeNull();
+    expect(replyNote(base, ctx({ lesson: lesson('scheduled'), rights: NONE }))).toBeNull();
+  });
+});
+
+describe('replyNote: «تأجيل الحلقة»', () => {
+  it('an open lesson she may move: «طلب تغيير موعد الحلقة» with «تغيير الموعد» for it', () => {
+    const l = lesson('confirmed');
+    expect(replyNote(ask, ctx({ lesson: l }))).toEqual({ key: 'reschedule', when: WHEN, action: { kind: 'reschedule', lesson: l } });
+    expect(replyNote(ask, ctx({ lesson: lesson(null) }))?.action?.kind).toBe('reschedule');
   });
 
-  it('«وقف» from a guardian or a lead', () => {
-    expect(replyNote({ ...base, body: 'وقف الرسايل' })?.key).toBe('stop');
-    expect(replyNote({ ...base, body: 'وقف', guardian_id: null, lead_id: 'l1' })?.key).toBe('stop');
+  it('no lesson, ended, closed or no right to move: «طلب تغيير الموعد» only', () => {
+    const only = { key: 'rescheduleNoLesson', when: null, action: null };
+    expect(replyNote(ask, ctx({}))).toEqual(only);
+    expect(replyNote(ask, ctx({ lesson: lesson('scheduled', ENDED) }))).toEqual(only);
+    expect(replyNote(ask, ctx({ lesson: lesson('cancelled_by_admin') }))).toEqual(only);
+    expect(replyNote(ask, ctx({ lesson: lesson('scheduled'), rights: NONE }))).toEqual(only);
   });
 
-  it('nothing to say: a lead’s «تمام», plain text, our own messages', () => {
-    expect(replyNote({ ...base, guardian_id: null, lead_id: 'l1' })).toBeNull();
-    expect(replyNote({ ...base, body: 'السلام عليكم' })).toBeNull();
-    expect(replyNote({ ...base, direction: 'outbound' })).toBeNull();
-    expect(replyNote({ ...base, body: null })).toBeNull();
+  it('once moved (its lesson «rescheduled», or moved from this note): «تم تغيير موعد الحلقة»', () => {
+    const done = { key: 'rescheduled', when: null, action: null };
+    expect(replyNote(ask, ctx({ lesson: lesson('rescheduled') }))).toEqual(done);
+    expect(replyNote(ask, ctx({ lesson: lesson('scheduled'), moved: true }))).toEqual(done);
+  });
+});
+
+describe('replyNote: the rest', () => {
+  it('«وقف» from a guardian or a lead, unchanged', () => {
+    expect(replyNote({ ...base, body: 'وقف الرسايل' }, ctx({}))?.key).toBe('stop');
+    expect(replyNote({ ...base, body: 'وقف', guardian_id: null, lead_id: 'l1' }, ctx({}))?.key).toBe('stop');
+  });
+
+  it('nothing to say: a lead’s «تمام», a rating button, plain text, our own messages', () => {
+    const c = ctx({ lesson: lesson('scheduled') });
+    expect(replyNote({ ...base, guardian_id: null, lead_id: 'l1' }, c)).toBeNull();
+    expect(replyNote({ ...base, body: 'rate_good:l1' }, c)).toBeNull();
+    expect(replyNote({ ...base, body: 'السلام عليكم' }, c)).toBeNull();
+    expect(replyNote({ ...base, direction: 'outbound' }, c)).toBeNull();
+    expect(replyNote({ ...base, body: null }, c)).toBeNull();
   });
 });

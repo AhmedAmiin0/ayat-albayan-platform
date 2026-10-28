@@ -2657,10 +2657,17 @@
     },
     "quickReply": {
       "confirmed": "Confirmed the {when} lesson (Riyadh time)",
-      "notConfirmed": "No lesson was confirmed by this reply",
-      "reschedule": "Asked to reschedule the {when} lesson (Riyadh time)",
+      "reschedule": "Asked to reschedule the lesson",
       "rescheduleNoLesson": "Asked to reschedule",
+      "rescheduled": "The lesson was rescheduled",
       "stop": "Asked to stop messages"
+    },
+    "replyAction": {
+      "confirm": "Confirm lesson",
+      "confirmLabel": "Confirm the {when} lesson (Riyadh time)",
+      "reschedule": "Reschedule",
+      "rescheduleLabel": "Reschedule the {when} lesson (Riyadh time)",
+      "notFound": "Could not open the lesson: it may have moved or been cancelled. Refresh the chat and try again."
     },
     "composer": {
       "placeholder": "Type a message…",
