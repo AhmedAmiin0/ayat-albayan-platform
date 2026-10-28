@@ -35,7 +35,7 @@ test('an LTR run tags threads with the en.json words', async () => {
   const row = within(screen.getByRole('button', { name: /هدى سالم/ }));
   expect(row.getByText(en.enums.leadStatus.interested_no_slot)).toBeTruthy();
   expect(row.getByText(en.enums.leadSource.facebook_ad)).toBeTruthy();
-  expect(row.getByText(en.inbox.unread.one)).toBeTruthy();
+  expect(row.getByLabelText(en.inbox.unread.one)).toBeTruthy();
   expect(screen.getByText(en.inbox.kind.teacher)).toBeTruthy();
 });
 

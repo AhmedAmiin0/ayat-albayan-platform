@@ -46,7 +46,7 @@ test('teacher mode: her threads with their unread count, no tags, rows open /tea
   await fireEvent.press(await screen.findByText('أم يوسف'));
   expect(mockPush).toHaveBeenCalledWith('/teacher/chats/%2B966552147730');
   expect(screen.queryByText(t.inbox.kind.guardian)).toBeNull();
-  expect(screen.getByText(t.inbox.unread.two)).toBeTruthy();
+  expect(screen.getByLabelText(t.inbox.unread.two)).toBeTruthy();
   expect(mockApiFetch).toHaveBeenCalledWith('/threads?page=1&pageSize=25');
 });
 
