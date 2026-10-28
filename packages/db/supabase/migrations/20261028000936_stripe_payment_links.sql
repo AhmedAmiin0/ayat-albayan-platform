@@ -29,7 +29,7 @@ alter type public.payment_method add value if not exists 'card';
 create table if not exists public.payment_links (
   id uuid primary key default gen_random_uuid(),
   token text not null unique check (token ~ '^[A-Za-z0-9_-]{32,64}$'),
-  student_id uuid not null references public.students (id) on delete cascade,
+  student_id uuid not null references public.students (id),
   subscription_id uuid references public.subscriptions (id) on delete set null,
   kind text not null check (kind in ('new', 'renewal')),
   package public.package_size,

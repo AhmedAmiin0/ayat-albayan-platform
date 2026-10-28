@@ -2,7 +2,7 @@ import { createFileRoute } from '@tanstack/react-router';
 import { StudentLinkPage } from '@/features/teaching/classroom/student-link/StudentLinkPage';
 
 /** /s/:token: the student's own long-lived link («رابط دخول الطالب»). Outside every guard: no login, no app shell. */
-export const Route = createFileRoute('/s/$token')({ component: StudentLinkRoute });
+export const Route = createFileRoute('/(public)/s/$token')({ component: StudentLinkRoute });
 
 function StudentLinkRoute() {
   const { token } = Route.useParams();

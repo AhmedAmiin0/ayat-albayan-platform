@@ -33,7 +33,7 @@ test('reference, minimum and agreed lines carry the isolated amount', () => {
 });
 
 test('API codes in her words; currency_mismatch names the package currency; else the fallback', () => {
-  expect(linkErrorText(new ApiError(403, { code: 'discount_not_allowed' }))).toBe(pl.error.generic);
+  expect(linkErrorText(new ApiError(403, { code: 'discount_not_allowed' }))).toBe(pl.error.discount_not_allowed);
   expect(linkErrorText(new ApiError(400, { code: 'not_a_renewal' }))).toBe(pl.error.not_a_renewal);
   expect(linkErrorText(new ApiError(400, { code: 'currency_mismatch', currency: 'USD' }))).toBe(
     pl.error.currency_mismatch.replace('{currency}', 'USD'),

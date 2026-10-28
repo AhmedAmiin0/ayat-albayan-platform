@@ -1,11 +1,15 @@
 import { t } from '@/lib/i18n/i18n';
 import { MyEarnings } from '../teachers/MyEarnings';
 import { MyPayments } from './MyPayments';
+import { PaymentLinksSection } from './links/PaymentLinksSection';
 import { ViewHead } from '../ViewHead';
 
 export type MoneyView = 'earnings' | 'payments';
 
-/** /sales/earnings «أرباحي»: my terms, commissions and statements, or «مدفوعاتي» (the payments I recorded). */
+/**
+ * /sales/earnings «أرباحي»: my terms, commissions and statements, or «مدفوعاتي» (the payments I recorded,
+ * then «روابط الدفع» in the Stripe test build).
+ */
 export function SalesMoney({ view, onView }: { view: MoneyView; onView: (view: MoneyView) => void }) {
   return (
     <>
@@ -19,7 +23,14 @@ export function SalesMoney({ view, onView }: { view: MoneyView; onView: (view: M
           { value: 'payments', label: t.assistantPortal.nav.payments },
         ]}
       />
-      {view === 'payments' ? <MyPayments /> : <MyEarnings />}
+      {view === 'payments' ? (
+        <>
+          <MyPayments />
+          <PaymentLinksSection />
+        </>
+      ) : (
+        <MyEarnings />
+      )}
     </>
   );
 }
