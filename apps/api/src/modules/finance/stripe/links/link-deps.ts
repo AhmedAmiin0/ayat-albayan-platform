@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { AuditService } from '../../../../common/audit/audit.service';
+import { SalesTeacherAssign } from '../../../sales/sales-money';
 import { StripeSettingsQueries } from '../gate/stripe-settings.queries';
 import { LinkPackages } from './link-packages';
 import { LinkViews } from './link-views';
@@ -15,11 +16,12 @@ export class LinkDeps {
   ) {}
 }
 
-/** LinkCreate's own: the cap and the release of earlier unused link packages. */
+/** LinkCreate's own: the cap, the release of earlier unused link packages and «المعلم/ة» of the subscribe step. */
 @Injectable()
 export class LinkCreateDeps {
   constructor(
     readonly settings: StripeSettingsQueries,
     readonly packages: LinkPackages,
+    readonly teachers: SalesTeacherAssign,
   ) {}
 }

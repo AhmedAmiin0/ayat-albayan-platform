@@ -12,7 +12,9 @@ import { LinkCreateDeps, LinkDeps } from './link-deps';
  * created now exactly like «اشتراك جديد» (catalog quote, the site's discount pills, the start-day rules and
  * used lessons, unpaid) except its price, which is the agreed amount, so paying the link in full makes it paid
  * and the commission triggers run on what the family paid. The agreed amount is free (> 0) unless the admin set
- * max_discount_pct. A retry of the same form (clientRequestId) returns the link it already made.
+ * max_discount_pct. A retry of the same form (clientRequestId) returns the link it already made. «المعلم/ة»
+ * (teacherId, «اشتراك جديد» → «دفع إلكتروني», owner 2026-10-29) as POST /sales/subscriptions saves it: checked
+ * active before the package is made, assigned to the student once the link exists.
  */
 @Injectable()
 export class LinkCreate {
@@ -41,7 +43,8 @@ export class LinkCreate {
     const reference = quote.afterDiscount;
     const problem = linkAmountProblem({ amount: input.amount, reference, maxDiscountPct: (await this.extra.settings.read()).max_discount_pct });
     if (problem) throw badRequest(problem, { min: min_amount, currency: quote.currency });
-    const { studentId, pricing, clientRequestId, lessonsUsedBefore } = input;
+    const { studentId, pricing, clientRequestId, lessonsUsedBefore, teacherId } = input;
+    if (teacherId) await this.extra.teachers.ensureActive(teacherId);
     const create = { studentId, pricing, clientRequestId, startsOn, lessonsUsedBefore };
     const sub = await this.creator.create(create, user.id, { price: input.amount });
     if (sub.student.id !== input.studentId) throw conflict('client_request_reused');
@@ -61,6 +64,7 @@ export class LinkCreate {
     });
     const after = { student_id: row.student_id, subscription_id: row.subscription_id, kind: row.kind, amount: row.amount, reference_price: reference, currency: row.currency };
     await this.deps.audit.record({ actorId: user.id, entity: 'payment_links', entityId: row.id, action: 'create', after });
+    if (teacherId) await this.extra.teachers.assign({ studentId, teacherId, actorId: user.id });
     return this.deps.views.one(row, now);
   }
 

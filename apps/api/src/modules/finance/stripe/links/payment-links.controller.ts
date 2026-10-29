@@ -4,7 +4,6 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser, Permissions } from '../../../../common/auth/decorators';
 import type { AuthUser } from '../../../../common/auth/verify-token';
 import { parseOrThrow } from '../../../../common/http/http';
-import { SalesTeacherAssign } from '../../../sales/sales-money';
 import { StripeEnabledGuard } from '../gate/stripe-gate';
 import { LinkCancel } from './link-cancel';
 import { LinkCreate } from './link-create';
@@ -25,7 +24,6 @@ export class PaymentLinksController {
     private readonly creates: LinkCreate,
     private readonly cancels: LinkCancel,
     private readonly deps: LinkDeps,
-    private readonly teachers: SalesTeacherAssign,
   ) {}
 
   @Post('quote')
@@ -34,17 +32,9 @@ export class PaymentLinksController {
     return this.creates.quote(parseOrThrow(paymentLinkQuoteSchema, body));
   }
 
-  /**
-   * «المعلم/ة» (teacherId) as «اشتراك جديد» saves it (SalesSubscribeController.create): checked active before
-   * the package is made, assigned once it exists (a replay assigns again, a no-op).
-   */
   @Post()
-  async create(@Body() body: unknown, @CurrentUser() user: AuthUser): Promise<PaymentLinkView> {
-    const input = parseOrThrow(paymentLinkCreateSchema, body);
-    if (input.teacherId) await this.teachers.ensureActive(input.teacherId);
-    const link = await this.creates.create(input, user);
-    if (input.teacherId) await this.teachers.assign({ studentId: input.studentId, teacherId: input.teacherId, actorId: user.id });
-    return link;
+  create(@Body() body: unknown, @CurrentUser() user: AuthUser): Promise<PaymentLinkView> {
+    return this.creates.create(parseOrThrow(paymentLinkCreateSchema, body), user);
   }
 
   @Get()
