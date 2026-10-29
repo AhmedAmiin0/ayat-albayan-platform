@@ -56,7 +56,7 @@ The lesson's subject («حفظ جديد», «مراجعة») is not on `LessonVi
 padding), each at least 62 px, 1 px `rule` between:
 
 - time 15/22 semibold `ink2` tabular (46 px column);
-- names 15/24 semibold + sub 12/18 `ink3` («أ. سلمى · 30 دقيقة», «تجريبية» / «تعويضية» in the sub);
+- names 15/24 semibold + sub 12/18 `ink3` («أ. سلمى · 30 دقيقة»; «تجريبية» / «تعويضية» leads the sub, «تجريبية · أ. سلمى · 30 دقيقة», so a one-line cut never drops it);
 - at the end a 7 px status dot + the status word 12/18 in the status tone.
 
 A tap opens the lesson details sheet, where ALL of today's actions live: تأكيد / إلغاء / غيّر الموعد /

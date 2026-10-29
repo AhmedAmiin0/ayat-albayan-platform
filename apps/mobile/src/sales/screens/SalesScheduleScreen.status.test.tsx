@@ -70,3 +70,12 @@ test('a pill with no lessons says so, not that the day is empty', async () => {
   expect(screen.getByText(s.empty)).toBeTruthy();
   expect(screen.queryByText(t.sales.academySchedule.empty)).toBeNull();
 });
+
+test('«ملغاة» groups two statuses, so each row still says who cancelled', async () => {
+  const cancelled = [one('d', 'نور', 'cancelled_by_admin'), one('e', 'ليلى', 'cancelled_by_teacher')];
+  mockApiFetch.mockImplementation(async (path: string) => (path === '/sales/teachers' ? [teacher()] : { date: '2026-10-12', lessons: cancelled }));
+  await renderWithQuery(<SalesScheduleScreen />);
+  await fireEvent.press(await screen.findByRole('tab', { name: `${s.cancelled} 2` }));
+  expect(screen.getByText(statusWord('cancelled_by_admin'))).toBeTruthy();
+  expect(screen.getByText(statusWord('cancelled_by_teacher'))).toBeTruthy();
+});

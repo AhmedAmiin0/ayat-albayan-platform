@@ -40,10 +40,11 @@ function emptyTitle(filteredOut: boolean, teacherId: string): string {
  * «تفاصيل الحلقة», which holds every action («ادخل الحلقة» first while it runs; no buttons on the rows).
  * `?teacherId=` opens it on a teacher (from «المعلمون»), that teacher's pill right after «كل المعلمين» so
  * the filter is in view; `?date=` on a day. `asTab`: the sales tree's «جدول الحلقات» tab (no «رجوع»). The
- * compact top (owner 2026-10-28, 10-29: no permissions note, the sheet says what she may do): an h2 title,
- * the day switcher, the teacher pills and the status pills (UX review #6: «الكل» / «للتأكيد» / «مؤكدة» /
- * «ملغاة» with the day's counts), each pill group ONE row that scrolls sideways, 8pt apart; the day's
- * lessons in one inset card. Under a status pill the rows drop the status word they would all share.
+ * compact top (owner 2026-10-28; UX review 2026-10-29: no permissions note, the sheet says what she may
+ * do): an h2 title, the day switcher, the teacher pills and the status pills (UX review #6: «الكل» /
+ * «للتأكيد» / «مؤكدة» / «ملغاة» with the day's counts), each pill group ONE row that scrolls sideways, 8pt
+ * apart; the day's lessons in one inset card. Under «للتأكيد» or «مؤكدة» the rows drop the status word
+ * they all share; «ملغاة» groups two statuses, so its rows keep who cancelled.
  */
 export function SalesScheduleScreen({ asTab = false }: { asTab?: boolean }) {
   const { color } = useTheme();
@@ -67,7 +68,9 @@ export function SalesScheduleScreen({ asTab = false }: { asTab?: boolean }) {
   ];
   const open = details.open;
   const row = useCallback(
-    ({ item }: ListRenderItemInfo<SalesScheduleLesson>) => <SalesLessonRow lesson={item} onOpen={open} hideStatus={status !== 'all'} />,
+    ({ item }: ListRenderItemInfo<SalesScheduleLesson>) => (
+      <SalesLessonRow lesson={item} onOpen={open} hideStatus={status === 'scheduled' || status === 'confirmed'} />
+    ),
     [open, status],
   );
   const all = day.data?.lessons ?? [];

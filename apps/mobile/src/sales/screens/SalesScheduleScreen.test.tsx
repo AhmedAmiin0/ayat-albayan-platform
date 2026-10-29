@@ -32,7 +32,7 @@ beforeEach(() => {
 });
 afterEach(() => jest.useRealTimers());
 
-test('today in Riyadh: one-line time, students over «أ. teacher · length · kind», ONE word per row, no button on a row', async () => {
+test('today in Riyadh: one-line time, students over «kind · أ. teacher · length», ONE word per row, no button on a row', async () => {
   backend();
   await renderWithQuery(<SalesScheduleScreen />);
   expect(await screen.findByText('سلمى')).toBeTruthy();
@@ -41,8 +41,9 @@ test('today in Riyadh: one-line time, students over «أ. teacher · length · k
   expect(screen.getByText('18:00').props.numberOfLines).toBe(1);
   expect(screen.getByText('سلمى').props.numberOfLines).toBe(1);
   const teacher = t.today.teacherTitled.replace('{teacher}', 'أبرار محمد');
-  expect(screen.getByText(`${teacher} · ${t.enums.duration['30']} · ${t.schedule.trialTag}`)).toBeTruthy();
-  expect(screen.getByText(new RegExp(` · ${t.booking.makeup.tag}$`))).toBeTruthy();
+  // The kind leads, so a one-line cut takes the teacher's name, never «تجريبية».
+  expect(screen.getByText(`${t.schedule.trialTag} · ${teacher} · ${t.enums.duration['30']}`)).toBeTruthy();
+  expect(screen.getByText(new RegExp(`^${t.booking.makeup.tag} · `))).toBeTruthy();
   // The running (confirmed) lesson reads «جارية الآن» only; the other its short status.
   expect(screen.getByText(t.lessons.sheet.live)).toBeTruthy();
   expect(screen.queryByText(statusWord('confirmed'))).toBeNull();
@@ -96,4 +97,13 @@ test('under a status pill a running lesson still reads «جارية الآن»; 
   await fireEvent.press(screen.getByRole('tab', { name: `${s.scheduled} 1` }));
   expect(screen.getByText('سلمى')).toBeTruthy();
   expect(screen.queryByText(statusWord('scheduled'))).toBeNull();
+});
+
+test('a running lesson still to confirm keeps «للتأكيد» under «جارية الآن» (screenshot 2026-10-29)', async () => {
+  backend([scheduleLesson({ status: 'scheduled', trial: true })]);
+  await renderWithQuery(<SalesScheduleScreen />);
+  expect(await screen.findByText(t.lessons.sheet.live)).toBeTruthy();
+  expect(screen.getByText(statusWord('scheduled'))).toBeTruthy();
+  const row = screen.getByRole('button', { name: t.lessons.sheet.openRow.replace('{names}', 'يوسف أحمد') });
+  expect(row.props.accessibilityHint).toContain(`${t.lessons.sheet.live} · ${t.enums.lessonStatus.scheduled}`);
 });
