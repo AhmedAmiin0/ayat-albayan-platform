@@ -1,9 +1,11 @@
 // Pure-move gate for refactor PRs (docs/27 §4, §6). Usage: node tools/scripts/pure-move-check.mjs <base> [head]
 // Against the merge base it allows only: renames, changed module paths (import/export/require/import()/vi|jest
 // mock strings), new index.ts barrels made of `export … from` lines, and path-dependent config (docs, workflows,
-// vitest/jest/tsconfig/eslint configs, refactor/ maps and allow-lists, the generated route tree). Anything else fails.
+// vitest/jest/tsconfig/eslint configs, refactor/ maps, the generated route tree) and path-keyed baselines whose
+// entries only follow their moved files (pure-move/baselines.mjs: eslint suppressions, knip, folder cap). Anything else fails.
 import { execFileSync } from 'node:child_process';
 import { pathToFileURL } from 'node:url';
+import { classifyBaseline } from './pure-move/baselines.mjs';
 import { reexportsOf, renameTable, samePath } from './pure-move-paths.mjs';
 import { sameButRenames, substitutions } from './pure-move-tokens.mjs';
 
@@ -84,6 +86,8 @@ const isConfig = (file) => CONFIG.some((re) => re.test(file));
 export function classify(entry, read, ctx = {}) {
   const { status, from, to } = entry;
   if (status === 'R100') return { kind: 'rename' };
+  const baseline = classifyBaseline(entry, read, ctx);
+  if (baseline) return baseline;
   if (TEXT.test(to) && !/^(\.github|refactor)\//.test(to) && status !== 'A' && status !== 'D') {
     const renamed = rewriteText(read('base', from), ctx.renames ?? []);
     return renamed === read('head', to) ? { kind: 'paths' } : { kind: 'bad', why: 'changes more than moved file paths' };
@@ -125,7 +129,7 @@ function main([base, head = 'HEAD']) {
   const renames = entries.filter((e) => e.status.startsWith('R')).map((e) => [e.from, e.to]);
   const gone = (dir) => git('ls-tree', '-d', '--name-only', head, '--', dir).trim() === '';
   const readHead = (file) => (git('ls-tree', '--name-only', head, '--', file).trim() ? read('head', file) : '');
-  const ctx = { renames, table: renameTable(renames), subs: substitutions(renames, gone), reexports: reexportsOf(readHead, barrelPaths) };
+  const ctx = { renames, gone, table: renameTable(renames), subs: substitutions(renames, gone), reexports: reexportsOf(readHead, barrelPaths) };
   const counts = { rename: 0, paths: 0, barrel: 0, config: 0, bad: 0 };
   for (const e of entries) {
     const result = classify(e, read, ctx);
