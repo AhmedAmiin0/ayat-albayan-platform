@@ -3,6 +3,7 @@ import { router } from 'expo-router';
 import { View } from 'react-native';
 import { apiSend } from '@/core/lib/http/api';
 import { pathKey } from '@/core/lib/query/query-keys';
+import { useStudentHref } from '@/core/nav/tree-base';
 import { t } from '@/core/lib/i18n/i18n';
 import { CancelPackage } from '@/payments';
 import { packageName, paidLine, usedOf } from '@/payments/format';
@@ -27,6 +28,7 @@ export function BalanceCard({ studentId }: { studentId: string }) {
   const balance = useStudentBalance(studentId).data;
   const line = packageLine(balance, useRenewalThreshold());
   const current = balance?.current;
+  const to = useStudentHref();
   const small = {
     fontFamily: type.ui[500],
     fontSize: type.size.xs,
@@ -75,7 +77,7 @@ export function BalanceCard({ studentId }: { studentId: string }) {
               <Button
                 variant="secondary"
                 label={t.payments.mobile.record}
-                onPress={() => router.push(`/students/payment/${studentId}`)}
+                onPress={() => router.push(to(`/students/payment/${studentId}`))}
               />
             </View>
             {cancelOffered(current) ? (

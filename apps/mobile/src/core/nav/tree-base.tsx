@@ -25,3 +25,29 @@ export function inTree(base: TreeBase, href: Href): Href {
   if (typeof href === 'string') return `${base}${href}` as Href;
   return { ...href, pathname: `${base}${href.pathname}` } as Href;
 }
+
+const InChatContext = createContext(false);
+
+/** ChatStack's: the screens below run inside a chat group (app/(admin-chat), (sales-chat), (teacher-chat)). */
+export function InChatProvider({ children }: { children: ReactNode }) {
+  return <InChatContext.Provider value>{children}</InChatContext.Provider>;
+}
+
+/**
+ * A tab's student route (`/students/…`, `/sales/students/…`) moved to the chat group's own copy
+ * (app/(admin-chat)/inbox/student/…, app/(sales-chat)/sales/inbox/student/…); anything else as is. From a
+ * chat group, a push to a tab's route stacks a second tab host above the chat (expo-router PUSHes it at the
+ * root), so «رجوع» landed on that host's first tab (owner 2026-10-29); the copy stays in the chat's stack.
+ */
+export function chatStudentHref(href: Href): Href {
+  const move = (path: string) => path.replace(/^(\/sales)?\/students\//, '$1/inbox/student/');
+  if (typeof href === 'string') return move(href) as Href;
+  return { ...href, pathname: move(href.pathname) } as Href;
+}
+
+const asIs = (href: Href): Href => href;
+
+/** The student links of a shared screen: the tab's routes in the tabs, the chat group's copies in a chat. */
+export function useStudentHref(): (href: Href) => Href {
+  return useContext(InChatContext) ? chatStudentHref : asIs;
+}

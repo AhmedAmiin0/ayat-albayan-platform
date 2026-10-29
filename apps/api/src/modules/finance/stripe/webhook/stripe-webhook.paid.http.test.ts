@@ -1,6 +1,6 @@
 import type { NestFastifyApplication } from '@nestjs/platform-fastify';
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { PAYMENT_ID, paymentRow, STUDENT_ID, SUB_ID } from '../../subscriptions/money/money.fakes';
+import { PAYMENT_ID, paymentRow, STUDENT_ID, SUB_ID, subRow } from '../../subscriptions/money/money.fakes';
 import { resetMocks, SALES_A, type Mocks } from '../../subscriptions/test-app';
 import { uuidFor } from '../links/link-ids';
 import { stripeApp } from '../testing/stripe-app.fakes';
@@ -27,6 +27,7 @@ describe('POST /webhooks/stripe: verified, idempotent, the payment recorded once
     resetMocks(m);
     stripeDefaults(s);
     m.payments.subscription.mockResolvedValue({ id: SUB_ID, student_id: STUDENT_ID, currency: 'SAR', status: 'unpaid' });
+    m.subs.get.mockResolvedValue(subRow({ price: 120 })); // the link's package: nothing paid on it yet
     m.payments.insert.mockResolvedValue(paymentRow({ method: 'card', amount: 120, recorded_by: SALES_A.id }));
     m.payments.get.mockResolvedValue(paymentRow({ method: 'card', amount: 120, recorded_by: SALES_A.id }));
     m.activation.afterPayment.mockResolvedValue(true);
@@ -89,6 +90,20 @@ describe('POST /webhooks/stripe: verified, idempotent, the payment recorded once
     expect(res.statusCode).toBe(200);
     expect(s.events.done).toHaveBeenCalledWith('evt_5', 'refused:subscription_cancelled');
     expect(s.push.notifyAdmins).toHaveBeenCalledWith('payment_due', expect.objectContaining({ bellOnly: true }));
+  });
+
+  it('a package paid another way while the session stayed open is refused with a bell, no second payment; its own retry replays', async () => {
+    m.subs.paid.mockResolvedValue(new Map([[SUB_ID, 120]])); // the assistant recorded the bank transfer meanwhile
+    expect((await post(sessionEvent('checkout.session.completed'))).statusCode).toBe(200);
+    expect(m.payments.insert).not.toHaveBeenCalled();
+    expect(s.links.attribute).not.toHaveBeenCalled();
+    expect(s.links.markPaid).not.toHaveBeenCalled();
+    expect(s.events.done).toHaveBeenCalledWith('evt_1', 'refused:already_paid');
+    expect(s.push.notifyAdmins).toHaveBeenCalledWith('payment_due', expect.objectContaining({ subject: `payment_link_refused:${SESSION}`, bellOnly: true }));
+    m.payments.byRequest.mockResolvedValue({ id: PAYMENT_ID }); // this session's payment is the one on the package
+    await post(sessionEvent('checkout.session.completed', {}, 'evt_2'));
+    expect(m.payments.insert).not.toHaveBeenCalled();
+    expect(s.links.markPaid).toHaveBeenCalledWith(LINK_ID, expect.objectContaining({ paymentId: PAYMENT_ID }));
   });
 
   it('never a takeover: a renewal, or a student with an earlier package, keeps brought_by; an orphan session alerts', async () => {

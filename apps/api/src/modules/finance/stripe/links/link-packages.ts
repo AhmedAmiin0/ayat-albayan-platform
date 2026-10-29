@@ -27,6 +27,17 @@ export class LinkPackages {
     }
   }
 
+  /**
+   * Why the link's package can no longer take the link's amount, or null when it can: cancelled («إلغاء
+   * الباقة»), or something already paid on it (a bank transfer recorded meanwhile, in part or in full, means
+   * the link would be paid twice).
+   */
+  async blocked(subscriptionId: string): Promise<'subscription_cancelled' | 'already_paid' | null> {
+    const sub = await this.cancels.view(subscriptionId);
+    if (sub.status === 'cancelled') return 'subscription_cancelled';
+    return sub.paid > 0 ? 'already_paid' : null;
+  }
+
   /** Before a new link: the packages of the student's earlier links that can no longer be paid. */
   async releaseStale(studentId: string, actorId: string, now = new Date()): Promise<void> {
     for (const link of await this.links.forStudent(studentId)) {

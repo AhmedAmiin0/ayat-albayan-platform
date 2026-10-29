@@ -1,5 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { renderRouter, screen } from 'expo-router/testing-library';
+import { router as nav } from 'expo-router';
+import { act, fireEvent, renderRouter, screen } from 'expo-router/testing-library';
 import { Text } from 'react-native';
 import { useThreadMode } from '@/inbox/thread/hooks/thread-mode';
 import type { UserRole } from '@ab/shared';
@@ -7,7 +8,7 @@ import { queryClient } from '@/core/lib/query/query-client';
 import { pathKey } from '@/core/lib/query/query-keys';
 import { fullAccessMe } from '@/test/staff-me';
 import { TabStack } from '@/core/nav/TabStack';
-import { useTreeBase } from '@/core/nav/tree-base';
+import { useStudentHref, useTreeBase } from '@/core/nav/tree-base';
 import { type PushTree, routeIn } from '@/core/push/notification-route';
 import AdminChatLayout from '../../../app/(admin-chat)/_layout';
 import SalesChatLayout from '../../../app/(sales-chat)/_layout';
@@ -36,6 +37,12 @@ function ChatStub() {
   return <Text>{`chat base=${useTreeBase()} mode=${useThreadMode().kind}`}</Text>;
 }
 const stub = (label: string) => () => <Text>{label}</Text>;
+/** The student file opened from a chat's name: «عرض سجل الحضور» as the real screens build it (the tab's route). */
+function StudentFileStub() {
+  const to = useStudentHref();
+  const base = useTreeBase();
+  return <Text onPress={() => nav.push(to(`${base}/students/s1/attendance`))}>student-file</Text>;
+}
 const app = {
   _layout: RootLayout,
   login: stub('login-screen'),
@@ -43,6 +50,8 @@ const app = {
   '(tabs)/index': stub('admin-today'),
   '(admin-chat)/_layout': AdminChatLayout,
   '(admin-chat)/inbox/thread/[phone]': ChatStub,
+  '(admin-chat)/inbox/student/[id]': StudentFileStub,
+  '(admin-chat)/inbox/student/[id]/attendance': stub('chat-attendance'),
   'teacher/_layout': TeacherLayout,
   'teacher/today/_layout': TabStack,
   'teacher/today/index': stub('teacher-today'),
@@ -53,6 +62,8 @@ const app = {
   'sales/inbox/index': stub('sales-inbox'),
   '(sales-chat)/_layout': SalesChatLayout,
   '(sales-chat)/sales/inbox/thread/[phone]': ChatStub,
+  '(sales-chat)/sales/inbox/student/[id]': StudentFileStub,
+  '(sales-chat)/sales/inbox/student/[id]/attendance': stub('chat-attendance'),
 };
 
 const PHONE = '+966552147730';
@@ -102,4 +113,18 @@ test.each([
   const router = await open(gate, `${path}/${ENC}`);
   expect(screen.queryByText(/^chat /)).toBeNull();
   expect(router.pathname()).toMatch(own);
+});
+
+// Review 2026-10-30: a tab route pushed from the chat group stacked a second tab host, so «رجوع» landed on Today.
+test.each([
+  { tree: 'admin', file: '/inbox/student/s1', group: '(admin-chat)' },
+  { tree: 'sales', file: '/sales/inbox/student/s1', group: '(sales-chat)' },
+])('$tree: the student file opened in a chat opens its screens inside $group; «رجوع» returns to the file', async ({ tree, file, group }) => {
+  const router = await open(tree, file);
+  await fireEvent.press(await screen.findByText('student-file'));
+  expect(await screen.findByText('chat-attendance')).toBeTruthy();
+  expect([router.pathname(), router.segments()[0]]).toEqual([`${file}/attendance`, group]);
+  await act(async () => nav.back());
+  expect(await screen.findByText('student-file')).toBeTruthy();
+  expect(router.pathname()).toBe(file);
 });
