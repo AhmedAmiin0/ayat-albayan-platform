@@ -38,7 +38,7 @@ test('the last row clears the floating tab bar and a FAB', async () => {
 });
 
 test('paged: a usePagedList result gives the rows, the next page and the pull to refresh', async () => {
-  const paged = { items: rows(2), loadMore: jest.fn(), refresh: jest.fn(), isRefetching: false };
+  const paged = { items: rows(2), loadMore: jest.fn(), refresh: jest.fn(), pulling: false };
   await render(<LazyList testID="lazy" paged={paged} keyExtractor={keyOf} renderItem={renderRow} />);
   expect(screen.getByText('صف 1')).toBeTruthy();
   const list = screen.getByTestId('lazy');

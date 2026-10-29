@@ -10,6 +10,8 @@ export interface IconButtonProps {
   /** ghost: lapis wash when pressed (a header action). filled: the lapis circle (send). */
   variant?: 'ghost' | 'filled';
   disabled?: boolean;
+  /** Narrower (34pt) inside a crowded bar such as the chat pill; hitSlop keeps the 44pt target. */
+  compact?: boolean;
   testID?: string;
   children: ReactNode;
 }
@@ -27,8 +29,9 @@ export function IconButton({ label, onPress, variant = 'ghost', ...p }: IconButt
       accessibilityState={{ disabled: off }}
       disabled={off}
       onPress={onPress}
+      hitSlop={p.compact ? { left: 5, right: 5 } : undefined}
       style={({ pressed }) => ({
-        width: shape.control.touch,
+        width: p.compact ? 34 : shape.control.touch,
         height: shape.control.touch,
         borderRadius: filled ? shape.radius.pill : shape.radius.md,
         alignItems: 'center',

@@ -27,13 +27,14 @@ interface Paged<T> {
   items: readonly T[];
   loadMore: () => void;
   refresh: () => void;
-  isRefetching: boolean;
+  /** The viewer's own pull is running: the only thing that shows the spinner (never a background refetch). */
+  pulling: boolean;
 }
 
 interface LazyListProps<T> extends Omit<FlashListProps<T>, 'style' | 'contentContainerStyle' | 'keyExtractor' | 'data'> {
   /** The rows; or `paged` instead. */
   data?: FlashListProps<T>['data'];
-  /** A usePagedList result: its items, loadMore at the end, refresh + isRefetching on a pull. */
+  /** A usePagedList result: its items, loadMore at the end, refresh + pulling on a pull. */
   paged?: Paged<T>;
   /** Required: a recycled row is matched to its item by key, never by index. */
   keyExtractor: (item: T, index: number) => string;
@@ -87,4 +88,4 @@ function spacing(inset: boolean, gap: number | undefined, header: boolean) {
 }
 
 const pagedProps = <T,>(paged: Paged<T> | undefined) =>
-  paged ? { onEndReached: paged.loadMore, onRefresh: paged.refresh, refreshing: paged.isRefetching } : null;
+  paged ? { onEndReached: paged.loadMore, onRefresh: paged.refresh, refreshing: paged.pulling } : null;

@@ -6,10 +6,12 @@ import { SendGate } from '../gate/send-gate';
 import { routeOf } from '../numbers/number-route';
 import { NumberRoutes } from '../numbers/number-routes';
 import { MessageDispatch, type SendVia } from '../sender/message.dispatch';
-import { lineOf } from '../sender/send-line';
 import type { DueMessage } from '../sender/sender.due';
 import { SenderQueries } from '../sender/sender.queries';
 import { WaError, type TemplateRow } from '../whatsapp.types';
+
+/** The line every sign-in / password code leaves from (docs/30 §4). */
+const CODE_LINE = 'chat' as const;
 
 /** sent | unavailable (gate closed, template not approved, no line / number can send it) | failed (the provider refused). */
 type CodeSendResult = { status: 'sent' } | { status: 'unavailable' } | { status: 'failed'; error: string };
@@ -31,9 +33,11 @@ export class CodeSend {
     private readonly dispatch: MessageDispatch,
   ) {}
 
-  /** Can a code go out now? (the template approved and the gate open; the line is checked at send). */
+  /** Can a code go out now? The template approved, the gate open and a chat line / number that can send it. */
   async available(): Promise<boolean> {
-    return (await this.template()) !== null && (await this.gate.open());
+    const template = await this.template();
+    if (!template || !(await this.gate.open())) return false;
+    return (await this.via(codeRow({ phone: '', code: '', template }), template)) !== null;
   }
 
   async send(input: { phone: string; code: string }): Promise<CodeSendResult> {
@@ -55,19 +59,22 @@ export class CodeSend {
   }
 
   /**
-   * Legacy: the template's line (notifications). Module mode: the number routing picks, as for any
-   * template. Never a crm line (docs/30 §4): the CRM's inbox would show the code to its users, and
-   * whether it fills an OTP button is untested.
+   * The CHAT line only (owner 2026-10-29: «For login make it with chat number»), never a fallback to
+   * notifications: no chat line (or number) that can send = unavailable. Legacy: the chat line's own
+   * client. Module mode: routing over the enabled chat numbers only. Never a crm line or number
+   * (docs/30 §4): the CRM's inbox would show the code to its users, and its OTP button is untested.
    */
   private async via(row: DueMessage, template: TemplateRow): Promise<SendVia | null> {
     const numbers = overlayNumbers();
     if (numbers === null) {
-      const line = lineOf(row, template, this.queries.chatConfigured);
-      return lineProvider(loadEnv(), line) === 'crm' ? null : line;
+      if (!this.queries.chatConfigured) return null;
+      return lineProvider(loadEnv(), CODE_LINE) === 'crm' ? null : CODE_LINE;
     }
     if (!this.routes) return null;
-    const route = routeOf((await this.routes.pass(numbers)).pass, { row, template });
-    return route && numbers.find((n) => n.id === route.numberId)?.env?.provider !== 'crm' ? route : null;
+    const chat = numbers.filter((n) => n.purpose === CODE_LINE && n.env?.provider !== 'crm');
+    const { pass } = await this.routes.pass(chat);
+    const route = routeOf(pass, { row, template: { ...template, line: CODE_LINE, number_id: null } });
+    return route?.line === CODE_LINE ? route : null;
   }
 }
 

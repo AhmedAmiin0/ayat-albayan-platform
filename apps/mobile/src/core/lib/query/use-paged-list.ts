@@ -32,6 +32,6 @@ export function usePagedList<T extends WithId>({
   });
   const pages = query.data?.pages;
   const items = useMemo(() => flattenPages(pages ?? []), [pages]);
-  const { loadMore, refresh } = usePagedActions(query);
-  return withTracked(query, { items, total: pages?.[0]?.total ?? 0, loadMore, refresh });
+  const { loadMore, refresh, pulling } = usePagedActions(query);
+  return withTracked(query, { items, total: pages?.[0]?.total ?? 0, loadMore, refresh, pulling });
 }

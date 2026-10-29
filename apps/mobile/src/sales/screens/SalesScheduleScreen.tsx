@@ -24,6 +24,7 @@ import { useSalesSchedule, useSalesTeachers } from '../lib/sales-api';
 import { SalesLessonRow } from '../components/SalesLessonRow';
 import { SalesLessonSheet } from '../components/SalesLessonSheet';
 import { byScheduleStatus, SCHEDULE_STATUSES, scheduleStatusCounts, type ScheduleStatus } from '../lib/schedule-status';
+import { usePullRefresh } from '@/core/lib/query/pull-refresh';
 
 const DATE = /^\d{4}-\d{2}-\d{2}$/;
 
@@ -52,6 +53,7 @@ export function SalesScheduleScreen({ asTab = false }: { asTab?: boolean }) {
   const [teacherId, setTeacherId] = useState(params.teacherId ?? '');
   const [status, setStatus] = useState<ScheduleStatus>('all');
   const day = useSalesSchedule(date, teacherId);
+  const pull = usePullRefresh(day.refetch);
   const teachers = useSalesTeachers();
   const details = useLessonDetails(day.data?.lessons);
   const inset = useTabBarInset();
@@ -96,8 +98,8 @@ export function SalesScheduleScreen({ asTab = false }: { asTab?: boolean }) {
         data={lessons}
         keyExtractor={(l) => l.id}
         {...cells}
-        refreshing={day.isRefetching}
-        onRefresh={() => void day.refetch()}
+        refreshing={pull.refreshing}
+        onRefresh={pull.onRefresh}
         ListEmptyComponent={
           day.data ? (
             <EmptyState title={emptyTitle(status !== 'all' && all.length > 0, teacherId)} />

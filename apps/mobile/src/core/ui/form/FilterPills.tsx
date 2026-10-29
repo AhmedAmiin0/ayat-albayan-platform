@@ -49,7 +49,8 @@ export function FilterPills<V extends string>({
   const radio = role === 'radiogroup';
   const pills = items.map((item) => {
     const selected = item.value === value;
-    const fg = selected ? color.onInverse : color.ink;
+    // Selected = the action green on its wash (owner 2026-10-29, option A), not the grey inverse pill.
+    const fg = selected ? color.lapis : color.ink;
     return (
       <Pressable
         key={item.value}
@@ -70,8 +71,8 @@ export function FilterPills<V extends string>({
           paddingHorizontal: 14,
           borderRadius: shape.radius.pill,
           borderWidth: 1,
-          borderColor: selected ? color.inverse : color.rule,
-          backgroundColor: selected ? color.inverse : color.raised,
+          borderColor: selected ? color.lapisWash : color.rule,
+          backgroundColor: selected ? color.lapisWash : color.raised,
         }}
       >
         {item.glyph ? (

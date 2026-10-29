@@ -46,6 +46,6 @@ export function useThreadList({ search, unread, list, live: liveTab = false }: T
     const seen = new Set<string>();
     return (pages ?? []).flatMap((p) => p.items).filter((th) => !seen.has(th.phone_e164) && seen.add(th.phone_e164));
   }, [pages]);
-  const { loadMore, refresh } = usePagedActions(query);
-  return withTracked(query, { items, total: pages?.[0]?.total ?? 0, loadMore, refresh });
+  const { loadMore, refresh, pulling } = usePagedActions(query);
+  return withTracked(query, { items, total: pages?.[0]?.total ?? 0, loadMore, refresh, pulling });
 }

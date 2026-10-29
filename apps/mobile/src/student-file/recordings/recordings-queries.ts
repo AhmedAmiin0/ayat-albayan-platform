@@ -28,10 +28,10 @@ export function useRecordings(studentId: string, params: Record<string, string |
   });
   const pages = query.data?.pages;
   const items = useMemo(() => flattenPages(pages ?? []), [pages]);
-  const { loadMore, refresh } = usePagedActions(query);
+  const { loadMore, refresh, pulling } = usePagedActions(query);
   const loadPage: LoadPage = (page) => apiFetch<StudentRecordingsPage>(`${path}${toQueryString({ ...params, page, pageSize: PAGE_SIZE })}`);
   const freshUrl = (id: string) => freshRecordingUrl(loadPage, pages ?? [], id);
-  return withTracked(query, { items, total: pages?.[0]?.total ?? 0, loadMore, refresh, freshUrl });
+  return withTracked(query, { items, total: pages?.[0]?.total ?? 0, loadMore, refresh, pulling, freshUrl });
 }
 
 type LoadPage = (page: number) => Promise<StudentRecordingsPage>;

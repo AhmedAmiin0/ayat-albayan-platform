@@ -15,6 +15,7 @@ import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { useInsetRows } from '@/core/ui/surface/use-inset-rows';
 import { NotificationRow } from './NotificationRow';
 import { useMarkRead, useNotifications } from './use-notifications';
+import { usePullRefresh } from '@/core/lib/query/pull-refresh';
 
 export interface NotificationsScreenProps {
   /** The tree it sits in: a row opens that tree's screen. */
@@ -29,6 +30,7 @@ export interface NotificationsScreenProps {
  */
 export function NotificationsScreen({ tree }: NotificationsScreenProps) {
   const list = useNotifications();
+  const pull = usePullRefresh(list.refetch);
   const markRead = useMarkRead();
   const can = usePermissions();
   const bell = t.bell.mobile;
@@ -63,8 +65,8 @@ export function NotificationsScreen({ tree }: NotificationsScreenProps) {
         data={items}
         keyExtractor={(item) => item.id}
         {...cells}
-        refreshing={list.isRefetching}
-        onRefresh={() => void list.refetch()}
+        refreshing={pull.refreshing}
+        onRefresh={pull.onRefresh}
         ListEmptyComponent={
           list.isPending ? (
             <Note>{t.common.loading}</Note>
