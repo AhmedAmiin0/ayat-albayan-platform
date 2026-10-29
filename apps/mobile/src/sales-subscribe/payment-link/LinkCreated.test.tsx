@@ -8,12 +8,6 @@ import { LinkCreated } from './LinkCreated';
 import { linkMessage } from './link-text';
 
 jest.mock('./flag', () => ({ STRIPE_FEATURE: true }));
-const mockSetText = jest.fn();
-jest.mock('@/inbox', () => ({
-  ...jest.requireActual('@/inbox'),
-  chatWindowOpen: () => true,
-  appendComposerText: (...mockArgs: unknown[]) => mockSetText(...mockArgs),
-}));
 
 const link = paymentLink({ url: `https://api.example.test/pay/${'k'.repeat(32)}` });
 const openURL = jest.spyOn(Linking, 'openURL');
@@ -28,12 +22,8 @@ test('«افتح الرابط» opens the page marked as from the app (?from=app
   await show();
   await fireEvent.press(screen.getByRole('button', { name: t.studentLists.openLink }));
   expect(openURL).toHaveBeenCalledWith(`${link.url}?from=app`);
-});
-
-test('the text for the family never carries the mark', async () => {
-  await show();
-  await fireEvent.press(screen.getByRole('button', { name: t.paymentLinks.sendInChat }));
-  expect(mockSetText).toHaveBeenCalledWith(PHONE, linkMessage(link));
+  // What «إرسال في المحادثة» / «نسخ» give the family stays unmarked (PaymentLinkScreen.test: the box gets it).
+  expect(linkMessage(link)).toContain(link.url);
   expect(linkMessage(link)).not.toContain('from=app');
 });
 

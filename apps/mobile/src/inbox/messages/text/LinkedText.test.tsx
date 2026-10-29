@@ -14,8 +14,9 @@ jest.mock('@/core/lib/http/api', () => ({
 }));
 
 const mockStripe = { on: false };
+// No spread: it would read the getter while the factory runs, before mockStripe exists.
 jest.mock('@/core/lib/stripe-flag', () => ({
-  ...jest.requireActual('@/core/lib/stripe-flag'),
+  appOpenUrl: jest.requireActual<{ appOpenUrl: (href: string, on: boolean) => string }>('@/core/lib/stripe-flag').appOpenUrl,
   get STRIPE_FEATURE() {
     return mockStripe.on;
   },
