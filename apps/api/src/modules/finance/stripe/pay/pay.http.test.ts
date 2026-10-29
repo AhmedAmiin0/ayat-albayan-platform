@@ -1,7 +1,7 @@
 import type { NestFastifyApplication } from '@nestjs/platform-fastify';
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { STUDENT_ID, SUB_ID } from '../../subscriptions/money/money.fakes';
-import { SALES_A } from '../../subscriptions/test-app';
+import { STUDENT_ID, SUB_ID, subRow } from '../../subscriptions/money/money.fakes';
+import { resetMocks, SALES_A, type Mocks } from '../../subscriptions/test-app';
 import { stripeApp } from '../testing/stripe-app.fakes';
 import { LINK_ID, linkRow, SESSION, stripeDefaults, TOKEN, type StripeMocks } from '../testing/stripe-mocks.fakes';
 
@@ -14,14 +14,17 @@ const PAGE = `https://api.test.example/pay/${TOKEN}`;
 
 describe('the public payment page: GET /pay/:token and GET /pay/:token/checkout', () => {
   let app: NestFastifyApplication;
+  let m: Mocks;
   let s: StripeMocks;
   const get = (url: string) => app.inject({ method: 'GET', url });
   const json = (url: string) => app.inject({ method: 'GET', url, headers: { accept: 'application/json' } });
 
-  beforeAll(async () => ({ app, s } = await stripeApp()));
+  beforeAll(async () => ({ app, m, s } = await stripeApp()));
   afterAll(() => app.close());
   beforeEach(() => {
+    resetMocks(m);
     stripeDefaults(s);
+    m.subs.get.mockResolvedValue(subRow({ price: 120 })); // the link's package: unpaid, nothing paid yet
     s.stripe.checkout.sessions.create.mockResolvedValue({ id: SESSION, url: 'https://checkout.stripe.com/c/pay/cs_test_a1' });
   });
 
@@ -71,6 +74,20 @@ describe('the public payment page: GET /pay/:token and GET /pay/:token/checkout'
       s.links.byToken.mockResolvedValue(linkRow(patch));
       expect((await get(`/pay/${TOKEN}/checkout`)).headers.location).toBe(PAGE);
     }
+    expect(s.stripe.checkout.sessions.create).not.toHaveBeenCalled();
+  });
+
+  it('a package paid another way (a transfer, part or whole) or cancelled closes the link: never a second payment', async () => {
+    s.links.byToken.mockResolvedValue(linkRow({ stripe_session_id: 'cs_old' }));
+    m.subs.paid.mockResolvedValue(new Map([[SUB_ID, 60]]));
+    expect((await get(`/pay/${TOKEN}/checkout`)).headers.location).toBe(PAGE);
+    m.subs.paid.mockResolvedValue(new Map());
+    m.subs.get.mockResolvedValue(subRow({ price: 120, status: 'cancelled' }));
+    expect((await get(`/pay/${TOKEN}/checkout`)).headers.location).toBe(PAGE);
+    expect(s.links.cancel).toHaveBeenCalledTimes(2);
+    expect(s.links.cancel).toHaveBeenCalledWith(LINK_ID);
+    expect(s.stripe.checkout.sessions.expire).toHaveBeenCalledWith('cs_old');
+    expect(s.stripe.checkout.sessions.retrieve).not.toHaveBeenCalled();
     expect(s.stripe.checkout.sessions.create).not.toHaveBeenCalled();
   });
 

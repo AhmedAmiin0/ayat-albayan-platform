@@ -27,6 +27,15 @@ export class LinkPackages {
     }
   }
 
+  /**
+   * The link's package can still take the link's amount: not cancelled («إلغاء الباقة») and nothing paid on
+   * it yet (a bank transfer recorded meanwhile, in part or in full, means the link would be paid twice).
+   */
+  async payable(subscriptionId: string): Promise<boolean> {
+    const sub = await this.cancels.view(subscriptionId);
+    return sub.status !== 'cancelled' && sub.paid <= 0;
+  }
+
   /** Before a new link: the packages of the student's earlier links that can no longer be paid. */
   async releaseStale(studentId: string, actorId: string, now = new Date()): Promise<void> {
     for (const link of await this.links.forStudent(studentId)) {
