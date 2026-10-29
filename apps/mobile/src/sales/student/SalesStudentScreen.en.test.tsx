@@ -38,9 +38,10 @@ test('an English (LTR) «Schedule»: the weekly line, the student\'s time, the u
   const first = await renderWithQuery(<SalesStudentScreen />);
   expect(await screen.findByText(s.title)).toBeTruthy();
   expect(screen.getByText(/^Sunday · Tuesday · Thursday at .+ Riyadh time$/)).toBeTruthy();
-  // The teacher's name in English, like the rows under it.
-  expect(screen.getByText(/Abrar Mohamed · /)).toBeTruthy();
-  expect(screen.getAllByText(/Abrar Mohamed$/).length).toBeGreaterThan(0);
+  // The teacher's name in English, like the rows under it (their second line: the name · the length).
+  const minutes = en.enums.duration['45'];
+  expect(screen.getByText(`${en.today.withTeacher.replace('{teacher}', 'Abrar Mohamed')} · ${minutes}`)).toBeTruthy();
+  expect(screen.getAllByText(`${en.today.teacherTitled.replace('{teacher}', 'Abrar Mohamed')} · ${minutes}`)).toHaveLength(2);
   expect(screen.getByText(/^Student's time: Sunday · Tuesday · Thursday at .+ Cairo time$/)).toBeTruthy();
   expect(screen.getByText(s.upcoming)).toBeTruthy();
   expect(screen.getAllByRole('button', { name: new RegExp(`^${en.lessons.sheet.openRow.replace('{names}', 'يوسف أحمد')} · `) })).toHaveLength(2);

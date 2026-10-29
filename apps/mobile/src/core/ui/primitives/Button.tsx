@@ -48,9 +48,12 @@ export function buttonLook(variant: ButtonVariant, color: Palette, pressed: bool
 export const pressScale = (pressed: boolean, off: boolean) => (pressed && !off ? 0.98 : 1);
 
 /**
- * docs/07 §6 «الأزرار» at 48pt: one radius, ui 600 at body size on ONE line. Fill the width it is
- * given (a column, or a ButtonRow cell); never shrink-wrap a multi-word label (Android measured
- * «Join the lesson» narrower than it drew it and clipped it, 2026-10-28).
+ * docs/07 §6 «الأزرار» at 48pt: one radius, ui 600 at body size on ONE line. The label's box spans
+ * the button (flexGrow) and centres its text: shrink-wrapped in the centred row, Android measured
+ * «Join the lesson» narrower than it drew it, wrapped it and showed only «Join the» (owner 2026-10-28,
+ * and again 10-29 with the «simple» break strategy). No adjustsFontSizeToFit: on Android it turns the
+ * ellipsis off, so a label too long would be cut silently; now it ends in «…». With an icon the box
+ * keeps its own width, so the icon and the label stay centred together.
  */
 export function Button({ label, onPress, variant = 'primary', busy = false, ref, ...p }: ButtonProps) {
   const { color } = useTheme();
@@ -82,9 +85,8 @@ export function Button({ label, onPress, variant = 'primary', busy = false, ref,
       {p.icon ? <View testID="button-icon">{p.icon(ink)}</View> : null}
       <AppText
         numberOfLines={1}
-        adjustsFontSizeToFit
-        minimumFontScale={0.85}
         style={{
+          flexGrow: p.icon ? 0 : 1,
           flexShrink: 1,
           fontFamily: type.ui[600],
           fontSize: type.size.body,
