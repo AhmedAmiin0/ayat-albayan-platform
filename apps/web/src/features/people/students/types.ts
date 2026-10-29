@@ -1,4 +1,4 @@
-import type { Gender, Program, StudentStatus } from '@ab/shared';
+import type { FamilyPhone, Gender, Program, StudentStatus } from '@ab/shared';
 
 // Response shapes of apps/api/src/modules/students (students.mapper.ts).
 
@@ -34,7 +34,8 @@ export type StudentProfile = StudentRef & {
   notes: string | null;
   /** «رقم الواتساب لـ: الطالب نفسه» (docs/30 §1); absent from an older API = false. */
   contact_is_self?: boolean;
-  guardian: { id: string; name: string; phone_e164: string };
+  /** phones: the main number and a second one (owner 2026-10-29); absent from an older API (secondPhoneOf). */
+  guardian: { id: string; name: string; phone_e164: string; phones?: FamilyPhone[] };
   teacher: { id: string; display_name_ar: string; meeting_link: string | null } | null;
   /** Override, else the teacher's fixed link (R-STU-05). */
   meeting_link: string | null;
