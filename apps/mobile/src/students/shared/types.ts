@@ -1,4 +1,4 @@
-import type { Gender, Program, StudentStatus } from '@ab/shared';
+import type { FamilyPhone, Gender, Program, StudentStatus } from '@ab/shared';
 
 // Response shapes of apps/api/src/modules/students (students.mapper.ts), the fields mobile reads.
 // Same as apps/web/src/features/students/types.ts; the apps cannot import each other.
@@ -27,7 +27,8 @@ export type StudentProfile = StudentRef & {
   tz: string;
   /** «رقم الواتساب لـ: الطالب نفسه» (docs/30 §1); absent from an older API / cache = «ولي الأمر». */
   contact_is_self?: boolean;
-  guardian: { id: string; name: string; phone_e164: string };
+  /** phones: the main number (is_primary) and a second one (owner 2026-10-29); absent from an older API / cache. */
+  guardian: { id: string; name: string; phone_e164: string; phones?: FamilyPhone[] };
   teacher: { id: string; display_name_ar: string; meeting_link: string | null } | null;
   /** Override, else the teacher's fixed link (R-STU-05). */
   meeting_link: string | null;
