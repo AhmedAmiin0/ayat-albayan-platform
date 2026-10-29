@@ -1,13 +1,15 @@
-import { canPickTrialDate, type SalesStudentRef, type ThreadView } from '@ab/shared';
+import { canLinkFamily, canPickTrialDate, type SalesStudentRef, type ThreadView } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { useState, type ReactNode } from 'react';
 import { Button } from '@/components/ui/form/button';
+import { Toast } from '@/components/ui/overlay/toast';
 import { usePermissions } from '@/features/people/auth/use-permissions';
 import { RegistrationCheckTrigger } from '@/features/sales/sales/registration/RegistrationCheckButton';
 import { RegistrationCheckDialog } from '@/features/sales/sales/registration/RegistrationCheckDialog';
 import { useStripeFeature } from '@/features/sales/payment-links';
 import { TrialDateDialog } from '@/features/teaching/booking/trial-date/dialog/TrialDateDialog';
 import { t } from '@/lib/i18n/i18n';
+import { LinkFamilyDialog } from '../lead/LinkFamilyDialog';
 import { useInboxMode } from '../shared/mode';
 import { SalesRegisterButton, SalesRegisterDialog } from '../sales/SalesRegisterAction';
 import { canRegisterFrom } from '../sales/sales-register';
@@ -38,7 +40,8 @@ export interface SalesFamilyActions {
  * (hasCourse), «موعد تجريبي جديد» per student with no running subscription (canPickTrialDate, with
  * the trial dates' history in its dialog); several children are named on each (the visible text is the accessible name).
  * «رابط دفع» (docs/30) only in the Stripe test build with the API's feature on (useStripeFeature).
- * «تحقق من التسجيل» (students.check_registration) always goes in the menu. `compact` (phones):
+ * «تحقق من التسجيل» (students.check_registration) always goes in the menu; «ربط بطالب موجود» (leads.link_family) on a
+ * lead chat with no family (canLinkFamily), its done text a toast here. `compact` (phones):
  * the visible action is an icon button. Outside sales mode everything is empty. Every dialog's open
  * state lives here, so SalesChatFrame keeps them open across 900px (m13; round 2 B: the lead's
  * «تسجيل طالب جديد», which keeps the lead thread it was opened on, and the registration check).
@@ -47,14 +50,21 @@ export function useSalesFamilyActions({ thread, compact = false }: { thread: Thr
   const mode = useInboxMode();
   const sales = mode === 'sales' && !!thread.guardian_id;
   const family = useQuery({ ...salesFamilyQuery(thread.phone_e164), enabled: sales });
-  const check = usePermissions().can('students.check_registration');
+  const { can } = usePermissions();
+  const check = can('students.check_registration');
   const [opened, setOpened] = useState<Opened | null>(null);
   const [course, setCourse] = useState<string | null>(null);
   const [registering, setRegistering] = useState<LeadThread | null>(null);
   const [checking, setChecking] = useState(false);
   const [trialFor, setTrialFor] = useState<SalesStudentRef | null>(null);
   const [linking, setLinking] = useState(false);
+  const [linkingFamily, setLinkingFamily] = useState<string | null>(null);
+  const [linked, setLinked] = useState<string | null>(null);
   const stripe = useStripeFeature();
+  const linkDone = (text: string) => {
+    setLinkingFamily(null);
+    setLinked(text);
+  };
   if (mode !== 'sales') return { primary: null, items: [], dialogs: null };
   const students = sales ? (family.data?.students ?? []) : [];
   // sales.renew_any (docs/16 row 38) also lists children not hers (`mine: false`): money only, the rest stays hers.
@@ -70,12 +80,18 @@ export function useSalesFamilyActions({ thread, compact = false }: { thread: Thr
       {trialFor && <TrialDateDialog mode="sales" student={trialFor} onClose={() => setTrialFor(null)} />}
       {opened && <SalesMoneyFlow {...opened} students={students} phone={thread.phone_e164} onClose={() => setOpened(null)} />}
       {linking && <PaymentLinkDialog thread={thread} students={own} onClose={() => setLinking(false)} />}
+      {linkingFamily && <LinkFamilyDialog leadId={linkingFamily} onClose={() => setLinkingFamily(null)} onDone={linkDone} />}
+      {linked && <Toast message={linked} onDismiss={() => setLinked(null)} />}
     </>
   );
   if (students.length === 0) {
     const lead = canRegisterFrom(thread) ? thread : null;
     const primary = lead && <SalesRegisterButton compact={compact} onOpen={() => setRegistering(lead)} />;
-    return { primary, items: checkItem, dialogs };
+    const leadId = can('leads.link_family') && canLinkFamily(thread) ? thread.lead_id : null;
+    const linkItem = leadId ? [
+      <Button key="link-family" type="button" size="sm" variant="ghost" onClick={() => setLinkingFamily(leadId)}>{t.inbox.linkFamily.action}</Button>,
+    ] : [];
+    return { primary, items: [...checkItem, ...linkItem], dialogs };
   }
 
   const named = (label: string, name: string) => (students.length > 1 ? `${label} — ${name}` : label);

@@ -1,4 +1,4 @@
-import { formatPhone, isPackageEnded, studentStatusStyle } from '@ab/shared';
+import { formatPhone, isPackageEnded, secondPhoneOf, studentStatusStyle } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { Link } from '@tanstack/react-router';
 import { useState, type ReactNode } from 'react';
@@ -51,10 +51,13 @@ export function StudentProfilePage({ studentId }: { studentId: string }) {
     return <FormAlert>{notFound ? t.common.notFound : t.common.error}</FormAlert>;
   }
 
+  // The family's second number (owner 2026-10-29), linked from a lead chat; removed from «تعديل ولي الأمر».
+  const second = secondPhoneOf(student.guardian.phones);
   const meta = [
     [t.students.code, <Ltr key="c">{student.code ?? '—'}</Ltr>],
     [t.students.guardian, <span key="g">{student.guardian.name}</span>],
     [t.students.guardianPhone, <Ltr key="p">{formatPhone(student.guardian.phone_e164)}</Ltr>],
+    ...(second ? [[t.guardians.secondPhone, <Ltr key="p2">{formatPhone(second)}</Ltr>] as const] : []),
     [
       t.students.effectiveLink,
       student.meeting_link ? (
