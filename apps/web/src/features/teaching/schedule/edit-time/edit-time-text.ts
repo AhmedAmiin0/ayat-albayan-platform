@@ -1,5 +1,5 @@
 import { durationText, lessonWhenAt, payoutLockOf } from '@ab/shared';
-import { monthLabel } from '@/features/finance/payouts/MonthSelect';
+import { monthLabel } from '@/features/finance/payouts/shared/MonthSelect';
 import { ApiError } from '@/lib/http/api';
 import { t } from '@/lib/i18n/i18n';
 import { RIYADH_TZ } from '../tz';

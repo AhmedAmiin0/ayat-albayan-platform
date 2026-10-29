@@ -4,7 +4,7 @@ import { createColumnHelper } from '@tanstack/react-table';
 import { useMemo } from 'react';
 import { DataTable, type DataTableFeatures } from '@/components/DataTable';
 import { FormAlert } from '@/components/ui/form/form-alert';
-import { monthLabel } from '@/features/finance/payouts/MonthSelect';
+import { monthLabel } from '@/features/finance/payouts/shared/MonthSelect';
 import { Amount } from '@/features/finance/subscriptions/balance/Amount';
 import { t } from '@/lib/i18n/i18n';
 import { categoriesQuery, categoryLabel, expenseYearQuery } from './api';

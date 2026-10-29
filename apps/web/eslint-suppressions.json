@@ -189,27 +189,27 @@
       "count": 1
     }
   },
-  "src/features/finance/payouts/LedgerPaid.tsx": {
+  "src/features/finance/payouts/shared/LedgerPaid.tsx": {
     "ab/module-boundaries": {
       "count": 1
     }
   },
-  "src/features/finance/payouts/PayPayoutDialog.tsx": {
+  "src/features/finance/payouts/pay/PayPayoutDialog.tsx": {
     "ab/module-boundaries": {
       "count": 3
     }
   },
-  "src/features/finance/payouts/PayoutDialogs.tsx": {
+  "src/features/finance/payouts/pay/PayoutDialogs.tsx": {
     "ab/module-boundaries": {
       "count": 3
     }
   },
-  "src/features/finance/payouts/PayoutsPage.tsx": {
+  "src/features/finance/payouts/list/PayoutsPage.tsx": {
     "ab/module-boundaries": {
       "count": 4
     }
   },
-  "src/features/finance/payouts/TeacherDuesSummary.tsx": {
+  "src/features/finance/payouts/list/TeacherDuesSummary.tsx": {
     "ab/module-boundaries": {
       "count": 2
     }
@@ -219,12 +219,12 @@
       "count": 1
     }
   },
-  "src/features/finance/payouts/payout-columns.tsx": {
+  "src/features/finance/payouts/list/payout-columns.tsx": {
     "ab/module-boundaries": {
       "count": 4
     }
   },
-  "src/features/finance/payouts/use-pay-payout.ts": {
+  "src/features/finance/payouts/pay/use-pay-payout.ts": {
     "ab/module-boundaries": {
       "count": 3
     }
