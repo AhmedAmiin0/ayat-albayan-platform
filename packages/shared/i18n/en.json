@@ -312,7 +312,13 @@
     "phoneTaken": "This number is already registered to another guardian",
     "phoneHint": "Start with your country code, then your number — Saudi Arabia 966 · Egypt 20 · Sudan 249",
     "edit": "Edit guardian",
-    "updated": "Guardian details updated"
+    "updated": "Guardian details updated",
+    "mainPhone": "Main number",
+    "secondPhone": "Second number",
+    "removePhone": "Remove the second number",
+    "removePhoneConfirm": "Remove {phone} from the family's numbers? Its chat becomes a lead chat again.",
+    "phoneRemoved": "The second number was removed",
+    "phoneNotFound": "This number is not a second number of this family"
   },
   "teachers": {
     "title": "Teachers",
@@ -728,6 +734,7 @@
       "request_id_required": "Try again, the booking needs a request id",
       "makeup_not_eligible": "This lesson cannot be made up",
       "makeup_exists": "This lesson already has a makeup booking",
+      "number_taken": "This number belongs to a registered family; book from the student's file",
       "makeup_student": "The student is not on the missed lesson",
       "makeup_scope_one": "A makeup lesson moves on its own, not with the rest of the schedule",
       "not_your_lead": "This lead is not assigned to you, so you cannot register it. Ask the admin to assign it to you.",
@@ -2913,6 +2920,25 @@
         "video": "Video",
         "document": "Document",
         "location": "Location"
+      }
+    },
+    "linkFamily": {
+      "action": "Link to an existing student",
+      "title": "Link this number to a student's family",
+      "hint": "Search by the student's name or code, then pick them. This number becomes their family's second number; who follows up the lead does not change.",
+      "confirm": "Link the number to the family of {name} ({code})?",
+      "pickHint": "Picks this student to link the number to their family",
+      "submit": "Link the number",
+      "linking": "Linking…",
+      "done": "The number is linked to the student's family",
+      "already": "This number is already linked to this family",
+      "errors": {
+        "lead_not_found": "This lead was not found",
+        "student_not_found": "No student has this code",
+        "number_taken": "This number is registered to another family",
+        "family_has_second_number": "This family already has a second number",
+        "teacher_number": "This is a teacher's number; it cannot be linked to a family",
+        "lead_has_family": "This number is another family's main number"
       }
     }
   },
@@ -5139,7 +5165,8 @@
       "saved_replies.manage": "Manage shared quick replies",
       "student_channels.monitor": "Read student–teacher channels",
       "courses.pause": "Pause and resume any student's course",
-      "sales.renew_any": "Renew any student's subscription from the chat"
+      "sales.renew_any": "Renew any student's subscription from the chat",
+      "leads.link_family": "Link a lead's number to an existing student's family"
     },
     "hints": {
       "students.check_registration": "Search by the guardian's phone or the student's name or code; shows only the name, code, status and teacher.",
@@ -5150,7 +5177,8 @@
       "saved_replies.manage": "Add, edit, delete and reorder the shared quick replies. Everyone manages their own replies without this permission.",
       "lessons.confirm": "Confirm a lesson after the family's «yes» in the chat, for any scheduled lesson that has not ended. No message is sent.",
       "courses.pause": "Stops the student's upcoming lessons during the pause without counting them from the package or paying the teacher, and extends the package by the paused days on resume. No message is sent.",
-      "sales.renew_any": "Shows «Renew subscription», «New subscription» and «Record a bank transfer» for every child of the family in its chat, even when they are not theirs (e.g. families imported from the old sheet). Commission keeps its rules. No message is sent."
+      "sales.renew_any": "Shows «Renew subscription», «New subscription» and «Record a bank transfer» for every child of the family in its chat, even when they are not theirs (e.g. families imported from the old sheet). Commission keeps its rules. No message is sent.",
+      "leads.link_family": "Adds the lead chat's number as a second number of a registered student's family, so the chat shows the family. It does not change who follows up the lead and makes no one responsible for the family. No message is sent."
     },
     "page": {
       "title": "Roles and permissions",

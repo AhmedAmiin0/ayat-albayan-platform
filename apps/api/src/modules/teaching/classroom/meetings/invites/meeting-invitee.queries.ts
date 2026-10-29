@@ -1,6 +1,7 @@
 import { NOT_SUBSCRIBED_STATUSES } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../../../../common/db/db.module';
+import { familyOfPhone } from '../../../../../common/db/family-of-phone';
 import { orSafe } from '../../../../people/guardians/http';
 import { studentNameOrCodeFilter } from '../../../../people/students/students.mapper';
 import { dbError } from '../../../../../common/http/http';
@@ -80,11 +81,10 @@ export class MeetingInviteeQueries {
     return data.map((r) => r.student_id);
   }
 
-  /** A guardian known by this phone (their name and tz for a typed number), or null. */
+  /** A family known by this number, main or second (their name and tz for a typed number), or null. */
   async guardianByPhone(phone: string): Promise<{ id: string; name: string; tz: string } | null> {
-    const { data, error } = await this.db.from('guardians').select('id, name, tz').eq('phone_e164', phone).maybeSingle();
-    if (error) throw dbError(error);
-    return data;
+    const family = await familyOfPhone(this.db, phone);
+    return family && { id: family.id, name: family.name, tz: family.tz };
   }
 
   /** The creator's tz: the time of an invitation to an unknown number reads in it. */

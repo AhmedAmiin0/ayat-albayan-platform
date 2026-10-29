@@ -23,11 +23,11 @@ const T: Grant[] = ['teacher'];
 const TS: Grant[] = ['teacher', 'sales'];
 const TA: Grant[] = ['teacher', 'assistant'];
 const TAS: Grant[] = ['teacher', 'assistant', 'sales'];
-
 export const PERMISSION_ROWS = [
   { key: 'leads.read', area: 'people', grants: [] },
   { key: 'leads.write', area: 'people', grants: [] },
   { key: 'leads.assign', area: 'people', grants: [] },
+  { key: 'leads.link_family', area: 'people', grants: [] }, // «ربط بطالب موجود» (owner 2026-10-29): the admin's only
   { key: 'applicants.read', area: 'people', grants: [] },
   { key: 'applicants.write', area: 'people', grants: [] },
   { key: 'students.read', area: 'students', grants: [] },

@@ -16,3 +16,13 @@ describe('MeetingInviteeQueries.teacherStudentIds (owner 2026-10-15)', () => {
     expect(f.calls.some((c) => c.table === 'students')).toBe(false);
   });
 });
+
+describe('MeetingInviteeQueries.guardianByPhone (a typed number)', () => {
+  it('a family’s second number is that family (name and tz); unknown → null', async () => {
+    const family = { id: 'g1', name: 'أم سهيلة', tz: 'Asia/Riyadh', phone_e164: '+966551110000' };
+    const f = fakeDb({ guardian_phones: [{ data: { guardian: family } }, { data: null }] });
+    const q = new MeetingInviteeQueries(f.db);
+    expect(await q.guardianByPhone('+966552220000')).toEqual({ id: 'g1', name: 'أم سهيلة', tz: 'Asia/Riyadh' });
+    expect(await q.guardianByPhone('+966559990000')).toBeNull();
+  });
+});

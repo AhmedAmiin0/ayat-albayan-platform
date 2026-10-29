@@ -10,7 +10,7 @@ export interface SalesOwnership {
   leadIds: string[];
   guardianIds: string[];
   studentIds: string[];
-  /** E.164: their leads' phones plus the phones of the guardians of their leads and of their brought students. */
+  /** E.164: their leads' phones plus every number (main and second) of their leads' and brought students' families. */
   phones: string[];
 }
 
@@ -32,7 +32,8 @@ export async function ownershipOf(db: Db, profileId: string): Promise<SalesOwner
   const leadIds = leads.data.map((l) => l.id);
   if (guardianIds.length === 0) return { ...NO_OWNERSHIP, leadIds, phones: [...phones] };
   const [guardians, families] = await Promise.all([
-    db.from('guardians').select('phone_e164').in('id', guardianIds),
+    // Every family number, main and second (guardian_phones, owner 2026-10-29), as my_sales_phones (migration 974).
+    db.from('guardian_phones').select('phone_e164').in('guardian_id', guardianIds),
     // Their lead families' children (as before); a brought student is theirs wherever the family came from.
     leadGuardians.length > 0 ? db.from('students').select('id').in('guardian_id', leadGuardians) : { data: [], error: null },
   ]);

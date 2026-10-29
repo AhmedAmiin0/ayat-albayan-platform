@@ -1271,6 +1271,38 @@ export type Database = {
         };
         Relationships: [];
       };
+      guardian_phones: {
+        Row: {
+          created_at: string;
+          created_by: string | null;
+          guardian_id: string;
+          is_primary: boolean;
+          phone_e164: string;
+        };
+        Insert: {
+          created_at?: string;
+          created_by?: string | null;
+          guardian_id: string;
+          is_primary?: boolean;
+          phone_e164: string;
+        };
+        Update: {
+          created_at?: string;
+          created_by?: string | null;
+          guardian_id?: string;
+          is_primary?: boolean;
+          phone_e164?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'guardian_phones_guardian_id_fkey';
+            columns: ['guardian_id'];
+            isOneToOne: false;
+            referencedRelation: 'guardians';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       guardians: {
         Row: {
           country: string | null;
@@ -5476,6 +5508,8 @@ export type Database = {
       };
       channel_teacher_ids: { Args: { p_student_id: string }; Returns: string[] };
       assign_student_teacher: { Args: { p_student: string; p_teacher: string; p_actor: string }; Returns: boolean };
+      link_family_phone: { Args: { p_lead: string; p_code: string; p_actor: string }; Returns: boolean };
+      remove_family_phone: { Args: { p_guardian: string; p_phone: string; p_actor: string }; Returns: undefined };
       teacher_channel_student_ids: { Args: { p_teacher_id: string }; Returns: string[] };
       teacher_student_ids: { Args: { p_teacher_id: string }; Returns: string[] };
       teacher_thread_phones: {

@@ -11,6 +11,7 @@ import { ApiError } from '@/lib/http/api';
 import { t } from '@/lib/i18n/i18n';
 import { GUARDIANS_KEY, guardianDetailQuery, updateGuardian, type GuardianDetail } from './api';
 import { guardianPatch, guardianValues, type GuardianErrors, type GuardianValues } from './guardian-form';
+import { GuardianPhones } from './GuardianPhones';
 import { SourceField } from './SourceField';
 
 export interface GuardianEditDialogProps {
@@ -21,7 +22,8 @@ export interface GuardianEditDialogProps {
 
 /**
  * «تعديل ولي الأمر» (research-forms item 10): the name, «رقم الواتساب (مع كود الدولة)», the
- * country, «عرفت عننا منين؟» and notes, saved with PATCH /guardians/:id (admin only).
+ * country, «عرفت عننا منين؟» and notes, saved with PATCH /guardians/:id (admin only). Above them the family's
+ * second number, when it has one, with «إزالة الرقم الثاني» (GuardianPhones).
  */
 export function GuardianEditDialog({ guardianId, onClose, onDone }: GuardianEditDialogProps) {
   const guardian = useQuery(guardianDetailQuery(guardianId));
@@ -29,6 +31,7 @@ export function GuardianEditDialog({ guardianId, onClose, onDone }: GuardianEdit
     <Dialog title={t.guardians.edit} onClose={onClose} className="max-w-[640px]">
       {guardian.isError && <FormAlert>{t.common.error}</FormAlert>}
       {guardian.isPending && <p className="text-ink-3">{t.common.loading}</p>}
+      {guardian.data && <GuardianPhones guardian={guardian.data} onDone={onDone} />}
       {guardian.data && <GuardianForm guardian={guardian.data} onClose={onClose} onDone={onDone} />}
     </Dialog>
   );

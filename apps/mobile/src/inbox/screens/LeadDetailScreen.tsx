@@ -40,7 +40,9 @@ export function LeadDetailScreen() {
       </Screen>
     );
   }
-  const { name, phone_e164: phone } = lead.data;
+  const { name, phone_e164: phone, status } = lead.data;
+  // As the web lead panel: a converted lead (its number may be a family's now) or a lost one books no trial here.
+  const open = status !== 'converted' && status !== 'lost';
   return (
     <Screen>
       <ScrollView
@@ -58,12 +60,14 @@ export function LeadDetailScreen() {
           onPress={() => router.push(threadHref(phone))}
         />
         <ButtonRow>
-          <Button
-            variant="secondary"
-            // Named: «… لهدى», apart from the «حجز حلقة تجريبية» status chip above (a move only).
-            label={name ? t.booking.trialFor.replace('{name}', name) : t.booking.trialTitle}
-            onPress={() => router.push({ pathname: '/inbox/book', params: { leadId: id } })}
-          />
+          {open ? (
+            <Button
+              variant="secondary"
+              // Named: «… لهدى», apart from the «حجز حلقة تجريبية» status chip above (a move only).
+              label={name ? t.booking.trialFor.replace('{name}', name) : t.booking.trialTitle}
+              onPress={() => router.push({ pathname: '/inbox/book', params: { leadId: id } })}
+            />
+          ) : null}
           <Button
             variant="secondary"
             label={t.mobile.openWhatsapp}

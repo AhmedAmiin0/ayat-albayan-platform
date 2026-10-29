@@ -25,7 +25,7 @@ function suite(resolver: PermissionResolver) {
   beforeEach(() => {
     resetMocks(ctx.m);
     salesDefaults(ctx.m);
-    ctx.m.family.phoneOf.mockResolvedValue(FAMILY_PHONE);
+    ctx.m.family.phonesOf.mockResolvedValue([FAMILY_PHONE]);
     ctx.m.storage.signedUpload.mockResolvedValue({ bucket: 'receipts', path: `${SUB_ID}/x.jpg`, token: 't' });
   });
   return ctx;
@@ -48,7 +48,7 @@ describe('without sales.renew_any (the system sales role): unchanged, the chat p
 
   it('every write for a student she does not own stays 403, even with the family’s phone', async () => {
     await refused(ctx, WRITES(FAMILY_PHONE));
-    expect(ctx.m.family.phoneOf).not.toHaveBeenCalled();
+    expect(ctx.m.family.phonesOf).not.toHaveBeenCalled();
   });
 });
 
@@ -63,17 +63,17 @@ describe('with sales.renew_any: any student of the chat’s family', () => {
     expect((await ctx.call({ ...pay, token: 'salesB' } as InjectArgs)).statusCode).toBe(201);
     expect(ctx.m.payments.insert).toHaveBeenCalledWith(expect.not.objectContaining({ phone: expect.anything() }));
     expect((await ctx.call({ ...upload, token: 'salesB' } as InjectArgs)).statusCode).toBe(200);
-    expect(ctx.m.family.phoneOf).toHaveBeenCalledWith(STUDENT_ID);
+    expect(ctx.m.family.phonesOf).toHaveBeenCalledWith(STUDENT_ID);
   });
 
   it('another family’s student (its phone is not this chat’s) → 403 not_your_student, nothing written', async () => {
-    ctx.m.family.phoneOf.mockResolvedValue(OTHER_PHONE);
+    ctx.m.family.phonesOf.mockResolvedValue([OTHER_PHONE]);
     await refused(ctx, WRITES(FAMILY_PHONE));
   });
 
   it('no chat phone, or a student with no family phone → 403 as before', async () => {
     await refused(ctx, WRITES());
-    ctx.m.family.phoneOf.mockResolvedValue(null);
+    ctx.m.family.phonesOf.mockResolvedValue([]);
     await refused(ctx, WRITES(FAMILY_PHONE));
   });
 
