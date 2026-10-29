@@ -60,7 +60,7 @@ test('the one «جدّد الاشتراك» with several children (no studentId)
   mockParams.current = { phone: PHONE, renew: '1' };
   await renderWithQuery(<SalesSubscribeScreen />);
   expect(await screen.findByRole('header', { name: t.students.renew })).toBeTruthy();
-  await fireEvent.press(screen.getByRole('radio', { name: /ريم/ }));
+  await fireEvent.press(await screen.findByRole('radio', { name: /ريم/ }));
   await waitFor(() => expect(lastQuote()).toEqual({ studentId: KID, pricing: { tier: 'premium', duration: 60, discount: 10, country: 'AE' } }));
   await fireEvent.press(screen.getByRole('radio', { name: /سلمى/ }));
   await waitFor(() => expect(lastQuote()).toEqual({ studentId: KID2, pricing: { tier: 'standard', duration: 45, discount: 0 } }));
