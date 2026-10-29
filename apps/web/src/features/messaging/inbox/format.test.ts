@@ -78,6 +78,7 @@ describe('inbox display text (docs/07 §9)', () => {
   it('errors: known Meta codes in words, anything else with its code', () => {
     expect(errorText({ error_code: '131047', error_text: null })).toBe(t.messages.errors['131047']);
     expect(errorText({ error_code: 'expired', error_text: null })).toBe(t.messages.errors.expired);
+    expect(errorText({ error_code: '131042', error_text: null })).toBe(t.messages.errors['131042']);
     expect(errorText({ error_code: '999', error_text: 'boom' })).toBe(t.messages.errors.unknown.replace('{code}', '999'));
     expect(errorText({ error_code: null, error_text: 'boom' })).toContain('boom');
   });
