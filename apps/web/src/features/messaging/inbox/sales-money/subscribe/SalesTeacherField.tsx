@@ -16,7 +16,8 @@ export const salesTeachersQuery = queryOptions({
 /** teacherChoice (@ab/client-core) with her pick kept: the teacher to show and the body to send. */
 export function useTeacherPick(students: readonly SalesFamilyStudent[], studentId: string) {
   const [pick, setPick] = useState<TeacherPick | null>(null);
-  return { ...teacherChoice(students, { studentId, pick }), setTeacher: (teacherId: string) => setPick({ studentId, teacherId }) };
+  const options = useQuery(salesTeachersQuery).data;
+  return { ...teacherChoice(students, { studentId, pick, options }), setTeacher: (teacherId: string) => setPick({ studentId, teacherId }) };
 }
 
 type Props = { value: string; onChange: (id: string) => void };
@@ -31,7 +32,8 @@ export function SalesTeacherField({ value, onChange }: Props) {
     <Field label={t.salesMoney.teacher} hint={t.salesMoney.teacherHint}>
       {(p) => (
         <Select {...p} value={value} onChange={(e) => onChange(e.target.value)}>
-          <option value="">{t.salesMoney.teacherNone}</option>
+          {/* «none» only while nothing is set: leaving it never removes a teacher (no teacherId is sent). */}
+          {value === '' && <option value="">{t.salesMoney.teacherNone}</option>}
           {teachers.map((x) => (
             <option key={x.id} value={x.id}>
               {x.name}

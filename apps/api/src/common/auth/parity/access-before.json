@@ -304,6 +304,7 @@
   "SalesSubscribeController.cancel": ["sales"],
   "SalesSubscribeController.create": ["sales"],
   "SalesSubscribeController.quote": ["sales"],
+  "SalesSubscribeController.teacherOptions": ["sales"],
   "SalesController.meetings": ["sales"],
   "SalesController.subscriptions": ["sales"],
   "SavedRepliesController.all": ["admin","sales","teacher"],

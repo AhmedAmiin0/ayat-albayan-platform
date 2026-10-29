@@ -14,6 +14,12 @@ describe('teacherChoice (owner 2026-10-29: the assistant assigns the teacher at 
     expect(teacherChoice(students, { studentId: 's2', pick })).toEqual({ teacherId: '', body: {} });
   });
 
+  it('an inactive own teacher (not among the loaded choices) is no default; while loading it stays', () => {
+    expect(teacherChoice(students, { studentId: 's1', pick: null, options: [{ id: 't9' }] }).body).toEqual({});
+    expect(teacherChoice(students, { studentId: 's1', pick: null, options: [{ id: 't1' }] }).teacherId).toBe('t1');
+    expect(teacherChoice(students, { studentId: 's1', pick: null, options: undefined }).teacherId).toBe('t1');
+  });
+
   it('«none» picked or no student: nothing sent', () => {
     expect(teacherChoice(students, { studentId: 's1', pick: { studentId: 's1', teacherId: '' } }).body).toEqual({});
     expect(teacherChoice(students, { studentId: '', pick: null }).body).toEqual({});

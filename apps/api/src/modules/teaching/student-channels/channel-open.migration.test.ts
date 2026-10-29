@@ -36,7 +36,7 @@ describe('migration 961: the channel opens after the subscription', () => {
 
   it('definer helpers with an empty search_path; nothing for anon; a rollback note', () => {
     expect([...open.matchAll(/security definer set search_path = ''/g)].length).toBe([...open.matchAll(/create or replace function/g)].length);
-    expect(open).toContain('revoke execute on function public.channel_is_open(uuid) from public, anon;');
+    expect(open).toContain('revoke execute on function public.channel_is_open(uuid) from public, anon, authenticated;');
     expect(readFileSync(join(dir, '20261029000961_channel_after_subscribe.sql'), 'utf8')).toContain('MANUAL ROLLBACK');
   });
 });
@@ -46,6 +46,8 @@ describe('migration 962: assign_student_teacher', () => {
     const fn = body(assign, 'assign_student_teacher');
     expect(fn).toContain("t.status = 'active'");
     expect(fn).toContain('if v_before is not distinct from p_teacher then\n    return false;');
+    // Unchanged before the active check: keeping an inactive trial teacher never fails the subscribe.
+    expect(fn.indexOf('is not distinct from p_teacher')).toBeLessThan(fn.indexOf("t.status = 'active'"));
     expect(fn).toContain("'students', p_student, 'teacher_assign'");
     expect(assign).toContain('revoke execute on function public.assign_student_teacher(uuid, uuid, uuid) from public, anon, authenticated;');
     expect(assign).toContain('grant execute on function public.assign_student_teacher(uuid, uuid, uuid) to service_role;');

@@ -134,7 +134,8 @@ below are updated accordingly (migrations `20261029000961`–`962`).
    nudge: the thread re-reads through the API (`subscribeChannelMessages`, `@ab/client-core`). The poll stays
    as the fallback: 60 s while the socket is joined (`CHANNEL_LIVE_FALLBACK_MS`), 15 s while it is down;
    mobile joins only while the screen is shown and the app is in the foreground, and TanStack's focus refetch
-   catches up on return. The lists and badges keep polling as before. Threads open on the newest message (web scrolls to it, mobile is an inverted
+   catches up on return. Only a participant's open thread joins the socket; monitors, the lists and the
+   badges keep polling as before (RLS tells only the admin and the owning assistant among monitors). Threads open on the newest message (web scrolls to it, mobile is an inverted
    list); a time shows its day when it is not today. Unread counts per participant
    (`channel_reads.last_read_at`), counting the other side only: a teacher counts the family's messages (never
    a co-teacher's), the family the teacher's. Opening a thread marks it read up to the newest message shown

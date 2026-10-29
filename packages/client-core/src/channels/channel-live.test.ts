@@ -75,9 +75,9 @@ describe('channelPollMs and channelMode', () => {
     expect(channelMode('teacher', undefined)).toBe('write');
   });
 
-  it('the socket joins an open or monitored channel only', () => {
+  it('the socket joins a participant’s open channel only; a monitor polls', () => {
     expect(liveChannelId('closed', { channel_id: 'c1' })).toBe('');
     expect(liveChannelId('write', { channel_id: 'c1' })).toBe('c1');
-    expect(liveChannelId('read', undefined)).toBe('');
+    expect(liveChannelId('read', { channel_id: 'c1' })).toBe('');
   });
 });

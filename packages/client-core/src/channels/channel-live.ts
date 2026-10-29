@@ -65,6 +65,10 @@ export function channelMode(audience: ChannelAudience, page: { open: boolean; re
   return page?.open === false ? 'closed' : 'write';
 }
 
-/** The channel the socket joins: none while closed or still loading ('' joins nothing). */
+/**
+ * The channel the socket joins: a participant's open channel only ('' joins nothing). A monitor keeps the
+ * plain poll: RLS tells only the admin and the owning assistant, never a role holding just
+ * student_channels.monitor, and a socket that joins but never hears would slow its poll for nothing.
+ */
 export const liveChannelId = (mode: 'closed' | 'write' | 'read', page: { channel_id: string } | undefined): string =>
-  mode === 'closed' ? '' : (page?.channel_id ?? '');
+  mode === 'write' ? (page?.channel_id ?? '') : '';

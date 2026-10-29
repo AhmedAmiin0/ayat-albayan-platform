@@ -22,8 +22,10 @@ create or replace function public.channel_is_open(p_student_id uuid) returns boo
      where s.id = p_student_id and s.teacher_id is not null
        and s.status not in ('new', 'trial', 'pending_subscription'))
 $$;
-revoke execute on function public.channel_is_open(uuid) from public, anon;
-grant execute on function public.channel_is_open(uuid) to authenticated, service_role;
+-- Not for clients (it would answer «subscribed with a teacher» for any student id): RLS calls it through
+-- the definer can_read_channel.
+revoke execute on function public.channel_is_open(uuid) from public, anon, authenticated;
+grant execute on function public.channel_is_open(uuid) to service_role;
 
 create or replace function public.can_read_channel(p_channel uuid) returns boolean
   language sql stable security definer set search_path = '' as $$

@@ -6,15 +6,23 @@ export interface TeacherPick {
   teacherId: string;
 }
 
+interface ChoiceInput {
+  studentId: string;
+  pick: TeacherPick | null;
+  /** The active teachers once loaded: a student's own teacher not among them (inactive) is no default. */
+  options?: readonly { id: string }[] | undefined;
+}
+
 /**
- * The teacher to send: her pick for this student, else the student's own (students.teacher_id, the trial's);
- * '' = none. `body` is what POST /sales/subscriptions carries: teacherId only when one is set.
+ * The teacher to send: her pick for this student, else the student's own (students.teacher_id, the trial's)
+ * while still active; '' = none. `body` is what POST /sales/subscriptions carries: teacherId only when set.
  */
 export function teacherChoice(
   students: readonly { id: string; teacher_id: string | null }[],
-  input: { studentId: string; pick: TeacherPick | null },
+  input: ChoiceInput,
 ): { teacherId: string; body: { teacherId?: string } } {
-  const own = students.find((s) => s.id === input.studentId)?.teacher_id ?? '';
+  const stored = students.find((s) => s.id === input.studentId)?.teacher_id ?? '';
+  const own = input.options && !input.options.some((o) => o.id === stored) ? '' : stored;
   const teacherId = input.pick?.studentId === input.studentId ? input.pick.teacherId : own;
   return { teacherId, body: teacherId ? { teacherId } : {} };
 }

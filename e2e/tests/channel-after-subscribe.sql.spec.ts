@@ -59,7 +59,7 @@ test.describe('student channel opens after the subscription (20261029000961–96
     });
   });
 
-  test('assign_student_teacher: an audit row on a change, nothing when unchanged, an inactive teacher refused', async () => {
+  test('assign_student_teacher: an audit row on a change, nothing when unchanged (even inactive), an inactive new teacher refused', async () => {
     await rolledBack(async (tx) => {
       const s = await seed(tx);
       const audits = async () =>
@@ -70,6 +70,9 @@ test.describe('student channel opens after the subscription (20261029000961–96
       const [moved] = await tx<{ r: boolean }[]>`select public.assign_student_teacher(${s.student}, ${s.teacherId}, ${s.admin}) as r`;
       expect([moved?.r, await audits()]).toEqual([true, 1]);
       await tx`update public.teachers set status = 'inactive' where id = ${s.teacherId}`;
+      const [kept] = await tx<{ r: boolean }[]>`select public.assign_student_teacher(${s.student}, ${s.teacherId}, ${s.admin}) as r`;
+      expect(kept?.r).toBe(false);
+      await tx`update public.students set teacher_id = null where id = ${s.student}`;
       await tx`savepoint inactive`;
       await expect(tx`select public.assign_student_teacher(${s.student}, ${s.teacherId}, ${s.admin})`).rejects.toThrow(/teacher_not_found/);
       await tx`rollback to savepoint inactive`;
