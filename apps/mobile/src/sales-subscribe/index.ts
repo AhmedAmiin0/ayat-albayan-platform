@@ -5,3 +5,5 @@ export { STRIPE_FEATURE } from './payment-link/flag';
 export { PaymentLinkScreen } from './payment-link/PaymentLinkScreen';
 export { PaymentLinksRow } from './payment-link/list/PaymentLinksRow';
 export { PaymentLinksScreen } from './payment-link/list/PaymentLinksScreen';
+// The student file's and pending rows' one money action (sales/money-action) reads the same family query.
+export { useSalesFamily } from './lib/family';
