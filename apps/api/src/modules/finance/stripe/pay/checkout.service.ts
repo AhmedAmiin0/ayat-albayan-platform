@@ -32,7 +32,7 @@ export class CheckoutService {
     if (effectiveLinkStatus({ status: statusOf(link), expires_at: link.expires_at }, now) !== 'open') return page;
     const stripe = await this.clients.client().catch(() => null);
     if (!stripe) return page; // keys missing or refused: the family sees the platform page, never a JSON error
-    if (!(await this.packages.payable(link.subscription_id))) return this.close({ stripe, link, now, page });
+    if (await this.packages.blocked(link.subscription_id)) return this.close({ stripe, link, now, page });
     if (link.stripe_session_id) {
       const current = await stripe.checkout.sessions.retrieve(link.stripe_session_id);
       if (current.status === 'open' && current.url) return current.url;

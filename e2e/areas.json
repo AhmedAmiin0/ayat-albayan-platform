@@ -528,6 +528,7 @@
     "pay-rule.sql.spec.ts",
     "pick-trial-date.guards.sql.spec.ts",
     "pick-trial-date.sql.spec.ts",
+    "portal-views.sql.spec.ts",
     "profiles-disabled.sql.spec.ts",
     "push-device-claim.sql.spec.ts",
     "push-notifications-rls.sql.spec.ts",

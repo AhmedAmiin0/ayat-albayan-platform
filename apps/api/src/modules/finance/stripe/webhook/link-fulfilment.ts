@@ -1,9 +1,11 @@
 import { fromMinorUnits } from '@ab/shared';
 import { HttpException, Injectable, Logger } from '@nestjs/common';
 import type Stripe from 'stripe';
-import { errorCode } from '../../../../common/http/errors';
+import { conflict, errorCode } from '../../../../common/http/errors';
 import { ar } from '../../../../common/i18n/server-text';
+import { PaymentsQueries } from '../../payments';
 import { uuidFor } from '../links/link-ids';
+import { LinkPackages } from '../links/link-packages';
 import type { LinkRow } from '../links/payment-links.queries';
 import { WebhookDeps } from './webhook-deps';
 
@@ -18,13 +20,17 @@ export const pastIso = (unixSeconds: number, now = new Date()): string => new Da
  * subscription of a student nobody brought and without a priced package, the student is first attributed to
  * her (brought_at = the link's creation) so the first-package commission applies; otherwise attribution is
  * never changed (a renewal follows the renewal commission rules of whoever brought the student). A payment the platform refuses (e.g. a
- * cancelled package) is not retried: the admins get a bell row to settle it by hand.
+ * cancelled package, or one paid another way while this session stayed open) is not retried: the admins get a bell row to settle it by hand.
  */
 @Injectable()
 export class LinkFulfilment {
   private readonly log = new Logger(LinkFulfilment.name);
 
-  constructor(private readonly deps: WebhookDeps) {}
+  constructor(
+    private readonly deps: WebhookDeps,
+    private readonly packages: LinkPackages,
+    private readonly recorded: PaymentsQueries,
+  ) {}
 
   linkOf(session: Pick<Stripe.Checkout.Session, 'client_reference_id' | 'metadata'>): Promise<LinkRow | null> {
     const id = session.client_reference_id ?? session.metadata?.payment_link_id ?? null;
@@ -34,11 +40,12 @@ export class LinkFulfilment {
   async paid(session: Stripe.Checkout.Session, eventAt: number): Promise<string> {
     const link = await this.linkOf(session);
     if (!link?.subscription_id) return this.orphan(session, link);
-    await this.attribute(link);
     const amount = fromMinorUnits(session.amount_total ?? 0);
     const currency = (session.currency ?? link.currency).toUpperCase();
     let payment;
     try {
+      await this.stillPayable(link.subscription_id, session.id);
+      await this.attribute(link);
       payment = await this.deps.payments.create(
         { subscriptionId: link.subscription_id, amount, currency, kind: 'payment', method: 'card', paidAt: pastIso(eventAt), note: `Stripe ${session.id}`, clientRequestId: uuidFor(session.id) },
         link.created_by,
@@ -68,6 +75,16 @@ export class LinkFulfilment {
     const link = await this.linkOf(session);
     if (link) await this.deps.links.setProcessing(link.id, true);
     return link ? 'pending' : 'unknown_link';
+  }
+
+  /**
+   * 409 already_paid / subscription_cancelled: the package was paid another way (a bank transfer) or cancelled
+   * while this session stayed open (up to 23 h). Only this session's own retry (its payment already recorded,
+   * the event not yet done) goes on, to replay it.
+   */
+  private async stillPayable(subscriptionId: string, sessionId: string): Promise<void> {
+    const blocked = await this.packages.blocked(subscriptionId);
+    if (blocked && !(await this.recorded.byRequest(uuidFor(sessionId)))) throw conflict(blocked);
   }
 
   /** Our session (client_reference_id) but no link or no package any more: Stripe has the money, so the admins are told. */

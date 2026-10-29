@@ -7077,6 +7077,7 @@
       "link_not_open": "This link is no longer open.",
       "link_processing": "This link's payment is being processed; wait for the result before cancelling it.",
       "stripe_not_configured": "The Stripe keys are not saved in the settings yet.",
+      "stripe_unavailable": "Stripe could not be reached; the link was not cancelled. Try again.",
       "generic": "Could not create the link; try again."
     },
     "web": {
