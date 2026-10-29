@@ -1,0 +1,104 @@
+{
+  "id": "v2-web-payouts",
+  "seq": 108,
+  "moves": [
+    {
+      "from": "apps/web/src/features/finance/payouts/PayoutsPage*",
+      "to": "apps/web/src/features/finance/payouts/list/"
+    },
+    {
+      "from": "apps/web/src/features/finance/payouts/payout-columns*",
+      "to": "apps/web/src/features/finance/payouts/list/"
+    },
+    {
+      "from": "apps/web/src/features/finance/payouts/PayoutActions*",
+      "to": "apps/web/src/features/finance/payouts/list/"
+    },
+    {
+      "from": "apps/web/src/features/finance/payouts/TeacherDuesSummary*",
+      "to": "apps/web/src/features/finance/payouts/list/"
+    },
+    {
+      "from": "apps/web/src/features/finance/payouts/MissingRates*",
+      "to": "apps/web/src/features/finance/payouts/list/"
+    },
+    {
+      "from": "apps/web/src/features/finance/payouts/PayoutDialogs*",
+      "to": "apps/web/src/features/finance/payouts/pay/"
+    },
+    {
+      "from": "apps/web/src/features/finance/payouts/PayPayoutDialog*",
+      "to": "apps/web/src/features/finance/payouts/pay/"
+    },
+    {
+      "from": "apps/web/src/features/finance/payouts/use-pay-payout*",
+      "to": "apps/web/src/features/finance/payouts/pay/"
+    },
+    {
+      "from": "apps/web/src/features/finance/payouts/LedgerPaid*",
+      "to": "apps/web/src/features/finance/payouts/shared/"
+    },
+    {
+      "from": "apps/web/src/features/finance/payouts/MonthSelect*",
+      "to": "apps/web/src/features/finance/payouts/shared/"
+    }
+  ],
+  "files": [
+    [
+      "apps/web/src/features/finance/payouts/LedgerPaid.test.tsx",
+      "apps/web/src/features/finance/payouts/shared/LedgerPaid.test.tsx"
+    ],
+    [
+      "apps/web/src/features/finance/payouts/LedgerPaid.tsx",
+      "apps/web/src/features/finance/payouts/shared/LedgerPaid.tsx"
+    ],
+    [
+      "apps/web/src/features/finance/payouts/MissingRates.en.test.ts",
+      "apps/web/src/features/finance/payouts/list/MissingRates.en.test.ts"
+    ],
+    [
+      "apps/web/src/features/finance/payouts/MissingRates.tsx",
+      "apps/web/src/features/finance/payouts/list/MissingRates.tsx"
+    ],
+    [
+      "apps/web/src/features/finance/payouts/MonthSelect.tsx",
+      "apps/web/src/features/finance/payouts/shared/MonthSelect.tsx"
+    ],
+    [
+      "apps/web/src/features/finance/payouts/payout-columns.tsx",
+      "apps/web/src/features/finance/payouts/list/payout-columns.tsx"
+    ],
+    [
+      "apps/web/src/features/finance/payouts/PayoutActions.tsx",
+      "apps/web/src/features/finance/payouts/list/PayoutActions.tsx"
+    ],
+    [
+      "apps/web/src/features/finance/payouts/PayoutDialogs.tsx",
+      "apps/web/src/features/finance/payouts/pay/PayoutDialogs.tsx"
+    ],
+    [
+      "apps/web/src/features/finance/payouts/PayoutsPage.test.tsx",
+      "apps/web/src/features/finance/payouts/list/PayoutsPage.test.tsx"
+    ],
+    [
+      "apps/web/src/features/finance/payouts/PayoutsPage.tsx",
+      "apps/web/src/features/finance/payouts/list/PayoutsPage.tsx"
+    ],
+    [
+      "apps/web/src/features/finance/payouts/PayPayoutDialog.tsx",
+      "apps/web/src/features/finance/payouts/pay/PayPayoutDialog.tsx"
+    ],
+    [
+      "apps/web/src/features/finance/payouts/TeacherDuesSummary.tsx",
+      "apps/web/src/features/finance/payouts/list/TeacherDuesSummary.tsx"
+    ],
+    [
+      "apps/web/src/features/finance/payouts/use-pay-payout.test.tsx",
+      "apps/web/src/features/finance/payouts/pay/use-pay-payout.test.tsx"
+    ],
+    [
+      "apps/web/src/features/finance/payouts/use-pay-payout.ts",
+      "apps/web/src/features/finance/payouts/pay/use-pay-payout.ts"
+    ]
+  ]
+}

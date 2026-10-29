@@ -4,8 +4,8 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { PAYOUT } from '@/features/finance/subscriptions/money-fixture';
 import { t } from '@/lib/i18n/i18n';
 import { openFilters } from '@/test/open-filters';
-import { currentMonth, downloadPayoutsCsv } from './api';
-import { monthLabel, monthOptions } from './MonthSelect';
+import { currentMonth, downloadPayoutsCsv } from '../api';
+import { monthLabel, monthOptions } from '../shared/MonthSelect';
 import { breakdownLines } from './payout-columns';
 import { PayoutsPage } from './PayoutsPage';
 

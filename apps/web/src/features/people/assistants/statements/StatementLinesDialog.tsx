@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/form/button';
 import { Dialog } from '@/components/ui/overlay/dialog';
 import { Ltr } from '@/components/ui/display/ltr';
-import { monthLabel } from '@/features/finance/payouts/MonthSelect';
+import { monthLabel } from '@/features/finance/payouts/shared/MonthSelect';
 import { Amount } from '@/features/finance/subscriptions/balance/Amount';
 import { t } from '@/lib/i18n/i18n';
 import type { AssistantStatementView } from '../api';

@@ -1,5 +1,5 @@
-export { LedgerPaid } from './LedgerPaid';
-export { monthLabel, monthOptions, MonthSelect } from './MonthSelect';
+export { LedgerPaid } from './shared/LedgerPaid';
+export { monthLabel, monthOptions, MonthSelect } from './shared/MonthSelect';
 export {
   approvePayout,
   currentMonth,
@@ -20,4 +20,4 @@ export {
   type PayoutAction,
   payoutColumns,
   payoutStatusOptions,
-} from './payout-columns';
+} from './list/payout-columns';

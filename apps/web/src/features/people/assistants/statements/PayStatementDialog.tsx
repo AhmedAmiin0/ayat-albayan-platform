@@ -8,7 +8,7 @@ import { Input } from '@/components/ui/form/input';
 import { Select } from '@/components/ui/form/select';
 import { paidAtDay } from '@/features/finance/payments/record/pay-day';
 import { ReceiptField, receiptProblem } from '@/features/finance/payments/attachments/ReceiptField';
-import { monthLabel } from '@/features/finance/payouts/MonthSelect';
+import { monthLabel } from '@/features/finance/payouts/shared/MonthSelect';
 import { moneyText } from '@/features/finance/subscriptions/format';
 import { t } from '@/lib/i18n/i18n';
 import { useUploadMaxBytes } from '@/lib/settings/public-config';

@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { paidAtFor } from '@/features/finance/payments/api';
 import { MONEY_KEY } from '@/features/finance/subscriptions/api';
 import { uploadTeacherReceipt } from '@/features/finance/teacher-earnings/api';
-import { payPayout, type PayoutView } from './api';
+import { payPayout, type PayoutView } from '../api';
 
 export type PayPayoutInput = { day: string; method: PaymentMethod; note: string; file: File | null };
 
