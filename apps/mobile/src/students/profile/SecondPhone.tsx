@@ -42,7 +42,7 @@ export function SecondPhone({ guardianId, phones }: { guardianId: string; phones
   const [asking, setAsking] = useState(false);
   const remove = useRemoveSecondPhone(guardianId);
   const phone = secondPhoneOf(phones);
-  if (remove.isSuccess) return <Note>{t.guardians.phoneRemoved}</Note>;
+  if (remove.isSuccess) return <Note alert>{t.guardians.phoneRemoved}</Note>;
   if (!phone) return null;
   return (
     <View style={{ gap: 8 }}>

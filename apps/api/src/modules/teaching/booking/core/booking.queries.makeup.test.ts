@@ -43,6 +43,13 @@ describe('BookingQueries.createBooking — makeup and invoice errors (R-SCH-10)'
     expect(calls).toHaveLength(1);
   });
 
+  it('23505 guardian_phones_pkey (a new guardian on a family\'s second number, migration 973) → 409 number_taken', async () => {
+    const message = 'duplicate key value violates unique constraint "guardian_phones_pkey"';
+    const { run, calls } = book([{ error: { code: '23505', message } }]);
+    expect(await failure(run())).toMatchObject({ status: 409, body: { code: 'number_taken' } });
+    expect(calls).toHaveLength(1);
+  });
+
   it('23505 on client_request_id retries once and returns the winner\'s booking (also with an invoice)', async () => {
     const message = 'duplicate key value violates unique constraint "invoices_client_request_id_key"';
     const { run, calls } = book([{ error: { code: '23505', message } }, { data: RESULT }]);

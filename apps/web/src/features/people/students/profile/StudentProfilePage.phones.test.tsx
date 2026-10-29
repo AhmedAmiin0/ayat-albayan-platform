@@ -33,7 +33,9 @@ function renderPage(g: ReturnType<typeof guardian>) {
 }
 
 describe('StudentProfilePage: «الرقم الثاني»', () => {
-  beforeEach(() => apiFetch.mockReset());
+  beforeEach(() => {
+    apiFetch.mockReset();
+  });
 
   it('shows the second number after the guardian’s phone', async () => {
     renderPage(guardian([{ phone_e164: MAIN, is_primary: true }, { phone_e164: SECOND, is_primary: false }]));

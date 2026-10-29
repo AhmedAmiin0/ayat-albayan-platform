@@ -1,5 +1,4 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { AuditService } from '../../../common/audit/audit.service';
 import { DB, type Db } from '../../../common/db/db.module';
 import { notFound } from '../../../common/http/errors';
 import { dbError } from './http';
@@ -13,22 +12,12 @@ type SecondNumber = { guardianId: string; phone: string; actorId: string };
  */
 @Injectable()
 export class GuardianPhonesService {
-  constructor(
-    @Inject(DB) private readonly db: Db,
-    private readonly audit: AuditService,
-  ) {}
+  constructor(@Inject(DB) private readonly db: Db) {}
 
-  /** 404 phone_not_found for the main number, another family's number or an unknown one. Audited. */
+  /** The delete and its audit row in one transaction (remove_family_phone, migration 973). 404 phone_not_found for the main number, another family's number or an unknown one. */
   async removeSecond({ guardianId, phone, actorId }: SecondNumber): Promise<void> {
-    const { data, error } = await this.db
-      .from('guardian_phones')
-      .delete()
-      .eq('guardian_id', guardianId)
-      .eq('phone_e164', phone)
-      .eq('is_primary', false)
-      .select('phone_e164');
+    const { error } = await this.db.rpc('remove_family_phone', { p_guardian: guardianId, p_phone: phone, p_actor: actorId });
+    if (error?.code === 'P0001' && error.message === 'phone_not_found') throw notFound('phone_not_found');
     if (error) throw dbError(error);
-    if (data.length === 0) throw notFound('phone_not_found');
-    await this.audit.record({ actorId, entity: 'guardians', entityId: guardianId, action: 'phone_removed', before: { phone_e164: phone } });
   }
 }

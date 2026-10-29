@@ -68,6 +68,8 @@ export function LinkFamilyScreen() {
     link.reset();
     setPicked(m);
   };
+  // A name typed but not searched: for a name search only «too short» stops it (searchOf).
+  const short = query.trim() !== '' && !search;
 
   const body = link.data ? (
     <LinkDone linked={link.data.linked} onBack={back} />
@@ -86,11 +88,14 @@ export function LinkFamilyScreen() {
     <>
       <Note>{t.inbox.linkFamily.hint}</Note>
       <SearchField label={t.registrationCheck.query} initial={query} onSearch={find} compact />
+      {short ? <Note>{t.registrationCheck.error.query_too_short}</Note> : null}
       {!search ? null : check.isError ? (
         <ErrorState message={checkErrorText(check.error)} onRetry={() => void check.refetch()} />
       ) : check.data ? (
         <RegistrationResults view={check.data} by="name" onPick={pick} />
-      ) : null}
+      ) : (
+        <Note>{t.registrationCheck.checking}</Note>
+      )}
     </>
   );
 
@@ -103,7 +108,7 @@ export function LinkFamilyScreen() {
         connecting
         trailing={<Button variant="ghost" label={t.common.back} onPress={back} />}
       />
-      {can('leads.link_family') && leadId ? (
+      {can('leads.link_family') && can('students.check_registration') && leadId ? (
         <ScrollView style={{ flex: 1 }} contentContainerStyle={{ gap: 12, paddingBottom: 24 }} keyboardShouldPersistTaps="handled">
           {body}
         </ScrollView>

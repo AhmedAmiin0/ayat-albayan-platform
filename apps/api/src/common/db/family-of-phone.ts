@@ -2,7 +2,7 @@ import { dbError } from '../http/http';
 import type { Db } from './db.module';
 
 /** A family found by one of its numbers. `phone_e164` is its MAIN number: notifications and sign-in codes go there. */
-export type FamilyOfPhone = { id: string; name: string; tz: string; phone_e164: string };
+type FamilyOfPhone = { id: string; name: string; tz: string; phone_e164: string };
 
 /**
  * The family whose number this is, its main one or its second one (public.guardian_phones, owner 2026-10-29

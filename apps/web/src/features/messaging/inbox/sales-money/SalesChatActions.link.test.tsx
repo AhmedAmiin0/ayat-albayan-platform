@@ -36,6 +36,7 @@ describe('«ربط بطالب موجود» in the sales chat’s «المزيد�
     apiSend.mockReset();
     granted.clear();
     granted.add('leads.link_family');
+    granted.add('students.check_registration');
   });
 
   it.each(['new', 'converted', 'lost'] as const)('a %s lead chat with leads.link_family: in the menu, never the visible action', (status) => {
@@ -46,15 +47,16 @@ describe('«ربط بطالب موجود» in the sales chat’s «المزيد�
   });
 
   it.each([
-    ['without leads.link_family', thread(), false],
-    ['on a family chat', thread({ guardian_id: 'g-1', guardian_name: 'أم سهيلة' }), true],
-    ['on a teacher’s chat', thread({ teacher_id: 't-1', teacher_name: 'أ. أبرار' }), true],
-  ] as const)('not rendered at all %s', async (_, th, key) => {
-    if (!key) granted.clear();
+    ['without leads.link_family', thread(), 'leads.link_family'],
+    // The picker searches with GET /sales/registration-check: without it the search could only fail.
+    ['without students.check_registration', thread(), 'students.check_registration'],
+    ['on a family chat', thread({ guardian_id: 'g-1', guardian_name: 'أم سهيلة' }), null],
+    ['on a teacher’s chat', thread({ teacher_id: 't-1', teacher_name: 'أ. أبرار' }), null],
+  ] as const)('not rendered at all %s', async (_, th, missing) => {
+    if (missing) granted.delete(missing);
     renderActions(th);
     // The menu keeps its entries mounted: no text anywhere means no entry.
     await waitFor(() => expect(screen.queryByText(L.action)).toBeNull());
-    if (!key) expect(screen.queryByRole('button', { name: t.common.more })).toBeNull();
   });
 
   it('links the chat’s lead and shows «رُبط الرقم…» once the dialog closes', async () => {

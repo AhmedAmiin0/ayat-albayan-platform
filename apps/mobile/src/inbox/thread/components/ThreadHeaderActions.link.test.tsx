@@ -22,7 +22,9 @@ jest.mock('expo-router', () => ({
 
 const CHAT = ['inbox.read', 'inbox.send', 'messages.read'];
 const salesMe = (extra: string[]) => ({ role: 'sales', permissions: [...CHAT, 'self.sales', ...extra] });
-const adminMe = { role: 'admin', permissions: [...CHAT, 'leads.link_family'] };
+// The picker searches with the registration check: both keys.
+const LINK = ['leads.link_family', 'students.check_registration'];
+const adminMe = { role: 'admin', permissions: [...CHAT, ...LINK] };
 const action = () => within(screen.getByTestId('thread-menu')).queryByRole('button', { name: t.inbox.linkFamily.action });
 
 async function openMenu({ me, th = thread, base = '' }: { me: unknown; th?: ThreadView; base?: TreeBase }) {
@@ -40,7 +42,7 @@ async function openMenu({ me, th = thread, base = '' }: { me: unknown; th?: Thre
 beforeEach(() => jest.clearAllMocks());
 
 test('the sales tree: a lead chat opens the picker for this number and lead, under /sales', async () => {
-  await openMenu({ me: salesMe(['leads.link_family']), base: '/sales' });
+  await openMenu({ me: salesMe(LINK), base: '/sales' });
   await fireEvent.press(await screen.findByRole('button', { name: t.inbox.linkFamily.action }));
   await waitFor(() =>
     expect(router.push).toHaveBeenCalledWith({ pathname: '/sales/inbox/link-family', params: { phone: PHONE, leadId: 'a1' } }),
@@ -58,6 +60,12 @@ test('the admin tree, and a converted or lost lead with no family still offers i
 test('hidden without leads.link_family (a salesperson by default)', async () => {
   await openMenu({ me: salesMe(['students.check_registration']), base: '/sales' });
   expect(await screen.findByRole('button', { name: t.registrationCheck.action })).toBeTruthy();
+  expect(action()).toBeNull();
+});
+
+test('hidden without students.check_registration (the picker could not search)', async () => {
+  await openMenu({ me: { role: 'admin', permissions: [...CHAT, 'leads.link_family'] } });
+  expect(await screen.findByRole('button', { name: t.inbox.copy.phone })).toBeTruthy();
   expect(action()).toBeNull();
 });
 

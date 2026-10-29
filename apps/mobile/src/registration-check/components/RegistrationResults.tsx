@@ -28,9 +28,12 @@ export function RegistrationResults({ view, by, onPick }: {
             key={m.code}
             title={m.name}
             meta={m.code}
+            // In the picker the code is what tells two children of the same name apart.
+            metaStrong={!!onPick}
             subtitle={`${rc.teacher}: ${m.teacher_name ?? rc.noTeacher}`}
             trailing={<StatusChip {...studentStatusStyle[m.status]} label={t.enums.studentStatus[m.status]} size="sm" />}
             onPress={onPick ? () => onPick(m) : undefined}
+            accessibilityHint={onPick ? t.inbox.linkFamily.pickHint : undefined}
           />
         ))}
       </InsetGroup>

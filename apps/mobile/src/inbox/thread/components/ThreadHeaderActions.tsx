@@ -36,8 +36,10 @@ function useMenuItems({ phone, sales, thread, openLists }: MenuOptions) {
   const base = useTreeBase();
   const { showCopy } = useBubbleChatActions();
   const lists = useHolds('inbox.lists');
-  const check = useHolds('students.check_registration') && sales;
-  const linkLead = useHolds('leads.link_family') && thread && canLinkFamily(thread) ? thread.lead_id : null;
+  const checks = useHolds('students.check_registration');
+  const check = checks && sales;
+  // The picker searches with the registration check (either tree), so it needs that key too.
+  const linkLead = useHolds('leads.link_family') && checks && thread && canLinkFamily(thread) ? thread.lead_id : null;
   const items: ThreadMenuItem[] = [
     { label: t.inbox.copy.phone, onPress: () => copyText({ title: t.inbox.copy.phoneTitle, text: phone }, showCopy) },
   ];

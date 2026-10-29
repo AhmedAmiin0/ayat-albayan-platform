@@ -54,7 +54,7 @@ export function GuardianPhones({ guardian, onDone }: GuardianPhonesProps) {
           <dd className="flex flex-1 flex-wrap items-center gap-x-3 text-ink-2">
             <Ltr>{formatPhone(second)}</Ltr>
             {!confirming && (
-              <Button type="button" size="sm" variant="ghost" className="ms-auto" onClick={() => setConfirming(true)}>
+              <Button type="button" size="sm" variant="danger-quiet" className="ms-auto" onClick={() => setConfirming(true)}>
                 {G.removePhone}
               </Button>
             )}
@@ -72,7 +72,7 @@ export function GuardianPhones({ guardian, onDone }: GuardianPhonesProps) {
             <Button type="button" size="sm" variant="ghost" onClick={() => setConfirming(false)}>
               {t.common.cancel}
             </Button>
-            <Button type="button" size="sm" variant="secondary" disabled={remove.isPending} onClick={() => remove.mutate({ id: guardian.id, phone: second })}>
+            <Button type="button" size="sm" variant="danger" disabled={remove.isPending} onClick={() => remove.mutate({ id: guardian.id, phone: second })}>
               {remove.isPending ? t.common.saving : G.removePhone}
             </Button>
           </div>

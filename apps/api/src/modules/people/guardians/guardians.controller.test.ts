@@ -1,7 +1,6 @@
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
-import { AuditModule } from '../../../common/audit/audit.service';
 import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '../../../common/auth/auth.guard';
 import { AuthModule } from '../../../common/auth/auth.module';
 import { DB, DbModule } from '../../../common/db/db.module';
@@ -18,7 +17,7 @@ describe('GuardiansController is admin-only (R-STU-02, R-NFR-02)', () => {
   let app: NestFastifyApplication;
 
   beforeAll(async () => {
-    const mod = await Test.createTestingModule({ imports: [DbModule, AuditModule, AuthModule, GuardiansModule] })
+    const mod = await Test.createTestingModule({ imports: [DbModule, AuthModule, GuardiansModule] })
       .overrideProvider(DB)
       .useValue(fake.db)
       .overrideProvider(PERMISSION_RESOLVER).useValue(systemResolver).overrideProvider(TOKEN_VERIFIER)
@@ -56,24 +55,19 @@ describe('GuardiansController is admin-only (R-STU-02, R-NFR-02)', () => {
     expect(res.json()).toEqual({ items: [], total: 0, page: 1, pageSize: 20 });
   });
 
-  it('DELETE /guardians/:id/phones/:phone removes the SECOND number only (an encoded +), audited, 204', async () => {
+  it('DELETE /guardians/:id/phones/:phone: remove_family_phone (delete + audit in one transaction), an encoded +, 204', async () => {
     const before = fake.calls.length;
-    results['guardian_phones'] = [{ data: [{ phone_e164: '+966552220000' }] }];
-    results['audit_log'] = [{ data: null }];
+    results['rpc:remove_family_phone'] = [{ data: null }];
     expect((await send({ method: 'DELETE', url: `/guardians/${ID}${SECOND}`, token: 'admin' })).statusCode).toBe(204);
     const calls = fake.calls.slice(before);
-    const eqs = calls.filter((c) => c.table === 'guardian_phones' && c.method === 'eq').map((c) => c.args);
-    expect(eqs).toEqual([['guardian_id', ID], ['phone_e164', '+966552220000'], ['is_primary', false]]);
-    const audit = calls.find((c) => c.table === 'audit_log' && c.method === 'insert')?.args[0];
-    expect(audit).toMatchObject({ actor_id: 'u1', entity: 'guardians', entity_id: ID, action: 'phone_removed', before: { phone_e164: '+966552220000' } });
+    expect(calls.map((c) => c.table)).toEqual(['rpc:remove_family_phone']);
+    expect(calls[0]?.args).toEqual([{ p_guardian: ID, p_phone: '+966552220000', p_actor: 'u1' }]);
   });
 
-  it('the main number, or a number of no row → 404 phone_not_found, nothing audited', async () => {
-    const before = fake.calls.length;
-    results['guardian_phones'] = [{ data: [] }];
+  it('the main number, or a number of no row (P0001 phone_not_found) → 404 phone_not_found', async () => {
+    results['rpc:remove_family_phone'] = [{ error: { code: 'P0001', message: 'phone_not_found' } }];
     const res = await send({ method: 'DELETE', url: `/guardians/${ID}${SECOND}`, token: 'admin' });
     expect([res.statusCode, res.json().code]).toEqual([404, 'phone_not_found']);
-    expect(fake.calls.slice(before).some((c) => c.table === 'audit_log')).toBe(false);
   });
 
   it('a phone that is not a number → 400 validation_failed, the DB is never touched', async () => {

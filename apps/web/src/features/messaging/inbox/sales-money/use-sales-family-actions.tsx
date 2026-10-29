@@ -80,14 +80,17 @@ export function useSalesFamilyActions({ thread, compact = false }: { thread: Thr
       {trialFor && <TrialDateDialog mode="sales" student={trialFor} onClose={() => setTrialFor(null)} />}
       {opened && <SalesMoneyFlow {...opened} students={students} phone={thread.phone_e164} onClose={() => setOpened(null)} />}
       {linking && <PaymentLinkDialog thread={thread} students={own} onClose={() => setLinking(false)} />}
-      {linkingFamily && <LinkFamilyDialog leadId={linkingFamily} onClose={() => setLinkingFamily(null)} onDone={linkDone} />}
+      {linkingFamily && (
+        <LinkFamilyDialog leadId={linkingFamily} phone={thread.phone_e164} onClose={() => setLinkingFamily(null)} onDone={linkDone} />
+      )}
       {linked && <Toast message={linked} onDismiss={() => setLinked(null)} />}
     </>
   );
   if (students.length === 0) {
     const lead = canRegisterFrom(thread) ? thread : null;
     const primary = lead && <SalesRegisterButton compact={compact} onOpen={() => setRegistering(lead)} />;
-    const leadId = can('leads.link_family') && canLinkFamily(thread) ? thread.lead_id : null;
+    // The picker searches with the registration check, so it needs that key too.
+    const leadId = can('leads.link_family') && check && canLinkFamily(thread) ? thread.lead_id : null;
     const linkItem = leadId ? [
       <Button key="link-family" type="button" size="sm" variant="ghost" onClick={() => setLinkingFamily(leadId)}>{t.inbox.linkFamily.action}</Button>,
     ] : [];

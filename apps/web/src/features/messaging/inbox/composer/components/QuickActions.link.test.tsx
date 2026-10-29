@@ -21,10 +21,12 @@ describe('«ربط بطالب موجود» in the admin inbox lead panel (owner 
     apiSend.mockReset();
     granted.clear();
     granted.add('leads.link_family');
+    granted.add('students.check_registration');
   });
 
-  it('is hidden without leads.link_family', () => {
-    granted.clear();
+  // The picker searches with GET /sales/registration-check, so both keys are needed.
+  it.each(['leads.link_family', 'students.check_registration'])('is hidden without %s', (key) => {
+    granted.delete(key);
     renderWithClient(<QuickActions lead={lead()} onDone={vi.fn()} />);
     expect(screen.getByRole('link', { name: t.booking.trialTitle })).toBeTruthy();
     expect(screen.queryByRole('button', { name: L.action })).toBeNull();

@@ -135,6 +135,8 @@ export class BookingQueries {
     if (error?.code === '23505' && error.message.includes('lessons_makeup_of_key')) {
       throw domainError(HttpStatus.CONFLICT, 'makeup_exists');
     }
+    // A new guardian on a family's SECOND number (migration 973): guardianByPhone reads main numbers only.
+    if (error?.code === '23505' && error.message.includes('guardian_phones_pkey')) throw domainError(HttpStatus.CONFLICT, 'number_taken');
     if (error) throw dbError(error);
     return toBookingResult(data);
   }

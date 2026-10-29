@@ -29,7 +29,9 @@ export function QuickActions({ lead, onDone }: QuickActionsProps) {
   const queryClient = useQueryClient();
   const [confirming, setConfirming] = useState(false);
   const [linking, setLinking] = useState(false);
-  const linkable = usePermissions().can('leads.link_family');
+  const { can } = usePermissions();
+  // The picker searches with GET /sales/registration-check: without that key it could only fail.
+  const linkable = can('leads.link_family') && can('students.check_registration');
   const reclassify = useMutation({
     mutationFn: reclassifyLead,
     onSuccess: async () => {
@@ -68,6 +70,7 @@ export function QuickActions({ lead, onDone }: QuickActionsProps) {
       {linking && (
         <LinkFamilyDialog
           leadId={lead.id}
+          phone={lead.phone_e164}
           onClose={() => setLinking(false)}
           onDone={(text) => {
             setLinking(false);

@@ -88,6 +88,15 @@ test('«حجز حلقة تجريبية» opens the quick trial booking for this 
   expect(mockPush).toHaveBeenCalledWith({ pathname: '/inbox/book', params: { leadId: 'a1' } });
 });
 
+test.each(['converted', 'lost'] as const)('a %s lead books no trial here (its number may be a family\'s now)', async (status) => {
+  mockApiFetch.mockImplementation(answer({ ...hudaProfile, status }));
+  const client = createTestQueryClient();
+  client.setQueryData(listKey('/leads', { q: '' }), cachedList([{ ...huda, status }, unnamed]));
+  await renderWithQuery(<LeadDetailScreen />, client);
+  expect(await screen.findByRole('button', { name: t.mobile.openWhatsapp })).toBeTruthy();
+  expect(screen.queryByRole('button', { name: 'حجز حلقة تجريبية لهدى سالم' })).toBeNull();
+});
+
 test('«رجوع» pops back to the inbox', async () => {
   await openLead();
   await fireEvent.press(screen.getByRole('button', { name: t.common.back }));

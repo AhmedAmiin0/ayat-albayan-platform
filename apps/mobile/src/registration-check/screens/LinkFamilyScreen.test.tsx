@@ -92,6 +92,29 @@ test('a 409 says why in her words and keeps the confirm to try another child', a
   await waitFor(() => expect(screen.queryByText(lf.errors.family_has_second_number)).toBeNull());
 });
 
+test('a one-letter name says it is too short and asks nothing; a search in flight says so', async () => {
+  let answer: (v: RegistrationCheckView) => void = () => undefined;
+  mockApiFetch.mockImplementation((path: string) =>
+    path === '/auth/me'
+      ? Promise.resolve(LINKER)
+      : new Promise<RegistrationCheckView>((resolve) => {
+          answer = resolve;
+        }),
+  );
+  await renderWithQuery(<LinkFamilyScreen />, createTestQueryClient({ meFromApi: true }));
+  const field = await screen.findByLabelText(t.registrationCheck.query);
+  await fireEvent.changeText(field, 'س');
+  await fireEvent(field, 'submitEditing');
+  expect(await screen.findByText(t.registrationCheck.error.query_too_short)).toBeTruthy();
+  expect(mockApiFetch).not.toHaveBeenCalledWith(expect.stringContaining('/sales/registration-check'));
+  await fireEvent.changeText(field, 'سلمى');
+  await fireEvent(field, 'submitEditing');
+  expect(await screen.findByText(t.registrationCheck.checking)).toBeTruthy();
+  expect(screen.queryByText(t.registrationCheck.error.query_too_short)).toBeNull();
+  answer(found);
+  expect(await screen.findByText('سلمى')).toBeTruthy();
+});
+
 test('without leads.link_family: the title only, no search', async () => {
   mockApiFetch.mockImplementation(async (path: string) =>
     path === '/auth/me' ? { role: 'sales', permissions: ['students.check_registration'] } : found,

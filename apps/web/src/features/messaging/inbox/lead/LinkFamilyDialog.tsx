@@ -1,6 +1,7 @@
-import type { RegistrationCheckView, RegistrationMatch } from '@ab/shared';
+import { formatPhone, type RegistrationCheckView, type RegistrationMatch } from '@ab/shared';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { useId, useState, type FormEvent } from 'react';
+import { useId, useState, type FormEvent, type ReactNode } from 'react';
+import { Ltr } from '@/components/ui/display/ltr';
 import { Button } from '@/components/ui/form/button';
 import { Field } from '@/components/ui/form/field';
 import { FormAlert } from '@/components/ui/form/form-alert';
@@ -17,19 +18,26 @@ const R = t.registrationCheck;
 interface LinkFamilyDialogProps {
   /** The chat's lead (ThreadView.lead_id). */
   leadId: string;
+  /** The chat's number, shown under the title: on a phone the dialog covers the chat. */
+  phone: string;
   onClose: () => void;
   /** After the link: «رُبط الرقم…» or «مرتبط… من قبل». The caller closes the dialog and shows the text. */
   onDone: (text: string) => void;
 }
 
-const confirmText = (m: RegistrationMatch) => L.confirm.replace('{name}', m.name).replace('{code}', m.code);
+/** One slot of «ربط الرقم بعائلة {name} ({code})؟»: the name and the code are bidi islands, so a Latin name never pulls the brackets. */
+function slot(part: string, m: RegistrationMatch, key: number): ReactNode {
+  if (part === '{name}') return <bdi key={key}>{m.name}</bdi>;
+  if (part === '{code}') return <Ltr key={key}>{m.code}</Ltr>;
+  return part;
+}
 
 /**
  * «ربط بطالب موجود» (owner 2026-10-29): find the child by name or code (GET /sales/registration-check, the
  * same answer as «التحقق من التسجيل»: name, code, status, teacher), pick one, confirm, and this chat's number
  * becomes the family's second number. The lead's follow-up owner does not change; nothing is sent to anyone.
  */
-export function LinkFamilyDialog({ leadId, onClose, onDone }: LinkFamilyDialogProps) {
+export function LinkFamilyDialog({ leadId, phone, onClose, onDone }: LinkFamilyDialogProps) {
   const formId = useId();
   const queryClient = useQueryClient();
   const [query, setQuery] = useState('');
@@ -50,17 +58,17 @@ export function LinkFamilyDialog({ leadId, onClose, onDone }: LinkFamilyDialogPr
       await refreshAfterLink(queryClient);
     },
   });
+  // No pick: the footer offers «بحث» again (an edited name is searched before anything is linked).
+  const pick = (m: RegistrationMatch | null) => {
+    setPicked(m);
+    link.reset();
+  };
   const search = (e: FormEvent) => {
     e.preventDefault();
     const r = checkRequest('name', query);
     setInvalid(r.ok ? null : R.error[r.code]);
     setPath(r.ok ? r.path : null);
-    setPicked(null);
-    link.reset();
-  };
-  const pick = (m: RegistrationMatch) => {
-    setPicked(m);
-    link.reset();
+    pick(null);
   };
   const action = picked ? (
     <Button type="button" disabled={link.isPending} onClick={() => link.mutate({ leadId, code: picked.code })}>
@@ -71,10 +79,16 @@ export function LinkFamilyDialog({ leadId, onClose, onDone }: LinkFamilyDialogPr
       {answer.isFetching ? R.checking : t.common.search}
     </Button>
   );
+  const description = (
+    <>
+      <Ltr className="block font-semibold text-ink-2">{formatPhone(phone)}</Ltr>
+      {L.hint}
+    </>
+  );
   return (
     <Dialog
       title={L.title}
-      description={L.hint}
+      description={description}
       onClose={onClose}
       actions={
         <>
@@ -87,14 +101,24 @@ export function LinkFamilyDialog({ leadId, onClose, onDone }: LinkFamilyDialogPr
     >
       <form id={formId} className="grid gap-4" onSubmit={search} noValidate>
         <Field label={R.query} error={invalid ?? undefined}>
-          {(p) => <Input {...p} value={query} onChange={(e) => setQuery(e.target.value)} />}
+          {(p) => (
+            <Input
+              {...p}
+              value={query}
+              onChange={(e) => {
+                setQuery(e.target.value);
+                pick(null);
+              }}
+            />
+          )}
         </Field>
       </form>
+      {/* The confirm line first: under 640px the dialog is a full-screen sheet and ten cards push the end off-screen. */}
       <div className="mt-4 grid gap-3" aria-live="polite">
+        {picked && <p className="text-sm font-semibold text-ink">{L.confirm.split(/(\{name\}|\{code\})/).map((part, i) => slot(part, picked, i))}</p>}
+        {link.isError && <FormAlert>{linkFamilyErrorText(link.error)}</FormAlert>}
         {path && answer.isError && <FormAlert>{searchErrorText(answer.error)}</FormAlert>}
         {path && answer.data && <RegistrationMatches view={answer.data} by="name" onPick={pick} picked={picked?.code ?? null} />}
-        {picked && <p className="text-sm font-semibold text-ink">{confirmText(picked)}</p>}
-        {link.isError && <FormAlert>{linkFamilyErrorText(link.error)}</FormAlert>}
       </div>
     </Dialog>
   );
