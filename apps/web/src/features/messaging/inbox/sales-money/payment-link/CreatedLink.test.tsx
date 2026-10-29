@@ -1,9 +1,11 @@
-import { fireEvent, screen, waitFor } from '@testing-library/react';
+import { fireEvent, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n/i18n';
 import { clearAllDrafts, getDraft, setDraft } from '../../composer/lib/draft-store';
 import { PHONE } from '../../testing/inbox-fixture';
-import { answer, openDialog } from './link-dialog.fixture';
+import { renderWithClient } from '../../testing/test-utils';
+import { CreatedLink } from './CreatedLink';
+import { CREATED } from './link.fixture';
 
 const apiSend = vi.hoisted(() => vi.fn());
 vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiSend }));
@@ -16,12 +18,10 @@ const MESSAGE = P.message
   .replace('{currency}', 'ر.س')
   .replace('{url}', 'https://app.example.com/pay/tok_1');
 
-async function created(chat = {}) {
-  answer(apiSend);
-  const onClose = openDialog({ chat });
-  const button = screen.getByRole('button', { name: P.create }) as HTMLButtonElement;
-  await waitFor(() => expect(button.disabled).toBe(false));
-  fireEvent.click(button);
+/** The link made (SalesMoneyFlow's last step after «دفع إلكتروني»). */
+async function created({ session_open = true } = {}) {
+  const onClose = vi.fn();
+  renderWithClient(<CreatedLink link={CREATED} thread={{ phone_e164: PHONE, session_open }} onClose={onClose} />);
   await screen.findByRole('button', { name: P.sendInChat });
   return onClose;
 }

@@ -32,7 +32,8 @@ function renderActions(compact = false, students = TWO_ENDED) {
 }
 
 const more = () => screen.getByRole('button', { name: t.common.more });
-const renewOf = (name: string) => ({ name: `${t.students.renew} — ${name}` });
+/** No action names a child (owner 2026-10-29): the child is picked inside. */
+const NAMED = { name: / — / };
 
 describe('SalesChatActions: one visible action, the rest in «المزيد» (W3)', () => {
   afterEach(() => {
@@ -48,23 +49,24 @@ describe('SalesChatActions: one visible action, the rest in «المزيد» (W3
       t.salesMoney.newSubscription,
       t.common.more,
     ]);
-    expect(screen.queryByRole('button', renewOf('جود'))).toBeNull();
+    expect(screen.queryByRole('button', NAMED)).toBeNull();
   });
 
-  it('the menu lists «تحقق من التسجيل», the transfer and the course days; no renewal hides in it', async () => {
+  it('the menu lists «تحقق من التسجيل», the transfer and ONE «أيام الحلقات»; no renewal hides in it', async () => {
     renderActions();
     await screen.findByRole('button', { name: t.salesMoney.newSubscription });
     fireEvent.click(more());
     expect(screen.getByRole('button', { name: t.registrationCheck.action })).toBeTruthy();
     expect(screen.queryByRole('button', { name: new RegExp(t.students.renew) })).toBeNull();
     expect(screen.getByRole('button', { name: t.salesMoney.recordTransfer })).toBeTruthy();
-    expect(screen.getByRole('button', { name: `${t.booking.courseDays} — جود` })).toBeTruthy();
+    expect(screen.getAllByRole('button', { name: t.booking.courseDays })).toHaveLength(1);
+    expect(screen.queryByRole('button', NAMED)).toBeNull();
   });
 
   it('two due: «جدّد الاشتراك» is the visible action; «اشتراك جديد» from the menu stays open after it closed', async () => {
     renderActions(false, TWO_DUE);
     expect((await screen.findByRole('button', { name: t.students.renew })).className).toContain('bg-secondary');
-    expect(screen.queryByRole('button', renewOf('جود'))).toBeNull();
+    expect(screen.queryByRole('button', NAMED)).toBeNull();
     fireEvent.click(more());
     fireEvent.click(screen.getByRole('button', { name: t.salesMoney.newSubscription }));
     expect(more().getAttribute('aria-expanded')).toBe('false');
@@ -79,9 +81,9 @@ describe('SalesChatActions: one visible action, the rest in «المزيد» (W3
     expect(more()).toBeTruthy();
   });
 
-  it('compact with one due: the icon button renews that child', async () => {
+  it('compact with one due: the icon button renews, no child named', async () => {
     renderActions(true, [TWO_DUE[0] ?? student(), ...TWO_ENDED.slice(1)]);
-    expect((await screen.findByRole('button', renewOf('سهيلة'))).textContent).toBe('');
+    expect((await screen.findByRole('button', { name: t.students.renew })).textContent).toBe('');
   });
 
   it('outside sales mode: nothing, and the family is never asked', () => {
