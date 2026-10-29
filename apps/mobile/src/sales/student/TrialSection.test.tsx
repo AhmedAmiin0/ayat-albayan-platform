@@ -1,4 +1,4 @@
-import type { TrialOutcome } from '@ab/shared';
+import type { SalesStudentDetails, TrialOutcome } from '@ab/shared';
 import { fireEvent, screen } from '@testing-library/react-native';
 import { router } from 'expo-router';
 import { TreeBaseProvider } from '@/core/nav/tree-base';
@@ -10,7 +10,7 @@ import { TrialSection } from './TrialSection';
 
 jest.mock('expo-router', () => ({ router: { push: jest.fn(), back: jest.fn() } }));
 
-const STUDENT = { ...details().student, status: 'trial' as const };
+const STUDENT: SalesStudentDetails['student'] = { ...details().student, status: 'trial' };
 const AGAIN = t.sales.student.trial.again.replace('{name}', STUDENT.name);
 // Newest first: the latest outcome decides, an older miss does not.
 const trials = (...outcomes: TrialOutcome[]) => outcomes.map((outcome, i) => ({ ...trialLesson, lesson_id: `tr${i}`, outcome }));

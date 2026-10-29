@@ -1,3 +1,4 @@
+import type { LessonStatus } from '@ab/shared';
 import { fireEvent, screen, within } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { fakeNow } from '@/test/fake-now';
@@ -10,7 +11,7 @@ jest.mock('@/core/lib/http/api', () => ({ ...jest.requireActual('@/core/lib/http
 jest.mock('expo-router', () => ({ router: { push: jest.fn(), back: jest.fn() }, useLocalSearchParams: () => ({}) }));
 
 const s = t.sales.academySchedule.status;
-const one = (id: string, name: string, status: Parameters<typeof scheduleLesson>[0]['status']) =>
+const one = (id: string, name: string, status: LessonStatus) =>
   scheduleLesson({ id, status, students: [{ id: `s-${id}`, code: 'AB-0300', name }] });
 const LESSONS = [
   one('a', 'سلمى', 'scheduled'),
