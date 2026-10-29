@@ -1,5 +1,5 @@
 import { type DynamicModule, Module } from '@nestjs/common';
-import { SalesTeacherAssign } from '../../sales/sales-money';
+import { SalesMoneyModule } from '../../sales/sales-money';
 import { PaymentsModule } from '../payments';
 import { SubscriptionsModule } from '../subscriptions';
 import { StripeAdminController } from './admin/stripe-admin.controller';
@@ -10,7 +10,7 @@ import { stripeFeatureOn, StripeEnabledGuard } from './gate/stripe-gate';
 import { StripeSettingsQueries } from './gate/stripe-settings.queries';
 import { LinkCancel } from './links/link-cancel';
 import { LinkCreate } from './links/link-create';
-import { LinkCreateDeps, LinkDeps } from './links/link-deps';
+import { LinkCreateDeps, LinkDeps, LinkSalesDeps } from './links/link-deps';
 import { LinkPackages } from './links/link-packages';
 import { LinkViews } from './links/link-views';
 import { PaymentLinksController } from './links/payment-links.controller';
@@ -40,11 +40,11 @@ export class StripeTestModule {
     if (!stripeFeatureOn(env)) return { module: StripeTestModule };
     return {
       module: StripeTestModule,
-      imports: [SubscriptionsModule, PaymentsModule],
+      imports: [SubscriptionsModule, PaymentsModule, SalesMoneyModule],
       controllers: [StripeFeatureController, StripeAdminController, PaymentLinksController, PayController, StripeWebhookController],
       providers: [
         { provide: STRIPE_FACTORY, useValue: stripeFactory },
-        ...[StripeSettingsQueries, StripeClients, StripeEnabledGuard, StripeAdmin, LinkViews, PaymentLinksQueries, LinkDeps, LinkCreateDeps, LinkPackages, LinkCreate, LinkCancel, SalesTeacherAssign],
+        ...[StripeSettingsQueries, StripeClients, StripeEnabledGuard, StripeAdmin, LinkViews, PaymentLinksQueries, LinkDeps, LinkCreateDeps, LinkPackages, LinkCreate, LinkCancel, LinkSalesDeps],
         ...[CheckoutService, PayLimit, LinkAlerts, LinkFulfilment, LinkRefunds, StripeEventsQueries, StripeWebhookService],
         ...[WebhookDeps, WebhookHandlers],
       ],

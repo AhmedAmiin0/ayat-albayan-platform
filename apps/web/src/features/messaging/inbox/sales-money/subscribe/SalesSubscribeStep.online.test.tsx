@@ -1,6 +1,7 @@
 import type { SalesFamilyStudent } from '@ab/shared';
 import { fireEvent, screen, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
+import { ApiError } from '@/lib/http/api';
 import { t } from '@/lib/i18n/i18n';
 import { PHONE } from '../../testing/inbox-fixture';
 import { renderWithClient, routeFetch } from '../../testing/test-utils';
@@ -80,18 +81,19 @@ describe('«اشتراك جديد» → «دفع إلكتروني» (owner 2026-
     expect(made.getByTestId('link-amount').textContent).toContain('270');
     expect(made.getByText('https://app.example.com/pay/tok_1')).toBeTruthy();
     const [body] = posted('/sales/payment-links');
-    expect(body).toMatchObject({ studentId: student().id, kind: 'new', amount: 270, currency: SALES_QUOTE.currency, teacherId: TRIAL });
+    expect(body).toMatchObject({ studentId: student().id, amount: 270, currency: SALES_QUOTE.currency, teacherId: TRIAL });
     expect(body?.['startsOn']).toMatch(/^\d{4}-\d{2}-\d{2}$/);
     expect(typeof body?.['clientRequestId']).toBe('string');
     expect(body).not.toHaveProperty('phone');
     expect(posted('/sales/subscriptions')).toHaveLength(0);
   });
 
-  it('a child due for a renewal: the link is a renewal', async () => {
+  it('a child due for a renewal: no kind is sent, the API derives it from her priced packages', async () => {
     await online([student({ status: 'active', renew_due: true })]);
     await create();
     await screen.findByRole('dialog', { name: P.title });
-    expect(posted('/sales/payment-links')[0]).toMatchObject({ kind: 'renewal' });
+    expect(posted('/sales/payment-links')[0]).toMatchObject({ studentId: student().id });
+    expect(posted('/sales/payment-links')[0]).not.toHaveProperty('kind');
   });
 
   it('an API refusal is said in the form', async () => {
@@ -99,6 +101,13 @@ describe('«اشتراك جديد» → «دفع إلكتروني» (owner 2026-
     apiSend.mockRejectedValueOnce(new Error('x'));
     await create();
     expect(await screen.findByText(P.error.generic)).toBeTruthy();
+  });
+
+  it('a refusal with the subscribe step’s own code (the teacher gone inactive) says it, never «try again»', async () => {
+    await online();
+    apiSend.mockRejectedValueOnce(new ApiError(400, { code: 'teacher_not_found' }));
+    await create();
+    expect(await screen.findByText(t.salesMoney.error.teacher_not_found)).toBeTruthy();
   });
 
   it('a child listed through sales.renew_any (mine: false): no method to pick, the bank transfer only', async () => {

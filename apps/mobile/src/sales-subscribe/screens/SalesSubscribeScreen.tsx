@@ -1,4 +1,6 @@
+import type { SalesFamilyStudent } from '@ab/shared';
 import { router, useLocalSearchParams } from 'expo-router';
+import { useState } from 'react';
 import { ScrollView } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { inTree, useTreeBase } from '@/core/nav/tree-base';
@@ -16,6 +18,12 @@ import { SalesSubscribeForm } from '../components/SalesSubscribeForm';
  */
 type Params = { phone?: string; studentId?: string; renew?: string };
 
+/** The picked child (one of hers), else the route's, else the only one, else none yet (''). */
+function childOf(students: readonly SalesFamilyStudent[], ids: { picked: string | undefined; route: string | undefined }): string {
+  const id = ids.picked ?? ids.route ?? (students.length === 1 ? students[0]?.id : undefined) ?? '';
+  return students.some((s) => s.id === id) ? id : '';
+}
+
 /**
  * /inbox/sales-subscribe?phone=… (R-ASST-01, owner 2026-10-12): «اشتراك جديد» from a family's chat by
  * the salesperson, for one of HER students only (GET /sales/money/family), the child picked here (owner
@@ -32,6 +40,11 @@ export function SalesSubscribeScreen() {
   const back = () => (router.canGoBack() ? router.back() : router.replace(inTree(base, '/inbox')));
   const own = students.find((s) => s.id === params.studentId);
   const renew = params.renew === '1';
+  const [picked, setPicked] = useState<string>();
+  const studentId = childOf(students, { picked, route: params.studentId });
+  const child = students.find((s) => s.id === studentId);
+  // «جدّد الاشتراك» only while the picked child is due (owner 2026-10-29: one pill; a sibling not due is a new package).
+  const renewing = renew && (child ? child.renew_due : true);
   // «أيام الحلقات» stays hers only: a child listed through sales.renew_any (`mine: false`) gets the package only.
   const courseDays = own && own.mine !== false
     ? () => router.push(inTree(base, { pathname: '/inbox/sales-course', params: { studentId: own.id } }))
@@ -44,7 +57,7 @@ export function SalesSubscribeScreen() {
         keyboardShouldPersistTaps="handled"
       >
         <ScreenHeader
-          title={renew ? t.students.renew : t.salesMoney.newSubscription}
+          title={renewing ? t.students.renew : t.salesMoney.newSubscription}
           trailing={<Button variant="ghost" label={t.common.back} onPress={back} />}
         />
         {family.isError ? (
@@ -54,13 +67,7 @@ export function SalesSubscribeScreen() {
         ) : (
           <>
             {courseDays ? <Button variant="secondary" label={t.booking.courseDays} onPress={courseDays} /> : null}
-            <SalesSubscribeForm
-              phone={phone}
-              students={students}
-              renew={renew}
-              onDone={back}
-              {...(params.studentId ? { studentId: params.studentId } : {})}
-            />
+            <SalesSubscribeForm phone={phone} students={students} studentId={studentId} onPick={setPicked} renew={renew} onDone={back} />
           </>
         )}
       </ScrollView>

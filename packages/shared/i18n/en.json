@@ -7085,7 +7085,7 @@
       "copyFailed": "Could not copy; copy the link by hand.",
       "status": "Status",
       "when": "Date",
-      "emptyHint": "Create the payment link from the family's chat: «New subscription», then «Online payment».",
+      "emptyHint": "Create the payment link from the family's chat: «New subscription» or «Renew subscription», then «Online payment».",
       "maxDiscountRange": "Enter a number from 0 to 100."
     },
     "mobile": {

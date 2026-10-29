@@ -9,11 +9,11 @@ import { usePermissions } from '@/features/people/auth/use-permissions';
 import { INITIAL_PRICING, pricingBody, todayIn, type PricingForm } from '@/features/finance/subscriptions/create/pricing-form';
 import { pricingLessons } from '@/features/finance/subscriptions';
 import { PricingFields } from '@/features/finance/subscriptions/create/PricingFields';
-import { paymentLinkErrorText, useStripeFeature } from '@/features/sales/payment-links';
+import { useStripeFeature } from '@/features/sales/payment-links';
 import { t } from '@/lib/i18n/i18n';
 import { createSalesSubscription, refreshAfterSalesWrite } from '../api';
 import { ChildPicker } from './ChildPicker';
-import { salesErrorText } from '../errors';
+import { linkStepErrorText, salesErrorText } from '../errors';
 import { OnlinePayFields } from '../payment-link/OnlinePayFields';
 import { useLinkPay } from '../payment-link/use-link-pay';
 import { SalesQuotePreview } from './SalesQuotePreview';
@@ -99,7 +99,7 @@ export function SalesSubscribeStep({ students, phone = '', picked, renew = false
     setStartError(checked.ok ? null : t.salesMoney.error[checked.code]);
     if (!checked.ok) return;
     // The link never carries the chat's phone: online is for her own children only.
-    if (online) return pay.submit({ kind: child?.renew_due ? 'renewal' : 'new', ...checked.body, ...teacher.body });
+    if (online) return pay.submit({ ...checked.body, ...teacher.body });
     const body = { studentId, pricing, ...checked.body, ...teacher.body, ...bind };
     const key = JSON.stringify(body);
     if (request.current?.body !== key) request.current = { body: key, id: crypto.randomUUID() };
@@ -131,7 +131,7 @@ export function SalesSubscribeStep({ students, phone = '', picked, renew = false
         {studentId && <SalesTeacherField value={teacher.teacherId} onChange={teacher.setTeacher} />}
         <SalesStartField canSet={canSet} today={today} value={startShown} usedMax={usedMax} onChange={(patch) => setStart((v) => ({ ...v, ...patch }))} error={startError} />
         {!online && save.isError && <FormAlert>{salesErrorText(save.error)}</FormAlert>}
-        {online && pay.create.isError && <FormAlert>{paymentLinkErrorText(pay.create.error)}</FormAlert>}
+        {online && pay.create.isError && <FormAlert>{linkStepErrorText(pay.create.error)}</FormAlert>}
       </form>
     </Dialog>
   );

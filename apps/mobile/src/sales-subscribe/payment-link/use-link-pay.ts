@@ -5,8 +5,8 @@ import { refreshFamily } from '../lib/family';
 import { useCreateLink, useLinkQuote } from './link-api';
 import { checkAmount } from './link-text';
 
-/** What the subscribe form adds: the kind (from renew_due), the start day, the used lessons, the teacher. */
-type LinkExtra = Omit<PaymentLinkCreate, 'studentId' | 'pricing' | 'amount' | 'currency' | 'clientRequestId'>;
+/** What the subscribe form adds: the start day, the used lessons, the teacher (the API derives the kind). */
+type LinkExtra = Omit<PaymentLinkCreate, 'studentId' | 'pricing' | 'amount' | 'currency' | 'clientRequestId' | 'kind'>;
 
 interface LinkPayInput {
   /** '' while «دفع إلكتروني» is not picked: nothing is asked. */

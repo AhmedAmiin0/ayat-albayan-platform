@@ -28,17 +28,14 @@ interface SalesSubscribeFormProps {
   phone: string;
   /** Her students of the family (at least one). */
   students: readonly SalesFamilyStudent[];
-  /** Preselected from the route. */
-  studentId?: string;
+  /** The picked child, '' = none yet; the screen holds it (its title follows the child). */
+  studentId: string;
+  onPick: (id: string) => void;
   /** «جدّد الاشتراك»: a child due for one starts from its `renewal` (still editable), again on a new pick. */
   renew?: boolean;
   /** Back to the chat once a payment link's text is in its box. */
   onDone: () => void;
 }
-
-/** The route's child, else the only one of hers, else none yet (''). */
-const firstChild = (students: readonly SalesFamilyStudent[], first: string | undefined) =>
-  first ?? (students.length === 1 ? (students[0]?.id ?? '') : '');
 
 const pl = t.paymentLinks;
 
@@ -48,19 +45,17 @@ const pl = t.paymentLinks;
  * «تحويل بنكي» saves the package (on to its weekly days, then the transfer; the screen is replaced), «دفع إلكتروني»
  * (the Stripe test build, her own child) makes a link from the same fields: the agreed amount, then the link to send.
  */
-export function SalesSubscribeForm({ phone, students, studentId: first, renew = false, onDone }: SalesSubscribeFormProps) {
-  const [picked, setPicked] = useState(() => firstChild(students, first));
-  const studentId = students.some((s) => s.id === picked) ? picked : '';
+export function SalesSubscribeForm({ phone, students, studentId, onPick, renew = false, onDone }: SalesSubscribeFormProps) {
   const child = students.find((s) => s.id === studentId);
   // A single «جدّد الاشتراك» lists all her children: only one due starts from its last package.
   const seedOf = (id: string) => {
     const s = renew ? students.find((x) => x.id === id) : undefined;
     return s?.renew_due ? renewalForm(s.renewal) : INITIAL_FORM;
   };
-  const [form, setForm] = useState(() => seedOf(picked));
+  const [form, setForm] = useState(() => seedOf(studentId));
   const teacher = useTeacherPick(students, studentId);
   const pick = (id: string) => {
-    setPicked(id);
+    onPick(id);
     if (renew) setForm(seedOf(id));
   };
   const [now] = useState(() => new Date());
@@ -88,7 +83,7 @@ export function SalesSubscribeForm({ phone, students, studentId: first, renew = 
     setTried(true);
     if (!starts.ok) return;
     // The link never carries the chat's phone: online is for her own children only.
-    if (online) pay.submit({ kind: child?.renew_due ? 'renewal' : 'new', ...starts.body, ...teacher.body });
+    if (online) pay.submit({ ...starts.body, ...teacher.body });
     else save.mutate(
       { studentId, pricing, ...starts.body, ...teacher.body, ...bind },
       {

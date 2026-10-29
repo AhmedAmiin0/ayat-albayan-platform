@@ -60,7 +60,7 @@ async function createLink(amount?: string, client = createTestQueryClient()) {
 test('the reference is the calculator price; the link carries the form’s student, package, day and teacher, never the phone', async () => {
   await createLink('170');
   await waitFor(() =>
-    expect(created()).toMatchObject({ studentId: KID, kind: 'new', amount: 170, currency: 'SAR', pricing: { tier: 'standard' }, teacherId: TEACHER }),
+    expect(created()).toMatchObject({ studentId: KID, amount: 170, currency: 'SAR', pricing: { tier: 'standard' }, teacherId: TEACHER }),
   );
   expect(created()?.['startsOn']).toMatch(/^\d{4}-\d{2}-\d{2}$/);
   expect(created()).toHaveProperty('clientRequestId');
@@ -70,10 +70,11 @@ test('the reference is the calculator price; the link carries the form’s stude
   expect(screen.getByText(ltr(paymentLink().url))).toBeTruthy();
 });
 
-test('a child due for a renewal: the link is sent as a renewal', async () => {
+test('a child due for a renewal: no kind is sent, the API derives it from her priced packages', async () => {
   serve(kid({ status: 'active', renew_due: true }));
   await createLink();
-  await waitFor(() => expect(created()).toMatchObject({ kind: 'renewal' }));
+  await waitFor(() => expect(created()).toMatchObject({ studentId: KID }));
+  expect(created()).not.toHaveProperty('kind');
 });
 
 test('below the admin minimum: refused before posting', async () => {

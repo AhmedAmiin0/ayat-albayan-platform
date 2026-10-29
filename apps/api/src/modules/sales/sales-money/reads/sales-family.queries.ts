@@ -61,4 +61,20 @@ export class SalesFamilyQueries {
     if (!data) throw notFound('student_not_found');
     return data.status;
   }
+
+  /**
+   * Of these packages, the ones a payment link is still open for (open, not expired; docs/30): the family pays
+   * them by the link, so the transfer step never offers them too (one package, never paid twice).
+   */
+  async linkPackages(subscriptionIds: readonly string[], now = new Date()): Promise<string[]> {
+    if (subscriptionIds.length === 0) return [];
+    const { data, error } = await this.db
+      .from('payment_links')
+      .select('subscription_id')
+      .in('subscription_id', [...subscriptionIds])
+      .eq('status', 'open')
+      .gt('expires_at', now.toISOString());
+    if (error) throw dbError(error);
+    return data.flatMap((r) => (r.subscription_id ? [r.subscription_id] : []));
+  }
 }

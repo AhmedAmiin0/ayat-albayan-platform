@@ -5,8 +5,8 @@ import { useDebounced } from '@/features/finance/pricing';
 import { createPaymentLink, PAYMENT_LINKS_KEY, quotePaymentLink } from '@/features/sales/payment-links';
 import { t } from '@/lib/i18n/i18n';
 
-/** What the subscribe step adds: the kind (from renew_due), the start day, the used lessons, the teacher. */
-type LinkExtra = Omit<PaymentLinkCreate, 'studentId' | 'pricing' | 'amount' | 'currency' | 'clientRequestId'>;
+/** What the subscribe step adds: the start day, the used lessons, the teacher (the API derives the kind). */
+type LinkExtra = Omit<PaymentLinkCreate, 'studentId' | 'pricing' | 'amount' | 'currency' | 'clientRequestId' | 'kind'>;
 
 type Opts = {
   /** '' while «دفع إلكتروني» is not picked: nothing is asked. */

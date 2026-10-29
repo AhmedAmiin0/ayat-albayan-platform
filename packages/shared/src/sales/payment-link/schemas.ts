@@ -24,7 +24,8 @@ export const paymentLinkQuoteSchema = z.strictObject({ studentId: z.uuid(), pric
  */
 export const paymentLinkCreateSchema = z.strictObject({
   studentId: z.uuid(),
-  kind: z.enum(PAYMENT_LINK_KINDS),
+  /** Optional (owner 2026-10-29): the API stores 'renewal' once the student has a priced package, else 'new'. */
+  kind: z.enum(PAYMENT_LINK_KINDS).optional(),
   pricing: subscriptionPricingSchema,
   startsOn: localDate.optional(),
   alreadyStarted: z.boolean().optional(),
