@@ -1,6 +1,6 @@
 {
-  "id": "pilot-web",
-  "seq": 106,
+  "id": "v2-web-payouts",
+  "seq": 108,
   "moves": [
     {
       "from": "apps/web/src/features/finance/payouts/PayoutsPage*",
