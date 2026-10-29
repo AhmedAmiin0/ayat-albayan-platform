@@ -31,24 +31,24 @@ const names = () => screen.getByTestId('chat-names');
 
 beforeEach(() => jest.clearAllMocks());
 
-test('one student: the name opens «تفاصيل الطالب» in the sales tree', async () => {
+test('one student: the name opens «تفاصيل الطالب» above the sales chat (back returns to it)', async () => {
   await show([child()]);
   expect(names().props.accessibilityHint).toBe(t.inbox.studentDetails);
   await fireEvent.press(names());
-  expect(router.push).toHaveBeenCalledWith(`/sales/students/${CHILD_ID}`);
+  expect(router.push).toHaveBeenCalledWith(`/sales/inbox/student/${CHILD_ID}`);
 });
 
-test('in the admin tree it opens the student file', async () => {
+test('in the admin tree it opens the student file above the chat', async () => {
   await show([child()], '');
   await fireEvent.press(names());
-  expect(router.push).toHaveBeenCalledWith(`/students/${CHILD_ID}`);
+  expect(router.push).toHaveBeenCalledWith(`/inbox/student/${CHILD_ID}`);
 });
 
 test('several students: a sheet of «name · code», each opens its own', async () => {
   await show([child(), child({ id: 's-2', name: 'مريم', code: 'AB-0200' })]);
   await fireEvent.press(names());
   await fireEvent.press(within(screen.getByTestId('thread-menu')).getByRole('button', { name: 'مريم · AB-0200' }));
-  await waitFor(() => expect(router.push).toHaveBeenCalledWith('/sales/students/s-2'));
+  await waitFor(() => expect(router.push).toHaveBeenCalledWith('/sales/inbox/student/s-2'));
 });
 
 test('no student (a lead) or the assistant tree: the name is not a button', async () => {
