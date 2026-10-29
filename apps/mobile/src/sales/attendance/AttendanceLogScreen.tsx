@@ -5,7 +5,7 @@ import { View } from 'react-native';
 import { ApiError } from '@/core/lib/http/api';
 import { useClockCycle } from '@/core/lib/clock';
 import { t } from '@/core/lib/i18n/i18n';
-import { useTreeBase } from '@/core/nav/tree-base';
+import { useStudentHref, useTreeBase } from '@/core/nav/tree-base';
 import { ErrorLine } from '@/inbox';
 import { Button } from '@/core/ui/primitives/Button';
 import { EmptyState } from '@/core/ui/feedback/EmptyState';
@@ -33,6 +33,7 @@ const pdfError = (e: unknown): string => (e instanceof ApiError && e.status === 
 export function AttendanceLogScreen() {
   const { id = '' } = useLocalSearchParams<{ id: string }>();
   const base = useTreeBase();
+  const to = useStudentHref();
   const cycle = useClockCycle();
   const [month, setMonth] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -42,9 +43,9 @@ export function AttendanceLogScreen() {
     (row: AttendanceTableRow) => {
       if (!row.report_id) return;
       setError(null);
-      void openAttendanceReport(base, { studentId: id, reportId: row.report_id }).catch((e: unknown) => setError(pdfError(e)));
+      void openAttendanceReport(base, { studentId: id, reportId: row.report_id }, to).catch((e: unknown) => setError(pdfError(e)));
     },
-    [base, id],
+    [base, id, to],
   );
   const renderItem = useCallback(
     ({ item, index }: { item: AttendanceTableRow; index: number }) => (

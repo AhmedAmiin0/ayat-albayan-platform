@@ -1,6 +1,7 @@
 import { RIYADH_TZ, type ReportSummaryView, type TeacherMe } from '@ab/shared';
-import { router, useLocalSearchParams } from 'expo-router';
+import { type Href, router, useLocalSearchParams } from 'expo-router';
 import { memo, useCallback, useMemo, useState } from 'react';
+import { useStudentHref } from '@/core/nav/tree-base';
 
 import { ErrorLine } from '@/inbox/ErrorLine';
 import { t } from '@/core/lib/i18n/i18n';
@@ -22,9 +23,9 @@ const teacherStudent = (me: TeacherMe | undefined, id: string) => me?.students.f
 const teacherStudentName = (me: TeacherMe | undefined, id: string): string => teacherStudent(me, id)?.name ?? t.reports.history;
 const teacherStudentStatus = (me: TeacherMe | undefined, id: string) => teacherStudent(me, id)?.status;
 
-/** A row's tap: the admin reads any report; a teacher opens only their own lesson's form. */
-function rowPress(r: ReportSummaryView, who: 'admin' | string | undefined): (() => void) | undefined {
-  if (who === 'admin') return () => router.push(`/students/reports/view/${r.id}`);
+/** A row's tap: the admin reads any report (`to`: in a chat group, its copy of the route); a teacher opens only their own lesson's form. */
+function rowPress(r: ReportSummaryView, who: 'admin' | string | undefined, to: (href: Href) => Href): (() => void) | undefined {
+  if (who === 'admin') return () => router.push(to(`/students/reports/view/${r.id}`));
   return r.teacher.id === who ? () => router.push(reportFormHref(r.lesson_id)) : undefined;
 }
 
@@ -41,7 +42,8 @@ interface ReportItemProps {
 /** A history row with its own stable handlers, so a re-render of the screen redraws none. */
 const ReportItem = memo(function ReportItem({ row, tz, who, onPdfFailed }: ReportItemProps) {
   const onPdf = useCallback(() => void openSigned(`/reports/${row.id}/pdf`).catch(onPdfFailed), [row.id, onPdfFailed]);
-  const onPress = useMemo(() => rowPress(row, who), [row, who]);
+  const to = useStudentHref();
+  const onPress = useMemo(() => rowPress(row, who, to), [row, who, to]);
   return <ReportHistoryRow row={row} tz={tz} onPdf={onPdf} onPress={onPress} />;
 });
 

@@ -5,6 +5,7 @@ import { AssistantsSection } from '@/classroom/assistants/AssistantsSection';
 import { ApiError, apiFetch } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
 import { pathKey } from '@/core/lib/query/query-keys';
+import { useStudentHref } from '@/core/nav/tree-base';
 import { StudentFileSections } from '@/student-file/components/StudentFileSections';
 import { TrialDateSection } from '@/trial-date/components/TrialDateSection';
 import { Button } from '@/core/ui/primitives/Button';
@@ -39,6 +40,7 @@ export function StudentScreen() {
     queryFn: () => apiFetch<StudentProfile>(path),
   });
   const student = query.data;
+  const to = useStudentHref();
   const backButton = <Button variant="ghost" label={t.common.back} onPress={back} />;
 
   if (!student) {
@@ -72,12 +74,12 @@ export function StudentScreen() {
         <Button
           variant="secondary"
           label={t.mobileAdmin.reports.button}
-          onPress={() => router.push(`/students/reports/${student.id}`)}
+          onPress={() => router.push(to(`/students/reports/${student.id}`))}
         />
         <Button
           variant="secondary"
           label={t.sales.student.log.open}
-          onPress={() => router.push(`/students/${student.id}/attendance`)}
+          onPress={() => router.push(to(`/students/${student.id}/attendance`))}
         />
         <BalanceCard studentId={student.id} />
         <StudentFileSections student={student} />

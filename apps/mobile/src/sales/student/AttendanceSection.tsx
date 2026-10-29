@@ -3,6 +3,7 @@ import { router } from 'expo-router';
 import { View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { useClockCycle, whenIn } from '@/core/lib/clock';
+import { useStudentHref } from '@/core/nav/tree-base';
 import { Note } from '@/more';
 import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
@@ -23,12 +24,13 @@ interface AttendanceSectionProps {
 export function AttendanceSection({ studentId, attendance }: AttendanceSectionProps) {
   const { color } = useTheme();
   const cycle = useClockCycle();
+  const to = useStudentHref();
   const s = t.sales.student;
   const text = { flex: 1, fontFamily: type.ui[500], fontSize: type.size.sm, lineHeight: type.lineHeight(type.size.sm), color: color.ink };
   return (
     <View style={{ gap: 8 }}>
       <SectionLabel>{s.attendance}</SectionLabel>
-      <Button variant="secondary" label={s.log.open} onPress={() => router.push(`/sales/students/${studentId}/attendance`)} />
+      <Button variant="secondary" label={s.log.open} onPress={() => router.push(to(`/sales/students/${studentId}/attendance`))} />
       {attendance.items.length === 0 ? (
         <Note>{s.noAttendance}</Note>
       ) : (

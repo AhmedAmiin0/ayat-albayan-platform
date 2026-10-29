@@ -1,6 +1,6 @@
 import type { StudentAttendanceTable } from '@ab/shared';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
-import { router } from 'expo-router';
+import { type Href, router } from 'expo-router';
 import { apiFetch } from '@/core/lib/http/api';
 import { pathKey } from '@/core/lib/query/query-keys';
 import type { TreeBase } from '@/core/nav/tree-base';
@@ -22,9 +22,12 @@ export function useAttendanceLog(base: TreeBase, id: string, month: string | nul
   });
 }
 
-/** A row's sent report: the PDF as «التقارير» opens it (sales), the admin's sent report view otherwise. */
-export function openAttendanceReport(base: TreeBase, ids: { studentId: string; reportId: string }): Promise<void> {
+/**
+ * A row's sent report: the PDF as «التقارير» opens it (sales), the admin's sent report view otherwise
+ * (`to`: useStudentHref, the chat group's copy of the route when the log runs in one).
+ */
+export function openAttendanceReport(base: TreeBase, ids: { studentId: string; reportId: string }, to: (href: Href) => Href): Promise<void> {
   if (base === '/sales') return openStudentReportPdf(ids.studentId, ids.reportId);
-  router.push(`/students/reports/view/${ids.reportId}`);
+  router.push(to(`/students/reports/view/${ids.reportId}`));
   return Promise.resolve();
 }
