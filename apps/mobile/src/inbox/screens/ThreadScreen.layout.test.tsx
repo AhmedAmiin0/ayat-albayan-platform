@@ -7,7 +7,8 @@ import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { detail, inbound, thread } from '../shared/thread-fixtures';
 import { ThreadScreen } from './ThreadScreen';
 
-// The sales chat's top (owner 2026-10-18: more room to read): one header line, one strip of pills.
+// The sales chat's top (owner 2026-10-18: more room to read): one header line, and on a family one
+// strip of pills; a lead's «تسجيل طالب جديد» sits in «⋮» (owner 2026-10-30).
 const mockApiFetch = jest.fn();
 jest.mock('@/core/lib/http/api', () => ({
   ...jest.requireActual('@/core/lib/http/api'),
@@ -58,12 +59,15 @@ test('without students.check_registration the menu has no «تحقق من الت
   expect(screen.queryByRole('button', { name: t.registrationCheck.action })).toBeNull();
 });
 
-test('a lead: «تسجيل طالب جديد» is a pill in the one sideways-scrolling strip', async () => {
+test('a lead: no strip; «تسجيل طالب جديد» is the first item of «⋮» (owner 2026-10-30)', async () => {
   await open(thread, BASE);
-  const strip = screen.getByTestId('sales-chat-actions');
-  expect(strip.props.horizontal).toBe(true);
-  await fireEvent.press(within(strip).getByRole('button', { name: t.inbox.registerNew }));
-  expect(router.push).toHaveBeenCalledWith(expect.objectContaining({ pathname: '/sales/inbox/book' }));
+  expect(screen.queryByTestId('sales-chat-actions')).toBeNull();
+  await fireEvent.press(screen.getByRole('button', { name: t.inbox.chatMenu }));
+  const menu = within(screen.getByTestId('thread-menu'));
+  const words: unknown[] = menu.getAllByRole('button').map((b) => within(b).getByText(/./).props.children);
+  expect(words[0]).toBe(t.inbox.registerNew);
+  await fireEvent.press(menu.getByRole('button', { name: t.inbox.registerNew }));
+  await waitFor(() => expect(router.push).toHaveBeenCalledWith(expect.objectContaining({ pathname: '/sales/inbox/book' })));
 });
 
 test('a teacher’s chat (no lead, no family): no strip at all', async () => {

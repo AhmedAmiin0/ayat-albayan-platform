@@ -5,7 +5,8 @@ import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { SalesChatActions } from './SalesChatActions';
 import { thread } from '../../shared/thread-fixtures';
 
-// The action strip shows only once a pill will: no empty band over a family chat (review of #112).
+// The action strip shows only once a pill will: no empty band over a family chat (review of #112),
+// and none over a lead's chat (owner 2026-10-30: «تسجيل طالب جديد» moved into the header's «⋮»).
 const mockApiFetch = jest.fn();
 jest.mock('@/core/lib/http/api', () => ({
   ...jest.requireActual('@/core/lib/http/api'),
@@ -40,10 +41,10 @@ test('her student in the family: the strip with «اشتراك جديد»', asyn
   expect(within(strip).getByRole('button', { name: t.salesMoney.newSubscription })).toBeTruthy();
 });
 
-test('a lead: the strip with «تسجيل طالب جديد», no family query', async () => {
-  serve(null, ['self.sales']);
+test('a lead: no strip at all («تسجيل طالب جديد» is in the header «⋮»), no family query', async () => {
+  serve(null, ['self.sales', 'self.sales_money']);
   await renderWithQuery(<SalesChatActions thread={thread} />, createTestQueryClient({ meFromApi: true }));
-  const strip = screen.getByTestId('sales-chat-actions');
-  expect(within(strip).getByRole('button', { name: t.inbox.registerNew })).toBeTruthy();
+  await waitFor(() => expect(mockApiFetch).toHaveBeenCalledWith('/auth/me'));
+  expect(screen.queryByTestId('sales-chat-actions')).toBeNull();
   expect(mockApiFetch).not.toHaveBeenCalledWith(expect.stringContaining('/sales/money/family'));
 });

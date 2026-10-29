@@ -42,7 +42,6 @@ test('from a family chat: «اشتراك جديد» → saved → the days (late
   expect(app.pathname()).toBe(`/inbox/thread/${GUARDIAN_PHONE}`);
   expect(await screen.findByRole('button', { name: m.newSubscription })).toBeTruthy();
   expect(screen.queryByRole('button', { name: m.recordTransfer })).toBeNull();
-  expect(screen.queryByRole('button', { name: t.inbox.registerNew })).toBeNull();
 
   await press('button', m.newSubscription);
   expect(app.pathname()).toBe('/inbox/sales-subscribe');

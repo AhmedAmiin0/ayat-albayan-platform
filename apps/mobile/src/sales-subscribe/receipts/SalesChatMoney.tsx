@@ -12,7 +12,7 @@ import { openPackages, useSalesFamily } from '../lib/family';
  * renewal (that child preselected when she is the only one due, the form prefilled from her last package;
  * owner 2026-10-15/26), else «اشتراك جديد»; the payment method (bank transfer, or a Stripe link in the test
  * build) is chosen inside too. «سجّل تحويلًا بنكيًا» while one of their packages is owed. Needs
- * self.sales_money; nothing on a lead's chat (RegisterFromChat is there) or another's family.
+ * self.sales_money; nothing on a lead's chat («تسجيل طالب جديد» is in «⋮») or another's family.
  * Pills in the chat's action strip (SalesChatActions).
  */
 export function SalesChatMoney({ thread }: { thread: ThreadView | null }) {

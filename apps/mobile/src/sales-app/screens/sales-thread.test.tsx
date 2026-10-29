@@ -1,4 +1,4 @@
-import { fireEvent, screen } from '@testing-library/react-native';
+import { fireEvent, screen, waitFor, within } from '@testing-library/react-native';
 import { router } from 'expo-router';
 import { detail, inbound, NOW, thread } from '@/inbox/shared/thread-fixtures';
 import { ThreadScreen } from '@/inbox/screens/ThreadScreen';
@@ -44,20 +44,24 @@ beforeEach(() => {
 });
 afterEach(() => jest.useRealTimers());
 
-test('a lead’s chat: «تسجيل طالب جديد» opens the sales wizard inside /sales, no subscription panel', async () => {
+test('a lead’s chat: «⋮» → «تسجيل طالب جديد» opens the sales wizard inside /sales, no subscription panel', async () => {
   await open(thread);
-  await fireEvent.press(screen.getByRole('button', { name: t.inbox.registerNew }));
-  expect(router.push).toHaveBeenCalledWith(expect.objectContaining({ pathname: '/sales/inbox/book' }));
   for (const word of [t.inbox.subscription.subscribe, t.inbox.subscription.renew, t.inbox.subscription.title]) {
     expect(screen.queryByText(word)).toBeNull();
   }
+  await fireEvent.press(screen.getByRole('button', { name: t.inbox.chatMenu }));
+  await fireEvent.press(within(screen.getByTestId('thread-menu')).getByRole('button', { name: t.inbox.registerNew }));
+  await waitFor(() => expect(router.push).toHaveBeenCalledWith(expect.objectContaining({ pathname: '/sales/inbox/book' })));
 });
 
 test('a family’s chat: no packages or money, no «إرسال تقييم الحلقة» (feedback.write is not a sales grant)', async () => {
   await open(family);
-  expect(screen.queryByRole('button', { name: t.inbox.registerNew })).toBeNull();
   expect(screen.queryByText(t.inbox.subscription.title)).toBeNull();
   expect(screen.queryByRole('button', { name: t.inbox.rating.send })).toBeNull();
+  await fireEvent.press(screen.getByRole('button', { name: t.inbox.chatMenu }));
+  const menu = within(screen.getByTestId('thread-menu'));
+  expect(menu.getByRole('button', { name: t.inbox.copy.phone })).toBeTruthy();
+  expect(menu.queryByRole('button', { name: t.inbox.registerNew })).toBeNull();
 });
 
 test('«رجوع» with no history returns to the sales chats, never the admin inbox', async () => {
