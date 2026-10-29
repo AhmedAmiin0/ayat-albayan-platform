@@ -52,7 +52,14 @@ export const quoteSalesSubscription = (body: SalesQuoteBody) =>
  * (else the API's default day); `alreadyStarted` only when «بدأ الاشتراك سابقًا» is ticked, and with it
  * `lessonsUsedBefore` («حلقات مستخدمة من الباقة», owner 2026-10-28) when > 0.
  */
-export type SalesSubscriptionBody = SalesQuoteBody & { startsOn?: string; alreadyStarted?: true; lessonsUsedBefore?: number; clientRequestId: string };
+export type SalesSubscriptionBody = SalesQuoteBody & {
+  startsOn?: string;
+  alreadyStarted?: true;
+  lessonsUsedBefore?: number;
+  /** «المعلم/ة» (owner 2026-10-29): students.teacher_id once subscribed. */
+  teacherId?: string;
+  clientRequestId: string;
+};
 
 export const createSalesSubscription = (body: SalesSubscriptionBody) =>
   apiSend<SalesMoneySubscriptionView>('POST', '/sales/subscriptions', body);

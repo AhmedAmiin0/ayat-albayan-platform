@@ -37,7 +37,7 @@ export function openSub(fields: Partial<SalesMoneySubscriptionView> = {}): Sales
 }
 
 export function kid(fields: Partial<SalesFamilyStudent> = {}): SalesFamilyStudent {
-  return { id: KID, code: 'AB-0201', name: 'ريم', status: 'trial', open: [], renew_due: false, renewal: DEFAULT_RENEWAL_PRICING, ...fields };
+  return { id: KID, code: 'AB-0201', name: 'ريم', status: 'trial', open: [], renew_due: false, renewal: DEFAULT_RENEWAL_PRICING, teacher_id: null, ...fields };
 }
 
 export const familyOf = (...students: SalesFamilyStudent[]): SalesFamilyView => ({ students });

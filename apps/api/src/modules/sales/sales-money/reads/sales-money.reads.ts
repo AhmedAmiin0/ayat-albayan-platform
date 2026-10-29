@@ -31,7 +31,7 @@ export class SalesMoneyReads {
     const students = await Promise.all(
       mine.map(async (s) => {
         const open = await this.open(s.id);
-        return { id: s.id, code: s.code ?? '', name: s.name, status: s.status, open, ...(renewals.get(s.id) ?? NOT_DUE) };
+        return { id: s.id, code: s.code ?? '', name: s.name, status: s.status, teacher_id: s.teacher_id, open, ...(renewals.get(s.id) ?? NOT_DUE) };
       }),
     );
     return { students };

@@ -10,9 +10,10 @@ import {
   type SalesPaymentView,
   type SalesQuoteView,
   type SalesReceiptCopied,
+  type SalesTeacherOption,
   type SignedUpload,
 } from '@ab/shared';
-import { Body, Controller, HttpCode, Param, ParseUUIDPipe, Post } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, Param, ParseUUIDPipe, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser, Permissions } from '../../../common/auth/decorators';
 import type { AuthUser } from '../../../common/auth/verify-token';
@@ -21,6 +22,7 @@ import { SalesChatReceipts } from './chat/sales-chat-receipts.service';
 import { SalesMoney } from './sales-money.service';
 import { SalesPackageCancel } from './sales-package-cancel';
 import { SalesMoneySettings } from './sales-money.settings';
+import { SalesTeacherAssign } from './teacher/sales-teacher-assign';
 
 /**
  * «اشتراك جديد» from a sales chat (owner 2026-10-12, R-ASST-01, docs/16 row 16): the price of the package
@@ -35,7 +37,14 @@ export class SalesSubscribeController {
   constructor(
     private readonly money: SalesMoney,
     private readonly cancels: SalesPackageCancel,
+    private readonly teachers: SalesTeacherAssign,
   ) {}
+
+  /** «المعلم/ة»'s choices (owner 2026-10-29): the active teachers, names only. */
+  @Get('teachers')
+  teacherOptions(): Promise<SalesTeacherOption[]> {
+    return this.teachers.options();
+  }
 
   @Post('quote')
   @HttpCode(200)
@@ -43,9 +52,17 @@ export class SalesSubscribeController {
     return this.money.quote(parseOrThrow(salesQuoteSchema, body), user);
   }
 
+  /**
+   * «المعلم/ة» (teacherId, owner 2026-10-29) is saved to students.teacher_id once the package exists (the
+   * ownership was checked by subscribe; a replay assigns again, a no-op): the student channel opens when
+   * the student is subscribed and has that teacher.
+   */
   @Post()
-  create(@Body() body: unknown, @CurrentUser() user: AuthUser): Promise<SalesMoneySubscriptionView> {
-    return this.money.subscribe(parseOrThrow(salesSubscriptionCreateSchema, body), user);
+  async create(@Body() body: unknown, @CurrentUser() user: AuthUser): Promise<SalesMoneySubscriptionView> {
+    const input = parseOrThrow(salesSubscriptionCreateSchema, body);
+    const view = await this.money.subscribe(input, user);
+    if (input.teacherId) await this.teachers.assign({ studentId: input.studentId, teacherId: input.teacherId, actorId: user.id });
+    return view;
   }
 
   /** «إلغاء الباقة» of her student's package (owner 2026-10-28): the admin's rules, her whitelisted view. */

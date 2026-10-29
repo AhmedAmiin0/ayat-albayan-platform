@@ -1,4 +1,5 @@
-import { CHANNEL_WRITES, threadMessages } from '@ab/client-core';
+import { channelMode, liveChannelId, threadMessages } from '@ab/client-core';
+import { useState } from 'react';
 import { ActivityIndicator, FlatList, View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { EmptyState } from '@/core/ui/feedback/EmptyState';
@@ -10,21 +11,31 @@ import { useTheme } from '@/theme';
 import { ChannelBubble } from './ChannelBubble';
 import { ChannelComposer } from './ChannelComposer';
 import { useChannel, useMarkRead, useSendChannel, type ChannelRef } from './channel-queries';
+import { useChannelLive } from './use-channel-live';
+
+/** «للاطلاع فقط», and for a monitor of a closed channel why nobody writes yet. */
+const readOnlyText = (open: boolean | undefined) =>
+  open === false ? `${t.studentChannel.readOnly} ${t.studentChannel.closedMonitor}` : t.studentChannel.readOnly;
 
 /** The viewer's clock (the phone's zone). */
 const phoneTz = (): string => Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC';
 
 /**
  * One student's channel (docs/31 §2): an inverted list, so it opens on the newest message and a new one
- * lands in view; «الرسائل الأقدم» at the top pages back; polled while shown. A participant writes and
- * marks read up to the newest message; a monitor gets «للاطلاع فقط» and no composer.
+ * lands in view; «الرسائل الأقدم» at the top pages back; live over the socket, polled as the fallback. A
+ * participant writes and marks read up to the newest message; before the subscription and the teacher's
+ * assignment (owner 2026-10-29) only the closed line. A monitor gets «للاطلاع فقط» and no composer.
  */
 export function ChannelThread({ refs }: { refs: ChannelRef }) {
   const { color } = useTheme();
-  const query = useChannel(refs);
+  const [live, setLive] = useState(false);
+  const query = useChannel(refs, live);
   const send = useSendChannel(refs);
-  const writes = CHANNEL_WRITES[refs.audience] && query.data?.pages[0]?.read_only !== true;
-  useMarkRead(refs, writes ? query.data?.pages[0]?.messages.at(-1)?.created_at : undefined);
+  const first = query.data?.pages[0];
+  const mode = channelMode(refs.audience, first);
+  const writes = mode === 'write';
+  useChannelLive(refs, { channelId: liveChannelId(mode, first), onLive: setLive });
+  useMarkRead(refs, writes ? first?.messages.at(-1)?.created_at : undefined);
   if (!query.data) {
     return query.isError ? (
       <ErrorState message={t.studentChannel.loadFailed} onRetry={() => void query.refetch()} />
@@ -32,11 +43,18 @@ export function ChannelThread({ refs }: { refs: ChannelRef }) {
       <ActivityIndicator accessibilityLabel={t.common.loading} color={color.lapis} style={{ paddingVertical: 32 }} />
     );
   }
+  if (mode === 'closed') {
+    return (
+      <View style={{ flex: 1 }}>
+        <EmptyState title={t.studentChannel.closed} />
+      </View>
+    );
+  }
   const tz = phoneTz();
   const newestFirst = threadMessages(query.data.pages).reverse();
   return (
     <KeyboardFrame style={{ flex: 1 }}>
-      {!writes ? <Note>{t.studentChannel.readOnly}</Note> : null}
+      {!writes ? <Note>{readOnlyText(first?.open)}</Note> : null}
       {newestFirst.length === 0 ? (
         <View style={{ flex: 1 }}>
           <EmptyState title={t.studentChannel.empty} />

@@ -4,7 +4,7 @@ import { DB, type Db } from '../../../../common/db/db.module';
 import { notFound } from '../../../../common/http/errors';
 import { dbError } from '../../../../common/http/http';
 
-export type FamilyStudentRow = { id: string; code: string | null; name: string; status: StudentStatus };
+export type FamilyStudentRow = { id: string; code: string | null; name: string; status: StudentStatus; teacher_id: string | null };
 
 /** The reads of the salesperson's money endpoints that the admin services do not answer (service role). */
 @Injectable()
@@ -15,11 +15,11 @@ export class SalesFamilyQueries {
   async studentsOfPhone(phone: string): Promise<FamilyStudentRow[]> {
     const { data, error } = await this.db
       .from('students')
-      .select('id, code, name, status, guardian:guardians!inner(phone_e164)')
+      .select('id, code, name, status, teacher_id, guardian:guardians!inner(phone_e164)')
       .eq('guardian.phone_e164', phone)
       .order('created_at');
     if (error) throw dbError(error);
-    return data.map(({ id, code, name, status }) => ({ id, code, name, status }));
+    return data.map(({ id, code, name, status, teacher_id }) => ({ id, code, name, status, teacher_id }));
   }
 
   /** The phone of the student's family chat (guardians.phone_e164); 404 student_not_found. */

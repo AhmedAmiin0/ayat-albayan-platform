@@ -1,4 +1,4 @@
-import { CHANNEL_PAGE_SIZE, type ChannelSenderRole } from '@ab/shared';
+import { CHANNEL_PAGE_SIZE, channelOpen, type ChannelSenderRole } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../../common/db/db.module';
 import { dbError } from '../../../common/http/http';
@@ -59,6 +59,13 @@ export class ChannelQueries {
     const row = { channel_id: input.channelId, profile_id: input.profileId, last_read_at: input.at };
     const { error } = await this.db.from('channel_reads').upsert(row, { onConflict: 'channel_id,profile_id' });
     if (error) throw dbError(error);
+  }
+
+  /** channelOpen, the rule of channel_is_open (migration 961): subscribed (past the trial) and a teacher assigned. */
+  async isOpen(studentId: string): Promise<boolean> {
+    const { data, error } = await this.db.from('students').select('status, teacher_id').eq('id', studentId).maybeSingle();
+    if (error) throw dbError(error);
+    return data !== null && channelOpen(data);
   }
 
   /** The student's current teachers (teachers.id), channel_teacher_ids. */

@@ -1,5 +1,6 @@
 import {
   channelKey,
+  channelPollMs,
   channelMessagesPath,
   channelReadPath,
   olderCursor,
@@ -12,7 +13,8 @@ import { infiniteQueryOptions, queryOptions } from '@tanstack/react-query';
 import { INBOX_REFRESH_MS } from '@/features/messaging/inbox';
 import { apiFetch, apiSend } from '@/lib/http/api';
 
-// The student channel (docs/31 §2). Refreshed like the inbox's open chat: polled while the window has focus.
+// The student channel (docs/31 §2). Lists and badges poll while the window has focus; the thread has its
+// socket (use-channel-live) and polls only as the fallback.
 const poll = () => (document.hasFocus() ? INBOX_REFRESH_MS : false);
 
 export interface ChannelRef {
@@ -20,13 +22,14 @@ export interface ChannelRef {
   studentId: string;
 }
 
-export const channelQuery = ({ audience, studentId }: ChannelRef) =>
+/** `live`: the thread's socket is joined (use-channel-live), so the poll is only the fallback. */
+export const channelQuery = ({ audience, studentId }: ChannelRef, live = false) =>
   infiniteQueryOptions({
     queryKey: channelKey(audience, studentId),
     queryFn: ({ pageParam }) => apiFetch<ChannelPage>(channelMessagesPath({ audience, studentId, before: pageParam || undefined })),
     initialPageParam: '',
     getNextPageParam: olderCursor,
-    refetchInterval: poll,
+    refetchInterval: () => (document.hasFocus() ? channelPollMs(live) : false),
   });
 
 export const sendChannelMessage = (ref: ChannelRef & { body: string }) =>

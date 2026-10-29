@@ -507,6 +507,7 @@
     "avatars.sql.spec.ts",
     "booking-day-times.sql.spec.ts",
     "change-course.sql.spec.ts",
+    "channel-after-subscribe.sql.spec.ts",
     "chat-files.sql.spec.ts",
     "chat-list-auto-rules.sql.spec.ts",
     "chat-list-auto-triggers.sql.spec.ts",
