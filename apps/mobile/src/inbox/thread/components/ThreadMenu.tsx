@@ -16,6 +16,8 @@ interface ThreadMenuProps {
   open: boolean;
   /** In order; each closes the menu, then runs. */
   items: readonly ThreadMenuItem[];
+  /** What a screen reader calls the sheet (default «خيارات المحادثة»). */
+  label?: string;
   onClose: () => void;
 }
 
@@ -24,7 +26,7 @@ interface ThreadMenuProps {
  * the name gets the width on a 360dp Android. A bottom sheet as the bubble menu: one full-width
  * secondary button per action (no primary: none outranks the others), then «إلغاء»; 48pt each.
  */
-export function ThreadMenu({ open, items, onClose }: ThreadMenuProps) {
+export function ThreadMenu({ open, items, label = t.inbox.chatMenu, onClose }: ThreadMenuProps) {
   // A chat left within the wait never runs its pending action (a push from a closed chat).
   const pending = useRef<ReturnType<typeof setTimeout> | null>(null);
   useEffect(() => () => {
@@ -35,7 +37,7 @@ export function ThreadMenu({ open, items, onClose }: ThreadMenuProps) {
     pending.current = setTimeout(item.onPress, AFTER_MENU_MS);
   };
   return (
-    <MenuSheet open={open} label={t.inbox.chatMenu} testID="thread-menu" onClose={onClose}>
+    <MenuSheet open={open} label={label} testID="thread-menu" onClose={onClose}>
       {items.map((item) => (
         <Button key={item.label} variant="secondary" label={item.label} onPress={() => run(item)} />
       ))}

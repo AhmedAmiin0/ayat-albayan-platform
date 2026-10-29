@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { View } from 'react-native';
+import { Pressable, View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
@@ -16,6 +16,8 @@ interface ChatHeaderProps {
   avatar?: ReactNode;
   /** Icon buttons at the inline-end («تحقق من التسجيل»). */
   trailing?: ReactNode;
+  /** Tapping the name or number: the student's details (owner 2026-10-29). Unset = not tappable. */
+  onTitlePress?: () => void;
 }
 
 /**
@@ -25,7 +27,7 @@ interface ChatHeaderProps {
  * back chevron at the inline-start pointing back (the right in Arabic, the left in English), the
  * contact's initials and the name beside it, the icons at the end.
  */
-export function ChatHeader({ title, subtitle, onBack, avatar, trailing }: ChatHeaderProps) {
+export function ChatHeader({ title, subtitle, onBack, avatar, trailing, onTitlePress }: ChatHeaderProps) {
   const { color } = useTheme();
   return (
     <View
@@ -44,7 +46,14 @@ export function ChatHeader({ title, subtitle, onBack, avatar, trailing }: ChatHe
       </IconButton>
       {avatar}
       {/* Hugs the chevron at the inline-start. */}
-      <View testID="chat-names" style={{ flex: 1, minWidth: 0, alignItems: 'flex-start' }}>
+      <Pressable
+        testID="chat-names"
+        disabled={!onTitlePress}
+        onPress={onTitlePress}
+        accessibilityRole={onTitlePress ? 'button' : undefined}
+        accessibilityHint={onTitlePress ? t.inbox.studentDetails : undefined}
+        style={{ flex: 1, minWidth: 0, alignItems: 'flex-start' }}
+      >
         <AppText
           testID="chat-title"
           accessibilityRole="header"
@@ -75,7 +84,7 @@ export function ChatHeader({ title, subtitle, onBack, avatar, trailing }: ChatHe
             {subtitle}
           </AppText>
         ) : null}
-      </View>
+      </Pressable>
       {trailing}
     </View>
   );
