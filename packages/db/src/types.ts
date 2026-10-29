@@ -1271,6 +1271,38 @@ export type Database = {
         };
         Relationships: [];
       };
+      guardian_phones: {
+        Row: {
+          created_at: string;
+          created_by: string | null;
+          guardian_id: string;
+          is_primary: boolean;
+          phone_e164: string;
+        };
+        Insert: {
+          created_at?: string;
+          created_by?: string | null;
+          guardian_id: string;
+          is_primary?: boolean;
+          phone_e164: string;
+        };
+        Update: {
+          created_at?: string;
+          created_by?: string | null;
+          guardian_id?: string;
+          is_primary?: boolean;
+          phone_e164?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'guardian_phones_guardian_id_fkey';
+            columns: ['guardian_id'];
+            isOneToOne: false;
+            referencedRelation: 'guardians';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       guardians: {
         Row: {
           country: string | null;
