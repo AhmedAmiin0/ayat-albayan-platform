@@ -19,6 +19,16 @@ export class SalesTeacherAssign {
     return data.map((t) => ({ id: t.id, name: t.display_name_ar }));
   }
 
+  /**
+   * 400 teacher_not_found BEFORE the package is made: a teacher gone inactive after the cached list
+   * would else leave a saved package and a retry with another pick (a new clientRequestId) a second one.
+   */
+  async ensureActive(teacherId: string): Promise<void> {
+    const { data, error } = await this.db.from('teachers').select('id').eq('id', teacherId).eq('status', 'active').maybeSingle();
+    if (error) throw dbError(error);
+    if (!data) throw badRequest('teacher_not_found');
+  }
+
   /** 400 teacher_not_found for an unknown or inactive teacher; true when the teacher changed. */
   async assign(input: { studentId: string; teacherId: string; actorId: string }): Promise<boolean> {
     const args = { p_student: input.studentId, p_teacher: input.teacherId, p_actor: input.actorId };

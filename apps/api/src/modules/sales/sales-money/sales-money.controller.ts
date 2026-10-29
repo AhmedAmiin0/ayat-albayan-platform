@@ -60,6 +60,7 @@ export class SalesSubscribeController {
   @Post()
   async create(@Body() body: unknown, @CurrentUser() user: AuthUser): Promise<SalesMoneySubscriptionView> {
     const input = parseOrThrow(salesSubscriptionCreateSchema, body);
+    if (input.teacherId) await this.teachers.ensureActive(input.teacherId);
     const view = await this.money.subscribe(input, user);
     if (input.teacherId) await this.teachers.assign({ studentId: input.studentId, teacherId: input.teacherId, actorId: user.id });
     return view;

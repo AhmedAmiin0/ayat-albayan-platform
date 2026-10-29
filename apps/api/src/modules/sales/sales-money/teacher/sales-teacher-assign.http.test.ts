@@ -2,7 +2,9 @@ import type { NestFastifyApplication } from '@nestjs/platform-fastify';
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi, type MockInstance } from 'vitest';
 import { STUDENT_ID } from '../../../finance/subscriptions/money/money.fakes';
 import { moneyApp, resetMocks, SALES_A, type Mocks } from '../../../finance/subscriptions/test-app';
+import { badRequest } from '../../../../common/http/errors';
 import { CREATE, salesDefaults } from '../sales-money.fakes';
+import { SalesMoney } from '../sales-money.service';
 import { SalesTeacherAssign } from './sales-teacher-assign';
 
 const TEACHER = '7a000000-0000-4000-8000-000000000001';
@@ -14,18 +16,31 @@ describe('POST /sales/subscriptions with teacherId; GET /sales/subscriptions/tea
   let m: Mocks;
   let call: Awaited<ReturnType<typeof moneyApp>>['call'];
   let assign: MockInstance<SalesTeacherAssign['assign']>;
+  let active: MockInstance<SalesTeacherAssign['ensureActive']>;
+  let subscribe: MockInstance<SalesMoney['subscribe']>;
 
   beforeAll(async () => {
     ({ app, m, call } = await moneyApp());
     const service = app.get(SalesTeacherAssign);
     assign = vi.spyOn(service, 'assign').mockResolvedValue(true);
     vi.spyOn(service, 'options').mockResolvedValue([{ id: TEACHER, name: 'أبرار' }]);
+    active = vi.spyOn(service, 'ensureActive').mockResolvedValue(undefined);
+    subscribe = vi.spyOn(app.get(SalesMoney), 'subscribe');
   });
   afterAll(() => app.close());
   beforeEach(() => {
     resetMocks(m);
     salesDefaults(m);
     assign.mockClear();
+    subscribe.mockClear();
+  });
+
+  it('a teacher gone inactive: 400 teacher_not_found before any package is made', async () => {
+    active.mockRejectedValueOnce(badRequest('teacher_not_found'));
+    const res = await call({ method: 'POST', url: '/sales/subscriptions', token: 'salesA', body: { ...CREATE, teacherId: TEACHER } });
+    expect([res.statusCode, res.json().code]).toEqual([400, 'teacher_not_found']);
+    expect(subscribe).not.toHaveBeenCalled();
+    expect(assign).not.toHaveBeenCalled();
   });
 
   it('the package is made, then her pick is saved as the student’s teacher, she is the actor', async () => {
