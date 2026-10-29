@@ -26,11 +26,13 @@ export const isInvoiceMime = (mime: string | null): boolean => (INVOICE_MIMES as
 
 /**
  * The gate of a file we may serve: inbound, with a media id (or an old-CRM file link, isCrmHistoryRow),
- * and a mime `allow` accepts. The default
+ * and a mime `allow` accepts. An inbound file with neither (imported, its link lost) is 410 media_expired,
+ * an honest «not available» instead of a «try again» that never works (owner 2026-10-29); a text stays 400. The default
  * (images / PDFs) keeps the booking's «من الشات» and the sales receipt copy narrow; the chat bubble
  * (W6) passes isChatViewMime for voice notes and videos too (owner 2026-10-19 #1).
  */
 export function servable(msg: MediaMessage, allow: (mime: string | null) => boolean = isInvoiceMime): MediaMessage {
+  if (msg.direction === 'inbound' && msg.media_mime && !msg.media_id && !isCrmHistoryRow(msg)) throw waHttpError('media_expired', HttpStatus.GONE);
   if (msg.direction !== 'inbound' || !(msg.media_id || isCrmHistoryRow(msg)) || !allow(msg.media_mime)) {
     throw waHttpError('invoice_message', HttpStatus.BAD_REQUEST);
   }
@@ -60,7 +62,7 @@ export function mediaExpired(msg: Pick<MediaMessage, 'created_at' | 'media_path'
  * (R-MSG-06). The webhook stores only Meta's media id, so the first time an admin needs the file (a thumbnail, «من الشات» on a booking) it is
  * fetched from Meta and cached in the private `wa-media` bucket; later calls read the cache.
  * 404 message_not_found, 400 invoice_message (not inbound, or not an image / PDF), 410 media_expired
- * (older than 29 days, or Meta refuses the id), 413 invoice_too_large (chatFileMaxBytes). The file is fetched with the
+ * (older than 29 days, Meta refuses the id, or an imported file with no id and no CRM link), 413 invoice_too_large (chatFileMaxBytes). The file is fetched with the
  * client of the NUMBER it came in on (mediaSource; docs/12 §13.4, docs/23c): 409 crm_no_media for the old
  * CRM number's history (no call), 503 line_not_configured for a chat message while the chat
  * line is not configured (module mode: while its number has no client), 502 meta_error when Meta refuses the line's token (190 / 10 / 200),

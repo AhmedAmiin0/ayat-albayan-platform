@@ -22,6 +22,7 @@ interface Ctx {
 /**
  * Text, else the caption-less media's CRM URL (kept to fetch into Storage later; the content check
  * needs a body on outbound rows without media_path), else a type marker such as '[audio]'.
+ * An inbound file's body is always its link (inboundFile overrides this in columnsOf).
  */
 export function messageBody(row: CrmRow): string {
   return (
@@ -62,6 +63,22 @@ function check(row: CrmRow, ctx: Ctx): Valid | Pick<RowIssue, 'code' | 'field'> 
   return { e164: contact.phone.e164, direction, status, createdAt };
 }
 
+/**
+ * An inbound file (a mime and a CRM link): the body is the link, which the API fetches once
+ * (crm-history-url), never the text. A document's content_text is its file name (the receipt bug,
+ * owner 2026-10-29): kept as media_name (DB check: 1-200 chars). Every other row adds no key, so its
+ * payload hash, and the plan of a re-run, stays the same. ponytail: an imported photo's caption is
+ * lost; add a caption column if the owner wants it.
+ */
+function inboundFile(row: CrmRow, v: Valid): Record<string, ColumnValue> {
+  const mime = text(row, 'media_type');
+  const link = text(row, 'media_url');
+  if (v.direction !== 'inbound' || !mime || !link) return {};
+  const name = text(row, 'content_text');
+  if (!name || /^(image|video|audio)\//i.test(mime)) return { body: link };
+  return { body: link, media_name: name.slice(0, 200) };
+}
+
 function columnsOf(row: CrmRow, v: Valid, ctx: Ctx): Record<string, ColumnValue> {
   const template = text(row, 'template_name');
   const outbound = v.direction === 'outbound';
@@ -79,6 +96,7 @@ function columnsOf(row: CrmRow, v: Valid, ctx: Ctx): Record<string, ColumnValue>
     read_at: outbound ? null : v.createdAt,
     media_mime: text(row, 'media_type'),
     reply_to_wa_id: ctx.wamidOf.get(field(row, 'reply_to_message_id')) ?? null,
+    ...inboundFile(row, v),
   };
 }
 
