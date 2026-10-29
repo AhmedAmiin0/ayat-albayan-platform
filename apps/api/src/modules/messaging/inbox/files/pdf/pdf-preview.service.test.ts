@@ -2,13 +2,10 @@ import { HttpStatus } from '@nestjs/common';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { type MediaMessage, waHttpError } from '../../../whatsapp';
 import { ask, jpgs, PDF_BYTES, setup, status } from './pdf-preview.fakes';
-import { pdfPageCount, renderPdfPages } from './pdf-render';
+import { pdfPageCount, renderPdfPages } from './pdf-client';
 
-vi.mock('./pdf-render', async (importOriginal) => ({
-  ...(await importOriginal<Record<string, unknown>>()),
-  pdfPageCount: vi.fn(),
-  renderPdfPages: vi.fn(),
-}));
+// The sandbox's two calls (pdf-client.ts); the slot and PdfToolError stay pdf-render's own.
+vi.mock('./pdf-client', () => ({ pdfPageCount: vi.fn(), renderPdfPages: vi.fn() }));
 const count = vi.mocked(pdfPageCount);
 const render = vi.mocked(renderPdfPages);
 const EXPIRES = '2026-10-29T13:00:00.000Z';

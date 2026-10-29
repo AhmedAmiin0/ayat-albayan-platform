@@ -9,7 +9,7 @@
       "ignoreBinaries": ["supabase"]
     },
     "apps/api": {
-      "entry": ["src/main.ts", "src/scripts/*.ts"],
+      "entry": ["src/main.ts", "src/scripts/*.ts", "src/modules/messaging/inbox/files/pdf/pdf-sandbox.ts"],
       "project": ["src/**/*.ts"],
       "ignore": ["src/modules/*/*/index.ts"],
       "ignoreDependencies": ["@fontsource/amiri", "@fontsource/ibm-plex-sans-arabic"]

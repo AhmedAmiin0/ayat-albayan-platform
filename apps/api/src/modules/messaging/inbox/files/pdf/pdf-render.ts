@@ -11,9 +11,12 @@ export type PdfExit = { code: number | null; stdout: string; timedOut: boolean }
 export type PdfRun = (tool: PopplerTool, args: readonly string[]) => Promise<PdfExit>;
 export type PdfPageImage = { page: number; jpg: Uint8Array };
 
-/** 'busy': the render queue is full, try again; 'failed': the tool crashed, hung or could not start (not stored). */
+/**
+ * 'busy': the render queue is full, try again; 'failed': the tool crashed, hung or could not start (not stored);
+ * 'unavailable': no PDF sandbox to ask (pdf-client.ts: local dev, tests, CI, ayat-pdf restarting).
+ */
 export class PdfToolError extends Error {
-  constructor(readonly reason: 'busy' | 'failed') {
+  constructor(readonly reason: 'busy' | 'failed' | 'unavailable') {
     super(`pdf preview ${reason}`);
   }
 }
@@ -21,15 +24,16 @@ export class PdfToolError extends Error {
 // Calibration knobs (docs/09: measure with a scanned 10 MB PDF on staging).
 const TIMEOUT_MS: Record<PopplerTool, number> = { pdfinfo: 5_000, pdftoppm: 20_000 };
 /**
- * Address space per run: a crafted page fails its own malloc, never the API's memory. Resources only, like
- * nice, choom and the timeout: an exploited poppler is still uid node in the API container (docs/09).
+ * Address space per run: a crafted page fails its own malloc, never the sandbox's node. Resources only, like
+ * nice, choom and the timeout; the isolation is the container: this runs in ayat-pdf only (pdf-sandbox.ts:
+ * no secrets, no network, read-only root, docs/09 «PDF sandbox»), never in an API copy (pdf-client.ts).
  */
 const AS_BYTES = 256 * 1024 * 1024;
 /** stdout kept per run; a pdfinfo report this long (a padded Title) may have lost its «Pages:» line. */
 const STDOUT_MAX = 64 * 1024;
 /** pdfinfo cannot open the file (1: broken, or a user password) or refuses it (3: permissions): it never previews. */
 const NEVER_OPENS = new Set([1, 3]);
-/** One render per API copy at a time; this many may wait, the next is 'busy'. */
+/** One render per process at a time (each API copy, and ayat-pdf); this many may wait, the next is 'busy'. */
 const QUEUE_MAX = 8;
 
 /**
@@ -60,8 +64,8 @@ let running = false;
 const waiting: (() => void)[] = [];
 
 /**
- * `fn` alone in this process: poppler's memory and CPU stay one run deep per API copy. The caller takes
- * the slot before it reads the PDF from storage, so a waiting request holds no PDF bytes.
+ * `fn` alone in this process: one PDF in flight per API copy, one poppler run at a time in ayat-pdf. The
+ * caller takes the slot before it reads the PDF (from storage, from the socket), so a waiting one holds none.
  */
 export async function inSlot<T>(fn: () => Promise<T>): Promise<T> {
   if (running) {

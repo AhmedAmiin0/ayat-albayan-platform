@@ -2,8 +2,9 @@
 # /opt/ayat-albayan-staging. Only ayat-lb is published, on localhost: the host Caddy (not in this repo,
 # shared with the CRM) keeps proxying the API domain to 127.0.0.1:3110 unchanged.
 # Never touches the CRM stack in /opt/wacrm. Roll it with roll.sh (one build, one container at a time).
-# Memory (8 GB VPS shared with the CRM): 2 × 512 MB API + 1 GB worker (512 MB Node heap + Chromium PDFs) + 64 MB LB
-# + 96 MB Redis ≈ 2.2 GB. After a deploy, measure the worker's RSS during a PDF render (docker stats) and adjust.
+# Memory (8 GB VPS shared with the CRM): 2 × 480 MB API + 1 GB worker (512 MB Node heap + Chromium PDFs) + 128 MB
+# PDF sandbox + 64 MB LB + 96 MB Redis = 2272 MB ≈ 2.2 GB. After a deploy, measure the worker's RSS during a report
+# PDF and ayat-pdf's during a scanned chat PDF (docker stats) and adjust.
 name: ayat-albayan-staging
 
 x-app: &app
@@ -60,26 +61,72 @@ services:
           # 512 MB heap + Chromium's own processes (outside the heap): 768 MB left Chromium too little.
           memory: 1024M
 
+  # 480M, not 512M: poppler (chat PDF previews) left these copies for ayat-pdf, which took the 2 × 32M.
   ayat-api-a:
     <<: *app
     environment:
       <<: *api-env
       # An admin save here also reloads the other copy's config at once (kickConfigReload, docs/09).
       PEER_URLS: http://ayat-api-b:3000
+    volumes:
+      - pdf-sock:/run/pdf:ro
     deploy:
       resources:
         limits:
-          memory: 512M
+          memory: 480M
 
   ayat-api-b:
     <<: *app
     environment:
       <<: *api-env
       PEER_URLS: http://ayat-api-a:3000
+    volumes:
+      - pdf-sock:/run/pdf:ro
     deploy:
       resources:
         limits:
-          memory: 512M
+          memory: 480M
+
+  # Chat PDF previews (docs/09 «PDF sandbox»): pdfinfo / pdftoppm parse a stranger's bytes HERE, never in an
+  # API copy. Same image (poppler-utils), its own command, and nothing worth stealing: no env_file (no
+  # secret), no network at all, a read-only root, no capabilities, no setuid. The API copies reach it only
+  # through the unix socket /run/pdf/pdf.sock on the pdf-sock volume (read-only on their side). Not `<<: *app`:
+  # that anchor carries env_file. Its node runs as PID 1 and handles SIGTERM (finishes the render in flight).
+  ayat-pdf:
+    image: ayat-api:staging
+    pull_policy: never
+    command: ["node", "dist/modules/messaging/inbox/files/pdf/pdf-sandbox.js"]
+    user: node
+    environment:
+      NODE_ENV: production
+      # Node's own heap stays small: the container's memory is for poppler (the OOM killer's first pick, choom).
+      NODE_OPTIONS: --max-old-space-size=64
+    network_mode: none
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    # The PDF and its JPEGs, one run at a time (charged to the memory limit below).
+    tmpfs:
+      - /tmp:size=64m
+    pids_limit: 64
+    volumes:
+      - pdf-sock:/run/pdf
+    restart: unless-stopped
+    stop_grace_period: 30s
+    # The socket exists only once this run listens (a stale one is removed first): no second node in 128 MB.
+    healthcheck:
+      test: ["CMD", "test", "-S", "/run/pdf/pdf.sock"]
+      interval: 5s
+      timeout: 3s
+      retries: 3
+      start_period: 30s
+    deploy:
+      resources:
+        limits:
+          # ponytail: 128M = node (~50M) + one pdftoppm; a scanned page that needs more is killed (503, retried
+          # after 10 min). Measure with docker stats on a scanned 10 MB PDF (docs/09) before giving it more.
+          memory: 128M
+          cpus: "1"
 
   # Round robin over the two copies with active health checks; a refused connection is retried on the other.
   ayat-lb:
@@ -110,3 +157,7 @@ services:
       resources:
         limits:
           memory: 96M
+
+volumes:
+  # The PDF sandbox's socket only (no data): node-owned on first use, from /run/pdf in the image (apps/api/Dockerfile).
+  pdf-sock:

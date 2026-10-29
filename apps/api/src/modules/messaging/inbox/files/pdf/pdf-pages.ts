@@ -4,7 +4,7 @@ import { PDF_PREVIEW_PAGES } from '@ab/shared';
 // arguments and outputs, and two per-process maps (shared in-flight work, recent failures).
 
 /** Pages 2+ render in runs of this many (2–6, 7–11 …), so page 2 never waits for page 30. */
-const PDF_RUN = 5;
+export const PDF_RUN = 5;
 /** A crafted «Pages: 99999999999» is stored as this many: never a column overflow, a 500 and a probe per view. */
 const PDF_PAGES_MAX = 100_000;
 

@@ -6,10 +6,14 @@ import { type InboundFile, waHttpError } from '../../../whatsapp';
 import { ThreadMediaService } from '../thread-media.service';
 import { FailedRecently, InFlight, pageRange, type PageRange } from './pdf-pages';
 import { PdfPreviewQueries, type PdfDoc } from './pdf-preview.queries';
-import { inSlot, PdfToolError, pdfPageCount, renderPdfPages, type PdfPageImage } from './pdf-render';
+// poppler runs in ayat-pdf (pdf-client.ts over its socket), never here; pdf-render gives the slot and the error.
+import { pdfPageCount, renderPdfPages } from './pdf-client';
+import { inSlot, PdfToolError, type PdfPageImage } from './pdf-render';
 
 /** A page run that failed is refused for this long (per process) instead of taking the slot again. */
 const FAILED_MS = 10 * 60_000;
+/** The 503's code per PdfToolError reason. */
+const ERROR_CODE: Record<PdfToolError['reason'], string> = { busy: 'pdf_busy', failed: 'pdf_render_failed', unavailable: 'pdf_unavailable' };
 
 /**
  * A chat PDF like WhatsApp's (owner 2026-10-29): GET /threads/:phone/messages/:id/pdf/:page signs one
@@ -19,7 +23,7 @@ const FAILED_MS = 10 * 60_000;
  * Nothing renders ahead: pdfinfo and page 1 on the first request, pages 2+ in runs (pageRange) when the
  * viewer asks; the images stay in wa-media/pdf/{message_id}/{page}.jpg and render again if ever missing.
  * 400 invoice_message (not a PDF) / page_out_of_range, 422 pdf_no_preview (encrypted, broken), 503
- * pdf_busy / pdf_render_failed (a retry may work; nothing stored).
+ * pdf_busy / pdf_render_failed / pdf_unavailable (no sandbox: local dev, CI; a retry may work; nothing stored).
  * ponytail: the Meta / CRM download inside bubbleObject (the first view of an uncached PDF) runs before the
  * render slot, unbounded as the photo bubbles' is; the slot then reads that stored copy once more. Pass the
  * fresh bytes to the probe if that ever shows in memory.
@@ -87,7 +91,10 @@ export class PdfPreviewService {
     );
   }
 
-  /** 'busy' → 503 pdf_busy; 'failed' → 503 pdf_render_failed, and the key is refused for FAILED_MS. */
+  /**
+   * 'busy' → 503 pdf_busy; 'unavailable' → 503 pdf_unavailable (the sandbox, not the PDF: never remembered);
+   * 'failed' → 503 pdf_render_failed, and the key is refused for FAILED_MS.
+   */
   private async guard<T>(key: string, fn: () => Promise<T>): Promise<T> {
     if (this.failed.has(key)) throw waHttpError('pdf_render_failed', HttpStatus.SERVICE_UNAVAILABLE);
     try {
@@ -95,7 +102,7 @@ export class PdfPreviewService {
     } catch (e) {
       if (!(e instanceof PdfToolError)) throw e;
       if (e.reason === 'failed') this.failed.add(key);
-      throw waHttpError(e.reason === 'busy' ? 'pdf_busy' : 'pdf_render_failed', HttpStatus.SERVICE_UNAVAILABLE);
+      throw waHttpError(ERROR_CODE[e.reason], HttpStatus.SERVICE_UNAVAILABLE);
     }
   }
 }

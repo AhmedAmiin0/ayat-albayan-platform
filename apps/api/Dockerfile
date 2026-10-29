@@ -39,6 +39,10 @@ RUN printf '%s\n' '%PDF-1.4' \
       pdftoppm -jpeg -jpegopt quality=70 -scale-to 1600 -f 1 -l 1 /tmp/smoke.pdf /tmp/smoke \
  && test -s /tmp/smoke-1.jpg \
  && rm -f /tmp/smoke.pdf /tmp/smoke-1.jpg
+# Those runs happen in ayat-pdf on staging (docs/09 «PDF sandbox»), never in an API copy. Its socket folder: a
+# fresh pdf-sock volume mounted here takes this owner and mode, so ayat-pdf (uid node) listens and the API
+# copies (uid node too) connect; nobody else.
+RUN install -d -o node -g node -m 0700 /run/pdf
 USER node
 WORKDIR /repo/apps/api
 EXPOSE 3000

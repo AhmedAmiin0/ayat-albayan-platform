@@ -1,14 +1,12 @@
 import { INVOICE_MAX_BYTES } from '@ab/shared';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { ask, jpgs, PDF_BYTES, setup, status } from './pdf-preview.fakes';
-import { pdfPageCount, PdfToolError, renderPdfPages } from './pdf-render';
+import { pdfPageCount, renderPdfPages } from './pdf-client';
+import { PdfToolError } from './pdf-render';
 
-// The limits a hostile or huge PDF meets in PdfPreviewService (the timeouts and the memory cap: pdf-render.spawn.test.ts).
-vi.mock('./pdf-render', async (importOriginal) => ({
-  ...(await importOriginal<Record<string, unknown>>()),
-  pdfPageCount: vi.fn(),
-  renderPdfPages: vi.fn(),
-}));
+// The limits a hostile or huge PDF meets in PdfPreviewService (the timeouts and the memory cap: pdf-render.spawn.test.ts;
+// the socket's own: pdf-client.test.ts).
+vi.mock('./pdf-client', () => ({ pdfPageCount: vi.fn(), renderPdfPages: vi.fn() }));
 const count = vi.mocked(pdfPageCount);
 const render = vi.mocked(renderPdfPages);
 
@@ -44,6 +42,16 @@ describe('PdfPreviewService limits', () => {
     // A failing page run is refused on its own: page 1 of another PDF still renders.
     t.objects.set('m2.pdf', PDF_BYTES);
     await expect(t.service.page(ask(1, 'm2'))).resolves.toMatchObject({ page: 1 });
+  });
+
+  it('no sandbox (local dev, CI, ayat-pdf restarting): 503 pdf_unavailable, nothing stored or remembered: the next view asks again', async () => {
+    const t = setup();
+    t.objects.set('m1.pdf', PDF_BYTES);
+    count.mockRejectedValueOnce(new PdfToolError('unavailable'));
+    expect(await status(t.service.page(ask(1)))).toMatchObject({ status: 503, body: { code: 'pdf_unavailable' } });
+    expect(t.queries.setDoc).not.toHaveBeenCalled();
+    await expect(t.service.page(ask(1))).resolves.toMatchObject({ page: 1, pages: 12 });
+    expect(count).toHaveBeenCalledTimes(2);
   });
 
   it('one render per process and 8 waiting: the next is 503 pdf_busy, nothing stored, and it works once the queue drains', async () => {

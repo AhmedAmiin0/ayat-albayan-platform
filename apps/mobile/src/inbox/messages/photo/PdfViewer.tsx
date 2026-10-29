@@ -1,5 +1,5 @@
 import { type MessageView, PDF_PREVIEW_PAGES, pdfMetaLine, type ThreadPdfPage } from '@ab/shared';
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import { FlatList, Modal, StatusBar, View, type ViewToken } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { t } from '@/core/lib/i18n/i18n';
@@ -38,11 +38,12 @@ export function PdfViewer({ message: m, phone, doc, name, onClose }: PdfViewerPr
   const still = useA11yPref('reduceMotion');
   const [zoomed, setZoomed] = useState<{ uri: string; label: string } | null>(null);
   const [current, setCurrent] = useState(1);
-  // The same function for the list's whole life: a new one on a render would throw.
-  const onViewable = useRef(({ viewableItems }: { viewableItems: ViewToken<number>[] }) => {
+  // The same function for the list's whole life (a new one on a render would throw): a state's first value,
+  // never read from a ref during render.
+  const [onViewable] = useState(() => ({ viewableItems }: { viewableItems: ViewToken<number>[] }) => {
     const shown = viewableItems[0]?.item;
     if (typeof shown === 'number') setCurrent(shown);
-  }).current;
+  });
   const pages = Array.from({ length: Math.min(doc.pages, PDF_PREVIEW_PAGES) }, (_, i) => i + 1);
   const more = doc.pages > PDF_PREVIEW_PAGES ? t.inbox.pdf.more.replace('{n}', String(PDF_PREVIEW_PAGES)) : null;
   return (

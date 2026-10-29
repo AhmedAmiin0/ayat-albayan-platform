@@ -15,8 +15,8 @@ const old = (compose) => ({
   'rollback.sh.old': 'BAD',
 });
 
-test('to the single container: build, stop+rm the worker and the LB, THEN compose up, then the copies, then /health', () => {
-  const r = run('rollback.sh', { up: ['ayat-worker', 'ayat-lb', 'ayat-api-a', 'ayat-api-b'], files: old(SINGLE) });
+test('to the single container: build, stop+rm the worker and the LB, THEN compose up, then the copies and the sandbox, then /health', () => {
+  const r = run('rollback.sh', { up: ['ayat-worker', 'ayat-lb', 'ayat-api-a', 'ayat-api-b', 'ayat-pdf'], files: old(SINGLE) });
   assert.equal(r.code, 0, r.out);
   const i = (s) => at(r.log, s);
   const up = i('compose -p ayat-albayan-staging up -d');
@@ -24,8 +24,8 @@ test('to the single container: build, stop+rm the worker and the LB, THEN compos
   for (const s of ['stop -t 30 id-ayat-worker', 'rm id-ayat-worker', 'stop -t 30 id-ayat-lb', 'rm id-ayat-lb']) {
     assert.ok(i(s) >= 0 && i(s) < up, `${s} before compose up:\n${r.log.join('\n')}`);
   }
-  for (const s of ['stop -t 30 id-ayat-api-a', 'rm id-ayat-api-b']) assert.ok(i(s) > up, `${s} after compose up`);
-  assert.ok(i('curl -fsS --retry 60') > i('rm id-ayat-api-b'));
+  for (const s of ['stop -t 30 id-ayat-api-a', 'rm id-ayat-api-b', 'stop -t 30 id-ayat-pdf']) assert.ok(i(s) > up, `${s} after compose up`);
+  assert.ok(i('curl -fsS --retry 60') > i('rm id-ayat-pdf'));
   assert.match(r.log[i('curl')], /http:\/\/127\.0\.0\.1:3110\/health/);
   assert.ok(i('image prune -f --filter label=com.docker.compose.project=ayat-albayan-staging') > i('curl'));
   assert.ok(i('rm -f') < 0, 'never a SIGKILL');

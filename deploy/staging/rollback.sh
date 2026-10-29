@@ -32,16 +32,19 @@ stop() {
 }
 
 if grep -q '^  ayat-lb:' docker-compose.yml; then
-  # The previous layout was this one: roll it again (roll.sh refuses code from before APP_ROLE).
+  # The previous layout was this one: roll it again (roll.sh refuses code from before APP_ROLE). A previous
+  # compose file without ayat-pdf: its roll.sh removes that container as an orphan (the copies of then render
+  # in their own process).
   sh roll.sh
 else
   # The previous layout was the single ayat-api container (every job + 3110). Build first (the new copies keep
   # serving meanwhile), then the worker (the one job runner) and the LB (it holds 3110) stop BEFORE the single
-  # container starts, so jobs never run in two processes; the API copies stop after it (no jobs there).
+  # container starts, so jobs never run in two processes; the API copies and the PDF sandbox stop after it (no
+  # jobs there).
   dc build
   stop ayat-worker ayat-lb
   dc up -d
-  stop ayat-api-a ayat-api-b
+  stop ayat-api-a ayat-api-b ayat-pdf
   curl -fsS --retry 60 --retry-delay 2 --retry-all-errors http://127.0.0.1:3110/health
   echo
   docker image prune -f --filter "label=com.docker.compose.project=$PROJECT" >/dev/null
