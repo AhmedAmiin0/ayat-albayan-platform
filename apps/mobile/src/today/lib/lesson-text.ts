@@ -47,9 +47,12 @@ export function studentNames(lesson: TodayLesson): string {
   return lesson.students.map((s) => s.name).join(t.common.listSeparator);
 }
 
-/** «أ. سلمى · 30 دقيقة · تجريبية»: a Today row's second line (docs/29 §4). */
+/**
+ * «تجريبية · أ. سلمى · 30 دقيقة»: a Today (and sales) row's second line (docs/29 §4). The kind leads so a
+ * one-line cut takes the teacher's name or the length, never «تجريبية» / «تعويضية».
+ */
 export function rowSubtitle(lesson: TodayLesson): string {
   const teacher = t.today.teacherTitled.replace('{teacher}', teacherName(lesson.teacher, locale));
   const kind = lesson.makeup ? t.booking.makeup.tag : lesson.trial ? t.schedule.trialTag : undefined;
-  return [teacher, durationLabel(lesson), kind].filter((part): part is string => part !== undefined).join(' · ');
+  return [kind, teacher, durationLabel(lesson)].filter((part): part is string => part !== undefined).join(' · ');
 }

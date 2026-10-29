@@ -1461,7 +1461,7 @@
   },
   "src/sales/components/SalesLessonRow.tsx": {
     "ab/module-boundaries": {
-      "count": 3
+      "count": 1
     }
   },
   "src/sales/components/SalesSection.tsx": {
@@ -1506,7 +1506,7 @@
   },
   "src/sales/screens/SalesScheduleScreen.tsx": {
     "ab/module-boundaries": {
-      "count": 3
+      "count": 2
     }
   },
   "src/sales/screens/SalesTeacherScreen.tsx": {

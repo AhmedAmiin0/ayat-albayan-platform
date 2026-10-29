@@ -1,6 +1,7 @@
 import type { LessonStatus } from '@ab/shared';
 import { fireEvent, screen, within } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
+import { statusWord } from '@/core/ui/feedback/lesson-status';
 import { fakeNow } from '@/test/fake-now';
 import { renderWithQuery } from '@/test/query';
 import { scheduleLesson, teacher } from '../testing/fixtures';
@@ -38,7 +39,7 @@ test('the status pills carry the day\'s counts; «الكل» is chosen first and
   expect(pills().getByRole('tab', { name: `${s.cancelled} 1` })).toBeTruthy();
 });
 
-test('«يحتاج تأكيد» keeps only the unconfirmed lessons, «ملغاة» the cancelled; «الكل» brings all back', async () => {
+test('«للتأكيد» keeps only the unconfirmed lessons, «ملغاة» the cancelled; «الكل» brings all back', async () => {
   await renderWithQuery(<SalesScheduleScreen />);
   await fireEvent.press(await screen.findByRole('tab', { name: `${s.scheduled} 2` }));
   expect(screen.getByText('سلمى')).toBeTruthy();
@@ -52,10 +53,29 @@ test('«يحتاج تأكيد» keeps only the unconfirmed lessons, «ملغاة
   expect(screen.getByText('مريم')).toBeTruthy();
 });
 
+test('under «الكل» each row says its status; under «للتأكيد» the rows drop the word the pill already says', async () => {
+  await renderWithQuery(<SalesScheduleScreen />);
+  expect(await screen.findByText('نور')).toBeTruthy();
+  // The pill's text is its label and count together («للتأكيد 2»), so only the rows match the bare word.
+  expect(screen.getAllByText(statusWord('scheduled'))).toHaveLength(2);
+  await fireEvent.press(screen.getByRole('tab', { name: `${s.scheduled} 2` }));
+  expect(screen.getByText('سلمى')).toBeTruthy();
+  expect(screen.queryByText(statusWord('scheduled'))).toBeNull();
+});
+
 test('a pill with no lessons says so, not that the day is empty', async () => {
   mockApiFetch.mockImplementation(async (path: string) => (path === '/sales/teachers' ? [teacher()] : { date: '2026-10-12', lessons: [one('a', 'سلمى', 'scheduled')] }));
   await renderWithQuery(<SalesScheduleScreen />);
   await fireEvent.press(await screen.findByRole('tab', { name: `${s.confirmed} 0` }));
   expect(screen.getByText(s.empty)).toBeTruthy();
   expect(screen.queryByText(t.sales.academySchedule.empty)).toBeNull();
+});
+
+test('«ملغاة» groups two statuses, so each row still says who cancelled', async () => {
+  const cancelled = [one('d', 'نور', 'cancelled_by_admin'), one('e', 'ليلى', 'cancelled_by_teacher')];
+  mockApiFetch.mockImplementation(async (path: string) => (path === '/sales/teachers' ? [teacher()] : { date: '2026-10-12', lessons: cancelled }));
+  await renderWithQuery(<SalesScheduleScreen />);
+  await fireEvent.press(await screen.findByRole('tab', { name: `${s.cancelled} 2` }));
+  expect(screen.getByText(statusWord('cancelled_by_admin'))).toBeTruthy();
+  expect(screen.getByText(statusWord('cancelled_by_teacher'))).toBeTruthy();
 });

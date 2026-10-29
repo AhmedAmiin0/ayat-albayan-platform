@@ -59,14 +59,15 @@ test('sales: a tap opens the details with every clock, the lesson link, her move
   expect(screen.getByRole('button', { name: t.lessons.copyLink })).toBeTruthy();
   // Any student's name opens their details (owner 2026-10-28).
   expect(screen.getByRole('button', { name: t.lessons.sheet.openStudent.replace('{name}', 'سلمى') })).toBeTruthy();
-  // Not running: no «ادخل الحلقة» in the sheet (the running row keeps its own).
-  expect(screen.getAllByRole('button', { name: t.classroom.enter })).toHaveLength(1);
+  // Not running: no «ادخل الحلقة» in the sheet, and none on the rows (the running one's is in its sheet).
+  expect(screen.queryByRole('button', { name: t.classroom.enter })).toBeNull();
 });
 
 test('sales: a running lesson keeps «ادخل الحلقة» and «جارية الآن» in the sheet', async () => {
   await renderWithQuery(<SalesScheduleScreen />);
   await openRow('يوسف أحمد');
-  expect(screen.getAllByRole('button', { name: t.classroom.enter })).toHaveLength(2);
-  // The row's chip and the sheet's.
+  // The sheet's only: the row carries no button.
+  expect(screen.getAllByRole('button', { name: t.classroom.enter })).toHaveLength(1);
+  // The row's word and the sheet's.
   expect(screen.getAllByText(t.lessons.sheet.live)).toHaveLength(2);
 });

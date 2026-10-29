@@ -43,10 +43,10 @@ test('names of every student on the lesson', () => {
   expect(studentNames(lesson({ id: 'g', students: [yusuf, jana] }))).toBe('يوسف أحمد، جنى وليد');
 });
 
-test('a row line: the titled teacher, the length, then trial or makeup', () => {
+test('a row line: trial or makeup first (a one-line cut never drops it), the titled teacher, the length', () => {
   expect(rowSubtitle(pending)).toBe(`أ. أبرار · ${t.enums.duration['45']}`);
-  expect(rowSubtitle(lesson({ id: 'tr', trial: true }))).toBe(`أ. أبرار · ${t.enums.duration['45']} · ${t.schedule.trialTag}`);
+  expect(rowSubtitle(lesson({ id: 'tr', trial: true }))).toBe(`${t.schedule.trialTag} · أ. أبرار · ${t.enums.duration['45']}`);
   expect(rowSubtitle(lesson({ id: 'mk', makeup: true, trial: true }))).toBe(
-    `أ. أبرار · ${t.enums.duration['45']} · ${t.booking.makeup.tag}`,
+    `${t.booking.makeup.tag} · أ. أبرار · ${t.enums.duration['45']}`,
   );
 });
