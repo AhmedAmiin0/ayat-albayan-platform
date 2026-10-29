@@ -85,11 +85,38 @@ export function isWaAuthFailure(info: WaAuthInfo | null | undefined): boolean {
 }
 
 /**
- * messages.error_code values where the admin's «جرّب تاني» can't help: not on WhatsApp, the 24 h
- * window closed (a template is needed), too late for the lesson, no longer wanted, or already
- * handed to the admin's own WhatsApp (that prompt answers it).
+ * messages.error_code values where the admin's «حاول مرة أخرى» can't help: not on WhatsApp, the 24 h
+ * window closed (a template is needed), too late for the lesson, no longer wanted, already handed
+ * to the admin's own WhatsApp (that prompt answers it), the WhatsApp Business account is blocked
+ * until an admin fixes it in Meta, or this row can never go out as it is. Throttling (131049,
+ * 130429, 131056), maintenance (131057), a paused or missing template (132015, 132001), the test
+ * allow-list (131030, Meta's or our own: add the number, then retry), network, http_*, auto_off, uncertain,
+ * internal and unknown stay retryable.
  */
-const RETRY_POINTLESS = new Set(['131026', '131047', 'expired', 'stale', 'handed_off']);
+const RETRY_POINTLESS = new Set([
+  '131026',
+  '131047',
+  'expired',
+  'stale',
+  'handed_off',
+  // The account, until an admin fixes it in Meta: payment (131042), locked (131031), policy block
+  // (368), number not registered (131045, 133010), display name (131037).
+  '131042',
+  '131031',
+  '368',
+  '131045',
+  '133010',
+  '131037',
+  // This row: outside the 24 h window (470), marketing turned off (131050), our own number
+  // (131021), template values (132000, 132012), template disabled for good (132016), file type (131053).
+  '470',
+  '131050',
+  '131021',
+  '132000',
+  '132012',
+  '132016',
+  '131053',
+]);
 
 export function canRetryCode(code: string | null | undefined): boolean {
   return !RETRY_POINTLESS.has(code ?? '');

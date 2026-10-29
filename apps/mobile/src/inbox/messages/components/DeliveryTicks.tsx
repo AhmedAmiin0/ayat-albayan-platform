@@ -23,6 +23,10 @@ export interface DeliveryTicksProps {
   times?: string;
   /** The bubble shows the times on its own line under the meta row (MessageMeta). */
   onLongPress?: () => void;
+  /** The admin's «! لم تُرسل» / queued clock: a tap opens what can be done (FailedSheet), as WhatsApp. */
+  onPress?: () => void;
+  /** Said after the status word when it can be tapped: why it failed («السبب: …»). */
+  actionLabel?: string;
   /** In a thread row: the row's label already says the word (no separate stop), its chip «لم تُرسل». */
   inList?: boolean;
 }
@@ -33,9 +37,10 @@ const WORD = { failed: t.enums.messageStatus.failed, manual: t.messages.manualTi
  * WhatsApp-style ticks on OUR message (packages/shared ticks.ts), the web's DeliveryTicks drawn with
  * react-native-svg: an image named by the status word (+ times). As in WhatsApp, delivered vs read is
  * the same two ticks told apart by colour only (docs/07 principle 3 carve-out): the word goes to
- * assistive tech and the long press. Failed has its own «!» and word; sent by hand «يدويًا».
+ * assistive tech and the long press. Failed has its own «!» and word; sent by hand «يدويًا». The
+ * admin's row that did not go out is a button instead: a tap opens its sheet (retry, by hand).
  */
-export function DeliveryTicks({ status, times, onLongPress, inList = false }: DeliveryTicksProps) {
+export function DeliveryTicks({ status, times, onLongPress, onPress, actionLabel, inList = false }: DeliveryTicksProps) {
   const { color } = useTheme();
   const kind = messageTicks(status);
   const ink = color[INK[tickTone(kind)]];
@@ -84,16 +89,18 @@ export function DeliveryTicks({ status, times, onLongPress, inList = false }: De
       </View>
     );
   }
+  const named = times ? `${t.enums.messageStatus[status]} · ${times}` : t.enums.messageStatus[status];
   const a11y = {
     accessible: true,
-    accessibilityRole: 'image' as const,
-    accessibilityLabel: times ? `${t.enums.messageStatus[status]} · ${times}` : t.enums.messageStatus[status],
+    accessibilityRole: onPress ? ('button' as const) : ('image' as const),
+    accessibilityLabel: actionLabel ? `${named} — ${actionLabel}` : named,
     testID: `ticks-${kind}`,
     style: ROW,
   };
-  if (!times) return <View {...a11y}>{body}</View>;
+  if (!times && !onPress) return <View {...a11y}>{body}</View>;
+  // hitSlop 14: the 16pt glyph is a 44pt target.
   return (
-    <Pressable {...a11y} hitSlop={14} onLongPress={onLongPress}>
+    <Pressable {...a11y} hitSlop={14} onPress={onPress} onLongPress={times ? onLongPress : undefined}>
       {body}
     </Pressable>
   );

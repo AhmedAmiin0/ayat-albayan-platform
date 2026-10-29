@@ -35,7 +35,7 @@ test('a chat opened from its URL has no tab host under it; what it opens stays i
   expect(app.stack()).toEqual(['(admin-chat)']);
   expect(screen.queryByRole('button', { name: t.mobile.more })).toBeNull();
 
-  await fireEvent.press(await screen.findByRole('button', { name: t.inbox.subscription.renew }));
+  await fireEvent.press(await screen.findByRole('button', { name: `${t.inbox.subscription.renew} — يوسف` }));
   expect(app.pathname()).toBe('/inbox/subscribe');
   expect(app.segments()[0]).toBe('(admin-chat)');
   expect(app.stack()).toEqual(['(admin-chat)']);
