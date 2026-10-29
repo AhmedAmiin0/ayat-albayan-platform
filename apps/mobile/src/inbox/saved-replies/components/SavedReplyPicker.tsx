@@ -1,7 +1,7 @@
 import { SavedRepliesSheet } from './SavedRepliesSheet';
-import { FillReplyForm } from './quick-list/FillReplyForm';
-import { type ReplyContact, useFillReply } from './quick-list/use-fill-reply';
-import type { ReplyFill } from './use-saved-reply';
+import { FillReplyForm } from '../quick-list/FillReplyForm';
+import { type ReplyContact, useFillReply } from '../quick-list/use-fill-reply';
+import type { ReplyFill } from '../hooks/use-saved-reply';
 
 interface SavedReplyPickerProps {
   contact: ReplyContact;

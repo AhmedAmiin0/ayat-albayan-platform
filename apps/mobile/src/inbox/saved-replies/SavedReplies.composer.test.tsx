@@ -4,7 +4,7 @@ import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { detail, inbound, message, thread } from '../shared/thread-fixtures';
 import { ThreadModeProvider } from '../thread/hooks/thread-mode';
 import { ThreadScreen } from '../screens/ThreadScreen';
-import { REPLIES } from './fixtures';
+import { REPLIES } from './testing/fixtures';
 
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();

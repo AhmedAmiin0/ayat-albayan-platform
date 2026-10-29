@@ -5,7 +5,7 @@ import { t } from '@/core/lib/i18n/i18n';
 import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { useInset } from '@/core/ui/surface/inset';
-import { AttachIcon } from '../shared/chat-icons';
+import { AttachIcon } from '../../shared/chat-icons';
 
 interface ReplyRowProps {
   reply: SavedReply;

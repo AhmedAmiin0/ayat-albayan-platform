@@ -3,7 +3,7 @@ import { Pressable, View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { shape, type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
-import { SavedReplyIcon } from '../shared/chat-icons';
+import { SavedReplyIcon } from '../../shared/chat-icons';
 
 export interface SavedRepliesButtonProps {
   /** The 24 h window: outside it the composer is templates only and the button only explains why. */

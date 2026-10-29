@@ -1,5 +1,5 @@
 import { act, renderHook } from '@testing-library/react-native';
-import { WELCOME } from './fixtures';
+import { WELCOME } from '../testing/fixtures';
 import { useSavedReplyDraft } from './use-saved-reply';
 
 async function setup(enabled = true) {

@@ -3,7 +3,7 @@ import { t } from '@/core/lib/i18n/i18n';
 import { Button } from '@/core/ui/primitives/Button';
 import { ClosedNote } from '../thread/components/ClosedNote';
 import { QuoteButton } from '../composer/quote/QuoteButton';
-import { SavedRepliesButton } from '../saved-replies/SavedRepliesButton';
+import { SavedRepliesButton } from '../saved-replies/components/SavedRepliesButton';
 
 /**
  * The reply box once the 24 h window closed: why (ClosedNote) on its own full-width line, so it never

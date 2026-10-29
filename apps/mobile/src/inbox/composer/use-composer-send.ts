@@ -4,8 +4,8 @@ import { requestId } from '@/core/lib/http/request-id';
 import { useChatActions } from '../thread/hooks/chat-actions';
 import { sendError } from '../messages/hooks/message-text';
 import { quoteOf } from '../messages/hooks/quote-text';
-import { useSendStagedFile } from '../saved-replies/send-staged';
-import type { StagedFile } from '../saved-replies/use-saved-reply';
+import { useSendStagedFile } from '../saved-replies/hooks/send-staged';
+import type { StagedFile } from '../saved-replies/hooks/use-saved-reply';
 import { fileError } from './send-file';
 import { type Outgoing, sendKey, useSendMessage } from '../thread/hooks/use-thread';
 

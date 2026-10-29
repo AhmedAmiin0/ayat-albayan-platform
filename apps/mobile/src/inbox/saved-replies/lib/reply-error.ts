@@ -1,7 +1,7 @@
 import { isSavedReplyError } from '@ab/shared';
 import { ApiError } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
-import { ChatFileError } from '../composer/send-file';
+import { ChatFileError } from '../../composer/send-file';
 
 const codeOf = (error: unknown): unknown =>
   error instanceof ApiError && typeof error.body === 'object' && error.body !== null ? Reflect.get(error.body, 'code') : undefined;
