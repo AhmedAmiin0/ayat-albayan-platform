@@ -4480,7 +4480,7 @@
       "status": {
         "label": "Lesson status",
         "all": "All",
-        "scheduled": "Needs confirmation",
+        "scheduled": "To confirm",
         "confirmed": "Confirmed",
         "cancelled": "Cancelled",
         "empty": "No lessons with this status on this day"

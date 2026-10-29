@@ -56,6 +56,11 @@ test('an English run of a teacher’s students and the read-only schedule', asyn
   expect(screen.getByRole('button', { name: "Show the teacher's schedule today" })).toBeTruthy();
   await first.unmount();
   await renderWithQuery(<SalesScheduleScreen />);
-  expect(await screen.findByText(en.sales.lessonActions.ownNote)).toBeTruthy();
-  expect(await screen.findByText(en.schedule.trialTag)).toBeTruthy();
+  // The row's second line: the bare name (no «Teacher»), the length, the kind.
+  const teacherLine = `${en.today.teacherTitled.replace('{teacher}', 'Abrar Mohamed')} · ${en.enums.duration['30']} · ${en.schedule.trialTag}`;
+  expect(await screen.findByText(teacherLine)).toBeTruthy();
+  // One word for the state: the pill says «To confirm» like the rows; no permissions note over the day.
+  expect(screen.getByRole('tab', { name: `${en.sales.academySchedule.status.scheduled} 0` })).toBeTruthy();
+  expect(en.sales.academySchedule.status.scheduled).toBe(en.today.statusShort.scheduled);
+  expect(screen.queryByText(en.sales.lessonActions.ownNote)).toBeNull();
 });

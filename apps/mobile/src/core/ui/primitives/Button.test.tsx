@@ -31,12 +31,19 @@ test('danger is outlined in the bad tone: label and edge, never a fill', async (
   expect(buttonLook('danger', palette.dark, false).ink).toBe(palette.dark.bad);
 });
 
-test('the label is ONE line (shrinks a little before it would clip), ui 600 at body size', async () => {
+test('the label is ONE line spanning the button (never shrink-wrapped, «…» not a silent cut), ui 600 at body size', async () => {
   await render(<Button label="Join the lesson" onPress={jest.fn()} />);
   const text = screen.getByText('Join the lesson');
   expect(text.props.numberOfLines).toBe(1);
-  expect(text.props.adjustsFontSizeToFit).toBe(true);
-  expect(StyleSheet.flatten(text.props.style)).toMatchObject({ fontFamily: 'NotoSansArabic_600SemiBold', fontSize: 15 });
+  // Android drops the ellipsis when adjustsFontSizeToFit is set: «Join the» (owner 2026-10-29).
+  expect(text.props.adjustsFontSizeToFit).toBeUndefined();
+  expect(StyleSheet.flatten(text.props.style)).toMatchObject({
+    fontFamily: 'NotoSansArabic_600SemiBold',
+    fontSize: 15,
+    flexGrow: 1,
+    flexShrink: 1,
+    textAlign: 'center',
+  });
 });
 
 test('a leading icon gets the label colour', async () => {
@@ -44,6 +51,8 @@ test('a leading icon gets the label colour', async () => {
   await render(<Button label="انسخ الرابط" variant="secondary" icon={icon} onPress={jest.fn()} />);
   expect(icon).toHaveBeenCalledWith(light.ink);
   expect(screen.getByTestId('button-icon')).toBeTruthy();
+  // Its own width with an icon, so the two stay centred together.
+  expect(StyleSheet.flatten(screen.getByText('انسخ الرابط').props.style).flexGrow).toBe(0);
 });
 
 test('busy disables the press and is announced busy', async () => {

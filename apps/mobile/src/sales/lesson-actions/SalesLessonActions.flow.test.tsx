@@ -70,6 +70,19 @@ test('cancel without a reason posts {} to her route; the lesson reads cancelled'
   expect(await screen.findByText(a.cancelled)).toBeTruthy();
 });
 
+test('while the cancel form is open «تأكيد الحلقة» is hidden: «تأكيد الإلغاء» is the one path until «رجوع»', async () => {
+  await open('سلمى');
+  expect(screen.getByRole('button', { name: a.confirm })).toBeTruthy();
+  await fireEvent.press(screen.getByRole('button', { name: a.cancel }));
+  expect(screen.getByRole('button', { name: a.confirmCancel })).toBeTruthy();
+  expect(screen.queryByRole('button', { name: a.confirm })).toBeNull();
+  // The form's «رجوع» (the screen header's own comes first).
+  const back = screen.getAllByRole('button', { name: t.common.back }).pop();
+  if (!back) throw new Error('no «رجوع»');
+  await fireEvent.press(back);
+  expect(screen.getByRole('button', { name: a.confirm })).toBeTruthy();
+});
+
 test('a typed reason is sent trimmed', async () => {
   mockApiSend.mockResolvedValue({ id: 'l2', status: 'cancelled_by_admin' });
   await open('سلمى');

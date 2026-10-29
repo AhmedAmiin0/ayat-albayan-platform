@@ -2,7 +2,6 @@ import { lessonStatusStyle, localizedName, type SalesScheduleLesson } from '@ab/
 import { router, useLocalSearchParams } from 'expo-router';
 import { useCallback, useState } from 'react';
 import { ActivityIndicator, FlatList, type ListRenderItemInfo, View } from 'react-native';
-import { usePermissions } from '@/auth';
 import { useLessonDetails } from '@/calendar';
 import { SchedulePeriod } from '@/calendar/overview/SchedulePeriod';
 import { riyadhToday } from '@/calendar/lib/week';
@@ -10,7 +9,6 @@ import { useNow } from '@/core/lib/time/use-now';
 import { t } from '@/core/lib/i18n/i18n';
 import { useFollowingDay } from '@/core/lib/time/use-following-day';
 import { locale } from '@/core/lib/i18n/locale';
-import { Note } from '@/more/Note';
 import { useTheme } from '@/theme';
 import { Button } from '@/core/ui/primitives/Button';
 import { EmptyState } from '@/core/ui/feedback/EmptyState';
@@ -38,11 +36,14 @@ function emptyTitle(filteredOut: boolean, teacherId: string): string {
 /**
  * «جدول الحلقات» of the salesperson (web /sales/schedule): one Riyadh day of the academy; she may move
  * or cancel any lesson not over yet, one at a time (docs/16 row 37, any lesson: owner 2026-10-28),
- * a day at a time (the admin schedule's switcher) and one teacher or all; «ادخل الحلقة» on a running
- * lesson; a tap on a lesson opens its «تفاصيل الحلقة». `?teacherId=` opens it on a teacher (from «المعلمون»), `?date=` on a day. `asTab`: the sales
- * tree's «جدول الحلقات» tab (no «رجوع»). The compact top (owner 2026-10-28): an h2 title, the note, the day
- * switcher, the teacher pills and the status pills (UX review #6: «الكل» / «يحتاج تأكيد» / «مؤكدة» / «ملغاة»
- * with the day's counts, wrapping on a narrow phone) 8pt apart; the day's lessons in one inset card.
+ * a day at a time (the admin schedule's switcher) and one teacher or all. A tap on a lesson opens its
+ * «تفاصيل الحلقة», which holds every action («ادخل الحلقة» first while it runs; no buttons on the rows).
+ * `?teacherId=` opens it on a teacher (from «المعلمون»), that teacher's pill right after «كل المعلمين» so
+ * the filter is in view; `?date=` on a day. `asTab`: the sales tree's «جدول الحلقات» tab (no «رجوع»). The
+ * compact top (owner 2026-10-28, 10-29: no permissions note, the sheet says what she may do): an h2 title,
+ * the day switcher, the teacher pills and the status pills (UX review #6: «الكل» / «للتأكيد» / «مؤكدة» /
+ * «ملغاة» with the day's counts), each pill group ONE row that scrolls sideways, 8pt apart; the day's
+ * lessons in one inset card. Under a status pill the rows drop the status word they would all share.
  */
 export function SalesScheduleScreen({ asTab = false }: { asTab?: boolean }) {
   const { color } = useTheme();
@@ -57,15 +58,18 @@ export function SalesScheduleScreen({ asTab = false }: { asTab?: boolean }) {
   const teachers = useSalesTeachers();
   const details = useLessonDetails(day.data?.lessons);
   const inset = useTabBarInset();
-  const can = usePermissions();
-  // docs/16 rows 37, 37b: she may move, cancel or confirm any lesson (owner 2026-10-28).
-  const changes = can('lessons.reschedule') || can('lessons.cancel') || can('lessons.confirm');
+  // The teacher she came for leads (from the params, so the pills never reorder on a tap).
+  const list = teachers.data ?? [];
+  const ordered = [...list.filter((tc) => tc.id === params.teacherId), ...list.filter((tc) => tc.id !== params.teacherId)];
   const pills = [
     { value: '', label: t.schedule.allTeachers },
-    ...(teachers.data ?? []).map((tc) => ({ value: tc.id, label: localizedName({ ar: tc.name, en: tc.name_en }, locale) })),
+    ...ordered.map((tc) => ({ value: tc.id, label: localizedName({ ar: tc.name, en: tc.name_en }, locale) })),
   ];
   const open = details.open;
-  const row = useCallback(({ item }: ListRenderItemInfo<SalesScheduleLesson>) => <SalesLessonRow lesson={item} onOpen={open} />, [open]);
+  const row = useCallback(
+    ({ item }: ListRenderItemInfo<SalesScheduleLesson>) => <SalesLessonRow lesson={item} onOpen={open} hideStatus={status !== 'all'} />,
+    [open, status],
+  );
   const all = day.data?.lessons ?? [];
   const counts = scheduleStatusCounts(all);
   const statuses = SCHEDULE_STATUSES.map((value) => ({
@@ -86,10 +90,9 @@ export function SalesScheduleScreen({ asTab = false }: { asTab?: boolean }) {
         trailing={asTab ? undefined : <Button variant="ghost" label={t.common.back} onPress={() => router.back()} />}
       />
       <View style={{ gap: 8 }}>
-        <Note>{changes ? t.sales.lessonActions.ownNote : t.sales.academySchedule.readOnly}</Note>
         <SchedulePeriod view="day" date={date} today={today} onDate={setDate} />
         <FilterPills accessibilityLabel={t.schedule.teacherFilter} items={pills} value={teacherId} onChange={setTeacherId} />
-        <FilterPills accessibilityLabel={t.sales.academySchedule.status.label} items={statuses} value={status} onChange={setStatus} wrap />
+        <FilterPills accessibilityLabel={t.sales.academySchedule.status.label} items={statuses} value={status} onChange={setStatus} />
       </View>
       <FlatList
         style={{ flex: 1 }}
