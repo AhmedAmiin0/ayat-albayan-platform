@@ -84,6 +84,9 @@ describe('delivery title and actions', () => {
       expect(canRetry(out({ status: 'failed', error_code: code }))).toBe(false);
     }
     expect(canRetry(out({ status: 'failed', error_code: 'uncertain' }))).toBe(true);
+    // Billing on the WhatsApp Business account: pointless until an admin fixes it in Meta; maintenance passes.
+    expect(canRetry(out({ status: 'failed', error_code: '131042' }))).toBe(false);
+    expect(canRetry(out({ status: 'failed', error_code: '131057' }))).toBe(true);
     expect(isHandedOff(out({ status: 'failed', error_code: 'handed_off' }))).toBe(true);
     expect(isHandedOff(out({ status: 'queued', error_code: 'handed_off' }))).toBe(false);
   });

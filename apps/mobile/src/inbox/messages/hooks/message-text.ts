@@ -1,3 +1,4 @@
+import { sendErrorReason } from '@ab/client-core';
 import { type ClockCycle, dayParts, isUnavailableMessage, isUnsupportedMessage, type MessageView, reactionText, type ThreadView } from '@ab/shared';
 import { clockIn } from '@/core/lib/clock';
 import { ApiError } from '@/core/lib/http/api';
@@ -98,13 +99,9 @@ export function deliveryTimes(m: MessageView, options: StampOptions): string {
   return steps.flatMap(([text, iso]) => (iso ? [text.replace('{time}', stamp(iso, options))] : [])).join(' · ');
 }
 
-/** «السبب: …» from Meta's code (messages.errors), or the unknown line carrying the code. */
+/** «السبب: …» from Meta's code (messages.errors), or the unknown line carrying the code (as the web). */
 export function errorLine(m: Pick<MessageView, 'error_code'>): string {
-  const errors: Record<string, string> = t.messages.errors;
-  const code = m.error_code ?? '';
-  const known = code !== 'unknown' ? errors[code] : undefined;
-  const reason = known ?? t.messages.errors.unknown.replace('{code}', code || '—');
-  return t.messages.errorLine.replace('{reason}', reason);
+  return t.messages.errorLine.replace('{reason}', sendErrorReason(m.error_code, t.messages.errors));
 }
 
 const isRecord = (v: unknown): v is Record<string, unknown> => typeof v === 'object' && v !== null;

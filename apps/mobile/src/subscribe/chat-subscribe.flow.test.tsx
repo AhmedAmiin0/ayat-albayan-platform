@@ -21,7 +21,7 @@ test('expired family: chip «انتهت الباقة» → «جدّد» → quot
   expect(app.pathname()).toBe(`/inbox/thread/${GUARDIAN_PHONE}`);
   expect(await screen.findByText(s.badge.expired)).toBeTruthy(); // the chat's chip
 
-  await press('button', s.renew);
+  await press('button', `${s.renew} — يوسف`); // the short pill; its spoken name says which child
   expect(app.pathname()).toBe('/inbox/subscribe');
   expect(await screen.findByRole('header', { name: s.renew })).toBeTruthy();
   const save = await screen.findByRole('button', { name: s.make, disabled: false });
