@@ -103,3 +103,12 @@ test('mobile.yml profile: preview by default (every automatic run), stripe-test 
   assert.match(normal, /update --branch "\$EAS_BRANCH" --environment "\$EAS_BRANCH"/);
   assert.match(mobile['run-name'], /inputs\.profile == 'stripe-test' && 'stripe-test' \|\| inputs\.branch/);
 });
+
+test('deploy-staging merges LOGIN_CODE_PEPPER from a secret into the server .env (docs/30 §8)', () => {
+  const step = deploy.jobs.deploy.steps.find((s) => s.name?.startsWith('Merge the server .env'));
+  assert.equal(step.env.LOGIN_CODE_PEPPER, '${{ secrets.LOGIN_CODE_PEPPER }}');
+  const keys = /keys="([^"]+)"/.exec(step.run)?.[1].split(/\s+/) ?? [];
+  assert.ok(keys.includes('LOGIN_CODE_PEPPER'), 'the env-merge keys list');
+  // Every key the step reads is merged, and every merged key comes from the step's env.
+  assert.deepEqual([...keys].sort(), Object.keys(step.env).sort());
+});

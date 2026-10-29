@@ -222,6 +222,7 @@ jobs:
           WA_APP_SECRET: ${{ secrets.WA_APP_SECRET }}
           WA_VERIFY_TOKEN: ${{ secrets.WA_VERIFY_TOKEN }}
           FEEDBACK_TOKEN_SECRET: ${{ secrets.FEEDBACK_TOKEN_SECRET }}
+          LOGIN_CODE_PEPPER: ${{ secrets.LOGIN_CODE_PEPPER }}
           LIVEKIT_API_KEY: ${{ secrets.LIVEKIT_API_KEY }}
           LIVEKIT_API_SECRET: ${{ secrets.LIVEKIT_API_SECRET }}
           RECORDING_S3_ACCESS_KEY: ${{ secrets.RECORDING_S3_ACCESS_KEY }}
@@ -246,7 +247,7 @@ jobs:
           ssh target "if [ -e $DEST/.env ]; then cat $DEST/.env; fi" > current.env
           keys="SUPABASE_URL SUPABASE_SERVICE_ROLE_KEY SUPABASE_JWT_SECRET WEB_ORIGIN WA_API_BASE WA_API_VERSION
             WA_WABA_ID WA_ACCESS_TOKEN WA_APP_ID WA_APP_SECRET WA_VERIFY_TOKEN
-            FEEDBACK_TOKEN_SECRET LIVEKIT_URL LIVEKIT_API_KEY LIVEKIT_API_SECRET RECORDING_S3_ENDPOINT RECORDING_S3_REGION
+            FEEDBACK_TOKEN_SECRET LOGIN_CODE_PEPPER LIVEKIT_URL LIVEKIT_API_KEY LIVEKIT_API_SECRET RECORDING_S3_ENDPOINT RECORDING_S3_REGION
             RECORDING_S3_BUCKET RECORDING_S3_ACCESS_KEY RECORDING_S3_SECRET EXPO_ACCESS_TOKEN EXPO_API_BASE FX_API_URL"
           node tools/scripts/env/env-merge.mjs current.env $keys > new.env
           if cmp -s current.env new.env; then echo "server .env unchanged"; else

@@ -27,6 +27,9 @@ forgot password), R-NFR-02/03 (RLS, audit).
 | Teacher | «فريق الأكاديمية» | the username the admin picked **or** their email | password | `teacher` (unchanged) |
 | Admin, sales, classroom assistant | «فريق الأكاديمية» | email | password | unchanged |
 
+Every code (sign-in, «أول دخول», forgot password) is sent from the academy's **chat** WhatsApp line, the
+number families already talk to (owner, 2026-10-29: «For login make it with chat number»; §4).
+
 `docs/03` line 17 stays true: the role `guardian` = a parent OR an adult student.
 
 ### The registration choice (a form DEVIATION)
@@ -99,22 +102,28 @@ is only said after a correct code, so it reveals nothing to someone who does not
 ## 4. Sending: an authentication template, behind two gates
 
 - The code is the WhatsApp **authentication**-category template `account_code` (Meta's fixed text with a
-  copy-code button; no custom words) on the **notifications** line, sent through the existing
-  `MessageDispatch` (per-line driver meta | kapso | crm; module mode routes it to a number like any template).
+  copy-code button; no custom words) on the **chat** line (owner, 2026-10-29: «For login make it with chat
+  number»; until then it was the notifications line), sent through the existing `MessageDispatch` (per-line
+  driver meta | kapso | crm). Module mode routes it over the enabled **chat** numbers only. There is no
+  fallback to the notifications line: no chat line (or chat number) that can send = codes unavailable, as below.
+- The allow-list (`WA_ALLOWED_RECIPIENTS`) and the send gate (`settings.messaging_enabled`) apply to codes like
+  any message; nothing bypasses them.
 - It is sent directly, **not** queued in `messages`: a queued row would keep the code in
   `messages.template_params`, readable by staff in the chat. `login_codes` keeps only the hash and the send result.
-- Catalog row: key `account_code`, `category authentication`, status **`not_submitted`**. It is **not**
+- Catalog row: key `account_code`, `category authentication`, `line chat` (migration 960 moved it from
+  notifications and reset it to `not_submitted`), status **`not_submitted`**. It is **not**
   submitted to Meta or Kapso: the owner approves the submission separately (§8). The submit payload for an
   authentication template is Meta's OTP shape (BODY with the security line, FOOTER with the expiry, an OTP
   COPY_CODE button).
 - **crm driver**: the CRM builds Meta's components from its own synced list and gets only body values and
   `buttonParams`. Whether it fills an OTP copy-code button is not documented, so authentication codes are
   **not supported on a crm line**, and the CRM's inbox would show the code to its users: `CodeSend` refuses a
-  crm line or number (the code is then unavailable). Keep the notifications line on meta or kapso for codes.
+  crm chat line or chat number (the code is then unavailable). Keep the chat line on meta or kapso for codes
+  (staging: kapso); the notifications line's driver does not matter for codes.
 - Settings (registry, «القيم» → academy group): `family_login_enabled` (bool, default **false**),
   `login_code_ttl_minutes` (default 10, 3–30), `login_code_max_attempts` (default 5, 3–10).
 - Codes are available only when `family_login_enabled` is on, `account_code` is approved, the pepper is
-  set and the send gate is open. Otherwise:
+  set, the send gate is open and the chat line can send it (configured, not crm). Otherwise:
   - the family tab and «أول دخول» show «الدخول للأسر غير متاح بعد»;
   - staff «نسيت كلمة السر؟» shows «تواصل مع الإدارة لإعادة تعيين كلمة السر» (the admin's existing
     «إعادة تعيين كلمة السر» dialog on «المستخدمون»).
@@ -162,9 +171,12 @@ still answer `202`) while §4's gates are closed. Password rules are the existin
 
 ## 8. Owner steps
 
-1. Approve submitting `account_code` to Meta on the **notifications** line («القوالب» → submit). Meta
-   reviews authentication templates within minutes; the health check then marks it approved.
-2. Set `LOGIN_CODE_PEPPER` (a random 32+ character secret) in the API's env / Vault.
+1. Approve submitting `account_code` on the **chat** line («القوالب» → submit; it goes to the chat line's
+   WABA, on staging through Kapso). Meta reviews authentication templates within minutes; the health
+   check then marks it approved. The chat line must be on meta or kapso (never crm) and enabled.
+2. Set `LOGIN_CODE_PEPPER` (a random 32+ character secret, `openssl rand -base64 48`): the GitHub secret
+   `LOGIN_CODE_PEPPER` (the `deploy-staging` run merges it into the server .env; empty keeps the server's
+   value, docs/09), or the API's env / Vault directly.
 3. Turn on `family_login_enabled` («الإعدادات» → «القيم» → الأكاديمية).
 
 ## 9. Not in this PR
@@ -182,7 +194,7 @@ still answer `202`) while §4's gates are closed. Password rules are the existin
 3. `.invalid` synthetic emails: the e2e suite provisions a family login on the local GoTrue to prove it
    accepts them. If a later version validates MX records, switch the domain (one constant,
    `FAMILY_EMAIL_DOMAIN`); the logins already made keep working.
-4. The crm driver and authentication templates (§4).
+4. The crm driver and authentication templates (§4): codes never go out on a crm chat line.
 5. `POST /auth/login` signs in from the API server, so GoTrue's own per-IP limit on password sign-ins (the
    project's «sign-ins and sign-ups» rate limit) counts every username sign-in together. Watch it once
    children use usernames; raising that limit is a project setting (an owner decision, not changed here).
