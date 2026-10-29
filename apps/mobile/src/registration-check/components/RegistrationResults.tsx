@@ -1,4 +1,4 @@
-import { studentStatusStyle, type RegistrationCheckView } from '@ab/shared';
+import { studentStatusStyle, type RegistrationCheckView, type RegistrationMatch } from '@ab/shared';
 import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/more/Note';
 import { Section } from '@/more/Section';
@@ -11,9 +11,13 @@ import { InsetGroup } from '@/core/ui/surface/inset';
 /**
  * The answer: «مسجّل: n طالب» and each child (name, code, status — any of the eight, expired and churned
  * included —, teacher or «لم يُحدَّد معلم بعد»), «أول 10 نتائج فقط» when there were more; else
- * «لا يوجد طالب…» for the mode searched.
+ * «لا يوجد طالب…» for the mode searched. With `onPick` each child is a button (the link-family picker).
  */
-export function RegistrationResults({ view, by }: { view: RegistrationCheckView; by: CheckBy }) {
+export function RegistrationResults({ view, by, onPick }: {
+  view: RegistrationCheckView;
+  by: CheckBy;
+  onPick?: (m: RegistrationMatch) => void;
+}) {
   const rc = t.registrationCheck;
   if (!view.found) return <EmptyState title={by === 'phone' ? rc.notFoundPhone : rc.notFoundName} />;
   return (
@@ -26,6 +30,7 @@ export function RegistrationResults({ view, by }: { view: RegistrationCheckView;
             meta={m.code}
             subtitle={`${rc.teacher}: ${m.teacher_name ?? rc.noTeacher}`}
             trailing={<StatusChip {...studentStatusStyle[m.status]} label={t.enums.studentStatus[m.status]} size="sm" />}
+            onPress={onPick ? () => onPick(m) : undefined}
           />
         ))}
       </InsetGroup>
