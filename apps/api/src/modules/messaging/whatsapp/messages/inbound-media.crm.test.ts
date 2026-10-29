@@ -60,11 +60,24 @@ describe('InboundMedia: files imported from the old CRM', () => {
     expect([fetch.mock.calls.length, storage.upload.mock.calls.length]).toEqual([0, 0]);
   });
 
-  it('a body with extra text is not a file: 400 invoice_message, never fetched', async () => {
+  it('a body with extra text is not a link: 410 media_expired (gone, not «try again»), never fetched', async () => {
     const fetch = stubFetch(async () => crmResponse(4));
     const { media } = setup(crmRow({ body: `صورة ${crmLink()}` }));
-    await expect(media.loadChat('m-crm-1')).rejects.toMatchObject({ status: 400 });
+    await expect(media.loadChat('m-crm-1')).rejects.toMatchObject({ status: 410 });
     expect(fetch).not.toHaveBeenCalled();
+  });
+
+  it('a receipt imported with only its name as body (owner 2026-10-29): 410 on every gate, nothing fetched', async () => {
+    const fetch = stubFetch(async () => crmResponse(4));
+    const { media, client } = setup(crmRow({ body: 'Transaction-Receipt.pdf', media_mime: 'application/pdf' }));
+    await expect(media.load('m-crm-1')).rejects.toMatchObject({ status: 410 });
+    await expect(media.loadChat('m-crm-1')).rejects.toMatchObject({ status: 410 });
+    expect([fetch.mock.calls.length, client.getMedia.mock.calls.length]).toEqual([0, 0]);
+  });
+
+  it('a text row on the crm number (no mime) is still 400 invoice_message', async () => {
+    const { media } = setup(crmRow({ body: 'السلام عليكم', media_mime: null }));
+    await expect(media.loadChat('m-crm-1')).rejects.toMatchObject({ status: 400 });
   });
 
   it('a crm-number row WITH a media id is unchanged: 409 crm_no_media, nothing fetched', async () => {
