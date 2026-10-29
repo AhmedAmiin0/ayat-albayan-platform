@@ -6791,6 +6791,7 @@
     "close": "Close",
     "showHistory": "Show dates",
     "mobile": {
+      "pickStudent": "Which student?",
       "showAll": "Show all ({n})",
       "showLess": "Show less",
       "newTime": "New date"

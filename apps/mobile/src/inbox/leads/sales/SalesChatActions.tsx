@@ -10,7 +10,7 @@ import { registerHref } from './register-href';
 /**
  * A salesperson's actions over her chat in ONE row of pills (owner 2026-10-18: more room to read):
  * «تسجيل طالب جديد» on a lead, «اشتراك جديد» / «جدّد الاشتراك» / «سجّل تحويلًا بنكيًا» on her family,
- * and «موعد تجريبي جديد» for each of her students there with no running subscription.
+ * and one «موعد تجريبي جديد» (a sheet picks the child when several have no running subscription).
  * Scrolls sideways when they overflow the phone's width. Each keeps its own gate; the strip shows
  * only once a pill will (the same gates, the same cached family query): no empty band, no jump.
  */
