@@ -39,7 +39,7 @@ export class MoneyFollowUps {
       await this.env.revert.afterDelete(write.before, ids);
     if (write.action === 'create') await this.created(write, ids);
     // A payment created, edited or deleted, a price changed (admin, sales or Stripe): the triggers may have earned one.
-    await this.env.commissions.notify(ids.studentId);
+    await this.env.commissions.notify();
   }
 
   private async created(write: Write, ids: { studentId: string; actorId: string }): Promise<void> {

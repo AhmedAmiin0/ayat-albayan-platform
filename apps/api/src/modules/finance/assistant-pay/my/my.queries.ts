@@ -1,4 +1,4 @@
-import { RIYADH_TZ, type AssistantCommissionStatus } from '@ab/shared';
+import { RIYADH_TZ } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../../../common/db/db.module';
 import { dbError, type PageQuery } from '../../../../common/http/http';
@@ -7,8 +7,6 @@ import { MY_PAYMENT_SELECT, MY_STUDENT_COLUMNS, type MyPaymentSource, type MyStu
 
 export type StatementState = { statement: { status: 'draft' | 'approved' | 'paid' } | null };
 export type MyCommission = StatementState & { id: string; amount: number; currency: string; earned_at: string };
-/** A commission the wallet counts: earned, or voided but still held by the frozen statement it was paid in. */
-export type MyWalletCommission = StatementState & { amount: number; currency: string; earned_at: string; status: AssistantCommissionStatus };
 /** kind 'reversal' = a commission voided after its statement was approved or paid (migration 272). */
 export type MyAdjustment = StatementState & { id: string; kind: string; amount: number; currency: string; effective_month: string };
 
@@ -72,21 +70,6 @@ export class MyQueries {
       .eq('assistant_id', assistantId)
       .eq('status', 'earned')
       .overrideTypes<MyCommission[], { merge: false }>();
-    if (error) throw dbError(error);
-    return data;
-  }
-
-  /**
-   * «محفظتي»'s commissions: the earned ones, and a voided one still in a statement (only a frozen statement
-   * keeps a voided row; its reversal adjustment then takes it back).
-   */
-  async walletRows(assistantId: string): Promise<MyWalletCommission[]> {
-    const { data, error } = await this.db
-      .from('assistant_commissions')
-      .select('amount, currency, earned_at, status, statement:assistant_statements(status)')
-      .eq('assistant_id', assistantId)
-      .or('status.eq.earned,statement_id.not.is.null')
-      .overrideTypes<MyWalletCommission[], { merge: false }>();
     if (error) throw dbError(error);
     return data;
   }

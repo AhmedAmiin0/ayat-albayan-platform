@@ -25,7 +25,7 @@ test('an English run reads en.json: my wallet, its entries, then my terms, total
   await renderWithQuery(<MyMoneyScreen />);
   expect(screen.getByRole('header', { name: en.assistantPortal.nav.earnings })).toBeTruthy();
   expect(await screen.findAllByText(new RegExp(en.assistantPortal.wallet.due))).toBeTruthy();
-  expect(await screen.findByText(new RegExp(en.assistantReasons.payment_voided))).toBeTruthy();
+  expect(await screen.findByText(new RegExp(en.assistantPortal.wallet.voided.payment_voided))).toBeTruthy();
   expect(screen.getByText(en.assistantPortal.commission.voided)).toBeTruthy();
   await fireEvent.press(screen.getByRole('tab', { name: en.assistantPortal.wallet.views.statements }));
   expect(await screen.findByText(en.assistantPortal.earnings.terms)).toBeTruthy();

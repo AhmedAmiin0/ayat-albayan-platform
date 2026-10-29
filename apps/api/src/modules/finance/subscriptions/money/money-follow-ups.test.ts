@@ -54,14 +54,14 @@ describe('MoneyFollowUps: what a money write changes outside money', () => {
 });
 
 describe('MoneyFollowUps: «عمولة جديدة» (CommissionBell, owner 2026-10-29)', () => {
-  it('runs after every write of a payment or a package, for the write’s student', async () => {
+  it('runs after every write of a payment or a package (it rings whatever the database just earned)', async () => {
     const t = setup();
     await t.follow.after({ entity: 'payments', entityId: 'p1', action: 'create', after: PAID }, IDS);
     await t.follow.after({ entity: 'payments', entityId: 'p1', action: 'update', before: PAID, after: PAID }, IDS);
     await t.follow.after({ entity: 'payments', entityId: 'p1', action: 'delete', before: PAID }, IDS);
     await t.follow.after({ entity: 'subscriptions', entityId: 'sub1', action: 'update' }, IDS);
     await t.follow.after({ entity: 'subscriptions', entityId: 'sub1', action: 'cancel' }, IDS);
-    expect(t.bell.notify.mock.calls).toEqual([['s1'], ['s1'], ['s1'], ['s1'], ['s1']]);
+    expect(t.bell.notify).toHaveBeenCalledTimes(5);
   });
 
   it('after the lifecycle follow-ups of the same write', async () => {

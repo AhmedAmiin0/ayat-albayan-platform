@@ -47,14 +47,10 @@ describe('MyQueries: every read is filtered on the signed-in profile, and only o
     expect(await new MyQueries(db).tz('a1')).toBe('Asia/Riyadh');
   });
 
-  it('walletRows: mine, earned or still held by a statement; adjustments carry their kind (reversals)', async () => {
-    const { db, calls } = fakeDb({ assistant_commissions: [{ data: [] }], assistant_adjustments: [{ data: [] }] });
-    const q = new MyQueries(db);
-    await q.walletRows('a1');
-    await q.adjustments('a1');
-    expect(eqs(calls)).toEqual([['assistant_id', 'a1'], ['assistant_id', 'a1']]);
-    expect(calls.find((c) => c.method === 'or')?.args).toEqual(['status.eq.earned,statement_id.not.is.null']);
-    expect(String(calls.find((c) => c.table === 'assistant_adjustments' && c.method === 'select')?.args[0])).toContain('kind');
+  it('adjustments carry their kind: the wallet counts the reversals only', async () => {
+    const { db, calls } = fakeDb({ assistant_adjustments: [{ data: [] }] });
+    await new MyQueries(db).adjustments('a1');
+    expect(String(calls.find((c) => c.method === 'select')?.args[0])).toContain('kind');
   });
 
   it('commissionPage: mine only, newest first then id, the page as a range, the count as the total', async () => {

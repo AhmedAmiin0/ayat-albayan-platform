@@ -9,7 +9,8 @@ import {
   type MyEarnings,
   type WalletLine,
 } from '@ab/shared';
-import type { MyAdjustment, MyCommission, MyWalletCommission, StatementState } from './my.queries';
+import type { StatementRow } from '../statements/statements.mapper';
+import type { MyAdjustment, MyCommission, StatementState } from './my.queries';
 
 const frozen = (r: StatementState): boolean => r.statement?.status === 'approved' || r.statement?.status === 'paid';
 
@@ -21,13 +22,32 @@ export function commissionsTotal(commissions: readonly Pick<MyCommission, 'amoun
 }
 
 /**
- * «محفظتي»'s lines: each counted commission (this month only while earned) and every reversal adjustment with
- * its own sign. The admin's other adjustments (bonus, deduction) are statement matters, not commissions.
+ * The commission money my approved and paid statements hold, as they froze it: their commission lines and
+ * their reversal lines (assistant_statement_lines). Never the commission rows: a re-earn sets a row's
+ * statement to null and a merge deletes it, while the frozen statement still pays (or paid) that line.
  */
-function walletLines(wallet: readonly MyWalletCommission[], adjustments: readonly MyAdjustment[]): WalletLine[] {
+export function frozenLines(statements: readonly Pick<StatementRow, 'status' | 'lines'>[]): WalletLine[] {
+  return statements.flatMap(({ status, lines }) =>
+    status === 'draft'
+      ? []
+      : lines
+          .filter((l) => l.kind === 'commission' || l.adjustment?.kind === 'reversal')
+          .map((l) => ({ amount: Number(l.amount), currency: l.currency, statement: { status } })),
+  );
+}
+
+/**
+ * «محفظتي»'s lines: the frozen statements' lines, then what no frozen statement holds yet: the earned
+ * commissions (no statement or a draft) and the reversals (negative). A voided commission is never a row
+ * here: inside a frozen statement its line counts, in a draft (a reopened one too) nothing does. The admin's
+ * other adjustments (bonus, deduction) are statement matters, not commissions.
+ */
+function walletLines(i: { frozen: readonly WalletLine[]; commissions: readonly MyCommission[]; adjustments: readonly MyAdjustment[] }): WalletLine[] {
+  const open = (r: StatementState & { amount: number; currency: string }) => ({ amount: r.amount, currency: r.currency, statement: r.statement });
   return [
-    ...wallet.map((c) => ({ amount: c.amount, currency: c.currency, statement: c.statement, earned_at: c.status === 'earned' ? c.earned_at : null })),
-    ...adjustments.filter((a) => a.kind === 'reversal').map((a) => ({ amount: a.amount, currency: a.currency, statement: a.statement, earned_at: null })),
+    ...i.frozen,
+    ...i.commissions.filter((c) => !frozen(c)).map(open),
+    ...i.adjustments.filter((a) => a.kind === 'reversal' && !frozen(a)).map(open),
   ];
 }
 
@@ -41,9 +61,9 @@ export function buildEarnings(i: {
   tz: string;
   terms: AssistantTermsView | null;
   commissions: readonly MyCommission[];
-  /** The wallet's commissions (MyQueries.walletRows): earned, or voided inside a frozen statement. */
-  wallet: readonly MyWalletCommission[];
   adjustments: readonly MyAdjustment[];
+  /** frozenLines of the approved and paid statements. */
+  frozen: readonly WalletLine[];
   /** Approved and paid only: a draft is the admin's to change. */
   statements: readonly AssistantStatementView[];
 }): MyEarnings {
@@ -61,7 +81,7 @@ export function buildEarnings(i: {
     terms: i.terms,
     this_month: issued ? issued.totals : plan.totals,
     commissions_total: commissionsTotal(i.commissions),
-    wallet: walletTotals(walletLines(i.wallet, i.adjustments), { month, tz: i.tz }),
+    wallet: walletTotals(walletLines(i), i.commissions, { month, tz: i.tz }),
     statements: [...i.statements],
   };
 }

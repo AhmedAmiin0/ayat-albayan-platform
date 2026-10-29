@@ -2,6 +2,7 @@ import type { MyCommissionRow, MyEarnings, NotificationItem } from '@ab/shared';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
+import { formatDate } from '@/features/sales/leads';
 import { t } from '@/lib/i18n/i18n';
 import { MyWallet } from './MyWallet';
 
@@ -19,10 +20,11 @@ const EARNINGS: MyEarnings = {
 };
 let bell: NotificationItem[] = [];
 
-function open(rows: MyCommissionRow[], over: { total?: number; wallet?: MyEarnings['wallet'] } = {}) {
+function open(rows: MyCommissionRow[], over: { total?: number; wallet?: MyEarnings['wallet']; earningsDown?: boolean } = {}) {
   apiFetch.mockImplementation(async (path: string) => {
     if (path.startsWith('/sales/me/commissions')) return { items: rows, total: over.total ?? rows.length, page: 1, pageSize: 20 };
     if (path.startsWith('/me/notifications')) return { items: bell, total: bell.length, page: 1, pageSize: 20, unread: 0 };
+    if (over.earningsDown) throw new Error('down');
     return { ...EARNINGS, wallet: over.wallet ?? EARNINGS.wallet };
   });
   const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
@@ -58,7 +60,11 @@ describe('MyWallet «العمولات» of «محفظتي»', () => {
     expect(due.textContent).toContain(t.payouts.currency);
     expect(due.textContent).toContain(t.assistantPortal.commission.earned);
     expect(due.textContent).toContain(t.assistants.ledger.kind.first);
-    expect(due.textContent).toContain(t.enums.paymentMethod.card);
+    expect(due.textContent).toContain(W.method.card);
+    expect(renewal.textContent).toContain(W.method.bank);
+    // The day sits on line 1, so line 2 fits a phone.
+    expect(due.querySelector('div')?.textContent).toContain(formatDate(row().earned_at));
+    expect(due.querySelector('p')?.textContent).not.toContain(formatDate(row().earned_at));
     expect(within(due).getByText('AB-1022').closest('bdi')?.getAttribute('dir')).toBe('ltr');
     expect(renewal.textContent).toContain(t.assistants.ledger.kind.renewal.replace('{n}', '50'));
     expect(renewal.textContent).toContain(W.state.in_statement.split('{month}')[0]?.trim() ?? '');
@@ -68,7 +74,7 @@ describe('MyWallet «العمولات» of «محفظتي»', () => {
     open([row({ state: 'voided', void_reason: 'payment_voided' }), row({ id: 'c2', state: 'voided', void_reason: null })]);
     const list = await screen.findByRole('list', { name: W.list });
     const [refunded, byAdmin] = within(list).getAllByRole('listitem') as [HTMLElement, HTMLElement];
-    expect(refunded.textContent).toContain(t.assistantReasons.payment_voided);
+    expect(refunded.textContent).toContain(W.voided.payment_voided);
     expect(refunded.textContent).not.toContain('+50');
     expect(refunded.querySelector('.line-through')).toBeTruthy();
     expect(byAdmin.textContent).toContain(W.voidedByAdmin);
@@ -99,5 +105,22 @@ describe('MyWallet «العمولات» of «محفظتي»', () => {
     await waitFor(() => expect(calls('/sales/me/commissions')).toBe(before.list + 1));
     expect(calls('/sales/me/earnings')).toBe(before.earnings + 1);
     expect(calls('/me/notifications')).toBe(2);
+  });
+
+  it('the balance failed to load: its own message and retry above the entries', async () => {
+    open([row()], { earningsDown: true });
+    expect(await screen.findByText(new RegExp(t.sales.loadFailed))).toBeTruthy();
+    expect(await screen.findByRole('list', { name: W.list })).toBeTruthy();
+    const before = calls('/sales/me/earnings');
+    fireEvent.click(screen.getByRole('button', { name: t.sales.retry }));
+    await waitFor(() => expect(calls('/sales/me/earnings')).toBe(before + 1));
+  });
+
+  it('below zero (voided after it was paid): «يُخصم من كشفك القادم» and the amount without a minus', async () => {
+    open([row()], { wallet: { EGP: { due: -50, paid: 50, this_month: 0 } } });
+    const egp = (await screen.findByText(W.owedBack)).closest('[data-currency]') as HTMLElement;
+    expect(egp.textContent).toContain('50');
+    expect(egp.textContent).not.toMatch(/[-−]\s*50/);
+    expect(screen.queryByText(W.due, { selector: '[data-currency] span' })).toBeNull();
   });
 });

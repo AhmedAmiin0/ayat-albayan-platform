@@ -18,20 +18,29 @@ const renderEntry = ({ item }: { item: MyCommissionRow }) => <CommissionEntry en
 /**
  * «العمولات» of «محفظتي» (owner 2026-10-29, web MyWallet): the balance per currency, then my commissions
  * newest first, 20 a page. A new «عمولة جديدة» on the bell refreshes both (useBellSignal: no extra
- * request); coming back to the screen or the app refetches as every query does.
+ * request), so does a pull; coming back to the screen or the app refetches as every query does. The
+ * balance has its own spinner and retry: the rows never show under a blank header.
  */
 export function MyWalletView() {
   const earnings = useMyEarnings();
   const list = usePagedList<MyCommissionRow>({ path: '/sales/me/commissions', pageSize: 20 });
   useBellSignal('commission_earned', MINE);
+  // After `paged`: the pull runs the list's refresh (its spinner) and the balance's refetch together.
+  const pull = () => {
+    list.refresh();
+    void earnings.refetch();
+  };
   return (
     <LazyList
       testID="wallet-list"
       accessibilityLabel={W.list}
       paged={list}
+      onRefresh={pull}
       keyExtractor={keyOf}
       renderItem={renderEntry}
-      ListHeaderComponent={earnings.data ? <WalletCard wallet={earnings.data.wallet ?? {}} /> : null}
+      ListHeaderComponent={
+        earnings.data ? <WalletCard wallet={earnings.data.wallet ?? {}} /> : <LoadState status={earnings} empty={false} emptyTitle="" />
+      }
       ListEmptyComponent={
         <LoadState status={{ data: list.data, isError: list.isError, refetch: list.refresh }} empty emptyTitle={W.empty} emptyHint={W.emptyHint} />
       }

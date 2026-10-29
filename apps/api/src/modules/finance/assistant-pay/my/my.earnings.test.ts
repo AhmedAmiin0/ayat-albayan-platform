@@ -1,7 +1,7 @@
 import type { AssistantStatementView } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
-import { buildEarnings, commissionsTotal } from './my.earnings';
-import type { MyAdjustment, MyWalletCommission } from './my.queries';
+import { buildEarnings, commissionsTotal, frozenLines } from './my.earnings';
+import type { MyAdjustment, MyCommission } from './my.queries';
 
 const NOW = '2026-10-15T10:00:00Z';
 const TERMS = {
@@ -16,7 +16,7 @@ const statement = (over: Partial<AssistantStatementView> = {}): AssistantStateme
   totals: { SAR: { salary: 1000, commissions: 0, adjustments: 0, total: 1000 } },
   lines: [], approved_at: null, paid_at: null, method: null, note: null, has_receipt: false, ...over,
 });
-const base = { now: NOW, tz: 'Asia/Riyadh', terms: TERMS, commissions: [], wallet: [], adjustments: [], statements: [] };
+const base = { now: NOW, tz: 'Asia/Riyadh', terms: TERMS, commissions: [], adjustments: [], frozen: [], statements: [] };
 
 describe('commissionsTotal', () => {
   it('sums per currency in exact cents and never across currencies', () => {
@@ -69,26 +69,51 @@ describe('buildEarnings: this month so far', () => {
   });
 });
 
-describe('buildEarnings: «محفظتي» (owner 2026-10-29)', () => {
-  const row = (amount: number, over: Partial<MyWalletCommission> = {}): MyWalletCommission =>
-    ({ amount, currency: 'EGP', earned_at: '2026-10-05T10:00:00Z', status: 'earned', statement: null, ...over });
+describe('buildEarnings: «محفظتي» from the frozen statement lines (owner 2026-10-29)', () => {
+  const earned = (amount: number, over: Partial<MyCommission> = {}): MyCommission =>
+    ({ id: 'c1', amount, currency: 'EGP', earned_at: '2026-10-05T10:00:00Z', statement: null, ...over });
   const reversal = (statement: MyAdjustment['statement']): MyAdjustment =>
     ({ id: 'r1', kind: 'reversal', amount: -50, currency: 'EGP', effective_month: '2026-11-01', statement });
+  const line = (kind: string, amount: number, adjustment: { kind: string; reason: string } | null = null) =>
+    ({ kind, amount, currency: 'EGP', commission: null, adjustment });
+  const back = line('adjustment', -50, { kind: 'reversal', reason: 'payment_voided' });
+  const frozen = (...s: { status: 'draft' | 'approved' | 'paid'; lines: ReturnType<typeof line>[] }[]) => frozenLines(s);
 
-  it('owed, paid and this month per currency from the wallet rows; the admin’s own adjustments stay out', () => {
-    const wallet = [row(50), row(30, { statement: { status: 'paid' }, earned_at: '2026-09-05T10:00:00Z' })];
+  it('frozenLines: commission and reversal lines of approved and paid statements; never a draft, the salary or a manual one', () => {
+    const bonus = line('adjustment', 100, { kind: 'manual', reason: 'مكافأة' });
+    expect(frozen({ status: 'paid', lines: [line('salary', 1000), line('commission', 30), bonus, back] }, { status: 'draft', lines: [line('commission', 9)] }))
+      .toEqual([{ amount: 30, currency: 'EGP', statement: { status: 'paid' } }, { amount: -50, currency: 'EGP', statement: { status: 'paid' } }]);
+  });
+
+  it('owed, paid and this month per currency; the admin’s own adjustments stay out', () => {
+    const commissions = [earned(50), earned(30, { statement: { status: 'paid' }, earned_at: '2026-09-05T10:00:00Z' })];
     const bonus = { id: 'b1', kind: 'manual', amount: 100, currency: 'EGP', effective_month: '2026-10-01', statement: null };
-    expect(buildEarnings({ ...base, wallet, adjustments: [bonus] }).wallet).toEqual({ EGP: { due: 50, paid: 30, this_month: 50 } });
+    const out = buildEarnings({ ...base, commissions, adjustments: [bonus], frozen: frozen({ status: 'paid', lines: [line('commission', 30)] }) });
+    expect(out.wallet).toEqual({ EGP: { due: 50, paid: 30, this_month: 50 } });
   });
 
   it('voided after its statement was paid: paid stays, the pending reversal makes owed negative, not this month', () => {
-    const voided = row(50, { status: 'voided', statement: { status: 'paid' } });
-    expect(buildEarnings({ ...base, wallet: [voided], adjustments: [reversal(null)] }).wallet).toEqual({ EGP: { due: -50, paid: 50, this_month: 0 } });
+    const out = buildEarnings({ ...base, frozen: frozen({ status: 'paid', lines: [line('commission', 50)] }), adjustments: [reversal(null)] });
+    expect(out.wallet).toEqual({ EGP: { due: -50, paid: 50, this_month: 0 } });
   });
 
-  it('voided inside an approved statement: nothing owed; nothing at all: an empty wallet', () => {
-    const voided = row(50, { status: 'voided', statement: { status: 'approved' } });
-    expect(buildEarnings({ ...base, wallet: [voided], adjustments: [reversal(null)] }).wallet).toEqual({ EGP: { due: 0, paid: 0, this_month: 0 } });
+  it('voided inside an approved statement (or its student merged away): the line and the reversal net to 0 owed', () => {
+    const out = buildEarnings({ ...base, frozen: frozen({ status: 'approved', lines: [line('commission', 50)] }), adjustments: [reversal(null)] });
+    expect(out.wallet).toEqual({ EGP: { due: 0, paid: 0, this_month: 0 } });
     expect(buildEarnings(base).wallet).toEqual({});
+  });
+
+  it('reopened to a draft with a voided commission (its reversal dropped): nothing owed until the admin rebuilds it', () => {
+    expect(buildEarnings({ ...base, frozen: frozen({ status: 'draft', lines: [line('commission', 50)] }) }).wallet).toEqual({});
+  });
+
+  it('earned again after its reversal was paid back: paid 0 and owed 50, from the lines, not the row’s statement', () => {
+    const out = buildEarnings({ ...base, commissions: [earned(50)], frozen: frozen({ status: 'paid', lines: [line('commission', 50)] }, { status: 'paid', lines: [back] }) });
+    expect(out.wallet).toEqual({ EGP: { due: 50, paid: 0, this_month: 50 } });
+  });
+
+  it('earned again while its reversal waits in a draft: the approved line is still owed, the draft nets to 0', () => {
+    const out = buildEarnings({ ...base, commissions: [earned(50)], adjustments: [reversal({ status: 'draft' })], frozen: frozen({ status: 'approved', lines: [line('commission', 50)] }) });
+    expect(out.wallet).toEqual({ EGP: { due: 50, paid: 0, this_month: 50 } });
   });
 });

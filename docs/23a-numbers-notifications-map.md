@@ -169,7 +169,7 @@ Expiry: lesson-timed keys drop if the lesson started, was cancelled or moved (`s
 | P6 | `reminder_failed` | admins | final WhatsApp failure; auth failure once per line per day | — |
 | P7 | `new_student` | the teacher | after booking (`booking/teacher-alert.plan.ts`), always on | — |
 | P8 | `meeting_invite` | invited staff | invite / move / cancel | — |
-| P9 | `commission_earned` | the assistant who brought the student (`brought_by`) | a money write earned a commission (`subscriptions/money/commission-bell.ts`, after MoneyWrites; rows inserted in the last 5 min); bell only, one row per commission | `self.sales_earnings` |
+| P9 | `commission_earned` | the assistant who brought the student (`brought_by`) | a money write, an admin's attribution or new terms earned a commission (`subscriptions/money/commission-bell.ts`: the `earn` / `reinstate` audit rows of the last 5 min whose commission is still earned); bell only, one row per earning (a re-earn after a refund rings again) | `self.sales_earnings` |
 
 ### B4. Sends nothing today
 Lesson cancelled; teacher proposes a new time; payment received / receipt / invoice; unpaid / expired subscription (admin task only); sales registration; job applicant; recording ready; trial reminders beyond normal reminders; feedback with `feedback_mode='link'` (rating stops, nothing replaces it); no auto-reply; no email.

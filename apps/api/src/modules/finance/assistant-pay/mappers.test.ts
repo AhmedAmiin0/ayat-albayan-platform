@@ -39,7 +39,7 @@ describe('toStatementView / readTotals', () => {
   it('an unknown line kind is dropped; the adjustment line carries its reason and no student', () => {
     const view = toStatementView(statementRow({ lines: [
       { kind: 'bonus', amount: 1, currency: 'SAR', commission: null, adjustment: null },
-      { kind: 'adjustment', amount: -20, currency: 'SAR', commission: null, adjustment: { reason: 'استرداد' } },
+      { kind: 'adjustment', amount: -20, currency: 'SAR', commission: null, adjustment: { kind: 'manual', reason: 'استرداد' } },
     ] }));
     expect(view.lines).toEqual([{ kind: 'adjustment', amount: -20, currency: 'SAR', student: null, reason: 'استرداد', commission_kind: null }]);
   });

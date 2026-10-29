@@ -48,6 +48,9 @@ describe('terms and attribution of one student (admin)', () => {
     });
     expect(t.audit.record).toHaveBeenCalledWith(expect.objectContaining({ actorId: ADMIN, entity: 'assistant_terms', entityId: A, action: 'set' }));
     expect(t.rpc.evaluate.mock.calls).toEqual([['sub-1'], ['sub-2']]);
+    // What those evaluations earned rings once, after them all («عمولة جديدة»).
+    expect(t.bell.notify).toHaveBeenCalledTimes(1);
+    expect(t.bell.notify.mock.invocationCallOrder[0]).toBeGreaterThan(t.rpc.evaluate.mock.invocationCallOrder[1] ?? Infinity);
   });
 
   it('a fixed commission keeps its currency; a null part clears its columns and skips the rule run', async () => {

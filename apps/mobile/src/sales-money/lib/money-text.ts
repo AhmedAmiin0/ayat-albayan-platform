@@ -4,6 +4,7 @@ import {
   type AssistantStatementView,
   type AssistantTermsView,
   type MyCommissionRow,
+  type PaymentMethod,
 } from '@ab/shared';
 import { t } from '@/core/lib/i18n/i18n';
 import { currencyName, localDay, instantDay, money } from '@/payments/format';
@@ -74,13 +75,19 @@ const W = t.assistantPortal.wallet;
 export const walletMoney = (amount: number, currency: string, plus = false): string =>
   `${ltr(`${plus ? '+' : ''}${formatAmount(amount)}`)} ${currencyName(currency)}`;
 
-/** «AB-1022 · lmkl · أول اشتراك · بطاقة (دفع إلكتروني) · 29 أكتوبر 2026»; a voided one ends with why instead. */
+/** The wallet's short words for line 2 at 360dp («دفع إلكتروني», «تحويل بنكي»); the other methods' own words are short. */
+const SHORT_METHOD: Partial<Record<PaymentMethod, string>> = W.method;
+
+/** «AB-1022 · lmkl · أول اشتراك · دفع إلكتروني»; a voided one ends with why, in short, instead. The day is on line 1. */
 export function commissionLine(c: MyCommissionRow): string {
   const who = [ltr(c.student.code), isolate(c.student.name)];
-  if (c.state === 'voided') return [...who, c.void_reason ? t.assistantReasons[c.void_reason] : W.voidedByAdmin].join(' · ');
+  if (c.state === 'voided') return [...who, c.void_reason ? W.voided[c.void_reason] : W.voidedByAdmin].join(' · ');
   const kind = c.kind === 'renewal' ? t.assistants.ledger.kind.renewal.replace('{n}', String(c.share_percent)) : t.assistants.ledger.kind.first;
-  return [...who, kind, ...(c.method ? [t.enums.paymentMethod[c.method]] : []), instantDay(c.earned_at)].join(' · ');
+  return [...who, kind, ...(c.method ? [SHORT_METHOD[c.method] ?? t.enums.paymentMethod[c.method]] : [])].join(' · ');
 }
+
+/** «29 أكتوبر 2026»: the day it was earned, on the entry's first line. */
+export const commissionDay = (c: Pick<MyCommissionRow, 'earned_at'>): string => instantDay(c.earned_at);
 
 /** The chip: «مستحقة», «في كشف أكتوبر 2026», «مدفوعة» or «ملغاة». */
 export function walletStateText(c: Pick<MyCommissionRow, 'state' | 'statement_month'>): string {

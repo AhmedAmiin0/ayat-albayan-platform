@@ -1,5 +1,6 @@
 import type { AssistantAdjustmentInput, AssistantCommissionView, BroughtByInput, BroughtByResult } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
+import { CommissionBell } from '../../subscriptions';
 import type { CommissionsQuery } from '../assistant-pay.dto';
 import { AssistantRpc } from '../assistant-pay.rpc';
 import { toCommissionView } from '../commissions/commissions.mapper';
@@ -14,6 +15,7 @@ export class CorrectionsService {
   constructor(
     private readonly queries: CommissionsQueries,
     private readonly rpc: AssistantRpc,
+    private readonly bell: CommissionBell,
   ) {}
 
   async ledger(q: CommissionsQuery): Promise<AssistantCommissionView[]> {
@@ -31,9 +33,13 @@ export class CorrectionsService {
     return { id: await this.rpc.adjust(input) };
   }
 
-  /** One student or many; assistantId null clears it. 409 commission_exists while a live commission belongs to another assistant. */
+  /**
+   * One student or many; assistantId null clears it. 409 commission_exists while a live commission belongs to another
+   * assistant. A change evaluates the student's paid packages, which can earn a commission: «عمولة جديدة» then.
+   */
   async broughtBy(input: BroughtByInput, actorId: string): Promise<BroughtByResult> {
     const changed = await this.rpc.broughtBy({ ...input, actorId, broughtAt: input.broughtAt });
+    if (changed > 0) await this.bell.notify();
     return { changed };
   }
 }

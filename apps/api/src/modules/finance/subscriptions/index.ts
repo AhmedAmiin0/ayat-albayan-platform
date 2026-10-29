@@ -2,6 +2,7 @@ export { SubscriptionAlertsService } from './alerts/alerts.service';
 export { AlertsQueries, type Recipient, type RenewalMessage } from './alerts/alerts.queries';
 export { UnpaidFlags } from './alerts/unpaid-flags.service';
 export { BalanceQueries, type BalanceRow, emptyBalance, toBalance } from './money/balance.queries';
+export { CommissionBell } from './money/commission-bell';
 export { causeOf, MoneyWrites } from './money/money-writes';
 export { PackagesService, type StudentState } from './money/packages.service';
 export { SubscriptionCancelQueries } from './cancel/subscription-cancel.queries';

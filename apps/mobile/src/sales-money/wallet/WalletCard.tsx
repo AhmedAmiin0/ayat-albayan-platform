@@ -11,6 +11,7 @@ const W = t.assistantPortal.wallet;
 /**
  * «محفظتي»'s balance: one block per currency (never summed across them). Line 1 «مستحق لك» and the
  * amount, bold and tabular; line 2 «هذا الشهر +X · دُفع لك Y». Nothing yet: «لا رصيد مستحق الآن».
+ * Below zero (a commission voided after it was paid): «يُخصم من كشفك القادم» and the amount without a sign.
  */
 export function WalletCard({ wallet }: { wallet: Readonly<Record<string, WalletTotals>> }) {
   const { color } = useTheme();
@@ -24,9 +25,9 @@ export function WalletCard({ wallet }: { wallet: Readonly<Record<string, WalletT
         rows.map(([currency, w]) => (
           <View key={currency} testID={`wallet-${currency}`} style={{ gap: 2, minHeight: 44, justifyContent: 'center' }}>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'baseline', gap: 8 }}>
-              <AppText style={{ fontFamily: type.ui[600], fontSize: type.size.sm, color: color.ink2 }}>{W.due}</AppText>
+              <AppText style={{ fontFamily: type.ui[600], fontSize: type.size.sm, color: color.ink2 }}>{w.due < 0 ? W.owedBack : W.due}</AppText>
               <AppText style={{ fontFamily: type.ui[700], fontSize: type.size.h4, color: color.ink, fontVariant: ['tabular-nums'] }}>
-                {walletMoney(w.due, currency)}
+                {walletMoney(Math.abs(w.due), currency)}
               </AppText>
             </View>
             <AppText style={small}>

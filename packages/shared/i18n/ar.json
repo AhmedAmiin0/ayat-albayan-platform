@@ -1590,6 +1590,7 @@
         "statements": "الكشوف"
       },
       "due": "مستحق لك",
+      "owedBack": "يُخصم من كشفك القادم",
       "thisMonth": "هذا الشهر {amount}",
       "paid": "دُفع لك {amount}",
       "none": "لا رصيد مستحق الآن",
@@ -1599,6 +1600,14 @@
       "state": {
         "in_statement": "في كشف {month}",
         "paid": "مدفوعة"
+      },
+      "method": {
+        "card": "دفع إلكتروني",
+        "bank": "تحويل بنكي"
+      },
+      "voided": {
+        "payment_voided": "لم يعد السداد مكتملًا",
+        "student_merged": "دُمج سجل الطالب"
       },
       "voidedByAdmin": "ألغتها الإدارة"
     }

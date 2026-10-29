@@ -1590,6 +1590,7 @@
         "statements": "Statements"
       },
       "due": "Owed to you",
+      "owedBack": "Deducted from your next statement",
       "thisMonth": "This month {amount}",
       "paid": "Paid to you {amount}",
       "none": "Nothing owed right now",
@@ -1599,6 +1600,14 @@
       "state": {
         "in_statement": "In the {month} statement",
         "paid": "Paid"
+      },
+      "method": {
+        "card": "Online",
+        "bank": "Bank transfer"
+      },
+      "voided": {
+        "payment_voided": "No longer fully paid",
+        "student_merged": "Record merged"
       },
       "voidedByAdmin": "Voided by the admin"
     }

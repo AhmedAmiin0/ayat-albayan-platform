@@ -28,7 +28,6 @@ describe('GET /sales/me/* (the assistant portal): who may call, and only ever my
     t.my.payments.mockImplementation(async (id: string) => (id === A ? [dirtyPayment] : []));
     t.my.tz.mockResolvedValue('Asia/Riyadh');
     t.my.commissions.mockResolvedValue([]);
-    t.my.walletRows.mockResolvedValue([]);
     t.my.adjustments.mockResolvedValue([]);
     t.terms.get.mockResolvedValue(null);
     t.statements.list.mockResolvedValue([]);
@@ -103,7 +102,7 @@ describe('GET /sales/me/* (the assistant portal): who may call, and only ever my
   it('earnings: B has no rows of A; this month is built from B terms only', async () => {
     const res = await t.call({ method: 'GET', url: '/sales/me/earnings', token: 'salesB' });
     expect(res.json()).toMatchObject({ terms: null, statements: [], commissions_total: {}, wallet: {} });
-    for (const fn of [t.my.tz, t.my.commissions, t.my.walletRows, t.my.adjustments, t.terms.get]) expect(fn).toHaveBeenCalledWith(B);
+    for (const fn of [t.my.tz, t.my.commissions, t.my.adjustments, t.terms.get]) expect(fn).toHaveBeenCalledWith(B);
     expect(t.statements.list).toHaveBeenCalledWith({ assistantId: B, hideDrafts: true });
   });
 });
