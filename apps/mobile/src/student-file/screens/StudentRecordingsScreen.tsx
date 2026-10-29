@@ -62,7 +62,6 @@ export function StudentRecordingsScreen({ admin = true }: { admin?: boolean }) {
             paged={list}
             keyExtractor={keyOf}
             renderItem={renderItem}
-            refreshing={list.isRefetching && !list.isFetchingNextPage}
             ListHeaderComponent={<Note>{R.hint}</Note>}
             ListFooterComponent={list.isFetchingNextPage ? <Note>{R.loadingMore}</Note> : null}
             ListEmptyComponent={
