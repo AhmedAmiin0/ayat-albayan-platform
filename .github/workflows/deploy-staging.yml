@@ -154,7 +154,7 @@ jobs:
     # A skipped migrate (env_only / migrate unticked) is fine; a failed or declined one stops the deploy.
     if: ${{ !cancelled() && needs.preflight.outputs.ready == 'true' && (needs.migrate.result == 'success' || needs.migrate.result == 'skipped') }}
     runs-on: ubuntu-latest
-    # A build, four health waits (≤ 3 min each) and, on failure, the rollback's build and roll: a cancelled run
+    # A build, five health waits (≤ 3 min each) and, on failure, the rollback's build and roll: a cancelled run
     # (failure() false) would skip the rollback.
     timeout-minutes: 60
     environment: develop

@@ -39,9 +39,9 @@ test('locked down: read-only root, no capability, no setuid, non-root, tmpfs /tm
   assert.equal(pdf.user, 'node');
   assert.equal(pdf.privileged, undefined);
   assert.deepEqual(pdf.tmpfs, ['/tmp:size=64m']);
-  assert.ok(pdf.pids_limit > 0 && pdf.pids_limit <= 64);
+  const { cpus, pids } = pdf.deploy.resources.limits;
+  assert.ok(cpus && pids > 0 && pids <= 64);
   assert.equal(pdf.restart, 'unless-stopped');
-  assert.ok(pdf.deploy.resources.limits.cpus);
 });
 
 test('the socket volume: only ayat-pdf and the two API copies (read-only there), never the worker', () => {

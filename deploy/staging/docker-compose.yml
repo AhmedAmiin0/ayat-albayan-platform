@@ -108,7 +108,6 @@ services:
     # The PDF and its JPEGs, one run at a time (charged to the memory limit below).
     tmpfs:
       - /tmp:size=64m
-    pids_limit: 64
     volumes:
       - pdf-sock:/run/pdf
     restart: unless-stopped
@@ -127,6 +126,8 @@ services:
           # after 10 min). Measure with docker stats on a scanned 10 MB PDF (docs/09) before giving it more.
           memory: 128M
           cpus: "1"
+          # Threads count too: node's ~12 and one poppler run fit; a fork bomb does not.
+          pids: 64
 
   # Round robin over the two copies with active health checks; a refused connection is retried on the other.
   ayat-lb:
