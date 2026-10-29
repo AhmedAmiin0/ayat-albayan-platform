@@ -4604,7 +4604,8 @@
     "teacher": "Teacher",
     "teacherHint": "The teacher–student chat opens after the subscription.",
     "teacherNone": "No teacher assigned yet",
-    "teacherSearch": "Search teachers"
+    "teacherSearch": "Search teachers",
+    "payOnline": "Online payment"
   },
   "registrationCheck": {
     "title": "Registration check",
@@ -7013,7 +7014,6 @@
     }
   },
   "paymentLinks": {
-    "action": "Payment link",
     "title": "Online payment link",
     "testBadge": "Test",
     "kind": {
@@ -7054,18 +7054,16 @@
       "generic": "Could not create the link; try again."
     },
     "web": {
-      "kind": "Link type",
       "agreed": "Agreed amount",
       "reference": "Calculator price",
       "amountPositive": "Enter an amount above zero.",
       "copyFailed": "Could not copy; copy the link by hand.",
       "status": "Status",
       "when": "Date",
-      "emptyHint": "Create a payment link from the family's chat: «More», then «Payment link».",
+      "emptyHint": "Create the payment link from the family's chat: «New subscription», then «Online payment».",
       "maxDiscountRange": "Enter a number from 0 to 100."
     },
     "mobile": {
-      "kind": "Subscription type",
       "agreed": "Agreed amount: {amount} {currency}",
       "cancelling": "Cancelling the link…",
       "cancelFailed": "Could not cancel the link; try again."

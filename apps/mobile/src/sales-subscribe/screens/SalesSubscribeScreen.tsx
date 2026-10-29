@@ -12,15 +12,16 @@ import { SalesSubscribeForm } from '../components/SalesSubscribeForm';
 
 /**
  * The chat's number; a child to preselect (any zone the link carries is ignored: the academy's day rules);
- * `renew` '1' = «جدّد الاشتراك»: the form opens on that child's last package.
+ * `renew` '1' = «جدّد الاشتراك»: a child due for one opens on its last package (several due: none picked yet).
  */
 type Params = { phone?: string; studentId?: string; renew?: string };
 
 /**
  * /inbox/sales-subscribe?phone=… (R-ASST-01, owner 2026-10-12): «اشتراك جديد» from a family's chat by
- * the salesperson, for one of HER students only (GET /sales/money/family). Priced and saved through
- * the sales endpoints; then the package's weekly days and its transfer. A preselected child of hers
- * also offers «أيام الحلقات» straight away (a package already sold, its days not booked yet).
+ * the salesperson, for one of HER students only (GET /sales/money/family), the child picked here (owner
+ * 2026-10-29: no names on the chat's pills). Priced and saved through the sales endpoints; then the
+ * package's weekly days and its transfer, or a payment link (the Stripe test build). A preselected child of
+ * hers also offers «أيام الحلقات» straight away (a package already sold, its days not booked yet).
  */
 export function SalesSubscribeScreen() {
   const params = useLocalSearchParams<Params>();
@@ -30,7 +31,7 @@ export function SalesSubscribeScreen() {
   const base = useTreeBase();
   const back = () => (router.canGoBack() ? router.back() : router.replace(inTree(base, '/inbox')));
   const own = students.find((s) => s.id === params.studentId);
-  const renew = params.renew === '1' && !!own;
+  const renew = params.renew === '1';
   // «أيام الحلقات» stays hers only: a child listed through sales.renew_any (`mine: false`) gets the package only.
   const courseDays = own && own.mine !== false
     ? () => router.push(inTree(base, { pathname: '/inbox/sales-course', params: { studentId: own.id } }))
@@ -57,6 +58,7 @@ export function SalesSubscribeScreen() {
               phone={phone}
               students={students}
               renew={renew}
+              onDone={back}
               {...(params.studentId ? { studentId: params.studentId } : {})}
             />
           </>

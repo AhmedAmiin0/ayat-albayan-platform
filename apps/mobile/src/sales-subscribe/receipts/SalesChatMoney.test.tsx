@@ -49,16 +49,26 @@ test.each(['pending_renewal', 'expired', 'active'] as const)('her %s student due
   });
 });
 
-test('the renew pills come first, one per due child, then «اشتراك جديد» and the transfer', async () => {
+test('several due: ONE «جدّد الاشتراك» with no child named and no «اشتراك جديد»; the child is picked inside', async () => {
   serve(familyOf(kid({ status: 'expired', renew_due: true, open: [openSub()] }), kid({ id: KID2, name: 'سلمى', renew_due: true }), kid({ id: 'k3', name: 'هند' })));
   await renderWithQuery(<SalesChatMoney thread={familyThread} />, createTestQueryClient({ meFromApi: true }));
-  await screen.findByRole('button', { name: m.newSubscription });
-  expect(screen.getAllByRole('button').map((b) => within(b).getByText(/.+/).props.children)).toEqual([
-    `${t.students.renew} — ريم`,
-    `${t.students.renew} — سلمى`,
-    m.newSubscription,
-    m.recordTransfer,
-  ]);
+  await screen.findByRole('button', { name: t.students.renew });
+  const labels = screen.getAllByRole('button').map((b) => String(within(b).getByText(/.+/).props.children));
+  expect(labels).toEqual([t.students.renew, m.recordTransfer]);
+  expect(labels.some((l) => l.includes(' — '))).toBe(false);
+  await fireEvent.press(screen.getByRole('button', { name: t.students.renew }));
+  expect(mockPush).toHaveBeenLastCalledWith({ pathname: '/inbox/sales-subscribe', params: { phone: PHONE, renew: '1', tz: 'Asia/Riyadh' } });
+});
+
+test('one due among several children: still no name, that child preselected', async () => {
+  serve(familyOf(kid(), kid({ id: KID2, name: 'سلمى', renew_due: true })));
+  await renderWithQuery(<SalesChatMoney thread={familyThread} />, createTestQueryClient({ meFromApi: true }));
+  await fireEvent.press(await screen.findByRole('button', { name: t.students.renew }));
+  expect(mockPush).toHaveBeenLastCalledWith({
+    pathname: '/inbox/sales-subscribe',
+    params: { phone: PHONE, studentId: KID2, renew: '1', tz: 'Asia/Riyadh' },
+  });
+  expect(screen.queryByRole('button', { name: m.newSubscription })).toBeNull();
 });
 
 test.each(['new', 'trial', 'pending_subscription', 'active', 'paused', 'churned', 'expired'] as const)('her %s student, not due: no «جدّد الاشتراك»', async (status) => {
