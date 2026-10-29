@@ -8,6 +8,8 @@ import { ChatReceiptThumb } from './ChatReceiptThumb';
 
 interface ChatReceiptRowProps {
   studentId: string;
+  /** The chat's phone for a child not hers (chatBinding). */
+  bind?: { phone?: string };
   item: SalesChatReceipt;
   /** This file is being copied now. */
   busy: boolean;
@@ -15,7 +17,7 @@ interface ChatReceiptRowProps {
 }
 
 /** One image / PDF of the family's chat: its thumbnail, day and caption; an expired one is off. */
-export function ChatReceiptRow({ studentId, item, busy, onPick }: ChatReceiptRowProps) {
+export function ChatReceiptRow({ studentId, bind, item, busy, onPick }: ChatReceiptRowProps) {
   const { color } = useTheme();
   const name = [instantDay(item.created_at), item.caption].filter(Boolean).join(' · ');
   const off = item.expired || busy;
@@ -35,7 +37,7 @@ export function ChatReceiptRow({ studentId, item, busy, onPick }: ChatReceiptRow
         backgroundColor: pressed ? color.sunk : 'transparent',
       })}
     >
-      <ChatReceiptThumb studentId={studentId} item={item} />
+      <ChatReceiptThumb studentId={studentId} item={item} {...(bind ? { bind } : {})} />
       <View style={{ flex: 1, gap: 2 }}>
         <AppText style={{ fontFamily: type.ui[600], fontSize: type.size.sm, color: color.ink }}>{name}</AppText>
         {item.expired ? (

@@ -23,15 +23,20 @@ export class SalesMoneyReads {
     return this.family.studentStatus(studentId);
   }
 
-  /** Only the children she owns; each with its unpaid packages that still have money due, and its renewal (SalesRenewals). */
-  async familyOf(phone: string, own: Pick<SalesOwnership, 'studentIds'>): Promise<SalesFamilyView> {
+  /**
+   * Only the children she owns, or every child with `all` (sales.renew_any, docs/16 row 38; `mine` says which are
+   * hers); each with its unpaid packages that still have money due, and its renewal (SalesRenewals).
+   */
+  async familyOf(phone: string, scope: { own: Pick<SalesOwnership, 'studentIds'>; all: boolean }): Promise<SalesFamilyView> {
     const rows = await this.family.studentsOfPhone(phone);
-    const mine = rows.filter((s) => own.studentIds.includes(s.id));
-    const renewals = await this.renewals.of(mine);
+    const isMine = (id: string) => scope.own.studentIds.includes(id);
+    const listed = scope.all ? rows : rows.filter((s) => isMine(s.id));
+    const renewals = await this.renewals.of(listed);
     const students = await Promise.all(
-      mine.map(async (s) => {
+      listed.map(async (s) => {
         const open = await this.open(s.id);
-        return { id: s.id, code: s.code ?? '', name: s.name, status: s.status, open, ...(renewals.get(s.id) ?? NOT_DUE) };
+        const due = renewals.get(s.id) ?? NOT_DUE;
+        return { id: s.id, code: s.code ?? '', name: s.name, status: s.status, mine: isMine(s.id), open, ...due };
       }),
     );
     return { students };

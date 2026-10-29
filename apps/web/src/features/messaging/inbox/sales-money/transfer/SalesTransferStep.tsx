@@ -8,7 +8,7 @@ import { currencySymbol, packageName, studentLabel } from '@/features/finance/su
 import { ShortfallNote } from '@/features/finance/payments';
 import { t } from '@/lib/i18n/i18n';
 import { useUploadMaxBytes } from '@/lib/settings/public-config';
-import { cancelSalesSubscription, SALES_MONEY_KEY } from '../api';
+import { cancelSalesSubscription, SALES_MONEY_KEY, type Bind } from '../api';
 import { salesErrorText } from '../errors';
 import { PackagePicker } from './PackagePicker';
 import { ReceiptChooser } from './ReceiptChooser';
@@ -25,6 +25,8 @@ type Props = {
   onSaved: (payment: SalesPaymentView) => void;
   /** Right after «اشتراك جديد»: «احجز أيام الحلقات الآن» for the new package's student. */
   onBookCourse?: (() => void) | undefined;
+  /** The chat's phone for a child not hers (chatBinding, sales.renew_any): the transfer only, never «إلغاء الباقة». */
+  bindOf?: ((studentId: string) => Bind) | undefined;
 };
 
 const today = () => new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Riyadh' });
@@ -39,7 +41,7 @@ const formFor = (s: SalesMoneySubscriptionView | undefined): TransferForm => ({
  * due; a smaller amount says the package stays unpaid (owner 2026-10-28) but still saves. A package she
  * made by mistake (nothing paid) is cancelled from here instead («إلغاء الباقة», owner 2026-10-28).
  */
-export function SalesTransferStep({ fixed, packages, onClose, onSaved, onBookCourse }: Props) {
+export function SalesTransferStep({ fixed, packages, onClose, onSaved, onBookCourse, bindOf }: Props) {
   const formId = useId();
   const maxBytes = useUploadMaxBytes();
   const [pickedId, setPickedId] = useState(() => fixed?.id ?? (packages.length === 1 ? (packages[0]?.id ?? '') : ''));
@@ -48,7 +50,8 @@ export function SalesTransferStep({ fixed, packages, onClose, onSaved, onBookCou
   const [chosen, setChosen] = useState<ReceiptChoice[]>([]);
   const [amountError, setAmountError] = useState<string | null>(null);
   const [cancelling, setCancelling] = useState(false);
-  const save = useSalesPayment(onSaved);
+  const bind = sub && bindOf ? bindOf(sub.student.id) : {};
+  const save = useSalesPayment(onSaved, bind);
   const attachments = sub ? attachmentsFor(chosen, sub.id) : [];
 
   const pick = (id: string) => {
@@ -86,7 +89,7 @@ export function SalesTransferStep({ fixed, packages, onClose, onSaved, onBookCou
               <p className="text-sm text-ink-2">
                 {t.salesMoney.packageFor.replace('{student}', studentLabel(sub.student))} · {packageName(sub)} · {dueLine(sub)}
               </p>
-              {cancelOffered(sub) && (
+              {cancelOffered(sub) && !bind.phone && (
                 <Button type="button" variant="ghost" size="sm" className="justify-self-start" onClick={() => setCancelling(true)}>
                   {t.subscriptions.cancel.action}
                 </Button>
@@ -96,7 +99,7 @@ export function SalesTransferStep({ fixed, packages, onClose, onSaved, onBookCou
                   {t.booking.bookCourseDays}
                 </Button>
               )}
-              <ReceiptChooser sub={sub} value={attachments} onChange={setChosen} maxBytes={maxBytes} />
+              <ReceiptChooser sub={sub} value={attachments} onChange={setChosen} maxBytes={maxBytes} bind={bind} />
               <TransferFields form={form} set={(patch) => setForm((f) => ({ ...f, ...patch }))} packageCurrency={sub.currency} today={today()} amountError={amountError} />
               <ShortfallNote amount={form.amount} due={sub.due} currencyLabel={currencySymbol(sub.currency)} />
             </>

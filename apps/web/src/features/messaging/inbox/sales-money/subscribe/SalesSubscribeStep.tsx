@@ -1,4 +1,4 @@
-import { DISCOUNTS, usedBeforeMax, type SalesFamilyStudent, type SalesMoneySubscriptionView } from '@ab/shared';
+import { chatBinding, DISCOUNTS, usedBeforeMax, type SalesFamilyStudent, type SalesMoneySubscriptionView } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useId, useRef, useState, type FormEvent } from 'react';
 import { Button } from '@/components/ui/form/button';
@@ -18,6 +18,8 @@ import { startBody } from './start-body';
 
 type Props = {
   students: SalesFamilyStudent[];
+  /** The chat's phone: sent only for a child not hers (chatBinding, sales.renew_any, docs/16 row 38). */
+  phone?: string | undefined;
   /** The student already picked (a renewal); else the only one, or none. */
   picked?: string | undefined;
   /** «جدّد الاشتراك»: only her students due for a renewal, the calculator prefilled from the picked one's. */
@@ -33,7 +35,7 @@ type Props = {
  * the student's last package (GET /sales/money/family `renewal`, the admin's renewalPricing); she may change
  * anything; the first day is the same default as any package (today, Riyadh), like the admin's renewal.
  */
-export function SalesSubscribeStep({ students, picked, renew = false, onClose, onSaved }: Props) {
+export function SalesSubscribeStep({ students, phone = '', picked, renew = false, onClose, onSaved }: Props) {
   const queryClient = useQueryClient();
   const formId = useId();
   const choices = renew ? students.filter((s) => s.renew_due || s.id === picked) : students;
@@ -49,6 +51,7 @@ export function SalesSubscribeStep({ students, picked, renew = false, onClose, o
   const [start, setStart] = useState<StartValue>({ startsOn: today, alreadyStarted: false, usedBefore: 0 });
   const [startError, setStartError] = useState<string | null>(null);
   const pricing = pricingBody(form);
+  const bind = chatBinding(students, { studentId, phone });
   // A smaller package clamps «حلقات مستخدمة من الباقة» to one lesson left per course day.
   const lessonsTotal = pricingLessons(pricing);
   const usedMax = usedBeforeMax(lessonsTotal);
@@ -68,7 +71,7 @@ export function SalesSubscribeStep({ students, picked, renew = false, onClose, o
     const checked = startBody(startShown, { canSet, today, lessonsTotal });
     setStartError(checked.ok ? null : t.salesMoney.error[checked.code]);
     if (!checked.ok) return;
-    const body = { studentId, pricing, ...checked.body };
+    const body = { studentId, pricing, ...checked.body, ...bind };
     const key = JSON.stringify(body);
     if (request.current?.body !== key) request.current = { body: key, id: crypto.randomUUID() };
     save.mutate({ ...body, clientRequestId: request.current.id });
@@ -92,7 +95,7 @@ export function SalesSubscribeStep({ students, picked, renew = false, onClose, o
       <form id={formId} className="grid gap-5" onSubmit={submit} noValidate>
         <ChildPicker students={choices} value={studentId} onChange={pick} />
         <PricingFields form={form} discounts={DISCOUNTS} set={(patch) => setForm((f) => ({ ...f, ...patch }))} />
-        {studentId && <SalesQuotePreview studentId={studentId} pricing={pricing} />}
+        {studentId && <SalesQuotePreview studentId={studentId} pricing={pricing} bind={bind} />}
         <SalesStartField canSet={canSet} today={today} value={startShown} usedMax={usedMax} onChange={(patch) => setStart((v) => ({ ...v, ...patch }))} error={startError} />
         {save.isError && <FormAlert>{salesErrorText(save.error)}</FormAlert>}
       </form>

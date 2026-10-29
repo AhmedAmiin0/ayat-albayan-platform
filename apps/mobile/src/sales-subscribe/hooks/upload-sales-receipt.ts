@@ -9,11 +9,12 @@ import { ReceiptUploadError } from '@/payments/upload-receipt';
  * /sales/payments/receipt-upload-url (her student's package only), then the signed upload into the
  * private `receipts` bucket. Resolves the path for POST /sales/payments.
  */
-export async function uploadSalesReceipt(subscriptionId: string, receipt: Receipt): Promise<string> {
+export async function uploadSalesReceipt(subscriptionId: string, receipt: Receipt, bind: { phone?: string } = {}): Promise<string> {
   const signed = await apiSend<SignedUpload>('POST', '/sales/payments/receipt-upload-url', {
     subscriptionId,
     mime: receipt.mime,
     size: receipt.size,
+    ...bind,
   });
   const { error } = await supabase.storage
     .from(signed.bucket)

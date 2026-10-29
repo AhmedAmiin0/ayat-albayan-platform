@@ -5,20 +5,20 @@ import { durationLabel, packageCopy, sessionsOf } from '@/features/finance/prici
 import { useDebounced } from '@/features/finance/pricing/use-debounced';
 import { Amount } from '@/features/finance/subscriptions/balance/Amount';
 import { t } from '@/lib/i18n/i18n';
-import { quoteSalesSubscription, SALES_MONEY_KEY } from '../api';
+import { quoteSalesSubscription, SALES_MONEY_KEY, type Bind } from '../api';
 import { salesErrorText } from '../errors';
 
-type Props = { studentId: string; pricing: SubscriptionPricing };
+type Props = { studentId: string; pricing: SubscriptionPricing; bind?: Bind | undefined };
 
 /**
  * «المبلغ المطلوب تحويله»: POST /sales/subscriptions/quote, the price the create will store, in the
  * family's currency. The admin's QuotePreview without the fx details; shown, never typed.
  */
-export function SalesQuotePreview({ studentId, pricing }: Props) {
+export function SalesQuotePreview({ studentId, pricing, bind }: Props) {
   const settled = useDebounced(pricing, 300);
   const quote = useQuery({
     queryKey: [...SALES_MONEY_KEY, 'quote', studentId, settled],
-    queryFn: () => quoteSalesSubscription({ studentId, pricing: settled }),
+    queryFn: () => quoteSalesSubscription({ studentId, pricing: settled, ...bind }),
   });
 
   if (quote.isError) return <FormAlert>{salesErrorText(quote.error)}</FormAlert>;

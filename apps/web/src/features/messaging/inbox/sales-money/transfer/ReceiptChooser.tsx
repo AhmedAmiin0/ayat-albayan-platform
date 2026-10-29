@@ -5,6 +5,7 @@ import { AttachmentItems } from '@/features/finance/payments/attachments/Attachm
 import { AttachmentPicker } from '@/features/finance/payments/attachments/AttachmentPicker';
 import { addAttachments, type AttachmentProblem } from '@/features/finance/payments/attachments/attachments';
 import { t } from '@/lib/i18n/i18n';
+import type { Bind } from '../api';
 import { ChatReceiptGrid } from './ChatReceiptGrid';
 import { addChatChoice, attachmentItem, pickedMessages, type ReceiptChoice } from './receipt';
 
@@ -13,13 +14,15 @@ type Props = {
   value: ReceiptChoice[];
   onChange: (list: ReceiptChoice[]) => void;
   maxBytes: number;
+  /** The chat's phone for a child not hers (chatBinding). */
+  bind?: Bind | undefined;
 };
 
 /**
  * The transfer's «المرفقات» (R-ASST-04, optional, up to five): files the family sent in this chat (copied
  * into the package's receipts when picked) and photos / PDFs she uploads (checked here, uploaded on save).
  */
-export function ReceiptChooser({ sub, value, onChange, maxBytes }: Props) {
+export function ReceiptChooser({ sub, value, onChange, maxBytes, bind }: Props) {
   const [browsing, setBrowsing] = useState(false);
   const [problem, setProblem] = useState<AttachmentProblem | null>(null);
   const apply = (next: { list: ReceiptChoice[]; problem: AttachmentProblem | null }) => {
@@ -50,6 +53,7 @@ export function ReceiptChooser({ sub, value, onChange, maxBytes }: Props) {
       {browsing && !full && (
         <ChatReceiptGrid
           sub={sub}
+          bind={bind}
           picked={pickedMessages(value, sub.id)}
           onPicked={(choice) => {
             setBrowsing(false);
