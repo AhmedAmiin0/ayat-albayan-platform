@@ -80,10 +80,9 @@ test('a lead without a guardian: «اشترك» opens the booking wizard with it
       params: { leadId: 'a1', phone: PHONE, mode: 'subscribe', name: 'هدى سالم' },
     },
   });
-  const nameless = subscribeAction({ people: leadOnly, phone: PHONE, thread: null });
-  expect(nameless?.href).toEqual({
-    pathname: '/inbox/book',
-    params: { leadId: 'a1', phone: PHONE, mode: 'subscribe' },
+  expect(subscribeAction({ people: leadOnly, phone: PHONE, thread: null })).toEqual({
+    label: s.subscribe,
+    href: { pathname: '/inbox/book', params: { leadId: 'a1', phone: PHONE, mode: 'subscribe' } },
   });
 });
 

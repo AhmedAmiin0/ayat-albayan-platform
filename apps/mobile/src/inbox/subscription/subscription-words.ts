@@ -56,7 +56,7 @@ export function dueLine(sub: ThreadSubscriptionView | null): string | null {
 export const running = (student: ThreadStudentView) => subscriptionBadge([student]) === 'subscribed';
 
 /** One row of «لأيّ طالب؟»: «يوسف · AB-0183 — جدّد الاشتراك» and that child's own form. */
-export interface SubscribeTarget {
+interface SubscribeTarget {
   label: string;
   href: Href;
 }
