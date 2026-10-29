@@ -6,4 +6,5 @@ export * from './schemas.js';
 export * from './started.js';
 export * from './statement.js';
 export * from './terms-dates.js';
+export * from './wallet.js';
 export type * from './views.js';

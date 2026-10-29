@@ -8,11 +8,17 @@ import type { PushTransport } from '../push.service';
 // docs/23 §2c: every staff push kind asks its notification rule (on/off, channels) before the bell row.
 
 const snap = (input: FakePolicyInput = {}) => fakeRulesReader(input).snapshot();
+/** The catalogue rows with no push channel: the bell row only. */
+const BELL_ONLY: ReadonlySet<string> = new Set(['google_sync_alert', 'commission_earned']);
 
 describe('pushRoute', () => {
-  it('legacy, no rows: every kind as before (bell + push; google_sync_alert has no push channel)', async () => {
+  it('legacy, no rows: every kind as before (bell + push; the bell-only kinds have no push channel)', async () => {
     const s = await snap();
-    for (const kind of PUSH_KINDS) expect(pushRoute(s, kind)).toEqual({ bell: true, push: kind !== 'google_sync_alert' });
+    for (const kind of PUSH_KINDS) expect(pushRoute(s, kind), kind).toEqual({ bell: true, push: !BELL_ONLY.has(kind) });
+  });
+
+  it('commission_earned («محفظتي») goes to the bell only', async () => {
+    expect(pushRoute(await snap(), 'commission_earned')).toEqual({ bell: true, push: false });
   });
 
   it('a row off: nothing; push left out of its channels: the bell only', async () => {

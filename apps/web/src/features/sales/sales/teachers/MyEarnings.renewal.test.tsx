@@ -22,12 +22,13 @@ const EARNINGS: Earnings = {
   terms: { assistant_id: 'a1', commission: { type: 'percent', value: 10, currency: null, starts_on: '2026-09-01' }, salary: null, renewal_share_percent: 40 },
   this_month: {},
   commissions_total: { SAR: 45 },
+  wallet: { SAR: { due: 45, paid: 0, this_month: 0 } },
   statements: [STATEMENT],
 };
 
 afterEach(() => apiFetch.mockReset());
 
-describe('MyEarnings «أرباحي»: renewal commissions (owner 2026-10-26)', () => {
+describe('MyEarnings «الكشوف»: renewal commissions (owner 2026-10-26)', () => {
   it('the note says each renewal earns the share the admin set; a renewal line reads «عمولة تجديد»', async () => {
     apiFetch.mockResolvedValue(EARNINGS);
     render(

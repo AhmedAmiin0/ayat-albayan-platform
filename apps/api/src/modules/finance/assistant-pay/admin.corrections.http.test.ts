@@ -76,4 +76,13 @@ describe('ledger, void, adjustment and attribution (admin)', () => {
     const clash = await t.call({ method: 'POST', url: '/assistant-pay/brought-by', token: 'admin', body: { studentIds: [STUDENT], assistantId: A } });
     expect([clash.statusCode, clash.json().code]).toEqual([409, 'commission_exists']);
   });
+
+  it('a changed attribution evaluates the paid packages: the bell rings what they earned; nothing changed, no bell', async () => {
+    t.rpc.broughtBy.mockResolvedValueOnce(1).mockResolvedValueOnce(0);
+    const body = { studentIds: [STUDENT], assistantId: A };
+    await t.call({ method: 'POST', url: '/assistant-pay/brought-by', token: 'admin', body });
+    expect(t.bell.notify).toHaveBeenCalledTimes(1);
+    await t.call({ method: 'POST', url: '/assistant-pay/brought-by', token: 'admin', body });
+    expect(t.bell.notify).toHaveBeenCalledTimes(1);
+  });
 });

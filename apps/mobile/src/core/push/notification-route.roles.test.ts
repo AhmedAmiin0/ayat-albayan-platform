@@ -34,6 +34,7 @@ test.each([
   [{ kind: 'meeting_invite', meetingId: 'm1' }, '/sales/more/meetings'],
   [{ kind: 'lesson_needs_confirmation', lessonId: 'l1' }, '/sales/today'],
   [{ kind: 'google_sync_alert' }, '/sales/more'],
+  [{ kind: 'commission_earned', commissionId: 'c1' }, '/sales/more/earnings'],
 ])('a salesperson tapping %j opens %s', (data, href) => {
   expect(salesRouteFor(data)).toBe(href);
 });
@@ -46,6 +47,8 @@ test('without inbox.read a message opens «المزيد»; without self.sales_ac
   expect(salesRouteFor({ kind: 'meeting_invite' }, none)).toBe('/sales/more');
   expect(salesRouteFor({ kind: 'meeting_invite' }, only('meetings.read'))).toBe('/sales/more/meetings');
   expect(salesRouteFor({ kind: 'lesson_needs_confirmation' }, none)).toBe('/sales/more');
+  expect(salesRouteFor({ kind: 'commission_earned' }, none)).toBe('/sales/more');
+  expect(salesRouteFor({ kind: 'commission_earned' }, only('self.sales_earnings'))).toBe('/sales/more/earnings');
 });
 
 test.each([
@@ -54,6 +57,7 @@ test.each([
   [{ kind: 'lesson_needs_confirmation' }, '/assistant/lessons'],
   [{ kind: 'payment_due' }, '/assistant/lessons'],
   [{ kind: 'google_sync_alert' }, '/assistant/lessons'],
+  [{ kind: 'commission_earned' }, '/assistant/lessons'],
 ])('an assistant tapping %j opens %s', (data, href) => {
   expect(assistantRouteFor(data)).toBe(href);
 });

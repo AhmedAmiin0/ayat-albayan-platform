@@ -12,6 +12,7 @@ export function mocks() {
     cancels: { linkedLessons: vi.fn(), laterCommission: vi.fn(), cancel: vi.fn() }, // «إلغاء الباقة»
     leads: { afterPackage: vi.fn() },
     activation: { afterPayment: vi.fn() },
+    commissionBell: { notify: vi.fn() }, // «عمولة جديدة» after every money write
     statuses: { student: vi.fn(), lastStatusChange: vi.fn(), hasPositivePayment: vi.fn(), move: vi.fn() },
     trials: { studentsOfTrialLessons: vi.fn(), lessonsOf: vi.fn() },
     balances: { forSubscriptions: vi.fn(), forStudents: vi.fn() },

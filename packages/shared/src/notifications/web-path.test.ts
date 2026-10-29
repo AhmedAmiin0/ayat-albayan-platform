@@ -38,6 +38,13 @@ describe('webNotificationPath (R-NOT-01)', () => {
     expect(webNotificationPath({ kind: 'channel_message', studentId: id }, 'admin')).toBe('/admin');
   });
 
+  it('commission_earned: «محفظتي» for sales (owner 2026-10-29), home for anyone else', () => {
+    expect(webNotificationPath({ kind: 'commission_earned', commissionId: STUDENT }, 'sales')).toBe('/sales/earnings');
+    expect(webNotificationPath({ kind: 'commission_earned' }, 'admin')).toBe('/admin');
+    expect(webNotificationPath({ kind: 'commission_earned' }, 'teacher')).toBe('/teacher');
+    expect(webNotificationPath({ kind: 'commission_earned' }, 'assistant')).toBe('/assistant');
+  });
+
   it('google_sync_alert: «مزامنة Google» for admins (docs/26b §1), home for anyone else', () => {
     expect(webNotificationPath({ kind: 'google_sync_alert' }, 'admin')).toBe('/admin/settings/google');
     expect(webNotificationPath({ kind: 'google_sync_alert' }, 'teacher')).toBe('/teacher');

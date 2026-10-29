@@ -14,6 +14,8 @@ export function parseSalesSubscriptionsSearch(s: Record<string, unknown>): { kin
 export const parseStudentsSearch = (s: Record<string, unknown>): { view?: 'mine' } =>
   s['view'] === 'mine' ? { view: 'mine' } : {};
 
-/** /sales/earnings: `?view=payments` shows «مدفوعاتي»; «أرباحي» is the default. */
-export const parseMoneySearch = (s: Record<string, unknown>): { view?: 'payments' } =>
-  s['view'] === 'payments' ? { view: 'payments' } : {};
+/** /sales/earnings «محفظتي»: `?view=statements` «الكشوف», `?view=payments` «مدفوعاتي»; «العمولات» is the default. */
+export function parseMoneySearch(s: Record<string, unknown>): { view?: 'statements' | 'payments' } {
+  const view = s['view'];
+  return view === 'payments' || view === 'statements' ? { view } : {};
+}

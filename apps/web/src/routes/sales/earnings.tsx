@@ -2,7 +2,7 @@ import { createFileRoute } from '@tanstack/react-router';
 import { SalesMoney } from '@/features/sales/sales/money/SalesMoney';
 import { parseMoneySearch } from '@/features/sales/sales/search';
 
-/** /sales/earnings?view=payments «أرباحي» — my salary, commissions and statements; «مدفوعاتي» is a filter. */
+/** /sales/earnings «محفظتي» — my commissions and balance; ?view=statements «الكشوف», ?view=payments «مدفوعاتي». */
 export const Route = createFileRoute('/sales/earnings')({
   validateSearch: parseMoneySearch,
   component: SalesMoneyRoute,
@@ -11,5 +11,5 @@ export const Route = createFileRoute('/sales/earnings')({
 function SalesMoneyRoute() {
   const { view = 'earnings' } = Route.useSearch();
   const navigate = Route.useNavigate();
-  return <SalesMoney view={view} onView={(next) => void navigate({ search: next === 'payments' ? { view: next } : {} })} />;
+  return <SalesMoney view={view} onView={(next) => void navigate({ search: next === 'earnings' ? {} : { view: next } })} />;
 }

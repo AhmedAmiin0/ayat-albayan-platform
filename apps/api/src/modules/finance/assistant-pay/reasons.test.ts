@@ -23,8 +23,8 @@ describe('reasonText: the codes the database writes never reach a reader as raw 
 describe('the reason of an adjustment line and of a ledger row goes through reasonText', () => {
   it('a statement line of an automatic reversal shows the text, not payment_voided', () => {
     const view = toStatementView(statementRow({ lines: [
-      { kind: 'adjustment', amount: -20, currency: 'SAR', commission: null, adjustment: { reason: 'payment_voided' } },
-      { kind: 'adjustment', amount: -5, currency: 'SAR', commission: null, adjustment: { reason: 'خصم يدوي' } },
+      { kind: 'adjustment', amount: -20, currency: 'SAR', commission: null, adjustment: { kind: 'reversal', reason: 'payment_voided' } },
+      { kind: 'adjustment', amount: -5, currency: 'SAR', commission: null, adjustment: { kind: 'manual', reason: 'خصم يدوي' } },
     ] }));
     expect(view.lines.map((l) => l.reason)).toEqual([ar.assistantReasons.payment_voided, 'خصم يدوي']);
     expect(JSON.stringify(view)).not.toContain('payment_voided');

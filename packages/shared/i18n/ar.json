@@ -1517,7 +1517,7 @@
     "title": "المبيعات",
     "nav": {
       "students": "طلابي",
-      "earnings": "أرباحي",
+      "earnings": "محفظتي",
       "payments": "مدفوعاتي"
     },
     "register": {
@@ -1541,7 +1541,7 @@
       "voided": "ملغاة"
     },
     "earnings": {
-      "title": "أرباحي",
+      "title": "محفظتي",
       "terms": "شروطي",
       "noTerms": "لم تُحدَّد شروط راتبك وعمولتك بعد. تواصل مع الإدارة.",
       "salary": "الراتب الشهري",
@@ -1583,6 +1583,33 @@
       "method": "الطريقة",
       "paidAt": "تاريخ الدفع",
       "note": "ملاحظة"
+    },
+    "wallet": {
+      "views": {
+        "commissions": "العمولات",
+        "statements": "الكشوف"
+      },
+      "due": "مستحق لك",
+      "owedBack": "يُخصم من كشفك القادم",
+      "thisMonth": "هذا الشهر {amount}",
+      "paid": "دُفع لك {amount}",
+      "none": "لا رصيد مستحق الآن",
+      "list": "عمولاتي",
+      "empty": "لا توجد عمولات بعد",
+      "emptyHint": "تظهر هنا كل عمولة فور سداد اشتراك طالب أحضرته بالكامل.",
+      "state": {
+        "in_statement": "في كشف {month}",
+        "paid": "مدفوعة"
+      },
+      "method": {
+        "card": "دفع إلكتروني",
+        "bank": "تحويل بنكي"
+      },
+      "voided": {
+        "payment_voided": "لم يعد السداد مكتملًا",
+        "student_merged": "دُمج سجل الطالب"
+      },
+      "voidedByAdmin": "ألغتها الإدارة"
     }
   },
   "reports": {
@@ -3497,6 +3524,10 @@
     "channel_message": {
       "title": "رسالة جديدة من أسرة طالب",
       "body": "{student}: {text}"
+    },
+    "commission_earned": {
+      "title": "عمولة جديدة",
+      "body": "{amount} — {code} {student}"
     }
   },
   "bell": {
@@ -3720,7 +3751,8 @@
       "new_student": "طالب جديد",
       "meeting_invite": "دعوة إلى اجتماع",
       "google_sync_alert": "تنبيه مزامنة Google",
-      "channel_message": "رسالة في محادثة طالب"
+      "channel_message": "رسالة في محادثة طالب",
+      "commission_earned": "عمولة جديدة"
     },
     "paymentKind": {
       "payment": "دفعة",
@@ -5946,6 +5978,10 @@
       "channel_message": {
         "name": "رسالة من أسرة الطالب في المحادثة",
         "trigger": "عند وصول رسالة من الطالب أو ولي الأمر في محادثة الطالب"
+      },
+      "commission_earned": {
+        "name": "عمولة جديدة للمساعد",
+        "trigger": "عند سداد اشتراك طالب أحضره المساعد بالكامل"
       }
     }
   },

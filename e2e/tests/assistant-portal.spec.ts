@@ -89,7 +89,8 @@ test.describe('assistant portal', () => {
     await expect(page.getByText(names.other)).toHaveCount(0);
     await expect(page.getByText('777')).toHaveCount(0);
 
-    await money.getByRole('button', { name: ar.assistantPortal.nav.earnings }).click();
+    // «محفظتي» (owner 2026-10-29): «العمولات» | «الكشوف» | «مدفوعاتي»; the terms and statements are «الكشوف».
+    await money.getByRole('button', { name: ar.assistantPortal.wallet.views.statements }).click();
     await expect(page.getByRole('heading', { name: ar.assistantPortal.earnings.terms })).toBeVisible();
     await expect(page.getByText(ar.assistantPortal.earnings.commissionPercent.replace('{value}', '10'))).toBeVisible();
     await expect(page.getByText(ar.assistantPortal.earnings.statementsEmpty)).toBeVisible();

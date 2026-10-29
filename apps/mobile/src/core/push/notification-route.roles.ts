@@ -22,10 +22,13 @@ const toSalesToday = (_data: unknown, can: Can) => (canOpen(can, 'salesSchedule'
 /** R-MEET-03: «الاجتماعات» is back for sales (docs/16 row 12b, reversed 2026-10-12). */
 const toSalesMeetings = (_data: unknown, can: Can) => (canOpen(can, 'salesMeetings') ? '/sales/more/meetings' : SALES_MORE);
 
+/** «عمولة جديدة» → «محفظتي» (owner 2026-10-29), with self.sales_earnings. */
+const toSalesWallet = (_data: unknown, can: Can) => (canOpen(can, 'salesEarnings') ? '/sales/more/earnings' : SALES_MORE);
+
 /**
  * A message → that number's chat in «المحادثات» (the list without a phone); a new student, a
  * report or a payment due → «الطلاب»; a meeting invite → «الاجتماعات» (with meetings.read); a
- * lesson to confirm → «اليوم» (with self.sales_academy); anything else → «المزيد».
+ * lesson to confirm → «اليوم» (with self.sales_academy); a new commission → «محفظتي»; anything else → «المزيد».
  */
 const SALES_ROUTES: Record<PushKind, (data: unknown, can: Can) => string> = {
   new_lead: toSalesThread,
@@ -40,6 +43,7 @@ const SALES_ROUTES: Record<PushKind, (data: unknown, can: Can) => string> = {
   google_sync_alert: () => SALES_MORE,
   // docs/31 §2: teachers only; never sent to a salesperson.
   channel_message: () => SALES_MORE,
+  commission_earned: toSalesWallet,
 };
 
 /** The sales screen a tapped push opens; null for anything that is not one of our pushes. */

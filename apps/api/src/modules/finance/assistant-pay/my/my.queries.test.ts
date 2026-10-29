@@ -42,9 +42,27 @@ describe('MyQueries: every read is filtered on the signed-in profile, and only o
     expect(calls.filter((c) => c.table === 'assistant_adjustments' && c.method === 'eq').map((c) => c.args)).toEqual([['assistant_id', 'a1']]);
   });
 
-  it('tz: the profile of the login; UTC when it has none', async () => {
+  it('tz: the profile of the login; Riyadh when it has none (the database’s own fallback)', async () => {
     const { db } = fakeDb({ profiles: [{ data: null }] });
-    expect(await new MyQueries(db).tz('a1')).toBe('UTC');
+    expect(await new MyQueries(db).tz('a1')).toBe('Asia/Riyadh');
+  });
+
+  it('adjustments carry their kind: the wallet counts the reversals only', async () => {
+    const { db, calls } = fakeDb({ assistant_adjustments: [{ data: [] }] });
+    await new MyQueries(db).adjustments('a1');
+    expect(String(calls.find((c) => c.method === 'select')?.args[0])).toContain('kind');
+  });
+
+  it('commissionPage: mine only, newest first then id, the page as a range, the count as the total', async () => {
+    const { db, calls } = fakeDb({ assistant_commissions: [{ data: [{ id: 'c1' }], count: 41 }] });
+    const out = await new MyQueries(db).commissionPage('a1', { page: 2, pageSize: 20 });
+    expect(out).toEqual({ rows: [{ id: 'c1' }], total: 41 });
+    expect(eqs(calls)).toEqual([['assistant_id', 'a1']]);
+    expect(calls.filter((c) => c.method === 'order').map((c) => c.args)).toEqual([['earned_at', { ascending: false }], ['id', { ascending: false }]]);
+    expect(calls.find((c) => c.method === 'range')?.args).toEqual([20, 39]);
+    const select = calls.find((c) => c.method === 'select');
+    expect(select?.args[1]).toEqual({ count: 'exact' });
+    expect(String(select?.args[0])).not.toMatch(/base_amount|price|recorded_by|subscription_id|assistant_id/);
   });
 
   it('a database error is thrown, never swallowed into an empty list', async () => {

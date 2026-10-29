@@ -1,5 +1,6 @@
-import type { MyEarnings, MyPaymentRow, MyStudentRow } from '@ab/shared';
-import { queryOptions } from '@tanstack/react-query';
+import type { MyCommissionRow, MyEarnings, MyPaymentRow, MyStudentRow } from '@ab/shared';
+import { keepPreviousData, queryOptions } from '@tanstack/react-query';
+import type { Page } from '@/features/finance/subscriptions';
 import { apiFetch, apiSend } from '@/lib/http/api';
 
 export type SubscriptionKind = 'pending' | 'confirmed';
@@ -41,6 +42,18 @@ export const myEarningsQuery = queryOptions({
   queryKey: ['sales', 'me', 'earnings'],
   queryFn: () => apiFetch<MyEarnings>('/sales/me/earnings'),
 });
+
+/** «محفظتي»: both of its queries sit under this key, so one invalidation refreshes the page. */
+export const MY_MONEY_KEY = ['sales', 'me'] as const;
+export const MY_COMMISSIONS_PAGE_SIZE = 20;
+
+/** GET /sales/me/commissions — one page of my commissions, newest first (the previous page stays while the next loads). */
+export const myCommissionsQuery = (page: number) =>
+  queryOptions({
+    queryKey: [...MY_MONEY_KEY, 'commissions', page],
+    queryFn: () => apiFetch<Page<MyCommissionRow>>(`/sales/me/commissions?page=${page}&pageSize=${MY_COMMISSIONS_PAGE_SIZE}`),
+    placeholderData: keepPreviousData,
+  });
 
 /** GET /sales/me/payments — only the payments I recorded. */
 export const myPaymentsQuery = queryOptions({

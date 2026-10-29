@@ -2,7 +2,7 @@ import { notificationEntry, type NotificationKey, type PushKind } from '@ab/shar
 import type { RulesSnapshot } from '../../../modules/messaging/notification-rules/store/rules.reader';
 import { ruleOf } from '../../rules/rule-of';
 
-/** Each push kind's catalogue row (docs/23a §B3 P1–P8; catalogue.test.ts keeps them in step). */
+/** Each push kind's catalogue row (docs/23a §B3 P1–P9; catalogue.test.ts keeps them in step). */
 const ROW_OF: Record<PushKind, NotificationKey> = {
   new_lead: 'new_lead',
   new_message: 'new_message',
@@ -14,6 +14,7 @@ const ROW_OF: Record<PushKind, NotificationKey> = {
   meeting_invite: 'meeting_invite',
   google_sync_alert: 'google_sync_alert',
   channel_message: 'channel_message',
+  commission_earned: 'commission_earned',
 };
 
 /** Where a staff notification goes: the bell row (push_notifications), and the browser / app push. */
