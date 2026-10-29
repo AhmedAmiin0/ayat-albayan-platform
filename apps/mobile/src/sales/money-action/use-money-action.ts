@@ -1,8 +1,21 @@
+import type { SalesFamilyView } from '@ab/shared';
+import { useQuery } from '@tanstack/react-query';
 import { useHolds } from '@/auth';
+import { apiFetch } from '@/core/lib/http/api';
 import { inTree, useTreeBase } from '@/core/nav/tree-base';
-import { useSalesFamily } from '@/sales-subscribe';
 import { useSalesStudent } from '../student/student-api';
 import { type MoneyAction, pickMoneyAction } from './money-action';
+
+/**
+ * GET /sales/money/family?phone under the chat money pills' own key (sales-subscribe lib/family.ts), so
+ * both share one cache and its refresh after a transfer; read here because @/sales-subscribe imports @/sales.
+ */
+const useFamily = (phone: string, enabled: boolean) =>
+  useQuery({
+    queryKey: ['sales', 'money', 'family', phone],
+    queryFn: () => apiFetch<SalesFamilyView>(`/sales/money/family?phone=${encodeURIComponent(phone)}`),
+    enabled: enabled && phone !== '',
+  });
 
 interface MoneyActionOptions {
   studentId: string;
@@ -20,7 +33,7 @@ export function useMoneyAction({ studentId, phone, subscriptionId }: MoneyAction
   const base = useTreeBase();
   const details = useSalesStudent(allowed && phone === undefined ? studentId : '');
   const guardian = phone ?? details.data?.student?.guardian_phone ?? '';
-  const family = useSalesFamily(guardian, allowed);
+  const family = useFamily(guardian, allowed);
   const action = allowed ? pickMoneyAction(family.data, { studentId, phone: guardian, ...(subscriptionId ? { subscriptionId } : {}) }) : null;
   return action ? { ...action, href: inTree(base, action.href) } : null;
 }
