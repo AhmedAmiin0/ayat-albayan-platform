@@ -7,7 +7,7 @@ import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { shape } from '@/theme';
 import { MessageFile } from '../components/MessageFile';
 import { PHONE } from '../../shared/thread-fixtures';
-import { pageUrl, pdfDoc, pdfPage, pdfPath } from './photo-test-kit';
+import { pageUrl, pdfPage, pdfPath, staffPdf } from './photo-test-kit';
 
 const mockApiFetch = jest.fn();
 jest.mock('@/core/lib/http/api', () => ({
@@ -16,6 +16,7 @@ jest.mock('@/core/lib/http/api', () => ({
 }));
 
 // A chat PDF like WhatsApp's (owner 2026-10-29): page 1 as the thumb, the name, «12 صفحة · PDF · 1.2 ميغابايت».
+// One staff sent (PdfPreview.states.test.tsx has a family's, asked on a tap).
 const FILE = '/threads/%2B966552147730/messages/d1/file';
 const SIGNED_PDF = 'https://storage.test/wa-media/d1.pdf?token=x';
 const serve = (first: () => Promise<unknown>) =>
@@ -28,7 +29,7 @@ const fail = (status: number, code: string) => serve(async () => { throw new Api
 const calls = (path: string) => mockApiFetch.mock.calls.filter(([p]) => p === path).length;
 const hold = jest.fn();
 const show = (client = createTestQueryClient()) =>
-  renderWithQuery(<MessageFile message={pdfDoc()} phone={PHONE} onLongPress={hold} />, client);
+  renderWithQuery(<MessageFile message={staffPdf()} phone={PHONE} onLongPress={hold} />, client);
 const openURL = jest.spyOn(Linking, 'openURL');
 
 beforeEach(() => {
@@ -99,7 +100,7 @@ test('a tap opens the viewer; a long press opens the bubble menu instead', async
   expect(screen.getByTestId('pdf-viewer')).toBeTruthy();
 });
 
-test('a thumb that fails to load is re-signed once, then the card goes on without it', async () => {
+test('a thumb that fails to load is re-signed once, then the card goes on with a large «PDF» in its place', async () => {
   let n = 0;
   serve(async () => pdfPage(1, { url: `${pageUrl(1)}&n=${++n}` }));
   await show();
@@ -108,5 +109,7 @@ test('a thumb that fails to load is re-signed once, then the card goes on withou
   await fireEvent(screen.getByTestId('pdf-thumb-d1'), 'error');
   await waitFor(() => expect(screen.queryByTestId('pdf-thumb-d1')).toBeNull());
   expect(screen.getByText('hifz-plan.pdf')).toBeTruthy();
+  expect(screen.getAllByText(t.inbox.pdf.type)).toHaveLength(2);
+  expect(screen.queryByLabelText(t.common.loading)).toBeNull();
   expect(calls(pdfPath(1))).toBe(2);
 });

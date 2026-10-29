@@ -17,9 +17,13 @@ export function pageRange(page: number, pages: number): PageRange {
   return { first, last: Math.min(first + PDF_RUN - 1, pages, PDF_PREVIEW_PAGES) };
 }
 
-/** «Pages:          12» of pdfinfo's report, at most PDF_PAGES_MAX; 0 when it has none. */
+/**
+ * «Pages:          12» of pdfinfo's report, at most PDF_PAGES_MAX; 0 when it has none. The LAST such
+ * line: the file's own strings (Title, Author …, a newline inside them printed as is) come before it,
+ * only poppler's lines (Encrypted, Page size …) after, so a crafted «\nPages: 1» in a Title never wins.
+ */
 export function pdfinfoPages(stdout: string): number {
-  const m = /^Pages:\s+(\d+)$/m.exec(stdout);
+  const m = [...stdout.matchAll(/^Pages:\s+(\d+)$/gm)].at(-1);
   return m ? Math.min(Number(m[1]), PDF_PAGES_MAX) : 0;
 }
 

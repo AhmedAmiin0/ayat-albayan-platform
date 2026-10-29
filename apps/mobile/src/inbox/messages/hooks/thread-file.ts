@@ -72,7 +72,8 @@ export const pdfPagePath = (phone: string, messageId: string, page: number): str
 
 /** A 503 (one render at a time per API copy, a failed render) is worth another try; a 4xx ends there. */
 const busy = (e: unknown): boolean => e instanceof ApiError && e.status === 503;
-const final = (e: unknown): boolean => e instanceof ApiError && e.status >= 400 && e.status < 500;
+/** A 4xx: an answer that ends there (the PDF bubble then shows today's opener or a note, never a retry). */
+export const finalError = (e: unknown): boolean => e instanceof ApiError && e.status >= 400 && e.status < 500;
 
 /**
  * One page of a chat PDF with its page count and size; page 1 is the bubble's thumb, so the bubble
@@ -85,5 +86,5 @@ export const pdfPageQuery = (phone: string, messageId: string, page: number) =>
     queryKey: ['thread-pdf', phone, messageId, page],
     queryFn: () => apiFetch<ThreadPdfPage>(pdfPagePath(phone, messageId, page)),
     retry: (failures, e) => failures < 3 && busy(e),
-    retryOnMount: (query) => !final(query.state.error),
+    retryOnMount: (query) => !finalError(query.state.error),
   });

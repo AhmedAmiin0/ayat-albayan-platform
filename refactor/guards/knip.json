@@ -37,7 +37,6 @@
   "apps/api/src/modules/messaging/webhook/webhook.settings.ts types WebhookSettingsValues",
   "apps/api/src/modules/messaging/whatsapp/messages/inbound-media.service.ts exports CRM_NO_MEDIA",
   "apps/api/src/modules/messaging/whatsapp/messages/inbound-media.service.ts exports MEDIA_FETCH_DAYS",
-  "apps/api/src/modules/messaging/whatsapp/messages/inbound-media.service.ts types InboundFile",
   "apps/api/src/modules/messaging/whatsapp/messages/message.mapper.ts types MessageViewInput",
   "apps/api/src/modules/messaging/whatsapp/sender/message.sender.ts types SendSummary",
   "apps/api/src/modules/messaging/whatsapp/sender/send-plan.ts exports AUTH_HOLD_MS",

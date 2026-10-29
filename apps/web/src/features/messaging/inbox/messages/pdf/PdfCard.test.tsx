@@ -20,6 +20,8 @@ const serve = (page: () => Promise<unknown>) =>
   apiFetch.mockImplementation(async (path: string) =>
     path.endsWith('/pdf/1') ? page() : { url: PDF_URL, expires_at: '2026-10-29T12:00:00Z', mime: 'application/pdf' },
   );
+const PAGE_1 = '/threads/%2B966501234567/messages/m-1/pdf/1';
+const pageCalls = () => apiFetch.mock.calls.filter(([p]) => p === PAGE_1).length;
 const open = () => fireEvent.click(screen.getByRole('button', { name: t.inbox.viewMedia.replace('{kind}', t.inbox.media.document) }));
 
 describe('PdfCard', () => {
@@ -41,6 +43,31 @@ describe('PdfCard', () => {
     expect(apiFetch).toHaveBeenCalledWith('/threads/%2B966501234567/messages/m-1/pdf/1');
   });
 
+  it('while page 1 is asked: the same card at once (aria-busy, an empty strip), never the bare link first', async () => {
+    let answer: (page: unknown) => void = () => undefined;
+    serve(() => new Promise((r) => (answer = r)));
+    renderWithClient(<MessageMedia message={row()} />);
+    open();
+    const card = await screen.findByRole('link', { name: `${t.inbox.pdf.open.replace('{name}', 'خطة الحفظ.pdf')} · ${t.common.loading}` });
+    expect([card.getAttribute('aria-busy'), card.querySelector('img')]).toEqual(['true', null]);
+    answer(PAGE);
+    await waitFor(() => expect(card.querySelector('img')?.getAttribute('src')).toBe(THUMB));
+    expect(card.getAttribute('aria-busy')).toBe('false');
+  });
+
+  it('a thumb that fails to load (its URL expired in a tab left open) is asked again, once', async () => {
+    serve(async () => PAGE);
+    renderWithClient(<MessageMedia message={row()} />);
+    open();
+    const card = await screen.findByRole('link', { name: new RegExp(t.inbox.pdf.type) });
+    const img = () => card.querySelector('img') ?? card;
+    fireEvent.error(img());
+    await waitFor(() => expect(pageCalls()).toBe(2));
+    fireEvent.error(img());
+    await new Promise((r) => setTimeout(r, 20));
+    expect(pageCalls()).toBe(2);
+  });
+
   it('«تنزيل» stays under the card', async () => {
     serve(async () => PAGE);
     renderWithClient(<MessageMedia message={row()} />);
@@ -57,7 +84,7 @@ describe('PdfCard', () => {
     open();
     const link = await screen.findByRole('link', { name: 'خطة الحفظ.pdf' });
     expect(link.getAttribute('href')).toBe(PDF_URL);
-    await waitFor(() => expect(apiFetch).toHaveBeenCalledWith('/threads/%2B966501234567/messages/m-1/pdf/1'));
+    await waitFor(() => expect(apiFetch).toHaveBeenCalledWith(PAGE_1));
     expect(document.querySelector('img')).toBeNull();
   });
 });

@@ -2954,7 +2954,9 @@
       "open": "Open {name}",
       "pageOf": "Page {n} of {total}",
       "more": "The preview shows the first {n} pages. Download the file to see the rest.",
-      "pageFailed": "Couldn't load the page. Tap to try again"
+      "pageFailed": "Couldn't load the page. Tap to try again",
+      "tapToPreview": "Tap to preview",
+      "zoomHint": "Tap a page to zoom in"
     }
   },
   "mobileFinance": {

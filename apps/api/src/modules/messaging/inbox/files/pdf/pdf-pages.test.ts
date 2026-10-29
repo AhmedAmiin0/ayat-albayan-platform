@@ -22,6 +22,10 @@ describe('pdfinfoPages', () => {
     expect(pdfinfoPages('')).toBe(0);
   });
 
+  it('takes the last «Pages:»: a Title with a newline cannot plant its own count', () => {
+    expect(pdfinfoPages('Title:          x\nPages: 1\nAuthor:         y\nPages:          12\nEncrypted:      no\n')).toBe(12);
+  });
+
   it('clamps a crafted count: never a column overflow and a probe on every view', () => {
     expect(pdfinfoPages('Pages:          99999999999\n')).toBe(100_000);
   });

@@ -20,8 +20,12 @@ export class PdfToolError extends Error {
 
 // Calibration knobs (docs/09: measure with a scanned 10 MB PDF on staging).
 const TIMEOUT_MS: Record<PopplerTool, number> = { pdfinfo: 5_000, pdftoppm: 20_000 };
-/** Address space per run: a crafted page fails its own malloc, never the API's memory. */
+/**
+ * Address space per run: a crafted page fails its own malloc, never the API's memory. Resources only, like
+ * nice, choom and the timeout: an exploited poppler is still uid node in the API container (docs/09).
+ */
 const AS_BYTES = 256 * 1024 * 1024;
+/** stdout kept per run; a pdfinfo report this long (a padded Title) may have lost its «Pages:» line. */
 const STDOUT_MAX = 64 * 1024;
 /** pdfinfo cannot open the file (1: broken, or a user password) or refuses it (3: permissions): it never previews. */
 const NEVER_OPENS = new Set([1, 3]);
@@ -84,13 +88,14 @@ const withPdf = <T>(bytes: Uint8Array, fn: (pdf: string, dir: string) => Promise
 
 /**
  * The page count, or 0 = a permanent «no preview»: pdfinfo cannot open it (1, an encrypted file too),
- * refuses it (3) or hangs (5 s on one file is pathological). Any other end (99, a crash, the memory cap)
- * may pass next time: PdfToolError('failed'), nothing stored.
+ * refuses it (3), hangs (5 s on one file is pathological) or prints STDOUT_MAX or more (cut, so its count
+ * cannot be trusted). Any other end (99, a crash, the memory cap) may pass next time:
+ * PdfToolError('failed'), nothing stored.
  */
 export function pdfPageCount(bytes: Uint8Array, run: PdfRun = spawnPoppler): Promise<number> {
   return withPdf(bytes, async (pdf) => {
     const r = await run('pdfinfo', [pdf]);
-    if (r.code === 0) return pdfinfoPages(r.stdout);
+    if (r.code === 0) return r.stdout.length >= STDOUT_MAX ? 0 : pdfinfoPages(r.stdout);
     if (r.timedOut || (r.code !== null && NEVER_OPENS.has(r.code))) return 0;
     throw new PdfToolError('failed');
   });

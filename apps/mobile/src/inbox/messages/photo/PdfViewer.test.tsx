@@ -1,5 +1,6 @@
 import { pdfMetaLine, PDF_PREVIEW_PAGES } from '@ab/shared';
 import { fireEvent, screen, within } from '@testing-library/react-native';
+import { I18nManager, StyleSheet } from 'react-native';
 import { ApiError } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
@@ -24,11 +25,11 @@ const serve = (pages = 12, broken = 0) =>
     return pdfPage(n, { pages });
   });
 const calls = (path: string) => mockApiFetch.mock.calls.filter(([p]) => p === path).length;
+/** A family's PDF: one tap asks page 1 and opens the viewer once it answers. */
 const open = async () => {
   await renderWithQuery(<MessageFile message={pdfDoc()} phone={PHONE} />);
-  await screen.findByTestId('pdf-thumb-d1');
   await fireEvent.press(screen.getByTestId('pdf-d1'));
-  return within(screen.getByTestId('pdf-viewer'));
+  return within(await screen.findByTestId('pdf-viewer'));
 };
 
 beforeEach(() => mockApiFetch.mockReset());
@@ -43,6 +44,18 @@ test('the name and meta line on top; page 1 comes from the bubble, the next page
   expect(calls(pdfPath(1))).toBe(1);
   expect(calls(pdfPath(12))).toBe(0);
   expect(viewer.queryByText(t.inbox.pdf.more.replace('{n}', String(PDF_PREVIEW_PAGES)))).toBeNull();
+});
+
+test('«صفحة n من 12» follows the page in view, the name keeps its own side, and a line says a tap zooms', async () => {
+  serve();
+  const viewer = await open();
+  expect(viewer.getByText(pageOf(1))).toBeTruthy();
+  expect(viewer.getByText(t.inbox.pdf.zoomHint)).toBeTruthy();
+  expect(viewer.getByRole('imagebutton', { name: pageOf(1) }).props.accessibilityHint).toBe(t.inbox.pdf.zoomHint);
+  const changed = { viewableItems: [{ item: 4, key: '4', index: 3, isViewable: true }], changed: [] };
+  await fireEvent(screen.getByTestId('pdf-pages'), 'viewableItemsChanged', changed);
+  expect(viewer.getByText(pageOf(4))).toBeTruthy();
+  expect(StyleSheet.flatten(viewer.getByText('hifz-plan.pdf').props.style).textAlign).toBe(I18nManager.isRTL ? 'right' : 'left');
 });
 
 test('a PDF longer than the preview lists its first 30 pages, then says to download the rest', async () => {

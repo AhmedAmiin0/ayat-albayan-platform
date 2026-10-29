@@ -48,8 +48,11 @@ const noPreview = () => Promise.reject(new ApiError(422, { code: 'pdf_no_preview
 /** W6 answers `file`; the bubble's other reads (/auth/me for its actions) get nothing. */
 const serve = (file: () => Promise<unknown>) =>
   mockApiFetch.mockImplementation((path: string) => (path === PATH ? file() : path === PDF_1 ? noPreview() : Promise.resolve(null)));
-/** «عرض ملف», once page 1 said there is no preview. */
-const pdfOpener = () => screen.findByRole('button', { name: t.inbox.viewMedia.replace('{kind}', kind.document) });
+/** «عرض ملف»: a tap on the PDF card (none of these rows is staff-sent) asks page 1, which has no preview. */
+const pdfOpener = async () => {
+  await fireEvent.press(screen.getByTestId('pdf-f1'));
+  return screen.findByRole('button', { name: t.inbox.viewMedia.replace('{kind}', kind.document) });
+};
 
 beforeEach(() => {
   mockApiFetch.mockReset();

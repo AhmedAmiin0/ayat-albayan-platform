@@ -29,8 +29,9 @@ describe('pdfPageCount (pdfinfo)', () => {
     expect([seen.tool, existsSync(seen.dir)]).toEqual(['pdfinfo', false]);
   });
 
-  it('cannot open (1, encrypted), permissions (3) or a hang: 0, a permanent «no preview»', async () => {
-    for (const out of [exit({ code: 1 }), exit({ code: 3 }), exit({ code: null, timedOut: true })]) {
+  it('cannot open (1, encrypted), permissions (3), a hang or a report cut at 64 KB: 0, a permanent «no preview»', async () => {
+    const cut = exit({ stdout: `Title: ${'x'.repeat(64 * 1024)}\nPages: 3\n` });
+    for (const out of [exit({ code: 1 }), exit({ code: 3 }), exit({ code: null, timedOut: true }), cut]) {
       await expect(pdfPageCount(PDF, fakeRun(out).run)).resolves.toBe(0);
     }
   });
