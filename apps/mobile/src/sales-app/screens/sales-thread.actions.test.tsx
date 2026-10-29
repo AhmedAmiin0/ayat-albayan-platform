@@ -39,6 +39,11 @@ test('a failed send in the sales tree: its status word, but no retry / click-to-
   expect(screen.queryByRole('button', { name: t.messages.retry })).toBeNull();
   expect(screen.queryByRole('button', { name: t.messages.clickToChat })).toBeNull();
   expect(screen.queryByText(t.messages.handedOff)).toBeNull();
+  // The «!» stays a picture: no tap opens the admin's sheet.
+  const ticks = screen.getByTestId('ticks-failed');
+  expect(ticks.props.accessibilityRole).toBe('image');
+  expect(ticks.props.onStartShouldSetResponder).toBeUndefined();
+  expect(screen.queryByTestId('failed-sheet')).toBeNull();
   // Only the closed chat's reopen request (owner 2026-10-26), never a retry or hand-off.
   expect(mockApiSend.mock.calls.filter((c) => !String(c[1]).endsWith('/reopen'))).toEqual([]);
 });

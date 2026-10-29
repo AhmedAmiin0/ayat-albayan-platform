@@ -59,7 +59,7 @@ export interface MessageBubbleProps {
  * Ours carry WhatsApp-style delivery ticks (DeliveryTicks, named by the status word); a template
  * row says which template, its body already rendered by the API; links in the text open (LinkedText). Ours say who sent them
  * («أرسلها: سارة», «رسالة تلقائية»); a photo previews, a PDF, voice note or video opens from MessageFile. Why a send failed is for everyone (as the web's
- * outboundNotes); retry / sent-by-hand stay the admin's (R-MSG-05).
+ * outboundNotes); retry / sent-by-hand stay the admin's, behind a tap on «! لم تُرسل» as WhatsApp (FailedSheet, R-MSG-05).
  */
 export const MessageBubble = memo(function MessageBubble({ message: m, phone, onJump, highlight = false }: MessageBubbleProps) {
   const { color } = useTheme();
@@ -67,7 +67,7 @@ export const MessageBubble = memo(function MessageBubble({ message: m, phone, on
   const touch = useBubbleActions(m);
   // «تفاعل» (owner 2026-10-27): the row floats over the held bubble; the pill names who reacted.
   const hold = (e?: GestureResponderEvent) => touch.openMenu(holdTop(e));
-  const { openReactors } = useBubbleChatActions();
+  const { openReactors, openFailed } = useBubbleChatActions();
   const admin = useThreadMode().kind === 'admin';
   // The sales tree has no thread mode either: the actions' endpoints need messages.manage (admin-only).
   const manages = useHolds('messages.manage');
@@ -77,8 +77,9 @@ export const MessageBubble = memo(function MessageBubble({ message: m, phone, on
   // A photo, PDF, voice note or video we can serve (W6): opened or played from the bubble.
   const file = m.media_url === null && isChatViewMime(m.media_mime);
   const stuck = admin && manages && ours && (m.status === 'failed' || m.click_to_chat !== null);
-  // A hand-off asks «بعتّها؟» in MessageActions instead of a reason.
+  // A hand-off asks «هل أرسلتها؟» in MessageActions instead of a reason.
   const why = ours && m.status === 'failed' && m.error_code !== 'handed_off';
+  const asking = stuck && m.error_code === 'handed_off';
   // The screen reader's way to the menu sits on the text; a file-only bubble keeps its own buttons.
   const a11yOn = m.body ? 'body' : m.template_key ? 'template' : null;
   const side = bubbleSide(ours);
@@ -114,13 +115,13 @@ export const MessageBubble = memo(function MessageBubble({ message: m, phone, on
       </TemplateFrame>
       {/* What a quick reply did, or «تأكيد الحلقة» / «تغيير الموعد» for its lesson (owner 2026-10-28). */}
       <ReplyNoteLine message={m} />
-      <MessageMeta message={m} />
-      {/* Right under the time, as WhatsApp; a failed send's reason and actions come below them. */}
+      <MessageMeta message={m} onTicksPress={stuck ? () => openFailed(m) : undefined} />
+      {/* Right under the time, as WhatsApp; a failed send's reason (and «هل أرسلتها؟») below them. */}
       {m.template ? (
-        <TemplateButtons buttons={m.template.buttons} inset={{ x: PAD.x, bottom: why || stuck ? 0 : PAD.bottom }} onLongPress={touch.has ? hold : undefined} />
+        <TemplateButtons buttons={m.template.buttons} inset={{ x: PAD.x, bottom: why || asking ? 0 : PAD.bottom }} onLongPress={touch.has ? hold : undefined} />
       ) : null}
-      {why ? <AppText style={{ ...small, fontSize: type.size.xs, lineHeight: type.lineHeight(type.size.xs) }}>{errorLine(m)}</AppText> : null}
-      {stuck ? <MessageActions message={m} phone={phone} /> : null}
+      {why ? <AppText numberOfLines={2} style={{ ...small, fontSize: type.size.xs, lineHeight: type.lineHeight(type.size.xs) }}>{errorLine(m)}</AppText> : null}
+      {asking ? <MessageActions message={m} phone={phone} /> : null}
     </>
   );
   const pill = <ReactionPill message={m} side={side.outer === 'start' ? 'start' : 'end'} onPress={() => openReactors(m)} />;
