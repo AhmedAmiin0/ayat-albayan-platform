@@ -107,6 +107,11 @@ export function waMediaPath(input: { messageId: string; mime: string }): string 
   return `${input.messageId}.${extFor(input.mime)}`;
 }
 
+/** wa-media/pdf/{message_id}/{page}.jpg: one rendered page of a chat PDF (owner 2026-10-29); re-rendering overwrites it. */
+export function pdfPagePath(input: { messageId: string; page: number }): string {
+  return `pdf/${input.messageId}/${input.page}.jpg`;
+}
+
 /** wa-media/out/{actor}/{client_request_id}/{uuid}.{ext}: a file staff send from the chat (owner 2026-10-19 #2). */
 export function chatOutPath(input: { actorId: string; requestId: string; mime: string }): string {
   return `out/${input.actorId}/${input.requestId}/${uploadName(input.mime)}`;

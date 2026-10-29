@@ -1,7 +1,7 @@
 import { spawn } from 'node:child_process';
-import { mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
-import { tmpdir } from 'node:os';
+import { readFile, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
+import { inTempDir } from './temp-dir';
 
 /** Runs ffmpeg with these arguments; rejects on a non-zero exit, a missing binary or the timeout. */
 export type FfmpegRun = (args: readonly string[]) => Promise<void>;
@@ -33,18 +33,13 @@ const spawnFfmpeg: FfmpegRun = (args) =>
  * missing or fails: the caller then sends the m4a as plain audio. Through temp files, never stdin:
  * Android's MP4 has its index (moov) at the end, which a pipe cannot seek to. The files are always removed.
  */
-export async function toVoiceOgg(bytes: Uint8Array, run: FfmpegRun = spawnFfmpeg): Promise<Uint8Array | null> {
-  const dir = await mkdtemp(join(tmpdir(), 'voice-'));
-  const input = join(dir, 'in.m4a');
-  const output = join(dir, 'out.ogg');
-  try {
+export function toVoiceOgg(bytes: Uint8Array, run: FfmpegRun = spawnFfmpeg): Promise<Uint8Array | null> {
+  return inTempDir('voice-', async (dir) => {
+    const input = join(dir, 'in.m4a');
+    const output = join(dir, 'out.ogg');
     await writeFile(input, bytes);
     await run(voiceArgs(input, output));
     const ogg = new Uint8Array(await readFile(output));
     return ogg.byteLength > 0 ? ogg : null;
-  } catch {
-    return null;
-  } finally {
-    await rm(dir, { recursive: true, force: true });
-  }
+  }).catch(() => null);
 }

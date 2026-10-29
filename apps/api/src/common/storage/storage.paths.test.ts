@@ -9,6 +9,7 @@ import {
   extFor,
   invoicePath,
   isPathOf,
+  pdfPagePath,
   receiptPath,
   teacherReceiptPath,
   reportPdfPath,
@@ -44,6 +45,8 @@ describe('storage paths (migration 122 policies parse these)', () => {
 
   it('wa-media cache: {message_id}.{ext}; the buckets are named once', () => {
     expect(waMediaPath({ messageId: 'm1', mime: 'image/webp' })).toBe('m1.webp');
+    // A chat PDF's page images sit under pdf/, never out/ (isChatOutPathOf) nor a message's own copy.
+    expect(pdfPagePath({ messageId: 'm1', page: 7 })).toBe('pdf/m1/7.jpg');
     expect(BUCKETS).toMatchObject({ invoices: 'invoices', waMedia: 'wa-media', recordings: 'recordings' });
   });
 

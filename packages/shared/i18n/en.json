@@ -2940,6 +2940,21 @@
         "teacher_number": "This is a teacher's number; it cannot be linked to a family",
         "lead_has_family": "This number is another family's main number"
       }
+    },
+    "pdf": {
+      "type": "PDF",
+      "pages": {
+        "one": "1 page",
+        "two": "2 pages",
+        "few": "{n} pages",
+        "other": "{n} pages"
+      },
+      "kb": "{n} KB",
+      "mb": "{n} MB",
+      "open": "Open {name}",
+      "pageOf": "Page {n} of {total}",
+      "more": "The preview shows the first {n} pages. Download the file to see the rest.",
+      "pageFailed": "Couldn't load the page. Tap to try again"
     }
   },
   "mobileFinance": {
